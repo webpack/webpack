@@ -7459,56 +7459,56 @@ describe("parseHtml — insertion modes", () => {
 describe("SourceProcessor — attribute rewrites as options", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
+	const OPEN = "<!doctype html><body>";
+	const CLOSE = "</body>";
+
 	/**
 	 * @param {string} body the document body
 	 * @param {object=} options extra print options
-	 * @returns {string} the minified serialization
+	 * @returns {string} the body's whole minified serialization
 	 */
 	const minify = (body, options) =>
-		new SourceProcessor().process(`<!DOCTYPE html><body>${body}`, {
-			mode: "minify",
-			...options
-		}).code;
+		new SourceProcessor()
+			.process(`<!DOCTYPE html><body>${body}`, { mode: "minify", ...options })
+			.code.slice(OPEN.length, -CLOSE.length);
 
 	it("collapses a boolean attribute the spec canonicalizes, by default", () => {
-		expect(minify('<input checked="checked" disabled="">')).toContain(
+		expect(minify('<input checked="checked" disabled="">')).toBe(
 			"<input checked disabled>"
 		);
 		expect(
 			minify('<input checked="checked">', { collapseBooleanAttributes: false })
-		).toContain("<input checked=checked>");
+		).toBe("<input checked=checked>");
 	});
 
 	it("collapses any value at `all`, and the empty one at every tier", () => {
 		expect(
 			minify('<input checked="false">', { collapseBooleanAttributes: "all" })
-		).toContain("<input checked>");
-		expect(minify('<input checked="false">')).toContain(
-			"<input checked=false>"
-		);
+		).toBe("<input checked>");
+		expect(minify('<input checked="false">')).toBe("<input checked=false>");
 		// The tokenizer reads `x` and `x=""` as the same attribute, so the bare
 		// name is not the option's to keep.
 		expect(
 			minify('<input checked="">', { collapseBooleanAttributes: false })
-		).toContain("<input checked>");
+		).toBe("<input checked>");
 	});
 
 	it("collapses across the elements each boolean attribute belongs to", () => {
-		for (const [element, name] of [
-			["input", "checked"],
-			["input", "disabled"],
-			["script", "async"],
-			["script", "defer"],
-			["option", "selected"],
-			["select", "multiple"],
-			["details", "open"],
-			["ol", "reversed"],
-			["iframe", "allowfullscreen"],
-			["video", "muted"],
-			["form", "novalidate"]
+		for (const [element, name, expected] of [
+			["input", "checked", "<input checked>"],
+			["input", "disabled", "<input disabled>"],
+			["script", "async", "<script async></script>"],
+			["script", "defer", "<script defer></script>"],
+			["option", "selected", "<option selected>"],
+			["select", "multiple", "<select multiple></select>"],
+			["details", "open", "<details open></details>"],
+			["ol", "reversed", "<ol reversed></ol>"],
+			["iframe", "allowfullscreen", "<iframe allowfullscreen></iframe>"],
+			["video", "muted", "<video muted></video>"],
+			["form", "novalidate", "<form novalidate></form>"]
 		]) {
-			expect(minify(`<${element} ${name}="${name}"></${element}>`)).toContain(
-				`<${element} ${name}>`
+			expect(minify(`<${element} ${name}="${name}"></${element}>`)).toBe(
+				expected
 			);
 		}
 	});
@@ -7516,24 +7516,24 @@ describe("SourceProcessor — attribute rewrites as options", () => {
 	it("leaves an attribute that is not boolean on that element", () => {
 		// `hidden` is enumerated in the living standard (`until-found`), so it is
 		// not one of these either.
-		for (const [element, name] of [
-			["p", "checked"],
-			["div", "open"],
-			["span", "selected"],
-			["p", "hidden"]
+		for (const [element, name, expected] of [
+			["p", "checked", "<p checked=checked>x"],
+			["div", "open", "<div open=open>x</div>"],
+			["span", "selected", "<span selected=selected>x</span>"],
+			["p", "hidden", "<p hidden=hidden>x"]
 		]) {
-			expect(minify(`<${element} ${name}="${name}">x</${element}>`)).toContain(
-				`${name}=${name}`
+			expect(minify(`<${element} ${name}="${name}">x</${element}>`)).toBe(
+				expected
 			);
 		}
 	});
 
 	it("keeps the quotes a value cannot go without", () => {
 		for (const value of ["a b", "a=b", "a<b", "a>b", "a`b", "a'b"]) {
-			expect(minify(`<p id="${value}">x</p>`)).toContain(`id="${value}"`);
+			expect(minify(`<p id="${value}">x</p>`)).toBe(`<p id="${value}">x`);
 		}
-		expect(minify('<p id="a/b">x</p>')).toContain("id=a/b");
-		expect(minify('<p id="a&quot;b">x</p>')).toContain("id='a\"b'");
+		expect(minify('<p id="a/b">x</p>')).toBe("<p id=a/b>x");
+		expect(minify('<p id="a&quot;b">x</p>')).toBe("<p id='a\"b'>x");
 	});
 
 	it("collapses only where the attribute is a boolean one", () => {
@@ -7541,80 +7541,93 @@ describe("SourceProcessor — attribute rewrites as options", () => {
 			minify('<p contenteditable="contenteditable">x</p>', {
 				collapseBooleanAttributes: "all"
 			})
-		).toContain("<p contenteditable=contenteditable>");
+		).toBe("<p contenteditable=contenteditable>x");
 	});
 
 	it("normalizes a value into its own grammar's shortest spelling", () => {
 		const body =
 			'<p class="  b   a  " dir="RTL">x</p><img srcset="a.png   1x" alt=a>';
-		expect(minify(body)).toContain('class="b a" dir=rtl');
-		expect(minify(body)).toContain('srcset="a.png 1x"');
-		const off = minify(body, { normalizeAttributeValues: false });
-		expect(off).toContain('class="  b   a  " dir=RTL');
-		expect(off).toContain('srcset="a.png   1x"');
+		expect(minify(body)).toBe(
+			'<p class="b a" dir=rtl>x</p><img srcset="a.png 1x" alt=a>'
+		);
+		expect(minify(body, { normalizeAttributeValues: false })).toBe(
+			'<p class="  b   a  " dir=RTL>x</p><img srcset="a.png   1x" alt=a>'
+		);
 	});
 
 	it("reaches every family the rewrite covers, not only the obvious ones", () => {
 		/** @type {[string, string, string][]} */
 		const families = [
-			['<p dir="RTL">x</p>', "dir=rtl", "dir=RTL"],
+			['<p dir="RTL">x</p>', "<p dir=rtl>x", "<p dir=RTL>x"],
 			[
 				'<img srcset="a.png   1x" alt=a>',
-				'srcset="a.png 1x"',
-				'srcset="a.png   1x"'
+				'<img srcset="a.png 1x" alt=a>',
+				'<img srcset="a.png   1x" alt=a>'
 			],
-			['<p class="  b   a ">x</p>', 'class="b a"', 'class="  b   a "'],
+			[
+				'<p class="  b   a ">x</p>',
+				'<p class="b a">x',
+				'<p class="  b   a ">x'
+			],
 			[
 				'<meta name=viewport content="width=device-width,  initial-scale=1">',
-				'content="width=device-width,initial-scale=1"',
-				'content="width=device-width,  initial-scale=1"'
+				'<meta name=viewport content="width=device-width,initial-scale=1">',
+				'<meta name=viewport content="width=device-width,  initial-scale=1">'
 			],
 			[
 				'<a ping="  a.php ,  b.php  ">x</a>',
-				'ping="a.php , b.php"',
-				'ping="  a.php ,  b.php  "'
+				'<a ping="a.php , b.php">x</a>',
+				'<a ping="  a.php ,  b.php  ">x</a>'
 			],
-			['<a href="  /a  ">x</a>', "href=/a", 'href="  /a  "'],
-			['<ol start="  007  "><li>x</ol>', "start=7", 'start="  007  "'],
-			['<img width="  100  " src=a alt=a>', "width=100", 'width="  100  "']
+			['<a href="  /a  ">x</a>', "<a href=/a>x</a>", '<a href="  /a  ">x</a>'],
+			[
+				'<ol start="  007  "><li>x</ol>',
+				"<ol start=7><li>x</ol>",
+				'<ol start="  007  "><li>x</ol>'
+			],
+			[
+				'<img width="  100  " src=a alt=a>',
+				"<img width=100 src=a alt=a>",
+				'<img width="  100  " src=a alt=a>'
+			]
 		];
 		for (const [body, on, off] of families) {
-			expect(minify(body)).toContain(on);
-			expect(minify(body, { normalizeAttributeValues: false })).toContain(off);
+			expect(minify(body)).toBe(on);
+			expect(minify(body, { normalizeAttributeValues: false })).toBe(off);
 		}
 	});
 
 	it("leaves the style attribute to its own option", () => {
 		const body = '<p class="  b  a " style="color:  #ff0000 ;">x</p>';
-		expect(minify(body, { normalizeAttributeValues: false })).toContain(
-			'class="  b  a " style=color:red'
+		expect(minify(body, { normalizeAttributeValues: false })).toBe(
+			'<p class="  b  a " style=color:red>x'
 		);
-		expect(minify(body, { minifyStyleAttribute: false })).toContain(
-			'class="b a" style="color:  #ff0000 ;"'
+		expect(minify(body, { minifyStyleAttribute: false })).toBe(
+			'<p class="b a" style="color:  #ff0000 ;">x'
 		);
 	});
 
 	it("keeps the quotes the tokenizer does not need, when asked", () => {
-		expect(minify('<p id="q" class="a">x</p>')).toContain("<p id=q class=a>");
+		expect(minify('<p id="q" class="a">x</p>')).toBe("<p id=q class=a>x");
 		expect(
 			minify('<p id="q" class="a">x</p>', { removeAttributeQuotes: false })
-		).toContain('<p id="q" class="a">');
+		).toBe('<p id="q" class="a">x');
 	});
 
 	it("keeps them through the respelling a reference would otherwise go bare in", () => {
-		expect(minify('<p title="&#x72;ed">x</p>')).toContain("<p title=red>");
+		expect(minify('<p title="&#x72;ed">x</p>')).toBe("<p title=red>x");
 		expect(
 			minify('<p title="&#x72;ed">x</p>', { removeAttributeQuotes: false })
-		).toContain('<p title="red">');
+		).toBe('<p title="red">x');
 	});
 
 	it("sorts a token list asked for on its own, normalization off", () => {
 		const body = '<p class="b a c" id="q">x</p>';
 		expect(
 			minify(body, { sortTokenLists: true, normalizeAttributeValues: false })
-		).toContain('class="a b c"');
-		expect(minify(body, { normalizeAttributeValues: false })).toContain(
-			'class="b a c"'
+		).toBe('<p class="a b c" id=q>x');
+		expect(minify(body, { normalizeAttributeValues: false })).toBe(
+			'<p class="b a c" id=q>x'
 		);
 		// `ping` is the order its requests go out in, so it is no set to sort.
 		expect(
@@ -7622,20 +7635,20 @@ describe("SourceProcessor — attribute rewrites as options", () => {
 				sortTokenLists: true,
 				normalizeAttributeValues: false
 			})
-		).toContain('ping="  b   a "');
+		).toBe('<a ping="  b   a ">x</a>');
 	});
 
 	it("keeps a value the source left unquoted unquoted", () => {
-		expect(minify("<p id=q>x</p>", { removeAttributeQuotes: false })).toContain(
-			"<p id=q>"
+		expect(minify("<p id=q>x</p>", { removeAttributeQuotes: false })).toBe(
+			"<p id=q>x"
 		);
 	});
 
 	it("rewrites nothing in foreign content, whatever the options say", () => {
 		const svg =
 			'<svg xmlns="http://www.w3.org/2000/svg"><rect class="  a  b "/></svg>';
-		expect(minify(svg, { collapseBooleanAttributes: "all" })).toContain(
-			'class="  a  b "'
+		expect(minify(svg, { collapseBooleanAttributes: "all" })).toBe(
+			'<svg xmlns=http://www.w3.org/2000/svg><rect class="  a  b "/></svg>'
 		);
 	});
 });
