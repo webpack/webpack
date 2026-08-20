@@ -79,6 +79,14 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		expect(has([{ glob: "**/*.css" }])).toBe(false);
 	});
 
+	it("does not count a glob that subtracts the extension", () => {
+		expect(has([{ glob: ["**/*", "!**/*.css"], use: ["x"] }])).toBe(false);
+		expect(has([{ glob: "!**/*.css", use: ["x"] }])).toBe(false);
+		expect(
+			has([{ test: { glob: ["**/*", "!**/*.module.css"] }, use: ["x"] }])
+		).toBe(true);
+	});
+
 	it("recurses into oneOf and nested rules", () => {
 		expect(
 			has([

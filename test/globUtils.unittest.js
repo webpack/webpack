@@ -16,6 +16,10 @@ const {
 	resolveContextModuleGlobPattern,
 	unescapeGlobPath
 } = require("../lib/util/globUtils");
+const {
+	ABSOLUTE_PATH_REGEXP,
+	WINDOWS_PATH_SEPARATOR_REGEXP
+} = require("../lib/util/identifier");
 
 const defaultOptions = {};
 
@@ -25,9 +29,9 @@ const defaultOptions = {};
  * @returns {string} pattern as `path.matchesGlob` reads it
  */
 const effectivePattern = (pattern) => {
-	let effective = pattern.replace(/\\/g, "/");
+	let effective = pattern.replace(WINDOWS_PATH_SEPARATOR_REGEXP, "/");
 	while (effective.startsWith("./")) effective = effective.slice(2);
-	if (!/^(?:[a-z]:)?\//i.test(effective) && !effective.startsWith("**/")) {
+	if (!ABSOLUTE_PATH_REGEXP.test(effective) && !effective.startsWith("**/")) {
 		effective = `**/${effective}`;
 	}
 	return effective;
@@ -43,6 +47,8 @@ const PARENT_SEGMENT_REGEXP = /(?:^|\/)\.\.(?:\/|$)/;
 //            member unless asked for `{ posix: true }`, which fast-glob does
 //   `!(a)`   "not exactly a", so `ab` matches — picomatch and tiny-glob test a
 //            prefix instead and reject it
+//   `!(@(a))` still a negation — minimatch, and so `path.matchesGlob`, matches
+//            every name once a group nests inside the alternatives
 //   `*`      never an empty segment, and `a/**` is not `a` itself
 //   case     always sensitive — `path.matchesGlob` reads it off the host, so it
 //            ignores case on macOS and Windows
@@ -747,6 +753,10 @@ describe("globUtils", () => {
 			expect(createMatcher("/a/./b.js")("/a/./b.js")).toBe(true);
 			expect(createMatcher("**/*.js")("/a/./b.js")).toBe(true);
 			expect(createMatcher("**/a/b/c.js")("/a//b/c.js")).toBe(true);
+			// a path of nothing but `.` segments is the context directory
+			expect(createMatcher(".")("./")).toBe(true);
+			expect(createMatcher(".")("./.")).toBe(true);
+			expect(path.posix.matchesGlob("./.", ".")).toBe(true);
 		});
 
 		it("matches a `..` segment literally, where path.matchesGlob resolves it", () => {
@@ -767,6 +777,20 @@ describe("globUtils", () => {
 			expect(createMatcher("**/*(ab).js")("x/abab.js")).toBe(true);
 			expect(createMatcher("**/!(a).js")("x/ab.js")).toBe(true);
 			expect(createMatcher("**/!(a).js")("x/a.js")).toBe(false);
+		});
+
+		// `path.matchesGlob` compiles through minimatch, which stops negating a
+		// `!(…)` whose alternatives hold a group: it answers true for every name,
+		// the excluded ones included. glibc `fnmatch(3)`, bash and picomatch read
+		// these the way this matcher does.
+		it("nests extended globs, where path.matchesGlob stops negating", () => {
+			expect(createMatcher("**/@(a|@(b|c)).js")("x/b.js")).toBe(true);
+			expect(createMatcher("**/@(a|@(b|c)).js")("x/d.js")).toBe(false);
+			expect(createMatcher("**/!(a|@(b|c)).js")("x/d.js")).toBe(true);
+			expect(createMatcher("**/!(a|@(b|c)).js")("x/b.js")).toBe(false);
+			expect(createMatcher("**/!(@(a|b)).js")("x/a.js")).toBe(false);
+			expect(path.posix.matchesGlob("x/b.js", "**/!(a|@(b|c)).js")).toBe(true);
+			expect(path.posix.matchesGlob("x/a.js", "**/!(@(a|b)).js")).toBe(true);
 		});
 
 		it("lets a group that quantifies match an empty path segment", () => {
