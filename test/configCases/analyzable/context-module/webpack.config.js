@@ -70,5 +70,23 @@ module.exports = [
 			...base(4, "theme").output,
 			cssChunkFilename: "theme-[name].css"
 		}
+	},
+	// One candidate split into the entry's own chunk: importing that from itself would
+	// be a cycle, so it keeps the runtime form while its sibling is still baked.
+	{
+		...base(5, "mixed"),
+		optimization: {
+			chunkIds: "named",
+			splitChunks: {
+				cacheGroups: {
+					entry: {
+						test: /mixed[/\\]de/,
+						chunks: "all",
+						name: "mixed",
+						enforce: true
+					}
+				}
+			}
+		}
 	}
 ];
