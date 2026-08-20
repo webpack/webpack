@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add performance hints for defines and externals nothing uses.
+Add performance hints for defines, externals and aliases nothing uses.

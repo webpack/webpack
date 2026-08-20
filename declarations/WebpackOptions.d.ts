@@ -3325,6 +3325,11 @@ export interface PerformanceOptions {
 	 */
 	unsplitVendors?: boolean;
 	/**
+	 * Report 'resolve.alias' entries that no request matched.
+	 * @since 5.110.0
+	 */
+	unusedAliases?: boolean;
+	/**
 	 * Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.
 	 * @since 5.110.0
 	 */

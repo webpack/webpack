@@ -13619,6 +13619,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-unused-aliases": Object {
+    "configs": Array [
+      Object {
+        "description": "Report 'resolve.alias' entries that no request matched.",
+        "multiple": false,
+        "path": "performance.unusedAliases",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report 'resolve.alias' entries that no request matched.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-defines": Object {
     "configs": Array [
       Object {
