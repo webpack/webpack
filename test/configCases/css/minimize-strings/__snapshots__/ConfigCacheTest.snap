@@ -46,7 +46,7 @@ b\\"}",
 
 exports[`ConfigCacheTestCases css minimize-strings minimize-strings should compile 2`] = `
 Array [
-  "/*! webpack: a string the tokenizer closes at EOF keeps its one quote */.t31:after{content:\\"unterminated
-}",
+  "/*! webpack: a string the tokenizer closes at EOF keeps its one quote */.t31:after{content:\\"unterminated\\\\
+\\"}",
 ]
 `;

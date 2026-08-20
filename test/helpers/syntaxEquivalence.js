@@ -254,13 +254,16 @@ const installHelpers = () => {
 			// otherwise read as punctuation.
 			if (ch === "\\") {
 				const [named, end] = readEscape(text, at);
+				// §4.3.4: a `\` a string runs out after names nothing, unlike the
+				// U+FFFD the same escape names anywhere else.
+				const ranOut = end === at + 1;
 				at = end - 1;
 				const code = /** @type {number} */ (named.codePointAt(0));
 				const written = BARE_ESCAPED.test(named)
 					? named
 					: `\\${code.toString(16).padStart(6, "0")}`;
 				if (quote === "") out += written;
-				else string += named;
+				else if (!ranOut) string += named;
 				continue;
 			}
 			if (quote !== "") {
