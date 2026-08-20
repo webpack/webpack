@@ -3641,7 +3641,11 @@ describe("parseHtml", () => {
 			const nodes = body(
 				"<a href=#x><svg><foreignObject><template shadowrootmode=open></template></foreignObject></svg></a>"
 			);
-			const shape = (/** @type {MatElement} */ node) =>
+			/**
+			 * @param {MatElement} node an element
+			 * @returns {string} its tag name and those it contains
+			 */
+			const shape = (node) =>
 				node.tagName +
 				(node.children && node.children.length > 0
 					? `>${/** @type {MatElement[]} */ (node.children).map(shape).join("")}`
