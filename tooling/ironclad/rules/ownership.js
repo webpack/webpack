@@ -96,8 +96,7 @@ const MARKER_ALIASES = new Map([
 	["o", "once"],
 	["once", "once"],
 	["ref", "borrow"],
-	["refMut", "borrowMut"],
-	["refmut", "borrowMut"]
+	["refMut", "borrowMut"]
 ]);
 
 // Longest first, so `borrowMut` is never read as `borrow` followed by `Mut`.
