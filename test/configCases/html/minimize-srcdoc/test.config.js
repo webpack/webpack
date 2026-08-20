@@ -46,6 +46,10 @@ module.exports = {
 		// the attribute, taking the one after it with it — so it gains quotes.
 		expect(page).toContain('<iframe id=bare srcdoc="<p>bare" title=after>');
 
+		// The body is put back by offset: this one also reads inside its own
+		// condition, which a text search would rewrite instead.
+		expect(page).toContain("<!--[if  IE ]>IE <![endif]-->");
+
 		// Nothing to minify, and nothing invented.
 		expect(page).toContain("<iframe id=empty srcdoc>");
 		expect(page).toContain("<iframe id=none src=child.html>");
