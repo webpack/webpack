@@ -1097,9 +1097,8 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("declines to stream a block a longhand family could still merge in", () => {
-		// `_mergeBoxLonghands` needs every declaration at once, so a block holding
-		// no child rule is never streamed, however far past the threshold it grows,
-		// and its four longhands still collapse.
+		// The merge needs every declaration at once, so a block holding no child
+		// rule is never streamed however far past the threshold it grows.
 		const src = `.root{${repeat(
 			20000,
 			(i) => `--v${i}:${i};`
@@ -1269,9 +1268,8 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	});
 
 	it("keeps a custom property's tokens as the source wrote them", () => {
-		// The value is the text `getPropertyValue()` hands back, so no token in it
-		// is rewritten — but a dropped comment leaves the boundary it stood for,
-		// which is a space only where the tokens it parts would otherwise fuse.
+		// No token is rewritten; a dropped comment leaves the boundary it stood
+		// for, a space only where the tokens it parts would fuse.
 		expect(min("a{--x:1px/*c*/2px}")).toBe("a{--x:1px 2px}");
 		expect(min("a{--x:1px 1px/*c*/1px 1px}")).toBe("a{--x:1px 1px 1px 1px}");
 		expect(min("a{--x:1px /*c*/ 2px}")).toBe("a{--x:1px 2px}");
@@ -1321,6 +1319,14 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{--x:1px , 2px ,3px}")).toBe("a{--x:1px,2px,3px}");
 		expect(min("a{--x: , a}")).toBe("a{--x:,a}");
 		expect(min("a{--x:a , }")).toBe("a{--x:a,}");
+		// Nor with a block's delimiters, on either side of one.
+		expect(min("a{--x:a [b] c}")).toBe("a{--x:a[b]c}");
+		expect(min("a{--x:a {b} c}")).toBe("a{--x:a{b}c}");
+		expect(min("a{--x:(a) b}")).toBe("a{--x:(a)b}");
+		expect(min("a{--x:url(a) b}")).toBe("a{--x:url(a)b}");
+		// `(` is the exception: an ident in front of it makes a function token.
+		expect(min("a{--x:a (b)}")).toBe("a{--x:a (b)}");
+		expect(min("a{--x:a/*c*/(b)}")).toBe("a{--x:a (b)}");
 		// Nor with a block's delimiters, at any depth and in a block of every shape.
 		expect(min("a{--x:foo( 1 ,  2 )}")).toBe("a{--x:foo(1,2)}");
 		expect(min("a{--x:[ a  b ]}")).toBe("a{--x:[a b]}");

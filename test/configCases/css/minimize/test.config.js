@@ -30,9 +30,8 @@ module.exports = {
 		// inside the string is never treated as delimiters).
 		expect(css).toContain('content:"; } , keep {"}');
 
-		// A custom-property (`--*`) value's tokens are opaque; the whitespace
-		// between two of them is a boundary, so a run of it is the one space
-		// they need.
+		// A custom property's tokens are opaque; a run of whitespace between two
+		// of them is the one space they need.
 		expect(css).toContain("--custom:a b");
 		// Required value whitespace collapses to a single space.
 		expect(css).toContain("margin:0 auto");

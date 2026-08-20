@@ -464,9 +464,7 @@ const main = async () => {
 				input.brotli
 			)} brotli, ${kb(input.zstd)} zstd), ${before.size} classes\n`
 		);
-		// `saved` reads off gzip, not `minified`: what a user downloads is the
-		// compressed asset, and a re-encoding can cut raw bytes while costing wire
-		// bytes. Raw stays first as the tiebreak — it is what has to be parsed.
+		// `saved` reads off gzip — what a user downloads — with raw the tiebreak.
 		process.stdout.write(
 			`${"minifier".padEnd(14)}${"minified".padStart(10)}${"gzip".padStart(
 				9

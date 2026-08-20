@@ -158,6 +158,8 @@ Array [
    two of them minifies to the boundary it is */.t140{--t140:1px 1px 1px 1px}.t141{--t141:1px 1px/*!k*/1px 1px}.t142{--t142:minmax(1px 2px,calc(3px 4px))}",
   "/*! webpack: ...so a run of whitespace is one space, and none at all where a
    comma or a block edge already parts the two */.t143{--t143:1px 2px}.t144{--t144:foo(1px,2px),[bar]}",
+  "/*! webpack: ...on either side of a block delimiter too, bar \`(\`, which an
+   identifier in front of turns into a function token */.t144a{--t144a:a[b]c (d)}",
   "/*! webpack: declined: a string is one token, whatever stands inside it */.t145{--t145:\\"a  b\\" \\"c ,  d\\"}",
   "/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */.t146{box-shadow:0 0 0 1px red inset,0 0 blue inset}",
   "/*! webpack: declined: \`0%\` is a percentage, which a shadow's slots do not take */.t147{box-shadow:1px 1px 0% 0% red}",

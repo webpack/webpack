@@ -719,9 +719,10 @@ const formatChangedAssets = (changes) => {
 	// — the byte delta is spelled out because the percentage of it varies with
 	// bundle size.
 	const rows = changes.map((change) => {
-		// An edit can keep the raw length and still change how well it packs, so
-		// the arrow falls back to the encodings rather than calling that a shrink.
+		// The arrow reads before the numbers do, so it follows the column that
+		// decides: gzip, then raw, then whatever else moved.
 		const direction =
+			change.delta.gzip ||
 			change.delta.raw ||
 			COMPRESSED.reduce((sum, metric) => sum + change.delta[metric], 0);
 		// Bytes as well as the percentage: on a small asset a real move rounds to
