@@ -2785,7 +2785,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
 			// `initial` computes to the initial value, which is often a shorter word.
 			["a{min-width:initial}", "a{min-width:auto}"],
-			["a{outline-width:initial}", "a{outline-width:medium}"]
+			// ...but not where that word is itself a length: `zoom` scales the
+			// keyword and not the `initial` resolved before it, so the two are one
+			// value without a zoom and two under one (measured in headless Chromium:
+			// 3px against 1.5px at `zoom:2`).
+			["a{outline-width:initial}", "a{outline-width:initial}"],
+			["a{font-size:initial}", "a{font-size:initial}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});

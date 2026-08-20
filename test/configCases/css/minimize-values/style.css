@@ -432,3 +432,9 @@
 .flex-balance { display: flex; flex-direction: column; flex-wrap: balance }
 /*! the same pair merges where both values are ones an engine reads */
 .flex-wrap { display: flex; flex-direction: column; flex-wrap: wrap }
+
+/*! declined: `initial` is resolved before `zoom` scales a length, so the
+   keyword it would be replaced by is a different computed value under one */
+.initial-length { outline-width: initial; border-top-width: initial; font-size: initial }
+/*! a keyword that is not a length is the value `initial` computes to */
+.initial-keyword { float: initial; display: initial }

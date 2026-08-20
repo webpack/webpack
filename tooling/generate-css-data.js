@@ -2136,6 +2136,18 @@ const collectPositionKeywordAxes = () => {
  * value, which is what keeps one out of this table.
  * @returns {[string, string][]} the entries, sorted by property
  */
+// The keywords that stand for a length: the ones `<line-width>` and
+// `<absolute-size>` offer beside `<length>`, which is where CSS states them.
+const lengthKeywords = new Set();
+for (const production of ["line-width", "absolute-size"]) {
+	const entry = syntaxes[production];
+	if (entry === undefined) continue;
+	for (const branch of String(entry.syntax).split("|")) {
+		const keyword = branch.trim();
+		if (/^[a-z][a-z-]*$/.test(keyword)) lengthKeywords.add(keyword);
+	}
+}
+
 const collectInitialValueKeywords = () => {
 	/** @type {[string, string][]} */
 	const out = [];
@@ -2152,6 +2164,12 @@ const collectInitialValueKeywords = () => {
 		// property's own grammar names is the value `initial` computes to.
 		if (typeof entry.syntax !== "string") continue;
 		if (!acceptedValues(entry.syntax).keywords.has(initial)) continue;
+		// A keyword that is itself a length is scaled by `zoom`, where the
+		// `initial` it would replace is resolved before zoom applies — so the two
+		// are one value without a zoom and two under one. Measured in headless
+		// Chromium: `outline-width:initial` computes to 1.5px at `zoom:2` and
+		// `outline-width:medium` to 3px.
+		if (lengthKeywords.has(initial)) continue;
 		out.push([name, initial]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
