@@ -31,6 +31,10 @@
 /*! declined: `scale()` takes a `<number>`, so `scale(0px)` is dropped where
    `scale(0)` is a transform — the rewrite would revive the declaration */
 .t09c { transform: scale(0px) }
+/*! declined: a unit runs on through `-`, so `0px-x` is its own dimension */
+.t09d { --zero-run-on: 0px-x }
+/*! ...and is not the `0-x` dropping the unit off it would give */
+.t09e { --zero-dropped: 0-x }
 /*! webpack: a zero angle drops its unit where the grammar names <zero> */
 .t09d { transform: rotate(0deg) }
 /*! convert-values: should trim trailing zeros */

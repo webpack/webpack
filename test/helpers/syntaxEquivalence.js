@@ -135,6 +135,9 @@ const installHelpers = () => {
 		return `paints ${[...context.getImageData(0, 0, 1, 1).data].join(",")}`;
 	};
 
+	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
+	const NEWLINE = /[\n\r\f]/;
+
 	/**
 	 * The escape starting at `text[at]` — a backslash — decoded, with the index
 	 * just past it. A hex escape takes up to six digits and swallows one
@@ -143,9 +146,6 @@ const installHelpers = () => {
 	 * @param {number} at the index of the backslash
 	 * @returns {[string, number]} the character it names, and where it ends
 	 */
-	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
-	const NEWLINE = /[\n\r\f]/;
-
 	const readEscape = (text, at) => {
 		const hex = /^[\da-f]{1,6}/i.exec(text.slice(at + 1, at + 7));
 		if (hex === null) {
@@ -217,8 +217,10 @@ const installHelpers = () => {
 		"vb",
 		"q"
 	];
+	// A unit runs on through `-`, an escape and any non-ASCII name character, so
+	// `\b` would read `0rcap-foo` as `0rcap` and hand back a value nothing wrote.
 	const ZERO_LENGTH_RE = new RegExp(
-		`(^|[^\\w.#%-])0(?:\\.0*)?(?:${LENGTH_UNITS.join("|")})\\b`,
+		`(^|[^\\w.#%-])0(?:\\.0*)?(?:${LENGTH_UNITS.join("|")})(?![\\w\\u00a0-\\uffff\\\\-])`,
 		"gi"
 	);
 
