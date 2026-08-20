@@ -12,6 +12,7 @@ exports[`ConfigCacheTestCases html minimize-srcdoc minimize-srcdoc should compil
 <iframe id=upper srcdoc=\\"<em>up</em>\\"></iframe>
 <iframe id=conditional srcdoc=\\"<!--[if IE]><p class=ie>downlevel<![endif]-->\\"></iframe>
 <iframe id=bare srcdoc=\\"<p>bare\\" title=after></iframe>
+<!--[if  IE ]>IE <![endif]-->
 <iframe id=empty srcdoc></iframe>
 <iframe id=none src=child.html></iframe>
 <div id=not-an-iframe srcdoc=\\"<!-- kept --><p   >div</p>\\"></div>
