@@ -452,6 +452,17 @@ describe("ironclad/ownership", () => {
 				"f(...[x]);",
 				"use(x);"
 			].join("\n"),
+			// `@bob` is not `@b`: a marker has to end at a word boundary.
+			["const a = o();", "/** thanks @bob */", "const r = a;", "use(a);"].join(
+				"\n"
+			),
+			// `@moved` is not `@move` either.
+			[
+				"const a = o();",
+				"/** @moved elsewhere */",
+				"const r = a;",
+				"use(a);"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -948,6 +959,46 @@ describe("ironclad/ownership", () => {
 					"stream.cancel();"
 				].join("\n"),
 				errors: [{ messageId: "useWhileMutablyBorrowed" }]
+			},
+			{
+				// `@m` is `@move`, for signatures that would otherwise be more
+				// comment than code.
+				code: [
+					"function update(/** @m */ a, /** @b */ b, /** @mut */ c) {}",
+					"const x = o();",
+					"update(x, p, q);",
+					"use(x);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// `ref` and `mut` are Rust's own keywords for the same two ideas.
+				code: [
+					"const a = o();",
+					"const view = /** @ref */ a;",
+					"a.x = 1;",
+					"use(view);"
+				].join("\n"),
+				errors: [{ messageId: "mutationWhileShared" }]
+			},
+			{
+				// Spellings mix freely inside one block, and lifetimes still work.
+				code: [
+					"/**",
+					" * @borrow x 'a",
+					" * @b y 'a",
+					" * @ref return 'a",
+					" */",
+					"function pick(x, y) {",
+					"\treturn x;",
+					"}",
+					"const first = o();",
+					"const second = o();",
+					"const got = pick(first, second);",
+					"second.n = 1;",
+					"use(got);"
+				].join("\n"),
+				errors: [{ messageId: "mutationWhileShared" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.

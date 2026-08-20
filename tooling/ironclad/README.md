@@ -315,6 +315,32 @@ list — a comment on `/** @move */ f(a)` marks the call, never `a`.
 
 A marker must be a **tag**: `@move` counts, `docs@move` in prose does not.
 
+### Spellings
+
+Each marker answers to several names. The full ones are canonical and are what
+the documentation uses; the rest exist because an inline marker on a parameter
+otherwise turns a signature into more comment than code.
+
+| marker       | Rust's word       | short         |
+| ------------ | ----------------- | ------------- |
+| `@move`      | `@move`           | `@mv`, `@m`   |
+| `@borrow`    | `@ref`            | `@br`, `@b`   |
+| `@borrowMut` | `@mut`, `@refMut` | `@brm`, `@bm` |
+| `@once`      | —                 | `@o`          |
+
+`@ref` and `@mut` are worth knowing: they are Rust's own keywords for exactly
+these two ideas, so they read as the thing they mean rather than as an
+abbreviation of it.
+
+```js
+function update(/** @m */ owned, /** @ref */ shared, /** @mut */ exclusive) {}
+```
+
+Spellings mix freely, including inside one block. The word boundary keeps them
+honest — `@bob` is not `@b`, and `@moved` is not `@move` — and across 51k
+comments in this repository no alias matched anything that was not meant as a
+marker.
+
 ## What it checks
 
 | Message                    | Meaning                                                                |

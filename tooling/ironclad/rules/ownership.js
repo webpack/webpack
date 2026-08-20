@@ -78,13 +78,41 @@
  * @property {(node: Node) => import("typescript").Symbol | undefined} [getSymbolAtLocation] symbol of a node
  */
 
-// A JSDoc tag, so `@move` counts and `docs@move` does not. `borrowMut` comes
-// first because `@borrow` would otherwise match its prefix.
-const MARKER_REGEXP = /(?:^|[\s*])@(borrowMut|borrow|move|once)\b/;
+// Every spelling of a marker, mapped to the one the rest of the rule uses.
+// `ref` and `mut` are Rust's own keywords for the same two ideas, and the
+// single letters are there for inline markers, where a signature otherwise
+// turns into more comment than code.
+const MARKER_ALIASES = new Map([
+	["b", "borrow"],
+	["bm", "borrowMut"],
+	["borrow", "borrow"],
+	["borrowMut", "borrowMut"],
+	["br", "borrow"],
+	["brm", "borrowMut"],
+	["m", "move"],
+	["move", "move"],
+	["mut", "borrowMut"],
+	["mv", "move"],
+	["o", "once"],
+	["once", "once"],
+	["ref", "borrow"],
+	["refMut", "borrowMut"],
+	["refmut", "borrowMut"]
+]);
+
+// Longest first, so `borrowMut` is never read as `borrow` followed by `Mut`.
+const MARKER_ALTERNATION = [...MARKER_ALIASES.keys()]
+	.sort((a, b) => b.length - a.length)
+	.join("|");
+
+// A JSDoc tag, so `@move` counts and `docs@move` does not.
+const MARKER_REGEXP = new RegExp(`(?:^|[\\s*])@(${MARKER_ALTERNATION})\\b`);
 
 // `@move config` in a function's JSDoc, naming the parameter it applies to.
-const NAMED_MARKER_REGEXP =
-	/(?:^|[\s*])@(borrowMut|borrow|move|once)[ \t]+([A-Za-z_$][\w$]*)(?:[ \t]+('?[A-Za-z_$][\w$]*))?/g;
+const NAMED_MARKER_REGEXP = new RegExp(
+	`(?:^|[\\s*])@(${MARKER_ALTERNATION})[ \\t]+([A-Za-z_$][\\w$]*)(?:[ \\t]+('?[A-Za-z_$][\\w$]*))?`,
+	"g"
+);
 
 // Rust's `'static`: a borrow that outlives the program, so nothing local may
 // satisfy it.
@@ -200,6 +228,12 @@ const collectReferences = (scope, result) => {
 	for (const child of scope.childScopes) collectReferences(child, result);
 	return result;
 };
+
+/**
+ * @param {string} alias marker as it was written
+ * @returns {string} the spelling the rest of the rule uses
+ */
+const marker = (alias) => /** @type {string} */ (MARKER_ALIASES.get(alias));
 
 /**
  * @param {Node} node node to locate
@@ -533,7 +567,7 @@ const rule = {
 				const comments = sourceCode.getCommentsBefore(target);
 				for (let i = comments.length - 1; i >= 0; i--) {
 					const match = MARKER_REGEXP.exec(comments[i].value);
-					if (match) return match[1];
+					if (match) return marker(match[1]);
 				}
 				// ESTree drops grouping parens, so `/** @type {T} @move *\/ (a)` puts
 				// the comment before a `(` that is not in the tree — step over it.
@@ -934,26 +968,20 @@ const rule = {
 				const match = MARKER_REGEXP.exec(
 					text.slice(parameter.pos, parameter.getStart(sourceFile))
 				);
-				if (match) inlineMarkers.set(index, match[1]);
+				if (match) inlineMarkers.set(index, marker(match[1]));
 			}
 			/** @type {[string, string, string | undefined][]} */
 			const declarations = [];
 			for (const tag of compiler.getJSDocTags(declaration)) {
-				const marker = tag.tagName.text;
-				if (
-					marker !== "move" &&
-					marker !== "borrow" &&
-					marker !== "borrowMut"
-				) {
-					continue;
-				}
+				const canonical = MARKER_ALIASES.get(tag.tagName.text);
+				if (canonical === undefined) continue;
 				const comment =
 					typeof tag.comment === "string"
 						? tag.comment
 						: (tag.comment || []).map((part) => part.text || "").join("");
 				const parts = comment.trim().split(/\s+/);
 				if (parts.length === 0 || parts[0] === "") continue;
-				declarations.push([marker, parts[0], parts[1]]);
+				declarations.push([canonical, parts[0], parts[1]]);
 			}
 			return buildContract(parameterNames, inlineMarkers, declarations, null);
 		};
@@ -1533,7 +1561,7 @@ const rule = {
 				NAMED_MARKER_REGEXP.lastIndex = 0;
 				let match;
 				while ((match = NAMED_MARKER_REGEXP.exec(comment.value)) !== null) {
-					declarations.push([match[1], match[2], match[3]]);
+					declarations.push([marker(match[1]), match[2], match[3]]);
 				}
 			}
 			return buildContract(parameterNames, inlineMarkers, declarations, node);
