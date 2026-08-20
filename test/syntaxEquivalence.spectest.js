@@ -30,7 +30,8 @@ const {
 	buildCorpus,
 	compareRules,
 	conditionSignatures,
-	installHelpers
+	installHelpers,
+	numericallyEqual
 } = require("./helpers/syntaxEquivalence");
 const {
 	browserCorpus,
@@ -340,7 +341,9 @@ describe("printer output in real Chrome", () => {
 						why = `${facet}: ${a.length} vs ${b.length}`;
 						break;
 					}
-					const found = a.findIndex((entry, i) => entry !== b[i]);
+					const found = a.findIndex(
+						(entry, i) => !numericallyEqual(entry, b[i])
+					);
 					if (found !== -1) {
 						why = `${facet} ${found}: ${a[found]} vs ${b[found]}`;
 						break;

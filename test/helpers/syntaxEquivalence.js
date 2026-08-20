@@ -63,7 +63,7 @@ const buildCorpus = (dir, extension, minify) => {
 
 /**
  * @typedef {{ kind: string, condition: string }} Condition
- * @typedef {{ chain: Condition[], text: string, label?: string, list?: string[] }} Rule
+ * @typedef {{ chain: Condition[], text: string, label?: string, list?: string[], css?: string }} Rule
  * @typedef {{ facets: Record<string, string[]>, styles: Rule[][] }} Facets
  */
 
@@ -228,6 +228,9 @@ const installHelpers = () => {
 				return call;
 			}
 		});
+		// CSS Color 4 §5: `transparent` is that color written as a keyword, and an
+		// engine echoing a descriptor hands back whichever spelling it was given.
+		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
 		// A color written into a value the engine cannot compute — a `var()`
 		// fallback — is still a color, and `#ff0` is `rgb(255,255,0)`.
 		out = out.replace(
@@ -251,6 +254,12 @@ const installHelpers = () => {
 					}
 				)
 				.replace(/(^|[^\w.%-])0*(\.\d)/g, "$10$2")
+				// A zero length is the same zero however it is spelled, and a value
+				// held as written is the one place the printer's `0px` → `0` shows.
+				.replace(
+					/(^|[^\w.#%-])0(?:\.0*)?(?:px|em|rem|q|in|pt|pc|cm|mm)\b/gi,
+					"$10"
+				)
 				.trim()
 		);
 	};
@@ -576,11 +585,12 @@ const installHelpers = () => {
 						sameChain(previous.chain, held) &&
 						previous.label === label
 					) {
-						// Concatenate rather than resolve: only an identical pair
-						// collapses, so no filed defect is hidden by the fold.
-						const both = [
-							...new Set([.../** @type {string[]} */ (previous.list), ...list])
-						];
+						// Resolved as one block, which is what the cascade reads and
+						// what a printer joining the two writes: a percentage or a
+						// `min()` in one of them resolves against the other's
+						// declarations, so the two lists cannot simply be added.
+						previous.css = `${previous.css};${style.cssText}`;
+						const both = computed(previous.css);
 						previous.list = both;
 						previous.text = `${label} { ${[...both].sort().join(";")} }`;
 					} else {
@@ -588,6 +598,7 @@ const installHelpers = () => {
 							chain: held,
 							label,
 							list,
+							css: style.cssText,
 							text: `${label} { ${[...list].sort().join(";")} }`
 						});
 					}
@@ -602,8 +613,10 @@ const installHelpers = () => {
 					walk(nested, [...chain, inner]);
 				} else if (!style) {
 					// `@import`, `@namespace` and `@property` neither declare nor group,
-					// so they are compared as written.
-					out.push({ chain, text: rule.cssText });
+					// so they are compared as written — under the one spelling a value
+					// has, since the engine echoes a descriptor rather than computing
+					// it and `3 red` is the `3 rgb(255, 0, 0)` it was handed.
+					out.push({ chain, text: canonical(normalizeValue(rule.cssText)) });
 				}
 			}
 		};
@@ -1264,6 +1277,45 @@ const LAYER_STATEMENT_RE = /^@layer\s+([^{;]+);$/i;
  * @param {Map<string, string>} signatures what the engine answers per condition
  * @returns {string} why they differ, or "" when they do not
  */
+// One number wherever it stands in a value.
+const NUMBER_RUN = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
+
+// The printer rounds a number to six significant digits, so anything derived
+// from one — a matrix entry, a resolved font size — lands within a relative
+// 1e-5 of what the unrounded input gives. That is under Chromium's own 1/64px
+// layout grid at every length a stylesheet uses, which is the bound the
+// rounding itself rests on. Wider than that is a difference, not a spelling.
+const NUMERIC_TOLERANCE = 1e-5;
+
+/**
+ * Whether two values differ only in numbers the printer's own rounding could
+ * have moved. Everything that is not a number has to match exactly, and the
+ * numbers have to line up one for one — a value with more of them is a
+ * different value however close each one reads.
+ * @param {string} one a value
+ * @param {string} other another
+ * @returns {boolean} whether they say the same thing
+ */
+const numericallyEqual = (one, other) => {
+	if (one === other) return true;
+	const mine = one.split(NUMBER_RUN);
+	const theirs = other.split(NUMBER_RUN);
+	if (mine.length !== theirs.length) return false;
+	for (let at = 0; at < mine.length; at++) {
+		if (mine[at] !== theirs[at]) return false;
+	}
+	const oneNumbers = one.match(NUMBER_RUN) || [];
+	const otherNumbers = other.match(NUMBER_RUN) || [];
+	for (let at = 0; at < oneNumbers.length; at++) {
+		const a = Number(oneNumbers[at]);
+		const b = Number(otherNumbers[at]);
+		if (!Number.isFinite(a) || !Number.isFinite(b)) return false;
+		const scale = Math.max(Math.abs(a), Math.abs(b), 1);
+		if (Math.abs(a - b) > scale * NUMERIC_TOLERANCE) return false;
+	}
+	return true;
+};
+
 const compareRules = (before, after, signatures) => {
 	/**
 	 * @param {string} text a rule's `selector { … }`
@@ -1345,7 +1397,9 @@ const compareRules = (before, after, signatures) => {
 	const a = keys(before);
 	const b = keys(after);
 	const shorter = Math.min(a.length, b.length);
-	const at = a.slice(0, shorter).findIndex((key, i) => key !== b[i]);
+	const at = a
+		.slice(0, shorter)
+		.findIndex((key, i) => !numericallyEqual(key, b[i]));
 	if (at !== -1) return `rule ${at}: ${a[at]} vs ${b[at]}`;
 	if (a.length > b.length) return `rule dropped: ${a[shorter]}`;
 	if (b.length > a.length) return `rule added: ${b[shorter]}`;
@@ -1357,5 +1411,6 @@ module.exports = {
 	collectFixtures,
 	compareRules,
 	conditionSignatures,
-	installHelpers
+	installHelpers,
+	numericallyEqual
 };
