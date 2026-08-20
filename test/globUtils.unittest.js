@@ -812,6 +812,10 @@ describe("globUtils", () => {
 			expect(createMatcher("**/[!a]b.js")("x/ab.js")).toBe(false);
 			expect(createMatcher("**/[^a]b.js")("x/bb.js")).toBe(true);
 			expect(createMatcher("**/[]].js")("x/].js")).toBe(true);
+			// and stays a member while a group or a brace list is scanned past it
+			expect(createMatcher("**/@([]|]|c).js")("x/|.js")).toBe(true);
+			expect(createMatcher("**/@([]|]|c).js")("x/c.js")).toBe(true);
+			expect(createMatcher("**/{a,[],]b}.js")("x/]b.js")).toBe(true);
 			// `?` is one character, never a separator
 			expect(createMatcher("**/a?c/x.js")("a/c/x.js")).toBe(false);
 			// `!(a)` is "not exactly a", so it matches `ab`
