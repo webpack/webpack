@@ -2790,6 +2790,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// value without a zoom and two under one (measured in headless Chromium:
 			// 3px against 1.5px at `zoom:2`).
 			["a{outline-width:initial}", "a{outline-width:initial}"],
+			["a{text-align:initial}", "a{text-align:start}"],
 			["a{font-size:initial}", "a{font-size:initial}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);

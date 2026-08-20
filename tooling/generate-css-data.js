@@ -2133,7 +2133,9 @@ const collectPositionKeywordAxes = () => {
  * -> that keyword. `initial` computes to the initial value whatever the
  * property, so the two are the same declaration and the shorter one is written.
  * A shorthand states its initial as the list of its longhands rather than a
- * value, which is what keeps one out of this table.
+ * value, which is what keeps one out of this table. An initial `mdn-data` writes
+ * as prose comes from `SUPPLEMENT.initialValueKeywords` and is then judged by
+ * these same tests.
  * @returns {[string, string][]} the entries, sorted by property
  */
 // The keywords that stand for a length: the ones `<line-width>` and
@@ -2151,10 +2153,18 @@ for (const production of ["line-width", "absolute-size"]) {
 const collectInitialValueKeywords = () => {
 	/** @type {[string, string][]} */
 	const out = [];
+	const stated = new Map(SUPPLEMENT.initialValueKeywords);
 	for (const [name, entry] of Object.entries(properties)) {
 		// `mdn-data`'s own types omit the field, which its data does carry.
-		const initial = /** @type {{ initial?: string | string[] }} */ (entry)
+		const written = /** @type {{ initial?: string | string[] }} */ (entry)
 			.initial;
+		const supplemented = stated.get(name);
+		if (supplemented !== undefined && /^[a-z][a-z-]*$/.test(String(written))) {
+			throw new Error(
+				`\`${name}\`'s initial is now a keyword \`mdn-data\` states — drop it from SUPPLEMENT.initialValueKeywords`
+			);
+		}
+		const initial = supplemented === undefined ? written : supplemented;
 		if (typeof initial !== "string") continue;
 		if (!/^[a-z][a-z-]*$/.test(initial)) continue;
 		if (initial.length >= "initial".length) continue;
@@ -2983,7 +2993,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3062,6 +3072,17 @@ const SUPPLEMENT = {
 	// `mdn-data` states each selector's syntax and says nothing about this.
 	// Measured in headless Chromium: `:host` matches, `*:host` does not.
 	featurelessPseudoClasses: ["host", "host-context"],
+	// The initial values `mdn-data` states as prose rather than as the keyword the
+	// spec gives, so nothing reads them off its `initial` field. Only a property
+	// whose initial really is one fixed keyword belongs here: `text-size-adjust`
+	// and `-ms-content-zooming` read differently per user agent, and `all` has no
+	// initial at all. Each is judged by the same tests a derived one is, and the
+	// generator throws once `mdn-data` states the keyword itself.
+	// CSS Text 3 gives `text-align: start`; `mdn-data` carries CSS 2.1's nameless
+	// value as `startOrNamelessValueIfLTRRightIfRTL`. Measured in headless
+	// Chromium under both `dir=ltr` and `dir=rtl`: `initial`, `start` and `unset`
+	// compute alike and paint the glyph at the same offset.
+	initialValueKeywords: [["text-align", "start"]],
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
 	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],

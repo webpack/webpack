@@ -438,3 +438,5 @@
 .initial-length { outline-width: initial; border-top-width: initial; font-size: initial }
 /*! a keyword that is not a length is the value `initial` computes to */
 .initial-keyword { float: initial; display: initial }
+/*! `mdn-data` writes this one's initial as prose, so the keyword is supplemented */
+.initial-prose { text-align: initial }

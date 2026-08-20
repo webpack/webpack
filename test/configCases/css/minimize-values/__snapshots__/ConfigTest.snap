@@ -199,5 +199,6 @@ Array [
   "/*! declined: \`initial\` is resolved before \`zoom\` scales a length, so the
    keyword it would be replaced by is a different computed value under one */.initial-length{outline-width:initial;border-top-width:initial;font-size:initial}",
   "/*! a keyword that is not a length is the value \`initial\` computes to */.initial-keyword{float:none;display:inline}",
+  "/*! \`mdn-data\` writes this one's initial as prose, so the keyword is supplemented */.initial-prose{text-align:start}",
 ]
 `;
