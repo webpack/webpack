@@ -33,6 +33,8 @@ const effectivePattern = (pattern) => {
 	return effective;
 };
 
+const PARENT_SEGMENT_REGEXP = /(?:^|\/)\.\.(?:\/|$)/;
+
 const PATTERNS = [
 	"**/*.css",
 	"*.css",
@@ -695,6 +697,13 @@ describe("globUtils", () => {
 			for (const pattern of PATTERNS) {
 				const match = createMatcher(pattern);
 				for (const testedPath of PATHS) {
+					// `..` is the one construct we read differently, above
+					if (
+						PARENT_SEGMENT_REGEXP.test(pattern) ||
+						PARENT_SEGMENT_REGEXP.test(testedPath)
+					) {
+						continue;
+					}
 					// `\` is a separator here, which is how `path.win32` reads it
 					const platform = testedPath.includes("\\") ? path.win32 : path.posix;
 					const expected = platform.matchesGlob(
@@ -714,14 +723,22 @@ describe("globUtils", () => {
 			expect(mismatches).toEqual([]);
 		});
 
-		it("normalizes `.`, `..` and repeated separators on both sides", () => {
+		it("drops the `.` and empty segments of both sides", () => {
 			expect(createMatcher("/a/b.js")("/a/./b.js")).toBe(true);
 			expect(createMatcher("/a/./b.js")("/a/./b.js")).toBe(true);
-			expect(createMatcher("/a/b.js")("/a/../a/b.js")).toBe(true);
-			expect(createMatcher("**/a/../b.js")("/b.js")).toBe(true);
+			expect(createMatcher("**/*.js")("/a/./b.js")).toBe(true);
 			expect(createMatcher("**/a/b/c.js")("/a//b/c.js")).toBe(true);
-			// `**/..` cannot be resolved away
-			expect(createMatcher("**/../b.js")("/a/b.js")).toBe(false);
+		});
+
+		it("matches a `..` segment literally, where path.matchesGlob resolves it", () => {
+			// `dir/link/../b.js` is `b.js` beside the symlink's target, not
+			// `dir/b.js`, so resolving `..` in a matcher answers about a file the
+			// caller did not name
+			expect(createMatcher("/a/b.js")("/a/../a/b.js")).toBe(false);
+			expect(createMatcher("**/a/../b.js")("/b.js")).toBe(false);
+			expect(path.posix.matchesGlob("/a/../a/b.js", "/a/b.js")).toBe(true);
+			// what the pattern says is still what it matches
+			expect(createMatcher("/a/../a/b.js")("/a/../a/b.js")).toBe(true);
 		});
 
 		it("supports extended globs", () => {
