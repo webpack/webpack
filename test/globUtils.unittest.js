@@ -35,9 +35,20 @@ const effectivePattern = (pattern) => {
 
 const PARENT_SEGMENT_REGEXP = /(?:^|\/)\.\.(?:\/|$)/;
 
-// `path.matchesGlob` takes its case sensitivity from the host — it ignores case
-// on macOS and Windows — so every pattern and path below stays lowercase and the
-// comparison answers the same everywhere. Case is covered on its own above.
+// Where this matcher stands when the glob tools disagree, and why:
+//   `..`     matched literally — resolving it names another file through a
+//            symlink, where `dir/link/../b` is the `b` beside the link's target
+//   `.` `//` collapsed with a trailing `/`, since all three name the same file
+//   `[!a]`   a negated class, as POSIX reads it — picomatch takes `!` for a
+//            member unless asked for `{ posix: true }`, which fast-glob does
+//   `!(a)`   "not exactly a", so `ab` matches — picomatch and tiny-glob test a
+//            prefix instead and reject it
+//   `*`      never an empty segment, and `a/**` is not `a` itself
+//   case     always sensitive — `path.matchesGlob` reads it off the host, so it
+//            ignores case on macOS and Windows
+//
+// The corpus below therefore stays lowercase and skips `..`, so that comparing
+// it against `path.matchesGlob` answers the same on every host.
 
 const PATTERNS = [
 	"**/*.css",
