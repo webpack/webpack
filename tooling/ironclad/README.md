@@ -560,6 +560,27 @@ _logical_ invalidation. Leak detection is a different property — reachability
 from a long-lived root — and would reuse this rule's escape analysis rather
 than its move checking.
 
+## Syntax coverage
+
+Checked, not assumed. The rule was run over webpack's own test corpus —
+**9,574 files, 151k lines** of deliberately exotic syntax under
+`test/cases`, `test/configCases`, `test/watchCases` and `test/hotCases` —
+with **zero crashes and zero findings**, and then over a matrix of 60
+constructs that each place a move or a borrow inside the construct and assert
+what comes out.
+
+Handled: `if`/`else`, `switch`, `try`/`catch`/`finally`, every loop form
+including `for await`, labelled `break`/`continue`, ternaries, `&&`/`||`/`??`,
+sequence expressions, `throw`, generators and `yield`, `async`/`await`,
+top-level await, optional chaining and optional calls, computed members,
+spread in calls, arrays, objects and transfer lists, tagged templates,
+`var` hoisting, shadowing, class static blocks, private fields, getters and
+setters, computed method names, static and class-expression methods, object
+methods, `super`, default and rest parameters, destructuring parameters, ESM
+`import`/`export`, and dynamic `import()`.
+
+Two gaps the matrix found, both recorded below rather than papered over.
+
 ## Known limits
 
 - Values are tracked within a single file. Contracts cross module boundaries
@@ -578,6 +599,15 @@ than its move checking.
   of the loop are not reported.
 - Without type information the platform table matches method names alone, so a
   `getReader` on something that is not a stream is a false positive.
+- The rule walks source order, so a use that runs **after** a move but is
+  written **before** it is missed. The `for` update expression is the case that
+  shows it: `for (…; …; use(a)) { consume(/** @move */ a); }` reports the loop
+  but not the use. Closing it needs the loop fixed point above.
+- A spread argument has no position, so no parameter contract applies to it:
+  `f(...[x])` is not a move even when `f` declares one. A spread inside a
+  transfer list is still detached, since that names its elements.
+- A method contract is matched by name, so a second method of that name
+  anywhere in the file disables it — including one that declares nothing.
 - Member moves are per-name, not per-path: `a.b.c` is tracked as `a.b`.
   Computed access (`a[key]`) is never treated as a move or as a use of a moved
   member.

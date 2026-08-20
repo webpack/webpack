@@ -424,6 +424,34 @@ describe("ironclad/ownership", () => {
 			// At the top level the resource lives as long as the program, which is
 			// the `'static` case rather than a leak.
 			"setInterval(() => poll(), 1000);",
+			// A second declaration of the same method name makes the name stop
+			// picking one contract out, whether or not it declares one itself.
+			[
+				"const one = {",
+				"\t/** @move a */",
+				"\ttake(a) {}",
+				"};",
+				"const two = { take(a) {} };",
+				"const x = o();",
+				"one.take(x);",
+				"use(x);"
+			].join("\n"),
+			// The other arm of a ternary never ran the move.
+			"const a = o();\ncond ? consume(/** @move */ a) : use(a);",
+			// A computed method name is not the platform's `getReader`.
+			[
+				"const stream = response.body;",
+				"const reader = stream['getReader']();",
+				"stream.cancel();"
+			].join("\n"),
+			// A spread argument has no position, so no contract applies to it.
+			[
+				"/** @move a */",
+				"function f(a) {}",
+				"const x = o();",
+				"f(...[x]);",
+				"use(x);"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -857,6 +885,69 @@ describe("ironclad/ownership", () => {
 					"}"
 				].join("\n"),
 				errors: [{ messageId: "resourceNeverReleased" }]
+			},
+			{
+				// A short-circuited move still moved on the path that ran.
+				code: [
+					"const a = o();",
+					"cond && consume(/** @move */ a);",
+					"use(a);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// Generators have code paths like any other function.
+				code: [
+					"function* g() {",
+					"\tconst a = o();",
+					"\tyield consume(/** @move */ a);",
+					"\tuse(a);",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// `for await` is a loop, so the move repeats.
+				code: [
+					"async function f(source) {",
+					"\tconst a = o();",
+					"\tfor await (const chunk of source) {",
+					"\t\tconsume(/** @move */ a);",
+					"\t}",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "moveInLoop" }]
+			},
+			{
+				// A class static block is a scope of its own.
+				code: [
+					"class C {",
+					"\tstatic {",
+					"\t\tconst a = o();",
+					"\t\tconsume(/** @move */ a);",
+					"\t\tuse(a);",
+					"\t}",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// A spread inside the transfer list still detaches what it names.
+				code: [
+					"const buffer = new ArrayBuffer(8);",
+					"worker.postMessage(message, [...others, buffer]);",
+					"use(buffer.byteLength);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// An optional call still locks the stream.
+				code: [
+					"const stream = response.body;",
+					"const reader = stream?.getReader();",
+					"stream.cancel();"
+				].join("\n"),
+				errors: [{ messageId: "useWhileMutablyBorrowed" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.

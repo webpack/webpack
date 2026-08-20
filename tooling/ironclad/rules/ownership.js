@@ -1551,6 +1551,23 @@ const rule = {
 			for (const node of parents.keys()) {
 				if (!FUNCTION_TYPES.has(node.type)) continue;
 				const contract = contractOf(node);
+				const owner = parentOf(node);
+				// Every method of that name counts, contract or not: a second
+				// declaration means the name no longer picks one out.
+				if (
+					owner &&
+					(owner.type === "MethodDefinition" ||
+						owner.type === "Property" ||
+						owner.type === "PropertyDefinition") &&
+					!owner.computed &&
+					owner.key.type === "Identifier"
+				) {
+					const name = owner.key.name;
+					contractByMethodName.set(
+						name,
+						contractByMethodName.has(name) ? null : contract
+					);
+				}
 				if (!contract) continue;
 				const id =
 					node.type === "FunctionDeclaration" ||
@@ -1589,23 +1606,6 @@ const rule = {
 					if (declared.length === 1) {
 						contractByFunction.set(declared[0], contract);
 					}
-				}
-				// A method is reached through a receiver whose declaration this rule
-				// cannot see, so it is matched by name — and only when the name is
-				// unambiguous within the file.
-				if (
-					holder &&
-					(holder.type === "MethodDefinition" ||
-						holder.type === "Property" ||
-						holder.type === "PropertyDefinition") &&
-					!holder.computed &&
-					holder.key.type === "Identifier"
-				) {
-					const name = holder.key.name;
-					contractByMethodName.set(
-						name,
-						contractByMethodName.has(name) ? null : contract
-					);
 				}
 			}
 		};
