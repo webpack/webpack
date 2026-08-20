@@ -59,5 +59,16 @@ module.exports = [
 	{
 		...base(3, "defer"),
 		experiments: { outputModule: true, deferImport: true, topLevelAwait: true }
+	},
+	// A chunk carrying css is loaded by more than the javascript handler, so the baked
+	// import has to keep dispatching the rest of them. Neutral platform so it runs here.
+	{
+		...base(4, "theme"),
+		target: ["web", "node"],
+		experiments: { outputModule: true, css: true },
+		output: {
+			...base(4, "theme").output,
+			cssChunkFilename: "theme-[name].css"
+		}
 	}
 ];
