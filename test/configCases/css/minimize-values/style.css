@@ -354,6 +354,11 @@
 .t146 { box-shadow: 0px 0px 0px 1px red inset, 0px 0em 0px 0px blue inset }
 /*! webpack: declined: `0%` is a percentage, which a shadow's slots do not take */
 .t147 { box-shadow: 1px 1px 0% 0% red }
+/*! webpack: declined: writing the character a hex escape names is value-identical,
+   but it trades a repetitive ASCII alphabet for 3-byte UTF-8 runs — 6420 raw bytes
+   saved against 593 gzip bytes lost over 19 framework stylesheets */
+.t148 { content: "\f00d" }
+.t149 { content: "\2014" }
 /*! gradient: the last stop's position is where CSS Images 3's fix-up already puts it */
 .t72 { background-image: linear-gradient(red, blue 100%) }
 /*! ...and a conic gradient's own turn, however it is spelled */
