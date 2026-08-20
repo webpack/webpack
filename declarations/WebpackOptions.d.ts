@@ -345,6 +345,14 @@ export type RuleSetCondition =
  */
 export type RuleSetConditions = RuleSetCondition[];
 /**
+ * A glob pattern matched against a path, using `/` as path separator on every OS; a `!` prefix excludes what it matches.
+ */
+export type RuleSetGlob = string;
+/**
+ * A list of glob patterns.
+ */
+export type RuleSetGlobs = RuleSetGlob[];
+/**
  * One or multiple rule conditions matching an absolute path.
  */
 export type RuleSetConditionOrConditionsAbsolute =
@@ -1958,6 +1966,11 @@ export interface RuleSetRule {
 		[k: string]: any;
 	};
 	/**
+	 * Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.
+	 * @since 5.110.0
+	 */
+	glob?: RuleSetGlob | RuleSetGlobs;
+	/**
 	 * Shortcut for resource.include.
 	 */
 	include?: RuleSetConditionOrConditionsAbsolute;
@@ -2051,13 +2064,18 @@ export interface RuleSetRule {
 	};
 }
 /**
- * Logic operators used in a condition matcher.
+ * Logic operators and glob patterns used in a condition matcher.
  */
 export interface RuleSetLogicalConditions {
 	/**
 	 * Logical AND.
 	 */
 	and?: RuleSetConditions;
+	/**
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * @since 5.110.0
+	 */
+	glob?: RuleSetGlob | RuleSetGlobs;
 	/**
 	 * Logical NOT.
 	 */
@@ -2068,13 +2086,18 @@ export interface RuleSetLogicalConditions {
 	or?: RuleSetConditions;
 }
 /**
- * Logic operators used in a condition matcher.
+ * Logic operators and glob patterns used in a condition matcher.
  */
 export interface RuleSetLogicalConditionsAbsolute {
 	/**
 	 * Logical AND.
 	 */
 	and?: RuleSetConditionsAbsolute;
+	/**
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * @since 5.110.0
+	 */
+	glob?: RuleSetGlob | RuleSetGlobs;
 	/**
 	 * Logical NOT.
 	 */

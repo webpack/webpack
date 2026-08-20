@@ -30,7 +30,6 @@ const stringDecoder = require("string_decoder");
 const sys = require("sys");
 const timers = require("timers");
 const tls = require("tls");
-const traceEvents = require("trace_events");
 const tty = require("tty");
 const url = require("url");
 const util = require("util");
@@ -42,6 +41,9 @@ const stream2 = require("./stream");
 // diagnostics_channel was backported to Node.js v14.17.0 and ships in v15.1.0+
 const diagnosticsChannel =
 	NODE_VERSION >= 14 ? require("diagnostics_channel") : undefined;
+
+// Unavailable off the main thread, on Node as well as Bun
+const traceEvents = TRACE_EVENTS ? require("trace_events") : undefined;
 
 // It's hidden on Node <=16 unless `--experimental-wasi-unstable-preview1` is provided
 const wasi = NODE_VERSION >= 18 ? require("wasi") : undefined;
@@ -319,9 +321,12 @@ it("should create server (tls)", () => {
 	expect(typeof tls.createServer).toBe("function");
 });
 
-it("should get traced objects (trace_events)", () => {
-	expect(typeof traceEvents.getEnabledCategories).toBe("function");
-});
+itIfAvailable(traceEvents)(
+	"should get traced objects (trace_events)",
+	(traceEvents) => {
+		expect(typeof traceEvents.getEnabledCategories).toBe("function");
+	}
+);
 
 it("should check if terminal (tty)", () => {
 	expect(typeof tty.isatty).toBe("function");

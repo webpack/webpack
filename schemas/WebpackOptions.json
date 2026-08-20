@@ -6127,6 +6127,18 @@
         ]
       }
     },
+    "RuleSetGlob": {
+      "description": "A glob pattern matched against a path, using `/` as path separator on every OS; a `!` prefix excludes what it matches.",
+      "type": "string",
+      "minLength": 1
+    },
+    "RuleSetGlobs": {
+      "description": "A list of glob patterns.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RuleSetGlob"
+      }
+    },
     "RuleSetLoader": {
       "description": "A loader request.",
       "type": "string",
@@ -6144,7 +6156,7 @@
       ]
     },
     "RuleSetLogicalConditions": {
-      "description": "Logic operators used in a condition matcher.",
+      "description": "Logic operators and glob patterns used in a condition matcher.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -6155,6 +6167,18 @@
               "$ref": "#/definitions/RuleSetConditions"
             }
           ]
+        },
+        "glob": {
+          "description": "Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetGlob"
+            },
+            {
+              "$ref": "#/definitions/RuleSetGlobs"
+            }
+          ],
+          "added": "5.110.0"
         },
         "not": {
           "description": "Logical NOT.",
@@ -6175,7 +6199,7 @@
       }
     },
     "RuleSetLogicalConditionsAbsolute": {
-      "description": "Logic operators used in a condition matcher.",
+      "description": "Logic operators and glob patterns used in a condition matcher.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -6186,6 +6210,18 @@
               "$ref": "#/definitions/RuleSetConditionsAbsolute"
             }
           ]
+        },
+        "glob": {
+          "description": "Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetGlob"
+            },
+            {
+              "$ref": "#/definitions/RuleSetGlobs"
+            }
+          ],
+          "added": "5.110.0"
         },
         "not": {
           "description": "Logical NOT.",
@@ -6268,6 +6304,18 @@
         "generator": {
           "description": "The options for the module generator.",
           "type": "object"
+        },
+        "glob": {
+          "description": "Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetGlob"
+            },
+            {
+              "$ref": "#/definitions/RuleSetGlobs"
+            }
+          ],
+          "added": "5.110.0"
         },
         "include": {
           "description": "Shortcut for resource.include.",

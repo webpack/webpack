@@ -24530,13 +24530,19 @@ type RuleSetConditionOrConditions =
 type RuleSetLoaderOptions = string | { [index: string]: any };
 
 /**
- * Logic operators used in a condition matcher.
+ * Logic operators and glob patterns used in a condition matcher.
  */
 declare interface RuleSetLogicalConditions {
 	/**
 	 * Logical AND.
 	 */
 	and?: RuleSetCondition[];
+
+	/**
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * @since 5.110.0
+	 */
+	glob?: string | string[];
 
 	/**
 	 * Logical NOT.
@@ -24555,13 +24561,19 @@ declare interface RuleSetLogicalConditions {
 }
 
 /**
- * Logic operators used in a condition matcher.
+ * Logic operators and glob patterns used in a condition matcher.
  */
 declare interface RuleSetLogicalConditionsAbsolute {
 	/**
 	 * Logical AND.
 	 */
 	and?: RuleSetConditionAbsolute[];
+
+	/**
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * @since 5.110.0
+	 */
+	glob?: string | string[];
 
 	/**
 	 * Logical NOT.
@@ -24648,6 +24660,12 @@ declare interface RuleSetRule {
 	 * The options for the module generator.
 	 */
 	generator?: { [index: string]: any };
+
+	/**
+	 * Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.
+	 * @since 5.110.0
+	 */
+	glob?: string | string[];
 
 	/**
 	 * Shortcut for resource.include.
