@@ -4609,6 +4609,17 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		);
 	});
 
+	it("materializes an implied tag whose content opens with whitespace", () => {
+		// Before `<body>` has started the insertion modes drop leading whitespace,
+		// so dropping the tag too would lose the text node re-parsing must keep.
+		expect(
+			new SourceProcessor().process("<!doctype html><body> <p>x", {
+				mode: "minify",
+				removeImpliedTags: true
+			}).code
+		).toBe("<!doctype html><body> <p>x");
+	});
+
 	it("keeps a <html> that carries an attribute", () => {
 		expect(
 			new SourceProcessor().process("<html lang=en><body>x", { mode: "minify" })
