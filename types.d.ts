@@ -25697,6 +25697,20 @@ declare abstract class RuntimeTemplate {
 	}): string;
 
 	/**
+	 * For ESM module output, load a single statically-named chunk through the
+	 * `analyzableChunkImport` helper — a literal `import("./chunk.js")` other bundlers
+	 * and webpack itself can follow, wrapped to keep `ensureChunk` timing and deduplication.
+	 * Returns `null` to fall back to the runtime `ensureChunk` form.
+	 */
+	analyzableChunkImport(
+		chunk: Chunk,
+		comment: string,
+		runtimeRequirements: Set<string>,
+		originModule: undefined | Module,
+		chunkGraph: ChunkGraph
+	): null | string;
+
+	/**
 	 * Static `new URL(<file>, import.meta.url)` for the binary emitted for an async wasm
 	 * module. Only called when `supportsAnalyzable("wasm")` holds.
 	 */
