@@ -1,6 +1,6 @@
 "use strict";
 
-const NAMES = ["auto", "hashed", "override"];
+const NAMES = ["auto", "hashed", "override", "hmr"];
 
 module.exports = {
 	findBundle(i) {

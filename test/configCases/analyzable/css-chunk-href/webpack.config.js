@@ -51,5 +51,16 @@ module.exports = [
 	},
 	// Reassigned where the chunk runs, so no literal can name where the stylesheet is
 	// and the runtime form has to stay.
-	base(2, "override", false)
+	base(2, "override", false),
+	// The hot handler re-loads by whatever id an update names, so a runtime carrying it
+	// keeps the runtime form everywhere rather than a map that knows only today's ids.
+	{
+		...base(3, "hmr", false),
+		plugins: [
+			.../** @type {NonNullable<import("../../../../").Configuration["plugins"]>} */ (
+				base(3, "hmr", false).plugins
+			),
+			new webpack.HotModuleReplacementPlugin()
+		]
+	}
 ];
