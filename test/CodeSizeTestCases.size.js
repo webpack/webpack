@@ -533,10 +533,14 @@ const compareMetrics = (before, after) => {
 		});
 	}
 	// Bytes first, then share of the asset: a fixed addition moves every bundle by
-	// the same amount, and the small ones are the ones it actually costs.
+	// the same amount, and the small ones are the ones it actually costs. Ranked
+	// on whichever of raw and gzip moved further, so the row budget cannot drop a
+	// re-encoding that barely moved raw and cost real bytes on the wire.
+	const moved = (/** @type {Change} */ change) =>
+		Math.max(Math.abs(change.delta.raw), Math.abs(change.delta.gzip));
 	return changes.sort(
 		(a, b) =>
-			Math.abs(b.delta.raw) - Math.abs(a.delta.raw) ||
+			moved(b) - moved(a) ||
 			Math.abs(b.delta.raw / (b.before.raw || 1)) -
 				Math.abs(a.delta.raw / (a.before.raw || 1))
 	);
@@ -720,8 +724,15 @@ const formatChangedAssets = (changes) => {
 		const direction =
 			change.delta.raw ||
 			COMPRESSED.reduce((sum, metric) => sum + change.delta[metric], 0);
+		// Bytes as well as the percentage: on a small asset a real move rounds to
+		// `0.00%`, and a percentage is not a thing two rows can be added up over.
 		const compressed = COMPRESSED.map((metric) =>
-			formatPercent(change.before[metric], change.after[metric])
+			change.delta[metric] === 0
+				? "—"
+				: `${formatDelta(change.delta[metric])} (${formatPercent(
+						change.before[metric],
+						change.after[metric]
+					)})`
 		).join(" | ");
 		return `| ${changeMarker(direction)} | \`${change.name}\` | ${formatBytes(
 			change.before.raw
@@ -732,7 +743,9 @@ const formatChangedAssets = (changes) => {
 
 	return formatSection({
 		summary: `${changes.length} asset(s) changed size${
-			changes.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw change` : ""
+			changes.length > MAX_ROWS
+				? `, biggest ${MAX_ROWS} by raw or gzip change`
+				: ""
 		}`,
 		header: [
 			`| | Asset | Before | After | Change | ${COMPRESSED.map(
@@ -965,7 +978,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 				caseMetrics(report),
 				sameMetrics
 			),
-			change: splitDelta(caseMetrics(baseline), caseMetrics(report), "raw")
+			change: splitDelta(caseMetrics(baseline), caseMetrics(report), "raw"),
+			gzip: splitDelta(caseMetrics(baseline), caseMetrics(report), "gzip")
 		},
 		{
 			label: "Assets",
@@ -974,7 +988,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 				assetMetrics(report),
 				sameMetrics
 			),
-			change: splitDelta(assetMetrics(baseline), assetMetrics(report), "raw")
+			change: splitDelta(assetMetrics(baseline), assetMetrics(report), "raw"),
+			gzip: splitDelta(assetMetrics(baseline), assetMetrics(report), "gzip")
 		},
 		{
 			// A runtime carries no bytes of its own — its modules land in the assets
@@ -985,7 +1000,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 				runtimeModules(report),
 				(a, b) => a.length === b.length && a.every((name, i) => name === b[i])
 			),
-			change: { changed: 0, introduced: 0 }
+			change: { changed: 0, introduced: 0 },
+			gzip: { changed: 0, introduced: 0 }
 		}
 	];
 	const short = (/** @type {Report} */ report) =>
@@ -1007,23 +1023,29 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		)}`,
 		"",
 		...(drift ? [drift, ""] : []),
-		"| | Changed | New | Deleted | Unchanged | Raw change | Raw new/gone |",
-		"| :-- | --: | --: | --: | --: | --: | --: |"
+		"| | Changed | New | Deleted | Unchanged | Gzip change | Raw change | Gzip new/gone | Raw new/gone |",
+		"| :-- | --: | --: | --: | --: | --: | --: | --: | --: |"
 	);
-	for (const { label, counts, change } of rows) {
+	for (const { label, counts, change, gzip } of rows) {
+		const delta = (
+			/** @type {SplitDelta} */ split,
+			/** @type {keyof SplitDelta} */ key
+		) =>
+			split[key] === 0
+				? "—"
+				: `${key === "changed" ? `${changeMarker(split[key])} ` : ""}${formatDelta(split[key])}`;
 		lines.push(
 			`| ${label} | ${counts.changed} | ${counts.added} | ${counts.removed} | ${
 				counts.unchanged
-			} | ${
-				change.changed === 0
-					? "—"
-					: `${changeMarker(change.changed)} ${formatDelta(change.changed)}`
-			} | ${change.introduced === 0 ? "—" : formatDelta(change.introduced)} |`
+			} | ${delta(gzip, "changed")} | ${delta(change, "changed")} | ${delta(
+				gzip,
+				"introduced"
+			)} | ${delta(change, "introduced")} |`
 		);
 	}
 	lines.push(
 		"",
-		"`Raw change` is what this pull request moved in assets both runs emit. Bytes an added or deleted case brings with it are counted apart, under `Raw new/gone`.",
+		"`Gzip change` decides — it is what a user downloads, and a re-encoding can cut raw bytes while costing wire bytes. `Raw change` is the tiebreak: it is what the generator wrote, so it is what has to be decompressed and parsed. Both are over assets both runs emit; bytes an added or deleted case brings with it are counted apart, under `new/gone`. Brotli and zstd are per asset in the table below.",
 		""
 	);
 
