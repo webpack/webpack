@@ -21,7 +21,6 @@ updates:
         update-types:
           - "major"
         exclude-patterns:
-          - "eslint-scope"
           - "rimraf"
   - package-ecosystem: "github-actions"
     directory: "/"
