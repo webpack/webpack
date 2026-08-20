@@ -2708,6 +2708,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("rgba(255,0,0,.2)")).toBe("#f003");
 			expect(value("rgba(0,0,0,.5)")).toBe("#00000080");
 		});
+
+		it("drops an authored alpha that is fully opaque", () => {
+			// `ff` is no alpha at all, so the color is spelled as an opaque one —
+			// which is shorter and asks nothing of the target's hex-alpha support.
+			expect(value("#ffffffff")).toBe("#fff");
+			expect(value("#ffff")).toBe("#fff");
+			expect(value("#FFFFFFFF")).toBe("#fff");
+			expect(value("#000000ff")).toBe("#000");
+			expect(value("#abcdefff")).toBe("#abcdef");
+			// All the way to the shortest name, as any other opaque color is.
+			expect(value("#ff0000ff")).toBe("red");
+			// Even where the target reads no hex alpha, this form needing none.
+			expect(value("#ffffffff", { cssColorHexAlpha: false })).toBe("#fff");
+			// A real alpha still collapses only as far as it may.
+			expect(value("#11223344")).toBe("#1234");
+			expect(value("#ffffffaa")).toBe("#fffa");
+			expect(value("#fff0")).toBe("#fff0");
+		});
 	});
 
 	describe("rounding and unit conversion", () => {
