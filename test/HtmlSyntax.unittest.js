@@ -3634,6 +3634,21 @@ describe("parseHtml", () => {
 			expect(inner.map((n) => n.tagName)).toEqual(shape);
 		});
 
+		// `attachShadow()` is defined on HTML elements alone. An integration point
+		// runs HTML rules with a foreign current node, so it is the one way a
+		// `<template shadowrootmode>` is written against a host that cannot take it.
+		it("keeps a shadow-root template outside the HTML namespace as content", () => {
+			const nodes = body(
+				"<a href=#x><svg><foreignObject><template shadowrootmode=open></template></foreignObject></svg></a>"
+			);
+			const shape = (/** @type {MatElement} */ node) =>
+				node.tagName +
+				(node.children && node.children.length > 0
+					? `>${/** @type {MatElement[]} */ (node.children).map(shape).join("")}`
+					: "");
+			expect(nodes.map(shape)).toEqual(["a>svg>foreignObject>template"]);
+		});
+
 		it("should apply Noah's Ark limit of three formatting elements", () => {
 			const nodes = body("<b><b><b><b></b></b></b></b>");
 			expect(nodes).toHaveLength(1);

@@ -26,6 +26,8 @@ module.exports = {
 		// One inside a string is not a `}` in the list, so the value still minifies
 		// — the repeated declaration after it goes.
 		expect(html).toContain("style='content:\"}\";color:red'>");
+		// A value ending inside a comment is left as written for the same reason.
+		expect(html).toContain('style="color:red;/* never closed">');
 
 		// The engine fills `<selectedcontent>` from the selected option, so writing
 		// the mirror back would have it mirrored a second time.
