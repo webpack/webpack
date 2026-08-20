@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `performance.all` to enable every performance check that is not set individually.
+Add `performance.all` to enable every check that is not set individually.

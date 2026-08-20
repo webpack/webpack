@@ -10,6 +10,7 @@ module.exports = {
 	},
 	resolve: {
 		alias: {
+			"@alias/used": path.resolve(__dirname, "real.js"),
 			"@alias/never": path.resolve(__dirname, "real.js")
 		}
 	}
