@@ -25525,10 +25525,8 @@ declare abstract class RuntimeTemplate {
 	}): string;
 
 	/**
-	 * The annotation for a module instantiation, carrying what webpack knows about
-	 * the module's side effects on to whoever consumes the emitted bundle. Only ever
-	 * write it in front of a call the emitted statement itself terminates: a minifier
-	 * binds it to the outermost call, so `f(id)(x)` would drop `(x)` along with it.
+	 * A module instantiation's side-effect annotation. Write it only where the
+	 * statement ends the call: a minifier reads `f(id)(x)` as one and drops it.
 	 */
 	moduleSideEffectsAnnotation(module: Module, moduleGraph: ModuleGraph): string;
 
