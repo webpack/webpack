@@ -15,6 +15,6 @@ module.exports = {
 		expect(svg).toContain("<p ");
 		expect(svg).toContain("</p><p ");
 		expect(svg).toContain("tom &amp; jerry, 1 &lt; 2");
-		expect(svg).toContain("<![CDATA[if (0 < 1) {}]]>");
+		expect(svg).toContain("<![CDATA[window.f=function(n,f){return n<f};]]>");
 	}
 };
