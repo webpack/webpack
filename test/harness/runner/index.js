@@ -22,8 +22,6 @@ const rewriteImportMeta = require("./rewriteImportMeta");
 
 const [major] = getNodeVersion();
 
-/** @import { ESModuleStatus } from "./RunnerHelpers" */
-
 /**
  * @typedef {object} TestMeta
  * @property {string} category
