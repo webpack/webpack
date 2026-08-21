@@ -7690,7 +7690,12 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// drop happens. MathML has a `textarea` of its own and keeps the newline.
 		["a foreign textarea's leading newline", "<math><textarea>\ny"],
 		["an html textarea's leading newline", "<textarea>\ny"],
-		["a pre's leading newline", "<pre>\ny"]
+		["a pre's leading newline", "<pre>\ny"],
+		// §4.13 pairs the `<colgroup>` tags: its start tag may go only when the
+		// group before it kept its end tag, and its end tag only when what follows
+		// closes it — which a `<template>` does not, the head rules taking it.
+		["two colgroups a col each", "<table><col>y<col>"],
+		["a template behind a colgroup", "<table><col></br><template>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
