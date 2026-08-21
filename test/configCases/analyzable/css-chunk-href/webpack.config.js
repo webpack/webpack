@@ -1,8 +1,7 @@
 "use strict";
 
-// A stylesheet is loaded by a `<link href>` the runtime builds from the chunk id. Under
-// module output the file is known, so the href is written out — unless something about
-// the public path can only be known where the chunk runs.
+// Under module output a stylesheet's href is written out, unless something about the
+// public path is only known where the chunk runs.
 
 const webpack = require("../../../../");
 

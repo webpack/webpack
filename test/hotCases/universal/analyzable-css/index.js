@@ -2,9 +2,8 @@ import update from "../../update.esm";
 
 import.meta.webpackHot.accept("./style.module.css");
 
-// A runtime carrying the hot handler keeps the runtime url form — the `css-chunk-href`
-// config case pins that in the emitted source. What this drives is that an update still
-// applies through it, with the stylesheet loaded on demand under module output.
+// `css-chunk-href` pins the emitted form; this drives that an update still applies
+// through it, with the stylesheet loaded on demand under module output.
 it("should apply a stylesheet update under module output", (done) => {
 	import("./style.module.css")
 		.then(() => {

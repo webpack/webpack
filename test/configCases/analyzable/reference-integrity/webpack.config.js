@@ -1,8 +1,7 @@
 "use strict";
 
-// Every kind of reference analyzable output writes out — a chunk `import()`, a lazy
-// context, a stylesheet, an asset url, a worker, a prefetched chunk and a wasm binary —
-// in one build, so a name that stops resolving is caught wherever it regressed.
+// Every kind of reference analyzable output writes out, in one build, so a name that
+// stops resolving is caught wherever it regressed.
 
 const webpack = require("../../../../");
 

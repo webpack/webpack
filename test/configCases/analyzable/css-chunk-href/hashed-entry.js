@@ -24,4 +24,5 @@ it("should fill the reserved name in with the hash the file was emitted under", 
 	expect(baked).toHaveLength(1);
 	expect(emitted).toContain(baked[0].slice('new URL("./'.length, -1));
 	expect(bundle).not.toContain(`${"__webpack_require__"}.k = `);
+	expect(bundle).not.toContain(`${"__webpack_require__"}.p = `);
 });

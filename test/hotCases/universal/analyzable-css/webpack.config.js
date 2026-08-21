@@ -1,8 +1,7 @@
 "use strict";
 
-// A runtime carrying the hot handler keeps the runtime url form: the hot path re-loads
-// by whatever chunk id an update names, and a map written at build time knows only the
-// stylesheets that existed then. What ships has no hot handler, and does bake.
+// The hot path re-loads by whatever chunk id an update names, which a map written at
+// build time cannot answer for, so a runtime carrying it keeps the runtime url form.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

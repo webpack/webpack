@@ -56,8 +56,9 @@ it("should leave no reserved name behind and call nothing it did not ship", () =
 		expect(text).not.toContain(token("@@webpack", "AnalyzableChunk"));
 		expect(text).not.toContain(token("@@webpack", "FullHash"));
 
-		// A chunk reads the runtime the entry defines, so only the entry is asked.
-		if (path.relative(root, file).includes(path.sep)) continue;
+		// Only the entry carries the runtime; a chunk reads what it defined. Named
+		// rather than inferred from depth, since one config emits its entry nested.
+		if (path.basename(file) !== `${__NAME__}.mjs`) continue;
 		for (const helper of ["u", "k", "p", "b"]) {
 			const used =
 				text.includes(token("__webpack_require__.", helper, "(")) ||
