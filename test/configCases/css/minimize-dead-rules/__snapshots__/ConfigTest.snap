@@ -7,7 +7,7 @@ Array [
   "/*! copies in two blocks sharing a condition */.between3{color:teal}@media print{.t03{color:red}}",
   "/*! the same selector under a different condition is a different rule */@media screen{.t04{color:red}}@media print{.t04{color:red}}",
   "/*! the same selector with a different block is not a copy */.t05{color:red}.between5{color:teal}.t05{color:blue}",
-  "/*! three copies leave the last */.m1,.m2{color:teal}.t06{color:red}",
+  "/*! three copies leave the last */.m1{color:teal}.m2{color:teal}.t06{color:red}",
   "/*! a block a cut empties goes, as an empty one written here would */.between7{color:teal}@media speech{.t07{color:red}}",
   "/*! a keyframe repeated at one offset is left to the printer */@keyframes t08{0%{opacity:0}to{opacity:1}}",
 ]
