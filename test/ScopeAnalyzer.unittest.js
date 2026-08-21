@@ -115,7 +115,9 @@ const parse = (code, sourceType = "module") =>
  * @returns {Analysis} the analysis, plus the harness views over it
  */
 const analyzeAst = (ast) => {
-	const analysis = analyzeScope(ast);
+	// the cases assert on references at every depth, which the analyser only
+	// collects on request — webpack itself reads back the module scope alone
+	const analysis = analyzeScope(ast, true);
 
 	/** @type {Scope[]} */
 	const scopes = [];
@@ -3214,6 +3216,72 @@ describe("ScopeAnalyzer", () => {
 				analysis.moduleScope.variables[0]
 			);
 			expect(freeNames(analysis)).toEqual(["bar"]);
+		});
+	});
+
+	describe("what a binding collects by default", () => {
+		/**
+		 * @param {import("../lib/javascript/ScopeAnalyzer").Scope} scope a scope
+		 * @returns {Record<string, number>} how many references each binding kept
+		 */
+		const collected = (scope) => {
+			/** @type {Record<string, number>} */
+			const result = {};
+			for (const variable of scope.variables) {
+				result[variable.name] = variable.references.length;
+			}
+			return result;
+		};
+
+		it("collects the references of a module-scope binding", () => {
+			const { moduleScope } = analyzeScope(
+				parse(`
+					let a = 0;
+					function f() { return a + a; }
+				`)
+			);
+
+			expect(collected(moduleScope)).toEqual({ a: 3, f: 0 });
+		});
+
+		it("collects the references of a direct child of the module scope", () => {
+			// the class name is bound twice, and `getAllReferences` reads the
+			// inner binding through `moduleScope.childScopes`
+			const { moduleScope } = analyzeScope(
+				parse(`
+					class C { m() { return C; } }
+					C;
+				`)
+			);
+			const classScope = moduleScope.childScopes[0];
+
+			expect(collected(moduleScope)).toEqual({ C: 1 });
+			expect(collected(classScope)).toEqual({ C: 1 });
+		});
+
+		const nested = `
+			function f() {
+				function g() {
+					let b = 0;
+					return b + b;
+				}
+				return g;
+			}
+		`;
+
+		it("resolves a deeper reference without collecting it", () => {
+			const analysis = analyzeScope(parse(nested));
+			const inner = analysis.moduleScope.childScopes[0].childScopes[0];
+
+			expect(collected(inner)).toEqual({ arguments: 0, b: 0 });
+			expect(analysis.unresolvedReferences).toHaveLength(0);
+		});
+
+		it("collects every reference when asked to", () => {
+			const analysis = analyzeScope(parse(nested), true);
+			const inner = analysis.moduleScope.childScopes[0].childScopes[0];
+
+			expect(collected(inner)).toEqual({ arguments: 0, b: 3 });
 		});
 	});
 });

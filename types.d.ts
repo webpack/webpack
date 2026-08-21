@@ -25728,7 +25728,7 @@ declare interface RuntimeValueOptions {
  * resolution loop stay monomorphic.
  */
 declare abstract class Scope {
-	type: string;
+	type: ScopeType;
 	block: NodeEstreeIndex;
 	upper: null | Scope;
 	childScopes: Scope[];
@@ -25744,6 +25744,13 @@ declare abstract class Scope {
 	 * `isHiddenBodyBinding`.
 	 */
 	paramBoundary: number;
+
+	/**
+	 * Whether this scope's bindings collect their references. Concatenation
+	 * asks only the module scope and its direct children, so a deeper
+	 * binding keeps no reference list at all — see `_resolve`.
+	 */
+	recorded: boolean;
 }
 
 /**
@@ -25761,6 +25768,19 @@ declare interface ScopeInfo {
 	isAsmJs: boolean;
 	terminated?: 1 | 2;
 }
+type ScopeType =
+	| "function"
+	| "module"
+	| "global"
+	| "function-expression-name"
+	| "block"
+	| "switch"
+	| "catch"
+	| "with"
+	| "for"
+	| "class"
+	| "class-field-initializer"
+	| "class-static-block";
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
