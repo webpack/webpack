@@ -6101,8 +6101,9 @@ declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
 	 */
-	constructor(definitions: Definitions);
+	constructor(definitions: Definitions, options?: DefinePluginOptions);
 	definitions: Definitions;
+	type: "html" | "css" | "javascript";
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -6146,6 +6147,12 @@ declare class DefinePlugin {
 		objKeys?: null | Set<string>
 	) => string;
 	static toPropertyKey: (key: string) => string;
+}
+declare interface DefinePluginOptions {
+	/**
+	 * module type to apply definitions to
+	 */
+	type?: "html" | "css" | "javascript";
 }
 declare interface Definitions {
 	[index: string]: CodeValue;
