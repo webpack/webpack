@@ -23,3 +23,47 @@
 .t09 { --i: 1px  /*! kept */  2px }
 /*! a normal declaration is unaffected by the option either way */
 .t10 { color: #ffffff }
+
+/* The custom-property corpus `minimize-lightningcss-values` carries, run again
+   with the option on — that case pins the default, this one pins the rewrite. */
+
+/*! lightningcss custom_properties: an empty value, in each spelling */
+.u01 { --test: ; }
+.u02 { --test:  ; }
+/*! lightningcss custom_properties: whitespace around a lone token */
+.u03 { --test: foo; }
+.u04 { --test:  foo; }
+.u05 { --test: foo ; }
+.u06 { --test:foo ; }
+/*! lightningcss custom_properties: a var() fallback carrying a length */
+.u07 { --test: var(--foo, 20px); }
+/*! lightningcss custom_properties: two of them across a comma */
+.u08 { transition: var(--foo, 20px), var(--bar, 40px); }
+/*! lightningcss custom_properties: substitutions side by side */
+.u09 { background: var(--color) var(--image); }
+/*! lightningcss custom_properties: a color function in a fallback */
+.u10 { color: var(--color, rgb(255, 255, 0)); }
+/*! lightningcss custom_properties: a hex in a fallback */
+.u11 { color: var(--color, #ffff00); }
+/*! lightningcss custom_properties: a fallback that is itself substituted */
+.u12 { color: var(--color, rgb(var(--red), var(--green), 0)); }
+/*! lightningcss custom_properties: a time already at its shortest */
+.u13 { --test: .5s; }
+/*! lightningcss custom_properties: an escaped `/` in the property name */
+.u14 { --theme-sizes-1\/12: 2 }
+/*! lightningcss custom_properties: a zero keeps its unit, the value being opaque */
+.u15 { --test: 0px; }
+/*! lightningcss custom_properties: attr() with a type, and with a fallback */
+.u16 { background-color: attr(data-color type(<color>)); }
+.u17 { width: attr(data-width type(<length>), 100px); }
+
+/* cssnano converts a named color to hex inside a custom property. webpack
+   declines: probed in Chrome, `font-family: var(--c), serif` reads `white` as a
+   family name and `#fff` as nothing, so the declaration falls back instead. */
+
+/*! a named color stays as authored, hex being invalid where the name is not */
+.v01 { --c: white }
+.v02 { --c: black }
+.v03 { --c: rebeccapurple }
+/*! and the same name in a real color property does shorten */
+.v04 { color: white }
