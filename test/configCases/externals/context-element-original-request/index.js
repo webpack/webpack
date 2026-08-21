@@ -19,3 +19,9 @@ it("should match an externals string against the original request", async () => 
 it("should match an externals RegExp against the original request", async () => {
 	expect((await load("d")).default.value).toBe("external d");
 });
+
+it("should keep the request of an element with inline loaders", async () => {
+	const name = "e";
+	const module = await import(`./loader.js!./configs/${name}.txt`);
+	expect(module.default).toBe("inline loader e");
+});

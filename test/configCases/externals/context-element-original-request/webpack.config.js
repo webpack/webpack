@@ -22,6 +22,8 @@ module.exports = {
 				if (request === "./a.js") return callback(null, true);
 				return callback();
 			}
+			// an element of a context module with inline loaders carries the resolved
+			// loaders in its request, which the context request must not be joined to
 			if (originalRequest !== request) {
 				return callback(
 					new Error(
