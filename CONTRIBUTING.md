@@ -60,7 +60,7 @@ Things that will increase the chance that your pull request is accepted:
 
 ## Releases
 
-Patch releases ship as soon as a fix is ready, minor releases every 4 weeks on Thursday, and major releases only after the roadmap has been discussed. See [RELEASES.md](./RELEASES.md).
+Patch releases ship as soon as a fix is ready, minor releases every 4 weeks on Thursday, and major releases only after the roadmap has been discussed. See [RELEASE_SCHEDULE.md](./RELEASE_SCHEDULE.md).
 
 ## Documentation
 

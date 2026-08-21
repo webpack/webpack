@@ -282,7 +282,7 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 
 To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
 
-For when your change reaches npm, see [RELEASES.md](./RELEASES.md) — patch releases go out as soon as possible, minor releases every 4 weeks on Thursday.
+For when your change reaches npm, see [RELEASE_SCHEDULE.md](./RELEASE_SCHEDULE.md) — patch releases go out as soon as possible, minor releases every 4 weeks on Thursday.
 
 ### Creating your own plugins and loaders
 
