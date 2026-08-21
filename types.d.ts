@@ -25800,6 +25800,23 @@ declare abstract class RuntimeTemplate {
 	): null | string;
 
 	/**
+	 * Static `new URL(<file>, import.meta.url)` for every stylesheet a runtime can load,
+	 * keyed by chunk id, or `null` when any of them has to keep the runtime
+	 * `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
+	 * and the plugin declaring what it needs ask this, so the two always agree. The
+	 * runtime hands an absolute url string to `link.href`, and so does this — the browser
+	 * resolves the element against the document, which is not where the chunk sits, and
+	 * the loader reads the url as text either way. Nothing is written out for a runtime
+	 * that also carries the hot handler; see below.
+	 */
+	analyzableCssChunkUrls(
+		runtimeChunk: Chunk,
+		chunkGraph: ChunkGraph,
+		runtimeRequirements: ReadonlySet<string>,
+		consumingModule?: Module
+	): null | Map<ChunkId, string>;
+
+	/**
 	 * Static `new URL(<file>, import.meta.url)` for the binary emitted for an async wasm
 	 * module. Only called when `supportsAnalyzable("wasm")` holds.
 	 */
