@@ -4,15 +4,15 @@ webpack follows [semantic versioning](https://semver.org/). This document descri
 
 ## Release schedule
 
+### Patch releases — as soon as possible
+
+Bug fixes are not held for the next scheduled release. Once a fix is merged and verified on `main`, a patch release is published as soon as possible — often the same day. Regressions in a recent release and security fixes take priority over everything else.
+
 ### Minor releases — every 4 weeks, on Thursday
 
 Feature work ships on a fixed cadence: a minor release every four weeks, on a Thursday. Everything merged into `main` before that date goes out with it; anything merged after waits for the next slot rather than delaying the release.
 
 A scheduled release may be skipped when nothing user-facing has landed since the previous one.
-
-### Patch releases — as soon as possible
-
-Bug fixes are not held for the next scheduled date. Once a fix is merged and verified on `main`, a patch release is published as soon as possible — often the same day. Regressions in a recent release and security fixes take priority over everything else.
 
 ### Major releases — only after a roadmap discussion
 
@@ -39,7 +39,3 @@ Releases are automated with [changesets](https://github.com/changesets/changeset
 3. The release is then announced on Discord, and the documentation update on [webpack.js.org](https://webpack.js.org/) is triggered automatically.
 
 So cutting a release means merging the release pull request — the timing of that merge is what the schedule above describes.
-
-## Pre-releases
-
-There are no beta or release-candidate tags on npm. Instead, every commit on `main` and every pull request opened from a branch of this repository is published as a preview package through [pkg.pr.new](https://pkg.pr.new/), so a change can be tried out before it is part of any release — the bot comment on the pull request carries the install command.
