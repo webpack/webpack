@@ -5387,8 +5387,8 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("ends what is open around an option only inside a select", () => {
-		// §"in body": in select scope an `<option>` implies end tags but
-		// `<optgroup>`, and an `<hr>` implies them all; outside one nothing does.
+		// §"in body": in select scope `<option>` implies end tags but `<optgroup>`,
+		// `<hr>` implies all; outside one only an open `<option>` gives way.
 		const inSelect = child(bodyOf("<select><p><option>"), "select");
 		expect(
 			inSelect.children
