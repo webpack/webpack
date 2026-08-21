@@ -7807,12 +7807,22 @@ describe("SourceProcessor — svg path data", () => {
 		expect(path("M1 1A5 5 0 2 1 2 2")).toBe("M1 1A5 5 0 2 1 2 2");
 	});
 
-	it("rewrites `d` only on an svg `path`", () => {
-		const html =
-			'<!DOCTYPE html><body><p d="M 1 1 L 2 2">x</p><svg xmlns="http://www.w3.org/2000/svg"><path d="M 1 1 L 2 2"/></svg>';
-		const out = new SourceProcessor().process(html, { mode: "minify" }).code;
-		expect(out).toContain('<p d="M 1 1 L 2 2">');
-		expect(out).toContain('<path d="M1 1 2 2"/>');
+	it("rewrites `d` only on an svg `path`, and only in XML", () => {
+		const markup =
+			'<p d="M 1 1 L 2 2">x</p><svg xmlns="http://www.w3.org/2000/svg"><path d="M 1 1 L 2 2"/></svg>';
+		// Inline in HTML the value is readable from script, so it is left as written.
+		const html = new SourceProcessor().process(
+			`<!DOCTYPE html><body>${markup}`,
+			{ mode: "minify" }
+		).code;
+		expect(html).toContain('<p d="M 1 1 L 2 2">');
+		expect(html).toContain('<path d="M 1 1 L 2 2"/>');
+		const xml = new SourceProcessor().process(markup, {
+			mode: "minify",
+			xml: true
+		}).code;
+		expect(xml).toContain('<p d="M 1 1 L 2 2">');
+		expect(xml).toContain('<path d="M1 1 2 2"/>');
 	});
 });
 
@@ -7977,13 +7987,22 @@ describe("SourceProcessor — svg presentation attributes", () => {
 		expect(out).toContain('<stop offset="0.50" stop-color="#fff"/>');
 	});
 
-	it("rewrites only in the svg namespace", () => {
-		const out = new SourceProcessor().process(
-			'<!DOCTYPE html><body><p fill="#ff0000">x</p><svg xmlns="http://www.w3.org/2000/svg"><rect fill="#ff0000"/></svg>',
+	it("rewrites only in the svg namespace, and only in XML", () => {
+		const markup =
+			'<p fill="#ff0000">x</p><svg xmlns="http://www.w3.org/2000/svg"><rect fill="#ff0000"/></svg>';
+		// Inline in HTML the value is readable from script, so it is left as written.
+		const html = new SourceProcessor().process(
+			`<!DOCTYPE html><body>${markup}`,
 			{ mode: "minify" }
 		).code;
-		expect(out).toContain("<p fill=#ff0000>");
-		expect(out).toContain("<rect fill=red />");
+		expect(html).toContain("<p fill=#ff0000>");
+		expect(html).toContain("<rect fill=#ff0000 />");
+		const xml = new SourceProcessor().process(markup, {
+			mode: "minify",
+			xml: true
+		}).code;
+		expect(xml).toContain('<p fill="#ff0000">');
+		expect(xml).toContain('<rect fill="red"/>');
 	});
 
 	it("leaves a value carrying a character reference uncompressed", () => {
