@@ -25354,6 +25354,13 @@ declare abstract class RuntimeTemplate {
 	getBuiltinModule(request: string, access?: string): string;
 
 	/**
+	 * Renders a `then` callback calling `fn` with `args`. An arrow is shorter than
+	 * the bound form and gives `fn` the same `this` a method call would, which is
+	 * what `__webpack_require__.t` reads; without arrows the bound form is shorter.
+	 */
+	deferredCall(fn: string, args: string): string;
+
+	/**
 	 * Renders an object-literal method, using method shorthand when supported
 	 * and falling back to a `prop: function/arrow` property otherwise.
 	 */
