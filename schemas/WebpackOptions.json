@@ -5354,6 +5354,11 @@
           "instanceof": "Function",
           "tsType": "import('../lib/performance/SizeLimitsPlugin').AssetFilter"
         },
+        "broadContexts": {
+          "description": "Report 'require.context' calls with no filter, which bundle every file under a directory (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "cacheEffectiveness": {
           "description": "Report how much of the module graph the cache reused, and the modules that can never be reused (requires 'hints' to be enabled).",
           "type": "boolean",

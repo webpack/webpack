@@ -21844,6 +21844,12 @@ declare interface PerformanceOptions {
 	assetFilter?: (name: string, source: Source, assetInfo: AssetInfo) => boolean;
 
 	/**
+	 * Report 'require.context' calls with no filter, which bundle every file under a directory (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	broadContexts?: boolean;
+
+	/**
 	 * Report how much of the module graph the cache reused, and the modules that can never be reused (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
