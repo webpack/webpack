@@ -1,7 +1,5 @@
 "use strict";
 
-const target = `async-node${process.versions.node.split(".").map(Number)[0]}`;
-
 /** @type {(name: string) => (compiler: import("../../../../types").Compiler) => void} */
 const snapshotBundle = (name) => (compiler) => {
 	compiler.hooks.compilation.tap(
@@ -25,7 +23,6 @@ const snapshotBundle = (name) => (compiler) => {
 module.exports = [
 	{
 		name: "plain",
-		target,
 		mode: "production",
 		experiments: { deferImport: true },
 		optimization: {
@@ -36,7 +33,6 @@ module.exports = [
 	},
 	{
 		name: "concatenated",
-		target,
 		mode: "production",
 		experiments: { deferImport: true },
 		// A CommonJS module cannot join the concatenation, so it stays an external
