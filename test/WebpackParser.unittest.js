@@ -1894,7 +1894,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			 */
 			checkParams(node, allowDuplicates) {
 				calls++;
-				// @ts-expect-error acorn internal
 				return super.checkParams(node, allowDuplicates);
 			}
 		}
@@ -2102,5 +2101,70 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		).toThrow(
 			/Private field '#missing' must be declared in an enclosing class/
 		);
+	});
+
+	describe("releaseParserCaches", () => {
+		const {
+			WebpackParser,
+			releaseParserCaches
+		} = require("../lib/javascript/syntax");
+
+		const options = /** @type {import("acorn").Options} */ (
+			/** @type {unknown} */ ({
+				ecmaVersion: "latest",
+				sourceType: "module",
+				lazyNodes: true,
+				locations: false,
+				ranges: false
+			})
+		);
+		const code =
+			"const value = 123; export function repeatedName(repeatedParameter) { return repeatedParameter + value + 0.5; }";
+
+		it("parses identically after the caches are released", () => {
+			const before = JSON.stringify(WebpackParser.parse(code, options));
+			releaseParserCaches();
+			const after = JSON.stringify(WebpackParser.parse(code, options));
+			expect(after).toBe(before);
+		});
+
+		it("is registered on the compiler's done and failed hooks", () => {
+			const { AsyncSeriesHook, SyncHook } = require("tapable");
+			const JavascriptModulesPlugin = require("../lib/javascript/JavascriptModulesPlugin");
+
+			// tap targets mirror lib/Compiler.js hook types
+			const compiler = {
+				hooks: {
+					done: new AsyncSeriesHook(["stats"]),
+					failed: new SyncHook(["error"]),
+					compilation: new SyncHook(["compilation", "params"])
+				}
+			};
+			new JavascriptModulesPlugin().apply(
+				/** @type {EXPECTED_ANY} */ (compiler)
+			);
+			// the plugin taps the exported function itself, so identity proves
+			// the release really runs on both lifecycle ends
+			expect(compiler.hooks.done.taps.map((tap) => tap.fn)).toContain(
+				releaseParserCaches
+			);
+			expect(compiler.hooks.failed.taps.map((tap) => tap.fn)).toContain(
+				releaseParserCaches
+			);
+			compiler.hooks.failed.call(new Error("test"));
+		});
+
+		it("is idempotent and keeps the tokenizer working", () => {
+			releaseParserCaches();
+			releaseParserCaches();
+			let count = 0;
+			for (const token of WebpackParser.tokenizer(code, {
+				ecmaVersion: "latest",
+				sourceType: "module"
+			})) {
+				if (token) count++;
+			}
+			expect(count).toBeGreaterThan(10);
+		});
 	});
 });
