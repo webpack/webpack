@@ -4915,10 +4915,8 @@ describe("parseHtml — insertion-mode edge cases", () => {
 	});
 
 	it("does not read raw text for a tag the frameset modes ignore", () => {
-		// Only `noframes` is handled there (§13.2.6.4.10 hands it to the head
-		// rules); every other one is ignored, and an ignored start tag never runs
-		// the algorithm that switches the tokenizer — so the `<frame>` after it is
-		// still a tag.
+		// §13.2.6.4.10 hands only `noframes` to the head rules; every other tag is
+		// ignored, and an ignored one never switches the tokenizer.
 		const frameset = find("<frameset><textarea><frame></textarea>", "frameset");
 		expect(/** @type {MatElement} */ (frameset.children[0]).tagName).toBe(
 			"frame"
@@ -5389,9 +5387,8 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("ends what is open around an option only inside a select", () => {
-		// §"in body": with a `<select>` in scope an `<option>` generates implied end
-		// tags except `<optgroup>`, and an `<hr>` generates them all. Outside one
-		// only a current `<option>` gives way, so everything else nests.
+		// §"in body": in select scope an `<option>` implies end tags but
+		// `<optgroup>`, and an `<hr>` implies them all; outside one nothing does.
 		const inSelect = child(bodyOf("<select><p><option>"), "select");
 		expect(
 			inSelect.children
@@ -5413,6 +5410,13 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 					/** @type {MatElement} */ (c).tagName === "hr"
 			)
 		).toBe(true);
+		// `<li>` is implied-end-tag material too, so the `<hr>` ends it as well.
+		const separated = child(bodyOf("<select><li><hr>"), "select");
+		expect(
+			separated.children
+				.filter((c) => c.type === NodeType.Element)
+				.map((c) => /** @type {MatElement} */ (c).tagName)
+		).toEqual(["li", "hr"]);
 	});
 
 	it("moves an <hr> out of option/optgroup context in <select>", () => {

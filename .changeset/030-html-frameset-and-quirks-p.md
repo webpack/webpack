@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Match the tree an engine builds for framesets, quirks-mode paragraphs and `<hr>`.
+Match the spec's tree for frameset content, quirks paragraphs and selects.
