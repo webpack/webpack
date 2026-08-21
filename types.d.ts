@@ -30004,6 +30004,7 @@ declare namespace exports {
 			export let TT_URL: 18;
 			export let TT_WHITESPACE: 2;
 			export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
+			export let dropDeadRules: (css: string) => string;
 			export let equalsLowerCase: (s: string, lit: string) => boolean;
 			export let escapeIdentifier: MakeCacheableResult<string> & {
 				bindCache: BindCache<string>;
