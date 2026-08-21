@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add the `performance.broadContexts`, `performance.largeModules` and `performance.hotspots` hints.
+Add the `broadContexts`, `largeModules` and `hotspots` performance hints.
