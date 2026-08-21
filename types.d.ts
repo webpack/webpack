@@ -25520,6 +25520,12 @@ declare abstract class RuntimeTemplate {
 	}): string;
 
 	/**
+	 * The annotation for a module instantiation, carrying what webpack knows about
+	 * the module's side effects on to whoever consumes the emitted bundle.
+	 */
+	moduleSideEffectsAnnotation(module: Module, moduleGraph: ModuleGraph): string;
+
+	/**
 	 * Returns the expression.
 	 */
 	moduleRaw(__0: {
