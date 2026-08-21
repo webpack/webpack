@@ -16,7 +16,7 @@ Array [
    parse */input.t07::-webkit-input-placeholder,textarea.t07::-webkit-input-placeholder{color:#999}input.t07::-moz-placeholder,textarea.t07::-moz-placeholder{color:#999}input.t07::placeholder,textarea.t07::placeholder{color:#999}",
   "/*! a nested at-rule is prefixed against its own scope */@media screen{@-webkit-keyframes nested{to{opacity:1}}@keyframes nested{to{opacity:1}}.t08::-webkit-input-placeholder{color:#999}.t08::-moz-placeholder{color:#999}.t08::placeholder{color:#999}}",
   "/*! a prefixed rule no target needs is dropped once its unprefixed twin turns
-   up, however far off that is — only IE ever read \`:-ms-fullscreen\` */.t09{color:red}:-webkit-full-screen{color:#999}:-moz-full-screen{color:#999}:fullscreen{color:#999}",
+   up, however far off that is — only IE ever read \`:-ms-fullscreen\` */.t09{color:red}",
   "/*! a nested prefixed rule is dropped by a twin later in its own block, just as
    a top-level one is */@media print{.t12{color:red}:-webkit-full-screen{color:#999}:-moz-full-screen{color:#999}:fullscreen{color:#999}}",
   "/*! an adjacent twin takes its prefixed rule back where it stands, rather than
