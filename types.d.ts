@@ -25692,6 +25692,11 @@ declare abstract class RuntimeTemplate {
 	): boolean;
 
 	/**
+	 * Reports an analyzable-ESM bailout from outside this class.
+	 */
+	analyzableBailout(module: undefined | Module, reason: string): void;
+
+	/**
 	 * Names the module whose code generation starts, so the reasons its references
 	 * record are handed back by `finishAnalyzableBailouts` and attributed to it.
 	 */
