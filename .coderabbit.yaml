@@ -155,26 +155,24 @@ reviews:
       mode: "warning"
     issue_assessment:
       mode: "warning"
-
-tools:
-  eslint:
-    enabled: true
-  actionlint:
-    enabled: true
-  gitleaks:
-    enabled: true
-  shellcheck:
-    enabled: true
-  yamllint:
-    enabled: true
-  # Prettier + cspell own Markdown/prose style in this repo (yarn fix / yarn lint)
-  markdownlint:
-    enabled: false
-  languagetool:
-    enabled: false
-  github-checks:
-    enabled: true
-    timeout_ms: 90000
+  tools:
+    eslint:
+      enabled: true
+    actionlint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    shellcheck:
+      enabled: true
+    yamllint:
+      enabled: true
+    # Prettier + cspell own Markdown/prose style in this repo (yarn fix / yarn lint)
+    markdownlint:
+      enabled: false
+    languagetool:
+      enabled: false
+    github-checks:
+      enabled: true
 
 chat:
   art: false
