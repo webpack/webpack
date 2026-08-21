@@ -7722,6 +7722,10 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// A `<template>` anywhere above suspends the form element pointer, so the
 		// end tag that a nested form otherwise needs would only close the outer one.
 		["a form a template holds", "<template><form><form>"],
+		// A scope rule ends the nearest match on the stack rather than the parent,
+		// so what a fostered run would close can sit any number of elements above.
+		["an input under a fostered div", "<select><table><div><input>"],
+		["a button under a fostered list", "<button><table><ol><button>"],
 		// And where tree order already re-parses, it is left alone.
 		["a paragraph fostered out of one", "<table><p>"]
 	])("keeps %s", (_name, source) => {
