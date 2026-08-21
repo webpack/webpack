@@ -17,7 +17,9 @@ const snapshotBundle = (name) => (compiler) => {
 				(
 					/** @type {Record<string, import("webpack-sources").Source>} */ assets
 				) => {
-					expect(assets[name].source()).toMatchSnapshot();
+					// Named: the two compilers run concurrently, so an unnamed snapshot
+					// would key on call order and the two bundles could swap places.
+					expect(assets[name].source()).toMatchSnapshot(name);
 				}
 			);
 		}
