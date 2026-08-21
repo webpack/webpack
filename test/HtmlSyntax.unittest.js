@@ -7728,6 +7728,10 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		["an input under a fostered div", "<select><table><div><input>"],
 		["a button under a fostered list", "<button><table><ol><button>"],
 		["a select above what holds the table", "<select><span><table><input>"],
+		// Whitespace a table kept and text it fostered stay two nodes: moved back in
+		// beside each other they would fuse, and one non-whitespace character in a
+		// run fosters all of it.
+		["text beside whitespace a table kept", "<dt><table> </nav>x<p>"],
 		// And where tree order already re-parses, it is left alone.
 		["a paragraph fostered out of one", "<table><p>"]
 	])("keeps %s", (_name, source) => {
