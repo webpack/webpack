@@ -13,6 +13,8 @@ exports[`ConfigTestCases html minimize-srcdoc minimize-srcdoc should compile 1`]
 <iframe id=conditional srcdoc=\\"<!--[if IE]><p class=ie>downlevel<![endif]-->\\"></iframe>
 <iframe id=bare srcdoc=\\"<p>bare\\" title=after></iframe>
 <!--[if  IE ]>IE <![endif]-->
+<script type=application/json>{\\"cc\\":\\"<!--[if IE]><p   >script</p><![endif]-->\\"}</script>
+<!--[if IE]><p>script<![endif]-->
 <iframe id=empty srcdoc></iframe>
 <iframe id=none src=child.html></iframe>
 <div id=not-an-iframe srcdoc=\\"<!-- kept --><p   >div</p>\\"></div>
