@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep frameset content and quirks-mode paragraphs as an engine parses them.
+Match the tree an engine builds for framesets, quirks-mode paragraphs and `<hr>`.
