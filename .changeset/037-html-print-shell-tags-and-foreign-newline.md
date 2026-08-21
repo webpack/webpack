@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep the tree when printing HTML shell tags, columns and a foreign `textarea`.
+Build and print the tree the HTML spec describes in six more places.

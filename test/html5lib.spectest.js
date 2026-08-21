@@ -232,8 +232,17 @@ describe("html5lib-tests webpack build", () => {
 // The corpus html5lib-tests carried until 224991e, in html5lib's `.dat` format.
 const treeDir = path.resolve(__dirname, "./wpt/html/syntax/parsing/resources");
 
-/** @type {Set<string>} intentional, documented exceptions (currently none) */
-const KNOWN_DIVERGENCES = new Set();
+/** @type {Set<string>} intentional, documented exceptions */
+const KNOWN_DIVERGENCES = new Set([
+	// `<font><select><option>a</option></font></select>`. The corpus expects
+	// `</font>` to be ignored, which is the deleted "in select" insertion mode —
+	// the spec now has 0 occurrences of it, lists `select` in the special
+	// category, and inserts an active-formatting marker only for `applet`,
+	// `object`, `marquee`, `template`, `td`, `th` and `caption`. So the adoption
+	// agency takes `select` as the furthest block and moves it, which is what
+	// webpack builds.
+	"webkit02.dat #48"
+]);
 
 /**
  * Parse a html5lib `.dat` file into test cases.

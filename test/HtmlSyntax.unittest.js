@@ -7694,7 +7694,17 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// group before it kept its end tag, and its end tag only when what follows
 		// closes it — which a `<template>` does not, the head rules taking it.
 		["two colgroups a col each", "<table><col>y<col>"],
-		["a template behind a colgroup", "<table><col></br><template>"]
+		["a template behind a colgroup", "<table><col></br><template>"],
+		// A `<select>` inserts no active-formatting marker — the spec inserts one
+		// only for `applet`, `object`, `marquee`, `template`, `td`, `th` and
+		// `caption` — so `</marquee>` clears the `<b>` rather than stopping short
+		// of it and reconstructing it behind the marquee.
+		["formatting a marquee cleared", "<marquee><b><select></marquee>x"],
+		// §13.2.6.4.7 ignores a `<form>` start tag while the form element pointer
+		// is set, so a form written inside another needs the end tag that cleared
+		// it written back in front of it.
+		["a form inside a form", "<form><div></form><form>"],
+		["a form a button holds", "<form><button></form><form>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
