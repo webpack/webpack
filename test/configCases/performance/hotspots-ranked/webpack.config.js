@@ -1,8 +1,7 @@
 "use strict";
 
 /**
- * Holds the main thread for a known stretch under one compilation hook, which
- * is what the hint measures.
+ * Holds the main thread for a known stretch under one compilation hook.
  * @param {string} name the plugin name the report should carry
  * @param {"optimizeModules" | "afterSeal"} hook where it burns
  * @param {number} ms how long to burn
