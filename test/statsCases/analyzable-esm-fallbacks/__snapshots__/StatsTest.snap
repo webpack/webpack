@@ -25,7 +25,7 @@ prefetch:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset mid_js.mjs X bytes [emitted] [javascript module]
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 7 modules
   cacheable modules X bytes
     ./index-prefetch.js X bytes [built] [code generated]
     ./mid.js X bytes [built] [code generated]
