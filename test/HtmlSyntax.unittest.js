@@ -7659,3 +7659,38 @@ describe("parseHtml — insertion modes", () => {
 		});
 	}
 });
+
+describe("SourceProcessor — re-serializing keeps the tree", () => {
+	const { SourceProcessor, parseHtml } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @returns {string} the tree the printed output re-parses to
+	 */
+	const reparsed = (source) =>
+		serializeHtmlTree(
+			parseHtml(
+				new SourceProcessor().process(source, { mode: "beautify" }).code
+			)
+		);
+
+	// Printing a document back out must hand back the tree it was parsed from —
+	// so what the parser puts outside `<body>` has to survive the round trip.
+	// §4.13 says which of the shell's tags may go: an `html` or `body` end tag
+	// only when no comment follows, a `head` one only when neither a comment nor
+	// whitespace does.
+	it.each([
+		["whitespace between head and body", "</head>\n"],
+		["a space between head and body", "</head> "],
+		["a comment after body", "</body><!--ab-->"],
+		["a comment after html", "</html><!--x-->"],
+		// The parser drops a newline after `<pre>` / `<textarea>` / `<listing>`,
+		// so serializing writes a second one back — but only in HTML, where the
+		// drop happens. MathML has a `textarea` of its own and keeps the newline.
+		["a foreign textarea's leading newline", "<math><textarea>\ny"],
+		["an html textarea's leading newline", "<textarea>\ny"],
+		["a pre's leading newline", "<pre>\ny"]
+	])("keeps %s", (_name, source) => {
+		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
+	});
+});
