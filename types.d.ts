@@ -5054,9 +5054,8 @@ declare abstract class ContextElementDependency extends ModuleDependency {
 	attributes?: ImportAttributes;
 
 	/**
-	 * The request as the user wrote it, e.g. `#configs/file.mjs` for the element
-	 * `./file.mjs` of a `#configs` context. `request` is relative to the resolved
-	 * context directory instead, which no longer resembles what was written.
+	 * The request as the user wrote it, e.g. `#configs/file.mjs` where `request`
+	 * is the `./file.mjs` relative to the resolved `#configs` directory.
 	 */
 	get originalRequest(): string;
 }
