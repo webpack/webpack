@@ -10631,9 +10631,14 @@ declare interface HtmlTokenCallbacks {
 	) => void;
 
 	/**
-	 * returns true when the adjusted current node is in a foreign (SVG/MathML) namespace, vetoing RAWTEXT/RCDATA/script content-mode switches
+	 * returns true when the adjusted current node is in a foreign (SVG/MathML) namespace, which is where a `<![CDATA[` opens a CDATA section
 	 */
 	isForeign?: () => boolean;
+
+	/**
+	 * returns true when the tree builder will not run the algorithm that switches the tokenizer for this start tag, so it stays in the data state
+	 */
+	vetoesContentMode?: (name: string) => boolean;
 
 	/**
 	 * context element tag name for fragment parsing; seeds the initial content mode

@@ -4398,6 +4398,15 @@ describe("SourceProcessor — optional end tags read the output", () => {
 
 	const LIST = "<ul>\n<li><p>a</p>\n</li>\n<li><p>b</p>\n</li>\n</ul>";
 
+	it("keeps a `</p>` a quirks-mode `<table>` would not close", () => {
+		// A `<table>` start tag closes an open `p` only outside quirks mode, so
+		// there the two would nest instead of staying siblings.
+		expect(minify("<table><p>")).toBe("<p></p><table></table>");
+		expect(minify("<!doctype html><table><p>")).toBe(
+			"<!doctype html><p><table></table>"
+		);
+	});
+
 	it("reads past whitespace the collapse tier deletes", () => {
 		// The `\n` after each `</p>` is content in the tree and nothing in the
 		// output, so the tag it was keeping alive goes with it.
@@ -4905,6 +4914,18 @@ describe("parseHtml — insertion-mode edge cases", () => {
 		expect(nodes[1].type).toBe(NodeType.Element);
 	});
 
+	it("does not read raw text for a tag the frameset modes ignore", () => {
+		// §13.2.6.4.10 hands only `noframes` to the head rules; every other tag is
+		// ignored, and an ignored one never switches the tokenizer.
+		const frameset = find("<frameset><textarea><frame></textarea>", "frameset");
+		expect(/** @type {MatElement} */ (frameset.children[0]).tagName).toBe(
+			"frame"
+		);
+		// `noframes` keeps its raw text, so the `<frame>` inside it is not one.
+		const noframes = find("<frameset><noframes><frame></noframes>", "noframes");
+		expect(noframes.children[0].type).toBe(NodeType.Text);
+	});
+
 	it("keeps end tags and comments under foreign rules inside <svg>", () => {
 		const svg = find("<svg><circle></circle><!--c--></svg>", "svg");
 		expect(/** @type {MatElement} */ (svg.children[0]).tagName).toBe("circle");
@@ -5363,6 +5384,39 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		expect(child(t1.children, "tbody")).toBeDefined();
 		const t2 = child(bodyOf("<table><colgroup><tbody><tr><td>x"), "table");
 		expect(child(t2.children, "tbody")).toBeDefined();
+	});
+
+	it("ends what is open around an option only inside a select", () => {
+		// §"in body": in select scope `<option>` implies end tags but `<optgroup>`,
+		// `<hr>` implies all; outside one only an open `<option>` gives way.
+		const inSelect = child(bodyOf("<select><p><option>"), "select");
+		expect(
+			inSelect.children
+				.filter((c) => c.type === NodeType.Element)
+				.map((c) => /** @type {MatElement} */ (c).tagName)
+		).toEqual(["p", "option"]);
+		// An `<optgroup>` is kept by an `<option>` and ended by an `<hr>`.
+		const grouped = child(bodyOf("<select><optgroup><option>"), "select");
+		expect(
+			/** @type {MatElement} */ (child(grouped.children, "optgroup")).children
+		).toHaveLength(1);
+		// No select in scope: the option keeps the `<hr>` written inside it.
+		const loose = child(bodyOf("<div><option>o<hr>"), "div");
+		const option = child(loose.children, "option");
+		expect(
+			option.children.some(
+				(c) =>
+					c.type === NodeType.Element &&
+					/** @type {MatElement} */ (c).tagName === "hr"
+			)
+		).toBe(true);
+		// `<li>` is implied-end-tag material too, so the `<hr>` ends it as well.
+		const separated = child(bodyOf("<select><li><hr>"), "select");
+		expect(
+			separated.children
+				.filter((c) => c.type === NodeType.Element)
+				.map((c) => /** @type {MatElement} */ (c).tagName)
+		).toEqual(["li", "hr"]);
 	});
 
 	it("moves an <hr> out of option/optgroup context in <select>", () => {
