@@ -21897,6 +21897,12 @@ declare interface PerformanceOptions {
 	hints?: false | "error" | "stats" | "warning";
 
 	/**
+	 * Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	largeModules?: boolean;
+
+	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
 	maxAssetSize?: number;

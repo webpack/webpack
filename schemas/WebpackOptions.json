@@ -5398,6 +5398,11 @@
           "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
           "enum": [false, "warning", "error", "stats"]
         },
+        "largeModules": {
+          "description": "Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "maxAssetSize": {
           "description": "File size limit (in bytes) when exceeded, that webpack will provide performance hints.",
           "type": "number"
