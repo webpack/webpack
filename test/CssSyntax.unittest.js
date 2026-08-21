@@ -4448,7 +4448,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			[
 				'a{background:url("data:image/svg+xml,%3csvg%20fill=%27red%27%3e%3c/svg%3e")}',
-				"a{background:url(\"data:image/svg+xml,<svg fill='red'/>\")}"
+				"a{background:url(\"data:image/svg+xml,<svg fill='red'></svg>\")}"
 			],
 			[
 				'a{background:url("data:image/png;base64,AAA%3D")}',

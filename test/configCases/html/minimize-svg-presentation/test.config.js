@@ -12,7 +12,7 @@ module.exports = {
 		expect(svg).toMatchSnapshot();
 
 		expect(svg).toContain('fill="red" stroke="#abcdef" stroke-width=".5"');
-		expect(svg).toContain('fill="currentColor" opacity="1"');
+		expect(svg).toContain('fill="currentcolor" opacity="1"');
 		expect(svg).toContain('stop-color="#fff" stop-opacity=".5"');
 		expect(svg).toContain('x="1" y="2" width="3" height="4"');
 		expect(svg).toContain('r="2"');
