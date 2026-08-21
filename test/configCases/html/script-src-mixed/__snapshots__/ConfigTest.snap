@@ -124,7 +124,7 @@ globalThis.__moduleA = moduleA;
 /******/ 			if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				installedChunks[chunkId][0]();
 /******/ 			}
-/******/ 			installedChunks[__webpack_esm_ids__[i]] = 0;
+/******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 	
 /******/ 	}
@@ -257,7 +257,7 @@ exports[`ConfigTestCases html script-src-mixed exported tests should chain multi
 /******/ 			if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				installedChunks[chunkId][0]();
 /******/ 			}
-/******/ 			installedChunks[__webpack_esm_ids__[i]] = 0;
+/******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 	
 /******/ 	}
