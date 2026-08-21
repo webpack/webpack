@@ -178,14 +178,14 @@ export type LibraryType =
 	  )
 	| string;
 /**
+ * Add a branch to the UMD wrapper for an AMD-style loader exposing `define` on a container object, given as a dot-separated path, after the `define.amd` branch.
+ * @since 5.110.0
+ */
+export type UmdAmdContainer = string;
+/**
  * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
  */
 export type UmdNamedDefine = boolean;
-/**
- * If `output.libraryTarget` is set to umd, setting this to true will add a branch for the SAPUI5/OpenUI5 module loader (`sap.ui.define`) to the UMD wrapper.
- * @since 5.110.0
- */
-export type UmdSapUiDefine = boolean;
 /**
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
@@ -1510,16 +1510,16 @@ export interface LibraryOptions {
 	 */
 	type: LibraryType;
 	/**
+	 * Add a branch to the UMD wrapper for an AMD-style loader exposing `define` on a container object, given as a dot-separated path, after the `define.amd` branch.
+	 */
+	umdAmdContainer?: UmdAmdContainer;
+	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: UmdNamedDefine;
-	/**
-	 * If `output.libraryTarget` is set to umd, setting this to true will add a branch for the SAPUI5/OpenUI5 module loader (`sap.ui.define`) to the UMD wrapper.
-	 */
-	umdSapUiDefine?: UmdSapUiDefine;
 }
 /**
- * Set explicit comments for `commonjs`, `commonjs2`, `amd`, `sapUiDefine` and `root`.
+ * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
  */
 export interface LibraryCustomUmdCommentObject {
 	/**
@@ -1538,11 +1538,6 @@ export interface LibraryCustomUmdCommentObject {
 	 * Set comment for `root` (global variable) section in UMD.
 	 */
 	root?: string;
-	/**
-	 * Set comment for `sapUiDefine` (SAPUI5/OpenUI5 module loader) section in UMD.
-	 * @since 5.110.0
-	 */
-	sapUiDefine?: string;
 }
 /**
  * Description object for all UMD variants of the library name.

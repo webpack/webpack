@@ -137,7 +137,7 @@
       ]
     },
     "LibraryCustomUmdCommentObject": {
-      "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, `sapUiDefine` and `root`.",
+      "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -156,11 +156,6 @@
         "root": {
           "description": "Set comment for `root` (global variable) section in UMD.",
           "type": "string"
-        },
-        "sapUiDefine": {
-          "description": "Set comment for `sapUiDefine` (SAPUI5/OpenUI5 module loader) section in UMD.",
-          "type": "string",
-          "added": "5.110.0"
         }
       }
     },
@@ -256,11 +251,11 @@
         "type": {
           "$ref": "#/definitions/LibraryType"
         },
+        "umdAmdContainer": {
+          "$ref": "#/definitions/UmdAmdContainer"
+        },
         "umdNamedDefine": {
           "$ref": "#/definitions/UmdNamedDefine"
-        },
-        "umdSapUiDefine": {
-          "$ref": "#/definitions/UmdSapUiDefine"
         }
       },
       "required": ["type"]
@@ -485,14 +480,16 @@
         ]
       }
     },
+    "UmdAmdContainer": {
+      "description": "Add a branch to the UMD wrapper for an AMD-style loader exposing `define` on a container object, given as a dot-separated path, after the `define.amd` branch.",
+      "type": "string",
+      "minLength": 1,
+      "added": "5.110.0",
+      "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*$"
+    },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
       "type": "boolean"
-    },
-    "UmdSapUiDefine": {
-      "description": "If `output.libraryTarget` is set to umd, setting this to true will add a branch for the SAPUI5/OpenUI5 module loader (`sap.ui.define`) to the UMD wrapper.",
-      "type": "boolean",
-      "added": "5.110.0"
     }
   },
   "title": "ModuleFederationPluginOptions",
