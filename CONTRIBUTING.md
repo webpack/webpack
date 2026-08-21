@@ -58,6 +58,10 @@ Things that will increase the chance that your pull request is accepted:
 - When you have a lot of commits in your PR, it's good practice to squash all your commits in one single commit. ([Learn how to squash here](https://davidwalsh.name/squash-commits-git))
 - For a better understanding of the folder structure and testing procedures, refer to the [Testing Documentation](./TESTING_DOCS.md).
 
+## Releases
+
+Minor releases ship every 4 weeks on Thursday, patch releases as soon as a fix is ready, and major releases only after the roadmap has been discussed. See [RELEASES.md](./RELEASES.md).
+
 ## Documentation
 
 webpack is insanely feature rich and documentation is a huge time sink. We
