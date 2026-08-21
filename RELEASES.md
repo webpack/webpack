@@ -30,6 +30,8 @@ If you are proposing a change that requires a major, open a [discussion](https:/
 
 Every user-facing pull request carries a [changeset](./.changeset/README.md) declaring its bump level; see the "Adding a Changeset" section of [AGENTS.md](./AGENTS.md) for the format.
 
+A change that does not affect the published package — repository documentation, CI or tests only — needs no changeset: it is not released on its own and does not appear in the changelog.
+
 ## How a release is made
 
 Releases are automated with [changesets](https://github.com/changesets/changesets) — see [`.github/workflows/release.yml`](./.github/workflows/release.yml):
