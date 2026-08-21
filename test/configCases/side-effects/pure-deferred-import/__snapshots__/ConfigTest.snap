@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases side-effects pure-deferred-import pure-deferred-import should compile 1`] = `
+exports[`ConfigTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle0.js 1`] = `
 "/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -169,7 +169,7 @@ it(\\"should evaluate the deferred module on access\\", () => {
 ;"
 `;
 
-exports[`ConfigTestCases side-effects pure-deferred-import pure-deferred-import should compile 2`] = `
+exports[`ConfigTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle1.js 1`] = `
 "/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
