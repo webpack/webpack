@@ -22136,6 +22136,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	foldIntoRetractable(index: number, text: string): void;
 
 	/**
+	 * Write an already-emitted piece again, shorter — a rule inside it a later
+	 * copy makes dead. Mappings anchored in the piece keep the offsets they were
+	 * given, so one inside what was cut names what now follows it.
+	 */
+	rewriteRetractable(index: number, text: string): void;
+
+	/**
 	 * {@link take} for a top-level node a later sibling may still make dead — the
 	 * unprefixed twin of a vendor-prefixed rule, which can stand anywhere after
 	 * it. The node is emitted as a piece of its own, with its mapping recorded
@@ -29911,7 +29918,6 @@ declare namespace exports {
 			export let TT_URL: 18;
 			export let TT_WHITESPACE: 2;
 			export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
-			export let dropDeadRules: (css: string) => string;
 			export let equalsLowerCase: (s: string, lit: string) => boolean;
 			export let escapeIdentifier: MakeCacheableResult<string> & {
 				bindCache: BindCache<string>;

@@ -3308,6 +3308,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("@layer x{a,b{top:0}c{left:0}}");
 		});
 
+		it("drops a rule the later anonymous layer says again", () => {
+			// Two anonymous blocks are two layers, but the later one is the stronger
+			// of the two, so what it repeats is dead wherever the earlier said it.
+			expect(minify("@layer{a{color:red}}@layer{a{color:red}}")).toBe(
+				"@layer{}@layer{a{color:red}}"
+			);
+		});
+
 		it("gathers into one whose own block is empty", () => {
 			// Gathering keeps the layer where the empty block put it in the cascade.
 			expect(minify("@layer a{}@layer a{i{t:0}}")).toBe("@layer a{i{t:0}}");
@@ -3353,7 +3361,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A layer with no name is a layer of its own.
 			[
 				"neither is named",
-				"@media all{@layer{a{color:red}}@layer{a{color:red}}}"
+				"@media all{@layer{a{color:red}}@layer{b{color:red}}}"
 			],
 			// `@layer a.b` writes where `@layer a{@layer b{…}}` writes, so the one
 			// between them is that same layer under its other spelling.
