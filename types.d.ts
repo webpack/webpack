@@ -21937,6 +21937,12 @@ declare interface PerformanceOptions {
 	scopeHoistingBailouts?: boolean;
 
 	/**
+	 * Report plugins that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	slowPlugins?: boolean;
+
+	/**
 	 * Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */

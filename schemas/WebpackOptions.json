@@ -5431,6 +5431,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "slowPlugins": {
+          "description": "Report plugins that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "splitChunksCapped": {
           "description": "Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).",
           "type": "boolean",
