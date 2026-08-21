@@ -79,13 +79,8 @@ globalThis.__moduleA = moduleA;
 /******/ 		while(i < definition.length) {
 /******/ 			var key = definition[i++];
 /******/ 			var binding = definition[i++];
-/******/ 			if(!__webpack_require__.o(exports, key)) {
-/******/ 				if(binding === 0) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 				} else {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 				}
-/******/ 			} else if(binding === 0) { i++; }
+/******/ 			var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 			if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
 /******/ 		}
 /******/ 	} else {
 /******/ 		for(var key in definition) {
