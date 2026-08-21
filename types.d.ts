@@ -356,7 +356,7 @@ declare interface AllCodeGenerationSchemas {
 	"share-init": [{ shareScope: string; initStage: number; init: string }];
 }
 type AnalyzableForm =
-	"import" | "url" | "url-inline" | "wasm" | "wasm-relative";
+	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
@@ -25069,6 +25069,7 @@ declare abstract class RuntimeTemplate {
 	 * may be emitted — the one question every caller asks, in the form it is asking for:
 	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
 	 * - `"url"` — a literal `new URL(<file>, import.meta.url)`
+	 * - `"url-runtime"` — the same, written into a runtime module rather than a module
 	 * - `"url-inline"` — whether such a reference names the file at the call site
 	 * - `"wasm"` — the same, fully baked for a wasm binary the runtime would name
 	 * - `"wasm-relative"` — a wasm path built at runtime under an `import.meta.url` base
