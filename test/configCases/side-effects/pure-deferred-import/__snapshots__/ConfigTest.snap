@@ -124,7 +124,7 @@ function extra(a) {
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop));
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/make optimized deferred namespace object */
 /******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
