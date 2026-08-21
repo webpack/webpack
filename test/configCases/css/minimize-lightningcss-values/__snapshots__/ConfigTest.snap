@@ -80,6 +80,7 @@ Array [
   "/*! test_custom_properties: .foo { --test: var(--foo, 20px); } */.foo{--test:var(--foo,20px)}",
   "/*! test_custom_properties: .foo { transition: var(--foo, 20px), var(--bar, 40px); } */.foo{transition:var(--foo,20px),var(--bar,40px)}",
   "/*! test_custom_properties: .foo { background: var(--color) var(--image); } */.foo{background:var(--color) var(--image)}",
+  "/*! test_custom_properties: .foo { height: calc(var(--spectrum-global-dimension-size-300) / 2); } */.foo{height:calc(var(--spectrum-global-dimension-size-300)/2)}",
   "/*! test_custom_properties: .foo { color: var(--color, rgb(255, 255, 0)); } */.foo{color:var(--color,#ff0)}",
   "/*! test_custom_properties: .foo { color: var(--color, #ffff00); } */.foo{color:var(--color,#ff0)}",
   "/*! test_custom_properties: .foo { color: var(--color, rgb(var(--red), var(--green), 0)); } */.foo{color:var(--color,rgb(var(--red),var(--green),0))}",
