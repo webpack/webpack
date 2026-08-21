@@ -25551,6 +25551,11 @@ declare abstract class RuntimeTemplate {
 	): boolean;
 
 	/**
+	 * Reports an analyzable-ESM bailout from outside this class.
+	 */
+	analyzableBailout(module: undefined | Module, reason: string): void;
+
+	/**
 	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
 	 * wasm/asset loader backends use to reference an emitted binary relative to the
 	 * current module (via `output.importMetaName`) instead of the runtime public-path
