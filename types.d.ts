@@ -25817,6 +25817,20 @@ declare abstract class RuntimeTemplate {
 	): null | Map<ChunkId, string>;
 
 	/**
+	 * Static `new URL(<file>, import.meta.url).href` for every javascript chunk a
+	 * runtime can hint at with `<link rel="prefetch"/"modulepreload">`, keyed by chunk
+	 * id, or `null` when any of them has to keep the runtime
+	 * `publicPath + getChunkScriptFilename(id)` form. Both the runtime module reading
+	 * them and the plugin declaring what it needs ask this, so the two always agree.
+	 */
+	analyzableChunkScriptUrls(
+		runtimeChunk: Chunk,
+		chunkGraph: ChunkGraph,
+		runtimeRequirements: ReadonlySet<string>,
+		consumingModule?: Module
+	): null | Map<ChunkId, string>;
+
+	/**
 	 * Static `new URL(<file>, import.meta.url)` for the binary emitted for an async wasm
 	 * module. Only called when `supportsAnalyzable("wasm")` holds.
 	 */
