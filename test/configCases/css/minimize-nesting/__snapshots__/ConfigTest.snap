@@ -30,5 +30,8 @@ Array [
   "/*! at-rule: ...and one condition is one however it is spelled, which \`@supports\`
    is the at-rule to say so — the engine hands its prelude back as written */@supports (top:0){.z1{top:0;left:0}}",
   "/*! declined: the whitespace between two conditions is the author's */@supports (top:0) and (left:0){.z2{top:0}}@supports (top:0)and (left:0){.z2{left:0}}",
+  "/*! nested declarations: dropping an empty rule ahead of them leaves them the
+   parent's own, which is what \`&\` alone already named */.v{top:0}",
+  "/*! declined: a rule between the two keeps the declarations a rule of their own */.w{.n25{top:1px}top:0}",
 ]
 `;

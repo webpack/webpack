@@ -63,7 +63,7 @@ const buildCorpus = (dir, extension, minify) => {
 
 /**
  * @typedef {{ kind: string, condition: string }} Condition
- * @typedef {{ chain: Condition[], text: string, label?: string, list?: string[] }} Rule
+ * @typedef {{ chain: Condition[], text: string, label?: string, list?: string[], block?: string }} Rule
  * @typedef {{ facets: Record<string, string[]>, styles: Rule[][] }} Facets
  */
 
@@ -74,6 +74,7 @@ const buildCorpus = (dir, extension, minify) => {
  * @property {(conditions: string[], sizes: number[]) => string[]} containerSignatures which sizes each container query holds at
  * @property {(conditions: string[]) => string[]} supportsSignatures whether each support condition holds
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
+ * @property {(value: string) => string} canonical a value under the one name the spec gives it
  */
 
 /**
@@ -83,6 +84,7 @@ const buildCorpus = (dir, extension, minify) => {
  */
 const installHelpers = () => {
 	const NS_HTML = "http://www.w3.org/1999/xhtml";
+	const NS_SVG = "http://www.w3.org/2000/svg";
 	const probe = document.createElement("div");
 	const canvas = document.createElement("canvas");
 	canvas.width = 1;
@@ -133,6 +135,99 @@ const installHelpers = () => {
 		return `paints ${[...context.getImageData(0, 0, 1, 1).data].join(",")}`;
 	};
 
+	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
+	const NEWLINE = /[\n\r\f]/;
+
+	/**
+	 * The escape starting at `text[at]` — a backslash — decoded, with the index
+	 * just past it. A hex escape takes up to six digits and swallows one
+	 * whitespace after them; anything else names the next character itself.
+	 * @param {string} text the text being read
+	 * @param {number} at the index of the backslash
+	 * @returns {[string, number]} the character it names, and where it ends
+	 */
+	const readEscape = (text, at) => {
+		const hex = /^[\da-f]{1,6}/i.exec(text.slice(at + 1, at + 7));
+		if (hex === null) {
+			const next = text[at + 1];
+			return next === undefined ? ["\uFFFD", at + 1] : [next, at + 2];
+		}
+		let end = at + 1 + hex[0].length;
+		if (/[\t\n\f\r ]/.test(text[end])) end++;
+		const code = Number.parseInt(hex[0], 16);
+		// §4.3.7: zero, a surrogate and anything past the maximum all name U+FFFD.
+		const named =
+			code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)
+				? "\uFFFD"
+				: String.fromCodePoint(code);
+		return [named, end];
+	};
+
+	// cspell:ignore rlh rcap cqmin cqmax vmin vmax dvmin dvmax lvmin lvmax svmin svmax
+	// Every length unit CSS Values 4 states, longest first so `vmin` is not read
+	// as `vm` — a zero is the same zero in any of them.
+	const LENGTH_UNITS = [
+		"cqmin",
+		"cqmax",
+		"svmin",
+		"svmax",
+		"lvmin",
+		"lvmax",
+		"dvmin",
+		"dvmax",
+		"rcap",
+		"vmin",
+		"vmax",
+		"cap",
+		"rlh",
+		"rem",
+		"rex",
+		"rch",
+		"ric",
+		"svw",
+		"svh",
+		"svi",
+		"svb",
+		"lvw",
+		"lvh",
+		"lvi",
+		"lvb",
+		"dvw",
+		"dvh",
+		"dvi",
+		"dvb",
+		"cqw",
+		"cqh",
+		"cqi",
+		"cqb",
+		"px",
+		"cm",
+		"mm",
+		"in",
+		"pt",
+		"pc",
+		"em",
+		"ex",
+		"ch",
+		"ic",
+		"lh",
+		"vw",
+		"vh",
+		"vi",
+		"vb",
+		"q"
+	];
+	// A unit runs on through `-`, an escape and any non-ASCII name character, so
+	// `\b` would read `0rcap-foo` as `0rcap` and hand back a value nothing wrote.
+	const ZERO_LENGTH_RE = new RegExp(
+		`(^|[^\\w.#%-])0(?:\\.0*)?(?:${LENGTH_UNITS.join("|")})(?![\\w\\u00a0-\\uffff\\\\-])`,
+		"gi"
+	);
+
+	// A character an escape can be dropped from without the value reading
+	// differently — everything a name is spelled out of.
+	const BARE_ESCAPED = /[\w\u00A0-\uFFFF-]/;
+
 	/**
 	 * A value spelled one way, for the values that have to be compared as written
 	 * rather than as computed. CSS does not need the whitespace around a `,`, a
@@ -146,6 +241,8 @@ const installHelpers = () => {
 		let out = "";
 		let quote = "";
 		let string = "";
+		/** @type {string[]} */
+		const open = [];
 		for (let at = 0; at < text.length; at++) {
 			const ch = text[at];
 			// A comment separates tokens and says nothing else, so it reads as the
@@ -154,6 +251,31 @@ const installHelpers = () => {
 				const end = text.indexOf("*/", at + 2);
 				at = end === -1 ? text.length : end + 1;
 				if (!out.endsWith(" ")) out += " ";
+				continue;
+			}
+			// A CSS escape is resolved before a name is matched, so `\2d-two` and
+			// `\2d\2d two` are the one identifier — decoded here, and written back
+			// escaped in a single spelling where the character it names would
+			// otherwise read as punctuation.
+			if (ch === "\\") {
+				// §4.3.4: a `\` before a newline continues the string's line — the pair
+				// names nothing, unlike every other escape.
+				if (quote !== "" && NEWLINE.test(text[at + 1] || "")) {
+					if (text[at + 1] === "\r" && text[at + 2] === "\n") at++;
+					at++;
+					continue;
+				}
+				const [named, end] = readEscape(text, at);
+				// §4.3.4: a `\` a string runs out after names nothing, unlike the
+				// U+FFFD the same escape names anywhere else.
+				const ranOut = end === at + 1;
+				at = end - 1;
+				const code = /** @type {number} */ (named.codePointAt(0));
+				const written = BARE_ESCAPED.test(named)
+					? named
+					: `\\${code.toString(16).padStart(6, "0")}`;
+				if (quote === "") out += written;
+				else if (!ranOut) string += named;
 				continue;
 			}
 			if (quote !== "") {
@@ -169,10 +291,18 @@ const installHelpers = () => {
 			} else if (/[\t\n\f\r ]/.test(ch)) {
 				if (!out.endsWith(" ")) out += " ";
 			} else {
+				if (ch === "(") open.push(")");
+				else if (ch === "[") open.push("]");
+				else if (ch === "{") open.push("}");
+				else if (open[open.length - 1] === ch) open.pop();
 				out += ch;
 			}
 		}
 		if (quote !== "") out += JSON.stringify(string);
+		// CSS Syntax §4.3.1 and §5.4.9: a string, a function and a block left open
+		// at the end of the input are closed there, so an engine echoing the value
+		// back without those closers means the same as a printer writing them.
+		while (open.length > 0) out += /** @type {string} */ (open.pop());
 		// Arithmetic nothing has to substitute into is arithmetic the engine can
 		// do now, and both spellings reach the same answer.
 		out = out.replace(/calc\([^()]*\)/g, (call) => {
@@ -185,6 +315,9 @@ const installHelpers = () => {
 				return call;
 			}
 		});
+		// CSS Color 4 §5: `transparent` is that color written as a keyword, and an
+		// engine echoing a descriptor hands back whichever spelling it was given.
+		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
 		// A color written into a value the engine cannot compute — a `var()`
 		// fallback — is still a color, and `#ff0` is `rgb(255,255,0)`.
 		out = out.replace(
@@ -208,6 +341,9 @@ const installHelpers = () => {
 					}
 				)
 				.replace(/(^|[^\w.%-])0*(\.\d)/g, "$10$2")
+				// A zero length is the same zero however it is spelled, and a value
+				// held as written is the one place the printer's `0px` → `0` shows.
+				.replace(ZERO_LENGTH_RE, "$10")
 				.trim()
 		);
 	};
@@ -257,29 +393,39 @@ const installHelpers = () => {
 	 * substitution is compared as parsed because `var(--a)` and `var(--b)` both
 	 * compute to nothing on a probe with no ancestor to resolve them.
 	 * @param {string} declaration the declaration block
+	 * @param {CSSStyleDeclaration=} own the block's own declarations, when it has
+	 * them: Chrome serializes an unterminated `var(--a` as `var(--a;`, which no
+	 * longer re-parses, so the probe alone would lose it
 	 * @returns {string[]} one entry per property it sets, unordered
 	 */
-	const computed = (declaration) => {
+	const computed = (declaration, own) => {
 		probe.style.cssText = "";
 		probe.style.cssText = declaration;
 		// A declaration carrying `transition-*` animates the shared probe away from
 		// the previous rule's value, and the computed style would be read in flight.
 		for (const animation of probe.getAnimations()) animation.cancel();
 		const style = getComputedStyle(probe);
+		const source = own || probe.style;
 		/** @type {string[]} */
 		const out = [];
-		for (const property of probe.style) {
-			const specified = probe.style.getPropertyValue(property);
-			const bang = probe.style.getPropertyPriority(property) === "" ? "" : "!";
+		// Indexed rather than iterated: a `@function` body's `result` descriptor is
+		// counted and named by `item()`, but Chrome's iterator hands back nothing.
+		for (let at = 0; at < source.length; at++) {
+			const property = source.item(at);
+			const specified = source.getPropertyValue(property);
+			const bang = source.getPropertyPriority(property) === "" ? "" : "!";
 			// A custom property is a token stream the engine keeps verbatim, so it is
 			// compared as written too — the whitespace and comments between its
 			// tokens say nothing once it is substituted.
 			const written =
 				property.startsWith("--") ||
 				/(^|[^\w-])(?:var|env|attr)\(/.test(specified);
-			const resolved = written
-				? normalizeValue(specified)
-				: style.getPropertyValue(property);
+			// One the probe never received has no computed value to read.
+			const lost = probe.style.getPropertyValue(property) === "";
+			const resolved =
+				written || lost
+					? normalizeValue(specified)
+					: style.getPropertyValue(property);
 			out.push(`${property}${bang}:${painted(canonical(resolved))}`);
 		}
 		return out;
@@ -303,6 +449,15 @@ const installHelpers = () => {
 		}
 		/** @type {Rule[]} */
 		const out = [];
+		// What each selector has been told so far, under each chain of conditions.
+		/** @type {Map<string, string>} */
+		const carried = new Map();
+		// A nested declaration block is its own interface, so it can be recognized
+		// rather than guessed at from the shape of its text.
+		const nestedDeclarations =
+			/** @type {{ CSSNestedDeclarations?: typeof CSSRule }} */ (
+				/** @type {unknown} */ (window)
+			).CSSNestedDeclarations;
 		/**
 		 * @param {CSSRule} rule any rule
 		 * @returns {string} the text before its block
@@ -397,12 +552,13 @@ const installHelpers = () => {
 			});
 		};
 		/**
-		 * A selector list in one order, a repeat dropped — it is a set. The splitter
-		 * is spelled out again because this function is serialized into the page.
+		 * A comma-separated list split on its own commas — not the ones inside
+		 * `:is(…)`, an attribute value or a string. Spelled out again because this
+		 * function is serialized into the page.
 		 * @param {string} list a selector list
-		 * @returns {string} its canonical spelling
+		 * @returns {string[]} its entries
 		 */
-		const selectorSet = (list) => {
+		const splitList = (list) => {
 			const out = [];
 			let depth = 0;
 			let quote = "";
@@ -425,8 +581,15 @@ const installHelpers = () => {
 				}
 			}
 			out.push(list.slice(from).trim());
-			return [...new Set(out.map(oneSpelling))].sort().join(", ");
+			return out;
 		};
+		/**
+		 * A selector list in one order, a repeat dropped — it is a set.
+		 * @param {string} list a selector list
+		 * @returns {string} its canonical spelling
+		 */
+		const selectorSet = (list) =>
+			[...new Set(splitList(list).map(oneSpelling))].sort().join(", ");
 		/**
 		 * A grouping rule as the kind of at-rule it is and the condition it holds
 		 * under, read through the API that normalizes it where one exists.
@@ -483,20 +646,6 @@ const installHelpers = () => {
 						.replace(/\s*:\s*/g, ":")
 				: condition;
 		/**
-		 * Each grouping rule builds its own chain, so two adjacent blocks of one
-		 * condition hold equal chains that are not the same array.
-		 * @param {Condition[]} one a chain
-		 * @param {Condition[]} other another
-		 * @returns {boolean} whether they are the same conditions
-		 */
-		const sameChain = (one, other) =>
-			one.length === other.length &&
-			one.every(
-				(condition, at) =>
-					condition.kind === other[at].kind &&
-					conditionKey(condition) === conditionKey(other[at])
-			);
-		/**
 		 * @param {CSSRuleList} list rules to walk
 		 * @param {Condition[]} chain the enclosing at-rules
 		 */
@@ -510,32 +659,55 @@ const installHelpers = () => {
 				if (style && style.length > 0) {
 					// A bare declaration block nested in a rule stands for `& { … }`.
 					const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
-					const label =
+					let label =
 						(selector ? selectorSet(selector) : selector) ||
 						/** @type {CSSKeyframeRule} */ (rule).keyText ||
-						(rule.cssText.includes("{") ? prelude(rule) : "&");
-					// The same selector twice in a row is the one rule the cascade reads,
-					// which is what joining their blocks leaves.
-					const previous = out[out.length - 1];
-					const list = computed(style.cssText);
-					if (
-						previous !== undefined &&
-						sameChain(previous.chain, chain) &&
-						previous.label === label
-					) {
-						// Concatenate rather than resolve: only an identical pair
-						// collapses, so no filed defect is hidden by the fold.
-						const both = [
-							...new Set([.../** @type {string[]} */ (previous.list), ...list])
-						];
-						previous.list = both;
-						previous.text = `${label} { ${[...both].sort().join(";")} }`;
-					} else {
+						// Asked by interface rather than by shape: a nested declaration
+						// whose value holds a `{` — `--x:hover { }` — is not a rule with a
+						// prelude, however much its text reads like one.
+						(nestedDeclarations !== undefined &&
+						rule instanceof nestedDeclarations
+							? "&"
+							: rule.cssText.includes("{")
+								? prelude(rule)
+								: "&");
+					// `&` alone is the rule it sits in, so the block is read as that
+					// rule's own — which is what it becomes once an empty rule ahead of
+					// it stops splitting the two apart. Only under a style rule: under
+					// an at-rule the declarations cannot fold into the parent either.
+					let held = chain;
+					const inner = chain[chain.length - 1];
+					if (label === "&" && inner !== undefined && inner.kind === "style") {
+						label = inner.condition;
+						held = chain.slice(0, -1);
+					}
+					// One entry per selector, each carrying what the cascade has said
+					// about that selector so far: a printer is free to move a selector
+					// between two adjacent lists, so only the per-selector sequence is
+					// the thing both sides have to agree on.
+					const own = computed(style.cssText, style);
+					const block = ` { ${[...own].sort().join(";")} }`;
+					const where = held
+						.map((one) => `${one.kind}\u0001${conditionKey(one)}`)
+						.join("\u0002");
+					for (const one of splitList(label)) {
+						const key = `${where}\u0003${one}`;
+						const earlier = carried.get(key);
+						const css =
+							earlier === undefined
+								? style.cssText
+								: `${earlier};${style.cssText}`;
+						carried.set(key, css);
+						// Read as one block, which is what the cascade reads: a
+						// percentage or a `min()` here resolves against the earlier
+						// declarations, so the two lists cannot simply be added.
+						const list = earlier === undefined ? own : computed(css);
 						out.push({
-							chain,
-							label,
+							chain: held,
+							label: one,
 							list,
-							text: `${label} { ${[...list].sort().join(";")} }`
+							block,
+							text: `${one} { ${[...list].sort().join(";")} }`
 						});
 					}
 				}
@@ -549,8 +721,10 @@ const installHelpers = () => {
 					walk(nested, [...chain, inner]);
 				} else if (!style) {
 					// `@import`, `@namespace` and `@property` neither declare nor group,
-					// so they are compared as written.
-					out.push({ chain, text: rule.cssText });
+					// so they are compared as written — under the one spelling a value
+					// has, since the engine echoes a descriptor rather than computing
+					// it and `3 red` is the `3 rgb(255, 0, 0)` it was handed.
+					out.push({ chain, text: canonical(normalizeValue(rule.cssText)) });
 				}
 			}
 		};
@@ -639,6 +813,10 @@ const installHelpers = () => {
 		"sizes",
 		"srcset"
 	]);
+	// An image candidate list, whose url is read as "characters that are not
+	// ASCII whitespace" and whose descriptors are then tokenized by skipping
+	// whitespace — so a run of it between the two carries nothing.
+	const SRCSET_ATTRIBUTES = new Set(["imagesrcset", "srcset"]);
 	// A space-separated list the engine does not reflect as a DOMTokenList.
 	const TOKEN_LIST_ATTRIBUTES = new Set([
 		"headers",
@@ -706,9 +884,13 @@ const installHelpers = () => {
 				node.localName === "meta" &&
 				(node.getAttribute("name") || "").toLowerCase() === "viewport")
 		) {
+			const squeeze = SRCSET_ATTRIBUTES.has(name);
 			return raw
 				.split(",")
-				.map((one) => one.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, ""))
+				.map((one) => {
+					const held = one.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, "");
+					return squeeze ? held.replace(/[\t\n\f\r ]+/g, " ") : held;
+				})
 				.filter(Boolean)
 				.join(",");
 		}
@@ -804,8 +986,16 @@ const installHelpers = () => {
 				if (node.nodeType !== Node.ELEMENT_NODE) continue;
 				const element = /** @type {Element} */ (node);
 				facets.elements.push(shapeOf(element, depth));
+				// SVG carries `<style>` and `<script>` too, and an engine reads both
+				// the same way — so their bodies are data there as well, not the page
+				// text a minified stylesheet would look like a change to.
+				const local = element.localName;
 				const name =
-					element.namespaceURI === NS_HTML ? element.localName : null;
+					element.namespaceURI === NS_HTML ||
+					(element.namespaceURI === NS_SVG &&
+						(local === "style" || local === "script"))
+						? local
+						: null;
 				// The text this element holds itself, so text moved to a neighbor
 				// cannot hide in the document-wide concatenation. Only where it
 				// reaches the page: whitespace between two `<head>` children, or
@@ -961,7 +1151,8 @@ const installHelpers = () => {
 			htmlFacets,
 			containerSignatures,
 			supportsSignatures,
-			probeReflection
+			probeReflection,
+			canonical
 		};
 };
 
@@ -1190,11 +1381,60 @@ const perSelector = (rules) =>
 		const selectors = splitSelectorList(rule.text.slice(0, at));
 		if (selectors.length < 2) return [rule];
 		const block = rule.text.slice(at);
-		return selectors.map((one) => ({ chain: rule.chain, text: one + block }));
+		return selectors.map((one) => ({
+			chain: rule.chain,
+			block: rule.block,
+			text: one + block
+		}));
 	});
 
 // An `@layer a, b;` statement, which names layers without holding any rule.
 const LAYER_STATEMENT_RE = /^@layer\s+([^{;]+);$/i;
+
+// One number wherever it stands in a value.
+const NUMBER_RUN = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
+
+// The printer rounds a number to six significant digits, so anything derived
+// from one — a matrix entry, a resolved font size — lands within a relative
+// 1e-5 of what the unrounded input gives. That is under Chromium's own 1/64px
+// layout grid at every length a stylesheet uses, which is the bound the
+// rounding itself rests on. Wider than that is a difference, not a spelling.
+const NUMERIC_TOLERANCE = 1e-5;
+
+/**
+ * Whether two values differ only in numbers the printer's own rounding could
+ * have moved. Everything that is not a number has to match exactly, and the
+ * numbers have to line up one for one — a value with more of them is a
+ * different value however close each one reads.
+ * @param {string} one a value
+ * @param {string} other another
+ * @returns {boolean} whether they say the same thing
+ */
+const numericallyEqual = (one, other) => {
+	if (one === other) return true;
+	const mine = one.split(NUMBER_RUN);
+	const theirs = other.split(NUMBER_RUN);
+	if (mine.length !== theirs.length) return false;
+	for (let at = 0; at < mine.length; at++) {
+		if (mine[at] !== theirs[at]) return false;
+	}
+	const oneNumbers = one.match(NUMBER_RUN) || [];
+	const otherNumbers = other.match(NUMBER_RUN) || [];
+	for (let at = 0; at < oneNumbers.length; at++) {
+		const a = Number(oneNumbers[at]);
+		const b = Number(otherNumbers[at]);
+		if (!Number.isFinite(a) || !Number.isFinite(b)) return false;
+		// The rounding this tolerance stands for never moves a number it writes
+		// back as an integer, so a pair of those has to match exactly.
+		if (Number.isInteger(a) && Number.isInteger(b)) {
+			if (a !== b) return false;
+			continue;
+		}
+		const scale = Math.max(Math.abs(a), Math.abs(b), 1);
+		if (Math.abs(a - b) > scale * NUMERIC_TOLERANCE) return false;
+	}
+	return true;
+};
 
 /**
  * @param {Rule[]} before the source's rules
@@ -1210,6 +1450,14 @@ const compareRules = (before, after, signatures) => {
 	const blockOf = (text) => {
 		const at = text.indexOf(" { ");
 		return at === -1 ? text : text.slice(at);
+	};
+	/**
+	 * @param {string} text a rule's `selector { … }`
+	 * @returns {string} the selector alone, or the whole text when it has none
+	 */
+	const selectorOf = (text) => {
+		const at = text.indexOf(" { ");
+		return at === -1 ? text : text.slice(0, at);
 	};
 	/**
 	 * Read the rules layer by layer, each layer where it is first named. A named
@@ -1260,30 +1508,63 @@ const compareRules = (before, after, signatures) => {
 		const flat = perSelector(byLayer(rules)).map((rule) => ({
 			key: keyOf(rule, signatures),
 			// Everything but the selector: two entries sharing it are one rule's
-			// worth of cascade, whichever of them is written first.
-			group: keyOf({ chain: rule.chain, text: blockOf(rule.text) }, signatures)
+			// worth of cascade, whichever of them is written first. A page entry
+			// carries its own block, which is what it says before the earlier
+			// declarations it is read on top of are folded in.
+			group: keyOf(
+				{
+					chain: rule.chain,
+					text: rule.block === undefined ? blockOf(rule.text) : rule.block
+				},
+				signatures
+			),
+			// Everything but the block: the one selector under the one condition, so
+			// two runs sharing a set of these are one rule's worth of cascade.
+			where: keyOf(
+				{ chain: rule.chain, text: selectorOf(rule.text) },
+				signatures
+			)
 		}));
 		// A run of selectors reaching one block under one condition is the set a
 		// join may write in any order, so it is compared in one order.
+		/** @type {(typeof flat)[]} */
+		const runs = [];
 		for (let from = 0; from < flat.length;) {
 			let to = from + 1;
 			while (to < flat.length && flat[to].group === flat[from].group) to++;
-			if (to - from > 1) {
-				const sorted = flat
-					.slice(from, to)
-					.sort((one, other) => (one.key < other.key ? -1 : 1));
-				for (let i = from; i < to; i++) flat[i] = sorted[i - from];
-			}
+			// One selector written twice inside a run says the same thing twice, and
+			// the later entry already carries the earlier one — so it stands in for
+			// both, which is what a printer joining the two blocks leaves.
+			/** @type {Map<string, typeof flat[0]>} */
+			const last = new Map();
+			for (let i = from; i < to; i++) last.set(flat[i].where, flat[i]);
+			const entries = [...last.values()].sort((one, other) =>
+				one.key < other.key ? -1 : 1
+			);
+			runs.push(entries);
 			from = to;
 		}
-		return flat
+		// A selector carried into the very next run is one rule's declarations
+		// split across two blocks — nothing stands between them, so the cascade
+		// reads them as one, and the later entry already carries what the earlier
+		// one said. Read from the back so a run emptied this way stops standing
+		// between its neighbors, whether a printer joined the blocks or not.
+		for (let i = runs.length - 2, next = runs.length - 1; i >= 0; i--) {
+			const ahead = new Set(runs[next].map(({ where }) => where));
+			runs[i] = runs[i].filter((one) => !ahead.has(one.where));
+			if (runs[i].length !== 0) next = i;
+		}
+		return runs
+			.flat()
 			.map(({ key }) => key)
 			.filter((key, i, all) => i === 0 || key !== all[i - 1]);
 	};
 	const a = keys(before);
 	const b = keys(after);
 	const shorter = Math.min(a.length, b.length);
-	const at = a.slice(0, shorter).findIndex((key, i) => key !== b[i]);
+	const at = a
+		.slice(0, shorter)
+		.findIndex((key, i) => !numericallyEqual(key, b[i]));
 	if (at !== -1) return `rule ${at}: ${a[at]} vs ${b[at]}`;
 	if (a.length > b.length) return `rule dropped: ${a[shorter]}`;
 	if (b.length > a.length) return `rule added: ${b[shorter]}`;
@@ -1295,5 +1576,6 @@ module.exports = {
 	collectFixtures,
 	compareRules,
 	conditionSignatures,
-	installHelpers
+	installHelpers,
+	numericallyEqual
 };

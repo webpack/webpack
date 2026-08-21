@@ -17,9 +17,30 @@
 	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
 	<DIV CLASS="a    b" ID="upper">source casing folds</DIV>
 	<div class="  trimmed  " style="color: #ff0000;  padding: 0 0 0 0">token list and declarations</div>
-	<div style="content: '}'">declines: escapes the wrapper</div>
-	<div style="--custom: {a:b}">declines: custom property braces</div>
+	<div style="content: '}'">a brace inside a string is not one in the list</div>
+	<div style="--custom: {a:b}">nor is a balanced pair</div>
+	<div style="background:red;};background:limegreen">declines: a bare `}` is part of a bad declaration, and what follows it still applies</div>
+	<div style="top:anchor-size(--a1 width">declines: what the value leaves open would swallow the wrapper's own brace</div>
+	<div style="box-shadow:var(--t,10px">declines: the same, unclosed in a fallback</div>
+	<div style="content:'a">declines: the same, unclosed in a string</div>
+	<div style="width:calc(1px + 2px)">a closed pair leaves nothing open</div>
+	<div style="content:'\'';color:red">an escape inside a string is not its end</div>
+	<div style="--escaped:\7d ">an escape outside one is not a brace either</div>
+	<div style="--ran-out:\">the escape the value ran out of</div>
+	<!-- a value spelling the wrapper is read back as the value it is -->
+	<div style="content:'a{color:red}'">wrapper-shaped string</div>
+	<div style="--wrapper-shaped:a{color:red}">wrapper-shaped custom property</div>
+	<!-- a kept comment is hoisted out of the rule, so there is no body to read
+	     back and the attribute stays as written -->
+	<div style="/*! keep */color:red">declines: hoisted comment</div>
 	<p>optional end tags</p>
+	<!-- the parser implies the second row, but its `</tr>` is the source's and
+	     load-bearing: without it the whitespace after it moves into the row -->
+	<table>
+		<tr><td>a</td></tr>
+			<td>b</td>
+		</tr>
+	</table>
 	<ul><li>one</li><li>two</li></ul>
 	<dl><dt>a</dt><dd>b</dd><dt>c</dt></dl>
 	<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td></tr></tbody></table>

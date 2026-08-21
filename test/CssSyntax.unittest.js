@@ -472,8 +472,34 @@ describe("CssSyntax — parser entry points", () => {
 		).toBe("--x");
 	});
 
-	it("parseADeclaration rejects a non-custom declaration with a {}-block value", () => {
-		expect(parseADeclaration("color: { a: b }")).toBeUndefined();
+	it("parseADeclaration reads a lone {}-block as a whole value", () => {
+		// §5.4.6 step 8 rejects a `{}` block only when the value holds another
+		// non-whitespace token beside it — a block standing alone is the value.
+		// Measured in headless Chromium: `.a{color:{a:b}}` is a declaration the
+		// grammar then throws out, not a nested rule (`cssRules` stays empty),
+		// while `.a{a:hover{color:red}}` is one.
+		const decl = parseADeclaration("color: { a: b }");
+		expect(decl).toBeDefined();
+		expect(
+			/** @type {import("../lib/css/syntax").Declaration} */ (decl).name
+		).toBe("color");
+		// Anything beside the block sends it back to the nested-rule reading.
+		expect(parseADeclaration("color: { a: b } c")).toBeUndefined();
+		expect(parseADeclaration("color: { a: b } { c: d }")).toBeUndefined();
+	});
+
+	it("keeps the declaration after a lone {}-block", () => {
+		// Read as a rule, the block's `}` ends it and the `;` after it goes, so
+		// the declaration behind it fuses onto the block and both are lost.
+		const { decls, rules } = parseABlocksContents(
+			"color: { a: b }; background: red"
+		);
+		expect(rules).toHaveLength(0);
+		expect(
+			decls.map(
+				(d) => /** @type {import("../lib/css/syntax").Declaration} */ (d).name
+			)
+		).toEqual(["color", "background"]);
 	});
 
 	it("parseAStylesheet builds nested rules and a full range", () => {
@@ -881,6 +907,20 @@ describe("CssSyntax — block streaming", () => {
 		const streamed = walk(`@media screen{${BIG}}`);
 		expect(streamed[0]).toBe("+AtRule|0|0");
 		expect(streamed[streamed.length - 1]).toBe("-AtRule|0|0");
+	});
+
+	it("keeps a descriptor opaque in a streamed body", () => {
+		// The block outlives the call that entered its rule, so `@property` /
+		// `@function` state is restored per frame rather than around one walk.
+		const value = "rgb(255,0,0)0.50px";
+		expect(minify(`@function --f(){${BIG}result:${value}}`)).toContain(
+			`result:${value}`
+		);
+		expect(
+			minify(
+				`@property --x{syntax:"*";inherits:false;${BIG}initial-value:${value}}`
+			)
+		).toContain(`initial-value:${value}`);
 	});
 
 	it("visits a streamed block's children in source order", () => {
@@ -1405,6 +1445,48 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min('@unknown [foo="bar\\')).toBe('@unknown [foo="bar"];');
 		// A closed string still unquotes.
 		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
+	});
+
+	it("keeps an empty rule a `@namespace` after it is made inert by", () => {
+		// CSS Namespaces 3 §3.1: a rule the engine keeps ends the run a
+		// `@namespace` may stand in. Dropping that rule would carry the dead
+		// `@namespace` back to the head, where the engine honours it.
+		expect(min('@supports (color:red){}@namespace y "u";a{color:red}')).toBe(
+			'@supports (color:red){}@namespace y "u";a{color:red}'
+		);
+		expect(min('.x{}@namespace y "u";a{color:red}')).toBe(
+			'.x{}@namespace y "u";a{color:red}'
+		);
+		// An unknown at-rule is thrown away, so it is not what ended the run — the
+		// `@supports` after it is, and it has to stay for that reason too.
+		expect(
+			min('@totally-unknown;@supports (color:red){}@namespace y "u";a{b:1}')
+		).toBe('@totally-unknown;@supports (color:red){}@namespace y "u";a{b:1}');
+		// Past the first rule every engine keeps, an empty one drops as before.
+		expect(min("a{color:red}.b{}@media all{}")).toBe("a{color:red}");
+	});
+
+	it("writes the replacement character an escape at EOF names", () => {
+		// §4.3.7: an escape the input ran out of is U+FFFD. Written back as the
+		// `\\` it was, it would escape the `}` the printer closes the rule with —
+		// so the value would read as `foo}` rather than `foo\uFFFD`.
+		expect(min("a{--x:foo\\")).toBe("a{--x:foo\uFFFD}");
+		expect(min("a{color:foo\\")).toBe("a{color:foo\uFFFD}");
+		expect(min("@media a\\")).toBe("@media a\uFFFD;");
+		// §4.3.5 instead inside a string, where it names nothing at all.
+		expect(min('a{content:"x\\')).toBe('a{content:"x"}');
+		// The input ran out inside the string, so the engine closed it there: the
+		// `}` written after it is the end of the rule, not more of the string.
+		expect(min('a{--x:"foo\\')).toBe('a{--x:"foo"}');
+		expect(min("a{--x:'foo\\")).toBe("a{--x:'foo'}");
+		// A url token the input ran out of mid-escape holds a value its text no
+		// longer spells, and the engine writes that value back closed — so the `}`
+		// after it is not read as part of the url.
+		expect(min("a{--x:url(foo\\")).toBe("a{--x:url(foo\uFFFD)}");
+		// A `\\` with a character after it is an escape like any other, and an
+		// even run is a pair of escaped backslashes.
+		expect(min("a{--x:foo\\\\")).toBe("a{--x:foo\\\\}");
+		expect(min("a{--x:foo\\}")).toBe("a{--x:foo\\}}");
 	});
 
 	it("consumes a CRLF pair as one escape terminator", () => {
@@ -2717,7 +2799,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
 			// `initial` computes to the initial value, which is often a shorter word.
 			["a{min-width:initial}", "a{min-width:auto}"],
-			["a{outline-width:initial}", "a{outline-width:medium}"]
+			// ...but not where that word is itself a length: `zoom` scales the
+			// keyword and not the `initial` resolved before it, so the two are one
+			// value without a zoom and two under one (measured in headless Chromium:
+			// 3px against 1.5px at `zoom:2`).
+			["a{outline-width:initial}", "a{outline-width:initial}"],
+			["a{text-align:initial}", "a{text-align:start}"],
+			// The source carries its own comments, so the queued copy is claimed
+			// rather than flushed again after the rule.
+			[
+				"@container style(--a: /*! keep */ b){.a{color:red}}",
+				"@container style(--a: /*! keep */ b){.a{color:red}}"
+			],
+			// Only decoding tells this at-keyword from `@namespace`, so the empty
+			// rule the prologue needs is kept either way.
+			[
+				".e{}@name\\73pace url(x);.a{color:red}",
+				".e{}@name\\73pace url(x);.a{color:red}"
+			],
+			["a{font-size:initial}", "a{font-size:initial}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});

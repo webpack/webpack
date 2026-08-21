@@ -471,6 +471,10 @@ const signed = [
 	...new Set([...reflect.signedInteger, ...SUPPLEMENT.signedInteger])
 ].sort();
 
+// The heading names, shared by every table that names them rather than copied
+// into each — two lists of the same six drift apart.
+const HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"];
+
 // §13.2 tree-construction vocabulary: the tag-name groups the insertion modes
 // test membership in, and the name maps foreign content is adjusted with. Spec
 // prose, so they are written out — no dataset states them. Sets rather than
@@ -615,7 +619,48 @@ const PARSER_TABLES = [
 		"HEADING",
 		"set",
 		"The heading elements, whose start tag closes an open one.",
-		["h1", "h2", "h3", "h4", "h5", "h6"]
+		HEADINGS
+	],
+	[
+		"SHELL_ELEMENTS",
+		"set",
+		"The three the parser implies around every document. Their end tags are omissible like any other, but non-browser consumers routinely mis-parse a document missing them, so the printer decides them by policy rather than by what follows — which is why `OPTIONAL_END_TAG_FOLLOWERS` leaves them out.",
+		["html", "head", "body"]
+	],
+	[
+		"SHADOW_HOSTS",
+		"set",
+		"DOM §4.9's valid shadow host names — what `attachShadow()` accepts by name, so what a `<template shadowrootmode>` attaches to. Prose in the DOM spec, which publishes no element dataset, so webref's HTML IDL cannot state it.",
+		[
+			"article",
+			"aside",
+			"blockquote",
+			"body",
+			"div",
+			"footer",
+			...HEADINGS,
+			"header",
+			"main",
+			"nav",
+			"p",
+			"section",
+			"span"
+		]
+	],
+	[
+		"RESERVED_ELEMENT_NAMES",
+		"set",
+		"§4.13.1's exclusions from a valid custom element name: the hyphenated SVG and MathML names a parser would otherwise read as custom. Prose in the name production, and the SVG names are not among the camel-cased ones §13.2.6.5 adjusts, so nothing here derives them.",
+		[
+			"annotation-xml",
+			"color-profile",
+			"font-face",
+			"font-face-format",
+			"font-face-name",
+			"font-face-src",
+			"font-face-uri",
+			"missing-glyph"
+		]
 	],
 	[
 		"SVG_TAG_ADJUST",

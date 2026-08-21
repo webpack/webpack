@@ -857,5 +857,41 @@ describe("CssValueSyntax", () => {
 			});
 			expect(formatted).toBe(fs.readFileSync(DATA_TARGET, "utf8"));
 		});
+
+		it.each([
+			[
+				"a supplemented initial the dataset now states itself",
+				"text-align",
+				(/** @type {EXPECTED_ANY} */ entry) => {
+					entry.initial = "start";
+				},
+				/drop it from SUPPLEMENT\.initialValueKeywords/
+			],
+			[
+				"a slot keyword the dataset no longer accepts",
+				"flex-wrap",
+				(/** @type {EXPECTED_ANY} */ entry) => {
+					entry.syntax = "nowrap | [ wrap | wrap-reverse ]";
+				},
+				/unmergeableSlotKeywords: flex-wrap does not accept balance/
+			]
+		])("fails generation on %s", (_why, name, stale, message) => {
+			// A `SUPPLEMENT` entry states what no dataset does; once one does, the
+			// entry is stale and generation has to say so rather than emit it twice.
+			const properties =
+				/** @type {Record<string, { initial: string | string[], syntax: string }>} */ (
+					/** @type {unknown} */ (require("mdn-data/css/properties.json"))
+				);
+
+			const entry = properties[name];
+			const before = { ...entry };
+			stale(entry);
+			try {
+				expect(() => collectData()).toThrow(message);
+			} finally {
+				Object.assign(entry, before);
+			}
+			expect(() => collectData()).not.toThrow();
+		});
 	});
 });

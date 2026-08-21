@@ -3574,6 +3574,85 @@ describe("parseHtml", () => {
 			expect(/** @type {MatText} */ (nodes[1].children[0]).data).toBe("3");
 		});
 
+		// A formatting end tag the list cannot answer for is read as any other end
+		// tag would be, rather than dropped. The marker a `<select>` leaves behind
+		// outlives the select, so the `<em>` around one is on the far side of it;
+		// Noah's Ark drops the earliest `<b>` while leaving it open.
+		it.each([
+			[
+				"a marker stands between them",
+				"<em><select></select></em><x>",
+				["em", "x"]
+			],
+			[
+				"a second select closed it",
+				"<em><select><select></select></em><x>",
+				["em", "x"]
+			],
+			["an input closed it", "<em><select><input></em><x>", ["em", "x"]],
+			[
+				"Noah's Ark dropped it",
+				"<b><b><b><b></b></b></b><i></b><x>",
+				["b", "i"]
+			]
+		])(
+			"reads a formatting end tag as any other when %s",
+			(_name, src, shape) => {
+				expect(body(src).map((n) => n.tagName)).toEqual(shape);
+			}
+		);
+
+		// A `<template shadowrootmode>` is its parent's shadow root, which the
+		// engine takes out of the tree — so it is not a child the algorithm may
+		// carry into the formatting element it reconstructs around the rest. It
+		// only attaches where `attachShadow()` would: a host it accepts by name,
+		// a mode it knows, and none attached already.
+		it.each([
+			[
+				"attaches to its host",
+				"<a href=#x><div><template shadowrootmode=open><slot></slot></template></a>",
+				["template", "a"]
+			],
+			[
+				"cannot attach to that host",
+				"<a href=#x><li><template shadowrootmode=open><slot></slot></template></a>",
+				["a"]
+			],
+			[
+				"names no mode it knows",
+				"<a href=#x><div><template shadowrootmode=bogus><slot></slot></template></a>",
+				["a"]
+			],
+			[
+				"is the second on one host",
+				"<a href=#x><div><template shadowrootmode=open></template><template shadowrootmode=open></template></a>",
+				["template", "a"]
+			]
+		])("leaves a declarative shadow root where it %s", (_name, src, shape) => {
+			const nodes = body(src);
+			const inner = /** @type {MatElement[]} */ (nodes[1].children);
+			expect(inner.map((n) => n.tagName)).toEqual(shape);
+		});
+
+		// `attachShadow()` is defined on HTML elements alone. An integration point
+		// runs HTML rules with a foreign current node, so it is the one way a
+		// `<template shadowrootmode>` is written against a host that cannot take it.
+		it("keeps a shadow-root template outside the HTML namespace as content", () => {
+			const nodes = body(
+				"<a href=#x><svg><foreignObject><template shadowrootmode=open></template></foreignObject></svg></a>"
+			);
+			/**
+			 * @param {MatElement} node an element
+			 * @returns {string} its tag name and those it contains
+			 */
+			const shape = (node) =>
+				node.tagName +
+				(node.children && node.children.length > 0
+					? `>${/** @type {MatElement[]} */ (node.children).map(shape).join("")}`
+					: "");
+			expect(nodes.map(shape)).toEqual(["a>svg>foreignObject>template"]);
+		});
+
 		it("should apply Noah's Ark limit of three formatting elements", () => {
 			const nodes = body("<b><b><b><b></b></b></b></b>");
 			expect(nodes).toHaveLength(1);
@@ -4528,6 +4607,41 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		expect(minify(false)).toBe(
 			"<!doctype html><html><head><title>t</title></head><body><ul><li>a</ul></body></html>"
 		);
+	});
+
+	it("materializes an implied tag whose content opens with whitespace", () => {
+		// Before `<body>` has started the insertion modes drop leading whitespace,
+		// so dropping the tag too would lose the text node re-parsing must keep.
+		expect(
+			new SourceProcessor().process("<!doctype html><body> <p>x", {
+				mode: "minify",
+				removeImpliedTags: true
+			}).code
+		).toBe("<!doctype html><body> <p>x");
+	});
+
+	it("materializes an implied tag whose content opens in the head", () => {
+		// A start tag `inBody` ignores still closed `<head>` on the way there, so
+		// what follows it belongs to `<body>`; dropping the tag too would send it
+		// back to the head the insertion modes had already left (§13.2.6.4.6).
+		expect(
+			new SourceProcessor().process("<tr><style>a{color:red}</style>", {
+				mode: "minify",
+				removeImpliedTags: true
+			}).code
+		).toBe("<body><style>a{color:red}</style>");
+	});
+
+	it("materializes an implied tag whose content opens with a comment", () => {
+		// A comment there goes further out than a head element does: the modes put
+		// it in the element above the body, so it leaves the body altogether.
+		expect(
+			new SourceProcessor().process("<tr><!--c--><p>x", {
+				mode: "minify",
+				removeImpliedTags: true,
+				preserveComments: [/c/]
+			}).code
+		).toBe("<body><!--c--><p>x");
 	});
 
 	it("keeps a <html> that carries an attribute", () => {
@@ -5496,6 +5610,24 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		}
 	});
 
+	it("materializes a streamed implied tag as the walked one does", () => {
+		// The streamed path decides this where the node is known, the walked one on
+		// the first piece emitted, so the two have to agree on the same document.
+		const opening = "<tr><style>a{color:red}</style>";
+		/**
+		 * @param {string} src source
+		 * @returns {string} the minified document
+		 */
+		const minify = (src) =>
+			new SourceProcessor().process(src, {
+				mode: "minify",
+				removeImpliedTags: true
+			}).code;
+		const walked = minify(`${opening}<p>x</p>`);
+		const streamed = minify(`${opening}${"<p>x</p>".repeat(BIG)}`);
+		expect(streamed.slice(0, walked.length)).toBe(walked);
+	});
+
 	it("honours skipChildren() on a streamed element", () => {
 		/** @type {string[]} */
 		const log = [];
@@ -6315,6 +6447,15 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	const minify = (source) =>
 		new SourceProcessor().process(source, { mode: "minify" }).code;
 
+	describe("style attributes the css minifier cannot read", () => {
+		it("keeps one the css parser runs out of stack on", () => {
+			// Balanced, so nothing is left open for the wrapper to lose — the parser
+			// still recurses per block, and the value has to come back as written.
+			const deep = `--x:${"(".repeat(20000)}${")".repeat(20000)}`;
+			expect(minify(`<p style="${deep}">x</p>`)).toContain(deep);
+		});
+	});
+
 	describe("cloned / reconstructed formatting elements", () => {
 		it("keeps the reconstructed <b> around text after an implied </p>", () => {
 			expect(minify("<p><b>a<p>b")).toBe("<p><b>a</b><p><b>b</b>");
@@ -6522,6 +6663,16 @@ describe("SourceProcessor — print modes", () => {
 		expect(print(source, "minify")).toBe(
 			"<!doctype html><div id=a class=x><p>hi <b>there</b><ul><li>one<li>two</ul></div>"
 		);
+	});
+
+	it("escapes text to the letter of \u00A713.3 outside minification", () => {
+		// A bare `>` is only ever a character, so minification keeps it; the CR is
+		// a reference either way, since a literal one would be read back as LF.
+		const source = "<p>a &amp; b &lt; c &gt; d &#13; e</p>";
+		expect(print(source, "beautify")).toBe(
+			"<p>a &amp; b &lt; c &gt; d &#13; e</p>"
+		);
+		expect(print(source, "minify")).toBe("<p>a & b &lt; c > d &#13; e");
 	});
 
 	it("beautifies to something that minifies back the same", () => {

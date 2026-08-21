@@ -31,6 +31,10 @@ b">newline in a value</p>
 	<p data-sq='a"b'>the other quote wins</p>
 	<p data-amp="a?b&c" data-ref="a&amp;b">raw value bytes</p>
 	<input type="text" value="" disabled="disabled" checked>
+	<!-- an enumerated attribute names a keyword, so the space is not spare: this
+	     input is a `text` one, and trimming would make it a `time` one -->
+	<input type="time " id="padded-type">
+	<input type="TIME" id="cased-type">
 	<div   class="a"
 		id="b"
 		>collapsed attribute whitespace</div>

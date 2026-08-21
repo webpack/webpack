@@ -56,5 +56,10 @@ Array [
   "/*! declined: an angle unit other than \`deg\` needs its own conversion */.h06{color:hsl(0turn,100%,50%)}",
   "/*! declined: a substitution, and a saturation out of range */.h07{color:hsl(var(--h),100%,50%);background:hsl(0,150%,50%)}",
   "/*! declined: hwb() — esbuild says #00c3ff, lightningcss says #00c4ff */.h08{color:hwb(194 0% 0%)}",
+  "/*! declined: the stops interpolate in the space the gradient names, and a
+   color converted through sRGB maps back into it as a different point */.g01{background-image:linear-gradient(90deg in lch,red,lch(50 20 30))}.g02{background-image:linear-gradient(in oklch,red,oklch(.7 .1 200))}",
+  "/*! declined without a space too: a stop outside sRGB is handed back as written
+   rather than computed, so converting one moves what the CSSOM reports */.g03{background-image:linear-gradient(90deg,red,lch(50 20 30))}",
+  "/*! the legacy sRGB forms all compute to \`rgb(…)\` however they are spelled */.g04{background-image:linear-gradient(90deg,red,#010203)}",
 ]
 `;

@@ -4,4 +4,4 @@
    stylesheet it is emitted into. */
 
 /*! webpack: a string the tokenizer closes at EOF keeps its one quote */
-.t31:after { content: "unterminated
+.t31:after { content: "unterminated\

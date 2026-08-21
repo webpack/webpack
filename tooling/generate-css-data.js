@@ -2133,16 +2133,38 @@ const collectPositionKeywordAxes = () => {
  * -> that keyword. `initial` computes to the initial value whatever the
  * property, so the two are the same declaration and the shorter one is written.
  * A shorthand states its initial as the list of its longhands rather than a
- * value, which is what keeps one out of this table.
+ * value, which is what keeps one out of this table. An initial `mdn-data` writes
+ * as prose comes from `SUPPLEMENT.initialValueKeywords` and is then judged by
+ * these same tests.
  * @returns {[string, string][]} the entries, sorted by property
  */
+// The keywords that stand for a length: the ones `<line-width>` and
+// `<absolute-size>` offer beside `<length>`, which is where CSS states them.
+const lengthKeywords = new Set();
+for (const production of ["line-width", "absolute-size"]) {
+	const entry = syntaxes[production];
+	if (entry === undefined) continue;
+	for (const branch of String(entry.syntax).split("|")) {
+		const keyword = branch.trim();
+		if (/^[a-z][a-z-]*$/.test(keyword)) lengthKeywords.add(keyword);
+	}
+}
+
 const collectInitialValueKeywords = () => {
 	/** @type {[string, string][]} */
 	const out = [];
+	const stated = new Map(SUPPLEMENT.initialValueKeywords);
 	for (const [name, entry] of Object.entries(properties)) {
 		// `mdn-data`'s own types omit the field, which its data does carry.
-		const initial = /** @type {{ initial?: string | string[] }} */ (entry)
+		const written = /** @type {{ initial?: string | string[] }} */ (entry)
 			.initial;
+		const supplemented = stated.get(name);
+		if (supplemented !== undefined && /^[a-z][a-z-]*$/.test(String(written))) {
+			throw new Error(
+				`\`${name}\`'s initial is now a keyword \`mdn-data\` states — drop it from SUPPLEMENT.initialValueKeywords`
+			);
+		}
+		const initial = supplemented === undefined ? written : supplemented;
 		if (typeof initial !== "string") continue;
 		if (!/^[a-z][a-z-]*$/.test(initial)) continue;
 		if (initial.length >= "initial".length) continue;
@@ -2152,6 +2174,12 @@ const collectInitialValueKeywords = () => {
 		// property's own grammar names is the value `initial` computes to.
 		if (typeof entry.syntax !== "string") continue;
 		if (!acceptedValues(entry.syntax).keywords.has(initial)) continue;
+		// A keyword that is itself a length is scaled by `zoom`, where the
+		// `initial` it would replace is resolved before zoom applies — so the two
+		// are one value without a zoom and two under one. Measured in headless
+		// Chromium: `outline-width:initial` computes to 1.5px at `zoom:2` and
+		// `outline-width:medium` to 3px.
+		if (lengthKeywords.has(initial)) continue;
 		out.push([name, initial]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
@@ -2965,7 +2993,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3038,12 +3066,41 @@ const SUPPLEMENT = {
 	// What may follow the `*` a compound selector implies: another simple
 	// selector in the same compound. Selector syntax, not a value grammar.
 	compoundContinuations: [":", ".", "#", "["],
+	// The pseudo-classes that select a featureless element, which matches no type
+	// or universal selector (CSS Scoping 1 §3.1) — so the `*` a compound implies
+	// before one is not redundant, it is what stops the selector matching.
+	// `mdn-data` states each selector's syntax and says nothing about this.
+	// Measured in headless Chromium: `:host` matches, `*:host` does not.
+	featurelessPseudoClasses: ["host", "host-context"],
+	// The initial values `mdn-data` states as prose rather than as the keyword the
+	// spec gives, so nothing reads them off its `initial` field. Only a property
+	// whose initial really is one fixed keyword belongs here: `text-size-adjust`
+	// and `-ms-content-zooming` read differently per user agent, and `all` has no
+	// initial at all. Each is judged by the same tests a derived one is, and the
+	// generator throws once `mdn-data` states the keyword itself.
+	// CSS Text 3 gives `text-align: start`; `mdn-data` carries CSS 2.1's nameless
+	// value as `startOrNamelessValueIfLTRRightIfRTL`. Measured in headless
+	// Chromium under both `dir=ltr` and `dir=rtl`: `initial`, `start` and `unset`
+	// compute alike and paint the glyph at the same offset.
+	initialValueKeywords: [["text-align", "start"]],
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
 	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],
+	// A merge is all-or-nothing: a shorthand carrying one value the engine cannot
+	// read is dropped whole, taking the sibling longhands with it, where the
+	// longhand alone would only have lost itself. So a keyword the grammar states
+	// but no engine reads must not be merged. `mdn-data` states the grammar and
+	// no dataset states what ships. Measured over all 119 family slot keywords in
+	// headless Chromium: this is the only one it rejects that the printer merges.
+	unmergeableSlotKeywords: [["flex-wrap", "balance"]],
 	// Not derivable, a grammar naming `<length>` says `calc()` is valid there:
 	// Chrome takes no `calc()` in `overflow-clip-margin`, as it takes no bare `0`.
 	calcRejectingProperties: ["overflow-clip-margin"],
+	// Ranges the spec clamps a `calc()` to at computed-value time while rejecting
+	// the literal outright, so folding one to the value it equals switches the
+	// declaration off. CSS Fonts 4 §2.3 bounds `oblique` at ±90deg; `mdn-data`
+	// states `oblique <angle>` with no range, and no dataset carries the clamp.
+	clampedValueRanges: [["font-style", "deg", -90, 90]],
 	// CSS Backgrounds 3 §3.9 / CSS Masking 1 §4.5: these spell an omitted second
 	// value `auto`, not the first repeated. Their shared grammar cannot say so.
 	autoSecondValueProperties: ["background-size", "mask-size"],
@@ -5120,6 +5177,16 @@ const collectData = () => {
 			);
 		}
 	}
+	// A keyword the shorthand would carry into a declaration the engine drops
+	// whole is taken back out, so the merge declines rather than writing one.
+	for (const [longhand, keyword] of SUPPLEMENT.unmergeableSlotKeywords) {
+		const slot = slotAccepts.get(longhand);
+		if (slot === undefined || !slot.keywords.delete(keyword)) {
+			throw new Error(
+				`unmergeableSlotKeywords: ${longhand} does not accept ${keyword}`
+			);
+		}
+	}
 	assertClassesArePrintable(slotAccepts);
 	const colorKeywords = lowerSorted(
 		acceptedValues(syntaxes.color.syntax).keywords
@@ -5499,6 +5566,13 @@ const LEGACY_PSEUDO_ELEMENTS = ${setLiteral(SUPPLEMENT.legacyPseudoElements)};
 // combinator instead, and \`|\` makes the \`*\` a namespace's, not a redundant one.
 const COMPOUND_CONTINUATIONS = ${setLiteral(SUPPLEMENT.compoundContinuations)};
 
+// The pseudo-classes selecting a featureless element, which matches no type or
+// universal selector — so an implied \`*\` before one is what makes the selector
+// match nothing, and dropping it would bring the rule to life.
+const FEATURELESS_PSEUDO_CLASSES = ${setLiteral(
+		SUPPLEMENT.featurelessPseudoClasses
+	)};
+
 // The properties whose zero length keeps its unit: those whose own grammar
 // offers a bare number beside the length, so the unit is what picks the
 // reading, and the two an engine reads its own way.
@@ -5509,6 +5583,13 @@ const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(zeroUnitKeepingProperties)};
 const CALC_REJECTING_PROPERTIES = ${setLiteral(
 		SUPPLEMENT.calcRejectingProperties
 	)};
+
+// The range a \`calc()\` is clamped to where the literal outside it is invalid,
+// keyed by property: \`[unit, min, max]\`.
+/** @type {Map<string, [string, number, number]>} */
+const CLAMPED_VALUE_RANGES = new Map([${SUPPLEMENT.clampedValueRanges
+		.map(([name, unit, min, max]) => `["${name}", ["${unit}", ${min}, ${max}]]`)
+		.join(", ")}]);
 
 // At-rules whose empty block is inert, so dropping it changes nothing.
 const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(
@@ -5726,7 +5807,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
@@ -5740,7 +5821,7 @@ module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
 module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
 module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
-module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
+module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;

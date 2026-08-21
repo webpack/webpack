@@ -6,9 +6,28 @@ exports[`ConfigCacheTestCases html minimize-transforms minimize-transforms shoul
 	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
 	<div class=\\"a b\\" id=upper>source casing folds</div>
 	<div class=trimmed style=color:red;padding:0>token list and declarations</div>
-	<div style=\\"content: '}'\\">declines: escapes the wrapper</div>
-	<div style=\\"--custom: {a:b}\\">declines: custom property braces</div>
+	<div style='content:\\"}\\"'>a brace inside a string is not one in the list</div>
+	<div style=--custom:{a:b}>nor is a balanced pair</div>
+	<div style=background:red;};background:limegreen>declines: a bare \`}\` is part of a bad declaration, and what follows it still applies</div>
+	<div style=\\"top:anchor-size(--a1 width\\">declines: what the value leaves open would swallow the wrapper's own brace</div>
+	<div style=box-shadow:var(--t,10px>declines: the same, unclosed in a fallback</div>
+	<div style=\\"content:'a\\">declines: the same, unclosed in a string</div>
+	<div style=width:3px>a closed pair leaves nothing open</div>
+	<div style=\\"content:'\\\\'';color:red\\">an escape inside a string is not its end</div>
+	<div style=\\"--escaped:\\\\7d \\">an escape outside one is not a brace either</div>
+	<div style=--ran-out:\\\\>the escape the value ran out of</div>
+	
+	<div style='content:\\"a{color:red}\\"'>wrapper-shaped string</div>
+	<div style=--wrapper-shaped:a{color:red}>wrapper-shaped custom property</div>
+	
+	<div style=\\"/*! keep */color:red\\">declines: hoisted comment</div>
 	<p>optional end tags</p>
+	
+	<table>
+		<tr><td>a</tr>
+			<td>b</td>
+		</tr>
+	</table>
 	<ul><li>one<li>two</ul>
 	<dl><dt>a<dd>b<dt>c</dt></dl>
 	<table><tr><td>a<td>b<tr><td>c</table>

@@ -13,6 +13,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
+const { parseABlocksContents } = require("../lib/css/syntax");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const casesDir = path.resolve(__dirname, "./css-parsing-tests");
@@ -159,5 +160,65 @@ describe("css-parsing-tests webpack build", () => {
 				expect(internalByMode.get(mode).get(id)).toEqual([]);
 			});
 		}
+	}
+});
+
+// The suite above says the pipeline survives the corpus; this one says the
+// parser reads it the way the corpus says to. `blocks_contents.json` is the
+// §5.4.5 production `parseABlocksContents` implements, and what it settles is
+// the one decision that has no other oracle: whether `<ident>:<value>` is a
+// declaration or a qualified rule.
+describe("css-parsing-tests block contents", () => {
+	const file = path.join(casesDir, "blocks_contents.json");
+	if (!fs.existsSync(file)) {
+		it("submodule not initialized (run `git submodule update --init test/css-parsing-tests`)", () => {
+			// No-op: the conformance data is an optional git submodule.
+		});
+
+		return;
+	}
+	const data = JSON.parse(fs.readFileSync(file, "utf8"));
+
+	/**
+	 * What the corpus says each top-level item is, minus the `error` entries —
+	 * an invalid declaration is dropped rather than materialized.
+	 * @param {EXPECTED_ANY[]} items the corpus's expected list
+	 * @returns {string[]} one entry per item the parser has to produce
+	 */
+	const expected = (items) =>
+		items
+			.filter((item) => item[0] !== "error")
+			.map((item) => {
+				if (item[0] === "declaration") return `declaration ${item[1]}`;
+				return item[0] === "at-rule" ? `at-rule ${item[1]}` : "qualified rule";
+			});
+
+	/**
+	 * The same, as the parser reads it. The two lists come back split, so they
+	 * are merged on source position to compare as one sequence.
+	 * @param {string} source a block's contents
+	 * @returns {string[]} one entry per top-level item
+	 */
+	const actual = (source) => {
+		const { decls, rules } = parseABlocksContents(source);
+		const items = [
+			...decls.map((d) => ({ at: d.start, text: `declaration ${d.name}` })),
+			...rules.map((r) => ({
+				at: r.start,
+				text: r.name ? `at-rule ${r.name}` : "qualified rule"
+			}))
+		];
+		items.sort((one, other) => one.at - other.at);
+		return items.map((item) => item.text);
+	};
+
+	for (let i = 0; i < data.length; i += 2) {
+		const source = data[i];
+		if (typeof source !== "string") continue;
+		const want = expected(data[i + 1]);
+
+		it(`reads ${JSON.stringify(source)} as ${want.join(" + ") || "nothing"}`, () => {
+			expect(actual(source)).toEqual(want);
+		});
 	}
 });

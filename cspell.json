@@ -538,6 +538,8 @@
     "tooling/html-reflect.json",
     "test/test262-cases/**",
     "test/wpt/**",
+    "test/css-parsing-tests/**",
+    "test/html5lib-tests/**",
     "**/*.svg",
     "*.log",
     "**/*.wasm",

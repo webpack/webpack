@@ -20,6 +20,9 @@ b\\">newline in a value</p>
 	<p data-sq='a\\"b'>the other quote wins</p>
 	<p data-amp=a?b&c data-ref=a&amp;b>raw value bytes</p>
 	<input type=text value disabled checked>
+	
+	<input type=\\"time \\" id=padded-type>
+	<input type=time id=cased-type>
 	<div class=a id=b>collapsed attribute whitespace</div>
 	<div>no attributes</div>
 	<br>
