@@ -1,0 +1,7 @@
+{
+  "name": "context-element-original-request",
+  "imports": {
+    "#configs": "./configs",
+    "#configs/*": "./configs/*"
+  }
+}
