@@ -4398,6 +4398,15 @@ describe("SourceProcessor — optional end tags read the output", () => {
 
 	const LIST = "<ul>\n<li><p>a</p>\n</li>\n<li><p>b</p>\n</li>\n</ul>";
 
+	it("keeps a `</p>` a quirks-mode `<table>` would not close", () => {
+		// A `<table>` start tag closes an open `p` only outside quirks mode, so
+		// there the two would nest instead of staying siblings.
+		expect(minify("<table><p>")).toBe("<p></p><table></table>");
+		expect(minify("<!doctype html><table><p>")).toBe(
+			"<!doctype html><p><table></table>"
+		);
+	});
+
 	it("reads past whitespace the collapse tier deletes", () => {
 		// The `\n` after each `</p>` is content in the tree and nothing in the
 		// output, so the tag it was keeping alive goes with it.
@@ -4903,6 +4912,20 @@ describe("parseHtml — insertion-mode edge cases", () => {
 			/** @type {MatText} */ (/** @type {unknown} */ (nodes[0])).data
 		).toBe("xy");
 		expect(nodes[1].type).toBe(NodeType.Element);
+	});
+
+	it("does not read raw text for a tag the frameset modes ignore", () => {
+		// Only `noframes` is handled there (§13.2.6.4.10 hands it to the head
+		// rules); every other one is ignored, and an ignored start tag never runs
+		// the algorithm that switches the tokenizer — so the `<frame>` after it is
+		// still a tag.
+		const frameset = find("<frameset><textarea><frame></textarea>", "frameset");
+		expect(/** @type {MatElement} */ (frameset.children[0]).tagName).toBe(
+			"frame"
+		);
+		// `noframes` keeps its raw text, so the `<frame>` inside it is not one.
+		const noframes = find("<frameset><noframes><frame></noframes>", "noframes");
+		expect(noframes.children[0].type).toBe(NodeType.Text);
 	});
 
 	it("keeps end tags and comments under foreign rules inside <svg>", () => {
