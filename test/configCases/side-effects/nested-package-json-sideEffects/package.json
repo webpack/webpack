@@ -1,0 +1,4 @@
+{
+  "name": "nested-package-json-sideEffects-fixture",
+  "sideEffects": false
+}
