@@ -2,12 +2,7 @@
 
 const target = `async-node${process.versions.node.split(".").map(Number)[0]}`;
 
-/**
- * Snapshots the emitted bundle, so the annotation is reviewed as part of the
- * whole printed output rather than pinned by a substring.
- * @param {string} name emitted bundle name
- * @returns {(compiler: import("../../../../types").Compiler) => void} plugin
- */
+/** @type {(name: string) => (compiler: import("../../../../types").Compiler) => void} */
 const snapshotBundle = (name) => (compiler) => {
 	compiler.hooks.compilation.tap(
 		"test",
