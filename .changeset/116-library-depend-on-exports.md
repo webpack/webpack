@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Throw instead of exporting the chunk loading array length when a library entry with `dependOn` runs first.
+Fix the library exports of an entry that uses `dependOn` in every chunk format.
