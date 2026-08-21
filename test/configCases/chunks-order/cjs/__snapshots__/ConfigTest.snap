@@ -3,10 +3,10 @@
 exports[`ConfigTestCases chunks-order cjs exported tests The dependOn chunk must be loaded before the common chunk. 1`] = `
 "\\"use strict\\";
 (() => {
-var exports = {};
-exports.id = \\"foo\\";
-exports.ids = [\\"foo\\"];
-exports.modules = {
+var __webpack_chunk__ = {};
+__webpack_chunk__.id = \\"foo\\";
+__webpack_chunk__.ids = [\\"foo\\"];
+__webpack_chunk__.modules = {
 
 /***/ 552
 /*!****************************!*\\\\
@@ -38,7 +38,7 @@ it(\\"The dependOn chunk must be loaded before the common chunk.\\", () => {
 
 // load runtime
 var __webpack_require__ = require(\\"./runtime~nested-shared.js\\");
-__webpack_require__.C(exports);
+__webpack_require__.C(__webpack_chunk__);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 var __webpack_exports__ = __webpack_require__.X(0, [\\"shared\\",\\"nested-shared\\",\\"commons-dependency_js\\"], () => (__webpack_exec__(552)));
 const __webpack_export_target__ = exports;
