@@ -1,3 +1,5 @@
-global.__tieLoaded = (global.__tieLoaded || 0) + 1;
+import { loaded } from "./counter";
+
+loaded.push("alpha");
 
 export const alpha = "alpha";

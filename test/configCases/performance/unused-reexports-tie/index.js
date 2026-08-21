@@ -1,7 +1,8 @@
 import { used } from "./barrel";
+import { loaded } from "./counter";
 
 it("should report equally sized re-exports in a stable order", () => {
 	expect(used).toBe("used");
-	// A counter of its own: sibling cases share the global object.
-	expect(global.__tieLoaded).toBe(2);
+	// Kept in the bundle rather than on `global`, which leaks between suites.
+	expect(loaded.sort()).toEqual(["alpha", "zebra"]);
 });

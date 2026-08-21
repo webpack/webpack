@@ -1,3 +1,5 @@
 it("should stay quiet when hints are off", () => {
-	expect(1).toBe(1);
+	// The harness fails on an unexpected warning; the stats channel is the one
+	// nothing else checks.
+	expect(__STATS__.hints).toHaveLength(0);
 });

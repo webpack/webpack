@@ -13,8 +13,7 @@ module.exports = (config) =>
 				[
 					/hotspots: 1 thing holds the main thread long enough to be worth looking at/,
 					// A loader is not a tap, so this line is what proves loaders are
-					// measured too. The figure is a measurement, so only its shape is
-					// pinned.
+					// measured too; the figure is a measurement, so only its shape is.
 					/\n {2}loader \.\/slow-loader\.js \(\d+ ms over 6 runs\)/
 				]
 			];

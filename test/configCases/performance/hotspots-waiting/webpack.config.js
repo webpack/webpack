@@ -1,8 +1,7 @@
 "use strict";
 
-// Holds `make` open for a good while without running any code of its own. Wall
-// time from tap to callback would call this the slowest plugin in the build;
-// self time is what tells the difference between waiting and working.
+// Holds `make` open without running any code of its own: wall time would call
+// it the build's slowest plugin, self time tells waiting from working.
 /** @type {import("../../../../").WebpackPluginInstance} */
 const waiting = {
 	/**

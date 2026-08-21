@@ -7,4 +7,5 @@ const locales = import.meta.webpackContext("./locale", {
 
 it("should stay quiet when a context is narrowed by exclude", () => {
 	expect(locales.keys().length).toBeGreaterThan(0);
+	expect(__STATS__.warnings).toHaveLength(0);
 });
