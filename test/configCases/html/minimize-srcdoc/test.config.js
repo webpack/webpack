@@ -50,6 +50,11 @@ module.exports = {
 		// condition, which a text search would rewrite instead.
 		expect(page).toContain("<!--[if  IE ]>IE <![endif]-->");
 
+		// The comment is put back where it was parsed, so the same text written
+		// inside a script is left as the script wrote it.
+		expect(page).toContain('{"cc":"<!--[if IE]><p   >script</p><![endif]-->"}');
+		expect(page).toContain("<!--[if IE]><p>script<![endif]-->");
+
 		// Nothing to minify, and nothing invented.
 		expect(page).toContain("<iframe id=empty srcdoc>");
 		expect(page).toContain("<iframe id=none src=child.html>");
