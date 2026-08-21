@@ -4382,6 +4382,11 @@ declare interface ConcatenatedModuleInfo {
 	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 	runtimeRequirements?: ReadonlySet<string>;
 	globalScope?: Scope;
+
+	/**
+	 * the module's free references
+	 */
+	unresolvedReferences?: Reference[];
 	moduleScope?: Scope;
 	internalNames: Map<string, string>;
 	exportMap?: Map<string, string>;
@@ -23327,92 +23332,14 @@ type RecursiveArrayOrRecord<T> =
 	| RecursiveArrayOrRecord<T>[]
 	| T;
 declare interface RecursiveNonNullable<T> {}
-declare interface Reference {
+
+/**
+ * One identifier occurrence that refers to a binding.
+ */
+declare abstract class Reference {
 	identifier: Identifier;
 	from: Scope;
-	resolved: null | Variable;
-	writeExpr:
-		| null
-		| Program
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| SpreadElement
-		| PrivateIdentifier
-		| Super
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration
-		| MethodDefinition
-		| PropertyDefinition
-		| VariableDeclarator
-		| AssignmentProperty
-		| Property
-		| CatchClause
-		| ClassBody
-		| ImportSpecifier
-		| ImportDefaultSpecifier
-		| ImportNamespaceSpecifier
-		| ExportSpecifier
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| SwitchCase
-		| TemplateElement;
-	init: boolean;
-	isWrite: () => boolean;
-	isRead: () => boolean;
-	isWriteOnly: () => boolean;
-	isReadOnly: () => boolean;
-	isReadWrite: () => boolean;
+	resolved?: Variable;
 }
 type ReferenceableItem = string | object;
 declare interface ReferencedExport {
@@ -25955,32 +25882,28 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
-declare interface Scope {
-	type:
-		| "function"
-		| "module"
-		| "global"
-		| "block"
-		| "catch"
-		| "class"
-		| "class-field-initializer"
-		| "class-static-block"
-		| "for"
-		| "function-expression-name"
-		| "switch"
-		| "with"
-		| "TDZ";
-	isStrict: boolean;
+
+/**
+ * A lexical scope. One shape for every kind, so the property loads in the
+ * resolution loop stay monomorphic.
+ */
+declare abstract class Scope {
+	type: string;
+	block: NodeEstreeIndex;
 	upper: null | Scope;
 	childScopes: Scope[];
-	variableScope: Scope;
-	block: NodeEstreeIndex;
 	variables: Variable[];
 	set: Map<string, Variable>;
-	references: Reference[];
-	through: Reference[];
-	functionExpressionScope: boolean;
-	implicit?: { variables: Variable[]; set: Map<string, Variable> };
+	variableScope: Scope;
+
+	/**
+	 * For a function scope with parameters, the offset where its body
+	 * starts; `-1` for every other scope. Separates the two regions that
+	 * share this scope, so a reference in the parameter list can be kept
+	 * from resolving to a binding declared in the body — see
+	 * `isHiddenBodyBinding`.
+	 */
+	paramBoundary: number;
 }
 
 /**
@@ -28578,12 +28501,15 @@ type ValueCacheVersion = string | Set<string>;
 declare interface Values {
 	[index: string]: Value[];
 }
-declare interface Variable {
+
+/**
+ * A binding: one name declared in one scope.
+ */
+declare abstract class Variable {
 	name: string;
-	scope: Scope;
 	identifiers: Identifier[];
 	references: Reference[];
-	defs: any[];
+	scope: Scope;
 }
 declare class VariableInfo {
 	/**
