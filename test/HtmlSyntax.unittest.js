@@ -5388,6 +5388,33 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		expect(child(t2.children, "tbody")).toBeDefined();
 	});
 
+	it("ends what is open around an option only inside a select", () => {
+		// §"in body": with a `<select>` in scope an `<option>` generates implied end
+		// tags except `<optgroup>`, and an `<hr>` generates them all. Outside one
+		// only a current `<option>` gives way, so everything else nests.
+		const inSelect = child(bodyOf("<select><p><option>"), "select");
+		expect(
+			inSelect.children
+				.filter((c) => c.type === NodeType.Element)
+				.map((c) => /** @type {MatElement} */ (c).tagName)
+		).toEqual(["p", "option"]);
+		// An `<optgroup>` is kept by an `<option>` and ended by an `<hr>`.
+		const grouped = child(bodyOf("<select><optgroup><option>"), "select");
+		expect(
+			/** @type {MatElement} */ (child(grouped.children, "optgroup")).children
+		).toHaveLength(1);
+		// No select in scope: the option keeps the `<hr>` written inside it.
+		const loose = child(bodyOf("<div><option>o<hr>"), "div");
+		const option = child(loose.children, "option");
+		expect(
+			option.children.some(
+				(c) =>
+					c.type === NodeType.Element &&
+					/** @type {MatElement} */ (c).tagName === "hr"
+			)
+		).toBe(true);
+	});
+
 	it("moves an <hr> out of option/optgroup context in <select>", () => {
 		const select = child(
 			bodyOf("<select><option>a<optgroup><option>b<hr><option>c"),
