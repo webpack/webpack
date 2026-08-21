@@ -7716,6 +7716,12 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		["ruby fostered out of one", "<ruby><rtc><table><rb>"],
 		["a form the table kept", "<table><p><form>"],
 		["an input that ends a select", "<select><table><input>"],
+		["a foreign element fostered out of one", "<h2><table><svg><h1>"],
+		["a style the fostered element holds", "<p><table><p><style>"],
+		["a newline the fostered pre kept", "<table><pre><head>\n"],
+		// A `<template>` anywhere above suspends the form element pointer, so the
+		// end tag that a nested form otherwise needs would only close the outer one.
+		["a form a template holds", "<template><form><form>"],
 		// And where tree order already re-parses, it is left alone.
 		["a paragraph fostered out of one", "<table><p>"]
 	])("keeps %s", (_name, source) => {
