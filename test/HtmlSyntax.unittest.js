@@ -4632,6 +4632,18 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		).toBe("<body><style>a{color:red}</style>");
 	});
 
+	it("materializes an implied tag whose content opens with a comment", () => {
+		// A comment there goes further out than a head element does: the modes put
+		// it in the element above the body, so it leaves the body altogether.
+		expect(
+			new SourceProcessor().process("<tr><!--c--><p>x", {
+				mode: "minify",
+				removeImpliedTags: true,
+				preserveComments: [/c/]
+			}).code
+		).toBe("<body><!--c--><p>x");
+	});
+
 	it("keeps a <html> that carries an attribute", () => {
 		expect(
 			new SourceProcessor().process("<html lang=en><body>x", { mode: "minify" })
