@@ -23,7 +23,8 @@ module.exports = {
 	optimization: {
 		minimize: {
 			css: {
-				convertLengthUnits: true
+				convertLengthUnits: true,
+				rewriteCustomProperties: true
 			}
 		},
 		// `"..."` keeps the default minimizer, which hands

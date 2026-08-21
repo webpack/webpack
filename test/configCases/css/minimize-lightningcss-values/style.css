@@ -163,6 +163,8 @@
 var(--bar, 40px); }
 /*! test_custom_properties: .foo { background: var(--color) var(--image); } */
 .foo { background: var(--color) var(--image); }
+/*! test_custom_properties: .foo { height: calc(var(--spectrum-global-dimension-size-300) / 2); } */
+.foo { height: calc(var(--spectrum-global-dimension-size-300) / 2); }
 /*! test_custom_properties: .foo { color: var(--color, rgb(255, 255, 0)); } */
 .foo { color: var(--color, rgb(255, 255, 0)); }
 /*! test_custom_properties: .foo { color: var(--color, #ffff00); } */

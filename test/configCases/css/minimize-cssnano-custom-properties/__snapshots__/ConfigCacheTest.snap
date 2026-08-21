@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-cssnano-custom-properties minimize-cssnano-custom-properties should compile 1`] = `
+Array [
+  "/*! colormin: a substitution names no color to shorten */h1{color:var(--white)}",
+  "/*! colormin: a custom property's channels are not a color function */:root{--some-color:200 255 0}",
+  "/*! colormin: a color function in a custom property (cssnano rewrites, we ask) */a{--foo:rgb(0 0 0)}",
+  "/*! colormin: an alpha carried by a substitution keeps the function */div{background-color:rgba(51,153,255,var(--tw-bg-opacity))}",
+  "/*! whitespace: a nested parenthesis inside calc() */.w1{width:calc(10px - (100px/var(--test)))}",
+  "/*! whitespace: an upper-case CALC( is still calc() */.w2{width:CALC(10px - (100px/var(--test)))}",
+  "/*! whitespace: a foldable sum in a fallback */.w3{width:var(--foo,20px)}",
+  "/*! whitespace: a product of two lengths is no length, so it stays */.w4{width:var(--foo,calc(10px*10px))}",
+  "/*! whitespace: an empty value, spaced and bare */.w5,.w6{--prop:}",
+  "/*! whitespace: an empty fallback nested in another */.w7{background:var(--my-var,var(--my-background,pink,))}",
+  "/*! whitespace: two empty fallbacks multiplied */.w8{height:calc(var(--text-xxxl,)*var(--text-scale-ratio-up,))}",
+  "/*! whitespace: an empty fallback after a length */.w9{border-radius:10px var(--foobar,)}",
+  "/*! whitespace: a var() whose name is not a custom property */.w10{border-radius:var(border-rad,)}",
+  "/*! whitespace: a lone token keeps neither surrounding space */:root{--foo:bar}",
+  "/*! whitespace: an escaped tab ends the value it is written in */.w11{--x:1;--y:red\\\\	}",
+  "/*! params: a custom property in a @supports condition */@supports (--foo:green){.p1{color:red}}",
+  "/*! params: an empty value in one */@supports (--foo:){.p2{background:green}}",
+  "/*! params: two of them across \`or\` */@supports ((--foo:) or (--bar:green)){.p3{background:green}}",
+]
+`;

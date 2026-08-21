@@ -6004,6 +6004,11 @@ declare interface CssPrintOptions {
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
+	 */
+	rewriteCustomProperties?: boolean;
 }
 declare interface CssProcessOptions {
 	/**
@@ -6050,6 +6055,11 @@ declare interface CssProcessOptions {
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
+	 */
+	rewriteCustomProperties?: boolean;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -10304,7 +10314,7 @@ declare interface HtmlParserOptions {
 }
 type HtmlPrintOptions = Pick<
 	CssProcessOptions,
-	"environment" | "convertLengthUnits"
+	"environment" | "convertLengthUnits" | "rewriteCustomProperties"
 > & {
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
@@ -10341,6 +10351,11 @@ declare interface HtmlProcessOptions {
 	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
+	 */
+	rewriteCustomProperties?: boolean;
 
 	/**
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge (default false)
@@ -19984,6 +19999,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
+	 * @since 5.110.0
+	 */
+	rewriteCustomProperties?: boolean;
 
 	/**
 	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.

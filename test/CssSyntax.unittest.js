@@ -1329,6 +1329,49 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{c:red/*!c*/}b{c:1}")).toBe("a{c:red}/*!c*/b{c:1}");
 	});
 
+	it("rewrites a custom property's tokens when the option asks", () => {
+		/**
+		 * @param {string} css a stylesheet
+		 * @returns {string} its minified serialization, custom properties rewritten
+		 */
+		const rewritten = (css) =>
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				rewriteCustomProperties: true
+			}).code;
+
+		// Each transform the other minifiers apply inside a `--*` value.
+		expect(rewritten("a{--x:#ffffff}")).toBe("a{--x:#fff}");
+		expect(rewritten("a{--x:#ffffff00}")).toBe("a{--x:#fff0}");
+		expect(rewritten("a{--x:0.5rem}")).toBe("a{--x:.5rem}");
+		expect(rewritten("a{--x:rgba(0,0,0,0.15)}")).toBe("a{--x:#00000026}");
+		// At every layer of a list, and at depth inside a function.
+		expect(rewritten("a{--x:0px 0px 0px 2px #ffffffcc}")).toBe(
+			"a{--x:0px 0px 0px 2px #fffc}"
+		);
+		expect(rewritten("a{--x:max(1px,0.0625rem)}")).toBe(
+			"a{--x:max(1px,.0625rem)}"
+		);
+		// A substitution's fallback is the property's value, so its colors shorten
+		// as any other value's do — but a hash a worklet or an unknown function
+		// reads is not known to be one.
+		expect(rewritten("a{--x:var(--y,#ffffff)}")).toBe("a{--x:var(--y,#fff)}");
+		expect(rewritten("a{--x:paint(w,#ffffff)}")).toBe(
+			"a{--x:paint(w,#ffffff)}"
+		);
+		expect(rewritten("a{--x:some-fn(#ffffff)}")).toBe(
+			"a{--x:some-fn(#ffffff)}"
+		);
+		// The empty value a `var()` fallback reads is still not a dropped one.
+		expect(rewritten("a{--x:}")).toBe("a{--x:}");
+		// The boundaries the option does not touch still print as they did.
+		expect(rewritten("a{--x:1px/*c*/2px}")).toBe("a{--x:1px 2px}");
+		expect(rewritten("a{--x:1px/*!k*/2px}")).toBe("a{--x:1px/*!k*/2px}");
+		// Off, every one of them is written back as authored.
+		expect(min("a{--x:#ffffff}")).toBe("a{--x:#ffffff}");
+		expect(min("a{--x:rgba(0,0,0,0.15)}")).toBe("a{--x:rgba(0,0,0,0.15)}");
+	});
+
 	it("minifies a comment nested in a custom property's value", () => {
 		// A function or block is no leaf, so the comments in one are the value's
 		// too — at any depth, and in a block of every shape.
@@ -2670,6 +2713,40 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("hsl(0 100% 50% / .5)")).toBe("#ff000080");
 			expect(value("rgba(255,0,0,.2)")).toBe("#f003");
 			expect(value("rgba(0,0,0,.5)")).toBe("#00000080");
+		});
+
+		it("drops an authored alpha that is fully opaque", () => {
+			// `ff` is no alpha at all, so the color is spelled as an opaque one —
+			// which is shorter and asks nothing of the target's hex-alpha support.
+			expect(value("#ffffffff")).toBe("#fff");
+			expect(value("#ffff")).toBe("#fff");
+			expect(value("#FFFFFFFF")).toBe("#fff");
+			expect(value("#000000ff")).toBe("#000");
+			expect(value("#abcdefff")).toBe("#abcdef");
+			// All the way to the shortest name, as any other opaque color is.
+			expect(value("#ff0000ff")).toBe("red");
+			// Even where the target reads no hex alpha, this form needing none.
+			expect(value("#ffffffff", { cssColorHexAlpha: false })).toBe("#fff");
+			// A real alpha still collapses only as far as it may.
+			expect(value("#11223344")).toBe("#1234");
+			expect(value("#ffffffaa")).toBe("#fffa");
+			expect(value("#fff0")).toBe("#fff0");
+		});
+
+		it("shortens a color in a substitution's fallback", () => {
+			// The fallback is the property's value, not the function's own
+			// argument, so a hash there is as much a color as one written in place.
+			expect(value("var(--a,#ffffff)")).toBe("var(--a,#fff)");
+			expect(value("var(--a,#ffffffff)")).toBe("var(--a,#fff)");
+			expect(value("env(--a,#ffffff)")).toBe("env(--a,#fff)");
+			expect(value("var(--a,var(--b,#ffffff))")).toBe("var(--a,var(--b,#fff))");
+			// `paint()`'s arguments reach a worklet instead, and a function nothing
+			// names is not known to take a color at all.
+			expect(value("paint(w,#ffffff)")).toBe("paint(w,#ffffff)");
+			expect(value("some-fn(#ffffff)")).toBe("some-fn(#ffffff)");
+			expect(value("--my-fn(#ffffff)")).toBe("--my-fn(#ffffff)");
+			// A `url()` fragment is an id reference, never a color.
+			expect(value("url(#gradient)")).toBe("url(#gradient)");
 		});
 	});
 

@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-rewrite-custom-properties minimize-rewrite-custom-properties should compile 1`] = `
+Array [
+  "/*! a six-digit hex shortens to three */.t01{--a:#fff}",
+  "/*! an eight-digit hex shortens to four */.t02{--b:#fff0}",
+  "/*! a leading zero goes */.t03{--c:.5rem}",
+  "/*! a color function becomes the hex it names */.t04{--d:#00000026}",
+  "/*! every layer of a multi-value list is reached */.t05{--e:0px 0px 0px 2px #fffc}",
+  "/*! and so is a token nested in a function */.t06{--f:max(1px,.0625rem)}",
+  "/*! a substitution's fallback is the property's value, so it shortens too */.t07{--g:var(--a,#fff)}",
+  "/*! but a hash a worklet reads is not known to be a color */.t07b{--g2:paint(w,#ffffff)}",
+  "/*! the empty value a var() fallback reads survives */.t08{--h:}",
+  "/*! a kept comment still stands between two tokens */.t09{--i:1px ",
+  "/*! kept */ 2px}",
+  "/*! a normal declaration is unaffected by the option either way */.t10{color:#fff}",
+  "/*! lightningcss custom_properties: an empty value, in each spelling */.u01,.u02{--test:}",
+  "/*! lightningcss custom_properties: whitespace around a lone token */.u03,.u04,.u05,.u06{--test:foo}",
+  "/*! lightningcss custom_properties: a var() fallback carrying a length */.u07{--test:var(--foo,20px)}",
+  "/*! lightningcss custom_properties: two of them across a comma */.u08{transition:var(--foo,20px),var(--bar,40px)}",
+  "/*! lightningcss custom_properties: substitutions side by side */.u09{background:var(--color) var(--image)}",
+  "/*! lightningcss custom_properties: a color function in a fallback */.u10{color:var(--color,#ff0)}",
+  "/*! lightningcss custom_properties: a hex in a fallback */.u11{color:var(--color,#ff0)}",
+  "/*! lightningcss custom_properties: a fallback that is itself substituted */.u12{color:var(--color,rgb(var(--red),var(--green),0))}",
+  "/*! lightningcss custom_properties: a time already at its shortest */.u13{--test:.5s}",
+  "/*! lightningcss custom_properties: an escaped \`/\` in the property name */.u14{--theme-sizes-1\\\\/12:2}",
+  "/*! lightningcss custom_properties: a zero keeps its unit, the value being opaque */.u15{--test:0px}",
+  "/*! lightningcss custom_properties: attr() with a type, and with a fallback */.u16{background-color:attr(data-color type(<color>))}.u17{width:attr(data-width type(<length>),100px)}",
+  "/*! a named color stays as authored, hex being invalid where the name is not */.v01{--c:white}.v02{--c:black}.v03{--c:rebeccapurple}",
+  "/*! and the same name in a real color property does shorten */.v04{color:#fff}",
+]
+`;
