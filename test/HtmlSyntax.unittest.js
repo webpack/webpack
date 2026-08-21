@@ -7727,6 +7727,7 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// so what a fostered run would close can sit any number of elements above.
 		["an input under a fostered div", "<select><table><div><input>"],
 		["a button under a fostered list", "<button><table><ol><button>"],
+		["a select above what holds the table", "<select><span><table><input>"],
 		// And where tree order already re-parses, it is left alone.
 		["a paragraph fostered out of one", "<table><p>"]
 	])("keeps %s", (_name, source) => {
