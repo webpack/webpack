@@ -3,9 +3,9 @@
 const { EventEmitter } = require("events");
 const createBackend = require("../lib/hmr/lazyCompilationBackend");
 
-/** @typedef {import("../lib/hmr/LazyCompilationPlugin").BackendApi} BackendApi */
-/** @typedef {import("http").Server} Server */
-/** @typedef {import("net").Socket} Socket */
+/** @import { BackendApi } from "../lib/hmr/LazyCompilationPlugin" */
+/** @import { Server } from "http" */
+/** @import { Socket } from "net" */
 
 const PREFIX = "/lazy-compilation-using-";
 

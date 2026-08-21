@@ -2,7 +2,7 @@
 
 const StringXor = require("../lib/util/StringXor");
 
-/** @typedef {import("../lib/util/Hash")} Hash */
+/** @import Hash from "../lib/util/Hash" */
 
 /**
  * @param {StringXor} xor xor accumulator

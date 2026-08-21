@@ -2,7 +2,7 @@
 
 const { ExternalModule } = require("../../");
 
-/** @typedef {import("../../").Compiler} Compiler */
+/** @import { Compiler } from "../../" */
 
 const PLUGIN_NAME = "assertIncludedExternals";
 

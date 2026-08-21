@@ -2,7 +2,7 @@
 
 const { RuntimeGlobals, RuntimeModule, Template } = require("../../../../");
 
-/** @typedef {import("../../../../").Compilation} Compilation */
+/** @import { Compilation } from "../../../../" */
 
 class ReactRefreshRuntimeModule extends RuntimeModule {
 	constructor() {

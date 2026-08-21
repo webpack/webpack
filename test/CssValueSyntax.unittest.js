@@ -24,7 +24,7 @@ const {
 	walkValueSyntax
 } = require("../tooling/generate-css-data");
 
-/** @typedef {import("../tooling/generate-css-data").SyntaxNode} SyntaxNode */
+/** @import { SyntaxNode } from "../tooling/generate-css-data" */
 
 /**
  * A one-line spelling of a parsed tree, so a case states the shape it expects

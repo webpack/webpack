@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").WebpackPluginFunction} WebpackPluginFunction */
+/** @import { WebpackPluginFunction } from "../../../../" */
 
 /** @type {WebpackPluginFunction[]} */
 const plugins = [

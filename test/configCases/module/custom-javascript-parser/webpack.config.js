@@ -4,7 +4,7 @@ const meriyah = require("meriyah");
 
 let counter = 0;
 
-/** @typedef {import("estree").SourceLocation} SourceLocation */
+/** @import { SourceLocation } from "estree" */
 /** @typedef {import("estree").Program & { start: number, end: number, loc: SourceLocation }} Program */
 /** @typedef {import("estree").Comment & { start: number, end: number, loc: SourceLocation }} Comment */
 

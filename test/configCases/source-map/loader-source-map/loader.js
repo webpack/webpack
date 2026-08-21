@@ -1,7 +1,9 @@
-/** @typedef {import("@babel/core").FileResult} BabelFileResult */
-/** @typedef {import("@babel/core").InputOptions} TransformOptions */
-
-/** @typedef {import("estree").SimpleLiteral} SimpleLiteral */
+/**
+ * @import {
+ * 	FileResult as BabelFileResult,
+ * 	InputOptions as TransformOptions
+ * } from "@babel/core"
+ */
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function (source, inputSourceMap) {

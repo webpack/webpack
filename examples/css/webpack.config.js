@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 
-/** @typedef {import("webpack").Compiler} Compiler */
+/** @import { Compiler } from "webpack" */
 
 /**
  * Renders a CSS module's export map into a `.d.ts`, using the object form that

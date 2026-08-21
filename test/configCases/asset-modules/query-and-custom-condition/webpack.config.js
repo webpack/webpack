@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
+/** @import { ParserOptionsByModuleTypeKnown } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -7,10 +7,8 @@ const RuntimeGlobals = require("../../../../").RuntimeGlobals;
 const Parser = require("../../../../").Parser;
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").ParserState} ParserState */
-/** @typedef {import("../../../../lib/Parser").PreparsedAst} PreparsedAst */
-/** @typedef {import("../../../../").Module} Module */
+/** @import { Compiler, ParserState, Module } from "../../../../" */
+/** @import { PreparsedAst } from "../../../../lib/Parser" */
 
 class LocalizationParser extends Parser {
 	/**

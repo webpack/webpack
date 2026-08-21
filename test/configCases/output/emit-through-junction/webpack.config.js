@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 
 // Emit through a directory junction (mklink /J on Windows) / symlink to verify
 // the build does not stall at the emit phase (#5915). `output.path` is a

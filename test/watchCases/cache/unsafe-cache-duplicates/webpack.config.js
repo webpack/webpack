@@ -2,7 +2,7 @@
 
 const path = require("path");
 
-/** @typedef {import("../../../../").NormalModule} NormalModule */
+/** @import { NormalModule } from "../../../../" */
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { srcPath }) => ({

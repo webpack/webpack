@@ -3,7 +3,7 @@
 const { join, resolve } = require("path");
 const { NormalModule } = require("../../../../");
 
-/** @typedef {import("../../../../").Module} Module */
+/** @import { Module } from "../../../../" */
 
 /**
  * @param {import("../../../../").Compiler} compiler the compiler

@@ -1,7 +1,11 @@
 "use strict";
 
-/** @typedef {import("../../../../").Configuration} Configuration */
-/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
+/**
+ * @import {
+ * 	Configuration,
+ * 	GeneratorOptionsByModuleTypeKnown
+ * } from "../../../../"
+ */
 
 const common = {
 	target: "web",

@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../").Compiler} Compiler */
-/** @typedef {import("../../../").Configuration} Configuration */
+/** @import { Compiler, Configuration } from "../../../" */
 
 const MCEP = require("mini-css-extract-plugin");
 const { Compilation } = require("../../../");

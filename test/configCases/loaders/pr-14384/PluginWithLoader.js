@@ -3,7 +3,7 @@ const { NormalModule } = require("webpack");
 const PLUGIN_NAME = "PluginWithLoader";
 const loaderPath = require.resolve("./loader.js");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 
 class PluginWithLoader {
 	/**

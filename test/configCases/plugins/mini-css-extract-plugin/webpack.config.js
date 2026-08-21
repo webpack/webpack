@@ -2,7 +2,7 @@
 
 const MCEP = require("mini-css-extract-plugin");
 
-/** @typedef {import("../../../../").StatsCompilation} StatsCompilation */
+/** @import { StatsCompilation } from "../../../../" */
 
 /** @type {(i: number, options?: import("mini-css-extract-plugin").PluginOptions) => import("../../../../").Configuration} */
 const config = (i, options) => ({

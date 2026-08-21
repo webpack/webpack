@@ -2,8 +2,12 @@
 
 const acorn = require("acorn");
 
-/** @typedef {import("../../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
-/** @typedef {import("../../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../../lib/javascript/JavascriptParser"
+ */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

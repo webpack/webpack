@@ -1,9 +1,13 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Compilation} Compilation */
-/** @typedef {import("../../../../").Configuration} Configuration */
-/** @typedef {import("../../../../").Chunk} Chunk */
+/**
+ * @import {
+ * 	Compiler,
+ * 	Compilation,
+ * 	Configuration,
+ * 	Chunk
+ * } from "../../../../"
+ */
 
 /** @type {Configuration} */
 /** @type {import("../../../../").Configuration} */

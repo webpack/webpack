@@ -2,7 +2,7 @@
 
 const path = require("path");
 
-/** @typedef {import("../../../../").NormalModule} NormalModule */
+/** @import { NormalModule } from "../../../../" */
 
 // Modules of `heavy-lib` that must stay deferred when only `used` is imported.
 const deferred = new Set(

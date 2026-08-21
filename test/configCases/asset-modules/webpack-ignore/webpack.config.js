@@ -2,8 +2,7 @@
 
 const path = require("path");
 
-/** @typedef {import("../../../../lib/util/fs").InputFileSystem} InputFileSystem */
-/** @typedef {import("../../../../lib/util/fs").ReadFileSync} ReadFileSync */
+/** @import { InputFileSystem, ReadFileSync } from "../../../../lib/util/fs" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -3,8 +3,8 @@
 const SyncHook = require("tapable").SyncHook;
 const MultiWatching = require("../lib/MultiWatching");
 
-/** @typedef {import("../lib/Watching")} Watching */
-/** @typedef {import("../lib/MultiCompiler")} MultiCompiler */
+/** @import Watching from "../lib/Watching" */
+/** @import MultiCompiler from "../lib/MultiCompiler" */
 
 /**
  * @returns {Watching} watching

@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../").Module} Module */
-/** @typedef {import("../../../").WebpackError} WebpackError */
+/** @import { Module, WebpackError } from "../../../" */
 
 /** @type {import("../../../").Configuration} */
 module.exports = {

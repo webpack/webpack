@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../").Configuration} Configuration */
+/** @import { Configuration } from "../../" */
 /** @typedef {Configuration | Configuration[]} Config */
 /** @typedef {{ testPath?: string, srcPath?: string, env?: Record<string, unknown> }} Argv */
 /** @typedef {(env: Record<string, unknown> | undefined, argv: Argv) => Config | Promise<Config>} ConfigFn */

@@ -1,5 +1,4 @@
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Compilation} Compilation */
+/** @import { Compiler, Compilation } from "../../../../" */
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = async function loader() {

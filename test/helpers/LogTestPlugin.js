@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../").Compiler} Compiler */
-/** @typedef {import("../../").Compilation} Compilation */
+/** @import { Compiler, Compilation } from "../../" */
 
 module.exports = class LogTestPlugin {
 	/**

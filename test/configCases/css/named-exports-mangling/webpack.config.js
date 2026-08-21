@@ -2,9 +2,13 @@
 
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Configuration} Configuration */
-/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
-/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
+/**
+ * @import {
+ * 	Configuration,
+ * 	ParserOptionsByModuleTypeKnown,
+ * 	GeneratorOptionsByModuleTypeKnown
+ * } from "../../../../"
+ */
 /** @typedef {NonNullable<GeneratorOptionsByModuleTypeKnown["css/module"]>["exportsConvention"]} ExportsConvention */
 /** @typedef {Extract<ExportsConvention, string>} ExportsConventionLiteral */
 

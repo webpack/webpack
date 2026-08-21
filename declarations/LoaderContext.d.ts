@@ -1,7 +1,7 @@
-import type { RawSourceMap } from "../lib/NormalModule";
+import type { RawSourceMap } from "webpack-sources";
 import type Module from "../lib/Module";
 import type { validate } from "schema-utils";
-import type { AssetInfo } from "../lib/Compilation";
+import type { AssetInfo, ExecuteModuleExports } from "../lib/Compilation";
 import type { ResolveOptionsWithDependencyType } from "../lib/ResolverFactory";
 import type Compilation from "../lib/Compilation";
 import type Compiler from "../lib/Compiler";
@@ -11,8 +11,7 @@ import type { InputFileSystem } from "../lib/util/fs";
 import type { Logger } from "../lib/logging/Logger";
 import type {
 	ImportModuleOptions,
-	ImportModuleCallback,
-	ExecuteModuleExports
+	ImportModuleCallback
 } from "../lib/dependencies/LoaderPlugin";
 import type { Resolver } from "enhanced-resolve";
 import type {

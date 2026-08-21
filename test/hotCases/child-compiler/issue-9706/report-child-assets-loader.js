@@ -1,5 +1,4 @@
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Compilation} Compilation */
+/** @import { Compiler, Compilation } from "../../../../" */
 
 const {
 	SingleEntryPlugin,

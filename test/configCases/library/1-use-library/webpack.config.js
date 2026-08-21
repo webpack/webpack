@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Compilation} Compilation */
+/** @import { Compiler, Compilation } from "../../../../" */
 
 const path = require("path");
 const webpack = require("../../../../");

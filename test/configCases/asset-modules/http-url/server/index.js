@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
-/** @typedef {import("../../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../../" */
 
 /**
  * @returns {import("http").Server} server instance

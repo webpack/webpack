@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../").Configuration} Configuration */
-/** @typedef {import("../../../").Compiler} Compiler */
+/** @import { Configuration, Compiler } from "../../../" */
 
 var EntryOptionPlugin = require("../../../").EntryOptionPlugin;
 var getNormalizedWebpackOptions = require("../../../").config.getNormalizedWebpackOptions;

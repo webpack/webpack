@@ -6,8 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 
-/** @typedef {import("..").Configuration} Configuration */
-/** @typedef {import("..").Stats} Stats */
+/** @import { Configuration, Stats } from ".." */
 
 const JS_ASSET = /\.[cm]?js$/;
 const casesPath = path.join(__dirname, "configCases");

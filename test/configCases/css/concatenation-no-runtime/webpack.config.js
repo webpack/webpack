@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 /** @type {("text" | "css-style-sheet" | "style" | "link")[]} */
 const exportTypes = ["text", "css-style-sheet", "style", "link"];

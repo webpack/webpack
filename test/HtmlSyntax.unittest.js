@@ -3071,8 +3071,7 @@ describe("tokenize", () => {
 	});
 });
 
-/** @typedef {import("../lib/html/syntax").HtmlNodeRef} HtmlNodeRef */
-/** @typedef {import("../lib/html/syntax").HtmlAttribute} HtmlAttribute */
+/** @import { HtmlNodeRef, HtmlAttribute } from "../lib/html/syntax" */
 /**
  * Materialized plain-object views of the struct-of-arrays AST — the shape
  * `parseHtml` used to return, rebuilt through the accessor `A`.

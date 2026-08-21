@@ -2,9 +2,13 @@
 
 const { compareLocations } = require("../lib/util/comparators");
 
-/** @typedef {import("../lib/Dependency").DependencyLocation} DependencyLocation */
-/** @typedef {import("../lib/Dependency").SourcePosition} SourcePosition */
-/** @typedef {import("../lib/Dependency").RealDependencyLocation} RealDependencyLocation */
+/**
+ * @import {
+ * 	DependencyLocation,
+ * 	SourcePosition,
+ * 	RealDependencyLocation
+ * } from "../lib/Dependency"
+ */
 
 /**
  * @param {Partial<SourcePosition>=} overrides position overrides

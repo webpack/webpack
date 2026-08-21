@@ -1,7 +1,7 @@
 "use strict";
 
-/** @typedef {import("enhanced-resolve").ResolveRequest} ResolveRequest */
-/** @typedef {import("../../../../").ExternalItemFunctionData} ExternalItemFunctionData */
+/** @import { ResolveRequest } from "enhanced-resolve" */
+/** @import { ExternalItemFunctionData } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

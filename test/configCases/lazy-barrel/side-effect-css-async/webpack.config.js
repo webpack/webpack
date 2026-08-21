@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @typedef {import("../../../../").NormalModule} NormalModule */
+/** @import { NormalModule } from "../../../../" */
 
 const unusedModule = path.resolve(__dirname, "lib/Unused.js");
 

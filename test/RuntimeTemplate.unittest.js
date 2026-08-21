@@ -3,7 +3,11 @@
 const RequestShortener = require("../lib/RequestShortener");
 const RuntimeTemplate = require("../lib/RuntimeTemplate");
 
-/** @typedef {import("../lib/config/defaults").OutputNormalizedWithDefaults} OutputOptions */
+/**
+ * @import {
+ * 	OutputNormalizedWithDefaults as OutputOptions
+ * } from "../lib/config/defaults"
+ */
 
 describe("RuntimeTemplate.concatenation", () => {
 	it("no args", () => {
@@ -259,9 +263,9 @@ describe("RuntimeTemplate.assignOr", () => {
 });
 
 describe("RuntimeTemplate.supportsAnalyzable", () => {
-	/** @typedef {import("../lib/ChunkGraph")} ChunkGraph */
-	/** @typedef {import("../lib/Compilation")} Compilation */
-	/** @typedef {import("../lib/Module")} Module */
+	/** @import ChunkGraph from "../lib/ChunkGraph" */
+	/** @import Compilation from "../lib/Compilation" */
+	/** @import Module from "../lib/Module" */
 
 	/** Stands for the module a reference is emitted into; no field of it is read. */
 	const module = /** @type {Module} */ (/** @type {unknown} */ ({}));

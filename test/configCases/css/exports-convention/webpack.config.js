@@ -2,8 +2,12 @@
 
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
-/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
+/**
+ * @import {
+ * 	ParserOptionsByModuleTypeKnown,
+ * 	GeneratorOptionsByModuleTypeKnown
+ * } from "../../../../"
+ */
 
 const common = {
 	optimization: {

@@ -5,7 +5,7 @@ const path = require("path");
 const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 
 const CONTENT = "emitted to an absolute path\n";
 

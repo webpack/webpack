@@ -60,6 +60,8 @@ export default defineConfig([
 		rules: {
 			// Too noise
 			"jsdoc/require-property-description": "off",
+			// Indents are used for imports
+			"jsdoc/check-indentation": "off",
 			// We have helpers for the default configuration
 			"new-cap": [
 				"error",

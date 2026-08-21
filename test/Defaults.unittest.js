@@ -23,8 +23,7 @@ afterAll(() => {
 	}
 });
 
-/** @typedef {import("../lib/index").Configuration} Configuration */
-/** @typedef {import("../lib/index").WebpackOptionsNormalized} WebpackOptionsNormalized */
+/** @import { Configuration, WebpackOptionsNormalized } from "../lib/index" */
 /** @typedef {ReturnType<expect>} ExceptResult */
 
 /**

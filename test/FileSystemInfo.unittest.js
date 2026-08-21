@@ -1,10 +1,8 @@
 "use strict";
 
-/** @typedef {import("../lib/FileSystemInfo").Snapshot} Snapshot */
-/** @typedef {import("../lib/FileSystemInfo").SnapshotOptions} SnapshotOptions */
-/** @typedef {import("../lib/errors/WebpackError")} WebpackError */
-/** @typedef {import("memfs").IFs} IFs */
-/** @typedef {import("../lib/util/fs").IStats} IStats */
+/** @import { Snapshot, SnapshotOptions } from "../lib/FileSystemInfo" */
+/** @import WebpackError from "../lib/errors/WebpackError" */
+/** @import { IFs } from "memfs" */
 
 const util = require("util");
 const { Volume, createFsFromVolume } = require("memfs");

@@ -6,11 +6,11 @@ const RawSource = require("webpack-sources").RawSource;
 const NormalModule = require("../lib/NormalModule");
 const HarmonyImportSideEffectDependency = require("../lib/dependencies/HarmonyImportSideEffectDependency");
 
-/** @typedef {import("../lib/NormalModule").LoaderItem} LoaderItem */
-/** @typedef {import("../lib/Parser")} Parser */
-/** @typedef {import("../lib/Generator")} Generator */
-/** @typedef {import("../lib/ModuleGraph")} ModuleGraph */
-/** @typedef {import("../lib/dependencies/ImportPhase").ImportPhaseType} ImportPhaseType */
+/** @import { LoaderItem } from "../lib/NormalModule" */
+/** @import Parser from "../lib/Parser" */
+/** @import Generator from "../lib/Generator" */
+/** @import ModuleGraph from "../lib/ModuleGraph" */
+/** @import { ImportPhaseType } from "../lib/dependencies/ImportPhase" */
 
 describe("NormalModule", () => {
 	/** @type {InstanceType<typeof NormalModule>} */

@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../").Module} Module */
+/** @import { Module } from "../../../" */
 
 const webpack = require("../../../");
 const {

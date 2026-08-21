@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 /** @type {(i: number, options: Partial<Configuration>) => Configuration} */
 const common = (i, options) => ({

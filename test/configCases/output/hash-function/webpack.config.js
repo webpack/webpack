@@ -2,8 +2,7 @@
 
 const { createHash } = require("crypto");
 
-/** @typedef {import("crypto").Encoding} Encoding */
-/** @typedef {import("crypto").BinaryToTextEncoding} BinaryToTextEncoding */
+/** @import { Encoding, BinaryToTextEncoding } from "crypto" */
 
 class SHA256Hash {
 	constructor() {

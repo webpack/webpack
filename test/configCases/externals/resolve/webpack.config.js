@@ -1,9 +1,12 @@
 "use strict";
 
-/** @typedef {import("../../../../").ExternalItemFunctionData} ExternalItemFunctionData */
-/** @typedef {import("../../../../").ExternalItemFunctionPromise} ExternalItemFunctionPromise */
-/** @typedef {import("../../../../").ExternalItemFunctionDataGetResolve} ExternalItemFunctionDataGetResolve */
-/** @typedef {import("../../../../").ExternalItemFunctionDataGetResolveResult} ExternalItemFunctionDataGetResolveResult */
+/**
+ * @import {
+ * 	ExternalItemFunctionPromise,
+ * 	ExternalItemFunctionDataGetResolve,
+ * 	ExternalItemFunctionDataGetResolveResult
+ * } from "../../../../"
+ */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").FileCacheOptions} FileCacheOptions */
+/** @import { Compiler, FileCacheOptions } from "../../../../" */
 
 // with explicit cache names
 

@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @typedef {import("../../lib/css/syntax").MutableToken} MutableToken */
+/** @import { MutableToken } from "../../lib/css/syntax" */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
 /** @typedef {{ selectorText: string | undefined, style: StyleDeclaration, cssText: string }} CssRule */
 /** @typedef {{ type: string, target?: FakeElement }} FakeEvent */

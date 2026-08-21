@@ -3,7 +3,7 @@
 const { CachedSource } = require("webpack-sources");
 const { AsyncWebAssemblyModulesPlugin } = require("../../../../").wasm;
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

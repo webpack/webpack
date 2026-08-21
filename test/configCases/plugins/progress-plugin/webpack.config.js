@@ -4,7 +4,7 @@ const path = require("path");
 const webpack = require("../../../../");
 const data = require("./data");
 
-/** @typedef {import("../../../../").ProgressPlugin} ProgressPlugin */
+/** @import { ProgressPlugin } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

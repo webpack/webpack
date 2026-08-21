@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../types").Compilation} Compilation */
-/** @typedef {import("../../../../types").Module} Module */
+/** @import { Compilation, Module } from "../../../../types" */
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	entry: {

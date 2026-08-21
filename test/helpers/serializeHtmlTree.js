@@ -8,7 +8,7 @@ const {
 	decodeEntities
 } = require("../../lib/html/syntax");
 
-/** @typedef {import("../../lib/html/syntax").HtmlNodeRef} HtmlNodeRef */
+/** @import { HtmlNodeRef } from "../../lib/html/syntax" */
 
 const NS_PREFIX = {
 	[NS_SVG]: "svg ",

@@ -2,12 +2,13 @@
 
 const meriyah = require("meriyah");
 
-/** @typedef {import("estree").Program} Program */
-/** @typedef {import("estree").Node} Node */
-/** @typedef {import("estree").Comment} Comment */
-/** @typedef {import("estree").SourceLocation} SourceLocation */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @import { Program, Comment, SourceLocation } from "estree" */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../lib/javascript/JavascriptParser"
+ */
 
 /**
  * @param {string} sourceCode the source code

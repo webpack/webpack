@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../").Compiler} Compiler */
-/** @typedef {import("../../../").EntryNormalized} EntryNormalized */
+/** @import { Compiler, EntryNormalized } from "../../../" */
 
 var EntryPlugin = require("../../../").EntryPlugin;
 
