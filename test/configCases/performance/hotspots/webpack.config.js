@@ -24,7 +24,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "warning",
-		slowPlugins: true
+		hotspots: true
 	},
 	plugins: [burn(160)]
 };

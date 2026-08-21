@@ -23,8 +23,8 @@ const burn = (ms) => ({
 module.exports = {
 	mode: "development",
 	performance: {
-		hints: false,
-		slowPlugins: true
+		hints: "stats",
+		hotspots: true
 	},
 	plugins: [burn(160)]
 };

@@ -5398,6 +5398,11 @@
           "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
           "enum": [false, "warning", "error", "stats"]
         },
+        "hotspots": {
+          "description": "Report the loaders, plugins and hooks that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "largeModules": {
           "description": "Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).",
           "type": "boolean",
@@ -5428,11 +5433,6 @@
         },
         "scopeHoistingBailouts": {
           "description": "Report modules that could not be merged into their importer's scope, and why (requires 'hints' to be enabled).",
-          "type": "boolean",
-          "added": "5.110.0"
-        },
-        "slowPlugins": {
-          "description": "Report plugins that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
