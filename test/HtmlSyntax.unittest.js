@@ -7704,7 +7704,20 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// is set, so a form written inside another needs the end tag that cleared
 		// it written back in front of it.
 		["a form inside a form", "<form><div></form><form>"],
-		["a form a button holds", "<form><button></form><form>"]
+		["a form a button holds", "<form><button></form><form>"],
+		// Foster parenting is the one insertion that puts a node before the table it
+		// was written inside, so tree order and source order disagree. Printed in
+		// tree order the start tag reaches what the table had kept out of scope, and
+		// ends it; printed back inside the table the parser fosters it out again.
+		["a list fostered out of a table", "<p><table><ol>"],
+		["a definition fostered out of one", "<dd><table><dd>"],
+		["an option fostered out of one", "<option><table><option>"],
+		["a heading fostered out of one", "<h2><table><h1>"],
+		["ruby fostered out of one", "<ruby><rtc><table><rb>"],
+		["a form the table kept", "<table><p><form>"],
+		["an input that ends a select", "<select><table><input>"],
+		// And where tree order already re-parses, it is left alone.
+		["a paragraph fostered out of one", "<table><p>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});

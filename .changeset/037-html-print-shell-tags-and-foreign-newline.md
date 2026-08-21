@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Build and print the tree the HTML spec describes in six more places.
+Hand back the tree a parsed HTML document was built from when printing it.
