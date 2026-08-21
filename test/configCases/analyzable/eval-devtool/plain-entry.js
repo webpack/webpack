@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 
 export const asset = new URL("./thing.txt", import.meta.url);
+export const hinted = new URL(/* webpackPreload: true */ "./hint.png", import.meta.url);
 
 it("should load the hinted chunks and the stylesheet", async () => {
 	const [lazy, pre] = await Promise.all([

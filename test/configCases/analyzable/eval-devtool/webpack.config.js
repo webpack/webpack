@@ -19,7 +19,7 @@ const base = (index, name, devtool) => ({
 	entry: { [name]: `./${name}-entry.js` },
 	experiments: { outputModule: true, css: true },
 	optimization: { chunkIds: "named", minimize: false },
-	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
+	module: { rules: [{ test: /\.(txt|png)$/, type: "asset/resource" }] },
 	output: {
 		module: true,
 		filename: "[name].mjs",
