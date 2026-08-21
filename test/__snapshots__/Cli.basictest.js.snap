@@ -14588,29 +14588,42 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-all": Object {
+    "configs": Array [
+      Object {
+        "description": "Fallback value for the performance checks that are not set individually (has precedence over local webpack defaults). Does not apply to 'hints', 'maxAssetSize' or 'maxEntrypointSize'.",
+        "multiple": false,
+        "path": "performance.all",
+        "type": "boolean",
+      },
+    ],
+    "description": "Fallback value for the performance checks that are not set individually (has precedence over local webpack defaults). Does not apply to 'hints', 'maxAssetSize' or 'maxEntrypointSize'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-cache-effectiveness": Object {
     "configs": Array [
       Object {
-        "description": "Report how much of the module graph the cache reused, and the modules that can never be reused.",
+        "description": "Report how much of the module graph the cache reused, and the modules that can never be reused (requires 'hints' to be enabled).",
         "multiple": false,
         "path": "performance.cacheEffectiveness",
         "type": "boolean",
       },
     ],
-    "description": "Report how much of the module graph the cache reused, and the modules that can never be reused.",
+    "description": "Report how much of the module graph the cache reused, and the modules that can never be reused (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
   "performance-circular-dependencies": Object {
     "configs": Array [
       Object {
-        "description": "Report groups of modules that import each other synchronously.",
+        "description": "Report groups of modules that import each other synchronously (requires 'hints' to be enabled).",
         "multiple": false,
         "path": "performance.circularDependencies",
         "type": "boolean",
       },
     ],
-    "description": "Report groups of modules that import each other synchronously.",
+    "description": "Report groups of modules that import each other synchronously (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -14630,13 +14643,13 @@ Object {
   "performance-duplicate-modules": Object {
     "configs": Array [
       Object {
-        "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
+        "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost (requires 'hints' to be enabled).",
         "multiple": false,
         "path": "performance.duplicateModules",
         "type": "boolean",
       },
     ],
-    "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
+    "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -14753,13 +14766,13 @@ Object {
   "performance-redundant-dynamic-imports": Object {
     "configs": Array [
       Object {
-        "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
+        "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing (requires 'hints' to be enabled).",
         "multiple": false,
         "path": "performance.redundantDynamicImports",
         "type": "boolean",
       },
     ],
-    "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
+    "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -14802,6 +14815,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-unused-aliases": Object {
+    "configs": Array [
+      Object {
+        "description": "Report 'resolve.alias' entries that no request matched.",
+        "multiple": false,
+        "path": "performance.unusedAliases",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report 'resolve.alias' entries that no request matched.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-defines": Object {
     "configs": Array [
       Object {
@@ -14831,13 +14857,13 @@ Object {
   "performance-unused-reexports": Object {
     "configs": Array [
       Object {
-        "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export.",
+        "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).",
         "multiple": false,
         "path": "performance.unusedReexports",
         "type": "boolean",
       },
     ],
-    "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export.",
+    "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
