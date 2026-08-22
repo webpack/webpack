@@ -233,6 +233,11 @@ declare interface AbstractLibraryPluginOptions {
 	 * used library type
 	 */
 	type: string;
+
+	/**
+	 * when true, finishEntryModule is called for every entry dependency instead of only the last one, so exports of all entry modules survive optimization
+	 */
+	finishAllEntryModules?: boolean;
 }
 declare interface AdditionalData {
 	[index: string]: any;
