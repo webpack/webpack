@@ -1,6 +1,6 @@
 import { getInfo, getInfoFromPullRequest } from "@changesets/get-github-info";
 
-/** @typedef {import("@changesets/types").ChangelogFunctions} ChangelogFunctions */
+/** @import { ChangelogFunctions } from "@changesets/types" */
 
 /**
  * @returns {{ GITHUB_SERVER_URL: string }} value
