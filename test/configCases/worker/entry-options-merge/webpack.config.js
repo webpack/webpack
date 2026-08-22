@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").EntryOptions} EntryOptions */
+/** @import { Compiler, EntryOptions } from "../../../../" */
 
 class AssertMergedEntryOptionsPlugin {
 	/**

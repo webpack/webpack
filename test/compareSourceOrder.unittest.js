@@ -2,8 +2,8 @@
 
 const { sortWithSourceOrder } = require("../lib/util/comparators");
 
-/** @typedef {import("../lib/Dependency")} Dependency */
-/** @typedef {import("../lib/util/comparators").DependencySourceOrder} DependencySourceOrder */
+/** @import Dependency from "../lib/Dependency" */
+/** @import { DependencySourceOrder } from "../lib/util/comparators" */
 
 describe("sortWithSourceOrder", () => {
 	/** @type {WeakMap<Dependency, DependencySourceOrder>} */

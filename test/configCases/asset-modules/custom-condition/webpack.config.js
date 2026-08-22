@@ -3,7 +3,7 @@
 const path = require("path");
 const NormalModule = require("../../../../").NormalModule;
 
-/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
+/** @import { ParserOptionsByModuleTypeKnown } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").PathData} PathData */
+/** @import { PathData } from "../../../../" */
 
 const publicPaths = [
 	"auto",

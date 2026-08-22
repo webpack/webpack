@@ -2,9 +2,7 @@
 
 // with explicit cache names
 
-/** @typedef {import("../../../../").Configuration} Configuration */
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").FileCacheOptions} FileCacheOptions */
+/** @import { Configuration, Compiler, FileCacheOptions } from "../../../../" */
 
 /** @type {Configuration} */
 module.exports = [

@@ -43,9 +43,7 @@ const {
 	readDocument
 } = require("./helpers/wptCorpus");
 
-/** @typedef {import("./helpers/syntaxEquivalence").Fixture} Fixture */
-/** @typedef {import("./helpers/syntaxEquivalence").PageHelpers} PageHelpers */
-/** @typedef {import("./helpers/syntaxEquivalence").Rule} Rule */
+/** @import { Fixture, PageHelpers } from "./helpers/syntaxEquivalence" */
 
 const CONFIG_CASES = path.join(__dirname, "configCases");
 // How many documents go to the page at once — the wpt corpus is far larger than

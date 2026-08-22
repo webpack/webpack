@@ -1,8 +1,12 @@
 "use strict";
 
-/** @typedef {import("enhanced-resolve").Resolver} Resolver */
-/** @typedef {import("enhanced-resolve").ResolveRequest} ResolveRequest */
-/** @typedef {import("enhanced-resolve").ResolveContext} ResolveContext */
+/**
+ * @import {
+ * 	Resolver,
+ * 	ResolveRequest,
+ * 	ResolveContext
+ * } from "enhanced-resolve"
+ */
 
 /**
  * @template T, R

@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").NormalModule} NormalModule */
+/** @import { Compiler, NormalModule } from "../../../../" */
 
 class ReorderModulesPlugin {
 	/**

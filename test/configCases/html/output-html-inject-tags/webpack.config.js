@@ -5,7 +5,11 @@ const path = require("path");
 const webpack = require("../../../../");
 const HtmlModulesPlugin = require("../../../../lib/html/HtmlModulesPlugin");
 
-/** @typedef {import("../../../../lib/html/HtmlModulesPlugin").HtmlTagDescriptor} HtmlTagDescriptor */
+/**
+ * @import {
+ * 	HtmlTagDescriptor
+ * } from "../../../../lib/html/HtmlModulesPlugin"
+ */
 
 /** @type {import("../../../../").WebpackPluginInstance} */
 const copyTest = {

@@ -4,7 +4,7 @@ const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../lib/index");
 
-/** @typedef {import("../lib/util/fs").OutputFileSystem} OutputFileSystem */
+/** @import { OutputFileSystem } from "../lib/util/fs" */
 
 // The entry hook builds the page before the first compilation, so nothing loaded
 // at a compilation boundary is warm — this must stay the process's first build.

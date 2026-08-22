@@ -15,13 +15,17 @@ const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
 
-/** @typedef {import("..").AssetInfo} AssetInfo */
-/** @typedef {import("..").Compilation} Compilation */
-/** @typedef {import("..").Compiler} Compiler */
-/** @typedef {import("..").Configuration} Configuration */
-/** @typedef {import("..").MultiCompiler} MultiCompiler */
-/** @typedef {import("..").MultiStats} MultiStats */
-/** @typedef {import("..").Stats} Stats */
+/**
+ * @import {
+ * 	AssetInfo,
+ * 	Compilation,
+ * 	Compiler,
+ * 	Configuration,
+ * 	MultiCompiler,
+ * 	MultiStats,
+ * 	Stats
+ * } from ".."
+ */
 
 /** @typedef {"raw" | "gzip" | "brotli" | "zstd"} Metric */
 /** @typedef {Record<Metric, number>} Metrics */

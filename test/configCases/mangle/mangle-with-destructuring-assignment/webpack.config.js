@@ -1,7 +1,7 @@
 "use strict";
 
-/** @typedef {import("webpack").CodeGenerationResults} CodeGenerationResults */
-/** @typedef {import("webpack-sources").Source} Source */
+/** @import { CodeGenerationResults } from "webpack" */
+/** @import { Source } from "webpack-sources" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

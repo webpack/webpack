@@ -1,5 +1,4 @@
-/** @typedef {import("../../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../../").Compilation} Compilation */
+/** @import { Compiler, Compilation } from "../../../../../" */
 
 var map = new Map();
 var currentWatchStepModule = require("../../../../helpers/currentWatchStep");

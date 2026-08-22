@@ -7,9 +7,13 @@ import { getCodspeedRunnerMode, getV8Flags } from "@codspeed/core";
 import { Worker } from "jest-worker";
 import { simpleGit } from "simple-git";
 
-/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").BenchmarkResult} BenchmarkResult */
-/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").Result} Result */
-/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").BenchmarkWorkerMethods} BenchmarkWorkerMethods */
+/**
+ * @import {
+ * 	BenchmarkResult,
+ * 	Result,
+ * 	BenchmarkWorkerMethods
+ * } from "./harness/benchmark/benchmark.worker.mjs"
+ */
 /** @typedef {import("jest-worker").JestWorkerFarm<BenchmarkWorkerMethods>} BenchmarkWorker */
 
 /**

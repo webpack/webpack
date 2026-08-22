@@ -1,4 +1,4 @@
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 /**
  * @param {Record<string, { name?: string, usedExports: string[], expect: Record<string, string[]> }>} testCases

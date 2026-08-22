@@ -2,8 +2,7 @@
 
 const path = require("path");
 
-/** @typedef {import("../../").Compiler} Compiler */
-/** @typedef {import("../../").Module} Module */
+/** @import { Compiler, Module } from "../../" */
 
 // Asserts buildInfo.isCircular (set by CircularModulesPlugin) matches the
 // expected set of basename. Reads after optimizeModules, before concatenation,

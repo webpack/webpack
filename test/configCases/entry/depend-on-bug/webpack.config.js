@@ -1,8 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Compilation} Compilation */
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 /** @type {Configuration} */
 /** @type {import("../../../../").Configuration} */

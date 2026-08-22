@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 /** @typedef {ReturnType<typeof import("../../../../").css.CssModulesPlugin.getCompilationHooks>} CssCompilationHooks */
 
 /**

@@ -1,7 +1,5 @@
 "use strict";
 
-/** @typedef {import("../../../../").AssetInfo} AssetInfo */
-
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {

@@ -1,4 +1,4 @@
-/** @typedef {import("../../../../types").LoaderDefinition} LoaderDefinition */
+/** @import { LoaderDefinition } from "../../../../types" */
 /** @typedef {import("../../../../types").LoaderContext<{}>} LoaderContext */
 
 /**

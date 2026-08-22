@@ -3,7 +3,7 @@
 const ConcatenatedModule = require("../../../../lib/optimize/ConcatenatedModule");
 const createHash = require("../../../../lib/util/createHash");
 
-/** @typedef {import("../../../../types").Compilation} Compilation */
+/** @import { Compilation } from "../../../../types" */
 
 /**
  * UMD externals can't be concatenated (see

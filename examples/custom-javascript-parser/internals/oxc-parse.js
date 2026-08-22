@@ -2,10 +2,13 @@
 
 const oxc = require("oxc-parser");
 
-/** @typedef {import("estree").Program} Program */
-/** @typedef {import("estree").Comment} Comment */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @import { Program, Comment } from "estree" */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../lib/javascript/JavascriptParser"
+ */
 
 /**
  * Oxc has no location API — none is needed: webpack derives line/column

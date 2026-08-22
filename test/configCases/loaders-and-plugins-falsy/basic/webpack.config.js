@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 
 const DefinePlugin = require("../../../../").DefinePlugin;
 

@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../types").LoaderDefinition} LoaderDefinition */
+/** @import { LoaderDefinition } from "../../../../types" */
 
 /**
  * @type {LoaderDefinition}

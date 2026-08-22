@@ -9,7 +9,7 @@
 // index gets its own `cfg${i}/` sub-tree so multiple variants can share a
 // single `options.output.path` without colliding.
 
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 // Which placeholders apply where (and why):
 //

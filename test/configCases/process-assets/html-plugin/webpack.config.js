@@ -10,10 +10,14 @@ const {
 	optimize: { RealContentHashPlugin }
 } = require("../../../../");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Asset} Asset */
-/** @typedef {import("../../../../").AssetInfo} AssetInfo */
-/** @typedef {import("../../../../").ChunkGroup} Entrypoint */
+/**
+ * @import {
+ * 	Compiler,
+ * 	Asset,
+ * 	AssetInfo,
+ * 	ChunkGroup as Entrypoint
+ * } from "../../../../"
+ */
 
 class VerifyAdditionalAssetsPlugin {
 	/**

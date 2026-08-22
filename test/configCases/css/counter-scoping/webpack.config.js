@@ -1,8 +1,12 @@
 "use strict";
 
-/** @typedef {import("../../../../").Configuration} Configuration */
-/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
-/** @typedef {import("../../../../").ParserOptionsByModuleTypeKnown} ParserOptionsByModuleTypeKnown */
+/**
+ * @import {
+ * 	Configuration,
+ * 	GeneratorOptionsByModuleTypeKnown,
+ * 	ParserOptionsByModuleTypeKnown
+ * } from "../../../../"
+ */
 
 /**
  * @param {ParserOptionsByModuleTypeKnown["css/module"]=} parser parser options

@@ -2,7 +2,7 @@
 
 const path = require("path");
 
-/** @typedef {import("../../../../").NormalModule} NormalModule */
+/** @import { NormalModule } from "../../../../" */
 
 // re-export targets that must stay deferred; `named-barrel/d.js` is a locally
 // imported binding re-exported unused, which webpack keeps lazy too

@@ -11,7 +11,7 @@ const common = {
 	}
 };
 
-/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
+/** @import { GeneratorOptionsByModuleTypeKnown } from "../../../../" */
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [

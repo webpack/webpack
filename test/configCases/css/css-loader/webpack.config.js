@@ -3,8 +3,7 @@
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").PathData} PathData */
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { PathData, Configuration } from "../../../../" */
 /** @typedef {"link" | "text" | "css-style-sheet" | "style"} ExportType */
 
 const EXPORT_TYPES =

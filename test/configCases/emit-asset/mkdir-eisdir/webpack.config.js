@@ -3,7 +3,7 @@
 const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 
 const ASSET = "nested/deep/asset.txt";
 const CONTENT = "emitted while mkdir reported EISDIR\n";

@@ -1,4 +1,4 @@
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 
 class ReadRecordsPlugin {
 	/**

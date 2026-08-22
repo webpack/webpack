@@ -2,8 +2,12 @@
 
 const { mkdirp, mkdirpSync } = require("../lib/util/fs");
 
-/** @typedef {import("../lib/util/fs").IntermediateFileSystem} IntermediateFileSystem */
-/** @typedef {import("../lib/util/fs").OutputFileSystem} OutputFileSystem */
+/**
+ * @import {
+ * 	IntermediateFileSystem,
+ * 	OutputFileSystem
+ * } from "../lib/util/fs"
+ */
 
 /**
  * @typedef {object} FakeFs

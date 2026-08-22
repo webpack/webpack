@@ -3,8 +3,7 @@
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 const { getPathInAst } = require("../lib/util/concatenate");
 
-/** @typedef {import("estree").Node} Node */
-/** @typedef {import("estree").Program} Program */
+/** @import { Node, Program } from "estree" */
 
 /**
  * @param {string} source source code

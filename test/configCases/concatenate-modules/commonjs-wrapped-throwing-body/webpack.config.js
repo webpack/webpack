@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 /**
  * @param {string} entry entry

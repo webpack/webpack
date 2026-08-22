@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @typedef {import("../../../../").NormalModule} NormalModule */
+/** @import { NormalModule } from "../../../../" */
 
 const lazyModules = new Set(
 	["lib/Button.js"].map((file) => path.resolve(__dirname, file))

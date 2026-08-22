@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Chunk} Chunk */
+/** @import { Chunk } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

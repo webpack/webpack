@@ -1,6 +1,10 @@
 "use strict";
 
-/** @typedef {import("../../../../lib/errors/ModuleBuildError").ErrorWithHideStack} ErrorWithHideStack */
+/**
+ * @import {
+ * 	ErrorWithHideStack
+ * } from "../../../../lib/errors/ModuleBuildError"
+ */
 
 /** @type {import("../../../../").LoaderDefinition} */
 module.exports = function loader() {

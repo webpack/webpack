@@ -15,19 +15,24 @@ import {
 } from "@codspeed/core";
 import { Bench, hrtimeNow } from "tinybench";
 
-/** @typedef {import("tinybench").Task} TinybenchTask */
-/** @typedef {import("tinybench").Fn} Fn */
-/** @typedef {import("tinybench").FnOptions} FnOptions */
-/** @typedef {import("tinybench").Statistics} TinybenchStatistics */
+/**
+ * @import {
+ * 	Task as TinybenchTask,
+ * 	Fn,
+ * 	FnOptions,
+ * 	Statistics as TinybenchStatistics
+ * } from "tinybench"
+ */
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
 
-/** @typedef {import("../../..")} Webpack */
-/** @typedef {import("../../..").Configuration} Configuration */
-/** @typedef {import("../../..").Stats} Stats */
-/** @typedef {import("../../..").Watching} Watching */
-/** @typedef {import("../../BenchmarkTestCases.benchmark.mjs").Scenario} Scenario */
-/** @typedef {import("../../BenchmarkTestCases.benchmark.mjs").Baseline} Baseline */
-/** @typedef {import("../../BenchmarkTestCases.benchmark.mjs").BenchmarkTask} BenchmarkTask */
+/** @import Webpack, { Configuration, Stats, Watching } from "../../.." */
+/**
+ * @import {
+ * 	Scenario,
+ * 	Baseline,
+ * 	BenchmarkTask
+ * } from "../../BenchmarkTestCases.benchmark.mjs"
+ */
 
 /**
  * @typedef {object} ResultExtra

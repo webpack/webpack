@@ -1,9 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Compilation} Compilation */
-/** @typedef {import("../../../../").Chunk} Chunk */
-/** @typedef {import("../../../../").Module} Module */
+/** @import { Compiler, Compilation, Chunk, Module } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

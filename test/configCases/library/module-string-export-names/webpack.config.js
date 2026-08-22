@@ -1,8 +1,7 @@
 "use strict";
 
-/** @typedef {import("../../../../").Compilation} Compilation */
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../types").Configuration} Configuration */
+/** @import { Compilation, Compiler } from "../../../../" */
+/** @import { Configuration } from "../../../../types" */
 
 const STRING_NAMES = [
 	"str name",

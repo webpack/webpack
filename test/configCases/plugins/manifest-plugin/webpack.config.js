@@ -3,7 +3,7 @@
 const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
+/** @import Compiler from "../../../../lib/Compiler" */
 
 class CopyPlugin {
 	/**

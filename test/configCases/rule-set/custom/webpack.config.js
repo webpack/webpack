@@ -1,7 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").RuleSetUseFunction} RuleSetUseFunction */
-/** @typedef {import("../../../../").RuleSetUseItem} RuleSetUseItem */
+/** @import { RuleSetUseFunction, RuleSetUseItem } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

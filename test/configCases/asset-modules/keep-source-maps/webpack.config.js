@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
+/** @import { GeneratorOptionsByModuleTypeKnown } from "../../../../" */
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

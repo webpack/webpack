@@ -88,7 +88,6 @@ import {
 	YieldExpression
 } from "estree";
 import {
-	IncomingMessage,
 	Server as ServerImportHttp,
 	ServerOptions as ServerOptionsImportHttp
 } from "http";
@@ -687,7 +686,6 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-declare abstract class AsyncWebAssemblyParser extends ParserClass {}
 type AtRule = NodeSyntax & {
 	name: string;
 	nameStart: number;
@@ -5274,89 +5272,7 @@ declare interface ContextTimestampAndHash {
 	symlinks?: Set<string>;
 }
 type ContextTypes = KnownContext & Record<any, any>;
-
-declare interface CreateData {
-	/**
-	 * an optional layer in which the module is
-	 */
-	layer?: string;
-
-	/**
-	 * module type. When deserializing, this is set to an empty string "".
-	 */
-	type: string;
-
-	/**
-	 * request string
-	 */
-	request: string;
-
-	/**
-	 * request intended by user (without loaders from config)
-	 */
-	userRequest: string;
-
-	/**
-	 * request without resolving
-	 */
-	rawRequest: string;
-
-	/**
-	 * list of loaders
-	 */
-	loaders: LoaderItem[];
-
-	/**
-	 * path + query of the real resource
-	 */
-	resource: string;
-
-	/**
-	 * resource resolve data
-	 */
-	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
-
-	/**
-	 * context directory for resolving
-	 */
-	context: string;
-
-	/**
-	 * path + query of the matched resource (virtual)
-	 */
-	matchResource?: string;
-
-	/**
-	 * the parser used
-	 */
-	parser: ParserClass;
-
-	/**
-	 * the options of the parser used
-	 */
-	parserOptions?: ParserOptions;
-
-	/**
-	 * the generator used
-	 */
-	generator: Generator;
-
-	/**
-	 * the options of the generator used
-	 */
-	generatorOptions?: GeneratorOptions;
-
-	/**
-	 * options used for resolving requests from this module
-	 */
-	resolveOptions?: ResolveOptions;
-
-	/**
-	 * enable/disable extracting source map
-	 */
-	extractSourceMap: boolean;
-	settings: ModuleSettings;
-}
+type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
 type CreateReadStreamFSImplementation = FSImplementation & {
 	read: (...args: any[]) => any;
 };
@@ -6231,12 +6147,12 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -6398,12 +6314,12 @@ declare class Dependency {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 	module: any;
 	get disconnect(): any;
 
@@ -9972,7 +9888,7 @@ type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
 	? H
 	: T extends readonly []
 		? any
-		: T extends (infer E)[]
+		: T extends readonly (infer E)[]
 			? E
 			: never;
 
@@ -11268,12 +11184,12 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -11301,8 +11217,8 @@ declare abstract class InlinedValue {
 	value?: null | string | number | boolean;
 	renderLiteral(): string;
 	render(comment: string): string;
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 }
 type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
 declare interface InnerGraphUtils {
@@ -15514,8 +15430,8 @@ declare interface LazyCompilationDefaultBackendOptions {
 	 * Specifies how to create the server handling the EventSource requests.
 	 */
 	server?:
-		| ServerOptionsImportHttps<typeof IncomingMessage>
-		| ServerOptionsImportHttp<typeof IncomingMessage>
+		| ServerOptionsImportHttps
+		| ServerOptionsImportHttp
 		| (() => ServerLazyCompilationBackend);
 }
 
@@ -15638,7 +15554,7 @@ declare class LazySet<T> {
 	 * serialization stream.
 	 */
 	serialize(
-		__0: ObjectSerializerContextObjectMiddlewareObject_4<(number | T)[]>
+		__0: ObjectSerializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): void;
 
 	/**
@@ -15650,7 +15566,7 @@ declare class LazySet<T> {
 	 * Restores a `LazySet` from serialized item data.
 	 */
 	static deserialize<T>(
-		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
+		__0: ObjectDeserializerContextObjectMiddlewareObject_2<(number | T)[]>
 	): LazySet<T>;
 }
 declare interface LibIdentOptions {
@@ -16176,12 +16092,12 @@ declare abstract class LocalModule {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_2): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_1): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
 }
 declare interface LogEntry {
 	type:
@@ -18724,7 +18640,7 @@ declare interface NodeTemplatePluginOptions {
 type NodeWebpackOptions = false | NodeOptions;
 type NonNullable<T> = T & {};
 declare class NormalModule extends Module {
-	constructor(__0: NormalModuleCreateDataNormalModuleObject_1<string>);
+	constructor(__0: NormalModuleCreateData<string>);
 	request: string;
 	userRequest: string;
 	rawRequest: string;
@@ -18830,7 +18746,7 @@ declare class NormalModule extends Module {
 		needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 	};
 	static deserialize(
-		context: ObjectDeserializerContextObjectMiddlewareObject_4
+		context: ObjectDeserializerContextObjectMiddlewareObject_2
 	): NormalModule;
 
 	/**
@@ -18842,9 +18758,7 @@ declare class NormalModule extends Module {
 type NormalModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo;
-declare interface NormalModuleCreateDataNormalModuleObject_1<
-	T extends string = string
-> {
+declare interface NormalModuleCreateData<T extends string = string> {
 	/**
 	 * an optional layer in which the module is
 	 */
@@ -18907,8 +18821,8 @@ declare interface NormalModuleCreateDataNormalModuleObject_1<
 		Record<"asset/resource", AssetParser> &
 		Record<"asset/source", AssetSourceParser> &
 		Record<"asset/bytes", AssetBytesParser> &
-		Record<"webassembly/async", AsyncWebAssemblyParser> &
-		Record<"webassembly/sync", WebAssemblyParser> &
+		Record<"webassembly/async", WebAssemblyParserAsyncWebAssemblyParser> &
+		Record<"webassembly/sync", WebAssemblyParserClass> &
 		Record<"css", CssParser> &
 		Record<"css/auto", CssParser> &
 		Record<"css/module", CssParser> &
@@ -19043,11 +18957,14 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"webassembly/async",
-					SyncBailHook<[EmptyParserOptions], AsyncWebAssemblyParser>
+					SyncBailHook<
+						[EmptyParserOptions],
+						WebAssemblyParserAsyncWebAssemblyParser
+					>
 				> &
 				Record<
 					"webassembly/sync",
-					SyncBailHook<[EmptyParserOptions], WebAssemblyParser>
+					SyncBailHook<[EmptyParserOptions], WebAssemblyParserClass>
 				> &
 				Record<"css", SyncBailHook<[CssParserOptions], CssParser>> &
 				Record<"css/auto", SyncBailHook<[CssModuleParserOptions], CssParser>> &
@@ -19095,11 +19012,14 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"webassembly/async",
-					SyncBailHook<[AsyncWebAssemblyParser, EmptyParserOptions], void>
+					SyncBailHook<
+						[WebAssemblyParserAsyncWebAssemblyParser, EmptyParserOptions],
+						void
+					>
 				> &
 				Record<
 					"webassembly/sync",
-					SyncBailHook<[WebAssemblyParser, EmptyParserOptions], void>
+					SyncBailHook<[WebAssemblyParserClass, EmptyParserOptions], void>
 				> &
 				Record<"css", SyncBailHook<[CssParser, CssParserOptions], void>> &
 				Record<
@@ -19294,8 +19214,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		Record<"asset/resource", AssetParser> &
 		Record<"asset/source", AssetSourceParser> &
 		Record<"asset/bytes", AssetBytesParser> &
-		Record<"webassembly/async", AsyncWebAssemblyParser> &
-		Record<"webassembly/sync", WebAssemblyParser> &
+		Record<"webassembly/async", WebAssemblyParserAsyncWebAssemblyParser> &
+		Record<"webassembly/sync", WebAssemblyParserClass> &
 		Record<"css", CssParser> &
 		Record<"css/auto", CssParser> &
 		Record<"css/module", CssParser> &
@@ -19318,8 +19238,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		Record<"asset/resource", AssetParser> &
 		Record<"asset/source", AssetSourceParser> &
 		Record<"asset/bytes", AssetBytesParser> &
-		Record<"webassembly/async", AsyncWebAssemblyParser> &
-		Record<"webassembly/sync", WebAssemblyParser> &
+		Record<"webassembly/async", WebAssemblyParserAsyncWebAssemblyParser> &
+		Record<"webassembly/sync", WebAssemblyParserClass> &
 		Record<"css", CssParser> &
 		Record<"css/auto", CssParser> &
 		Record<"css/module", CssParser> &
@@ -19605,18 +19525,9 @@ declare class NullDependencyTemplate extends DependencyTemplate {
 declare interface ObjectConfiguration {
 	[index: string]: any;
 }
-
-/**
- * Updates set size using the provided set.
- */
-declare interface ObjectDeserializerContextObjectMiddlewareObject_1 {
-	read: () => string;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[number, boolean]>;
-	setCircularReference: (value: ReferenceableItem) => void;
-}
-declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
+declare namespace ObjectDeserializerContextObjectMiddlewareObject_1 {
 	export let read: () => any;
-	export let rest: ObjectDeserializerContextObjectMiddlewareObject_3<
+	export let rest: ObjectDeserializerContextObjectMiddlewareObject_2<
 		ReadonlyArray<any>
 	>;
 	export let setCircularReference: (value: ReferenceableItem) => void;
@@ -19625,20 +19536,20 @@ declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
+declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
 	T extends ReadonlyArray<any> = ReadonlyArray<any>
 > {
 	read: () => Head<T>;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<Tail<T>>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_2<Tail<T>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectDeserializerContextObjectMiddlewareObject_4 {
-	read: () => any;
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<ReadonlyArray<any>>;
+declare interface ObjectDeserializerContextObjectMiddlewareObject_3 {
+	read: () => string;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_2<[number, boolean]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -19687,10 +19598,10 @@ declare interface ObjectEncodingOptionsTypes {
 declare interface ObjectSerializer {
 	serialize: (
 		value: any,
-		context: ObjectSerializerContextObjectMiddlewareObject_4<any>
+		context: ObjectSerializerContextObjectMiddlewareObject_3<any>
 	) => void;
 	deserialize: (
-		context: ObjectDeserializerContextObjectMiddlewareObject_3<any>
+		context: ObjectDeserializerContextObjectMiddlewareObject_2<any>
 	) => any;
 }
 
@@ -19699,27 +19610,8 @@ declare interface ObjectSerializer {
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	write: (
-		value: RestoreProvidedDataExports[]
-	) => ObjectSerializerContextObjectMiddlewareObject_4<
-		[undefined | null | boolean, undefined | boolean, boolean]
-	>;
-	setCircularReference: (value: ReferenceableItem) => void;
-	snapshot: () => ObjectSerializerSnapshot;
-	rollback: (snapshot: ObjectSerializerSnapshot) => void;
-	writeLazy?: (item?: any) => void;
-	writeSeparate?: (
-		item: any,
-		obj?: LazyOptions
-	) => LazyFunction<any, any, any, LazyOptions>;
-}
-
-/**
- * Updates set size using the provided set.
- */
-declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
-	write: (
 		value: string
-	) => ObjectSerializerContextObjectMiddlewareObject_4<[number, boolean]>;
+	) => ObjectSerializerContextObjectMiddlewareObject_3<[number, boolean]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -19729,10 +19621,10 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
 		obj?: LazyOptions
 	) => LazyFunction<any, any, any, LazyOptions>;
 }
-declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
+declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 	export let write: (
 		value?: any
-	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
+	) => ObjectSerializerContextObjectMiddlewareObject_3<ReadonlyArray<any>>;
 	export let setCircularReference: (value: ReferenceableItem) => void;
 	export let snapshot: () => ObjectSerializerSnapshot;
 	export let rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -19748,12 +19640,12 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectSerializerContextObjectMiddlewareObject_4<
+declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 	T extends ReadonlyArray<any> = ReadonlyArray<any>
 > {
 	write: (
 		value: Head<T>
-	) => ObjectSerializerContextObjectMiddlewareObject_4<Tail<T>>;
+	) => ObjectSerializerContextObjectMiddlewareObject_3<Tail<T>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -19767,10 +19659,12 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4<
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectSerializerContextObjectMiddlewareObject_5 {
+declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 	write: (
-		value?: any
-	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
+		value: RestoreProvidedDataExports[]
+	) => ObjectSerializerContextObjectMiddlewareObject_3<
+		[undefined | null | boolean, undefined | boolean, boolean]
+	>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -23162,10 +23056,7 @@ declare interface ReaddirTypes {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			files?: DirentTypes<string>[]
-		) => void
+		callback: (err: null | NodeJS.ErrnoException, files?: DirentTypes[]) => void
 	): void;
 	(
 		path: PathLikeTypes,
@@ -24434,7 +24325,7 @@ declare abstract class RestoreProvidedData {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_4): void;
 }
 declare interface RestoreProvidedDataExports {
 	name: string;
@@ -25974,9 +25865,7 @@ declare abstract class SerializerMiddleware<
 		context: Context
 	): DeserializedType | Promise<DeserializedType>;
 }
-type ServerLazyCompilationBackend =
-	| ServerImportHttp<typeof IncomingMessage>
-	| ServerImportHttps<typeof IncomingMessage>;
+type ServerLazyCompilationBackend = ServerImportHttp | ServerImportHttps;
 declare interface SetIterator<T> extends IteratorObject<T, undefined> {
 	[Symbol.iterator](): SetIterator<T>;
 	[Symbol.dispose](): void;
@@ -26221,12 +26110,12 @@ declare abstract class Snapshot {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Gets file iterable.
@@ -27079,7 +26968,7 @@ declare abstract class StackedMap<K, V> {
  */
 declare interface StarListDeserializerContext {
 	read: () => HarmonyExportImportedSpecifierDependency[];
-	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[]>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_2<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -27089,7 +26978,7 @@ declare interface StarListDeserializerContext {
 declare interface StarListSerializerContext {
 	write: (
 		value: HarmonyExportImportedSpecifierDependency[]
-	) => ObjectSerializerContextObjectMiddlewareObject_4<[]>;
+	) => ObjectSerializerContextObjectMiddlewareObject_3<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -28894,7 +28783,8 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	 */
 	clear(): void;
 }
-declare abstract class WebAssemblyParser extends ParserClass {}
+declare abstract class WebAssemblyParserAsyncWebAssemblyParser extends ParserClass {}
+declare abstract class WebAssemblyParserClass extends ParserClass {}
 declare interface WebAssemblyRenderContext {
 	/**
 	 * the chunk
@@ -28950,12 +28840,12 @@ declare class WebpackError extends Error {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
@@ -30743,9 +30633,9 @@ declare namespace exports {
 		argv: Record<string, any>
 	) => MaybePromise<Configuration | MultiConfiguration>;
 	export type ObjectSerializerContext =
-		typeof ObjectSerializerContextObjectMiddlewareObject_3;
+		typeof ObjectSerializerContextObjectMiddlewareObject_2;
 	export type ObjectDeserializerContext =
-		typeof ObjectDeserializerContextObjectMiddlewareObject_2;
+		typeof ObjectDeserializerContextObjectMiddlewareObject_1;
 	export {
 		AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,

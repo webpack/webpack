@@ -3,9 +3,9 @@
 const { Volume, createFsFromVolume } = require("memfs");
 const ContextModuleFactory = require("../lib/ContextModuleFactory");
 
-/** @typedef {import("memfs").IFs} IFs */
-/** @typedef {import("../lib/util/fs").InputFileSystem} InputFileSystem */
-/** @typedef {import("../lib/ContextModule").ContextModuleOptions} ContextModuleOptions */
+/** @import { IFs } from "memfs" */
+/** @import { InputFileSystem } from "../lib/util/fs" */
+/** @import { ContextModuleOptions } from "../lib/ContextModule" */
 
 describe("ContextModuleFactory", () => {
 	describe("resolveDependencies", () => {

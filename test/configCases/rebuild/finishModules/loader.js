@@ -1,4 +1,4 @@
-/** @typedef {import("../../../../").Module} Module */
+/** @import { Module } from "../../../../" */
 
 /** @type {import("../../../../").LoaderDefinition<{}, { shouldReplace: boolean }>} */
 module.exports = function (source) {

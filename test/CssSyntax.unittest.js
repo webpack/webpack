@@ -2398,7 +2398,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 });
 
 describe("CssSyntax — path accessors", () => {
-	/** @typedef {import("../lib/css/syntax").CssPath} CssPath */
+	/** @import { CssPath } from "../lib/css/syntax" */
 	const SRC =
 		"@media screen { .a { co\\6cor: red !important; background: url(x.png) var(--v, calc(1 + 2)); } } /* note */ .b { grid: [x] 1; }";
 
@@ -2621,7 +2621,7 @@ describe("CssSyntax — print modes", () => {
 });
 
 describe("CssSyntax minify — the value transforms' rejection paths", () => {
-	/** @typedef {import("../lib/css/syntax").CssEnvironment} CssEnvironment */
+	/** @import { CssEnvironment } from "../lib/css/syntax" */
 
 	/**
 	 * @param {string} css a stylesheet

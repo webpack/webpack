@@ -2,11 +2,13 @@
 
 const acorn = require("acorn");
 
-/** @typedef {import("estree").Program} Program */
-/** @typedef {import("estree").Comment} Comment */
-/** @typedef {import("estree").SourceLocation} SourceLocation */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @import { Comment, SourceLocation } from "estree" */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../lib/javascript/JavascriptParser"
+ */
 
 /**
  * @param {string} sourceCode the source code
