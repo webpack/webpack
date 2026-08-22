@@ -14601,6 +14601,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-broad-contexts": Object {
+    "configs": Array [
+      Object {
+        "description": "Report 'require.context' calls with no filter, which bundle every file under a directory (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.broadContexts",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report 'require.context' calls with no filter, which bundle every file under a directory (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-cache-effectiveness": Object {
     "configs": Array [
       Object {
@@ -14710,6 +14723,32 @@ Object {
     "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "performance-hotspots": Object {
+    "configs": Array [
+      Object {
+        "description": "Report the loaders, plugins and hooks that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.hotspots",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report the loaders, plugins and hooks that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-large-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.largeModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "performance-max-asset-size": Object {
     "configs": Array [

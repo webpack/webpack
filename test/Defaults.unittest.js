@@ -1277,6 +1277,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "broadContexts": false,
 		+     "cacheEffectiveness": false,
 		+     "circularDependencies": false,
 		+     "conflictingResourceHints": false,
@@ -1285,6 +1286,8 @@ describe("snapshots", () => {
 		+     "dynamicExports": false,
 		+     "entrypointOverlap": false,
 		+     "hints": "warning",
+		+     "hotspots": false,
+		+     "largeModules": false,
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+     "missingSideEffects": false,
@@ -1375,6 +1378,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "broadContexts": false,
 		+     "cacheEffectiveness": false,
 		+     "circularDependencies": false,
 		+     "conflictingResourceHints": false,
@@ -1383,6 +1387,8 @@ describe("snapshots", () => {
 		+     "dynamicExports": false,
 		+     "entrypointOverlap": false,
 		+     "hints": "warning",
+		+     "hotspots": false,
+		+     "largeModules": false,
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+     "missingSideEffects": false,
