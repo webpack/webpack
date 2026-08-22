@@ -161,8 +161,7 @@ globalThis.__moduleA = moduleA;
 `;
 
 exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple <script type=module src> via dependOn and share modules across them 2`] = `
-"export const __webpack_esm_id__ = \\"__html_cbe5b59d_3\\";
-export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_3\\"];
+"export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_3\\"];
 export const __webpack_esm_modules__ = {
 
 /***/ 942
@@ -296,8 +295,7 @@ globalThis.__classicA = \\"classic-a value\\";
 `;
 
 exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple classic <script src> via dependOn 2`] = `
-"export const __webpack_esm_id__ = \\"__html_cbe5b59d_2\\";
-export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_2\\"];
+"export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_2\\"];
 export const __webpack_esm_modules__ = {
 
 /***/ 702
