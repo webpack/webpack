@@ -70,9 +70,8 @@
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 const analyzeScope = require("../lib/javascript/ScopeAnalyzer");
 
-/** @typedef {import("estree").Program} Program */
-/** @typedef {import("../lib/javascript/ScopeAnalyzer").Reference} Reference */
-/** @typedef {import("../lib/javascript/ScopeAnalyzer").Scope} Scope */
+/** @import { Program } from "estree" */
+/** @import { Reference, Scope } from "../lib/javascript/ScopeAnalyzer" */
 
 /**
  * @typedef {object} Analysis
