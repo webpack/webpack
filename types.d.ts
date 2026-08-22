@@ -5711,6 +5711,13 @@ declare class CssModulesPlugin {
 				Source
 			>;
 			/**
+			 * Called with a module's rendered CSS when `exportType` `style` or `text`
+			 * embeds it into a JS bundle, which no `.css` asset carries and the asset
+			 * minimizer never sees. Placeholders are already substituted.
+			 * @since 5.110.0
+			 */
+			renderEmbeddedModule: SyncWaterfallHook<[Source, Module], Source>;
+			/**
 			 * @since 5.94.0
 			 */
 			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
@@ -5739,6 +5746,13 @@ declare class CssModulesPlugin {
 				[Source, Module, ChunkRenderContextCssModulesPlugin],
 				Source
 			>;
+			/**
+			 * Called with a module's rendered CSS when `exportType` `style` or `text`
+			 * embeds it into a JS bundle, which no `.css` asset carries and the asset
+			 * minimizer never sees. Placeholders are already substituted.
+			 * @since 5.110.0
+			 */
+			renderEmbeddedModule: SyncWaterfallHook<[Source, Module], Source>;
 			/**
 			 * @since 5.94.0
 			 */
@@ -5774,6 +5788,13 @@ declare class CssModulesPlugin {
 			[Source, Module, ChunkRenderContextCssModulesPlugin],
 			Source
 		>;
+		/**
+		 * Called with a module's rendered CSS when `exportType` `style` or `text`
+		 * embeds it into a JS bundle, which no `.css` asset carries and the asset
+		 * minimizer never sees. Placeholders are already substituted.
+		 * @since 5.110.0
+		 */
+		renderEmbeddedModule: SyncWaterfallHook<[Source, Module], Source>;
 		/**
 		 * @since 5.94.0
 		 */
