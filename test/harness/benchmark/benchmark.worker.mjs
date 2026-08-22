@@ -45,10 +45,25 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {TinybenchStatistics & ResultExtra} Result */
 
 /**
+ * @typedef {object} HeapSample
+ * @property {number} peak peak live bytes during the workload
+ * @property {number} marginal peak minus the GC-settled baseline
+ */
+
+/**
+ * @typedef {object} HeapUsage
+ * @property {string} uri task URI
+ * @property {number} peak median peak live bytes
+ * @property {number} marginal median marginal live bytes
+ * @property {number} samples samples behind the medians
+ */
+
+/**
  * @typedef {object} BenchmarkResult
  * @property {string} benchmark benchmark name
  * @property {string} scenario scenario name
  * @property {Result[]} results per-task results
+ * @property {HeapUsage[]} heapUsages per-task heap usage (memory mode only)
  */
 
 /**
@@ -66,6 +81,14 @@ const codspeedRunnerMode = getCodspeedRunnerMode();
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";
 // `run()` input. Opaque to the compiler, so the workload can't be constant-folded.
 const RUNTIME_SEED = 7;
+// One rebuild allocates so little that a single GC or cache difference swings a
+// memory sample ~14%; averaging 5 brings it to ~1%. Simulation is exact already.
+const REBUILDS_PER_SAMPLE = codspeedRunnerMode === "memory" ? 5 : 1;
+// Heap samples kept per task; one more is taken and discarded as first-touch.
+const HEAP_SAMPLES = 3;
+
+/** @type {HeapUsage[]} */
+const heapUsages = [];
 
 /** @type {string} */
 let baseOutputPath;
@@ -568,13 +591,14 @@ const withCodSpeed = async (bench) => {
 			if (!meta) return;
 			await meta.options?.beforeAll?.call(task, "warmup");
 			try {
-				const { peak, marginal } = await sampleHeapPeak(() =>
-					iterationAsync(task, task.name)
-				);
-				const uri = getTaskUri(bench, task.name, callingFile);
-				console.log(
-					`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)}`
-				);
+				/** @type {HeapSample[]} */
+				const samples = [];
+				for (let i = 0; i < HEAP_SAMPLES + 1; i++) {
+					samples.push(
+						await sampleHeapPeak(() => iterationAsync(task, task.name))
+					);
+				}
+				recordHeapUsage(getTaskUri(bench, task.name, callingFile), samples);
 			} finally {
 				await meta.options?.afterAll?.call(task, "warmup");
 			}
@@ -590,7 +614,12 @@ const withCodSpeed = async (bench) => {
 			if (!meta) return;
 			meta.options?.beforeAll?.call(task, "warmup");
 			try {
-				iteration(task, task.name);
+				/** @type {HeapSample[]} */
+				const samples = [];
+				for (let i = 0; i < HEAP_SAMPLES + 1; i++) {
+					samples.push(sampleHeapPeakSync(() => iteration(task, task.name)));
+				}
+				recordHeapUsage(getTaskUri(bench, task.name, callingFile), samples);
 			} finally {
 				meta.options?.afterAll?.call(task, "warmup");
 			}
@@ -748,7 +777,7 @@ function formatBytes(bytes) {
  * prime pass so it can't pollute the measured region. `heapUsed` not `rss`: the
  * shared process never returns arena pages, so `rss` isn't per-task comparable.
  * @param {() => Promise<unknown>} fn compile to measure
- * @returns {Promise<{ peak: number, marginal: number }>} peak and marginal live bytes
+ * @returns {Promise<HeapSample>} peak and marginal live bytes
  */
 async function sampleHeapPeak(fn) {
 	global.gc?.();
@@ -767,6 +796,51 @@ async function sampleHeapPeak(fn) {
 	const end = process.memoryUsage().heapUsed;
 	if (end > peak) peak = end;
 	return { peak, marginal: peak - baseline };
+}
+
+/**
+ * Sync counterpart of `sampleHeapPeak`. No timer can fire during a synchronous
+ * workload, so peak is the end reading.
+ * @param {() => unknown} fn workload to measure
+ * @returns {HeapSample} peak and marginal live bytes
+ */
+function sampleHeapPeakSync(fn) {
+	global.gc?.();
+	const baseline = process.memoryUsage().heapUsed;
+	fn();
+	const peak = process.memoryUsage().heapUsed;
+	return { peak, marginal: peak - baseline };
+}
+
+/**
+ * @param {number[]} values values
+ * @returns {number} median
+ */
+function median(values) {
+	const sorted = [...values].sort((a, b) => a - b);
+	const middle = sorted.length >> 1;
+	return sorted.length % 2 === 0
+		? (sorted[middle - 1] + sorted[middle]) / 2
+		: sorted[middle];
+}
+
+/**
+ * Record one task's heap usage, dropping the first sample: a fresh process pays
+ * first-touch (module loads, lazy tables) that later iterations do not, measured
+ * at ~2x the steady state.
+ * @param {string} uri task URI
+ * @param {HeapSample[]} samples samples, first one discarded
+ * @returns {void}
+ */
+function recordHeapUsage(uri, samples) {
+	const measured = samples.slice(1);
+	const peak = median(measured.map((sample) => sample.peak));
+	const marginal = median(measured.map((sample) => sample.marginal));
+
+	heapUsages.push({ uri, peak, marginal, samples: measured.length });
+	console.log(
+		`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)}`
+	);
 }
 
 /**
@@ -869,6 +943,12 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 	const entry = path.resolve(/** @type {string} */ (config.entry));
 	const originalEntryContent = await fs.readFile(entry, "utf8");
 
+	// Alternate the appended digit so every iteration is a real content change of
+	// identical length — rewriting the same bytes short-circuited some rebuilds.
+	let iteration = 0;
+	const nextEntryContent = () =>
+		`${originalEntryContent};console.log('watch test ${iteration++ % 2}')`;
+
 	/** @type {Watching | undefined} */
 	let watching;
 	/** @type {(err: Error | null, stats?: Stats) => void} */
@@ -884,82 +964,20 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 		}
 	};
 
-	bench.add(
-		taskName,
-		async () => {
-			/** @type {((value?: void) => void)} */
-			let resolve;
-			/** @type {((err: Error | null) => void)} */
-			let reject;
-
-			const promise = new Promise((res, rej) => {
-				resolve = res;
-				reject = rej;
-			});
-
-			next = (err, stats) => {
-				if (err || !stats) {
-					reject(err);
-					return;
-				}
-
-				if (stats.hasWarnings() || stats.hasErrors()) {
-					reject(new Error(stats.toString()));
-					return;
-				}
-
-				// Construct and print stats to be more accurate with real life projects
-				stats.toString();
-				resolve();
-			};
-
-			await new Promise(
-				/**
-				 * @param {(value?: void) => void} resolve resolve
-				 * @param {(err: Error) => void} reject reject
-				 */
-				(resolve, reject) => {
-					writeFile(
-						entry,
-						`${originalEntryContent};console.log('watch test')`,
-						(err) => {
-							if (err) {
-								reject(err);
-								return;
-							}
-
-							resolve();
-						}
-					);
-				}
-			);
-
-			await promise;
-		},
-		{
-			beforeEach(mode) {
-				console.time(`Time (${mode} mode): ${taskName}`);
-			},
-			afterEach(mode) {
-				console.timeEnd(`Time (${mode} mode): ${taskName}`);
-			},
-			async beforeAll() {
-				/** @type {Task} */
-				(this).collectBy = collectBy;
-
-				/** @type {((value?: void) => void)} */
-				let resolve;
-				/** @type {((err: Error | null) => void)} */
-				let reject;
-
-				const promise = new Promise((res, rej) => {
-					resolve = res;
-					reject = rej;
-				});
-
+	/**
+	 * Installs the watch callback for the next rebuild.
+	 * @returns {Promise<void>} settles when that rebuild has finished
+	 */
+	const nextRebuild = () =>
+		new Promise(
+			/**
+			 * @param {(value?: void) => void} resolve resolve
+			 * @param {(err: Error) => void} reject reject
+			 */
+			(resolve, reject) => {
 				next = (err, stats) => {
 					if (err || !stats) {
-						reject(err);
+						reject(err || new Error(`No stats for "${taskName}" rebuild.`));
 						return;
 					}
 
@@ -972,6 +990,54 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					stats.toString();
 					resolve();
 				};
+			}
+		);
+
+	/**
+	 * @returns {Promise<void>} resolves once the edit has been rebuilt
+	 */
+	const rebuildOnce = async () => {
+		const rebuilt = nextRebuild();
+		const written = new Promise(
+			/**
+			 * @param {(value?: void) => void} resolve resolve
+			 * @param {(err: Error) => void} reject reject
+			 */
+			(resolve, reject) => {
+				writeFile(entry, nextEntryContent(), (err) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve();
+				});
+			}
+		);
+
+		// Awaited together so a failed write does not leave the rebuild unhandled
+		await Promise.all([written, rebuilt]);
+	};
+
+	bench.add(
+		taskName,
+		async () => {
+			for (let i = 0; i < REBUILDS_PER_SAMPLE; i++) {
+				await rebuildOnce();
+			}
+		},
+		{
+			beforeEach(mode) {
+				console.time(`Time (${mode} mode): ${taskName}`);
+			},
+			afterEach(mode) {
+				console.timeEnd(`Time (${mode} mode): ${taskName}`);
+			},
+			async beforeAll() {
+				/** @type {Task} */
+				(this).collectBy = collectBy;
+
+				const firstBuild = nextRebuild();
 
 				if (GENERATE_PROFILE) {
 					await withProfiling(
@@ -993,7 +1059,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					(resolve, reject) => {
 						writeFile(
 							entry,
-							`${originalEntryContent};console.log('watch test')`,
+							nextEntryContent(),
 							(err) => {
 								if (err) {
 									reject(err);
@@ -1006,7 +1072,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					}
 				);
 
-				await promise;
+				await firstBuild;
 			},
 			async afterAll() {
 				// Close watching
@@ -1016,16 +1082,21 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					 * @param {(err: Error) => void} reject reject
 					 */
 					(resolve, reject) => {
-						if (watching) {
-							watching.close((closeErr) => {
-								if (closeErr) {
-									reject(closeErr);
-									return;
-								}
-
-								resolve();
-							});
+						// No watcher means `runWatch` failed; resolving here lets the
+						// entry file be restored instead of hanging on a dead promise.
+						if (!watching) {
+							resolve();
+							return;
 						}
+
+						watching.close((closeErr) => {
+							if (closeErr) {
+								reject(closeErr);
+								return;
+							}
+
+							resolve();
+						});
 					}
 				);
 
@@ -1362,50 +1433,8 @@ export async function run({
 	return {
 		benchmark: task.benchmark,
 		scenario: task.scenario ? task.scenario.name : "unit",
-		results
+		results,
+		heapUsages
 	};
 }
 
-/**
- * Run every task in one shared bench and process. Used for CodSpeed memory
- * mode: a single `Bench`, one global prime pass, one setup/teardown — identical
- * to the pre-parallel harness, so allocation counts stay stable and comparable
- * across PRs (per-benchmark benches shift them). Never used with the worker pool.
- * @param {object} options options
- * @param {BenchmarkTask[]} options.tasks benchmark tasks
- * @param {string} options.casesPath benchmark cases directory
- * @param {string} options.baseOutputPath base output directory
- * @param {string=} options.callingFile harness path relative to the git root
- * @returns {Promise<BenchmarkResult>} combined benchmark result
- */
-export async function runAll({
-	tasks,
-	casesPath,
-	baseOutputPath: baseOutputPathArg,
-	callingFile
-}) {
-	console.log(`Process ${process.pid}: running ${tasks.length} task(s) in one bench`);
-
-	baseOutputPath = baseOutputPathArg;
-	rootCallingFile = callingFile;
-
-	const bench = await createBenchInstance();
-
-	/** @type {Result[]} */
-	const results = [];
-	attachResultCollector(bench, results);
-
-	// Register every task up front so the memory-mode global prime pass warms
-	// all of them before any measurement (removes cross-task order dependence).
-	for (const task of tasks) {
-		await registerBenchmark(bench, task, casesPath);
-	}
-
-	await bench.run();
-
-	return {
-		benchmark: "all",
-		scenario: "all",
-		results
-	};
-}
