@@ -30,9 +30,9 @@ const bcd =
 	/** @type {{ css: { properties: { [name: string]: BcdNode }, selectors: { [name: string]: BcdNode }, "at-rules": { [name: string]: BcdNode }, types: { [name: string]: BcdNode } }, __meta: { version: string } }} */ (
 		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
 	);
-const colorName = require("color-name");
 
 /** @typedef {{ version: string }} PackageManifest */
+/** @typedef {{ [name: string]: [number, number, number] }} ColorNameTable */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
@@ -2861,9 +2861,10 @@ const hex = (channels) => {
  * length test of its own. Both datasets must list exactly the same names:
  * `mdn-data` is the spec's list and `color-name` the byte values, so a
  * disagreement means one of them moved and the table can no longer be trusted.
+ * @param {ColorNameTable} colorName the named-color byte values
  * @returns {[number, string][]} the entries, sorted by packed value
  */
-const collectColorNames = () => {
+const collectColorNames = (colorName) => {
 	const spec = syntaxes["named-color"].syntax
 		.split("|")
 		.map((name) => name.trim());
@@ -2900,9 +2901,10 @@ const collectColorNames = () => {
  * `collectColorNames` already says which value each name carries and which name
  * wins a value, so this is that pair read back rather than a second list.
  * @param {[number, string][]} colorNames the packed-value -> shortest-name entries
+ * @param {ColorNameTable} colorName the named-color byte values
  * @returns {[string, string][]} the entries, sorted by name
  */
-const collectShorterColorSpellings = (colorNames) => {
+const collectShorterColorSpellings = (colorNames, colorName) => {
 	const byValue = new Map(colorNames);
 	const spec = syntaxes["named-color"].syntax
 		.split("|")
@@ -5069,9 +5071,15 @@ const prefixedValueLiteral = (table) =>
  * Read every table out of the datasets and build the file they belong in.
  * Separate from writing it, so a test can assert the checked-in
  * `lib/css/data.js` is what this produces without touching the disk.
- * @returns {{ source: string, summary: string }} the unformatted file and what it holds
+ * @returns {Promise<{ source: string, summary: string }>} the unformatted file and what it holds
  */
-const collectData = () => {
+const collectData = async () => {
+	// Imported here, not required at the top: `color-name` is ESM from v2 on, and
+	// this module is also loaded by a test whose jest `vm` cannot require one.
+	const colorName =
+		/** @type {{ default: ColorNameTable }} */
+		(await import("color-name")).default;
+
 	assertGrammarsParse();
 	assertPrimitivesExist();
 
@@ -5082,7 +5090,7 @@ const collectData = () => {
 		...slashShorthands
 	]);
 	const colorFunctions = collectColorArgumentFunctions();
-	const colorNames = collectColorNames();
+	const colorNames = collectColorNames(colorName);
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
@@ -5127,7 +5135,10 @@ const collectData = () => {
 	const gradientFunctions = collectGradientFunctions(syntaxes, functions);
 	const fontStretchPercentages = collectFontStretchPercentages();
 	const filterFunctionOmitted = collectFilterFunctionOmitted();
-	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
+	const shorterColorSpellings = collectShorterColorSpellings(
+		colorNames,
+		colorName
+	);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
@@ -5885,33 +5896,31 @@ module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// 
 /**
  * Write `lib/css/data.js`, or report that it is out of date.
  */
-const generate = () => {
+const generate = async () => {
 	// Required here, not at the top: `collectData` is imported by a test that runs
 	// on Bun and Deno, where prettier's dynamic import fails under jest's `vm`.
 	const prettier = require("prettier");
 
-	const { source, summary } = collectData();
+	const { source, summary } = await collectData();
 	// Formatted here rather than left to `yarn fmt`, so the comparison below is
 	// against what the repo actually checks in.
-	prettier
-		.resolveConfig(TARGET)
-		.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
-		.then((formatted) => {
-			const current = fs.existsSync(TARGET)
-				? fs.readFileSync(TARGET, "utf8")
-				: "";
-			if (current === formatted) {
-				process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
-			} else if (write) {
-				fs.writeFileSync(TARGET, formatted);
-				process.stdout.write(`lib/css/data.js updated (${summary})\n`);
-			} else {
-				process.stderr.write(
-					"lib/css/data.js is out of date — run `yarn fix:special`\n"
-				);
-				process.exitCode = 1;
-			}
-		});
+	const config = await prettier.resolveConfig(TARGET);
+	const formatted = await prettier.format(source, {
+		...config,
+		filepath: TARGET
+	});
+	const current = fs.existsSync(TARGET) ? fs.readFileSync(TARGET, "utf8") : "";
+	if (current === formatted) {
+		process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
+	} else if (write) {
+		fs.writeFileSync(TARGET, formatted);
+		process.stdout.write(`lib/css/data.js updated (${summary})\n`);
+	} else {
+		process.stderr.write(
+			"lib/css/data.js is out of date — run `yarn fix:special`\n"
+		);
+		process.exitCode = 1;
+	}
 };
 
 if (require.main === module) generate();

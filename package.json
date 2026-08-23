@@ -142,7 +142,7 @@
     "bundle-loader": "^0.5.6",
     "coffee-loader": "^5.0.0",
     "coffeescript": "^2.5.1",
-    "color-name": "^1.1.4",
+    "color-name": "^2.1.1",
     "core-js": "^3.47.0",
     "cspell": "^10.0.1",
     "css-loader": "^7.1.2",

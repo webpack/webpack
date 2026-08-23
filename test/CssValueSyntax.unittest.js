@@ -849,7 +849,7 @@ describe("CssValueSyntax", () => {
 			// — and every collector above runs, which is what proves them.
 			const prettier = require("prettier");
 
-			const { source } = collectData();
+			const { source } = await collectData();
 			const config = await prettier.resolveConfig(DATA_TARGET);
 			const formatted = await prettier.format(source, {
 				...config,
@@ -875,7 +875,7 @@ describe("CssValueSyntax", () => {
 				},
 				/unmergeableSlotKeywords: flex-wrap does not accept balance/
 			]
-		])("fails generation on %s", (_why, name, stale, message) => {
+		])("fails generation on %s", async (_why, name, stale, message) => {
 			// A `SUPPLEMENT` entry states what no dataset does; once one does, the
 			// entry is stale and generation has to say so rather than emit it twice.
 			const properties =
@@ -887,11 +887,11 @@ describe("CssValueSyntax", () => {
 			const before = { ...entry };
 			stale(entry);
 			try {
-				expect(() => collectData()).toThrow(message);
+				await expect(collectData()).rejects.toThrow(message);
 			} finally {
 				Object.assign(entry, before);
 			}
-			expect(() => collectData()).not.toThrow();
+			await expect(collectData()).resolves.toBeDefined();
 		});
 	});
 });
