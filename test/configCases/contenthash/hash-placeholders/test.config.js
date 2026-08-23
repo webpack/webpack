@@ -140,9 +140,8 @@ module.exports = {
 			// reachable filename it produces actually exists on disk.
 			const bundleContent = fs.readFileSync(path.join(dir, bundle), "utf8");
 
-			// Locate a chunk-URL helper for a property (`u` / `k`) and extension.
-			// Anchored on `chunkId` and the `".<ext>"` tail, so a concise arrow, a
-			// `return` block and the `function` form all match. `<expr>` is one of:
+			// Locate a chunk-URL helper (`u` / `k`), anchored on `chunkId` and the
+			// `".<ext>"` tail so arrow, `return` and `function` forms all match. `<expr>`:
 			//   a) per-chunk map: `{"async_js":"<h>","async_css":"<h>"}[chunkId]`
 			//   b) inlined literal: `"<h>"` (when only one chunk applies)
 			//   c) compilation-hash helper: `__webpack_require__.h()`
