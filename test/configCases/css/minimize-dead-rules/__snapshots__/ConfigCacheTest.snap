@@ -10,5 +10,8 @@ Array [
   "/*! three copies leave the last */.m1{color:teal}.m2{color:teal}.t06{color:red}",
   "/*! a block a cut empties goes, as an empty one written here would */.between7{color:teal}@media speech{.t07{color:red}}",
   "/*! a keyframe repeated at one offset is left to the printer */@keyframes t08{0%{opacity:0}to{opacity:1}}",
+  "/*! a rule nested in another is read under it, so a copy elsewhere under the
+   same rule makes it dead even where the two blocks differ otherwise */.t09{width:1px}.between9{color:teal}.t09{height:2px;.inner{color:red}}",
+  "/*! and the same selector under another rule is another rule */.t10a{.inner{color:red}}.t10b{.inner{color:red}}",
 ]
 `;

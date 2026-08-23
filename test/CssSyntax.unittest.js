@@ -3274,6 +3274,42 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("keeps one standing in front of a `@namespace` that could still be read", () => {
+			// Taking it back would move the `@namespace` up to where an engine reads
+			// it, which is not what the sheet said.
+			const css = '.a{x:1}@namespace u "urn:z";.b{y:1}.a{x:1}';
+			expect(minify(css)).toBe(css);
+		});
+
+		it("drops one nested in a rule, which is what encloses it", () => {
+			expect(minify(".a{.b{color:red}.x{color:teal}.b{color:red}}")).toBe(
+				".a{.x{color:teal}.b{color:red}}"
+			);
+		});
+
+		it("drops one nested in two rules that differ elsewhere", () => {
+			// The whole rule is not repeated — only what it nests — and the `;` the
+			// cut leaves in front of the `}` goes with it.
+			expect(minify(".a{q:1;.b{x:1}}.z{y:1}.a{w:2;.b{x:1}}")).toBe(
+				".a{q:1}.z{y:1}.a{w:2;.b{x:1}}"
+			);
+		});
+
+		it("drops the rule a cut empties, as an empty one written here would be", () => {
+			expect(minify(".a{.b{.c{d:1}}}.z{t:1}.a{w:2;.b{.c{d:1}}}")).toBe(
+				".z{t:1}.a{w:2;.b{.c{d:1}}}"
+			);
+		});
+
+		it.each([
+			// What a rule nests is read under it, so the same selector under another
+			// rule — or under none — is another rule.
+			[".a{.b{color:red}}.c{.b{color:red}}"],
+			[".b{color:red}.a{.b{color:red}}"]
+		])("keeps both where the enclosing rule differs: %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+
 		it("leaves a layer to the merge, which gathers it rather than dropping it", () => {
 			expect(
 				minify(

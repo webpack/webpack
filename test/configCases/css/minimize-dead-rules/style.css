@@ -40,3 +40,13 @@
 
 /*! a keyframe repeated at one offset is left to the printer */
 @keyframes t08 { 0% { opacity: 0 } 100% { opacity: 1 } }
+
+/*! a rule nested in another is read under it, so a copy elsewhere under the
+   same rule makes it dead even where the two blocks differ otherwise */
+.t09 { width: 1px; .inner { color: red } }
+.between9 { color: teal }
+.t09 { height: 2px; .inner { color: red } }
+
+/*! and the same selector under another rule is another rule */
+.t10a { .inner { color: red } }
+.t10b { .inner { color: red } }
