@@ -7759,9 +7759,8 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 	});
 
 	it("leaves a formatting element where the tree holds it", () => {
-		// The adoption agency rebuilds one from the list of active formatting
-		// elements, so a run carrying it does not replay out of the table it would
-		// be printed back into — §13.3 does not round-trip this one either way.
+		// The adoption agency rebuilds one from the active formatting list, so a run
+		// carrying it does not replay out of the table it would be printed into.
 		expect(
 			new SourceProcessor().process("<nobr><table><nobr>", {
 				mode: "beautify"
