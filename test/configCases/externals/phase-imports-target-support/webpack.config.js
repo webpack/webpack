@@ -2,10 +2,8 @@
 
 const webpack = require("../../../../");
 
-// Neither ESM config sets `output.environment`: the point is that the target
-// version alone decides. `import source` is Node >= 24.5 and Deno >= 2.6, and
-// `import defer` is Deno >= 2.8 and nothing else, so only the deno build may
-// emit it.
+// No config sets `output.environment`: the target version alone decides. `import
+// source` is Node >= 24.5 / Deno >= 2.6, `import defer` is Deno >= 2.8 and nothing else.
 
 /**
  * Exposes the environment webpack resolved, which is settled after plugins apply.

@@ -1,8 +1,7 @@
 "use strict";
 
-// `import.defer(…)` / `import.source(…)` are forms of the native `import(…)`,
-// and a custom import function has no phase form at all — so a phase here must
-// be reported rather than dropped, which would import eagerly instead.
+// `import.defer(…)` / `import.source(…)` are forms of the native `import(…)`, so a
+// custom import function has no phase form — reported rather than dropped.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
