@@ -1473,6 +1473,20 @@ const compareRules = (before, after, signatures) => {
 		/** @type {Map<string, Rule[]>} */
 		const layers = new Map();
 		let anonymous = 0;
+		/** @type {Map<EXPECTED_OBJECT, string>} */
+		const ids = new Map();
+		/**
+		 * @param {EXPECTED_OBJECT} each an anonymous layer's chain entry
+		 * @returns {string} the identity of the block it opened
+		 */
+		const idOf = (each) => {
+			let id = ids.get(each);
+			if (id === undefined) {
+				id = ` ${anonymous++}`;
+				ids.set(each, id);
+			}
+			return id;
+		};
 		// An `@layer a, b;` statement is what names those layers first, whatever
 		// order their blocks then stand in, so it opens their buckets.
 		for (const rule of rules) {
@@ -1489,16 +1503,21 @@ const compareRules = (before, after, signatures) => {
 		for (const rule of rules) {
 			const chain = rule.chain.filter((each) => each.kind === "layer");
 			const anon = chain.some((each) => each.condition.trim() === "@layer");
-			const id = anon ? ` ${anonymous++}` : "";
-			const key = anon ? id : chain.map((each) => each.condition).join(" ");
-			// Each block of one is a layer of its own, so the key says which block a
-			// rule stood in — two of them hold two rules, not one said twice.
+			const key = anon
+				? chain
+						.map((each) =>
+							each.condition.trim() === "@layer" ? idOf(each) : each.condition
+						)
+						.join(" ")
+				: chain.map((each) => each.condition).join(" ");
+			// Every block of one is its own layer, so the key says which block a rule
+			// stood in — two of them hold two rules, not one said twice.
 			const one = anon
 				? {
 						...rule,
 						chain: rule.chain.map((each) =>
 							each.kind === "layer" && each.condition.trim() === "@layer"
-								? { ...each, condition: `@layer${id}` }
+								? { ...each, condition: `@layer${idOf(each)}` }
 								: each
 						)
 					}

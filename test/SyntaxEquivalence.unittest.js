@@ -23,6 +23,41 @@ describe("syntaxEquivalence — what the oracle accepts", () => {
 		expect(compareRules(before, after, signatures)).toBe("");
 	});
 
+	// Every `@layer {` is a layer of its own: a rule in one is not the same rule
+	// as an identical one in another, but two in one block are one rule twice.
+	// One entry object per block, as the traversal builds it.
+	/** @returns {import("./helpers/syntaxEquivalence").Rule["chain"][0]} the entry */
+	const anonymousLayer = () => ({ kind: "layer", condition: "@layer" });
+	/**
+	 * @param {string} text a rule's `selector { … }`
+	 * @param {import("./helpers/syntaxEquivalence").Rule["chain"][0]} block the layer it stands in
+	 * @returns {import("./helpers/syntaxEquivalence").Rule} the rule
+	 */
+	const inLayer = (text, block) => ({ chain: [block], text });
+
+	it("rejects a rule being dropped across two anonymous layers", () => {
+		const one = anonymousLayer();
+		const two = anonymousLayer();
+		const wide = [
+			inLayer(".a{color:red}", one),
+			inLayer(".b{color:blue}", two),
+			inLayer(".a{color:red}", two)
+		];
+		const cut = [inLayer(".b{color:blue}", two), inLayer(".a{color:red}", two)];
+		expect(compareRules(wide, cut, signatures)).not.toBe("");
+	});
+
+	it("accepts one dropped inside a single anonymous layer", () => {
+		const one = anonymousLayer();
+		const wide = [
+			inLayer(".a{color:red}", one),
+			inLayer(".b{color:blue}", one),
+			inLayer(".a{color:red}", one)
+		];
+		const cut = [inLayer(".b{color:blue}", one), inLayer(".a{color:red}", one)];
+		expect(compareRules(wide, cut, signatures)).toBe("");
+	});
+
 	it("rejects the later one being dropped instead", () => {
 		const after = [rule(".a{color:red}"), rule(".b{color:blue}")];
 		expect(compareRules(before, after, signatures)).not.toBe("");

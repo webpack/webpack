@@ -3302,9 +3302,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			// CSS Cascade 5 §6.4.1: every `@layer {` opens a layer of its own, and an
-			// `!important` declaration is read from the earliest layer — so a later
-			// copy is the weaker one and makes nothing dead.
+			// CSS Cascade 5 §6.4.1: an `!important` declaration is read from the
+			// earliest layer, so a copy in a later one makes nothing dead.
 			[
 				"an important copy stands in a later anonymous layer",
 				"@layer{.a{color:red!important}}@layer{.a{color:blue!important}}@layer{.a{color:red!important}}"
@@ -3312,6 +3311,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"two anonymous layers say the same rule",
 				"@layer{a{color:red}}@layer{a{color:red}}"
+			],
+			[
+				"the layers spell their name with an escape",
+				"@media all{@l\\61yer{.a{c:red}}@l\\61yer{.a{c:blue}}}"
 			]
 		])("keeps both where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
