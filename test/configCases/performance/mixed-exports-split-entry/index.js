@@ -1,6 +1,8 @@
 import { named } from "./named-only";
 
-it("should report a default and named exports from different entry modules", () => {
+it("should read only the entry module whose exports reach the consumer", () => {
 	expect(named).toBe(2);
-	expect(__STATS__.warnings).toHaveLength(1);
+	// Every chunk format renders the startup with the last entry module, so
+	// nothing this one does not export can reach a consumer.
+	expect(__STATS__.warnings).toHaveLength(0);
 });

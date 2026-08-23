@@ -4,15 +4,13 @@
 module.exports = {
 	mode: "production",
 	entry: {
-		main: "./index.js",
-		other: "./other.js"
+		main: { import: "./index.js", library: { type: "commonjs2" } }
 	},
 	optimization: {
 		minimize: false
 	},
 	output: {
-		filename: "[name].js",
-		library: { type: "commonjs2" }
+		filename: "[name].js"
 	},
 	performance: {
 		hints: "warning",
