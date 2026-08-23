@@ -7770,7 +7770,11 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			"an end tag the region already carries",
 			"<i><h1><table><a><thead></i><dd></p> <noframes>"
 		],
-		["a run under an implied body", "<table><a><tr>0"]
+		["a run under an implied body", "<table><a><tr>0"],
+		// The table keeps whitespace-only text and fosters the rest, so the run
+		// cannot come back beside it without the two fusing.
+		["a run beside whitespace the table kept", "<p><table>\n<br>0 <li>"],
+		["text the table kept before a run", "<p><table>0 \n</main>\n<figcaption>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
