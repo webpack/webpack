@@ -6070,8 +6070,8 @@ declare class DefinePlugin {
 			Record<string, CodeValue>
 		>;
 	};
-	static VALUE_DEP_MAIN: "webpack/DefinePlugin_hash";
-	static VALUE_DEP_PREFIX: "webpack/DefinePlugin ";
+	static VALUE_DEP_MAIN: string;
+	static VALUE_DEP_PREFIX: string;
 	static getDeclaredKeys: (compilation: Compilation) => undefined | Set<string>;
 	static getMergedDefinitionNode: (
 		compilation: Compilation,
@@ -8178,7 +8178,7 @@ declare abstract class ExportsInfo {
 	/**
 	 * Gets read only export info.
 	 */
-	getReadOnlyExportInfo(name: string): ExportInfo;
+	getReadOnlyExportInfo(name: string): any;
 
 	/**
 	 * Gets read only export info recursive.
@@ -14230,9 +14230,9 @@ declare class JavascriptParser extends ParserClass {
 	static extend(
 		...plugins: ((BaseParser: typeof ParserImport) => typeof ParserImport)[]
 	): typeof JavascriptParser;
-	static ALLOWED_MEMBER_TYPES_ALL: 3;
-	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
-	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
+	static ALLOWED_MEMBER_TYPES_ALL: number;
+	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: number;
+	static ALLOWED_MEMBER_TYPES_EXPRESSION: number;
 	static VariableInfo: typeof VariableInfo;
 	static VariableInfoFlags: Readonly<{
 		Evaluated: 0;
@@ -17005,8 +17005,8 @@ declare class ModuleConcatenationPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-	static BAILOUT_PREFIX: "ModuleConcatenation bailout: ";
-	static REJECTED_PREFIX: "Cannot concat with ";
+	static BAILOUT_PREFIX: string;
+	static REJECTED_PREFIX: string;
 }
 declare class ModuleDependency extends Dependency {
 	/**
