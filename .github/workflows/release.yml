@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.changesets.outputs.published }}
-      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      publishedPackages: ${{ steps.changesets.outputs.published-packages }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -33,13 +33,18 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
-          publish: node ./node_modules/.bin/changeset publish
-          commit: "chore(release): new release"
-          title: "chore(release): new release"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # `changeset publish` refuses to run under Yarn Classic, so npm
+          # publishes instead. The action runs this on every push that leaves no
+          # changeset behind, hence the skip when npm already carries the
+          # version; it execs without a shell, hence `bash -c`; and it splits
+          # the command on double quotes, so there are none inside.
+          publish-script: bash -c "v=$(npm pkg get version | xargs); (npm view webpack@${v:?} version > /dev/null 2>&1 || npm publish) && node ./node_modules/.bin/changeset git-tag"
+          commit-message: "chore(release): new release"
+          pr-title: "chore(release): new release"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: "" # https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
 
   announce-release:
