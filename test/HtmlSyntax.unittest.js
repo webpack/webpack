@@ -4406,6 +4406,14 @@ describe("SourceProcessor — optional end tags read the output", () => {
 		);
 	});
 
+	it("keeps a `</caption>` whitespace behind it would move inside", () => {
+		// §4.13 lets a `caption` end tag go only when what follows is an element:
+		// whitespace or a comment would land inside the caption without it.
+		expect(minify("<table><caption>x</caption> ")).toBe(
+			"<table><caption>x</caption> </table>"
+		);
+	});
+
 	it("reads past whitespace the collapse tier deletes", () => {
 		// The `\n` after each `</p>` is content in the tree and nothing in the
 		// output, so the tag it was keeping alive goes with it.
@@ -7658,4 +7666,94 @@ describe("parseHtml — insertion modes", () => {
 			expect(treeOf(source, fragmentContext)).toMatchSnapshot();
 		});
 	}
+});
+
+describe("SourceProcessor — re-serializing keeps the tree", () => {
+	const { SourceProcessor, parseHtml } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @returns {string} the tree the printed output re-parses to
+	 */
+	const reparsed = (source) =>
+		serializeHtmlTree(
+			parseHtml(
+				new SourceProcessor().process(source, { mode: "beautify" }).code
+			)
+		);
+
+	// §4.13 lets an `html` or `body` end tag go only when no comment follows, and
+	// a `head` one only when neither a comment nor whitespace does.
+	it.each([
+		["whitespace between head and body", "</head>\n"],
+		["a space between head and body", "</head> "],
+		["a comment after body", "</body><!--ab-->"],
+		["a comment after html", "</html><!--x-->"],
+		// Serializing writes back the newline the parser drops — in HTML only, so a
+		// MathML `textarea`, which keeps its own, must not gain one.
+		["a foreign textarea's leading newline", "<math><textarea>\ny"],
+		["an html textarea's leading newline", "<textarea>\ny"],
+		["a pre's leading newline", "<pre>\ny"],
+		// §4.13 pairs the `<colgroup>` tags, and a `<template>` behind one does not
+		// close it: the head rules take it where it stands.
+		["two colgroups a col each", "<table><col>y<col>"],
+		["a template behind a colgroup", "<table><col></br><template>"],
+		// A `<select>` inserts no active-formatting marker, so `</marquee>` clears
+		// the `<b>` rather than stopping short and rebuilding it behind the marquee.
+		["formatting a marquee cleared", "<marquee><b><select></marquee>x"],
+		// §13.2.6.4.7 ignores a `<form>` start tag while the pointer is set, so a
+		// nested one needs the end tag that cleared it written back in front.
+		["a form inside a form", "<form><div></form><form>"],
+		["a form a button holds", "<form><button></form><form>"],
+		// Foster parenting puts a node before the table it was written inside, so in
+		// tree order its start tag reaches what the table had kept out of scope.
+		["a list fostered out of a table", "<p><table><ol>"],
+		["a definition fostered out of one", "<dd><table><dd>"],
+		["an option fostered out of one", "<option><table><option>"],
+		["a heading fostered out of one", "<h2><table><h1>"],
+		["ruby fostered out of one", "<ruby><rtc><table><rb>"],
+		["a form the table kept", "<table><p><form>"],
+		["an input that ends a select", "<select><table><input>"],
+		["a foreign element fostered out of one", "<h2><table><svg><h1>"],
+		["a style the fostered element holds", "<p><table><p><style>"],
+		["a newline the fostered pre kept", "<table><pre><head>\n"],
+		// A `<template>` anywhere above suspends the form element pointer, so the
+		// end tag that a nested form otherwise needs would only close the outer one.
+		["a form a template holds", "<template><form><form>"],
+		// A scope rule ends the nearest match on the stack rather than the parent,
+		// so what a fostered run would close can sit any number of elements above.
+		["an input under a fostered div", "<select><table><div><input>"],
+		["a button under a fostered list", "<button><table><ol><button>"],
+		["a select above what holds the table", "<select><span><table><input>"],
+		// Whitespace a table kept and text it fostered stay two nodes: moved back in
+		// beside each other they would fuse into one.
+		["text beside whitespace a table kept", "<dt><table> </nav>x<p>"],
+		["a comment behind a column group", "<table><col><!--c-->"],
+		["a form a foreign element holds", "<form><svg><form>"],
+		["a hidden input the table keeps", "<select><table><input type=hidden>"],
+		["an input the table fosters", "<select><table><input type=text>"],
+		["a fostered list of several items", "<p><table><ol><li>a</li><li>b</li>"],
+		["a run fostered inside template content", "<template><table><p><ol>"],
+		["a foreign run with children", "<p><table><svg><desc>d</desc>"],
+		["a run a template's content holds", "<template><table><li><p>"],
+		["a second column group behind a run", "<dd><table><col><dd><col>"],
+		[
+			"a run that moves beside one that cannot",
+			"<p><table><ol></table><div><table><b>"
+		],
+		// And where tree order already re-parses, it is left alone.
+		["a paragraph fostered out of one", "<table><p>"]
+	])("keeps %s", (_name, source) => {
+		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
+	});
+
+	it("leaves a formatting element where the tree holds it", () => {
+		// The adoption agency rebuilds one from the active formatting list, so a run
+		// carrying it does not replay out of the table it would be printed into.
+		expect(
+			new SourceProcessor().process("<nobr><table><nobr>", {
+				mode: "beautify"
+			}).code
+		).toBe("<nobr><nobr></nobr><table></table></nobr>");
+	});
 });
