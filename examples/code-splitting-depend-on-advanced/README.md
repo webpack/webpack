@@ -384,7 +384,7 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 /******/ __webpack_require__.O(0, ["other-vendors"], () => (__webpack_exec__(6)));
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
@@ -426,7 +426,7 @@ __webpack_require__.e(/*! import() */ "lazy_js").then(__webpack_require__.bind(_
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 /******/ __webpack_require__.O(0, ["app","react-vendors","other-vendors"], () => (__webpack_exec__(7)));
 /******/ var __webpack_exports__ = __webpack_require__.O();
 /******/ }
@@ -491,7 +491,7 @@ module.exports = "isomorphic-fetch";
 /***/ })
 ],
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 /******/ var __webpack_exports__ = (__webpack_exec__(3));
 /******/ }
 ]);
@@ -542,7 +542,7 @@ module.exports = 'prop-types';
 /***/ })
 ],
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 /******/ var __webpack_exports__ = (__webpack_exec__(0), __webpack_exec__(1), __webpack_exec__(2));
 /******/ }
 ]);
@@ -554,15 +554,15 @@ module.exports = 'prop-types';
 
 ```
 asset runtime.js 11.4 KiB [emitted] (name: runtime)
-asset other-vendors.js 2.13 KiB [emitted] (name: other-vendors)
-asset page1.js 1.9 KiB [emitted] (name: page1)
-asset app.js 1.43 KiB [emitted] (name: app)
-asset react-vendors.js 1.33 KiB [emitted] (name: react-vendors)
+asset other-vendors.js 2.11 KiB [emitted] (name: other-vendors)
+asset page1.js 1.88 KiB [emitted] (name: page1)
+asset app.js 1.41 KiB [emitted] (name: app)
+asset react-vendors.js 1.3 KiB [emitted] (name: react-vendors)
 asset lazy_js.js 1.1 KiB [emitted]
-Entrypoint app 1.43 KiB = app.js
-Entrypoint page1 1.9 KiB = page1.js
-Entrypoint react-vendors 12.8 KiB = runtime.js 11.4 KiB react-vendors.js 1.33 KiB
-Entrypoint other-vendors 13.6 KiB = runtime.js 11.4 KiB other-vendors.js 2.13 KiB
+Entrypoint app 1.41 KiB = app.js
+Entrypoint page1 1.88 KiB = page1.js
+Entrypoint react-vendors 12.7 KiB = runtime.js 11.4 KiB react-vendors.js 1.3 KiB
+Entrypoint other-vendors 13.5 KiB = runtime.js 11.4 KiB other-vendors.js 2.11 KiB
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -626,15 +626,15 @@ webpack X.X.X compiled successfully
 
 ```
 asset runtime.js 2.6 KiB [emitted] [minimized] (name: runtime)
-asset page1.js 278 bytes [emitted] [minimized] (name: page1)
-asset other-vendors.js 236 bytes [emitted] [minimized] (name: other-vendors)
-asset react-vendors.js 201 bytes [emitted] [minimized] (name: react-vendors)
-asset app.js 197 bytes [emitted] [minimized] (name: app)
+asset page1.js 274 bytes [emitted] [minimized] (name: page1)
+asset other-vendors.js 232 bytes [emitted] [minimized] (name: other-vendors)
+asset react-vendors.js 197 bytes [emitted] [minimized] (name: react-vendors)
+asset app.js 193 bytes [emitted] [minimized] (name: app)
 asset lazy_js.js 157 bytes [emitted] [minimized]
-Entrypoint app 197 bytes = app.js
-Entrypoint page1 278 bytes = page1.js
-Entrypoint react-vendors 2.8 KiB = runtime.js 2.6 KiB react-vendors.js 201 bytes
-Entrypoint other-vendors 2.83 KiB = runtime.js 2.6 KiB other-vendors.js 236 bytes
+Entrypoint app 193 bytes = app.js
+Entrypoint page1 274 bytes = page1.js
+Entrypoint react-vendors 2.79 KiB = runtime.js 2.6 KiB react-vendors.js 197 bytes
+Entrypoint other-vendors 2.83 KiB = runtime.js 2.6 KiB other-vendors.js 232 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]

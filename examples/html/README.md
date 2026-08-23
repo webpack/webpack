@@ -333,7 +333,7 @@ assets by path *.png 77.9 KiB
 assets by path *.js 11.3 KiB
   asset __html_6d047296_1.js 6.77 KiB [emitted] (name: __html_6d047296_1)
   asset page.js 3.57 KiB [emitted] (name: page)
-  asset __html_6d047296_2.js 1.01 KiB [emitted] (name: __html_6d047296_2)
+  asset __html_6d047296_2.js 1010 bytes [emitted] (name: __html_6d047296_2)
 asset favicon.ico 14.6 KiB [emitted]
 asset index.html 1.91 KiB [emitted] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]
@@ -382,7 +382,7 @@ assets by path *.png 77.9 KiB
 assets by path *.js 2.89 KiB
   asset page.js 1.62 KiB [emitted] [minimized] (name: page)
   asset __html_6d047296_1.js 1.14 KiB [emitted] [minimized] (name: __html_6d047296_1)
-  asset __html_6d047296_2.js 143 bytes [emitted] [minimized] (name: __html_6d047296_2)
+  asset __html_6d047296_2.js 139 bytes [emitted] [minimized] (name: __html_6d047296_2)
 asset favicon.ico 14.6 KiB [emitted]
 asset index.html 749 bytes [emitted] [minimized] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]

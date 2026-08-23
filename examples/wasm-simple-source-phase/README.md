@@ -366,7 +366,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 	(() => {
 /******/ 		__webpack_require__.vs = (wasmModuleId, wasmModuleHash) => {
 /******/ 		
-/******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".wasm");
+/******/ 			var req = fetch("dist/" + "" + wasmModuleHash + ".wasm");
 /******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
 /******/ 				.then((bytes) => (WebAssembly.compile(bytes))));
@@ -389,9 +389,6 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	__webpack_require__.p = "dist/";
-/******/ 	
 /************************************************************************/
 ```
 
@@ -413,13 +410,13 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ## Unoptimized
 
 ```
-asset output.js 14.5 KiB [emitted] (name: main)
+asset output.js 14.4 KiB [emitted] (name: main)
 asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.82 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.78 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.82 KiB 6 modules
+  runtime modules 3.78 KiB 5 modules
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
@@ -431,14 +428,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 3.23 KiB [emitted] [minimized] (name: main)
+asset output.js 3.22 KiB [emitted] [minimized] (name: main)
 asset cf7e85ed8e63f4d888d1.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset a2f8efa4d5c0dcec35af.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 8c504d8ec13ead0a0a07.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.59 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.59 KiB 5 modules
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
+  runtime modules 3.54 KiB 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
     [no exports used]

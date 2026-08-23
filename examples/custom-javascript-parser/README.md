@@ -22,11 +22,13 @@ import("./async-loaded").then(function (asyncLoaded) {
 
 const acorn = require("acorn");
 
-/** @typedef {import("estree").Program} Program */
-/** @typedef {import("estree").Comment} Comment */
-/** @typedef {import("estree").SourceLocation} SourceLocation */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @import { Comment, SourceLocation } from "estree" */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../lib/javascript/JavascriptParser"
+ */
 
 /**
  * @param {string} sourceCode the source code
@@ -61,10 +63,13 @@ Implementation example:
 
 const oxc = require("oxc-parser");
 
-/** @typedef {import("estree").Program} Program */
-/** @typedef {import("estree").Comment} Comment */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @import { Program, Comment } from "estree" */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../lib/javascript/JavascriptParser"
+ */
 
 /**
  * Oxc has no location API — none is needed: webpack derives line/column
@@ -110,12 +115,13 @@ Implementation example:
 
 const meriyah = require("meriyah");
 
-/** @typedef {import("estree").Program} Program */
-/** @typedef {import("estree").Node} Node */
-/** @typedef {import("estree").Comment} Comment */
-/** @typedef {import("estree").SourceLocation} SourceLocation */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
-/** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @import { Program, Comment, SourceLocation } from "estree" */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../lib/javascript/JavascriptParser"
+ */
 
 /**
  * @param {string} sourceCode the source code
@@ -260,8 +266,8 @@ Implementation example:
 ## Unoptimized
 
 ```
-asset output.js 12.2 KiB [compared for emit] (name: main)
-asset 655.output.js 761 bytes [compared for emit]
+asset output.js 12.2 KiB [emitted] (name: main)
+asset 655.output.js 761 bytes [emitted]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
