@@ -12,7 +12,9 @@ it("should report through the stats channel", async () => {
 		import("./r9")
 	]);
 
-	expect(loaded).toHaveLength(10);
+	expect(loaded.map((module) => module.default)).toEqual([
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+	]);
 	expect(__STATS__.hints).toHaveLength(1);
 	expect(__STATS__.hints[0].message).toMatch(/tiny chunks: 10 chunks/);
 	expect(__STATS__.warnings).toHaveLength(0);

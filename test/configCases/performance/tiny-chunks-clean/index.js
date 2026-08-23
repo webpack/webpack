@@ -11,6 +11,8 @@ it("should stay quiet when too few chunks are that small", async () => {
 		import("./r8")
 	]);
 
-	expect(loaded).toHaveLength(9);
+	expect(loaded.map((module) => module.default)).toEqual([
+		0, 1, 2, 3, 4, 5, 6, 7, 8
+	]);
 	expect(__STATS__.warnings).toHaveLength(0);
 });
