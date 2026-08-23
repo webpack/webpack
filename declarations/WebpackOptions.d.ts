@@ -3276,6 +3276,11 @@ export interface PerformanceOptions {
 	 */
 	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
 	/**
+	 * Report 'require.context' calls with no filter, which bundle every file under a directory (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	broadContexts?: boolean;
+	/**
 	 * Report how much of the module graph the cache reused, and the modules that can never be reused (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3314,6 +3319,16 @@ export interface PerformanceOptions {
 	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
 	hints?: false | "warning" | "error" | "stats";
+	/**
+	 * Report the loaders, plugins and hooks that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	hotspots?: boolean;
+	/**
+	 * Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	largeModules?: boolean;
 	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
