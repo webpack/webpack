@@ -18,3 +18,16 @@ it("should leave a stand-in it cannot read exactly as written", () => {
 		expect([name, bundle.includes(text)]).toEqual([name, true]);
 	}
 });
+
+it("should leave an asset alone when it can read none of its stand-ins", async () => {
+	const { unreadable } = await load();
+	const lazyName = __STATS__.assets.find((asset) =>
+		/^lazy\./.test(asset.name)
+	).name;
+	const chunk = fs.readFileSync(
+		path.join(__STATS__.outputPath, lazyName),
+		"utf8"
+	);
+
+	expect(chunk).toContain(unreadable);
+});
