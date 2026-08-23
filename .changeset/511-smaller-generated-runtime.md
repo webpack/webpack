@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Emit less runtime code for dynamic imports, chunk loading and publicPath.
+Emit less runtime code, and shorter syntax where `output.environment` allows.
