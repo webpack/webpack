@@ -900,6 +900,22 @@ describe("CssSyntax — block streaming", () => {
 		expect(childCount(`@media screen{${SMALL}}`)).toBe(4);
 	});
 
+	it("cuts a dead rule where it stands after an earlier cut in the piece", () => {
+		// Sibling `@layer a` blocks fold into one piece, so a batch that takes two
+		// rules back cuts twice in it. Its own spans move with the first cut, and a
+		// span read after it must name its new place, not the one it went out at.
+		const dead = ".p{color:red}.q{color:blue}";
+		const victim =
+			".victim{align-items:flex-start;border-radius:0;opacity:1;background:red}";
+		const src = `@layer outer{${repeat(6000, (i) => `.f${i}{color:red}`)}@layer a{${dead}}@layer a{${dead}}@layer a{${victim}}@layer a{.q{color:blue}}}`;
+		// The outer block has to stream for the fold to be the one under test.
+		expect(childCount(src)).toBe(0);
+		const out = minify(src);
+		// Sliced, so a wrong cut reads as the mangled rule and not as the sheet.
+		const at = out.indexOf(".victim");
+		expect(out.slice(at, at + victim.length)).toBe(victim);
+	});
+
 	it("enters a streamed rule before its children and exits after them", () => {
 		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");
