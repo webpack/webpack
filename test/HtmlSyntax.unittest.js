@@ -7742,18 +7742,30 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			"<p><table><ol></table><div><table><b>"
 		],
 		// And where tree order already re-parses, it is left alone.
-		["a paragraph fostered out of one", "<table><p>"]
+		["a paragraph fostered out of one", "<table><p>"],
+		// Every scope stops at a table, so a formatting element written inside one
+		// reaches an ancestor of the same name only once printed outside it.
+		["a formatting element the table held out of scope", "<nobr><table><nobr>"],
+		["one under a run that closes the holder", "<p><table><i><ol>"],
+		[
+			"a foreign element fostered out of a table",
+			"<i><article><table><desc></i>"
+		],
+		// §13.2.6.5 inserts a foreign `<form>` without consulting the form pointer.
+		["a form in foreign content inside another", "<form><svg><form><dd>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
 
-	it("leaves a formatting element where the tree holds it", () => {
-		// The adoption agency rebuilds one from the active formatting list, so a run
-		// carrying it does not replay out of the table it would be printed into.
+	it("rebuilds a formatting element rather than re-nesting it", () => {
+		// §13.2.4.3 makes this `<b>` from the list of active formatting elements, so
+		// no source tag places it and the run stays where the tree holds it.
 		expect(
-			new SourceProcessor().process("<nobr><table><nobr>", {
+			new SourceProcessor().process("<nobr><table><b><colgroup><nobr>", {
 				mode: "beautify"
 			}).code
-		).toBe("<nobr><nobr></nobr><table></table></nobr>");
+		).toBe(
+			"<nobr><b></b><b><nobr></nobr></b><table><colgroup></colgroup></table></nobr>"
+		);
 	});
 });
