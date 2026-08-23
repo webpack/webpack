@@ -30,7 +30,7 @@ describe("Profiling Plugin", () => {
 
 	it("should handle when unable to start a profiling session", () => {
 		const profiler = new ProfilingPlugin.Profiler(
-			/** @type {EXPECTED_ANY} */ ({
+			/** @type {any} */ ({
 				Session() {
 					throw new Error("Sean Larkin was here.");
 				}
@@ -45,7 +45,7 @@ describe("Profiling Plugin", () => {
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.sendCommand(
 			"randy",
-			/** @type {EXPECTED_OBJECT} */ (/** @type {unknown} */ ("is awesome"))
+			/** @type {object} */ (/** @type {unknown} */ ("is awesome"))
 		);
 	});
 

@@ -112,7 +112,7 @@ describe("NodeWatchFileSystem", () => {
 		expect(() =>
 			watch({
 				aggregateTimeout: 20,
-				ignored: /** @type {EXPECTED_ANY} */ (42)
+				ignored: /** @type {any} */ (42)
 			})
 		).toThrow("Invalid option for 'ignored'");
 	});

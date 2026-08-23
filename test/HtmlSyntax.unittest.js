@@ -896,10 +896,10 @@ describe("tokenize", () => {
 	describe("coverage: state-machine branches", () => {
 		/**
 		 * @param {string} html input
-		 * @returns {[string, ...EXPECTED_ANY[]][]} token stream
+		 * @returns {[string, ...any[]][]} token stream
 		 */
 		const walk = (html) => {
-			/** @type {[string, ...EXPECTED_ANY[]][]} */
+			/** @type {[string, ...any[]][]} */
 			const out = [];
 			tokenize(html, 0, {
 				openTag: (input, start, end, ns, ne, selfClosing) => {
@@ -2070,7 +2070,7 @@ describe("tokenize", () => {
 			// branch in STATE_TAG_NAME, STATE_AFTER_ATTRIBUTE_NAME,
 			// STATE_BEFORE_ATTRIBUTE_VALUE, STATE_ATTRIBUTE_VALUE_UNQUOTED, and
 			// STATE_AFTER_ATTRIBUTE_VALUE_QUOTED `>` handlers.
-			/** @type {[string, ...EXPECTED_ANY[]][]} */
+			/** @type {[string, ...any[]][]} */
 			const out = [];
 			const skipFn =
 				(/** @type {string} */ label) =>
@@ -6133,10 +6133,10 @@ describe("parseCssUrls", () => {
 describe("tokenize — fused state transitions", () => {
 	/**
 	 * @param {string} html input
-	 * @returns {[string, ...EXPECTED_ANY[]][]} token + parse-error stream
+	 * @returns {[string, ...any[]][]} token + parse-error stream
 	 */
 	const walk = (html) => {
-		/** @type {[string, ...EXPECTED_ANY[]][]} */
+		/** @type {[string, ...any[]][]} */
 		const out = [];
 		tokenize(html, 0, {
 			openTag: (input, start, end, ns, ne, selfClosing) => {
@@ -6979,10 +6979,10 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 	/**
 	 * @param {string} source HTML
 	 * @param {import("../lib/html/syntax").HtmlTokenCallbacks=} extra extra callbacks
-	 * @returns {[string, ...EXPECTED_ANY[]][]} token stream
+	 * @returns {[string, ...any[]][]} token stream
 	 */
 	const walk = (source, extra) => {
-		/** @type {[string, ...EXPECTED_ANY[]][]} */
+		/** @type {[string, ...any[]][]} */
 		const out = [];
 		tokenize(source, 0, {
 			openTag: (input, start, end, nameStart, nameEnd) => {

@@ -20,7 +20,7 @@ const parse = (source) =>
 const findNode = (node, test) => {
 	if (test(node)) return node;
 	for (const key of Object.keys(node)) {
-		const value = /** @type {EXPECTED_ANY} */ (node)[key];
+		const value = /** @type {any} */ (node)[key];
 		for (const child of Array.isArray(value) ? value : [value]) {
 			if (
 				child &&
@@ -32,7 +32,7 @@ const findNode = (node, test) => {
 			}
 		}
 	}
-	return /** @type {EXPECTED_ANY} */ (undefined);
+	return /** @type {any} */ (undefined);
 };
 
 /**
@@ -76,7 +76,7 @@ describe("getPathInAst", () => {
 		// both identifiers share one range, so the value is only reachable by
 		// continuing the scan past the key
 		const ast = parse("const a = 1;\nconst o = { a };");
-		const property = /** @type {EXPECTED_ANY} */ (
+		const property = /** @type {any} */ (
 			findNode(ast, (node) => node.type === "Property")
 		);
 		const keyPath = /** @type {Node[]} */ (getPathInAst(ast, property.key));
@@ -114,26 +114,27 @@ describe("getPathInAst", () => {
 			body: [statement],
 			range: [0, 12]
 		};
-		const ast = /** @type {EXPECTED_ANY} */ (program);
-		expect(getPathInAst(ast, /** @type {EXPECTED_ANY} */ (identifier))).toEqual(
-			[identifier, statement]
-		);
+		const ast = /** @type {any} */ (program);
+		expect(getPathInAst(ast, /** @type {any} */ (identifier))).toEqual([
+			identifier,
+			statement
+		]);
 	});
 
 	it("should scan past siblings without position info", () => {
 		const identifier = { type: "Identifier", name: "a", range: [4, 5] };
-		const program = /** @type {EXPECTED_ANY} */ ({
+		const program = /** @type {any} */ ({
 			type: "Program",
 			body: [{ type: "EmptyStatement" }, identifier],
 			range: [0, 6]
 		});
-		expect(
-			getPathInAst(program, /** @type {EXPECTED_ANY} */ (identifier))
-		).toEqual([identifier]);
+		expect(getPathInAst(program, /** @type {any} */ (identifier))).toEqual([
+			identifier
+		]);
 		expect(
 			getPathInAst(
 				program,
-				/** @type {EXPECTED_ANY} */ ({ type: "Identifier", range: [9, 10] })
+				/** @type {any} */ ({ type: "Identifier", range: [9, 10] })
 			)
 		).toBeUndefined();
 	});
@@ -169,7 +170,7 @@ describe("getPathInAst", () => {
 			(node) => node.type === "Identifier"
 		);
 		expect(
-			getPathInAst(/** @type {EXPECTED_ANY} */ ("not a node"), identifier)
+			getPathInAst(/** @type {any} */ ("not a node"), identifier)
 		).toBeUndefined();
 	});
 });

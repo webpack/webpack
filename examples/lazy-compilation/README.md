@@ -46,7 +46,7 @@ document.body.appendChild(pre);
 
 const { HotModuleReplacementPlugin } = require("../../");
 
-/** @type {import("webpack").Configuration & { devServer: Record<string, EXPECTED_ANY> }} */
+/** @type {import("webpack").Configuration & { devServer: Record<string, any> }} */
 const config = {
 	mode: "development",
 	cache: {

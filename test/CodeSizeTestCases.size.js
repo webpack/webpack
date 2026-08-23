@@ -209,14 +209,14 @@ const measureAsset = (content) => ({
 // — and most of them read a bundle this harness deliberately minifies — so the
 // global is stubbed out rather than evaluated: every access and call returns the
 // stub again, which swallows `expect(x).not.toBe(y)` and friends alike.
-/** @type {EXPECTED_ANY} */
+/** @type {any} */
 const expectStub = new Proxy(() => {}, {
 	get: (target, property) => (property === "then" ? undefined : expectStub),
 	apply: () => expectStub
 });
 
-if (typeof (/** @type {EXPECTED_ANY} */ (globalThis).expect) === "undefined") {
-	/** @type {EXPECTED_ANY} */ (globalThis).expect = expectStub;
+if (typeof (/** @type {any} */ (globalThis).expect) === "undefined") {
+	/** @type {any} */ (globalThis).expect = expectStub;
 }
 
 /**
@@ -371,7 +371,7 @@ const measureCase = async ({ category, name }) => {
 	try {
 		const activeCompiler = /** @type {Compiler | MultiCompiler} */ (
 			webpack(
-				/** @type {EXPECTED_ANY} */ (
+				/** @type {any} */ (
 					optionsArr.length === 1 ? optionsArr[0] : optionsArr
 				)
 			)

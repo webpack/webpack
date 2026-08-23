@@ -29,7 +29,7 @@ module.exports = {
 						test: /\.(?:[cm]?js|css)(\?.*)?$/i,
 						minify: [MinimizerPlugin.terserMinify, cssMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}]
-					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
+					}).apply(/** @type {any} */ (compiler));
 				}
 			}
 		]

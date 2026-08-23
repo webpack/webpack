@@ -3,7 +3,7 @@
 const CssModule = require("../../../../lib/css/CssModule");
 const HtmlModule = require("../../../../lib/html/HtmlModule");
 
-/** @type {Map<string, { new (...args: EXPECTED_ANY[]): EXPECTED_ANY }>} */
+/** @type {Map<string, { new (...args: any[]): any }>} */
 const expectedClasses = new Map([
 	["css", CssModule],
 	["css/auto", CssModule],

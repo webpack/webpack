@@ -15,9 +15,9 @@ const compile = (options) =>
 			const webpack = require("..");
 
 			const compiler = /** @type {import("../").MultiCompiler} */ (
-				/** @type {unknown} */ (webpack(/** @type {EXPECTED_ANY} */ (options)))
+				/** @type {unknown} */ (webpack(/** @type {any} */ (options)))
 			);
-			compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
+			compiler.outputFileSystem = /** @type {any} */ (
 				createFsFromVolume(new Volume())
 			);
 			compiler.run((err, stats) => {

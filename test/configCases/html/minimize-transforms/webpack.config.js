@@ -39,7 +39,7 @@ module.exports = {
 						parallel: false,
 						minify: [htmlMinify],
 						minimizerOptions: [{}]
-					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
+					}).apply(/** @type {any} */ (compiler));
 				}
 			}
 		]

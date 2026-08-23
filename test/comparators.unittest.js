@@ -34,9 +34,7 @@ describe("comparators", () => {
 		});
 
 		it("should order by type name when the types differ", () => {
-			expect(compareNumbers(1, /** @type {EXPECTED_ANY} */ (undefined))).toBe(
-				-1
-			);
+			expect(compareNumbers(1, /** @type {any} */ (undefined))).toBe(-1);
 		});
 	});
 
@@ -114,15 +112,13 @@ describe("comparators", () => {
 	describe("createCachedParameterizedComparator", () => {
 		it("should cache the produced comparator per argument", () => {
 			const arg = {};
-			const comparator = compareModulesByFullName(
-				/** @type {EXPECTED_ANY} */ (arg)
-			);
-			expect(compareModulesByFullName(/** @type {EXPECTED_ANY} */ (arg))).toBe(
+			const comparator = compareModulesByFullName(/** @type {any} */ (arg));
+			expect(compareModulesByFullName(/** @type {any} */ (arg))).toBe(
 				comparator
 			);
-			expect(
-				compareModulesByFullName(/** @type {EXPECTED_ANY} */ ({}))
-			).not.toBe(comparator);
+			expect(compareModulesByFullName(/** @type {any} */ ({}))).not.toBe(
+				comparator
+			);
 		});
 	});
 });

@@ -15,7 +15,7 @@ const compile = (options) =>
 			const webpack = require("..");
 
 			const compiler = /** @type {import("../").Compiler} */ (webpack(options));
-			compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
+			compiler.outputFileSystem = /** @type {any} */ (
 				createFsFromVolume(new Volume())
 			);
 			compiler.run((err, stats) => {

@@ -4,7 +4,7 @@
 import fs from "fs";
 
 /**
- * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY }} params params
+ * @param {{ github: any, context: any }} params params
  */
 export async function run({ github, context }) {
 	const output = JSON.parse(fs.readFileSync("output.json", "utf8"));
@@ -43,7 +43,7 @@ pnpm add -D webpack@${output.packages.map((p) => p.url).join(" ")}
 
 	/**
 	 * @param {number=} issueNumber PR number
-	 * @returns {Promise<EXPECTED_ANY[]>} comments
+	 * @returns {Promise<any[]>} comments
 	 */
 	async function findBotComment(issueNumber) {
 		if (!issueNumber) return null;

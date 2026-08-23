@@ -9,7 +9,7 @@ const stripVTControlCharacters = require("./helpers/stripVTControlCharacters");
 
 // Stub `stripTypeScriptTypes` (Node.js >= 22.6) on runtimes lacking it (Bun/Deno)
 // so the `typescript: "auto"` default resolves on, keeping snapshots identical.
-const anyNodeModuleApi = /** @type {EXPECTED_ANY} */ (nodeModuleApi);
+const anyNodeModuleApi = /** @type {any} */ (nodeModuleApi);
 const hadStripTypeScriptTypes =
 	typeof anyNodeModuleApi.stripTypeScriptTypes === "function";
 if (!hadStripTypeScriptTypes) {
@@ -114,10 +114,8 @@ const getDefaultConfig = (config) => {
 	const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 		require("..").config;
 
-	const normalized = getNormalizedWebpackOptions(
-		/** @type {EXPECTED_ANY} */ (config)
-	);
-	applyWebpackOptionsDefaults(/** @type {EXPECTED_ANY} */ (normalized));
+	const normalized = getNormalizedWebpackOptions(/** @type {any} */ (config));
+	applyWebpackOptionsDefaults(/** @type {any} */ (normalized));
 	// `process.chdir` throws in a worker thread, where the cwd cannot have moved
 	if (process.cwd() !== cwd) process.chdir(cwd);
 	return /** @type {WebpackOptionsNormalized} */ (normalized);
@@ -3846,7 +3844,7 @@ describe("snapshots", () => {
 
 	test(
 		"ecmaVersion",
-		{ output: /** @type {EXPECTED_ANY} */ ({ ecmaVersion: 2020 }) },
+		{ output: /** @type {any} */ ({ ecmaVersion: 2020 }) },
 		(e) => e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
 
@@ -5360,7 +5358,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 		// Auto-enabled html must not let `x.html` shadow `x.js` for `import "./x"`.
 		const { resolve: r } = getDefaultConfig({});
 		const exts = /** @type {string[]} */ (
-			/** @type {EXPECTED_ANY} */ (r.byDependency).esm.extensions
+			/** @type {any} */ (r.byDependency).esm.extensions
 		);
 		expect(exts.indexOf(".html")).toBeGreaterThan(exts.indexOf(".js"));
 	});
@@ -5369,7 +5367,7 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 		// Explicit opt-in preserves the html-as-entry priority (`.html` before `.js`).
 		const { resolve: r } = getDefaultConfig({ experiments: { html: true } });
 		const exts = /** @type {string[]} */ (
-			/** @type {EXPECTED_ANY} */ (r.byDependency).esm.extensions
+			/** @type {any} */ (r.byDependency).esm.extensions
 		);
 		expect(exts.indexOf(".html")).toBeLessThan(exts.indexOf(".js"));
 	});
@@ -5456,7 +5454,7 @@ describe("experiments.typescript auto", () => {
 	it("keeps typescript off when the Node.js TypeScript API is unavailable", () => {
 		// `"auto"` must not enable the built-in support on Node.js < 22.6, where
 		// `module.stripTypeScriptTypes` is missing and it would throw at build time.
-		const mod = /** @type {EXPECTED_ANY} */ (require("module"));
+		const mod = /** @type {any} */ (require("module"));
 
 		const saved = mod.stripTypeScriptTypes;
 		mod.stripTypeScriptTypes = undefined;

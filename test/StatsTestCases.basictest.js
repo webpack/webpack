@@ -113,7 +113,7 @@ describe("StatsTestCases", () => {
 					}
 				}
 				const c = webpack(options);
-				const cAny = /** @type {EXPECTED_ANY} */ (c);
+				const cAny = /** @type {any} */ (c);
 				const compilers = /** @type {import("../").Compiler[]} */ (
 					cAny.compilers ? cAny.compilers : [c]
 				);
@@ -129,7 +129,7 @@ describe("StatsTestCases", () => {
 						const args = Array.prototype.slice.call(arguments);
 						const callback = args.pop();
 						// eslint-disable-next-line no-useless-call
-						/** @type {EXPECTED_ANY} */ (
+						/** @type {any} */ (
 							/** @type {NonNullable<typeof ifs>} */ (ifs).readFile
 						).apply(ifs, [
 							...args,
@@ -161,7 +161,7 @@ describe("StatsTestCases", () => {
 								"afterOptimizeAssets",
 								"beforeHash"
 							]) {
-								/** @type {Record<string, EXPECTED_ANY>} */ (compilation.hooks)[
+								/** @type {Record<string, any>} */ (compilation.hooks)[
 									hook
 								].tap("TestCasesTest", () => compilation.checkConstraints());
 							}
@@ -171,10 +171,10 @@ describe("StatsTestCases", () => {
 				c.run((err, _stats) => {
 					if (err) return done(err);
 					const stats = /** @type {import("../").Stats} */ (_stats);
-					const statsAny = /** @type {EXPECTED_ANY} */ (stats);
+					const statsAny = /** @type {any} */ (stats);
 					for (const compilation of /** @type {import("../").Compilation[]} */ (
 						[...(statsAny.stats ? statsAny.stats : [stats])].map(
-							(/** @type {EXPECTED_ANY} */ s) => s.compilation
+							(/** @type {any} */ s) => s.compilation
 						)
 					)) {
 						compilation.logging.delete("webpack.Compilation.ModuleProfile");
@@ -202,13 +202,13 @@ describe("StatsTestCases", () => {
 						"utf8"
 					);
 
-					/** @type {EXPECTED_ANY} */
+					/** @type {any} */
 					let toStringOptions = {
 						context: testDirectory,
 						colors: false
 					};
 					let hasColorSetting = false;
-					const cOptions = /** @type {EXPECTED_ANY} */ (c.options);
+					const cOptions = /** @type {any} */ (c.options);
 					if (typeof cOptions.stats !== "undefined") {
 						toStringOptions = cOptions.stats;
 						if (
@@ -224,22 +224,20 @@ describe("StatsTestCases", () => {
 					}
 					if (Array.isArray(cOptions) && !toStringOptions.children) {
 						toStringOptions.children = cOptions.map(
-							(/** @type {EXPECTED_ANY} */ o) => o.stats
+							(/** @type {any} */ o) => o.stats
 						);
 					}
 					// mock timestamps
 					for (const { compilation: s } of statsAny.stats
 						? statsAny.stats
 						: [stats]) {
-						expect(/** @type {EXPECTED_ANY} */ (s).startTime).toBeGreaterThan(
-							0
-						);
-						expect(/** @type {EXPECTED_ANY} */ (s).endTime).toBeGreaterThan(0);
-						/** @type {EXPECTED_ANY} */ (s).endTime = new Date(
+						expect(/** @type {any} */ (s).startTime).toBeGreaterThan(0);
+						expect(/** @type {any} */ (s).endTime).toBeGreaterThan(0);
+						/** @type {any} */ (s).endTime = new Date(
 							"04/20/1970, 12:42:42 PM"
 						).getTime();
-						/** @type {EXPECTED_ANY} */ (s).startTime =
-							/** @type {EXPECTED_ANY} */ (s).endTime - 1234;
+						/** @type {any} */ (s).startTime =
+							/** @type {any} */ (s).endTime - 1234;
 					}
 					let actual = stats.toString(toStringOptions);
 					expect(typeof actual).toBe("string");

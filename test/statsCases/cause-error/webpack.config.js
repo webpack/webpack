@@ -38,10 +38,10 @@ function createWebpackErrorWithCause(message, options) {
 	return error;
 }
 
-/** @typedef {Error & { cause?: unknown, errors: EXPECTED_ANY[] }} AggregateError */
+/** @typedef {Error & { cause?: unknown, errors: any[] }} AggregateError */
 
 /**
- * @param {EXPECTED_ANY[]} errors errors
+ * @param {any[]} errors errors
  * @param {string} message message
  * @param {{ cause?: unknown }=} options options
  * @returns {AggregateError} error with errors and cause

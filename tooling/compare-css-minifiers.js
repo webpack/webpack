@@ -182,7 +182,7 @@ const setup = async () => {
 
 /**
  * @param {string} name package name
- * @returns {EXPECTED_ANY} the package's export
+ * @returns {any} the package's export
  */
 const load = (name) => require(path.join(MODULES, name));
 
@@ -293,17 +293,17 @@ const MINIFIERS = [
  * the count wrong: a hex escape may swallow its terminating whitespace, so
  * `.\32 xl` and `.\32xl` are one class, and a `.` inside `[href=".foo"]` is not
  * one at all. The parser resolves both, so equivalent re-spellings compare equal.
- * @param {EXPECTED_ANY} postcss the postcss export
- * @param {EXPECTED_ANY} selectorParser the postcss-selector-parser export
+ * @param {any} postcss the postcss export
+ * @param {any} selectorParser the postcss-selector-parser export
  * @param {string} css a stylesheet
  * @returns {Set<string>} the classes it matches on
  */
 const classSelectors = (postcss, selectorParser, css) => {
 	const set = new Set();
-	const collect = selectorParser((/** @type {EXPECTED_ANY} */ root) => {
-		root.walkClasses((/** @type {EXPECTED_ANY} */ node) => set.add(node.value));
+	const collect = selectorParser((/** @type {any} */ root) => {
+		root.walkClasses((/** @type {any} */ node) => set.add(node.value));
 	});
-	postcss.parse(css).walkRules((/** @type {EXPECTED_ANY} */ rule) => {
+	postcss.parse(css).walkRules((/** @type {any} */ rule) => {
 		// A selector the parser rejects is not a class source worth guessing at.
 		try {
 			collect.processSync(rule.selector);

@@ -18,7 +18,7 @@ module.exports = {
 					new MinimizerPlugin({
 						test: /\.css(\?.*)?$/i,
 						minify: cssMinify
-					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
+					}).apply(/** @type {any} */ (compiler));
 				}
 			}
 		]

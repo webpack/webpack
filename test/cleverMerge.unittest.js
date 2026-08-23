@@ -8,7 +8,7 @@ const {
 	resolveByProperty
 } = require("../lib/util/cleverMerge");
 
-/** @typedef {Record<string, EXPECTED_ANY[]>} CasesMap */
+/** @typedef {Record<string, any[]>} CasesMap */
 
 describe("cleverMerge", () => {
 	const base = {

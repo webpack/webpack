@@ -69,7 +69,7 @@ const config = (name, target, testPath) => ({
 	externals
 });
 
-/** @type {(env: EXPECTED_ANY, options: { testPath: string }) => import("../../../../").Configuration[]} */
+/** @type {(env: any, options: { testPath: string }) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [
 	config("node", `node${nodeMajor}`, testPath),
 	config("web", ["web", "es2020"], testPath),

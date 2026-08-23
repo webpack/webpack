@@ -111,7 +111,7 @@ const setup = async () => {
 
 /**
  * @param {string} name package name
- * @returns {EXPECTED_ANY} the package's export
+ * @returns {any} the package's export
  */
 const load = (name) => require(path.join(MODULES, name));
 

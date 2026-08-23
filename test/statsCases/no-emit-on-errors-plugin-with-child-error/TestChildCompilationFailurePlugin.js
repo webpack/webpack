@@ -35,13 +35,13 @@ module.exports = class TestChildCompilationFailurePlugin {
 					(compiler.options.context),
 					/** @type {string[]} */
 					(
-						/** @type {Exclude<EntryNormalized, EXPECTED_FUNCTION>} */
+						/** @type {Exclude<EntryNormalized, Function>} */
 						(compiler.options.entry).main.import
 					)[0],
 					"child"
 				).apply(child);
 				child.runAsChild(
-					/** @type {EXPECTED_ANY} */
+					/** @type {any} */
 					(cb)
 				);
 			}

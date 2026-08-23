@@ -75,20 +75,17 @@ describe("conventions", () => {
 				/returned an empty array/
 			);
 			expect(() =>
-				cssExportConvention("foo", () => /** @type {EXPECTED_ANY} */ ([123]))
+				cssExportConvention("foo", () => /** @type {any} */ ([123]))
 			).toThrow(/must return a non-empty string/);
 		});
 
 		it("should safely stringify unusual invalid results in the error", () => {
 			// a BigInt can't be JSON.stringified, so the message falls back to String()
 			expect(() =>
-				cssExportConvention(
-					"foo",
-					() => /** @type {EXPECTED_ANY} */ (BigInt(1))
-				)
+				cssExportConvention("foo", () => /** @type {any} */ (BigInt(1)))
 			).toThrow(/got 1/);
 			// a circular object whose toString throws exercises the final fallback
-			const circular = /** @type {EXPECTED_ANY} */ ({
+			const circular = /** @type {any} */ ({
 				toString() {
 					throw new Error("no");
 				}
@@ -99,10 +96,7 @@ describe("conventions", () => {
 			);
 			// JSON.stringify(undefined) is undefined, so String() is used
 			expect(() =>
-				cssExportConvention(
-					"foo",
-					() => /** @type {EXPECTED_ANY} */ (undefined)
-				)
+				cssExportConvention("foo", () => /** @type {any} */ (undefined))
 			).toThrow(/got undefined/);
 		});
 	});

@@ -60,6 +60,8 @@ export default defineConfig([
 		rules: {
 			// Too noise
 			"jsdoc/require-property-description": "off",
+			"jsdoc/reject-any-type": "off",
+			"jsdoc/reject-function-type": "off",
 			// Indents are used for imports
 			"jsdoc/check-indentation": "off",
 			// We have helpers for the default configuration
@@ -74,6 +76,9 @@ export default defineConfig([
 			"id-length": "off",
 			// Revisit it in future
 			"no-use-before-define": "off",
+
+			// TODO: Remove this rule from special
+			"jsdoc/no-restricted-syntax": "off",
 
 			// TODO We need allow to have `_arg` in tooling and use `after-used` value for `args`
 			"no-unused-vars": [

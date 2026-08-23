@@ -11,24 +11,24 @@ require("./helpers/warmup-webpack");
  * @property {boolean=} module module
  * @property {boolean=} minimize minimize
  * @property {string | false=} devtool devtool
- * @property {EXPECTED_ANY=} cache cache
- * @property {EXPECTED_ANY=} snapshot snapshot
- * @property {EXPECTED_ANY=} optimization optimization
+ * @property {any=} cache cache
+ * @property {any=} snapshot snapshot
+ * @property {any=} optimization optimization
  * @property {string[]=} deprecations expected deprecations
- * @property {EXPECTED_ANY[]=} plugins plugins
+ * @property {any[]=} plugins plugins
  */
 /**
  * @typedef {object} TestConfig
- * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
+ * @property {((i: any, options: any) => string)=} findBundle
  * @property {number=} timeout
  * @property {number=} cachedTimeout
  * @property {boolean=} noTests
- * @property {((scope: EXPECTED_ANY, options: EXPECTED_ANY) => void)=} moduleScope
+ * @property {((scope: any, options: any) => void)=} moduleScope
  */
 
 const path = require("path");
 const fs = require("graceful-fs");
-/** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
+/** @type {{ sync: (p: string) => void, (p: string, cb: (err: any) => void): void }} */
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -52,7 +52,7 @@ const categories = fs.readdirSync(casesPath).map((cat) => ({
 /**
  * @param {string[]} appendTarget log collector
  * @param {string[]} appendErrors warn/error collector
- * @returns {EXPECTED_ANY} logger object
+ * @returns {any} logger object
  */
 const createLogger = (appendTarget, appendErrors) => ({
 	log: (/** @type {string} */ l) => appendTarget.push(l),
@@ -62,11 +62,11 @@ const createLogger = (appendTarget, appendErrors) => ({
 	// Collect warn/error separately: every infrastructure warning/error must be
 	// declared in the case's infrastructure-log.js or the test fails, so a cache
 	// store/restore failure can't slip through unnoticed.
-	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+	warn: (/** @type {string} */ l, /** @type {any[]} */ ...args) => {
 		appendErrors.push(l);
 		console.warn(l, ...args);
 	},
-	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+	error: (/** @type {string} */ l, /** @type {any[]} */ ...args) => {
 		appendErrors.push(l);
 		console.error(l, ...args);
 	},
@@ -263,7 +263,7 @@ const describeCases = (config) => {
 								function testCasesTest() {
 									this.hooks.compilation.tap(
 										"TestCasesTest",
-										(/** @type {EXPECTED_ANY} */ compilation) => {
+										(/** @type {any} */ compilation) => {
 											for (const hook of [
 												"optimize",
 												"optimizeModules",
@@ -306,8 +306,8 @@ const describeCases = (config) => {
 						const cleanups = [];
 
 						afterAll(() => {
-							options = /** @type {EXPECTED_ANY} */ (undefined);
-							testConfig = /** @type {EXPECTED_ANY} */ (undefined);
+							options = /** @type {any} */ (undefined);
+							testConfig = /** @type {any} */ (undefined);
 							for (const fn of cleanups) fn();
 						});
 
@@ -315,7 +315,7 @@ const describeCases = (config) => {
 							it(
 								`${testName} should pre-compile to fill disk cache (1st)`,
 								(done) => {
-									const output = /** @type {EXPECTED_ANY} */ (options.output);
+									const output = /** @type {any} */ (options.output);
 									const oldPath = output.path;
 									output.path = path.join(
 										/** @type {string} */ (output.path),
@@ -361,7 +361,7 @@ const describeCases = (config) => {
 							it(
 								`${testName} should pre-compile to fill disk cache (2nd)`,
 								(done) => {
-									const output2 = /** @type {EXPECTED_ANY} */ (options.output);
+									const output2 = /** @type {any} */ (options.output);
 									const oldPath = output2.path;
 									output2.path = path.join(
 										/** @type {string} */ (output2.path),
@@ -530,9 +530,7 @@ const describeCases = (config) => {
 									if (testConfig.moduleScope) {
 										testConfig.moduleScope(runner._moduleScope, options);
 									}
-									const runnerRequire = /** @type {EXPECTED_ANY} */ (
-										runner.require
-									);
+									const runnerRequire = /** @type {any} */ (runner.require);
 									runnerRequire.webpackTestSuiteRequire = true;
 								},
 								getBundlePaths: (i, options) =>

@@ -95,7 +95,7 @@ const runCli = (cli) => {
 
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 
-	/** @type {Record<string, EXPECTED_ANY> & { type: string, bin: Record<string, string> }} */
+	/** @type {Record<string, any> & { type: string, bin: Record<string, string> }} */
 	const pkg = require(pkgPath);
 
 	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {

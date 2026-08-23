@@ -16,7 +16,7 @@ const withAcorn = (source) => {
 		sourceType: "script",
 		allowReturnOutsideFunction: true
 	});
-	/** @type {EXPECTED_ANY[]} */
+	/** @type {any[]} */
 	const stack = [ast];
 	while (stack.length > 0) {
 		const node = stack.pop();

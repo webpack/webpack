@@ -32,7 +32,7 @@ if (process.versions.deno) {
 	workerThreads.Worker = class DenoWorker extends RealWorker {
 		/**
 		 * @param {string | URL} resource worker resource
-		 * @param {EXPECTED_ANY} options worker options
+		 * @param {any} options worker options
 		 */
 		constructor(resource, options = {}) {
 			let temp;

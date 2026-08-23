@@ -331,9 +331,9 @@ describe("WebpackParser", () => {
 		const asiParserFor = (code, current, prev) => {
 			const parser = new JavascriptParser("auto");
 			parser._source = code;
-			parser.statementPath = [/** @type {EXPECTED_ANY} */ ({ range: current })];
+			parser.statementPath = [/** @type {any} */ ({ range: current })];
 			if (prev) {
-				parser.prevStatement = /** @type {EXPECTED_ANY} */ ({ range: prev });
+				parser.prevStatement = /** @type {any} */ ({ range: prev });
 			}
 			return parser;
 		};
@@ -403,7 +403,7 @@ describe("WebpackParser", () => {
 
 		it("should assume ASI when no source text is available", () => {
 			const parser = new JavascriptParser("auto");
-			parser.statementPath = [/** @type {EXPECTED_ANY} */ ({ range: [0, 1] })];
+			parser.statementPath = [/** @type {any} */ ({ range: [0, 1] })];
 			expect(parser.isAsiPosition(1)).toBe(true);
 		});
 
@@ -1233,18 +1233,18 @@ describe("WebpackParser", () => {
 
 			const source = "= .";
 			const parser = new WebpackParser(
-				/** @type {EXPECTED_ANY} */ ({
+				/** @type {any} */ ({
 					ecmaVersion: "latest",
 					lazyNodes: true
 				}),
 				source
 			);
-			/** @type {EXPECTED_ANY} */ (parser).getTokenFromCode(61);
-			expect(/** @type {EXPECTED_ANY} */ (parser).type).toBe(tokTypes.eq);
-			expect(/** @type {EXPECTED_ANY} */ (parser).value).toBe("=");
-			/** @type {EXPECTED_ANY} */ (parser).pos = 2;
-			/** @type {EXPECTED_ANY} */ (parser).getTokenFromCode(46);
-			expect(/** @type {EXPECTED_ANY} */ (parser).type).toBe(tokTypes.dot);
+			/** @type {any} */ (parser).getTokenFromCode(61);
+			expect(/** @type {any} */ (parser).type).toBe(tokTypes.eq);
+			expect(/** @type {any} */ (parser).value).toBe("=");
+			/** @type {any} */ (parser).pos = 2;
+			/** @type {any} */ (parser).getTokenFromCode(46);
+			expect(/** @type {any} */ (parser).type).toBe(tokTypes.dot);
 		});
 
 		it("should read the inlined HTML comment forms", () => {
@@ -1940,9 +1940,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			"try { f() } catch { g() }",
 			lazyOptions
 		);
-		expect(
-			/** @type {EXPECTED_ANY} */ (catchAst.body[0]).handler.param
-		).toBeNull();
+		expect(/** @type {any} */ (catchAst.body[0]).handler.param).toBeNull();
 		// for-await outside async context is rejected
 		expect(() =>
 			WebpackParser.parse("for await (const x of y) f(x);", lazyOptions)
@@ -2058,7 +2056,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 				ecmaVersion: "latest",
 				sourceType: "script"
 			})
-		].map((token) => /** @type {EXPECTED_ANY} */ (token).value);
+		].map((token) => /** @type {any} */ (token).value);
 		expect(values).toContain("===");
 		expect(values).toContain(">>>=");
 		expect(values).toContain("??=");

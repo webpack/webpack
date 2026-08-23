@@ -1464,7 +1464,7 @@ export interface OutputHtmlOptions {
 		| {
 				[k: string]: any;
 		  }
-		| ((name: string) => false | string | {[key: string]: EXPECTED_ANY});
+		| ((name: string) => false | string | {[key: string]: any});
 	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
 	 * @since 5.109.0

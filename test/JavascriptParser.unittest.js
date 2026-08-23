@@ -8,13 +8,13 @@ const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 describe("JavascriptParser", () => {
 	/* eslint-disable no-unused-vars */
-	/** @type {EXPECTED_ANY} */ let abc;
-	/** @type {EXPECTED_ANY} */ let cde;
-	/** @type {EXPECTED_ANY} */ let fgh;
-	/** @type {EXPECTED_ANY} */ let memberExpr;
-	/** @type {EXPECTED_ANY} */ let ijk;
-	/** @type {EXPECTED_ANY} */ let xyz;
-	const testCases = /** @type {EXPECTED_ANY} */ ({
+	/** @type {any} */ let abc;
+	/** @type {any} */ let cde;
+	/** @type {any} */ let fgh;
+	/** @type {any} */ let memberExpr;
+	/** @type {any} */ let ijk;
+	/** @type {any} */ let xyz;
+	const testCases = /** @type {any} */ ({
 		"call ident": [
 			function () {
 				abc("test");
@@ -294,13 +294,11 @@ describe("JavascriptParser", () => {
 
 	for (const name of Object.keys(testCases)) {
 		it(`should parse ${name}`, () => {
-			let source = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[
+			let source = /** @type {Record<string, any[]>} */ (testCases)[
 				name
 			][0].toString();
 			source = source.slice(13, -1).trim();
-			const state = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[
-				name
-			][1];
+			const state = /** @type {Record<string, any[]>} */ (testCases)[name][1];
 
 			const testParser = new JavascriptParser(
 				/** @type {"auto"} */ (/** @type {unknown} */ ({}))
@@ -776,13 +774,13 @@ describe("JavascriptParser", () => {
 			for (const name of Object.keys(cases)) {
 				it(name, () => {
 					const actual = parser.parse(
-						/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][0],
+						/** @type {Record<string, any[]>} */ (cases)[name][0],
 						/** @type {import("../lib/Parser").ParserState} */ (
 							/** @type {unknown} */ ({})
 						)
 					);
 					expect(actual).toEqual(
-						/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][1]
+						/** @type {Record<string, any[]>} */ (cases)[name][1]
 					);
 				});
 			}
@@ -811,7 +809,7 @@ describe("JavascriptParser", () => {
 		});
 
 		it("should collect definitions from identifiers introduced in object patterns", () => {
-			/** @type {EXPECTED_ANY} */
+			/** @type {any} */
 			let definitions;
 
 			const parser = new JavascriptParser();
@@ -939,7 +937,7 @@ describe("JavascriptParser", () => {
 				}
 			};
 			for (const name of Object.keys(cases)) {
-				const expr = /** @type {Record<string, EXPECTED_ANY>} */ (cases)[name];
+				const expr = /** @type {Record<string, any>} */ (cases)[name];
 
 				it(name, () => {
 					const parser = new JavascriptParser();
@@ -953,7 +951,7 @@ describe("JavascriptParser", () => {
 					expect(
 						parser.parseCalculatedString(
 							/** @type {import("estree").Expression} */ (
-								/** @type {EXPECTED_ANY} */ (ast.body[0]).expression
+								/** @type {any} */ (ast.body[0]).expression
 							)
 						)
 					).toEqual(expr.result);
@@ -992,7 +990,7 @@ describe("JavascriptParser", () => {
 
 	describe("defined-identifier evaluation fast path", () => {
 		/** @type {import("../lib/Parser").ParserState} */
-		const state = /** @type {EXPECTED_ANY} */ ({});
+		const state = /** @type {any} */ ({});
 
 		it("still walks callee and arguments of defined-callee calls", () => {
 			const parser = new JavascriptParser();
@@ -1192,7 +1190,7 @@ describe("JavascriptParser", () => {
 
 		/**
 		 * @param {string} source source code
-		 * @returns {EXPECTED_ANY} program AST
+		 * @returns {any} program AST
 		 */
 		// `lazyNodes` is webpack's private extension of acorn's Options
 		const parseOptions = /** @type {import("acorn").Options} */ (
@@ -1200,10 +1198,10 @@ describe("JavascriptParser", () => {
 		);
 		/**
 		 * @param {string} source source code
-		 * @returns {EXPECTED_ANY} program AST (loosely typed for node access)
+		 * @returns {any} program AST (loosely typed for node access)
 		 */
 		const parse = (source) =>
-			/** @type {EXPECTED_ANY} */ (WebpackParser.parse(source, parseOptions));
+			/** @type {any} */ (WebpackParser.parse(source, parseOptions));
 
 		it("shares one string between an escape-free quasi's raw and cooked", () => {
 			// eslint-disable-next-line no-template-curly-in-string
@@ -1273,7 +1271,7 @@ describe("JavascriptParser", () => {
 			// but misses the other option set's memo and must re-classify
 			const src = "value1 = value2 instanceof Gate;";
 			const modern = parse(src);
-			const legacy = /** @type {EXPECTED_ANY} */ (
+			const legacy = /** @type {any} */ (
 				WebpackParser.parse(
 					src,
 					/** @type {import("acorn").Options} */ (
@@ -1311,12 +1309,12 @@ describe("JavascriptParser", () => {
 		it("keeps arrow behavior when a plugin overrides parseArrowExpression", () => {
 			// overriding disables `_arrowFastPath`; the type-based fallback probes
 			// must reproduce the same accepts and rejects
-			const plugin = /** @type {EXPECTED_ANY} */ (
-				(/** @type {EXPECTED_ANY} */ P) =>
+			const plugin = /** @type {any} */ (
+				(/** @type {any} */ P) =>
 					class extends P {
 						/**
-						 * @param {...EXPECTED_ANY} args acorn args
-						 * @returns {EXPECTED_ANY} arrow node
+						 * @param {...any} args acorn args
+						 * @returns {any} arrow node
 						 */
 						parseArrowExpression(...args) {
 							return super.parseArrowExpression(...args);
@@ -1327,14 +1325,14 @@ describe("JavascriptParser", () => {
 			expect(() => Extended.parse("() => {} ? a : b", parseOptions)).toThrow(
 				/Unexpected token/
 			);
-			const ast = /** @type {EXPECTED_ANY} */ (
+			const ast = /** @type {any} */ (
 				Extended.parse("f = (x) => x + 1;", parseOptions)
 			);
 			expect(ast.body[0].expression.right.type).toBe("ArrowFunctionExpression");
 		});
 
 		it("serves comment ranges lazily with a stable memo and writable slot", () => {
-			/** @type {EXPECTED_ANY[]} */
+			/** @type {any[]} */
 			const comments = [];
 			WebpackParser.parse(
 				"// hi\nvar x = 1; /* block */",

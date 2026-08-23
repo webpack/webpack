@@ -7,7 +7,7 @@ const HtmlGenerator = require("../lib/html/HtmlGenerator");
  * Drives the single-pass post-processing (collect → inject → mutate → render)
  * the way `HtmlModulesPlugin` does, but without a full build.
  * @param {string} content the HTML
- * @param {{ injected?: EXPECTED_ANY[], csp?: EXPECTED_ANY, mutate?: (tags: EXPECTED_ANY[]) => void }} options options
+ * @param {{ injected?: any[], csp?: any, mutate?: (tags: any[]) => void }} options options
  * @returns {string} the rendered HTML
  */
 const run = (content, { injected = [], csp, mutate } = {}) => {

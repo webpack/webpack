@@ -35,7 +35,7 @@ describe("nonNumericOnlyHash", () => {
 
 describe("nonNumericOnlyHash.digestNonNumericOnly", () => {
 	const fakeHash = (/** @type {string} */ value) =>
-		/** @type {EXPECTED_ANY} */ ({
+		/** @type {any} */ ({
 			digest: (/** @type {string} */ encoding) => `${value}:${encoding}`
 		});
 

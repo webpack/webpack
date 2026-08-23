@@ -26,12 +26,12 @@ const IGNORED_ERROR_KEYS = new Set([
 
 /**
  * @param {unknown} err an err
- * @returns {Record<string, EXPECTED_ANY>} a cleaned error
+ * @returns {Record<string, any>} a cleaned error
  */
 function cleanError(err) {
-	/** @type {Record<string, EXPECTED_ANY>} */
+	/** @type {Record<string, any>} */
 	const result = {};
-	const errObj = /** @type {Record<string, EXPECTED_ANY>} */ (err);
+	const errObj = /** @type {Record<string, any>} */ (err);
 	for (const key of Object.getOwnPropertyNames(errObj)) {
 		if (IGNORED_ERROR_KEYS.has(key)) continue;
 		result[key] = errObj[key];
@@ -84,10 +84,10 @@ const prettyFormatOptions = {
 };
 
 expect.addSnapshotSerializer({
-	test(/** @type {EXPECTED_ANY} */ received) {
+	test(/** @type {any} */ received) {
 		return received.errors || received.warnings;
 	},
-	print(/** @type {EXPECTED_ANY} */ received) {
+	print(/** @type {any} */ received) {
 		return serialize({
 			errors: received.errors.map(cleanError),
 			warnings: received.warnings.map(cleanError)
@@ -96,10 +96,10 @@ expect.addSnapshotSerializer({
 });
 
 expect.addSnapshotSerializer({
-	test(/** @type {EXPECTED_ANY} */ received) {
+	test(/** @type {any} */ received) {
 		return received.message;
 	},
-	print(/** @type {EXPECTED_ANY} */ received) {
+	print(/** @type {any} */ received) {
 		return serialize(cleanError(received));
 	}
 });

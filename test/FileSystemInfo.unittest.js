@@ -802,7 +802,7 @@ ${details(snapshot)}`)
 						stats.isFile = () => false;
 						stats.isDirectory = () => false;
 					}
-					/** @type {EXPECTED_ANY} */ (callback)(err, stats);
+					/** @type {any} */ (callback)(err, stats);
 				});
 			});
 			return fs;
@@ -1062,7 +1062,7 @@ ${details(snapshot)}`)
 				),
 				(err, snapshot) => {
 					if (err) return done(err);
-					const stored = /** @type {Map<string, EXPECTED_ANY>} */ (
+					const stored = /** @type {Map<string, any>} */ (
 						/** @type {Snapshot} */ (snapshot).contextTimestamps
 					).get("/path/context+files");
 					expect(stored).toBeTruthy();
@@ -1099,7 +1099,7 @@ ${details(snapshot)}`)
 				),
 				(err, snapshot) => {
 					if (err) return done(err);
-					const ctxSnap = /** @type {Map<string, EXPECTED_ANY>} */ (
+					const ctxSnap = /** @type {Map<string, any>} */ (
 						/** @type {Snapshot} */ (snapshot).contextTimestamps
 					).get(ctxDir);
 					const fsInfo2 = createFsInfo(fs);
@@ -1199,7 +1199,7 @@ ${details(snapshot)}`)
 				{ timestamp: true },
 				(err, snapshot) => {
 					if (err) return done(err);
-					const ts = /** @type {Map<string, EXPECTED_ANY> | undefined} */ (
+					const ts = /** @type {Map<string, any> | undefined} */ (
 						/** @type {Snapshot} */ (snapshot).contextTimestamps
 					);
 					expect(ts === undefined || !ts.has(ignoredDir)).toBe(true);

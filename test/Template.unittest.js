@@ -31,7 +31,7 @@ describe("Template", () => {
 				[
 					"function () {",
 					"\t/** @type {number} */",
-					"\tvar a = /** @type {EXPECTED_ANY} */ (1);",
+					"\tvar a = /** @type {any} */ (1);",
 					"\t// keep this line comment",
 					"\treturn a /* keep */;",
 					"}"

@@ -49,13 +49,13 @@ module.exports = {
 					defines[Number(currentWatchStep.step || 0)]
 				);
 				plugin.apply(
-					/** @type {EXPECTED_ANY} */
+					/** @type {any} */
 					({
 						hooks: {
 							compilation: {
 								/**
 								 * @param {string} name name
-								 * @param {EXPECTED_FUNCTION} fn fn
+								 * @param {Function} fn fn
 								 */
 								tap: (name, fn) => {
 									fn(...args);

@@ -27,7 +27,7 @@ module.exports = function (source, inputSourceMap) {
 						return {
 							visitor: {
 								/**
-								 * @param {EXPECTED_ANY} path path
+								 * @param {any} path path
 								 */
 								NumericLiteral(path) {
 									path.node.value = 43;

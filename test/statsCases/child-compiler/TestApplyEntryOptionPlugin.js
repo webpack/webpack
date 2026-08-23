@@ -28,7 +28,7 @@ module.exports = class TestApplyEntryOptionPlugin {
       (compilation, cb) => {
         const child = compilation.createChildCompiler(this.name);
         EntryOptionPlugin.applyEntryOption(child, compilation.compiler.context, this.options.entry);
-        child.runAsChild(/** @type {EXPECTED_ANY} */ (cb))
+        child.runAsChild(/** @type {any} */ (cb))
       }
     )
   }

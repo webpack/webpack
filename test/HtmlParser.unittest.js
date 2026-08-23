@@ -12,35 +12,35 @@ const UnsupportedFeatureWarning = require("../lib/errors/UnsupportedFeatureWarni
 const HtmlParser = require("../lib/html/HtmlParser");
 
 /**
- * @returns {{ module: EXPECTED_ANY, presentationalDependencies: EXPECTED_OBJECT[], dependencies: EXPECTED_OBJECT[], warnings: EXPECTED_OBJECT[], errors: EXPECTED_OBJECT[] }} test doubles
+ * @returns {{ module: any, presentationalDependencies: object[], dependencies: object[], warnings: object[], errors: object[] }} test doubles
  */
 const makeModule = () => {
-	/** @type {EXPECTED_OBJECT[]} */
+	/** @type {object[]} */
 	const presentationalDependencies = [];
-	/** @type {EXPECTED_OBJECT[]} */
+	/** @type {object[]} */
 	const dependencies = [];
-	/** @type {EXPECTED_OBJECT[]} */
+	/** @type {object[]} */
 	const warnings = [];
-	/** @type {EXPECTED_OBJECT[]} */
+	/** @type {object[]} */
 	const errors = [];
 	const module = {
 		resource: path.resolve(__dirname, "index.html"),
-		buildInfo: /** @type {Record<string, EXPECTED_ANY>} */ ({}),
+		buildInfo: /** @type {Record<string, any>} */ ({}),
 		buildMeta: {},
 		identifier() {
 			return this.resource;
 		},
-		addPresentationalDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
+		addPresentationalDependency(/** @type {object} */ dependency) {
 			presentationalDependencies.push(dependency);
 		},
-		addDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
+		addDependency(/** @type {object} */ dependency) {
 			dependencies.push(dependency);
 		},
 		addCodeGenerationDependency() {},
-		addWarning(/** @type {EXPECTED_OBJECT} */ warning) {
+		addWarning(/** @type {object} */ warning) {
 			warnings.push(warning);
 		},
-		addError(/** @type {EXPECTED_OBJECT} */ error) {
+		addError(/** @type {object} */ error) {
 			errors.push(error);
 		}
 	};
@@ -48,7 +48,7 @@ const makeModule = () => {
 };
 
 /**
- * @param {EXPECTED_ANY} module module double
+ * @param {any} module module double
  * @param {{ outputModule?: boolean, css?: boolean }=} options options
  * @returns {import("../lib/Parser").ParserState} parser state
  */
@@ -74,21 +74,21 @@ describe("HtmlParser", () => {
 			secondText,
 			firstStart + firstText.length
 		);
-		/** @type {EXPECTED_OBJECT[]} */
+		/** @type {object[]} */
 		const presentationalDependencies = [];
-		/** @type {EXPECTED_OBJECT[]} */
+		/** @type {object[]} */
 		const dependencies = [];
-		const module = /** @type {EXPECTED_ANY} */ ({
+		const module = /** @type {any} */ ({
 			resource: path.resolve(__dirname, "index.html"),
-			buildInfo: /** @type {Record<string, EXPECTED_ANY>} */ ({}),
+			buildInfo: /** @type {Record<string, any>} */ ({}),
 			buildMeta: {},
 			identifier() {
 				return this.resource;
 			},
-			addPresentationalDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
+			addPresentationalDependency(/** @type {object} */ dependency) {
 				presentationalDependencies.push(dependency);
 			},
-			addDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
+			addDependency(/** @type {object} */ dependency) {
 				dependencies.push(dependency);
 			}
 		});
@@ -120,9 +120,7 @@ describe("HtmlParser", () => {
 		expect(dependencies).toHaveLength(1);
 		expect(presentationalDependencies).toHaveLength(1);
 
-		const dependency = /** @type {EXPECTED_ANY} */ (
-			presentationalDependencies[0]
-		);
+		const dependency = /** @type {any} */ (presentationalDependencies[0]);
 		expect(dependency).toBeInstanceOf(HtmlInlineScriptDependency);
 		expect(dependency.contentRange).toEqual([
 			firstStart,
@@ -161,9 +159,9 @@ describe("HtmlParser", () => {
 			secondText,
 			firstStart + firstText.length
 		); // 20
-		/** @type {EXPECTED_OBJECT[]} */
+		/** @type {object[]} */
 		const dependencies = [];
-		const module = /** @type {EXPECTED_ANY} */ ({
+		const module = /** @type {any} */ ({
 			resource: path.resolve(__dirname, "index.html"),
 			buildInfo: {},
 			buildMeta: {},
@@ -171,7 +169,7 @@ describe("HtmlParser", () => {
 				return this.resource;
 			},
 			addPresentationalDependency() {},
-			addDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
+			addDependency(/** @type {object} */ dependency) {
 				dependencies.push(dependency);
 			},
 			addCodeGenerationDependency() {}
@@ -216,24 +214,24 @@ describe("HtmlParser", () => {
 
 	describe("applyTemplate", () => {
 		/**
-		 * @returns {EXPECTED_ANY} module double with dependency sets + diagnostics
+		 * @returns {any} module double with dependency sets + diagnostics
 		 */
 		const templateModule = () => {
-			/** @type {EXPECTED_OBJECT[]} */
+			/** @type {object[]} */
 			const warnings = [];
-			/** @type {EXPECTED_OBJECT[]} */
+			/** @type {object[]} */
 			const errors = [];
 			return {
 				resource: path.resolve(__dirname, "index.html"),
-				buildInfo: /** @type {Record<string, EXPECTED_ANY>} */ ({
+				buildInfo: /** @type {Record<string, any>} */ ({
 					fileDependencies: new Set(),
 					contextDependencies: new Set(),
 					missingDependencies: new Set()
 				}),
-				addWarning(/** @type {EXPECTED_OBJECT} */ warning) {
+				addWarning(/** @type {object} */ warning) {
 					warnings.push(warning);
 				},
-				addError(/** @type {EXPECTED_OBJECT} */ error) {
+				addError(/** @type {object} */ error) {
 					errors.push(error);
 				},
 				warnings,
@@ -280,7 +278,7 @@ describe("HtmlParser", () => {
 
 		it("throws when the template does not return a string", () => {
 			const parser = new HtmlParser({
-				template: () => /** @type {EXPECTED_ANY} */ (42)
+				template: () => /** @type {any} */ (42)
 			});
 			expect(() => parser.applyTemplate("<p>", templateModule())).toThrow(
 				"must return a string"
@@ -324,7 +322,7 @@ describe("HtmlParser", () => {
 			const { module, dependencies } = makeModule();
 			new HtmlParser({}).parse(src, makeState(module));
 			const dep = dependencies.find((d) => d instanceof HtmlSourceDependency);
-			return /** @type {EXPECTED_ANY} */ (dep).range;
+			return /** @type {any} */ (dep).range;
 		};
 
 		// A Buffer source parses like the equivalent string.
@@ -338,10 +336,7 @@ describe("HtmlParser", () => {
 	it("throws when given a preparsed (object) source", () => {
 		const { module } = makeModule();
 		expect(() =>
-			new HtmlParser({}).parse(
-				/** @type {EXPECTED_ANY} */ ({}),
-				makeState(module)
-			)
+			new HtmlParser({}).parse(/** @type {any} */ ({}), makeState(module))
 		).toThrow("webpackAst is unexpected");
 	});
 
@@ -389,7 +384,7 @@ describe("HtmlParser", () => {
 			new HtmlParser({}).parse(source, makeState(module));
 			return dependencies
 				.filter((d) => d instanceof HtmlSourceDependency)
-				.map((d) => /** @type {EXPECTED_ANY} */ (d).request);
+				.map((d) => /** @type {any} */ (d).request);
 		};
 
 		it("extracts external url() in SVG presentation attributes, skipping local/empty", () => {
@@ -451,7 +446,7 @@ describe("HtmlParser", () => {
 
 		/**
 		 * @param {string} source html
-		 * @returns {EXPECTED_OBJECT[]} its inline-script dependencies
+		 * @returns {object[]} its inline-script dependencies
 		 */
 		const inlineScriptDeps = (source) => {
 			const { module, presentationalDependencies } = makeModule();

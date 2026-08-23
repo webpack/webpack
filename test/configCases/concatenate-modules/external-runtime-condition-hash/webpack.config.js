@@ -31,7 +31,7 @@ module.exports = {
 			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					const concatenated =
-						/** @type {EXPECTED_ANY} */
+						/** @type {any} */
 						(
 							[...compilation.modules].find(
 								(m) => m instanceof ConcatenatedModule

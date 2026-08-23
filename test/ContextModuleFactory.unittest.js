@@ -15,7 +15,7 @@ describe("ContextModuleFactory", () => {
 		let memfs;
 
 		beforeEach(() => {
-			factory = new ContextModuleFactory(/** @type {EXPECTED_ANY} */ ([]));
+			factory = new ContextModuleFactory(/** @type {any} */ ([]));
 			memfs = createFsFromVolume(new Volume());
 		});
 

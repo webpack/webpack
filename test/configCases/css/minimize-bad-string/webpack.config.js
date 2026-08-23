@@ -20,7 +20,7 @@ module.exports = {
 						test: /\.css(\?.*)?$/i,
 						minify: [cssMinify],
 						minimizerOptions: [{}]
-					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
+					}).apply(/** @type {any} */ (compiler));
 				}
 			}
 		]

@@ -51,7 +51,7 @@ const wasmHashes = {
 
 for (const name of Object.keys(wasmHashes)) {
 	const { createHash, createReferenceHash, regExp } =
-		/** @type {Record<string, () => { createHash: EXPECTED_ANY, createReferenceHash: EXPECTED_ANY, regExp: RegExp }>} */ (
+		/** @type {Record<string, () => { createHash: any, createReferenceHash: any, regExp: RegExp }>} */ (
 			wasmHashes
 		)[name]();
 

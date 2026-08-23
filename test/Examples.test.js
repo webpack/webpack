@@ -13,7 +13,7 @@ jest.setTimeout(60000);
 
 /**
  * @param {string[]} appendErrors warn/error collector
- * @returns {EXPECTED_ANY} logger object
+ * @returns {any} logger object
  */
 const createLogger = (appendErrors) => ({
 	log: () => {},
@@ -23,11 +23,11 @@ const createLogger = (appendErrors) => ({
 	// Every infrastructure warning/error must be declared in the example's
 	// infrastructure-log.js or the build fails, so a filesystem-cache
 	// store/restore failure can't slip through unnoticed.
-	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+	warn: (/** @type {string} */ l, /** @type {any[]} */ ...args) => {
 		appendErrors.push(l);
 		console.warn(l, ...args);
 	},
-	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+	error: (/** @type {string} */ l, /** @type {any[]} */ ...args) => {
 		appendErrors.push(l);
 		console.error(l, ...args);
 	},
@@ -47,7 +47,7 @@ const dynamicImport = new Function("specifier", "return import(specifier)");
 
 /**
  * @param {string} projectDir a project directory
- * @returns {Promise<EXPECTED_ANY | undefined>} webpack options
+ * @returns {Promise<any | undefined>} webpack options
  */
 async function loadConfiguration(projectDir) {
 	const paths = [

@@ -27,11 +27,11 @@ class EisdirMkdirPlugin {
 	 * @returns {void}
 	 */
 	apply(compiler) {
-		const real = /** @type {EXPECTED_ANY} */ (compiler.outputFileSystem);
-		const fs = /** @type {EXPECTED_ANY} */ (Object.create(real));
+		const real = /** @type {any} */ (compiler.outputFileSystem);
+		const fs = /** @type {any} */ (Object.create(real));
 		/**
 		 * @param {string} dir directory
-		 * @param {EXPECTED_ANY} optionsOrCallback options or callback
+		 * @param {any} optionsOrCallback options or callback
 		 * @param {(err?: Error) => void=} maybeCallback callback
 		 * @returns {void}
 		 */

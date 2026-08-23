@@ -2,23 +2,23 @@
 
 require("./helpers/warmup-webpack");
 
-/** @typedef {Record<string, EXPECTED_ANY>} Env */
+/** @typedef {Record<string, any>} Env */
 /** @typedef {{ testPath: string, srcPath: string }} TestOptions */
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
- * @property {EXPECTED_ANY=} experiments experiments overrides
- * @property {EXPECTED_ANY=} optimization optimization overrides
+ * @property {any=} experiments experiments overrides
+ * @property {any=} optimization optimization overrides
  */
 /**
  * @typedef {object} WatchTestConfig
- * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
+ * @property {((i: any, options: any) => string)=} findBundle
  * @property {boolean=} noTests
  */
 
 const path = require("path");
 const fs = require("graceful-fs");
-/** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
+/** @type {{ sync: (p: string) => void, (p: string, cb: (err: any) => void): void }} */
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -127,7 +127,7 @@ const describeCases = (config) => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
-						/** @type {{ name: string, done?: boolean, stats?: import("../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
+						/** @type {{ name: string, done?: boolean, stats?: import("../").Stats, it?: any, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -216,10 +216,10 @@ const describeCases = (config) => {
 									if (!options.experiments) options.experiments = {};
 									for (const key of Object.keys(config.experiments)) {
 										if (
-											/** @type {EXPECTED_ANY} */ (options.experiments)[key] ===
+											/** @type {any} */ (options.experiments)[key] ===
 											undefined
 										) {
-											/** @type {EXPECTED_ANY} */ (options.experiments)[key] =
+											/** @type {any} */ (options.experiments)[key] =
 												config.experiments[key];
 										}
 									}
@@ -228,11 +228,10 @@ const describeCases = (config) => {
 									if (!options.optimization) options.optimization = {};
 									for (const key of Object.keys(config.optimization)) {
 										if (
-											/** @type {EXPECTED_ANY} */ (options.optimization)[
-												key
-											] === undefined
+											/** @type {any} */ (options.optimization)[key] ===
+											undefined
 										) {
-											/** @type {EXPECTED_ANY} */ (options.optimization)[key] =
+											/** @type {any} */ (options.optimization)[key] =
 												config.optimization[key];
 										}
 									}
@@ -257,7 +256,7 @@ const describeCases = (config) => {
 							const currentWatchStepModule = require("./helpers/currentWatchStep");
 
 							/** @type {(err?: Error | null) => void} */
-							let compilationFinished = /** @type {EXPECTED_ANY} */ (done);
+							let compilationFinished = /** @type {any} */ (done);
 							/** @type {{ step: string | undefined }} */ (
 								currentWatchStepModule
 							).step = run.name;
@@ -400,7 +399,7 @@ const describeCases = (config) => {
 											);
 										}
 
-										/** @type {EXPECTED_ANY} */ (run.it)(
+										/** @type {any} */ (run.it)(
 											"should compile the next step",
 											(/** @type {(err?: Error | null) => void} */ done) => {
 												runIdx++;

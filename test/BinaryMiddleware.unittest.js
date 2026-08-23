@@ -19,7 +19,7 @@ const cont = (base, count) => {
 
 const mw = new BinaryMiddleware();
 /** @type {import("../lib/serialization/SerializerMiddleware").LazyTarget} */
-const other = /** @type {EXPECTED_ANY} */ ({ other: true });
+const other = /** @type {any} */ ({ other: true });
 
 /**
  * @param {import("../lib/serialization/types").PrimitiveSerializableType} item item
@@ -56,7 +56,7 @@ describe("BinaryMiddleware", () => {
 	];
 
 	/** @type {import("../lib/serialization/types").PrimitiveSerializableType[]} */
-	const itemsWithLazy = /** @type {EXPECTED_ANY} */ ([
+	const itemsWithLazy = /** @type {any} */ ([
 		...items,
 		SerializerMiddleware.createLazy(
 			[SerializerMiddleware.createLazy([5], other)],
@@ -77,7 +77,7 @@ describe("BinaryMiddleware", () => {
 		SerializerMiddleware.createLazy([...itemsWithLazy], other)
 	);
 
-	items.push(/** @type {EXPECTED_ANY} */ (undefined));
+	items.push(/** @type {any} */ (undefined));
 
 	const cases = [
 		...itemsWithLazy.map((item) => [item]),
@@ -231,15 +231,15 @@ describe("BinaryMiddleware", () => {
 
 	describe("invalid data", () => {
 		it("should throw on a non-buffer object", () => {
-			expect(() =>
-				mw.serialize(/** @type {EXPECTED_ANY} */ ([{ a: 1 }]), {})
-			).toThrow(/Unexpected object/);
+			expect(() => mw.serialize(/** @type {any} */ ([{ a: 1 }]), {})).toThrow(
+				/Unexpected object/
+			);
 		});
 
 		it("should throw on a non-lazy function", () => {
-			expect(() =>
-				mw.serialize(/** @type {EXPECTED_ANY} */ ([() => 1]), {})
-			).toThrow(/Unexpected function/);
+			expect(() => mw.serialize(/** @type {any} */ ([() => 1]), {})).toThrow(
+				/Unexpected function/
+			);
 		});
 	});
 
@@ -281,7 +281,7 @@ describe("BinaryMiddleware", () => {
 				mw.deserialize(
 					[
 						Buffer.from([0xf1, 10, 0, 0, 0, 0, 0, 0, 0, 0x61, 0x62]),
-						/** @type {EXPECTED_ANY} */ (lazy)
+						/** @type {any} */ (lazy)
 					],
 					{}
 				)

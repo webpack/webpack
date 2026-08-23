@@ -3,7 +3,7 @@
 const AsyncWasmModule = require("../../../../lib/wasm-async/AsyncWasmModule");
 const SyncWasmModule = require("../../../../lib/wasm-sync/SyncWasmModule");
 
-/** @type {Map<string, { new (...args: EXPECTED_ANY[]): EXPECTED_ANY }>} */
+/** @type {Map<string, { new (...args: any[]): any }>} */
 const expectedClasses = new Map([
 	["webassembly/async", AsyncWasmModule],
 	["webassembly/sync", SyncWasmModule]

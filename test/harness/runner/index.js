@@ -31,9 +31,9 @@ const [major] = getNodeVersion();
 
 /**
  * @typedef {object} TestConfig
- * @property {EXPECTED_FUNCTION=} resolveModule
- * @property {EXPECTED_FUNCTION=} moduleScope
- * @property {EXPECTED_FUNCTION=} nonEsmThis
+ * @property {Function=} resolveModule
+ * @property {Function=} moduleScope
+ * @property {Function=} nonEsmThis
  * @property {boolean=} evaluateScriptOnAttached
  * @property {"jsdom"=} env
  * @property {string=} currentScriptNonce nonce reflected on the fake `document.currentScript` (for CSP prefetch/preload tests)
@@ -45,7 +45,7 @@ const [major] = getNodeVersion();
  * @property {string} outputDirectory
  * @property {TestMeta} testMeta
  * @property {TestConfig} testConfig
- * @property {EXPECTED_ANY} webpackOptions
+ * @property {any} webpackOptions
  */
 
 /**
@@ -63,12 +63,12 @@ const [major] = getNodeVersion();
 
 /**
  * @typedef {object} ModuleRunner
- * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} cjs
- * @property {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>} esm
- * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} json
- * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} raw
- * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} bytes
- * @property {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} css
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => any} cjs
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<any>} esm
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => any} json
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => any} raw
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => any} bytes
+ * @property {(moduleInfo: ModuleInfo, context: RequireContext) => any} css
  */
 
 class TestRunner {
@@ -90,17 +90,17 @@ class TestRunner {
 		this.testConfig = testConfig || {};
 		/** @type {TestMeta} */
 		this.testMeta = testMeta || {};
-		/** @type {EXPECTED_ANY} */
+		/** @type {any} */
 		this.webpackOptions = webpackOptions || {};
 		/** @type {import("../../../lib/config/target").TargetProperties | false} */
 		this._targetProperties = this._resolveTargetProperties();
 		/** @type {boolean} */
 		this._runInNewContext = this.hasWebTarget();
-		/** @type {EXPECTED_ANY} */
+		/** @type {any} */
 		this._globalContext = this.createBaseGlobalContext();
-		/** @type {EXPECTED_ANY} */
+		/** @type {any} */
 		this._esmContext = this.createBaseEsmContext();
-		/** @type {EXPECTED_ANY} */
+		/** @type {any} */
 		this._moduleScope = this.createBaseModuleScope();
 		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
@@ -111,7 +111,7 @@ class TestRunner {
 	 * node- nor web-specific (the `"universal"` preset, or arrays like
 	 * `["web", "node"]`, `["web", "electron-main"]`, `["web", "node", "webworker"]`),
 	 * so the same bundle runs once per env.
-	 * @param {EXPECTED_ANY} webpackOptions webpack options
+	 * @param {any} webpackOptions webpack options
 	 * @returns {boolean} whether target is universal
 	 */
 	static isUniversalTarget(webpackOptions) {
@@ -141,14 +141,14 @@ class TestRunner {
 
 	/**
 	 * @param {object} options run options
-	 * @param {EXPECTED_ANY[]} options.optionsArr webpack options array
+	 * @param {any[]} options.optionsArr webpack options array
 	 * @param {string} options.outputDirectory output directory
-	 * @param {EXPECTED_ANY} options.testConfig test config
+	 * @param {any} options.testConfig test config
 	 * @param {{ name: string }} options.category test category
 	 * @param {string} options.testName test name
 	 * @param {(options: { runner: TestRunner, index: number, target: string }) => void} options.setupRunner configure runner
-	 * @param {(i: number, options: EXPECTED_ANY, runner: TestRunner) => string | string[] | null | undefined} options.getBundlePaths resolve bundle paths
-	 * @returns {{ filesCount: number, results: EXPECTED_ANY[] }} files count and results
+	 * @param {(i: number, options: any, runner: TestRunner) => string | string[] | null | undefined} options.getBundlePaths resolve bundle paths
+	 * @returns {{ filesCount: number, results: any[] }} files count and results
 	 */
 	static runBundles({
 		optionsArr,
@@ -229,7 +229,7 @@ class TestRunner {
 	}
 
 	/**
-	 * @returns {EXPECTED_ANY} globalContext
+	 * @returns {any} globalContext
 	 */
 	createBaseGlobalContext() {
 		const base = {
@@ -245,8 +245,8 @@ class TestRunner {
 	}
 
 	/**
-	 * @param {EXPECTED_ANY} esmContext esm context
-	 * @returns {EXPECTED_ANY} esm context
+	 * @param {any} esmContext esm context
+	 * @returns {any} esm context
 	 */
 	mergeEsmContext(esmContext) {
 		return Object.assign(this._esmContext, esmContext);
@@ -259,7 +259,7 @@ class TestRunner {
 		const target = this.target;
 		const context = /** @type {string} */ (this.webpackOptions.context);
 
-		if (/** @type {EXPECTED_ANY} */ (target) === false) return false;
+		if (/** @type {any} */ (target) === false) return false;
 
 		return typeof target === "string"
 			? getTargetProperties(target, context)
@@ -294,14 +294,14 @@ class TestRunner {
 	}
 
 	/**
-	 * @returns {EXPECTED_ANY} moduleScope
+	 * @returns {any} moduleScope
 	 */
 	createBaseModuleScope() {
 		const base = {
 			console,
 			expect,
 			jest,
-			nsObj: (/** @type {EXPECTED_ANY} */ m) => {
+			nsObj: (/** @type {any} */ m) => {
 				Object.defineProperty(m, Symbol.toStringTag, {
 					value: "Module"
 				});
@@ -310,14 +310,14 @@ class TestRunner {
 		};
 		Object.assign(base, this._globalContext);
 		if (this.jsDom()) {
-			/** @type {EXPECTED_ANY} */ (base).window = this._globalContext;
-			/** @type {EXPECTED_ANY} */ (base).self = this._globalContext;
+			/** @type {any} */ (base).window = this._globalContext;
+			/** @type {any} */ (base).self = this._globalContext;
 		}
 		return base;
 	}
 
 	/**
-	 * @returns {EXPECTED_ANY} esm context
+	 * @returns {any} esm context
 	 */
 	createBaseEsmContext() {
 		const base = {
@@ -332,23 +332,23 @@ class TestRunner {
 			TextDecoder: typeof TextDecoder !== "undefined" ? TextDecoder : undefined,
 			// expose the Deno/Bun runtime globals to bundles when running under
 			// them; `global` (not `globalThis`) keeps this working on Node.js 10
-			Deno: /** @type {EXPECTED_ANY} */ (global).Deno,
-			Bun: /** @type {EXPECTED_ANY} */ (global).Bun
+			Deno: /** @type {any} */ (global).Deno,
+			Bun: /** @type {any} */ (global).Bun
 		};
 		return base;
 	}
 
 	/**
-	 * @param {EXPECTED_ANY} globalContext global context
-	 * @returns {EXPECTED_ANY} global context
+	 * @param {any} globalContext global context
+	 * @returns {any} global context
 	 */
 	mergeGlobalContext(globalContext) {
 		return Object.assign(this._globalContext, globalContext);
 	}
 
 	/**
-	 * @param {EXPECTED_ANY} moduleScope module scope
-	 * @returns {EXPECTED_ANY} module scope
+	 * @param {any} moduleScope module scope
+	 * @returns {any} module scope
 	 */
 	mergeModuleScope(moduleScope) {
 		return Object.assign(this._moduleScope, moduleScope);
@@ -362,7 +362,7 @@ class TestRunner {
 	_resolveModule(currentDirectory, module) {
 		if (Array.isArray(module)) {
 			return {
-				origin: /** @type {string} */ (/** @type {EXPECTED_ANY} */ (module)),
+				origin: /** @type {string} */ (/** @type {any} */ (module)),
 				subPath: "",
 				modulePath: path.join(currentDirectory, ".array-require.js"),
 				content: `module.exports = (${module
@@ -402,7 +402,7 @@ class TestRunner {
 	 * @param {string | string[]} module module
 	 * @param {RequireContext=} context context
 	 * @param {Record<string, string>=} importAttributes import attributes
-	 * @returns {EXPECTED_ANY} require result
+	 * @returns {any} require result
 	 */
 	require(
 		currentDirectory,
@@ -411,11 +411,11 @@ class TestRunner {
 		importAttributes = {}
 	) {
 		if (
-			/** @type {EXPECTED_ANY} */ (this.testConfig).modules &&
+			/** @type {any} */ (this.testConfig).modules &&
 			/** @type {string} */ (module) in
-				/** @type {EXPECTED_ANY} */ (this.testConfig).modules
+				/** @type {any} */ (this.testConfig).modules
 		) {
-			return /** @type {EXPECTED_ANY} */ (this.testConfig).modules[
+			return /** @type {any} */ (this.testConfig).modules[
 				/** @type {string} */ (module)
 			];
 		}
@@ -456,7 +456,7 @@ class TestRunner {
 	}
 
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} cjs runner
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => any} cjs runner
 	 */
 	createCjsRunner() {
 		const requireCache = Object.create(null);
@@ -552,7 +552,7 @@ class TestRunner {
 	}
 
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<EXPECTED_ANY>} esm runner
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => Promise<any>} esm runner
 	 */
 	createEsmRunner() {
 		const asModule = require("./asModule");
@@ -604,13 +604,13 @@ class TestRunner {
 				}
 				instance = new vm.SourceTextModule(
 					moduleSource,
-					/** @type {EXPECTED_ANY} */ ({
+					/** @type {any} */ ({
 						identifier: appendTestMeta(identifier),
 						url: appendTestMeta(pathToFileURL(identifier).href),
 						context: esmContext,
 						initializeImportMeta: (
-							/** @type {EXPECTED_ANY} */ meta,
-							/** @type {EXPECTED_ANY} */ _module
+							/** @type {any} */ meta,
+							/** @type {any} */ _module
 						) => {
 							meta.url = pathToFileURL(identifier).href;
 
@@ -622,7 +622,7 @@ class TestRunner {
 						importModuleDynamically: async (
 							/** @type {string} */ specifier,
 							/** @type {vm.Module} */ module,
-							/** @type {EXPECTED_ANY} */ importAttributes
+							/** @type {any} */ importAttributes
 						) => {
 							const normalizedSpecifier = specifier.startsWith("file:")
 								? `./${path.relative(
@@ -641,7 +641,7 @@ class TestRunner {
 									esmReturnStatus: ESModuleStatus.Evaluated
 								},
 								/** @type {Record<string, string>} */ (
-									/** @type {EXPECTED_ANY} */ (importAttributes)
+									/** @type {any} */ (importAttributes)
 								)
 							);
 
@@ -650,7 +650,7 @@ class TestRunner {
 								module.context,
 								undefined,
 								/** @type {Record<string, string>} */ (
-									/** @type {EXPECTED_ANY} */ (importAttributes)
+									/** @type {any} */ (importAttributes)
 								)
 							);
 						}
@@ -691,7 +691,7 @@ class TestRunner {
 									referencingModule.identifier ||
 										fileURLToPath(
 											/** @type {string} */ (
-												/** @type {EXPECTED_ANY} */ (referencingModule).url
+												/** @type {any} */ (referencingModule).url
 											)
 										)
 								),
@@ -710,16 +710,14 @@ class TestRunner {
 				// Link module dependencies
 				if (major === 10) {
 					if (
-						/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
-						ESModuleStatus.Unlinked
+						/** @type {any} */ (esm).linkingStatus === ESModuleStatus.Unlinked
 					) {
 						await link();
 					}
 					if (
-						/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
-						ESModuleStatus.Linked
+						/** @type {any} */ (esm).linkingStatus === ESModuleStatus.Linked
 					) {
-						/** @type {EXPECTED_ANY} */ (esm).instantiate();
+						/** @type {any} */ (esm).instantiate();
 					}
 				} else if (esm.status === ESModuleStatus.Unlinked) {
 					await link();
@@ -744,7 +742,7 @@ class TestRunner {
 				await esm.evaluate();
 				if (esmReturnStatus === ESModuleStatus.Evaluated) return esm;
 
-				const ns = /** @type {EXPECTED_ANY} */ (esm.namespace);
+				const ns = /** @type {any} */ (esm.namespace);
 				return ns.default && ns.default instanceof Promise ? ns.default : ns;
 			};
 
@@ -753,28 +751,28 @@ class TestRunner {
 	}
 
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} json runner
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => any} json runner
 	 */
 	createJSONRunner() {
 		return (moduleInfo) => JSON.parse(moduleInfo.content);
 	}
 
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} raw runner
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => any} raw runner
 	 */
 	createRawRunner() {
 		return (moduleInfo) => moduleInfo.content;
 	}
 
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} bytes runner
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => any} bytes runner
 	 */
 	createBytesRunner() {
 		return (moduleInfo) => new Uint8Array(Buffer.from(moduleInfo.content));
 	}
 
 	/**
-	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => EXPECTED_ANY} css runner
+	 * @returns {(moduleInfo: ModuleInfo, context: RequireContext) => any} css runner
 	 */
 	createCssRunner() {
 		return (moduleInfo) => {
@@ -789,7 +787,7 @@ class TestRunner {
 	}
 
 	/**
-	 * @returns {EXPECTED_ANY} env
+	 * @returns {any} env
 	 */
 	setupEnv() {
 		if (this.jsDom()) {
@@ -838,7 +836,7 @@ class TestRunner {
 						text: async () => buffer.toString("utf8"),
 						json: async () => JSON.parse(buffer.toString("utf8"))
 					};
-				} catch (/** @type {EXPECTED_ANY} */ err) {
+				} catch (/** @type {any} */ err) {
 					if (err.code === "ENOENT") {
 						return typeof Response !== "undefined"
 							? new Response(null, { status: 404 })
@@ -882,7 +880,7 @@ class TestRunner {
 			};
 			if (typeof Blob !== "undefined") {
 				// node.js >= 18
-				/** @type {EXPECTED_ANY} */ (env).Blob = Blob;
+				/** @type {any} */ (env).Blob = Blob;
 			}
 			return env;
 		}

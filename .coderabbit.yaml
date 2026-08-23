@@ -93,7 +93,7 @@ reviews:
         instance field. Path-shape regexps and helpers must be imported from
         lib/util/identifier.js, never re-declared locally. Comments must be at
         most two short lines and add non-obvious information. Prefer specific
-        types over EXPECTED_ANY/unknown when a real type fits.
+        types over any/unknown when a real type fits.
     - path: "hot/**"
       instructions: >-
         Runtime code shipped to browsers; same Node >= 10.13 syntax baseline as

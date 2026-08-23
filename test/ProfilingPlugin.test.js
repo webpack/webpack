@@ -68,7 +68,7 @@ describe("Profiling Plugin", () => {
 				const data = require(finalPath);
 
 				const maxTs = data.reduce(
-					(/** @type {number} */ max, /** @type {EXPECTED_ANY} */ entry) =>
+					(/** @type {number} */ max, /** @type {any} */ entry) =>
 						Math.max(max, entry.ts),
 					0
 				);
@@ -78,7 +78,7 @@ describe("Profiling Plugin", () => {
 					testDuration[0] * 1000000 + testDuration[1] / 1000
 				);
 				const cpuProfile = data.find(
-					(/** @type {EXPECTED_ANY} */ entry) => entry.name === "CpuProfile"
+					(/** @type {any} */ entry) => entry.name === "CpuProfile"
 				);
 				expect(cpuProfile).toBeTypeOf("object");
 				const profile = cpuProfile.args.data.cpuProfile;

@@ -30,14 +30,16 @@ const bcd =
 	/** @type {{ css: { properties: { [name: string]: BcdNode }, selectors: { [name: string]: BcdNode }, "at-rules": { [name: string]: BcdNode }, types: { [name: string]: BcdNode } }, __meta: { version: string } }} */ (
 		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
 	);
-const colorName = require("color-name");
+const colorName = /** @type {Record<string, [number, number, number]>} */ (
+	/** @type {unknown} */ (require("color-name"))
+);
 
 /** @typedef {{ version: string }} PackageManifest */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
-/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, alternative_name?: string, partial_implementation?: boolean, flags?: EXPECTED_ANY[] }} BcdSupport */
+/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, alternative_name?: string, partial_implementation?: boolean, flags?: any[] }} BcdSupport */
 /** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
 /** @typedef {{ __compat?: BcdCompat }} BcdNode */
 const bcdVersion = bcd.__meta.version;
@@ -581,7 +583,7 @@ const collectCustomIdentListProperties = () => {
 	 * rather than `walkValueSyntax`: a `<custom-ident>` inside a function's
 	 * arguments is that function's, not a name the item itself may be spelled as,
 	 * and reading it as one would let a `-webkit-` *function* pass for a name.
-	 * @param {EXPECTED_ANY} node a value-syntax node
+	 * @param {any} node a value-syntax node
 	 * @param {Set<string>} seen the references already followed
 	 * @returns {boolean} whether the item itself may be a `<custom-ident>`
 	 */
@@ -601,7 +603,7 @@ const collectCustomIdentListProperties = () => {
 			case "allOf":
 			case "sequence":
 				return node.items.some(
-					/** @type {(item: EXPECTED_ANY) => boolean} */
+					/** @type {(item: any) => boolean} */
 					((item) => reachesCustomIdent(item, seen))
 				);
 			case "group":
@@ -677,7 +679,7 @@ const collectOneValuePairShorthands = (pairs) => {
 
 /**
  * A dataset entry's value definition, or null where it states none.
- * @param {EXPECTED_ANY} entry a `properties` or `syntaxes` entry
+ * @param {any} entry a `properties` or `syntaxes` entry
  * @returns {string | null} its grammar
  */
 const grammarText = (entry) =>
@@ -704,7 +706,7 @@ const collectUnsharedLonghandKeywords = (tables) => {
 		/** @type {Set<string>} */
 		const out = new Set();
 		/**
-		 * @param {EXPECTED_ANY} node a value-syntax node
+		 * @param {any} node a value-syntax node
 		 * @param {Set<string>} seen the references already followed
 		 * @returns {void}
 		 */
@@ -818,7 +820,7 @@ const acceptedValues = (syntax) => {
 			return;
 		}
 		/**
-		 * @param {EXPECTED_ANY} node the node to walk
+		 * @param {any} node the node to walk
 		 * @param {boolean} inFunction whether it sits in a function's arguments
 		 * @returns {void}
 		 */
@@ -885,7 +887,7 @@ const isSpelledSyntax = (source, seen) => {
 	}
 	let spelled = true;
 	/**
-	 * @param {EXPECTED_ANY} node the node to walk
+	 * @param {any} node the node to walk
 	 * @returns {void}
 	 */
 	const walk = (node) => {
@@ -2493,7 +2495,7 @@ const collectCssModulesKeywords = () => {
 	const counterStyleDescriptors =
 		/** @type {Record<string, { syntax?: string }>} */
 		(
-			/** @type {{ descriptors?: EXPECTED_OBJECT }} */
+			/** @type {{ descriptors?: object }} */
 			(atRules["@counter-style"]).descriptors
 		);
 	/** @type {[string, string, [string, number][]][]} */
@@ -4221,7 +4223,7 @@ const engineVersionLine = (bcdName, baseName, from) => {
 		return entry ? encodeVersion(entry.version_added) : null;
 	};
 	/**
-	 * @param {{ [key: string]: EXPECTED_ANY }} node a BCD subtree
+	 * @param {{ [key: string]: any }} node a BCD subtree
 	 * @returns {Generator<BcdCompat>} every `__compat` block under it
 	 */
 	function* walk(node) {

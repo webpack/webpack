@@ -7,11 +7,11 @@ const ResourceHintPlugin = require("../lib/prefetch/ResourceHintPlugin");
 describe("ResourceHintPlugin.getCompilationResolver", () => {
 	it("returns an empty resolver when no plugin instance ran on this compilation", () => {
 		const resolver = ResourceHintPlugin.getCompilationResolver(
-			/** @type {EXPECTED_ANY} */ ({})
+			/** @type {any} */ ({})
 		);
 		expect(resolver.hints).toBeUndefined();
 		expect(resolver.getHtmlHinted("any")).toEqual([]);
-		expect(resolver.isHtmlHinted(/** @type {EXPECTED_ANY} */ ({}))).toBe(false);
+		expect(resolver.isHtmlHinted(/** @type {any} */ ({}))).toBe(false);
 		expect(resolver.getEntrypointHints("any")).toEqual([]);
 	});
 });

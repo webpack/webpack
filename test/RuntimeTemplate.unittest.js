@@ -272,7 +272,7 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 
 	/**
 	 * @param {object} options overrides
-	 * @param {Record<string, EXPECTED_ANY>=} options.output `output` overrides
+	 * @param {Record<string, any>=} options.output `output` overrides
 	 * @param {(string | false)=} options.devtool the configured devtool
 	 * @param {string[]=} options.bailouts collects the recorded bailout reasons
 	 * @returns {RuntimeTemplate} runtime template
@@ -304,7 +304,7 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 		);
 
 	/**
-	 * @param {EXPECTED_ANY[]=} chunksOfModule chunks the module is placed in
+	 * @param {any[]=} chunksOfModule chunks the module is placed in
 	 * @returns {{ chunkGraph: ChunkGraph, reads: () => number }} a counting chunk graph
 	 */
 	const countingChunkGraph = (chunksOfModule = []) => {
@@ -326,7 +326,7 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 
 	/**
 	 * @param {string | undefined} chunkLoading how this worker entry loads chunks
-	 * @returns {EXPECTED_ANY} a chunk standing for a worker entry
+	 * @returns {any} a chunk standing for a worker entry
 	 */
 	const workerChunk = (chunkLoading) => ({
 		getEntryOptions: () => ({ worker: true, chunkLoading })
