@@ -1,0 +1,94 @@
+name: Update shared comment
+
+on:
+  workflow_run:
+    workflows: [Github Actions, Publish to pkg.pr.new]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-shared-comment-${{ format('{0}@{1}', github.event.workflow_run.head_repository.full_name, github.event.workflow_run.head_branch) }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: |
+      github.repository == 'webpack/webpack' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download the report sections
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pr-report-*
+          merge-multiple: true
+          path: sections
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve Pull Request Number
+        id: pr
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+
+            // 1. For same-repo Pull Requests the run is already linked to its PR(s).
+            if (run.pull_requests && run.pull_requests.length) {
+              core.setOutput('number', run.pull_requests[0].number);
+              return;
+            }
+
+            // 2. For forks that list is empty, so find the open Pull Request who has the
+            // correct branch information
+            const match = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.payload.workflow_run.head_repository.owner.login}:${context.payload.workflow_run.head_branch}`,
+              sort: 'updated',
+              direction: 'desc',
+              per_page: 1,
+            }).then(r => r.data[0]);
+
+            if (!match) {
+              core.info(`No open pull request found for HEAD ${run.head_sha}`);
+              return;
+            }
+
+            core.setOutput('result', match.number);
+
+      - name: Find the shared comment
+        id: find
+        if: steps.pr.outputs.result != ''
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+        with:
+          issue-number: ${{ steps.pr.outputs.result }}
+          comment-author: github-actions[bot]
+          body-includes: <!-- webpack-ci-report -->
+
+      - name: Assemble the comment
+        if: steps.pr.outputs.result != ''
+        run: node .github/scripts/pr-report-comment.mjs
+        env:
+          SECTIONS_PATH: sections
+          EXISTING_BODY: ${{ steps.find.outputs.comment-body }}
+          OUTPUT_PATH: ${{ runner.temp }}/pr-report-comment.md
+
+      - name: Create or update the shared comment
+        if: steps.pr.outputs.result != ''
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+        with:
+          issue-number: ${{ steps.pr.outputs.result }}
+          comment-id: ${{ steps.find.outputs.comment-id }}
+          body-path: ${{ runner.temp }}/pr-report-comment.md
+          edit-mode: replace
