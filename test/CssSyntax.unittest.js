@@ -3281,6 +3281,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("counts a raw passthrough among the children it stands between", () => {
+			// It carries no rules of its own, but its parent still counts it — without
+			// its place, the rules after it are cut at the offsets of the ones before.
+			expect(
+				minify("@media all{*zoom:1;.b{.c{z:1}}}.z{q:1}@media all{.b{.c{z:1}}}")
+			).toBe("@media all{*zoom:1}.z{q:1}@media all{.b{.c{z:1}}}");
+		});
+
 		it("drops one nested in a rule, which is what encloses it", () => {
 			expect(minify(".a{.b{color:red}.x{color:teal}.b{color:red}}")).toBe(
 				".a{.x{color:teal}.b{color:red}}"

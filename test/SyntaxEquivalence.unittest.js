@@ -9,10 +9,8 @@ const { compareRules } = require("./helpers/syntaxEquivalence");
 const rule = (text) => ({ chain: [], text });
 
 describe("syntaxEquivalence — what the oracle accepts", () => {
-	// The printer may drop a rule an identical later one makes dead. The oracle
-	// has to accept exactly that, and no relaxation of it: keeping the earlier
-	// copy instead reorders the cascade, and passing both directions would make
-	// the whole browser corpus unable to catch it.
+	// The oracle has to accept dropping a dead duplicate and nothing looser:
+	// keeping the earlier copy instead would reorder the cascade.
 	const before = [
 		rule(".a{color:red}"),
 		rule(".b{color:blue}"),

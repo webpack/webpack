@@ -1554,10 +1554,8 @@ const compareRules = (before, after, signatures) => {
 			runs[i] = runs[i].filter((one) => !ahead.has(one.where));
 			if (runs[i].length !== 0) next = i;
 		}
-		// A key written twice is one rule said twice: the later copy restates every
-		// declaration at the same specificity, so nothing between them survives it
-		// and the earlier is dead. Keeping the last is what dropping a dead
-		// duplicate leaves, and what dropping the *later* one would not match.
+		// A key written twice is one rule said twice, and the later copy restates it
+		// all — so keeping the last is what dropping the dead earlier one leaves.
 		const all = runs.flat().map(({ key }) => key);
 		/** @type {Map<string, number>} */
 		const lastAt = new Map();

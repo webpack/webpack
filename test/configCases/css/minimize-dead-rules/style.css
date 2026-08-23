@@ -1,6 +1,5 @@
-/* A rule an identical later one makes dead is dropped wherever the two stand:
-   the later copy restates every declaration at the same specificity, so nothing
-   between them survives it. The last copy is the one kept. */
+/* A rule an identical later one makes dead is dropped wherever the two stand,
+   and the last copy is the one kept. */
 
 /*! two copies with a rule between them: the first goes */
 .t01 { color: red }
@@ -34,9 +33,9 @@
 .t06 { color: red }
 
 /*! a block a cut empties goes, as an empty one written here would */
-@media speech { .t07 { color: red } }
+@media (monochrome) { .t07 { color: red } }
 .between7 { color: teal }
-@media speech { .t07 { color: red } }
+@media (monochrome) { .t07 { color: red } }
 
 /*! a keyframe repeated at one offset is left to the printer */
 @keyframes t08 { 0% { opacity: 0 } 100% { opacity: 1 } }
@@ -50,3 +49,9 @@
 /*! and the same selector under another rule is another rule */
 .t10a { .inner { color: red } }
 .t10b { .inner { color: red } }
+
+/*! a raw passthrough the parser kept verbatim stands among the rules it
+   separates, and is counted among them */
+@media (min-width: 1px) { *zoom: 1; .t11 { .inner { color: red } } }
+.between11 { color: teal }
+@media (min-width: 1px) { .t11 { .inner { color: red } } }
