@@ -245,9 +245,7 @@ describe("ScopeAnalyzer", () => {
 				"global",
 				"module",
 				"function",
-				"block",
-				"catch",
-				"block"
+				"catch"
 			]);
 
 			const functionScope = scopes[2];
@@ -255,7 +253,7 @@ describe("ScopeAnalyzer", () => {
 			expect(varNames(functionScope)).toEqual(["arguments"]);
 			expect(refs(functionScope)).toHaveLength(0);
 
-			const catchScope = scopes[4];
+			const catchScope = scopes[3];
 
 			expect(catchScope.block.type).toBe("CatchClause");
 			expect(varNames(catchScope)).toEqual(["e"]);
@@ -278,9 +276,7 @@ describe("ScopeAnalyzer", () => {
 				"global",
 				"module",
 				"function",
-				"block",
-				"catch",
-				"block"
+				"catch"
 			]);
 
 			const functionScope = scopes[2];
@@ -290,7 +286,7 @@ describe("ScopeAnalyzer", () => {
 			expect(refs(functionScope)[0].from).toBe(functionScope);
 			expect(refs(functionScope)[0].resolved).toBe(functionScope.variables[1]);
 
-			const catchScope = scopes[4];
+			const catchScope = scopes[3];
 
 			expect(varNames(catchScope)).toEqual(["message", "id", "arg1", "arg2"]);
 			expect(refNames(catchScope)).toEqual(["id", "default_id"]);
@@ -482,18 +478,17 @@ describe("ScopeAnalyzer", () => {
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
 				"module",
-				"block",
 				"catch",
 				"block"
 			]);
 
-			const catchScope = scopes[3];
+			const catchScope = scopes[2];
 
 			expect(catchScope.block.type).toBe("CatchClause");
 			expect(varNames(catchScope)).toEqual(["a", "b", "c", "d"]);
 			expect(refs(catchScope)).toHaveLength(0);
 
-			const catchBlockScope = scopes[4];
+			const catchBlockScope = scopes[3];
 
 			expect(varNames(catchBlockScope)).toEqual(["e"]);
 			expect(refNames(catchBlockScope)).toEqual(["e", "a", "b", "c", "d"]);
@@ -1798,12 +1793,12 @@ describe("ScopeAnalyzer", () => {
 				}());
 			`);
 
+			// the loop body declares nothing, so it gets no scope of its own
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
 				"module",
 				"function",
-				"for",
-				"block"
+				"for"
 			]);
 
 			const functionScope = scopes[2];
@@ -1815,17 +1810,11 @@ describe("ScopeAnalyzer", () => {
 			const iterScope = scopes[3];
 
 			expect(varNames(iterScope)).toEqual(["i"]);
-			expect(refNames(iterScope)).toEqual(["i", "i"]);
-			for (const reference of refs(iterScope)) {
-				expect(reference.resolved).toBe(iterScope.variables[0]);
-			}
-
-			const blockScope = scopes[4];
-
-			expect(blockScope.variables).toHaveLength(0);
-			expect(refNames(blockScope)).toEqual(["console", "i"]);
-			expect(refs(blockScope)[0].resolved).toBeUndefined();
-			expect(refs(blockScope)[1].resolved).toBe(iterScope.variables[0]);
+			expect(refNames(iterScope)).toEqual(["i", "i", "console", "i"]);
+			expect(refs(iterScope)[0].resolved).toBe(iterScope.variables[0]);
+			expect(refs(iterScope)[1].resolved).toBe(iterScope.variables[0]);
+			expect(refs(iterScope)[2].resolved).toBeUndefined();
+			expect(refs(iterScope)[3].resolved).toBe(iterScope.variables[0]);
 		});
 
 		it("let materialize iteration scope for ForInStatement#2", () => {
@@ -1842,8 +1831,7 @@ describe("ScopeAnalyzer", () => {
 				"global",
 				"module",
 				"function",
-				"for",
-				"block"
+				"for"
 			]);
 
 			const functionScope = scopes[2];
@@ -1854,17 +1842,13 @@ describe("ScopeAnalyzer", () => {
 			const iterScope = scopes[3];
 
 			expect(varNames(iterScope)).toEqual(["i", "j", "k"]);
-			expect(refNames(iterScope)).toEqual(["i", "j", "k", "i"]);
+			expect(refNames(iterScope)).toEqual(["i", "j", "k", "i", "console", "i"]);
 			expect(refs(iterScope)[0].resolved).toBe(iterScope.variables[0]);
 			expect(refs(iterScope)[1].resolved).toBe(iterScope.variables[1]);
 			expect(refs(iterScope)[2].resolved).toBe(iterScope.variables[2]);
 			expect(refs(iterScope)[3].resolved).toBe(iterScope.variables[0]);
-
-			const blockScope = scopes[4];
-
-			expect(refNames(blockScope)).toEqual(["console", "i"]);
-			expect(refs(blockScope)[0].resolved).toBeUndefined();
-			expect(refs(blockScope)[1].resolved).toBe(iterScope.variables[0]);
+			expect(refs(iterScope)[4].resolved).toBeUndefined();
+			expect(refs(iterScope)[5].resolved).toBe(iterScope.variables[0]);
 		});
 
 		// cspell:ignore okok
@@ -1883,8 +1867,7 @@ describe("ScopeAnalyzer", () => {
 				"global",
 				"module",
 				"function",
-				"for",
-				"block"
+				"for"
 			]);
 
 			const functionScope = scopes[2];
@@ -1902,20 +1885,20 @@ describe("ScopeAnalyzer", () => {
 				"obj",
 				"i",
 				"okok",
-				"i"
+				"i",
+				"console",
+				"i",
+				"j",
+				"k"
 			]);
 			expect(refs(iterScope)[3].resolved).toBe(functionScope.variables[2]);
 			expect(refs(iterScope)[4].resolved).toBe(iterScope.variables[0]);
 			expect(refs(iterScope)[5].resolved).toBeUndefined();
 			expect(refs(iterScope)[6].resolved).toBe(iterScope.variables[0]);
-
-			const blockScope = scopes[4];
-
-			expect(blockScope.variables).toHaveLength(0);
-			expect(refNames(blockScope)).toEqual(["console", "i", "j", "k"]);
-			expect(refs(blockScope)[1].resolved).toBe(iterScope.variables[0]);
-			expect(refs(blockScope)[2].resolved).toBe(iterScope.variables[1]);
-			expect(refs(blockScope)[3].resolved).toBe(iterScope.variables[2]);
+			expect(refs(iterScope)[7].resolved).toBeUndefined();
+			expect(refs(iterScope)[8].resolved).toBe(iterScope.variables[0]);
+			expect(refs(iterScope)[9].resolved).toBe(iterScope.variables[1]);
+			expect(refs(iterScope)[10].resolved).toBe(iterScope.variables[2]);
 		});
 	});
 
@@ -2169,12 +2152,7 @@ describe("ScopeAnalyzer", () => {
 				"function bar() { q: for(;;) { break q; } }"
 			);
 
-			expect(scopeTypes(scopes)).toEqual([
-				"global",
-				"module",
-				"function",
-				"block"
-			]);
+			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(moduleScope)).toEqual(["bar"]);
 			expect(refs(moduleScope)).toHaveLength(0);
 
@@ -2220,8 +2198,7 @@ describe("ScopeAnalyzer", () => {
 				"global",
 				"module",
 				"function",
-				"with",
-				"block"
+				"with"
 			]);
 
 			const functionScope = scopes[2];
@@ -2234,11 +2211,8 @@ describe("ScopeAnalyzer", () => {
 
 			expect(withScope.block.type).toBe("WithStatement");
 			expect(withScope.variables).toHaveLength(0);
-
-			const blockScope = scopes[4];
-
-			expect(refNames(blockScope)).toEqual(["testing"]);
-			expect(refs(blockScope)[0].resolved).toBeUndefined();
+			expect(refNames(withScope)).toEqual(["testing"]);
+			expect(refs(withScope)[0].resolved).toBeUndefined();
 			expect(freeNames(analysis)).toEqual(["obj", "testing"]);
 		});
 	});
@@ -2445,13 +2419,8 @@ describe("ScopeAnalyzer", () => {
 				staticBlockScope
 			);
 
-			expect(staticBlockScope.childScopes).toHaveLength(1);
-
-			const blockScope = staticBlockScope.childScopes[0];
-
-			expect(blockScope.type).toBe("block");
-			expect(blockScope.variables).toHaveLength(0);
-			expect(refs(blockScope)).toHaveLength(0);
+			// the inner block declares nothing — `var` hoisted out of it
+			expect(staticBlockScope.childScopes).toHaveLength(0);
 		});
 
 		it("class C { static { if (this.x) { var a; a = 1; } } }", () => {
@@ -2465,17 +2434,15 @@ describe("ScopeAnalyzer", () => {
 			const staticBlockScope = moduleScope.childScopes[0].childScopes[0];
 
 			expect(varNames(staticBlockScope)).toEqual(["a"]);
-			expect(refs(staticBlockScope)).toHaveLength(0);
-			expect(staticBlockScope.childScopes).toHaveLength(1);
-
-			const blockScope = staticBlockScope.childScopes[0];
-
-			expect(blockScope.type).toBe("block");
-			expect(blockScope.variables).toHaveLength(0);
-			expect(refNames(blockScope)).toEqual(["a"]);
-			expect(refs(blockScope)[0].resolved).toBe(staticBlockScope.variables[0]);
+			expect(staticBlockScope.childScopes).toHaveLength(0);
+			expect(refNames(staticBlockScope)).toEqual(["a"]);
+			expect(refs(staticBlockScope)[0].resolved).toBe(
+				staticBlockScope.variables[0]
+			);
 			expect(staticBlockScope.variables[0].references).toHaveLength(1);
-			expect(staticBlockScope.variables[0].references[0].from).toBe(blockScope);
+			expect(staticBlockScope.variables[0].references[0].from).toBe(
+				staticBlockScope
+			);
 		});
 
 		it("class C { static { const { a } = this.foo; if (this.bar) { const b = a + 1; this.baz(b); } } }", () => {
@@ -2555,15 +2522,12 @@ describe("ScopeAnalyzer", () => {
 			const staticBlockScope = classScope.childScopes[0];
 
 			expect(staticBlockScope.type).toBe("class-static-block");
-			expect(refs(staticBlockScope)).toHaveLength(0);
-			expect(staticBlockScope.childScopes).toHaveLength(1);
-
-			// the label does not create a scope of its own
-			const blockScope = staticBlockScope.childScopes[0];
-
-			expect(blockScope.type).toBe("block");
-			expect(refNames(blockScope)).toEqual(["a"]);
-			expect(refs(blockScope)[0].resolved).toBe(moduleScope.getBinding("a"));
+			// neither the label nor the block it holds declares anything
+			expect(staticBlockScope.childScopes).toHaveLength(0);
+			expect(refNames(staticBlockScope)).toEqual(["a"]);
+			expect(refs(staticBlockScope)[0].resolved).toBe(
+				moduleScope.getBinding("a")
+			);
 		});
 
 		it("class C { static { a; } }", () => {
@@ -3154,8 +3118,7 @@ describe("ScopeAnalyzer", () => {
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
 				["outer"],
-				["arguments"],
-				[]
+				["arguments"]
 			]);
 			expect(freeNames(analysis)).toEqual(["x", "y"]);
 		});
@@ -3174,8 +3137,7 @@ describe("ScopeAnalyzer", () => {
 				[],
 				["outer"],
 				["arguments", "inner", "x"],
-				["arguments"],
-				[]
+				["arguments"]
 			]);
 			expect(freeNames(analysis)).toEqual(["y"]);
 		});
@@ -3282,6 +3244,48 @@ describe("ScopeAnalyzer", () => {
 			const inner = analysis.moduleScope.childScopes[0].childScopes[0];
 
 			expect(collected(inner)).toEqual({ arguments: 0, b: 3 });
+		});
+	});
+
+	describe("scopes a block only when it declares something", () => {
+		it("gives a block with a lexical declaration a scope", () => {
+			const { scopes } = analyze("{ let a; a; }");
+
+			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
+			expect(varNames(scopes[2])).toEqual(["a"]);
+		});
+
+		it("gives a block holding only `var` no scope of its own", () => {
+			const { scopes, moduleScope } = analyze("{ var a; a; }");
+
+			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
+			expect(varNames(moduleScope)).toEqual(["a"]);
+			expect(refNames(moduleScope)).toEqual(["a"]);
+		});
+
+		it("gives a switch with a lexical declaration a scope", () => {
+			const { scopes } = analyze("switch (x) { case 1: let a; a; }");
+
+			expect(scopeTypes(scopes)).toEqual(["global", "module", "switch"]);
+			expect(varNames(scopes[2])).toEqual(["a"]);
+		});
+
+		it("gives a switch that declares nothing no scope", () => {
+			const { scopes } = analyze("switch (x) { case 1: y; }");
+
+			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
+		});
+
+		it("scopes a block whose statement type it does not know", () => {
+			const ast = parse("{ x; }");
+			const block = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+
+			block.body[0].type = "SpecialDeclaration";
+
+			const { scopes } = analyzeAst(ast);
+
+			// the unknown statement might declare, so the block keeps a scope
+			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 		});
 	});
 });

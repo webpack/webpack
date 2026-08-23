@@ -25812,13 +25812,6 @@ declare abstract class Scope {
 	 * `isHiddenBodyBinding`.
 	 */
 	paramBoundary: number;
-
-	/**
-	 * Whether this scope's bindings collect their references. Concatenation
-	 * asks only the module scope and its direct children, so a deeper
-	 * binding keeps no reference list at all — see `_resolve`.
-	 */
-	recorded: boolean;
 	getBinding(name: string): undefined | Variable;
 }
 
