@@ -885,6 +885,29 @@ const PARSER_TABLES = [
 		["table", "tbody", "tfoot", "thead", "tr"]
 	],
 	[
+		"FOSTER_KEPT",
+		"set",
+		'The start tags §13.2.6.4.9 gives a rule of its own, so "in table" inserts them where they stand instead of taking the "anything else" arc that fosters one out. Read by the printer, which may only move a fostered run back inside the table when the table would foster all of it straight out again. Prose rather than a dataset: the IDL says nothing about insertion modes.',
+		[
+			"caption",
+			"col",
+			"colgroup",
+			"form",
+			"input",
+			"script",
+			"style",
+			"td",
+			"template",
+			"th"
+		]
+	],
+	[
+		"SCOPE_ENDED_BY",
+		"map",
+		"Open elements a start tag of another name ends through a scope check, for the pairs no broader rule already states — not the same name, not one heading behind another, and not two of `IMPLIED` ending each other. §13.2.6.4.7 pops an open `<select>` for an `<input>`; every other pair the printer needs is one of those three. Prose rather than a dataset, for the same reason as `FOSTER_KEPT`.",
+		[["select", ["input"]]]
+	],
+	[
 		"TBODY_GROUP",
 		"set",
 		"The three row-group elements, interchangeable in the table modes.",
