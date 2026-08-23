@@ -4406,6 +4406,14 @@ describe("SourceProcessor — optional end tags read the output", () => {
 		);
 	});
 
+	it("keeps a `</caption>` whitespace behind it would move inside", () => {
+		// §4.13 lets a `caption` end tag go only when what follows is an element:
+		// whitespace or a comment would land inside the caption without it.
+		expect(minify("<table><caption>x</caption> ")).toBe(
+			"<table><caption>x</caption> </table>"
+		);
+	});
+
 	it("reads past whitespace the collapse tier deletes", () => {
 		// The `\n` after each `</p>` is content in the tree and nothing in the
 		// output, so the tag it was keeping alive goes with it.
@@ -7731,9 +7739,33 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// beside each other they would fuse, and one non-whitespace character in a
 		// run fosters all of it.
 		["text beside whitespace a table kept", "<dt><table> </nav>x<p>"],
+		["a comment behind a column group", "<table><col><!--c-->"],
+		["a form a foreign element holds", "<form><svg><form>"],
+		["a hidden input the table keeps", "<select><table><input type=hidden>"],
+		["an input the table fosters", "<select><table><input type=text>"],
+		["a fostered list of several items", "<p><table><ol><li>a</li><li>b</li>"],
+		["a run fostered inside template content", "<template><table><p><ol>"],
+		["a foreign run with children", "<p><table><svg><desc>d</desc>"],
+		["a run a template's content holds", "<template><table><li><p>"],
+		["a second column group behind a run", "<dd><table><col><dd><col>"],
+		[
+			"a run that moves beside one that cannot",
+			"<p><table><ol></table><div><table><b>"
+		],
 		// And where tree order already re-parses, it is left alone.
 		["a paragraph fostered out of one", "<table><p>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
+	});
+
+	it("leaves a formatting element where the tree holds it", () => {
+		// The adoption agency rebuilds one from the list of active formatting
+		// elements, so a run carrying it does not replay out of the table it would
+		// be printed back into — §13.3 does not round-trip this one either way.
+		expect(
+			new SourceProcessor().process("<nobr><table><nobr>", {
+				mode: "beautify"
+			}).code
+		).toBe("<nobr><nobr></nobr><table></table></nobr>");
 	});
 });
