@@ -37,6 +37,7 @@ const [major] = getNodeVersion();
  * @property {boolean=} evaluateScriptOnAttached
  * @property {"jsdom"=} env
  * @property {string=} currentScriptNonce nonce reflected on the fake `document.currentScript` (for CSP prefetch/preload tests)
+ * @property {boolean=} restrictEnvironment run the bundle in a realm that really lacks what `output.environment` says the target lacks
  */
 
 /**
@@ -190,6 +191,7 @@ class TestRunner {
 					index: i,
 					target
 				});
+				if (testConfig.restrictEnvironment) runner.restrictEnvironment();
 				const bundlePaths = getBundlePaths(i, options, runner);
 				if (bundlePaths) {
 					const paths = Array.isArray(bundlePaths)
@@ -212,6 +214,34 @@ class TestRunner {
 			}
 		}
 		return { filesCount, results };
+	}
+
+	/**
+	 * Takes out of the bundle's realm what `output.environment` says the target
+	 * has not got, so the guard webpack emitted around it is actually taken
+	 * rather than stepped over by a modern engine. Only the bindings a flag
+	 * names: everything else in the realm is a library the flags say nothing
+	 * about, and removing it would test a contract webpack never made.
+	 *
+	 * A node target shares this process's realm, so there is nothing to remove.
+	 */
+	restrictEnvironment() {
+		if (!this._runInNewContext) return;
+		const output = this.webpackOptions.output || {};
+		const environment = {
+			...(this._targetProperties || undefined),
+			...output.environment
+		};
+		const removals = [
+			["globalThis", "delete this.globalThis;"],
+			["symbol", "delete this.Symbol;"],
+			["bigIntLiteral", "delete this.BigInt;"],
+			["hasOwn", "delete Object.hasOwn;"]
+		]
+			.filter(([flag]) => environment[flag] === false)
+			.map(([, statement]) => statement);
+		if (removals.length === 0) return;
+		vm.runInNewContext(removals.join(""), this._globalContext);
 	}
 
 	/**
