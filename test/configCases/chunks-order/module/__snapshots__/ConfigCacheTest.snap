@@ -40,8 +40,7 @@ import * as __webpack_chunk_2__ from \\"./nested-shared.mjs\\";
 __webpack_require__.C(__webpack_chunk_2__);
 import * as __webpack_chunk_3__ from \\"./commons-dependency_js.mjs\\";
 __webpack_require__.C(__webpack_chunk_3__);
-import * as __webpack_chunk_4__ from \\"./foo.mjs\\";
-__webpack_require__.C(__webpack_chunk_4__);
+__webpack_require__.C({ __webpack_esm_ids__, __webpack_esm_modules__ });
 var __webpack_exports__ = __webpack_exec__(353);
 
 //# sourceMappingURL=foo.mjs.map"
