@@ -3364,4 +3364,117 @@ describe("ScopeAnalyzer", () => {
 			expect(freeNames(analysis)).toEqual(["a", "b"]);
 		});
 	});
+
+	describe("assignment targets a parser may report as expressions", () => {
+		// acorn reports every destructuring target as a pattern, so these arms
+		// are reached only by a parser that does not — mutate the tree to get
+		// the shape such a parser would hand over
+		it("binds through an array reported as an expression", () => {
+			const ast = parse("[[a]] = b;");
+			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
+
+			outer.elements[0].type = "ArrayExpression";
+
+			const analysis = analyzeAst(ast);
+
+			expect(freeNames(analysis)).toEqual(["a", "b"]);
+		});
+
+		it("binds through an object reported as an expression", () => {
+			const ast = parse("[{ a }] = b;");
+			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
+
+			outer.elements[0].type = "ObjectExpression";
+
+			const analysis = analyzeAst(ast);
+
+			expect(freeNames(analysis)).toEqual(["a", "b"]);
+		});
+
+		it("binds through a default reported as an assignment", () => {
+			const ast = parse("[a = 1] = b;");
+			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
+
+			outer.elements[0].type = "AssignmentExpression";
+			outer.elements[0].operator = "=";
+
+			const analysis = analyzeAst(ast);
+
+			// this arm counts the default and the write, so `a` is read twice
+			expect(freeNames(analysis)).toEqual(["a", "a", "b"]);
+		});
+
+		it("visits a pattern element whose type it does not know", () => {
+			const ast = parse("[a] = b;");
+			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
+
+			outer.elements[0] = {
+				type: "SpecialTarget",
+				start: 1,
+				end: 2,
+				argument: outer.elements[0]
+			};
+
+			const analysis = analyzeAst(ast);
+
+			// the unknown element is handed back as a right-hand node and walked
+			expect(freeNames(analysis)).toEqual(["a", "b"]);
+		});
+	});
+
+	describe("reading and writing the same binding", () => {
+		it("records one reference for a compound assignment", () => {
+			const { moduleScope } = analyze("let x = 0; x += 1;");
+			const x = moduleScope.variables[0];
+
+			expect(x.references).toHaveLength(2);
+			expect(refNames(moduleScope)).toEqual(["x", "x"]);
+		});
+
+		it("records one reference for an update expression", () => {
+			const { moduleScope } = analyze("let x = 0; x++;");
+			const x = moduleScope.variables[0];
+
+			expect(x.references).toHaveLength(2);
+		});
+
+		it("walks a compound assignment to a member expression", () => {
+			const analysis = analyze("a.b += c;");
+
+			expect(freeNames(analysis)).toEqual(["a", "c"]);
+		});
+
+		it("walks an update expression on a member expression", () => {
+			const analysis = analyze("a.b++;");
+
+			expect(freeNames(analysis)).toEqual(["a"]);
+		});
+
+		it("walks a compound assignment reported against a pattern", () => {
+			const ast = parse("[a] = b;");
+			const assignment = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression;
+
+			// no parser emits this, but the walker must not drop the target
+			assignment.operator = "+=";
+
+			const analysis = analyzeAst(ast);
+
+			expect(freeNames(analysis)).toEqual(["a", "b"]);
+		});
+	});
+
+	describe("an unknown node with a non-computed key", () => {
+		it("does not read the key as a reference", () => {
+			const ast = parse("({ a: b });");
+			const property = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression
+				.properties[0];
+
+			property.type = "SpecialProperty";
+
+			const analysis = analyzeAst(ast);
+
+			// `a` is the key of a non-computed property, so only `b` is read
+			expect(freeNames(analysis)).toEqual(["b"]);
+		});
+	});
 });
