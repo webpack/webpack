@@ -25083,6 +25083,8 @@ declare abstract class RuntimeTemplate {
 	supportsBigIntLiteral(): boolean;
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
+	supportsDeferImport(): boolean;
+	supportsSourceImport(): boolean;
 	supportsModulePreload(): boolean;
 
 	/**
