@@ -14789,6 +14789,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-legacy-javascript": Object {
+    "configs": Array [
+      Object {
+        "description": "Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.legacyJavascript",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-max-asset-size": Object {
     "configs": Array [
       Object {
@@ -14825,6 +14838,19 @@ Object {
       },
     ],
     "description": "Report packages that keep unused code in the bundle because their package.json does not declare 'sideEffects' (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-mixed-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.mixedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },

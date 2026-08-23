@@ -14946,6 +14946,12 @@ declare interface KnownNormalModuleBuildInfo {
 	snapshot?: null | Snapshot;
 
 	/**
+	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	evalUsage?: boolean;
+
+	/**
 	 * using in HttpUriPlugin
 	 */
 	resourceIntegrity?: string;
@@ -21817,6 +21823,12 @@ declare interface PerformanceOptions {
 	largeModules?: boolean;
 
 	/**
+	 * Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	legacyJavascript?: boolean;
+
+	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
 	maxAssetSize?: number;
@@ -21825,6 +21837,12 @@ declare interface PerformanceOptions {
 	 * Total size of an entry point (in bytes).
 	 */
 	maxEntrypointSize?: number;
+
+	/**
+	 * Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	mixedExports?: boolean;
 
 	/**
 	 * Report packages that keep unused code in the bundle because their package.json does not declare 'sideEffects' (requires 'hints' to be enabled).
@@ -27741,12 +27759,6 @@ declare interface StatsOptions {
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
-
-	/**
-	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	evalUsage?: boolean;
 
 	/**
 	 * Add performance hints reported with 'performance.hints: "stats"'.

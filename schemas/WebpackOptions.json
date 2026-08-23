@@ -5425,6 +5425,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "legacyJavascript": {
+          "description": "Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "maxAssetSize": {
           "description": "File size limit (in bytes) when exceeded, that webpack will provide performance hints.",
           "type": "number"
@@ -5435,6 +5440,11 @@
         },
         "missingSideEffects": {
           "description": "Report packages that keep unused code in the bundle because their package.json does not declare 'sideEffects' (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "mixedExports": {
+          "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },

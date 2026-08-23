@@ -3347,6 +3347,11 @@ export interface PerformanceOptions {
 	 */
 	largeModules?: boolean;
 	/**
+	 * Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	legacyJavascript?: boolean;
+	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
 	maxAssetSize?: number;
@@ -3359,6 +3364,11 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	missingSideEffects?: boolean;
+	/**
+	 * Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	mixedExports?: boolean;
 	/**
 	 * Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.
 	 * @since 5.110.0
