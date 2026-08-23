@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Emit analyzable ESM output for chunk, asset, stylesheet, worker and wasm urls.
+Emit analyzable ESM urls: chunks, assets, styles, workers, wasm, eval included.
