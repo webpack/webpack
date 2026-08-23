@@ -17,6 +17,15 @@ it("should emit both phases natively for the deno target", () => {
 	);
 });
 
+it("should hand a dynamic source phase the namespace shape consumers unwrap", () => {
+	const content = emitted("deno-phases.mjs");
+
+	expect(content).toContain('import.defer("ext-import-defer")');
+	expect(content).toMatch(
+		/import\.source\("ext-import-source"\)\.then\(\(m\) => \(\{ "default": m \}\)\)/
+	);
+});
+
 it("should emit the source phase natively for the node target", () => {
 	expect(emitted("node-phases.mjs")).toMatch(
 		/import source __WEBPACK_EXTERNAL_MODULE_ext_source\w* from "ext-source";/

@@ -40,7 +40,9 @@ module.exports = [
 		},
 		externals: {
 			"ext-defer": "module ext-defer",
-			"ext-source": "module ext-source"
+			"ext-source": "module ext-source",
+			"ext-import-defer": "import ext-import-defer",
+			"ext-import-source": "import ext-import-source"
 		},
 		plugins: [defineResolvedEnvironment]
 	},
