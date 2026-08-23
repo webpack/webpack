@@ -21839,6 +21839,12 @@ declare interface PerformanceOptions {
 	osDependentRules?: boolean;
 
 	/**
+	 * Report '/*#__PURE__* /' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	pureAnnotations?: boolean;
+
+	/**
 	 * Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -27735,6 +27741,12 @@ declare interface StatsOptions {
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
+
+	/**
+	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	evalUsage?: boolean;
 
 	/**
 	 * Add performance hints reported with 'performance.hints: "stats"'.

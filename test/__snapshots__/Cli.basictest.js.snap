@@ -14731,6 +14731,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-eval-usage": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.evalUsage",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-hints": Object {
     "configs": Array [
       Object {
@@ -14825,6 +14838,19 @@ Object {
       },
     ],
     "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-pure-annotations": Object {
+    "configs": Array [
+      Object {
+        "description": "Report '/*#__PURE__*/' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.pureAnnotations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report '/*#__PURE__*/' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },

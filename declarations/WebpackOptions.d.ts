@@ -3328,6 +3328,11 @@ export interface PerformanceOptions {
 	 */
 	entrypointOverlap?: boolean;
 	/**
+	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	evalUsage?: boolean;
+	/**
 	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
 	hints?: false | "warning" | "error" | "stats";
@@ -3359,6 +3364,11 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	osDependentRules?: boolean;
+	/**
+	 * Report '/*#__PURE__* /' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	pureAnnotations?: boolean;
 	/**
 	 * Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing (requires 'hints' to be enabled).
 	 * @since 5.110.0
