@@ -5904,23 +5904,25 @@ const generate = async () => {
 	const { source, summary } = await collectData();
 	// Formatted here rather than left to `yarn fmt`, so the comparison below is
 	// against what the repo actually checks in.
-	const config = await prettier.resolveConfig(TARGET);
-	const formatted = await prettier.format(source, {
-		...config,
-		filepath: TARGET
-	});
-	const current = fs.existsSync(TARGET) ? fs.readFileSync(TARGET, "utf8") : "";
-	if (current === formatted) {
-		process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
-	} else if (write) {
-		fs.writeFileSync(TARGET, formatted);
-		process.stdout.write(`lib/css/data.js updated (${summary})\n`);
-	} else {
-		process.stderr.write(
-			"lib/css/data.js is out of date — run `yarn fix:special`\n"
-		);
-		process.exitCode = 1;
-	}
+	prettier
+		.resolveConfig(TARGET)
+		.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
+		.then((formatted) => {
+			const current = fs.existsSync(TARGET)
+				? fs.readFileSync(TARGET, "utf8")
+				: "";
+			if (current === formatted) {
+				process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
+			} else if (write) {
+				fs.writeFileSync(TARGET, formatted);
+				process.stdout.write(`lib/css/data.js updated (${summary})\n`);
+			} else {
+				process.stderr.write(
+					"lib/css/data.js is out of date — run `yarn fix:special`\n"
+				);
+				process.exitCode = 1;
+			}
+		});
 };
 
 if (require.main === module) generate();
