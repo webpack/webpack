@@ -42,7 +42,8 @@ module.exports = [
 			"ext-defer": "module ext-defer",
 			"ext-source": "module ext-source",
 			"ext-import-defer": "import ext-import-defer",
-			"ext-import-source": "import ext-import-source"
+			"ext-import-source": "import ext-import-source",
+			"ext-both": "module ext-both"
 		},
 		plugins: [defineResolvedEnvironment]
 	},
@@ -65,7 +66,28 @@ module.exports = [
 		plugins: [defineResolvedEnvironment]
 	},
 	{
-		// The two builds above emit syntax this runtime cannot parse, so their
+		name: "deno-concat",
+		target: "deno2.8",
+		entry: { main: "./concat.js", phases: "./unused-source.js" },
+		output: {
+			filename: "concat-[name].mjs",
+			module: true
+		},
+		optimization: { concatenateModules: true, usedExports: true },
+		experiments: {
+			outputModule: true,
+			deferImport: true,
+			sourceImport: true
+		},
+		externals: {
+			"ext-defer": "module ext-defer",
+			"ext-source": "module ext-source",
+			"ext-both": "module ext-both"
+		},
+		plugins: [defineResolvedEnvironment]
+	},
+	{
+		// The builds above emit syntax this runtime cannot parse, so their
 		// output is read as text rather than executed.
 		name: "runner",
 		target: "node",

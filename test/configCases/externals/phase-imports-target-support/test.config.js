@@ -2,6 +2,8 @@
 
 module.exports = {
 	findBundle(index) {
-		return [index === 2 ? "main.js" : `${["deno", "node"][index]}-main.mjs`];
+		return [
+			index === 3 ? "main.js" : `${["deno", "node", "concat"][index]}-main.mjs`
+		];
 	}
 };

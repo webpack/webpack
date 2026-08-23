@@ -5,4 +5,8 @@ import source sourced from "ext-source";
 const dynamicDeferred = import.defer("ext-import-defer");
 const dynamicSourced = import.source("ext-import-source");
 
-export { deferred, sourced, dynamicDeferred, dynamicSourced };
+// The same request in two phases must stay two imports without concatenation too.
+import defer * as bothDefer from "ext-both";
+import source bothSource from "ext-both";
+
+export { deferred, sourced, dynamicDeferred, dynamicSourced, bothDefer, bothSource };
