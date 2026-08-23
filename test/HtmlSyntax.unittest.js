@@ -7682,41 +7682,31 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			)
 		);
 
-	// Printing a document back out must hand back the tree it was parsed from —
-	// so what the parser puts outside `<body>` has to survive the round trip.
-	// §4.13 says which of the shell's tags may go: an `html` or `body` end tag
-	// only when no comment follows, a `head` one only when neither a comment nor
-	// whitespace does.
+	// §4.13 lets an `html` or `body` end tag go only when no comment follows, and
+	// a `head` one only when neither a comment nor whitespace does.
 	it.each([
 		["whitespace between head and body", "</head>\n"],
 		["a space between head and body", "</head> "],
 		["a comment after body", "</body><!--ab-->"],
 		["a comment after html", "</html><!--x-->"],
-		// The parser drops a newline after `<pre>` / `<textarea>` / `<listing>`,
-		// so serializing writes a second one back — but only in HTML, where the
-		// drop happens. MathML has a `textarea` of its own and keeps the newline.
+		// Serializing writes back the newline the parser drops — in HTML only, so a
+		// MathML `textarea`, which keeps its own, must not gain one.
 		["a foreign textarea's leading newline", "<math><textarea>\ny"],
 		["an html textarea's leading newline", "<textarea>\ny"],
 		["a pre's leading newline", "<pre>\ny"],
-		// §4.13 pairs the `<colgroup>` tags: its start tag may go only when the
-		// group before it kept its end tag, and its end tag only when what follows
-		// closes it — which a `<template>` does not, the head rules taking it.
+		// §4.13 pairs the `<colgroup>` tags, and a `<template>` behind one does not
+		// close it: the head rules take it where it stands.
 		["two colgroups a col each", "<table><col>y<col>"],
 		["a template behind a colgroup", "<table><col></br><template>"],
-		// A `<select>` inserts no active-formatting marker — the spec inserts one
-		// only for `applet`, `object`, `marquee`, `template`, `td`, `th` and
-		// `caption` — so `</marquee>` clears the `<b>` rather than stopping short
-		// of it and reconstructing it behind the marquee.
+		// A `<select>` inserts no active-formatting marker, so `</marquee>` clears
+		// the `<b>` rather than stopping short and rebuilding it behind the marquee.
 		["formatting a marquee cleared", "<marquee><b><select></marquee>x"],
-		// §13.2.6.4.7 ignores a `<form>` start tag while the form element pointer
-		// is set, so a form written inside another needs the end tag that cleared
-		// it written back in front of it.
+		// §13.2.6.4.7 ignores a `<form>` start tag while the pointer is set, so a
+		// nested one needs the end tag that cleared it written back in front.
 		["a form inside a form", "<form><div></form><form>"],
 		["a form a button holds", "<form><button></form><form>"],
-		// Foster parenting is the one insertion that puts a node before the table it
-		// was written inside, so tree order and source order disagree. Printed in
-		// tree order the start tag reaches what the table had kept out of scope, and
-		// ends it; printed back inside the table the parser fosters it out again.
+		// Foster parenting puts a node before the table it was written inside, so in
+		// tree order its start tag reaches what the table had kept out of scope.
 		["a list fostered out of a table", "<p><table><ol>"],
 		["a definition fostered out of one", "<dd><table><dd>"],
 		["an option fostered out of one", "<option><table><option>"],
@@ -7736,8 +7726,7 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		["a button under a fostered list", "<button><table><ol><button>"],
 		["a select above what holds the table", "<select><span><table><input>"],
 		// Whitespace a table kept and text it fostered stay two nodes: moved back in
-		// beside each other they would fuse, and one non-whitespace character in a
-		// run fosters all of it.
+		// beside each other they would fuse into one.
 		["text beside whitespace a table kept", "<dt><table> </nav>x<p>"],
 		["a comment behind a column group", "<table><col><!--c-->"],
 		["a form a foreign element holds", "<form><svg><form>"],
