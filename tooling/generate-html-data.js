@@ -480,6 +480,22 @@ const HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 // prose, so they are written out — no dataset states them. Sets rather than
 // arrays because the tree builder runs these tests per token on hot paths.
 /** @typedef {[string, "set" | "array" | "object" | "map" | "byElement" | "byElementSet", string, (string | [string, string] | [string, string[] | null])[]]} ParserTable a name, its literal kind, its doc line and its members */
+// §13.2.6.4.7 "generate implied end tags", named once: the scope table below is
+// the same list read from the other side.
+/** @type {string[]} */
+const IMPLIED_END_TAG_ELEMENTS = [
+	"dd",
+	"dt",
+	"li",
+	"optgroup",
+	"option",
+	"p",
+	"rb",
+	"rp",
+	"rt",
+	"rtc"
+];
+
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
@@ -827,7 +843,7 @@ const PARSER_TABLES = [
 		"IMPLIED",
 		"set",
 		'§13.2.6.4.7 "generate implied end tags": the elements popped without their end tag.',
-		["dd", "dt", "li", "optgroup", "option", "p", "rb", "rp", "rt", "rtc"]
+		IMPLIED_END_TAG_ELEMENTS
 	],
 	[
 		"IMPLIED_THOROUGH",
@@ -904,8 +920,14 @@ const PARSER_TABLES = [
 	[
 		"SCOPE_ENDED_BY",
 		"map",
-		"Open elements a start tag of another name ends through a scope check, for the pairs no broader rule already states — not the same name, not one heading behind another, and not two of `IMPLIED` ending each other. §13.2.6.4.7 pops an open `<select>` for an `<input>`; every other pair the printer needs is one of those three. Prose rather than a dataset, for the same reason as `FOSTER_KEPT`.",
-		[["select", ["input"]]]
+		"Open elements a start tag of another name ends through a scope check, for the pairs no broader rule already states — not the same name, not one heading behind another, and not two of `IMPLIED` ending each other. §13.2.6.4.7 pops an open `<select>` for an `<input>`, and generates implied end tags for an `<hr>` while a `<select>` is in scope. Prose rather than a dataset, for the same reason as `FOSTER_KEPT`.",
+		[
+			["select", ["input"]],
+			// Derived: the `<hr>` arm ends whatever "generate implied end tags" does.
+			...IMPLIED_END_TAG_ELEMENTS.map(
+				(name) => /** @type {[string, string[]]} */ ([name, ["hr"]])
+			)
+		]
 	],
 	[
 		"TBODY_GROUP",

@@ -7774,7 +7774,22 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// The table keeps whitespace-only text and fosters the rest, so the run
 		// cannot come back beside it without the two fusing.
 		["a run beside whitespace the table kept", "<p><table>\n<br>0 <li>"],
-		["text the table kept before a run", "<p><table>0 \n</main>\n<figcaption>"]
+		["text the table kept before a run", "<p><table>0 \n</main>\n<figcaption>"],
+		// §13.2.6.4.7 gives `a` and `nobr` a start-tag rule of their own, so writing
+		// a rebuilt one back is not the same as never having removed it.
+		["a rebuilt nobr a heading left on the list", "<h2><nobr><h2><nobr>"],
+		["a rebuilt a behind a marker", "<a><template><applet></template><a>"],
+		// §13.2.6.4.7 stops the dd/dt loop at a special element, and generates
+		// implied end tags for an `<hr>` while a `<select>` is in scope.
+		["a list item a select held open", "<dt><p><select><dd>"],
+		["an hr the table held out of a select's scope", "<select><dt><table><hr>"],
+		// The `</form>` a nested form needs generates implied end tags of its own.
+		[
+			"a nested form behind something implied",
+			"<form><center></form><rt><form>"
+		],
+		// §13.2.6.4.7's close-a-p list is not §4.13's tag-omission list.
+		["a p closed by a start tag only the parser lists", "<p><table><center>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
