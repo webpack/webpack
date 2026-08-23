@@ -29644,6 +29644,7 @@ declare namespace exports {
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
 		export let definePropertyGetters: "__webpack_require__.d";
+		export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 		export let ensureChunk: "__webpack_require__.e";
 		export let ensureChunkHandlers: "__webpack_require__.f";
 		export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
