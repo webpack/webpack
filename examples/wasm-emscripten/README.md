@@ -373,7 +373,7 @@ function createModule(moduleArg = {}) {
 /******/ 	(() => {
 /******/ 		__webpack_require__.vs = (wasmModuleId, wasmModuleHash) => {
 /******/ 		
-/******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".module.wasm");
+/******/ 			var req = fetch("dist/" + "" + wasmModuleHash + ".module.wasm");
 /******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
 /******/ 				.then((bytes) => (WebAssembly.compile(bytes))));
@@ -396,9 +396,6 @@ function createModule(moduleArg = {}) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	__webpack_require__.p = "dist/";
-/******/ 	
 /************************************************************************/
 ```
 
@@ -420,11 +417,11 @@ function createModule(moduleArg = {}) {
 ## Unoptimized
 
 ```
-asset output.js 11.4 KiB [emitted] (name: main)
+asset output.js 11.3 KiB [emitted] (name: main)
 asset f052564a523e50ee50a2.module.wasm 96 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.74 KiB (javascript) 96 bytes (webassembly) 3.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.74 KiB (javascript) 96 bytes (webassembly) 3.79 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.83 KiB 6 modules
+  runtime modules 3.79 KiB 5 modules
   dependent modules 1.04 KiB (javascript) 96 bytes (webassembly) [dependent] 2 modules
   ./example.js 720 bytes [built] [code generated]
     [no exports]
@@ -436,11 +433,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.5 KiB [emitted] [minimized] (name: main)
+asset output.js 2.49 KiB [emitted] [minimized] (name: main)
 asset f5155e54cc54c8650d10.module.wasm 96 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.74 KiB (javascript) 96 bytes (webassembly) 3.59 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.74 KiB (javascript) 96 bytes (webassembly) 3.55 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.59 KiB 5 modules
+  runtime modules 3.55 KiB 4 modules
   dependent modules 1.04 KiB (javascript) 96 bytes (webassembly) [dependent] 2 modules
   ./example.js 720 bytes [built] [code generated]
     [no exports]

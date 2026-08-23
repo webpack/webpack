@@ -385,7 +385,7 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(__webpa
 /***/ })
 ],
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 /******/ var __webpack_exports__ = (__webpack_exec__(0));
 /******/ }
 ]);
@@ -397,10 +397,10 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(__webpa
 
 ```
 asset runtime~main.[chunkhash].js 12.6 KiB [emitted] (name: runtime~main)
-asset main.[chunkhash].js 873 bytes [emitted] (name: main)
+asset main.[chunkhash].js 849 bytes [emitted] (name: main)
 asset 2.[chunkhash].js 285 bytes [emitted]
 asset 3.[chunkhash].js 267 bytes [emitted]
-Entrypoint main 13.4 KiB = runtime~main.[chunkhash].js 12.6 KiB main.[chunkhash].js 873 bytes
+Entrypoint main 13.4 KiB = runtime~main.[chunkhash].js 12.6 KiB main.[chunkhash].js 849 bytes
 chunk (runtime: runtime~main) main.[chunkhash].js (main) 55 bytes [initial] [rendered]
   > ./example main
   ./example.js 55 bytes [built] [code generated]
@@ -426,10 +426,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset runtime~main.[chunkhash].js 3 KiB [emitted] [minimized] (name: runtime~main)
-asset main.[chunkhash].js 152 bytes [emitted] [minimized] (name: main)
+asset main.[chunkhash].js 148 bytes [emitted] [minimized] (name: main)
 asset 471.[chunkhash].js 66 bytes [emitted] [minimized]
 asset 18.[chunkhash].js 64 bytes [emitted] [minimized]
-Entrypoint main 3.15 KiB = runtime~main.[chunkhash].js 3 KiB main.[chunkhash].js 152 bytes
+Entrypoint main 3.15 KiB = runtime~main.[chunkhash].js 3 KiB main.[chunkhash].js 148 bytes
 chunk (runtime: runtime~main) 18.[chunkhash].js 28 bytes [rendered]
   > ./async1 ./example.js 2:0-18
   ./async1.js 28 bytes [built] [code generated]

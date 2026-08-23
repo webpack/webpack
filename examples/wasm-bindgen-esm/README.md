@@ -335,7 +335,7 @@ module.exports = __webpack_require__.v(exports, module.id, "83f766418938094a1584
 /******/ 	(() => {
 /******/ 		__webpack_require__.v = (exports, wasmModuleId, wasmModuleHash, importsObj) => {
 /******/ 		
-/******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".wasm");
+/******/ 			var req = fetch("dist/" + "" + wasmModuleHash + ".wasm");
 /******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
 /******/ 				.then((bytes) => (WebAssembly.instantiate(bytes, importsObj)))
@@ -360,9 +360,6 @@ module.exports = __webpack_require__.v(exports, module.id, "83f766418938094a1584
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	__webpack_require__.p = "dist/";
-/******/ 	
 /************************************************************************/
 ```
 
@@ -385,10 +382,10 @@ module.exports = __webpack_require__.v(exports, module.id, "83f766418938094a1584
 
 ```
 asset 83f766418938094a1584.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
-asset output.js 14 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 4.01 KiB (runtime) [entry] [rendered]
+asset output.js 13.9 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.96 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.01 KiB 6 modules
+  runtime modules 3.96 KiB 5 modules
   dependent modules 2.97 KiB (javascript) 14.8 KiB (webassembly) [dependent] 2 modules
   ./example.js 69 bytes [built] [code generated]
     [no exports]
@@ -401,10 +398,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset d9d80d430272dc67db6b.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
-asset output.js 3.46 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.77 KiB (runtime) [entry] [rendered]
+asset output.js 3.45 KiB [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.73 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.77 KiB 5 modules
+  runtime modules 3.73 KiB 4 modules
   dependent modules 2.97 KiB (javascript) 14.8 KiB (webassembly) [dependent] 2 modules
   ./example.js 69 bytes [built] [code generated]
     [no exports]

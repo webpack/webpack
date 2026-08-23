@@ -66,7 +66,7 @@ console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_
 
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
-/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 /******/ var __webpack_exports__ = (__webpack_exec__(3));
 /******/ }
 ]);
@@ -308,7 +308,7 @@ module.exports = 'prop-types';
 
 ```
 asset react-vendors.js 8.04 KiB [emitted] (name: react-vendors)
-asset app.js 1.62 KiB [emitted] (name: app)
+asset app.js 1.59 KiB [emitted] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
@@ -349,7 +349,7 @@ webpack X.X.X compiled successfully
 
 ```
 asset react-vendors.js 1.4 KiB [emitted] [minimized] (name: react-vendors)
-asset app.js 184 bytes [emitted] [minimized] (name: app)
+asset app.js 180 bytes [emitted] [minimized] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]

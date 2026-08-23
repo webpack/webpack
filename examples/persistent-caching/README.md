@@ -80,6 +80,7 @@ WARNING in asset size limit: The following asset(s) exceed the recommended size 
 This can impact web performance.
 Assets: 
   output.js (543 KiB)
+    Largest modules: ./example.js + 1495 modules (1.7 MiB), ../../node_modules/lodash/lodash.js (533 KiB), ../../node_modules/css-loader/dist/runtime/api.js (2.25 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:

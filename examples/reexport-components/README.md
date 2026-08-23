@@ -380,7 +380,7 @@ const Login = () => {
 ## Unoptimized
 
 ```
-asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 91.2 KiB [emitted] (id hint: vendors)
+asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 91.4 KiB [emitted] (id hint: vendors)
 asset output.js 12 KiB [emitted] (name: main)
 asset pages_Dashboard_js.output.js 7.42 KiB [emitted]
 asset pages_Login_js.output.js 7.4 KiB [emitted]
