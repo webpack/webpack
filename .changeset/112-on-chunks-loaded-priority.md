@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix `__webpack_require__.O` making every deferred handler wait, not just odd priorities.
+Run an even-priority `__webpack_require__.O` handler without waiting.
