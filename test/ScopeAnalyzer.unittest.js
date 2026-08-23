@@ -3288,4 +3288,80 @@ describe("ScopeAnalyzer", () => {
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 		});
 	});
+
+	describe("indexing a scope that outgrows a scan", () => {
+		// the threshold is 8, so ten names cross it and an eleventh lands in
+		// the index the tenth built
+		const names = Array.from({ length: 11 }, (_, i) => `n${i}`);
+
+		it("finds every binding once the scope has an index", () => {
+			const { moduleScope } = analyze(
+				`${names.map((name) => `let ${name};`).join("")}${names.join(";")};`
+			);
+
+			expect(varNames(moduleScope)).toEqual(names);
+			for (const [i, name] of names.entries()) {
+				expect(moduleScope.getBinding(name)).toBe(moduleScope.variables[i]);
+			}
+			expect(moduleScope.getBinding("missing")).toBeUndefined();
+			expect(freeNames(analyze(names.join(";")))).toEqual(names);
+		});
+
+		it("resolves a reference through the index", () => {
+			const { moduleScope } = analyze(
+				`${names.map((name) => `let ${name};`).join("")}function f() { return n10; }`
+			);
+			const last =
+				/** @type {import("../lib/javascript/ScopeAnalyzer").Variable} */ (
+					moduleScope.getBinding("n10")
+				);
+
+			expect(last.references).toHaveLength(1);
+			expect(last.references[0].identifier.name).toBe("n10");
+		});
+	});
+
+	describe("a binding declared more than once", () => {
+		it("keeps every declaring identifier", () => {
+			const { moduleScope } = analyze("var a; var a; a;");
+			const a = moduleScope.variables[0];
+
+			expect(varNames(moduleScope)).toEqual(["a"]);
+			expect(a.identifiers).toHaveLength(2);
+			expect(startOf(a.identifiers[0])).not.toBe(startOf(a.identifiers[1]));
+			expect(a.references).toHaveLength(1);
+		});
+
+		it("keeps a parameter and the `var` of the same name together", () => {
+			const { moduleScope } = analyze("function f(a) { var a; return a; }");
+			const functionScope = moduleScope.childScopes[0];
+			const a =
+				/** @type {import("../lib/javascript/ScopeAnalyzer").Variable} */ (
+					functionScope.getBinding("a")
+				);
+
+			expect(varNames(functionScope)).toEqual(["arguments", "a"]);
+			expect(a.identifiers).toHaveLength(2);
+		});
+	});
+
+	describe("branches of a conditional", () => {
+		it("visits the alternate of an if statement", () => {
+			const analysis = analyze("if (a) { b } else { c }");
+
+			expect(freeNames(analysis)).toEqual(["a", "b", "c"]);
+		});
+
+		it("visits every arm of a ternary", () => {
+			const analysis = analyze("a ? b : c;");
+
+			expect(freeNames(analysis)).toEqual(["a", "b", "c"]);
+		});
+
+		it("handles an if statement with no alternate", () => {
+			const analysis = analyze("if (a) { b }");
+
+			expect(freeNames(analysis)).toEqual(["a", "b"]);
+		});
+	});
 });
