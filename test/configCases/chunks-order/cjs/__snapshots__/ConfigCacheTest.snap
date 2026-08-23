@@ -4,7 +4,6 @@ exports[`ConfigCacheTestCases chunks-order cjs exported tests The dependOn chunk
 "\\"use strict\\";
 (() => {
 var exports = {};
-exports.id = \\"foo\\";
 exports.ids = [\\"foo\\"];
 exports.modules = {
 
