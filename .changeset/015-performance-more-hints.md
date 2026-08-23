@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add the `tinyChunks`, `evalUsage`, `pureAnnotations`, `mixedExports` and `legacyJavascript` performance hints.
+Add five performance hints for chunk size, eval, PURE, exports and polyfills.

@@ -1,4 +1,4 @@
-it("should report through the error channel", async () => {
+it("should read a per-source-type 'splitChunks.minSize'", async () => {
 	const loaded = await Promise.all([
 		import("./r0"),
 		import("./r1"),
@@ -12,7 +12,6 @@ it("should report through the error channel", async () => {
 		import("./r9")
 	]);
 
-	expect(loaded.map((module) => module.default)).toEqual([
-		0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-	]);
+	expect(loaded).toHaveLength(10);
+	expect(__STATS__.warnings).toHaveLength(0);
 });

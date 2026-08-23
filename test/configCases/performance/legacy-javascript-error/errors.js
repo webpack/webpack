@@ -1,3 +1,5 @@
 "use strict";
 
-module.exports = [[/legacy javascript: \d+ bytes of the build emulates/]];
+module.exports = [
+	[/legacy javascript: \d+ bytes of the build emulates syntax/]
+];
