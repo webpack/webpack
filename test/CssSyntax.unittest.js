@@ -3281,6 +3281,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("moves the rules after a cut back by what went", () => {
+			// Two cuts in one block: the second names its rule at the offset the
+			// first left it at, not the one it was written at.
+			expect(
+				minify(
+					"@media a{.p{x:1}.q{y:2}.r{z:3}}.z{t:1}@media a{.p{x:1}}.z2{t:2}@media a{.r{z:3}}"
+				)
+			).toBe(
+				"@media a{.q{y:2}}.z{t:1}@media a{.p{x:1}}.z2{t:2}@media a{.r{z:3}}"
+			);
+		});
+
 		it("counts a raw passthrough among the children it stands between", () => {
 			// It carries no rules of its own, but its parent still counts it — without
 			// its place, the rules after it are cut at the offsets of the ones before.
