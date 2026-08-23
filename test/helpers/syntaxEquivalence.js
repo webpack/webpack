@@ -1488,12 +1488,24 @@ const compareRules = (before, after, signatures) => {
 		}
 		for (const rule of rules) {
 			const chain = rule.chain.filter((each) => each.kind === "layer");
-			const key = chain.some((each) => each.condition.trim() === "@layer")
-				? ` ${anonymous++}`
-				: chain.map((each) => each.condition).join(" ");
+			const anon = chain.some((each) => each.condition.trim() === "@layer");
+			const id = anon ? ` ${anonymous++}` : "";
+			const key = anon ? id : chain.map((each) => each.condition).join(" ");
+			// Each block of one is a layer of its own, so the key says which block a
+			// rule stood in — two of them hold two rules, not one said twice.
+			const one = anon
+				? {
+						...rule,
+						chain: rule.chain.map((each) =>
+							each.kind === "layer" && each.condition.trim() === "@layer"
+								? { ...each, condition: `@layer${id}` }
+								: each
+						)
+					}
+				: rule;
 			const layer = layers.get(key);
-			if (layer === undefined) layers.set(key, [rule]);
-			else layer.push(rule);
+			if (layer === undefined) layers.set(key, [one]);
+			else layer.push(one);
 		}
 		// The place-holding entry a layer block left behind has done its work.
 		return [...layers.values()].flat().filter((rule) => rule.text !== "");

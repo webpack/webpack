@@ -3301,6 +3301,28 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("@media all{*zoom:1}.z{q:1}@media all{.b{.c{z:1}}}");
 		});
 
+		it.each([
+			// CSS Cascade 5 §6.4.1: every `@layer {` opens a layer of its own, and an
+			// `!important` declaration is read from the earliest layer — so a later
+			// copy is the weaker one and makes nothing dead.
+			[
+				"an important copy stands in a later anonymous layer",
+				"@layer{.a{color:red!important}}@layer{.a{color:blue!important}}@layer{.a{color:red!important}}"
+			],
+			[
+				"two anonymous layers say the same rule",
+				"@layer{a{color:red}}@layer{a{color:red}}"
+			]
+		])("keeps both where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it("drops one the same anonymous layer says again", () => {
+			expect(minify("@layer{.a{c:red}.x{y:1}.a{c:red}}")).toBe(
+				"@layer{.x{y:1}.a{c:red}}"
+			);
+		});
+
 		it("drops one nested in a rule, which is what encloses it", () => {
 			expect(minify(".a{.b{color:red}.x{color:teal}.b{color:red}}")).toBe(
 				".a{.x{color:teal}.b{color:red}}"
@@ -3362,14 +3384,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(
 				minify("@layer x{a{top:0}}@layer x{b{top:0}}@layer x{c{left:0}}")
 			).toBe("@layer x{a,b{top:0}c{left:0}}");
-		});
-
-		it("drops a rule the later anonymous layer says again", () => {
-			// Two anonymous blocks are two layers, but the later one is the stronger
-			// of the two, so what it repeats is dead wherever the earlier said it.
-			expect(minify("@layer{a{color:red}}@layer{a{color:red}}")).toBe(
-				"@layer{}@layer{a{color:red}}"
-			);
 		});
 
 		it("gathers into one whose own block is empty", () => {
