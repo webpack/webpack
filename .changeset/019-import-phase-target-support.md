@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Gate `import defer` / `import source` on new `output.environment` abilities.
+Derive `import defer` / `import source` support from the target and fix source externals.
