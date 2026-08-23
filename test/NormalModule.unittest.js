@@ -300,14 +300,12 @@ describe("NormalModule", () => {
 		const expectedSource = "some source";
 
 		beforeEach(() => {
-			/** @type {EXPECTED_ANY} */ (normalModule)._source = new RawSource(
-				expectedSource
-			);
+			/** @type {any} */ (normalModule)._source = new RawSource(expectedSource);
 		});
 
 		it("returns an original Source", () => {
 			expect(normalModule.originalSource()).toBe(
-				/** @type {EXPECTED_ANY} */ (normalModule)._source
+				/** @type {any} */ (normalModule)._source
 			);
 		});
 	});
@@ -411,7 +409,7 @@ describe("NormalModule", () => {
 			// Make module 5 have side effects.
 			modules[5].buildMeta = { sideEffectFree: false };
 			const bailouts = new Map();
-			/** @type {EXPECTED_ANY} */ (moduleGraph).getOptimizationBailout =
+			/** @type {any} */ (moduleGraph).getOptimizationBailout =
 				/**
 				 * @param {import("../lib/NormalModule")} mod module
 				 * @returns {unknown[]} bailout list

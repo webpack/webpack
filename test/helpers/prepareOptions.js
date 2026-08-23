@@ -9,11 +9,11 @@
 
 /**
  * @param {unknown} value value
- * @returns {value is Promise<EXPECTED_ANY>} true when thenable
+ * @returns {value is Promise<any>} true when thenable
  */
 const isPromise = (value) =>
 	Boolean(value) &&
-	typeof (/** @type {Promise<EXPECTED_ANY>} */ (value).then) === "function";
+	typeof (/** @type {Promise<any>} */ (value).then) === "function";
 
 /**
  * @param {ConfigModule} options exported config value

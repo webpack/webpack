@@ -5037,7 +5037,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((name: string) => false | string | { [key: string]: EXPECTED_ANY })"
+              "tsType": "((name: string) => false | string | { [key: string]: any })"
             }
           ]
         },

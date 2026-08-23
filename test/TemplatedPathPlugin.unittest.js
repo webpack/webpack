@@ -167,7 +167,7 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		const expected = Buffer.from("0123456789abcdef", "hex")
 			.toString("base64")
 			.slice(0, 8);
-		const assetInfo = /** @type {EXPECTED_ANY} */ ({});
+		const assetInfo = /** @type {any} */ ({});
 		expect(
 			interpolate(
 				"[contenthash:base64:8]",
@@ -178,7 +178,7 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		// digest recorded so RealContentHashPlugin re-encodes the recomputed hash
 		expect(assetInfo.contenthashDigest).toEqual({ [expected]: "base64" });
 		// nothing recorded when realContentHash is off
-		const assetInfo2 = /** @type {EXPECTED_ANY} */ ({});
+		const assetInfo2 = /** @type {any} */ ({});
 		expect(interpolate("[contenthash:base64]", data, assetInfo2)).toBe(
 			Buffer.from("0123456789abcdef", "hex").toString("base64")
 		);
@@ -210,17 +210,14 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[contenthash:4]", data)).toBe("9988");
 		// chunk name falls back to id when unnamed
 		expect(
-			interpolate(
-				"[name]",
-				/** @type {EXPECTED_ANY} */ ({ chunk: { id: "9" } })
-			)
+			interpolate("[name]", /** @type {any} */ ({ chunk: { id: "9" } }))
 		).toBe("9");
 	});
 
 	/* cSpell:disable */
 	it("re-encodes [contenthash:<digest>] from the full content digest", () => {
 		// stored hash is truncated; contentHashFull carries the full digest
-		const data = /** @type {EXPECTED_ANY} */ ({
+		const data = /** @type {any} */ ({
 			chunk: {
 				id: "7",
 				contentHash: { javascript: "0123" },
@@ -238,7 +235,7 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	/* cSpell:enable */
 
 	it("uses the per-chunk digest handler for [contenthash:<digest>] (runtime map)", () => {
-		const data = /** @type {EXPECTED_ANY} */ ({
+		const data = /** @type {any} */ ({
 			chunk: {
 				id: "7",
 				contentHash: { javascript: "0123" },
@@ -313,10 +310,7 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[runtime]", { runtime: "main" })).toBe("main");
 		// non-string runtime collapses to "_"
 		expect(
-			interpolate(
-				"[runtime]",
-				/** @type {EXPECTED_ANY} */ ({ runtime: ["a", "b"] })
-			)
+			interpolate("[runtime]", /** @type {any} */ ({ runtime: ["a", "b"] }))
 		).toBe("_");
 	});
 

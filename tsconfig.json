@@ -8,7 +8,8 @@
     "noEmit": true,
     "strict": true,
     "types": ["node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
   "include": [
     "declarations.d.ts",

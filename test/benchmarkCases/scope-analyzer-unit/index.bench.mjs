@@ -37,7 +37,7 @@ const lodashSource = readPkgFile("lodash", "lodash.js");
 /**
  * @param {string} code source code
  * @param {"auto" | "module" | "script"} sourceType source type
- * @returns {EXPECTED_ANY} the parsed program
+ * @returns {any} the parsed program
  */
 const parse = (code, sourceType) =>
 	JavascriptParser._parse(code, {

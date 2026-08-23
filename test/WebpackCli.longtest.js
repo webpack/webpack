@@ -59,7 +59,7 @@ const run = async (args) => {
 	process.env.WEBPACK_CLI_TEST_CAPTURE = capture;
 	jest.resetModules();
 
-	/** @type {EXPECTED_ANY} */
+	/** @type {any} */
 	const WebpackCLI = require("webpack-cli").default;
 
 	const exitSpy = jest.spyOn(process, "exit").mockImplementation((code) => {

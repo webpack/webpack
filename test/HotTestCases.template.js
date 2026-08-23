@@ -10,7 +10,7 @@ require("./helpers/warmup-webpack");
  */
 /**
  * @typedef {object} HotTestConfig
- * @property {((scope: EXPECTED_ANY, options: import("../").Configuration) => void)=} moduleScope
+ * @property {((scope: any, options: import("../").Configuration) => void)=} moduleScope
  */
 
 const path = require("path");
@@ -71,9 +71,9 @@ const describeCases = (config) => {
 						/** @type {import("../").Compiler} */
 						let compiler;
 
-						afterAll((/** @type {EXPECTED_ANY} */ callback) => {
+						afterAll((/** @type {any} */ callback) => {
 							compiler.close(callback);
-							compiler = /** @type {EXPECTED_ANY} */ (undefined);
+							compiler = /** @type {any} */ (undefined);
 						});
 
 						it(`${testName} should compile`, (done) => {
@@ -95,10 +95,8 @@ const describeCases = (config) => {
 							/** @type {import("../").Configuration} */
 							let options = /** @type {import("../").Configuration} */ ({});
 							if (fs.existsSync(configPath)) options = require(configPath);
-							if (
-								typeof (/** @type {EXPECTED_ANY} */ (options)) === "function"
-							) {
-								options = /** @type {EXPECTED_ANY} */ (options)({ config });
+							if (typeof (/** @type {any} */ (options)) === "function") {
+								options = /** @type {any} */ (options)({ config });
 							}
 							if (!options.mode) options.mode = "development";
 							if (!options.devtool) options.devtool = false;
@@ -242,7 +240,7 @@ const describeCases = (config) => {
 								}
 
 								function runCompiler(
-									/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback
+									/** @type {(err: any, stats?: any) => void} */ callback
 								) {
 									fakeUpdateLoaderOptions.updateIndex++;
 									const deprecationTracker = deprecationTracking.start();
@@ -316,7 +314,7 @@ const describeCases = (config) => {
 											afterEach: _afterEach,
 											STATE: jsonStats,
 											NEXT: runCompiler,
-											NEXT_DEFERRED: (/** @type {EXPECTED_ANY} */ cb) => {
+											NEXT_DEFERRED: (/** @type {any} */ cb) => {
 												// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
 												// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
 												// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
@@ -330,17 +328,16 @@ const describeCases = (config) => {
 											// Re-run the same compilation version (without advancing the
 											// fake-update index): lets a test wait out the lazy-compilation
 											// activation race instead of relying on a single fixed delay.
-											NEXT_RETRY: (/** @type {EXPECTED_ANY} */ cb) => {
+											NEXT_RETRY: (/** @type {any} */ cb) => {
 												fakeUpdateLoaderOptions.updateIndex--;
 												runCompiler(cb);
 											}
 										});
 									},
 									getBundlePaths: (_i, _options, runner) => {
-										const bundles = /** @type {EXPECTED_ANY[]} */ (
-											/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main
-												.assets
-										).map((/** @type {EXPECTED_ANY} */ i) => i.name);
+										const bundles = /** @type {any[]} */ (
+											/** @type {any} */ (_stats.entrypoints).main.assets
+										).map((/** @type {any} */ i) => i.name);
 										// universal expands to one runner per target; pick by its target
 										const isWeb = isUniversal
 											? runner.hasWebTarget()
@@ -373,7 +370,7 @@ const describeCases = (config) => {
 							};
 							const deprecationTracker = deprecationTracking.start();
 							compiler = webpack(options);
-							compiler.run(/** @type {EXPECTED_ANY} */ (onCompiled));
+							compiler.run(/** @type {any} */ (onCompiled));
 						}, 20000);
 
 						const {

@@ -13,7 +13,7 @@ let interception;
 const originalDeprecate = util.deprecate;
 
 /**
- * @template {EXPECTED_FUNCTION} T
+ * @template {Function} T
  * @param {T} fn fn
  * @param {string} message message
  * @param {string=} _code code

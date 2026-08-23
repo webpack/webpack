@@ -30,7 +30,7 @@ module.exports = {
 						ranges: true,
 						allowHashBang: true,
 						allowReturnOutsideFunction: options.allowReturnOutsideFunction,
-						onComment: /** @type {EXPECTED_ANY} */ (comments)
+						onComment: /** @type {any} */ (comments)
 					});
 					return {
 						ast: /** @type {ParseResult["ast"]} */ (ast),

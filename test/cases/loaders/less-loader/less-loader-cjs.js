@@ -10,9 +10,9 @@ const lessLoader = require("less-loader");
 module.exports = function loader(content) {
 	if (process.versions.bun || process.versions.deno) {
 		// Make less-loader read the CJS less (skips its crashing `import("less")`).
-		const ctx = /** @type {EXPECTED_ANY} */ (this);
+		const ctx = /** @type {any} */ (this);
 		const getOptions = ctx.getOptions.bind(ctx);
-		ctx.getOptions = (/** @type {EXPECTED_ANY} */ schema) => ({
+		ctx.getOptions = (/** @type {any} */ schema) => ({
 			implementation: require("less"),
 			...getOptions(schema)
 		});

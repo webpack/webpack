@@ -84,7 +84,7 @@ describe("FileMiddleware getReferencedFilenames", () => {
 	// callbacks fire asynchronously like a real fs, so a `throw` inside them
 	// is not swallowed by a surrounding Promise executor
 	const fsWithFile = (content, maxBytesPerRead = Infinity) =>
-		/** @type {EXPECTED_ANY} */ ({
+		/** @type {any} */ ({
 			readFile: (
 				/** @type {string} */ _file,
 				/** @type {(err: Error | null, content?: Buffer) => void} */ callback
@@ -113,10 +113,8 @@ describe("FileMiddleware getReferencedFilenames", () => {
 				/** @type {number} */ _fd,
 				/** @type {(err: Error | null) => void} */ callback
 			) => process.nextTick(() => callback(null)),
-			stat: (
-				/** @type {string} */ _file,
-				/** @type {EXPECTED_ANY} */ callback
-			) => process.nextTick(() => callback(null, { size: content.length }))
+			stat: (/** @type {string} */ _file, /** @type {any} */ callback) =>
+				process.nextTick(() => callback(null, { size: content.length }))
 		});
 
 	it("extracts pointer names between content sections", async () => {
@@ -201,7 +199,7 @@ describe("FileMiddleware getReferencedFilenames", () => {
 	});
 
 	it("rejects on read errors", async () => {
-		const fs = /** @type {EXPECTED_ANY} */ ({
+		const fs = /** @type {any} */ ({
 			readFile: (
 				/** @type {string} */ _file,
 				/** @type {(err: Error | null) => void} */ callback
@@ -222,12 +220,10 @@ describe("FileMiddleware getReferencedFilenames", () => {
 
 	it("rejects when the section table does not match the file size", async () => {
 		const content = buildFile([Buffer.from([1, 2, 3]), "file-a"]);
-		const fs = /** @type {EXPECTED_ANY} */ (fsWithFile(content));
+		const fs = /** @type {any} */ (fsWithFile(content));
 		// the table sums to fewer bytes than the file actually has
-		fs.stat = (
-			/** @type {string} */ _file,
-			/** @type {EXPECTED_ANY} */ callback
-		) => process.nextTick(() => callback(null, { size: content.length + 10 }));
+		fs.stat = (/** @type {string} */ _file, /** @type {any} */ callback) =>
+			process.nextTick(() => callback(null, { size: content.length + 10 }));
 		await expect(getReferencedFilenames(fs, "index.pack")).rejects.toThrow(
 			/Section table does not match size/
 		);
@@ -235,11 +231,9 @@ describe("FileMiddleware getReferencedFilenames", () => {
 
 	it("rejects when stat errors", async () => {
 		const content = buildFile([Buffer.from([1, 2, 3]), "file-a"]);
-		const fs = /** @type {EXPECTED_ANY} */ (fsWithFile(content));
-		fs.stat = (
-			/** @type {string} */ _file,
-			/** @type {EXPECTED_ANY} */ callback
-		) => process.nextTick(() => callback(new Error("stat failed")));
+		const fs = /** @type {any} */ (fsWithFile(content));
+		fs.stat = (/** @type {string} */ _file, /** @type {any} */ callback) =>
+			process.nextTick(() => callback(new Error("stat failed")));
 		await expect(getReferencedFilenames(fs, "index.pack")).rejects.toThrow(
 			/stat failed/
 		);

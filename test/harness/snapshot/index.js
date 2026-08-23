@@ -30,7 +30,7 @@ const createPerCaseSnapshotState = function (
 	suiteName,
 	originalState = expect.getState().snapshotState
 ) {
-	const s = /** @type {EXPECTED_ANY} */ (originalState);
+	const s = /** @type {any} */ (originalState);
 	return new SnapshotState(getSnapshotPath(caseDir, suiteName), {
 		updateSnapshot: s._updateSnapshot,
 		snapshotFormat: originalState.snapshotFormat,
@@ -114,7 +114,7 @@ const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
 		try {
 			finalizePerCaseSnapshotState(snapshotContext);
 		} finally {
-			deactivateSnapshotState(/** @type {EXPECTED_ANY} */ (snapshotContext));
+			deactivateSnapshotState(/** @type {any} */ (snapshotContext));
 			snapshotContext = undefined;
 		}
 	});
@@ -127,13 +127,13 @@ const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
  * sharing the same test case match one snapshot entry.
  * @param {string} caseDir Absolute path to the test case directory
  * @param {string} kind Snapshot kind, used as filename (e.g. "errors")
- * @param {EXPECTED_ANY} received The value to match against the snapshot
+ * @param {any} received The value to match against the snapshot
  */
 const matchKindSnapshot = function (caseDir, kind, received) {
 	const snapshotPath = path.join(caseDir, "__snapshots__", `${kind}.snap`);
 	const parentState =
 		getActiveSnapshotState() || expect.getState().snapshotState;
-	const ps = /** @type {EXPECTED_ANY} */ (parentState);
+	const ps = /** @type {any} */ (parentState);
 
 	const kindState = new SnapshotState(snapshotPath, {
 		updateSnapshot: ps._updateSnapshot === "all" ? "all" : "none",
@@ -147,7 +147,7 @@ const matchKindSnapshot = function (caseDir, kind, received) {
 	// matcher context. Using `kind` as currentTestName produces the
 	// stable key "<kind> 1" (e.g. "errors 1"), independent of suite.
 	const { toMatchSnapshot } = require("jest-snapshot");
-	const context = /** @type {EXPECTED_ANY} */ ({
+	const context = /** @type {any} */ ({
 		snapshotState: kindState,
 		currentTestName: kind,
 		isNot: false,

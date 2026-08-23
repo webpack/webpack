@@ -32,7 +32,7 @@ module.exports = {
 						test: /\.(?:[cm]?js|html)(\?.*)?$/i,
 						minify: [MinimizerPlugin.terserMinify, htmlMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}]
-					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
+					}).apply(/** @type {any} */ (compiler));
 				}
 			}
 		]

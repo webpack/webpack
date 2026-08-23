@@ -4,15 +4,14 @@ const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 	require("..").config;
 
 /**
- * @param {EXPECTED_ANY} target target option
- * @returns {EXPECTED_ANY} resolved platform target properties
+ * @param {any} target target option
+ * @returns {any} resolved platform target properties
  */
 const getPlatform = (target) => {
 	const normalized = getNormalizedWebpackOptions(
-		/** @type {EXPECTED_ANY} */ ({ target })
+		/** @type {any} */ ({ target })
 	);
-	return applyWebpackOptionsDefaults(/** @type {EXPECTED_ANY} */ (normalized))
-		.platform;
+	return applyWebpackOptionsDefaults(/** @type {any} */ (normalized)).platform;
 };
 
 describe("platform", () => {

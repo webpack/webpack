@@ -45,7 +45,7 @@ const tagPlugin = (groups) => ({
 			const taps = Array.isArray(groups[0]) ? groups : [groups];
 			for (const [i, tags] of taps.entries()) {
 				HtmlModulesPlugin.getCompilationHooks(
-					/** @type {EXPECTED_ANY} */ (compilation)
+					/** @type {any} */ (compilation)
 				).injectTags.tap(`TagPlugin${i}`, (list) => {
 					list.push(.../** @type {HtmlTagDescriptor[]} */ (tags));
 					return list;

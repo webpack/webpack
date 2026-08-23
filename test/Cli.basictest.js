@@ -143,9 +143,9 @@ describe("Cli", () => {
 	describe("processArguments", () => {
 		const test = (
 			/** @type {string} */ name,
-			/** @type {Record<string, EXPECTED_ANY>} */ values,
+			/** @type {Record<string, any>} */ values,
 			/** @type {import("../").Configuration} */ config,
-			/** @type {(e: EXPECTED_ANY) => void} */ fn
+			/** @type {(e: any) => void} */ fn
 		) => {
 			it(`should correctly process arguments for ${name}`, () => {
 				const args = getArguments();

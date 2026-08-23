@@ -45,7 +45,7 @@ const ESCAPE_END_OBJECT = true;
 const ESCAPE_UNDEFINED = false;
 
 /**
- * @param {EXPECTED_ANY[]} data data
+ * @param {any[]} data data
  * @param {string} indent indent
  * @returns {Promise<void>} promise
  */

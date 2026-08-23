@@ -35,7 +35,7 @@ module.exports = {
 						parallel: false,
 						minify: [MinimizerPlugin.terserMinify, htmlMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}]
-					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
+					}).apply(/** @type {any} */ (compiler));
 				}
 			}
 		]

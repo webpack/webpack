@@ -4,7 +4,7 @@ import * as runtime from "lib-runtime";
 import * as runtimeProd from "lib-runtime-prod";
 
 /**
- * @param {EXPECTED_ANY} ns imported library namespace
+ * @param {any} ns imported library namespace
  * @param {string} label variant label
  */
 function checkLiveBindings(ns, label) {

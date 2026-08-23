@@ -166,8 +166,7 @@ describe("ProgressPlugin", () => {
 	});
 
 	const nanTest =
-		(/** @type {(...args: EXPECTED_ANY[]) => EXPECTED_ANY} */ createCompiler) =>
-		() => {
+		(/** @type {(...args: any[]) => any} */ createCompiler) => () => {
 			const compiler = createCompiler();
 
 			return runCompilerAsync(compiler).then(() => {
@@ -233,8 +232,7 @@ describe("ProgressPlugin", () => {
 	});
 
 	const monotonicTest =
-		(/** @type {(...args: EXPECTED_ANY[]) => EXPECTED_ANY} */ createCompiler) =>
-		() => {
+		(/** @type {(...args: any[]) => any} */ createCompiler) => () => {
 			/** @type {{ value: number, text: string }[]} */
 			const handlerCalls = [];
 			const compiler = createCompiler({
@@ -285,7 +283,7 @@ describe("ProgressPlugin", () => {
 				expect(log.length).toBeLessThanOrEqual(35);
 			}
 			// cspell:ignore mization nsPlugin
-			/** @type {EXPECTED_ANY} */ (expect(logs)).toContain(
+			/** @type {any} */ (expect(logs)).toContain(
 				"75% sealing ...mization ...nsPlugin",
 				"trims each detail string equally"
 			);
@@ -297,7 +295,7 @@ describe("ProgressPlugin", () => {
 	it("should handle when stderr.columns is undefined", () => {
 		const compiler = createSimpleCompiler();
 
-		/** @type {EXPECTED_ANY} */ (process.stderr).columns = undefined;
+		/** @type {any} */ (process.stderr).columns = undefined;
 		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
@@ -311,7 +309,7 @@ describe("ProgressPlugin", () => {
 	it("should contain the new compiler hooks", () => {
 		const compiler = createSimpleCompiler();
 
-		/** @type {EXPECTED_ANY} */ (process.stderr).columns = undefined;
+		/** @type {any} */ (process.stderr).columns = undefined;
 		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 

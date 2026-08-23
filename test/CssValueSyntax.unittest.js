@@ -862,7 +862,7 @@ describe("CssValueSyntax", () => {
 			[
 				"a supplemented initial the dataset now states itself",
 				"text-align",
-				(/** @type {EXPECTED_ANY} */ entry) => {
+				(/** @type {any} */ entry) => {
 					entry.initial = "start";
 				},
 				/drop it from SUPPLEMENT\.initialValueKeywords/
@@ -870,7 +870,7 @@ describe("CssValueSyntax", () => {
 			[
 				"a slot keyword the dataset no longer accepts",
 				"flex-wrap",
-				(/** @type {EXPECTED_ANY} */ entry) => {
+				(/** @type {any} */ entry) => {
 					entry.syntax = "nowrap | [ wrap | wrap-reverse ]";
 				},
 				/unmergeableSlotKeywords: flex-wrap does not accept balance/

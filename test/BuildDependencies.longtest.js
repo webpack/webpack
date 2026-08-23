@@ -36,7 +36,7 @@ const exec = (
 			JSON.stringify(options)
 		]);
 		const p = /** @type {import("child_process").ChildProcess} */ (
-			/** @type {EXPECTED_ANY} */ (childProcess.execFile)(
+			/** @type {any} */ (childProcess.execFile)(
 				process.execPath,
 				execArgs,
 				/** @type {import("child_process").ExecFileOptions} */ ({

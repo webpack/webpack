@@ -1,24 +1,5 @@
-type EXPECTED_ANY = any;
-type EXPECTED_FUNCTION = Function;
-type EXPECTED_OBJECT = object;
-
 declare module "*.json";
 declare module "rimraf";
-
-declare module "color-name" {
-	const colors: { [name: string]: [number, number, number] };
-	export = colors;
-}
-
-// Deprecated NodeJS API usages in webpack
-declare namespace NodeJS {
-	interface Process {
-		binding(internalModule: string): any;
-	}
-	interface ProcessVersions {
-		pnp: "1" | "3";
-	}
-}
 
 declare module "typescript-iterable" {
 	// New iterator interfaces from `lib.es2015.iterable.d.ts` for compatibility with old typescript versions and `dispose`
@@ -69,7 +50,7 @@ declare module "@webassemblyjs/ast" {
 	export class Module extends Node {
 		id: string;
 		fields: Node[];
-		metadata?: Record<string, EXPECTED_ANY>;
+		metadata?: Record<string, any>;
 	}
 	export class ModuleImportDescription {
 		type: string;
@@ -230,14 +211,3 @@ type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| Array<RecursiveArrayOrRecord<T>>
 	| T;
-
-declare module "eslint-scope/lib/referencer" {
-	type Property = import("estree").Property;
-	type PropertyDefinition = import("estree").PropertyDefinition;
-
-	class Referencer {
-		Property(node: PropertyDefinition | Property): void;
-		PropertyDefinition(node: PropertyDefinition): void;
-	}
-	export = Referencer;
-}

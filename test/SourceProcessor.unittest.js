@@ -14,7 +14,7 @@ const HTML = "<div   class='a'  >\n  <p>x</p>\n</div>\n";
 
 /** @typedef {{ mode?: "minify" | "beautify", source?: string, content?: string }} PrintAsk */
 
-/** @type {[string, EXPECTED_ANY, string][]} name, processor, source */
+/** @type {[string, any, string][]} name, processor, source */
 const LANGUAGES = [
 	["css", CssSourceProcessor, CSS],
 	["html", HtmlSourceProcessor, HTML]

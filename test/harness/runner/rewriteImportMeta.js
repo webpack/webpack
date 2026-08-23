@@ -26,7 +26,7 @@ module.exports = (content, makeMeta) => {
 
 	/** @type {[number, number][]} */
 	const ranges = [];
-	(function walk(/** @type {EXPECTED_ANY} */ node) {
+	(function walk(/** @type {any} */ node) {
 		if (!node || typeof node.type !== "string") return;
 		if (
 			node.type === "MetaProperty" &&

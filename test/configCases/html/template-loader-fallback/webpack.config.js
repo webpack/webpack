@@ -88,7 +88,7 @@ class MiniHtmlWebpackPlugin {
 							return callback(new Error("No result from child compiler"));
 						}
 						/** @type {{ exports: { default?: Render } & Render }} */
-						const module = { exports: /** @type {EXPECTED_ANY} */ ({}) };
+						const module = { exports: /** @type {any} */ ({}) };
 						// eslint-disable-next-line no-new-func
 						new Function("module", "exports", "require", source)(
 							module,

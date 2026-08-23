@@ -14,7 +14,7 @@ const testPlugin = (compiler) => {
 		NormalModule.getCompilationHooks(compilation).loader.tap(
 			"TestPlugin",
 			(loaderContext) => {
-				/** @type {EXPECTED_ANY} */
+				/** @type {any} */
 				(loaderContext).shouldReplace = shouldReplace;
 			}
 		);

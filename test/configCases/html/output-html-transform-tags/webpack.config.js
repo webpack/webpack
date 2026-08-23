@@ -34,7 +34,7 @@ const alterPlugin = (mutate) => ({
 	apply(compiler) {
 		compiler.hooks.compilation.tap("AlterPlugin", (compilation) => {
 			HtmlModulesPlugin.getCompilationHooks(
-				/** @type {EXPECTED_ANY} */ (compilation)
+				/** @type {any} */ (compilation)
 			).transformTags.tap("AlterPlugin", mutate);
 		});
 	}

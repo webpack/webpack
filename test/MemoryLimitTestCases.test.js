@@ -101,7 +101,7 @@ describe("MemoryLimitTestCases", () => {
 			}
 			const heapSizeStart = process.memoryUsage().heapUsed;
 			const c = webpack(options);
-			const cAny = /** @type {EXPECTED_ANY} */ (c);
+			const cAny = /** @type {any} */ (c);
 			const compilers = /** @type {import("../").Compiler[]} */ (
 				cAny.compilers ? cAny.compilers : [c]
 			);
@@ -117,7 +117,7 @@ describe("MemoryLimitTestCases", () => {
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
 					// eslint-disable-next-line no-useless-call
-					/** @type {EXPECTED_ANY} */ (
+					/** @type {any} */ (
 						/** @type {NonNullable<typeof ifs>} */ (ifs).readFile
 					).apply(ifs, [
 						...args,

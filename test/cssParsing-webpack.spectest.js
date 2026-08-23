@@ -182,7 +182,7 @@ describe("css-parsing-tests block contents", () => {
 	/**
 	 * What the corpus says each top-level item is, minus the `error` entries —
 	 * an invalid declaration is dropped rather than materialized.
-	 * @param {EXPECTED_ANY[]} items the corpus's expected list
+	 * @param {any[]} items the corpus's expected list
 	 * @returns {string[]} one entry per item the parser has to produce
 	 */
 	const expected = (items) =>

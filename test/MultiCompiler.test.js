@@ -613,9 +613,9 @@ describe("MultiCompiler", () => {
 		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
+		/** @type {((...args: any[]) => void)[]} */
 		const watchCallbacks = [];
-		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
+		/** @type {((...args: any[]) => void)[]} */
 		const watchCallbacksUndelayed = [];
 		compiler.watchFileSystem =
 			/** @type {import("../lib/util/fs").WatchFileSystem} */ ({
@@ -1087,9 +1087,9 @@ describe("MultiCompiler", () => {
 		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
+		/** @type {((...args: any[]) => void)[]} */
 		const watchCallbacks = [];
-		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
+		/** @type {((...args: any[]) => void)[]} */
 		const watchCallbacksUndelayed = [];
 		let firstRun = true;
 		compiler.watchFileSystem =

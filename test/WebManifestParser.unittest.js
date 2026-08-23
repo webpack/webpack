@@ -8,8 +8,8 @@ describe("WebManifestParser", () => {
 	it("throws on a preparsed AST", () => {
 		expect(() =>
 			new WebManifestParser().parse(
-				/** @type {EXPECTED_ANY} */ ({}),
-				/** @type {EXPECTED_ANY} */ ({})
+				/** @type {any} */ ({}),
+				/** @type {any} */ ({})
 			)
 		).toThrow("webpackAst is unexpected");
 	});

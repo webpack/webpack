@@ -1,6 +1,6 @@
 /**
  * @param {string} name name of the config
- * @returns {Promise<EXPECTED_ANY>} the imported config
+ * @returns {Promise<any>} the imported config
  */
 const load = (name) => import(`#configs/${name}.js`);
 

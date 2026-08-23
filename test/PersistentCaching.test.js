@@ -74,7 +74,7 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	const compile = async (/** @type {EXPECTED_ANY} */ configAdditions = {}) =>
+	const compile = async (/** @type {any} */ configAdditions = {}) =>
 		new Promise((resolve, reject) => {
 			const webpack = require("../");
 
@@ -85,7 +85,7 @@ describe("Persistent Caching", () => {
 						...configAdditions,
 						cache: {
 							...config.cache,
-							.../** @type {EXPECTED_ANY} */ (configAdditions).cache
+							.../** @type {any} */ (configAdditions).cache
 						}
 					})
 				),
@@ -123,8 +123,8 @@ describe("Persistent Caching", () => {
 			const source = fs.readFileSync(p, "utf8");
 			const context = {};
 			const fn =
-				/** @type {(require: (name: string) => EXPECTED_ANY, module: { exports: unknown }, exports: unknown) => void} */ (
-					/** @type {EXPECTED_ANY} */ (vm.runInThisContext)(
+				/** @type {(require: (name: string) => any, module: { exports: unknown }, exports: unknown) => void} */ (
+					/** @type {any} */ (vm.runInThisContext)(
 						`(function(require, module, exports) { ${source} })`,
 						context,
 						{

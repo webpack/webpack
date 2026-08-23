@@ -821,7 +821,7 @@ describe("runLoaders", () => {
 	});
 
 	it("should load a loader using System.import and process", (done) => {
-		/** @type {EXPECTED_ANY} */
+		/** @type {any} */
 		(global).System = {
 			import(/** @type {string} */ moduleId) {
 				return Promise.resolve(require(moduleId));
@@ -843,7 +843,7 @@ describe("runLoaders", () => {
 				done();
 			}
 		);
-		delete (/** @type {EXPECTED_ANY} */ (global).System);
+		delete (/** @type {any} */ (global).System);
 	});
 
 	if (Number(process.versions.modules) >= 83) {

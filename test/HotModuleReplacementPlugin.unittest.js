@@ -28,16 +28,14 @@ describe("HotModuleReplacementPlugin.getParserHooks", () => {
 		const parser = new JavascriptParserOtherCopy();
 
 		expect(parser instanceof JavascriptParser).toBe(false);
-		const hooks = getParserHooks(/** @type {EXPECTED_ANY} */ (parser));
+		const hooks = getParserHooks(/** @type {any} */ (parser));
 		expect(typeof hooks.hotAcceptCallback.tap).toBe("function");
-		expect(getParserHooks(/** @type {EXPECTED_ANY} */ (parser))).toBe(hooks);
+		expect(getParserHooks(/** @type {any} */ (parser))).toBe(hooks);
 	});
 
 	it("rejects anything that is not a JavascriptParser", () => {
 		expect(() =>
-			HotModuleReplacementPlugin.getParserHooks(
-				/** @type {EXPECTED_ANY} */ ({})
-			)
+			HotModuleReplacementPlugin.getParserHooks(/** @type {any} */ ({}))
 		).toThrow(TypeError);
 	});
 });

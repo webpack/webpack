@@ -13,7 +13,7 @@ const dropRedStyle = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("DropRedStyle", (compilation) => {
 			HtmlModulesPlugin.getCompilationHooks(
-				/** @type {EXPECTED_ANY} */ (compilation)
+				/** @type {any} */ (compilation)
 			).transformTags.tap("DropRedStyle", (tags) => {
 				const styles = tags.filter((t) => t.tag === "style");
 				if (styles[0]) styles[0].attrs["data-x"] = "1";

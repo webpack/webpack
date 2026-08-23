@@ -1,8 +1,8 @@
 "use strict";
 
 /**
- * @param {EXPECTED_ANY[]} useArray use array
- * @returns {EXPECTED_FUNCTION[]} functions
+ * @param {any[]} useArray use array
+ * @returns {Function[]} functions
  */
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(

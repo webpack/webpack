@@ -11,7 +11,7 @@ const PREFIX = "/lazy-compilation-using-";
 
 // Runtime-agnostic timer control: patch global setTimeout/clearTimeout instead of
 // jest's fake timers, which need `@sinonjs/fake-timers` (uninstallable on Bun).
-/** @typedef {{ callback: () => void, delay: number, unref: () => EXPECTED_ANY }} FakeTimer */
+/** @typedef {{ callback: () => void, delay: number, unref: () => any }} FakeTimer */
 /** @type {Set<FakeTimer>} */
 let pendingTimers;
 /** @type {typeof setTimeout} */
@@ -23,7 +23,7 @@ const installTimers = () => {
 	pendingTimers = new Set();
 	realSetTimeout = global.setTimeout;
 	realClearTimeout = global.clearTimeout;
-	global.setTimeout = /** @type {EXPECTED_ANY} */ (
+	global.setTimeout = /** @type {any} */ (
 		(/** @type {() => void} */ callback, /** @type {number} */ delay) => {
 			/** @type {FakeTimer} */
 			const timer = { callback, delay, unref: () => timer };
@@ -31,7 +31,7 @@ const installTimers = () => {
 			return timer;
 		}
 	);
-	global.clearTimeout = /** @type {EXPECTED_ANY} */ (
+	global.clearTimeout = /** @type {any} */ (
 		(/** @type {FakeTimer} */ timer) => {
 			if (timer) pendingTimers.delete(timer);
 		}

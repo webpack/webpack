@@ -10,7 +10,7 @@ describe("MultiItemCache", () => {
 		// "not a function" TypeError differently than V8.
 		expect(() =>
 			multiItemCache.get(
-				/** @type {EXPECTED_ANY} */ (
+				/** @type {any} */ (
 					(/** @type {unknown} */ _) => /** @type {() => unknown} */ (_)()
 				)
 			)
@@ -56,8 +56,8 @@ describe("MultiItemCache", () => {
 
 	/**
 	 * @param {number} howMany how many generation
-	 * @param {() => EXPECTED_ANY=} dataGenerator data generator fn
-	 * @returns {EXPECTED_ANY[]} cache facades
+	 * @param {() => any=} dataGenerator data generator fn
+	 * @returns {any[]} cache facades
 	 */
 	function generateItemCaches(howMany, dataGenerator) {
 		const ret = [];

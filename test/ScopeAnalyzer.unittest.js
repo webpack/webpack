@@ -100,7 +100,7 @@ const scopeReferences = new WeakMap();
  * @param {import("estree").Node} node any node
  * @returns {number} its start offset
  */
-const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
+const startOf = (node) => /** @type {any} */ (node).start;
 
 /**
  * @param {string} code source code
@@ -2375,8 +2375,7 @@ describe("ScopeAnalyzer", () => {
 			expect(staticBlockScope.upper).toBe(classScope);
 			expect(staticBlockScope.variableScope).toBe(staticBlockScope);
 
-			const staticBlockNode = /** @type {EXPECTED_ANY} */ (ast.body[0]).body
-				.body[0];
+			const staticBlockNode = /** @type {any} */ (ast.body[0]).body.body[0];
 
 			expect(staticBlockNode.type).toBe("StaticBlock");
 			expect(staticBlockScope.block).toBe(staticBlockNode);
@@ -2622,7 +2621,7 @@ describe("ScopeAnalyzer", () => {
 					startOf(staticBlockScope.block)
 				);
 				expect(startOf(reference.identifier)).toBeLessThan(
-					/** @type {EXPECTED_ANY} */ (staticBlockScope.block).end
+					/** @type {any} */ (staticBlockScope.block).end
 				);
 			}
 		});
@@ -2676,7 +2675,7 @@ describe("ScopeAnalyzer", () => {
 
 			expect(typeVariable.references).toHaveLength(1);
 			expect(typeVariable.references[0].identifier).toBe(
-				/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].id
+				/** @type {any} */ (ast.body[0]).declarations[0].id
 			);
 		});
 
@@ -2712,11 +2711,11 @@ describe("ScopeAnalyzer", () => {
 
 			expect(typeVariable.references).toHaveLength(2);
 			expect(typeVariable.references[0].identifier).toBe(
-				/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].id
+				/** @type {any} */ (ast.body[0]).declarations[0].id
 			);
 			expect(typeVariable.references[1].identifier).toBe(
-				/** @type {EXPECTED_ANY} */ (ast.body[1]).expression.options
-					.properties[0].value.properties[0].value
+				/** @type {any} */ (ast.body[1]).expression.options.properties[0].value
+					.properties[0].value
 			);
 		});
 	});
@@ -3046,9 +3045,7 @@ describe("ScopeAnalyzer", () => {
 				for (const reference of refs(scope)) {
 					expect(reference.identifier.name).toBe("a");
 					expect(reference.resolved).toBeDefined();
-					expect(/** @type {EXPECTED_ANY} */ (reference.resolved).name).toBe(
-						"a"
-					);
+					expect(/** @type {any} */ (reference.resolved).name).toBe("a");
 				}
 			});
 		}
@@ -3185,7 +3182,7 @@ describe("ScopeAnalyzer", () => {
 		it("keeps walking a node type it does not know", () => {
 			const ast = parse("var foo = bar(baz);");
 
-			/** @type {EXPECTED_ANY} */ (ast.body[0]).declarations[0].init.type =
+			/** @type {any} */ (ast.body[0]).declarations[0].init.type =
 				"SpecialCallExpression";
 
 			const analysis = analyzeAst(ast);
@@ -3203,7 +3200,7 @@ describe("ScopeAnalyzer", () => {
 				}
 			`);
 
-			/** @type {EXPECTED_ANY} */ (ast.body[1]).body.body[0].argument.type =
+			/** @type {any} */ (ast.body[1]).body.body[0].argument.type =
 				"SpecialCallExpression";
 
 			const analysis = analyzeAst(ast);

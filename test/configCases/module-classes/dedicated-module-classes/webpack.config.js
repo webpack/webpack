@@ -4,7 +4,7 @@ const AssetModule = require("../../../../lib/asset/AssetModule");
 const JavascriptModule = require("../../../../lib/javascript/JavascriptModule");
 const JsonModule = require("../../../../lib/json/JsonModule");
 
-/** @type {Map<string, { new (...args: EXPECTED_ANY[]): EXPECTED_ANY }>} */
+/** @type {Map<string, { new (...args: any[]): any }>} */
 const expectedClasses = new Map([
 	["javascript/auto", JavascriptModule],
 	["javascript/dynamic", JavascriptModule],

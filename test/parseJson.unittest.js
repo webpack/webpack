@@ -43,12 +43,8 @@ describe("parseJson", () => {
 		const data = Buffer.from(str);
 		const bom = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), data]);
 
-		expect(JSON.stringify(parseJson(/** @type {EXPECTED_ANY} */ (data)))).toBe(
-			str
-		);
-		expect(JSON.stringify(parseJson(/** @type {EXPECTED_ANY} */ (bom)))).toBe(
-			str
-		);
+		expect(JSON.stringify(parseJson(/** @type {any} */ (data)))).toBe(str);
+		expect(JSON.stringify(parseJson(/** @type {any} */ (bom)))).toBe(str);
 	});
 
 	const str = JSON.stringify({ foo: 1, bar: { baz: [1, 2, 3, "four"] } });
@@ -92,9 +88,7 @@ describe("parseJson", () => {
 
 	for (const [input, message] of nonStringCases) {
 		it(`reports a helpful message for ${String(message)}`, () => {
-			const err = catchError(() =>
-				parseJson(/** @type {EXPECTED_ANY} */ (input))
-			);
+			const err = catchError(() => parseJson(/** @type {any} */ (input)));
 
 			expect(err.name).toBe("JSONParseError");
 			expect(err.position).toBe(0);

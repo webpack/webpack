@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-/** @typedef {Record<string, EXPECTED_ANY>} Env */
+/** @typedef {Record<string, any>} Env */
 /** @typedef {{ testPath: string }} TestOptions */
 /**
  * @typedef {object} SuiteConfig
@@ -16,7 +16,7 @@ require("./helpers/warmup-webpack");
  * @property {boolean=} noTests
  * @property {(() => void)=} beforeExecute
  * @property {((options: import("../").Configuration) => void)=} afterExecute
- * @property {((scope: EXPECTED_ANY, options: import("../").Configuration, target: EXPECTED_ANY) => void)=} moduleScope
+ * @property {((scope: any, options: import("../").Configuration, target: any) => void)=} moduleScope
  */
 
 const path = require("path");
@@ -47,7 +47,7 @@ const categories = fs.readdirSync(casesPath).map((cat) => ({
 /**
  * @param {string[]} appendTarget log collector
  * @param {string[]} appendErrors warn/error collector
- * @returns {EXPECTED_ANY} logger object
+ * @returns {any} logger object
  */
 const createLogger = (appendTarget, appendErrors) => ({
 	log: (/** @type {string} */ l) => appendTarget.push(l),
@@ -57,11 +57,11 @@ const createLogger = (appendTarget, appendErrors) => ({
 	// Collect warn/error separately: every infrastructure warning/error must be
 	// declared in the case's infrastructure-log.js or the test fails, so a cache
 	// store/restore failure can't slip through unnoticed.
-	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+	warn: (/** @type {string} */ l, /** @type {any[]} */ ...args) => {
 		appendErrors.push(l);
 		console.warn(l, ...args);
 	},
-	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+	error: (/** @type {string} */ l, /** @type {any[]} */ ...args) => {
 		appendErrors.push(l);
 		console.error(l, ...args);
 	},
@@ -231,7 +231,7 @@ const describeCases = (config) => {
 							}
 							testConfig = {
 								findBundle(i, options) {
-									const output = /** @type {EXPECTED_ANY} */ (options.output);
+									const output = /** @type {any} */ (options.output);
 									const ext = path.extname(
 										parseResource(/** @type {string} */ (output.filename)).path
 									);
@@ -267,9 +267,9 @@ const describeCases = (config) => {
 
 						afterAll(() => {
 							// cleanup
-							options = /** @type {EXPECTED_ANY} */ (undefined);
-							optionsArr = /** @type {EXPECTED_ANY} */ (undefined);
-							testConfig = /** @type {EXPECTED_ANY} */ (undefined);
+							options = /** @type {any} */ (undefined);
+							optionsArr = /** @type {any} */ (undefined);
+							testConfig = /** @type {any} */ (undefined);
 						});
 
 						/**
@@ -572,7 +572,7 @@ const describeCases = (config) => {
 								});
 								// give a free pass to compilation that generated an error
 								if (
-									!(/** @type {EXPECTED_ANY[]} */ (jsonStats.errors).length) &&
+									!(/** @type {any[]} */ (jsonStats.errors).length) &&
 									filesCount !== optionsArr.length
 								) {
 									return done(
@@ -627,10 +627,7 @@ const describeCases = (config) => {
 									handleFatalError(/** @type {Error} */ (err), done);
 								}
 							} else {
-								require("..")(
-									options,
-									/** @type {EXPECTED_ANY} */ (onCompiled)
-								);
+								require("..")(options, /** @type {any} */ (onCompiled));
 							}
 						}, 30000);
 

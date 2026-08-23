@@ -42,7 +42,7 @@ const configs = [
 ];
 
 module.exports = configs.reduce(
-	/** @type {(result: EXPECTED_ANY, config: EXPECTED_ANY) => Configuration[]} */ (
+	/** @type {(result: any, config: any) => Configuration[]} */ (
 		result,
 		{ name, entry, optimization, css }
 	) => {

@@ -52,14 +52,14 @@ describe("ExportInfo", () => {
 		it("clears the target map, the max-target memo and canInlineProvide", () => {
 			const info = new ExportInfo("foo");
 			info.setTarget(
-				/** @type {EXPECTED_ANY} */ ({}),
-				/** @type {EXPECTED_ANY} */ ({}),
+				/** @type {any} */ ({}),
+				/** @type {any} */ ({}),
 				["a"],
 				1
 			);
 			// prime the memo so a stale entry would be observable
 			info._getMaxTarget();
-			info.canInlineProvide = /** @type {EXPECTED_ANY} */ (true);
+			info.canInlineProvide = /** @type {any} */ (true);
 
 			info._resetProvideInfo();
 

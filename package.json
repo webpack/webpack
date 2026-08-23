@@ -129,6 +129,7 @@
     "@changesets/get-github-info": "^0.8.0",
     "@codspeed/core": "^5.5.0",
     "@mdn/browser-compat-data": "^8.0.9",
+    "@types/color-name": "^2.0.0",
     "@types/convert-source-map": "^2.0.3",
     "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^30.0.0",

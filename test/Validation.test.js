@@ -5,7 +5,7 @@ require("./helpers/warmup-webpack");
 describe("Validation", () => {
 	const createTestCase = (
 		/** @type {string} */ name,
-		/** @type {EXPECTED_ANY} */ config,
+		/** @type {any} */ config,
 		/** @type {(msg: string) => void} */ fn,
 		/** @type {unknown} */ only = undefined
 	) => {
@@ -15,7 +15,7 @@ describe("Validation", () => {
 
 				webpack(config);
 			} catch (err) {
-				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") {
+				if (/** @type {any} */ (err).name !== "ValidationError") {
 					throw err;
 				}
 				fn(/** @type {Error} */ (err).message);
@@ -29,7 +29,7 @@ describe("Validation", () => {
 
 	const createTestCaseOnlyValidate = (
 		/** @type {string} */ name,
-		/** @type {EXPECTED_ANY} */ config,
+		/** @type {any} */ config,
 		/** @type {(msg: string) => void} */ fn
 	) => {
 		it(`should fail validation for ${name}`, () => {
@@ -38,7 +38,7 @@ describe("Validation", () => {
 
 				webpack.validate(config);
 			} catch (err) {
-				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") {
+				if (/** @type {any} */ (err).name !== "ValidationError") {
 					throw err;
 				}
 				fn(/** @type {Error} */ (err).message);
@@ -52,7 +52,7 @@ describe("Validation", () => {
 
 	const createTestCaseWithoutError = (
 		/** @type {string} */ name,
-		/** @type {EXPECTED_ANY} */ config
+		/** @type {any} */ config
 	) => {
 		it(`should success validation for ${name}`, () => {
 			let errored;
@@ -62,7 +62,7 @@ describe("Validation", () => {
 
 				webpack(config);
 			} catch (err) {
-				if (/** @type {EXPECTED_ANY} */ (err).name === "ValidationError") {
+				if (/** @type {any} */ (err).name === "ValidationError") {
 					throw new Error("Validation didn't success", {
 						cause: /** @type {Error} */ (err)
 					});

@@ -29,7 +29,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map((d) => /** @type {EXPECTED_ANY} */ (d).name)).toEqual([
+		expect(deps.map((d) => /** @type {any} */ (d).name)).toEqual([
 			"c",
 			"a",
 			"d",
@@ -53,7 +53,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map((d) => /** @type {EXPECTED_ANY} */ (d).name)).toEqual([
+		expect(deps.map((d) => /** @type {any} */ (d).name)).toEqual([
 			"c",
 			"b",
 			"a"
@@ -76,7 +76,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map((d) => /** @type {EXPECTED_ANY} */ (d).name)).toEqual([
+		expect(deps.map((d) => /** @type {any} */ (d).name)).toEqual([
 			"a",
 			"c",
 			"b"
@@ -97,7 +97,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map((d) => /** @type {EXPECTED_ANY} */ (d).name)).toEqual([
+		expect(deps.map((d) => /** @type {any} */ (d).name)).toEqual([
 			"a",
 			"b",
 			"c"
@@ -115,7 +115,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map((d) => /** @type {EXPECTED_ANY} */ (d).name)).toEqual([
+		expect(deps.map((d) => /** @type {any} */ (d).name)).toEqual([
 			"a",
 			"b",
 			"c"
@@ -143,7 +143,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map((d) => /** @type {EXPECTED_ANY} */ (d).name)).toEqual([
+		expect(deps.map((d) => /** @type {any} */ (d).name)).toEqual([
 			"a",
 			"b",
 			"e",
@@ -164,7 +164,7 @@ describe("sortWithSourceOrder", () => {
 
 		sortWithSourceOrder(deps, dependencySourceOrderMap);
 
-		expect(deps.map((d) => /** @type {EXPECTED_ANY} */ (d).name)).toEqual([
+		expect(deps.map((d) => /** @type {any} */ (d).name)).toEqual([
 			"b",
 			"a",
 			"c"

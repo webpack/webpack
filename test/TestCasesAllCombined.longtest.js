@@ -4,7 +4,7 @@ const { describeCases } = require("./TestCases.template");
 
 describe("TestCases", () => {
 	describeCases(
-		/** @type {EXPECTED_ANY} */ ({
+		/** @type {any} */ ({
 			name: "all-combined",
 			mode: "production",
 			devtool: "source-map",

@@ -5,7 +5,7 @@ const RuleSetCompiler = require("../lib/rules/RuleSetCompiler");
 
 describe("RuleSetCompiler.hasRuleForResource", () => {
 	/**
-	 * @param {EXPECTED_ANY} rules module rules (may be intentionally malformed)
+	 * @param {any} rules module rules (may be intentionally malformed)
 	 * @param {string=} resource sample resource path
 	 * @returns {boolean} whether a rule handles the resource
 	 */
@@ -125,7 +125,7 @@ describe("RuleSetCompiler glob conditions", () => {
 	const compiler = new RuleSetCompiler([]);
 
 	/**
-	 * @param {EXPECTED_ANY} condition condition (may be intentionally malformed)
+	 * @param {any} condition condition (may be intentionally malformed)
 	 * @returns {(value: string) => boolean} matcher
 	 */
 	const compile = (condition) => {

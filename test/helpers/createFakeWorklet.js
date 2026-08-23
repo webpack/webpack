@@ -26,7 +26,7 @@ module.exports = (
 	};
 
 	const createWorklet = () => {
-		/** @type {Map<string, EXPECTED_ANY>} */
+		/** @type {Map<string, any>} */
 		const registrations = new Map();
 		const sandbox = {
 			URL,
@@ -35,14 +35,11 @@ module.exports = (
 			console,
 			registerProcessor: (
 				/** @type {string} */ name,
-				/** @type {EXPECTED_ANY} */ ctor
+				/** @type {any} */ ctor
 			) => {
 				registrations.set(name, ctor);
 			},
-			registerPaint: (
-				/** @type {string} */ name,
-				/** @type {EXPECTED_ANY} */ ctor
-			) => {
+			registerPaint: (/** @type {string} */ name, /** @type {any} */ ctor) => {
 				registrations.set(name, ctor);
 			}
 		};

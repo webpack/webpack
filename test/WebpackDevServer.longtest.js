@@ -5,8 +5,8 @@
 // loading express/serve-index throws there. It only emits deprecation warnings, so
 // a no-op keeps the dev server working uniformly on Node, Bun and Deno.
 jest.mock("depd", () => () => {
-	const deprecate = /** @type {EXPECTED_ANY} */ (() => {});
-	deprecate.function = (/** @type {EXPECTED_ANY} */ fn) => fn;
+	const deprecate = /** @type {any} */ (() => {});
+	deprecate.function = (/** @type {any} */ fn) => fn;
 	deprecate.property = () => {};
 	return deprecate;
 });
@@ -319,14 +319,14 @@ describe("WebpackDevServer integration in real Chrome", () => {
 
 				// Marker on window survives an HMR patch but not a full page reload.
 				await page.evaluate(() => {
-					/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
+					/** @type {any} */ (window).__notReloaded = true;
 				});
 
 				fs.writeFileSync(messagePath, messageSource("V2"));
 				await waitForAppText(page, "MESSAGE_V2", 20000);
 
 				const notReloaded = await page.evaluate(
-					() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
+					() => /** @type {any} */ (window).__notReloaded === true
 				);
 				expect(notReloaded).toBe(true);
 			} finally {
@@ -358,14 +358,14 @@ describe("WebpackDevServer integration in real Chrome", () => {
 				await waitForAppText(page, "MESSAGE_V1", 20000);
 
 				await page.evaluate(() => {
-					/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
+					/** @type {any} */ (window).__notReloaded = true;
 				});
 
 				fs.writeFileSync(messagePath, messageSource("V2"));
 				await waitForAppText(page, "MESSAGE_V2", 20000);
 
 				const notReloaded = await page.evaluate(
-					() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
+					() => /** @type {any} */ (window).__notReloaded === true
 				);
 				expect(notReloaded).toBe(false);
 			} finally {
