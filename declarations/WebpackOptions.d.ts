@@ -3375,6 +3375,11 @@ export interface PerformanceOptions {
 	 */
 	splitChunksCapped?: boolean;
 	/**
+	 * Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	tinyChunks?: boolean;
+	/**
 	 * Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */

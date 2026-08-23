@@ -14867,6 +14867,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-tiny-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.tinyChunks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unsplit-vendors": Object {
     "configs": Array [
       Object {

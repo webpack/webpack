@@ -5453,6 +5453,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "tinyChunks": {
+          "description": "Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "unsplitVendors": {
           "description": "Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).",
           "type": "boolean",
