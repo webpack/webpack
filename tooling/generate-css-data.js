@@ -5895,6 +5895,7 @@ module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// 
 
 /**
  * Write `lib/css/data.js`, or report that it is out of date.
+ * @returns {Promise<void>} when it has been written or compared
  */
 const generate = async () => {
 	// Required here, not at the top: `collectData` is imported by a test that runs
@@ -5904,7 +5905,7 @@ const generate = async () => {
 	const { source, summary } = await collectData();
 	// Formatted here rather than left to `yarn fmt`, so the comparison below is
 	// against what the repo actually checks in.
-	prettier
+	return prettier
 		.resolveConfig(TARGET)
 		.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
 		.then((formatted) => {
@@ -5925,7 +5926,14 @@ const generate = async () => {
 		});
 };
 
-if (require.main === module) generate();
+if (require.main === module) {
+	// `generate` is async, so a failed generation has to be turned back into a
+	// non-zero exit rather than left as an unhandled rejection.
+	generate().catch((error) => {
+		process.stderr.write(`${error.stack}\n`);
+		process.exitCode = 1;
+	});
+}
 
 module.exports.DATA_TARGET = TARGET;
 module.exports.acceptedValues = acceptedValues;
