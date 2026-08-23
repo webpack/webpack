@@ -14774,6 +14774,16 @@ declare interface KnownBuildInfo {
 	isCircular?: boolean;
 
 	/**
+	 * true when the module calls `eval` directly
+	 */
+	usesEval?: boolean;
+
+	/**
+	 * how many `#__PURE__` annotations sit where the parser does not read them
+	 */
+	ineffectivePureAnnotations?: number;
+
+	/**
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
@@ -14944,12 +14954,6 @@ declare interface KnownNormalModuleBuildInfo {
 	buildDependencies?: LazySet<string>;
 	valueDependencies?: Map<string, ValueCacheVersion>;
 	snapshot?: null | Snapshot;
-
-	/**
-	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	evalUsage?: boolean;
 
 	/**
 	 * using in HttpUriPlugin
@@ -21806,6 +21810,12 @@ declare interface PerformanceOptions {
 	entrypointOverlap?: boolean;
 
 	/**
+	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	evalUsage?: boolean;
+
+	/**
 	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
 	hints?: false | "error" | "stats" | "warning";
@@ -21839,16 +21849,16 @@ declare interface PerformanceOptions {
 	maxEntrypointSize?: number;
 
 	/**
-	 * Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	mixedExports?: boolean;
-
-	/**
 	 * Report packages that keep unused code in the bundle because their package.json does not declare 'sideEffects' (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	missingSideEffects?: boolean;
+
+	/**
+	 * Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	mixedExports?: boolean;
 
 	/**
 	 * Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.
