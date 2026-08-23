@@ -3274,6 +3274,87 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("keeps one standing in front of a `@namespace` that could still be read", () => {
+			// Taking it back would move the `@namespace` up to where an engine reads
+			// it, which is not what the sheet said.
+			const css = '.a{x:1}@namespace u "urn:z";.b{y:1}.a{x:1}';
+			expect(minify(css)).toBe(css);
+		});
+
+		it("moves the rules after a cut back by what went", () => {
+			// Two cuts in one block: the second names its rule at the offset the
+			// first left it at, not the one it was written at.
+			expect(
+				minify(
+					"@media a{.p{x:1}.q{y:2}.r{z:3}}.z{t:1}@media a{.p{x:1}}.z2{t:2}@media a{.r{z:3}}"
+				)
+			).toBe(
+				"@media a{.q{y:2}}.z{t:1}@media a{.p{x:1}}.z2{t:2}@media a{.r{z:3}}"
+			);
+		});
+
+		it("counts a raw passthrough among the children it stands between", () => {
+			// It carries no rules of its own, but its parent still counts it — without
+			// its place, the rules after it are cut at the offsets of the ones before.
+			expect(
+				minify("@media all{*zoom:1;.b{.c{z:1}}}.z{q:1}@media all{.b{.c{z:1}}}")
+			).toBe("@media all{*zoom:1}.z{q:1}@media all{.b{.c{z:1}}}");
+		});
+
+		it.each([
+			// CSS Cascade 5 §6.4.1: an `!important` declaration is read from the
+			// earliest layer, so a copy in a later one makes nothing dead.
+			[
+				"an important copy stands in a later anonymous layer",
+				"@layer{.a{color:red!important}}@layer{.a{color:blue!important}}@layer{.a{color:red!important}}"
+			],
+			[
+				"two anonymous layers say the same rule",
+				"@layer{a{color:red}}@layer{a{color:red}}"
+			],
+			[
+				"the layers spell their name with an escape",
+				"@media all{@l\\61yer{.a{c:red}}@l\\61yer{.a{c:blue}}}"
+			]
+		])("keeps both where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it("drops one the same anonymous layer says again", () => {
+			expect(minify("@layer{.a{c:red}.x{y:1}.a{c:red}}")).toBe(
+				"@layer{.x{y:1}.a{c:red}}"
+			);
+		});
+
+		it("drops one nested in a rule, which is what encloses it", () => {
+			expect(minify(".a{.b{color:red}.x{color:teal}.b{color:red}}")).toBe(
+				".a{.x{color:teal}.b{color:red}}"
+			);
+		});
+
+		it("drops one nested in two rules that differ elsewhere", () => {
+			// The whole rule is not repeated — only what it nests — and the `;` the
+			// cut leaves in front of the `}` goes with it.
+			expect(minify(".a{q:1;.b{x:1}}.z{y:1}.a{w:2;.b{x:1}}")).toBe(
+				".a{q:1}.z{y:1}.a{w:2;.b{x:1}}"
+			);
+		});
+
+		it("drops the rule a cut empties, as an empty one written here would be", () => {
+			expect(minify(".a{.b{.c{d:1}}}.z{t:1}.a{w:2;.b{.c{d:1}}}")).toBe(
+				".z{t:1}.a{w:2;.b{.c{d:1}}}"
+			);
+		});
+
+		it.each([
+			// What a rule nests is read under it, so the same selector under another
+			// rule — or under none — is another rule.
+			[".a{.b{color:red}}.c{.b{color:red}}"],
+			[".b{color:red}.a{.b{color:red}}"]
+		])("keeps both where the enclosing rule differs: %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+
 		it("leaves a layer to the merge, which gathers it rather than dropping it", () => {
 			expect(
 				minify(
@@ -3353,7 +3434,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A layer with no name is a layer of its own.
 			[
 				"neither is named",
-				"@media all{@layer{a{color:red}}@layer{a{color:red}}}"
+				"@media all{@layer{a{color:red}}@layer{b{color:red}}}"
 			],
 			// `@layer a.b` writes where `@layer a{@layer b{…}}` writes, so the one
 			// between them is that same layer under its other spelling.

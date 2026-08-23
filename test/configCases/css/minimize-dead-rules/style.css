@@ -1,0 +1,57 @@
+/* A rule an identical later one makes dead is dropped wherever the two stand,
+   and the last copy is the one kept. */
+
+/*! two copies with a rule between them: the first goes */
+.t01 { color: red }
+.between1 { color: teal }
+.t01 { color: red }
+
+/*! and with a whole block between them */
+.t02 { color: red }
+@media screen { .between2 { color: teal } }
+.t02 { color: red }
+
+/*! copies in two blocks sharing a condition */
+@media print { .t03 { color: red } }
+.between3 { color: teal }
+@media print { .t03 { color: red } }
+
+/*! the same selector under a different condition is a different rule */
+@media screen { .t04 { color: red } }
+@media print { .t04 { color: red } }
+
+/*! the same selector with a different block is not a copy */
+.t05 { color: red }
+.between5 { color: teal }
+.t05 { color: blue }
+
+/*! three copies leave the last */
+.t06 { color: red }
+.m1 { color: teal }
+.t06 { color: red }
+.m2 { color: teal }
+.t06 { color: red }
+
+/*! a block a cut empties goes, as an empty one written here would */
+@media (monochrome) { .t07 { color: red } }
+.between7 { color: teal }
+@media (monochrome) { .t07 { color: red } }
+
+/*! a keyframe repeated at one offset is left to the printer */
+@keyframes t08 { 0% { opacity: 0 } 100% { opacity: 1 } }
+
+/*! a rule nested in another is read under it, so a copy elsewhere under the
+   same rule makes it dead even where the two blocks differ otherwise */
+.t09 { width: 1px; .inner { color: red } }
+.between9 { color: teal }
+.t09 { height: 2px; .inner { color: red } }
+
+/*! and the same selector under another rule is another rule */
+.t10a { .inner { color: red } }
+.t10b { .inner { color: red } }
+
+/*! a raw passthrough the parser kept verbatim stands among the rules it
+   separates, and is counted among them */
+@media (min-width: 1px) { *zoom: 1; .t11 { .inner { color: red } } }
+.between11 { color: teal }
+@media (min-width: 1px) { .t11 { .inner { color: red } } }

@@ -1473,6 +1473,20 @@ const compareRules = (before, after, signatures) => {
 		/** @type {Map<string, Rule[]>} */
 		const layers = new Map();
 		let anonymous = 0;
+		/** @type {Map<EXPECTED_OBJECT, string>} */
+		const ids = new Map();
+		/**
+		 * @param {EXPECTED_OBJECT} each an anonymous layer's chain entry
+		 * @returns {string} the identity of the block it opened
+		 */
+		const idOf = (each) => {
+			let id = ids.get(each);
+			if (id === undefined) {
+				id = ` ${anonymous++}`;
+				ids.set(each, id);
+			}
+			return id;
+		};
 		// An `@layer a, b;` statement is what names those layers first, whatever
 		// order their blocks then stand in, so it opens their buckets.
 		for (const rule of rules) {
@@ -1488,12 +1502,29 @@ const compareRules = (before, after, signatures) => {
 		}
 		for (const rule of rules) {
 			const chain = rule.chain.filter((each) => each.kind === "layer");
-			const key = chain.some((each) => each.condition.trim() === "@layer")
-				? ` ${anonymous++}`
+			const anon = chain.some((each) => each.condition.trim() === "@layer");
+			const key = anon
+				? chain
+						.map((each) =>
+							each.condition.trim() === "@layer" ? idOf(each) : each.condition
+						)
+						.join(" ")
 				: chain.map((each) => each.condition).join(" ");
+			// Every block of one is its own layer, so the key says which block a rule
+			// stood in — two of them hold two rules, not one said twice.
+			const one = anon
+				? {
+						...rule,
+						chain: rule.chain.map((each) =>
+							each.kind === "layer" && each.condition.trim() === "@layer"
+								? { ...each, condition: `@layer${idOf(each)}` }
+								: each
+						)
+					}
+				: rule;
 			const layer = layers.get(key);
-			if (layer === undefined) layers.set(key, [rule]);
-			else layer.push(rule);
+			if (layer === undefined) layers.set(key, [one]);
+			else layer.push(one);
 		}
 		// The place-holding entry a layer block left behind has done its work.
 		return [...layers.values()].flat().filter((rule) => rule.text !== "");
@@ -1554,10 +1585,13 @@ const compareRules = (before, after, signatures) => {
 			runs[i] = runs[i].filter((one) => !ahead.has(one.where));
 			if (runs[i].length !== 0) next = i;
 		}
-		return runs
-			.flat()
-			.map(({ key }) => key)
-			.filter((key, i, all) => i === 0 || key !== all[i - 1]);
+		// A key written twice is one rule said twice, and the later copy restates it
+		// all — so keeping the last is what dropping the dead earlier one leaves.
+		const all = runs.flat().map(({ key }) => key);
+		/** @type {Map<string, number>} */
+		const lastAt = new Map();
+		for (const [i, key] of all.entries()) lastAt.set(key, i);
+		return all.filter((key, i) => lastAt.get(key) === i);
 	};
 	const a = keys(before);
 	const b = keys(after);
