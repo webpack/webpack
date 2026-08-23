@@ -234,6 +234,19 @@ export default defineConfig([
 		}
 	},
 	{
+		// `color-name` is ESM, so the CSS data generator reaches its table
+		// through a dynamic import rather than a `require` no jest `vm` supports.
+		files: ["tooling/generate-css-data.js"],
+		rules: {
+			"n/no-unsupported-features/es-syntax": [
+				"error",
+				{
+					ignores: ["error-cause", "dynamic-import"]
+				}
+			]
+		}
+	},
+	{
 		files: ["test/Compiler-filesystem-caching.test.js"],
 		languageOptions: {
 			ecmaVersion: 2022
