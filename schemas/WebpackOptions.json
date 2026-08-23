@@ -1171,6 +1171,12 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "deferImport": {
+          "description": "The environment supports deferred module evaluation ('import defer * as ns from \"...\"', 'import.defer(\"...\")').",
+          "type": "boolean",
+          "experimental": true,
+          "added": "5.110.0"
+        },
         "destructuring": {
           "description": "The environment supports destructuring ('{ a, b } = obj').",
           "type": "boolean"
@@ -1240,6 +1246,12 @@
         "optionalChaining": {
           "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
           "type": "boolean"
+        },
+        "sourceImport": {
+          "description": "The environment supports source phase imports ('import source m from \"...\"', 'import.source(\"...\")').",
+          "type": "boolean",
+          "experimental": true,
+          "added": "5.110.0"
         },
         "spread": {
           "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",

@@ -12423,6 +12423,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-defer-import": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports deferred module evaluation ('import defer * as ns from \\"...\\"', 'import.defer(\\"...\\")').",
+        "multiple": false,
+        "path": "output.environment.deferImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports deferred module evaluation ('import defer * as ns from \\"...\\"', 'import.defer(\\"...\\")').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-destructuring": Object {
     "configs": Array [
       Object {
@@ -12641,6 +12654,19 @@ Object {
       },
     ],
     "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-source-import": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports source phase imports ('import source m from \\"...\\"', 'import.source(\\"...\\")').",
+        "multiple": false,
+        "path": "output.environment.sourceImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports source phase imports ('import source m from \\"...\\"', 'import.source(\\"...\\")').",
     "multiple": false,
     "simpleType": "boolean",
   },
