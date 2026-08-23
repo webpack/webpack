@@ -2,9 +2,8 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	// Production: the const-value optimization that feeds a value binding only
-	// runs there. Minifying would rewrite the runtime the test reads, and
-	// dropping unused exports would remove the `__webpack_require__.d` call.
+	// Production: only there does the const-value optimization feed a value
+	// binding. No minify or tree-shake: both rewrite what the test reads.
 	mode: "production",
 	devtool: false,
 	// Keep the real `__filename` so the test can read its own bundle.
