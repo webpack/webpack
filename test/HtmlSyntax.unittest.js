@@ -7752,20 +7752,36 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			"<i><article><table><desc></i>"
 		],
 		// §13.2.6.5 inserts a foreign `<form>` without consulting the form pointer.
-		["a form in foreign content inside another", "<form><svg><form><dd>"]
+		["a form in foreign content inside another", "<form><svg><form><dd>"],
+		// §13.2.4.3 rebuilds these from the list of active formatting elements, so
+		// no tag placement reaches them and the source is what prints.
+		[
+			"a run holding a rebuilt formatting element",
+			"<nobr><table><b><colgroup><nobr>"
+		],
+		[
+			"one rebuilt behind a row group",
+			"<button><table><nobr><button><tbody><option>"
+		],
+		["a rebuilt one an end tag closed", "<table><i><tfoot><a></i><li><rtc>"],
+		["two the source never closed", "<table><b><b><tr><img>"],
+		["a second table inside the run's own", "<b><table><b><table>x<div>"],
+		[
+			"an end tag the region already carries",
+			"<i><h1><table><a><thead></i><dd></p> <noframes>"
+		],
+		["a run under an implied body", "<table><a><tr>0"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
 
-	it("rebuilds a formatting element rather than re-nesting it", () => {
-		// §13.2.4.3 makes this `<b>` from the list of active formatting elements, so
-		// no source tag places it and the run stays where the tree holds it.
+	it("prints a run it cannot re-nest from the source that built it", () => {
+		// §13.2.4.3 makes the second `<b>` from the list of active formatting
+		// elements, so no arrangement of tags places it — the source does.
 		expect(
 			new SourceProcessor().process("<nobr><table><b><colgroup><nobr>", {
 				mode: "beautify"
 			}).code
-		).toBe(
-			"<nobr><b></b><b><nobr></nobr></b><table><colgroup></colgroup></table></nobr>"
-		);
+		).toBe("<nobr><table><b><colgroup><nobr>");
 	});
 });
