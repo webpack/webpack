@@ -3366,9 +3366,8 @@ describe("ScopeAnalyzer", () => {
 	});
 
 	describe("assignment targets a parser may report as expressions", () => {
-		// acorn reports every destructuring target as a pattern, so these arms
-		// are reached only by a parser that does not — mutate the tree to get
-		// the shape such a parser would hand over
+		// acorn emits a pattern for every destructuring target, so these arms
+		// need the tree a parser reporting expressions would hand over
 		it("binds through an array reported as an expression", () => {
 			const ast = parse("[[a]] = b;");
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
