@@ -25802,7 +25802,6 @@ declare abstract class Scope {
 	upper: null | Scope;
 	childScopes: Scope[];
 	variables: Variable[];
-	set: Map<string, Variable>;
 	variableScope: Scope;
 
 	/**
@@ -25820,6 +25819,7 @@ declare abstract class Scope {
 	 * binding keeps no reference list at all — see `_resolve`.
 	 */
 	recorded: boolean;
+	getBinding(name: string): undefined | Variable;
 }
 
 /**

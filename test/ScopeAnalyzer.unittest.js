@@ -2385,10 +2385,11 @@ describe("ScopeAnalyzer", () => {
 			const expectedVariableNames = ["a", "b", "c", "d", "e"];
 
 			expect(varNames(staticBlockScope)).toEqual(expectedVariableNames);
-			expect([...staticBlockScope.set.keys()]).toEqual(expectedVariableNames);
-			expect([...staticBlockScope.set.values()]).toEqual(
-				staticBlockScope.variables
-			);
+			for (const name of expectedVariableNames) {
+				expect(staticBlockScope.getBinding(name)).toBe(
+					staticBlockScope.variables[expectedVariableNames.indexOf(name)]
+				);
+			}
 			for (const variable of staticBlockScope.variables) {
 				expect(variable.scope).toBe(staticBlockScope);
 			}
@@ -2545,7 +2546,7 @@ describe("ScopeAnalyzer", () => {
 
 			expect(refs(moduleScope)).toHaveLength(0);
 			expect(freeNames(analysis)).toEqual([]);
-			expect(moduleScope.set.has("a")).toBe(true);
+			expect(moduleScope.getBinding("a")).toBe(moduleScope.variables[0]);
 
 			const classScope = moduleScope.childScopes[0];
 
@@ -2562,7 +2563,7 @@ describe("ScopeAnalyzer", () => {
 
 			expect(blockScope.type).toBe("block");
 			expect(refNames(blockScope)).toEqual(["a"]);
-			expect(refs(blockScope)[0].resolved).toBe(moduleScope.set.get("a"));
+			expect(refs(blockScope)[0].resolved).toBe(moduleScope.getBinding("a"));
 		});
 
 		it("class C { static { a; } }", () => {
@@ -2582,10 +2583,10 @@ describe("ScopeAnalyzer", () => {
 				"let a; class C { static { let a; a; } static { a; let a; } }"
 			);
 
-			expect(moduleScope.set.has("a")).toBe(true);
+			expect(moduleScope.getBinding("a")).toBe(moduleScope.variables[0]);
 			expect(
 				/** @type {import("../lib/javascript/ScopeAnalyzer").Variable} */ (
-					moduleScope.set.get("a")
+					moduleScope.getBinding("a")
 				).references
 			).toHaveLength(0);
 
@@ -2633,7 +2634,7 @@ describe("ScopeAnalyzer", () => {
 				"let a; class C { [a]; static { let a; } [a]; static { function a(){} } [a]; static { var a; } [a]; }"
 			);
 
-			expect(moduleScope.set.has("a")).toBe(true);
+			expect(moduleScope.getBinding("a")).toBe(moduleScope.variables[0]);
 
 			const classScope = moduleScope.childScopes[0];
 
@@ -2641,7 +2642,7 @@ describe("ScopeAnalyzer", () => {
 
 			const a =
 				/** @type {import("../lib/javascript/ScopeAnalyzer").Variable} */ (
-					moduleScope.set.get("a")
+					moduleScope.getBinding("a")
 				);
 
 			expect(a.references).toHaveLength(4);
