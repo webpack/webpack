@@ -168,9 +168,12 @@ to every emitted asset (the case's own sources must then be es5 too), and
 `ecmaConformanceExpected` declares findings deliberate as regexps, each with its
 reason — one that stops matching fails the case.
 
-The `ecmaVersion/es5-*` cases cover one runtime-emitting feature each: jsonp,
-`importScripts`, `require` and read-file chunk loading, workers and asset urls,
-css, hot updates, wasm, the library wrappers, and Module Federation.
+Under `ecmaVersion/`, the `es5-*` cases cover one runtime-emitting feature each
+(jsonp, `importScripts`, `require` and read-file chunk loading, workers and
+asset urls, css, hot updates, wasm, the library wrappers, Module Federation);
+`es-versions` sweeps every rung of the `esX` ladder; `environment-flags` turns
+each flag off on its own against an otherwise current target, which a version
+sweep cannot do; and `esm-environment` repeats both over ESM output.
 
 ## How to Run Tests
 

@@ -2,7 +2,7 @@
 
 /**
  * @param {string} name variant name
- * @param {import("../../../../").Experiments} experiments which wasm support to enable
+ * @param {NonNullable<import("../../../../").Configuration["experiments"]>} experiments which wasm support to enable
  * @returns {import("../../../../").Configuration} configuration
  */
 const variant = (name, experiments) => ({
