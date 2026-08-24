@@ -5824,7 +5824,8 @@ describe("CssSyntax — a string the source never closed", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.String]: {
-					enter: (/** @type {CssPath} */ path) => seen.push(path.unescaped())
+					enter: (/** @type {import("../lib/css/syntax").CssPath} */ path) =>
+						seen.push(path.unescaped())
 				}
 			})
 			.process(source);
