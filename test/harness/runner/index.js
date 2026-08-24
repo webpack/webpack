@@ -221,13 +221,8 @@ class TestRunner {
 	}
 
 	/**
-	 * Takes out of the bundle's realm what `output.environment` says the target
-	 * has not got, so the guard webpack emitted around it is actually taken
-	 * rather than stepped over by a modern engine. Only the bindings a flag
-	 * names: everything else in the realm is a library the flags say nothing
-	 * about, and removing it would test a contract webpack never made.
-	 *
-	 * A node target shares this process's realm, so there is nothing to remove.
+	 * Removes from the bundle's realm the bindings `output.environment` says the
+	 * target lacks, so webpack's guard around one is taken, not stepped over.
 	 */
 	restrictEnvironment() {
 		const output = this.webpackOptions.output || {};
@@ -244,13 +239,12 @@ class TestRunner {
 		this._environmentRemovals = removed
 			.map(([, statement]) => statement)
 			.join("");
-		// A node target shares this process's realm, so there is nothing to take
-		// out of it. An ESM context is built per module and restricted there.
+		// A node target shares this process's realm; an ESM context is built per
+		// module and restricted there.
 		if (this._runInNewContext && this._environmentRemovals) {
 			vm.runInNewContext(this._environmentRemovals, this._globalContext);
-			// Not every host's `vm` gives the sandbox a realm of its own — Bun's
-			// does not, so the removals do not take there. Say which happened
-			// rather than letting a case assert what the realm never did.
+			// Bun's `vm` gives the sandbox no realm of its own, so the removals do
+			// not take there — say so rather than asserting what never happened.
 			this._environmentRestricted = vm.runInNewContext(
 				removed.map(([, , probe]) => `${probe} === "undefined"`).join(" && "),
 				this._globalContext
