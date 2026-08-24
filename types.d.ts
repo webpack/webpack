@@ -22264,6 +22264,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 */
 	takeInserts(start: number, end: number): string;
 	sourceMap(options: SourceMapOptions): SourceMap;
+
+	/**
+	 * Throw away everything printed and stand `text` in its place. For the one
+	 * caller that can only tell its output is wrong once it has all of it.
+	 */
+	replaceAll(text: string): void;
 	result(): string;
 }
 declare interface PrintOptions {
