@@ -3288,6 +3288,11 @@ export interface PerformanceOptions {
 	 */
 	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
 	/**
+	 * Report chains of 'import()' calls where each chunk can only be requested once the one before it has arrived, so the levels cost round trips in series (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	asyncChunkWaterfalls?: boolean;
+	/**
 	 * Report 'require.context' calls with no filter, which bundle every file under a directory (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
