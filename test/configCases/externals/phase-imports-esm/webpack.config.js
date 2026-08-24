@@ -13,7 +13,13 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].js",
-		module: true
+		module: true,
+		// The phases are spelled with syntax the target has to read, and `es2020`
+		// says nothing about either, so this states what the case is exercising.
+		environment: {
+			deferImport: true,
+			sourceImport: true
+		}
 	},
 	optimization: {
 		concatenateModules: true,

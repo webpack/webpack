@@ -3048,6 +3048,12 @@ export interface Environment {
 	 */
 	cssPlaceShorthand?: boolean;
 	/**
+	 * The environment supports deferred module evaluation ('import defer * as ns from "..."', 'import.defer("...")').
+	 * @since 5.110.0
+	 * @experimental
+	 */
+	deferImport?: boolean;
+	/**
 	 * The environment supports destructuring ('{ a, b } = obj').
 	 */
 	destructuring?: boolean;
@@ -3117,6 +3123,12 @@ export interface Environment {
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
 	optionalChaining?: boolean;
+	/**
+	 * The environment supports source phase imports ('import source m from "..."', 'import.source("...")').
+	 * @since 5.110.0
+	 * @experimental
+	 */
+	sourceImport?: boolean;
 	/**
 	 * The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').
 	 */
