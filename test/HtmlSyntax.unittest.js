@@ -7766,6 +7766,9 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		["a rebuilt one an end tag closed", "<table><i><tfoot><a></i><li><rtc>"],
 		["two the source never closed", "<table><b><b><tr><img>"],
 		["a second table inside the run's own", "<b><table><b><table>x<div>"],
+		// The run's holder is read back off its own tag, which the source may have
+		// spaced out before the `>`.
+		["a spaced-out tag holding a run", "<b ><table><b><table>x<div>"],
 		[
 			"an end tag the region already carries",
 			"<i><h1><table><a><thead></i><dd></p> <noframes>"
@@ -7779,9 +7782,15 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		// a rebuilt one back is not the same as never having removed it.
 		["a rebuilt nobr a heading left on the list", "<h2><nobr><h2><nobr>"],
 		["a rebuilt a behind a marker", "<a><template><applet></template><a>"],
+		// A marquee's marker hides the outer `<b>` from the list, so the rebuilt one
+		// inside it is a second element of the same name rather than the same one.
+		["a name repeated below a marker", "<b><marquee><b><table><a>x"],
 		// §13.2.6.4.7 stops the dd/dt loop at a special element, and generates
 		// implied end tags for an `<hr>` while a `<select>` is in scope.
 		["a list item a select held open", "<dt><p><select><dd>"],
+		// §13.2.6.4.7 stops the `li` loop at a special element that is not
+		// `address`/`div`/`p`, leaving the item below it open.
+		["an item a section kept open", "<ul><li><section><li>x"],
 		["an hr the table held out of a select's scope", "<select><dt><table><hr>"],
 		// The `</form>` a nested form needs generates implied end tags of its own.
 		[
