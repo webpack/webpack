@@ -5813,6 +5813,47 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 	});
 });
 
+describe("CssSyntax — tokens the source never closed", () => {
+	/**
+	 * @param {string} source css
+	 * @returns {string[]} every string token's unescaped value
+	 */
+	const strings = (source) => {
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.String]: {
+					enter: (/** @type {CssPath} */ path) => seen.push(path.unescaped())
+				}
+			})
+			.process(source);
+		return seen;
+	};
+
+	// §4.3.5 returns the string token at EOF too, and that one has no closing quote
+	// to drop — taking one off ate a character of the value.
+	it.each([
+		["a closing quote", "a{b:'xy'}", "xy"],
+		["end of input", "a{b:'xy", "xy"],
+		["a brace end of input swallowed", "a{b:'xy}", "xy}"],
+		["nothing but a brace", "a{b:'}", "}"],
+		["nothing at all", "a{b:'", ""],
+		["an escaped quote before the closing one", "a{b:'a\\''}", "a'"],
+		["an escaped quote at end of input", "a{b:'a\\'", "a'"]
+	])("reads a string ended by %s", (_name, source, value) => {
+		expect(strings(source)).toEqual([value]);
+	});
+
+	it("stops a bad url where the tokenizer stopped it", () => {
+		// §4.3.6 runs the remnants to `)` or EOF, so one ending at EOF would swallow
+		// the `;` and `}` the printer writes after it.
+		expect(
+			new SourceProcessor().process("{b:url(y }", { mode: "beautify" }).code
+		).toBe(" {\nb: url(y });\n}");
+	});
+});
+
 describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 	it("prepends the engine spelling a target needs, keeping the source colons", () => {
 		expect(minifyFor("::placeholder{color:red}", ["chrome 40"])).toBe(
