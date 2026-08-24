@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up concatenated module renaming by walking the ast on node offsets and indexing double-bound names once.
+Speed up concatenated module renaming with ast offsets and a shared-name index.
