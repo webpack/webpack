@@ -3420,6 +3420,11 @@ export interface PerformanceOptions {
 	 */
 	tinyChunks?: boolean;
 	/**
+	 * Report modules that read 'this' at the top level of an ES module, where it is 'undefined' rather than the module object or the global one (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	topLevelThis?: boolean;
+	/**
 	 * Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */

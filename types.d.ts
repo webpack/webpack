@@ -14784,6 +14784,11 @@ declare interface KnownBuildInfo {
 	ineffectivePureAnnotations?: number;
 
 	/**
+	 * how many times the module reads `this` at its top level
+	 */
+	topLevelThis?: number;
+
+	/**
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
@@ -21919,6 +21924,12 @@ declare interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	tinyChunks?: boolean;
+
+	/**
+	 * Report modules that read 'this' at the top level of an ES module, where it is 'undefined' rather than the module object or the global one (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	topLevelThis?: boolean;
 
 	/**
 	 * Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).
