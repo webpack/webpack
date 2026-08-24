@@ -14,13 +14,17 @@
  *
  * ScopeAnalyzer.unittest.js states the analyser's own contract with hand-written
  * expectations; this file states that the contract is still eslint-scope's.
+ *
+ * The reference needs a newer Node than webpack itself supports, so the suite
+ * skips below that — the built-in analyser is covered on every version by
+ * ScopeAnalyzer.unittest.js, which depends on nothing.
  */
 
 const fs = require("fs");
 const path = require("path");
-const eslintScope = require("eslint-scope");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 const analyzeScope = require("../lib/javascript/ScopeAnalyzer");
+const supportsEslintScope = require("./helpers/supportsEslintScope");
 
 /** @import { Program } from "estree" */
 /** @import { AnalyzeOptions, GlobalScope } from "eslint-scope" */
@@ -189,6 +193,10 @@ const resolutions = (root, free) => {
  * @returns {EXPECTED_ANY} the two analyses, normalized
  */
 const analyzeBoth = (code, sourceType) => {
+	// required here rather than at the top: on a Node the suite skips, loading
+	// the reference is what would throw
+	const eslintScope = require("eslint-scope");
+
 	// eslint-scope reads `range` to tell a function's parameter list from its
 	// body, so the parse has to serve it
 	const ast = /** @type {Program} */ (
@@ -470,7 +478,9 @@ const CASES = {
 	}
 };
 
-describe("ScopeAnalyzer matches eslint-scope", () => {
+const describeIfSupported = supportsEslintScope() ? describe : describe.skip;
+
+describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 	for (const [group, cases] of Object.entries(CASES)) {
 		describe(group, () => {
 			for (const [name, entry] of Object.entries(cases)) {
