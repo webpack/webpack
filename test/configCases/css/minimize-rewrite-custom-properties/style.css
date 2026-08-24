@@ -73,3 +73,14 @@
 .v03 { --c: rebeccapurple }
 /*! and the same name in a real color property does shorten */
 .v04 { color: white }
+
+/* A fragment names something and a string is text, so neither is a color the
+   `cssom:` note above may read through — `url(#fff)` and `url(#ffffff)` point
+   at two different elements. */
+
+/*! a fragment keeps every digit it was written with */
+.w01 { --u: url(#fff) }
+.w02 { --u: url(#ffffff) }
+/*! a quoted value is text, hex-shaped or not */
+.w03 { --s: "#fff" }
+.w04 { --s: "0.50" }

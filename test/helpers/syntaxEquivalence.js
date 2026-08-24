@@ -135,6 +135,37 @@ const installHelpers = () => {
 		return `paints ${[...context.getImageData(0, 0, 1, 1).data].join(",")}`;
 	};
 
+	/**
+	 * Rewrite only what stands outside a string or a `url()` body, so a token that
+	 * looks like a color inside either is left as the text it is.
+	 * @param {string} value a value
+	 * @param {(run: string) => string} rewrite what to do with the rest
+	 * @returns {string} the value, rewritten in place
+	 */
+	const outsideText = (value, rewrite) => {
+		let out = "";
+		let run = "";
+		for (let at = 0; at < value.length; at++) {
+			const ch = value[at];
+			const url = /^url\(/i.test(value.slice(at, at + 4));
+			if (ch === '"' || ch === "'" || url) {
+				out += rewrite(run);
+				run = "";
+				const end = url ? ")" : ch;
+				const from = at;
+				if (url) at += 3;
+				for (at += 1; at < value.length; at++) {
+					if (value[at] === "\\") at++;
+					else if (value[at] === end) break;
+				}
+				out += value.slice(from, at + 1);
+				continue;
+			}
+			run += ch;
+		}
+		return out + rewrite(run);
+	};
+
 	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
 	const NEWLINE = /[\n\r\f]/;
 
@@ -320,9 +351,14 @@ const installHelpers = () => {
 		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
 		// A color written into a value the engine cannot compute — a `var()`
 		// fallback — is still a color, and `#ff0` is `rgb(255,255,0)`.
-		out = out.replace(
-			/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
-			(color) => painted(color)
+		// A string is text and a `url()` body names something rather than describing
+		// it, so neither holds a color to read: `url(#fff)` and `url(#ffffff)` point
+		// at two different elements.
+		out = outsideText(out, (run) =>
+			run.replace(
+				/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
+				(color) => painted(color)
+			)
 		);
 		return (
 			out
@@ -385,32 +421,6 @@ const installHelpers = () => {
 		);
 	};
 
-	// Set while a sheet whose fixture says its custom properties are rewritten is
-	// read, so both sides are canonicalized alike rather than either being skipped.
-	let rewrittenCustomProperties = false;
-
-	/**
-	 * A custom property's token stream with each color resolved through the
-	 * engine and each number spelled one way, so a shortened value reads as the
-	 * one it shortens and a changed value still does not.
-	 * @param {string} value the value as written
-	 * @returns {string} it, token by token
-	 */
-	const canonicalTokens = (value) => {
-		const probe = document.createElement("div");
-		return value.replace(
-			/#[\da-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)|(^|[\s,(])(-?)(?:0+(\.\d+)|(\d+\.\d*?)0+)(?=[a-z%]*(?:[\s,)]|$))/g,
-			(token, lead, sign, bare, trailing) => {
-				if (bare !== undefined || trailing !== undefined) {
-					return `${lead}${sign}${bare === undefined ? trailing.replace(/\.$/, "") : `0${bare}`}`;
-				}
-				probe.style.color = "";
-				probe.style.color = token;
-				return probe.style.color === "" ? token : probe.style.color;
-			}
-		);
-	};
-
 	/**
 	 * The engine's computed value for every property a declaration sets, so an
 	 * equivalent respelling (`bold` / `700`, `300ms` / `0.3s`, `rgb(255, 0, 0)` /
@@ -450,9 +460,7 @@ const installHelpers = () => {
 			const lost = probe.style.getPropertyValue(property) === "";
 			const resolved =
 				written || lost
-					? rewrittenCustomProperties && property.startsWith("--")
-						? canonicalTokens(normalizeValue(specified))
-						: normalizeValue(specified)
+					? normalizeValue(specified)
 					: style.getPropertyValue(property);
 			out.push(`${property}${bang}:${painted(canonical(resolved))}`);
 		}
@@ -466,12 +474,9 @@ const installHelpers = () => {
 	 * are resolved by it. A condition is returned as written; the caller replaces
 	 * it with what the engine makes of it.
 	 * @param {string} source the stylesheet
-	 * @param {boolean=} rewritten whether the fixture says its custom property
-	 * values are rewritten, which makes them compare by what they denote
 	 * @returns {Rule[] | null} its rules, or null when it does not parse
 	 */
-	const cssRules = (source, rewritten) => {
-		rewrittenCustomProperties = rewritten === true;
+	const cssRules = (source) => {
 		const sheet = new CSSStyleSheet();
 		try {
 			sheet.replaceSync(source);

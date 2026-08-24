@@ -169,14 +169,7 @@ const variant = (sources, options) =>
  */
 const buildCorpora = () => {
 	const configHtml = buildCorpus(CONFIG_CASES, ".html", (source) => source);
-	// A fixture's own `cssom:` note rides along, so the comparison reads its
-	// custom properties the way the option it names leaves them.
-	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss).map(
-		(each) => ({
-			...each,
-			rewritten: cssomDirective(each.raw).includes("rewriteCustomProperties")
-		})
-	);
+	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss);
 	/** @type {Corpus[]} */
 	const built = [
 		{
@@ -403,8 +396,8 @@ describe("printer output in real Chrome", () => {
 				).__eq;
 				return sheets.map((each) => ({
 					name: each.name,
-					before: cssRules(each.raw, each.rewritten),
-					after: cssRules(each.min, each.rewritten)
+					before: cssRules(each.raw),
+					after: cssRules(each.min)
 				}));
 			}, batch)
 		);
