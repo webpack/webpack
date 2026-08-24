@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix `ReferenceError` from an AMD `define()` result assigned to the wrong module argument.
+Fix `ReferenceError` from AMD `define()` using the wrong module argument.
