@@ -1,6 +1,12 @@
 /* `optimization.minimize.css.rewriteCustomProperties` lets a custom property's
    value be shortened like any other value's — off by default, on here. */
 
+/* cssom: rewriteCustomProperties */
+/* The note above is read by the browser-equivalence run: it minifies this file
+   with that option, and compares each custom property by what its tokens denote
+   rather than by how they are spelled — so a value shortened here reads as the
+   one it shortens, and a value that changed still does not. */
+
 /*! a six-digit hex shortens to three */
 .t01 { --a: #ffffff }
 /*! an eight-digit hex shortens to four */

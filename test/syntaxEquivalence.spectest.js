@@ -100,10 +100,33 @@ const minifyHtml = (source, options) =>
  * @param {string} source a stylesheet
  * @returns {string} the same stylesheet, minified
  */
-const minifyCss = (source) =>
-	/** @type {{ code: string }} */ (
-		new CssSourceProcessor().process(source, { mode: "minify" })
+// A fixture says which minimizer options its own claim is about, so the option
+// the file exists to cover is the one the engine is held to — and the same note
+// tells the comparison which differences the file means to produce.
+const CSSOM_DIRECTIVE = /\/\*\s*cssom:([^*]*)\*\//;
+
+/**
+ * @param {string} source the stylesheet as written
+ * @returns {string[]} the options its `cssom:` note names, empty when it has none
+ */
+const cssomDirective = (source) => {
+	const found = CSSOM_DIRECTIVE.exec(source);
+	return found === null
+		? []
+		: found[1]
+				.trim()
+				.split(/[\s,]+/)
+				.filter(Boolean);
+};
+
+const minifyCss = (source) => {
+	/** @type {{ mode: string, [k: string]: EXPECTED_ANY }} */
+	const options = { mode: "minify" };
+	for (const name of cssomDirective(source)) options[name] = true;
+	return /** @type {{ code: string }} */ (
+		new CssSourceProcessor().process(source, options)
 	).code;
+};
 
 /**
  * One declaration's minified value — `a{…}` is the smallest rule carrying one.
@@ -146,7 +169,14 @@ const variant = (sources, options) =>
  */
 const buildCorpora = () => {
 	const configHtml = buildCorpus(CONFIG_CASES, ".html", (source) => source);
-	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss);
+	// A fixture's own `cssom:` note rides along, so the comparison reads its
+	// custom properties the way the option it names leaves them.
+	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss).map(
+		(each) => ({
+			...each,
+			rewritten: cssomDirective(each.raw).includes("rewriteCustomProperties")
+		})
+	);
 	/** @type {Corpus[]} */
 	const built = [
 		{
@@ -373,8 +403,8 @@ describe("printer output in real Chrome", () => {
 				).__eq;
 				return sheets.map((each) => ({
 					name: each.name,
-					before: cssRules(each.raw),
-					after: cssRules(each.min)
+					before: cssRules(each.raw, each.rewritten),
+					after: cssRules(each.min, each.rewritten)
 				}));
 			}, batch)
 		);
