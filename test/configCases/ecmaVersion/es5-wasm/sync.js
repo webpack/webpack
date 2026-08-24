@@ -3,5 +3,5 @@ it("should load a sync wasm module without leaving es5", function (done) {
 	import("./sync-user").then(function (module) {
 		expect(module.add(1, 2)).toBe(3);
 		done();
-	}, done);
+	}).catch(done);
 });

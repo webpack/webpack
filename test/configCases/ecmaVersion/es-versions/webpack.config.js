@@ -1,6 +1,16 @@
 "use strict";
 
-const VERSIONS = ["es5", "es2015", "es2017", "es2018", "es2020", "es2022"];
+// Every version at which the `esX` preset changes its answer. es2016 and
+// es2019 are not rungs: they read exactly as es2015 and es2018.
+const VERSIONS = [
+	"es5",
+	"es2015",
+	"es2017",
+	"es2018",
+	"es2020",
+	"es2021",
+	"es2022"
+];
 
 /**
  * @param {string} version an `esX` target

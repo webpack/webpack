@@ -164,7 +164,8 @@ and `ConfigCacheTestCases`. See that file for how it reads an environment.
   rather than stepped over. Web targets only.
 
 Two more `test.config.js` fields: `ecmaConformance: true` widens the parse check
-to every emitted asset (the case's own sources must then be es5 too), and
+to every emitted asset, so the case's own sources are held to its
+`output.environment` too, and
 `ecmaConformanceExpected` declares findings deliberate as regexps, each with its
 reason — one that stops matching fails the case.
 

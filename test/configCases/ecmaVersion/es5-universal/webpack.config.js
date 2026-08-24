@@ -1,9 +1,7 @@
 "use strict";
 
-// The neutral platform at its oldest: one bundle for a browser and for Node.js,
-// so no single global identifier is defined on both sides and every DOM access
-// sits behind a guard. A neutral target has no script chunk format it can pick
-// on its own, so this one says which.
+// One bundle for a browser and for Node.js, so no single global identifier is
+// defined on both sides. A neutral target picks no script chunk format itself.
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: ["web", "node", "es5"],

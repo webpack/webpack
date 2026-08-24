@@ -1,8 +1,7 @@
 "use strict";
 
-// ESM output renders its own chunk header and its own analyzable `import()`,
-// neither of which a script target reaches, so the flags are read again here.
-// `import.meta` is es2020, so the versions below it are not asked for.
+// ESM output has its own chunk header and analyzable `import()`. Nothing below
+// es2020 is asked for: `import.meta` is es2020.
 /**
  * @param {string} name variant name
  * @param {import("../../../../declarations/WebpackOptions").Environment} environment what the target lacks
@@ -34,5 +33,6 @@ module.exports = [
 	variant("no-arrow-function", { arrowFunction: false }),
 	variant("no-const", { const: false }),
 	variant("no-optional-chaining", { optionalChaining: false }),
-	variant("no-template-literal", { templateLiteral: false })
+	variant("no-template-literal", { templateLiteral: false }),
+	variant("no-has-own", { hasOwn: false })
 ];

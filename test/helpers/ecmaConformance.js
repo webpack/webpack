@@ -277,7 +277,10 @@ const JAVASCRIPT_ASSET = /\.[cm]?js$/;
 const collectGeneratedCode = (optionsArr, options = {}) => {
 	/** @type {Map<string, Subject>} */
 	const collected = new Map();
-	for (const config of optionsArr) {
+	// Keyed by the config's index, not by `compilation.name`: a runtime module's
+	// identifier is the same in every compilation of a multi-config case, and an
+	// unnamed config has no name to tell them apart either.
+	for (const [index, config] of optionsArr.entries()) {
 		if (!config.plugins) config.plugins = [];
 		config.plugins.push({
 			apply(/** @type {EXPECTED_ANY} */ compiler) {
@@ -313,7 +316,7 @@ const collectGeneratedCode = (optionsArr, options = {}) => {
 										continue;
 									}
 									if (!code) continue;
-									collected.set(runtimeModule.identifier(), {
+									collected.set(`${index} ${runtimeModule.identifier()}`, {
 										code,
 										environment: worklet
 											? { ...environment, module: true }
@@ -327,7 +330,7 @@ const collectGeneratedCode = (optionsArr, options = {}) => {
 							if (!options.assets) return;
 							for (const name of Object.keys(compilation.assets)) {
 								if (!JAVASCRIPT_ASSET.test(name)) continue;
-								collected.set(`asset ${compilation.name || ""} ${name}`, {
+								collected.set(`${index} asset ${name}`, {
 									code: compilation.assets[name].source().toString(),
 									environment,
 									sourceType,

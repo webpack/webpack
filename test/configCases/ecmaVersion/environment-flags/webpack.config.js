@@ -1,10 +1,7 @@
 "use strict";
 
-// Every flag `output.environment` states about the grammar, plus the three it
-// states about the standard library. Each variant turns exactly one off against
-// an otherwise current target: a version sweep only ever reads the flags a
-// version happens to group together, so a guard webpack forgot for one of them
-// hides behind the rest.
+// One flag off per variant, against an otherwise current target: a version
+// groups flags together, so a guard forgotten for one hides behind the rest.
 const FLAGS = [
 	"arrowFunction",
 	"asyncFunction",

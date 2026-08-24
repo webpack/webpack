@@ -103,6 +103,8 @@ class TestRunner {
 		this._esmContext = this.createBaseEsmContext();
 		/** @type {EXPECTED_ANY} */
 		this._moduleScope = this.createBaseModuleScope();
+		/** @type {string} */
+		this._environmentRemovals = "";
 		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
 	}
@@ -226,22 +228,24 @@ class TestRunner {
 	 * A node target shares this process's realm, so there is nothing to remove.
 	 */
 	restrictEnvironment() {
-		if (!this._runInNewContext) return;
 		const output = this.webpackOptions.output || {};
 		const environment = {
 			...(this._targetProperties || undefined),
 			...output.environment
 		};
-		const removals = [
+		this._environmentRemovals = [
 			["globalThis", "delete this.globalThis;"],
 			["symbol", "delete this.Symbol;"],
 			["bigIntLiteral", "delete this.BigInt;"],
 			["hasOwn", "delete Object.hasOwn;"]
 		]
 			.filter(([flag]) => environment[flag] === false)
-			.map(([, statement]) => statement);
-		if (removals.length === 0) return;
-		vm.runInNewContext(removals.join(""), this._globalContext);
+			.map(([, statement]) => statement)
+			.join("");
+		// A node target shares this process's realm, so there is nothing to take
+		// out of it. An ESM context is built per module and restricted there.
+		if (!this._runInNewContext || !this._environmentRemovals) return;
+		vm.runInNewContext(this._environmentRemovals, this._globalContext);
 	}
 
 	/**
@@ -587,13 +591,20 @@ class TestRunner {
 	createEsmRunner() {
 		const asModule = require("./asModule");
 
-		const createEsmContext = () =>
-			vm.createContext(
+		const createEsmContext = () => {
+			const context = vm.createContext(
 				{ ...this._moduleScope, ...this._esmContext },
 				{
 					name: "context for esm"
 				}
 			);
+			// Each ESM context is its own realm, so what `restrictEnvironment` took
+			// out of the script one has to come out of this one too.
+			if (this._environmentRemovals) {
+				vm.runInContext(this._environmentRemovals, context);
+			}
+			return context;
+		};
 
 		/** @type {vm.Context | null} */
 		let esmContext = null;

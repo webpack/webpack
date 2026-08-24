@@ -27,9 +27,8 @@ const variant = (name, experiments) => ({
 	experiments
 });
 
-// The wasm loaders read `fs` and build a fake fetch response, both of which
-// have to come out es5 on an es5 target. Sync and async are separate plugins
-// writing the same shape, so both are read.
+// The wasm loaders read `fs` and build a fake fetch response. Sync and async are
+// separate plugins writing the same shape, so both are read.
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	variant("async", { asyncWebAssembly: true }),

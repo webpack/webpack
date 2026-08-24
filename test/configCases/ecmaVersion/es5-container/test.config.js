@@ -2,5 +2,8 @@
 
 module.exports = {
 	ecmaConformance: true,
-	restrictEnvironment: true
+	restrictEnvironment: true,
+	findBundle() {
+		return ["./remote.js", "./bundle0.js"];
+	}
 };
