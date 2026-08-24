@@ -120,6 +120,21 @@ const cssomDirective = (source) => {
 			}
 			continue;
 		}
+		// `/*` inside an unquoted `url()` is part of the address, not a comment.
+		if (/^url\(/i.test(source.slice(at, at + 4))) {
+			at += 3;
+			let quote = "";
+			while (/[\t\n\f\r ]/.test(source[at + 1] || "")) at++;
+			const opens = source[at + 1];
+			if (opens === '"' || opens === "'") quote = opens;
+			if (quote === "") {
+				for (at += 1; at < source.length; at++) {
+					if (source[at] === "\\") at++;
+					else if (source[at] === ")") break;
+				}
+			}
+			continue;
+		}
 		if (ch !== "/" || source[at + 1] !== "*") continue;
 		const close = source.indexOf("*/", at + 2);
 		const found = CSSOM_DIRECTIVE.exec(
@@ -559,6 +574,36 @@ describe("printer output in real Chrome", () => {
 				},
 				FILE_TIMEOUT
 			);
+
+			// CSS Syntax 4.2 counts five code points as whitespace, and U+00A0 is not
+			// one: it opens no quoted body, so the quote after it ends a bad url.
+			it(
+				"skips no non-breaking space before a url() body",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "nbsp-url-fragment",
+							raw: '.a{--u:url(\u00A0"foo)#fff")}',
+							min: '.a{--u:url(\u00A0"foo)#ffffff")}'
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// `/*` inside an unquoted `url()` is the address, so a fixture whose url
+			// spells one out is naming no option.
+			it("reads no cssom note out of a url() body", () => {
+				expect(
+					cssomDirective(
+						"a{background:url(/*cssom:rewriteCustomProperties*/x)}"
+					)
+				).toEqual([]);
+				expect(
+					cssomDirective("/* cssom: rewriteCustomProperties */a{color:red}")
+				).toEqual(["rewriteCustomProperties"]);
+			});
 
 			// The rules are read layer by layer, and an `@layer` statement is what
 			// fixes those layers' order — so the same blocks written the other way

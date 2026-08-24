@@ -157,7 +157,7 @@ const installHelpers = () => {
 				let quote = url ? "" : ch;
 				if (url) {
 					at += 3;
-					while (/\s/.test(value[at + 1] || "")) at++;
+					while (/[\t\n\f\r ]/.test(value[at + 1] || "")) at++;
 					const opens = value[at + 1];
 					if (opens === '"' || opens === "'") {
 						quote = opens;
