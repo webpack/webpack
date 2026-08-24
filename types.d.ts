@@ -14774,6 +14774,16 @@ declare interface KnownBuildInfo {
 	isCircular?: boolean;
 
 	/**
+	 * true when the module calls `eval` directly
+	 */
+	usesEval?: boolean;
+
+	/**
+	 * how many `#__PURE__` annotations sit where the parser does not read them
+	 */
+	ineffectivePureAnnotations?: number;
+
+	/**
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
@@ -21800,6 +21810,12 @@ declare interface PerformanceOptions {
 	entrypointOverlap?: boolean;
 
 	/**
+	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	evalUsage?: boolean;
+
+	/**
 	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
 	hints?: false | "error" | "stats" | "warning";
@@ -21815,6 +21831,12 @@ declare interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	largeModules?: boolean;
+
+	/**
+	 * Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	legacyJavascript?: boolean;
 
 	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
@@ -21833,10 +21855,22 @@ declare interface PerformanceOptions {
 	missingSideEffects?: boolean;
 
 	/**
+	 * Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	mixedExports?: boolean;
+
+	/**
 	 * Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.
 	 * @since 5.110.0
 	 */
 	osDependentRules?: boolean;
+
+	/**
+	 * Report '/*#__PURE__* /' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	pureAnnotations?: boolean;
 
 	/**
 	 * Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing (requires 'hints' to be enabled).
@@ -21855,6 +21889,12 @@ declare interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	splitChunksCapped?: boolean;
+
+	/**
+	 * Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	tinyChunks?: boolean;
 
 	/**
 	 * Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).

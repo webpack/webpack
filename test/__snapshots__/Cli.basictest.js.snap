@@ -14731,6 +14731,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-eval-usage": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.evalUsage",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-hints": Object {
     "configs": Array [
       Object {
@@ -14776,6 +14789,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-legacy-javascript": Object {
+    "configs": Array [
+      Object {
+        "description": "Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.legacyJavascript",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-max-asset-size": Object {
     "configs": Array [
       Object {
@@ -14815,6 +14841,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-mixed-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.mixedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-os-dependent-rules": Object {
     "configs": Array [
       Object {
@@ -14825,6 +14864,19 @@ Object {
       },
     ],
     "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-pure-annotations": Object {
+    "configs": Array [
+      Object {
+        "description": "Report '/*#__PURE__*/' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.pureAnnotations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report '/*#__PURE__*/' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -14864,6 +14916,19 @@ Object {
       },
     ],
     "description": "Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-tiny-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.tinyChunks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -71,7 +71,11 @@ const JavascriptParser = require("../lib/javascript/JavascriptParser");
 const analyzeScope = require("../lib/javascript/ScopeAnalyzer");
 
 /** @import { Program } from "estree" */
-/** @import { Reference, Scope } from "../lib/javascript/ScopeAnalyzer" */
+
+// The analyser exports one function and hangs the classes off it, so their
+// instance types are read back through it rather than imported by name.
+/** @typedef {InstanceType<typeof analyzeScope.Scope>} Scope */
+/** @typedef {InstanceType<typeof analyzeScope.Reference>} Reference */
 
 /**
  * @typedef {object} Analysis

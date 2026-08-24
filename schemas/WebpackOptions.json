@@ -5406,6 +5406,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "evalUsage": {
+          "description": "Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
           "enum": [false, "warning", "error", "stats"]
@@ -5417,6 +5422,11 @@
         },
         "largeModules": {
           "description": "Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "legacyJavascript": {
+          "description": "Report polyfill packages that emulate language features the target already supports natively (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
@@ -5433,8 +5443,18 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "mixedExports": {
+          "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "osDependentRules": {
           "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "pureAnnotations": {
+          "description": "Report '/*#__PURE__*/' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
@@ -5450,6 +5470,11 @@
         },
         "splitChunksCapped": {
           "description": "Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "tinyChunks": {
+          "description": "Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
