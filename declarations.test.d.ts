@@ -7,38 +7,6 @@ declare module "webpack-dev-server";
 declare module "less";
 declare module "less-loader";
 
-// the reference implementation ScopeAnalyzerParity.unittest.js compares
-// lib/javascript/ScopeAnalyzer.js against; ships no types, and the published
-// ones describe the v5 API webpack used before the replacement
-declare module "eslint-scope" {
-	interface EslintScope {
-		type: string;
-		block: import("estree").Node;
-		upper: EslintScope | null;
-		childScopes: EslintScope[];
-		variables: EslintVariable[];
-		through: EslintReference[];
-	}
-
-	interface EslintVariable {
-		name: string;
-		identifiers: import("estree").Identifier[];
-		references: EslintReference[];
-		scope: EslintScope;
-	}
-
-	interface EslintReference {
-		identifier: import("estree").Identifier;
-		from: EslintScope;
-		resolved: EslintVariable | null;
-	}
-
-	function analyze(
-		ast: import("estree").Program,
-		options?: Record<string, unknown>
-	): { globalScope: EslintScope };
-}
-
 type Env = Record<string, any>;
 type TestOptions = { testPath: string; srcPath: string };
 

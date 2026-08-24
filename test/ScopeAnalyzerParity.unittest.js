@@ -22,14 +22,23 @@ const eslintScope = require("eslint-scope");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 const analyzeScope = require("../lib/javascript/ScopeAnalyzer");
 
-/** @import { Identifier, Node, Program } from "estree" */
+/** @import { Program } from "estree" */
+/** @import { AnalyzeOptions, GlobalScope } from "eslint-scope" */
+
+/**
+ * The only thing this file reads of a node is its source offset, so the
+ * narrowest shape either analyser emits is enough. It has to be this narrow:
+ * eslint-scope types a reference's identifier as `Identifier | JSXIdentifier`,
+ * and a JSX node is not an estree `Node`.
+ * @typedef {{ type: string }} AnyNode
+ */
 
 /**
  * Each analyser builds its own classes, but every field this file reads exists
  * on both. These typedefs are that shared surface.
  * @typedef {object} AnyScope
  * @property {string} type what opened the scope
- * @property {Node} block the node that opened it
+ * @property {AnyNode} block the node that opened it
  * @property {AnyScope[]} childScopes the scopes nested in it
  * @property {AnyVariable[]} variables the bindings it declares
  */
@@ -37,21 +46,21 @@ const analyzeScope = require("../lib/javascript/ScopeAnalyzer");
 /**
  * @typedef {object} AnyVariable
  * @property {string} name the declared name
- * @property {Identifier[]} identifiers declaring occurrences
+ * @property {AnyNode[]} identifiers declaring occurrences
  * @property {AnyReference[]} references occurrences that resolved here
  * @property {AnyScope} scope the declaring scope
  */
 
 /**
  * @typedef {object} AnyReference
- * @property {Identifier} identifier the identifier node
+ * @property {AnyNode} identifier the identifier node
  * @property {AnyVariable | null | undefined} resolved the binding it resolved to, absent when free
  */
 
 /**
  * The options webpack passed eslint-scope before the replacement, so the
  * reference is the analyser webpack actually shipped rather than eslint's
- * defaults. Two of them matter here:
+ * defaults. Three of them matter here:
  *
  * - `sourceType` is always `module`: the built-in analyser analyses generated
  *   module sources and so has no script mode, whatever a case parsed as.
@@ -60,10 +69,10 @@ const analyzeScope = require("../lib/javascript/ScopeAnalyzer");
  * - `ignoreEval` stops a direct `eval()` call from making its enclosing scopes
  *   dynamic, which under eslint's defaults leaves the whole chain unresolved.
  *
- * `fallback` is this file's own: eslint-scope's visitor keys predate some of
- * the syntax webpack's parser accepts, and the built-in analyser walks an
- * unknown node type rather than dropping it.
- * @type {EXPECTED_ANY}
+ * `fallback` is this file's own, and covers nothing today: it keeps the two
+ * agreeing on syntax eslint-scope's visitor keys have not caught up with,
+ * which the built-in analyser walks rather than drops.
+ * @type {AnalyzeOptions}
  */
 const REFERENCE_OPTIONS = {
 	ecmaVersion: 6,
@@ -75,7 +84,7 @@ const REFERENCE_OPTIONS = {
 };
 
 /**
- * @param {Node} node any node
+ * @param {AnyNode} node any node
  * @returns {number} its start offset
  */
 const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
@@ -189,7 +198,9 @@ const analyzeBoth = (code, sourceType) => {
 	// webpack reads references back from the module scope alone; the reference
 	// records them everywhere, so ask for the same
 	const ours = analyzeScope(ast, true);
-	const theirs = eslintScope.analyze(ast, REFERENCE_OPTIONS);
+	const theirs = /** @type {GlobalScope} */ (
+		eslintScope.analyze(ast, REFERENCE_OPTIONS).globalScope
+	);
 
 	return {
 		ours: {
@@ -200,11 +211,8 @@ const analyzeBoth = (code, sourceType) => {
 			)
 		},
 		theirs: {
-			tree: normalizeScope(/** @type {AnyScope} */ (theirs.globalScope)),
-			resolutions: resolutions(
-				/** @type {AnyScope} */ (theirs.globalScope),
-				theirs.globalScope.through
-			)
+			tree: normalizeScope(/** @type {AnyScope} */ (theirs)),
+			resolutions: resolutions(/** @type {AnyScope} */ (theirs), theirs.through)
 		}
 	};
 };
