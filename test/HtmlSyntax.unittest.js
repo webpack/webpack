@@ -7799,9 +7799,26 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		[
 			"a run beside a table a template holds",
 			"<table><mtext><template><table><tfoot><rt><rtc>"
-		]
+		],
+		// A parser-implied element carries attributes once a later tag merges them
+		// on, so it prints its tags — and it has no name in the source to echo.
+		[
+			"a comment behind an implied html the source gave attributes",
+			"ab<html B=2 a=1></html><!--0-->"
+		],
+		["one behind an implied body", "</body><!--x--><body class=b>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
+	});
+
+	it("closes a merged-attribute implied element by name, not with `</>`", () => {
+		// Its end tag is generated from the source range, which a parser-inserted
+		// element does not have — the slice of one spells `</>`.
+		expect(
+			new SourceProcessor().process("ab<html B=2 a=1></html><!--0-->", {
+				mode: "beautify"
+			}).code
+		).toBe('<html b="2" a="1">ab</html><!--0-->');
 	});
 
 	it("prints a run it cannot re-nest from the source that built it", () => {
