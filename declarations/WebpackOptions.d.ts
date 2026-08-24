@@ -3313,11 +3313,6 @@ export interface PerformanceOptions {
 	 */
 	conflictingResourceHints?: boolean;
 	/**
-	 * Report bindings declared 'const' that are written to, which throws a TypeError in the strict mode an ES module runs in (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	constReassignment?: boolean;
-	/**
 	 * Report modules emitted into more than one chunk, and the bytes the extra copies cost (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3394,11 +3389,6 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	mixedExports?: boolean;
-	/**
-	 * Report namespaces imported with 'import * as' and then called, which throws a TypeError because a module namespace is an object rather than a function (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	namespaceCall?: boolean;
 	/**
 	 * Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.
 	 * @since 5.110.0

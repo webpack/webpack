@@ -14692,19 +14692,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "performance-const-reassignment": Object {
-    "configs": Array [
-      Object {
-        "description": "Report bindings declared 'const' that are written to, which throws a TypeError in the strict mode an ES module runs in (requires 'hints' to be enabled).",
-        "multiple": false,
-        "path": "performance.constReassignment",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report bindings declared 'const' that are written to, which throws a TypeError in the strict mode an ES module runs in (requires 'hints' to be enabled).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "performance-duplicate-modules": Object {
     "configs": Array [
       Object {
@@ -14916,19 +14903,6 @@ Object {
       },
     ],
     "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "performance-namespace-call": Object {
-    "configs": Array [
-      Object {
-        "description": "Report namespaces imported with 'import * as' and then called, which throws a TypeError because a module namespace is an object rather than a function (requires 'hints' to be enabled).",
-        "multiple": false,
-        "path": "performance.namespaceCall",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report namespaces imported with 'import * as' and then called, which throws a TypeError because a module namespace is an object rather than a function (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
