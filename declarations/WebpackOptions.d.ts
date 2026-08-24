@@ -3347,6 +3347,11 @@ export interface PerformanceOptions {
 	 */
 	hotspots?: boolean;
 	/**
+	 * Report assets inlined as data urls that are large enough for the base64 cost and the lost caching to outweigh the request they save (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	inlinedAssets?: boolean;
+	/**
 	 * Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
