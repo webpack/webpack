@@ -109,13 +109,32 @@ const CSSOM_DIRECTIVE = /\/\*\s*cssom:([^*]*)\*\//;
  * @returns {string[]} the options its `cssom:` note names, empty when it has none
  */
 const cssomDirective = (source) => {
-	const found = CSSOM_DIRECTIVE.exec(source);
-	return found === null
-		? []
-		: found[1]
+	// Read from the comments alone: the same text inside a string is a value the
+	// fixture prints, not a note about how to minify it.
+	for (let at = 0; at < source.length; at++) {
+		const ch = source[at];
+		if (ch === '"' || ch === "'") {
+			for (at++; at < source.length; at++) {
+				if (source[at] === "\\") at++;
+				else if (source[at] === ch) break;
+			}
+			continue;
+		}
+		if (ch !== "/" || source[at + 1] !== "*") continue;
+		const close = source.indexOf("*/", at + 2);
+		const found = CSSOM_DIRECTIVE.exec(
+			source.slice(at, close === -1 ? source.length : close + 2)
+		);
+		if (found !== null) {
+			return found[1]
 				.trim()
 				.split(/[\s,]+/)
 				.filter(Boolean);
+		}
+		if (close === -1) break;
+		at = close + 1;
+	}
+	return [];
 };
 
 const minifyCss = (source) => {
@@ -502,8 +521,8 @@ describe("printer output in real Chrome", () => {
 				);
 			}
 
-			// A `)` inside a quoted `url()` belongs to the address, so the scan for
-			// the call's end must not stop there and read a color out of the rest.
+			// A `)` inside a quoted `url()` belongs to the address; one met after an
+			// illegal quote ends the bad url, and the rest is a color again.
 			it(
 				"reads no color out of a quoted url() body",
 				async () => {
@@ -520,6 +539,23 @@ describe("printer output in real Chrome", () => {
 							why: 'rule 0:  .a { --u:url("assets/)#fff") } vs  .a { --u:url("assets/)#ffffff") }'
 						}
 					]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// CSS Syntax 4.3.6: the quote is a parse error, and recovery ends the url
+			// at the next `)`, so the hex after it is read as the color it is.
+			it(
+				"ends a bad url() at the paren its recovery reaches",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "bad-url-fragment",
+							raw: '.a{--u:url(foo")#fff)}',
+							min: '.a{--u:url(foo")#ffffff)}'
+						}
+					]);
+					expect(differences).toEqual([]);
 				},
 				FILE_TIMEOUT
 			);

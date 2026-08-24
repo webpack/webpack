@@ -151,24 +151,27 @@ const installHelpers = () => {
 			if (ch === '"' || ch === "'" || url) {
 				out += rewrite(run);
 				run = "";
-				const end = url ? ")" : ch;
 				const from = at;
-				if (url) at += 3;
-				let quote = "";
-				for (at += 1; at < value.length; at++) {
-					const here = value[at];
-					if (here === "\\") {
+				// CSS Syntax 4.3.6: only a quote opening the body makes it a string;
+				// one met later is a parse error whose recovery ends at the next `)`.
+				let quote = url ? "" : ch;
+				if (url) {
+					at += 3;
+					while (/\s/.test(value[at + 1] || "")) at++;
+					const opens = value[at + 1];
+					if (opens === '"' || opens === "'") {
+						quote = opens;
 						at++;
 					}
-					// A `url()` body may be quoted, and a `)` inside those quotes is
-					// part of the address rather than the end of the call.
-					else if (quote !== "") {
-						if (here === quote) quote = "";
-					} else if (url && (here === '"' || here === "'")) {
-						quote = here;
-					} else if (here === end) {
-						break;
-					}
+				}
+				const end = quote === "" ? ")" : quote;
+				for (at += 1; at < value.length; at++) {
+					if (value[at] === "\\") at++;
+					else if (value[at] === end) break;
+				}
+				// A quoted body leaves the call's own `)` still to step over.
+				if (url && quote !== "") {
+					while (at < value.length && value[at] !== ")") at++;
 				}
 				out += value.slice(from, at + 1);
 				continue;
