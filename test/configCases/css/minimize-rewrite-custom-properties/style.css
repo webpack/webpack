@@ -72,8 +72,7 @@
 /*! and the same name in a real color property does shorten */
 .v04 { color: white }
 
-/* A fragment names something and a string is text, so neither holds a color:
-   `url(#fff)` and `url(#ffffff)` point at two different elements. */
+/* A fragment names something and a string is text, so neither holds a color. */
 
 /*! a fragment keeps every digit it was written with */
 .w01 { --u: url(#fff) }

@@ -136,8 +136,8 @@ const installHelpers = () => {
 	};
 
 	/**
-	 * Rewrite only what stands outside a string or a `url()` body, so a token that
-	 * looks like a color inside either is left as the text it is.
+	 * Rewrite only what stands outside a string or a `url()` body, where a
+	 * color-shaped token is text.
 	 * @param {string} value a value
 	 * @param {(run: string) => string} rewrite what to do with the rest
 	 * @returns {string} the value, rewritten in place
@@ -154,9 +154,21 @@ const installHelpers = () => {
 				const end = url ? ")" : ch;
 				const from = at;
 				if (url) at += 3;
+				let quote = "";
 				for (at += 1; at < value.length; at++) {
-					if (value[at] === "\\") at++;
-					else if (value[at] === end) break;
+					const here = value[at];
+					if (here === "\\") {
+						at++;
+					}
+					// A `url()` body may be quoted, and a `)` inside those quotes is
+					// part of the address rather than the end of the call.
+					else if (quote !== "") {
+						if (here === quote) quote = "";
+					} else if (url && (here === '"' || here === "'")) {
+						quote = here;
+					} else if (here === end) {
+						break;
+					}
 				}
 				out += value.slice(from, at + 1);
 				continue;

@@ -502,6 +502,28 @@ describe("printer output in real Chrome", () => {
 				);
 			}
 
+			// A `)` inside a quoted `url()` belongs to the address, so the scan for
+			// the call's end must not stop there and read a color out of the rest.
+			it(
+				"reads no color out of a quoted url() body",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "quoted-url-fragment",
+							raw: '.a{--u:url("assets/)#fff")}',
+							min: '.a{--u:url("assets/)#ffffff")}'
+						}
+					]);
+					expect(differences).toEqual([
+						{
+							name: "quoted-url-fragment",
+							why: 'rule 0:  .a { --u:url("assets/)#fff") } vs  .a { --u:url("assets/)#ffffff") }'
+						}
+					]);
+				},
+				FILE_TIMEOUT
+			);
+
 			// The rules are read layer by layer, and an `@layer` statement is what
 			// fixes those layers' order — so the same blocks written the other way
 			// round under one are the same sheet, wherever each block stands.
