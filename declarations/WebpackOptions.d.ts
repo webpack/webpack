@@ -3328,6 +3328,11 @@ export interface PerformanceOptions {
 	 */
 	dynamicExports?: boolean;
 	/**
+	 * Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	embeddedSourceMaps?: boolean;
+	/**
 	 * Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
