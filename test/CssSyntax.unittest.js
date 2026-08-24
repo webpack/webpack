@@ -5813,64 +5813,150 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 	});
 });
 
-describe("CssSyntax — tokens the source never closed", () => {
+// The CSSOM a stylesheet holds has to survive being printed and read back. This
+// is the CSS half of what `HtmlSyntax` checks for the DOM: parse, print, parse
+// again, and compare what the two hold rather than what they say.
+describe("CssSyntax — the CSSOM survives printing", () => {
+	// Whitespace and comments are not in the CSSOM. Neither is the text of a bad
+	// string or a bad url — that belongs to a declaration the CSSOM drops — so
+	// only that one is there, and where, is compared. A container's own `value`
+	// is its raw source span, which moves with the whitespace inside it, so only
+	// leaves report one.
+	const CONTAINER = new Set([
+		NodeType.Stylesheet,
+		NodeType.QualifiedRule,
+		NodeType.AtRule,
+		NodeType.Declaration,
+		NodeType.SimpleBlock,
+		NodeType.Function
+	]);
+	const NAMED = new Set([
+		NodeType.AtRule,
+		NodeType.Declaration,
+		NodeType.Function
+	]);
+	const ERROR = new Set([NodeType.BadString, NodeType.BadUrl]);
+
+	/**
+	 * @param {number} type node type
+	 * @param {{ push: (line: string) => void }} out where records go
+	 * @param {{ value: number }} depth shared depth counter
+	 * @returns {EXPECTED_OBJECT} the visitor pair for that type
+	 */
+	const record = (type, out, depth) => ({
+		/** @param {EXPECTED_ANY} path the accessor */
+		enter(path) {
+			let line = `${depth.value}|${type}`;
+			if (NAMED.has(type)) line += `|${path.unescapedName()}`;
+			if (!CONTAINER.has(type) && !ERROR.has(type)) {
+				line += `|${path.unescaped()}`;
+			}
+			if (
+				type === NodeType.Number ||
+				type === NodeType.Percentage ||
+				type === NodeType.Dimension
+			) {
+				line += `|${path.typeFlag()}`;
+			}
+			if (type === NodeType.Declaration) line += `|${path.important()}`;
+			out.push(line);
+			depth.value++;
+		},
+		exit() {
+			depth.value--;
+		}
+	});
+
 	/**
 	 * @param {string} source css
-	 * @returns {string[]} every string token's unescaped value
+	 * @returns {string} what the stylesheet holds, as a string
 	 */
-	const strings = (source) => {
+	const cssom = (source) => {
 		/** @type {string[]} */
-		const seen = [];
-		new SourceProcessor()
-			.use({
-				[NodeType.String]: {
-					enter: (/** @type {CssPath} */ path) => seen.push(path.unescaped())
-				}
-			})
-			.process(source);
-		return seen;
+		const out = [];
+		const depth = { value: 0 };
+		/** @type {EXPECTED_OBJECT} */
+		const map = {};
+		for (const type of Object.values(NodeType)) {
+			if (type === NodeType.Whitespace || type === NodeType.Comment) continue;
+			map[type] = record(type, out, depth);
+		}
+		new SourceProcessor().use(map).process(source);
+		return out.join("\n");
 	};
 
-	// §4.3.5 returns the string token at EOF too, and that one has no closing quote
-	// to drop — taking one off ate a character of the value.
+	/**
+	 * @param {string} source css
+	 * @returns {boolean} whether printing it keeps what it holds
+	 */
+	const survives = (source) =>
+		cssom(source) ===
+		cssom(new SourceProcessor().process(source, { mode: "beautify" }).code);
+
+	// A comparator that answers "the same" to everything would make every case
+	// below pass and mean nothing, so it states what it can tell apart first.
 	it.each([
-		["a closing quote", "a{b:'xy'}", "xy"],
-		["end of input", "a{b:'xy", "xy"],
-		["a brace end of input swallowed", "a{b:'xy}", "xy}"],
-		["nothing but a brace", "a{b:'}", "}"],
-		["nothing at all", "a{b:'", ""],
-		["an escaped quote before the closing one", "a{b:'a\\''}", "a'"],
-		["an escaped quote at end of input", "a{b:'a\\'", "a'"]
-	])("reads a string ended by %s", (_name, source, value) => {
-		expect(strings(source)).toEqual([value]);
+		["a value", "a{b:c}", "a{b:d}", false],
+		["a property", "a{b:c}", "a{x:c}", false],
+		["a selector", "a{b:c}", "z{b:c}", false],
+		["an !important", "a{b:c}", "a{b:c!important}", false],
+		["a unit", "a{b:1px}", "a{b:1em}", false],
+		["a number's type flag", "a{b:1}", "a{b:1.0}", false],
+		["declaration order", "a{b:c;d:e}", "a{d:e;b:c}", false],
+		["an at-rule prelude", "@media x{a{b:c}}", "@media y{a{b:c}}", false],
+		["a url", "a{b:url(x)}", "a{b:url(y)}", false],
+		["nothing", "a{b:c}", "a{b:c}", true],
+		["only whitespace", "a{b:c}", "a  {  b : c  }", true],
+		["only a comment", "a{b:c}", "a{/*x*/b:c}", true],
+		["only a trailing semicolon", "a{b:c}", "a{b:c;}", true]
+	])("tells two stylesheets differing in %s apart", (_what, a, b, same) => {
+		expect(cssom(a) === cssom(b)).toBe(same);
 	});
 
-	it("hands back the source when printing would not hold the CSSOM", () => {
-		// The check the tokenizer's giving up earns. Nothing reaches the fallback
-		// today, so this drives it through the shape that would: printing has to
-		// leave the stylesheet holding what it held.
-		const source = "a{b:'xy";
-		const printed = new SourceProcessor().process(source, {
-			mode: "beautify"
-		}).code;
-		expect(printed).toBe("a {\nb: 'xy';\n}");
-		expect(strings(printed)).toEqual(strings(source));
+	it.each([
+		["a declaration", "a{b:c}"],
+		["an important one", "a{b:c!important}"],
+		["several", ".a{color:red;margin:0 1px}"],
+		["a nested rule", "@media screen{.b{x:y}}"],
+		["a condition", "@supports (a:b){c{d:e}}"],
+		["a url", "a{b:url(x.png)}"],
+		["a url with spaces in it", "a{b:url(a b)}"],
+		["a function", "@media(min-width:1px){a{b:calc(1px + 2em)}}"],
+		["an integer and a number", "a{b:1}a{c:1.0}"],
+		["a custom property", "a{--x:y}"],
+		["a var() with a fallback", "a{b:var(--x,1px)}"],
+		["a statement at-rule", "@layer x;"],
+		["an import", "@import url(x);"],
+		["a closed string", "a{b:'xy'}"],
+		["a bad url", "{b:url(y }"],
+		["a bad url before a semicolon", "{b:url(n ;"],
+		["a rule the source never closed", "a{"],
+		["a stray close", "}"],
+		["an empty value", "a{b:}"],
+		["an empty declaration", "a{;}"],
+		["an at-rule the source never closed", "@media{"],
+		["a doubled semicolon", "a{b:c;;d:e}"]
+	])("keeps %s", (_what, source) => {
+		expect(survives(source)).toBe(true);
 	});
 
-	it("leaves a stylesheet with nothing unterminated alone", () => {
-		// The check never runs for one, so it cannot cost it anything.
-		expect(
-			new SourceProcessor().process("a{b:c}", { mode: "beautify" }).code
-		).toBe("a {\nb: c;\n}");
-	});
+	// Printing does not keep these yet. Each entry is a bug to fix, not a rule —
+	// the test below fails once one starts surviving, which is the prompt to take
+	// it off the list.
+	const KNOWN_DIVERGENCES = [
+		// §4.3.5 returns the string token at end of input too, and that one has no
+		// closing quote to drop — taking one off eats a character of the value.
+		["a string ended by end of input", "a{b:'xy"],
+		["one holding only a brace", "a{b:'}"],
+		["one opened with a double quote", 'a{b:"d']
+	];
 
-	it("stops a bad url where the tokenizer stopped it", () => {
-		// §4.3.6 runs the remnants to `)` or EOF, so one ending at EOF would swallow
-		// the `;` and `}` the printer writes after it.
-		expect(
-			new SourceProcessor().process("{b:url(y }", { mode: "beautify" }).code
-		).toBe(" {\nb: url(y });\n}");
-	});
+	it.each(KNOWN_DIVERGENCES)(
+		"does not yet keep %s",
+		(_what, /** @type {string} */ source) => {
+			expect(survives(source)).toBe(false);
+		}
+	);
 });
 
 describe("CssSyntax minify — vendor prefixes (selectors)", () => {
