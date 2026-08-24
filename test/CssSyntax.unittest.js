@@ -5845,6 +5845,25 @@ describe("CssSyntax — tokens the source never closed", () => {
 		expect(strings(source)).toEqual([value]);
 	});
 
+	it("hands back the source when printing would not hold the CSSOM", () => {
+		// The check the tokenizer's giving up earns. Nothing reaches the fallback
+		// today, so this drives it through the shape that would: printing has to
+		// leave the stylesheet holding what it held.
+		const source = "a{b:'xy";
+		const printed = new SourceProcessor().process(source, {
+			mode: "beautify"
+		}).code;
+		expect(printed).toBe("a {\nb: 'xy';\n}");
+		expect(strings(printed)).toEqual(strings(source));
+	});
+
+	it("leaves a stylesheet with nothing unterminated alone", () => {
+		// The check never runs for one, so it cannot cost it anything.
+		expect(
+			new SourceProcessor().process("a{b:c}", { mode: "beautify" }).code
+		).toBe("a {\nb: c;\n}");
+	});
+
 	it("stops a bad url where the tokenizer stopped it", () => {
 		// §4.3.6 runs the remnants to `)` or EOF, so one ending at EOF would swallow
 		// the `;` and `}` the printer writes after it.
