@@ -170,7 +170,8 @@ reason — one that stops matching fails the case.
 
 Under `ecmaVersion/`, the `es5-*` cases cover one runtime-emitting feature each
 (jsonp, `importScripts`, `require` and read-file chunk loading, workers and
-asset urls, css, hot updates, wasm, the library wrappers, Module Federation);
+asset urls, css, hot updates, wasm, the library wrappers, Module Federation,
+the neutral platform);
 `es-versions` sweeps every rung of the `esX` ladder; `environment-flags` turns
 each flag off on its own against an otherwise current target, which a version
 sweep cannot do; and `esm-environment` repeats both over ESM output.
