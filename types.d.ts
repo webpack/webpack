@@ -25198,6 +25198,12 @@ declare abstract class RuntimeTemplate {
 	getBuiltinModule(request: string, access?: string): string;
 
 	/**
+	 * Renders a `then` callback calling `fn` with `args`. An arrow keeps the `this`
+	 * a method call gives; the bound form is shorter without arrows.
+	 */
+	deferredCall(fn: string, args: string): string;
+
+	/**
 	 * Renders an object-literal method, using method shorthand when supported
 	 * and falling back to a `prop: function/arrow` property otherwise.
 	 */
@@ -29638,6 +29644,7 @@ declare namespace exports {
 		export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
 		export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
 		export let definePropertyGetters: "__webpack_require__.d";
+		export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
 		export let ensureChunk: "__webpack_require__.e";
 		export let ensureChunkHandlers: "__webpack_require__.f";
 		export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";

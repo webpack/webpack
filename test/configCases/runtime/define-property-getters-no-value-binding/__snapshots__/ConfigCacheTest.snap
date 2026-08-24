@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases runtime define-property-getters-no-value-binding exported tests should drop the array branch of __webpack_require__.d 1`] = `
+Array [
+  "	__webpack_require__.d = (exports, definition) => {",
+  "		for(var key in definition) {",
+  "			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {",
+  "				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });",
+  "			}",
+  "		}",
+  "	};",
+]
+`;

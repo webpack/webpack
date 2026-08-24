@@ -140,13 +140,8 @@ module.exports = {
 			// reachable filename it produces actually exists on disk.
 			const bundleContent = fs.readFileSync(path.join(dir, bundle), "utf8");
 
-			// Locate a chunk-URL helper for a given property (`u` / `k`)
-			// and extension. Webpack emits the body as either
-			//   `(chunkId) => { … return "<dir>/async." + chunkId + "." + <expr> + ".<ext>"; }`
-			// or, when `output.environment.arrowFunction` is false, the
-			// equivalent `function (chunkId) { … }` form. We accept either
-			// — the regex anchors on `chunkId` and the `".<ext>"` tail,
-			// not on the surrounding function syntax. `<expr>` is one of:
+			// Locate a chunk-URL helper (`u` / `k`), anchored on `chunkId` and the
+			// `".<ext>"` tail so arrow, `return` and `function` forms all match. `<expr>`:
 			//   a) per-chunk map: `{"async_js":"<h>","async_css":"<h>"}[chunkId]`
 			//   b) inlined literal: `"<h>"` (when only one chunk applies)
 			//   c) compilation-hash helper: `__webpack_require__.h()`
@@ -155,7 +150,7 @@ module.exports = {
 			// be an arrow or function form returning the hash literal.
 			const extractChunkHashExpr = (prop, ext) => {
 				const re = new RegExp(
-					`\\.${prop}\\s*=\\s*(?:\\(\\s*chunkId\\s*\\)|function\\s*\\(\\s*chunkId\\s*\\))[\\s\\S]*?return\\s+"[^"]+"\\s*\\+\\s*chunkId\\s*\\+\\s*"\\."\\s*\\+\\s*([\\s\\S]*?)\\s*\\+\\s*"\\.${ext}";`
+					`\\.${prop}\\s*=\\s*(?:\\(\\s*chunkId\\s*\\)|function\\s*\\(\\s*chunkId\\s*\\))[\\s\\S]*?(?:return|=>)\\s*\\(?\\s*"[^"]+"\\s*\\+\\s*chunkId\\s*\\+\\s*"\\."\\s*\\+\\s*([\\s\\S]*?)\\s*\\+\\s*"\\.${ext}"\\)?;`
 				);
 				const m = bundleContent.match(re);
 				return m ? m[1] : null;
