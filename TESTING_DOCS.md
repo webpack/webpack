@@ -153,47 +153,24 @@ runtimes can load it.
 
 ### Generated code is held to `output.environment`
 
-An old browser cannot be launched in CI, so the two things it would tell us are
-answered separately, by `test/helpers/ecmaConformance.js`, over every
-`configCases` case in `ConfigTestCases` and `ConfigCacheTestCases`:
+No old browser runs in CI, so `test/helpers/ecmaConformance.js` asks the two
+questions one would answer, over every `configCases` case in `ConfigTestCases`
+and `ConfigCacheTestCases`. See that file for how it reads an environment.
 
-- **Will it parse?** Every runtime module a build renders is parsed against the
-  environment it was rendered for. Syntax that `output.environment` names
-  (`arrowFunction`, `const`, `templateLiteral`, …) is reported by its flag, and
-  syntax carrying no flag (classes, default parameters, `??`) by the version
-  tier the flags put the target at. Nothing here is a hand-written list of
-  ECMAScript versions: the ladder and the tiers are read back out of the `esX`
-  preset in `lib/config/target.js`, and a flag added there that nobody
-  classifies as grammar or as a library capability throws rather than passing
-  quietly. No case has to opt in — a runtime module is webpack's code start to
-  finish.
-- **Will it run?** `restrictEnvironment: true` in a case's `test.config.js`
-  takes out of the bundle's realm what `output.environment` says the target has
-  not got (`globalThis`, `Symbol`, `BigInt`, `Object.hasOwn`), so a guard
-  webpack emits around one of them is taken rather than stepped over. Web
-  targets only — a node target shares this process's realm.
+- **Will it parse?** Always on: every runtime module a build renders is parsed
+  against the environment it was rendered for.
+- **Will it run?** `restrictEnvironment: true` in `test.config.js` removes from
+  the bundle's realm what the target lacks, so webpack's guards are taken
+  rather than stepped over. Web targets only.
 
-`ecmaConformance: true` widens the first check from webpack's runtime modules to
-**every emitted JavaScript asset**, which also holds the case's own sources to
-the target. The `ecmaVersion/es5-*` cases set both and cover one runtime-emitting
-feature each — jsonp, `importScripts`, `require` and read-file chunk loading,
-workers and asset urls, css, hot updates, the library wrappers, and Module
-Federation.
+Two more `test.config.js` fields: `ecmaConformance: true` widens the parse check
+to every emitted asset (the case's own sources must then be es5 too), and
+`ecmaConformanceExpected` declares findings deliberate as regexps, each with its
+reason — one that stops matching fails the case.
 
-Two things are excused. Webpack's own `EnvironmentNotSupportAsyncWarning`: a
-build that already warned it can lower a module to neither `async` nor a
-generator has reported what this check would report again. And whatever a case
-declares in `ecmaConformanceExpected` — an array of regexps, each with the
-reason next to it, for generated code that outruns the target on purpose
-(`wasm/esm-without-dynamic-import` is the worked example: ESM output has no
-`require`, so the wasm loader takes the `import()` branch whatever
-`environment.dynamicImport` says). A declaration that stops matching fails the
-case, so none outlives what it excused.
-
-An environment that is not an ECMAScript version — one that turns a single
-grammar flag off, say `templateLiteral: false` — is held to its flags alone.
-One feature missing is not a target that also lost arrow functions, and there
-is no version to read unflagged syntax against.
+The `ecmaVersion/es5-*` cases cover one runtime-emitting feature each: jsonp,
+`importScripts`, `require` and read-file chunk loading, workers and asset urls,
+css, hot updates, wasm, the library wrappers, and Module Federation.
 
 ## How to Run Tests
 
