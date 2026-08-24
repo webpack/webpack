@@ -51,12 +51,9 @@ describe("getAllReferences", () => {
 		expect(at(outer.references).length).toBeLessThan(
 			at(getAllReferences(outer)).length
 		);
-		// every occurrence has to be renamed, inner ones included
-		expect(at(getAllReferences(outer)).sort()).toEqual([
-			"C@23",
-			"C@30",
-			"C@37"
-		]);
+		// every occurrence has to be renamed, inner ones included; the inner
+		// reference is appended after the binding's own, which the order pins
+		expect(at(getAllReferences(outer))).toEqual(["C@30", "C@37", "C@23"]);
 	});
 
 	it("returns the same references when the index is already built", () => {
