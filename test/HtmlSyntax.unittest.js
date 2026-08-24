@@ -7789,7 +7789,17 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			"<form><center></form><rt><form>"
 		],
 		// §13.2.6.4.7's close-a-p list is not §4.13's tag-omission list.
-		["a p closed by a start tag only the parser lists", "<p><table><center>"]
+		["a p closed by a start tag only the parser lists", "<p><table><center>"],
+		// The run and the table's own children only read in source order while the
+		// two do not overlap.
+		[
+			"a run written inside a sibling's span",
+			"<rb><table><tbody><rb><th><table> </h2>x\n<li>"
+		],
+		[
+			"a run beside a table a template holds",
+			"<table><mtext><template><table><tfoot><rt><rtc>"
+		]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
