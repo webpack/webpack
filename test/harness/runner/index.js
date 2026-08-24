@@ -105,6 +105,8 @@ class TestRunner {
 		this._moduleScope = this.createBaseModuleScope();
 		/** @type {string} */
 		this._environmentRemovals = "";
+		/** @type {boolean} */
+		this._environmentRestricted = false;
 		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
 	}
@@ -233,19 +235,30 @@ class TestRunner {
 			...(this._targetProperties || undefined),
 			...output.environment
 		};
-		this._environmentRemovals = [
-			["globalThis", "delete this.globalThis;"],
-			["symbol", "delete this.Symbol;"],
-			["bigIntLiteral", "delete this.BigInt;"],
-			["hasOwn", "delete Object.hasOwn;"]
-		]
-			.filter(([flag]) => environment[flag] === false)
+		const removed = [
+			["globalThis", "delete this.globalThis;", "typeof globalThis"],
+			["symbol", "delete this.Symbol;", "typeof Symbol"],
+			["bigIntLiteral", "delete this.BigInt;", "typeof BigInt"],
+			["hasOwn", "delete Object.hasOwn;", "typeof Object.hasOwn"]
+		].filter(([flag]) => environment[flag] === false);
+		this._environmentRemovals = removed
 			.map(([, statement]) => statement)
 			.join("");
 		// A node target shares this process's realm, so there is nothing to take
 		// out of it. An ESM context is built per module and restricted there.
-		if (!this._runInNewContext || !this._environmentRemovals) return;
-		vm.runInNewContext(this._environmentRemovals, this._globalContext);
+		if (this._runInNewContext && this._environmentRemovals) {
+			vm.runInNewContext(this._environmentRemovals, this._globalContext);
+			// Not every host's `vm` gives the sandbox a realm of its own — Bun's
+			// does not, so the removals do not take there. Say which happened
+			// rather than letting a case assert what the realm never did.
+			this._environmentRestricted = vm.runInNewContext(
+				removed.map(([, , probe]) => `${probe} === "undefined"`).join(" && "),
+				this._globalContext
+			);
+		}
+		this.mergeModuleScope({
+			__ENVIRONMENT_RESTRICTED__: this._environmentRestricted
+		});
 	}
 
 	/**
