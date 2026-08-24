@@ -2,10 +2,8 @@
    value be shortened like any other value's — off by default, on here. */
 
 /* cssom: rewriteCustomProperties */
-/* The note above is read by the browser-equivalence run: it minifies this file
-   with that option, and compares each custom property by what its tokens denote
-   rather than by how they are spelled — so a value shortened here reads as the
-   one it shortens, and a value that changed still does not. */
+/* The note above tells the browser-equivalence run to minify this file with
+   that option, so the engine is held to what it does. */
 
 /*! a six-digit hex shortens to three */
 .t01 { --a: #ffffff }
@@ -74,9 +72,8 @@
 /*! and the same name in a real color property does shorten */
 .v04 { color: white }
 
-/* A fragment names something and a string is text, so neither is a color the
-   `cssom:` note above may read through — `url(#fff)` and `url(#ffffff)` point
-   at two different elements. */
+/* A fragment names something and a string is text, so neither holds a color:
+   `url(#fff)` and `url(#ffffff)` point at two different elements. */
 
 /*! a fragment keeps every digit it was written with */
 .w01 { --u: url(#fff) }

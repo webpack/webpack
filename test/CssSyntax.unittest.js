@@ -901,9 +901,8 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("cuts a dead rule where it stands after an earlier cut in the piece", () => {
-		// Sibling `@layer a` blocks fold into one piece, so a batch that takes two
-		// rules back cuts twice in it. Its own spans move with the first cut, and a
-		// span read after it must name its new place, not the one it went out at.
+		// Sibling `@layer a` blocks fold into one piece, so a batch cuts twice in
+		// it — and its own second span must name where the first cut left it.
 		const dead = ".p{color:red}.q{color:blue}";
 		const victim =
 			".victim{align-items:flex-start;border-radius:0;opacity:1;background:red}";

@@ -28,5 +28,7 @@ Array [
   "/*! lightningcss custom_properties: attr() with a type, and with a fallback */.u16{background-color:attr(data-color type(<color>))}.u17{width:attr(data-width type(<length>),100px)}",
   "/*! a named color stays as authored, hex being invalid where the name is not */.v01{--c:white}.v02{--c:black}.v03{--c:rebeccapurple}",
   "/*! and the same name in a real color property does shorten */.v04{color:#fff}",
+  "/*! a fragment keeps every digit it was written with */.w01{--u:url(#fff)}.w02{--u:url(#ffffff)}",
+  "/*! a quoted value is text, hex-shaped or not */.w03{--s:\\"#fff\\"}.w04{--s:\\"0.50\\"}",
 ]
 `;

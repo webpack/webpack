@@ -351,9 +351,8 @@ const installHelpers = () => {
 		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
 		// A color written into a value the engine cannot compute — a `var()`
 		// fallback — is still a color, and `#ff0` is `rgb(255,255,0)`.
-		// A string is text and a `url()` body names something rather than describing
-		// it, so neither holds a color to read: `url(#fff)` and `url(#ffffff)` point
-		// at two different elements.
+		// A string is text and a `url()` body names something, so neither holds a
+		// color: `url(#fff)` and `url(#ffffff)` are two different elements.
 		out = outsideText(out, (run) =>
 			run.replace(
 				/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,

@@ -100,9 +100,8 @@ const minifyHtml = (source, options) =>
  * @param {string} source a stylesheet
  * @returns {string} the same stylesheet, minified
  */
-// A fixture says which minimizer options its own claim is about, so the option
-// the file exists to cover is the one the engine is held to — and the same note
-// tells the comparison which differences the file means to produce.
+// A fixture names the minimizer options its own claim is about, so the engine
+// is held to the option the file exists to cover.
 const CSSOM_DIRECTIVE = /\/\*\s*cssom:([^*]*)\*\//;
 
 /**

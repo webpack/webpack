@@ -28,10 +28,8 @@ const path = require("path");
 const { promisify } = require("util");
 const zlib = require("zlib");
 
-// The assumption every other tool here makes when told no target: current
-// engines only. A broader query has webpack adding prefixes the others never
-// considered, which is a different sheet rather than a smaller one. Resolved
-// rather than written out, so it does not go stale as the browsers move.
+// What every other tool assumes when told no target: current engines only.
+// Resolved rather than written out, so it does not go stale.
 const MODERN_BROWSERS = require("browserslist")(
 	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
 );
@@ -236,9 +234,8 @@ const fixtures = () => [
 const MINIFIERS = [
 	["webpack", () => (css) => cssMinify({ "input.css": css }).code],
 	[
-		// Every other tool here assumes a modern engine when told no target, and
-		// strips the vendor spellings it makes dead. webpack is told nothing, so it
-		// keeps them all — comparing the two rows says what the target is worth.
+		// The rivals strip the spellings a modern engine makes dead; webpack, told
+		// nothing, keeps them. The two rows say what the target is worth.
 		"webpack+target",
 		() => (css) =>
 			cssMinify({ "input.css": css }, undefined, {
