@@ -4712,6 +4712,115 @@ describe("SourceProcessor — removeImpliedTags", () => {
 	});
 });
 
+describe("SourceProcessor — the per-transform switches", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {import("../lib/html/syntax").HtmlTransformOptions=} transforms which rewrites to make
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, transforms) =>
+		new SourceProcessor().process(html, { mode: "minify", transforms }).code;
+
+	// One input per switch, minified twice: with everything on, and with that one
+	// switch off — so a guard that stops firing fails here rather than quietly
+	// making the rewrite unconditional again.
+	it.each([
+		[
+			"booleanAttributes",
+			'<input disabled="disabled">',
+			"<input disabled>",
+			// `quotes` is still on, so the value it keeps goes bare.
+			"<input disabled=disabled>"
+		],
+		[
+			"comments",
+			"<div>a</div><!-- c -->",
+			"<div>a</div>",
+			"<div>a</div><!-- c -->"
+		],
+		[
+			"enumeratedAttributes",
+			'<input type="TEXT">',
+			"<input type=text>",
+			"<input type=TEXT>"
+		],
+		[
+			"listAttributes",
+			'<div class="  b   a ">x</div>',
+			'<div class="b a">x</div>',
+			'<div class="  b   a ">x</div>'
+		],
+		[
+			"minifyJson",
+			'<script type="application/json"> { "a" : 1 } </script>',
+			'<script type=application/json>{"a":1}</script>',
+			'<script type=application/json> { "a" : 1 } </script>'
+		],
+		[
+			"minifyStyles",
+			'<div style="COLOR: red">x</div>',
+			"<div style=color:red>x</div>",
+			'<div style="COLOR: red">x</div>'
+		],
+		[
+			"numericAttributes",
+			'<div tabindex=" 03 ">x</div>',
+			"<div tabindex=3>x</div>",
+			'<div tabindex=" 03 ">x</div>'
+		],
+		[
+			"optionalTags",
+			"<ul><li>a<li>b</ul>",
+			"<ul><li>a<li>b</ul>",
+			"<ul><li>a</li><li>b</li></ul>"
+		],
+		[
+			"quotes",
+			'<div data-x="plain">t</div>',
+			"<div data-x=plain>t</div>",
+			'<div data-x="plain">t</div>'
+		],
+		[
+			"urlAttributes",
+			'<a href=" /a ">t</a>',
+			"<a href=/a>t</a>",
+			'<a href=" /a ">t</a>'
+		]
+	])("%s", (name, html, on, off) => {
+		expect(minify(html)).toBe(on);
+		expect(minify(html, { [name]: false })).toBe(off);
+	});
+
+	// Turning one off leaves the rest alone, which is the whole point of naming
+	// them one at a time.
+	it("leaves every other rewrite on", () => {
+		expect(
+			minify('<input disabled="disabled" tabindex=" 03 ">', {
+				booleanAttributes: false
+			})
+		).toBe("<input disabled=disabled tabindex=3>");
+	});
+
+	it("takes an absent option as every rewrite on", () => {
+		expect(minify("<div>a</div><!-- c -->", {})).toBe("<div>a</div>");
+		expect(minify("<div>a</div><!-- c -->", undefined)).toBe("<div>a</div>");
+	});
+
+	// `removeImpliedTags` keeps the shell to itself, so the two do not overlap.
+	it("leaves the shell to removeImpliedTags", () => {
+		const doc =
+			"<html><head><title>t</title></head><body><p>a</p></body></html>";
+		expect(
+			new SourceProcessor().process(doc, {
+				mode: "minify",
+				transforms: { optionalTags: false }
+			}).code
+		).toBe("<head><title>t</title></head><body><p>a</p></body></html>");
+	});
+});
+
 describe("SourceProcessor — attribute quote spelling", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 

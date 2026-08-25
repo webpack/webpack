@@ -10313,11 +10313,10 @@ declare interface HtmlParserOptions {
 }
 type HtmlPrintOptions = Pick<
 	CssProcessOptions,
-	| "environment"
-	| "convertLengthUnits"
-	| "rewriteCustomProperties"
-	| "transforms"
+	"environment" | "convertLengthUnits" | "rewriteCustomProperties"
 > & {
+	cssTransforms?: CssTransformOptions;
+	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
 	removeEmptyAttributes?: boolean;
@@ -10364,9 +10363,14 @@ declare interface HtmlProcessOptions {
 	rewriteCustomProperties?: boolean;
 
 	/**
-	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
+	 * CSS's per-transform switches too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
-	transforms?: CssTransformOptions;
+	cssTransforms?: CssTransformOptions;
+
+	/**
+	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
+	 */
+	transforms?: HtmlTransformOptions;
 
 	/**
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge (default false)
@@ -10666,6 +10670,57 @@ declare interface HtmlTokenCallbacks {
 }
 declare interface HtmlTransformHtmlContext {
 	outputName: string;
+}
+declare interface HtmlTransformOptions {
+	/**
+	 * write a boolean attribute spelled with its own name (`disabled="disabled"`) as the bare name
+	 */
+	booleanAttributes?: boolean;
+
+	/**
+	 * drop a comment no parser or server reads
+	 */
+	comments?: boolean;
+
+	/**
+	 * fold an enumerated value to the keyword it names
+	 */
+	enumeratedAttributes?: boolean;
+
+	/**
+	 * normalize a space-, comma- or descriptor-separated list value (`class`, `rel`, `srcset`, `sizes`, the viewport `content`)
+	 */
+	listAttributes?: boolean;
+
+	/**
+	 * strip the whitespace between a JSON `<script>`'s tokens
+	 */
+	minifyJson?: boolean;
+
+	/**
+	 * run the CSS minifier over an inline `<style>` and every `style=""`
+	 */
+	minifyStyles?: boolean;
+
+	/**
+	 * write an integer attribute the one way its rules read it
+	 */
+	numericAttributes?: boolean;
+
+	/**
+	 * leave out an optional tag other than the `<html>` / `<head>` / `<body>` shell, which is `removeImpliedTags`
+	 */
+	optionalTags?: boolean;
+
+	/**
+	 * drop or re-pick an attribute value's quotes
+	 */
+	quotes?: boolean;
+
+	/**
+	 * trim the whitespace around a URL attribute
+	 */
+	urlAttributes?: boolean;
 }
 declare interface HtmlTransformTagsContext {
 	outputName: string;
@@ -20091,15 +20146,39 @@ declare interface OptimizationMinimizeCss {
 }
 
 /**
- * What the HTML minimizer may do beyond the transforms that always apply.
+ * What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for.
  * @since 5.110.0
  */
 declare interface OptimizationMinimizeHtml {
+	/**
+	 * Write a boolean attribute spelled with its own name (`disabled="disabled"`) as the bare name the spec canonicalizes it to. On by default.
+	 * @since 5.110.0
+	 */
+	booleanAttributes?: boolean;
+
 	/**
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
+
+	/**
+	 * Drop a comment no parser or server reads. On by default; a downlevel conditional comment, a server-side include, a template directive and anything `preserveComments` names are kept whatever this says.
+	 * @since 5.110.0
+	 */
+	comments?: boolean;
+
+	/**
+	 * Fold an enumerated attribute's value to the keyword it names (`type="TEXT"` -> `type=text`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.
+	 * @since 5.110.0
+	 */
+	enumeratedAttributes?: boolean;
+
+	/**
+	 * Normalize a list-shaped attribute value: a space-separated token list (`class`, `rel`, `part`, …), a comma-separated one (`accept`, `sizes`, …), a `srcset` and the viewport `<meta content>`. On by default. Reordering a token list is `sortTokenLists`, which is separate and off by default.
+	 * @since 5.110.0
+	 */
+	listAttributes?: boolean;
 
 	/**
 	 * Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll("style").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.
@@ -20114,16 +20193,46 @@ declare interface OptimizationMinimizeHtml {
 	minifyConditionalComments?: boolean;
 
 	/**
+	 * Strip the whitespace between the tokens of a `<script>` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.
+	 * @since 5.110.0
+	 */
+	minifyJson?: boolean;
+
+	/**
 	 * Minify the document held in an `<iframe srcdoc>` attribute. Off by default: the body is a whole document of its own (its base URL is `about:srcdoc`), so minifying it is safe, but the attribute is readable from script and a consumer comparing `iframe.srcdoc` byte for byte would see it change.
 	 * @since 5.110.0
 	 */
 	minifySrcdoc?: boolean;
 
 	/**
+	 * Run the CSS minimizer over an inline `<style>` element and every `style=""` attribute, with the options `optimization.minimize.css` names. On by default.
+	 * @since 5.110.0
+	 */
+	minifyStyles?: boolean;
+
+	/**
+	 * Write an integer attribute (`tabindex`, `colspan`, `width`, …) the one way its own rules read it — leading whitespace, a `+` and leading zeros all go. On by default.
+	 * @since 5.110.0
+	 */
+	numericAttributes?: boolean;
+
+	/**
+	 * Leave out a tag §13.1.2.4 lets the parser imply, other than the `<html>` / `<head>` / `<body>` shell, which `removeImpliedTags` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.
+	 * @since 5.110.0
+	 */
+	optionalTags?: boolean;
+
+	/**
 	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
 	 * @since 5.110.0
 	 */
 	preserveComments?: (string | RegExp)[];
+
+	/**
+	 * Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.
+	 * @since 5.110.0
+	 */
+	quotes?: boolean;
 
 	/**
 	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals `class`, `id`, `style`, `dir`, `accesskey`, `itemprop`, `itemref`, `itemtype` and `part`, and every attribute reflecting a token list on the elements the spec defines it for — `rel` on `<a>`, `<area>`, `<form>` and `<link>`, `ping` on `<a>` and `<area>`, `headers` on `<td>` and `<th>`, `blocking` on `<link>`, `<script>` and `<style>`, `sizes` on `<link>`, `for` on `<output>` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so `<x-foo rel="">` and `<label for="">` keep it. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
@@ -20160,6 +20269,12 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	sortTokenLists?: boolean;
+
+	/**
+	 * Trim the whitespace around a URL attribute's value (`href`, `src`, `action`, …), which the URL parser strips before resolving it. On by default.
+	 * @since 5.110.0
+	 */
+	urlAttributes?: boolean;
 }
 
 /**
@@ -30490,6 +30605,9 @@ declare namespace exports {
 			) => [string, number, number][];
 			export let parseSrc: (input: string) => [string, number, number][];
 			export let parseSrcset: (input: string) => [string, number, number][];
+			export let pickTransforms: (
+				options: object
+			) => undefined | HtmlTransformOptions;
 			export let printer: (
 				path: {
 					get node(): number;

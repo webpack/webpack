@@ -3792,10 +3792,15 @@
       "added": "5.110.0"
     },
     "OptimizationMinimizeHtml": {
-      "description": "What the HTML minimizer may do beyond the transforms that always apply.",
+      "description": "What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "booleanAttributes": {
+          "description": "Write a boolean attribute spelled with its own name (`disabled=\"disabled\"`) as the bare name the spec canonicalizes it to. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "collapseWhitespace": {
           "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `\"conservative\"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `\"smart\"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `\"all\"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
           "anyOf": [
@@ -3808,6 +3813,21 @@
           ],
           "added": "5.110.0"
         },
+        "comments": {
+          "description": "Drop a comment no parser or server reads. On by default; a downlevel conditional comment, a server-side include, a template directive and anything `preserveComments` names are kept whatever this says.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "enumeratedAttributes": {
+          "description": "Fold an enumerated attribute's value to the keyword it names (`type=\"TEXT\"` -> `type=text`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "listAttributes": {
+          "description": "Normalize a list-shaped attribute value: a space-separated token list (`class`, `rel`, `part`, …), a comma-separated one (`accept`, `sizes`, …), a `srcset` and the viewport `<meta content>`. On by default. Reordering a token list is `sortTokenLists`, which is separate and off by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "mergeStyles": {
           "description": "Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll(\"style\").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.",
           "type": "boolean",
@@ -3818,8 +3838,28 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "minifyJson": {
+          "description": "Strip the whitespace between the tokens of a `<script>` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "minifySrcdoc": {
           "description": "Minify the document held in an `<iframe srcdoc>` attribute. Off by default: the body is a whole document of its own (its base URL is `about:srcdoc`), so minifying it is safe, but the attribute is readable from script and a consumer comparing `iframe.srcdoc` byte for byte would see it change.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "minifyStyles": {
+          "description": "Run the CSS minimizer over an inline `<style>` element and every `style=\"\"` attribute, with the options `optimization.minimize.css` names. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "numericAttributes": {
+          "description": "Write an integer attribute (`tabindex`, `colspan`, `width`, …) the one way its own rules read it — leading whitespace, a `+` and leading zeros all go. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "optionalTags": {
+          "description": "Leave out a tag §13.1.2.4 lets the parser imply, other than the `<html>` / `<head>` / `<body>` shell, which `removeImpliedTags` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.",
           "type": "boolean",
           "added": "5.110.0"
         },
@@ -3838,6 +3878,11 @@
               }
             ]
           },
+          "added": "5.110.0"
+        },
+        "quotes": {
+          "description": "Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.",
+          "type": "boolean",
           "added": "5.110.0"
         },
         "removeEmptyAttributes": {
@@ -3881,6 +3926,11 @@
         },
         "sortTokenLists": {
           "description": "Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "urlAttributes": {
+          "description": "Trim the whitespace around a URL attribute's value (`href`, `src`, `action`, …), which the URL parser strips before resolving it. On by default.",
           "type": "boolean",
           "added": "5.110.0"
         }

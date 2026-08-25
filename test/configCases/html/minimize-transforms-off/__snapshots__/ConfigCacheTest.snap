@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-transforms-off minimize-transforms-off should compile 1`] = `
+"<!doctype html><html lang=\\"en\\"><head><title>t</title></head><body>
+<!-- an inert comment, kept because \`comments\` is off -->
+<p style=\\"COLOR: red\\">the style attribute is not minified</p>
+<ul><li>one</li><li>two</li></ul>
+<input disabled=\\"disabled\\" type=\\"TEXT\\" tabindex=\\" 03 \\" class=\\"  b   a \\">
+<a href=\\" /a \\">a url attribute keeps its padding</a>
+<div data-x=\\"plain\\">a value that could go bare keeps its quotes</div>
+<script type=\\"application/json\\"> { \\"a\\" : 1 } </script>
+
+
+</body></html>"
+`;
