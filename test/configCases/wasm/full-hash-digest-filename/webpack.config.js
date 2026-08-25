@@ -16,10 +16,7 @@ const webpack = require("../../../../");
 const base = (index, name, hashPart, inlined) => ({
 	target: "node",
 	mode: "development",
-	// The runtime interpolation this case is about is what the analyzable form replaces,
-	// so the module is wrapped in an `eval()` where `import.meta` does not parse — a
-	// reason to keep the runtime name that has nothing to do with hashing.
-	devtool: "eval",
+	devtool: false,
 	module: {
 		rules: [
 			{ test: /\.wat$/, loader: "wast-loader", type: "webassembly/async" }
