@@ -6409,15 +6409,6 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 	// Both modes drop a rule an identical later sibling supersedes, and minifying
 	// also joins adjacent rules sharing a selector — so the two forms keep a
 	// different copy of the same declarations. Every element still computes what
-	// the source said; only which redundant copy survives differs.
-	const KEPT_A_DIFFERENT_COPY = new Map([
-		["hacks.css", "a repeated `.selector` rule survives in a different place"],
-		["values.css", "a repeated declaration survives in a different place"],
-		[
-			"nesting.css",
-			"a nested rule is kept beside the source's copy, not merged into it"
-		]
-	]);
 
 	it("has a corpus", () => {
 		expect(cases.length).toBeGreaterThan(15);
@@ -6436,13 +6427,10 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 	// same — the property `print modes` states over its own handful of sources,
 	// here over every case the tokenizer reads.
 	for (const [name, code] of cases) {
-		const filed = KEPT_A_DIFFERENT_COPY.get(name);
-
-		it(`should minify "${name}" the same from either form${filed ? " (keeps a different copy)" : ""}`, () => {
-			const fromSource = print(code, "minify");
-			const fromBeautified = print(print(code, "beautify"), "minify");
-			if (filed === undefined) expect(fromBeautified).toBe(fromSource);
-			else expect(fromBeautified).not.toBe(fromSource);
+		it(`should minify "${name}" the same from either form`, () => {
+			expect(print(print(code, "beautify"), "minify")).toBe(
+				print(code, "minify")
+			);
 		});
 	}
 });

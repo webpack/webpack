@@ -220,6 +220,8 @@ color: a b;
 }a {
 color: black;
 }a {
+color: black;
+}a {
 color: \\\\\\\\ red \\\\\\\\ blue;
 }"
 `;
@@ -290,6 +292,8 @@ font-size: calc(1rem * pow(1.5, 1));
 font-size: calc(1rem * pow(1.5, 2));
 font-size: calc(1rem * pow(1.5, 3));
 font-size: calc(1rem * pow(1.5, 4));
+}.fade {
+background-image: linear-gradient(silver 0%, white 20px, white calc(100% - 20px), silver 100%);
 }div {
 }div {
 width: calc(100% / 4);
@@ -434,6 +438,8 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "hacks.css
 _property: value;
 }.selector {
 -property: value;
+}.selector {
+property: value\\\\9;
 }.selector {
 property: value\\\\9;
 }"
@@ -645,10 +651,14 @@ display: grid;
 @media (orientation: landscape) {
 grid-auto-flow: column;
 }
+}.foo {
+display: grid;
 }@media (orientation: landscape) {
 .foo {
 grid-auto-flow: column;
 }
+}.foo {
+display: grid;
 }@media (orientation: landscape) {
 .foo {
 grid-auto-flow: column;
@@ -826,23 +836,33 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }[title=foo] {
 }[title=\\"foo\\"] {
 }[title = \\"foo\\"] {
+}[title = \\"foo\\"] {
 }[lang~=\\"en-us\\"] {
 }[lang|=\\"zh\\"] {
 }[href^=\\"#\\"] {
 }[href$=\\".org\\"] {
 }[href*=\\"example\\"] {
+}[href*=\\"insensitive\\" i] {
 }[href*=\\"insensitive\\" I] {
 }[href*=\\"cAsE\\" s] {
 }[href*=\\"cAsE\\" S] {
 }[foo|att=val] {
 }[*|att] {
+}[*|att] {
+}[|att] {
+}[|att] {
 }[|att] {
 }[att] {
+}[att] {
+}[att] {
 }a[class = \\"test\\"] {
+}a[class = \\"test\\"] {
+}[href*=\\"insensitive\\" i] {
 }[href*=\\"insensitive\\" i] {
 }[href *= \\"insensitive\\" i] {
 }[href] {
 }[frame=hsides i] {
+}#id.class[target] {
 }#id[target] {
 }[target].class {
 }[title='foo'] {
@@ -874,12 +894,21 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }.\\\\. {
 }.\\\\3A \\\\) {
 }.\\\\3A \\\\\`\\\\( {
+}.\\\\31 23 {
+}.\\\\31 a2b3c {
 }.\\\\<p\\\\> {
+}.\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> {
 }.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<\\\\-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\.\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. {
+}.\\\\# {
+}.\\\\#\\\\# {
 }.\\\\#\\\\.\\\\#\\\\.\\\\# {
 }.\\\\_ {
 }.\\\\{\\\\} {
 }.\\\\.fake\\\\-class {
+}.foo\\\\.bar {
+}.\\\\3A hover {
+}.\\\\3A hover\\\\3A focus\\\\3A active {
+}.\\\\[attr\\\\=value\\\\] {
 }.f\\\\/o\\\\/o {
 }.f\\\\\\\\o\\\\\\\\o {
 }.f\\\\*o\\\\*o {
@@ -890,6 +919,9 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }.-a-b-c- {
 }.\\\\#fake-id {
 }foo.class > .foo.class {
+}.foo#id {
+}.class[target] {
+}.class#id[target] {
 }ul.list {
 }ul.list::before {
 }.\\\\31 a2b3c {
@@ -906,13 +938,35 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }.not-pseudo\\\\:\\\\:focus {
 }.\\\\\\\\1D306 {
 }.\\\\; {
+}a b {
+}a b {
+}a b {
+}a b {
 }a/**/b {
+}a/**/b {
+}a b {
+}a b {
+}a b {
+}a b {
+}a b {
+}a b {
+}a b {
+}a b {
 }a,b {
 }a , b {
 }article p {
+}article p {
+}article p {
+}article > p {
+}article > p {
 }article > p {
 }p + img {
+}p + img {
+}p + img {
 }p ~ img {
+}p ~ img {
+}p ~ img {
+}article > p > a {
 }article > p > a {
 }div p {
 }.class p {
@@ -971,6 +1025,7 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }a>a {
 }a~a {
 }a [type='button'] {
+}a [type='button'] {
 }a a {
 }namespace|type#id > .foo {
 }#id > .cl + .cl2 {
@@ -982,8 +1037,10 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }[data-weird-attr*=\\"Something=weird\\"], [data-weird-attr^=\\"Something=weird\\"], [data-weird-attr$=\\"Something=weird\\"], [data-weird-attr|=\\"Something=weird\\"] {
 }* + * {
 }* * {
+}* * {
 }*[href] *:not(*.green) {
 }*::-webkit-media-controls-play-button {
+}col.selected || td {
 }col.selected || td {
 }col.selected||td {
 }.one {
@@ -991,6 +1048,10 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }.foo#id {
 }.class[target] {
 }.class#id[target] {
+}#id.class {
+}#id.class[target] {
+}div#thing:hover {
+}div#thing::before {
 }a[href='place']:hover {
 }a[href='place']::before {
 }.one.two.three {
@@ -998,13 +1059,41 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }*#z98y {
 }#one#two {
 }#one.two.three {
+}#id {
+}#♥ {
 }#© {
+}#“‘’” {
+}#☺☃ {
 }#⌘⌥ {
 }#𝄞♪♩♫♬ {
 }#💩 {
 }#\\\\? {
+}#\\\\@ {
+}#\\\\. {
+}#\\\\3A \\\\) {
+}#\\\\3A \\\\\`\\\\( {
+}#\\\\31 23 {
+}#\\\\31 a2b3c {
+}#\\\\<p\\\\> {
+}#\\\\<\\\\>\\\\<\\\\<\\\\<\\\\>\\\\>\\\\<\\\\> {
 }#\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\[\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\>\\\\+\\\\+\\\\+\\\\>\\\\+\\\\<\\\\<\\\\<\\\\<\\\\-\\\\]\\\\>\\\\+\\\\+\\\\.\\\\>\\\\+\\\\.\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\.\\\\+\\\\+\\\\+\\\\.\\\\>\\\\+\\\\+\\\\.\\\\<\\\\<\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\+\\\\.\\\\>\\\\.\\\\+\\\\+\\\\+\\\\.\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\.\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\-\\\\.\\\\>\\\\+\\\\.\\\\>\\\\. {
+}#\\\\# {
+}#\\\\#\\\\# {
+}#\\\\#\\\\.\\\\#\\\\.\\\\# {
+}#\\\\_ {
+}#\\\\{\\\\} {
+}#\\\\.fake\\\\-class {
+}#foo\\\\.bar {
+}#\\\\3A hover {
+}#\\\\3A hover\\\\3A focus\\\\3A active {
+}#\\\\[attr\\\\=value\\\\] {
+}#f\\\\/o\\\\/o {
+}#f\\\\\\\\o\\\\\\\\o {
+}#f\\\\*o\\\\*o {
+}#f\\\\!o\\\\!o {
 }#f\\\\'o\\\\'o {
+}#f\\\\~o\\\\~o {
+}#f\\\\+o\\\\+o {
 }#id {
 }#id.class {
 }#id.class[target] {
@@ -1044,10 +1133,12 @@ exports[`CssSyntax — beautifying the parsing corpus should beautify "selectors
 }#f\\\\+o\\\\+o {
 }div, p {
 }div , p {
+}div , p {
 }a, a[href='place'] {
 }a #foo > [foo='bar'], .FOO {
 }div, p, a {
 }div,p,a {
+}div , p , a {
 }div , p , a {
 }.foo, .bar, *.baz {
 }input::-moz-placeholder, input::placeholder {
@@ -1087,6 +1178,11 @@ color: red;
 }.foo, .bar {
 color: blue;
 & + .baz, &.qux {
+color: red;
+}
+}.foo {
+color: blue;
+& .bar & .baz & .qux {
 color: red;
 }
 }.foo {
@@ -1224,10 +1320,13 @@ color: blue;
 }:unknown(;) {
 }:nth-child(2n+1) {
 }:nth-child(2n +1) {
+}:nth-child(2n + 1) {
+}:nth-child(2n+ 1) {
 }:nth-child(2n-1) {
 }:nth-child(2n -1) {
 }:nth-child(2n- 1) {
 }:nth-child(2n - 1) {
+}:nth-child(-2n+1) {
 }:nth-child(-2n +1) {
 }:nth-child(-2n + 1) {
 }:nth-child(-2n+ 1) {
@@ -1291,6 +1390,7 @@ color: blue;
 }:nth-child(eVeN) {
 }:nth-child(EVEN) {
 }:nth-child(2n+ 1) {
+}:nth-last-child(+3n - 2) {
 }:nth-child(2n + 1) {
 }:nth-last-child(+3n - 2) {
 }:nth-child(-2n+1) {
@@ -1311,6 +1411,7 @@ color: blue;
 }p:nth-child(+3) {
 }p:nth-child(-3) {
 }:nth-child(2n+1 of li) {
+}:nth-child(2n+1 of li) {
 }:nth-child(2n+1 of li,.test) {
 }:nth-child(2n+1 of li, .test) {
 }:nth-child(-n+3 of li.important) {
@@ -1318,6 +1419,7 @@ color: blue;
 }:root {
 }:any-link {
 }button:hover {
+}div\\\\:before {
 }div\\\\::before {
 }iNpUt {
 }:matches(section, article, aside, nav) h1 {
@@ -1329,6 +1431,7 @@ color: blue;
 }*:is(*) {
 }:--heading {
 }a:-moz-placeholder {
+}a:hover::before {
 }div :nth-child(2) {
 }a:hOvEr {
 }:-webkit-full-screen a {
@@ -1377,6 +1480,7 @@ color: blue;
 }*:hover {
 }*::before {
 }* *:not(*) {
+}a {
 }a {
 }\\\\@noat {
 }h1\\\\\\\\ {
@@ -1701,6 +1805,8 @@ height: 16px;
 };
 }:root {
 --a: 1;
+}:root {
+--foo: ;
 }:root {
 --foo: ;
 }:root {
