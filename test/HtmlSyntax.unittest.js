@@ -4093,6 +4093,126 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 });
 
+// Only what a unit test reaches better than a build does: the shapes a run is
+// declined for. The rest is covered by the
+// `configCases/html/minimize-merge-scripts` case.
+describe("SourceProcessor — merging adjacent <script>", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify", mergeScripts: true })
+			.code;
+
+	it("folds a run into one element", () => {
+		expect(minify("<script>a()</script><script>b()</script>")).toBe(
+			"<script>a()\n;b()</script>"
+		);
+		expect(
+			minify("<script>a()</script><script>b()</script><script>c()</script>")
+		).toBe("<script>a()\n;b()\n;c()</script>");
+	});
+
+	it("keeps every element unless asked to fold", () => {
+		const html = "<script>a()</script><script>b()</script>";
+		expect(new SourceProcessor().process(html, { mode: "minify" }).code).toBe(
+			html
+		);
+	});
+
+	it("folds across the whitespace between them", () => {
+		expect(minify("<script>a()</script>\n  <script>b()</script>")).toBe(
+			"<script>a()\n;b()</script>"
+		);
+	});
+
+	it("declines a run carrying any attribute at all", () => {
+		for (const attribute of [
+			"src=x.js",
+			"type=module",
+			"nonce=n",
+			"async",
+			"defer",
+			"id=q",
+			"class=c",
+			"data-x=1"
+		]) {
+			// Two elements still, whichever side carries it.
+			expect(
+				minify(`<script ${attribute}>a()</script><script>b()</script>`)
+			).toContain("</script><script");
+			expect(
+				minify(`<script>a()</script><script ${attribute}>b()</script>`)
+			).toContain("</script><script");
+		}
+	});
+
+	it("declines anything but whitespace between them", () => {
+		expect(minify("<script>a()</script><p>x</p><script>b()</script>")).toBe(
+			"<script>a()</script><p>x</p><script>b()</script>"
+		);
+		// The comment goes, but it stood between them when the tree was read.
+		expect(minify("<script>a()</script><!--c--><script>b()</script>")).toBe(
+			"<script>a()</script><script>b()</script>"
+		);
+	});
+
+	it("declines a body that leaves something open", () => {
+		// Each would swallow the next body whole.
+		expect(minify("<script>a() /* open</script><script>b()</script>")).toBe(
+			"<script>a() /* open</script><script>b()</script>"
+		);
+		expect(minify('<script>var s = "open</script><script>b()</script>')).toBe(
+			'<script>var s = "open</script><script>b()</script>'
+		);
+		expect(minify("<script>var s = `open</script><script>b()</script>")).toBe(
+			"<script>var s = `open</script><script>b()</script>"
+		);
+	});
+
+	it("folds a body ending in a line comment, which the newline closes", () => {
+		expect(minify("<script>a() // note</script><script>b()</script>")).toBe(
+			"<script>a() // note\n;b()</script>"
+		);
+	});
+
+	it("writes the `;` a next body would otherwise continue", () => {
+		expect(
+			minify("<script>var a = 1</script><script>(function(){})()</script>")
+		).toBe("<script>var a = 1\n;(function(){})()</script>");
+	});
+
+	it("reads a closed string, template or comment as closed", () => {
+		expect(
+			minify('<script>var s = "a</script\'"</script><script>b()</script>')
+		).toBe('<script>var s = "a</script\'"\n;b()</script>');
+		expect(minify("<script>/* done */a()</script><script>b()</script>")).toBe(
+			"<script>/* done */a()\n;b()</script>"
+		);
+		expect(minify("<script>var t = `x`</script><script>b()</script>")).toBe(
+			"<script>var t = `x`\n;b()</script>"
+		);
+		// An escaped quote does not close the string it sits in.
+		expect(minify('<script>var s = "a\\""</script><script>b()</script>')).toBe(
+			'<script>var s = "a\\""\n;b()</script>'
+		);
+	});
+
+	it("declines an empty element, which has no text node to fold into", () => {
+		expect(minify("<script>a()</script><script></script>")).toBe(
+			"<script>a()</script><script></script>"
+		);
+	});
+
+	it("leaves a script in foreign content alone", () => {
+		const svg = "<svg><script>a()</script><script>b()</script></svg>";
+		expect(minify(svg)).toBe(svg);
+	});
+});
+
 describe("SourceProcessor — JSON <script> bodies", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 

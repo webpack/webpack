@@ -10389,6 +10389,7 @@ type HtmlPrintOptions = Pick<
 	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
+	mergeScripts?: boolean;
 	removeEmptyAttributes?: boolean;
 	removeEmptyElements?: boolean;
 	removeRedundantAttributes?: boolean | "all" | "smart";
@@ -10462,6 +10463,11 @@ declare interface HtmlProcessOptions {
 	 * print a run of adjacent `<style>` elements as one sheet, which removes elements (default false)
 	 */
 	mergeStyles?: boolean;
+
+	/**
+	 * print a run of adjacent bare `<script>` elements as one, which removes elements (default false)
+	 */
+	mergeScripts?: boolean;
 
 	/**
 	 * print an element's attributes commonest name first, ties by name, which nothing in HTML reads (default false)
@@ -20250,6 +20256,12 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
+
+	/**
+	 * Print a run of adjacent `<script>` elements as one, joined by a newline and a `;`. Only a run of bare ones folds — a `src`, `type`, `nonce`, `async` or `id` says the two are not interchangeable with one — and a body left inside a string, template or block comment is never appended to, since it would swallow the next. Off by default: it removes elements, so `document.scripts`, a `script:nth-child()` selector and `document.currentScript` all read a different document.
+	 * @since 5.110.0
+	 */
+	mergeScripts?: boolean;
 
 	/**
 	 * Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll("style").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.
