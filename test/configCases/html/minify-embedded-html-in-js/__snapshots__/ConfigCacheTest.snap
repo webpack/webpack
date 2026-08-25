@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minify-embedded-html-in-js exported tests should minify HTML embedded in JS 1`] = `
+"<div class=a id=b>
+	
+	<p>hello</p>
+</div>
+"
+`;

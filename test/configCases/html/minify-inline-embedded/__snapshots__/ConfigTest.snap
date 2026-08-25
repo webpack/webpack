@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minify-inline-embedded exported tests should route what the document embeds through the caller's renderer 1`] = `
+"<div>
+	<p style=color:red;>x</p>
+	<script type=application/json>/*json-in-html*/{ \\"a\\" : 1 }</script>
+	<script type=text/plain>   KEEP   ME   </script>
+</div>
+"
+`;

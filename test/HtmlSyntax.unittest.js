@@ -4911,6 +4911,211 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 	});
 });
 
+describe("SourceProcessor — renderEmbeddedSource", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {import("../lib/html/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, renderEmbeddedSource) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			renderEmbeddedSource
+		}).code;
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {[string, string][]} each body offered, as `[type, source]`
+	 */
+	const offered = (html) => {
+		/** @type {[string, string][]} */
+		const seen = [];
+		minify(html, (source, info) => {
+			seen.push([info.type, source]);
+			return source;
+		});
+		return seen;
+	};
+
+	it("offers an inline `<style>`, a `style` attribute and a `<script>`", () => {
+		expect(
+			offered(
+				'<p style="color : red">x</p><style>.a { color : red }</style><script>var a = 1</script>'
+			)
+		).toEqual([
+			// The attribute's declaration list arrives wrapped as a whole stylesheet.
+			["css", "a{color : red}"],
+			["css", ".a { color : red }"],
+			["javascript", "var a = 1"]
+		]);
+	});
+
+	it("names html as the host of every body it offers", () => {
+		const hosts = new Set();
+		minify("<style>.a{color:red}</style><script>var a=1</script>", (s, i) => {
+			hosts.add(i.hostType);
+			return s;
+		});
+		expect([...hosts]).toEqual(["html"]);
+	});
+
+	it("offers a JSON `<script>` as json, by type and by `+json` subtype", () => {
+		expect(
+			offered(
+				'<script type="application/json">{ "a": 1 }</script><script type="application/ld+json">{ "b": 2 }</script>'
+			)
+		).toEqual([
+			["json", '{ "a": 1 }'],
+			["json", '{ "b": 2 }']
+		]);
+	});
+
+	it("replaces the built-in CSS and JSON minifiers", () => {
+		expect(
+			minify(
+				'<style>.a { color : red }</style><script type="application/json">{ "a" : 1 }</script>',
+				(source) => source.toUpperCase()
+			)
+		).toBe(
+			'<style>.A { COLOR : RED }</style><script type=application/json>{ "A" : 1 }</script>'
+		);
+	});
+
+	it("leaves an inline script alone when there is no renderer", () => {
+		expect(minify("<script>var   a   =   1</script>")).toBe(
+			"<script>var   a   =   1</script>"
+		);
+	});
+
+	it("declines a body the renderer returns unchanged", () => {
+		const source = "<style>.a { color : red }</style>";
+		expect(minify(source, (s) => s)).toBe(source);
+	});
+
+	it("keeps the body when the renderer throws", () => {
+		expect(
+			minify("<style>.a{color:red}</style>", () => {
+				throw new Error("nope");
+			})
+		).toBe("<style>.a{color:red}</style>");
+	});
+
+	it("keeps a `style` attribute whose renderer broke the rule wrapper", () => {
+		expect(
+			minify('<p style="  color : red ;  ">x</p>', () => "not a rule")
+		).toBe('<p style="  color : red ;  ">x');
+	});
+
+	it("never offers an empty body", () => {
+		expect(
+			offered('<style> </style><script></script><p style=" "></p>')
+		).toEqual([]);
+	});
+
+	it("offers what an inline `<svg>` nests, its `style` attribute included", () => {
+		// Foreign content: every other attribute there is adjusted or means
+		// something else, but `style` is a declaration list exactly like HTML's.
+		expect(
+			offered(
+				'<svg viewBox="0 0 2 2"><style>.s { fill : red }</style><rect style="fill : red"/><script>var b = 2</script></svg>'
+			)
+		).toEqual([
+			["css", ".s { fill : red }"],
+			["css", "a{fill : red}"],
+			["javascript", "var b = 2"],
+			// The subtree comes last: children print before their parent, so it
+			// carries whatever the renderer just made of them.
+			[
+				"svg",
+				'<svg viewBox="0 0 2 2"><style>.s { fill : red }</style><rect style="fill : red"/><script>var b = 2</script></svg>'
+			]
+		]);
+	});
+
+	it("offers each body exactly once, including on a `/>`-spelled tag", () => {
+		// A tag the source spells `/>` is serialized twice — once by the streaming
+		// walk, once by the printer — and a renderer must not see it twice.
+		expect(
+			offered('<svg viewBox="0 0 2 2"><rect style="fill : red"/></svg>')
+		).toEqual([
+			["css", "a{fill : red}"],
+			["svg", '<svg viewBox="0 0 2 2"><rect style="fill : red"/></svg>']
+		]);
+	});
+
+	it("offers only the outermost `<svg>`, its nested bodies already rendered", () => {
+		/** @type {string[]} */
+		const svg = [];
+		const out = minify(
+			'<svg viewBox="0 0 2 2"><style>  .s { fill : red }  </style><svg><rect/></svg></svg>',
+			(source, info) => {
+				if (info.type === "css") return source.replace(/\s+/g, "");
+				svg.push(source);
+				return source.replace(" viewBox", " v");
+			}
+		);
+		// One offer for the whole subtree — the inner `<svg>` is part of it — and
+		// the CSS inside it is what the renderer just returned.
+		expect(svg).toEqual([
+			'<svg viewBox="0 0 2 2"><style>.s{fill:red}</style><svg><rect/></svg></svg>'
+		]);
+		expect(out).toBe(
+			'<svg v="0 0 2 2"><style>.s{fill:red}</style><svg><rect/></svg></svg>'
+		);
+	});
+
+	it("offers a self-closing `<svg>`", () => {
+		expect(offered("<svg/>")).toEqual([["svg", "<svg/>"]]);
+	});
+
+	it("does not offer a non-CSS `<style>` or a data-block `<script>`", () => {
+		expect(
+			offered(
+				'<style type="text/plain">raw</style><script type="text/template">raw</script>'
+			)
+		).toEqual([]);
+	});
+});
+
+describe("SourceProcessor — inline CSS honors the target's abilities", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	// A `style=""` is serialized while the walk streams the open tag, before that
+	// element's printer runs, so its options have to be bound for the whole print
+	// — otherwise the attribute reads the previous print's target and emits a
+	// spelling this one cannot read.
+	/**
+	 * @param {boolean} cssColorHexAlpha whether the target reads `#rrggbbaa`
+	 * @returns {string} the minified serialization
+	 */
+	const minifyWith = (cssColorHexAlpha) =>
+		new SourceProcessor().process(
+			'<p style="color:rgba(255,0,0,.5)">x</p><style>.a{color:rgba(255,0,0,.5)}</style>',
+			{ mode: "minify", environment: { cssColorHexAlpha } }
+		).code;
+
+	it("shortens both the attribute and the element when the target reads it", () => {
+		expect(minifyWith(true)).toBe(
+			"<p style=color:#ff000080>x</p><style>.a{color:#ff000080}</style>"
+		);
+	});
+
+	it("shortens neither when it does not", () => {
+		expect(minifyWith(false)).toBe(
+			"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"
+		);
+	});
+
+	it("does not carry one print's target into the next", () => {
+		minifyWith(true);
+		expect(minifyWith(false)).toBe(
+			"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"
+		);
+	});
+});
+
 describe("parseHtml — insertion-mode edge cases", () => {
 	it("merges foster-parented text runs before a table", () => {
 		const nodes = body("<table>x<tr></tr>y</table>");

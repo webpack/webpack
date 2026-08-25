@@ -3406,6 +3406,27 @@ declare class Compilation {
 			[RenderManifestEntry[], RenderManifestOptions],
 			RenderManifestEntry[]
 		>;
+		/**
+		 * Called with source written in one language that a module emits inside
+		 * another — CSS or HTML reaching the bundle as a JavaScript string
+		 * literal today — before it is embedded; return the (possibly
+		 * transformed) source, e.g. a minified one. `info.type` says which
+		 * language it is, so one tap serves every pair; no asset carries this
+		 * source, so an asset-level minimizer cannot reach it.
+		 * @since 5.110.0
+		 */
+		renderEmbeddedSource: AsyncSeriesWaterfallHook<
+			[Source, EmbeddedSourceInfo],
+			Source
+		>;
+		/**
+		 * Called while hashing a module that embeds such a source. Module hashes
+		 * are taken before code generation, so a `renderEmbeddedSource` tap must
+		 * write whatever it varies on into the hash, or the codegen cache
+		 * replays output from before its options changed.
+		 * @since 5.110.0
+		 */
+		embeddedSourceHash: SyncHook<[Module, Hash]>;
 		fullHash: SyncHook<[Hash]>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
@@ -5902,6 +5923,14 @@ declare interface CssPrintOptions {
 	environment?: CssEnvironment;
 
 	/**
+	 * renders source this stylesheet embeds: the payload of a `url()` `data:` URL whose media type names a language webpack knows (SVG, CSS, HTML, JSON, JavaScript). Absent, a data URL is emitted exactly as written
+	 */
+	renderEmbeddedSource?: (
+		source: string,
+		info: { type: string; hostType: string }
+	) => string;
+
+	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
@@ -5961,6 +5990,14 @@ declare interface CssProcessOptions {
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
+
+	/**
+	 * renders source this stylesheet embeds: the payload of a `url()` `data:` URL whose media type names a language webpack knows (SVG, CSS, HTML, JSON, JavaScript). Absent, a data URL is emitted exactly as written
+	 */
+	renderEmbeddedSource?: (
+		source: string,
+		info: { type: string; hostType: string }
+	) => string;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -6956,6 +6993,22 @@ declare class ElectronTargetPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface EmbeddedSourceInfo {
+	/**
+	 * the embedded source's type, e.g. `"css"` / `"html"`
+	 */
+	type: string;
+
+	/**
+	 * the type of the source it is embedded in, e.g. `"javascript"`
+	 */
+	hostType: string;
+
+	/**
+	 * the module being generated
+	 */
+	module: Module;
 }
 
 /**
@@ -10210,6 +10263,10 @@ type HtmlPrintOptions = Pick<
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
 	removeImpliedTags?: boolean | "all" | "smart";
+	renderEmbeddedSource?: (
+		source: string,
+		info: { type: string; hostType: string }
+	) => string;
 };
 declare interface HtmlProcessOptions {
 	/**
@@ -10286,6 +10343,14 @@ declare interface HtmlProcessOptions {
 	 * how much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out: `"smart"` leaves out only the `<html>` start tag, `true` (or `"all"`) all six, `false` none (default `"smart"`)
 	 */
 	removeImpliedTags?: boolean | "all" | "smart";
+
+	/**
+	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript, and an `<svg>` subtree. Replaces the built-in CSS and JSON minifiers, and is the only way inline JavaScript and SVG are reached at all
+	 */
+	renderEmbeddedSource?: (
+		source: string,
+		info: { type: string; hostType: string }
+	) => string;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
