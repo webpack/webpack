@@ -3525,6 +3525,11 @@ export interface PerformanceOptions {
 	 */
 	missingSideEffects?: boolean;
 	/**
+	 * Report modules a loader transformed without returning a source map, which leaves the map pointing at the loader's output rather than the file (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	missingSourceMaps?: boolean;
+	/**
 	 * Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */

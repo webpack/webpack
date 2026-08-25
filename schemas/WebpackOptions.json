@@ -5633,6 +5633,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "missingSourceMaps": {
+          "description": "Report modules a loader transformed without returning a source map, which leaves the map pointing at the loader's output rather than the file (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "mixedExports": {
           "description": "Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).",
           "type": "boolean",

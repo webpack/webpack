@@ -15839,6 +15839,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-missing-source-maps": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules a loader transformed without returning a source map, which leaves the map pointing at the loader's output rather than the file (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.missingSourceMaps",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules a loader transformed without returning a source map, which leaves the map pointing at the loader's output rather than the file (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-mixed-exports": Object {
     "configs": Array [
       Object {
