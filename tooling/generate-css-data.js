@@ -53,6 +53,7 @@ const properties = require("mdn-data/css/properties.json");
 const selectors = require("mdn-data/css/selectors.json");
 /** @type {SyntaxTable} */
 const syntaxes = require("mdn-data/css/syntaxes.json");
+const units = require("mdn-data/css/units.json");
 /** @type {PackageManifest} */
 const mdnDataPackage = require("mdn-data/package.json");
 
@@ -2772,6 +2773,29 @@ const collectOmittableInitialKeywords = (
 	return out;
 };
 
+/**
+ * Every name CSS matches ASCII case-insensitively whose canonical spelling is
+ * not all-lowercase, keyed by the lowercase form the printer arrives with. Read
+ * off the two datasets that carry such names — the function table
+ * (`translateX()`, `skewY()`) and the unit table (`Hz`, `kHz`, `Q`) — rather
+ * than listed, so a name either dataset re-cases lands as a diff. Nothing else
+ * needs an entry: every property, at-rule and selector `mdn-data` states is
+ * spelled lowercase already.
+ * @returns {[string, string][]} lowercased name -> canonical spelling, sorted
+ */
+const collectCanonicalNames = () => {
+	/** @type {Map<string, string>} */
+	const canonical = new Map();
+	for (const name of Object.keys(functions)) {
+		const bare = name.slice(0, -2);
+		if (bare !== bare.toLowerCase()) canonical.set(bare.toLowerCase(), bare);
+	}
+	for (const name of Object.keys(units)) {
+		if (name !== name.toLowerCase()) canonical.set(name.toLowerCase(), name);
+	}
+	return [...canonical].sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
 // A production naming a selector: what a function taking one has in its grammar.
 const SELECTOR_PRODUCTION_REGEXP = /<[a-z-]*selector[a-z-]*>/;
 
@@ -5247,6 +5271,7 @@ const collectData = async () => {
 	const nthNamedEquivalents = collectNthNamedEquivalents();
 	const omittableInitialKeywords = collectOmittableInitialKeywords();
 	const selectorFunctions = collectSelectorFunctions();
+	const canonicalNames = collectCanonicalNames();
 	const colorOnlyProperties = collectColorOnlyProperties();
 	const initialValueKeywords = collectInitialValueKeywords();
 	const repeatStyleProperties = collectRepeatStyleProperties();
@@ -5605,6 +5630,11 @@ const AUTO_SECOND_VALUE_PROPERTIES = ${setLiteral(
 const DEFAULT_GRADIENT_DIRECTIONS = ${setLiteral(
 		SUPPLEMENT.defaultGradientDirections
 	)};
+
+// A name CSS matches ASCII case-insensitively but spells with a capital ->
+// that spelling, so lowercasing a name normalizes its case without printing
+// \`translatey\` or \`1q\` for what everything else writes \`translateY\` and \`1Q\`.
+const CANONICAL_NAMES = ${mapLiteral(canonicalNames)};
 
 // A transform along x only -> the pair spelling whose second component is the
 // 0 the one-axis call already means.
@@ -6007,7 +6037,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;

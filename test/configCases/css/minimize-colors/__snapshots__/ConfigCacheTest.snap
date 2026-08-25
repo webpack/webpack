@@ -3,13 +3,13 @@
 exports[`ConfigCacheTestCases css minimize-colors minimize-colors should compile 1`] = `
 Array [
   "/*! colormin: should minify lowercase color values */.t01{color:#ff0}",
-  "/*! colormin: should minify uppercase color values */.t02{COLOR:#ff0}",
+  "/*! colormin: should minify uppercase color values */.t02{color:#ff0}",
   "/*! colormin: should minify color values (2) */.t03{box-shadow:0 1px 3px#ffe6dc80}",
   "/*! colormin: should minify color values (3) */.t04{background:hsla(134,50%,50%,1)}",
   "/*! colormin: should minify color values (4) */.t05{text-shadow:1px 1px 2px#000}",
   "/*! colormin: should minify color values (5) */.t06{text-shadow:1px 1px 2px#fff}",
   "/*! colormin: should minify color values (6) */.t07{text-shadow:1px 1px 2px#fff}",
-  "/*! colormin: should minify color values (7) */.t08{background:HSLA(134,50%,50%,1)}",
+  "/*! colormin: should minify color values (7) */.t08{background:hsla(134,50%,50%,1)}",
   "/*! colormin: should minify color values (8) */.t09{background:#fff}",
   "/*! colormin: should minify color values (9) */.t10{background:azure}",
   "/*! colormin: should minify color values in background gradients */.t11{background:linear-gradient(red,yellow)}",

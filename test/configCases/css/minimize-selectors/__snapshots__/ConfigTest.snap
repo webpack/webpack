@@ -58,7 +58,7 @@ Array [
   "/*! lightningcss: .t59:first-letter */.t59:first-letter{color:red}",
   "/*! lightningcss: .t60:hover:before */.t60:hover:before{color:red}",
   "/*! lightningcss: .t61:before .t61:after — one rule, both collapse */.t61:before .t61:after{color:red}",
-  "/*! webpack: the name's case is the author's, only the colon goes */.t62:BEFORE{color:red}",
+  "/*! webpack: the legacy colon goes and the name matches case-insensitively */.t62:before{color:red}",
   "/*! webpack: ::selection came after CSS2, so it has no one-colon spelling */.t63::selection{color:red}",
   "/*! webpack: ...nor do ::placeholder, ::backdrop or a vendor pseudo-element */.t64::placeholder,.t65::backdrop,.t66::-webkit-scrollbar{color:red}",
   "/*! webpack: a \`selector()\` condition is an at-rule prelude, left alone */@supports selector(::before){.t67{color:red}}",

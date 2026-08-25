@@ -1970,11 +1970,105 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		);
 	});
 
+	describe("a name CSS matches ASCII case-insensitively", () => {
+		it.each([
+			["a property", "a{COLOR:red}", "a{color:red}"],
+			[
+				"a vendor property",
+				"a{-WEBKIT-Box-Shadow:0 0}",
+				"a{-webkit-box-shadow:0 0}"
+			],
+			["an at-rule", "@MEDIA print{a{b:c}}", "@media print{a{b:c}}"],
+			["a function", "a{width:CALC(1px + 2em)}", "a{width:calc(1px + 2em)}"],
+			["a url token", "a{background:URL(A.PNG)}", "a{background:url(A.PNG)}"],
+			[
+				"a padded url token",
+				"a{background:URL(  A.PNG  )}",
+				"a{background:url(A.PNG)}"
+			],
+			["a unit", "a{width:10PX}", "a{width:10px}"],
+			["a pseudo-class", "A:HOVER{b:c}", "A:hover{b:c}"],
+			["a pseudo-element", "a::BEFORE{b:c}", "a:before{b:c}"],
+			[
+				"a pseudo inside a selector function",
+				"a:NOT(b:HOVER){c:d}",
+				"a:not(b:hover){c:d}"
+			],
+			[
+				"a media feature",
+				"@media (MIN-WIDTH:100PX){a{b:c}}",
+				"@media (width>=100px){a{b:c}}"
+			],
+			[
+				"a media type and the keyword before it",
+				"@media ONLY SCREEN{a{b:c}}",
+				"@media only screen{a{b:c}}"
+			]
+		])("is printed lowercase: %s", (_name, css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+
+		it.each([
+			// A type selector is case-sensitive in XML, where `linearGradient` is
+			// its own element.
+			["a type selector", "DIV linearGradient{a:b}"],
+			["an id and a class", "#Id.Class{a:b}"],
+			// HTML matches an attribute name case-insensitively, XML does not, and
+			// an attribute's value is case-sensitive in both.
+			["an attribute selector", 'a[HREF^="HTTP x"]{b:c}'],
+			["a custom property", "a{--Foo:BAR}"],
+			["a keyframes name", "@keyframes Spin{0%{a:b}}"],
+			["a container name", "@container Card (width>0px){a{b:c}}"],
+			["a custom media name", "@media (--Wide){a{b:c}}"],
+			// A style query asks whether a custom property holds the token stream
+			// written here, which is read as written.
+			["a style query", "@container style(--x:Foo){a{b:c}}"],
+			["a string in a condition", '@media (font-family:"My Font"){a{b:c}}'],
+			["a font family", "a{font-family:Other Face,MyFont}"],
+			// A name carrying an escape names its characters by case: `\\G` is not
+			// `\\g`.
+			["an escaped name", "a{c\\4Flor:red}"]
+		])("is left as written: %s", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
+
+		// The bytes an engine reads a charset rule as are the literal `@charset "`
+		// (CSS Syntax 3 §3.2), so lowercasing one would turn a rule the engine
+		// drops into one that sets the sheet's encoding.
+		it("leaves a cased `@charset` alone", () => {
+			expect(min('@CHARSET "utf-8";a{b:c}')).toBe('@CHARSET "utf-8";a{b:c}');
+			expect(min('@charset "utf-8";a{b:c}')).toBe('@charset "utf-8";a{b:c}');
+		});
+
+		// Both are the same declaration however they are spelled, so a rule an
+		// identical later sibling repeats is dead whichever way each spells it.
+		it("makes two spellings of one property the same bytes", () => {
+			expect(min("a{color:red}a{COLOR:blue}")).toBe(
+				"a{color:red}a{color:blue}"
+			);
+			expect(min("a{COLOR:red}a{color:red}")).toBe("a{color:red}");
+		});
+
+		// The eleven transforms and three units `mdn-data` spells with a capital
+		// keep that spelling, which is what every other tool writes.
+		it.each([
+			["a{transform:TRANSLATEY(5px)}", "a{transform:translateY(5px)}"],
+			["a{transform:skewx(1deg)}", "a{transform:skew(1deg)}"],
+			["a{transform:SCALEZ(2)}", "a{transform:scaleZ(2)}"],
+			["a{width:40q}", "a{width:40Q}"],
+			["a{x:1hz}", "a{x:1Hz}"],
+			["a{x:1KHZ}", "a{x:1kHz}"]
+		])("keeps the canonical spelling of %s", (css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+	});
+
 	it("rewrites a `flex` value to its keyword spelling", () => {
 		expect(min("a{flex:0 0 auto}")).toBe("a{flex:none}");
 		expect(min("a{flex:1 1 auto}")).toBe("a{flex:auto}");
-		// The names match case-insensitively; the property keeps its own spelling.
-		expect(min("a{FLEX:0 0 AUTO}")).toBe("a{FLEX:none}");
+		// The names match case-insensitively, and the property is printed the one
+		// way it matches.
+		expect(min("a{FLEX:0 0 AUTO}")).toBe("a{flex:none}");
 	});
 
 	it("drops a `flex` shrink factor that is its own default", () => {
@@ -2860,7 +2954,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// no exact ratio to a shorter unit
 			["1.3px"],
 			// `q` is a conversion source, never a target
-			["40q"],
+			["40Q"],
 			// scientific notation is left alone
 			["1e3px"],
 			// a unit outside the absolute families
@@ -3159,7 +3253,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			["a{border-image:none 30}", "a{border-image:30}"],
 			["a{mask:none luminance}", "a{mask:luminance}"],
-			["a{TRANSITION:opacity 1s EASE}", "a{TRANSITION:opacity 1s}"]
+			["a{TRANSITION:opacity 1s EASE}", "a{transition:opacity 1s}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -3749,7 +3843,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// One block holds a property once, so the earlier declaration of a
 			// property both of them set would be the one it loses.
 			["they set the same property", "a{color:red}a{color:blue}"],
-			["...whatever its case", "a{color:red}a{COLOR:blue}"],
 			// A shorthand holds every longhand its name prefixes.
 			[
 				"one holds the other's longhand",
@@ -5979,7 +6072,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 				"@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}",
 				["chrome 40"]
 			)
-		).toBe("@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}");
+		).toBe("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}");
 	});
 
 	it("gives each same-named at-rule its own copy, so the last still wins", () => {
@@ -6188,7 +6281,7 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("matches a pseudo name case-insensitively", () => {
 		expect(minifyFor("::PLACEHOLDER{color:red}", ["chrome 40"])).toBe(
-			"::-webkit-input-placeholder{color:red}::PLACEHOLDER{color:red}"
+			"::-webkit-input-placeholder{color:red}::placeholder{color:red}"
 		);
 	});
 
