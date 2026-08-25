@@ -71,17 +71,22 @@ class SampleEmbeddedMinifyPlugin {
 					}
 					if (type === HTML_TYPE && html) {
 						const markup = source.source();
+						// Answered as bytes, as a minifier working on buffers would: the
+						// generator embedding this has to take either.
 						return new RawSource(
-							new htmlSyntax.SourceProcessor().process(
-								typeof markup === "string" ? markup : markup.toString("utf8"),
-								{
-									mode: "minify",
-									// What the document itself embeds. Absent, the serializer
-									// falls back to its own CSS and JSON minifiers.
-									renderEmbeddedSource,
-									...minimizerOptions
-								}
-							).code
+							Buffer.from(
+								new htmlSyntax.SourceProcessor().process(
+									typeof markup === "string" ? markup : markup.toString("utf8"),
+									{
+										mode: "minify",
+										// What the document itself embeds. Absent, the serializer
+										// falls back to its own CSS and JSON minifiers.
+										renderEmbeddedSource,
+										...minimizerOptions
+									}
+								).code,
+								"utf8"
+							)
 						);
 					}
 					return source;
