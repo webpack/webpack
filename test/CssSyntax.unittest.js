@@ -2625,9 +2625,8 @@ describe("CssSyntax — print modes", () => {
 	});
 
 	it("closes a comment the source left open before writing after it", () => {
-		// §4.3.2 runs an unterminated comment to EOF, so a `;` or `}` written after
-		// it lands inside it — and the next parse reads a longer comment, growing
-		// the output on every pass (`{y/*` -> `{y/*}` -> `{y/*}}`).
+		// §4.3.2 runs an unterminated comment to EOF, so a `;` or `}` after it
+		// lands inside: `{y/*` grew to `{y/*}` to `{y/*}}` on every pass.
 		expect(print("{y/*", "minify")).toBe("{y/**/}");
 		expect(print("{y/*", "beautify")).toBe(" {\ny/**/;\n}");
 		for (const mode of /** @type {const} */ (["minify", "beautify"])) {
@@ -6383,9 +6382,8 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 	});
 });
 
-// The corpus the tokenizer snapshots read, put through the other print mode.
-// Beautifying is the mode with no test corpus of its own, and it is the one a
-// consumer reads, so what it writes is snapshotted rather than described.
+// The tokenizer's corpus through the other print mode: beautifying had none of
+// its own, and it is what a consumer reads, so its output is snapshotted.
 describe("CssSyntax — beautifying the parsing corpus", () => {
 	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
 	const cases = fs
@@ -6404,12 +6402,6 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 	const print = (src, mode) =>
 		new SourceProcessor().process(src, { mode }).code;
 
-	// Beautifying writes a terminator after content it echoed raw, so a comment
-	// the source never closed swallows it and the rule never ends. Minimal:
-	// Both modes drop a rule an identical later sibling supersedes, and minifying
-	// also joins adjacent rules sharing a selector — so the two forms keep a
-	// different copy of the same declarations. Every element still computes what
-
 	it("has a corpus", () => {
 		expect(cases.length).toBeGreaterThan(15);
 	});
@@ -6424,8 +6416,7 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 	}
 
 	// Both modes read the same stylesheet, so minifying either form answers the
-	// same — the property `print modes` states over its own handful of sources,
-	// here over every case the tokenizer reads.
+	// same — what `print modes` states over a handful, over every case here.
 	for (const [name, code] of cases) {
 		it(`should minify "${name}" the same from either form`, () => {
 			expect(print(print(code, "beautify"), "minify")).toBe(

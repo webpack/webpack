@@ -1083,9 +1083,8 @@ describe("wpt tree stability", () => {
 				for (const [mode, print] of PRINT_MODES) {
 					const why = whatMoved(before, domShapeOf(print(source)));
 					if (why === "") continue;
-					// Keyed by mode as well as document: a file filed for one mode says
-					// nothing about the other, and exempting both would hide half of
-					// what this tier exists to catch.
+					// Keyed by mode too: a file filed for one says nothing about the
+					// other, and exempting both hides half of what this tier catches.
 					const name = `${mode} ${nameOf(file)}`;
 					diverging.add(name);
 					if (!FILED_WPT_TREE_DEFECTS.has(name)) {
@@ -1105,10 +1104,8 @@ describe("wpt tree stability", () => {
 	});
 });
 
-// §serialization of css-syntax lists the token pairs that re-tokenize as
-// something else when written next to each other, so a minifier dropping the
-// whitespace between them has to leave a separator behind. wpt states that
-// table; this holds our minifier to it without an engine.
+// css-syntax §serialization lists the token pairs that re-tokenize when written
+// together, so dropping the whitespace between them has to leave a separator.
 describe("wpt css token adjacency", () => {
 	const table = path.resolve(
 		WPT,

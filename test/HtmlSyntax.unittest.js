@@ -7840,9 +7840,8 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		).toBe("<nobr><table><b><colgroup><nobr>");
 	});
 
-	// Harvested from wpt's `html/syntax/serializing-html-fragments`, which states
-	// the cases §13.3 serialization has to get right; the tree is what we hold
-	// them to, since our printer echoes the source rather than re-serializing.
+	// From wpt's `html/syntax/serializing-html-fragments`. Held to the tree, not
+	// to §13.3's text: this printer echoes the source rather than re-serializing.
 	describe("wpt serialization cases", () => {
 		it.each([
 			["a bare ampersand in an attribute", "<span><a b='&'></a></span>"],
@@ -7891,9 +7890,8 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 	});
 });
 
-// Beautifying is not a pretty-printer: it completes the tags the source left
-// out and echoes everything else byte for byte, so what it writes is
-// snapshotted rather than described.
+// Beautifying is no pretty-printer: it completes the tags the source left out
+// and echoes the rest byte for byte, so what it writes is snapshotted.
 describe("SourceProcessor — beautifying", () => {
 	const { SourceProcessor, parseHtml } = require("../lib/html/syntax");
 
@@ -7944,9 +7942,8 @@ describe("SourceProcessor — beautifying", () => {
 		expect(moved).toEqual([]);
 	});
 
-	// Echoing the source cannot be a fixed point in one pass: a tag the printer
-	// supplies is source the next pass reads, and a source-written tag is the
-	// one case that gets its pair written back. It settles on the second pass.
+	// A tag the printer supplies is source the next pass reads, and a written one
+	// gets its pair back — so echoing settles on the second pass, not the first.
 	it("should settle on the second pass", () => {
 		/** @type {string[]} */
 		const unsettled = [];
