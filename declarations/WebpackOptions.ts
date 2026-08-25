@@ -839,6 +839,12 @@ export type CssParserPure = boolean;
 export type CssParserUrl = boolean;
 
 /**
+ * State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).
+ * @since 5.112.0
+ */
+export type DeclareChunkDependencies = boolean;
+
+/**
  * Options for defer import.
  */
 export type DeferImportExperimentOptions = boolean;
@@ -2715,6 +2721,11 @@ export interface LibraryOptions {
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: AuxiliaryComment;
+	/**
+	 * State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).
+	 * @since 5.112.0
+	 */
+	declareChunkDependencies?: DeclareChunkDependencies;
 	/**
 	 * Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.
 	 * @since 5.112.0
