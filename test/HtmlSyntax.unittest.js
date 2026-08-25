@@ -4217,6 +4217,22 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 		const afterComment =
 			'<script>a()</script><script>/* c */ "use strict";b()</script>';
 		expect(minify(afterComment)).toBe(afterComment);
+		// ECMAScript's whitespace is wider than HTML's, and all of it may sit
+		// before a directive: a form feed, a BOM, U+2028.
+		for (const space of ["\f", "\v", "\uFEFF", "\u00A0", "\u2028", "\u2029"]) {
+			const spaced = `<script>a()</script><script>${space}"use strict";x = 1</script>`;
+			expect(minify(spaced)).toBe(spaced);
+		}
+		// The same set ends a line comment, so a directive behind one is found.
+		// Compared as two elements, not byte for byte: the parser reads a `\r` in
+		// as a `\n`.
+		for (const terminator of ["\n", "\r", "\u2028", "\u2029"]) {
+			expect(
+				minify(
+					`<script>a()</script><script>// c${terminator}"use strict";b()</script>`
+				)
+			).toContain("</script><script");
+		}
 		// A hashbang is only a hashbang at the very start of a script.
 		const hashbang =
 			"<script>a()</script><script>#!/usr/bin/env node\nb()</script>";
