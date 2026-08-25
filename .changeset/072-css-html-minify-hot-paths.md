@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up CSS and HTML minification, cut allocations; select output with `mode`.
+Speed up CSS and HTML parsing and minification, cut allocations; select output with `mode`.

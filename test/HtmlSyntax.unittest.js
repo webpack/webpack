@@ -8243,3 +8243,62 @@ describe("SourceProcessor — beautifying", () => {
 		expect(unsettled).toEqual([]);
 	});
 });
+
+describe("SourceProcessor — reusing work across a print", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {Partial<import("../lib/html/syntax").HtmlProcessOptions>=} options extra process options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
+
+	it("minifies a repeated style attribute to the same declarations", () => {
+		expect(
+			minify(
+				'<p style="color: #ff0000; color: #ff0000"><b style="color: #ff0000">'
+			)
+		).toBe("<p style=color:red><b style=color:red></b>");
+	});
+
+	it("does not carry a style attribute's result into a print with other options", () => {
+		const html = '<p style="width: 16px">';
+		expect(minify(html)).toBe("<p style=width:16px>");
+		expect(minify(html, { convertLengthUnits: true })).toBe(
+			"<p style=width:1pc>"
+		);
+		expect(minify(html)).toBe("<p style=width:16px>");
+	});
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the tag name of the document's deepest element
+	 */
+	const deepestTagName = (html) => {
+		let node = parseHtmlRefs(html);
+		for (;;) {
+			const children = A.children(node);
+			if (children.length === 0) return A.tagName(node);
+			node = children[children.length - 1];
+		}
+	};
+
+	it("reads back the name it was given, whatever the memo holds", () => {
+		// These three take the same memo slot — it is keyed by first character and
+		// length — so each is handed the one before it and must reject it.
+		expect(deepestTagName("<body><my-widget>")).toBe("my-widget");
+		expect(deepestTagName("<body><my-gadget>")).toBe("my-gadget");
+		expect(deepestTagName("<body><MY-WIDGET>")).toBe("my-widget");
+	});
+
+	it("hands out one shared string for a known name", () => {
+		// What lets the memo keep a known name across parses: the entry is this
+		// constant, not a slice of the document that asked for it.
+		const first = deepestTagName("<body><section>");
+		const second = deepestTagName("<body><SECTION>");
+		expect(second).toBe("section");
+		expect(second).toBe(first);
+	});
+});
