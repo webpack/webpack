@@ -68,7 +68,8 @@ module.exports = [
 		baseUri: "app/",
 		expect: "/app/assets/asset.txt"
 	}),
-	// No literal can spell a protocol-relative base, so it stays with the runtime.
+	// A protocol-relative base keeps the scheme of whatever loads the chunk, which a
+	// literal resolved against `import.meta.url` reproduces.
 	base({
 		index: 2,
 		name: "proto",
