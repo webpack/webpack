@@ -2624,6 +2624,20 @@ describe("CssSyntax — print modes", () => {
 		);
 	});
 
+	it("closes a comment the source left open before writing after it", () => {
+		// §4.3.2 runs an unterminated comment to EOF, so a `;` or `}` written after
+		// it lands inside it — and the next parse reads a longer comment, growing
+		// the output on every pass (`{y/*` -> `{y/*}` -> `{y/*}}`).
+		expect(print("{y/*", "minify")).toBe("{y/**/}");
+		expect(print("{y/*", "beautify")).toBe(" {\ny/**/;\n}");
+		for (const mode of /** @type {const} */ (["minify", "beautify"])) {
+			const once = print("{y/*", mode);
+			expect(print(once, mode)).toBe(once);
+		}
+		// A comment the source did close is written back as it stands.
+		expect(print("{y/**/ z", "minify")).toBe("{y/**/ z}");
+	});
+
 	it("beautifies to something that minifies back the same", () => {
 		for (const src of [
 			"/*!k*/.a{color:#ff0000}",
@@ -6392,19 +6406,16 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 
 	// Beautifying writes a terminator after content it echoed raw, so a comment
 	// the source never closed swallows it and the rule never ends. Minimal:
-	// `{y/*` beautifies to ` {\ny/*;\n}`, where the `;}` is comment content.
-	const FILED_BEAUTIFY_DEFECTS = new Map([
-		[
-			"hacks.css",
-			"an unterminated comment swallows the terminator written after it"
-		],
-		[
-			"values.css",
-			"an unterminated block swallows the terminator written after it"
-		],
+	// Both modes drop a rule an identical later sibling supersedes, and minifying
+	// also joins adjacent rules sharing a selector — so the two forms keep a
+	// different copy of the same declarations. Every element still computes what
+	// the source said; only which redundant copy survives differs.
+	const KEPT_A_DIFFERENT_COPY = new Map([
+		["hacks.css", "a repeated `.selector` rule survives in a different place"],
+		["values.css", "a repeated declaration survives in a different place"],
 		[
 			"nesting.css",
-			"a nested rule is hoisted from the beautified form but not the source"
+			"a nested rule is kept beside the source's copy, not merged into it"
 		]
 	]);
 
@@ -6425,9 +6436,9 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 	// same — the property `print modes` states over its own handful of sources,
 	// here over every case the tokenizer reads.
 	for (const [name, code] of cases) {
-		const filed = FILED_BEAUTIFY_DEFECTS.get(name);
+		const filed = KEPT_A_DIFFERENT_COPY.get(name);
 
-		it(`should minify "${name}" the same from either form${filed ? " (filed)" : ""}`, () => {
+		it(`should minify "${name}" the same from either form${filed ? " (keeps a different copy)" : ""}`, () => {
 			const fromSource = print(code, "minify");
 			const fromBeautified = print(print(code, "beautify"), "minify");
 			if (filed === undefined) expect(fromBeautified).toBe(fromSource);
