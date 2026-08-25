@@ -22,5 +22,7 @@ Array [
   "/*! the \`place-*\` shorthands are newer than the pairs they merge */.t16{align-items:center;justify-items:end}.t17{align-self:center;justify-self:center}.t18{align-content:center;justify-content:end}",
   "/*! ...unlike \`gap\`, whose shorthand is as old as its longhands */.t19{gap:1px 2px}",
   "/*! ...and a source \`place-items\` is the author's own, so it stays */.t20{place-items:center end}",
+  "/*! ...and two-value \`overflow\`, which Chrome 50 predates */.t21{overflow-x:hidden;overflow-y:scroll}",
+  "/*! ...while collapsing it to one value is as old as the longhands */.t22{overflow:hidden}",
 ]
 `;

@@ -10,7 +10,7 @@ Array [
   "/*! declined: px -> pc/pt/in is exact, but it fires ~10 times in all of Bootstrap
    and costs as many bytes as it saves once compressed, so it is off by default
    (\`convertLengthUnits\`) — as it is in cssnano's default preset */.t06{width:16px}.t07{width:120px}.t08{width:192px}",
-  "/*! convert-values: should strip the unit from zero lengths */.t09{margin:0 0% 0 0}",
+  "/*! convert-values: should strip the unit from zero lengths */.t09{margin:0 0%0 0}",
   "/*! convert-values: ...inside a call whose every number is a length too */.t09a{transform:translate3d(0,1em,2em)}",
   "/*! convert-values: ...however deep the shape nests them */.t09b{clip-path:inset(0 1px 0 2px)}",
   "/*! declined: \`scale()\` takes a \`<number>\`, so \`scale(0px)\` is dropped where
@@ -78,8 +78,9 @@ Array [
   "/*! webpack: a shorthand setting exactly two longhands merges like a box family */.t70{margin-block:1px 2px}",
   "/*! ...collapsing to one value when both are equal */.t71{padding-inline:1px}",
   "/*! ...and \`gap\`, whose longhands are named for the axes */.t72{gap:1px 2px}",
-  "/*! declined: two-value \`overflow\` is far newer than \`overflow-x\`/\`-y\`, so the
-   merge would lose both declarations on a target that reads only the longhands */.t73{overflow-x:hidden;overflow-y:scroll}",
+  "/*! webpack: two-value \`overflow\` is far newer than \`overflow-x\`/\`-y\`, so it is
+   written only where the target reads it — this case builds for no particular
+   one (see the \`minimize-environment\` case) */.t73{overflow:hidden scroll}",
   "/*! webpack: ...but one-value \`overflow\` is CSS 2.1, as old as the longhands */.t73a{overflow:hidden}",
   "/*! merge-longhand: \`place-items\` is newer than \`align-items\`, so it is written
    only where the target reads it — see the \`minimize-environment\` case */.t74{place-items:center start}",
@@ -121,7 +122,8 @@ Array [
   "/*! webpack: declined: outside the sRGB gamut, a hex would clip it */.t99{color:oklch(90% .4 140)}",
   "/*! webpack: an alpha rides along into the hex */.t100{color:#5f0c}",
   "/*! webpack: the merge steps over what does not write the family */.t101{margin:1px 2px;color:red}",
-  "/*! webpack: declined: the shorthand itself between them */.t102{margin-top:1px;margin:9px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+  "/*! webpack: the shorthand takes the longhands written after it, and the one
+   written before it stays where it is */.t102{margin-top:1px;margin:9px 2px 1px}",
   "/*! webpack: declined: a logical property that writes the same sides */.t103{margin-top:1px;margin-inline:9px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`all\` writes everything */.t104{margin-top:1px;all:unset;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`border\` writes every border-color longhand */.t105{border-top-color:red;border:1px solid;border-right-color:red;border-bottom-color:red;border-left-color:red}",
@@ -164,7 +166,7 @@ Array [
    function token after an identifier */.t144a{--t144a:a[b]c (d)}",
   "/*! webpack: declined: a string is one token, whatever stands inside it */.t145{--t145:\\"a  b\\" \\"c ,  d\\"}",
   "/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */.t146{box-shadow:0 0 0 1px red inset,0 0 blue inset}",
-  "/*! webpack: declined: \`0%\` is a percentage, which a shadow's slots do not take */.t147{box-shadow:1px 1px 0% 0% red}",
+  "/*! webpack: declined: \`0%\` is a percentage, which a shadow's slots do not take */.t147{box-shadow:1px 1px 0%0%red}",
   "/*! webpack: declined: writing the character a hex escape names is value-identical,
    but it trades a repetitive ASCII alphabet for 3-byte UTF-8 runs — 6420 raw bytes
    saved against 593 gzip bytes lost over 19 framework stylesheets */.t148{content:\\"\\\\f00d\\"}.t149{content:\\"\\\\2014\\"}",

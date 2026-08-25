@@ -2953,16 +2953,43 @@ const countMapLiteral = (entries) =>
  * @param {[string, [string, [string, number, number][]][]][]} table the axis table
  * @returns {string} its `new Map([…])` literal — prettier wraps it on emit
  */
+// The `[browser, from, to]` windows every prefix table shares, pooled: a window
+// list is stated once and each spelling names the one it reads. Two thirds of
+// them repeat — 24 constructs share Gecko's one window alone.
+/** @type {Map<string, number>} */
+const prefixWindowIndex = new Map();
+/** @type {string[]} */
+const prefixWindows = [];
+
+/**
+ * @param {[string, number, number][]} browsers one spelling's windows
+ * @returns {number} its index in the pool
+ */
+const poolPrefixWindows = (browsers) => {
+	const body = browsers
+		.map(([browser, from, to]) => `["${browser}", ${from}, ${to}]`)
+		.join(", ");
+	let at = prefixWindowIndex.get(body);
+	if (at === undefined) {
+		at = prefixWindows.length;
+		prefixWindows.push(`[${body}]`);
+		prefixWindowIndex.set(body, at);
+	}
+	return at;
+};
+
+/**
+ * @param {[string, [string, [string, number, number][]][]][]} table one axis' prefix table
+ * @returns {string} the `Map` literal, each window list named by its pool index
+ */
 const prefixLiteral = (table) =>
 	`new Map([${table
 		.map(([name, prefixes]) => {
 			const body = prefixes
-				.map(([prefix, browsers]) => {
-					const list = browsers
-						.map(([browser, from, to]) => `["${browser}", ${from}, ${to}]`)
-						.join(", ");
-					return `["${prefix}", [${list}]]`;
-				})
+				.map(
+					([prefix, browsers]) =>
+						`["${prefix}", ${poolPrefixWindows(browsers)}]`
+				)
 				.join(", ");
 			return `["${name}", [${body}]]`;
 		})
@@ -3115,10 +3142,8 @@ const SUPPLEMENT = {
 		["translatex", "translate"],
 		["skewx", "skew"]
 	],
-	// The pair shorthands `output.environment.cssPlaceShorthand` gates: newer than
-	// the longhands they merge, so a target reading `align-items` may not read
-	// `place-items` and the merge would lose both declarations rather than one.
-	// `mdn-data` states no version, so the set is named rather than derived.
+	// Newer than the longhands they merge, so the merge would lose both
+	// declarations. Named because `mdn-data` states no version.
 	placeShorthands: ["place-content", "place-items", "place-self"],
 	// Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
@@ -3991,6 +4016,151 @@ const encodeVersion = (version) => {
 	return parsedMajor * 100000 + (Number.parseInt(minor, 10) || 0);
 };
 
+// Each ability the printer reaches for -> the BCD paths that all have to have
+// arrived for it. Stated because no dataset names what the printer emits.
+/** @type {[string, string[]][]} */
+const SUPPORTED_FEATURES = [
+	[
+		"colorHexAlpha",
+		["css.types.color.rgb_hexadecimal_notation.alpha_hexadecimal_notation"]
+	],
+	[
+		"gradientDoublePosition",
+		[
+			"css.types.gradient.linear-gradient.doubleposition",
+			"css.types.gradient.radial-gradient.doubleposition",
+			"css.types.gradient.conic-gradient.doubleposition"
+		]
+	],
+	["insetShorthand", ["css.properties.inset"]],
+	["mediaQueryRange", ["css.at-rules.media.range_syntax"]],
+	["overflowTwoValues", ["css.properties.overflow.multiple_keywords"]],
+	[
+		"placeShorthand",
+		[
+			"css.properties.place-content",
+			"css.properties.place-items",
+			"css.properties.place-self"
+		]
+	]
+];
+
+/**
+ * Whether a BCD entry is the plain spelling arriving for good — prefixed,
+ * renamed, flagged and later-removed support are none of them the arrival.
+ * @param {BcdSupport} entry a BCD support entry
+ * @returns {boolean} true when it is the plain spelling, still supported
+ */
+const isPlainSupport = (entry) =>
+	!entry.prefix &&
+	!entry.alternative_name &&
+	!entry.version_removed &&
+	!entry.flags;
+
+/**
+ * When each browser first read every one of a feature's constructs, as
+ * `[browserslistName, since][]`. Only a plain arrival counts, and a browser BCD
+ * never gives one carries `Infinity`, which no version satisfies.
+ * @param {string[]} paths BCD paths that all have to have arrived
+ * @returns {[string, number][]} the versions, by browserslist name
+ */
+const collectSupportedFrom = (paths) => {
+	/** @type {Map<string, number>} */
+	const since = new Map();
+	for (const path of paths) {
+		/** @type {EXPECTED_ANY} */
+		let node = bcd;
+		for (const key of path.split(".")) node = node && node[key];
+		const compat = node && node.__compat;
+		if (!compat || !compat.support) {
+			throw new Error(`no BCD support block at ${path}`);
+		}
+		for (const [bcdBrowser, raw] of Object.entries(compat.support)) {
+			const names = BCD_TO_BROWSERSLIST.get(bcdBrowser);
+			if (names === undefined) continue;
+			const entries = Array.isArray(raw) ? raw : [raw];
+			const plain = entries.find(isPlainSupport);
+			const added = plain ? encodeVersion(plain.version_added) : null;
+			for (const name of names) {
+				const before = since.get(name);
+				const version = added === null ? Infinity : added;
+				if (before === undefined || version > before) since.set(name, version);
+			}
+		}
+	}
+	return [...since].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * When each browser first read every standard pseudo-class and pseudo-element,
+ * keyed by the spelling a selector carries (`:hover`, `::before`, `:nth-child`).
+ * Only a pseudo every target reads may be joined into a selector list, because
+ * one selector an engine cannot parse invalidates the whole list.
+ * @returns {[string, [string, number][]][]} the versions, by spelling
+ */
+const collectSelectorSupport = () => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const entry of Object.values(selectors)) {
+		if (entry.status !== "standard") continue;
+		const match = /^(::?)([-\w]+)/.exec(entry.syntax || "");
+		if (match === null) continue;
+		const [, colons, name] = match;
+		if (!bcd.css.selectors[name]) continue;
+		table.push([
+			`${colons}${name}`,
+			collectSupportedFrom([`css.selectors.${name}`])
+		]);
+	}
+	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * Both support tables as one profile pool and two name-to-profile maps. Every
+ * profile covers the same browsers in the same order, so the versions are a
+ * positional array — the names are stated once for all of them — and a profile
+ * two constructs share is stored once.
+ * @param {[string, [string, number][]][][]} tables the tables to pool
+ * @returns {{ browsers: string[], profiles: number[][], indexes: number[][] }} the pooled form
+ */
+const poolSupport = (tables) => {
+	const browsers = tables[0][0][1].map(([browser]) => browser);
+	/** @type {Map<string, number>} */
+	const seen = new Map();
+	/** @type {number[][]} */
+	const profiles = [];
+	const indexes = tables.map((table) =>
+		table.map(([, versions]) => {
+			const row = browsers.map((browser) => {
+				const found = versions.find(([name]) => name === browser);
+				if (found === undefined) {
+					throw new Error(`no ${browser} in a support profile`);
+				}
+				return found[1];
+			});
+			const key = row.join(",");
+			let at = seen.get(key);
+			if (at === undefined) {
+				at = profiles.length;
+				profiles.push(row);
+				seen.set(key, at);
+			}
+			return at;
+		})
+	);
+	return { browsers, profiles, indexes };
+};
+
+/**
+ * @param {[string, [string, number][]][]} table the features
+ * @param {number[]} indexes each one's profile
+ * @returns {string} the `Map` literal
+ */
+const supportLiteral = (table, indexes) =>
+	`new Map([${table
+		.map(([name], at) => `["${name}", ${indexes[at]}]`)
+		.join(", ")}])`;
+
 // A vendor spelling BCD states as an alternative name rather than a prefix, with
 // its decoration stripped: `":-webkit-any()"` -> `-webkit-any`. The same engine
 // filter applies, so a rename that is not a vendor's (`:matches()`, `:after`) is
@@ -4023,22 +4193,9 @@ const collectPrefixes = (compat, name, alternatives) => {
 		const entries = Array.isArray(raw) ? raw : [raw];
 		let unprefixedFrom = null;
 		for (const entry of entries) {
-			// An entry BCD later removed never established unprefixed support — the
-			// one it ends may be a partial implementation the next refines, but
-			// reading a partial one as support is what would drop a spelling an
-			// engine still needs (`-webkit-mask`, against a `mask` Chrome has
-			// partially had since 1). One behind a flag is not support a page can
-			// rely on, one spelled another way is not the unprefixed spelling at
-			// all, and the earliest of the rest is the arrival — BCD's newest-first
-			// ordering is convention, not schema.
-			if (
-				entry.prefix ||
-				entry.alternative_name ||
-				entry.version_removed ||
-				entry.flags
-			) {
-				continue;
-			}
+			// The earliest plain entry is the arrival — BCD's newest-first ordering
+			// is convention, not schema.
+			if (!isPlainSupport(entry)) continue;
 			const added = encodeVersion(entry.version_added);
 			if (
 				added !== null &&
@@ -4212,14 +4369,7 @@ const engineVersionLine = (bcdName, baseName, from) => {
 	/** @type {(support: BcdSupport | BcdSupport[] | undefined) => number | null} */
 	const unprefixed = (support) => {
 		const list = Array.isArray(support) ? support : support ? [support] : [];
-		// The same reading of "arrived unprefixed" the window rule above uses.
-		const entry = list.find(
-			(one) =>
-				!one.prefix &&
-				!one.alternative_name &&
-				!one.version_removed &&
-				!one.flags
-		);
+		const entry = list.find(isPlainSupport);
 		return entry ? encodeVersion(entry.version_added) : null;
 	};
 	/**
@@ -5208,8 +5358,21 @@ const collectData = async () => {
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
+	const selectorSupport = collectSelectorSupport();
+	/** @type {[string, [string, number][]][]} */
+	const supportedFrom = SUPPORTED_FEATURES.map(([name, paths]) => [
+		name,
+		collectSupportedFrom(paths)
+	]);
+	const pooled = poolSupport([supportedFrom, selectorSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
+	// Built before the template so the window pool below is complete when it is
+	// written; the order fixes the indices the tables name.
+	const prefixedPropertiesText = prefixLiteral(prefixedProperties);
+	const prefixedSelectorsText = prefixLiteral(prefixedSelectors);
+	const prefixedAtRulesText = prefixLiteral(prefixedAtRules);
+	const prefixedValuesText = prefixedValueLiteral(prefixedValues);
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
 		.filter(([, , , , , stepped]) => stepped)
 		.map(([name]) => name);
@@ -5271,7 +5434,7 @@ const PAIR_LONGHANDS = new Map([${pairLonghands
 // collapsing to one value may emit it.
 const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 
-// The pair shorthands \`output.environment.cssPlaceShorthand\` gates, newer than
+// The pair shorthands the target's \`placeShorthand\` ability gates, newer than
 // the longhands they merge.
 const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
 
@@ -5767,22 +5930,48 @@ ${colorNames
 // are \`major * 100000 + minor\`; a target browser at version V needs the prefix
 // when \`prefixedFrom <= V < unprefixedFrom\` (\`Infinity\` = never unprefixed).
 // Non-standard-only constructs are absent.
-/** @type {Map<string, [string, [string, number, number][]][]>} */
-const PREFIXED_PROPERTIES = ${prefixLiteral(prefixedProperties)};
+// Each \`[browser, from, to]\` window list a prefixed spelling reads: a target at
+// version V needs the spelling when some window of it has \`from <= V < to\`. Two
+// thirds of the lists are shared, so they are pooled and named by index.
+/** @type {[string, number, number][][]} */
+const PREFIX_WINDOWS = [${prefixWindows.join(", ")}];
 
-/** @type {Map<string, [string, [string, number, number][]][]>} */
-const PREFIXED_SELECTORS = ${prefixLiteral(prefixedSelectors)};
+/** @type {Map<string, [string, number][]>} */
+const PREFIXED_PROPERTIES = ${prefixedPropertiesText};
 
-/** @type {Map<string, [string, [string, number, number][]][]>} */
-const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
+/** @type {Map<string, [string, number][]>} */
+const PREFIXED_SELECTORS = ${prefixedSelectorsText};
+
+/** @type {Map<string, [string, number][]>} */
+const PREFIXED_AT_RULES = ${prefixedAtRulesText};
+
+// The browsers every support profile below covers, in the order it states them.
+// A selection has an ability when every browser in it is named here and at or
+// past the version its profile row gives.
+/** @type {string[]} */
+const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
+
+// The versions themselves, one row per distinct profile: a construct names the
+// row it reads rather than carrying its own copy of it.
+/** @type {number[][]} */
+const SUPPORT_PROFILES = [${pooled.profiles.map((row) => `[${row.join(", ")}]`).join(", ")}];
+
+/** @type {Map<string, number>} */
+const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
+
+// When each browser first read a pseudo-class or pseudo-element, by the spelling
+// a selector carries. A pseudo missing here is one no target is known to read,
+// so it never joins a selector list.
+/** @type {Map<string, number>} */
+const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport, pooled.indexes[1])};
 
 // The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
 // Only keywords the property's syntax names are here, so a function whose older
 // spelling read its arguments differently is not.
-/** @type {Map<string, Map<string, [string, [string, number, number][]][]>>} */
-const PREFIXED_VALUES = ${prefixedValueLiteral(prefixedValues)};
+/** @type {Map<string, Map<string, [string, number][]>>} */
+const PREFIXED_VALUES = ${prefixedValuesText};
 
 // The keywords a vendor spelling reads in place of the standard ones, as
 // \`spelling -> standard -> legacy\` — IE 10's \`-ms-flex-pack\` reads
@@ -5853,12 +6042,12 @@ module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
 module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
 module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
-module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
+module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;\nmodule.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
@@ -5952,6 +6141,7 @@ module.exports.collectUnsharedLonghandKeywords =
 	collectUnsharedLonghandKeywords;
 module.exports.collectZeroUnitAmbiguousProperties =
 	collectZeroUnitAmbiguousProperties;
+module.exports.isPlainSupport = isPlainSupport;
 module.exports.isSpelledSyntax = isSpelledSyntax;
 module.exports.longhandType = longhandType;
 module.exports.parseValueSyntax = parseValueSyntax;

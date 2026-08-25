@@ -2,19 +2,13 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "web",
+	// An inline `<style>` and a `style=""` run through the CSS minifier, so it
+	// needs the same selection a `.css` asset gets.
+	target: "browserslist: chrome 50",
 	mode: "production",
 	output: {
 		filename: "[name].js",
-		pathinfo: false,
-		// An inline `<style>` and a `style=""` run through the CSS minifier, so the
-		// HTML minifier has to be handed the same abilities a `.css` asset gets.
-		environment: {
-			cssColorHexAlpha: false,
-			cssInsetShorthand: false,
-			cssMediaQueryRange: false,
-			cssPlaceShorthand: false
-		}
+		pathinfo: false
 	},
 	module: {
 		generator: {
@@ -30,8 +24,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: true,
-		// `"..."` keeps the default minimizer, which is what reads
-		// `output.environment` and hands it to `htmlMinify`.
+		// `"..."` keeps the default minimizer, which resolves the target.
 		minimizer: ["..."]
 	},
 	experiments: {

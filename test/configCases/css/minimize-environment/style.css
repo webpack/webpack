@@ -45,3 +45,7 @@
 .t19 { row-gap: 1px; column-gap: 2px }
 /*! ...and a source `place-items` is the author's own, so it stays */
 .t20 { place-items: center end }
+/*! ...and two-value `overflow`, which Chrome 50 predates */
+.t21 { overflow-x: hidden; overflow-y: scroll }
+/*! ...while collapsing it to one value is as old as the longhands */
+.t22 { overflow-x: hidden; overflow-y: hidden }

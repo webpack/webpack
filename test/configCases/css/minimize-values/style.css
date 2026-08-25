@@ -167,8 +167,9 @@
 .t71 { padding-inline-start: 1px; padding-inline-end: 1px }
 /*! ...and `gap`, whose longhands are named for the axes */
 .t72 { row-gap: 1px; column-gap: 2px }
-/*! declined: two-value `overflow` is far newer than `overflow-x`/`-y`, so the
-   merge would lose both declarations on a target that reads only the longhands */
+/*! webpack: two-value `overflow` is far newer than `overflow-x`/`-y`, so it is
+   written only where the target reads it — this case builds for no particular
+   one (see the `minimize-environment` case) */
 .t73 { overflow-x: hidden; overflow-y: scroll }
 /*! webpack: ...but one-value `overflow` is CSS 2.1, as old as the longhands */
 .t73a { overflow-x: hidden; overflow-y: hidden }
@@ -270,7 +271,8 @@
 
 /*! webpack: the merge steps over what does not write the family */
 .t101 { margin-top: 1px; margin-right: 2px; color: red; margin-bottom: 1px; margin-left: 2px }
-/*! webpack: declined: the shorthand itself between them */
+/*! webpack: the shorthand takes the longhands written after it, and the one
+   written before it stays where it is */
 .t102 { margin-top: 1px; margin: 9px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
 /*! webpack: declined: a logical property that writes the same sides */
 .t103 { margin-top: 1px; margin-inline: 9px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }

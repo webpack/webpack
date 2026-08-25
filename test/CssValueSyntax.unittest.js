@@ -16,6 +16,7 @@ const {
 	collectRatioProperties,
 	collectUnsharedLonghandKeywords,
 	collectZeroUnitAmbiguousProperties,
+	isPlainSupport,
 	isSpelledSyntax,
 	longhandType,
 	parseValueSyntax,
@@ -407,6 +408,26 @@ describe("CssValueSyntax", () => {
 					new Map([["rotate", { classes: new Set(["angle"]) }]])
 				)
 			).toThrow("rotate accepts <angle>, which the printer cannot classify");
+		});
+	});
+
+	describe("isPlainSupport", () => {
+		it("reads a bare arrival as the plain spelling", () => {
+			expect(isPlainSupport({ version_added: "10" })).toBe(true);
+		});
+
+		it.each([
+			["a prefixed one", { version_added: "10", prefix: "-webkit-" }],
+			[
+				"one spelled another way",
+				{ version_added: "10", alternative_name: "-webkit-box" }
+			],
+			["one behind a flag", { version_added: "10", flags: [{}] }],
+			["one BCD later removed", { version_added: "10", version_removed: "30" }]
+		])("is not %s", (_why, entry) => {
+			// Support that ended is the one every reading of a BCD entry has to
+			// exclude: a target past the removal no longer reads the construct.
+			expect(isPlainSupport(entry)).toBe(false);
 		});
 	});
 

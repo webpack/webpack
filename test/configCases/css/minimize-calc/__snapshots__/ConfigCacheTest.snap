@@ -56,7 +56,7 @@ Array [
   "/*! kept: \`width: calc(0)\` is a number and dropped, \`width: 0\` is a length */.u09{width:calc(0)}",
   "/*! kept: a shorthand reaches \`<integer>\` through its longhands — \`columns: 1.5\`
    is dropped, \`calc(1.5)\` rounds to 2 columns */.u10{columns:calc(1.5)}",
-  "/*! ...beside the other value it sets */.u11{columns:calc(1.5) 20em}",
+  "/*! ...beside the other value it sets */.u11{columns:calc(1.5)20em}",
   "/*! unwrap: an integer through that same longhand is still an integer */.u12{columns:2}",
   "/*! declined: a \`@supports\` condition is the syntax being tested */@supports (width:calc(1px + 2px)){.s01{color:red}}",
   "/*! declined: a custom property hands its text back through getPropertyValue() */.s02{--gap:calc(1px + 2px)}",

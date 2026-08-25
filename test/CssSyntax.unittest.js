@@ -829,7 +829,9 @@ describe("CssSyntax — block streaming", () => {
 	// of the two it is exercising, so none of them can quietly stop testing the
 	// streamed path if the threshold moves.
 	/** @type {(i: number) => string} */
-	const rule = (i) => `.c${i}>d${i}:hover{color:red;margin:1px}`;
+	// Distinct blocks: rules printing the same one join into a selector list, and
+	// what these cases are about is the streaming, not the joining.
+	const rule = (i) => `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
 	/** @type {(n: number, f: (i: number) => string) => string} */
 	const repeat = (n, f) => {
 		let s = "";
@@ -1459,7 +1461,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// One case per fusion rule; each right-hand side is a single token when the
 		// space is removed (`/*` even opens a comment).
 		const cases = [
-			["a{b:1 //**/*}", "a{b:1 / *}"],
+			["a{b:1 //**/*}", "a{b:1/ *}"],
 			["a{b:./**/5}", "a{b:. 5}"],
 			["a{b:+/**/5}", "a{b:+ 5}"],
 			["a{b:#/**/fff}", "a{b:# fff}"],
@@ -1475,6 +1477,50 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			["a{b:x-/**/>y}", "a{b:x- >y}"]
 		];
 		for (const [src, expected] of cases) expect(min(src)).toBe(expected);
+	});
+
+	it("drops a value separator its tokens do not need", () => {
+		// Whitespace in a value only separates tokens, so each of these reads back
+		// as the same token stream without it.
+		expect(min("a{padding:.35em .75em}")).toBe("a{padding:.35em.75em}");
+		expect(min("a{transform:translate(1px) scale(2)}")).toBe(
+			"a{transform:translate(1px)scale(2)}"
+		);
+		expect(min("a{background:url(a.png) no-repeat}")).toBe(
+			"a{background:url(a.png)no-repeat}"
+		);
+		expect(min('a{grid-template-areas:"a b" "c d"}')).toBe(
+			'a{grid-template-areas:"a b""c d"}'
+		);
+		expect(min("a{border:1px solid #fff}")).toBe("a{border:1px solid#fff}");
+	});
+
+	it("keeps a value separator wherever it carries something", () => {
+		// A number takes a `%` on, making `123 %` the one percentage `123%`.
+		expect(min("a{b:123 %}")).toBe("a{b:123 %}");
+		// An ident ending in a digit takes no `%`, so that one still tightens.
+		expect(min("a{b:x1 %}")).toBe("a{b:x1%}");
+		expect(min("a{b:50% 25%}")).toBe("a{b:50%25%}");
+		// A bare number would take the `.` on, making `0 .5em` the one value `0.5em`.
+		expect(min("a{margin:0 .5em}")).toBe("a{margin:0 .5em}");
+		// Two idents would fuse into one.
+		expect(min("a{font-family:My Font,serif}")).toBe(
+			"a{font-family:My Font,serif}"
+		);
+		// CSS Values 4 §10.1 needs the whitespace around a math `-`.
+		expect(min("a{width:calc(2rem - .02px)}")).toBe(
+			"a{width:calc(2rem - .02px)}"
+		);
+		// A custom property and a substituted value are handed back as written.
+		expect(min("a{--x:.5em .5em}")).toBe("a{--x:.5em .5em}");
+		expect(min("a{margin:var(--y) .5em}")).toBe("a{margin:var(--y) .5em}");
+		// In a selector the separator is a descendant combinator, not a separator.
+		expect(min(".a .b{c:1}")).toBe(".a .b{c:1}");
+		expect(min(".a:not(.b .c){d:1}")).toBe(".a:not(.b .c){d:1}");
+		// A value the string transforms read stays space-separated for them.
+		expect(min("a{background-size:50% auto,2px auto}")).toBe(
+			"a{background-size:50%,2px}"
+		);
 	});
 
 	it("does not separate tokens that cannot fuse", () => {
@@ -2730,10 +2776,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("keeps a partly transparent color when the target has no hex alpha", () => {
-			expect(value("hsl(0 100% 50% / .8)", { cssColorHexAlpha: false })).toBe(
+			expect(value("hsl(0 100% 50% / .8)", { browsers: ["chrome 50"] })).toBe(
 				"hsl(0 100% 50% / .8)"
 			);
-			expect(value("rgba(255,0,0,.8)", { cssColorHexAlpha: false })).toBe(
+			expect(value("rgba(255,0,0,.8)", { browsers: ["chrome 50"] })).toBe(
 				"rgba(255,0,0,.8)"
 			);
 		});
@@ -2757,7 +2803,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// All the way to the shortest name, as any other opaque color is.
 			expect(value("#ff0000ff")).toBe("red");
 			// Even where the target reads no hex alpha, this form needing none.
-			expect(value("#ffffffff", { cssColorHexAlpha: false })).toBe("#fff");
+			expect(value("#ffffffff", { browsers: ["chrome 50"] })).toBe("#fff");
 			// A real alpha still collapses only as far as it may.
 			expect(value("#11223344")).toBe("#1234");
 			expect(value("#ffffffaa")).toBe("#fffa");
@@ -3078,7 +3124,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{transition:all}", "a{transition:all}"],
 			// The zero duration goes first, which leaves `all` standing alone.
 			["a{transition:all 0s}", "a{transition:all}"],
-			["a{transition:none .5s}", "a{transition:none .5s}"],
+			["a{transition:none .5s}", "a{transition:none.5s}"],
 			["a{transition-property:all}", "a{transition-property:all}"],
 			["a{animation:x 1s ease}", "a{animation:x 1s}"],
 			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
@@ -3121,7 +3167,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			[
 				"the keyword is not the initial",
-				"a{transition:height .35s ease-in-out}"
+				"a{transition:height.35s ease-in-out}"
 			],
 			// `none` is both an animation name and a fill mode, so which slot it
 			// fills is not a question the grammar answers.
@@ -3129,7 +3175,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the same, on a list style", "a{list-style:none}"],
 			// `mask: url(…) none` fills `<mask-reference>` twice and is a declaration
 			// the engine drops — removing the `none` would revive it.
-			["a sibling fills the same slot", "a{mask:url(a.svg) none}"],
+			["a sibling fills the same slot", "a{mask:url(a.svg)none}"],
 			// A function fills the easing slot as much as a keyword does.
 			["a call fills the same slot", "a{transition:opacity 1s ease steps(4)}"],
 			["the same, on an animation", "a{animation:x 1s ease linear(0,1)}"],
@@ -3140,7 +3186,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{transition:ease 1s ease,ease 2s ease}"
 			],
 			// A string could carry the comma the layer split reads.
-			["a layer holds a string", 'a{transition:"a" 1s ease}'],
+			[
+				"a layer holds a string",
+				'a{transition:"a" 1s ease}',
+				'a{transition:"a"1s ease}'
+			],
 			["a layer is empty", "a{transition:opacity 1s ease,,color 2s ease}"],
 			["the first layer is empty", "a{transition:,opacity 1s ease}"],
 			["the last layer is empty", "a{transition:opacity 1s ease,}"],
@@ -3162,8 +3212,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A `/` reaches a slot through another's value, so the components are no
 			// longer this one flat list.
 			["a background states a size", "a{background:none 50%/cover}"]
-		])("keeps it where %s", (_name, css) => {
-			expect(minify(css)).toBe(css);
+		])("keeps it where %s", (_name, css, printed = css) => {
+			expect(minify(css)).toBe(printed);
 		});
 	});
 
@@ -3526,12 +3576,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// spelling still parses the value and has nothing to fall back to.
 			[
 				"a{transition:box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
-				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+				"a{transition:box-shadow.25s,-webkit-box-shadow.25s}"
 			],
 			// ...whichever spelling the earlier one wrote
 			[
 				"a{transition:-webkit-box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
-				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+				"a{transition:box-shadow.25s,-webkit-box-shadow.25s}"
 			],
 			// ...and for a keyframes name, which is a `<custom-ident>` too
 			[
@@ -3622,7 +3672,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{color:red;&:hover{color:blue}}"
 			],
 			// Only the last of a set of identical declarations can be read.
-			["a{color:red}a{color:red}", "a{color:red}"]
+			["a{color:red}a{color:red}", "a{color:red}"],
+			// A pseudo every engine reads joins like any other compound.
+			["a:hover{top:0}b:hover{top:0}", "a:hover,b:hover{top:0}"],
+			["[a=b]:hover{top:0}.b{top:0}", "[a=b]:hover,.b{top:0}"],
+			[
+				"a:nth-child(2){top:0}b::before{top:0}",
+				"a:nth-child(2),b:before{top:0}"
+			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -3632,10 +3689,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Nothing stands between two rules a join puts together, so a rule that
 			// does keeps them apart whatever it writes.
 			["a rule stands between them", "a{color:red}i{margin-top:0}b{color:red}"],
-			// One selector the engine cannot parse invalidates the whole list.
-			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
-			["...even beside an attribute selector", "[a=b]:hover{top:0}.b{top:0}"],
-			["...including a prefixed one", "a{top:0}::-moz-placeholder{top:0}"],
+			// One selector the engine cannot parse invalidates the whole list, so a
+			// pseudo no target is known to read keeps its rule out of one.
+			["a pseudo is a prefixed one", "a{top:0}::-moz-placeholder{top:0}"],
 			["...or a CSS modules one", "body{top:0}:local(.x){top:0}"],
 			["the parser passed a shape through", "a{top:0}. b{top:0}"],
 			// `:is(a,b)` takes the specificity of its most specific selector.
@@ -3655,6 +3711,38 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			]
 		])("keeps both rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		it("joins a pseudo only where every target browser reads it", () => {
+			const css = "a:focus-visible{top:0}b:focus-visible{top:0}";
+			const joined = "a:focus-visible,b:focus-visible{top:0}";
+			// Chrome 86 is where it arrived; 85 is the release before it.
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			expect(minifyFor(css, ["chrome 85"])).toBe(css);
+			// One browser short of it holds the whole selection back.
+			expect(minifyFor(css, ["chrome 130", "safari 15.3"])).toBe(css);
+			expect(minifyFor(css, ["chrome 130", "safari 15.4"])).toBe(joined);
+			// No selection names no browser to answer for, so it is assumed.
+			expect(minify(css)).toBe(joined);
+			// A pseudo nothing states support for never joins, at any target.
+			const unknown = "a:totally-made-up{top:0}b:totally-made-up{top:0}";
+			expect(minifyFor(unknown, ["chrome 130"])).toBe(unknown);
+			expect(minify(unknown)).toBe(unknown);
+		});
+
+		it("answers a pseudo again when the selection changes under it", () => {
+			// Cached per spelling while the selection holds, so a different one has
+			// to throw that away rather than read the first's answer.
+			const css = "a:focus-visible{top:0}b:focus-visible{top:0}";
+			const joined = "a:focus-visible,b:focus-visible{top:0}";
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			expect(minifyFor(css, ["chrome 85"])).toBe(css);
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			// The same stylesheet twice under one selection reads the cache.
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			// And with the selection gone the ability is assumed again.
+			expect(minify(css)).toBe(joined);
+			expect(minifyFor(css, ["chrome 85"])).toBe(css);
 		});
 
 		it.each([
@@ -3828,7 +3916,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the value is a keyword", "a{box-shadow:none}"],
 			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
 			// `0%` is a percentage, which a shadow's `<length>` slots do not take.
-			["a percentage is no zero length", "a{box-shadow:1px 1px 0% 0% red}"],
+			["a percentage is no zero length", "a{box-shadow:1px 1px 0%0%red}"],
 			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
 			// A comma with nothing either side is a layer no shadow fills.
 			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],
@@ -3874,7 +3962,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["the value is a keyword", "a{transform:none}"],
 			["a component is no call", "a{background:red repeat-x}"],
-			["the same, past a call", "a{mask:url(a.svg) none}"],
+			["the same, past a call", "a{mask:url(a.svg)none}"],
 			["there is one component", "a{filter:blur(2px)}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
@@ -4134,11 +4222,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a word is no identifier", 'a{font-family:"a.b"}'],
 			["two spaces part its words", 'a{font-family:"My  Font"}'],
 			// The family slot of the shorthand is read among the other slots.
-			["it is the `font` shorthand", 'a{font:12px "Foo Bar"}'],
+			[
+				"it is the `font` shorthand",
+				'a{font:12px "Foo Bar"}',
+				'a{font:12px"Foo Bar"}'
+			],
 			["the property takes a string", 'a{content:"Foo Bar"}'],
 			["it is a custom property's value", 'a{--x:"Foo Bar"}']
-		])("keeps the quotes where %s", (_name, css) => {
-			expect(minify(css)).toBe(css);
+		])("keeps the quotes where %s", (_name, css, printed = css) => {
+			expect(minify(css)).toBe(printed);
 		});
 	});
 
@@ -4428,7 +4520,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("keeps a two-position stop the target cannot read", () => {
 			expect(
 				minify("a{background:linear-gradient(red 0%,red 50%,blue)}", {
-					cssGradientDoublePosition: false
+					browsers: ["chrome 50"]
 				})
 			).toBe("a{background:linear-gradient(red 0%,red 50%,blue)}");
 		});
@@ -4518,10 +4610,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Two names carry this value and neither beats the hex.
 			["a{color:magenta}", "a{color:#f0f}"],
 			["a{color:WHITE}", "a{color:#fff}"],
-			["a{border:1px solid white}", "a{border:1px solid #fff}"],
+			["a{border:1px solid white}", "a{border:1px solid#fff}"],
 			[
 				"a{box-shadow:0 0 1px lightgoldenrodyellow}",
-				"a{box-shadow:0 0 1px #fafad2}"
+				"a{box-shadow:0 0 1px#fafad2}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -4651,12 +4743,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			["the shorthand itself", "margin:9px"],
-			["a logical property", "margin-inline:9px"],
-			["`all`", "all:unset"]
-		])("declines across %s", (_name, between) => {
+			// The shorthand takes the three that follow it — they are its own slots,
+			// written after it — but the one before it stays where it is.
+			[
+				"the shorthand itself",
+				"margin:9px",
+				"a{margin-top:1px;margin:9px 2px 1px}"
+			],
+			["a logical property", "margin-inline:9px", null],
+			["`all`", "all:unset", null]
+		])("declines across %s", (_name, between, expected) => {
 			const css = `a{margin-top:1px;${between};margin-right:2px;margin-bottom:1px;margin-left:2px}`;
-			expect(minify(css)).toBe(css);
+			expect(minify(css)).toBe(expected === null ? css : expected);
 		});
 
 		it("steps over a child rule standing outside the family", () => {
@@ -4693,9 +4791,75 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 		});
 
+		it("declines a merge mixing a bare number with a length", () => {
+			// `.25` is no length, so the engine kept the other three — merging writes
+			// `padding:0 0 .25`, which it drops whole, losing all four.
+			const bare =
+				"a{padding-top:0;padding-right:0;padding-bottom:.25;padding-left:0}";
+			expect(minify(bare)).toBe(bare);
+			// A keyword is no bare number, so a slot holding one still merges.
+			expect(
+				minify(
+					"a{margin-top:auto;margin-right:0;margin-bottom:0;margin-left:0}"
+				)
+			).toBe("a{margin:auto 0 0}");
+			expect(
+				minify(
+					"a{padding-top:1px;padding-right:2px;padding-bottom:1px;padding-left:2px}"
+				)
+			).toBe("a{padding:1px 2px}");
+		});
+
+		it("folds a longhand into the shorthand it follows", () => {
+			expect(minify("a{border-width:0;border-bottom-width:1px}")).toBe(
+				"a{border-width:0 0 1px}"
+			);
+			expect(minify("a{padding:0;padding-bottom:1rem}")).toBe(
+				"a{padding:0 0 1rem}"
+			);
+			// Each following longhand folds into what the last one left.
+			expect(minify("a{margin:0;margin-top:1px;margin-bottom:2px}")).toBe(
+				"a{margin:1px 0 2px}"
+			);
+			// A pair shorthand folds by the same rule.
+			expect(minify("a{gap:1px;column-gap:2px}")).toBe("a{gap:1px 2px}");
+			// One saying again what the shorthand already set leaves just the one.
+			expect(minify("a{margin:1px;margin-top:1px}")).toBe("a{margin:1px}");
+		});
+
+		it("declines a fold the two declarations do not allow", () => {
+			// Anything between them is read between them.
+			const parted = "a{margin:0;color:red;margin-top:1px}";
+			expect(minify(parted)).toBe(parted);
+			// An `!important` longhand is not the same declaration as a plain one.
+			const important = "a{margin:0!important;margin-top:1px}";
+			expect(minify(important)).toBe(important);
+			// A substitution may stand for any number of slots, on either side.
+			const inShorthand = "a{margin:var(--m);margin-top:1px}";
+			expect(minify(inShorthand)).toBe(inShorthand);
+			const inLonghand = "a{margin:0;margin-top:var(--t)}";
+			expect(minify(inLonghand)).toBe(inLonghand);
+			// A longhand of another family is no slot of this shorthand.
+			const other = "a{margin:0;padding-top:1px}";
+			expect(minify(other)).toBe(other);
+			// A component the shorthand cannot read makes the whole of it invalid, so
+			// two values of different kinds do not fold.
+			const bare = "a{padding:0;padding-bottom:.25}";
+			expect(minify(bare)).toBe(bare);
+			const color = "a{padding:0;padding-bottom:red}";
+			expect(minify(color)).toBe(color);
+			const percentage = "a{border-width:0;border-bottom-width:50%}";
+			expect(minify(percentage)).toBe(percentage);
+			// A keyword is the same question, so `auto` beside a length declines.
+			const keyword = "a{margin:auto;margin-top:25px}";
+			expect(minify(keyword)).toBe(keyword);
+			const pair = "a{overflow:auto;overflow-y:hidden}";
+			expect(minify(pair)).toBe(pair);
+		});
+
 		it("declines `inset` when the target cannot read the shorthand", () => {
 			const css = "a{top:1px;right:2px;bottom:1px;left:2px}";
-			expect(minify(css, { cssInsetShorthand: false })).toBe(css);
+			expect(minify(css, { browsers: ["chrome 50"] })).toBe(css);
 			expect(minify(css)).toBe("a{inset:1px 2px}");
 		});
 
@@ -4760,16 +4924,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("a{corner-block-start-shape:bevel notch}");
 		});
 
-		it("merges `overflow` only where it collapses to one value", () => {
+		it("collapses `overflow` to one value whatever the target", () => {
 			expect(minify("a{overflow-x:hidden;overflow-y:hidden}")).toBe(
 				"a{overflow:hidden}"
 			);
-			const two = "a{overflow-x:hidden;overflow-y:scroll}";
-			expect(minify(two)).toBe(two);
+			expect(
+				minifyFor("a{overflow-x:hidden;overflow-y:hidden}", ["ie 11"])
+			).toBe("a{overflow:hidden}");
 		});
 
 		it("declines the `place-*` pairs a target cannot read", () => {
-			const off = { cssPlaceShorthand: false };
+			const off = { browsers: ["chrome 50"] };
 			const items = "a{align-items:center;justify-items:center}";
 			expect(minifyFor(items, undefined, off)).toBe(items);
 			const self = "a{align-self:center;justify-self:end}";
@@ -4780,6 +4945,39 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(items)).toBe("a{place-items:center}");
 			expect(minify(self)).toBe("a{place-self:center end}");
 			expect(minify(content)).toBe("a{place-content:center end}");
+		});
+
+		it("keeps reading the target when prefixes are turned off", () => {
+			// `vendorPrefixes` turns off the prefixes alone: the selection still says
+			// which spellings the target reads.
+			const css = "a{top:0;right:0;bottom:0;left:0}";
+			const off = { browsers: ["ie 11"], vendorPrefixes: false };
+			expect(minifyFor(css, undefined, off)).toBe(css);
+			expect(minifyFor(css, ["ie 11"])).toBe(css);
+			expect(minify(css)).toBe("a{inset:0}");
+			// And the prefixes themselves still answer to it.
+			expect(minifyFor("a{display:flex}", ["ie 10"])).toBe(
+				"a{display:-ms-flexbox;display:flex}"
+			);
+			expect(
+				minifyFor("a{display:flex}", undefined, {
+					browsers: ["ie 10"],
+					vendorPrefixes: false
+				})
+			).toBe("a{display:flex}");
+		});
+
+		it("writes `overflow`'s two-value form only where the target reads it", () => {
+			const two = "a{overflow-x:auto;overflow-y:hidden}";
+			// Chrome 68 is where the two-value form arrived.
+			expect(minifyFor(two, ["chrome 68"])).toBe("a{overflow:auto hidden}");
+			expect(minifyFor(two, ["chrome 67"])).toBe(two);
+			expect(minifyFor(two, ["ie 11"])).toBe(two);
+			expect(minify(two)).toBe("a{overflow:auto hidden}");
+			// Collapsing to one value is as old as the longhands, so it always runs.
+			const one = "a{overflow-x:auto;overflow-y:auto}";
+			expect(minifyFor(one, ["ie 11"])).toBe("a{overflow:auto}");
+			expect(minify(one)).toBe("a{overflow:auto}");
 		});
 
 		it.each([
@@ -5503,7 +5701,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 			"a{-webkit-logical-height:1px;block-size:1px}"
 		);
 		expect(minifyFor("a{mask-border:url(x) 30}", ["safari 9"])).toBe(
-			"a{-webkit-mask-box-image:url(x) 30;mask-border:url(x) 30}"
+			"a{-webkit-mask-box-image:url(x)30;mask-border:url(x)30}"
 		);
 	});
 
@@ -5522,10 +5720,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		expect(
 			minifyFor(
 				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
-				["ie 10"],
-				// Set by hand: this path passes `browsers` straight to the printer, so
-				// the browserslist-to-abilities resolution never runs.
-				{ cssPlaceShorthand: false }
+				["ie 10"]
 			)
 		).toBe(
 			"a{-ms-flex-align:start;align-items:flex-start;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between}"
@@ -6162,13 +6357,13 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		// only dataset following Presto version by version, marks every version
 		// that has it at all as needing the prefix.
 		expect(minifyFor("a{border-image:url(x) 30}", ["opera 12.1"])).toBe(
-			"a{-o-border-image:url(x) 30;border-image:url(x) 30}"
+			"a{-o-border-image:url(x)30;border-image:url(x)30}"
 		);
 		expect(
-			minifyFor("a{-o-border-image:url(x) 30;border-image:url(x) 30}", [
+			minifyFor("a{-o-border-image:url(x)30;border-image:url(x)30}", [
 				"opera 12.1"
 			])
-		).toBe("a{-o-border-image:url(x) 30;border-image:url(x) 30}");
+		).toBe("a{-o-border-image:url(x)30;border-image:url(x)30}");
 		// Opera Mobile kept `text-overflow` prefixed four versions past desktop.
 		expect(minifyFor("a{text-overflow:ellipsis}", ["op_mob 12"])).toBe(
 			"a{-o-text-overflow:ellipsis;text-overflow:ellipsis}"

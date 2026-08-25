@@ -11,8 +11,8 @@
 .c { & .n6 { top: 0 } & .n7 { top: 0 } }
 /*! declined: a nested rule of its own, whose `&` would become the joined list */
 .d { .n8 { top: 0; i { top: 1px } } .n9 { top: 0; i { top: 1px } } }
-/*! declined: a pseudo may be one the engine cannot parse */
-.e { .n10:hover { top: 0 } .n11:hover { top: 0 } }
+/*! declined: a vendor pseudo is one an engine may not parse */
+.e { .n10::-webkit-scrollbar { top: 0 } .n11::-webkit-scrollbar { top: 0 } }
 /*! values: a number, a time, a zero angle and a color all fold the same nested */
 .f { .n12 { transition-duration: 0.5s; transform: rotate(0deg); color: #ffffff; width: calc(2px + 3px) } }
 /*! shorthand: four sides merge into the one shorthand inside a nested rule */

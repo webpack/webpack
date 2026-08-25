@@ -2,24 +2,16 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "web",
+	// Chrome 50 predates every CSS ability, so the selection alone holds each
+	// spelling back — through the default minimizer, so the whole flow is driven.
+	target: "browserslist: chrome 50",
 	mode: "production",
 	output: {
-		pathinfo: false,
-		// The default minimizer wiring reads this and passes it to `cssMinify`, so
-		// the whole option flow is exercised rather than the serializer alone.
-		environment: {
-			cssColorHexAlpha: false,
-			cssGradientDoublePosition: false,
-			cssInsetShorthand: false,
-			cssMediaQueryRange: false,
-			cssPlaceShorthand: false
-		}
+		pathinfo: false
 	},
 	optimization: {
 		minimize: true,
-		// `"..."` keeps the default minimizer, which is what reads
-		// `output.environment` and hands it to `cssMinify`.
+		// `"..."` keeps the default minimizer, which resolves the target.
 		minimizer: ["..."]
 	},
 	experiments: {

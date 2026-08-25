@@ -2,11 +2,11 @@
 
 exports[`ConfigTestCases css minimize-declined minimize-declined should compile 1`] = `
 Array [
-  "/*! declined here only because this case builds for no particular target — with
-   \`output.environment.cssColorHexAlpha\` false it stays, and otherwise it is
-   \`#0000\` (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
-  "/*! declined here only because this case builds for no particular target — with
-   \`output.environment.cssMediaQueryRange\` false it stays, and otherwise it is
+  "/*! declined here only because this case builds for no particular target — for a
+   selection with no hex alpha it stays, and otherwise it is \`#0000\`
+   (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
+  "/*! declined here only because this case builds for no particular target — for a
+   selection with no range syntax it stays, and otherwise it is
    \`(width>=1200px)\` (see the \`minimize-environment\` case) */@media (width>=1200px){.t06{color:red}}",
   "/*! declined: a declaration between them that writes the same family would be
    stepped over by the merge — \`mdn-data\` maps \`margin-top\` back to \`margin\`
@@ -23,7 +23,8 @@ Array [
    rejects, so converting it would revive a dropped declaration (lightningcss: translate) */.t12{transform:translateX(var(--x))}",
   "/*! declined: a \`/*!\` banner is kept, as cssnano, csso and clean-css also do (lightningcss drops it) */.t13{color:red}",
   "/*! declined: a rule between two that share a block, so joining them reorders the cascade (csso, cssnano) */.t14{color:red}.t14b{color:blue}.t15{color:red}",
-  "/*! declined: a pseudo may be one the engine cannot parse, which would invalidate the whole list */.t16:hover{color:red}.t17:hover{color:red}",
+  "/*! declined: a vendor pseudo is one an engine may not parse, and one selector it
+   drops invalidates the whole list — a pseudo every target reads does join */.t16::-webkit-scrollbar{color:red}.t17::-webkit-scrollbar{color:red}",
   "/*! declined: a nested rule's \`&\` would become the list, and \`:is()\` takes its most specific selector */.t18{color:red;& i{color:blue}}.t19{color:red;& i{color:blue}}",
   "/*! declined: not identical, so the first is a fallback for an engine that cannot
    read the second — dropping it is how esbuild and lightningcss lose this pair
@@ -52,8 +53,8 @@ Array [
   "/*! merge-longhand: a tool adding prefixes writes the prefixed item beside the
    plain one, which leaves what it wrote on the way there unreadable — the item
    slot takes a \`<custom-ident>\`, so an engine knowing neither spelling still
-   parses the value */.t25l{transition:box-shadow .25s,-webkit-box-shadow .25s}",
-  "/*! ...whichever of the two spellings the earlier one wrote */.t25m{transition:box-shadow .25s,-webkit-box-shadow .25s}",
+   parses the value */.t25l{transition:box-shadow.25s,-webkit-box-shadow.25s}",
+  "/*! ...whichever of the two spellings the earlier one wrote */.t25m{transition:box-shadow.25s,-webkit-box-shadow.25s}",
   "/*! declined: \`-webkit-ease\` is no \`<easing-function>\`, so that declaration is one
    an engine drops — which is what the earlier one is there for */.t25n{transition-timing-function:ease;transition-timing-function:ease,-webkit-ease}",
   "/*! declined: a \`<custom-ident>\` reached inside a call is that call's, and a call

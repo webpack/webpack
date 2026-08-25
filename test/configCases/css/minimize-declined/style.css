@@ -11,12 +11,12 @@
    Every case here is a passthrough. A snapshot entry that stops being one means
    webpack started making the trade, which is a decision, not a detail. */
 
-/*! declined here only because this case builds for no particular target — with
-   `output.environment.cssColorHexAlpha` false it stays, and otherwise it is
-   `#0000` (see the `minimize-environment` case) (lightningcss: #0000) */
+/*! declined here only because this case builds for no particular target — for a
+   selection with no hex alpha it stays, and otherwise it is `#0000`
+   (see the `minimize-environment` case) (lightningcss: #0000) */
 .t05 { background-color: transparent }
-/*! declined here only because this case builds for no particular target — with
-   `output.environment.cssMediaQueryRange` false it stays, and otherwise it is
+/*! declined here only because this case builds for no particular target — for a
+   selection with no range syntax it stays, and otherwise it is
    `(width>=1200px)` (see the `minimize-environment` case) */
 @media (min-width: 1200px) { .t06 { color: red } }
 /*! declined: a declaration between them that writes the same family would be
@@ -44,9 +44,10 @@
 .t14 { color: red }
 .t14b { color: blue }
 .t15 { color: red }
-/*! declined: a pseudo may be one the engine cannot parse, which would invalidate the whole list */
-.t16:hover { color: red }
-.t17:hover { color: red }
+/*! declined: a vendor pseudo is one an engine may not parse, and one selector it
+   drops invalidates the whole list — a pseudo every target reads does join */
+.t16::-webkit-scrollbar { color: red }
+.t17::-webkit-scrollbar { color: red }
 /*! declined: a nested rule's `&` would become the list, and `:is()` takes its most specific selector */
 .t18 { color: red; & i { color: blue } }
 .t19 { color: red; & i { color: blue } }
