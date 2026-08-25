@@ -5944,11 +5944,6 @@ declare interface CssPrintOptions {
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: CssTransformOptions;
-
-	/**
-	 * patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas)
-	 */
-	preserveComments?: (string | RegExp)[];
 }
 declare interface CssProcessOptions {
 	/**
@@ -6013,11 +6008,6 @@ declare interface CssProcessOptions {
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: CssTransformOptions;
-
-	/**
-	 * patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas)
-	 */
-	preserveComments?: (string | RegExp)[];
 }
 declare interface CssTransformOptions {
 	/**
@@ -6026,9 +6016,9 @@ declare interface CssTransformOptions {
 	colors?: boolean;
 
 	/**
-	 * drop a comment no tool reads; `"all"` drops the banners and annotations too
+	 * which comments survive: `"some"` (the default) the ones that carry something, `true` / `"all"` every one, `false` none, or the ones a pattern matches / a predicate accepts, over the comment's own text
 	 */
-	comments?: boolean | "all";
+	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
 	 * write an identifier's escapes and a `url()`'s percent-escapes in their shortest equal form
@@ -10331,13 +10321,11 @@ type HtmlPrintOptions = Pick<
 	"environment" | "convertLengthUnits" | "rewriteCustomProperties"
 > & {
 	cssTransforms?: CssTransformOptions;
-	cssPreserveComments?: (string | RegExp)[];
 	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
 	removeEmptyAttributes?: boolean;
 	removeEmptyElements?: boolean;
-	preserveComments?: (string | RegExp)[];
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
@@ -10384,11 +10372,6 @@ declare interface HtmlProcessOptions {
 	cssTransforms?: CssTransformOptions;
 
 	/**
-	 * CSS's comment patterns too, handed over with `environment` — an inline `<style>` holds a stylesheet, so HTML's own `preserveComments` is not what applies inside one
-	 */
-	cssPreserveComments?: (string | RegExp)[];
-
-	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: HtmlTransformOptions;
@@ -10407,11 +10390,6 @@ declare interface HtmlProcessOptions {
 	 * drop an element with no children and no attributes, unless its bare form is meaningful (default false)
 	 */
 	removeEmptyElements?: boolean;
-
-	/**
-	 * patterns naming comments to keep, on top of the ones minifying always keeps
-	 */
-	preserveComments?: (string | RegExp)[];
 
 	/**
 	 * print a run of adjacent `<style>` elements as one sheet, which removes elements (default false)
@@ -10699,9 +10677,9 @@ declare interface HtmlTransformOptions {
 	booleanAttributes?: boolean;
 
 	/**
-	 * drop a comment no parser or server reads
+	 * which comments survive: `"some"` (the default) the ones that carry something, `true` / `"all"` every one, `false` none, or the ones a pattern matches / a predicate accepts, over the comment's own text. A comment a parser or a server reads is kept whatever this says
 	 */
-	comments?: boolean;
+	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
 	 * fold an enumerated value to the keyword it names
@@ -20094,10 +20072,10 @@ declare interface OptimizationMinimizeCss {
 	colors?: boolean;
 
 	/**
-	 * Drop a comment no tool reads. `true`, the default, keeps a `/*!` banner, a comment annotated `@license` or `@preserve`, and a `/*#` source-map pragma; `false` keeps every comment; `"all"` drops the banners and annotations as well, which is a license notice gone, so ask for it only where you know none is owed. A `/*#` pragma is a link to a source map rather than a comment and stays whatever this says, as does anything `preserveComments` names.
+	 * Which comments survive. `"some"`, the default, keeps a `/*!` banner and a comment annotated `@license` or `@preserve`; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's `format.comments` does, so a pattern that names nothing else drops the ones `"some"` would have kept. A `/*#` source-map pragma is a link rather than a comment and stays whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
 	 * @since 5.110.0
 	 */
-	comments?: boolean | "all";
+	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
 	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
@@ -20134,12 +20112,6 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	numbers?: boolean;
-
-	/**
-	 * Patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas). A string is read as a regular expression source and matched against the comment's text.
-	 * @since 5.110.0
-	 */
-	preserveComments?: (string | RegExp)[];
 
 	/**
 	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.
@@ -20196,10 +20168,10 @@ declare interface OptimizationMinimizeHtml {
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
 	/**
-	 * Drop a comment no parser or server reads. On by default; a downlevel conditional comment, a server-side include, a template directive and anything `preserveComments` names are kept whatever this says.
+	 * Which comments survive. `"some"`, the default, keeps nothing: every comment an HTML parser reads is inert; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's `format.comments` does, so a pattern that names nothing else drops the ones `"some"` would have kept. A downlevel conditional comment, a server-side include and a `<?…?>` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
 	 * @since 5.110.0
 	 */
-	comments?: boolean;
+	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
 	 * Fold an enumerated attribute's value to the keyword it names (`type="TEXT"` -> `type=text`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.
@@ -20254,12 +20226,6 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	optionalTags?: boolean;
-
-	/**
-	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
-	 * @since 5.110.0
-	 */
-	preserveComments?: (string | RegExp)[];
 
 	/**
 	 * Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.
@@ -27120,6 +27086,9 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 		all: T,
 		options: object
 	) => undefined | Partial<T>;
+	static keptComments: (
+		comments: string | boolean | RegExp | ((comment: string) => boolean)
+	) => boolean | "some" | ((comment: string) => boolean);
 }
 
 /**
@@ -27193,6 +27162,9 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 		all: T,
 		options: object
 	) => undefined | Partial<T>;
+	static keptComments: (
+		comments: string | boolean | RegExp | ((comment: string) => boolean)
+	) => boolean | "some" | ((comment: string) => boolean);
 }
 declare interface SourceTable {
 	[index: string]: SourceBucket;

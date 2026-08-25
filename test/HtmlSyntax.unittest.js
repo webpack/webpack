@@ -4242,31 +4242,64 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 	});
 });
 
-describe("SourceProcessor — preserveComments", () => {
+describe("SourceProcessor — which comments survive", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
 	/**
 	 * @param {string} html input markup
-	 * @param {(string | RegExp)[]=} preserveComments patterns to keep
+	 * @param {import("../lib/html/syntax").HtmlTransformOptions["comments"]=} comments which comments to keep
 	 * @returns {string} the minified serialization
 	 */
-	const minify = (html, preserveComments) =>
-		new SourceProcessor().process(html, { mode: "minify", preserveComments })
-			.code;
+	const minify = (html, comments) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			transforms: { comments }
+		}).code;
 
-	it("keeps a comment a pattern names, and drops the rest", () => {
-		const html = "<div><!-- @license MIT --><!-- chatter --></div>";
-		expect(minify(html)).toBe("<div></div>");
-		expect(minify(html, ["@license"])).toBe("<div><!-- @license MIT --></div>");
-		expect(minify(html, [/^\s*@license/])).toBe(
-			"<div><!-- @license MIT --></div>"
-		);
+	const html = "<div><!-- @license MIT --><!-- chatter --></div>";
+	const licensed = "<div><!-- @license MIT --></div>";
+
+	// The six forms terser's `format.comments` takes, on an element whose own
+	// tags stay put either way.
+	it.each([
+		["absent drops every inert comment", undefined, "<div></div>"],
+		[
+			'"some" drops them too, HTML having no banner rule',
+			"some",
+			"<div></div>"
+		],
+		["false drops them", false, "<div></div>"],
+		["true keeps every comment", true, html],
+		['"all" keeps every comment', "all", html],
+		["a string is read as a pattern", "@license", licensed],
+		["a RegExp keeps what it matches", /^\s*@license/, licensed],
+		[
+			"a predicate keeps what it accepts",
+			/** @type {(comment: string) => boolean} */ (
+				(comment) => comment.includes("@license")
+			),
+			licensed
+		]
+	])("%s", (_name, comments, expected) => {
+		expect(minify(html, /** @type {EXPECTED_ANY} */ (comments))).toBe(expected);
 	});
 
-	it("still keeps what minifying always keeps", () => {
-		expect(
-			minify("<div><!--[if IE]>a<![endif]--></div>", ["nothing"])
-		).toContain("[if IE]");
+	// A conditional comment, a server-side include and a `<?…?>` directive are
+	// code rather than comments, so no level drops one.
+	it.each([
+		[
+			"a conditional comment",
+			"<div><!--[if IE]>a<![endif]--></div>",
+			"[if IE]"
+		],
+		["a server-side include", "<div><!--#include a--></div>", "#include"],
+		["a template directive", "<div><?php echo 1; ?></div>", "php"]
+	])("keeps %s whatever the level", (_name, input, held) => {
+		for (const comments of [false, "some", "nothing-matches"]) {
+			expect(minify(input, /** @type {EXPECTED_ANY} */ (comments))).toContain(
+				held
+			);
+		}
 	});
 });
 
@@ -4453,7 +4486,7 @@ describe("SourceProcessor — optional end tags read the output", () => {
 	it("keeps the tag for a comment minifying keeps", () => {
 		expect(
 			minify("<ul><li>a</li><!--keep--><li>b</li></ul>", {
-				preserveComments: ["keep"]
+				transforms: { comments: "keep" }
 			})
 		).toBe("<ul><li>a</li><!--keep--><li>b</ul>");
 	});
@@ -4655,7 +4688,7 @@ describe("SourceProcessor — removeImpliedTags", () => {
 			new SourceProcessor().process("<tr><!--c--><p>x", {
 				mode: "minify",
 				removeImpliedTags: true,
-				preserveComments: [/c/]
+				transforms: { comments: /c/ }
 			}).code
 		).toBe("<body><!--c--><p>x");
 	});
@@ -4725,7 +4758,8 @@ describe("SourceProcessor — the per-transform switches", () => {
 
 	// One input per switch, minified twice: with everything on, and with that one
 	// switch off — so a guard that stops firing fails here rather than quietly
-	// making the rewrite unconditional again.
+	// making the rewrite unconditional again. `comments` is not one of the
+	// booleans, so it has a describe of its own above.
 	it.each([
 		[
 			"booleanAttributes",
@@ -4733,12 +4767,6 @@ describe("SourceProcessor — the per-transform switches", () => {
 			"<input disabled>",
 			// `quotes` is still on, so the value it keeps goes bare.
 			"<input disabled=disabled>"
-		],
-		[
-			"comments",
-			"<div>a</div><!-- c -->",
-			"<div>a</div>",
-			"<div>a</div><!-- c -->"
 		],
 		[
 			"enumeratedAttributes",

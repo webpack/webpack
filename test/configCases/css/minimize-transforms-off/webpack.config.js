@@ -11,7 +11,9 @@ module.exports = {
 		minimize: {
 			css: {
 				colors: false,
-				comments: false,
+				// `false` here would drop every comment; `"all"` is the level that
+				// makes none of them go, which is what leaves each label below.
+				comments: "all",
 				escapes: false,
 				functions: false,
 				lowercase: false,

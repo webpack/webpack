@@ -2230,10 +2230,10 @@ describe("CssSyntax — the per-transform switches", () => {
 
 	// One input per switch, minified twice: with everything on, and with that one
 	// switch off — so a guard that stops firing fails here rather than quietly
-	// making the rewrite unconditional again.
+	// making the rewrite unconditional again. `comments` is not one of the
+	// booleans, so it has a describe of its own below.
 	it.each([
 		["colors", "a{color:#ffffff}", "a{color:#fff}", "a{color:#ffffff}"],
-		["comments", "a{b:c}/*x*/", "a{b:c}", "a{b:c}/*x*/"],
 		["escapes", "a{color:r\\065 d}", "a{color:red}", "a{color:r\\065 d}"],
 		[
 			"functions",
@@ -2327,53 +2327,60 @@ describe("CssSyntax — the per-transform switches", () => {
 		});
 	});
 
-	// csso and cssnano both name three levels here, and so does this: keep the
-	// banners, keep everything, or keep nothing but the source-map pragma.
+	// One option says which comments survive, in the six forms terser's
+	// `format.comments` takes.
 	describe("comments", () => {
 		const css =
 			"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
+		const banners =
+			"/*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
+		const every =
+			"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
 
 		it.each([
+			["absent keeps the banners", undefined, banners],
+			['"some" keeps the banners', /** @type {const} */ ("some"), banners],
+			["true keeps every comment", true, every],
+			['"all" keeps every comment', /** @type {const} */ ("all"), every],
+			["false keeps none", false, "a{b:c}/*# sourceMappingURL=x.map */"],
 			[
-				"true keeps the banners",
-				true,
-				"/*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */"
+				"a string is read as a pattern",
+				"banner",
+				"/*! banner */a{b:c}/*# sourceMappingURL=x.map */"
 			],
 			[
-				"false keeps every comment",
-				false,
-				"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */"
+				"a RegExp keeps what it matches",
+				/inert/,
+				"/*inert*/a{b:c}/*# sourceMappingURL=x.map */"
 			],
 			[
-				'"all" keeps only the pragma',
-				/** @type {"all"} */ ("all"),
-				"a{b:c}/*# sourceMappingURL=x.map */"
+				"a predicate keeps what it accepts",
+				/** @type {(comment: string) => boolean} */ (
+					(comment) => comment.includes("@license")
+				),
+				"/* @license L */a{b:c}/*# sourceMappingURL=x.map */"
 			]
 		])("%s", (_name, comments, expected) => {
 			expect(min(css, { comments })).toBe(expected);
 		});
 
-		// A pattern of the author's outranks the level, `"all"` included.
-		it("keeps what preserveComments names, whatever the level", () => {
-			/**
-			 * @param {boolean | "all"} comments the comment level
-			 * @returns {string} the minified serialization
-			 */
-			const keep = (comments) =>
-				new SourceProcessor().process(css, {
-					mode: "minify",
-					transforms: { comments },
-					preserveComments: ["banner"]
-				}).code;
-			expect(keep("all")).toBe(
-				"/*! banner */a{b:c}/*# sourceMappingURL=x.map */"
+		// The pragma is a link to a source map, so no level drops it — which the
+		// rows above already show, and this states.
+		it("keeps the source-map pragma at every level", () => {
+			for (const comments of [false, true, "some", "nothing-matches"]) {
+				expect(
+					min("a{b:c}/*# sourceMappingURL=x.map */", {
+						comments: /** @type {EXPECTED_ANY} */ (comments)
+					})
+				).toContain("/*# sourceMappingURL=x.map */");
+			}
+		});
+
+		// A `g` flag would carry an index from one comment to the next.
+		it("matches a global pattern from the start each time", () => {
+			expect(min("a{b:c}/*k1*/d{e:f}/*k2*/", { comments: /k\d/g })).toBe(
+				"a{b:c}/*k1*/d{e:f}/*k2*/"
 			);
-			expect(
-				new SourceProcessor().process("a{b:c}/* marker */", {
-					mode: "minify",
-					preserveComments: [/mark/]
-				}).code
-			).toBe("a{b:c}/* marker */");
 		});
 	});
 

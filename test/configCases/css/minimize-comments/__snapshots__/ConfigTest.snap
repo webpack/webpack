@@ -2,6 +2,7 @@
 
 exports[`ConfigTestCases css minimize-comments minimize-comments should compile 1`] = `
 Array [
-  ".t01,.t02,.t03{color:red}/* keep: named by a preserveComments string, so it outranks the level */.t04{color:red}/* a build-step marker, named by a preserveComments regexp */.t05{color:red}",
+  ".t01,.t02,.t03{color:red}/* keep: named by the pattern, so this one survives */.t04{color:red}",
+  "/*! keep: a banner the pattern does name */.t05{color:red}",
 ]
 `;

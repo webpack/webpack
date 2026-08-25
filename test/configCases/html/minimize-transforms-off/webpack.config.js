@@ -13,7 +13,9 @@ module.exports = {
 		minimize: {
 			html: {
 				booleanAttributes: false,
-				comments: false,
+				// `false` here would drop every comment; `"all"` is the level that
+				// makes none of them go.
+				comments: "all",
 				enumeratedAttributes: false,
 				listAttributes: false,
 				minifyJson: false,

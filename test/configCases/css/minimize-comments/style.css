@@ -1,10 +1,10 @@
-/* an inert comment, dropped at every level */
+/* an inert comment, which the pattern does not name */
 .t01 { color: red }
-/*! a banner, which only `"all"` drops */
+/*! a banner the pattern does not name either, so it goes with the rest */
 .t02 { color: red }
-/* @license also only dropped by `"all"` */
+/* @license which a pattern standing in for the banner rule does not keep */
 .t03 { color: red }
-/* keep: named by a preserveComments string, so it outranks the level */
+/* keep: named by the pattern, so this one survives */
 .t04 { color: red }
-/* a build-step marker, named by a preserveComments regexp */
+/*! keep: a banner the pattern does name */
 .t05 { color: red }

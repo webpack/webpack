@@ -23,7 +23,7 @@ module.exports = {
 		// Whitespace renders verbatim here whatever the mode says.
 		expect(page).toContain("<pre>  verbatim   here  </pre>");
 
-		// The pattern outranks the inert-comment rule; nothing else survives it.
+		// The pattern says which comments survive; nothing else does.
 		expect(page).toContain("@license MIT");
 		expect(page).not.toContain("ordinary chatter");
 		// The markup inside the conditional comment was minified in place.

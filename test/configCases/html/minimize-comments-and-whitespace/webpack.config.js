@@ -13,7 +13,7 @@ module.exports = {
 		minimize: {
 			html: {
 				collapseWhitespace: "smart",
-				preserveComments: ["@license"],
+				comments: "@license",
 				minifyConditionalComments: true
 			}
 		},

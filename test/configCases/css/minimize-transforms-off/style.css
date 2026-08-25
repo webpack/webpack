@@ -3,7 +3,7 @@
    this comment among them. Whitespace still goes: collapsing it is not one of
    the rewrites a switch names. */
 
-/*! comments: an inert comment is kept, not just this banner */
+/*! comments: at `"all"` an inert comment is kept, not just this banner */
 /* an inert comment */
 /*! colors: the hex is not shortened */
 .t01 { color: #ffffff }

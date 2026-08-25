@@ -10,10 +10,10 @@ module.exports = {
 	optimization: {
 		minimize: {
 			css: {
-				// The level csso spells `false` and cssnano `removeAll`: nothing
-				// survives but the source-map pragma and what `preserveComments` names.
-				comments: "all",
-				preserveComments: ["^\\s*keep:", /build-step/]
+				// One option says which comments survive: this pattern stands in for
+				// the banner rule, so a `/*!` banner it does not name goes with the
+				// rest — which is what terser's `format.comments` does.
+				comments: /keep:/
 			}
 		},
 		// `"..."` keeps the default minimizer, which is what reads
