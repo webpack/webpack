@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases asset-modules minify-embedded-inline exported tests should reach the payload an asset/inline module encodes into a data URI 1`] = `"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMCAxMCI+IDxyZWN0IHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgLz4gPC9zdmc+"`;

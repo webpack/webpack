@@ -446,7 +446,7 @@ declare abstract class AssetGenerator extends Generator {
 	/**
 	 * Generates data uri.
 	 */
-	generateDataUri(module: NormalModule): string;
+	generateDataUri(module: NormalModule, renderedSource?: Source): string;
 
 	/**
 	 * Generates fallback output for the provided error condition.
