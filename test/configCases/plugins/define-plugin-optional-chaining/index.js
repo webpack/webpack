@@ -60,6 +60,7 @@ it("should short-circuit a call reached through an unknown member (issue 21822)"
 	expect(OBJECT?.SUB1?.UNKNOWN?.toUpperCase()).toBe(undefined);
 	expect(NOT_DEFINED.SUB2.b?.["includes"]("foo")).toBe(undefined);
 	expect(OBJECT.SUB1.UNKNOWN?.a.b()).toBe(undefined);
+	expect(OBJECT.SUB1.UNKNOWN?.a?.b()).toBe(undefined);
 });
 it("should not evaluate the arguments of a short-circuited call (issue 21822)", function () {
 	let calls = 0;
