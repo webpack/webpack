@@ -37,23 +37,54 @@ it("should resolve unknown member calls with optional members without inlining t
 	expect(c.toString()).toBe("function () { return undefined(); }");
 	expect(() => OBJECT.SUB1?.UNKNOWN()).toThrow();
 });
-it("should short-circuit a call on a member read from an unknown member (issue 21822)", function () {
-	const a = function () { return OBJECT.SUB1.UNKNOWN?.includes("foo"); };
-	const b = function () { return OBJECT?.SUB1?.UNKNOWN?.toUpperCase(); };
-	const c = function () { return NOT_DEFINED.SUB2.b?.["includes"]("foo"); };
-	const d = function () { return OBJECT.SUB1.UNKNOWN?.a.b(); };
-	const e = function () { return OBJECT.SUB1.UNKNOWN.a?.b(); };
-	expect(a.toString()).toBe("function () { return undefined; }");
-	expect(b.toString()).toBe("function () { return undefined; }");
-	expect(c.toString()).toBe("function () { return undefined; }");
-	expect(d.toString()).toBe("function () { return undefined; }");
-	expect(e.toString()).toBe("function () { return undefined(); }");
-	expect(OBJECT.SUB1.UNKNOWN?.includes("foo")).toBe(undefined);
-	expect(NOT_DEFINED.SUB2.b?.["includes"]("foo")).toBe(undefined);
-	expect(() => OBJECT.SUB1.UNKNOWN.a?.b()).toThrow();
-});
 it("should still substitute arguments of an unknown member call (issue 15559)", function () {
 	const a = function () { return OBJECT.SUB1.UNKNOWN?.(STRING); };
 	expect(a.toString()).toBe('function () { return undefined?.("string"); }');
 	expect(OBJECT.SUB1.UNKNOWN?.(STRING)).toBe(undefined);
+});
+it("should short-circuit a call reached through an unknown member (issue 21822)", function () {
+	const a = function () { return process.env.MISSING?.includes("foo"); };
+	const b = function () { return OBJECT.SUB1.UNKNOWN?.includes("foo"); };
+	const c = function () { return OBJECT?.SUB1?.UNKNOWN?.toUpperCase(); };
+	const d = function () { return NOT_DEFINED.SUB2.b?.["includes"]("foo"); };
+	const e = function () { return OBJECT.SUB1.UNKNOWN?.a.b(); };
+	const f = function () { return OBJECT.SUB1.UNKNOWN?.a?.b(); };
+	expect(a.toString()).toBe("function () { return undefined; }");
+	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(c.toString()).toBe("function () { return undefined; }");
+	expect(d.toString()).toBe("function () { return undefined; }");
+	expect(e.toString()).toBe("function () { return undefined; }");
+	expect(f.toString()).toBe("function () { return undefined; }");
+	expect(process.env.MISSING?.includes("foo")).toBe(undefined);
+	expect(OBJECT.SUB1.UNKNOWN?.includes("foo")).toBe(undefined);
+	expect(OBJECT?.SUB1?.UNKNOWN?.toUpperCase()).toBe(undefined);
+	expect(NOT_DEFINED.SUB2.b?.["includes"]("foo")).toBe(undefined);
+	expect(OBJECT.SUB1.UNKNOWN?.a.b()).toBe(undefined);
+	expect(OBJECT.SUB1.UNKNOWN?.a?.b()).toBe(undefined);
+});
+it("should not evaluate the arguments of a short-circuited call (issue 21822)", function () {
+	let calls = 0;
+	const arg = function () { calls++; return STRING; };
+	expect(OBJECT.SUB1.UNKNOWN?.includes(arg())).toBe(undefined);
+	expect(calls).toBe(0);
+});
+it("should keep a non-optional read after an unknown member throwing (issue 21822)", function () {
+	const a = function () { return OBJECT.SUB1.UNKNOWN.a?.(); };
+	const b = function () { return OBJECT.SUB1.UNKNOWN.a?.b(); };
+	const c = function () { return OBJECT.SUB1.UNKNOWN["a"]?.(); };
+	const d = function () { return OBJECT.SUB1.UNKNOWN.deep.method(); };
+	expect(a.toString()).toBe("function () { return undefined.a?.(); }");
+	expect(b.toString()).toBe("function () { return undefined.a?.b(); }");
+	expect(c.toString()).toBe('function () { return undefined["a"]?.(); }');
+	expect(d.toString()).toBe("function () { return undefined.deep.method(); }");
+	expect(() => OBJECT.SUB1.UNKNOWN.a?.()).toThrow();
+	expect(() => OBJECT.SUB1.UNKNOWN.a?.b()).toThrow();
+	expect(() => OBJECT.SUB1.UNKNOWN["a"]?.()).toThrow();
+	expect(() => OBJECT.SUB1.UNKNOWN.deep.method()).toThrow();
+});
+it("should keep optional calls on defined members intact (issue 21822)", function () {
+	expect(OBJECT.SUB1.a?.toFixed(2)).toBe("1.00");
+	expect(STRING?.toUpperCase()).toBe("STRING");
+	expect(process.env.NODE_ENV?.toUpperCase()).toBe("PRODUCTION");
+	expect(OBJECT.SUB1?.a).toBe(1);
 });

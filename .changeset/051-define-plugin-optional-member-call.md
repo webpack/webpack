@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix `DefinePlugin` dropping the optional chain in `OBJ.MISSING?.method()`.
+Fix `DefinePlugin` optional chains reading an undefined object member.
