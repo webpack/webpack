@@ -151,6 +151,7 @@
     "es6-promise-polyfill": "^1.2.0",
     "eslint": "^9.39.2",
     "eslint-config-webpack": "^4.9.3",
+    "eslint-scope": "^9.1.2",
     "eta": "^4.6.0",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
