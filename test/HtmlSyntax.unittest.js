@@ -4201,6 +4201,28 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 		);
 	});
 
+	it("declines a body that opens a script of its own", () => {
+		// A directive prologue only means anything at the start of a script, so a
+		// later `"use strict"` would quietly become a plain string, and a strict
+		// first body would put everything appended after it in strict mode.
+		const strictLater =
+			'<script>var a = 1</script><script>"use strict";x = 1</script>';
+		expect(minify(strictLater)).toBe(strictLater);
+		const strictFirst = '<script>"use strict";a()</script><script>b()</script>';
+		expect(minify(strictFirst)).toBe(strictFirst);
+		const singleQuoted =
+			"<script>a()</script><script>'use strict';b()</script>";
+		expect(minify(singleQuoted)).toBe(singleQuoted);
+		// Comments may precede a prologue, so they are read past to find it.
+		const afterComment =
+			'<script>a()</script><script>/* c */ "use strict";b()</script>';
+		expect(minify(afterComment)).toBe(afterComment);
+		// A hashbang is only a hashbang at the very start of a script.
+		const hashbang =
+			"<script>a()</script><script>#!/usr/bin/env node\nb()</script>";
+		expect(minify(hashbang)).toBe(hashbang);
+	});
+
 	it("declines an empty element, which has no text node to fold into", () => {
 		expect(minify("<script>a()</script><script></script>")).toBe(
 			"<script>a()</script><script></script>"
