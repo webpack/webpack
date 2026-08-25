@@ -5070,6 +5070,38 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect(offered("<svg/>")).toEqual([["svg", "<svg/>"]]);
 	});
 
+	it("keeps a map the renderer attached to an inline `<style>` / `<script>`", () => {
+		// The only mechanism a browser honours for inline content is a
+		// `sourceMappingURL` in the body itself, so a renderer attaches its own —
+		// nothing here has to compose one. This is that contract.
+		const out = minify(
+			"<div>\n  <style>  .a { color : red }  </style>\n  <script>  var a = 1  </script>\n</div>",
+			(source, info) =>
+				info.type === "css"
+					? ".a{color:red}\n/*# sourceMappingURL=data:application/json;base64,e30= */"
+					: info.type === "javascript"
+						? "var a=1\n//# sourceMappingURL=data:application/json;base64,e30="
+						: source
+		);
+		expect(out).toContain(
+			"/*# sourceMappingURL=data:application/json;base64,e30= */</style>"
+		);
+		expect(out).toContain(
+			"//# sourceMappingURL=data:application/json;base64,e30=</script>"
+		);
+	});
+
+	it("declines a `style` attribute the renderer put a comment in", () => {
+		// There is no way to carry a map on an attribute, and a comment escapes the
+		// rule wrapper — so the value is kept as written rather than corrupted.
+		expect(
+			minify(
+				'<p style="  color : red ;  ">x</p>',
+				(s) => `${s}/*# sourceMappingURL=data:application/json;base64,e30= */`
+			)
+		).toBe('<p style="  color : red ;  ">x');
+	});
+
 	it("does not offer a non-CSS `<style>` or a data-block `<script>`", () => {
 		expect(
 			offered(

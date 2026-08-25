@@ -6689,6 +6689,35 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		);
 	});
 
+	it("keeps the stylesheet's own map coherent when the payload changes size", () => {
+		// The url goes out as one piece, so the columns after it move with it —
+		// rewriting a payload must not shift the mappings that follow.
+		const sheet =
+			'.a {\n\tcolor : red ;\n}\n.b {\n\tbackground : url("data:image/svg+xml,<svg>    <rect/>    </svg>") ;\n}\n.c {\n\tcolor : blue ;\n}\n';
+		/**
+		 * @param {import("../lib/css/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+		 * @returns {{ code: string, map: EXPECTED_ANY }} the printed sheet and its map
+		 */
+		const run = (renderEmbeddedSource) =>
+			new SourceProcessor().process(sheet, {
+				mode: "minify",
+				source: "s.css",
+				content: sheet,
+				renderEmbeddedSource
+			});
+		const plain = run();
+		const shrunk = run((source, info) =>
+			info.type === "svg" ? source.replace(/\s+/g, "") : source
+		);
+		// Eight characters left the payload, and the last mapping's generated
+		// column is the only thing that moved — by exactly that much.
+		expect(plain.code.length - shrunk.code.length).toBe(8);
+		const columns = (/** @type {string} */ mappings) =>
+			mappings.split(",").length;
+		expect(columns(shrunk.map.mappings)).toBe(columns(plain.map.mappings));
+		expect(shrunk.map.mappings).not.toBe(plain.map.mappings);
+	});
+
 	it("emits the url as written when the renderer declines or throws", () => {
 		for (const sheet of [svgUrl, base64Url]) {
 			const untouched = minify(sheet);
