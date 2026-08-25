@@ -84,6 +84,7 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 const FILED_WPT_CSS_DEFECTS = new Map();
 
 // The same, for what webpack's own parser sees over the whole corpus.
+// Keyed `"<mode> <document>"`, so filing one print mode leaves the other held.
 const FILED_WPT_TREE_DEFECTS = new Map();
 
 // Declarations Chromium computes a different style from once printed, keyed by
@@ -1082,10 +1083,13 @@ describe("wpt tree stability", () => {
 				for (const [mode, print] of PRINT_MODES) {
 					const why = whatMoved(before, domShapeOf(print(source)));
 					if (why === "") continue;
-					const name = nameOf(file);
+					// Keyed by mode as well as document: a file filed for one mode says
+					// nothing about the other, and exempting both would hide half of
+					// what this tier exists to catch.
+					const name = `${mode} ${nameOf(file)}`;
 					diverging.add(name);
 					if (!FILED_WPT_TREE_DEFECTS.has(name)) {
-						differences.push({ name, why: `${mode} ${why}` });
+						differences.push({ name, why });
 					}
 				}
 			}
