@@ -3,19 +3,26 @@
 const fs = require("fs");
 const path = require("path");
 
-// creating a directory symlink needs privileges this machine may not grant
+// codes a machine that cannot make directory symlinks reports
+const SYMLINK_UNSUPPORTED = new Set(["EPERM", "EACCES", "ENOSYS", "UNKNOWN"]);
+
 module.exports = () => {
 	const probe = path.resolve(
 		__dirname,
 		"../../../js/side-effects-symlinked-probe"
 	);
 	fs.mkdirSync(path.dirname(probe), { recursive: true });
-	// clear a probe a failed cleanup left behind, or every later run reads its
-	// EEXIST as "no symlinks here" and skips the case for good
+	// a probe a failed cleanup left behind would read as EEXIST, i.e. "cannot"
 	fs.rmSync(probe, { recursive: true, force: true });
 	try {
 		fs.symlinkSync(path.join(__dirname, "package"), probe, "junction");
-	} catch (_err) {
+	} catch (err) {
+		// anything else is a broken fixture, which must fail rather than skip
+		if (
+			!SYMLINK_UNSUPPORTED.has(/** @type {NodeJS.ErrnoException} */ (err).code)
+		) {
+			throw err;
+		}
 		return false;
 	}
 	try {
