@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep the optional chain in `OBJ.MISSING?.method()` short-circuiting under `DefinePlugin`.
+Fix `DefinePlugin` dropping the optional chain in `OBJ.MISSING?.method()`.
