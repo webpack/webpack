@@ -58,10 +58,9 @@ module.exports = [
 		realContentHash: false,
 		workerChunkFilename: "[name].[contenthash].mjs"
 	}),
-	// The chunk the url is written into is named by its own content, and nothing
-	// repairs that name after the deferred pass rewrites it — so it stays runtime.
+	// The chunk is content-named with nothing repairing it after, so it settles in the
+	// round after the compilation hash — where one reading `.p` already is.
 	base(4, "no-repair", "[fullhash]", false, {
-		baked: false,
 		realContentHash: false,
 		chunkSuffix: ".[contenthash]"
 	}),

@@ -1,7 +1,7 @@
 "use strict";
 
-// `[chunkhash]` comes from the chunk's own modules and nothing repairs it after a
-// fill, so a baked reference would leave an immutable name over changed bytes.
+// `[chunkhash]` reads this chunk's own modules, which a fill does not touch, so nothing
+// repairs it after. It bakes because the fold reaches the hash before the name is taken.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -15,5 +15,5 @@ module.exports = {
 		chunkFilename: "[name].[contenthash].mjs",
 		publicPath: "auto"
 	},
-	optimization: { realContentHash: true, chunkIds: "named" }
+	optimization: { realContentHash: false, chunkIds: "named" }
 };

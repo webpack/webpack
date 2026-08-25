@@ -25723,6 +25723,14 @@ declare abstract class RuntimeTemplate {
 	): null | string;
 
 	/**
+	 * The `../` path from a chunk's own asset back to the output root. Hashes are
+	 * neutralized first: a runtime module is generated once to be hashed, before any
+	 * hash exists, so resolving one there throws — and `RuntimeModule.updateHash`
+	 * swallows that, pinning the module's hash to the message.
+	 */
+	chunkRootOutputDir(chunk: Chunk, enforceRelative: boolean): string;
+
+	/**
 	 * Static `new URL(<file>, import.meta.url)` for every stylesheet a runtime can load,
 	 * keyed by chunk id, or `null` when any of them has to keep the runtime
 	 * `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them

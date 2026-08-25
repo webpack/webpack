@@ -74,21 +74,24 @@ module.exports = [
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
 	}),
-	// Every case below must fall back with no `.ei` emitted.
-	base("public-path-override", { entry: "./index-public-path-override" }),
-	// The entry the stand-in would land in is named by its own content, and with
-	// `realContentHash` off nothing repairs the name it is rewritten under.
+	// Also analyzable: the entry the stand-in lands in is named by its own content and
+	// `realContentHash` is off, so nothing repairs that name after the rewrite — the
+	// name being baked is folded into the entry's hash before it is taken instead.
 	base("content-hash", {
 		output: {
 			filename: "[name].[contenthash].mjs",
 			chunkFilename: "[name].[contenthash].mjs"
 		}
 	}),
-	// Two depths need a stand-in, and the chunks it would land in are content-named.
+	// Also analyzable: two depths need a per-asset stand-in for the `../` path, and the
+	// chunks it lands in are named by their content — the depth is hash-independent, so
+	// it reaches those names before they are taken.
 	base("shared-depths", {
 		entry: "./index-depths",
 		plugins: [nameConsumersByContent(["flat", "nested/deep"])]
 	}),
+	// Every case below must fall back with no `.ei` emitted.
+	base("public-path-override", { entry: "./index-public-path-override" }),
 	// `import.meta` does not parse inside the `eval()` this devtool wraps a module in.
 	base("eval-devtool", {
 		entry: "./index-eval",
@@ -113,7 +116,8 @@ module.exports = [
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 		output: { environment: { module: false, dynamicImport: true } }
 	}),
-	// Two chunks that reference each other cannot both be named by their content.
+	// Two chunks naming each other: whichever hash settles first bakes into the other,
+	// and the way back has no hash to read.
 	base("circular", {
 		entry: "./index-cycle",
 		output: { chunkFilename: "[name].[contenthash].mjs" }

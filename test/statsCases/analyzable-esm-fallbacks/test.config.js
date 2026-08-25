@@ -18,11 +18,9 @@ const CASES = {
 	// `fetchPriority` is unsupported for ESM output, so it must not degrade the
 	// output — the analyzable form is still emitted (documented limitation).
 	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
-	"content-hash": {
-		file: /^main\./,
-		expect: "fallback",
-		bailout: "optimization.realContentHash"
-	},
+	// The entry is named by its own content with nothing to repair that name after a
+	// rewrite, so what the stand-in resolves to is folded into its hash instead.
+	"content-hash": { file: /^main\./, expect: "analyzable" },
 	// The public path's hash is filled in by the deferred pass, and no name here is
 	// built from content, so there is none for the rewrite to invalidate.
 	"templated-public-path": { file: "main.mjs", expect: "analyzable" },
@@ -32,13 +30,10 @@ const CASES = {
 	// The hot require wraps `.ei` like `.e`, so an update still blocks on a chunk
 	// load in flight and HMR does not force the runtime form.
 	hmr: { file: "main.mjs", expect: "analyzable" },
-	// Only the chunk both copies share falls back, and not for its depth: a per-asset
-	// stand-in carries that. Content-named chunks leave none to write into.
-	"shared-depths": {
-		file: /^flat\./,
-		expect: "fallback",
-		bailout: "needs optimization.realContentHash"
-	},
+	// Two depths need a per-asset stand-in for the `../` path, and the chunks it lands in
+	// are named by their content — the depth is read off the template with the hashes
+	// neutralized, so it folds into those names like any other part.
+	"shared-depths": { file: /^flat\./, expect: "analyzable" },
 	"eval-devtool": {
 		file: "main.mjs",
 		expect: "fallback",
