@@ -6,10 +6,7 @@ const path = require("path");
 // codes a machine that cannot make directory symlinks reports
 const SYMLINK_UNSUPPORTED = new Set(["EPERM", "EACCES", "ENOSYS", "UNKNOWN"]);
 
-/**
- * @param {string} link path of a symlink or junction that may not exist
- * @returns {void}
- */
+/** @type {(link: string) => void} */
 const removeLink = (link) => {
 	try {
 		fs.unlinkSync(link);
