@@ -5165,31 +5165,33 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 	// element's printer runs, so its options have to be bound for the whole print
 	// — otherwise the attribute reads the previous print's target and emits a
 	// spelling this one cannot read.
+	// `#rrggbbaa` landed in Chrome 62, so these two selections sit either side of
+	// the one ability, and the browsers decide it rather than a flag.
 	/**
-	 * @param {boolean} cssColorHexAlpha whether the target reads `#rrggbbaa`
+	 * @param {string} browser the browserslist selection to minify for
 	 * @returns {string} the minified serialization
 	 */
-	const minifyWith = (cssColorHexAlpha) =>
+	const minifyFor = (browser) =>
 		new SourceProcessor().process(
 			'<p style="color:rgba(255,0,0,.5)">x</p><style>.a{color:rgba(255,0,0,.5)}</style>',
-			{ mode: "minify", environment: { cssColorHexAlpha } }
+			{ mode: "minify", environment: { browsers: [browser] } }
 		).code;
 
 	it("shortens both the attribute and the element when the target reads it", () => {
-		expect(minifyWith(true)).toBe(
+		expect(minifyFor("chrome 62")).toBe(
 			"<p style=color:#ff000080>x</p><style>.a{color:#ff000080}</style>"
 		);
 	});
 
 	it("shortens neither when it does not", () => {
-		expect(minifyWith(false)).toBe(
+		expect(minifyFor("chrome 50")).toBe(
 			"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"
 		);
 	});
 
 	it("does not carry one print's target into the next", () => {
-		minifyWith(true);
-		expect(minifyWith(false)).toBe(
+		minifyFor("chrome 62");
+		expect(minifyFor("chrome 50")).toBe(
 			"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"
 		);
 	});
