@@ -83,13 +83,15 @@ module.exports = [
 			chunkFilename: "[name].[contenthash].mjs"
 		}
 	}),
-	// Every case below must fall back with no `.ei` emitted.
-	base("public-path-override", { entry: "./index-public-path-override" }),
-	// Two depths need a stand-in, and the chunks it would land in are content-named.
+	// Also analyzable: two depths need a per-asset stand-in for the `../` path, and the
+	// chunks it lands in are named by their content — the depth is hash-independent, so
+	// it reaches those names before they are taken.
 	base("shared-depths", {
 		entry: "./index-depths",
 		plugins: [nameConsumersByContent(["flat", "nested/deep"])]
 	}),
+	// Every case below must fall back with no `.ei` emitted.
+	base("public-path-override", { entry: "./index-public-path-override" }),
 	// `import.meta` does not parse inside the `eval()` this devtool wraps a module in.
 	base("eval-devtool", {
 		entry: "./index-eval",
