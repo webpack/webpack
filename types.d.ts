@@ -22418,6 +22418,12 @@ declare interface PerformanceOptions {
 	unusedExternals?: boolean;
 
 	/**
+	 * Report modules bundled although nothing uses what they export, naming the statement whose side effect kept each one (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	unusedModules?: boolean;
+
+	/**
 	 * Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */

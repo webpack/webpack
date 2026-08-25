@@ -16021,6 +16021,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-unused-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules bundled although nothing uses what they export, naming the statement whose side effect kept each one (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.unusedModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules bundled although nothing uses what they export, naming the statement whose side effect kept each one (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-reexports": Object {
     "configs": Array [
       Object {
