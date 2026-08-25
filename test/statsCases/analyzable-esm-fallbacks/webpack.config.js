@@ -74,16 +74,17 @@ module.exports = [
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
 	}),
-	// Every case below must fall back with no `.ei` emitted.
-	base("public-path-override", { entry: "./index-public-path-override" }),
-	// The entry the stand-in would land in is named by its own content, and with
-	// `realContentHash` off nothing repairs the name it is rewritten under.
+	// Also analyzable: the entry the stand-in lands in is named by its own content and
+	// `realContentHash` is off, so nothing repairs that name after the rewrite — the
+	// name being baked is folded into the entry's hash before it is taken instead.
 	base("content-hash", {
 		output: {
 			filename: "[name].[contenthash].mjs",
 			chunkFilename: "[name].[contenthash].mjs"
 		}
 	}),
+	// Every case below must fall back with no `.ei` emitted.
+	base("public-path-override", { entry: "./index-public-path-override" }),
 	// Two depths need a stand-in, and the chunks it would land in are content-named.
 	base("shared-depths", {
 		entry: "./index-depths",
@@ -113,7 +114,8 @@ module.exports = [
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 		output: { environment: { module: false, dynamicImport: true } }
 	}),
-	// Two chunks that reference each other cannot both be named by their content.
+	// Two chunks naming each other: whichever hash settles first bakes into the other,
+	// and the way back has no hash to read.
 	base("circular", {
 		entry: "./index-cycle",
 		output: { chunkFilename: "[name].[contenthash].mjs" }

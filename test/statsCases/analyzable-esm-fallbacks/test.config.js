@@ -18,11 +18,9 @@ const CASES = {
 	// `fetchPriority` is unsupported for ESM output, so it must not degrade the
 	// output — the analyzable form is still emitted (documented limitation).
 	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
-	"content-hash": {
-		file: /^main\./,
-		expect: "fallback",
-		bailout: "optimization.realContentHash"
-	},
+	// The entry is named by its own content with nothing to repair that name after a
+	// rewrite, so what the stand-in resolves to is folded into its hash instead.
+	"content-hash": { file: /^main\./, expect: "analyzable" },
 	// The public path's hash is filled in by the deferred pass, and no name here is
 	// built from content, so there is none for the rewrite to invalidate.
 	"templated-public-path": { file: "main.mjs", expect: "analyzable" },
@@ -33,7 +31,8 @@ const CASES = {
 	// load in flight and HMR does not force the runtime form.
 	hmr: { file: "main.mjs", expect: "analyzable" },
 	// Only the chunk both copies share falls back, and not for its depth: a per-asset
-	// stand-in carries that. Content-named chunks leave none to write into.
+	// stand-in carries that. That `../` path is what cannot be folded into a
+	// content-named consumer's hash — it is built from the consumer's own name.
 	"shared-depths": {
 		file: /^flat\./,
 		expect: "fallback",
