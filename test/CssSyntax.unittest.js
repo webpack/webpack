@@ -6750,3 +6750,47 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		}
 	});
 });
+
+describe("CssSyntax minify — what a duplicate rule is scoped to", () => {
+	const { SourceProcessor } = require("../lib/css/syntax");
+
+	/**
+	 * @param {string} css input stylesheet
+	 * @returns {string} the minified stylesheet
+	 */
+	const minify = (css) =>
+		new SourceProcessor().process(css, { mode: "minify" }).code;
+
+	it("takes back a rule an identical later one under the same conditions kills", () => {
+		expect(
+			minify("@media print{.a{color:red}.b{color:#00f}.a{color:red}}")
+		).toBe("@media print{.b{color:#00f}.a{color:red}}");
+	});
+
+	it("keeps both when the conditions differ", () => {
+		expect(
+			minify("@media print{.a{color:red}}@media screen{.a{color:red}}")
+		).toBe("@media print{.a{color:red}}@media screen{.a{color:red}}");
+	});
+
+	it("keeps both when one is nested deeper under the same outer condition", () => {
+		expect(
+			minify("@media print{@supports (a:b){.a{color:red}}.a{color:red}}")
+		).toBe("@media print{@supports (a:b){.a{color:red}}.a{color:red}}");
+	});
+
+	it("folds two blocks that say the same thing into one", () => {
+		expect(
+			minify(
+				"@media print{@supports (a:b){.a{color:red}}}" +
+					"@media print{@supports (a:b){.a{color:red}}}"
+			)
+		).toBe("@media print{@supports (a:b){.a{color:red}}}");
+	});
+
+	it("does not read a rule as one whose text merely starts the same", () => {
+		expect(minify("@media print{.a{color:red}.a{color:redd}}")).toBe(
+			"@media print{.a{color:red}.a{color:redd}}"
+		);
+	});
+});
