@@ -2088,12 +2088,23 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			["a{transform:TRANSLATEY(5px)}", "a{transform:translateY(5px)}"],
 			["a{transform:skewx(1deg)}", "a{transform:skew(1deg)}"],
 			["a{transform:SCALEZ(2)}", "a{transform:scaleZ(2)}"],
-			["a{width:40q}", "a{width:40Q}"],
-			["a{x:1hz}", "a{x:1Hz}"],
+			["a{width:40Q}", "a{width:40Q}"],
+			["a{x:1HZ}", "a{x:1Hz}"],
 			["a{x:1KHZ}", "a{x:1kHz}"]
 		])("keeps the canonical spelling of %s", (css, expected) => {
 			expect(min(css)).toBe(expected);
 		});
+
+		// The canonical spelling repairs a name that was shouted; a name already
+		// written in one case is left where it is, since the two are the same
+		// bytes either way and reading the table for every unit in a stylesheet
+		// costs more than the spelling is worth.
+		it.each([["a{width:40q}"], ["a{x:1hz}"], ["a{transform:translatey(1px)}"]])(
+			"leaves an already-lowercase name alone: %s",
+			(css) => {
+				expect(min(css)).toBe(css);
+			}
+		);
 	});
 
 	it("rewrites a `flex` value to its keyword spelling", () => {

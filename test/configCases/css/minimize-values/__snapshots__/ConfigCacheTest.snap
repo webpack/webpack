@@ -108,7 +108,7 @@ Array [
   "/*! webpack: declined: past 1e4 the rounded error would pass 1/64px */.t77{width:33333.33333px}",
   "/*! webpack: the units CSS Values 4 fixes against each other convert */.t78{width:16px}.t79{width:12pt}.t80{width:10mm}.t81{transition-duration:.4s}",
   "/*! webpack: ...only when the ratio divides exactly */.t82{width:1.3px}",
-  "/*! webpack: declined: \`q\` is a source only — Safari read it first in 15 */.t83{width:10mm;height:40Q}",
+  "/*! webpack: declined: \`q\` is a source only — Safari read it first in 15 */.t83{width:10mm;height:40q}",
   "/*! webpack: declined: a \`@supports\` condition tests the unit itself */@supports (width:16px){.t84{color:red}}",
   "/*! webpack: ...and the value it is tested with */@supports (color:rgba(0,0,0,.5)){.t85{color:red}}",
   "/*! webpack: a media feature is evaluated, not tested, so it converts */@media (width>=1200px){.t86{color:red}}",
