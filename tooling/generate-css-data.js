@@ -2187,6 +2187,28 @@ const collectInitialValueKeywords = () => {
 };
 
 /**
+ * The properties whose top-level value grammar is keywords alone — no
+ * `<custom-ident>`, no string, no name of the author's — so an identifier
+ * standing directly in one of their values is one of those keywords, which CSS
+ * matches ASCII case-insensitively. A call's arguments are not top level, so a
+ * property whose keywords stand beside one (`transform`, `font-variant`) is here
+ * too: the call is its own token, read against the function's own grammar.
+ * @returns {string[]} the property names, sorted
+ */
+const collectKeywordOnlyProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		const { keywords, classes } = acceptedValues(entry.syntax);
+		// No keyword at all means a grammar that spelled none out — nothing to
+		// match a value against, so the property claims no identifier.
+		if (classes.size !== 0 || keywords.size === 0) continue;
+		out.push(name);
+	}
+	return out.sort();
+};
+
+/**
  * The properties whose grammar takes a color and never a bare identifier of the
  * author's own, so a named color written in one is unambiguously that color and
  * may be rewritten to whichever spelling is shortest. Under-approximate on
@@ -5273,6 +5295,7 @@ const collectData = async () => {
 	const selectorFunctions = collectSelectorFunctions();
 	const canonicalNames = collectCanonicalNames();
 	const colorOnlyProperties = collectColorOnlyProperties();
+	const keywordOnlyProperties = collectKeywordOnlyProperties();
 	const initialValueKeywords = collectInitialValueKeywords();
 	const repeatStyleProperties = collectRepeatStyleProperties();
 	const repeatStyleKeywords = collectRepeatStyleKeywords();
@@ -5563,6 +5586,12 @@ const NTH_NAMED_EQUIVALENTS = ${mapLiteral(nthNamedEquivalents)};
 // The properties taking a color and never an identifier of the author's own, so
 // a named color written in one is that color and may be spelled the shortest way.
 const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
+
+// The properties whose value is keywords alone, so an identifier standing
+// directly in one is a keyword rather than a name of the author's — and matches
+// ASCII case-insensitively. A call's arguments are read against the function's
+// own grammar, so they are not covered.
+const KEYWORD_ONLY_PROPERTIES = ${setLiteral(keywordOnlyProperties)};
 
 // Each two-keyword \`display\` -> the single keyword naming the same box.
 const DISPLAY_SHORT_FORMS = new Map([
@@ -6054,7 +6083,7 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.KEYWORD_ONLY_PROPERTIES = KEYWORD_ONLY_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;

@@ -2049,6 +2049,39 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			expect(min("a{COLOR:red}a{color:red}")).toBe("a{color:red}");
 		});
 
+		// A property whose grammar is keywords alone claims no name of the
+		// author's, so a top-level identifier in one of its values is a keyword.
+		it.each([
+			["a{DISPLAY:GRID}", "a{display:grid}"],
+			["a{position:ABSOLUTE;float:LEFT}", "a{position:absolute;float:left}"],
+			["a{white-space:PRE-WRAP}", "a{white-space:pre-wrap}"],
+			["a{transform:NONE}", "a{transform:none}"],
+			// A vendor spelling is read as the property it spells.
+			["a{-WEBKIT-USER-SELECT:NONE}", "a{-webkit-user-select:none}"]
+		])("lowercases the keyword value %s", (css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+
+		it.each([
+			// Each of these grammars takes a name of the author's somewhere, so an
+			// identifier in one may be that name.
+			["a name the grammar takes", "a{animation-name:Spin}"],
+			["a font family", "a{font-family:Foo}"],
+			["a grid area", "a{grid-area:MyArea}"],
+			["a will-change property", "a{will-change:Xy}"],
+			// A call's arguments follow the function's grammar, not the property's.
+			["a call's argument", "a{font-variant-alternates:stylistic(Foo)}"],
+			// The engine hands a pending-substitution value back as its tokens were
+			// written, so nothing inside one is rewritten.
+			[
+				"a value holding a substitution",
+				"a{text-decoration-line:UNDERLINE var(--x)}"
+			],
+			["a custom property", "a{--x:DISPLAY GRID}"]
+		])("leaves a value identifier alone: %s", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
+
 		// The eleven transforms and three units `mdn-data` spells with a capital
 		// keep that spelling, which is what every other tool writes.
 		it.each([
@@ -5077,7 +5110,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `left` / `right` are `justify-*`'s alone, so the shorthand is invalid
 			// whole where the `justify-*` declaration alone was read.
 			"a{align-items:left;justify-items:left}",
-			"a{align-items:RIGHT;justify-items:RIGHT}",
 			"a{align-self:left;justify-self:left}",
 			"a{align-content:right;justify-content:right}",
 			// ...and a `<baseline-position>` is `align-content`'s alone, the other way
@@ -5085,6 +5117,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			"a{align-content:baseline;justify-content:baseline}"
 		])("declines a pair over a keyword only one half takes: %s", (css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		// The keyword matches case-insensitively, and `align-items` is keywords
+		// alone, so it prints the one way it matches.
+		it("declines the pair whatever case the keyword is written in", () => {
+			expect(minify("a{align-items:RIGHT;justify-items:RIGHT}")).toBe(
+				"a{align-items:right;justify-items:right}"
+			);
 		});
 
 		it("merges a pair over a keyword both halves take", () => {
