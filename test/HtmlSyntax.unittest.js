@@ -8294,15 +8294,19 @@ describe("SourceProcessor — reusing work across a print", () => {
 	});
 
 	it("reads back every name of a document that dirties the whole memo", () => {
-		// A slot is picked by the name's first character and length, so names of
-		// 512 consecutive lengths reach every one of them — which is what makes the
-		// next parse drop the memo whole rather than slot by slot.
+		// A slot is picked by first character and length, so 512 consecutive
+		// lengths reach every one — the parse that drops the memo whole.
 		const SLOTS = 512;
 		let markup = "<body>";
 		for (let i = 1; i <= SLOTS; i++) {
 			markup += `<x-${"a".repeat(i)}></x-${"a".repeat(i)}>`;
 		}
+		/** @type {string[]} */
 		const names = [];
+		/**
+		 * @param {import("../lib/html/syntax").HtmlNodeRef} node node
+		 * @returns {void}
+		 */
 		const walk = (node) => {
 			for (const child of A.children(node)) {
 				if (A.type(child) === NodeType.Element) {
