@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `output.environment.cssColorHexAlpha`, `cssInsetShorthand`, `cssMediaQueryRange` and `cssPlaceShorthand`, resolved from the target like the JavaScript abilities beside them, so CSS minification only reaches for a spelling the target can read.
+Resolve every CSS ability the minifier reaches for from the target's browsers, so a spelling the target cannot read is never written.

@@ -2769,10 +2769,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("keeps a partly transparent color when the target has no hex alpha", () => {
-			expect(value("hsl(0 100% 50% / .8)", { cssColorHexAlpha: false })).toBe(
+			expect(value("hsl(0 100% 50% / .8)", { browsers: ["chrome 50"] })).toBe(
 				"hsl(0 100% 50% / .8)"
 			);
-			expect(value("rgba(255,0,0,.8)", { cssColorHexAlpha: false })).toBe(
+			expect(value("rgba(255,0,0,.8)", { browsers: ["chrome 50"] })).toBe(
 				"rgba(255,0,0,.8)"
 			);
 		});
@@ -4475,7 +4475,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("keeps a two-position stop the target cannot read", () => {
 			expect(
 				minify("a{background:linear-gradient(red 0%,red 50%,blue)}", {
-					cssGradientDoublePosition: false
+					browsers: ["chrome 50"]
 				})
 			).toBe("a{background:linear-gradient(red 0%,red 50%,blue)}");
 		});
@@ -4742,7 +4742,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("declines `inset` when the target cannot read the shorthand", () => {
 			const css = "a{top:1px;right:2px;bottom:1px;left:2px}";
-			expect(minify(css, { cssInsetShorthand: false })).toBe(css);
+			expect(minify(css, { browsers: ["chrome 50"] })).toBe(css);
 			expect(minify(css)).toBe("a{inset:1px 2px}");
 		});
 
@@ -4816,7 +4816,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("declines the `place-*` pairs a target cannot read", () => {
-			const off = { cssPlaceShorthand: false };
+			const off = { browsers: ["chrome 50"] };
 			const items = "a{align-items:center;justify-items:center}";
 			expect(minifyFor(items, undefined, off)).toBe(items);
 			const self = "a{align-self:center;justify-self:end}";
@@ -5569,10 +5569,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		expect(
 			minifyFor(
 				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
-				["ie 10"],
-				// Set by hand: this path passes `browsers` straight to the printer, so
-				// the browserslist-to-abilities resolution never runs.
-				{ cssPlaceShorthand: false }
+				["ie 10"]
 			)
 		).toBe(
 			"a{-ms-flex-align:start;align-items:flex-start;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between}"

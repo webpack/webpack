@@ -3115,7 +3115,7 @@ const SUPPLEMENT = {
 		["translatex", "translate"],
 		["skewx", "skew"]
 	],
-	// The pair shorthands `output.environment.cssPlaceShorthand` gates: newer than
+	// The pair shorthands the target's `placeShorthand` ability gates: newer than
 	// the longhands they merge, so a target reading `align-items` may not read
 	// `place-items` and the merge would lose both declarations rather than one.
 	// `mdn-data` states no version, so the set is named rather than derived.
@@ -3990,6 +3990,88 @@ const encodeVersion = (version) => {
 	if (Number.isNaN(parsedMajor)) return null;
 	return parsedMajor * 100000 + (Number.parseInt(minor, 10) || 0);
 };
+
+// The CSS abilities a target either has or does not, each as the BCD paths that
+// have to have arrived for it: several where one spelling covers several
+// constructs, and then the ability is only there once the last of them is. Read
+// out of BCD rather than stated, so an engine shipping one moves the table on
+// the next `yarn fix:special` instead of going stale unread.
+/** @type {[string, string[]][]} */
+const SUPPORTED_FEATURES = [
+	[
+		"colorHexAlpha",
+		["css.types.color.rgb_hexadecimal_notation.alpha_hexadecimal_notation"]
+	],
+	[
+		"gradientDoublePosition",
+		[
+			"css.types.gradient.linear-gradient.doubleposition",
+			"css.types.gradient.radial-gradient.doubleposition",
+			"css.types.gradient.conic-gradient.doubleposition"
+		]
+	],
+	["insetShorthand", ["css.properties.inset"]],
+	["mediaQueryRange", ["css.at-rules.media.range_syntax"]],
+	[
+		"placeShorthand",
+		[
+			"css.properties.place-content",
+			"css.properties.place-items",
+			"css.properties.place-self"
+		]
+	]
+];
+
+/**
+ * When each browser first read every one of a feature's constructs, as
+ * `[browserslistName, since][]`. A prefixed, renamed or flagged arrival is not
+ * one the plain spelling reaches, so it does not count; a browser BCD never
+ * gives it carries `Infinity`, which no version satisfies.
+ * @param {string[]} paths BCD paths that all have to have arrived
+ * @returns {[string, number][]} the versions, by browserslist name
+ */
+const collectSupportedFrom = (paths) => {
+	/** @type {Map<string, number>} */
+	const since = new Map();
+	for (const path of paths) {
+		/** @type {EXPECTED_ANY} */
+		let node = bcd;
+		for (const key of path.split(".")) node = node && node[key];
+		const compat = node && node.__compat;
+		if (!compat || !compat.support) {
+			throw new Error(`no BCD support block at ${path}`);
+		}
+		for (const [bcdBrowser, raw] of Object.entries(compat.support)) {
+			const names = BCD_TO_BROWSERSLIST.get(bcdBrowser);
+			if (names === undefined) continue;
+			const entries = Array.isArray(raw) ? raw : [raw];
+			const plain = entries.find(
+				(entry) => !entry.prefix && !entry.alternative_name && !entry.flags
+			);
+			const added = plain ? encodeVersion(plain.version_added) : null;
+			for (const name of names) {
+				const before = since.get(name);
+				const version = added === null ? Infinity : added;
+				if (before === undefined || version > before) since.set(name, version);
+			}
+		}
+	}
+	return [...since].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * @param {[string, [string, number][]][]} table the features and their versions
+ * @returns {string} the `Map` literal
+ */
+const supportLiteral = (table) =>
+	`new Map([${table
+		.map(
+			([name, browsers]) =>
+				`["${name}", new Map([${browsers
+					.map(([browser, since]) => `["${browser}", ${since}]`)
+					.join(", ")}])]`
+		)
+		.join(", ")}])`;
 
 // A vendor spelling BCD states as an alternative name rather than a prefix, with
 // its decoration stripped: `":-webkit-any()"` -> `-webkit-any`. The same engine
@@ -5208,6 +5290,11 @@ const collectData = async () => {
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
+	/** @type {[string, [string, number][]][]} */
+	const supportedFrom = SUPPORTED_FEATURES.map(([name, paths]) => [
+		name,
+		collectSupportedFrom(paths)
+	]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
@@ -5271,7 +5358,7 @@ const PAIR_LONGHANDS = new Map([${pairLonghands
 // collapsing to one value may emit it.
 const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 
-// The pair shorthands \`output.environment.cssPlaceShorthand\` gates, newer than
+// The pair shorthands the target's \`placeShorthand\` ability gates, newer than
 // the longhands they merge.
 const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
 
@@ -5776,6 +5863,12 @@ const PREFIXED_SELECTORS = ${prefixLiteral(prefixedSelectors)};
 /** @type {Map<string, [string, [string, number, number][]][]>} */
 const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
 
+// When each browser first read a CSS ability the printer reaches for, as
+// \`feature -> browserslistName -> version\`. A selection has the ability when
+// every browser in it is named here and at or past its version.
+/** @type {Map<string, Map<string, number>>} */
+const SUPPORTED_FROM = ${supportLiteral(supportedFrom)};
+
 // The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
@@ -5858,7 +5951,7 @@ module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;

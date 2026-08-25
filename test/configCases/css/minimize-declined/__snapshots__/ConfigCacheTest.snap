@@ -2,11 +2,11 @@
 
 exports[`ConfigCacheTestCases css minimize-declined minimize-declined should compile 1`] = `
 Array [
-  "/*! declined here only because this case builds for no particular target — with
-   \`output.environment.cssColorHexAlpha\` false it stays, and otherwise it is
-   \`#0000\` (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
-  "/*! declined here only because this case builds for no particular target — with
-   \`output.environment.cssMediaQueryRange\` false it stays, and otherwise it is
+  "/*! declined here only because this case builds for no particular target — for a
+   selection with no hex alpha it stays, and otherwise it is \`#0000\`
+   (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
+  "/*! declined here only because this case builds for no particular target — for a
+   selection with no range syntax it stays, and otherwise it is
    \`(width>=1200px)\` (see the \`minimize-environment\` case) */@media (width>=1200px){.t06{color:red}}",
   "/*! declined: a declaration between them that writes the same family would be
    stepped over by the merge — \`mdn-data\` maps \`margin-top\` back to \`margin\`
