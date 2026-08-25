@@ -145,6 +145,11 @@ export type AmdContainer = string;
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 /**
+ * State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).
+ * @since 5.110.0
+ */
+export type DeclareChunkDependencies = boolean;
+/**
  * Specify which export should be exposed as library.
  */
 export type LibraryExport = string[] | string;
@@ -1497,6 +1502,11 @@ export interface LibraryOptions {
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: AuxiliaryComment;
+	/**
+	 * State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).
+	 * @since 5.110.0
+	 */
+	declareChunkDependencies?: DeclareChunkDependencies;
 	/**
 	 * Specify which export should be exposed as library.
 	 */
