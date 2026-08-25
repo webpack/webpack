@@ -7839,4 +7839,121 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			}).code
 		).toBe("<nobr><table><b><colgroup><nobr>");
 	});
+
+	// From wpt's `html/syntax/serializing-html-fragments`. Held to the tree, not
+	// to §13.3's text: this printer echoes the source rather than re-serializing.
+	describe("wpt serialization cases", () => {
+		it.each([
+			["a bare ampersand in an attribute", "<span><a b='&'></a></span>"],
+			["a no-break space in an attribute", "<span><a b='&nbsp;'></a></span>"],
+			["a quote in an attribute", "<span><a b='\"'></a></span>"],
+			["a less-than in an attribute", '<span><a b="<"></a></span>'],
+			["a greater-than in an attribute", '<span><a b=">"></a></span>'],
+			[
+				"an escaped javascript url",
+				'<span><a href="javascript:&quot;&lt;>&quot;"></a></span>'
+			],
+			[
+				"a namespaced attribute on svg",
+				'<span><svg xlink:href="a"></svg></span>'
+			],
+			[
+				"an xmlns attribute on svg",
+				'<span><svg xmlns:svg="test"></svg></span>'
+			],
+			// Raw-text and escapable-raw-text elements: the markup inside them is
+			// text, and printing it back must not let it become tags again.
+			["markup inside style", "<span><style><&></style></span>"],
+			["markup inside xmp", "<span><xmp><&></xmp></span>"],
+			["markup inside iframe", "<span><iframe><&></iframe></span>"],
+			["markup inside noembed", "<span><noembed><&></noembed></span>"],
+			["markup inside noframes", "<span><noframes><&></noframes></span>"],
+			["a comment", "<span><!--data--></span>"],
+			[
+				"nested elements",
+				"<span><a><b><c></c></b><d>e</d><f><g>h</g></f></a></span>"
+			],
+			["an unquoted attribute value", "<span b=c></span>"],
+			// Scripting is off in webpack, so `<noscript>` holds markup rather than
+			// text — wpt's escaping.html is the case that says so.
+			["markup inside noscript", "<span><noscript><&></noscript></span>"],
+			["unescaped noscript content", "<noscript>& <></noscript>"],
+			["escaped noscript content", "<noscript>&amp;&nbsp;&lt;&gt;</noscript>"],
+			["an element inside noscript", "<noscript><b>x</b></noscript>"],
+			[
+				"a link inside noscript in head",
+				"<head><noscript><link href=x></noscript>"
+			]
+		])("keeps %s", (_name, source) => {
+			expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
+		});
+	});
+});
+
+// Beautifying is no pretty-printer: it completes the tags the source left out
+// and echoes the rest byte for byte, so what it writes is snapshotted.
+describe("SourceProcessor — beautifying", () => {
+	const { SourceProcessor, parseHtml } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @returns {string} its beautified serialization
+	 */
+	const beautify = (source) =>
+		new SourceProcessor().process(source, { mode: "beautify" }).code;
+
+	const CASES = [
+		// End tags §4.13 lets a source omit are written back.
+		["implied list items", "<ul><li>a<li>b</ul>"],
+		["implied table sections", "<table><tr><td>1<td>2"],
+		["an implied paragraph", '<div   class="x"    id=y ><p>z'],
+		// Nothing the author wrote is rewritten: quoting, case and the spacing
+		// inside a tag all survive.
+		["attribute spelling", "<A HREF='x'   dATa-Y=1 >t</A>"],
+		["an unquoted attribute", "<img src=a.png alt=hi>"],
+		// The round-trip fallback: shapes no tag placement reproduces print from
+		// the source that built them.
+		["a fostered formatting run", "<nobr><table><b><colgroup><nobr>"],
+		["a list fostered out of a table", "<p><table><ol>"],
+		["a form the table kept", "<table><p><form>"],
+		// Raw text keeps its content, and a comment survives.
+		["raw text", "<style>a{b:c}</style><script>1<2</script>"],
+		["a comment", "<div><!--c--></div>"]
+	];
+
+	for (const [name, source] of CASES) {
+		it(`should beautify ${name}`, () => {
+			expect(beautify(source)).toMatchSnapshot();
+		});
+	}
+
+	it("should keep the tree every case was parsed from", () => {
+		/** @type {string[]} */
+		const moved = [];
+		for (const [name, source] of CASES) {
+			const printed = beautify(source);
+			if (
+				serializeHtmlTree(parseHtml(printed)) !==
+				serializeHtmlTree(parseHtml(source))
+			) {
+				moved.push(name);
+			}
+		}
+		expect(moved).toEqual([]);
+	});
+
+	// A tag the printer supplies is source the next pass reads, and a written one
+	// gets its pair back — so echoing settles on the second pass, not the first.
+	it("should settle on the second pass", () => {
+		/** @type {string[]} */
+		const unsettled = [];
+		for (const [name, source] of [
+			...CASES,
+			["a body implied before leading whitespace", "</html> leading ws"]
+		]) {
+			const twice = beautify(beautify(source));
+			if (beautify(twice) !== twice) unsettled.push(name);
+		}
+		expect(unsettled).toEqual([]);
+	});
 });

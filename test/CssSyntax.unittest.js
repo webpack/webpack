@@ -2624,6 +2624,19 @@ describe("CssSyntax — print modes", () => {
 		);
 	});
 
+	it("closes a comment the source left open before writing after it", () => {
+		// §4.3.2 runs an unterminated comment to EOF, so a `;` or `}` after it
+		// lands inside: `{y/*` grew to `{y/*}` to `{y/*}}` on every pass.
+		expect(print("{y/*", "minify")).toBe("{y/**/}");
+		expect(print("{y/*", "beautify")).toBe(" {\ny/**/;\n}");
+		for (const mode of /** @type {const} */ (["minify", "beautify"])) {
+			const once = print("{y/*", mode);
+			expect(print(once, mode)).toBe(once);
+		}
+		// A comment the source did close is written back as it stands.
+		expect(print("{y/**/ z", "minify")).toBe("{y/**/ z}");
+	});
+
 	it("beautifies to something that minifies back the same", () => {
 		for (const src of [
 			"/*!k*/.a{color:#ff0000}",
@@ -6367,4 +6380,48 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 			)
 		).toBe("@media screen{a,b{color:red}}@keyframes s{to{opacity:1}}");
 	});
+});
+
+// The tokenizer's corpus through the other print mode: beautifying had none of
+// its own, and it is what a consumer reads, so its output is snapshotted.
+describe("CssSyntax — beautifying the parsing corpus", () => {
+	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
+	const cases = fs
+		.readdirSync(casesPath)
+		.filter((name) => name.endsWith(".css"))
+		.map((name) => [
+			name,
+			fs.readFileSync(path.resolve(casesPath, name), "utf8")
+		]);
+
+	/**
+	 * @param {string} src css source
+	 * @param {import("../lib/util/SourceProcessor").PrintOptions["mode"]} mode print mode
+	 * @returns {string} its serialization
+	 */
+	const print = (src, mode) =>
+		new SourceProcessor().process(src, { mode }).code;
+
+	it("has a corpus", () => {
+		expect(cases.length).toBeGreaterThan(15);
+	});
+
+	for (const [name, code] of cases) {
+		it(`should beautify "${name}"`, () => {
+			const beautified = print(code, "beautify");
+			expect(beautified).toMatchSnapshot();
+			// The printer has to accept what it wrote: beautifying is a fixed point.
+			expect(print(beautified, "beautify")).toBe(beautified);
+		});
+	}
+
+	// Both modes read the same stylesheet, so minifying either form answers the
+	// same — what `print modes` states over a handful, over every case here.
+	for (const [name, code] of cases) {
+		it(`should minify "${name}" the same from either form`, () => {
+			expect(print(print(code, "beautify"), "minify")).toBe(
+				print(code, "minify")
+			);
+		});
+	}
 });
