@@ -829,7 +829,9 @@ describe("CssSyntax — block streaming", () => {
 	// of the two it is exercising, so none of them can quietly stop testing the
 	// streamed path if the threshold moves.
 	/** @type {(i: number) => string} */
-	const rule = (i) => `.c${i}>d${i}:hover{color:red;margin:1px}`;
+	// Distinct blocks: rules printing the same one join into a selector list, and
+	// what these cases are about is the streaming, not the joining.
+	const rule = (i) => `.c${i}>d${i}:hover{color:red;margin:${i + 1}px}`;
 	/** @type {(n: number, f: (i: number) => string) => string} */
 	const repeat = (n, f) => {
 		let s = "";
@@ -3665,7 +3667,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{color:red;&:hover{color:blue}}"
 			],
 			// Only the last of a set of identical declarations can be read.
-			["a{color:red}a{color:red}", "a{color:red}"]
+			["a{color:red}a{color:red}", "a{color:red}"],
+			// A pseudo every engine reads joins like any other compound.
+			["a:hover{top:0}b:hover{top:0}", "a:hover,b:hover{top:0}"],
+			["[a=b]:hover{top:0}.b{top:0}", "[a=b]:hover,.b{top:0}"],
+			[
+				"a:nth-child(2){top:0}b::before{top:0}",
+				"a:nth-child(2),b:before{top:0}"
+			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -3675,10 +3684,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Nothing stands between two rules a join puts together, so a rule that
 			// does keeps them apart whatever it writes.
 			["a rule stands between them", "a{color:red}i{margin-top:0}b{color:red}"],
-			// One selector the engine cannot parse invalidates the whole list.
-			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
-			["...even beside an attribute selector", "[a=b]:hover{top:0}.b{top:0}"],
-			["...including a prefixed one", "a{top:0}::-moz-placeholder{top:0}"],
+			// One selector the engine cannot parse invalidates the whole list, so a
+			// pseudo no target is known to read keeps its rule out of one.
+			["a pseudo is a prefixed one", "a{top:0}::-moz-placeholder{top:0}"],
 			["...or a CSS modules one", "body{top:0}:local(.x){top:0}"],
 			["the parser passed a shape through", "a{top:0}. b{top:0}"],
 			// `:is(a,b)` takes the specificity of its most specific selector.
@@ -3698,6 +3706,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			]
 		])("keeps both rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		it("joins a pseudo only where every target browser reads it", () => {
+			const css = "a:focus-visible{top:0}b:focus-visible{top:0}";
+			const joined = "a:focus-visible,b:focus-visible{top:0}";
+			// Chrome 86 is where it arrived; 85 is the release before it.
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			expect(minifyFor(css, ["chrome 85"])).toBe(css);
+			// One browser short of it holds the whole selection back.
+			expect(minifyFor(css, ["chrome 130", "safari 15.3"])).toBe(css);
+			expect(minifyFor(css, ["chrome 130", "safari 15.4"])).toBe(joined);
+			// No selection names no browser to answer for, so it is assumed.
+			expect(minify(css)).toBe(joined);
+			// A pseudo nothing states support for never joins, at any target.
+			const unknown = "a:totally-made-up{top:0}b:totally-made-up{top:0}";
+			expect(minifyFor(unknown, ["chrome 130"])).toBe(unknown);
+			expect(minify(unknown)).toBe(unknown);
 		});
 
 		it.each([

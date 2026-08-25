@@ -4060,6 +4060,30 @@ const collectSupportedFrom = (paths) => {
 };
 
 /**
+ * When each browser first read every standard pseudo-class and pseudo-element,
+ * keyed by the spelling a selector carries (`:hover`, `::before`, `:nth-child`).
+ * Only a pseudo every target reads may be joined into a selector list, because
+ * one selector an engine cannot parse invalidates the whole list.
+ * @returns {[string, [string, number][]][]} the versions, by spelling
+ */
+const collectSelectorSupport = () => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const entry of Object.values(selectors)) {
+		if (entry.status !== "standard") continue;
+		const match = /^(::?)([-\w]+)/.exec(entry.syntax || "");
+		if (match === null) continue;
+		const [, colons, name] = match;
+		if (!bcd.css.selectors[name]) continue;
+		table.push([
+			`${colons}${name}`,
+			collectSupportedFrom([`css.selectors.${name}`])
+		]);
+	}
+	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
  * @param {[string, [string, number][]][]} table the features and their versions
  * @returns {string} the `Map` literal
  */
@@ -5290,6 +5314,7 @@ const collectData = async () => {
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
+	const selectorSupport = collectSelectorSupport();
 	/** @type {[string, [string, number][]][]} */
 	const supportedFrom = SUPPORTED_FEATURES.map(([name, paths]) => [
 		name,
@@ -5869,6 +5894,12 @@ const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
 /** @type {Map<string, Map<string, number>>} */
 const SUPPORTED_FROM = ${supportLiteral(supportedFrom)};
 
+// When each browser first read a pseudo-class or pseudo-element, by the spelling
+// a selector carries. A pseudo missing here is one no target is known to read,
+// so it never joins a selector list.
+/** @type {Map<string, Map<string, number>>} */
+const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport)};
+
 // The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
@@ -5949,7 +5980,7 @@ module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
