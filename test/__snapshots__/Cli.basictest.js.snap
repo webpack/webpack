@@ -13237,6 +13237,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-library-declare-chunk-dependencies": Object {
+    "configs": Array [
+      Object {
+        "description": "State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).",
+        "multiple": false,
+        "path": "output.library.declareChunkDependencies",
+        "type": "boolean",
+      },
+    ],
+    "description": "State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-library-export": Object {
     "configs": Array [
       Object {
