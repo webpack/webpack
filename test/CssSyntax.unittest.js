@@ -6368,3 +6368,70 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 		).toBe("@media screen{a,b{color:red}}@keyframes s{to{opacity:1}}");
 	});
 });
+
+// The corpus the tokenizer snapshots read, put through the other print mode.
+// Beautifying is the mode with no test corpus of its own, and it is the one a
+// consumer reads, so what it writes is snapshotted rather than described.
+describe("CssSyntax — beautifying the parsing corpus", () => {
+	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
+	const cases = fs
+		.readdirSync(casesPath)
+		.filter((name) => name.endsWith(".css"))
+		.map((name) => [
+			name,
+			fs.readFileSync(path.resolve(casesPath, name), "utf8")
+		]);
+
+	/**
+	 * @param {string} src css source
+	 * @param {import("../lib/util/SourceProcessor").PrintOptions["mode"]} mode print mode
+	 * @returns {string} its serialization
+	 */
+	const print = (src, mode) =>
+		new SourceProcessor().process(src, { mode }).code;
+
+	// Beautifying writes a terminator after content it echoed raw, so a comment
+	// the source never closed swallows it and the rule never ends. Minimal:
+	// `{y/*` beautifies to ` {\ny/*;\n}`, where the `;}` is comment content.
+	const FILED_BEAUTIFY_DEFECTS = new Map([
+		[
+			"hacks.css",
+			"an unterminated comment swallows the terminator written after it"
+		],
+		[
+			"values.css",
+			"an unterminated block swallows the terminator written after it"
+		],
+		[
+			"nesting.css",
+			"a nested rule is hoisted from the beautified form but not the source"
+		]
+	]);
+
+	it("has a corpus", () => {
+		expect(cases.length).toBeGreaterThan(15);
+	});
+
+	for (const [name, code] of cases) {
+		it(`should beautify "${name}"`, () => {
+			const beautified = print(code, "beautify");
+			expect(beautified).toMatchSnapshot();
+			// The printer has to accept what it wrote: beautifying is a fixed point.
+			expect(print(beautified, "beautify")).toBe(beautified);
+		});
+	}
+
+	// Both modes read the same stylesheet, so minifying either form answers the
+	// same — the property `print modes` states over its own handful of sources,
+	// here over every case the tokenizer reads.
+	for (const [name, code] of cases) {
+		const filed = FILED_BEAUTIFY_DEFECTS.get(name);
+
+		it(`should minify "${name}" the same from either form${filed ? " (filed)" : ""}`, () => {
+			const fromSource = print(code, "minify");
+			const fromBeautified = print(print(code, "beautify"), "minify");
+			if (filed === undefined) expect(fromBeautified).toBe(fromSource);
+			else expect(fromBeautified).not.toBe(fromSource);
+		});
+	}
+});

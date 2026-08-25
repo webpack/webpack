@@ -7890,3 +7890,73 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		});
 	});
 });
+
+// Beautifying is not a pretty-printer: it completes the tags the source left
+// out and echoes everything else byte for byte, so what it writes is
+// snapshotted rather than described.
+describe("SourceProcessor — beautifying", () => {
+	const { SourceProcessor, parseHtml } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @returns {string} its beautified serialization
+	 */
+	const beautify = (source) =>
+		new SourceProcessor().process(source, { mode: "beautify" }).code;
+
+	const CASES = [
+		// End tags §4.13 lets a source omit are written back.
+		["implied list items", "<ul><li>a<li>b</ul>"],
+		["implied table sections", "<table><tr><td>1<td>2"],
+		["an implied paragraph", '<div   class="x"    id=y ><p>z'],
+		// Nothing the author wrote is rewritten: quoting, case and the spacing
+		// inside a tag all survive.
+		["attribute spelling", "<A HREF='x'   dATa-Y=1 >t</A>"],
+		["an unquoted attribute", "<img src=a.png alt=hi>"],
+		// The round-trip fallback: shapes no tag placement reproduces print from
+		// the source that built them.
+		["a fostered formatting run", "<nobr><table><b><colgroup><nobr>"],
+		["a list fostered out of a table", "<p><table><ol>"],
+		["a form the table kept", "<table><p><form>"],
+		// Raw text keeps its content, and a comment survives.
+		["raw text", "<style>a{b:c}</style><script>1<2</script>"],
+		["a comment", "<div><!--c--></div>"]
+	];
+
+	for (const [name, source] of CASES) {
+		it(`should beautify ${name}`, () => {
+			expect(beautify(source)).toMatchSnapshot();
+		});
+	}
+
+	it("should keep the tree every case was parsed from", () => {
+		/** @type {string[]} */
+		const moved = [];
+		for (const [name, source] of CASES) {
+			const printed = beautify(source);
+			if (
+				serializeHtmlTree(parseHtml(printed)) !==
+				serializeHtmlTree(parseHtml(source))
+			) {
+				moved.push(name);
+			}
+		}
+		expect(moved).toEqual([]);
+	});
+
+	// Echoing the source cannot be a fixed point in one pass: a tag the printer
+	// supplies is source the next pass reads, and a source-written tag is the
+	// one case that gets its pair written back. It settles on the second pass.
+	it("should settle on the second pass", () => {
+		/** @type {string[]} */
+		const unsettled = [];
+		for (const [name, source] of [
+			...CASES,
+			["a body implied before leading whitespace", "</html> leading ws"]
+		]) {
+			const twice = beautify(beautify(source));
+			if (beautify(twice) !== twice) unsettled.push(name);
+		}
+		expect(unsettled).toEqual([]);
+	});
+});
