@@ -58,10 +58,11 @@ module.exports = [
 		realContentHash: false,
 		workerChunkFilename: "[name].[contenthash].mjs"
 	}),
-	// The chunk the url is written into is named by its own content, and nothing
-	// repairs that name after the deferred pass rewrites it — so it stays runtime.
+	// The chunk the url is written into is named by its own content, and nothing repairs
+	// that name after the deferred pass rewrites it. It is moved into the round that
+	// follows the compilation hash instead, so its name is taken once the hash being
+	// written into it exists — where a chunk reading `__webpack_require__.p` already is.
 	base(4, "no-repair", "[fullhash]", false, {
-		baked: false,
 		realContentHash: false,
 		chunkSuffix: ".[contenthash]"
 	}),

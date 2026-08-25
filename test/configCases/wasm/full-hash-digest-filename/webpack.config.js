@@ -16,7 +16,10 @@ const webpack = require("../../../../");
 const base = (index, name, hashPart, inlined) => ({
 	target: "node",
 	mode: "development",
-	devtool: false,
+	// The runtime interpolation this case is about is what the analyzable form replaces,
+	// so the module is wrapped in an `eval()` where `import.meta` does not parse — a
+	// reason to keep the runtime name that has nothing to do with hashing.
+	devtool: "eval",
 	module: {
 		rules: [
 			{ test: /\.wat$/, loader: "wast-loader", type: "webassembly/async" }
@@ -44,8 +47,7 @@ const base = (index, name, hashPart, inlined) => ({
 module.exports = [
 	base(0, "digest", "[fullhash:base64safe]", true),
 	base(1, "digest-sliced", "[fullhash:base64safe:8]", true),
-	// A plain read still goes through the runtime helper. Every config here names its
-	// javascript by content, which keeps the analyzable form from baking the name and
-	// leaves the runtime interpolation this case is about in place.
+	// A plain read still goes through the runtime helper, which is the other half of
+	// what a re-encoded digest cannot do.
 	base(2, "plain", "[fullhash]", false)
 ];
