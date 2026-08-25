@@ -87,11 +87,13 @@ it("keeps walking past an unnamed package.json deeper inside the package", () =>
 	expect(moduleSourceIncludes(UNNAMED_INNER_HEAVY)).toBe(false);
 });
 
-it("keeps walking past an unparsable ancestor package.json", () => {
-	expect(moduleSourceIncludes(BROKEN_ANCESTOR_HEAVY)).toBe(false);
+it("stops at an ancestor package.json it cannot read", () => {
+	// Unparsable: what it declares is unknown, so no outer flag may speak for it.
+	expect(moduleSourceIncludes(BROKEN_ANCESTOR_HEAVY)).toBe(true);
 });
 
-it("keeps walking past an ancestor package.json that is not an object", () => {
+it("keeps walking past an ancestor package.json that declares nothing", () => {
+	// It parsed, and an array declares no sideEffects — like any unnamed manifest.
 	expect(moduleSourceIncludes(ARRAY_ANCESTOR_HEAVY)).toBe(false);
 });
 

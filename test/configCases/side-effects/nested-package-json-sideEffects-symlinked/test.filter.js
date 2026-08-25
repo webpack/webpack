@@ -9,8 +9,11 @@ module.exports = () => {
 		__dirname,
 		"../../../js/side-effects-symlinked-probe"
 	);
+	fs.mkdirSync(path.dirname(probe), { recursive: true });
+	// clear a probe a failed cleanup left behind, or every later run reads its
+	// EEXIST as "no symlinks here" and skips the case for good
+	fs.rmSync(probe, { recursive: true, force: true });
 	try {
-		fs.mkdirSync(path.dirname(probe), { recursive: true });
 		fs.symlinkSync(path.join(__dirname, "package"), probe, "junction");
 	} catch (_err) {
 		return false;
@@ -18,7 +21,7 @@ module.exports = () => {
 	try {
 		fs.rmSync(probe, { recursive: true, force: true });
 	} catch (_err) {
-		// a leftover probe under test/js is harmless
+		// the next run clears it
 	}
 	return true;
 };

@@ -17,8 +17,7 @@ it("still runs the used export", () => {
 });
 
 it("flags every file of a symlinked package alike", () => {
-	// The package request reaches esm/index.js through node_modules and its own
-	// imports reach their siblings through the real path. Reading the flag from
-	// the resolved file keeps the whole package on one answer.
+	// The package request arrives through node_modules and its own imports through
+	// the real path; reading the resolved file keeps both on one answer.
 	expect(moduleSourceIncludes(SYMLINKED_HEAVY)).toBe(true);
 });
