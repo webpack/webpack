@@ -1,9 +1,7 @@
 "use strict";
 
-// The runtime lives in its own chunk, so the entry holding the reference reaches an
-// initial chunk with a runtime — one whose hash is remixed with the compilation hash
-// and so may never be read. A filename function names the lazy chunk, which resolves
-// to a name only once the hashes exist.
+// The entry reaches an initial chunk carrying a runtime, whose hash may never be read.
+// A filename function names the lazy chunk, resolving only once the hashes exist.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

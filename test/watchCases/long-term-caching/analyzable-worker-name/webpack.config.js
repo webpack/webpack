@@ -1,9 +1,7 @@
 "use strict";
 
-// A worker's chunk is an async entrypoint, which neither the referenced-chunk walk nor
-// the initial-chunk one reaches. Its name is baked into the chunk spawning it, so that
-// chunk's own `[chunkhash]` — taken from its modules, which a change to the worker does
-// not touch — has to move with it.
+// A worker's chunk is an async entrypoint, reached by neither other walk. Its name is
+// baked into the chunk spawning it, whose `[chunkhash]` must move with it.
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "node",

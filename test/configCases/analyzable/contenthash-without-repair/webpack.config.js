@@ -1,8 +1,7 @@
 "use strict";
 
-// `optimization.realContentHash` is what normally brings a rewritten chunk's own
-// `[contenthash]` name back in line with its bytes. Without it the name is taken once
-// and kept, so baking has to be accounted for in the hash instead.
+// `optimization.realContentHash` normally brings a rewritten `[contenthash]` name back
+// in line with its bytes. Without it, baking is accounted for in the hash instead.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

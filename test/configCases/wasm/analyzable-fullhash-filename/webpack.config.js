@@ -58,9 +58,7 @@ module.exports = [
 	// A digest re-encodes the hash rather than reading it, which no stand-in survives,
 	// so the whole name is handed to the deferred pass and spelled by `getPath` there.
 	base(2, "digest", "[fullhash:base64]", true, true),
-	// Substituting rewrites the chunk after its own content hash was taken, and here
-	// `RealContentHashPlugin` is not there to bring the two back in line. The chunk is
-	// moved into the round that follows the compilation hash instead, so the name is
-	// taken once that hash — the very thing being written into it — already exists.
+	// Nothing repairs this name after the rewrite, so the chunk settles in the round
+	// after the compilation hash — once the thing written into it exists.
 	base(3, "no-repair", "[fullhash]", true, true, ".[contenthash]", false)
 ];

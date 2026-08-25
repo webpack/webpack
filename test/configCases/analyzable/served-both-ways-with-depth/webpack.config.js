@@ -1,9 +1,7 @@
 "use strict";
 
-// The same module in an initial chunk the host fetched and in an async chunk the loader
-// fetched through a public path that has a depth of its own — two urls one directory
-// apart. Neither literal is right for both, so each asset gets its own: the one already
-// under the public path names the file beside it, the one that is not puts it in front.
+// One module in a chunk the host fetched and one the loader fetched through a public
+// path with depth — two urls a directory apart, so each asset gets its own literal.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -1,9 +1,7 @@
 "use strict";
 
-// A `baseUri` naming a host but no scheme is not one anything can be resolved against
-// here — but the runtime does not resolve it here either: it reads it against the
-// chunk's own url, which is the very url the literal is resolved against. So it stays
-// protocol-relative in the literal and settles the same way at load time.
+// A `baseUri` naming a host but no scheme is read against the chunk's own url — the
+// url the literal resolves against — so it stays protocol-relative and settles there.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

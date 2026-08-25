@@ -1,8 +1,7 @@
 "use strict";
 
 // A public path needing a base is spelled from a chunk the host loads and left out of
-// one webpack loads through it. A module in both has no one answer, so each asset gets
-// its own — which is the whole reason a stand-in is resolved per asset rather than once.
+// one webpack loads through it, so each asset gets its own answer.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

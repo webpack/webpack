@@ -1,10 +1,7 @@
 "use strict";
 
-// One module in an initial chunk the host fetched and in an async chunk the loader
-// fetched through `output.publicPath` — two urls one public path apart. Separate entries,
-// because a chunk never duplicates what a parent already carries. That only makes the two
-// disagree where the public path has a depth of its own; this one has none, so the same
-// literal is right whichever way the asset was served.
+// One module fetched by the host and by the loader — separate entries, since a chunk
+// never duplicates what a parent carries. A public path of no depth serves both alike.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

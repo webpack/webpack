@@ -1,8 +1,7 @@
 "use strict";
 
-// The chunk holding the reference is named by its own content, and `[chunkhash]` reads
-// only its own modules — which a change to the child does not touch. Baking is sound
-// here because the name being baked reaches that hash first.
+// `[chunkhash]` reads only this chunk's own modules, which a change to the child does
+// not touch — so the name it bakes has to reach that hash first.
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "node",

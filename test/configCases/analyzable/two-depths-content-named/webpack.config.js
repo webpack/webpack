@@ -20,9 +20,7 @@ const nameConsumersByContent = (names) => (compiler) => {
 };
 
 // One module duplicated into chunks at two output depths, so each copy needs its own
-// `../` path to the same chunk — carried by a stand-in the deferred pass resolves per
-// asset. Both chunks are named by their content with nothing to repair those names, so
-// the depth has to reach the hash before the name is taken.
+// `../` path — resolved per asset, and folded into names nothing else repairs.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

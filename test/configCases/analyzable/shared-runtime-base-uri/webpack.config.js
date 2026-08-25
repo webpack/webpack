@@ -1,8 +1,7 @@
 "use strict";
 
-// Two entries set different `baseUri` values but share one runtime chunk, so webpack
-// writes a single `__webpack_require__.b` — the first entry's. The two never disagree at
-// runtime, whatever their descriptors say, so a literal may spell that one base.
+// Two entries name different `baseUri` values but share one runtime chunk, so webpack
+// writes a single `__webpack_require__.b` — the one a literal may spell.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -1,9 +1,7 @@
 "use strict";
 
-// `output.publicPath` names the compilation hash, which does not exist while the chunk
-// holding the reference is hashed — and `[chunkhash]` is not repaired afterwards either.
-// The chunk is moved into the round that follows that hash instead, which is where one
-// reaching for `__webpack_require__.p` ends up on its own.
+// `output.publicPath` names a hash that does not exist while this chunk is hashed, and
+// `[chunkhash]` is not repaired after — so the chunk settles in the round that follows.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -15,7 +13,7 @@ module.exports = {
 	output: {
 		module: true,
 		filename: "bundle0.[chunkhash].mjs",
-		chunkFilename: "[name].mjs",
+		chunkFilename: "[name].[contenthash].mjs",
 		assetModuleFilename: "[name][ext]",
 		publicPath: "/cdn/[fullhash]/"
 	},
