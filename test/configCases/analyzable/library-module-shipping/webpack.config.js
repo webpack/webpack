@@ -1,0 +1,73 @@
+"use strict";
+
+// A module library is consumed by another bundler, so its chunk references have to be
+// literals whatever names the shipping config gives them — the library types, a
+// content-named chunk, a compilation-hashed public path, and a non-production mode.
+
+const webpack = require("../../../../");
+
+/**
+ * @param {number} index position in this array, and so the entry's emitted name
+ * @param {object} options the shipping config under test
+ * @param {"module" | "modern-module"} options.libraryType library type
+ * @param {import("../../../../").Configuration["mode"]} options.mode mode
+ * @param {string} options.chunkFilename chunk filename template
+ * @param {string=} options.publicPath public path, when it is not `auto`
+ * @returns {import("../../../../").Configuration} configuration
+ */
+const base = (index, { libraryType, mode, chunkFilename, publicPath }) => ({
+	target: "node",
+	mode,
+	devtool: false,
+	experiments: { outputModule: true },
+	optimization: {
+		chunkIds: "named",
+		splitChunks: false,
+		// Kept readable: what is asserted is the specifier, not how it was renamed.
+		minimize: false
+	},
+	output: {
+		module: true,
+		library: { type: libraryType },
+		filename: `bundle${index}.mjs`,
+		// Prefixed per config: every config here shares one output directory, and two
+		// that name a chunk alike would each load the other's module ids.
+		chunkFilename: `${index}-${chunkFilename}`,
+		publicPath: publicPath || "auto"
+	},
+	plugins: [
+		new webpack.DefinePlugin({
+			__INDEX__: JSON.stringify(index),
+			// An absolute url names no file the case can read back or import.
+			__ON_DISK__: JSON.stringify(publicPath === undefined)
+		})
+	]
+});
+
+/** @type {import("../../../../").Configuration[]} */
+module.exports = [
+	base(0, {
+		libraryType: "module",
+		mode: "production",
+		chunkFilename: "[name].[contenthash].mjs"
+	}),
+	base(1, {
+		libraryType: "modern-module",
+		mode: "production",
+		chunkFilename: "[name].[contenthash].mjs"
+	}),
+	// The compilation hash is settled after code generation, so this name is filled in
+	// by the deferred pass rather than baked where the reference is written.
+	base(2, {
+		libraryType: "module",
+		mode: "production",
+		chunkFilename: "[name].mjs",
+		publicPath: "https://cdn.example.invalid/[fullhash]/"
+	}),
+	// A library is analyzable without being a production build.
+	base(3, {
+		libraryType: "module",
+		mode: "none",
+		chunkFilename: "[name].mjs"
+	})
+];
