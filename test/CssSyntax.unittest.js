@@ -2281,6 +2281,52 @@ describe("CssSyntax — the per-transform switches", () => {
 		).toBe(expected);
 	});
 
+	// The embedded-source renderer reads a data URL's payload, which is what the
+	// percent-escapes hold — so it is offered the decoded one whatever `escapes`
+	// says, and what it hands back is quoted or not as `quotes` says.
+	describe("a rendered data URL", () => {
+		const css = 'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}';
+		/**
+		 * @param {string} source the payload
+		 * @returns {string} it, rewritten
+		 */
+		const renderEmbeddedSource = (source) =>
+			source.replace("<svg>", "<svg id=r>");
+		/**
+		 * @param {import("../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+		 * @returns {string} the minified serialization
+		 */
+		const render = (transforms) =>
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				renderEmbeddedSource,
+				transforms
+			}).code;
+
+		it("reaches the renderer with escapes off", () => {
+			const rendered =
+				"a{background:url(data:image/svg+xml,<svg\\ id=r></svg>)}";
+			expect(render()).toBe(rendered);
+			expect(render({ escapes: false })).toBe(rendered);
+		});
+
+		it("keeps the quotes round what it hands back with quotes off", () => {
+			expect(render({ quotes: false })).toBe(
+				'a{background:url("data:image/svg+xml,<svg id=r></svg>")}'
+			);
+		});
+
+		// Nothing to render, so the switches decide alone.
+		it("leaves a payload no renderer was given to the switches", () => {
+			expect(min(css)).toBe(
+				"a{background:url(data:image/svg+xml,<svg></svg>)}"
+			);
+			expect(min(css, { escapes: false })).toBe(
+				"a{background:url(data:image/svg+xml,%3Csvg%3E%3C/svg%3E)}"
+			);
+		});
+	});
+
 	// csso and cssnano both name three levels here, and so does this: keep the
 	// banners, keep everything, or keep nothing but the source-map pragma.
 	describe("comments", () => {
