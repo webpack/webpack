@@ -2803,7 +2803,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// All the way to the shortest name, as any other opaque color is.
 			expect(value("#ff0000ff")).toBe("red");
 			// Even where the target reads no hex alpha, this form needing none.
-			expect(value("#ffffffff", { cssColorHexAlpha: false })).toBe("#fff");
+			expect(value("#ffffffff", { browsers: ["chrome 50"] })).toBe("#fff");
 			// A real alpha still collapses only as far as it may.
 			expect(value("#11223344")).toBe("#1234");
 			expect(value("#ffffffaa")).toBe("#fffa");

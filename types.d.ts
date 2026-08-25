@@ -9852,7 +9852,7 @@ type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
 	? H
 	: T extends readonly []
 		? any
-		: T extends (infer E)[]
+		: T extends readonly (infer E)[]
 			? E
 			: never;
 
@@ -11153,9 +11153,7 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(
-		context: ObjectDeserializerContextObjectMiddlewareObject_2
-	): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -23128,10 +23126,7 @@ declare interface ReaddirTypes {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			files?: DirentTypes<string>[]
-		) => void
+		callback: (err: null | NodeJS.ErrnoException, files?: DirentTypes[]) => void
 	): void;
 	(
 		path: PathLikeTypes,
@@ -25962,9 +25957,7 @@ declare abstract class SerializerMiddleware<
 		context: Context
 	): DeserializedType | Promise<DeserializedType>;
 }
-type ServerLazyCompilationBackend =
-	| ServerImportHttp
-	| ServerImportHttps;
+type ServerLazyCompilationBackend = ServerImportHttp | ServerImportHttps;
 declare interface SetIterator<T> extends IteratorObject<T, undefined> {
 	[Symbol.iterator](): SetIterator<T>;
 	[Symbol.dispose](): void;
