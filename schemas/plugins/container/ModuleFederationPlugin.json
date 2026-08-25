@@ -17,6 +17,11 @@
         }
       ]
     },
+    "DeclareChunkDependencies": {
+      "description": "State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).",
+      "type": "boolean",
+      "added": "5.110.0"
+    },
     "EntryRuntime": {
       "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
       "anyOf": [
@@ -241,6 +246,9 @@
         },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
+        },
+        "declareChunkDependencies": {
+          "$ref": "#/definitions/DeclareChunkDependencies"
         },
         "export": {
           "$ref": "#/definitions/LibraryExport"

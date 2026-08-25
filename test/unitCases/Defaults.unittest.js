@@ -2159,6 +2159,7 @@ describe("snapshots", () => {
 		+     "library": Object {
 		+       "amdContainer": undefined,
 		+       "auxiliaryComment": undefined,
+		+       "declareChunkDependencies": undefined,
 		+       "export": undefined,
 		+       "name": Array [
 		+         "myLib",
@@ -2208,6 +2209,7 @@ describe("snapshots", () => {
 			+     "library": Object {
 			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
+			+       "declareChunkDependencies": undefined,
 			+       "export": undefined,
 			+       "name": Array [
 			+         "myLib",
@@ -2260,6 +2262,7 @@ describe("snapshots", () => {
 			+     "library": Object {
 			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
+			+       "declareChunkDependencies": undefined,
 			+       "export": undefined,
 			+       "name": Array [
 			+         "my[name]Lib",
@@ -2315,6 +2318,7 @@ describe("snapshots", () => {
 			+     "library": Object {
 			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
+			+       "declareChunkDependencies": undefined,
 			+       "export": undefined,
 			+       "name": Object {
 			+         "root": Array [
@@ -2371,6 +2375,7 @@ describe("snapshots", () => {
 			+     "library": Object {
 			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
+			+       "declareChunkDependencies": undefined,
 			+       "export": undefined,
 			+       "name": Object {
 			+         "root": Array [
