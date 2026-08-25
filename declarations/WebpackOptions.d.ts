@@ -2446,6 +2446,11 @@ export interface OptimizationMinimizeHtml {
 	 */
 	minifyConditionalComments?: boolean;
 	/**
+	 * Minify the document held in an `<iframe srcdoc>` attribute. Off by default: the body is a whole document of its own (its base URL is `about:srcdoc`), so minifying it is safe, but the attribute is readable from script and a consumer comparing `iframe.srcdoc` byte for byte would see it change.
+	 * @since 5.110.0
+	 */
+	minifySrcdoc?: boolean;
+	/**
 	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
 	 * @since 5.110.0
 	 */

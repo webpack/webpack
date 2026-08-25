@@ -11194,6 +11194,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-html-minify-srcdoc": Object {
+    "configs": Array [
+      Object {
+        "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
+        "multiple": false,
+        "path": "optimization.minimize.html.minifySrcdoc",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-html-preserve-comments": Object {
     "configs": Array [
       Object {
