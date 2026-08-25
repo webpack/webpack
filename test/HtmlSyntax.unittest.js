@@ -7742,18 +7742,101 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			"<p><table><ol></table><div><table><b>"
 		],
 		// And where tree order already re-parses, it is left alone.
-		["a paragraph fostered out of one", "<table><p>"]
+		["a paragraph fostered out of one", "<table><p>"],
+		// Every scope stops at a table, so a formatting element written inside one
+		// reaches an ancestor of the same name only once printed outside it.
+		["a formatting element the table held out of scope", "<nobr><table><nobr>"],
+		["one under a run that closes the holder", "<p><table><i><ol>"],
+		[
+			"a foreign element fostered out of a table",
+			"<i><article><table><desc></i>"
+		],
+		// §13.2.6.5 inserts a foreign `<form>` without consulting the form pointer.
+		["a form in foreign content inside another", "<form><svg><form><dd>"],
+		// §13.2.4.3 rebuilds these from the list of active formatting elements, so
+		// no tag placement reaches them and the source is what prints.
+		[
+			"a run holding a rebuilt formatting element",
+			"<nobr><table><b><colgroup><nobr>"
+		],
+		[
+			"one rebuilt behind a row group",
+			"<button><table><nobr><button><tbody><option>"
+		],
+		["a rebuilt one an end tag closed", "<table><i><tfoot><a></i><li><rtc>"],
+		["two the source never closed", "<table><b><b><tr><img>"],
+		["a second table inside the run's own", "<b><table><b><table>x<div>"],
+		// The run's holder is read back off its own tag, which the source may have
+		// spaced out before the `>`.
+		["a spaced-out tag holding a run", "<b ><table><b><table>x<div>"],
+		[
+			"an end tag the region already carries",
+			"<i><h1><table><a><thead></i><dd></p> <noframes>"
+		],
+		["a run under an implied body", "<table><a><tr>0"],
+		// The table keeps whitespace-only text and fosters the rest, so the run
+		// cannot come back beside it without the two fusing.
+		["a run beside whitespace the table kept", "<p><table>\n<br>0 <li>"],
+		["text the table kept before a run", "<p><table>0 \n</main>\n<figcaption>"],
+		// §13.2.6.4.7 gives `a` and `nobr` a start-tag rule of their own, so writing
+		// a rebuilt one back is not the same as never having removed it.
+		["a rebuilt nobr a heading left on the list", "<h2><nobr><h2><nobr>"],
+		["a rebuilt a behind a marker", "<a><template><applet></template><a>"],
+		// A marquee's marker hides the outer `<b>` from the list, so the rebuilt one
+		// inside it is a second element of the same name rather than the same one.
+		["a name repeated below a marker", "<b><marquee><b><table><a>x"],
+		// §13.2.6.4.7 stops the dd/dt loop at a special element, and generates
+		// implied end tags for an `<hr>` while a `<select>` is in scope.
+		["a list item a select held open", "<dt><p><select><dd>"],
+		// §13.2.6.4.7 stops the `li` loop at a special element that is not
+		// `address`/`div`/`p`, leaving the item below it open.
+		["an item a section kept open", "<ul><li><section><li>x"],
+		["an hr the table held out of a select's scope", "<select><dt><table><hr>"],
+		// The `</form>` a nested form needs generates implied end tags of its own.
+		[
+			"a nested form behind something implied",
+			"<form><center></form><rt><form>"
+		],
+		// §13.2.6.4.7's close-a-p list is not §4.13's tag-omission list.
+		["a p closed by a start tag only the parser lists", "<p><table><center>"],
+		// The run and the table's own children only read in source order while the
+		// two do not overlap.
+		[
+			"a run written inside a sibling's span",
+			"<rb><table><tbody><rb><th><table> </h2>x\n<li>"
+		],
+		[
+			"a run beside a table a template holds",
+			"<table><mtext><template><table><tfoot><rt><rtc>"
+		],
+		// A parser-implied element carries attributes once a later tag merges them
+		// on, so it prints its tags — and it has no name in the source to echo.
+		[
+			"a comment behind an implied html the source gave attributes",
+			"ab<html B=2 a=1></html><!--0-->"
+		],
+		["one behind an implied body", "</body><!--x--><body class=b>"]
 	])("keeps %s", (_name, source) => {
 		expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
 	});
 
-	it("leaves a formatting element where the tree holds it", () => {
-		// The adoption agency rebuilds one from the active formatting list, so a run
-		// carrying it does not replay out of the table it would be printed into.
+	it("closes a merged-attribute implied element by name, not with `</>`", () => {
+		// Its end tag is generated from the source range, which a parser-inserted
+		// element does not have — the slice of one spells `</>`.
 		expect(
-			new SourceProcessor().process("<nobr><table><nobr>", {
+			new SourceProcessor().process("ab<html B=2 a=1></html><!--0-->", {
 				mode: "beautify"
 			}).code
-		).toBe("<nobr><nobr></nobr><table></table></nobr>");
+		).toBe('<html b="2" a="1">ab</html><!--0-->');
+	});
+
+	it("prints a run it cannot re-nest from the source that built it", () => {
+		// §13.2.4.3 makes the second `<b>` from the list of active formatting
+		// elements, so no arrangement of tags places it — the source does.
+		expect(
+			new SourceProcessor().process("<nobr><table><b><colgroup><nobr>", {
+				mode: "beautify"
+			}).code
+		).toBe("<nobr><table><b><colgroup><nobr>");
 	});
 });

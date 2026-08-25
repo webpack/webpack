@@ -5848,6 +5848,44 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 	});
 });
 
+describe("CssSyntax — a string the source never closed", () => {
+	/**
+	 * @param {string} source css
+	 * @returns {string[]} every string token's value
+	 */
+	const values = (source) => {
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.String]: {
+					enter: (/** @type {import("../lib/css/syntax").CssPath} */ path) =>
+						seen.push(path.unescaped())
+				}
+			})
+			.process(source);
+		return seen;
+	};
+
+	// §4.3.5 returns the string token at end of input as well, and that one has no
+	// closing quote to take off — taking one off ate a character of the value.
+	it.each([
+		["a closing quote", "a{b:'xy'}", ["xy"]],
+		["end of input", "a{b:'xy", ["xy"]],
+		["end of input, holding a brace", "a{b:'xy}", ["xy}"]],
+		["end of input, holding only one", "a{b:'}", ["}"]],
+		["end of input, holding nothing", "a{b:'", [""]],
+		["a double quote at end of input", 'a{b:"d', ["d"]],
+		["an empty string", "a{b:''}", [""]],
+		["a quote the source escaped", "a{b:'a\\''}", ["a'"]],
+		["one escaped at end of input", "a{b:'a\\'", ["a'"]],
+		["a backslash the source escaped", "a{b:'a\\\\'}", ["a\\"]],
+		["two of them", "a{b:'x' 'y'}", ["x", "y"]]
+	])("reads one ended by %s", (_name, source, expected) => {
+		expect(values(source)).toEqual(expected);
+	});
+});
+
 describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 	it("prepends the engine spelling a target needs, keeping the source colons", () => {
 		expect(minifyFor("::placeholder{color:red}", ["chrome 40"])).toBe(

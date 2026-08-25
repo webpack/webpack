@@ -22264,6 +22264,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 */
 	takeInserts(start: number, end: number): string;
 	sourceMap(options: SourceMapOptions): SourceMap;
+
+	/**
+	 * Throw away everything printed and stand `text` in its place. For the one
+	 * caller that can only tell its output is wrong once it has all of it.
+	 */
+	replaceAll(text: string): void;
 	result(): string;
 }
 declare interface PrintOptions {
@@ -26717,6 +26723,7 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 		 * window), before `parseHtml` releases `_htmlSource`.
 		 */
 		source(n?: number): string;
+		sourceSpanAt(from: number, to: number): string;
 		tagName(n?: number): string;
 		namespace(n?: number): number;
 		selfClosing(n?: number): boolean;
@@ -26739,20 +26746,21 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 		tagEnd(n?: number): number;
 		nameEnd(n?: number): number;
 		/**
-		 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-		 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-		 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-		 * real source tag: its offsets are zero-width or borrow the triggering token,
-		 * so the sliced name doesn't match this element. The empty string lets a printer
-		 * treat such an element as transparent.
+		 * Whether the source wrote this element's end tag rather than the parser
+		 * popping it for an implied close. Read back off the range instead of marked
+		 * during the parse: an element's end spans the token that closed it, so its
+		 * own end tag is the last thing in it — and only the few elements around a
+		 * region printed from source ever ask.
 		 */
+		sourceClosed(n?: number): boolean;
 		openTag(n?: number): string;
 		/**
 		 * An element's end tag, generated as `</name>` from the opening tag's own name
 		 * (exact source casing, correct for foreign camelCase elements). Generated, not
 		 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-		 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
-		 * for void / implied elements — the printer only calls it for the rest.
+		 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+		 * parser inserted the element, as {@link openTag } does — it has no name in the
+		 * source to echo, and slicing one would spell `</>`.
 		 */
 		closeTag(n?: number): string;
 		contentEnd(n?: number): number;
@@ -30189,6 +30197,7 @@ declare namespace exports {
 				 * window), before `parseHtml` releases `_htmlSource`.
 				 */
 				source(n?: number): string;
+				sourceSpanAt(from: number, to: number): string;
 				tagName(n?: number): string;
 				namespace(n?: number): number;
 				selfClosing(n?: number): boolean;
@@ -30211,20 +30220,21 @@ declare namespace exports {
 				tagEnd(n?: number): number;
 				nameEnd(n?: number): number;
 				/**
-				 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-				 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-				 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-				 * real source tag: its offsets are zero-width or borrow the triggering token,
-				 * so the sliced name doesn't match this element. The empty string lets a printer
-				 * treat such an element as transparent.
+				 * Whether the source wrote this element's end tag rather than the parser
+				 * popping it for an implied close. Read back off the range instead of marked
+				 * during the parse: an element's end spans the token that closed it, so its
+				 * own end tag is the last thing in it — and only the few elements around a
+				 * region printed from source ever ask.
 				 */
+				sourceClosed(n?: number): boolean;
 				openTag(n?: number): string;
 				/**
 				 * An element's end tag, generated as `</name>` from the opening tag's own name
 				 * (exact source casing, correct for foreign camelCase elements). Generated, not
 				 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-				 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
-				 * for void / implied elements — the printer only calls it for the rest.
+				 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+				 * parser inserted the element, as {@link openTag } does — it has no name in the
+				 * source to echo, and slicing one would spell `</>`.
 				 */
 				closeTag(n?: number): string;
 				contentEnd(n?: number): number;
@@ -30306,6 +30316,7 @@ declare namespace exports {
 					 * window), before `parseHtml` releases `_htmlSource`.
 					 */
 					source(n?: number): string;
+					sourceSpanAt(from: number, to: number): string;
 					tagName(n?: number): string;
 					namespace(n?: number): number;
 					selfClosing(n?: number): boolean;
@@ -30328,20 +30339,21 @@ declare namespace exports {
 					tagEnd(n?: number): number;
 					nameEnd(n?: number): number;
 					/**
-					 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-					 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-					 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-					 * real source tag: its offsets are zero-width or borrow the triggering token,
-					 * so the sliced name doesn't match this element. The empty string lets a printer
-					 * treat such an element as transparent.
+					 * Whether the source wrote this element's end tag rather than the parser
+					 * popping it for an implied close. Read back off the range instead of marked
+					 * during the parse: an element's end spans the token that closed it, so its
+					 * own end tag is the last thing in it — and only the few elements around a
+					 * region printed from source ever ask.
 					 */
+					sourceClosed(n?: number): boolean;
 					openTag(n?: number): string;
 					/**
 					 * An element's end tag, generated as `</name>` from the opening tag's own name
 					 * (exact source casing, correct for foreign camelCase elements). Generated, not
 					 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-					 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
-					 * for void / implied elements — the printer only calls it for the rest.
+					 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+					 * parser inserted the element, as {@link openTag } does — it has no name in the
+					 * source to echo, and slicing one would spell `</>`.
 					 */
 					closeTag(n?: number): string;
 					contentEnd(n?: number): number;
@@ -30372,6 +30384,7 @@ declare namespace exports {
 						 * window), before `parseHtml` releases `_htmlSource`.
 						 */
 						source(n?: number): string;
+						sourceSpanAt(from: number, to: number): string;
 						tagName(n?: number): string;
 						namespace(n?: number): number;
 						selfClosing(n?: number): boolean;
@@ -30394,20 +30407,21 @@ declare namespace exports {
 						tagEnd(n?: number): number;
 						nameEnd(n?: number): number;
 						/**
-						 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
-						 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
-						 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
-						 * real source tag: its offsets are zero-width or borrow the triggering token,
-						 * so the sliced name doesn't match this element. The empty string lets a printer
-						 * treat such an element as transparent.
+						 * Whether the source wrote this element's end tag rather than the parser
+						 * popping it for an implied close. Read back off the range instead of marked
+						 * during the parse: an element's end spans the token that closed it, so its
+						 * own end tag is the last thing in it — and only the few elements around a
+						 * region printed from source ever ask.
 						 */
+						sourceClosed(n?: number): boolean;
 						openTag(n?: number): string;
 						/**
 						 * An element's end tag, generated as `</name>` from the opening tag's own name
 						 * (exact source casing, correct for foreign camelCase elements). Generated, not
 						 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
-						 * for void / implied elements — the printer only calls it for the rest.
+						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+						 * parser inserted the element, as {@link openTag } does — it has no name in the
+						 * source to echo, and slicing one would spell `</>`.
 						 */
 						closeTag(n?: number): string;
 						contentEnd(n?: number): number;
