@@ -6,6 +6,24 @@ const path = require("path");
 // codes a machine that cannot make directory symlinks reports
 const SYMLINK_UNSUPPORTED = new Set(["EPERM", "EACCES", "ENOSYS", "UNKNOWN"]);
 
+/**
+ * @param {string} link path of a symlink or junction that may not exist
+ * @returns {void}
+ */
+const removeLink = (link) => {
+	try {
+		fs.unlinkSync(link);
+		return;
+	} catch (_err) {
+		// a junction on Windows unlinks as a directory
+	}
+	try {
+		fs.rmdirSync(link);
+	} catch (_err) {
+		// nothing was there
+	}
+};
+
 module.exports = () => {
 	const probe = path.resolve(
 		__dirname,
@@ -13,7 +31,7 @@ module.exports = () => {
 	);
 	fs.mkdirSync(path.dirname(probe), { recursive: true });
 	// a probe a failed cleanup left behind would read as EEXIST, i.e. "cannot"
-	fs.rmSync(probe, { recursive: true, force: true });
+	removeLink(probe);
 	try {
 		fs.symlinkSync(path.join(__dirname, "package"), probe, "junction");
 	} catch (err) {
@@ -25,10 +43,6 @@ module.exports = () => {
 		}
 		return false;
 	}
-	try {
-		fs.rmSync(probe, { recursive: true, force: true });
-	} catch (_err) {
-		// the next run clears it
-	}
+	removeLink(probe);
 	return true;
 };
