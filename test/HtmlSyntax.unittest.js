@@ -5102,6 +5102,42 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		).toBe('<p style="  color : red ;  ">x');
 	});
 
+	it("offers the document an `<iframe srcdoc>` holds, decoded", () => {
+		expect(
+			offered('<iframe srcdoc="&lt;p&gt;   hello   &lt;/p&gt;"></iframe>')
+		).toEqual([["html", "<p>   hello   </p>"]]);
+		// Empty carries no document, and a foreign-content `<iframe>` is an SVG
+		// element that happens to share the name.
+		expect(offered('<iframe srcdoc=""></iframe>')).toEqual([]);
+		expect(
+			offered('<svg><iframe srcdoc="&lt;p&gt;x&lt;/p&gt;"/></svg>')
+		).toEqual([["svg", '<svg><iframe srcdoc="<p>x</p>"/></svg>']]);
+	});
+
+	it("writes a rendered srcdoc back so it parses to what came out", () => {
+		const payload = "<p class=\"a\" data-x='y'>a & b < c > d</p>";
+		const out = minify(
+			'<iframe srcdoc="&lt;p&gt;x&lt;/p&gt;"></iframe>',
+			(source, info) => (info.type === "html" ? payload : source)
+		);
+		/** @type {string | undefined} */
+		let readBack;
+		new SourceProcessor()
+			.use({
+				[NodeType.Element]: (path) => {
+					if (path.tagName() !== "iframe") return;
+					for (const attribute of path.attributes()) {
+						if (attribute.name === "srcdoc") readBack = attribute.value;
+					}
+				}
+			})
+			.process(out, {});
+		expect(readBack).toBeDefined();
+		expect(decodeEntities(/** @type {string} */ (readBack), true)).toBe(
+			payload
+		);
+	});
+
 	it("does not offer a non-CSS `<style>` or a data-block `<script>`", () => {
 		expect(
 			offered(

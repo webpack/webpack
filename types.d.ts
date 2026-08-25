@@ -10345,7 +10345,7 @@ declare interface HtmlProcessOptions {
 	removeImpliedTags?: boolean | "all" | "smart";
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript, and an `<svg>` subtree. Replaces the built-in CSS and JSON minifiers, and is the only way inline JavaScript and SVG are reached at all
+	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript, an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). Replaces the built-in CSS and JSON minifiers, and is the only way inline JavaScript, SVG and a nested document are reached at all
 	 */
 	renderEmbeddedSource?: (
 		source: string,
