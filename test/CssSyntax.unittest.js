@@ -3731,9 +3731,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("answers a pseudo again when the selection changes under it", () => {
-			// The answer is cached per spelling for as long as the selection holds,
-			// so a build minifying several stylesheets asks once — and a different
-			// selection has to throw that away rather than read the first one's.
+			// Cached per spelling while the selection holds, so a different one has
+			// to throw that away rather than read the first's answer.
 			const css = "a:focus-visible{top:0}b:focus-visible{top:0}";
 			const joined = "a:focus-visible,b:focus-visible{top:0}";
 			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
@@ -4793,9 +4792,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("declines a merge mixing a bare number with a length", () => {
-			// `.25` is no length, so the engine dropped that one declaration and kept
-			// the other three — merging them writes `padding:0 0 .25`, which it drops
-			// whole, losing the three that were fine.
+			// `.25` is no length, so the engine kept the other three — merging writes
+			// `padding:0 0 .25`, which it drops whole, losing all four.
 			const bare =
 				"a{padding-top:0;padding-right:0;padding-bottom:.25;padding-left:0}";
 			expect(minify(bare)).toBe(bare);
@@ -4844,10 +4842,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A longhand of another family is no slot of this shorthand.
 			const other = "a{margin:0;padding-top:1px}";
 			expect(minify(other)).toBe(other);
-			// Which values a property accepts is the property's own business, so
-			// two of different kinds do not fold: a component the shorthand cannot
-			// read makes the whole of it invalid, losing the slots that were fine.
-			// `.25` is no length, and `red` no length either.
+			// A component the shorthand cannot read makes the whole of it invalid, so
+			// two values of different kinds do not fold.
 			const bare = "a{padding:0;padding-bottom:.25}";
 			expect(minify(bare)).toBe(bare);
 			const color = "a{padding:0;padding-bottom:red}";
@@ -4949,6 +4945,26 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(items)).toBe("a{place-items:center}");
 			expect(minify(self)).toBe("a{place-self:center end}");
 			expect(minify(content)).toBe("a{place-content:center end}");
+		});
+
+		it("keeps reading the target when prefixes are turned off", () => {
+			// `vendorPrefixes` turns off the prefixes alone: the selection still says
+			// which spellings the target reads.
+			const css = "a{top:0;right:0;bottom:0;left:0}";
+			const off = { browsers: ["ie 11"], vendorPrefixes: false };
+			expect(minifyFor(css, undefined, off)).toBe(css);
+			expect(minifyFor(css, ["ie 11"])).toBe(css);
+			expect(minify(css)).toBe("a{inset:0}");
+			// And the prefixes themselves still answer to it.
+			expect(minifyFor("a{display:flex}", ["ie 10"])).toBe(
+				"a{display:-ms-flexbox;display:flex}"
+			);
+			expect(
+				minifyFor("a{display:flex}", undefined, {
+					browsers: ["ie 10"],
+					vendorPrefixes: false
+				})
+			).toBe("a{display:flex}");
 		});
 
 		it("writes `overflow`'s two-value form only where the target reads it", () => {

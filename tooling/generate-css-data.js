@@ -5961,10 +5961,9 @@ const PREFIXED_SELECTORS = ${prefixedSelectorsText};
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_AT_RULES = ${prefixedAtRulesText};
 
-// When each browser first read a CSS ability the printer reaches for, as
-// \`feature -> browserslistName -> version\`. A selection has the ability when
-// every browser in it is named here and at or past its version.
 // The browsers every support profile below covers, in the order it states them.
+// A selection has an ability when every browser in it is named here and at or
+// past the version its profile row gives.
 /** @type {string[]} */
 const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 

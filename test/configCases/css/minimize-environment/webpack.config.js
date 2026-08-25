@@ -2,10 +2,8 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	// Chrome 50 predates every CSS ability the printer reaches for, so the
-	// selection alone is what holds each spelling back. The default minimizer
-	// wiring resolves it and passes it to `cssMinify`, so the whole option flow is
-	// exercised rather than the serializer alone.
+	// Chrome 50 predates every CSS ability, so the selection alone holds each
+	// spelling back — through the default minimizer, so the whole flow is driven.
 	target: "browserslist: chrome 50",
 	mode: "production",
 	output: {
@@ -13,8 +11,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: true,
-		// `"..."` keeps the default minimizer, which is what resolves the target
-		// and hands its browsers to `cssMinify`.
+		// `"..."` keeps the default minimizer, which resolves the target.
 		minimizer: ["..."]
 	},
 	experiments: {

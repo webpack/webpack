@@ -5389,15 +5389,15 @@ declare interface CssData {
 	exportLocs?: Map<string, { line: number; column: number }>;
 }
 declare interface CssEnvironment {
-
-
-
-
-
 	/**
-	 * the browserslist selection (`["chrome 100", "safari 15"]`), so vendor prefixes are added / dropped for exactly these browsers; absent leaves prefixes untouched
+	 * the browserslist selection (`["chrome 100", "safari 15"]`), so vendor prefixes and every spelling a target has to be able to read are decided for exactly these browsers; absent leaves prefixes untouched and assumes every ability
 	 */
 	browsers?: string[];
+
+	/**
+	 * whether prefixes are written at all; false leaves them alone while the selection still decides which spellings a target reads
+	 */
+	vendorPrefixes?: boolean;
 }
 declare abstract class CssGenerator extends Generator {
 	options: CssModuleGeneratorOptions;
@@ -7393,11 +7393,6 @@ declare interface Environment {
 	 * The environment supports const and let for variable declarations.
 	 */
 	const?: boolean;
-
-
-
-
-
 
 	/**
 	 * The environment supports deferred module evaluation ('import defer * as ns from "..."', 'import.defer("...")').
@@ -9857,7 +9852,7 @@ type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
 	? H
 	: T extends readonly []
 		? any
-		: T extends readonly (infer E)[]
+		: T extends (infer E)[]
 			? E
 			: never;
 
@@ -11158,7 +11153,9 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_2): void;
+	deserialize(
+		context: ObjectDeserializerContextObjectMiddlewareObject_2
+	): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -23131,7 +23128,10 @@ declare interface ReaddirTypes {
 			withFileTypes: true;
 			recursive?: boolean;
 		},
-		callback: (err: null | NodeJS.ErrnoException, files?: DirentTypes[]) => void
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			files?: DirentTypes<string>[]
+		) => void
 	): void;
 	(
 		path: PathLikeTypes,
@@ -25962,7 +25962,9 @@ declare abstract class SerializerMiddleware<
 		context: Context
 	): DeserializedType | Promise<DeserializedType>;
 }
-type ServerLazyCompilationBackend = ServerImportHttp | ServerImportHttps;
+type ServerLazyCompilationBackend =
+	| ServerImportHttp
+	| ServerImportHttps;
 declare interface SetIterator<T> extends IteratorObject<T, undefined> {
 	[Symbol.iterator](): SetIterator<T>;
 	[Symbol.dispose](): void;
