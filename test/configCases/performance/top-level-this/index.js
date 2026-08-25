@@ -1,3 +1,5 @@
+import first from "./first";
+import second from "./second";
 import values from "./dep";
 
 it("should report reads of 'this' at the top level of an ES module", () => {
@@ -8,4 +10,6 @@ it("should report reads of 'this' at the top level of an ES module", () => {
 	const receiver = {};
 
 	expect(values[2].call(receiver)).toBe(receiver);
+	expect(first).toBeUndefined();
+	expect(second).toBeUndefined();
 });

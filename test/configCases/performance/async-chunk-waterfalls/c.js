@@ -1,1 +1,1 @@
-export const load = () => import("./d");
+export const load = () => import(/* webpackChunkName: "d" */ "./d");
