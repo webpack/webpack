@@ -900,6 +900,24 @@ describe("CssSyntax — block streaming", () => {
 		expect(childCount(`@media screen{${SMALL}}`)).toBe(4);
 	});
 
+	it("cuts a dead rule where it stands after an earlier cut in the piece", () => {
+		// Sibling `@layer a` blocks fold into one piece, so a batch cuts twice in
+		// it — and its own second span must name where the first cut left it.
+		const dead = ".p{color:red}.q{color:blue}";
+		const victim =
+			".victim{align-items:flex-start;border-radius:0;opacity:1;background:red}";
+		const src = `@layer outer{${repeat(
+			6000,
+			(i) => `.f${i}{color:red}`
+		)}@layer a{${dead}}@layer a{${dead}}@layer a{${victim}}@layer a{.q{color:blue}}}`;
+		// The outer block has to stream for the fold to be the one under test.
+		expect(childCount(src)).toBe(0);
+		const out = minify(src);
+		// Sliced, so a wrong cut reads as the mangled rule and not as the sheet.
+		const at = out.indexOf(".victim");
+		expect(out.slice(at, at + victim.length)).toBe(victim);
+	});
+
 	it("enters a streamed rule before its children and exits after them", () => {
 		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");
@@ -3012,7 +3030,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["a{transition:height .35s ease}", "a{transition:height.35s}"],
 			["a{transition:opacity 1s ease 2s}", "a{transition:opacity 1s 2s}"],
-			["a{transition:all 1s ease}", "a{transition:all 1s}"],
+			["a{transition:all 1s ease}", "a{transition:1s}"],
 			["a{transition:opacity 1s normal}", "a{transition:opacity 1s}"],
 			// A comma parts two layers, and each holds its own set of slots.
 			[
@@ -3021,7 +3039,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			[
 				"a{transition:all .3s cubic-bezier(.4,0,.2,1),color .2s ease}",
-				"a{transition:all.3s cubic-bezier(.4,0,.2,1),color.2s}"
+				"a{transition:.3s cubic-bezier(.4,0,.2,1),color.2s}"
 			],
 			// Only the layer whose slots are unambiguous gives its keyword up.
 			[
@@ -3032,6 +3050,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{transition:1s ease color,2s opacity}",
 				"a{transition:color 1s,opacity 2s}"
 			],
+			// `all` is the property a layer naming none transitions, so it is spare
+			// beside anything else — but it is what a layer left alone still says.
+			["a{transition:all .5s}", "a{transition:.5s}"],
+			["a{transition:ALL .5s}", "a{transition:.5s}"],
+			["a{transition:all 5s linear}", "a{transition:5s linear}"],
+			["a{transition:all .5s 1s}", "a{transition:.5s 1s}"],
+			[
+				"a{transition:all .5s allow-discrete}",
+				"a{transition:.5s allow-discrete}"
+			],
+			["a{transition:all .5s,opacity 1s}", "a{transition:.5s,opacity 1s}"],
+			["a{-webkit-transition:all .5s}", "a{-webkit-transition:.5s}"],
+			["a{transition:all}", "a{transition:all}"],
+			// The zero duration goes first, which leaves `all` standing alone.
+			["a{transition:all 0s}", "a{transition:all}"],
+			["a{transition:none .5s}", "a{transition:none .5s}"],
+			["a{transition-property:all}", "a{transition-property:all}"],
 			["a{animation:x 1s ease}", "a{animation:x 1s}"],
 			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
 			["a{border:2px none red}", "a{border:2px red}"],

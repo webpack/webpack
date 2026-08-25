@@ -28,6 +28,11 @@ const path = require("path");
 const { promisify } = require("util");
 const zlib = require("zlib");
 
+// What every other tool assumes when told no target: current engines only.
+// Resolved rather than written out, so it does not go stale.
+const MODERN_BROWSERS = require("browserslist")(
+	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
+);
 const cssMinify = require("../lib/css/cssMinify");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -228,6 +233,15 @@ const fixtures = () => [
 /** @type {[string, () => (css: string) => string | Promise<string>][]} */
 const MINIFIERS = [
 	["webpack", () => (css) => cssMinify({ "input.css": css }).code],
+	[
+		// The rivals strip the spellings a modern engine makes dead; webpack, told
+		// nothing, keeps them. The two rows say what the target is worth.
+		"webpack+target",
+		() => (css) =>
+			cssMinify({ "input.css": css }, undefined, {
+				environment: { browsers: MODERN_BROWSERS }
+			}).code
+	],
 	[
 		"esbuild",
 		() => {

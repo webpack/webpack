@@ -1,6 +1,10 @@
 /* `optimization.minimize.css.rewriteCustomProperties` lets a custom property's
    value be shortened like any other value's — off by default, on here. */
 
+/* cssom: rewriteCustomProperties */
+/* The note above tells the browser-equivalence run to minify this file with
+   that option, so the engine is held to what it does. */
+
 /*! a six-digit hex shortens to three */
 .t01 { --a: #ffffff }
 /*! an eight-digit hex shortens to four */
@@ -67,3 +71,12 @@
 .v03 { --c: rebeccapurple }
 /*! and the same name in a real color property does shorten */
 .v04 { color: white }
+
+/* A fragment names something and a string is text, so neither holds a color. */
+
+/*! a fragment keeps every digit it was written with */
+.w01 { --u: url(#fff) }
+.w02 { --u: url(#ffffff) }
+/*! a quoted value is text, hex-shaped or not */
+.w03 { --s: "#fff" }
+.w04 { --s: "0.50" }

@@ -135,6 +135,52 @@ const installHelpers = () => {
 		return `paints ${[...context.getImageData(0, 0, 1, 1).data].join(",")}`;
 	};
 
+	/**
+	 * Rewrite only what stands outside a string or a `url()` body, where a
+	 * color-shaped token is text.
+	 * @param {string} value a value
+	 * @param {(run: string) => string} rewrite what to do with the rest
+	 * @returns {string} the value, rewritten in place
+	 */
+	const outsideText = (value, rewrite) => {
+		let out = "";
+		let run = "";
+		for (let at = 0; at < value.length; at++) {
+			const ch = value[at];
+			const url = /^url\(/i.test(value.slice(at, at + 4));
+			if (ch === '"' || ch === "'" || url) {
+				out += rewrite(run);
+				run = "";
+				const from = at;
+				// CSS Syntax 4.3.6: only a quote opening the body makes it a string;
+				// one met later is a parse error whose recovery ends at the next `)`.
+				let quote = url ? "" : ch;
+				if (url) {
+					at += 3;
+					while (/[\t\n\f\r ]/.test(value[at + 1] || "")) at++;
+					const opens = value[at + 1];
+					if (opens === '"' || opens === "'") {
+						quote = opens;
+						at++;
+					}
+				}
+				const end = quote === "" ? ")" : quote;
+				for (at += 1; at < value.length; at++) {
+					if (value[at] === "\\") at++;
+					else if (value[at] === end) break;
+				}
+				// A quoted body leaves the call's own `)` still to step over.
+				if (url && quote !== "") {
+					while (at < value.length && value[at] !== ")") at++;
+				}
+				out += value.slice(from, at + 1);
+				continue;
+			}
+			run += ch;
+		}
+		return out + rewrite(run);
+	};
+
 	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
 	const NEWLINE = /[\n\r\f]/;
 
@@ -320,9 +366,13 @@ const installHelpers = () => {
 		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
 		// A color written into a value the engine cannot compute — a `var()`
 		// fallback — is still a color, and `#ff0` is `rgb(255,255,0)`.
-		out = out.replace(
-			/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
-			(color) => painted(color)
+		// A string is text and a `url()` body names something, so neither holds a
+		// color: `url(#fff)` and `url(#ffffff)` are two different elements.
+		out = outsideText(out, (run) =>
+			run.replace(
+				/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
+				(color) => painted(color)
+			)
 		);
 		return (
 			out

@@ -100,10 +100,66 @@ const minifyHtml = (source, options) =>
  * @param {string} source a stylesheet
  * @returns {string} the same stylesheet, minified
  */
-const minifyCss = (source) =>
-	/** @type {{ code: string }} */ (
-		new CssSourceProcessor().process(source, { mode: "minify" })
+// A fixture names the minimizer options its own claim is about, so the engine
+// is held to the option the file exists to cover.
+const CSSOM_DIRECTIVE = /\/\*\s*cssom:([^*]*)\*\//;
+
+/**
+ * @param {string} source the stylesheet as written
+ * @returns {string[]} the options its `cssom:` note names, empty when it has none
+ */
+const cssomDirective = (source) => {
+	// Read from the comments alone: the same text inside a string is a value the
+	// fixture prints, not a note about how to minify it.
+	for (let at = 0; at < source.length; at++) {
+		const ch = source[at];
+		if (ch === '"' || ch === "'") {
+			for (at++; at < source.length; at++) {
+				if (source[at] === "\\") at++;
+				else if (source[at] === ch) break;
+			}
+			continue;
+		}
+		// `/*` inside an unquoted `url()` is part of the address, not a comment.
+		if (/^url\(/i.test(source.slice(at, at + 4))) {
+			at += 3;
+			let quote = "";
+			while (/[\t\n\f\r ]/.test(source[at + 1] || "")) at++;
+			const opens = source[at + 1];
+			if (opens === '"' || opens === "'") quote = opens;
+			if (quote === "") {
+				for (at += 1; at < source.length; at++) {
+					if (source[at] === "\\") at++;
+					else if (source[at] === ")") break;
+				}
+			}
+			continue;
+		}
+		if (ch !== "/" || source[at + 1] !== "*") continue;
+		const close = source.indexOf("*/", at + 2);
+		const found = CSSOM_DIRECTIVE.exec(
+			source.slice(at, close === -1 ? source.length : close + 2)
+		);
+		if (found !== null) {
+			return found[1]
+				.trim()
+				.split(/[\s,]+/)
+				.filter(Boolean);
+		}
+		if (close === -1) break;
+		at = close + 1;
+	}
+	return [];
+};
+
+const minifyCss = (source) => {
+	/** @type {{ mode: string, [k: string]: EXPECTED_ANY }} */
+	const options = { mode: "minify" };
+	for (const name of cssomDirective(source)) options[name] = true;
+	return /** @type {{ code: string }} */ (
+		new CssSourceProcessor().process(source, options)
 	).code;
+};
 
 /**
  * One declaration's minified value — `a{…}` is the smallest rule carrying one.
@@ -479,6 +535,75 @@ describe("printer output in real Chrome", () => {
 					FILE_TIMEOUT
 				);
 			}
+
+			// A `)` inside a quoted `url()` belongs to the address; one met after an
+			// illegal quote ends the bad url, and the rest is a color again.
+			it(
+				"reads no color out of a quoted url() body",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "quoted-url-fragment",
+							raw: '.a{--u:url("assets/)#fff")}',
+							min: '.a{--u:url("assets/)#ffffff")}'
+						}
+					]);
+					expect(differences).toEqual([
+						{
+							name: "quoted-url-fragment",
+							why: 'rule 0:  .a { --u:url("assets/)#fff") } vs  .a { --u:url("assets/)#ffffff") }'
+						}
+					]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// CSS Syntax 4.3.6: the quote is a parse error, and recovery ends the url
+			// at the next `)`, so the hex after it is read as the color it is.
+			it(
+				"ends a bad url() at the paren its recovery reaches",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "bad-url-fragment",
+							raw: '.a{--u:url(foo")#fff)}',
+							min: '.a{--u:url(foo")#ffffff)}'
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// CSS Syntax 4.2 counts five code points as whitespace, and U+00A0 is not
+			// one: it opens no quoted body, so the quote after it ends a bad url.
+			it(
+				"skips no non-breaking space before a url() body",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "nbsp-url-fragment",
+							raw: '.a{--u:url(\u00A0"foo)#fff")}',
+							min: '.a{--u:url(\u00A0"foo)#ffffff")}'
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// `/*` inside an unquoted `url()` is the address, so a fixture whose url
+			// spells one out is naming no option.
+			it("reads no cssom note out of a url() body", () => {
+				expect(
+					cssomDirective(
+						"a{background:url(/*cssom:rewriteCustomProperties*/x)}"
+					)
+				).toEqual([]);
+				expect(
+					cssomDirective("/* cssom: rewriteCustomProperties */a{color:red}")
+				).toEqual(["rewriteCustomProperties"]);
+			});
 
 			// The rules are read layer by layer, and an `@layer` statement is what
 			// fixes those layers' order — so the same blocks written the other way
