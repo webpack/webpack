@@ -271,7 +271,8 @@
 
 /*! webpack: the merge steps over what does not write the family */
 .t101 { margin-top: 1px; margin-right: 2px; color: red; margin-bottom: 1px; margin-left: 2px }
-/*! webpack: declined: the shorthand itself between them */
+/*! webpack: the shorthand takes the longhands written after it, and the one
+   written before it stays where it is */
 .t102 { margin-top: 1px; margin: 9px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
 /*! webpack: declined: a logical property that writes the same sides */
 .t103 { margin-top: 1px; margin-inline: 9px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }

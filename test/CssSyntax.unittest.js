@@ -4739,12 +4739,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			["the shorthand itself", "margin:9px"],
-			["a logical property", "margin-inline:9px"],
-			["`all`", "all:unset"]
-		])("declines across %s", (_name, between) => {
+			// The shorthand takes the three that follow it — they are its own slots,
+			// written after it — but the one before it stays where it is.
+			[
+				"the shorthand itself",
+				"margin:9px",
+				"a{margin-top:1px;margin:9px 2px 1px}"
+			],
+			["a logical property", "margin-inline:9px", null],
+			["`all`", "all:unset", null]
+		])("declines across %s", (_name, between, expected) => {
 			const css = `a{margin-top:1px;${between};margin-right:2px;margin-bottom:1px;margin-left:2px}`;
-			expect(minify(css)).toBe(css);
+			expect(minify(css)).toBe(expected === null ? css : expected);
 		});
 
 		it("steps over a child rule standing outside the family", () => {
@@ -4779,6 +4785,55 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe(
 				"a{margin:1px 2px;padding-top:1px;&:hover{x:1}padding-right:2px;padding-bottom:1px;padding-left:2px}"
 			);
+		});
+
+		it("folds a longhand into the shorthand it follows", () => {
+			expect(minify("a{border-width:0;border-bottom-width:1px}")).toBe(
+				"a{border-width:0 0 1px}"
+			);
+			expect(minify("a{padding:0;padding-bottom:1rem}")).toBe(
+				"a{padding:0 0 1rem}"
+			);
+			// Each following longhand folds into what the last one left.
+			expect(minify("a{margin:0;margin-top:1px;margin-bottom:2px}")).toBe(
+				"a{margin:1px 0 2px}"
+			);
+			// A pair shorthand folds by the same rule.
+			expect(minify("a{gap:1px;column-gap:2px}")).toBe("a{gap:1px 2px}");
+			// One saying again what the shorthand already set leaves just the one.
+			expect(minify("a{margin:1px;margin-top:1px}")).toBe("a{margin:1px}");
+		});
+
+		it("declines a fold the two declarations do not allow", () => {
+			// Anything between them is read between them.
+			const parted = "a{margin:0;color:red;margin-top:1px}";
+			expect(minify(parted)).toBe(parted);
+			// An `!important` longhand is not the same declaration as a plain one.
+			const important = "a{margin:0!important;margin-top:1px}";
+			expect(minify(important)).toBe(important);
+			// A substitution may stand for any number of slots, on either side.
+			const inShorthand = "a{margin:var(--m);margin-top:1px}";
+			expect(minify(inShorthand)).toBe(inShorthand);
+			const inLonghand = "a{margin:0;margin-top:var(--t)}";
+			expect(minify(inLonghand)).toBe(inLonghand);
+			// A longhand of another family is no slot of this shorthand.
+			const other = "a{margin:0;padding-top:1px}";
+			expect(minify(other)).toBe(other);
+			// Which values a property accepts is the property's own business, so
+			// two of different kinds do not fold: a component the shorthand cannot
+			// read makes the whole of it invalid, losing the slots that were fine.
+			// `.25` is no length, and `red` no length either.
+			const bare = "a{padding:0;padding-bottom:.25}";
+			expect(minify(bare)).toBe(bare);
+			const color = "a{padding:0;padding-bottom:red}";
+			expect(minify(color)).toBe(color);
+			const percentage = "a{border-width:0;border-bottom-width:50%}";
+			expect(minify(percentage)).toBe(percentage);
+			// A keyword is the same question, so `auto` beside a length declines.
+			const keyword = "a{margin:auto;margin-top:25px}";
+			expect(minify(keyword)).toBe(keyword);
+			const pair = "a{overflow:auto;overflow-y:hidden}";
+			expect(minify(pair)).toBe(pair);
 		});
 
 		it("declines `inset` when the target cannot read the shorthand", () => {

@@ -122,7 +122,8 @@ Array [
   "/*! webpack: declined: outside the sRGB gamut, a hex would clip it */.t99{color:oklch(90% .4 140)}",
   "/*! webpack: an alpha rides along into the hex */.t100{color:#5f0c}",
   "/*! webpack: the merge steps over what does not write the family */.t101{margin:1px 2px;color:red}",
-  "/*! webpack: declined: the shorthand itself between them */.t102{margin-top:1px;margin:9px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+  "/*! webpack: the shorthand takes the longhands written after it, and the one
+   written before it stays where it is */.t102{margin-top:1px;margin:9px 2px 1px}",
   "/*! webpack: declined: a logical property that writes the same sides */.t103{margin-top:1px;margin-inline:9px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`all\` writes everything */.t104{margin-top:1px;all:unset;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`border\` writes every border-color longhand */.t105{border-top-color:red;border:1px solid;border-right-color:red;border-bottom-color:red;border-left-color:red}",
