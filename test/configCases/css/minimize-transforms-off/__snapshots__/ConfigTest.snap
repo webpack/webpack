@@ -2,6 +2,11 @@
 
 exports[`ConfigTestCases css minimize-transforms-off minimize-transforms-off should compile 1`] = `
 Array [
+  "/* Every \`optimization.minimize.css\` transform switch is off here, so each rule
+   below keeps what the transform named in its comment would have rewritten —
+   this comment among them. Whitespace still goes: collapsing it is not one of
+   the rewrites a switch names. */",
+  "/*! comments: an inert comment is kept, not just this banner *//* an inert comment */",
   "/*! colors: the hex is not shortened */.t01{color:#ffffff}",
   "/*! escapes: the identifier keeps the escape it was written with */.t02{color:r\\\\065 d}",
   "/*! functions: the calc is not folded and the transform names both axes */.t03{width:calc(1px + 2px);transform:translate(1px,0)}",

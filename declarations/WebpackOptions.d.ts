@@ -2415,6 +2415,11 @@ export interface OptimizationMinimizeCss {
 	 */
 	colors?: boolean;
 	/**
+	 * Drop a comment no tool reads. `true`, the default, keeps a `/*!` banner, a comment annotated `@license` or `@preserve`, and a `/*#` source-map pragma; `false` keeps every comment; `"all"` drops the banners and annotations as well, which is a license notice gone, so ask for it only where you know none is owed. A `/*#` pragma is a link to a source map rather than a comment and stays whatever this says, as does anything `preserveComments` names.
+	 * @since 5.110.0
+	 */
+	comments?: "all" | boolean;
+	/**
 	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
 	 * @since 5.110.0
 	 */
@@ -2444,6 +2449,11 @@ export interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	numbers?: boolean;
+	/**
+	 * Patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas). A string is read as a regular expression source and matched against the comment's text.
+	 * @since 5.110.0
+	 */
+	preserveComments?: (RegExp | string)[];
 	/**
 	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.
 	 * @since 5.110.0

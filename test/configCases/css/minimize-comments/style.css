@@ -1,0 +1,10 @@
+/* an inert comment, dropped at every level */
+.t01 { color: red }
+/*! a banner, which only `"all"` drops */
+.t02 { color: red }
+/* @license also only dropped by `"all"` */
+.t03 { color: red }
+/* keep: named by a preserveComments string, so it outranks the level */
+.t04 { color: red }
+/* a build-step marker, named by a preserveComments regexp */
+.t05 { color: red }

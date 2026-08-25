@@ -11102,6 +11102,28 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a comment no tool reads. \`true\`, the default, keeps a \`/*!\` banner, a comment annotated \`@license\` or \`@preserve\`, and a \`/*#\` source-map pragma; \`false\` keeps every comment; \`\\"all\\"\` drops the banners and annotations as well, which is a license notice gone, so ask for it only where you know none is owed. A \`/*#\` pragma is a link to a source map rather than a comment and stays whatever this says, as does anything \`preserveComments\` names.",
+        "multiple": false,
+        "path": "optimization.minimize.css.comments",
+        "type": "enum",
+        "values": Array [
+          "all",
+        ],
+      },
+      Object {
+        "description": "Drop a comment no tool reads. \`true\`, the default, keeps a \`/*!\` banner, a comment annotated \`@license\` or \`@preserve\`, and a \`/*#\` source-map pragma; \`false\` keeps every comment; \`\\"all\\"\` drops the banners and annotations as well, which is a license notice gone, so ask for it only where you know none is owed. A \`/*#\` pragma is a link to a source map rather than a comment and stays whatever this says, as does anything \`preserveComments\` names.",
+        "multiple": false,
+        "path": "optimization.minimize.css.comments",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a comment no tool reads. \`true\`, the default, keeps a \`/*!\` banner, a comment annotated \`@license\` or \`@preserve\`, and a \`/*#\` source-map pragma; \`false\` keeps every comment; \`\\"all\\"\` drops the banners and annotations as well, which is a license notice gone, so ask for it only where you know none is owed. A \`/*#\` pragma is a link to a source map rather than a comment and stays whatever this says, as does anything \`preserveComments\` names.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-css-convert-length-units": Object {
     "configs": Array [
       Object {
@@ -11177,6 +11199,38 @@ Object {
       },
     ],
     "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a \`+\`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-preserve-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "A pattern matched against a comment's text.",
+        "multiple": true,
+        "path": "optimization.minimize.css.preserveComments[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A pattern matched against a comment's text.",
+        "multiple": true,
+        "path": "optimization.minimize.css.preserveComments[]",
+        "type": "string",
+      },
+    ],
+    "description": "A pattern matched against a comment's text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-css-preserve-comments-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimize.css.preserveComments' configuration. Patterns naming comments to keep, on top of the ones minifying always keeps (a \`/*!\` banner, \`@license\` / \`@preserve\`, and the source-map pragmas). A string is read as a regular expression source and matched against the comment's text.",
+        "multiple": false,
+        "path": "optimization.minimize.css.preserveComments",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimize.css.preserveComments' configuration. Patterns naming comments to keep, on top of the ones minifying always keeps (a \`/*!\` banner, \`@license\` / \`@preserve\`, and the source-map pragmas). A string is read as a regular expression source and matched against the comment's text.",
     "multiple": false,
     "simpleType": "boolean",
   },

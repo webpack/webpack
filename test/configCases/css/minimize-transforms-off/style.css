@@ -1,7 +1,10 @@
 /* Every `optimization.minimize.css` transform switch is off here, so each rule
-   below keeps what the transform named in its comment would have rewritten.
-   Whitespace and the comments between them still go: those are not rewrites. */
+   below keeps what the transform named in its comment would have rewritten —
+   this comment among them. Whitespace still goes: collapsing it is not one of
+   the rewrites a switch names. */
 
+/*! comments: an inert comment is kept, not just this banner */
+/* an inert comment */
 /*! colors: the hex is not shortened */
 .t01 { color: #ffffff }
 /*! escapes: the identifier keeps the escape it was written with */

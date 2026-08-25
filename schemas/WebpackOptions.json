@@ -3728,6 +3728,18 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "comments": {
+          "description": "Drop a comment no tool reads. `true`, the default, keeps a `/*!` banner, a comment annotated `@license` or `@preserve`, and a `/*#` source-map pragma; `false` keeps every comment; `\"all\"` drops the banners and annotations as well, which is a license notice gone, so ask for it only where you know none is owed. A `/*#` pragma is a link to a source map rather than a comment and stays whatever this says, as does anything `preserveComments` names.",
+          "anyOf": [
+            {
+              "enum": ["all"]
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "added": "5.110.0"
+        },
         "convertLengthUnits": {
           "description": "Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
           "type": "boolean",
@@ -3756,6 +3768,23 @@
         "numbers": {
           "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a `+`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
           "type": "boolean",
+          "added": "5.110.0"
+        },
+        "preserveComments": {
+          "description": "Patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas). A string is read as a regular expression source and matched against the comment's text.",
+          "type": "array",
+          "items": {
+            "description": "A pattern matched against a comment's text.",
+            "anyOf": [
+              {
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
           "added": "5.110.0"
         },
         "quotes": {

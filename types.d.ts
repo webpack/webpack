@@ -5944,6 +5944,11 @@ declare interface CssPrintOptions {
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: CssTransformOptions;
+
+	/**
+	 * patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas)
+	 */
+	preserveComments?: (string | RegExp)[];
 }
 declare interface CssProcessOptions {
 	/**
@@ -6008,12 +6013,22 @@ declare interface CssProcessOptions {
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: CssTransformOptions;
+
+	/**
+	 * patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas)
+	 */
+	preserveComments?: (string | RegExp)[];
 }
 declare interface CssTransformOptions {
 	/**
 	 * write each color in the shortest spelling of the same value
 	 */
 	colors?: boolean;
+
+	/**
+	 * drop a comment no tool reads; `"all"` drops the banners and annotations too
+	 */
+	comments?: boolean | "all";
 
 	/**
 	 * write an identifier's escapes and a `url()`'s percent-escapes in their shortest equal form
@@ -10316,6 +10331,7 @@ type HtmlPrintOptions = Pick<
 	"environment" | "convertLengthUnits" | "rewriteCustomProperties"
 > & {
 	cssTransforms?: CssTransformOptions;
+	cssPreserveComments?: (string | RegExp)[];
 	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
@@ -10366,6 +10382,11 @@ declare interface HtmlProcessOptions {
 	 * CSS's per-transform switches too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
 	cssTransforms?: CssTransformOptions;
+
+	/**
+	 * CSS's comment patterns too, handed over with `environment` — an inline `<style>` holds a stylesheet, so HTML's own `preserveComments` is not what applies inside one
+	 */
+	cssPreserveComments?: (string | RegExp)[];
 
 	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
@@ -20073,6 +20094,12 @@ declare interface OptimizationMinimizeCss {
 	colors?: boolean;
 
 	/**
+	 * Drop a comment no tool reads. `true`, the default, keeps a `/*!` banner, a comment annotated `@license` or `@preserve`, and a `/*#` source-map pragma; `false` keeps every comment; `"all"` drops the banners and annotations as well, which is a license notice gone, so ask for it only where you know none is owed. A `/*#` pragma is a link to a source map rather than a comment and stays whatever this says, as does anything `preserveComments` names.
+	 * @since 5.110.0
+	 */
+	comments?: boolean | "all";
+
+	/**
 	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
 	 * @since 5.110.0
 	 */
@@ -20107,6 +20134,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	numbers?: boolean;
+
+	/**
+	 * Patterns naming comments to keep, on top of the ones minifying always keeps (a `/*!` banner, `@license` / `@preserve`, and the source-map pragmas). A string is read as a regular expression source and matched against the comment's text.
+	 * @since 5.110.0
+	 */
+	preserveComments?: (string | RegExp)[];
 
 	/**
 	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.

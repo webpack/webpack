@@ -10,17 +10,10 @@ module.exports = {
 	optimization: {
 		minimize: {
 			css: {
-				colors: false,
-				comments: false,
-				escapes: false,
-				functions: false,
-				lowercase: false,
-				mediaQueries: false,
-				numbers: false,
-				quotes: false,
-				rules: false,
-				selectors: false,
-				shorthands: false
+				// The level csso spells `false` and cssnano `removeAll`: nothing
+				// survives but the source-map pragma and what `preserveComments` names.
+				comments: "all",
+				preserveComments: ["^\\s*keep:", /build-step/]
 			}
 		},
 		// `"..."` keeps the default minimizer, which is what reads
