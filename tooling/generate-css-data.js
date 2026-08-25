@@ -2953,16 +2953,43 @@ const countMapLiteral = (entries) =>
  * @param {[string, [string, [string, number, number][]][]][]} table the axis table
  * @returns {string} its `new Map([…])` literal — prettier wraps it on emit
  */
+// The `[browser, from, to]` windows every prefix table shares, pooled: a window
+// list is stated once and each spelling names the one it reads. Two thirds of
+// them repeat — 24 constructs share Gecko's one window alone.
+/** @type {Map<string, number>} */
+const prefixWindowIndex = new Map();
+/** @type {string[]} */
+const prefixWindows = [];
+
+/**
+ * @param {[string, number, number][]} browsers one spelling's windows
+ * @returns {number} its index in the pool
+ */
+const poolPrefixWindows = (browsers) => {
+	const body = browsers
+		.map(([browser, from, to]) => `["${browser}", ${from}, ${to}]`)
+		.join(", ");
+	let at = prefixWindowIndex.get(body);
+	if (at === undefined) {
+		at = prefixWindows.length;
+		prefixWindows.push(`[${body}]`);
+		prefixWindowIndex.set(body, at);
+	}
+	return at;
+};
+
+/**
+ * @param {[string, [string, [string, number, number][]][]][]} table one axis' prefix table
+ * @returns {string} the `Map` literal, each window list named by its pool index
+ */
 const prefixLiteral = (table) =>
 	`new Map([${table
 		.map(([name, prefixes]) => {
 			const body = prefixes
-				.map(([prefix, browsers]) => {
-					const list = browsers
-						.map(([browser, from, to]) => `["${browser}", ${from}, ${to}]`)
-						.join(", ");
-					return `["${prefix}", [${list}]]`;
-				})
+				.map(
+					([prefix, browsers]) =>
+						`["${prefix}", ${poolPrefixWindows(browsers)}]`
+				)
 				.join(", ");
 			return `["${name}", [${body}]]`;
 		})
@@ -4085,17 +4112,49 @@ const collectSelectorSupport = () => {
 };
 
 /**
- * @param {[string, [string, number][]][]} table the features and their versions
+ * Both support tables as one profile pool and two name-to-profile maps. Every
+ * profile covers the same browsers in the same order, so the versions are a
+ * positional array — the names are stated once for all of them — and a profile
+ * two constructs share is stored once.
+ * @param {[string, [string, number][]][][]} tables the tables to pool
+ * @returns {{ browsers: string[], profiles: number[][], indexes: number[][] }} the pooled form
+ */
+const poolSupport = (tables) => {
+	const browsers = tables[0][0][1].map(([browser]) => browser);
+	/** @type {Map<string, number>} */
+	const seen = new Map();
+	/** @type {number[][]} */
+	const profiles = [];
+	const indexes = tables.map((table) =>
+		table.map(([, versions]) => {
+			const row = browsers.map((browser) => {
+				const found = versions.find(([name]) => name === browser);
+				if (found === undefined) {
+					throw new Error(`no ${browser} in a support profile`);
+				}
+				return found[1];
+			});
+			const key = row.join(",");
+			let at = seen.get(key);
+			if (at === undefined) {
+				at = profiles.length;
+				profiles.push(row);
+				seen.set(key, at);
+			}
+			return at;
+		})
+	);
+	return { browsers, profiles, indexes };
+};
+
+/**
+ * @param {[string, [string, number][]][]} table the features
+ * @param {number[]} indexes each one's profile
  * @returns {string} the `Map` literal
  */
-const supportLiteral = (table) =>
+const supportLiteral = (table, indexes) =>
 	`new Map([${table
-		.map(
-			([name, browsers]) =>
-				`["${name}", new Map([${browsers
-					.map(([browser, since]) => `["${browser}", ${since}]`)
-					.join(", ")}])]`
-		)
+		.map(([name], at) => `["${name}", ${indexes[at]}]`)
 		.join(", ")}])`;
 
 // A vendor spelling BCD states as an alternative name rather than a prefix, with
@@ -5321,8 +5380,15 @@ const collectData = async () => {
 		name,
 		collectSupportedFrom(paths)
 	]);
+	const pooled = poolSupport([supportedFrom, selectorSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
+	// Built before the template so the window pool below is complete when it is
+	// written; the order fixes the indices the tables name.
+	const prefixedPropertiesText = prefixLiteral(prefixedProperties);
+	const prefixedSelectorsText = prefixLiteral(prefixedSelectors);
+	const prefixedAtRulesText = prefixLiteral(prefixedAtRules);
+	const prefixedValuesText = prefixedValueLiteral(prefixedValues);
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
 		.filter(([, , , , , stepped]) => stepped)
 		.map(([name]) => name);
@@ -5880,34 +5946,49 @@ ${colorNames
 // are \`major * 100000 + minor\`; a target browser at version V needs the prefix
 // when \`prefixedFrom <= V < unprefixedFrom\` (\`Infinity\` = never unprefixed).
 // Non-standard-only constructs are absent.
-/** @type {Map<string, [string, [string, number, number][]][]>} */
-const PREFIXED_PROPERTIES = ${prefixLiteral(prefixedProperties)};
+// Each \`[browser, from, to]\` window list a prefixed spelling reads: a target at
+// version V needs the spelling when some window of it has \`from <= V < to\`. Two
+// thirds of the lists are shared, so they are pooled and named by index.
+/** @type {[string, number, number][][]} */
+const PREFIX_WINDOWS = [${prefixWindows.join(", ")}];
 
-/** @type {Map<string, [string, [string, number, number][]][]>} */
-const PREFIXED_SELECTORS = ${prefixLiteral(prefixedSelectors)};
+/** @type {Map<string, [string, number][]>} */
+const PREFIXED_PROPERTIES = ${prefixedPropertiesText};
 
-/** @type {Map<string, [string, [string, number, number][]][]>} */
-const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
+/** @type {Map<string, [string, number][]>} */
+const PREFIXED_SELECTORS = ${prefixedSelectorsText};
+
+/** @type {Map<string, [string, number][]>} */
+const PREFIXED_AT_RULES = ${prefixedAtRulesText};
 
 // When each browser first read a CSS ability the printer reaches for, as
 // \`feature -> browserslistName -> version\`. A selection has the ability when
 // every browser in it is named here and at or past its version.
-/** @type {Map<string, Map<string, number>>} */
-const SUPPORTED_FROM = ${supportLiteral(supportedFrom)};
+// The browsers every support profile below covers, in the order it states them.
+/** @type {string[]} */
+const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
+
+// The versions themselves, one row per distinct profile: a construct names the
+// row it reads rather than carrying its own copy of it.
+/** @type {number[][]} */
+const SUPPORT_PROFILES = [${pooled.profiles.map((row) => `[${row.join(", ")}]`).join(", ")}];
+
+/** @type {Map<string, number>} */
+const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
 
 // When each browser first read a pseudo-class or pseudo-element, by the spelling
 // a selector carries. A pseudo missing here is one no target is known to read,
 // so it never joins a selector list.
-/** @type {Map<string, Map<string, number>>} */
-const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport)};
+/** @type {Map<string, number>} */
+const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport, pooled.indexes[1])};
 
 // The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
 // Only keywords the property's syntax names are here, so a function whose older
 // spelling read its arguments differently is not.
-/** @type {Map<string, Map<string, [string, [string, number, number][]][]>>} */
-const PREFIXED_VALUES = ${prefixedValueLiteral(prefixedValues)};
+/** @type {Map<string, Map<string, [string, number][]>>} */
+const PREFIXED_VALUES = ${prefixedValuesText};
 
 // The keywords a vendor spelling reads in place of the standard ones, as
 // \`spelling -> standard -> legacy\` — IE 10's \`-ms-flex-pack\` reads
@@ -5978,12 +6059,12 @@ module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
 module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
 module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
-module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
+module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;\nmodule.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
