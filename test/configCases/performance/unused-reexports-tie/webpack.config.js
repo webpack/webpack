@@ -8,6 +8,6 @@ module.exports = {
 	},
 	performance: {
 		hints: "warning",
-		unusedReexports: true
+		unusedModules: true
 	}
 };

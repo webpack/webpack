@@ -3473,16 +3473,6 @@ export interface PerformanceOptions {
 	 */
 	dynamicExports?: boolean;
 	/**
-	 * Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	embeddedSourceMaps?: boolean;
-	/**
-	 * Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	entrypointOverlap?: boolean;
-	/**
 	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3525,11 +3515,6 @@ export interface PerformanceOptions {
 	 */
 	missingSideEffects?: boolean;
 	/**
-	 * Report modules a loader transformed without returning a source map, which leaves the map pointing at the loader's output rather than the file (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	missingSourceMaps?: boolean;
-	/**
 	 * Report an entry that exports a default beside named exports for a CommonJS library, where a consumer receives the namespace object (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3555,6 +3540,11 @@ export interface PerformanceOptions {
 	 */
 	scopeHoistingBailouts?: boolean;
 	/**
+	 * Report source maps that cost more than they give: a production 'devtool' that writes the map into the JavaScript, and modules a loader transformed without returning a map, which leaves positions pointing at the loader's output (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	sourceMaps?: boolean;
+	/**
 	 * Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3575,40 +3565,20 @@ export interface PerformanceOptions {
 	 */
 	unsplitVendors?: boolean;
 	/**
-	 * Report 'resolve.alias' entries that no request matched.
-	 * @since 5.110.0
-	 */
-	unusedAliases?: boolean;
-	/**
 	 * Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	unusedAssets?: boolean;
 	/**
-	 * Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.
+	 * Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
-	unusedDefines?: boolean;
+	unusedConfig?: boolean;
 	/**
-	 * Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.
-	 * @since 5.110.0
-	 */
-	unusedExternals?: boolean;
-	/**
-	 * Report modules bundled although nothing uses what they export, naming the statement whose side effect kept each one (requires 'hints' to be enabled).
+	 * Report modules bundled although nothing uses what they export, naming the re-export or the side-effect statement that kept each one (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	unusedModules?: boolean;
-	/**
-	 * Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	unusedReexports?: boolean;
-	/**
-	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
-	 * @since 5.110.0
-	 */
-	unusedRules?: boolean;
 }
 /**
  * Options affecting how file system snapshots are created and validated.

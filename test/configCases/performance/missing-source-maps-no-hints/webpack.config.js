@@ -23,6 +23,6 @@ module.exports = {
 	},
 	performance: {
 		hints: false,
-		missingSourceMaps: true
+		sourceMaps: true
 	}
 };

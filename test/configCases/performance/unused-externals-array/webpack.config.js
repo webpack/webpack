@@ -6,7 +6,7 @@ module.exports = {
 	target: "node",
 	performance: {
 		hints: "warning",
-		unusedExternals: true
+		unusedConfig: true
 	},
 	// Strings nested in an array name a request each, unlike the RegExp beside them.
 	externals: ["path", "never-imported", /^nothing-matches-this$/],

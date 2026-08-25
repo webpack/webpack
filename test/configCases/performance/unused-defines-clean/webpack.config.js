@@ -7,7 +7,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "warning",
-		unusedDefines: true
+		unusedConfig: true
 	},
 	plugins: [new DefinePlugin({ USED_FLAG: JSON.stringify(true) })]
 };

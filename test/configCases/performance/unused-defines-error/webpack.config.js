@@ -7,7 +7,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "error",
-		unusedDefines: true
+		unusedConfig: true
 	},
 	plugins: [
 		new DefinePlugin({

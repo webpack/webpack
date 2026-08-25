@@ -2,7 +2,7 @@
 
 module.exports = [
 	[
-		/entrypoint overlap: modules shipped by more than one entrypoint/,
+		/duplicate modules: copies of the same module across chunks add/,
 		/\.\/shared\.js \(in main, other/
 	]
 ];

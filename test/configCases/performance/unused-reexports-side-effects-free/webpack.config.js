@@ -13,6 +13,6 @@ module.exports = {
 	},
 	performance: {
 		hints: "stats",
-		unusedReexports: true
+		unusedModules: true
 	}
 };

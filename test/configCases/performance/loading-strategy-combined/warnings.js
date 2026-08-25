@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = [
-	[/entrypoint overlap: modules shipped by more than one entrypoint/],
+	[/duplicate modules: copies of the same module across chunks add/],
 	[/unsplit vendors: initial chunks carry node_modules code/],
 	[/split chunks capped: 'optimization\.splitChunks' refused these splits/],
 	[

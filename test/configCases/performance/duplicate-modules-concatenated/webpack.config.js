@@ -7,7 +7,12 @@ module.exports = {
 	output: { filename: "[name].js" },
 	performance: {
 		hints: "warning",
-		entrypointOverlap: true
+		duplicateModules: true
 	},
-	optimization: { splitChunks: false }
+	optimization: {
+		concatenateModules: true,
+		usedExports: true,
+		providedExports: true,
+		splitChunks: false
+	}
 };

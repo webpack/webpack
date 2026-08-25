@@ -5,7 +5,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "stats",
-		unusedRules: true,
+		unusedConfig: true,
 		// Any bundle exceeds this, so the size hints always fire.
 		maxAssetSize: 1,
 		maxEntrypointSize: 1

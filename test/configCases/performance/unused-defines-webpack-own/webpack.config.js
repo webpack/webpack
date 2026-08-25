@@ -5,6 +5,6 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "warning",
-		unusedDefines: true
+		unusedConfig: true
 	}
 };

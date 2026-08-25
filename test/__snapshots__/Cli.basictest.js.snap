@@ -15690,32 +15690,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "performance-embedded-source-maps": Object {
-    "configs": Array [
-      Object {
-        "description": "Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).",
-        "multiple": false,
-        "path": "performance.embeddedSourceMaps",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "performance-entrypoint-overlap": Object {
-    "configs": Array [
-      Object {
-        "description": "Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).",
-        "multiple": false,
-        "path": "performance.entrypointOverlap",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "performance-eval-usage": Object {
     "configs": Array [
       Object {
@@ -15839,19 +15813,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "performance-missing-source-maps": Object {
-    "configs": Array [
-      Object {
-        "description": "Report modules a loader transformed without returning a source map, which leaves the map pointing at the loader's output rather than the file (requires 'hints' to be enabled).",
-        "multiple": false,
-        "path": "performance.missingSourceMaps",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report modules a loader transformed without returning a source map, which leaves the map pointing at the loader's output rather than the file (requires 'hints' to be enabled).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "performance-mixed-exports": Object {
     "configs": Array [
       Object {
@@ -15917,6 +15878,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-source-maps": Object {
+    "configs": Array [
+      Object {
+        "description": "Report source maps that cost more than they give: a production 'devtool' that writes the map into the JavaScript, and modules a loader transformed without returning a map, which leaves positions pointing at the loader's output (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.sourceMaps",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report source maps that cost more than they give: a production 'devtool' that writes the map into the JavaScript, and modules a loader transformed without returning a map, which leaves positions pointing at the loader's output (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-split-chunks-capped": Object {
     "configs": Array [
       Object {
@@ -15969,19 +15943,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "performance-unused-aliases": Object {
-    "configs": Array [
-      Object {
-        "description": "Report 'resolve.alias' entries that no request matched.",
-        "multiple": false,
-        "path": "performance.unusedAliases",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report 'resolve.alias' entries that no request matched.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "performance-unused-assets": Object {
     "configs": Array [
       Object {
@@ -15995,68 +15956,29 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "performance-unused-defines": Object {
+  "performance-unused-config": Object {
     "configs": Array [
       Object {
-        "description": "Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.",
+        "description": "Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched (requires 'hints' to be enabled).",
         "multiple": false,
-        "path": "performance.unusedDefines",
+        "path": "performance.unusedConfig",
         "type": "boolean",
       },
     ],
-    "description": "Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "performance-unused-externals": Object {
-    "configs": Array [
-      Object {
-        "description": "Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.",
-        "multiple": false,
-        "path": "performance.unusedExternals",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.",
+    "description": "Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
   "performance-unused-modules": Object {
     "configs": Array [
       Object {
-        "description": "Report modules bundled although nothing uses what they export, naming the statement whose side effect kept each one (requires 'hints' to be enabled).",
+        "description": "Report modules bundled although nothing uses what they export, naming the re-export or the side-effect statement that kept each one (requires 'hints' to be enabled).",
         "multiple": false,
         "path": "performance.unusedModules",
         "type": "boolean",
       },
     ],
-    "description": "Report modules bundled although nothing uses what they export, naming the statement whose side effect kept each one (requires 'hints' to be enabled).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "performance-unused-reexports": Object {
-    "configs": Array [
-      Object {
-        "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).",
-        "multiple": false,
-        "path": "performance.unusedReexports",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "performance-unused-rules": Object {
-    "configs": Array [
-      Object {
-        "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
-        "multiple": false,
-        "path": "performance.unusedRules",
-        "type": "boolean",
-      },
-    ],
-    "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
+    "description": "Report modules bundled although nothing uses what they export, naming the re-export or the side-effect statement that kept each one (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },

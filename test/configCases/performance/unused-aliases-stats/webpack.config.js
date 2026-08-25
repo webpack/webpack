@@ -7,7 +7,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "stats",
-		unusedAliases: true
+		unusedConfig: true
 	},
 	resolve: {
 		alias: {

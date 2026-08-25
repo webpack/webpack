@@ -1,4 +1,5 @@
-import "./tracker";
+// eslint-disable-next-line no-unused-vars
+import { helper } from "./tracker";
 import { value } from "./read";
 
 it("should report the unused module in stats only", () => {

@@ -7,7 +7,7 @@ module.exports = {
 	output: { filename: "[name].js", chunkFilename: "[name].js" },
 	performance: {
 		hints: "error",
-		entrypointOverlap: true,
+		duplicateModules: true,
 		splitChunksCapped: true,
 		unsplitVendors: true,
 		conflictingResourceHints: true
