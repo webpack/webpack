@@ -14,6 +14,9 @@ require("./helpers/warmup-webpack");
  * @property {((i: number, options: import("../").Configuration) => string | undefined)=} findBundle
  * @property {number=} timeout
  * @property {boolean=} noTests
+ * @property {boolean=} ecmaConformance hold every emitted asset to `output.environment`, not only webpack's runtime modules — the case's own sources must then stay within it too
+ * @property {RegExp[]=} ecmaConformanceExpected findings the case declares deliberate, each with the reason next to it; an entry that stops matching fails the case
+ * @property {boolean=} restrictEnvironment run the bundle in a realm that really lacks what `output.environment` says the target lacks
  * @property {(() => void)=} beforeExecute
  * @property {((options: import("../").Configuration) => void)=} afterExecute
  * @property {((scope: EXPECTED_ANY, options: import("../").Configuration, target: EXPECTED_ANY) => void)=} moduleScope
@@ -30,6 +33,10 @@ const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
 const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
+const {
+	collectGeneratedCode,
+	reportEcmaConformance
+} = require("./helpers/ecmaConformance");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 const prepareOptions = require("./helpers/prepareOptions");
 const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
@@ -123,6 +130,8 @@ const describeCases = (config) => {
 						let optionsArr;
 						/** @type {TestConfig} */
 						let testConfig;
+						/** @type {Map<string, import("./helpers/ecmaConformance").Subject>} */
+						let generatedCode;
 
 						registerPerCaseSnapshotHooks(testDirectory, config.name);
 
@@ -258,6 +267,9 @@ const describeCases = (config) => {
 								// ignored
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
+							generatedCode = collectGeneratedCode(optionsArr, {
+								assets: testConfig.ecmaConformance === true
+							});
 						});
 
 						// eslint-disable-next-line jest/no-duplicate-hooks
@@ -270,6 +282,7 @@ const describeCases = (config) => {
 							options = /** @type {EXPECTED_ANY} */ (undefined);
 							optionsArr = /** @type {EXPECTED_ANY} */ (undefined);
 							testConfig = /** @type {EXPECTED_ANY} */ (undefined);
+							generatedCode = /** @type {EXPECTED_ANY} */ (undefined);
 						});
 
 						/**
@@ -539,6 +552,14 @@ const describeCases = (config) => {
 									)
 								) {
 									return;
+								}
+
+								const outranEnvironment = reportEcmaConformance(
+									generatedCode.values(),
+									testConfig.ecmaConformanceExpected
+								);
+								if (outranEnvironment) {
+									return done(new Error(outranEnvironment));
 								}
 
 								if (testConfig.noTests) return process.nextTick(done);

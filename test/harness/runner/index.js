@@ -37,6 +37,7 @@ const [major] = getNodeVersion();
  * @property {boolean=} evaluateScriptOnAttached
  * @property {"jsdom"=} env
  * @property {string=} currentScriptNonce nonce reflected on the fake `document.currentScript` (for CSP prefetch/preload tests)
+ * @property {boolean=} restrictEnvironment run the bundle in a realm that really lacks what `output.environment` says the target lacks
  */
 
 /**
@@ -102,6 +103,10 @@ class TestRunner {
 		this._esmContext = this.createBaseEsmContext();
 		/** @type {EXPECTED_ANY} */
 		this._moduleScope = this.createBaseModuleScope();
+		/** @type {string} */
+		this._environmentRemovals = "";
+		/** @type {boolean} */
+		this._environmentRestricted = false;
 		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
 	}
@@ -190,6 +195,7 @@ class TestRunner {
 					index: i,
 					target
 				});
+				if (testConfig.restrictEnvironment) runner.restrictEnvironment();
 				const bundlePaths = getBundlePaths(i, options, runner);
 				if (bundlePaths) {
 					const paths = Array.isArray(bundlePaths)
@@ -212,6 +218,41 @@ class TestRunner {
 			}
 		}
 		return { filesCount, results };
+	}
+
+	/**
+	 * Removes from the bundle's realm the bindings `output.environment` says the
+	 * target lacks, so webpack's guard around one is taken, not stepped over.
+	 */
+	restrictEnvironment() {
+		const output = this.webpackOptions.output || {};
+		const environment = {
+			...(this._targetProperties || undefined),
+			...output.environment
+		};
+		const removed = [
+			["globalThis", "delete this.globalThis;", "typeof globalThis"],
+			["symbol", "delete this.Symbol;", "typeof Symbol"],
+			["bigIntLiteral", "delete this.BigInt;", "typeof BigInt"],
+			["hasOwn", "delete Object.hasOwn;", "typeof Object.hasOwn"]
+		].filter(([flag]) => environment[flag] === false);
+		this._environmentRemovals = removed
+			.map(([, statement]) => statement)
+			.join("");
+		// A node target shares this process's realm; an ESM context is built per
+		// module and restricted there.
+		if (this._runInNewContext && this._environmentRemovals) {
+			vm.runInNewContext(this._environmentRemovals, this._globalContext);
+			// Bun's `vm` gives the sandbox no realm of its own, so the removals do
+			// not take there — say so rather than asserting what never happened.
+			this._environmentRestricted = vm.runInNewContext(
+				removed.map(([, , probe]) => `${probe} === "undefined"`).join(" && "),
+				this._globalContext
+			);
+		}
+		this.mergeModuleScope({
+			__ENVIRONMENT_RESTRICTED__: this._environmentRestricted
+		});
 	}
 
 	/**
@@ -557,13 +598,20 @@ class TestRunner {
 	createEsmRunner() {
 		const asModule = require("./asModule");
 
-		const createEsmContext = () =>
-			vm.createContext(
+		const createEsmContext = () => {
+			const context = vm.createContext(
 				{ ...this._moduleScope, ...this._esmContext },
 				{
 					name: "context for esm"
 				}
 			);
+			// Each ESM context is its own realm, so what `restrictEnvironment` took
+			// out of the script one has to come out of this one too.
+			if (this._environmentRemovals) {
+				vm.runInContext(this._environmentRemovals, context);
+			}
+			return context;
+		};
 
 		/** @type {vm.Context | null} */
 		let esmContext = null;

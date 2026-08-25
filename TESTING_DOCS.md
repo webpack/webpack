@@ -151,6 +151,32 @@ outright with "Provided module is not an instance of Module", and Jest's
 `require(ESM)` fallback needs Node >= 24.9. Drop the exclusion once those
 runtimes can load it.
 
+### Generated code is held to `output.environment`
+
+No old browser runs in CI, so `test/helpers/ecmaConformance.js` asks the two
+questions one would answer, over every `configCases` case in `ConfigTestCases`
+and `ConfigCacheTestCases`. See that file for how it reads an environment.
+
+- **Will it parse?** Always on: every runtime module a build renders is parsed
+  against the environment it was rendered for.
+- **Will it run?** `restrictEnvironment: true` in `test.config.js` removes from
+  the bundle's realm what the target lacks, so webpack's guards are taken
+  rather than stepped over. Web targets only.
+
+Two more `test.config.js` fields: `ecmaConformance: true` widens the parse check
+to every emitted asset, so the case's own sources are held to its
+`output.environment` too, and
+`ecmaConformanceExpected` declares findings deliberate as regexps, each with its
+reason — one that stops matching fails the case.
+
+Under `ecmaVersion/`, the `es5-*` cases cover one runtime-emitting feature each
+(jsonp, `importScripts`, `require` and read-file chunk loading, workers and
+asset urls, css, hot updates, wasm, the library wrappers, Module Federation,
+the neutral platform);
+`es-versions` sweeps every rung of the `esX` ladder; `environment-flags` turns
+each flag off on its own against an otherwise current target, which a version
+sweep cannot do; and `esm-environment` repeats both over ESM output.
+
 ## How to Run Tests
 
 To execute all tests:

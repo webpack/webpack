@@ -3491,7 +3491,8 @@ describe("snapshots", () => {
 	test(
 		"universal target with a version lacking globalThis",
 		{
-			// node<12 lacks `globalThis`: globalObject stays `self`, environment.globalThis false
+			// node<12 lacks `globalThis`: globalObject guards `self` against `global`,
+			// environment.globalThis false
 			target: ["web", "node10"],
 			experiments: { outputModule: false },
 			output: { chunkFormat: "array-push" }
@@ -3582,6 +3583,9 @@ describe("snapshots", () => {
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			@@ ... @@
+			-     "globalObject": "self",
+			+     "globalObject": "typeof self !== \\"undefined\\" ? self : global",
+			@@ ... @@
 			-     "publicPath": "auto",
 			+     "publicPath": "",
 			@@ ... @@
@@ -3671,7 +3675,8 @@ describe("snapshots", () => {
 		"universal target with mixed globalThis support",
 		{
 			// node10 lacks `globalThis` while node12 has it: the merged value is `null`,
-			// so globalObject stays `self` (not every selected target supports globalThis)
+			// so globalObject guards `self` against `global` (not every selected target
+			// supports globalThis)
 			target: ["web", "node10", "node12"],
 			experiments: { outputModule: false },
 			output: { chunkFormat: "array-push" }
@@ -3761,6 +3766,9 @@ describe("snapshots", () => {
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
+			@@ ... @@
+			-     "globalObject": "self",
+			+     "globalObject": "typeof self !== \\"undefined\\" ? self : global",
 			@@ ... @@
 			-     "publicPath": "auto",
 			+     "publicPath": "",
