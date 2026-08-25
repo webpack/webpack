@@ -2,8 +2,8 @@
 
 exports[`ConfigTestCases css minimize-bad-string minimize-bad-string should compile 1`] = `
 ".t1:before{content:\\"tes
- t\\";
- color: red}.t2:after{content:\\"x\\\\\\"
+t\\";
+color:red}.t2:after{content:\\"x\\\\\\"
 }.t3{background:url(\\"
 )}.ok{color:green}"
 `;

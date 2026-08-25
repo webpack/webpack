@@ -5389,30 +5389,10 @@ declare interface CssData {
 	exportLocs?: Map<string, { line: number; column: number }>;
 }
 declare interface CssEnvironment {
-	/**
-	 * 4- and 8-digit hex colors (`#rgba`, `#rrggbbaa`) are available
-	 */
-	cssColorHexAlpha?: boolean;
 
-	/**
-	 * two positions on one gradient color stop (`red 0% 50%`) are available
-	 */
-	cssGradientDoublePosition?: boolean;
 
-	/**
-	 * the `inset` shorthand property is available
-	 */
-	cssInsetShorthand?: boolean;
 
-	/**
-	 * media query range syntax (`(width >= 600px)`) is available
-	 */
-	cssMediaQueryRange?: boolean;
 
-	/**
-	 * the `place-content` / `place-items` / `place-self` shorthand properties are available
-	 */
-	cssPlaceShorthand?: boolean;
 
 	/**
 	 * the browserslist selection (`["chrome 100", "safari 15"]`), so vendor prefixes are added / dropped for exactly these browsers; absent leaves prefixes untouched
@@ -7414,35 +7394,10 @@ declare interface Environment {
 	 */
 	const?: boolean;
 
-	/**
-	 * The environment supports 4- and 8-digit hex colors ('#rgba', '#rrggbbaa').
-	 * @since 5.110.0
-	 */
-	cssColorHexAlpha?: boolean;
 
-	/**
-	 * The environment supports two positions on one gradient color stop ('red 0% 50%').
-	 * @since 5.110.0
-	 */
-	cssGradientDoublePosition?: boolean;
 
-	/**
-	 * The environment supports the 'inset' shorthand property.
-	 * @since 5.110.0
-	 */
-	cssInsetShorthand?: boolean;
 
-	/**
-	 * The environment supports media query range syntax ('(width >= 600px)').
-	 * @since 5.110.0
-	 */
-	cssMediaQueryRange?: boolean;
 
-	/**
-	 * The environment supports the 'place-content', 'place-items' and 'place-self' shorthand properties.
-	 * @since 5.110.0
-	 */
-	cssPlaceShorthand?: boolean;
 
 	/**
 	 * The environment supports deferred module evaluation ('import defer * as ns from "..."', 'import.defer("...")').

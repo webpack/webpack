@@ -2,7 +2,7 @@
 
 exports[`ConfigTestCases css minimize-value-validity minimize-value-validity should compile 1`] = `
 Array [
-  "/*! invalid: a quoted family beside a bare identifier matches no family list */.a{font-family:\\"Lucida\\" Grande,sans-serif}",
+  "/*! invalid: a quoted family beside a bare identifier matches no family list */.a{font-family:\\"Lucida\\"Grande,sans-serif}",
   "/*! valid: a lone string is a family, so unquoting it stays one */.b{font-family:Lucida Grande,sans-serif}",
   "/*! invalid: \`<integer>\` takes no fraction, so this computes \`auto\` */.c{grid-row:1.0}",
   "/*! valid: the fraction is the value, not a spelling of an integer */.d{opacity:1}",
@@ -15,7 +15,7 @@ Array [
   "/*! the same, and neither was found by a test — the grammar says both */.k{border-image-width:0px}",
   "/*! \`flex:0\` is grow=0,basis=0%; \`flex:0px\` is grow=1,basis=0px */.l{flex:0px}",
   "/*! a negative zero keeps its fraction too, and still drops the leading zero */.m{grid-row:-.0}",
-  "/*! the shared slot is the second entry here, not the first */.n{font-family:serif,\\"My Font\\" Extra}",
+  "/*! the shared slot is the second entry here, not the first */.n{font-family:serif,\\"My Font\\"Extra}",
   "/*! a lone string in a later slot still unquotes */.o{font-family:serif,My Font,monospace}@property --len{syntax:\\"<length>\\";initial-value:0px;inherits:false}@property --tint{syntax:\\"<color>\\";initial-value:#ff0000;inherits:false}.property-descriptors{width:var(--len);color:var(--tint);margin:0;background:red}",
   "/*! a literal past \`oblique\`'s ±90deg is rejected where the \`calc()\` is clamped */.p{font-style:oblique calc(100deg)}",
   "/*! the same in the other direction */.q{font-style:oblique calc(-95deg)}",

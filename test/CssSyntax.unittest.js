@@ -1496,6 +1496,11 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	});
 
 	it("keeps a value separator wherever it carries something", () => {
+		// A number takes a `%` on, making `123 %` the one percentage `123%`.
+		expect(min("a{b:123 %}")).toBe("a{b:123 %}");
+		// An ident ending in a digit takes no `%`, so that one still tightens.
+		expect(min("a{b:x1 %}")).toBe("a{b:x1%}");
+		expect(min("a{b:50% 25%}")).toBe("a{b:50%25%}");
 		// A bare number would take the `.` on, making `0 .5em` the one value `0.5em`.
 		expect(min("a{margin:0 .5em}")).toBe("a{margin:0 .5em}");
 		// Two idents would fuse into one.
@@ -3119,7 +3124,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{transition:all}", "a{transition:all}"],
 			// The zero duration goes first, which leaves `all` standing alone.
 			["a{transition:all 0s}", "a{transition:all}"],
-			["a{transition:none .5s}", "a{transition:none .5s}"],
+			["a{transition:none .5s}", "a{transition:none.5s}"],
 			["a{transition-property:all}", "a{transition-property:all}"],
 			["a{animation:x 1s ease}", "a{animation:x 1s}"],
 			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
@@ -4785,6 +4790,26 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe(
 				"a{margin:1px 2px;padding-top:1px;&:hover{x:1}padding-right:2px;padding-bottom:1px;padding-left:2px}"
 			);
+		});
+
+		it("declines a merge mixing a bare number with a length", () => {
+			// `.25` is no length, so the engine dropped that one declaration and kept
+			// the other three — merging them writes `padding:0 0 .25`, which it drops
+			// whole, losing the three that were fine.
+			const bare =
+				"a{padding-top:0;padding-right:0;padding-bottom:.25;padding-left:0}";
+			expect(minify(bare)).toBe(bare);
+			// A keyword is no bare number, so a slot holding one still merges.
+			expect(
+				minify(
+					"a{margin-top:auto;margin-right:0;margin-bottom:0;margin-left:0}"
+				)
+			).toBe("a{margin:auto 0 0}");
+			expect(
+				minify(
+					"a{padding-top:1px;padding-right:2px;padding-bottom:1px;padding-left:2px}"
+				)
+			).toBe("a{padding:1px 2px}");
 		});
 
 		it("folds a longhand into the shorthand it follows", () => {
