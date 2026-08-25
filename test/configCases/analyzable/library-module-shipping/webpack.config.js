@@ -13,13 +13,20 @@ const webpack = require("../../../../");
  * @param {import("../../../../").Configuration["mode"]} options.mode mode
  * @param {string} options.chunkFilename chunk filename template
  * @param {string=} options.publicPath public path, when it is not `auto`
+ * @param {import("../../../../").Configuration["devtool"]=} options.devtool the
+ * devtool, left out to take whatever the mode defaults to
+ * @param {boolean=} options.urlFormsBake whether the `import.meta.url` forms bake
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, { libraryType, mode, chunkFilename, publicPath }) => ({
+const base = (
+	index,
+	{ libraryType, mode, chunkFilename, publicPath, devtool, urlFormsBake = true }
+) => ({
 	target: "node",
 	mode,
-	devtool: false,
+	...(devtool === undefined ? {} : { devtool }),
 	experiments: { outputModule: true },
+	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 	optimization: {
 		chunkIds: "named",
 		splitChunks: false,
@@ -33,11 +40,13 @@ const base = (index, { libraryType, mode, chunkFilename, publicPath }) => ({
 		// Prefixed per config: every config here shares one output directory, and two
 		// that name a chunk alike would each load the other's module ids.
 		chunkFilename: `${index}-${chunkFilename}`,
+		assetModuleFilename: `${index}-[name][ext]`,
 		publicPath: publicPath || "auto"
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
+			__URL_FORMS_BAKE__: JSON.stringify(urlFormsBake),
 			// An absolute url names no file the case can read back or import.
 			__ON_DISK__: JSON.stringify(publicPath === undefined)
 		})
@@ -69,5 +78,28 @@ module.exports = [
 		libraryType: "module",
 		mode: "none",
 		chunkFilename: "[name].mjs"
+	}),
+	// Development builds bake too, whichever devtool keeps the module body out of an
+	// `eval()`.
+	base(4, {
+		libraryType: "module",
+		mode: "development",
+		chunkFilename: "[name].mjs",
+		devtool: false
+	}),
+	base(5, {
+		libraryType: "modern-module",
+		mode: "development",
+		chunkFilename: "[name].mjs",
+		devtool: "source-map"
+	}),
+	// The `mode: "development"` default is `eval`. A chunk `import()` needs no
+	// `import.meta`, so it still bakes; the url forms cannot and keep the runtime
+	// shape. Documented, not desired.
+	base(6, {
+		libraryType: "module",
+		mode: "development",
+		chunkFilename: "[name].mjs",
+		urlFormsBake: false
 	})
 ];
