@@ -27082,6 +27082,11 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
+	static resolveSwitches: <T extends object>(all: T, options?: Partial<T>) => T;
+	static pickSwitches: <T extends object>(
+		all: T,
+		options: object
+	) => undefined | Partial<T>;
 }
 
 /**
@@ -27150,6 +27155,11 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
+	static resolveSwitches: <T extends object>(all: T, options?: Partial<T>) => T;
+	static pickSwitches: <T extends object>(
+		all: T,
+		options: object
+	) => undefined | Partial<T>;
 }
 declare interface SourceTable {
 	[index: string]: SourceBucket;
