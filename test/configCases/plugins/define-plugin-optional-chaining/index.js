@@ -37,6 +37,21 @@ it("should resolve unknown member calls with optional members without inlining t
 	expect(c.toString()).toBe("function () { return undefined(); }");
 	expect(() => OBJECT.SUB1?.UNKNOWN()).toThrow();
 });
+it("should short-circuit a call on a member read from an unknown member (issue 21822)", function () {
+	const a = function () { return OBJECT.SUB1.UNKNOWN?.includes("foo"); };
+	const b = function () { return OBJECT?.SUB1?.UNKNOWN?.toUpperCase(); };
+	const c = function () { return NOT_DEFINED.SUB2.b?.["includes"]("foo"); };
+	const d = function () { return OBJECT.SUB1.UNKNOWN?.a.b(); };
+	const e = function () { return OBJECT.SUB1.UNKNOWN.a?.b(); };
+	expect(a.toString()).toBe("function () { return undefined; }");
+	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(c.toString()).toBe("function () { return undefined; }");
+	expect(d.toString()).toBe("function () { return undefined; }");
+	expect(e.toString()).toBe("function () { return undefined(); }");
+	expect(OBJECT.SUB1.UNKNOWN?.includes("foo")).toBe(undefined);
+	expect(NOT_DEFINED.SUB2.b?.["includes"]("foo")).toBe(undefined);
+	expect(() => OBJECT.SUB1.UNKNOWN.a?.b()).toThrow();
+});
 it("should still substitute arguments of an unknown member call (issue 15559)", function () {
 	const a = function () { return OBJECT.SUB1.UNKNOWN?.(STRING); };
 	expect(a.toString()).toBe('function () { return undefined?.("string"); }');
