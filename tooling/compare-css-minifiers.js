@@ -301,6 +301,20 @@ const MINIFIERS = [
 ];
 
 /**
+ * The legal notices a stylesheet carries — a `/*!` comment is the convention
+ * every minifier is meant to preserve, and a bundled sheet concatenates one per
+ * library it was built from. Dropping one is content lost the way a class is,
+ * and it is silent: the sheet still works, and the copyright notice its license
+ * requires is gone.
+ * @param {string} css a stylesheet
+ * @returns {number} how many it carries
+ */
+const legalNotices = (css) => {
+	const found = css.match(/\/\*![\s\S]*?\*\//g);
+	return found === null ? 0 : found.length;
+};
+
+/**
  * Every class a stylesheet's selectors mention. Both layers are real parsers —
  * postcss for the rules, postcss-selector-parser for their selectors — because a
  * size win that drops a class is not a size win, and hand-matching `.name` gets
@@ -472,6 +486,7 @@ const main = async () => {
 			""
 		);
 		const before = classSelectors(postcss, selectorParser, css);
+		const noticesBefore = legalNotices(css);
 		const input = await compress(Buffer.from(css));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -497,6 +512,7 @@ const main = async () => {
 			}
 			const after = classSelectors(postcss, selectorParser, result.code);
 			const lost = [...before].filter((c) => !after.has(c));
+			const notices = noticesBefore - legalNotices(result.code);
 			const out = await compress(Buffer.from(result.code));
 			process.stdout.write(
 				`${
@@ -510,9 +526,16 @@ const main = async () => {
 					result.cpu.toFixed(0).padStart(6) +
 					`${(result.peak / 1024).toFixed(0)} MB`.padStart(8)
 				}   ${
-					lost.length === 0
-						? "-"
-						: `${lost.length} classes! e.g. ${lost.slice(0, 3).join(", ")}`
+					[
+						lost.length === 0
+							? ""
+							: `${lost.length} classes! e.g. ${lost.slice(0, 3).join(", ")}`,
+						notices <= 0
+							? ""
+							: `${notices} legal notice${notices === 1 ? "" : "s"}!`
+					]
+						.filter(Boolean)
+						.join(", ") || "-"
 				}\n`
 			);
 		}
