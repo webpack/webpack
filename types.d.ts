@@ -17449,6 +17449,12 @@ declare interface LibraryOptions {
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
 
 	/**
+	 * State the chunks that must be loaded before this one as dependencies of the emitted module, so the loader fetches them ('amd', 'umd' and 'system' library types).
+	 * @since 5.112.0
+	 */
+	declareChunkDependencies?: boolean;
+
+	/**
 	 * Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.
 	 * @since 5.112.0
 	 */
