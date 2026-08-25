@@ -5137,6 +5137,18 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		);
 	});
 
+	it("keeps the body when the renderer answers with something other than text", () => {
+		// `srcdoc` is written back escaped, so a non-string would reach the escaper.
+		const doc =
+			'<iframe srcdoc="&lt;p&gt;x&lt;/p&gt;"></iframe><style>.a{color:red}</style>';
+		const untouched = minify(doc);
+		for (const answer of [undefined, null, 42, {}]) {
+			expect(minify(doc, () => /** @type {EXPECTED_ANY} */ (answer))).toBe(
+				untouched
+			);
+		}
+	});
+
 	it("does not offer a non-CSS `<style>` or a data-block `<script>`", () => {
 		expect(
 			offered(

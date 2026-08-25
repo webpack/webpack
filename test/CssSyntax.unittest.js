@@ -6729,6 +6729,15 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		expect(shrunk.map.mappings).not.toBe(plain.map.mappings);
 	});
 
+	it("emits the url as written when the renderer answers with a non-string", () => {
+		const untouched = minify(svgUrl);
+		for (const answer of [undefined, null, 42]) {
+			expect(minify(svgUrl, () => /** @type {EXPECTED_ANY} */ (answer))).toBe(
+				untouched
+			);
+		}
+	});
+
 	it("emits the url as written when the renderer declines or throws", () => {
 		for (const sheet of [svgUrl, base64Url]) {
 			const untouched = minify(sheet);
