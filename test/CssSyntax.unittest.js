@@ -2219,6 +2219,60 @@ describe("CssSyntax — minify transforms, in-process", () => {
 	});
 });
 
+describe("CssSyntax — the per-transform switches", () => {
+	/**
+	 * @param {string} src css source
+	 * @param {import("../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src, transforms) =>
+		new SourceProcessor().process(src, { mode: "minify", transforms }).code;
+
+	// One input per switch, minified twice: with everything on, and with that one
+	// switch off — so a guard that stops firing fails here rather than quietly
+	// making the rewrite unconditional again.
+	it.each([
+		["colors", "a{color:#ffffff}", "a{color:#fff}", "a{color:#ffffff}"],
+		["escapes", "a{color:r\\065 d}", "a{color:red}", "a{color:r\\065 d}"],
+		[
+			"functions",
+			"a{width:calc(1px + 2px)}",
+			"a{width:3px}",
+			"a{width:calc(1px + 2px)}"
+		],
+		["lowercase", "A{COLOR:red}", "A{color:red}", "A{COLOR:red}"],
+		[
+			"mediaQueries",
+			"@media (min-width:1px){a{b:c}}",
+			"@media (width>=1px){a{b:c}}",
+			"@media (min-width:1px){a{b:c}}"
+		],
+		["numbers", "a{width:0.50px}", "a{width:.5px}", "a{width:0.50px}"],
+		["quotes", "a{content:'x'}", 'a{content:"x"}', "a{content:'x'}"],
+		["rules", "a{b:1;b:1}", "a{b:1}", "a{b:1;b:1}"],
+		["selectors", "b,a,b{c:1}", "a,b{c:1}", "b,a,b{c:1}"],
+		["shorthands", "a{margin:1px 1px}", "a{margin:1px}", "a{margin:1px 1px}"]
+	])("%s", (name, css, on, off) => {
+		expect(min(css)).toBe(on);
+		expect(min(css, { [name]: false })).toBe(off);
+	});
+
+	// Turning one off leaves the rest alone, which is the whole point of naming
+	// them one at a time.
+	it("leaves every other rewrite on", () => {
+		expect(min("a{color:#ffffff;margin:1px 1px}", { colors: false })).toBe(
+			"a{color:#ffffff;margin:1px}"
+		);
+	});
+
+	// A walk that does not print holds every rewrite on, so no visitor pass
+	// inherits a switch from a print that ran before it.
+	it("takes an absent option as every rewrite on", () => {
+		expect(min("a{color:#ffffff}", {})).toBe("a{color:#fff}");
+		expect(min("a{color:#ffffff}", undefined)).toBe("a{color:#fff}");
+	});
+});
+
 describe("CssSyntax — nesting and error recovery", () => {
 	/**
 	 * @param {string} src css source
@@ -5211,7 +5265,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{text-decoration-line:line-through;text-decoration-style:double;text-decoration-color:CanvasText;text-decoration-thickness:from-font}"
 				)
-			).toBe("a{text-decoration:line-through double CanvasText from-font}");
+				// A system color matches ASCII case-insensitively and is what the CSSOM
+				// hands back lowercase, so it prints the one way it matches.
+			).toBe("a{text-decoration:line-through double canvastext from-font}");
 		});
 
 		it.each([

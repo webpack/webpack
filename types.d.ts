@@ -5939,6 +5939,11 @@ declare interface CssPrintOptions {
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
+
+	/**
+	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
+	 */
+	transforms?: CssTransformOptions;
 }
 declare interface CssProcessOptions {
 	/**
@@ -5998,6 +6003,62 @@ declare interface CssProcessOptions {
 		source: string,
 		info: { type: string; hostType: string }
 	) => string;
+
+	/**
+	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
+	 */
+	transforms?: CssTransformOptions;
+}
+declare interface CssTransformOptions {
+	/**
+	 * write each color in the shortest spelling of the same value
+	 */
+	colors?: boolean;
+
+	/**
+	 * write an identifier's escapes and a `url()`'s percent-escapes in their shortest equal form
+	 */
+	escapes?: boolean;
+
+	/**
+	 * fold a call into the shorter call computing the same value (math, transform, gradient, easing, filter)
+	 */
+	functions?: boolean;
+
+	/**
+	 * print every name CSS matches ASCII case-insensitively in one case
+	 */
+	lowercase?: boolean;
+
+	/**
+	 * write a media feature in its range spelling and collapse an `and` of two into the interval
+	 */
+	mediaQueries?: boolean;
+
+	/**
+	 * write each number in its shortest equal spelling
+	 */
+	numbers?: boolean;
+
+	/**
+	 * normalize a string's, `url()`'s, font family's and attribute value's quoting
+	 */
+	quotes?: boolean;
+
+	/**
+	 * drop and merge whole rules and declarations
+	 */
+	rules?: boolean;
+
+	/**
+	 * rewrite a selector into an equal one
+	 */
+	selectors?: boolean;
+
+	/**
+	 * write a value as the shorthand that already implies it, and merge a family of longhands into one
+	 */
+	shorthands?: boolean;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -10252,7 +10313,10 @@ declare interface HtmlParserOptions {
 }
 type HtmlPrintOptions = Pick<
 	CssProcessOptions,
-	"environment" | "convertLengthUnits" | "rewriteCustomProperties"
+	| "environment"
+	| "convertLengthUnits"
+	| "rewriteCustomProperties"
+	| "transforms"
 > & {
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
@@ -10298,6 +10362,11 @@ declare interface HtmlProcessOptions {
 	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
 	rewriteCustomProperties?: boolean;
+
+	/**
+	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
+	 */
+	transforms?: CssTransformOptions;
 
 	/**
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge (default false)
@@ -19938,10 +20007,16 @@ declare interface Optimization {
 }
 
 /**
- * What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it.
+ * What the CSS minimizer does. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it. Every transform that keeps the stylesheet's meaning is on by default and may be turned off on its own, so a document a rewrite breaks can be minimized without it while the rest still applies; the two that change what the CSSOM hands back (`convertLengthUnits`, `rewriteCustomProperties`) are off until asked for.
  * @since 5.110.0
  */
 declare interface OptimizationMinimizeCss {
+	/**
+	 * Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.
+	 * @since 5.110.0
+	 */
+	colors?: boolean;
+
 	/**
 	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
 	 * @since 5.110.0
@@ -19949,10 +20024,64 @@ declare interface OptimizationMinimizeCss {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * Write an identifier's escapes in their shortest equal form, and a percent-escape in a `url()` as the byte it names. On by default.
+	 * @since 5.110.0
+	 */
+	escapes?: boolean;
+
+	/**
+	 * Fold a call into the shorter call that computes the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.
+	 * @since 5.110.0
+	 */
+	functions?: boolean;
+
+	/**
+	 * Print every name CSS matches ASCII case-insensitively in one case — a property, at-rule, function, `url()`, pseudo, media feature, media type, unit and a keyword value on a property whose grammar takes no name of the author's — so one document spells each the same way. On by default. A type selector, id, class, attribute, custom property, `@keyframes` / `@container` / custom-media name and `@charset` are left as authored whatever this says.
+	 * @since 5.110.0
+	 */
+	lowercase?: boolean;
+
+	/**
+	 * Write a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), and collapse an `and` of two one-sided ranges into the interval it describes. On by default.
+	 * @since 5.110.0
+	 */
+	mediaQueries?: boolean;
+
+	/**
+	 * Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a `+`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.
+	 * @since 5.110.0
+	 */
+	numbers?: boolean;
+
+	/**
+	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.
+	 * @since 5.110.0
+	 */
+	quotes?: boolean;
+
+	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
 	 * @since 5.110.0
 	 */
 	rewriteCustomProperties?: boolean;
+
+	/**
+	 * Drop and merge whole rules and declarations: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, a rule an identical later sibling makes dead, adjacent rules that print the same block, and a named `@layer` block a later sibling opens again. On by default.
+	 * @since 5.110.0
+	 */
+	rules?: boolean;
+
+	/**
+	 * Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an `An+B` written the shortest way its microsyntax allows, and a `from` / `100%` keyframe selector written as the shorter of the pair. On by default.
+	 * @since 5.110.0
+	 */
+	selectors?: boolean;
+
+	/**
+	 * Write a value as the shorthand that already implies it: a `{1,4}` box or corner notation collapsed, a slot holding its own initial dropped, `flex` / `font-weight` / `display` / `transition` / `<position>` / `<repeat-style>` written the short way, and a family of longhands — with unrelated declarations between them — merged into the one shorthand that sets them. On by default.
+	 * @since 5.110.0
+	 */
+	shorthands?: boolean;
 
 	/**
 	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
@@ -30108,6 +30237,9 @@ declare namespace exports {
 				pos?: number,
 				options?: ParseOptionsSyntax
 			) => RuleSyntax[];
+			export let pickTransforms: (
+				options: object
+			) => undefined | CssTransformOptions;
 			export let printer: (
 				path: {
 					get node(): NodeSyntax;

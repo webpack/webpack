@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-transforms-off minimize-transforms-off should compile 1`] = `
+Array [
+  "/*! colors: the hex is not shortened */.t01{color:#ffffff}",
+  "/*! escapes: the identifier keeps the escape it was written with */.t02{color:r\\\\065 d}",
+  "/*! functions: the calc is not folded and the transform names both axes */.t03{width:calc(1px + 2px);transform:translate(1px,0)}",
+  "/*! lowercase: the property, function and unit keep their case */.T04{COLOR:RGB(1 2 3);width:10PX}",
+  "/*! numbers: the leading zero and the trailing fraction stay */.t05{width:0.50px;opacity:100%}",
+  "/*! quotes: the string keeps the quote it was written with */.t06{content:'x'}",
+  "/*! rules: the second declaration of a property keeps the first */.t07{color:red;color:red}",
+  "/*! selectors: the list is neither deduplicated nor ordered */.t09,.t08,.t09{color:red}",
+  "/*! shorthands: the repeated box value is not collapsed */.t10{margin:1px 1px}",
+  "/*! mediaQueries: the feature keeps its \`min-\` spelling */@media (min-width:100px){.t11{color:red}}",
+]
+`;

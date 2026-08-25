@@ -3719,17 +3719,67 @@
       }
     },
     "OptimizationMinimizeCss": {
-      "description": "What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=\"\"` the HTML minimizer hands it.",
+      "description": "What the CSS minimizer does. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=\"\"` the HTML minimizer hands it. Every transform that keeps the stylesheet's meaning is on by default and may be turned off on its own, so a document a rewrite breaks can be minimized without it while the rest still applies; the two that change what the CSSOM hands back (`convertLengthUnits`, `rewriteCustomProperties`) are off until asked for.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "colors": {
+          "description": "Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "convertLengthUnits": {
           "description": "Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
           "type": "boolean",
           "added": "5.110.0"
         },
+        "escapes": {
+          "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a `url()` as the byte it names. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "functions": {
+          "description": "Fold a call into the shorter call that computes the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "lowercase": {
+          "description": "Print every name CSS matches ASCII case-insensitively in one case — a property, at-rule, function, `url()`, pseudo, media feature, media type, unit and a keyword value on a property whose grammar takes no name of the author's — so one document spells each the same way. On by default. A type selector, id, class, attribute, custom property, `@keyframes` / `@container` / custom-media name and `@charset` are left as authored whatever this says.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "mediaQueries": {
+          "description": "Write a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), and collapse an `and` of two one-sided ranges into the interval it describes. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "numbers": {
+          "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a `+`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "quotes": {
+          "description": "Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "rewriteCustomProperties": {
           "description": "Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "rules": {
+          "description": "Drop and merge whole rules and declarations: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, a rule an identical later sibling makes dead, adjacent rules that print the same block, and a named `@layer` block a later sibling opens again. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "selectors": {
+          "description": "Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an `An+B` written the shortest way its microsyntax allows, and a `from` / `100%` keyframe selector written as the shorter of the pair. On by default.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "shorthands": {
+          "description": "Write a value as the shorthand that already implies it: a `{1,4}` box or corner notation collapsed, a slot holding its own initial dropped, `flex` / `font-weight` / `display` / `transition` / `<position>` / `<repeat-style>` written the short way, and a family of longhands — with unrelated declarations between them — merged into the one shorthand that sets them. On by default.",
           "type": "boolean",
           "added": "5.110.0"
         },
