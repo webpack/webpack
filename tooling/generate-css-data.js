@@ -4051,10 +4051,24 @@ const SUPPORTED_FEATURES = [
 ];
 
 /**
+ * Whether a BCD support entry is the plain spelling arriving for good. One
+ * behind a flag is not support a page can rely on, one spelled with a prefix or
+ * another name is not the plain spelling at all, and one BCD later removed is
+ * support that ended — reading any of them as the arrival is what would let a
+ * construct be written for a target that cannot read it.
+ * @param {BcdSupport} entry a BCD support entry
+ * @returns {boolean} true when it is the plain spelling, still supported
+ */
+const isPlainSupport = (entry) =>
+	!entry.prefix &&
+	!entry.alternative_name &&
+	!entry.version_removed &&
+	!entry.flags;
+
+/**
  * When each browser first read every one of a feature's constructs, as
- * `[browserslistName, since][]`. A prefixed, renamed or flagged arrival is not
- * one the plain spelling reaches, so it does not count; a browser BCD never
- * gives it carries `Infinity`, which no version satisfies.
+ * `[browserslistName, since][]`. Only a plain arrival counts, and a browser BCD
+ * never gives one carries `Infinity`, which no version satisfies.
  * @param {string[]} paths BCD paths that all have to have arrived
  * @returns {[string, number][]} the versions, by browserslist name
  */
@@ -4073,9 +4087,7 @@ const collectSupportedFrom = (paths) => {
 			const names = BCD_TO_BROWSERSLIST.get(bcdBrowser);
 			if (names === undefined) continue;
 			const entries = Array.isArray(raw) ? raw : [raw];
-			const plain = entries.find(
-				(entry) => !entry.prefix && !entry.alternative_name && !entry.flags
-			);
+			const plain = entries.find(isPlainSupport);
 			const added = plain ? encodeVersion(plain.version_added) : null;
 			for (const name of names) {
 				const before = since.get(name);
@@ -4189,22 +4201,10 @@ const collectPrefixes = (compat, name, alternatives) => {
 		const entries = Array.isArray(raw) ? raw : [raw];
 		let unprefixedFrom = null;
 		for (const entry of entries) {
-			// An entry BCD later removed never established unprefixed support — the
-			// one it ends may be a partial implementation the next refines, but
-			// reading a partial one as support is what would drop a spelling an
-			// engine still needs (`-webkit-mask`, against a `mask` Chrome has
-			// partially had since 1). One behind a flag is not support a page can
-			// rely on, one spelled another way is not the unprefixed spelling at
-			// all, and the earliest of the rest is the arrival — BCD's newest-first
-			// ordering is convention, not schema.
-			if (
-				entry.prefix ||
-				entry.alternative_name ||
-				entry.version_removed ||
-				entry.flags
-			) {
-				continue;
-			}
+			// The earliest plain entry is the arrival — BCD's newest-first ordering is
+			// convention, not schema. Reading a removed one as support would drop
+			// `-webkit-mask` against a `mask` Chrome has only partially had since 1.
+			if (!isPlainSupport(entry)) continue;
 			const added = encodeVersion(entry.version_added);
 			if (
 				added !== null &&
@@ -4378,14 +4378,7 @@ const engineVersionLine = (bcdName, baseName, from) => {
 	/** @type {(support: BcdSupport | BcdSupport[] | undefined) => number | null} */
 	const unprefixed = (support) => {
 		const list = Array.isArray(support) ? support : support ? [support] : [];
-		// The same reading of "arrived unprefixed" the window rule above uses.
-		const entry = list.find(
-			(one) =>
-				!one.prefix &&
-				!one.alternative_name &&
-				!one.version_removed &&
-				!one.flags
-		);
+		const entry = list.find(isPlainSupport);
 		return entry ? encodeVersion(entry.version_added) : null;
 	};
 	/**
@@ -6157,6 +6150,7 @@ module.exports.collectUnsharedLonghandKeywords =
 	collectUnsharedLonghandKeywords;
 module.exports.collectZeroUnitAmbiguousProperties =
 	collectZeroUnitAmbiguousProperties;
+module.exports.isPlainSupport = isPlainSupport;
 module.exports.isSpelledSyntax = isSpelledSyntax;
 module.exports.longhandType = longhandType;
 module.exports.parseValueSyntax = parseValueSyntax;
