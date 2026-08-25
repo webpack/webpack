@@ -14627,6 +14627,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-async-chunk-waterfalls": Object {
+    "configs": Array [
+      Object {
+        "description": "Report chains of 'import()' calls where each chunk can only be requested once the one before it has arrived, so the levels cost round trips in series (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.asyncChunkWaterfalls",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report chains of 'import()' calls where each chunk can only be requested once the one before it has arrived, so the levels cost round trips in series (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-broad-contexts": Object {
     "configs": Array [
       Object {
@@ -14718,6 +14731,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-embedded-source-maps": Object {
+    "configs": Array [
+      Object {
+        "description": "Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.embeddedSourceMaps",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-entrypoint-overlap": Object {
     "configs": Array [
       Object {
@@ -14773,6 +14799,19 @@ Object {
       },
     ],
     "description": "Report the loaders, plugins and hooks that hold the main thread, timing each one's own code rather than what it waited for (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-inlined-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Report assets inlined as data urls that are large enough for the base64 cost and the lost caching to outweigh the request they save (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.inlinedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report assets inlined as data urls that are large enough for the base64 cost and the lost caching to outweigh the request they save (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -14929,6 +14968,19 @@ Object {
       },
     ],
     "description": "Report chunks loaded on demand that carry less than 'optimization.splitChunks.minSize' (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules that read 'this' at the top level of an ES module, where it is 'undefined' rather than the module object or the global one (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.topLevelThis",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules that read 'this' at the top level of an ES module, where it is 'undefined' rather than the module object or the global one (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },

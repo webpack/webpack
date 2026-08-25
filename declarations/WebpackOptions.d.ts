@@ -3288,6 +3288,11 @@ export interface PerformanceOptions {
 	 */
 	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
 	/**
+	 * Report chains of 'import()' calls where each chunk can only be requested once the one before it has arrived, so the levels cost round trips in series (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	asyncChunkWaterfalls?: boolean;
+	/**
 	 * Report 'require.context' calls with no filter, which bundle every file under a directory (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3323,6 +3328,11 @@ export interface PerformanceOptions {
 	 */
 	dynamicExports?: boolean;
 	/**
+	 * Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	embeddedSourceMaps?: boolean;
+	/**
 	 * Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3341,6 +3351,11 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	hotspots?: boolean;
+	/**
+	 * Report assets inlined as data urls that are large enough for the base64 cost and the lost caching to outweigh the request they save (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	inlinedAssets?: boolean;
 	/**
 	 * Report a single module that makes up most of the chunk it is in (requires 'hints' to be enabled).
 	 * @since 5.110.0
@@ -3399,6 +3414,11 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	tinyChunks?: boolean;
+	/**
+	 * Report modules that read 'this' at the top level of an ES module, where it is 'undefined' rather than the module object or the global one (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	topLevelThis?: boolean;
 	/**
 	 * Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).
 	 * @since 5.110.0
