@@ -3725,6 +3725,22 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(unknown)).toBe(unknown);
 		});
 
+		it("answers a pseudo again when the selection changes under it", () => {
+			// The answer is cached per spelling for as long as the selection holds,
+			// so a build minifying several stylesheets asks once — and a different
+			// selection has to throw that away rather than read the first one's.
+			const css = "a:focus-visible{top:0}b:focus-visible{top:0}";
+			const joined = "a:focus-visible,b:focus-visible{top:0}";
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			expect(minifyFor(css, ["chrome 85"])).toBe(css);
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			// The same stylesheet twice under one selection reads the cache.
+			expect(minifyFor(css, ["chrome 86"])).toBe(joined);
+			// And with the selection gone the ability is assumed again.
+			expect(minify(css)).toBe(joined);
+			expect(minifyFor(css, ["chrome 85"])).toBe(css);
+		});
+
 		it.each([
 			// One block holds a property once, so the earlier declaration of a
 			// property both of them set would be the one it loses.
