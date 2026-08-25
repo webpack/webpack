@@ -6620,3 +6620,133 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 		});
 	}
 });
+
+describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
+	/**
+	 * @param {string} sheet the stylesheet
+	 * @param {import("../lib/css/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+	 * @returns {string} the minified stylesheet
+	 */
+	const minify = (sheet, renderEmbeddedSource) =>
+		new SourceProcessor().process(sheet, {
+			mode: "minify",
+			renderEmbeddedSource
+		}).code;
+
+	/**
+	 * @param {string} sheet the stylesheet
+	 * @returns {[string, string][]} each payload offered, as `[type, source]`
+	 */
+	const offered = (sheet) => {
+		/** @type {[string, string][]} */
+		const seen = [];
+		minify(sheet, (source, info) => {
+			seen.push([info.type, source]);
+			return source;
+		});
+		return seen;
+	};
+
+	const svgUrl =
+		'.a{background:url("data:image/svg+xml,<svg>  <rect/></svg>")}';
+	const base64Url = `.a{background:url(data:image/svg+xml;base64,${Buffer.from(
+		"<svg>  <rect/></svg>"
+	).toString("base64")})}`;
+
+	it("offers an svg payload, quoted or base64", () => {
+		expect(offered(svgUrl)).toEqual([["svg", "<svg>  <rect/></svg>"]]);
+		expect(offered(base64Url)).toEqual([["svg", "<svg>  <rect/></svg>"]]);
+	});
+
+	it("names the language its media type carries, and declines an unknown one", () => {
+		expect(offered('.a{background:url("data:text/css,a{color:red}")}')).toEqual(
+			[["css", "a{color:red}"]]
+		);
+		expect(
+			offered('.a{background:url("data:application/json,{\\"a\\":1}")}')
+		).toEqual([["json", '{"a":1}']]);
+		// An image webpack has no notion of is never decoded.
+		expect(
+			offered('.a{background:url("data:image/png;base64,iVBORw0KGgo=")}')
+		).toEqual([]);
+		expect(offered('.a{background:url("./img.png")}')).toEqual([]);
+	});
+
+	it("rebuilds the url in the shortest form that parses back to it", () => {
+		// A rebuilt url keeps its base64-ness, and loses quotes it no longer needs.
+		expect(minify(svgUrl, (s) => s.replace(/\s+/g, ""))).toBe(
+			".a{background:url(data:image/svg+xml,<svg><rect/></svg>)}"
+		);
+		expect(minify(base64Url, (s) => s.replace(/\s+/g, ""))).toBe(
+			`.a{background:url(data:image/svg+xml;base64,${Buffer.from(
+				"<svg><rect/></svg>"
+			).toString("base64")})}`
+		);
+	});
+
+	it("escapes only what would change what the url means", () => {
+		expect(minify(svgUrl, () => "<svg>%#</svg>")).toBe(
+			".a{background:url(data:image/svg+xml,<svg>%25%23</svg>)}"
+		);
+	});
+
+	it("quotes and escapes a payload a url token cannot carry", () => {
+		// A space or a quote would end the token, so the url takes quotes and the
+		// delimiter inside it is escaped — otherwise the declaration is dropped.
+		expect(minify(svgUrl, () => '<svg viewBox="0 0 2 2"/>')).toBe(
+			'.a{background:url("data:image/svg+xml,<svg viewBox=\\"0 0 2 2\\"/>")}'
+		);
+	});
+
+	it("keeps the stylesheet's own map coherent when the payload changes size", () => {
+		// The url goes out as one piece, so the columns after it move with it —
+		// rewriting a payload must not shift the mappings that follow.
+		const sheet =
+			'.a {\n\tcolor : red ;\n}\n.b {\n\tbackground : url("data:image/svg+xml,<svg>    <rect/>    </svg>") ;\n}\n.c {\n\tcolor : blue ;\n}\n';
+		/**
+		 * @param {import("../lib/css/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+		 * @returns {{ code: string, map: EXPECTED_ANY }} the printed sheet and its map
+		 */
+		const run = (renderEmbeddedSource) =>
+			new SourceProcessor().process(sheet, {
+				mode: "minify",
+				source: "s.css",
+				content: sheet,
+				renderEmbeddedSource
+			});
+		const plain = run();
+		const shrunk = run((source, info) =>
+			info.type === "svg" ? source.replace(/\s+/g, "") : source
+		);
+		// Eight characters left the payload, and the last mapping's generated
+		// column is the only thing that moved — by exactly that much.
+		// Eight characters of whitespace, and the two quotes the shorter url no
+		// longer needs.
+		expect(plain.code.length - shrunk.code.length).toBe(10);
+		const columns = (/** @type {string} */ mappings) =>
+			mappings.split(",").length;
+		expect(columns(shrunk.map.mappings)).toBe(columns(plain.map.mappings));
+		expect(shrunk.map.mappings).not.toBe(plain.map.mappings);
+	});
+
+	it("emits the url as written when the renderer answers with a non-string", () => {
+		const untouched = minify(svgUrl);
+		for (const answer of [undefined, null, 42]) {
+			expect(minify(svgUrl, () => /** @type {EXPECTED_ANY} */ (answer))).toBe(
+				untouched
+			);
+		}
+	});
+
+	it("emits the url as written when the renderer declines or throws", () => {
+		for (const sheet of [svgUrl, base64Url]) {
+			const untouched = minify(sheet);
+			expect(minify(sheet, (s) => s)).toBe(untouched);
+			expect(
+				minify(sheet, () => {
+					throw new Error("nope");
+				})
+			).toBe(untouched);
+		}
+	});
+});

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minify-embedded-svg exported tests should reach an inline svg subtree in embedded HTML 1`] = `
+"<div>
+	<svg viewBox=\\"0 0 2 2\\"> <rect style=\\" fill : red ; \\"/> </svg>
+</div>
+"
+`;
+
+exports[`ConfigCacheTestCases css minify-embedded-svg exported tests should reach an svg payload inside a data: url in embedded CSS 1`] = `
+"/*!******************************************!*\\\\
+  !*** css ./style.css (exportType: text) ***!
+  \\\\******************************************/.a{background:url(\\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'> <rect fill='red' /> </svg>\\")}"
+`;
