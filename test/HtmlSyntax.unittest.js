@@ -8263,6 +8263,18 @@ describe("SourceProcessor — reusing work across a print", () => {
 		);
 	});
 
+	it("runs a caller's renderer for every style attribute, repeats included", () => {
+		// The renderer is handed every `style=""`, so a memo keyed on the value
+		// alone would hand the second attribute the first one's result.
+		let calls = 0;
+		const code = minify('<p style="color: red"><b style="color: red">', {
+			renderEmbeddedSource: (source, info) =>
+				info.type === "css" ? `a{--call:${++calls}}` : source
+		});
+		expect(calls).toBe(2);
+		expect(code).toBe("<p style=--call:1><b style=--call:2></b>");
+	});
+
 	it("does not carry a style attribute's result into a print with other options", () => {
 		const html = '<p style="width: 16px">';
 		expect(minify(html)).toBe("<p style=width:16px>");
