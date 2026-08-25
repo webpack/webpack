@@ -32,7 +32,7 @@ Array [
   "/*! webpack: the descendant combinator is not */:not(.e) .f{color:red}",
   "/*! webpack: a compound selector a dropped comment must not split */.g.h{color:red}",
   "/*! webpack: An+B carries its own sign, which says nothing */.i:nth-child(3){color:red}",
-  "/*! webpack: a \`[…]\` in a value is a grid line-name list, not a matcher */.j{grid-template-columns:[full-start] 1fr [full-end]}",
+  "/*! webpack: a \`[…]\` in a value is a grid line-name list, not a matcher */.j{grid-template-columns:[full-start]1fr[full-end]}",
   "/*! webpack: an escape's terminator goes when the next code point cannot extend it */.\\\\32xl\\\\:flex{color:red}",
   "/*! webpack: ...but stays when the next code point is a hex digit */.\\\\31 abc{color:red}",
   "/*! webpack: ...and when it is the identifier's own end */.\\\\31 {color:red}",

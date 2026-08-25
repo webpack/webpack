@@ -52,8 +52,8 @@ Array [
   "/*! merge-longhand: a tool adding prefixes writes the prefixed item beside the
    plain one, which leaves what it wrote on the way there unreadable — the item
    slot takes a \`<custom-ident>\`, so an engine knowing neither spelling still
-   parses the value */.t25l{transition:box-shadow .25s,-webkit-box-shadow .25s}",
-  "/*! ...whichever of the two spellings the earlier one wrote */.t25m{transition:box-shadow .25s,-webkit-box-shadow .25s}",
+   parses the value */.t25l{transition:box-shadow.25s,-webkit-box-shadow.25s}",
+  "/*! ...whichever of the two spellings the earlier one wrote */.t25m{transition:box-shadow.25s,-webkit-box-shadow.25s}",
   "/*! declined: \`-webkit-ease\` is no \`<easing-function>\`, so that declaration is one
    an engine drops — which is what the earlier one is there for */.t25n{transition-timing-function:ease;transition-timing-function:ease,-webkit-ease}",
   "/*! declined: a \`<custom-ident>\` reached inside a call is that call's, and a call

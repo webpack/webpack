@@ -1459,7 +1459,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// One case per fusion rule; each right-hand side is a single token when the
 		// space is removed (`/*` even opens a comment).
 		const cases = [
-			["a{b:1 //**/*}", "a{b:1 / *}"],
+			["a{b:1 //**/*}", "a{b:1/ *}"],
 			["a{b:./**/5}", "a{b:. 5}"],
 			["a{b:+/**/5}", "a{b:+ 5}"],
 			["a{b:#/**/fff}", "a{b:# fff}"],
@@ -1475,6 +1475,45 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			["a{b:x-/**/>y}", "a{b:x- >y}"]
 		];
 		for (const [src, expected] of cases) expect(min(src)).toBe(expected);
+	});
+
+	it("drops a value separator its tokens do not need", () => {
+		// Whitespace in a value only separates tokens, so each of these reads back
+		// as the same token stream without it.
+		expect(min("a{padding:.35em .75em}")).toBe("a{padding:.35em.75em}");
+		expect(min("a{transform:translate(1px) scale(2)}")).toBe(
+			"a{transform:translate(1px)scale(2)}"
+		);
+		expect(min("a{background:url(a.png) no-repeat}")).toBe(
+			"a{background:url(a.png)no-repeat}"
+		);
+		expect(min('a{grid-template-areas:"a b" "c d"}')).toBe(
+			'a{grid-template-areas:"a b""c d"}'
+		);
+		expect(min("a{border:1px solid #fff}")).toBe("a{border:1px solid#fff}");
+	});
+
+	it("keeps a value separator wherever it carries something", () => {
+		// A bare number would take the `.` on, making `0 .5em` the one value `0.5em`.
+		expect(min("a{margin:0 .5em}")).toBe("a{margin:0 .5em}");
+		// Two idents would fuse into one.
+		expect(min("a{font-family:My Font,serif}")).toBe(
+			"a{font-family:My Font,serif}"
+		);
+		// CSS Values 4 §10.1 needs the whitespace around a math `-`.
+		expect(min("a{width:calc(2rem - .02px)}")).toBe(
+			"a{width:calc(2rem - .02px)}"
+		);
+		// A custom property and a substituted value are handed back as written.
+		expect(min("a{--x:.5em .5em}")).toBe("a{--x:.5em .5em}");
+		expect(min("a{margin:var(--y) .5em}")).toBe("a{margin:var(--y) .5em}");
+		// In a selector the separator is a descendant combinator, not a separator.
+		expect(min(".a .b{c:1}")).toBe(".a .b{c:1}");
+		expect(min(".a:not(.b .c){d:1}")).toBe(".a:not(.b .c){d:1}");
+		// A value the string transforms read stays space-separated for them.
+		expect(min("a{background-size:50% auto,2px auto}")).toBe(
+			"a{background-size:50%,2px}"
+		);
 	});
 
 	it("does not separate tokens that cannot fuse", () => {
@@ -3121,7 +3160,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			[
 				"the keyword is not the initial",
-				"a{transition:height .35s ease-in-out}"
+				"a{transition:height.35s ease-in-out}"
 			],
 			// `none` is both an animation name and a fill mode, so which slot it
 			// fills is not a question the grammar answers.
@@ -3129,7 +3168,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the same, on a list style", "a{list-style:none}"],
 			// `mask: url(…) none` fills `<mask-reference>` twice and is a declaration
 			// the engine drops — removing the `none` would revive it.
-			["a sibling fills the same slot", "a{mask:url(a.svg) none}"],
+			["a sibling fills the same slot", "a{mask:url(a.svg)none}"],
 			// A function fills the easing slot as much as a keyword does.
 			["a call fills the same slot", "a{transition:opacity 1s ease steps(4)}"],
 			["the same, on an animation", "a{animation:x 1s ease linear(0,1)}"],
@@ -3140,7 +3179,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{transition:ease 1s ease,ease 2s ease}"
 			],
 			// A string could carry the comma the layer split reads.
-			["a layer holds a string", 'a{transition:"a" 1s ease}'],
+			[
+				"a layer holds a string",
+				'a{transition:"a" 1s ease}',
+				'a{transition:"a"1s ease}'
+			],
 			["a layer is empty", "a{transition:opacity 1s ease,,color 2s ease}"],
 			["the first layer is empty", "a{transition:,opacity 1s ease}"],
 			["the last layer is empty", "a{transition:opacity 1s ease,}"],
@@ -3162,8 +3205,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A `/` reaches a slot through another's value, so the components are no
 			// longer this one flat list.
 			["a background states a size", "a{background:none 50%/cover}"]
-		])("keeps it where %s", (_name, css) => {
-			expect(minify(css)).toBe(css);
+		])("keeps it where %s", (_name, css, printed = css) => {
+			expect(minify(css)).toBe(printed);
 		});
 	});
 
@@ -3526,12 +3569,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// spelling still parses the value and has nothing to fall back to.
 			[
 				"a{transition:box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
-				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+				"a{transition:box-shadow.25s,-webkit-box-shadow.25s}"
 			],
 			// ...whichever spelling the earlier one wrote
 			[
 				"a{transition:-webkit-box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
-				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+				"a{transition:box-shadow.25s,-webkit-box-shadow.25s}"
 			],
 			// ...and for a keyframes name, which is a `<custom-ident>` too
 			[
@@ -3828,7 +3871,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the value is a keyword", "a{box-shadow:none}"],
 			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
 			// `0%` is a percentage, which a shadow's `<length>` slots do not take.
-			["a percentage is no zero length", "a{box-shadow:1px 1px 0% 0% red}"],
+			["a percentage is no zero length", "a{box-shadow:1px 1px 0%0%red}"],
 			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
 			// A comma with nothing either side is a layer no shadow fills.
 			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],
@@ -3874,7 +3917,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["the value is a keyword", "a{transform:none}"],
 			["a component is no call", "a{background:red repeat-x}"],
-			["the same, past a call", "a{mask:url(a.svg) none}"],
+			["the same, past a call", "a{mask:url(a.svg)none}"],
 			["there is one component", "a{filter:blur(2px)}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
@@ -4134,11 +4177,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a word is no identifier", 'a{font-family:"a.b"}'],
 			["two spaces part its words", 'a{font-family:"My  Font"}'],
 			// The family slot of the shorthand is read among the other slots.
-			["it is the `font` shorthand", 'a{font:12px "Foo Bar"}'],
+			[
+				"it is the `font` shorthand",
+				'a{font:12px "Foo Bar"}',
+				'a{font:12px"Foo Bar"}'
+			],
 			["the property takes a string", 'a{content:"Foo Bar"}'],
 			["it is a custom property's value", 'a{--x:"Foo Bar"}']
-		])("keeps the quotes where %s", (_name, css) => {
-			expect(minify(css)).toBe(css);
+		])("keeps the quotes where %s", (_name, css, printed = css) => {
+			expect(minify(css)).toBe(printed);
 		});
 	});
 
@@ -4518,10 +4565,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Two names carry this value and neither beats the hex.
 			["a{color:magenta}", "a{color:#f0f}"],
 			["a{color:WHITE}", "a{color:#fff}"],
-			["a{border:1px solid white}", "a{border:1px solid #fff}"],
+			["a{border:1px solid white}", "a{border:1px solid#fff}"],
 			[
 				"a{box-shadow:0 0 1px lightgoldenrodyellow}",
-				"a{box-shadow:0 0 1px #fafad2}"
+				"a{box-shadow:0 0 1px#fafad2}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -5503,7 +5550,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 			"a{-webkit-logical-height:1px;block-size:1px}"
 		);
 		expect(minifyFor("a{mask-border:url(x) 30}", ["safari 9"])).toBe(
-			"a{-webkit-mask-box-image:url(x) 30;mask-border:url(x) 30}"
+			"a{-webkit-mask-box-image:url(x)30;mask-border:url(x)30}"
 		);
 	});
 
@@ -6162,13 +6209,13 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		// only dataset following Presto version by version, marks every version
 		// that has it at all as needing the prefix.
 		expect(minifyFor("a{border-image:url(x) 30}", ["opera 12.1"])).toBe(
-			"a{-o-border-image:url(x) 30;border-image:url(x) 30}"
+			"a{-o-border-image:url(x)30;border-image:url(x)30}"
 		);
 		expect(
-			minifyFor("a{-o-border-image:url(x) 30;border-image:url(x) 30}", [
+			minifyFor("a{-o-border-image:url(x)30;border-image:url(x)30}", [
 				"opera 12.1"
 			])
-		).toBe("a{-o-border-image:url(x) 30;border-image:url(x) 30}");
+		).toBe("a{-o-border-image:url(x)30;border-image:url(x)30}");
 		// Opera Mobile kept `text-overflow` prefixed four versions past desktop.
 		expect(minifyFor("a{text-overflow:ellipsis}", ["op_mob 12"])).toBe(
 			"a{-o-text-overflow:ellipsis;text-overflow:ellipsis}"
