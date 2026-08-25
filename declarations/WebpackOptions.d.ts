@@ -3367,11 +3367,6 @@ export interface PerformanceOptions {
 	 */
 	legacyJavascript?: boolean;
 	/**
-	 * Report loaders that ran over modules inside 'node_modules', which usually means a rule is missing an 'exclude' and is spending build time on code that already ships built (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	loadersOnNodeModules?: boolean;
-	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
 	maxAssetSize?: number;
