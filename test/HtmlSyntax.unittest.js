@@ -5071,9 +5071,8 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	});
 
 	it("keeps a map the renderer attached to an inline `<style>` / `<script>`", () => {
-		// The only mechanism a browser honours for inline content is a
-		// `sourceMappingURL` in the body itself, so a renderer attaches its own —
-		// nothing here has to compose one. This is that contract.
+		// A `sourceMappingURL` in the body is the only map a browser honours for
+		// inline content, so a renderer attaches its own and nothing composes it.
 		const out = minify(
 			"<div>\n  <style>  .a { color : red }  </style>\n  <script>  var a = 1  </script>\n</div>",
 			(source, info) =>

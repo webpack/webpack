@@ -2,11 +2,8 @@
 
 const SampleEmbeddedMinifyPlugin = require("../../../helpers/SampleEmbeddedMinifyPlugin");
 
-// Stands in for a real minifier, tagging each body with the type it arrived as.
-// The fixture has no inline `<style>` / `<script>`: the HTML parser lifts those
-// into modules of their own, so only what stays in the document reaches this.
-// CSS keeps its shape — a `style=""` arrives wrapped in a throwaway rule, and
-// the serializer only unwraps what still is one.
+// Tags each body with the type it arrived as. CSS keeps its shape: a `style=""`
+// arrives wrapped in a throwaway rule the serializer only unwraps if it stays one.
 /** @type {import("../../../../lib/html/syntax").EmbeddedSourceRenderer} */
 const renderEmbeddedSource = (source, { type, hostType }) =>
 	type === "css"

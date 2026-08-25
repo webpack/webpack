@@ -6672,9 +6672,10 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		expect(offered('.a{background:url("./img.png")}')).toEqual([]);
 	});
 
-	it("rebuilds the url in the form it was written in", () => {
+	it("rebuilds the url in the shortest form that parses back to it", () => {
+		// A rebuilt url keeps its base64-ness, and loses quotes it no longer needs.
 		expect(minify(svgUrl, (s) => s.replace(/\s+/g, ""))).toBe(
-			'.a{background:url("data:image/svg+xml,<svg><rect/></svg>")}'
+			".a{background:url(data:image/svg+xml,<svg><rect/></svg>)}"
 		);
 		expect(minify(base64Url, (s) => s.replace(/\s+/g, ""))).toBe(
 			`.a{background:url(data:image/svg+xml;base64,${Buffer.from(
@@ -6685,7 +6686,15 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 
 	it("escapes only what would change what the url means", () => {
 		expect(minify(svgUrl, () => "<svg>%#</svg>")).toBe(
-			'.a{background:url("data:image/svg+xml,<svg>%25%23</svg>")}'
+			".a{background:url(data:image/svg+xml,<svg>%25%23</svg>)}"
+		);
+	});
+
+	it("quotes and escapes a payload a url token cannot carry", () => {
+		// A space or a quote would end the token, so the url takes quotes and the
+		// delimiter inside it is escaped — otherwise the declaration is dropped.
+		expect(minify(svgUrl, () => '<svg viewBox="0 0 2 2"/>')).toBe(
+			'.a{background:url("data:image/svg+xml,<svg viewBox=\\"0 0 2 2\\"/>")}'
 		);
 	});
 
@@ -6711,7 +6720,9 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		);
 		// Eight characters left the payload, and the last mapping's generated
 		// column is the only thing that moved — by exactly that much.
-		expect(plain.code.length - shrunk.code.length).toBe(8);
+		// Eight characters of whitespace, and the two quotes the shorter url no
+		// longer needs.
+		expect(plain.code.length - shrunk.code.length).toBe(10);
 		const columns = (/** @type {string} */ mappings) =>
 			mappings.split(",").length;
 		expect(columns(shrunk.map.mappings)).toBe(columns(plain.map.mappings));

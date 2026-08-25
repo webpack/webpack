@@ -14,9 +14,7 @@ const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";
 
 /**
  * Stands in for `minimizer-webpack-plugin`, which owns the real taps: webpack
- * ships `renderEmbeddedSource` but taps it nowhere, so this is what
- * exercises it. Kept in `test/` on purpose — nothing here should grow
- * into a second implementation of the minifier.
+ * ships `renderEmbeddedSource` but taps it nowhere.
  */
 /**
  * @typedef {object} SampleEmbeddedMinifyPluginOptions
@@ -45,14 +43,18 @@ class SampleEmbeddedMinifyPlugin {
 	 */
 	apply(compiler) {
 		const { css, html, minimizerOptions, renderEmbeddedSource } = this.options;
-		// Whatever a tap varies on has to reach the codegen cache key: module
+		// Everything a tap varies on has to reach the codegen cache key: module
 		// hashes are taken before code generation, so the hook's own output cannot.
-		const key = JSON.stringify(minimizerOptions);
+		const key = JSON.stringify([
+			css,
+			html,
+			minimizerOptions,
+			renderEmbeddedSource === undefined ? null : String(renderEmbeddedSource)
+		]);
 
 		compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
-			// One tap for every language pair — `info.type` says which arrived, the
-			// way `minimizer-webpack-plugin` already dispatches assets by filename.
-			// Async on purpose: a real minifier may only be loadable that way.
+			// One tap per language pair — `info.type` says which arrived. Async on
+			// purpose: a real minifier may only be loadable that way.
 			compilation.hooks.renderEmbeddedSource.tapPromise(
 				PLUGIN_NAME,
 				async (source, { type, module }) => {
