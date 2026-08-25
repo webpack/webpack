@@ -7,6 +7,7 @@ const fs = require("graceful-fs");
 const rimraf = /** @type {{ sync: (path: string) => void }} */ (
 	require("rimraf")
 );
+const { RawSource } = require("webpack-sources");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 let fixtureCount = 0;
@@ -428,5 +429,112 @@ describe("Compiler (filesystem caching, css devtool)", () => {
 		);
 
 		expect(map.sourcesContent).toBeUndefined();
+	});
+});
+
+describe("Compiler (filesystem caching, embedded source)", () => {
+	expectNoDeprecations();
+
+	const cachePath = path.join(
+		__dirname,
+		"fixtures",
+		"temp-embedded-source-cache-fixture"
+	);
+
+	beforeEach(() => {
+		rimraf.sync(cachePath);
+	});
+
+	afterEach(() => {
+		rimraf.sync(cachePath);
+	});
+
+	// A renderer whose answer and whose hash contribution both follow `marker`,
+	// which is what a minimizer's options are to a build that changed them.
+	class MarkerMinifier {
+		/**
+		 * @param {string} marker the marker to write into the stylesheet
+		 */
+		constructor(marker) {
+			this.marker = marker;
+		}
+
+		/**
+		 * @param {import("../types").Compiler} compiler the compiler
+		 * @returns {void}
+		 */
+		apply(compiler) {
+			const { marker } = this;
+			compiler.hooks.compilation.tap("MarkerMinifier", (compilation) => {
+				compilation.hooks.renderEmbeddedSource.tap(
+					"MarkerMinifier",
+					(source) =>
+						new RawSource(
+							`/*${marker}*/${/** @type {string} */ (source.source())}`
+						)
+				);
+				compilation.hooks.embeddedSourceHash.tap("MarkerMinifier", (_m, hash) =>
+					hash.update(marker)
+				);
+			});
+		}
+	}
+
+	/**
+	 * @param {string} marker the marker the renderer writes
+	 * @returns {Promise<string>} the emitted bundle
+	 */
+	function build(marker) {
+		const webpack = require("..");
+
+		return new Promise((resolve, reject) => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures", "css-devtool-cache"),
+				entry: "./index.js",
+				mode: "development",
+				devtool: false,
+				target: "web",
+				experiments: { css: true },
+				cache: { type: "filesystem", cacheDirectory: cachePath },
+				module: {
+					rules: [
+						{ test: /\.css$/, type: "css/auto", parser: { exportType: "text" } }
+					]
+				},
+				output: { path: path.join(cachePath, "dist"), filename: "bundle.js" },
+				plugins: [new MarkerMinifier(marker)]
+			});
+
+			compiler.run((err, stats) => {
+				if (err) return reject(err);
+				if (/** @type {import("../types").Stats} */ (stats).hasErrors()) {
+					return reject(
+						new Error(
+							/** @type {import("../types").Stats} */ (stats).toString()
+						)
+					);
+				}
+				compiler.close(() => {
+					resolve(
+						fs
+							.readFileSync(path.join(cachePath, "dist", "bundle.js"))
+							.toString()
+					);
+				});
+			});
+		});
+	}
+
+	it("should render embedded source through the hook", async () => {
+		expect(await build("first")).toContain("/*first*/");
+	});
+
+	it("should not reuse a cached result for another renderer", async () => {
+		expect(await build("first")).toContain("/*first*/");
+
+		const bundle = await build("second");
+
+		expect(bundle).toContain("/*second*/");
+		expect(bundle).not.toContain("/*first*/");
 	});
 });
