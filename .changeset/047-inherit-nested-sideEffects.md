@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Inherit sideEffects past type-only nested package.json under node_modules.
+Inherit sideEffects past a type-only nested package.json for files under node_modules.

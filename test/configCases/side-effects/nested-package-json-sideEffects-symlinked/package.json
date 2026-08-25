@@ -1,0 +1,4 @@
+{
+  "name": "nested-package-json-sideEffects-symlinked",
+  "sideEffects": false
+}
