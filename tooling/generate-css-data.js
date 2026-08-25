@@ -3142,10 +3142,8 @@ const SUPPLEMENT = {
 		["translatex", "translate"],
 		["skewx", "skew"]
 	],
-	// The pair shorthands the target's `placeShorthand` ability gates: newer than
-	// the longhands they merge, so a target reading `align-items` may not read
-	// `place-items` and the merge would lose both declarations rather than one.
-	// `mdn-data` states no version, so the set is named rather than derived.
+	// Newer than the longhands they merge, so the merge would lose both
+	// declarations. Named because `mdn-data` states no version.
 	placeShorthands: ["place-content", "place-items", "place-self"],
 	// Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
@@ -4018,11 +4016,8 @@ const encodeVersion = (version) => {
 	return parsedMajor * 100000 + (Number.parseInt(minor, 10) || 0);
 };
 
-// The CSS abilities a target either has or does not, each as the BCD paths that
-// have to have arrived for it: several where one spelling covers several
-// constructs, and then the ability is only there once the last of them is. Read
-// out of BCD rather than stated, so an engine shipping one moves the table on
-// the next `yarn fix:special` instead of going stale unread.
+// Each ability the printer reaches for -> the BCD paths that all have to have
+// arrived for it. Stated because no dataset names what the printer emits.
 /** @type {[string, string[]][]} */
 const SUPPORTED_FEATURES = [
 	[
@@ -4051,11 +4046,8 @@ const SUPPORTED_FEATURES = [
 ];
 
 /**
- * Whether a BCD support entry is the plain spelling arriving for good. One
- * behind a flag is not support a page can rely on, one spelled with a prefix or
- * another name is not the plain spelling at all, and one BCD later removed is
- * support that ended — reading any of them as the arrival is what would let a
- * construct be written for a target that cannot read it.
+ * Whether a BCD entry is the plain spelling arriving for good — prefixed,
+ * renamed, flagged and later-removed support are none of them the arrival.
  * @param {BcdSupport} entry a BCD support entry
  * @returns {boolean} true when it is the plain spelling, still supported
  */
@@ -4201,9 +4193,8 @@ const collectPrefixes = (compat, name, alternatives) => {
 		const entries = Array.isArray(raw) ? raw : [raw];
 		let unprefixedFrom = null;
 		for (const entry of entries) {
-			// The earliest plain entry is the arrival — BCD's newest-first ordering is
-			// convention, not schema. Reading a removed one as support would drop
-			// `-webkit-mask` against a `mask` Chrome has only partially had since 1.
+			// The earliest plain entry is the arrival — BCD's newest-first ordering
+			// is convention, not schema.
 			if (!isPlainSupport(entry)) continue;
 			const added = encodeVersion(entry.version_added);
 			if (
