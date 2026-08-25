@@ -3580,6 +3580,11 @@ export interface PerformanceOptions {
 	 */
 	unusedAliases?: boolean;
 	/**
+	 * Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	unusedAssets?: boolean;
+	/**
 	 * Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.
 	 * @since 5.110.0
 	 */

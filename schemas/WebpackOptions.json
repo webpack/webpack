@@ -5688,6 +5688,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "unusedAssets": {
+          "description": "Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "unusedDefines": {
           "description": "Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.",
           "type": "boolean",

@@ -15982,6 +15982,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-unused-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.unusedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-defines": Object {
     "configs": Array [
       Object {
