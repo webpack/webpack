@@ -78,8 +78,9 @@ Array [
   "/*! webpack: a shorthand setting exactly two longhands merges like a box family */.t70{margin-block:1px 2px}",
   "/*! ...collapsing to one value when both are equal */.t71{padding-inline:1px}",
   "/*! ...and \`gap\`, whose longhands are named for the axes */.t72{gap:1px 2px}",
-  "/*! declined: two-value \`overflow\` is far newer than \`overflow-x\`/\`-y\`, so the
-   merge would lose both declarations on a target that reads only the longhands */.t73{overflow-x:hidden;overflow-y:scroll}",
+  "/*! webpack: two-value \`overflow\` is far newer than \`overflow-x\`/\`-y\`, so it is
+   written only where the target reads it — this case builds for no particular
+   one (see the \`minimize-environment\` case) */.t73{overflow:hidden scroll}",
   "/*! webpack: ...but one-value \`overflow\` is CSS 2.1, as old as the longhands */.t73a{overflow:hidden}",
   "/*! merge-longhand: \`place-items\` is newer than \`align-items\`, so it is written
    only where the target reads it — see the \`minimize-environment\` case */.t74{place-items:center start}",

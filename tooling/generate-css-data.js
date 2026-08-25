@@ -4012,6 +4012,7 @@ const SUPPORTED_FEATURES = [
 	],
 	["insetShorthand", ["css.properties.inset"]],
 	["mediaQueryRange", ["css.at-rules.media.range_syntax"]],
+	["overflowTwoValues", ["css.properties.overflow.multiple_keywords"]],
 	[
 		"placeShorthand",
 		[

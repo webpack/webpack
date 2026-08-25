@@ -4848,12 +4848,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("a{corner-block-start-shape:bevel notch}");
 		});
 
-		it("merges `overflow` only where it collapses to one value", () => {
+		it("collapses `overflow` to one value whatever the target", () => {
 			expect(minify("a{overflow-x:hidden;overflow-y:hidden}")).toBe(
 				"a{overflow:hidden}"
 			);
-			const two = "a{overflow-x:hidden;overflow-y:scroll}";
-			expect(minify(two)).toBe(two);
+			expect(
+				minifyFor("a{overflow-x:hidden;overflow-y:hidden}", ["ie 11"])
+			).toBe("a{overflow:hidden}");
 		});
 
 		it("declines the `place-*` pairs a target cannot read", () => {
@@ -4868,6 +4869,19 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(items)).toBe("a{place-items:center}");
 			expect(minify(self)).toBe("a{place-self:center end}");
 			expect(minify(content)).toBe("a{place-content:center end}");
+		});
+
+		it("writes `overflow`'s two-value form only where the target reads it", () => {
+			const two = "a{overflow-x:auto;overflow-y:hidden}";
+			// Chrome 68 is where the two-value form arrived.
+			expect(minifyFor(two, ["chrome 68"])).toBe("a{overflow:auto hidden}");
+			expect(minifyFor(two, ["chrome 67"])).toBe(two);
+			expect(minifyFor(two, ["ie 11"])).toBe(two);
+			expect(minify(two)).toBe("a{overflow:auto hidden}");
+			// Collapsing to one value is as old as the longhands, so it always runs.
+			const one = "a{overflow-x:auto;overflow-y:auto}";
+			expect(minifyFor(one, ["ie 11"])).toBe("a{overflow:auto}");
+			expect(minify(one)).toBe("a{overflow:auto}");
 		});
 
 		it.each([
