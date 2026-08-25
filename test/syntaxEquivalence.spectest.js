@@ -7,7 +7,10 @@
 // DOM oracle, held to that corpus's expected trees by html5lib.spectest.js.
 
 const path = require("path");
-const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
+const {
+	SourceProcessor: CssSourceProcessor,
+	readToken
+} = require("../lib/css/syntax");
 const {
 	BOOLEAN_ATTRIBUTES,
 	EMPTY_REMOVABLE_ATTRIBUTES,
@@ -34,6 +37,7 @@ const {
 	numericallyEqual
 } = require("./helpers/syntaxEquivalence");
 const {
+	WPT,
 	browserCorpus,
 	cssCorpus: wptCssCorpus,
 	cssDeclarations,
@@ -95,6 +99,21 @@ const minifyHtml = (source, options) =>
 	/** @type {{ code: string }} */ (
 		new HtmlSourceProcessor().process(source, { mode: "minify", ...options })
 	).code;
+
+/**
+ * @param {string} source HTML
+ * @returns {string} the same document, beautified
+ */
+const beautifyHtml = (source) =>
+	/** @type {{ code: string }} */ (
+		new HtmlSourceProcessor().process(source, { mode: "beautify" })
+	).code;
+
+/** @type {[string, (source: string) => string][]} both printing modes */
+const PRINT_MODES = [
+	["minify", (source) => minifyHtml(source)],
+	["beautify", beautifyHtml]
+];
 
 /**
  * @param {string} source a stylesheet
@@ -1021,6 +1040,8 @@ const whatMoved = (before, after) => {
 
 // The whole wpt corpus, with no engine: webpack's parser answers for the DOM,
 // which the tree-construction suite holds to this corpus's own expected trees.
+// Both print modes run — beautifying is where the round-trip fallback lives, so
+// the corpus is the only thing holding it to real documents.
 // One test per spec area rather than per document — 49k test names report
 // nothing a failing list does not, and the list shows every document at once.
 describe("wpt tree stability", () => {
@@ -1051,20 +1072,22 @@ describe("wpt tree stability", () => {
 	// nothing a failing list does not. Each area does its own parsing, so a slow
 	// one is named by its own timing rather than hidden in a corpus-wide pass.
 	for (const [group, files] of byGroup) {
-		it(`should build the same tree from ${group} and its minified form`, () => {
+		it(`should build the same tree from ${group} and its printed forms`, () => {
 			/** @type {{ name: string, why: string }[]} */
 			const differences = [];
 			for (const file of files) {
 				const source = readDocument(file);
 				if (source === null) continue;
-				const why = whatMoved(
-					domShapeOf(source),
-					domShapeOf(minifyHtml(source))
-				);
-				if (why === "") continue;
-				const name = nameOf(file);
-				diverging.add(name);
-				if (!FILED_WPT_TREE_DEFECTS.has(name)) differences.push({ name, why });
+				const before = domShapeOf(source);
+				for (const [mode, print] of PRINT_MODES) {
+					const why = whatMoved(before, domShapeOf(print(source)));
+					if (why === "") continue;
+					const name = nameOf(file);
+					diverging.add(name);
+					if (!FILED_WPT_TREE_DEFECTS.has(name)) {
+						differences.push({ name, why: `${mode} ${why}` });
+					}
+				}
 			}
 			expect(differences).toEqual([]);
 		}, 600000);
@@ -1075,5 +1098,69 @@ describe("wpt tree stability", () => {
 		expect(
 			[...FILED_WPT_TREE_DEFECTS.keys()].filter((name) => !diverging.has(name))
 		).toEqual([]);
+	});
+});
+
+// §serialization of css-syntax lists the token pairs that re-tokenize as
+// something else when written next to each other, so a minifier dropping the
+// whitespace between them has to leave a separator behind. wpt states that
+// table; this holds our minifier to it without an engine.
+describe("wpt css token adjacency", () => {
+	const table = path.resolve(
+		WPT,
+		"css/css-syntax/serialize-consecutive-tokens.html"
+	);
+
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its tokens, whitespace and comments dropped
+	 */
+	const significantTokens = (css) => {
+		/** @type {string[]} */
+		const out = [];
+		for (let pos = 0; ;) {
+			const token = readToken(
+				css,
+				pos,
+				/** @type {import("../lib/css/syntax").MutableToken} */ ({})
+			);
+			if (token === undefined) break;
+			pos = token.end;
+			const text = css.slice(token.start, token.end);
+			if (text.trim() === "" || text.startsWith("/*")) continue;
+			out.push(`${token.type}:${text}`);
+		}
+		return out.join(" ");
+	};
+
+	if (!hasCorpus()) {
+		it(NO_CORPUS, () => {
+			// No-op: the corpus is an optional git submodule.
+		});
+
+		return;
+	}
+
+	const pairs = [
+		...readDocument(table).matchAll(/testTokenPairs\("([^"]*)",\s*"([^"]*)"\)/g)
+	].map((match) => [match[1], match[2]]);
+
+	// The table is read out of a test file, so an extraction that silently found
+	// nothing would report green over no cases at all.
+	it("should read the table", () => {
+		expect(pairs.length).toBeGreaterThan(50);
+	});
+
+	it("should keep every listed pair apart once minified", () => {
+		/** @type {{ pair: string, minified: string }[]} */
+		const fused = [];
+		for (const [first, second] of pairs) {
+			const source = `a{b:${first} ${second}}`;
+			const minified = minifyCss(source);
+			if (significantTokens(minified) !== significantTokens(source)) {
+				fused.push({ pair: `${first} ${second}`, minified });
+			}
+		}
+		expect(fused).toEqual([]);
 	});
 });

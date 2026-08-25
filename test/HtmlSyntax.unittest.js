@@ -7839,4 +7839,54 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 			}).code
 		).toBe("<nobr><table><b><colgroup><nobr>");
 	});
+
+	// Harvested from wpt's `html/syntax/serializing-html-fragments`, which states
+	// the cases §13.3 serialization has to get right; the tree is what we hold
+	// them to, since our printer echoes the source rather than re-serializing.
+	describe("wpt serialization cases", () => {
+		it.each([
+			["a bare ampersand in an attribute", "<span><a b='&'></a></span>"],
+			["a no-break space in an attribute", "<span><a b='&nbsp;'></a></span>"],
+			["a quote in an attribute", "<span><a b='\"'></a></span>"],
+			["a less-than in an attribute", '<span><a b="<"></a></span>'],
+			["a greater-than in an attribute", '<span><a b=">"></a></span>'],
+			[
+				"an escaped javascript url",
+				'<span><a href="javascript:&quot;&lt;>&quot;"></a></span>'
+			],
+			[
+				"a namespaced attribute on svg",
+				'<span><svg xlink:href="a"></svg></span>'
+			],
+			[
+				"an xmlns attribute on svg",
+				'<span><svg xmlns:svg="test"></svg></span>'
+			],
+			// Raw-text and escapable-raw-text elements: the markup inside them is
+			// text, and printing it back must not let it become tags again.
+			["markup inside style", "<span><style><&></style></span>"],
+			["markup inside xmp", "<span><xmp><&></xmp></span>"],
+			["markup inside iframe", "<span><iframe><&></iframe></span>"],
+			["markup inside noembed", "<span><noembed><&></noembed></span>"],
+			["markup inside noframes", "<span><noframes><&></noframes></span>"],
+			["a comment", "<span><!--data--></span>"],
+			[
+				"nested elements",
+				"<span><a><b><c></c></b><d>e</d><f><g>h</g></f></a></span>"
+			],
+			["an unquoted attribute value", "<span b=c></span>"],
+			// Scripting is off in webpack, so `<noscript>` holds markup rather than
+			// text — wpt's escaping.html is the case that says so.
+			["markup inside noscript", "<span><noscript><&></noscript></span>"],
+			["unescaped noscript content", "<noscript>& <></noscript>"],
+			["escaped noscript content", "<noscript>&amp;&nbsp;&lt;&gt;</noscript>"],
+			["an element inside noscript", "<noscript><b>x</b></noscript>"],
+			[
+				"a link inside noscript in head",
+				"<head><noscript><link href=x></noscript>"
+			]
+		])("keeps %s", (_name, source) => {
+			expect(reparsed(source)).toBe(serializeHtmlTree(parseHtml(source)));
+		});
+	});
 });
