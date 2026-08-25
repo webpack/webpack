@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Keep a module library's development source map out of an `eval()` wrapper.
+Default a module library's development source map to cheap-module-source-map.
