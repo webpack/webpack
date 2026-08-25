@@ -1,6 +1,5 @@
-// The runtime interpolation this case is about is what the analyzable form replaces, so
-// the public path is reassigned — a reason to keep the runtime name that has nothing to
-// do with hashing. The value is the one `auto` computes, so nothing else moves.
+// Reassigned to keep the runtime name this case is about, for a reason unrelated to
+// hashing. The value is the one `auto` computes, so nothing else moves.
 __webpack_public_path__ = new URL("./", import.meta.url).href;
 
 import fs from "fs";
