@@ -10,19 +10,21 @@ module.exports = {
 	optimization: {
 		minimize: {
 			css: {
-				colors: false,
 				// `false` here would drop every comment; `"all"` is the level that
 				// makes none of them go, which is what leaves each label below.
 				comments: "all",
-				escapes: false,
-				functions: false,
-				lowercase: false,
-				mediaQueries: false,
-				numbers: false,
-				quotes: false,
-				rules: false,
-				selectors: false,
-				shorthands: false
+				lowercaseNames: false,
+				mergeLonghands: false,
+				mergeRules: false,
+				normalizeQuotes: false,
+				reduceFunctions: false,
+				removeDeadRules: false,
+				shortenColors: false,
+				shortenEscapes: false,
+				shortenMediaQueries: false,
+				shortenNumbers: false,
+				shortenSelectors: false,
+				shortenValues: false
 			}
 		},
 		// `"..."` keeps the default minimizer, which is what reads

@@ -4762,20 +4762,20 @@ describe("SourceProcessor — the per-transform switches", () => {
 	// booleans, so it has a describe of its own above.
 	it.each([
 		[
-			"booleanAttributes",
+			"collapseBooleanAttributes",
 			'<input disabled="disabled">',
 			"<input disabled>",
 			// `quotes` is still on, so the value it keeps goes bare.
 			"<input disabled=disabled>"
 		],
 		[
-			"enumeratedAttributes",
+			"normalizeEnumeratedAttributes",
 			'<input type="TEXT">',
 			"<input type=text>",
 			"<input type=TEXT>"
 		],
 		[
-			"listAttributes",
+			"normalizeListAttributes",
 			'<div class="  b   a ">x</div>',
 			'<div class="b a">x</div>',
 			'<div class="  b   a ">x</div>'
@@ -4793,32 +4793,41 @@ describe("SourceProcessor — the per-transform switches", () => {
 			'<div style="COLOR: red">x</div>'
 		],
 		[
-			"numericAttributes",
+			"normalizeNumericAttributes",
 			'<div tabindex=" 03 ">x</div>',
 			"<div tabindex=3>x</div>",
 			'<div tabindex=" 03 ">x</div>'
 		],
 		[
-			"optionalTags",
+			"removeOptionalTags",
 			"<ul><li>a<li>b</ul>",
 			"<ul><li>a<li>b</ul>",
 			"<ul><li>a</li><li>b</li></ul>"
 		],
 		[
-			"quotes",
+			"normalizeAttributeQuotes",
 			'<div data-x="plain">t</div>',
 			"<div data-x=plain>t</div>",
 			'<div data-x="plain">t</div>'
 		],
+		// An empty value written as the bare name is the `=""` going, which is the
+		// same decision.
 		[
-			"urlAttributes",
+			"normalizeAttributeQuotes (empty value)",
+			'<div class="">t</div>',
+			"<div class>t</div>",
+			'<div class="">t</div>'
+		],
+		[
+			"trimUrlAttributes",
 			'<a href=" /a ">t</a>',
 			"<a href=/a>t</a>",
 			'<a href=" /a ">t</a>'
 		]
 	])("%s", (name, html, on, off) => {
+		const key = name.replace(/ .*/, "");
 		expect(minify(html)).toBe(on);
-		expect(minify(html, { [name]: false })).toBe(off);
+		expect(minify(html, { [key]: false })).toBe(off);
 	});
 
 	// Turning one off leaves the rest alone, which is the whole point of naming
@@ -4826,7 +4835,7 @@ describe("SourceProcessor — the per-transform switches", () => {
 	it("leaves every other rewrite on", () => {
 		expect(
 			minify('<input disabled="disabled" tabindex=" 03 ">', {
-				booleanAttributes: false
+				collapseBooleanAttributes: false
 			})
 		).toBe("<input disabled=disabled tabindex=3>");
 	});
@@ -4843,7 +4852,7 @@ describe("SourceProcessor — the per-transform switches", () => {
 		expect(
 			new SourceProcessor().process(doc, {
 				mode: "minify",
-				transforms: { optionalTags: false }
+				transforms: { removeOptionalTags: false }
 			}).code
 		).toBe("<head><title>t</title></head><body><p>a</p></body></html>");
 	});

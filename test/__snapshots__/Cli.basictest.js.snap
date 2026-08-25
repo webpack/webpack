@@ -11089,19 +11089,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-colors": Object {
-    "configs": Array [
-      Object {
-        "description": "Write each color in the shortest spelling of the same value: \`#ffffff\` -> \`#fff\`, \`rgb(1 2 3)\` -> \`#010203\`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.css.colors",
-        "type": "boolean",
-      },
-    ],
-    "description": "Write each color in the shortest spelling of the same value: \`#ffffff\` -> \`#fff\`, \`rgb(1 2 3)\` -> \`#010203\`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-minimize-css-comments": Object {
     "configs": Array [
       Object {
@@ -11150,38 +11137,12 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-escapes": Object {
-    "configs": Array [
-      Object {
-        "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a \`url()\` as the byte it names. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.css.escapes",
-        "type": "boolean",
-      },
-    ],
-    "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a \`url()\` as the byte it names. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-css-functions": Object {
-    "configs": Array [
-      Object {
-        "description": "Fold a call into the shorter call that computes the same value: \`calc()\` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.css.functions",
-        "type": "boolean",
-      },
-    ],
-    "description": "Fold a call into the shorter call that computes the same value: \`calc()\` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-css-lowercase": Object {
+  "optimization-minimize-css-lowercase-names": Object {
     "configs": Array [
       Object {
         "description": "Print every name CSS matches ASCII case-insensitively in one case — a property, at-rule, function, \`url()\`, pseudo, media feature, media type, unit and a keyword value on a property whose grammar takes no name of the author's — so one document spells each the same way. On by default. A type selector, id, class, attribute, custom property, \`@keyframes\` / \`@container\` / custom-media name and \`@charset\` are left as authored whatever this says.",
         "multiple": false,
-        "path": "optimization.minimize.css.lowercase",
+        "path": "optimization.minimize.css.lowercaseNames",
         "type": "boolean",
       },
     ],
@@ -11189,42 +11150,68 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-media-queries": Object {
+  "optimization-minimize-css-merge-longhands": Object {
     "configs": Array [
       Object {
-        "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+        "description": "Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.css.mediaQueries",
+        "path": "optimization.minimize.css.mergeLonghands",
         "type": "boolean",
       },
     ],
-    "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+    "description": "Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-numbers": Object {
+  "optimization-minimize-css-merge-rules": Object {
     "configs": Array [
       Object {
-        "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a \`+\`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+        "description": "Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named \`@layer\` block a later sibling opens again is folded into the first. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.css.numbers",
+        "path": "optimization.minimize.css.mergeRules",
         "type": "boolean",
       },
     ],
-    "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a \`+\`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+    "description": "Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named \`@layer\` block a later sibling opens again is folded into the first. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-quotes": Object {
+  "optimization-minimize-css-normalize-quotes": Object {
     "configs": Array [
       Object {
         "description": "Normalize quoting: a string takes whichever quote needs fewer escapes, a \`url()\` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.css.quotes",
+        "path": "optimization.minimize.css.normalizeQuotes",
         "type": "boolean",
       },
     ],
     "description": "Normalize quoting: a string takes whichever quote needs fewer escapes, a \`url()\` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-reduce-functions": Object {
+    "configs": Array [
+      Object {
+        "description": "Compute a call into the shorter call naming the same value: \`calc()\` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.css.reduceFunctions",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compute a call into the shorter call naming the same value: \`calc()\` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-remove-dead-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
+        "multiple": false,
+        "path": "optimization.minimize.css.removeDeadRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11241,25 +11228,64 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-rules": Object {
+  "optimization-minimize-css-shorten-colors": Object {
     "configs": Array [
       Object {
-        "description": "Drop and merge whole rules and declarations: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, a rule an identical later sibling makes dead, adjacent rules that print the same block, and a named \`@layer\` block a later sibling opens again. On by default.",
+        "description": "Write each color in the shortest spelling of the same value: \`#ffffff\` -> \`#fff\`, \`rgb(1 2 3)\` -> \`#010203\`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.css.rules",
+        "path": "optimization.minimize.css.shortenColors",
         "type": "boolean",
       },
     ],
-    "description": "Drop and merge whole rules and declarations: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, a rule an identical later sibling makes dead, adjacent rules that print the same block, and a named \`@layer\` block a later sibling opens again. On by default.",
+    "description": "Write each color in the shortest spelling of the same value: \`#ffffff\` -> \`#fff\`, \`rgb(1 2 3)\` -> \`#010203\`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-selectors": Object {
+  "optimization-minimize-css-shorten-escapes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a \`url()\` as the byte it names. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.css.shortenEscapes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a \`url()\` as the byte it names. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-shorten-media-queries": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.css.shortenMediaQueries",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-shorten-numbers": Object {
+    "configs": Array [
+      Object {
+        "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a \`+\`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.css.shortenNumbers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a \`+\`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-shorten-selectors": Object {
     "configs": Array [
       Object {
         "description": "Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an \`An+B\` written the shortest way its microsyntax allows, and a \`from\` / \`100%\` keyframe selector written as the shorter of the pair. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.css.selectors",
+        "path": "optimization.minimize.css.shortenSelectors",
         "type": "boolean",
       },
     ],
@@ -11267,16 +11293,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-shorthands": Object {
+  "optimization-minimize-css-shorten-values": Object {
     "configs": Array [
       Object {
-        "description": "Write a value as the shorthand that already implies it: a \`{1,4}\` box or corner notation collapsed, a slot holding its own initial dropped, \`flex\` / \`font-weight\` / \`display\` / \`transition\` / \`<position>\` / \`<repeat-style>\` written the short way, and a family of longhands — with unrelated declarations between them — merged into the one shorthand that sets them. On by default.",
+        "description": "Write a value the shortest way its property's own grammar allows: a \`{1,4}\` box or corner notation collapsed, a slot holding its own initial dropped, and \`flex\` / \`font-weight\` / \`display\` / \`transition\` / \`<position>\` / \`<repeat-style>\` written the short way. On by default. Merging separate longhand declarations is \`mergeLonghands\`.",
         "multiple": false,
-        "path": "optimization.minimize.css.shorthands",
+        "path": "optimization.minimize.css.shortenValues",
         "type": "boolean",
       },
     ],
-    "description": "Write a value as the shorthand that already implies it: a \`{1,4}\` box or corner notation collapsed, a slot holding its own initial dropped, \`flex\` / \`font-weight\` / \`display\` / \`transition\` / \`<position>\` / \`<repeat-style>\` written the short way, and a family of longhands — with unrelated declarations between them — merged into the one shorthand that sets them. On by default.",
+    "description": "Write a value the shortest way its property's own grammar allows: a \`{1,4}\` box or corner notation collapsed, a slot holding its own initial dropped, and \`flex\` / \`font-weight\` / \`display\` / \`transition\` / \`<position>\` / \`<repeat-style>\` written the short way. On by default. Merging separate longhand declarations is \`mergeLonghands\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11309,12 +11335,12 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-html-boolean-attributes": Object {
+  "optimization-minimize-html-collapse-boolean-attributes": Object {
     "configs": Array [
       Object {
         "description": "Write a boolean attribute spelled with its own name (\`disabled=\\"disabled\\"\`) as the bare name the spec canonicalizes it to. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.html.booleanAttributes",
+        "path": "optimization.minimize.html.collapseBooleanAttributes",
         "type": "boolean",
       },
     ],
@@ -11381,32 +11407,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "optimization-minimize-html-enumerated-attributes": Object {
-    "configs": Array [
-      Object {
-        "description": "Fold an enumerated attribute's value to the keyword it names (\`type=\\"TEXT\\"\` -> \`type=text\`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.html.enumeratedAttributes",
-        "type": "boolean",
-      },
-    ],
-    "description": "Fold an enumerated attribute's value to the keyword it names (\`type=\\"TEXT\\"\` -> \`type=text\`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-html-list-attributes": Object {
-    "configs": Array [
-      Object {
-        "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
-        "multiple": false,
-        "path": "optimization.minimize.html.listAttributes",
-        "type": "boolean",
-      },
-    ],
-    "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-minimize-html-merge-styles": Object {
     "configs": Array [
       Object {
@@ -11472,42 +11472,55 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-html-numeric-attributes": Object {
-    "configs": Array [
-      Object {
-        "description": "Write an integer attribute (\`tabindex\`, \`colspan\`, \`width\`, …) the one way its own rules read it — leading whitespace, a \`+\` and leading zeros all go. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.html.numericAttributes",
-        "type": "boolean",
-      },
-    ],
-    "description": "Write an integer attribute (\`tabindex\`, \`colspan\`, \`width\`, …) the one way its own rules read it — leading whitespace, a \`+\` and leading zeros all go. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-html-optional-tags": Object {
-    "configs": Array [
-      Object {
-        "description": "Leave out a tag §13.1.2.4 lets the parser imply, other than the \`<html>\` / \`<head>\` / \`<body>\` shell, which \`removeImpliedTags\` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.",
-        "multiple": false,
-        "path": "optimization.minimize.html.optionalTags",
-        "type": "boolean",
-      },
-    ],
-    "description": "Leave out a tag §13.1.2.4 lets the parser imply, other than the \`<html>\` / \`<head>\` / \`<body>\` shell, which \`removeImpliedTags\` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-html-quotes": Object {
+  "optimization-minimize-html-normalize-attribute-quotes": Object {
     "configs": Array [
       Object {
         "description": "Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.",
         "multiple": false,
-        "path": "optimization.minimize.html.quotes",
+        "path": "optimization.minimize.html.normalizeAttributeQuotes",
         "type": "boolean",
       },
     ],
     "description": "Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-normalize-enumerated-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Fold an enumerated attribute's value to the keyword it names (\`type=\\"TEXT\\"\` -> \`type=text\`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.html.normalizeEnumeratedAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Fold an enumerated attribute's value to the keyword it names (\`type=\\"TEXT\\"\` -> \`type=text\`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-normalize-list-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+        "multiple": false,
+        "path": "optimization.minimize.html.normalizeListAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-normalize-numeric-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an integer attribute (\`tabindex\`, \`colspan\`, \`width\`, …) the one way its own rules read it — leading whitespace, a \`+\` and leading zeros all go. On by default.",
+        "multiple": false,
+        "path": "optimization.minimize.html.normalizeNumericAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an integer attribute (\`tabindex\`, \`colspan\`, \`width\`, …) the one way its own rules read it — leading whitespace, a \`+\` and leading zeros all go. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11560,6 +11573,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-html-remove-optional-tags": Object {
+    "configs": Array [
+      Object {
+        "description": "Leave out a tag §13.1.2.4 lets the parser imply, other than the \`<html>\` / \`<head>\` / \`<body>\` shell, which \`removeImpliedTags\` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.",
+        "multiple": false,
+        "path": "optimization.minimize.html.removeOptionalTags",
+        "type": "boolean",
+      },
+    ],
+    "description": "Leave out a tag §13.1.2.4 lets the parser imply, other than the \`<html>\` / \`<head>\` / \`<body>\` shell, which \`removeImpliedTags\` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-html-remove-redundant-attributes": Object {
     "configs": Array [
       Object {
@@ -11609,12 +11635,12 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-html-url-attributes": Object {
+  "optimization-minimize-html-trim-url-attributes": Object {
     "configs": Array [
       Object {
         "description": "Trim the whitespace around a URL attribute's value (\`href\`, \`src\`, \`action\`, …), which the URL parser strips before resolving it. On by default.",
         "multiple": false,
-        "path": "optimization.minimize.html.urlAttributes",
+        "path": "optimization.minimize.html.trimUrlAttributes",
         "type": "boolean",
       },
     ],

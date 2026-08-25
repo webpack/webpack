@@ -12,18 +12,18 @@ module.exports = {
 	optimization: {
 		minimize: {
 			html: {
-				booleanAttributes: false,
+				collapseBooleanAttributes: false,
 				// `false` here would drop every comment; `"all"` is the level that
 				// makes none of them go.
 				comments: "all",
-				enumeratedAttributes: false,
-				listAttributes: false,
 				minifyJson: false,
 				minifyStyles: false,
-				numericAttributes: false,
-				optionalTags: false,
-				quotes: false,
-				urlAttributes: false
+				normalizeAttributeQuotes: false,
+				normalizeEnumeratedAttributes: false,
+				normalizeListAttributes: false,
+				normalizeNumericAttributes: false,
+				removeOptionalTags: false,
+				trimUrlAttributes: false
 			}
 		},
 		minimizer: ["..."]

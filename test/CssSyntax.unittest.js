@@ -2233,26 +2233,43 @@ describe("CssSyntax — the per-transform switches", () => {
 	// making the rewrite unconditional again. `comments` is not one of the
 	// booleans, so it has a describe of its own below.
 	it.each([
-		["colors", "a{color:#ffffff}", "a{color:#fff}", "a{color:#ffffff}"],
-		["escapes", "a{color:r\\065 d}", "a{color:red}", "a{color:r\\065 d}"],
+		["shortenColors", "a{color:#ffffff}", "a{color:#fff}", "a{color:#ffffff}"],
 		[
-			"functions",
+			"shortenEscapes",
+			"a{color:r\\065 d}",
+			"a{color:red}",
+			"a{color:r\\065 d}"
+		],
+		[
+			"reduceFunctions",
 			"a{width:calc(1px + 2px)}",
 			"a{width:3px}",
 			"a{width:calc(1px + 2px)}"
 		],
-		["lowercase", "A{COLOR:red}", "A{color:red}", "A{COLOR:red}"],
+		["lowercaseNames", "A{COLOR:red}", "A{color:red}", "A{COLOR:red}"],
 		[
-			"mediaQueries",
+			"shortenMediaQueries",
 			"@media (min-width:1px){a{b:c}}",
 			"@media (width>=1px){a{b:c}}",
 			"@media (min-width:1px){a{b:c}}"
 		],
-		["numbers", "a{width:0.50px}", "a{width:.5px}", "a{width:0.50px}"],
-		["quotes", "a{content:'x'}", 'a{content:"x"}', "a{content:'x'}"],
-		["rules", "a{b:1;b:1}", "a{b:1}", "a{b:1;b:1}"],
-		["selectors", "b,a,b{c:1}", "a,b{c:1}", "b,a,b{c:1}"],
-		["shorthands", "a{margin:1px 1px}", "a{margin:1px}", "a{margin:1px 1px}"]
+		["shortenNumbers", "a{width:0.50px}", "a{width:.5px}", "a{width:0.50px}"],
+		["normalizeQuotes", "a{content:'x'}", 'a{content:"x"}', "a{content:'x'}"],
+		["removeDeadRules", "a{b:1;b:1}", "a{b:1}", "a{b:1;b:1}"],
+		["mergeRules", "a{x:1}b{x:1}", "a,b{x:1}", "a{x:1}b{x:1}"],
+		["shortenSelectors", "b,a,b{c:1}", "a,b{c:1}", "b,a,b{c:1}"],
+		[
+			"shortenValues",
+			"a{margin:1px 1px}",
+			"a{margin:1px}",
+			"a{margin:1px 1px}"
+		],
+		[
+			"mergeLonghands",
+			"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+			"a{margin:1px 2px}",
+			"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}"
+		]
 	])("%s", (name, css, on, off) => {
 		expect(min(css)).toBe(on);
 		expect(min(css, { [name]: false })).toBe(off);
@@ -2264,12 +2281,15 @@ describe("CssSyntax — the per-transform switches", () => {
 	it.each([
 		[undefined, "a{background:url(data:image/svg+xml,<svg></svg>)}"],
 		[
-			{ escapes: false },
+			{ shortenEscapes: false },
 			"a{background:url(data:image/svg+xml,%3Csvg%3E%3C/svg%3E)}"
 		],
-		[{ quotes: false }, 'a{background:url("data:image/svg+xml,<svg></svg>")}'],
 		[
-			{ escapes: false, quotes: false },
+			{ normalizeQuotes: false },
+			'a{background:url("data:image/svg+xml,<svg></svg>")}'
+		],
+		[
+			{ shortenEscapes: false, normalizeQuotes: false },
 			'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}'
 		]
 	])("parts a url()'s escapes from its quotes: %s", (transforms, expected) => {
@@ -2307,11 +2327,11 @@ describe("CssSyntax — the per-transform switches", () => {
 			const rendered =
 				"a{background:url(data:image/svg+xml,<svg\\ id=r></svg>)}";
 			expect(render()).toBe(rendered);
-			expect(render({ escapes: false })).toBe(rendered);
+			expect(render({ shortenEscapes: false })).toBe(rendered);
 		});
 
 		it("keeps the quotes round what it hands back with quotes off", () => {
-			expect(render({ quotes: false })).toBe(
+			expect(render({ normalizeQuotes: false })).toBe(
 				'a{background:url("data:image/svg+xml,<svg id=r></svg>")}'
 			);
 		});
@@ -2321,7 +2341,7 @@ describe("CssSyntax — the per-transform switches", () => {
 			expect(min(css)).toBe(
 				"a{background:url(data:image/svg+xml,<svg></svg>)}"
 			);
-			expect(min(css, { escapes: false })).toBe(
+			expect(min(css, { shortenEscapes: false })).toBe(
 				"a{background:url(data:image/svg+xml,%3Csvg%3E%3C/svg%3E)}"
 			);
 		});
@@ -2387,9 +2407,9 @@ describe("CssSyntax — the per-transform switches", () => {
 	// Turning one off leaves the rest alone, which is the whole point of naming
 	// them one at a time.
 	it("leaves every other rewrite on", () => {
-		expect(min("a{color:#ffffff;margin:1px 1px}", { colors: false })).toBe(
-			"a{color:#ffffff;margin:1px}"
-		);
+		expect(
+			min("a{color:#ffffff;margin:1px 1px}", { shortenColors: false })
+		).toBe("a{color:#ffffff;margin:1px}");
 	});
 
 	// A walk that does not print holds every rewrite on, so no visitor pass
