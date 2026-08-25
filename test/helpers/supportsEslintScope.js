@@ -3,9 +3,8 @@
 const nodeVersion = process.versions.node.split(".").map(Number);
 
 module.exports = function supportsEslintScope() {
-	// eslint-scope 9's own `engines.node`. It parses as ES2018, so an old Node
-	// loads it and only fails once it runs — keep this in step with the
-	// dependency rather than with the syntax it happens to use today.
+	// eslint-scope 9's own `engines.node` — it parses as ES2018, so an older
+	// node loads it and only fails once it runs
 	if (nodeVersion[0] >= 24) {
 		return true;
 	} else if (nodeVersion[0] === 22 && nodeVersion[1] >= 13) {

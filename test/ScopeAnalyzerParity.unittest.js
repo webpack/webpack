@@ -4,21 +4,8 @@
 
 "use strict";
 
-/*
- * webpack analysed scopes with eslint-scope until lib/javascript/ScopeAnalyzer.js
- * replaced it. This file keeps eslint-scope as a reference implementation: every
- * case is analysed by both over the *same* AST, and the two must agree on the
- * scope tree, on what each scope binds, and on which binding every identifier
- * resolves to. A change to the analyser that drifts from the reference fails
- * here rather than in a user's bundle.
- *
- * ScopeAnalyzer.unittest.js states the analyser's own contract with hand-written
- * expectations; this file states that the contract is still eslint-scope's.
- *
- * The reference needs a newer Node than webpack itself supports, so the suite
- * skips below that — the built-in analyser is covered on every version by
- * ScopeAnalyzer.unittest.js, which depends on nothing.
- */
+// Holds lib/javascript/ScopeAnalyzer.js to eslint-scope, the analyser it
+// replaced, over one shared AST. Skips where the reference cannot run.
 
 const fs = require("fs");
 const path = require("path");
@@ -30,16 +17,13 @@ const supportsEslintScope = require("./helpers/supportsEslintScope");
 /** @import { AnalyzeOptions, GlobalScope } from "eslint-scope" */
 
 /**
- * The only thing this file reads of a node is its source offset, so the
- * narrowest shape either analyser emits is enough. It has to be this narrow:
- * eslint-scope types a reference's identifier as `Identifier | JSXIdentifier`,
- * and a JSX node is not an estree `Node`.
+ * Only ever read for its offset, and narrow because eslint-scope types an
+ * identifier as `Identifier | JSXIdentifier`, which is no estree `Node`.
  * @typedef {{ type: string }} AnyNode
  */
 
 /**
- * Each analyser builds its own classes, but every field this file reads exists
- * on both. These typedefs are that shared surface.
+ * The surface shared by the classes each analyser builds.
  * @typedef {object} AnyScope
  * @property {string} type what opened the scope
  * @property {AnyNode} block the node that opened it
@@ -62,20 +46,9 @@ const supportsEslintScope = require("./helpers/supportsEslintScope");
  */
 
 /**
- * The options webpack passed eslint-scope before the replacement, so the
- * reference is the analyser webpack actually shipped rather than eslint's
- * defaults. Three of them matter here:
- *
- * - `sourceType` is always `module`: the built-in analyser analyses generated
- *   module sources and so has no script mode, whatever a case parsed as.
- * - `optimistic` closes a dynamic scope statically, so a `with` body resolves
- *   against the enclosing scopes instead of dropping every name.
- * - `ignoreEval` stops a direct `eval()` call from making its enclosing scopes
- *   dynamic, which under eslint's defaults leaves the whole chain unresolved.
- *
- * `fallback` is this file's own, and covers nothing today: it keeps the two
- * agreeing on syntax eslint-scope's visitor keys have not caught up with,
- * which the built-in analyser walks rather than drops.
+ * What webpack passed eslint-scope before the replacement: under eslint's own
+ * defaults a `with` body (`optimistic`) and a direct `eval` (`ignoreEval`)
+ * resolve nothing. `fallback` covers syntax the visitor keys have not reached.
  * @type {AnalyzeOptions}
  */
 const REFERENCE_OPTIONS = {
@@ -94,8 +67,8 @@ const REFERENCE_OPTIONS = {
 const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
 
 /**
- * Identifies a binding by where it was declared. Both analyses run over one
- * AST, so a node offset names the same node on either side.
+ * Identifies a binding by where it was declared — one shared AST, so an offset
+ * names the same node on either side.
  * @param {AnyVariable} variable a binding
  * @returns {string} a key equal for the same binding in both analyses
  */
@@ -103,10 +76,8 @@ const bindingKey = (variable) =>
 	`${variable.scope.type}@${startOf(variable.scope.block)}:${variable.name}`;
 
 /**
- * A scope that binds nothing changes no resolution — only the tree's shape and
- * a reference's `from`. The built-in analyser exploits that and skips one for a
- * block or a switch that declares nothing, where eslint-scope always opens one,
- * so both trees are pruned of them before they are compared.
+ * Such a scope changes no resolution, and the built-in analyser skips opening
+ * one where eslint-scope always does — so both trees are pruned of them.
  * @param {AnyScope} scope a scope
  * @returns {boolean} true when it can be dropped without changing resolution
  */
@@ -143,9 +114,7 @@ const normalizeScope = (scope) => {
 };
 
 /**
- * Every identifier occurrence that was read, against the binding it resolved
- * to. This is the part of the analysis webpack acts on, and it is insensitive
- * to the tree's shape and to walk order.
+ * What webpack acts on, and insensitive to tree shape and walk order.
  * @param {AnyScope} root the outermost scope
  * @param {AnyReference[]} free the references that resolved to no binding
  * @returns {Record<number, string[]>} offset of each identifier read, to what it resolved to
@@ -193,8 +162,7 @@ const resolutions = (root, free) => {
  * @returns {EXPECTED_ANY} the two analyses, normalized
  */
 const analyzeBoth = (code, sourceType) => {
-	// required here rather than at the top: on a Node the suite skips, loading
-	// the reference is what would throw
+	// lazy: on a node the suite skips, loading the reference is what throws
 	const eslintScope = require("eslint-scope");
 
 	// eslint-scope reads `range` to tell a function's parameter list from its
@@ -203,8 +171,7 @@ const analyzeBoth = (code, sourceType) => {
 		JavascriptParser._parse(code, { sourceType, ranges: true }).ast
 	);
 
-	// webpack reads references back from the module scope alone; the reference
-	// records them everywhere, so ask for the same
+	// records references everywhere, as the reference does
 	const ours = analyzeScope(ast, true);
 	const theirs = /** @type {GlobalScope} */ (
 		eslintScope.analyze(ast, REFERENCE_OPTIONS).globalScope
@@ -238,9 +205,8 @@ const expectAgreement = (code, sourceType = "module") => {
 };
 
 /**
- * A case is source code, or source code plus the way it has to be parsed —
- * `with`, a sloppy-mode function declaration and a redeclared function are
- * script-only syntax, and are still analysed as a module by both sides.
+ * Source code, or source code plus how to parse it — script-only syntax is
+ * still analysed as a module by both sides.
  * @typedef {string | [string, "module" | "script"]} Case
  */
 
@@ -510,8 +476,7 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 		const root = path.resolve(__dirname, "..");
 
 		for (const dir of ["lib", "hot", "tooling"]) {
-			// one case per directory: a file each would be thousands of them, and
-			// the offending file's path is in the failure either way
+			// one case per directory; the failing path is in the diff either way
 			it(`${dir}/`, () => {
 				const files = collect(path.join(root, dir), []);
 
