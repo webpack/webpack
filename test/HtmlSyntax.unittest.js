@@ -8256,11 +8256,11 @@ describe("SourceProcessor — reusing work across a print", () => {
 		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
 	it("minifies a repeated style attribute to the same declarations", () => {
-		expect(
-			minify(
-				'<p style="color: #ff0000; color: #ff0000"><b style="color: #ff0000">'
-			)
-		).toBe("<p style=color:red><b style=color:red></b>");
+		// The same raw value twice, which is what the memo is keyed on — a value
+		// that merely minifies to the same text is a different entry.
+		expect(minify('<p style="color: #ff0000"><b style="color: #ff0000">')).toBe(
+			"<p style=color:red><b style=color:red></b>"
+		);
 	});
 
 	it("does not carry a style attribute's result into a print with other options", () => {
