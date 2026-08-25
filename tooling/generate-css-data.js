@@ -3004,7 +3004,7 @@ const countMapLiteral = (entries) =>
 // them repeat — 24 constructs share Gecko's one window alone.
 /** @type {Map<string, number>} */
 const prefixWindowIndex = new Map();
-/** @type {string[]} */
+/** @type {[string, number, number][][]} */
 const prefixWindows = [];
 
 /**
@@ -3012,14 +3012,14 @@ const prefixWindows = [];
  * @returns {number} its index in the pool
  */
 const poolPrefixWindows = (browsers) => {
-	const body = browsers
-		.map(([browser, from, to]) => `["${browser}", ${from}, ${to}]`)
-		.join(", ");
-	let at = prefixWindowIndex.get(body);
+	const key = browsers
+		.map(([browser, from, to]) => `${browser},${from},${to}`)
+		.join(" ");
+	let at = prefixWindowIndex.get(key);
 	if (at === undefined) {
 		at = prefixWindows.length;
-		prefixWindows.push(`[${body}]`);
-		prefixWindowIndex.set(body, at);
+		prefixWindows.push(browsers);
+		prefixWindowIndex.set(key, at);
 	}
 	return at;
 };
@@ -4043,6 +4043,28 @@ const prefixBrowsers = [
 	)
 ].sort();
 
+// The version a browser that never shipped a construct is given, and the one a
+// spelling still prefixed today is unprefixed at. Finite and a plain number, so
+// the two version tables hold numbers alone — `Infinity` prints as an identifier
+// and costs the emitted file six times its lines. Far past any real version
+// (`major * 100000 + minor` tops out around 15 million) and past the one
+// `_encodeBrowserVersion` gives Safari TP, which has to compare as the newest
+// version that exists rather than as one that never arrives.
+const NEVER = 1e15;
+
+// How `NEVER` is written into the emitted tables: the same value, twelve
+// characters shorter than the digits it stands for, and still a plain number
+// literal — which is what lets prettier pack the tables many to a line.
+const NEVER_LITERAL = "1e15";
+
+/**
+ * One version as the emitted tables spell it.
+ * @param {number} version an encoded version
+ * @returns {string} its literal
+ */
+const versionLiteral = (version) =>
+	version === NEVER ? NEVER_LITERAL : String(version);
+
 // A BCD version to one comparable integer `major * 100000 + minor`, so the
 // runtime orders versions with a plain `<` and never a float compare (`15.10`
 // must sort above `15.4`). `true` (since forever) is 0; `≤n` is that n; a
@@ -4106,7 +4128,7 @@ const isPlainSupport = (entry) =>
 /**
  * When each browser first read every one of a feature's constructs, as
  * `[browserslistName, since][]`. Only a plain arrival counts, and a browser BCD
- * never gives one carries `Infinity`, which no version satisfies.
+ * never gives one carries `NEVER`, which no version satisfies.
  * @param {string[]} paths BCD paths that all have to have arrived
  * @returns {[string, number][]} the versions, by browserslist name
  */
@@ -4129,7 +4151,7 @@ const collectSupportedFrom = (paths) => {
 			const added = plain ? encodeVersion(plain.version_added) : null;
 			for (const name of names) {
 				const before = since.get(name);
-				const version = added === null ? Infinity : added;
+				const version = added === null ? NEVER : added;
 				if (before === undefined || version > before) since.set(name, version);
 			}
 		}
@@ -4216,7 +4238,7 @@ const ALTERNATIVE_DECORATION = /^:{1,2}|\(\)$/g;
 // One construct's vendor spellings as `spelling -> [browserslistName, from,
 // to][]`: a target browser at version V needs the spelling exactly when
 // `from <= V < to`. A browser whose unprefixed form never arrived carries
-// `Infinity`, so it always needs it (Safari and `-webkit-user-select`); one
+// `NEVER`, so it always needs it (Safari and `-webkit-user-select`); one
 // whose windows are all empty is dropped. A spelling is the name with the
 // engine's prefix on it, or — where `alternatives` is on, which is the axes
 // whose legacy spelling is a rename rather than a prefix — the vendor name BCD
@@ -4250,7 +4272,7 @@ const collectPrefixes = (compat, name, alternatives) => {
 				unprefixedFrom = added;
 			}
 		}
-		const target = unprefixedFrom === null ? Infinity : unprefixedFrom;
+		const target = unprefixedFrom === null ? NEVER : unprefixedFrom;
 		// Every spelling that covers this browser's gap, before deciding which of
 		// them it may be told about.
 		/** @type {[BcdSupport, string, number][]} */
@@ -4449,19 +4471,19 @@ const engineVersionLine = (bcdName, baseName, from) => {
 	// so it bounds every base version at or below it: the answer for `b` is the
 	// earliest derived release seen against any base version from `b` on.
 	const points = [...earliest].sort((a, b) => a[0] - b[0]);
-	let running = Infinity;
+	let running = NEVER;
 	for (let i = points.length - 1; i >= 0; i--) {
 		running = Math.min(running, points[i][1]);
 		points[i][1] = running;
 	}
 	return (version) => {
-		if (version === Infinity) return Infinity;
+		if (version >= NEVER) return NEVER;
 		for (const [base, derived] of points) {
 			if (base >= version) {
 				return Math.max(derived, /** @type {number} */ (floor));
 			}
 		}
-		return Infinity;
+		return NEVER;
 	};
 };
 
@@ -4870,7 +4892,7 @@ const PREFIX_SUPPLEMENT = new Map([
 					["edge", "12", "19"]
 				]
 			],
-			["-moz-text-size-adjust", [["firefox", "14", Infinity]]]
+			["-moz-text-size-adjust", [["firefox", "14", NEVER]]]
 		]
 	],
 	// WebKit named the ruby side and the vertical orientation after the box rather
@@ -4975,7 +4997,7 @@ const applyPrefixSupplement = (table) => {
 			}
 			for (const [browser, from, to] of windows) {
 				const start = /** @type {number} */ (encodeVersion(from));
-				// `Infinity` where the engine still has no unprefixed spelling.
+				// `NEVER` where the engine still has no unprefixed spelling.
 				const end =
 					typeof to === "number"
 						? to
@@ -5421,6 +5443,22 @@ const collectData = async () => {
 	const prefixedSelectorsText = prefixLiteral(prefixedSelectors);
 	const prefixedAtRulesText = prefixLiteral(prefixedAtRules);
 	const prefixedValuesText = prefixedValueLiteral(prefixedValues);
+	// The window pool is complete once every table above has been written, so the
+	// lists flatten here: `browser, from, to` end to end, the browser named by its
+	// place in `SUPPORT_BROWSERS` rather than by 710 copies of its name.
+	/** @type {number[]} */
+	const windowTriples = [];
+	const windowStarts = [0];
+	for (const list of prefixWindows) {
+		for (const [browser, from, to] of list) {
+			const slot = pooled.browsers.indexOf(browser);
+			if (slot === -1) {
+				throw new Error(`no support profile covers \`${browser}\``);
+			}
+			windowTriples.push(slot, from, to);
+		}
+		windowStarts.push(windowTriples.length);
+	}
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
 		.filter(([, , , , , stepped]) => stepped)
 		.map(([name]) => name);
@@ -5985,15 +6023,19 @@ ${colorNames
 ]);
 
 // Prefixed constructs the minifier reads back, one table per axis, as \`name ->
-// [prefix, [browserslistBrowser, prefixedFrom, unprefixedFrom][]][]\`. Versions
-// are \`major * 100000 + minor\`; a target browser at version V needs the prefix
-// when \`prefixedFrom <= V < unprefixedFrom\` (\`Infinity\` = never unprefixed).
-// Non-standard-only constructs are absent.
-// Each \`[browser, from, to]\` window list a prefixed spelling reads: a target at
-// version V needs the spelling when some window of it has \`from <= V < to\`. Two
-// thirds of the lists are shared, so they are pooled and named by index.
-/** @type {[string, number, number][][]} */
-const PREFIX_WINDOWS = [${prefixWindows.join(", ")}];
+// [prefix, windowList][]\`. Versions are \`major * 100000 + minor\`; a target
+// browser at version V needs the prefix when \`prefixedFrom <= V < unprefixedFrom\`
+// (\`NEVER\` = never unprefixed). Non-standard-only constructs are absent.
+// Every window list laid end to end as \`browserSlot, prefixedFrom,
+// unprefixedFrom\` triples — the slot is the browser's place in
+// \`SUPPORT_BROWSERS\`, so no name is restated. A spelling names its list by
+// index, and two thirds of the lists are shared.
+const PREFIX_WINDOWS = new Float64Array([${windowTriples
+		.map(versionLiteral)
+		.join(", ")}]);
+
+// Where each window list begins; the entry after it is where it ends.
+const PREFIX_WINDOW_STARTS = new Int32Array([${windowStarts.join(", ")}]);
 
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_PROPERTIES = ${prefixedPropertiesText};
@@ -6004,16 +6046,25 @@ const PREFIXED_SELECTORS = ${prefixedSelectorsText};
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_AT_RULES = ${prefixedAtRulesText};
 
+// The version a browser that never shipped a construct is given below, and the
+// one a spelling still prefixed today is unprefixed at. Finite and a plain
+// number, so both version tables hold numbers alone; far past any real version,
+// and past the one Safari TP is read as.
+const NEVER = ${NEVER_LITERAL};
+
 // The browsers every support profile below covers, in the order it states them.
 // A selection has an ability when every browser in it is named here and at or
 // past the version its profile row gives.
 /** @type {string[]} */
 const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 
-// The versions themselves, one row per distinct profile: a construct names the
-// row it reads rather than carrying its own copy of it.
-/** @type {number[][]} */
-const SUPPORT_PROFILES = [${pooled.profiles.map((row) => `[${row.join(", ")}]`).join(", ")}];
+// The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
+// one row per distinct profile: a construct names the row it reads rather than
+// carrying its own copy of it. \`NEVER\` is a browser that never shipped it.
+const SUPPORT_PROFILES = new Float64Array([${pooled.profiles
+		.flat()
+		.map(versionLiteral)
+		.join(", ")}]);
 
 /** @type {Map<string, number>} */
 const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
@@ -6048,14 +6099,6 @@ ${prefixSpellingKeywords
 	)
 	.join(",\n")}
 ]);
-
-// The browserslist names the three tables above carry windows for. One they do
-// not name is skipped, so prefixes are added and dropped for the rest of the
-// selection alone; a selection of only those turns prefixing off entirely.
-/** @type {Set<string>} */
-const PREFIX_BROWSERS = new Set([${prefixBrowsers
-		.map((browser) => `"${browser}"`)
-		.join(", ")}]);
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
@@ -6092,7 +6135,7 @@ module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
-module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
+module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
@@ -6101,7 +6144,7 @@ module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
 module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
 module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
-module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;\nmodule.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;
+module.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
