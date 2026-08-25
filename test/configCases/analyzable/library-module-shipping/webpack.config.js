@@ -93,13 +93,11 @@ module.exports = [
 		chunkFilename: "[name].mjs",
 		devtool: "source-map"
 	}),
-	// The `mode: "development"` default is `eval`. A chunk `import()` needs no
-	// `import.meta`, so it still bakes; the url forms cannot and keep the runtime
-	// shape. Documented, not desired.
+	// No devtool set: a module library takes the one default that keeps the module
+	// body out of an eval wrapper, so the url forms bake here too.
 	base(6, {
 		libraryType: "module",
 		mode: "development",
-		chunkFilename: "[name].mjs",
-		urlFormsBake: false
+		chunkFilename: "[name].mjs"
 	})
 ];
