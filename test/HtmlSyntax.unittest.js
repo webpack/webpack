@@ -8293,6 +8293,32 @@ describe("SourceProcessor — reusing work across a print", () => {
 		expect(deepestTagName("<body><MY-WIDGET>")).toBe("my-widget");
 	});
 
+	it("reads back every name of a document that fills the memo many times over", () => {
+		// Far more distinct unknown names than the memo has slots, so each slot is
+		// written many times and every one of them has to be dropped before the
+		// next parse — the path a document of custom elements takes.
+		let markup = "<body>";
+		for (let i = 0; i < 20000; i++) {
+			markup += `<x-el${i} data-k${i}=1></x-el${i}>`;
+		}
+		const first = parseHtmlRefs(markup);
+		const names = [];
+		const walk = (node) => {
+			for (const child of A.children(node)) {
+				if (A.type(child) === NodeType.Element) {
+					names.push(A.tagName(child));
+					walk(child);
+				}
+			}
+		};
+		walk(first);
+		expect(names).toHaveLength(20003);
+		expect(names[3]).toBe("x-el0");
+		expect(names[names.length - 1]).toBe("x-el19999");
+		// A second parse must not be handed anything the first left in a slot.
+		expect(deepestTagName("<body><my-widget>")).toBe("my-widget");
+	});
+
 	it("hands out one shared string for a known name", () => {
 		// What lets the memo keep a known name across parses: the entry is this
 		// constant, not a slice of the document that asked for it.
