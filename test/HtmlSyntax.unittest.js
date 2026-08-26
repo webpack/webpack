@@ -4839,6 +4839,29 @@ describe("SourceProcessor — the per-transform switches", () => {
 		expect(minify("<div>a</div><!-- c -->", undefined)).toBe("<div>a</div>");
 	});
 
+	// A table group the parser inserted has an end tag to print once the switch
+	// is off, so its start tag has to print with it — the pair, or neither.
+	it.each([
+		["<table><tr><td>a</td></tr></table>", "<table><tr><td>a</table>"],
+		["<table><col></table>", "<table><col></table>"],
+		[
+			"<table><tbody><tr><td>a</td></tr></tbody></table>",
+			"<table><tr><td>a</table>"
+		],
+		["<table><colgroup><col></colgroup></table>", "<table><col></table>"]
+	])("keeps a parser-inserted table group balanced: %s", (doc, on) => {
+		expect(new SourceProcessor().process(doc, { mode: "minify" }).code).toBe(
+			on
+		);
+		const off = new SourceProcessor().process(doc, {
+			mode: "minify",
+			transforms: { removeOptionalTags: false }
+		}).code;
+		for (const name of ["tbody", "colgroup"]) {
+			expect(off.includes(`<${name}>`)).toBe(off.includes(`</${name}>`));
+		}
+	});
+
 	// `removeImpliedTags` keeps the shell to itself, so the two do not overlap.
 	it("leaves the shell to removeImpliedTags", () => {
 		const doc =

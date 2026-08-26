@@ -33,7 +33,7 @@ Array [
   "/*! convert-values: should not round by default */.t24{right:6.66667px}",
   "/*! convert-values: should drop the leading zero of an opacity */.t25{opacity:.0625}",
   "/*! normalize-whitespace: should trim whitespace from nested functions */.t26{width:calc(10px - (100px/var(--test)))}",
-  "/*! normalize-whitespace: should trim whitespace from nested functions (uppercase) */.t27{width:calc(10px - (100px/var(--test)))}",
+  "/*! normalize-whitespace: should trim whitespace from nested functions (uppercase) */.t27{width:CALC(10px - (100px/var(--test)))}",
   "/*! normalize-whitespace: should trim whitespace from css variables */.t28{width:var(--foo,20px)}",
   "/*! normalize-whitespace: should trim whitespace from env variables */.t29{width:env(--foo,20px)}",
   "/*! normalize-whitespace: should preserve space in custom property */.t30{--prop:}",

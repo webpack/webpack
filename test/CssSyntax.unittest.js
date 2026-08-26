@@ -2105,6 +2105,43 @@ describe("CssSyntax — minify transforms, in-process", () => {
 				expect(min(css)).toBe(css);
 			}
 		);
+
+		// Until its substitution resolves the engine keeps the value as the tokens
+		// it was written as, so a folded name there is a value the CSSOM never
+		// reports — and two spellings of one call stop being one declaration.
+		it.each([
+			["a function", "a{width:CALC(1PX + var(--x))}"],
+			["the substitution itself", "a{color:VAR(--x)}"],
+			["a url token", "a{background:URL(A.PNG) var(--x)}"],
+			["a canonical spelling", "a{transform:TRANSLATEY(var(--x))}"],
+			["an env()", "a{color:ENV(safe-area-inset-top)}"]
+		])("keeps %s as written inside a substituted value", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
+
+		it("still folds a sibling declaration carrying no substitution", () => {
+			expect(min("a{color:VAR(--x);display:GRID}")).toBe(
+				"a{color:VAR(--x);display:grid}"
+			);
+		});
+
+		// An `@font-feature-values` sub-rule names feature values, which are
+		// `<custom-ident>`s: folding one makes two distinct entries collide.
+		it("keeps a font feature value name case-sensitive", () => {
+			expect(
+				min(
+					"@font-feature-values fancy{@styleset{MULTI-def2:2 6;multi-def2:3 4 5}}"
+				)
+			).toBe(
+				"@font-feature-values fancy{@styleset{MULTI-def2:2 6;multi-def2:3 4 5}}"
+			);
+		});
+
+		it("still folds the at-rules around a feature value, and the rules after", () => {
+			expect(
+				min("@FONT-FEATURE-VALUES fancy{@STYLESET{Nice-Name:1}}a{COLOR:RED}")
+			).toBe("@font-feature-values fancy{@styleset{Nice-Name:1}}a{color:red}");
+		});
 	});
 
 	it("rewrites a `flex` value to its keyword spelling", () => {
@@ -2273,6 +2310,22 @@ describe("CssSyntax — the per-transform switches", () => {
 			"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
 			"a{margin:1px 2px}",
 			"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}"
+		],
+		// A shorthand the longhands after it fold into is the same rewrite read
+		// from the other end, and answers to the same switch.
+		[
+			"mergeLonghands",
+			"a{margin:1px;margin-top:2px}",
+			"a{margin:2px 1px 1px}",
+			"a{margin:1px;margin-top:2px}"
+		],
+		// Taking the `calc()` off a term that means the same bare is the last step
+		// of the fold, not a separate one.
+		[
+			"reduceFunctions",
+			"a{width:calc(5px)}",
+			"a{width:5px}",
+			"a{width:calc(5px)}"
 		]
 	])("%s", (name, css, on, off) => {
 		expect(min(css)).toBe(on);
@@ -2358,38 +2411,34 @@ describe("CssSyntax — the per-transform switches", () => {
 			['"some" keeps the banners', /** @type {const} */ ("some"), banners],
 			["true keeps every comment", true, every],
 			['"all" keeps every comment', /** @type {const} */ ("all"), every],
-			["false keeps none", false, "a{b:c}/*# sourceMappingURL=x.map */"],
-			[
-				"a string is read as a pattern",
-				"banner",
-				"/*! banner */a{b:c}/*# sourceMappingURL=x.map */"
-			],
-			[
-				"a RegExp keeps what it matches",
-				/inert/,
-				"/*inert*/a{b:c}/*# sourceMappingURL=x.map */"
-			],
+			["false keeps none", false, "a{b:c}"],
+			["a string is read as a pattern", "banner", "/*! banner */a{b:c}"],
+			["a RegExp keeps what it matches", /inert/, "/*inert*/a{b:c}"],
 			[
 				"a predicate keeps what it accepts",
 				/** @type {(comment: string) => boolean} */ (
 					(comment) => comment.includes("@license")
 				),
-				"/* @license L */a{b:c}/*# sourceMappingURL=x.map */"
+				"/* @license L */a{b:c}"
 			]
 		])("%s", (_name, comments, expected) => {
 			expect(min(css, { comments })).toBe(expected);
 		});
 
-		// The pragma is a link to a source map, so no level drops it — which the
-		// rows above already show, and this states.
-		it("keeps the source-map pragma at every level", () => {
-			for (const comments of [false, true, "some", "nothing-matches"]) {
-				expect(
-					min("a{b:c}/*# sourceMappingURL=x.map */", {
-						comments: /** @type {EXPECTED_ANY} */ (comments)
-					})
-				).toContain("/*# sourceMappingURL=x.map */");
-			}
+		// The pragma is a link to a source map rather than a comment, so the two
+		// banner levels carry it; a selector the author wrote decides it like any
+		// other comment, or `comments` would have a case it cannot express.
+		it.each([
+			[undefined, true],
+			[/** @type {const} */ ("some"), true],
+			[/** @type {const} */ ("all"), true],
+			[true, true],
+			[false, false],
+			[/nothing-matches/, false],
+			[/** @type {(comment: string) => boolean} */ (() => false), false]
+		])("source-map pragma with comments: %s", (comments, kept) => {
+			const out = min("a{b:c}/*# sourceMappingURL=x.map */", { comments });
+			expect(out.includes("/*# sourceMappingURL=x.map */")).toBe(kept);
 		});
 
 		// A `g` flag would carry an index from one comment to the next.

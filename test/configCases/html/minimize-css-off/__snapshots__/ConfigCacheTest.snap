@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-css-off minimize-css-off should compile 1`] = `
+"<!doctype html><title>t</title><style>
+	.a {
+		COLOR: red;
+	}
+
+</style><div style=\\"COLOR: red\\">t</div>
+"
+`;

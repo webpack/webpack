@@ -7,7 +7,7 @@ Array [
   "/*! colormin: a color function in a custom property (cssnano rewrites, we ask) */a{--foo:rgb(0 0 0)}",
   "/*! colormin: an alpha carried by a substitution keeps the function */div{background-color:rgba(51,153,255,var(--tw-bg-opacity))}",
   "/*! whitespace: a nested parenthesis inside calc() */.w1{width:calc(10px - (100px/var(--test)))}",
-  "/*! whitespace: an upper-case CALC( is still calc() */.w2{width:calc(10px - (100px/var(--test)))}",
+  "/*! whitespace: an upper-case CALC( is still calc() */.w2{width:CALC(10px - (100px/var(--test)))}",
   "/*! whitespace: a foldable sum in a fallback */.w3{width:var(--foo,20px)}",
   "/*! whitespace: a product of two lengths is no length, so it stays */.w4{width:var(--foo,calc(10px*10px))}",
   "/*! whitespace: an empty value, spaced and bare */.w5,.w6{--prop:}",
