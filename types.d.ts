@@ -27070,14 +27070,6 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
-	static resolveSwitches: <T extends object>(all: T, options?: Partial<T>) => T;
-	static pickSwitches: <T extends object>(
-		all: T,
-		options: object
-	) => undefined | Partial<T>;
-	static keptComments: (
-		comments: string | boolean | RegExp | ((comment: string) => boolean)
-	) => boolean | "some" | ((comment: string) => boolean);
 }
 
 /**
@@ -27146,14 +27138,6 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
-	static resolveSwitches: <T extends object>(all: T, options?: Partial<T>) => T;
-	static pickSwitches: <T extends object>(
-		all: T,
-		options: object
-	) => undefined | Partial<T>;
-	static keptComments: (
-		comments: string | boolean | RegExp | ((comment: string) => boolean)
-	) => boolean | "some" | ((comment: string) => boolean);
 }
 declare interface SourceTable {
 	[index: string]: SourceBucket;
