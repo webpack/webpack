@@ -1942,6 +1942,199 @@ describe("snapshots", () => {
 		`)
 	);
 
+	// Every other library type waits for webpack@6, where it joins the module ones.
+	test(
+		"non-module library in development with future defaults",
+		{
+			mode: "development",
+			experiments: { futureDefaults: true },
+			output: { library: { type: "var", name: "myLib" } }
+		},
+		(e) =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "cache": false,
+			+   "cache": Object {
+			+     "cacheUnaffected": true,
+			+     "maxGenerations": Infinity,
+			+     "type": "memory",
+			+   },
+			@@ ... @@
+			-     "backCompat": true,
+			+     "backCompat": false,
+			@@ ... @@
+			-     "cacheUnaffected": false,
+			-     "css": "auto",
+			+     "cacheUnaffected": true,
+			+     "css": true,
+			@@ ... @@
+			-     "futureDefaults": false,
+			-     "html": "auto",
+			+     "futureDefaults": true,
+			+     "html": true,
+			@@ ... @@
+			-     "progress": false,
+			+     "progress": "auto",
+			@@ ... @@
+			-   "mode": "none",
+			+   "mode": "development",
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "oneOf": Array [
+			+           Object {
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "type": "asset/resource",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)inline(&|$)/,
+			+             "type": "asset/inline",
+			+           },
+			+         ],
+			@@ ... @@
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
+			@@ ... @@
+			-         "localIdentName": "[fullhash]",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			@@ ... @@
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
+			@@ ... @@
+			-         "localIdentName": "[fullhash]",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			@@ ... @@
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
+			@@ ... @@
+			-         "localIdentName": "[fullhash]",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			@@ ... @@
+			-         "anonymousDefaultExportName": true,
+			+         "anonymousDefaultExportName": false,
+			@@ ... @@
+			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "strictModeViolations": "warn",
+			+         "strictModeViolations": "error",
+			@@ ... @@
+			-         "exportsDepth": Infinity,
+			+         "exportsDepth": 1,
+			@@ ... @@
+			-     "unsafeCache": false,
+			+     "unsafeCache": [Function anonymous],
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "warn-mock",
+			+     "__filename": "warn-mock",
+			+     "global": "warn",
+			@@ ... @@
+			-     "chunkIds": "natural",
+			+     "chunkIds": "named",
+			@@ ... @@
+			-     "moduleIds": "natural",
+			-     "nodeEnv": false,
+			+     "moduleIds": "named",
+			+     "nodeEnv": "development",
+			@@ ... @@
+			-       "minRemainingSize": undefined,
+			+       "minRemainingSize": 0,
+			@@ ... @@
+			-     "charset": true,
+			+     "charset": false,
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunkmyLib",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "myLib",
+			@@ ... @@
+			+     ],
+			+     "enabledLibraryTypes": Array [
+			+       "var",
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
+			@@ ... @@
+			-     "hashDigestLength": 20,
+			-     "hashFunction": "md4",
+			+     "hashDigestLength": 16,
+			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
+			@@ ... @@
+			-     "library": undefined,
+			+     "library": Object {
+			+       "amdContainer": undefined,
+			+       "auxiliaryComment": undefined,
+			+       "export": undefined,
+			+       "name": "myLib",
+			+       "type": "var",
+			+       "umdAmdContainer": undefined,
+			+       "umdNamedDefine": undefined,
+			+     },
+			@@ ... @@
+			-     "pathinfo": false,
+			+     "pathinfo": true,
+			@@ ... @@
+			-     "strictModuleResolution": false,
+			+     "strictModuleResolution": true,
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "myLib",
+			@@ ... @@
+			-           "production",
+			+           "development",
+			@@ ... @@
+			-           "production",
+			+           "development",
+			@@ ... @@
+			-           "production",
+			+           "development",
+			@@ ... @@
+			+           ".html",
+			@@ ... @@
+			-           ".html",
+			@@ ... @@
+			+           ".html",
+			@@ ... @@
+			-           ".html",
+			@@ ... @@
+			+           ".html",
+			@@ ... @@
+			-           ".html",
+			@@ ... @@
+			+           ".html",
+			@@ ... @@
+			-           ".html",
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-       "production",
+			+       "development",
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-       "<cwd>/node_modules/",
+			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+		`)
+	);
+
 	test("library", { output: { library: ["myLib", "awesome"] } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
