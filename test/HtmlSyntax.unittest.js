@@ -5134,6 +5134,28 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		return { code, offered };
 	};
 
+	it("is usable again after a deferred print throws", async () => {
+		// The throw never reaches where `process` clears the deferred callback, so
+		// without a teardown the next ordinary print returns nothing.
+		let explode = true;
+		const processor = new SourceProcessor().use({
+			[NodeType.Element]: () => {
+				if (explode) throw new Error("boom");
+			}
+		});
+
+		await expect(
+			processor.processAsync("<p>x</p>", {
+				mode: "minify",
+				renderEmbeddedSource: () => undefined
+			})
+		).rejects.toThrow("boom");
+
+		explode = false;
+
+		expect(processor.process("<p>y</p>", { mode: "minify" }).code).toBe("<p>y");
+	});
+
 	it("keeps `srcdoc` off the deferred path when the caller says so", () => {
 		// Both renderers set: `deferSrcdoc: false` asks for the attribute on the
 		// normal path, so it is answered synchronously and collected nowhere.
