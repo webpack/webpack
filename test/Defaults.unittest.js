@@ -1664,8 +1664,8 @@ describe("snapshots", () => {
 	`)
 	);
 
-	// A module library is read by another bundler, so development keeps its source map
-	// out of an `eval()` wrapper; every other build keeps `eval` and its rebuild speed.
+	// A module library is an artifact someone else reads, so development emits no source
+	// map for one; every other build keeps `eval` and its rebuild speed.
 	test(
 		"module library in development",
 		{
@@ -1685,18 +1685,6 @@ describe("snapshots", () => {
 			+     "maxGenerations": Infinity,
 			+     "type": "memory",
 			+   },
-			@@ ... @@
-			-   "devtool": false,
-			+   "devtool": Array [
-			+     Object {
-			+       "type": "css",
-			+       "use": "source-map",
-			+     },
-			+     Object {
-			+       "type": "javascript",
-			+       "use": "cheap-module-source-map",
-			+     },
-			+   ],
 			@@ ... @@
 			-     "outputModule": false,
 			+     "outputModule": true,
@@ -1758,11 +1746,11 @@ describe("snapshots", () => {
 			-       "jsonp",
 			-       "import-scripts",
 			+       "import",
-			@@ ... @@
-			-     "enabledLibraryTypes": Array [],
+			+     ],
 			+     "enabledLibraryTypes": Array [
 			+       "module",
-			+     ],
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
 			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
