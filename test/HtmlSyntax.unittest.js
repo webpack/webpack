@@ -4848,7 +4848,13 @@ describe("SourceProcessor — the per-transform switches", () => {
 			"<table><tbody><tr><td>a</td></tr></tbody></table>",
 			"<table><tr><td>a</table>"
 		],
-		["<table><colgroup><col></colgroup></table>", "<table><col></table>"]
+		["<table><colgroup><col></colgroup></table>", "<table><col></table>"],
+		// §4.13: the second group's start tag has to stay once the first has lost
+		// its end tag, or its columns would join the group before it.
+		[
+			"<table><colgroup><col></colgroup><col></table>",
+			"<table><col><colgroup><col></table>"
+		]
 	])("keeps a parser-inserted table group balanced: %s", (doc, on) => {
 		expect(new SourceProcessor().process(doc, { mode: "minify" }).code).toBe(
 			on
