@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Default a module library's development source map to cheap-module-source-map.
+Emit no development source map for a module library, as other bundlers do.
