@@ -22599,7 +22599,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * pair of them is read as a write only where what stands between spells an id
 	 * this answers for. Anything else is the source's own text and is left alone.
 	 */
-	substitute(resolve: (id: number) => undefined | string): void;
+	substitute(resolve: (id: number) => undefined | string, infix: string): void;
 
 	/**
 	 * Throw away everything printed and stand `text` in its place. For the one

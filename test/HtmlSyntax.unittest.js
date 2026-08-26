@@ -5158,9 +5158,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("leaves a NUL the source carried where it stands", async () => {
 		// An RCDATA element and an attribute value keep the NUL they were written
-		// with rather than turning it into U+FFFD, so one reaches printed output —
-		// where a deferred write's own `NUL id NUL` marker also stands. The
-		// source's spell no id, so they stay text; the write behind them lands.
+		// with, so one reaches printed output — where a write's marker also stands.
 		const nul = String.fromCharCode(0);
 		const { code, offered } = await deferred(
 			`<textarea>raw${nul}text</textarea><p title="a${nul}b" style="color: red">x`,
@@ -5170,6 +5168,20 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect(offered).toEqual([["css", "block-contents", "color: red"]]);
 		expect(code).toBe(
 			`<textarea>raw${nul}text</textarea><p title=a${nul}b style=color:blue>x`
+		);
+	});
+
+	it("leaves a NUL run spelling a write's own marker alone", async () => {
+		// The source carries exactly what a marker looks like. The infix is chosen
+		// to occur nowhere in the input, so this spells no write of ours.
+		const nul = String.fromCharCode(0);
+		const { code } = await deferred(
+			`<textarea>${nul}0:0${nul}${nul}0${nul}</textarea><p style="color: red">x`,
+			() => "color:blue"
+		);
+
+		expect(code).toBe(
+			`<textarea>${nul}0:0${nul}${nul}0${nul}</textarea><p style=color:blue>x`
 		);
 	});
 
