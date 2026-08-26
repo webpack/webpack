@@ -10465,7 +10465,7 @@ declare interface HtmlProcessOptions {
 	mergeStyles?: boolean;
 
 	/**
-	 * print a run of adjacent bare `<script>` elements as one, which removes elements (default false)
+	 * print a run of adjacent bare `<script>` elements as one, which removes elements and lets a throwing body end the whole run (default false)
 	 */
 	mergeScripts?: boolean;
 
@@ -20258,7 +20258,7 @@ declare interface OptimizationMinimizeHtml {
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
-	 * Print a run of adjacent `<script>` elements as one, joined by a newline and a `;`. Only a run of bare ones folds — a `src`, `type`, `nonce`, `async` or `id` says the two are not interchangeable with one — and a body left inside a string, template or block comment is never appended to, since it would swallow the next. Off by default: it removes elements, so `document.scripts`, a `script:nth-child()` selector and `document.currentScript` all read a different document.
+	 * Print a run of adjacent `<script>` elements as one, joined by a newline and a `;`. Only a run of bare ones folds — a `src`, `type`, `nonce`, `async` or `id` says the two are not interchangeable with one — and a body left inside a string, template or block comment is never appended to, since it would swallow the next. Off by default: it removes elements, so `document.scripts`, a `script:nth-child()` selector and `document.currentScript` all read a different document, and a body that throws takes the rest of its run with it rather than only itself.
 	 * @since 5.110.0
 	 */
 	mergeScripts?: boolean;

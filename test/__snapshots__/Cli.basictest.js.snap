@@ -11381,6 +11381,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-html-merge-scripts": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a run of adjacent \`<script>\` elements as one, joined by a newline and a \`;\`. Only a run of bare ones folds — a \`src\`, \`type\`, \`nonce\`, \`async\` or \`id\` says the two are not interchangeable with one — and a body left inside a string, template or block comment is never appended to, since it would swallow the next. Off by default: it removes elements, so \`document.scripts\`, a \`script:nth-child()\` selector and \`document.currentScript\` all read a different document, and a body that throws takes the rest of its run with it rather than only itself.",
+        "multiple": false,
+        "path": "optimization.minimize.html.mergeScripts",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a run of adjacent \`<script>\` elements as one, joined by a newline and a \`;\`. Only a run of bare ones folds — a \`src\`, \`type\`, \`nonce\`, \`async\` or \`id\` says the two are not interchangeable with one — and a body left inside a string, template or block comment is never appended to, since it would swallow the next. Off by default: it removes elements, so \`document.scripts\`, a \`script:nth-child()\` selector and \`document.currentScript\` all read a different document, and a body that throws takes the rest of its run with it rather than only itself.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-html-merge-styles": Object {
     "configs": Array [
       Object {
