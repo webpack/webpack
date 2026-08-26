@@ -5134,6 +5134,28 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		return { code, offered };
 	};
 
+	it("keeps `srcdoc` off the deferred path when the caller says so", () => {
+		// Both renderers set: `deferSrcdoc: false` asks for the attribute on the
+		// normal path, so it is answered synchronously and collected nowhere.
+		/** @type {import("../lib/html/syntax").DeferredEmbeddedSource[]} */
+		const holes = [];
+		const { code } = new SourceProcessor().process(
+			'<iframe srcdoc="<p>  a  </p>"></iframe>',
+			{
+				mode: "minify",
+				renderEmbeddedSource: (
+					/** @type {string} */ _source,
+					/** @type {{ type: string }} */ info
+				) => (info.type === "html" ? "<p>answered</p>" : undefined),
+				deferEmbeddedSource: holes,
+				deferSrcdoc: false
+			}
+		);
+
+		expect(holes).toEqual([]);
+		expect(code).toBe('<iframe srcdoc="<p>answered</p>"></iframe>');
+	});
+
 	it("leaves a NUL the source carried where it stands", async () => {
 		// An RCDATA element and an attribute value keep the NUL they were written
 		// with rather than turning it into U+FFFD, so one reaches printed output —

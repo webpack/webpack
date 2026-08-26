@@ -8,6 +8,6 @@
 /* Which property holds the url is immaterial — the media type is what names
    the language, so one declaration each is enough to reach all of them. */
 .javascript { background : url("data:text/javascript,var  a  =  1 ;  function  f ( ) { return  a }") ; }
-.json { background : url("data:application/json,{ "a" :  1 }") ; }
+.json { background : url('data:application/json,{ "a" :  1 }') ; }
 .html { background : url("data:text/html,<div>  <!-- dropped -->  <p>hi</p>  </div>") ; }
 .png { background : url("data:image/png;base64,AAAA") ; }
