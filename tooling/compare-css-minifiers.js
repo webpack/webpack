@@ -232,15 +232,20 @@ const fixtures = () => [
 // is used wherever a tool offers one; csso and lightningcss only ship sync.
 /** @type {[string, () => (css: string) => string | Promise<string>][]} */
 const MINIFIERS = [
-	["webpack", () => (css) => cssMinify({ "input.css": css }).code],
+	[
+		"webpack",
+		() => async (css) => (await cssMinify({ "input.css": css })).code
+	],
 	[
 		// The rivals strip the spellings a modern engine makes dead; webpack, told
 		// nothing, keeps them. The two rows say what the target is worth.
 		"webpack+target",
-		() => (css) =>
-			cssMinify({ "input.css": css }, undefined, {
-				environment: { browsers: MODERN_BROWSERS }
-			}).code
+		() => async (css) =>
+			(
+				await cssMinify({ "input.css": css }, undefined, {
+					environment: { browsers: MODERN_BROWSERS }
+				})
+			).code
 	],
 	[
 		"esbuild",

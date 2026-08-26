@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-embedded-nested minimize-embedded-nested should compile 1`] = `
+"<!doctype html><html lang=en><head><title>x</title><style>.a{color:red}</style><script>var a=1;function f(){return a}</script><script type=application/json>{\\"a\\":1}</script></head><body>
+		<p style=color:#0f0>hi</p>
+		<svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
+		<iframe srcdoc=\\"<p class=b>inner\\"></iframe>
+	
+
+</body></html>"
+`;

@@ -328,21 +328,26 @@ const fixtures = async () => {
 /** @type {[string, () => (html: string) => string | Promise<string>][]} */
 const MINIFIERS = [
 	// Two rows per tool: its defaults, and everything it will do when asked.
-	["webpack", () => (html) => htmlMinify({ "input.html": html }).code],
+	[
+		"webpack",
+		() => async (html) => (await htmlMinify({ "input.html": html })).code
+	],
 	[
 		"webpack (aggressive)",
-		() => (html) =>
-			htmlMinify({ "input.html": html }, undefined, {
-				collapseWhitespace: "all",
-				mergeStyles: true,
-				minifyConditionalComments: true,
-				removeEmptyAttributes: true,
-				removeEmptyElements: true,
-				removeRedundantAttributes: "all",
-				sortAttributes: true,
-				sortTokenLists: true,
-				removeImpliedTags: true
-			}).code
+		() => async (html) =>
+			(
+				await htmlMinify({ "input.html": html }, undefined, {
+					collapseWhitespace: "all",
+					mergeStyles: true,
+					minifyConditionalComments: true,
+					removeEmptyAttributes: true,
+					removeEmptyElements: true,
+					removeRedundantAttributes: "all",
+					sortAttributes: true,
+					sortTokenLists: true,
+					removeImpliedTags: true
+				})
+			).code
 	],
 	[
 		"html-minifier-terser",

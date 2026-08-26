@@ -115,7 +115,7 @@
     "events": "^3.2.0",
     "graceful-fs": "^4.2.11",
     "mime-db": "^1.54.0",
-    "minimizer-webpack-plugin": "^5.6.1",
+    "minimizer-webpack-plugin": "^5.7.0",
     "neo-async": "^2.6.2",
     "schema-utils": "^4.3.3",
     "tapable": "^2.3.0",

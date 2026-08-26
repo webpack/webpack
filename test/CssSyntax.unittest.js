@@ -2832,6 +2832,46 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		// The per-call skip drops numbers.
 		expect(seen).toEqual(["foo"]);
 	});
+
+	it('minifies as: "block-contents" through the list-wide transforms', () => {
+		const minify = (/** @type {string} */ input) =>
+			/** @type {{ code: string }} */ (
+				new SourceProcessor().process(input, {
+					mode: "minify",
+					as: "block-contents"
+				})
+			).code;
+
+		// The production a `style=""` holds is the one a rule's block holds, so it
+		// gets the same transforms — no rule around it to put them back.
+		expect(minify("top:0;right:0;bottom:0;left:0")).toBe("inset:0");
+		expect(minify("color:red;color:red")).toBe("color:red");
+		// Nothing follows the last declaration, so its separator carries nothing.
+		expect(minify("color:  #ff0000 ;")).toBe("color:red");
+		expect(minify("")).toBe("");
+		// A `}` closes no block here, so it is a parse error whose bad declaration
+		// runs to the next `;` — what a browser reads a `style=""` as.
+		expect(minify("color:red;}color:blue")).toBe("color:red");
+		expect(minify("color:red;};color:blue")).toBe("color:red;color:blue");
+		// Inside a value it is a token like any other.
+		expect(minify("color:red}color:blue")).toBe("color:red}color:blue");
+	});
+
+	it('maps an as: "block-contents" print to where the list starts', () => {
+		const { code, map } = /** @type {{ code: string, map: EXPECTED_ANY }} */ (
+			new SourceProcessor().process("color:  #ff0000", {
+				mode: "minify",
+				as: "block-contents",
+				source: "style",
+				content: "color:  #ff0000"
+			})
+		);
+
+		expect(code).toBe("color:red");
+		// The list prints as one piece, so it anchors as one.
+		expect(map.sources).toEqual(["style"]);
+		expect(map.mappings).toBe("AAAA");
+	});
 });
 
 describe("CssSyntax — path accessors", () => {

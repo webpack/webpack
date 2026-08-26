@@ -20,14 +20,16 @@ module.exports = {
 		expect(html).toContain("A&#13;B");
 		expect(html).not.toContain("A\rB");
 
-		// A style attribute is a declaration list: a `}` in it does not end a rule,
-		// so it is left as written rather than cut short at it.
-		expect(html).toContain("style=background:red;};background:limegreen>");
+		// A style attribute is a declaration list, so a `}` in it closes no block:
+		// it is a parse error whose bad declaration runs to the next `;`, leaving
+		// what follows to apply — which is what a browser reads it as.
+		expect(html).toContain("style=background:red;background:limegreen>");
 		// One inside a string is not a `}` in the list, so the value still minifies
 		// — the repeated declaration after it goes.
 		expect(html).toContain("style='content:\"}\";color:red'>");
-		// A value ending inside a comment is left as written for the same reason.
-		expect(html).toContain('style="color:red;/* never closed">');
+		// A comment nothing closes runs to the end of the value, taking nothing
+		// with it.
+		expect(html).toContain("style=color:red>");
 
 		// The engine fills `<selectedcontent>` from the selected option, so writing
 		// the mirror back would have it mirrored a second time.
