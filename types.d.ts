@@ -22593,11 +22593,13 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * what its text changed in length. Runs before {@link result} and
 	 * {@link sourceMap}, so both read the substituted output rather than
 	 * correcting for it.
-	 * The marker is `NUL id NUL`: both the CSS and the HTML preprocessor turn a
-	 * NUL in the input into U+FFFD, so one can never stand in printed output on
-	 * its own account.
+	 * The marker is `NUL id NUL`. A NUL mostly cannot reach printed output on its
+	 * own account — both preprocessors turn one into U+FFFD — but an RCDATA
+	 * element and an attribute value keep the one they were written with, so a
+	 * pair of them is read as a write only where what stands between spells an id
+	 * this answers for. Anything else is the source's own text and is left alone.
 	 */
-	substitute(resolve: (id: number) => string): void;
+	substitute(resolve: (id: number) => undefined | string): void;
 
 	/**
 	 * Throw away everything printed and stand `text` in its place. For the one

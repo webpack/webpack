@@ -5134,6 +5134,23 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		return { code, offered };
 	};
 
+	it("leaves a NUL the source carried where it stands", async () => {
+		// An RCDATA element and an attribute value keep the NUL they were written
+		// with rather than turning it into U+FFFD, so one reaches printed output —
+		// where a deferred write's own `NUL id NUL` marker also stands. The
+		// source's spell no id, so they stay text; the write behind them lands.
+		const nul = String.fromCharCode(0);
+		const { code, offered } = await deferred(
+			`<textarea>raw${nul}text</textarea><p title="a${nul}b" style="color: red">x`,
+			() => "color:blue"
+		);
+
+		expect(offered).toEqual([["css", "block-contents", "color: red"]]);
+		expect(code).toBe(
+			`<textarea>raw${nul}text</textarea><p title=a${nul}b style=color:blue>x`
+		);
+	});
+
 	it("offers a `style` attribute to a deferring caller, and falls back to the built-in", async () => {
 		const declined = await deferred(
 			'<p style="  color : #ff0000 ; margin : 0px  ">x</p>',
