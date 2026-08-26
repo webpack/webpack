@@ -4217,6 +4217,14 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 		const afterComment =
 			'<script>a()</script><script>/* c */ "use strict";b()</script>';
 		expect(minify(afterComment)).toBe(afterComment);
+		// A line comment ends at every line terminator, so a string opened past
+		// one is really open and the body must not be appended to.
+		for (const terminator of ["\u2028", "\u2029"]) {
+			for (const opener of ['var s = "open', "var s = 'open", "/* open"]) {
+				const html = `<script>a() // c${terminator}${opener}</script><script>b()</script>`;
+				expect(minify(html)).toContain("</script><script");
+			}
+		}
 		// ECMAScript's whitespace is wider than HTML's, and all of it may sit
 		// before a directive: a form feed, a BOM, U+2028.
 		for (const space of ["\f", "\v", "\uFEFF", "\u00A0", "\u2028", "\u2029"]) {

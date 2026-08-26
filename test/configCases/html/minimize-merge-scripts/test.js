@@ -10,9 +10,10 @@ it("folds the inlined runtime and entry into one <script>", () => {
 	expect(page).not.toContain("</script><script");
 });
 
-it("writes the newline and `;` the join needs", () => {
-	// The runtime's last statement must not run into the entry's first.
-	expect(page).toContain("\n;");
+it("does not let the runtime's last statement run into the entry's first", () => {
+	// The `\n;` the printer writes is checked in HtmlSyntax.unittest.js; a JS
+	// minimizer runs over the merged body afterwards and respells it.
+	expect(page).toContain("})();,");
 });
 
 it("keeps both chunks' code", () => {
