@@ -4817,12 +4817,6 @@ describe("SourceProcessor — the per-transform switches", () => {
 			'<div class="">t</div>',
 			"<div class>t</div>",
 			'<div class="">t</div>'
-		],
-		[
-			"trimUrlAttributes",
-			'<a href=" /a ">t</a>',
-			"<a href=/a>t</a>",
-			'<a href=" /a ">t</a>'
 		]
 	])("%s", (name, html, on, off) => {
 		const key = name.replace(/ .*/, "");

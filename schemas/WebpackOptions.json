@@ -3751,11 +3751,6 @@
           "type": "boolean",
           "added": "5.110.0"
         },
-        "lowercaseNames": {
-          "description": "Print every name CSS matches ASCII case-insensitively in one case — a property, at-rule, function, `url()`, pseudo, media feature, media type, unit and a keyword value on a property whose grammar takes no name of the author's — so one document spells each the same way. On by default. A type selector, id, class, attribute, custom property, `@keyframes` / `@container` / custom-media name and `@charset` are left as authored whatever this says.",
-          "type": "boolean",
-          "added": "5.110.0"
-        },
         "mergeLonghands": {
           "description": "Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.",
           "type": "boolean",
@@ -3788,11 +3783,6 @@
         },
         "shortenColors": {
           "description": "Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
-          "type": "boolean",
-          "added": "5.110.0"
-        },
-        "shortenEscapes": {
-          "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a `url()` as the byte it names. On by default.",
           "type": "boolean",
           "added": "5.110.0"
         },
@@ -3960,11 +3950,6 @@
         },
         "sortTokenLists": {
           "description": "Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.",
-          "type": "boolean",
-          "added": "5.110.0"
-        },
-        "trimUrlAttributes": {
-          "description": "Trim the whitespace around a URL attribute's value (`href`, `src`, `action`, …), which the URL parser strips before resolving it. On by default.",
           "type": "boolean",
           "added": "5.110.0"
         }

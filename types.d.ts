@@ -6016,11 +6016,6 @@ declare interface CssTransformOptions {
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
-	 * print every name CSS matches ASCII case-insensitively in one case
-	 */
-	lowercaseNames?: boolean;
-
-	/**
 	 * write a family of longhands as the one shorthand that sets them
 	 */
 	mergeLonghands?: boolean;
@@ -6049,11 +6044,6 @@ declare interface CssTransformOptions {
 	 * write each color in the shortest spelling of the same value
 	 */
 	shortenColors?: boolean;
-
-	/**
-	 * write an identifier's escapes and a `url()`'s percent-escapes in their shortest equal form
-	 */
-	shortenEscapes?: boolean;
 
 	/**
 	 * write a media feature in its range spelling and collapse an `and` of two into the interval
@@ -10725,11 +10715,6 @@ declare interface HtmlTransformOptions {
 	 * leave out an optional tag other than the `<html>` / `<head>` / `<body>` shell, which is `removeImpliedTags`
 	 */
 	removeOptionalTags?: boolean;
-
-	/**
-	 * trim the whitespace around a URL attribute
-	 */
-	trimUrlAttributes?: boolean;
 }
 declare interface HtmlTransformTagsContext {
 	outputName: string;
@@ -20088,12 +20073,6 @@ declare interface OptimizationMinimizeCss {
 	convertLengthUnits?: boolean;
 
 	/**
-	 * Print every name CSS matches ASCII case-insensitively in one case — a property, at-rule, function, `url()`, pseudo, media feature, media type, unit and a keyword value on a property whose grammar takes no name of the author's — so one document spells each the same way. On by default. A type selector, id, class, attribute, custom property, `@keyframes` / `@container` / custom-media name and `@charset` are left as authored whatever this says.
-	 * @since 5.110.0
-	 */
-	lowercaseNames?: boolean;
-
-	/**
 	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
 	 * @since 5.110.0
 	 */
@@ -20134,12 +20113,6 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	shortenColors?: boolean;
-
-	/**
-	 * Write an identifier's escapes in their shortest equal form, and a percent-escape in a `url()` as the byte it names. On by default.
-	 * @since 5.110.0
-	 */
-	shortenEscapes?: boolean;
 
 	/**
 	 * Write a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), and collapse an `and` of two one-sided ranges into the interval it describes. On by default.
@@ -20290,12 +20263,6 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	sortTokenLists?: boolean;
-
-	/**
-	 * Trim the whitespace around a URL attribute's value (`href`, `src`, `action`, …), which the URL parser strips before resolving it. On by default.
-	 * @since 5.110.0
-	 */
-	trimUrlAttributes?: boolean;
 }
 
 /**

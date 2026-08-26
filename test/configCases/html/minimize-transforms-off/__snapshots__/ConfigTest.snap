@@ -6,7 +6,6 @@ exports[`ConfigTestCases html minimize-transforms-off minimize-transforms-off sh
 <p style=\\"COLOR: red\\">the style attribute is not minified</p>
 <ul><li>one</li><li>two</li></ul>
 <input disabled=\\"disabled\\" type=\\"TEXT\\" tabindex=\\" 03 \\" class=\\"  b   a \\">
-<a href=\\" /a \\">a url attribute keeps its padding</a>
 <div data-x=\\"plain\\">a value that could go bare keeps its quotes</div>
 <script type=\\"application/json\\"> { \\"a\\" : 1 } </script>
 

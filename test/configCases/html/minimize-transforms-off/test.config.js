@@ -23,7 +23,6 @@ module.exports = {
 		expect(page).toContain('type="TEXT"');
 		expect(page).toContain('tabindex=" 03 "');
 		expect(page).toContain('class="  b   a "');
-		expect(page).toContain('href=" /a "');
 		expect(page).toContain('data-x="plain"');
 		expect(page).toContain('{ "a" : 1 }');
 	}

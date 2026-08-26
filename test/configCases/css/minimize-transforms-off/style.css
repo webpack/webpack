@@ -7,12 +7,8 @@
 /* an inert comment */
 /*! shortenColors: the hex is not shortened */
 .t01 { color: #ffffff }
-/*! shortenEscapes: the identifier keeps the escape it was written with */
-.t02 { color: r\065 d }
 /*! reduceFunctions: the calc is not folded and the transform names both axes */
 .t03 { width: calc(1px + 2px); transform: translate(1px, 0) }
-/*! lowercaseNames: the property, function and unit keep their case */
-.T04 { COLOR: RGB(1 2 3); width: 10PX }
 /*! shortenNumbers: the leading zero and the trailing fraction stay */
 .t05 { width: 0.50px; opacity: 100% }
 /*! normalizeQuotes: the string keeps the quote it was written with */

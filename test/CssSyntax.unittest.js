@@ -2246,18 +2246,11 @@ describe("CssSyntax — the per-transform switches", () => {
 	it.each([
 		["shortenColors", "a{color:#ffffff}", "a{color:#fff}", "a{color:#ffffff}"],
 		[
-			"shortenEscapes",
-			"a{color:r\\065 d}",
-			"a{color:red}",
-			"a{color:r\\065 d}"
-		],
-		[
 			"reduceFunctions",
 			"a{width:calc(1px + 2px)}",
 			"a{width:3px}",
 			"a{width:calc(1px + 2px)}"
 		],
-		["lowercaseNames", "A{COLOR:red}", "A{color:red}", "A{COLOR:red}"],
 		[
 			"shortenMediaQueries",
 			"@media (min-width:1px){a{b:c}}",
@@ -2292,29 +2285,24 @@ describe("CssSyntax — the per-transform switches", () => {
 	it.each([
 		[undefined, "a{background:url(data:image/svg+xml,<svg></svg>)}"],
 		[
-			{ shortenEscapes: false },
-			"a{background:url(data:image/svg+xml,%3Csvg%3E%3C/svg%3E)}"
-		],
-		[
 			{ normalizeQuotes: false },
 			'a{background:url("data:image/svg+xml,<svg></svg>")}'
-		],
-		[
-			{ shortenEscapes: false, normalizeQuotes: false },
-			'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}'
 		]
-	])("parts a url()'s escapes from its quotes: %s", (transforms, expected) => {
-		expect(
-			min(
-				'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}',
-				transforms
-			)
-		).toBe(expected);
-	});
+	])(
+		"writes a data URI's escapes as the bytes they name: %s",
+		(transforms, expected) => {
+			expect(
+				min(
+					'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}',
+					transforms
+				)
+			).toBe(expected);
+		}
+	);
 
 	// The embedded-source renderer reads a data URL's payload, which is what the
-	// percent-escapes hold — so it is offered the decoded one whatever `escapes`
-	// says, and what it hands back is quoted or not as `quotes` says.
+	// percent-escapes hold — so it is offered the decoded one, and what it hands
+	// back is quoted or not as `normalizeQuotes` says.
 	describe("a rendered data URL", () => {
 		const css = 'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}';
 		/**
@@ -2334,11 +2322,10 @@ describe("CssSyntax — the per-transform switches", () => {
 				transforms
 			}).code;
 
-		it("reaches the renderer with escapes off", () => {
-			const rendered =
-				"a{background:url(data:image/svg+xml,<svg\\ id=r></svg>)}";
-			expect(render()).toBe(rendered);
-			expect(render({ shortenEscapes: false })).toBe(rendered);
+		it("reaches the renderer with the payload decoded", () => {
+			expect(render()).toBe(
+				"a{background:url(data:image/svg+xml,<svg\\ id=r></svg>)}"
+			);
 		});
 
 		it("keeps the quotes round what it hands back with quotes off", () => {
@@ -2347,13 +2334,11 @@ describe("CssSyntax — the per-transform switches", () => {
 			);
 		});
 
-		// Nothing to render, so the switches decide alone.
-		it("leaves a payload no renderer was given to the switches", () => {
+		// With no renderer the payload is still written as the bytes its escapes
+		// name, which is what makes it the same URL either way.
+		it("writes the payload out with no renderer", () => {
 			expect(min(css)).toBe(
 				"a{background:url(data:image/svg+xml,<svg></svg>)}"
-			);
-			expect(min(css, { shortenEscapes: false })).toBe(
-				"a{background:url(data:image/svg+xml,%3Csvg%3E%3C/svg%3E)}"
 			);
 		});
 	});

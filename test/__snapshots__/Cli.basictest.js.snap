@@ -11137,19 +11137,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-lowercase-names": Object {
-    "configs": Array [
-      Object {
-        "description": "Print every name CSS matches ASCII case-insensitively in one case — a property, at-rule, function, \`url()\`, pseudo, media feature, media type, unit and a keyword value on a property whose grammar takes no name of the author's — so one document spells each the same way. On by default. A type selector, id, class, attribute, custom property, \`@keyframes\` / \`@container\` / custom-media name and \`@charset\` are left as authored whatever this says.",
-        "multiple": false,
-        "path": "optimization.minimize.css.lowercaseNames",
-        "type": "boolean",
-      },
-    ],
-    "description": "Print every name CSS matches ASCII case-insensitively in one case — a property, at-rule, function, \`url()\`, pseudo, media feature, media type, unit and a keyword value on a property whose grammar takes no name of the author's — so one document spells each the same way. On by default. A type selector, id, class, attribute, custom property, \`@keyframes\` / \`@container\` / custom-media name and \`@charset\` are left as authored whatever this says.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-minimize-css-merge-longhands": Object {
     "configs": Array [
       Object {
@@ -11238,19 +11225,6 @@ Object {
       },
     ],
     "description": "Write each color in the shortest spelling of the same value: \`#ffffff\` -> \`#fff\`, \`rgb(1 2 3)\` -> \`#010203\`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-css-shorten-escapes": Object {
-    "configs": Array [
-      Object {
-        "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a \`url()\` as the byte it names. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.css.shortenEscapes",
-        "type": "boolean",
-      },
-    ],
-    "description": "Write an identifier's escapes in their shortest equal form, and a percent-escape in a \`url()\` as the byte it names. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11632,19 +11606,6 @@ Object {
       },
     ],
     "description": "Print every space-separated token list the DOM reads as a set — \`class\`, \`rel\`, \`part\`, \`sandbox\`, \`blocking\`, \`itemprop\` / \`itemref\` / \`itemtype\`, \`<output for>\` and \`<link sizes>\` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` or \`rel\` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — \`ping\` is the order its requests go out in and \`accesskey\` the order its keys are tried.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-html-trim-url-attributes": Object {
-    "configs": Array [
-      Object {
-        "description": "Trim the whitespace around a URL attribute's value (\`href\`, \`src\`, \`action\`, …), which the URL parser strips before resolving it. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.html.trimUrlAttributes",
-        "type": "boolean",
-      },
-    ],
-    "description": "Trim the whitespace around a URL attribute's value (\`href\`, \`src\`, \`action\`, …), which the URL parser strips before resolving it. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },

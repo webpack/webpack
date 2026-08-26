@@ -22,8 +22,7 @@ module.exports = {
 				normalizeEnumeratedAttributes: false,
 				normalizeListAttributes: false,
 				normalizeNumericAttributes: false,
-				removeOptionalTags: false,
-				trimUrlAttributes: false
+				removeOptionalTags: false
 			}
 		},
 		minimizer: ["..."]
