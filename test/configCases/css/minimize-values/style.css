@@ -57,7 +57,7 @@
 .t19 { top: 0.25rem }
 /*! convert-values: should drop the leading zero of a negative number */
 .t20 { letter-spacing: -0.1rem }
-/*! convert-values: should keep the unit's case */
+/*! convert-values: a unit matches case-insensitively */
 .t21 { font-size: 20PX }
 /*! convert-values: should trim trailing zeros of a percentage */
 .t22 { height: 12.500% }

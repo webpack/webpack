@@ -4242,31 +4242,64 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 	});
 });
 
-describe("SourceProcessor — preserveComments", () => {
+describe("SourceProcessor — which comments survive", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
 	/**
 	 * @param {string} html input markup
-	 * @param {(string | RegExp)[]=} preserveComments patterns to keep
+	 * @param {import("../lib/html/syntax").HtmlTransformOptions["comments"]=} comments which comments to keep
 	 * @returns {string} the minified serialization
 	 */
-	const minify = (html, preserveComments) =>
-		new SourceProcessor().process(html, { mode: "minify", preserveComments })
-			.code;
+	const minify = (html, comments) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			transforms: { comments }
+		}).code;
 
-	it("keeps a comment a pattern names, and drops the rest", () => {
-		const html = "<div><!-- @license MIT --><!-- chatter --></div>";
-		expect(minify(html)).toBe("<div></div>");
-		expect(minify(html, ["@license"])).toBe("<div><!-- @license MIT --></div>");
-		expect(minify(html, [/^\s*@license/])).toBe(
-			"<div><!-- @license MIT --></div>"
-		);
+	const html = "<div><!-- @license MIT --><!-- chatter --></div>";
+	const licensed = "<div><!-- @license MIT --></div>";
+
+	// The six forms terser's `format.comments` takes, on an element whose own
+	// tags stay put either way.
+	it.each([
+		["absent drops every inert comment", undefined, "<div></div>"],
+		[
+			'"some" drops them too, HTML having no banner rule',
+			"some",
+			"<div></div>"
+		],
+		["false drops them", false, "<div></div>"],
+		["true keeps every comment", true, html],
+		['"all" keeps every comment', "all", html],
+		["a string is read as a pattern", "@license", licensed],
+		["a RegExp keeps what it matches", /^\s*@license/, licensed],
+		[
+			"a predicate keeps what it accepts",
+			/** @type {(comment: string) => boolean} */ (
+				(comment) => comment.includes("@license")
+			),
+			licensed
+		]
+	])("%s", (_name, comments, expected) => {
+		expect(minify(html, /** @type {EXPECTED_ANY} */ (comments))).toBe(expected);
 	});
 
-	it("still keeps what minifying always keeps", () => {
-		expect(
-			minify("<div><!--[if IE]>a<![endif]--></div>", ["nothing"])
-		).toContain("[if IE]");
+	// A conditional comment, a server-side include and a `<?…?>` directive are
+	// code rather than comments, so no level drops one.
+	it.each([
+		[
+			"a conditional comment",
+			"<div><!--[if IE]>a<![endif]--></div>",
+			"[if IE]"
+		],
+		["a server-side include", "<div><!--#include a--></div>", "#include"],
+		["a template directive", "<div><?php echo 1; ?></div>", "php"]
+	])("keeps %s whatever the level", (_name, input, held) => {
+		for (const comments of [false, "some", "nothing-matches"]) {
+			expect(minify(input, /** @type {EXPECTED_ANY} */ (comments))).toContain(
+				held
+			);
+		}
 	});
 });
 
@@ -4453,7 +4486,7 @@ describe("SourceProcessor — optional end tags read the output", () => {
 	it("keeps the tag for a comment minifying keeps", () => {
 		expect(
 			minify("<ul><li>a</li><!--keep--><li>b</li></ul>", {
-				preserveComments: ["keep"]
+				transforms: { comments: "keep" }
 			})
 		).toBe("<ul><li>a</li><!--keep--><li>b</ul>");
 	});
@@ -4655,7 +4688,7 @@ describe("SourceProcessor — removeImpliedTags", () => {
 			new SourceProcessor().process("<tr><!--c--><p>x", {
 				mode: "minify",
 				removeImpliedTags: true,
-				preserveComments: [/c/]
+				transforms: { comments: /c/ }
 			}).code
 		).toBe("<body><!--c--><p>x");
 	});
@@ -4709,6 +4742,142 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		expect(
 			minifyAll("<html><head><title>t</title></head><!--[if IE]>i<![endif]-->x")
 		).toBe("<title>t</title></head><!--[if IE]>i<![endif]-->x");
+	});
+});
+
+describe("SourceProcessor — the per-transform switches", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {import("../lib/html/syntax").HtmlTransformOptions=} transforms which rewrites to make
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, transforms) =>
+		new SourceProcessor().process(html, { mode: "minify", transforms }).code;
+
+	// One input per switch, minified twice: with everything on, and with that one
+	// switch off — so a guard that stops firing fails here rather than quietly
+	// making the rewrite unconditional again. `comments` is not one of the
+	// booleans, so it has a describe of its own above.
+	it.each([
+		[
+			"collapseBooleanAttributes",
+			'<input disabled="disabled">',
+			"<input disabled>",
+			// `quotes` is still on, so the value it keeps goes bare.
+			"<input disabled=disabled>"
+		],
+		[
+			"normalizeEnumeratedAttributes",
+			'<input type="TEXT">',
+			"<input type=text>",
+			"<input type=TEXT>"
+		],
+		[
+			"normalizeListAttributes",
+			'<div class="  b   a ">x</div>',
+			'<div class="b a">x</div>',
+			'<div class="  b   a ">x</div>'
+		],
+		[
+			"minifyJson",
+			'<script type="application/json"> { "a" : 1 } </script>',
+			'<script type=application/json>{"a":1}</script>',
+			'<script type=application/json> { "a" : 1 } </script>'
+		],
+		[
+			"minifyStyles",
+			'<div style="COLOR: red">x</div>',
+			"<div style=color:red>x</div>",
+			'<div style="COLOR: red">x</div>'
+		],
+		[
+			"normalizeNumericAttributes",
+			'<div tabindex=" 03 ">x</div>',
+			"<div tabindex=3>x</div>",
+			'<div tabindex=" 03 ">x</div>'
+		],
+		[
+			"removeOptionalTags",
+			"<ul><li>a<li>b</ul>",
+			"<ul><li>a<li>b</ul>",
+			"<ul><li>a</li><li>b</li></ul>"
+		],
+		[
+			"normalizeAttributeQuotes",
+			'<div data-x="plain">t</div>',
+			"<div data-x=plain>t</div>",
+			'<div data-x="plain">t</div>'
+		],
+		// An empty value written as the bare name is the `=""` going, which is the
+		// same decision.
+		[
+			"normalizeAttributeQuotes (empty value)",
+			'<div class="">t</div>',
+			"<div class>t</div>",
+			'<div class="">t</div>'
+		]
+	])("%s", (name, html, on, off) => {
+		const key = name.replace(/ .*/, "");
+		expect(minify(html)).toBe(on);
+		expect(minify(html, { [key]: false })).toBe(off);
+	});
+
+	// Turning one off leaves the rest alone, which is the whole point of naming
+	// them one at a time.
+	it("leaves every other rewrite on", () => {
+		expect(
+			minify('<input disabled="disabled" tabindex=" 03 ">', {
+				collapseBooleanAttributes: false
+			})
+		).toBe("<input disabled=disabled tabindex=3>");
+	});
+
+	it("takes an absent option as every rewrite on", () => {
+		expect(minify("<div>a</div><!-- c -->", {})).toBe("<div>a</div>");
+		expect(minify("<div>a</div><!-- c -->", undefined)).toBe("<div>a</div>");
+	});
+
+	// A table group the parser inserted has an end tag to print once the switch
+	// is off, so its start tag has to print with it — the pair, or neither.
+	it.each([
+		["<table><tr><td>a</td></tr></table>", "<table><tr><td>a</table>"],
+		["<table><col></table>", "<table><col></table>"],
+		[
+			"<table><tbody><tr><td>a</td></tr></tbody></table>",
+			"<table><tr><td>a</table>"
+		],
+		["<table><colgroup><col></colgroup></table>", "<table><col></table>"],
+		// §4.13: the second group's start tag has to stay once the first has lost
+		// its end tag, or its columns would join the group before it.
+		[
+			"<table><colgroup><col></colgroup><col></table>",
+			"<table><col><colgroup><col></table>"
+		]
+	])("keeps a parser-inserted table group balanced: %s", (doc, on) => {
+		expect(new SourceProcessor().process(doc, { mode: "minify" }).code).toBe(
+			on
+		);
+		const off = new SourceProcessor().process(doc, {
+			mode: "minify",
+			transforms: { removeOptionalTags: false }
+		}).code;
+		for (const name of ["tbody", "colgroup"]) {
+			expect(off.includes(`<${name}>`)).toBe(off.includes(`</${name}>`));
+		}
+	});
+
+	// `removeImpliedTags` keeps the shell to itself, so the two do not overlap.
+	it("leaves the shell to removeImpliedTags", () => {
+		const doc =
+			"<html><head><title>t</title></head><body><p>a</p></body></html>";
+		expect(
+			new SourceProcessor().process(doc, {
+				mode: "minify",
+				transforms: { removeOptionalTags: false }
+			}).code
+		).toBe("<head><title>t</title></head><body><p>a</p></body></html>");
 	});
 });
 

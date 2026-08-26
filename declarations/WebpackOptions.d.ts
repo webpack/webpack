@@ -2405,20 +2405,80 @@ export interface OptimizationMinimizeOptions {
 	javascript?: false | OptimizationMinimizeJavascript;
 }
 /**
- * What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it.
+ * What the CSS minimizer does. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it. Every transform that keeps the stylesheet's meaning is on by default and may be turned off on its own, so a document a rewrite breaks can be minimized without it while the rest still applies; the two that change what the CSSOM hands back (`convertLengthUnits`, `rewriteCustomProperties`) are off until asked for.
  * @since 5.110.0
  */
 export interface OptimizationMinimizeCss {
+	/**
+	 * Which comments survive. `"some"`, the default, keeps a `/*!` banner and a comment annotated `@license` or `@preserve`; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's `format.comments` does, so a pattern that names nothing else drops the ones `"some"` would have kept. A `/*#` source-map pragma is a link rather than a comment, so `"some"` and `"all"` keep it; `false`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
+	 * @since 5.110.0
+	 */
+	comments?:
+		| ("all" | "some")
+		| RegExp
+		| boolean
+		| string
+		| ((comment: string) => boolean);
 	/**
 	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
 	 * @since 5.110.0
 	 */
 	convertLengthUnits?: boolean;
 	/**
+	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
+	 * @since 5.110.0
+	 */
+	mergeLonghands?: boolean;
+	/**
+	 * Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named `@layer` block a later sibling opens again is folded into the first. On by default.
+	 * @since 5.110.0
+	 */
+	mergeRules?: boolean;
+	/**
+	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.
+	 * @since 5.110.0
+	 */
+	normalizeQuotes?: boolean;
+	/**
+	 * Compute a call into the shorter call naming the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.
+	 * @since 5.110.0
+	 */
+	reduceFunctions?: boolean;
+	/**
+	 * Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is `mergeRules`.
+	 * @since 5.110.0
+	 */
+	removeDeadRules?: boolean;
+	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
 	 * @since 5.110.0
 	 */
 	rewriteCustomProperties?: boolean;
+	/**
+	 * Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.
+	 * @since 5.110.0
+	 */
+	shortenColors?: boolean;
+	/**
+	 * Write a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), and collapse an `and` of two one-sided ranges into the interval it describes. On by default.
+	 * @since 5.110.0
+	 */
+	shortenMediaQueries?: boolean;
+	/**
+	 * Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a `+`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.
+	 * @since 5.110.0
+	 */
+	shortenNumbers?: boolean;
+	/**
+	 * Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an `An+B` written the shortest way its microsyntax allows, and a `from` / `100%` keyframe selector written as the shorter of the pair. On by default.
+	 * @since 5.110.0
+	 */
+	shortenSelectors?: boolean;
+	/**
+	 * Write a value the shortest way its property's own grammar allows: a `{1,4}` box or corner notation collapsed, a slot holding its own initial dropped, and `flex` / `font-weight` / `display` / `transition` / `<position>` / `<repeat-style>` written the short way. On by default. Merging separate longhand declarations is `mergeLonghands`.
+	 * @since 5.110.0
+	 */
+	shortenValues?: boolean;
 	/**
 	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
 	 * @since 5.110.0
@@ -2426,15 +2486,30 @@ export interface OptimizationMinimizeCss {
 	vendorPrefixes?: boolean;
 }
 /**
- * What the HTML minimizer may do beyond the transforms that always apply.
+ * What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for.
  * @since 5.110.0
  */
 export interface OptimizationMinimizeHtml {
+	/**
+	 * Write a boolean attribute spelled with its own name (`disabled="disabled"`) as the bare name the spec canonicalizes it to. On by default.
+	 * @since 5.110.0
+	 */
+	collapseBooleanAttributes?: boolean;
 	/**
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: ("conservative" | "smart" | "all") | boolean;
+	/**
+	 * Which comments survive. `"some"`, the default, keeps nothing: every comment an HTML parser reads is inert; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's `format.comments` does, so a pattern that names nothing else drops the ones `"some"` would have kept. A downlevel conditional comment, a server-side include and a `<?…?>` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
+	 * @since 5.110.0
+	 */
+	comments?:
+		| ("all" | "some")
+		| RegExp
+		| boolean
+		| string
+		| ((comment: string) => boolean);
 	/**
 	 * Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll("style").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.
 	 * @since 5.110.0
@@ -2446,15 +2521,40 @@ export interface OptimizationMinimizeHtml {
 	 */
 	minifyConditionalComments?: boolean;
 	/**
+	 * Strip the whitespace between the tokens of a `<script>` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.
+	 * @since 5.110.0
+	 */
+	minifyJson?: boolean;
+	/**
 	 * Minify the document held in an `<iframe srcdoc>` attribute. Off by default: the body is a whole document of its own (its base URL is `about:srcdoc`), so minifying it is safe, but the attribute is readable from script and a consumer comparing `iframe.srcdoc` byte for byte would see it change.
 	 * @since 5.110.0
 	 */
 	minifySrcdoc?: boolean;
 	/**
-	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
+	 * Run the CSS minimizer over an inline `<style>` element and every `style=""` attribute, with the options `optimization.minimize.css` names. On by default.
 	 * @since 5.110.0
 	 */
-	preserveComments?: (RegExp | string)[];
+	minifyStyles?: boolean;
+	/**
+	 * Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.
+	 * @since 5.110.0
+	 */
+	normalizeAttributeQuotes?: boolean;
+	/**
+	 * Fold an enumerated attribute's value to the keyword it names (`type="TEXT"` -> `type=text`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.
+	 * @since 5.110.0
+	 */
+	normalizeEnumeratedAttributes?: boolean;
+	/**
+	 * Normalize a list-shaped attribute value: a space-separated token list (`class`, `rel`, `part`, …), a comma-separated one (`accept`, `sizes`, …), a `srcset` and the viewport `<meta content>`. On by default. Reordering a token list is `sortTokenLists`, which is separate and off by default.
+	 * @since 5.110.0
+	 */
+	normalizeListAttributes?: boolean;
+	/**
+	 * Write an integer attribute (`tabindex`, `colspan`, `width`, …) the one way its own rules read it — leading whitespace, a `+` and leading zeros all go. On by default.
+	 * @since 5.110.0
+	 */
+	normalizeNumericAttributes?: boolean;
 	/**
 	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals `class`, `id`, `style`, `dir`, `accesskey`, `itemprop`, `itemref`, `itemtype` and `part`, and every attribute reflecting a token list on the elements the spec defines it for — `rel` on `<a>`, `<area>`, `<form>` and `<link>`, `ping` on `<a>` and `<area>`, `headers` on `<td>` and `<th>`, `blocking` on `<link>`, `<script>` and `<style>`, `sizes` on `<link>`, `for` on `<output>` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so `<x-foo rel="">` and `<label for="">` keep it. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
 	 * @since 5.110.0
@@ -2470,6 +2570,11 @@ export interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	removeImpliedTags?: ("smart" | "all") | boolean;
+	/**
+	 * Leave out a tag §13.1.2.4 lets the parser imply, other than the `<html>` / `<head>` / `<body>` shell, which `removeImpliedTags` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.
+	 * @since 5.110.0
+	 */
+	removeOptionalTags?: boolean;
 	/**
 	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0

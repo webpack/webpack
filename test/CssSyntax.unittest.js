@@ -1970,11 +1970,186 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		);
 	});
 
+	describe("a name CSS matches ASCII case-insensitively", () => {
+		it.each([
+			["a property", "a{COLOR:red}", "a{color:red}"],
+			[
+				"a vendor property",
+				"a{-WEBKIT-Box-Shadow:0 0}",
+				"a{-webkit-box-shadow:0 0}"
+			],
+			["an at-rule", "@MEDIA print{a{b:c}}", "@media print{a{b:c}}"],
+			["a function", "a{width:CALC(1px + 2em)}", "a{width:calc(1px + 2em)}"],
+			["a url token", "a{background:URL(A.PNG)}", "a{background:url(A.PNG)}"],
+			[
+				"a padded url token",
+				"a{background:URL(  A.PNG  )}",
+				"a{background:url(A.PNG)}"
+			],
+			["a unit", "a{width:10PX}", "a{width:10px}"],
+			["a pseudo-class", "A:HOVER{b:c}", "A:hover{b:c}"],
+			["a pseudo-element", "a::BEFORE{b:c}", "a:before{b:c}"],
+			[
+				"a pseudo inside a selector function",
+				"a:NOT(b:HOVER){c:d}",
+				"a:not(b:hover){c:d}"
+			],
+			[
+				"a media feature",
+				"@media (MIN-WIDTH:100PX){a{b:c}}",
+				"@media (width>=100px){a{b:c}}"
+			],
+			[
+				"a media type and the keyword before it",
+				"@media ONLY SCREEN{a{b:c}}",
+				"@media only screen{a{b:c}}"
+			]
+		])("is printed lowercase: %s", (_name, css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+
+		it.each([
+			// A type selector is case-sensitive in XML, where `linearGradient` is
+			// its own element.
+			["a type selector", "DIV linearGradient{a:b}"],
+			["an id and a class", "#Id.Class{a:b}"],
+			// HTML matches an attribute name case-insensitively, XML does not, and
+			// an attribute's value is case-sensitive in both.
+			["an attribute selector", 'a[HREF^="HTTP x"]{b:c}'],
+			["a custom property", "a{--Foo:BAR}"],
+			["a keyframes name", "@keyframes Spin{0%{a:b}}"],
+			["a container name", "@container Card (width>0px){a{b:c}}"],
+			["a custom media name", "@media (--Wide){a{b:c}}"],
+			// A style query asks whether a custom property holds the token stream
+			// written here, which is read as written.
+			["a style query", "@container style(--x:Foo){a{b:c}}"],
+			["a string in a condition", '@media (font-family:"My Font"){a{b:c}}'],
+			["a font family", "a{font-family:Other Face,MyFont}"],
+			// A name carrying an escape names its characters by case: `\\G` is not
+			// `\\g`.
+			["an escaped name", "a{c\\4Flor:red}"]
+		])("is left as written: %s", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
+
+		// The bytes an engine reads a charset rule as are the literal `@charset "`
+		// (CSS Syntax 3 §3.2), so lowercasing one would turn a rule the engine
+		// drops into one that sets the sheet's encoding.
+		it("leaves a cased `@charset` alone", () => {
+			expect(min('@CHARSET "utf-8";a{b:c}')).toBe('@CHARSET "utf-8";a{b:c}');
+			expect(min('@charset "utf-8";a{b:c}')).toBe('@charset "utf-8";a{b:c}');
+		});
+
+		// Both are the same declaration however they are spelled, so a rule an
+		// identical later sibling repeats is dead whichever way each spells it.
+		it("makes two spellings of one property the same bytes", () => {
+			expect(min("a{color:red}a{COLOR:blue}")).toBe(
+				"a{color:red}a{color:blue}"
+			);
+			expect(min("a{COLOR:red}a{color:red}")).toBe("a{color:red}");
+		});
+
+		// A property whose grammar is keywords alone claims no name of the
+		// author's, so a top-level identifier in one of its values is a keyword.
+		it.each([
+			["a{DISPLAY:GRID}", "a{display:grid}"],
+			["a{position:ABSOLUTE;float:LEFT}", "a{position:absolute;float:left}"],
+			["a{white-space:PRE-WRAP}", "a{white-space:pre-wrap}"],
+			["a{transform:NONE}", "a{transform:none}"],
+			// A vendor spelling is read as the property it spells.
+			["a{-WEBKIT-USER-SELECT:NONE}", "a{-webkit-user-select:none}"]
+		])("lowercases the keyword value %s", (css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+
+		it.each([
+			// Each of these grammars takes a name of the author's somewhere, so an
+			// identifier in one may be that name.
+			["a name the grammar takes", "a{animation-name:Spin}"],
+			["a font family", "a{font-family:Foo}"],
+			["a grid area", "a{grid-area:MyArea}"],
+			["a will-change property", "a{will-change:Xy}"],
+			// A call's arguments follow the function's grammar, not the property's.
+			["a call's argument", "a{font-variant-alternates:stylistic(Foo)}"],
+			// The engine hands a pending-substitution value back as its tokens were
+			// written, so nothing inside one is rewritten.
+			[
+				"a value holding a substitution",
+				"a{text-decoration-line:UNDERLINE var(--x)}"
+			],
+			["a custom property", "a{--x:DISPLAY GRID}"]
+		])("leaves a value identifier alone: %s", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
+
+		// The eleven transforms and three units `mdn-data` spells with a capital
+		// keep that spelling, which is what every other tool writes.
+		it.each([
+			["a{transform:TRANSLATEY(5px)}", "a{transform:translateY(5px)}"],
+			["a{transform:skewx(1deg)}", "a{transform:skew(1deg)}"],
+			["a{transform:SCALEZ(2)}", "a{transform:scaleZ(2)}"],
+			["a{width:40Q}", "a{width:40Q}"],
+			["a{x:1HZ}", "a{x:1Hz}"],
+			["a{x:1KHZ}", "a{x:1kHz}"]
+		])("keeps the canonical spelling of %s", (css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+
+		// The canonical spelling repairs a name that was shouted; a name already
+		// written in one case is left where it is, since the two are the same
+		// bytes either way and reading the table for every unit in a stylesheet
+		// costs more than the spelling is worth.
+		it.each([["a{width:40q}"], ["a{x:1hz}"], ["a{transform:translatey(1px)}"]])(
+			"leaves an already-lowercase name alone: %s",
+			(css) => {
+				expect(min(css)).toBe(css);
+			}
+		);
+
+		// Until its substitution resolves the engine keeps the value as the tokens
+		// it was written as, so a folded name there is a value the CSSOM never
+		// reports — and two spellings of one call stop being one declaration.
+		it.each([
+			["a function", "a{width:CALC(1PX + var(--x))}"],
+			["the substitution itself", "a{color:VAR(--x)}"],
+			["a url token", "a{background:URL(A.PNG) var(--x)}"],
+			["a canonical spelling", "a{transform:TRANSLATEY(var(--x))}"],
+			["an env()", "a{color:ENV(safe-area-inset-top)}"]
+		])("keeps %s as written inside a substituted value", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
+
+		it("still folds a sibling declaration carrying no substitution", () => {
+			expect(min("a{color:VAR(--x);display:GRID}")).toBe(
+				"a{color:VAR(--x);display:grid}"
+			);
+		});
+
+		// An `@font-feature-values` sub-rule names feature values, which are
+		// `<custom-ident>`s: folding one makes two distinct entries collide.
+		it("keeps a font feature value name case-sensitive", () => {
+			expect(
+				min(
+					"@font-feature-values fancy{@styleset{MULTI-def2:2 6;multi-def2:3 4 5}}"
+				)
+			).toBe(
+				"@font-feature-values fancy{@styleset{MULTI-def2:2 6;multi-def2:3 4 5}}"
+			);
+		});
+
+		it("still folds the at-rules around a feature value, and the rules after", () => {
+			expect(
+				min("@FONT-FEATURE-VALUES fancy{@STYLESET{Nice-Name:1}}a{COLOR:RED}")
+			).toBe("@font-feature-values fancy{@styleset{Nice-Name:1}}a{color:red}");
+		});
+	});
+
 	it("rewrites a `flex` value to its keyword spelling", () => {
 		expect(min("a{flex:0 0 auto}")).toBe("a{flex:none}");
 		expect(min("a{flex:1 1 auto}")).toBe("a{flex:auto}");
-		// The names match case-insensitively; the property keeps its own spelling.
-		expect(min("a{FLEX:0 0 AUTO}")).toBe("a{FLEX:none}");
+		// The names match case-insensitively, and the property is printed the one
+		// way it matches.
+		expect(min("a{FLEX:0 0 AUTO}")).toBe("a{flex:none}");
 	});
 
 	it("drops a `flex` shrink factor that is its own default", () => {
@@ -2089,6 +2264,204 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min('a[href="1x"]{b:c}')).toBe('a[href="1x"]{b:c}');
 		expect(min('a[href="-"]{b:c}')).toBe('a[href="-"]{b:c}');
 		expect(min("a[href]{b:c}")).toBe("a[href]{b:c}");
+	});
+});
+
+describe("CssSyntax — the per-transform switches", () => {
+	/**
+	 * @param {string} src css source
+	 * @param {import("../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src, transforms) =>
+		new SourceProcessor().process(src, { mode: "minify", transforms }).code;
+
+	// One input per switch, minified twice: with everything on, and with that one
+	// switch off — so a guard that stops firing fails here rather than quietly
+	// making the rewrite unconditional again. `comments` is not one of the
+	// booleans, so it has a describe of its own below.
+	it.each([
+		["shortenColors", "a{color:#ffffff}", "a{color:#fff}", "a{color:#ffffff}"],
+		[
+			"reduceFunctions",
+			"a{width:calc(1px + 2px)}",
+			"a{width:3px}",
+			"a{width:calc(1px + 2px)}"
+		],
+		[
+			"shortenMediaQueries",
+			"@media (min-width:1px){a{b:c}}",
+			"@media (width>=1px){a{b:c}}",
+			"@media (min-width:1px){a{b:c}}"
+		],
+		["shortenNumbers", "a{width:0.50px}", "a{width:.5px}", "a{width:0.50px}"],
+		["normalizeQuotes", "a{content:'x'}", 'a{content:"x"}', "a{content:'x'}"],
+		["removeDeadRules", "a{b:1;b:1}", "a{b:1}", "a{b:1;b:1}"],
+		["mergeRules", "a{x:1}b{x:1}", "a,b{x:1}", "a{x:1}b{x:1}"],
+		["shortenSelectors", "b,a,b{c:1}", "a,b{c:1}", "b,a,b{c:1}"],
+		[
+			"shortenValues",
+			"a{margin:1px 1px}",
+			"a{margin:1px}",
+			"a{margin:1px 1px}"
+		],
+		[
+			"mergeLonghands",
+			"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+			"a{margin:1px 2px}",
+			"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}"
+		],
+		// A shorthand the longhands after it fold into is the same rewrite read
+		// from the other end, and answers to the same switch.
+		[
+			"mergeLonghands",
+			"a{margin:1px;margin-top:2px}",
+			"a{margin:2px 1px 1px}",
+			"a{margin:1px;margin-top:2px}"
+		],
+		// Taking the `calc()` off a term that means the same bare is the last step
+		// of the fold, not a separate one.
+		[
+			"reduceFunctions",
+			"a{width:calc(5px)}",
+			"a{width:5px}",
+			"a{width:calc(5px)}"
+		]
+	])("%s", (name, css, on, off) => {
+		expect(min(css)).toBe(on);
+		expect(min(css, { [name]: false })).toBe(off);
+	});
+
+	// A `url()` holds two rewrites, and each answers to its own switch: writing
+	// a data URI's percent-escapes as the bytes they name, and taking the quotes
+	// off a body that is a url-token without them.
+	it.each([
+		[undefined, "a{background:url(data:image/svg+xml,<svg></svg>)}"],
+		[
+			{ normalizeQuotes: false },
+			'a{background:url("data:image/svg+xml,<svg></svg>")}'
+		]
+	])(
+		"writes a data URI's escapes as the bytes they name: %s",
+		(transforms, expected) => {
+			expect(
+				min(
+					'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}',
+					transforms
+				)
+			).toBe(expected);
+		}
+	);
+
+	// The embedded-source renderer reads a data URL's payload, which is what the
+	// percent-escapes hold — so it is offered the decoded one, and what it hands
+	// back is quoted or not as `normalizeQuotes` says.
+	describe("a rendered data URL", () => {
+		const css = 'a{background:url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")}';
+		/**
+		 * @param {string} source the payload
+		 * @returns {string} it, rewritten
+		 */
+		const renderEmbeddedSource = (source) =>
+			source.replace("<svg>", "<svg id=r>");
+		/**
+		 * @param {import("../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+		 * @returns {string} the minified serialization
+		 */
+		const render = (transforms) =>
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				renderEmbeddedSource,
+				transforms
+			}).code;
+
+		it("reaches the renderer with the payload decoded", () => {
+			expect(render()).toBe(
+				"a{background:url(data:image/svg+xml,<svg\\ id=r></svg>)}"
+			);
+		});
+
+		it("keeps the quotes round what it hands back with quotes off", () => {
+			expect(render({ normalizeQuotes: false })).toBe(
+				'a{background:url("data:image/svg+xml,<svg id=r></svg>")}'
+			);
+		});
+
+		// With no renderer the payload is still written as the bytes its escapes
+		// name, which is what makes it the same URL either way.
+		it("writes the payload out with no renderer", () => {
+			expect(min(css)).toBe(
+				"a{background:url(data:image/svg+xml,<svg></svg>)}"
+			);
+		});
+	});
+
+	// One option says which comments survive, in the six forms terser's
+	// `format.comments` takes.
+	describe("comments", () => {
+		const css =
+			"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
+		const banners =
+			"/*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
+		const every =
+			"/*inert*//*! banner *//* @license L */a{b:c}/*# sourceMappingURL=x.map */";
+
+		it.each([
+			["absent keeps the banners", undefined, banners],
+			['"some" keeps the banners', /** @type {const} */ ("some"), banners],
+			["true keeps every comment", true, every],
+			['"all" keeps every comment', /** @type {const} */ ("all"), every],
+			["false keeps none", false, "a{b:c}"],
+			["a string is read as a pattern", "banner", "/*! banner */a{b:c}"],
+			["a RegExp keeps what it matches", /inert/, "/*inert*/a{b:c}"],
+			[
+				"a predicate keeps what it accepts",
+				/** @type {(comment: string) => boolean} */ (
+					(comment) => comment.includes("@license")
+				),
+				"/* @license L */a{b:c}"
+			]
+		])("%s", (_name, comments, expected) => {
+			expect(min(css, { comments })).toBe(expected);
+		});
+
+		// The pragma is a link to a source map rather than a comment, so the two
+		// banner levels carry it; a selector the author wrote decides it like any
+		// other comment, or `comments` would have a case it cannot express.
+		it.each([
+			[undefined, true],
+			[/** @type {const} */ ("some"), true],
+			[/** @type {const} */ ("all"), true],
+			[true, true],
+			[false, false],
+			[/nothing-matches/, false],
+			[/** @type {(comment: string) => boolean} */ (() => false), false]
+		])("source-map pragma with comments: %s", (comments, kept) => {
+			const out = min("a{b:c}/*# sourceMappingURL=x.map */", { comments });
+			expect(out.includes("/*# sourceMappingURL=x.map */")).toBe(kept);
+		});
+
+		// A `g` flag would carry an index from one comment to the next.
+		it("matches a global pattern from the start each time", () => {
+			expect(min("a{b:c}/*k1*/d{e:f}/*k2*/", { comments: /k\d/g })).toBe(
+				"a{b:c}/*k1*/d{e:f}/*k2*/"
+			);
+		});
+	});
+
+	// Turning one off leaves the rest alone, which is the whole point of naming
+	// them one at a time.
+	it("leaves every other rewrite on", () => {
+		expect(
+			min("a{color:#ffffff;margin:1px 1px}", { shortenColors: false })
+		).toBe("a{color:#ffffff;margin:1px}");
+	});
+
+	// A walk that does not print holds every rewrite on, so no visitor pass
+	// inherits a switch from a print that ran before it.
+	it("takes an absent option as every rewrite on", () => {
+		expect(min("a{color:#ffffff}", {})).toBe("a{color:#fff}");
+		expect(min("a{color:#ffffff}", undefined)).toBe("a{color:#fff}");
 	});
 });
 
@@ -2860,7 +3233,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// no exact ratio to a shorter unit
 			["1.3px"],
 			// `q` is a conversion source, never a target
-			["40q"],
+			["40Q"],
 			// scientific notation is left alone
 			["1e3px"],
 			// a unit outside the absolute families
@@ -3159,7 +3532,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			["a{border-image:none 30}", "a{border-image:30}"],
 			["a{mask:none luminance}", "a{mask:luminance}"],
-			["a{TRANSITION:opacity 1s EASE}", "a{TRANSITION:opacity 1s}"]
+			["a{TRANSITION:opacity 1s EASE}", "a{transition:opacity 1s}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -3749,7 +4122,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// One block holds a property once, so the earlier declaration of a
 			// property both of them set would be the one it loses.
 			["they set the same property", "a{color:red}a{color:blue}"],
-			["...whatever its case", "a{color:red}a{COLOR:blue}"],
 			// A shorthand holds every longhand its name prefixes.
 			[
 				"one holds the other's longhand",
@@ -4984,7 +5356,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `left` / `right` are `justify-*`'s alone, so the shorthand is invalid
 			// whole where the `justify-*` declaration alone was read.
 			"a{align-items:left;justify-items:left}",
-			"a{align-items:RIGHT;justify-items:RIGHT}",
 			"a{align-self:left;justify-self:left}",
 			"a{align-content:right;justify-content:right}",
 			// ...and a `<baseline-position>` is `align-content`'s alone, the other way
@@ -4992,6 +5363,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			"a{align-content:baseline;justify-content:baseline}"
 		])("declines a pair over a keyword only one half takes: %s", (css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		// The keyword matches case-insensitively, and `align-items` is keywords
+		// alone, so it prints the one way it matches.
+		it("declines the pair whatever case the keyword is written in", () => {
+			expect(minify("a{align-items:RIGHT;justify-items:RIGHT}")).toBe(
+				"a{align-items:right;justify-items:right}"
+			);
 		});
 
 		it("merges a pair over a keyword both halves take", () => {
@@ -5078,7 +5457,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{text-decoration-line:line-through;text-decoration-style:double;text-decoration-color:CanvasText;text-decoration-thickness:from-font}"
 				)
-			).toBe("a{text-decoration:line-through double CanvasText from-font}");
+				// A system color matches ASCII case-insensitively and is what the CSSOM
+				// hands back lowercase, so it prints the one way it matches.
+			).toBe("a{text-decoration:line-through double canvastext from-font}");
 		});
 
 		it.each([
@@ -5979,7 +6360,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 				"@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}",
 				["chrome 40"]
 			)
-		).toBe("@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}");
+		).toBe("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}");
 	});
 
 	it("gives each same-named at-rule its own copy, so the last still wins", () => {
@@ -6188,7 +6569,7 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("matches a pseudo name case-insensitively", () => {
 		expect(minifyFor("::PLACEHOLDER{color:red}", ["chrome 40"])).toBe(
-			"::-webkit-input-placeholder{color:red}::PLACEHOLDER{color:red}"
+			"::-webkit-input-placeholder{color:red}::placeholder{color:red}"
 		);
 	});
 

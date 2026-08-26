@@ -37,7 +37,7 @@
 }
 /*! box: `!important` is not one of the values */
 .t11 { padding: 7px 7px !important }
-/*! box: a case-different re-spelling is not compared, so it is kept */
+/*! box: a case-different re-spelling is the same value once normalized */
 .t12 { margin: 1PX 1px }
 /*! box: five values is not the notation, so nothing is assumed */
 .t13 { margin: 1px 1px 1px 1px 1px }

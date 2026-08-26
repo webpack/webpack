@@ -1,0 +1,28 @@
+/* Every `optimization.minimize.css` transform switch is off here, so each rule
+   below keeps what the transform named in its comment would have rewritten —
+   this comment among them. Whitespace still goes: collapsing it is not one of
+   the rewrites a switch names. */
+
+/*! comments: at `"all"` an inert comment is kept, not just this banner */
+/* an inert comment */
+/*! shortenColors: the hex is not shortened */
+.t01 { color: #ffffff }
+/*! reduceFunctions: the calc is not folded and the transform names both axes */
+.t03 { width: calc(1px + 2px); transform: translate(1px, 0) }
+/*! shortenNumbers: the leading zero and the trailing fraction stay */
+.t05 { width: 0.50px; opacity: 100% }
+/*! normalizeQuotes: the string keeps the quote it was written with */
+.t06 { content: 'x' }
+/*! removeDeadRules: the second declaration of a property keeps the first */
+.t07 { color: red; color: red }
+/*! shortenSelectors: the list is neither deduplicated nor ordered */
+.t09, .t08, .t09 { color: red }
+/*! shortenValues: the repeated box value is not collapsed */
+.t10 { margin: 1px 1px }
+/*! shortenMediaQueries: the feature keeps its `min-` spelling */
+@media (min-width: 100px) { .t11 { color: red } }
+/*! mergeRules: two rules printing the same block stay two */
+.t12 { color: red }
+.t13 { color: red }
+/*! mergeLonghands: the four sides stay four declarations */
+.t14 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }

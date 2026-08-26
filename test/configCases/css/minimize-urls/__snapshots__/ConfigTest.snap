@@ -5,7 +5,7 @@ Array [
   "@import url(http://website.test/foo.css);",
   "/*! normalize-url: should strip double quotes */.t01{background:url(http://website.test/cat.jpg)}",
   "/*! normalize-url: should strip single quotes */.t02{background:url(http://website.test/cat.jpg)}",
-  "/*! normalize-url: should strip double quotes uppercase URL */.t03{background:URL(http://website.test/cat.jpg)}",
+  "/*! normalize-url: should strip double quotes uppercase URL */.t03{background:url(http://website.test/cat.jpg)}",
   "/*! normalize-url: should not escape more than one special character */.t04{background:url(\\"http://website.test/assets_(test).png\\")}",
   "/*! normalize-url: should remove the default port */.t05{background:url(http://website.test:80/image.png)}",
   "/*! normalize-url: should not remove the fragment */.t06{background:url(http://website.test/test.svg#icon)}",

@@ -479,7 +479,7 @@ const HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 // test membership in, and the name maps foreign content is adjusted with. Spec
 // prose, so they are written out — no dataset states them. Sets rather than
 // arrays because the tree builder runs these tests per token on hot paths.
-/** @typedef {[string, "set" | "array" | "object" | "map" | "byElement" | "byElementSet", string, (string | [string, string] | [string, string[] | null])[]]} ParserTable a name, its literal kind, its doc line and its members */
+/** @typedef {[string, "set" | "array" | "adjust" | "object" | "map" | "byElement" | "byElementSet", string, (string | [string, string] | [string, string[] | null])[]]} ParserTable a name, its literal kind, its doc line and its members */
 // §13.2.6.4.7 "generate implied end tags", named once: the scope table below is
 // the same list read from the other side.
 /** @type {string[]} */
@@ -680,111 +680,111 @@ const PARSER_TABLES = [
 	],
 	[
 		"SVG_TAG_ADJUST",
-		"object",
+		"adjust",
 		'§13.2.6.5 "adjust SVG tag name": lowercased source name -> the camelCased SVG name.',
 		[
-			["altglyph", "altGlyph"],
-			["altglyphdef", "altGlyphDef"],
-			["altglyphitem", "altGlyphItem"],
-			["animatecolor", "animateColor"],
-			["animatemotion", "animateMotion"],
-			["animatetransform", "animateTransform"],
-			["clippath", "clipPath"],
-			["feblend", "feBlend"],
-			["fecolormatrix", "feColorMatrix"],
-			["fecomponenttransfer", "feComponentTransfer"],
-			["fecomposite", "feComposite"],
-			["feconvolvematrix", "feConvolveMatrix"],
-			["fediffuselighting", "feDiffuseLighting"],
-			["fedisplacementmap", "feDisplacementMap"],
-			["fedistantlight", "feDistantLight"],
-			["fedropshadow", "feDropShadow"],
-			["feflood", "feFlood"],
-			["fefunca", "feFuncA"],
-			["fefuncb", "feFuncB"],
-			["fefuncg", "feFuncG"],
-			["fefuncr", "feFuncR"],
-			["fegaussianblur", "feGaussianBlur"],
-			["feimage", "feImage"],
-			["femerge", "feMerge"],
-			["femergenode", "feMergeNode"],
-			["femorphology", "feMorphology"],
-			["feoffset", "feOffset"],
-			["fepointlight", "fePointLight"],
-			["fespecularlighting", "feSpecularLighting"],
-			["fespotlight", "feSpotLight"],
-			["fetile", "feTile"],
-			["feturbulence", "feTurbulence"],
-			["foreignobject", "foreignObject"],
-			["glyphref", "glyphRef"],
-			["lineargradient", "linearGradient"],
-			["radialgradient", "radialGradient"],
-			["textpath", "textPath"]
+			"altGlyph",
+			"altGlyphDef",
+			"altGlyphItem",
+			"animateColor",
+			"animateMotion",
+			"animateTransform",
+			"clipPath",
+			"feBlend",
+			"feColorMatrix",
+			"feComponentTransfer",
+			"feComposite",
+			"feConvolveMatrix",
+			"feDiffuseLighting",
+			"feDisplacementMap",
+			"feDistantLight",
+			"feDropShadow",
+			"feFlood",
+			"feFuncA",
+			"feFuncB",
+			"feFuncG",
+			"feFuncR",
+			"feGaussianBlur",
+			"feImage",
+			"feMerge",
+			"feMergeNode",
+			"feMorphology",
+			"feOffset",
+			"fePointLight",
+			"feSpecularLighting",
+			"feSpotLight",
+			"feTile",
+			"feTurbulence",
+			"foreignObject",
+			"glyphRef",
+			"linearGradient",
+			"radialGradient",
+			"textPath"
 		]
 	],
 	[
 		"SVG_ATTR_ADJUST",
-		"object",
+		"adjust",
 		'§13.2.6.1 "adjust SVG attributes": lowercased source name -> the camelCased SVG attribute.',
 		[
-			["attributename", "attributeName"],
-			["attributetype", "attributeType"],
-			["basefrequency", "baseFrequency"],
-			["baseprofile", "baseProfile"],
-			["calcmode", "calcMode"],
-			["clippathunits", "clipPathUnits"],
-			["diffuseconstant", "diffuseConstant"],
-			["edgemode", "edgeMode"],
-			["filterunits", "filterUnits"],
-			["glyphref", "glyphRef"],
-			["gradienttransform", "gradientTransform"],
-			["gradientunits", "gradientUnits"],
-			["kernelmatrix", "kernelMatrix"],
-			["kernelunitlength", "kernelUnitLength"],
-			["keypoints", "keyPoints"],
-			["keysplines", "keySplines"],
-			["keytimes", "keyTimes"],
-			["lengthadjust", "lengthAdjust"],
-			["limitingconeangle", "limitingConeAngle"],
-			["markerheight", "markerHeight"],
-			["markerunits", "markerUnits"],
-			["markerwidth", "markerWidth"],
-			["maskcontentunits", "maskContentUnits"],
-			["maskunits", "maskUnits"],
-			["numoctaves", "numOctaves"],
-			["pathlength", "pathLength"],
-			["patterncontentunits", "patternContentUnits"],
-			["patterntransform", "patternTransform"],
-			["patternunits", "patternUnits"],
-			["pointsatx", "pointsAtX"],
-			["pointsaty", "pointsAtY"],
-			["pointsatz", "pointsAtZ"],
-			["preservealpha", "preserveAlpha"],
-			["preserveaspectratio", "preserveAspectRatio"],
-			["primitiveunits", "primitiveUnits"],
-			["refx", "refX"],
-			["refy", "refY"],
-			["repeatcount", "repeatCount"],
-			["repeatdur", "repeatDur"],
-			["requiredextensions", "requiredExtensions"],
-			["requiredfeatures", "requiredFeatures"],
-			["specularconstant", "specularConstant"],
-			["specularexponent", "specularExponent"],
-			["spreadmethod", "spreadMethod"],
-			["startoffset", "startOffset"],
-			["stddeviation", "stdDeviation"],
-			["stitchtiles", "stitchTiles"],
-			["surfacescale", "surfaceScale"],
-			["systemlanguage", "systemLanguage"],
-			["tablevalues", "tableValues"],
-			["targetx", "targetX"],
-			["targety", "targetY"],
-			["textlength", "textLength"],
-			["viewbox", "viewBox"],
-			["viewtarget", "viewTarget"],
-			["xchannelselector", "xChannelSelector"],
-			["ychannelselector", "yChannelSelector"],
-			["zoomandpan", "zoomAndPan"]
+			"attributeName",
+			"attributeType",
+			"baseFrequency",
+			"baseProfile",
+			"calcMode",
+			"clipPathUnits",
+			"diffuseConstant",
+			"edgeMode",
+			"filterUnits",
+			"glyphRef",
+			"gradientTransform",
+			"gradientUnits",
+			"kernelMatrix",
+			"kernelUnitLength",
+			"keyPoints",
+			"keySplines",
+			"keyTimes",
+			"lengthAdjust",
+			"limitingConeAngle",
+			"markerHeight",
+			"markerUnits",
+			"markerWidth",
+			"maskContentUnits",
+			"maskUnits",
+			"numOctaves",
+			"pathLength",
+			"patternContentUnits",
+			"patternTransform",
+			"patternUnits",
+			"pointsAtX",
+			"pointsAtY",
+			"pointsAtZ",
+			"preserveAlpha",
+			"preserveAspectRatio",
+			"primitiveUnits",
+			"refX",
+			"refY",
+			"repeatCount",
+			"repeatDur",
+			"requiredExtensions",
+			"requiredFeatures",
+			"specularConstant",
+			"specularExponent",
+			"spreadMethod",
+			"startOffset",
+			"stdDeviation",
+			"stitchTiles",
+			"surfaceScale",
+			"systemLanguage",
+			"tableValues",
+			"targetX",
+			"targetY",
+			"textLength",
+			"viewBox",
+			"viewTarget",
+			"xChannelSelector",
+			"yChannelSelector",
+			"zoomAndPan"
 		]
 	],
 	[
@@ -1790,6 +1790,14 @@ const byElementLiteral = (entries, asSet = false) => {
  * @returns {string} the declaration
  */
 const parserTable = ([name, kind, doc, items]) => {
+	if (kind === "adjust") {
+		const keys = new Set(
+			/** @type {string[]} */ (items).map((item) => item.toLowerCase())
+		);
+		if (keys.size !== items.length) {
+			throw new Error(`two names in \`${name}\` lowercase to one key`);
+		}
+	}
 	const value =
 		kind === "set"
 			? setLiteral(/** @type {string[]} */ (items))
@@ -1802,11 +1810,13 @@ const parserTable = ([name, kind, doc, items]) => {
 						)
 					: kind === "array"
 						? `[${items.map((item) => `"${item}"`).join(", ")}]`
-						: `Object.assign(Object.create(null), {${
-								/** @type {[string, string][]} */ (items)
-									.map(([key, mapped]) => `${propertyKey(key)}: "${mapped}"`)
-									.join(", ")
-							}})`;
+						: kind === "adjust"
+							? `adjusted([${items.map((item) => `"${item}"`).join(", ")}])`
+							: `Object.assign(Object.create(null), {${
+									/** @type {[string, string][]} */ (items)
+										.map(([key, mapped]) => `${propertyKey(key)}: "${mapped}"`)
+										.join(", ")
+								}})`;
 	const type =
 		kind === "set"
 			? "Set<string>"
@@ -1872,6 +1882,21 @@ const source = `/*
 // cspell:ignore ${CSPELL_IGNORE}
 // Reflected-attribute tables from ${REFLECT_SOURCE}; everything else is the
 // generator's SUPPLEMENT, which carries the spec facts no dataset states.
+
+/**
+ * An "adjust … name" table: each name under the lowercase spelling the tokenizer
+ * hands over, which is that name lowercased — so only the names are stated and
+ * no key can drift from the value it maps to. Null-prototype, so a name like
+ * \`constructor\` is a miss rather than a hit.
+ * @param {string[]} names the adjusted names
+ * @returns {Record<string, string>} the table
+ */
+const adjusted = (names) => {
+	/** @type {Record<string, string>} */
+	const table = Object.create(null);
+	for (const name of names) table[name.toLowerCase()] = name;
+	return table;
+};
 
 /**
  * §13.1.2.4: the elements a \`<p>\` end tag may be omitted in front of.

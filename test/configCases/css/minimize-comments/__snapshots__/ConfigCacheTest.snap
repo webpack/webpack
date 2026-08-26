@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-comments minimize-comments should compile 1`] = `
+Array [
+  ".t01,.t02,.t03{color:red}/* keep: named by the pattern, so this one survives */.t04{color:red}",
+  "/*! keep: a banner the pattern does name */.t05{color:red}",
+]
+`;
