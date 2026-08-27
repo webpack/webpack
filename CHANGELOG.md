@@ -1,5 +1,15 @@
 # webpack
 
+## 5.110.1
+
+### Patch Changes
+
+- Fix a capture-group-less `snapshot.managedPaths` RegExp; speed up cache writes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21843](https://github.com/webpack/webpack/pull/21843))
+
+- Throw `SyntaxError`, or `WebAssembly.CompileError`, from an unparsable module. (by [@alexander-akait](https://github.com/alexander-akait) in [#21847](https://github.com/webpack/webpack/pull/21847))
+
+- Accept the `optimization.minimize: true` shorthand set by a plugin in `apply()`. (by [@AgentEnder](https://github.com/AgentEnder) in [#21845](https://github.com/webpack/webpack/pull/21845))
+
 ## 5.110.0
 
 ### Minor Changes
@@ -789,7 +799,7 @@
 
 - Fix snapshot validity check for context dependencies in watch mode by treating watchpack's existence-only entries (`{}`) as cache misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#20916](https://github.com/webpack/webpack/pull/20916))
 
-- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+- Support no-expression template literals in computed member access (e.g. `` import.meta[`url`] ``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
 
 - Improve tree-shaking in `isPure`: handle more expression types (`ArrayExpression`, `ObjectExpression`, `NewExpression`, `ChainExpression`, `UnaryExpression` (safe operators), `MetaProperty`, `TaggedTemplateExpression`, `BinaryExpression` (strict equality)), prevent `/*#__PURE__*/` comments from leaking across `ObjectExpression` properties, and detect PURE comments inside `TemplateLiteral` interpolations. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
 
