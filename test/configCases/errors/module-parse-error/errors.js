@@ -1,8 +1,12 @@
 "use strict";
 
 module.exports = [
-	[/^Module parse failed: Unexpected token/],
-	[/^Module parse failed: Expected property name or '}' in JSON/],
-	[/^Module parse failed: Unsupported type/],
-	[/^Module build failed \(from .*loader\.js\):\nError: loader boom/]
+	// anchored per module: the JSON parse message differs between V8 versions
+	[{ moduleName: /broken\.js$/ }, /^Module parse failed: Unexpected token/],
+	[{ moduleName: /broken\.json$/ }, /^Module parse failed: /],
+	[{ moduleName: /broken\.wasm$/ }, /^Module parse failed: Unsupported type/],
+	[
+		{ moduleName: /built\.js$/ },
+		/^Module build failed \(from .*loader\.js\):\nError: loader boom/
+	]
 ];

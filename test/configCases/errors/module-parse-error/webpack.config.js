@@ -10,6 +10,10 @@ module.exports = {
 			}
 		]
 	},
+	// pinned, so the `"auto"` default cannot resolve differently per target
+	experiments: {
+		asyncWebAssembly: true
+	},
 	// the bundle has to be emitted for the failing modules to be executed
 	optimization: {
 		emitOnErrors: true
