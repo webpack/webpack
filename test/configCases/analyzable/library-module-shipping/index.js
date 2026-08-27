@@ -1,10 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-// Named exports make each of these an ESM library, so the analyzable literals are
-// asserted next to the library's own `export { ... }`. Both are exported rather than
-// used behind a flag: a reference nothing exports is shaken out, taking the chunk
-// and the asset with it.
+// Exported, not used behind a flag: a reference nothing exports is shaken out, taking
+// the chunk and the asset with it.
 export const value = 42;
 export const load = () => import(/* webpackChunkName: "lazy" */ "./lazy");
 export const assetUrl = new URL("./asset.txt", import.meta.url).href;

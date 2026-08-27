@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Emit no development source map for library builds, as other bundlers do.
+Emit no development source map for module libraries, or any with futureDefaults.

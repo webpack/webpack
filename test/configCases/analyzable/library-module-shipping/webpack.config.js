@@ -1,8 +1,7 @@
 "use strict";
 
-// A module library is consumed by another bundler, so its chunk references have to be
-// literals whatever names the shipping config gives them — the library types, a
-// content-named chunk, a compilation-hashed public path, and a non-production mode.
+// A module library is read by another bundler, so its references have to be literals
+// whatever the shipping config names them.
 
 const webpack = require("../../../../");
 
@@ -79,8 +78,7 @@ module.exports = [
 		mode: "none",
 		chunkFilename: "[name].mjs"
 	}),
-	// Development builds bake too, whichever devtool keeps the module body out of an
-	// `eval()`.
+	// Development bakes too, whichever devtool keeps the body out of an eval wrapper.
 	base(4, {
 		libraryType: "module",
 		mode: "development",
@@ -93,11 +91,19 @@ module.exports = [
 		chunkFilename: "[name].mjs",
 		devtool: "source-map"
 	}),
-	// No devtool set: a module library takes the one default that keeps the module
-	// body out of an eval wrapper, so the url forms bake here too.
+	// No devtool set: the default a module library now takes emits no map at all.
 	base(6, {
 		libraryType: "module",
 		mode: "development",
 		chunkFilename: "[name].mjs"
+	}),
+	// Asking for `eval` still puts the body where `import.meta` cannot be spelled, so
+	// the url forms keep the runtime shape — the reason the default moved off it.
+	base(7, {
+		libraryType: "module",
+		mode: "development",
+		chunkFilename: "[name].mjs",
+		devtool: "eval",
+		urlFormsBake: false
 	})
 ];
