@@ -7221,6 +7221,64 @@ describe("CssSyntax minify — what a duplicate rule is scoped to", () => {
 // integer below 2**32. Below 2**31 too, so V8 hands each element back as a small
 // integer rather than boxing it. A browser numbering scheme that outgrew either
 // bound would silently truncate every window it appears in, so it fails here.
+// Each switch answers for its own rewrite and for no other's. A rewrite reached
+// from inside another switch's block is the way that breaks: the second switch
+// silently stops working when the first is turned off, which no test of either
+// one alone would notice.
+describe("CssSyntax — the per-transform switches are independent", () => {
+	const { SourceProcessor } = require("../lib/css/syntax");
+
+	/**
+	 * @param {string} src css source
+	 * @param {import("../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src, transforms) =>
+		new SourceProcessor().process(src, { mode: "minify", transforms }).code;
+
+	// One input per switch, which that switch alone rewrites.
+	/** @type {Record<string, string>} */
+	const PROBES = {
+		comments: ".a{b:c}/*note*/",
+		mergeLonghands: ".a{margin:1px;margin-top:2px}",
+		mergeRules: ".a{x:1}.b{x:1}",
+		normalizeQuotes: ".a{content:'x'}",
+		reduceFunctions: ".a{width:calc(1px + 2px)}",
+		removeDeadRules: ".a{}.b{y:1}",
+		shortenColors: ".a{color:#ffffff}",
+		shortenMediaQueries: "@media (min-width:1px){.a{b:c}}",
+		shortenNumbers: ".a{width:0.50px}",
+		shortenSelectors: ".b,.a,.b{c:1}",
+		shortenValues: ".a{margin:1px 1px}"
+	};
+	const NAMES = Object.keys(PROBES);
+	/**
+	 * @param {string} name a switch
+	 * @returns {import("../lib/css/syntax").CssTransformOptions} it turned off
+	 */
+	const turnOff = (name) => ({
+		[name]: name === "comments" ? "all" : false
+	});
+
+	it.each(NAMES)("%s is the only switch that stops its own rewrite", (name) => {
+		const probe = PROBES[name];
+		// The probe has to isolate the switch, or the rows below prove nothing.
+		expect(min(probe, turnOff(name))).not.toBe(min(probe));
+	});
+
+	it.each(NAMES)("%s keeps rewriting while any other switch is off", (name) => {
+		const probe = PROBES[name];
+		const expected = min(probe);
+		for (const other of NAMES) {
+			if (other === name) continue;
+			// Named in the message so a failure says which pair coupled.
+			expect({ [other]: min(probe, turnOff(other)) }).toEqual({
+				[other]: expected
+			});
+		}
+	});
+});
+
 describe("CssData — the version tables stay in their element type", () => {
 	const {
 		NEVER,
