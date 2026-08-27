@@ -26,6 +26,22 @@ export type CacheOptions = true | CacheOptionsNormalized;
 export type CacheOptionsNormalized =
 	false | MemoryCacheOptions | FileCacheOptions;
 /**
+ * A build dependency for filesystem cache invalidation.
+ * @since 5.111.0
+ */
+export type BuildDependencyItem =
+	| string
+	| {
+			/**
+			 * Request to a dependency (resolved as directory relative to the context directory).
+			 */
+			dependency: string;
+			/**
+			 * When true, the dependency may be missing. Existence changes invalidate the cache.
+			 */
+			optional?: boolean;
+	  };
+/**
  * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
  */
 export type Context = string;
@@ -1213,7 +1229,7 @@ export interface FileCacheOptions {
 		/**
 		 * List of dependencies the build depends on.
 		 */
-		[k: string]: string[];
+		[k: string]: BuildDependencyItem[];
 	};
 	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
