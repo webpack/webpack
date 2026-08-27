@@ -183,9 +183,8 @@ module.exports = {
 			});
 			if (minified === source) untouched.push(file);
 		}
-		// Every document here is written with something for minifying to change,
-		// so one handed back byte for byte is one the round-trip guard refused —
-		// which is silent otherwise, and costs the whole document.
+		// Every document here has something to minify, so one handed back byte for
+		// byte is one the guard refused — silent otherwise, and costs the document.
 		expect(untouched).toEqual([]);
 	}
 };
