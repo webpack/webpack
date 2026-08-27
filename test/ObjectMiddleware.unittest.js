@@ -75,21 +75,21 @@ describe("ObjectMiddleware", () => {
 
 	it("keeps a repeated string equal on both sides", () => {
 		const long = "a-repeated-request-string";
-		expect(roundTrip([long, long, long])).toEqual([long, long, long]);
+		expect(roundTrip([long, long, long])).toStrictEqual([long, long, long]);
 	});
 
 	it("restores a repeated object as one shared reference", () => {
 		const shared = { shared: true };
 		const result = roundTrip([shared, shared]);
-		expect(result[0]).toEqual(shared);
+		expect(result[0]).toStrictEqual(shared);
 		expect(result[1]).toBe(result[0]);
 	});
 
 	it("restores equal buffers written twice", () => {
 		const buffer = Buffer.from("some buffer content");
 		const result = roundTrip([buffer, Buffer.from(buffer)]);
-		expect(result[0]).toEqual(buffer);
-		expect(result[1]).toEqual(buffer);
+		expect(result[0]).toStrictEqual(buffer);
+		expect(result[1]).toStrictEqual(buffer);
 	});
 
 	it("round-trips a lazy value", () => {
@@ -100,7 +100,7 @@ describe("ObjectMiddleware", () => {
 		);
 		const result = roundTrip(lazy);
 		expect(SerializerMiddleware.isLazy(result)).toBe(true);
-		expect(result()).toEqual([{ inside: "the lazy" }]);
+		expect(result()).toStrictEqual([{ inside: "the lazy" }]);
 	});
 
 	it("rejects a function that is not lazy", () => {
