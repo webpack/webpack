@@ -14,7 +14,6 @@ const logger = new Logger(
 const context = { logger };
 
 /**
- * Round-trips a value through serialize + deserialize.
  * @param {EXPECTED_ANY} value the value to round-trip
  * @returns {EXPECTED_ANY} what came back
  */
@@ -64,7 +63,7 @@ describe("ObjectMiddleware", () => {
 	for (const name of Object.keys(cases)) {
 		it(`round-trips ${name}`, () => {
 			const value = cases[/** @type {keyof typeof cases} */ (name)];
-			expect(roundTrip(value)).toEqual(value);
+			expect(roundTrip(value)).toStrictEqual(value);
 		});
 	}
 
