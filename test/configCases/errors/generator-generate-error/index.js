@@ -1,7 +1,7 @@
 it("should generate a custom error content", async () => {
-	expect(__STATS__.modules.filter(m => m.moduleType !== "runtime").length).toEqual(14);
-	expect(__STATS__.assets.length).toEqual(19);
-	expect(__STATS__.chunks.length).toEqual(12);
+	expect(__STATS__.modules.filter(m => m.moduleType !== "runtime").length).toEqual(15);
+	expect(__STATS__.assets.length).toEqual(20);
+	expect(__STATS__.chunks.length).toEqual(13);
 
 	let errored;
 
@@ -115,4 +115,14 @@ it("should generate a custom error content", async () => {
 	}
 
 	expect(errored.toString()).toMatch(/webassembly\/async error message/);
+
+	let bytes;
+
+	try {
+		bytes = await import("./bytes.bin");
+	} catch (error) {
+		errored = error;
+	}
+
+	expect(errored.toString()).toMatch(/asset\/bytes error message/);
 });

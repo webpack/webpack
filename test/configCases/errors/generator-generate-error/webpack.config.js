@@ -139,6 +139,16 @@ module.exports = {
 						message: "webassembly/async error message"
 					}
 				}
+			},
+			{
+				type: "asset/bytes",
+				test: /bytes\.bin$/,
+				use: {
+					loader: "./loader.js",
+					options: {
+						message: "asset/bytes error message"
+					}
+				}
 			}
 		]
 	}

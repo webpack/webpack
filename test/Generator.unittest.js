@@ -1,7 +1,9 @@
 "use strict";
 
 const Generator = require("../lib/Generator");
+const { JAVASCRIPT_TYPE } = require("../lib/ModuleSourceTypeConstants");
 const ModuleParseError = require("../lib/errors/ModuleParseError");
+const WebAssemblyJavascriptGenerator = require("../lib/wasm-sync/WebAssemblyJavascriptGenerator");
 
 describe("Generator.throwBuildErrorCode", () => {
 	// `loc` keeps the message deterministic: without it the inner stack, which
@@ -43,5 +45,41 @@ describe("Generator.throwBuildErrorCode", () => {
 				"WebAssembly.CompileError"
 			)
 		).toMatchInlineSnapshot('"throw new Error(\\"loader boom\\");"');
+	});
+});
+
+describe("WebAssemblyJavascriptGenerator.generateError", () => {
+	// asserted on the generated source: a sync wasm module cannot show this at
+	// runtime, the engine rejects the emitted asset before the throw is reached
+	/** @type {(error: Error) => string} */
+	const generate = (error) =>
+		/** @type {import("webpack-sources").Source} */
+		(
+			new WebAssemblyJavascriptGenerator().generateError(
+				error,
+				/** @type {EXPECTED_ANY} */ ({}),
+				/** @type {EXPECTED_ANY} */ ({ type: JAVASCRIPT_TYPE })
+			)
+		)
+			.source()
+			.toString();
+
+	it("should throw a WebAssembly.CompileError for a rejected binary", () => {
+		expect(
+			generate(
+				new ModuleParseError(
+					"\u0000asm",
+					new Error("magic header not detected"),
+					[],
+					"webassembly/sync"
+				)
+			)
+		).toMatch(/^throw new WebAssembly\.CompileError\(/);
+	});
+
+	it("should throw a plain Error for any other build failure", () => {
+		expect(generate(new Error("loader boom"))).toBe(
+			'throw new Error("loader boom");'
+		);
 	});
 });

@@ -5,6 +5,8 @@ Array [
   "Module build failed (from ./loader.js):
 Error: javascript/auto error message",
   "Module build failed (from ./loader.js):
+Error: asset/bytes error message",
+  "Module build failed (from ./loader.js):
 Error: asset/inline error message",
   "Module build failed (from ./loader.js):
 Error: asset/resource error message",
