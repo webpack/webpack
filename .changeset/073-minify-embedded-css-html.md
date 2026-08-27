@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `renderEmbeddedSource` to transform source one language embeds in another.
+Add `renderEmbeddedSource`, and minify what it offers out of the box.

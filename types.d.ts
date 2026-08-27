@@ -5928,7 +5928,7 @@ declare interface CssPrintOptions {
 	renderEmbeddedSource?: (
 		source: string,
 		info: { type: string; hostType: string }
-	) => string;
+	) => undefined | string;
 
 	/**
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
@@ -5939,6 +5939,11 @@ declare interface CssPrintOptions {
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
+
+	/**
+	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
+	 */
+	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
@@ -6002,12 +6007,17 @@ declare interface CssProcessOptions {
 	renderEmbeddedSource?: (
 		source: string,
 		info: { type: string; hostType: string }
-	) => string;
+	) => undefined | string;
 
 	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: CssTransformOptions;
+
+	/**
+	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
+	 */
+	deferEmbeddedSource?: DeferredEmbeddedSource[];
 }
 declare interface CssTransformOptions {
 	/**
@@ -6097,6 +6107,14 @@ declare interface DefaultHandlerOptions {
 		  }>;
 	estimatedTime?: boolean;
 	phaseTimings?: boolean;
+}
+
+declare interface DeferredEmbeddedSource {
+	source: string;
+	build: (answer?: string) => string;
+	type: string;
+	hostType: string;
+	as?: string;
 }
 type DefineConfigInput =
 	| Configuration
@@ -7075,6 +7093,16 @@ declare interface EmbeddedSourceInfo {
 	 * the module being generated
 	 */
 	module: Module;
+
+	/**
+	 * which of that language's productions this is, where more than one can be embedded — a `style=""` holds `"block-contents"`, an inline `<style>` a whole `"stylesheet"`. Absent where the language has only one
+	 */
+	as?: string;
+}
+declare interface EmbeddedSourceResult {
+	code?: string;
+	warnings?: (string | Error)[];
+	errors?: (string | Error)[];
 }
 
 /**
@@ -10332,8 +10360,10 @@ type HtmlPrintOptions = Pick<
 	removeImpliedTags?: boolean | "all" | "smart";
 	renderEmbeddedSource?: (
 		source: string,
-		info: { type: string; hostType: string }
-	) => string;
+		info: { type: string; hostType: string; as?: string }
+	) => undefined | string;
+	deferEmbeddedSource?: DeferredEmbeddedSource[];
+	deferSrcdoc?: boolean;
 };
 declare interface HtmlProcessOptions {
 	/**
@@ -10417,12 +10447,22 @@ declare interface HtmlProcessOptions {
 	removeImpliedTags?: boolean | "all" | "smart";
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript, an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). Replaces the built-in CSS and JSON minifiers, and is the only way inline JavaScript, SVG and a nested document are reached at all
+	 * whether an `<iframe srcdoc>` is among what `deferEmbeddedSource` collects (default true); false for a caller that minifies them itself, which keeps the attribute on the normal path and its shorter delimiter
+	 */
+	deferSrcdoc?: boolean;
+
+	/**
+	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. A `style=""` stays with the built-in CSS minifier, whose text this print reads back to decide how the attribute is written. Takes precedence over `renderEmbeddedSource`
+	 */
+	deferEmbeddedSource?: DeferredEmbeddedSource[];
+
+	/**
+	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript, an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). Replaces the built-in CSS and JSON minifiers wherever it answers, and returning anything but text falls back to them; it is the only way inline JavaScript, SVG and a nested document are reached at all
 	 */
 	renderEmbeddedSource?: (
 		source: string,
-		info: { type: string; hostType: string }
-	) => string;
+		info: { type: string; hostType: string; as?: string }
+	) => undefined | string;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -22501,7 +22541,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * mapping — the map ends up empty).
 	 */
 	take(
-		node: TNode,
+		node?: TNode,
 		srcOffset?: number,
 		srcLine?: number,
 		srcCol?: number,
@@ -22546,6 +22586,20 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 */
 	takeInserts(start: number, end: number): string;
 	sourceMap(options: SourceMapOptions): SourceMap;
+
+	/**
+	 * Stand the text `resolve` gives back in place of every deferred write left
+	 * in the output, and move the mappings that follow one in the same piece by
+	 * what its text changed in length. Runs before {@link result} and
+	 * {@link sourceMap}, so both read the substituted output rather than
+	 * correcting for it.
+	 * The marker is `NUL id NUL`. A NUL mostly cannot reach printed output on its
+	 * own account — both preprocessors turn one into U+FFFD — but an RCDATA
+	 * element and an attribute value keep the one they were written with, so a
+	 * pair of them is read as a write only where what stands between spells an id
+	 * this answers for. Anything else is the source's own text and is left alone.
+	 */
+	substitute(resolve: (id: number) => undefined | string, infix: string): void;
 
 	/**
 	 * Throw away everything printed and stand `text` in its place. For the one
@@ -26987,6 +27041,30 @@ declare abstract class SourceProcessorClass<
 		options: TProcessOptions & { mode: "minify" | "beautify" }
 	): { code: string; map: undefined };
 	process(input: string, options?: TProcessOptions): undefined;
+
+	/**
+	 * {@link process}, for a caller whose renderer answers asynchronously. Code
+	 * generation is synchronous — a printer returns its node's text, it cannot
+	 * await one — so the walk leaves a marker where each answer goes, they are
+	 * asked for together, and {@link PrintContext.substitute} stands each in its
+	 * place before the output and its map are built. One parse either way, and
+	 * the async boundary stays at the top rather than on every node.
+	 * This is the shape `process` itself takes once it is async: how the answers
+	 * are waited for is this method's business, so nothing above it changes.
+	 */
+	processAsync(
+		input: string,
+		options: Omit<TProcessOptions, "renderEmbeddedSource"> & {
+			mode: "minify" | "beautify";
+		} & {
+			source?: string;
+			content?: string;
+			renderEmbeddedSource?: (
+				source: string,
+				hole?: any
+			) => undefined | string | Promise<undefined | string>;
+		}
+	): Promise<{ code: string; map?: SourceMap }>;
 }
 
 /**
@@ -27070,6 +27148,7 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
+	static deferredWrite: (id: number) => string;
 }
 
 /**
@@ -27138,6 +27217,7 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
+	static deferredWrite: (id: number) => string;
 }
 declare interface SourceTable {
 	[index: string]: SourceBucket;
@@ -30236,6 +30316,7 @@ declare namespace exports {
 				setEnd(n: NodeSyntax, v: number): void;
 				setBlockEnd(n: NodeSyntax, v: number): void;
 			};
+			export let EMBEDDED_LANGUAGES: string[];
 			export namespace NodeType {
 				export let Ident: number;
 				export let Function: number;
@@ -30292,7 +30373,28 @@ declare namespace exports {
 			export let TT_STRING: 3;
 			export let TT_URL: 18;
 			export let TT_WHITESPACE: 2;
+			export let askEmbeddedRenderer: (
+				render: (
+					source: string,
+					info: { type: string; hostType: string; as?: string }
+				) =>
+					| undefined
+					| string
+					| EmbeddedSourceResult
+					| Promise<undefined | string | EmbeddedSourceResult>,
+				hole: { source: string; type: string; hostType: string; as?: string },
+				reported: EmbeddedSourceResult[]
+			) => Promise<undefined | string | EmbeddedSourceResult>;
 			export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
+			export let collectEmbeddedDiagnostics: (
+				reported: {
+					warnings?: (string | Error)[];
+					errors?: (string | Error)[];
+				}[]
+			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
+			export let embeddedText: (
+				answer?: string | { code?: string }
+			) => undefined | string;
 			export let equalsLowerCase: (s: string, lit: string) => boolean;
 			export let escapeIdentifier: MakeCacheableResult<string> & {
 				bindCache: BindCache<string>;
@@ -30542,6 +30644,7 @@ declare namespace exports {
 				parentOf(n?: number): number;
 				children(n?: number): number[];
 			};
+			export let EMBEDDED_LANGUAGES: string[];
 			export let NS_HTML: 0;
 			export let NS_MATHML: 1;
 			export let NS_SVG: 2;
@@ -30558,6 +30661,18 @@ declare namespace exports {
 			export let QUOTE_NONE: 0;
 			export let QUOTE_SINGLE: 2;
 			export let SVG_TAG_ADJUST: Record<string, string>;
+			export let askEmbeddedRenderer: (
+				render: (
+					source: string,
+					info: { type: string; hostType: string; as?: string }
+				) =>
+					| undefined
+					| string
+					| EmbeddedSourceResult
+					| Promise<undefined | string | EmbeddedSourceResult>,
+				hole: { source: string; type: string; hostType: string; as?: string },
+				reported: EmbeddedSourceResult[]
+			) => Promise<undefined | string | EmbeddedSourceResult>;
 			export let baseTag: (
 				base:
 					| string
@@ -30573,7 +30688,16 @@ declare namespace exports {
 					  }
 			) => string;
 			export let buildHeadTags: (opts: OutputHtmlOptions) => string;
+			export let collectEmbeddedDiagnostics: (
+				reported: {
+					warnings?: (string | Error)[];
+					errors?: (string | Error)[];
+				}[]
+			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
 			export let decodeEntities: _functionSyntax;
+			export let embeddedText: (
+				answer?: string | { code?: string }
+			) => undefined | string;
 			export let escapeAttribute: (
 				s: string,
 				delimiter?: number,
