@@ -1244,7 +1244,8 @@ describe("CssSyntax — minify comment preservation", () => {
 			'a{color:red}b{color:red}/*! c */@import "x.css";',
 			'a,b{color:red}/*! c */@import "x.css";'
 		],
-		['/*! h */@charset "utf-8";a{top:0}', '/*! h */@charset "utf-8";a{top:0}']
+		// ...and where the rule it stood before is one the print takes out.
+		['/*! h */@charset "utf-8";a{top:0}', "/*! h */a{top:0}"]
 	])(
 		"writes a kept comment ahead of the rule it stood before: %s",
 		(src, out) => {
@@ -1842,9 +1843,36 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(transform("rotate3d(1,0,0,45deg)")).toBe("rotateX(45deg)");
 		expect(transform("rotate3d(0,1,0,45deg)")).toBe("rotateY(45deg)");
 		expect(transform("rotate3d(0,0,1,45deg)")).toBe("rotate(45deg)");
+		// ...and the 2D matrix that leaves is a translation, which reduces again.
 		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,4,5,0,1)")).toBe(
-			"matrix(1,0,0,1,4,5)"
+			"translate(4px,5px)"
 		);
+	});
+
+	it("writes the named function a matrix says in fewer bytes", () => {
+		// A matrix's own numbers are `px`, and each shape read back is exact.
+		expect(transform("matrix(1,0,0,1,100,200)")).toBe("translate(100px,200px)");
+		expect(transform("matrix(1,0,0,1,0,50)")).toBe("translateY(50px)");
+		expect(transform("matrix(2,0,0,3,0,0)")).toBe("scale(2,3)");
+		expect(transform("matrix(2,0,0,2,0,0)")).toBe("scale(2)");
+		expect(transform("matrix(1,0,0,1,0,0)")).toBe("scale(1)");
+		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,10,1)")).toBe(
+			"translate3d(100px,100px,10px)"
+		);
+		expect(transform("matrix3d(2,0,0,0,0,3,0,0,0,0,4,0,0,0,0,1)")).toBe(
+			"scale3d(2,3,4)"
+		);
+		// A rotation is rational only at a quarter turn, so no other angle comes
+		// back out of a matrix — and a shear names none of these shapes at all.
+		expect(transform("matrix(0,1,-1,0,0,0)")).toBe("rotate(90deg)");
+		expect(transform("matrix(0,-1,1,0,0,0)")).toBe("rotate(270deg)");
+		expect(transform("matrix(1.41421,1.41421,-1.16485,1.66358,100,200)")).toBe(
+			"matrix(1.41421,1.41421,-1.16485,1.66358,100,200)"
+		);
+		expect(transform("matrix(1,0,1,1,0,0)")).toBe("matrix(1,0,1,1,0,0)");
+		// A matrix takes `<number>` alone, so a unit is no matrix to read.
+		expect(transform("matrix(1,0,0,1,10px,0)")).toBe("matrix(1,0,0,1,10px,0)");
+		expect(transform("matrix(1,0,0,1,0)")).toBe("matrix(1,0,0,1,0)");
 	});
 
 	// One reduction uncovers the next, which is the loop's whole reason to exist.
@@ -2032,12 +2060,20 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			expect(min(css)).toBe(css);
 		});
 
+		// `@charset` names the encoding the source was read in, and what is written
+		// out is UTF-8 whatever it said.
+		it("takes a `@charset` out however it is cased", () => {
+			expect(min('@CHARSET "utf-8";a{b:c}')).toBe("a{b:c}");
+			expect(min('@charset "utf-8";a{b:c}')).toBe("a{b:c}");
+			expect(min('@charset "iso-8859-1";a{b:c}')).toBe("a{b:c}");
+		});
+
 		// The bytes an engine reads a charset rule as are the literal `@charset "`
 		// (CSS Syntax 3 §3.2), so lowercasing one would turn a rule the engine
-		// drops into one that sets the sheet's encoding.
-		it("leaves a cased `@charset` alone", () => {
-			expect(min('@CHARSET "utf-8";a{b:c}')).toBe('@CHARSET "utf-8";a{b:c}');
-			expect(min('@charset "utf-8";a{b:c}')).toBe('@charset "utf-8";a{b:c}');
+		// drops into one that sets the sheet's encoding. A `@charset` carrying a
+		// block is no charset rule to take out, so the case still has to hold.
+		it("leaves a cased `@charset` carrying a block alone", () => {
+			expect(min('@CHARSET "utf-8"{}a{b:c}')).toBe('@CHARSET "utf-8"{}a{b:c}');
 		});
 
 		// Both are the same declaration however they are spelled, so a rule an
@@ -4988,6 +5024,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 		});
 
+		it("writes a run of null cells as the one token it is", () => {
+			// A cell name holds no `.`, so however many are written they are one
+			// null cell token (CSS Grid 2 §7.3) — and the column count is unchanged.
+			expect(minify('a{grid-template-areas:"head head""foot ...."}')).toBe(
+				'a{grid-template-areas:"head head""foot ."}'
+			);
+			expect(minify('a{grid-template-areas:"... ... a"}')).toBe(
+				'a{grid-template-areas:". . a"}'
+			);
+		});
+
 		it("keeps a value that is not a row list", () => {
 			expect(minify("a{grid-template-areas:none}")).toBe(
 				"a{grid-template-areas:none}"
@@ -7669,5 +7716,122 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 		expect(minifyFor("a{color:lab(40% 56.6 39)}")).toBe(
 			"a{color:lab(40% 56.6 39)}"
 		);
+	});
+});
+
+describe("CssSyntax minify — unusedSymbols", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} unusedSymbols the names nothing uses
+	 * @returns {string} its minified serialization
+	 */
+	const withoutSymbols = (css, unusedSymbols) =>
+		new SourceProcessor().process(css, { mode: "minify", unusedSymbols }).code;
+
+	it("takes out a rule that can only match through an unused name", () => {
+		expect(
+			withoutSymbols(
+				":root{--color:red}.foo{color:var(--color)}" +
+					"@keyframes fade-in{from{opacity:0}to{opacity:1}}.bar{color:green}",
+				["foo", "fade-in", "--color"]
+			)
+		).toBe(".bar{color:green}");
+		// An id names one as much as a class does.
+		expect(withoutSymbols("#gone{color:red}.kept{color:blue}", ["gone"])).toBe(
+			".kept{color:blue}"
+		);
+		// A descendant of an unused name cannot match either.
+		expect(
+			withoutSymbols(".foo .child{color:red}.kept{color:blue}", ["foo"])
+		).toBe(".kept{color:blue}");
+	});
+
+	it("keeps the selectors of a list that can still match", () => {
+		expect(withoutSymbols(".gone,.kept{margin:0}", ["gone"])).toBe(
+			".kept{margin:0}"
+		);
+		expect(
+			withoutSymbols(".gone,.other{margin:0}.kept{padding:0}", ["gone"])
+		).toBe(".other{margin:0}.kept{padding:0}");
+	});
+
+	it("leaves a name a functional pseudo holds", () => {
+		// `:not(.gone)` matches *more* once nothing carries the class, and
+		// `:is(.gone, .kept)` still matches through its other half.
+		expect(withoutSymbols("a:not(.gone){color:red}", ["gone"])).toBe(
+			"a:not(.gone){color:red}"
+		);
+		expect(withoutSymbols("a:is(.gone,.kept){color:red}", ["gone"])).toBe(
+			"a:is(.gone,.kept){color:red}"
+		);
+		// Nor one inside an attribute selector's value.
+		expect(withoutSymbols('a[data-x=".gone"]{color:red}', ["gone"])).toBe(
+			'a[data-x=".gone"]{color:red}'
+		);
+	});
+
+	it("takes out an `@keyframes` under an unused name, and no other", () => {
+		expect(
+			withoutSymbols(
+				"@keyframes gone{from{opacity:0}}@keyframes stay{from{opacity:0}}",
+				["gone"]
+			)
+		).toBe("@keyframes stay{0%{opacity:0}}");
+		// Every vendor spelling of the rule names the same animation.
+		expect(
+			withoutSymbols("@-webkit-keyframes gone{from{opacity:0}}", ["gone"])
+		).toBe("");
+	});
+
+	it("takes out a custom property nothing reads, and no other", () => {
+		expect(withoutSymbols(":root{--gone:red;--kept:blue}", ["--gone"])).toBe(
+			":root{--kept:blue}"
+		);
+		// A bare name is a class, an id or an animation — never a custom property.
+		expect(withoutSymbols(":root{--gone:red}", ["gone"])).toBe(
+			":root{--gone:red}"
+		);
+	});
+
+	it("reaches a rule at any depth", () => {
+		expect(withoutSymbols(".a{color:red;.gone{color:blue}}", ["gone"])).toBe(
+			".a{color:red}"
+		);
+		expect(
+			withoutSymbols("@media print{.gone{color:red}.kept{color:blue}}", [
+				"gone"
+			])
+		).toBe("@media print{.kept{color:blue}}");
+		// A block left with nothing goes with it.
+		expect(withoutSymbols("@media print{.gone{color:red}}", ["gone"])).toBe("");
+	});
+
+	it("names a rule by what it holds rather than by where it stands", () => {
+		// The parser pools a finished rule's node, so a mark left on one would land
+		// on whatever is built over it next — every rule after the first would go.
+		expect(
+			withoutSymbols(".gone{color:red}.kept{color:green}.other{color:blue}", [
+				"gone"
+			])
+		).toBe(".kept{color:green}.other{color:blue}");
+	});
+
+	it("reads a name through the escapes it is written with", () => {
+		expect(
+			withoutSymbols(".gone\\.x{color:red}.kept{color:blue}", ["gone.x"])
+		).toBe(".kept{color:blue}");
+		// An escape outside a class or an id names nothing to match.
+		expect(withoutSymbols("\\.esc{color:red}", ["esc"])).toBe(
+			"\\.esc{color:red}"
+		);
+		// ...and neither does a `.` the input never gave a name.
+		expect(withoutSymbols(".{color:red}.kept{color:blue}", ["gone"])).toBe(
+			".{color:red}.kept{color:blue}"
+		);
+	});
+
+	it("writes every rule with no names to take out", () => {
+		expect(withoutSymbols(".foo{color:red}")).toBe(".foo{color:red}");
+		expect(withoutSymbols(".foo{color:red}", [])).toBe(".foo{color:red}");
 	});
 });

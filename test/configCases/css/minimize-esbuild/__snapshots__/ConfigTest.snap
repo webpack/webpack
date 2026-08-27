@@ -2,7 +2,7 @@
 
 exports[`ConfigTestCases css minimize-esbuild minimize-esbuild should compile 1`] = `
 Array [
-  "@charset \\"UTF-8\\";@import url(http://example.test/foo.css);",
+  "@import url(http://example.test/foo.css);",
   "/*! esbuild: @import\\"foo.css\\"; */",
   "/*! esbuild: @import \\"foo.css\\"; */",
   "/*! esbuild: @import url(foo.css); */",
