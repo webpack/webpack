@@ -1,5 +1,141 @@
 # webpack
 
+## 5.110.0
+
+### Minor Changes
+
+- Wrap concatenated modules in lazy `__webpack_require__.cw` accessors and inline `require()`, keeping a wrapped body's names and side effects intact. (by [@hai-x](https://github.com/hai-x) in [#21519](https://github.com/webpack/webpack/pull/21519))
+
+- Add performance hints reporting what a build costs: duplicate packages and modules, circular dependencies, broad contexts, large modules and chunks, hotspots, `eval`, missing PURE annotations, polyfills, redundant dynamic imports, OS-dependent rules, cache effectiveness, how chunks load, what splitting refused, why an optimization was skipped, and rules, defines, externals, aliases and barrel reexports nothing uses. An oversized asset names its largest modules, and an entrypoint carrying the runtime recommends `optimization.runtimeChunk`. Enable every check not set individually with `performance.all`, report hints in stats only with `performance.hints: "stats"`, and get them in a stable order that leaves the build hashes unchanged. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Add the `descriptionRelativePath` module rule condition. (by [@alexander-akait](https://github.com/alexander-akait) in [#21705](https://github.com/webpack/webpack/pull/21705))
+
+- Add OS-independent `glob` matching to module rules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21771](https://github.com/webpack/webpack/pull/21771))
+
+- Report inner-graph, AMD and bare `module` bailouts in `optimizationBailout`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21740](https://github.com/webpack/webpack/pull/21740))
+
+- Allow marking externals as side-effect-free with a `sideEffects` flag. (by [@alexander-akait](https://github.com/alexander-akait) in [#21712](https://github.com/webpack/webpack/pull/21712))
+
+- Give externals the original request of a context module element. (by [@alexander-akait](https://github.com/alexander-akait) in [#21780](https://github.com/webpack/webpack/pull/21780))
+
+- Add the `externalsPresets.nodeModules` preset with an `allowlist` option to externalize installed packages, replacing the `webpack-node-externals` plugin. (by [@alexander-akait](https://github.com/alexander-akait) in [#21569](https://github.com/webpack/webpack/pull/21569))
+
+- Add `output.library.umdAmdContainer` for an AMD-style loader branch in UMD. (by [@hai-x](https://github.com/hai-x) in [#21770](https://github.com/webpack/webpack/pull/21770))
+
+- Resolve `@custom-media` values that are `true` / `false` or name another custom media. (by [@alexander-akait](https://github.com/alexander-akait) in [#21624](https://github.com/webpack/webpack/pull/21624))
+
+- Add the `__webpack_css_server_styles__` module variable to read the CSS collected while rendering without a DOM, and keep that CSS in the order the styles were applied. (by [@alexander-akait](https://github.com/alexander-akait) in [#21576](https://github.com/webpack/webpack/pull/21576))
+
+- Patch the HTML `<head>` in place on hot update instead of forcing a full reload, including when a `<script>` that never executed is removed. (by [@alexander-akait](https://github.com/alexander-akait) in [#21624](https://github.com/webpack/webpack/pull/21624))
+
+- Scope counter names in CSS modules; fix the `counter()` counter-style and `animation` timeline keywords. (by [@alexander-akait](https://github.com/alexander-akait) in [#21600](https://github.com/webpack/webpack/pull/21600))
+
+- Derive `import defer` / `import source` from the target and fix the source phase. (by [@alexander-akait](https://github.com/alexander-akait) in [#21810](https://github.com/webpack/webpack/pull/21810))
+
+- Emit analyzable ESM urls for chunks, assets, styles, workers and wasm. (by [@alexander-akait](https://github.com/alexander-akait) in [#21788](https://github.com/webpack/webpack/pull/21788))
+
+- Tree shake CommonJS: `module.exports` object literals, exports destructured from a `require()` binding, unused method requires, and unused side-effect-free `require()` calls and reexports. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Resolve relative entry `baseUri` values and bake one side of a hash cycle. (by [@alexander-akait](https://github.com/alexander-akait) in [#21750](https://github.com/webpack/webpack/pull/21750))
+
+- Minify CSS further, only where the document is unchanged: shorthands and box longhands, `font-weight`, `<position>` and `font-stretch` keywords, colors (polar, Lab and `hsl()` converted to hex), numbers, times, zero units, `calc()` and every math function the spec names folded over constants, selector lists, An+B, keyframe selectors, media-feature ranges, `unicode-range`, `transition` layers, `display`, transforms, gradients, font families, identical repeated declarations, and rules an identical later one makes dead. Abilities are read off the target browsers, `vendorPrefixes` adds and drops vendor prefixes for them, and `rewriteCustomProperties` shortens custom property values. Minification never changes whether a declaration parses, and beautifying keeps every rule. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Safely minify CSS (with source maps) and HTML assets when `optimization.minimize` is enabled, unless a minimizer is already configured for them, making only transformations an engine cannot tell apart. Every rewrite is named as an option, so it can be switched off. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Minify HTML further where the parsed document is unchanged: drop redundant quotes, whitespace nothing renders, escapes text does not need, implied tags, optional end tags nothing prints behind, empty attributes and nested empty elements; fold enumerated values and casing; normalize each attribute against the element it is on; and rewrite `style`, token lists, `srcset`, `sizes`, URL, integer and boolean attributes, viewport `content`, inline `<style>` and a JSON `<script>` body through their own grammars. Adds the `optimization.minimize.html` options `collapseWhitespace`, `mergeStyles`, `minifyConditionalComments`, `minifySrcdoc`, `preserveComments`, `removeEmptyAttributes`, `removeEmptyElements`, `removeImpliedTags`, `removeRedundantAttributes`, `sortAttributes` and `sortTokenLists`, and keeps an end tag the parent, the next element or the adoption agency would otherwise restructure the tree over. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Suggest the closest name or a casing fix anywhere in a failed request. (by [@alexander-akait](https://github.com/alexander-akait) in [#21727](https://github.com/webpack/webpack/pull/21727))
+
+- Add aggregated `shutdown` hook to `MultiCompiler`. (by [@bjohansebas](https://github.com/bjohansebas) in [#21578](https://github.com/webpack/webpack/pull/21578))
+
+- Report which compilers changed on the MultiCompiler `done` hook. (by [@bjohansebas](https://github.com/bjohansebas) in [#21580](https://github.com/webpack/webpack/pull/21580))
+
+- Add `[containedpath]`/`[containedfile]` placeholders, used for `[path]`/`[file]` of asset and html modules with `experiments.futureDefaults`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21592](https://github.com/webpack/webpack/pull/21592))
+
+- Support an object for an entry's `html` that overrides `output.html` per option. (by [@alexander-akait](https://github.com/alexander-akait) in [#21574](https://github.com/webpack/webpack/pull/21574))
+
+- Configure or exclude each asset type's minifier via `optimization.minimize`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21663](https://github.com/webpack/webpack/pull/21663))
+
+- Support printing CSS and HTML beautified as well as minified. (by [@alexander-akait](https://github.com/alexander-akait) in [#21660](https://github.com/webpack/webpack/pull/21660))
+
+- Add `renderEmbeddedSource`, and minify what it offers out of the box. (by [@alexander-akait](https://github.com/alexander-akait) in [#21830](https://github.com/webpack/webpack/pull/21830))
+
+- Report bindings named `eval`, `arguments` or reserved words in ES module output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21567](https://github.com/webpack/webpack/pull/21567))
+
+- Emit no development source map for module libraries, or any with futureDefaults. (by [@alexander-akait](https://github.com/alexander-akait) in [#21839](https://github.com/webpack/webpack/pull/21839))
+
+- Speed up builds and cut memory: faster CSS, HTML and JavaScript parsing and minification, a built-in scope analyzer replacing `eslint-scope`, faster dependency hot paths, module diagnostics, CommonJS export scanning and concatenated module renaming, runtime modules, parsers, generators and dependencies loaded only when used, one file watcher pool shared between MultiCompiler children, and lower parser, graph and startup memory. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Improve tree-shaking for a namespace reexported as default, and fix `import d from "./mod"; d.member` reading `undefined` in that case. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Warn on cross-kind CSS module export conflicts and let the class win. (by [@alexander-akait](https://github.com/alexander-akait) in [#21538](https://github.com/webpack/webpack/pull/21538))
+
+- Add `output.resourceHints.dedupe` to skip prefetch links for already preloaded/prefetched chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21386](https://github.com/webpack/webpack/pull/21386))
+
+### Patch Changes
+
+- Let a memory-cache etag mismatch fall through to the file cache instead of reporting a miss. (by [@alexander-akait](https://github.com/alexander-akait) in [#21624](https://github.com/webpack/webpack/pull/21624))
+
+- Determine provided exports in dependency order, so a build's module hashes no longer depend on what the persistent cache held. (by [@alexander-akait](https://github.com/alexander-akait) in [#21630](https://github.com/webpack/webpack/pull/21630))
+
+- Emit no dead module and no failing require for an `asset-url` external. (by [@alexander-akait](https://github.com/alexander-akait) in [#21713](https://github.com/webpack/webpack/pull/21713))
+
+- Fix names, hidden devtools and cache reuse for CSS maps inlined into JS. (by [@alexander-akait](https://github.com/alexander-akait) in [#21558](https://github.com/webpack/webpack/pull/21558))
+
+- Follow the HTML spec more closely when parsing and printing: frameset content, quirks paragraphs and selects, `<![CDATA[` outside foreign content as a bogus comment, `<?target data?>` as a processing instruction, `</>` dropped, comment data and DOCTYPE identifiers read from the tokenizer states, attributes merged from a repeated `<html>`/`<body>` tag, legacy JavaScript script types, void `keygen` and font format detection — and hand back the tree a parsed document was built from when printing it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Clear a `Watching`'s `blocked` flag when its build starts, so it reports only a child actually waiting for its MultiCompiler parent. (by [@bjohansebas](https://github.com/bjohansebas) in [#21639](https://github.com/webpack/webpack/pull/21639))
+
+- Fix AMD `define()` output using the wrong module and exports argument names. (by [@hai-x](https://github.com/hai-x) in [#21814](https://github.com/webpack/webpack/pull/21814))
+
+- Fix `ReferenceError` from `import.meta.main` using the wrong module argument. (by [@hai-x](https://github.com/hai-x) in [#21620](https://github.com/webpack/webpack/pull/21620))
+
+- Leave a `@namespace` URI alone instead of resolving and rewriting it as an asset. (by [@alexander-akait](https://github.com/alexander-akait) in [#21658](https://github.com/webpack/webpack/pull/21658))
+
+- Resolve escaped CSS names, and scope a grid area cell name as one name. (by [@alexander-akait](https://github.com/alexander-akait) in [#21665](https://github.com/webpack/webpack/pull/21665))
+
+- Track exports usage of side-effect-free modules an active import() evaluates. (by [@hai-x](https://github.com/hai-x) in [#21623](https://github.com/webpack/webpack/pull/21623))
+
+- Resolve absolute symlink targets and treat an unreadable context as missing. (by [@alexander-akait](https://github.com/alexander-akait) in [#21647](https://github.com/webpack/webpack/pull/21647))
+
+- Fix corrupted icon URLs in a `.webmanifest` with a BOM or non-ASCII text. (by [@alexander-akait](https://github.com/alexander-akait) in [#21655](https://github.com/webpack/webpack/pull/21655))
+
+- Respect `strictThisContextOnImports` for `require()` member calls. (by [@hai-x](https://github.com/hai-x) in [#21601](https://github.com/webpack/webpack/pull/21601))
+
+- Fix `import.meta`, `[object Object]` asset urls and crashes in build-time executed modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Inherit sideEffects past a type-only nested package.json for files under node_modules. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21686](https://github.com/webpack/webpack/pull/21686))
+
+- Do not fail directory creation when the file system reports it already exists. (by [@alexander-akait](https://github.com/alexander-akait) in [#21698](https://github.com/webpack/webpack/pull/21698))
+
+- Fix top-level `using` and `await using` declarations in modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21557](https://github.com/webpack/webpack/pull/21557))
+
+- Fix `DefinePlugin` optional chains reading an undefined object member. (by [@lazerg](https://github.com/lazerg) in [#21823](https://github.com/webpack/webpack/pull/21823))
+
+- Fix MultiCompiler: compute the common `outputPath` by whole path segments, run again after a dependency validation failure, and recover watch mode from a fatal child error without leaking watchings. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Keep a nested bundle's runtime tables separate when bundling webpack output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21568](https://github.com/webpack/webpack/pull/21568))
+
+- Keep the runtime out of strict mode when `output.globalObject` reads `this`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21715](https://github.com/webpack/webpack/pull/21715))
+
+- Run an even-priority `__webpack_require__.O` handler without waiting. (by [@alexander-akait](https://github.com/alexander-akait) in [#21803](https://github.com/webpack/webpack/pull/21803))
+
+- Treat top-level `this` in a classic worker entry as its global scope. (by [@alexander-akait](https://github.com/alexander-akait) in [#21720](https://github.com/webpack/webpack/pull/21720))
+
+- Rehash runtime modules whose code changes under a content-named filename. (by [@alexander-akait](https://github.com/alexander-akait) in [#21828](https://github.com/webpack/webpack/pull/21828))
+
+- Fix namespace object reexports and string export names in module library output and emit a CommonJS entry's default as `export default`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21589](https://github.com/webpack/webpack/pull/21589))
+
+- Keep tree-shaken JSON arrays as arrays when a prototype property is read. (by [@hai-x](https://github.com/hai-x) in [#21599](https://github.com/webpack/webpack/pull/21599))
+
+- Generate every CSS and HTML lookup table into `lib/{css,html}/data.js` from `mdn-data`, `color-name` and the spec IDL — including the value-type facts read out of the CSS value-definition grammars — leaving both `syntax.js` files algorithm only. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Support UNC paths in module and context replacement plugins. (by [@avivkeller](https://github.com/avivkeller) in [#21645](https://github.com/webpack/webpack/pull/21645))
+
+- Emit less runtime code: shorter syntax where `output.environment` allows, no IIFE for a `RuntimeModule` without locals, no unread `__webpack_esm_id__` and `exports.id` chunk exports, and an ESM entry chunk installing its own modules from its local bindings instead of importing itself. (by [@alexander-akait](https://github.com/alexander-akait) in [#21841](https://github.com/webpack/webpack/pull/21841))
+
+- Release the compilation and file system caches retained after `compiler.close()`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21603](https://github.com/webpack/webpack/pull/21603))
+
 ## 5.109.2
 
 ### Patch Changes
@@ -567,6 +703,7 @@
 - Fix `RangeError: Maximum call stack size exceeded` thrown from `HarmonyImportSideEffectDependency.getModuleEvaluationSideEffectsState` on long linear chains of side-effect-free imports. `NormalModule.getSideEffectsConnectionState` previously descended through `HarmonyImportSideEffectDependency.getModuleEvaluationSideEffectsState` recursively, adding two stack frames per module, which overflowed V8's stack at a few thousand modules deep. The traversal is now iterative. (by [@alexander-akait](https://github.com/alexander-akait) in [#20993](https://github.com/webpack/webpack/pull/20993))
 
 - Fix `NormalModuleFactory` parser/generator types: (by [@alexander-akait](https://github.com/alexander-akait) in [#20999](https://github.com/webpack/webpack/pull/20999))
+
   - `module.generator.html` now uses `HtmlGeneratorOptions` instead of `EmptyGeneratorOptions` (the `extract` option was hidden from the `createGenerator` / `generator` hook types).
   - WebAssembly (`webassembly/async`, `webassembly/sync`) generator hooks now use `EmptyGeneratorOptions` instead of `EmptyParserOptions`.
   - `NormalModuleFactory#getParser` / `createParser` / `getGenerator` / `createGenerator` are now generic over the module-type string, returning the specific parser/generator class for known types (e.g. `JavascriptParser` for `"javascript/auto"`, `CssGenerator` for `"css"`, etc.) instead of always returning the base `Parser` / `Generator`.
@@ -652,7 +789,7 @@
 
 - Fix snapshot validity check for context dependencies in watch mode by treating watchpack's existence-only entries (`{}`) as cache misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#20916](https://github.com/webpack/webpack/pull/20916))
 
-- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+- Support no-expression template literals in computed member access (e.g. `` import.meta[`url`] ``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
 
 - Improve tree-shaking in `isPure`: handle more expression types (`ArrayExpression`, `ObjectExpression`, `NewExpression`, `ChainExpression`, `UnaryExpression` (safe operators), `MetaProperty`, `TaggedTemplateExpression`, `BinaryExpression` (strict equality)), prevent `/*#__PURE__*/` comments from leaking across `ObjectExpression` properties, and detect PURE comments inside `TemplateLiteral` interpolations. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
 
@@ -709,6 +846,7 @@
 - Add `exportType: "style"` for CSS modules to inject styles into DOM via HTMLStyleElement, similar to style-loader functionality. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20579](https://github.com/webpack/webpack/pull/20579))
 
 - Add `context` option support for VirtualUrlPlugin (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20449](https://github.com/webpack/webpack/pull/20449))
+
   - The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
   - Support custom context path for resolving relative imports in virtual modules
   - Add examples demonstrating context usage and filename customization
