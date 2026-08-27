@@ -715,6 +715,7 @@ describe("snapshots", () => {
 		    "chunkLoadingGlobal": "webpackChunkwebpack",
 		    "clean": undefined,
 		    "compareBeforeEmit": true,
+		    "copy": undefined,
 		    "crossOriginLoading": false,
 		    "cssChunkFilename": "[name].css",
 		    "cssFilename": "[name].css",
