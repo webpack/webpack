@@ -8687,6 +8687,23 @@ describe("SourceProcessor — minifying what the round-trip guard checks", () =>
 		const source = "<nobr><table><b><colgroup><nobr>  x  ";
 		expect(minify(source)).toBe(source);
 	});
+
+	it("minifies a document whose deferred svg the guard reads back", async () => {
+		// An `<svg>` subtree is offered whole, so the print holds a marker where it
+		// stood; this document also fosters, so the guard re-parses the print.
+		const source =
+			'<table>\n\t<svg viewBox="0 0 8 8">   <circle cx="4" cy="4" r="3"/>   </svg>\n\t<tr><td class="a  b">y</td></tr>\n</table>\n';
+		const { code } = await new SourceProcessor().processAsync(source, {
+			mode: /** @type {"minify"} */ ("minify"),
+			renderEmbeddedSource: (
+				/** @type {string} */ body,
+				/** @type {import("../lib/html/syntax").DeferredEmbeddedSource} */ hole
+			) => Promise.resolve(hole.type === "svg" ? body : undefined)
+		});
+
+		expect(code).not.toBe(source);
+		expect(code).toMatchSnapshot();
+	});
 });
 
 describe("SourceProcessor — reusing work across a print", () => {

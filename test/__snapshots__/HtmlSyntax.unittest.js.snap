@@ -20,6 +20,14 @@ exports[`SourceProcessor — beautifying should beautify implied table sections 
 
 exports[`SourceProcessor — beautifying should beautify raw text 1`] = `"<style>a{b:c}</style><script>1<2</script>"`;
 
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies a document whose deferred svg the guard reads back 1`] = `
+"<svg viewBox=\\"0 0 8 8\\">   <circle cx=4 cy=4 r=3 />   </svg><table>
+	
+	<tr><td class=\\"a b\\">y</tr>
+</table>
+"
+`;
+
 exports[`SourceProcessor — minifying what the round-trip guard checks minifies a link inside a link 1`] = `"<a href=/x>a<b> </b></a><b><a href=/y>b</a></b>"`;
 
 exports[`SourceProcessor — minifying what the round-trip guard checks minifies a list nested in a list item 1`] = `"<ul><li>a<ul><li>b</ul></ul>"`;
