@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-embedded-svg minimize-embedded-svg should compile 1`] = `
+"<svg viewBox=\\"0 0 8 8\\"> <circle cx=4 cy=4 r=3 /> </svg><table>
+	
+	<tr><td class=\\"a b\\">y</tr>
+</table>
+"
+`;
