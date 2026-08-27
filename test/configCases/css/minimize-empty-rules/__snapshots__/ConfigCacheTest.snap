@@ -2,11 +2,12 @@
 
 exports[`ConfigCacheTestCases css minimize-empty-rules minimize-empty-rules should compile 1`] = `
 Array [
-  "@charset \\"UTF-8\\";",
   "/*! discard-empty: should remove empty @ rules */@font-face;",
   "/*! discard-empty: should remove empty @ rules (2) */@font-face{}",
   "/*! discard-empty: should not mangle @ rules with decls */@font-face{font-family:Helvetica}",
-  "/*! discard-empty: should not mangle @ rules with parameters */",
+  "/*! discard-empty: should not mangle @ rules with parameters */@layer base;",
+  "/*! ...though \`@charset\` names the encoding the source was read in, and what is
+   written out is UTF-8 whatever it said */",
   "/*! discard-empty: should remove empty rules */",
   "/*! discard-empty: should remove empty declarations */",
   "/*! discard-empty: should remove null selectors */{color:blue}",

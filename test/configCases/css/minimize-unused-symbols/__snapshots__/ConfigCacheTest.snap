@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-unused-symbols minimize-unused-symbols should compile 1`] = `
+Array [
+  "/*! a rule that can only match through a name nothing uses */",
+  "/*! ...and the selectors of a list that still can */.kept{margin:0}",
+  "/*! ...while a name a functional pseudo holds is not one the rule needs */a:not(.gone){color:red}",
+  "/*! an \`@keyframes\` under an unused name, and one under a used name */@keyframes stay-in{0%{opacity:0}}",
+  "/*! a custom property nothing reads, beside one that is read */:root{--kept:blue}",
+]
+`;

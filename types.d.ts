@@ -5945,6 +5945,11 @@ declare interface CssPrintOptions {
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
 	 */
 	transforms?: CssTransformOptions;
+
+	/**
+	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
+	 */
+	unusedSymbols?: string[];
 }
 declare interface CssProcessOptions {
 	/**
@@ -6004,6 +6009,11 @@ declare interface CssProcessOptions {
 		source: string,
 		info: { type: string; hostType: string }
 	) => undefined | string;
+
+	/**
+	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
+	 */
+	unusedSymbols?: string[];
 
 	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
@@ -10385,6 +10395,7 @@ type HtmlPrintOptions = Pick<
 	"environment" | "convertLengthUnits" | "rewriteCustomProperties"
 > & {
 	cssTransforms?: CssTransformOptions;
+	cssUnusedSymbols?: string[];
 	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
@@ -10436,6 +10447,11 @@ declare interface HtmlProcessOptions {
 	 * CSS's per-transform switches too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
 	cssTransforms?: CssTransformOptions;
+
+	/**
+	 * CSS's `unusedSymbols` too, handed over with `environment` (see `HtmlPrintOptions`)
+	 */
+	cssUnusedSymbols?: string[];
 
 	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
@@ -20234,6 +20250,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	shortenValues?: boolean;
+
+	/**
+	 * Names a whole-project analysis found nothing uses, which the minimizer then takes out: a bare name is matched against every class and id a selector names and against every `@keyframes` name, and a `--`-prefixed one against every custom property a declaration sets. A selector list keeps the selectors that do not name one, and a rule left with none goes; a name inside a functional pseudo (`:not(.gone)`, `:is(.gone, .kept)`) is not one the rule needs, so it is left alone. Nothing is derived here — the list is the caller's, and a name on it that something does use takes working CSS out.
+	 * @since 5.111.0
+	 */
+	unusedSymbols?: string[];
 
 	/**
 	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
