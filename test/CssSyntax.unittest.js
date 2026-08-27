@@ -7215,3 +7215,53 @@ describe("CssSyntax minify — what a duplicate rule is scoped to", () => {
 		);
 	});
 });
+
+// The two version tables are `Uint32Array`s, which only works while every entry
+// they hold — real versions and the `NEVER` sentinel alike — stays a non-negative
+// integer below 2**32. Below 2**31 too, so V8 hands each element back as a small
+// integer rather than boxing it. A browser numbering scheme that outgrew either
+// bound would silently truncate every window it appears in, so it fails here.
+describe("CssData — the version tables stay in their element type", () => {
+	const {
+		NEVER,
+		PREFIX_WINDOWS,
+		PREFIX_WINDOW_STARTS,
+		SUPPORT_PROFILES
+	} = require("../lib/css/data");
+
+	it.each([
+		["PREFIX_WINDOWS", () => PREFIX_WINDOWS],
+		["SUPPORT_PROFILES", () => SUPPORT_PROFILES]
+	])("%s holds versions the element type represents exactly", (_name, get) => {
+		const table = get();
+		expect(table).toBeInstanceOf(Uint32Array);
+		let realMax = 0;
+		for (const version of table) {
+			expect(Number.isInteger(version)).toBe(true);
+			expect(version).toBeGreaterThanOrEqual(0);
+			if (version !== NEVER && version > realMax) realMax = version;
+		}
+		// The sentinel has to stay above every real version, or a still-prefixed
+		// window would end before a browser that is in it.
+		expect(realMax).toBeLessThan(NEVER);
+	});
+
+	it("keeps NEVER a small integer, and Safari TP below it", () => {
+		expect(Number.isInteger(NEVER)).toBe(true);
+		expect(NEVER).toBeLessThan(2 ** 31);
+		// `_encodeBrowserVersion` reads Safari TP as `NEVER - 1`, which must still
+		// be newer than any real version rather than a version of its own.
+		expect(NEVER - 1).toBeGreaterThan(100 * 100000);
+	});
+
+	it("indexes the window table within its element type", () => {
+		expect(PREFIX_WINDOW_STARTS).toBeInstanceOf(Uint16Array);
+		for (const start of PREFIX_WINDOW_STARTS) {
+			expect(start).toBeLessThanOrEqual(PREFIX_WINDOWS.length);
+		}
+		// The last start is the end of the last list, so it is the table's length.
+		expect(PREFIX_WINDOW_STARTS[PREFIX_WINDOW_STARTS.length - 1]).toBe(
+			PREFIX_WINDOWS.length
+		);
+	});
+});

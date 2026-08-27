@@ -4050,12 +4050,15 @@ const prefixBrowsers = [
 // (`major * 100000 + minor` tops out around 15 million) and past the one
 // `_encodeBrowserVersion` gives Safari TP, which has to compare as the newest
 // version that exists rather than as one that never arrives.
-const NEVER = 1e15;
+// Below 2**31 as well, so every table entry is a `Uint32Array` element V8 hands
+// back as a small integer rather than boxing — which is what lets those tables
+// be half the width `Infinity` or a 1e15 sentinel would force.
+const NEVER = 1e9;
 
-// How `NEVER` is written into the emitted tables: the same value, twelve
+// How `NEVER` is written into the emitted tables: the same value, seven
 // characters shorter than the digits it stands for, and still a plain number
 // literal — which is what lets prettier pack the tables many to a line.
-const NEVER_LITERAL = "1e15";
+const NEVER_LITERAL = "1e9";
 
 /**
  * One version as the emitted tables spell it.
@@ -6030,12 +6033,12 @@ ${colorNames
 // unprefixedFrom\` triples — the slot is the browser's place in
 // \`SUPPORT_BROWSERS\`, so no name is restated. A spelling names its list by
 // index, and two thirds of the lists are shared.
-const PREFIX_WINDOWS = new Float64Array([${windowTriples
+const PREFIX_WINDOWS = new Uint32Array([${windowTriples
 		.map(versionLiteral)
 		.join(", ")}]);
 
 // Where each window list begins; the entry after it is where it ends.
-const PREFIX_WINDOW_STARTS = new Int32Array([${windowStarts.join(", ")}]);
+const PREFIX_WINDOW_STARTS = new Uint16Array([${windowStarts.join(", ")}]);
 
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_PROPERTIES = ${prefixedPropertiesText};
@@ -6047,9 +6050,9 @@ const PREFIXED_SELECTORS = ${prefixedSelectorsText};
 const PREFIXED_AT_RULES = ${prefixedAtRulesText};
 
 // The version a browser that never shipped a construct is given below, and the
-// one a spelling still prefixed today is unprefixed at. Finite and a plain
-// number, so both version tables hold numbers alone; far past any real version,
-// and past the one Safari TP is read as.
+// one a spelling still prefixed today is unprefixed at. Finite, a plain number
+// and below 2**31, so both version tables are \`Uint32Array\`s of small integers;
+// far past any real version, and past the one Safari TP is read as.
 const NEVER = ${NEVER_LITERAL};
 
 // The browsers every support profile below covers, in the order it states them.
@@ -6061,7 +6064,7 @@ const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 // The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
 // one row per distinct profile: a construct names the row it reads rather than
 // carrying its own copy of it. \`NEVER\` is a browser that never shipped it.
-const SUPPORT_PROFILES = new Float64Array([${pooled.profiles
+const SUPPORT_PROFILES = new Uint32Array([${pooled.profiles
 		.flat()
 		.map(versionLiteral)
 		.join(", ")}]);
