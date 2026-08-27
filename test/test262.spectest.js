@@ -9,6 +9,8 @@ const vm = require("vm");
 const webpack = require("..");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
+/** @import NormalModule from "../lib/NormalModule" */
+
 const needDebug = typeof process.env.DEBUG !== "undefined";
 
 const outputFileSystem = needDebug
@@ -115,6 +117,21 @@ const knownV8EvalBugs = [
 ];
 /* cspell:enable */
 
+// Host bugs, not webpack ones: running the unbundled test262 file in a plain
+// `vm` context fails exactly the same way.
+/* cspell:disable */
+const knownHostEvalBugs = [
+	// V8 runs `eval(...spread)` as an indirect eval, the spec makes it direct
+	"expressions/call/eval-spread.js",
+	// A `vm` contextified global gives a top-level `var` a configurable
+	// property, and re-declaring one from eval keeps the old descriptor
+	"eval-code/direct/var-env-func-init-global-update-configurable.js",
+	"eval-code/direct/var-env-var-init-global-exstng.js",
+	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
+	"eval-code/indirect/var-env-var-init-global-exstng.js"
+];
+/* cspell:enable */
+
 const knownV8WithBugs = [
 	"expressions/compound-assignment/S11.13.2_A5.10_T1.js",
 	"expressions/compound-assignment/S11.13.2_A5.10_T2.js",
@@ -213,6 +230,7 @@ const knownV8PrefixAndPostfixBugs = [
 
 const knownV8Bugs = [
 	...knownV8EvalBugs,
+	...knownHostEvalBugs,
 	...knownV8WithBugs,
 	...knownV8PrefixAndPostfixBugs,
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
@@ -225,12 +243,16 @@ const edgeCases = [
 	"eval-code/indirect/this-value-func.js",
 	"eval-code/indirect/this-value-global.js",
 	"eval-code/indirect/var-env-func-init-global-new.js",
+	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
 	"eval-code/indirect/var-env-func-init-global-update-non-configurable.js",
+	"eval-code/indirect/var-env-var-init-global-exstng.js",
 	"eval-code/indirect/var-env-var-init-global-new.js",
 	"eval-code/direct/non-definable-global-var.js",
 	"eval-code/direct/this-value-func-non-strict.js",
 	"eval-code/direct/this-value-func-strict-source.js",
 	"eval-code/direct/var-env-func-init-global-new.js",
+	"eval-code/direct/var-env-func-init-global-update-configurable.js",
+	"eval-code/direct/var-env-var-init-global-exstng.js",
 	"eval-code/direct/var-env-var-init-global-new.js",
 	...knownV8EvalBugs,
 
@@ -719,8 +741,6 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 /* cspell:disable */
 const knownBugs = [
 	// Node.js problems and bugs
-	// Eval and spread
-	"expressions/call/eval-spread.js",
 	// Doesn't work
 	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
 	// Proxy and `with` incompatibility
@@ -735,10 +755,6 @@ const knownBugs = [
 	"statements/async-generator/generator-created-after-decl-inst.js",
 	// V8 optimization bug
 	"statements/variable/binding-resolution.js",
-
-	// V8 bugs with `eval` and global `this`
-	"eval-code/direct/var-env-func-init-global-update-configurable.js",
-	"eval-code/direct/var-env-var-init-global-exstng.js",
 
 	// acorn bugs
 	"statements/using/syntax/using-for-statement.js",
@@ -814,9 +830,6 @@ const knownBugs = [
 
 	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
 	"expressions/class/elements/class-name-static-initializer-default-export.js",
-
-	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
-	"eval-code/indirect/var-env-var-init-global-exstng.js",
 
 	// `with` problems — webpack hoists/scopes bindings such that compound
 	// assignment, mutation through deleted prototype-chain entries, and idref
@@ -942,27 +955,6 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-no-strict.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
-
-	// Tests catch the SyntaxError from importing `script-code_FIXTURE.js`
-	// (a script-only file that shouldn't parse as a module). webpack treats
-	// every imported file as a module and won't surface the script-vs-module
-	// mismatch as a runtime SyntaxError.
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-function-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-gen-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-async-gen-return-await-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-do-while-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-eval-script-code-target.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-eval-script-code-target.js",
 
 	// Tests expect a runtime SyntaxError from an ambiguous re-export
 	// (`export * from a; export * from b;` with the same name in both).
@@ -1346,7 +1338,18 @@ describe("test262", () => {
 
 						const hasUnexpectedErrors = errors.some(
 							(item) =>
-								!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(item)
+								!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(
+									item
+								) &&
+								// `script-code_FIXTURE.js` only parses as a script; webpack
+								// reports the `SyntaxError` the test expects at build time
+								!(
+									item.name === "ModuleParseError" &&
+									item.module &&
+									/script-code_FIXTURE\.js$/.test(
+										/** @type {NormalModule} */ (item.module).resource
+									)
+								)
 						);
 
 						if (!isExpectedParseError && hasUnexpectedErrors) {
