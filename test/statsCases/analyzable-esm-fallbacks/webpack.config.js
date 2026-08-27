@@ -109,8 +109,8 @@ module.exports = [
 	base("import-function-name", {
 		output: { importFunctionName: "__import__" }
 	}),
-	// The target does not read `import.meta`, so only the url forms fall back — the
-	// chunk `import()` is emitted by the module chunk loader either way.
+	// Also analyzable: ESM output writes `import.meta` whatever `environment.module`
+	// claims, so the url forms bake to match what the bundle already assumes.
 	base("environment-module", {
 		entry: "./index-asset",
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },

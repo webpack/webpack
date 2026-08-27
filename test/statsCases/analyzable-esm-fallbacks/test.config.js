@@ -54,12 +54,9 @@ const CASES = {
 		expect: "fallback",
 		bailout: "output.importFunctionName is"
 	},
-	// Only the url forms need `import.meta`, so the chunk `import()` still bakes.
-	"environment-module": {
-		file: "main.mjs",
-		expect: "partial",
-		bailout: "output.environment.module is false"
-	},
+	// ESM output writes `import.meta` whatever `environment.module` claims, so the
+	// url forms bake too.
+	"environment-module": { file: "main.mjs", expect: "analyzable" },
 	// Only the pair that names each other falls back; the entry's own imports still
 	// bake, so the helper stays and the reason is what marks the limitation.
 	circular: {
