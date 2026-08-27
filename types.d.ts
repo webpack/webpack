@@ -9482,6 +9482,11 @@ declare class Generator {
 	static byType(map: {
 		[index: string]: undefined | Generator;
 	}): ByTypeGenerator;
+
+	/**
+	 * Returns the statement a module that failed to build throws when executed.
+	 */
+	static throwBuildErrorCode(error: Error): string;
 }
 declare interface GeneratorOptions {
 	[index: string]: any;
