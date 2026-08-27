@@ -7280,3 +7280,225 @@ describe("CssSyntax minify — what a duplicate rule is scoped to", () => {
 		);
 	});
 });
+
+describe("CssSyntax minify — lowering a spelling the target cannot read", () => {
+	it("writes a hex alpha as the `rgba()` it names", () => {
+		expect(minifyFor("a{color:#7bffff80}", ["chrome 50"])).toBe(
+			"a{color:rgba(123,255,255,.5)}"
+		);
+		// The shortest decimal that quantizes back to the same byte.
+		expect(minifyFor("a{color:#7bf8}", ["chrome 50"])).toBe(
+			"a{color:rgba(119,187,255,.533)}"
+		);
+		expect(minifyFor("a{color:#ff000001}", ["chrome 50"])).toBe(
+			"a{color:rgba(255,0,0,.004)}"
+		);
+		// Transparent black is the keyword, which is shorter and older still.
+		expect(minifyFor("a{color:#0000}", ["chrome 50"])).toBe(
+			"a{color:transparent}"
+		);
+		// An opaque alpha asks nothing of the target, and a target that reads the
+		// notation keeps it.
+		expect(minifyFor("a{color:#aabbccff}", ["chrome 50"])).toBe(
+			"a{color:#abc}"
+		);
+		expect(minifyFor("a{color:#7bffff80}", ["chrome 130"])).toBe(
+			"a{color:#7bffff80}"
+		);
+		// A hash is a color only in a value: an id keeps every byte of its name.
+		expect(minifyFor("#7bffff80{color:red}", ["chrome 50"])).toBe(
+			"#7bffff80{color:red}"
+		);
+		// A transparent color that is not black is the `rgba()` of its channels.
+		expect(minifyFor("a{color:#ff000000}", ["chrome 50"])).toBe(
+			"a{color:rgba(255,0,0,0)}"
+		);
+		// An opaque one is written as the name or hex it already had.
+		expect(minifyFor("a{color:#ff0000ff}", ["chrome 50"])).toBe("a{color:red}");
+		// A hash that is no hex color at all is left as the token it is.
+		expect(minifyFor("a{color:#zzzz}", ["chrome 50"])).toBe("a{color:#zzzz}");
+		// And with the color transform off, an opaque alpha still asks nothing of
+		// the target — there is nothing to lower.
+		expect(
+			new SourceProcessor().process("a{color:#aabbccff}", {
+				mode: "minify",
+				environment: { browsers: ["chrome 50"] },
+				transforms: { shortenColors: false }
+			}).code
+		).toBe("a{color:#aabbccff}");
+	});
+
+	it("lowers a hex alpha wherever a color may stand", () => {
+		expect(
+			minifyFor("a{background:linear-gradient(#0008,#fff)}", ["chrome 50"])
+		).toBe("a{background:linear-gradient(rgba(0,0,0,.533),#fff)}");
+		expect(minifyFor("a{color:var(--x,#7bffff80)}", ["chrome 50"])).toBe(
+			"a{color:var(--x,rgba(123,255,255,.5))}"
+		);
+		// A custom property's value is handed back as written.
+		expect(minifyFor("a{--x:#7bffff80}", ["chrome 50"])).toBe(
+			"a{--x:#7bffff80}"
+		);
+	});
+
+	it("writes a media range as the `min-` / `max-` prefixes", () => {
+		expect(
+			minifyFor("@media (width>=480px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (min-width:480px){a{color:red}}");
+		expect(
+			minifyFor("@media (width<=480px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (max-width:480px){a{color:red}}");
+		expect(
+			minifyFor("@media (width=480px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (width:480px){a{color:red}}");
+		expect(
+			minifyFor("@media screen and (width>=480px){a{color:red}}", [
+				"chrome 100"
+			])
+		).toBe("@media screen and (min-width:480px){a{color:red}}");
+		expect(
+			minifyFor("@media (width>=480px),(height<=100px){a{color:red}}", [
+				"chrome 100"
+			])
+		).toBe("@media (min-width:480px),(max-height:100px){a{color:red}}");
+		// A target that reads the range spelling is written the shorter one.
+		expect(
+			minifyFor("@media (min-width:480px){a{color:red}}", ["chrome 130"])
+		).toBe("@media (width>=480px){a{color:red}}");
+	});
+
+	it("writes a media interval as the two bounds it names", () => {
+		expect(
+			minifyFor("@media (480px<=width<=768px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (min-width:480px) and (max-width:768px){a{color:red}}");
+		expect(
+			minifyFor("@media (768px>=width>=480px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (max-width:768px) and (min-width:480px){a{color:red}}");
+		// An `and` inside an `or` needs its own parentheses, which a prelude
+		// already holding an `or` is new enough to read.
+		expect(
+			minifyFor("@media (color) or (480px<=width<=768px){a{color:red}}", [
+				"chrome 100"
+			])
+		).toBe(
+			"@media (color) or ((min-width:480px) and (max-width:768px)){a{color:red}}"
+		);
+	});
+
+	it("leaves a comparison with no `min-` / `max-` equivalent", () => {
+		// A strict bound is only `not (max-width:…)`, which is Media Queries 4 as
+		// much as the range spelling it would replace.
+		expect(
+			minifyFor("@media (width>480px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (width>480px){a{color:red}}");
+		expect(
+			minifyFor("@media (480px<=width<768px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (480px<=width<768px){a{color:red}}");
+		// A `@container` query is itself newer than the range spelling.
+		expect(
+			minifyFor("@container (width>=480px){a{color:red}}", ["chrome 100"])
+		).toBe("@container (width>=480px){a{color:red}}");
+		// Two comparisons facing each other bound nothing, so there is no pair to
+		// write — Media Queries 4 §2.4.3 gives no such interval.
+		expect(
+			minifyFor("@media (480px<=width>=768px){a{color:red}}", ["chrome 100"])
+		).toBe("@media (480px<=width>=768px){a{color:red}}");
+	});
+
+	it("writes a shorthand the target cannot read as its longhands", () => {
+		expect(minifyFor("a{place-items:center start}", ["chrome 45"])).toBe(
+			"a{align-items:center;justify-items:start}"
+		);
+		// One value fills both slots.
+		expect(minifyFor("a{place-items:center}", ["chrome 45"])).toBe(
+			"a{align-items:center;justify-items:center}"
+		);
+		expect(
+			minifyFor("a{place-self:center start!important}", ["chrome 45"])
+		).toBe("a{align-self:center!important;justify-self:start!important}");
+		expect(minifyFor("a{overflow:hidden auto}", ["chrome 60"])).toBe(
+			"a{overflow-x:hidden;overflow-y:auto}"
+		);
+		expect(minifyFor("a{inset:1px 2px}", ["chrome 80"])).toBe(
+			"a{top:1px;right:2px;bottom:1px;left:2px}"
+		);
+		// The one-value spelling is as old as the property itself.
+		expect(minifyFor("a{overflow:hidden}", ["chrome 60"])).toBe(
+			"a{overflow:hidden}"
+		);
+		// A target that reads the shorthand is written it.
+		expect(
+			minifyFor("a{align-items:center;justify-items:start}", ["chrome 130"])
+		).toBe("a{place-items:center start}");
+	});
+
+	it("refuses a shorthand whose longhands would not say the same", () => {
+		// A substitution may expand across a slot boundary.
+		expect(minifyFor("a{place-items:var(--x)}", ["chrome 45"])).toBe(
+			"a{place-items:var(--x)}"
+		);
+		// `left` is a keyword only `justify-items` takes, so the engine drops the
+		// whole shorthand — splitting it would revive the half that parses.
+		expect(minifyFor("a{place-items:left center}", ["chrome 45"])).toBe(
+			"a{place-items:left center}"
+		);
+	});
+
+	it("writes a two-position color stop as the two stops it names", () => {
+		expect(
+			minifyFor("a{background:linear-gradient(green,red 30% 40%,pink)}", [
+				"chrome 60"
+			])
+		).toBe("a{background:linear-gradient(green,red 30%,red 40%,pink)}");
+		expect(
+			minifyFor(
+				"a{background:conic-gradient(from 45deg,red 10deg 20deg,blue)}",
+				["chrome 60"]
+			)
+		).toBe("a{background:conic-gradient(from 45deg,red 10deg,red 20deg,blue)}");
+		// A gradient's first argument may be its shape and size rather than a stop.
+		expect(
+			minifyFor("a{background:radial-gradient(ellipse 50% 50%,red,blue)}", [
+				"chrome 60"
+			])
+		).toBe("a{background:radial-gradient(ellipse 50% 50%,red,blue)}");
+		// A target that reads the notation is written the shorter one.
+		expect(
+			minifyFor("a{background:linear-gradient(green,red 30%,red 40%,pink)}", [
+				"chrome 130"
+			])
+		).toBe("a{background:linear-gradient(green,red 30% 40%,pink)}");
+	});
+
+	it("writes a multi-keyword `display` as the one keyword naming the same box", () => {
+		expect(minifyFor("a{display:inline flex}", ["chrome 100"])).toBe(
+			"a{display:inline-flex}"
+		);
+		expect(minifyFor("a{display:flex inline}", ["chrome 100"])).toBe(
+			"a{display:inline-flex}"
+		);
+		// Nothing names this box in one keyword, so there is nothing to write.
+		expect(minifyFor("a{display:block ruby}", ["chrome 100"])).toBe(
+			"a{display:block ruby}"
+		);
+		// Where the one-keyword name is no shorter, a target reading the pair keeps
+		// what the author wrote; a shorter one is always written.
+		expect(minifyFor("a{display:inline flex}", ["chrome 130"])).toBe(
+			"a{display:inline flex}"
+		);
+		expect(minifyFor("a{display:block flex}", ["chrome 130"])).toBe(
+			"a{display:flex}"
+		);
+	});
+
+	it("leaves every spelling alone with no target to read them", () => {
+		expect(minifyFor("a{color:#7bffff80}")).toBe("a{color:#7bffff80}");
+		expect(minifyFor("@media (480px<=width<=768px){a{color:red}}")).toBe(
+			"@media (480px<=width<=768px){a{color:red}}"
+		);
+		expect(minifyFor("a{place-items:center start}")).toBe(
+			"a{place-items:center start}"
+		);
+		expect(minifyFor("a{display:inline flex}")).toBe("a{display:inline flex}");
+	});
+});

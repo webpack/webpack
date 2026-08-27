@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-lower-unsupported minimize-lower-unsupported should compile 1`] = `
+Array [
+  "/*! a hex alpha, which the target reads only as \`rgba()\` */.t01{color:rgba(123,255,255,.5)}",
+  "/*! transparent black, which the keyword names in fewer bytes */.t02{color:transparent}",
+  "/*! a media range, which the target reads only as \`min-\` / \`max-\` */@media (min-width:480px) and (max-width:768px){.t03{color:red}}",
+  "/*! a shorthand the target does not have, written as its longhands */.t04{align-items:center;justify-items:start}.t05{overflow-x:hidden;overflow-y:auto}.t06{top:1px;right:2px;bottom:1px;left:2px}",
+  "/*! a two-position color stop, written as the two stops it names */.t07{background-image:linear-gradient(green,red 30%,red 40%,pink)}",
+  "/*! a multi-keyword \`display\`, written as the one keyword naming the box */.t08{display:inline-flex}",
+]
+`;

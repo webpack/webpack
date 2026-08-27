@@ -1,8 +1,9 @@
-/* The `output.environment` CSS entries decide which newer spellings the minifier
-   may reach for. This build sets all four false, so every case here keeps the
-   form an engine without CSS Color 4 hex alpha, Media Queries 4 range syntax,
-   the CSS Position 3 `inset` shorthand, CSS Box Alignment 3's `place-*` or CSS
-   Images 4's two-position color stop can read. */
+/* The `output.environment` CSS entries decide which spellings the minifier may
+   reach for, and which of the author's own it writes another way. This build
+   sets all four false, so every case here ends in the form an engine without
+   CSS Color 4 hex alpha, Media Queries 4 range syntax, the CSS Position 3
+   `inset` shorthand, CSS Box Alignment 3's `place-*` or CSS Images 4's
+   two-position color stop can read. */
 
 /*! the keyword stays a keyword */
 .t01 { background-color: transparent }
@@ -12,7 +13,7 @@
 .t03 { background-image: linear-gradient(red, transparent) }
 /*! an opaque color is not gated: it has no alpha to spell */
 .t04 { color: rgb(0, 0, 0) }
-/*! a source hex with alpha is the author's own, and is only shortened */
+/*! ...and a source hex with alpha is written as the color the target reads */
 .t05 { color: #00000000 }
 /*! a partly transparent color keeps its function: the hex would need the alpha */
 .t08 { color: rgba(0, 0, 0, .5) }
@@ -30,7 +31,7 @@
 .t11 { top: 1px; right: 2px; bottom: 1px; left: 2px }
 /*! ...unlike `margin`, whose shorthand is as old as its longhands */
 .t12 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
-/*! ...and a source `inset` is the author's own, so it still collapses */
+/*! ...and a source `inset` is written as the four longhands it sets */
 .t13 { inset: 1px 1px 1px 1px }
 /*! a two-position color stop is CSS Images 4, so the two stops stay */
 .t14 { background-image: linear-gradient(red 0%, red 50%, blue) }
@@ -43,7 +44,7 @@
 .t18 { align-content: center; justify-content: end }
 /*! ...unlike `gap`, whose shorthand is as old as its longhands */
 .t19 { row-gap: 1px; column-gap: 2px }
-/*! ...and a source `place-items` is the author's own, so it stays */
+/*! ...and a source `place-items` is written as the two longhands it sets */
 .t20 { place-items: center end }
 /*! ...and two-value `overflow`, which Chrome 50 predates */
 .t21 { overflow-x: hidden; overflow-y: scroll }
