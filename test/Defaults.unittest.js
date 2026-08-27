@@ -6012,3 +6012,23 @@ describe("Targets", () => {
 	`);
 	});
 });
+
+describe("optimization.minimize", () => {
+	it("should accept the `true` shorthand assigned after normalization", () => {
+		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+			require("..").config;
+
+		const normalized = getNormalizedWebpackOptions({ mode: "production" });
+
+		// What a plugin does in `apply()`, which runs between normalization and
+		// defaults, so `getNormalizedOptimizationMinimize` never sees this value.
+		normalized.optimization.minimize = /** @type {EXPECTED_ANY} */ (true);
+
+		expect(() => applyWebpackOptionsDefaults(normalized)).not.toThrow();
+		expect(normalized.optimization.minimize).toEqual({
+			css: {},
+			html: {},
+			javascript: { compress: { passes: 2 } }
+		});
+	});
+});
