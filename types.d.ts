@@ -26091,6 +26091,20 @@ declare abstract class RuntimeTemplate {
 	chunkRootOutputDir(chunk: Chunk, enforceRelative: boolean): string;
 
 	/**
+	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
+	 * a worker or worklet entry chunk bakes to, or `null` to keep the runtime form. The
+	 * gate and the build are asked together so every call site agrees on both — the
+	 * `new Worker(...)` emit, and the resource hint `ResourceHintPlugin` spells for it.
+	 */
+	getAnalyzableWorkerUrl(
+		overridePublicPath: undefined | string,
+		chunk: Chunk,
+		module: Module,
+		chunkGraph: ChunkGraph,
+		runtimeRequirements: Set<string>
+	): null | string;
+
+	/**
 	 * Static `new URL(<file>, import.meta.url)` for every stylesheet a runtime can load,
 	 * keyed by chunk id, or `null` when any of them has to keep the runtime
 	 * `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
