@@ -1,9 +1,17 @@
 "use strict";
 
+const { Logger } = require("../lib/logging/Logger");
 const ObjectMiddleware = require("../lib/serialization/ObjectMiddleware");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
 const middleware = new ObjectMiddleware(() => {}, "xxhash64");
+// Only the error paths log, so a sink is enough
+/** @type {Logger} */
+const logger = new Logger(
+	() => {},
+	() => logger
+);
+const context = { logger };
 
 /**
  * Round-trips a value through serialize + deserialize.
@@ -11,12 +19,13 @@ const middleware = new ObjectMiddleware(() => {}, "xxhash64");
  * @returns {EXPECTED_ANY} what came back
  */
 const roundTrip = (value) => {
-	const serialized = middleware.serialize([value], {});
+	const serialized = middleware.serialize([value], context);
 	expect(serialized).not.toBeNull();
-	return middleware.deserialize(
+	const deserialized = middleware.deserialize(
 		/** @type {EXPECTED_ANY} */ (serialized),
-		{}
-	)[0];
+		context
+	);
+	return /** @type {EXPECTED_ANY[]} */ (deserialized)[0];
 };
 
 describe("ObjectMiddleware", () => {
@@ -97,7 +106,7 @@ describe("ObjectMiddleware", () => {
 
 	it("rejects a function that is not lazy", () => {
 		expect(() =>
-			middleware.serialize([/** @type {EXPECTED_ANY} */ (() => {})], {})
+			middleware.serialize([/** @type {EXPECTED_ANY} */ (() => {})], context)
 		).toThrow(/Unexpected function/);
 	});
 
@@ -105,7 +114,7 @@ describe("ObjectMiddleware", () => {
 		/** @type {EXPECTED_ANY} */
 		const circular = {};
 		circular.self = circular;
-		expect(() => middleware.serialize([circular], {})).toThrow(
+		expect(() => middleware.serialize([circular], context)).toThrow(
 			/circular references/
 		);
 	});
