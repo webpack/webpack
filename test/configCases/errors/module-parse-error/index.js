@@ -15,6 +15,13 @@ it("should throw a SyntaxError when a module that failed to parse is executed", 
 	expect(() => require("./broken.json")).toThrow(SyntaxError);
 });
 
+it("should throw a WebAssembly.CompileError for a malformed wasm module", async () => {
+	// a rejected wasm binary is a compile error to the engine, not a syntax one
+	await expect(import("./broken.wasm")).rejects.toThrow(
+		WebAssembly.CompileError
+	);
+});
+
 it("should throw a plain Error for a build failure that is not a parse error", () => {
 	expect(() => require("./built.js")).toThrow("loader boom");
 	expect(() => require("./built.js")).not.toThrow(SyntaxError);

@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Throw a `SyntaxError` from a module that failed to parse.
+Throw `SyntaxError`, or `WebAssembly.CompileError`, from an unparsable module.

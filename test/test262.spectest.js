@@ -1341,9 +1341,8 @@ describe("test262", () => {
 								!/Can't resolve '\.\/THIS_FILE_DOES_NOT_EXIST\.js'/.test(
 									item
 								) &&
-								// `script-code_FIXTURE.js` only parses as a script, and the test
-								// asserts `import()` of it rejects with a `SyntaxError` — webpack
-								// reports the same failure at build time and re-throws it there.
+								// `script-code_FIXTURE.js` only parses as a script; webpack
+								// reports the `SyntaxError` the test expects at build time
 								!(
 									item.name === "ModuleParseError" &&
 									item.module &&

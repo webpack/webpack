@@ -9486,7 +9486,10 @@ declare class Generator {
 	/**
 	 * Returns the statement a module that failed to build throws when executed.
 	 */
-	static throwBuildErrorCode(error: Error): string;
+	static throwBuildErrorCode(
+		error: Error,
+		parseErrorConstructor?: string
+	): string;
 }
 declare interface GeneratorOptions {
 	[index: string]: any;
