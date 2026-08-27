@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Lower a CSS spelling the `browserslist` target cannot read into one it can.
+Lower a CSS spelling a target cannot read and write a color fallback before one.

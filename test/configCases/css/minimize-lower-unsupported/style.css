@@ -12,3 +12,7 @@
 .t07 { background-image: linear-gradient(green, red 30% 40%, pink) }
 /*! a multi-keyword `display`, written as the one keyword naming the box */
 .t08 { display: inline flex }
+/*! a Lab-family color, with the color it names written before it */
+.t09 { color: oklch(59.686% 0.15619 49.7694) }
+/*! ...and `hwb()`, which shipped before the Lab family */
+.t10 { background-color: hwb(120 20% 30%) }

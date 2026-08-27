@@ -4168,6 +4168,12 @@ const SUPPORTED_FEATURES = [
 		]
 	],
 	["displayTwoValues", ["css.properties.display.multi-keyword_values"]],
+	["colorFunction", ["css.types.color.color"]],
+	["colorMix", ["css.types.color.color-mix"]],
+	["hwbColors", ["css.types.color.hwb"]],
+	["lightDark", ["css.types.color.light-dark"]],
+	["labColors", ["css.types.color.lab", "css.types.color.lch"]],
+	["oklabColors", ["css.types.color.oklab", "css.types.color.oklch"]],
 	["insetShorthand", ["css.properties.inset"]],
 	["mediaQueryRange", ["css.at-rules.media.range_syntax"]],
 	["overflowTwoValues", ["css.properties.overflow.multiple_keywords"]],

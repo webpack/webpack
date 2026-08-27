@@ -7502,3 +7502,172 @@ describe("CssSyntax minify — lowering a spelling the target cannot read", () =
 		expect(minifyFor("a{display:inline flex}")).toBe("a{display:inline flex}");
 	});
 });
+
+describe("CssSyntax minify — a fallback for a color the target cannot read", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]} browsers the browserslist selection to target
+	 * @returns {string} its minified serialization, with the fallback turned off
+	 */
+	const withoutFallbacks = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: { browsers },
+			transforms: { colorFallbacks: false }
+		}).code;
+
+	it("writes the color a Lab-family function names before it", () => {
+		expect(minifyFor("a{color:lab(40% 56.6 39)}", ["chrome 100"])).toBe(
+			"a{color:#b32323;color:lab(40% 56.6 39)}"
+		);
+		expect(
+			minifyFor("a{color:oklch(59.686% 0.15619 49.7694)}", ["chrome 100"])
+		).toBe("a{color:#c65d06;color:oklch(59.686% .15619 49.7694)}");
+		// `hwb()` shipped before the Lab family, so it has a target of its own.
+		expect(minifyFor("a{color:hwb(194 0% 0%)}", ["chrome 100"])).toBe(
+			"a{color:#00c3ff;color:hwb(194 0% 0%)}"
+		);
+		// A target reading the function is written it alone.
+		expect(minifyFor("a{color:lab(40% 56.6 39)}", ["chrome 130"])).toBe(
+			"a{color:lab(40% 56.6 39)}"
+		);
+	});
+
+	it("clips a color sRGB cannot show, which the declaration after it corrects", () => {
+		// Replacing the function with this would be a different color; standing
+		// before it, it is only ever read where there is no better answer.
+		expect(minifyFor("a{color:oklch(0.7 0.4 150)}", ["chrome 100"])).toBe(
+			"a{color:#00d600;color:oklch(.7 .4 150)}"
+		);
+	});
+
+	it("writes an alpha the way the target spells one", () => {
+		expect(minifyFor("a{color:lch(70% 40 20 / .5)}", ["chrome 100"])).toBe(
+			"a{color:#ef8f9480;color:lch(70% 40 20 / .5)}"
+		);
+		// No hex alpha either, so the fallback is the `rgba()` both read.
+		expect(minifyFor("a{color:lch(70% 40 20 / .5)}", ["chrome 50"])).toBe(
+			"a{color:rgba(239,143,148,.5);color:lch(70% 40 20 / .5)}"
+		);
+		// An alpha the engine quantizes to `255` is the opaque color, which is
+		// written without an alpha at all — in either spelling.
+		expect(minifyFor("a{color:hwb(194 0% 0% / .999)}", ["chrome 50"])).toBe(
+			"a{color:#00c3ff;color:hwb(194 0% 0% / .999)}"
+		);
+		expect(minifyFor("a{color:lch(70% 40 20 / .999)}", ["chrome 100"])).toBe(
+			"a{color:#ef8f94;color:lch(70% 40 20 / .999)}"
+		);
+	});
+
+	it("carries the whole declaration, wherever the color stands in it", () => {
+		expect(
+			minifyFor("a{background:linear-gradient(oklch(0.7 0.1 20),#fff)}", [
+				"chrome 100"
+			])
+		).toBe(
+			"a{background:linear-gradient(#d68585,#fff);background:linear-gradient(oklch(.7 .1 20),#fff)}"
+		);
+		expect(
+			minifyFor(
+				"a{box-shadow:0 0 2px lab(50% 20 30),0 0 4px oklch(0.6 0.1 90)}",
+				["chrome 100"]
+			)
+		).toBe(
+			"a{box-shadow:0 0 2px #a16945,0 0 4px #977d30;" +
+				"box-shadow:0 0 2px lab(50% 20 30),0 0 4px oklch(.6 .1 90)}"
+		);
+		expect(
+			minifyFor("a{color:oklch(0.7 0.1 20)!important}", ["chrome 100"])
+		).toBe("a{color:#d68585!important;color:oklch(.7 .1 20)!important}");
+	});
+
+	it("leaves the author's own fallback alone", () => {
+		expect(
+			minifyFor("a{color:red;color:oklch(0.7 0.1 20)}", ["chrome 100"])
+		).toBe("a{color:red;color:oklch(.7 .1 20)}");
+		// A declaration the body never writes is no fallback the author left, so the
+		// one that survives still gets ours.
+		expect(
+			minifyFor("a{color:oklch(0.7 0.1 20);color:oklch(0.7 0.1 20)}", [
+				"chrome 100"
+			])
+		).toBe("a{color:#d68585;color:oklch(.7 .1 20)}");
+	});
+
+	it("writes none where there is no color to write", () => {
+		// A relative color's components are the referenced color's, not numbers.
+		expect(minifyFor("a{color:oklch(from red l c h)}", ["chrome 100"])).toBe(
+			"a{color:oklch(from red l c h)}"
+		);
+		// A custom property's value is handed back as written.
+		expect(minifyFor("a{--x:oklch(0.7 0.1 20)}", ["chrome 100"])).toBe(
+			"a{--x:oklch(0.7 0.1 20)}"
+		);
+		// The function the target does read is replaced rather than fallen back to.
+		expect(minifyFor("a{color:lch(50% 0 0)}", ["chrome 100"])).toBe(
+			"a{color:#777}"
+		);
+	});
+
+	it("writes none where the fallback would be unreadable too", () => {
+		// Chrome 100 reads none of these, so a fallback still naming one is dropped
+		// by the same engine that drops the declaration it stands before.
+		expect(
+			minifyFor("a{color:color-mix(in oklch,oklch(0.7 0.1 20),red)}", [
+				"chrome 100"
+			])
+		).toBe("a{color:color-mix(in oklch,oklch(.7 .1 20),red)}");
+		expect(
+			minifyFor("a{color:light-dark(oklch(0.7 0.1 20),red)}", ["chrome 100"])
+		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+		expect(
+			minifyFor(
+				"a{background:linear-gradient(oklch(0.7 0.1 20),color(display-p3 1 0 0))}",
+				["chrome 100"]
+			)
+		).toBe(
+			"a{background:linear-gradient(oklch(.7 .1 20),color(display-p3 1 0 0))}"
+		);
+	});
+
+	it("folds only the functions the target is missing", () => {
+		// Chrome 105 reads `hwb()` and not the Lab family, so one color of the two
+		// is written another way and the other stands as the author wrote it.
+		expect(
+			minifyFor(
+				"a{background-image:linear-gradient(hwb(120 20% 30%),oklch(0.7 0.1 20))}",
+				["chrome 105"]
+			)
+		).toBe(
+			"a{background-image:linear-gradient(hwb(120 20% 30%),#d68585);" +
+				"background-image:linear-gradient(hwb(120 20% 30%),oklch(.7 .1 20))}"
+		);
+		expect(minifyFor("a{color:hwb(120 20% 30%)}", ["chrome 105"])).toBe(
+			"a{color:hwb(120 20% 30%)}"
+		);
+	});
+
+	it("writes none when the transform is off", () => {
+		expect(withoutFallbacks("a{color:lab(40% 56.6 39)}", ["chrome 100"])).toBe(
+			"a{color:lab(40% 56.6 39)}"
+		);
+	});
+
+	it("writes one even with the color transform off", () => {
+		// `shortenColors` governs writing a color the shortest way, not whether the
+		// target can read the one the author wrote.
+		expect(
+			new SourceProcessor().process("a{color:lab(40% 56.6 39)}", {
+				mode: "minify",
+				environment: { browsers: ["chrome 100"] },
+				transforms: { shortenColors: false }
+			}).code
+		).toBe("a{color:#b32323;color:lab(40% 56.6 39)}");
+	});
+
+	it("writes none with no target to answer for", () => {
+		expect(minifyFor("a{color:lab(40% 56.6 39)}")).toBe(
+			"a{color:lab(40% 56.6 39)}"
+		);
+	});
+});
