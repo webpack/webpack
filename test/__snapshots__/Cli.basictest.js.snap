@@ -13159,6 +13159,71 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-copy": Object {
+    "configs": Array [
+      Object {
+        "description": "Glob or path from where the files are copied.",
+        "multiple": true,
+        "path": "output.copy[]",
+        "type": "string",
+      },
+    ],
+    "description": "Glob or path from where the files are copied.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-copy-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.",
+        "multiple": true,
+        "path": "output.copy[].filename",
+        "type": "string",
+      },
+    ],
+    "description": "Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-copy-from": Object {
+    "configs": Array [
+      Object {
+        "description": "Glob or path from where the files are copied.",
+        "multiple": true,
+        "path": "output.copy[].from",
+        "type": "string",
+      },
+    ],
+    "description": "Glob or path from where the files are copied.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-copy-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.copy' configuration. Copy files and directories to the output directory.",
+        "multiple": false,
+        "path": "output.copy",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.copy' configuration. Copy files and directories to the output directory.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-copy-to": Object {
+    "configs": Array [
+      Object {
+        "description": "Directory the files are copied to, relative to 'output.path'.",
+        "multiple": true,
+        "path": "output.copy[].to",
+        "type": "string",
+      },
+    ],
+    "description": "Directory the files are copied to, relative to 'output.path'.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "output-cross-origin-loading": Object {
     "configs": Array [
       Object {
