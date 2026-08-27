@@ -5475,16 +5475,77 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 					"a{border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:red}"
 				)
 			).toBe("a{border-bottom:1px solid red}");
+			// A logical edge states its physical twin's grammar, so its slots are read
+			// off that one and written back onto its own longhands.
+			expect(
+				minify(
+					"a{border-inline-start-width:1px;border-inline-start-style:solid;border-inline-start-color:red}"
+				)
+			).toBe("a{border-inline-start:1px solid red}");
+			expect(
+				minify(
+					"a{border-block-end-style:dashed;border-block-end-width:2px;border-block-end-color:#00f}"
+				)
+			).toBe("a{border-block-end:2px dashed #00f}");
 			// `border` itself resets `border-image`, which its three longhands leave
-			// alone, so the four-sided family is no family of this merge.
+			// alone, so the four-sided family is no family of this merge — nor is the
+			// four-sided one below it, for the same reason.
 			const sided = "a{border-width:1px;border-style:solid;border-color:red}";
 			expect(minify(sided)).toBe(sided);
+			const edges =
+				"a{border-top:1px solid red;border-right:1px solid red;border-bottom:1px solid red;border-left:1px solid red}";
+			expect(minify(edges)).toBe(edges);
 			expect(minify("a{text-wrap-mode:nowrap;text-wrap-style:balance}")).toBe(
 				"a{text-wrap:nowrap balance}"
 			);
 			expect(minify('a{text-emphasis-style:"x";text-emphasis-color:red}')).toBe(
 				'a{text-emphasis:"x" red}'
 			);
+		});
+
+		it("merges an ordered shorthand's slots by position", () => {
+			expect(minify("a{flex-grow:2;flex-shrink:3;flex-basis:10px}")).toBe(
+				"a{flex:2 3 10px}"
+			);
+			// Shortened the way an authored shorthand is: the two keyword spellings,
+			// the shrink an omitted one leaves, and the basis an omitted one leaves.
+			expect(minify("a{flex-grow:0;flex-shrink:0;flex-basis:auto}")).toBe(
+				"a{flex:none}"
+			);
+			expect(minify("a{flex-grow:1;flex-shrink:1;flex-basis:auto}")).toBe(
+				"a{flex:auto}"
+			);
+			expect(minify("a{flex-grow:0;flex-shrink:1;flex-basis:auto}")).toBe(
+				"a{flex:0 auto}"
+			);
+			expect(minify("a{flex-grow:1;flex-shrink:2;flex-basis:0%}")).toBe(
+				"a{flex:1 2}"
+			);
+			expect(minify("a{flex-grow:1;flex-shrink:1;flex-basis:0%}")).toBe(
+				"a{flex:1}"
+			);
+			// §7.1.1 reads a unitless zero not preceded by two factors as a factor,
+			// so the basis stays where dropping the shrink would make it one.
+			expect(minify("a{flex-grow:1;flex-shrink:1;flex-basis:0}")).toBe(
+				"a{flex:1 1 0}"
+			);
+		});
+
+		it("declines an ordered merge the slots do not allow", () => {
+			// A substitution may stand for any number of slots.
+			const substituted = "a{flex-grow:var(--g);flex-shrink:1;flex-basis:auto}";
+			expect(minify(substituted)).toBe(substituted);
+			// A CSS-wide keyword beside another value is a shorthand engines drop.
+			const wide = "a{flex-grow:1;flex-shrink:inherit;flex-basis:auto}";
+			expect(minify(wide)).toBe(wide);
+			// Every slot has to be written: an omitted one is the shorthand's own
+			// default, not what the longhand was left at.
+			const partial = "a{flex-grow:1;flex-basis:auto}";
+			expect(minify(partial)).toBe(partial);
+			// They have to agree on `!important`.
+			const important =
+				"a{flex-grow:1;flex-shrink:1!important;flex-basis:auto}";
+			expect(minify(important)).toBe(important);
 		});
 
 		it("classifies a zero length, a system color and a written unit", () => {
@@ -6127,14 +6188,18 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 	});
 
 	it("writes IE 10's flexbox renames, which take the same values", () => {
+		// Two of the three, so they stay longhands: all three merge into `flex`,
+		// which the same table renames to `-ms-flex`.
 		expect(
-			minifyFor(
-				"a{order:1;flex-grow:2;flex-shrink:3;flex-basis:4px;flex-wrap:nowrap}",
-				["ie 10"]
-			)
+			minifyFor("a{order:1;flex-grow:2;flex-basis:4px;flex-wrap:nowrap}", [
+				"ie 10"
+			])
 		).toBe(
-			"a{-ms-flex-order:1;order:1;-ms-flex-positive:2;flex-grow:2;-ms-flex-negative:3;flex-shrink:3;-ms-flex-preferred-size:4px;flex-basis:4px;-ms-flex-wrap:nowrap;flex-wrap:nowrap}"
+			"a{-ms-flex-order:1;order:1;-ms-flex-positive:2;flex-grow:2;-ms-flex-preferred-size:4px;flex-basis:4px;-ms-flex-wrap:nowrap;flex-wrap:nowrap}"
 		);
+		expect(
+			minifyFor("a{flex-grow:2;flex-shrink:3;flex-basis:4px}", ["ie 10"])
+		).toBe("a{-ms-flex:2 3 4px;flex:2 3 4px}");
 	});
 
 	it("carries the keywords a rename read in place of the standard ones", () => {

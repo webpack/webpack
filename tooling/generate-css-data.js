@@ -998,25 +998,65 @@ const collectFamilyLonghands = (
 		} catch (_err) {
 			continue;
 		}
+		// A logical family states its grammar as its physical twin's whole value
+		// (`border-inline-start` is `<'border-top'>`), so the slots are read off that
+		// one and mapped back by position — both list width, style then color.
+		let twin = null;
+		if (tree.type === "property") {
+			const other = propertyTable[tree.name];
+			if (other === undefined || typeof other.syntax !== "string") continue;
+			if (!Array.isArray(other.computed)) continue;
+			try {
+				tree = parseValueSyntax(other.syntax);
+			} catch (_err) {
+				continue;
+			}
+			twin = other.computed;
+		}
 		if (tree.type !== "anyOf") continue;
+		const named = twin === null ? longhands : twin;
+		if (named.length !== longhands.length) continue;
 		const slots = tree.items.map((item) => {
 			if (item.type === "property") return item.name;
 			if (item.type !== "type") return null;
 			// A grammar naming its slots by type: the slot is the one longhand
 			// whose whole value is that type, through any `<'other'>`.
-			const named = longhands.filter(
+			const byType = named.filter(
 				(one) => longhandType(one, 0, propertyTable) === item.name
 			);
-			return named.length === 1 ? named[0] : null;
+			return byType.length === 1 ? byType[0] : null;
 		});
 		if (slots.includes(null)) continue;
-		if (slots.length !== longhands.length) continue;
-		if (
-			slots.some((slot) => !longhands.includes(/** @type {string} */ (slot)))
-		) {
+		if (slots.length !== named.length) continue;
+		if (slots.some((slot) => !named.includes(/** @type {string} */ (slot)))) {
 			continue;
 		}
-		out.push([name, /** @type {string[]} */ (slots)]);
+		out.push([
+			name,
+			twin === null
+				? /** @type {string[]} */ (slots)
+				: slots.map(
+						(slot) => longhands[named.indexOf(/** @type {string} */ (slot))]
+					)
+		]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The shorthands a merge writes by position (see `SUPPLEMENT.orderedShorthands`),
+ * with their longhands in the order the grammar juxtaposes them — which is the
+ * order `mdn-data` lists them in.
+ * @param {string[]} shorthands the ordered-shorthand property names
+ * @returns {[string, string[]][]} `[shorthand, longhands]`, sorted
+ */
+const collectOrderedLonghands = (shorthands) => {
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const name of shorthands) {
+		const longhands = properties[name].computed;
+		if (!Array.isArray(longhands) || longhands.length < 2) continue;
+		out.push([name, longhands]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
@@ -3068,7 +3108,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3207,11 +3247,18 @@ const SUPPLEMENT = {
 	// both `text-underline-*`, `text-emphasis` keeps `text-emphasis-position`.
 	// `caret` is the one candidate left out — it is far newer than `caret-color`.
 	// The four `border-<side>` shorthands reset their three longhands and nothing
-	// else, which is what keeps them here while `border` itself stays out.
+	// else, which is what keeps them here while `border` itself stays out: it
+	// clears all five `border-image-*` longhands, and a rule merging into it would
+	// clear what an earlier rule set. The four logical edges answer the same way
+	// as their physical twins (they state the same grammar, and Chromium keeps
+	// every `border-image-*` across one), so they are here too.
 	// `transition` also resets `transition-behavior` and folds a list to one item.
-	// `flex` is safe but its grammar is ordered, not the order-free shape here.
 	familyShorthands: [
+		"border-block-end",
+		"border-block-start",
 		"border-bottom",
+		"border-inline-end",
+		"border-inline-start",
 		"border-left",
 		"border-right",
 		"border-top",
@@ -3223,6 +3270,13 @@ const SUPPLEMENT = {
 		"text-emphasis",
 		"text-wrap"
 	],
+	// The shorthands whose grammar juxtaposes its longhands in a fixed order
+	// rather than offering them order-free, so `familyShorthands`' slot-by-value
+	// reading does not apply and the merge writes them by position. Named rather
+	// than derived: what an omitted slot leaves is the shorthand's own default,
+	// not the longhand's initial (`flex` reads a missing basis as `0%` where
+	// `flex-basis` starts at `auto`), and no dataset states that.
+	orderedShorthands: ["flex"],
 	// Both the property's initial and a whole `||` group, so omitting the group
 	// leaves it — `mdn-data` states neither, and `aspect-ratio:auto 3/2` is not one.
 	omittableInitialKeywords: ["grid-auto-flow"],
@@ -5379,6 +5433,9 @@ const collectData = async () => {
 	const pairLonghands = collectPairLonghands();
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
+	const orderedLonghands = collectOrderedLonghands(
+		SUPPLEMENT.orderedShorthands
+	);
 	const slashLonghands = collectSlashLonghands();
 	const customIdentListProperties = collectCustomIdentListProperties();
 	const unsharedLonghandKeywords = collectUnsharedLonghandKeywords([
@@ -5393,6 +5450,7 @@ const collectData = async () => {
 		boxLonghands,
 		pairLonghands,
 		familyLonghands,
+		orderedLonghands,
 		slashLonghands
 	]) {
 		for (const [, longhands] of table) {
@@ -5543,6 +5601,12 @@ const FAMILY_LONGHANDS = new Map([${familyLonghands
 // vendor spelling is a name the engine parses rather than one it may drop — so a
 // later declaration listing an earlier one's items cannot be its fallback.
 const CUSTOM_IDENT_LIST_PROPERTIES = ${setLiteral(customIdentListProperties)};
+
+// The shorthands whose grammar juxtaposes its longhands in a fixed order, so a
+// merge writes every value by position rather than reading which slot takes it.
+const ORDERED_LONGHANDS = new Map([${orderedLonghands
+		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
 
 const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
@@ -6137,7 +6201,7 @@ module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
-module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
+module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.ORDERED_LONGHANDS = ORDERED_LONGHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;

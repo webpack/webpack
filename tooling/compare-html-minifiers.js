@@ -13,6 +13,7 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { pathToFileURL } = require("url");
 const { promisify } = require("util");
 const zlib = require("zlib");
 
@@ -28,6 +29,7 @@ const PACKAGES = [
 	"@picocss/pico@2",
 	"@swc/html@1",
 	"cssnano@7",
+	"html-minifier-next@8",
 	"html-minifier-terser@7",
 	"html5-boilerplate@9",
 	"htmlnano@2",
@@ -348,6 +350,53 @@ const MINIFIERS = [
 					removeImpliedTags: true
 				})
 			).code
+	],
+	[
+		"html-minifier-next",
+		() => {
+			// ESM only, so the entry its own manifest names is imported by URL —
+			// a bare specifier would resolve against this file, not the cache.
+			const manifest = load("html-minifier-next/package.json");
+			const loading = import(
+				pathToFileURL(
+					path.join(MODULES, "html-minifier-next", manifest.exports["."].import)
+				).href
+			);
+			return async (html) => (await loading).minify(html, {});
+		}
+	],
+	[
+		"html-minifier-next (aggressive)",
+		() => {
+			const manifest = load("html-minifier-next/package.json");
+			const loading = import(
+				pathToFileURL(
+					path.join(MODULES, "html-minifier-next", manifest.exports["."].import)
+				).href
+			);
+			// The html-minifier-terser row's options plus the four this fork adds
+			// that leave the rendered page alone. `removeUnusedCSS` and `minifySVG`
+			// are left out: both are told to change what the page renders.
+			return async (html) =>
+				(await loading).minify(html, {
+					collapseAttributeWhitespace: true,
+					collapseBooleanAttributes: true,
+					collapseWhitespace: true,
+					decodeEntities: true,
+					mergeScripts: true,
+					minifyCSS: true,
+					minifyJS: true,
+					removeAttributeQuotes: true,
+					removeComments: true,
+					removeDefaultTypeAttributes: true,
+					removeEmptyAttributes: true,
+					removeOptionalTags: true,
+					removeRedundantAttributes: true,
+					sortAttributes: true,
+					sortClassNames: true,
+					useShortDoctype: true
+				});
+		}
 	],
 	[
 		"html-minifier-terser",

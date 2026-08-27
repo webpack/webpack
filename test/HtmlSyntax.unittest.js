@@ -8618,6 +8618,77 @@ describe("SourceProcessor — beautifying", () => {
 	});
 });
 
+// A nested list item, a second `<form>`, a fostered run: shapes whose print the
+// round-trip guard checks. It reads both trees the way minifying leaves them —
+// no comments, text runs joined and collapsed, the elements and values the
+// options rewrite or drop — so only a node that moved hands the source back.
+describe("SourceProcessor — minifying what the round-trip guard checks", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (source) =>
+		new SourceProcessor().process(source, {
+			mode: /** @type {"minify"} */ ("minify"),
+			collapseWhitespace: /** @type {"smart"} */ ("smart"),
+			mergeStyles: true,
+			removeEmptyAttributes: true,
+			removeEmptyElements: true,
+			removeRedundantAttributes: /** @type {"all"} */ ("all"),
+			sortAttributes: true,
+			sortTokenLists: true
+		}).code;
+
+	/** @type {[string, string][]} */
+	const CASES = [
+		[
+			"a list nested in a list item",
+			"<ul>\n<li>a<ul>\n<li>b</li>\n</ul>\n</li>"
+		],
+		["a term nested behind a division", "<dl>\n<dt>a<div>\n<dt>b</div>\n</dl>"],
+		["a link inside a link", '<a href="/x">a<b>\n<a href="/y">b</a></b></a>'],
+		["a second form", '<form action="/a">\n<p>x<form action="/b">y'],
+		["a run fostered out of a table", "<p><table>\n<ol>\n<li>x"],
+		[
+			"an inline sheet under a nested list",
+			"<ul><li>a<ul>\n<li><style>  a { color : #ff0000 }  </style>"
+		]
+	];
+
+	it.each(CASES)("minifies %s", (_name, source) => {
+		expect(minify(source)).toMatchSnapshot();
+	});
+
+	it("gives none of them back as their source", () => {
+		// The fallback is the whole document verbatim, so a case reading as its own
+		// input is one the guard stopped minifying altogether.
+		expect(
+			CASES.filter(([, source]) => minify(source) === source).map(
+				([name]) => name
+			)
+		).toEqual([]);
+	});
+
+	it("settles on the second pass", () => {
+		/** @type {string[]} */
+		const unsettled = [];
+		for (const [name, source] of CASES) {
+			const once = minify(source);
+			if (minify(once) !== once) unsettled.push(name);
+		}
+		expect(unsettled).toEqual([]);
+	});
+
+	it("still hands back the source where the print would move a node", () => {
+		// The shape no arrangement of tags reproduces: printed as the tree says, it
+		// parses back somewhere else, so the guard has to refuse the whole print.
+		const source = "<nobr><table><b><colgroup><nobr>  x  ";
+		expect(minify(source)).toBe(source);
+	});
+});
+
 describe("SourceProcessor — reusing work across a print", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 

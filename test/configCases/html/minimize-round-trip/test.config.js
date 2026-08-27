@@ -167,6 +167,8 @@ module.exports = {
 	},
 	afterExecute(options) {
 		const cases = path.resolve(__dirname, "cases");
+		/** @type {string[]} */
+		const untouched = [];
 		for (const file of fs.readdirSync(cases)) {
 			const emitted = path.join(options.output.path, file);
 			if (!fs.existsSync(emitted)) continue;
@@ -179,6 +181,11 @@ module.exports = {
 				file,
 				tree: tree(source)
 			});
+			if (minified === source) untouched.push(file);
 		}
+		// Every document here is written with something for minifying to change,
+		// so one handed back byte for byte is one the round-trip guard refused —
+		// which is silent otherwise, and costs the whole document.
+		expect(untouched).toEqual([]);
 	}
 };

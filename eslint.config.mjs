@@ -236,7 +236,12 @@ export default defineConfig([
 	{
 		// `color-name` is ESM, so the CSS data generator reaches its table
 		// through a dynamic import rather than a `require` no jest `vm` supports.
-		files: ["tooling/generate-css-data.js"],
+		// `html-minifier-next` is ESM only, and the HTML comparison imports it the
+		// same way.
+		files: [
+			"tooling/generate-css-data.js",
+			"tooling/compare-html-minifiers.js"
+		],
 		rules: {
 			"n/no-unsupported-features/es-syntax": [
 				"error",
