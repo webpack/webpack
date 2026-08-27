@@ -69,7 +69,7 @@ or packaging just about any resource or asset.
 
 **TL;DR**
 
-- Bundles [ES Modules](https://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](https://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+- Bundles [ES Modules](https://web.archive.org/web/20201226153522/https://2ality.com/2014/09/es6-modules-final.html), [CommonJS](https://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 - Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 - Dependencies are resolved during compilation, reducing the runtime size.
 - Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
@@ -86,7 +86,7 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 
 ### Browser Compatibility
 
-Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+Webpack supports all browsers that are [ES5-compliant](https://compat-table.github.io/compat-table/es5/) (IE8 and below are not supported).
 Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 ## Concepts
