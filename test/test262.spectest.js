@@ -1301,8 +1301,18 @@ describe("test262", () => {
 							);
 						}
 
+						// The `_FIXTURE` context dependency bundles every fixture beside
+						// the test, so a circular reexport in one warns on tests that
+						// never import it.
+						const unexpectedWarnings = warnings.filter(
+							(item) =>
+								!/is part of a circular reexport chain in '\.\/[^']*_FIXTURE\.js'/.test(
+									item.message
+								)
+						);
+
 						if (
-							warnings.length > 0 &&
+							unexpectedWarnings.length > 0 &&
 							// Just syntax test
 							name !==
 								"module-code/top-level-await/syntax/await-expr-dyn-import.js"
@@ -1310,7 +1320,9 @@ describe("test262", () => {
 							throw new Error(
 								`Warnings in test file "${outputFile}" ("${testFile}")`,
 								{
-									cause: new Error(`Errors:\n\n${warnings.join("\n")}`)
+									cause: new Error(
+										`Errors:\n\n${unexpectedWarnings.join("\n")}`
+									)
 								}
 							);
 						}
