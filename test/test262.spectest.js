@@ -773,6 +773,9 @@ const knownBugs = [
 	// `yield` as a strict-mode reserved word: webpack parses the source in
 	// sloppy mode, so the expected parse-time SyntaxError is not raised.
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
+	// A top-level `await using` makes the module async, like a bare top-level
+	// `await` does, so the Script-goal early error is not raised.
+	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
 	// `#mark in obj` requires the deferred namespace target to report
 	// `isExtensible() === false` to throw a TypeError. webpack's proxy
 	// target is mutable until init runs and cannot be frozen up-front
@@ -1035,12 +1038,8 @@ const knownBugs = [
 ];
 
 const knownProductionBuildBugs = [
-	// The inner graph reads a class heritage and an unused export's value as pure,
-	// so a getter on either never runs and a free name never throws. Both are
-	// deliberate: `configCases/inner-graph/issue-17565` pins the heritage one, and
-	// making a free identifier impure fails 40 inner-graph cases. Measured cost of
-	// changing them is small (+116 B and +1.43 KiB gzip over `configCases`, and
-	// nothing on three.js), so it is a decision to take rather than a bug to fix.
+	// Deliberate: the inner graph reads a class heritage and an unused export's
+	// value as pure. `configCases/inner-graph/issue-17565` pins the first.
 	"statements/class/definition/prototype-getter.js",
 	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
