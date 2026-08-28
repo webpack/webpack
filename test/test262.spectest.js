@@ -467,10 +467,7 @@ const edgeCases = [
 	"global-code/S10.4.1_A1_T2.js",
 	"global-code/decl-var.js",
 	"global-code/decl-lex-configurable-global.js",
-	"global-code/script-decl-lex-deletion.js",
-	"global-code/script-decl-lex-lex.js",
 	"global-code/script-decl-lex-restricted-global.js",
-	"global-code/script-decl-lex-var.js",
 
 	"expressions/delete/S11.4.1_A3.1.js",
 
