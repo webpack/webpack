@@ -8144,6 +8144,12 @@ declare abstract class ExportInfo {
 	): undefined | TargetItemWithConnection;
 
 	/**
+	 * Returns whether resolving the target leads back to this export, which
+	 * `getTarget` cannot express as it reports a cycle as "no target".
+	 */
+	hasCircularTarget(moduleGraph: ModuleGraph): boolean;
+
+	/**
 	 * Move the target forward as long resolveTargetFilter is fulfilled
 	 */
 	moveTarget(
@@ -8182,6 +8188,7 @@ declare abstract class ExportMode {
 	items: null | NormalReexportItem[];
 	name: null | string;
 	partialNamespaceExportInfo: null | ExportInfo;
+	circular: boolean;
 	ignored: null | Set<string>;
 	hidden?: null | Set<string>;
 	userRequest: null | string;

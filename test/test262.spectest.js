@@ -956,10 +956,8 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
-	// Tests expect a runtime SyntaxError from an ambiguous re-export
-	// (`export * from a; export * from b;` with the same name in both).
-	// webpack reports ambiguous exports as a build-time error, not as a
-	// runtime rejection of `import()`.
+	// An ambiguous re-export is a compile-time diagnostic and never a runtime
+	// failure — `configCases/compiletime/exports-presence` pins that contract.
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-ambiguous-import.js",
@@ -1040,29 +1038,10 @@ const knownBugs = [
 ];
 
 const knownProductionBuildBugs = [
-	// Production inner graph drops class heritage access
+	// Deliberate: the inner graph reads a class heritage and an unused export's
+	// value as pure. `configCases/inner-graph/issue-17565` pins the first.
 	"statements/class/definition/prototype-getter.js",
-	// Production inner graph drops unused export value access
-	"module-code/eval-export-dflt-expr-err-get-value.js",
-	// Production concatenation loses immutable import assignment
-	"module-code/instn-iee-bndng-fun.js",
-	"module-code/instn-iee-bndng-gen.js",
-	"module-code/instn-iee-bndng-var.js",
-	// Production provided exports misses namespace re-exports
-	"module-code/instn-star-props-nrml.js",
-	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
-	// A module imported both `import defer` and eagerly must evaluate at the
-	// eager position; production concatenation evaluates it at the earlier
-	// deferred position instead, changing the observable evaluation order.
-	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
-
-	// Production InlineExports:
-	// TODO: Support disable inline export annotation to keep the TDZ
-	"module-code/instn-named-bndng-const.js",
-	"module-code/instn-iee-bndng-const.js",
-	"module-code/instn-named-bndng-dflt-star.js",
-	"module-code/instn-named-bndng-dflt-named.js",
-	"module-code/namespace/internals/get-str-found-uninit.js"
+	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
 /* cspell:enable */
 
@@ -1322,8 +1301,18 @@ describe("test262", () => {
 							);
 						}
 
+						// The `_FIXTURE` context dependency bundles every fixture beside
+						// the test, so a circular reexport in one warns on tests that
+						// never import it.
+						const unexpectedWarnings = warnings.filter(
+							(item) =>
+								!/is part of a circular reexport chain in '\.\/[^']*_FIXTURE\.js'/.test(
+									item.message
+								)
+						);
+
 						if (
-							warnings.length > 0 &&
+							unexpectedWarnings.length > 0 &&
 							// Just syntax test
 							name !==
 								"module-code/top-level-await/syntax/await-expr-dyn-import.js"
@@ -1331,7 +1320,9 @@ describe("test262", () => {
 							throw new Error(
 								`Warnings in test file "${outputFile}" ("${testFile}")`,
 								{
-									cause: new Error(`Errors:\n\n${warnings.join("\n")}`)
+									cause: new Error(
+										`Errors:\n\n${unexpectedWarnings.join("\n")}`
+									)
 								}
 							);
 						}
