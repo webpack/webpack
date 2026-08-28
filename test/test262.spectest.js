@@ -1035,15 +1035,14 @@ const knownBugs = [
 ];
 
 const knownProductionBuildBugs = [
-	// The inner graph reads a class heritage and an unused export's value as
-	// pure, so a getter on either never runs. Treating them as impure would stop
-	// every `class X extends Y` from being tree-shaken, so this stays a trade.
+	// The inner graph reads a class heritage and an unused export's value as pure,
+	// so a getter on either never runs and a free name never throws. Both are
+	// deliberate: `configCases/inner-graph/issue-17565` pins the heritage one, and
+	// making a free identifier impure fails 40 inner-graph cases. Measured cost of
+	// changing them is small (+116 B and +1.43 KiB gzip over `configCases`, and
+	// nothing on three.js), so it is a decision to take rather than a bug to fix.
 	"statements/class/definition/prototype-getter.js",
-	"module-code/eval-export-dflt-expr-err-get-value.js",
-	// `experiments.outputModule` only: a module imported both `import defer` and
-	// eagerly must evaluate at the eager position, and concatenation evaluates it
-	// at the earlier deferred one.
-	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js"
+	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
 /* cspell:enable */
 
