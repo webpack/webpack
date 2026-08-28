@@ -2,7 +2,9 @@
    prefixing them — and renamed the keywords of four of them with it. */
 
 /*! a rename whose values IE 10 reads unchanged */
-.t01 { order: 1; flex-grow: 2; flex-shrink: 3; flex-basis: 4px }
+.t01 { order: 1; flex-grow: 2; flex-basis: 4px }
+/*! all three merge first, and the same table renames the shorthand they became */
+.t01b { flex-grow: 2; flex-shrink: 3; flex-basis: 4px }
 /*! and one whose keywords it renamed too */
 .t02 { align-items: flex-start; justify-content: space-around }
 /*! a CSS-wide keyword is every property's, so it carries through the map */

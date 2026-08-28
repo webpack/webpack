@@ -2,7 +2,8 @@
 
 exports[`ConfigCacheTestCases css minimize-vendor-prefixes-legacy minimize-vendor-prefixes-legacy should compile 1`] = `
 Array [
-  "/*! a rename whose values IE 10 reads unchanged */.t01{-ms-flex-order:1;order:1;-ms-flex-positive:2;flex-grow:2;-ms-flex-negative:3;flex-shrink:3;-ms-flex-preferred-size:4px;flex-basis:4px}",
+  "/*! a rename whose values IE 10 reads unchanged */.t01{-ms-flex-order:1;order:1;-ms-flex-positive:2;flex-grow:2;-ms-flex-preferred-size:4px;flex-basis:4px}",
+  "/*! all three merge first, and the same table renames the shorthand they became */.t01b{-ms-flex:2 3 4px;flex:2 3 4px}",
   "/*! and one whose keywords it renamed too */.t02{-ms-flex-align:start;align-items:flex-start;-ms-flex-pack:distribute;justify-content:space-around}",
   "/*! a CSS-wide keyword is every property's, so it carries through the map */.t03{-ms-flex-line-pack:inherit;align-content:inherit}",
   "/*! a value the renamed property cannot read gets no copy at all */.t04{align-self:safe center}",

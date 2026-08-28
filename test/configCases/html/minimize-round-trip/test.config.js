@@ -167,6 +167,8 @@ module.exports = {
 	},
 	afterExecute(options) {
 		const cases = path.resolve(__dirname, "cases");
+		/** @type {string[]} */
+		const untouched = [];
 		for (const file of fs.readdirSync(cases)) {
 			const emitted = path.join(options.output.path, file);
 			if (!fs.existsSync(emitted)) continue;
@@ -179,6 +181,10 @@ module.exports = {
 				file,
 				tree: tree(source)
 			});
+			if (minified === source) untouched.push(file);
 		}
+		// Every document here has something to minify, so one handed back byte for
+		// byte is one the guard refused — silent otherwise, and costs the document.
+		expect(untouched).toEqual([]);
 	}
 };

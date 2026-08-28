@@ -6108,13 +6108,14 @@ declare interface DefaultHandlerOptions {
 	estimatedTime?: boolean;
 	phaseTimings?: boolean;
 }
-
-declare interface DeferredEmbeddedSource {
-	source: string;
-	build: (answer?: string) => string;
+type DeferredEmbeddedSource = DeferredWrite & {
 	type: string;
 	hostType: string;
 	as?: string;
+};
+declare interface DeferredWrite {
+	source: string;
+	build: (answer?: string) => string;
 }
 type DefineConfigInput =
 	| Configuration
@@ -27156,6 +27157,10 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
+	static declineDeferredWrites: (
+		text: string,
+		writes: DeferredWrite[]
+	) => string;
 	static deferredWrite: (id: number) => string;
 }
 
@@ -27225,6 +27230,10 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
+	static declineDeferredWrites: (
+		text: string,
+		writes: DeferredWrite[]
+	) => string;
 	static deferredWrite: (id: number) => string;
 }
 declare interface SourceTable {

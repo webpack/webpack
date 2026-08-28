@@ -20,6 +20,26 @@ exports[`SourceProcessor — beautifying should beautify implied table sections 
 
 exports[`SourceProcessor — beautifying should beautify raw text 1`] = `"<style>a{b:c}</style><script>1<2</script>"`;
 
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies a document whose deferred svg the guard reads back 1`] = `
+"<svg viewBox=\\"0 0 8 8\\">   <circle cx=4 cy=4 r=3 />   </svg><table>
+	
+	<tr><td class=\\"a b\\">y</tr>
+</table>
+"
+`;
+
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies a link inside a link 1`] = `"<a href=/x>a<b> </b></a><b><a href=/y>b</a></b>"`;
+
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies a list nested in a list item 1`] = `"<ul><li>a<ul><li>b</ul></ul>"`;
+
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies a run fostered out of a table 1`] = `"<p><table><ol><li>x</ol></table>"`;
+
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies a second form 1`] = `"<form action=/a><p>xy</form>"`;
+
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies a term nested behind a division 1`] = `"<dl><dt>a<dt>b</dt></dl>"`;
+
+exports[`SourceProcessor — minifying what the round-trip guard checks minifies an inline sheet under a nested list 1`] = `"<ul><li>a<ul><li><style>a{color:red}</style></ul></ul>"`;
+
 exports[`parseHtml — insertion modes appends a comment after the body to the html element 1`] = `
 "| <!DOCTYPE html>
 | <html>

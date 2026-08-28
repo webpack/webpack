@@ -76,8 +76,12 @@
 .t28 { flex: none }
 /*! declined: `flex:1` means `1 1 0%`, and a length `0` is not a percentage `0%` */
 .t29 { flex: 1 1 0 }
-/*! flex: the same shorthand spelled with `0%` — no factor reading, so the shrink goes */
+/*! flex: `0%` is what an omitted basis leaves, and `1` what an omitted shrink does */
 .t30 { flex: 1 1 0% }
+/*! flex: the basis goes on its own where the shrink is not `1` */
+.t30b { flex: 1 2 0% }
+/*! flex: three longhands are the same value, so they merge and then shorten */
+.t30c { flex-grow: 2; flex-shrink: 3; flex-basis: 10px }
 /*! declined: a prefixed property is a different property */
 .t31 { -webkit-box-flex: 0 0 auto }
 
