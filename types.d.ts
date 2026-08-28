@@ -355,6 +355,18 @@ declare interface AllCodeGenerationSchemas {
 	 */
 	"share-init": [{ shareScope: string; initStage: number; init: string }];
 }
+declare interface AnalyzableChunkUrls {
+	/**
+	 * the urls that could be written, by chunk id
+	 */
+	urls: Map<ChunkId, string>;
+
+	/**
+	 * false when some chunk kept the runtime form, whose
+	 * ids the consumer then still resolves through the runtime name lookup
+	 */
+	complete: boolean;
+}
 type AnalyzableForm =
 	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
@@ -26091,9 +26103,23 @@ declare abstract class RuntimeTemplate {
 	chunkRootOutputDir(chunk: Chunk, enforceRelative: boolean): string;
 
 	/**
+	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
+	 * a worker or worklet entry chunk bakes to, or `null` to keep the runtime form. The
+	 * gate and the build are asked together so every call site agrees on both — the
+	 * `new Worker(...)` emit, and the resource hint `ResourceHintPlugin` spells for it.
+	 */
+	getAnalyzableWorkerUrl(
+		overridePublicPath: undefined | string,
+		chunk: Chunk,
+		module: Module,
+		chunkGraph: ChunkGraph,
+		runtimeRequirements: Set<string>
+	): null | string;
+
+	/**
 	 * Static `new URL(<file>, import.meta.url)` for every stylesheet a runtime can load,
-	 * keyed by chunk id, or `null` when any of them has to keep the runtime
-	 * `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
+	 * keyed by chunk id — one that cannot be named leaves the map incomplete, and its
+	 * id keeps the runtime `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
 	 * and the plugin declaring what it needs ask this, so the two always agree. The
 	 * runtime hands an absolute url string to `link.href`, and so does this — the browser
 	 * resolves the element against the document, which is not where the chunk sits, and
@@ -26105,13 +26131,13 @@ declare abstract class RuntimeTemplate {
 		chunkGraph: ChunkGraph,
 		runtimeRequirements: ReadonlySet<string>,
 		consumingModule?: Module
-	): null | Map<ChunkId, string>;
+	): null | AnalyzableChunkUrls;
 
 	/**
 	 * Static `new URL(<file>, import.meta.url).href` for every javascript chunk a
 	 * runtime can hint at with `<link rel="prefetch"/"modulepreload">`, keyed by chunk
-	 * id, or `null` when any of them has to keep the runtime
-	 * `publicPath + getChunkScriptFilename(id)` form. Both the runtime module reading
+	 * id — one that cannot be named leaves the map incomplete, and its id keeps the
+	 * runtime `publicPath + getChunkScriptFilename(id)` form. Both the runtime module reading
 	 * them and the plugin declaring what it needs ask this, so the two always agree.
 	 */
 	analyzableChunkScriptUrls(
@@ -26119,7 +26145,7 @@ declare abstract class RuntimeTemplate {
 		chunkGraph: ChunkGraph,
 		runtimeRequirements: ReadonlySet<string>,
 		consumingModule?: Module
-	): null | Map<ChunkId, string>;
+	): null | AnalyzableChunkUrls;
 
 	/**
 	 * Static `new URL(<file>, import.meta.url)` for the binary emitted for an async wasm
