@@ -860,6 +860,11 @@ const knownBugs = [
 	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
 	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
 	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
+	// Same family: `x++` under nested `with` reads `@@unscopables` twice, and a
+	// binding deleted by that getter is not seen as gone.
+	"statements/with/unscopables-inc-dec.js",
+	"statements/with/get-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
+	"statements/with/set-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
 
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
@@ -871,6 +876,8 @@ const knownBugs = [
 	"global-code/script-decl-var-collision.js",
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
+	// Same cause: `this.test262 = true` then a bare `test262` reference.
+	"global-code/unscopables-ignored.js",
 
 	// `Object.defineProperty(this, "x", { get })` on the global object — the
 	// test relies on the getter side-effect (deleting `this.x`) being visible
@@ -1140,11 +1147,11 @@ describe("test262", () => {
 				if (
 					// Decorators are not supported
 					meta.features.includes("decorators") ||
-					// V8 optimization bugs
-					meta.features.includes("Symbol.unscopables") ||
-					// TODO Not implemented
-					meta.features.includes("source-phase-imports") ||
-					meta.features.includes("source-phase-imports-module-source") ||
+					// TODO Not implemented. A negative parse test still runs: the
+					// syntax it rejects is rejected either way.
+					((meta.features.includes("source-phase-imports") ||
+						meta.features.includes("source-phase-imports-module-source")) &&
+						!(meta.negative && meta.negative.phase === "parse")) ||
 					knownBugs.includes(name) ||
 					(mode === "production" && knownProductionBuildBugs.includes(name))
 				) {
