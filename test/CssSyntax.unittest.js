@@ -8253,3 +8253,166 @@ describe("CssSyntax minify — pseudo-class replacement", () => {
 		expect(withClasses("a:hover{color:red}")).toBe("a:hover{color:red}");
 	});
 });
+
+describe("CssSyntax minify — the version each rewrite turns on at", () => {
+	// One selection either side of the version the compat data gives, so a
+	// rewrite that starts or stops one release early is a failure rather than a
+	// detail. Chrome alone: the browser every entry here has a version for.
+	it.each([
+		["a hex alpha", "a{color:#7bffff80}", 62],
+		[
+			"a two-position color stop",
+			"a{background-image:linear-gradient(green,red 30% 40%,pink)}",
+			72
+		],
+		["a multi-keyword `display`", "a{display:inline flex}", 115],
+		["`system-ui`", "a{font-family:system-ui}", 56],
+		["a `text-decoration` style", "a{text-decoration:underline dotted}", 57],
+		["...and its thickness", "a{text-decoration:underline 2px}", 87],
+		["a `color()`", "a{color:color(display-p3 1 0 0)}", 111],
+		["`hwb()`", "a{color:hwb(120 20% 30%)}", 101],
+		["the Lab family", "a{color:lab(40% 56.6 39)}", 111],
+		["...and the Oklab one", "a{color:oklch(.6322 .2577 29.23)}", 111],
+		["the `inset` shorthand", "a{inset:1px 2px}", 87],
+		["a media range", "@media (width>=1px){a{color:red}}", 104],
+		["two-value `overflow`", "a{overflow:hidden auto}", 68],
+		["a `place-*` shorthand", "a{place-items:center start}", 59]
+	])("rewrites %s below Chrome %i and not at it", (_name, css, version) => {
+		const below = minifyFor(css, [`chrome ${version - 1}`]);
+		const at = minifyFor(css, [`chrome ${version}`]);
+		expect(below).not.toBe(at);
+		// At the version the feature arrived, the spelling is the author's own.
+		expect(at).toBe(minifyFor(css));
+	});
+
+	it("writes `light-dark()` only between the two versions it needs", () => {
+		const css = "a{color:light-dark(red,blue)}";
+		// The pair needs a rule of no specificity to default it, so a target
+		// reading no `:where()` (Chrome 88) is one this leaves the function for...
+		expect(minifyFor(css, ["chrome 87"])).toBe(css);
+		expect(minifyFor(css, ["chrome 88"])).toBe(
+			"a{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
+				":where(:root){--webpack-light:initial;--webpack-dark: }"
+		);
+		// ...and at the version the function itself arrived, there is nothing to
+		// write another way.
+		expect(minifyFor(css, ["chrome 122"])).not.toBe(css);
+		expect(minifyFor(css, ["chrome 123"])).toBe(css);
+	});
+
+	it("writes nothing another way for a selection naming no browser", () => {
+		// A build with no browserslist target answers for no engine, so every
+		// spelling is the author's own.
+		for (const css of [
+			"a{color:#7bffff80}",
+			"a{display:inline flex}",
+			"a{font-family:system-ui}",
+			"a{color:light-dark(red,blue)}",
+			"@media (width>=1px){a{color:red}}"
+		]) {
+			expect(minifyFor(css)).toBe(css);
+		}
+	});
+});
+
+describe("CssSyntax minify — light-dark()", () => {
+	const DEFAULTS = ":where(:root){--webpack-light:initial;--webpack-dark: }";
+
+	it("writes the pair the color scheme switches", () => {
+		expect(minifyFor("a{color:light-dark(red,blue)}", ["chrome 100"])).toBe(
+			`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+	});
+
+	it("says which half a rule setting `color-scheme` takes", () => {
+		expect(
+			minifyFor("html{color-scheme:light dark}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toBe(
+			"html{color-scheme:light dark;--webpack-light:initial;--webpack-dark: }" +
+				"@media (prefers-color-scheme:dark){html{--webpack-light: ;--webpack-dark:initial}}" +
+				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+		// One scheme alone answers for itself, with no query to defer to.
+		expect(
+			minifyFor("html{color-scheme:dark}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toBe(
+			"html{color-scheme:dark;--webpack-light: ;--webpack-dark:initial}" +
+				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+		// `only` narrows how the scheme is chosen, and `normal` is the light one.
+		expect(
+			minifyFor("html{color-scheme:only dark}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toContain("--webpack-light: ;--webpack-dark:initial");
+		expect(
+			minifyFor("html{color-scheme:normal}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toContain("--webpack-light:initial;--webpack-dark: ");
+	});
+
+	it("leaves a `color-scheme` it cannot read alone", () => {
+		// A substitution says nothing about which scheme it names, so the rule is
+		// left as written and the defaults still answer for the element.
+		expect(
+			minifyFor("html{color-scheme:var(--x)}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toBe(
+			"html{color-scheme:var(--x)}" +
+				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+	});
+
+	it("reads a `color-scheme` a rule sets, and no text that merely says one", () => {
+		expect(
+			minifyFor('a{content:"color-scheme:x";color:light-dark(red,blue)}', [
+				"chrome 100"
+			])
+		).toBe(
+			`a{content:"color-scheme:x";color:var(--webpack-light,red) var(--webpack-dark,blue)}${
+				DEFAULTS
+			}`
+		);
+	});
+
+	it("writes the defaults only where it wrote a pair", () => {
+		expect(minifyFor("html{color-scheme:dark}", ["chrome 100"])).toBe(
+			"html{color-scheme:dark}"
+		);
+	});
+
+	it("leaves a call it cannot answer for alone", () => {
+		// A half the target cannot read would make the whole declaration invalid at
+		// computed-value time once it is substituted, which nothing falls back from.
+		expect(
+			minifyFor("a{color:light-dark(oklch(.7 .1 20),red)}", ["chrome 100"])
+		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+		// ...and a call of any other shape is no `light-dark()`.
+		expect(minifyFor("a{color:light-dark(red)}", ["chrome 100"])).toBe(
+			"a{color:light-dark(red)}"
+		);
+		// A custom property's value is handed back as written.
+		expect(minifyFor("a{--x:light-dark(red,blue)}", ["chrome 100"])).toBe(
+			"a{--x:light-dark(red,blue)}"
+		);
+	});
+
+	it("writes no fallback pair before a value a substitution reaches", () => {
+		// An unreadable color inside a `var()` fallback is invalid at
+		// computed-value time, which is `unset` rather than the earlier
+		// declaration — so a pair standing before one is bytes nothing reads.
+		expect(minifyFor("a{color:var(--x,oklch(.7 .1 20))}", ["chrome 100"])).toBe(
+			"a{color:var(--x,oklch(.7 .1 20))}"
+		);
+		// Written in place, the pair does answer.
+		expect(minifyFor("a{color:oklch(.7 .1 20)}", ["chrome 100"])).toBe(
+			"a{color:#d68585;color:oklch(.7 .1 20)}"
+		);
+	});
+});
