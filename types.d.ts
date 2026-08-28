@@ -5950,6 +5950,11 @@ declare interface CssPrintOptions {
 	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
 	 */
 	unusedSymbols?: string[];
+
+	/**
+	 * each pseudo-class to write as a class instead (`{ "focus-visible": "focus-visible" }`), so a script can apply it where the engine does not. Only read while printing
+	 */
+	pseudoClasses?: { [index: string]: string };
 }
 declare interface CssProcessOptions {
 	/**
@@ -6009,6 +6014,11 @@ declare interface CssProcessOptions {
 		source: string,
 		info: { type: string; hostType: string }
 	) => undefined | string;
+
+	/**
+	 * each pseudo-class to write as a class instead (`{ "focus-visible": "focus-visible" }`), so a script can apply it where the engine does not. Only read while printing
+	 */
+	pseudoClasses?: { [index: string]: string };
 
 	/**
 	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
@@ -10396,6 +10406,7 @@ type HtmlPrintOptions = Pick<
 > & {
 	cssTransforms?: CssTransformOptions;
 	cssUnusedSymbols?: string[];
+	cssPseudoClasses?: { [index: string]: string };
 	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
@@ -10452,6 +10463,11 @@ declare interface HtmlProcessOptions {
 	 * CSS's `unusedSymbols` too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
 	cssUnusedSymbols?: string[];
+
+	/**
+	 * CSS's `pseudoClasses` too, handed over with `environment` (see `HtmlPrintOptions`)
+	 */
+	cssPseudoClasses?: { [index: string]: string };
 
 	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
@@ -20202,6 +20218,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	normalizeQuotes?: boolean;
+
+	/**
+	 * Each pseudo-class to write as an ordinary class instead, as `{ "focus-visible": "focus-visible" }` — so a script can apply the class where the engine reads no such pseudo. Only a plain pseudo-class is rewritten, wherever it stands in a selector: a pseudo-element (`::hover`) and a functional pseudo of the same name (`:hover(…)`) are not what a class stands in for, and a `:name` inside a quoted attribute value is nobody's pseudo. Nothing applies the class — that is the script's part.
+	 * @since 5.111.0
+	 */
+	pseudoClasses?: { [index: string]: string };
 
 	/**
 	 * Compute a call into the shorter call naming the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.

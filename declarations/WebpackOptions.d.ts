@@ -2449,6 +2449,16 @@ export interface OptimizationMinimizeCss {
 	 */
 	normalizeQuotes?: boolean;
 	/**
+	 * Each pseudo-class to write as an ordinary class instead, as `{ "focus-visible": "focus-visible" }` — so a script can apply the class where the engine reads no such pseudo. Only a plain pseudo-class is rewritten, wherever it stands in a selector: a pseudo-element (`::hover`) and a functional pseudo of the same name (`:hover(…)`) are not what a class stands in for, and a `:name` inside a quoted attribute value is nobody's pseudo. Nothing applies the class — that is the script's part.
+	 * @since 5.111.0
+	 */
+	pseudoClasses?: {
+		/**
+		 * The class to write instead, without its `.`.
+		 */
+		[k: string]: string;
+	};
+	/**
 	 * Compute a call into the shorter call naming the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.
 	 * @since 5.110.0
 	 */

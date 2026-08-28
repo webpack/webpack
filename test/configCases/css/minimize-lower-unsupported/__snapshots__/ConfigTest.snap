@@ -10,5 +10,10 @@ Array [
   "/*! a multi-keyword \`display\`, written as the one keyword naming the box */.t08{display:inline-flex}",
   "/*! a Lab-family color, with the color it names written before it */.t09{color:#c65d06;color:oklch(59.686% .15619 49.7694)}",
   "/*! ...and \`hwb()\`, which shipped before the Lab family */.t10{background-color:#33b333;background-color:hwb(120 20% 30%)}",
+  "/*! a \`color()\`, which the target reads only as the sRGB it names */.t11{color:#6a805d;color:color(a98-rgb .44091 .49971 .37408)}",
+  "/*! \`system-ui\`, which the target reaches only by each platform's own name */.t12{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue}",
+  "/*! a \`text-decoration\` naming more than its line, written as longhands */.t13{text-decoration:underline;text-decoration-style:dotted;text-decoration-color:red;text-decoration-thickness:2px}",
+  "/*! a \`color-mix()\`, evaluated where every component is known */.t14{color:#706a43}",
+  "/*! a relative color, resolved against the origin it names */.t15{color:#669}",
 ]
 `;
