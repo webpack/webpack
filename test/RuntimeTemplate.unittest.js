@@ -349,9 +349,10 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 		});
 	});
 
-	// A chunk `import()` is emitted by the module chunk loader whatever the target
-	// reads; `import.meta` in a url is syntax the target has to read itself.
-	it("should ask for ESM syntax only where the reference spells it", () => {
+	// ESM output writes `import.meta` whatever `environment.module` claims — the
+	// public path and the chunk loader already assume the target reads it — so the
+	// url forms bake to match rather than reading the flag.
+	it("should not read environment.module, which ESM output already ignores", () => {
 		const reads = create({});
 		const doesNot = create({ output: { environment: { module: false } } });
 		const { chunkGraph } = countingChunkGraph();
@@ -365,7 +366,7 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 			readsImport: true,
 			readsUrl: true,
 			doesNotImport: true,
-			doesNotUrl: false
+			doesNotUrl: true
 		});
 	});
 
