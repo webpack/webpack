@@ -953,10 +953,8 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
-	// Tests expect a runtime SyntaxError from an ambiguous re-export
-	// (`export * from a; export * from b;` with the same name in both).
-	// webpack reports ambiguous exports as a build-time error, not as a
-	// runtime rejection of `import()`.
+	// An ambiguous re-export is a compile-time diagnostic and never a runtime
+	// failure — `configCases/compiletime/exports-presence` pins that contract.
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-ambiguous-import.js",
