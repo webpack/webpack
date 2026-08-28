@@ -827,7 +827,9 @@ const knownBugs = [
 	// known. Pre-knowing exports would require a larger architectural
 	// change, so this remains skipped.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Bug with place of `__webpack_require__`, it hoists, but should not
+	// Hoisting is fine; the binding is not immutable. A namespace import
+	// compiles to a plain `var`, which must stay function-scoped for
+	// runtime-condition imports, so assigning to it does not throw.
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
