@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-script-data-blocks minimize-script-data-blocks should compile 1`] = `"<!doctype html><html lang=en><head><title>Data blocks</title><script type=application/ld+json>{\\"a\\":1}</script></head><body> <script type=text/x-template><p   class=\\"a\\">  {{ t }}  </p></script> <script type=text/html><div> x </div></script> <script type=unknown/thing>raw   payload</script> <script src=__html_cbe5b59d_0.js></script> </body></html>"`;

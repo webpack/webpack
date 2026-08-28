@@ -4141,6 +4141,91 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 		expect(minifyBody("text/template", '{ "a" : 1 }')).toBe('{ "a" : 1 }');
 	});
 
+	/**
+	 * @param {string} type the `<script type>` value
+	 * @param {string} body the raw body
+	 * @returns {string} the body, collapsing whitespace
+	 */
+	const collapseBody = (type, body) => {
+		const out = new SourceProcessor().process(
+			`<script type="${type}">${body}</script>`,
+			{ mode: "minify", collapseWhitespace: "all" }
+		).code;
+		return out.slice(out.indexOf(">") + 1, out.lastIndexOf("</script>"));
+	};
+
+	it.each([
+		"text/template",
+		"text/x-template",
+		"text/ng-template",
+		"text/x-handlebars-template",
+		"text/html",
+		"unknown/thing"
+	])("trims the body of the data block %s", (type) => {
+		expect(collapseBody(type, "  <div> x </div>  ")).toBe("<div> x </div>");
+	});
+
+	it("only trims — a data block's own syntax is not read", () => {
+		// The template language owns what is inside, `{{ }}` and its spacing too.
+		expect(
+			collapseBody("text/x-template", "  <p   class='a'>  {{ t }}  </p>  ")
+		).toBe("<p   class='a'>  {{ t }}  </p>");
+	});
+
+	it.each(["", "module", "text/javascript"])(
+		"leaves an executable body alone (%s)",
+		(type) => {
+			const body = "  var a = 1  ";
+			expect(collapseBody(type, body)).toBe(body);
+		}
+	);
+
+	it("reads a data block's type case- and whitespace-insensitively", () => {
+		expect(collapseBody(" TEXT/X-TEMPLATE ", "  x  ")).toBe("x");
+	});
+
+	it("takes every character HTML counts as whitespace", () => {
+		expect(collapseBody("text/x-template", "\t\n\f\r x \r\f\n\t")).toBe("x");
+		expect(collapseBody("text/x-template", "   ")).toBe("");
+	});
+
+	it("keeps a NBSP, which is a character and not whitespace", () => {
+		// `@swc/html` trims it, which edits what the body renders.
+		expect(collapseBody("text/x-template", "\u00A0\u00A0x\u00A0\u00A0")).toBe(
+			"\u00A0\u00A0x\u00A0\u00A0"
+		);
+	});
+
+	it.each(
+		/** @type {("conservative" | "smart" | "all")[]} */ ([
+			"conservative",
+			"smart",
+			"all"
+		])
+	)("trims where collapsing is %s", (collapseWhitespace) => {
+		const out = new SourceProcessor().process(
+			'<script type="text/x-template">  x  </script>',
+			{ mode: "minify", collapseWhitespace }
+		).code;
+		expect(out).toContain(">x<");
+	});
+
+	it("trims a data block in foreign content too", () => {
+		const out = new SourceProcessor().process(
+			'<svg><script type="text/x-template">  x  </script></svg>',
+			{ mode: "minify", collapseWhitespace: "all" }
+		).code;
+		expect(out).toContain(">x<");
+	});
+
+	it("leaves a data block alone where whitespace is kept", () => {
+		const out = new SourceProcessor().process(
+			'<script type="text/x-template">  <div> x </div>  </script>',
+			{ mode: "minify" }
+		).code;
+		expect(out).toContain(">  <div> x </div>  <");
+	});
+
 	it("copies every literal byte for byte", () => {
 		// Re-serializing would round the number through a double, drop the
 		// duplicate key and rewrite the escape.
