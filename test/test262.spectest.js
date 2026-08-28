@@ -487,12 +487,13 @@ const edgeCasesRegExp = new RegExp(
 
 const compile = async (entry, scenario, options = {}) =>
 	new Promise((resolve, reject) => {
+		const { exportsPresence, ...webpackOptions } = options;
 		const compiler = webpack({
-			...options,
+			...webpackOptions,
 			entry,
 			context: path.dirname(entry),
 			output: {
-				...options.output,
+				...webpackOptions.output,
 				...(scenario === "module" ? { module: true } : { iife: false })
 			},
 			mode: options.mode || "development",
@@ -517,8 +518,8 @@ const compile = async (entry, scenario, options = {}) =>
 						exprContextRequest: path.dirname(entry),
 						exprContextCritical: false,
 						// For testing purposes, where the `export` is tested that it is not defined
-						exportsPresence: false,
-						reexportExportsPresence: false
+						exportsPresence: exportsPresence || false,
+						reexportExportsPresence: exportsPresence || false
 					}
 				},
 				rules:
@@ -740,6 +741,28 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 
 /* cspell:disable */
 const knownBugs = [
+	// A named import is only checked where the binding is read, so an unused one
+	// naming a missing export links silently. These assert a link error through
+	// an unused specifier, several via `ensure-linking-error_FIXTURE.js`.
+	"module-code/instn-named-err-not-found.js",
+	"module-code/instn-named-err-not-found-as.js",
+	"module-code/instn-named-err-not-found-dflt.js",
+	"module-code/instn-named-err-dflt-thru-star-as.js",
+	"module-code/instn-named-err-dflt-thru-star-dflt.js",
+	"module-code/import-attributes/allow-nlt-before-with.js",
+	"module-code/import-attributes/import-attribute-key-identifiername.js",
+	"module-code/import-attributes/import-attribute-key-string-double.js",
+	"module-code/import-attributes/import-attribute-key-string-single.js",
+	"module-code/import-attributes/import-attribute-many.js",
+	"module-code/import-attributes/import-attribute-newlines.js",
+	"module-code/import-attributes/import-attribute-trlng-comma.js",
+	"module-code/import-attributes/import-attribute-value-string-double.js",
+	"module-code/import-attributes/import-attribute-value-string-single.js",
+	"import/import-attributes/json-named-bindings.js",
+	// webpack resolves a circular reexport to `undefined` with a warning rather
+	// than failing the link, so the build reports no error.
+	"module-code/instn-iee-err-circular.js",
+	"module-code/instn-iee-err-circular-as.js",
 	// Node.js problems and bugs
 	// Doesn't work
 	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
@@ -1122,8 +1145,6 @@ describe("test262", () => {
 					// TODO Not implemented
 					meta.features.includes("source-phase-imports") ||
 					meta.features.includes("source-phase-imports-module-source") ||
-					// TODO improve in our test runner
-					(meta.negative && meta.negative.phase === "resolution") ||
 					knownBugs.includes(name) ||
 					(mode === "production" && knownProductionBuildBugs.includes(name))
 				) {
@@ -1153,13 +1174,31 @@ describe("test262", () => {
 							process.stdout.write(`Running ${name} ("${scenario}")\n`);
 						}
 
+						// A resolution error is a build error for webpack, not a throw,
+						// so the presence checks the other tests disable must be on.
+						const isResolutionTest =
+							meta.negative && meta.negative.phase === "resolution";
+
 						const stats = await compile(testFile, scenario, {
 							mode,
+							...(isResolutionTest ? { exportsPresence: "error" } : {}),
 							output: {
 								path: outputPath,
 								filename: path.relative(outputPath, outputFile)
 							}
 						});
+
+						if (isResolutionTest) {
+							// The bundle must not run: linking failed, so the body these
+							// tests guard against evaluation was never reached.
+							if (stats.compilation.errors.length === 0) {
+								throw new Error(
+									`Error in test file "${outputFile}" ("${testFile}"), expected a resolution error`
+								);
+							}
+
+							return;
+						}
 
 						const includes = meta.flags.includes("raw")
 							? []
