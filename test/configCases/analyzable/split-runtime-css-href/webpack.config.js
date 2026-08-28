@@ -1,8 +1,7 @@
 "use strict";
 
-// The entry chunk hashes after the runtime chunk that names its stylesheet, so its
-// url cannot be baked — the lazy stylesheet's still is, and the id the map lacks
-// falls back to the runtime name lookup instead of costing the whole map.
+// The entry chunk hashes after the runtime chunk naming its stylesheet, so only
+// the lazy url bakes and the missing id falls back to the runtime name lookup.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
