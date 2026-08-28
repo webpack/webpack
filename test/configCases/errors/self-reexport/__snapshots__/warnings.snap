@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "export 'something' (reexported as 'something') is part of a circular reexport chain in './a' and is undefined",
+  "export 'something' (reexported as 'other') is part of a circular reexport chain in './b' and is undefined",
+  "export 'other' (reexported as 'something') is part of a circular reexport chain in './b' and is undefined",
+  "export 'something' (reexported as 'something') is part of a circular reexport chain in './c2' and is undefined",
+  "export 'something' (reexported as 'something') is part of a circular reexport chain in './c1' and is undefined",
+]
+`;
