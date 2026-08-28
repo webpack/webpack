@@ -127,8 +127,8 @@
 /*! the legacy sRGB forms all compute to `rgb(…)` however they are spelled */
 .g04 { background-image: linear-gradient(90deg, red, rgb(1, 2, 3)) }
 
-/*! declined: a relative color reads its origin's channels off as the `r` / `l` /
-   `h` keywords, so a hex — 8 bits a channel — is a different origin */
+/*! a relative color is the color its channels name, read off the origin as the
+   `r` / `l` / `h` keywords, so it folds where the byte is the engine's own */
 .r01 { color: lch(from lch(50% 20 30) l c h) }
 .r02 { color: rgb(from lch(50% 20 30) r g b) }
 .r03 { color: hsl(from hsl(120 50% 50%) h s l) }
@@ -144,13 +144,13 @@
 .r08 { color: rgb(from rgb(300 0 0) r g b) }
 /*! ...and `from` heading a function's name is not the keyword */
 .r09 { color: from(lch(50% 20 30)) }
-/*! declined: `color-mix()` interpolates its arguments the way a gradient does */
+/*! a mix is the color it computes; one whose argument no byte holds stands */
 .m01 { color: color-mix(in oklab, lch(50% 20 30), red) }
 .m02 { color: color-mix(in srgb, hsl(120 50% 50%), red) }
 /*! the legacy sRGB forms fold there too, where their channels are already bytes */
 .m03 { color: color-mix(in srgb, rgb(1, 2, 3), red) }
-/*! declined however the keyword is spelled: `\66 rom` names it too, as an
-   escaped `color-mix` or gradient name names those */
+/*! the escapes name the same things: `\66 rom` is the keyword, and an escaped
+   `color-mix` or gradient name is that function */
 .r10 { color: rgb(\66 rom rgb(50% 50% 50%) r g b) }
 .m04 { color: color-\6d ix(in oklab, lch(50% 20 30), red) }
 .g05 { background-image: linear-\67 radient(lch(50 20 30), red) }

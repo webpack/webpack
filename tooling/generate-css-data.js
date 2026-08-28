@@ -4851,6 +4851,9 @@ const SUPPORTED_FEATURES = [
 	],
 	["displayTwoValues", ["css.properties.display.multi-keyword_values"]],
 	["systemUiFont", ["css.properties.font-family.system-ui"]],
+	["isSelector", ["css.selectors.is"]],
+	["langArgumentList", ["css.selectors.lang.argument_list"]],
+	["notSelectorList", ["css.selectors.not.selector_list"]],
 	["whereSelector", ["css.selectors.where"]],
 	[
 		"textDecorationColorStyle",

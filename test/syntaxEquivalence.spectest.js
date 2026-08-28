@@ -1182,6 +1182,7 @@ describe("wpt css token adjacency", () => {
  * @property {string[]=} directions the writing directions to read it under
  * @property {string[]=} differs properties this lowering changes on purpose
  * @property {string[]} produces text the rewrite leaves, so a comparison of two sheets neither of which was rewritten cannot pass for one
+ * @property {string=} reference what the source means, where the engine reads no spelling of it — `:lang(en, fr)` is one Chromium has never taken, so the rewrite is held to the pair of rules that state the same thing rather than to an engine's reading of the original
  */
 /** @type {LoweringFixture[]} */
 const LOWERING_FIXTURES = [
@@ -1327,6 +1328,31 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a `:not()` holding a list the target does not take",
+		css: "p:not(:first-child,.lead){color:rgb(4,5,6)}",
+		browsers: ["firefox 80"],
+		produces: [":not(:is(:first-child,.lead))"],
+		html: "<div><p id=p1>a</p><p id=p2 class=lead>b</p><p id=p3>c</p></div>",
+		probes: [
+			["#p1", "color"],
+			["#p2", "color"],
+			["#p3", "color"]
+		]
+	},
+	{
+		name: "a `:lang()` holding one, which no Chromium has ever taken",
+		css: "a:lang(en,fr){color:rgb(1,2,3)}",
+		reference: "a:lang(en),a:lang(fr){color:rgb(1,2,3)}",
+		browsers: ["firefox 80"],
+		produces: [":is(:lang(en),:lang(fr))"],
+		html: "<a id=en lang=en>x</a><a id=fr lang=fr>x</a><a id=de lang=de>x</a>",
+		probes: [
+			["#en", "color"],
+			["#fr", "color"],
+			["#de", "color"]
+		]
+	},
+	{
 		name: "system-ui, which names each platform's own font instead",
 		produces: ["-apple-system,BlinkMacSystemFont"],
 		css: "#b{font-family:system-ui}",
@@ -1411,7 +1437,12 @@ describe("a lowering computes as the spelling it replaces", () => {
 						const html = `<script>document.documentElement.dir=${JSON.stringify(
 							direction
 						)}</script>${fixture.html}`;
-						const before = await readComputed(page, fixture.css, html, asked);
+						const before = await readComputed(
+							page,
+							fixture.reference || fixture.css,
+							html,
+							asked
+						);
 						const after = await readComputed(page, lowered, html, asked);
 						expect({ scheme, direction, computed: after }).toEqual({
 							scheme,

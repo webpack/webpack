@@ -8416,3 +8416,47 @@ describe("CssSyntax minify — light-dark()", () => {
 		);
 	});
 });
+
+describe("CssSyntax minify — a selector list a pseudo does not take", () => {
+	it("writes a `:not()` list as the `:is()` it means", () => {
+		// Gecko took `:is()` six releases before it took a list inside `:not()`,
+		// which is the window this is written in.
+		expect(
+			minifyFor("p:not(:first-child,.lead){margin-top:1em}", ["firefox 80"])
+		).toBe("p:not(:is(:first-child,.lead)){margin-top:1em}");
+		expect(
+			minifyFor("p:not(:first-child,.lead){margin-top:1em}", ["firefox 84"])
+		).toBe("p:not(:first-child,.lead){margin-top:1em}");
+		// Before `:is()` there is nothing to write it as.
+		expect(
+			minifyFor("p:not(:first-child,.lead){margin-top:1em}", ["firefox 77"])
+		).toBe("p:not(:first-child,.lead){margin-top:1em}");
+		// One argument is the list every engine has always taken.
+		expect(minifyFor("p:not(.lead){margin-top:1em}", ["firefox 80"])).toBe(
+			"p:not(.lead){margin-top:1em}"
+		);
+	});
+
+	it("writes a `:lang()` list as the `:is()` of each", () => {
+		// No Chromium has ever taken one, so every Chrome target is written this
+		// way — and Gecko took it in 114.
+		expect(minifyFor("a:lang(en,fr){color:red}", ["chrome 130"])).toBe(
+			"a:is(:lang(en),:lang(fr)){color:red}"
+		);
+		expect(minifyFor("a:lang(en,fr){color:red}", ["firefox 114"])).toBe(
+			"a:lang(en,fr){color:red}"
+		);
+		expect(minifyFor("a:lang(en){color:red}", ["chrome 130"])).toBe(
+			"a:lang(en){color:red}"
+		);
+	});
+
+	it("leaves both alone with no target to answer for", () => {
+		expect(minifyFor("p:not(:first-child,.lead){margin-top:1em}")).toBe(
+			"p:not(:first-child,.lead){margin-top:1em}"
+		);
+		expect(minifyFor("a:lang(en,fr){color:red}")).toBe(
+			"a:lang(en,fr){color:red}"
+		);
+	});
+});
