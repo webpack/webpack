@@ -1035,29 +1035,15 @@ const knownBugs = [
 ];
 
 const knownProductionBuildBugs = [
-	// Production inner graph drops class heritage access
+	// The inner graph reads a class heritage and an unused export's value as
+	// pure, so a getter on either never runs. Treating them as impure would stop
+	// every `class X extends Y` from being tree-shaken, so this stays a trade.
 	"statements/class/definition/prototype-getter.js",
-	// Production inner graph drops unused export value access
 	"module-code/eval-export-dflt-expr-err-get-value.js",
-	// Production concatenation loses immutable import assignment
-	"module-code/instn-iee-bndng-fun.js",
-	"module-code/instn-iee-bndng-gen.js",
-	"module-code/instn-iee-bndng-var.js",
-	// Production provided exports misses namespace re-exports
-	"module-code/instn-star-props-nrml.js",
-	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
-	// A module imported both `import defer` and eagerly must evaluate at the
-	// eager position; production concatenation evaluates it at the earlier
-	// deferred position instead, changing the observable evaluation order.
-	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
-
-	// Production InlineExports:
-	// TODO: Support disable inline export annotation to keep the TDZ
-	"module-code/instn-named-bndng-const.js",
-	"module-code/instn-iee-bndng-const.js",
-	"module-code/instn-named-bndng-dflt-star.js",
-	"module-code/instn-named-bndng-dflt-named.js",
-	"module-code/namespace/internals/get-str-found-uninit.js"
+	// `experiments.outputModule` only: a module imported both `import defer` and
+	// eagerly must evaluate at the eager position, and concatenation evaluates it
+	// at the earlier deferred one.
+	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js"
 ];
 /* cspell:enable */
 
