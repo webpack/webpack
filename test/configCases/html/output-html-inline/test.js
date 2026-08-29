@@ -116,10 +116,20 @@ it("inline: true + integrity does not emit integrity attr on inlined tags", () =
 });
 
 it("JS importing HTML module does not leave inline sentinel in the JS chunk", () => {
-	const files = fs.readdirSync(__dirname).filter((f) => f.startsWith("js-imports-html.") && f.endsWith(".js"));
-	expect(files.length).toBeGreaterThan(0);
-	const jsContent = fs.readFileSync(path.resolve(__dirname, files[0]), "utf-8");
-	expect(jsContent).not.toContain("__WEBPACK_HTML_INLINE__");
+	// The chunk holding `main-with-html.js` is inlined into the page, so the
+	// sentinel has to be gone from the `<script>` the page now carries.
+	const html = readHtml("js-imports-html-wrapper.html");
+	const scripts = inlineScripts(html);
+	expect(scripts.length).toBeGreaterThan(0);
+	expect(scripts.join("")).toContain("main-with-html");
+	expect(html).not.toContain("__WEBPACK_HTML_INLINE__");
+});
+
+it("output.html does not emit a JS chunk for the generated page itself", () => {
+	const files = fs
+		.readdirSync(__dirname)
+		.filter((f) => f.startsWith("js-imports-html.") && f.endsWith(".js"));
+	expect(files).toHaveLength(0);
 });
 
 it("inline: true with authored <link rel=stylesheet> entry inlines CSS as <style>", () => {
