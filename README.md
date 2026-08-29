@@ -98,18 +98,18 @@ interface](https://webpack.js.org/plugins/). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
+Webpack can generate HTML pages and extract CSS files itself, both experimental —
+see what that covers, and what still needs a plugin, for
+[CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
+[HTML](https://webpack.js.org/guides/native-html/#whats-built-in).
+
 |                   Name                    |       Status       |    Install Size     | Description                                                                             |
 | :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
-|    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
 | [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
 |  [html-bundler-webpack-plugin][bundler]   |   ![bundler-npm]   |   ![bundler-size]   | Renders a template (EJS, Handlebars, Pug) with referenced source asset files into HTML. |
-|    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
 |         [pug-plugin][pug-plugin]          | ![pug-plugin-npm]  | ![pug-plugin-size]  | Renders Pug files to HTML, extracts JS and CSS from sources specified directly in Pug.  |
 
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
-[mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
-[mini-css-npm]: https://img.shields.io/npm/v/mini-css-extract-plugin.svg
-[mini-css-size]: https://packagephobia.com/badge?p=mini-css-extract-plugin
 [component]: https://github.com/webpack-contrib/component-webpack-plugin
 [component-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
 [component-size]: https://packagephobia.com/badge?p=component-webpack-plugin
@@ -119,9 +119,6 @@ within webpack itself use this plugin interface. This makes webpack very
 [bundler]: https://github.com/webdiscus/html-bundler-webpack-plugin
 [bundler-npm]: https://img.shields.io/npm/v/html-bundler-webpack-plugin.svg
 [bundler-size]: https://packagephobia.com/badge?p=html-bundler-webpack-plugin
-[html-plugin]: https://github.com/jantimon/html-webpack-plugin
-[html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
-[html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
 [pug-plugin]: https://github.com/webdiscus/pug-plugin
 [pug-plugin-npm]: https://img.shields.io/npm/v/pug-plugin.svg
 [pug-plugin-size]: https://packagephobia.com/badge?p=pug-plugin
@@ -134,6 +131,11 @@ loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
+
+JavaScript, JSON and [assets](https://webpack.js.org/guides/asset-modules/) need no
+loader, and [CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
+[HTML](https://webpack.js.org/guides/native-html/#whats-built-in) have experimental
+built-in support — but preprocessors and template engines keep their loaders.
 
 #### JSON
 
@@ -163,14 +165,11 @@ or are automatically applied via regex from your webpack configuration.
 
 |                                                                                         Name                                                                                         |     Status      |   Install Size   | Description                                                                             |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
-|     <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"></a>      |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
 |      <a href="https://github.com/webdiscus/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>       |   ![pug-npm]    |   ![pug-size]    | Compiles Pug to a function or HTML string, useful for use with Vue, React, Angular      |
 |    <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/markdown/markdown-original.svg"></a>    |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
 |                      <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>                       | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
 | <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/handlebars/handlebars-original.svg"></a> |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
 
-[html-npm]: https://img.shields.io/npm/v/html-loader.svg
-[html-size]: https://packagephobia.com/badge?p=html-loader
 [pug-npm]: https://img.shields.io/npm/v/@webdiscus/pug-loader.svg
 [pug-size]: https://packagephobia.com/badge?p=@webdiscus/pug-loader
 [jade-npm]: https://img.shields.io/npm/v/jade-loader.svg
@@ -186,17 +185,11 @@ or are automatically applied via regex from your webpack configuration.
 
 |                                                                                      Name                                                                                       |     Status     |  Install Size   | Description                                                              |
 | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :----------------------------------------------------------------------- |
-|                                                     <a href="https://github.com/webpack-contrib/style-loader">`<style>`</a>                                                     |  ![style-npm]  |  ![style-size]  | Add exports of a module as style to DOM                                  |
-|    <a href="https://github.com/webpack-contrib/css-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"></a>     |   ![css-npm]   |   ![css-size]   | Loads CSS file with resolved imports and returns CSS code                |
 | <a href="https://github.com/webpack-contrib/less-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/less/less-plain-wordmark.svg"></a> |  ![less-npm]   |  ![less-size]   | Loads and compiles a LESS file                                           |
 |    <a href="https://github.com/webpack-contrib/sass-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg"></a>    |  ![sass-npm]   |  ![sass-size]   | Loads and compiles a Sass/SCSS file                                      |
 |      <a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/stylus/stylus-original.svg"></a>      | ![stylus-npm]  | ![stylus-size]  | Loads and compiles a Stylus file                                         |
 |   <a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postcss/postcss-original.svg"></a>    | ![postcss-npm] | ![postcss-size] | Loads and transforms a CSS/SSS file using [PostCSS](https://postcss.org) |
 
-[style-npm]: https://img.shields.io/npm/v/style-loader.svg
-[style-size]: https://packagephobia.com/badge?p=style-loader
-[css-npm]: https://img.shields.io/npm/v/css-loader.svg
-[css-size]: https://packagephobia.com/badge?p=css-loader
 [less-npm]: https://img.shields.io/npm/v/less-loader.svg
 [less-size]: https://packagephobia.com/badge?p=less-loader
 [sass-npm]: https://img.shields.io/npm/v/sass-loader.svg
