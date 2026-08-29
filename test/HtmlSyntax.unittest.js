@@ -4189,6 +4189,22 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 		expect(collapseBody("text/x-template", "   ")).toBe("");
 	});
 
+	it.each([
+		"text&#47;javascript",
+		"text&#x2F;javascript",
+		"&#116;ext/javascript"
+	])("reads %s as executable, since the parser decodes it", (type) => {
+		// Chrome runs each of these; classifying one as a data block would trim a
+		// body that is really a script.
+		expect(collapseBody(type, "  var a = 1  ")).toBe("  var a = 1  ");
+	});
+
+	it("reads an entity-encoded JSON type as JSON", () => {
+		expect(collapseBody("application&#47;ld&#43;json", '  { "a" : 1 }  ')).toBe(
+			'{"a":1}'
+		);
+	});
+
 	it("keeps a NBSP, which is a character and not whitespace", () => {
 		// `@swc/html` trims it, which edits what the body renders.
 		expect(collapseBody("text/x-template", "\u00A0\u00A0x\u00A0\u00A0")).toBe(
