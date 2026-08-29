@@ -132,12 +132,72 @@ const knownHostEvalBugs = [
 ];
 /* cspell:enable */
 
+// A specifier that names no module: `import()` stringifies whatever it is
+// handed, so `import(import(...))` asks for "[object Promise]" and
+// `import(typeof x)` for "object". Rejecting is what the spec requires.
+const UNRESOLVED_SPECIFIER = /Cannot find module/;
+
 // These abandon a rejected promise on purpose — an async body nothing awaits,
-// a short-circuited optional chain. jest records it against the running test,
-// so the count is asserted and cleared below the way `rejectionHandled` would.
+// a short-circuited optional chain, an `import()` of a name nothing resolves.
+// jest records it against the running test, so the count and reason are
+// asserted and cleared below the way `rejectionHandled` would.
 const expectedAbandonedRejections = new Map([
-	["statements/async-function/evaluation-body.js", 1],
-	["expressions/optional-chaining/member-expression-async-identifier.js", 1]
+	[
+		"statements/async-function/evaluation-body.js",
+		{ count: 1, reason: /resolver/ }
+	],
+	[
+		"expressions/optional-chaining/member-expression-async-identifier.js",
+		{ count: 1, reason: /^undefined$/ }
+	],
+	[
+		"expressions/dynamic-import/assignment-expression/unary-expr.js",
+		{ count: 8, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-block-labeled-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-block-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-do-while-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-else-braceless-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-else-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-if-braceless-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-if-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	]
 ]);
 
 /* cspell:disable */
@@ -887,20 +947,6 @@ const knownBugs = [
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
 
-	// Nested `import(import(...))` — webpack collapses dynamic-import
-	// expressions to module dependencies at compile time and cannot represent
-	// `import` calls whose argument is itself a dynamic import.
-	"expressions/dynamic-import/syntax/valid/nested-block-labeled-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-block-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-do-while-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-else-braceless-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-else-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-if-braceless-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-if-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
-
 	// Module Namespace Exotic Object semantics for the dynamically imported
 	// namespace — webpack's resolved namespace is a plain `__webpack_exports__`
 	// object with `__esModule: true`, so non-extensibility, prototype-of-null,
@@ -984,14 +1030,11 @@ const knownBugs = [
 	//   failed module and replays its error rather than re-evaluating.
 	// - `eval("import('...')")` and dynamic `import` reuse-namespace assertions
 	//   require dynamic specifiers webpack cannot resolve at build time.
-	// - `import(<UnaryExpression>)` (e.g. `import(typeof {})`): non-string
-	//   specifiers are emitted by the parser but webpack rejects them.
 	"expressions/dynamic-import/eval-self-once-script.js",
 	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
 	"expressions/dynamic-import/import-errored-module.js",
 	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
 	"expressions/dynamic-import/usage-from-eval.js",
-	"expressions/dynamic-import/assignment-expression/unary-expr.js",
 	// `.then` is expected not to be called on the deferred namespace's promise.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
 
@@ -1004,9 +1047,6 @@ const knownBugs = [
 	// bare `x` to its module wrapper rather than the realm global.
 	"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
-
-	// Weird test
-	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
 
 	// A rejecting top-level-await entry can only reject the ESM bundle module
 	// via top-level `await`, which webpack intentionally does not emit (async
@@ -1283,13 +1323,24 @@ describe("test262", () => {
 								globalThis.JEST_STATE_SYMBOL.currentlyRunningTest;
 							const byPromise =
 								runningTest && runningTest.unhandledRejectionErrorByPromise;
-							const found = byPromise ? byPromise.size : 0;
-							if (found !== abandoned) {
+							const reasons = byPromise
+								? [...byPromise.values()].map((reason) =>
+										String(reason && reason.message ? reason.message : reason)
+									)
+								: [];
+							if (byPromise) byPromise.clear();
+							if (
+								reasons.length !== abandoned.count ||
+								reasons.some((reason) => !abandoned.reason.test(reason))
+							) {
 								throw new Error(
-									`Error in test file "${outputFile}" ("${testFile}"), expected ${abandoned} abandoned rejection(s) but got ${found}`
+									`Error in test file "${outputFile}" ("${testFile}"), expected ${
+										abandoned.count
+									} abandoned rejection(s) matching ${
+										abandoned.reason
+									} but got ${reasons.length}: ${JSON.stringify(reasons)}`
 								);
 							}
-							byPromise.clear();
 						}
 
 						if (errored && knownV8Bugs.includes(name)) {
