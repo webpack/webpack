@@ -1181,6 +1181,7 @@ describe("wpt css token adjacency", () => {
  * @property {string[]=} schemes the color schemes to read it under
  * @property {string[]=} directions the writing directions to read it under
  * @property {string[]=} differs properties this lowering changes on purpose
+ * @property {string[]=} numeric properties whose value the rewrite reaches by arithmetic, held to `numericallyEqual` rather than to the same text
  * @property {string[]} produces text the rewrite leaves, so a comparison of two sheets neither of which was rewritten cannot pass for one
  * @property {string=} reference what the source means, where the engine reads no spelling of it — `:lang(en, fr)` is one Chromium has never taken, so the rewrite is held to the pair of rules that state the same thing rather than to an engine's reading of the original
  */
@@ -1393,6 +1394,44 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a math function folded to the value it names",
+		css:
+			"#b{width:calc(sqrt(2)*100px);height:calc(sin(45deg)*100px);" +
+			"margin-left:calc(.1px + .2px);margin-right:calc(100px/7);" +
+			"padding-left:calc(pi*10px);padding-right:calc(exp(1)*10px);" +
+			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
+			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
+		browsers: ["chrome 130"],
+		produces: ["width:141.421px", "height:70.7107px", "margin-left:.3px"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "width"],
+			["#b", "height"],
+			["#b", "margin-left"],
+			["#b", "margin-right"],
+			["#b", "padding-left"],
+			["#b", "padding-right"],
+			["#b", "border-top-width"],
+			["#b", "top"],
+			["#b", "left"],
+			["#b", "right"]
+		],
+		// The engine computes the expression at full precision and serializes what
+		// it computed; the printer writes the six significant digits a stylesheet
+		// can observe. So these are held to `numericallyEqual` — the same relative
+		// 1e-5 the rounding itself rests on, under Chromium's 1/64px layout grid —
+		// rather than to the same text.
+		numeric: [
+			"width",
+			"height",
+			"margin-right",
+			"padding-left",
+			"padding-right",
+			"top",
+			"right"
+		]
+	},
+	{
 		name: "system-ui, which names each platform's own font instead",
 		produces: ["-apple-system,BlinkMacSystemFont"],
 		css: "#b{font-family:system-ui}",
@@ -1467,6 +1506,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 			const asked = fixture.probes.filter(
 				([, property]) => !(fixture.differs || []).includes(property)
 			);
+			const approximate = new Set(fixture.numeric || []);
 			const page = await browser.newPage();
 			try {
 				for (const scheme of fixture.schemes || ["light"]) {
@@ -1484,7 +1524,15 @@ describe("a lowering computes as the spelling it replaces", () => {
 							asked
 						);
 						const after = await readComputed(page, lowered, html, asked);
-						expect({ scheme, direction, computed: after }).toEqual({
+						// A probe the rewrite reaches by arithmetic is held to the
+						// tolerance the rounding rests on; every other one to the byte.
+						const held = after.map((value, at) =>
+							approximate.has(asked[at][1]) &&
+							numericallyEqual(before[at], value)
+								? before[at]
+								: value
+						);
+						expect({ scheme, direction, computed: held }).toEqual({
 							scheme,
 							direction,
 							computed: before
