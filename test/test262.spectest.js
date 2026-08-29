@@ -132,6 +132,33 @@ const knownHostEvalBugs = [
 ];
 /* cspell:enable */
 
+/* cspell:disable */
+// Fail identically when the unbundled test262 file runs in a plain `vm`
+// context, so the divergence is the host's and not webpack's.
+const knownHostBugs = [
+	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
+	"expressions/assignment/S11.13.1_A5_T1.js",
+	"expressions/assignment/S11.13.1_A5_T2.js",
+	"expressions/assignment/S11.13.1_A5_T3.js",
+	"expressions/assignment/S11.13.1_A6_T1.js",
+	"expressions/assignment/S11.13.1_A6_T2.js",
+	"expressions/assignment/S11.13.1_A6_T3.js",
+	"expressions/delete/11.4.1-4.a-8-s.js",
+	"statements/async-generator/generator-created-after-decl-inst.js",
+	"statements/class/elements/private-class-field-on-nonextensible-objects.js",
+	"statements/class/subclass/private-class-field-on-nonextensible-return-override.js",
+	"statements/variable/binding-resolution.js",
+	"statements/with/get-binding-value-call-with-proxy-env.js",
+	"statements/with/get-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
+	"statements/with/get-binding-value-idref-with-proxy-env.js",
+	"statements/with/set-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
+	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
+	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
+	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
+	"statements/with/unscopables-inc-dec.js"
+];
+/* cspell:enable */
+
 const knownV8WithBugs = [
 	"expressions/compound-assignment/S11.13.2_A5.10_T1.js",
 	"expressions/compound-assignment/S11.13.2_A5.10_T2.js",
@@ -232,6 +259,7 @@ const knownV8Bugs = [
 	...knownV8EvalBugs,
 	...knownHostEvalBugs,
 	...knownV8WithBugs,
+	...knownHostBugs,
 	...knownV8PrefixAndPostfixBugs,
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
@@ -742,21 +770,8 @@ const knownBugs = [
 	// than failing the link, so the build reports no error.
 	"module-code/instn-iee-err-circular.js",
 	"module-code/instn-iee-err-circular-as.js",
-	// Node.js problems and bugs
-	// Doesn't work
-	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
-	// Proxy and `with` incompatibility
-	"statements/with/get-binding-value-call-with-proxy-env.js",
-	"statements/with/get-binding-value-idref-with-proxy-env.js",
 	// await using bugs
 	"statements/await-using/syntax/await-using-invalid-assignment-statement-body-for-of.js",
-	// Bug with `Object.preventExtensions` and classes
-	"statements/class/subclass/private-class-field-on-nonextensible-return-override.js",
-	"statements/class/elements/private-class-field-on-nonextensible-objects.js",
-	// Bug in `g.prototype` on V8 side
-	"statements/async-generator/generator-created-after-decl-inst.js",
-	// V8 optimization bug
-	"statements/variable/binding-resolution.js",
 
 	// acorn bugs
 	"statements/using/syntax/using-for-statement.js",
@@ -835,18 +850,6 @@ const knownBugs = [
 	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
 	"expressions/class/elements/class-name-static-initializer-default-export.js",
 
-	// `with` problems — webpack hoists/scopes bindings such that compound
-	// assignment, mutation through deleted prototype-chain entries, and idref
-	// rewrites inside `with` proxy environments don't preserve spec semantics.
-	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
-	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
-	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
-	// Same family: `x++` under nested `with` reads `@@unscopables` twice, and a
-	// binding deleted by that getter is not seen as gone.
-	"statements/with/unscopables-inc-dec.js",
-	"statements/with/get-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
-	"statements/with/set-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
-
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
 	// the realm's global object and there is no Script Record context.
@@ -866,20 +869,6 @@ const knownBugs = [
 	// global object and bare identifiers are scoped to the wrapper.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
-
-	// Assignment tests rely on `with` proxy env bindings going stale during
-	// the assignment (PutValue must use the original Reference even after the
-	// binding is deleted). Webpack's transforms break this invariant.
-	"expressions/assignment/S11.13.1_A5_T1.js",
-	"expressions/assignment/S11.13.1_A5_T2.js",
-	"expressions/assignment/S11.13.1_A5_T3.js",
-	"expressions/assignment/S11.13.1_A6_T1.js",
-	"expressions/assignment/S11.13.1_A6_T2.js",
-	"expressions/assignment/S11.13.1_A6_T3.js",
-
-	// `delete global.NaN` (via `var global = this;`) — relies on `this` being
-	// the realm's global object, which it is not under webpack's module wrap.
-	"expressions/delete/11.4.1-4.a-8-s.js",
 	// `delete super[(super(), 0)]` in a derived constructor — webpack rewrites
 	// `super` references in a way that doesn't preserve the uninitialized
 	// `this`-binding ReferenceError before the inner `super()` call runs.
