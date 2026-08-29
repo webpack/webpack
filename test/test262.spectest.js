@@ -893,9 +893,10 @@ const knownBugs = [
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
 
-	// `await a?.b` where `a` is named like a contextual keyword — acorn parses
-	// this differently from V8 in our test harness, the result is `undefined`
-	// vs the spec-required value. Upstream parser limitation.
+	// Same cause as `async-function/evaluation-body.js` above: the bundle runs
+	// green outside jest, but `Promise.reject(undefined)?.y` short-circuits to
+	// 43, so the rejection is never awaited and jest attributes it to the test.
+	// It surfaces a turn later than the body, so it cannot be drained here.
 	"expressions/optional-chaining/member-expression-async-identifier.js",
 
 	// Nested `import(import(...))` — webpack collapses dynamic-import
