@@ -4207,7 +4207,9 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 			'<script type="text/x-template">  x  </script>',
 			{ mode: "minify", collapseWhitespace }
 		).code;
-		expect(out).toContain(">x<");
+		expect(out.slice(out.indexOf(">") + 1, out.lastIndexOf("</script>"))).toBe(
+			"x"
+		);
 	});
 
 	it("trims a data block in foreign content too", () => {
@@ -4215,7 +4217,7 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 			'<svg><script type="text/x-template">  x  </script></svg>',
 			{ mode: "minify", collapseWhitespace: "all" }
 		).code;
-		expect(out).toContain(">x<");
+		expect(out).toBe("<svg><script type=text/x-template>x</script></svg>");
 	});
 
 	it("leaves a data block alone where whitespace is kept", () => {
