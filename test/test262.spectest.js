@@ -793,8 +793,9 @@ const knownBugs = [
 	// A top-level `await using` makes the module async, like a bare top-level
 	// `await` does, so the Script-goal early error is not raised.
 	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
-	// `#mark in obj` needs the proxy target to report `isExtensible() === false`,
-	// which requires sealing it up front with every export name in place.
+	// `#mark in obj` needs `isExtensible() === false` without evaluating, so the
+	// target must be sealed with every export name already on it — the names
+	// emitted per deferred import, and a mismatch would silently lose a key.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
 	// Host resolution errors must be reported eagerly even for deferred imports;
 	// webpack turns a missing module into a build error resolved lazily instead.
@@ -812,9 +813,9 @@ const knownBugs = [
 	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
 	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
 	// Just bugs, need to fix
-	// Same: the target is filled in after evaluation, so it stays extensible.
-	// Sealing it needs the export names emitted at the deferred import, which
-	// costs bytes on every one of them.
+	// Extensibility is only its first assertion: it also wants `ownKeys` to be
+	// the sorted exports plus `@@toStringTag`, so `__esModule` would have to go.
+	// That is the namespace-object trade-off, not a defer-local fix.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
 	// Hoisting is fine; assigning is not caught. A namespace import compiles to
 	// a `var`, which must stay function-scoped for runtime-condition imports.
