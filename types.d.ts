@@ -6042,6 +6042,11 @@ declare interface CssTransformOptions {
 	colorFallbacks?: boolean;
 
 	/**
+	 * write a spelling the target cannot read as one it can — the same value, said another way
+	 */
+	lowerUnsupported?: boolean;
+
+	/**
 	 * which comments survive: `"some"` (the default) the ones that carry something, `true` / `"all"` every one, `false` none, or the ones a pattern matches / a predicate accepts, over the comment's own text
 	 */
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
@@ -20202,6 +20207,12 @@ declare interface OptimizationMinimizeCss {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * Write a spelling the `browserslist` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as `rgba()`, a double-position gradient stop as the two stops it names, `inset` / `overflow` / `place-*` as the longhands they set, `text-decoration` as its own longhands where a slot is newer than the shorthand, `system-ui` as the stack of platform font names it stands for, a `:lang()` or `:not()` holding a list as the `:is()` that means it, a media feature range as the `min-`/`max-` pair, and `light-dark()` as the custom-property pair a color scheme switches. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for. Turning it off leaves every such spelling as written, which is what a stylesheet one of these rewrites gets wrong is minified with; it does not make the minifier write a spelling the target cannot read.
+	 * @since 5.111.0
+	 */
+	lowerUnsupported?: boolean;
+
+	/**
 	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
 	 * @since 5.110.0
 	 */
@@ -20232,7 +20243,7 @@ declare interface OptimizationMinimizeCss {
 	reduceFunctions?: boolean;
 
 	/**
-	 * Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is `mergeRules`.
+	 * Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the `@charset` naming an encoding the output is not written in. On by default. Joining rules that are not dead is `mergeRules`.
 	 * @since 5.110.0
 	 */
 	removeDeadRules?: boolean;
@@ -20250,7 +20261,7 @@ declare interface OptimizationMinimizeCss {
 	shortenColors?: boolean;
 
 	/**
-	 * Write a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), and collapse an `and` of two one-sided ranges into the interval it describes. On by default.
+	 * Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), an `and` of two one-sided ranges collapsed into the interval it describes, the `all` a query states before an `and` (which matches what the condition alone matches), and an operand a condition already states — in `@supports` and `@container` as well as `@media`. On by default.
 	 * @since 5.110.0
 	 */
 	shortenMediaQueries?: boolean;

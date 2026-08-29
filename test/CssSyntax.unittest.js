@@ -1802,6 +1802,77 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 // The `configCases/css/minimize-*` cases cover these transforms end to end, but
 // `minimizer-webpack-plugin` runs `minify` in its worker pool, so nothing there
 // is reachable by the coverage instrument. These drive the same code in-process.
+describe("CssSyntax — every rewrite has a switch", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {import("../lib/css/syntax").CssTransformOptions} transforms which rewrites may run
+	 * @param {string[]=} browsers the target
+	 * @returns {string} the minified serialization
+	 */
+	const off = (css, transforms, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: browsers ? { browsers } : undefined,
+			transforms
+		}).code;
+
+	// A stylesheet one rewrite gets wrong is minified without it while the rest
+	// still applies, which is what every one of these switches is for.
+	const OLD = ["chrome 50"];
+
+	it.each([
+		["a hex alpha", "a{color:#7bffff80}", OLD],
+		[
+			"a double-position stop",
+			"a{background:linear-gradient(red 10% 20%,blue)}",
+			OLD
+		],
+		["an `inset`", "a{inset:1px 2px}", OLD],
+		["an `overflow` pair", "a{overflow:hidden auto}", OLD],
+		["a `place-items`", "a{place-items:center start}", OLD],
+		["a media range", "@media (400px<=width<=700px){a{color:red}}", OLD],
+		[
+			"a `text-decoration`",
+			"a{text-decoration:underline 2px dotted red}",
+			["safari 15"]
+		],
+		["`system-ui`", "a{font-family:system-ui}", OLD],
+		["a `:lang()` list", "a:lang(en,fr){color:red}", ["chrome 100"]],
+		[
+			"a `light-dark()`",
+			"button{background:light-dark(#aaa,#444)}",
+			["chrome 100"]
+		]
+	])("leaves %s where `lowerUnsupported` is off", (_name, css, browsers) => {
+		expect(off(css, { lowerUnsupported: false }, browsers)).toBe(
+			off(css, {}, undefined)
+		);
+	});
+
+	it("leaves what each of the other switches names", () => {
+		// A rule or declaration nothing can read, which `removeDeadRules` drops.
+		const dead = '@charset "utf-8";a{}b{color:#fff;color:#333}';
+		expect(off(dead, { removeDeadRules: false })).toBe(
+			'@charset "utf-8";a{}b{color:#fff;color:#333}'
+		);
+		expect(off(dead, {})).toBe("b{color:#333}");
+		// A condition prelude, which `shortenMediaQueries` shortens.
+		const query =
+			"@media all and (min-width:100px){a{color:red}}" +
+			"@supports (a:b) and (a:b){c{color:red}}";
+		expect(off(query, { shortenMediaQueries: false })).toBe(query);
+		expect(off(query, {})).toBe(
+			"@media (width>=100px){a{color:red}}@supports (a:b){c{color:red}}"
+		);
+		// A shorthand slot holding its own initial, which `shortenValues` drops.
+		expect(
+			off("a{border:medium none currentcolor;transition:opacity .3s 0s}", {
+				shortenValues: false
+			})
+		).toBe("a{border:medium none currentcolor;transition:opacity.3s 0s}");
+	});
+});
+
 describe("CssSyntax — minify transforms, in-process", () => {
 	/**
 	 * @param {string} src css source
