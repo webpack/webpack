@@ -61,7 +61,7 @@ Array [
   "/*! declined: a CSS-wide keyword is only valid as the whole value */.t55{margin-top:inherit;margin-right:inherit;margin-bottom:inherit;margin-left:inherit}",
   "/*! declined: a longhand holding two components is already invalid */.t56{margin-top:1px 2px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! declined: a repeated longhand makes the cascade decide, not the order — the
-   dead first write goes, but the merge already read the family as repeated */.t57{margin-top:1px;margin-top:3px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+   dead first write goes, but the merge already read the family as repeated */.t57{margin-top:3px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! declined: something between the four writes the same family, so the merge would move it */.t57b{margin-top:1px;margin-inline-start:9px;margin-right:2px;margin-bottom:3px;margin-left:4px}",
   "/*! declined: ...and a vendor prefix does not hide that — Chromium reads \`-webkit-margin-start\` */.t57c{margin-top:1px;-webkit-margin-start:9px;margin-right:2px;margin-bottom:3px;margin-left:4px}",
   "/*! merge-longhand: an unrelated property between them is free to move */.t57d{margin:1px 2px 3px 4px;color:red}",

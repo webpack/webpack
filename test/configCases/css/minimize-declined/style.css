@@ -91,7 +91,8 @@
    rules, so the first is read at its own place rather than resolving to the
    second — dropping it loses a rule the engine builds */
 .t24b { color: red; & i { top: 0 } color: red }
-/*! declined: the importance differs, so they are not the same declaration */
+/*! webpack: the importance differs, so the two are not the same declaration —
+   but the important one wins wherever the plain one would have been read */
 .t25 { color: red; color: red !important }
 /*! declined: a value spelled differently is a fallback for an engine that cannot
    read the later one, and a bare name says nothing about which engines do — it

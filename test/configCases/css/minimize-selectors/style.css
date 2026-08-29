@@ -180,7 +180,8 @@ a/*c*/b { color: red }
 /*! webpack: ...and two identical rules are the one that can be read */
 .t81 { color: red }
 .t81 { color: red }
-/*! declined: the earlier declaration of a property both set would be lost */
+/*! webpack: a property both set joins where the later declaration is one the
+   earlier cannot have been read behind */
 .t82 { color: red }
 .t82 { color: blue }
 /*! declined: a shorthand holds every longhand its name prefixes */

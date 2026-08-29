@@ -23,7 +23,7 @@ module.exports = {
 		// A style attribute is a declaration list, so a `}` in it closes no block:
 		// it is a parse error whose bad declaration runs to the next `;`, leaving
 		// what follows to apply — which is what a browser reads it as.
-		expect(html).toContain("style=background:red;background:limegreen>");
+		expect(html).toContain("style=background:limegreen>");
 		// One inside a string is not a `}` in the list, so the value still minifies
 		// — the repeated declaration after it goes.
 		expect(html).toContain("style='content:\"}\";color:red'>");

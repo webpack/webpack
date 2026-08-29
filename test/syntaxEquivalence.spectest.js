@@ -1432,6 +1432,43 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a shorthand slot, a query and a declaration saying nothing",
+		css:
+			"@media all and (min-width:1px){#b{outline-color:red}}" +
+			"@supports (color:red) and (color:red){#b{caret-color:red}}" +
+			"#b{border:medium none currentcolor;column-rule:medium none currentcolor;" +
+			"transition:opacity .3s 0s;animation:1s ease 0s 1 normal none running x;" +
+			"color:#eee;color:#333;margin-top:1px;margin-top:2px}" +
+			"#c{color:red}#c{color:blue}",
+		browsers: ["chrome 130"],
+		produces: [
+			"@media (width>=1px)",
+			"@supports (color:red){",
+			"border:none",
+			"transition:opacity.3s",
+			"color:#333",
+			"#c{color:blue}"
+		],
+		html:
+			'<button id=b style="position:absolute">x</button>' +
+			'<button id=c style="position:absolute">y</button>',
+		probes: [
+			["#b", "outline-color"],
+			["#b", "caret-color"],
+			["#b", "border-top-width"],
+			["#b", "border-top-style"],
+			["#b", "border-top-color"],
+			["#b", "column-rule-width"],
+			["#b", "column-rule-style"],
+			["#b", "column-rule-color"],
+			["#b", "transition"],
+			["#b", "animation"],
+			["#b", "color"],
+			["#b", "margin-top"],
+			["#c", "color"]
+		]
+	},
+	{
 		name: "a color computed rather than painted, kept as it was written",
 		// A gradient interpolates between its stops and a mix mixes its two, so the
 		// byte an engine paints is not what either computes from. The probes read

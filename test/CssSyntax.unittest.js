@@ -2077,9 +2077,9 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		// Both are the same declaration however they are spelled, so a rule an
 		// identical later sibling repeats is dead whichever way each spells it.
 		it("makes two spellings of one property the same bytes", () => {
-			expect(min("a{color:red}a{COLOR:blue}")).toBe(
-				"a{color:red}a{color:blue}"
-			);
+			// Both spell one property, so the later rule is read as the override it
+			// is rather than as another property.
+			expect(min("a{color:red}a{COLOR:blue}")).toBe("a{color:blue}");
 			expect(min("a{COLOR:red}a{color:red}")).toBe("a{color:red}");
 		});
 
@@ -2886,7 +2886,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		// A `}` closes no block here, so it is a parse error whose bad declaration
 		// runs to the next `;` — what a browser reads a `style=""` as.
 		expect(minify("color:red;}color:blue")).toBe("color:red");
-		expect(minify("color:red;};color:blue")).toBe("color:red;color:blue");
+		expect(minify("color:red;};color:blue")).toBe("color:blue");
 		// Inside a value it is a token like any other.
 		expect(minify("color:red}color:blue")).toBe("color:red}color:blue");
 	});
@@ -3589,7 +3589,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// order they were written in.
 			["a{flex-flow:row nowrap}", "a{flex-flow:row}"],
 			["a{flex-flow:nowrap row}", "a{flex-flow:row}"],
-			["a{border:none medium}", "a{border:medium}"],
 			["a{list-style:disc outside}", "a{list-style:disc}"],
 			["a{mask:url(a.svg) match-source add}", "a{mask:url(a.svg)}"],
 			[
@@ -3611,7 +3610,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{background:padding-box border-box none}", "a{background:none}"],
 			["a{border-image:none 30}", "a{border-image:30}"],
 			["a{mask:none luminance}", "a{mask:luminance}"],
-			["a{TRANSITION:opacity 1s EASE}", "a{transition:opacity 1s}"]
+			["a{TRANSITION:opacity 1s EASE}", "a{transition:opacity 1s}"],
+			// A slot taking a length or a color is read the same way, by the classes
+			// a sibling's own value is in: neither `solid` nor `red` is a width.
+			["a{border:medium solid red}", "a{border:solid red}"],
+			["a{border:medium none currentcolor}", "a{border:none}"],
+			["a{border:none medium}", "a{border:none}"],
+			["a{column-rule:medium none currentcolor}", "a{column-rule:none}"],
+			// ...and a sibling that is one keeps it.
+			["a{border:medium 1px}", "a{border:medium 1px}"],
+			["a{border:currentcolor red}", "a{border:currentcolor red}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -3647,12 +3655,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the first layer is empty", "a{transition:,opacity 1s ease}"],
 			["the last layer is empty", "a{transition:opacity 1s ease,}"],
 			["the property is no shorthand", "a{border-style:none}"],
-			// `<line-width>` reaches `<length>`, which no spelling names, so a
-			// sibling filling that slot cannot be recognized.
-			[
-				"the slot takes a value no spelling names",
-				"a{border:medium solid red}"
-			],
 			// An image function fills `<bg-image>` as much as `none` does.
 			["a call fills the image slot", "a{background:none url(a.png)}"],
 			[
@@ -3811,7 +3813,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("keeps the one between, which says what neither of them does", () => {
 			expect(minify("@media all{a{color:red}a{color:blue}a{color:red}}")).toBe(
-				"@media all{a{color:blue}a{color:red}}"
+				"@media all{a{color:red}}"
 			);
 		});
 
@@ -4197,10 +4199,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minifyFor(css, ["chrome 85"])).toBe(css);
 		});
 
+		it("joins the same selector's two rules where one overrides the other", () => {
+			// One block holds a property once, so a property both of them set joins
+			// only where the later declaration is one the earlier cannot have been
+			// read behind — which is the same question a repeated property inside
+			// one block answers.
+			expect(minify("a{color:red}a{color:blue}")).toBe("a{color:blue}");
+			expect(minify("a{color:red;top:0}a{color:blue;left:0}")).toBe(
+				"a{top:0;color:blue;left:0}"
+			);
+			// ...and not where the earlier one may still be what an engine reads.
+			const fallback = "a{color:#fff}a{color:var(--x)}";
+			expect(minify(fallback)).toBe(fallback);
+			const important = "a{color:red!important}a{color:blue}";
+			expect(minify(important)).toBe(important);
+		});
+
 		it.each([
-			// One block holds a property once, so the earlier declaration of a
-			// property both of them set would be the one it loses.
-			["they set the same property", "a{color:red}a{color:blue}"],
 			// A shorthand holds every longhand its name prefixes.
 			[
 				"one holds the other's longhand",
@@ -5703,6 +5718,164 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `scale(0)` is a transform — the rewrite would revive it.
 			const scale = "a{transform:scale(0px)}";
 			expect(minify(scale)).toBe(scale);
+		});
+	});
+
+	describe("a condition saying what another already says", () => {
+		it("drops the media type a query states for nothing", () => {
+			expect(minify("@media all and (min-width:100px){a{color:red}}")).toBe(
+				"@media (width>=100px){a{color:red}}"
+			);
+			expect(minify("@media print,all and (color){a{color:red}}")).toBe(
+				"@media print,(color){a{color:red}}"
+			);
+			// `all` on its own is the whole query and says everything, and `not` or
+			// `only` before it is not the same query at all — `only` is there to
+			// hide the rule from an engine reading CSS 2's grammar.
+			expect(minify("@media all{a{color:red}}")).toBe(
+				"@media all{a{color:red}}"
+			);
+			expect(minify("@media only all and (color){a{color:red}}")).toBe(
+				"@media only all and (color){a{color:red}}"
+			);
+			expect(minify("@media not all and (color){a{color:red}}")).toBe(
+				"@media not all and (color){a{color:red}}"
+			);
+			expect(minify("@media screen and (color){a{color:red}}")).toBe(
+				"@media screen and (color){a{color:red}}"
+			);
+		});
+
+		it("drops an operand a condition already states", () => {
+			expect(
+				minify("@supports (display:grid) and (display:grid){a{color:red}}")
+			).toBe("@supports (display:grid){a{color:red}}");
+			expect(minify("@supports (a:b) or (a:b) or (c:d){a{color:red}}")).toBe(
+				"@supports (a:b) or (c:d){a{color:red}}"
+			);
+			expect(
+				minify("@supports ((a:b) or (c:d)) and ((a:b) or (c:d)){a{color:red}}")
+			).toBe("@supports ((a:b) or (c:d)){a{color:red}}");
+			expect(minify("@media (color) and (color){a{color:red}}")).toBe(
+				"@media (color){a{color:red}}"
+			);
+			expect(
+				minify("@container (width>400px) and (width>400px){a{color:red}}")
+			).toBe("@container (width>400px){a{color:red}}");
+			// A bare operand is a part of one rather than one this can compare, and
+			// two queries are not two operands of anything.
+			const negated = "@supports not (a:b) and not (a:b){a{color:red}}";
+			expect(minify(negated)).toBe(negated);
+			const listed = "@media (color),(color){a{color:red}}";
+			expect(minify(listed)).toBe(listed);
+			// ...and a chain mixing the two operators is no flat list of either's.
+			const mixed = "@supports (a:b) and (c:d) or (e:f){a{color:red}}";
+			expect(minify(mixed)).toBe(mixed);
+		});
+	});
+
+	describe("a time or a count a layer runs with anyway", () => {
+		it("drops the zero time nothing after it depends on", () => {
+			expect(minify("a{transition:opacity .3s 0s}")).toBe(
+				"a{transition:opacity.3s}"
+			);
+			expect(minify("a{transition:opacity 0s}")).toBe("a{transition:opacity}");
+			expect(minify("a{transition:opacity .3s 0s ease-in,color 1s 0s}")).toBe(
+				"a{transition:opacity.3s ease-in,color 1s}"
+			);
+			// The first `<time>` fills the duration and the second the delay, so
+			// dropping the first would hand the delay's value to the duration.
+			expect(minify("a{transition:opacity 0s .3s}")).toBe(
+				"a{transition:opacity 0s.3s}"
+			);
+		});
+
+		it("drops an animation's own defaults", () => {
+			expect(minify("a{animation:1s ease 0s 1 normal none running x}")).toBe(
+				"a{animation:1s none x}"
+			);
+			expect(minify("a{animation:x 1s 1}")).toBe("a{animation:x 1s}");
+			expect(minify("a{animation:1s x,2s 0s y}")).toBe(
+				"a{animation:1s x,2s y}"
+			);
+			// A count that is not one, and the keyword that says every count.
+			expect(minify("a{animation:x 1s 2}")).toBe("a{animation:x 1s 2}");
+			// A quoted name could carry the comma the layer split reads, and an
+			// empty layer is a value this does not part.
+			expect(minify('a{animation:"x" 1s 0s}')).toBe('a{animation:"x"1s 0s}');
+			expect(minify("a{animation:1s x,,2s y}")).toBe("a{animation:1s x,,2s y}");
+			expect(minify("a{animation:x 1s infinite}")).toBe(
+				"a{animation:x 1s infinite}"
+			);
+		});
+	});
+
+	describe("a declaration a later one overrides", () => {
+		it("drops it where the two are spelled from one vocabulary", () => {
+			expect(minify("a{color:#fff;color:#333}")).toBe("a{color:#333}");
+			expect(minify("a{color:red;color:blue}")).toBe("a{color:blue}");
+			expect(minify("a{color:#fff;color:red}")).toBe("a{color:red}");
+			expect(minify("a{margin-top:1px;margin-top:2px}")).toBe(
+				"a{margin-top:2px}"
+			);
+			expect(minify("a{opacity:.5;opacity:1}")).toBe("a{opacity:1}");
+			expect(minify("a{color:red;color:inherit}")).toBe("a{color:inherit}");
+			// Whatever stands between them, which can only lose to the later one
+			// wherever it would have beaten this.
+			expect(minify("a{color:red;background:red;color:blue}")).toBe(
+				"a{background:red;color:blue}"
+			);
+		});
+
+		it.each([
+			// The later value is the one an engine may not read, which is what a
+			// fallback pair is written for.
+			["a substitution", "a{color:#fff;color:var(--x)}"],
+			["a call", "a{width:100px;width:calc(100% - 1px)}"],
+			["a newer color spelling", "a{color:#eee;color:lab(50% 40 -30)}"],
+			["a hex the other states no alpha for", "a{color:#fff;color:#33333380}"],
+			["a unit the earlier one does not write", "a{width:1em;width:2dvh}"],
+			[
+				"a name that arrived later",
+				"a{color:red;color:rebeccapurple}",
+				"a{color:red;color:#639}"
+			],
+			// A keyword an engine may not know is not one either — and `display`
+			// is where that pair is written on purpose.
+			["a keyword", "a{display:block;display:flex}"],
+			// An `!important` earlier declaration still wins.
+			["an earlier one that wins", "a{color:red!important;color:blue}"]
+		])("keeps it behind %s", (_name, css, printed = css) => {
+			expect(minify(css)).toBe(printed);
+		});
+
+		it("reads two rules' declarations only where it may drop one", () => {
+			// An empty declaration between two is nothing to read; one without a
+			// value is not a declaration this can answer for.
+			expect(minify("a{color:red;;top:0}a{left:0}")).toBe(
+				"a{color:red;top:0;left:0}"
+			);
+			const partial = "a{color:red;top}a{left:0}";
+			expect(minify(partial)).toBe(partial);
+			// ...and the later rule holding one is read for its properties alone,
+			// which is what the join then refuses on.
+			expect(minify("a{color:red}a{top}")).toBe("a{color:red;top}");
+			// A `;` inside a string parts no declaration, and neither does an escape
+			// the string carries.
+			expect(minify('a{content:"a\\";b";color:red}a{left:0}')).toBe(
+				"a{content:'a\";b';color:red;left:0}"
+			);
+			expect(minify('a{content:"a\\"b\'c";color:red}a{left:0}')).toBe(
+				'a{content:"a\\"b\'c";color:red;left:0}'
+			);
+			// ...and with the transform off, two rules stay two.
+			const pair = "a{color:red}a{color:blue}";
+			expect(
+				new SourceProcessor().process(pair, {
+					mode: "minify",
+					transforms: { removeDeadRules: false }
+				}).code
+			).toBe(pair);
 		});
 	});
 
