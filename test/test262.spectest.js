@@ -785,10 +785,8 @@ const knownBugs = [
 	// A top-level `await using` makes the module async, like a bare top-level
 	// `await` does, so the Script-goal early error is not raised.
 	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
-	// `#mark in obj` requires the deferred namespace target to report
-	// `isExtensible() === false` to throw a TypeError. webpack's proxy
-	// target is mutable until init runs and cannot be frozen up-front
-	// because the underlying module's exports aren't yet known.
+	// `#mark in obj` needs the proxy target to report `isExtensible() === false`,
+	// which requires sealing it up front with every export name in place.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
 	// Host resolution errors must be reported eagerly even for deferred imports;
 	// webpack turns a missing module into a build error resolved lazily instead.
@@ -806,12 +804,9 @@ const knownBugs = [
 	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
 	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
 	// Just bugs, need to fix
-	// `Reflect.preventExtensions(ns)` should return true and the deferred
-	// namespace should report `isExtensible() === false` per the TC39 spec —
-	// webpack's proxy target is mutable until init runs and it cannot be
-	// frozen up-front because the underlying module's exports aren't yet
-	// known. Pre-knowing exports would require a larger architectural
-	// change, so this remains skipped.
+	// Same: the target is filled in after evaluation, so it stays extensible.
+	// Sealing it needs the export names emitted at the deferred import, which
+	// costs bytes on every one of them.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
 	// Hoisting is fine; assigning is not caught. A namespace import compiles to
 	// a `var`, which must stay function-scoped for runtime-condition imports.
@@ -865,12 +860,10 @@ const knownBugs = [
 	// `this`-binding ReferenceError before the inner `super()` call runs.
 	"expressions/delete/super-property-uninitialized-this.js",
 
-	// `foo()` in this test discards a promise that synchronously rejects with
-	// `TypeError` (from `new Promise()` with no executor). Jest's per-test
-	// `unhandledRejection` tracking surfaces that rejection as a test failure
-	// even though the test itself only asserts `assert(called)` synchronously.
-	// Working around it would require sandboxing Jest's rejection tracking
-	// per-test, which is a substantial test-runner refactor.
+	// The bundle passes every assertion outside jest; the test abandons a
+	// rejected promise on purpose, and jest reports it against the test. The
+	// rejection reaches neither `unhandledRejection` nor `uncaughtException`
+	// while the test body runs, so the runner cannot capture or assert it.
 	"statements/async-function/evaluation-body.js",
 
 	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
@@ -891,8 +884,8 @@ const knownBugs = [
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
 
-	// Same cause as `async-function/evaluation-body.js`: the chain
-	// short-circuits, so jest blames the test for the abandoned rejection.
+	// Same cause: `Promise.reject(undefined)?.y` short-circuits to 43, so the
+	// rejection is abandoned by design and jest blames the test for it.
 	"expressions/optional-chaining/member-expression-async-identifier.js",
 
 	// Nested `import(import(...))` — webpack collapses dynamic-import
