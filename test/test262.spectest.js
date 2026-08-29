@@ -133,9 +133,8 @@ const knownHostEvalBugs = [
 /* cspell:enable */
 
 /* cspell:disable */
-// Fail identically when the unbundled test262 file runs in a plain `vm`
-// context on the Node.js the test262 job pins, so the divergence is the
-// host's and not webpack's.
+// Fail identically unbundled in a plain `vm` on the pinned Node.js, so the
+// divergence is the host's and not webpack's.
 const knownHostBugs = [
 	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
 	"expressions/assignment/S11.13.1_A5_T1.js",
@@ -814,9 +813,8 @@ const knownBugs = [
 	// known. Pre-knowing exports would require a larger architectural
 	// change, so this remains skipped.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Hoisting is fine; the binding is not immutable. A namespace import
-	// compiles to a plain `var`, which must stay function-scoped for
-	// runtime-condition imports, so assigning to it does not throw.
+	// Hoisting is fine; assigning is not caught. A namespace import compiles to
+	// a `var`, which must stay function-scoped for runtime-condition imports.
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
@@ -893,10 +891,8 @@ const knownBugs = [
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
 
-	// Same cause as `async-function/evaluation-body.js` above: the bundle runs
-	// green outside jest, but `Promise.reject(undefined)?.y` short-circuits to
-	// 43, so the rejection is never awaited and jest attributes it to the test.
-	// It surfaces a turn later than the body, so it cannot be drained here.
+	// Same cause as `async-function/evaluation-body.js`: the chain
+	// short-circuits, so jest blames the test for the abandoned rejection.
 	"expressions/optional-chaining/member-expression-async-identifier.js",
 
 	// Nested `import(import(...))` — webpack collapses dynamic-import
