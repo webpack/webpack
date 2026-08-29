@@ -102,7 +102,9 @@ Array [
   "/*! initial: a slot every value of which is a keyword or a call is checked for a sibling like a keywords-only one */.t72{background:#fff}",
   "/*! initial: ...and the same slot's other initials go with it */.t72b{background:red}",
   "/*! declined: an image function fills the same slot, so the value is one the engine drops */.t72c{background:none url(http://website.test/cat.jpg)}",
-  "/*! declined: origin and clip are two slots of one production, so neither initial is a slot's own */.t72d{background:padding-box border-box red}",
+  "/*! the origin and the clip are two slots of one production, so neither initial
+   is a slot's own to the keyword table — the layer reads them as the pair they
+   are, and the pair is what each holds when nothing writes it */.t72d{background:red}",
   "/*! webpack: a side's three longhands are the shorthand naming them */.t90{border-top:1px solid red}.t91{border-bottom:1px solid red}",
   "/*! declined: \`border\` resets \`border-image\`, which its longhands leave alone */.t92{border-width:1px;border-style:solid;border-color:red}",
   "/*! declined: a substitution could expand to more than the slot takes */.t93{border-top-width:var(--w);border-top-style:solid;border-top-color:red}",

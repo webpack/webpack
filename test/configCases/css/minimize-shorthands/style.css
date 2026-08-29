@@ -224,7 +224,9 @@
 .t72b { background: none red repeat scroll }
 /*! declined: an image function fills the same slot, so the value is one the engine drops */
 .t72c { background: none url("http://website.test/cat.jpg") }
-/*! declined: origin and clip are two slots of one production, so neither initial is a slot's own */
+/*! the origin and the clip are two slots of one production, so neither initial
+   is a slot's own to the keyword table — the layer reads them as the pair they
+   are, and the pair is what each holds when nothing writes it */
 .t72d { background: padding-box border-box red }
 
 /*! webpack: a side's three longhands are the shorthand naming them */

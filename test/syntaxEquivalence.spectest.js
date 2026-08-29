@@ -1353,6 +1353,46 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a slot holding the value an unwritten one takes",
+		css:
+			"#b{background:0% 0% / auto repeat scroll padding-box border-box red;" +
+			"border-left:currentcolor medium none;column-rule:medium none red;" +
+			"outline:medium none currentcolor;text-decoration:none currentcolor solid auto}" +
+			"#c{background:left top url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}" +
+			"#d{mask:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=) border-box}",
+		browsers: ["chrome 130"],
+		produces: ["background:red", "border-left:none", "column-rule:red"],
+		html: "<button id=b>x</button><div id=c></div><div id=d></div>",
+		probes: [
+			["#b", "background-position"],
+			["#b", "background-size"],
+			["#b", "background-repeat"],
+			["#b", "background-attachment"],
+			["#b", "background-origin"],
+			["#b", "background-clip"],
+			["#b", "background-color"],
+			["#b", "background-image"],
+			["#b", "border-left-width"],
+			["#b", "border-left-style"],
+			["#b", "border-left-color"],
+			["#b", "column-rule-width"],
+			["#b", "column-rule-style"],
+			["#b", "column-rule-color"],
+			["#b", "outline-width"],
+			["#b", "outline-style"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-line"],
+			["#b", "text-decoration-style"],
+			["#b", "text-decoration-color"],
+			["#b", "text-decoration-thickness"],
+			["#c", "background-position"],
+			["#c", "background-image"],
+			["#d", "mask-origin"],
+			["#d", "mask-clip"],
+			["#d", "mask-image"]
+		]
+	},
+	{
 		name: "system-ui, which names each platform's own font instead",
 		produces: ["-apple-system,BlinkMacSystemFont"],
 		css: "#b{font-family:system-ui}",

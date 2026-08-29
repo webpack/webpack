@@ -2370,6 +2370,70 @@ const collectShorthandInitialKeywords = () => {
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
 };
 
+// The shorthands whose layers carry a `<position>`, a `<bg-size>` after a `/`
+// and a `<box>{1,2}`, as the longhand each of those four slots is. Stated
+// because the grammar names them through `<bg-layer>`, which the value-definition
+// parser follows into a production rather than into slots.
+const LAYER_SLOT_PROPERTIES = [
+	["background", "background"],
+	["mask", "mask"]
+];
+
+/**
+ * What each layered shorthand's position, size, origin and clip hold when
+ * nothing writes them, from the initial `mdn-data` states per longhand — with
+ * the position as the two values it resolves to.
+ * @returns {[string, string[]][]} shorthand -> `[x, y, size, origin, clip]`
+ */
+const collectLayerInitials = () =>
+	LAYER_SLOT_PROPERTIES.map(([shorthand, prefix]) => {
+		const read = (/** @type {string} */ slot) => {
+			const initial = /** @type {{ initial?: string | string[] }} */ (
+				properties[`${prefix}-${slot}`]
+			).initial;
+			if (typeof initial !== "string") {
+				throw new Error(`no stated initial for ${prefix}-${slot}`);
+			}
+			return initial;
+		};
+		const position = read("position").split(" ");
+		if (position.length !== 2) {
+			throw new Error(`${prefix}-position states no two values`);
+		}
+		// A size of `auto auto` is the one value `auto` says.
+		const size = read("size").split(" ");
+		return /** @type {[string, string[]]} */ ([
+			shorthand,
+			[position[0], position[1], size[0], read("origin"), read("clip")]
+		]);
+	});
+
+/**
+ * The value each slot of a family shorthand holds when nothing writes it, from
+ * the initial `mdn-data` states per longhand. A slot holding its own initial
+ * says nothing beside the others, so the shorthand may be written without it.
+ * @param {[string, string[]][]} familyLonghands each family shorthand's longhands
+ * @returns {[string, string][]} longhand -> its initial value
+ */
+const collectFamilySlotInitials = (familyLonghands) => {
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const [, longhands] of familyLonghands) {
+		for (const longhand of longhands) {
+			const initial = /** @type {{ initial?: string | string[] }} */ (
+				properties[longhand]
+			).initial;
+			// Every slot of every family states one keyword or value; an array is a
+			// shorthand's own list of longhands, which no slot here is.
+			if (typeof initial !== "string") {
+				throw new Error(`no stated initial for ${longhand}`);
+			}
+			out.push([longhand, initial]);
+		}
+	}
+	return out.sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
 /**
  * Each `font-stretch` keyword -> the percentage it names. The keywords are read
  * off the property's own grammar; only the percentages are stated.
@@ -6152,6 +6216,8 @@ const collectData = async () => {
 	const pairLonghands = collectPairLonghands();
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
+	const familySlotInitials = collectFamilySlotInitials(familyLonghands);
+	const layerInitials = collectLayerInitials();
 	const orderedLonghands = collectOrderedLonghands(
 		SUPPLEMENT.orderedShorthands
 	);
@@ -6717,6 +6783,22 @@ const COLOR_NAME_TO_RGB = new Map([${colorNameValues
 		.map(([name, packed]) => `["${name}", ${packed}]`)
 		.join(", ")}]);
 
+// What a layered shorthand's position, size, origin and clip hold when nothing
+// writes them, as \`[x, y, size, origin, clip]\`. A layer holding its own is a
+// layer the shorthand says without them.
+const LAYER_INITIALS = new Map([
+${layerInitials
+	.map(
+		([name, slots]) =>
+			`\t["${name}", [${slots.map((one) => JSON.stringify(one)).join(", ")}]]`
+	)
+	.join(",\n")}
+]);
+
+// What each slot of a family shorthand holds when nothing writes it. A slot
+// holding its own initial says nothing beside the others.
+const FAMILY_SLOT_INITIALS = ${mapLiteral(familySlotInitials)};
+
 // The font stack \`system-ui\` names, for a target that does not read the keyword.
 const SYSTEM_UI_STACK = ${JSON.stringify(SUPPLEMENT.systemUiStack.join(","))};
 
@@ -6948,11 +7030,11 @@ module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
 module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
 module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
-module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
+module.exports.FAMILY_SLOT_INITIALS = FAMILY_SLOT_INITIALS;\nmodule.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.KEYWORD_ONLY_PROPERTIES = KEYWORD_ONLY_PROPERTIES;
-module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
+module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;\nmodule.exports.LINEAR_SRGB_TO_P3 = LINEAR_SRGB_TO_P3;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
