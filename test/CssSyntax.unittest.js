@@ -8305,7 +8305,10 @@ describe("CssSyntax minify — relative colors", () => {
 		["a keyword nothing binds", "rgb(from red calc(q*2) g b)"],
 		["an expression of two arguments", "rgb(from red min(r,2) g b)"],
 		["an expression of two units", "rgb(from red calc(r*1px + 1em) g b)"],
-		["a number where the hue takes an angle", "hsl(from red calc(h*1) s l)"],
+		[
+			"an angle added to the number a hue keyword is",
+			"hsl(from red calc(h + 40deg) s l)"
+		],
 		["an alpha that is neither", "rgb(from red r g b/x)"],
 		["a fourth channel", "rgb(from red r g b b)"],
 		["an expression of no arithmetic", "rgb(from red calc(r*url(x)) g b)"],
@@ -8317,6 +8320,18 @@ describe("CssSyntax minify — relative colors", () => {
 	it("reads a channel written any way the function takes", () => {
 		// A hue is an angle, and the alpha may be a percentage.
 		expect(minify("a{color:hsl(from red 240deg s l)}")).toBe("a{color:#00f}");
+		// ...and a channel keyword substitutes as the number it names (CSS Color 5
+		// §4.1), so an expression over the hue reduces to no unit and is read as
+		// the degrees it states.
+		expect(minify("a{color:hsl(from red calc(h + 240) s l)}")).toBe(
+			"a{color:#00f}"
+		);
+		expect(minify("a{color:oklch(from oklch(70% .3 30) l c calc(h*2))}")).toBe(
+			"a{color:oklch(.7 .3 60)}"
+		);
+		expect(minify("a{color:oklch(from oklch(70% .3 30) l c 70)}")).toBe(
+			"a{color:oklch(.7 .3 70)}"
+		);
 		expect(minify("a{color:rgb(from red r g b/50%)}")).toBe(
 			"a{color:#ff000080}"
 		);
