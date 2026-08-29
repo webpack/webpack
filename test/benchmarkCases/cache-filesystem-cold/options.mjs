@@ -13,12 +13,11 @@ export async function setup() {
 }
 
 /**
- * Drop the pack so each iteration builds from nothing and serializes a fresh
- * one — the store path `cache-filesystem` never reaches, since it restores.
+ * Drops the pack so each iteration measures the store path, not the restore one.
  * @param {import("../../..").Configuration} config built configuration
  * @returns {Promise<void>}
  */
-export async function beforeEach(config) {
+export async function beforeEachIteration(config) {
 	const { cache } = config;
 
 	if (

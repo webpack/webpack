@@ -64,7 +64,7 @@ jobs:
           mode: "simulation"
         env:
           LAST_COMMIT: 1
-          NEGATIVE_FILTER: ${{ github.event_name == 'schedule' && '' || 'on-schedule' }}
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
           # Single libuv thread → deterministic fs-completion order, removing the
           # last I/O race that perturbs allocation counts between runs.
@@ -110,7 +110,7 @@ jobs:
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           LAST_COMMIT: 1
-          NEGATIVE_FILTER: ${{ github.event_name == 'schedule' && '' || 'on-schedule' }}
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
           # Single libuv thread → deterministic fs-completion order, removing the
           # last I/O race that perturbs allocation counts between runs.
