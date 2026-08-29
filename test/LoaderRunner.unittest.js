@@ -469,6 +469,61 @@ describe("runLoaders", () => {
 		);
 	});
 
+	it("should omit a BOM a loader put on a string", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					path.resolve(fixtures, "simple-loader.js"),
+					path.resolve(fixtures, "bom-loader.js")
+				]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result[0]).toBe("resource-simple");
+				done();
+			}
+		);
+	});
+
+	it("should omit a BOM a loader put on a string handed to a raw loader", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					path.resolve(fixtures, "raw-loader.js"),
+					path.resolve(fixtures, "bom-loader.js")
+				]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result[0].toString("utf8")).toBe(
+					"7265736f75726365resource"
+				);
+				done();
+			}
+		);
+	});
+
+	it("should keep a BOM the resource itself came with", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [path.resolve(fixtures, "raw-loader.js")],
+				processResource: (loaderContext, resource, callback) => {
+					callback(null, "\uFEFFvirtual");
+				}
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result[0].toString("utf8")).toBe(
+					"efbbbf7669727475616c\uFEFFvirtual"
+				);
+				done();
+			}
+		);
+	});
+
 	it("should have to correct keys in context without resource", (done) => {
 		runLoaders(
 			{
