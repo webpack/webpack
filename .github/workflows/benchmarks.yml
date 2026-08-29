@@ -30,6 +30,9 @@ jobs:
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
+    # The harness has no deadline of its own and a watch bench waits on a
+    # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
+    timeout-minutes: 120
     permissions:
       issues: write
       pull-requests: write
@@ -75,6 +78,9 @@ jobs:
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
+    # The harness has no deadline of its own and a watch bench waits on a
+    # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
+    timeout-minutes: 120
     permissions:
       issues: write
       pull-requests: write
