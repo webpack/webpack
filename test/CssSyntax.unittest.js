@@ -3498,7 +3498,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A third component is `transform-origin`'s z offset, which the two-value
 			// collapse has no reading of.
 			["a depth follows the position", "a{transform-origin:left top 10px}"],
-			["the position is a shorthand's slot", "a{background:left top}"]
+			// A shorthand's own position slot is read where the layer is, which is
+			// what takes `left top` out as the place an unwritten one names.
+			["the position is a shorthand's slot", "a{background:none}"]
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -3578,8 +3580,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{animation:x 1s ease}", "a{animation:x 1s}"],
 			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
 			["a{border:2px none red}", "a{border:2px red}"],
-			["a{column-rule:medium none red}", "a{column-rule:medium red}"],
-			["a{outline:medium none}", "a{outline:medium}"],
+			// A family reads each slot by what it takes, so a width and a color are
+			// answered for as well as a keyword: both of these hold their initial.
+			["a{column-rule:medium none red}", "a{column-rule:red}"],
+			["a{outline:medium none}", "a{outline:none}"],
 			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
 			// Both slots hold their initial, so the shortest one says both — whichever
 			// order they were written in.
@@ -3601,11 +3605,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{background:red repeat}", "a{background:red}"],
 			["a{background:none red repeat scroll}", "a{background:red}"],
 			// `background-origin` and `background-clip` are two slots of one
-			// production, so neither of their initials is the one slot's own.
-			[
-				"a{background:padding-box border-box none}",
-				"a{background:padding-box border-box}"
-			],
+			// production, so neither of their initials is the one slot's own to the
+			// keyword table — the layer reads them as the pair they are, and the
+			// pair is what each holds when nothing writes it.
+			["a{background:padding-box border-box none}", "a{background:none}"],
 			["a{border-image:none 30}", "a{border-image:30}"],
 			["a{mask:none luminance}", "a{mask:luminance}"],
 			["a{TRANSITION:opacity 1s EASE}", "a{transition:opacity 1s}"]
@@ -8457,6 +8460,112 @@ describe("CssSyntax minify — a selector list a pseudo does not take", () => {
 		);
 		expect(minifyFor("a:lang(en,fr){color:red}")).toBe(
 			"a:lang(en,fr){color:red}"
+		);
+	});
+});
+
+describe("CssSyntax minify — a slot holding its own initial", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its minified serialization, with no target to answer for
+	 */
+	const minify = (css) => minifyFor(css);
+
+	it("takes a family's initials out, and one of them says all of them", () => {
+		// The slots are read by what each takes, so a width and a color are
+		// answered for as well as a keyword.
+		expect(minify("a{border-left:currentcolor medium none}")).toBe(
+			"a{border-left:none}"
+		);
+		expect(minify("a{column-rule:medium none red}")).toBe("a{column-rule:red}");
+		expect(minify("a{outline:medium none currentcolor}")).toBe(
+			"a{outline:currentcolor}"
+		);
+		expect(minify("a{text-decoration:none currentcolor solid auto}")).toBe(
+			"a{text-decoration:none}"
+		);
+		expect(minify("a{border-top:1px solid currentcolor}")).toBe(
+			"a{border-top:1px solid}"
+		);
+		// Nothing to take out leaves the value as it was.
+		expect(minify("a{border-top:1px solid red}")).toBe(
+			"a{border-top:1px solid red}"
+		);
+	});
+
+	it("keeps a family value it cannot part", () => {
+		// `none` is both a `list-style-type` and a `list-style-image`, so which slot
+		// it fills is not a question this answers.
+		expect(minify("a{list-style:disc outside none}")).toBe(
+			"a{list-style:disc none}"
+		);
+		// No family takes a comma or a `/`, so one written there is a value the
+		// engine drops — and one this leaves exactly as it stands.
+		expect(minify("a{border-top:1px, solid currentcolor}")).toBe(
+			"a{border-top:1px,solid currentcolor}"
+		);
+		expect(minify("a{border-left:medium none, red}")).toBe(
+			"a{border-left:medium none,red}"
+		);
+	});
+
+	it("keeps a `text-decoration` a slot the target cannot read stands in", () => {
+		// Taking the thickness out would bring the rest of the declaration back to
+		// life on an engine that drops it whole, where the author wrote nothing.
+		expect(
+			minifyFor("a{text-decoration:none solid}", ["chrome 50"])
+		).not.toContain("text-decoration:none}");
+		expect(minifyFor("a{text-decoration:none solid}", ["chrome 130"])).toBe(
+			"a{text-decoration:none}"
+		);
+	});
+
+	it("takes a layer's position, size and boxes out", () => {
+		expect(
+			minify(
+				"a{background:0% 0% / auto repeat scroll padding-box border-box red}"
+			)
+		).toBe("a{background:red}");
+		// Every spelling of the place an unwritten position names.
+		expect(minify("a{background:left top red}")).toBe("a{background:red}");
+		expect(minify("a{background:0 0 red}")).toBe("a{background:red}");
+		expect(minify("a{background:0% 0%/auto auto red}")).toBe(
+			"a{background:red}"
+		);
+		// A layer writes at least one component, and the image's own initial says
+		// the least of them.
+		expect(minify("a{background:0% 0%}")).toBe("a{background:none}");
+		// The two boxes are the origin and the clip in that order; one of them is
+		// both, which only goes where the two initials are the same value.
+		expect(minify("a{mask:url(a.svg) border-box}")).toBe("a{mask:url(a.svg)}");
+		expect(minify("a{background:red border-box}")).toBe(
+			"a{background:red border-box}"
+		);
+		expect(minify("a{background:red padding-box}")).toBe(
+			"a{background:red padding-box}"
+		);
+	});
+
+	it("keeps a layer that writes any of them", () => {
+		expect(minify("a{background:10% 0% red}")).toBe("a{background:10%0%red}");
+		expect(minify("a{background:center red}")).toBe("a{background:center red}");
+		expect(minify("a{background:0% 0%/cover red}")).toBe(
+			"a{background:0%0%/cover red}"
+		);
+		// Only where every component of the size is the one an unwritten slot
+		// takes: half of a size is a size.
+		expect(minify("a{background:0% 0%/auto 50% red}")).toBe(
+			"a{background:0%0%/auto 50%red}"
+		);
+		expect(minify("a{background:0% 0%/50% auto red}")).toBe(
+			"a{background:0%0%/50%auto red}"
+		);
+		// The size ends where the next slot begins, and no keyword of one is a size.
+		expect(minify("a{background:0% 0%/auto no-repeat red}")).toBe(
+			"a{background:no-repeat red}"
+		);
+		expect(minify("a{background:red content-box padding-box}")).toBe(
+			"a{background:red content-box padding-box}"
 		);
 	});
 });
