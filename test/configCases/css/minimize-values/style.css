@@ -122,6 +122,22 @@
 @media (width >= 40rem) { .t46 { color: red } }
 /*! webpack: ...on both sides of the feature */
 @media (400px <= width <= 700px) { .t47 { color: red } }
+/*! webpack: `all and (…)` matches what the condition alone matches, so the type
+   is six bytes saying nothing */
+@media all and (min-width: 100px) { .t47a { color: red } }
+/*! declined: `all` on its own is the whole query, and `only` before it is there
+   to hide the rule from an engine reading CSS 2's grammar */
+@media all { .t47b { color: red } }
+@media only all and (min-width: 100px) { .t47c { color: red } }
+@media not all and (min-width: 100px) { .t47d { color: red } }
+/*! webpack: an operand a condition already states, whichever rule states it */
+@media (monochrome) and (monochrome) { .t47e { color: red } }
+@supports (display: grid) and (display: grid) { .t47f { color: red } }
+@supports ((display: grid) or (display: flex)) or ((display: grid) or (display: flex)) { .t47g { color: red } }
+/*! declined: a chain mixing the two operators is no flat list of either's, and
+   two queries are not two operands of anything */
+@supports (display: grid) and (display: flex) or (display: table) { .t47h { color: red } }
+@media (monochrome), (monochrome) { .t47i { color: red } }
 /*! webpack: a container query */
 @container card (width > 400px) { .t48 { color: red } }
 /*! webpack: an @supports condition */
@@ -429,6 +445,15 @@
 .t97 { transform: scale3d(1, 1, 1.5) }
 /*! webpack: a zero time keeps a unit, and `s` is the shorter one it can carry */
 .t98 { transition-duration: 0ms }
+/*! webpack: a shorthand slot holding its own initial goes, and a slot taking a
+   length or a color is read by the classes a sibling's own value is in — every
+   slot holding its initial leaves the shortest of them saying all of them */
+.t98a { border: medium none currentcolor }
+.t98b { column-rule: medium none currentcolor }
+.t98c { border: medium solid red }
+/*! declined: a sibling filling the slot keeps the initial there */
+.t98d { border: medium 1px }
+.t98e { border: currentcolor red }
 /*! webpack: a component spelling the property's own initial says nothing beside
    another — omitting its group leaves exactly that keyword */
 .t99 { grid-auto-flow: row dense }
