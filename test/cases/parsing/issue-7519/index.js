@@ -4,8 +4,7 @@ import {
 	inc,
 	incTruthy,
 	setCount,
-	multUsed,
-	incUsed
+	multUsed
 } from "./a";
 
 it("logical 'and' should work", () => {

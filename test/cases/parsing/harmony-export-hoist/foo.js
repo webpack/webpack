@@ -1,4 +1,4 @@
-import { bar } from "./bar";
+import "./bar";
 
 export function foo() {
 	return "ok";

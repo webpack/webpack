@@ -132,6 +132,32 @@ const knownHostEvalBugs = [
 ];
 /* cspell:enable */
 
+/* cspell:disable */
+// Fail identically unbundled in a plain `vm` on the pinned Node.js, so the
+// divergence is the host's and not webpack's.
+const knownHostBugs = [
+	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
+	"expressions/assignment/S11.13.1_A5_T1.js",
+	"expressions/assignment/S11.13.1_A5_T2.js",
+	"expressions/assignment/S11.13.1_A5_T3.js",
+	"expressions/assignment/S11.13.1_A6_T1.js",
+	"expressions/assignment/S11.13.1_A6_T2.js",
+	"expressions/assignment/S11.13.1_A6_T3.js",
+	"expressions/delete/11.4.1-4.a-8-s.js",
+	"statements/class/elements/private-class-field-on-nonextensible-objects.js",
+	"statements/class/subclass/private-class-field-on-nonextensible-return-override.js",
+	"statements/variable/binding-resolution.js",
+	"statements/with/get-binding-value-call-with-proxy-env.js",
+	"statements/with/get-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
+	"statements/with/get-binding-value-idref-with-proxy-env.js",
+	"statements/with/set-mutable-binding-binding-deleted-in-get-unscopables-strict-mode.js",
+	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
+	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
+	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
+	"statements/with/unscopables-inc-dec.js"
+];
+/* cspell:enable */
+
 const knownV8WithBugs = [
 	"expressions/compound-assignment/S11.13.2_A5.10_T1.js",
 	"expressions/compound-assignment/S11.13.2_A5.10_T2.js",
@@ -232,6 +258,7 @@ const knownV8Bugs = [
 	...knownV8EvalBugs,
 	...knownHostEvalBugs,
 	...knownV8WithBugs,
+	...knownHostBugs,
 	...knownV8PrefixAndPostfixBugs,
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
@@ -467,10 +494,7 @@ const edgeCases = [
 	"global-code/S10.4.1_A1_T2.js",
 	"global-code/decl-var.js",
 	"global-code/decl-lex-configurable-global.js",
-	"global-code/script-decl-lex-deletion.js",
-	"global-code/script-decl-lex-lex.js",
 	"global-code/script-decl-lex-restricted-global.js",
-	"global-code/script-decl-lex-var.js",
 
 	"expressions/delete/S11.4.1_A3.1.js",
 
@@ -487,12 +511,13 @@ const edgeCasesRegExp = new RegExp(
 
 const compile = async (entry, scenario, options = {}) =>
 	new Promise((resolve, reject) => {
+		const { exportsPresence, ...webpackOptions } = options;
 		const compiler = webpack({
-			...options,
+			...webpackOptions,
 			entry,
 			context: path.dirname(entry),
 			output: {
-				...options.output,
+				...webpackOptions.output,
 				...(scenario === "module" ? { module: true } : { iife: false })
 			},
 			mode: options.mode || "development",
@@ -517,8 +542,8 @@ const compile = async (entry, scenario, options = {}) =>
 						exprContextRequest: path.dirname(entry),
 						exprContextCritical: false,
 						// For testing purposes, where the `export` is tested that it is not defined
-						exportsPresence: false,
-						reexportExportsPresence: false
+						exportsPresence: exportsPresence || false,
+						reexportExportsPresence: exportsPresence || false
 					}
 				},
 				rules:
@@ -740,26 +765,10 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 
 /* cspell:disable */
 const knownBugs = [
-	// Node.js problems and bugs
-	// Doesn't work
-	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
-	// Proxy and `with` incompatibility
-	"statements/with/get-binding-value-call-with-proxy-env.js",
-	"statements/with/get-binding-value-idref-with-proxy-env.js",
-	// await using bugs
-	"statements/await-using/syntax/await-using-invalid-assignment-statement-body-for-of.js",
-	// Bug with `Object.preventExtensions` and classes
-	"statements/class/subclass/private-class-field-on-nonextensible-return-override.js",
-	"statements/class/elements/private-class-field-on-nonextensible-objects.js",
-	// Bug in `g.prototype` on V8 side
-	"statements/async-generator/generator-created-after-decl-inst.js",
-	// V8 optimization bug
-	"statements/variable/binding-resolution.js",
-
-	// acorn bugs
-	"statements/using/syntax/using-for-statement.js",
-	"statements/await-using/syntax/await-using-valid-for-await-using-of-of.js",
-
+	// webpack resolves a circular reexport to `undefined` with a warning rather
+	// than failing the link, so the build reports no error.
+	"module-code/instn-iee-err-circular.js",
+	"module-code/instn-iee-err-circular-as.js",
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
 
@@ -804,7 +813,8 @@ const knownBugs = [
 	// known. Pre-knowing exports would require a larger architectural
 	// change, so this remains skipped.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Bug with place of `__webpack_require__`, it hoists, but should not
+	// Hoisting is fine; assigning is not caught. A namespace import compiles to
+	// a `var`, which must stay function-scoped for runtime-condition imports.
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
@@ -831,13 +841,6 @@ const knownBugs = [
 	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
 	"expressions/class/elements/class-name-static-initializer-default-export.js",
 
-	// `with` problems — webpack hoists/scopes bindings such that compound
-	// assignment, mutation through deleted prototype-chain entries, and idref
-	// rewrites inside `with` proxy environments don't preserve spec semantics.
-	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
-	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
-	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
-
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
 	// the realm's global object and there is no Script Record context.
@@ -848,6 +851,8 @@ const knownBugs = [
 	"global-code/script-decl-var-collision.js",
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
+	// Same cause: `this.test262 = true` then a bare `test262` reference.
+	"global-code/unscopables-ignored.js",
 
 	// `Object.defineProperty(this, "x", { get })` on the global object — the
 	// test relies on the getter side-effect (deleting `this.x`) being visible
@@ -855,20 +860,6 @@ const knownBugs = [
 	// global object and bare identifiers are scoped to the wrapper.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
-
-	// Assignment tests rely on `with` proxy env bindings going stale during
-	// the assignment (PutValue must use the original Reference even after the
-	// binding is deleted). Webpack's transforms break this invariant.
-	"expressions/assignment/S11.13.1_A5_T1.js",
-	"expressions/assignment/S11.13.1_A5_T2.js",
-	"expressions/assignment/S11.13.1_A5_T3.js",
-	"expressions/assignment/S11.13.1_A6_T1.js",
-	"expressions/assignment/S11.13.1_A6_T2.js",
-	"expressions/assignment/S11.13.1_A6_T3.js",
-
-	// `delete global.NaN` (via `var global = this;`) — relies on `this` being
-	// the realm's global object, which it is not under webpack's module wrap.
-	"expressions/delete/11.4.1-4.a-8-s.js",
 	// `delete super[(super(), 0)]` in a derived constructor — webpack rewrites
 	// `super` references in a way that doesn't preserve the uninitialized
 	// `this`-binding ReferenceError before the inner `super()` call runs.
@@ -900,9 +891,8 @@ const knownBugs = [
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
 
-	// `await a?.b` where `a` is named like a contextual keyword — acorn parses
-	// this differently from V8 in our test harness, the result is `undefined`
-	// vs the spec-required value. Upstream parser limitation.
+	// Same cause as `async-function/evaluation-body.js`: the chain
+	// short-circuits, so jest blames the test for the abandoned rejection.
 	"expressions/optional-chaining/member-expression-async-identifier.js",
 
 	// Nested `import(import(...))` — webpack collapses dynamic-import
@@ -1117,13 +1107,11 @@ describe("test262", () => {
 				if (
 					// Decorators are not supported
 					meta.features.includes("decorators") ||
-					// V8 optimization bugs
-					meta.features.includes("Symbol.unscopables") ||
-					// TODO Not implemented
-					meta.features.includes("source-phase-imports") ||
-					meta.features.includes("source-phase-imports-module-source") ||
-					// TODO improve in our test runner
-					(meta.negative && meta.negative.phase === "resolution") ||
+					// TODO Not implemented. A negative parse test still runs: the
+					// syntax it rejects is rejected either way.
+					((meta.features.includes("source-phase-imports") ||
+						meta.features.includes("source-phase-imports-module-source")) &&
+						!(meta.negative && meta.negative.phase === "parse")) ||
 					knownBugs.includes(name) ||
 					(mode === "production" && knownProductionBuildBugs.includes(name))
 				) {
@@ -1153,13 +1141,31 @@ describe("test262", () => {
 							process.stdout.write(`Running ${name} ("${scenario}")\n`);
 						}
 
+						// A resolution error is a build error for webpack, not a throw,
+						// so the presence checks the other tests disable must be on.
+						const isResolutionTest =
+							meta.negative && meta.negative.phase === "resolution";
+
 						const stats = await compile(testFile, scenario, {
 							mode,
+							...(isResolutionTest ? { exportsPresence: "error" } : {}),
 							output: {
 								path: outputPath,
 								filename: path.relative(outputPath, outputFile)
 							}
 						});
+
+						if (isResolutionTest) {
+							// The bundle must not run: linking failed, so the body these
+							// tests guard against evaluation was never reached.
+							if (stats.compilation.errors.length === 0) {
+								throw new Error(
+									`Error in test file "${outputFile}" ("${testFile}"), expected a resolution error`
+								);
+							}
+
+							return;
+						}
 
 						const includes = meta.flags.includes("raw")
 							? []
