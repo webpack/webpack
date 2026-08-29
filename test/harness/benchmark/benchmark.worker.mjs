@@ -59,6 +59,12 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {{ run: (seed: number) => unknown }} RuntimeBundleExports */
 /** @typedef {{ taskName: string, collectBy: string }} TaskNames */
 
+/**
+ * @typedef {object} CaseOptions
+ * @property {(() => Promise<void>)=} setup one-time fixture generation, run once by the orchestrator
+ * @property {((config: Configuration) => Promise<void> | void)=} beforeEach reset run before every iteration, outside the measured region
+ */
+
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 const codspeedRunnerMode = getCodspeedRunnerMode();
 
@@ -827,9 +833,17 @@ function buildConfiguration(test, baseline, realConfig, scenario, testDirectory)
  * @param {string} params.collectBy collect-by key
  * @param {Webpack} params.webpack webpack
  * @param {Configuration} params.config config
+ * @param {((config: Configuration) => Promise<void> | void)=} params.beforeEachIteration per-iteration reset
  * @returns {void}
  */
-function addBuildBench({ bench, taskName, collectBy, webpack, config }) {
+function addBuildBench({
+	bench,
+	taskName,
+	collectBy,
+	webpack,
+	config,
+	beforeEachIteration
+}) {
 	bench.add(
 		taskName,
 		async () => {
@@ -838,7 +852,9 @@ function addBuildBench({ bench, taskName, collectBy, webpack, config }) {
 				: runWebpack(webpack, config));
 		},
 		{
-			beforeEach(mode) {
+			async beforeEach(mode) {
+				// Before the timer: the reset is setup, not part of the build.
+				if (beforeEachIteration) await beforeEachIteration(config);
 				console.time(`Time (${mode} mode): ${taskName}`);
 			},
 			afterEach(mode) {
@@ -1246,6 +1262,24 @@ function attachResultCollector(bench, results) {
 }
 
 /**
+ * @param {string} testDirectory benchmark case directory
+ * @returns {Promise<CaseOptions | undefined>} case options, or undefined when the case has none
+ */
+async function importCaseOptions(testDirectory) {
+	const optionsPath = path.resolve(testDirectory, "options.mjs");
+
+	try {
+		await fs.stat(optionsPath);
+	} catch (_err) {
+		return undefined;
+	}
+
+	// Imported outside the existence check so a broken `options.mjs` throws
+	// instead of reading as a case that has none.
+	return import(`${pathToFileURL(optionsPath)}`);
+}
+
+/**
  * Register one benchmark task's benches onto `bench`. `-unit` benchmarks
  * register their own tasks against the current lib, `-runtime` benchmarks
  * measure the compiled output; others add one build/watch bench per baseline.
@@ -1274,11 +1308,23 @@ async function registerBenchmark(bench, task, casesPath) {
 		throw new Error(`Missing scenario for benchmark "${benchmark}"`);
 	}
 
-	const realConfig = (
-		await import(
-			`${pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))}`
-		)
-	).default;
+	const configModule = await import(
+		`${pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))}`
+	);
+	const realConfig = configModule.default;
+	// `buildConfiguration` structuredClones the config, which strips a plugin's
+	// prototype (and with it `apply`) without erroring. A case declares plugins
+	// through this factory instead, so each baseline instantiates them from the
+	// webpack copy it is measuring.
+	const { createPlugins } = configModule;
+
+	if (realConfig.plugins && realConfig.plugins.length > 0) {
+		throw new Error(
+			`Benchmark "${benchmark}" declares \`plugins\` in its configuration, which cloning would silently empty. Export \`createPlugins(webpack)\` from its webpack.config.mjs instead.`
+		);
+	}
+
+	const caseOptions = await importCaseOptions(testDirectory);
 
 	// Register HEAD then BASE sequentially so task order in `bench.tasks` is
 	// deterministic; parallel registration would leak Promise-resolution order
@@ -1297,6 +1343,10 @@ async function registerBenchmark(bench, task, casesPath) {
 			scenario,
 			testDirectory
 		);
+
+		if (createPlugins) {
+			config.plugins = createPlugins(webpack);
+		}
 
 		const stringifiedScenario = JSON.stringify(scenario);
 
@@ -1324,7 +1374,12 @@ async function registerBenchmark(bench, task, casesPath) {
 
 		const params = { bench, ...createNames(""), webpack, config };
 
-		await (scenario.watch ? addWatchBench(params) : addBuildBench(params));
+		await (scenario.watch
+			? addWatchBench(params)
+			: addBuildBench({
+					...params,
+					beforeEachIteration: caseOptions?.beforeEach
+				}));
 	}
 }
 
