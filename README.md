@@ -98,9 +98,10 @@ interface](https://webpack.js.org/plugins/). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
-Webpack generates HTML pages and extracts CSS files itself, both experimental, so
-neither needs a plugin — see [native CSS](https://webpack.js.org/guides/native-css/)
-and [native HTML](https://webpack.js.org/guides/native-html/).
+Webpack can generate HTML pages and extract CSS files itself, both experimental —
+see what that covers, and what still needs a plugin, for
+[CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
+[HTML](https://webpack.js.org/guides/native-html/#whats-built-in).
 
 |                   Name                    |       Status       |    Install Size     | Description                                                                             |
 | :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
@@ -131,9 +132,10 @@ loaders](https://webpack.js.org/api/loaders/) using Node.js.
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
 
-JavaScript, JSON, [assets](https://webpack.js.org/guides/asset-modules/) and —
-experimentally — [CSS](https://webpack.js.org/guides/native-css/) and
-[HTML](https://webpack.js.org/guides/native-html/) need no loader at all.
+JavaScript, JSON and [assets](https://webpack.js.org/guides/asset-modules/) need no
+loader, and [CSS](https://webpack.js.org/guides/native-css/#whats-built-in) and
+[HTML](https://webpack.js.org/guides/native-html/#whats-built-in) have experimental
+built-in support — but preprocessors and template engines keep their loaders.
 
 #### JSON
 
