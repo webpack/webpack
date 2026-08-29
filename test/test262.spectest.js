@@ -132,6 +132,14 @@ const knownHostEvalBugs = [
 ];
 /* cspell:enable */
 
+// These abandon a rejected promise on purpose — an async body nothing awaits,
+// a short-circuited optional chain. jest records it against the running test,
+// so the count is asserted and cleared below the way `rejectionHandled` would.
+const expectedAbandonedRejections = new Map([
+	["statements/async-function/evaluation-body.js", 1],
+	["expressions/optional-chaining/member-expression-async-identifier.js", 1]
+]);
+
 /* cspell:disable */
 // Fail identically unbundled in a plain `vm` on the pinned Node.js, so the
 // divergence is the host's and not webpack's.
@@ -860,12 +868,6 @@ const knownBugs = [
 	// `this`-binding ReferenceError before the inner `super()` call runs.
 	"expressions/delete/super-property-uninitialized-this.js",
 
-	// The bundle passes every assertion outside jest; the test abandons a
-	// rejected promise on purpose, and jest reports it against the test. The
-	// rejection reaches neither `unhandledRejection` nor `uncaughtException`
-	// while the test body runs, so the runner cannot capture or assert it.
-	"statements/async-function/evaluation-body.js",
-
 	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
 	// is a plain object with `__esModule: true` rather than a true namespace
 	// exotic. Adopting `Object.setPrototypeOf(__webpack_exports__, null)` (and
@@ -883,10 +885,6 @@ const knownBugs = [
 	"module-code/namespace/internals/set-prototype-of.js",
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
-
-	// Same cause: `Promise.reject(undefined)?.y` short-circuits to 43, so the
-	// rejection is abandoned by design and jest blames the test for it.
-	"expressions/optional-chaining/member-expression-async-identifier.js",
 
 	// Nested `import(import(...))` — webpack collapses dynamic-import
 	// expressions to module dependencies at compile time and cannot represent
@@ -1270,6 +1268,27 @@ describe("test262", () => {
 							}
 						} catch (err) {
 							errored = err;
+						}
+
+						const abandoned = expectedAbandonedRejections.get(name);
+						if (abandoned !== undefined) {
+							// The rejection settles a microtask after the body that
+							// abandoned it, so drain before reading jest's tally.
+							await new Promise((resolve) => {
+								setImmediate(resolve);
+							});
+							const runningTest =
+								globalThis.JEST_STATE_SYMBOL &&
+								globalThis.JEST_STATE_SYMBOL.currentlyRunningTest;
+							const byPromise =
+								runningTest && runningTest.unhandledRejectionErrorByPromise;
+							const found = byPromise ? byPromise.size : 0;
+							if (found !== abandoned) {
+								throw new Error(
+									`Error in test file "${outputFile}" ("${testFile}"), expected ${abandoned} abandoned rejection(s) but got ${found}`
+								);
+							}
+							byPromise.clear();
 						}
 
 						if (errored && knownV8Bugs.includes(name)) {
