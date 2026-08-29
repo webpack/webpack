@@ -3265,6 +3265,33 @@ const collectMathFunctions = () => {
 };
 
 /**
+ * The constants a calculation may name, out of the `<calc-constant>` grammar. A
+ * value is stated here only for the two that are doubles: the other names are
+ * carried so the tokenizer declines a calculation using one instead of reading
+ * the name as a unit. The signed spelling `-infinity` is dropped — a sign is
+ * read before the name it applies to.
+ * @param {[string, string][]} stated the value of each constant that has one
+ * @returns {[string, string][]} `name -> the expression for its value, or `null``
+ */
+const collectCalcConstants = (stated) => {
+	const named = syntaxes["calc-constant"].syntax
+		.split("|")
+		.map((name) => name.trim().toLowerCase())
+		.filter((name) => !name.startsWith("-"));
+	const values = new Map(stated);
+	const missing = [...values.keys()].filter((name) => !named.includes(name));
+	if (missing.length !== 0) {
+		throw new Error(
+			`no <calc-constant> named ${missing.join(", ")}: the grammar moved`
+		);
+	}
+	return named.sort().map((name) => {
+		const value = values.get(name);
+		return [name, value === undefined ? "null" : value];
+	});
+};
+
+/**
  * @param {number[]} channels the `[r, g, b]` bytes
  * @returns {string} the shortest hex spelling — 3 digits when every byte is a repeated pair
  */
@@ -3464,7 +3491,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -4146,6 +4173,12 @@ const rec2020Transfer = (c) => {
 		["D65", [0.3127, 0.329]],
 		["D50", [0.3457, 0.3585]]
 	],
+	// What the two calculation constants are worth. The grammar names them, and
+	// no dataset states a value for either.
+	calcConstantValues: [
+		["e", "Math.E"],
+		["pi", "Math.PI"]
+	],
 	quarterTurnAngle: [
 		["deg", 90],
 		["grad", 100],
@@ -4186,12 +4219,12 @@ const rec2020Transfer = (c) => {
 	// `3cm` and `round(down,45mm,15mm)` as `4.5cm`.
 	mathFunctionFold: [
 		["abs", "readSameUnit", "absolute", "same", null, false],
-		["acos", "readNumber", "lookup", "deg", "ARC_COSINE_DEGREES", false],
-		["asin", "readNumber", "lookup", "deg", "ARC_SINE_DEGREES", false],
-		["atan", "readNumber", "lookup", "deg", "ARC_TANGENT_DEGREES", false],
+		["acos", "readNumber", "statedAngle", "deg", "ARC_COSINE_DEGREES", false],
+		["asin", "readNumber", "statedAngle", "deg", "ARC_SINE_DEGREES", false],
+		["atan", "readNumber", "statedAngle", "deg", "ARC_TANGENT_DEGREES", false],
 		["atan2", "readSameUnit", "arcTangent2", "deg", null, false],
 		["clamp", "readSameUnit", "clamp", "same", null, false],
-		["cos", "readEighthTurn", "lookup", "", "EIGHTH_TURN_COSINE", false],
+		["cos", "readAngle", "cosine", "", "EIGHTH_TURN_COSINE", false],
 		["exp", "readNumber", "exponential", "", null, false],
 		["hypot", "readSameUnit", "hypotenuse", "same", null, false],
 		["log", "readNumber", "logarithm", "", null, false],
@@ -4202,9 +4235,9 @@ const rec2020Transfer = (c) => {
 		["rem", "readSameUnit", "remainder", "same", null, true],
 		["round", "readSameUnit", "round", "same", null, true],
 		["sign", "readSameUnit", "sign", "", null, false],
-		["sin", "readEighthTurn", "lookup", "", "EIGHTH_TURN_SINE", false],
+		["sin", "readAngle", "sine", "", "EIGHTH_TURN_SINE", false],
 		["sqrt", "readNumber", "squareRoot", "", null, false],
-		["tan", "readEighthTurn", "lookup", "", "EIGHTH_TURN_TANGENT", false]
+		["tan", "readAngle", "tangent", "", "EIGHTH_TURN_TANGENT", false]
 	],
 	// The arithmetic each math function folds by, in dependency order. No dataset
 	// states any of it — the grammars say only that every argument is a
@@ -4213,9 +4246,21 @@ const rec2020Transfer = (c) => {
 	// arithmetic it does it with. `lib/css/syntax.js` then names neither.
 	//
 	// Every operation answers a number or `null`, and `null` leaves the call
-	// written out. That is the discipline the whole fold rests on: a folded
-	// expression is no longer there for the engine to recompute, so a result
-	// carrying any rounding of its own is declined rather than printed.
+	// written out — for a result that is not a number at all (a root of a negative,
+	// a logarithm of zero, a division by it), and for the one place the arithmetic
+	// itself has to be exact: `exactFloorDivide` pins the integer a stepped
+	// function counts in, where a double an ulp either side of it would put the
+	// answer a whole step out.
+	//
+	// Everything else folds and lets the printer decide what is worth writing.
+	// `_roundSignificant` already holds every number it writes to six significant
+	// digits below 1e4 — measured against Chromium, which serializes a computed
+	// number at six and lays a length out in 1/64px — so a fold's last bits are
+	// below what a stylesheet can observe. The four basic operations and `sqrt`
+	// are exactly specified by IEEE 754, so an engine reaches the same double;
+	// the transcendental ones may differ in the last bit, which the same rounding
+	// covers. An angle is not rounded (a `rotate()` runs it back through trig), so
+	// a fold answering in degrees is left to the length check to accept or not.
 	mathPrimitives: [
 		[
 			"exactAdd",
@@ -4246,18 +4291,42 @@ const exactMultiply = (a, k) => {
 };`
 		],
 		[
-			"exactDivide",
+			"foldAdd",
 			`/**
- * Divide, or decline, on the same terms.
+ * Add two doubles. Every sum a stylesheet can write is finite, and one that is
+ * not is no value to print.
+ * @param {number} a one term
+ * @param {number} b the other
+ * @returns {number | null} their sum, or \`null\`
+ */
+const foldAdd = (a, b) => {
+	const sum = a + b;
+	return Number.isFinite(sum) ? sum : null;
+};`
+		],
+		[
+			"foldMultiply",
+			`/**
+ * @param {number} a the value
+ * @param {number} k the factor
+ * @returns {number | null} their product, or \`null\`
+ */
+const foldMultiply = (a, k) => {
+	const product = a * k;
+	return Number.isFinite(product) ? product : null;
+};`
+		],
+		[
+			"foldDivide",
+			`/**
  * @param {number} a the value
  * @param {number} k the divisor
- * @returns {number | null} their exact quotient, or \`null\`
+ * @returns {number | null} their quotient, or \`null\` where there is none
  */
-const exactDivide = (a, k) => {
+const foldDivide = (a, k) => {
 	if (k === 0) return null;
 	const quotient = a / k;
-	if (!Number.isFinite(quotient)) return null;
-	return quotient * k === a ? quotient : null;
+	return Number.isFinite(quotient) ? quotient : null;
 };`
 		],
 		[
@@ -4289,51 +4358,6 @@ const exactFloorDivide = (value, step) => {
 		return n;
 	}
 	return null;
-};`
-		],
-		[
-			"exactSquareRoot",
-			`/**
- * The square root of a value, where it is one that can be written down. IEEE-754
- * makes \`Math.sqrt\` correctly rounded, so squaring the result back is a complete
- * test — and it fails for every irrational root, which is most of them.
- * @param {number} value the radicand
- * @returns {number | null} the root, or \`null\`
- */
-const exactSquareRoot = (value) => {
-	if (!(value >= 0)) return null;
-	const root = Math.sqrt(value);
-	const back = exactMultiply(root, root);
-	return back === null || back !== value ? null : root;
-};`
-		],
-		[
-			"POWER_LIMIT",
-			`// Beyond this an integer exponent is not worth multiplying out, and every result
-// overflows a double for all but a base within an ulp of 1.
-const POWER_LIMIT = 64;`
-		],
-		[
-			"exactIntegerPower",
-			`/**
- * \`base ** exponent\` for a whole exponent, by multiplying out. Every step is
- * checked, so the result is the one an engine computing in doubles gets — which
- * \`Math.pow\` is not required to be for a general exponent.
- * @param {number} base the base
- * @param {number} exponent a whole exponent
- * @returns {number | null} the power, or \`null\`
- */
-const exactIntegerPower = (base, exponent) => {
-	if (!Number.isInteger(exponent) || Math.abs(exponent) > POWER_LIMIT) {
-		return null;
-	}
-	let power = 1;
-	for (let n = Math.abs(exponent); n > 0; n--) {
-		const next = exactMultiply(power, base);
-		if (next === null) return null;
-		power = next;
-	}
-	return exponent < 0 ? exactDivide(1, power) : power;
 };`
 		],
 		[
@@ -4376,26 +4400,24 @@ const readNumber = (sums) => {
 };`
 		],
 		[
-			"eighthTurnReader",
+			"angleReader",
 			`/**
- * A reader answering which eighth turn a single angle argument is, as the one
- * "coefficient" — a lookup key rather than a magnitude, which \`lookup\` takes. A
- * plain number is an angle in radians, where only zero lands on a whole one.
+ * Read a trigonometric function's one argument as degrees. A bare number is
+ * radians (CSS Values 4 §10.6), and an angle is the unit it was written in;
+ * either way what the fold needs is the one measure the tables are keyed by.
  * @param {Map<string, number>} quarterTurnAngle a quarter turn in each unit that spells one exactly
- * @returns {(sums: Map<string, number>[]) => [string, number[]] | null} the reader
+ * @returns {MathArgumentReader} the reader
  */
-const eighthTurnReader = (quarterTurnAngle) => (sums) => {
+const angleReader = (quarterTurnAngle) => (sums) => {
 	const shared = readSameUnit(sums);
 	if (shared === null) return null;
 	const [unit, [angle]] = shared;
-	if (unit === "") return angle === 0 ? ["", [0]] : null;
+	// A radian is what a bare number is read as, and the one angle unit that
+	// spells no quarter turn exactly — so the table states none for it.
+	if (unit === "" || unit === "rad") return ["", [(angle * 180) / Math.PI]];
 	const quarter = quarterTurnAngle.get(unit);
 	if (quarter === undefined) return null;
-	// Halving a quarter turn is exact in each unit that spells one: 45, 50 and an
-	// eighth, which is a power of two.
-	const eighths = exactDivide(angle, quarter / 2);
-	if (eighths === null || !Number.isInteger(eighths)) return null;
-	return ["", [((eighths % 8) + 8) % 8]];
+	return ["", [(angle * 90) / quarter]];
 };`
 		],
 		[
@@ -4447,18 +4469,11 @@ const sign = ([value]) => Math.sign(value);`
 			"hypotenuse",
 			`/**
  * @param {number[]} values the coefficients
- * @returns {number | null} the root of their sum of squares, or \`null\`
+ * @returns {number | null} the root of their squares, or \`null\`
  */
 const hypotenuse = (values) => {
-	let total = 0;
-	for (const value of values) {
-		const square = exactMultiply(value, value);
-		if (square === null) return null;
-		const sum = exactAdd(total, square);
-		if (sum === null) return null;
-		total = sum;
-	}
-	return exactSquareRoot(total);
+	const total = Math.hypot(...values);
+	return Number.isFinite(total) ? total : null;
 };`
 		],
 		[
@@ -4542,9 +4557,9 @@ const remainder = ([value, divisor]) => {
 			"squareRoot",
 			`/**
  * @param {number[]} values the one radicand
- * @returns {number | null} its root, or \`null\`
+ * @returns {number | null} its root, or \`null\` where there is none
  */
-const squareRoot = ([value]) => exactSquareRoot(value);`
+const squareRoot = ([value]) => (value >= 0 ? Math.sqrt(value) : null);`
 		],
 		[
 			"power",
@@ -4552,47 +4567,115 @@ const squareRoot = ([value]) => exactSquareRoot(value);`
  * @param {number[]} values the base and the exponent
  * @returns {number | null} the power, or \`null\`
  */
-const power = ([base, exponent]) => exactIntegerPower(base, exponent);`
+const power = ([base, exponent]) => {
+	const raised = base ** exponent;
+	return Number.isFinite(raised) ? raised : null;
+};`
 		],
 		[
 			"logarithm",
 			`/**
- * A logarithm is transcendental except where it lands on a whole power of its
- * base, so the candidate is raised back and only an exact match is taken. The
- * natural logarithm's base is not a double at all, which leaves only \`log(1)\`.
  * @param {number[]} values the value and, optionally, the base
- * @returns {number | null} the logarithm, or \`null\`
+ * @returns {number | null} the logarithm, or \`null\` where there is none
  */
 const logarithm = ([value, base]) => {
-	if (base === undefined) return value === 1 ? 0 : null;
-	const exponent = Math.round(Math.log(value) / Math.log(base));
-	const back = exactIntegerPower(base, exponent);
-	return back === null || back !== value ? null : exponent;
+	if (!(value > 0)) return null;
+	if (base === undefined) return Math.log(value);
+	// A base of one divides by zero and a negative one has no logarithm at all;
+	// both leave a quotient that is not a number.
+	const quotient = Math.log(value) / Math.log(base);
+	return Number.isFinite(quotient) ? quotient : null;
 };`
 		],
 		[
 			"exponential",
 			`/**
- * \`e\` is not a double, so every other power of it is a number this cannot write
- * down and an engine's math library rounds its own way.
  * @param {number[]} values the one exponent
- * @returns {number | null} the power of \`e\`, or \`null\`
+ * @returns {number | null} \`e\` raised to it, or \`null\`
  */
-const exponential = ([value]) => (value === 0 ? 1 : null);`
+const exponential = ([value]) => {
+	const raised = Math.exp(value);
+	return Number.isFinite(raised) ? raised : null;
+};`
 		],
 		[
-			"lookup",
+			"eighthTurn",
 			`/**
- * Read the answer out of the table the descriptor carries. Absent means the
- * value is one no stylesheet can hold, so the call stays written out.
- * @param {number[]} values the one lookup key
- * @param {string} _strategy unused
- * @param {Map<number, number> | null} table the descriptor's table
- * @returns {number | null} the answer, or \`null\`
+ * The value a table gives at a whole number of eighth turns, where a real
+ * computation would answer an ulp away from it — \`Math.sin(Math.PI)\` is 1.2e-16
+ * rather than the zero the table states.
+ * @param {number} degrees the angle
+ * @param {Map<number, number>} table the function's eighth-turn table
+ * @returns {number | undefined} the stated value, or undefined
  */
-const lookup = ([key], _strategy, table) => {
-	const value = /** @type {Map<number, number>} */ (table).get(key);
-	return value === undefined ? null : value;
+const eighthTurn = (degrees, table) => {
+	const eighths = degrees / 45;
+	return Number.isInteger(eighths)
+		? table.get(((eighths % 8) + 8) % 8)
+		: undefined;
+};`
+		],
+		[
+			"statedAngle",
+			`/**
+ * An inverse trigonometric function answers with an angle, and an angle is the
+ * one thing the printer does not round — a \`rotate()\` runs it back through trig,
+ * where a truncated digit is a different matrix. So only the arguments the table
+ * states are taken: everywhere else the real answer carries digits that are
+ * noise (\`asin(.5)\` is 30.000000000000004 degrees) and no shorter than the call.
+ * @param {number[]} values the one argument
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the arguments the table states
+ * @returns {number | null} the angle in degrees, or \`null\`
+ */
+const statedAngle = ([value], keyword, table) => {
+	const stated = table.get(value);
+	return stated === undefined ? null : stated;
+};`
+		],
+		[
+			"tangent",
+			`/**
+ * Tangent, which has an asymptote an odd quarter turn from zero: the table
+ * states no value there because there is none, and a double still answers with
+ * a very large one.
+ * @param {number[]} values the angle in degrees
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the eighth-turn table
+ * @returns {number | null} its tangent, or \`null\` at an asymptote
+ */
+const tangent = ([degrees], keyword, table) => {
+	const stated = eighthTurn(degrees, table);
+	if (stated !== undefined) return stated;
+	const quarters = degrees / 90;
+	if (Number.isInteger(quarters) && ((quarters % 2) + 2) % 2 === 1) return null;
+	return Math.tan((degrees * Math.PI) / 180);
+};`
+		],
+		[
+			"cosine",
+			`/**
+ * @param {number[]} values the angle in degrees
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the eighth-turn table
+ * @returns {number | null} its cosine
+ */
+const cosine = ([degrees], keyword, table) => {
+	const stated = eighthTurn(degrees, table);
+	return stated === undefined ? Math.cos((degrees * Math.PI) / 180) : stated;
+};`
+		],
+		[
+			"sine",
+			`/**
+ * @param {number[]} values the angle in degrees
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the eighth-turn table
+ * @returns {number | null} its sine
+ */
+const sine = ([degrees], keyword, table) => {
+	const stated = eighthTurn(degrees, table);
+	return stated === undefined ? Math.sin((degrees * Math.PI) / 180) : stated;
 };`
 		],
 		[
@@ -4745,9 +4828,9 @@ const collectArcAngles = (table, from, to) => {
 	return out.sort((a, b) => a[0] - b[0]);
 };
 
-// `readEighthTurn` is not a primitive of its own: it is the reader
-// `eighthTurnReader` builds once the quarter-turn table exists.
-const GENERATED_READERS = new Set(["readEighthTurn"]);
+// `readAngle` is not a primitive of its own: it is the reader `angleReader`
+// builds once the quarter-turn table exists.
+const GENERATED_READERS = new Set(["readAngle"]);
 
 /**
  * Fail generation when a descriptor names an arithmetic that is not among the
@@ -6144,6 +6227,7 @@ const collectData = async () => {
 	const colorNames = collectColorNames(colorName);
 	const colorNameValues = collectColorNameValues(colorName);
 	const mathFunctions = collectMathFunctions();
+	const calcConstants = collectCalcConstants(SUPPLEMENT.calcConstantValues);
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
 	const nthNamedEquivalents = collectNthNamedEquivalents();
@@ -6319,7 +6403,7 @@ const collectData = async () => {
 "use strict";
 
 /** @typedef {(sums: Map<string, number>[]) => [string, number[]] | null} MathArgumentReader */
-/** @typedef {(values: number[], strategy: string, table: Map<number, number> | null) => number | null} MathOperation */
+/** @typedef {(values: number[], strategy: string, table: Map<number, number>) => number | null} MathOperation */
 
 // The arithmetic the math-function descriptors at the end of this file bind to.
 // It knows nothing of CSS beyond the shape of an evaluated argument, and names
@@ -6806,9 +6890,17 @@ const SYSTEM_UI_STACK = ${JSON.stringify(SUPPLEMENT.systemUiStack.join(","))};
 // trig, which turns a truncated digit into a different computed matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 
+// The constants a calculation may name (CSS Values 4 §10.7), as \`name -> value\`.
+// \`infinity\` and \`NaN\` are named with none: no printed number spells either, so
+// a calculation naming one is left as it stands.
+/** @type {Map<string, number | null>} */
+const CALC_CONSTANTS = new Map([${calcConstants
+		.map(([name, value]) => `["${name}", ${value}]`)
+		.join(", ")}]);
+
 // A quarter turn in each unit that spells it exactly (CSS Values 4 §8.1), as
-// \`unit -> the count\`. The trig functions are folded only where their argument
-// is a whole number of these, which is where sine and cosine are rational.
+// \`unit -> the count\`. It is what a trig function's argument is read as degrees
+// through, and the eighths of it are where sine and cosine are rational.
 /** @type {Map<string, number>} */
 const QUARTER_TURN_ANGLE = new Map([${SUPPLEMENT.quarterTurnAngle
 		.map(([unit, count]) => `["${unit}", ${count}]`)
@@ -6850,22 +6942,26 @@ const ARC_TANGENT_DEGREES = ${numberMapLiteral(
 		collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1)
 	)};
 
-// The reader that needs a table, built once here — \`mathPrimitives\` knows the
-// arithmetic of an eighth turn but not which units spell one.
-const readEighthTurn = eighthTurnReader(QUARTER_TURN_ANGLE);
+// The reader that needs a table, built once here — \`mathPrimitives\` knows how to
+// read an angle but not which units spell a quarter turn.
+const readAngle = angleReader(QUARTER_TURN_ANGLE);
+
+// The table a function that looks nothing up is handed.
+/** @type {Map<number, number>} */
+const NO_TABLE = new Map();
 
 // What folding each math function comes down to, as
 // \`name -> { read, apply, result, table }\`: how its arguments are read, which
 // arithmetic runs, and the unit the answer carries. \`read\` and \`apply\` are the
 // functions themselves, so \`lib/css/syntax.js\` drives the fold while naming
 // neither a math function nor an arithmetic of its own.
-/** @type {Map<string, { read: MathArgumentReader, apply: MathOperation, result: string, table: Map<number, number> | null }>} */
+/** @type {Map<string, { read: MathArgumentReader, apply: MathOperation, result: string, table: Map<number, number> }>} */
 const MATH_FUNCTION_FOLD = new Map([
 ${SUPPLEMENT.mathFunctionFold
 	.map(
 		([name, read, apply, result, table]) =>
 			`\t["${name}", { read: ${read}, apply: ${apply}, result: "${result}", table: ${
-				table === null ? "null" : table
+				table === null ? "NO_TABLE" : table
 			} }]`
 	)
 	.join(",\n")}
@@ -7016,7 +7112,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_RGB = COLOR_NAME_TO_RGB;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.COLOR_SPACE_MODEL = COLOR_SPACE_MODEL;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
@@ -7061,7 +7157,7 @@ module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
-module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
+module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The arithmetic the printer's own evaluator needs. Sorted after the tables:\n// \`import/order\` orders exports by case, uppercase first.\nmodule.exports.foldAdd = foldAdd;\nmodule.exports.foldDivide = foldDivide;\nmodule.exports.foldMultiply = foldMultiply;
 `;
 
 	const summary = `${

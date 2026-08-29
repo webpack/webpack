@@ -76,8 +76,9 @@ Array [
   "/*! declined: clamp() takes exactly three */.n04{width:clamp(1px,2px)}",
   "/*! declined: calc-size() leads with a basis, which is an expression this does
    not evaluate, so it is the one math function with no arity to read */.n05{width:calc-size(auto,size)}",
-  "/*! declined: an irrational root is not a value a stylesheet can hold */.n06{width:calc(sqrt(2)*1px)}",
-  "/*! declined: ...nor a power that does not multiply back */.n07{width:calc(pow(2,.5)*1px)}",
+  "/*! an irrational root is written at the six significant digits every number
+   here is written at */.n06{width:1.41421px}",
+  "/*! ...and so is a power that does not multiply back */.n07{width:1.41421px}",
   "/*! kept: a negative folds but keeps the parentheses */.n08{width:calc(-5px)}",
   "/*! math: abs() drops the sign */.a01{width:5px}",
   "/*! math: ...and leaves a positive alone */.a02{width:5px}",
@@ -86,7 +87,7 @@ Array [
   "/*! math: hypot() where the root is exact */.a05{width:5px}",
   "/*! math: ...however many arguments, and in whichever unit */.a06{width:10px}",
   "/*! math: ...including units fixed against each other */.a07{width:5in}",
-  "/*! declined: hypot() is irrational for most inputs */.a08{width:hypot(1px,1px)}",
+  "/*! hypot() is irrational for most inputs, and written the same way */.a08{width:1.41421px}",
   "/*! declined: abs() of a percentage depends on the basis sign */.a09{width:abs(-50%)}",
   "/*! math: a relative unit still has a known sign — every length unit scales by
    a positive factor, so abs() only has to drop the minus */.a10{width:1em}",
@@ -112,8 +113,7 @@ Array [
   "/*! exact: a whole power, multiplied out */.e02{width:8px}",
   "/*! exact: ...including a negative exponent */.e03{width:.25px}",
   "/*! exact: a logarithm that lands on a whole power of its base */.e04{width:3px}",
-  "/*! exact: ...and a base of zero is one such, since \`ln(1)/ln(0)\` is \`-0\` and
-   \`0\` to that power is the \`1\` it came from */.e04a{width:0}",
+  "/*! exact: ...and a base of zero, where \`ln(1)/ln(0)\` is \`-0\` */.e04a{width:0}",
   "/*! exact: e to the zero */.e05{width:1px}",
   "/*! trig: a quarter turn, in whichever unit spells one */.e06{width:1px}",
   "/*! trig: ...and the same angle written as a turn */.e07{width:1px}",
@@ -123,10 +123,12 @@ Array [
   "/*! trig: ...and atan2() reads a ratio, so two lengths answer the same way */.e11{rotate:135deg}",
   "/*! exact: a folded operand of an outer expression is printed bare — no property
    judges it in here, which is what lets the outer fold go on */.e12{width:2px}",
-  "/*! declined: sine is irrational an odd eighth turn from zero */.f01{width:calc(sin(30deg)*1px)}",
+  "/*! sine is irrational an odd eighth turn from zero — the table states the
+   turns where it is not, and the rest is computed */.f01{width:.5px}",
   "/*! declined: ...and tangent has an asymptote on the odd quarters */.f02{width:calc(tan(90deg)*1px)}",
-  "/*! declined: a radian is a whole number of eighth turns only at zero */.f03{width:calc(cos(1rad)*1px)}",
-  "/*! declined: \`e\` is not a double, so no other power of it can be written down */.f04{width:calc(exp(1)*1px)}",
+  "/*! a radian is a whole number of eighth turns only at zero, and states one
+   quarter turn exactly nowhere — so it is read as the angle it is */.f03{width:.540302px}",
+  "/*! \`e\` is not a double, and its powers are written at the same precision */.f04{width:2.71828px}",
   "/*! declined: a base of one makes the quotient \`0/0\`, which is not a number */.f04a{width:calc(log(1,1)*1px)}",
   "/*! declined: ...and a negative base has no logarithm at all */.f04b{width:calc(log(1,-2)*1px)}",
   "/*! declined: the inverse functions answer with a whole number of degrees at

@@ -5740,9 +5740,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// needs one plain number for the result to keep the units it had.
 			["calc(2px*3px)"],
 			["calc(1px/0)"],
-			// Neither the sum nor the product is exact in a double.
-			["calc(.1px + .2px)"],
-			["calc(1px/7)"],
 			["calc(1e20px + 1px)"],
 			["calc(1e308px*1e10)"],
 			// Past the range the rounding covers, so every digit is kept — and all
@@ -5787,8 +5784,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(converted("calc(1cm + 1mm)")).toBe("11mm");
 			expect(converted("calc(1in + 1cm)")).toBe("3.54cm");
 			expect(converted("calc(4.5cm + 0cm)")).toBe("45mm");
-			// And a sum no unit of the group spells exactly still declines.
-			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
+			// Where no unit of the group spells it exactly, the sum still lands in one
+			// the expression was written with, at the precision every number is
+			// written at.
+			expect(value("calc(1px + 1cm)")).toBe("38.7953px");
 		});
 
 		it("keeps the parentheses on a negative the property refuses", () => {
@@ -5903,11 +5902,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:-1}");
 		});
 
-		it("takes hypot() only where the root is exact", () => {
+		it("takes hypot()", () => {
 			expect(value("hypot(3px,4px)")).toBe("5px");
 			expect(value("hypot(6px,8px,0px)")).toBe("10px");
-			// Irrational for most inputs.
-			expect(value("hypot(1px,1px)")).toBe("hypot(1px,1px)");
+			// Irrational for most inputs, and written at the precision every number
+			// is written at.
+			expect(value("calc(hypot(1px,1px)*100)")).toBe("141.421px");
 		});
 	});
 
@@ -5982,28 +5982,58 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("sqrt(), pow(), log(), exp() and the trig functions", () => {
 		it.each([
-			// Irrational, so there is no value to write down.
-			["calc(sqrt(2)*1px)"],
-			["calc(pow(2,.5)*1px)"],
-			// `e` is not a double, which leaves only the powers of it this knows.
-			["calc(exp(1)*1px)"],
-			["calc(log(10)*1px)"],
-			// Not a whole power of the base.
-			["calc(log(9,2)*1px)"],
-			// Sine and cosine are irrational an odd eighth turn from zero, and
-			// tangent has an asymptote on the odd quarters.
-			["calc(sin(30deg)*1px)"],
-			["calc(sin(45deg)*1px)"],
-			["calc(cos(50grad)*1px)"],
+			// The printer holds every number it writes to six significant digits
+			// below 1e4, which is under what a stylesheet can observe, so an
+			// irrational answer is written at the precision any other number is.
+			["calc(sqrt(2)*100px)", "141.421px"],
+			["calc(pow(2,.5)*100px)", "141.421px"],
+			["calc(exp(1)*100px)", "271.828px"],
+			["calc(log(10)*100px)", "230.259px"],
+			["calc(log(9,2)*100px)", "316.993px"],
+			["calc(sin(30deg)*100px)", "50px"],
+			["calc(sin(45deg)*100px)", "70.7107px"],
+			["calc(cos(50grad)*100px)", "70.7107px"],
+			// A bare number is radians (CSS Values 4 §10.6).
+			["calc(sin(1)*100px)", "84.1471px"],
+			["calc(cos(1rad)*100px)", "54.0302px"],
+			// ...and the constants a calculation may name.
+			["calc(pi*100px)", "314.159px"],
+			["calc(e*100px)", "271.828px"]
+		])("folds %s", (expression, folded) => {
+			expect(value(expression)).toBe(folded);
+		});
+
+		it.each([
+			// Tangent has an asymptote an odd quarter turn from zero, where there is
+			// no value at all.
 			["calc(tan(90deg)*1px)"],
-			// A radian is not a whole number of eighth turns except at zero.
-			["calc(sin(1)*1px)"],
-			["calc(cos(1rad)*1px)"],
-			// The inverse functions answer with an angle only at three arguments.
+			// An inverse function answers with an angle, and an angle is the one
+			// thing the printer does not round — so only the arguments the table
+			// states are taken.
 			["asin(.5)"],
 			["atan2(1,2)"],
 			// Both zero is left to the engine.
-			["atan2(0,0)"]
+			["atan2(0,0)"],
+			// `infinity` and `NaN` are values no printed number spells.
+			["calc(infinity*1px)"],
+			["calc(nan*1px)"],
+			// A trigonometric function takes an angle or a bare number, so a length
+			// or a percentage is not one it can be read from.
+			["calc(sin(1px)*1px)"],
+			["calc(sin(1%)*1px)"],
+			// An argument outside a function's domain has no answer to write.
+			["calc(sqrt(-1)*1px)"],
+			["calc(log(0)*1px)"],
+			["calc(log(-1)*1px)"],
+			// ...and base one names every power of itself.
+			["calc(log(8,1)*1px)"],
+			// An answer that overflows a double is not one either.
+			["calc(pow(1e308,2)*1px)"],
+			["calc(exp(1000)*1px)"],
+			["hypot(1.5e308,1.5e308)"],
+			["calc(1e308 + 1e308)"],
+			["calc(1/1e-320)"],
+			["calc(1px/0)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
 		});
@@ -6019,6 +6049,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("takes a logarithm that lands on a whole power of its base", () => {
 			expect(value("calc(log(8,2)*1px)")).toBe("3px");
 			expect(value("calc(log(1,10)*1px)")).toBe("0");
+			// A base of zero divides by an infinity, which is a number after all.
+			expect(value("calc(log(8,0)*1px)")).toBe("0");
 			expect(value("calc(exp(0)*1px)")).toBe("1px");
 		});
 
@@ -6030,6 +6062,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(cos(180deg)*1px)")).toBe("calc(-1px)");
 			expect(value("calc(tan(45deg)*1px)")).toBe("1px");
 			expect(value("calc(tan(180deg)*1px)")).toBe("0");
+			// Between them it is computed like every other irrational answer.
+			expect(value("calc(tan(30deg)*1px)")).toBe(".57735px");
 		});
 
 		it("answers the inverse functions in degrees", () => {
@@ -6040,6 +6074,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("atan2(0,-1)")).toBe("180deg");
 			// A ratio of two lengths is a number, so it answers the same way.
 			expect(value("atan2(1px,-1px)")).toBe("135deg");
+			// Every other argument is left alone: an angle is not rounded, so an
+			// inexact one would be written to seventeen digits.
+			expect(value("atan(.3)")).toBe("atan(.3)");
 		});
 
 		it("prints a folded operand of an outer expression bare", () => {
@@ -6095,9 +6132,10 @@ describe("CssSyntax — convertLengthUnits", () => {
 		expect(width("calc(1px + 15px)", true)).toBe("1pc");
 	});
 
-	it("declines a sum that reaches no written unit exactly", () => {
-		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves.
-		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
+	it("lands a sum in a unit it was written with, gate or no gate", () => {
+		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves — so
+		// the sum lands there, at the precision every number is written at.
+		expect(width("calc(1cm + 1px)")).toBe("38.7953px");
 	});
 });
 
