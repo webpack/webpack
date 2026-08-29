@@ -738,24 +738,6 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 
 /* cspell:disable */
 const knownBugs = [
-	// A named import is only checked where the binding is read, so an unused one
-	// naming a missing export links silently. These assert a link error through
-	// an unused specifier, several via `ensure-linking-error_FIXTURE.js`.
-	"module-code/instn-named-err-not-found.js",
-	"module-code/instn-named-err-not-found-as.js",
-	"module-code/instn-named-err-not-found-dflt.js",
-	"module-code/instn-named-err-dflt-thru-star-as.js",
-	"module-code/instn-named-err-dflt-thru-star-dflt.js",
-	"module-code/import-attributes/allow-nlt-before-with.js",
-	"module-code/import-attributes/import-attribute-key-identifiername.js",
-	"module-code/import-attributes/import-attribute-key-string-double.js",
-	"module-code/import-attributes/import-attribute-key-string-single.js",
-	"module-code/import-attributes/import-attribute-many.js",
-	"module-code/import-attributes/import-attribute-newlines.js",
-	"module-code/import-attributes/import-attribute-trlng-comma.js",
-	"module-code/import-attributes/import-attribute-value-string-double.js",
-	"module-code/import-attributes/import-attribute-value-string-single.js",
-	"import/import-attributes/json-named-bindings.js",
 	// webpack resolves a circular reexport to `undefined` with a warning rather
 	// than failing the link, so the build reports no error.
 	"module-code/instn-iee-err-circular.js",

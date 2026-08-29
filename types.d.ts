@@ -9920,6 +9920,11 @@ declare interface HarmonySettings {
 	await: boolean;
 	attributes?: ImportAttributes;
 	phase: ImportPhaseType;
+
+	/**
+	 * whether the binding is referenced anywhere
+	 */
+	used: boolean;
 }
 declare abstract class HarmonyStarExportsList {
 	dependencies: HarmonyExportImportedSpecifierDependency[];
