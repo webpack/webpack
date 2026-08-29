@@ -62,7 +62,7 @@ import { Bench, hrtimeNow } from "tinybench";
 /**
  * @typedef {object} CaseOptions
  * @property {(() => Promise<void>)=} setup one-time fixture generation, run once by the orchestrator
- * @property {((config: Configuration) => Promise<void> | void)=} beforeEach reset run before every iteration, outside the measured region
+ * @property {((config: Configuration) => Promise<void> | void)=} beforeEachIteration reset run before every iteration, outside the measured region
  */
 
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
@@ -1312,10 +1312,8 @@ async function registerBenchmark(bench, task, casesPath) {
 		`${pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))}`
 	);
 	const realConfig = configModule.default;
-	// `buildConfiguration` structuredClones the config, which strips a plugin's
-	// prototype (and with it `apply`) without erroring. A case declares plugins
-	// through this factory instead, so each baseline instantiates them from the
-	// webpack copy it is measuring.
+	// Cloning the config strips a plugin's prototype, and with it `apply`, so a
+	// case declares plugins here instead — bound to the baseline being measured.
 	const { createPlugins } = configModule;
 
 	if (realConfig.plugins && realConfig.plugins.length > 0) {
@@ -1378,7 +1376,7 @@ async function registerBenchmark(bench, task, casesPath) {
 			? addWatchBench(params)
 			: addBuildBench({
 					...params,
-					beforeEachIteration: caseOptions?.beforeEach
+					beforeEachIteration: caseOptions?.beforeEachIteration
 				}));
 	}
 }

@@ -294,9 +294,8 @@ class BenchmarkRunner {
 	 * @returns {Promise<string[]>} benchmark names
 	 */
 	async discoverBenchmarks() {
-		// Empty means unset: a workflow expression that resolves to "" would
-		// otherwise compile to `new RegExp("")`, which matches every case and so
-		// excludes all of them.
+		// Empty means unset: `new RegExp("")` matches every case, so an empty
+		// NEGATIVE_FILTER would exclude all of them.
 		const FILTER = process.env.FILTER
 			? new RegExp(process.env.FILTER)
 			: undefined;
