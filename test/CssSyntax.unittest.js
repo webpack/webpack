@@ -3190,9 +3190,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["hsla(0,100%,50%,1)", "red"],
 			["hwb(0 0% 100%)", "#000"],
 			["lab(100% 0 0)", "#fff"],
-			["lch(29.2345% 44.2 45deg)", "#752d15"],
 			["oklab(1 0 0)", "#fff"],
-			["oklch(70% .1 200)", "#40b1b7"],
 			["oklab(40.101% .1147% .0453%)", "#484848"]
 		])("converts %s", (input, expected) => {
 			expect(value(input)).toBe(expected);
@@ -3205,8 +3203,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// past the sRGB gamut, so a hex would clip to a different color
 			["lab(50% 100 -100)"],
 			["oklch(90% .4 140)"],
-			// within the Lab family's wider margin
+			// within the margin a conversion through a matrix carries: an engine's
+			// own transfer is a fitted curve rather than the spec's, so a channel
+			// this close to a boundary is one it could round the other way
 			["lab(20% 40 0)"],
+			["lch(29.2345% 44.2 45deg)"],
+			["oklch(70% .1 200)"],
 			// a non-percentage saturation / lightness is not the grammar converted
 			["hsl(0,1,.5)"],
 			// a hue in a unit the converter does not read
@@ -7919,6 +7921,40 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 		expect(minify("a{color:color(srgb 1 0 0/50%)}")).toBe("a{color:#ff000080}");
 	});
 
+	it("converts a space by what reaching the byte passes through", () => {
+		// `srgb` states the byte itself, so the only channel it declines is one on
+		// a rounding boundary — `.1` is 25.5 of them.
+		expect(minify("a{color:color(srgb .2 .4 .6)}")).toBe("a{color:#369}");
+		expect(minify("a{color:color(srgb .333 .666 .1)}")).toBe(
+			"a{color:color(srgb .333 .666 .1)}"
+		);
+		// A matrix carries an engine's transfer approximation into every term, so
+		// what it costs is relative to the color's own magnitude: a dark color
+		// converts where a bright one is left as it stands.
+		expect(minify("a{color:color(display-p3 .05 .06 .07)}")).toBe(
+			"a{color:#0c0f12}"
+		);
+		expect(minify("a{color:color(display-p3 .6 .7 .8)}")).toBe(
+			"a{color:color(display-p3 .6 .7 .8)}"
+		);
+	});
+
+	it("leaves a space an engine reads through another transfer", () => {
+		// Chromium takes a98-rgb's gamma as 2.2 rather than 563/256, and ProPhoto's
+		// as a pure 1.8 with none of the linear segment below 16/512 — so the byte
+		// computed here is not the color it paints, however far from a boundary.
+		expect(minify("a{color:color(a98-rgb .5 .5 .5)}")).toBe(
+			"a{color:color(a98-rgb .5 .5 .5)}"
+		);
+		expect(minify("a{color:color(prophoto-rgb .5 .5 .5)}")).toBe(
+			"a{color:color(prophoto-rgb .5 .5 .5)}"
+		);
+		// ...and a mix reading one of them inherits that, whatever space it is
+		// made in.
+		const mix = "a{color:color-mix(in srgb,color(a98-rgb .5 .5 .5),red)}";
+		expect(minify(mix)).toBe(mix);
+	});
+
 	it("falls back through the widest gamut the target reads", () => {
 		// Safari 15 reads `color()` and no Lab family, so the color goes out three
 		// times: the clipped hex, the gamut P3 does show, and the author's own.
@@ -8010,14 +8046,132 @@ describe("CssSyntax minify — color-mix()", () => {
 		expect(minify("a{color:color-mix(in oklab-ish, red, blue)}")).toBe(
 			"a{color:color-mix(in oklab-ish,red,blue)}"
 		);
-		// A channel landing on a `.5` boundary is where implementations disagree.
-		expect(minify("a{color:color-mix(in srgb, red, blue)}")).toBe(
-			"a{color:color-mix(in srgb,red,blue)}"
+		// ...and a call naming no space at all.
+		expect(minify("a{color:color-mix(in srgb, color(), red)}")).toBe(
+			"a{color:color-mix(in srgb,color(),red)}"
 		);
-		// ...and a mix sRGB cannot show has no hex to write.
+		// A mix sRGB cannot show has no hex to write, and one of its colors was
+		// written in a space this had to convert to reach the mix's — so there is
+		// nothing to write in that space either.
 		expect(minify("a{color:color-mix(in oklch, red 37%, blue)}")).toBe(
 			"a{color:color-mix(in oklch,red 37%,blue)}"
 		);
+	});
+
+	it("leaves a color a function computes with as it was written", () => {
+		// A gradient interpolates between its stops and a mix mixes its two, so the
+		// byte an engine would paint is not what either computes from: rounding one
+		// here moves the answer rather than a pixel's last bit.
+		const gradient =
+			"a{background:linear-gradient(hsl(209.32 16.5% 53.41%),red)}";
+		expect(minify(gradient)).toBe(gradient);
+		const mix = "a{color:color-mix(in oklch,hsl(209.32 16.5% 53.41%) 20%,red)}";
+		expect(minify(mix)).toBe(mix);
+		// ...though a mix this can compute whole answers with the color it names
+		// rather than with the byte, so the fold still stands.
+		expect(
+			minify("a{color:color-mix(in srgb,hsl(209.32 16.5% 53.41%) 20%,red)}")
+		).toBe("a{color:#e31b1f}");
+		const relative = "a{color:lab(from rgb(97.8 212.1 167.6) calc(l*1.1) a b)}";
+		expect(minify(relative)).toBe(relative);
+		// A spelling naming the same color exactly still stands, in any of them.
+		expect(minify("a{background:linear-gradient(#ff0000,rgb(0,255,0))}")).toBe(
+			"a{background:linear-gradient(red,#0f0)}"
+		);
+		// ...though only the legacy `rgb()` spelling, whose channels are already
+		// the bytes: `hsl()` reaches them through a conversion, so it stands.
+		const exactHsl = "a{color:color-mix(in oklch,hsl(0 100% 50%) 20%,#00f)}";
+		expect(minify(exactHsl)).toBe(exactHsl);
+		// ...and `light-dark()` picks one of its two and paints it, so the byte is
+		// what it computes with too.
+		expect(minify("a{color:light-dark(hsl(209.32 16.5% 53.41%),red)}")).toBe(
+			"a{color:light-dark(#75899c,red)}"
+		);
+	});
+
+	it("mixes a gray as the missing hue an engine reads it for", () => {
+		// CSS Color 4 §12.2: a gray states no hue, so the other color's stands
+		// rather than the two being interpolated.
+		expect(minify("a{color:color-mix(in hsl,#ff0 12%,#000)}")).toBe(
+			"a{color:#11110d}"
+		);
+		expect(minify("a{color:color-mix(in hsl,#ff0 12%,#fff)}")).toBe(
+			"a{color:#f2f2ee}"
+		);
+		expect(minify("a{color:color-mix(in hsl,#ff0 12%,#808080)}")).toBe(
+			"a{color:#8f8f71}"
+		);
+		expect(minify("a{color:color-mix(in hwb,#ff0 12%,#808080)}")).toBe(
+			"a{color:#8f8f71}"
+		);
+		// ...whichever of the two states the hue.
+		expect(minify("a{color:color-mix(in hsl,#808080,#ff0 88%)}")).toBe(
+			"a{color:#f0f00f}"
+		);
+		// A gray written in the space the mix is made in keeps the hue it states,
+		// which reaching it through sRGB has already lost.
+		const written = "a{color:color-mix(in hsl,#ff0 12%,hsl(280 0% 50%))}";
+		expect(minify(written)).toBe(written);
+		// Chromium reads an Oklch hue as missing while the color still has chroma,
+		// where the spec makes it powerless only at zero — so a mix naming a color
+		// in that band has no answer two engines agree on.
+		const pale = "a{color:color-mix(in oklch,#ff0 12%,oklch(.4 .01 200))}";
+		expect(minify(pale)).toBe(pale);
+	});
+
+	it("writes a mix in the space it was made in where no byte holds it", () => {
+		// A channel landing on a `.5` boundary is where implementations disagree
+		// over the byte — but not over the mix, which both colors were written in
+		// the space of, so nothing was converted to make it.
+		expect(minify("a{color:color-mix(in srgb, red, blue)}")).toBe(
+			"a{color:color(srgb .5 0 .5)}"
+		);
+		// ...and the same for a mix outside the sRGB gamut altogether.
+		expect(
+			minify(
+				"a{color:color-mix(in oklch, oklch(70% .3 30), oklch(50% .2 250))}"
+			)
+		).toBe("a{color:oklch(.6 .25 320)}");
+		expect(
+			minify("a{color:color-mix(in lab, lab(80% 90 -70), lab(60% -50 60))}")
+		).toBe("a{color:lab(70 20 -5)}");
+		// The hue method decides which way round the circle, as it does for a byte.
+		expect(
+			minify(
+				"a{color:color-mix(in oklch longer hue, oklch(70% .3 30), oklch(50% .2 250))}"
+			)
+		).toBe("a{color:oklch(.6 .25 140)}");
+		// A weight and an alpha are carried the same way.
+		expect(
+			minify(
+				"a{color:color-mix(in oklch, oklch(70% .3 30) 30%, oklch(50% .2 250 / .5))}"
+			)
+		).toBe("a{color:oklch(.592308 .246154 292/.65)}");
+		// A relative color answers in its own space on the same terms.
+		expect(
+			minify("a{color:oklch(from oklch(70% .3 30) calc(l * 1.1) c h)}")
+		).toBe("a{color:oklch(.77 .3 30)}");
+		// A space stating percentages writes them back, and one written as a
+		// `color()` is written back as the same call.
+		expect(
+			minify("a{color:color-mix(in hwb,hwb(200 10% 20%),hwb(20 30% 40%))}")
+		).toBe("a{color:hwb(290 20% 30%)}");
+		expect(
+			minify(
+				"a{color:color-mix(in display-p3," +
+					"color(display-p3 1 0 0),color(display-p3 0 0 1))}"
+			)
+		).toBe("a{color:color(display-p3 .5 0 .5)}");
+		// ...but not where the origin is written in another space: reaching this
+		// one converted it, and a conversion is not what an engine computes.
+		const converted = "a{color:oklch(from red l c h)}";
+		expect(minify(converted)).toBe(converted);
+	});
+
+	it("declines the space's own spelling where the target cannot read it", () => {
+		const mix =
+			"a{color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}";
+		expect(minifyFor(mix, ["chrome 100"])).toBe(mix);
 	});
 
 	it.each([
@@ -8104,7 +8258,11 @@ describe("CssSyntax minify — relative colors", () => {
 		);
 		// Every channel keyword the function names is bound, in any order.
 		expect(minify("a{color:rgb(from red b g r)}")).toBe("a{color:#00f}");
-		expect(minify("a{color:oklch(from red l c h)}")).toBe("a{color:red}");
+		// ...though a channel the conversion leaves near a rounding boundary keeps
+		// the function: red through oklch and back is 255, 0, 0 within a bit, and
+		// a bit is what the margin is about.
+		const throughOklch = "a{color:oklch(from red l c h)}";
+		expect(minify(throughOklch)).toBe(throughOklch);
 		expect(minify("a{color:hsl(from red h s l)}")).toBe("a{color:red}");
 		expect(minify("a{color:rgb(from red calc(r - 50) g b)}")).toBe(
 			"a{color:#cd0000}"
@@ -8186,6 +8344,16 @@ describe("CssSyntax minify — the rest of the target's abilities", () => {
 		expect(minifyFor("a{--x:system-ui}", ["chrome 50"])).toBe(
 			"a{--x:system-ui}"
 		);
+		// The `font` shorthand ends in the same family list, and no other slot of
+		// it takes an identifier the property does not define itself.
+		expect(minifyFor("a{font:12px system-ui}", ["chrome 50"])).toBe(
+			`a{font:12px ${stack}}`
+		);
+		expect(
+			minifyFor("a{font:italic bold 12px/1.2 system-ui,serif}", ["chrome 50"])
+		).toBe(`a{font:italic 700 12px/1.2 ${stack},serif}`);
+		// ...while a system font keyword is not a family at all.
+		expect(minifyFor("a{font:menu}", ["chrome 50"])).toBe("a{font:menu}");
 	});
 
 	it("writes a `text-decoration` naming more than its line as longhands", () => {

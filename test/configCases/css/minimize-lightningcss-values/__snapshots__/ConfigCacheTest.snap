@@ -40,7 +40,7 @@ Array [
   "/*! test_color: .foo { color: lch(29.2345% 44.2 27); } */.foo{color:lch(29.2345% 44.2 27)}",
   "/*! test_color: .foo { color: lch(29.2345 44.2 27); } */.foo{color:lch(29.2345 44.2 27)}",
   "/*! test_color: .foo { color: lch(29.2345% 44.2% 27deg); } */.foo{color:lch(29.2345% 44.2% 27deg)}",
-  "/*! test_color: .foo { color: lch(29.2345% 44.2 45deg); } */.foo{color:#752d15}",
+  "/*! test_color: .foo { color: lch(29.2345% 44.2 45deg); } */.foo{color:lch(29.2345% 44.2 45deg)}",
   "/*! test_color: .foo { color: lch(29.2345% 44.2 .5turn); } */.foo{color:lch(29.2345% 44.2 .5turn)}",
   "/*! test_color: .foo { color: lch(29.2345% 44.2 27 / 100%); } */.foo{color:lch(29.2345% 44.2 27 / 100%)}",
   "/*! test_color: .foo { color: lch(29.2345% 44.2 27 / 50%); } */.foo{color:lch(29.2345% 44.2 27 / 50%)}",

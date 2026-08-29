@@ -1432,12 +1432,62 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a color computed rather than painted, kept as it was written",
+		// A gradient interpolates between its stops and a mix mixes its two, so the
+		// byte an engine paints is not what either computes from. The probes read
+		// the mixes; the gradient is here for the printer to leave alone.
+		css:
+			"#b{color:color-mix(in srgb,hsl(209.32 16.5% 53.41%) 20%,red);" +
+			"background-color:color-mix(in hsl,#ff0 12%,#808080);" +
+			"border-top-color:color-mix(in hwb,#ff0 12%,#808080);" +
+			"outline-color:color-mix(in hsl,#ff0 12%,#000);" +
+			"text-decoration-color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250));" +
+			"background-image:linear-gradient(hsl(209.32 16.5% 53.41%),red)}",
+		browsers: ["chrome 130"],
+		produces: ["background-color:#8f8f71", "color:#e31b1f"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "background-image"]
+		]
+	},
+	{
+		name: "a color() converted only as far as the byte is the engine's own",
+		css:
+			"#b{color:color(srgb .2 .4 .6);" +
+			"background-color:color(display-p3 .05 .06 .07);" +
+			"border-top-color:color(a98-rgb .5 .5 .5);" +
+			"outline-color:color(prophoto-rgb .5 .5 .5);" +
+			"text-decoration-color:color(srgb-linear .2 .4 .6);" +
+			"caret-color:color(display-p3 .6 .7 .8)}",
+		browsers: ["chrome 130"],
+		produces: ["color:#369", "background-color:#0c0f12"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "caret-color"]
+		]
+	},
+	{
 		name: "system-ui, which names each platform's own font instead",
 		produces: ["-apple-system,BlinkMacSystemFont"],
-		css: "#b{font-family:system-ui}",
+		css: "#b{font-family:system-ui}#c{font:italic 700 12px/1.2 system-ui,serif}",
 		browsers: ["chrome 50"],
-		html: "<button id=b>x</button>",
-		probes: [["#b", "font-family"]],
+		html: "<button id=b>x</button><button id=c>y</button>",
+		probes: [
+			["#b", "font-family"],
+			["#c", "font-family"],
+			["#c", "font-size"],
+			["#c", "font-style"]
+		],
 		// The stack *is* the rewrite: `system-ui` leads it, so an engine reading
 		// the keyword still takes it, and the rest is what one that does not reads.
 		differs: ["font-family"]
