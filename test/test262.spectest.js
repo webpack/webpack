@@ -585,6 +585,11 @@ const compile = async (entry, scenario, options = {}) =>
 			entry,
 			context: path.dirname(entry),
 			output: {
+				// A Cyclic Module Record keeps its [[EvaluationError]] forever, so
+				// re-importing a module that threw re-throws instead of re-running
+				// it. webpack leaves this off by default for CommonJS's sake, so the
+				// suite opts in to measure the spec-conformant output.
+				strictModuleErrorHandling: true,
 				...webpackOptions.output,
 				...(scenario === "module" ? { module: true } : { iife: false })
 			},
@@ -843,10 +848,6 @@ const knownBugs = [
 	// webpack bugs and improvements
 	// With namespace import we export and value and `default`, by spec we should export only `default`
 	"import/import-attributes/json-via-namespace.js",
-	// `import(spec, options)` with a dynamic specifier: the options argument
-	// goes through the context-dependency path, which still drops its
-	// evaluation, so the sequenced side effects are not observed.
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
 	// `yield` as a strict-mode reserved word: webpack parses the source in
 	// sloppy mode, so the expected parse-time SyntaxError is not raised.
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
@@ -1024,15 +1025,9 @@ const knownBugs = [
 
 	// Dynamic-import edge cases that don't fit webpack's static module graph:
 	// - Self-importing script that asserts evaluation count.
-	// - Async-generator yielding `import()` of a module whose top-level export
-	//   throws ("poisoned" fixture).
-	// - Re-importing a module that previously errored: webpack caches the
-	//   failed module and replays its error rather than re-evaluating.
 	// - `eval("import('...')")` and dynamic `import` reuse-namespace assertions
 	//   require dynamic specifiers webpack cannot resolve at build time.
 	"expressions/dynamic-import/eval-self-once-script.js",
-	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
-	"expressions/dynamic-import/import-errored-module.js",
 	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
 	"expressions/dynamic-import/usage-from-eval.js",
 	// `.then` is expected not to be called on the deferred namespace's promise.
