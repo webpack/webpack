@@ -134,7 +134,8 @@ const knownHostEvalBugs = [
 
 /* cspell:disable */
 // Fail identically when the unbundled test262 file runs in a plain `vm`
-// context, so the divergence is the host's and not webpack's.
+// context on the Node.js the test262 job pins, so the divergence is the
+// host's and not webpack's.
 const knownHostBugs = [
 	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
 	"expressions/assignment/S11.13.1_A5_T1.js",
@@ -144,7 +145,6 @@ const knownHostBugs = [
 	"expressions/assignment/S11.13.1_A6_T2.js",
 	"expressions/assignment/S11.13.1_A6_T3.js",
 	"expressions/delete/11.4.1-4.a-8-s.js",
-	"statements/async-generator/generator-created-after-decl-inst.js",
 	"statements/class/elements/private-class-field-on-nonextensible-objects.js",
 	"statements/class/subclass/private-class-field-on-nonextensible-return-override.js",
 	"statements/variable/binding-resolution.js",
@@ -770,13 +770,6 @@ const knownBugs = [
 	// than failing the link, so the build reports no error.
 	"module-code/instn-iee-err-circular.js",
 	"module-code/instn-iee-err-circular-as.js",
-	// await using bugs
-	"statements/await-using/syntax/await-using-invalid-assignment-statement-body-for-of.js",
-
-	// acorn bugs
-	"statements/using/syntax/using-for-statement.js",
-	"statements/await-using/syntax/await-using-valid-for-await-using-of-of.js",
-
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
 
