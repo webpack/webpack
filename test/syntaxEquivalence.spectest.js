@@ -1181,6 +1181,7 @@ describe("wpt css token adjacency", () => {
  * @property {string[]=} schemes the color schemes to read it under
  * @property {string[]=} directions the writing directions to read it under
  * @property {string[]=} differs properties this lowering changes on purpose
+ * @property {string[]=} introduces custom properties the lowering writes that the source has none of, which a script enumerating them would see
  * @property {string[]=} numeric properties whose value the rewrite reaches by arithmetic, held to `numericallyEqual` rather than to the same text
  * @property {string[]} produces text the rewrite leaves, so a comparison of two sheets neither of which was rewritten cannot pass for one
  * @property {string=} reference what the source means, where the engine reads no spelling of it — `:lang(en, fr)` is one Chromium has never taken, so the rewrite is held to the pair of rules that state the same thing rather than to an engine's reading of the original
@@ -1189,6 +1190,9 @@ describe("wpt css token adjacency", () => {
 const LOWERING_FIXTURES = [
 	{
 		name: "light-dark()",
+		// The pair the lowering writes, which a script enumerating the computed
+		// custom properties would see where the source has none.
+		introduces: ["--webpack-light", "--webpack-dark"],
 		produces: [
 			"var(--webpack-light,#aaa) var(--webpack-dark,#444)",
 			":where(:root){--webpack-light:initial",
@@ -1211,6 +1215,7 @@ const LOWERING_FIXTURES = [
 	},
 	{
 		name: "light-dark() with no color-scheme, which is the light one",
+		introduces: ["--webpack-light", "--webpack-dark"],
 		produces: ["var(--webpack-light,#aaa)", ":where(:root){"],
 		css: "button{background-color:light-dark(#aaa,#444)}",
 		browsers: ["chrome 100"],
@@ -1579,6 +1584,53 @@ describe("a lowering computes as the spelling it replaces", () => {
 			}, probes)
 		);
 
+	/**
+	 * Every computed property of every element a fixture probes, under one
+	 * stylesheet — the whole of what the CSSOM reports rather than the handful of
+	 * properties the fixture names, so a rewrite reaching a property nobody
+	 * thought to probe is one this still sees.
+	 * @param {import("puppeteer-core").Page} page the page to read from
+	 * @param {string} css the stylesheet
+	 * @param {string} html the document
+	 * @param {string[]} selectors the elements to read
+	 * @returns {Promise<string[]>} one `property:value` list per element
+	 */
+	const readEveryProperty = (page, css, html, selectors) =>
+		page.setContent(`<style>${css}</style>${html}`).then(() =>
+			page.evaluate((asked) => {
+				const canvas = document.createElement("canvas");
+				const context = /** @type {CanvasRenderingContext2D} */ (
+					canvas.getContext("2d", { willReadFrequently: true })
+				);
+				// A color is read as the color it is rather than as the text the
+				// engine serializes it to: `color(srgb .2 .4 .6)` and `#369` are one
+				// color written two ways, and which of them a computed value carries
+				// is what the rewrite is free to change.
+				const painted = (value) => {
+					context.fillStyle = "#010203";
+					context.fillStyle = value;
+					if (context.fillStyle === "#010203") return value;
+					context.clearRect(0, 0, 1, 1);
+					context.fillRect(0, 0, 1, 1);
+					return [...context.getImageData(0, 0, 1, 1).data].join(",");
+				};
+				return asked.map((selector) => {
+					const element = document.querySelector(selector);
+					if (element === null) return "no such element";
+					const style = getComputedStyle(element);
+					/** @type {string[]} */
+					const out = [];
+					for (let at = 0; at < style.length; at++) {
+						const property = style.item(at);
+						out.push(
+							`${property}:${painted(style.getPropertyValue(property))}`
+						);
+					}
+					return out.sort().join("\n");
+				});
+			}, selectors)
+		);
+
 	it.each(LOWERING_FIXTURES.map((fixture) => [fixture.name, fixture]))(
 		"%s",
 		async (_name, fixture) => {
@@ -1624,6 +1676,31 @@ describe("a lowering computes as the spelling it replaces", () => {
 							direction,
 							computed: before
 						});
+						// ...and the same elements, read whole: what the fixture names is
+						// where the rewrite is, and this is everything else the CSSOM
+						// says about them. A property the rewrite is allowed to move —
+						// or one it reaches by arithmetic — is left to the probes above.
+						const loose = new Set([
+							...(fixture.differs || []),
+							...(fixture.numeric || []),
+							...(fixture.introduces || [])
+						]);
+						const whole = [...new Set(asked.map(([selector]) => selector))];
+						const [wholeBefore, wholeAfter] = [
+							await readEveryProperty(
+								page,
+								fixture.reference || fixture.css,
+								html,
+								whole
+							),
+							await readEveryProperty(page, lowered, html, whole)
+						];
+						const kept = (/** @type {string} */ text) =>
+							text
+								.split("\n")
+								.filter((line) => !loose.has(line.slice(0, line.indexOf(":"))))
+								.join("\n");
+						expect(wholeAfter.map(kept)).toEqual(wholeBefore.map(kept));
 					}
 				}
 			} finally {
