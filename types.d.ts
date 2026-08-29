@@ -9912,6 +9912,9 @@ declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 		referencedModule: Module
 	): undefined | string | boolean | SortableSet<string>;
 }
+declare abstract class HarmonyImportSideEffectDependency extends HarmonyImportDependency {
+	unusedSpecifiers?: UnusedSpecifiers;
+}
 declare interface HarmonySettings {
 	ids: string[];
 	source: string;
@@ -9925,6 +9928,11 @@ declare interface HarmonySettings {
 	 * whether the binding is referenced anywhere
 	 */
 	used: boolean;
+
+	/**
+	 * the statement's own dependency
+	 */
+	dependency?: HarmonyImportSideEffectDependency;
 }
 declare abstract class HarmonyStarExportsList {
 	dependencies: HarmonyExportImportedSpecifierDependency[];
@@ -28810,6 +28818,10 @@ declare interface TsconfigPathsMap {
 declare const UNDEFINED_MARKER: unique symbol;
 declare interface URL_url extends URL {}
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
+declare interface UnusedSpecifiers {
+	exportPresenceMode: ExportPresenceMode;
+	specifiers: [string[], string][];
+}
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
