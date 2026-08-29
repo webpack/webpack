@@ -74,7 +74,8 @@ Array [
   "/*! webpack: ...and a keyframe selector list is one too */@keyframes t74{0%,50%{color:red}}",
   "/*! webpack: the same selector twice is one rule */.t80{color:red;margin:0}",
   "/*! webpack: ...and two identical rules are the one that can be read */.t81{color:red}",
-  "/*! declined: the earlier declaration of a property both set would be lost */.t82{color:red}.t82{color:blue}",
+  "/*! webpack: a property both set joins where the later declaration is one the
+   earlier cannot have been read behind */.t82{color:blue}",
   "/*! declined: a shorthand holds every longhand its name prefixes */.t83{background:red}.t83{background-image:none}",
   "/*! declined: declarations after a nested rule are an implicit \`&\` rule */.t84{color:red;&:hover{top:0}}.t84{margin:0}",
   "/*! webpack: a selector list is a set, so one order lets equal lists compare */.t90a,.t90b{color:red}",

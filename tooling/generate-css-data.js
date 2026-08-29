@@ -2478,13 +2478,15 @@ const slotSpellings = (slot) => {
  * the keyword must be named by exactly one slot (`animation`'s `none` is both a
  * name and a fill mode), every value that slot takes must be one the spellings
  * report (`mask: url(a.svg) none` fills one slot twice and is dropped, so
- * removing the `none` would revive it — a `<color>` slot cannot be checked that
- * way, `#fff` being no spelling), and it must be a slot of its own rather than
- * one reached through a `/`.
- * @returns {[string, [string, string[]][]][]} the entries, sorted by property
+ * removing the `none` would revive it), and it must be a slot of its own rather
+ * than one reached through a `/`. What a slot takes beyond its spellings is
+ * carried as the value classes it names, since `#fff` is no spelling of `<color>`
+ * and fills the slot as surely as a keyword.
+ * @param {Set<string>} colorKeywords every keyword that is a color, which is the one class a keyword itself can be in
+ * @returns {[string, [string, string[], string[]][]][]} the entries, sorted by property
  */
-const collectShorthandInitialKeywords = () => {
-	/** @type {[string, [string, string[]][]][]} */
+const collectShorthandInitialKeywords = (colorKeywords) => {
+	/** @type {[string, [string, string[], string[]][]][]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		// A prefixed spelling is a different property with its own grammar.
@@ -2499,24 +2501,33 @@ const collectShorthandInitialKeywords = () => {
 			return {
 				named: new Set([...values.keywords].map((one) => one.toLowerCase())),
 				spellings: slotSpellings(slot),
-				spelledOnly: [...values.classes].every(isSpelledClass)
+				// What the slot takes beyond the spellings — a length, a color, an
+				// image. `lib/css/syntax.js` reads a sibling's own classes against
+				// these, and refuses the drop for a value it cannot class at all.
+				classes: [...values.classes]
+					.filter((one) => !isSpelledClass(one))
+					.sort()
 			};
 		});
-		/** @type {[string, string[]][]} */
+		/** @type {[string, string[], string[]][]} */
 		const droppable = [];
 		for (const longhand of initial) {
 			const keyword = initialKeyword(longhand, 0);
 			if (keyword === null) continue;
 			const hits = [];
 			for (let i = 0; i < accepted.length; i++) {
-				if (accepted[i].named.has(keyword)) hits.push(i);
+				if (
+					accepted[i].named.has(keyword) ||
+					(colorKeywords.has(keyword) && accepted[i].classes.includes("color"))
+				) {
+					hits.push(i);
+				}
 			}
 			if (hits.length !== 1) continue;
 			const slot = accepted[hits[0]];
-			if (!slot.spelledOnly) continue;
 			if (slots[hits[0]].includes("/")) continue;
 			if (!SINGLE_TERM_SLOT_REGEXP.test(slots[hits[0]])) continue;
-			droppable.push([keyword, [...slot.spellings].sort()]);
+			droppable.push([keyword, [...slot.spellings].sort(), slot.classes]);
 		}
 		if (droppable.length !== 0) {
 			out.push([name, droppable.sort(([a], [b]) => (a < b ? -1 : 1))]);
@@ -3529,6 +3540,25 @@ const collectColorNames = (colorName) => {
 };
 
 /**
+ * The named colors an engine may read none of while reading the rest: the ones
+ * carrying a compatibility row of their own under `<named-color>`, which is
+ * where a name that arrived after the list did is recorded. Every other name is
+ * as old as naming a color at all, so one of them stands wherever another does —
+ * which is what lets a later declaration of one supersede an earlier.
+ * @returns {string[]} the names, sorted
+ */
+const collectLaterColorNames = () => {
+	const named = /** @type {{ [name: string]: BcdNode }} */ (
+		/** @type {unknown} */ (bcd.css.types.color)
+	)["named-color"];
+	const names = Object.keys(named).filter((name) => name !== "__compat");
+	if (names.length === 0) {
+		throw new Error("no <named-color> carries a row of its own: bcd moved");
+	}
+	return names.sort();
+};
+
+/**
  * Every named color as `[name, packed value]` — the table the other two are cut
  * down from, and the one a color a mix or a relative reference names is resolved
  * through, whether or not its own name is the shortest way to write it.
@@ -3578,7 +3608,10 @@ const collectShorterColorSpellings = (colorNames, colorName) => {
  * @returns {string} its `new Set([…])` literal — prettier wraps it on emit
  */
 const setLiteral = (names) =>
-	`new Set([${names.map((name) => `"${name}"`).join(", ")}])`;
+	// An empty one takes no argument at all, which is how it is kept.
+	names.length === 0
+		? "new Set()"
+		: `new Set([${names.map((name) => `"${name}"`).join(", ")}])`;
 
 /**
  * @param {[string, string][]} entries the table
@@ -6416,6 +6449,7 @@ const collectData = async () => {
 	const colorFunctions = collectColorArgumentFunctions();
 	const colorNames = collectColorNames(colorName);
 	const colorNameValues = collectColorNameValues(colorName);
+	const laterColorNames = collectLaterColorNames();
 	const mathFunctions = collectMathFunctions();
 	const familyListProperties = collectFamilyListProperties();
 	const calcConstants = collectCalcConstants(SUPPLEMENT.calcConstantValues);
@@ -6461,7 +6495,12 @@ const collectData = async () => {
 	].sort();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
 	checkStatedClassSpellings(syntaxes);
-	const shorthandInitialKeywords = collectShorthandInitialKeywords();
+	const colorKeywords = lowerSorted(
+		acceptedValues(syntaxes.color.syntax).keywords
+	);
+	const shorthandInitialKeywords = collectShorthandInitialKeywords(
+		new Set(colorKeywords)
+	);
 	const shadowProperties = collectShadowProperties();
 	const mergeableAtRules = collectMergeableAtRules(atRules);
 	const gradientFunctions = collectGradientFunctions(syntaxes, functions);
@@ -6537,9 +6576,6 @@ const collectData = async () => {
 		}
 	}
 	assertClassesArePrintable(slotAccepts);
-	const colorKeywords = lowerSorted(
-		acceptedValues(syntaxes.color.syntax).keywords
-	);
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
@@ -6782,8 +6818,10 @@ ${shorthandInitialKeywords
 		([name, entries]) =>
 			`\t[${JSON.stringify(name)}, new Map([${entries
 				.map(
-					([keyword, siblings]) =>
-						`[${JSON.stringify(keyword)}, ${setLiteral(siblings)}]`
+					([keyword, spellings, classes]) =>
+						`[${JSON.stringify(keyword)}, { spellings: ${setLiteral(
+							spellings
+						)}, classes: ${setLiteral(classes)} }]`
 				)
 				.join(", ")}])]`
 	)
@@ -7062,6 +7100,11 @@ ${SUPPLEMENT.colorSpacePrimitives.map(([, source]) => source).join("\n\n")}
 
 ${colorSpaceModel.text}
 
+// The named colors an engine may not read while reading the rest, so one of them
+// says nothing about what another engine takes. Every other name arrived with
+// naming a color at all.
+const LATER_COLOR_NAMES = ${setLiteral(laterColorNames)};
+
 // Every named color as its packed \`0xrrggbb\` value — what a color a mix or a
 // relative reference names resolves through. The two tables above cut this one
 // down to the spellings worth rewriting; this one answers for every name.
@@ -7332,7 +7375,7 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_INITIALS = FAMILY_SLOT_INITIALS;\nmodule.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.KEYWORD_ONLY_PROPERTIES = KEYWORD_ONLY_PROPERTIES;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.KEYWORD_ONLY_PROPERTIES = KEYWORD_ONLY_PROPERTIES;\nmodule.exports.LATER_COLOR_NAMES = LATER_COLOR_NAMES;
 module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;\nmodule.exports.LINEAR_SRGB_TO_P3 = LINEAR_SRGB_TO_P3;
