@@ -5794,6 +5794,42 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a media feature's own number", () => {
+		it("is written the way a value's number is", () => {
+			// A feature is a `<length>`, a `<ratio>` or an `<integer>` and nothing
+			// else, so the number in one shortens like any other — where a prelude
+			// number elsewhere is An+B, and stripping a `+` there breaks it.
+			expect(minify("@media (min-width:0480.0px){a{color:red}}")).toBe(
+				"@media (width>=480px){a{color:red}}"
+			);
+			expect(minify("@media (0480.0px<=width<=768.50px){a{color:red}}")).toBe(
+				"@media (480px<=width<=768.5px){a{color:red}}"
+			);
+			expect(
+				minifyFor("@media (0480.0px<=width<=768.50px){a{color:red}}", [
+					"chrome 50"
+				])
+			).toBe("@media (min-width:480px) and (max-width:768.5px){a{color:red}}");
+			expect(minify("@container card (width>0400.50px){a{color:red}}")).toBe(
+				"@container card (width>400.5px){a{color:red}}"
+			);
+			// A ratio is two integers, and neither is shortened away.
+			expect(minify("@media (aspect-ratio:16/9){a{color:red}}")).toBe(
+				"@media (aspect-ratio:16/9){a{color:red}}"
+			);
+			// A style query compares the tokens as written, and `@supports` reads a
+			// declaration rather than a feature.
+			const style = "@container style(--x: 0480.0px){a{color:red}}";
+			expect(minify(style)).toBe(style);
+			const supports = "@supports (width:0480.0px){a{color:red}}";
+			expect(minify(supports)).toBe(supports);
+			// ...and a selector's own An+B keeps every sign it was written with.
+			expect(minify("li:nth-child(2n+3){color:red}")).toBe(
+				"li:nth-child(2n+3){color:red}"
+			);
+		});
+	});
+
 	describe("a condition saying what another already says", () => {
 		it("drops the media type a query states for nothing", () => {
 			expect(minify("@media all and (min-width:100px){a{color:red}}")).toBe(
@@ -8622,6 +8658,31 @@ describe("CssSyntax minify — the rest of the target's abilities", () => {
 		).toBe(
 			"a{text-decoration:underline;text-decoration-style:dotted;" +
 				"text-decoration-color:red;text-decoration-thickness:2px}"
+		);
+		// The print leaves out the separator between an ident and a hash or a
+		// call, so the components are read back at the junctions it could have
+		// left bare rather than at its spaces alone.
+		expect(
+			minifyFor("a{text-decoration:underline 2px solid #ffffff}", ["safari 15"])
+		).toBe(
+			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:#fff;text-decoration-thickness:2px}"
+		);
+		expect(
+			minifyFor("a{text-decoration:underline solid rgb(1,2,3)}", ["safari 15"])
+		).toBe(
+			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:#010203}"
+		);
+		// ...and a color that stays a call fills the color slot as a hex does.
+		expect(
+			minifyFor(
+				"a{text-decoration:underline solid color-mix(in oklch,red,blue)}",
+				["safari 15"]
+			)
+		).toBe(
+			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:color-mix(in oklch,red,blue)}"
 		);
 		// An unwritten line is the `none` the shorthand would have set.
 		expect(minifyFor("a{text-decoration:dotted red}", ["safari 15"])).toBe(
