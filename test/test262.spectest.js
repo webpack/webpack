@@ -877,8 +877,10 @@ const knownBugs = [
 	// the sorted exports plus `@@toStringTag`, so `__esModule` would have to go.
 	// That is the namespace-object trade-off, not a defer-local fix.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Hoisting is fine; assigning is not caught. A namespace import compiles to
-	// a `var`, which must stay function-scoped for runtime-condition imports.
+	// The assignment is now a build error, which is earlier than the spec's
+	// runtime TypeError, so this test cannot observe the throw. It stays a
+	// `var` because a runtime-condition import must be function-scoped and HMR
+	// accept reassigns it, so `const` is not available to make the write throw.
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
