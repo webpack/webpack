@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Fix import() options, circular reexports, async ESM entries, namespace writes.
+Add `output.environment.topLevelAwait`, await async ESM entries, and fix `import()` options, circular reexports and namespace writes.

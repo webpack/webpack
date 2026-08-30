@@ -3226,6 +3226,11 @@ export interface Environment {
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+	/**
+	 * The environment supports top-level await ('await x' at the top level of a module).
+	 * @since 5.111.0
+	 */
+	topLevelAwait?: boolean;
 }
 /**
  * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
