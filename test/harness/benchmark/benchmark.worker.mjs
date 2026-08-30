@@ -56,6 +56,7 @@ import { Bench, hrtimeNow } from "tinybench";
  * @property {number} peak median peak live bytes
  * @property {number} marginal median marginal live bytes
  * @property {number} samples samples behind the medians
+ * @property {number} spread marginal max-min as a share of the median
  */
 
 /**
@@ -771,6 +772,14 @@ function formatBytes(bytes) {
 }
 
 /**
+ * @param {number} ratio ratio
+ * @returns {string} formatted percentage
+ */
+function formatPercentage(ratio) {
+	return `${(ratio * 100).toFixed(1)}%`;
+}
+
+/**
  * Peak `heapUsed` during `fn`, sampled on the event loop. CodSpeed memory mode
  * counts allocations in an already-warmed heap, so peak-RSS wins stay invisible;
  * this tracks the live-set high-water mark. Called only from the un-instrumented
@@ -835,11 +844,18 @@ function median(values) {
 function recordHeapUsage(uri, samples) {
 	const measured = samples.slice(1);
 	const peak = median(measured.map((sample) => sample.peak));
-	const marginal = median(measured.map((sample) => sample.marginal));
+	const marginals = measured.map((sample) => sample.marginal);
+	const marginal = median(marginals);
+	// How far the samples disagreed. A median hides its own instability, so carry
+	// the spread: a task that drifts run-to-run says so here before CI does.
+	const spread =
+		marginal === 0
+			? 0
+			: (Math.max(...marginals) - Math.min(...marginals)) / marginal;
 
-	heapUsages.push({ uri, peak, marginal, samples: measured.length });
+	heapUsages.push({ uri, peak, marginal, samples: measured.length, spread });
 	console.log(
-		`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)}`
+		`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)} spread=${formatPercentage(spread)}`
 	);
 }
 

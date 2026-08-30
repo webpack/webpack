@@ -182,6 +182,11 @@ async function getBaselineRevs() {
 	];
 }
 
+// Sample spread above which a heap number is reported as not worth comparing.
+// Three samples of a live heap spread 12-15% even when their median repeats to
+// under 1%, so the guard sits well above that and only catches real drift.
+const UNSTABLE_SPREAD = 0.25;
+
 /**
  * @param {number} bytes bytes
  * @returns {string} formatted size
@@ -509,9 +514,15 @@ class BenchmarkRunner {
 			const delta = before
 				? ` (was ${formatBytes(before.peak)}, ${formatPercentage(entry.peak, before.peak)})`
 				: "";
+			// Flagged rather than failed: a wide spread means the number is not worth
+			// comparing, which is a different thing from the number having moved.
+			const spread =
+				entry.spread > UNSTABLE_SPREAD
+					? ` [unstable, samples spread ${(entry.spread * 100).toFixed(1)}%]`
+					: "";
 
 			console.log(
-				`  ${formatBytes(entry.peak).padStart(10)} peak  ${formatBytes(entry.marginal).padStart(10)} marginal  ${entry.uri}${delta}`
+				`  ${formatBytes(entry.peak).padStart(10)} peak  ${formatBytes(entry.marginal).padStart(10)} marginal  ${entry.uri}${delta}${spread}`
 			);
 		}
 
