@@ -1,11 +1,18 @@
 import "./style.css";
 
-it("should apply the initial stylesheet", done => {
+it("should apply the initial stylesheet", () => {
+	const style = getComputedStyle(document.body);
+	expect(style.getPropertyValue("background")).toBe(" red");
+});
+
+it("should load a javascript-only chunk", done => {
 	import("./lazy.js").then(({ default: value }) => {
-		expect(value).toBe(42);
-		const style = getComputedStyle(document.body);
-		expect(style.getPropertyValue("background")).toBe(" red");
-		done();
+		try {
+			expect(value).toBe(42);
+			done();
+		} catch (err) {
+			done(err);
+		}
 	}, done);
 });
 
