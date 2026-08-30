@@ -41,9 +41,8 @@ module.exports = {
 			const start = text.indexOf("const ");
 			const quote = text.indexOf(`"${token}"`);
 
-			// The BOM is gone from the content, so the map must not count it any
-			// more: both segments of the module's first line point at the columns
-			// the code really occupies.
+			// The BOM is gone, so both segments of line 1 must point at the
+			// columns the code really occupies.
 			expect(
 				consumer.generatedPositionFor({ source, line: 1, column: 0 })
 			).toMatchObject({ line, column: start });

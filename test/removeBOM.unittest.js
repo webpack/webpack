@@ -60,10 +60,8 @@ describe("adjustSourceMapForRemovedBOM", () => {
 		expect(adjustSourceMapForRemovedBOM(sourceMap)).toBe(sourceMap);
 	});
 
-	// Column 0 of a BOM-prefixed first line is the BOM, never source content, so
-	// a map starting the line further in is read as having counted the BOM. A
-	// map that ignored it and still skipped column 0 did not describe its own
-	// content, and is shifted with the rest.
+	// Column 0 of a BOM-prefixed line is the BOM, never source content, so a map
+	// that skipped it anyway did not describe its own content.
 	it("shifts a map that skipped the first column for a reason of its own", () => {
 		expect(adjustSourceMapForRemovedBOM(map("EAAA"))).toEqual(map("CAAA"));
 	});

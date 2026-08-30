@@ -1,6 +1,5 @@
-// Emulates dart-sass: the map describes the emitted string, so its first line
-// starts at generated column 1 - column 0 is the BOM. `options.stringifyMap`
-// hands the map over as JSON, the other shape a loader may return.
+// Emulates dart-sass: the map counts the BOM, so line 1 starts at column 1.
+// `options.stringifyMap` returns it as JSON, the other shape a loader may use.
 const { encodeMappings } = require("../../../../lib/util/createMappings");
 
 /** @type {import("../../../../").LoaderDefinition<{ stringifyMap?: boolean }>} */
