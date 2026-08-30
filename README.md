@@ -301,8 +301,6 @@ For information about the governance of the webpack project, see [GOVERNANCE.md]
   **Aviv Keller** <<me@aviv.sh>> (he/him)
 - [evenstensberg](https://github.com/evenstensberg) -
   **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
-- [ovflowd](https://github.com/ovflowd) -
-  **Claudio Wunder** <<cwunder@gnome.org>> (he/they)
 - [thelarkinn](https://github.com/thelarkinn) -
   **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
 
