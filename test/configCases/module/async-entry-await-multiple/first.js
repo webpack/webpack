@@ -1,1 +1,3 @@
-globalThis.__firstEntryValue = await Promise.resolve("first");
+globalThis.__firstEntryValue = await new Promise((resolve) => {
+	setTimeout(() => resolve("first"), 0);
+});
