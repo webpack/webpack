@@ -1,7 +1,11 @@
 "use strict";
 
 // cspell:disable -- VLQ-encoded source-map mappings strings below
-const { encodeMappings, encodeVLQ } = require("../lib/util/createMappings");
+const {
+	decodeVLQ,
+	encodeMappings,
+	encodeVLQ
+} = require("../lib/util/createMappings");
 
 describe("encodeVLQ", () => {
 	const cases = [
@@ -19,6 +23,41 @@ describe("encodeVLQ", () => {
 			expect(encodeVLQ(/** @type {number} */ (input))).toBe(expected);
 		});
 	}
+});
+
+describe("decodeVLQ", () => {
+	const cases = [
+		["A", 0, 1],
+		["C", 1, 1],
+		["D", -1, 1],
+		["e", 15, 1],
+		["gB", 16, 2],
+		["hB", -16, 2],
+		["gkxH", 123456, 4]
+	];
+
+	for (const [input, value, end] of cases) {
+		it(`decodes ${input} -> ${value}`, () => {
+			expect(decodeVLQ(/** @type {string} */ (input), 0)).toEqual({
+				value,
+				end
+			});
+		});
+	}
+
+	it("decodes a value at an offset", () => {
+		expect(decodeVLQ("AAgB", 2)).toEqual({ value: 16, end: 4 });
+	});
+
+	it("reports no value for a separator, an unknown character or the end of the input", () => {
+		expect(decodeVLQ(";AAAA", 0)).toEqual({ value: 0, end: 0 });
+		expect(decodeVLQ("AAAA", 4)).toEqual({ value: 0, end: 4 });
+		expect(decodeVLQ("", 0)).toEqual({ value: 0, end: 0 });
+	});
+
+	it("reports no value for a continuation that runs off the end", () => {
+		expect(decodeVLQ("g", 0)).toEqual({ value: 0, end: 0 });
+	});
 });
 
 describe("encodeMappings", () => {
