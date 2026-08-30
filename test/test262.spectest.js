@@ -132,15 +132,12 @@ const knownHostEvalBugs = [
 ];
 /* cspell:enable */
 
-// A specifier that names no module: `import()` stringifies whatever it is
-// handed, so `import(import(...))` asks for "[object Promise]" and
-// `import(typeof x)` for "object". Rejecting is what the spec requires.
+// `import()` stringifies its argument, so these ask for a name nothing
+// resolves ("[object Promise]", "object") and reject, as the spec requires.
 const UNRESOLVED_SPECIFIER = /Cannot find module/;
 
-// These abandon a rejected promise on purpose — an async body nothing awaits,
-// a short-circuited optional chain, an `import()` of a name nothing resolves.
-// jest records it against the running test, so the count and reason are
-// asserted and cleared below the way `rejectionHandled` would.
+// These abandon a rejected promise on purpose. jest blames the running test,
+// so the count and reason are asserted and cleared below.
 const expectedAbandonedRejections = new Map([
 	[
 		"statements/async-function/evaluation-body.js",
@@ -588,10 +585,8 @@ const compile = async (entry, scenario, options = {}) =>
 			entry,
 			context: path.dirname(entry),
 			output: {
-				// A Cyclic Module Record keeps its [[EvaluationError]] forever, so
-				// re-importing a module that threw re-throws instead of re-running
-				// it. webpack leaves this off by default for CommonJS's sake, so the
-				// suite opts in to measure the spec-conformant output.
+				// A Cyclic Module Record keeps its [[EvaluationError]] forever. Off
+				// by default for CommonJS's sake, so the suite opts in.
 				strictModuleErrorHandling: true,
 				...webpackOptions.output,
 				...(scenario === "module" ? { module: true } : { iife: false })
@@ -854,8 +849,7 @@ const knownBugs = [
 	// `await` does, so the Script-goal early error is not raised.
 	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
 	// `#mark in obj` needs `isExtensible() === false` without evaluating, so the
-	// target must be sealed with every export name already on it — the names
-	// emitted per deferred import, and a mismatch would silently lose a key.
+	// target must be sealed with every export name on it, and a mismatch loses one.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
 	// Host resolution errors must be reported eagerly even for deferred imports;
 	// webpack turns a missing module into a build error resolved lazily instead.
@@ -872,15 +866,11 @@ const knownBugs = [
 	// A deferred module must wait for the whole strongly-connected component when a
 	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
 	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
-	// Just bugs, need to fix
-	// Extensibility is only its first assertion: it also wants `ownKeys` to be
-	// the sorted exports plus `@@toStringTag`, so `__esModule` would have to go.
-	// That is the namespace-object trade-off, not a defer-local fix.
+	// It also wants `ownKeys` to be the sorted exports plus `@@toStringTag`, so
+	// `__esModule` would have to go — the namespace trade-off, not a defer fix.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// The assignment is now a build error, which is earlier than the spec's
-	// runtime TypeError, so this test cannot observe the throw. It stays a
-	// `var` because a runtime-condition import must be function-scoped and HMR
-	// accept reassigns it, so `const` is not available to make the write throw.
+	// Reported as a build error, earlier than the spec's runtime TypeError: the
+	// binding stays a `var`, which a runtime condition and HMR accept both need.
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
@@ -1044,13 +1034,9 @@ const knownBugs = [
 ];
 
 const knownProductionBuildBugs = [
-	// Deliberate: the inner graph reads a class heritage and an unused export's
-	// value as pure, so a `prototype` getter and a `ReferenceError` on a free
-	// name are not seen. Both only fire where the class or the export is
-	// unused — used, the heritage and the expression are emitted and observe
-	// the same as the spec, and development mode observes it either way.
-	// Tree-shaking an imported base class out of an unused class is the whole
-	// point of the first, which `configCases/inner-graph/issue-17565` pins.
+	// Deliberate: the inner graph reads an unused class heritage and an unused
+	// export's value as pure, which `configCases/inner-graph/issue-17565` pins.
+	// Used, both are emitted and observe the same as the spec, as does development.
 	"statements/class/definition/prototype-getter.js",
 	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
