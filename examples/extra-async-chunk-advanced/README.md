@@ -90,10 +90,7 @@ module.exports = config;
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -171,8 +168,6 @@ module.exports = config;
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -191,7 +186,7 @@ module.exports = config;
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -274,7 +269,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(670), __webpack_require_
 ## Unoptimized
 
 ```
-asset output.js 9.75 KiB [emitted] (name: main)
+asset output.js 9.58 KiB [emitted] (name: main)
 asset 670.output.js 344 bytes [emitted]
 asset 210.output.js 326 bytes [emitted]
 asset 425.output.js 326 bytes [emitted]
@@ -305,9 +300,9 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.83 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -378,9 +373,9 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.83 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

@@ -132,24 +132,9 @@ module.exports = webpackAsyncContext;
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -167,10 +152,7 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -223,9 +205,7 @@ module.exports = webpackAsyncContext;
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -257,8 +237,6 @@ module.exports = webpackAsyncContext;
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -277,7 +255,7 @@ module.exports = webpackAsyncContext;
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -337,7 +315,7 @@ let __webpack_exports__ = {};
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
-__webpack_require__.e(/*! import() | chunk-foo */ 45).then(__webpack_require__.bind(__webpack_require__, /*! ./templates/foo */ 2)).then(function(foo) {
+__webpack_require__.e(/*! import() | chunk-foo */ 45).then(() => (__webpack_require__(/*! ./templates/foo */ 2))).then(function(foo) {
 	console.log('foo:', foo);
 })
 
@@ -364,7 +342,7 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 ## Unoptimized
 
 ```
-asset output.js 11.8 KiB [emitted] (name: main)
+asset output.js 11 KiB [emitted] (name: main)
 asset 792.output.js 846 bytes [emitted] (name: chunk-bar-baz2)
 asset 994.output.js 846 bytes [emitted] (name: chunk-bar-baz0)
 asset 45.output.js 845 bytes [emitted] (name: chunk-foo)
@@ -376,9 +354,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.93 KiB 8 modules
+  runtime modules 5.34 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [used exports unknown]
@@ -405,7 +383,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.69 KiB [emitted] [minimized] (name: main)
+asset output.js 2.63 KiB [emitted] [minimized] (name: main)
 asset 994.output.js 117 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 45.output.js 116 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 116 bytes [emitted] [minimized] (name: chunk-bar-baz2)
@@ -416,9 +394,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.93 KiB 8 modules
+  runtime modules 5.71 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [no exports used]

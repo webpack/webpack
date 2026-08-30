@@ -178,24 +178,9 @@ function platform() {
 /******/ /* webpack/runtime/define property getters */
 /******/ // define getter/value functions for harmony exports
 /******/ __webpack_require__.d = (exports, definition) => {
-/******/ 	if(Array.isArray(definition)) {
-/******/ 		var i = 0;
-/******/ 		while(i < definition.length) {
-/******/ 			var key = definition[i++];
-/******/ 			var binding = definition[i++];
-/******/ 			if(!__webpack_require__.o(exports, key)) {
-/******/ 				if(binding === 0) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 				} else {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 				}
-/******/ 			} else if(binding === 0) { i++; }
-/******/ 		}
-/******/ 	} else {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 		}
 /******/ 	}
 /******/ };
@@ -206,9 +191,7 @@ function platform() {
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
 /******/ __webpack_require__.r = (exports) => {
-/******/ 	if(Symbol.toStringTag) {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 	}
+/******/ 	Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 	Object.defineProperty(exports, '__esModule', { value: true });
 /******/ };
 /******/ 
@@ -239,7 +222,7 @@ function platform() {
 /******/ 			if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				installedChunks[chunkId][0]();
 /******/ 			}
-/******/ 			installedChunks[__webpack_esm_ids__[i]] = 0;
+/******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 	
 /******/ 	}
@@ -306,7 +289,7 @@ async function main() {
 	// Code-split into its own chunk. The universal chunk loader knows how to
 	// fetch it on either platform (native `import()` in the browser, dynamic
 	// `import()` of the emitted `.mjs` in Node).
-	const { render } = await __webpack_require__.ei("render_js", () => import(/*! import() */ "./render_js.mjs")).then(__webpack_require__.bind(__webpack_require__, /*! ./render */ 2));
+	const { render } = await __webpack_require__.ei("render_js", () => (import(/*! import() */ "./render_js.mjs"))).then(() => (__webpack_require__(/*! ./render */ 2)));
 
 	render(banner);
 }
@@ -319,7 +302,6 @@ main();
 # dist/render_js.mjs
 
 ```javascript
-export const __webpack_esm_id__ = "render_js";
 export const __webpack_esm_ids__ = ["render_js"];
 export const __webpack_esm_modules__ = {
 
@@ -358,11 +340,11 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 7.84 KiB [emitted] [javascript module] (name: main)
-asset render_js.mjs 1.02 KiB [emitted] [javascript module]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.94 KiB (runtime) [entry] [rendered]
+asset output.mjs 7.19 KiB [emitted] [javascript module] (name: main)
+asset render_js.mjs 998 bytes [emitted] [javascript module]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.45 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.94 KiB 4 modules
+  runtime modules 2.45 KiB 4 modules
   dependent modules 562 bytes [dependent] 1 module
   ./example.js 629 bytes [built] [code generated]
     [no exports]
@@ -380,11 +362,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.mjs 1.27 KiB [emitted] [javascript module] [minimized] (name: main)
-asset render_js.mjs 250 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.71 KiB (runtime) [entry] [rendered]
+asset output.mjs 1.07 KiB [emitted] [javascript module] [minimized] (name: main)
+asset render_js.mjs 206 bytes [emitted] [javascript module] [minimized]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.25 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.71 KiB 3 modules
+  runtime modules 2.25 KiB 3 modules
   ./example.js + 1 modules 1.16 KiB [built] [code generated]
     [no exports]
     [no exports used]

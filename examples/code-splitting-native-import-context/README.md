@@ -144,24 +144,9 @@ module.exports = webpackAsyncContext;
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -179,10 +164,7 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -235,9 +217,7 @@ module.exports = webpackAsyncContext;
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -269,8 +249,6 @@ module.exports = webpackAsyncContext;
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -289,7 +267,7 @@ module.exports = webpackAsyncContext;
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -376,7 +354,7 @@ getTemplate("baz");
 ## Unoptimized
 
 ```
-asset output.js 11.5 KiB [emitted] (name: main)
+asset output.js 10.7 KiB [emitted] (name: main)
 asset 717.output.js 846 bytes [emitted]
 asset 776.output.js 846 bytes [emitted]
 asset 0.output.js 844 bytes [emitted]
@@ -404,9 +382,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [used exports unknown]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.93 KiB 8 modules
+  runtime modules 5.34 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [used exports unknown]
@@ -417,7 +395,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.67 KiB [emitted] [minimized] (name: main)
+asset output.js 2.61 KiB [emitted] [minimized] (name: main)
 asset 717.output.js 117 bytes [emitted] [minimized]
 asset 776.output.js 117 bytes [emitted] [minimized]
 asset 0.output.js 114 bytes [emitted] [minimized]
@@ -442,9 +420,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [exports: default]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.93 KiB 8 modules
+  runtime modules 5.71 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [no exports used]

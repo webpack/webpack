@@ -181,24 +181,9 @@ function c() { console.log("c"); }
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -209,9 +194,7 @@ function c() { console.log("c"); }
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -248,7 +231,7 @@ _library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 # dist/output.js
 
 ```javascript
-(()=>{"use strict";var e={627(e,r,t){function o(){for(var e=0,r=0,t=arguments,o=t.length;r<o;)e+=t[r++];return e}function n(){for(var e=1,r=0,t=arguments,o=t.length;r<o;)e*=t[r++];return e}t.d(r,{WQ:()=>o,lw:()=>n})}};const r={};function t(o){const n=r[o];if(void 0!==n)return n.exports;const a=r[o]={exports:{}};return e[o](a,a.exports,t),a.exports}t.d=(e,r)=>{if(Array.isArray(r))for(var o=0;o<r.length;){var n=r[o++],a=r[o++];t.o(e,n)?0===a&&o++:0===a?Object.defineProperty(e,n,{enumerable:!0,value:r[o++]}):Object.defineProperty(e,n,{enumerable:!0,get:a})}else for(var n in r)t.o(r,n)&&!t.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:r[n]})},t.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r);var o=t(627);(0,o.WQ)(1,2),o.lw(1,2)})();
+(()=>{"use strict";var r={627(r,t,e){function o(){for(var r=0,t=0,e=arguments,o=e.length;t<o;)r+=e[t++];return r}function n(){for(var r=1,t=0,e=arguments,o=e.length;t<o;)r*=e[t++];return r}e.d(t,{WQ:()=>o,lw:()=>n})}};const t={};function e(o){const n=t[o];if(void 0!==n)return n.exports;const c=t[o]={exports:{}};return r[o](c,c.exports,e),c.exports}e.d=(r,t)=>{for(var o in t)e.o(t,o)&&!e.o(r,o)&&Object.defineProperty(r,o,{enumerable:!0,get:t[o]})},e.o=(r,t)=>Object.prototype.hasOwnProperty.call(r,t);var o=e(627);(0,o.WQ)(1,2),o.lw(1,2)})();
 ```
 
 # Info
@@ -256,11 +239,11 @@ _library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 ## Unoptimized
 
 ```
-asset output.js 7.47 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 698 bytes (javascript) 1.08 KiB (runtime) [entry] [rendered]
+asset output.js 6.83 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 698 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 584 bytes [dependent] 3 modules
-  runtime modules 1.08 KiB 3 modules
+  runtime modules 614 bytes 3 modules
   ./example.js 114 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -271,10 +254,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 748 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 461 bytes (javascript) 860 bytes (runtime) [entry] [rendered]
+asset output.js 545 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 461 bytes (javascript) 403 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 860 bytes 2 modules
+  runtime modules 403 bytes 2 modules
   dependent modules 347 bytes [dependent] 1 module
   ./example.js 114 bytes [built] [code generated]
     [no exports]

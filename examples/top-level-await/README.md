@@ -137,7 +137,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CreateUserAction: () => (/* binding */ CreateUserAction)
 /* harmony export */ });
 // import() doesn't care about whether a module is an async module or not
-const UserApi = __webpack_require__.e(/*! import() */ "UserApi_js").then(__webpack_require__.bind(__webpack_require__, /*! ./UserApi.js */ 2));
+const UserApi = __webpack_require__.e(/*! import() */ "UserApi_js").then(() => (__webpack_require__(/*! ./UserApi.js */ 2)));
 
 const CreateUserAction = async name => {
 	// These are normal awaits, because they are in an async function
@@ -157,7 +157,7 @@ const CreateUserAction = async name => {
 //   Here: Connecting to the DB starts when AlternativeCreateUserAction
 //         is called
 const AlternativeCreateUserAction = async name => {
-	const { createUser } = await __webpack_require__.e(/*! import() */ "UserApi_js").then(__webpack_require__.bind(__webpack_require__, /*! ./UserApi.js */ 2));
+	const { createUser } = await __webpack_require__.e(/*! import() */ "UserApi_js").then(() => (__webpack_require__(/*! ./UserApi.js */ 2)));
 	await createUser(name);
 };
 
@@ -280,24 +280,9 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -315,10 +300,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -371,9 +353,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -405,8 +385,6 @@ const AlternativeCreateUserAction = async name => {
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -425,7 +403,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -590,7 +568,7 @@ __webpack_async_result__();
 ## Unoptimized
 
 ```
-asset output.js 15.3 KiB [emitted] (name: main)
+asset output.js 14.5 KiB [emitted] (name: main)
 asset UserApi_js.output.js 3.05 KiB [emitted]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
@@ -601,9 +579,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [used exports unknown]
     import() ./UserApi.js ./Actions.js 2:16-38
     import() ./UserApi.js ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.3 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.89 KiB 9 modules
+  runtime modules 7.3 KiB 9 modules
   dependent modules 1.09 KiB [dependent] 1 module
   ./example.js 103 bytes [built] [code generated]
     [no exports]
@@ -615,7 +593,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 3.03 KiB [emitted] [minimized] (name: main)
+asset output.js 2.97 KiB [emitted] [minimized] (name: main)
 asset UserApi_js.output.js 528 bytes [emitted] [minimized]
 chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
@@ -625,9 +603,9 @@ chunk (runtime: main) UserApi_js.output.js 617 bytes [rendered]
     [exports: createUser]
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 7.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.89 KiB 9 modules
+  runtime modules 7.67 KiB 9 modules
   ./example.js + 1 modules 1.19 KiB [built] [code generated]
     [no exports]
     [no exports used]

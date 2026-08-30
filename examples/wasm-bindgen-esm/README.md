@@ -297,24 +297,9 @@ module.exports = __webpack_require__.v(exports, module.id, "83f766418938094a1584
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -325,9 +310,7 @@ module.exports = __webpack_require__.v(exports, module.id, "83f766418938094a1584
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -382,10 +365,10 @@ module.exports = __webpack_require__.v(exports, module.id, "83f766418938094a1584
 
 ```
 asset 83f766418938094a1584.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
-asset output.js 13.9 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.96 KiB (runtime) [entry] [rendered]
+asset output.js 13.3 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.49 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.96 KiB 5 modules
+  runtime modules 3.49 KiB 5 modules
   dependent modules 2.97 KiB (javascript) 14.8 KiB (webassembly) [dependent] 2 modules
   ./example.js 69 bytes [built] [code generated]
     [no exports]
@@ -398,10 +381,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset d9d80d430272dc67db6b.wasm 14.8 KiB [emitted] [immutable] (auxiliary name: main)
-asset output.js 3.45 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.73 KiB (runtime) [entry] [rendered]
+asset output.js 3.25 KiB [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 3.03 KiB (javascript) 14.8 KiB (webassembly) 3.28 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.73 KiB 4 modules
+  runtime modules 3.28 KiB 4 modules
   dependent modules 2.97 KiB (javascript) 14.8 KiB (webassembly) [dependent] 2 modules
   ./example.js 69 bytes [built] [code generated]
     [no exports]

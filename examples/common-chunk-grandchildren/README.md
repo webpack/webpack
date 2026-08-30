@@ -159,10 +159,7 @@ module.exports = config;
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -240,8 +237,6 @@ module.exports = config;
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -260,7 +255,7 @@ module.exports = config;
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -445,14 +440,14 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 8.94 KiB [emitted] (name: main)
+asset output.js 8.78 KiB [emitted] (name: main)
 asset pageB_js.output.js 760 bytes [emitted]
 asset pageA_js.output.js 565 bytes [emitted]
 asset pageC_js.output.js 547 bytes [emitted]
 asset reusableComponent_js.output.js 441 bytes [emitted]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.83 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -488,14 +483,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.86 KiB [emitted] [minimized] (name: main)
+asset output.js 1.85 KiB [emitted] [minimized] (name: main)
 asset pageB_js.output.js 228 bytes [emitted] [minimized]
 asset reusableComponent_js.output.js 141 bytes [emitted] [minimized]
 asset pageC_js.output.js 138 bytes [emitted] [minimized]
 asset pageA_js.output.js 137 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.83 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
