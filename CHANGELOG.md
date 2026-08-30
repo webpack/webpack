@@ -1,5 +1,23 @@
 # webpack
 
+## 5.110.2
+
+### Patch Changes
+
+- Fix analyzable ESM baking around cycles, mixed-served wasm and style url maps. (by [@alexander-akait](https://github.com/alexander-akait) in [#21851](https://github.com/webpack/webpack/pull/21851))
+
+- Minify more HTML and CSS shorthands, and cut two costs off printing. (by [@alexander-akait](https://github.com/alexander-akait) in [#21842](https://github.com/webpack/webpack/pull/21842))
+
+- Report a named import that is never read when it names a missing export. (by [@alexander-akait](https://github.com/alexander-akait) in [#21856](https://github.com/webpack/webpack/pull/21856))
+
+- Fix ESM circular reexports, cyclic const TDZ, and defer evaluation order. (by [@alexander-akait](https://github.com/alexander-akait) in [#21852](https://github.com/webpack/webpack/pull/21852))
+
+- Stop `output.html` emitting an unused JS chunk for each generated page. (by [@alexander-akait](https://github.com/alexander-akait) in [#21859](https://github.com/webpack/webpack/pull/21859))
+
+- Stop emitting the CSS chunk loading runtime when every CSS chunk is initial. (by [@alexander-akait](https://github.com/alexander-akait) in [#21862](https://github.com/webpack/webpack/pull/21862))
+
+- Strip a BOM a loader put on a string, and shift a source map that counted it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21857](https://github.com/webpack/webpack/pull/21857))
+
 ## 5.110.1
 
 ### Patch Changes
@@ -799,7 +817,7 @@
 
 - Fix snapshot validity check for context dependencies in watch mode by treating watchpack's existence-only entries (`{}`) as cache misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#20916](https://github.com/webpack/webpack/pull/20916))
 
-- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+- Support no-expression template literals in computed member access (e.g. `` import.meta[`url`] ``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
 
 - Improve tree-shaking in `isPure`: handle more expression types (`ArrayExpression`, `ObjectExpression`, `NewExpression`, `ChainExpression`, `UnaryExpression` (safe operators), `MetaProperty`, `TaggedTemplateExpression`, `BinaryExpression` (strict equality)), prevent `/*#__PURE__*/` comments from leaking across `ObjectExpression` properties, and detect PURE comments inside `TemplateLiteral` interpolations. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
 
