@@ -1042,7 +1042,12 @@ const knownBugs = [
 
 const knownProductionBuildBugs = [
 	// Deliberate: the inner graph reads a class heritage and an unused export's
-	// value as pure. `configCases/inner-graph/issue-17565` pins the first.
+	// value as pure, so a `prototype` getter and a `ReferenceError` on a free
+	// name are not seen. Both only fire where the class or the export is
+	// unused — used, the heritage and the expression are emitted and observe
+	// the same as the spec, and development mode observes it either way.
+	// Tree-shaking an imported base class out of an unused class is the whole
+	// point of the first, which `configCases/inner-graph/issue-17565` pins.
 	"statements/class/definition/prototype-getter.js",
 	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
