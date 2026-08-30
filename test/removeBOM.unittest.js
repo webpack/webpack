@@ -68,6 +68,24 @@ describe("adjustSourceMapForRemovedBOM", () => {
 		expect(adjustSourceMapForRemovedBOM(map("EAAA"))).toEqual(map("CAAA"));
 	});
 
+	it("leaves a map declaring a version other than 3 alone, and shifts one declaring none", () => {
+		const older = { ...map("CAAA"), version: 2 };
+		const versionless = { mappings: "CAAA", sources: ["x.js"] };
+
+		expect(
+			adjustSourceMapForRemovedBOM(
+				/** @type {import("webpack-sources").RawSourceMap} */
+				(/** @type {unknown} */ (older))
+			)
+		).toBe(older);
+		expect(
+			adjustSourceMapForRemovedBOM(
+				/** @type {import("webpack-sources").RawSourceMap} */
+				(/** @type {unknown} */ (versionless))
+			)
+		).toEqual({ mappings: "AAAA", sources: ["x.js"] });
+	});
+
 	it("leaves a map whose first line has no mapping alone", () => {
 		const sourceMap = map(";CAAA");
 
