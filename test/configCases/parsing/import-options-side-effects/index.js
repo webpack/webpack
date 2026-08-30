@@ -37,27 +37,48 @@ it("should evaluate an options object whose keys are not import attributes", asy
 	expect(log).toEqual(["effect"]);
 });
 
+const rejection = async (promise) => {
+	try {
+		await promise;
+	} catch (error) {
+		return error;
+	}
+	throw new Error("expected the import to reject");
+};
+
 it("should reject an import() whose options are not an object", async () => {
-	await expect(import("./a.js", 1)).rejects.toThrow(
-		"The second argument to import() must be an object"
-	);
-	await expect(import("./a.js", null)).rejects.toThrow(
-		"The second argument to import() must be an object"
-	);
+	for (const options of [1, null]) {
+		const error = await rejection(import("./a.js", options));
+
+		expect(error).toBeInstanceOf(TypeError);
+		expect(error.message).toBe(
+			"The second argument to import() must be an object"
+		);
+	}
 });
 
 it("should reject an import() whose 'with' option is not an object", async () => {
-	await expect(import("./a.js", { with: 1 })).rejects.toThrow(
-		"The 'with' option must be an object"
-	);
+	const name = "a";
+	for (const imported of [
+		import("./a.js", { with: 1 }),
+		import(`./${name}.js`, { with: 1 })
+	]) {
+		const error = await rejection(imported);
+
+		expect(error).toBeInstanceOf(TypeError);
+		expect(error.message).toBe("The 'with' option must be an object");
+	}
 });
 
 it("should reject an import() whose attribute values are not strings", async () => {
-	await expect(import("./a.js", { with: { type: 1 } })).rejects.toThrow(
-		"Import attribute values must be strings"
-	);
 	const name = "a";
-	await expect(
+	for (const imported of [
+		import("./a.js", { with: { type: 1 } }),
 		import(`./${name}.js`, { with: { type: 1 } })
-	).rejects.toThrow("Import attribute values must be strings");
+	]) {
+		const error = await rejection(imported);
+
+		expect(error).toBeInstanceOf(TypeError);
+		expect(error.message).toBe("Import attribute values must be strings");
+	}
 });
