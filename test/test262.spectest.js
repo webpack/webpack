@@ -333,6 +333,9 @@ const knownV8Bugs = [
 
 /* cspell:disable */
 const edgeCases = [
+	// `this.test262 = true` then a bare `test262`: with the parsers off the
+	// global reference is left alone and resolves the way a script would
+	"global-code/unscopables-ignored.js",
 	// eval test cases require to be in global scope
 	"eval-code/indirect/non-definable-global-var.js",
 	"eval-code/indirect/this-value-func.js",
@@ -912,8 +915,6 @@ const knownBugs = [
 	"global-code/script-decl-var-collision.js",
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
-	// Same cause: `this.test262 = true` then a bare `test262` reference.
-	"global-code/unscopables-ignored.js",
 
 	// `Object.defineProperty(this, "x", { get })` on the global object — the
 	// test relies on the getter side-effect (deleting `this.x`) being visible
