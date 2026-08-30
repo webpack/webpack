@@ -838,10 +838,6 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 
 /* cspell:disable */
 const knownBugs = [
-	// webpack resolves a circular reexport to `undefined` with a warning rather
-	// than failing the link, so the build reports no error.
-	"module-code/instn-iee-err-circular.js",
-	"module-code/instn-iee-err-circular-as.js",
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
 
