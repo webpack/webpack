@@ -247,9 +247,9 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 1.11 KiB
-  asset index.js 658 bytes [emitted] [minimized] (name: index)
-  asset special.js 431 bytes [emitted] [minimized] (name: special)
+assets by path *.js 1.04 KiB
+  asset index.js 616 bytes [emitted] [minimized] (name: index)
+  asset special.js 399 bytes [emitted] [minimized] (name: special)
   asset __html_6d047296_0.js 46 bytes [emitted] [minimized] (name: __html_6d047296_0)
 assets by chunk 14.9 KiB (auxiliary name: index)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: index)

@@ -47,24 +47,9 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -75,9 +60,7 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -120,10 +103,10 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 3.33 KiB [emitted] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.08 KiB (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 2.69 KiB [emitted] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 1.08 KiB 3 modules
+  runtime modules 614 bytes 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     [used exports unknown]
@@ -135,10 +118,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.umd.js 852 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.08 KiB (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 799 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 991 bytes (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 1.08 KiB 3 modules
+  runtime modules 991 bytes 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     entry ./example main

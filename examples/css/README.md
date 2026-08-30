@@ -229,17 +229,11 @@ __webpack_require__.r(module.exports = {
 /******/ 	
 /******/ 	/* webpack/runtime/get css chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.k = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.css";
-/******/ 	};
+/******/ 	__webpack_require__.k = (chunkId) => (chunkId + ".output.css");
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -292,9 +286,7 @@ __webpack_require__.r(module.exports = {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -432,8 +424,6 @@ __webpack_require__.r(module.exports = {
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -452,7 +442,7 @@ __webpack_require__.r(module.exports = {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -518,7 +508,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 7));
+__webpack_require__.e(/*! import() */ 1).then(() => (__webpack_require__(/*! ./lazy-style.css */ 7)));
 
 document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_IMPORTED_MODULE_0__.main;
 
@@ -666,17 +656,17 @@ app, so scoping would break them): `@layer` and `@page` names,
 ## Unoptimized
 
 ```
-assets by path *.js 15.4 KiB
-  asset output.js 15.1 KiB [emitted] (name: main)
+assets by path *.js 15.1 KiB
+  asset output.js 14.8 KiB [emitted] (name: main)
   asset 1.output.js 332 bytes [emitted]
 assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 16.2 KiB (14.6 KiB) = output.js 15.1 KiB output.css 1.04 KiB 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 259 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.87 KiB (runtime) [entry] [rendered]
+Entrypoint main 15.8 KiB (14.6 KiB) = output.js 14.8 KiB output.css 1.04 KiB 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 259 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.87 KiB 9 modules
+  runtime modules 8.67 KiB 9 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 78 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 181 bytes [built] [code generated]
     [no exports]
@@ -694,17 +684,17 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.21 KiB
-  asset output.js 3.13 KiB [emitted] [minimized] (name: main)
+assets by path *.js 3.2 KiB
+  asset output.js 3.12 KiB [emitted] [minimized] (name: main)
   asset 822.output.js 85 bytes [emitted] [minimized]
 assets by path *.css 376 bytes
   asset output.css 360 bytes [emitted] [minimized] (name: main)
   asset 822.output.css 16 bytes [emitted] [minimized]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.48 KiB (14.6 KiB) = output.js 3.13 KiB output.css 360 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 467 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.64 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.47 KiB (14.6 KiB) = output.js 3.12 KiB output.css 360 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 467 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.46 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.64 KiB 8 modules
+  runtime modules 8.46 KiB 8 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
   built modules 467 bytes (javascript) 375 bytes (css) [built]
     ./example.js + 5 modules 408 bytes [not cacheable] [built] [code generated]

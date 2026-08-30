@@ -96,10 +96,7 @@ require.ensure(["./a"], function(require) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -177,8 +174,6 @@ require.ensure(["./a"], function(require) {
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -197,7 +192,7 @@ require.ensure(["./a"], function(require) {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -346,7 +341,7 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 9 KiB [emitted] (name: main)
+asset output.js 8.84 KiB [emitted] (name: main)
 asset a_js-b_js.output.js 618 bytes [emitted]
 asset c_js.output.js 329 bytes [emitted]
 asset d_js.output.js 329 bytes [emitted]
@@ -375,9 +370,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.83 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -416,9 +411,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.83 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

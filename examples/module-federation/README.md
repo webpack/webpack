@@ -361,7 +361,7 @@ export default Component;
 // This also requires an async boundary (import())
 
 // At this point shared modules initialized and remote modules are loaded
-__webpack_require__.e(/*! import() */ "src_bootstrap_js").then(__webpack_require__.bind(__webpack_require__, /*! ./bootstrap */ 2));
+__webpack_require__.e(/*! import() */ "src_bootstrap_js").then(() => (__webpack_require__(/*! ./bootstrap */ 2)));
 
 // It's possible to place more code here to do stuff on page init
 // but it can't use any of the shared modules or remote modules.
@@ -474,7 +474,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
-/******/ 		const getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
+/******/ 		const getProto = Object.getPrototypeOf;
 /******/ 		let leafPrototypes;
 /******/ 		// create a fake namespace object
 /******/ 		// mode & 1: value is a module id, require it
@@ -505,24 +505,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -540,10 +525,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -596,9 +578,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -923,8 +903,6 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -943,7 +921,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -1097,24 +1075,9 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -1132,10 +1095,7 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -1188,9 +1148,7 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -1441,8 +1399,6 @@ __webpack_require__.d(exports, {
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -1461,7 +1417,7 @@ __webpack_require__.d(exports, {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -1629,24 +1585,9 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -1664,10 +1605,7 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".js");
 /******/ 	
 /******/ 	/* webpack/runtime/global */
 /******/ 	__webpack_require__.g = (function() {
@@ -1730,9 +1668,7 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -1989,8 +1925,6 @@ __webpack_require__.d(exports, {
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -2009,7 +1943,7 @@ __webpack_require__.d(exports, {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -2079,11 +2013,11 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 46 KiB [emitted]
-  asset app.js 30.6 KiB [emitted] (name: app)
+  asset app.js 29.7 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.5 KiB (runtime) [entry] [rendered]
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.5 KiB 13 modules
+    runtime modules 18.9 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2108,11 +2042,11 @@ mfe-b:
   assets by chunk 1 MiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 24.6 KiB [emitted] (name: mfeBBB)
+  asset mfeBBB.js 23.8 KiB [emitted] (name: mfeBBB)
   asset src-b_Component_js.js 4.02 KiB [emitted]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.8 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.4 KiB 10 modules
+    runtime modules 15.8 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2137,12 +2071,12 @@ mfe-c:
   assets by chunk 1020 KiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_lodash_random_js.js 24.8 KiB [emitted] (id hint: vendors)
-  asset mfeCCC.js 26 KiB [emitted] (name: mfeCCC)
+  asset mfeCCC.js 25.2 KiB [emitted] (name: mfeCCC)
   asset src-c_LazyComponent_js.js 4.09 KiB [emitted]
   asset src-c_Component_js.js 3.9 KiB [emitted]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17.1 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 17.1 KiB 12 modules
+    runtime modules 16.6 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2177,11 +2111,11 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 12.8 KiB [emitted] [minimized] 1 related asset
-  asset app.js 8.05 KiB [emitted] [minimized] (name: app)
+  asset app.js 7.78 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.9 KiB (runtime) [entry] [rendered]
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.2 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.9 KiB 14 modules
+    runtime modules 19.2 KiB 14 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2205,11 +2139,11 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.56 KiB [emitted] [minimized] (name: mfeBBB)
+  asset mfeBBB.js 6.33 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 632 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.7 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.7 KiB 11 modules
+    runtime modules 16.1 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2231,13 +2165,13 @@ mfe-b:
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 7.06 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 7.01 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.08 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 651 bytes [emitted] [minimized]
   asset src-c_Component_js.js 595 bytes [emitted] [minimized]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.8 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 17 KiB 12 modules
+    runtime modules 16.8 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]

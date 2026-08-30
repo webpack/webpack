@@ -328,24 +328,9 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -356,9 +341,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -410,13 +393,13 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ## Unoptimized
 
 ```
-asset output.js 14.4 KiB [emitted] (name: main)
+asset output.js 13.8 KiB [emitted] (name: main)
 asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.78 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.3 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.78 KiB 5 modules
+  runtime modules 3.3 KiB 5 modules
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
@@ -428,14 +411,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 3.22 KiB [emitted] [minimized] (name: main)
+asset output.js 3.18 KiB [emitted] [minimized] (name: main)
 asset cf7e85ed8e63f4d888d1.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset a2f8efa4d5c0dcec35af.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 8c504d8ec13ead0a0a07.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.54 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.46 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
-  runtime modules 3.54 KiB 4 modules
+  runtime modules 3.46 KiB 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
     [no exports used]

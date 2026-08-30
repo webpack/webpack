@@ -166,7 +166,7 @@ module.exports = 'prop-types';
 /******/ 				let [chunkIds, fn, priority] = deferred[i];
 /******/ 				let fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
-/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 					if (((priority & 1) === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
 /******/ 						chunkIds.splice(j--, 1);
 /******/ 					} else {
 /******/ 						fulfilled = false;
@@ -196,24 +196,9 @@ module.exports = 'prop-types';
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -224,9 +209,7 @@ module.exports = 'prop-types';
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -307,7 +290,7 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset react-vendors.js 8.04 KiB [emitted] (name: react-vendors)
+asset react-vendors.js 7.4 KiB [emitted] (name: react-vendors)
 asset app.js 1.59 KiB [emitted] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
@@ -315,11 +298,11 @@ chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial
     [no exports]
     [used exports unknown]
     entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.73 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.25 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 3.73 KiB 6 modules
+  runtime modules 3.25 KiB 6 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]
@@ -348,7 +331,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset react-vendors.js 1.4 KiB [emitted] [minimized] (name: react-vendors)
+asset react-vendors.js 1.2 KiB [emitted] [minimized] (name: react-vendors)
 asset app.js 180 bytes [emitted] [minimized] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
@@ -356,11 +339,11 @@ chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial
     [no exports]
     [no exports used]
     entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.49 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.05 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 3.49 KiB 5 modules
+  runtime modules 3.05 KiB 5 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]

@@ -81,24 +81,9 @@ export function reset() {
 /******/ /* webpack/runtime/define property getters */
 /******/ // define getter/value functions for harmony exports
 /******/ __webpack_require__.d = (exports, definition) => {
-/******/ 	if(Array.isArray(definition)) {
-/******/ 		var i = 0;
-/******/ 		while(i < definition.length) {
-/******/ 			var key = definition[i++];
-/******/ 			var binding = definition[i++];
-/******/ 			if(!__webpack_require__.o(exports, key)) {
-/******/ 				if(binding === 0) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 				} else {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 				}
-/******/ 			} else if(binding === 0) { i++; }
-/******/ 		}
-/******/ 	} else {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 		}
 /******/ 	}
 /******/ };
@@ -109,9 +94,7 @@ export function reset() {
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
 /******/ __webpack_require__.r = (exports) => {
-/******/ 	if(Symbol.toStringTag) {
-/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 	}
+/******/ 	Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 	Object.defineProperty(exports, '__esModule', { value: true });
 /******/ };
 /******/ 
@@ -142,7 +125,7 @@ export function reset() {
 /******/ 			if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				installedChunks[chunkId][0]();
 /******/ 			}
-/******/ 			installedChunks[__webpack_esm_ids__[i]] = 0;
+/******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 	
 /******/ 	}
@@ -195,7 +178,7 @@ export function reset() {
 
 ;// ./methods.js
 const resetCounter = async () => {
-	(await __webpack_require__.ei(1, () => import(/*! import() */ "./dist/1.output.js")).then(__webpack_require__.bind(__webpack_require__, /*! ./counter */ 1))).reset();
+	(await __webpack_require__.ei(1, () => (import(/*! import() */ "./dist/1.output.js"))).then(() => (__webpack_require__(/*! ./counter */ 1)))).reset();
 };
 
 const print = value => console.log(value);
@@ -204,7 +187,7 @@ const print = value => console.log(value);
 
 
 setTimeout(async () => {
-	const counter = await __webpack_require__.ei(1, () => import(/*! import() */ "./dist/1.output.js")).then(__webpack_require__.bind(__webpack_require__, /*! ./counter */ 1));
+	const counter = await __webpack_require__.ei(1, () => (import(/*! import() */ "./dist/1.output.js"))).then(() => (__webpack_require__(/*! ./counter */ 1)));
 	print(counter.value);
 	counter.increment();
 	counter.increment();
@@ -218,7 +201,7 @@ setTimeout(async () => {
 # dist/output.js (production)
 
 ```javascript
-var e={};const t={};function r(o){const n=t[o];if(void 0!==n)return n.exports;const i=t[o]={exports:{}};return e[o](i,i.exports,r),i.exports}r.m=e,r.d=(e,t)=>{if(Array.isArray(t))for(var o=0;o<t.length;){var n=t[o++],i=t[o++];r.o(e,n)?0===i&&o++:0===i?Object.defineProperty(e,n,{enumerable:!0,value:t[o++]}):Object.defineProperty(e,n,{enumerable:!0,get:i})}else for(var n in t)r.o(t,n)&&!r.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},r.o=(e,t)=>Object.hasOwn(e,t),r.r=e=>{Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},(()=>{const e={792:0},t=t=>{let{__webpack_esm_ids__:o,__webpack_esm_modules__:n,__webpack_esm_runtime__:i}=t;var s,a,l=0;for(s in n)r.o(n,s)&&(r.m[s]=n[s]);for(i&&i(r);l<o.length;l++)a=o[l],r.o(e,a)&&e[a]&&e[a][0](),e[o[l]]=0};r.ei=(o,n)=>{let i=[],s=r.o(e,o)?e[o]:void 0;if(0!==s)if(s)i.push(s[1]);else{let r=n().then(t,t=>{throw 0!==e[o]&&(e[o]=void 0),t});r=Promise.race([r,new Promise(t=>s=e[o]=[t])]),i.push(s[1]=r)}return Promise.all(i)}})();const o=e=>console.log(e);setTimeout(async()=>{const e=await r.ei(481,()=>import("./dist/481.output.js")).then(r.bind(r,481));o(e.value),e.increment(),e.increment(),e.increment(),o(e.value),await(async()=>{(await r.ei(481,()=>import("./dist/481.output.js")).then(r.bind(r,481))).reset()})(),o(e.value)},100);
+var e={};const t={};function o(r){const n=t[r];if(void 0!==n)return n.exports;const i=t[r]={exports:{}};return e[r](i,i.exports,o),i.exports}o.m=e,o.d=(e,t)=>{for(var r in t)o.o(t,r)&&!o.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},o.o=(e,t)=>Object.hasOwn(e,t),o.r=e=>{Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},(()=>{const e={792:0},t=t=>{let{__webpack_esm_ids__:r,__webpack_esm_modules__:n,__webpack_esm_runtime__:i}=t;var s,a,c=0;for(s in n)o.o(n,s)&&(o.m[s]=n[s]);for(i&&i(o);c<r.length;c++)a=r[c],o.o(e,a)&&e[a]&&e[a][0](),e[a]=0};o.ei=(r,n)=>{let i=[],s=o.o(e,r)?e[r]:void 0;if(0!==s)if(s)i.push(s[1]);else{let o=n().then(t,t=>{throw 0!==e[r]&&(e[r]=void 0),t});o=Promise.race([o,new Promise(t=>s=e[r]=[t])]),i.push(s[1]=o)}return Promise.all(i)}})();const r=e=>console.log(e);setTimeout(async()=>{const e=await o.ei(481,()=>import("./dist/481.output.js")).then(()=>o(481));r(e.value),e.increment(),e.increment(),e.increment(),r(e.value),await(async()=>{(await o.ei(481,()=>import("./dist/481.output.js")).then(()=>o(481))).reset()})(),r(e.value)},100);
 ```
 
 # Info
@@ -226,11 +209,11 @@ var e={};const t={};function r(o){const n=t[o];if(void 0!==n)return n.exports;co
 ## Unoptimized
 
 ```
-asset output.js 6.14 KiB [emitted] [javascript module] (name: main)
-asset 1.output.js 1.34 KiB [emitted] [javascript module]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.92 KiB (runtime) [entry] [rendered]
+asset output.js 5.47 KiB [emitted] [javascript module] (name: main)
+asset 1.output.js 1.3 KiB [emitted] [javascript module]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.43 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.92 KiB 4 modules
+  runtime modules 2.43 KiB 4 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -249,8 +232,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.34 KiB [emitted] [javascript module] [minimized] (name: main)
-asset 481.output.js 258 bytes [emitted] [javascript module] [minimized]
+asset output.js 1.12 KiB [emitted] [javascript module] [minimized] (name: main)
+asset 481.output.js 222 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: main) 481.output.js 146 bytes [rendered]
   > ./counter ./methods.js 2:8-27
   > ./counter ./example.js 4:23-42
@@ -258,9 +241,9 @@ chunk (runtime: main) 481.output.js 146 bytes [rendered]
     [exports: decrement, increment, reset, value]
     import() ./counter ./example.js + 1 modules ./example.js 4:23-42
     import() ./counter ./example.js + 1 modules ./methods.js 2:8-27
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.43 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.92 KiB 4 modules
+  runtime modules 2.43 KiB 4 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]

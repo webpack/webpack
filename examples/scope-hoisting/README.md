@@ -187,24 +187,9 @@ var x = "x";
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -222,10 +207,7 @@ var x = "x";
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".output.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".output.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -278,9 +260,7 @@ var x = "x";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -312,8 +292,6 @@ var x = "x";
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -332,7 +310,7 @@ var x = "x";
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -411,7 +389,7 @@ function b_a() {
 
 
 
-__webpack_require__.e(/*! import() */ "lazy_js").then(__webpack_require__.bind(__webpack_require__, /*! ./lazy */ 2)).then(function(lazy) {
+__webpack_require__.e(/*! import() */ "lazy_js").then(() => (__webpack_require__(/*! ./lazy */ 2))).then(function(lazy) {
 	console.log(a, b_a(), shared.x, shared.y, lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
@@ -511,7 +489,7 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 11.4 KiB [emitted] (name: main)
+asset output.js 10.6 KiB [emitted] (name: main)
 asset lazy_js.output.js 2.35 KiB [emitted]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
@@ -520,9 +498,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.35 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.93 KiB 8 modules
+  runtime modules 5.35 KiB 8 modules
   dependent modules 100 bytes [dependent] 1 module
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]
@@ -534,7 +512,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.31 KiB [emitted] [minimized] (name: main)
+asset output.js 2.08 KiB [emitted] [minimized] (name: main)
 asset lazy_js.output.js 265 bytes [emitted] [minimized]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
@@ -543,9 +521,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.35 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.93 KiB 8 modules
+  runtime modules 5.35 KiB 8 modules
   dependent modules 100 bytes [dependent] 2 modules
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]

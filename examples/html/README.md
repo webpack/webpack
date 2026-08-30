@@ -331,7 +331,7 @@ assets by path *.png 77.9 KiB
   asset icon-192.png 14.6 KiB [emitted]
   asset icon-512.png 14.6 KiB [emitted]
 assets by path *.js 11.3 KiB
-  asset __html_6d047296_1.js 6.77 KiB [emitted] (name: __html_6d047296_1)
+  asset __html_6d047296_1.js 6.72 KiB [emitted] (name: __html_6d047296_1)
   asset page.js 3.57 KiB [emitted] (name: page)
   asset __html_6d047296_2.js 1010 bytes [emitted] (name: __html_6d047296_2)
 asset favicon.ico 14.6 KiB [emitted]
@@ -345,9 +345,9 @@ chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 
     [no exports]
     [used exports unknown]
     entry ./styles.css __html_6d047296_0
-chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.7 KiB (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.67 KiB (runtime) [entry] [rendered]
   > ./app.js __html_6d047296_1
-  runtime modules 2.7 KiB 4 modules
+  runtime modules 2.67 KiB 4 modules
   dependent modules 124 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 2 modules
   ./src/app.js 417 bytes [built] [code generated]
     [no exports]
@@ -379,14 +379,14 @@ assets by path *.png 77.9 KiB
   asset apple-touch-icon.png 14.6 KiB [emitted]
   asset icon-192.png 14.6 KiB [emitted]
   asset icon-512.png 14.6 KiB [emitted]
-assets by path *.js 2.89 KiB
-  asset page.js 1.62 KiB [emitted] [minimized] (name: page)
-  asset __html_6d047296_1.js 1.14 KiB [emitted] [minimized] (name: __html_6d047296_1)
+assets by path *.js 2.01 KiB
+  asset __html_6d047296_1.js 1.13 KiB [emitted] [minimized] (name: __html_6d047296_1)
+  asset page.js 764 bytes [emitted] [minimized] (name: page)
   asset __html_6d047296_2.js 139 bytes [emitted] [minimized] (name: __html_6d047296_2)
 asset favicon.ico 14.6 KiB [emitted]
 asset index.html 749 bytes [emitted] [minimized] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]
-asset __html_6d047296_0.css 40 bytes [emitted] [minimized] (name: __html_6d047296_0)
+asset __html_6d047296_0.css 39 bytes [emitted] [minimized] (name: __html_6d047296_0)
 chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
@@ -407,9 +407,9 @@ chunk (runtime: __html_6d047296_1) __html_6d047296_2.js (__html_6d047296_2) 56 b
     [no exports]
     [no exports used]
     entry data:text/javascript;base64,CgkJCWNvbnNvbGUu.. __html_6d047296_2
-chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.46 KiB (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.47 KiB (runtime) [entry] [rendered]
   > ./app.js __html_6d047296_1
-  runtime modules 2.46 KiB 3 modules
+  runtime modules 2.47 KiB 3 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 1 module
   ./src/app.js + 1 modules 541 bytes [built] [code generated]
     [no exports]

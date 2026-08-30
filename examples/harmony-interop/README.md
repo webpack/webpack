@@ -202,24 +202,9 @@ var named = "named";
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -230,9 +215,7 @@ var named = "named";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -285,11 +268,11 @@ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 ## Unoptimized
 
 ```
-asset output.js 7.64 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 1.34 KiB (runtime) [entry] [rendered]
+asset output.js 6.99 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 883 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 785 bytes [dependent] 4 modules
-  runtime modules 1.34 KiB 4 modules
+  runtime modules 883 bytes 4 modules
   ./example.js 374 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -300,11 +283,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 948 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 1.08 KiB (runtime) [entry] [rendered]
+asset output.js 895 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 991 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 484 bytes [dependent] 3 modules
-  runtime modules 1.08 KiB 3 modules
+  runtime modules 991 bytes 3 modules
   ./example.js + 1 modules 675 bytes [built] [code generated]
     [no exports]
     [no exports used]

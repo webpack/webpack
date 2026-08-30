@@ -401,7 +401,7 @@ webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-cheap-module-source-map.js 4.96 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-cheap-module-source-map.js 921 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.85 KiB (4.77 KiB) = ./runtime~bundle-cheap-module-source-map.js 4.96 KiB ./bundle-cheap-module-source-map.js 921 bytes 2 auxiliary assets
+Entrypoint bundle 5.86 KiB (4.78 KiB) = ./runtime~bundle-cheap-module-source-map.js 4.96 KiB ./bundle-cheap-module-source-map.js 921 bytes 2 auxiliary assets
 chunk (runtime: runtime~bundle) ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
@@ -414,7 +414,7 @@ webpack X.X.X compiled successfully
 
 asset ./runtime~bundle-inline-cheap-source-map.js 10.8 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-inline-cheap-source-map.js 1.6 KiB [emitted] (name: bundle)
-Entrypoint bundle 12.3 KiB = ./runtime~bundle-inline-cheap-source-map.js 10.8 KiB ./bundle-inline-cheap-source-map.js 1.6 KiB
+Entrypoint bundle 12.4 KiB = ./runtime~bundle-inline-cheap-source-map.js 10.8 KiB ./bundle-inline-cheap-source-map.js 1.6 KiB
 chunk (runtime: runtime~bundle) ./bundle-inline-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]

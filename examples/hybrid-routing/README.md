@@ -254,7 +254,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 				let [chunkIds, fn, priority] = deferred[i];
 /******/ 				let fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
-/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 					if (((priority & 1) === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
 /******/ 						chunkIds.splice(j--, 1);
 /******/ 					} else {
 /******/ 						fulfilled = false;
@@ -273,7 +273,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
-/******/ 		const getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
+/******/ 		const getProto = Object.getPrototypeOf;
 /******/ 		let leafPrototypes;
 /******/ 		// create a fake namespace object
 /******/ 		// mode & 1: value is a module id, require it
@@ -304,24 +304,9 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -339,10 +324,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	// This function allow to reference async chunks
-/******/ 	__webpack_require__.u = (chunkId) => {
-/******/ 		// return url for filenames based on template
-/******/ 		return "" + chunkId + ".bundle.js";
-/******/ 	};
+/******/ 	__webpack_require__.u = (chunkId) => (chunkId + ".bundle.js");
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
@@ -395,9 +377,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ 	
@@ -429,8 +409,6 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 							// start chunk loading
-/******/ 							const url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							const error = new Error();
 /******/ 							const loadingEnded = (event) => {
@@ -449,7 +427,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 							__webpack_require__.l(__webpack_require__.p + __webpack_require__.u(chunkId), loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						}
 /******/ 					}
 /******/ 				}
@@ -541,13 +519,13 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset pageA.bundle.js 13.4 KiB [emitted] (name: pageA)
-asset pageB.bundle.js 13.4 KiB [emitted] (name: pageB)
+asset pageA.bundle.js 12.5 KiB [emitted] (name: pageA)
+asset pageB.bundle.js 12.5 KiB [emitted] (name: pageB)
 asset router_js.bundle.js 2.59 KiB [emitted]
 asset aPage.bundle.js 380 bytes [emitted] (name: aPage)
 asset bPage.bundle.js 380 bytes [emitted] (name: bPage)
-Entrypoint pageA 16.3 KiB = router_js.bundle.js 2.59 KiB aPage.bundle.js 380 bytes pageA.bundle.js 13.4 KiB
-Entrypoint pageB 16.3 KiB = router_js.bundle.js 2.59 KiB bPage.bundle.js 380 bytes pageB.bundle.js 13.4 KiB
+Entrypoint pageA 15.5 KiB = router_js.bundle.js 2.59 KiB aPage.bundle.js 380 bytes pageA.bundle.js 12.5 KiB
+Entrypoint pageB 15.5 KiB = router_js.bundle.js 2.59 KiB bPage.bundle.js 380 bytes pageB.bundle.js 12.5 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -566,17 +544,17 @@ chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [render
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 8.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.39 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 8.04 KiB 10 modules
+  runtime modules 7.39 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 8.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.39 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 8.04 KiB 10 modules
+  runtime modules 7.39 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./bEntry pageB
@@ -596,13 +574,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.bundle.js 3.1 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 3.1 KiB [emitted] [minimized] (name: pageB)
+asset pageA.bundle.js 2.83 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 2.83 KiB [emitted] [minimized] (name: pageB)
 asset router_js.bundle.js 582 bytes [emitted] [minimized]
 asset aPage.bundle.js 116 bytes [emitted] [minimized] (name: aPage)
 asset bPage.bundle.js 116 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.78 KiB = router_js.bundle.js 582 bytes aPage.bundle.js 116 bytes pageA.bundle.js 3.1 KiB
-Entrypoint pageB 3.78 KiB = router_js.bundle.js 582 bytes bPage.bundle.js 116 bytes pageB.bundle.js 3.1 KiB
+Entrypoint pageA 3.52 KiB = router_js.bundle.js 582 bytes aPage.bundle.js 116 bytes pageA.bundle.js 2.83 KiB
+Entrypoint pageB 3.52 KiB = router_js.bundle.js 582 bytes bPage.bundle.js 116 bytes pageB.bundle.js 2.83 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -621,17 +599,17 @@ chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [render
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     import() context element ./bPage ././ lazy ^\.\/.*Page$ referencedExports: default chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 8.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.39 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 8.04 KiB 10 modules
+  runtime modules 7.39 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 8.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.39 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 8.04 KiB 10 modules
+  runtime modules 7.39 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./bEntry pageB
