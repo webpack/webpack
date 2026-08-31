@@ -20,6 +20,11 @@ it("should expose variables from EnvironmentPlugin", () => {
 it("should expose variables from DotenvPlugin", () => {
 	const env = import.meta.env;
 	expect(env.WEBPACK_DOTENV_VAR).toBe("from_dotenv");
+	expect(env["WEBPACK_DOTTED.KEY"]).toBe("from_dotted_key");
+	expect(env["WEBPACK_DASHED-KEY"]).toBe("from_dashed_key");
+	expect(process.env["WEBPACK_DOTTED.KEY"]).toBe("from_dotted_key");
+	expect(process.env["WEBPACK_DASHED-KEY"]).toBe("from_dashed_key");
+	expect(env["__proto__"]).toBe("from_prototype_key");
 });
 
 it("should expose variables from DefinePlugin", () => {
