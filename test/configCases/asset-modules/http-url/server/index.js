@@ -67,11 +67,16 @@ function createServer() {
 		);
 		// serve compressed responses to exercise the decompression branches
 		const encoding =
-			query === "gzip" || query === "br" || query === "deflate"
-				? query
-				: undefined;
+			query === "gzip-uppercase"
+				? "gzip"
+				: query === "gzip" || query === "br" || query === "deflate"
+					? query
+					: undefined;
 		if (encoding) {
-			res.setHeader("Content-Encoding", encoding);
+			res.setHeader(
+				"Content-Encoding",
+				query === "gzip-uppercase" ? "GZip" : encoding
+			);
 			const buffer = Buffer.from(file);
 			res.end(
 				encoding === "gzip"

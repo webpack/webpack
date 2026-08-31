@@ -11,6 +11,7 @@ import textUrl from "http://localhost:9990/url.js";
 import license1 from "http://localhost:9990//LICENSE";
 import license2 from "http://localhost:9990/LICENSE";
 import { value as gzipValue } from "http://localhost:9990/resolve.js?gzip";
+import { value as uppercaseGzipValue } from "http://localhost:9990/resolve.js?gzip-uppercase";
 import { value as brValue } from "http://localhost:9990/resolve.js?br";
 import { value as deflateValue } from "http://localhost:9990/resolve.js?deflate";
 import { value as redirectValue } from "http://localhost:9990/resolve.js?redirect";
@@ -38,6 +39,7 @@ it("http url request for an extension-less asset should be supported", () => {
 
 it("http url request with content-encoding should be supported", () => {
 	expect(gzipValue).toBe(42);
+	expect(uppercaseGzipValue).toBe(42);
 	expect(brValue).toBe(42);
 	expect(deflateValue).toBe(42);
 });
