@@ -20,6 +20,7 @@ it("should expose variables from EnvironmentPlugin", () => {
 it("should expose variables from DotenvPlugin", () => {
 	const env = import.meta.env;
 	expect(env.WEBPACK_DOTENV_VAR).toBe("from_dotenv");
+	expect(env.WEBPACK_EXPANDED_NULL).toBe("expanded_value");
 });
 
 it("should expose variables from DefinePlugin", () => {
