@@ -1,5 +1,6 @@
 import cssContent from "http://localhost:9990/index.css?query#fragment";
 import noCacheCssContent from "http://localhost:9990/index.css?no-cache";
+import noStoreCssContent from "http://localhost:9990/index.css?no-store";
 import cachedCssContent from "http://localhost:9990/index.css?cache";
 import { value, value2 } from "http://localhost:9990/resolve.js";
 import { fallback } from "http://localhost:9990/fallback.js";
@@ -17,6 +18,7 @@ import { value as redirectValue } from "http://localhost:9990/resolve.js?redirec
 it("http url request should be supported", () => {
 	expect(cssContent).toBe("a {}.webpack{}");
 	expect(noCacheCssContent).toBe("a {}.webpack{}");
+	expect(noStoreCssContent).toBe("a {}.webpack{}");
 	expect(cachedCssContent).toBe("a {}.webpack{}");
 	expect(value).toBe(42);
 	expect(value2).toBe(42);

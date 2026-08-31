@@ -9,6 +9,7 @@
   "http://localhost:9990/folder/sub-dependency2.js": { "integrity": "sha512-BDZKEwlnwBabeHEwmMd02NxFEjYy+QwKAKP0S8zMMesX7dUsvh11hM7LUOPPFOS+nIEFZPtnc7kFwmnojVUw5A==", "contentType": "text/javascript" },
   "http://localhost:9990/index.css?cache": { "integrity": "sha512-sqhF9JAEi5h3ziP48SBnzQnaeei8cf/pfYJBdKL4F7xdu3v5yr71eQ0kCL11/jWRFjLG4TKOudUnS/u6WLMqYw==", "contentType": "text/css" },
   "http://localhost:9990/index.css?no-cache": "no-cache",
+  "http://localhost:9990/index.css?no-store": "no-cache",
   "http://localhost:9990/index.css?query#fragment": { "integrity": "sha512-sqhF9JAEi5h3ziP48SBnzQnaeei8cf/pfYJBdKL4F7xdu3v5yr71eQ0kCL11/jWRFjLG4TKOudUnS/u6WLMqYw==", "contentType": "text/css" },
   "http://localhost:9990/redirect": { "resolved": "http://localhost:9990/redirect.js", "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
   "http://localhost:9990/redirect.js": { "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
