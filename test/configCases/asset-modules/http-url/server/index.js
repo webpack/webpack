@@ -30,6 +30,8 @@ function createServer() {
 		const pathname = "." + url.replace(/\?.*$/, "");
 		if (url.endsWith("?no-cache")) {
 			res.setHeader("Cache-Control", "no-cache, max-age=60");
+		} else if (url.endsWith("?no-store")) {
+			res.setHeader("Cache-Control", "No-Store, MAX-AGE=60");
 		} else {
 			res.setHeader("Cache-Control", "public, immutable, max-age=600");
 		}
