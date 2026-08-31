@@ -1,0 +1,589 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-strict-esm-new-expression commonjs-wrapped-strict-esm-new-expression should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 4 modules ***!
+  \\\\******************************/
+
+// MODULE: ./identity.cjs
+var identity_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = function identity(value) {
+	return value.raw ? value.raw[0] : value;
+};
+
+});
+
+// MODULE: ./thing.cjs
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+class Thing {
+	constructor(options) {
+		this.options = options;
+	}
+}
+
+module.exports = Thing;
+
+});
+
+;// ./thing.cjs
+thing_namespaceFn();
+
+;// ./identity.cjs
+identity_namespaceFn();
+
+;// ./reexport.mjs
+
+
+;// ./entry.mjs
+// strict ESM: the default import of a CommonJS module resolves straight to the
+// wrapper accessor call, skipping the \`__webpack_require__.n\` interop
+
+
+
+
+
+function construct(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughNamespace(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughReexport(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function call(value) {
+	return identity_namespaceFn()(value);
+}
+
+function tag(value) {
+	return identity_namespaceFn()\`tag\${value}\`;
+}
+
+// the reference opens a statement that ASI could glue to the previous one, so
+// it must be emitted with a leading semicolon
+function readInAsiPosition() {
+	const seen = []
+	seen.push(1)
+	;(thing_namespaceFn())
+	return seen
+}
+
+function read() {
+	return (thing_namespaceFn());
+}
+
+const kind = typeof (thing_namespaceFn());
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to the wrapper accessor's result, not to the accessor\\", () => {
+	const thing = construct({ a: 1 });
+
+	expect(thing.options).toEqual({ a: 1 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a namespace default access\\", () => {
+	const thing = constructThroughNamespace({ b: 2 });
+
+	expect(thing.options).toEqual({ b: 2 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a re-exported default\\", () => {
+	const thing = constructThroughReexport({ c: 3 });
+
+	expect(thing.options).toEqual({ c: 3 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should keep the default import readable as a plain value\\", () => {
+	expect(kind).toBe(\\"function\\");
+	expect(read().name).toBe(\\"Thing\\");
+});
+
+it(\\"should call a wrapped default import in call and tagged-template position\\", () => {
+	expect(call(\\"value\\")).toBe(\\"value\\");
+	expect(tag(\\"value\\")).toBe(\\"tag\\");
+});
+
+it(\\"should read a wrapped default import opening an ASI position\\", () => {
+	expect(readInAsiPosition()).toEqual([1]);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-strict-esm-new-expression commonjs-wrapped-strict-esm-new-expression should compile 2`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 4 modules ***!
+  \\\\******************************/
+
+// MODULE: ./identity.cjs
+var identity_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = function identity(value) {
+	return value.raw ? value.raw[0] : value;
+};
+
+});
+
+// MODULE: ./thing.cjs
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+class Thing {
+	constructor(options) {
+		this.options = options;
+	}
+}
+
+module.exports = Thing;
+
+});
+
+;// ./thing.cjs
+thing_namespaceFn();
+
+;// ./identity.cjs
+identity_namespaceFn();
+
+;// ./reexport.mjs
+
+
+;// ./entry.mjs
+// strict ESM: the default import of a CommonJS module resolves straight to the
+// wrapper accessor call, skipping the \`__webpack_require__.n\` interop
+
+
+
+
+
+function construct(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughNamespace(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughReexport(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function call(value) {
+	return identity_namespaceFn()(value);
+}
+
+function tag(value) {
+	return identity_namespaceFn()\`tag\${value}\`;
+}
+
+// the reference opens a statement that ASI could glue to the previous one, so
+// it must be emitted with a leading semicolon
+function readInAsiPosition() {
+	const seen = []
+	seen.push(1)
+	;(thing_namespaceFn())
+	return seen
+}
+
+function read() {
+	return (thing_namespaceFn());
+}
+
+const kind = typeof (thing_namespaceFn());
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to the wrapper accessor's result, not to the accessor\\", () => {
+	const thing = construct({ a: 1 });
+
+	expect(thing.options).toEqual({ a: 1 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a namespace default access\\", () => {
+	const thing = constructThroughNamespace({ b: 2 });
+
+	expect(thing.options).toEqual({ b: 2 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a re-exported default\\", () => {
+	const thing = constructThroughReexport({ c: 3 });
+
+	expect(thing.options).toEqual({ c: 3 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should keep the default import readable as a plain value\\", () => {
+	expect(kind).toBe(\\"function\\");
+	expect(read().name).toBe(\\"Thing\\");
+});
+
+it(\\"should call a wrapped default import in call and tagged-template position\\", () => {
+	expect(call(\\"value\\")).toBe(\\"value\\");
+	expect(tag(\\"value\\")).toBe(\\"tag\\");
+});
+
+it(\\"should read a wrapped default import opening an ASI position\\", () => {
+	expect(readInAsiPosition()).toEqual([1]);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-strict-esm-new-expression commonjs-wrapped-strict-esm-new-expression should pre-compile to fill disk cache (1st) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 4 modules ***!
+  \\\\******************************/
+
+// MODULE: ./identity.cjs
+var identity_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = function identity(value) {
+	return value.raw ? value.raw[0] : value;
+};
+
+});
+
+// MODULE: ./thing.cjs
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+class Thing {
+	constructor(options) {
+		this.options = options;
+	}
+}
+
+module.exports = Thing;
+
+});
+
+;// ./thing.cjs
+thing_namespaceFn();
+
+;// ./identity.cjs
+identity_namespaceFn();
+
+;// ./reexport.mjs
+
+
+;// ./entry.mjs
+// strict ESM: the default import of a CommonJS module resolves straight to the
+// wrapper accessor call, skipping the \`__webpack_require__.n\` interop
+
+
+
+
+
+function construct(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughNamespace(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughReexport(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function call(value) {
+	return identity_namespaceFn()(value);
+}
+
+function tag(value) {
+	return identity_namespaceFn()\`tag\${value}\`;
+}
+
+// the reference opens a statement that ASI could glue to the previous one, so
+// it must be emitted with a leading semicolon
+function readInAsiPosition() {
+	const seen = []
+	seen.push(1)
+	;(thing_namespaceFn())
+	return seen
+}
+
+function read() {
+	return (thing_namespaceFn());
+}
+
+const kind = typeof (thing_namespaceFn());
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to the wrapper accessor's result, not to the accessor\\", () => {
+	const thing = construct({ a: 1 });
+
+	expect(thing.options).toEqual({ a: 1 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a namespace default access\\", () => {
+	const thing = constructThroughNamespace({ b: 2 });
+
+	expect(thing.options).toEqual({ b: 2 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a re-exported default\\", () => {
+	const thing = constructThroughReexport({ c: 3 });
+
+	expect(thing.options).toEqual({ c: 3 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should keep the default import readable as a plain value\\", () => {
+	expect(kind).toBe(\\"function\\");
+	expect(read().name).toBe(\\"Thing\\");
+});
+
+it(\\"should call a wrapped default import in call and tagged-template position\\", () => {
+	expect(call(\\"value\\")).toBe(\\"value\\");
+	expect(tag(\\"value\\")).toBe(\\"tag\\");
+});
+
+it(\\"should read a wrapped default import opening an ASI position\\", () => {
+	expect(readInAsiPosition()).toEqual([1]);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-strict-esm-new-expression commonjs-wrapped-strict-esm-new-expression should pre-compile to fill disk cache (2nd) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 4 modules ***!
+  \\\\******************************/
+
+// MODULE: ./identity.cjs
+var identity_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = function identity(value) {
+	return value.raw ? value.raw[0] : value;
+};
+
+});
+
+// MODULE: ./thing.cjs
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+class Thing {
+	constructor(options) {
+		this.options = options;
+	}
+}
+
+module.exports = Thing;
+
+});
+
+;// ./thing.cjs
+thing_namespaceFn();
+
+;// ./identity.cjs
+identity_namespaceFn();
+
+;// ./reexport.mjs
+
+
+;// ./entry.mjs
+// strict ESM: the default import of a CommonJS module resolves straight to the
+// wrapper accessor call, skipping the \`__webpack_require__.n\` interop
+
+
+
+
+
+function construct(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughNamespace(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function constructThroughReexport(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+function call(value) {
+	return identity_namespaceFn()(value);
+}
+
+function tag(value) {
+	return identity_namespaceFn()\`tag\${value}\`;
+}
+
+// the reference opens a statement that ASI could glue to the previous one, so
+// it must be emitted with a leading semicolon
+function readInAsiPosition() {
+	const seen = []
+	seen.push(1)
+	;(thing_namespaceFn())
+	return seen
+}
+
+function read() {
+	return (thing_namespaceFn());
+}
+
+const kind = typeof (thing_namespaceFn());
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to the wrapper accessor's result, not to the accessor\\", () => {
+	const thing = construct({ a: 1 });
+
+	expect(thing.options).toEqual({ a: 1 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a namespace default access\\", () => {
+	const thing = constructThroughNamespace({ b: 2 });
+
+	expect(thing.options).toEqual({ b: 2 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should apply \`new\` through a re-exported default\\", () => {
+	const thing = constructThroughReexport({ c: 3 });
+
+	expect(thing.options).toEqual({ c: 3 });
+	expect(thing).toBeInstanceOf(read());
+});
+
+it(\\"should keep the default import readable as a plain value\\", () => {
+	expect(kind).toBe(\\"function\\");
+	expect(read().name).toBe(\\"Thing\\");
+});
+
+it(\\"should call a wrapped default import in call and tagged-template position\\", () => {
+	expect(call(\\"value\\")).toBe(\\"value\\");
+	expect(tag(\\"value\\")).toBe(\\"tag\\");
+});
+
+it(\\"should read a wrapped default import opening an ASI position\\", () => {
+	expect(readInAsiPosition()).toEqual([1]);
+});
+
+/******/ })()
+;"
+`;
