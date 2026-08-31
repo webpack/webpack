@@ -18,9 +18,8 @@ import {
 	named6 as snamed6
 } from "./named-with-namespace-no-side";
 
-// `named1`, `named2` and `named3` reach different bindings through `a.js` and
-// `b.js`, so they are ambiguous and no `export *` provides them. `named4`,
-// `named5` and `named6` reach the same binding through both.
+// `named1`-`named3` reach different bindings through `a.js` and `b.js`, so they
+// are ambiguous; `named4`-`named6` reach the same binding through both.
 const expectOmitted = (namespace) => {
 	expect("named1" in namespace).toBe(false);
 	expect("named2" in namespace).toBe(false);
