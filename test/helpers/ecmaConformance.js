@@ -42,7 +42,7 @@ const ES_VERSIONS = (() => {
  * Syntax `output.environment` states the availability of, by the shape the
  * parser gives it. A flag missing from here and from `NON_SYNTAX` below is a
  * flag nobody has classified, which `assertEveryFlagClassified` rejects.
- * @type {[string, (node: EXPECTED_ANY, inFunction: boolean) => boolean][]}
+ * @type {[string, (node: EXPECTED_ANY) => boolean][]}
  */
 const SYNTAX = [
 	["arrowFunction", (node) => node.type === "ArrowFunctionExpression"],
@@ -102,14 +102,7 @@ const SYNTAX = [
 		"spread",
 		(node) => node.type === "SpreadElement" || node.type === "RestElement"
 	],
-	["templateLiteral", (node) => node.type === "TemplateLiteral"],
-	[
-		"topLevelAwait",
-		(node, inFunction) =>
-			!inFunction &&
-			(node.type === "AwaitExpression" ||
-				(node.type === "ForOfStatement" && node.await === true))
-	]
+	["templateLiteral", (node) => node.type === "TemplateLiteral"]
 ];
 
 // Capabilities of the standard library, not of the grammar. A parser cannot
@@ -175,32 +168,22 @@ const ecmaVersionOf = (environment) => {
 	return undefined;
 };
 
-// `await` is the one construct whose legality depends on what encloses it, so
-// the walk carries that much context.
-const FUNCTION_TYPES = new Set([
-	"FunctionDeclaration",
-	"FunctionExpression",
-	"ArrowFunctionExpression"
-]);
-
 /**
  * @param {EXPECTED_ANY} node any AST node, array of them, or neither
- * @param {(node: EXPECTED_ANY, inFunction: boolean) => void} visit called once per node
- * @param {boolean=} inFunction the node sits inside a function
+ * @param {(node: EXPECTED_ANY) => void} visit called once per node
  */
-const walk = (node, visit, inFunction = false) => {
+const walk = (node, visit) => {
 	if (!node || typeof node !== "object") return;
 	if (Array.isArray(node)) {
-		for (const child of node) walk(child, visit, inFunction);
+		for (const child of node) walk(child, visit);
 		return;
 	}
-	if (typeof node.type === "string") visit(node, inFunction);
-	const nested = inFunction || FUNCTION_TYPES.has(node.type);
+	if (typeof node.type === "string") visit(node);
 	for (const key of Object.keys(node)) {
 		if (key === "type" || key === "loc" || key === "start" || key === "end") {
 			continue;
 		}
-		walk(node[key], visit, nested);
+		walk(node[key], visit);
 	}
 };
 
@@ -254,9 +237,9 @@ const checkEcmaConformance = ({ code, environment, sourceType = "script" }) => {
 			return [`does not parse at all: ${/** @type {Error} */ (error).message}`];
 		}
 	}
-	walk(ast, (node, inFunction) => {
+	walk(ast, (node) => {
 		for (const [flag, matches] of SYNTAX) {
-			if (environment[flag] === false && matches(node, inFunction)) {
+			if (environment[flag] === false && matches(node)) {
 				violations.push(
 					`${node.loc.start.line}:${node.loc.start.column} ${node.type} needs output.environment.${flag}`
 				);
