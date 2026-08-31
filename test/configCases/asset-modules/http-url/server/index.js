@@ -18,6 +18,11 @@ function createServer() {
 			/** @type {import("net").Socket} */ (res.socket).destroy();
 			return;
 		}
+		if (query === "invalid-gzip") {
+			res.setHeader("Content-Encoding", "gzip");
+			res.end("not gzip data");
+			return;
+		}
 		// must-revalidate redirect with a stable etag, to exercise the unchanged-redirect path
 		if (query === "redirect") {
 			res.statusCode = 301;

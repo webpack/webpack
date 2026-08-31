@@ -112,5 +112,18 @@ module.exports = [
 				frozen: false
 			})
 		]
+	},
+	{
+		name: "decompression-errors",
+		...base,
+		entry: "./index.decompression-errors.js",
+		plugins: [
+			serverPlugin,
+			new HttpUriPlugin({
+				allowedUris,
+				upgrade: true,
+				frozen: false
+			})
+		]
 	}
 ];

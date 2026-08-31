@@ -20,5 +20,6 @@ module.exports = [
 	[/while fetching http:\/\/localhost:9990\/resolve\.js\?error/],
 	[
 		/Module not found: Error: http:\/\/localhost:9990@127\.0\.0\.1:9100\/secret\.js doesn't match the allowedUris policy/
-	]
+	],
+	[/while decompressing http:\/\/localhost:9990\/resolve\.js\?invalid-gzip/]
 ];
