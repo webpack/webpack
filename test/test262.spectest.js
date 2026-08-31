@@ -905,8 +905,6 @@ const knownBugs = [
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
-	// When two `export * from "one"; export * from "two";` re-exports the same export, it should be false for `in`
-	"module-code/ambiguous-export-bindings/omitted-from-namespace.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
 	// module namespace exotic object). webpack's `__webpack_exports__` is a
 	// plain object inheriting `Object.prototype`, so `Object.prototype.toString`

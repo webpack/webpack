@@ -2,6 +2,12 @@
 
 exports[`warnings 1`] = `
 Array [
+  "export 'named1' (imported as 'named1') was not found in './named-with-namespace' (possible exports: named4, named5, named6)",
+  "export 'named2' (imported as 'named2') was not found in './named-with-namespace' (possible exports: named4, named5, named6)",
+  "export 'named3' (imported as 'named3') was not found in './named-with-namespace' (possible exports: named4, named5, named6)",
+  "export 'named1' (imported as 'snamed1') was not found in './named-with-namespace-no-side' (possible exports: named4, named5, named6)",
+  "export 'named2' (imported as 'snamed2') was not found in './named-with-namespace-no-side' (possible exports: named4, named5, named6)",
+  "export 'named3' (imported as 'snamed3') was not found in './named-with-namespace-no-side' (possible exports: named4, named5, named6)",
   "The requested module './b.js' contains conflicting star exports for the names 'named1', 'named2', 'named3' with the previous requested module './a.js'",
   "The requested module './b.js' contains conflicting star exports for the names 'named1', 'named2', 'named3' with the previous requested module './a.js'",
 ]
