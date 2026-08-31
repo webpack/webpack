@@ -43,6 +43,50 @@ describe("FileMiddleware deserialize", () => {
 		expect(result).toHaveLength(1);
 		expect(Buffer.from(/** @type {Buffer} */ (result[0]))).toEqual(content);
 	});
+
+	it("rejects when a cache file is truncated after stat", async () => {
+		const content = buildHeader([]);
+		let position = 0;
+		let reads = 0;
+		const fs = /** @type {EXPECTED_ANY} */ ({
+			stat: (
+				/** @type {string} */ _file,
+				/** @type {EXPECTED_ANY} */ callback
+			) => process.nextTick(() => callback(null, { size: content.length + 1 })),
+			open: (
+				/** @type {string} */ _file,
+				/** @type {string} */ _flags,
+				/** @type {EXPECTED_ANY} */ callback
+			) => process.nextTick(() => callback(null, 1)),
+			read: (
+				/** @type {number} */ _fd,
+				/** @type {Buffer} */ buffer,
+				/** @type {number} */ offset,
+				/** @type {number} */ length,
+				/** @type {number | null} */ _position,
+				/** @type {EXPECTED_ANY} */ callback
+			) => {
+				reads++;
+				if (reads > 2) {
+					process.nextTick(() => callback(new Error("read retried after EOF")));
+					return;
+				}
+				const slice = content.subarray(position, position + length);
+				slice.copy(buffer, offset);
+				position += slice.length;
+				process.nextTick(() => callback(null, slice.length));
+			},
+			close: (
+				/** @type {number} */ _fd,
+				/** @type {EXPECTED_ANY} */ callback
+			) => process.nextTick(() => callback(null))
+		});
+
+		await expect(
+			new FileMiddleware(fs).deserialize(null, { filename: "cache.pack" })
+		).rejects.toThrow(/Unexpected end of file/);
+		expect(reads).toBe(2);
+	});
 });
 
 describe("FileMiddleware serialize", () => {
