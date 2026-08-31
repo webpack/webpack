@@ -1,5 +1,6 @@
 "use strict";
 
+const { Writable } = require("stream");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 
 // Internal `deserialize(middleware, name, readFile)` exposed for this test.
@@ -41,6 +42,52 @@ describe("FileMiddleware deserialize", () => {
 
 		expect(result).toHaveLength(1);
 		expect(Buffer.from(/** @type {Buffer} */ (result[0]))).toEqual(content);
+	});
+});
+
+describe("FileMiddleware serialize", () => {
+	it("waits for compressed output before replacing the cache file", async () => {
+		/** @type {Writable | undefined} */
+		let output;
+		/** @type {boolean | undefined} */
+		let finishedWhenReplaced;
+		const fs = /** @type {EXPECTED_ANY} */ ({
+			mkdir: (
+				/** @type {string} */ _path,
+				/** @type {() => void} */ callback
+			) => callback(),
+			createWriteStream: () => {
+				output = new Writable({
+					write(_chunk, _encoding, callback) {
+						setTimeout(callback, 25);
+					}
+				});
+				return output;
+			},
+			rename: (
+				/** @type {string} */ from,
+				/** @type {string} */ _to,
+				/** @type {() => void} */ callback
+			) => {
+				if (from.endsWith("_")) {
+					finishedWhenReplaced = /** @type {Writable} */ (output)
+						.writableFinished;
+				}
+				callback();
+			}
+		});
+		const middleware = new FileMiddleware(fs);
+
+		await middleware.serialize([Buffer.from("content")], {
+			filename: "/cache/index.pack.gz"
+		});
+
+		if (!(/** @type {Writable} */ (output).writableFinished)) {
+			await new Promise((resolve) => {
+				/** @type {Writable} */ (output).once("finish", resolve);
+			});
+		}
+		expect(finishedWhenReplaced).toBe(true);
 	});
 });
 
