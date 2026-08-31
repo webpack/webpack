@@ -132,6 +132,71 @@ const knownHostEvalBugs = [
 ];
 /* cspell:enable */
 
+// `import()` stringifies its argument, so these ask for a name nothing
+// resolves ("[object Promise]", "object") and reject, as the spec requires.
+const UNRESOLVED_SPECIFIER = /Cannot find module/;
+
+// These abandon a rejected promise on purpose. jest blames the running test,
+// so the count and reason are asserted and cleared below.
+const expectedAbandonedRejections = new Map([
+	[
+		"statements/async-function/evaluation-body.js",
+		{ count: 1, reason: /resolver/ }
+	],
+	[
+		"expressions/optional-chaining/member-expression-async-identifier.js",
+		{ count: 1, reason: /^undefined$/ }
+	],
+	[
+		"expressions/dynamic-import/assignment-expression/unary-expr.js",
+		{ count: 8, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-block-labeled-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-block-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-do-while-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-else-braceless-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-else-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-if-braceless-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-if-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	],
+	[
+		"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
+		{ count: 2, reason: UNRESOLVED_SPECIFIER }
+	]
+]);
+
 /* cspell:disable */
 // Fail identically unbundled in a plain `vm` on the pinned Node.js, so the
 // divergence is the host's and not webpack's.
@@ -265,6 +330,9 @@ const knownV8Bugs = [
 
 /* cspell:disable */
 const edgeCases = [
+	// `this.test262 = true` then a bare `test262`: with the parsers off the
+	// global reference is left alone and resolves the way a script would
+	"global-code/unscopables-ignored.js",
 	// eval test cases require to be in global scope
 	"eval-code/indirect/non-definable-global-var.js",
 	"eval-code/indirect/this-value-func.js",
@@ -517,6 +585,9 @@ const compile = async (entry, scenario, options = {}) =>
 			entry,
 			context: path.dirname(entry),
 			output: {
+				// A Cyclic Module Record keeps its [[EvaluationError]] forever. Off
+				// by default for CommonJS's sake, so the suite opts in.
+				strictModuleErrorHandling: true,
 				...webpackOptions.output,
 				...(scenario === "module" ? { module: true } : { iife: false })
 			},
@@ -765,30 +836,20 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 
 /* cspell:disable */
 const knownBugs = [
-	// webpack resolves a circular reexport to `undefined` with a warning rather
-	// than failing the link, so the build reports no error.
-	"module-code/instn-iee-err-circular.js",
-	"module-code/instn-iee-err-circular-as.js",
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
 
 	// webpack bugs and improvements
 	// With namespace import we export and value and `default`, by spec we should export only `default`
 	"import/import-attributes/json-via-namespace.js",
-	// `import(spec, options)` with a dynamic specifier: the options argument
-	// goes through the context-dependency path, which still drops its
-	// evaluation, so the sequenced side effects are not observed.
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
 	// `yield` as a strict-mode reserved word: webpack parses the source in
 	// sloppy mode, so the expected parse-time SyntaxError is not raised.
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
 	// A top-level `await using` makes the module async, like a bare top-level
 	// `await` does, so the Script-goal early error is not raised.
 	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
-	// `#mark in obj` requires the deferred namespace target to report
-	// `isExtensible() === false` to throw a TypeError. webpack's proxy
-	// target is mutable until init runs and cannot be frozen up-front
-	// because the underlying module's exports aren't yet known.
+	// `#mark in obj` needs `isExtensible() === false` without evaluating, so the
+	// target must be sealed with every export name on it, and a mismatch loses one.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
 	// Host resolution errors must be reported eagerly even for deferred imports;
 	// webpack turns a missing module into a build error resolved lazily instead.
@@ -805,16 +866,11 @@ const knownBugs = [
 	// A deferred module must wait for the whole strongly-connected component when a
 	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
 	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
-	// Just bugs, need to fix
-	// `Reflect.preventExtensions(ns)` should return true and the deferred
-	// namespace should report `isExtensible() === false` per the TC39 spec —
-	// webpack's proxy target is mutable until init runs and it cannot be
-	// frozen up-front because the underlying module's exports aren't yet
-	// known. Pre-knowing exports would require a larger architectural
-	// change, so this remains skipped.
+	// It also wants `ownKeys` to be the sorted exports plus `@@toStringTag`, so
+	// `__esModule` would have to go — the namespace trade-off, not a defer fix.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Hoisting is fine; assigning is not caught. A namespace import compiles to
-	// a `var`, which must stay function-scoped for runtime-condition imports.
+	// Reported as a build error, earlier than the spec's runtime TypeError: the
+	// binding stays a `var`, which a runtime condition and HMR accept both need.
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
@@ -851,8 +907,6 @@ const knownBugs = [
 	"global-code/script-decl-var-collision.js",
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
-	// Same cause: `this.test262 = true` then a bare `test262` reference.
-	"global-code/unscopables-ignored.js",
 
 	// `Object.defineProperty(this, "x", { get })` on the global object — the
 	// test relies on the getter side-effect (deleting `this.x`) being visible
@@ -864,14 +918,6 @@ const knownBugs = [
 	// `super` references in a way that doesn't preserve the uninitialized
 	// `this`-binding ReferenceError before the inner `super()` call runs.
 	"expressions/delete/super-property-uninitialized-this.js",
-
-	// `foo()` in this test discards a promise that synchronously rejects with
-	// `TypeError` (from `new Promise()` with no executor). Jest's per-test
-	// `unhandledRejection` tracking surfaces that rejection as a test failure
-	// even though the test itself only asserts `assert(called)` synchronously.
-	// Working around it would require sandboxing Jest's rejection tracking
-	// per-test, which is a substantial test-runner refactor.
-	"statements/async-function/evaluation-body.js",
 
 	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
 	// is a plain object with `__esModule: true` rather than a true namespace
@@ -890,24 +936,6 @@ const knownBugs = [
 	"module-code/namespace/internals/set-prototype-of.js",
 	"module-code/namespace/internals/set.js",
 	"module-code/namespace/internals/define-own-property.js",
-
-	// Same cause as `async-function/evaluation-body.js`: the chain
-	// short-circuits, so jest blames the test for the abandoned rejection.
-	"expressions/optional-chaining/member-expression-async-identifier.js",
-
-	// Nested `import(import(...))` — webpack collapses dynamic-import
-	// expressions to module dependencies at compile time and cannot represent
-	// `import` calls whose argument is itself a dynamic import.
-	"expressions/dynamic-import/syntax/valid/nested-block-labeled-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-block-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-do-while-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-else-braceless-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-else-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-if-braceless-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-if-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
 
 	// Module Namespace Exotic Object semantics for the dynamically imported
 	// namespace — webpack's resolved namespace is a plain `__webpack_exports__`
@@ -986,20 +1014,11 @@ const knownBugs = [
 
 	// Dynamic-import edge cases that don't fit webpack's static module graph:
 	// - Self-importing script that asserts evaluation count.
-	// - Async-generator yielding `import()` of a module whose top-level export
-	//   throws ("poisoned" fixture).
-	// - Re-importing a module that previously errored: webpack caches the
-	//   failed module and replays its error rather than re-evaluating.
 	// - `eval("import('...')")` and dynamic `import` reuse-namespace assertions
 	//   require dynamic specifiers webpack cannot resolve at build time.
-	// - `import(<UnaryExpression>)` (e.g. `import(typeof {})`): non-string
-	//   specifiers are emitted by the parser but webpack rejects them.
 	"expressions/dynamic-import/eval-self-once-script.js",
-	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
-	"expressions/dynamic-import/import-errored-module.js",
 	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
 	"expressions/dynamic-import/usage-from-eval.js",
-	"expressions/dynamic-import/assignment-expression/unary-expr.js",
 	// `.then` is expected not to be called on the deferred namespace's promise.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
 
@@ -1011,25 +1030,13 @@ const knownBugs = [
 	// property must run before the increment writes back, but webpack scopes
 	// bare `x` to its module wrapper rather than the realm global.
 	"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
-	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
-
-	// Weird test
-	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
-
-	// A rejecting top-level-await entry can only reject the ESM bundle module
-	// via top-level `await`, which webpack intentionally does not emit (async
-	// output stays runnable on engines without top-level await), so the
-	// rejection is orphaned instead of failing the module.
-	"module-code/top-level-await/module-import-rejection.js",
-	"module-code/top-level-await/module-import-rejection-body.js",
-	"module-code/top-level-await/module-import-rejection-tick.js",
-	"module-code/top-level-await/dynamic-import-rejection.js",
-	"module-code/top-level-await/await-dynamic-import-rejection.js"
+	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js"
 ];
 
 const knownProductionBuildBugs = [
-	// Deliberate: the inner graph reads a class heritage and an unused export's
-	// value as pure. `configCases/inner-graph/issue-17565` pins the first.
+	// Deliberate: the inner graph reads an unused class heritage and an unused
+	// export's value as pure, which `configCases/inner-graph/issue-17565` pins.
+	// Used, both are emitted and observe the same as the spec, as does development.
 	"statements/class/definition/prototype-getter.js",
 	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
@@ -1277,6 +1284,38 @@ describe("test262", () => {
 							}
 						} catch (err) {
 							errored = err;
+						}
+
+						const abandoned = expectedAbandonedRejections.get(name);
+						if (abandoned !== undefined) {
+							// The rejection settles a microtask after the body that
+							// abandoned it, so drain before reading jest's tally.
+							await new Promise((resolve) => {
+								setImmediate(resolve);
+							});
+							const runningTest =
+								globalThis.JEST_STATE_SYMBOL &&
+								globalThis.JEST_STATE_SYMBOL.currentlyRunningTest;
+							const byPromise =
+								runningTest && runningTest.unhandledRejectionErrorByPromise;
+							const reasons = byPromise
+								? [...byPromise.values()].map((reason) =>
+										String(reason && reason.message ? reason.message : reason)
+									)
+								: [];
+							if (byPromise) byPromise.clear();
+							if (
+								reasons.length !== abandoned.count ||
+								reasons.some((reason) => !abandoned.reason.test(reason))
+							) {
+								throw new Error(
+									`Error in test file "${outputFile}" ("${testFile}"), expected ${
+										abandoned.count
+									} abandoned rejection(s) matching ${
+										abandoned.reason
+									} but got ${reasons.length}: ${JSON.stringify(reasons)}`
+								);
+							}
 						}
 
 						if (errored && knownV8Bugs.includes(name)) {

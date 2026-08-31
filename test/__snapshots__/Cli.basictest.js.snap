@@ -12929,6 +12929,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-top-level-await": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports top-level await ('await x' at the top level of a module).",
+        "multiple": false,
+        "path": "output.environment.topLevelAwait",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports top-level await ('await x' at the top level of a module).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-filename": Object {
     "configs": Array [
       Object {
