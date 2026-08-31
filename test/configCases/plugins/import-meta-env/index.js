@@ -24,6 +24,7 @@ it("should expose variables from DotenvPlugin", () => {
 	expect(env["WEBPACK_DASHED-KEY"]).toBe("from_dashed_key");
 	expect(process.env["WEBPACK_DOTTED.KEY"]).toBe("from_dotted_key");
 	expect(process.env["WEBPACK_DASHED-KEY"]).toBe("from_dashed_key");
+	expect(env.WEBPACK_EXPANDED_NULL).toBe("expanded_value");
 });
 
 it("should expose variables from DefinePlugin", () => {
