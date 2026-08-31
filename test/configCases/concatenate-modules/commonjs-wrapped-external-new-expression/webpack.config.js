@@ -16,8 +16,7 @@ module.exports = {
 	},
 	plugins: [
 		/**
-		 * `new` on a wrapped module's accessor call is printed code, so the whole
-		 * emitted bundle is reviewed as one rather than pinned substring by substring.
+		 * What this case checks is printed code, so review the bundle as a whole.
 		 * @param {import("../../../../").Compiler} compiler compiler
 		 */
 		(compiler) => {
