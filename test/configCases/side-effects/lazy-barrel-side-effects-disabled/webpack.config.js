@@ -11,7 +11,7 @@ module.exports = {
 		}
 	},
 	optimization: {
-		sideEffects: true,
+		sideEffects: false,
 		usedExports: true,
 		providedExports: true,
 		concatenateModules: false,

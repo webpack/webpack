@@ -6,7 +6,7 @@ module.exports = {
 	module: {
 		parser: {
 			javascript: {
-				exportsPresence: "error"
+				exportsPresence: "warn"
 			}
 		}
 	},

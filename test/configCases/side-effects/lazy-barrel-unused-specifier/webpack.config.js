@@ -14,6 +14,7 @@ module.exports = {
 		sideEffects: true,
 		usedExports: true,
 		providedExports: true,
+		concatenateModules: false,
 		minimize: false
 	}
 };
