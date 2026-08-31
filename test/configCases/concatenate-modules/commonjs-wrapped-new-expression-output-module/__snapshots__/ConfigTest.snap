@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-wrapped-new-expression-output-module commonjs-wrapped-new-expression-output-module should compile 1`] = `
+"/******/ // The require scope
+/******/ const __webpack_require__ = {};
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/compat get default export */
+/******/ // getDefaultExport function for compatibility with non-harmony modules
+/******/ __webpack_require__.n = (module) => {
+/******/ 	const getter = module && module.__esModule ?
+/******/ 		() => (module['default']) :
+/******/ 		() => (module);
+/******/ 	__webpack_require__.d(getter, { a: getter });
+/******/ 	return getter;
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/concatenation wrap */
+/******/ // wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ // set before the body runs so re-entrant calls (require cycles) observe
+/******/ // the partial exports like Node.js
+/******/ __webpack_require__.cw = (body) => {
+/******/ 	var mod;
+/******/ 	return () => {
+/******/ 		if (body) {
+/******/ 			var fn = body;
+/******/ 			body = 0;
+/******/ 			mod = { exports: {} };
+/******/ 			fn.call(mod.exports, mod, mod.exports);
+/******/ 		}
+/******/ 		return mod.exports;
+/******/ 	};
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/define property getters */
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 		}
+/******/ 	}
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 3 modules ***!
+  \\\\******************************/
+
+// MODULE: ./thing.cjs
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+class Thing {
+	constructor(options) {
+		this.options = options;
+	}
+}
+
+module.exports = Thing;
+
+});
+
+;// ./thing.cjs
+thing_namespaceFn();
+
+function thing_default() { return thing_default.c || (thing_default.c = __webpack_require__.n(thing_namespaceFn())); }
+;// ./loose.js
+// javascript/auto: the default import goes through the interop helper instead
+
+
+function construct(options) {
+	return new (thing_default()())(options);
+}
+
+;// ./strict.mjs
+// strict ESM: the default import binds to the wrapper accessor directly
+
+
+function strict_construct(options) {
+	return new (thing_namespaceFn())(options);
+}
+
+const ctor = (thing_namespaceFn());
+
+;// ./index.js
+
+
+
+it(\\"should construct through a strict ESM default import\\", () => {
+	const thing = strict_construct({ a: 1 });
+
+	expect(thing.options).toEqual({ a: 1 });
+	expect(thing).toBeInstanceOf(ctor);
+});
+
+it(\\"should construct through the javascript/auto interop\\", () => {
+	const thing = construct({ b: 2 });
+
+	expect(thing.options).toEqual({ b: 2 });
+	expect(thing).toBeInstanceOf(ctor);
+});
+
+"
+`;

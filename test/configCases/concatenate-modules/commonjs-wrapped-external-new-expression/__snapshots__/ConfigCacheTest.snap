@@ -1,0 +1,429 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-expression commonjs-wrapped-external-new-expression should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		if(Array.isArray(definition)) {
+/******/ 			var i = 0;
+/******/ 			while(i < definition.length) {
+/******/ 				var key = definition[i++];
+/******/ 				var binding = definition[i++];
+/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
+/******/ 			}
+/******/ 		} else {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 3 modules ***!
+  \\\\******************************/
+
+// MODULE: external \\"events\\"
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+module.exports = require(\\"events\\");
+});
+
+// MODULE: ./mid.cjs
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+const { make, raw } = (esm_user_namespaceFn());
+
+exports.L = make;
+exports.l = raw;
+
+});
+
+// MODULE: ./esm-user.mjs
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   make: () => (/* binding */ make)
+/* harmony export */ });
+(external_events_namespaceFn());
+// required by a CommonJS module, so wrapping propagates from here to the
+// external: the default import becomes the external's accessor call
+
+
+function make() {
+	return new (external_events_namespaceFn())();
+}
+
+const raw = (external_events_namespaceFn());
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"raw\\", 0, /* binding */ raw
+/* harmony export */ ]);
+
+});
+
+;// ./mid.cjs
+mid_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to a wrapped external's accessor result\\", () => {
+	const emitter = (0,mid_namespaceFn().L)();
+
+	expect(emitter).toBeInstanceOf((mid_namespaceFn().l));
+	expect(typeof emitter.on).toBe(\\"function\\");
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-expression commonjs-wrapped-external-new-expression should compile 2`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		if(Array.isArray(definition)) {
+/******/ 			var i = 0;
+/******/ 			while(i < definition.length) {
+/******/ 				var key = definition[i++];
+/******/ 				var binding = definition[i++];
+/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
+/******/ 			}
+/******/ 		} else {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 3 modules ***!
+  \\\\******************************/
+
+// MODULE: external \\"events\\"
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+module.exports = require(\\"events\\");
+});
+
+// MODULE: ./mid.cjs
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+const { make, raw } = (esm_user_namespaceFn());
+
+exports.L = make;
+exports.l = raw;
+
+});
+
+// MODULE: ./esm-user.mjs
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   make: () => (/* binding */ make)
+/* harmony export */ });
+(external_events_namespaceFn());
+// required by a CommonJS module, so wrapping propagates from here to the
+// external: the default import becomes the external's accessor call
+
+
+function make() {
+	return new (external_events_namespaceFn())();
+}
+
+const raw = (external_events_namespaceFn());
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"raw\\", 0, /* binding */ raw
+/* harmony export */ ]);
+
+});
+
+;// ./mid.cjs
+mid_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to a wrapped external's accessor result\\", () => {
+	const emitter = (0,mid_namespaceFn().L)();
+
+	expect(emitter).toBeInstanceOf((mid_namespaceFn().l));
+	expect(typeof emitter.on).toBe(\\"function\\");
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-expression commonjs-wrapped-external-new-expression should pre-compile to fill disk cache (1st) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		if(Array.isArray(definition)) {
+/******/ 			var i = 0;
+/******/ 			while(i < definition.length) {
+/******/ 				var key = definition[i++];
+/******/ 				var binding = definition[i++];
+/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
+/******/ 			}
+/******/ 		} else {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 3 modules ***!
+  \\\\******************************/
+
+// MODULE: external \\"events\\"
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+module.exports = require(\\"events\\");
+});
+
+// MODULE: ./mid.cjs
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+const { make, raw } = (esm_user_namespaceFn());
+
+exports.L = make;
+exports.l = raw;
+
+});
+
+// MODULE: ./esm-user.mjs
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   make: () => (/* binding */ make)
+/* harmony export */ });
+(external_events_namespaceFn());
+// required by a CommonJS module, so wrapping propagates from here to the
+// external: the default import becomes the external's accessor call
+
+
+function make() {
+	return new (external_events_namespaceFn())();
+}
+
+const raw = (external_events_namespaceFn());
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"raw\\", 0, /* binding */ raw
+/* harmony export */ ]);
+
+});
+
+;// ./mid.cjs
+mid_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to a wrapped external's accessor result\\", () => {
+	const emitter = (0,mid_namespaceFn().L)();
+
+	expect(emitter).toBeInstanceOf((mid_namespaceFn().l));
+	expect(typeof emitter.on).toBe(\\"function\\");
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-expression commonjs-wrapped-external-new-expression should pre-compile to fill disk cache (2nd) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		if(Array.isArray(definition)) {
+/******/ 			var i = 0;
+/******/ 			while(i < definition.length) {
+/******/ 				var key = definition[i++];
+/******/ 				var binding = definition[i++];
+/******/ 				var descriptor = binding === 0 ? { enumerable: true, value: definition[i++] } : { enumerable: true, get: binding };
+/******/ 				if(!__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, descriptor);
+/******/ 			}
+/******/ 		} else {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 3 modules ***!
+  \\\\******************************/
+
+// MODULE: external \\"events\\"
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+module.exports = require(\\"events\\");
+});
+
+// MODULE: ./mid.cjs
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+const { make, raw } = (esm_user_namespaceFn());
+
+exports.L = make;
+exports.l = raw;
+
+});
+
+// MODULE: ./esm-user.mjs
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   make: () => (/* binding */ make)
+/* harmony export */ });
+(external_events_namespaceFn());
+// required by a CommonJS module, so wrapping propagates from here to the
+// external: the default import becomes the external's accessor call
+
+
+function make() {
+	return new (external_events_namespaceFn())();
+}
+
+const raw = (external_events_namespaceFn());
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"raw\\", 0, /* binding */ raw
+/* harmony export */ ]);
+
+});
+
+;// ./mid.cjs
+mid_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should apply \`new\` to a wrapped external's accessor result\\", () => {
+	const emitter = (0,mid_namespaceFn().L)();
+
+	expect(emitter).toBeInstanceOf((mid_namespaceFn().l));
+	expect(typeof emitter.on).toBe(\\"function\\");
+});
+
+/******/ })()
+;"
+`;

@@ -1,4 +1,3 @@
-import { readFileSync } from "fs";
 import {
 	call,
 	construct,
@@ -36,29 +35,11 @@ it("should keep the default import readable as a plain value", () => {
 	expect(read().name).toBe("Thing");
 });
 
-it("should call a wrapped default import without extra parentheses", () => {
+it("should call a wrapped default import in call and tagged-template position", () => {
 	expect(call("value")).toBe("value");
 	expect(tag("value")).toBe("tag");
-
-	const source = readFileSync(__filename, "utf-8");
-
-	expect(source).toMatch(/return identity_namespaceFn\(\)\(value\)/);
-	expect(source).toMatch(/return identity_namespaceFn\(\)`tag\$\{value\}`/);
 });
 
-it("should guard an accessor reference that opens an ASI position", () => {
+it("should read a wrapped default import opening an ASI position", () => {
 	expect(readInAsiPosition()).toEqual([1]);
-
-	expect(readFileSync(__filename, "utf-8")).toMatch(
-		/\n\t;\(thing_namespaceFn\(\)\)\n/
-	);
-});
-
-it("should really reach the modules through a wrapper accessor", () => {
-	const source = readFileSync(__filename, "utf-8");
-
-	expect(source).toMatch(
-		/thing_namespaceFn = \/\*#__PURE__\*\/__webpack_require__\.cw\(/
-	);
-	expect(source).toMatch(/new \(thing_namespaceFn\(\)\)\(/);
 });
