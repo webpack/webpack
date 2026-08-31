@@ -220,7 +220,7 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 
 **So never trade a JSDoc block for a shorter comment.** Turning
 
-```js
+```
 /**
  * An async external is a promise, not a module record with an evaluating state.
  * @param {Module} module the imported module
@@ -231,7 +231,7 @@ const isAsyncExternal = (module) => …
 
 into
 
-```js
+```
 // An async external is a promise, not a module record with an evaluating state.
 const isAsyncExternal = (/** @type {Module} */ module) => …
 ```
