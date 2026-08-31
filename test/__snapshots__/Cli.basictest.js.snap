@@ -11063,13 +11063,13 @@ Object {
   "optimization-minimize": Object {
     "configs": Array [
       Object {
-        "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.",
+        "description": "Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and configures the built-in minimizer per asset type.",
         "multiple": false,
         "path": "optimization.minimize",
         "type": "boolean",
       },
     ],
-    "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.",
+    "description": "Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and configures the built-in minimizer per asset type.",
     "multiple": false,
     "simpleType": "boolean",
   },

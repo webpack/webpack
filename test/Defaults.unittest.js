@@ -655,6 +655,7 @@ describe("snapshots", () => {
 		    "mangleWasmImports": false,
 		    "mergeDuplicateChunks": true,
 		    "minimize": false,
+		    "minimizeOptions": Object {},
 		    "minimizer": Array [
 		      Object {
 		        "apply": [Function],
@@ -1231,7 +1232,9 @@ describe("snapshots", () => {
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
-		+     "minimize": Object {
+		-     "minimizeOptions": Object {},
+		+     "minimize": true,
+		+     "minimizeOptions": Object {
 		+       "css": Object {},
 		+       "html": Object {},
 		+       "javascript": Object {
@@ -1341,7 +1344,9 @@ describe("snapshots", () => {
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
-		+     "minimize": Object {
+		-     "minimizeOptions": Object {},
+		+     "minimize": true,
+		+     "minimizeOptions": Object {
 		+       "css": Object {},
 		+       "html": Object {},
 		+       "javascript": Object {
@@ -6014,21 +6019,74 @@ describe("Targets", () => {
 });
 
 describe("optimization.minimize", () => {
-	it("should accept the `true` shorthand assigned after normalization", () => {
+	const DEFAULT_MINIMIZE_OPTIONS = {
+		css: {},
+		html: {},
+		javascript: { compress: { passes: 2 } }
+	};
+
+	/**
+	 * @param {import("../").Configuration["optimization"]} optimization optimization options
+	 * @returns {import("../").WebpackOptionsNormalized} normalized and defaulted options
+	 */
+	const resolve = (optimization) => {
 		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 			require("..").config;
 
-		const normalized = getNormalizedWebpackOptions({ mode: "production" });
+		const normalized = getNormalizedWebpackOptions({
+			mode: "production",
+			optimization
+		});
+		applyWebpackOptionsDefaults(normalized);
+		return normalized;
+	};
+
+	it("should keep `minimize` a boolean, whichever form is configured", () => {
+		expect(resolve(undefined).optimization.minimize).toBe(true);
+		expect(resolve({ minimize: true }).optimization.minimize).toBe(true);
+		expect(resolve({ minimize: false }).optimization.minimize).toBe(false);
+		expect(resolve({ minimize: { css: false } }).optimization.minimize).toBe(
+			true
+		);
+	});
+
+	it("should read the per-asset-type options off the `minimize` shorthand", () => {
+		expect(resolve(undefined).optimization.minimizeOptions).toEqual(
+			DEFAULT_MINIMIZE_OPTIONS
+		);
+		expect(
+			resolve({ minimize: { css: false } }).optimization.minimizeOptions
+		).toEqual({ ...DEFAULT_MINIMIZE_OPTIONS, css: false });
+		// Nothing is minimized, so no type carries options.
+		expect(resolve({ minimize: false }).optimization.minimizeOptions).toEqual(
+			{}
+		);
+	});
+
+	it("should accept a shorthand assigned after normalization", () => {
+		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+			require("..").config;
 
 		// What a plugin does in `apply()`, which runs between normalization and
-		// defaults, so `getNormalizedOptimizationMinimize` never sees this value.
-		normalized.optimization.minimize = /** @type {EXPECTED_ANY} */ (true);
+		// defaults, so neither form is normalized. The normalized type is a
+		// boolean, hence the casts.
+		const withTrue = getNormalizedWebpackOptions({ mode: "development" });
+		withTrue.optimization.minimize = /** @type {EXPECTED_ANY} */ (true);
+		expect(() => applyWebpackOptionsDefaults(withTrue)).not.toThrow();
+		expect(withTrue.optimization.minimize).toBe(true);
+		expect(withTrue.optimization.minimizeOptions).toEqual(
+			DEFAULT_MINIMIZE_OPTIONS
+		);
 
-		expect(() => applyWebpackOptionsDefaults(normalized)).not.toThrow();
-		expect(normalized.optimization.minimize).toEqual({
-			css: {},
-			html: {},
-			javascript: { compress: { passes: 2 } }
+		const withObject = getNormalizedWebpackOptions({ mode: "development" });
+		withObject.optimization.minimize = /** @type {EXPECTED_ANY} */ ({
+			html: false
+		});
+		expect(() => applyWebpackOptionsDefaults(withObject)).not.toThrow();
+		expect(withObject.optimization.minimize).toBe(true);
+		expect(withObject.optimization.minimizeOptions).toEqual({
+			...DEFAULT_MINIMIZE_OPTIONS,
+			html: false
 		});
 	});
 });
