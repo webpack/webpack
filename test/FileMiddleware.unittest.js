@@ -42,6 +42,37 @@ describe("FileMiddleware deserialize", () => {
 		expect(result).toHaveLength(1);
 		expect(Buffer.from(/** @type {Buffer} */ (result[0]))).toEqual(content);
 	});
+
+	it("rejects when a cache file is truncated after stat", async () => {
+		const content = buildHeader([]);
+		let position = 0;
+		let reads = 0;
+		const fs = /** @type {EXPECTED_ANY} */ ({
+			stat: jest.fn((_file, callback) =>
+				process.nextTick(() => callback(null, { size: content.length + 1 }))
+			),
+			open: jest.fn((_file, _flags, callback) =>
+				process.nextTick(() => callback(null, 1))
+			),
+			read: jest.fn((_fd, buffer, offset, length, _position, callback) => {
+				reads++;
+				if (reads > 2) {
+					process.nextTick(() => callback(new Error("read retried after EOF")));
+					return;
+				}
+				const slice = content.subarray(position, position + length);
+				slice.copy(buffer, offset);
+				position += slice.length;
+				process.nextTick(() => callback(null, slice.length));
+			}),
+			close: jest.fn((_fd, callback) => process.nextTick(() => callback(null)))
+		});
+
+		await expect(
+			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
+		).rejects.toThrow(/Unexpected end of file/);
+		expect(reads).toBe(2);
+	});
 });
 
 describe("FileMiddleware getReferencedFilenames", () => {
