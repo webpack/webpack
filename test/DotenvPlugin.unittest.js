@@ -15,11 +15,9 @@ describe("DotenvPlugin", () => {
 			});
 
 			await expect(
-				new DotenvPlugin({ template: [".env"] })._getParsed(
-					fs,
-					"/project",
-					"development"
-				)
+				/** @type {EXPECTED_ANY} */ (
+					new DotenvPlugin({ template: [".env"] })
+				)._getParsed(fs, "/project", "development")
 			).resolves.toMatchObject({
 				missingDependencies: ["/project/.env"],
 				parsed: {}
@@ -39,11 +37,9 @@ describe("DotenvPlugin", () => {
 		});
 
 		await expect(
-			new DotenvPlugin({ template: [".env"] })._getParsed(
-				fs,
-				"/project",
-				"development"
-			)
+			/** @type {EXPECTED_ANY} */ (
+				new DotenvPlugin({ template: [".env"] })
+			)._getParsed(fs, "/project", "development")
 		).rejects.toBe(error);
 	});
 });

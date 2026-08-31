@@ -83,7 +83,7 @@ describe("FileMiddleware deserialize", () => {
 		});
 
 		await expect(
-			new FileMiddleware(fs).deserialize(null, { filename: "cache.pack" })
+			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
 		).rejects.toThrow(/Unexpected end of file/);
 		expect(reads).toBe(2);
 	});
