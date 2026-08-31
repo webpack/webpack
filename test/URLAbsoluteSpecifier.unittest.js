@@ -35,6 +35,10 @@ const samples = [
 		expected: "my+data"
 	},
 	{
+		specifier: "vnd.example:data",
+		expected: "vnd.example"
+	},
+	{
 		specifier: "mY+dATA:image/jpg;base64",
 		expected: "my+data"
 	},
