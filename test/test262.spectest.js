@@ -835,6 +835,44 @@ const runScript = async (
 const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 
 /* cspell:disable */
+// The spec rejects `import()` for these link errors; webpack, like rollup,
+// esbuild and bun, resolves linking at build time and reports them there.
+const linkErrorsAtBuildTime = new Set([
+	// ambiguous star re-export
+	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-ambiguous-import.js",
+	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-ambiguous-import.js",
+
+	// circular re-export chain
+	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-circular.js",
+	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js"
+]);
+
 const knownBugs = [
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
@@ -974,44 +1012,6 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
-	// An ambiguous re-export is a compile-time diagnostic and never a runtime
-	// failure — `configCases/compiletime/exports-presence` pins that contract.
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-ambiguous-import.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-ambiguous-import.js",
-
-	// Tests expect a runtime SyntaxError from a circular re-export chain
-	// (`a` re-exports from `b`, `b` re-exports from `a`). webpack resolves
-	// circular exports during the build and does not surface this as a
-	// runtime rejection of `import()`.
-	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-async-function-await-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-async-function-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-async-function-return-await-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-async-gen-await-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-async-gen-return-await-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-block-import-catch-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-block-labeled-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-do-while-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-else-import-catch-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js",
-
 	// Dynamic-import edge cases that don't fit webpack's static module graph:
 	// - Self-importing script that asserts evaluation count.
 	// - `eval("import('...')")` and dynamic `import` reuse-namespace assertions
@@ -1148,26 +1148,27 @@ describe("test262", () => {
 							process.stdout.write(`Running ${name} ("${scenario}")\n`);
 						}
 
-						// A resolution error is a build error for webpack, not a throw,
-						// so the presence checks the other tests disable must be on.
-						const isResolutionTest =
-							meta.negative && meta.negative.phase === "resolution";
+						// A link error is a build error for webpack, not a throw, so the
+						// presence checks the other tests disable must be on.
+						const isLinkErrorTest =
+							(meta.negative && meta.negative.phase === "resolution") ||
+							linkErrorsAtBuildTime.has(name);
 
 						const stats = await compile(testFile, scenario, {
 							mode,
-							...(isResolutionTest ? { exportsPresence: "error" } : {}),
+							...(isLinkErrorTest ? { exportsPresence: "error" } : {}),
 							output: {
 								path: outputPath,
 								filename: path.relative(outputPath, outputFile)
 							}
 						});
 
-						if (isResolutionTest) {
+						if (isLinkErrorTest) {
 							// The bundle must not run: linking failed, so the body these
 							// tests guard against evaluation was never reached.
 							if (stats.compilation.errors.length === 0) {
 								throw new Error(
-									`Error in test file "${outputFile}" ("${testFile}"), expected a resolution error`
+									`Error in test file "${outputFile}" ("${testFile}"), expected a link error`
 								);
 							}
 
