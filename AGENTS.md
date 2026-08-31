@@ -216,7 +216,9 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 
 **This rule is about plain comments only** — `//` and `/* … */` narration inside `lib/`, `hot/`, `tooling/`, and `test/`. Those must be **as short as possible** — ideally one line, at most two short lines. Every line must add information a careful reader can't get from the code itself: a hidden invariant, a non-obvious ordering constraint, a workaround, or the name of the higher-level concept the block implements. **Never** write multi-paragraph essays, restate what the next line obviously does, narrate the diff, restate the PR description, or quote the user/task framing.
 
-**A JSDoc block is exempt — it is the type contract, not commentary, and it is multi-line by construction.** One `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply, and a description line when the name alone doesn't carry the intent. That holds for every documented symbol, exported or internal to one file — "as short as possible" never applies to it, and a JSDoc block is never something to shorten, flatten onto one line, or delete.
+**A JSDoc block's tags are exempt — they are the type contract, not commentary, and they are multi-line by construction.** One `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply. That holds for every documented symbol, exported or internal to one file: the tags are never something to shorten, flatten onto one line, or delete.
+
+**The description above those tags is prose, so it is bound by the same brevity as a plain comment: one or two sentences, never more.** Say what the function does when the name alone doesn't carry it, plus the one invariant or non-obvious constraint a caller needs. A paragraph explaining the algorithm, the history, or the alternatives considered belongs in neither place — moving an essay from a `//` comment into a JSDoc description is not a fix, it is the same essay indented differently.
 
 **So never trade a JSDoc block for a shorter comment.** Turning
 
