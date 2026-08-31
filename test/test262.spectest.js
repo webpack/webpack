@@ -1023,7 +1023,17 @@ const knownBugs = [
 	// property must run before the increment writes back, but webpack scopes
 	// bare `x` to its module wrapper rather than the realm global.
 	"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
-	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js"
+	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
+
+	// A rejecting top-level-await entry can only reject the ESM bundle module
+	// via top-level `await`, which the startup does not emit while
+	// `output.environment.topLevelAwait` is held back for the patch release, so
+	// the rejection is orphaned instead of failing the module.
+	"module-code/top-level-await/module-import-rejection.js",
+	"module-code/top-level-await/module-import-rejection-body.js",
+	"module-code/top-level-await/module-import-rejection-tick.js",
+	"module-code/top-level-await/dynamic-import-rejection.js",
+	"module-code/top-level-await/await-dynamic-import-rejection.js"
 ];
 
 const knownProductionBuildBugs = [
