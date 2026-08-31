@@ -61,4 +61,9 @@ describe("ArrayQueue", () => {
 		const queue = new ArrayQueue([1, 2, 3]);
 		expect([...queue]).toEqual([1, 2, 3]);
 	});
+
+	it("should iterate over falsy items", () => {
+		const queue = new ArrayQueue([0, false, "", undefined, 1]);
+		expect([...queue]).toEqual([0, false, "", undefined, 1]);
+	});
 });
