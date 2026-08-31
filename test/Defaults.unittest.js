@@ -6063,13 +6063,28 @@ describe("optimization.minimize", () => {
 		);
 	});
 
+	it("should let `minimizeOptions` override the `minimize` shorthand", () => {
+		expect(
+			resolve({ minimize: true, minimizeOptions: { css: false } }).optimization
+				.minimizeOptions
+		).toEqual({ ...DEFAULT_MINIMIZE_OPTIONS, css: false });
+		expect(
+			resolve({ minimize: { css: false }, minimizeOptions: { html: false } })
+				.optimization.minimizeOptions
+		).toEqual({ ...DEFAULT_MINIMIZE_OPTIONS, html: false });
+		// A resolved config is a valid input, so it normalizes back to itself.
+		expect(
+			resolve({ minimize: true, minimizeOptions: DEFAULT_MINIMIZE_OPTIONS })
+				.optimization.minimizeOptions
+		).toEqual(DEFAULT_MINIMIZE_OPTIONS);
+	});
+
 	it("should accept a shorthand assigned after normalization", () => {
 		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 			require("..").config;
 
-		// What a plugin does in `apply()`, which runs between normalization and
-		// defaults, so neither form is normalized. The normalized type is a
-		// boolean, hence the casts.
+		// What a plugin does in `apply()`, between normalization and defaults.
+		// The normalized type is a boolean, hence the casts.
 		const withTrue = getNormalizedWebpackOptions({ mode: "development" });
 		withTrue.optimization.minimize = /** @type {EXPECTED_ANY} */ (true);
 		expect(() => applyWebpackOptionsDefaults(withTrue)).not.toThrow();

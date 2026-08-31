@@ -13,9 +13,8 @@ module.exports = {
 		pathinfo: false
 	},
 	optimization: {
-		// The object form is a shorthand for `true` plus `minimizeOptions`: a
-		// minimizer plugin reading `optimization.minimize` off the resolved config
-		// gets the boolean it has always been handed, and forwards it as one.
+		// The object form is a shorthand for `true` plus `minimizeOptions`, so a
+		// minimizer plugin still reads a boolean off the resolved config.
 		minimize: {
 			javascript: { compress: { passes: 1 } }
 		},

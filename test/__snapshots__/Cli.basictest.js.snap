@@ -11063,13 +11063,13 @@ Object {
   "optimization-minimize": Object {
     "configs": Array [
       Object {
-        "description": "Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and configures the built-in minimizer per asset type.",
+        "description": "Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and sets optimization.minimizeOptions.",
         "multiple": false,
         "path": "optimization.minimize",
         "type": "boolean",
       },
     ],
-    "description": "Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and configures the built-in minimizer per asset type.",
+    "description": "Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and sets optimization.minimizeOptions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11615,6 +11615,558 @@ Object {
         "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
         "multiple": false,
         "path": "optimization.minimize.javascript",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps a \`/*!\` banner and a comment annotated \`@license\` or \`@preserve\`; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A \`/*#\` source-map pragma is a link rather than a comment, so \`\\"some\\"\` and \`\\"all\\"\` keep it; \`false\`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.comments",
+        "type": "enum",
+        "values": Array [
+          "all",
+          "some",
+        ],
+      },
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps a \`/*!\` banner and a comment annotated \`@license\` or \`@preserve\`; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A \`/*#\` source-map pragma is a link rather than a comment, so \`\\"some\\"\` and \`\\"all\\"\` keep it; \`false\`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.comments",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps a \`/*!\` banner and a comment annotated \`@license\` or \`@preserve\`; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A \`/*#\` source-map pragma is a link rather than a comment, so \`\\"some\\"\` and \`\\"all\\"\` keep it; \`false\`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.comments",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps a \`/*!\` banner and a comment annotated \`@license\` or \`@preserve\`; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A \`/*#\` source-map pragma is a link rather than a comment, so \`\\"some\\"\` and \`\\"all\\"\` keep it; \`false\`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.comments",
+        "type": "string",
+      },
+    ],
+    "description": "Which comments survive. \`\\"some\\"\`, the default, keeps a \`/*!\` banner and a comment annotated \`@license\` or \`@preserve\`; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A \`/*#\` source-map pragma is a link rather than a comment, so \`\\"some\\"\` and \`\\"all\\"\` keep it; \`false\`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-css-convert-length-units": Object {
+    "configs": Array [
+      Object {
+        "description": "Rewrite a length into a shorter unit it is exactly equal in (\`16px\` -> \`1pc\`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.convertLengthUnits",
+        "type": "boolean",
+      },
+    ],
+    "description": "Rewrite a length into a shorter unit it is exactly equal in (\`16px\` -> \`1pc\`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-merge-longhands": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.mergeLonghands",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-merge-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named \`@layer\` block a later sibling opens again is folded into the first. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.mergeRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named \`@layer\` block a later sibling opens again is folded into the first. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-normalize-quotes": Object {
+    "configs": Array [
+      Object {
+        "description": "Normalize quoting: a string takes whichever quote needs fewer escapes, a \`url()\` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.normalizeQuotes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Normalize quoting: a string takes whichever quote needs fewer escapes, a \`url()\` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-reduce-functions": Object {
+    "configs": Array [
+      Object {
+        "description": "Compute a call into the shorter call naming the same value: \`calc()\` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.reduceFunctions",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compute a call into the shorter call naming the same value: \`calc()\` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-remove-dead-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.removeDeadRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-rewrite-custom-properties": Object {
+    "configs": Array [
+      Object {
+        "description": "Shorten the values of custom properties (\`--x: #ffffff\` -> \`#fff\`, \`--y: 0.5rem\` -> \`.5rem\`), which are otherwise written back exactly as authored. Off by default: \`getComputedStyle().getPropertyValue()\` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.rewriteCustomProperties",
+        "type": "boolean",
+      },
+    ],
+    "description": "Shorten the values of custom properties (\`--x: #ffffff\` -> \`#fff\`, \`--y: 0.5rem\` -> \`.5rem\`), which are otherwise written back exactly as authored. Off by default: \`getComputedStyle().getPropertyValue()\` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-shorten-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Write each color in the shortest spelling of the same value: \`#ffffff\` -> \`#fff\`, \`rgb(1 2 3)\` -> \`#010203\`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.shortenColors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write each color in the shortest spelling of the same value: \`#ffffff\` -> \`#fff\`, \`rgb(1 2 3)\` -> \`#010203\`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-shorten-media-queries": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.shortenMediaQueries",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-shorten-numbers": Object {
+    "configs": Array [
+      Object {
+        "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a \`+\`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.shortenNumbers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a \`+\`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-shorten-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an \`An+B\` written the shortest way its microsyntax allows, and a \`from\` / \`100%\` keyframe selector written as the shorter of the pair. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.shortenSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an \`An+B\` written the shortest way its microsyntax allows, and a \`from\` / \`100%\` keyframe selector written as the shorter of the pair. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-shorten-values": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a value the shortest way its property's own grammar allows: a \`{1,4}\` box or corner notation collapsed, a slot holding its own initial dropped, and \`flex\` / \`font-weight\` / \`display\` / \`transition\` / \`<position>\` / \`<repeat-style>\` written the short way. On by default. Merging separate longhand declarations is \`mergeLonghands\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.shortenValues",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a value the shortest way its property's own grammar allows: a \`{1,4}\` box or corner notation collapsed, a slot holding its own initial dropped, and \`flex\` / \`font-weight\` / \`display\` / \`transition\` / \`<position>\` / \`<repeat-style>\` written the short way. On by default. Merging separate longhand declarations is \`mergeLonghands\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-vendor-prefixes": Object {
+    "configs": Array [
+      Object {
+        "description": "Maintain vendor prefixes for the \`browserslist\` target: add the \`-webkit-\` / \`-moz-\` / \`-ms-\` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a \`browserslist\` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (\`op_mini\`, \`and_uc\`, \`and_qq\`, \`baidu\`, \`kaios\`, \`bb\`) is skipped, and a selection of nothing but those prefixes for no one.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.vendorPrefixes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Maintain vendor prefixes for the \`browserslist\` target: add the \`-webkit-\` / \`-moz-\` / \`-ms-\` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a \`browserslist\` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (\`op_mini\`, \`and_uc\`, \`and_qq\`, \`baidu\`, \`kaios\`, \`bb\`) is skipped, and a selection of nothing but those prefixes for no one.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize HTML assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize HTML assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-collapse-boolean-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a boolean attribute spelled with its own name (\`disabled=\\"disabled\\"\`) as the bare name the spec canonicalizes it to. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.collapseBooleanAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a boolean attribute spelled with its own name (\`disabled=\\"disabled\\"\`) as the bare name the spec canonicalizes it to. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim. \`true\` (or \`\\"conservative\\"\`) never removes whitespace entirely — dropping it would join two inline elements that render apart. \`\\"smart\\"\` also drops the whitespace that sits against a block element's edge, where no line box reaches it. \`\\"all\\"\` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.collapseWhitespace",
+        "type": "enum",
+        "values": Array [
+          "conservative",
+          "smart",
+          "all",
+        ],
+      },
+      Object {
+        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim. \`true\` (or \`\\"conservative\\"\`) never removes whitespace entirely — dropping it would join two inline elements that render apart. \`\\"smart\\"\` also drops the whitespace that sits against a block element's edge, where no line box reaches it. \`\\"all\\"\` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim. \`true\` (or \`\\"conservative\\"\`) never removes whitespace entirely — dropping it would join two inline elements that render apart. \`\\"smart\\"\` also drops the whitespace that sits against a block element's edge, where no line box reaches it. \`\\"all\\"\` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-html-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps nothing: every comment an HTML parser reads is inert; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A downlevel conditional comment, a server-side include and a \`<?…?>\` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.comments",
+        "type": "enum",
+        "values": Array [
+          "all",
+          "some",
+        ],
+      },
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps nothing: every comment an HTML parser reads is inert; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A downlevel conditional comment, a server-side include and a \`<?…?>\` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.comments",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps nothing: every comment an HTML parser reads is inert; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A downlevel conditional comment, a server-side include and a \`<?…?>\` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.comments",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Which comments survive. \`\\"some\\"\`, the default, keeps nothing: every comment an HTML parser reads is inert; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A downlevel conditional comment, a server-side include and a \`<?…?>\` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.comments",
+        "type": "string",
+      },
+    ],
+    "description": "Which comments survive. \`\\"some\\"\`, the default, keeps nothing: every comment an HTML parser reads is inert; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A downlevel conditional comment, a server-side include and a \`<?…?>\` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-html-merge-styles": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a run of adjacent \`<style>\` elements as one sheet. Off by default: it removes elements, so \`document.styleSheets\`, a \`style:nth-child()\` selector and \`querySelectorAll(\\"style\\").length\` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by \`@import\` / \`@charset\` / \`@namespace\`, which apply only at the top of a sheet.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.mergeStyles",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a run of adjacent \`<style>\` elements as one sheet. Off by default: it removes elements, so \`document.styleSheets\`, a \`style:nth-child()\` selector and \`querySelectorAll(\\"style\\").length\` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by \`@import\` / \`@charset\` / \`@namespace\`, which apply only at the top of a sheet.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-minify-conditional-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.minifyConditionalComments",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-minify-json": Object {
+    "configs": Array [
+      Object {
+        "description": "Strip the whitespace between the tokens of a \`<script>\` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.minifyJson",
+        "type": "boolean",
+      },
+    ],
+    "description": "Strip the whitespace between the tokens of a \`<script>\` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-minify-srcdoc": Object {
+    "configs": Array [
+      Object {
+        "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.minifySrcdoc",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-minify-styles": Object {
+    "configs": Array [
+      Object {
+        "description": "Run the CSS minimizer over an inline \`<style>\` element and every \`style=\\"\\"\` attribute, with the options \`optimization.minimize.css\` names. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.minifyStyles",
+        "type": "boolean",
+      },
+    ],
+    "description": "Run the CSS minimizer over an inline \`<style>\` element and every \`style=\\"\\"\` attribute, with the options \`optimization.minimize.css\` names. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-normalize-attribute-quotes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.normalizeAttributeQuotes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-normalize-enumerated-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Fold an enumerated attribute's value to the keyword it names (\`type=\\"TEXT\\"\` -> \`type=text\`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.normalizeEnumeratedAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Fold an enumerated attribute's value to the keyword it names (\`type=\\"TEXT\\"\` -> \`type=text\`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-normalize-list-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.normalizeListAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-normalize-numeric-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an integer attribute (\`tabindex\`, \`colspan\`, \`width\`, …) the one way its own rules read it — leading whitespace, a \`+\` and leading zeros all go. On by default.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.normalizeNumericAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an integer attribute (\`tabindex\`, \`colspan\`, \`width\`, …) the one way its own rules read it — leading whitespace, a \`+\` and leading zeros all go. On by default.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-remove-empty-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals \`class\`, \`id\`, \`style\`, \`dir\`, \`accesskey\`, \`itemprop\`, \`itemref\`, \`itemtype\` and \`part\`, and every attribute reflecting a token list on the elements the spec defines it for — \`rel\` on \`<a>\`, \`<area>\`, \`<form>\` and \`<link>\`, \`ping\` on \`<a>\` and \`<area>\`, \`headers\` on \`<td>\` and \`<th>\`, \`blocking\` on \`<link>\`, \`<script>\` and \`<style>\`, \`sizes\` on \`<link>\`, \`for\` on \`<output>\` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so \`<x-foo rel=\\"\\">\` and \`<label for=\\"\\">\` keep it. Off by default: an attribute selector matches on presence, so \`[class]\` stops matching. Never dropped: \`title\` and \`lang\`, whose empty value means what absence does not; \`sandbox\`, whose empty list is the most restrictive state an \`<iframe>\` has; and an event handler, whose empty body still compiles to a function where absence reads null.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.removeEmptyAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals \`class\`, \`id\`, \`style\`, \`dir\`, \`accesskey\`, \`itemprop\`, \`itemref\`, \`itemtype\` and \`part\`, and every attribute reflecting a token list on the elements the spec defines it for — \`rel\` on \`<a>\`, \`<area>\`, \`<form>\` and \`<link>\`, \`ping\` on \`<a>\` and \`<area>\`, \`headers\` on \`<td>\` and \`<th>\`, \`blocking\` on \`<link>\`, \`<script>\` and \`<style>\`, \`sizes\` on \`<link>\`, \`for\` on \`<output>\` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so \`<x-foo rel=\\"\\">\` and \`<label for=\\"\\">\` keep it. Off by default: an attribute selector matches on presence, so \`[class]\` stops matching. Never dropped: \`title\` and \`lang\`, whose empty value means what absence does not; \`sandbox\`, whose empty list is the most restrictive state an \`<iframe>\` has; and an event handler, whose empty body still compiles to a function where absence reads null.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-remove-empty-elements": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.removeEmptyElements",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (\`canvas\`, \`slot\`, \`template\`, \`textarea\`, \`progress\`, \`meter\`, \`output\`, \`dialog\`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a \`::before\`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace \`collapseWhitespace\` deletes goes with them.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-remove-implied-tags": Object {
+    "configs": Array [
+      Object {
+        "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.removeImpliedTags",
+        "type": "enum",
+        "values": Array [
+          "smart",
+          "all",
+        ],
+      },
+      Object {
+        "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.removeImpliedTags",
+        "type": "boolean",
+      },
+    ],
+    "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-html-remove-optional-tags": Object {
+    "configs": Array [
+      Object {
+        "description": "Leave out a tag §13.1.2.4 lets the parser imply, other than the \`<html>\` / \`<head>\` / \`<body>\` shell, which \`removeImpliedTags\` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.removeOptionalTags",
+        "type": "boolean",
+      },
+    ],
+    "description": "Leave out a tag §13.1.2.4 lets the parser imply, other than the \`<html>\` / \`<head>\` / \`<body>\` shell, which \`removeImpliedTags\` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-remove-redundant-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.removeRedundantAttributes",
+        "type": "enum",
+        "values": Array [
+          "smart",
+          "all",
+        ],
+      },
+      Object {
+        "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.removeRedundantAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one \`getAttribute\` and every attribute selector read differently, whichever tier dropped it. \`true\` (or \`\\"smart\\"\`) drops only markers on elements that render nothing — \`<script type=text/javascript>\`, \`<script language=javascript>\`, \`<script charset=utf-8>\`, \`<style type=text/css>\`, \`<link type=text/css>\`, \`<link media=all>\` — so no rule that styles the page stops applying, which is what \`@swc/html\` does by default. \`\\"all\\"\` also drops spec defaults such as \`<input type=text>\` and \`<form method=get>\`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so \`input[type=text]\` stops matching.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-options-html-sort-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Print an element's attributes in a fixed order: the document's commonest attribute names first, ties by name. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages — the run of attributes two elements share becomes the same run of bytes. Off by default: a script reading \`element.attributes\` back, or a snapshot of the emitted HTML, sees the new order.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.sortAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print an element's attributes in a fixed order: the document's commonest attribute names first, ties by name. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages — the run of attributes two elements share becomes the same run of bytes. Off by default: a script reading \`element.attributes\` back, or a snapshot of the emitted HTML, sees the new order.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-html-sort-token-lists": Object {
+    "configs": Array [
+      Object {
+        "description": "Print every space-separated token list the DOM reads as a set — \`class\`, \`rel\`, \`part\`, \`sandbox\`, \`blocking\`, \`itemprop\` / \`itemref\` / \`itemtype\`, \`<output for>\` and \`<link sizes>\` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` or \`rel\` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — \`ping\` is the order its requests go out in and \`accesskey\` the order its keys are tried.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.sortTokenLists",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print every space-separated token list the DOM reads as a set — \`class\`, \`rel\`, \`part\`, \`sandbox\`, \`blocking\`, \`itemprop\` / \`itemref\` / \`itemtype\`, \`<output for>\` and \`<link sizes>\` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` or \`rel\` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — \`ping\` is the order its requests go out in and \`accesskey\` the order its keys are tried.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-javascript": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.javascript",
         "type": "enum",
         "values": Array [
           false,
