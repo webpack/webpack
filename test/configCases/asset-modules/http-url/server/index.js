@@ -64,7 +64,10 @@ function createServer() {
 				? query
 				: undefined;
 		if (encoding) {
-			res.setHeader("Content-Encoding", encoding);
+			res.setHeader(
+				"Content-Encoding",
+				query === "gzip" ? "GZip" : encoding
+			);
 			const buffer = Buffer.from(file);
 			res.end(
 				encoding === "gzip"
