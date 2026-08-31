@@ -1074,16 +1074,24 @@ const collectBoxLonghands = (shorthands) => {
 	for (const name of shorthands) {
 		const longhands = properties[name].computed;
 		if (!Array.isArray(longhands) || longhands.length !== 4) continue;
-		const match = (/** @type {string} */ part) =>
+		/**
+		 * @param {string} part side or corner name
+		 * @returns {string | undefined} the longhand naming that part, if any
+		 */
+		const match = (part) =>
 			longhands.find(
 				(longhand) =>
 					longhand === part ||
 					longhand.includes(`-${part}-`) ||
 					longhand.endsWith(`-${part}`)
 			);
-		// A corner name holds two side names (`border-top-left-radius` answers both
-		// `top` and `left`), so a sides match only counts when it is one-to-one.
-		const distinct = (/** @type {(string | undefined)[]} */ found) =>
+		/**
+		 * A corner name holds two side names (`border-top-left-radius` answers both
+		 * `top` and `left`), so a sides match only counts when it is one-to-one.
+		 * @param {(string | undefined)[]} found longhands matched per side/corner
+		 * @returns {boolean} true when every side matched a distinct longhand
+		 */
+		const distinct = (found) =>
 			!found.includes(undefined) && new Set(found).size === found.length;
 		let sides = BOX_SIDES.map(match);
 		if (!distinct(sides)) sides = BOX_CORNERS.map(match);

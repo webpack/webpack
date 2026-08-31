@@ -214,9 +214,31 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 
 > [!REQUIRED]
 
-Comments inside `lib/`, `hot/`, `tooling/`, and `test/` must be **as short as possible** — ideally one line, at most two short lines. Every line must add information a careful reader can't get from the code itself: a hidden invariant, a non-obvious ordering constraint, a workaround, or the name of the higher-level concept the block implements. **Never** write multi-paragraph essays, restate what the next line obviously does, narrate the diff, restate the PR description, or quote the user/task framing.
+**This rule is about plain comments only** — `//` and `/* … */` narration inside `lib/`, `hot/`, `tooling/`, and `test/`. Those must be **as short as possible** — ideally one line, at most two short lines. Every line must add information a careful reader can't get from the code itself: a hidden invariant, a non-obvious ordering constraint, a workaround, or the name of the higher-level concept the block implements. **Never** write multi-paragraph essays, restate what the next line obviously does, narrate the diff, restate the PR description, or quote the user/task framing.
 
-JSDoc on exported symbols stays as-is — that's the type contract, not commentary.
+**A JSDoc block is exempt — it is the type contract, not commentary, and it is multi-line by construction.** One `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply, and a description line when the name alone doesn't carry the intent. That holds for every documented symbol, exported or internal to one file — "as short as possible" never applies to it, and a JSDoc block is never something to shorten, flatten onto one line, or delete.
+
+**So never trade a JSDoc block for a shorter comment.** Turning
+
+```js
+/**
+ * An async external is a promise, not a module record with an evaluating state.
+ * @param {Module} module the imported module
+ * @returns {boolean} true when the module is an async external
+ */
+const isAsyncExternal = (module) => …
+```
+
+into
+
+```js
+// An async external is a promise, not a module record with an evaluating state.
+const isAsyncExternal = (/** @type {Module} */ module) => …
+```
+
+is a regression, not a cleanup: the parameter and return documentation is gone and the types now hide inside the signature. An inline `/** @type {T} */` cast on a parameter is for a throwaway callback argument, not for a named function — every named function, module-scope helper or not, gets a JSDoc block, and one carrying an explanation gets it whatever its scope.
+
+Prose about a documented symbol goes **inside** its JSDoc, as the description above the tags — never as a `//` comment stacked on top of the block, and never as a `//` comment standing in for the block.
 
 ## Testing
 
