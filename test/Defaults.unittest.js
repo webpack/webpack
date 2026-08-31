@@ -6089,4 +6089,27 @@ describe("optimization.minimize", () => {
 			html: false
 		});
 	});
+
+	it("should let a shorthand assigned after normalization replace the configured options", () => {
+		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+			require("..").config;
+
+		const normalized = getNormalizedWebpackOptions({
+			mode: "production",
+			optimization: { minimize: { css: false } }
+		});
+
+		// Assigning `optimization.minimize` in `apply()` replaces what the config
+		// named, as overwriting the resolved option always has.
+		normalized.optimization.minimize = /** @type {EXPECTED_ANY} */ ({
+			html: false
+		});
+		applyWebpackOptionsDefaults(normalized);
+
+		expect(normalized.optimization.minimize).toBe(true);
+		expect(normalized.optimization.minimizeOptions).toEqual({
+			...DEFAULT_MINIMIZE_OPTIONS,
+			html: false
+		});
+	});
 });
