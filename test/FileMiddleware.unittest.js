@@ -1,5 +1,6 @@
 "use strict";
 
+const { Writable } = require("stream");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 
 // Internal `deserialize(middleware, name, readFile)` exposed for this test.
@@ -41,6 +42,39 @@ describe("FileMiddleware deserialize", () => {
 
 		expect(result).toHaveLength(1);
 		expect(Buffer.from(/** @type {Buffer} */ (result[0]))).toEqual(content);
+	});
+});
+
+describe("FileMiddleware serialize", () => {
+	it("waits for compressed output before replacing the cache file", async () => {
+		const output = new Writable({
+			write(_chunk, _encoding, callback) {
+				setTimeout(callback, 25);
+			}
+		});
+		let finishedWhenReplaced = false;
+		const fs = /** @type {EXPECTED_ANY} */ ({
+			mkdir: jest.fn((_path, callback) => callback()),
+			createWriteStream: () => output,
+			rename: jest.fn((from, _to, callback) => {
+				if (from.endsWith("_")) {
+					finishedWhenReplaced = output.writableFinished;
+				}
+				callback();
+			})
+		});
+		const middleware = new FileMiddleware(fs);
+
+		await middleware.serialize([Buffer.from("content")], {
+			filename: "/cache/index.pack.gz"
+		});
+
+		if (!output.writableFinished) {
+			await new Promise((resolve) => {
+				output.once("finish", () => resolve(undefined));
+			});
+		}
+		expect(finishedWhenReplaced).toBe(true);
 	});
 });
 
