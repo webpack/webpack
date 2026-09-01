@@ -71,7 +71,7 @@
     "test:deno": "yarn test:base:deno --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|WebpackDevServer)\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --allow-net --import-map=test/deno-import-map.json --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --workerIdleMemoryLimit=512MB --logHeapUsage",
     "test:bun": "yarn test:base:bun --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|WebpackDevServer)\"",
-    "test:base:bun": "bun --bun --smol --preload ./test/bun-preload.js ./node_modules/jest-cli/bin/jest.js --workerThreads --workerIdleMemoryLimit=2048MB --logHeapUsage",
+    "test:base:bun": "NODE_TLS_REJECT_UNAUTHORIZED=0 bun --bun --smol --preload ./test/bun-preload.js ./node_modules/jest-cli/bin/jest.js --workerThreads --workerIdleMemoryLimit=2048MB --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
     "test:size": "node --max-old-space-size=4096 ./test/CodeSizeTestCases.size.js",
     "report:cover": "nyc report --reporter=lcov  --reporter=text -t coverage",
