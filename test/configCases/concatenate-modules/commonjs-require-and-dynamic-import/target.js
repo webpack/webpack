@@ -1,5 +1,5 @@
 "use strict";
 
-global.__targetEvaluations = (global.__targetEvaluations || 0) + 1;
+require("./registry").evaluations.push("target");
 
 exports.value = "target";

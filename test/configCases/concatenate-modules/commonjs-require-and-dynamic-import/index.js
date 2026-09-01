@@ -1,3 +1,4 @@
+import { evaluations } from "./registry";
 import { loadAsync, syncExports, syncValue } from "./consumer";
 
 it("should read a require() of a module that is also imported dynamically", () => {
@@ -12,5 +13,5 @@ it("should give the dynamic import the same instance the require() got", async (
 
 it("should evaluate that module exactly once", async () => {
 	await loadAsync();
-	expect(global.__targetEvaluations).toBe(1);
+	expect(evaluations).toEqual(["target"]);
 });
