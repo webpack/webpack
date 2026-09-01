@@ -1,6 +1,8 @@
 // the ESM import gives this entry a concatenation; each require() below decides
 // whether its target is absorbed into it
 import { tag } from "./member";
+// also a branch of the computed requests below, so it sits in the scope
+import importedBranch from "./imported-branch";
 
 function getLazy() {
 	return require("./lazy").v;
@@ -15,6 +17,12 @@ try {
 	tryV = "failed";
 }
 const argM = require(global.__notSet ? "./arg-a" : "./arg-b");
+const importedBranchM = require(
+	global.__notSet ? "./imported-branch" : "./arg-b"
+);
+const importedBranchTakenM = require(
+	global.__notSet ? "./arg-b" : "./imported-branch"
+);
 
 require("./written-direct").p = "set";
 const writtenDirect = require("./written-direct");
@@ -26,7 +34,12 @@ const resolveId = require.resolve("./resolve-target");
 const ORDER_AT_LOAD = global.__bailoutOrder.slice();
 
 // no single target for a computed request; require.resolve() cannot concatenate
-const BAILED_OUT = ["./arg-a.js", "./arg-b.js", "./resolve-target.js"];
+const BAILED_OUT = [
+	"./arg-a.js",
+	"./arg-b.js",
+	"./imported-branch.js",
+	"./resolve-target.js"
+];
 // absorbed targets render as wrapped members, so they evaluate at their
 // require() instead of at their position in the concatenation
 const ABSORBED = [
@@ -62,6 +75,12 @@ it("should resolve a require() with a computed request at runtime", () => {
 	expect(ORDER_AT_LOAD).not.toContain("arg-a");
 });
 
+it("should keep a computed request working when a branch is also imported", () => {
+	expect(importedBranch.v).toBe("imported-branch");
+	expect(importedBranchM.v).toBe("arg-b");
+	expect(importedBranchTakenM.v).toBe("imported-branch");
+});
+
 it("should keep a member-assigned require() target writable", () => {
 	expect(writtenDirect.p).toBe("set");
 	expect(writtenDirect.v).toBe("written-direct");
@@ -90,6 +109,34 @@ it("should absorb every require() target that can be wrapped", () => {
 	expect(concatModules.length).toBe(1);
 	expect(concatModules[0].modules.map((m) => m.name).sort()).toEqual(ABSORBED);
 });
+
+// an async callback moves the require() into a child block, which renders
+// after the module's own `require` header
+it("should read a whole module object required in a require.ensure callback", () => {
+	expect(ORDER_AT_LOAD).not.toContain("ensure-target");
+	return new Promise((resolve) => {
+		require.ensure(
+			[],
+			(require) => {
+				resolve(require("./ensure-target"));
+			},
+			"ensure"
+		);
+	}).then((whole) => {
+		expect(whole.NAME).toBe("ensure-target");
+		expect(whole.default).toEqual({ isDefault: true });
+		expect(global.__bailoutOrder).toContain("ensure-target");
+	});
+});
+
+it("should read a whole module object required in an AMD require callback", () =>
+	new Promise((resolve) => {
+		require(["./amd-target"], function () {
+			resolve(require("./amd-target"));
+		});
+	}).then((whole) => {
+		expect(whole.v).toBe("amd-target");
+	}));
 
 it("should evaluate the absorbed targets at their require(), in source order", () => {
 	// a bailed-out target is reached through a lazy accessor too, so it keeps its
