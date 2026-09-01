@@ -1354,6 +1354,12 @@
           "experimental": true,
           "added": "5.106.0"
         },
+        "specNamespaceObjects": {
+          "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' instead of the plain exports object. Requires 'Proxy' in the target environment.",
+          "type": "boolean",
+          "experimental": true,
+          "added": "5.111.0"
+        },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean",
@@ -1485,6 +1491,12 @@
           "type": "boolean",
           "experimental": true,
           "added": "5.106.0"
+        },
+        "specNamespaceObjects": {
+          "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' instead of the plain exports object. Requires 'Proxy' in the target environment.",
+          "type": "boolean",
+          "experimental": true,
+          "added": "5.111.0"
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",

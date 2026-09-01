@@ -7887,6 +7887,13 @@ declare interface Experiments {
 	sourceImport?: boolean;
 
 	/**
+	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' instead of the plain exports object. Requires 'Proxy' in the target environment.
+	 * @since 5.111.0
+	 * @experimental
+	 */
+	specNamespaceObjects?: boolean;
+
+	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
 	 * @since 5.0.0
 	 * @experimental
@@ -7981,6 +7988,13 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	sourceImport?: boolean;
+
+	/**
+	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' instead of the plain exports object. Requires 'Proxy' in the target environment.
+	 * @since 5.111.0
+	 * @experimental
+	 */
+	specNamespaceObjects?: boolean;
 
 	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
@@ -25469,6 +25483,7 @@ declare abstract class RuntimeTemplate {
 	requestShortener: RequestShortener;
 	globalObject: string;
 	contentHashReplacement: string;
+	specNamespaceObjects: boolean;
 	isIIFE(): boolean;
 
 	/**
@@ -30213,6 +30228,7 @@ declare namespace exports {
 		export let scriptNonce: "__webpack_require__.nc";
 		export let setAnonymousDefaultName: "__webpack_require__.dn";
 		export let shareScopeMap: "__webpack_require__.S";
+		export let specNamespaceObject: "__webpack_require__.ns";
 		export let startup: "__webpack_require__.x";
 		export let startupAssetHints: "__webpack_require__.SAH";
 		export let startupEntrypoint: "__webpack_require__.X";
