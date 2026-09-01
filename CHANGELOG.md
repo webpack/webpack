@@ -1,5 +1,31 @@
 # webpack
 
+## 5.110.3
+
+### Patch Changes
+
+- Fix `import()` options, circular reexport severity and namespace writes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21867](https://github.com/webpack/webpack/pull/21867))
+
+- Skip ESM interop when require() targets a module outside the concatenation. (by [@hai-x](https://github.com/hai-x) in [#21884](https://github.com/webpack/webpack/pull/21884))
+
+- Fix concatenated `require()` in a `require.ensure` callback or a computed request. (by [@hai-x](https://github.com/hai-x) in [#21907](https://github.com/webpack/webpack/pull/21907))
+
+- Keep `optimization.minimize` a boolean; its options move to `minimizeOptions`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21886](https://github.com/webpack/webpack/pull/21886))
+
+- Fix mangled exports read through require() and a leaked internal reference. (by [@alexander-akait](https://github.com/alexander-akait) in [#21905](https://github.com/webpack/webpack/pull/21905))
+
+- Fix `new` on a default import of a wrapped CommonJS module. (by [@alexander-akait](https://github.com/alexander-akait) in [#21876](https://github.com/webpack/webpack/pull/21876))
+
+- Throw when a deferred namespace of an async module is forced while it evaluates. (by [@alexander-akait](https://github.com/alexander-akait) in [#21871](https://github.com/webpack/webpack/pull/21871))
+
+- Do not report a missing export for a name a side-effect-free barrel defers. (by [@alexander-akait](https://github.com/alexander-akait) in [#21874](https://github.com/webpack/webpack/pull/21874))
+
+- Fix queue, URL scheme, dotenv, HTTP module and persistent cache edge cases. (by [@alexander-akait](https://github.com/alexander-akait) in [#21901](https://github.com/webpack/webpack/pull/21901))
+
+- Evaluate a deferred import's async dependencies where the import sits. (by [@alexander-akait](https://github.com/alexander-akait) in [#21902](https://github.com/webpack/webpack/pull/21902))
+
+- Omit ambiguous `export *` names from the module namespace. (by [@alexander-akait](https://github.com/alexander-akait) in [#21878](https://github.com/webpack/webpack/pull/21878))
+
 ## 5.110.2
 
 ### Patch Changes
@@ -817,7 +843,7 @@
 
 - Fix snapshot validity check for context dependencies in watch mode by treating watchpack's existence-only entries (`{}`) as cache misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#20916](https://github.com/webpack/webpack/pull/20916))
 
-- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+- Support no-expression template literals in computed member access (e.g. `` import.meta[`url`] ``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
 
 - Improve tree-shaking in `isPure`: handle more expression types (`ArrayExpression`, `ObjectExpression`, `NewExpression`, `ChainExpression`, `UnaryExpression` (safe operators), `MetaProperty`, `TaggedTemplateExpression`, `BinaryExpression` (strict equality)), prevent `/*#__PURE__*/` comments from leaking across `ObjectExpression` properties, and detect PURE comments inside `TemplateLiteral` interpolations. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
 
