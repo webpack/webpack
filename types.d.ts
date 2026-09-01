@@ -6049,6 +6049,16 @@ declare class CssModulesPlugin {
 	 * Returns true, when the chunk has css.
 	 */
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
+
+	/**
+	 * The css-carrying chunks of `chunks`, in the order their rules cascade —
+	 * the order a `<link rel="stylesheet">` per chunk has to be written in.
+	 */
+	static getCssChunksInCascadeOrder(
+		chunks: Iterable<Chunk>,
+		group: ChunkGroup,
+		chunkGraph: ChunkGraph
+	): Chunk[];
 	static getCompilationHooks: (compilation: Compilation) => {
 		/**
 		 * @since 5.94.0
@@ -27247,6 +27257,29 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
+declare class SSRManifestPlugin {
+	/**
+	 * Creates an instance of SSRManifestPlugin.
+	 */
+	constructor(options?: SSRManifestPluginOptions);
+	options: SSRManifestPluginOptions;
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface SSRManifestPluginOptions {
+	/**
+	 * The base directory used to compute the source-module keys (defaults to the compiler context).
+	 */
+	context?: string;
+
+	/**
+	 * Specifies the filename of the emitted manifest on disk. By default the plugin will emit `ssr-manifest.json` inside the 'output.path' directory.
+	 */
+	filename?: string;
+}
 
 /**
  * Helper function for joining two ranges into a single range. This is useful
@@ -32386,6 +32419,7 @@ declare namespace exports {
 		ProvidePlugin,
 		RuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
+		SSRManifestPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
 		ManifestPlugin,
