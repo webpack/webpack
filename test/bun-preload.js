@@ -123,10 +123,8 @@ if (nodeVm.SourceTextModule) {
 // stale output. Force watchpack into polling mode (honored unless already set).
 if (!process.env.WATCHPACK_POLLING) process.env.WATCHPACK_POLLING = "100";
 
-// `NODE_TLS_REJECT_UNAUTHORIZED` cannot be set from here: Bun's TLS layer reads
-// the real environment at process start and never sees a `process.env` write, so
-// the lazy-compilation https case would reject its self-signed cert on a socket
-// that never connects and never errors. `test:base:bun` exports it instead.
+// Bun's TLS layer reads the real environment at process start, so the CA the
+// lazy-compilation https case needs is exported by `test:base:bun`, not here.
 
 // Statics Node keeps non-enumerable; hide them so `Object.entries` skips them.
 const HIDDEN = new Set(["prototype", "length", "name", "arguments", "caller"]);
