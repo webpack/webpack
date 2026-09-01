@@ -62,6 +62,9 @@ describe("ArrayQueue", () => {
 		expect([...queue]).toEqual([1, 2, 3]);
 	});
 
+	// webpack only ever queues objects (AsyncQueue entries, DependenciesBlocks,
+	// MultiCompiler nodes), so no build can reach a falsy item — but the iterator
+	// is public API of a util that plugins use.
 	it("should iterate over falsy items", () => {
 		const queue = new ArrayQueue([
 			0,

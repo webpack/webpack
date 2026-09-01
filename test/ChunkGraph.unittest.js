@@ -5,6 +5,10 @@ const ChunkGraph = require("../lib/ChunkGraph");
 const Entrypoint = require("../lib/Entrypoint");
 const ModuleGraph = require("../lib/ModuleGraph");
 
+// The build-level behaviour lives in `configCases/runtime/depend-on-diamond-chain`.
+// Only the visit counts are here: a real build can show the cost as elapsed time
+// but cannot count how often the traversal reaches an entrypoint.
+
 /**
  * @param {string} name entrypoint name
  * @param {boolean=} hasRuntime whether the entrypoint chunk carries a runtime
@@ -67,11 +71,17 @@ describe("ChunkGraph", () => {
 
 			const visits = countVisits(shared);
 
-			chunkGraph.getRuntimeChunkDependentChunksIterable(
-				root.getEntrypointChunk()
-			);
+			const result = [
+				...chunkGraph.getRuntimeChunkDependentChunksIterable(
+					root.getEntrypointChunk()
+				)
+			];
 
 			expect(visits.count).toBe(1);
+			// deduplicating must not drop a chunk from the result
+			expect(new Set(result)).toEqual(
+				new Set([left.getEntrypointChunk(), right.getEntrypointChunk()])
+			);
 		});
 
 		it("visits each entrypoint of a diamond chain once", () => {
@@ -103,52 +113,6 @@ describe("ChunkGraph", () => {
 
 			expect(visits.map((visit) => visit.count)).toEqual(
 				Array.from({ length: depth }).fill(1)
-			);
-		});
-
-		it("returns the dependent chunks of every reachable entrypoint", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
-			const root = createEntrypoint("root", true);
-			const left = createEntrypoint("left");
-			const right = createEntrypoint("right");
-			const shared = createEntrypoint("shared");
-
-			dependOn(root, left);
-			dependOn(root, right);
-			dependOn(left, shared);
-			dependOn(right, shared);
-
-			const result = [
-				...chunkGraph.getRuntimeChunkDependentChunksIterable(
-					root.getEntrypointChunk()
-				)
-			];
-
-			// every entrypoint that has a dependent entrypoint contributes its own
-			// chunk, except the runtime chunk the traversal started from
-			expect(new Set(result)).toEqual(
-				new Set([left.getEntrypointChunk(), right.getEntrypointChunk()])
-			);
-		});
-
-		it("terminates on a circular dependOn relation", () => {
-			const chunkGraph = new ChunkGraph(new ModuleGraph());
-			const root = createEntrypoint("root", true);
-			const a = createEntrypoint("a");
-			const b = createEntrypoint("b");
-
-			dependOn(root, a);
-			dependOn(a, b);
-			dependOn(b, a);
-
-			const result = [
-				...chunkGraph.getRuntimeChunkDependentChunksIterable(
-					root.getEntrypointChunk()
-				)
-			];
-
-			expect(new Set(result)).toEqual(
-				new Set([a.getEntrypointChunk(), b.getEntrypointChunk()])
 			);
 		});
 	});

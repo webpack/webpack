@@ -44,6 +44,10 @@ describe("FileMiddleware deserialize", () => {
 		expect(Buffer.from(/** @type {Buffer} */ (result[0]))).toEqual(content);
 	});
 
+	// A build cannot stage either of the next two: shrinking a cache file between
+	// `stat` and `read` is a race, and the compressed-write ordering only shows
+	// when the destination is slower than the transform. Hence the fake fs.
+
 	/**
 	 * A file that reports `size` from `stat` but only ever hands out `available`
 	 * bytes — what a cache file truncated between `stat` and `read` looks like.
