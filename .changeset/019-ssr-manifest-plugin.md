@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `SSRManifestPlugin` that emits a source-module to client-asset manifest for server-side rendering preloads.
+Add `SSRManifestPlugin`, emitting a source-module to client-asset manifest whose stylesheets are listed in cascade order, and collect server styles on document-less targets such as `target: "node"`.

@@ -166,20 +166,20 @@ Keyed by source module. `./page.js` lists its own chunk, its CSS, and any chunk 
 ```json
 {
   "./example.js": [
-    "/dist/client/main.css",
-    "/dist/client/main.js"
+    "/dist/client/main.js",
+    "/dist/client/main.css"
   ],
   "./page.css": [
-    "/dist/client/page_js.css",
-    "/dist/client/page_js.js"
+    "/dist/client/page_js.js",
+    "/dist/client/page_js.css"
   ],
   "./page.js": [
-    "/dist/client/page_js.css",
-    "/dist/client/page_js.js"
+    "/dist/client/page_js.js",
+    "/dist/client/page_js.css"
   ],
   "./style.css": [
-    "/dist/client/main.css",
-    "/dist/client/main.js"
+    "/dist/client/main.js",
+    "/dist/client/main.css"
   ]
 }
 ```
@@ -221,8 +221,8 @@ Keyed by emitted asset, with the entrypoint graph alongside it.
 
 ```
 client:
-  assets by path *.js 16.3 KiB
-    asset main.js 15.5 KiB [emitted] (name: main)
+  assets by path *.js 15.1 KiB
+    asset main.js 14.3 KiB [emitted] (name: main)
     asset page_js.js 820 bytes [emitted]
   assets by path *.json 721 bytes
     asset manifest.json 389 bytes [emitted]
@@ -230,10 +230,10 @@ client:
   assets by path *.css 243 bytes
     asset main.css 122 bytes [emitted] (name: main)
     asset page_js.css 121 bytes [emitted]
-  Entrypoint main 15.6 KiB = main.js 15.5 KiB main.css 122 bytes
-  chunk (runtime: main) main.js, main.css (main) 343 bytes (javascript) 35 bytes (css) 9.43 KiB (runtime) [entry] [rendered]
+  Entrypoint main 14.4 KiB = main.js 14.3 KiB main.css 122 bytes
+  chunk (runtime: main) main.js, main.css (main) 343 bytes (javascript) 35 bytes (css) 8.78 KiB (runtime) [entry] [rendered]
     > ./example.js main
-    runtime modules 9.43 KiB 10 modules
+    runtime modules 8.78 KiB 10 modules
     dependent modules 35 bytes [dependent] 1 module
     ./example.js 343 bytes [built] [code generated]
       [no exports]
@@ -249,12 +249,12 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 14 KiB [emitted] [javascript module] (name: main)
-  asset page_js.mjs 867 bytes [emitted] [javascript module]
+  asset main.mjs 11.6 KiB [emitted] [javascript module] (name: main)
+  asset page_js.mjs 822 bytes [emitted] [javascript module]
   asset page_js.css 121 bytes [emitted]
-  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 6.95 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 5.33 KiB (runtime) [entry] [rendered]
     > ./server.js main
-    runtime modules 6.95 KiB 11 modules
+    runtime modules 5.33 KiB 8 modules
     dependent modules 42 bytes [dependent] 1 module
     ./server.js 1.29 KiB [built] [code generated]
       [exports: renderDocument]
@@ -275,19 +275,19 @@ server:
 
 ```
 client:
-  assets by path *.js 3.44 KiB
-    asset main.js 3.25 KiB [emitted] [minimized] (name: main)
+  assets by path *.js 3.24 KiB
+    asset main.js 3.04 KiB [emitted] [minimized] (name: main)
     asset page_js-page_css.js 200 bytes [emitted] [minimized]
   assets by path *.json 793 bytes
     asset manifest.json 425 bytes [emitted]
     asset ssr-manifest.json 368 bytes [emitted]
-  assets by path *.css 58 bytes
-    asset page_js-page_css.css 30 bytes [emitted] [minimized]
+  assets by path *.css 49 bytes
     asset main.css 28 bytes [emitted] [minimized] (name: main)
-  Entrypoint main 3.27 KiB = main.js 3.25 KiB main.css 28 bytes
-  chunk (runtime: main) main.js, main.css (main) 385 bytes (javascript) 35 bytes (css) 9.19 KiB (runtime) [entry] [rendered]
+    asset page_js-page_css.css 21 bytes [emitted] [minimized]
+  Entrypoint main 3.07 KiB = main.js 3.04 KiB main.css 28 bytes
+  chunk (runtime: main) main.js, main.css (main) 385 bytes (javascript) 35 bytes (css) 8.58 KiB (runtime) [entry] [rendered]
     > ./example.js main
-    runtime modules 9.19 KiB 9 modules
+    runtime modules 8.58 KiB 9 modules
     cacheable modules 385 bytes (javascript) 35 bytes (css)
       ./example.js + 1 modules 385 bytes [built] [code generated]
         [no exports]
@@ -308,12 +308,12 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 2.67 KiB [emitted] [javascript module] [minimized] (name: main)
-  asset page_js-page_css.mjs 258 bytes [emitted] [javascript module] [minimized]
-  asset page_js-page_css.css 30 bytes [emitted] [minimized]
-  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 6.72 KiB (runtime) [entry] [rendered]
+  asset main.mjs 2.3 KiB [emitted] [javascript module] [minimized] (name: main)
+  asset page_js-page_css.mjs 207 bytes [emitted] [javascript module] [minimized]
+  asset page_js-page_css.css 21 bytes [emitted] [minimized]
+  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 5.15 KiB (runtime) [entry] [rendered]
     > ./server.js main
-    runtime modules 6.72 KiB 10 modules
+    runtime modules 5.15 KiB 7 modules
     ./server.js + 1 modules 1.33 KiB [not cacheable] [built] [code generated]
       [exports: renderDocument]
       [all exports used]
