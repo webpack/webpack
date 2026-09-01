@@ -27,9 +27,27 @@ function createServer() {
 			res.end();
 			return;
 		}
+		// a truncated body under a compressed content-encoding, to exercise the
+		// decompression error path
+		const invalidEncoding = /^invalid-(gzip|br|deflate)$/.exec(query);
+		if (invalidEncoding) {
+			res.setHeader(
+				"Content-Encoding",
+				invalidEncoding[1] === "gzip"
+					? "gzip"
+					: invalidEncoding[1] === "br"
+						? "br"
+						: "deflate"
+			);
+			res.end("this is not compressed data");
+			return;
+		}
 		const pathname = "." + url.replace(/\?.*$/, "");
 		if (url.endsWith("?no-cache")) {
 			res.setHeader("Cache-Control", "no-cache, max-age=60");
+		} else if (url.endsWith("?no-store")) {
+			// mixed case on purpose: directive names are case-insensitive
+			res.setHeader("Cache-Control", "No-Store, MAX-AGE=60");
 		} else {
 			res.setHeader("Cache-Control", "public, immutable, max-age=600");
 		}
@@ -58,13 +76,21 @@ function createServer() {
 					? "text/plain"
 					: "text/css"
 		);
-		// serve compressed responses to exercise the decompression branches
-		const encoding =
-			query === "gzip" || query === "br" || query === "deflate"
-				? query
-				: undefined;
-		if (encoding) {
-			res.setHeader("Content-Encoding", encoding);
+		// serve compressed responses to exercise the decompression branches; the
+		// `-case` variants send the same coding with non-canonical spelling
+		const encodingHeaders = {
+			gzip: "gzip",
+			br: "br",
+			deflate: "deflate",
+			"gzip-case": "GZip",
+			"br-case": "BR",
+			"deflate-case": " Deflate "
+		};
+		const encodingHeader =
+			encodingHeaders[/** @type {keyof typeof encodingHeaders} */ (query)];
+		if (encodingHeader) {
+			const encoding = query.replace(/-case$/, "");
+			res.setHeader("Content-Encoding", encodingHeader);
 			const buffer = Buffer.from(file);
 			res.end(
 				encoding === "gzip"

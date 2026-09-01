@@ -61,4 +61,39 @@ describe("ArrayQueue", () => {
 		const queue = new ArrayQueue([1, 2, 3]);
 		expect([...queue]).toEqual([1, 2, 3]);
 	});
+
+	it("should iterate over falsy items", () => {
+		const queue = new ArrayQueue([
+			0,
+			false,
+			"",
+			null,
+			undefined,
+			Number.NaN,
+			1
+		]);
+		expect([...queue]).toEqual([0, false, "", null, undefined, Number.NaN, 1]);
+	});
+
+	it("should iterate over a queue that only holds falsy items", () => {
+		const queue = new ArrayQueue([0, 0, 0]);
+		expect([...queue]).toEqual([0, 0, 0]);
+		expect(queue).toHaveLength(0);
+	});
+
+	it("should iterate over falsy items enqueued after a dequeue", () => {
+		/** @type {ArrayQueue<number | boolean>} */
+		const queue = new ArrayQueue([1]);
+		queue.dequeue();
+		queue.enqueue(0);
+		queue.enqueue(false);
+		expect([...queue]).toEqual([0, false]);
+	});
+
+	it("should report done once a falsy-only queue is drained", () => {
+		const queue = new ArrayQueue([0]);
+		const iterator = queue[Symbol.iterator]();
+		expect(iterator.next()).toEqual({ done: false, value: 0 });
+		expect(iterator.next()).toEqual({ done: true, value: undefined });
+	});
 });

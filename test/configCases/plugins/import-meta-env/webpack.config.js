@@ -8,7 +8,8 @@ module.exports = {
 	mode: "production",
 	// Test 3: DotenvPlugin from .env.test file
 	dotenv: {
-		template: [".env.test"]
+		template: [".env.test"],
+		prefix: ["WEBPACK_", "__proto__"]
 	},
 	plugins: [
 		// Test 2: EnvironmentPlugin

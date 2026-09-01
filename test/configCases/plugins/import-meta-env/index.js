@@ -22,6 +22,33 @@ it("should expose variables from DotenvPlugin", () => {
 	expect(env.WEBPACK_DOTENV_VAR).toBe("from_dotenv");
 });
 
+it("should keep dotenv keys literal when reading the whole env object", () => {
+	const env = import.meta.env;
+	expect(env["WEBPACK_DOTTED.KEY"]).toBe("from_dotted_key");
+	expect(env["WEBPACK_DEEP.NESTED.KEY"]).toBe("from_deep_key");
+	expect(env["WEBPACK_DASHED-KEY"]).toBe("from_dashed_key");
+	expect(env["__proto__"]).toBe("from_prototype_key");
+	// a dotted key must not also show up as a nested object
+	expect(env.WEBPACK_DOTTED).toBe(undefined);
+	expect(env.WEBPACK_DEEP).toBe(undefined);
+});
+
+it("should keep dotenv keys literal when read as a member expression", () => {
+	expect(import.meta.env["WEBPACK_DOTTED.KEY"]).toBe("from_dotted_key");
+	expect(process.env["WEBPACK_DOTTED.KEY"]).toBe("from_dotted_key");
+	expect(process.env["WEBPACK_DASHED-KEY"]).toBe("from_dashed_key");
+});
+
+it("should expand dotenv references whose name contains null", () => {
+	const env = import.meta.env;
+	expect(env.WEBPACK_null_VALUE).toBe("expanded_value");
+	expect(env.WEBPACK_EXPANDED_NULL).toBe("expanded_value");
+});
+
+it("should still apply the default operator after the null fix", () => {
+	expect(import.meta.env.WEBPACK_EXPANDED_DEFAULT).toBe("fallback_value");
+});
+
 it("should expose variables from DefinePlugin", () => {
 	const env = import.meta.env;
 	expect(env.CUSTOM_VAR).toBe("custom_value");
