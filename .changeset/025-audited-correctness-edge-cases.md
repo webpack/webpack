@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix audited edge cases in queue iteration, URL schemes, dotenv, HTTP modules and the persistent cache.
+Fix queue, URL scheme, dotenv, HTTP module and persistent cache edge cases.
