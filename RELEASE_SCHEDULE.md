@@ -14,6 +14,24 @@ Feature work ships on a fixed cadence: a minor release every four weeks, on a Th
 
 A scheduled release may be skipped when nothing user-facing has landed since the previous one.
 
+#### The week after a minor — no new features
+
+The first week of every four-week cycle is a stabilization window: **pull requests adding features are not merged for one week after a minor release.** Only bug fixes go into `main` during that week, so a regression reported against the fresh minor can be fixed and patched out on its own.
+
+The point is that the patch releases of that week stay clean. If features were merged straight after a minor, every regression fix would drag whatever features had landed since out with it — a stream of small releases each mixing new behavior into what was meant to be a fix, and each one a new thing to bisect when the next report comes in.
+
+Once the week is over, feature pull requests are merged as usual for the remaining three weeks of the cycle. Approved feature pull requests simply wait during the window; there is no need to close or rebase them.
+
+### Out-of-band releases — critical fixes do not wait
+
+The cadence above is for feature work. A release is published as soon as the fix is on `main`, without waiting for the four-week slot or the end of the stabilization window, when it contains:
+
+- a security fix;
+- a fix for a breaking change that shipped unintentionally (behavior a release changed without saying so);
+- a fix for anything else critical — a regression that breaks common builds, corrupts output, or has no workaround.
+
+Such a release carries only the fix and whatever else has already landed; nothing is held back for it and no feature is merged to accompany it.
+
 ### Major releases — only after a roadmap discussion
 
 Major releases are not scheduled. A new major happens only after the roadmap and the other aspects requiring significant changes — breaking changes, the supported Node.js range, migration effort for the ecosystem, and the work needed in loaders, plugins and the documentation — have been discussed publicly and agreed on by the [Core Working Group](./WORKING_GROUP.md).
