@@ -838,6 +838,11 @@ const baseDir = path.posix.resolve(test262Dir, "./test/language/");
 // The spec rejects `import()` for these link errors; webpack, like rollup,
 // esbuild and bun, resolves linking at build time and reports them there.
 const linkErrorsAtBuildTime = new Set([
+	// A module that fails to resolve is a build error, deferred or not.
+	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
+	// Assigning to a namespace import is a build error, earlier than the
+	// spec's runtime TypeError.
+	"module-code/instn-star-binding.js",
 	// ambiguous star re-export
 	"expressions/dynamic-import/catch/nested-arrow-import-catch-instn-iee-err-ambiguous-import.js",
 	"expressions/dynamic-import/catch/nested-async-arrow-function-return-await-instn-iee-err-ambiguous-import.js",
@@ -889,18 +894,12 @@ const knownBugs = [
 	// `#mark in obj` needs `isExtensible() === false` without evaluating, so the
 	// target must be sealed with every export name on it, and a mismatch loses one.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
-	// Host resolution errors must be reported eagerly even for deferred imports;
-	// webpack turns a missing module into a build error resolved lazily instead.
-	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
 	// A deferred module must wait for the whole strongly-connected component when a
 	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
 	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
 	// It also wants `ownKeys` to be the sorted exports plus `@@toStringTag`, so
 	// `__esModule` would have to go — the namespace trade-off, not a defer fix.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Reported as a build error, earlier than the spec's runtime TypeError: the
-	// binding stays a `var`, which a runtime condition and HMR accept both need.
-	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
