@@ -892,8 +892,6 @@ const knownBugs = [
 	// Host resolution errors must be reported eagerly even for deferred imports;
 	// webpack turns a missing module into a build error resolved lazily instead.
 	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
-	// Exact interleaving of top-level-await and deferred evaluation order.
-	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
 	// A deferred module must wait for the whole strongly-connected component when a
 	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
 	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
