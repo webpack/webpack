@@ -4535,18 +4535,6 @@ declare class ConcatenationScope {
 	isWrapped(): boolean;
 
 	/**
-	 * Records a `require(...)` call that was replaced as a whole by a
-	 * concatenation reference, so nothing else rewrites a range inside it.
-	 */
-	registerReplacedRequire(range: [number, number]): void;
-
-	/**
-	 * Checks whether an offset sits inside an already-replaced `require(...)` call.
-	 * Containment, not exact match: `new require(...)` is replaced from `new`.
-	 */
-	isInsideReplacedRequire(start: number): boolean;
-
-	/**
 	 * Records the symbol that should be used when the current module exports a
 	 * named binding.
 	 */
