@@ -4578,7 +4578,15 @@ declare class ConcatenationScope {
 	static isModuleReference(name: string): boolean;
 
 	/**
-	 * Finds all encoded module references in a generated source.
+	 * Checks whether an identifier buries a reference token without being one,
+	 * which nothing can resolve: it would reach the output as an undeclared global.
+	 */
+	static isLeakedModuleReference(name: string): boolean;
+
+	/**
+	 * Finds all encoded module references in a generated source. A match that
+	 * continues an identifier is reported as `leaked`: it is a token a wider
+	 * replacement swallowed, so substituting it would rewrite the middle of a name.
 	 */
 	static findModuleReferences(source: Source): ModuleReferenceMatch[];
 
@@ -18206,6 +18214,7 @@ declare interface ModuleReferenceMatch {
 	start: number;
 	end: number;
 	name: string;
+	leaked: boolean;
 }
 declare interface ModuleReferenceOptions {
 	/**
