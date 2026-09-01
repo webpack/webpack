@@ -310,7 +310,7 @@ yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<categor
 
 Swap `ConfigTestCases` for `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [TESTING_DOCS.md](TESTING_DOCS.md)). The `test262`/`html5lib`/`css-parsing` suites are git submodules — run `git submodule update --init test/<dir>` first, or they fail confusingly.
 
-**Writing a `configCases/` case:** a case is a mini project — `index.js` (runs assertions; a thrown error fails the test) plus `webpack.config.js`. The emitted bundle is actually executed, so it must run. Optional per-case files: `errors.js` / `warnings.js` export arrays of matchers for expected build diagnostics (without them, any error/warning fails the case); `test.filter.js` returns `false` to skip the case (e.g. gate by Node version); `test.config.js` customizes the run (e.g. `findBundle`).
+**Writing a `configCases/` case:** a case is a mini project — `index.js` (runs assertions; a thrown error fails the test) plus `webpack.config.js`. The emitted bundle is actually executed, so it must run. Optional per-case files: `errors.js` / `warnings.js` export arrays of matchers for expected build diagnostics (without them, any error/warning fails the case); `test.filter.js` returns `false` to skip the case (e.g. gate by Node version — see [Target the Node baseline](#target-the-node-baseline) when the fixture itself needs newer syntax); `test.config.js` customizes the run (e.g. `findBundle`).
 
 **Cover every line you add or change.** A commit must not lower coverage: each new branch, fast path, and fallback needs a test that exercises it (CI's coverage report enforces this on the patch, target 90%+). Cover new branches with `configCases/` whenever a real build can reach them; fall back to a focused `*.unittest.js` only when a config case can't reasonably drive the branch (or a build-level test adds nothing) — e.g. tokenizer cold-path fallbacks, where each branch (fast and delegated) still needs exercising. Check `yarn cover:unit` locally, or the PR's "patch" coverage report, and add cases until no changed line is missing.
 
@@ -595,6 +595,23 @@ CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` s
 
 `lib/` and `hot/` ship as raw source (no build step) and must run on **Node ≥ 10.13** (the CI matrix goes down to Node 10.x). Don't use syntax or runtime APIs newer than that baseline — e.g. no optional chaining (`?.`) or nullish coalescing (`??`) — or the code passes locally and fails the Node 10 CI job.
 
+**The baseline covers what a test executes, too.** The harness runs each `configCases/` bundle, so a fixture written in syntax newer than the baseline — a class static field or static block, `??=`, `await using` — parses everywhere you try it locally and then fails the Node 10 job with a bare `SyntaxError` pointing into the emitted bundle. webpack does not transpile the fixture, so `output.environment` will not save you: it constrains the code webpack _generates_, never the code you wrote.
+
+When the behaviour under test needs that syntax, gate the case with a `test.filter.js` returning `false` below the first version supporting it, and say which syntax in a comment:
+
+```js
+"use strict";
+
+// The fixture observes the name from a class static field, which Node 10
+// cannot parse when the harness executes the bundle.
+module.exports = function filter() {
+	const major = Number(process.versions.node.split(".")[0]);
+	return major >= 12;
+};
+```
+
+Reach for the filter only when the syntax _is_ the point. If the same behaviour can be covered with syntax the baseline accepts, write it that way and keep the case running everywhere. And note this is a capability gate, unrelated to the cache-suite silencing forbidden under [The persistent cache has to keep working](#the-persistent-cache-has-to-keep-working) — a filtered case still runs in both suites on every version that can execute it.
+
 ### Runtime code ships to every target
 
 Code that emits runtime into the bundle — chunk loading (`lib/web/` JSONP, `lib/esm/`, `lib/node/`, `lib/webworker/`), prefetch/preload/resource hints, library and externals presets — is **per-target**: each preset (browsers/JSONP, ESM `output.module`, `node`, `webworker`, `deno`, `electron`, `bun`, and the **universal** `target: ["web", "node"]` neutral-platform path) has its own runtime module or wiring. Changing one and forgetting the others is the easy mistake here. When you touch runtime-emitting code, apply it to **every** affected target and add an integration case per target (typically `target: "web"`, `experiments.outputModule`, and `target: ["web", "node"]`; add `node`/`webworker`/`bun`/`deno`/`electron` when they're in scope). The universal/neutral-platform runtime guards browser-only APIs behind `typeof document === "undefined"`, so those bundles run Node-side without a DOM — its config case must gate DOM assertions on `typeof document !== "undefined"` (see `configCases/target/universal-prefetch-preload`).
@@ -635,7 +652,7 @@ The cache suite runs with `infrastructureLogging.debug`, so the log usually name
 - `Restoring failed for <identifier> from pack: <err>` — it _was_ written, and deserialization threw. Deserialization re-enters the constructor with **no arguments**, so a constructor that dereferences a parameter (`err.message`) must guard (`err ? err.message : ""`).
 - Nothing at all — the identifier is not stable between runs, or the module reports that it needs rebuilding.
 
-**Never silence it with `test.filter.js`.** `module.exports = (config) => !config.cache` drops the case from the cache suite entirely, so nothing about that feature is cache-tested any more — including the parts that did work. A new case must pass under both suites.
+**Never silence it with `test.filter.js`.** `module.exports = (config) => !config.cache` drops the case from the cache suite entirely, so nothing about that feature is cache-tested any more — including the parts that did work. A new case must pass under both suites. (Gating a case whose _fixture_ needs syntax newer than the Node baseline is a different thing and is fine — see [Target the Node baseline](#target-the-node-baseline).)
 
 The one expected write webpack ships today is a module carrying a **build error**: `NormalModule.needBuild` returns true whenever `this.error` is set, because webpack retries errors on every build. A case whose subject _is_ an error therefore invalidates the pack by design, and states so with an `infrastructure-log.js` returning `[/Pack got invalid because of write to/]` when `cache.type === "filesystem"` (~20 cases already do). That is the only mechanism that needs no further justification; any other expectation carries the reason it is not a bug, written next to it — and "it is noise here" is not a reason.
 
