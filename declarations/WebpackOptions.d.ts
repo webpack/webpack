@@ -2319,9 +2319,13 @@ export interface Optimization {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
+	 * Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and sets optimization.minimizeOptions.
 	 */
 	minimize?: boolean | OptimizationMinimizeOptions;
+	/**
+	 * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
+	 */
+	minimizeOptions?: OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
@@ -4862,9 +4866,14 @@ export interface OptimizationNormalized {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer. An object configures the built-in minimizer per asset type.
+	 * Enable minimizing the output. Uses optimization.minimizer.
 	 */
-	minimize?: false | OptimizationMinimizeOptions;
+	minimize?: boolean;
+	/**
+	 * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
+	 * @since 5.110.0
+	 */
+	minimizeOptions?: OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
