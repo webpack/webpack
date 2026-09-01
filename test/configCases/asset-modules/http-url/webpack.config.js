@@ -112,5 +112,33 @@ module.exports = [
 				frozen: false
 			})
 		]
+	},
+	{
+		name: "encoding-case",
+		...base,
+		entry: "./index.encoding-case.js",
+		plugins: [
+			serverPlugin,
+			new HttpUriPlugin({
+				allowedUris,
+				cacheLocation: false,
+				upgrade: false,
+				frozen: false
+			})
+		]
+	},
+	{
+		name: "decompression-errors",
+		...base,
+		entry: "./index.decompression-errors.js",
+		plugins: [
+			serverPlugin,
+			new HttpUriPlugin({
+				allowedUris,
+				cacheLocation: false,
+				upgrade: false,
+				frozen: false
+			})
+		]
 	}
 ];

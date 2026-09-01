@@ -1,5 +1,6 @@
 "use strict";
 
+const { Writable } = require("stream");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 
 // Internal `deserialize(middleware, name, readFile)` exposed for this test.
@@ -41,6 +42,172 @@ describe("FileMiddleware deserialize", () => {
 
 		expect(result).toHaveLength(1);
 		expect(Buffer.from(/** @type {Buffer} */ (result[0]))).toEqual(content);
+	});
+
+	// A build cannot stage either of the next two: shrinking a cache file between
+	// `stat` and `read` is a race, and the compressed-write ordering only shows
+	// when the destination is slower than the transform. Hence the fake fs.
+
+	/**
+	 * A file that reports `size` from `stat` but only ever hands out `available`
+	 * bytes — what a cache file truncated between `stat` and `read` looks like.
+	 * @param {Buffer} content bytes the file actually holds
+	 * @param {number} size size reported by `stat`
+	 * @param {Error=} closeError error `close` reports, if any
+	 * @returns {EXPECTED_ANY} fake fs plus the read counter
+	 */
+	const truncatedFs = (content, size, closeError) => {
+		let position = 0;
+		const state = { reads: 0 };
+		return {
+			state,
+			fs: /** @type {EXPECTED_ANY} */ ({
+				stat: jest.fn((_file, callback) =>
+					process.nextTick(() => callback(null, { size }))
+				),
+				open: jest.fn((_file, _flags, callback) =>
+					process.nextTick(() => callback(null, 1))
+				),
+				read: jest.fn((_fd, buffer, offset, length, _position, callback) => {
+					state.reads++;
+					if (state.reads > 32) {
+						process.nextTick(() =>
+							callback(new Error("read retried after end of file"))
+						);
+						return;
+					}
+					const slice = content.subarray(position, position + length);
+					slice.copy(buffer, offset);
+					position += slice.length;
+					process.nextTick(() => callback(null, slice.length));
+				}),
+				close: jest.fn((_fd, callback) =>
+					process.nextTick(() => callback(closeError || null))
+				)
+			})
+		};
+	};
+
+	it("rejects when a cache file is truncated after stat", async () => {
+		const content = buildHeader([]);
+		const { fs, state } = truncatedFs(content, content.length + 1);
+
+		await expect(
+			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
+		).rejects.toThrow(/Unexpected end of file/);
+		// the read that returns 0 bytes ends it; without the guard it loops
+		expect(state.reads).toBe(2);
+		expect(fs.close).toHaveBeenCalled();
+	});
+
+	it("rejects when a cache file is truncated mid-section", async () => {
+		const header = buildHeader([64]);
+		const { fs, state } = truncatedFs(
+			Buffer.concat([header, Buffer.alloc(8)]),
+			header.length + 64
+		);
+
+		await expect(
+			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
+		).rejects.toThrow(/Unexpected end of file/);
+		expect(state.reads).toBeLessThan(32);
+	});
+
+	it("reports the close error when closing a truncated file fails", async () => {
+		const content = buildHeader([]);
+		const { fs } = truncatedFs(
+			content,
+			content.length + 1,
+			new Error("close failed")
+		);
+
+		await expect(
+			new FileMiddleware(fs).deserialize(true, { filename: "cache.pack" })
+		).rejects.toThrow(/close failed/);
+	});
+});
+
+describe("FileMiddleware serialize", () => {
+	/**
+	 * @param {string} filename cache file name
+	 * @param {number} writeDelay ms each write takes to flush
+	 * @returns {Promise<{ finishedWhenReplaced: boolean, written: number }>} result
+	 */
+	const serializeTo = async (filename, writeDelay) => {
+		let written = 0;
+		const output = new Writable({
+			write(chunk, _encoding, callback) {
+				written += chunk.length;
+				setTimeout(callback, writeDelay);
+			}
+		});
+		let finishedWhenReplaced = false;
+		const fs = /** @type {EXPECTED_ANY} */ ({
+			mkdir: jest.fn((_path, callback) => callback()),
+			createWriteStream: () => output,
+			rename: jest.fn((from, _to, callback) => {
+				if (from.endsWith("_")) {
+					finishedWhenReplaced = output.writableFinished;
+				}
+				callback();
+			})
+		});
+
+		await new FileMiddleware(fs).serialize(
+			[Buffer.from("content".repeat(64))],
+			{
+				filename
+			}
+		);
+
+		if (!output.writableFinished) {
+			await new Promise((resolve) => {
+				output.once("finish", () => resolve(undefined));
+			});
+		}
+		return { finishedWhenReplaced, written };
+	};
+
+	it("waits for gzip output before replacing the cache file", async () => {
+		const { finishedWhenReplaced, written } = await serializeTo(
+			"/cache/index.pack.gz",
+			25
+		);
+		expect(finishedWhenReplaced).toBe(true);
+		expect(written).toBeGreaterThan(0);
+	});
+
+	it("waits for brotli output before replacing the cache file", async () => {
+		const { finishedWhenReplaced } = await serializeTo(
+			"/cache/index.pack.br",
+			25
+		);
+		expect(finishedWhenReplaced).toBe(true);
+	});
+
+	it("still replaces the cache file for uncompressed output", async () => {
+		const { finishedWhenReplaced } = await serializeTo("/cache/index.pack", 5);
+		expect(finishedWhenReplaced).toBe(true);
+	});
+
+	it("rejects when the compressed output stream fails", async () => {
+		const output = new Writable({
+			write(_chunk, _encoding, callback) {
+				callback(new Error("disk full"));
+			}
+		});
+		const fs = /** @type {EXPECTED_ANY} */ ({
+			mkdir: jest.fn((_path, callback) => callback()),
+			createWriteStream: () => output,
+			rename: jest.fn((_from, _to, callback) => callback())
+		});
+
+		await expect(
+			new FileMiddleware(fs).serialize([Buffer.from("content")], {
+				filename: "/cache/index.pack.gz"
+			})
+		).rejects.toThrow(/disk full/);
+		expect(fs.rename).not.toHaveBeenCalled();
 	});
 });
 

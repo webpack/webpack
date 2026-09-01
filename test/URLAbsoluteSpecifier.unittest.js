@@ -39,6 +39,32 @@ const samples = [
 		expected: "my+data"
 	},
 	{
+		specifier: "vnd.example:data",
+		expected: "vnd.example"
+	},
+	{
+		specifier: "VND.Example:data",
+		expected: "vnd.example"
+	},
+	{
+		specifier: "web+foo.bar-baz2:resource",
+		expected: "web+foo.bar-baz2"
+	},
+	{
+		// a scheme must start with a letter, so a leading dot is not one
+		specifier: ".vnd:data",
+		expected: undefined
+	},
+	{
+		// trailing dot before the colon is still a valid scheme character
+		specifier: "vnd.:data",
+		expected: "vnd."
+	},
+	{
+		specifier: "./relative.path:not-a-scheme",
+		expected: undefined
+	},
+	{
 		specifier: "my-data/next:image/",
 		expected: undefined
 	},
