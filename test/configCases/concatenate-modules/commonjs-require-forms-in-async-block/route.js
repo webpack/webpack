@@ -1,6 +1,5 @@
-// The require forms whose dependency renders in an async block while the
-// `require`/`require.resolve` callee it sits in is a presentational dependency
-// of the module, so the two are applied out of source order.
+// Each callee below is a presentational dependency of the module while its call
+// renders in an async block, so the two are applied out of source order.
 import { value as sharedFromImport } from "./shared";
 
 export function loadDestructured() {

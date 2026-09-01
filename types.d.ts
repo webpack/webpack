@@ -4578,9 +4578,8 @@ declare class ConcatenationScope {
 	static isModuleReference(name: string): boolean;
 
 	/**
-	 * Checks whether an identifier buries a reference token without being a
-	 * reference itself, which a replacement overlapping a reference produces.
-	 * Nothing can resolve it, so it would reach the output as an undeclared global.
+	 * Checks whether an identifier buries a reference token without being one,
+	 * which nothing can resolve: it would reach the output as an undeclared global.
 	 */
 	static isLeakedModuleReference(name: string): boolean;
 
