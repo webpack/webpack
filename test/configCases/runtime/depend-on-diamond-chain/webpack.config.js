@@ -9,7 +9,7 @@
 // timeout rather than merely being slow.
 const DEPTH = 16;
 
-/** @type {NonNullable<import("../../../../").Configuration["entry"]> & object} */
+/** @type {Record<string, string | { import: string, dependOn: string | string[] }>} */
 const entry = { main: "./index.js" };
 
 let current = "main";
