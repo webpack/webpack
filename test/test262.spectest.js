@@ -605,7 +605,8 @@ const compile = async (entry, scenario, options = {}) =>
 			performance: false,
 			experiments: {
 				outputModule: scenario === "module",
-				deferImport: true
+				deferImport: true,
+				specNamespaceObjects: true
 			},
 			optimization: {
 				emitOnErrors: true,
@@ -914,15 +915,12 @@ const knownBugs = [
 	// is reachable and returns `"[object Module]"` instead of falling back to
 	// the exported `valueOf`. Setting the prototype to `null` would impact
 	// other webpack-generated code paths.
-	"expressions/dynamic-import/custom-primitive.js",
 	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
 	"import/import-attributes/text-via-namespace.js",
 	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
 	"module-code/namespace/internals/own-property-keys-binding-types.js",
-	"module-code/namespace/internals/own-property-keys-sort.js",
 
 	// Potential improvement for enumerate
-	"module-code/namespace/internals/enumerate-binding-uninit.js",
 
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
@@ -950,55 +948,23 @@ const knownBugs = [
 	// exotic. Adopting `Object.setPrototypeOf(__webpack_exports__, null)` (and
 	// freezing/extensibility tweaks) would change runtime behaviour broadly,
 	// so these spec-conformance tests remain skipped.
-	"module-code/namespace/internals/get-own-property-str-found-init.js",
-	"module-code/namespace/internals/get-own-property-str-found-uninit.js",
-	"module-code/namespace/internals/get-prototype-of.js",
 	"module-code/namespace/internals/get-str-not-found.js",
-	"module-code/namespace/internals/has-property-str-not-found.js",
-	"module-code/namespace/internals/is-extensible.js",
-	"module-code/namespace/internals/object-hasOwnProperty-binding-uninit.js",
-	"module-code/namespace/internals/object-keys-binding-uninit.js",
-	"module-code/namespace/internals/object-propertyIsEnumerable-binding-uninit.js",
-	"module-code/namespace/internals/set-prototype-of.js",
 	"module-code/namespace/internals/set.js",
-	"module-code/namespace/internals/define-own-property.js",
 
 	// Module Namespace Exotic Object semantics for the dynamically imported
 	// namespace — webpack's resolved namespace is a plain `__webpack_exports__`
 	// object with `__esModule: true`, so non-extensibility, prototype-of-null,
 	// throw-on-set in strict, sorted ownKeys, and frozen prop descriptors are
 	// not all satisfied (same root cause as `module-code/namespace/internals/*`).
-	"expressions/dynamic-import/namespace/await-ns-define-own-property.js",
 	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-no-strict.js",
 	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-strict.js",
-	"expressions/dynamic-import/namespace/await-ns-extensible.js",
 	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-direct.js",
 	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-indirect.js",
-	"expressions/dynamic-import/namespace/await-ns-get-own-property-str-found-init.js",
-	"expressions/dynamic-import/namespace/await-ns-get-str-not-found.js",
-	"expressions/dynamic-import/namespace/await-ns-has-property-str-not-found.js",
-	"expressions/dynamic-import/namespace/await-ns-own-property-keys-sort.js",
-	"expressions/dynamic-import/namespace/await-ns-prop-descs.js",
-	"expressions/dynamic-import/namespace/await-ns-prototype.js",
-	"expressions/dynamic-import/namespace/await-ns-set-no-strict.js",
-	"expressions/dynamic-import/namespace/await-ns-set-prototype-of.js",
-	"expressions/dynamic-import/namespace/await-ns-set-strict.js",
 	"expressions/dynamic-import/namespace/default-property-not-set-own.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-define-own-property.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-delete-non-exported-no-strict.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-delete-non-exported-strict.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-extensible.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-direct.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-indirect.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-get-own-property-str-found-init.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-get-str-not-found.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-has-property-str-not-found.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-own-property-keys-sort.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-prop-descs.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-prototype.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-set-no-strict.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
 	// Dynamic-import edge cases that don't fit webpack's static module graph:
 	// - Self-importing script that asserts evaluation count.

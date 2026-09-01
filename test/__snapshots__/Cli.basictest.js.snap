@@ -1079,6 +1079,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-spec-namespace-objects": Object {
+    "configs": Array [
+      Object {
+        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' instead of the plain exports object. Requires 'Proxy' in the target environment.",
+        "multiple": false,
+        "path": "experiments.specNamespaceObjects",
+        "type": "boolean",
+      },
+    ],
+    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' instead of the plain exports object. Requires 'Proxy' in the target environment.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-sync-web-assembly": Object {
     "configs": Array [
       Object {
