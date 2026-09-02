@@ -36,6 +36,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -77,6 +78,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": null,
   "webworker": false,
 }
@@ -118,6 +120,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -159,6 +162,7 @@ Object {
   "spread": false,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -200,6 +204,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -241,6 +246,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -282,6 +288,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -323,6 +330,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -364,6 +372,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -405,6 +414,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -446,6 +456,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": null,
   "webworker": false,
 }
@@ -487,6 +498,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": null,
   "webworker": false,
 }
@@ -528,6 +540,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -569,6 +582,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -610,6 +624,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -651,6 +666,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -692,6 +708,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -733,6 +750,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -774,6 +792,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -815,6 +834,7 @@ Object {
   "spread": false,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -856,6 +876,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": false,
   "webworker": false,
 }
@@ -897,6 +918,7 @@ Object {
   "spread": false,
   "symbol": true,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": false,
   "webworker": false,
 }
@@ -938,6 +960,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": false,
   "webworker": false,
 }
@@ -979,6 +1002,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": false,
   "webworker": false,
 }
@@ -1020,6 +1044,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": false,
   "webworker": false,
 }
@@ -1061,6 +1086,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": false,
   "webworker": false,
 }
@@ -1102,6 +1128,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": true,
   "web": false,
   "webworker": false,
 }
@@ -1143,6 +1170,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1184,6 +1212,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1225,6 +1254,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1266,6 +1296,7 @@ Object {
   "spread": false,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1307,6 +1338,7 @@ Object {
   "spread": false,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1348,6 +1380,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1389,6 +1422,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1430,6 +1464,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1471,6 +1506,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": true,
   "web": true,
   "webworker": false,
 }
@@ -1512,6 +1548,7 @@ Object {
   "spread": false,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1553,6 +1590,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1594,6 +1632,7 @@ Object {
   "spread": true,
   "symbol": true,
   "templateLiteral": true,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }
@@ -1635,6 +1674,7 @@ Object {
   "spread": false,
   "symbol": false,
   "templateLiteral": false,
+  "topLevelAwait": false,
   "web": true,
   "webworker": false,
 }

@@ -1239,6 +1239,11 @@
         "templateLiteral": {
           "description": "The environment supports template literals.",
           "type": "boolean"
+        },
+        "topLevelAwait": {
+          "description": "The environment supports top-level await ('await x' at the top level of a module).",
+          "type": "boolean",
+          "added": "5.111.0"
         }
       }
     },

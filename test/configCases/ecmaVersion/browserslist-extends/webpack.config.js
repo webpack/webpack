@@ -34,6 +34,7 @@ module.exports = {
 			  "spread": false,
 			  "symbol": false,
 			  "templateLiteral": false,
+			  "topLevelAwait": false,
 			}
 		`);
 				expect(compilation.options.externalsPresets).toMatchInlineSnapshot(`

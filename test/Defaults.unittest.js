@@ -205,6 +205,7 @@ describe("snapshots", () => {
 		      "spread": true,
 		      "symbol": true,
 		      "templateLiteral": true,
+		      "topLevelAwait": true,
 		    },
 		    "target": "web",
 		  },
@@ -755,6 +756,7 @@ describe("snapshots", () => {
 		      "spread": true,
 		      "symbol": true,
 		      "templateLiteral": true,
+		      "topLevelAwait": true,
 		    },
 		    "filename": "[name].js",
 		    "globalObject": "self",
@@ -4010,6 +4012,9 @@ describe("snapshots", () => {
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			@@ ... @@
+			-       "topLevelAwait": true,
+			+       "topLevelAwait": false,
+			@@ ... @@
 			-     "target": "web",
 			+     "target": undefined,
 			@@ ... @@
@@ -4056,6 +4061,9 @@ describe("snapshots", () => {
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
+			@@ ... @@
+			-       "topLevelAwait": true,
+			+       "topLevelAwait": false,
 			@@ ... @@
 			-     "globalObject": "self",
 			+     "globalObject": "typeof self !== \\"undefined\\" ? self : global",
@@ -4194,6 +4202,9 @@ describe("snapshots", () => {
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			@@ ... @@
+			-       "topLevelAwait": true,
+			+       "topLevelAwait": false,
+			@@ ... @@
 			-     "target": "web",
 			+     "target": undefined,
 			@@ ... @@
@@ -4240,6 +4251,9 @@ describe("snapshots", () => {
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
+			@@ ... @@
+			-       "topLevelAwait": true,
+			+       "topLevelAwait": false,
 			@@ ... @@
 			-     "globalObject": "self",
 			+     "globalObject": "typeof self !== \\"undefined\\" ? self : global",
@@ -4888,9 +4902,11 @@ describe("snapshots", () => {
 			-       "spread": true,
 			-       "symbol": true,
 			-       "templateLiteral": true,
+			-       "topLevelAwait": true,
 			+       "spread": false,
 			+       "symbol": false,
 			+       "templateLiteral": false,
+			+       "topLevelAwait": false,
 			@@ ... @@
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
 			+     "chunkLoadingGlobal": "webpackChunkbrowserslist_test",
@@ -4944,9 +4960,11 @@ describe("snapshots", () => {
 			-       "spread": true,
 			-       "symbol": true,
 			-       "templateLiteral": true,
+			-       "topLevelAwait": true,
 			+       "spread": false,
 			+       "symbol": false,
 			+       "templateLiteral": false,
+			+       "topLevelAwait": false,
 			@@ ... @@
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
 			+     "hotUpdateGlobal": "webpackHotUpdatebrowserslist_test",
@@ -5506,6 +5524,9 @@ describe("snapshots", () => {
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
+			-       "topLevelAwait": true,
+			+       "topLevelAwait": false,
+			@@ ... @@
 			-     "target": "web",
 			+     "target": "node",
 			@@ ... @@
@@ -5564,6 +5585,9 @@ describe("snapshots", () => {
 			-       "nodePrefixForCoreModules": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
+			@@ ... @@
+			-       "topLevelAwait": true,
+			+       "topLevelAwait": false,
 			@@ ... @@
 			-     "filename": "[name].js",
 			-     "globalObject": "self",

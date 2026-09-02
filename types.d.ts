@@ -7665,6 +7665,12 @@ declare interface Environment {
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+
+	/**
+	 * The environment supports top-level await ('await x' at the top level of a module).
+	 * @since 5.111.0
+	 */
+	topLevelAwait?: boolean;
 }
 declare class EnvironmentPlugin {
 	/**
@@ -25506,6 +25512,7 @@ declare abstract class RuntimeTemplate {
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsGenerator(): boolean;
+	supportsTopLevelAwait(): boolean;
 	supportsOptionalChaining(): boolean;
 	supportsSpread(): boolean;
 	supportsObjectHasOwn(): boolean;
