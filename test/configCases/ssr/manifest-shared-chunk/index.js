@@ -22,5 +22,7 @@ it("lists the split-out chunk a route depends on", () => {
 
 it("does not list the routes that merely import a shared chunk", () => {
 	const files = manifest["./shared.js"];
+	// the filter below passes on an empty list, so require the chunk first
+	expect(files.some((file) => file.includes("shared"))).toBe(true);
 	expect(files).toEqual(files.filter((file) => file.includes("shared")));
 });
