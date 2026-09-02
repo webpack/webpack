@@ -25520,6 +25520,13 @@ declare abstract class RuntimeTemplate {
 	needsAnalyzableRepair(): boolean;
 
 	/**
+	 * The assets the deferred fill rewrote under a name that has to be repaired. Only
+	 * these, and whatever names them, are renamed by an on-demand repair — the rest
+	 * keep the names they were given.
+	 */
+	analyzableRepairedAssets(): ReadonlySet<string>;
+
+	/**
 	 * Whether a reference a foreign bundler can follow without running webpack's runtime
 	 * may be emitted — the one question every caller asks, in the form it is asking for:
 	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
