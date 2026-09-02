@@ -44,12 +44,20 @@ export function render() {
 
 ```javascript
 import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-// The Node half of the app: it renders the route to HTML and consumes the
-// client build's artifacts. Read once at startup; re-read per request if the
-// client is rebuilt while the server is running.
+// The Node half of the app: it renders the route to HTML and consumes the client
+// build's artifacts. Resolved from this module, so the working directory is free;
+// read once at startup — re-read per request to pick up a client rebuild.
 const manifest = JSON.parse(
-	readFileSync("dist/client/ssr-manifest.json", "utf8")
+	readFileSync(
+		resolve(
+			dirname(fileURLToPath(import.meta.url)),
+			"../client/ssr-manifest.json"
+		),
+		"utf8"
+	)
 );
 
 export async function renderDocument() {
@@ -249,25 +257,25 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 11.6 KiB [emitted] [javascript module] (name: main)
+  asset main.mjs 13.2 KiB [emitted] [javascript module] (name: main)
   asset page_js.mjs 822 bytes [emitted] [javascript module]
   asset page_js.css 121 bytes [emitted]
-  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 5.33 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 1.6 KiB (javascript) 5.33 KiB (runtime) [entry] [rendered]
     > ./server.js main
     runtime modules 5.33 KiB 8 modules
-    dependent modules 42 bytes [dependent] 1 module
-    ./server.js 1.29 KiB [built] [code generated]
+    dependent modules 126 bytes [dependent] 3 modules
+    ./server.js 1.48 KiB [built] [code generated]
       [exports: renderDocument]
       [used exports unknown]
       entry ./server.js main
       used as library export
   chunk (runtime: main) page_js.mjs, page_js.css 121 bytes (javascript) 37 bytes (css) [rendered]
-    > ./page.js ./server.js 13:26-45
+    > ./page.js ./server.js 21:26-45
     dependent modules 37 bytes [dependent] 1 module
     ./page.js 121 bytes [built] [code generated]
       [exports: render]
       [used exports unknown]
-      import() ./page.js ./server.js 13:26-45
+      import() ./page.js ./server.js 21:26-45
   server (webpack X.X.X) compiled successfully
 ```
 
@@ -308,23 +316,23 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 2.3 KiB [emitted] [javascript module] [minimized] (name: main)
+  asset main.mjs 2.44 KiB [emitted] [javascript module] [minimized] (name: main)
   asset page_js-page_css.mjs 207 bytes [emitted] [javascript module] [minimized]
   asset page_js-page_css.css 21 bytes [emitted] [minimized]
-  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 5.15 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 1.6 KiB (javascript) 5.15 KiB (runtime) [entry] [rendered]
     > ./server.js main
     runtime modules 5.15 KiB 7 modules
-    ./server.js + 1 modules 1.33 KiB [not cacheable] [built] [code generated]
+    ./server.js + 3 modules 1.6 KiB [not cacheable] [built] [code generated]
       [exports: renderDocument]
       [all exports used]
       entry ./server.js main
       used as library export
   chunk (runtime: main) page_js-page_css.mjs, page_js-page_css.css 163 bytes (javascript) 37 bytes (css) [rendered]
-    > ./page.js ./server.js 13:26-45
+    > ./page.js ./server.js 21:26-45
     ./page.js + 1 modules 163 bytes [built] [code generated]
       [exports: render]
       [all exports used]
-      import() ./page.js ./server.js + 1 modules ./server.js 13:26-45
+      import() ./page.js ./server.js + 3 modules ./server.js 21:26-45
     css ./page.css 37 bytes [built] [code generated]
       [no exports]
       [no exports used]

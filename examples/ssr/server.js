@@ -1,10 +1,18 @@
 import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-// The Node half of the app: it renders the route to HTML and consumes the
-// client build's artifacts. Read once at startup; re-read per request if the
-// client is rebuilt while the server is running.
+// The Node half of the app: it renders the route to HTML and consumes the client
+// build's artifacts. Resolved from this module, so the working directory is free;
+// read once at startup — re-read per request to pick up a client rebuild.
 const manifest = JSON.parse(
-	readFileSync("dist/client/ssr-manifest.json", "utf8")
+	readFileSync(
+		resolve(
+			dirname(fileURLToPath(import.meta.url)),
+			"../client/ssr-manifest.json"
+		),
+		"utf8"
+	)
 );
 
 export async function renderDocument() {
