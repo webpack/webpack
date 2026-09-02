@@ -25520,9 +25520,8 @@ declare abstract class RuntimeTemplate {
 	needsAnalyzableRepair(): boolean;
 
 	/**
-	 * The assets the deferred fill rewrote under a name that has to be repaired. Only
-	 * these, and whatever names them, are renamed by an on-demand repair — the rest
-	 * keep the names they were given.
+	 * The assets the deferred fill rewrote under a name that has to be repaired: an
+	 * on-demand repair renames only these and whatever names them.
 	 */
 	analyzableRepairedAssets(): ReadonlySet<string>;
 
