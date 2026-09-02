@@ -1,3 +1,4 @@
 globalThis.__firstEntryValue = await new Promise((resolve) => {
-	setTimeout(() => resolve("first"), 0);
+	// Slower than the other entry, so awaiting only the last one fails here.
+	setTimeout(() => resolve("first"), 50);
 });
