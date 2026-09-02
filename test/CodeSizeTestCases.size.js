@@ -11,6 +11,7 @@ const path = require("path");
 const zlib = require("zlib");
 const webpack = require("..");
 const { DEFAULTS } = require("../lib/config/defaults");
+const browserslistConfigPackages = require("./helpers/browserslistConfigPackages");
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
@@ -1204,6 +1205,9 @@ const run = async () => {
 	if (cases.length === 0) throw new Error("No case matched the filter");
 
 	fs.rmSync(outputBaseDir, { recursive: true, force: true });
+	// Outside jest, so the globalSetup that writes them for the test suites is
+	// not what puts the `ecmaVersion` cases' browserslist packages in place.
+	browserslistConfigPackages.create();
 	console.log(`Measuring ${cases.length} case(s)…`);
 
 	/** @type {Record<string, CaseResult>} */
@@ -1234,6 +1238,8 @@ const run = async () => {
 			);
 		}
 	}
+
+	browserslistConfigPackages.remove();
 
 	const totals = createMetrics();
 	/** @type {Record<string, CaseResult>} */
