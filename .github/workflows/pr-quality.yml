@@ -11,4 +11,4 @@ on:
 
 jobs:
   anti-slop:
-    uses: webpack/.github/.github/workflows/pr-quality.yml@a03552c758d8c244b3cfc2985aff7020469e0473
+    uses: webpack/.github/.github/workflows/pr-quality.yml@438fc377cc376d2074ab1c6aaf4c35250b905670
