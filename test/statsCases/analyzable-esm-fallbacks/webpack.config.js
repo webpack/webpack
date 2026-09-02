@@ -116,8 +116,8 @@ module.exports = [
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 		output: { environment: { module: false, dynamicImport: true } }
 	}),
-	// Two chunks naming each other: whichever hash settles first bakes into the other,
-	// and the way back has no hash to read.
+	// Also analyzable: two chunks naming each other are repaired after the fill, so
+	// each bakes the other's settled name.
 	base("circular", {
 		entry: "./index-cycle",
 		output: { chunkFilename: "[name].[contenthash].mjs" }

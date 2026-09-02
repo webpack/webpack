@@ -1,7 +1,7 @@
 "use strict";
 
 // Two depths need a stand-in, and with `realContentHash` off the chunks holding the
-// reference are named by their content, so none may be written into them.
+// reference are named by their content — so the stand-in is marked for repair.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

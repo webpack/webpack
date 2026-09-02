@@ -57,13 +57,8 @@ const CASES = {
 	// ESM output writes `import.meta` whatever `environment.module` claims, so the
 	// url forms bake too.
 	"environment-module": { file: "main.mjs", expect: "analyzable" },
-	// Only the pair that names each other falls back; the entry's own imports still
-	// bake, so the helper stays and the reason is what marks the limitation.
-	circular: {
-		file: "main.mjs",
-		expect: "partial",
-		bailout: "name each other"
-	},
+	// The pair naming each other is repaired after the fill, so both directions bake.
+	circular: { file: "main.mjs", expect: "analyzable" },
 	// A relative base is read against the chunk at runtime, so the literal spells it
 	// there rather than resolving against it — no base of its own is needed.
 	"base-uri": { file: "main.mjs", expect: "analyzable" }

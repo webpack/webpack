@@ -152,9 +152,9 @@ environment-module:
 
 circular:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
-  asset b-cycle_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
   asset a-cycle_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
-  runtime modules X KiB 6 modules
+  asset b-cycle_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
+  runtime modules X KiB 4 modules
   cacheable modules X bytes
     ./index-cycle.js X bytes [built] [code generated]
     ./a-cycle.js X bytes [built] [code generated]
