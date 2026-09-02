@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Repair hashed names on demand so cycles and [chunkhash] names bake in ESM output.
+Repair hashed names so cycles and [chunkhash] names bake in ESM output.

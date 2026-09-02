@@ -10,22 +10,24 @@ it("should build rather than deadlock on two chunks that name each other", async
 it("should bake both directions of the cycle under repaired names", () => {
 	const dir = __STATS__.outputPath;
 	const names = fs.readdirSync(dir).filter((n) => n.endsWith(".mjs"));
+	const emitted = (prefix) =>
+		/** @type {string} */ (names.find((n) => n.startsWith(prefix)));
 	const read = (prefix) =>
-		fs.readFileSync(
-			path.join(
-				dir,
-				/** @type {string} */ (names.find((n) => n.startsWith(prefix)))
-			),
-			"utf8"
-		);
+		fs.readFileSync(path.join(dir, emitted(prefix)), "utf8");
 	const helper = `${"__webpack_require__"}.ei`;
-	const baked = [read("a_js"), read("b_js")].filter((s) => s.includes(helper));
-	// Both bake: the repair re-hashes the pair as one group, so each name on disk is
-	// the one the other file spells.
-	expect(baked).toHaveLength(2);
-	for (const source of baked) {
-		for (const ref of source.match(/"\.\/[^"]+\.mjs"/g) || []) {
-			expect(names).toContain(ref.slice(3, -1));
-		}
+
+	// Both bake, and the repair re-hashes the pair as one group: each spells exactly
+	// the name the other was emitted under.
+	expect(read("a_js")).toContain(`${helper}(`);
+	expect(read("a_js")).toContain(`"./${emitted("b_js")}"`);
+	expect(read("b_js")).toContain(`${helper}(`);
+	expect(read("b_js")).toContain(`"./${emitted("a_js")}"`);
+
+	// The repaired hash is the one the asset's info carries, not the one it was
+	// named with before the fill.
+	for (const prefix of ["a_js", "b_js"]) {
+		const name = emitted(prefix);
+		const asset = __STATS__.assets.find((a) => a.name === name);
+		expect(asset.info.chunkhash).toBe(name.split(".")[1]);
 	}
 });
