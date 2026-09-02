@@ -80,11 +80,12 @@ const CASES = {
 		expect: "analyzable",
 		contains: "cssUrls = {"
 	},
+	// The runtime chunk sits in `js/` and its update at the root, so the map is written
+	// with each asset's own `../` depth rather than the runtime chunk's.
 	"hmr-css-depth": {
 		file: "js/main.mjs",
-		expect: "partial",
-		bailout: "output.hotUpdateChunkFilename",
-		lacks: "cssUrls = {"
+		expect: "analyzable",
+		contains: 'new URL("../lazy_css.css"'
 	},
 	// The chunk `import()` bakes, the url in the chunk served both ways does not.
 	"served-both-ways": {

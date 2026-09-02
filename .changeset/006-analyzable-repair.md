@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Repair hashed names and keep baked url maps under HMR in ESM output.
+Repair hashed names, keep url maps under HMR and read depths per hot update.
