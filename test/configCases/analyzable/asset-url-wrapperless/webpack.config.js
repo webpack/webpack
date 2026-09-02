@@ -1,7 +1,7 @@
 "use strict";
 
-// Nothing reads the wrapper, so it is not emitted — and the two depths here cannot
-// bake, so that reference concatenates what it would have said, inline.
+// Nothing reads the wrapper, so it is not emitted: the two depths here are named by
+// their content, and the reference still bakes, repaired after the fill.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

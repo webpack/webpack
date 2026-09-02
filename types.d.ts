@@ -355,18 +355,6 @@ declare interface AllCodeGenerationSchemas {
 	 */
 	"share-init": [{ shareScope: string; initStage: number; init: string }];
 }
-declare interface AnalyzableChunkUrls {
-	/**
-	 * the urls that could be written, by chunk id
-	 */
-	urls: Map<ChunkId, string>;
-
-	/**
-	 * false when some chunk kept the runtime form, whose
-	 * ids the consumer then still resolves through the runtime name lookup
-	 */
-	complete: boolean;
-}
 type AnalyzableForm =
 	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
@@ -23618,6 +23606,11 @@ declare interface RealContentHashPluginOptions {
 	 * the hash digest to use
 	 */
 	hashDigest: string;
+
+	/**
+	 * run only where analyzable output marked a name for repair
+	 */
+	onDemand?: boolean;
 }
 declare interface RealDependencyLocation {
 	start: SourcePosition;
@@ -25520,6 +25513,19 @@ declare abstract class RuntimeTemplate {
 	supportsModulePreload(): boolean;
 
 	/**
+	 * Whether the deferred fill rewrote a chunk whose hashed name would otherwise go
+	 * stale, which `RealContentHashPlugin` reads to run — and to repair `[chunkhash]`
+	 * names — where `optimization.realContentHash` did not ask for it.
+	 */
+	needsAnalyzableRepair(): boolean;
+
+	/**
+	 * The assets the deferred fill rewrote under a name that has to be repaired: an
+	 * on-demand repair renames only these and whatever names them.
+	 */
+	analyzableRepairedAssets(): ReadonlySet<string>;
+
+	/**
 	 * Whether a reference a foreign bundler can follow without running webpack's runtime
 	 * may be emitted — the one question every caller asks, in the form it is asking for:
 	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
@@ -26141,32 +26147,30 @@ declare abstract class RuntimeTemplate {
 		overridePublicPath: undefined | string,
 		chunk: Chunk,
 		module: Module,
-		chunkGraph: ChunkGraph,
-		runtimeRequirements: Set<string>
+		chunkGraph: ChunkGraph
 	): null | string;
 
 	/**
 	 * Static `new URL(<file>, import.meta.url)` for every stylesheet a runtime can load,
-	 * keyed by chunk id — one that cannot be named leaves the map incomplete, and its
-	 * id keeps the runtime `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
+	 * keyed by chunk id, or `null` when they have to keep the runtime
+	 * `publicPath + getChunkCssFilename(id)` form. Both the runtime module reading them
 	 * and the plugin declaring what it needs ask this, so the two always agree. The
 	 * runtime hands an absolute url string to `link.href`, and so does this — the browser
 	 * resolves the element against the document, which is not where the chunk sits, and
-	 * the loader reads the url as text either way. Nothing is written out for a runtime
-	 * that also carries the hot handler; see below.
+	 * the loader reads the url as text either way.
 	 */
 	analyzableCssChunkUrls(
 		runtimeChunk: Chunk,
 		chunkGraph: ChunkGraph,
 		runtimeRequirements: ReadonlySet<string>,
 		consumingModule?: Module
-	): null | AnalyzableChunkUrls;
+	): null | Map<ChunkId, string>;
 
 	/**
 	 * Static `new URL(<file>, import.meta.url).href` for every javascript chunk a
 	 * runtime can hint at with `<link rel="prefetch"/"modulepreload">`, keyed by chunk
-	 * id — one that cannot be named leaves the map incomplete, and its id keeps the
-	 * runtime `publicPath + getChunkScriptFilename(id)` form. Both the runtime module reading
+	 * id, or `null` when they have to keep the runtime
+	 * `publicPath + getChunkScriptFilename(id)` form. Both the runtime module reading
 	 * them and the plugin declaring what it needs ask this, so the two always agree.
 	 */
 	analyzableChunkScriptUrls(
@@ -26174,7 +26178,7 @@ declare abstract class RuntimeTemplate {
 		chunkGraph: ChunkGraph,
 		runtimeRequirements: ReadonlySet<string>,
 		consumingModule?: Module
-	): null | AnalyzableChunkUrls;
+	): null | Map<ChunkId, string>;
 
 	/**
 	 * Static `new URL(<file>, import.meta.url)` for the binary emitted for an async wasm

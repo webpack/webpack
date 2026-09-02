@@ -57,16 +57,41 @@ const CASES = {
 	// ESM output writes `import.meta` whatever `environment.module` claims, so the
 	// url forms bake too.
 	"environment-module": { file: "main.mjs", expect: "analyzable" },
-	// Only the pair that names each other falls back; the entry's own imports still
-	// bake, so the helper stays and the reason is what marks the limitation.
-	circular: {
-		file: "main.mjs",
-		expect: "partial",
-		bailout: "name each other"
-	},
+	// The pair naming each other is repaired after the fill, so both directions bake.
+	circular: { file: "main.mjs", expect: "analyzable" },
 	// A relative base is read against the chunk at runtime, so the literal spells it
 	// there rather than resolving against it — no base of its own is needed.
-	"base-uri": { file: "main.mjs", expect: "analyzable" }
+	"base-uri": { file: "main.mjs", expect: "analyzable" },
+	// The runtime's stylesheet map is baked under HMR where nothing an update moves
+	// reaches it without re-shipping the module holding it.
+	"hmr-css-urls": {
+		file: "main.mjs",
+		expect: "analyzable",
+		contains: "cssUrls = {"
+	},
+	"hmr-hashed-css": {
+		file: "main.mjs",
+		expect: "partial",
+		bailout: "a hot update can move this name",
+		lacks: "cssUrls = {"
+	},
+	"hmr-css-two-depths": {
+		file: "nested/side.mjs",
+		expect: "analyzable",
+		contains: "cssUrls = {"
+	},
+	"hmr-css-depth": {
+		file: "js/main.mjs",
+		expect: "partial",
+		bailout: "output.hotUpdateChunkFilename",
+		lacks: "cssUrls = {"
+	},
+	// The chunk `import()` bakes, the url in the chunk served both ways does not.
+	"served-both-ways": {
+		file: "side.mjs",
+		expect: "partial",
+		bailout: 'or "auto", is read the same from both'
+	}
 };
 
 module.exports = {
@@ -95,15 +120,19 @@ module.exports = {
 			// A bailout is recorded exactly when the runtime form is kept, so a limitation
 			// that is later lifted fails here until its reason is dropped too.
 			const bailouts = [];
+			// A runtime module reports why its url map kept the runtime form.
 			for (const module of child.toJson({
 				all: false,
 				modules: true,
+				runtimeModules: true,
 				optimizationBailout: true
 			}).modules || []) {
 				for (const bailout of module.optimizationBailout || []) {
 					if (bailout.startsWith(BAILOUT)) bailouts.push(bailout);
 				}
 			}
+			if (testCase.contains) expect(output).toContain(testCase.contains);
+			if (testCase.lacks) expect(output).not.toContain(testCase.lacks);
 			if (testCase.expect === "analyzable") {
 				expect(output).toContain(HELPER);
 				expect(bailouts).toEqual([]);

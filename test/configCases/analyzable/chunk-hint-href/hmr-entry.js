@@ -9,15 +9,16 @@ it("should still hint with the hot handler present", async () => {
 	expect(a.default).toBe("a");
 });
 
-it("should keep the runtime url form for a runtime that can be updated", () => {
+it("should write the hint urls out for a runtime that can be updated", () => {
 	const bundle = fs.readFileSync(
 		path.join(__STATS__.children[__INDEX__].outputPath, `${__NAME__}.mjs`),
 		"utf8"
 	);
 
-	// An update hints at ids this map knows nothing about, so nothing is written out.
-	expect(bundle).not.toContain(`new URL("./${__NAME__}-a.mjs"`);
-	expect(bundle).toContain(
-		`link.href = ${"__webpack_require__"}.p + ${"__webpack_require__"}.u(chunkId);`
-	);
+	// Every url here is settled at build time, so an update that changes the map
+	// re-ships the runtime module holding it, and the hint reads the map.
+	expect(bundle).toContain(`new URL("./${__NAME__}-a.mjs"`);
+	expect(bundle).toContain("link.href = chunkUrls[chunkId]();");
+	// The hot handler still builds the update's url from the id.
+	expect(bundle).toContain(`${"__webpack_require__"}.hu = `);
 });

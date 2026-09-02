@@ -32,12 +32,11 @@ it("should emit no wrapper for an asset every consumer names itself", () => {
 		path.join(dir, "nested", fs.readdirSync(path.join(dir, "nested"))[0]),
 		"utf8"
 	);
-	const inline = `/* asset import */ ${"__webpack_require__"}.p + "asset.txt"`;
 
 	for (const source of [read("bundle0"), read("flat."), deep]) {
 		expect(source).not.toContain(wrapper);
 	}
-	// Neither depth can bake, so each concatenates what the wrapper would have said.
-	expect(read("flat.")).toContain(inline);
-	expect(deep).toContain(inline);
+	// Each depth bakes its own literal, so nothing reads the public path either.
+	expect(read("flat.")).toContain('"./asset.txt", import.meta.url');
+	expect(deep).toContain('"../asset.txt", import.meta.url');
 });

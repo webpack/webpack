@@ -9,7 +9,7 @@ it("should resolve the asset from chunks at different depths", async () => {
 	expect(fs.readFileSync(deep.url, "utf8")).toContain("the asset content");
 });
 
-it("should bake each depth's specifier unless the name moves with the content", () => {
+it("should bake each depth's specifier whatever names the chunk", () => {
 	const outputPath = __STATS__.children[__INDEX__].outputPath;
 	// The two configs share an output directory, so each names its chunks apart; the
 	// hashed one is found by prefix.
@@ -19,14 +19,10 @@ it("should bake each depth's specifier unless the name moves with the content", 
 			.find((name) => name.startsWith(prefix));
 		return fs.readFileSync(path.join(outputPath, dir, found), "utf8");
 	};
-	// Needle built at runtime so it is not a source string literal here.
-	const publicPath = `${"__webpack_require__"}.p`;
-
-	if (__ANALYZABLE__) {
-		expect(read(".", "flat-0")).toContain('"./asset.txt", import.meta.url');
-		expect(read("nested", "deep-0")).toContain('"../asset.txt", import.meta.url');
-	} else {
-		expect(read(".", "flat-1")).toContain(publicPath);
-		expect(read("nested", "deep-1")).toContain(publicPath);
-	}
+	expect(read(".", `flat-${__INDEX__}`)).toContain(
+		'"./asset.txt", import.meta.url'
+	);
+	expect(read("nested", `deep-${__INDEX__}`)).toContain(
+		'"../asset.txt", import.meta.url'
+	);
 });

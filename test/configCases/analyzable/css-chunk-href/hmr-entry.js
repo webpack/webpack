@@ -12,15 +12,16 @@ it("should still load the stylesheet with the hot handler present", async () => 
 	}
 });
 
-it("should keep the runtime url form for a runtime that can be updated", () => {
+it("should write the stylesheet url out for a runtime that can be updated", () => {
 	const bundle = fs.readFileSync(
 		path.join(__STATS__.children[__INDEX__].outputPath, `${__NAME__}.mjs`),
 		"utf8"
 	);
 
-	// The hot path re-loads by whatever id an update names, which a map written at build
-	// time knows nothing about, so nothing here is written out and the lookup ships.
-	expect(bundle).not.toContain(`new URL("./${__NAME__}-lazy_css.css"`);
+	// Every url here is settled at build time, so an update that changes the map
+	// re-ships the runtime module holding it, and the loader reads the map.
+	expect(bundle).toContain(`new URL("./${__NAME__}-lazy_css.css"`);
+	expect(bundle).toContain("const url = cssUrls[chunkId]();");
+	// The hot handler still re-loads a stylesheet by id, so the lookup ships for it.
 	expect(bundle).toContain(`${"__webpack_require__"}.k = `);
-	expect(bundle).toContain(`${"__webpack_require__"}.k(`);
 });

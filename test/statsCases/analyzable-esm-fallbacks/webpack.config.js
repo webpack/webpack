@@ -32,11 +32,12 @@ const nameConsumersByContent = (names) => (compiler) => {
 const base = (name, extra = {}) => ({
 	name,
 	mode: "development",
-	experiments: { outputModule: true },
+	experiments: { outputModule: true, ...extra.experiments },
 	entry: extra.entry || "./index",
 	plugins: extra.plugins,
 	devtool: extra.devtool === undefined ? false : extra.devtool,
 	module: extra.module,
+	optimization: extra.optimization,
 	output: {
 		module: true,
 		path: path.resolve(
@@ -116,8 +117,8 @@ module.exports = [
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 		output: { environment: { module: false, dynamicImport: true } }
 	}),
-	// Two chunks naming each other: whichever hash settles first bakes into the other,
-	// and the way back has no hash to read.
+	// Also analyzable: two chunks naming each other are repaired after the fill, so
+	// each bakes the other's settled name.
 	base("circular", {
 		entry: "./index-cycle",
 		output: { chunkFilename: "[name].[contenthash].mjs" }
@@ -128,5 +129,44 @@ module.exports = [
 		entry: { main: { import: "./index-asset", baseUri: "not-a-url" } },
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 		output: { publicPath: "./" }
+	}),
+	// Also analyzable under HMR: every url in the runtime's map is settled at code
+	// generation and the update chunk sits with the runtime chunk, so an update that
+	// changes the map re-ships it whole.
+	base("hmr-css-urls", {
+		entry: "./index-css",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()]
+	}),
+	// The map keeps the runtime form under HMR where a name is settled only by the fill:
+	// an update could move it without touching the module the map is written into.
+	base("hmr-hashed-css", {
+		entry: "./index-css",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: { cssChunkFilename: "[name].[contenthash].css" }
+	}),
+	// Also analyzable: each runtime is measured against its own update chunk, so one
+	// whose id puts that chunk a directory down bakes beside one at the root.
+	base("hmr-css-two-depths", {
+		entry: { main: "./index-css", "nested/side": "./index-css" },
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()]
+	}),
+	// And where the update chunk sits at another depth than the runtime chunk, which is
+	// where a re-shipped runtime module runs from.
+	base("hmr-css-depth", {
+		entry: "./index-css",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: { filename: "js/[name].mjs" }
+	}),
+	// A chunk both initial and loaded through a public path needing a base is at two
+	// urls, which no one literal fits — the bailout names the public paths that would.
+	base("served-both-ways", {
+		entry: { main: "./index-both", side: "./side-both" },
+		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
+		output: { publicPath: "assets/" },
+		optimization: { splitChunks: { chunks: "all", minSize: 0 } }
 	})
 ];

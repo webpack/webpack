@@ -1,7 +1,7 @@
 "use strict";
 
-// The entry chunk hashes after the runtime chunk naming its stylesheet, so only
-// the lazy url bakes and the missing id falls back to the runtime name lookup.
+// The entry chunk hashes after the runtime chunk naming its stylesheet, so its url
+// is reserved with a repair mark: both bake, and nothing builds a url at runtime.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
