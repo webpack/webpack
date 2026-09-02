@@ -64,10 +64,22 @@ const create = () => {
  */
 const remove = () => {
 	for (const name of PACKAGES.keys()) {
-		fs.rmSync(path.resolve(NODE_MODULES_PATH, name), {
-			recursive: true,
-			force: true
-		});
+		const packagePath = path.resolve(NODE_MODULES_PATH, name);
+
+		// Not `fs.rmSync`: the harness itself runs on the Node.js 10 CI matrix.
+		for (const file of ["index.js", "package.json"]) {
+			try {
+				fs.unlinkSync(path.resolve(packagePath, file));
+			} catch (_err) {
+				// Already gone
+			}
+		}
+
+		try {
+			fs.rmdirSync(packagePath);
+		} catch (_err) {
+			// Already gone
+		}
 	}
 };
 
