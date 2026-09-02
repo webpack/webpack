@@ -894,10 +894,7 @@ const knownBugs = [
 	// `#mark in obj` needs `isExtensible() === false` without evaluating, so the
 	// target must be sealed with every export name on it, and a mismatch loses one.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
-	// A deferred module must wait for the whole strongly-connected component when a
-	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
-	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
-	// It also wants `ownKeys` to be the sorted exports plus `@@toStringTag`, so
+	// It wants `ownKeys` to be the sorted exports plus `@@toStringTag`, so
 	// `__esModule` would have to go — the namespace trade-off, not a defer fix.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
