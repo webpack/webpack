@@ -26151,8 +26151,7 @@ declare abstract class RuntimeTemplate {
 	 * and the plugin declaring what it needs ask this, so the two always agree. The
 	 * runtime hands an absolute url string to `link.href`, and so does this — the browser
 	 * resolves the element against the document, which is not where the chunk sits, and
-	 * the loader reads the url as text either way. Nothing is written out for a runtime
-	 * that also carries the hot handler; see below.
+	 * the loader reads the url as text either way.
 	 */
 	analyzableCssChunkUrls(
 		runtimeChunk: Chunk,

@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Repair hashed names so cycles and [chunkhash] names bake in ESM output.
+Repair hashed names and keep baked url maps under HMR in ESM output.

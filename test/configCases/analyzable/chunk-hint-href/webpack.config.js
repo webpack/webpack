@@ -49,8 +49,8 @@ module.exports = [
 	// Reassigned where the hint runs, so no literal can name where the chunk is and the
 	// runtime form has to stay.
 	base(2, "override"),
-	// The hot handler hints at whatever id an update names, so a runtime carrying it
-	// keeps the runtime form rather than a map that knows only today's ids.
+	// A hot update re-ships the runtime module whenever the map it holds changes, so
+	// the map is written out here too.
 	{
 		...base(3, "hmr"),
 		plugins: [
