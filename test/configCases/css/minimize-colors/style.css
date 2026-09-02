@@ -149,3 +149,8 @@
 .m02 { color: color-mix(in srgb, hsl(120 50% 50%), red) }
 /*! the legacy sRGB forms fold there too, where their channels are already bytes */
 .m03 { color: color-mix(in srgb, rgb(1, 2, 3), red) }
+/*! declined however the keyword is spelled: `\66 rom` names it too, as an
+   escaped `color-mix` or gradient name names those */
+.r10 { color: rgb(\66 rom rgb(50% 50% 50%) r g b) }
+.m04 { color: color-\6d ix(in oklab, lch(50% 20 30), red) }
+.g05 { background-image: linear-\67 radient(lch(50 20 30), red) }
