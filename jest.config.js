@@ -5,6 +5,8 @@ const config = {
 	testTimeout: 30000,
 	prettierPath: require.resolve("prettier-2"),
 	forceExit: true,
+	globalSetup: "<rootDir>/test/globalSetup.js",
+	globalTeardown: "<rootDir>/test/globalTeardown.js",
 	setupFiles: [
 		"<rootDir>/test/bun-sandbox-setup.js",
 		"<rootDir>/test/deno-worker-setup.js"
