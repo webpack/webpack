@@ -40,8 +40,7 @@ const PACKAGES = new Map([
 
 /**
  * Writes the packages the `configCases/ecmaVersion` browserslist cases extend.
- * They live for the whole run: removing one while another worker builds leaves
- * that worker resolving a build dependency that is gone, invalidating its pack.
+ * They outlive every worker: removing one mid-run invalidates that worker's pack.
  * @returns {void}
  */
 const create = () => {
