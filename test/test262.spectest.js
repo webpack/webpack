@@ -1007,10 +1007,6 @@ const knownBugs = [
 	// `.then` is expected not to be called on the deferred namespace's promise.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
 
-	// Dynamic import of a fulfilled member of an errored TLA cycle must reject
-	// with the cycle root's evaluation error; webpack fulfills it instead.
-	"expressions/dynamic-import/import-fulfilled-member-of-errored-cycle.js",
-
 	// Same root cause as the postfix variants above: getter on a global `this`
 	// property must run before the increment writes back, but webpack scopes
 	// bare `x` to its module wrapper rather than the realm global.
