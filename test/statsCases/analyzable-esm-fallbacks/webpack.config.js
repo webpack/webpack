@@ -153,8 +153,8 @@ module.exports = [
 		experiments: { css: true },
 		plugins: [new webpack.HotModuleReplacementPlugin()]
 	}),
-	// And where the update chunk sits at another depth than the runtime chunk, which is
-	// where a re-shipped runtime module runs from.
+	// Also analyzable where the update chunk sits at another depth than the runtime
+	// chunk: a re-shipped runtime module runs from there, so the depth is read per asset.
 	base("hmr-css-depth", {
 		entry: "./index-css",
 		experiments: { css: true },
