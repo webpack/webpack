@@ -920,9 +920,6 @@ const knownBugs = [
 	// Potential improvement for enumerate
 	"module-code/namespace/internals/enumerate-binding-uninit.js",
 
-	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
-	"expressions/class/elements/class-name-static-initializer-default-export.js",
-
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
 	// the realm's global object and there is no Script Record context.
