@@ -75,6 +75,11 @@ const CASES = {
 		bailout: "a hot update can move this name",
 		lacks: "cssUrls = {"
 	},
+	"hmr-css-two-depths": {
+		file: "nested/side.mjs",
+		expect: "analyzable",
+		contains: "cssUrls = {"
+	},
 	"hmr-css-depth": {
 		file: "js/main.mjs",
 		expect: "partial",

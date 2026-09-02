@@ -146,6 +146,13 @@ module.exports = [
 		plugins: [new webpack.HotModuleReplacementPlugin()],
 		output: { cssChunkFilename: "[name].[contenthash].css" }
 	}),
+	// Also analyzable: each runtime is measured against its own update chunk, so one
+	// whose id puts that chunk a directory down bakes beside one at the root.
+	base("hmr-css-two-depths", {
+		entry: { main: "./index-css", "nested/side": "./index-css" },
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()]
+	}),
 	// And where the update chunk sits at another depth than the runtime chunk, which is
 	// where a re-shipped runtime module runs from.
 	base("hmr-css-depth", {
