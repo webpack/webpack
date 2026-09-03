@@ -10795,11 +10795,6 @@ declare interface HtmlTransformOptions {
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
-	 * strip the whitespace between a JSON `<script>`'s tokens
-	 */
-	minifyJson?: boolean;
-
-	/**
 	 * run the CSS minifier over an inline `<style>` and every `style=""`
 	 */
 	minifyStyles?: boolean;
@@ -20331,12 +20326,6 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	minifyConditionalComments?: boolean;
-
-	/**
-	 * Strip the whitespace between the tokens of a `<script>` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.
-	 * @since 5.110.0
-	 */
-	minifyJson?: boolean;
 
 	/**
 	 * Run the CSS minimizer over an inline `<style>` element and every `style=""` attribute, with the options `optimization.minimize.css` names. On by default.

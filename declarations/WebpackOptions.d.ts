@@ -2550,11 +2550,6 @@ export interface OptimizationMinimizeHtml {
 	 */
 	minifyConditionalComments?: boolean;
 	/**
-	 * Strip the whitespace between the tokens of a `<script>` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.
-	 * @since 5.110.0
-	 */
-	minifyJson?: boolean;
-	/**
 	 * Run the CSS minimizer over an inline `<style>` element and every `style=""` attribute, with the options `optimization.minimize.css` names. On by default.
 	 * @since 5.110.0
 	 */

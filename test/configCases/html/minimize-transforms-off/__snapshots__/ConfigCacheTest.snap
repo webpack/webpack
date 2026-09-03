@@ -7,7 +7,7 @@ exports[`ConfigCacheTestCases html minimize-transforms-off minimize-transforms-o
 <ul><li>one</li><li>two</li></ul>
 <input disabled=\\"disabled\\" type=\\"TEXT\\" tabindex=\\" 03 \\" class=\\"  b   a \\">
 <div data-x=\\"plain\\">a value that could go bare keeps its quotes</div>
-<script type=\\"application/json\\"> { \\"a\\" : 1 } </script>
+<script type=\\"application/json\\">{\\"a\\":1}</script>
 
 
 </body></html>"

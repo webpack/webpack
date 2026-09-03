@@ -4783,12 +4783,6 @@ describe("SourceProcessor — the per-transform switches", () => {
 			'<div class="  b   a ">x</div>'
 		],
 		[
-			"minifyJson",
-			'<script type="application/json"> { "a" : 1 } </script>',
-			'<script type=application/json>{"a":1}</script>',
-			'<script type=application/json> { "a" : 1 } </script>'
-		],
-		[
 			"minifyStyles",
 			'<div style="COLOR: red">x</div>',
 			"<div style=color:red>x</div>",

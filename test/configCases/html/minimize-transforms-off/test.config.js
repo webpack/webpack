@@ -24,6 +24,8 @@ module.exports = {
 		expect(page).toContain('tabindex=" 03 "');
 		expect(page).toContain('class="  b   a "');
 		expect(page).toContain('data-x="plain"');
-		expect(page).toContain('{ "a" : 1 }');
+		// No switch reaches a JSON `<script>`: it is an embedded body, minified by
+		// whatever answers for it and by webpack's own minifier when nothing does.
+		expect(page).toContain('{"a":1}');
 	}
 };

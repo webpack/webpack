@@ -2,4 +2,4 @@
 "webpack": major
 ---
 
-Minify an `<iframe srcdoc>` through the embedded path, dropping `minifySrcdoc`.
+Minify an embedded body through the embedded path, dropping two html options.
