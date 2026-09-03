@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read grouped and case-insensitive extension tests when matching a resource.
+Match a rule's extension test exactly, including groups and the `i` flag.

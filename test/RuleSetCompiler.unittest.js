@@ -76,6 +76,22 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		).toBe(true);
 	});
 
+	it("does not read a longer extension as the probed one", () => {
+		expect(has([{ test: /\.tsx$/, loader: "ts-loader" }], "/file.ts")).toBe(
+			false
+		);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.tsx$/, loader: "ts-loader" }], "/file.ts")
+		).toBe(false);
+		expect(has([{ test: /\.html$/, use: ["x"] }], "/file.htm")).toBe(false);
+		expect(has([{ test: /\.tsx$/, loader: "ts-loader" }], "/file.tsx")).toBe(
+			true
+		);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.tsx?$/, loader: "ts-loader" }], "/file.ts")
+		).toBe(true);
+	});
+
 	it("reads the extension probe case-insensitively behind an `i` flag", () => {
 		expect(
 			has([{ test: /[\\/]src[\\/].*\.(CSS|SCSS)$/i, use: ["css-loader"] }])
