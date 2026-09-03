@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "EACCES: permission denied, stat 'denied.txt'",
+  "EACCES: permission denied, scandir 'denied-dir'",
+]
+`;
