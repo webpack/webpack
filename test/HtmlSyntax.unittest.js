@@ -4193,6 +4193,131 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 	});
 });
 
+describe("SourceProcessor — inline <script> whitespace", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} type the `<script type>` value
+	 * @param {string} body the raw body
+	 * @param {"conservative" | "smart" | "all"=} collapseWhitespace the tier
+	 * @returns {string} the body, minified
+	 */
+	const minifyBody = (type, body, collapseWhitespace = "all") => {
+		const out = new SourceProcessor().process(
+			`<script type="${type}">${body}</script>`,
+			{ mode: "minify", collapseWhitespace }
+		).code;
+		return out.slice(out.indexOf(">") + 1, out.lastIndexOf("</script>"));
+	};
+
+	it.each(["", "module", "text/javascript", "application/javascript"])(
+		"trims the edges of the program text (%s)",
+		(type) => {
+			expect(minifyBody(type, "  var a = 1  ")).toBe("var a = 1");
+		}
+	);
+
+	it.each(
+		/** @type {("conservative" | "smart" | "all")[]} */ ([
+			"conservative",
+			"smart",
+			"all"
+		])
+	)("trims where collapsing is %s", (tier) => {
+		// Whitespace outside the program renders nothing, so no tier keeps it.
+		expect(minifyBody("", "  var a = 1  ", tier)).toBe("var a = 1");
+	});
+
+	it("takes every character HTML counts as whitespace", () => {
+		expect(minifyBody("", "\t\n\f\r var a = 1 \r\f\n\t")).toBe("var a = 1");
+	});
+
+	it("keeps a body that is only whitespace", () => {
+		// Emptying the element hands it to `removeEmptyElements`, and a `<script>`
+		// the source wrote would go missing from the DOM.
+		expect(minifyBody("", "   ")).toBe("   ");
+	});
+
+	it("keeps a NBSP, which is a character and not whitespace", () => {
+		// It sits next to a JavaScript identifier, it does not separate one.
+		expect(minifyBody("", "\u00A0var a = 1\u00A0")).toBe(
+			"\u00A0var a = 1\u00A0"
+		);
+	});
+
+	it.each([
+		"text/x-template",
+		"text/template",
+		"text/ng-template",
+		"text/html",
+		"text/plain",
+		"unknown/thing"
+	])("leaves the body of the data block %s alone", (type) => {
+		// Its own syntax is not ours to read, and its whitespace can be part of it.
+		expect(minifyBody(type, "  <div> x </div>  ")).toBe("  <div> x </div>  ");
+	});
+
+	it("keeps the indentation a payload's own language may count", () => {
+		// Trimming the edges alone would leave the first line of this at column 0
+		// and every other one indented — which is no longer the same document.
+		const yaml = "\n    a: 1\n    b: 2\n  ";
+		expect(minifyBody("text/yaml", yaml)).toBe(yaml);
+	});
+
+	it.each([
+		"text&#47;javascript",
+		"text&#x2F;javascript",
+		"&#116;ext/javascript"
+	])("reads %s as executable, since the parser decodes it", (type) => {
+		// Chrome runs each of these, so each is program text and not a data block.
+		expect(minifyBody(type, "  var a = 1  ")).toBe("var a = 1");
+	});
+
+	it("reads an entity-encoded JSON type as JSON", () => {
+		expect(minifyBody("application&#47;ld&#43;json", '  { "a" : 1 }  ')).toBe(
+			'{"a":1}'
+		);
+	});
+
+	it("reads the type case- and whitespace-insensitively", () => {
+		expect(minifyBody(" TEXT/JAVASCRIPT ", "  var a = 1  ")).toBe("var a = 1");
+		expect(minifyBody(" TEXT/X-TEMPLATE ", "  x  ")).toBe("  x  ");
+	});
+
+	it("leaves every body alone where whitespace is kept", () => {
+		const out = new SourceProcessor().process(
+			"<script>  var a = 1  </script>",
+			{ mode: "minify" }
+		).code;
+		expect(out).toBe("<script>  var a = 1  </script>");
+	});
+
+	it("trims an inline script in foreign content too", () => {
+		const out = new SourceProcessor().process(
+			"<svg><script>  var a = 1  </script></svg>",
+			{ mode: "minify", collapseWhitespace: "all" }
+		).code;
+		expect(out).toBe("<svg><script>var a = 1</script></svg>");
+	});
+
+	it("drops a redundant type spelled with a reference", () => {
+		// The same reading as the body: what the parser sees is `text/javascript`,
+		// which is what the element runs anyway.
+		const minify = (/** @type {string} */ html) =>
+			new SourceProcessor().process(html, {
+				mode: /** @type {"minify"} */ ("minify"),
+				removeRedundantAttributes: /** @type {"smart"} */ ("smart")
+			}).code;
+		expect(
+			minify('<script type="text&#47;javascript">var a = 1</script>')
+		).toBe("<script>var a = 1</script>");
+		// A data block's type is what tells it apart from a script, so it stays.
+		expect(minify('<script type="text&#47;x-template">x</script>')).toBe(
+			"<script type=text/x-template>x</script>"
+		);
+	});
+});
+
 describe("SourceProcessor — collapseWhitespace modes", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
