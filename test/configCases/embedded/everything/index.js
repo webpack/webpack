@@ -99,13 +99,31 @@ it("minifies javascript in a css data url", () => {
 });
 
 it("minifies svg in a base64 css data url, and re-encodes it as base64", () => {
-	const url = isolate(sheetText, /data:image\/svg\+xml;base64,[^)]*/);
+	const url = isolate(sheetText, /data:image\/svg\+xml;base64,[^)"]*/);
 
 	expect({ url, decoded: decodeDataUrl(url) }).toMatchSnapshot();
 });
 
 it("minifies css in a base64 css data url, and re-encodes it as base64", () => {
-	const url = isolate(sheetText, /data:text\/css;base64,[^)]*/);
+	const url = isolate(sheetText, /data:text\/css;base64,[^)"]*/);
+
+	expect({ url, decoded: decodeDataUrl(url) }).toMatchSnapshot();
+});
+
+it("minifies html in a base64 css data url, and re-encodes it as base64", () => {
+	const url = isolate(sheetText, /data:text\/html;base64,[^)"]*/);
+
+	expect({ url, decoded: decodeDataUrl(url) }).toMatchSnapshot();
+});
+
+it("minifies json in a base64 css data url, and re-encodes it as base64", () => {
+	const url = isolate(sheetText, /data:application\/json;base64,[^)"]*/);
+
+	expect({ url, decoded: decodeDataUrl(url) }).toMatchSnapshot();
+});
+
+it("minifies javascript in a base64 css data url, and re-encodes it as base64", () => {
+	const url = isolate(sheetText, /data:text\/javascript;base64,[^)"]*/);
 
 	expect({ url, decoded: decodeDataUrl(url) }).toMatchSnapshot();
 });
