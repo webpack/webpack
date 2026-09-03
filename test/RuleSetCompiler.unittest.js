@@ -96,12 +96,11 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 
 	it("reads a capturing, non-capturing or named group the same way", () => {
 		expect(has([{ test: /[\\/]src[\\/].*\.(css)$/, use: ["x"] }])).toBe(true);
-		expect(
-			has([{ test: /[\\/]src[\\/].*\.(?<ext>css|scss)$/, use: ["x"] }])
-		).toBe(true);
-		expect(
-			has([{ test: /[\\/]src[\\/].*\.(?<ext>scss|sass)$/, use: ["x"] }])
-		).toBe(false);
+		// built at runtime: a named group is past this project's `tsc` target
+		const named = (/** @type {string} */ alternatives) =>
+			new RegExp(`[\\\\/]src[\\\\/].*\\.(?<ext>${alternatives})$`);
+		expect(has([{ test: named("css|scss"), use: ["x"] }])).toBe(true);
+		expect(has([{ test: named("scss|sass"), use: ["x"] }])).toBe(false);
 	});
 
 	it("spells the extension in the case an `i` rule accepts", () => {
