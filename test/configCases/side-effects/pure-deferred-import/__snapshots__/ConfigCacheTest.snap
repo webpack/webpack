@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle0.js 1`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle0.mjs 1`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 174
 /*!****************!*\\\\
@@ -10,7 +9,6 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   n: () => (/* binding */ readLazy)
 /* harmony export */ });
@@ -45,7 +43,6 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   P: () => (/* binding */ extra)
 /* harmony export */ });
@@ -56,88 +53,84 @@ function extra(a) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ /* webpack/runtime/define property getters */
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 		}
+/******/ 	}
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
 /******/ 		}
 /******/ 	};
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
-/******/ 	
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
-/******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
-/******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
@@ -148,15 +141,11 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect((0,_lib_js__WEBPACK_IMPORTED_MODULE_0__/* .readLazy */ .n)(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle0.js 2`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle0.mjs 2`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 174
 /*!****************!*\\\\
@@ -164,7 +153,6 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   n: () => (/* binding */ readLazy)
 /* harmony export */ });
@@ -199,7 +187,6 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   P: () => (/* binding */ extra)
 /* harmony export */ });
@@ -210,88 +197,84 @@ function extra(a) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ /* webpack/runtime/define property getters */
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 		}
+/******/ 	}
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
 /******/ 		}
 /******/ 	};
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
-/******/ 	
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
-/******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
-/******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
@@ -302,15 +285,11 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect((0,_lib_js__WEBPACK_IMPORTED_MODULE_0__/* .readLazy */ .n)(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle1.js 1`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle1.mjs 1`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 896
 /*!*********************!*\\\\
@@ -325,75 +304,71 @@ exports.l = function (a, b) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
+/******/ 		}
 /******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************************!*\\\\
   !*** ./index.js + 2 modules ***!
   \\\\******************************/
@@ -420,15 +395,11 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect(readLazy(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle1.js 2`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should compile: bundle1.mjs 2`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 896
 /*!*********************!*\\\\
@@ -443,75 +414,71 @@ exports.l = function (a, b) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
+/******/ 		}
 /******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************************!*\\\\
   !*** ./index.js + 2 modules ***!
   \\\\******************************/
@@ -538,15 +505,11 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect(readLazy(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (1st): bundle0.js 1`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (1st): bundle0.mjs 1`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 174
 /*!****************!*\\\\
@@ -554,7 +517,6 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   n: () => (/* binding */ readLazy)
 /* harmony export */ });
@@ -589,7 +551,6 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   P: () => (/* binding */ extra)
 /* harmony export */ });
@@ -600,88 +561,84 @@ function extra(a) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ /* webpack/runtime/define property getters */
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 		}
+/******/ 	}
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
 /******/ 		}
 /******/ 	};
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
-/******/ 	
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
-/******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
-/******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
@@ -692,15 +649,11 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect((0,_lib_js__WEBPACK_IMPORTED_MODULE_0__/* .readLazy */ .n)(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (1st): bundle1.js 1`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (1st): bundle1.mjs 1`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 896
 /*!*********************!*\\\\
@@ -715,75 +668,71 @@ exports.l = function (a, b) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
+/******/ 		}
 /******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************************!*\\\\
   !*** ./index.js + 2 modules ***!
   \\\\******************************/
@@ -810,15 +759,11 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect(readLazy(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (2nd): bundle0.js 1`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (2nd): bundle0.mjs 1`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 174
 /*!****************!*\\\\
@@ -826,7 +771,6 @@ exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-im
   \\\\****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   n: () => (/* binding */ readLazy)
 /* harmony export */ });
@@ -861,7 +805,6 @@ exports.l = function (a, b) {
   \\\\*****************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-\\"use strict\\";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   P: () => (/* binding */ extra)
 /* harmony export */ });
@@ -872,88 +815,84 @@ function extra(a) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	// define getter/value functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ /* webpack/runtime/define property getters */
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	for(var key in definition) {
+/******/ 		if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 			Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 		}
+/******/ 	}
+/******/ };
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
 /******/ 		}
 /******/ 	};
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
-/******/ 	
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
-/******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
-/******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************!*\\\\
   !*** ./index.js ***!
   \\\\******************/
@@ -964,15 +903,11 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect((0,_lib_js__WEBPACK_IMPORTED_MODULE_0__/* .readLazy */ .n)(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;
 
-exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (2nd): bundle1.js 1`] = `
-"/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+exports[`ConfigCacheTestCases side-effects pure-deferred-import pure-deferred-import should pre-compile to fill disk cache (2nd): bundle1.mjs 1`] = `
+"/******/ var __webpack_modules__ = ({
 
 /***/ 896
 /*!*********************!*\\\\
@@ -987,75 +922,71 @@ exports.l = function (a, b) {
 
 /***/ }
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			if (cachedModule.error !== undefined) throw cachedModule.error;
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		module.evaluating = true;
-/******/ 		try {
-/******/ 			if (!(moduleId in __webpack_modules__)) {
-/******/ 				delete __webpack_module_cache__[moduleId];
-/******/ 				const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
-/******/ 				e.code = 'MODULE_NOT_FOUND';
-/******/ 				throw e;
-/******/ 			}
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 			module.evaluating = false;
-/******/ 		} catch(e) {
-/******/ 			module.evaluating = false;
-/******/ 			module.error = e;
+/******/ // The module cache
+/******/ const __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		if (cachedModule.error !== undefined) throw cachedModule.error;
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	module.evaluating = true;
+/******/ 	try {
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		module.evaluating = false;
+/******/ 	} catch(e) {
+/******/ 		module.evaluating = false;
+/******/ 		module.error = e;
+/******/ 		throw e;
 /******/ 	}
-/******/ 	
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/make optimized deferred namespace object */
-/******/ 	__webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
-/******/ 		const r = this;
-/******/ 	
-/******/ 		const obj = {
-/******/ 			get a() {
-/******/ 				const cachedModule = __webpack_module_cache__[moduleId];
-/******/ 				if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
-/******/ 				if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
-/******/ 					const depModule = __webpack_module_cache__[syncDeps[i]];
-/******/ 					if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
-/******/ 				}
-/******/ 				let exports = r(moduleId);
-/******/ 	
-/******/ 				if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
-/******/ 				return exports;
+/******/ /* webpack/runtime/make optimized deferred namespace object */
+/******/ __webpack_require__.zO = function(moduleId, mode, asyncDeps, syncDeps) {
+/******/ 	const r = this;
+/******/ 
+/******/ 	const obj = {
+/******/ 		get a() {
+/******/ 			const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 			if (cachedModule !== undefined && (cachedModule.evaluating || cachedModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while the module is being evaluated\\");
+/******/ 			if (syncDeps) for (var i = 0; i < syncDeps.length; i++) {
+/******/ 				const depModule = __webpack_module_cache__[syncDeps[i]];
+/******/ 				if (depModule !== undefined && (depModule.evaluating || depModule.evaluatingAsync)) throw new TypeError(\\"Cannot access a deferred module namespace while a dependency is being evaluated\\");
 /******/ 			}
-/******/ 		};
-/******/ 	
-/******/ 		return obj;
+/******/ 			let exports = r(moduleId);
+/******/ 
+/******/ 			if(mode & 8 || (mode & 4 && exports.__esModule)) Object.defineProperty(this, \\"a\\", { value: exports });
+/******/ 			return exports;
+/******/ 		}
 /******/ 	};
-/******/ 	
+/******/ 
+/******/ 	return obj;
+/******/ };
+/******/ 
 /************************************************************************/
-let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
-(() => {
-\\"use strict\\";
 /*!******************************!*\\\\
   !*** ./index.js + 2 modules ***!
   \\\\******************************/
@@ -1082,8 +1013,5 @@ it(\\"should evaluate the deferred module on access\\", () => {
 	expect(readLazy(6, 7)).toBe(43);
 });
 
-})();
-
-/******/ })()
-;"
+"
 `;

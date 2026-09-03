@@ -25831,6 +25831,12 @@ declare abstract class RuntimeTemplate {
 	}): string;
 
 	/**
+	 * The side-effect annotation for output another build reads back, which is the
+	 * only output it can pay for — elsewhere it is bytes with no consumer.
+	 */
+	sideEffectsAnnotation(): string;
+
+	/**
 	 * A module instantiation's side-effect annotation. Write it only where the
 	 * statement ends the call: a minifier reads `f(id)(x)` as one and drops it.
 	 */
