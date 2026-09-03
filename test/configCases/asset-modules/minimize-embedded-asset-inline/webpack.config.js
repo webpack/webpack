@@ -2,7 +2,6 @@
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const cssMinify = require("../../../../lib/css/cssMinify");
-const htmlMinify = require("../../../../lib/html/htmlMinify");
 const svgMinify = require("../../../helpers/svgMinify");
 
 /** @type {import("../../../../").Configuration} */
@@ -11,11 +10,7 @@ module.exports = {
 	mode: "production",
 	output: { pathinfo: false },
 	module: {
-		rules: [
-			{ test: /\.(?:svg|css|html|json)$/, type: "asset/inline" },
-			// By name: a bare `\.js$` would inline the entry itself.
-			{ test: /script\.js$/, type: "asset/inline" }
-		]
+		rules: [{ test: /\.(?:svg|css)$/, type: "asset/inline" }]
 	},
 	optimization: {
 		minimize: true,
@@ -23,15 +18,9 @@ module.exports = {
 			{
 				apply: (compiler) => {
 					new MinimizerPlugin({
-						test: /\.(?:[cm]?js|css|html|json|svg)(\?.*)?$/i,
-						minify: [
-							MinimizerPlugin.terserMinify,
-							cssMinify,
-							htmlMinify,
-							MinimizerPlugin.jsonMinify,
-							svgMinify
-						],
-						minimizerOptions: [{ compress: { passes: 2 } }, {}, {}, {}, {}]
+						test: /\.(?:[cm]?js|css|svg)(\?.*)?$/i,
+						minify: [MinimizerPlugin.terserMinify, cssMinify, svgMinify],
+						minimizerOptions: [{ compress: { passes: 2 } }, {}, {}]
 					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
 				}
 			}

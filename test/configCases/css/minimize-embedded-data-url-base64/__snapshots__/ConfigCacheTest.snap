@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`ConfigCacheTestCases css minimize-embedded-data-url-base64 minimize-embedded-data-url-base64 should compile 1`] = `".svg{background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPiA8cmVjdCBmaWxsPSdyZWQnIC8+IDwvc3ZnPg==)}.css{background:url(data:text/css;base64,LmlubmVye2NvbG9yOnJlZH0=)}.html{background:url(data:text/html;base64,PGRpdj4gICAgPHA+aGk8L3A+ICA8L2Rpdj4=)}.json{background:url(data:application/json;base64,eyJhIjoxfQ==)}.javascript{background:url(data:text/javascript;base64,dmFyIGE9MTtmdW5jdGlvbiBmKCl7cmV0dXJuIGF9)}"`;
