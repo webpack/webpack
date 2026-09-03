@@ -6017,6 +6017,11 @@ declare interface CssProcessOptions {
 }
 declare interface CssTransformOptions {
 	/**
+	 * write a color the target cannot read as an extra declaration before it, in a spelling it does read
+	 */
+	colorFallbacks?: boolean;
+
+	/**
 	 * which comments survive: `"some"` (the default) the ones that carry something, `true` / `"all"` every one, `false` none, or the ones a pattern matches / a predicate accepts, over the comment's own text
 	 */
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
@@ -20146,6 +20151,12 @@ declare interface Optimization {
  * @since 5.110.0
  */
 declare interface OptimizationMinimizeCss {
+	/**
+	 * Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.
+	 * @since 5.111.0
+	 */
+	colorFallbacks?: boolean;
+
 	/**
 	 * Which comments survive. `"some"`, the default, keeps a `/*!` banner and a comment annotated `@license` or `@preserve`; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's `format.comments` does, so a pattern that names nothing else drops the ones `"some"` would have kept. A `/*#` source-map pragma is a link rather than a comment, so `"some"` and `"all"` keep it; `false`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
 	 * @since 5.110.0

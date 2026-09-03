@@ -1,0 +1,18 @@
+/*! a hex alpha, which the target reads only as `rgba()` */
+.t01 { color: #7bffff80 }
+/*! transparent black, which the keyword names in fewer bytes */
+.t02 { color: #0000 }
+/*! a media range, which the target reads only as `min-` / `max-` */
+@media (480px <= width <= 768px) { .t03 { color: red } }
+/*! a shorthand the target does not have, written as its longhands */
+.t04 { place-items: center start }
+.t05 { overflow: hidden auto }
+.t06 { inset: 1px 2px }
+/*! a two-position color stop, written as the two stops it names */
+.t07 { background-image: linear-gradient(green, red 30% 40%, pink) }
+/*! a multi-keyword `display`, written as the one keyword naming the box */
+.t08 { display: inline flex }
+/*! a Lab-family color, with the color it names written before it */
+.t09 { color: oklch(59.686% 0.15619 49.7694) }
+/*! ...and `hwb()`, which shipped before the Lab family */
+.t10 { background-color: hwb(120 20% 30%) }

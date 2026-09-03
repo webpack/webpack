@@ -1638,7 +1638,12 @@ const collectDisplayShortForms = () => {
 			} else {
 				short = DISPLAY_UNNAMED_LEGACY.get(pair) || null;
 			}
-			if (short !== null && short.length < pair.length) out.push([pair, short]);
+			// Equal-length too: `inline flex` is `inline-flex` in the same bytes, which
+			// buys a minify nothing and is the only spelling a target reading no
+			// multi-keyword `display` understands.
+			if (short !== null && short.length <= pair.length) {
+				out.push([pair, short]);
+			}
 		}
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
@@ -4162,6 +4167,13 @@ const SUPPORTED_FEATURES = [
 			"css.types.gradient.conic-gradient.doubleposition"
 		]
 	],
+	["displayTwoValues", ["css.properties.display.multi-keyword_values"]],
+	["colorFunction", ["css.types.color.color"]],
+	["colorMix", ["css.types.color.color-mix"]],
+	["hwbColors", ["css.types.color.hwb"]],
+	["lightDark", ["css.types.color.light-dark"]],
+	["labColors", ["css.types.color.lab", "css.types.color.lch"]],
+	["oklabColors", ["css.types.color.oklab", "css.types.color.oklch"]],
 	["insetShorthand", ["css.properties.inset"]],
 	["mediaQueryRange", ["css.at-rules.media.range_syntax"]],
 	["overflowTwoValues", ["css.properties.overflow.multiple_keywords"]],
