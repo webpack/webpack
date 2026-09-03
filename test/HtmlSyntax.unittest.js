@@ -7187,6 +7187,43 @@ describe("htmlMinify — assets webpack only passes through", () => {
 	});
 });
 
+describe("htmlMinify — embedded bodies with no renderer", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} src html source
+	 * @returns {Promise<string>} the minified serialization
+	 */
+	const min = async (src) => (await htmlMinify({ "page.html": src })).code;
+
+	it("minifies the document an `<iframe srcdoc>` holds", async () => {
+		// Nothing is configured here, so what a caller would have answered for
+		// this one webpack minifies itself — the comment goes and `</p>` is
+		// implied, exactly as they are in a document of its own.
+		expect(
+			await min(
+				'<p><iframe srcdoc="&lt;!-- x --&gt;&lt;p&gt;a&lt;/p&gt;"></iframe>'
+			)
+		).toBe('<p><iframe srcdoc="<p>a"></iframe>');
+	});
+
+	it("reaches a `srcdoc` the source wrote bare", async () => {
+		// An unquoted value holds a document too, and gets quotes back: a space
+		// or a `>` in the minified text would otherwise end the attribute.
+		expect(await min("<p><iframe srcdoc=&lt;p&gt;a&lt;/p&gt;></iframe>")).toBe(
+			'<p><iframe srcdoc="<p>a"></iframe>'
+		);
+	});
+
+	it("leaves a `srcdoc` in foreign content alone", async () => {
+		// An `<iframe>` in SVG is an SVG element that shares the name, and its
+		// `srcdoc` is not the HTML attribute.
+		expect(
+			await min('<p><svg><iframe srcdoc="&lt;!-- k --&gt;"></iframe></svg>')
+		).toBe('<p><svg><iframe srcdoc="<!-- k -->"></iframe></svg>');
+	});
+});
+
 describe("SourceProcessor — minify serialization edge cases", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 

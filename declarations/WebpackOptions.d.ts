@@ -2555,11 +2555,6 @@ export interface OptimizationMinimizeHtml {
 	 */
 	minifyJson?: boolean;
 	/**
-	 * Minify the document held in an `<iframe srcdoc>` attribute. Off by default: the body is a whole document of its own (its base URL is `about:srcdoc`), so minifying it is safe, but the attribute is readable from script and a consumer comparing `iframe.srcdoc` byte for byte would see it change.
-	 * @since 5.110.0
-	 */
-	minifySrcdoc?: boolean;
-	/**
 	 * Run the CSS minimizer over an inline `<style>` element and every `style=""` attribute, with the options `optimization.minimize.css` names. On by default.
 	 * @since 5.110.0
 	 */

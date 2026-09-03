@@ -11,7 +11,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
-			html: { minifySrcdoc: true, minifyConditionalComments: true }
+			html: { minifyConditionalComments: true }
 		},
 		minimizer: ["..."]
 	},
