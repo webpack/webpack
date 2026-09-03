@@ -5543,6 +5543,15 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			)
 		).toEqual([]);
 	});
+
+	it("quotes a bare `srcdoc` a synchronous renderer answered", () => {
+		// An unquoted value carries no delimiter to keep, so the answer alone
+		// decides one — and it needs quotes whatever it holds, a bare value
+		// having nowhere to put a space or a `>`.
+		expect(
+			minify("<p><iframe srcdoc=&lt;p&gt;a></iframe>", () => '<p a="b">')
+		).toBe("<p><iframe srcdoc='<p a=\"b\">'></iframe>");
+	});
 });
 
 describe("SourceProcessor — inline CSS honors the target's abilities", () => {
@@ -8940,5 +8949,76 @@ describe("SourceProcessor — reusing work across a print", () => {
 		const second = deepestTagName("<body><SECTION>");
 		expect(second).toBe("section");
 		expect(second).toBe(first);
+	});
+});
+
+describe("htmlMinify — the delimiter an answered `srcdoc` is written with", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} src html source
+	 * @param {(source: string, info: { type: string }) => EXPECTED_ANY} renderEmbeddedSource the renderer
+	 * @returns {Promise<string>} the minified serialization
+	 */
+	const min = async (src, renderEmbeddedSource) =>
+		(
+			await htmlMinify({ "page.html": src }, undefined, {
+				renderEmbeddedSource
+			})
+		).code;
+
+	// The value decides, so each case is one answer and the delimiter it forces.
+	const SOURCE = '<p><iframe srcdoc="&lt;p&gt;a"></iframe>';
+
+	it("quotes an answer holding a `\"` with `'`", async () => {
+		expect(await min(SOURCE, () => '<p a="b">')).toBe(
+			"<p><iframe srcdoc='<p a=\"b\">'></iframe>"
+		);
+	});
+
+	it("quotes an answer holding a `'` with `\"`", async () => {
+		expect(await min(SOURCE, () => "<p a='b'>")).toBe(
+			"<p><iframe srcdoc=\"<p a='b'>\"></iframe>"
+		);
+	});
+
+	it("escapes an answer holding both, where neither delimiter is free", async () => {
+		expect(await min(SOURCE, () => "<p a='b' c=\"d\">")).toBe(
+			"<p><iframe srcdoc=\"<p a='b' c=&quot;d&quot;>\"></iframe>"
+		);
+	});
+
+	it("keeps the source's delimiter where the answer needs neither", async () => {
+		// Nothing to escape either way, so the shorter document is the one that
+		// does not rewrite the delimiter it was already spelled with.
+		expect(
+			await min("<p><iframe srcdoc='&lt;p&gt;a'></iframe>", () => "<p>b")
+		).toBe("<p><iframe srcdoc='<p>b'></iframe>");
+		expect(await min(SOURCE, () => "<p>b")).toBe(
+			'<p><iframe srcdoc="<p>b"></iframe>'
+		);
+	});
+
+	it("gives a `srcdoc` the source wrote bare the quotes its answer needs", async () => {
+		// An unquoted value carries no delimiter to keep, so the answer's own
+		// content is all there is to go on.
+		expect(
+			await min("<p><iframe srcdoc=&lt;p&gt;a></iframe>", () => '<p a="b">')
+		).toBe("<p><iframe srcdoc='<p a=\"b\">'></iframe>");
+	});
+
+	it("leaves the attribute as written when an async renderer declines", async () => {
+		// An asynchronous renderer is offered the body through the deferring
+		// path, where declining puts the attribute back exactly as the source
+		// spelled it — the raw value, references and delimiter included, rather
+		// than the decoded document the renderer was shown.
+		expect(await min(SOURCE, () => Promise.resolve(undefined))).toBe(
+			'<p><iframe srcdoc="&lt;p&gt;a"></iframe>'
+		);
+		expect(
+			await min("<p><iframe srcdoc=&lt;p&gt;a></iframe>", () =>
+				Promise.resolve(undefined)
+			)
+		).toBe("<p><iframe srcdoc=&lt;p&gt;a></iframe>");
 	});
 });
