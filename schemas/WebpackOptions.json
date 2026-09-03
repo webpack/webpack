@@ -429,6 +429,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "caseSensitive": {
+          "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
+          "type": "boolean"
+        },
         "filename": {
           "description": "Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.",
           "anyOf": [
@@ -441,6 +445,10 @@
               "tsType": "import('../lib/CopyPlugin').CopyFilenameFunction"
             }
           ]
+        },
+        "followSymlinks": {
+          "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
+          "type": "boolean"
         },
         "from": {
           "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
