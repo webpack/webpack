@@ -8006,11 +8006,19 @@ describe("CssSyntax minify — color-mix()", () => {
 		// Each method takes the second hue its own way round the circle. Two pairs,
 		// since one only ever tells the two arcs apart: which of them is the
 		// shorter is also which of them increases.
+		/**
+		 * @param {string} method the hue interpolation method
+		 * @param {string} first the first color
+		 * @param {string} second the second color
+		 * @returns {string} the minified declaration
+		 */
 		const mix = (method, first, second) =>
 			minify(`a{color:color-mix(in hsl ${method} hue,${first} 30%,${second})}`);
+		/** @type {[string, string]} */
 		const rising = ["#804d4d", "#4d8080"];
 		expect(mix("shorter", ...rising)).toBe("a{color:#4d8052}");
 		expect(mix("decreasing", ...rising)).toBe("a{color:#4d5280}");
+		/** @type {[string, string]} */
 		const falling = ["#4d8080", "#804d4d"];
 		expect(mix("longer", ...falling)).toBe("a{color:#807b4d}");
 		expect(mix("increasing", ...falling)).toBe("a{color:#804d7b}");
