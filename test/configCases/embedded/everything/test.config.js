@@ -90,9 +90,14 @@ module.exports = {
 		).toBeDefined();
 
 		// `style` and `css-style-sheet` put their stylesheet in the bundle instead
-		// of exporting it, each with its own nested `@import` payload minified.
-		expect(types).toContain(".sheet_style_css{color:red;margin:10px}");
-		expect(types).toContain(".sheet_sheet_css{color:red;margin:10px}");
-		expect(types.match(/\.imported\{color:red\}/g)).toHaveLength(2);
+		// of exporting it, each nesting its own minified `@import` payload. Anchor
+		// the two together: the bundle also holds this case's own test source.
+		for (const name of ["style", "sheet"]) {
+			expect(types).toMatch(
+				new RegExp(
+					`@import url\\(data:text/css,\\.imported\\{color:red\\}\\)((?!@import)[^])*?\\.sheet_${name}_css\\{`
+				)
+			);
+		}
 	}
 };

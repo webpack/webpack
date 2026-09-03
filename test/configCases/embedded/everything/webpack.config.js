@@ -8,9 +8,21 @@ const svgMinify = require("../../../helpers/svgMinify");
 /**
  * @typedef {import("minimizer-webpack-plugin").BasicMinimizerImplementation<EXPECTED_ANY> & import("minimizer-webpack-plugin").MinimizeFunctionHelpers} Minifier
  */
+
 /**
- * One minimizer per language a nested body can be written in, so whatever a
- * host hands over reaches something that minifies it.
+ * Every language a nested body can be written in, so whatever a host hands
+ * over reaches something that minifies it.
+ * @type {Minifier[]}
+ */
+const MINIFIERS = [
+	MinimizerPlugin.terserMinify,
+	cssMinify,
+	htmlMinify,
+	MinimizerPlugin.jsonMinify,
+	svgMinify
+];
+
+/**
  * @param {Minifier[]} minify the minimizers
  * @returns {import("../../../../").WebpackPluginInstance} the plugin
  */
@@ -58,15 +70,7 @@ module.exports = [
 		},
 		optimization: {
 			minimize: true,
-			minimizer: [
-				minimizer([
-					MinimizerPlugin.terserMinify,
-					cssMinify,
-					htmlMinify,
-					MinimizerPlugin.jsonMinify,
-					svgMinify
-				])
-			]
+			minimizer: [minimizer(MINIFIERS)]
 		},
 		experiments: { css: true, html: true }
 	},
@@ -91,7 +95,7 @@ module.exports = [
 		},
 		optimization: {
 			minimize: true,
-			minimizer: [minimizer([MinimizerPlugin.terserMinify, cssMinify])]
+			minimizer: [minimizer(MINIFIERS)]
 		},
 		experiments: { css: true }
 	}
