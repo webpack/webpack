@@ -86,13 +86,15 @@ const installHelpers = () => {
 	const NS_HTML = "http://www.w3.org/1999/xhtml";
 	const NS_SVG = "http://www.w3.org/2000/svg";
 	const probe = document.createElement("div");
+	// A path has to be in a rendered tree for the engine to walk it.
+	const svgProbe = document.createElementNS(NS_SVG, "svg");
 	const canvas = document.createElement("canvas");
 	canvas.width = 1;
 	canvas.height = 1;
 	const context = /** @type {CanvasRenderingContext2D} */ (
 		canvas.getContext("2d", { willReadFrequently: true })
 	);
-	document.body.append(probe);
+	document.body.append(probe, svgProbe);
 
 	// Every absolute unit is a fixed multiple of another, so one spelling stands
 	// for all of them: 1in is 96px, 1pt is 96/72px, 1turn is 360deg, 1s is 1000ms.
@@ -900,6 +902,35 @@ const installHelpers = () => {
 		const raw = attribute.value;
 		if (attribute.namespaceURI !== null) return raw;
 		if (name === "style") return computed(raw).sort().join(";");
+		if (node.namespaceURI === NS_SVG) {
+			// `d` is geometry, not a css value the property accepts as written, so
+			// two spellings are the same path when the engine walks them alike.
+			if (name === "d" && node.localName === "path") {
+				const probePath = document.createElementNS(NS_SVG, "path");
+				probePath.setAttribute("d", raw);
+				svgProbe.appendChild(probePath);
+				let walked;
+				try {
+					const length = probePath.getTotalLength();
+					const box = probePath.getBBox();
+					const points = [];
+					for (let i = 0; i <= 32; i++) {
+						const at = probePath.getPointAtLength((length * i) / 32);
+						points.push(`${at.x.toFixed(4)},${at.y.toFixed(4)}`);
+					}
+					walked = `${length.toFixed(4)};${box.x.toFixed(4)};${box.y.toFixed(4)};${box.width.toFixed(4)};${box.height.toFixed(4)};${points.join("|")}`;
+				} catch (_err) {
+					walked = raw;
+				}
+				svgProbe.removeChild(probePath);
+				return walked;
+			}
+			// A presentation attribute is the css value of the property it names, so
+			// it is read back the way `style` is. An attribute the engine does not
+			// take as one leaves the probe empty and is compared as written.
+			const asValue = computed(`${name}:${raw}`);
+			if (asValue.length !== 0) return asValue.sort().join(";");
+		}
 		const property = reflectionOf(node, name);
 		const properties = /** @type {Record<string, unknown>} */ (
 			/** @type {unknown} */ (node)

@@ -10383,6 +10383,7 @@ type HtmlPrintOptions = Pick<
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
 	removeImpliedTags?: boolean | "all" | "smart";
+	xml?: boolean;
 	renderEmbeddedSource?: (
 		source: string,
 		info: { type: string; hostType: string; as?: string }
@@ -10488,6 +10489,11 @@ declare interface HtmlProcessOptions {
 		source: string,
 		info: { type: string; hostType: string; as?: string }
 	) => undefined | string;
+
+	/**
+	 * print XML rather than HTML, for a standalone `.svg`: quotes stay on, no tag is left out, every `&` is escaped and a `<script>` / `<style>` body is not raw text (default false)
+	 */
+	xml?: boolean;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**

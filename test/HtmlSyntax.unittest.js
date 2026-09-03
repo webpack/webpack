@@ -8807,3 +8807,356 @@ describe("SourceProcessor — reusing work across a print", () => {
 		expect(second).toBe(first);
 	});
 });
+
+describe("SourceProcessor — xml", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} markup input markup
+	 * @param {boolean} xml whether to print XML
+	 * @returns {string} the minified serialization
+	 */
+	const print = (markup, xml) =>
+		new SourceProcessor().process(markup, { mode: "minify", xml }).code;
+
+	it("quotes every attribute value and keeps every attribute's own", () => {
+		const svg =
+			'<svg xmlns="http://www.w3.org/2000/svg"><rect fill="red" class=""/></svg>';
+		expect(print(svg, false)).toBe(
+			"<svg xmlns=http://www.w3.org/2000/svg><rect fill=red class/></svg>"
+		);
+		expect(print(svg, true)).toBe(svg);
+	});
+
+	it("escapes every ampersand, not only the ones opening a reference", () => {
+		expect(print("<svg><text>a &amp; b &s c</text></svg>", true)).toBe(
+			"<svg><text>a &amp; b &amp;s c</text></svg>"
+		);
+	});
+
+	it("escapes the `>` that would close a CDATA section", () => {
+		expect(print("<svg><text>a ]]&gt; b</text></svg>", true)).toBe(
+			"<svg><text>a ]]&gt; b</text></svg>"
+		);
+	});
+
+	it("puts a script or style body back in a CDATA section when it needs one", () => {
+		expect(
+			print("<svg><script><![CDATA[if(a<b){}]]></script></svg>", true)
+		).toBe("<svg><script><![CDATA[if(a<b){}]]></script></svg>");
+		expect(print("<svg><script>var a=1</script></svg>", true)).toBe(
+			"<svg><script>var a=1</script></svg>"
+		);
+	});
+
+	it("keeps the end tags XML has no way to imply", () => {
+		const svg = "<svg><foreignObject><p>a</p><p>b</p></foreignObject></svg>";
+		expect(print(svg, true)).toBe(svg);
+	});
+
+	it("closes a void element, which XML gives no end tag", () => {
+		expect(print("<svg><foreignObject><br/></foreignObject></svg>", true)).toBe(
+			"<svg><foreignObject><br/></foreignObject></svg>"
+		);
+	});
+
+	it("spells an element with no children as an empty-element tag", () => {
+		expect(print('<svg><path d="M0 0"></path></svg>', true)).toBe(
+			'<svg><path d="M0 0"/></svg>'
+		);
+		expect(print("<svg><g></g></svg>", true)).toBe("<svg><g/></svg>");
+		expect(print("<svg><linearGradient></linearGradient></svg>", true)).toBe(
+			"<svg><linearGradient/></svg>"
+		);
+		expect(print("<svg><script></script><style></style></svg>", true)).toBe(
+			"<svg><script/><style/></svg>"
+		);
+	});
+
+	it("leaves an element that carries anything at all", () => {
+		expect(print("<svg><text>a</text></svg>", true)).toBe(
+			"<svg><text>a</text></svg>"
+		);
+		expect(print("<svg><g> </g></svg>", true)).toBe("<svg><g> </g></svg>");
+		expect(print('<svg><g><path d="M0 0"/></g></svg>', true)).toBe(
+			'<svg><g><path d="M0 0"/></g></svg>'
+		);
+	});
+
+	it("keeps a `<template>`, whose children hang off a content fragment", () => {
+		expect(print("<template><p>a</p></template>", true)).toBe(
+			"<template><p>a</p></template>"
+		);
+	});
+
+	it("spells an empty element the HTML way when printing HTML", () => {
+		expect(print('<svg><path d="M0 0"></path></svg>', false)).toBe(
+			'<svg><path d="M0 0"></path></svg>'
+		);
+		expect(print("<p></p><span></span>", false)).toBe("<p></p><span></span>");
+	});
+});
+
+describe("SourceProcessor — svg path data", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} d the path data
+	 * @returns {string} what the printer wrote it back as
+	 */
+	const path = (d) => {
+		const svg = `<svg xmlns="http://www.w3.org/2000/svg"><path d="${d}"/></svg>`;
+		const out = new SourceProcessor().process(svg, {
+			mode: "minify",
+			xml: true
+		}).code;
+		const written = /<path d="([^"]*)"/.exec(out);
+		return written === null ? out : written[1];
+	};
+
+	it("drops the separators the grammar does not need", () => {
+		expect(path("M 10 10 L 20 20 Z")).toBe("M10 10 20 20Z");
+		expect(path("M1 1 H 5 V 6 h 1 v 2")).toBe("M1 1H5V6h1v2");
+	});
+
+	it("implies a repeated command, and a moveto's repeat is a lineto", () => {
+		expect(path("M1 1 L2 2 L3 3 M4 4 L5 5")).toBe("M1 1 2 2 3 3M4 4 5 5");
+		expect(path("M1 1 M2 2")).toBe("M1 1M2 2");
+		expect(path("M1 1 m2 2")).toBe("M1 1m2 2");
+	});
+
+	it("hands back a number already as short as it goes", () => {
+		expect(path("M300 .1L565 150v299.9")).toBe("M300 .1 565 150v299.9");
+		expect(path("M0 0")).toBe("M0 0");
+		expect(path("M1e3 1")).toBe("M1e3 1");
+		expect(path("M1. 2.")).toBe("M1 2");
+		expect(path("M.0 .5")).toBe("M0 .5");
+		expect(path("M1.0 2.00 3.000 4.0")).toBe("M1 2 3 4");
+	});
+
+	it("re-spells a number without changing its value", () => {
+		expect(path("M0.5 0.5 L-0.5 -0.5")).toBe("M.5.5-.5-.5");
+		expect(path("M 1.500 2.0 L 3. 4")).toBe("M1.5 2 3 4");
+		expect(path("M+1 +2")).toBe("M1 2");
+		expect(path("M1E3 1e+03")).toBe("M1e3 1e3");
+		expect(path("M00.10 -0.0")).toBe("M.1 0");
+	});
+
+	it("packs an arc's flags, which are one character each", () => {
+		expect(path("M1 1 A 5 5 0 0 1 10 10")).toBe("M1 1A5 5 0 0110 10");
+		expect(path("M1 1 A5 5 0 1 1 2 2 5 5 0 0 0 3 3")).toBe(
+			"M1 1A5 5 0 112 2 5 5 0 003 3"
+		);
+	});
+
+	it("leaves alone what is not path data", () => {
+		expect(path("not a path")).toBe("not a path");
+		expect(path("L1 1")).toBe("L1 1");
+		expect(path("M1 1A5 5 0 2 1 2 2")).toBe("M1 1A5 5 0 2 1 2 2");
+	});
+
+	it("rewrites `d` only on an svg `path`, and only in XML", () => {
+		const markup =
+			'<p d="M 1 1 L 2 2">x</p><svg xmlns="http://www.w3.org/2000/svg"><path d="M 1 1 L 2 2"/></svg>';
+		// Inline in HTML the value is readable from script, so it is left as written.
+		const html = new SourceProcessor().process(
+			`<!DOCTYPE html><body>${markup}`,
+			{ mode: "minify" }
+		).code;
+		expect(html).toContain('<p d="M 1 1 L 2 2">');
+		expect(html).toContain('<path d="M 1 1 L 2 2"/>');
+		const xml = new SourceProcessor().process(markup, {
+			mode: "minify",
+			xml: true
+		}).code;
+		expect(xml).toContain('<p d="M 1 1 L 2 2">');
+		expect(xml).toContain('<path d="M1 1 2 2"/>');
+	});
+});
+
+describe("SourceProcessor — what xml requires", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} markup input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const xml = (markup, options) =>
+		new SourceProcessor().process(markup, {
+			mode: "minify",
+			xml: true,
+			...options
+		}).code;
+
+	const SVG = '<svg xmlns="http://www.w3.org/2000/svg">';
+
+	it("spells the doctype the way XML reads it", () => {
+		expect(
+			xml(`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG}</svg>`)
+		).toBe(
+			`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG.slice(0, -1)}/>`
+		);
+		expect(
+			new SourceProcessor().process("<!DOCTYPE HTML><p>x", { mode: "minify" })
+				.code
+		).toBe("<!doctype html><p>x");
+	});
+
+	it("splits the section a `]]>` in the body would close", () => {
+		expect(
+			xml(`${SVG}<script type="application/json">{"a":"]]>"}</script></svg>`)
+		).toBe(
+			`${SVG}<script type="application/json"><![CDATA[{"a":"]]]]><![CDATA[>"}]]></script></svg>`
+		);
+	});
+
+	it("keeps a start tag XML has no way to imply", () => {
+		const table = "<table><tbody><tr><td>a</td></tr></tbody></table>";
+		expect(xml(`${SVG}<foreignObject>${table}</foreignObject></svg>`)).toBe(
+			`${SVG}<foreignObject>${table}</foreignObject></svg>`
+		);
+	});
+
+	it("reads `xml:space` as the way SVG asks for verbatim text", () => {
+		const collapse = { collapseWhitespace: "all" };
+		expect(
+			xml(`${SVG}<text xml:space="preserve">a   b</text></svg>`, collapse)
+		).toBe(`${SVG}<text xml:space="preserve">a   b</text></svg>`);
+		expect(
+			xml(`${SVG}<text xml:space="default">a   b</text></svg>`, collapse)
+		).toBe(`${SVG}<text xml:space="default">a b</text></svg>`);
+		expect(xml(`${SVG}<text>a   b</text></svg>`, collapse)).toBe(
+			`${SVG}<text>a b</text></svg>`
+		);
+	});
+
+	it("inherits `xml:space` from the nearest ancestor stating one", () => {
+		const collapse = { collapseWhitespace: "all" };
+		const outer =
+			'<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve">';
+		expect(xml(`${outer}<g><text>a   b</text></g></svg>`, collapse)).toBe(
+			`${outer}<g><text>a   b</text></g></svg>`
+		);
+		expect(
+			xml(`${outer}<text xml:space="default">a   b</text></svg>`, collapse)
+		).toBe(`${outer}<text xml:space="default">a b</text></svg>`);
+	});
+
+	it("honours `xml:space` on an svg inside an html document too", () => {
+		expect(
+			new SourceProcessor().process(
+				`<!DOCTYPE html><body>${SVG}<text xml:space="preserve">a   b</text></svg>`,
+				{ mode: "minify", collapseWhitespace: "all" }
+			).code
+		).toContain("<text xml:space=preserve>a   b</text>");
+	});
+});
+
+describe("SourceProcessor — svg presentation attributes", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} attributes the `<rect>`'s attributes
+	 * @returns {string} what the printer wrote them back as
+	 */
+	const rect = (attributes) => {
+		const out = new SourceProcessor().process(
+			`<svg xmlns="http://www.w3.org/2000/svg"><rect ${attributes}/></svg>`,
+			{ mode: "minify", xml: true }
+		).code;
+		return String(/<rect ([^/]*)\//.exec(out))
+			.split(",")[1]
+			.trim();
+	};
+
+	it("minifies the value as the css value it is", () => {
+		expect(rect('fill="#ff0000" stroke="#ABCDEF" stroke-width="0.50"')).toBe(
+			'fill="red" stroke="#abcdef" stroke-width=".5"'
+		);
+		expect(rect('opacity="1.0" stop-color="#ffffff"')).toBe(
+			'opacity="1" stop-color="#fff"'
+		);
+	});
+
+	it("keeps a value the css grammar does not reach", () => {
+		expect(rect('fill="context-fill" stroke="context-stroke"')).toBe(
+			'fill="context-fill" stroke="context-stroke"'
+		);
+		// One the grammar does reach: a CSS-wide keyword matches case-insensitively.
+		expect(rect('fill="currentColor"')).toBe('fill="currentcolor"');
+		expect(rect('fill="url(#g)" clip-path="url(#c)"')).toBe(
+			'fill="url(#g)" clip-path="url(#c)"'
+		);
+		expect(rect('fill="none" fill-opacity="inherit"')).toBe(
+			'fill="none" fill-opacity="inherit"'
+		);
+	});
+
+	it("keeps a value a `;` would make a second declaration of", () => {
+		// `red;;` is no valid paint, so the attribute is ignored and the fill is
+		// black — writing it back as `red` would paint the shape.
+		expect(rect('fill="red;;"')).toBe('fill="red;;"');
+		expect(rect('fill="green;fill:red"')).toBe('fill="green;fill:red"');
+	});
+
+	it("keeps an empty value, which is no declaration at all", () => {
+		expect(rect('fill="" stroke="  "')).toBe('fill="" stroke="  "');
+	});
+
+	it("keeps a value the minifier answers nothing for", () => {
+		/**
+		 * @param {string} attributes the `<rect>`'s attributes
+		 * @returns {string} the whole serialization
+		 */
+		const svg = (attributes) =>
+			new SourceProcessor().process(
+				`<svg xmlns="http://www.w3.org/2000/svg"><rect ${attributes}/></svg>`,
+				{ mode: "minify", xml: true }
+			).code;
+		expect(svg('fill="/*x*/"')).toContain('<rect fill="/*x*/"/>');
+		expect(svg('fill="a{b}"')).toContain('<rect fill="a{b}"/>');
+	});
+
+	it("leaves the attributes svg spells with its own grammar", () => {
+		// A unitless number is user units, which css reads as an invalid length.
+		expect(rect('x="5" y="5" width="10" height="10" rx="2"')).toBe(
+			'x="5" y="5" width="10" height="10" rx="2"'
+		);
+		expect(rect('transform="translate(10 20)"')).toBe(
+			'transform="translate(10 20)"'
+		);
+	});
+
+	it("leaves an attribute css names for something else", () => {
+		// `<stop offset>` is a number, not the motion-path shorthand.
+		const out = new SourceProcessor().process(
+			'<svg xmlns="http://www.w3.org/2000/svg"><stop offset="0.50" stop-color="#ffffff"/></svg>',
+			{ mode: "minify", xml: true }
+		).code;
+		expect(out).toContain('<stop offset="0.50" stop-color="#fff"/>');
+	});
+
+	it("rewrites only in the svg namespace, and only in XML", () => {
+		const markup =
+			'<p fill="#ff0000">x</p><svg xmlns="http://www.w3.org/2000/svg"><rect fill="#ff0000"/></svg>';
+		// Inline in HTML the value is readable from script, so it is left as written.
+		const html = new SourceProcessor().process(
+			`<!DOCTYPE html><body>${markup}`,
+			{ mode: "minify" }
+		).code;
+		expect(html).toContain("<p fill=#ff0000>");
+		expect(html).toContain("<rect fill=#ff0000 />");
+		const xml = new SourceProcessor().process(markup, {
+			mode: "minify",
+			xml: true
+		}).code;
+		expect(xml).toContain('<p fill="#ff0000">');
+		expect(xml).toContain('<rect fill="red"/>');
+	});
+
+	it("leaves a value carrying a character reference uncompressed", () => {
+		// The reference decodes, but the value is not read as a css value.
+		expect(rect('fill="&#x23;ff0000"')).toBe('fill="#ff0000"');
+	});
+});
