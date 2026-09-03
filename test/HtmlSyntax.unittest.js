@@ -7212,6 +7212,87 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 	});
 });
 
+describe("htmlMinify — one document reaching every embedded site", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	// One document per site the print offers: an inline `<style>` (whose own
+	// `url()` payloads name every language a media type can), a JSON `<script>`,
+	// a `<script>`, a `style=""`, an `<svg>` subtree and two `<iframe srcdoc>` —
+	// one quoted, one written bare.
+	const DOCUMENT = `<!doctype html>
+<html lang="en">
+<head>
+<title>   every embedded body   </title>
+<style>
+  /* a comment */
+  .a { color : #ff0000 ; margin : 10px 10px 10px 10px }
+  .svg { background : url("data:image/svg+xml,<svg>   <rect  fill='red' />   </svg>") }
+  .css { background : url("data:text/css,.i {  color : #ff0000  }") }
+  .html { background : url("data:text/html,<div>  <!-- x -->  <p>hi</p>  </div>") }
+  .json { background : url('data:application/json,{ "a" :  1 }') }
+  .js { background : url("data:text/javascript,var  a  =  1 ;") }
+  .b64 { background : url("data:text/css;base64,LmlubmVyIHsgIGNvbG9yIDogI2ZmMDAwMCAgfQ==") }
+  .png { background : url("data:image/png;base64,AAAA") }
+</style>
+<script type="application/json">  { "a" :  1 , "b" : [ 1 , 2 ] }  </script>
+<script>  var  a  =  1 ;  function  f ( ) { return  a }  </script>
+</head>
+<body>
+<p style="  COLOR : #ff0000 ;  margin : 10px 10px 10px 10px  ">styled</p>
+<svg viewBox="0 0 2 2">   <rect  fill="red"  />   </svg>
+<iframe srcdoc="&lt;!-- c --&gt;&lt;style&gt;.s{ color : #ff0000 }&lt;/style&gt;&lt;p&gt;   deep   &lt;/p&gt;"></iframe>
+<iframe srcdoc=&lt;p&gt;bare&lt;/p&gt;></iframe>
+</body>
+</html>`;
+
+	it("offers every body to a caller's renderer, and prints each answer", async () => {
+		/** @type {string[]} */
+		const offered = [];
+		/**
+		 * @param {string} _source the body offered
+		 * @param {{ type: string, as?: string }} info what it is
+		 * @returns {string} a marker naming what was asked for
+		 */
+		const render = (_source, info) => {
+			const name =
+				info.as === undefined ? info.type : `${info.type}:${info.as}`;
+
+			offered.push(name);
+
+			return `ANSWER(${name})`;
+		};
+
+		const { code } = await htmlMinify({ "page.html": DOCUMENT }, undefined, {
+			renderEmbeddedSource: render
+		});
+
+		// Every site, once each: the `style=""` as the block-contents production
+		// it is, and one `html` per `<iframe srcdoc>`.
+		expect(offered).toEqual([
+			"css",
+			"json",
+			"javascript",
+			"css:block-contents",
+			"svg",
+			"html",
+			"html"
+		]);
+		expect(code).toMatchSnapshot();
+	});
+
+	it("minifies with webpack's own minifiers when no renderer is given", async () => {
+		// What webpack ships a minifier for is minified here — the inline
+		// `<style>`, the `style=""`, the JSON `<script>` and both documents an
+		// `<iframe srcdoc>` holds, nested `<style>` included. A `<script>` of
+		// JavaScript and an `<svg>` subtree are left as written, and so is every
+		// `data:` payload the inline `<style>` carries: the CSS minifier has no
+		// built-in of its own to fall back to for those.
+		const { code } = await htmlMinify({ "page.html": DOCUMENT });
+
+		expect(code).toMatchSnapshot();
+	});
+});
+
 describe("SourceProcessor — minify serialization edge cases", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
