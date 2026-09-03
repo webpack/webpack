@@ -8274,13 +8274,31 @@ describe("CssSyntax minify — pseudo-class replacement", () => {
 		expect(withClasses("a:hover/*c*/{color:red}", NAMED)).toBe(
 			"a.hovered{color:red}"
 		);
-		// A CSS2 pseudo-element drops its second colon, leaving an empty part where
-		// it stood.
-		expect(withClasses("a::before:hover{color:red}", NAMED)).toBe(
-			"a:before.hovered{color:red}"
-		);
 		expect(withClasses(".hover{color:red}", NAMED)).toBe(".hover{color:red}");
 		expect(withClasses("a:hover{color:red}")).toBe("a:hover{color:red}");
+	});
+
+	it("writes none after a pseudo-element, which takes no class", () => {
+		// Selectors 4 §3.5: only a pseudo-class follows a pseudo-element, so a class
+		// written there would match nothing at all.
+		expect(withClasses("a::before:hover{color:red}", NAMED)).toBe(
+			"a:before:hover{color:red}"
+		);
+		// Whichever colon it was authored with, and whatever the fold left behind.
+		expect(withClasses("a:before:hover{color:red}", NAMED)).toBe(
+			"a:before:hover{color:red}"
+		);
+		// The compound it opens is the whole of what stands: the next one is free.
+		expect(withClasses("a::before:hover b:hover{color:red}", NAMED)).toBe(
+			"a:before:hover b.hovered{color:red}"
+		);
+		expect(withClasses("a::before:hover,b:hover{color:red}", NAMED)).toBe(
+			"a:before:hover,b.hovered{color:red}"
+		);
+		// A pseudo-class standing before one is the ordinary case.
+		expect(withClasses("a:hover::before{color:red}", NAMED)).toBe(
+			"a.hovered:before{color:red}"
+		);
 	});
 });
 
