@@ -12,7 +12,8 @@ it("should keep the directory structure below 'from'", () => {
 });
 
 it("should copy only what the glob names", () => {
-	expect(exists("all/skip.log")).toBe(false);
+	expect(read("all/keep.txt")).toBe("keep");
+	expect(exists("all/skip.md")).toBe(false);
 });
 
 it("should copy a dot directory the glob names, no deeper than it reaches", () => {
