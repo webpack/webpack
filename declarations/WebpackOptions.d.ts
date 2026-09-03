@@ -3204,11 +3204,11 @@ export interface CopyObjectPattern {
 	 */
 	filename?: string | import("../lib/CopyPlugin").CopyFilenameFunction;
 	/**
-	 * Glob or path from where the files are copied.
+	 * Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.
 	 */
 	from: string;
 	/**
-	 * Directory the files are copied to, relative to 'output.path'.
+	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
 	 */
 	to?: string;
 	/**

@@ -417,7 +417,7 @@
           }
         },
         {
-          "description": "Glob or path from where the files are copied.",
+          "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
           "type": "string",
           "minLength": 1
         }
@@ -443,12 +443,12 @@
           ]
         },
         "from": {
-          "description": "Glob or path from where the files are copied.",
+          "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
           "type": "string",
           "minLength": 1
         },
         "to": {
-          "description": "Directory the files are copied to, relative to 'output.path'.",
+          "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",
           "type": "string",
           "absolutePath": false
         },
@@ -464,7 +464,7 @@
       "description": "A glob or a path of files which are copied to the output directory.",
       "anyOf": [
         {
-          "description": "Glob or path from where the files are copied.",
+          "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
           "type": "string",
           "minLength": 1
         },
