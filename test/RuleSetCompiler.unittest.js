@@ -76,6 +76,18 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		).toBe(true);
 	});
 
+	it("reads the extension probe case-insensitively behind an `i` flag", () => {
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.(CSS|SCSS)$/i, use: ["css-loader"] }])
+		).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.CSS$/i, loader: "css-loader" }])
+		).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.(CSS|SCSS)$/, use: ["css-loader"] }])
+		).toBe(false);
+	});
+
 	it("detects a filename-scoped glob via the extension probe", () => {
 		expect(has([{ test: { glob: "**/*.module.css" }, use: ["x"] }])).toBe(true);
 		expect(
