@@ -75,9 +75,8 @@ module.exports = [
 		experiments: { css: true, html: true }
 	},
 	{
-		// An export type that injects a stylesheet rather than exporting it needs a
-		// runtime that works without a document, and that target emits no HTML
-		// entry — so those two are built here instead.
+		// No document here, so `css-style-sheet` falls back to an object carrying
+		// the stylesheet text as written rather than one a parser reassembled.
 		target: ["web", "node"],
 		mode: "production",
 		entry: { types: "./export-types.js" },
@@ -89,8 +88,29 @@ module.exports = [
 					type: "css/auto",
 					parser: { url: false, import: false }
 				},
-				{ test: /sheet-style\.css$/, parser: { exportType: "style" } },
 				{ test: /sheet-sheet\.css$/, parser: { exportType: "css-style-sheet" } }
+			]
+		},
+		optimization: {
+			minimize: true,
+			minimizer: [minimizer(MINIFIERS)]
+		},
+		experiments: { css: true }
+	},
+	{
+		// `style` injects into a document, so this one is built for the web.
+		target: "web",
+		mode: "production",
+		entry: { styles: "./style-export.js" },
+		output: { pathinfo: false, filename: "[name].js" },
+		module: {
+			rules: [
+				{
+					test: /sheet-.*\.css$/,
+					type: "css/auto",
+					parser: { url: false, import: false }
+				},
+				{ test: /sheet-style\.css$/, parser: { exportType: "style" } }
 			]
 		},
 		optimization: {

@@ -5,7 +5,7 @@ const path = require("path");
 
 module.exports = {
 	findBundle(i) {
-		return i === 0 ? ["main.js"] : ["types.js"];
+		return [["main.js"], ["types.js"], ["styles.js"]][i];
 	},
 	moduleScope(scope, options) {
 		// What the bundle cannot reach for itself: documents webpack emitted
