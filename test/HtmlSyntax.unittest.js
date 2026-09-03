@@ -4273,6 +4273,19 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 		expect(minifyBody(type, "  var a = 1  ")).toBe("var a = 1");
 	});
 
+	it("keeps the trim where a renderer declines the body", () => {
+		// The edges go before the offer, so declining costs them nothing.
+		const out = new SourceProcessor().process(
+			"<script>  var a = 1  </script>",
+			{
+				mode: /** @type {"minify"} */ ("minify"),
+				collapseWhitespace: /** @type {"all"} */ ("all"),
+				renderEmbeddedSource: () => undefined
+			}
+		).code;
+		expect(out).toBe("<script>var a = 1</script>");
+	});
+
 	it("trims a JSON body the strip declines", () => {
 		// Embedded all the same: the edges are outside whatever it holds.
 		expect(minifyBody("application/ld+json", "  {{ t }}  ")).toBe("{{ t }}");
@@ -4373,6 +4386,9 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 				mode: /** @type {"minify"} */ ("minify"),
 				removeRedundantAttributes: /** @type {"smart"} */ ("smart")
 			}).code;
+		expect(minify('<script type="text/javascript">var a = 1</script>')).toBe(
+			"<script>var a = 1</script>"
+		);
 		expect(
 			minify('<script type="text&#47;javascript">var a = 1</script>')
 		).toBe("<script>var a = 1</script>");
