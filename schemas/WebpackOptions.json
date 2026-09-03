@@ -397,8 +397,8 @@
       ],
       "added": "5.111.0"
     },
-    "CopyObjectPattern": {
-      "description": "A pattern of files which are copied to the output directory.",
+    "CopyGlobOptions": {
+      "description": "Options of the glob in 'from'.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -406,6 +406,21 @@
           "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
           "type": "boolean"
         },
+        "dot": {
+          "description": "Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.",
+          "type": "boolean"
+        },
+        "followSymlinks": {
+          "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
+          "type": "boolean"
+        }
+      }
+    },
+    "CopyObjectPattern": {
+      "description": "A pattern of files which are copied to the output directory.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
         "filename": {
           "description": "Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.",
           "anyOf": [
@@ -419,14 +434,13 @@
             }
           ]
         },
-        "followSymlinks": {
-          "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
-          "type": "boolean"
-        },
         "from": {
           "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
           "type": "string",
           "minLength": 1
+        },
+        "globOptions": {
+          "$ref": "#/definitions/CopyGlobOptions"
         },
         "to": {
           "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",

@@ -5291,28 +5291,43 @@ declare interface ContextTimestampAndHash {
 type ContextTypes = KnownContext & Record<any, any>;
 
 /**
- * A pattern of files which are copied to the output directory.
+ * Options of the glob in 'from'.
  */
-declare interface CopyObjectPattern {
+declare interface CopyGlobOptions {
 	/**
 	 * Whether the glob matches the case of a file name. Defaults to 'true'.
 	 */
 	caseSensitive?: boolean;
 
 	/**
-	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
+	 * Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	dot?: boolean;
 
 	/**
 	 * Whether a symbolic link is walked into and copied. Defaults to 'true'.
 	 */
 	followSymlinks?: boolean;
+}
+
+/**
+ * A pattern of files which are copied to the output directory.
+ */
+declare interface CopyObjectPattern {
+	/**
+	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
+	 */
+	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.
 	 */
 	from: string;
+
+	/**
+	 * Options of the glob in 'from'.
+	 */
+	globOptions?: CopyGlobOptions;
 
 	/**
 	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
