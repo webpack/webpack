@@ -3144,9 +3144,17 @@ export interface CleanOptions {
  */
 export interface CopyObjectPattern {
 	/**
+	 * Whether the glob matches the case of a file name. Defaults to 'true'.
+	 */
+	caseSensitive?: boolean;
+	/**
 	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
 	 */
 	filename?: string | import("../lib/CopyPlugin").CopyFilenameFunction;
+	/**
+	 * Whether a symbolic link is walked into and copied. Defaults to 'true'.
+	 */
+	followSymlinks?: boolean;
 	/**
 	 * Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.
 	 */

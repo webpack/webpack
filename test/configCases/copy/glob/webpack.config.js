@@ -23,7 +23,8 @@ module.exports = {
 				// a `\` in an absolute pattern separates, as `path.join` writes it
 				from: [path.resolve(__dirname, "assets"), "*.txt"].join("\\"),
 				to: "backslash"
-			}
+			},
+			{ from: "assets/*.txt", caseSensitive: false, to: "insensitive" }
 		]
 	}
 };

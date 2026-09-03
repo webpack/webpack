@@ -14,3 +14,8 @@ it("should stop where a symlink points back at a directory it walked", () => {
 	expect(exists("real/loop/real/a.txt")).toBe(false);
 	expect(exists("link/loop/real/a.txt")).toBe(false);
 });
+
+it("should leave a symlink alone when 'followSymlinks' is false", () => {
+	expect(read("no-follow/real/a.txt")).toBe("a");
+	expect(exists("no-follow/link/a.txt")).toBe(false);
+});

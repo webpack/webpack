@@ -37,3 +37,12 @@ it("should read a '\\' in an absolute pattern as a separator", () => {
 	expect(read("backslash/keep.txt")).toBe("keep");
 	expect(read("backslash/.dot.txt")).toBe("dot");
 });
+
+it("should match the case of a file name by default", () => {
+	expect(exists("all/Upper.TXT")).toBe(false);
+});
+
+it("should ignore the case when 'caseSensitive' is false", () => {
+	expect(read("insensitive/Upper.TXT")).toBe("upper");
+	expect(read("insensitive/keep.txt")).toBe("keep");
+});

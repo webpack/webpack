@@ -28,7 +28,10 @@ const buildTree = () => {
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
-		copy: [{ from: source }]
+		copy: [
+			{ from: source },
+			{ from: source, followSymlinks: false, to: "no-follow" }
+		]
 	},
 	plugins: [
 		(compiler) => {
