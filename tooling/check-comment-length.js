@@ -10,6 +10,7 @@
 
 const { execFileSync } = require("child_process");
 const fs = require("fs");
+const path = require("path");
 
 const LIMIT = 2;
 const MAX_BUFFER = 1024 * 1024 * 256;
@@ -92,11 +93,12 @@ const untrackedDiff = (files, read) =>
 
 /**
  * @param {string=} from base to diff against, defaulting to the merge base
+ * @param {string=} cwd repository to read, defaulting to the current directory
  * @returns {string[]} one `<file>:<line>` per comment over the limit
  */
-const report = (from) => {
+const report = (from, cwd) => {
 	const run = (/** @type {string[]} */ args) =>
-		execFileSync("git", args, { encoding: "utf8", maxBuffer: MAX_BUFFER });
+		execFileSync("git", args, { encoding: "utf8", maxBuffer: MAX_BUFFER, cwd });
 	const base = from || run(["merge-base", "HEAD", "origin/main"]).trim();
 	const globs = ["*.js", "*.mjs", "*.cjs"];
 	const untracked = run([
@@ -110,7 +112,7 @@ const report = (from) => {
 	return overLimit(
 		`${run(["diff", "-U0", base, "--", ...globs])}\n${untrackedDiff(
 			untracked,
-			(one) => fs.readFileSync(one, "utf8")
+			(one) => fs.readFileSync(cwd ? path.join(cwd, one) : one, "utf8")
 		)}`
 	);
 };
@@ -118,10 +120,11 @@ const report = (from) => {
 /**
  * @param {(text: string) => void} write receives one line per offender
  * @param {string=} from base to diff against, defaulting to the merge base
+ * @param {string=} cwd repository to read, defaulting to the current directory
  * @returns {number} the exit code, non-zero where a comment is over the limit
  */
-const main = (write, from) => {
-	const found = report(from);
+const main = (write, from, cwd) => {
+	const found = report(from, cwd);
 	for (const one of found) write(`${one}: comment over ${LIMIT} lines\n`);
 	return found.length > 0 ? 1 : 0;
 };
