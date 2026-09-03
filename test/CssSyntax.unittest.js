@@ -7870,6 +7870,17 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 		expect(minify("a{color:color(srgb 1 0 0/x)}")).toBe(
 			"a{color:color(srgb 1 0 0/x)}"
 		);
+		// A comma separates nothing here, and an alpha stands after the one slash
+		// the grammar has — reading either as a space paints what an engine drops.
+		expect(minify("a{color:color(srgb 0, 0, 0)}")).toBe(
+			"a{color:color(srgb 0,0,0)}"
+		);
+		expect(minify("a{color:color(srgb 1 1 1 1)}")).toBe(
+			"a{color:color(srgb 1 1 1 1)}"
+		);
+		expect(minify("a{color:color(srgb 1 0 0/.5/.5)}")).toBe(
+			"a{color:color(srgb 1 0 0/.5/.5)}"
+		);
 	});
 
 	it("reads a space through its own transfer", () => {
@@ -7883,6 +7894,24 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 		);
 		expect(minify("a{color:color(rec2020 .5 .2 .1)}")).toBe(
 			"a{color:color(rec2020 .5 .2 .1)}"
+		);
+	});
+
+	it("declines a mix a percentage puts outside 0..100", () => {
+		// `<percentage [0,100]>` (CSS Color 5 §2.1), whether the other is written or
+		// left for this one to leave: an engine drops the declaration either way.
+		const over = "a{color:color-mix(in hsl,red 150%,#00f 20%)}";
+		expect(minify(over)).toBe(over);
+		const only = "a{color:color-mix(in hsl,red 150%,#00f)}";
+		expect(minify(only)).toBe(only);
+		const under = "a{color:color-mix(in hsl,red -10%,#00f)}";
+		expect(minify(under)).toBe(under);
+		// The edges of the range are a mix like any other.
+		expect(minify("a{color:color-mix(in hsl,red 100%,#00f 0%)}")).toBe(
+			"a{color:red}"
+		);
+		expect(minify("a{color:color-mix(in hsl,red 60%,#00f 60%)}")).toBe(
+			"a{color:#f0f}"
 		);
 	});
 
