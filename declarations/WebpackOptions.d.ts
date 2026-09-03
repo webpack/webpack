@@ -2434,6 +2434,11 @@ export interface OptimizationMinimizeCss {
 	 */
 	convertLengthUnits?: boolean;
 	/**
+	 * Write the query a `@custom-media` names wherever a condition asks for it, and drop the rule that named it where no target reads one. `@custom-media --wide (width>400px)` and `@media (--wide)` become `@media (width>400px)`. Off until asked for: `@custom-media` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.
+	 * @since 5.111.0
+	 */
+	customMedia?: boolean;
+	/**
 	 * Write a spelling the `browserslist` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as `rgba()`, a double-position gradient stop as the two stops it names, `inset` / `overflow` / `place-*` as the longhands they set, `text-decoration` as its own longhands where a slot is newer than the shorthand, `system-ui` as the stack of platform font names it stands for, a `:lang()` or `:not()` holding a list as the `:is()` that means it, a media feature range as the `min-`/`max-` pair, and `light-dark()` as the custom-property pair a color scheme switches. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for. Off leaves every such spelling as written, which is how a stylesheet one of these rewrites gets wrong is minified; it never makes the minifier write a spelling the target cannot read.
 	 * @since 5.111.0
 	 */
@@ -2478,6 +2483,11 @@ export interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	rewriteCustomProperties?: boolean;
+	/**
+	 * Write a `:dir()` the `browserslist` target cannot read as the `[dir]` attribute selector it approximates: `a:dir(rtl)` becomes `a[dir=rtl]`. Off until asked for, because the two are not the same question — `:dir()` reads the directionality an element resolves to, which it may inherit from an ancestor, while `[dir=rtl]` reads the attribute on the element itself, so an element inside a `dir="rtl"` ancestor matches the first and not the second. Only in effect for a `browserslist` target that reads no `:dir()`; any other target names no browsers to answer for.
+	 * @since 5.111.0
+	 */
+	rewriteDirSelector?: boolean;
 	/**
 	 * Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.
 	 * @since 5.110.0

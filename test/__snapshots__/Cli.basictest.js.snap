@@ -11150,6 +11150,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
+        "multiple": false,
+        "path": "optimization.minimize.css.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-lower-unsupported": Object {
     "configs": Array [
       Object {
@@ -11238,6 +11251,19 @@ Object {
       },
     ],
     "description": "Shorten the values of custom properties (\`--x: #ffffff\` -> \`#fff\`, \`--y: 0.5rem\` -> \`.5rem\`), which are otherwise written back exactly as authored. Off by default: \`getComputedStyle().getPropertyValue()\` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-rewrite-dir-selector": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a \`:dir()\` the \`browserslist\` target cannot read as the \`[dir]\` attribute selector it approximates: \`a:dir(rtl)\` becomes \`a[dir=rtl]\`. Off until asked for, because the two are not the same question — \`:dir()\` reads the directionality an element resolves to, which it may inherit from an ancestor, while \`[dir=rtl]\` reads the attribute on the element itself, so an element inside a \`dir=\\"rtl\\"\` ancestor matches the first and not the second. Only in effect for a \`browserslist\` target that reads no \`:dir()\`; any other target names no browsers to answer for.",
+        "multiple": false,
+        "path": "optimization.minimize.css.rewriteDirSelector",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a \`:dir()\` the \`browserslist\` target cannot read as the \`[dir]\` attribute selector it approximates: \`a:dir(rtl)\` becomes \`a[dir=rtl]\`. Off until asked for, because the two are not the same question — \`:dir()\` reads the directionality an element resolves to, which it may inherit from an ancestor, while \`[dir=rtl]\` reads the attribute on the element itself, so an element inside a \`dir=\\"rtl\\"\` ancestor matches the first and not the second. Only in effect for a \`browserslist\` target that reads no \`:dir()\`; any other target names no browsers to answer for.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11715,6 +11741,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-css-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-css-lower-unsupported": Object {
     "configs": Array [
       Object {
@@ -11803,6 +11842,19 @@ Object {
       },
     ],
     "description": "Shorten the values of custom properties (\`--x: #ffffff\` -> \`#fff\`, \`--y: 0.5rem\` -> \`.5rem\`), which are otherwise written back exactly as authored. Off by default: \`getComputedStyle().getPropertyValue()\` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-rewrite-dir-selector": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a \`:dir()\` the \`browserslist\` target cannot read as the \`[dir]\` attribute selector it approximates: \`a:dir(rtl)\` becomes \`a[dir=rtl]\`. Off until asked for, because the two are not the same question — \`:dir()\` reads the directionality an element resolves to, which it may inherit from an ancestor, while \`[dir=rtl]\` reads the attribute on the element itself, so an element inside a \`dir=\\"rtl\\"\` ancestor matches the first and not the second. Only in effect for a \`browserslist\` target that reads no \`:dir()\`; any other target names no browsers to answer for.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.rewriteDirSelector",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a \`:dir()\` the \`browserslist\` target cannot read as the \`[dir]\` attribute selector it approximates: \`a:dir(rtl)\` becomes \`a[dir=rtl]\`. Off until asked for, because the two are not the same question — \`:dir()\` reads the directionality an element resolves to, which it may inherit from an ancestor, while \`[dir=rtl]\` reads the attribute on the element itself, so an element inside a \`dir=\\"rtl\\"\` ancestor matches the first and not the second. Only in effect for a \`browserslist\` target that reads no \`:dir()\`; any other target names no browsers to answer for.",
     "multiple": false,
     "simpleType": "boolean",
   },

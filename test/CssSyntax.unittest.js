@@ -57,6 +57,20 @@ const minifyFor = (css, browsers, abilities) =>
 		environment: browsers ? { ...abilities, browsers } : abilities
 	}).code;
 
+/**
+ * Minify for a browserslist selection with some of the rewrites set.
+ * @param {string} css source text
+ * @param {string[]} browsers the browserslist selection to target
+ * @param {import("../lib/css/syntax").CssTransformOptions} transforms the rewrites to set
+ * @returns {string} its minified serialization
+ */
+const minifyForWith = (css, browsers, transforms) =>
+	new SourceProcessor().process(css, {
+		mode: "minify",
+		environment: { browsers },
+		transforms
+	}).code;
+
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
 // the tokenizer emits numeric `TT_*` values. Map between them so the existing
 // snapshot files stay valid.
@@ -8925,6 +8939,7 @@ describe("CssSyntax minify — the rest of the target's abilities", () => {
 			)
 		).toBe(
 			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:#ba00c2;" +
 				"text-decoration-color:color-mix(in oklch,red,blue)}"
 		);
 		// An unwritten line is the `none` the shorthand would have set.
@@ -9372,6 +9387,233 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 		);
 		expect(minify("a{background:red content-box padding-box}")).toBe(
 			"a{background:red content-box padding-box}"
+		);
+	});
+});
+
+describe("CssSyntax minify — nesting the target cannot read", () => {
+	it("writes a rule nested in another on its own", () => {
+		expect(minifyFor("a{color:red;& b{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}a b{color:blue}"
+		);
+	});
+
+	it("reads a nested rule that names no parent as the descendant it means", () => {
+		expect(minifyFor("a{color:red;b{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}a b{color:blue}"
+		);
+	});
+
+	it("writes `&` wherever it stands in the nested selector", () => {
+		expect(minifyFor("a{color:red;&:hover{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}a:hover{color:blue}"
+		);
+		expect(minifyFor("a{color:red;.x &{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}.x a{color:blue}"
+		);
+		expect(minifyFor("a{&.x{color:red}}", ["chrome 100"])).toBe(
+			"a.x{color:red}"
+		);
+	});
+
+	it("names a parent that is not one compound as the `:is()` it means", () => {
+		// A selector list, and a complex selector: standing either where `&` was
+		// would bind the combinator around it to its last compound alone.
+		expect(minifyFor("a,b{color:red;& c{color:blue}}", ["chrome 100"])).toBe(
+			"a,b{color:red}:is(a,b) c{color:blue}"
+		);
+		expect(minifyFor("a b{& c{color:red}}", ["chrome 100"])).toBe(
+			":is(a b) c{color:red}"
+		);
+		expect(minifyFor("a>b{& c{color:red}}", ["chrome 100"])).toBe(
+			":is(a>b) c{color:red}"
+		);
+	});
+
+	it("writes each rule against the parent, not against its sibling", () => {
+		// Every rule written in one parent shares it, so one of them draining
+		// another's would write that one against the wrong selector.
+		expect(
+			minifyFor("a{color:red;& b{color:blue}&.x{color:green}}", ["chrome 100"])
+		).toBe("a{color:red}a b{color:blue}a.x{color:green}");
+		expect(
+			minifyFor("x{& a{color:red}}y{& b{color:blue}}", ["chrome 100"])
+		).toBe("x a{color:red}y b{color:blue}");
+	});
+
+	it("writes each selector of a nested list", () => {
+		expect(minifyFor("a{& b,& c{color:red}}", ["chrome 100"])).toBe(
+			"a b,a c{color:red}"
+		);
+	});
+
+	it("writes a rule nested two deep", () => {
+		expect(
+			minifyFor("a{color:red;& b{& c{color:green}}}", ["chrome 100"])
+		).toBe("a{color:red}:is(a b) c{color:green}");
+	});
+
+	it("drops the rule left holding nothing but the ones taken out of it", () => {
+		expect(minifyFor("a{& b{color:blue}}", ["chrome 100"])).toBe(
+			"a b{color:blue}"
+		);
+	});
+
+	it("keeps the nesting where a declaration is written after a rule", () => {
+		// Hoisting it would let the rule win against a declaration written after
+		// it, which is not the order the two were read in.
+		const css = "a{color:red;& b{color:blue}color:green}";
+		expect(minifyFor(css, ["chrome 100"])).toBe(css);
+	});
+
+	it("keeps the nesting where the target reads it", () => {
+		const css = "a{color:red;& b{color:blue}}";
+		expect(minifyFor(css, ["chrome 130"])).toBe(css);
+	});
+
+	it("keeps the nesting where the target reads no `:is()`", () => {
+		// `&` is the parent selector list, which only `:is()` writes out.
+		const css = "a{color:red;& b{color:blue}}";
+		expect(minifyFor(css, ["chrome 60"])).toBe(css);
+	});
+
+	it("keeps the nesting where no target is named", () => {
+		const css = "a{color:red;& b{color:blue}}";
+		expect(new SourceProcessor().process(css, { mode: "minify" }).code).toBe(
+			css
+		);
+	});
+
+	it("keeps the nesting with the rewrite off", () => {
+		const css = "a{color:red;& b{color:blue}}";
+		expect(
+			minifyForWith(css, ["chrome 100"], { lowerUnsupported: false })
+		).toBe(css);
+	});
+
+	it("leaves a rule written in an at-rule where it stands", () => {
+		// The at-rule is what it is written in, and taking it out of that would
+		// take it out of the query too.
+		expect(
+			minifyFor("a{color:red;@media print{color:blue}}", ["chrome 100"])
+		).toBe("a{color:red;@media print{color:blue}}");
+	});
+});
+
+describe("CssSyntax minify — `:dir()` as the attribute it approximates", () => {
+	it("writes it where the target reads no `:dir()` and it is asked for", () => {
+		expect(
+			minifyForWith("a:dir(rtl){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]{color:red}");
+	});
+
+	it("folds the direction's own case", () => {
+		expect(
+			minifyForWith("a:DIR(RTL){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]{color:red}");
+	});
+
+	it("is off until asked for", () => {
+		expect(minifyFor("a:dir(rtl){color:red}", ["chrome 80"])).toBe(
+			"a:dir(rtl){color:red}"
+		);
+	});
+
+	it("keeps it where the target reads `:dir()`", () => {
+		expect(
+			minifyForWith("a:dir(rtl){color:red}", ["chrome 130"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a:dir(rtl){color:red}");
+	});
+
+	it("leaves a `::dir()` alone, which is no pseudo-class", () => {
+		expect(
+			minifyForWith("a::dir(rtl){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a::dir(rtl){color:red}");
+	});
+});
+
+describe("CssSyntax minify — `@custom-media`", () => {
+	const sheet = "@custom-media --m (width>400px);@media (--m){a{color:red}}";
+
+	it("writes the query wherever a condition asks for it", () => {
+		expect(minifyForWith(sheet, ["chrome 120"], { customMedia: true })).toBe(
+			"@media (width>400px){a{color:red}}"
+		);
+	});
+
+	it("writes it into a condition an `and` joins", () => {
+		expect(
+			minifyForWith(
+				"@custom-media --m (width>400px);@media screen and (--m){a{color:red}}",
+				["chrome 120"],
+				{ customMedia: true }
+			)
+		).toBe("@media screen and (width>400px){a{color:red}}");
+	});
+
+	it("is off until asked for", () => {
+		expect(minifyFor(sheet, ["chrome 120"])).toBe(sheet);
+	});
+
+	it("leaves a name nothing states alone", () => {
+		expect(
+			minifyForWith("@media (--nope){a{color:red}}", ["chrome 120"], {
+				customMedia: true
+			})
+		).toBe("@media (--nope){a{color:red}}");
+	});
+
+	it("leaves a condition standing before the rule that names it", () => {
+		// The rules are read in the order they are written, so the query is not
+		// there yet — and the rule naming it is dropped, which no engine reads.
+		expect(
+			minifyForWith(
+				"@media (--m){a{color:red}}@custom-media --m (width>400px);",
+				["chrome 120"],
+				{ customMedia: true }
+			)
+		).toBe("@media (--m){a{color:red}}");
+	});
+});
+
+describe("CssSyntax minify — a `color-mix()` the target cannot read", () => {
+	it("writes the color it mixes to before it", () => {
+		expect(
+			minifyFor("a{color:color-mix(in srgb,red,blue)}", ["chrome 80"])
+		).toBe("a{color:#7f007f;color:color-mix(in srgb,red,blue)}");
+	});
+
+	it("writes one mixed in a polar space too", () => {
+		expect(
+			minifyFor("a{color:color-mix(in oklch,red,blue)}", ["chrome 80"])
+		).toBe("a{color:#ba00c2;color:color-mix(in oklch,red,blue)}");
+	});
+
+	it("writes nothing for a mix that names what it cannot resolve", () => {
+		// `currentcolor` is whatever the element's `color` is, which no fallback
+		// written here can state.
+		const css = "a{color:color-mix(in srgb,currentcolor,red)}";
+		expect(minifyFor(css, ["chrome 80"])).toBe(css);
+	});
+
+	it("writes nothing where the target reads `color-mix()`", () => {
+		expect(
+			minifyFor("a{color:color-mix(in srgb,red,blue)}", ["chrome 130"])
+		).toBe("a{color:color(srgb .5 0 .5)}");
+	});
+
+	it("is off with the fallbacks off", () => {
+		const css = "a{color:color-mix(in srgb,red,blue)}";
+		expect(minifyForWith(css, ["chrome 80"], { colorFallbacks: false })).toBe(
+			css
 		);
 	});
 });

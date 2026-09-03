@@ -13,7 +13,7 @@ Array [
   "/*! a \`color()\`, which the target reads only as the sRGB it names */.t11{color:#6a805d;color:color(a98-rgb .44091 .49971 .37408)}",
   "/*! \`system-ui\`, which the target reaches only by each platform's own name */.t12{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue}",
   "/*! ...and the same where the print left out the separator before the color,
-   which is where the components are read back from */.t13a{text-decoration:underline;text-decoration-style:solid;text-decoration-color:#fff;text-decoration-thickness:2px}.t13b{text-decoration:underline;text-decoration-style:solid;text-decoration-color:#010203}.t13c{text-decoration:underline;text-decoration-style:solid;text-decoration-color:color-mix(in oklch,red,blue)}",
+   which is where the components are read back from */.t13a{text-decoration:underline;text-decoration-style:solid;text-decoration-color:#fff;text-decoration-thickness:2px}.t13b{text-decoration:underline;text-decoration-style:solid;text-decoration-color:#010203}.t13c{text-decoration:underline;text-decoration-style:solid;text-decoration-color:#ba00c2;text-decoration-color:color-mix(in oklch,red,blue)}",
   "/*! a \`text-decoration\` naming more than its line, written as longhands */.t13{text-decoration:underline;text-decoration-style:dotted;text-decoration-color:red;text-decoration-thickness:2px}",
   "/*! a \`color-mix()\`, evaluated where every component is known */.t14{color:#706a43}",
   "/*! a relative color, resolved against the origin it names */.t15{color:#669}",

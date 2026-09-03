@@ -1189,6 +1189,31 @@ describe("wpt css token adjacency", () => {
 /** @type {LoweringFixture[]} */
 const LOWERING_FIXTURES = [
 	{
+		name: "nesting",
+		// The rules the lowering writes on their own, which the source states
+		// inside the one they were written in.
+		produces: ["a b{", "a.x{", ":is(a,section) p{", "main>i{", ":is(a b) c{"],
+		css:
+			"a{color:red;& b{color:blue}&.x{color:green}}" +
+			"a,section{& p{color:teal}}" +
+			"main{& > i{color:navy}}" +
+			"a{& b{& c{color:olive}}}",
+		browsers: ["chrome 100"],
+		html:
+			"<a id=t>t<b id=u>u<c id=z>z</c></b></a>" +
+			"<a id=v class=x>v</a>" +
+			"<section><p id=w>w</p></section>" +
+			"<main><i id=y>y</i></main>",
+		probes: [
+			["#t", "color"],
+			["#u", "color"],
+			["#v", "color"],
+			["#w", "color"],
+			["#y", "color"],
+			["#z", "color"]
+		]
+	},
+	{
 		name: "light-dark()",
 		// The pair the lowering writes, which a script enumerating the computed
 		// custom properties would see where the source has none.

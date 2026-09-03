@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-nesting-lowered minimize-nesting-lowered should compile 1`] = `
+Array [
+  ".a{color:red}.a .b{color:blue}.a.c{color:green}:is(.d,.e) .f{color:teal}.g[dir=rtl]{color:navy}@media (width>400px){.h{color:olive}}.i{color:#ba00c2;color:color-mix(in oklch,red,blue)}",
+]
+`;

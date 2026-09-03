@@ -1,0 +1,32 @@
+@custom-media --wide (width>400px);
+
+.a {
+	color: red;
+	& .b {
+		color: blue;
+	}
+	&.c {
+		color: green;
+	}
+}
+
+.d,
+.e {
+	& .f {
+		color: teal;
+	}
+}
+
+.g:dir(rtl) {
+	color: navy;
+}
+
+@media (--wide) {
+	.h {
+		color: olive;
+	}
+}
+
+.i {
+	color: color-mix(in oklch, red, blue);
+}
