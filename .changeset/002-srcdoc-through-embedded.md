@@ -1,5 +1,5 @@
 ---
-"webpack": major
+"webpack": patch
 ---
 
-Minify an embedded body through the embedded path, dropping two html options.
+Minify an embedded body through the embedded path, dropping three html options.
