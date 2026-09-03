@@ -62,6 +62,9 @@ Array [
   "/*! webpack: an operand a condition already states, whichever rule states it */@media (monochrome){.t47e{color:red}}@supports (display:grid){.t47f{color:red}}@supports ((display:grid) or (display:flex)){.t47g{color:red}}",
   "/*! declined: a chain mixing the two operators is no flat list of either's, and
    two queries are not two operands of anything */@supports (display:grid) and (display:flex) or (display:table){.t47h{color:red}}@media (monochrome),(monochrome){.t47i{color:red}}",
+  "/*! webpack: a media feature is a length, a ratio or an integer and nothing
+   else, so the number in one is written the way a value's number is */@media (480px<=width<=768.5px){.t47j{color:red}}",
+  "/*! declined: a style query compares the tokens as they were written */@container style(--x: 0480.0px){.t47k{color:red}}",
   "/*! webpack: a container query */@container card (width>400px){.t48{color:red}}",
   "/*! webpack: an @supports condition */@supports (display:grid){.t49{color:red}}",
   "/*! webpack: ...on a custom property */@supports (--x:1){.t50{color:red}}",

@@ -3188,6 +3188,23 @@ const collectLengthOnlyFunctions = () => {
 /**
  * @returns {string[]} the functions that take a color argument directly, sorted
  */
+/**
+ * The functions that are a color, out of `<color>`'s own grammar: the calls a
+ * slot taking a color accepts, which is what says a value spelled as one fills
+ * that slot. A gradient is an `<image>` and is not among them.
+ * @returns {string[]} the function names, sorted
+ */
+const collectColorFunctions = () => {
+	const names = [...slotSpellings("<color>")]
+		.filter((one) => one.endsWith("()"))
+		.map((one) => one.slice(0, -2))
+		.sort();
+	if (names.length === 0) {
+		throw new Error("`<color>` names no function: the grammar moved");
+	}
+	return names;
+};
+
 const collectColorArgumentFunctions = () => {
 	/** @type {string[]} */
 	const names = [];
@@ -6447,6 +6464,7 @@ const collectData = async () => {
 		...slashShorthands
 	]);
 	const colorFunctions = collectColorArgumentFunctions();
+	const colorValueFunctions = collectColorFunctions();
 	const colorNames = collectColorNames(colorName);
 	const colorNameValues = collectColorNameValues(colorName);
 	const laterColorNames = collectLaterColorNames();
@@ -6771,6 +6789,10 @@ const BOX_FAMILY_PREFIX = new Map([${boxLonghands
 // hex color rather than a case-sensitive reference (\`element(#id)\`). Only direct
 // arguments: a gradient nested in \`image-set()\` is matched as the gradient.
 const COLOR_ARGUMENT_FUNCTIONS = ${setLiteral(colorFunctions)};
+
+// The functions that are a color rather than take one, out of \`<color>\`'s own
+// grammar — what says a call fills a slot a color fills.
+const COLOR_FUNCTIONS = ${setLiteral(colorValueFunctions)};
 
 // Functions that substitute an arbitrary token sequence, so two identical
 // references need not be one repeated value: with \`--x:1px 2px\`,
@@ -7358,7 +7380,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_RGB = COLOR_NAME_TO_RGB;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.COLOR_SPACE_MODEL = COLOR_SPACE_MODEL;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;

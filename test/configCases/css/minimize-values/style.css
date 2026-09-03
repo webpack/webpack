@@ -138,6 +138,11 @@
    two queries are not two operands of anything */
 @supports (display: grid) and (display: flex) or (display: table) { .t47h { color: red } }
 @media (monochrome), (monochrome) { .t47i { color: red } }
+/*! webpack: a media feature is a length, a ratio or an integer and nothing
+   else, so the number in one is written the way a value's number is */
+@media (0480.0px <= width <= 768.50px) { .t47j { color: red } }
+/*! declined: a style query compares the tokens as they were written */
+@container style(--x: 0480.0px) { .t47k { color: red } }
 /*! webpack: a container query */
 @container card (width > 400px) { .t48 { color: red } }
 /*! webpack: an @supports condition */

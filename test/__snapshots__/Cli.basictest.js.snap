@@ -11150,6 +11150,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-lower-unsupported": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a spelling the \`browserslist\` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as \`rgba()\`, a double-position gradient stop as the two stops it names, \`inset\` / \`overflow\` / \`place-*\` as the longhands they set, \`text-decoration\` as its own longhands where a slot is newer than the shorthand, \`system-ui\` as the stack of platform font names it stands for, a \`:lang()\` or \`:not()\` holding a list as the \`:is()\` that means it, a media feature range as the \`min-\`/\`max-\` pair, and \`light-dark()\` as the custom-property pair a color scheme switches. On by default, and only in effect for a \`browserslist\` target — any other target names no browsers to answer for. Turning it off leaves every such spelling as written, which is what a stylesheet one of these rewrites gets wrong is minified with; it does not make the minifier write a spelling the target cannot read.",
+        "multiple": false,
+        "path": "optimization.minimize.css.lowerUnsupported",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a spelling the \`browserslist\` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as \`rgba()\`, a double-position gradient stop as the two stops it names, \`inset\` / \`overflow\` / \`place-*\` as the longhands they set, \`text-decoration\` as its own longhands where a slot is newer than the shorthand, \`system-ui\` as the stack of platform font names it stands for, a \`:lang()\` or \`:not()\` holding a list as the \`:is()\` that means it, a media feature range as the \`min-\`/\`max-\` pair, and \`light-dark()\` as the custom-property pair a color scheme switches. On by default, and only in effect for a \`browserslist\` target — any other target names no browsers to answer for. Turning it off leaves every such spelling as written, which is what a stylesheet one of these rewrites gets wrong is minified with; it does not make the minifier write a spelling the target cannot read.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-merge-longhands": Object {
     "configs": Array [
       Object {
@@ -11205,13 +11218,13 @@ Object {
   "optimization-minimize-css-remove-dead-rules": Object {
     "configs": Array [
       Object {
-        "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
+        "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
         "multiple": false,
         "path": "optimization.minimize.css.removeDeadRules",
         "type": "boolean",
       },
     ],
-    "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11244,13 +11257,13 @@ Object {
   "optimization-minimize-css-shorten-media-queries": Object {
     "configs": Array [
       Object {
-        "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+        "description": "Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), an \`and\` of two one-sided ranges collapsed into the interval it describes, the \`all\` a query states before an \`and\` (which matches what the condition alone matches), and an operand a condition already states — in \`@supports\` and \`@container\` as well as \`@media\`. On by default.",
         "multiple": false,
         "path": "optimization.minimize.css.shortenMediaQueries",
         "type": "boolean",
       },
     ],
-    "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+    "description": "Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), an \`and\` of two one-sided ranges collapsed into the interval it describes, the \`all\` a query states before an \`and\` (which matches what the condition alone matches), and an operand a condition already states — in \`@supports\` and \`@container\` as well as \`@media\`. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11741,6 +11754,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-css-lower-unsupported": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a spelling the \`browserslist\` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as \`rgba()\`, a double-position gradient stop as the two stops it names, \`inset\` / \`overflow\` / \`place-*\` as the longhands they set, \`text-decoration\` as its own longhands where a slot is newer than the shorthand, \`system-ui\` as the stack of platform font names it stands for, a \`:lang()\` or \`:not()\` holding a list as the \`:is()\` that means it, a media feature range as the \`min-\`/\`max-\` pair, and \`light-dark()\` as the custom-property pair a color scheme switches. On by default, and only in effect for a \`browserslist\` target — any other target names no browsers to answer for. Turning it off leaves every such spelling as written, which is what a stylesheet one of these rewrites gets wrong is minified with; it does not make the minifier write a spelling the target cannot read.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.lowerUnsupported",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a spelling the \`browserslist\` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as \`rgba()\`, a double-position gradient stop as the two stops it names, \`inset\` / \`overflow\` / \`place-*\` as the longhands they set, \`text-decoration\` as its own longhands where a slot is newer than the shorthand, \`system-ui\` as the stack of platform font names it stands for, a \`:lang()\` or \`:not()\` holding a list as the \`:is()\` that means it, a media feature range as the \`min-\`/\`max-\` pair, and \`light-dark()\` as the custom-property pair a color scheme switches. On by default, and only in effect for a \`browserslist\` target — any other target names no browsers to answer for. Turning it off leaves every such spelling as written, which is what a stylesheet one of these rewrites gets wrong is minified with; it does not make the minifier write a spelling the target cannot read.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-css-merge-longhands": Object {
     "configs": Array [
       Object {
@@ -11796,13 +11822,13 @@ Object {
   "optimization-minimize-options-css-remove-dead-rules": Object {
     "configs": Array [
       Object {
-        "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
+        "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
         "multiple": false,
         "path": "optimization.minimizeOptions.css.removeDeadRules",
         "type": "boolean",
       },
     ],
-    "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration an identical later one in the same block makes dead, and a rule an identical later sibling makes dead. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11835,13 +11861,13 @@ Object {
   "optimization-minimize-options-css-shorten-media-queries": Object {
     "configs": Array [
       Object {
-        "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+        "description": "Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), an \`and\` of two one-sided ranges collapsed into the interval it describes, the \`all\` a query states before an \`and\` (which matches what the condition alone matches), and an operand a condition already states — in \`@supports\` and \`@container\` as well as \`@media\`. On by default.",
         "multiple": false,
         "path": "optimization.minimizeOptions.css.shortenMediaQueries",
         "type": "boolean",
       },
     ],
-    "description": "Write a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), and collapse an \`and\` of two one-sided ranges into the interval it describes. On by default.",
+    "description": "Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (\`(min-width:100px)\` -> \`(width>=100px)\`), an \`and\` of two one-sided ranges collapsed into the interval it describes, the \`all\` a query states before an \`and\` (which matches what the condition alone matches), and an operand a condition already states — in \`@supports\` and \`@container\` as well as \`@media\`. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },

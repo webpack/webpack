@@ -1802,6 +1802,77 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 // The `configCases/css/minimize-*` cases cover these transforms end to end, but
 // `minimizer-webpack-plugin` runs `minify` in its worker pool, so nothing there
 // is reachable by the coverage instrument. These drive the same code in-process.
+describe("CssSyntax — every rewrite has a switch", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {import("../lib/css/syntax").CssTransformOptions} transforms which rewrites may run
+	 * @param {string[]=} browsers the target
+	 * @returns {string} the minified serialization
+	 */
+	const off = (css, transforms, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: browsers ? { browsers } : undefined,
+			transforms
+		}).code;
+
+	// A stylesheet one rewrite gets wrong is minified without it while the rest
+	// still applies, which is what every one of these switches is for.
+	const OLD = ["chrome 50"];
+
+	it.each([
+		["a hex alpha", "a{color:#7bffff80}", OLD],
+		[
+			"a double-position stop",
+			"a{background:linear-gradient(red 10% 20%,blue)}",
+			OLD
+		],
+		["an `inset`", "a{inset:1px 2px}", OLD],
+		["an `overflow` pair", "a{overflow:hidden auto}", OLD],
+		["a `place-items`", "a{place-items:center start}", OLD],
+		["a media range", "@media (400px<=width<=700px){a{color:red}}", OLD],
+		[
+			"a `text-decoration`",
+			"a{text-decoration:underline 2px dotted red}",
+			["safari 15"]
+		],
+		["`system-ui`", "a{font-family:system-ui}", OLD],
+		["a `:lang()` list", "a:lang(en,fr){color:red}", ["chrome 100"]],
+		[
+			"a `light-dark()`",
+			"button{background:light-dark(#aaa,#444)}",
+			["chrome 100"]
+		]
+	])("leaves %s where `lowerUnsupported` is off", (_name, css, browsers) => {
+		expect(off(css, { lowerUnsupported: false }, browsers)).toBe(
+			off(css, {}, undefined)
+		);
+	});
+
+	it("leaves what each of the other switches names", () => {
+		// A rule or declaration nothing can read, which `removeDeadRules` drops.
+		const dead = '@charset "utf-8";a{}b{color:#fff;color:#333}';
+		expect(off(dead, { removeDeadRules: false })).toBe(
+			'@charset "utf-8";a{}b{color:#fff;color:#333}'
+		);
+		expect(off(dead, {})).toBe("b{color:#333}");
+		// A condition prelude, which `shortenMediaQueries` shortens.
+		const query =
+			"@media all and (min-width:100px){a{color:red}}" +
+			"@supports (a:b) and (a:b){c{color:red}}";
+		expect(off(query, { shortenMediaQueries: false })).toBe(query);
+		expect(off(query, {})).toBe(
+			"@media (width>=100px){a{color:red}}@supports (a:b){c{color:red}}"
+		);
+		// A shorthand slot holding its own initial, which `shortenValues` drops.
+		expect(
+			off("a{border:medium none currentcolor;transition:opacity .3s 0s}", {
+				shortenValues: false
+			})
+		).toBe("a{border:medium none currentcolor;transition:opacity.3s 0s}");
+	});
+});
+
 describe("CssSyntax — minify transforms, in-process", () => {
 	/**
 	 * @param {string} src css source
@@ -5721,6 +5792,42 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a media feature's own number", () => {
+		it("is written the way a value's number is", () => {
+			// A feature is a `<length>`, a `<ratio>` or an `<integer>` and nothing
+			// else, so the number in one shortens like any other — where a prelude
+			// number elsewhere is An+B, and stripping a `+` there breaks it.
+			expect(minify("@media (min-width:0480.0px){a{color:red}}")).toBe(
+				"@media (width>=480px){a{color:red}}"
+			);
+			expect(minify("@media (0480.0px<=width<=768.50px){a{color:red}}")).toBe(
+				"@media (480px<=width<=768.5px){a{color:red}}"
+			);
+			expect(
+				minifyFor("@media (0480.0px<=width<=768.50px){a{color:red}}", [
+					"chrome 50"
+				])
+			).toBe("@media (min-width:480px) and (max-width:768.5px){a{color:red}}");
+			expect(minify("@container card (width>0400.50px){a{color:red}}")).toBe(
+				"@container card (width>400.5px){a{color:red}}"
+			);
+			// A ratio is two integers, and neither is shortened away.
+			expect(minify("@media (aspect-ratio:16/9){a{color:red}}")).toBe(
+				"@media (aspect-ratio:16/9){a{color:red}}"
+			);
+			// A style query compares the tokens as written, and `@supports` reads a
+			// declaration rather than a feature.
+			const style = "@container style(--x: 0480.0px){a{color:red}}";
+			expect(minify(style)).toBe(style);
+			const supports = "@supports (width:0480.0px){a{color:red}}";
+			expect(minify(supports)).toBe(supports);
+			// ...and a selector's own An+B keeps every sign it was written with.
+			expect(minify("li:nth-child(2n+3){color:red}")).toBe(
+				"li:nth-child(2n+3){color:red}"
+			);
+		});
+	});
+
 	describe("a condition saying what another already says", () => {
 		it("drops the media type a query states for nothing", () => {
 			expect(minify("@media all and (min-width:100px){a{color:red}}")).toBe(
@@ -8638,6 +8745,31 @@ describe("CssSyntax minify — the rest of the target's abilities", () => {
 		).toBe(
 			"a{text-decoration:underline;text-decoration-style:dotted;" +
 				"text-decoration-color:red;text-decoration-thickness:2px}"
+		);
+		// The print leaves out the separator between an ident and a hash or a
+		// call, so the components are read back at the junctions it could have
+		// left bare rather than at its spaces alone.
+		expect(
+			minifyFor("a{text-decoration:underline 2px solid #ffffff}", ["safari 15"])
+		).toBe(
+			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:#fff;text-decoration-thickness:2px}"
+		);
+		expect(
+			minifyFor("a{text-decoration:underline solid rgb(1,2,3)}", ["safari 15"])
+		).toBe(
+			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:#010203}"
+		);
+		// ...and a color that stays a call fills the color slot as a hex does.
+		expect(
+			minifyFor(
+				"a{text-decoration:underline solid color-mix(in oklch,red,blue)}",
+				["safari 15"]
+			)
+		).toBe(
+			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:color-mix(in oklch,red,blue)}"
 		);
 		// An unwritten line is the `none` the shorthand would have set.
 		expect(minifyFor("a{text-decoration:dotted red}", ["safari 15"])).toBe(
