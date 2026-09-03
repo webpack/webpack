@@ -8,6 +8,9 @@
 /*! discard-empty: should not mangle @ rules with decls */
 @font-face { font-family: Helvetica }
 /*! discard-empty: should not mangle @ rules with parameters */
+@layer base;
+/*! ...though `@charset` names the encoding the source was read in, and what is
+   written out is UTF-8 whatever it said */
 @charset "utf-8";
 /*! discard-empty: should remove empty rules */
 h1{}h2{}h4{}h5,h6{}

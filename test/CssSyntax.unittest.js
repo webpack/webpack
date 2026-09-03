@@ -1244,7 +1244,8 @@ describe("CssSyntax — minify comment preservation", () => {
 			'a{color:red}b{color:red}/*! c */@import "x.css";',
 			'a,b{color:red}/*! c */@import "x.css";'
 		],
-		['/*! h */@charset "utf-8";a{top:0}', '/*! h */@charset "utf-8";a{top:0}']
+		// ...and where the rule it stood before is one the print takes out.
+		['/*! h */@charset "utf-8";a{top:0}', "/*! h */a{top:0}"]
 	])(
 		"writes a kept comment ahead of the rule it stood before: %s",
 		(src, out) => {
@@ -1842,9 +1843,36 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(transform("rotate3d(1,0,0,45deg)")).toBe("rotateX(45deg)");
 		expect(transform("rotate3d(0,1,0,45deg)")).toBe("rotateY(45deg)");
 		expect(transform("rotate3d(0,0,1,45deg)")).toBe("rotate(45deg)");
+		// ...and the 2D matrix that leaves is a translation, which reduces again.
 		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,4,5,0,1)")).toBe(
-			"matrix(1,0,0,1,4,5)"
+			"translate(4px,5px)"
 		);
+	});
+
+	it("writes the named function a matrix says in fewer bytes", () => {
+		// A matrix's own numbers are `px`, and each shape read back is exact.
+		expect(transform("matrix(1,0,0,1,100,200)")).toBe("translate(100px,200px)");
+		expect(transform("matrix(1,0,0,1,0,50)")).toBe("translateY(50px)");
+		expect(transform("matrix(2,0,0,3,0,0)")).toBe("scale(2,3)");
+		expect(transform("matrix(2,0,0,2,0,0)")).toBe("scale(2)");
+		expect(transform("matrix(1,0,0,1,0,0)")).toBe("scale(1)");
+		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,100,100,10,1)")).toBe(
+			"translate3d(100px,100px,10px)"
+		);
+		expect(transform("matrix3d(2,0,0,0,0,3,0,0,0,0,4,0,0,0,0,1)")).toBe(
+			"scale3d(2,3,4)"
+		);
+		// A rotation is rational only at a quarter turn, so no other angle comes
+		// back out of a matrix — and a shear names none of these shapes at all.
+		expect(transform("matrix(0,1,-1,0,0,0)")).toBe("rotate(90deg)");
+		expect(transform("matrix(0,-1,1,0,0,0)")).toBe("rotate(270deg)");
+		expect(transform("matrix(1.41421,1.41421,-1.16485,1.66358,100,200)")).toBe(
+			"matrix(1.41421,1.41421,-1.16485,1.66358,100,200)"
+		);
+		expect(transform("matrix(1,0,1,1,0,0)")).toBe("matrix(1,0,1,1,0,0)");
+		// A matrix takes `<number>` alone, so a unit is no matrix to read.
+		expect(transform("matrix(1,0,0,1,10px,0)")).toBe("matrix(1,0,0,1,10px,0)");
+		expect(transform("matrix(1,0,0,1,0)")).toBe("matrix(1,0,0,1,0)");
 	});
 
 	// One reduction uncovers the next, which is the loop's whole reason to exist.
@@ -2032,12 +2060,18 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			expect(min(css)).toBe(css);
 		});
 
-		// The bytes an engine reads a charset rule as are the literal `@charset "`
-		// (CSS Syntax 3 §3.2), so lowercasing one would turn a rule the engine
-		// drops into one that sets the sheet's encoding.
-		it("leaves a cased `@charset` alone", () => {
-			expect(min('@CHARSET "utf-8";a{b:c}')).toBe('@CHARSET "utf-8";a{b:c}');
-			expect(min('@charset "utf-8";a{b:c}')).toBe('@charset "utf-8";a{b:c}');
+		// `@charset` names the encoding the source was read in, and what is written
+		// out is UTF-8 whatever it said.
+		it("takes a `@charset` out however it is cased", () => {
+			expect(min('@CHARSET "utf-8";a{b:c}')).toBe("a{b:c}");
+			expect(min('@charset "utf-8";a{b:c}')).toBe("a{b:c}");
+			expect(min('@charset "iso-8859-1";a{b:c}')).toBe("a{b:c}");
+		});
+
+		// An engine reads only the literal `@charset "` (CSS Syntax 3 §3.2), so a
+		// cased rule — which a block makes no charset rule anyway — keeps its bytes.
+		it("leaves a cased `@charset` carrying a block alone", () => {
+			expect(min('@CHARSET "utf-8"{}a{b:c}')).toBe('@CHARSET "utf-8"{}a{b:c}');
 		});
 
 		// Both are the same declaration however they are spelled, so a rule an
@@ -4988,6 +5022,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 		});
 
+		it("writes a run of null cells as the one token it is", () => {
+			// A cell name holds no `.`, so however many are written they are one
+			// null cell token (CSS Grid 2 §7.3) — and the column count is unchanged.
+			expect(minify('a{grid-template-areas:"head head""foot ...."}')).toBe(
+				'a{grid-template-areas:"head head""foot ."}'
+			);
+			expect(minify('a{grid-template-areas:"... ... a"}')).toBe(
+				'a{grid-template-areas:". . a"}'
+			);
+		});
+
 		it("keeps a value that is not a row list", () => {
 			expect(minify("a{grid-template-areas:none}")).toBe(
 				"a{grid-template-areas:none}"
@@ -7595,10 +7640,10 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 	});
 
 	it("writes none where there is no color to write", () => {
-		// A relative color's components are the referenced color's, not numbers.
-		expect(minifyFor("a{color:oklch(from red l c h)}", ["chrome 100"])).toBe(
-			"a{color:oklch(from red l c h)}"
-		);
+		// A relative color whose result sRGB cannot show has no hex to fall back to.
+		expect(
+			minifyFor("a{color:oklch(from red calc(l * 0.8) c h)}", ["chrome 100"])
+		).toBe("a{color:oklch(from red calc(l*.8) c h)}");
 		// A custom property's value is handed back as written.
 		expect(minifyFor("a{--x:oklch(0.7 0.1 20)}", ["chrome 100"])).toBe(
 			"a{--x:oklch(0.7 0.1 20)}"
@@ -7620,14 +7665,14 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 		expect(
 			minifyFor("a{color:light-dark(oklch(0.7 0.1 20),red)}", ["chrome 100"])
 		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+		// A custom color space is one nothing here can fold, so the `color()` it
+		// stands in stays — and the fallback would be dropped with it.
 		expect(
 			minifyFor(
-				"a{background:linear-gradient(oklch(0.7 0.1 20),color(display-p3 1 0 0))}",
+				"a{background:linear-gradient(oklch(0.7 0.1 20),color(--my 1 0 0))}",
 				["chrome 100"]
 			)
-		).toBe(
-			"a{background:linear-gradient(oklch(.7 .1 20),color(display-p3 1 0 0))}"
-		);
+		).toBe("a{background:linear-gradient(oklch(.7 .1 20),color(--my 1 0 0))}");
 	});
 
 	it("folds only the functions the target is missing", () => {
@@ -7668,6 +7713,872 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 	it("writes none with no target to answer for", () => {
 		expect(minifyFor("a{color:lab(40% 56.6 39)}")).toBe(
 			"a{color:lab(40% 56.6 39)}"
+		);
+	});
+});
+
+describe("CssSyntax minify — unusedSymbols", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} unusedSymbols the names nothing uses
+	 * @returns {string} its minified serialization
+	 */
+	const withoutSymbols = (css, unusedSymbols) =>
+		new SourceProcessor().process(css, { mode: "minify", unusedSymbols }).code;
+
+	it("takes out a rule that can only match through an unused name", () => {
+		expect(
+			withoutSymbols(
+				":root{--color:red}.foo{color:var(--color)}" +
+					"@keyframes fade-in{from{opacity:0}to{opacity:1}}.bar{color:green}",
+				["foo", "fade-in", "--color"]
+			)
+		).toBe(".bar{color:green}");
+		// An id names one as much as a class does.
+		expect(withoutSymbols("#gone{color:red}.kept{color:blue}", ["gone"])).toBe(
+			".kept{color:blue}"
+		);
+		// A descendant of an unused name cannot match either.
+		expect(
+			withoutSymbols(".foo .child{color:red}.kept{color:blue}", ["foo"])
+		).toBe(".kept{color:blue}");
+	});
+
+	it("keeps the selectors of a list that can still match", () => {
+		expect(withoutSymbols(".gone,.kept{margin:0}", ["gone"])).toBe(
+			".kept{margin:0}"
+		);
+		expect(
+			withoutSymbols(".gone,.other{margin:0}.kept{padding:0}", ["gone"])
+		).toBe(".other{margin:0}.kept{padding:0}");
+	});
+
+	it("leaves a name a functional pseudo holds", () => {
+		// `:not(.gone)` matches *more* once nothing carries the class, and
+		// `:is(.gone, .kept)` still matches through its other half.
+		expect(withoutSymbols("a:not(.gone){color:red}", ["gone"])).toBe(
+			"a:not(.gone){color:red}"
+		);
+		expect(withoutSymbols("a:is(.gone,.kept){color:red}", ["gone"])).toBe(
+			"a:is(.gone,.kept){color:red}"
+		);
+		// Nor one inside an attribute selector's value.
+		expect(withoutSymbols('a[data-x=".gone"]{color:red}', ["gone"])).toBe(
+			'a[data-x=".gone"]{color:red}'
+		);
+	});
+
+	it("takes out an `@keyframes` under an unused name, and no other", () => {
+		expect(
+			withoutSymbols(
+				"@keyframes gone{from{opacity:0}}@keyframes stay{from{opacity:0}}",
+				["gone"]
+			)
+		).toBe("@keyframes stay{0%{opacity:0}}");
+		// Every vendor spelling of the rule names the same animation.
+		expect(
+			withoutSymbols("@-webkit-keyframes gone{from{opacity:0}}", ["gone"])
+		).toBe("");
+	});
+
+	it("takes out a custom property nothing reads, and no other", () => {
+		expect(withoutSymbols(":root{--gone:red;--kept:blue}", ["--gone"])).toBe(
+			":root{--kept:blue}"
+		);
+		// A bare name is a class, an id or an animation — never a custom property.
+		expect(withoutSymbols(":root{--gone:red}", ["gone"])).toBe(
+			":root{--gone:red}"
+		);
+	});
+
+	it("reaches a rule at any depth", () => {
+		expect(withoutSymbols(".a{color:red;.gone{color:blue}}", ["gone"])).toBe(
+			".a{color:red}"
+		);
+		expect(
+			withoutSymbols("@media print{.gone{color:red}.kept{color:blue}}", [
+				"gone"
+			])
+		).toBe("@media print{.kept{color:blue}}");
+		// A block left with nothing goes with it.
+		expect(withoutSymbols("@media print{.gone{color:red}}", ["gone"])).toBe("");
+	});
+
+	it("names a rule by what it holds rather than by where it stands", () => {
+		// The parser pools a finished rule's node, so a mark left on one would land
+		// on whatever is built over it next — every rule after the first would go.
+		expect(
+			withoutSymbols(".gone{color:red}.kept{color:green}.other{color:blue}", [
+				"gone"
+			])
+		).toBe(".kept{color:green}.other{color:blue}");
+	});
+
+	it("reads a name through the escapes it is written with", () => {
+		expect(
+			withoutSymbols(".gone\\.x{color:red}.kept{color:blue}", ["gone.x"])
+		).toBe(".kept{color:blue}");
+		// An escape outside a class or an id names nothing to match.
+		expect(withoutSymbols("\\.esc{color:red}", ["esc"])).toBe(
+			"\\.esc{color:red}"
+		);
+		// ...and neither does a `.` the input never gave a name.
+		expect(withoutSymbols(".{color:red}.kept{color:blue}", ["gone"])).toBe(
+			".{color:red}.kept{color:blue}"
+		);
+	});
+
+	it("writes every rule with no names to take out", () => {
+		expect(withoutSymbols(".foo{color:red}")).toBe(".foo{color:red}");
+		expect(withoutSymbols(".foo{color:red}", [])).toBe(".foo{color:red}");
+	});
+});
+
+describe("CssSyntax minify — the predefined color spaces", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its minified serialization, with no target to answer for
+	 */
+	const minify = (css) => minifyFor(css);
+
+	it("writes the color a `color()` names", () => {
+		expect(minify("a{color:color(srgb 1 0 0)}")).toBe("a{color:red}");
+		expect(minify("a{color:color(srgb 100% 0% 0%)}")).toBe("a{color:red}");
+		expect(minify("a{color:color(rec2020 0 0 0)}")).toBe("a{color:#000}");
+		// `none` computes as zero wherever it is read as a number.
+		expect(minify("a{color:color(srgb none none none)}")).toBe("a{color:#000}");
+		expect(minify("a{color:color(srgb 1 0 0/.5)}")).toBe("a{color:#ff000080}");
+	});
+
+	it("keeps one it cannot pin down", () => {
+		// A color space of the author's own, which nothing here defines.
+		expect(minify("a{color:color(--my 1 2 3)}")).toBe(
+			"a{color:color(--my 1 2 3)}"
+		);
+		// ...and one sRGB cannot show, which hex would clip to another color.
+		expect(minify("a{color:color(display-p3 1 0 0)}")).toBe(
+			"a{color:color(display-p3 1 0 0)}"
+		);
+		// An alpha outside 0..1 is no color at all.
+		expect(minify("a{color:color(srgb 1 0 0/1.5)}")).toBe(
+			"a{color:color(srgb 1 0 0/1.5)}"
+		);
+		expect(minify("a{color:color(srgb 1 0)}")).toBe("a{color:color(srgb 1 0)}");
+		expect(minify("a{color:color(srgb 1 0 x)}")).toBe(
+			"a{color:color(srgb 1 0 x)}"
+		);
+		expect(minify("a{color:color(srgb 1 0 0/x)}")).toBe(
+			"a{color:color(srgb 1 0 0/x)}"
+		);
+		// A comma separates nothing here, and an alpha stands after the one slash
+		// the grammar has — reading either as a space paints what an engine drops.
+		expect(minify("a{color:color(srgb 0, 0, 0)}")).toBe(
+			"a{color:color(srgb 0,0,0)}"
+		);
+		expect(minify("a{color:color(srgb 1 1 1 1)}")).toBe(
+			"a{color:color(srgb 1 1 1 1)}"
+		);
+		expect(minify("a{color:color(srgb 1 0 0/.5/.5)}")).toBe(
+			"a{color:color(srgb 1 0 0/.5/.5)}"
+		);
+	});
+
+	it("reads a space through its own transfer", () => {
+		expect(minify("a{color:color(prophoto-rgb .5 .2 .1)}")).toBe(
+			"a{color:#c20715}"
+		);
+		// Chromium reads these two through a function of its own, which no margin
+		// bridges, so the color it names is left for it to compute.
+		expect(minify("a{color:color(a98-rgb .5 .2 .1)}")).toBe(
+			"a{color:color(a98-rgb .5 .2 .1)}"
+		);
+		expect(minify("a{color:color(rec2020 .5 .2 .1)}")).toBe(
+			"a{color:color(rec2020 .5 .2 .1)}"
+		);
+	});
+
+	it("declines a mix a percentage puts outside 0..100", () => {
+		// `<percentage [0,100]>` (CSS Color 5 §2.1), whether the other is written or
+		// left for this one to leave: an engine drops the declaration either way.
+		const over = "a{color:color-mix(in hsl,red 150%,#00f 20%)}";
+		expect(minify(over)).toBe(over);
+		const only = "a{color:color-mix(in hsl,red 150%,#00f)}";
+		expect(minify(only)).toBe(only);
+		const under = "a{color:color-mix(in hsl,red -10%,#00f)}";
+		expect(minify(under)).toBe(under);
+		// The edges of the range are a mix like any other.
+		expect(minify("a{color:color-mix(in hsl,red 100%,#00f 0%)}")).toBe(
+			"a{color:red}"
+		);
+		expect(minify("a{color:color-mix(in hsl,red 60%,#00f 60%)}")).toBe(
+			"a{color:#f0f}"
+		);
+	});
+
+	it("mixes in hwb, which is the sRGB byte another way round", () => {
+		expect(minify("a{color:color-mix(in hwb,red,blue)}")).toBe("a{color:#f0f}");
+		expect(minify("a{color:color-mix(in hwb,#f00 30%,#00f)}")).toBe(
+			"a{color:#90f}"
+		);
+	});
+
+	it("reads an alpha written as a percentage", () => {
+		expect(minify("a{color:color(srgb 1 0 0/50%)}")).toBe("a{color:#ff000080}");
+	});
+
+	it("falls back through the widest gamut the target reads", () => {
+		// Safari 15 reads `color()` and no Lab family, so the color goes out three
+		// times: the clipped hex, the gamut P3 does show, and the author's own.
+		expect(
+			minifyFor("a{color:oklch(0.6322 0.2577 29.23)}", ["safari 15"])
+		).toBe(
+			"a{color:#ff0704;color:color(display-p3 .923508 .207882 .145098);" +
+				"color:oklch(.6322 .2577 29.23)}"
+		);
+		// A target reading no `color()` has only the hex to fall back to.
+		expect(
+			minifyFor("a{color:oklch(0.6322 0.2577 29.23)}", ["chrome 100"])
+		).toBe("a{color:#ff0704;color:oklch(.6322 .2577 29.23)}");
+		// ...and a color P3 cannot show either takes no rung of its own.
+		expect(minifyFor("a{color:oklch(0.7 0.4 150)}", ["safari 15"])).toBe(
+			"a{color:#00d600;color:oklch(.7 .4 150)}"
+		);
+		// A component the wider gamut fills outright prints as the whole number.
+		expect(
+			minifyFor("a{color:oklch(0.648574 0.299485 28.958137)}", ["safari 15"])
+		).toBe(
+			"a{color:red;color:color(display-p3 1 .00000312208 .00000392647);" +
+				"color:oklch(.648574 .299485 28.9581)}"
+		);
+		// The rung carries the alpha, and every color of the declaration.
+		expect(
+			minifyFor("a{color:oklch(0.6322 0.2577 29.23/.5)}", ["safari 15"])
+		).toBe(
+			"a{color:#ff070480;color:color(display-p3 .923508 .207882 .145098/.5);" +
+				"color:oklch(.6322 .2577 29.23/.5)}"
+		);
+		// An alpha the engine stores as `255` is the opaque color, so the rung
+		// carries no alpha rather than an empty one.
+		expect(
+			minifyFor("a{color:oklch(0.6322 0.2577 29.23/.999)}", ["safari 15"])
+		).toBe(
+			"a{color:#ff0704;color:color(display-p3 .923508 .207882 .145098);" +
+				"color:oklch(.6322 .2577 29.23/.999)}"
+		);
+		// A gradient holding one color the target reads and one it does not takes
+		// the rung over the second alone.
+		expect(
+			minifyFor(
+				"a{background:linear-gradient(hwb(120 20% 30%),oklch(0.6322 0.2577 29.23))}",
+				["safari 15"]
+			)
+		).toBe(
+			"a{background:linear-gradient(hwb(120 20% 30%),#ff0704);" +
+				"background:linear-gradient(hwb(120 20% 30%),color(display-p3 .923508 .207882 .145098));" +
+				"background:linear-gradient(hwb(120 20% 30%),oklch(.6322 .2577 29.23))}"
+		);
+	});
+});
+
+describe("CssSyntax minify — color-mix()", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its minified serialization, with no target to answer for
+	 */
+	const minify = (css) => minifyFor(css);
+
+	it("writes the color a mix names", () => {
+		expect(
+			minify(
+				"a{color:color-mix(in hsl, hsl(120deg 10% 20%) 25%, hsl(30deg 30% 40%))}"
+			)
+		).toBe("a{color:#706a43}");
+		expect(
+			minify(
+				"a{color:color-mix(in hsl, hsl(120deg 10% 20%), hsl(30deg 30% 40%))}"
+			)
+		).toBe("a{color:#545c3d}");
+		expect(minify("a{color:color-mix(in srgb, red 25%, blue)}")).toBe(
+			"a{color:#4000bf}"
+		);
+		// A percentage may be written either side of the color it weights.
+		expect(minify("a{color:color-mix(in srgb, 25% red, blue)}")).toBe(
+			"a{color:#4000bf}"
+		);
+		expect(minify("a{color:color-mix(in xyz, #101010, #f0f0f0 30%)}")).toBe(
+			"a{color:#8d8d8d}"
+		);
+		expect(
+			minify("a{color:color-mix(in display-p3, #112233, #445566 25%)}")
+		).toBe("a{color:#1e2f40}");
+	});
+
+	it("keeps a mix it cannot pin down", () => {
+		// A color computed from the element, a substitution, and a space nothing
+		// here defines.
+		expect(minify("a{color:color-mix(in srgb, red, currentcolor)}")).toBe(
+			"a{color:color-mix(in srgb,red,currentcolor)}"
+		);
+		expect(minify("a{color:color-mix(in srgb, red, var(--x))}")).toBe(
+			"a{color:color-mix(in srgb,red,var(--x))}"
+		);
+		expect(minify("a{color:color-mix(in oklab-ish, red, blue)}")).toBe(
+			"a{color:color-mix(in oklab-ish,red,blue)}"
+		);
+		// A channel landing on a `.5` boundary is where implementations disagree.
+		expect(minify("a{color:color-mix(in srgb, red, blue)}")).toBe(
+			"a{color:color-mix(in srgb,red,blue)}"
+		);
+		// ...and a mix sRGB cannot show has no hex to write.
+		expect(minify("a{color:color-mix(in oklch, red 37%, blue)}")).toBe(
+			"a{color:color-mix(in oklch,red 37%,blue)}"
+		);
+	});
+
+	it.each([
+		["one color", "color-mix(in srgb,red)"],
+		["no `in`", "color-mix(srgb,red,blue)"],
+		["a hue method naming no hue", "color-mix(in hsl longer arc,red,blue)"],
+		[
+			"a method the spec does not give",
+			"color-mix(in hsl sideways hue,red,blue)"
+		],
+		["more than a space and a method", "color-mix(in hsl a b c,red,blue)"],
+		["two percentages on one color", "color-mix(in srgb,red 10% 20%,blue)"],
+		["a percentage that is not one", "color-mix(in srgb,red 10px,blue)"],
+		["percentages summing to nothing", "color-mix(in srgb,red 0%,blue 0%)"],
+		["a hash that is no color", "color-mix(in srgb,#zzz,red)"],
+		["a hash of no color's length", "color-mix(in srgb,#12345,red)"],
+		["a name no color carries", "color-mix(in srgb,nothing,red)"],
+		["a string", 'color-mix(in srgb,"s",red)'],
+		["a call of the wrong arity", "color-mix(in srgb,rgb(1 2),red)"],
+		["a call no color function names", "color-mix(in srgb,url(x),red)"],
+		["a percentage below zero", "color-mix(in srgb,red -10%,blue)"]
+	])("keeps a mix naming %s", (_name, css) => {
+		expect(minify(`a{color:${css}}`)).toBe(`a{color:${css}}`);
+	});
+
+	it("reads a hue the way the method it was given names", () => {
+		// Each method takes the second hue its own way round the circle; two pairs,
+		// since the shorter arc is also the increasing one.
+		/**
+		 * @param {string} method the hue interpolation method
+		 * @param {string} first the first color
+		 * @param {string} second the second color
+		 * @returns {string} the minified declaration
+		 */
+		const mix = (method, first, second) =>
+			minify(`a{color:color-mix(in hsl ${method} hue,${first} 30%,${second})}`);
+		/** @type {[string, string]} */
+		const rising = ["#804d4d", "#4d8080"];
+		expect(mix("shorter", ...rising)).toBe("a{color:#4d8052}");
+		expect(mix("decreasing", ...rising)).toBe("a{color:#4d5280}");
+		/** @type {[string, string]} */
+		const falling = ["#4d8080", "#804d4d"];
+		expect(mix("longer", ...falling)).toBe("a{color:#807b4d}");
+		expect(mix("increasing", ...falling)).toBe("a{color:#804d7b}");
+		// The shorter arc across zero, and the longer one between two near hues.
+		expect(
+			minify("a{color:color-mix(in hsl,hsl(350 50% 40%) 30%,hsl(10 50% 40%))}")
+		).toBe("a{color:#993a33}");
+	});
+
+	it("keeps a polar mix an achromatic color reaches with no hue", () => {
+		// A gray converts into hsl and hwb with its hue missing, and the engine
+		// interpolates the other color's own rather than the zero it lands on.
+		for (const css of [
+			"color-mix(in hsl,green,#fff)",
+			"color-mix(in hsl,green,#000)",
+			"color-mix(in hwb,green,gray)",
+			// ...and a hue written beside a zero saturation is lost the same way.
+			"color-mix(in hsl,green,hsl(50 0% 100%))"
+		]) {
+			expect(minify(`a{color:${css}}`)).toBe(`a{color:${css}}`);
+		}
+		// A space with no hue takes the same color and folds the mix as before.
+		expect(minify("a{color:color-mix(in srgb,#000 25%,#fff)}")).toBe(
+			"a{color:#bfbfbf}"
+		);
+	});
+
+	it("reads its own hue method, not one a nested mix left behind", () => {
+		// The nested mix resolves through this same fold, so a method held in module
+		// state would be the inner one's by the time the outer interpolates.
+		const inner = "color-mix(in hsl shorter hue,#804d4d 30%,#4d8080)";
+		expect(minify(`a{color:${inner}}`)).toBe("a{color:#4d8052}");
+		expect(
+			minify(`a{color:color-mix(in hsl longer hue,${inner} 30%,#804d4d)}`)
+		).toBe("a{color:#774d80}");
+		// Which is the color the outer names once the inner one is written out.
+		expect(
+			minify("a{color:color-mix(in hsl longer hue,#4d8052 30%,#804d4d)}")
+		).toBe("a{color:#774d80}");
+		expect(
+			minify(
+				"a{color:color-mix(in hsl longer hue,hsl(30 50% 40%) 30%,hsl(60 50% 40%))}"
+			)
+		).toBe("a{color:#339975}");
+		// ...and the longer one the other way round.
+		expect(
+			minify(
+				"a{color:color-mix(in hsl longer hue,hsl(60 50% 40%) 30%,hsl(30 50% 40%))}"
+			)
+		).toBe("a{color:#8a3399}");
+		// `transparent` is a color like any other, and contributes none of its hue.
+		expect(minify("a{color:color-mix(in srgb,transparent,#102030)}")).toBe(
+			"a{color:#10203080}"
+		);
+		// ...whether it is written as the keyword or as the hex naming it.
+		expect(
+			minifyFor("a{color:color-mix(in srgb,transparent,#102030)}", [
+				"chrome 50"
+			])
+		).toBe("a{color:rgba(16,32,48,.5)}");
+	});
+});
+
+describe("CssSyntax minify — relative colors", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its minified serialization, with no target to answer for
+	 */
+	const minify = (css) => minifyFor(css);
+
+	it("writes the color a relative reference names", () => {
+		expect(minify("a{color:rgb(from rebeccapurple r calc(g * 2) b)}")).toBe(
+			"a{color:#669}"
+		);
+		// Every channel keyword the function names is bound, in any order.
+		expect(minify("a{color:rgb(from red b g r)}")).toBe("a{color:#00f}");
+		expect(minify("a{color:oklch(from red l c h)}")).toBe("a{color:red}");
+		expect(minify("a{color:hsl(from red h s l)}")).toBe("a{color:red}");
+		expect(minify("a{color:rgb(from red calc(r - 50) g b)}")).toBe(
+			"a{color:#cd0000}"
+		);
+		// ...including the alpha, which carries over where nothing writes it.
+		expect(minify("a{color:rgb(from red r g b/calc(alpha * 0.5))}")).toBe(
+			"a{color:#ff000080}"
+		);
+	});
+
+	it("keeps one it cannot pin down", () => {
+		expect(minify("a{color:rgb(from var(--x) r g b)}")).toBe(
+			"a{color:rgb(from var(--x) r g b)}"
+		);
+		// `none` takes the other color's value, which is not a number to bind.
+		expect(minify("a{color:rgb(from red r g none)}")).toBe(
+			"a{color:rgb(from red r g none)}"
+		);
+		// A result sRGB cannot show has no hex to write.
+		expect(minify("a{color:lch(from slateblue calc(l * 1.1) c h)}")).toBe(
+			"a{color:lch(from #6a5acd calc(l*1.1) c h)}"
+		);
+	});
+
+	it.each([
+		["nothing after `from`", "rgb(from red)"],
+		["a channel missing", "rgb(from red r g)"],
+		["a percentage, which names no channel", "rgb(from red 50% g b)"],
+		["a call that is no expression", "rgb(from red url(x) g b)"],
+		["a keyword the function does not name", "rgb(from red l g b)"],
+		["an expression that does not reduce", "rgb(from red calc(r*1px) g b)"],
+		["an angle where a number belongs", "rgb(from red 5deg g b)"],
+		["a space of the author's own", "color(from red --my r g b)"],
+		["a polar space `color()` does not take", "color(from red oklch r g b)"],
+		["a slash with no alpha after it", "rgb(from red r g b/)"],
+		["an alpha outside 0..1", "rgb(from red r g b/2)"],
+		["more than the channels and an alpha", "rgb(from red r g b/1 1)"],
+		["nothing at all", "rgb(from)"],
+		["no space for `color()` to read", "color(from red)"],
+		["a keyword nothing binds", "rgb(from red calc(q*2) g b)"],
+		["an expression of two arguments", "rgb(from red min(r,2) g b)"],
+		["an expression of two units", "rgb(from red calc(r*1px + 1em) g b)"],
+		["a number where the hue takes an angle", "hsl(from red calc(h*1) s l)"],
+		["an alpha that is neither", "rgb(from red r g b/x)"],
+		["a fourth channel", "rgb(from red r g b b)"],
+		["an expression of no arithmetic", "rgb(from red calc(r*url(x)) g b)"],
+		["an expression of no tokens", "rgb(from red calc(r@ 2) g b)"]
+	])("keeps a relative reference naming %s", (_name, css) => {
+		expect(minify(`a{color:${css}}`)).toBe(`a{color:${css}}`);
+	});
+
+	it("reads a channel written any way the function takes", () => {
+		// A hue is an angle, and the alpha may be a percentage.
+		expect(minify("a{color:hsl(from red 240deg s l)}")).toBe("a{color:#00f}");
+		expect(minify("a{color:rgb(from red r g b/50%)}")).toBe(
+			"a{color:#ff000080}"
+		);
+		// A `color()` states the space its channels belong to.
+		expect(minify("a{color:color(from red srgb b g r)}")).toBe("a{color:#00f}");
+	});
+});
+
+describe("CssSyntax minify — the rest of the target's abilities", () => {
+	it("writes the stack `system-ui` names", () => {
+		const stack =
+			"system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto," +
+			"Noto Sans,Ubuntu,Cantarell,Helvetica Neue";
+		expect(minifyFor("a{font-family:system-ui}", ["chrome 50"])).toBe(
+			`a{font-family:${stack}}`
+		);
+		// Whatever stands after it stays after the stack.
+		expect(
+			minifyFor("a{font-family:system-ui,sans-serif}", ["chrome 50"])
+		).toBe(`a{font-family:${stack},sans-serif}`);
+		expect(minifyFor("a{font-family:system-ui}", ["chrome 130"])).toBe(
+			"a{font-family:system-ui}"
+		);
+		// A custom property's value is handed back as written.
+		expect(minifyFor("a{--x:system-ui}", ["chrome 50"])).toBe(
+			"a{--x:system-ui}"
+		);
+	});
+
+	it("writes a `text-decoration` naming more than its line as longhands", () => {
+		// The line stays in the shorthand, which is what resets the family.
+		expect(
+			minifyFor("a{text-decoration:underline 2px dotted red}", ["safari 15"])
+		).toBe(
+			"a{text-decoration:underline;text-decoration-style:dotted;" +
+				"text-decoration-color:red;text-decoration-thickness:2px}"
+		);
+		// An unwritten line is the `none` the shorthand would have set.
+		expect(minifyFor("a{text-decoration:dotted red}", ["safari 15"])).toBe(
+			"a{text-decoration:none;text-decoration-style:dotted;text-decoration-color:red}"
+		);
+		// Only where a slot the target cannot read is written: Chrome 60 reads a
+		// style and not a thickness.
+		expect(
+			minifyFor("a{text-decoration:underline dotted}", ["chrome 60"])
+		).toBe("a{text-decoration:underline dotted}");
+		expect(minifyFor("a{text-decoration:underline 2px}", ["chrome 60"])).toBe(
+			"a{text-decoration:underline;text-decoration-thickness:2px}"
+		);
+		expect(
+			minifyFor("a{text-decoration:underline 2px dotted red}", ["chrome 130"])
+		).toBe("a{text-decoration:underline 2px dotted red}");
+		// A line alone is as old as the property, and a value no slot takes is one
+		// this cannot part.
+		expect(minifyFor("a{text-decoration:underline}", ["safari 15"])).toBe(
+			"a{text-decoration:underline}"
+		);
+		expect(minifyFor("a{text-decoration:underline foo}", ["safari 15"])).toBe(
+			"a{text-decoration:underline foo}"
+		);
+		expect(
+			minifyFor("a{text-decoration:underline underline}", ["safari 15"])
+		).toBe("a{text-decoration:underline underline}");
+		// A CSS-wide keyword is no slot's value; it is the whole declaration's.
+		expect(
+			minifyFor("a{text-decoration:underline inherit}", ["safari 15"])
+		).toBe("a{text-decoration:underline inherit}");
+	});
+});
+
+describe("CssSyntax minify — pseudo-class replacement", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {{ [name: string]: string }=} pseudoClasses the classes to write instead
+	 * @returns {string} its minified serialization
+	 */
+	const withClasses = (css, pseudoClasses) =>
+		new SourceProcessor().process(css, { mode: "minify", pseudoClasses }).code;
+
+	const NAMED = { "focus-visible": "focus-visible", hover: "hovered" };
+
+	it("writes the class the caller named", () => {
+		expect(withClasses("a:focus-visible{color:red}", NAMED)).toBe(
+			"a.focus-visible{color:red}"
+		);
+		expect(withClasses("a:hover{color:red}", NAMED)).toBe(
+			"a.hovered{color:red}"
+		);
+		expect(withClasses("a:hover:focus-visible{color:red}", NAMED)).toBe(
+			"a.hovered.focus-visible{color:red}"
+		);
+		// A pseudo-class matches ASCII case-insensitively; the class does not.
+		expect(withClasses("a:HOVER{color:red}", NAMED)).toBe(
+			"a.hovered{color:red}"
+		);
+		// ...at any depth, since the argument holds selectors of its own.
+		expect(withClasses("a:not(:hover){color:red}", NAMED)).toBe(
+			"a:not(.hovered){color:red}"
+		);
+		expect(withClasses("a:is(:hover,.x){color:red}", NAMED)).toBe(
+			"a:is(.hovered,.x){color:red}"
+		);
+	});
+
+	it("writes none where a class is not what stands in", () => {
+		// A pseudo-element and a functional pseudo of the same name are neither.
+		expect(withClasses("a::hover{color:red}", NAMED)).toBe(
+			"a::hover{color:red}"
+		);
+		expect(withClasses("a:not(::hover){color:red}", NAMED)).toBe(
+			"a:not(::hover){color:red}"
+		);
+		expect(withClasses("a:not(:hover(1)){color:red}", NAMED)).toBe(
+			"a:not(:hover(1)){color:red}"
+		);
+		// A `:name` inside a quoted attribute value is nobody's pseudo.
+		expect(withClasses('a:not([data-x=":hover"]){color:red}', NAMED)).toBe(
+			'a:not([data-x=":hover"]){color:red}'
+		);
+		// A pseudo nothing named, and a class of the same name already written.
+		expect(withClasses("a:focus{color:red}", NAMED)).toBe("a:focus{color:red}");
+		expect(withClasses("a:not(:focus){color:red}", NAMED)).toBe(
+			"a:not(:focus){color:red}"
+		);
+		// A comment prints away wherever it stands, leaving an empty part behind.
+		expect(withClasses("a:/*c*/hover{color:red}", NAMED)).toBe(
+			"a.hovered{color:red}"
+		);
+		expect(withClasses("a/*c*/:hover{color:red}", NAMED)).toBe(
+			"a.hovered{color:red}"
+		);
+		expect(withClasses("a:hover/*c*/{color:red}", NAMED)).toBe(
+			"a.hovered{color:red}"
+		);
+		expect(withClasses(".hover{color:red}", NAMED)).toBe(".hover{color:red}");
+		expect(withClasses("a:hover{color:red}")).toBe("a:hover{color:red}");
+	});
+
+	it("writes none after a pseudo-element, which takes no class", () => {
+		// Selectors 4 §3.5: only a pseudo-class follows a pseudo-element, so a class
+		// written there would match nothing at all.
+		expect(withClasses("a::before:hover{color:red}", NAMED)).toBe(
+			"a:before:hover{color:red}"
+		);
+		// Whichever colon it was authored with, and whatever the fold left behind.
+		expect(withClasses("a:before:hover{color:red}", NAMED)).toBe(
+			"a:before:hover{color:red}"
+		);
+		// The compound it opens is the whole of what stands: the next one is free.
+		expect(withClasses("a::before:hover b:hover{color:red}", NAMED)).toBe(
+			"a:before:hover b.hovered{color:red}"
+		);
+		expect(withClasses("a::before:hover,b:hover{color:red}", NAMED)).toBe(
+			"a:before:hover,b.hovered{color:red}"
+		);
+		// A pseudo-class standing before one is the ordinary case.
+		expect(withClasses("a:hover::before{color:red}", NAMED)).toBe(
+			"a.hovered:before{color:red}"
+		);
+		// One taking arguments is a pseudo-element all the same.
+		expect(withClasses("a::part(label):hover{color:red}", NAMED)).toBe(
+			"a::part(label):hover{color:red}"
+		);
+		expect(withClasses("a::slotted(b):hover{color:red}", NAMED)).toBe(
+			"a::slotted(b):hover{color:red}"
+		);
+		// ...where a functional pseudo-*class* is not, and still takes one.
+		expect(withClasses("a:not(.x):hover{color:red}", NAMED)).toBe(
+			"a:not(.x).hovered{color:red}"
+		);
+	});
+});
+
+describe("CssSyntax minify — the version each rewrite turns on at", () => {
+	// One selection either side of the compat data's version, so an off-by-one
+	// release fails. Chrome alone: every entry here has a version for it.
+	it.each([
+		["a hex alpha", "a{color:#7bffff80}", 62],
+		[
+			"a two-position color stop",
+			"a{background-image:linear-gradient(green,red 30% 40%,pink)}",
+			72
+		],
+		["a multi-keyword `display`", "a{display:inline flex}", 115],
+		["`system-ui`", "a{font-family:system-ui}", 56],
+		["a `text-decoration` style", "a{text-decoration:underline dotted}", 57],
+		["...and its thickness", "a{text-decoration:underline 2px}", 87],
+		["a `color()`", "a{color:color(display-p3 1 0 0)}", 111],
+		["`hwb()`", "a{color:hwb(120 20% 30%)}", 101],
+		["the Lab family", "a{color:lab(40% 56.6 39)}", 111],
+		["...and the Oklab one", "a{color:oklch(.6322 .2577 29.23)}", 111],
+		["the `inset` shorthand", "a{inset:1px 2px}", 87],
+		["a media range", "@media (width>=1px){a{color:red}}", 104],
+		["two-value `overflow`", "a{overflow:hidden auto}", 68],
+		["a `place-*` shorthand", "a{place-items:center start}", 59]
+	])("rewrites %s below Chrome %i and not at it", (_name, css, version) => {
+		const below = minifyFor(css, [`chrome ${version - 1}`]);
+		const at = minifyFor(css, [`chrome ${version}`]);
+		expect(below).not.toBe(at);
+		// At the version the feature arrived, the spelling is the author's own.
+		expect(at).toBe(minifyFor(css));
+	});
+
+	it("writes `light-dark()` only between the two versions it needs", () => {
+		const css = "a{color:light-dark(red,blue)}";
+		// The pair needs a rule of no specificity to default it, so a target
+		// reading no `:where()` (Chrome 88) is one this leaves the function for...
+		expect(minifyFor(css, ["chrome 87"])).toBe(css);
+		expect(minifyFor(css, ["chrome 88"])).toBe(
+			"a{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
+				":where(:root){--webpack-light:initial;--webpack-dark: }"
+		);
+		// ...and at the version the function itself arrived, there is nothing to
+		// write another way.
+		expect(minifyFor(css, ["chrome 122"])).not.toBe(css);
+		expect(minifyFor(css, ["chrome 123"])).toBe(css);
+	});
+
+	it("writes nothing another way for a selection naming no browser", () => {
+		// A build with no browserslist target answers for no engine, so every
+		// spelling is the author's own.
+		for (const css of [
+			"a{color:#7bffff80}",
+			"a{display:inline flex}",
+			"a{font-family:system-ui}",
+			"a{color:light-dark(red,blue)}",
+			"@media (width>=1px){a{color:red}}"
+		]) {
+			expect(minifyFor(css)).toBe(css);
+		}
+	});
+});
+
+describe("CssSyntax minify — light-dark()", () => {
+	const DEFAULTS = ":where(:root){--webpack-light:initial;--webpack-dark: }";
+
+	it("writes the pair the color scheme switches", () => {
+		expect(minifyFor("a{color:light-dark(red,blue)}", ["chrome 100"])).toBe(
+			`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+	});
+
+	it("says which half a rule setting `color-scheme` takes", () => {
+		expect(
+			minifyFor("html{color-scheme:light dark}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toBe(
+			"html{color-scheme:light dark;--webpack-light:initial;--webpack-dark: }" +
+				"@media (prefers-color-scheme:dark){html{--webpack-light: ;--webpack-dark:initial}}" +
+				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+		// One scheme alone answers for itself, with no query to defer to.
+		expect(
+			minifyFor("html{color-scheme:dark}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toBe(
+			"html{color-scheme:dark;--webpack-light: ;--webpack-dark:initial}" +
+				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+		// `only` narrows how the scheme is chosen, and `normal` is the light one.
+		expect(
+			minifyFor("html{color-scheme:only dark}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toContain("--webpack-light: ;--webpack-dark:initial");
+		expect(
+			minifyFor("html{color-scheme:normal}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toContain("--webpack-light:initial;--webpack-dark: ");
+	});
+
+	it("leaves a `color-scheme` it cannot read alone", () => {
+		// A substitution says nothing about which scheme it names, so the rule is
+		// left as written and the defaults still answer for the element.
+		expect(
+			minifyFor("html{color-scheme:var(--x)}a{color:light-dark(red,blue)}", [
+				"chrome 100"
+			])
+		).toBe(
+			"html{color-scheme:var(--x)}" +
+				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
+		);
+	});
+
+	it("reads a `color-scheme` a rule sets, and no text that merely says one", () => {
+		expect(
+			minifyFor('a{content:"color-scheme:x";color:light-dark(red,blue)}', [
+				"chrome 100"
+			])
+		).toBe(
+			`a{content:"color-scheme:x";color:var(--webpack-light,red) var(--webpack-dark,blue)}${
+				DEFAULTS
+			}`
+		);
+	});
+
+	it("writes the defaults only where it wrote a pair", () => {
+		expect(minifyFor("html{color-scheme:dark}", ["chrome 100"])).toBe(
+			"html{color-scheme:dark}"
+		);
+	});
+
+	it("leaves a call it cannot answer for alone", () => {
+		// A half the target cannot read would make the whole declaration invalid at
+		// computed-value time once it is substituted, which nothing falls back from.
+		expect(
+			minifyFor("a{color:light-dark(oklch(.7 .1 20),red)}", ["chrome 100"])
+		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+		// ...and a call of any other shape is no `light-dark()`.
+		expect(minifyFor("a{color:light-dark(red)}", ["chrome 100"])).toBe(
+			"a{color:light-dark(red)}"
+		);
+		// A custom property's value is handed back as written.
+		expect(minifyFor("a{--x:light-dark(red,blue)}", ["chrome 100"])).toBe(
+			"a{--x:light-dark(red,blue)}"
+		);
+	});
+
+	it("writes no fallback pair before a value a substitution reaches", () => {
+		// Invalid at computed-value time is `unset`, not the earlier declaration, so
+		// a fallback pair before a `var()` is bytes nothing reads.
+		expect(minifyFor("a{color:var(--x,oklch(.7 .1 20))}", ["chrome 100"])).toBe(
+			"a{color:var(--x,oklch(.7 .1 20))}"
+		);
+		// Written in place, the pair does answer.
+		expect(minifyFor("a{color:oklch(.7 .1 20)}", ["chrome 100"])).toBe(
+			"a{color:#d68585;color:oklch(.7 .1 20)}"
+		);
+	});
+});
+
+describe("CssSyntax minify — a selector list a pseudo does not take", () => {
+	it("writes a `:not()` list as the `:is()` it means", () => {
+		// Gecko took `:is()` six releases before it took a list inside `:not()`,
+		// which is the window this is written in.
+		expect(
+			minifyFor("p:not(:first-child,.lead){margin-top:1em}", ["firefox 80"])
+		).toBe("p:not(:is(:first-child,.lead)){margin-top:1em}");
+		expect(
+			minifyFor("p:not(:first-child,.lead){margin-top:1em}", ["firefox 84"])
+		).toBe("p:not(:first-child,.lead){margin-top:1em}");
+		// Before `:is()` there is nothing to write it as.
+		expect(
+			minifyFor("p:not(:first-child,.lead){margin-top:1em}", ["firefox 77"])
+		).toBe("p:not(:first-child,.lead){margin-top:1em}");
+		// One argument is the list every engine has always taken.
+		expect(minifyFor("p:not(.lead){margin-top:1em}", ["firefox 80"])).toBe(
+			"p:not(.lead){margin-top:1em}"
+		);
+	});
+
+	it("writes a `:lang()` list as the `:is()` of each", () => {
+		// No Chromium has ever taken one, so every Chrome target is written this
+		// way — and Gecko took it in 114.
+		expect(minifyFor("a:lang(en,fr){color:red}", ["chrome 130"])).toBe(
+			"a:is(:lang(en),:lang(fr)){color:red}"
+		);
+		expect(minifyFor("a:lang(en,fr){color:red}", ["firefox 114"])).toBe(
+			"a:lang(en,fr){color:red}"
+		);
+		expect(minifyFor("a:lang(en){color:red}", ["chrome 130"])).toBe(
+			"a:lang(en){color:red}"
+		);
+	});
+
+	it("leaves both alone with no target to answer for", () => {
+		expect(minifyFor("p:not(:first-child,.lead){margin-top:1em}")).toBe(
+			"p:not(:first-child,.lead){margin-top:1em}"
+		);
+		expect(minifyFor("a:lang(en,fr){color:red}")).toBe(
+			"a:lang(en,fr){color:red}"
 		);
 	});
 });
