@@ -24,3 +24,7 @@ it("should copy a dot directory the glob names, no deeper than it reaches", () =
 it("should copy an absolute 'from'", () => {
 	expect(read("absolute.txt")).toBe("keep");
 });
+
+it("should copy an absolute 'from' which walks back up a directory", () => {
+	expect(read("dots/keep.txt")).toBe("keep");
+});

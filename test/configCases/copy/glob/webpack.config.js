@@ -11,6 +11,12 @@ module.exports = {
 			{
 				from: path.resolve(__dirname, "assets/keep.txt"),
 				filename: "absolute.txt"
+			},
+			{
+				from: [path.resolve(__dirname, "assets"), "sub", "..", "*.txt"].join(
+					"/"
+				),
+				to: "dots"
 			}
 		]
 	}
