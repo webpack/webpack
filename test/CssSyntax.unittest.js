@@ -7552,6 +7552,37 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		expect(offered('.a{background:url("./img.png")}')).toEqual([]);
 	});
 
+	it("offers every language `EMBEDDED_LANGUAGES` names, and prints each answer", () => {
+		const { EMBEDDED_LANGUAGES } = require("../lib/css/syntax");
+
+		// One stylesheet reaching every language a `data:` payload's media type can
+		// name, an `@import` among them.
+		const sheet =
+			'@import url("data:text/css,.inner {  color : red  }");' +
+			'.svg{background:url("data:image/svg+xml,<svg>   <rect/>   </svg>")}' +
+			'.html{background:url("data:text/html,<p>   x   </p>")}' +
+			".json{background:url('data:application/json,{ \"a\" :  1 }')}" +
+			'.js{background:url("data:text/javascript,var  a  =  1")}';
+
+		// The list is what a caller reads to say up front which languages it
+		// handles, so every entry needs a live offer site behind it, and nothing
+		// may arrive that the list does not name. Asserted over the whole set
+		// rather than per payload: either half drifting is what this catches.
+		expect([...new Set(offered(sheet).map(([type]) => type))].sort()).toEqual(
+			[...EMBEDDED_LANGUAGES].sort()
+		);
+
+		// And what the renderer answered is what the stylesheet carries — being
+		// offered a payload is only half of minifying it.
+		expect(minify(sheet, (source, { type }) => `/*${type}*/`)).toBe(
+			"@import url(data:text/css,/*css*/);" +
+				".svg{background:url(data:image/svg+xml,/*svg*/)}" +
+				".html{background:url(data:text/html,/*html*/)}" +
+				".json{background:url(data:application/json,/*json*/)}" +
+				".js{background:url(data:text/javascript,/*javascript*/)}"
+		);
+	});
+
 	it("rebuilds the url in the shortest form that parses back to it", () => {
 		// A rebuilt url keeps its base64-ness, and loses quotes it no longer needs.
 		expect(minify(svgUrl, (s) => s.replace(/\s+/g, ""))).toBe(

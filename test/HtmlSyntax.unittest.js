@@ -5317,6 +5317,40 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect([...hosts]).toEqual(["html"]);
 	});
 
+	it("offers every language `EMBEDDED_LANGUAGES` names, and prints each answer", () => {
+		const { EMBEDDED_LANGUAGES } = require("../lib/html/syntax");
+
+		// One document reaching every offer site: an inline `<style>`, a `<script>`,
+		// a JSON `<script>`, a `style` attribute, an `<svg>` subtree and the
+		// document an `<iframe srcdoc>` holds.
+		const html =
+			"<style>  .a { color : red }  </style>" +
+			"<script>  var  a  =  1  </script>" +
+			'<script type="application/json">  { "a" :  1 }  </script>' +
+			'<p style="  color : red  ">x</p>' +
+			'<svg viewBox="0 0 2 2">   <rect/>   </svg>' +
+			'<iframe srcdoc="&lt;p&gt;   inner   &lt;/p&gt;"></iframe>';
+
+		// The list is what a caller reads to say up front which languages it
+		// handles, so every entry needs a live offer site behind it, and nothing
+		// may arrive that the list does not name. Asserted over the whole set
+		// rather than per site: either half drifting is what this catches.
+		expect([...new Set(offered(html).map(([type]) => type))].sort()).toEqual(
+			[...EMBEDDED_LANGUAGES].sort()
+		);
+
+		// And what the renderer answered is what the serialization carries — being
+		// offered a body is only half of minifying it.
+		expect(minify(html, (source, { type }) => `/*${type}*/`)).toBe(
+			"<style>/*css*/</style>" +
+				"<script>/*javascript*/</script>" +
+				"<script type=application/json>/*json*/</script>" +
+				"<p style=/*css*/>x</p>" +
+				"/*svg*/" +
+				'<iframe srcdoc="/*html*/"></iframe>'
+		);
+	});
+
 	it("offers a JSON `<script>` as json, by type and by `+json` subtype", () => {
 		expect(
 			offered(
