@@ -28,3 +28,12 @@ it("should copy an absolute 'from'", () => {
 it("should copy an absolute 'from' which walks back up a directory", () => {
 	expect(read("dots/keep.txt")).toBe("keep");
 });
+
+it("should copy an absolute directory 'from'", () => {
+	expect(read("absolute-dir/deep.txt")).toBe("deep");
+});
+
+it("should read a '\\' in an absolute pattern as a separator", () => {
+	expect(read("backslash/keep.txt")).toBe("keep");
+	expect(read("backslash/.dot.txt")).toBe("dot");
+});
