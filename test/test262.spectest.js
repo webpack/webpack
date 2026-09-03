@@ -201,9 +201,8 @@ const expectedAbandonedRejections = new Map([
 // Fail identically unbundled in a plain `vm` on the pinned Node.js, so the
 // divergence is the host's and not webpack's.
 const knownHostBugs = [
-	// `nonextensible-applies-to-private`: adding a private field to a
-	// non-extensible object must throw, which the pinned Node.js does not do,
-	// so it fails the same way unbundled.
+	// Adding a private field to a non-extensible object must throw, which the
+	// pinned Node.js does not do, so it fails the same way unbundled.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
 	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
 	"expressions/assignment/S11.13.1_A5_T1.js",
