@@ -4199,10 +4199,10 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 	/**
 	 * @param {string} type the `<script type>` value
 	 * @param {string} body the raw body
-	 * @param {"conservative" | "smart" | "all"=} collapseWhitespace the tier
+	 * @param {"conservative" | "smart" | "all"=} collapseWhitespace the tier, where one is asked for
 	 * @returns {string} the body, minified
 	 */
-	const minifyBody = (type, body, collapseWhitespace = "all") => {
+	const minifyBody = (type, body, collapseWhitespace) => {
 		const out = new SourceProcessor().process(
 			`<script type="${type}">${body}</script>`,
 			{ mode: "minify", collapseWhitespace }
@@ -4218,13 +4218,15 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 	);
 
 	it.each(
-		/** @type {("conservative" | "smart" | "all")[]} */ ([
+		/** @type {(undefined | "conservative" | "smart" | "all")[]} */ ([
+			undefined,
 			"conservative",
 			"smart",
 			"all"
 		])
-	)("trims where collapsing is %s", (tier) => {
-		// Whitespace outside the program renders nothing, so no tier keeps it.
+	)("trims whatever `collapseWhitespace` says (%s)", (tier) => {
+		// An embedded body is not the host's text, so its edges are not a run
+		// for that option to have an opinion about.
 		expect(minifyBody("", "  var a = 1  ", tier)).toBe("var a = 1");
 	});
 
@@ -4279,7 +4281,6 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 			"<script>  var a = 1  </script>",
 			{
 				mode: /** @type {"minify"} */ ("minify"),
-				collapseWhitespace: /** @type {"all"} */ ("all"),
 				renderEmbeddedSource: () => undefined
 			}
 		).code;
@@ -4291,17 +4292,14 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 		expect(minifyBody("application/ld+json", "  {{ t }}  ")).toBe("{{ t }}");
 	});
 
-	it("trims a JSON body where `minifyJson` is off", () => {
-		// That switch owns the strip, `collapseWhitespace` owns the edges.
+	it("strips a JSON body with no switch to ask", () => {
+		// Minifying is what decides an embedded body; a caller that wants its own
+		// answer gives a renderer, which is asked first.
 		const out = new SourceProcessor().process(
 			'<script type="application/json">  { "a" : 1 }  </script>',
-			{
-				mode: /** @type {"minify"} */ ("minify"),
-				collapseWhitespace: /** @type {"all"} */ ("all"),
-				transforms: { minifyJson: false }
-			}
+			{ mode: /** @type {"minify"} */ ("minify") }
 		).code;
-		expect(out).toBe('<script type=application/json>{ "a" : 1 }</script>');
+		expect(out).toBe('<script type=application/json>{"a":1}</script>');
 	});
 
 	/**
@@ -4316,7 +4314,6 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 		const offered = [];
 		const { code } = await new SourceProcessor().processAsync(html, {
 			mode: /** @type {"minify"} */ ("minify"),
-			collapseWhitespace: /** @type {"all"} */ ("all"),
 			renderEmbeddedSource: (/** @type {string} */ source) => {
 				offered.push(source);
 				return Promise.resolve(answer(source));
@@ -4362,10 +4359,10 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 		expect(minifyBody(" TEXT/X-TEMPLATE ", "  x  ")).toBe("  x  ");
 	});
 
-	it("leaves every body alone where whitespace is kept", () => {
+	it("leaves every body alone where nothing is minified", () => {
 		const out = new SourceProcessor().process(
 			"<script>  var a = 1  </script>",
-			{ mode: "minify" }
+			{ mode: "beautify" }
 		).code;
 		expect(out).toBe("<script>  var a = 1  </script>");
 	});
@@ -4373,7 +4370,7 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 	it("trims an inline script in foreign content too", () => {
 		const out = new SourceProcessor().process(
 			"<svg><script>  var a = 1  </script></svg>",
-			{ mode: "minify", collapseWhitespace: "all" }
+			{ mode: "minify" }
 		).code;
 		expect(out).toBe("<svg><script>var a = 1</script></svg>");
 	});

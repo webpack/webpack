@@ -10480,7 +10480,7 @@ declare interface HtmlProcessOptions {
 	transforms?: HtmlTransformOptions;
 
 	/**
-	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge; an inline `<script>` holding JavaScript or JSON is trimmed at its edges, a data block's body never (default false)
+	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge (default false)
 	 */
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
@@ -20288,7 +20288,7 @@ declare interface OptimizationMinimizeCss {
 }
 
 /**
- * What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for.
+ * What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for. A body the document embeds in a language this can name is minified with it: a JSON `<script>` loses the whitespace between its tokens — every literal copied byte for byte, so no number is rounded and no escape rewritten — and an inline `<script>` holding JavaScript or JSON loses the whitespace at its edges, which is the host's rather than part of what the element holds. A data block's body is left whole, its own whitespace being part of its syntax. A caller's own renderer is asked before any of this, so what it answers for is its to decide.
  * @since 5.110.0
  */
 declare interface OptimizationMinimizeHtml {
@@ -20299,7 +20299,7 @@ declare interface OptimizationMinimizeHtml {
 	collapseBooleanAttributes?: boolean;
 
 	/**
-	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render. An inline `<script>` holding JavaScript or JSON is trimmed at its edges in every tier, that whitespace sitting outside the program text; a data block's body is left alone, its own whitespace being part of its syntax.
+	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";

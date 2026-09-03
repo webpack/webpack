@@ -21,5 +21,8 @@ module.exports = {
 		expect(page).toContain(
 			"<script type=text/yaml>\n    a: 1\n    b: 2\n  </script>"
 		);
+		// The host's own text between them is untouched: nothing collapses it
+		// here, which is what tells the two apart.
+		expect(page).toContain("</script>\n\t<script type=text/javascript>");
 	}
 };

@@ -34,8 +34,10 @@ module.exports = {
 						// In-process, so the coverage instrument sees the minify run:
 						// the worker pool is another process and reports nothing.
 						parallel: false,
+						// No `collapseWhitespace`: an embedded body's edges are not
+						// the host's text, so minifying alone decides them.
 						minify: [htmlMinify],
-						minimizerOptions: [{ collapseWhitespace: true }]
+						minimizerOptions: [{}]
 					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
 				}
 			}
