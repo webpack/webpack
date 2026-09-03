@@ -839,9 +839,20 @@ const main = async () => {
 	}
 };
 
-(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
-	(error) => {
-		log(String(error && error.stack ? error.stack : error));
-		process.exitCode = 1;
-	}
-);
+// Only as the entry point, so the documents below can be required from a test.
+if (require.main === module) {
+	(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
+		(error) => {
+			log(String(error && error.stack ? error.stack : error));
+			process.exitCode = 1;
+		}
+	);
+}
+
+// The documents that are files rather than pages this builds, for a reader that
+// is not this script.
+module.exports.CACHE = CACHE;
+module.exports.INSTALLED_DOCUMENTS = /** @type {[string, string][]} */ ([
+	["HTML5 Boilerplate 9", "html5-boilerplate/dist/index.html"],
+	["Swagger UI 5", "swagger-ui-dist/index.html"]
+]);

@@ -623,9 +623,21 @@ const main = async () => {
 	}
 };
 
-(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
-	(error) => {
-		log(String(error && error.stack ? error.stack : error));
-		process.exitCode = 1;
-	}
-);
+// Only as the entry point, so the corpus below can be required from a test.
+if (require.main === module) {
+	(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
+		(error) => {
+			log(String(error && error.stack ? error.stack : error));
+			process.exitCode = 1;
+		}
+	);
+}
+
+// Where the cache holds each fixture, for a reader that is not this script.
+module.exports.CACHE = CACHE;
+module.exports.GENERATED_FIXTURES = /** @type {[string, string][]} */ ([
+	["Tailwind 4 (app-sized)", "tailwind-app.css"],
+	["Tailwind 4 (wide utilities)", "tailwind-wide.css"],
+	["Tailwind 4 + daisyUI 5", "tailwind-daisyui.css"]
+]);
+module.exports.INSTALLED_FIXTURES = INSTALLED_FIXTURES;
