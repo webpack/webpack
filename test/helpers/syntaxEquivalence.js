@@ -61,6 +61,88 @@ const buildCorpus = (dir, extension, minify) => {
 	});
 };
 
+// What the minifier comparisons install, read back as a corpus: real framework
+// stylesheets and documents, which `configCases` and wpt between them do not
+// have — those are spec fixtures, written to exercise a rule rather than to
+// ship. Absent until `yarn benchmark:css-minifiers` / `:html-minifiers` has run
+// once, so a caller that finds nothing says so rather than reporting green.
+const CSS_BENCHMARK_CACHE = path.join(
+	__dirname,
+	"../../node_modules/.cache/css-minifier-comparison"
+);
+const HTML_BENCHMARK_CACHE = path.join(
+	__dirname,
+	"../../node_modules/.cache/html-minifier-comparison"
+);
+
+// Named rather than walked: the caches also hold each tool's own `node_modules`,
+// and a package's test fixtures are not what any of this is about.
+/** @type {[string, string][]} */
+const BENCHMARK_STYLESHEETS = [
+	["Animate.css 4", "node_modules/animate.css/animate.css"],
+	["Bootstrap 5", "node_modules/bootstrap/dist/css/bootstrap.css"],
+	["Bootstrap 5 grid", "node_modules/bootstrap/dist/css/bootstrap-grid.css"],
+	["Bulma 1", "node_modules/bulma/css/bulma.css"],
+	["Font Awesome 6", "node_modules/@fortawesome/fontawesome-free/css/all.css"],
+	["Foundation 6", "node_modules/foundation-sites/dist/css/foundation.css"],
+	["Materialize 1", "node_modules/materialize-css/dist/css/materialize.css"],
+	["Milligram 1", "node_modules/milligram/dist/milligram.css"],
+	["normalize.css 8", "node_modules/normalize.css/normalize.css"],
+	["Pico 2", "node_modules/@picocss/pico/css/pico.css"],
+	["Primer 21", "node_modules/@primer/css/dist/primer.css"],
+	["Pure 3", "node_modules/purecss/build/pure.css"],
+	["sanitize.css 13", "node_modules/sanitize.css/sanitize.css"],
+	["Semantic UI 2", "node_modules/semantic-ui-css/semantic.css"],
+	["Tachyons 4", "node_modules/tachyons/css/tachyons.css"],
+	["UIkit 3", "node_modules/uikit/dist/css/uikit.css"],
+	["Water.css 2", "node_modules/water.css/out/water.css"],
+	["Tailwind 4 app", "tailwind-app.css"],
+	["Tailwind 4 wide", "tailwind-wide.css"],
+	["Tailwind 4 + daisyUI 5", "tailwind-daisyui.css"]
+];
+
+/** @type {[string, string][]} */
+const BENCHMARK_DOCUMENTS = [
+	["HTML5 Boilerplate 9", "node_modules/html5-boilerplate/dist/index.html"],
+	["Swagger UI 5", "node_modules/swagger-ui-dist/index.html"]
+];
+
+/**
+ * Read a benchmark cache as a corpus. A file the cache does not hold is left out
+ * rather than failing: each cache is built by the comparison that installs it.
+ * @param {string} cache the cache directory
+ * @param {[string, string][]} entries `[label, path within the cache]`
+ * @param {(source: string) => string} minify the printer to run
+ * @returns {Fixture[]} the corpus, empty when the cache is not there
+ */
+const readBenchmarkCache = (cache, entries, minify) => {
+	/** @type {Fixture[]} */
+	const out = [];
+	for (const [label, within] of entries) {
+		const file = path.join(cache, within);
+		if (!fs.existsSync(file)) continue;
+		const raw = fs.readFileSync(file, "utf8");
+		out.push({ name: label, raw, min: minify(raw) });
+	}
+	return out;
+};
+
+/**
+ * The framework stylesheets `yarn benchmark:css-minifiers` installs.
+ * @param {(source: string) => string} minify the printer to run
+ * @returns {Fixture[]} the corpus, empty until that has been run once
+ */
+const benchmarkStylesheets = (minify) =>
+	readBenchmarkCache(CSS_BENCHMARK_CACHE, BENCHMARK_STYLESHEETS, minify);
+
+/**
+ * The documents `yarn benchmark:html-minifiers` installs.
+ * @param {(source: string) => string} minify the printer to run
+ * @returns {Fixture[]} the corpus, empty until that has been run once
+ */
+const benchmarkDocuments = (minify) =>
+	readBenchmarkCache(HTML_BENCHMARK_CACHE, BENCHMARK_DOCUMENTS, minify);
+
 /**
  * @typedef {{ kind: string, condition: string }} Condition
  * @typedef {{ chain: Condition[], text: string, label?: string, list?: string[], block?: string }} Rule
@@ -211,7 +293,17 @@ const installHelpers = () => {
 						: word;
 				word = "";
 			};
-			for (const ch of run.replace(COLOR_TOKEN_RE, (color) => painted(color))) {
+			// A pixel ends in a channel, so a token written straight after the color
+			// would read as part of it — `rgba(…)0` is a color and a zero, not one
+			// channel more. The printer writes that form, since the `)` parts them.
+			const painting = run.replace(
+				COLOR_TOKEN_RE,
+				(color, at, whole) =>
+					`${painted(color)}${
+						WORD_RE.test(whole[at + color.length] || "") ? " " : ""
+					}`
+			);
+			for (const ch of painting) {
 				if (WORD_RE.test(ch)) {
 					word += ch;
 					continue;
@@ -1694,6 +1786,8 @@ const compareRules = (before, after, signatures) => {
 };
 
 module.exports = {
+	benchmarkDocuments,
+	benchmarkStylesheets,
 	buildCorpus,
 	collectFixtures,
 	compareRules,
