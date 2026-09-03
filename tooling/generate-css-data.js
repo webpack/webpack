@@ -3183,10 +3183,11 @@ const collectLengthOnlyFunctions = () => {
 /**
  * The functions that are a color, out of `<color>`'s own grammar — so a value
  * spelled as one fills a color slot. A gradient is an `<image>`, not one.
+ * @param {Iterable<string>} spellings what `<color>` is spelled by
  * @returns {string[]} the function names, sorted
  */
-const collectColorFunctions = () => {
-	const names = [...slotSpellings("<color>")]
+const collectColorFunctions = (spellings = slotSpellings("<color>")) => {
+	const names = [...spellings]
 		.filter((one) => one.endsWith("()"))
 		.map((one) => one.slice(0, -2))
 		.sort();
@@ -3552,12 +3553,18 @@ const collectColorNames = (colorName) => {
  * carrying a `<named-color>` compatibility row, where a name that arrived after
  * the list did is recorded. Every other name is as old as naming a color at all,
  * so one stands wherever another does.
+ * @param {{ [name: string]: BcdNode }=} named the `<named-color>` rows
  * @returns {string[]} the names, sorted
  */
-const collectLaterColorNames = () => {
-	const named = /** @type {{ [name: string]: BcdNode }} */ (
-		/** @type {unknown} */ (bcd.css.types.color)
-	)["named-color"];
+const collectLaterColorNames = (
+	named = /** @type {{ [name: string]: BcdNode }} */ (
+		/** @type {unknown} */ (
+			/** @type {{ [name: string]: BcdNode }} */ (
+				/** @type {unknown} */ (bcd.css.types.color)
+			)["named-color"]
+		)
+	)
+) => {
 	const names = Object.keys(named).filter((name) => name !== "__compat");
 	if (names.length === 0) {
 		throw new Error("no <named-color> carries a row of its own: bcd moved");
@@ -7492,9 +7499,11 @@ module.exports.acceptedValues = acceptedValues;
 module.exports.assertClassesArePrintable = assertClassesArePrintable;
 module.exports.checkStatedClassSpellings = checkStatedClassSpellings;
 module.exports.collectAlphaValueProperties = collectAlphaValueProperties;
+module.exports.collectColorFunctions = collectColorFunctions;
 module.exports.collectData = collectData;
 module.exports.collectFamilyLonghands = collectFamilyLonghands;
 module.exports.collectGradientFunctions = collectGradientFunctions;
+module.exports.collectLaterColorNames = collectLaterColorNames;
 module.exports.collectMergeableAtRules = collectMergeableAtRules;
 module.exports.collectNthNamedEquivalents = collectNthNamedEquivalents;
 module.exports.collectOmittableInitialKeywords =
