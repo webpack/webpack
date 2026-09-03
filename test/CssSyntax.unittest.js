@@ -7872,6 +7872,27 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 		);
 	});
 
+	it("reads a space through its own transfer", () => {
+		expect(minify("a{color:color(prophoto-rgb .5 .2 .1)}")).toBe(
+			"a{color:#c20715}"
+		);
+		// Chromium reads these two through a function of its own, which no margin
+		// bridges, so the color it names is left for it to compute.
+		expect(minify("a{color:color(a98-rgb .5 .2 .1)}")).toBe(
+			"a{color:color(a98-rgb .5 .2 .1)}"
+		);
+		expect(minify("a{color:color(rec2020 .5 .2 .1)}")).toBe(
+			"a{color:color(rec2020 .5 .2 .1)}"
+		);
+	});
+
+	it("mixes in hwb, which is the sRGB byte another way round", () => {
+		expect(minify("a{color:color-mix(in hwb,red,blue)}")).toBe("a{color:#f0f}");
+		expect(minify("a{color:color-mix(in hwb,#f00 30%,#00f)}")).toBe(
+			"a{color:#90f}"
+		);
+	});
+
 	it("reads an alpha written as a percentage", () => {
 		expect(minify("a{color:color(srgb 1 0 0/50%)}")).toBe("a{color:#ff000080}");
 	});
