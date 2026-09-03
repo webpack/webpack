@@ -11,9 +11,8 @@ module.exports = {
 	mode: "production",
 	output: { pathinfo: false },
 	module: {
-		// `url` / `import` off, so a `data:` URL stays in the stylesheet rather
-		// than becoming an asset module of its own — which is what puts the
-		// payload where only the serializer can reach it.
+		// `url` / `import` off keeps a `data:` URL in the stylesheet rather than
+		// making an asset module of it, where only the serializer reaches it.
 		parser: { "css/auto": { url: false, import: false } }
 	},
 	optimization: {
