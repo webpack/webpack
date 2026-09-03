@@ -65,7 +65,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
 /* harmony export */   readViaB: () => (/* binding */ readViaB)
 /* harmony export */ });
-/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-b */ 100);
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
 
 
 const cyclicConst = \\"cyclic\\";
@@ -87,7 +87,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   readFromB: () => (/* binding */ readFromB)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 
 
 function readFromB() {
@@ -246,8 +246,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
 /* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 660);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 245);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
 // Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
 
 // A mutable binding re-exported through two hops must stay live
@@ -266,7 +266,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 // Re-export from a circular module — should use getter
 
 
@@ -286,9 +286,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
 /* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // Mixed: direct const export + re-exports in the same module
 const ownConst = \\"own\\";
 
@@ -314,8 +314,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
 /* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
 // Star export mixed with named re-export — star export should prevent value binding
 
 
@@ -339,9 +339,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 
 
 
@@ -360,7 +360,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   readSelf: () => (/* binding */ readSelf),
 /* harmony export */   selfConst: () => (/* binding */ selfConst)
 /* harmony export */ });
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
 // Self-cycle: const must fall back to a getter so reading via the namespace works
 
 
@@ -384,7 +384,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
 /* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
 /* harmony export */ });
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // \`export *\` of a mutable binding must stay live
 
 
@@ -469,23 +469,23 @@ let __webpack_exports__ = {};
   !*** ./index.js ***!
   \\\\******************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 245);
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 797);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 618);
-/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-chain */ 670);
-/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-mixed */ 992);
-/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 787);
-/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 770);
-/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = /*#__PURE__*/__webpack_require__(/*! ./default-binding */ 260);
-/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = /*#__PURE__*/__webpack_require__(/*! ./const-default */ 462);
-/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = /*#__PURE__*/__webpack_require__(/*! ./default-expr */ 262);
-/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-decl */ 914);
-/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-anon */ 72);
-/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 990);
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
-/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-forms */ 381);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
 
 
 
@@ -751,7 +751,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
 /* harmony export */   readViaB: () => (/* binding */ readViaB)
 /* harmony export */ });
-/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-b */ 100);
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
 
 
 const cyclicConst = \\"cyclic\\";
@@ -773,7 +773,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   readFromB: () => (/* binding */ readFromB)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 
 
 function readFromB() {
@@ -932,8 +932,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
 /* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 660);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 245);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
 // Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
 
 // A mutable binding re-exported through two hops must stay live
@@ -952,7 +952,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 // Re-export from a circular module — should use getter
 
 
@@ -972,9 +972,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
 /* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // Mixed: direct const export + re-exports in the same module
 const ownConst = \\"own\\";
 
@@ -1000,8 +1000,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
 /* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
 // Star export mixed with named re-export — star export should prevent value binding
 
 
@@ -1025,9 +1025,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 
 
 
@@ -1046,7 +1046,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   readSelf: () => (/* binding */ readSelf),
 /* harmony export */   selfConst: () => (/* binding */ selfConst)
 /* harmony export */ });
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
 // Self-cycle: const must fall back to a getter so reading via the namespace works
 
 
@@ -1070,7 +1070,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
 /* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
 /* harmony export */ });
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // \`export *\` of a mutable binding must stay live
 
 
@@ -1155,23 +1155,23 @@ let __webpack_exports__ = {};
   !*** ./index.js ***!
   \\\\******************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 245);
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 797);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 618);
-/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-chain */ 670);
-/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-mixed */ 992);
-/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 787);
-/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 770);
-/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = /*#__PURE__*/__webpack_require__(/*! ./default-binding */ 260);
-/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = /*#__PURE__*/__webpack_require__(/*! ./const-default */ 462);
-/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = /*#__PURE__*/__webpack_require__(/*! ./default-expr */ 262);
-/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-decl */ 914);
-/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-anon */ 72);
-/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 990);
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
-/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-forms */ 381);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
 
 
 
@@ -1437,7 +1437,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
 /* harmony export */   readViaB: () => (/* binding */ readViaB)
 /* harmony export */ });
-/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-b */ 100);
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
 
 
 const cyclicConst = \\"cyclic\\";
@@ -1459,7 +1459,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   readFromB: () => (/* binding */ readFromB)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 
 
 function readFromB() {
@@ -1618,8 +1618,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
 /* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 660);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 245);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
 // Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
 
 // A mutable binding re-exported through two hops must stay live
@@ -1638,7 +1638,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 // Re-export from a circular module — should use getter
 
 
@@ -1658,9 +1658,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
 /* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // Mixed: direct const export + re-exports in the same module
 const ownConst = \\"own\\";
 
@@ -1686,8 +1686,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
 /* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
 // Star export mixed with named re-export — star export should prevent value binding
 
 
@@ -1711,9 +1711,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 
 
 
@@ -1732,7 +1732,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   readSelf: () => (/* binding */ readSelf),
 /* harmony export */   selfConst: () => (/* binding */ selfConst)
 /* harmony export */ });
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
 // Self-cycle: const must fall back to a getter so reading via the namespace works
 
 
@@ -1756,7 +1756,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
 /* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
 /* harmony export */ });
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // \`export *\` of a mutable binding must stay live
 
 
@@ -1841,23 +1841,23 @@ let __webpack_exports__ = {};
   !*** ./index.js ***!
   \\\\******************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 245);
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 797);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 618);
-/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-chain */ 670);
-/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-mixed */ 992);
-/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 787);
-/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 770);
-/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = /*#__PURE__*/__webpack_require__(/*! ./default-binding */ 260);
-/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = /*#__PURE__*/__webpack_require__(/*! ./const-default */ 462);
-/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = /*#__PURE__*/__webpack_require__(/*! ./default-expr */ 262);
-/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-decl */ 914);
-/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-anon */ 72);
-/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 990);
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
-/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-forms */ 381);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
 
 
 
@@ -2123,7 +2123,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
 /* harmony export */   readViaB: () => (/* binding */ readViaB)
 /* harmony export */ });
-/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-b */ 100);
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
 
 
 const cyclicConst = \\"cyclic\\";
@@ -2145,7 +2145,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   readFromB: () => (/* binding */ readFromB)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 
 
 function readFromB() {
@@ -2304,8 +2304,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
 /* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 660);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 245);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
 // Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
 
 // A mutable binding re-exported through two hops must stay live
@@ -2324,7 +2324,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
 /* harmony export */ });
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./cycle-a */ 797);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
 // Re-export from a circular module — should use getter
 
 
@@ -2344,9 +2344,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
 /* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // Mixed: direct const export + re-exports in the same module
 const ownConst = \\"own\\";
 
@@ -2372,8 +2372,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
 /* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
 // Star export mixed with named re-export — star export should prevent value binding
 
 
@@ -2397,9 +2397,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
 /* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
 /* harmony export */ });
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./const-exports */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./function-exports */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
 
 
 
@@ -2418,7 +2418,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   readSelf: () => (/* binding */ readSelf),
 /* harmony export */   selfConst: () => (/* binding */ selfConst)
 /* harmony export */ });
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
 // Self-cycle: const must fall back to a getter so reading via the namespace works
 
 
@@ -2442,7 +2442,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
 /* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
 /* harmony export */ });
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-exports */ 245);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
 // \`export *\` of a mutable binding must stay live
 
 
@@ -2527,23 +2527,23 @@ let __webpack_exports__ = {};
   !*** ./index.js ***!
   \\\\******************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 660);
-/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 103);
-/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 245);
-/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 797);
-/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = /*#__PURE__*/__webpack_require__(/*! ./reexport */ 618);
-/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-chain */ 670);
-/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-mixed */ 992);
-/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-star */ 787);
-/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = /*#__PURE__*/__webpack_require__(/*! ./reexport-circular */ 770);
-/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = /*#__PURE__*/__webpack_require__(/*! ./default-binding */ 260);
-/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = /*#__PURE__*/__webpack_require__(/*! ./const-default */ 462);
-/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = /*#__PURE__*/__webpack_require__(/*! ./default-expr */ 262);
-/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-decl */ 914);
-/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = /*#__PURE__*/__webpack_require__(/*! ./default-fn-anon */ 72);
-/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = /*#__PURE__*/__webpack_require__(/*! ./star-mutable */ 990);
-/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = /*#__PURE__*/__webpack_require__(/*! ./self-const */ 973);
-/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = /*#__PURE__*/__webpack_require__(/*! ./mutable-forms */ 381);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
 
 
 
