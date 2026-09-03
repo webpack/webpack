@@ -23,21 +23,34 @@ const snapshotBundle = (name) => (compiler) => {
 module.exports = [
 	{
 		name: "plain",
+		target: "node",
 		mode: "production",
-		experiments: { deferImport: true },
+		// The annotation is only written into output another build reads back.
+		output: {
+			filename: "bundle0.mjs",
+			library: { type: "module" },
+			module: true
+		},
+		experiments: { deferImport: true, outputModule: true },
 		optimization: {
 			// Renders the deferred import through `importStatement`.
 			concatenateModules: false
 		},
-		plugins: [snapshotBundle("bundle0.js")]
+		plugins: [snapshotBundle("bundle0.mjs")]
 	},
 	{
 		name: "concatenated",
+		target: "node",
 		mode: "production",
-		experiments: { deferImport: true },
+		output: {
+			filename: "bundle1.mjs",
+			library: { type: "module" },
+			module: true
+		},
+		experiments: { deferImport: true, outputModule: true },
 		// A CommonJS module cannot join the concatenation, so it stays an external
 		// member of it and `ConcatenatedModule` renders the deferred loader itself.
 		optimization: { concatenateModules: true },
-		plugins: [snapshotBundle("bundle1.js")]
+		plugins: [snapshotBundle("bundle1.mjs")]
 	}
 ];

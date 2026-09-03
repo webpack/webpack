@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Keep module side-effect information in the build output as PURE annotations.
+Keep module side-effect information in ESM output as PURE annotations.
