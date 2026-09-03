@@ -56,8 +56,7 @@ module.exports = [
 			rules: [
 				{ test: /page-asset\.html$/, type: "asset/resource" },
 				// `url` / `import` off keeps a `data:` payload in the stylesheet
-				// rather than making an asset module of it, where only the
-				// serializer reaches it.
+				// rather than making an asset module of it.
 				{
 					test: /sheet-.*\.css$/,
 					type: "css/auto",

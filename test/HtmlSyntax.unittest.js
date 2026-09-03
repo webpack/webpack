@@ -5214,14 +5214,13 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		);
 	});
 
-	it("writes a deferred `style` attribute back, and keeps the shape the tag was closed on", async () => {
+	it("writes a deferred `style` attribute back in whatever shape its answer needs", async () => {
 		expect(
 			(await deferred('<p style="  color : red  ">x</p>', () => "color:red"))
 				.code
 		).toBe("<p style=color:red>x");
-		// Whether this value leaves the tag ending unquoted was decided when the tag
-		// was printed, so an answer that would need quotes cannot be taken and the
-		// built-in's text stands.
+		// Only a foreign element's `/>` reads whether a value left the tag ending
+		// unquoted, so on an html element an answer needing quotes is taken.
 		expect(
 			(
 				await deferred(
@@ -5229,7 +5228,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 					() => 'content:"a b"'
 				)
 			).code
-		).toBe("<p style=color:red>x");
+		).toBe("<p style='content:\"a b\"'>x");
 	});
 
 	it("gives a `style` attribute the transforms a block's contents get", () => {
@@ -5546,8 +5545,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("quotes a bare `srcdoc` a synchronous renderer answered", () => {
 		// An unquoted value carries no delimiter to keep, so the answer alone
-		// decides one — and it needs quotes whatever it holds, a bare value
-		// having nowhere to put a space or a `>`.
+		// decides one — and it needs quotes whatever it holds.
 		expect(
 			minify("<p><iframe srcdoc=&lt;p&gt;a></iframe>", () => '<p a="b">')
 		).toBe("<p><iframe srcdoc='<p a=\"b\">'></iframe>");
@@ -7195,8 +7193,7 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 
 	it("minifies the document an `<iframe srcdoc>` holds", async () => {
 		// Nothing is configured here, so what a caller would have answered for
-		// this one webpack minifies itself — the comment goes and `</p>` is
-		// implied, exactly as they are in a document of its own.
+		// this one webpack minifies itself, as in a document of its own.
 		expect(
 			await min(
 				'<p><iframe srcdoc="&lt;!-- x --&gt;&lt;p&gt;a&lt;/p&gt;"></iframe>'
@@ -7224,9 +7221,7 @@ describe("htmlMinify — embedded bodies with no renderer", () => {
 describe("htmlMinify — one document reaching every embedded site", () => {
 	const htmlMinify = require("../lib/html/htmlMinify");
 
-	// One document per site the print offers: an inline `<style>` (whose own
-	// `url()` payloads name every language a media type can), a JSON `<script>`,
-	// a `<script>`, a `style=""`, an `<svg>` subtree and two `<iframe srcdoc>` —
+	// One document per site the print offers, down to two `<iframe srcdoc>` —
 	// one quoted, one written bare.
 	const DOCUMENT = `<!doctype html>
 <html lang="en">
@@ -7290,12 +7285,8 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 	});
 
 	it("minifies with webpack's own minifiers when no renderer is given", async () => {
-		// What webpack ships a minifier for is minified here — the inline
-		// `<style>`, the `style=""`, the JSON `<script>` and both documents an
-		// `<iframe srcdoc>` holds, nested `<style>` included. A `<script>` of
-		// JavaScript and an `<svg>` subtree are left as written, and so is every
-		// `data:` payload the inline `<style>` carries: the CSS minifier has no
-		// built-in of its own to fall back to for those.
+		// What webpack ships a minifier for is minified here; a `<script>` of
+		// JavaScript, an `<svg>` subtree and every `data:` payload are not.
 		const { code } = await htmlMinify({ "page.html": DOCUMENT });
 
 		expect(code).toMatchSnapshot();
@@ -9008,10 +8999,8 @@ describe("htmlMinify — the delimiter an answered `srcdoc` is written with", ()
 	});
 
 	it("leaves the attribute as written when an async renderer declines", async () => {
-		// An asynchronous renderer is offered the body through the deferring
-		// path, where declining puts the attribute back exactly as the source
-		// spelled it — the raw value, references and delimiter included, rather
-		// than the decoded document the renderer was shown.
+		// Declining on the deferring path puts the attribute back as the source
+		// spelled it: the raw value, references and delimiter included.
 		expect(await min(SOURCE, () => Promise.resolve(undefined))).toBe(
 			'<p><iframe srcdoc="&lt;p&gt;a"></iframe>'
 		);
@@ -9020,5 +9009,56 @@ describe("htmlMinify — the delimiter an answered `srcdoc` is written with", ()
 				Promise.resolve(undefined)
 			)
 		).toBe("<p><iframe srcdoc=&lt;p&gt;a></iframe>");
+	});
+});
+
+describe("htmlMinify — an answered `style` attribute that changes its quoting", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} src html source
+	 * @param {(source: string, info: { type: string }) => EXPECTED_ANY} renderEmbeddedSource the renderer
+	 * @returns {Promise<string>} the minified serialization
+	 */
+	const min = async (src, renderEmbeddedSource) =>
+		(
+			await htmlMinify({ "page.html": src }, undefined, {
+				renderEmbeddedSource
+			})
+		).code;
+
+	it("keeps an answer that no longer needs quotes", async () => {
+		// The built-in's text is quoted and the answer is bare. Only a foreign
+		// `/>` reads that difference, so an html element takes the answer.
+		expect(
+			await min('<p style="margin: 0 auto">x</p>', () => "color:red")
+		).toBe("<p style=color:red>x");
+	});
+
+	it("keeps an answer that now needs quotes", async () => {
+		expect(
+			await min('<p style="color: red">x</p>', () => "margin:0 auto")
+		).toBe('<p style="margin:0 auto">x');
+	});
+
+	it("minifies a `data:` payload the answer shortens past its quotes", async () => {
+		// The shape webpack's own default reaches through the css minifier: with
+		// the payload minified the whole value fits unquoted.
+		expect(
+			await min(
+				"<p style=\"background:url('data:text/css,  .q  {  color : red  }  ')\">x</p>",
+				() => "background:url(data:text/css,.q{color:red})"
+			)
+		).toBe("<p style=background:url(data:text/css,.q{color:red})>x");
+	});
+
+	it("declines an answer that would change a foreign `/>`", async () => {
+		// Whether a space must precede a foreign `/>` is decided when the tag
+		// closes, too early to wait for the answer, so the built-in's text stands.
+		expect(
+			await min('<svg><rect style="color: red" /></svg>', (source, info) =>
+				info.type === "css" ? "margin:0 auto" : undefined
+			)
+		).toBe("<svg><rect style=color:red /></svg>");
 	});
 });
