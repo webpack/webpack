@@ -7909,6 +7909,14 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 			"a{color:#ff070480;color:color(display-p3 .923508 .207882 .145098/.5);" +
 				"color:oklch(.6322 .2577 29.23/.5)}"
 		);
+		// An alpha the engine stores as `255` is the opaque color, so the rung
+		// carries no alpha rather than an empty one.
+		expect(
+			minifyFor("a{color:oklch(0.6322 0.2577 29.23/.999)}", ["safari 15"])
+		).toBe(
+			"a{color:#ff0704;color:color(display-p3 .923508 .207882 .145098);" +
+				"color:oklch(.6322 .2577 29.23/.999)}"
+		);
 		// A gradient holding one color the target reads and one it does not takes
 		// the rung over the second alone.
 		expect(
@@ -8026,6 +8034,20 @@ describe("CssSyntax minify — color-mix()", () => {
 		expect(
 			minify("a{color:color-mix(in hsl,hsl(350 50% 40%) 30%,hsl(10 50% 40%))}")
 		).toBe("a{color:#993a33}");
+	});
+
+	it("reads its own hue method, not one a nested mix left behind", () => {
+		// The nested mix resolves through this same fold, so a method held in module
+		// state would be the inner one's by the time the outer interpolates.
+		const inner = "color-mix(in hsl shorter hue,#804d4d 30%,#4d8080)";
+		expect(minify(`a{color:${inner}}`)).toBe("a{color:#4d8052}");
+		expect(
+			minify(`a{color:color-mix(in hsl longer hue,${inner} 30%,#804d4d)}`)
+		).toBe("a{color:#774d80}");
+		// Which is the color the outer names once the inner one is written out.
+		expect(
+			minify("a{color:color-mix(in hsl longer hue,#4d8052 30%,#804d4d)}")
+		).toBe("a{color:#774d80}");
 		expect(
 			minify(
 				"a{color:color-mix(in hsl longer hue,hsl(30 50% 40%) 30%,hsl(60 50% 40%))}"
