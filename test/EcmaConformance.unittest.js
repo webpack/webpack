@@ -61,8 +61,9 @@ describe("ecmaVersionOf", () => {
 	});
 
 	it("should ignore what a target can lack at any version", () => {
-		// electron 10 parses class fields and still cannot load an ES module.
-		expect(ecmaVersionOf(environmentOf("electron10-main"))).toBe(2022);
+		// electron 10 cannot load an ES module, which must not drag it down to ES5;
+		// it is Chromium 85, so ES2021 is as far as its grammar actually goes.
+		expect(ecmaVersionOf(environmentOf("electron10-main"))).toBe(2021);
 	});
 
 	it("should answer nothing for an environment that is no version", () => {
