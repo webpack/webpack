@@ -406,12 +406,20 @@ class BenchmarkRunner {
 			);
 
 			try {
-				const options = await import(`${pathToFileURL(optionsPath)}`);
-				if (typeof options.setup !== "undefined") {
-					await options.setup();
+				await fs.stat(optionsPath);
+			} catch (err) {
+				// Only a missing options.mjs is optional; anything else would
+				// otherwise measure a fixture that never got built.
+				if (/** @type {NodeJS.ErrnoException} */ (err).code !== "ENOENT") {
+					throw err;
 				}
-			} catch (_err) {
-				// Ignore — benchmark has no options.mjs
+				continue;
+			}
+
+			const options = await import(`${pathToFileURL(optionsPath)}`);
+
+			if (typeof options.setup !== "undefined") {
+				await options.setup();
 			}
 		}
 	}

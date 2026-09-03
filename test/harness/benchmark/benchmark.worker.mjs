@@ -1270,7 +1270,11 @@ async function importCaseOptions(testDirectory) {
 
 	try {
 		await fs.stat(optionsPath);
-	} catch (_err) {
+	} catch (err) {
+		// Only a missing options.mjs is optional; a permission error is real.
+		if (/** @type {NodeJS.ErrnoException} */ (err).code !== "ENOENT") {
+			throw err;
+		}
 		return undefined;
 	}
 
