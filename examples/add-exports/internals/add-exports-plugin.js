@@ -31,6 +31,9 @@ class AddExportsPlugin {
 				(result, module) => {
 					const [source, sourceMap] = result;
 					for (const [test, code] of this.exports) {
+						// a global or sticky pattern keeps its lastIndex between calls,
+						// which would skip the next module it is tested against
+						test.lastIndex = 0;
 						if (!module.resource || !test.test(module.resource)) continue;
 						// appending moves nothing before it, so the source map still fits;
 						// a preparsed ast would be parsed instead of the appended code
