@@ -10,9 +10,8 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				// Emitted verbatim rather than parsed: the html parser bundles an
-				// executable inline `<script>` into its own entry, so a page that is
-				// a module never reaches the minifier holding one.
+				// The html parser bundles an executable inline `<script>` into its own
+				// entry, so only an unparsed page reaches the minifier holding one.
 				test: /\.html$/i,
 				type: "asset/resource",
 				generator: { filename: "page.html" }
