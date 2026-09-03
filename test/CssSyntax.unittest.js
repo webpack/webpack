@@ -4271,10 +4271,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("joins the same selector's two rules where one overrides the other", () => {
-			// One block holds a property once, so a property both of them set joins
-			// only where the later declaration is one the earlier cannot have been
-			// read behind — which is the same question a repeated property inside
-			// one block answers.
+			// One block holds a property once, so two blocks join only where the later
+			// declaration is one the earlier cannot have been read behind.
 			expect(minify("a{color:red}a{color:blue}")).toBe("a{color:blue}");
 			expect(minify("a{color:red;top:0}a{color:blue;left:0}")).toBe(
 				"a{top:0;color:blue;left:0}"
@@ -5794,9 +5792,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("a media feature's own number", () => {
 		it("is written the way a value's number is", () => {
-			// A feature is a `<length>`, a `<ratio>` or an `<integer>` and nothing
-			// else, so the number in one shortens like any other — where a prelude
-			// number elsewhere is An+B, and stripping a `+` there breaks it.
+			// A feature takes only a `<length>`, `<ratio>` or `<integer>`, so its number
+			// shortens like any other — a prelude number elsewhere is An+B.
 			expect(minify("@media (min-width:0480.0px){a{color:red}}")).toBe(
 				"@media (width>=480px){a{color:red}}"
 			);
@@ -5836,9 +5833,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("@media print,all and (color){a{color:red}}")).toBe(
 				"@media print,(color){a{color:red}}"
 			);
-			// `all` on its own is the whole query and says everything, and `not` or
-			// `only` before it is not the same query at all — `only` is there to
-			// hide the rule from an engine reading CSS 2's grammar.
+			// `all` alone says everything, but `not`/`only` before it does not: `only`
+			// hides the rule from an engine reading CSS 2's grammar.
 			expect(minify("@media all{a{color:red}}")).toBe(
 				"@media all{a{color:red}}"
 			);
@@ -5917,9 +5913,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			// One slot takes a `<number>` and two take a `<time>`, so a layer
-			// naming more is one no engine reads — dropping from it would hand
-			// back a layer that runs.
+			// One slot takes a `<number>` and two a `<time>`, so a layer naming more is
+			// read by no engine — dropping from it would hand back one that runs.
 			["two counts", "a{animation:1 2}"],
 			["two counts, both one", "a{animation:1 1}"],
 			["three times", "a{animation:0s 0s 0s}"],
@@ -8777,9 +8772,8 @@ describe("CssSyntax minify — the rest of the target's abilities", () => {
 			"a{text-decoration:underline;text-decoration-style:dotted;" +
 				"text-decoration-color:red;text-decoration-thickness:2px}"
 		);
-		// The print leaves out the separator between an ident and a hash or a
-		// call, so the components are read back at the junctions it could have
-		// left bare rather than at its spaces alone.
+		// The print drops the separator between an ident and a hash or call, so
+		// components are read back at those junctions, not at its spaces alone.
 		expect(
 			minifyFor("a{text-decoration:underline 2px solid #ffffff}", ["safari 15"])
 		).toBe(

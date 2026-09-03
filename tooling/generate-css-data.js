@@ -2472,16 +2472,12 @@ const slotSpellings = (slot) => {
 
 /**
  * Each shorthand -> the keywords a value of it may drop, and for each the other
- * spellings its slot takes. A slot holding what it already defaults to says
- * nothing, but only under three conditions, and every one of them is a rewrite
- * that turned a declaration the engine drops into one it accepts:
- * the keyword must be named by exactly one slot (`animation`'s `none` is both a
- * name and a fill mode), every value that slot takes must be one the spellings
- * report (`mask: url(a.svg) none` fills one slot twice and is dropped, so
- * removing the `none` would revive it), and it must be a slot of its own rather
- * than one reached through a `/`. What a slot takes beyond its spellings is
- * carried as the value classes it names, since `#fff` is no spelling of `<color>`
- * and fills the slot as surely as a keyword.
+ * spellings its slot takes. A keyword is droppable only where naming one slot
+ * (`animation`'s `none` is a name and a fill mode), where the spellings report
+ * every value that slot takes (`mask: url(a.svg) none` fills one slot twice and
+ * is dropped), and where the slot is its own rather than reached through a `/`;
+ * what it takes beyond them rides along as value classes, since `#fff` is no
+ * spelling of `<color>`.
  * @param {Set<string>} colorKeywords every keyword that is a color, which is the one class a keyword itself can be in
  * @returns {[string, [string, string[], string[]][]][]} the entries, sorted by property
  */
@@ -2501,9 +2497,8 @@ const collectShorthandInitialKeywords = (colorKeywords) => {
 			return {
 				named: new Set([...values.keywords].map((one) => one.toLowerCase())),
 				spellings: slotSpellings(slot),
-				// What the slot takes beyond the spellings — a length, a color, an
-				// image. `lib/css/syntax.js` reads a sibling's own classes against
-				// these, and refuses the drop for a value it cannot class at all.
+				// What the slot takes beyond the spellings. `syntax.js` reads a
+				// sibling's classes against these, and refuses one it cannot class.
 				classes: [...values.classes]
 					.filter((one) => !isSpelledClass(one))
 					.sort()
@@ -3186,12 +3181,8 @@ const collectLengthOnlyFunctions = () => {
 };
 
 /**
- * @returns {string[]} the functions that take a color argument directly, sorted
- */
-/**
- * The functions that are a color, out of `<color>`'s own grammar: the calls a
- * slot taking a color accepts, which is what says a value spelled as one fills
- * that slot. A gradient is an `<image>` and is not among them.
+ * The functions that are a color, out of `<color>`'s own grammar — so a value
+ * spelled as one fills a color slot. A gradient is an `<image>`, not one.
  * @returns {string[]} the function names, sorted
  */
 const collectColorFunctions = () => {
@@ -3557,11 +3548,10 @@ const collectColorNames = (colorName) => {
 };
 
 /**
- * The named colors an engine may read none of while reading the rest: the ones
- * carrying a compatibility row of their own under `<named-color>`, which is
- * where a name that arrived after the list did is recorded. Every other name is
- * as old as naming a color at all, so one of them stands wherever another does —
- * which is what lets a later declaration of one supersede an earlier.
+ * The named colors an engine may read none of while reading the rest — the ones
+ * carrying a `<named-color>` compatibility row, where a name that arrived after
+ * the list did is recorded. Every other name is as old as naming a color at all,
+ * so one stands wherever another does.
  * @returns {string[]} the names, sorted
  */
 const collectLaterColorNames = () => {
@@ -7122,9 +7112,8 @@ ${SUPPLEMENT.colorSpacePrimitives.map(([, source]) => source).join("\n\n")}
 
 ${colorSpaceModel.text}
 
-// The named colors an engine may not read while reading the rest, so one of them
-// says nothing about what another engine takes. Every other name arrived with
-// naming a color at all.
+// The named colors an engine may not read while reading the rest, so one says
+// nothing about what another takes. Every other name is as old as naming one.
 const LATER_COLOR_NAMES = ${setLiteral(laterColorNames)};
 
 // Every named color as its packed \`0xrrggbb\` value — what a color a mix or a

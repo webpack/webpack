@@ -2,9 +2,8 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	// The same sheet and the same target as `minimize-lower-unsupported`, with
-	// the one switch off: every spelling the target cannot read stays as it was
-	// written, and the rest of the minifier still runs.
+	// The sheet and target of `minimize-lower-unsupported` with the switch off:
+	// what the target cannot read stays written, the rest of the minifier runs.
 	target: "browserslist",
 	mode: "production",
 	output: {
