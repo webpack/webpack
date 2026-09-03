@@ -131,6 +131,25 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		).toBe(false);
 	});
 
+	it("leaves a pattern generated from a list of paths unexpanded", () => {
+		// the test262 harness builds one of these from ~200 paths; expanding it
+		// costs 165ms per compilation, so past the length cap only the spelling the
+		// pattern carries outright is read
+		const paths = Array.from(
+			{ length: 60 },
+			(_, i) => `(?:case-${i}/fixture\\.js$)`
+		).join("|");
+		expect(
+			has([
+				{ test: new RegExp(`${paths}|(?:styles/x\\.(css|scss)$)`), use: ["x"] }
+			])
+		).toBe(false);
+		// the extension is still read where the pattern spells it outright
+		expect(
+			has([{ test: new RegExp(`${paths}|(?:styles/x\\.css$)`), use: ["x"] }])
+		).toBe(true);
+	});
+
 	it("expands past a lookaround and stops at the spelling cap", () => {
 		expect(
 			has([{ test: /[\\/]src[\\/](?!vendor)((.*))\.(css|scss)$/, use: ["x"] }])
