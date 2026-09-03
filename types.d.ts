@@ -21197,7 +21197,7 @@ declare interface Output {
 
 	/**
 	 * Copy files and directories to the output directory.
-	 * @since 5.110.0
+	 * @since 5.111.0
 	 */
 	copy?: string | CopyPattern[];
 
