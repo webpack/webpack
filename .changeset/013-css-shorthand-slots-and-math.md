@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Take out a shorthand slot an unwritten one implies, and fold a math function to the value it names.
+Take out an implied shorthand slot, fold a math function, and tighten a color conversion.
