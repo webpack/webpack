@@ -4,7 +4,7 @@ const { Compilation } = require("../../../../");
 
 /** @typedef {NonNullable<import("../../../../").Compiler["inputFileSystem"]>} InputFileSystem */
 /** @typedef {import("../../../../lib/util/fs").StatsCallback} StatsCallback */
-/** @typedef {import("../../../../lib/util/fs").ReaddirStringCallback} ReaddirStringCallback */
+/** @typedef {import("../../../../lib/util/fs").ReaddirDirentCallback} ReaddirDirentCallback */
 
 const PLUGIN_NAME = "DenyReadingPlugin";
 
@@ -52,15 +52,16 @@ class DenyReadingPlugin {
 
 			/**
 			 * @param {string} directory path to read
-			 * @param {ReaddirStringCallback} callback callback
+			 * @param {{ withFileTypes: true }} options options the walk reads types with
+			 * @param {ReaddirDirentCallback} callback callback
 			 * @returns {void}
 			 */
-			const readdir = (directory, callback) => {
+			const readdir = (directory, options, callback) => {
 				if (directory.includes("denied-dir")) {
 					callback(denied("scandir", "denied-dir"));
 					return;
 				}
-				original.readdir(directory, callback);
+				original.readdir(directory, options, callback);
 			};
 
 			compilation.hooks.processAssets.tap(
