@@ -2068,10 +2068,8 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			expect(min('@charset "iso-8859-1";a{b:c}')).toBe("a{b:c}");
 		});
 
-		// The bytes an engine reads a charset rule as are the literal `@charset "`
-		// (CSS Syntax 3 §3.2), so lowercasing one would turn a rule the engine
-		// drops into one that sets the sheet's encoding. A `@charset` carrying a
-		// block is no charset rule to take out, so the case still has to hold.
+		// An engine reads only the literal `@charset "` (CSS Syntax 3 §3.2), so a
+		// cased rule — which a block makes no charset rule anyway — keeps its bytes.
 		it("leaves a cased `@charset` carrying a block alone", () => {
 			expect(min('@CHARSET "utf-8"{}a{b:c}')).toBe('@CHARSET "utf-8"{}a{b:c}');
 		});
@@ -8011,9 +8009,8 @@ describe("CssSyntax minify — color-mix()", () => {
 	});
 
 	it("reads a hue the way the method it was given names", () => {
-		// Each method takes the second hue its own way round the circle. Two pairs,
-		// since one only ever tells the two arcs apart: which of them is the
-		// shorter is also which of them increases.
+		// Each method takes the second hue its own way round the circle; two pairs,
+		// since the shorter arc is also the increasing one.
 		/**
 		 * @param {string} method the hue interpolation method
 		 * @param {string} first the first color
@@ -8303,9 +8300,8 @@ describe("CssSyntax minify — pseudo-class replacement", () => {
 });
 
 describe("CssSyntax minify — the version each rewrite turns on at", () => {
-	// One selection either side of the version the compat data gives, so a
-	// rewrite that starts or stops one release early is a failure rather than a
-	// detail. Chrome alone: the browser every entry here has a version for.
+	// One selection either side of the compat data's version, so an off-by-one
+	// release fails. Chrome alone: every entry here has a version for it.
 	it.each([
 		["a hex alpha", "a{color:#7bffff80}", 62],
 		[
@@ -8452,9 +8448,8 @@ describe("CssSyntax minify — light-dark()", () => {
 	});
 
 	it("writes no fallback pair before a value a substitution reaches", () => {
-		// An unreadable color inside a `var()` fallback is invalid at
-		// computed-value time, which is `unset` rather than the earlier
-		// declaration — so a pair standing before one is bytes nothing reads.
+		// Invalid at computed-value time is `unset`, not the earlier declaration, so
+		// a fallback pair before a `var()` is bytes nothing reads.
 		expect(minifyFor("a{color:var(--x,oklch(.7 .1 20))}", ["chrome 100"])).toBe(
 			"a{color:var(--x,oklch(.7 .1 20))}"
 		);
