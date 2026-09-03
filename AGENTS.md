@@ -214,33 +214,20 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 
 > [!REQUIRED]
 
-**This rule is about plain comments only** — `//` and `/* … */` narration inside `lib/`, `hot/`, `tooling/`, and `test/`. Those must be **as short as possible** — ideally one line, at most two short lines. Every line must add information a careful reader can't get from the code itself: a hidden invariant, a non-obvious ordering constraint, a workaround, or the name of the higher-level concept the block implements. **Never** write multi-paragraph essays, restate what the next line obviously does, narrate the diff, restate the PR description, or quote the user/task framing.
+**A plain comment is at most two lines. Count them.** This binds every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits into its output. A third line is over the limit however short each line is and however true every word — split the thought, cut it, or drop it.
 
-**A JSDoc block's tags are exempt — they are the type contract, not commentary, and they are multi-line by construction.** One `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply. That holds for every documented symbol, exported or internal to one file: the tags are never something to shorten, flatten onto one line, or delete.
+**Check your own diff before every commit. It must print nothing:**
 
-**The description above those tags is prose, so it is bound by the same brevity as a plain comment: one or two sentences, never more.** Say what the function does when the name alone doesn't carry it, plus the one invariant or non-obvious constraint a caller needs. A paragraph explaining the algorithm, the history, or the alternatives considered belongs in neither place — moving an essay from a `//` comment into a JSDoc description is not a fix, it is the same essay indented differently.
-
-**So never trade a JSDoc block for a shorter comment.** Turning
-
-```
-/**
- * An async external is a promise, not a module record with an evaluating state.
- * @param {Module} module the imported module
- * @returns {boolean} true when the module is an async external
- */
-const isAsyncExternal = (module) => …
+```sh
+git diff -U0 $(git merge-base HEAD origin/main) -- '*.js' |
+	awk '/^\+[ \t]*\/\//{if(++n>2)print;next}{n=0}'
 ```
 
-into
+Each surviving line must carry what the code cannot: a hidden invariant, an ordering constraint, a workaround, or the name of the concept the block implements. **Never** restate the next line, narrate the diff, recap the PR description, or quote the task you were given.
 
-```
-// An async external is a promise, not a module record with an evaluating state.
-const isAsyncExternal = (/** @type {Module} */ module) => …
-```
+**A JSDoc block's tags are exempt** — they are the type contract, not commentary, and are multi-line by construction. Every named function gets one, module-scope helper or not: one `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply. Never shorten, flatten or delete a tag, and never trade a JSDoc block for a `//` comment that hides the types in an inline `/** @type {T} */` cast — that loses the parameter and return documentation. (Such a cast is for a throwaway callback argument only.)
 
-is a regression, not a cleanup: the parameter and return documentation is gone and the types now hide inside the signature. An inline `/** @type {T} */` cast on a parameter is for a throwaway callback argument, not for a named function — every named function, module-scope helper or not, gets a JSDoc block, and one carrying an explanation gets it whatever its scope.
-
-Prose about a documented symbol goes **inside** its JSDoc, as the description above the tags — never as a `//` comment stacked on top of the block, and never as a `//` comment standing in for the block.
+**The description above those tags is prose, so it is capped at two sentences.** Say what the function does when its name doesn't, plus the one constraint a caller needs. Moving an essay out of a `//` comment into a JSDoc description is the same essay indented differently, not a fix — an explanation of the algorithm, the history, or the alternatives considered belongs in neither. Prose about a documented symbol goes inside its JSDoc, never as a `//` comment stacked on top of the block or standing in for it.
 
 ## Testing
 

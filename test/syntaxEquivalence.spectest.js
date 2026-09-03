@@ -1602,10 +1602,8 @@ describe("a lowering computes as the spelling it replaces", () => {
 				const context = /** @type {CanvasRenderingContext2D} */ (
 					canvas.getContext("2d", { willReadFrequently: true })
 				);
-				// A color is read as the color it is rather than as the text the
-				// engine serializes it to: `color(srgb .2 .4 .6)` and `#369` are one
-				// color written two ways, and which of them a computed value carries
-				// is what the rewrite is free to change.
+				// A color read as the color it is, not the text it serializes to:
+				// `color(srgb .2 .4 .6)` and `#369` are one color written two ways.
 				const painted = (value) => {
 					context.fillStyle = "#010203";
 					context.fillStyle = value;
@@ -1676,10 +1674,8 @@ describe("a lowering computes as the spelling it replaces", () => {
 							direction,
 							computed: before
 						});
-						// ...and the same elements, read whole: what the fixture names is
-						// where the rewrite is, and this is everything else the CSSOM
-						// says about them. A property the rewrite is allowed to move —
-						// or one it reaches by arithmetic — is left to the probes above.
+						// ...and the same elements read whole: everything else the CSSOM
+						// says about them. What may move is left to the probes above.
 						const loose = new Set([
 							...(fixture.differs || []),
 							...(fixture.numeric || []),
