@@ -554,6 +554,15 @@ export type Clean = boolean | CleanOptions;
  */
 export type CompareBeforeEmit = boolean;
 /**
+ * Copy files and directories to the output directory.
+ * @since 5.111.0
+ */
+export type Copy = CopyPattern[] | string;
+/**
+ * A glob or a path of files which are copied to the output directory.
+ */
+export type CopyPattern = string | CopyObjectPattern;
+/**
  * This option enables cross-origin loading of chunks.
  */
 export type CrossOriginLoading = false | "anonymous" | "use-credentials";
@@ -862,6 +871,10 @@ export type AssetModuleOutputPath =
  */
 export type AssetParserDataUrlFunction =
 	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
+/**
+ * Patterns of files which are copied to the output directory.
+ */
+export type CopyPatterns = CopyPattern[];
 /**
  * Enable/disable renaming of `@keyframes`.
  */
@@ -2907,6 +2920,11 @@ export interface Output {
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
 	/**
+	 * Copy files and directories to the output directory.
+	 * @since 5.111.0
+	 */
+	copy?: Copy;
+	/**
 	 * This option enables cross-origin loading of chunks.
 	 */
 	crossOriginLoading?: CrossOriginLoading;
@@ -3120,6 +3138,27 @@ export interface CleanOptions {
 	 * Keep these assets.
 	 */
 	keep?: RegExp | string | import("../lib/CleanPlugin").KeepFn;
+}
+/**
+ * A pattern of files which are copied to the output directory.
+ */
+export interface CopyObjectPattern {
+	/**
+	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
+	 */
+	filename?: string | import("../lib/CopyPlugin").CopyFilenameFunction;
+	/**
+	 * Glob or path from where the files are copied.
+	 */
+	from: string;
+	/**
+	 * Directory the files are copied to, relative to 'output.path'.
+	 */
+	to?: string;
+	/**
+	 * Modifies the content of a copied file.
+	 */
+	transform?: import("../lib/CopyPlugin").CopyTransform;
 }
 /**
  * The abilities of the environment where the webpack generated code should run.
@@ -4982,6 +5021,10 @@ export interface OutputNormalized {
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
+	/**
+	 * Patterns of files which are copied to the output directory.
+	 */
+	copy?: CopyPatterns;
 	/**
 	 * This option enables cross-origin loading of chunks.
 	 */

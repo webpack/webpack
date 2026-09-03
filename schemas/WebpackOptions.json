@@ -380,6 +380,79 @@
       "type": "string",
       "absolutePath": true
     },
+    "Copy": {
+      "description": "Copy files and directories to the output directory.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CopyPattern"
+          }
+        },
+        {
+          "description": "Glob or path from where the files are copied.",
+          "type": "string",
+          "minLength": 1
+        }
+      ],
+      "added": "5.111.0"
+    },
+    "CopyObjectPattern": {
+      "description": "A pattern of files which are copied to the output directory.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "filename": {
+          "description": "Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.",
+          "anyOf": [
+            {
+              "type": "string",
+              "absolutePath": false
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "import('../lib/CopyPlugin').CopyFilenameFunction"
+            }
+          ]
+        },
+        "from": {
+          "description": "Glob or path from where the files are copied.",
+          "type": "string",
+          "minLength": 1
+        },
+        "to": {
+          "description": "Directory the files are copied to, relative to 'output.path'.",
+          "type": "string",
+          "absolutePath": false
+        },
+        "transform": {
+          "description": "Modifies the content of a copied file.",
+          "instanceof": "Function",
+          "tsType": "import('../lib/CopyPlugin').CopyTransform"
+        }
+      },
+      "required": ["from"]
+    },
+    "CopyPattern": {
+      "description": "A glob or a path of files which are copied to the output directory.",
+      "anyOf": [
+        {
+          "description": "Glob or path from where the files are copied.",
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "$ref": "#/definitions/CopyObjectPattern"
+        }
+      ]
+    },
+    "CopyPatterns": {
+      "description": "Patterns of files which are copied to the output directory.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CopyPattern"
+      }
+    },
     "CrossOriginLoading": {
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
@@ -4780,6 +4853,9 @@
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
         },
+        "copy": {
+          "$ref": "#/definitions/Copy"
+        },
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
         },
@@ -5220,6 +5296,9 @@
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
+        },
+        "copy": {
+          "$ref": "#/definitions/CopyPatterns"
         },
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
