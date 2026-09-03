@@ -46,3 +46,13 @@ it("should ignore the case when 'caseSensitive' is false", () => {
 	expect(read("insensitive/Upper.TXT")).toBe("upper");
 	expect(read("insensitive/keep.txt")).toBe("keep");
 });
+
+it("should reach a dot file the glob does not name by default", () => {
+	expect(read("all/.dot.txt")).toBe("dot");
+});
+
+it("should leave a dot file alone when 'dot' is false", () => {
+	expect(read("no-dot/keep.txt")).toBe("keep");
+	expect(exists("no-dot/.dot.txt")).toBe(false);
+	expect(exists("no-dot/.hidden/inside.txt")).toBe(false);
+});

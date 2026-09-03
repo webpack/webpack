@@ -13172,19 +13172,6 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
-  "output-copy-case-sensitive": Object {
-    "configs": Array [
-      Object {
-        "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
-        "multiple": true,
-        "path": "output.copy[].caseSensitive",
-        "type": "boolean",
-      },
-    ],
-    "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
-    "multiple": true,
-    "simpleType": "boolean",
-  },
   "output-copy-filename": Object {
     "configs": Array [
       Object {
@@ -13198,19 +13185,6 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
-  "output-copy-follow-symlinks": Object {
-    "configs": Array [
-      Object {
-        "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
-        "multiple": true,
-        "path": "output.copy[].followSymlinks",
-        "type": "boolean",
-      },
-    ],
-    "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
-    "multiple": true,
-    "simpleType": "boolean",
-  },
   "output-copy-from": Object {
     "configs": Array [
       Object {
@@ -13223,6 +13197,45 @@ Object {
     "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "output-copy-glob-options-case-sensitive": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
+        "multiple": true,
+        "path": "output.copy[].globOptions.caseSensitive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-copy-glob-options-dot": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.",
+        "multiple": true,
+        "path": "output.copy[].globOptions.dot",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-copy-glob-options-follow-symlinks": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
+        "multiple": true,
+        "path": "output.copy[].globOptions.followSymlinks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
+    "multiple": true,
+    "simpleType": "boolean",
   },
   "output-copy-reset": Object {
     "configs": Array [

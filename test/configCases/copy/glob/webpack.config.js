@@ -24,7 +24,16 @@ module.exports = {
 				from: [path.resolve(__dirname, "assets"), "*.txt"].join("\\"),
 				to: "backslash"
 			},
-			{ from: "assets/*.txt", caseSensitive: false, to: "insensitive" }
+			{
+				from: "assets/*.txt",
+				globOptions: { caseSensitive: false },
+				to: "insensitive"
+			},
+			{
+				from: "assets/**/*.txt",
+				globOptions: { dot: false },
+				to: "no-dot"
+			}
 		]
 	}
 };

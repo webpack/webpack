@@ -30,7 +30,7 @@ module.exports = {
 	output: {
 		copy: [
 			{ from: source },
-			{ from: source, followSymlinks: false, to: "no-follow" }
+			{ from: source, globOptions: { followSymlinks: false }, to: "no-follow" }
 		]
 	},
 	plugins: [
