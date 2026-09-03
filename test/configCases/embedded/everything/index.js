@@ -1,3 +1,4 @@
+import { isolate } from "./isolate";
 import inlineCss from "./inline.css";
 import inlineHtml from "./inline.html";
 import inlineJs from "./inline.js";
@@ -13,73 +14,154 @@ import sourceSvg from "./source.svg";
 import "./page-asset.html";
 import "./sheet-asset.css";
 
-it("minifies every body a document nests", () => {
+// The document webpack only emits keeps every body where it was written, so it
+// is the one that reaches a minimizer for each of them.
+const emittedPage = readEmitted("page-asset.html");
+const entryPage = readEmitted("page-entry.html");
+const emittedSheet = readEmitted("main.css");
+
+it("minifies an html document imported into javascript", () => {
 	expect(modulePage).toMatchSnapshot();
-	// An inline `<style>`, a `style` attribute, a JSON `<script>`, an `<svg>`
-	// subtree, and the document an `<iframe srcdoc>` holds.
-	expect(modulePage).toContain("<style>.moduleStyle{");
-	expect(modulePage).toContain("<p style=color:#0f0>hi</p>");
-	expect(modulePage).toContain(
-		'<script type=application/json>{"moduleJson":1}</script>'
-	);
-	expect(modulePage).toContain(
-		'<svg viewBox="0 0 2 2"> <rect fill=red /> </svg>'
-	);
-	expect(modulePage).toContain(
-		'<iframe srcdoc="<style>.moduleSrcdoc{color:#00f}</style>">'
-	);
-	// Two deep: the SVG in the `<style>`'s own `data:` url.
-	expect(modulePage).toContain(
-		"url(\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\")"
-	);
-	// A document webpack parses extracts its inline `<script>` into a chunk, so
-	// only the emitted-only document reaches a JavaScript minimizer inline.
-	expect(modulePage).toContain("<script src=");
 });
 
-it("minifies a `data:` payload of every language a media type names", () => {
+it("minifies an html document webpack parses as an entry", () => {
+	expect(entryPage).toMatchSnapshot();
+});
+
+it("minifies an html document webpack only emits", () => {
+	expect(emittedPage).toMatchSnapshot();
+});
+
+it("minifies css in an html style element", () => {
+	expect(
+		isolate(emittedPage, /<style>\.assetStyle[^]*?<\/style>/)
+	).toMatchSnapshot();
+});
+
+it("minifies css in an html style attribute", () => {
+	expect(isolate(emittedPage, /<p style=[^>]*>/)).toMatchSnapshot();
+});
+
+it("minifies javascript in an html script element", () => {
+	expect(isolate(emittedPage, /<script>[^]*?<\/script>/)).toMatchSnapshot();
+});
+
+it("minifies json in an html script element typed application/json", () => {
+	expect(
+		isolate(emittedPage, /<script type=application\/json>[^]*?<\/script>/)
+	).toMatchSnapshot();
+});
+
+it("minifies an svg subtree in html", () => {
+	expect(isolate(emittedPage, /<svg viewBox[^]*?<\/svg>/)).toMatchSnapshot();
+});
+
+it("minifies html in an html iframe srcdoc attribute", () => {
+	expect(isolate(emittedPage, /<iframe srcdoc="[^"]*">/)).toMatchSnapshot();
+});
+
+it("minifies an svg data url nested in an html style element", () => {
+	expect(
+		isolate(emittedPage, /url\("data:image\/svg\+xml,[^"]*"\)/)
+	).toMatchSnapshot();
+});
+
+it("extracts the script of an html entry into a chunk of its own", () => {
+	expect(isolate(entryPage, /<script src=[^>]*>/)).toMatchSnapshot();
+});
+
+it("minifies a stylesheet javascript imports as text", () => {
 	expect(sheetText).toMatchSnapshot();
-	expect(sheetText).toContain("@import url(data:text/css,.imported{color:red})");
-	expect(sheetText).toContain(
-		"url(\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\")"
-	);
-	expect(sheetText).toContain(
-		'url("data:text/html,<div>    <p>hi</p>  </div>")'
-	);
-	expect(sheetText).toContain('url(\'data:application/json,{"a":1}\')');
-	expect(sheetText).toContain("url(data:text/javascript,var\\ a=1;)");
-	// Reached through base64 it stays base64: re-encoding it as text would be a
-	// different url.
-	expect(sheetText).toContain(
-		"url(data:image/svg+xml;base64,PHN2Zz4gPHJlY3QgZmlsbD0ncmVkJyAvPiA8L3N2Zz4=)"
-	);
-	expect(sheetText).toContain(
-		"url(data:text/css;base64,LmlubmVye2NvbG9yOnJlZH0=)"
-	);
-	// A media type naming no language webpack knows keeps its payload.
-	expect(sheetText).toContain("url(data:image/png;base64,AAAA)");
-	// And the sheet itself is minified, whatever it carries.
-	expect(sheetText).toContain(".sheet_text_css{color:red;margin:10px}");
 });
 
-it("minifies an `asset/source` module of every language", () => {
-	expect(sourceCss).toBe(".sourceCss{color:red}");
-	expect(sourceJs).toBe("var sourceJs=1;function f(){return sourceJs}");
-	expect(sourceJson).toBe('{"sourceJson":1,"b":[1,2]}');
-	expect(sourceSvg).toBe(
-		'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"> <rect width="10" height="10" /> </svg>'
-	);
-	// Whitespace between elements is meaningful, so only the comment goes.
-	expect(sourceHtml).toContain("<div class=a>");
-	expect(sourceHtml).not.toContain("dropped");
+it("minifies the stylesheet webpack emits as a css asset", () => {
+	expect(emittedSheet).toMatchSnapshot();
 });
 
-it("encodes an `asset/inline` module of every language as a `data:` URI", () => {
-	// What each one carries is decoded in test.config.js, where a base64 decoder
-	// exists; referencing them here is also what keeps them in the bundle.
-	expect(inlineCss).toContain("data:text/css;base64,");
-	expect(inlineHtml).toContain("data:text/html;base64,");
-	expect(inlineJs).toContain("data:text/javascript;base64,");
-	expect(inlineJson).toContain("data:application/json;base64,");
-	expect(inlineSvg).toContain("data:image/svg+xml;base64,");
+it("minifies css in a css data url", () => {
+	expect(isolate(sheetText, /@import[^]*?\);/)).toMatchSnapshot();
+});
+
+it("minifies svg in a css data url", () => {
+	expect(isolate(sheetText, /\.svg\{background:url\([^]*?\)\}/)).toMatchSnapshot();
+});
+
+it("minifies html in a css data url", () => {
+	expect(isolate(sheetText, /\.html\{background:url\([^]*?\)\}/)).toMatchSnapshot();
+});
+
+it("minifies json in a css data url", () => {
+	expect(isolate(sheetText, /\.json\{background:url\([^]*?\)\}/)).toMatchSnapshot();
+});
+
+it("minifies javascript in a css data url", () => {
+	expect(isolate(sheetText, /\.javascript\{background:url\([^]*?\)\}/)).toMatchSnapshot();
+});
+
+it("minifies svg in a base64 css data url, and re-encodes it as base64", () => {
+	const url = isolate(sheetText, /data:image\/svg\+xml;base64,[^)]*/);
+
+	expect({ url, decoded: decodeDataUrl(url) }).toMatchSnapshot();
+});
+
+it("minifies css in a base64 css data url, and re-encodes it as base64", () => {
+	const url = isolate(sheetText, /data:text\/css;base64,[^)]*/);
+
+	expect({ url, decoded: decodeDataUrl(url) }).toMatchSnapshot();
+});
+
+it("leaves a css data url whose media type names no language", () => {
+	expect(isolate(sheetText, /\.png\{background:url\([^]*?\)\}/)).toMatchSnapshot();
+});
+
+it("minifies a css module of type asset/source", () => {
+	expect(sourceCss).toMatchSnapshot();
+});
+
+it("minifies an html module of type asset/source", () => {
+	expect(sourceHtml).toMatchSnapshot();
+});
+
+it("minifies a javascript module of type asset/source", () => {
+	expect(sourceJs).toMatchSnapshot();
+});
+
+it("minifies a json module of type asset/source", () => {
+	expect(sourceJson).toMatchSnapshot();
+});
+
+it("minifies an svg module of type asset/source", () => {
+	expect(sourceSvg).toMatchSnapshot();
+});
+
+it("minifies a css module of type asset/inline", () => {
+	expect({
+		url: inlineCss,
+		decoded: decodeDataUrl(inlineCss)
+	}).toMatchSnapshot();
+});
+
+it("minifies an html module of type asset/inline", () => {
+	expect({
+		url: inlineHtml,
+		decoded: decodeDataUrl(inlineHtml)
+	}).toMatchSnapshot();
+});
+
+it("minifies a javascript module of type asset/inline", () => {
+	expect({ url: inlineJs, decoded: decodeDataUrl(inlineJs) }).toMatchSnapshot();
+});
+
+it("minifies a json module of type asset/inline", () => {
+	expect({
+		url: inlineJson,
+		decoded: decodeDataUrl(inlineJson)
+	}).toMatchSnapshot();
+});
+
+it("minifies an svg module of type asset/inline", () => {
+	expect({
+		url: inlineSvg,
+		decoded: decodeDataUrl(inlineSvg)
+	}).toMatchSnapshot();
 });

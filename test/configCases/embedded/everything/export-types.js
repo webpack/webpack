@@ -1,20 +1,23 @@
 import sheetObject from "./sheet-sheet.css";
 import "./sheet-style.css";
 
-it("hands every export type that embeds a stylesheet the minified text", () => {
-	// A constructable stylesheet where one exists, the text-carrying fallback
-	// otherwise — never null, which `typeof` alone would accept.
-	expect(typeof sheetObject.replaceSync).toBe("function");
+/**
+ * What the `style` export type injected. This target has no document, so the
+ * universal runtime collects the stylesheet on globalThis instead.
+ * @returns {string} the collected stylesheets
+ */
+function collectedStyles() {
+	const key = Object.keys(globalThis).find((name) =>
+		name.startsWith("__webpack_css__")
+	);
 
-	const cssText =
-		typeof CSSStyleSheet !== "undefined" && sheetObject instanceof CSSStyleSheet
-			? [...sheetObject.cssRules].map((rule) => rule.cssText).join("")
-			: sheetObject.cssText;
+	return Object.values(globalThis[key]).join("\n");
+}
 
-	expect(cssText).toContain(".sheet_sheet_css{color:red;margin:10px}");
-	// And every payload it nests is minified too, whichever export type carries
-	// the sheet.
-	expect(cssText).toContain("@import url(data:text/css,.imported{color:red})");
-	expect(cssText).toContain("<svg> <rect fill='red' /> </svg>");
-	expect(cssText).not.toContain("dropped");
+it("minifies a stylesheet javascript imports as a constructable stylesheet", () => {
+	expect(sheetObject.cssText).toMatchSnapshot();
+});
+
+it("minifies a stylesheet the style export type injects", () => {
+	expect(collectedStyles()).toMatchSnapshot();
 });
