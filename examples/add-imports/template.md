@@ -1,6 +1,6 @@
 # Adding imports to a module
 
-Some files read what they never import: a script written for a `<script>` tag that expects `$` on a global, a polyfill it needs but never names, a top-level `this` that was the window. Putting the imports around the file before webpack parses it is enough — the parser reads them as the module's own, so they are ordinary dependencies with ordinary tree shaking, mangling and scope hoisting.
+Some files read what they never import: a script written for a `<script>` tag that expects `$` on a global, a polyfill it needs but never names, a top-level `this` that was the window. Putting the imports around the file before webpack parses it is enough — the parser reads them as the module's own, so they enter the module graph as ordinary dependencies and get whatever their module format allows. A `require` keeps the file the script it is, so the output below reports a CommonJS bailout for it; `ProvidePlugin` below, and an `import` in a file that tolerates one, are what buy the analysis.
 
 No loader is needed for that. `NormalModule`'s `processResult` hook hands a plugin what the loaders produced — source, source map and any preparsed AST — and takes back a replacement. It is the same hook [adding exports](../add-exports) uses, from the other end of the file, and it is small enough to keep in the configuration.
 
@@ -8,7 +8,7 @@ Reach for it only for what it is for. A name the module merely **reads** is `Pro
 
 Two details the plugin has to respect, and one to know:
 
-- A `"use strict"` directive stays the first statement, or prepending demotes it to an expression and the module silently turns sloppy.
+- A `"use strict"` directive stays the first statement, or prepending demotes it to an expression and the module silently turns sloppy. A source that left the directive unterminated needs the `;` its own next line would have supplied, or the prepended code runs into it.
 - `before` ends without a newline, so nothing below it shifts and the source map still fits; `after` adds one line at the end, which shifts nothing above it.
 - The wrapper is for scripts only. `import`/`export` may only appear at the top level, so wrapping an ES module in a function is a syntax error — an ES module already answers `undefined` for a top-level `this` anyway.
 

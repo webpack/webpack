@@ -46,10 +46,12 @@ const addImports = (compiler) => {
 						typeof source === "string" ? source : source.toString("utf8");
 					const directive = DIRECTIVE.exec(code);
 					const at = directive ? directive[0].length : 0;
+					// a directive its source left unterminated would run into `before`
+					const end = directive && !directive[0].endsWith(";") ? ";" : "";
 					// no newline after `before`: one would shift every line below it out
 					// of the source map; a preparsed ast would be parsed instead of this
 					return [
-						`${code.slice(0, at)}${before}${code.slice(at)}\n${after}`,
+						`${code.slice(0, at)}${end}${before}${code.slice(at)}\n${after}`,
 						sourceMap,
 						undefined
 					];

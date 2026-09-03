@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 // A script written for a `<script>` tag: it reads `$` as a global, reaches the
 // global through `this`, and expects the polyfill to have run before it.
