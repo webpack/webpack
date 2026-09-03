@@ -1752,6 +1752,56 @@ const gamutToLinearSrgb = (primaries, white, adapt) => {
  * of its own.
  * @returns {{ text: string, names: string[] }} the emitted source and the spaces it defines
  */
+// What a color read in one space passes through on its way to a byte. The
+// printer's own sRGB encode undoes the sRGB transfer, so a space carrying that
+// transfer and no matrix hands the byte back the component it was written with.
+// sRGB's own gamut constructs the identity to within 1e-16, which is noise a
+// component would carry into what the printer writes — so it is written as the
+// identity it is.
+const IDENTITY_MATRIX = [
+	[1, 0, 0],
+	[0, 1, 0],
+	[0, 0, 1]
+];
+
+/**
+ * @param {number[][]} matrix a constructed matrix
+ * @returns {number[][]} the identity where it is one, else the matrix
+ */
+const asIdentity = (matrix) =>
+	matrix.every((row, r) =>
+		row.every((value, c) => Math.abs(value - IDENTITY_MATRIX[r][c]) <= 1e-9)
+	)
+		? IDENTITY_MATRIX.map((row) => [...row])
+		: matrix;
+
+const ENCODED_ALREADY = 0;
+const THROUGH_TRANSFER = 1;
+const THROUGH_MATRIX = 2;
+const ENGINE_TRANSFER_DIFFERS = 3;
+const SRGB_TRANSFER = "srgbTransfer";
+
+/**
+ * @param {string} name the space
+ * @param {string} gamut the primaries it is defined by
+ * @param {string} transfer the name of its transfer function
+ * @returns {number} what a color in it passes through
+ */
+const spaceConversion = (name, gamut, transfer) => {
+	if (
+		!SUPPLEMENT.colorTransfers.some(([spelling]) => spelling === SRGB_TRANSFER)
+	) {
+		throw new Error(
+			`no ${SRGB_TRANSFER} among the transfers: they were renamed`
+		);
+	}
+	if (SUPPLEMENT.enginesDisagreeOnTransfer.includes(name)) {
+		return ENGINE_TRANSFER_DIFFERS;
+	}
+	if (gamut !== "srgb") return THROUGH_MATRIX;
+	return transfer === SRGB_TRANSFER ? ENCODED_ALREADY : THROUGH_TRANSFER;
+};
+
 const collectColorSpaceModel = () => {
 	const [toLms, lmsToOklab] = SUPPLEMENT.oklabMatrices;
 	const asRows = (/** @type {number[]} */ flat) => [
@@ -1771,23 +1821,58 @@ const collectColorSpaceModel = () => {
 	const names = [];
 	const flat = (/** @type {number[][]} */ m) =>
 		`[${flatten(m).map(String).join(", ")}]`;
-	// `direct` marks a space reached from sRGB by arithmetic alone. Mixing in one
-	// lands on the byte every implementation lands on, so its result is rounded
-	// against the tight boundary margin rather than the Lab family's wide one.
+	// `conversion` says what a color read in this space passes through on its way
+	// to a byte, which is how far the answer can sit from an engine's own: `0`
+	// where the components are the gamma-encoded sRGB ones already, `1` where the
+	// sRGB transfer runs, `2` where a matrix runs as well. What each is worth in
+	// bytes is measured in `lib/css/syntax.js`.
+	// `written` says how a color computed in this space is written back out: what
+	// opens the call, what each component is multiplied by to reach the units the
+	// grammar states, which of them carry a `%`, and the support key the spelling
+	// needs. A color the sRGB byte cannot hold is written this way instead.
+	// `uncertainHue` says when this space's hue is one an engine may or may not
+	// read as missing, which is a mix no answer can be given for. `null` where
+	// there is no such band: a gray's hue is missing in every space, and every
+	// other color's stands.
 	const add = (
 		/** @type {string[]} */ spellings,
 		/** @type {string} */ to,
 		/** @type {string} */ from,
 		/** @type {number} */ hue,
-		/** @type {boolean} */ direct
+		/** @type {number} */ conversion,
+		/** @type {(name: string) => string} */ written,
+		/** @type {string} */ uncertainHue = "null"
 	) => {
 		for (const name of spellings) {
 			names.push(name);
 			entries.push(
-				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, direct: ${direct} }]`
+				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, conversion: ${conversion}, written: ${written(name)}, uncertainHue: ${uncertainHue} }]`
 			);
 		}
 	};
+	// Chromium reads an Oklch hue as missing well before the chroma reaches zero —
+	// measured: kept at 0.02, dropped at 0.015 — where CSS Color 4 §4.4 makes it
+	// powerless only at zero. So a color in that band has no answer two engines
+	// agree on, and a mix naming one is left as it stands. `lch()`, `hsl()` and
+	// `hwb()` show no such band: their hue stands down to a chroma of 0.2 and a
+	// saturation of 0.1%.
+	const UNCERTAIN_OKLCH_HUE = "uncertainOklchHue";
+	const written = (
+		/** @type {string} */ open,
+		/** @type {number[]} */ scale,
+		/** @type {boolean[]} */ percent,
+		/** @type {string} */ feature
+	) =>
+		`{ open: "${open}", scale: [${scale.join(", ")}], percent: [${percent.join(", ")}], feature: "${feature}" }`;
+	const plain = [1, 1, 1];
+	const numbers = [false, false, false];
+	const percentPair = [false, true, true];
+	// A predefined space is written as the `color()` it was read from.
+	const asColorFunction = (/** @type {string} */ name) =>
+		written(`color(${name} `, plain, numbers, "colorFunction");
+	// The one space whose components are the byte's own, which is what a hex and
+	// an `rgb()` state as well.
+	let encodedSpace = "";
 	/** @type {string[]} */
 	const sources = [];
 	const typedConverter = (/** @type {string} */ line) =>
@@ -1799,10 +1884,12 @@ const collectColorSpaceModel = () => {
 		point,
 		transfer
 	] of SUPPLEMENT.predefinedColorSpaces) {
-		const toSrgb = gamutToLinearSrgb(
-			/** @type {number[]} */ (primaries.get(gamut)),
-			/** @type {number[]} */ (white.get(point)),
-			point === "D50"
+		const toSrgb = asIdentity(
+			gamutToLinearSrgb(
+				/** @type {number[]} */ (primaries.get(gamut)),
+				/** @type {number[]} */ (white.get(point)),
+				point === "D50"
+			)
 		);
 		// `display-p3` names `DISPLAY_P3_M` and `toDisplayP3`, so neither the
 		// constants nor the functions carry a spelling the linter reads as a word.
@@ -1819,7 +1906,17 @@ const collectColorSpaceModel = () => {
 				`const from${title} = (c) => applyModel(${upper}_I, c.map(${transfer}));`
 			)
 		);
-		add([name], `to${title}`, `from${title}`, -1, gamut === "srgb");
+		add(
+			[name],
+			`to${title}`,
+			`from${title}`,
+			-1,
+			spaceConversion(name, gamut, transfer),
+			asColorFunction
+		);
+		if (spaceConversion(name, gamut, transfer) === ENCODED_ALREADY) {
+			encodedSpace = name;
+		}
 	}
 	sources.push(
 		`const XYZ_M = ${flat(linearSrgbToXyz)};`,
@@ -1835,16 +1932,58 @@ const collectColorSpaceModel = () => {
 		`const OKLAB_M = ${flat(asRows(lmsToOklab))};`,
 		`const OKLAB_I = ${flat(oklabToLms)};`
 	);
-	add(["xyz", "xyz-d65"], "toXyz", "fromXyz", -1, false);
-	add(["xyz-d50"], "toXyzD50", "fromXyzD50", -1, false);
-	add(["lab"], "toLab", "fromLab", -1, false);
-	add(["lch"], "toLch", "fromLch", 2, false);
-	add(["oklab"], "toOklab", "fromOklab", -1, false);
-	add(["oklch"], "toOklch", "fromOklch", 2, false);
-	add(["hsl"], "toHsl", "fromHsl", 0, true);
-	add(["hwb"], "toHwb", "fromHwb", 0, true);
+	add(
+		["xyz", "xyz-d65"],
+		"toXyz",
+		"fromXyz",
+		-1,
+		THROUGH_MATRIX,
+		asColorFunction
+	);
+	add(
+		["xyz-d50"],
+		"toXyzD50",
+		"fromXyzD50",
+		-1,
+		THROUGH_MATRIX,
+		asColorFunction
+	);
+	add(["lab"], "toLab", "fromLab", -1, THROUGH_MATRIX, () =>
+		written("lab(", plain, numbers, "labColors")
+	);
+	add(["lch"], "toLch", "fromLch", 2, THROUGH_MATRIX, () =>
+		written("lch(", plain, numbers, "labColors")
+	);
+	add(["oklab"], "toOklab", "fromOklab", -1, THROUGH_MATRIX, () =>
+		written("oklab(", plain, numbers, "oklabColors")
+	);
+	sources.push(
+		`/**
+ * @param {number[]} c a color's components in Oklch
+ * @returns {boolean} true where an engine may read the hue as missing
+ */
+const ${UNCERTAIN_OKLCH_HUE} = (c) => Math.abs(c[1]) < 0.03;`
+	);
+	add(
+		["oklch"],
+		"toOklch",
+		"fromOklch",
+		2,
+		THROUGH_MATRIX,
+		() => written("oklch(", plain, numbers, "oklabColors"),
+		UNCERTAIN_OKLCH_HUE
+	);
+	add(["hsl"], "toHsl", "fromHsl", 0, ENCODED_ALREADY, () =>
+		written("hsl(", [1, 100, 100], percentPair, "")
+	);
+	add(["hwb"], "toHwb", "fromHwb", 0, ENCODED_ALREADY, () =>
+		written("hwb(", [1, 100, 100], percentPair, "hwbColors")
+	);
+	if (encodedSpace === "") {
+		throw new Error("no predefined space states the sRGB byte itself");
+	}
 	return {
-		text: `${sources.join("\n")}\n\n/** @type {Map<string, { to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, direct: boolean }>} */\nconst COLOR_SPACE_MODEL = new Map([\n${entries.join(",\n")}\n]);`,
+		text: `${sources.join("\n")}\n\n// The space a hex and an \`rgb()\` state their components in.\nconst SRGB_SPACE = "${encodedSpace}";\n\n/** @typedef {{ to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, conversion: number, written: { open: string, scale: number[], percent: boolean[], feature: string }, uncertainHue: ((c: number[]) => boolean) | null }} ColorSpaceModel */\n\n/** @type {Map<string, ColorSpaceModel>} */\nconst COLOR_SPACE_MODEL = new Map([\n${entries.join(",\n")}\n]);`,
 		names
 	};
 };
@@ -1855,12 +1994,12 @@ const collectColorSpaceModel = () => {
  * name of the function that reads one stored component back to linear light. The three `xyz`
  * spellings carry no primaries of their own — they are the space the rest
  * convert through.
- * @returns {[string, number[], string][]} the spaces, in the order they are read
+ * @returns {[string, number[], string, number][]} the spaces, in the order they are read
  */
 const collectColorSpaces = () => {
 	const primaries = new Map(SUPPLEMENT.colorPrimaries);
 	const white = new Map(SUPPLEMENT.colorWhitePoints);
-	/** @type {[string, number[], string][]} */
+	/** @type {[string, number[], string, number][]} */
 	const out = [];
 	for (const [
 		name,
@@ -1873,18 +2012,34 @@ const collectColorSpaces = () => {
 			/** @type {number[]} */ (white.get(point)),
 			point === "D50"
 		);
-		out.push([name, flatten(matrix), transfer]);
+		out.push([
+			name,
+			flatten(matrix),
+			transfer,
+			spaceConversion(name, gamut, transfer)
+		]);
 	}
 	const identity = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 	const xyz = flatten(XYZ_TO_LINEAR_SRGB);
-	out.push(["xyz", xyz, "linearTransfer"], ["xyz-d65", xyz, "linearTransfer"]);
+	out.push(
+		["xyz", xyz, "linearTransfer", THROUGH_MATRIX],
+		["xyz-d65", xyz, "linearTransfer", THROUGH_MATRIX]
+	);
 	out.push([
 		"xyz-d50",
 		flatten(multiplyMatrix(XYZ_TO_LINEAR_SRGB, D50_TO_D65)),
-		"linearTransfer"
+		"linearTransfer",
+		THROUGH_MATRIX
 	]);
-	// Read by nothing but the check that the construction reproduces sRGB itself.
-	if (out[0][1].some((value, at) => Math.abs(value - identity[at]) > 1e-9)) {
+	// sRGB's own primaries must construct the identity, and then it is written as
+	// the identity: the 1e-16 the construction leaves behind is noise a component
+	// carries all the way into what the printer writes.
+	for (const space of out) {
+		if (space[1].every((value, at) => Math.abs(value - identity[at]) <= 1e-9)) {
+			space[1] = [...identity];
+		}
+	}
+	if (out[0][1].some((value, at) => value !== identity[at])) {
 		throw new Error("sRGB's own primaries did not construct the identity");
 	}
 	return out;
@@ -3246,6 +3401,33 @@ const collectSubstitutionFunctions = () => {
 // referencing one takes math expressions and nothing else.
 const MATH_PRODUCTIONS = ["calc-sum", "calc-product", "calc-value"];
 
+// The longhand a family list is stated by, which its shorthands reference.
+const FAMILY_PROPERTY = "font-family";
+
+/**
+ * The properties whose value takes a font family list: the longhand itself and
+ * every shorthand referencing it. An identifier naming a family is a family name
+ * in any of them — no other slot they state takes one the property does not
+ * define — which is what lets `system-ui` be lowered wherever it is written.
+ * @returns {string[]} the property names, sorted
+ */
+const collectFamilyListProperties = () => {
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (typeof property.syntax !== "string") continue;
+		if (
+			name === FAMILY_PROPERTY ||
+			references(property.syntax).includes(`'${FAMILY_PROPERTY}'`)
+		) {
+			out.push(name);
+		}
+	}
+	if (!out.includes(FAMILY_PROPERTY)) {
+		throw new Error(`no ${FAMILY_PROPERTY} among the properties`);
+	}
+	return out.sort();
+};
+
 /**
  * CSS Values 4's math functions, spotted by the `<calc-sum>` in their own
  * syntax: inside one, everything is a math expression, so `*` and `/` there are
@@ -3491,7 +3673,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -4173,6 +4355,14 @@ const rec2020Transfer = (c) => {
 		["D65", [0.3127, 0.329]],
 		["D50", [0.3457, 0.3585]]
 	],
+	// The spaces whose transfer function an engine does not read the way CSS
+	// Color 4 §10 states it, so no byte computed from one is the color it paints:
+	// Chromium takes a98-rgb's gamma as 2.2 rather than 563/256 (0.4% out at the
+	// bottom of the range) and ProPhoto's as a pure 1.8 with none of the linear
+	// segment below 16/512 (4x out there). `yarn measure:color-agreement` sweeps
+	// each space's own range and names them, so this list is re-derivable rather
+	// than remembered; a color written in either is left as it stands.
+	enginesDisagreeOnTransfer: ["a98-rgb", "prophoto-rgb"],
 	// What the two calculation constants are worth. The grammar names them, and
 	// no dataset states a value for either.
 	calcConstantValues: [
@@ -6227,6 +6417,7 @@ const collectData = async () => {
 	const colorNames = collectColorNames(colorName);
 	const colorNameValues = collectColorNameValues(colorName);
 	const mathFunctions = collectMathFunctions();
+	const familyListProperties = collectFamilyListProperties();
 	const calcConstants = collectCalcConstants(SUPPLEMENT.calcConstantValues);
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
@@ -6462,6 +6653,10 @@ const UNSHARED_LONGHAND_KEYWORDS = new Map([${unsharedLonghandKeywords
 // appearing once, in grammar order. A merge emits every value, so the only
 // question is whether each parses back into the longhand it was authored on.
 // prettier-ignore
+// The properties whose value ends in a family list, out of the grammars: the
+// longhand and the shorthands that reference it.
+const FAMILY_LIST_PROPERTIES = ${setLiteral(familyListProperties)};
+
 const FAMILY_LONGHANDS = new Map([${familyLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
@@ -6834,14 +7029,22 @@ const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 // white point and transfer function CSS Color 4 §10 states.
 ${SUPPLEMENT.colorTransfers.map(([, source]) => source).join("\n\n")}
 
-/** @type {Map<string, { toSrgb: number[], transfer: (c: number) => number }>} */
+// What a color read in one space passes through on its way to a byte: nothing at
+// all, the sRGB transfer, or a matrix as well. \`lib/css/syntax.js\` reads how far
+// its answer can sit from an engine's from this.
+const ENCODED_ALREADY = ${ENCODED_ALREADY};
+const THROUGH_TRANSFER = ${THROUGH_TRANSFER};
+const THROUGH_MATRIX = ${THROUGH_MATRIX};
+const ENGINE_TRANSFER_DIFFERS = ${ENGINE_TRANSFER_DIFFERS};
+
+/** @type {Map<string, { toSrgb: number[], transfer: (c: number) => number, conversion: number }>} */
 const PREDEFINED_COLOR_SPACES = new Map([
 ${colorSpaces
 	.map(
-		([name, matrix, transfer]) =>
+		([name, matrix, transfer, conversion]) =>
 			`\t["${name}", { toSrgb: [${matrix
 				.map(String)
-				.join(", ")}], transfer: ${transfer} }]`
+				.join(", ")}], transfer: ${transfer}, conversion: ${conversion} }]`
 	)
 	.join(",\n")}
 ]);
@@ -7123,8 +7326,8 @@ module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPA
 module.exports.EASING_KEYWORDS = EASING_KEYWORDS;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
 module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
-module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
-module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
+module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;\nmodule.exports.ENCODED_ALREADY = ENCODED_ALREADY;\nmodule.exports.ENGINE_TRANSFER_DIFFERS = ENGINE_TRANSFER_DIFFERS;
+module.exports.FAMILY_LIST_PROPERTIES = FAMILY_LIST_PROPERTIES;\nmodule.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
 module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_INITIALS = FAMILY_SLOT_INITIALS;\nmodule.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
@@ -7151,9 +7354,9 @@ module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;

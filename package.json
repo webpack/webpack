@@ -54,6 +54,7 @@
     "benchmark": "node --max-old-space-size=6144 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
     "benchmark:css-minifiers": "node tooling/compare-css-minifiers.js",
     "benchmark:html-minifiers": "node tooling/compare-html-minifiers.js",
+		"measure:color-agreement": "node tooling/measure-color-agreement.js",
     "pretest": "yarn lint",
     "test": "yarn test:base",
     "test:base": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --workerIdleMemoryLimit=512MB --logHeapUsage",

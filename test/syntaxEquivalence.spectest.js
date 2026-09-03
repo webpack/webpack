@@ -1432,12 +1432,62 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a color computed rather than painted, kept as it was written",
+		// A gradient interpolates between its stops and a mix mixes its two, so the
+		// byte an engine paints is not what either computes from. The probes read
+		// the mixes; the gradient is here for the printer to leave alone.
+		css:
+			"#b{color:color-mix(in srgb,hsl(209.32 16.5% 53.41%) 20%,red);" +
+			"background-color:color-mix(in hsl,#ff0 12%,#808080);" +
+			"border-top-color:color-mix(in hwb,#ff0 12%,#808080);" +
+			"outline-color:color-mix(in hsl,#ff0 12%,#000);" +
+			"text-decoration-color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250));" +
+			"background-image:linear-gradient(hsl(209.32 16.5% 53.41%),red)}",
+		browsers: ["chrome 130"],
+		produces: ["background-color:#8f8f71", "color:#e31b1f"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "background-image"]
+		]
+	},
+	{
+		name: "a color() converted only as far as the byte is the engine's own",
+		css:
+			"#b{color:color(srgb .2 .4 .6);" +
+			"background-color:color(display-p3 .05 .06 .07);" +
+			"border-top-color:color(a98-rgb .5 .5 .5);" +
+			"outline-color:color(prophoto-rgb .5 .5 .5);" +
+			"text-decoration-color:color(srgb-linear .2 .4 .6);" +
+			"caret-color:color(display-p3 .6 .7 .8)}",
+		browsers: ["chrome 130"],
+		produces: ["color:#369", "background-color:#0c0f12"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "caret-color"]
+		]
+	},
+	{
 		name: "system-ui, which names each platform's own font instead",
 		produces: ["-apple-system,BlinkMacSystemFont"],
-		css: "#b{font-family:system-ui}",
+		css: "#b{font-family:system-ui}#c{font:italic 700 12px/1.2 system-ui,serif}",
 		browsers: ["chrome 50"],
-		html: "<button id=b>x</button>",
-		probes: [["#b", "font-family"]],
+		html: "<button id=b>x</button><button id=c>y</button>",
+		probes: [
+			["#b", "font-family"],
+			["#c", "font-family"],
+			["#c", "font-size"],
+			["#c", "font-style"]
+		],
 		// The stack *is* the rewrite: `system-ui` leads it, so an engine reading
 		// the keyword still takes it, and the rest is what one that does not reads.
 		differs: ["font-family"]
@@ -1542,6 +1592,181 @@ describe("a lowering computes as the spelling it replaces", () => {
 			} finally {
 				await page.close();
 			}
+		},
+		FILE_TIMEOUT
+	);
+});
+
+// Every color spelling a stylesheet can hold, in the shapes a rewrite reads them
+// through: a color of its own, one a mix or a relative reference computes with,
+// and one nested a level deeper.
+const COLOR_SPACES = [
+	"srgb",
+	"srgb-linear",
+	"display-p3",
+	"a98-rgb",
+	"prophoto-rgb",
+	"rec2020",
+	"xyz",
+	"xyz-d50",
+	"xyz-d65"
+];
+const MIX_SPACES = [
+	"srgb",
+	"hsl",
+	"hwb",
+	"lab",
+	"lch",
+	"oklab",
+	"oklch",
+	"display-p3"
+];
+const RELATIVE_CHANNELS = {
+	rgb: "r calc(g * 1.2) b",
+	// A hue keyword substitutes as the number it names, so the arithmetic over
+	// one is read in degrees — which these carry into the sweep.
+	hsl: "calc(h + 40) s calc(l * .9)",
+	hwb: "h w b",
+	lab: "calc(l * 1.1) a b",
+	lch: "l c calc(h * 2)",
+	oklab: "l a calc(b * .8)",
+	oklch: "calc(l * .95) c calc(h - 30)"
+};
+// The seed is what makes the corpus the same one every run; the count is what
+// the browser reads back in one batch of a few seconds.
+const COLOR_SAMPLES = 20000;
+
+describe("a color rewrite paints as the color it replaced", () => {
+	/** @type {import("puppeteer-core").Browser} */
+	let browser;
+
+	beforeAll(async () => {
+		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	});
+
+	/**
+	 * One color, in a spelling drawn from the seeded sequence.
+	 * @param {() => number} random the sequence
+	 * @param {number} depth how many levels of mix or relative reference are left
+	 * @returns {string} the color as written
+	 */
+	const spell = (random, depth) => {
+		const number = (max, digits) => (random() * max).toFixed(digits);
+		const pick = random();
+		if (pick < 0.12) {
+			return `#${Math.floor(random() * 0xffffff)
+				.toString(16)
+				.padStart(6, "0")}`;
+		}
+		if (pick < 0.2) {
+			return `rgb(${number(255, 1)} ${number(255, 1)} ${number(255, 1)})`;
+		}
+		if (pick < 0.28) {
+			return `hsl(${number(360, 2)} ${number(100, 2)}% ${number(100, 2)}%)`;
+		}
+		if (pick < 0.34) {
+			return `hwb(${number(360, 2)} ${number(60, 2)}% ${number(60, 2)}%)`;
+		}
+		if (pick < 0.44) {
+			return `lab(${number(100, 4)}% ${number(200, 4) - 100} ${number(200, 4) - 100})`;
+		}
+		if (pick < 0.54) {
+			return `lch(${number(100, 4)}% ${number(140, 4)} ${number(360, 3)})`;
+		}
+		if (pick < 0.64) {
+			return `oklab(${number(1, 6)} ${number(0.8, 6) - 0.4} ${number(0.8, 6) - 0.4})`;
+		}
+		if (pick < 0.74) {
+			return `oklch(${number(1, 6)} ${number(0.4, 6)} ${number(360, 3)})`;
+		}
+		if (pick < 0.88) {
+			const space = COLOR_SPACES[Math.floor(random() * COLOR_SPACES.length)];
+			return `color(${space} ${number(1, 6)} ${number(1, 6)} ${number(1, 6)})`;
+		}
+		if (depth === 0) return "red";
+		if (pick < 0.94) {
+			const space = MIX_SPACES[Math.floor(random() * MIX_SPACES.length)];
+			return `color-mix(in ${space}, ${spell(random, depth - 1)} ${number(
+				100,
+				1
+			)}%, ${spell(random, depth - 1)})`;
+		}
+		const names = Object.keys(RELATIVE_CHANNELS);
+		const fn = names[Math.floor(random() * names.length)];
+		return `${fn}(from ${spell(random, depth - 1)} ${RELATIVE_CHANNELS[fn]})`;
+	};
+
+	it(
+		"over every spelling, mix and relative reference",
+		async () => {
+			let seed = 1234567;
+			const random = () => {
+				seed = (seed * 1103515245 + 12345) % 2147483648;
+				return seed / 2147483648;
+			};
+			/** @type {[string, string][]} */
+			const rewritten = [];
+			for (let at = 0; at < COLOR_SAMPLES; at++) {
+				const written = spell(random, 2);
+				const minified = /^a\{color:([\s\S]*)\}$/.exec(
+					new CssSourceProcessor().process(`a{color:${written}}`, {
+						mode: "minify"
+					}).code
+				)[1];
+				// Whitespace alone is no rewrite to hold to anything.
+				if (minified !== written.replace(/,\s+/g, ",").replace(/\s+/g, " ")) {
+					rewritten.push([written, minified]);
+				}
+			}
+			// The corpus has to reach the rewrites, or this proves nothing.
+			expect(rewritten.length).toBeGreaterThan(COLOR_SAMPLES / 10);
+			const page = await browser.newPage();
+			/** @type {string[]} */
+			const differed = [];
+			try {
+				await page.setContent("<body></body>");
+				const CHUNK = 300;
+				for (let at = 0; at < rewritten.length; at += CHUNK) {
+					const chunk = rewritten.slice(at, at + CHUNK);
+					const painted = await page.evaluate((pairs) => {
+						const canvas = document.createElement("canvas");
+						const context = /** @type {CanvasRenderingContext2D} */ (
+							canvas.getContext("2d", { willReadFrequently: true })
+						);
+						const paint = (color) => {
+							// A color the canvas will not take keeps its text, so a pair
+							// the engine reads differently is not read as agreement.
+							context.fillStyle = "#010203";
+							context.fillStyle = color;
+							if (context.fillStyle === "#010203") return `unread:${color}`;
+							context.clearRect(0, 0, 1, 1);
+							context.fillRect(0, 0, 1, 1);
+							return [...context.getImageData(0, 0, 1, 1).data].join(",");
+						};
+						return pairs.map(([before, after]) => [
+							paint(before),
+							paint(after)
+						]);
+					}, chunk);
+					for (const [index, [before, after]] of painted.entries()) {
+						if (before !== after) {
+							differed.push(
+								`${chunk[index][0]}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
+							);
+						}
+					}
+				}
+			} finally {
+				await page.close();
+			}
+			expect({ rewrites: rewritten.length, differed }).toEqual({
+				rewrites: rewritten.length,
+				differed: []
+			});
 		},
 		FILE_TIMEOUT
 	);

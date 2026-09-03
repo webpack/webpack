@@ -62,16 +62,16 @@ Array [
    rather than computed, so converting one moves what the CSSOM reports */.g03{background-image:linear-gradient(90deg,red,lch(50 20 30))}",
   "/*! the legacy sRGB forms all compute to \`rgb(…)\` however they are spelled */.g04{background-image:linear-gradient(90deg,red,#010203)}",
   "/*! a relative color is the color its channels name, read off the origin as the
-   \`r\` / \`l\` / \`h\` keywords, so it folds where the byte is the engine's own */.r01,.r02{color:#976c67}.r03{color:#40bf40}.r04{color:gray}",
+   \`r\` / \`l\` / \`h\` keywords, so it folds where the byte is the engine's own */.r01,.r02{color:#976c67}.r03{color:#40bf40}.r04{color:rgb(from rgb(50% 50% 50%) r g b)}",
   "/*! declined whatever the function is named: \`from\` says the argument after it is
    read the same way, which is the only thing an unknown function states */.r05{color:alpha(from lch(50% 20 30) / .5)}",
   "/*! ...and the keyword is the first argument however the call is spaced */.r06{color:#976c67}",
   "/*! an origin already written as bytes converts exactly, so it still folds — one
    out of range with it, since the engine clamps that to the same byte */.r07{color:#781e28}.r08{color:red}",
   "/*! ...and \`from\` heading a function's name is not the keyword */.r09{color:from(#976c67)}",
-  "/*! a mix is the color it computes; one whose argument no byte holds stands */.m01{color:#cd5447}.m02{color:#9f6020}",
+  "/*! a mix is the color it computes; one whose argument no byte holds stands */.m01{color:color-mix(in oklab,lch(50% 20 30),red)}.m02{color:#9f6020}",
   "/*! the legacy sRGB forms fold there too, where their channels are already bytes */.m03{color:color-mix(in srgb,#010203,red)}",
   "/*! the escapes name the same things: \`\\\\66 rom\` is the keyword, and an escaped
-   \`color-mix\` or gradient name is that function */.r10{color:gray}.m04{color:color-\\\\6d ix(in oklab,lch(50% 20 30),red)}.g05{background-image:linear-\\\\67 radient(lch(50 20 30),red)}",
+   \`color-mix\` or gradient name is that function */.r10{color:rgb(from rgb(50% 50% 50%) r g b)}.m04{color:color-\\\\6d ix(in oklab,lch(50% 20 30),red)}.g05{background-image:linear-\\\\67 radient(lch(50 20 30),red)}",
 ]
 `;

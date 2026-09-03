@@ -117,7 +117,9 @@ Array [
   "/*! webpack: a custom property's tokens are never respelled, only spaced anew */.t90{--width:16px;--alpha:rgba(0,0,0,.5);--round:33.33333333%}",
   "/*! webpack: hwb() converts like hsl() */.t91{color:#000}",
   "/*! webpack: declined: a channel exactly on a \`.5\` boundary */.t92{color:hwb(194 0% 0%)}",
-  "/*! webpack: lab(), lch(), oklab() and oklch() reach sRGB */.t93{color:#fff}.t94{color:#bf5700}.t95{color:#752d15}.t96{color:#fff}.t97{color:#40b1b7}",
+  "/*! webpack: lab(), lch(), oklab() and oklch() reach sRGB, as far as the byte is
+   the one an engine's own conversion lands on: white is, and a color whose
+   channels sit near enough a rounding boundary is not */.t93{color:#fff}.t94{color:lab(50% 40 59.5)}.t95{color:lch(29.2345% 44.2 45deg)}.t96{color:#fff}.t97{color:oklch(70% .1 200)}",
   "/*! webpack: ...with a percentage axis scaled to the space's own 100% */.t98{color:#484848}",
   "/*! webpack: declined: outside the sRGB gamut, a hex would clip it */.t99{color:oklch(90% .4 140)}",
   "/*! webpack: an alpha rides along into the hex */.t100{color:#5f0c}",
