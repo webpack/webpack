@@ -1,6 +1,15 @@
 "use strict";
 
-const { overLimit } = require("../tooling/check-comment-length");
+const { execFileSync } = require("child_process");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const {
+	main,
+	overLimit,
+	report,
+	untrackedDiff
+} = require("../tooling/check-comment-length");
 
 /**
  * @param {string[]} lines added lines, without the `+`
@@ -127,5 +136,110 @@ describe("check-comment-length", () => {
 				].join("\n")
 			)
 		).toEqual(["one.js:4", "two.js:9"]);
+	});
+
+	describe("over a real repository", () => {
+		/** @type {string} */
+		let dir;
+		/** @type {string} */
+		let cwd;
+
+		const git = (/** @type {string[]} */ args) =>
+			execFileSync("git", args, { cwd: dir, encoding: "utf8" });
+
+		beforeEach(() => {
+			dir = fs.mkdtempSync(path.join(os.tmpdir(), "comment-length-"));
+			git(["init", "-q", "-b", "main"]);
+			fs.writeFileSync(path.join(dir, "kept.js"), "const a = 1;\n");
+			git(["add", "-A"]);
+			git([
+				"-c",
+				"user.name=t",
+				"-c",
+				"user.email=t@t",
+				"commit",
+				"-qm",
+				"base"
+			]);
+			cwd = process.cwd();
+			process.chdir(dir);
+		});
+
+		afterEach(() => {
+			process.chdir(cwd);
+			fs.rmSync(dir, { recursive: true, force: true });
+		});
+
+		it("reads a tracked file's added lines", () => {
+			fs.appendFileSync(
+				path.join(dir, "kept.js"),
+				"// one\n// two\n// three\n"
+			);
+			expect(report("HEAD")).toEqual(["kept.js:2"]);
+		});
+
+		it("reads a file git does not track yet", () => {
+			fs.writeFileSync(
+				path.join(dir, "new.js"),
+				"/* one\n   two\n   three */\n"
+			);
+			expect(report("HEAD")).toEqual(["new.js:1"]);
+		});
+
+		it("reports nothing when every comment is short enough", () => {
+			fs.appendFileSync(path.join(dir, "kept.js"), "// one\n// two\n");
+			fs.writeFileSync(path.join(dir, "new.js"), "/* just the one */\n");
+			expect(report("HEAD")).toEqual([]);
+		});
+
+		it("returns 1 and names each offender", () => {
+			fs.writeFileSync(path.join(dir, "new.js"), "// one\n// two\n// three\n");
+			/** @type {string[]} */
+			const written = [];
+			expect(main((text) => written.push(text), "HEAD")).toBe(1);
+			expect(written).toEqual(["new.js:1: comment over 2 lines\n"]);
+		});
+
+		it("returns 0 and writes nothing when the diff is clean", () => {
+			fs.appendFileSync(path.join(dir, "kept.js"), "// one\n");
+			/** @type {string[]} */
+			const written = [];
+			expect(main((text) => written.push(text), "HEAD")).toBe(0);
+			expect(written).toEqual([]);
+		});
+
+		it("exits 1 and names the offender when run as a command", () => {
+			fs.writeFileSync(path.join(dir, "new.js"), "// one\n// two\n// three\n");
+			let status = 0;
+			let stderr = "";
+			try {
+				execFileSync(
+					process.execPath,
+					[path.join(cwd, "tooling/check-comment-length.js"), "HEAD"],
+					{ cwd: dir, encoding: "utf8", stdio: "pipe" }
+				);
+			} catch (err) {
+				status = /** @type {EXPECTED_ANY} */ (err).status;
+				stderr = /** @type {EXPECTED_ANY} */ (err).stderr;
+			}
+			expect(status).toBe(1);
+			expect(stderr).toBe("new.js:1: comment over 2 lines\n");
+		});
+
+		it("exits 0 and says nothing when the diff is clean", () => {
+			fs.appendFileSync(path.join(dir, "kept.js"), "// one\n");
+			const out = execFileSync(
+				process.execPath,
+				[path.join(cwd, "tooling/check-comment-length.js"), "HEAD"],
+				{ cwd: dir, encoding: "utf8", stdio: "pipe" }
+			);
+			expect(out).toBe("");
+		});
+	});
+
+	it("builds a diff naming every line of an untracked file", () => {
+		expect(untrackedDiff(["a.js"], () => "x\ny")).toBe(
+			"--- a/a.js\n+++ b/a.js\n@@ -0,0 +1,2 @@\n+x\n+y"
+		);
 	});
 });

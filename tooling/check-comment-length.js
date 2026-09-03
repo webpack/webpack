@@ -73,40 +73,67 @@ const overLimit = (diff) => {
 	return found;
 };
 
-module.exports.overLimit = overLimit;
-
-if (require.main === module) {
-	const base =
-		process.argv[2] ||
-		execFileSync("git", ["merge-base", "HEAD", "origin/main"], {
-			encoding: "utf8"
-		}).trim();
-	const parts = [
-		execFileSync("git", ["diff", "-U0", base, "--", "*.js", "*.mjs", "*.cjs"], {
-			encoding: "utf8",
-			maxBuffer: MAX_BUFFER
+/**
+ * A file git does not track yet is in no diff, so read it as all added —
+ * otherwise a new file passes until the commit that would have caught it.
+ * @param {string[]} files paths git does not track yet
+ * @param {(path: string) => string} read reads one of them
+ * @returns {string} a diff naming every line of each as added
+ */
+const untrackedDiff = (files, read) =>
+	files
+		.map((one) => {
+			const body = read(one).split("\n");
+			return `--- a/${one}\n+++ b/${one}\n@@ -0,0 +1,${body.length} @@\n${body
+				.map((line) => `+${line}`)
+				.join("\n")}`;
 		})
-	];
-	// A file git does not track yet is in no diff, so read it as all added —
-	// otherwise a new file passes until the commit that would have caught it.
-	const untracked = execFileSync(
-		"git",
-		["ls-files", "--others", "--exclude-standard", "*.js", "*.mjs", "*.cjs"],
-		{ encoding: "utf8", maxBuffer: MAX_BUFFER }
-	)
+		.join("\n");
+
+/**
+ * @param {string=} from base to diff against, defaulting to the merge base
+ * @returns {string[]} one `<file>:<line>` per comment over the limit
+ */
+const report = (from) => {
+	const run = (/** @type {string[]} */ args) =>
+		execFileSync("git", args, { encoding: "utf8", maxBuffer: MAX_BUFFER });
+	const base = from || run(["merge-base", "HEAD", "origin/main"]).trim();
+	const globs = ["*.js", "*.mjs", "*.cjs"];
+	const untracked = run([
+		"ls-files",
+		"--others",
+		"--exclude-standard",
+		...globs
+	])
 		.split("\n")
 		.filter(Boolean);
-	for (const one of untracked) {
-		const body = fs.readFileSync(one, "utf8").split("\n");
-		parts.push(
-			`--- a/${one}\n+++ b/${one}\n@@ -0,0 +1,${body.length} @@\n${body
-				.map((line) => `+${line}`)
-				.join("\n")}`
-		);
-	}
-	const found = overLimit(parts.join("\n"));
-	for (const one of found) {
-		process.stderr.write(`${one}: comment over ${LIMIT} lines\n`);
-	}
-	if (found.length > 0) process.exitCode = 1;
+	return overLimit(
+		`${run(["diff", "-U0", base, "--", ...globs])}\n${untrackedDiff(
+			untracked,
+			(one) => fs.readFileSync(one, "utf8")
+		)}`
+	);
+};
+
+/**
+ * @param {(text: string) => void} write receives one line per offender
+ * @param {string=} from base to diff against, defaulting to the merge base
+ * @returns {number} the exit code, non-zero where a comment is over the limit
+ */
+const main = (write, from) => {
+	const found = report(from);
+	for (const one of found) write(`${one}: comment over ${LIMIT} lines\n`);
+	return found.length > 0 ? 1 : 0;
+};
+
+module.exports.main = main;
+module.exports.overLimit = overLimit;
+module.exports.report = report;
+module.exports.untrackedDiff = untrackedDiff;
+
+if (require.main === module) {
+	process.exitCode = main(
+		(text) => process.stderr.write(text),
+		process.argv[2]
+	);
 }
