@@ -63,6 +63,9 @@ module.exports = [
 					type: "css/auto",
 					parser: { url: false, import: false }
 				},
+				// `link` is the default, and the one export type whose stylesheet
+				// stays a css asset instead of reaching the javascript bundle.
+				{ test: /sheet-asset\.css$/, parser: { exportType: "link" } },
 				{ test: /sheet-text\.css$/, parser: { exportType: "text" } },
 				{ test: /source\.(?:css|html|js|json|svg)$/, type: "asset/source" },
 				{ test: /inline\.(?:css|html|js|json|svg)$/, type: "asset/inline" }

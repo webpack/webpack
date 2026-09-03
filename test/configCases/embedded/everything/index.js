@@ -74,7 +74,7 @@ it("minifies a stylesheet javascript imports as text", () => {
 	expect(sheetText).toMatchSnapshot();
 });
 
-it("minifies the stylesheet webpack emits as a css asset", () => {
+it("minifies a stylesheet the link export type emits as a css asset", () => {
 	expect(emittedSheet).toMatchSnapshot();
 });
 
