@@ -75,6 +75,7 @@ const buildCorpus = (dir, extension, minify) => {
  * @property {(conditions: string[]) => string[]} supportsSignatures whether each support condition holds
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  * @property {(value: string) => string} canonical a value under the one name the spec gives it
+ * @property {(value: string) => string} paintedColors a value with every color it holds painted
  */
 
 /**
@@ -180,6 +181,49 @@ const installHelpers = () => {
 		}
 		return out + rewrite(run);
 	};
+
+	// A color token, and the whole of a color function that holds no call of its
+	// own — which is every spelling but a nested `calc()`.
+	const COLOR_TOKEN_RE =
+		/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix)\([^()]*\)/gi;
+
+	// One word, so a number with its unit is read whole rather than as an ident.
+	const WORD_RE = /[\w-]/;
+
+	/**
+	 * Every color a value holds, as the pixel it paints. A color the engine hands
+	 * back as written — a `var()` fallback, the one `image()` carries — is a color
+	 * still, and two spellings of it are one value. A bare keyword counts only
+	 * inside a call, where it is an argument: `font-family:red` names a family.
+	 * `currentcolor` is never painted, since the pixel it takes is the element's.
+	 * @param {string} value a value
+	 * @returns {string} the value, its colors painted
+	 */
+	const paintedColors = (value) =>
+		outsideText(value, (run) => {
+			let out = "";
+			let word = "";
+			let depth = 0;
+			const take = () => {
+				out +=
+					depth > 0 && word !== "" && !/^currentcolor$/i.test(word)
+						? painted(word)
+						: word;
+				word = "";
+			};
+			for (const ch of run.replace(COLOR_TOKEN_RE, (color) => painted(color))) {
+				if (WORD_RE.test(ch)) {
+					word += ch;
+					continue;
+				}
+				take();
+				if (ch === "(") depth++;
+				else if (ch === ")" && depth > 0) depth--;
+				out += ch;
+			}
+			take();
+			return out;
+		});
 
 	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
 	const NEWLINE = /[\n\r\f]/;
@@ -364,16 +408,9 @@ const installHelpers = () => {
 		// CSS Color 4 §5: `transparent` is that color written as a keyword, and an
 		// engine echoing a descriptor hands back whichever spelling it was given.
 		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
-		// A color written into a value the engine cannot compute — a `var()`
-		// fallback — is still a color, and `#ff0` is `rgb(255,255,0)`.
 		// A string is text and a `url()` body names something, so neither holds a
 		// color: `url(#fff)` and `url(#ffffff)` are two different elements.
-		out = outsideText(out, (run) =>
-			run.replace(
-				/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
-				(color) => painted(color)
-			)
-		);
+		out = paintedColors(out);
 		return (
 			out
 				// Nothing fuses with a comma or a block's delimiters, so the whitespace
@@ -1202,7 +1239,8 @@ const installHelpers = () => {
 			containerSignatures,
 			supportsSignatures,
 			probeReflection,
-			canonical
+			canonical,
+			paintedColors
 		};
 };
 

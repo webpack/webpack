@@ -8083,6 +8083,24 @@ describe("CssSyntax minify — color-mix()", () => {
 		).toBe("a{color:#993a33}");
 	});
 
+	it("keeps a polar mix an achromatic color reaches with no hue", () => {
+		// A gray converts into hsl and hwb with its hue missing, and the engine
+		// interpolates the other color's own rather than the zero it lands on.
+		for (const css of [
+			"color-mix(in hsl,green,#fff)",
+			"color-mix(in hsl,green,#000)",
+			"color-mix(in hwb,green,gray)",
+			// ...and a hue written beside a zero saturation is lost the same way.
+			"color-mix(in hsl,green,hsl(50 0% 100%))"
+		]) {
+			expect(minify(`a{color:${css}}`)).toBe(`a{color:${css}}`);
+		}
+		// A space with no hue takes the same color and folds the mix as before.
+		expect(minify("a{color:color-mix(in srgb,#000 25%,#fff)}")).toBe(
+			"a{color:#bfbfbf}"
+		);
+	});
+
 	it("reads its own hue method, not one a nested mix left behind", () => {
 		// The nested mix resolves through this same fold, so a method held in module
 		// state would be the inner one's by the time the outer interpolates.

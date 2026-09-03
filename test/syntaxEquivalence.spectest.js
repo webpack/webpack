@@ -690,9 +690,9 @@ describe("printer output in real Chrome", () => {
 	const compareValues = (cases) =>
 		inBatches(probePage, cases, (batch) =>
 			probePage.evaluate((each) => {
-				const { canonical } = /** @type {{ __eq: PageHelpers }} */ (
-					/** @type {unknown} */ (window)
-				).__eq;
+				const { canonical, paintedColors } =
+					/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
+						.__eq;
 				const probe = document.createElement("div");
 				document.body.append(probe);
 				// Computed values, not `cssText`: `left bottom` and `0% 100%` are one
@@ -720,12 +720,12 @@ describe("printer output in real Chrome", () => {
 					// boundary ("ab"+"c" against "a"+"bc") reads as equal.
 					let out = "";
 					for (const name of names) {
-						// Under the one name the spec gives the value: the engine echoes
-						// the spelling it was handed — `jump-start` beside `start`, a
-						// gradient's implied last stop beside a written one — so without
-						// this the tier reads a synonym as a change of meaning.
-						out += `${name}:${canonical(
-							computed.getPropertyValue(name)
+						// Under the one name the spec gives the value, its colors painted:
+						// the engine echoes the spelling it was handed — `jump-start`
+						// beside `start`, the color `image()` carries — so without this
+						// the tier reads a synonym as a change of meaning.
+						out += `${name}:${paintedColors(
+							canonical(computed.getPropertyValue(name))
 						)}\u0000`;
 					}
 					return out;
