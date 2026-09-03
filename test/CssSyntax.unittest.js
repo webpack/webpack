@@ -5915,6 +5915,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{animation:x 1s infinite}"
 			);
 		});
+
+		it.each([
+			// One slot takes a `<number>` and two take a `<time>`, so a layer
+			// naming more is one no engine reads — dropping from it would hand
+			// back a layer that runs.
+			["two counts", "a{animation:1 2}"],
+			["two counts, both one", "a{animation:1 1}"],
+			["three times", "a{animation:0s 0s 0s}"],
+			["three times in a transition", "a{transition:0s 0s 0s}"]
+		])("keeps a layer naming %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
 	});
 
 	describe("a declaration a later one overrides", () => {
@@ -5951,9 +5963,28 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// is where that pair is written on purpose.
 			["a keyword", "a{display:block;display:flex}"],
 			// An `!important` earlier declaration still wins.
-			["an earlier one that wins", "a{color:red!important;color:blue}"]
+			["an earlier one that wins", "a{color:red!important;color:blue}"],
+			// CSS Animations 1 §3 ignores an `!important` declaration in a
+			// keyframe, so the plain one before it is what the engine reads.
+			[
+				"one a keyframe ignores",
+				"@keyframes k{0%{color:green;color:red!important}}"
+			]
 		])("keeps it behind %s", (_name, css, printed = css) => {
 			expect(minify(css)).toBe(printed);
+		});
+
+		it("reads the later rule's last declaration of the property", () => {
+			// `revert-rule` reads back to the rule before it, so the earlier rule
+			// is what it reverts to rather than something the later one repeats.
+			const reverted =
+				"@layer{#t{color:red}}@layer{#t{color:green}#t{color:red;color:revert-rule}}";
+			expect(minify(reverted)).toBe(reverted);
+			// ...and the last one deciding is what lets the plain pair still join,
+			// which the block's own dedupe then reads down to that last one.
+			expect(minify("a{color:green}a{color:blue;color:red}")).toBe(
+				"a{color:red}"
+			);
 		});
 
 		it("reads two rules' declarations only where it may drop one", () => {

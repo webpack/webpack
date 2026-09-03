@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Drop a CSS declaration, a shorthand slot or a query condition that says what another already says.
+Drop what a declaration, slot or query already says, and add `lowerUnsupported`.
