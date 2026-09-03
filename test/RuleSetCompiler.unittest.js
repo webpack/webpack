@@ -132,9 +132,8 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 	});
 
 	it("leaves a pattern generated from a list of paths unexpanded", () => {
-		// the test262 harness builds one of these from ~200 paths; expanding it
-		// costs 165ms per compilation, so past the length cap only the spelling the
-		// pattern carries outright is read
+		// a kilobyte-long generated pattern (test262's harness has one) costs 165ms
+		// to expand per compilation, so past the cap only an outright spelling reads
 		const paths = Array.from(
 			{ length: 60 },
 			(_, i) => `(?:case-${i}/fixture\\.js$)`
