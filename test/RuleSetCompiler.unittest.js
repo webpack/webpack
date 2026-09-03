@@ -63,6 +63,19 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		);
 	});
 
+	it("detects grouped extension alternatives via the extension probe", () => {
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.(css|scss)$/, use: ["css-loader"] }])
+		).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.(?:scss|css)$/, use: ["css-loader"] }])
+		).toBe(true);
+		expect(has([{ test: /\.(scss|less)$/, use: ["sass-loader"] }])).toBe(false);
+		expect(
+			has([{ test: /\/src\/.*\.(ts|tsx)$/, loader: "ts-loader" }], "/file.ts")
+		).toBe(true);
+	});
+
 	it("detects a filename-scoped glob via the extension probe", () => {
 		expect(has([{ test: { glob: "**/*.module.css" }, use: ["x"] }])).toBe(true);
 		expect(
