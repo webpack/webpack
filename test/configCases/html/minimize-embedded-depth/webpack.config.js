@@ -7,15 +7,11 @@ const svgMinify = require("../../../helpers/svgMinify");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "node",
+	target: "web",
 	mode: "production",
-	output: { pathinfo: false },
+	output: { pathinfo: false, assetModuleFilename: "[name][ext]" },
 	module: {
-		rules: [
-			{ test: /\.(?:svg|css|html|json)$/, type: "asset/inline" },
-			// By name: a bare `\.js$` would inline the entry itself.
-			{ test: /script\.js$/, type: "asset/inline" }
-		]
+		rules: [{ test: /\.html$/, type: "asset/resource" }]
 	},
 	optimization: {
 		minimize: true,
@@ -37,5 +33,5 @@ module.exports = {
 			}
 		]
 	},
-	experiments: { css: true }
+	experiments: { css: true, html: true }
 };

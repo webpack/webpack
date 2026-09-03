@@ -7,15 +7,14 @@ const svgMinify = require("../../../helpers/svgMinify");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "node",
+	target: "web",
 	mode: "production",
 	output: { pathinfo: false },
 	module: {
-		rules: [
-			{ test: /\.(?:svg|css|html|json)$/, type: "asset/inline" },
-			// By name: a bare `\.js$` would inline the entry itself.
-			{ test: /script\.js$/, type: "asset/inline" }
-		]
+		// `url` / `import` off, so a `data:` URL stays in the stylesheet rather
+		// than becoming an asset module of its own — which is what puts the
+		// payload where only the serializer can reach it.
+		parser: { "css/auto": { url: false, import: false } }
 	},
 	optimization: {
 		minimize: true,
@@ -37,5 +36,5 @@ module.exports = {
 			}
 		]
 	},
-	experiments: { css: true }
+	experiments: { css: true, html: true }
 };
