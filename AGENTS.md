@@ -91,7 +91,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
 - `bin/` — `webpack` CLI entry point.
-- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`). Those two need no arguments and no reading of their source: each runs webpack's CSS/HTML minifier and the ecosystem's over popular framework stylesheets and real documents, printing one table per fixture — output size raw and under gzip/brotli/zstd (the `test:size` settings), best-of-3 wall and cpu ms, peak RSS (each minifier × fixture measured in its own worker process, so the numbers are attributable), and whether the output lost classes / changed the DOM ("rejects it" rows mean the tool errored on that input). They install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies; expect the first run to install for a minute and every full run to take a few. `measure-color-agreement.js` (`yarn measure:color-agreement`) is the third: it asks a real browser for its own color conversions rather than for a pixel, and prints how far they sit from webpack's — which is where the rounding margins in `lib/css/syntax.js` and the list of spaces an engine reads through another transfer come from. Re-run it (a few seconds; `PUPPETEER_EXECUTABLE_PATH` picks the binary) rather than adjusting either by hand.
+- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`). Those two need no arguments and no reading of their source: each runs webpack's CSS/HTML minifier and the ecosystem's over popular framework stylesheets and real documents, printing one table per fixture — output size raw and under gzip/brotli/zstd (the `test:size` settings), best-of-3 wall and cpu ms, peak RSS (each minifier × fixture measured in its own worker process, so the numbers are attributable), and whether the output lost classes / changed the DOM ("rejects it" rows mean the tool errored on that input). They install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies; expect the first run to install for a minute and every full run to take a few. `check-comment-length.js` (`yarn lint:comments`) reports the plain comments a change grows past the two-line limit of [Code comments](#code-comments). `measure-color-agreement.js` (`yarn measure:color-agreement`) is the third: it asks a real browser for its own color conversions rather than for a pixel, and prints how far they sit from webpack's — which is where the rounding margins in `lib/css/syntax.js` and the list of spaces an engine reads through another transfer come from. Re-run it (a few seconds; `PUPPETEER_EXECUTABLE_PATH` picks the binary) rather than adjusting either by hand.
 - `assembly/` — WebAssembly source for the hash function.
 - `setup/` — One-time setup scripts.
 
@@ -219,9 +219,10 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 **Check your own diff before every commit. It must print nothing:**
 
 ```sh
-git diff -U0 $(git merge-base HEAD origin/main) -- '*.js' |
-	awk '/^\+[ \t]*\/\//{if(++n>2)print;next}{n=0}'
+yarn lint:comments
 ```
+
+It reports every plain comment your added lines grow past two, in either form, and exempts JSDoc. It is not part of `yarn lint`, which has no base branch to diff against.
 
 Each surviving line must carry what the code cannot: a hidden invariant, an ordering constraint, a workaround, or the name of the concept the block implements. **Never** restate the next line, narrate the diff, recap the PR description, or quote the task you were given.
 
