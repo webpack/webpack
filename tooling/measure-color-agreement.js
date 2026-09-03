@@ -64,7 +64,10 @@ const HEDGE = 1.6;
  * @returns {() => number} the sequence
  */
 const sequence = (seed) => () => {
-	seed = (seed * 1103515245 + 12345) % 2147483648;
+	// `Math.imul` and a mask, not the arithmetic the recurrence reads as: the
+	// product passes 2^53, and the rounding collapses the sequence to a few
+	// thousand values however many are drawn.
+	seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
 	return seed / 2147483648;
 };
 
@@ -240,6 +243,9 @@ const readTransfers = async (page, spaces) => {
 	return out.sort();
 };
 
+/** @type {import("puppeteer-core").Browser | undefined} the run's browser */
+let browser;
+
 const main = async () => {
 	const random = sequence(24680);
 	/** @type {{ space: string, text: string, linear: number[] }[]} */
@@ -273,7 +279,7 @@ const main = async () => {
 		}
 	}
 
-	const browser = await launchChrome({ protocolTimeout: 600000 });
+	browser = await launchChrome({ protocolTimeout: 600000 });
 	const page = await browser.newPage();
 	await page.setContent('<div id="probe">probe</div>');
 	const theirs = await readSrgb(
@@ -361,10 +367,13 @@ const main = async () => {
 			suspect.join() === stated.join() ? "" : "   <- the generator disagrees"
 		}`
 	);
-	await browser.close();
 };
 
-main().catch((error) => {
-	console.error(error);
-	process.exitCode = 1;
-});
+main()
+	.catch((error) => {
+		console.error(error);
+		process.exitCode = 1;
+	})
+	// Whatever the run did, the browser goes: an open one keeps node alive with
+	// the report already printed.
+	.finally(() => (browser === undefined ? undefined : browser.close()));

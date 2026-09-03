@@ -8212,7 +8212,7 @@ describe("CssSyntax minify — color-mix()", () => {
 		// `color()` is written back as the same call.
 		expect(
 			minify("a{color:color-mix(in hwb,hwb(200 10% 20%),hwb(20 30% 40%))}")
-		).toBe("a{color:hwb(290 20% 30%)}");
+		).toBe("a{color:hwb(110 20% 30%)}");
 		expect(
 			minify(
 				"a{color:color-mix(in display-p3," +
@@ -8277,6 +8277,23 @@ describe("CssSyntax minify — color-mix()", () => {
 		expect(
 			minify("a{color:color-mix(in hsl,hsl(350 50% 40%) 30%,hsl(10 50% 40%))}")
 		).toBe("a{color:#993a33}");
+	});
+
+	it("keeps the arc two opposite hues state, whichever is greater", () => {
+		// CSS Color 4 §12.4 breaks the tie by which hue is greater, and a color
+		// reaches its own space through sRGB — so a half turn the trip back leaves
+		// a hair over must not read as the arc the other way round. Both of these
+		// paint 68,153,51 in Chromium; the arc the other way is 136,51,153.
+		expect(
+			minify("a{color:color-mix(in hsl,hsl(200 50% 40%),hsl(20 50% 40%))}")
+		).toBe("a{color:#493}");
+		expect(
+			minify("a{color:color-mix(in hsl,hsl(20 50% 40%),hsl(200 50% 40%))}")
+		).toBe("a{color:#493}");
+		// A pair that is genuinely more than a half turn apart still wraps.
+		expect(
+			minify("a{color:color-mix(in hsl,hsl(200 50% 40%),hsl(19.5 50% 40%))}")
+		).toBe("a{color:#839}");
 	});
 
 	it("reads its own hue method, not one a nested mix left behind", () => {
