@@ -8317,6 +8317,17 @@ describe("CssSyntax minify — pseudo-class replacement", () => {
 		expect(withClasses("a:hover::before{color:red}", NAMED)).toBe(
 			"a.hovered:before{color:red}"
 		);
+		// One taking arguments is a pseudo-element all the same.
+		expect(withClasses("a::part(label):hover{color:red}", NAMED)).toBe(
+			"a::part(label):hover{color:red}"
+		);
+		expect(withClasses("a::slotted(b):hover{color:red}", NAMED)).toBe(
+			"a::slotted(b):hover{color:red}"
+		);
+		// ...where a functional pseudo-*class* is not, and still takes one.
+		expect(withClasses("a:not(.x):hover{color:red}", NAMED)).toBe(
+			"a:not(.x).hovered{color:red}"
+		);
 	});
 });
 
