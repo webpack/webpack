@@ -4291,6 +4291,49 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 		expect(out).toBe('<script type=application/json>{ "a" : 1 }</script>');
 	});
 
+	/**
+	 * Print with a renderer that answers asynchronously, as a caller reaching a
+	 * worker pool does.
+	 * @param {string} html input markup
+	 * @param {(source: string) => string | undefined} answer what the renderer makes of one body
+	 * @returns {Promise<{ code: string, offered: string[] }>} the output and each body offered
+	 */
+	const deferredBody = async (html, answer) => {
+		/** @type {string[]} */
+		const offered = [];
+		const { code } = await new SourceProcessor().processAsync(html, {
+			mode: /** @type {"minify"} */ ("minify"),
+			collapseWhitespace: /** @type {"all"} */ ("all"),
+			renderEmbeddedSource: (/** @type {string} */ source) => {
+				offered.push(source);
+				return Promise.resolve(answer(source));
+			}
+		});
+		return { code, offered };
+	};
+
+	it("offers a deferred JSON body trimmed", async () => {
+		const { code, offered } = await deferredBody(
+			'<script type="application/ld+json">  { "a" : 1 }  </script>',
+			() => '{"answered":1}'
+		);
+
+		expect(offered).toEqual(['{ "a" : 1 }']);
+		expect(code).toBe(
+			'<script type=application/ld+json>{"answered":1}</script>'
+		);
+	});
+
+	it("strips a deferred JSON body the renderer declines", async () => {
+		// The built-in stands in, and it reads the same trimmed body.
+		const { code } = await deferredBody(
+			'<script type="application/ld+json">  { "a" : 1 }  </script>',
+			() => undefined
+		);
+
+		expect(code).toBe('<script type=application/ld+json>{"a":1}</script>');
+	});
+
 	it("keeps a JSON body that is only whitespace", () => {
 		expect(minifyBody("application/json", "   ")).toBe("   ");
 	});
