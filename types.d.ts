@@ -14949,6 +14949,13 @@ declare interface KnownAssetModuleBuildInfo {
 	filename?: string;
 	assetInfo?: AssetInfo;
 	fullContentHash?: string;
+
+	/**
+	 * the resource this asset is named after, when
+	 * something re-encoded it. Unlike `matchResource` this is serialized, so a
+	 * rename set while building survives the persistent cache
+	 */
+	assetResource?: string;
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
@@ -18957,9 +18964,11 @@ declare class NormalModule extends Module {
 		 */
 		beforeSnapshot: SyncHook<[NormalModule]>;
 		/**
+		 * Async since 5.111.0, so a tap can await work of its own — minifying an
+		 * asset, say, which before only a loader could do. `tap` keeps working.
 		 * @since 5.99.0
 		 */
-		processResult: SyncWaterfallHook<
+		processResult: AsyncSeriesWaterfallHook<
 			[
 				[
 					string | Buffer,
