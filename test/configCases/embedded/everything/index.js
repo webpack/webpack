@@ -34,40 +34,40 @@ it("minifies an html document webpack only emits", () => {
 
 it("minifies css in an html style element", () => {
 	expect(
-		isolate(emittedPage, /<style>\.assetStyle[^]*?<\/style>/)
+		isolate(emittedPage, /<style>\.assetStyle[^]*?<\/style>/i)
 	).toMatchSnapshot();
 });
 
 it("minifies css in an html style attribute", () => {
-	expect(isolate(emittedPage, /<p style=[^>]*>/)).toMatchSnapshot();
+	expect(isolate(emittedPage, /<p style=[^>]*>/i)).toMatchSnapshot();
 });
 
 it("minifies javascript in an html script element", () => {
-	expect(isolate(emittedPage, /<script>[^]*?<\/script>/)).toMatchSnapshot();
+	expect(isolate(emittedPage, /<script>var assetScript[^]*?<\/script>/i)).toMatchSnapshot();
 });
 
 it("minifies json in an html script element typed application/json", () => {
 	expect(
-		isolate(emittedPage, /<script type=application\/json>[^]*?<\/script>/)
+		isolate(emittedPage, /<script type=application\/json>[^]*?<\/script>/i)
 	).toMatchSnapshot();
 });
 
 it("minifies an svg subtree in html", () => {
-	expect(isolate(emittedPage, /<svg viewBox[^]*?<\/svg>/)).toMatchSnapshot();
+	expect(isolate(emittedPage, /<svg viewBox[^]*?<\/svg>/i)).toMatchSnapshot();
 });
 
 it("minifies html in an html iframe srcdoc attribute", () => {
-	expect(isolate(emittedPage, /<iframe srcdoc="[^"]*">/)).toMatchSnapshot();
+	expect(isolate(emittedPage, /<iframe srcdoc="[^"]*">/i)).toMatchSnapshot();
 });
 
 it("minifies an svg data url nested in an html style element", () => {
 	expect(
-		isolate(emittedPage, /url\("data:image\/svg\+xml,[^"]*"\)/)
+		isolate(emittedPage, /url\("data:image\/svg\+xml,[^"]*"\)/i)
 	).toMatchSnapshot();
 });
 
 it("extracts the script of an html entry into a chunk of its own", () => {
-	expect(isolate(entryPage, /<script src=[^>]*>/)).toMatchSnapshot();
+	expect(isolate(entryPage, /<script src=[^>]*>/i)).toMatchSnapshot();
 });
 
 it("minifies a stylesheet javascript imports as text", () => {
