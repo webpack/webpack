@@ -15,8 +15,9 @@ it("should copy only what the glob names", () => {
 	expect(exists("all/skip.log")).toBe(false);
 });
 
-it("should copy a dot directory the glob names", () => {
+it("should copy a dot directory the glob names, no deeper than it reaches", () => {
 	expect(read("explicit-dot/inside.txt")).toBe("inside");
+	expect(exists("explicit-dot/deeper/ignored.txt")).toBe(false);
 });
 
 it("should copy an absolute 'from'", () => {

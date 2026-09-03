@@ -395,7 +395,7 @@
           "minLength": 1
         }
       ],
-      "added": "5.110.0"
+      "added": "5.111.0"
     },
     "CopyObjectPattern": {
       "description": "A pattern of files which are copied to the output directory.",
