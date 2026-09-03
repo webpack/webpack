@@ -1181,6 +1181,7 @@ describe("wpt css token adjacency", () => {
  * @property {string[]=} schemes the color schemes to read it under
  * @property {string[]=} directions the writing directions to read it under
  * @property {string[]=} differs properties this lowering changes on purpose
+ * @property {string[]=} numeric properties whose value the rewrite reaches by arithmetic, held to `numericallyEqual` rather than to the same text
  * @property {string[]} produces text the rewrite leaves, so a comparison of two sheets neither of which was rewritten cannot pass for one
  * @property {string=} reference what the source means, where the engine reads no spelling of it — `:lang(en, fr)` is one Chromium has never taken, so the rewrite is held to the pair of rules that state the same thing rather than to an engine's reading of the original
  */
@@ -1353,12 +1354,140 @@ const LOWERING_FIXTURES = [
 		]
 	},
 	{
+		name: "a slot holding the value an unwritten one takes",
+		css:
+			"#b{background:0% 0% / auto repeat scroll padding-box border-box red;" +
+			"border-left:currentcolor medium none;column-rule:medium none red;" +
+			"outline:medium none currentcolor;text-decoration:none currentcolor solid auto}" +
+			"#c{background:left top url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}" +
+			"#d{mask:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=) border-box}",
+		browsers: ["chrome 130"],
+		produces: ["background:red", "border-left:none", "column-rule:red"],
+		html: "<button id=b>x</button><div id=c></div><div id=d></div>",
+		probes: [
+			["#b", "background-position"],
+			["#b", "background-size"],
+			["#b", "background-repeat"],
+			["#b", "background-attachment"],
+			["#b", "background-origin"],
+			["#b", "background-clip"],
+			["#b", "background-color"],
+			["#b", "background-image"],
+			["#b", "border-left-width"],
+			["#b", "border-left-style"],
+			["#b", "border-left-color"],
+			["#b", "column-rule-width"],
+			["#b", "column-rule-style"],
+			["#b", "column-rule-color"],
+			["#b", "outline-width"],
+			["#b", "outline-style"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-line"],
+			["#b", "text-decoration-style"],
+			["#b", "text-decoration-color"],
+			["#b", "text-decoration-thickness"],
+			["#c", "background-position"],
+			["#c", "background-image"],
+			["#d", "mask-origin"],
+			["#d", "mask-clip"],
+			["#d", "mask-image"]
+		]
+	},
+	{
+		name: "a math function folded to the value it names",
+		css:
+			"#b{width:calc(sqrt(2)*100px);height:calc(sin(45deg)*100px);" +
+			"margin-left:calc(.1px + .2px);margin-right:calc(100px/7);" +
+			"padding-left:calc(pi*10px);padding-right:calc(exp(1)*10px);" +
+			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
+			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
+		browsers: ["chrome 130"],
+		produces: ["width:141.421px", "height:70.7107px", "margin-left:.3px"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "width"],
+			["#b", "height"],
+			["#b", "margin-left"],
+			["#b", "margin-right"],
+			["#b", "padding-left"],
+			["#b", "padding-right"],
+			["#b", "border-top-width"],
+			["#b", "top"],
+			["#b", "left"],
+			["#b", "right"]
+		],
+		// The engine computes the expression at full precision and serializes what
+		// it computed; the printer writes the six significant digits a stylesheet
+		// can observe. So these are held to `numericallyEqual` — the same relative
+		// 1e-5 the rounding itself rests on, under Chromium's 1/64px layout grid —
+		// rather than to the same text.
+		numeric: [
+			"width",
+			"height",
+			"margin-right",
+			"padding-left",
+			"padding-right",
+			"top",
+			"right"
+		]
+	},
+	{
+		name: "a color computed rather than painted, kept as it was written",
+		// A gradient interpolates between its stops and a mix mixes its two, so the
+		// byte an engine paints is not what either computes from. The probes read
+		// the mixes; the gradient is here for the printer to leave alone.
+		css:
+			"#b{color:color-mix(in srgb,hsl(209.32 16.5% 53.41%) 20%,red);" +
+			"background-color:color-mix(in hsl,#ff0 12%,#808080);" +
+			"border-top-color:color-mix(in hwb,#ff0 12%,#808080);" +
+			"outline-color:color-mix(in hsl,#ff0 12%,#000);" +
+			"text-decoration-color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250));" +
+			"background-image:linear-gradient(hsl(209.32 16.5% 53.41%),red)}",
+		browsers: ["chrome 130"],
+		produces: ["background-color:#8f8f71", "color:#e31b1f"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "background-image"]
+		]
+	},
+	{
+		name: "a color() converted only as far as the byte is the engine's own",
+		css:
+			"#b{color:color(srgb .2 .4 .6);" +
+			"background-color:color(display-p3 .05 .06 .07);" +
+			"border-top-color:color(a98-rgb .5 .5 .5);" +
+			"outline-color:color(prophoto-rgb .5 .5 .5);" +
+			"text-decoration-color:color(srgb-linear .2 .4 .6);" +
+			"caret-color:color(display-p3 .6 .7 .8)}",
+		browsers: ["chrome 130"],
+		produces: ["color:#369", "background-color:#0c0f12"],
+		html: '<button id=b style="position:absolute">x</button>',
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"],
+			["#b", "text-decoration-color"],
+			["#b", "caret-color"]
+		]
+	},
+	{
 		name: "system-ui, which names each platform's own font instead",
 		produces: ["-apple-system,BlinkMacSystemFont"],
-		css: "#b{font-family:system-ui}",
+		css: "#b{font-family:system-ui}#c{font:italic 700 12px/1.2 system-ui,serif}",
 		browsers: ["chrome 50"],
-		html: "<button id=b>x</button>",
-		probes: [["#b", "font-family"]],
+		html: "<button id=b>x</button><button id=c>y</button>",
+		probes: [
+			["#b", "font-family"],
+			["#c", "font-family"],
+			["#c", "font-size"],
+			["#c", "font-style"]
+		],
 		// The stack *is* the rewrite: `system-ui` leads it, so an engine reading
 		// the keyword still takes it, and the rest is what one that does not reads.
 		differs: ["font-family"]
@@ -1427,6 +1556,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 			const asked = fixture.probes.filter(
 				([, property]) => !(fixture.differs || []).includes(property)
 			);
+			const approximate = new Set(fixture.numeric || []);
 			const page = await browser.newPage();
 			try {
 				for (const scheme of fixture.schemes || ["light"]) {
@@ -1444,7 +1574,15 @@ describe("a lowering computes as the spelling it replaces", () => {
 							asked
 						);
 						const after = await readComputed(page, lowered, html, asked);
-						expect({ scheme, direction, computed: after }).toEqual({
+						// A probe the rewrite reaches by arithmetic is held to the
+						// tolerance the rounding rests on; every other one to the byte.
+						const held = after.map((value, at) =>
+							approximate.has(asked[at][1]) &&
+							numericallyEqual(before[at], value)
+								? before[at]
+								: value
+						);
+						expect({ scheme, direction, computed: held }).toEqual({
 							scheme,
 							direction,
 							computed: before
@@ -1454,6 +1592,211 @@ describe("a lowering computes as the spelling it replaces", () => {
 			} finally {
 				await page.close();
 			}
+		},
+		FILE_TIMEOUT
+	);
+});
+
+// Every color spelling a stylesheet can hold, in the shapes a rewrite reads them
+// through: a color of its own, one a mix or a relative reference computes with,
+// and one nested a level deeper.
+const COLOR_SPACES = [
+	"srgb",
+	"srgb-linear",
+	"display-p3",
+	"a98-rgb",
+	"prophoto-rgb",
+	"rec2020",
+	"xyz",
+	"xyz-d50",
+	"xyz-d65"
+];
+const MIX_SPACES = [
+	"srgb",
+	"hsl",
+	"hwb",
+	"lab",
+	"lch",
+	"oklab",
+	"oklch",
+	"display-p3"
+];
+const RELATIVE_CHANNELS = {
+	rgb: "r calc(g * 1.2) b",
+	// A hue keyword substitutes as the number it names, so the arithmetic over
+	// one is read in degrees — which these carry into the sweep.
+	hsl: "calc(h + 40) s calc(l * .9)",
+	hwb: "h w b",
+	lab: "calc(l * 1.1) a b",
+	lch: "l c calc(h * 2)",
+	oklab: "l a calc(b * .8)",
+	oklch: "calc(l * .95) c calc(h - 30)"
+};
+// The seed is what makes the corpus the same one every run; the count is what
+// the browser reads back in one batch of a few seconds.
+const COLOR_SAMPLES = 20000;
+
+describe("a color rewrite paints as the color it replaced", () => {
+	/** @type {import("puppeteer-core").Browser} */
+	let browser;
+
+	beforeAll(async () => {
+		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (browser !== undefined) await browser.close();
+	});
+
+	/**
+	 * One color, in a spelling drawn from the seeded sequence.
+	 * @param {() => number} random the sequence
+	 * @param {number} depth how many levels of mix or relative reference are left
+	 * @returns {string} the color as written
+	 */
+	const spell = (random, depth) => {
+		const number = (max, digits) => (random() * max).toFixed(digits);
+		const pick = random();
+		if (pick < 0.12) {
+			return `#${Math.floor(random() * 0xffffff)
+				.toString(16)
+				.padStart(6, "0")}`;
+		}
+		if (pick < 0.2) {
+			return `rgb(${number(255, 1)} ${number(255, 1)} ${number(255, 1)})`;
+		}
+		if (pick < 0.28) {
+			return `hsl(${number(360, 2)} ${number(100, 2)}% ${number(100, 2)}%)`;
+		}
+		if (pick < 0.34) {
+			return `hwb(${number(360, 2)} ${number(60, 2)}% ${number(60, 2)}%)`;
+		}
+		if (pick < 0.44) {
+			return `lab(${number(100, 4)}% ${number(200, 4) - 100} ${number(200, 4) - 100})`;
+		}
+		if (pick < 0.54) {
+			return `lch(${number(100, 4)}% ${number(140, 4)} ${number(360, 3)})`;
+		}
+		if (pick < 0.64) {
+			return `oklab(${number(1, 6)} ${number(0.8, 6) - 0.4} ${number(0.8, 6) - 0.4})`;
+		}
+		if (pick < 0.74) {
+			return `oklch(${number(1, 6)} ${number(0.4, 6)} ${number(360, 3)})`;
+		}
+		if (pick < 0.88) {
+			const space = COLOR_SPACES[Math.floor(random() * COLOR_SPACES.length)];
+			return `color(${space} ${number(1, 6)} ${number(1, 6)} ${number(1, 6)})`;
+		}
+		if (depth === 0) return "red";
+		if (pick < 0.94) {
+			const space = MIX_SPACES[Math.floor(random() * MIX_SPACES.length)];
+			return `color-mix(in ${space}, ${spell(random, depth - 1)} ${number(
+				100,
+				1
+			)}%, ${spell(random, depth - 1)})`;
+		}
+		const names = Object.keys(RELATIVE_CHANNELS);
+		const fn = names[Math.floor(random() * names.length)];
+		return `${fn}(from ${spell(random, depth - 1)} ${RELATIVE_CHANNELS[fn]})`;
+	};
+
+	it(
+		"over every spelling, mix and relative reference",
+		async () => {
+			let seed = 1234567;
+			const random = () => {
+				// `Math.imul` and a mask, not the arithmetic the recurrence reads as:
+				// the product passes 2^53, and the rounding collapses the sequence to
+				// a few thousand values however many are drawn.
+				seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
+				return seed / 2147483648;
+			};
+			/** @type {[string, string][]} */
+			const rewritten = [];
+			for (let at = 0; at < COLOR_SAMPLES; at++) {
+				const written = spell(random, 2);
+				const minified = /^a\{color:([\s\S]*)\}$/.exec(
+					new CssSourceProcessor().process(`a{color:${written}}`, {
+						mode: "minify"
+					}).code
+				)[1];
+				// Whitespace alone is no rewrite to hold to anything.
+				if (minified !== written.replace(/,\s+/g, ",").replace(/\s+/g, " ")) {
+					rewritten.push([written, minified]);
+				}
+			}
+			// The corpus has to reach the rewrites, or this proves nothing.
+			expect(rewritten.length).toBeGreaterThan(COLOR_SAMPLES / 10);
+			const page = await browser.newPage();
+			/** @type {string[]} */
+			const differed = [];
+			/**
+			 * Whether a pair differs by no more than a number's last significant
+			 * digit. The printer caps a number at six of them, which its own
+			 * measurement covers for lengths and unitless numbers — six sit below
+			 * what a stylesheet can observe. A color channel is quantized to a byte
+			 * after a conversion, so an out-of-gamut chroma can still move it by one
+			 * (`lch(1.8968% 125.4467 129.726)` paints 0,38,0 and its six-digit form
+			 * 0,39,0). That cap is generic number printing, so narrowing it for
+			 * colors is measured on its own rather than here; every other way a
+			 * rewrite can move a color is still held to agreement.
+			 * @param {string} before the color as written
+			 * @param {string} after the color the printer wrote
+			 * @returns {boolean} true when only a last digit moved
+			 */
+			const roundedOnly = (before, after) => {
+				const shape = (text) => text.replace(/[\d.]+/g, "#");
+				if (shape(before) !== shape(after)) return false;
+				const ours = before.match(/[\d.]+/g) || [];
+				const theirs = after.match(/[\d.]+/g) || [];
+				return (
+					ours.length === theirs.length &&
+					ours.every(
+						(num, at) =>
+							Number(num).toPrecision(5) === Number(theirs[at]).toPrecision(5)
+					)
+				);
+			};
+			try {
+				await page.setContent("<body></body>");
+				const CHUNK = 300;
+				for (let at = 0; at < rewritten.length; at += CHUNK) {
+					const chunk = rewritten.slice(at, at + CHUNK);
+					const painted = await page.evaluate((pairs) => {
+						const canvas = document.createElement("canvas");
+						const context = /** @type {CanvasRenderingContext2D} */ (
+							canvas.getContext("2d", { willReadFrequently: true })
+						);
+						const paint = (color) => {
+							// A color the canvas will not take keeps its text, so a pair
+							// the engine reads differently is not read as agreement.
+							context.fillStyle = "#010203";
+							context.fillStyle = color;
+							if (context.fillStyle === "#010203") return `unread:${color}`;
+							context.clearRect(0, 0, 1, 1);
+							context.fillRect(0, 0, 1, 1);
+							return [...context.getImageData(0, 0, 1, 1).data].join(",");
+						};
+						return pairs.map(([before, after]) => [
+							paint(before),
+							paint(after)
+						]);
+					}, chunk);
+					for (const [index, [before, after]] of painted.entries()) {
+						if (before !== after && !roundedOnly(...chunk[index])) {
+							differed.push(
+								`${chunk[index][0]}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
+							);
+						}
+					}
+				}
+			} finally {
+				await page.close();
+			}
+			expect({ rewrites: rewritten.length, differed }).toEqual({
+				rewrites: rewritten.length,
+				differed: []
+			});
 		},
 		FILE_TIMEOUT
 	);

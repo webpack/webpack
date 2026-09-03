@@ -1752,6 +1752,56 @@ const gamutToLinearSrgb = (primaries, white, adapt) => {
  * of its own.
  * @returns {{ text: string, names: string[] }} the emitted source and the spaces it defines
  */
+// What a color read in one space passes through on its way to a byte. The
+// printer's own sRGB encode undoes the sRGB transfer, so a space carrying that
+// transfer and no matrix hands the byte back the component it was written with.
+// sRGB's own gamut constructs the identity to within 1e-16, which is noise a
+// component would carry into what the printer writes — so it is written as the
+// identity it is.
+const IDENTITY_MATRIX = [
+	[1, 0, 0],
+	[0, 1, 0],
+	[0, 0, 1]
+];
+
+/**
+ * @param {number[][]} matrix a constructed matrix
+ * @returns {number[][]} the identity where it is one, else the matrix
+ */
+const asIdentity = (matrix) =>
+	matrix.every((row, r) =>
+		row.every((value, c) => Math.abs(value - IDENTITY_MATRIX[r][c]) <= 1e-9)
+	)
+		? IDENTITY_MATRIX.map((row) => [...row])
+		: matrix;
+
+const ENCODED_ALREADY = 0;
+const THROUGH_TRANSFER = 1;
+const THROUGH_MATRIX = 2;
+const ENGINE_TRANSFER_DIFFERS = 3;
+const SRGB_TRANSFER = "srgbTransfer";
+
+/**
+ * @param {string} name the space
+ * @param {string} gamut the primaries it is defined by
+ * @param {string} transfer the name of its transfer function
+ * @returns {number} what a color in it passes through
+ */
+const spaceConversion = (name, gamut, transfer) => {
+	if (
+		!SUPPLEMENT.colorTransfers.some(([spelling]) => spelling === SRGB_TRANSFER)
+	) {
+		throw new Error(
+			`no ${SRGB_TRANSFER} among the transfers: they were renamed`
+		);
+	}
+	if (SUPPLEMENT.enginesDisagreeOnTransfer.includes(name)) {
+		return ENGINE_TRANSFER_DIFFERS;
+	}
+	if (gamut !== "srgb") return THROUGH_MATRIX;
+	return transfer === SRGB_TRANSFER ? ENCODED_ALREADY : THROUGH_TRANSFER;
+};
+
 const collectColorSpaceModel = () => {
 	const [toLms, lmsToOklab] = SUPPLEMENT.oklabMatrices;
 	const asRows = (/** @type {number[]} */ flat) => [
@@ -1771,23 +1821,58 @@ const collectColorSpaceModel = () => {
 	const names = [];
 	const flat = (/** @type {number[][]} */ m) =>
 		`[${flatten(m).map(String).join(", ")}]`;
-	// `direct` marks a space reached from sRGB by arithmetic alone. Mixing in one
-	// lands on the byte every implementation lands on, so its result is rounded
-	// against the tight boundary margin rather than the Lab family's wide one.
+	// `conversion` says what a color read in this space passes through on its way
+	// to a byte, which is how far the answer can sit from an engine's own: `0`
+	// where the components are the gamma-encoded sRGB ones already, `1` where the
+	// sRGB transfer runs, `2` where a matrix runs as well. What each is worth in
+	// bytes is measured in `lib/css/syntax.js`.
+	// `written` says how a color computed in this space is written back out: what
+	// opens the call, what each component is multiplied by to reach the units the
+	// grammar states, which of them carry a `%`, and the support key the spelling
+	// needs. A color the sRGB byte cannot hold is written this way instead.
+	// `uncertainHue` says when this space's hue is one an engine may or may not
+	// read as missing, which is a mix no answer can be given for. `null` where
+	// there is no such band: a gray's hue is missing in every space, and every
+	// other color's stands.
 	const add = (
 		/** @type {string[]} */ spellings,
 		/** @type {string} */ to,
 		/** @type {string} */ from,
 		/** @type {number} */ hue,
-		/** @type {boolean} */ direct
+		/** @type {number} */ conversion,
+		/** @type {(name: string) => string} */ written,
+		/** @type {string} */ uncertainHue = "null"
 	) => {
 		for (const name of spellings) {
 			names.push(name);
 			entries.push(
-				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, direct: ${direct} }]`
+				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, conversion: ${conversion}, written: ${written(name)}, uncertainHue: ${uncertainHue} }]`
 			);
 		}
 	};
+	// Chromium reads an Oklch hue as missing well before the chroma reaches zero —
+	// measured: kept at 0.02, dropped at 0.015 — where CSS Color 4 §4.4 makes it
+	// powerless only at zero. So a color in that band has no answer two engines
+	// agree on, and a mix naming one is left as it stands. `lch()`, `hsl()` and
+	// `hwb()` show no such band: their hue stands down to a chroma of 0.2 and a
+	// saturation of 0.1%.
+	const UNCERTAIN_OKLCH_HUE = "uncertainOklchHue";
+	const written = (
+		/** @type {string} */ open,
+		/** @type {number[]} */ scale,
+		/** @type {boolean[]} */ percent,
+		/** @type {string} */ feature
+	) =>
+		`{ open: "${open}", scale: [${scale.join(", ")}], percent: [${percent.join(", ")}], feature: "${feature}" }`;
+	const plain = [1, 1, 1];
+	const numbers = [false, false, false];
+	const percentPair = [false, true, true];
+	// A predefined space is written as the `color()` it was read from.
+	const asColorFunction = (/** @type {string} */ name) =>
+		written(`color(${name} `, plain, numbers, "colorFunction");
+	// The one space whose components are the byte's own, which is what a hex and
+	// an `rgb()` state as well.
+	let encodedSpace = "";
 	/** @type {string[]} */
 	const sources = [];
 	const typedConverter = (/** @type {string} */ line) =>
@@ -1799,10 +1884,12 @@ const collectColorSpaceModel = () => {
 		point,
 		transfer
 	] of SUPPLEMENT.predefinedColorSpaces) {
-		const toSrgb = gamutToLinearSrgb(
-			/** @type {number[]} */ (primaries.get(gamut)),
-			/** @type {number[]} */ (white.get(point)),
-			point === "D50"
+		const toSrgb = asIdentity(
+			gamutToLinearSrgb(
+				/** @type {number[]} */ (primaries.get(gamut)),
+				/** @type {number[]} */ (white.get(point)),
+				point === "D50"
+			)
 		);
 		// `display-p3` names `DISPLAY_P3_M` and `toDisplayP3`, so neither the
 		// constants nor the functions carry a spelling the linter reads as a word.
@@ -1819,7 +1906,17 @@ const collectColorSpaceModel = () => {
 				`const from${title} = (c) => applyModel(${upper}_I, c.map(${transfer}));`
 			)
 		);
-		add([name], `to${title}`, `from${title}`, -1, gamut === "srgb");
+		add(
+			[name],
+			`to${title}`,
+			`from${title}`,
+			-1,
+			spaceConversion(name, gamut, transfer),
+			asColorFunction
+		);
+		if (spaceConversion(name, gamut, transfer) === ENCODED_ALREADY) {
+			encodedSpace = name;
+		}
 	}
 	sources.push(
 		`const XYZ_M = ${flat(linearSrgbToXyz)};`,
@@ -1835,16 +1932,58 @@ const collectColorSpaceModel = () => {
 		`const OKLAB_M = ${flat(asRows(lmsToOklab))};`,
 		`const OKLAB_I = ${flat(oklabToLms)};`
 	);
-	add(["xyz", "xyz-d65"], "toXyz", "fromXyz", -1, false);
-	add(["xyz-d50"], "toXyzD50", "fromXyzD50", -1, false);
-	add(["lab"], "toLab", "fromLab", -1, false);
-	add(["lch"], "toLch", "fromLch", 2, false);
-	add(["oklab"], "toOklab", "fromOklab", -1, false);
-	add(["oklch"], "toOklch", "fromOklch", 2, false);
-	add(["hsl"], "toHsl", "fromHsl", 0, true);
-	add(["hwb"], "toHwb", "fromHwb", 0, true);
+	add(
+		["xyz", "xyz-d65"],
+		"toXyz",
+		"fromXyz",
+		-1,
+		THROUGH_MATRIX,
+		asColorFunction
+	);
+	add(
+		["xyz-d50"],
+		"toXyzD50",
+		"fromXyzD50",
+		-1,
+		THROUGH_MATRIX,
+		asColorFunction
+	);
+	add(["lab"], "toLab", "fromLab", -1, THROUGH_MATRIX, () =>
+		written("lab(", plain, numbers, "labColors")
+	);
+	add(["lch"], "toLch", "fromLch", 2, THROUGH_MATRIX, () =>
+		written("lch(", plain, numbers, "labColors")
+	);
+	add(["oklab"], "toOklab", "fromOklab", -1, THROUGH_MATRIX, () =>
+		written("oklab(", plain, numbers, "oklabColors")
+	);
+	sources.push(
+		`/**
+ * @param {number[]} c a color's components in Oklch
+ * @returns {boolean} true where an engine may read the hue as missing
+ */
+const ${UNCERTAIN_OKLCH_HUE} = (c) => Math.abs(c[1]) < 0.03;`
+	);
+	add(
+		["oklch"],
+		"toOklch",
+		"fromOklch",
+		2,
+		THROUGH_MATRIX,
+		() => written("oklch(", plain, numbers, "oklabColors"),
+		UNCERTAIN_OKLCH_HUE
+	);
+	add(["hsl"], "toHsl", "fromHsl", 0, ENCODED_ALREADY, () =>
+		written("hsl(", [1, 100, 100], percentPair, "")
+	);
+	add(["hwb"], "toHwb", "fromHwb", 0, ENCODED_ALREADY, () =>
+		written("hwb(", [1, 100, 100], percentPair, "hwbColors")
+	);
+	if (encodedSpace === "") {
+		throw new Error("no predefined space states the sRGB byte itself");
+	}
 	return {
-		text: `${sources.join("\n")}\n\n/** @type {Map<string, { to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, direct: boolean }>} */\nconst COLOR_SPACE_MODEL = new Map([\n${entries.join(",\n")}\n]);`,
+		text: `${sources.join("\n")}\n\n// The space a hex and an \`rgb()\` state their components in.\nconst SRGB_SPACE = "${encodedSpace}";\n\n/** @typedef {{ to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, conversion: number, written: { open: string, scale: number[], percent: boolean[], feature: string }, uncertainHue: ((c: number[]) => boolean) | null }} ColorSpaceModel */\n\n/** @type {Map<string, ColorSpaceModel>} */\nconst COLOR_SPACE_MODEL = new Map([\n${entries.join(",\n")}\n]);`,
 		names
 	};
 };
@@ -1855,12 +1994,12 @@ const collectColorSpaceModel = () => {
  * name of the function that reads one stored component back to linear light. The three `xyz`
  * spellings carry no primaries of their own — they are the space the rest
  * convert through.
- * @returns {[string, number[], string][]} the spaces, in the order they are read
+ * @returns {[string, number[], string, number][]} the spaces, in the order they are read
  */
 const collectColorSpaces = () => {
 	const primaries = new Map(SUPPLEMENT.colorPrimaries);
 	const white = new Map(SUPPLEMENT.colorWhitePoints);
-	/** @type {[string, number[], string][]} */
+	/** @type {[string, number[], string, number][]} */
 	const out = [];
 	for (const [
 		name,
@@ -1873,18 +2012,34 @@ const collectColorSpaces = () => {
 			/** @type {number[]} */ (white.get(point)),
 			point === "D50"
 		);
-		out.push([name, flatten(matrix), transfer]);
+		out.push([
+			name,
+			flatten(matrix),
+			transfer,
+			spaceConversion(name, gamut, transfer)
+		]);
 	}
 	const identity = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 	const xyz = flatten(XYZ_TO_LINEAR_SRGB);
-	out.push(["xyz", xyz, "linearTransfer"], ["xyz-d65", xyz, "linearTransfer"]);
+	out.push(
+		["xyz", xyz, "linearTransfer", THROUGH_MATRIX],
+		["xyz-d65", xyz, "linearTransfer", THROUGH_MATRIX]
+	);
 	out.push([
 		"xyz-d50",
 		flatten(multiplyMatrix(XYZ_TO_LINEAR_SRGB, D50_TO_D65)),
-		"linearTransfer"
+		"linearTransfer",
+		THROUGH_MATRIX
 	]);
-	// Read by nothing but the check that the construction reproduces sRGB itself.
-	if (out[0][1].some((value, at) => Math.abs(value - identity[at]) > 1e-9)) {
+	// sRGB's own primaries must construct the identity, and then it is written as
+	// the identity: the 1e-16 the construction leaves behind is noise a component
+	// carries all the way into what the printer writes.
+	for (const space of out) {
+		if (space[1].every((value, at) => Math.abs(value - identity[at]) <= 1e-9)) {
+			space[1] = [...identity];
+		}
+	}
+	if (out[0][1].some((value, at) => value !== identity[at])) {
 		throw new Error("sRGB's own primaries did not construct the identity");
 	}
 	return out;
@@ -2365,6 +2520,70 @@ const collectShorthandInitialKeywords = () => {
 		}
 		if (droppable.length !== 0) {
 			out.push([name, droppable.sort(([a], [b]) => (a < b ? -1 : 1))]);
+		}
+	}
+	return out.sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
+// The shorthands whose layers carry a `<position>`, a `<bg-size>` after a `/`
+// and a `<box>{1,2}`, as the longhand each of those four slots is. Stated
+// because the grammar names them through `<bg-layer>`, which the value-definition
+// parser follows into a production rather than into slots.
+const LAYER_SLOT_PROPERTIES = [
+	["background", "background"],
+	["mask", "mask"]
+];
+
+/**
+ * What each layered shorthand's position, size, origin and clip hold when
+ * nothing writes them, from the initial `mdn-data` states per longhand — with
+ * the position as the two values it resolves to.
+ * @returns {[string, string[]][]} shorthand -> `[x, y, size, origin, clip]`
+ */
+const collectLayerInitials = () =>
+	LAYER_SLOT_PROPERTIES.map(([shorthand, prefix]) => {
+		const read = (/** @type {string} */ slot) => {
+			const initial = /** @type {{ initial?: string | string[] }} */ (
+				properties[`${prefix}-${slot}`]
+			).initial;
+			if (typeof initial !== "string") {
+				throw new Error(`no stated initial for ${prefix}-${slot}`);
+			}
+			return initial;
+		};
+		const position = read("position").split(" ");
+		if (position.length !== 2) {
+			throw new Error(`${prefix}-position states no two values`);
+		}
+		// A size of `auto auto` is the one value `auto` says.
+		const size = read("size").split(" ");
+		return /** @type {[string, string[]]} */ ([
+			shorthand,
+			[position[0], position[1], size[0], read("origin"), read("clip")]
+		]);
+	});
+
+/**
+ * The value each slot of a family shorthand holds when nothing writes it, from
+ * the initial `mdn-data` states per longhand. A slot holding its own initial
+ * says nothing beside the others, so the shorthand may be written without it.
+ * @param {[string, string[]][]} familyLonghands each family shorthand's longhands
+ * @returns {[string, string][]} longhand -> its initial value
+ */
+const collectFamilySlotInitials = (familyLonghands) => {
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const [, longhands] of familyLonghands) {
+		for (const longhand of longhands) {
+			const initial = /** @type {{ initial?: string | string[] }} */ (
+				properties[longhand]
+			).initial;
+			// Every slot of every family states one keyword or value; an array is a
+			// shorthand's own list of longhands, which no slot here is.
+			if (typeof initial !== "string") {
+				throw new Error(`no stated initial for ${longhand}`);
+			}
+			out.push([longhand, initial]);
 		}
 	}
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
@@ -3182,6 +3401,33 @@ const collectSubstitutionFunctions = () => {
 // referencing one takes math expressions and nothing else.
 const MATH_PRODUCTIONS = ["calc-sum", "calc-product", "calc-value"];
 
+// The longhand a family list is stated by, which its shorthands reference.
+const FAMILY_PROPERTY = "font-family";
+
+/**
+ * The properties whose value takes a font family list: the longhand itself and
+ * every shorthand referencing it. An identifier naming a family is a family name
+ * in any of them — no other slot they state takes one the property does not
+ * define — which is what lets `system-ui` be lowered wherever it is written.
+ * @returns {string[]} the property names, sorted
+ */
+const collectFamilyListProperties = () => {
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (typeof property.syntax !== "string") continue;
+		if (
+			name === FAMILY_PROPERTY ||
+			references(property.syntax).includes(`'${FAMILY_PROPERTY}'`)
+		) {
+			out.push(name);
+		}
+	}
+	if (!out.includes(FAMILY_PROPERTY)) {
+		throw new Error(`no ${FAMILY_PROPERTY} among the properties`);
+	}
+	return out.sort();
+};
+
 /**
  * CSS Values 4's math functions, spotted by the `<calc-sum>` in their own
  * syntax: inside one, everything is a math expression, so `*` and `/` there are
@@ -3198,6 +3444,33 @@ const collectMathFunctions = () => {
 		}
 	}
 	return names.sort();
+};
+
+/**
+ * The constants a calculation may name, out of the `<calc-constant>` grammar. A
+ * value is stated here only for the two that are doubles: the other names are
+ * carried so the tokenizer declines a calculation using one instead of reading
+ * the name as a unit. The signed spelling `-infinity` is dropped — a sign is
+ * read before the name it applies to.
+ * @param {[string, string][]} stated the value of each constant that has one
+ * @returns {[string, string][]} `name -> the expression for its value, or `null``
+ */
+const collectCalcConstants = (stated) => {
+	const named = syntaxes["calc-constant"].syntax
+		.split("|")
+		.map((name) => name.trim().toLowerCase())
+		.filter((name) => !name.startsWith("-"));
+	const values = new Map(stated);
+	const missing = [...values.keys()].filter((name) => !named.includes(name));
+	if (missing.length !== 0) {
+		throw new Error(
+			`no <calc-constant> named ${missing.join(", ")}: the grammar moved`
+		);
+	}
+	return named.sort().map((name) => {
+		const value = values.get(name);
+		return [name, value === undefined ? "null" : value];
+	});
 };
 
 /**
@@ -3400,7 +3673,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -4082,6 +4355,20 @@ const rec2020Transfer = (c) => {
 		["D65", [0.3127, 0.329]],
 		["D50", [0.3457, 0.3585]]
 	],
+	// The spaces whose transfer function an engine does not read the way CSS
+	// Color 4 §10 states it, so no byte computed from one is the color it paints:
+	// Chromium takes a98-rgb's gamma as 2.2 rather than 563/256 (0.4% out at the
+	// bottom of the range) and ProPhoto's as a pure 1.8 with none of the linear
+	// segment below 16/512 (4x out there). `yarn measure:color-agreement` sweeps
+	// each space's own range and names them, so this list is re-derivable rather
+	// than remembered; a color written in either is left as it stands.
+	enginesDisagreeOnTransfer: ["a98-rgb", "prophoto-rgb"],
+	// What the two calculation constants are worth. The grammar names them, and
+	// no dataset states a value for either.
+	calcConstantValues: [
+		["e", "Math.E"],
+		["pi", "Math.PI"]
+	],
 	quarterTurnAngle: [
 		["deg", 90],
 		["grad", 100],
@@ -4122,12 +4409,12 @@ const rec2020Transfer = (c) => {
 	// `3cm` and `round(down,45mm,15mm)` as `4.5cm`.
 	mathFunctionFold: [
 		["abs", "readSameUnit", "absolute", "same", null, false],
-		["acos", "readNumber", "lookup", "deg", "ARC_COSINE_DEGREES", false],
-		["asin", "readNumber", "lookup", "deg", "ARC_SINE_DEGREES", false],
-		["atan", "readNumber", "lookup", "deg", "ARC_TANGENT_DEGREES", false],
+		["acos", "readNumber", "statedAngle", "deg", "ARC_COSINE_DEGREES", false],
+		["asin", "readNumber", "statedAngle", "deg", "ARC_SINE_DEGREES", false],
+		["atan", "readNumber", "statedAngle", "deg", "ARC_TANGENT_DEGREES", false],
 		["atan2", "readSameUnit", "arcTangent2", "deg", null, false],
 		["clamp", "readSameUnit", "clamp", "same", null, false],
-		["cos", "readEighthTurn", "lookup", "", "EIGHTH_TURN_COSINE", false],
+		["cos", "readAngle", "cosine", "", "EIGHTH_TURN_COSINE", false],
 		["exp", "readNumber", "exponential", "", null, false],
 		["hypot", "readSameUnit", "hypotenuse", "same", null, false],
 		["log", "readNumber", "logarithm", "", null, false],
@@ -4138,9 +4425,9 @@ const rec2020Transfer = (c) => {
 		["rem", "readSameUnit", "remainder", "same", null, true],
 		["round", "readSameUnit", "round", "same", null, true],
 		["sign", "readSameUnit", "sign", "", null, false],
-		["sin", "readEighthTurn", "lookup", "", "EIGHTH_TURN_SINE", false],
+		["sin", "readAngle", "sine", "", "EIGHTH_TURN_SINE", false],
 		["sqrt", "readNumber", "squareRoot", "", null, false],
-		["tan", "readEighthTurn", "lookup", "", "EIGHTH_TURN_TANGENT", false]
+		["tan", "readAngle", "tangent", "", "EIGHTH_TURN_TANGENT", false]
 	],
 	// The arithmetic each math function folds by, in dependency order. No dataset
 	// states any of it — the grammars say only that every argument is a
@@ -4149,9 +4436,21 @@ const rec2020Transfer = (c) => {
 	// arithmetic it does it with. `lib/css/syntax.js` then names neither.
 	//
 	// Every operation answers a number or `null`, and `null` leaves the call
-	// written out. That is the discipline the whole fold rests on: a folded
-	// expression is no longer there for the engine to recompute, so a result
-	// carrying any rounding of its own is declined rather than printed.
+	// written out — for a result that is not a number at all (a root of a negative,
+	// a logarithm of zero, a division by it), and for the one place the arithmetic
+	// itself has to be exact: `exactFloorDivide` pins the integer a stepped
+	// function counts in, where a double an ulp either side of it would put the
+	// answer a whole step out.
+	//
+	// Everything else folds and lets the printer decide what is worth writing.
+	// `_roundSignificant` already holds every number it writes to six significant
+	// digits below 1e4 — measured against Chromium, which serializes a computed
+	// number at six and lays a length out in 1/64px — so a fold's last bits are
+	// below what a stylesheet can observe. The four basic operations and `sqrt`
+	// are exactly specified by IEEE 754, so an engine reaches the same double;
+	// the transcendental ones may differ in the last bit, which the same rounding
+	// covers. An angle is not rounded (a `rotate()` runs it back through trig), so
+	// a fold answering in degrees is left to the length check to accept or not.
 	mathPrimitives: [
 		[
 			"exactAdd",
@@ -4182,18 +4481,42 @@ const exactMultiply = (a, k) => {
 };`
 		],
 		[
-			"exactDivide",
+			"foldAdd",
 			`/**
- * Divide, or decline, on the same terms.
+ * Add two doubles. Every sum a stylesheet can write is finite, and one that is
+ * not is no value to print.
+ * @param {number} a one term
+ * @param {number} b the other
+ * @returns {number | null} their sum, or \`null\`
+ */
+const foldAdd = (a, b) => {
+	const sum = a + b;
+	return Number.isFinite(sum) ? sum : null;
+};`
+		],
+		[
+			"foldMultiply",
+			`/**
+ * @param {number} a the value
+ * @param {number} k the factor
+ * @returns {number | null} their product, or \`null\`
+ */
+const foldMultiply = (a, k) => {
+	const product = a * k;
+	return Number.isFinite(product) ? product : null;
+};`
+		],
+		[
+			"foldDivide",
+			`/**
  * @param {number} a the value
  * @param {number} k the divisor
- * @returns {number | null} their exact quotient, or \`null\`
+ * @returns {number | null} their quotient, or \`null\` where there is none
  */
-const exactDivide = (a, k) => {
+const foldDivide = (a, k) => {
 	if (k === 0) return null;
 	const quotient = a / k;
-	if (!Number.isFinite(quotient)) return null;
-	return quotient * k === a ? quotient : null;
+	return Number.isFinite(quotient) ? quotient : null;
 };`
 		],
 		[
@@ -4225,51 +4548,6 @@ const exactFloorDivide = (value, step) => {
 		return n;
 	}
 	return null;
-};`
-		],
-		[
-			"exactSquareRoot",
-			`/**
- * The square root of a value, where it is one that can be written down. IEEE-754
- * makes \`Math.sqrt\` correctly rounded, so squaring the result back is a complete
- * test — and it fails for every irrational root, which is most of them.
- * @param {number} value the radicand
- * @returns {number | null} the root, or \`null\`
- */
-const exactSquareRoot = (value) => {
-	if (!(value >= 0)) return null;
-	const root = Math.sqrt(value);
-	const back = exactMultiply(root, root);
-	return back === null || back !== value ? null : root;
-};`
-		],
-		[
-			"POWER_LIMIT",
-			`// Beyond this an integer exponent is not worth multiplying out, and every result
-// overflows a double for all but a base within an ulp of 1.
-const POWER_LIMIT = 64;`
-		],
-		[
-			"exactIntegerPower",
-			`/**
- * \`base ** exponent\` for a whole exponent, by multiplying out. Every step is
- * checked, so the result is the one an engine computing in doubles gets — which
- * \`Math.pow\` is not required to be for a general exponent.
- * @param {number} base the base
- * @param {number} exponent a whole exponent
- * @returns {number | null} the power, or \`null\`
- */
-const exactIntegerPower = (base, exponent) => {
-	if (!Number.isInteger(exponent) || Math.abs(exponent) > POWER_LIMIT) {
-		return null;
-	}
-	let power = 1;
-	for (let n = Math.abs(exponent); n > 0; n--) {
-		const next = exactMultiply(power, base);
-		if (next === null) return null;
-		power = next;
-	}
-	return exponent < 0 ? exactDivide(1, power) : power;
 };`
 		],
 		[
@@ -4312,26 +4590,24 @@ const readNumber = (sums) => {
 };`
 		],
 		[
-			"eighthTurnReader",
+			"angleReader",
 			`/**
- * A reader answering which eighth turn a single angle argument is, as the one
- * "coefficient" — a lookup key rather than a magnitude, which \`lookup\` takes. A
- * plain number is an angle in radians, where only zero lands on a whole one.
+ * Read a trigonometric function's one argument as degrees. A bare number is
+ * radians (CSS Values 4 §10.6), and an angle is the unit it was written in;
+ * either way what the fold needs is the one measure the tables are keyed by.
  * @param {Map<string, number>} quarterTurnAngle a quarter turn in each unit that spells one exactly
- * @returns {(sums: Map<string, number>[]) => [string, number[]] | null} the reader
+ * @returns {MathArgumentReader} the reader
  */
-const eighthTurnReader = (quarterTurnAngle) => (sums) => {
+const angleReader = (quarterTurnAngle) => (sums) => {
 	const shared = readSameUnit(sums);
 	if (shared === null) return null;
 	const [unit, [angle]] = shared;
-	if (unit === "") return angle === 0 ? ["", [0]] : null;
+	// A radian is what a bare number is read as, and the one angle unit that
+	// spells no quarter turn exactly — so the table states none for it.
+	if (unit === "" || unit === "rad") return ["", [(angle * 180) / Math.PI]];
 	const quarter = quarterTurnAngle.get(unit);
 	if (quarter === undefined) return null;
-	// Halving a quarter turn is exact in each unit that spells one: 45, 50 and an
-	// eighth, which is a power of two.
-	const eighths = exactDivide(angle, quarter / 2);
-	if (eighths === null || !Number.isInteger(eighths)) return null;
-	return ["", [((eighths % 8) + 8) % 8]];
+	return ["", [(angle * 90) / quarter]];
 };`
 		],
 		[
@@ -4383,18 +4659,11 @@ const sign = ([value]) => Math.sign(value);`
 			"hypotenuse",
 			`/**
  * @param {number[]} values the coefficients
- * @returns {number | null} the root of their sum of squares, or \`null\`
+ * @returns {number | null} the root of their squares, or \`null\`
  */
 const hypotenuse = (values) => {
-	let total = 0;
-	for (const value of values) {
-		const square = exactMultiply(value, value);
-		if (square === null) return null;
-		const sum = exactAdd(total, square);
-		if (sum === null) return null;
-		total = sum;
-	}
-	return exactSquareRoot(total);
+	const total = Math.hypot(...values);
+	return Number.isFinite(total) ? total : null;
 };`
 		],
 		[
@@ -4478,9 +4747,9 @@ const remainder = ([value, divisor]) => {
 			"squareRoot",
 			`/**
  * @param {number[]} values the one radicand
- * @returns {number | null} its root, or \`null\`
+ * @returns {number | null} its root, or \`null\` where there is none
  */
-const squareRoot = ([value]) => exactSquareRoot(value);`
+const squareRoot = ([value]) => (value >= 0 ? Math.sqrt(value) : null);`
 		],
 		[
 			"power",
@@ -4488,47 +4757,115 @@ const squareRoot = ([value]) => exactSquareRoot(value);`
  * @param {number[]} values the base and the exponent
  * @returns {number | null} the power, or \`null\`
  */
-const power = ([base, exponent]) => exactIntegerPower(base, exponent);`
+const power = ([base, exponent]) => {
+	const raised = base ** exponent;
+	return Number.isFinite(raised) ? raised : null;
+};`
 		],
 		[
 			"logarithm",
 			`/**
- * A logarithm is transcendental except where it lands on a whole power of its
- * base, so the candidate is raised back and only an exact match is taken. The
- * natural logarithm's base is not a double at all, which leaves only \`log(1)\`.
  * @param {number[]} values the value and, optionally, the base
- * @returns {number | null} the logarithm, or \`null\`
+ * @returns {number | null} the logarithm, or \`null\` where there is none
  */
 const logarithm = ([value, base]) => {
-	if (base === undefined) return value === 1 ? 0 : null;
-	const exponent = Math.round(Math.log(value) / Math.log(base));
-	const back = exactIntegerPower(base, exponent);
-	return back === null || back !== value ? null : exponent;
+	if (!(value > 0)) return null;
+	if (base === undefined) return Math.log(value);
+	// A base of one divides by zero and a negative one has no logarithm at all;
+	// both leave a quotient that is not a number.
+	const quotient = Math.log(value) / Math.log(base);
+	return Number.isFinite(quotient) ? quotient : null;
 };`
 		],
 		[
 			"exponential",
 			`/**
- * \`e\` is not a double, so every other power of it is a number this cannot write
- * down and an engine's math library rounds its own way.
  * @param {number[]} values the one exponent
- * @returns {number | null} the power of \`e\`, or \`null\`
+ * @returns {number | null} \`e\` raised to it, or \`null\`
  */
-const exponential = ([value]) => (value === 0 ? 1 : null);`
+const exponential = ([value]) => {
+	const raised = Math.exp(value);
+	return Number.isFinite(raised) ? raised : null;
+};`
 		],
 		[
-			"lookup",
+			"eighthTurn",
 			`/**
- * Read the answer out of the table the descriptor carries. Absent means the
- * value is one no stylesheet can hold, so the call stays written out.
- * @param {number[]} values the one lookup key
- * @param {string} _strategy unused
- * @param {Map<number, number> | null} table the descriptor's table
- * @returns {number | null} the answer, or \`null\`
+ * The value a table gives at a whole number of eighth turns, where a real
+ * computation would answer an ulp away from it — \`Math.sin(Math.PI)\` is 1.2e-16
+ * rather than the zero the table states.
+ * @param {number} degrees the angle
+ * @param {Map<number, number>} table the function's eighth-turn table
+ * @returns {number | undefined} the stated value, or undefined
  */
-const lookup = ([key], _strategy, table) => {
-	const value = /** @type {Map<number, number>} */ (table).get(key);
-	return value === undefined ? null : value;
+const eighthTurn = (degrees, table) => {
+	const eighths = degrees / 45;
+	return Number.isInteger(eighths)
+		? table.get(((eighths % 8) + 8) % 8)
+		: undefined;
+};`
+		],
+		[
+			"statedAngle",
+			`/**
+ * An inverse trigonometric function answers with an angle, and an angle is the
+ * one thing the printer does not round — a \`rotate()\` runs it back through trig,
+ * where a truncated digit is a different matrix. So only the arguments the table
+ * states are taken: everywhere else the real answer carries digits that are
+ * noise (\`asin(.5)\` is 30.000000000000004 degrees) and no shorter than the call.
+ * @param {number[]} values the one argument
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the arguments the table states
+ * @returns {number | null} the angle in degrees, or \`null\`
+ */
+const statedAngle = ([value], keyword, table) => {
+	const stated = table.get(value);
+	return stated === undefined ? null : stated;
+};`
+		],
+		[
+			"tangent",
+			`/**
+ * Tangent, which has an asymptote an odd quarter turn from zero: the table
+ * states no value there because there is none, and a double still answers with
+ * a very large one.
+ * @param {number[]} values the angle in degrees
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the eighth-turn table
+ * @returns {number | null} its tangent, or \`null\` at an asymptote
+ */
+const tangent = ([degrees], keyword, table) => {
+	const stated = eighthTurn(degrees, table);
+	if (stated !== undefined) return stated;
+	const quarters = degrees / 90;
+	if (Number.isInteger(quarters) && ((quarters % 2) + 2) % 2 === 1) return null;
+	return Math.tan((degrees * Math.PI) / 180);
+};`
+		],
+		[
+			"cosine",
+			`/**
+ * @param {number[]} values the angle in degrees
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the eighth-turn table
+ * @returns {number | null} its cosine
+ */
+const cosine = ([degrees], keyword, table) => {
+	const stated = eighthTurn(degrees, table);
+	return stated === undefined ? Math.cos((degrees * Math.PI) / 180) : stated;
+};`
+		],
+		[
+			"sine",
+			`/**
+ * @param {number[]} values the angle in degrees
+ * @param {string} keyword unused
+ * @param {Map<number, number>} table the eighth-turn table
+ * @returns {number | null} its sine
+ */
+const sine = ([degrees], keyword, table) => {
+	const stated = eighthTurn(degrees, table);
+	return stated === undefined ? Math.sin((degrees * Math.PI) / 180) : stated;
 };`
 		],
 		[
@@ -4681,9 +5018,9 @@ const collectArcAngles = (table, from, to) => {
 	return out.sort((a, b) => a[0] - b[0]);
 };
 
-// `readEighthTurn` is not a primitive of its own: it is the reader
-// `eighthTurnReader` builds once the quarter-turn table exists.
-const GENERATED_READERS = new Set(["readEighthTurn"]);
+// `readAngle` is not a primitive of its own: it is the reader `angleReader`
+// builds once the quarter-turn table exists.
+const GENERATED_READERS = new Set(["readAngle"]);
 
 /**
  * Fail generation when a descriptor names an arithmetic that is not among the
@@ -6080,6 +6417,8 @@ const collectData = async () => {
 	const colorNames = collectColorNames(colorName);
 	const colorNameValues = collectColorNameValues(colorName);
 	const mathFunctions = collectMathFunctions();
+	const familyListProperties = collectFamilyListProperties();
+	const calcConstants = collectCalcConstants(SUPPLEMENT.calcConstantValues);
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
 	const nthNamedEquivalents = collectNthNamedEquivalents();
@@ -6152,6 +6491,8 @@ const collectData = async () => {
 	const pairLonghands = collectPairLonghands();
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
+	const familySlotInitials = collectFamilySlotInitials(familyLonghands);
+	const layerInitials = collectLayerInitials();
 	const orderedLonghands = collectOrderedLonghands(
 		SUPPLEMENT.orderedShorthands
 	);
@@ -6253,7 +6594,7 @@ const collectData = async () => {
 "use strict";
 
 /** @typedef {(sums: Map<string, number>[]) => [string, number[]] | null} MathArgumentReader */
-/** @typedef {(values: number[], strategy: string, table: Map<number, number> | null) => number | null} MathOperation */
+/** @typedef {(values: number[], strategy: string, table: Map<number, number>) => number | null} MathOperation */
 
 // The arithmetic the math-function descriptors at the end of this file bind to.
 // It knows nothing of CSS beyond the shape of an evaluated argument, and names
@@ -6312,6 +6653,10 @@ const UNSHARED_LONGHAND_KEYWORDS = new Map([${unsharedLonghandKeywords
 // appearing once, in grammar order. A merge emits every value, so the only
 // question is whether each parses back into the longhand it was authored on.
 // prettier-ignore
+// The properties whose value ends in a family list, out of the grammars: the
+// longhand and the shorthands that reference it.
+const FAMILY_LIST_PROPERTIES = ${setLiteral(familyListProperties)};
+
 const FAMILY_LONGHANDS = new Map([${familyLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
@@ -6684,14 +7029,22 @@ const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 // white point and transfer function CSS Color 4 §10 states.
 ${SUPPLEMENT.colorTransfers.map(([, source]) => source).join("\n\n")}
 
-/** @type {Map<string, { toSrgb: number[], transfer: (c: number) => number }>} */
+// What a color read in one space passes through on its way to a byte: nothing at
+// all, the sRGB transfer, or a matrix as well. \`lib/css/syntax.js\` reads how far
+// its answer can sit from an engine's from this.
+const ENCODED_ALREADY = ${ENCODED_ALREADY};
+const THROUGH_TRANSFER = ${THROUGH_TRANSFER};
+const THROUGH_MATRIX = ${THROUGH_MATRIX};
+const ENGINE_TRANSFER_DIFFERS = ${ENGINE_TRANSFER_DIFFERS};
+
+/** @type {Map<string, { toSrgb: number[], transfer: (c: number) => number, conversion: number }>} */
 const PREDEFINED_COLOR_SPACES = new Map([
 ${colorSpaces
 	.map(
-		([name, matrix, transfer]) =>
+		([name, matrix, transfer, conversion]) =>
 			`\t["${name}", { toSrgb: [${matrix
 				.map(String)
-				.join(", ")}], transfer: ${transfer} }]`
+				.join(", ")}], transfer: ${transfer}, conversion: ${conversion} }]`
 	)
 	.join(",\n")}
 ]);
@@ -6717,6 +7070,22 @@ const COLOR_NAME_TO_RGB = new Map([${colorNameValues
 		.map(([name, packed]) => `["${name}", ${packed}]`)
 		.join(", ")}]);
 
+// What a layered shorthand's position, size, origin and clip hold when nothing
+// writes them, as \`[x, y, size, origin, clip]\`. A layer holding its own is a
+// layer the shorthand says without them.
+const LAYER_INITIALS = new Map([
+${layerInitials
+	.map(
+		([name, slots]) =>
+			`\t["${name}", [${slots.map((one) => JSON.stringify(one)).join(", ")}]]`
+	)
+	.join(",\n")}
+]);
+
+// What each slot of a family shorthand holds when nothing writes it. A slot
+// holding its own initial says nothing beside the others.
+const FAMILY_SLOT_INITIALS = ${mapLiteral(familySlotInitials)};
+
 // The font stack \`system-ui\` names, for a target that does not read the keyword.
 const SYSTEM_UI_STACK = ${JSON.stringify(SUPPLEMENT.systemUiStack.join(","))};
 
@@ -6724,9 +7093,17 @@ const SYSTEM_UI_STACK = ${JSON.stringify(SUPPLEMENT.systemUiStack.join(","))};
 // trig, which turns a truncated digit into a different computed matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 
+// The constants a calculation may name (CSS Values 4 §10.7), as \`name -> value\`.
+// \`infinity\` and \`NaN\` are named with none: no printed number spells either, so
+// a calculation naming one is left as it stands.
+/** @type {Map<string, number | null>} */
+const CALC_CONSTANTS = new Map([${calcConstants
+		.map(([name, value]) => `["${name}", ${value}]`)
+		.join(", ")}]);
+
 // A quarter turn in each unit that spells it exactly (CSS Values 4 §8.1), as
-// \`unit -> the count\`. The trig functions are folded only where their argument
-// is a whole number of these, which is where sine and cosine are rational.
+// \`unit -> the count\`. It is what a trig function's argument is read as degrees
+// through, and the eighths of it are where sine and cosine are rational.
 /** @type {Map<string, number>} */
 const QUARTER_TURN_ANGLE = new Map([${SUPPLEMENT.quarterTurnAngle
 		.map(([unit, count]) => `["${unit}", ${count}]`)
@@ -6768,22 +7145,26 @@ const ARC_TANGENT_DEGREES = ${numberMapLiteral(
 		collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1)
 	)};
 
-// The reader that needs a table, built once here — \`mathPrimitives\` knows the
-// arithmetic of an eighth turn but not which units spell one.
-const readEighthTurn = eighthTurnReader(QUARTER_TURN_ANGLE);
+// The reader that needs a table, built once here — \`mathPrimitives\` knows how to
+// read an angle but not which units spell a quarter turn.
+const readAngle = angleReader(QUARTER_TURN_ANGLE);
+
+// The table a function that looks nothing up is handed.
+/** @type {Map<number, number>} */
+const NO_TABLE = new Map();
 
 // What folding each math function comes down to, as
 // \`name -> { read, apply, result, table }\`: how its arguments are read, which
 // arithmetic runs, and the unit the answer carries. \`read\` and \`apply\` are the
 // functions themselves, so \`lib/css/syntax.js\` drives the fold while naming
 // neither a math function nor an arithmetic of its own.
-/** @type {Map<string, { read: MathArgumentReader, apply: MathOperation, result: string, table: Map<number, number> | null }>} */
+/** @type {Map<string, { read: MathArgumentReader, apply: MathOperation, result: string, table: Map<number, number> }>} */
 const MATH_FUNCTION_FOLD = new Map([
 ${SUPPLEMENT.mathFunctionFold
 	.map(
 		([name, read, apply, result, table]) =>
 			`\t["${name}", { read: ${read}, apply: ${apply}, result: "${result}", table: ${
-				table === null ? "null" : table
+				table === null ? "NO_TABLE" : table
 			} }]`
 	)
 	.join(",\n")}
@@ -6934,7 +7315,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_RGB = COLOR_NAME_TO_RGB;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.COLOR_SPACE_MODEL = COLOR_SPACE_MODEL;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
@@ -6945,14 +7326,14 @@ module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPA
 module.exports.EASING_KEYWORDS = EASING_KEYWORDS;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
 module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
-module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
-module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
+module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;\nmodule.exports.ENCODED_ALREADY = ENCODED_ALREADY;\nmodule.exports.ENGINE_TRANSFER_DIFFERS = ENGINE_TRANSFER_DIFFERS;
+module.exports.FAMILY_LIST_PROPERTIES = FAMILY_LIST_PROPERTIES;\nmodule.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
 module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
-module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
+module.exports.FAMILY_SLOT_INITIALS = FAMILY_SLOT_INITIALS;\nmodule.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.KEYWORD_ONLY_PROPERTIES = KEYWORD_ONLY_PROPERTIES;
-module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
+module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;\nmodule.exports.LINEAR_SRGB_TO_P3 = LINEAR_SRGB_TO_P3;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
@@ -6973,13 +7354,13 @@ module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
-module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
+module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The arithmetic the printer's own evaluator needs. Sorted after the tables:\n// \`import/order\` orders exports by case, uppercase first.\nmodule.exports.foldAdd = foldAdd;\nmodule.exports.foldDivide = foldDivide;\nmodule.exports.foldMultiply = foldMultiply;
 `;
 
 	const summary = `${

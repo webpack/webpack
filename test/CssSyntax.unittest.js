@@ -3188,9 +3188,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["hsla(0,100%,50%,1)", "red"],
 			["hwb(0 0% 100%)", "#000"],
 			["lab(100% 0 0)", "#fff"],
-			["lch(29.2345% 44.2 45deg)", "#752d15"],
 			["oklab(1 0 0)", "#fff"],
-			["oklch(70% .1 200)", "#40b1b7"],
 			["oklab(40.101% .1147% .0453%)", "#484848"]
 		])("converts %s", (input, expected) => {
 			expect(value(input)).toBe(expected);
@@ -3203,8 +3201,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// past the sRGB gamut, so a hex would clip to a different color
 			["lab(50% 100 -100)"],
 			["oklch(90% .4 140)"],
-			// within the Lab family's wider margin
+			// within the margin a conversion through a matrix carries: an engine's
+			// own transfer is a fitted curve rather than the spec's, so a channel
+			// this close to a boundary is one it could round the other way
 			["lab(20% 40 0)"],
+			["lch(29.2345% 44.2 45deg)"],
+			["oklch(70% .1 200)"],
 			// a non-percentage saturation / lightness is not the grammar converted
 			["hsl(0,1,.5)"],
 			// a hue in a unit the converter does not read
@@ -3496,7 +3498,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A third component is `transform-origin`'s z offset, which the two-value
 			// collapse has no reading of.
 			["a depth follows the position", "a{transform-origin:left top 10px}"],
-			["the position is a shorthand's slot", "a{background:left top}"]
+			// A shorthand's own position slot is read where the layer is, which is
+			// what takes `left top` out as the place an unwritten one names.
+			["the position is a shorthand's slot", "a{background:none}"]
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -3576,8 +3580,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{animation:x 1s ease}", "a{animation:x 1s}"],
 			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
 			["a{border:2px none red}", "a{border:2px red}"],
-			["a{column-rule:medium none red}", "a{column-rule:medium red}"],
-			["a{outline:medium none}", "a{outline:medium}"],
+			// A family reads each slot by what it takes, so a width and a color are
+			// answered for as well as a keyword: both of these hold their initial.
+			["a{column-rule:medium none red}", "a{column-rule:red}"],
+			["a{outline:medium none}", "a{outline:none}"],
 			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
 			// Both slots hold their initial, so the shortest one says both — whichever
 			// order they were written in.
@@ -3599,11 +3605,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{background:red repeat}", "a{background:red}"],
 			["a{background:none red repeat scroll}", "a{background:red}"],
 			// `background-origin` and `background-clip` are two slots of one
-			// production, so neither of their initials is the one slot's own.
-			[
-				"a{background:padding-box border-box none}",
-				"a{background:padding-box border-box}"
-			],
+			// production, so neither of their initials is the one slot's own to the
+			// keyword table — the layer reads them as the pair they are, and the
+			// pair is what each holds when nothing writes it.
+			["a{background:padding-box border-box none}", "a{background:none}"],
 			["a{border-image:none 30}", "a{border-image:30}"],
 			["a{mask:none luminance}", "a{mask:luminance}"],
 			["a{TRANSITION:opacity 1s EASE}", "a{transition:opacity 1s}"]
@@ -5737,9 +5742,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// needs one plain number for the result to keep the units it had.
 			["calc(2px*3px)"],
 			["calc(1px/0)"],
-			// Neither the sum nor the product is exact in a double.
-			["calc(.1px + .2px)"],
-			["calc(1px/7)"],
 			["calc(1e20px + 1px)"],
 			["calc(1e308px*1e10)"],
 			// Past the range the rounding covers, so every digit is kept — and all
@@ -5784,8 +5786,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(converted("calc(1cm + 1mm)")).toBe("11mm");
 			expect(converted("calc(1in + 1cm)")).toBe("3.54cm");
 			expect(converted("calc(4.5cm + 0cm)")).toBe("45mm");
-			// And a sum no unit of the group spells exactly still declines.
-			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
+			// Where no unit of the group spells it exactly, the sum still lands in one
+			// the expression was written with, at the precision every number is
+			// written at.
+			expect(value("calc(1px + 1cm)")).toBe("38.7953px");
 		});
 
 		it("keeps the parentheses on a negative the property refuses", () => {
@@ -5900,11 +5904,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:-1}");
 		});
 
-		it("takes hypot() only where the root is exact", () => {
+		it("takes hypot()", () => {
 			expect(value("hypot(3px,4px)")).toBe("5px");
 			expect(value("hypot(6px,8px,0px)")).toBe("10px");
-			// Irrational for most inputs.
-			expect(value("hypot(1px,1px)")).toBe("hypot(1px,1px)");
+			// Irrational for most inputs, and written at the precision every number
+			// is written at.
+			expect(value("calc(hypot(1px,1px)*100)")).toBe("141.421px");
 		});
 	});
 
@@ -5979,28 +5984,58 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("sqrt(), pow(), log(), exp() and the trig functions", () => {
 		it.each([
-			// Irrational, so there is no value to write down.
-			["calc(sqrt(2)*1px)"],
-			["calc(pow(2,.5)*1px)"],
-			// `e` is not a double, which leaves only the powers of it this knows.
-			["calc(exp(1)*1px)"],
-			["calc(log(10)*1px)"],
-			// Not a whole power of the base.
-			["calc(log(9,2)*1px)"],
-			// Sine and cosine are irrational an odd eighth turn from zero, and
-			// tangent has an asymptote on the odd quarters.
-			["calc(sin(30deg)*1px)"],
-			["calc(sin(45deg)*1px)"],
-			["calc(cos(50grad)*1px)"],
+			// The printer holds every number it writes to six significant digits
+			// below 1e4, which is under what a stylesheet can observe, so an
+			// irrational answer is written at the precision any other number is.
+			["calc(sqrt(2)*100px)", "141.421px"],
+			["calc(pow(2,.5)*100px)", "141.421px"],
+			["calc(exp(1)*100px)", "271.828px"],
+			["calc(log(10)*100px)", "230.259px"],
+			["calc(log(9,2)*100px)", "316.993px"],
+			["calc(sin(30deg)*100px)", "50px"],
+			["calc(sin(45deg)*100px)", "70.7107px"],
+			["calc(cos(50grad)*100px)", "70.7107px"],
+			// A bare number is radians (CSS Values 4 §10.6).
+			["calc(sin(1)*100px)", "84.1471px"],
+			["calc(cos(1rad)*100px)", "54.0302px"],
+			// ...and the constants a calculation may name.
+			["calc(pi*100px)", "314.159px"],
+			["calc(e*100px)", "271.828px"]
+		])("folds %s", (expression, folded) => {
+			expect(value(expression)).toBe(folded);
+		});
+
+		it.each([
+			// Tangent has an asymptote an odd quarter turn from zero, where there is
+			// no value at all.
 			["calc(tan(90deg)*1px)"],
-			// A radian is not a whole number of eighth turns except at zero.
-			["calc(sin(1)*1px)"],
-			["calc(cos(1rad)*1px)"],
-			// The inverse functions answer with an angle only at three arguments.
+			// An inverse function answers with an angle, and an angle is the one
+			// thing the printer does not round — so only the arguments the table
+			// states are taken.
 			["asin(.5)"],
 			["atan2(1,2)"],
 			// Both zero is left to the engine.
-			["atan2(0,0)"]
+			["atan2(0,0)"],
+			// `infinity` and `NaN` are values no printed number spells.
+			["calc(infinity*1px)"],
+			["calc(nan*1px)"],
+			// A trigonometric function takes an angle or a bare number, so a length
+			// or a percentage is not one it can be read from.
+			["calc(sin(1px)*1px)"],
+			["calc(sin(1%)*1px)"],
+			// An argument outside a function's domain has no answer to write.
+			["calc(sqrt(-1)*1px)"],
+			["calc(log(0)*1px)"],
+			["calc(log(-1)*1px)"],
+			// ...and base one names every power of itself.
+			["calc(log(8,1)*1px)"],
+			// An answer that overflows a double is not one either.
+			["calc(pow(1e308,2)*1px)"],
+			["calc(exp(1000)*1px)"],
+			["hypot(1.5e308,1.5e308)"],
+			["calc(1e308 + 1e308)"],
+			["calc(1/1e-320)"],
+			["calc(1px/0)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
 		});
@@ -6016,6 +6051,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("takes a logarithm that lands on a whole power of its base", () => {
 			expect(value("calc(log(8,2)*1px)")).toBe("3px");
 			expect(value("calc(log(1,10)*1px)")).toBe("0");
+			// A base of zero divides by an infinity, which is a number after all.
+			expect(value("calc(log(8,0)*1px)")).toBe("0");
 			expect(value("calc(exp(0)*1px)")).toBe("1px");
 		});
 
@@ -6027,6 +6064,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(cos(180deg)*1px)")).toBe("calc(-1px)");
 			expect(value("calc(tan(45deg)*1px)")).toBe("1px");
 			expect(value("calc(tan(180deg)*1px)")).toBe("0");
+			// Between them it is computed like every other irrational answer.
+			expect(value("calc(tan(30deg)*1px)")).toBe(".57735px");
 		});
 
 		it("answers the inverse functions in degrees", () => {
@@ -6037,6 +6076,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("atan2(0,-1)")).toBe("180deg");
 			// A ratio of two lengths is a number, so it answers the same way.
 			expect(value("atan2(1px,-1px)")).toBe("135deg");
+			// Every other argument is left alone: an angle is not rounded, so an
+			// inexact one would be written to seventeen digits.
+			expect(value("atan(.3)")).toBe("atan(.3)");
 		});
 
 		it("prints a folded operand of an outer expression bare", () => {
@@ -6092,9 +6134,10 @@ describe("CssSyntax — convertLengthUnits", () => {
 		expect(width("calc(1px + 15px)", true)).toBe("1pc");
 	});
 
-	it("declines a sum that reaches no written unit exactly", () => {
-		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves.
-		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
+	it("lands a sum in a unit it was written with, gate or no gate", () => {
+		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves — so
+		// the sum lands there, at the precision every number is written at.
+		expect(width("calc(1cm + 1px)")).toBe("38.7953px");
 	});
 });
 
@@ -7884,11 +7927,12 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 	});
 
 	it("reads a space through its own transfer", () => {
+		// The transfer the spec states is read for every space, and the margin then
+		// decides. Chromium computes all three through one of its own, so the byte
+		// read here is not the color it paints, however far from a boundary.
 		expect(minify("a{color:color(prophoto-rgb .5 .2 .1)}")).toBe(
-			"a{color:#c20715}"
+			"a{color:color(prophoto-rgb .5 .2 .1)}"
 		);
-		// Chromium reads these two through a function of its own, which no margin
-		// bridges, so the color it names is left for it to compute.
 		expect(minify("a{color:color(a98-rgb .5 .2 .1)}")).toBe(
 			"a{color:color(a98-rgb .5 .2 .1)}"
 		);
@@ -7924,6 +7968,40 @@ describe("CssSyntax minify — the predefined color spaces", () => {
 
 	it("reads an alpha written as a percentage", () => {
 		expect(minify("a{color:color(srgb 1 0 0/50%)}")).toBe("a{color:#ff000080}");
+	});
+
+	it("converts a space by what reaching the byte passes through", () => {
+		// `srgb` states the byte itself, so the only channel it declines is one on
+		// a rounding boundary — `.1` is 25.5 of them.
+		expect(minify("a{color:color(srgb .2 .4 .6)}")).toBe("a{color:#369}");
+		expect(minify("a{color:color(srgb .333 .666 .1)}")).toBe(
+			"a{color:color(srgb .333 .666 .1)}"
+		);
+		// A matrix carries an engine's transfer approximation into every term, so
+		// what it costs is relative to the color's own magnitude: a dark color
+		// converts where a bright one is left as it stands.
+		expect(minify("a{color:color(display-p3 .05 .06 .07)}")).toBe(
+			"a{color:#0c0f12}"
+		);
+		expect(minify("a{color:color(display-p3 .6 .7 .8)}")).toBe(
+			"a{color:color(display-p3 .6 .7 .8)}"
+		);
+	});
+
+	it("leaves a space an engine reads through another transfer", () => {
+		// Chromium takes a98-rgb's gamma as 2.2 rather than 563/256, and ProPhoto's
+		// as a pure 1.8 with none of the linear segment below 16/512 — so the byte
+		// computed here is not the color it paints, however far from a boundary.
+		expect(minify("a{color:color(a98-rgb .5 .5 .5)}")).toBe(
+			"a{color:color(a98-rgb .5 .5 .5)}"
+		);
+		expect(minify("a{color:color(prophoto-rgb .5 .5 .5)}")).toBe(
+			"a{color:color(prophoto-rgb .5 .5 .5)}"
+		);
+		// ...and a mix reading one of them inherits that, whatever space it is
+		// made in.
+		const mix = "a{color:color-mix(in srgb,color(a98-rgb .5 .5 .5),red)}";
+		expect(minify(mix)).toBe(mix);
 	});
 
 	it("falls back through the widest gamut the target reads", () => {
@@ -8025,14 +8103,132 @@ describe("CssSyntax minify — color-mix()", () => {
 		expect(minify("a{color:color-mix(in oklab-ish, red, blue)}")).toBe(
 			"a{color:color-mix(in oklab-ish,red,blue)}"
 		);
-		// A channel landing on a `.5` boundary is where implementations disagree.
-		expect(minify("a{color:color-mix(in srgb, red, blue)}")).toBe(
-			"a{color:color-mix(in srgb,red,blue)}"
+		// ...and a call naming no space at all.
+		expect(minify("a{color:color-mix(in srgb, color(), red)}")).toBe(
+			"a{color:color-mix(in srgb,color(),red)}"
 		);
-		// ...and a mix sRGB cannot show has no hex to write.
+		// A mix sRGB cannot show has no hex to write, and one of its colors was
+		// written in a space this had to convert to reach the mix's — so there is
+		// nothing to write in that space either.
 		expect(minify("a{color:color-mix(in oklch, red 37%, blue)}")).toBe(
 			"a{color:color-mix(in oklch,red 37%,blue)}"
 		);
+	});
+
+	it("leaves a color a function computes with as it was written", () => {
+		// A gradient interpolates between its stops and a mix mixes its two, so the
+		// byte an engine would paint is not what either computes from: rounding one
+		// here moves the answer rather than a pixel's last bit.
+		const gradient =
+			"a{background:linear-gradient(hsl(209.32 16.5% 53.41%),red)}";
+		expect(minify(gradient)).toBe(gradient);
+		const mix = "a{color:color-mix(in oklch,hsl(209.32 16.5% 53.41%) 20%,red)}";
+		expect(minify(mix)).toBe(mix);
+		// ...though a mix this can compute whole answers with the color it names
+		// rather than with the byte, so the fold still stands.
+		expect(
+			minify("a{color:color-mix(in srgb,hsl(209.32 16.5% 53.41%) 20%,red)}")
+		).toBe("a{color:#e31b1f}");
+		const relative = "a{color:lab(from rgb(97.8 212.1 167.6) calc(l*1.1) a b)}";
+		expect(minify(relative)).toBe(relative);
+		// A spelling naming the same color exactly still stands, in any of them.
+		expect(minify("a{background:linear-gradient(#ff0000,rgb(0,255,0))}")).toBe(
+			"a{background:linear-gradient(red,#0f0)}"
+		);
+		// ...though only the legacy `rgb()` spelling, whose channels are already
+		// the bytes: `hsl()` reaches them through a conversion, so it stands.
+		const exactHsl = "a{color:color-mix(in oklch,hsl(0 100% 50%) 20%,#00f)}";
+		expect(minify(exactHsl)).toBe(exactHsl);
+		// ...and `light-dark()` picks one of its two and paints it, so the byte is
+		// what it computes with too.
+		expect(minify("a{color:light-dark(hsl(209.32 16.5% 53.41%),red)}")).toBe(
+			"a{color:light-dark(#75899c,red)}"
+		);
+	});
+
+	it("mixes a gray as the missing hue an engine reads it for", () => {
+		// CSS Color 4 §12.2: a gray states no hue, so the other color's stands
+		// rather than the two being interpolated.
+		expect(minify("a{color:color-mix(in hsl,#ff0 12%,#000)}")).toBe(
+			"a{color:#11110d}"
+		);
+		expect(minify("a{color:color-mix(in hsl,#ff0 12%,#fff)}")).toBe(
+			"a{color:#f2f2ee}"
+		);
+		expect(minify("a{color:color-mix(in hsl,#ff0 12%,#808080)}")).toBe(
+			"a{color:#8f8f71}"
+		);
+		expect(minify("a{color:color-mix(in hwb,#ff0 12%,#808080)}")).toBe(
+			"a{color:#8f8f71}"
+		);
+		// ...whichever of the two states the hue.
+		expect(minify("a{color:color-mix(in hsl,#808080,#ff0 88%)}")).toBe(
+			"a{color:#f0f00f}"
+		);
+		// A gray written in the space the mix is made in keeps the hue it states,
+		// which reaching it through sRGB has already lost.
+		const written = "a{color:color-mix(in hsl,#ff0 12%,hsl(280 0% 50%))}";
+		expect(minify(written)).toBe(written);
+		// Chromium reads an Oklch hue as missing while the color still has chroma,
+		// where the spec makes it powerless only at zero — so a mix naming a color
+		// in that band has no answer two engines agree on.
+		const pale = "a{color:color-mix(in oklch,#ff0 12%,oklch(.4 .01 200))}";
+		expect(minify(pale)).toBe(pale);
+	});
+
+	it("writes a mix in the space it was made in where no byte holds it", () => {
+		// A channel landing on a `.5` boundary is where implementations disagree
+		// over the byte — but not over the mix, which both colors were written in
+		// the space of, so nothing was converted to make it.
+		expect(minify("a{color:color-mix(in srgb, red, blue)}")).toBe(
+			"a{color:color(srgb .5 0 .5)}"
+		);
+		// ...and the same for a mix outside the sRGB gamut altogether.
+		expect(
+			minify(
+				"a{color:color-mix(in oklch, oklch(70% .3 30), oklch(50% .2 250))}"
+			)
+		).toBe("a{color:oklch(.6 .25 320)}");
+		expect(
+			minify("a{color:color-mix(in lab, lab(80% 90 -70), lab(60% -50 60))}")
+		).toBe("a{color:lab(70 20 -5)}");
+		// The hue method decides which way round the circle, as it does for a byte.
+		expect(
+			minify(
+				"a{color:color-mix(in oklch longer hue, oklch(70% .3 30), oklch(50% .2 250))}"
+			)
+		).toBe("a{color:oklch(.6 .25 140)}");
+		// A weight and an alpha are carried the same way.
+		expect(
+			minify(
+				"a{color:color-mix(in oklch, oklch(70% .3 30) 30%, oklch(50% .2 250 / .5))}"
+			)
+		).toBe("a{color:oklch(.592308 .246154 292/.65)}");
+		// A relative color answers in its own space on the same terms.
+		expect(
+			minify("a{color:oklch(from oklch(70% .3 30) calc(l * 1.1) c h)}")
+		).toBe("a{color:oklch(.77 .3 30)}");
+		// A space stating percentages writes them back, and one written as a
+		// `color()` is written back as the same call.
+		expect(
+			minify("a{color:color-mix(in hwb,hwb(200 10% 20%),hwb(20 30% 40%))}")
+		).toBe("a{color:hwb(110 20% 30%)}");
+		expect(
+			minify(
+				"a{color:color-mix(in display-p3," +
+					"color(display-p3 1 0 0),color(display-p3 0 0 1))}"
+			)
+		).toBe("a{color:color(display-p3 .5 0 .5)}");
+		// ...but not where the origin is written in another space: reaching this
+		// one converted it, and a conversion is not what an engine computes.
+		const converted = "a{color:oklch(from red l c h)}";
+		expect(minify(converted)).toBe(converted);
+	});
+
+	it("declines the space's own spelling where the target cannot read it", () => {
+		const mix =
+			"a{color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}";
+		expect(minifyFor(mix, ["chrome 100"])).toBe(mix);
 	});
 
 	it.each([
@@ -8083,22 +8279,21 @@ describe("CssSyntax minify — color-mix()", () => {
 		).toBe("a{color:#993a33}");
 	});
 
-	it("keeps a polar mix an achromatic color reaches with no hue", () => {
-		// A gray converts into hsl and hwb with its hue missing, and the engine
-		// interpolates the other color's own rather than the zero it lands on.
-		for (const css of [
-			"color-mix(in hsl,green,#fff)",
-			"color-mix(in hsl,green,#000)",
-			"color-mix(in hwb,green,gray)",
-			// ...and a hue written beside a zero saturation is lost the same way.
-			"color-mix(in hsl,green,hsl(50 0% 100%))"
-		]) {
-			expect(minify(`a{color:${css}}`)).toBe(`a{color:${css}}`);
-		}
-		// A space with no hue takes the same color and folds the mix as before.
-		expect(minify("a{color:color-mix(in srgb,#000 25%,#fff)}")).toBe(
-			"a{color:#bfbfbf}"
-		);
+	it("keeps the arc two opposite hues state, whichever is greater", () => {
+		// CSS Color 4 §12.4 breaks the tie by which hue is greater, and a color
+		// reaches its own space through sRGB — so a half turn the trip back leaves
+		// a hair over must not read as the arc the other way round. Both of these
+		// paint 68,153,51 in Chromium; the arc the other way is 136,51,153.
+		expect(
+			minify("a{color:color-mix(in hsl,hsl(200 50% 40%),hsl(20 50% 40%))}")
+		).toBe("a{color:#493}");
+		expect(
+			minify("a{color:color-mix(in hsl,hsl(20 50% 40%),hsl(200 50% 40%))}")
+		).toBe("a{color:#493}");
+		// A pair that is genuinely more than a half turn apart still wraps.
+		expect(
+			minify("a{color:color-mix(in hsl,hsl(200 50% 40%),hsl(19.5 50% 40%))}")
+		).toBe("a{color:#839}");
 	});
 
 	it("reads its own hue method, not one a nested mix left behind", () => {
@@ -8150,7 +8345,11 @@ describe("CssSyntax minify — relative colors", () => {
 		);
 		// Every channel keyword the function names is bound, in any order.
 		expect(minify("a{color:rgb(from red b g r)}")).toBe("a{color:#00f}");
-		expect(minify("a{color:oklch(from red l c h)}")).toBe("a{color:red}");
+		// ...though a channel the conversion leaves near a rounding boundary keeps
+		// the function: red through oklch and back is 255, 0, 0 within a bit, and
+		// a bit is what the margin is about.
+		const throughOklch = "a{color:oklch(from red l c h)}";
+		expect(minify(throughOklch)).toBe(throughOklch);
 		expect(minify("a{color:hsl(from red h s l)}")).toBe("a{color:red}");
 		expect(minify("a{color:rgb(from red calc(r - 50) g b)}")).toBe(
 			"a{color:#cd0000}"
@@ -8193,7 +8392,10 @@ describe("CssSyntax minify — relative colors", () => {
 		["a keyword nothing binds", "rgb(from red calc(q*2) g b)"],
 		["an expression of two arguments", "rgb(from red min(r,2) g b)"],
 		["an expression of two units", "rgb(from red calc(r*1px + 1em) g b)"],
-		["a number where the hue takes an angle", "hsl(from red calc(h*1) s l)"],
+		[
+			"an angle added to the number a hue keyword is",
+			"hsl(from red calc(h + 40deg) s l)"
+		],
 		["an alpha that is neither", "rgb(from red r g b/x)"],
 		["a fourth channel", "rgb(from red r g b b)"],
 		["an expression of no arithmetic", "rgb(from red calc(r*url(x)) g b)"],
@@ -8205,6 +8407,18 @@ describe("CssSyntax minify — relative colors", () => {
 	it("reads a channel written any way the function takes", () => {
 		// A hue is an angle, and the alpha may be a percentage.
 		expect(minify("a{color:hsl(from red 240deg s l)}")).toBe("a{color:#00f}");
+		// ...and a channel keyword substitutes as the number it names (CSS Color 5
+		// §4.1), so an expression over the hue reduces to no unit and is read as
+		// the degrees it states.
+		expect(minify("a{color:hsl(from red calc(h + 240) s l)}")).toBe(
+			"a{color:#00f}"
+		);
+		expect(minify("a{color:oklch(from oklch(70% .3 30) l c calc(h*2))}")).toBe(
+			"a{color:oklch(.7 .3 60)}"
+		);
+		expect(minify("a{color:oklch(from oklch(70% .3 30) l c 70)}")).toBe(
+			"a{color:oklch(.7 .3 70)}"
+		);
 		expect(minify("a{color:rgb(from red r g b/50%)}")).toBe(
 			"a{color:#ff000080}"
 		);
@@ -8232,6 +8446,16 @@ describe("CssSyntax minify — the rest of the target's abilities", () => {
 		expect(minifyFor("a{--x:system-ui}", ["chrome 50"])).toBe(
 			"a{--x:system-ui}"
 		);
+		// The `font` shorthand ends in the same family list, and no other slot of
+		// it takes an identifier the property does not define itself.
+		expect(minifyFor("a{font:12px system-ui}", ["chrome 50"])).toBe(
+			`a{font:12px ${stack}}`
+		);
+		expect(
+			minifyFor("a{font:italic bold 12px/1.2 system-ui,serif}", ["chrome 50"])
+		).toBe(`a{font:italic 700 12px/1.2 ${stack},serif}`);
+		// ...while a system font keyword is not a family at all.
+		expect(minifyFor("a{font:menu}", ["chrome 50"])).toBe("a{font:menu}");
 	});
 
 	it("writes a `text-decoration` naming more than its line as longhands", () => {
@@ -8579,6 +8803,114 @@ describe("CssSyntax minify — a selector list a pseudo does not take", () => {
 		);
 		expect(minifyFor("a:lang(en,fr){color:red}")).toBe(
 			"a:lang(en,fr){color:red}"
+		);
+	});
+});
+
+describe("CssSyntax minify — a slot holding its own initial", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @returns {string} its minified serialization, with no target to answer for
+	 */
+	const minify = (css) => minifyFor(css);
+
+	it("takes a family's initials out, and one of them says all of them", () => {
+		// The slots are read by what each takes, so a width and a color are
+		// answered for as well as a keyword.
+		expect(minify("a{border-left:currentcolor medium none}")).toBe(
+			"a{border-left:none}"
+		);
+		expect(minify("a{column-rule:medium none red}")).toBe("a{column-rule:red}");
+		expect(minify("a{outline:medium none currentcolor}")).toBe(
+			"a{outline:currentcolor}"
+		);
+		expect(minify("a{text-decoration:none currentcolor solid auto}")).toBe(
+			"a{text-decoration:none}"
+		);
+		expect(minify("a{border-top:1px solid currentcolor}")).toBe(
+			"a{border-top:1px solid}"
+		);
+		// Nothing to take out leaves the value as it was.
+		expect(minify("a{border-top:1px solid red}")).toBe(
+			"a{border-top:1px solid red}"
+		);
+	});
+
+	it("keeps a family value it cannot part", () => {
+		// `none` is both a `list-style-type` and a `list-style-image`, so which slot
+		// it fills is not a question this answers.
+		expect(minify("a{list-style:disc outside none}")).toBe(
+			"a{list-style:disc none}"
+		);
+		// No family takes a comma or a `/`, so one written there is a value the
+		// engine drops — and one this leaves exactly as it stands.
+		expect(minify("a{border-top:1px, solid currentcolor}")).toBe(
+			"a{border-top:1px,solid currentcolor}"
+		);
+		expect(minify("a{border-left:medium none, red}")).toBe(
+			"a{border-left:medium none,red}"
+		);
+	});
+
+	it("keeps a `text-decoration` a slot the target cannot read stands in", () => {
+		// Taking the thickness out would bring the rest of the declaration back to
+		// life on an engine that drops it whole, where the author wrote nothing.
+		expect(
+			minifyFor("a{text-decoration:none solid}", ["chrome 50"])
+		).not.toContain("text-decoration:none}");
+		expect(minifyFor("a{text-decoration:none solid}", ["chrome 130"])).toBe(
+			"a{text-decoration:none}"
+		);
+	});
+
+	it("takes a layer's position, size and boxes out", () => {
+		expect(
+			minify(
+				"a{background:0% 0% / auto repeat scroll padding-box border-box red}"
+			)
+		).toBe("a{background:red}");
+		// Every spelling of the place an unwritten position names — but not a
+		// length zero, which lands there and still computes as `0px` rather than
+		// the `0%` an unwritten slot computes as.
+		expect(minify("a{background:left top red}")).toBe("a{background:red}");
+		expect(minify("a{background:0 0 red}")).toBe("a{background:0 0 red}");
+		expect(minify("a{background:0% 0%/auto auto red}")).toBe(
+			"a{background:red}"
+		);
+		// A layer writes at least one component, and the image's own initial says
+		// the least of them.
+		expect(minify("a{background:0% 0%}")).toBe("a{background:none}");
+		// The two boxes are the origin and the clip in that order; one of them is
+		// both, which only goes where the two initials are the same value.
+		expect(minify("a{mask:url(a.svg) border-box}")).toBe("a{mask:url(a.svg)}");
+		expect(minify("a{background:red border-box}")).toBe(
+			"a{background:red border-box}"
+		);
+		expect(minify("a{background:red padding-box}")).toBe(
+			"a{background:red padding-box}"
+		);
+	});
+
+	it("keeps a layer that writes any of them", () => {
+		expect(minify("a{background:10% 0% red}")).toBe("a{background:10%0%red}");
+		expect(minify("a{background:center red}")).toBe("a{background:center red}");
+		expect(minify("a{background:0% 0%/cover red}")).toBe(
+			"a{background:0%0%/cover red}"
+		);
+		// Only where every component of the size is the one an unwritten slot
+		// takes: half of a size is a size.
+		expect(minify("a{background:0% 0%/auto 50% red}")).toBe(
+			"a{background:0%0%/auto 50%red}"
+		);
+		expect(minify("a{background:0% 0%/50% auto red}")).toBe(
+			"a{background:0%0%/50%auto red}"
+		);
+		// The size ends where the next slot begins, and no keyword of one is a size.
+		expect(minify("a{background:0% 0%/auto no-repeat red}")).toBe(
+			"a{background:no-repeat red}"
+		);
+		expect(minify("a{background:red content-box padding-box}")).toBe(
+			"a{background:red content-box padding-box}"
 		);
 	});
 });

@@ -179,8 +179,12 @@ export default defineConfig([
 	},
 	{
 		// The equivalence helpers are installed into the page, so they run in the
-		// browser rather than in Node.
-		files: ["test/helpers/syntaxEquivalence.js"],
+		// browser rather than in Node. So does what the color measurement hands to
+		// `page.evaluate`.
+		files: [
+			"test/helpers/syntaxEquivalence.js",
+			"tooling/measure-color-agreement.js"
+		],
 		languageOptions: {
 			globals: {
 				...globals.browser

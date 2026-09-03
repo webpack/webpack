@@ -201,7 +201,9 @@ export { style };
 		await compile({ cache: { compression: false } });
 		expect(execute()).toBe(30);
 		for (let i = 0; i < 30; i++) {
-			updateSrc({
+			// Awaited: the writes it ends with outlive the test otherwise, and the
+			// next one's `rimraf` takes the file out from under them.
+			await updateSrc({
 				[files[i]]: "export default 2;",
 				"style.modules.css": `.class-${i} { color: red; background: url('image1.png'); }`
 			});
