@@ -94,6 +94,27 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		);
 	});
 
+	it("reads a capturing, non-capturing or named group the same way", () => {
+		expect(has([{ test: /[\\/]src[\\/].*\.(css)$/, use: ["x"] }])).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.(?<ext>css|scss)$/, use: ["x"] }])
+		).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.(?<ext>scss|sass)$/, use: ["x"] }])
+		).toBe(false);
+	});
+
+	it("spells the extension in the case an `i` rule accepts", () => {
+		expect(has([{ test: /[\\/]src[\\/].*\.(CSS|SCSS)$/i, use: ["x"] }])).toBe(
+			true
+		);
+		expect(has([{ test: /[\\/]SRC[\\/].*\.Css$/i, use: ["x"] }])).toBe(true);
+		// without `i` the rule really does not match `.css`
+		expect(has([{ test: /[\\/]src[\\/].*\.(CSS|SCSS)$/, use: ["x"] }])).toBe(
+			false
+		);
+	});
+
 	it("detects an extension spelled behind an optional atom", () => {
 		expect(has([{ test: /[\\/]src[\\/].*\.s?css$/, use: ["x"] }])).toBe(true);
 		expect(has([{ test: /[\\/]src[\\/].*\.s?ass$/, use: ["x"] }])).toBe(false);

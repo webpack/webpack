@@ -1,9 +1,7 @@
 "use strict";
 
-// `experiments.typescript` stays at its "auto" default and the ts-loader rule is
-// path-scoped with its extensions in an alternation — the sample path the
-// detection probes with doesn't match it, so only reading the extension out of
-// the alternation keeps the built-in support off. Left on, it rejects `.tsx`.
+// The ts-loader rule is path-scoped, so the detection probe has to read `.ts`
+// out of its alternation — left on, the built-in support rejects `.tsx`.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
