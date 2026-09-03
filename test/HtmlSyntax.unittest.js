@@ -4273,6 +4273,28 @@ describe("SourceProcessor — inline <script> whitespace", () => {
 		expect(minifyBody(type, "  var a = 1  ")).toBe("var a = 1");
 	});
 
+	it("trims a JSON body the strip declines", () => {
+		// Embedded all the same: the edges are outside whatever it holds.
+		expect(minifyBody("application/ld+json", "  {{ t }}  ")).toBe("{{ t }}");
+	});
+
+	it("trims a JSON body where `minifyJson` is off", () => {
+		// That switch owns the strip, `collapseWhitespace` owns the edges.
+		const out = new SourceProcessor().process(
+			'<script type="application/json">  { "a" : 1 }  </script>',
+			{
+				mode: /** @type {"minify"} */ ("minify"),
+				collapseWhitespace: /** @type {"all"} */ ("all"),
+				transforms: { minifyJson: false }
+			}
+		).code;
+		expect(out).toBe('<script type=application/json>{ "a" : 1 }</script>');
+	});
+
+	it("keeps a JSON body that is only whitespace", () => {
+		expect(minifyBody("application/json", "   ")).toBe("   ");
+	});
+
 	it("reads an entity-encoded JSON type as JSON", () => {
 		expect(minifyBody("application&#47;ld&#43;json", '  { "a" : 1 }  ')).toBe(
 			'{"a":1}'
