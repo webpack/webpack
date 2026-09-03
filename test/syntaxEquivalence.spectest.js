@@ -1165,3 +1165,296 @@ describe("wpt css token adjacency", () => {
 		expect(fused).toEqual([]);
 	});
 });
+
+// What a lowering is held to: an engine that reads both spellings computes the
+// same style from either. The engine here reads every modern spelling, so a
+// fallback pair resolves to the author's own and a rewrite has to land on it.
+// A lowering that changes the computed value on purpose names the properties it
+// changes, with the reason — nothing is compared as text.
+/**
+ * @typedef {object} LoweringFixture
+ * @property {string} name what it lowers
+ * @property {string} css the stylesheet
+ * @property {string[]} browsers the selection that turns the lowering on
+ * @property {string} html the document the probes are read from
+ * @property {[string, string][]} probes selector and the property to read
+ * @property {string[]=} schemes the color schemes to read it under
+ * @property {string[]=} directions the writing directions to read it under
+ * @property {string[]=} differs properties this lowering changes on purpose
+ * @property {string[]} produces text the rewrite leaves, so a comparison of two sheets neither of which was rewritten cannot pass for one
+ * @property {string=} reference what the source means, where the engine reads no spelling of it — `:lang(en, fr)` is one Chromium has never taken, so the rewrite is held to the pair of rules that state the same thing rather than to an engine's reading of the original
+ */
+/** @type {LoweringFixture[]} */
+const LOWERING_FIXTURES = [
+	{
+		name: "light-dark()",
+		produces: [
+			"var(--webpack-light,#aaa) var(--webpack-dark,#444)",
+			":where(:root){--webpack-light:initial",
+			"@media (prefers-color-scheme:dark){html{"
+		],
+		css:
+			"html{color-scheme:light dark}html[dir=rtl]{color-scheme:dark}" +
+			".panel{color-scheme:dark}" +
+			"button{background-color:light-dark(#aaa,#444);color:light-dark(red,blue)}",
+		browsers: ["chrome 100"],
+		html: "<button id=b>x</button><div class=panel><button id=c>y</button></div>",
+		probes: [
+			["#b", "background-color"],
+			["#b", "color"],
+			["#c", "background-color"],
+			["#c", "color"]
+		],
+		schemes: ["light", "dark"],
+		directions: ["ltr", "rtl"]
+	},
+	{
+		name: "light-dark() with no color-scheme, which is the light one",
+		produces: ["var(--webpack-light,#aaa)", ":where(:root){"],
+		css: "button{background-color:light-dark(#aaa,#444)}",
+		browsers: ["chrome 100"],
+		html: "<button id=b>x</button>",
+		probes: [["#b", "background-color"]],
+		schemes: ["light", "dark"]
+	},
+	{
+		name: "a color the target cannot read, and the gamut rung before it",
+		produces: ["color:#ff0704;color:color(display-p3"],
+		css:
+			"#b{color:oklch(.6322 .2577 29.23);background-color:lab(40% 56.6 39);" +
+			"border-top-color:hwb(120 20% 30%);outline-color:color(a98-rgb .44091 .49971 .37408)}",
+		browsers: ["safari 15"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"]
+		]
+	},
+	{
+		name: "...and the same colors for a target that reads none of them",
+		css:
+			"#b{color:oklch(.6322 .2577 29.23);background-color:lab(40% 56.6 39);" +
+			"border-top-color:hwb(120 20% 30%);outline-color:color(a98-rgb .44091 .49971 .37408)}",
+		browsers: ["chrome 100"],
+		produces: [
+			"color:#ff0704;color:oklch(",
+			"background-color:#b32323;background-color:lab(",
+			"border-top-color:#33b333",
+			"outline-color:#6a805d"
+		],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"],
+			["#b", "border-top-color"],
+			["#b", "outline-color"]
+		]
+	},
+	{
+		name: "a color-mix() and a relative color",
+		produces: ["color:#706a43", "background-color:#669"],
+		css:
+			"#b{color:color-mix(in hsl,hsl(120deg 10% 20%) 25%,hsl(30deg 30% 40%));" +
+			"background-color:rgb(from rebeccapurple r calc(g * 2) b)}",
+		browsers: ["chrome 130"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-color"]
+		]
+	},
+	{
+		name: "a hex alpha, a media range and a two-position color stop",
+		produces: [
+			"rgba(123,255,255,.5)",
+			"red 30%,red 40%",
+			"(min-width:480px) and (max-width:768px)",
+			"(min-width:1px)"
+		],
+		css:
+			"#b{color:#7bffff80;background-image:linear-gradient(green,red 30% 40%,pink)}" +
+			"@media (480px<=width<=768px){#b{outline-color:red}}" +
+			"@media (width>=1px){#b{border-top-color:red}}",
+		browsers: ["chrome 50"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "color"],
+			["#b", "background-image"],
+			["#b", "outline-color"],
+			["#b", "border-top-color"]
+		]
+	},
+	{
+		name: "the shorthands the target does not have",
+		produces: [
+			"align-items:center;justify-items:start",
+			"overflow-x:hidden;overflow-y:auto",
+			"top:1px",
+			"display:inline-flex",
+			"text-decoration-thickness:2px"
+		],
+		css:
+			"#b{place-items:center start;overflow:hidden auto;inset:1px 2px;" +
+			"display:inline flex;text-decoration:underline 2px dotted red}",
+		browsers: ["chrome 50"],
+		html: "<button id=b>x</button>",
+		probes: [
+			["#b", "align-items"],
+			["#b", "justify-items"],
+			["#b", "overflow-x"],
+			["#b", "overflow-y"],
+			["#b", "top"],
+			["#b", "left"],
+			["#b", "display"],
+			["#b", "text-decoration-line"],
+			["#b", "text-decoration-style"],
+			["#b", "text-decoration-color"],
+			["#b", "text-decoration-thickness"]
+		]
+	},
+	{
+		name: "a matrix transform and a grid template",
+		produces: ["translate(100px,200px)", '"foot ."'],
+		css:
+			"#b{transform:matrix(1,0,0,1,100,200)}" +
+			'#c{display:grid;grid-template-areas:"head head" "foot ...."}',
+		browsers: ["chrome 130"],
+		html: "<button id=b>x</button><div id=c></div>",
+		probes: [
+			["#b", "transform"],
+			["#c", "grid-template-areas"]
+		]
+	},
+	{
+		name: "a `:not()` holding a list the target does not take",
+		css: "p:not(:first-child,.lead){color:rgb(4,5,6)}",
+		browsers: ["firefox 80"],
+		produces: [":not(:is(:first-child,.lead))"],
+		html: "<div><p id=p1>a</p><p id=p2 class=lead>b</p><p id=p3>c</p></div>",
+		probes: [
+			["#p1", "color"],
+			["#p2", "color"],
+			["#p3", "color"]
+		]
+	},
+	{
+		name: "a `:lang()` holding one, which no Chromium has ever taken",
+		css: "a:lang(en,fr){color:rgb(1,2,3)}",
+		reference: "a:lang(en),a:lang(fr){color:rgb(1,2,3)}",
+		browsers: ["firefox 80"],
+		produces: [":is(:lang(en),:lang(fr))"],
+		html: "<a id=en lang=en>x</a><a id=fr lang=fr>x</a><a id=de lang=de>x</a>",
+		probes: [
+			["#en", "color"],
+			["#fr", "color"],
+			["#de", "color"]
+		]
+	},
+	{
+		name: "system-ui, which names each platform's own font instead",
+		produces: ["-apple-system,BlinkMacSystemFont"],
+		css: "#b{font-family:system-ui}",
+		browsers: ["chrome 50"],
+		html: "<button id=b>x</button>",
+		probes: [["#b", "font-family"]],
+		// The stack *is* the rewrite: `system-ui` leads it, so an engine reading
+		// the keyword still takes it, and the rest is what one that does not reads.
+		differs: ["font-family"]
+	}
+];
+
+describe("a lowering computes as the spelling it replaces", () => {
+	/** @type {import("puppeteer-core").Browser} */
+	let browser;
+
+	beforeAll(async () => {
+		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
+	}, 300000);
+
+	afterAll(async () => {
+		if (browser) await browser.close();
+	});
+
+	/**
+	 * Every probe's computed value under one stylesheet.
+	 * @param {import("puppeteer-core").Page} page the page to read from
+	 * @param {string} css the stylesheet
+	 * @param {string} html the document
+	 * @param {[string, string][]} probes selector and property
+	 * @returns {Promise<string[]>} the values, in the probes' order
+	 */
+	const readComputed = (page, css, html, probes) =>
+		page.setContent(`<style>${css}</style>${html}`).then(() =>
+			page.evaluate((asked) => {
+				// A color is compared as painted rather than as text: the engine
+				// keeps a mix at the precision it computed, while the printer writes
+				// the byte it lands on — which is the trade every color rewrite here
+				// already makes, and the pixel is what a reader sees of it.
+				const canvas = document.createElement("canvas");
+				const context = /** @type {CanvasRenderingContext2D} */ (
+					canvas.getContext("2d", { willReadFrequently: true })
+				);
+				return asked.map(([selector, property]) => {
+					const element = document.querySelector(selector);
+					if (element === null) return "no such element";
+					const value = getComputedStyle(element).getPropertyValue(property);
+					context.fillStyle = "#000";
+					context.fillStyle = value;
+					// Anything the canvas does not read as one color keeps its text.
+					if (context.fillStyle === "#000" && !/^#0{3,8}$/i.test(value)) {
+						return value;
+					}
+					context.clearRect(0, 0, 1, 1);
+					context.fillRect(0, 0, 1, 1);
+					return [...context.getImageData(0, 0, 1, 1).data].join(",");
+				});
+			}, probes)
+		);
+
+	it.each(LOWERING_FIXTURES.map((fixture) => [fixture.name, fixture]))(
+		"%s",
+		async (_name, fixture) => {
+			const lowered = new CssSourceProcessor().process(fixture.css, {
+				mode: "minify",
+				environment: { browsers: fixture.browsers }
+			}).code;
+			// The rewrite has to have happened, or the comparison proves nothing.
+			for (const written of fixture.produces) {
+				expect(lowered).toContain(written);
+			}
+			const asked = fixture.probes.filter(
+				([, property]) => !(fixture.differs || []).includes(property)
+			);
+			const page = await browser.newPage();
+			try {
+				for (const scheme of fixture.schemes || ["light"]) {
+					await page.emulateMediaFeatures([
+						{ name: "prefers-color-scheme", value: scheme }
+					]);
+					for (const direction of fixture.directions || ["ltr"]) {
+						const html = `<script>document.documentElement.dir=${JSON.stringify(
+							direction
+						)}</script>${fixture.html}`;
+						const before = await readComputed(
+							page,
+							fixture.reference || fixture.css,
+							html,
+							asked
+						);
+						const after = await readComputed(page, lowered, html, asked);
+						expect({ scheme, direction, computed: after }).toEqual({
+							scheme,
+							direction,
+							computed: before
+						});
+					}
+				}
+			} finally {
+				await page.close();
+			}
+		},
+		FILE_TIMEOUT
+	);
+});

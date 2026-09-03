@@ -16,3 +16,13 @@
 .t09 { color: oklch(59.686% 0.15619 49.7694) }
 /*! ...and `hwb()`, which shipped before the Lab family */
 .t10 { background-color: hwb(120 20% 30%) }
+/*! a `color()`, which the target reads only as the sRGB it names */
+.t11 { color: color(a98-rgb 0.44091 0.49971 0.37408) }
+/*! `system-ui`, which the target reaches only by each platform's own name */
+.t12 { font-family: system-ui }
+/*! a `text-decoration` naming more than its line, written as longhands */
+.t13 { text-decoration: underline 2px dotted red }
+/*! a `color-mix()`, evaluated where every component is known */
+.t14 { color: color-mix(in hsl, hsl(120deg 10% 20%) 25%, hsl(30deg 30% 40%)) }
+/*! a relative color, resolved against the origin it names */
+.t15 { color: rgb(from rebeccapurple r calc(g * 2) b) }
