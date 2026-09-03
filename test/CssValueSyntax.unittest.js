@@ -7,9 +7,11 @@ const {
 	assertClassesArePrintable,
 	checkStatedClassSpellings,
 	collectAlphaValueProperties,
+	collectColorFunctions,
 	collectData,
 	collectFamilyLonghands,
 	collectGradientFunctions,
+	collectLaterColorNames,
 	collectMergeableAtRules,
 	collectNthNamedEquivalents,
 	collectOmittableInitialKeywords,
@@ -854,6 +856,34 @@ describe("CssValueSyntax", () => {
 		it("rejects an `at-rules.json` without a rule replaced by name", () => {
 			expect(() => collectMergeableAtRules({})).toThrow(
 				"`@keyframes` is gone from mdn-data"
+			);
+		});
+
+		it("reads the calls `<color>` is spelled by, and nothing else it names", () => {
+			expect(
+				collectColorFunctions(["rgb()", "currentcolor", "oklch()"])
+			).toEqual(["oklch", "rgb"]);
+		});
+
+		it("rejects a `<color>` grammar that names no call at all", () => {
+			expect(() => collectColorFunctions(["currentcolor"])).toThrow(
+				"`<color>` names no function: the grammar moved"
+			);
+		});
+
+		it("reads the named colors carrying a row, past bcd's own `__compat`", () => {
+			expect(
+				collectLaterColorNames({
+					__compat: {},
+					rebeccapurple: { __compat: { support: {} } },
+					lime: { __compat: { support: {} } }
+				})
+			).toEqual(["lime", "rebeccapurple"]);
+		});
+
+		it("rejects a `<named-color>` node where every name lost its row", () => {
+			expect(() => collectLaterColorNames({ __compat: {} })).toThrow(
+				"no <named-color> carries a row of its own: bcd moved"
 			);
 		});
 	});

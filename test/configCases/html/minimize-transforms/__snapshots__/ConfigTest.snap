@@ -8,7 +8,7 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<div class=trimmed style=color:red;padding:0>token list and declarations</div>
 	<div style='content:\\"}\\"'>a brace inside a string is not one in the list</div>
 	<div style=--custom:{a:b}>nor is a balanced pair</div>
-	<div style=background:red;background:limegreen>a bare \`}\` closes no block, so it is a bad declaration running to the next \`;\`</div>
+	<div style=background:limegreen>a bare \`}\` closes no block, so it is a bad declaration running to the next \`;\`</div>
 	<div style=\\"top:anchor-size(--a1 width)\\">what the value leaves open, the end of the input closes</div>
 	<div style=box-shadow:var(--t,10px)>the same, unclosed in a fallback</div>
 	<div style=\\"content:'a'\\">the same, unclosed in a string</div>

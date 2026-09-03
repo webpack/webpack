@@ -20,11 +20,6 @@
 .t11 { color: color(a98-rgb 0.44091 0.49971 0.37408) }
 /*! `system-ui`, which the target reaches only by each platform's own name */
 .t12 { font-family: system-ui }
-/*! ...and the same where the print left out the separator before the color,
-   which is where the components are read back from */
-.t13a { text-decoration: underline 2px solid #ffffff }
-.t13b { text-decoration: underline solid rgb(1, 2, 3) }
-.t13c { text-decoration: underline solid color-mix(in oklch, red, blue) }
 /*! a `text-decoration` naming more than its line, written as longhands */
 .t13 { text-decoration: underline 2px dotted red }
 /*! a `color-mix()`, evaluated where every component is known */

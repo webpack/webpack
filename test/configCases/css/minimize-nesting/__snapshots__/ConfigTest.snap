@@ -9,7 +9,7 @@ Array [
   "/*! declined: a vendor pseudo is one an engine may not parse */.e{.n10::-webkit-scrollbar{top:0}.n11::-webkit-scrollbar{top:0}}",
   "/*! values: a number, a time, a zero angle and a color all fold the same nested */.f{.n12{transition-duration:.5s;transform:rotate(0);color:#fff;width:5px}}",
   "/*! shorthand: four sides merge into the one shorthand inside a nested rule */.g{.n13{margin:1px 2px}}",
-  "/*! shorthand: ...and a slot holding its own initial goes */.h{.n14{transition:opacity 1s 0s}}",
+  "/*! shorthand: ...and a slot holding its own initial goes */.h{.n14{transition:opacity 1s}}",
   "/*! filter: an argument that is the amount an omitted one means says nothing */.i{.n15{filter:blur()grayscale()}}",
   "/*! declaration: only the last of a set of identical ones can be read */.j{.n16{color:red}}",
   "/*! declaration: ...whatever nested rule stands between them */.k{color:red;.n17{top:0}color:red}",

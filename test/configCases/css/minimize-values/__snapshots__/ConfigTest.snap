@@ -55,6 +55,16 @@ Array [
   "/*! webpack: ...with whitespace on both sides */@media screen and (width>=100px){.t45{color:red}}",
   "/*! webpack: a Media Queries Level 4 range */@media (width>=40rem){.t46{color:red}}",
   "/*! webpack: ...on both sides of the feature */@media (400px<=width<=700px){.t47{color:red}}",
+  "/*! webpack: \`all and (…)\` matches what the condition alone matches, so the type
+   is six bytes saying nothing */@media (width>=100px){.t47a{color:red}}",
+  "/*! declined: \`all\` on its own is the whole query, and \`only\` before it is there
+   to hide the rule from an engine reading CSS 2's grammar */@media all{.t47b{color:red}}@media only all and (width>=100px){.t47c{color:red}}@media not all and (width>=100px){.t47d{color:red}}",
+  "/*! webpack: an operand a condition already states, whichever rule states it */@media (monochrome){.t47e{color:red}}@supports (display:grid){.t47f{color:red}}@supports ((display:grid) or (display:flex)){.t47g{color:red}}",
+  "/*! declined: a chain mixing the two operators is no flat list of either's, and
+   two queries are not two operands of anything */@supports (display:grid) and (display:flex) or (display:table){.t47h{color:red}}@media (monochrome),(monochrome){.t47i{color:red}}",
+  "/*! webpack: a media feature is a length, a ratio or an integer and nothing
+   else, so the number in one is written the way a value's number is */@media (480px<=width<=768.5px){.t47j{color:red}}",
+  "/*! declined: a style query compares the tokens as they were written */@container style(--x: 0480.0px){.t47k{color:red}}",
   "/*! webpack: a container query */@container card (width>400px){.t48{color:red}}",
   "/*! webpack: an @supports condition */@supports (display:grid){.t49{color:red}}",
   "/*! webpack: ...on a custom property */@supports (--x:1){.t50{color:red}}",
@@ -196,6 +206,10 @@ Array [
   "/*! declined: ...but only then */.t96{transform:matrix3d(20,20,0,0,40,40,0,0,0,0,1,5,80,80,0,1)}",
   "/*! webpack: a 2D pair of 1 leaves the z scale alone */.t97{transform:scaleZ(1.5)}",
   "/*! webpack: a zero time keeps a unit, and \`s\` is the shorter one it can carry */.t98{transition-duration:0s}",
+  "/*! webpack: a shorthand slot holding its own initial goes, and a slot taking a
+   length or a color is read by the classes a sibling's own value is in — every
+   slot holding its initial leaves the shortest of them saying all of them */.t98a{border:none}.t98b{column-rule:none}.t98c{border:solid red}",
+  "/*! declined: a sibling filling the slot keeps the initial there */.t98d{border:medium 1px}.t98e{border:currentcolor red}",
   "/*! webpack: a component spelling the property's own initial says nothing beside
    another — omitting its group leaves exactly that keyword */.t99{grid-auto-flow:dense}",
   "/*! declined: the other alternative of the group is not the initial */.t99a{grid-auto-flow:column dense}",

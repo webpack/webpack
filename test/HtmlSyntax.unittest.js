@@ -5263,9 +5263,9 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			)
 		).toBe("<svg><rect style=padding:0 /></svg>");
 		// Nothing opened a block, so a `}` closes none: it is a parse error whose
-		// bad declaration runs to the next `;`, which is what a browser reads.
-		expect(minify('<p style="background:red;};background:blue">x</p>')).toBe(
-			"<p style=background:red;background:blue>x"
+		// bad declaration runs to the next `;` — two properties, so both survive it.
+		expect(minify('<p style="color:red;};background:blue">x</p>')).toBe(
+			"<p style=color:red;background:blue>x"
 		);
 		// No `;` after it, so the bad declaration runs to the end.
 		expect(minify('<p style="background:red;}background:blue">x</p>')).toBe(

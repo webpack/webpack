@@ -91,7 +91,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
 - `bin/` — `webpack` CLI entry point.
-- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`). Those two need no arguments and no reading of their source: each runs webpack's CSS/HTML minifier and the ecosystem's over popular framework stylesheets and real documents, printing one table per fixture — output size raw and under gzip/brotli/zstd (the `test:size` settings), best-of-3 wall and cpu ms, peak RSS (each minifier × fixture measured in its own worker process, so the numbers are attributable), and whether the output lost classes / changed the DOM ("rejects it" rows mean the tool errored on that input). They install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies; expect the first run to install for a minute and every full run to take a few. `measure-color-agreement.js` (`yarn measure:color-agreement`) is the third: it asks a real browser for its own color conversions rather than for a pixel, and prints how far they sit from webpack's — which is where the rounding margins in `lib/css/syntax.js` and the list of spaces an engine reads through another transfer come from. Re-run it (a few seconds; `PUPPETEER_EXECUTABLE_PATH` picks the binary) rather than adjusting either by hand.
+- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`). Those two need no arguments and no reading of their source: each runs webpack's CSS/HTML minifier and the ecosystem's over popular framework stylesheets and real documents, printing one table per fixture — output size raw and under gzip/brotli/zstd (the `test:size` settings), best-of-3 wall and cpu ms, peak RSS (each minifier × fixture measured in its own worker process, so the numbers are attributable), and whether the output lost classes / changed the DOM ("rejects it" rows mean the tool errored on that input). They install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies; expect the first run to install for a minute and every full run to take a few. `check-comment-length.js` (`yarn lint:comments`) reports the plain comments a change grows past the two-line limit of [Code comments](#code-comments). `measure-color-agreement.js` (`yarn measure:color-agreement`) is the third: it asks a real browser for its own color conversions rather than for a pixel, and prints how far they sit from webpack's — which is where the rounding margins in `lib/css/syntax.js` and the list of spaces an engine reads through another transfer come from. Re-run it (a few seconds; `PUPPETEER_EXECUTABLE_PATH` picks the binary) rather than adjusting either by hand.
 - `assembly/` — WebAssembly source for the hash function.
 - `setup/` — One-time setup scripts.
 
@@ -214,33 +214,21 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 
 > [!REQUIRED]
 
-**This rule is about plain comments only** — `//` and `/* … */` narration inside `lib/`, `hot/`, `tooling/`, and `test/`. Those must be **as short as possible** — ideally one line, at most two short lines. Every line must add information a careful reader can't get from the code itself: a hidden invariant, a non-obvious ordering constraint, a workaround, or the name of the higher-level concept the block implements. **Never** write multi-paragraph essays, restate what the next line obviously does, narrate the diff, restate the PR description, or quote the user/task framing.
+**A plain comment is at most two lines. Count them.** This binds every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits into its output. A third line is over the limit however short each line is and however true every word — split the thought, cut it, or drop it.
 
-**A JSDoc block's tags are exempt — they are the type contract, not commentary, and they are multi-line by construction.** One `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply. That holds for every documented symbol, exported or internal to one file: the tags are never something to shorten, flatten onto one line, or delete.
+**Check your own diff before every commit. It must print nothing:**
 
-**The description above those tags is prose, so it is bound by the same brevity as a plain comment: one or two sentences, never more.** Say what the function does when the name alone doesn't carry it, plus the one invariant or non-obvious constraint a caller needs. A paragraph explaining the algorithm, the history, or the alternatives considered belongs in neither place — moving an essay from a `//` comment into a JSDoc description is not a fix, it is the same essay indented differently.
-
-**So never trade a JSDoc block for a shorter comment.** Turning
-
-```
-/**
- * An async external is a promise, not a module record with an evaluating state.
- * @param {Module} module the imported module
- * @returns {boolean} true when the module is an async external
- */
-const isAsyncExternal = (module) => …
+```sh
+yarn lint:comments
 ```
 
-into
+It reports every plain comment your added lines grow past two, in either form, and exempts JSDoc. It is not part of `yarn lint`, which has no base branch to diff against.
 
-```
-// An async external is a promise, not a module record with an evaluating state.
-const isAsyncExternal = (/** @type {Module} */ module) => …
-```
+Each surviving line must carry what the code cannot: a hidden invariant, an ordering constraint, a workaround, or the name of the concept the block implements. **Never** restate the next line, narrate the diff, recap the PR description, or quote the task you were given.
 
-is a regression, not a cleanup: the parameter and return documentation is gone and the types now hide inside the signature. An inline `/** @type {T} */` cast on a parameter is for a throwaway callback argument, not for a named function — every named function, module-scope helper or not, gets a JSDoc block, and one carrying an explanation gets it whatever its scope.
+**A JSDoc block's tags are exempt** — they are the type contract, not commentary, and are multi-line by construction. Every named function gets one, module-scope helper or not: one `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply. Never shorten, flatten or delete a tag, and never trade a JSDoc block for a `//` comment that hides the types in an inline `/** @type {T} */` cast — that loses the parameter and return documentation. (Such a cast is for a throwaway callback argument only.)
 
-Prose about a documented symbol goes **inside** its JSDoc, as the description above the tags — never as a `//` comment stacked on top of the block, and never as a `//` comment standing in for the block.
+**The description above those tags is prose, so it is capped at two sentences.** Say what the function does when its name doesn't, plus the one constraint a caller needs. Moving an essay out of a `//` comment into a JSDoc description is the same essay indented differently, not a fix — an explanation of the algorithm, the history, or the alternatives considered belongs in neither. Prose about a documented symbol goes inside its JSDoc, never as a `//` comment stacked on top of the block or standing in for it.
 
 ## Testing
 
