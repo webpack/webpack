@@ -30,6 +30,8 @@ const {
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 const launchChrome = require("./helpers/launchChrome");
 const {
+	benchmarkDocuments,
+	benchmarkStylesheets,
 	buildCorpus,
 	compareRules,
 	conditionSignatures,
@@ -73,6 +75,19 @@ const VALUE_BUDGET = 2000;
 const FILED_CONFIG_CSS_DEFECTS = new Map();
 
 const FILED_CONFIG_HTML_DEFECTS = new Map();
+
+const FILED_BENCHMARK_CSS_DEFECTS = new Map([
+	[
+		"Semantic UI 2",
+		"not a printer defect: `.ui.table tr.negative, td.negative` and the same pair for `.error` print the same block, so joining each pair leaves four one-selector entries where the source had eight. The four carry one block between them, which makes their order unobservable — an element carrying both classes computes the same style either way, checked in Chrome. The comparison sorts a run of selectors reaching one block, and these land in two runs rather than one."
+	],
+	[
+		"Tailwind 4 + daisyUI 5",
+		"not a printer defect: the same shape as Semantic UI, with a `@media` between the two runs. `.collapse-arrow` and `.collapse-plus` `::after` come back reordered and four entries shorter; an element carrying both classes computes the same style at either side of the query, checked in Chrome."
+	]
+]);
+
+const FILED_BENCHMARK_HTML_DEFECTS = new Map();
 
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[
@@ -237,6 +252,22 @@ const buildCorpora = () => {
 			filedCss: FILED_CONFIG_CSS_DEFECTS
 		}
 	];
+	// The framework sheets and documents the minifier comparisons install: real
+	// projects, where `configCases` and wpt are both spec fixtures. Left out
+	// entirely when neither comparison has been run, and reported below.
+	const benchHtml = benchmarkDocuments((source) => source);
+	const benchCss = benchmarkStylesheets(minifyCss);
+	if (benchHtml.length > 0 || benchCss.length > 0) {
+		built.push({
+			label: "benchmark corpus",
+			html: variant(benchHtml, {}),
+			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
+			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			css: benchCss,
+			filedHtml: FILED_BENCHMARK_HTML_DEFECTS,
+			filedCss: FILED_BENCHMARK_CSS_DEFECTS
+		});
+	}
 	if (!hasCorpus()) return built;
 	/** @type {Fixture[]} */
 	const wptHtml = [];
@@ -656,8 +687,9 @@ describe("printer output in real Chrome", () => {
 		});
 	};
 
-	describeCorpus(0, "configCases");
-	describeCorpus(1, "wpt");
+	// By position: which corpora were built depends on what is checked out and
+	// which comparisons have been run, so each names itself.
+	for (const [at, one] of corpora.entries()) describeCorpus(at, one.label);
 
 	// One test per declaration, not per file: the value is what a defect is filed
 	// against, so the run names it without anything having to narrow it down.
