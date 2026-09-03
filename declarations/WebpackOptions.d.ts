@@ -571,7 +571,7 @@ export type Clean = boolean | CleanOptions;
 export type CompareBeforeEmit = boolean;
 /**
  * Copy files and directories to the output directory.
- * @since 5.110.0
+ * @since 5.111.0
  */
 export type Copy = CopyPattern[] | string;
 /**
@@ -2977,7 +2977,7 @@ export interface Output {
 	compareBeforeEmit?: CompareBeforeEmit;
 	/**
 	 * Copy files and directories to the output directory.
-	 * @since 5.110.0
+	 * @since 5.111.0
 	 */
 	copy?: Copy;
 	/**
