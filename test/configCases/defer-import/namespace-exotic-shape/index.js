@@ -1,4 +1,6 @@
 import defer * as ns from "./dep.js";
+import defer * as reserved from "./reserved-names.js";
+import * as reservedEager from "./reserved-names.js";
 import { reexported } from "./barrel.js";
 
 // Opaque keys: webpack resolves a literal member access statically, so it
@@ -31,4 +33,24 @@ it("keeps one shape when the same module is also re-exported", () => {
 	expect(reexported).toBe(ns);
 	expect(Reflect.isExtensible(reexported)).toBe(false);
 	expect({ ...reexported }).toEqual({ alpha: 1, beta: 2 });
+});
+
+it("keeps a real `__esModule` export and never exposes `then`", () => {
+	expect(Reflect.ownKeys(reserved)).toEqual([
+		"__esModule",
+		"real",
+		Symbol.toStringTag
+	]);
+	// webpack's own interop flag shadows the export's value, on an eager
+	// namespace too, so the two must at least agree.
+	expect(reserved[esModule]).toBe(reservedEager[esModule]);
+	expect(Object.getOwnPropertyDescriptor(reserved, esModule)).toEqual({
+		value: reservedEager[esModule],
+		writable: true,
+		enumerable: true,
+		configurable: false
+	});
+	expect(reserved[opaque("real")]).toBe(1);
+	expect(opaque("then") in reserved).toBe(false);
+	expect(reserved[opaque("then")]).toBe(undefined);
 });
