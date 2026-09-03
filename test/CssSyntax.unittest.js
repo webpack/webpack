@@ -9544,6 +9544,22 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		).toBe(css);
 	});
 
+	it("keeps a rule the prefixes rewrote where it was written", () => {
+		// Prefix copies are several rules with preludes of their own, so there is
+		// no one rule to take out — it stays, and its siblings still come out.
+		expect(
+			minifyFor("a{color:red;&:autofill{color:blue}}", ["chrome 100"])
+		).toBe("a{color:red;&:-webkit-autofill{color:blue}&:autofill{color:blue}}");
+		expect(
+			minifyFor("a{color:red;&:autofill{color:blue}& b{color:teal}}", [
+				"chrome 100"
+			])
+		).toBe(
+			"a{color:red;&:-webkit-autofill{color:blue}&:autofill{color:blue}}" +
+				"a b{color:teal}"
+		);
+	});
+
 	it("leaves a rule written in an at-rule where it stands", () => {
 		// The at-rule is what it is written in, and taking it out of that would
 		// take it out of the query too.
@@ -9632,16 +9648,48 @@ describe("CssSyntax minify — `@custom-media`", () => {
 		expect(minifyFor(sheet, ["chrome 120"])).toBe(sheet);
 	});
 
+	it("writes a query naming alternatives only as the whole condition", () => {
+		// A list written beside an `and` would leave it binding to the last
+		// alternative alone, and CSS has no parentheses to group one with.
+		const list = "@custom-media --m (width>400px),(orientation:portrait);";
+		expect(
+			minifyForWith(`${list}@media (--m){a{color:red}}`, ["chrome 120"], {
+				customMedia: true
+			})
+		).toBe("@media (width>400px),(orientation:portrait){a{color:red}}");
+		expect(
+			minifyForWith(
+				`${list}@media screen and (--m){a{color:red}}`,
+				["chrome 120"],
+				{ customMedia: true }
+			)
+		).toBe("@media screen and (--m){a{color:red}}");
+	});
+
+	it("writes a query of one condition wherever it is asked for", () => {
+		expect(
+			minifyForWith(
+				"@custom-media --w (width>400px);@media screen and (--w){a{color:red}}",
+				["chrome 120"],
+				{ customMedia: true }
+			)
+		).toBe("@media screen and (width>400px){a{color:red}}");
+	});
+
 	it("leaves a rule stating no query alone", () => {
 		const css = "@custom-media --m;@media (--m){a{color:red}}";
 		expect(minifyForWith(css, ["chrome 120"], { customMedia: true })).toBe(css);
 	});
 
 	it("leaves a name nothing states alone", () => {
+		// Beside a rule that states another, so the substitution does run and
+		// finds nothing for this one.
 		expect(
-			minifyForWith("@media (--nope){a{color:red}}", ["chrome 120"], {
-				customMedia: true
-			})
+			minifyForWith(
+				"@custom-media --m (width>400px);@media (--nope){a{color:red}}",
+				["chrome 120"],
+				{ customMedia: true }
+			)
 		).toBe("@media (--nope){a{color:red}}");
 	});
 
