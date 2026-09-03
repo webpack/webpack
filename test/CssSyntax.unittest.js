@@ -8852,9 +8852,11 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 				"a{background:0% 0% / auto repeat scroll padding-box border-box red}"
 			)
 		).toBe("a{background:red}");
-		// Every spelling of the place an unwritten position names.
+		// Every spelling of the place an unwritten position names — but not a
+		// length zero, which lands there and still computes as `0px` rather than
+		// the `0%` an unwritten slot computes as.
 		expect(minify("a{background:left top red}")).toBe("a{background:red}");
-		expect(minify("a{background:0 0 red}")).toBe("a{background:red}");
+		expect(minify("a{background:0 0 red}")).toBe("a{background:0 0 red}");
 		expect(minify("a{background:0% 0%/auto auto red}")).toBe(
 			"a{background:red}"
 		);
