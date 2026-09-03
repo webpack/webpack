@@ -9447,6 +9447,59 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		);
 	});
 
+	it("reads a quoted attribute value as no part of the selector's shape", () => {
+		// A space, a combinator or a comma inside a string is the value's own, so
+		// the parent is still the one compound it stands where `&` was as.
+		expect(minifyFor('a[title="x y"]{& b{color:red}}', ["chrome 100"])).toBe(
+			'a[title="x y"] b{color:red}'
+		);
+		expect(minifyFor('a[title="x>y"]{& b{color:red}}', ["chrome 100"])).toBe(
+			'a[title="x>y"] b{color:red}'
+		);
+		expect(minifyFor('a[title="x,y"]{& b{color:red}}', ["chrome 100"])).toBe(
+			'a[title="x,y"] b{color:red}'
+		);
+	});
+
+	it("reads what a pseudo or an attribute holds as no part of it either", () => {
+		expect(minifyFor("a:not(.x .y){& b{color:red}}", ["chrome 100"])).toBe(
+			"a:not(.x .y) b{color:red}"
+		);
+		expect(minifyFor("a[href]{& b{color:red}}", ["chrome 100"])).toBe(
+			"a[href] b{color:red}"
+		);
+	});
+
+	it("leaves an `&` written inside a string alone", () => {
+		expect(minifyFor('a{& [title="&"]{color:red}}', ["chrome 100"])).toBe(
+			'a [title="&"]{color:red}'
+		);
+	});
+
+	it("reads a string written before the `&` as no parent of its own", () => {
+		// The quotes a space keeps, so the string is still one where `&` is read.
+		expect(minifyFor('a{[title="x y"] &{color:red}}', ["chrome 100"])).toBe(
+			'[title="x y"] a{color:red}'
+		);
+	});
+
+	it("reads an escape written before the `&` as no parent either", () => {
+		expect(minifyFor("a{.\\31 23 &{color:red}}", ["chrome 100"])).toBe(
+			".\\31 23 a{color:red}"
+		);
+	});
+
+	it("names an escaped selector as the `:is()` it means", () => {
+		// The space ending an escape is not a combinator, but reading it as one
+		// only writes the `:is()` that says the same thing.
+		expect(minifyFor("a.\\31 23{& b{color:red}}", ["chrome 100"])).toBe(
+			":is(a.\\31 23) b{color:red}"
+		);
+		expect(minifyFor("a{& .\\31 23{color:red}}", ["chrome 100"])).toBe(
+			"a .\\31 23{color:red}"
+		);
+	});
+
 	it("writes a rule nested two deep", () => {
 		expect(
 			minifyFor("a{color:red;& b{& c{color:green}}}", ["chrome 100"])
@@ -9531,6 +9584,22 @@ describe("CssSyntax minify — `:dir()` as the attribute it approximates", () =>
 		).toBe("a:dir(rtl){color:red}");
 	});
 
+	it("steps over the part a dropped pseudo-element colon left empty", () => {
+		expect(
+			minifyForWith("a:dir(rtl)::before{color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]:before{color:red}");
+	});
+
+	it("steps over a part a comment printed away left empty", () => {
+		expect(
+			minifyForWith("a:/**/dir(rtl){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]{color:red}");
+	});
+
 	it("leaves a `::dir()` alone, which is no pseudo-class", () => {
 		expect(
 			minifyForWith("a::dir(rtl){color:red}", ["chrome 80"], {
@@ -9561,6 +9630,11 @@ describe("CssSyntax minify — `@custom-media`", () => {
 
 	it("is off until asked for", () => {
 		expect(minifyFor(sheet, ["chrome 120"])).toBe(sheet);
+	});
+
+	it("leaves a rule stating no query alone", () => {
+		const css = "@custom-media --m;@media (--m){a{color:red}}";
+		expect(minifyForWith(css, ["chrome 120"], { customMedia: true })).toBe(css);
 	});
 
 	it("leaves a name nothing states alone", () => {
@@ -9608,6 +9682,12 @@ describe("CssSyntax minify — a `color-mix()` the target cannot read", () => {
 		expect(
 			minifyFor("a{color:color-mix(in srgb,red,blue)}", ["chrome 130"])
 		).toBe("a{color:color(srgb .5 0 .5)}");
+	});
+
+	it("writes no fallback into a lowered shorthand with them off", () => {
+		expect(
+			minifyForWith("a{inset:1px}", ["chrome 80"], { colorFallbacks: false })
+		).toBe("a{top:1px;right:1px;bottom:1px;left:1px}");
 	});
 
 	it("is off with the fallbacks off", () => {
