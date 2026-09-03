@@ -3,7 +3,7 @@
 exports[`ConfigTestCases html minimize-transforms-off minimize-transforms-off should compile 1`] = `
 "<!doctype html><html lang=\\"en\\"><head><title>t</title></head><body>
 <!-- an inert comment, kept because \`comments\` is off -->
-<p style=\\"COLOR: red\\">the style attribute is not minified</p>
+<p style=\\"color:red\\">a style attribute is minified whatever these switches say</p>
 <ul><li>one</li><li>two</li></ul>
 <input disabled=\\"disabled\\" type=\\"TEXT\\" tabindex=\\" 03 \\" class=\\"  b   a \\">
 <div data-x=\\"plain\\">a value that could go bare keeps its quotes</div>

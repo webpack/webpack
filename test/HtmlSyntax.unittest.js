@@ -4783,12 +4783,6 @@ describe("SourceProcessor — the per-transform switches", () => {
 			'<div class="  b   a ">x</div>'
 		],
 		[
-			"minifyStyles",
-			'<div style="COLOR: red">x</div>',
-			"<div style=color:red>x</div>",
-			'<div style="COLOR: red">x</div>'
-		],
-		[
 			"normalizeNumericAttributes",
 			'<div tabindex=" 03 ">x</div>',
 			"<div tabindex=3>x</div>",

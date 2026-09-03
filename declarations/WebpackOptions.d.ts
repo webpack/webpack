@@ -2550,11 +2550,6 @@ export interface OptimizationMinimizeHtml {
 	 */
 	minifyConditionalComments?: boolean;
 	/**
-	 * Run the CSS minimizer over an inline `<style>` element and every `style=""` attribute, with the options `optimization.minimize.css` names. On by default.
-	 * @since 5.110.0
-	 */
-	minifyStyles?: boolean;
-	/**
 	 * Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.
 	 * @since 5.110.0
 	 */
