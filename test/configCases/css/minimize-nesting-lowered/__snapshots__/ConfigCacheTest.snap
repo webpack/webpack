@@ -2,6 +2,6 @@
 
 exports[`ConfigCacheTestCases css minimize-nesting-lowered minimize-nesting-lowered should compile 1`] = `
 Array [
-  ".a{color:red}.a .b{color:blue}.a.c{color:green}:is(.d,.e) .f{color:teal}.g[dir=rtl]{color:navy}@media (width>400px){.h{color:olive}}.i{color:#ba00c2;color:color-mix(in oklch,red,blue)}",
+  ".a{color:red}.a .b{color:blue}.a.c{color:green}:is(.d,.e) .f{color:teal}.g[dir=rtl]{color:navy}@media (width>400px){.h{color:olive}}.i{color:#ba00c2;color:color-mix(in oklch,red,blue)}.j{color:red;& .k{color:blue}color:green}.l{color:red;@media print{color:blue}}.m{color:color-mix(in srgb,currentcolor,red)}@media ((width>400px) or (orientation:portrait)){.n{color:red}}@media screen and ((width>400px) or (orientation:portrait)){.o{color:red}}",
 ]
 `;
