@@ -13162,13 +13162,13 @@ Object {
   "output-copy": Object {
     "configs": Array [
       Object {
-        "description": "Glob or path from where the files are copied.",
+        "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
         "multiple": true,
         "path": "output.copy[]",
         "type": "string",
       },
     ],
-    "description": "Glob or path from where the files are copied.",
+    "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -13188,13 +13188,13 @@ Object {
   "output-copy-from": Object {
     "configs": Array [
       Object {
-        "description": "Glob or path from where the files are copied.",
+        "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
         "multiple": true,
         "path": "output.copy[].from",
         "type": "string",
       },
     ],
-    "description": "Glob or path from where the files are copied.",
+    "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -13214,13 +13214,13 @@ Object {
   "output-copy-to": Object {
     "configs": Array [
       Object {
-        "description": "Directory the files are copied to, relative to 'output.path'.",
+        "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",
         "multiple": true,
         "path": "output.copy[].to",
         "type": "string",
       },
     ],
-    "description": "Directory the files are copied to, relative to 'output.path'.",
+    "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",
     "multiple": true,
     "simpleType": "string",
   },
