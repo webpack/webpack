@@ -3231,6 +3231,10 @@ export interface CopyOptions {
 	 * Patterns of files which are copied to the output directory.
 	 */
 	patterns: CopyPatterns;
+	/**
+	 * Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.
+	 */
+	stage?: number;
 }
 /**
  * The abilities of the environment where the webpack generated code should run.

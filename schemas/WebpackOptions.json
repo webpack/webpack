@@ -581,6 +581,10 @@
         },
         "patterns": {
           "$ref": "#/definitions/CopyPatterns"
+        },
+        "stage": {
+          "description": "Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.",
+          "type": "number"
         }
       },
       "required": ["patterns"]
