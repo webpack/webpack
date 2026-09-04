@@ -7,5 +7,5 @@ it("should report a module kept only by a side effect", () => {
 	// `read.js` has a side effect too, but something reads its export, so it is
 	// not bundled for nothing.
 	expect(value).toBe(42);
-	expect(globalThis.__ANALYTICS__.started).toBe(true);
+	expect(global.__ANALYTICS__.started).toBe(true);
 });
