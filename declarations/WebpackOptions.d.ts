@@ -2434,11 +2434,6 @@ export interface OptimizationMinimizeCss {
 	 */
 	convertLengthUnits?: boolean;
 	/**
-	 * Write the query a `@custom-media` names wherever a condition asks for it, and drop the rule that named it where no target reads one. `@custom-media --wide (width>400px)` and `@media (--wide)` become `@media (width>400px)`. Off until asked for: `@custom-media` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.
-	 * @since 5.111.0
-	 */
-	customMedia?: boolean;
-	/**
 	 * Write a spelling the `browserslist` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as `rgba()`, a double-position gradient stop as the two stops it names, `inset` / `overflow` / `place-*` as the longhands they set, `text-decoration` as its own longhands where a slot is newer than the shorthand, `system-ui` as the stack of platform font names it stands for, a `:lang()` or `:not()` holding a list as the `:is()` that means it, a media feature range as the `min-`/`max-` pair, and `light-dark()` as the custom-property pair a color scheme switches. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for. Off leaves every such spelling as written, which is how a stylesheet one of these rewrites gets wrong is minified; it never makes the minifier write a spelling the target cannot read.
 	 * @since 5.111.0
 	 */
@@ -2478,6 +2473,11 @@ export interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	removeDeadRules?: boolean;
+	/**
+	 * Resolve the `@custom-media` and `@custom-selector` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`, and `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off until asked for: `module.parser.css.customMedia` and `module.parser.css.customSelectors` already resolve both in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as `:is(…)`, so a name is substituted only where the target reads `:is()`.
+	 * @since 5.111.0
+	 */
+	resolveCustomAtRules?: boolean;
 	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
 	 * @since 5.110.0

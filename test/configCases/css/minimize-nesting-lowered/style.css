@@ -67,3 +67,10 @@
 		color: red;
 	}
 }
+
+/* Resolved by the same option as `@custom-media`, and always as `:is()`. */
+@custom-selector :--picked h1, h2;
+
+:--picked {
+	color: purple;
+}

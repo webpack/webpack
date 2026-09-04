@@ -9625,13 +9625,13 @@ describe("CssSyntax minify — `:dir()` as the attribute it approximates", () =>
 	});
 });
 
-describe("CssSyntax minify — `@custom-media`", () => {
+describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 	const sheet = "@custom-media --m (width>400px);@media (--m){a{color:red}}";
 
 	it("writes the query wherever a condition asks for it", () => {
-		expect(minifyForWith(sheet, ["chrome 120"], { customMedia: true })).toBe(
-			"@media (width>400px){a{color:red}}"
-		);
+		expect(
+			minifyForWith(sheet, ["chrome 120"], { resolveCustomAtRules: true })
+		).toBe("@media (width>400px){a{color:red}}");
 	});
 
 	it("writes it into a condition an `and` joins", () => {
@@ -9639,7 +9639,7 @@ describe("CssSyntax minify — `@custom-media`", () => {
 			minifyForWith(
 				"@custom-media --m (width>400px);@media screen and (--m){a{color:red}}",
 				["chrome 120"],
-				{ customMedia: true }
+				{ resolveCustomAtRules: true }
 			)
 		).toBe("@media screen and (width>400px){a{color:red}}");
 	});
@@ -9654,14 +9654,14 @@ describe("CssSyntax minify — `@custom-media`", () => {
 		const list = "@custom-media --m (width>400px),(orientation:portrait);";
 		expect(
 			minifyForWith(`${list}@media (--m){a{color:red}}`, ["chrome 120"], {
-				customMedia: true
+				resolveCustomAtRules: true
 			})
 		).toBe("@media (width>400px),(orientation:portrait){a{color:red}}");
 		expect(
 			minifyForWith(
 				`${list}@media screen and (--m){a{color:red}}`,
 				["chrome 120"],
-				{ customMedia: true }
+				{ resolveCustomAtRules: true }
 			)
 		).toBe("@media screen and (--m){a{color:red}}");
 	});
@@ -9671,14 +9671,16 @@ describe("CssSyntax minify — `@custom-media`", () => {
 			minifyForWith(
 				"@custom-media --w (width>400px);@media screen and (--w){a{color:red}}",
 				["chrome 120"],
-				{ customMedia: true }
+				{ resolveCustomAtRules: true }
 			)
 		).toBe("@media screen and (width>400px){a{color:red}}");
 	});
 
 	it("leaves a rule stating no query alone", () => {
 		const css = "@custom-media --m;@media (--m){a{color:red}}";
-		expect(minifyForWith(css, ["chrome 120"], { customMedia: true })).toBe(css);
+		expect(
+			minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true })
+		).toBe(css);
 	});
 
 	it("leaves a name nothing states alone", () => {
@@ -9688,7 +9690,7 @@ describe("CssSyntax minify — `@custom-media`", () => {
 			minifyForWith(
 				"@custom-media --m (width>400px);@media (--nope){a{color:red}}",
 				["chrome 120"],
-				{ customMedia: true }
+				{ resolveCustomAtRules: true }
 			)
 		).toBe("@media (--nope){a{color:red}}");
 	});
@@ -9700,9 +9702,77 @@ describe("CssSyntax minify — `@custom-media`", () => {
 			minifyForWith(
 				"@media (--m){a{color:red}}@custom-media --m (width>400px);",
 				["chrome 120"],
-				{ customMedia: true }
+				{ resolveCustomAtRules: true }
 			)
 		).toBe("@media (--m){a{color:red}}");
+	});
+});
+
+describe("CssSyntax minify — `@custom-selector`", () => {
+	const sheet = "@custom-selector :--h h1,h2;:--h{color:red}";
+	const on = { resolveCustomAtRules: true };
+
+	it("writes the list wherever a selector asks for it", () => {
+		expect(minifyForWith(sheet, ["chrome 120"], on)).toBe(
+			":is(h1,h2){color:red}"
+		);
+	});
+
+	it("writes a list of one as `:is()` too", () => {
+		// A lone type selector cannot be spliced into a compound another part
+		// opened, so the wrapper is what makes every position the same.
+		expect(
+			minifyForWith(
+				"@custom-selector :--h h1;x:--h{color:red}",
+				["chrome 120"],
+				on
+			)
+		).toBe("x:is(h1){color:red}");
+	});
+
+	it("writes it where the name stands in a compound", () => {
+		expect(
+			minifyForWith(
+				"@custom-selector :--h h1,h2;.x:--h .y{color:red}",
+				["chrome 120"],
+				on
+			)
+		).toBe(".x:is(h1,h2) .y{color:red}");
+	});
+
+	it("is off until asked for", () => {
+		expect(minifyFor(sheet, ["chrome 120"])).toBe(sheet);
+	});
+
+	it("leaves a pseudo-element spelling alone", () => {
+		const css = "@custom-selector :--h h1;::--h{color:red}";
+		expect(minifyForWith(css, ["chrome 120"], on)).toBe("::--h{color:red}");
+	});
+
+	it("leaves a name nothing states alone", () => {
+		expect(
+			minifyForWith(
+				"@custom-selector :--h h1;:--nope{color:red}",
+				["chrome 120"],
+				on
+			)
+		).toBe(":--nope{color:red}");
+	});
+
+	it("leaves a selector standing before the rule that names it", () => {
+		expect(
+			minifyForWith(
+				":--h{color:red}@custom-selector :--h h1;",
+				["chrome 120"],
+				on
+			)
+		).toBe(":--h{color:red}");
+	});
+
+	it("keeps the rule where the target reads no `:is()`", () => {
+		// Nothing to write the name as, so dropping what states it would leave
+		// every selector asking for it unreadable instead of merely unresolved.
+		expect(minifyForWith(sheet, ["chrome 60"], on)).toBe(sheet);
 	});
 });
 

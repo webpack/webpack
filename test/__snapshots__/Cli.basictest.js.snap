@@ -11150,19 +11150,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-custom-media": Object {
-    "configs": Array [
-      Object {
-        "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
-        "multiple": false,
-        "path": "optimization.minimize.css.customMedia",
-        "type": "boolean",
-      },
-    ],
-    "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-minimize-css-lower-unsupported": Object {
     "configs": Array [
       Object {
@@ -11238,6 +11225,19 @@ Object {
       },
     ],
     "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-resolve-custom-at-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
+        "multiple": false,
+        "path": "optimization.minimize.css.resolveCustomAtRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11741,19 +11741,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-options-css-custom-media": Object {
-    "configs": Array [
-      Object {
-        "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
-        "multiple": false,
-        "path": "optimization.minimizeOptions.css.customMedia",
-        "type": "boolean",
-      },
-    ],
-    "description": "Write the query a \`@custom-media\` names wherever a condition asks for it, and drop the rule that named it where no target reads one. \`@custom-media --wide (width>400px)\` and \`@media (--wide)\` become \`@media (width>400px)\`. Off until asked for: \`@custom-media\` is a draft no browser ships unflagged, so a stylesheet using it is opting into a syntax webpack resolves at build time rather than one an engine reads. Only a name stated before the condition asking for it is written out — the rules are read in the order they are written — and a condition naming one this has not come to is left as the author had it.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-minimize-options-css-lower-unsupported": Object {
     "configs": Array [
       Object {
@@ -11829,6 +11816,19 @@ Object {
       },
     ],
     "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-resolve-custom-at-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.resolveCustomAtRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve the \`@custom-media\` and \`@custom-selector\` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. \`@custom-media --wide (width>400px)\` with \`@media (--wide)\` becomes \`@media (width>400px)\`, and \`@custom-selector :--heading h1, h2\` with \`:--heading\` becomes \`:is(h1, h2)\`. Off until asked for: \`module.parser.css.customMedia\` and \`module.parser.css.customSelectors\` already resolve both in every stylesheet webpack parses, so this is for a \`.css\` asset that reached the minimizer without being parsed — one emitted by \`asset/resource\` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as \`:is(…)\`, so a name is substituted only where the target reads \`:is()\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
