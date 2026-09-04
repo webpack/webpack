@@ -1,7 +1,9 @@
 "use strict";
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
-const htmlMinify = require("../../../../lib/html/htmlMinify");
+const webpack = require("../../../../");
+
+const { htmlMinify } = webpack.html.syntax;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

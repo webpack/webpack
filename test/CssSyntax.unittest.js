@@ -9880,3 +9880,33 @@ describe("CssSyntax minify — a `color-mix()` the target cannot read", () => {
 		);
 	});
 });
+
+describe("cssMinify export", () => {
+	it("is the minifier itself, reachable from the public entry", () => {
+		const webpack = require("../");
+
+		expect(webpack.css.syntax.cssMinify).toBe(require("../lib/css/cssMinify"));
+	});
+
+	it("carries the minimizer contract minimizer-webpack-plugin dispatches on", () => {
+		const webpack = require("../");
+
+		const { cssMinify } = webpack.css.syntax;
+
+		expect(cssMinify.getTypes()).toEqual(["css"]);
+		expect(cssMinify.getEmbeddedTypes()).toContain("css");
+		expect(cssMinify.supportsWorkerThreads()).toBe(true);
+		expect(cssMinify.filter("a.css")).toBe(true);
+		expect(cssMinify.filter("a.html")).toBe(false);
+	});
+
+	it("minifies through the public entry", async () => {
+		const webpack = require("../");
+
+		const { cssMinify } = webpack.css.syntax;
+
+		const { code } = await cssMinify({ "a.css": "a {\n\tcolor: red;\n}\n" });
+
+		expect(code).toMatchInlineSnapshot('"a{color:red}"');
+	});
+});
