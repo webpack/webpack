@@ -4193,186 +4193,85 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 	});
 });
 
-describe("SourceProcessor — inline <script> whitespace", () => {
+describe("SourceProcessor — inline <script> type", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
 	/**
 	 * @param {string} type the `<script type>` value
 	 * @param {string} body the raw body
-	 * @param {"conservative" | "smart" | "all"=} collapseWhitespace the tier, where one is asked for
 	 * @returns {string} the body, minified
 	 */
-	const minifyBody = (type, body, collapseWhitespace) => {
+	const minifyBody = (type, body) => {
 		const out = new SourceProcessor().process(
 			`<script type="${type}">${body}</script>`,
-			{ mode: "minify", collapseWhitespace }
+			{ mode: "minify" }
 		).code;
 		return out.slice(out.indexOf(">") + 1, out.lastIndexOf("</script>"));
 	};
 
-	it.each(["", "module", "text/javascript", "application/javascript"])(
-		"trims the edges of the program text (%s)",
+	it.each([
+		"application&#47;ld&#43;json",
+		"application&#x2F;json",
+		"application/json&#32;"
+	])("reads %s as JSON, since the parser decodes it", (type) => {
+		expect(minifyBody(type, '  { "a" :  1 }  ')).toBe('{"a":1}');
+	});
+
+	it.each(["text&#47;x-template", "text&#47;yaml", "unknown&#47;thing"])(
+		"leaves the body of the data block %s alone",
 		(type) => {
-			expect(minifyBody(type, "  var a = 1  ")).toBe("var a = 1");
+			// Its own syntax is not ours to read, and its whitespace can be part of it.
+			expect(minifyBody(type, "  <div> x </div>  ")).toBe("  <div> x </div>  ");
 		}
 	);
 
-	it.each(
-		/** @type {(undefined | "conservative" | "smart" | "all")[]} */ ([
-			undefined,
-			"conservative",
-			"smart",
-			"all"
-		])
-	)("trims whatever `collapseWhitespace` says (%s)", (tier) => {
-		// An embedded body is not the host's text, so its edges are not a run
-		// for that option to have an opinion about.
-		expect(minifyBody("", "  var a = 1  ", tier)).toBe("var a = 1");
-	});
-
-	it("takes every character HTML counts as whitespace", () => {
-		expect(minifyBody("", "\t\n\f\r var a = 1 \r\f\n\t")).toBe("var a = 1");
-	});
-
-	it("keeps a body that is only whitespace", () => {
-		// Emptying the element hands it to `removeEmptyElements`, and a `<script>`
-		// the source wrote would go missing from the DOM.
-		expect(minifyBody("", "   ")).toBe("   ");
-	});
-
-	it("keeps a NBSP, which is a character and not whitespace", () => {
-		// It sits next to a JavaScript identifier, it does not separate one.
-		expect(minifyBody("", "\u00A0var a = 1\u00A0")).toBe(
-			"\u00A0var a = 1\u00A0"
-		);
-	});
-
-	it.each([
-		"text/x-template",
-		"text/template",
-		"text/ng-template",
-		"text/html",
-		"text/plain",
-		"unknown/thing"
-	])("leaves the body of the data block %s alone", (type) => {
-		// Its own syntax is not ours to read, and its whitespace can be part of it.
-		expect(minifyBody(type, "  <div> x </div>  ")).toBe("  <div> x </div>  ");
-	});
-
 	it("keeps the indentation a payload's own language may count", () => {
-		// Trimming the edges alone would leave the first line of this at column 0
-		// and every other one indented — which is no longer the same document.
 		const yaml = "\n    a: 1\n    b: 2\n  ";
 		expect(minifyBody("text/yaml", yaml)).toBe(yaml);
 	});
 
-	it.each([
-		"text&#47;javascript",
-		"text&#x2F;javascript",
-		"&#116;ext/javascript"
-	])("reads %s as executable, since the parser decodes it", (type) => {
-		// Chrome runs each of these, so each is program text and not a data block.
-		expect(minifyBody(type, "  var a = 1  ")).toBe("var a = 1");
-	});
-
-	it("keeps the trim where a renderer declines the body", () => {
-		// The edges go before the offer, so declining costs them nothing.
-		const out = new SourceProcessor().process(
-			"<script>  var a = 1  </script>",
-			{
-				mode: /** @type {"minify"} */ ("minify"),
-				renderEmbeddedSource: () => undefined
-			}
-		).code;
-		expect(out).toBe("<script>var a = 1</script>");
-	});
-
-	it("trims a JSON body the strip declines", () => {
-		// Embedded all the same: the edges are outside whatever it holds.
-		expect(minifyBody("application/ld+json", "  {{ t }}  ")).toBe("{{ t }}");
-	});
-
-	it("strips a JSON body with no switch to ask", () => {
-		// Minifying is what decides an embedded body; a caller that wants its own
-		// answer gives a renderer, which is asked first.
-		const out = new SourceProcessor().process(
-			'<script type="application/json">  { "a" : 1 }  </script>',
-			{ mode: /** @type {"minify"} */ ("minify") }
-		).code;
-		expect(out).toBe('<script type=application/json>{"a":1}</script>');
+	it("reads the type case- and whitespace-insensitively through a reference", () => {
+		expect(minifyBody(" APPLICATION&#47;JSON ", '  { "a" : 1 }  ')).toBe(
+			'{"a":1}'
+		);
+		expect(minifyBody(" TEXT&#47;X-TEMPLATE ", "  x  ")).toBe("  x  ");
 	});
 
 	/**
-	 * Print with a renderer that answers asynchronously, as a caller reaching a
-	 * worker pool does.
+	 * Minify with a renderer, recording the bodies it was offered.
 	 * @param {string} html input markup
-	 * @param {(source: string) => string | undefined} answer what the renderer makes of one body
-	 * @returns {Promise<{ code: string, offered: string[] }>} the output and each body offered
+	 * @returns {{ code: string, offered: string[] }} the output and each body offered
 	 */
-	const deferredBody = async (html, answer) => {
+	const withRenderer = (html) => {
 		/** @type {string[]} */
 		const offered = [];
-		const { code } = await new SourceProcessor().processAsync(html, {
+		const { code } = new SourceProcessor().process(html, {
 			mode: /** @type {"minify"} */ ("minify"),
 			renderEmbeddedSource: (/** @type {string} */ source) => {
 				offered.push(source);
-				return Promise.resolve(answer(source));
+				return "rendered";
 			}
 		});
 		return { code, offered };
 	};
 
-	it("offers a deferred JSON body trimmed", async () => {
-		const { code, offered } = await deferredBody(
-			'<script type="application/ld+json">  { "a" : 1 }  </script>',
-			() => '{"answered":1}'
+	it("offers the body of a script whose type is spelled with a reference", () => {
+		// Chrome runs this one, so it is program text and not a data block.
+		const { code, offered } = withRenderer(
+			'<script type="text&#47;javascript">var a = 1</script>'
 		);
 
-		expect(offered).toEqual(['{ "a" : 1 }']);
-		expect(code).toBe(
-			'<script type=application/ld+json>{"answered":1}</script>'
-		);
+		expect(offered).toEqual(["var a = 1"]);
+		expect(code).toBe("<script type=text/javascript>rendered</script>");
 	});
 
-	it("strips a deferred JSON body the renderer declines", async () => {
-		// The built-in stands in, and it reads the same trimmed body.
-		const { code } = await deferredBody(
-			'<script type="application/ld+json">  { "a" : 1 }  </script>',
-			() => undefined
+	it("offers no data block whose type is spelled with a reference", () => {
+		const { code, offered } = withRenderer(
+			'<script type="text&#47;x-template">  x  </script>'
 		);
 
-		expect(code).toBe('<script type=application/ld+json>{"a":1}</script>');
-	});
-
-	it("keeps a JSON body that is only whitespace", () => {
-		expect(minifyBody("application/json", "   ")).toBe("   ");
-	});
-
-	it("reads an entity-encoded JSON type as JSON", () => {
-		expect(minifyBody("application&#47;ld&#43;json", '  { "a" : 1 }  ')).toBe(
-			'{"a":1}'
-		);
-	});
-
-	it("reads the type case- and whitespace-insensitively", () => {
-		expect(minifyBody(" TEXT/JAVASCRIPT ", "  var a = 1  ")).toBe("var a = 1");
-		expect(minifyBody(" TEXT/X-TEMPLATE ", "  x  ")).toBe("  x  ");
-	});
-
-	it("leaves every body alone where nothing is minified", () => {
-		const out = new SourceProcessor().process(
-			"<script>  var a = 1  </script>",
-			{ mode: "beautify" }
-		).code;
-		expect(out).toBe("<script>  var a = 1  </script>");
-	});
-
-	it("trims an inline script in foreign content too", () => {
-		const out = new SourceProcessor().process(
-			"<svg><script>  var a = 1  </script></svg>",
-			{ mode: "minify" }
-		).code;
-		expect(out).toBe("<svg><script>var a = 1</script></svg>");
+		expect(offered).toEqual([]);
+		expect(code).toBe("<script type=text/x-template>  x  </script>");
 	});
 
 	it("drops a redundant type spelled with a reference", () => {

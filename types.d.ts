@@ -20288,7 +20288,7 @@ declare interface OptimizationMinimizeCss {
 }
 
 /**
- * What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for. A body the document embeds in a language this can name is minified with it: a JSON `<script>` loses the whitespace between its tokens — every literal copied byte for byte, so no number is rounded and no escape rewritten — and an inline `<script>` holding JavaScript or JSON loses the whitespace at its edges, which is the host's rather than part of what the element holds. A data block's body is left whole, its own whitespace being part of its syntax. A caller's own renderer is asked before any of this, so what it answers for is its to decide.
+ * What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for.
  * @since 5.110.0
  */
 declare interface OptimizationMinimizeHtml {

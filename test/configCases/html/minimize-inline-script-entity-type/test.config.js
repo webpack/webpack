@@ -14,6 +14,10 @@ module.exports = {
 			"utf8"
 		);
 		expect(page).toMatchSnapshot();
+		// What the parser reads is the decoded value, so both spellings name JSON
+		// and both bodies are stripped.
+		expect(page).toContain('<script type=application/ld+json>{"a":1}</script>');
+		expect(page).toContain('<script type=application/ld+json>{"b":2}</script>');
 		// The template language owns what is inside a data block, its whitespace
 		// too — only a body webpack can name is touched.
 		expect(page).toContain(
