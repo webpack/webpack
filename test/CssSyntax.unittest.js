@@ -57,6 +57,20 @@ const minifyFor = (css, browsers, abilities) =>
 		environment: browsers ? { ...abilities, browsers } : abilities
 	}).code;
 
+/**
+ * Minify for a browserslist selection with some of the rewrites set.
+ * @param {string} css source text
+ * @param {string[]} browsers the browserslist selection to target
+ * @param {import("../lib/css/syntax").CssTransformOptions} transforms the rewrites to set
+ * @returns {string} its minified serialization
+ */
+const minifyForWith = (css, browsers, transforms) =>
+	new SourceProcessor().process(css, {
+		mode: "minify",
+		environment: { browsers },
+		transforms
+	}).code;
+
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
 // the tokenizer emits numeric `TT_*` values. Map between them so the existing
 // snapshot files stay valid.
@@ -8925,6 +8939,7 @@ describe("CssSyntax minify — the rest of the target's abilities", () => {
 			)
 		).toBe(
 			"a{text-decoration:underline;text-decoration-style:solid;" +
+				"text-decoration-color:#ba00c2;" +
 				"text-decoration-color:color-mix(in oklch,red,blue)}"
 		);
 		// An unwritten line is the `none` the shorthand would have set.
@@ -9372,6 +9387,496 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 		);
 		expect(minify("a{background:red content-box padding-box}")).toBe(
 			"a{background:red content-box padding-box}"
+		);
+	});
+});
+
+describe("CssSyntax minify — nesting the target cannot read", () => {
+	it("writes a rule nested in another on its own", () => {
+		expect(minifyFor("a{color:red;& b{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}a b{color:blue}"
+		);
+	});
+
+	it("reads a nested rule that names no parent as the descendant it means", () => {
+		expect(minifyFor("a{color:red;b{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}a b{color:blue}"
+		);
+	});
+
+	it("writes `&` wherever it stands in the nested selector", () => {
+		expect(minifyFor("a{color:red;&:hover{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}a:hover{color:blue}"
+		);
+		expect(minifyFor("a{color:red;.x &{color:blue}}", ["chrome 100"])).toBe(
+			"a{color:red}.x a{color:blue}"
+		);
+		expect(minifyFor("a{&.x{color:red}}", ["chrome 100"])).toBe(
+			"a.x{color:red}"
+		);
+	});
+
+	it("names a parent that is not one compound as the `:is()` it means", () => {
+		// A selector list, and a complex selector: standing either where `&` was
+		// would bind the combinator around it to its last compound alone.
+		expect(minifyFor("a,b{color:red;& c{color:blue}}", ["chrome 100"])).toBe(
+			"a,b{color:red}:is(a,b) c{color:blue}"
+		);
+		expect(minifyFor("a b{& c{color:red}}", ["chrome 100"])).toBe(
+			":is(a b) c{color:red}"
+		);
+		expect(minifyFor("a>b{& c{color:red}}", ["chrome 100"])).toBe(
+			":is(a>b) c{color:red}"
+		);
+	});
+
+	it("writes each rule against the parent, not against its sibling", () => {
+		// Every rule written in one parent shares it, so one of them draining
+		// another's would write that one against the wrong selector.
+		expect(
+			minifyFor("a{color:red;& b{color:blue}&.x{color:green}}", ["chrome 100"])
+		).toBe("a{color:red}a b{color:blue}a.x{color:green}");
+		expect(
+			minifyFor("x{& a{color:red}}y{& b{color:blue}}", ["chrome 100"])
+		).toBe("x a{color:red}y b{color:blue}");
+	});
+
+	it("writes each selector of a nested list", () => {
+		expect(minifyFor("a{& b,& c{color:red}}", ["chrome 100"])).toBe(
+			"a b,a c{color:red}"
+		);
+	});
+
+	it("reads a quoted attribute value as no part of the selector's shape", () => {
+		// A space, a combinator or a comma inside a string is the value's own, so
+		// the parent is still the one compound it stands where `&` was as.
+		expect(minifyFor('a[title="x y"]{& b{color:red}}', ["chrome 100"])).toBe(
+			'a[title="x y"] b{color:red}'
+		);
+		expect(minifyFor('a[title="x>y"]{& b{color:red}}', ["chrome 100"])).toBe(
+			'a[title="x>y"] b{color:red}'
+		);
+		expect(minifyFor('a[title="x,y"]{& b{color:red}}', ["chrome 100"])).toBe(
+			'a[title="x,y"] b{color:red}'
+		);
+	});
+
+	it("reads what a pseudo or an attribute holds as no part of it either", () => {
+		expect(minifyFor("a:not(.x .y){& b{color:red}}", ["chrome 100"])).toBe(
+			"a:not(.x .y) b{color:red}"
+		);
+		expect(minifyFor("a[href]{& b{color:red}}", ["chrome 100"])).toBe(
+			"a[href] b{color:red}"
+		);
+	});
+
+	it("leaves an `&` written inside a string alone", () => {
+		expect(minifyFor('a{& [title="&"]{color:red}}', ["chrome 100"])).toBe(
+			'a [title="&"]{color:red}'
+		);
+	});
+
+	it("reads a string written before the `&` as no parent of its own", () => {
+		// The quotes a space keeps, so the string is still one where `&` is read.
+		expect(minifyFor('a{[title="x y"] &{color:red}}', ["chrome 100"])).toBe(
+			'[title="x y"] a{color:red}'
+		);
+	});
+
+	it("reads an escape written before the `&` as no parent either", () => {
+		expect(minifyFor("a{.\\31 23 &{color:red}}", ["chrome 100"])).toBe(
+			".\\31 23 a{color:red}"
+		);
+	});
+
+	it("names an escaped selector as the `:is()` it means", () => {
+		// The space ending an escape is not a combinator, but reading it as one
+		// only writes the `:is()` that says the same thing.
+		expect(minifyFor("a.\\31 23{& b{color:red}}", ["chrome 100"])).toBe(
+			":is(a.\\31 23) b{color:red}"
+		);
+		expect(minifyFor("a{& .\\31 23{color:red}}", ["chrome 100"])).toBe(
+			"a .\\31 23{color:red}"
+		);
+	});
+
+	it("writes a rule nested two deep", () => {
+		expect(
+			minifyFor("a{color:red;& b{& c{color:green}}}", ["chrome 100"])
+		).toBe("a{color:red}:is(a b) c{color:green}");
+	});
+
+	it("drops the rule left holding nothing but the ones taken out of it", () => {
+		expect(minifyFor("a{& b{color:blue}}", ["chrome 100"])).toBe(
+			"a b{color:blue}"
+		);
+	});
+
+	it("keeps the nesting where a declaration is written after a rule", () => {
+		// Hoisting it would let the rule win against a declaration written after
+		// it, which is not the order the two were read in.
+		const css = "a{color:red;& b{color:blue}color:green}";
+		expect(minifyFor(css, ["chrome 100"])).toBe(css);
+	});
+
+	it("keeps the nesting where the target reads it", () => {
+		const css = "a{color:red;& b{color:blue}}";
+		expect(minifyFor(css, ["chrome 130"])).toBe(css);
+	});
+
+	it("keeps the nesting where the target reads no `:is()`", () => {
+		// `&` is the parent selector list, which only `:is()` writes out.
+		const css = "a{color:red;& b{color:blue}}";
+		expect(minifyFor(css, ["chrome 60"])).toBe(css);
+	});
+
+	it("keeps the nesting where no target is named", () => {
+		const css = "a{color:red;& b{color:blue}}";
+		expect(new SourceProcessor().process(css, { mode: "minify" }).code).toBe(
+			css
+		);
+	});
+
+	it("keeps the nesting with the rewrite off", () => {
+		const css = "a{color:red;& b{color:blue}}";
+		expect(
+			minifyForWith(css, ["chrome 100"], { lowerUnsupported: false })
+		).toBe(css);
+	});
+
+	it("keeps a rule the prefixes rewrote where it was written", () => {
+		// Prefix copies are several rules with preludes of their own, so there is
+		// no one rule to take out — it stays, and its siblings still come out.
+		expect(
+			minifyFor("a{color:red;&:autofill{color:blue}}", ["chrome 100"])
+		).toBe("a{color:red;&:-webkit-autofill{color:blue}&:autofill{color:blue}}");
+		expect(
+			minifyFor("a{color:red;&:autofill{color:blue}& b{color:teal}}", [
+				"chrome 100"
+			])
+		).toBe(
+			"a{color:red;&:-webkit-autofill{color:blue}&:autofill{color:blue}}" +
+				"a b{color:teal}"
+		);
+	});
+
+	it("leaves a rule written in an at-rule where it stands", () => {
+		// The at-rule is what it is written in, and taking it out of that would
+		// take it out of the query too.
+		expect(
+			minifyFor("a{color:red;@media print{color:blue}}", ["chrome 100"])
+		).toBe("a{color:red;@media print{color:blue}}");
+	});
+});
+
+describe("CssSyntax minify — `:dir()` as the attribute it approximates", () => {
+	it("writes it where the target reads no `:dir()` and it is asked for", () => {
+		expect(
+			minifyForWith("a:dir(rtl){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]{color:red}");
+	});
+
+	it("folds the direction's own case", () => {
+		expect(
+			minifyForWith("a:DIR(RTL){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]{color:red}");
+	});
+
+	it("is off until asked for", () => {
+		expect(minifyFor("a:dir(rtl){color:red}", ["chrome 80"])).toBe(
+			"a:dir(rtl){color:red}"
+		);
+	});
+
+	it("keeps it where the target reads `:dir()`", () => {
+		expect(
+			minifyForWith("a:dir(rtl){color:red}", ["chrome 130"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a:dir(rtl){color:red}");
+	});
+
+	it("steps over the part a dropped pseudo-element colon left empty", () => {
+		expect(
+			minifyForWith("a:dir(rtl)::before{color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]:before{color:red}");
+	});
+
+	it("steps over a part a comment printed away left empty", () => {
+		expect(
+			minifyForWith("a:/**/dir(rtl){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a[dir=rtl]{color:red}");
+	});
+
+	it("leaves a `::dir()` alone, which is no pseudo-class", () => {
+		expect(
+			minifyForWith("a::dir(rtl){color:red}", ["chrome 80"], {
+				rewriteDirSelector: true
+			})
+		).toBe("a::dir(rtl){color:red}");
+	});
+});
+
+describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
+	const sheet = "@custom-media --m (width>400px);@media (--m){a{color:red}}";
+
+	it("writes the query wherever a condition asks for it", () => {
+		expect(
+			minifyForWith(sheet, ["chrome 120"], { resolveCustomAtRules: true })
+		).toBe("@media (width>400px){a{color:red}}");
+	});
+
+	it("writes it into a condition an `and` joins", () => {
+		expect(
+			minifyForWith(
+				"@custom-media --m (width>400px);@media screen and (--m){a{color:red}}",
+				["chrome 120"],
+				{ resolveCustomAtRules: true }
+			)
+		).toBe("@media screen and (width>400px){a{color:red}}");
+	});
+
+	it("is off until asked for", () => {
+		expect(minifyFor(sheet, ["chrome 120"])).toBe(sheet);
+	});
+
+	it("writes a query naming alternatives only as the whole condition", () => {
+		// A list written beside an `and` would leave it binding to the last
+		// alternative alone, and CSS has no parentheses to group one with.
+		const list = "@custom-media --m (width>400px),(orientation:portrait);";
+		expect(
+			minifyForWith(`${list}@media (--m){a{color:red}}`, ["chrome 120"], {
+				resolveCustomAtRules: true
+			})
+		).toBe("@media (width>400px),(orientation:portrait){a{color:red}}");
+		expect(
+			minifyForWith(
+				`${list}@media screen and (--m){a{color:red}}`,
+				["chrome 120"],
+				{ resolveCustomAtRules: true }
+			)
+		).toBe("@media screen and (--m){a{color:red}}");
+	});
+
+	it("writes a query of one condition wherever it is asked for", () => {
+		expect(
+			minifyForWith(
+				"@custom-media --w (width>400px);@media screen and (--w){a{color:red}}",
+				["chrome 120"],
+				{ resolveCustomAtRules: true }
+			)
+		).toBe("@media screen and (width>400px){a{color:red}}");
+	});
+
+	it("leaves a rule stating no query alone", () => {
+		const css = "@custom-media --m;@media (--m){a{color:red}}";
+		expect(
+			minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true })
+		).toBe(css);
+	});
+
+	it("leaves a name nothing states alone", () => {
+		// Beside a rule that states another, so the substitution does run and
+		// finds nothing for this one.
+		expect(
+			minifyForWith(
+				"@custom-media --m (width>400px);@media (--nope){a{color:red}}",
+				["chrome 120"],
+				{ resolveCustomAtRules: true }
+			)
+		).toBe("@media (--nope){a{color:red}}");
+	});
+
+	it("leaves a condition standing before the rule that names it", () => {
+		// The rules are read in the order they are written, so the query is not
+		// there yet — and the rule naming it is dropped, which no engine reads.
+		expect(
+			minifyForWith(
+				"@media (--m){a{color:red}}@custom-media --m (width>400px);",
+				["chrome 120"],
+				{ resolveCustomAtRules: true }
+			)
+		).toBe("@media (--m){a{color:red}}");
+	});
+});
+
+describe("CssSyntax minify — `foldCase`", () => {
+	const shouted = [
+		[
+			"at-rule name",
+			"@MEDIA screen{a{color:red}}",
+			"@media screen{a{color:red}}"
+		],
+		["property name", ".a{COLOR:red}", ".a{color:red}"],
+		["pseudo name", ":NTH-CHILD(2n){color:red}", ":nth-child(2n){color:red}"],
+		["function name", ".a{background:URL(x.png)}", ".a{background:url(x.png)}"],
+		["unit", ".a{margin:1PX}", ".a{margin:1px}"],
+		["keyword value", ".a{color:currentColor}", ".a{color:currentcolor}"],
+		["media type", "@media SCREEN{a{color:red}}", "@media screen{a{color:red}}"]
+	];
+
+	for (const [what, source, folded] of shouted) {
+		it(`folds a ${what} on, and leaves it alone off`, () => {
+			expect(minifyForWith(source, ["chrome 120"], { foldCase: true })).toBe(
+				folded
+			);
+			expect(minifyForWith(source, ["chrome 120"], { foldCase: false })).toBe(
+				source
+			);
+		});
+	}
+
+	it("never folds a name the author chose", () => {
+		// A custom property, a custom ident and an id are case-sensitive, so the
+		// fold has to stop at each of them however loudly they are written.
+		const css =
+			"@keyframes Spin{0%{opacity:0}}.a{--Foo:1;animation-name:Spin;color:var(--Foo)}#Abc{grid-area:Foot}";
+		expect(minifyForWith(css, ["chrome 120"], { foldCase: true })).toBe(css);
+	});
+
+	it("leaves `@charset` as written", () => {
+		// It is read as bytes rather than matched, so folding it would turn a rule
+		// the engine drops into one that sets the sheet's encoding.
+		const css = '@CHARSET "utf-8";a{color:red}';
+		expect(
+			minifyForWith(css, ["chrome 120"], {
+				foldCase: true,
+				removeDeadRules: false
+			})
+		).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — `rewriteEscapes`", () => {
+	const written = [
+		["a value's ident", ".a{grid-area:\\66oot}", ".a{grid-area:foot}"],
+		["an id", "#\\41 x{color:red}", "#Ax{color:red}"]
+	];
+
+	for (const [what, source, shorter] of written) {
+		it(`rewrites ${what} on, and leaves it alone off`, () => {
+			expect(
+				minifyForWith(source, ["chrome 120"], { rewriteEscapes: true })
+			).toBe(shorter);
+			expect(
+				minifyForWith(source, ["chrome 120"], { rewriteEscapes: false })
+			).toBe(source);
+		});
+	}
+});
+
+describe("CssSyntax minify — `@custom-selector`", () => {
+	const sheet = "@custom-selector :--h h1,h2;:--h{color:red}";
+	const on = { resolveCustomAtRules: true };
+
+	it("writes the list wherever a selector asks for it", () => {
+		expect(minifyForWith(sheet, ["chrome 120"], on)).toBe(
+			":is(h1,h2){color:red}"
+		);
+	});
+
+	it("writes a list of one as `:is()` too", () => {
+		// A lone type selector cannot be spliced into a compound another part
+		// opened, so the wrapper is what makes every position the same.
+		expect(
+			minifyForWith(
+				"@custom-selector :--h h1;x:--h{color:red}",
+				["chrome 120"],
+				on
+			)
+		).toBe("x:is(h1){color:red}");
+	});
+
+	it("writes it where the name stands in a compound", () => {
+		expect(
+			minifyForWith(
+				"@custom-selector :--h h1,h2;.x:--h .y{color:red}",
+				["chrome 120"],
+				on
+			)
+		).toBe(".x:is(h1,h2) .y{color:red}");
+	});
+
+	it("is off until asked for", () => {
+		expect(minifyFor(sheet, ["chrome 120"])).toBe(sheet);
+	});
+
+	it("leaves a pseudo-element spelling alone", () => {
+		const css = "@custom-selector :--h h1;::--h{color:red}";
+		expect(minifyForWith(css, ["chrome 120"], on)).toBe("::--h{color:red}");
+	});
+
+	it("leaves a name nothing states alone", () => {
+		expect(
+			minifyForWith(
+				"@custom-selector :--h h1;:--nope{color:red}",
+				["chrome 120"],
+				on
+			)
+		).toBe(":--nope{color:red}");
+	});
+
+	it("leaves a selector standing before the rule that names it", () => {
+		expect(
+			minifyForWith(
+				":--h{color:red}@custom-selector :--h h1;",
+				["chrome 120"],
+				on
+			)
+		).toBe(":--h{color:red}");
+	});
+
+	it("keeps the rule where the target reads no `:is()`", () => {
+		// Nothing to write the name as, so dropping what states it would leave
+		// every selector asking for it unreadable instead of merely unresolved.
+		expect(minifyForWith(sheet, ["chrome 60"], on)).toBe(sheet);
+	});
+});
+
+describe("CssSyntax minify — a `color-mix()` the target cannot read", () => {
+	it("writes the color it mixes to before it", () => {
+		expect(
+			minifyFor("a{color:color-mix(in srgb,red,blue)}", ["chrome 80"])
+		).toBe("a{color:#7f007f;color:color-mix(in srgb,red,blue)}");
+	});
+
+	it("writes one mixed in a polar space too", () => {
+		expect(
+			minifyFor("a{color:color-mix(in oklch,red,blue)}", ["chrome 80"])
+		).toBe("a{color:#ba00c2;color:color-mix(in oklch,red,blue)}");
+	});
+
+	it("writes nothing for a mix that names what it cannot resolve", () => {
+		// `currentcolor` is whatever the element's `color` is, which no fallback
+		// written here can state.
+		const css = "a{color:color-mix(in srgb,currentcolor,red)}";
+		expect(minifyFor(css, ["chrome 80"])).toBe(css);
+	});
+
+	it("writes nothing where the target reads `color-mix()`", () => {
+		expect(
+			minifyFor("a{color:color-mix(in srgb,red,blue)}", ["chrome 130"])
+		).toBe("a{color:color(srgb .5 0 .5)}");
+	});
+
+	it("writes no fallback into a lowered shorthand with them off", () => {
+		expect(
+			minifyForWith("a{inset:1px}", ["chrome 80"], { colorFallbacks: false })
+		).toBe("a{top:1px;right:1px;bottom:1px;left:1px}");
+	});
+
+	it("is off with the fallbacks off", () => {
+		const css = "a{color:color-mix(in srgb,red,blue)}";
+		expect(minifyForWith(css, ["chrome 80"], { colorFallbacks: false })).toBe(
+			css
 		);
 	});
 });

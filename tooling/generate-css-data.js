@@ -5239,6 +5239,9 @@ const SUPPORTED_FEATURES = [
 	["langArgumentList", ["css.selectors.lang.argument_list"]],
 	["notSelectorList", ["css.selectors.not.selector_list"]],
 	["whereSelector", ["css.selectors.where"]],
+	["dirSelector", ["css.selectors.dir"]],
+	["customMedia", ["css.at-rules.custom-media"]],
+	["nesting", ["css.selectors.nesting"]],
 	[
 		"textDecorationColorStyle",
 		["css.properties.text-decoration.includes_color-and-style"]
