@@ -13266,13 +13266,13 @@ Object {
   "output-copy-glob-options-follow-symlinks": Object {
     "configs": Array [
       Object {
-        "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
+        "description": "Whether a symbolic link is resolved and copied as what it points at. Defaults to 'true'; 'false' copies the link itself, pointing where it already points.",
         "multiple": true,
         "path": "output.copy[].globOptions.followSymlinks",
         "type": "boolean",
       },
     ],
-    "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
+    "description": "Whether a symbolic link is resolved and copied as what it points at. Defaults to 'true'; 'false' copies the link itself, pointing where it already points.",
     "multiple": true,
     "simpleType": "boolean",
   },
@@ -13288,6 +13288,19 @@ Object {
     "description": "Clear all items provided in 'output.copy' configuration. Copy files and directories to the output directory.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "output-copy-stage": Object {
+    "configs": Array [
+      Object {
+        "description": "Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.",
+        "multiple": false,
+        "path": "output.copy.stage",
+        "type": "number",
+      },
+    ],
+    "description": "Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.",
+    "multiple": false,
+    "simpleType": "number",
   },
   "output-copy-to": Object {
     "configs": Array [
