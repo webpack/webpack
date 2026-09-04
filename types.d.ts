@@ -5948,6 +5948,11 @@ declare interface CssPrintOptions {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
+	 */
+	mergeDistantRules?: boolean;
+
+	/**
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
@@ -6017,6 +6022,11 @@ declare interface CssProcessOptions {
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
+	 */
+	mergeDistantRules?: boolean;
 
 	/**
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
@@ -20246,6 +20256,12 @@ declare interface OptimizationMinimizeCss {
 	lowerUnsupported?: boolean;
 
 	/**
+	 * Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default: it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does — and it is taken only where the copy of the block it drops outweighs the selector it writes instead, since a block repeated at a distance already compresses on its own. `mergeRules` is the safe half of this, joining only what nothing stands between.
+	 * @since 5.111.0
+	 */
+	mergeDistantRules?: boolean;
+
+	/**
 	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
 	 * @since 5.110.0
 	 */
@@ -30582,6 +30598,7 @@ declare namespace exports {
 					as?: "stylesheet" | "block-contents";
 					environment?: CssEnvironment;
 					convertLengthUnits?: boolean;
+					mergeDistantRules?: boolean;
 					rewriteCustomProperties?: boolean;
 					unusedSymbols?: string[];
 					pseudoClasses?: { [index: string]: string };

@@ -2460,6 +2460,11 @@ export interface OptimizationMinimizeCss {
 	 */
 	lowerUnsupported?: boolean;
 	/**
+	 * Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default: it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does — and it is taken only where the copy of the block it drops outweighs the selector it writes instead, since a block repeated at a distance already compresses on its own. `mergeRules` is the safe half of this, joining only what nothing stands between.
+	 * @since 5.111.0
+	 */
+	mergeDistantRules?: boolean;
+	/**
 	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
 	 * @since 5.110.0
 	 */
