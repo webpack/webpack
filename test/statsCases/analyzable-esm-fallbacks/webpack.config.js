@@ -138,13 +138,30 @@ module.exports = [
 		experiments: { css: true },
 		plugins: [new webpack.HotModuleReplacementPlugin()]
 	}),
-	// The map keeps the runtime form under HMR where a name is settled only by the fill:
-	// an update could move it without touching the module the map is written into.
+	// Also analyzable: a hashed name settled in a round before the runtime chunk's is
+	// spelled into the runtime module, so an update that moves it re-ships the map.
 	base("hmr-hashed-css", {
 		entry: "./index-css",
 		experiments: { css: true },
 		plugins: [new webpack.HotModuleReplacementPlugin()],
 		output: { cssChunkFilename: "[name].[contenthash].css" }
+	}),
+	// The entry's own stylesheet is hashed after its runtime module is generated, so no
+	// update could carry that name: the map keeps the runtime form.
+	base("hmr-hashed-css-entry", {
+		entry: "./index-css-own",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: {
+			cssFilename: "[name].[contenthash].css",
+			cssChunkFilename: "[name].[contenthash].css"
+		}
+	}),
+	// Also analyzable: the hinted script names are read off the chunk hash the same way.
+	base("hmr-hashed-prefetch", {
+		entry: "./index-prefetch",
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: { chunkFilename: "[name].[chunkhash].mjs" }
 	}),
 	// Also analyzable: each runtime is measured against its own update chunk, so one
 	// whose id puts that chunk a directory down bakes beside one at the root.

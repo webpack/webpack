@@ -69,11 +69,22 @@ const CASES = {
 		expect: "analyzable",
 		contains: "cssUrls = {"
 	},
+	// The name settles a round before the runtime chunk, so the map spells it.
 	"hmr-hashed-css": {
+		file: "main.mjs",
+		expect: "analyzable",
+		contains: /cssUrls = \{[^}]*"\.\/lazy_css\.[0-9a-f]+\.css"/
+	},
+	"hmr-hashed-css-entry": {
 		file: "main.mjs",
 		expect: "partial",
 		bailout: "a hot update can move this name",
 		lacks: "cssUrls = {"
+	},
+	"hmr-hashed-prefetch": {
+		file: "main.mjs",
+		expect: "analyzable",
+		contains: /chunkUrls = \{[^}]*"\.\/async_js\.[0-9a-f]+\.mjs"/
 	},
 	"hmr-css-two-depths": {
 		file: "nested/side.mjs",
@@ -132,7 +143,9 @@ module.exports = {
 					if (bailout.startsWith(BAILOUT)) bailouts.push(bailout);
 				}
 			}
-			if (testCase.contains) expect(output).toContain(testCase.contains);
+			if (testCase.contains) {
+				expect(output).toMatch(testCase.contains);
+			}
 			if (testCase.lacks) expect(output).not.toContain(testCase.lacks);
 			if (testCase.expect === "analyzable") {
 				expect(output).toContain(HELPER);
