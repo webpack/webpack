@@ -201,6 +201,9 @@ const expectedAbandonedRejections = new Map([
 // Fail identically unbundled in a plain `vm` on the pinned Node.js, so the
 // divergence is the host's and not webpack's.
 const knownHostBugs = [
+	// Adding a private field to a non-extensible object must throw, which the
+	// pinned Node.js does not do, so it fails the same way unbundled.
+	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
 	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
 	"expressions/assignment/S11.13.1_A5_T1.js",
 	"expressions/assignment/S11.13.1_A5_T2.js",
@@ -891,12 +894,6 @@ const knownBugs = [
 	// A top-level `await using` makes the module async, like a bare top-level
 	// `await` does, so the Script-goal early error is not raised.
 	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
-	// `#mark in obj` needs `isExtensible() === false` without evaluating, so the
-	// target must be sealed with every export name on it, and a mismatch loses one.
-	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
-	// It wants `ownKeys` to be the sorted exports plus `@@toStringTag`, so
-	// `__esModule` would have to go — the namespace trade-off, not a defer fix.
-	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real

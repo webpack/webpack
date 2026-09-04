@@ -30283,6 +30283,8 @@ declare namespace exports {
 		export let hasCssModules: "has css modules";
 		export let hasFetchPriority: "has fetch priority";
 		export let hasOwnProperty: "__webpack_require__.o";
+		export let hasSealedDeferredNamespace: "has sealed deferred namespace";
+		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
 		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
