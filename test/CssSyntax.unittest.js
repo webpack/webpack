@@ -5463,6 +5463,27 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				expect(minify(moz, MODERN)).toBe(moz);
 			});
 
+			it("reads no pseudo out of an escape or a quoted value", () => {
+				// The `:` of `.sm\\:-flex` and of `[href="a:-b"]` starts no pseudo, so
+				// neither rule is one an engine the target lost could read.
+				const escaped = ".sm\\:-flex{display:flex}";
+				expect(minify(escaped, MODERN)).toBe(escaped);
+				const quoted = '[href="a:-ms-b"]{color:red}';
+				expect(minify(quoted, MODERN)).toBe(quoted);
+				// The printer settles on one quote, so only the rule surviving is read.
+				expect(minify("[href='a:-ms-b']{color:red}", MODERN)).toBe(quoted);
+				// A `\` inside the value is stepped over with whatever it escapes, so
+				// the string still ends where it ends.
+				const backslash = '[title="a:-\\\\b"]{color:red}';
+				expect(minify(backslash, MODERN)).toBe(backslash);
+			});
+
+			it("drops one needing a prefix the data names nowhere", () => {
+				// `-khtml-` was Konqueror's: no table holds it, so every one of them
+				// is asked before the selector is read as dead.
+				expect(minify(".a :-khtml-gone{color:red}", MODERN)).toBe("");
+			});
+
 			it("leaves it where the rewrite is turned off", () => {
 				const css = "input::-ms-expand{display:none}";
 				expect(
