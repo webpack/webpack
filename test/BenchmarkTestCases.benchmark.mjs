@@ -294,15 +294,15 @@ class BenchmarkRunner {
 	 * @returns {Promise<string[]>} benchmark names
 	 */
 	async discoverBenchmarks() {
-		const FILTER =
-			typeof process.env.FILTER !== "undefined"
-				? new RegExp(process.env.FILTER)
-				: undefined;
+		// Empty means unset: `new RegExp("")` matches every case, so an empty
+		// NEGATIVE_FILTER would exclude all of them.
+		const FILTER = process.env.FILTER
+			? new RegExp(process.env.FILTER)
+			: undefined;
 
-		const NEGATIVE_FILTER =
-			typeof process.env.NEGATIVE_FILTER !== "undefined"
-				? new RegExp(process.env.NEGATIVE_FILTER)
-				: undefined;
+		const NEGATIVE_FILTER = process.env.NEGATIVE_FILTER
+			? new RegExp(process.env.NEGATIVE_FILTER)
+			: undefined;
 
 		/** @type {string[]} */
 		const allBenchmarks = (await fs.readdir(this.casesPath))
@@ -406,12 +406,20 @@ class BenchmarkRunner {
 			);
 
 			try {
-				const options = await import(`${pathToFileURL(optionsPath)}`);
-				if (typeof options.setup !== "undefined") {
-					await options.setup();
+				await fs.stat(optionsPath);
+			} catch (err) {
+				// Only a missing options.mjs is optional; anything else would
+				// otherwise measure a fixture that never got built.
+				if (/** @type {NodeJS.ErrnoException} */ (err).code !== "ENOENT") {
+					throw err;
 				}
-			} catch (_err) {
-				// Ignore — benchmark has no options.mjs
+				continue;
+			}
+
+			const options = await import(`${pathToFileURL(optionsPath)}`);
+
+			if (typeof options.setup !== "undefined") {
+				await options.setup();
 			}
 		}
 	}
@@ -463,12 +471,20 @@ class BenchmarkRunner {
 		const benchmarkResults = [];
 		/** @type {string[]} */
 		const failedTasks = [];
+		/** @type {unknown} */
+		let firstFailure;
 
 		for (const [index, settled] of settledResults.entries()) {
 			if (settled.status === "fulfilled") {
 				benchmarkResults.push(settled.value);
 			} else {
-				failedTasks.push(benchmarkTasks[index].id);
+				const { id } = benchmarkTasks[index];
+
+				failedTasks.push(id);
+				// The rejection is the only description of what broke; without it a
+				// failing case reports a task id and nothing else.
+				console.error(`Failed: ${id}`, settled.reason);
+				if (failedTasks.length === 1) firstFailure = settled.reason;
 			}
 		}
 
@@ -478,7 +494,8 @@ class BenchmarkRunner {
 
 		if (failedTasks.length > 0) {
 			throw new Error(
-				`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(", ")}`
+				`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(", ")}`,
+				{ cause: firstFailure }
 			);
 		}
 	}

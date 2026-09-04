@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # The only trigger that measures the `-on-schedule` cases; every other one
+  # filters them out as too expensive to run per pull request.
+  schedule:
+    - cron: "0 4 * * 1"
   workflow_dispatch:
 
 concurrency:
@@ -26,6 +30,9 @@ jobs:
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
+    # The harness has no deadline of its own and a watch bench waits on a
+    # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
+    timeout-minutes: 120
     permissions:
       issues: write
       pull-requests: write
@@ -60,7 +67,7 @@ jobs:
           mode: "simulation"
         env:
           LAST_COMMIT: 1
-          NEGATIVE_FILTER: on-schedule
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
           # Single libuv thread → deterministic fs-completion order, removing the
           # last I/O race that perturbs allocation counts between runs.
@@ -71,6 +78,9 @@ jobs:
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
     runs-on: ubuntu-latest
+    # The harness has no deadline of its own and a watch bench waits on a
+    # rebuild callback; main's slowest shard is ~55m, so this only trips on a hang.
+    timeout-minutes: 120
     permissions:
       issues: write
       pull-requests: write
@@ -106,7 +116,7 @@ jobs:
           token: ${{ secrets.CODSPEED_TOKEN }}
         env:
           LAST_COMMIT: 1
-          NEGATIVE_FILTER: on-schedule
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
           SHARD: ${{ matrix.shard }}
           # Single libuv thread → deterministic fs-completion order, removing the
           # last I/O race that perturbs allocation counts between runs.

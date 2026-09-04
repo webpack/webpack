@@ -757,7 +757,6 @@
 - Fix `RangeError: Maximum call stack size exceeded` thrown from `HarmonyImportSideEffectDependency.getModuleEvaluationSideEffectsState` on long linear chains of side-effect-free imports. `NormalModule.getSideEffectsConnectionState` previously descended through `HarmonyImportSideEffectDependency.getModuleEvaluationSideEffectsState` recursively, adding two stack frames per module, which overflowed V8's stack at a few thousand modules deep. The traversal is now iterative. (by [@alexander-akait](https://github.com/alexander-akait) in [#20993](https://github.com/webpack/webpack/pull/20993))
 
 - Fix `NormalModuleFactory` parser/generator types: (by [@alexander-akait](https://github.com/alexander-akait) in [#20999](https://github.com/webpack/webpack/pull/20999))
-
   - `module.generator.html` now uses `HtmlGeneratorOptions` instead of `EmptyGeneratorOptions` (the `extract` option was hidden from the `createGenerator` / `generator` hook types).
   - WebAssembly (`webassembly/async`, `webassembly/sync`) generator hooks now use `EmptyGeneratorOptions` instead of `EmptyParserOptions`.
   - `NormalModuleFactory#getParser` / `createParser` / `getGenerator` / `createGenerator` are now generic over the module-type string, returning the specific parser/generator class for known types (e.g. `JavascriptParser` for `"javascript/auto"`, `CssGenerator` for `"css"`, etc.) instead of always returning the base `Parser` / `Generator`.
@@ -900,7 +899,6 @@
 - Add `exportType: "style"` for CSS modules to inject styles into DOM via HTMLStyleElement, similar to style-loader functionality. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20579](https://github.com/webpack/webpack/pull/20579))
 
 - Add `context` option support for VirtualUrlPlugin (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20449](https://github.com/webpack/webpack/pull/20449))
-
   - The context for the virtual module. A string path. Defaults to 'auto', which will try to resolve the context from the module id.
   - Support custom context path for resolving relative imports in virtual modules
   - Add examples demonstrating context usage and filename customization
