@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-drop-dead-engine-rules minimize-drop-dead-engine-rules should compile 1`] = `
+Array [
+  "input::-webkit-slider-thumb{width:1px}input::-moz-range-thumb{width:2px}.kept,input::-ms-track{color:green}.plain{color:blue}",
+]
+`;

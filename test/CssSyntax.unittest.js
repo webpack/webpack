@@ -5423,6 +5423,58 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe("a{inset:1px 2px}");
 		});
 
+		describe("a rule only a gone engine could read", () => {
+			const MODERN = { browsers: ["chrome 120", "firefox 120", "safari 17"] };
+
+			it("drops one every selector of which needs a `-ms-` pseudo", () => {
+				expect(minify("input::-ms-expand{display:none}", MODERN)).toBe("");
+				expect(minify("input:-ms-input-placeholder{color:red}", MODERN)).toBe(
+					""
+				);
+			});
+
+			it("drops one that needs an `-o-` pseudo", () => {
+				expect(
+					minify(".opera-only :-o-prefocus{word-spacing:-.43em}", MODERN)
+				).toBe("");
+			});
+
+			it("keeps it where the selection still has that engine", () => {
+				const css = "input::-ms-expand{display:none}";
+				expect(minify(css, { browsers: ["ie 11"] })).toBe(css);
+			});
+
+			it("keeps it where no target is stated", () => {
+				const css = "input::-ms-expand{display:none}";
+				expect(minify(css)).toBe(css);
+			});
+
+			it("keeps a list one live selector stands in", () => {
+				// An unknown pseudo-element invalidates the whole list, so the live
+				// half matches nothing either — dropping the dead one would start it.
+				const css = ".a,input::-ms-expand{color:red}";
+				expect(minify(css, MODERN)).toBe(css);
+			});
+
+			it("keeps a prefix an engine in the selection reads", () => {
+				const css = "input::-webkit-slider-thumb{width:1px}";
+				expect(minify(css, MODERN)).toBe(css);
+				const moz = "input::-moz-range-thumb{width:1px}";
+				expect(minify(moz, MODERN)).toBe(moz);
+			});
+
+			it("leaves it where the rewrite is turned off", () => {
+				const css = "input::-ms-expand{display:none}";
+				expect(
+					new SourceProcessor().process(css, {
+						mode: "minify",
+						environment: MODERN,
+						transforms: { removeDeadRules: false }
+					}).code
+				).toBe(css);
+			});
+		});
+
 		it("merges the four corners, matched by name rather than position", () => {
 			// `corner-shape` lists its longhands by row and `{1,4}` writes them
 			// clockwise, so a positional read would cross two of them over.
