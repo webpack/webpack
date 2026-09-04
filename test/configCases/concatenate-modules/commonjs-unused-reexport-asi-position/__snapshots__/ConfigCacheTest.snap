@@ -49,7 +49,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
 /******/ 	
 /************************************************************************/
 /*!******************************!*\\\\
-  !*** ./index.js + 5 modules ***!
+  !*** ./index.js + 7 modules ***!
   \\\\******************************/
 
 // MODULE: ./defaults.js
@@ -63,15 +63,37 @@ __webpack_unused_export__ = { name: \\"core\\" };
 
 });
 
+// MODULE: ./failsafe.js
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"failsafe\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
+
+});
+
+// MODULE: ./json.js
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"json\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
+
+});
+
 // MODULE: ./lib.js
 var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
 
 
-// semicolon-free re-exports: dropping the unused ones must not let the
-// remaining expressions bind to the next statement
+// semicolon-free re-exports, in every spelling: dropping the unused ones must
+// not let the remaining expressions bind to the next statement
 /* unused reexport */ (type_namespaceFn())
 /* unused reexport */ ;(schema_namespaceFn())
 /* unused reexport */ ;/* unused export */ (defaults_namespaceFn(), undefined)
+/* unused reexport */ ;(failsafe_namespaceFn())
+/* unused reexport */ ;(json_namespaceFn())
 module.exports.H = () => \\"loaded\\"
 
 });
@@ -128,7 +150,7 @@ it(\\"should keep an unused re-export from swallowing the next statement\\", () 
 });
 
 it(\\"should still evaluate what an unused re-export required\\", () => {
-	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\"]);
+	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\", \\"failsafe\\", \\"json\\"]);
 });
 
 /******/ })()
@@ -184,7 +206,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
 /******/ 	
 /************************************************************************/
 /*!******************************!*\\\\
-  !*** ./index.js + 5 modules ***!
+  !*** ./index.js + 7 modules ***!
   \\\\******************************/
 
 // MODULE: ./defaults.js
@@ -198,15 +220,37 @@ __webpack_unused_export__ = { name: \\"core\\" };
 
 });
 
+// MODULE: ./failsafe.js
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"failsafe\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
+
+});
+
+// MODULE: ./json.js
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"json\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
+
+});
+
 // MODULE: ./lib.js
 var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
 
 
-// semicolon-free re-exports: dropping the unused ones must not let the
-// remaining expressions bind to the next statement
+// semicolon-free re-exports, in every spelling: dropping the unused ones must
+// not let the remaining expressions bind to the next statement
 /* unused reexport */ (type_namespaceFn())
 /* unused reexport */ ;(schema_namespaceFn())
 /* unused reexport */ ;/* unused export */ (defaults_namespaceFn(), undefined)
+/* unused reexport */ ;(failsafe_namespaceFn())
+/* unused reexport */ ;(json_namespaceFn())
 module.exports.H = () => \\"loaded\\"
 
 });
@@ -263,7 +307,7 @@ it(\\"should keep an unused re-export from swallowing the next statement\\", () 
 });
 
 it(\\"should still evaluate what an unused re-export required\\", () => {
-	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\"]);
+	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\", \\"failsafe\\", \\"json\\"]);
 });
 
 /******/ })()
@@ -319,7 +363,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
 /******/ 	
 /************************************************************************/
 /*!******************************!*\\\\
-  !*** ./index.js + 5 modules ***!
+  !*** ./index.js + 7 modules ***!
   \\\\******************************/
 
 // MODULE: ./defaults.js
@@ -333,15 +377,37 @@ __webpack_unused_export__ = { name: \\"core\\" };
 
 });
 
+// MODULE: ./failsafe.js
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"failsafe\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
+
+});
+
+// MODULE: ./json.js
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"json\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
+
+});
+
 // MODULE: ./lib.js
 var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
 
 
-// semicolon-free re-exports: dropping the unused ones must not let the
-// remaining expressions bind to the next statement
+// semicolon-free re-exports, in every spelling: dropping the unused ones must
+// not let the remaining expressions bind to the next statement
 /* unused reexport */ (type_namespaceFn())
 /* unused reexport */ ;(schema_namespaceFn())
 /* unused reexport */ ;/* unused export */ (defaults_namespaceFn(), undefined)
+/* unused reexport */ ;(failsafe_namespaceFn())
+/* unused reexport */ ;(json_namespaceFn())
 module.exports.H = () => \\"loaded\\"
 
 });
@@ -398,7 +464,7 @@ it(\\"should keep an unused re-export from swallowing the next statement\\", () 
 });
 
 it(\\"should still evaluate what an unused re-export required\\", () => {
-	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\"]);
+	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\", \\"failsafe\\", \\"json\\"]);
 });
 
 /******/ })()
@@ -454,7 +520,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
 /******/ 	
 /************************************************************************/
 /*!******************************!*\\\\
-  !*** ./index.js + 5 modules ***!
+  !*** ./index.js + 7 modules ***!
   \\\\******************************/
 
 // MODULE: ./defaults.js
@@ -468,15 +534,37 @@ __webpack_unused_export__ = { name: \\"core\\" };
 
 });
 
+// MODULE: ./failsafe.js
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"failsafe\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
+
+});
+
+// MODULE: ./json.js
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"json\\");
+
+module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
+
+});
+
 // MODULE: ./lib.js
 var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
 
 
-// semicolon-free re-exports: dropping the unused ones must not let the
-// remaining expressions bind to the next statement
+// semicolon-free re-exports, in every spelling: dropping the unused ones must
+// not let the remaining expressions bind to the next statement
 /* unused reexport */ (type_namespaceFn())
 /* unused reexport */ ;(schema_namespaceFn())
 /* unused reexport */ ;/* unused export */ (defaults_namespaceFn(), undefined)
+/* unused reexport */ ;(failsafe_namespaceFn())
+/* unused reexport */ ;(json_namespaceFn())
 module.exports.H = () => \\"loaded\\"
 
 });
@@ -533,7 +621,7 @@ it(\\"should keep an unused re-export from swallowing the next statement\\", () 
 });
 
 it(\\"should still evaluate what an unused re-export required\\", () => {
-	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\"]);
+	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\", \\"failsafe\\", \\"json\\"]);
 });
 
 /******/ })()

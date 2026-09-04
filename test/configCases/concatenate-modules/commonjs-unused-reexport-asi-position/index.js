@@ -6,5 +6,5 @@ it("should keep an unused re-export from swallowing the next statement", () => {
 });
 
 it("should still evaluate what an unused re-export required", () => {
-	expect(log).toEqual(["type", "schema", "defaults"]);
+	expect(log).toEqual(["type", "schema", "defaults", "failsafe", "json"]);
 });

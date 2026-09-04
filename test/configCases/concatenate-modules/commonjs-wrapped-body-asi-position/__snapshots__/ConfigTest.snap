@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-wrapped-body-asi-position commonjs-wrapped-body-asi-position should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	var __webpack_modules__ = ({});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	const __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/construct require */
+/******/ 	// \`new require(id)\` invokes the require function as a constructor, so a
+/******/ 	// primitive module.exports is discarded in favor of the freshly created
+/******/ 	// instance, exactly as in Node.js. A concatenated module has no require
+/******/ 	// call left, so apply that rule to its exports value instead.
+/******/ 	__webpack_require__.cr = (exports) => {
+/******/ 		const isObject =
+/******/ 			exports !== null && (typeof exports === \\"object\\" || typeof exports === \\"function\\");
+/******/ 		return isObject ? exports : Object.create(__webpack_require__.prototype);
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 5 modules ***!
+  \\\\******************************/
+
+// MODULE: ./body.js
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// semicolon-free: every require below opens a statement ASI would otherwise
+// glue to the one above it
+const log = (log_namespaceFn())
+
+log.push(\\"body\\")
+;(side_namespaceFn())
+__webpack_require__.cr((ctor_namespaceFn()))
+;(plain_namespaceFn().member)()
+
+module.exports.z = () => log
+
+});
+
+// MODULE: ./ctor.js
+var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"ctor\\");
+
+module.exports = function Ctor() {
+	this.tag = \\"ctor\\";
+};
+
+});
+
+// MODULE: ./log.js
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = [];
+
+});
+
+// MODULE: ./plain.js
+var plain_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"plain\\");
+
+module.exports = { member: () => \\"member\\" };
+
+});
+
+// MODULE: ./side.js
+var side_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"side\\");
+
+});
+
+;// ./body.js
+body_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should keep every semicolon-free require form a separate statement\\", () => {
+	expect((0,body_namespaceFn().z)()).toEqual([\\"body\\", \\"side\\", \\"ctor\\", \\"plain\\"]);
+});
+
+/******/ })()
+;"
+`;
