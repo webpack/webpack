@@ -3903,8 +3903,15 @@
       "additionalProperties": false,
       "properties": {
         "collapseBooleanAttributes": {
-          "description": "Write a boolean attribute spelled with its own name (`disabled=\"disabled\"`) as the bare name the spec canonicalizes it to. On by default.",
-          "type": "boolean",
+          "description": "Write a boolean attribute as the bare name its presence already means. The DOM reads `checked` from the attribute being there and never from its value, so `checked=\"checked\"` and `checked=\"\"` are the same element — but `getAttribute` hands back what was written. `true`, the default, rewrites only the spelling the spec itself canonicalizes, the attribute's own name; `\"all\"` rewrites any value, including the `checked=\"false\"` that already means checked.",
+          "anyOf": [
+            {
+              "enum": ["all"]
+            },
+            {
+              "type": "boolean"
+            }
+          ],
           "added": "5.110.0"
         },
         "collapseWhitespace": {
@@ -3972,6 +3979,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "normalizeUrlAttributes": {
+          "description": "Drop the ASCII whitespace around a URL value (`href`, `src`, `action`, `poster`, …), which every URL parser strips before resolving it. On by default: the request goes to the same place either way, and `getAttribute` reads the trimmed string.",
+          "type": "boolean",
+          "added": "5.111.0"
+        },
         "removeEmptyAttributes": {
           "description": "Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals `class`, `id`, `style`, `dir`, `accesskey`, `itemprop`, `itemref`, `itemtype` and `part`, and every attribute reflecting a token list on the elements the spec defines it for — `rel` on `<a>`, `<area>`, `<form>` and `<link>`, `ping` on `<a>` and `<area>`, `headers` on `<td>` and `<th>`, `blocking` on `<link>`, `<script>` and `<style>`, `sizes` on `<link>`, `for` on `<output>` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so `<x-foo rel=\"\">` and `<label for=\"\">` keep it. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.",
           "type": "boolean",
@@ -4017,7 +4029,7 @@
           "added": "5.110.0"
         },
         "sortTokenLists": {
-          "description": "Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.",
+          "description": "Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. Asked for on its own: a list this reorders is rewritten whether or not `normalizeListAttributes` is on, since another order is another spelling. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.",
           "type": "boolean",
           "added": "5.110.0"
         }

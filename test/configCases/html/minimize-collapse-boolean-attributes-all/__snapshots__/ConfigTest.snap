@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-collapse-boolean-attributes-all minimize-collapse-boolean-attributes-all should compile 1`] = `
+"<!doctype html><html lang=en><head><title>t</title></head><body>
+<input checked disabled>
+<script defer></script>
+<p contenteditable=contenteditable>enumerated, so its value is the state</p>
+<p checked=false>not a boolean attribute here</p>
+
+
+</body></html>"
+`;

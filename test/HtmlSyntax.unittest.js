@@ -9199,3 +9199,210 @@ describe("htmlMinify export", () => {
 		expect(code).toMatchInlineSnapshot('"<p class=x>  a  "');
 	});
 });
+
+describe("SourceProcessor — attribute rewrites as switches", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
+
+	/**
+	 * @param {import("../lib/html/syntax").HtmlTransformOptions} transforms the switches
+	 * @returns {{ mode: "minify", transforms: import("../lib/html/syntax").HtmlTransformOptions }} print options
+	 */
+	const off = (transforms) => ({
+		mode: /** @type {"minify"} */ ("minify"),
+		transforms
+	});
+
+	it("keeps a `style` attribute a renderer hands straight back", () => {
+		// The way to keep one: there is no switch, and none is needed — a renderer
+		// that answers with the list it was given has said to leave it alone.
+		const code = new SourceProcessor().process(
+			'<p style="color:  #ff0000 ;">x</p>',
+			{
+				mode: "minify",
+				renderEmbeddedSource: (
+					/** @type {string} */ source,
+					/** @type {{ type: string }} */ info
+				) => (info.type === "css" ? source : undefined)
+			}
+		).code;
+
+		expect(code).toBe('<p style="color:  #ff0000 ;">x');
+	});
+
+	/**
+	 * Print with a renderer answering asynchronously, as a caller reaching a
+	 * worker pool does — which is the path webpack's own minimizer takes.
+	 * @param {string} html input markup
+	 * @param {(source: string) => string | undefined} answer what it makes of one list
+	 * @returns {Promise<string>} the minified serialization
+	 */
+	const deferredStyle = async (html, answer) => {
+		const { code } = await new SourceProcessor().processAsync(html, {
+			mode: "minify",
+			renderEmbeddedSource: (
+				/** @type {string} */ source,
+				/** @type {{ as?: string }} */ hole
+			) =>
+				Promise.resolve(
+					hole.as === "block-contents" ? answer(source) : undefined
+				)
+		});
+
+		return code;
+	};
+
+	it("keeps one a deferred renderer hands straight back", async () => {
+		// The answer arrives after the attribute is written, so the built-in's
+		// text stood here until the answer was read for what it says.
+		expect(
+			await deferredStyle(
+				'<p style="color:  #ff0000 ;">x</p>',
+				(source) => source
+			)
+		).toBe('<p style="color:  #ff0000 ;">x');
+		expect(
+			await deferredStyle(
+				'<p style="color:  #ff0000 ;" id=q>x</p>',
+				(source) => source
+			)
+		).toBe('<p style="color:  #ff0000 ;" id=q>x');
+	});
+
+	it("takes what a deferred renderer answers, longer or not", async () => {
+		expect(
+			await deferredStyle(
+				'<p style="color:  #ff0000 ;">x</p>',
+				() => "color:blue"
+			)
+		).toBe("<p style=color:blue>x");
+		expect(
+			await deferredStyle(
+				'<p style="color:  #ff0000 ;">x</p>',
+				() => "color:rgb(255 0 0)"
+			)
+		).toBe('<p style="color:rgb(255 0 0)">x');
+	});
+
+	it("offers a deferred renderer the list, not its spelling", async () => {
+		/** @type {string[]} */
+		const offered = [];
+		const code = await deferredStyle(
+			'<p style="color&#x3a;red">x</p>',
+			(source) => {
+				offered.push(source);
+				return "color:blue";
+			}
+		);
+
+		// The reference is how the attribute is written; what the renderer reads
+		// is the declaration list the element computes.
+		expect(offered).toEqual(["color:red"]);
+		expect(code).toBe("<p style=color:blue>x");
+	});
+
+	it("minifies one a deferred renderer declines", async () => {
+		expect(
+			await deferredStyle('<p style="color:  #ff0000 ;">x</p>', () => undefined)
+		).toBe("<p style=color:red>x");
+	});
+
+	it("trims the whitespace around a URL, until told not to", () => {
+		const html = '<a href="  /a  ">x</a>';
+		expect(minify(html)).toBe("<a href=/a>x</a>");
+		expect(minify(html, off({ normalizeUrlAttributes: false }))).toBe(
+			'<a href="  /a  ">x</a>'
+		);
+	});
+
+	it.each([
+		['<img src="  a.png  " alt=a>', '<img src="  a.png  " alt=a>'],
+		['<form action="  /post  "></form>', '<form action="  /post  "></form>'],
+		['<video poster="  p.png  "></video>', '<video poster="  p.png  "></video>']
+	])("keeps the whitespace in %s with the switch off", (html, expected) => {
+		expect(minify(html, off({ normalizeUrlAttributes: false }))).toBe(expected);
+	});
+
+	it("collapses only the canonical spelling by default", () => {
+		expect(minify('<input checked="checked" disabled="">')).toBe(
+			"<input checked disabled>"
+		);
+		expect(minify('<input checked="false">')).toBe("<input checked=false>");
+	});
+
+	it("collapses any value at `all`", () => {
+		expect(
+			minify(
+				'<input checked="false">',
+				off({ collapseBooleanAttributes: "all" })
+			)
+		).toBe("<input checked>");
+		expect(
+			minify(
+				'<input checked="checked">',
+				off({ collapseBooleanAttributes: "all" })
+			)
+		).toBe("<input checked>");
+	});
+
+	it("collapses at `all` only where the attribute is a boolean one", () => {
+		// `contenteditable` is enumerated and `checked` is not boolean on a `<p>`,
+		// so neither is a presence the value may go from.
+		expect(
+			minify(
+				'<p contenteditable="contenteditable">x</p>',
+				off({ collapseBooleanAttributes: "all" })
+			)
+		).toBe("<p contenteditable=contenteditable>x");
+		expect(
+			minify(
+				'<p checked="false">x</p>',
+				off({ collapseBooleanAttributes: "all" })
+			)
+		).toBe("<p checked=false>x");
+	});
+
+	it("keeps every spelling with the switch off", () => {
+		expect(
+			minify(
+				'<input checked="checked">',
+				off({ collapseBooleanAttributes: false })
+			)
+		).toBe("<input checked=checked>");
+		// The tokenizer reads `x` and `x=""` as the same attribute, so the bare
+		// name is not this switch's to keep.
+		expect(
+			minify('<input checked="">', off({ collapseBooleanAttributes: false }))
+		).toBe("<input checked>");
+	});
+
+	it("sorts a token list with list normalization off", () => {
+		const html = '<p class="b a c">x</p>';
+		expect(
+			minify(html, {
+				sortTokenLists: true,
+				transforms: { normalizeListAttributes: false }
+			})
+		).toBe('<p class="a b c">x');
+		expect(minify(html, off({ normalizeListAttributes: false }))).toBe(
+			'<p class="b a c">x'
+		);
+	});
+
+	it("sorts no list the DOM does not read as a set", () => {
+		// `ping` is the order its requests go out in, so it is no set to sort.
+		expect(
+			minify('<a ping="  b   a ">x</a>', {
+				sortTokenLists: true,
+				transforms: { normalizeListAttributes: false }
+			})
+		).toBe('<a ping="  b   a ">x</a>');
+	});
+});

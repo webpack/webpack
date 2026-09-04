@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-sort-token-lists-alone minimize-sort-token-lists-alone should compile 1`] = `
+"<!doctype html><html lang=en><head><title>t</title></head><body>
+<div class=\\"aa mm zz\\">a set, so it sorts</div>
+<a href=/x ping=\\"/z /a\\">ping keeps its request order</a>
+<img srcset=\\"a.png   1x\\" alt=\\"a list this switch does not reorder\\">
+
+
+</body></html>"
+`;
