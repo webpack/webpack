@@ -5348,7 +5348,7 @@ declare interface CopiedFileData {
 	sourceFilename: string;
 
 	/**
-	 * path of the asset, relative to `output.path`
+	 * path of the copied file, relative to `to`
 	 */
 	filename: string;
 }
@@ -5415,7 +5415,7 @@ declare interface CopyObjectPattern {
 	/**
 	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
 	 */
-	to?: string;
+	to?: string | ((file: CopiedFileData) => string);
 
 	/**
 	 * Modifies the content of a copied file.

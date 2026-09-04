@@ -33,7 +33,9 @@ class AssertCopyInfo {
 						];
 						if (actual !== value) {
 							throw new Error(
-								`'${name}' has '${key}' of '${String(actual)}', not '${String(value)}'`
+								`'${name}' has '${key}' of '${String(actual)}', not '${String(
+									value
+								)}'`
 							);
 						}
 					};
@@ -59,9 +61,10 @@ module.exports = {
 				{
 					from: "files",
 					to: "from-file",
-					// only the file the pattern picks out carries it
+					// only the file the pattern picks out carries it, named as the
+					// callback sees it: relative to `to`, not to `output.path`
 					info: (file) =>
-						file.sourceFilename === "files/a.txt" ? { development: true } : {}
+						file.filename === "a.txt" ? { development: true } : {}
 				}
 			]
 		}

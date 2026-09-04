@@ -524,8 +524,18 @@
         },
         "to": {
           "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",
-          "type": "string",
-          "absolutePath": false
+          "anyOf": [
+            {
+              "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",
+              "type": "string",
+              "absolutePath": false
+            },
+            {
+              "description": "Directory a copied file is copied to, relative to 'output.path', from the file itself.",
+              "instanceof": "Function",
+              "tsType": "import('../lib/CopyPlugin').CopyToFunction"
+            }
+          ]
         },
         "transform": {
           "description": "Modifies the content of a copied file.",

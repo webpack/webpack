@@ -18,9 +18,14 @@ it("should interpolate a content hash and mark the asset immutable", () => {
 	expect(read(hashed[0].name)).toBe("a");
 });
 
-it("should support a 'to' function", () => {
+it("should support a 'filename' function", () => {
 	expect(read("fn/a.txt")).toBe("a");
 	expect(read("fn/b.txt")).toBe("b");
+});
+
+it("should support a 'to' function", () => {
+	expect(read("a-only/a.txt")).toBe("a");
+	expect(read("rest/b.txt")).toBe("b");
 });
 
 it("should let a later pattern replace what an earlier one copied", () => {
