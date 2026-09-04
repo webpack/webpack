@@ -33,6 +33,22 @@ module.exports = {
 				from: "assets/**/*.txt",
 				globOptions: { dot: false },
 				to: "no-dot"
+			},
+			{
+				from: "assets/**/*.txt",
+				globOptions: { deep: 1 },
+				to: "shallow"
+			},
+			{
+				from: "assets/**/*.txt",
+				globOptions: { ignore: ["**/sub/**"] },
+				to: "no-sub"
+			},
+			{
+				// a glob naming the directory itself skips everything below it
+				from: "assets/**/*.txt",
+				globOptions: { ignore: ["assets/.hidden"] },
+				to: "no-hidden"
 			}
 		]
 	}

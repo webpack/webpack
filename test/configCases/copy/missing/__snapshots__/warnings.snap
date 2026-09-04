@@ -8,5 +8,8 @@ Silence it with 'ignoreWarnings' when the pattern is optional.",
   "The 'assets/*.png' pattern of 'output.copy' copied no file.
 It resolved to '<TEST_DIR>/assets/*.png', which matches nothing on disk — usually a typo, a path relative to the wrong directory, or a directory a previous build step was supposed to create.
 Silence it with 'ignoreWarnings' when the pattern is optional.",
+  "The 'assets/*.txt' pattern of 'output.copy' copied no file.
+It resolved to '<TEST_DIR>/assets/*.txt', which matches nothing on disk — usually a typo, a path relative to the wrong directory, or a directory a previous build step was supposed to create.
+Silence it with 'ignoreWarnings' when the pattern is optional.",
 ]
 `;
