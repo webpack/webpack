@@ -1,22 +1,11 @@
-var asyncLib = require("neo-async");
 module.exports = function(content) {
 	var cb = this.async();
 	var json = JSON.parse(content);
-	asyncLib.mapSeries(
-		json.imports,
-		function(url, callback) {
-			this.loadModule(url, function(err, source, map, module) {
-				if (err) {
-					return callback(err);
-				}
-				callback(null, JSON.parse(source));
-			});
-		}.bind(this),
-		function(err, results) {
-			if (err) {
-				return cb(err);
-			}
-			// Combine all the results into one object and return it
+	var imports = json.imports;
+	var results = [];
+	var self = this;
+	var next = function(index) {
+		if (index === imports.length) {
 			cb(
 				null,
 				"module.exports = " +
@@ -26,6 +15,15 @@ module.exports = function(content) {
 						}, json)
 					)
 			);
+			return;
 		}
-	);
+		self.loadModule(imports[index], function(err, source, map, module) {
+			if (err) {
+				return cb(err);
+			}
+			results.push(JSON.parse(source));
+			next(index + 1);
+		});
+	};
+	next(0);
 };

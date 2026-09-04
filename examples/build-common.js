@@ -7,7 +7,6 @@
 const cp = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const async = require("neo-async");
 const tc = require("./template-common");
 
 const extraArgs = "";
@@ -150,29 +149,26 @@ const doCompileAndReplace = (args, prefix, callback) => {
 	connectIO(subprocess);
 };
 
-async.series(
-	[
-		(callback) =>
-			doCompileAndReplace(
-				"--mode production --env production",
-				"production",
-				callback
-			),
-		(callback) =>
-			doCompileAndReplace(
-				"--mode development --env development --devtool none",
-				"development",
-				callback
-			),
-		(callback) =>
-			doCompileAndReplace(
-				"--mode none --env none --output-pathinfo verbose",
-				"",
-				callback
-			)
-	],
-	() => {
+/** @type {[string, string][]} */
+const compilations = [
+	["--mode production --env production", "production"],
+	["--mode development --env development --devtool none", "development"],
+	["--mode none --env none --output-pathinfo verbose", ""]
+];
+
+/**
+ * Runs the compilations one after another, as each one rewrites the README.
+ * @param {number} index compilation to run
+ * @returns {void}
+ */
+const runCompilation = (index) => {
+	if (index === compilations.length) {
 		readme = tc.replaceBase(readme);
 		fs.writeFile("README.md", readme, "utf8", () => {});
+		return;
 	}
-);
+	const [args, prefix] = compilations[index];
+	doCompileAndReplace(args, prefix, () => runCompilation(index + 1));
+};
+
+runCompilation(0);
