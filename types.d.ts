@@ -30556,6 +30556,37 @@ declare namespace exports {
 					errors?: (string | Error)[];
 				}[]
 			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
+			export function cssMinify(
+				input: { [index: string]: string },
+				sourceMap?: object,
+				minimizerOptions?: {
+					as?: "stylesheet" | "block-contents";
+					environment?: CssEnvironment;
+					convertLengthUnits?: boolean;
+					rewriteCustomProperties?: boolean;
+					unusedSymbols?: string[];
+					pseudoClasses?: { [index: string]: string };
+					renderEmbeddedSource?: (
+						source: string,
+						info: { type: string; hostType: string }
+					) =>
+						| undefined
+						| string
+						| EmbeddedSourceResult
+						| Promise<undefined | string | EmbeddedSourceResult>;
+				} & CssTransformOptions
+			): Promise<{
+				code: string;
+				map?: SourceMap;
+				warnings?: (string | Error)[];
+				errors?: (string | Error)[];
+			}>;
+			export namespace cssMinify {
+				export let supportsWorkerThreads: () => boolean;
+				export let getTypes: () => string[];
+				export let getEmbeddedTypes: () => string[];
+				export let filter: (name: string) => boolean;
+			}
 			export let embeddedText: (
 				answer?: string | { code?: string }
 			) => undefined | string;
@@ -30868,6 +30899,40 @@ declare namespace exports {
 				minimal?: boolean
 			) => string;
 			export let escapeText: (s: string) => string;
+			export function htmlMinify(
+				input: { [index: string]: string },
+				sourceMap?: RawSourceMap,
+				minimizerOptions?: Omit<
+					HtmlPrintOptions,
+					"renderEmbeddedSource" | "deferEmbeddedSource"
+				> & {
+					css?: {
+						convertLengthUnits?: boolean;
+						rewriteCustomProperties?: boolean;
+						unusedSymbols?: string[];
+						pseudoClasses?: { [index: string]: string };
+					};
+					minifyConditionalComments?: boolean;
+					renderEmbeddedSource?: (
+						source: string,
+						info: { type: string; hostType: string; as?: string }
+					) =>
+						| undefined
+						| string
+						| EmbeddedSourceResult
+						| Promise<undefined | string | EmbeddedSourceResult>;
+				}
+			): Promise<{
+				code: string;
+				warnings?: (string | Error)[];
+				errors?: (string | Error)[];
+			}>;
+			export namespace htmlMinify {
+				export let supportsWorkerThreads: () => boolean;
+				export let getTypes: () => string[];
+				export let getEmbeddedTypes: () => string[];
+				export let filter: (name: string) => boolean;
+			}
 			export let isAsciiWhitespace: (cc: number) => boolean;
 			export let metaTag: (name: string, content: string) => string;
 			export let parseCssUrls: (input: string) => [string, number, number][];

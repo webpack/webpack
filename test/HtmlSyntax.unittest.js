@@ -9062,3 +9062,38 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 		).toBe("<svg><rect style=color:red /></svg>");
 	});
 });
+
+describe("htmlMinify export", () => {
+	it("is the minifier itself, reachable from the public entry", () => {
+		const webpack = require("../");
+
+		expect(webpack.html.syntax.htmlMinify).toBe(
+			require("../lib/html/htmlMinify")
+		);
+	});
+
+	it("carries the minimizer contract minimizer-webpack-plugin dispatches on", () => {
+		const webpack = require("../");
+
+		const { htmlMinify } = webpack.html.syntax;
+
+		expect(htmlMinify.getTypes()).toEqual(["html"]);
+		expect(htmlMinify.getEmbeddedTypes()).toContain("css");
+		expect(htmlMinify.supportsWorkerThreads()).toBe(true);
+		expect(htmlMinify.filter("a.html")).toBe(true);
+		expect(htmlMinify.filter("a.css")).toBe(false);
+	});
+
+	it("minifies through the public entry", async () => {
+		const webpack = require("../");
+
+		const { htmlMinify } = webpack.html.syntax;
+
+		const { code } = await htmlMinify({
+			"a.html": "<p class='x'>  a  </p>"
+		});
+
+		// `</p>` is an optional end tag, so minifying drops it.
+		expect(code).toBe("<p class=x>  a  ");
+	});
+});
