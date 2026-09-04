@@ -46,6 +46,7 @@ const PACKAGES = [
 	"clean-css@5",
 	"csso@5",
 	"cssnano@7",
+	"cssnano-preset-advanced@9",
 	"daisyui@5",
 	"esbuild@0.25",
 	"@fortawesome/fontawesome-free@6",
@@ -63,6 +64,7 @@ const PACKAGES = [
 	"semantic-ui-css@2",
 	"tachyons@4",
 	"tailwindcss@4",
+	"@tdewolff/minify@2",
 	"@tailwindcss/cli@4",
 	"uikit@3",
 	"water.css@2"
@@ -256,6 +258,20 @@ const MINIFIERS = [
 		}
 	],
 	[
+		"esbuild+target",
+		() => {
+			const esbuild = load("esbuild");
+			// esbuild names its targets rather than reading browserslist, so the
+			// query resolves to the `<name><major>` strings it accepts.
+			const target = MODERN_BROWSERS.map((entry) =>
+				entry.replace(" ", "").replace(/\..*$/, "")
+			);
+			return async (css) =>
+				(await esbuild.transform(css, { loader: "css", minify: true, target }))
+					.code;
+		}
+	],
+	[
 		"csso",
 		() => {
 			const csso = load("csso");
@@ -295,12 +311,51 @@ const MINIFIERS = [
 		}
 	],
 	[
+		"lightningcss+target",
+		() => {
+			const lightningcss = load("lightningcss");
+			const targets = lightningcss.browserslistToTargets(MODERN_BROWSERS);
+			return (css) =>
+				lightningcss
+					.transform({
+						filename: "input.css",
+						code: Buffer.from(css),
+						minify: true,
+						targets
+					})
+					.code.toString("utf8");
+		}
+	],
+	[
 		"cssnano",
 		() => {
 			const postcss = load("postcss");
 			const cssnano = load("cssnano");
 			return async (css) =>
 				(await postcss([cssnano]).process(css, { from: undefined })).css;
+		}
+	],
+	[
+		// The preset cssnano does not ship on by default: it also merges rules,
+		// rebases `z-index` and reduces idents, so it diverges where the rest agree.
+		"cssnano advanced",
+		() => {
+			const postcss = load("postcss");
+			const cssnano = load("cssnano");
+			const advanced = load("cssnano-preset-advanced");
+			return async (css) =>
+				(
+					await postcss([cssnano({ preset: advanced() })]).process(css, {
+						from: undefined
+					})
+				).css;
+		}
+	],
+	[
+		"tdewolff/minify",
+		() => {
+			const { minify } = load("@tdewolff/minify");
+			return (css) => minify("text/css", css);
 		}
 	]
 ];
