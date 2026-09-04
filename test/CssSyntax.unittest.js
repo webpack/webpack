@@ -5478,6 +5478,31 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				expect(minify(backslash, MODERN)).toBe(backslash);
 			});
 
+			it("keeps one whose dead pseudo a forgiving list only skips", () => {
+				// Chrome parses `.a:is(.b,input::-ms-expand)` down to `.a:is(.b)` and
+				// paints with it, so the rule is not one no engine reads.
+				const is = ".a:is(.b,input::-ms-expand){color:red}";
+				expect(minify(is, MODERN)).toBe(is);
+				const where = ":where(.a,:-ms-input-placeholder){color:red}";
+				expect(minify(where, MODERN)).toBe(where);
+				// The name is matched the way an engine reads it, case and all.
+				const cased = ".a:IS(.b,:-ms-input-placeholder){color:red}";
+				expect(minify(cased, MODERN)).toBe(
+					".a:is(.b,:-ms-input-placeholder){color:red}"
+				);
+			});
+
+			it("drops one whose dead pseudo an unforgiving list keeps", () => {
+				// `:has()` and `:not()` take an unforgiving list, so Chrome drops the
+				// whole rule over the argument it cannot parse.
+				expect(
+					minify(".a:has(> :-ms-input-placeholder){color:red}", MODERN)
+				).toBe("");
+				expect(
+					minify(".a:not(:-ms-input-placeholder){color:red}", MODERN)
+				).toBe("");
+			});
+
 			it("drops one needing a prefix the data names nowhere", () => {
 				// `-khtml-` was Konqueror's: no table holds it, so every one of them
 				// is asked before the selector is read as dead.

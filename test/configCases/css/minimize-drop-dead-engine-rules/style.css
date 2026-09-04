@@ -19,12 +19,17 @@ input::-moz-range-thumb {
 	width: 2px;
 }
 
-/* One live selector stands in this list, so the whole rule stays: an engine
-   drops it over the half it cannot parse, and taking that half out would start
-   the other one matching. */
+/* One live selector stands in this list, so the whole rule stays: taking the
+   dead half out would start the live one matching. */
 .kept,
 input::-ms-track {
 	color: green;
+}
+
+/* A forgiving list drops only the argument an engine cannot parse, so the rest
+   of this selector goes on matching. */
+.forgiving:is(.b, input::-ms-clear) {
+	color: teal;
 }
 
 .plain {

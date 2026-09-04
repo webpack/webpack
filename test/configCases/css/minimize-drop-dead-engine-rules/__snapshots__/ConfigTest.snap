@@ -2,6 +2,6 @@
 
 exports[`ConfigTestCases css minimize-drop-dead-engine-rules minimize-drop-dead-engine-rules should compile 1`] = `
 Array [
-  "input::-webkit-slider-thumb{width:1px}input::-moz-range-thumb{width:2px}.kept,input::-ms-track{color:green}.plain{color:blue}",
+  "input::-webkit-slider-thumb{width:1px}input::-moz-range-thumb{width:2px}.kept,input::-ms-track{color:green}.forgiving:is(.b,input::-ms-clear){color:teal}.plain{color:blue}",
 ]
 `;
