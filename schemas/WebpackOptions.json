@@ -393,6 +393,9 @@
           "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
           "type": "string",
           "minLength": 1
+        },
+        {
+          "$ref": "#/definitions/CopyOptions"
         }
       ],
       "added": "5.111.0"
@@ -406,6 +409,11 @@
           "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
           "type": "boolean"
         },
+        "deep": {
+          "description": "How many directory levels below the base of the glob are read, where '1' reads only the base itself. Defaults to no limit.",
+          "type": "number",
+          "minimum": 1
+        },
         "dot": {
           "description": "Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.",
           "type": "boolean"
@@ -413,6 +421,15 @@
         "followSymlinks": {
           "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
           "type": "boolean"
+        },
+        "ignore": {
+          "description": "Globs of the files which are not copied, resolved like 'from'. A directory one of them matches is skipped whole.",
+          "type": "array",
+          "items": {
+            "description": "Glob of the files which are not copied.",
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
@@ -421,6 +438,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "context": {
+          "description": "Directory 'from' is resolved from and the copied paths are relative to. Defaults to the compiler context, and to what 'from' names when it is not a glob.",
+          "type": "string"
+        },
         "filename": {
           "description": "Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.",
           "anyOf": [
@@ -435,12 +456,44 @@
           ]
         },
         "from": {
-          "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
-          "type": "string",
-          "minLength": 1
+          "description": "Glob or path from where the files are copied.",
+          "anyOf": [
+            {
+              "description": "Globs or paths from where the files are copied, in order.",
+              "type": "array",
+              "items": {
+                "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            {
+              "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
+              "type": "string",
+              "minLength": 1
+            }
+          ]
         },
         "globOptions": {
           "$ref": "#/definitions/CopyGlobOptions"
+        },
+        "info": {
+          "description": "Asset info of a copied file.",
+          "anyOf": [
+            {
+              "description": "Asset info of a copied file.",
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {},
+              "tsType": "import('../lib/Compilation').AssetInfo"
+            },
+            {
+              "description": "Asset info of a copied file, from the file itself.",
+              "instanceof": "Function",
+              "tsType": "import('../lib/CopyPlugin').CopyInfoFunction"
+            }
+          ]
         },
         "to": {
           "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",
@@ -449,11 +502,78 @@
         },
         "transform": {
           "description": "Modifies the content of a copied file.",
-          "instanceof": "Function",
-          "tsType": "import('../lib/CopyPlugin').CopyTransform"
+          "anyOf": [
+            {
+              "description": "Modifies the content of a copied file, and says how the result is cached.",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cache": {
+                  "description": "Whether the result of the transform is cached, and what it is cached under. Defaults to 'true'.",
+                  "anyOf": [
+                    {
+                      "description": "Whether the result of the transform is cached.",
+                      "type": "boolean"
+                    },
+                    {
+                      "description": "What the result of the transform is cached under, beside the content of the file.",
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "keys": {
+                          "description": "Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.",
+                          "anyOf": [
+                            {
+                              "description": "Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.",
+                              "type": "object",
+                              "additionalProperties": true,
+                              "properties": {},
+                              "tsType": "import('../lib/CopyPlugin').CopyTransformCacheKeys"
+                            },
+                            {
+                              "description": "Everything beside the content of the file the transform depends on, from the file itself.",
+                              "instanceof": "Function",
+                              "tsType": "import('../lib/CopyPlugin').CopyTransformCacheKeysFunction"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                "transformer": {
+                  "description": "Modifies the content of a copied file.",
+                  "instanceof": "Function",
+                  "tsType": "import('../lib/CopyPlugin').CopyTransform"
+                }
+              },
+              "required": ["transformer"]
+            },
+            {
+              "description": "Modifies the content of a copied file.",
+              "instanceof": "Function",
+              "tsType": "import('../lib/CopyPlugin').CopyTransform"
+            }
+          ]
         }
       },
       "required": ["from"]
+    },
+    "CopyOptions": {
+      "description": "Patterns of files which are copied to the output directory, and the options of the copying itself.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "concurrency": {
+          "description": "Maximum number of files which are read at the same time. Defaults to '100'.",
+          "type": "number",
+          "minimum": 1
+        },
+        "patterns": {
+          "$ref": "#/definitions/CopyPatterns"
+        }
+      },
+      "required": ["patterns"]
     },
     "CopyPattern": {
       "description": "A glob or a path of files which are copied to the output directory.",
@@ -471,6 +591,9 @@
     "CopyPatterns": {
       "description": "Patterns of files which are copied to the output directory.",
       "type": "array",
+      "cli": {
+        "exclude": true
+      },
       "items": {
         "$ref": "#/definitions/CopyPattern"
       }
@@ -5320,7 +5443,7 @@
           "$ref": "#/definitions/CompareBeforeEmit"
         },
         "copy": {
-          "$ref": "#/definitions/CopyPatterns"
+          "$ref": "#/definitions/CopyOptions"
         },
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"

@@ -5289,6 +5289,22 @@ declare interface ContextTimestampAndHash {
 	symlinks?: Set<string>;
 }
 type ContextTypes = KnownContext & Record<any, any>;
+declare interface CopiedFileData {
+	/**
+	 * absolute path of the source file
+	 */
+	absoluteFilename: string;
+
+	/**
+	 * path of the source file, relative to the compiler context
+	 */
+	sourceFilename: string;
+
+	/**
+	 * path of the asset, relative to `output.path`
+	 */
+	filename: string;
+}
 
 /**
  * Options of the glob in 'from'.
@@ -5300,6 +5316,11 @@ declare interface CopyGlobOptions {
 	caseSensitive?: boolean;
 
 	/**
+	 * How many directory levels below the base of the glob are read, where '1' reads only the base itself. Defaults to no limit.
+	 */
+	deep?: number;
+
+	/**
 	 * Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.
 	 */
 	dot?: boolean;
@@ -5308,6 +5329,11 @@ declare interface CopyGlobOptions {
 	 * Whether a symbolic link is walked into and copied. Defaults to 'true'.
 	 */
 	followSymlinks?: boolean;
+
+	/**
+	 * Globs of the files which are not copied, resolved like 'from'. A directory one of them matches is skipped whole.
+	 */
+	ignore?: string[];
 }
 
 /**
@@ -5315,19 +5341,29 @@ declare interface CopyGlobOptions {
  */
 declare interface CopyObjectPattern {
 	/**
+	 * Directory 'from' is resolved from and the copied paths are relative to. Defaults to the compiler context, and to what 'from' names when it is not a glob.
+	 */
+	context?: string;
+
+	/**
 	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
 	 */
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
-	 * Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.
+	 * Glob or path from where the files are copied.
 	 */
-	from: string;
+	from: string | string[];
 
 	/**
 	 * Options of the glob in 'from'.
 	 */
 	globOptions?: CopyGlobOptions;
+
+	/**
+	 * Asset info of a copied file.
+	 */
+	info?: AssetInfo | ((file: CopiedFileData) => AssetInfo);
 
 	/**
 	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
@@ -5337,20 +5373,66 @@ declare interface CopyObjectPattern {
 	/**
 	 * Modifies the content of a copied file.
 	 */
-	transform?: (
-		content: Buffer,
-		absoluteFilename: string
-	) => string | Buffer | Promise<string | Buffer>;
+	transform?:
+		| {
+				/**
+				 * Whether the result of the transform is cached, and what it is cached under. Defaults to 'true'.
+				 */
+				cache?:
+					| boolean
+					| {
+							/**
+							 * Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.
+							 */
+							keys?:
+								| CopyTransformCacheKeys
+								| ((
+										defaultKeys: CopyTransformCacheKeys,
+										absoluteFilename: string
+								  ) =>
+										CopyTransformCacheKeys | Promise<CopyTransformCacheKeys>);
+					  };
+				/**
+				 * Modifies the content of a copied file.
+				 */
+				transformer: (
+					content: Buffer,
+					absoluteFilename: string
+				) => string | Buffer | Promise<string | Buffer>;
+		  }
+		| ((
+				content: Buffer,
+				absoluteFilename: string
+		  ) => string | Buffer | Promise<string | Buffer>);
+}
+
+/**
+ * Patterns of files which are copied to the output directory, and the options of the copying itself.
+ */
+declare interface CopyOptions {
+	/**
+	 * Maximum number of files which are read at the same time. Defaults to '100'.
+	 */
+	concurrency?: number;
+
+	/**
+	 * Patterns of files which are copied to the output directory.
+	 */
+	patterns: CopyPattern[];
 }
 type CopyPattern = string | CopyObjectPattern;
 declare class CopyPlugin {
-	constructor(patterns: CopyPattern[]);
+	constructor(options: CopyOptions);
 	patterns: CopyPattern[];
+	concurrency: number;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface CopyTransformCacheKeys {
+	[index: string]: any;
 }
 type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
 type CreateReadStreamFSImplementation = FSImplementation & {
@@ -21087,7 +21169,7 @@ declare interface Output {
 	 * Copy files and directories to the output directory.
 	 * @since 5.111.0
 	 */
-	copy?: string | CopyPattern[];
+	copy?: string | CopyOptions | CopyPattern[];
 
 	/**
 	 * This option enables cross-origin loading of chunks.
@@ -21615,9 +21697,9 @@ declare interface OutputNormalized {
 	compareBeforeEmit?: boolean;
 
 	/**
-	 * Patterns of files which are copied to the output directory.
+	 * Patterns of files which are copied to the output directory, and the options of the copying itself.
 	 */
-	copy?: CopyPattern[];
+	copy?: CopyOptions;
 
 	/**
 	 * This option enables cross-origin loading of chunks.
