@@ -446,7 +446,7 @@
           "type": "boolean"
         },
         "followSymlinks": {
-          "description": "Whether a symbolic link is walked into and copied. Defaults to 'true'.",
+          "description": "Whether a symbolic link is resolved and copied as what it points at. Defaults to 'true'; 'false' copies the link itself, pointing where it already points.",
           "type": "boolean"
         },
         "ignore": {
