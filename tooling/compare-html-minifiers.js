@@ -851,8 +851,18 @@ if (require.main === module) {
 
 // The documents that are files rather than pages this builds, for a reader that
 // is not this script.
+module.exports.APP_SHELL = APP_SHELL;
 module.exports.CACHE = CACHE;
+module.exports.INLINED_STYLESHEETS = /** @type {[string, string][]} */ ([
+	["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
+	["Water.css 2 (inlined)", "water.css/out/water.css"],
+	["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
+]);
 module.exports.INSTALLED_DOCUMENTS = /** @type {[string, string][]} */ ([
 	["HTML5 Boilerplate 9", "html5-boilerplate/dist/index.html"],
 	["Swagger UI 5", "swagger-ui-dist/index.html"]
 ]);
+
+// The pages built here rather than installed. A reader that cannot await builds
+// the same documents from these.
+module.exports.inlineCssPage = inlineCssPage;
