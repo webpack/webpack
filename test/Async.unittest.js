@@ -98,6 +98,20 @@ describe("each", () => {
 		);
 	});
 
+	it("throws when an iterator calls back twice", () => {
+		// Without this the run settles early, while later items are still going.
+		expect(() => {
+			each(
+				[1, 2, 3, 4],
+				(item, callback) => {
+					callback();
+					if (item === 1) callback();
+				},
+				() => {}
+			);
+		}).toThrow("Callback was already called");
+	});
+
 	it("does not grow the stack for a synchronous iterator", (done) => {
 		const items = Array.from({ length: 200000 }, (_, i) => i);
 		let count = 0;
@@ -249,6 +263,20 @@ describe("eachLimit", () => {
 			expect(calls).toBe(1);
 			done();
 		});
+	});
+
+	it("throws when an iterator calls back twice", () => {
+		expect(() => {
+			eachLimit(
+				[1, 2, 3, 4],
+				2,
+				(item, callback) => {
+					callback();
+					if (item === 1) callback();
+				},
+				() => {}
+			);
+		}).toThrow("Callback was already called");
 	});
 
 	it("completes immediately when the limit is below one", () => {
@@ -403,26 +431,17 @@ describe("map", () => {
 		});
 	});
 
-	it("ignores an iterator that calls back twice", (done) => {
-		let calls = 0;
-		map(
-			[1, 2],
-			(item, callback) => {
-				setImmediate(() => {
+	it("throws when an iterator calls back twice", () => {
+		expect(() => {
+			map(
+				[1, 2],
+				(item, callback) => {
 					callback(null, item);
 					callback(null, item);
-				});
-			},
-			(err, results) => {
-				calls++;
-				expect(err).toBeNull();
-				expect(results).toEqual([1, 2]);
-				setImmediate(() => {
-					expect(calls).toBe(1);
-					done();
-				});
-			}
-		);
+				},
+				() => {}
+			);
+		}).toThrow("Callback was already called");
 	});
 
 	it("works with a synchronous iterator", (done) => {
