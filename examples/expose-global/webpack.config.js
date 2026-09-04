@@ -1,22 +1,22 @@
 "use strict";
 
-const { NormalModule } = require("../../../");
+const { NormalModule } = require("../../");
 
-/** @import { Compiler } from "webpack" */
+/** @import { Compiler } from "../../" */
 
-const PLUGIN_NAME = "AddExportsPlugin";
+const PLUGIN_NAME = "ExposeGlobalPlugin";
 
 /**
- * Appends exports to modules which have none, before webpack parses them, so
- * the exports are read as the module's own.
+ * Appends the assignment that puts a module in the global object, before
+ * webpack parses it, so the reference is read as the module's own.
  */
-class AddExportsPlugin {
+class ExposeGlobalPlugin {
 	/**
-	 * Creates an instance of AddExportsPlugin.
-	 * @param {[RegExp, string][]} exports pairs of a resource condition and the code to append
+	 * Creates an instance of ExposeGlobalPlugin.
+	 * @param {[RegExp, string][]} exposes pairs of a resource condition and the code to append
 	 */
-	constructor(exports) {
-		this.exports = exports;
+	constructor(exposes) {
+		this.exposes = exposes;
 	}
 
 	/**
@@ -30,7 +30,7 @@ class AddExportsPlugin {
 				PLUGIN_NAME,
 				(result, module) => {
 					const [source, sourceMap] = result;
-					for (const [test, code] of this.exports) {
+					for (const [test, code] of this.exposes) {
 						// a global or sticky pattern keeps its lastIndex between calls,
 						// which would skip the next module it is tested against
 						test.lastIndex = 0;
@@ -46,4 +46,14 @@ class AddExportsPlugin {
 	}
 }
 
-module.exports = AddExportsPlugin;
+/** @type {import("../../").Configuration} */
+module.exports = {
+	plugins: [
+		new ExposeGlobalPlugin([
+			// the default export is a binding in scope, under both names a script reads
+			[/jquery\.js$/, "globalThis.$ = globalThis.jQuery = jQuery;"],
+			// one export of many, the rest of the module still shaken out
+			[/math\.js$/, "globalThis.add = add;"]
+		])
+	]
+};

@@ -1,12 +1,12 @@
-# Adding exports to a module
+# Exposing a module to the global object
 
-Some files export nothing: a legacy script that only defines globals, a vendored file, a bundle that was never written as a module. Appending the exports before webpack parses the file is enough — the parser reads them as the module's own.
+Some scripts are not part of the bundle: an inline `<script>`, a plugin written for a `<script>` tag, a snippet a CMS pastes in. They read what they need off the global object, and putting it there is one appended line — the parser reads the assignment as the module's own code.
 
-No loader is needed for that. `NormalModule`'s `processResult` hook hands a plugin what the loaders produced — source, source map and any preparsed AST — and takes back a replacement. It is the same hook [adding imports](../add-imports) uses, from the other end of the file, and it is small enough to keep in the configuration.
+No loader is needed for that. `NormalModule`'s `processResult` hook hands a plugin what the loaders produced — source, source map and any preparsed AST — and takes back a replacement. It is the same hook [adding exports](../add-exports) and [adding imports](../add-imports) use, and it is small enough to keep in the configuration.
 
-Which format to append is the module's own, and the two are not equivalent. `export { … }` is what makes a file an ES module, exactly as it would be in the source, so those exports are analyzable: under `mode: "production"`, `math.js` has its `PI` inlined into the call site and its `add` hoisted into the entry, like any `export` webpack reads, and the unoptimized output below keeps both. `module.exports = …` keeps the file the script it is, and webpack treats it as it treats any module whose whole exports object is assigned a value — `legacy-global.js` below keeps runtime-defined exports and is not analyzed that way. Prefer the ES module form where the file tolerates it.
+What the line assigns is whatever the module has in scope, so an ES module names the binding it exports, and webpack analyzes that reference like any other. Under `mode: "production"`, `math.js` keeps `add` — renamed with the rest of the module, and hoisted into the entry — while `PI`, which nothing reads, is shaken out; the unoptimized output below keeps both, as it keeps everything. A script that assigns its whole exports object is exposed by appending `globalThis.$ = module.exports;` instead. A name read out of an exports object at runtime, which a module wrapping another one has to do, is neither analyzed nor renamed.
 
-Appending moves nothing before it, so the source map is still valid; a preparsed AST is dropped, because webpack would otherwise parse that instead of the appended code.
+The assignment runs when the module is evaluated, so something still has to import it — a module nothing pulls in is not in the bundle at all. Where the file sits in a package marked `"sideEffects": false` and the importer uses none of its exports, webpack drops that import before it can assign; `{ test: /…/, sideEffects: true }` in `module.rules` says otherwise for that file. And the appended line names the global object itself — nothing rewrites it — so a target that predates `globalThis` is one where `self` or `window` is what the line has to say, here and in whatever reads it back.
 
 # webpack.config.js
 
@@ -17,19 +17,19 @@ const { NormalModule } = require("../../");
 
 /** @import { Compiler } from "../../" */
 
-const PLUGIN_NAME = "AddExportsPlugin";
+const PLUGIN_NAME = "ExposeGlobalPlugin";
 
 /**
- * Appends exports to modules which have none, before webpack parses them, so
- * the exports are read as the module's own.
+ * Appends the assignment that puts a module in the global object, before
+ * webpack parses it, so the reference is read as the module's own.
  */
-class AddExportsPlugin {
+class ExposeGlobalPlugin {
 	/**
-	 * Creates an instance of AddExportsPlugin.
-	 * @param {[RegExp, string][]} exports pairs of a resource condition and the code to append
+	 * Creates an instance of ExposeGlobalPlugin.
+	 * @param {[RegExp, string][]} exposes pairs of a resource condition and the code to append
 	 */
-	constructor(exports) {
-		this.exports = exports;
+	constructor(exposes) {
+		this.exposes = exposes;
 	}
 
 	/**
@@ -43,7 +43,7 @@ class AddExportsPlugin {
 				PLUGIN_NAME,
 				(result, module) => {
 					const [source, sourceMap] = result;
-					for (const [test, code] of this.exports) {
+					for (const [test, code] of this.exposes) {
 						// a global or sticky pattern keeps its lastIndex between calls,
 						// which would skip the next module it is tested against
 						test.lastIndex = 0;
@@ -62,11 +62,11 @@ class AddExportsPlugin {
 /** @type {import("../../").Configuration} */
 module.exports = {
 	plugins: [
-		new AddExportsPlugin([
-			// a script, so CommonJs exports
-			[/legacy-global\.js$/, "module.exports = Legacy;"],
-			// `export` makes the module an ES module, as it would in the source
-			[/math\.js$/, "export { add, PI };"]
+		new ExposeGlobalPlugin([
+			// the default export is a binding in scope, under both names a script reads
+			[/jquery\.js$/, "globalThis.$ = globalThis.jQuery = jQuery;"],
+			// one export of many, the rest of the module still shaken out
+			[/math\.js$/, "globalThis.add = add;"]
 		])
 	]
 };
@@ -75,53 +75,60 @@ module.exports = {
 # example.js
 
 ```javascript
-import Legacy from "./legacy-global";
-import { add, PI } from "./math";
+import jQuery from "./jquery";
+import { add } from "./math";
 
-console.log(new Legacy().version, add(PI, 1));
+// A script outside the bundle reads the same values off the global object.
+console.log(jQuery(".app"), globalThis.$(".app"));
+console.log(add(1, 2), globalThis.add(1, 2));
 ```
 
-# legacy-global.js
+# jquery.js
 
 ```javascript
-// A legacy script — it defines a constructor and exports nothing.
-function Legacy() {
-	this.version = "1.0.0";
+// A library a script outside the bundle expects to find on a global.
+export default function jQuery(selector) {
+	return `element(${selector})`;
 }
 ```
 
 # math.js
 
 ```javascript
-// A vendored file — it defines values and exports nothing.
-const PI = 3.14;
-
-function add(first, second) {
+export function add(first, second) {
 	return first + second;
 }
+
+export const PI = 3.14;
 ```
 
 # dist/output.js
 
 ```javascript
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/*!**************************!*\
-  !*** ./legacy-global.js ***!
-  \**************************/
-/*! unknown exports (runtime-defined) */
-/*! runtime requirements: module */
-/*! CommonJS bailout: module.exports is used directly at 6:0-14 */
-/***/ ((module) => {
+/*!*******************!*\
+  !*** ./jquery.js ***!
+  \*******************/
+/*! namespace exports */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-// A legacy script — it defines a constructor and exports nothing.
-function Legacy() {
-	this.version = "1.0.0";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ jQuery)
+/* harmony export */ });
+// A library a script outside the bundle expects to find on a global.
+function jQuery(selector) {
+	return `element(${selector})`;
 }
 
-module.exports = Legacy;
+globalThis.$ = globalThis.jQuery = jQuery;
 
 /***/ }),
 /* 2 */
@@ -135,20 +142,18 @@ module.exports = Legacy;
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PI: () => (/* binding */ PI),
 /* harmony export */   add: () => (/* binding */ add)
 /* harmony export */ });
-// A vendored file — it defines values and exports nothing.
-const PI = 3.14;
-
 function add(first, second) {
 	return first + second;
 }
 
+const PI = 3.14;
 
+globalThis.add = add;
 
 /***/ })
 /******/ 	]);
@@ -183,16 +188,6 @@ function add(first, second) {
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
-/******/ 			() => (module['default']) :
-/******/ 			() => (module);
-/******/ 		__webpack_require__.d(getter, { a: getter });
-/******/ 		return getter;
-/******/ 	};
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
@@ -220,23 +215,23 @@ function add(first, second) {
 
 ``` js
 let __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-"use strict";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./legacy-global */ 1);
-/* harmony import */ var _legacy_global__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_legacy_global__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./jquery */ 1);
 /* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
 
 
 
-console.log(new (_legacy_global__WEBPACK_IMPORTED_MODULE_0___default())().version, (0,_math__WEBPACK_IMPORTED_MODULE_1__.add)(_math__WEBPACK_IMPORTED_MODULE_1__.PI, 1));
+// A script outside the bundle reads the same values off the global object.
+console.log((0,_jquery__WEBPACK_IMPORTED_MODULE_0__["default"])(".app"), globalThis.$(".app"));
+console.log((0,_math__WEBPACK_IMPORTED_MODULE_1__.add)(1, 2), globalThis.add(1, 2));
 
 })();
 
@@ -249,12 +244,12 @@ console.log(new (_legacy_global__WEBPACK_IMPORTED_MODULE_0___default())().versio
 ## Unoptimized
 
 ```
-asset output.js 4.85 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 417 bytes (javascript) 883 bytes (runtime) [entry] [rendered]
+asset output.js 4.71 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 535 bytes (javascript) 614 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 883 bytes 4 modules
-  dependent modules 297 bytes [dependent] 2 modules
-  ./example.js 120 bytes [built] [code generated]
+  runtime modules 614 bytes 3 modules
+  dependent modules 300 bytes [dependent] 2 modules
+  ./example.js 235 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
@@ -264,12 +259,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 514 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 417 bytes (javascript) 672 bytes (runtime) [entry] [rendered]
+asset output.js 220 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 535 bytes [entry] [rendered]
   > ./example.js main
-  runtime modules 672 bytes 3 modules
-  dependent modules 141 bytes [dependent] 1 module
-  ./example.js + 1 modules 276 bytes [built] [code generated]
+  ./example.js + 2 modules 535 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
