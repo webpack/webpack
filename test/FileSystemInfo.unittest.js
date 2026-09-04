@@ -1517,6 +1517,7 @@ ${details(snapshot)}`)
 			fsInfo.resolveBuildDependencies(
 				"/proj",
 				["/proj/entry.js", "/proj/", "/proj/empty-dir/"],
+				undefined,
 				(err, result_) => {
 					if (err) return done(err);
 					const result =
@@ -1549,28 +1550,33 @@ ${details(snapshot)}`)
 		it("checkResolveResultsValid reports invalid when an expected-missing dep appears", (done) => {
 			const fs = createProjectFs();
 			const fsInfo = createProjectFsInfo(fs);
-			fsInfo.resolveBuildDependencies("/proj", ["/proj/"], (err, result_) => {
-				if (err) return done(err);
-				const result =
-					/** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (
-						result_
+			fsInfo.resolveBuildDependencies(
+				"/proj",
+				["/proj/"],
+				undefined,
+				(err, result_) => {
+					if (err) return done(err);
+					const result =
+						/** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+							result_
+						);
+					// Create the previously-missing optional dependency.
+					fs.mkdirSync("/proj/node_modules/missing-dep", { recursive: true });
+					fs.writeFileSync(
+						"/proj/node_modules/missing-dep/package.json",
+						JSON.stringify({ name: "missing-dep", version: "1.0.0" })
 					);
-				// Create the previously-missing optional dependency.
-				fs.mkdirSync("/proj/node_modules/missing-dep", { recursive: true });
-				fs.writeFileSync(
-					"/proj/node_modules/missing-dep/package.json",
-					JSON.stringify({ name: "missing-dep", version: "1.0.0" })
-				);
-				const fsInfo2 = createProjectFsInfo(fs);
-				fsInfo2.checkResolveResultsValid(
-					result.resolveResults,
-					(err, valid) => {
-						if (err) return done(err);
-						expect(valid).toBe(false);
-						done();
-					}
-				);
-			});
+					const fsInfo2 = createProjectFsInfo(fs);
+					fsInfo2.checkResolveResultsValid(
+						result.resolveResults,
+						(err, valid) => {
+							if (err) return done(err);
+							expect(valid).toBe(false);
+							done();
+						}
+					);
+				}
+			);
 		});
 
 		it("checkResolveResultsValid errors on an unexpected key type", (done) => {
@@ -1626,6 +1632,7 @@ ${details(snapshot)}`)
 			fsInfo.resolveBuildDependencies(
 				"/proj",
 				["/proj/entry.mjs"],
+				undefined,
 				(err, result) => {
 					if (err) return done(err);
 					expect(result).toBeDefined();

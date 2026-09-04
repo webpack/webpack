@@ -240,6 +240,33 @@
       "description": "Report the first error as a hard error instead of tolerating it.",
       "type": "boolean"
     },
+    "BuildDependencyItem": {
+      "description": "A build dependency for filesystem cache invalidation.",
+      "anyOf": [
+        {
+          "description": "Request to a dependency (resolved as directory relative to the context directory).",
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "dependency": {
+              "description": "Request to a dependency (resolved as directory relative to the context directory).",
+              "type": "string",
+              "minLength": 1
+            },
+            "optional": {
+              "description": "When true, the dependency may be missing. Existence changes invalidate the cache.",
+              "type": "boolean"
+            }
+          },
+          "required": ["dependency"]
+        }
+      ],
+      "added": "5.111.0"
+    },
     "CacheOptions": {
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
       "anyOf": [
@@ -1837,9 +1864,7 @@
             "description": "List of dependencies the build depends on.",
             "type": "array",
             "items": {
-              "description": "Request to a dependency (resolved as directory relative to the context directory).",
-              "type": "string",
-              "minLength": 1
+              "$ref": "#/definitions/BuildDependencyItem"
             }
           }
         },

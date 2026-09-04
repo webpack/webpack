@@ -1271,6 +1271,18 @@ declare interface BufferedMap {
 	 */
 	file: string;
 }
+type BuildDependencyItem =
+	| string
+	| {
+			/**
+			 * Request to a dependency (resolved as directory relative to the context directory).
+			 */
+			dependency: string;
+			/**
+			 * When true, the dependency may be missing. Existence changes invalidate the cache.
+			 */
+			optional?: boolean;
+	  };
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -1295,7 +1307,9 @@ declare class CacheClass {
 	hooks: {
 		get: AsyncSeriesBailHook<[string, null | Etag, GotHandler<any>[]], any>;
 		store: AsyncParallelHook<[string, null | Etag, any]>;
-		storeBuildDependencies: AsyncParallelHook<[Iterable<string>]>;
+		storeBuildDependencies: AsyncParallelHook<
+			[Iterable<string>, Iterable<string>]
+		>;
 		beginIdle: SyncHook<[]>;
 		endIdle: AsyncParallelHook<[]>;
 		shutdown: AsyncParallelHook<[]>;
@@ -1328,6 +1342,7 @@ declare class CacheClass {
 	 */
 	storeBuildDependencies(
 		dependencies: Iterable<string>,
+		optionalDependencies: Iterable<string>,
 		callback: CallbackCacheCache<void>
 	): void;
 
@@ -3528,6 +3543,7 @@ declare class Compilation {
 	contextDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
+	optionalBuildDependencies: LazySet<string>;
 
 	/**
 	 * @deprecated
@@ -9146,7 +9162,7 @@ declare interface FileCacheOptions {
 	/**
 	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
-	buildDependencies?: { [index: string]: string[] };
+	buildDependencies?: { [index: string]: BuildDependencyItem[] };
 
 	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
@@ -9377,6 +9393,7 @@ declare abstract class FileSystemInfo {
 	resolveBuildDependencies(
 		context: string,
 		deps: Iterable<string>,
+		optionalDeps: undefined | Iterable<string>,
 		callback: (
 			err?: null | Error,
 			resolveBuildDependenciesResult?: ResolveBuildDependenciesResult
