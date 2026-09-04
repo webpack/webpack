@@ -2,83 +2,61 @@
 
 Some files export nothing: a legacy script that only defines globals, a vendored file, a bundle that was never written as a module. Appending the exports before webpack parses the file is enough — the parser reads them as the module's own.
 
-No loader is needed for that. `NormalModule`'s `processResult` hook hands a plugin what the loaders produced — source, source map and any preparsed AST — and takes back a replacement.
+No loader is needed for that. `NormalModule`'s `processResult` hook hands a plugin what the loaders produced — source, source map and any preparsed AST — and takes back a replacement. It is the same hook [adding imports](../add-imports) uses, from the other end of the file, and it is small enough to keep in the configuration.
 
 Which format to append is the module's own, and the two are not equivalent. `export { … }` is what makes a file an ES module, exactly as it would be in the source, so those exports are analyzable: below, `math.js` has its `PI` inlined into the call site and its `add` hoisted into the entry, like any `export` webpack reads. `module.exports = …` keeps the file the script it is, and webpack treats it as it treats any module whose whole exports object is assigned a value — `legacy-global.js` below keeps runtime-defined exports and is not analyzed that way. Prefer the ES module form where the file tolerates it.
 
 Appending moves nothing before it, so the source map is still valid; a preparsed AST is dropped, because webpack would otherwise parse that instead of the appended code.
-
-# internals/add-exports-plugin.js
-
-```javascript
-"use strict";
-
-const { NormalModule } = require("../../../");
-
-/** @import { Compiler } from "webpack" */
-
-const PLUGIN_NAME = "AddExportsPlugin";
-
-/**
- * Appends exports to modules which have none, before webpack parses them, so
- * the exports are read as the module's own.
- */
-class AddExportsPlugin {
-	/**
-	 * Creates an instance of AddExportsPlugin.
-	 * @param {[RegExp, string][]} exports pairs of a resource condition and the code to append
-	 */
-	constructor(exports) {
-		this.exports = exports;
-	}
-
-	/**
-	 * Applies the plugin by registering its hooks on the compiler.
-	 * @param {Compiler} compiler the compiler instance
-	 * @returns {void}
-	 */
-	apply(compiler) {
-		compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
-			NormalModule.getCompilationHooks(compilation).processResult.tap(
-				PLUGIN_NAME,
-				(result, module) => {
-					const [source, sourceMap] = result;
-					for (const [test, code] of this.exports) {
-						// a global or sticky pattern keeps its lastIndex between calls,
-						// which would skip the next module it is tested against
-						test.lastIndex = 0;
-						if (!module.resource || !test.test(module.resource)) continue;
-						// appending moves nothing before it, so the source map still fits;
-						// a preparsed ast would be parsed instead of the appended code
-						return [`${source}\n${code}`, sourceMap, undefined];
-					}
-					return result;
-				}
-			);
-		});
-	}
-}
-
-module.exports = AddExportsPlugin;
-```
 
 # webpack.config.js
 
 ```javascript
 "use strict";
 
-const AddExportsPlugin = require("./internals/add-exports-plugin");
+const { NormalModule } = require("../../");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Compiler } from "../../" */
+
+const PLUGIN_NAME = "AddExportsPlugin";
+
+/** @type {[RegExp, string][]} */
+const addedExports = [
+	// a script, so CommonJs exports
+	[/legacy-global\.js$/, "module.exports = Legacy;"],
+	// `export` makes the module an ES module, as it would in the source
+	[/math\.js$/, "export { add, PI };"]
+];
+
+/**
+ * Appends exports to modules which have none, before webpack parses them, so
+ * the exports are read as the module's own.
+ * @param {Compiler} compiler the compiler instance
+ * @returns {void}
+ */
+const addExports = (compiler) => {
+	compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
+		NormalModule.getCompilationHooks(compilation).processResult.tap(
+			PLUGIN_NAME,
+			(result, module) => {
+				const [source, sourceMap] = result;
+				for (const [test, code] of addedExports) {
+					// a global or sticky pattern keeps its lastIndex between calls,
+					// which would skip the next module it is tested against
+					test.lastIndex = 0;
+					if (!module.resource || !test.test(module.resource)) continue;
+					// appending moves nothing before it, so the source map still fits;
+					// a preparsed ast would be parsed instead of the appended code
+					return [`${source}\n${code}`, sourceMap, undefined];
+				}
+				return result;
+			}
+		);
+	});
+};
+
+/** @type {import("../../").Configuration} */
 module.exports = {
-	plugins: [
-		new AddExportsPlugin([
-			// a script, so CommonJs exports
-			[/legacy-global\.js$/, "module.exports = Legacy;"],
-			// `export` makes the module an ES module, as it would in the source
-			[/math\.js$/, "export { add, PI };"]
-		])
-	]
+	plugins: [addExports]
 };
 ```
 
