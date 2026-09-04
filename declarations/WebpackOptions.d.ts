@@ -3211,7 +3211,7 @@ export interface CopyGlobOptions {
 	 */
 	dot?: boolean;
 	/**
-	 * Whether a symbolic link is walked into and copied. Defaults to 'true'.
+	 * Whether a symbolic link is resolved and copied as what it points at. Defaults to 'true'; 'false' copies the link itself, pointing where it already points.
 	 */
 	followSymlinks?: boolean;
 	/**

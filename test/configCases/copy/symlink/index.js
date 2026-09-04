@@ -15,7 +15,31 @@ it("should stop where a symlink points back at a directory it walked", () => {
 	expect(exists("link/loop/real/a.txt")).toBe(false);
 });
 
-it("should leave a symlink alone when 'followSymlinks' is false", () => {
+it("should copy a symlink as a symlink when 'followSymlinks' is false", () => {
+	const link = path.resolve(__dirname, "no-follow/relative.txt");
+
+	expect(fs.lstatSync(link).isSymbolicLink()).toBe(true);
+	// the link is copied as it is written, so it points inside the output
+	expect(fs.readlinkSync(link)).toBe(path.join("real", "a.txt"));
+	expect(read("no-follow/relative.txt")).toBe("a");
+});
+
+it("should copy a symlink to a directory as a symlink", () => {
+	const link = path.resolve(__dirname, "no-follow/link");
+
+	expect(fs.lstatSync(link).isSymbolicLink()).toBe(true);
 	expect(read("no-follow/real/a.txt")).toBe("a");
-	expect(exists("no-follow/link/a.txt")).toBe(false);
+});
+
+it("should copy nothing from below a symlink it copied as a link", () => {
+	const copied = __STATS__.assets
+		.map((asset) => asset.name)
+		.filter((name) => name.startsWith("no-follow/"));
+
+	expect(copied.sort()).toEqual([
+		"no-follow/link",
+		"no-follow/real/a.txt",
+		"no-follow/real/loop",
+		"no-follow/relative.txt"
+	]);
 });
