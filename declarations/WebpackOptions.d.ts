@@ -3168,7 +3168,7 @@ export interface CopyObjectPattern {
 	/**
 	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
 	 */
-	to?: string;
+	to?: string | import("../lib/CopyPlugin").CopyToFunction;
 	/**
 	 * Modifies the content of a copied file.
 	 */
