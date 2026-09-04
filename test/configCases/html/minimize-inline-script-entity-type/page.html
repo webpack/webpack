@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Inline script type</title>
+	<script type="application/ld+json">  { "a" :  1 }  </script>
+	<script type="application&#47;ld&#43;json">  { "b" :  2 }  </script>
+</head>
+<body>
+	<script>  var a = 1  </script>
+	<script type="text&#47;javascript">  var b = 2  </script>
+	<script type="text/x-template">  <p   class="a">  {{ t }}  </p>  </script>
+	<script type="text/yaml">
+    a: 1
+    b: 2
+  </script>
+	<script type="unknown/thing">  raw   payload  </script>
+</body>
+</html>

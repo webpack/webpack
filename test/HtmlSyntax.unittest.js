@@ -4193,6 +4193,108 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 	});
 });
 
+describe("SourceProcessor — inline <script> type", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} type the `<script type>` value
+	 * @param {string} body the raw body
+	 * @returns {string} the body, minified
+	 */
+	const minifyBody = (type, body) => {
+		const out = new SourceProcessor().process(
+			`<script type="${type}">${body}</script>`,
+			{ mode: "minify" }
+		).code;
+		return out.slice(out.indexOf(">") + 1, out.lastIndexOf("</script>"));
+	};
+
+	it.each([
+		"application&#47;ld&#43;json",
+		"application&#x2F;json",
+		"application/json&#32;"
+	])("reads %s as JSON, since the parser decodes it", (type) => {
+		expect(minifyBody(type, '  { "a" :  1 }  ')).toBe('{"a":1}');
+	});
+
+	it.each(["text&#47;x-template", "text&#47;yaml", "unknown&#47;thing"])(
+		"leaves the body of the data block %s alone",
+		(type) => {
+			// Its own syntax is not ours to read, and its whitespace can be part of it.
+			expect(minifyBody(type, "  <div> x </div>  ")).toBe("  <div> x </div>  ");
+		}
+	);
+
+	it("keeps the indentation a payload's own language may count", () => {
+		const yaml = "\n    a: 1\n    b: 2\n  ";
+		expect(minifyBody("text/yaml", yaml)).toBe(yaml);
+	});
+
+	it("reads the type case- and whitespace-insensitively through a reference", () => {
+		expect(minifyBody(" APPLICATION&#47;JSON ", '  { "a" : 1 }  ')).toBe(
+			'{"a":1}'
+		);
+		expect(minifyBody(" TEXT&#47;X-TEMPLATE ", "  x  ")).toBe("  x  ");
+	});
+
+	/**
+	 * Minify with a renderer, recording the bodies it was offered.
+	 * @param {string} html input markup
+	 * @returns {{ code: string, offered: string[] }} the output and each body offered
+	 */
+	const withRenderer = (html) => {
+		/** @type {string[]} */
+		const offered = [];
+		const { code } = new SourceProcessor().process(html, {
+			mode: /** @type {"minify"} */ ("minify"),
+			renderEmbeddedSource: (/** @type {string} */ source) => {
+				offered.push(source);
+				return "rendered";
+			}
+		});
+		return { code, offered };
+	};
+
+	it("offers the body of a script whose type is spelled with a reference", () => {
+		// Chrome runs this one, so it is program text and not a data block.
+		const { code, offered } = withRenderer(
+			'<script type="text&#47;javascript">var a = 1</script>'
+		);
+
+		expect(offered).toEqual(["var a = 1"]);
+		expect(code).toBe("<script type=text/javascript>rendered</script>");
+	});
+
+	it("offers no data block whose type is spelled with a reference", () => {
+		const { code, offered } = withRenderer(
+			'<script type="text&#47;x-template">  x  </script>'
+		);
+
+		expect(offered).toEqual([]);
+		expect(code).toBe("<script type=text/x-template>  x  </script>");
+	});
+
+	it("drops a redundant type spelled with a reference", () => {
+		// The same reading as the body: what the parser sees is `text/javascript`,
+		// which is what the element runs anyway.
+		const minify = (/** @type {string} */ html) =>
+			new SourceProcessor().process(html, {
+				mode: /** @type {"minify"} */ ("minify"),
+				removeRedundantAttributes: /** @type {"smart"} */ ("smart")
+			}).code;
+		expect(minify('<script type="text/javascript">var a = 1</script>')).toBe(
+			"<script>var a = 1</script>"
+		);
+		expect(
+			minify('<script type="text&#47;javascript">var a = 1</script>')
+		).toBe("<script>var a = 1</script>");
+		// A data block's type is what tells it apart from a script, so it stays.
+		expect(minify('<script type="text&#47;x-template">x</script>')).toBe(
+			"<script type=text/x-template>x</script>"
+		);
+	});
+});
+
 describe("SourceProcessor — collapseWhitespace modes", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
