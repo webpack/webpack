@@ -58,6 +58,26 @@ describe("SourceProcessor", () => {
 			expect(held(context)).toBe(8);
 		});
 
+		it("lets go of the text when a node is taken", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"t".repeat(16)
+			);
+			context.printNode(1, null);
+			expect(held(context)).toBe(16);
+			context.take(1);
+			expect(held(context)).toBe(0);
+		});
+
+		it("lets go of the text when a retractable node is taken", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"r".repeat(16)
+			);
+			context.printNode(1, null);
+			expect(held(context)).toBe(16);
+			context.takeRetractable(1);
+			expect(held(context)).toBe(0);
+		});
+
 		it("answers for a node printed since the drop, and no earlier one", () => {
 			const context = new PrintContext({ mode: "minify" }, () => "z");
 			context.printNode(1, null);
