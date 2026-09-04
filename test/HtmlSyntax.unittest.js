@@ -9094,6 +9094,6 @@ describe("htmlMinify export", () => {
 		});
 
 		// `</p>` is an optional end tag, so minifying drops it.
-		expect(code).toBe("<p class=x>  a  ");
+		expect(code).toMatchInlineSnapshot('"<p class=x>  a  "');
 	});
 });

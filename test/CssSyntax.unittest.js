@@ -9907,6 +9907,6 @@ describe("cssMinify export", () => {
 
 		const { code } = await cssMinify({ "a.css": "a {\n\tcolor: red;\n}\n" });
 
-		expect(code).toBe("a{color:red}");
+		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
 });
