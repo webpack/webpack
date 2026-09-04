@@ -5651,7 +5651,7 @@
         "sourceMaps": {
           "description": "Report source maps that cost more than they give: a production 'devtool' that writes the map into the JavaScript, and modules a loader transformed without returning a map, which leaves positions pointing at the loader's output (requires 'hints' to be enabled).",
           "type": "boolean",
-          "added": "5.110.0"
+          "added": "5.111.0"
         },
         "splitChunksCapped": {
           "description": "Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).",
@@ -5676,17 +5676,17 @@
         "unusedAssets": {
           "description": "Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).",
           "type": "boolean",
-          "added": "5.110.0"
+          "added": "5.111.0"
         },
         "unusedConfig": {
           "description": "Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched (requires 'hints' to be enabled).",
           "type": "boolean",
-          "added": "5.110.0"
+          "added": "5.111.0"
         },
         "unusedModules": {
           "description": "Report modules bundled although nothing uses what they export, naming the re-export or the side-effect statement that kept each one (requires 'hints' to be enabled).",
           "type": "boolean",
-          "added": "5.110.0"
+          "added": "5.111.0"
         }
       }
     },

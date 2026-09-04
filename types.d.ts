@@ -22358,7 +22358,7 @@ declare interface PerformanceOptions {
 
 	/**
 	 * Report source maps that cost more than they give: a production 'devtool' that writes the map into the JavaScript, and modules a loader transformed without returning a map, which leaves positions pointing at the loader's output (requires 'hints' to be enabled).
-	 * @since 5.110.0
+	 * @since 5.111.0
 	 */
 	sourceMaps?: boolean;
 
@@ -22388,19 +22388,19 @@ declare interface PerformanceOptions {
 
 	/**
 	 * Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).
-	 * @since 5.110.0
+	 * @since 5.111.0
 	 */
 	unusedAssets?: boolean;
 
 	/**
 	 * Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched (requires 'hints' to be enabled).
-	 * @since 5.110.0
+	 * @since 5.111.0
 	 */
 	unusedConfig?: boolean;
 
 	/**
 	 * Report modules bundled although nothing uses what they export, naming the re-export or the side-effect statement that kept each one (requires 'hints' to be enabled).
-	 * @since 5.110.0
+	 * @since 5.111.0
 	 */
 	unusedModules?: boolean;
 }
