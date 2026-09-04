@@ -9308,6 +9308,29 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 		expect(code).toBe("<p style=color:blue>x");
 	});
 
+	it("offers a list already at its shortest", async () => {
+		// The built-in makes `margin:0 auto` of it and it cannot go unquoted, so
+		// nothing beats the source — which is no reason to ask nobody.
+		/** @type {string[]} */
+		const offered = [];
+		const code = await deferredStyle(
+			'<p style="margin:0 auto">x</p>',
+			(source) => {
+				offered.push(source);
+				return "color:blue";
+			}
+		);
+
+		expect(offered).toEqual(["margin:0 auto"]);
+		expect(code).toBe("<p style=color:blue>x");
+	});
+
+	it("keeps a shortest list no renderer answers for", async () => {
+		expect(
+			await deferredStyle('<p style="margin:0 auto">x</p>', () => undefined)
+		).toBe('<p style="margin:0 auto">x');
+	});
+
 	it("minifies one a deferred renderer declines", async () => {
 		expect(
 			await deferredStyle('<p style="color:  #ff0000 ;">x</p>', () => undefined)
