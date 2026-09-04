@@ -68,8 +68,11 @@ const {
 	INSTALLED_FIXTURES
 } = require("../../tooling/compare-css-minifiers");
 const {
+	APP_SHELL,
 	CACHE: HTML_CACHE,
-	INSTALLED_DOCUMENTS
+	INLINED_STYLESHEETS,
+	INSTALLED_DOCUMENTS,
+	inlineCssPage
 } = require("../../tooling/compare-html-minifiers");
 
 /**
@@ -115,8 +118,8 @@ const benchmarkStylesheets = (minify) =>
  * @param {(source: string) => string} minify the printer to run
  * @returns {Fixture[]} the corpus, empty until that has been run once
  */
-const benchmarkDocuments = (minify) =>
-	readBenchmarkCache(
+const benchmarkDocuments = (minify) => {
+	const out = readBenchmarkCache(
 		HTML_CACHE,
 		INSTALLED_DOCUMENTS.map(
 			(/** @type {[string, string]} */ [label, file]) =>
@@ -124,6 +127,23 @@ const benchmarkDocuments = (minify) =>
 		),
 		minify
 	);
+	// The installed documents carry no `<style>` and no `style=`, so the pages
+	// the comparison builds are what reach the css minifier nested in the html.
+	if (out.length === 0) return out;
+	out.push({
+		name: "App shell (inline critical CSS)",
+		raw: APP_SHELL,
+		min: minify(APP_SHELL)
+	});
+	// From the css cache: that is the one installing framework stylesheets.
+	for (const [label, file] of INLINED_STYLESHEETS) {
+		const sheet = path.join(CSS_CACHE, "node_modules", file);
+		if (!fs.existsSync(sheet)) continue;
+		const raw = inlineCssPage(label, fs.readFileSync(sheet, "utf8"));
+		out.push({ name: label, raw, min: minify(raw) });
+	}
+	return out;
+};
 
 /**
  * @typedef {{ kind: string, condition: string }} Condition
