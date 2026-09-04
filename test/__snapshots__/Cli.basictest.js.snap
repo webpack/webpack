@@ -13172,6 +13172,32 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-copy-concurrency": Object {
+    "configs": Array [
+      Object {
+        "description": "Maximum number of files which are read at the same time. Defaults to '100'.",
+        "multiple": false,
+        "path": "output.copy.concurrency",
+        "type": "number",
+      },
+    ],
+    "description": "Maximum number of files which are read at the same time. Defaults to '100'.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "output-copy-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Directory 'from' is resolved from and the copied paths are relative to. Defaults to the compiler context, and to what 'from' names when it is not a glob.",
+        "multiple": true,
+        "path": "output.copy[].context",
+        "type": "string",
+      },
+    ],
+    "description": "Directory 'from' is resolved from and the copied paths are relative to. Defaults to the compiler context, and to what 'from' names when it is not a glob.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "output-copy-filename": Object {
     "configs": Array [
       Object {
@@ -13210,6 +13236,19 @@ Object {
     "description": "Whether the glob matches the case of a file name. Defaults to 'true'.",
     "multiple": true,
     "simpleType": "boolean",
+  },
+  "output-copy-glob-options-deep": Object {
+    "configs": Array [
+      Object {
+        "description": "How many directory levels below the base of the glob are read, where '1' reads only the base itself. Defaults to no limit.",
+        "multiple": true,
+        "path": "output.copy[].globOptions.deep",
+        "type": "number",
+      },
+    ],
+    "description": "How many directory levels below the base of the glob are read, where '1' reads only the base itself. Defaults to no limit.",
+    "multiple": true,
+    "simpleType": "number",
   },
   "output-copy-glob-options-dot": Object {
     "configs": Array [
@@ -13262,6 +13301,19 @@ Object {
     "description": "Directory the files are copied to, relative to 'output.path', which is where they land by default.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "output-copy-transform-cache": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether the result of the transform is cached.",
+        "multiple": true,
+        "path": "output.copy[].transform.cache",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether the result of the transform is cached.",
+    "multiple": true,
+    "simpleType": "boolean",
   },
   "output-cross-origin-loading": Object {
     "configs": Array [

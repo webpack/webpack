@@ -573,11 +573,15 @@ export type CompareBeforeEmit = boolean;
  * Copy files and directories to the output directory.
  * @since 5.111.0
  */
-export type Copy = CopyPattern[] | string;
+export type Copy = CopyPattern[] | string | CopyOptions;
 /**
  * A glob or a path of files which are copied to the output directory.
  */
 export type CopyPattern = string | CopyObjectPattern;
+/**
+ * Patterns of files which are copied to the output directory.
+ */
+export type CopyPatterns = CopyPattern[];
 /**
  * This option enables cross-origin loading of chunks.
  */
@@ -887,10 +891,6 @@ export type AssetModuleOutputPath =
  */
 export type AssetParserDataUrlFunction =
 	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
-/**
- * Patterns of files which are copied to the output directory.
- */
-export type CopyPatterns = CopyPattern[];
 /**
  * Enable/disable renaming of `@keyframes`.
  */
@@ -3200,17 +3200,27 @@ export interface CleanOptions {
  */
 export interface CopyObjectPattern {
 	/**
+	 * Directory 'from' is resolved from and the copied paths are relative to. Defaults to the compiler context, and to what 'from' names when it is not a glob.
+	 */
+	context?: string;
+	/**
 	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
 	 */
 	filename?: string | import("../lib/CopyPlugin").CopyFilenameFunction;
 	/**
-	 * Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.
+	 * Glob or path from where the files are copied.
 	 */
-	from: string;
+	from: string[] | string;
 	/**
 	 * Options of the glob in 'from'.
 	 */
 	globOptions?: CopyGlobOptions;
+	/**
+	 * Asset info of a copied file.
+	 */
+	info?:
+		| import("../lib/Compilation").AssetInfo
+		| import("../lib/CopyPlugin").CopyInfoFunction;
 	/**
 	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
 	 */
@@ -3218,7 +3228,27 @@ export interface CopyObjectPattern {
 	/**
 	 * Modifies the content of a copied file.
 	 */
-	transform?: import("../lib/CopyPlugin").CopyTransform;
+	transform?:
+		| {
+				/**
+				 * Whether the result of the transform is cached, and what it is cached under. Defaults to 'true'.
+				 */
+				cache?:
+					| boolean
+					| {
+							/**
+							 * Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.
+							 */
+							keys?:
+								| import("../lib/CopyPlugin").CopyTransformCacheKeys
+								| import("../lib/CopyPlugin").CopyTransformCacheKeysFunction;
+					  };
+				/**
+				 * Modifies the content of a copied file.
+				 */
+				transformer: import("../lib/CopyPlugin").CopyTransform;
+		  }
+		| import("../lib/CopyPlugin").CopyTransform;
 }
 /**
  * Options of the glob in 'from'.
@@ -3229,6 +3259,10 @@ export interface CopyGlobOptions {
 	 */
 	caseSensitive?: boolean;
 	/**
+	 * How many directory levels below the base of the glob are read, where '1' reads only the base itself. Defaults to no limit.
+	 */
+	deep?: number;
+	/**
 	 * Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.
 	 */
 	dot?: boolean;
@@ -3236,6 +3270,23 @@ export interface CopyGlobOptions {
 	 * Whether a symbolic link is walked into and copied. Defaults to 'true'.
 	 */
 	followSymlinks?: boolean;
+	/**
+	 * Globs of the files which are not copied, resolved like 'from'. A directory one of them matches is skipped whole.
+	 */
+	ignore?: string[];
+}
+/**
+ * Patterns of files which are copied to the output directory, and the options of the copying itself.
+ */
+export interface CopyOptions {
+	/**
+	 * Maximum number of files which are read at the same time. Defaults to '100'.
+	 */
+	concurrency?: number;
+	/**
+	 * Patterns of files which are copied to the output directory.
+	 */
+	patterns: CopyPatterns;
 }
 /**
  * The abilities of the environment where the webpack generated code should run.
@@ -5084,9 +5135,9 @@ export interface OutputNormalized {
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
 	/**
-	 * Patterns of files which are copied to the output directory.
+	 * Patterns of files which are copied to the output directory, and the options of the copying itself.
 	 */
-	copy?: CopyPatterns;
+	copy?: CopyOptions;
 	/**
 	 * This option enables cross-origin loading of chunks.
 	 */

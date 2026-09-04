@@ -56,3 +56,20 @@ it("should leave a dot file alone when 'dot' is false", () => {
 	expect(exists("no-dot/.dot.txt")).toBe(false);
 	expect(exists("no-dot/.hidden/inside.txt")).toBe(false);
 });
+
+it("should read no deeper than 'deep' says", () => {
+	expect(read("shallow/keep.txt")).toBe("keep");
+	expect(read("shallow/.dot.txt")).toBe("dot");
+	expect(exists("shallow/sub/deep.txt")).toBe(false);
+});
+
+it("should leave a file 'ignore' names alone", () => {
+	expect(read("no-sub/keep.txt")).toBe("keep");
+	expect(exists("no-sub/sub/deep.txt")).toBe(false);
+});
+
+it("should skip a directory 'ignore' names whole", () => {
+	expect(read("no-hidden/keep.txt")).toBe("keep");
+	expect(exists("no-hidden/.hidden/inside.txt")).toBe(false);
+	expect(exists("no-hidden/.hidden/deeper/ignored.txt")).toBe(false);
+});
