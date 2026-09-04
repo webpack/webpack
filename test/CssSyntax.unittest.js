@@ -5478,18 +5478,62 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				expect(minify(backslash, MODERN)).toBe(backslash);
 			});
 
-			it("keeps one whose dead pseudo a forgiving list only skips", () => {
+			it("keeps one a forgiving list still matches with", () => {
 				// Chrome parses `.a:is(.b,input::-ms-expand)` down to `.a:is(.b)` and
 				// paints with it, so the rule is not one no engine reads.
 				const is = ".a:is(.b,input::-ms-expand){color:red}";
 				expect(minify(is, MODERN)).toBe(is);
 				const where = ":where(.a,:-ms-input-placeholder){color:red}";
 				expect(minify(where, MODERN)).toBe(where);
-				// The name is matched the way an engine reads it, case and all.
-				const cased = ".a:IS(.b,:-ms-input-placeholder){color:red}";
-				expect(minify(cased, MODERN)).toBe(
-					".a:is(.b,:-ms-input-placeholder){color:red}"
+				// A list nested in one is read the same way, so the live `.b` carries
+				// both of them.
+				const nested = ".a:is(:is(.b,::-ms-expand)){color:red}";
+				expect(minify(nested, MODERN)).toBe(nested);
+				// The `:-ms-x` sits inside a string, so no pseudo is read out of it
+				// and the `)` there closes nothing.
+				const quoted = '.a:is([href="),::-ms-x"]){color:red}';
+				expect(minify(quoted, MODERN)).toBe(quoted);
+			});
+
+			it("drops one a forgiving list leaves nothing of", () => {
+				// Every argument is dead, so the list matches nothing and neither does
+				// what it qualifies.
+				expect(minify(".a:is(input::-ms-expand){color:red}", MODERN)).toBe("");
+				expect(minify(".a:where(input::-ms-expand){color:red}", MODERN)).toBe(
+					""
 				);
+				expect(minify(".a:is(:is(::-ms-expand)){color:red}", MODERN)).toBe("");
+			});
+
+			it("reads the rest of a selector past a forgiving list", () => {
+				// The list is stepped over as one, and what follows or precedes it is
+				// still read — `.a:is(.b)::-ms-expand` parses nowhere.
+				expect(minify(".a:is(.b)::-ms-expand{color:red}", MODERN)).toBe("");
+				expect(
+					minify(".a:where(.b) :-ms-input-placeholder{color:red}", MODERN)
+				).toBe("");
+				expect(minify("::-ms-expand:is(.b){color:red}", MODERN)).toBe("");
+				// The string holds a `)`, so only the one closing the list ends it.
+				expect(
+					minify('.a:is([href="),::-ms-x"])::-ms-expand{color:red}', MODERN)
+				).toBe("");
+				// Both names are matched the way an engine reads them, case and all.
+				expect(minify(".a:IS(.b)::-MS-EXPAND{color:red}", MODERN)).toBe("");
+			});
+
+			it("finds the end of a forgiving list an escape sits in", () => {
+				// The escaped `)` closes nothing, so the list runs on to the real one
+				// and `::-ms-expand` is still read after it.
+				expect(minify(".a:is(.b\\))::-ms-expand{color:red}", MODERN)).toBe("");
+				const live = ".a:is(.b\\)){color:red}";
+				expect(minify(live, MODERN)).toBe(live);
+				// A value holding both quotes keeps its escape, and the escaped one
+				// leaves the string open so the `)` in it does not end the list.
+				const quoted = '.a:is([href="a\'\\")b"]){color:red}';
+				expect(minify(quoted, MODERN)).toBe(quoted);
+				expect(
+					minify('.a:is([href="a\'\\")b"])::-ms-expand{color:red}', MODERN)
+				).toBe("");
 			});
 
 			it("drops one whose dead pseudo an unforgiving list keeps", () => {
