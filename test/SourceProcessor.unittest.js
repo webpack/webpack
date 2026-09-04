@@ -8,6 +8,7 @@ const {
 	NodeType: HtmlNodeType,
 	SourceProcessor: HtmlSourceProcessor
 } = require("../lib/html/syntax");
+const { PrintContext } = require("../lib/util/SourceProcessor");
 
 const CSS = "a {\n\tcolor : #ff0000 ;\n}\n";
 const HTML = "<div   class='a'  >\n  <p>x</p>\n</div>\n";
@@ -21,6 +22,74 @@ const LANGUAGES = [
 ];
 
 describe("SourceProcessor", () => {
+	// Dropping the store has to let go of the text, not just stop answering for
+	// it: a stylesheet prints ~300k nodes, which is the output over again.
+	describe("printed-text store", () => {
+		/**
+		 * @param {InstanceType<typeof PrintContext>} context print context
+		 * @returns {number} characters the store still holds
+		 */
+		const held = (context) => {
+			let chars = 0;
+			for (let i = 0; i < context._storeText.length; i++) {
+				chars += context._storeText[i].length;
+			}
+			return chars;
+		};
+
+		it("lets go of the text when the epoch moves", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"x".repeat(64)
+			);
+			for (let node = 0; node < 500; node++) context.printNode(node, null);
+			expect(held(context)).toBe(500 * 64);
+			context.dropStore();
+			expect(held(context)).toBe(0);
+		});
+
+		it("holds only what was printed since the last drop", () => {
+			const context = new PrintContext({ mode: "minify" }, () => "y".repeat(8));
+			for (let node = 0; node < 300; node++) {
+				context.printNode(node, null);
+				if (node % 10 === 9) context.dropStore();
+			}
+			expect(held(context)).toBe(0);
+			context.printNode(300, null);
+			expect(held(context)).toBe(8);
+		});
+
+		it("lets go of the text when a node is taken", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"t".repeat(16)
+			);
+			context.printNode(1, null);
+			expect(held(context)).toBe(16);
+			context.take(1);
+			expect(held(context)).toBe(0);
+		});
+
+		it("lets go of the text when a retractable node is taken", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"r".repeat(16)
+			);
+			context.printNode(1, null);
+			expect(held(context)).toBe(16);
+			context.takeRetractable(1);
+			expect(held(context)).toBe(0);
+		});
+
+		it("answers for a node printed since the drop, and no earlier one", () => {
+			const context = new PrintContext({ mode: "minify" }, () => "z");
+			context.printNode(1, null);
+			expect(context.get(1)).toBe("z");
+			context.dropStore();
+			expect(context.get(1)).toBeUndefined();
+			context.printNode(2, null);
+			expect(context.get(2)).toBe("z");
+			expect(context.get(1)).toBeUndefined();
+		});
+	});
+
 	// `mode` is the only thing that names the output, and it resolves in the
 	// shared processor — so both languages bound to it must agree.
 	describe("mode", () => {
