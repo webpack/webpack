@@ -11459,45 +11459,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-html-minify-json": Object {
-    "configs": Array [
-      Object {
-        "description": "Strip the whitespace between the tokens of a \`<script>\` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.html.minifyJson",
-        "type": "boolean",
-      },
-    ],
-    "description": "Strip the whitespace between the tokens of a \`<script>\` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-html-minify-srcdoc": Object {
-    "configs": Array [
-      Object {
-        "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
-        "multiple": false,
-        "path": "optimization.minimize.html.minifySrcdoc",
-        "type": "boolean",
-      },
-    ],
-    "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-html-minify-styles": Object {
-    "configs": Array [
-      Object {
-        "description": "Run the CSS minimizer over an inline \`<style>\` element and every \`style=\\"\\"\` attribute, with the options \`optimization.minimize.css\` names. On by default.",
-        "multiple": false,
-        "path": "optimization.minimize.html.minifyStyles",
-        "type": "boolean",
-      },
-    ],
-    "description": "Run the CSS minimizer over an inline \`<style>\` element and every \`style=\\"\\"\` attribute, with the options \`optimization.minimize.css\` names. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-minimize-html-normalize-attribute-quotes": Object {
     "configs": Array [
       Object {
@@ -12060,45 +12021,6 @@ Object {
       },
     ],
     "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-options-html-minify-json": Object {
-    "configs": Array [
-      Object {
-        "description": "Strip the whitespace between the tokens of a \`<script>\` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.",
-        "multiple": false,
-        "path": "optimization.minimizeOptions.html.minifyJson",
-        "type": "boolean",
-      },
-    ],
-    "description": "Strip the whitespace between the tokens of a \`<script>\` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-options-html-minify-srcdoc": Object {
-    "configs": Array [
-      Object {
-        "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
-        "multiple": false,
-        "path": "optimization.minimizeOptions.html.minifySrcdoc",
-        "type": "boolean",
-      },
-    ],
-    "description": "Minify the document held in an \`<iframe srcdoc>\` attribute. Off by default: the body is a whole document of its own (its base URL is \`about:srcdoc\`), so minifying it is safe, but the attribute is readable from script and a consumer comparing \`iframe.srcdoc\` byte for byte would see it change.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-options-html-minify-styles": Object {
-    "configs": Array [
-      Object {
-        "description": "Run the CSS minimizer over an inline \`<style>\` element and every \`style=\\"\\"\` attribute, with the options \`optimization.minimize.css\` names. On by default.",
-        "multiple": false,
-        "path": "optimization.minimizeOptions.html.minifyStyles",
-        "type": "boolean",
-      },
-    ],
-    "description": "Run the CSS minimizer over an inline \`<style>\` element and every \`style=\\"\\"\` attribute, with the options \`optimization.minimize.css\` names. On by default.",
     "multiple": false,
     "simpleType": "boolean",
   },

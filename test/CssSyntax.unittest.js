@@ -7552,6 +7552,33 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		expect(offered('.a{background:url("./img.png")}')).toEqual([]);
 	});
 
+	it("offers every language `EMBEDDED_LANGUAGES` names, and prints each answer", () => {
+		const { EMBEDDED_LANGUAGES } = require("../lib/css/syntax");
+
+		// One stylesheet reaching every language a media type can name.
+		const sheet =
+			'@import url("data:text/css,.inner {  color : red  }");' +
+			'.svg{background:url("data:image/svg+xml,<svg>   <rect/>   </svg>")}' +
+			'.html{background:url("data:text/html,<p>   x   </p>")}' +
+			".json{background:url('data:application/json,{ \"a\" :  1 }')}" +
+			'.js{background:url("data:text/javascript,var  a  =  1")}';
+
+		// Every entry needs a live offer site behind it, and nothing may arrive
+		// that the list does not name.
+		expect([...new Set(offered(sheet).map(([type]) => type))].sort()).toEqual(
+			[...EMBEDDED_LANGUAGES].sort()
+		);
+
+		// Being offered a payload is only half of minifying it.
+		expect(minify(sheet, (source, { type }) => `/*${type}*/`)).toBe(
+			"@import url(data:text/css,/*css*/);" +
+				".svg{background:url(data:image/svg+xml,/*svg*/)}" +
+				".html{background:url(data:text/html,/*html*/)}" +
+				".json{background:url(data:application/json,/*json*/)}" +
+				".js{background:url(data:text/javascript,/*javascript*/)}"
+		);
+	});
+
 	it("rebuilds the url in the shortest form that parses back to it", () => {
 		// A rebuilt url keeps its base64-ness, and loses quotes it no longer needs.
 		expect(minify(svgUrl, (s) => s.replace(/\s+/g, ""))).toBe(
@@ -7628,6 +7655,110 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 				})
 			).toBe(untouched);
 		}
+	});
+});
+
+describe("CssSyntax minify — one stylesheet reaching every embedded site", () => {
+	/**
+	 * @param {string} payload the payload to encode
+	 * @returns {string} it, base64-encoded
+	 */
+	const base64 = (payload) => Buffer.from(payload).toString("base64");
+
+	const PAYLOADS = {
+		css: "  .inner  {  color : red  ;  }  ",
+		svg: "<svg xmlns='http://www.w3.org/2000/svg'>   <rect/>   </svg>",
+		html: "<p>   x   </p><p>   y   ",
+		json: '{ "a" :  1 , "b" : [ 1 , 2 ] }',
+		javascript: "var   a   =   1  ;"
+	};
+
+	// Every site a stylesheet can embed a body at, each language reached twice —
+	// once written out and once base64 — plus the two a renderer never sees.
+	const STYLESHEET = `@import url("data:text/css,${PAYLOADS.css}") ;
+
+.svg  { background : url("data:image/svg+xml,${PAYLOADS.svg}") ; }
+.html { background : url("data:text/html,${PAYLOADS.html}") ; }
+.json { background : url('data:application/json,${PAYLOADS.json}') ; }
+.javascript { background : url("data:text/javascript,${PAYLOADS.javascript}") ; }
+
+.svg-base64  { background : url(data:image/svg+xml;base64,${base64(
+		PAYLOADS.svg
+	)}) ; }
+.css-base64  { background : url(data:text/css;base64,${base64(
+		PAYLOADS.css
+	)}) ; }
+.html-base64 { background : url(data:text/html;base64,${base64(
+		PAYLOADS.html
+	)}) ; }
+.json-base64 { background : url(data:application/json;base64,${base64(
+		PAYLOADS.json
+	)}) ; }
+.javascript-base64 { background : url(data:text/javascript;base64,${base64(
+		PAYLOADS.javascript
+	)}) ; }
+
+.png  { background : url("data:image/png;base64,iVBORw0KGgo=") ; }
+.file { background : url("./img.png") ; }
+`;
+
+	/**
+	 * @param {import("../lib/css/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+	 * @returns {string} the minified stylesheet
+	 */
+	const minify = (renderEmbeddedSource) =>
+		new SourceProcessor().process(STYLESHEET, {
+			mode: "minify",
+			renderEmbeddedSource
+		}).code;
+
+	it("offers each embedded body once, written out and base64 alike", () => {
+		const { EMBEDDED_LANGUAGES } = require("../lib/css/syntax");
+
+		/** @type {[string, string][]} */
+		const offered = [];
+
+		minify((source, info) => {
+			offered.push([info.type, source]);
+			return source;
+		});
+
+		// A media type naming no language, and a url that is not a payload at all,
+		// are never decoded — so neither reaches a renderer.
+		expect(offered.map(([type]) => type)).toEqual([
+			"css",
+			"svg",
+			"html",
+			"json",
+			"javascript",
+			"svg",
+			"css",
+			"html",
+			"json",
+			"javascript"
+		]);
+		// Nothing arrives that `EMBEDDED_LANGUAGES` does not name, and every entry
+		// it names has a live site behind it.
+		expect([...new Set(offered.map(([type]) => type))].sort()).toEqual(
+			[...EMBEDDED_LANGUAGES].sort()
+		);
+		// Base64 is a spelling of the url, not of the body: each language is handed
+		// the same source both times.
+		expect(offered.map(([, source]) => source)).toEqual(
+			offered.map(
+				([type]) => PAYLOADS[/** @type {keyof typeof PAYLOADS} */ (type)]
+			)
+		);
+	});
+
+	it("prints each answer back where it was asked for", () => {
+		expect(minify((source, { type }) => `/*${type}*/`)).toMatchSnapshot();
+	});
+
+	it("leaves every embedded body as written when no renderer is passed", () => {
+		// The stylesheet around them is minified; the bodies are not, webpack
+		// having no minifier of its own to fall back to here.
+		expect(minify()).toMatchSnapshot();
 	});
 });
 

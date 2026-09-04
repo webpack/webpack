@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases embedded everything exported tests extracts the script of an html entry into a chunk of its own 1`] = `"<script src=__html_2a0885fc_0.js>"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests leaves a css data url whose media type names no language 1`] = `".png{background:url(data:image/png;base64,AAAA)}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a css module of type asset/inline 1`] = `
+Object {
+  "decoded": ".inlineCss{color:red}",
+  "url": "data:text/css;base64,LmlubGluZUNzc3tjb2xvcjpyZWR9",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a css module of type asset/source 1`] = `".sourceCss{color:red}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a javascript module of type asset/inline 1`] = `
+Object {
+  "decoded": "var inlineJs=1;function f(){return inlineJs}",
+  "url": "data:text/javascript;base64,dmFyIGlubGluZUpzPTE7ZnVuY3Rpb24gZigpe3JldHVybiBpbmxpbmVKc30=",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a javascript module of type asset/source 1`] = `"var sourceJs=1;function f(){return sourceJs}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a json module of type asset/inline 1`] = `
+Object {
+  "decoded": "{\\"inlineJson\\":1,\\"b\\":[1,2]}",
+  "url": "data:application/json;base64,eyJpbmxpbmVKc29uIjoxLCJiIjpbMSwyXX0=",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a json module of type asset/source 1`] = `"{\\"sourceJson\\":1,\\"b\\":[1,2]}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a stylesheet javascript imports as a constructable stylesheet 1`] = `"@import url(data:text/css,.imported{color:red});.svg{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}.html{background:url(\\"data:text/html,<div>    <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{\\"a\\":1}')}.javascript{background:url(data:text/javascript,var\\\\ a=1;)}.svgBase64{background:url(data:image/svg+xml;base64,PHN2Zz4gPHJlY3QgZmlsbD0ncmVkJyAvPiA8L3N2Zz4=)}.cssBase64{background:url(data:text/css;base64,LmlubmVye2NvbG9yOnJlZH0=)}.htmlBase64{background:url(data:text/html;base64,PGRpdj4gICAgPHA+aGk8L3A+ICA8L2Rpdj4=)}.jsonBase64{background:url(data:application/json;base64,eyJhIjoxfQ==)}.javascriptBase64{background:url(data:text/javascript;base64,dmFyIGE9MTs=)}.png{background:url(data:image/png;base64,AAAA)}.sheet_sheet_css{color:red;margin:10px}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a stylesheet javascript imports as text 1`] = `"@import url(data:text/css,.imported{color:red});.svg{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}.html{background:url(\\"data:text/html,<div>    <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{\\"a\\":1}')}.javascript{background:url(data:text/javascript,var\\\\ a=1;)}.svgBase64{background:url(data:image/svg+xml;base64,PHN2Zz4gPHJlY3QgZmlsbD0ncmVkJyAvPiA8L3N2Zz4=)}.cssBase64{background:url(data:text/css;base64,LmlubmVye2NvbG9yOnJlZH0=)}.htmlBase64{background:url(data:text/html;base64,PGRpdj4gICAgPHA+aGk8L3A+ICA8L2Rpdj4=)}.jsonBase64{background:url(data:application/json;base64,eyJhIjoxfQ==)}.javascriptBase64{background:url(data:text/javascript;base64,dmFyIGE9MTs=)}.png{background:url(data:image/png;base64,AAAA)}.sheet_text_css{color:red;margin:10px}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a stylesheet the link export type emits as a css asset 1`] = `"@import url(data:text/css,.imported{color:red});.svg{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}.html{background:url(\\"data:text/html,<div>    <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{\\"a\\":1}')}.javascript{background:url(data:text/javascript,var\\\\ a=1;)}.svgBase64{background:url(data:image/svg+xml;base64,PHN2Zz4gPHJlY3QgZmlsbD0ncmVkJyAvPiA8L3N2Zz4=)}.cssBase64{background:url(data:text/css;base64,LmlubmVye2NvbG9yOnJlZH0=)}.htmlBase64{background:url(data:text/html;base64,PGRpdj4gICAgPHA+aGk8L3A+ICA8L2Rpdj4=)}.jsonBase64{background:url(data:application/json;base64,eyJhIjoxfQ==)}.javascriptBase64{background:url(data:text/javascript;base64,dmFyIGE9MTs=)}.png{background:url(data:image/png;base64,AAAA)}.sheet_asset_css{color:red;margin:10px}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies a stylesheet the style export type injects 1`] = `
+Array [
+  "@import url(data:text/css,.imported{color:red});.svg{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}.html{background:url(\\"data:text/html,<div>    <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{\\"a\\":1}')}.javascript{background:url(data:text/javascript,var\\\\ a=1;)}.svgBase64{background:url(data:image/svg+xml;base64,PHN2Zz4gPHJlY3QgZmlsbD0ncmVkJyAvPiA8L3N2Zz4=)}.cssBase64{background:url(data:text/css;base64,LmlubmVye2NvbG9yOnJlZH0=)}.htmlBase64{background:url(data:text/html;base64,PGRpdj4gICAgPHA+aGk8L3A+ICA8L2Rpdj4=)}.jsonBase64{background:url(data:application/json;base64,eyJhIjoxfQ==)}.javascriptBase64{background:url(data:text/javascript;base64,dmFyIGE9MTs=)}.png{background:url(data:image/png;base64,AAAA)}.sheet_style_css{color:red;margin:10px}",
+]
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an html document imported into javascript 1`] = `
+"<!doctype html><html lang=en><head><title>module</title><style>.moduleStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script src=__html_fc45afb8_0.js></script><script type=application/json>{\\"moduleJson\\":1}</script></head><body>
+<p style=color:#0f0>hi</p>
+<svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
+<iframe srcdoc=\\"<style>.moduleSrcdoc{color:#00f}</style>\\"></iframe>
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an html document webpack only emits 1`] = `
+"<!doctype html><html lang=en><head><title>asset</title><style>.assetStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script>var assetScript=1;function f(){return assetScript}</script><script type=application/json>{\\"assetJson\\":1}</script></head><body>
+<p style=color:#0f0>hi</p>
+<svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
+<iframe srcdoc=\\"<style>.assetSrcdoc{color:#00f}</style>\\"></iframe>
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an html document webpack parses as an entry 1`] = `
+"<!doctype html><html lang=en><head><title>entry</title><style>.entryStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script src=__html_2a0885fc_0.js></script><script type=application/json>{\\"entryJson\\":1}</script></head><body>
+<p style=color:#0f0>hi</p>
+<svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
+<iframe srcdoc=\\"<style>.entrySrcdoc{color:#00f}</style>\\"></iframe>
+
+</body></html>"
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an html module of type asset/inline 1`] = `
+Object {
+  "decoded": "<div class=a>
+	
+	<p>hi</p>
+</div>
+",
+  "url": "data:text/html;base64,PGRpdiBjbGFzcz1hPgoJCgk8cD5oaTwvcD4KPC9kaXY+Cg==",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an html module of type asset/source 1`] = `
+"<div class=a>
+	
+	<p>hi</p>
+</div>
+"
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an svg data url nested in an html style element 1`] = `"url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an svg module of type asset/inline 1`] = `
+Object {
+  "decoded": "<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\"> <rect width=\\"10\\" height=\\"10\\" /> </svg>",
+  "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMCAxMCI+IDxyZWN0IHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgLz4gPC9zdmc+",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an svg module of type asset/source 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\"> <rect width=\\"10\\" height=\\"10\\" /> </svg>"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies an svg subtree in html 1`] = `"<svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies css in a base64 css data url, and re-encodes it as base64 1`] = `
+Object {
+  "decoded": ".inner{color:red}",
+  "url": "data:text/css;base64,LmlubmVye2NvbG9yOnJlZH0=",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies css in a css data url 1`] = `"@import url(data:text/css,.imported{color:red});"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies css in an html style attribute 1`] = `"<p style=color:#0f0>"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies css in an html style element 1`] = `"<style>.assetStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style>"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies html in a base64 css data url, and re-encodes it as base64 1`] = `
+Object {
+  "decoded": "<div>    <p>hi</p>  </div>",
+  "url": "data:text/html;base64,PGRpdj4gICAgPHA+aGk8L3A+ICA8L2Rpdj4=",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies html in a css data url 1`] = `".html{background:url(\\"data:text/html,<div>    <p>hi</p>  </div>\\")}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies html in an html iframe srcdoc attribute 1`] = `"<iframe srcdoc=\\"<style>.assetSrcdoc{color:#00f}</style>\\">"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies javascript in a base64 css data url, and re-encodes it as base64 1`] = `
+Object {
+  "decoded": "var a=1;",
+  "url": "data:text/javascript;base64,dmFyIGE9MTs=",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies javascript in a css data url 1`] = `".javascript{background:url(data:text/javascript,var\\\\ a=1;)}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies javascript in an html script element 1`] = `"<script>var assetScript=1;function f(){return assetScript}</script>"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies json in a base64 css data url, and re-encodes it as base64 1`] = `
+Object {
+  "decoded": "{\\"a\\":1}",
+  "url": "data:application/json;base64,eyJhIjoxfQ==",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies json in a css data url 1`] = `".json{background:url('data:application/json,{\\"a\\":1}')}"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies json in an html script element typed application/json 1`] = `"<script type=application/json>{\\"assetJson\\":1}</script>"`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies svg in a base64 css data url, and re-encodes it as base64 1`] = `
+Object {
+  "decoded": "<svg> <rect fill='red' /> </svg>",
+  "url": "data:image/svg+xml;base64,PHN2Zz4gPHJlY3QgZmlsbD0ncmVkJyAvPiA8L3N2Zz4=",
+}
+`;
+
+exports[`ConfigCacheTestCases embedded everything exported tests minifies svg in a css data url 1`] = `".svg{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\")}"`;

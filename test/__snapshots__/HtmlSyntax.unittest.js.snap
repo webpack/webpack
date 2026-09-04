@@ -40,6 +40,26 @@ exports[`SourceProcessor — minifying what the round-trip guard checks minifies
 
 exports[`SourceProcessor — minifying what the round-trip guard checks minifies an inline sheet under a nested list 1`] = `"<ul><li>a<ul><li><style>a{color:red}</style></ul></ul>"`;
 
+exports[`htmlMinify — one document reaching every embedded site minifies with webpack's own minifiers when no renderer is given 1`] = `
+"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>.a{color:red;margin:10px}.svg{background:url(\\"data:image/svg+xml,<svg>   <rect  fill='red' />   </svg>\\")}.css{background:url(\\"data:text/css,.i {  color : #ff0000  }\\")}.html{background:url(\\"data:text/html,<div>  <!-- x -->  <p>hi</p>  </div>\\")}.json{background:url('data:application/json,{ \\"a\\" :  1 }')}.js{background:url(\\"data:text/javascript,var  a  =  1 ;\\")}.b64{background:url(data:text/css;base64,LmlubmVyIHsgIGNvbG9yIDogI2ZmMDAwMCAgfQ==)}.png{background:url(data:image/png;base64,AAAA)}</style><script type=application/json>{\\"a\\":1,\\"b\\":[1,2]}</script><script>  var  a  =  1 ;  function  f ( ) { return  a }  </script></head><body>
+<p style=color:red;margin:10px>styled</p>
+<svg viewBox=\\"0 0 2 2\\">   <rect fill=red />   </svg>
+<iframe srcdoc=\\"<style>.s{color:red}</style><p>   deep   \\"></iframe>
+<iframe srcdoc=\\"<p>bare\\"></iframe>
+
+</body></html>"
+`;
+
+exports[`htmlMinify — one document reaching every embedded site offers every body to a caller's renderer, and prints each answer 1`] = `
+"<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript)</script></head><body>
+<p style=ANSWER(css:block-contents)>styled</p>
+ANSWER(svg)
+<iframe srcdoc=\\"ANSWER(html)\\"></iframe>
+<iframe srcdoc=\\"ANSWER(html)\\"></iframe>
+
+</body></html>"
+`;
+
 exports[`parseHtml — insertion modes appends a comment after the body to the html element 1`] = `
 "| <!DOCTYPE html>
 | <html>

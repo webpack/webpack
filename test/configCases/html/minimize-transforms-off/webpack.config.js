@@ -16,8 +16,6 @@ module.exports = {
 				// `false` here would drop every comment; `"all"` is the level that
 				// makes none of them go.
 				comments: "all",
-				minifyJson: false,
-				minifyStyles: false,
 				normalizeAttributeQuotes: false,
 				normalizeEnumeratedAttributes: false,
 				normalizeListAttributes: false,

@@ -1,0 +1,16 @@
+@import url("data:text/css,.imported {  color : #ff0000  }") ;
+
+/* One payload per language a media type can name, plain and base64. */
+.svg { background : url("data:image/svg+xml,<svg>   <rect  fill='red' />   </svg>") ; }
+.html { background : url("data:text/html,<div>  <!-- dropped -->  <p>hi</p>  </div>") ; }
+.json { background : url('data:application/json,{ "a" :  1 }') ; }
+.javascript { background : url("data:text/javascript,var  a  =  1 ;") ; }
+.svgBase64 { background : url("data:image/svg+xml;base64,PHN2Zz4gICA8cmVjdCAgZmlsbD0ncmVkJyAvPiAgIDwvc3ZnPg==") ; }
+.cssBase64 { background : url("data:text/css;base64,LmlubmVyIHsgIGNvbG9yIDogI2ZmMDAwMCAgfQ==") ; }
+.htmlBase64 { background : url("data:text/html;base64,PGRpdj4gIDwhLS0gZHJvcHBlZCAtLT4gIDxwPmhpPC9wPiAgPC9kaXY+") ; }
+.jsonBase64 { background : url("data:application/json;base64,eyAiYSIgOiAgMSB9") ; }
+.javascriptBase64 { background : url("data:text/javascript;base64,dmFyICBhICA9ICAxIDs=") ; }
+/* A media type naming no language webpack knows is left as written. */
+.png { background : url("data:image/png;base64,AAAA") ; }
+
+.sheet_text_css { color : #ff0000 ;  margin : 10px 10px 10px 10px }

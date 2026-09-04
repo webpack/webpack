@@ -2550,21 +2550,6 @@ export interface OptimizationMinimizeHtml {
 	 */
 	minifyConditionalComments?: boolean;
 	/**
-	 * Strip the whitespace between the tokens of a `<script>` whose type is a JSON MIME type. Every literal is copied byte for byte, so no number is rounded and no escape rewritten. On by default.
-	 * @since 5.110.0
-	 */
-	minifyJson?: boolean;
-	/**
-	 * Minify the document held in an `<iframe srcdoc>` attribute. Off by default: the body is a whole document of its own (its base URL is `about:srcdoc`), so minifying it is safe, but the attribute is readable from script and a consumer comparing `iframe.srcdoc` byte for byte would see it change.
-	 * @since 5.110.0
-	 */
-	minifySrcdoc?: boolean;
-	/**
-	 * Run the CSS minimizer over an inline `<style>` element and every `style=""` attribute, with the options `optimization.minimize.css` names. On by default.
-	 * @since 5.110.0
-	 */
-	minifyStyles?: boolean;
-	/**
 	 * Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.
 	 * @since 5.110.0
 	 */
