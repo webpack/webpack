@@ -5825,6 +5825,41 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 		).toEqual({ css: "auto", html: "auto", asyncWebAssembly: true });
 	});
 
+	it("reads the extension out of a path-scoped alternation or class", () => {
+		// The sample path the detection probes with doesn't match a path-scoped
+		// rule, so the extension has to be read out of the pattern itself.
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{
+							test: /[\\/]src[\\/].*\.(css|scss)$/i,
+							use: ["style-loader", "css-loader"]
+						}
+					]
+				}
+			})
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{ glob: "src/**/*.{css,scss}", use: ["style-loader", "css-loader"] }
+					]
+				}
+			})
+		).toEqual({ css: false, html: "auto", asyncWebAssembly: true });
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{ test: /\/templates\/.*\.(html|htm)$/i, use: ["html-loader"] }
+					]
+				}
+			})
+		).toEqual({ css: "auto", html: false, asyncWebAssembly: true });
+	});
+
 	it("stays lenient about include/exclude narrowing", () => {
 		// A loader scoped to `include: /src/` already handles those files today, so
 		// the built-in type must stay off even for a resource outside that scope.
@@ -5955,10 +5990,34 @@ describe("experiments.typescript auto", () => {
 		).toBe(false);
 	});
 
+	it("keeps typescript off for a path-scoped ts-loader rule", () => {
+		// A rule the sample path can't match still names `.ts` in its alternation
+		// or class — leaving the built-in support on would reject `.tsx` outright.
+		expect(
+			resolve({
+				module: {
+					rules: [{ test: /\/components\/.*\.(ts|tsx)$/, use: ["ts-loader"] }]
+				}
+			})
+		).toBe(false);
+		expect(
+			resolve({
+				module: { rules: [{ test: /[\\/]src[\\/].*\.[jt]sx?$/, use: ["swc"] }] }
+			})
+		).toBe(false);
+	});
+
 	it("ignores loaders registered for unrelated extensions", () => {
 		expect(
 			resolve({
 				module: { rules: [{ test: /\.js$/i, use: ["babel-loader"] }] }
+			})
+		).toBe(true);
+		expect(
+			resolve({
+				module: {
+					rules: [{ test: /[\\/]src[\\/].*\.(js|mjs)$/, use: ["babel-loader"] }]
+				}
 			})
 		).toBe(true);
 	});

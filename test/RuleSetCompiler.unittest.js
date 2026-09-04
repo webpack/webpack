@@ -63,12 +63,125 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		);
 	});
 
+	it("detects a path-scoped regexp spelling the extension in an alternation", () => {
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.(css|scss)$/, use: ["css-loader"] }])
+		).toBe(true);
+		expect(has([{ test: /[\\/]src[\\/].*\.(?:css|less)$/, use: ["x"] }])).toBe(
+			true
+		);
+		expect(has([{ test: /[\\/]src[\\/].*\.(sa|sc|c)ss$/, use: ["x"] }])).toBe(
+			true
+		);
+		expect(has([{ test: /[\\/]src[\\/].*\.(scss|sass)$/, use: ["x"] }])).toBe(
+			false
+		);
+	});
+
+	it("detects a path-scoped regexp spelling the extension in a character class", () => {
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.[jt]sx?$/, use: ["x"] }], "/file.ts")
+		).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.[mc]?ts$/, use: ["x"] }], "/file.mts")
+		).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*\.[jt]sx?$/, use: ["x"] }], "/file.css")
+		).toBe(false);
+		// a range spells no fixed extension, so it stays unexpanded
+		expect(has([{ test: /[\\/]src[\\/].*\.[a-z]ss$/, use: ["x"] }])).toBe(
+			false
+		);
+	});
+
+	it("reads a capturing, non-capturing or named group the same way", () => {
+		expect(has([{ test: /[\\/]src[\\/].*\.(css)$/, use: ["x"] }])).toBe(true);
+		// built at runtime: a named group is past this project's `tsc` target
+		const named = (/** @type {string} */ alternatives) =>
+			new RegExp(`[\\\\/]src[\\\\/].*\\.(?<ext>${alternatives})$`);
+		expect(has([{ test: named("css|scss"), use: ["x"] }])).toBe(true);
+		expect(has([{ test: named("scss|sass"), use: ["x"] }])).toBe(false);
+	});
+
+	it("spells the extension in the case an `i` rule accepts", () => {
+		expect(has([{ test: /[\\/]src[\\/].*\.(CSS|SCSS)$/i, use: ["x"] }])).toBe(
+			true
+		);
+		expect(has([{ test: /[\\/]SRC[\\/].*\.Css$/i, use: ["x"] }])).toBe(true);
+		// without `i` the rule really does not match `.css`
+		expect(has([{ test: /[\\/]src[\\/].*\.(CSS|SCSS)$/, use: ["x"] }])).toBe(
+			false
+		);
+	});
+
+	it("detects an extension spelled behind an optional atom", () => {
+		expect(has([{ test: /[\\/]src[\\/].*\.s?css$/, use: ["x"] }])).toBe(true);
+		expect(has([{ test: /[\\/]src[\\/].*\.s?ass$/, use: ["x"] }])).toBe(false);
+	});
+
+	it("skips escapes and character classes inside an alternation", () => {
+		expect(has([{ test: /[\\/]src[\\/].*(\.css|\.less)$/, use: ["x"] }])).toBe(
+			true
+		);
+		expect(
+			has([{ test: /[\\/]src[\\/].*(\.[ms]css|\.css)$/, use: ["x"] }])
+		).toBe(true);
+		expect(
+			has([{ test: /[\\/]src[\\/].*(\.[ms]css|\.less)$/, use: ["x"] }])
+		).toBe(false);
+	});
+
+	it("leaves a pattern generated from a list of paths unexpanded", () => {
+		// a kilobyte-long generated pattern (test262's harness has one) costs 165ms
+		// to expand per compilation, so past the cap only an outright spelling reads
+		const paths = Array.from(
+			{ length: 60 },
+			(_, i) => `(?:case-${i}/fixture\\.js$)`
+		).join("|");
+		expect(
+			has([
+				{ test: new RegExp(`${paths}|(?:styles/x\\.(css|scss)$)`), use: ["x"] }
+			])
+		).toBe(false);
+		// the extension is still read where the pattern spells it outright
+		expect(
+			has([{ test: new RegExp(`${paths}|(?:styles/x\\.css$)`), use: ["x"] }])
+		).toBe(true);
+	});
+
+	it("expands past a lookaround and stops at the spelling cap", () => {
+		expect(
+			has([{ test: /[\\/]src[\\/](?!vendor)((.*))\.(css|scss)$/, use: ["x"] }])
+		).toBe(true);
+		// an expression with more spellings than the cap keeps what it reached
+		expect(
+			has([
+				{
+					test: /[\\/]src[\\/](a|b)(c|d)(e|f)(g|h)(i|j)(k|l)(m|n)\.(css|scss)$/,
+					use: ["x"]
+				}
+			])
+		).toBe(false);
+	});
+
 	it("detects a filename-scoped glob via the extension probe", () => {
 		expect(has([{ test: { glob: "**/*.module.css" }, use: ["x"] }])).toBe(true);
 		expect(
 			has([{ test: { glob: ["**/*.js", "**/*.module.css"] }, use: ["x"] }])
 		).toBe(true);
 		expect(has([{ test: { glob: "**/*.scss" }, use: ["x"] }])).toBe(false);
+	});
+
+	it("detects a path-scoped glob spelling the extension in braces", () => {
+		expect(has([{ test: { glob: "src/**/*.{css,scss}" }, use: ["x"] }])).toBe(
+			true
+		);
+		expect(
+			has([{ test: { glob: "src/**/*.{ts,tsx}" }, use: ["x"] }], "/file.ts")
+		).toBe(true);
+		expect(has([{ test: { glob: "src/**/*.{scss,sass}" }, use: ["x"] }])).toBe(
+			false
+		);
 	});
 
 	it("matches a rule-level glob", () => {
