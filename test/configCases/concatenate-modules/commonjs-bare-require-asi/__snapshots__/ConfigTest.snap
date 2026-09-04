@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-bare-require-asi commonjs-bare-require-asi should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	var __webpack_modules__ = ({});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	const __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/construct require */
+/******/ 	// \`new require(id)\` invokes the require function as a constructor, so a
+/******/ 	// primitive module.exports is discarded in favor of the freshly created
+/******/ 	// instance, exactly as in Node.js. A concatenated module has no require
+/******/ 	// call left, so apply that rule to its exports value instead.
+/******/ 	__webpack_require__.cr = (exports) => {
+/******/ 		const isObject =
+/******/ 			exports !== null && (typeof exports === \\"object\\" || typeof exports === \\"function\\");
+/******/ 		return isObject ? exports : Object.create(__webpack_require__.prototype);
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 5 modules ***!
+  \\\\******************************/
+
+// MODULE: ./a.cjs
+var a_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports.ran = true;
+
+});
+
+// MODULE: ./b.cjs
+var b_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports.ran = true;
+
+});
+
+// MODULE: ./ctor.cjs
+var ctor_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = function Ctor() {
+	this.ran = true;
+};
+
+});
+
+;// ./x.js
+function X() {
+	return 42;
+}
+
+;// ./entry.js
+
+
+const value = X();
+
+(a_namespaceFn())
+;(b_namespaceFn())
+
+;__webpack_require__.cr((ctor_namespaceFn()))
+
+;// ./index.js
+
+
+const a = (a_namespaceFn());
+const b = (b_namespaceFn());
+const index_Ctor = (ctor_namespaceFn());
+
+it(\\"should not merge adjacent require() statements via ASI\\", () => {
+	expect(value).toBe(42);
+	expect(a.ran).toBe(true);
+	expect(b.ran).toBe(true);
+});
+
+it(\\"should not merge a \`new require()\` statement via ASI\\", () => {
+	const instance = new index_Ctor();
+	expect(instance.ran).toBe(true);
+});
+
+/******/ })()
+;"
+`;

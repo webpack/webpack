@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-unused-reexport-asi commonjs-unused-reexport-asi should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 4 modules ***!
+  \\\\******************************/
+
+// MODULE: ./loader.cjs
+var loader_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports.Sub = function Sub() {
+	this.marker = \\"sub\\";
+};
+
+module.exports.load = function load(value) {
+	return value + 1;
+};
+
+});
+
+// MODULE: ./reexport-lib.cjs
+var reexport_lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+/* unused reexport */ ;(type_namespaceFn())
+/* unused reexport */ ;(loader_namespaceFn().Sub)
+module.exports.load = (loader_namespaceFn().load)
+
+});
+
+// MODULE: ./type.cjs
+var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = function Type() {
+	this.marker = \\"type\\";
+};
+
+});
+
+;// ./reexport-lib.cjs
+reexport_lib_namespaceFn();
+
+;// ./entry.mjs
+
+
+const entry_load = (loader_namespaceFn().load);
+
+;// ./index.js
+
+
+it(\\"should not merge an unused reexport's dropped assignment into the previous statement\\", () => {
+	expect(entry_load(1)).toBe(2);
+});
+
+/******/ })()
+;"
+`;
