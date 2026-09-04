@@ -18,8 +18,9 @@ module.exports = {
 		// One assertion per switch, naming what it stopped.
 		expect(page).toContain("<!-- an inert comment");
 		// No switch reaches a `style=""`: it is offered as css like an inline
-		// `<style>`, and the minified list it becomes needs no quotes.
+		// `<style>`, and a caller wanting it kept says so with its own renderer.
 		expect(page).toContain("style=color:red");
+		expect(page).toContain('href="  /a  "');
 		expect(page).toContain("<li>one</li>");
 		expect(page).toContain('disabled="disabled"');
 		expect(page).toContain('type="TEXT"');

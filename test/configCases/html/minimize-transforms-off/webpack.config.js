@@ -20,6 +20,7 @@ module.exports = {
 				normalizeEnumeratedAttributes: false,
 				normalizeListAttributes: false,
 				normalizeNumericAttributes: false,
+				normalizeUrlAttributes: false,
 				removeOptionalTags: false
 			}
 		},

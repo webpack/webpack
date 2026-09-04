@@ -2556,10 +2556,10 @@ export interface OptimizationMinimizeCss {
  */
 export interface OptimizationMinimizeHtml {
 	/**
-	 * Write a boolean attribute spelled with its own name (`disabled="disabled"`) as the bare name the spec canonicalizes it to. On by default.
+	 * Write a boolean attribute as the bare name its presence already means. The DOM reads `checked` from the attribute being there and never from its value, so `checked="checked"` and `checked=""` are the same element — but `getAttribute` hands back what was written. `true`, the default, rewrites only the spelling the spec itself canonicalizes, the attribute's own name; `"all"` rewrites any value, including the `checked="false"` that already means checked.
 	 * @since 5.110.0
 	 */
-	collapseBooleanAttributes?: boolean;
+	collapseBooleanAttributes?: "all" | boolean;
 	/**
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
@@ -2606,6 +2606,11 @@ export interface OptimizationMinimizeHtml {
 	 */
 	normalizeNumericAttributes?: boolean;
 	/**
+	 * Drop the ASCII whitespace around a URL value (`href`, `src`, `action`, `poster`, …), which resolving the URL skips over, so the request goes to the same place either way. On by default: `getAttribute` hands back the attribute as written, so a script comparing those bytes is the one this is turned off for.
+	 * @since 5.111.0
+	 */
+	normalizeUrlAttributes?: boolean;
+	/**
 	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals `class`, `id`, `style`, `dir`, `accesskey`, `itemprop`, `itemref`, `itemtype` and `part`, and every attribute reflecting a token list on the elements the spec defines it for — `rel` on `<a>`, `<area>`, `<form>` and `<link>`, `ping` on `<a>` and `<area>`, `headers` on `<td>` and `<th>`, `blocking` on `<link>`, `<script>` and `<style>`, `sizes` on `<link>`, `for` on `<output>` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so `<x-foo rel="">` and `<label for="">` keep it. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
 	 * @since 5.110.0
 	 */
@@ -2636,7 +2641,7 @@ export interface OptimizationMinimizeHtml {
 	 */
 	sortAttributes?: boolean;
 	/**
-	 * Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.
+	 * Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. Asked for on its own: a list this reorders is rewritten whether or not `normalizeListAttributes` is on, since another order is another spelling. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.
 	 * @since 5.110.0
 	 */
 	sortTokenLists?: boolean;
