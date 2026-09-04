@@ -81,6 +81,17 @@ const CASES = {
 		bailout: "a hot update can move this name",
 		lacks: "cssUrls = {"
 	},
+	"hmr-fullhash-css": {
+		file: "main.mjs",
+		expect: "partial",
+		bailout: "a hot update can move this name",
+		lacks: "cssUrls = {"
+	},
+	"hmr-hashed-css-depth": {
+		file: "js/main.mjs",
+		expect: "analyzable",
+		contains: /new URL\("\.\.\/lazy_css\.[0-9a-f]+\.css"/
+	},
 	"hmr-hashed-prefetch": {
 		file: "main.mjs",
 		expect: "analyzable",

@@ -157,6 +157,25 @@ module.exports = [
 			cssChunkFilename: "[name].[contenthash].css"
 		}
 	}),
+	// A name built from the compilation hash exists in no round a chunk is hashed in, so
+	// nothing settles it before the runtime module: the map keeps the runtime form.
+	base("hmr-fullhash-css", {
+		entry: "./index-css",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: { cssChunkFilename: "[name].[fullhash].css" }
+	}),
+	// Also analyzable: the runtime chunk sits in `js/` and its update at the root, so the
+	// settled name is carried as text behind each asset's own `../` depth.
+	base("hmr-hashed-css-depth", {
+		entry: "./index-css",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: {
+			filename: "js/[name].mjs",
+			cssChunkFilename: "[name].[contenthash].css"
+		}
+	}),
 	// Also analyzable: the hinted script names are read off the chunk hash the same way.
 	base("hmr-hashed-prefetch", {
 		entry: "./index-prefetch",
