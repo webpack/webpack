@@ -6,7 +6,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "stats",
-		unusedRules: true
+		unusedConfig: true
 	},
 	module: {
 		rules: [{ test: /\.never-matches$/, type: "asset/source" }]
