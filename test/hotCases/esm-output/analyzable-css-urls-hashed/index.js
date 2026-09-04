@@ -21,12 +21,11 @@ it("should bake hashed stylesheet urls and carry a moved one in the update", (do
 				update(done, true, () => {
 					loadMore()
 						.then(() => {
-							// The map the update re-shipped spells the name the stylesheet has
-							// now, so the loader attaches the updated one.
-							const link = stylesheets("lazy2_css").find(
-								(candidate) => !candidate.href.includes("?")
-							);
-							expect(link.sheet.css).toContain("orange");
+							// The map the update re-shipped spells the name the update loaded the
+							// stylesheet at, so the loader reuses that one instead of adding another.
+							const links = stylesheets("lazy2_css");
+							expect(links).toHaveLength(1);
+							expect(links[0].sheet.css).toContain("orange");
 							done();
 						})
 						.catch(done);
