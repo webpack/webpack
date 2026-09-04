@@ -11150,6 +11150,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-fold-case": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. \`@MEDIA\`, \`COLOR\`, \`:NTH-CHILD\`, \`URL(\`, \`1PX\` and \`currentColor\` become \`@media\`, \`color\`, \`:nth-child\`, \`url(\`, \`1px\` and \`currentcolor\`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. \`@charset\` is left as written, being read as bytes rather than matched, and \`!important\` is always written in lowercase because the printer writes the keyword rather than copying it.",
+        "multiple": false,
+        "path": "optimization.minimize.css.foldCase",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. \`@MEDIA\`, \`COLOR\`, \`:NTH-CHILD\`, \`URL(\`, \`1PX\` and \`currentColor\` become \`@media\`, \`color\`, \`:nth-child\`, \`url(\`, \`1px\` and \`currentcolor\`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. \`@charset\` is left as written, being read as bytes rather than matched, and \`!important\` is always written in lowercase because the printer writes the keyword rather than copying it.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-lower-unsupported": Object {
     "configs": Array [
       Object {
@@ -11264,6 +11277,19 @@ Object {
       },
     ],
     "description": "Write a \`:dir()\` the \`browserslist\` target cannot read as the \`[dir]\` attribute selector it approximates: \`a:dir(rtl)\` becomes \`a[dir=rtl]\`. Off until asked for, because the two are not the same question — \`:dir()\` reads the directionality an element resolves to, which it may inherit from an ancestor, while \`[dir=rtl]\` reads the attribute on the element itself, so an element inside a \`dir=\\"rtl\\"\` ancestor matches the first and not the second. Only in effect for a \`browserslist\` target that reads no \`:dir()\`; any other target names no browsers to answer for.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-rewrite-escapes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
+        "multiple": false,
+        "path": "optimization.minimize.css.rewriteEscapes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11741,6 +11767,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-css-fold-case": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. \`@MEDIA\`, \`COLOR\`, \`:NTH-CHILD\`, \`URL(\`, \`1PX\` and \`currentColor\` become \`@media\`, \`color\`, \`:nth-child\`, \`url(\`, \`1px\` and \`currentcolor\`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. \`@charset\` is left as written, being read as bytes rather than matched, and \`!important\` is always written in lowercase because the printer writes the keyword rather than copying it.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.foldCase",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. \`@MEDIA\`, \`COLOR\`, \`:NTH-CHILD\`, \`URL(\`, \`1PX\` and \`currentColor\` become \`@media\`, \`color\`, \`:nth-child\`, \`url(\`, \`1px\` and \`currentcolor\`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. \`@charset\` is left as written, being read as bytes rather than matched, and \`!important\` is always written in lowercase because the printer writes the keyword rather than copying it.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-css-lower-unsupported": Object {
     "configs": Array [
       Object {
@@ -11855,6 +11894,19 @@ Object {
       },
     ],
     "description": "Write a \`:dir()\` the \`browserslist\` target cannot read as the \`[dir]\` attribute selector it approximates: \`a:dir(rtl)\` becomes \`a[dir=rtl]\`. Off until asked for, because the two are not the same question — \`:dir()\` reads the directionality an element resolves to, which it may inherit from an ancestor, while \`[dir=rtl]\` reads the attribute on the element itself, so an element inside a \`dir=\\"rtl\\"\` ancestor matches the first and not the second. Only in effect for a \`browserslist\` target that reads no \`:dir()\`; any other target names no browsers to answer for.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-rewrite-escapes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.rewriteEscapes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write an escaped identifier the shortest way that names the same thing, in a value or an id: \`grid-area:\\\\66oot\` becomes \`grid-area:foot\` and \`#\\\\41 x\` becomes \`#Ax\`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.",
     "multiple": false,
     "simpleType": "boolean",
   },

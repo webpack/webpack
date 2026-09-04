@@ -9708,6 +9708,71 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 	});
 });
 
+describe("CssSyntax minify — `foldCase`", () => {
+	const shouted = [
+		[
+			"at-rule name",
+			"@MEDIA screen{a{color:red}}",
+			"@media screen{a{color:red}}"
+		],
+		["property name", ".a{COLOR:red}", ".a{color:red}"],
+		["pseudo name", ":NTH-CHILD(2n){color:red}", ":nth-child(2n){color:red}"],
+		["function name", ".a{background:URL(x.png)}", ".a{background:url(x.png)}"],
+		["unit", ".a{margin:1PX}", ".a{margin:1px}"],
+		["keyword value", ".a{color:currentColor}", ".a{color:currentcolor}"],
+		["media type", "@media SCREEN{a{color:red}}", "@media screen{a{color:red}}"]
+	];
+
+	for (const [what, source, folded] of shouted) {
+		it(`folds a ${what} on, and leaves it alone off`, () => {
+			expect(minifyForWith(source, ["chrome 120"], { foldCase: true })).toBe(
+				folded
+			);
+			expect(minifyForWith(source, ["chrome 120"], { foldCase: false })).toBe(
+				source
+			);
+		});
+	}
+
+	it("never folds a name the author chose", () => {
+		// A custom property, a custom ident and an id are case-sensitive, so the
+		// fold has to stop at each of them however loudly they are written.
+		const css =
+			"@keyframes Spin{0%{opacity:0}}.a{--Foo:1;animation-name:Spin;color:var(--Foo)}#Abc{grid-area:Foot}";
+		expect(minifyForWith(css, ["chrome 120"], { foldCase: true })).toBe(css);
+	});
+
+	it("leaves `@charset` as written", () => {
+		// It is read as bytes rather than matched, so folding it would turn a rule
+		// the engine drops into one that sets the sheet's encoding.
+		const css = '@CHARSET "utf-8";a{color:red}';
+		expect(
+			minifyForWith(css, ["chrome 120"], {
+				foldCase: true,
+				removeDeadRules: false
+			})
+		).toBe(css);
+	});
+});
+
+describe("CssSyntax minify — `rewriteEscapes`", () => {
+	const written = [
+		["a value's ident", ".a{grid-area:\\66oot}", ".a{grid-area:foot}"],
+		["an id", "#\\41 x{color:red}", "#Ax{color:red}"]
+	];
+
+	for (const [what, source, shorter] of written) {
+		it(`rewrites ${what} on, and leaves it alone off`, () => {
+			expect(
+				minifyForWith(source, ["chrome 120"], { rewriteEscapes: true })
+			).toBe(shorter);
+			expect(
+				minifyForWith(source, ["chrome 120"], { rewriteEscapes: false })
+			).toBe(source);
+		});
+	}
+});
+
 describe("CssSyntax minify — `@custom-selector`", () => {
 	const sheet = "@custom-selector :--h h1,h2;:--h{color:red}";
 	const on = { resolveCustomAtRules: true };

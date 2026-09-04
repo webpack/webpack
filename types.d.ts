@@ -6047,6 +6047,16 @@ declare interface CssTransformOptions {
 	lowerUnsupported?: boolean;
 
 	/**
+	 * write a name that matches ASCII case-insensitively — an at-rule, property, pseudo, function, unit or keyword — in lowercase
+	 */
+	foldCase?: boolean;
+
+	/**
+	 * write an escaped identifier the shortest way that names it, in a value or an id
+	 */
+	rewriteEscapes?: boolean;
+
+	/**
 	 * which comments survive: `"some"` (the default) the ones that carry something, `true` / `"all"` every one, `false` none, or the ones a pattern matches / a predicate accepts, over the comment's own text
 	 */
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
@@ -20207,6 +20217,12 @@ declare interface OptimizationMinimizeCss {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.
+	 * @since 5.111.0
+	 */
+	foldCase?: boolean;
+
+	/**
 	 * Write a spelling the `browserslist` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as `rgba()`, a double-position gradient stop as the two stops it names, `inset` / `overflow` / `place-*` as the longhands they set, `text-decoration` as its own longhands where a slot is newer than the shorthand, `system-ui` as the stack of platform font names it stands for, a `:lang()` or `:not()` holding a list as the `:is()` that means it, a media feature range as the `min-`/`max-` pair, and `light-dark()` as the custom-property pair a color scheme switches. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for. Off leaves every such spelling as written, which is how a stylesheet one of these rewrites gets wrong is minified; it never makes the minifier write a spelling the target cannot read.
 	 * @since 5.111.0
 	 */
@@ -20265,6 +20281,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.111.0
 	 */
 	rewriteDirSelector?: boolean;
+
+	/**
+	 * Write an escaped identifier the shortest way that names the same thing, in a value or an id: `grid-area:\66oot` becomes `grid-area:foot` and `#\41 x` becomes `#Ax`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.
+	 * @since 5.111.0
+	 */
+	rewriteEscapes?: boolean;
 
 	/**
 	 * Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.
