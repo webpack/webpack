@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-unused-reexport-asi-position commonjs-unused-reexport-asi-position should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = (module) => {
+/******/ 		const getter = module && module.__esModule ?
+/******/ 			() => (module['default']) :
+/******/ 			() => (module);
+/******/ 		__webpack_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 5 modules ***!
+  \\\\******************************/
+
+// MODULE: ./defaults.js
+var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var __webpack_unused_export__;
+
+
+(log_namespaceFn().push)(\\"defaults\\");
+
+__webpack_unused_export__ = { name: \\"core\\" };
+
+});
+
+// MODULE: ./lib.js
+var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// semicolon-free re-exports: dropping the unused ones must not let the
+// remaining expressions bind to the next statement
+/* unused reexport */ (type_namespaceFn())
+/* unused reexport */ ;(schema_namespaceFn())
+/* unused reexport */ ;/* unused export */ (defaults_namespaceFn(), undefined)
+module.exports.H = () => \\"loaded\\"
+
+});
+
+// MODULE: ./log.js
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+module.exports = [];
+
+});
+
+// MODULE: ./schema.js
+var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"schema\\");
+
+function Schema(types) {
+	this.types = types;
+}
+
+module.exports = Schema;
+
+});
+
+// MODULE: ./type.js
+var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+(log_namespaceFn().push)(\\"type\\");
+
+function Type(options) {
+	this.options = options;
+}
+
+module.exports = Type;
+
+});
+
+;// ./log.js
+log_namespaceFn();
+
+function log_default() { return log_default.c || (log_default.c = __webpack_require__.n(log_namespaceFn())); }
+;// ./lib.js
+lib_namespaceFn();
+
+;// ./index.js
+
+
+
+it(\\"should keep an unused re-export from swallowing the next statement\\", () => {
+	expect((0,lib_namespaceFn().H)()).toBe(\\"loaded\\");
+});
+
+it(\\"should still evaluate what an unused re-export required\\", () => {
+	expect((log_default()())).toEqual([\\"type\\", \\"schema\\", \\"defaults\\"]);
+});
+
+/******/ })()
+;"
+`;

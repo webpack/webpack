@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-require-asi-position commonjs-require-asi-position should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ \\"./a.js\\"
+/*!**************!*\\\\
+  !*** ./a.js ***!
+  \\\\**************/
+(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+(__webpack_require__(/*! ./order */ \\"./order.js\\").push)(\\"a\\");
+
+
+/***/ },
+
+/***/ \\"./b.js\\"
+/*!**************!*\\\\
+  !*** ./b.js ***!
+  \\\\**************/
+(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+(__webpack_require__(/*! ./order */ \\"./order.js\\").push)(\\"b\\");
+
+
+/***/ },
+
+/***/ \\"./order.js\\"
+/*!******************!*\\\\
+  !*** ./order.js ***!
+  \\\\******************/
+(module) {
+
+module.exports = [];
+
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	const __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = (module) => {
+/******/ 		const getter = module && module.__esModule ?
+/******/ 			() => (module['default']) :
+/******/ 			() => (module);
+/******/ 		__webpack_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
+(() => {
+\\"use strict\\";
+/*!******************************!*\\\\
+  !*** ./index.js + 1 modules ***!
+  \\\\******************************/
+
+// EXTERNAL MODULE: ./a.js
+var a_namespaceFn = () => {
+	return __webpack_require__(\\"./a.js\\");
+};
+
+// EXTERNAL MODULE: ./b.js
+var b_namespaceFn = () => {
+	return __webpack_require__(\\"./b.js\\");
+};
+
+// EXTERNAL MODULE: ./order.js
+var order = __webpack_require__(\\"./order.js\\");
+var order_default = /*#__PURE__*/__webpack_require__.n(order);
+;// ./side-effects.js
+// semicolon-free: each require opens a statement ASI would otherwise glue to
+// the previous one
+
+
+(a_namespaceFn())
+;(b_namespaceFn())
+
+
+
+;// ./index.js
+
+
+it(\\"should keep adjacent bare requires as separate statements\\", () => {
+	expect((order_default())).toEqual([\\"a\\", \\"b\\"]);
+});
+
+})();
+
+/******/ })()
+;"
+`;
