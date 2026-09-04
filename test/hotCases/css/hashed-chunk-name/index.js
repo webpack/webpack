@@ -15,7 +15,7 @@ it("should reload a lazily loaded stylesheet at the name the update gave it", (d
 					// the name that content has now.
 					const active = stylesheets().filter((l) => !l.sheet.disabled);
 					expect(active).toHaveLength(1);
-					expect(active[0].href).not.toBe(link.href.split("?")[0]);
+					expect(active[0].href.split("?")[0]).not.toBe(link.href);
 					expect(active[0].sheet.css).toContain("blue");
 					done();
 				})
