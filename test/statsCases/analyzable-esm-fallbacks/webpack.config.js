@@ -138,13 +138,49 @@ module.exports = [
 		experiments: { css: true },
 		plugins: [new webpack.HotModuleReplacementPlugin()]
 	}),
-	// The map keeps the runtime form under HMR where a name is settled only by the fill:
-	// an update could move it without touching the module the map is written into.
+	// Also analyzable: a hashed name settled in a round before the runtime chunk's is
+	// spelled into the runtime module, so an update that moves it re-ships the map.
 	base("hmr-hashed-css", {
 		entry: "./index-css",
 		experiments: { css: true },
 		plugins: [new webpack.HotModuleReplacementPlugin()],
 		output: { cssChunkFilename: "[name].[contenthash].css" }
+	}),
+	// The entry's own stylesheet is hashed after its runtime module is generated, so no
+	// update could carry that name: the map keeps the runtime form.
+	base("hmr-hashed-css-entry", {
+		entry: "./index-css-own",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: {
+			cssFilename: "[name].[contenthash].css",
+			cssChunkFilename: "[name].[contenthash].css"
+		}
+	}),
+	// A name built from the compilation hash exists in no round a chunk is hashed in, so
+	// nothing settles it before the runtime module: the map keeps the runtime form.
+	base("hmr-fullhash-css", {
+		entry: "./index-css",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: { cssChunkFilename: "[name].[fullhash].css" }
+	}),
+	// Also analyzable: the runtime chunk sits in `js/` and its update at the root, so the
+	// settled name is carried as text behind each asset's own `../` depth.
+	base("hmr-hashed-css-depth", {
+		entry: "./index-css",
+		experiments: { css: true },
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: {
+			filename: "js/[name].mjs",
+			cssChunkFilename: "[name].[contenthash].css"
+		}
+	}),
+	// Also analyzable: the hinted script names are read off the chunk hash the same way.
+	base("hmr-hashed-prefetch", {
+		entry: "./index-prefetch",
+		plugins: [new webpack.HotModuleReplacementPlugin()],
+		output: { chunkFilename: "[name].[chunkhash].mjs" }
 	}),
 	// Also analyzable: each runtime is measured against its own update chunk, so one
 	// whose id puts that chunk a directory down bakes beside one at the root.
