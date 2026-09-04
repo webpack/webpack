@@ -11575,13 +11575,13 @@ Object {
   "optimization-minimize-html-normalize-url-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which every URL parser strips before resolving it. On by default: the request goes to the same place either way, and \`getAttribute\` reads the trimmed string.",
+        "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which resolving the URL skips over, so the request goes to the same place either way. On by default: \`getAttribute\` hands back the attribute as written, so a script comparing those bytes is the one this is turned off for.",
         "multiple": false,
         "path": "optimization.minimize.html.normalizeUrlAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which every URL parser strips before resolving it. On by default: the request goes to the same place either way, and \`getAttribute\` reads the trimmed string.",
+    "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which resolving the URL skips over, so the request goes to the same place either way. On by default: \`getAttribute\` hands back the attribute as written, so a script comparing those bytes is the one this is turned off for.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12214,13 +12214,13 @@ Object {
   "optimization-minimize-options-html-normalize-url-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which every URL parser strips before resolving it. On by default: the request goes to the same place either way, and \`getAttribute\` reads the trimmed string.",
+        "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which resolving the URL skips over, so the request goes to the same place either way. On by default: \`getAttribute\` hands back the attribute as written, so a script comparing those bytes is the one this is turned off for.",
         "multiple": false,
         "path": "optimization.minimizeOptions.html.normalizeUrlAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which every URL parser strips before resolving it. On by default: the request goes to the same place either way, and \`getAttribute\` reads the trimmed string.",
+    "description": "Drop the ASCII whitespace around a URL value (\`href\`, \`src\`, \`action\`, \`poster\`, …), which resolving the URL skips over, so the request goes to the same place either way. On by default: \`getAttribute\` hands back the attribute as written, so a script comparing those bytes is the one this is turned off for.",
     "multiple": false,
     "simpleType": "boolean",
   },

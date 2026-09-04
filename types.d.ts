@@ -10852,7 +10852,7 @@ declare interface HtmlTransformOptions {
 	normalizeNumericAttributes?: boolean;
 
 	/**
-	 * drop the whitespace around a URL value (`href`, `src`, `action`, …), which every URL parser strips
+	 * drop the whitespace around a URL value (`href`, `src`, `action`, …), which resolving the URL skips over
 	 */
 	normalizeUrlAttributes?: boolean;
 
@@ -20413,7 +20413,7 @@ declare interface OptimizationMinimizeHtml {
 	normalizeNumericAttributes?: boolean;
 
 	/**
-	 * Drop the ASCII whitespace around a URL value (`href`, `src`, `action`, `poster`, …), which every URL parser strips before resolving it. On by default: the request goes to the same place either way, and `getAttribute` reads the trimmed string.
+	 * Drop the ASCII whitespace around a URL value (`href`, `src`, `action`, `poster`, …), which resolving the URL skips over, so the request goes to the same place either way. On by default: `getAttribute` hands back the attribute as written, so a script comparing those bytes is the one this is turned off for.
 	 * @since 5.111.0
 	 */
 	normalizeUrlAttributes?: boolean;
