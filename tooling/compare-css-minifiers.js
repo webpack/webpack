@@ -266,6 +266,18 @@ const MINIFIERS = [
 			).code
 	],
 	[
+		// The rivals shorten a custom property's value the way they shorten any
+		// other; webpack holds off unless told, since `getPropertyValue()` reads it.
+		"webpack+target+vars",
+		() => async (css) =>
+			(
+				await cssMinify({ "input.css": css }, undefined, {
+					environment: { browsers: MODERN_BROWSERS },
+					rewriteCustomProperties: true
+				})
+			).code
+	],
+	[
 		"esbuild",
 		() => {
 			const esbuild = load("esbuild");
