@@ -26576,7 +26576,7 @@ declare class SideEffectsFlagPlugin {
 	/**
 	 * Creates an instance of SideEffectsFlagPlugin.
 	 */
-	constructor(analyseSource?: boolean);
+	constructor(analyseSource?: boolean, recordStatement?: boolean);
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
