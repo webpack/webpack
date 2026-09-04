@@ -9,8 +9,8 @@ const PLUGIN_NAME = "BuildSymlinkedTreePlugin";
 const source = path.resolve(__dirname, "../../../js/copy-symlink-source");
 
 /**
- * Builds `real/a.txt`, a `link` to that directory, and a `loop` inside it
- * pointing back at the base.
+ * Builds `real/a.txt`, a `link` to that directory, a `loop` inside it pointing
+ * back at the base, and a relative link to the file.
  * @returns {void}
  */
 const buildTree = () => {
@@ -23,6 +23,8 @@ const buildTree = () => {
 		"junction"
 	);
 	fs.symlinkSync(source, path.join(source, "real/loop"), "junction");
+	// relative, so it still resolves once the link and its target are copied
+	fs.symlinkSync("real/a.txt", path.join(source, "relative.txt"), "file");
 };
 
 /** @type {import("../../../../").Configuration} */

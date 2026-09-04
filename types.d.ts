@@ -574,6 +574,17 @@ declare abstract class AssetSourceGenerator extends Generator {
 	): null | Source;
 }
 declare abstract class AssetSourceParser extends ParserClass {}
+declare interface AssetSymlink {
+	/**
+	 * what the link points at, left as it is written
+	 */
+	target: string;
+
+	/**
+	 * whether it points at a directory, which is what Windows needs in order to create one
+	 */
+	isDirectory: boolean;
+}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
@@ -5342,7 +5353,7 @@ declare interface CopyGlobOptions {
 	dot?: boolean;
 
 	/**
-	 * Whether a symbolic link is walked into and copied. Defaults to 'true'.
+	 * Whether a symbolic link is resolved and copied as what it points at. Defaults to 'true'; 'false' copies the link itself, pointing where it already points.
 	 */
 	followSymlinks?: boolean;
 
@@ -15157,6 +15168,11 @@ declare interface KnownAssetInfo {
 	copied?: boolean;
 
 	/**
+	 * when set, the asset is emitted as a symbolic link rather than as its content
+	 */
+	symlink?: AssetSymlink;
+
+	/**
 	 * size in bytes, only set after asset has been emitted
 	 */
 	size?: number;
@@ -21597,6 +21613,13 @@ declare interface OutputFileSystem {
 		pathLike: PathLikeFs,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	) => void;
+	symlink?: (
+		target: PathLikeFs,
+		path: PathLikeFs,
+		type: undefined | null | "file" | "dir" | "junction",
+		callback: (err: null | NodeJS.ErrnoException) => void
+	) => void;
+	readlink?: ReadlinkFs;
 	stat: StatFs;
 	lstat?: LStatFs;
 	readFile: ReadFileFs;
