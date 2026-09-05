@@ -527,13 +527,6 @@ describe("printer output in real Chrome", () => {
 
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
-			if (label === "wpt" && !hasCorpus()) {
-				it(NO_CORPUS, () => {
-					// No-op: the corpus is an optional git submodule.
-				});
-
-				return;
-			}
 			const one = corpora[at];
 
 			// One test per page, not per corpus: the file is what a defect is filed
@@ -689,12 +682,17 @@ describe("printer output in real Chrome", () => {
 	};
 
 	// Which corpora were built depends on what is checked out, so each names
-	// itself; a tier that cannot run reports that rather than reporting green.
+	// itself, and one that could not be built says so rather than going quiet.
 	for (const [at, one] of corpora.entries()) describeCorpus(at, one.label);
-	if (!corpora.some((one) => one.label === "benchmark corpus")) {
-		describe("benchmark corpus", () => {
-			it(NO_BENCHMARK_CORPUS, () => {
-				// No-op: the caches are built by the comparison scripts.
+	for (const [label, why] of [
+		["wpt", NO_CORPUS],
+		["benchmark corpus", NO_BENCHMARK_CORPUS]
+	]) {
+		if (corpora.some((one) => one.label === label)) continue;
+
+		describe(label, () => {
+			it(why, () => {
+				// No-op: both are optional, and each is built outside this suite.
 			});
 		});
 	}
