@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minify-inline-handlers minify-inline-handlers should compile 1`] = `
+"<!doctype html><div>
+	<button onclick=report(3)>plain body</button>
+	<form onsubmit=if(!window.ready)return!1;send()>
+		<input onfocus='track(\\"focus\\")'>
+	</form>
+	<a href=#x onclick=return!1>return only</a>
+	<div onunload=\\"  not( 'a handler here' )  \\">not a handler on a div</div>
+</div>
+"
+`;

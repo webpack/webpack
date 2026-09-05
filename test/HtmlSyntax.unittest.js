@@ -5397,6 +5397,142 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		]);
 	});
 
+	// Stands in for a JS minifier: comments and whitespace out, everything else
+	// as written.
+	const squeeze = (/** @type {string} */ source) =>
+		source
+			.replace(/\/\/[^\n]*/g, "")
+			.replace(/\s+/g, " ")
+			.replace(/\s*([(){};,])\s*/g, "$1")
+			.trim();
+
+	it("offers an event handler attribute and writes the answer back", () => {
+		const html = '<button onclick="  foo( 1 , 2 )  ">x</button>';
+
+		// `as` says which production of JavaScript the value is, the way a
+		// `style=""` is offered as the block contents it is rather than a sheet.
+		expect(offered(html)).toEqual([
+			["javascript", "event-handler", "  foo( 1 , 2 )  "]
+		]);
+		expect(minify(html, squeeze)).toBe("<button onclick=foo(1,2)>x</button>");
+	});
+
+	it("offers a handler whose top level is a `return`", () => {
+		// A handler body is a function body, where the `return` cancelling an
+		// event lives — which is why `as` is on the offer: no script holds one.
+		const html = '<form onsubmit="return  false"><input></form>';
+
+		expect(offered(html)).toEqual([
+			["javascript", "event-handler", "return  false"]
+		]);
+		expect(minify(html, () => "return!1")).toBe(
+			"<form onsubmit=return!1><input></form>"
+		);
+	});
+
+	it("offers a handler no JavaScript production could hold", () => {
+		// The printer reads none of it: what parses is the renderer's business,
+		// exactly as it is for an inline `<script>`.
+		expect(offered('<button onclick="var = broken(">x</button>')).toEqual([
+			["javascript", "event-handler", "var = broken("]
+		]);
+	});
+
+	it("offers a handler only where the name is one on that element", () => {
+		// `onunload` is a handler on `<body>` and text a script may read anywhere
+		// else, so only one of these two holds JavaScript.
+		expect(offered('<div onunload="a( 1 )">x</div>')).toEqual([]);
+		expect(offered('<body onunload="a( 1 )">x</body>')).toEqual([
+			["javascript", "event-handler", "a( 1 )"]
+		]);
+		// Foreign content carries the global ones too.
+		expect(offered('<svg><circle onclick="f( 1 )"/></svg>')[0]).toEqual([
+			"javascript",
+			"event-handler",
+			"f( 1 )"
+		]);
+	});
+
+	it("never offers an empty handler", () => {
+		// A reference spelling whitespace stays as written, so nothing is offered
+		// for it either — writing it out would make the attribute read as empty.
+		expect(
+			offered('<button onclick="  " onmouseover="" onfocus="&#32;">x</button>')
+		).toEqual([]);
+	});
+
+	it("keeps a minified handler through the print's own re-parse", () => {
+		// The adoption agency makes this print verify itself by re-parsing, which
+		// reads a renderer's answer as a value the print got wrong unless told.
+		expect(minify('<p>1<b>2<i onclick="f( 1 )">3</b>4</i>5</p>', squeeze)).toBe(
+			'<p>1<b>2<i onclick=f(1)>3</i></b><i onclick="f( 1 )">4</i>5'
+		);
+	});
+
+	it("offers every handler the document holds", () => {
+		expect(
+			offered('<p onclick="f( 1 )">a</p><p onclick="f( 1 )">b</p>')
+		).toEqual([
+			["javascript", "event-handler", "f( 1 )"],
+			["javascript", "event-handler", "f( 1 )"]
+		]);
+	});
+
+	it("offers a handler carrying character references decoded", () => {
+		// `&amp;&amp;` is an operator to JavaScript rather than an entity, and the
+		// answer is escaped back for the value it lands in.
+		const html = '<button onclick="a&amp;&amp;b( 1 )">x</button>';
+
+		expect(offered(html)).toEqual([
+			["javascript", "event-handler", "a&&b( 1 )"]
+		]);
+		expect(minify(html, squeeze)).toBe(
+			"<button onclick=a&&amp;b(1)>x</button>"
+		);
+	});
+
+	it("quotes a handler answer that needs it", () => {
+		expect(
+			minify('<button onclick="f( &quot;a&quot; )">x</button>', squeeze)
+		).toBe("<button onclick='f(\"a\")'>x</button>");
+	});
+
+	it("keeps a handler the renderer answered longer than the source", () => {
+		// A minifier ends a statement it was handed without one, so the shortest
+		// handlers come back a byte longer than they were written.
+		expect(minify('<p onclick="x">a</p>', () => "x;")).toBe("<p onclick=x>a");
+	});
+
+	it("leaves a handler alone where the renderer declines it", () => {
+		// Exactly what an untapped run writes, down to the quoting — and a renderer
+		// answering with what it was handed spells the same thing.
+		const html = '<button onclick="foo( 1 )" title="  a  ">x</button>';
+		const written = '<button onclick="foo( 1 )" title="  a  ">x</button>';
+
+		expect(minify(html, () => undefined)).toBe(minify(html));
+		expect(minify(html, () => undefined)).toBe(written);
+		expect(minify(html, (source) => source)).toBe(written);
+	});
+
+	it("answers a handler on a deferred print, `/>`-spelled tag included", async () => {
+		expect(
+			await deferred('<button onclick="  foo( 1 , 2 )  ">x</button>', squeeze)
+		).toEqual({
+			code: "<button onclick=foo(1,2)>x</button>",
+			offered: [["javascript", "event-handler", "  foo( 1 , 2 )  "]]
+		});
+		// A foreign `/>` reads back whether the last value ended unquoted, which an
+		// answer that has not arrived cannot decide: the source's quoting stands.
+		expect(
+			(await deferred('<svg><circle onclick="f( 1 )"/></svg>', squeeze)).code
+		).toBe('<svg><circle onclick="f(1)"/></svg>');
+		// There the answer is written only where it is shorter than the source: the
+		// quoting is already decided, so an equal one would only be a rewrite.
+		expect(
+			(await deferred('<svg><circle onclick="f(1)"/></svg>', squeeze)).code
+		).toBe('<svg><circle onclick="f(1)"/></svg>');
+	});
+
 	it("names html as the host of every body it offers", () => {
 		const hosts = new Set();
 		minify("<style>.a{color:red}</style><script>var a=1</script>", (s, i) => {
@@ -7344,7 +7480,7 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 <script>  var  a  =  1 ;  function  f ( ) { return  a }  </script>
 </head>
 <body>
-<p style="  COLOR : #ff0000 ;  margin : 10px 10px 10px 10px  ">styled</p>
+<p style="  COLOR : #ff0000 ;  margin : 10px 10px 10px 10px  " onclick="  f( 1 )  ;  g( 2 )  ;  h( 3 )  ">styled</p>
 <svg viewBox="0 0 2 2">   <rect  fill="red"  />   </svg>
 <iframe srcdoc="&lt;!-- c --&gt;&lt;style&gt;.s{ color : #ff0000 }&lt;/style&gt;&lt;p&gt;   deep   &lt;/p&gt;"></iframe>
 <iframe srcdoc=&lt;p&gt;bare&lt;/p&gt;></iframe>
@@ -7355,17 +7491,21 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 		/** @type {string[]} */
 		const offered = [];
 		/**
-		 * @param {string} _source the body offered
+		 * @param {string} source the body offered
 		 * @param {{ type: string, as?: string }} info what it is
 		 * @returns {string} a marker naming what was asked for
 		 */
-		const render = (_source, info) => {
+		const render = (source, info) => {
 			const name =
 				info.as === undefined ? info.type : `${info.type}:${info.as}`;
 
 			offered.push(name);
 
-			return `ANSWER(${name})`;
+			// A handler arrives as the function its body belongs to, and only the
+			// body of the function answered is written back.
+			return source.startsWith("function ")
+				? `function _(){ANSWER(${name})}`
+				: `ANSWER(${name})`;
 		};
 
 		const { code } = await htmlMinify({ "page.html": DOCUMENT }, undefined, {
@@ -7379,6 +7519,9 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 			"json",
 			"javascript",
 			"css:block-contents",
+			// The handler, spent as a whole script by the minifier before the
+			// renderer sees it — the printer offers it as `javascript:event-handler`.
+			"javascript",
 			"svg",
 			"html",
 			"html"
@@ -9162,6 +9305,104 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 				info.type === "css" ? "margin:0 auto" : undefined
 			)
 		).toBe("<svg><rect style=color:red /></svg>");
+	});
+});
+
+describe("htmlMinify — the function an event handler is asked about", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} src html source
+	 * @param {(source: string, info: { type: string, as?: string }) => EXPECTED_ANY} renderEmbeddedSource the renderer
+	 * @returns {Promise<string>} the minified html
+	 */
+	const min = async (src, renderEmbeddedSource) =>
+		(
+			await htmlMinify({ "page.html": src }, undefined, {
+				renderEmbeddedSource
+			})
+		).code;
+
+	it("asks about a whole script, since that is what a JS minifier takes", async () => {
+		/** @type {[string, string | undefined][]} */
+		const asked = [];
+
+		await min('<p onclick="  f( 1 )  ">x</p>', (source, info) => {
+			asked.push([source, info.as]);
+			return undefined;
+		});
+
+		// The body arrives inside the function it belongs to, and the production
+		// it was offered under is spent here rather than passed on.
+		expect(asked).toEqual([["function _(){  f( 1 )  \n}", undefined]]);
+	});
+
+	it("writes back the body of the function it is answered with", async () => {
+		expect(
+			await min('<p onclick="  f( 1 )  ">x</p>', () => "function _(){f(1)}")
+		).toBe("<p onclick=f(1)>x");
+	});
+
+	it("carries a `return` through, which is what a handler body may hold", async () => {
+		expect(
+			await min('<form onsubmit="return  false"><input></form>', (source) => {
+				expect(source).toBe("function _(){return  false\n}");
+				return "function _(){return!1}";
+			})
+		).toBe("<form onsubmit=return!1><input></form>");
+	});
+
+	it("names the function past any run of `_` the body holds", async () => {
+		/** @type {string[]} */
+		const asked = [];
+
+		await min('<p onclick="_( __ )">x</p>', (source) => {
+			asked.push(source);
+			return undefined;
+		});
+
+		// A body naming the same binding would resolve to the function around it
+		// rather than to what it meant.
+		expect(asked).toEqual(["function ___(){_( __ )\n}"]);
+	});
+
+	it("ends a line comment the body closes with", async () => {
+		// Without the newline the brace closing the function would be inside the
+		// comment, and nothing could parse what it was handed.
+		expect(
+			await min('<p onclick="f( 1 ) // done">x</p>', (source) =>
+				source.endsWith("// done\n}") ? "function _(){f(1)}" : "BROKEN"
+			)
+		).toBe("<p onclick=f(1)>x");
+	});
+
+	it("keeps the handler where the answer is not that one function", async () => {
+		const html = '<p onclick="f( 1 )">x</p>';
+		const written = '<p onclick="f( 1 )">x';
+
+		// Anything but the function minified: text around it, a second statement,
+		// and the empty answer a minifier dropping an unused declaration gives.
+		expect(await min(html, () => "f(1)")).toBe(written);
+		expect(await min(html, () => "function _(){f(1)}g()")).toBe(written);
+		expect(await min(html, () => "g();function _(){f(1)}")).toBe(written);
+		expect(await min(html, () => "")).toBe(written);
+	});
+
+	it("reports what a renderer threw over a handler", async () => {
+		// A body no JavaScript production holds is the renderer's to report, as an
+		// inline `<script>` that does not parse is.
+		const { code, errors } = await htmlMinify(
+			{ "page.html": '<p onclick="var = broken(">x</p>' },
+			undefined,
+			{
+				renderEmbeddedSource: () => {
+					throw new Error("Unexpected token");
+				}
+			}
+		);
+
+		expect(code).toBe('<p onclick="var = broken(">x');
+		expect(errors).toHaveLength(1);
 	});
 });
 

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<!-- Each handler goes to the JavaScript minimizer as the function its body
+	belongs to, so a `return` is minified in the production it is in. -->
+<div>
+	<button onclick="  var total = 1 + 2 ;  report( total )  ">plain body</button>
+	<form onsubmit="  if ( !window.ready ) { return false } ;  send( )  ">
+		<input onfocus="track( 'focus' )">
+	</form>
+	<a href="#x" onclick="return  false">return only</a>
+	<div onunload="  not( 'a handler here' )  ">not a handler on a div</div>
+</div>
