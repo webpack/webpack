@@ -10,7 +10,16 @@ const page = fs
 const SCRIPT_REGEXP = /<script\b[^>]*>([\s\S]*?)<\/script(?:[\s/][^>]*)?>/gi;
 const SCRIPT_OPEN_REGEXP = /<script\b/gi;
 
-const bodies = [...page.matchAll(SCRIPT_REGEXP)].map((match) => match[1]);
+// Read with `exec`: the harness runs this bundle on the Node baseline, which
+// has no `String.prototype.matchAll`.
+const bodies = [];
+for (
+	let match = SCRIPT_REGEXP.exec(page);
+	match !== null;
+	match = SCRIPT_REGEXP.exec(page)
+) {
+	bodies.push(match[1]);
+}
 
 // `output.html.inline` leaves a sentinel where each chunk's code goes and swaps
 // it in after the print, so the printer reads a stand-in rather than JavaScript.
@@ -38,5 +47,5 @@ it("emits a page whose every script parses", () => {
 // where it is a plain string rather than a directive.
 it("leaves the entry chunk's `use strict` where it is a directive", () => {
 	const entry = bodies.find((body) => body.includes("console.log"));
-	expect(entry.trimStart().startsWith('"use strict"')).toBe(true);
+	expect(/^\s*"use strict"/.test(entry)).toBe(true);
 });
