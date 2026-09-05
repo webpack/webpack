@@ -185,6 +185,18 @@ Spell names out in full — functions, variables, parameters, properties. Prefer
 
 The only exceptions are (1) established abbreviations webpack already uses pervasively (`ast`, `ns` for namespace, `id`, `url`, `css`, `js`, `dir`, `env`, `fs`) or spec-defined ones (`afe` for the HTML spec's "active formatting elements"), and (2) throwaway loop indices (`i`, `j`, `k`). When an abbreviation isn't already common in the codebase or the relevant spec, write the full word.
 
+### Search for an existing implementation before writing a new one
+
+> [!REQUIRED]
+
+**One implementation per job, everywhere in the repository.** Before writing a helper, a regexp, a fixture generator, or any block that "runs a build", "walks the module graph", "generates a project", search for one that already does it. Grep for the concept — and for the names it would plausibly carry — under the places it would live: `lib/util/` for general helpers, `test/harness/` for test and benchmark plumbing, `tooling/` for repo scripts, and the subsystem directory itself. Read what you find before concluding it does not fit.
+
+When something close exists, **use it**. When it is wrong, missing a case, or awkward for your caller, **fix or extend it in place** — widen a parameter, add an option, split it in two — and update its existing callers in the same commit. A second copy beside the first is what this section exists to prevent: the two drift, and the repository ends up holding two answers to one question with no rule for which is current.
+
+Two copies are acceptable only as a migration you intend to finish: a subsystem that supersedes an older one may run beside it for a while. Name the code it replaces in the PR and state when it goes away. Without that, it is duplication, not a migration.
+
+[Path regexps and helpers live in one file](#path-regexps-and-helpers-live-in-one-file) is this rule written out for the case that recurs most.
+
 ### Path regexps and helpers live in one file
 
 > [!REQUIRED]
@@ -205,6 +217,16 @@ A list of module types, source types or dependency types written into `lib/` cla
 **A feature flag is that same list in disguise.** Gating on `options.experiments.<x>` to mean "which types can exist here" is the harder version of the mistake to spot, because it reads like configuration rather than an enumeration — and it goes stale the same way.
 
 When a branch genuinely has to name types, **write it so an unknown type takes the safe side**. Name the one special case and let everything else fall to the general answer (`typePrefixEquals(type, JAVASCRIPT_TYPE)` … `else` reads the asset url), or list what provably needs nothing and treat the rest as needing it (`TYPES_WITHOUT_CHUNK_HANDLER`). A list whose `else` branch does nothing is the shape to avoid.
+
+### Prefer asynchronous APIs
+
+> [!REQUIRED]
+
+**Never reach for a `*Sync` API when an asynchronous one exists.** `readFileSync`, `writeFileSync`, `mkdirSync`, `existsSync`, `rmSync`, `execSync`, `spawnSync` and friends block the event loop, so in `lib/` they stall every concurrent module build in the same process, and in `test/` and `tooling/` they serialize work that would otherwise overlap. Use `fs/promises` (or the callback API where the surrounding code is callback-based) and make the calling function `async`; that a caller is currently synchronous is a reason to change the caller, not to block.
+
+The `fs` webpack itself reads user files through is the `InputFileSystem`/`OutputFileSystem` abstraction — go through it rather than through `node:fs` at all, and it only offers the asynchronous shape.
+
+Two narrow exceptions: process startup before anything else runs (`bin/`, a generator's own entry point), and a callback a third-party contract defines as synchronous. Anywhere else, a `*Sync` call needs the reason it cannot be awaited written next to it.
 
 ### Source file headers
 
