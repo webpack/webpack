@@ -134,6 +134,21 @@ const load = (name) => require(path.join(MODULES, name));
 // form markup. Neither installed fixture carries an inline `<style>`, a
 // `srcset` or a boolean attribute, so without this the comparison cannot see
 // what a minifier does with any of them.
+// Whether a tool minifies, passes through or mangles a large `<style>` is what
+// the inlined sheets decide.
+/** @type {[string, string][]} */
+const INSTALLED_DOCUMENTS = [
+	["HTML5 Boilerplate 9", "html5-boilerplate/dist/index.html"],
+	["Swagger UI 5", "swagger-ui-dist/index.html"]
+];
+
+/** @type {[string, string][]} */
+const INLINED_STYLESHEETS = [
+	["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
+	["Water.css 2 (inlined)", "water.css/out/water.css"],
+	["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
+];
+
 const APP_SHELL = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -288,25 +303,18 @@ const fixtures = async () => {
 	const { marked } = load("marked");
 	/** @type {[string, string][]} */
 	const out = [];
-	for (const [label, file] of [
-		[
-			"HTML5 Boilerplate 9",
-			path.join(MODULES, "html5-boilerplate/dist/index.html")
-		],
-		["Swagger UI 5", path.join(MODULES, "swagger-ui-dist/index.html")]
-	]) {
-		out.push([label, await fs.promises.readFile(file, "utf8")]);
+	for (const [label, file] of INSTALLED_DOCUMENTS) {
+		out.push([
+			label,
+			await fs.promises.readFile(path.join(MODULES, file), "utf8")
+		]);
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
 	out.push(["Component library page", componentPage(400)]);
 	// Real framework stylesheets, classless through component-sized, inlined
 	// whole: whether each tool minifies, passes through, or mangles a large
 	// `<style>` decides these pages.
-	for (const [label, file] of [
-		["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
-		["Water.css 2 (inlined)", "water.css/out/water.css"],
-		["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
-	]) {
+	for (const [label, file] of INLINED_STYLESHEETS) {
 		out.push([
 			label,
 			inlineCssPage(
@@ -853,15 +861,8 @@ if (require.main === module) {
 // is not this script.
 module.exports.APP_SHELL = APP_SHELL;
 module.exports.CACHE = CACHE;
-module.exports.INLINED_STYLESHEETS = /** @type {[string, string][]} */ ([
-	["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
-	["Water.css 2 (inlined)", "water.css/out/water.css"],
-	["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
-]);
-module.exports.INSTALLED_DOCUMENTS = /** @type {[string, string][]} */ ([
-	["HTML5 Boilerplate 9", "html5-boilerplate/dist/index.html"],
-	["Swagger UI 5", "swagger-ui-dist/index.html"]
-]);
+module.exports.INLINED_STYLESHEETS = INLINED_STYLESHEETS;
+module.exports.INSTALLED_DOCUMENTS = INSTALLED_DOCUMENTS;
 
 // The pages built here rather than installed. A reader that cannot await builds
 // the same documents from these.

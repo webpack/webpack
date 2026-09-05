@@ -99,6 +99,15 @@ const log = (message) => {
 	process.stderr.write(`${message}\n`);
 };
 
+// Built rather than installed: each is a label, the file it lands in, and the
+// source it is built from.
+/** @type {[string, string, string][]} */
+const GENERATED_FIXTURES = [
+	["Tailwind 4 (app-sized)", "tailwind-app.css", TAILWIND_APP],
+	["Tailwind 4 (wide utilities)", "tailwind-wide.css", TAILWIND_WIDE],
+	["Tailwind 4 + daisyUI 5", "tailwind-daisyui.css", TAILWIND_DAISYUI]
+];
+
 /**
  * @param {string} file a path
  * @returns {Promise<boolean>} whether it exists
@@ -161,11 +170,7 @@ const setup = async () => {
 			`${JSON.stringify(written, null, 2)}\n`
 		);
 	}
-	for (const [source, out] of [
-		[TAILWIND_APP, "tailwind-app.css"],
-		[TAILWIND_WIDE, "tailwind-wide.css"],
-		[TAILWIND_DAISYUI, "tailwind-daisyui.css"]
-	]) {
+	for (const [, out, source] of GENERATED_FIXTURES) {
 		const target = path.join(CACHE, out);
 		if (await exists(target)) continue;
 		log(`building ${out} …`);
@@ -222,9 +227,9 @@ const fixtures = () => [
 	.../** @type {[string, string][]} */ (
 		INSTALLED_FIXTURES.map(([label, file]) => [label, path.join(MODULES, file)])
 	),
-	["Tailwind 4 (app-sized)", path.join(CACHE, "tailwind-app.css")],
-	["Tailwind 4 (wide utilities)", path.join(CACHE, "tailwind-wide.css")],
-	["Tailwind 4 + daisyUI 5", path.join(CACHE, "tailwind-daisyui.css")]
+	.../** @type {[string, string][]} */ (
+		GENERATED_FIXTURES.map(([label, file]) => [label, path.join(CACHE, file)])
+	)
 ];
 
 // Each entry is a factory so the measuring worker loads only the one tool it
@@ -536,9 +541,7 @@ if (require.main === module) {
 
 // Where the cache holds each fixture, for a reader that is not this script.
 module.exports.CACHE = CACHE;
-module.exports.GENERATED_FIXTURES = /** @type {[string, string][]} */ ([
-	["Tailwind 4 (app-sized)", "tailwind-app.css"],
-	["Tailwind 4 (wide utilities)", "tailwind-wide.css"],
-	["Tailwind 4 + daisyUI 5", "tailwind-daisyui.css"]
-]);
+module.exports.GENERATED_FIXTURES = /** @type {[string, string][]} */ (
+	GENERATED_FIXTURES.map(([label, file]) => [label, file])
+);
 module.exports.INSTALLED_FIXTURES = INSTALLED_FIXTURES;
