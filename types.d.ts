@@ -585,6 +585,17 @@ declare interface AssetSymlink {
 	 */
 	isDirectory: boolean;
 }
+declare interface AssetTimestamps {
+	/**
+	 * last access time, in milliseconds
+	 */
+	atime: number;
+
+	/**
+	 * last modification time, in milliseconds
+	 */
+	mtime: number;
+}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
@@ -5422,6 +5433,11 @@ declare interface CopyObjectPattern {
 	 * Asset info of a copied file.
 	 */
 	info?: AssetInfo | ((file: CopiedFileData) => AssetInfo);
+
+	/**
+	 * Whether a copied file keeps the access and modification times of the file it was copied from. Defaults to 'false', which stamps it with the time it was written.
+	 */
+	preserveTimestamps?: boolean;
 
 	/**
 	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
@@ -15174,6 +15190,11 @@ declare interface KnownAssetInfo {
 	symlink?: AssetSymlink;
 
 	/**
+	 * when set, the file the asset is written to is stamped with these times
+	 */
+	timestamps?: AssetTimestamps;
+
+	/**
 	 * size in bytes, only set after asset has been emitted
 	 */
 	size?: number;
@@ -21621,6 +21642,12 @@ declare interface OutputFileSystem {
 		callback: (err: null | NodeJS.ErrnoException) => void
 	) => void;
 	readlink?: ReadlinkFs;
+	utimes?: (
+		path: PathLikeFs,
+		atime: string | number | Date,
+		mtime: string | number | Date,
+		callback: (err: null | NodeJS.ErrnoException) => void
+	) => void;
 	stat: StatFs;
 	lstat?: LStatFs;
 	readFile: ReadFileFs;
