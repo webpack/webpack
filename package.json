@@ -31,6 +31,7 @@
   "scripts": {
     "prepare": "husky",
     "setup": "node ./setup/setup.js",
+    "setup:agent": "node ./setup/agent.js",
     "prelint": "yarn setup",
     "lint": "yarn lint:code && yarn lint:special && yarn lint:types && yarn lint:types-test && yarn lint:types-benchmark && yarn lint:types-module-test && yarn lint:types-hot && yarn fmt:check && yarn lint:spellcheck",
     "lint:code": "node node_modules/eslint/bin/eslint.js --cache .",

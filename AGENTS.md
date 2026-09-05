@@ -26,6 +26,7 @@ All commands are defined in `package.json` `scripts`.
 | Command                                                              | What it does                                                                                                    |
 | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | `yarn fix`                                                           | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step. |
+| `yarn setup:agent`                                                   | Non-interactive setup for an agent or sandbox: install dependencies and link the checkout in as `webpack`.      |
 | `yarn fix:special`                                                   | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code.                           |
 | `yarn lint`                                                          | Full lint: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck (what CI runs).       |
 | `yarn tsc`                                                           | TypeScript type check of `lib/` JSDoc (catches type errors in annotations).                                     |
@@ -93,7 +94,7 @@ The directory listings below are the canonical map of the repository. **Whenever
 - `bin/` — `webpack` CLI entry point.
 - `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`). Those two need no arguments and no reading of their source: each runs webpack's CSS/HTML minifier and the ecosystem's over popular framework stylesheets and real documents, printing one table per fixture — output size raw and under gzip/brotli/zstd (the `test:size` settings), best-of-3 wall and cpu ms, peak RSS (each minifier × fixture measured in its own worker process, so the numbers are attributable), and whether the output lost classes / changed the DOM ("rejects it" rows mean the tool errored on that input). They install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies; expect the first run to install for a minute and every full run to take a few. `check-comment-length.js` (`yarn lint:comments`) reports the plain comments a change grows past the two-line limit of [Code comments](#code-comments). `measure-color-agreement.js` (`yarn measure:color-agreement`) is the third: it asks a real browser for its own color conversions rather than for a pixel, and prints how far they sit from webpack's — which is where the rounding margins in `lib/css/syntax.js` and the list of spaces an engine reads through another transfer come from. Re-run it (a few seconds; `PUPPETEER_EXECUTABLE_PATH` picks the binary) rather than adjusting either by hand.
 - `assembly/` — WebAssembly source for the hash function.
-- `setup/` — One-time setup scripts.
+- `setup/` — One-time setup scripts. `setup.js` (`yarn setup`) is the interactive one a contributor runs; `agent.js` (`yarn setup:agent`) is its non-interactive counterpart for an agent or a fresh sandbox — it verifies the lockfile instead of rewriting it, installs no global yarn, and links the checkout in as `node_modules/webpack` without touching yarn's machine-global link registry. Safe to re-run.
 
 **Schemas (the source of truth for webpack's config API)**
 
@@ -119,7 +120,8 @@ The directory listings below are the canonical map of the repository. **Whenever
 - `package.json` — All commands (defined in `scripts`).
 - `tsconfig*.json` — TypeScript configs (one per surface: `lib`, `hot`, types tests, validation, benchmarks).
 - `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — Lint/spell/test/type-gen configs.
-- `.github/workflows/`, `.github/scripts/` — CI.
+- `.github/workflows/`, `.github/scripts/` — CI, plus `copilot-setup-steps.yml`, which is not CI: it is the GitHub Copilot coding agent's environment setup, and its job name is the part the agent looks for.
+- `.claude/`, `.cursor/` — Agent environment setup, one file each: a `SessionStart` hook for Claude Code on the web, an `install` command for Cursor's cloud agents, and the Copilot workflow above. Every harness hard-codes the path it reads, so these cannot be merged into one directory — but each holds only the name of the command, never the setup itself, which lives in the vendor-neutral script above and which any other agent can run directly. The Claude hook is a no-op outside that sandbox (`CLAUDE_CODE_REMOTE`), so none of this changes a local checkout.
 - `test/patches/` — test-only dependency patches (e.g. jest-worker) applied via `git apply` in the CI Bun test job.
 
 **How data flows — adding or renaming a webpack option** requires edits in every layer, in this order:

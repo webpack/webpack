@@ -8,6 +8,12 @@ If not, do: `npm run setup`, the setup will also install `yarn` for you.
 
 That's all.
 
+## Automated environments
+
+An agent or a throwaway sandbox should run `yarn setup:agent` instead. It is the same setup, non-interactive and safe to re-run: it verifies `yarn.lock` rather than rewriting it, installs no global `yarn`, and links the checkout in as `node_modules/webpack` without touching yarn's machine-global link registry.
+
+Some agents run it for you: Claude Code on the web from a `SessionStart` hook, Cursor's cloud agents from `.cursor/environment.json`, and the GitHub Copilot coding agent from `.github/workflows/copilot-setup-steps.yml`.
+
 ## Setup manually
 
 ### Setup your local webpack repository

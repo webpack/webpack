@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ \"${CLAUDE_CODE_REMOTE:-}\" = \"true\" ]; then cd \"$CLAUDE_PROJECT_DIR\" && exec yarn setup:agent; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
