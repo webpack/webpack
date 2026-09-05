@@ -134,6 +134,19 @@ const load = (name) => require(path.join(MODULES, name));
 // form markup. Neither installed fixture carries an inline `<style>`, a
 // `srcset` or a boolean attribute, so without this the comparison cannot see
 // what a minifier does with any of them.
+/** @type {[string, string][]} */
+const INSTALLED_DOCUMENTS = [
+	["HTML5 Boilerplate 9", "html5-boilerplate/dist/index.html"],
+	["Swagger UI 5", "swagger-ui-dist/index.html"]
+];
+
+/** @type {[string, string][]} */
+const INLINED_STYLESHEETS = [
+	["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
+	["Water.css 2 (inlined)", "water.css/out/water.css"],
+	["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
+];
+
 const APP_SHELL = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -288,25 +301,18 @@ const fixtures = async () => {
 	const { marked } = load("marked");
 	/** @type {[string, string][]} */
 	const out = [];
-	for (const [label, file] of [
-		[
-			"HTML5 Boilerplate 9",
-			path.join(MODULES, "html5-boilerplate/dist/index.html")
-		],
-		["Swagger UI 5", path.join(MODULES, "swagger-ui-dist/index.html")]
-	]) {
-		out.push([label, await fs.promises.readFile(file, "utf8")]);
+	for (const [label, file] of INSTALLED_DOCUMENTS) {
+		out.push([
+			label,
+			await fs.promises.readFile(path.join(MODULES, file), "utf8")
+		]);
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
 	out.push(["Component library page", componentPage(400)]);
 	// Real framework stylesheets, classless through component-sized, inlined
 	// whole: whether each tool minifies, passes through, or mangles a large
 	// `<style>` decides these pages.
-	for (const [label, file] of [
-		["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
-		["Water.css 2 (inlined)", "water.css/out/water.css"],
-		["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
-	]) {
+	for (const [label, file] of INLINED_STYLESHEETS) {
 		out.push([
 			label,
 			inlineCssPage(
@@ -839,9 +845,23 @@ const main = async () => {
 	}
 };
 
-(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
-	(error) => {
-		log(String(error && error.stack ? error.stack : error));
-		process.exitCode = 1;
-	}
-);
+// Only as the entry point, so the documents below can be required from a test.
+if (require.main === module) {
+	(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
+		(error) => {
+			log(String(error && error.stack ? error.stack : error));
+			process.exitCode = 1;
+		}
+	);
+}
+
+// The documents that are files rather than pages this builds, for a reader that
+// is not this script.
+module.exports.APP_SHELL = APP_SHELL;
+module.exports.CACHE = CACHE;
+module.exports.INLINED_STYLESHEETS = INLINED_STYLESHEETS;
+module.exports.INSTALLED_DOCUMENTS = INSTALLED_DOCUMENTS;
+
+// The pages built here rather than installed. A reader that cannot await builds
+// the same documents from these.
+module.exports.inlineCssPage = inlineCssPage;
