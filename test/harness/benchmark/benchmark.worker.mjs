@@ -792,7 +792,10 @@ function buildConfiguration(test, baseline, realConfig, scenario, testDirectory)
 			? path.resolve(
 					testDirectory,
 					config.entry
-						? /\.(?:c|m)?js$/.test(config.entry)
+						? // Keep entries that already have an extension (JS or HTML).
+							// Bare names still get `.js` — the historical default entry shape.
+							/\.(?:c|m)?js$/i.test(config.entry) ||
+							/\.html$/i.test(config.entry)
 							? config.entry
 							: `${config.entry}.js`
 						: "./index.js"
@@ -869,6 +872,51 @@ function addBuildBench({
 }
 
 /**
+ * Resolve the on-disk file the watch scenario rewrites to trigger a rebuild.
+ * @param {NonNullable<Configuration["entry"]>} entry webpack entry
+ * @returns {string} absolute path of one entry file
+ */
+const resolveWatchEntryPath = (entry) => {
+	if (typeof entry === "string") return path.resolve(entry);
+	if (Array.isArray(entry)) {
+		const first = entry.find((item) => typeof item === "string");
+		if (typeof first === "string") return path.resolve(first);
+	} else if (entry && typeof entry === "object") {
+		for (const value of Object.values(entry)) {
+			if (typeof value === "string") return path.resolve(value);
+			if (Array.isArray(value)) {
+				const first = value.find((item) => typeof item === "string");
+				if (typeof first === "string") return path.resolve(first);
+			} else if (
+				value &&
+				typeof value === "object" &&
+				"import" in value &&
+				value.import
+			) {
+				const imp = value.import;
+				if (typeof imp === "string") return path.resolve(imp);
+				if (Array.isArray(imp)) {
+					const first = imp.find((item) => typeof item === "string");
+					if (typeof first === "string") return path.resolve(first);
+				}
+			}
+		}
+	}
+	throw new Error("Watch bench needs a string path in `entry`.");
+};
+
+/**
+ * Append a no-op change that keeps the entry parseable (JS statement or HTML comment).
+ * @param {string} entryPath entry file path
+ * @param {string} originalContent original file contents
+ * @returns {string} mutated contents
+ */
+const mutateWatchEntryContent = (entryPath, originalContent) =>
+	/\.html$/i.test(entryPath)
+		? `${originalContent}<!-- watch test -->`
+		: `${originalContent};console.log('watch test')`;
+
+/**
  * @param {object} params params
  * @param {Bench} params.bench bench
  * @param {string} params.taskName task name
@@ -882,7 +930,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 		throw new Error(`No entry for "${taskName}" bench.`);
 	}
 
-	const entry = path.resolve(/** @type {string} */ (config.entry));
+	const entry = resolveWatchEntryPath(config.entry);
 	const originalEntryContent = await fs.readFile(entry, "utf8");
 
 	/** @type {Watching | undefined} */
@@ -937,7 +985,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 				(resolve, reject) => {
 					writeFile(
 						entry,
-						`${originalEntryContent};console.log('watch test')`,
+						mutateWatchEntryContent(entry, originalEntryContent),
 						(err) => {
 							if (err) {
 								reject(err);
