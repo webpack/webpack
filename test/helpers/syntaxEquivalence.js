@@ -275,6 +275,10 @@ const installHelpers = () => {
 	// One word, so a number with its unit is read whole rather than as an ident.
 	const WORD_RE = /[\w-]/;
 
+	// CSS Syntax §4.2: a name code point is also anything non-ASCII, which the
+	// token after a color can start with.
+	const NAME_RE = /[\w-]|[\u0080-\uFFFF]/;
+
 	/**
 	 * Every color a value holds, as the pixel it paints. A color the engine hands
 	 * back as written — a `var()` fallback, the one `image()` carries — is a color
@@ -302,7 +306,7 @@ const installHelpers = () => {
 				COLOR_TOKEN_RE,
 				(color, at, whole) =>
 					`${painted(color)}${
-						WORD_RE.test(whole[at + color.length] || "") ? " " : ""
+						NAME_RE.test(whole[at + color.length] || "") ? " " : ""
 					}`
 			);
 			for (const ch of painting) {

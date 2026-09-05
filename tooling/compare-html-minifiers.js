@@ -134,8 +134,6 @@ const load = (name) => require(path.join(MODULES, name));
 // form markup. Neither installed fixture carries an inline `<style>`, a
 // `srcset` or a boolean attribute, so without this the comparison cannot see
 // what a minifier does with any of them.
-// Whether a tool minifies, passes through or mangles a large `<style>` is what
-// the inlined sheets decide.
 /** @type {[string, string][]} */
 const INSTALLED_DOCUMENTS = [
 	["HTML5 Boilerplate 9", "html5-boilerplate/dist/index.html"],
