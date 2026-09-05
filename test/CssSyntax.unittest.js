@@ -10141,6 +10141,27 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		expect(minify(sheet, true)).toBe(sheet);
 	});
 
+	// An at-rule this cannot join is emitted on its own path, which is where a
+	// rule waiting behind it is written out — and it declares what it declares.
+	it.each([
+		["@keyframes", "@keyframes k{from{opacity:0}}"],
+		["@font-face", "@font-face{font-family:x;src:url(a.woff2)}"]
+	])("keeps what a rule flushed by `%s` declares", (name, between) => {
+		const sheet = `.a{color:red}.b{color:blue}${between}.c{color:red}`;
+		expect(minify(sheet, true)).toBe(minify(sheet));
+	});
+
+	it.each([
+		["@keyframes", "@keyframes k{from{opacity:0}}"],
+		["@font-face", "@font-face{font-family:x;src:url(a.woff2)}"]
+	])(
+		"declines across `%s`, which it cannot see into either",
+		(name, between) => {
+			const sheet = `.a{color:red}${between}.c{color:red}`;
+			expect(minify(sheet, true)).toBe(minify(sheet));
+		}
+	);
+
 	it("merges where the rule between touches nothing the block does", () => {
 		expect(minify(".a{color:red}.b{margin:0}.c{color:red}", true)).toContain(
 			".a,.c"
