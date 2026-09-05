@@ -15959,13 +15959,13 @@ Object {
   "performance-unused-config": Object {
     "configs": Array [
       Object {
-        "description": "Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched.",
+        "description": "Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, 'module.rules' that never matched, and Module Federation 'shared' keys or 'remotes' nothing imported.",
         "multiple": false,
         "path": "performance.unusedConfig",
         "type": "boolean",
       },
     ],
-    "description": "Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched.",
+    "description": "Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, 'module.rules' that never matched, and Module Federation 'shared' keys or 'remotes' nothing imported.",
     "multiple": false,
     "simpleType": "boolean",
   },

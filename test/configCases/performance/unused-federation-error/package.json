@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "used-lib": "*",
+    "unused-lib": "*"
+  }
+}
