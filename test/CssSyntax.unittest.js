@@ -10052,3 +10052,164 @@ describe("cssMinify export", () => {
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
 });
+
+describe("SourceProcessor — mergeDistantRules", () => {
+	/**
+	 * @param {string} sheet the stylesheet
+	 * @param {boolean=} mergeDistantRules whether to give a rule a later one's selectors
+	 * @returns {string} the minified stylesheet
+	 */
+	const minify = (sheet, mergeDistantRules) =>
+		new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules
+		}).code;
+
+	it("gives an earlier rule the selectors of a later one printing the same block", () => {
+		expect(minify(".a{color:red}.b{margin:0}.c{color:red}", true)).toBe(
+			".a,.c{color:red}.b{margin:0}"
+		);
+	});
+
+	it("does nothing unless it is asked to", () => {
+		const sheet = ".a{color:red}.b{margin:0}.c{color:red}";
+		expect(minify(sheet)).toBe(sheet);
+		expect(minify(sheet, false)).toBe(sheet);
+	});
+
+	it("gathers a whole run into the first of them", () => {
+		expect(
+			minify(
+				".a{color:red}.b{margin:0}.c{color:red}.d{padding:0}.e{color:red}",
+				true
+			)
+		).toBe(".a,.c,.e{color:red}.b{margin:0}.d{padding:0}");
+	});
+
+	it("declines where a rule between declares what the block does", () => {
+		const sheet = ".a{color:red}.b{color:blue}.c{color:red}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("reads a shorthand between as declaring every longhand it holds", () => {
+		const sheet = ".a{margin-top:0}.b{margin:1px}.c{margin-top:0}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("reads a longhand between as declaring the shorthand that holds it", () => {
+		const sheet = ".a{margin:0}.b{margin-top:1px}.c{margin:0}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	// A shorthand does not always name its longhands as a prefix, so reading the
+	// name cannot answer this — `inset` sets `top`, `font` sets `line-height`.
+	it.each([
+		["inset", "top:1px", "inset:0"],
+		["font", "line-height:2", "font:12px serif"],
+		["gap", "row-gap:1px", "gap:0"],
+		["place-items", "align-items:start", "place-items:center"],
+		["columns", "column-count:2", "columns:3 auto"],
+		["flex-flow", "flex-direction:row", "flex-flow:column wrap"],
+		["grid-area", "grid-row-start:1", "grid-area:2/2/2/2"]
+	])(
+		"declines where `%s` between sets a longhand its name does not prefix",
+		(name, longhand, shorthand) => {
+			const sheet = `.a{${longhand}}.b{${shorthand}}.c{${longhand}}`;
+			expect(minify(sheet, true)).toBe(sheet);
+		}
+	);
+
+	it("declines where the block holds the shorthand and the rule between a longhand it sets", () => {
+		const sheet = ".a{inset:0}.b{top:1px}.c{inset:0}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("reads a shorthand between through the shorthands it holds", () => {
+		// `border` sets `border-width`, which sets `border-top-width`.
+		const sheet =
+			".a{border-top-width:0}.b{border:1px solid red}.c{border-top-width:0}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("reads `all` between as declaring everything", () => {
+		const sheet = ".a{color:red}.b{all:unset}.c{color:red}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("declines across an at-rule, whose own rules it cannot see into", () => {
+		const sheet = ".a{color:red}@media print{.x{width:0}}.c{color:red}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("merges where the rule between touches nothing the block does", () => {
+		expect(minify(".a{color:red}.b{margin:0}.c{color:red}", true)).toContain(
+			".a,.c"
+		);
+	});
+
+	it("declines a block that does not outweigh the selector it would write", () => {
+		// `{color:red}` is 11, so a selector of 22 or more is not worth the join.
+		const sheet = `.a{color:red}.b{margin:0}.${"x".repeat(22)}{color:red}`;
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("does not write a selector the list already carries", () => {
+		expect(
+			minify(".a{color:red}.b{margin:0}.c{color:red}.a{color:red}", true)
+		).not.toMatch(/\.a[^{]*,\.a/);
+	});
+
+	it("keeps a rule an identical later one would otherwise take back with it", () => {
+		// The grown rule is keyed again by what it now says: left under the text it
+		// went out as, a later copy of that text takes the whole rule back.
+		const sheet =
+			".selector-long-enough-to-decline{a:b}.q{margin:0}.c{a:b}.z{margin:1px}.selector-long-enough-to-decline{a:b}";
+		expect(minify(sheet, true)).toContain(".c");
+	});
+
+	it("emits the rule it was holding exactly once", () => {
+		// The merge returns early, so the held rule has to be let go with it.
+		const out = minify(
+			".a{color:red}.b{margin:0}.c{color:red}.d{margin:0}",
+			true
+		);
+		expect(out.match(/margin:0/g)).toHaveLength(1);
+	});
+
+	it.each(["::-moz-placeholder", "::-webkit-scrollbar", ":local(.x)"])(
+		"declines %s as the rule a list would grow onto",
+		(selector) => {
+			// One selector an engine cannot parse invalidates the list it stands in,
+			// so joining onto it would take the other selector down with it.
+			const sheet = `${selector}{color:red}.b{margin:0}.c{color:red}`;
+			expect(minify(sheet, true)).toBe(sheet);
+		}
+	);
+
+	it("merges rules nested in an at-rule", () => {
+		expect(
+			minify("@media print{.a{color:red}.b{margin:0}.c{color:red}}", true)
+		).toBe("@media print{.a,.c{color:red}.b{margin:0}}");
+	});
+
+	it("leaves the source map pointing at what each rule came from", () => {
+		const sheet = ".a{color:red}\n.b{margin:0}\n.c{color:red}\n";
+		const { code, map } = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true,
+			source: "in.css",
+			content: sheet
+		});
+		expect(code).toBe(".a,.c{color:red}.b{margin:0}");
+		expect(map).toBeDefined();
+	});
+
+	it("keeps every declaration the sheet had", () => {
+		const sheet =
+			".a{color:red}.b{margin:0}.c{color:red}.d{padding:0}.e{color:red}";
+		const out = minify(sheet, true);
+		for (const declaration of ["color:red", "margin:0", "padding:0"]) {
+			expect(out).toContain(declaration);
+		}
+	});
+});

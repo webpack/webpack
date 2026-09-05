@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-merge-distant-rules minimize-merge-distant-rules should compile 1`] = `
+Array [
+  ".alpha,.gamma{color:red}.spacer{margin:0}.delta{color:blue}.between{color:green}.epsilon{color:blue}.zeta{margin-top:0}.shorthand{margin:1px}.eta{margin-top:0}.theta{padding:0}@media print{.printed{width:0}}.iota{padding:0}",
+]
+`;
