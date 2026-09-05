@@ -886,14 +886,12 @@ const knownBugs = [
 	"expressions/dynamic-import/returns-promise.js",
 
 	// webpack bugs and improvements
-	// With namespace import we export and value and `default`, by spec we should export only `default`
+	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
+	// namespace has two own keys where the spec has one.
 	"import/import-attributes/json-via-namespace.js",
-	// `yield` as a strict-mode reserved word: webpack parses the source in
-	// sloppy mode, so the expected parse-time SyntaxError is not raised.
+	// The "strict" scenario prepends the directive to the bundled output, not to
+	// the source, so webpack parses `yield` as a plain identifier.
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
-	// A top-level `await using` makes the module async, like a bare top-level
-	// `await` does, so the Script-goal early error is not raised.
-	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
