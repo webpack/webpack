@@ -475,6 +475,90 @@ describe("Compiler", () => {
 		});
 	});
 
+	/**
+	 * @param {import("../lib/Compilation").AssetTimestamps} timestamps times the asset carries
+	 * @returns {import("../").WebpackPluginInstance} a plugin emitting an asset which carries them
+	 */
+	function emitAssetWithTimestamps(timestamps) {
+		const webpack = require("..");
+		const { RawSource } = require("webpack-sources");
+
+		return {
+			/**
+			 * @param {import("../").Compiler} compiler the compiler
+			 * @returns {void}
+			 */
+			apply(compiler) {
+				compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+					compilation.hooks.processAssets.tap(
+						{
+							name: "Test",
+							stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+						},
+						() => {
+							compilation.emitAsset("stamped.txt", new RawSource("stamped"), {
+								timestamps
+							});
+						}
+					);
+				});
+			}
+		};
+	}
+
+	it("should stamp an emitted asset with the times it carries", (done) => {
+		const webpack = require("..");
+
+		const timestamps = {
+			atime: Date.UTC(2020, 0, 2, 3, 4, 5),
+			mtime: Date.UTC(2020, 0, 3, 4, 5, 6)
+		};
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [emitAssetWithTimestamps(timestamps)]
+		});
+		const outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (outputFileSystem)
+		);
+		compiler.run((err) => {
+			if (err) return done(err);
+			const stats = outputFileSystem.statSync("/directory/stamped.txt");
+			expect(stats.mtimeMs).toBe(timestamps.mtime);
+			expect(stats.atimeMs).toBe(timestamps.atime);
+			done();
+		});
+	});
+
+	it("should fail when the output file system cannot set the times", (done) => {
+		const webpack = require("..");
+
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [
+				emitAssetWithTimestamps({ atime: Date.now(), mtime: Date.now() })
+			]
+		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ ({
+				...createFsFromVolume(new Volume()),
+				utimes: undefined
+			})
+		);
+		compiler.run((err) => {
+			expect(/** @type {Error} */ (err).message).toMatch(
+				/Unable to set the times of '.*stamped\.txt': the output file system cannot set them/
+			);
+			done();
+		});
+	});
+
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		let errored;
 		try {
