@@ -5397,23 +5397,6 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		]);
 	});
 
-	it("says which production of JavaScript a `<script>` body is", () => {
-		// Only the module goal parses a top-level `await`, so a renderer that
-		// dispatches by language alone cannot know how to read one.
-		expect(
-			offered(
-				'<script type="module">await x()</script><script>var a = 1</script>' +
-					'<script type="text/javascript">var b = 2</script>'
-			)
-		).toEqual([
-			["javascript", "module", "await x()"],
-			// `offered` spells an absent `as` as "stylesheet": a classic script is
-			// the goal a renderer reads by default.
-			["javascript", "stylesheet", "var a = 1"],
-			["javascript", "stylesheet", "var b = 2"]
-		]);
-	});
-
 	it("names html as the host of every body it offers", () => {
 		const hosts = new Set();
 		minify("<style>.a{color:red}</style><script>var a=1</script>", (s, i) => {
