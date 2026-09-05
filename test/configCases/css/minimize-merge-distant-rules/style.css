@@ -1,7 +1,7 @@
 /* Nothing between touches `color`, so the two join. */
-.alpha { color: red }
+.alpha { color: red; background: blue }
 .spacer { margin: 0 }
-.gamma { color: red }
+.gamma { color: red; background: blue }
 
 /* `color` between them, so these two stay apart. */
 .delta { color: blue }
@@ -17,3 +17,8 @@
 .theta { padding: 0 }
 @media print { .printed { width: 0 } }
 .iota { padding: 0 }
+
+/* The copy dropped is not worth twice the selector written, so these stay apart. */
+.kappa { outline: 0 }
+.spacing { margin: 2px }
+.lambda-is-a-long-name { outline: 0 }
