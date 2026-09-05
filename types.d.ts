@@ -25648,6 +25648,11 @@ declare abstract class RuntimeTemplate {
 	): boolean;
 
 	/**
+	 * Reports an analyzable-ESM bailout from outside this class.
+	 */
+	analyzableBailout(module: undefined | Module, reason: string): void;
+
+	/**
 	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
 	 * wasm/asset loader backends use to reference an emitted binary relative to the
 	 * current module (via `output.importMetaName`) instead of the runtime public-path
@@ -25921,6 +25926,18 @@ declare abstract class RuntimeTemplate {
 		 */
 		weak?: boolean;
 	}): string;
+
+	/**
+	 * The side-effect annotation for output another build reads back, which is the
+	 * only output it can pay for — elsewhere it is bytes with no consumer.
+	 */
+	sideEffectsAnnotation(): string;
+
+	/**
+	 * A module instantiation's side-effect annotation. Write it only where the
+	 * statement ends the call: a minifier reads `f(id)(x)` as one and drops it.
+	 */
+	moduleSideEffectsAnnotation(module: Module, moduleGraph: ModuleGraph): string;
 
 	/**
 	 * Returns the expression.
