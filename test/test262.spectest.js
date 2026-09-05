@@ -620,19 +620,9 @@ const compile = async (entry, scenario, options = {}) =>
 						reexportExportsPresence: exportsPresence || false
 					}
 				},
-				rules: [
-					// The strict scenario is defined as the source carrying the
-					// directive, so the entry is parsed strictly, not only run so.
-					...(scenario === "strict"
-						? [
-								{
-									test: (resource) => resource === entry,
-									use: path.resolve(__dirname, "./helpers/prependUseStrict.js")
-								}
-							]
-						: []),
+				rules:
 					// For top level await, maybe we can improve our parser to detect and switch to module
-					...(scenario === "module"
+					scenario === "module"
 						? [
 								{
 									// Avoid override `type` when we have `bytes` or `text` type
@@ -655,8 +645,7 @@ const compile = async (entry, scenario, options = {}) =>
 										system: false
 									}
 								}
-							])
-				]
+							]
 			},
 			externals: [
 				({ context, request }, callback) => {
@@ -900,6 +889,9 @@ const knownBugs = [
 	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
 	// namespace has two own keys where the spec has one.
 	"import/import-attributes/json-via-namespace.js",
+	// The "strict" scenario prepends the directive to the bundled output, not to
+	// the source, so webpack parses `yield` as a plain identifier.
+	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
