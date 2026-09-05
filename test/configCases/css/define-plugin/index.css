@@ -1,0 +1,4 @@
+body {
+	color: %ENV_COLOR%;
+	content: process.env.THEME;
+}
