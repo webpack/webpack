@@ -5423,6 +5423,148 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe("a{inset:1px 2px}");
 		});
 
+		describe("a rule only a gone engine could read", () => {
+			const MODERN = { browsers: ["chrome 120", "firefox 120", "safari 17"] };
+
+			it("drops one every selector of which needs a `-ms-` pseudo", () => {
+				expect(minify("input::-ms-expand{display:none}", MODERN)).toBe("");
+				expect(minify("input:-ms-input-placeholder{color:red}", MODERN)).toBe(
+					""
+				);
+			});
+
+			it("drops one that needs an `-o-` pseudo", () => {
+				expect(
+					minify(".opera-only :-o-prefocus{word-spacing:-.43em}", MODERN)
+				).toBe("");
+			});
+
+			it("keeps it where the selection still has that engine", () => {
+				const css = "input::-ms-expand{display:none}";
+				expect(minify(css, { browsers: ["ie 11"] })).toBe(css);
+			});
+
+			it("keeps it where no target is stated", () => {
+				const css = "input::-ms-expand{display:none}";
+				expect(minify(css)).toBe(css);
+			});
+
+			it("keeps a list one live selector stands in", () => {
+				// An unknown pseudo-element invalidates the whole list, so the live
+				// half matches nothing either — dropping the dead one would start it.
+				const css = ".a,input::-ms-expand{color:red}";
+				expect(minify(css, MODERN)).toBe(css);
+			});
+
+			it("keeps a prefix an engine in the selection reads", () => {
+				const css = "input::-webkit-slider-thumb{width:1px}";
+				expect(minify(css, MODERN)).toBe(css);
+				const moz = "input::-moz-range-thumb{width:1px}";
+				expect(minify(moz, MODERN)).toBe(moz);
+			});
+
+			it("reads no pseudo out of an escape or a quoted value", () => {
+				// The `:` of `.sm\\:-flex` and of `[href="a:-b"]` starts no pseudo, so
+				// neither rule is one an engine the target lost could read.
+				const escaped = ".sm\\:-flex{display:flex}";
+				expect(minify(escaped, MODERN)).toBe(escaped);
+				const quoted = '[href="a:-ms-b"]{color:red}';
+				expect(minify(quoted, MODERN)).toBe(quoted);
+				// The printer settles on one quote, so only the rule surviving is read.
+				expect(minify("[href='a:-ms-b']{color:red}", MODERN)).toBe(quoted);
+				// A `\` inside the value is stepped over with whatever it escapes, so
+				// the string still ends where it ends.
+				const backslash = '[title="a:-\\\\b"]{color:red}';
+				expect(minify(backslash, MODERN)).toBe(backslash);
+			});
+
+			it("keeps one a forgiving list still matches with", () => {
+				// Chrome parses `.a:is(.b,input::-ms-expand)` down to `.a:is(.b)` and
+				// paints with it, so the rule is not one no engine reads.
+				const is = ".a:is(.b,input::-ms-expand){color:red}";
+				expect(minify(is, MODERN)).toBe(is);
+				const where = ":where(.a,:-ms-input-placeholder){color:red}";
+				expect(minify(where, MODERN)).toBe(where);
+				// A list nested in one is read the same way, so the live `.b` carries
+				// both of them.
+				const nested = ".a:is(:is(.b,::-ms-expand)){color:red}";
+				expect(minify(nested, MODERN)).toBe(nested);
+				// The `:-ms-x` sits inside a string, so no pseudo is read out of it
+				// and the `)` there closes nothing.
+				const quoted = '.a:is([href="),::-ms-x"]){color:red}';
+				expect(minify(quoted, MODERN)).toBe(quoted);
+			});
+
+			it("drops one a forgiving list leaves nothing of", () => {
+				// Every argument is dead, so the list matches nothing and neither does
+				// what it qualifies.
+				expect(minify(".a:is(input::-ms-expand){color:red}", MODERN)).toBe("");
+				expect(minify(".a:where(input::-ms-expand){color:red}", MODERN)).toBe(
+					""
+				);
+				expect(minify(".a:is(:is(::-ms-expand)){color:red}", MODERN)).toBe("");
+			});
+
+			it("reads the rest of a selector past a forgiving list", () => {
+				// The list is stepped over as one, and what follows or precedes it is
+				// still read — `.a:is(.b)::-ms-expand` parses nowhere.
+				expect(minify(".a:is(.b)::-ms-expand{color:red}", MODERN)).toBe("");
+				expect(
+					minify(".a:where(.b) :-ms-input-placeholder{color:red}", MODERN)
+				).toBe("");
+				expect(minify("::-ms-expand:is(.b){color:red}", MODERN)).toBe("");
+				// The string holds a `)`, so only the one closing the list ends it.
+				expect(
+					minify('.a:is([href="),::-ms-x"])::-ms-expand{color:red}', MODERN)
+				).toBe("");
+				// Both names are matched the way an engine reads them, case and all.
+				expect(minify(".a:IS(.b)::-MS-EXPAND{color:red}", MODERN)).toBe("");
+			});
+
+			it("finds the end of a forgiving list an escape sits in", () => {
+				// The escaped `)` closes nothing, so the list runs on to the real one
+				// and `::-ms-expand` is still read after it.
+				expect(minify(".a:is(.b\\))::-ms-expand{color:red}", MODERN)).toBe("");
+				const live = ".a:is(.b\\)){color:red}";
+				expect(minify(live, MODERN)).toBe(live);
+				// A value holding both quotes keeps its escape, and the escaped one
+				// leaves the string open so the `)` in it does not end the list.
+				const quoted = '.a:is([href="a\'\\")b"]){color:red}';
+				expect(minify(quoted, MODERN)).toBe(quoted);
+				expect(
+					minify('.a:is([href="a\'\\")b"])::-ms-expand{color:red}', MODERN)
+				).toBe("");
+			});
+
+			it("drops one whose dead pseudo an unforgiving list keeps", () => {
+				// `:has()` and `:not()` take an unforgiving list, so Chrome drops the
+				// whole rule over the argument it cannot parse.
+				expect(
+					minify(".a:has(> :-ms-input-placeholder){color:red}", MODERN)
+				).toBe("");
+				expect(
+					minify(".a:not(:-ms-input-placeholder){color:red}", MODERN)
+				).toBe("");
+			});
+
+			it("drops one needing a prefix the data names nowhere", () => {
+				// `-khtml-` was Konqueror's: no table holds it, so every one of them
+				// is asked before the selector is read as dead.
+				expect(minify(".a :-khtml-gone{color:red}", MODERN)).toBe("");
+			});
+
+			it("leaves it where the rewrite is turned off", () => {
+				const css = "input::-ms-expand{display:none}";
+				expect(
+					new SourceProcessor().process(css, {
+						mode: "minify",
+						environment: MODERN,
+						transforms: { removeDeadRules: false }
+					}).code
+				).toBe(css);
+			});
+		});
+
 		it("merges the four corners, matched by name rather than position", () => {
 			// `corner-shape` lists its longhands by row and `{1,4}` writes them
 			// clockwise, so a positional read would cross two of them over.

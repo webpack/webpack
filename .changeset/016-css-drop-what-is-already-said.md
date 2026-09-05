@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Drop what a declaration, slot or query already says, and add `lowerUnsupported`.
+Drop what is already said or only a gone engine reads, add `lowerUnsupported`.
