@@ -8,6 +8,19 @@
 
 const fs = require("fs");
 const path = require("path");
+// Read from the comparison scripts, so a fixture added to one is added here.
+const {
+	CACHE: CSS_CACHE,
+	GENERATED_FIXTURES,
+	INSTALLED_FIXTURES
+} = require("../../tooling/compare-css-minifiers");
+const {
+	APP_SHELL,
+	CACHE: HTML_CACHE,
+	INLINED_STYLESHEETS,
+	INSTALLED_DOCUMENTS,
+	inlineCssPage
+} = require("../../tooling/compare-html-minifiers");
 
 /** @typedef {{ name: string, raw: string, min: string }} Fixture */
 
@@ -60,20 +73,6 @@ const buildCorpus = (dir, extension, minify) => {
 		};
 	});
 };
-
-// Read from the comparison scripts, so a fixture added to one is added here.
-const {
-	CACHE: CSS_CACHE,
-	GENERATED_FIXTURES,
-	INSTALLED_FIXTURES
-} = require("../../tooling/compare-css-minifiers");
-const {
-	APP_SHELL,
-	CACHE: HTML_CACHE,
-	INLINED_STYLESHEETS,
-	INSTALLED_DOCUMENTS,
-	inlineCssPage
-} = require("../../tooling/compare-html-minifiers");
 
 /**
  * Read a benchmark cache as a corpus. A file the cache does not hold is left
@@ -129,13 +128,15 @@ const benchmarkDocuments = (minify) => {
 	);
 	// The installed documents carry no `<style>` and no `style=`, so the pages
 	// the comparison builds are what reach the css minifier nested in the html.
-	if (out.length === 0) return out;
-	out.push({
-		name: "App shell (inline critical CSS)",
-		raw: APP_SHELL,
-		min: minify(APP_SHELL)
-	});
-	// From the css cache: that is the one installing framework stylesheets.
+	if (out.length > 0) {
+		out.push({
+			name: "App shell (inline critical CSS)",
+			raw: APP_SHELL,
+			min: minify(APP_SHELL)
+		});
+	}
+	// The sheets these inline come from the css cache, which is the one that
+	// installs them — so they stand whether or not the html cache is built.
 	for (const [label, file] of INLINED_STYLESHEETS) {
 		const sheet = path.join(CSS_CACHE, "node_modules", file);
 		if (!fs.existsSync(sheet)) continue;
