@@ -903,8 +903,6 @@ const knownBugs = [
 	"expressions/dynamic-import/custom-primitive.js",
 	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
 	"import/import-attributes/text-via-namespace.js",
-	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
-	"expressions/import.meta/distinct-for-each-module.js",
 	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
 	"module-code/namespace/internals/own-property-keys-binding-types.js",
 	"module-code/namespace/internals/own-property-keys-sort.js",
