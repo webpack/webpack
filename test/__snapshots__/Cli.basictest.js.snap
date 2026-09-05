@@ -11507,6 +11507,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-html-merge-scripts": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a run of adjacent \`<script>\` elements as one, joined by a newline and a \`;\`. Only bare ones fold — any attribute at all, a \`src\`, \`type\`, \`nonce\`, \`async\` or \`id\` among them, says the two are not interchangeable with one — and only where the print writes the bodies itself, so a \`<script>\` that \`output.html.inline\` fills in after the print is left alone. A body is left alone too wherever appending it would change what it means: one still inside a string, template or block comment would swallow the next, and a directive prologue, a hashbang or a leading \`-->\` mean what they do only at a start the appended body no longer has. Off by default: it removes elements, so \`document.scripts\`, a \`script:nth-child()\` selector and \`querySelectorAll(\\"script\\").length\` all read a different document; a later body's \`var\` and \`function\` declarations become visible to the bodies before it; and a body that throws takes the rest of its run with it rather than only itself, while one that does not parse takes the whole run, its own code included.",
+        "multiple": false,
+        "path": "optimization.minimize.html.mergeScripts",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a run of adjacent \`<script>\` elements as one, joined by a newline and a \`;\`. Only bare ones fold — any attribute at all, a \`src\`, \`type\`, \`nonce\`, \`async\` or \`id\` among them, says the two are not interchangeable with one — and only where the print writes the bodies itself, so a \`<script>\` that \`output.html.inline\` fills in after the print is left alone. A body is left alone too wherever appending it would change what it means: one still inside a string, template or block comment would swallow the next, and a directive prologue, a hashbang or a leading \`-->\` mean what they do only at a start the appended body no longer has. Off by default: it removes elements, so \`document.scripts\`, a \`script:nth-child()\` selector and \`querySelectorAll(\\"script\\").length\` all read a different document; a later body's \`var\` and \`function\` declarations become visible to the bodies before it; and a body that throws takes the rest of its run with it rather than only itself, while one that does not parse takes the whole run, its own code included.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-html-merge-styles": Object {
     "configs": Array [
       Object {
@@ -12158,6 +12171,19 @@ Object {
     "description": "Which comments survive. \`\\"some\\"\`, the default, keeps nothing: every comment an HTML parser reads is inert; \`true\` (or \`\\"all\\"\`) keeps every comment and \`false\` keeps none; a string is read as a regular expression source, and it, a \`RegExp\` or a \`(comment) => boolean\` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's \`format.comments\` does, so a pattern that names nothing else drops the ones \`\\"some\\"\` would have kept. A downlevel conditional comment, a server-side include and a \`<?…?>\` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "optimization-minimize-options-html-merge-scripts": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a run of adjacent \`<script>\` elements as one, joined by a newline and a \`;\`. Only bare ones fold — any attribute at all, a \`src\`, \`type\`, \`nonce\`, \`async\` or \`id\` among them, says the two are not interchangeable with one — and only where the print writes the bodies itself, so a \`<script>\` that \`output.html.inline\` fills in after the print is left alone. A body is left alone too wherever appending it would change what it means: one still inside a string, template or block comment would swallow the next, and a directive prologue, a hashbang or a leading \`-->\` mean what they do only at a start the appended body no longer has. Off by default: it removes elements, so \`document.scripts\`, a \`script:nth-child()\` selector and \`querySelectorAll(\\"script\\").length\` all read a different document; a later body's \`var\` and \`function\` declarations become visible to the bodies before it; and a body that throws takes the rest of its run with it rather than only itself, while one that does not parse takes the whole run, its own code included.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.html.mergeScripts",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a run of adjacent \`<script>\` elements as one, joined by a newline and a \`;\`. Only bare ones fold — any attribute at all, a \`src\`, \`type\`, \`nonce\`, \`async\` or \`id\` among them, says the two are not interchangeable with one — and only where the print writes the bodies itself, so a \`<script>\` that \`output.html.inline\` fills in after the print is left alone. A body is left alone too wherever appending it would change what it means: one still inside a string, template or block comment would swallow the next, and a directive prologue, a hashbang or a leading \`-->\` mean what they do only at a start the appended body no longer has. Off by default: it removes elements, so \`document.scripts\`, a \`script:nth-child()\` selector and \`querySelectorAll(\\"script\\").length\` all read a different document; a later body's \`var\` and \`function\` declarations become visible to the bodies before it; and a body that throws takes the rest of its run with it rather than only itself, while one that does not parse takes the whole run, its own code included.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "optimization-minimize-options-html-merge-styles": Object {
     "configs": Array [

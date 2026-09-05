@@ -4093,6 +4093,320 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 });
 
+// Only what a unit test reaches better than a build does: the shapes a run is
+// declined for. A real build is the `minimize-merge-scripts` config case.
+describe("SourceProcessor — merging adjacent <script>", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify", mergeScripts: true })
+			.code;
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {number} how many `<script>` elements the print left
+	 */
+	const scriptCount = (html) => (minify(html).match(/<script\b/g) || []).length;
+
+	it("folds a run into one element", () => {
+		expect(minify("<script>a()</script><script>b()</script>")).toBe(
+			"<script>a()\n;b()</script>"
+		);
+		expect(
+			minify("<script>a()</script><script>b()</script><script>c()</script>")
+		).toBe("<script>a()\n;b()\n;c()</script>");
+	});
+
+	it("keeps every element unless asked to fold", () => {
+		const html = "<script>a()</script><script>b()</script>";
+		expect(new SourceProcessor().process(html, { mode: "minify" }).code).toBe(
+			html
+		);
+	});
+
+	it("folds across the whitespace between them", () => {
+		expect(minify("<script>a()</script>\n  <script>b()</script>")).toBe(
+			"<script>a()\n;b()</script>"
+		);
+	});
+
+	it("declines a run carrying any attribute at all", () => {
+		for (const attribute of [
+			"src=x.js",
+			"type=module",
+			'type="text/javascript"',
+			"nonce=n",
+			"async",
+			"defer",
+			"id=q",
+			"class=c",
+			"data-x=1",
+			"integrity=sha256-x",
+			"crossorigin"
+		]) {
+			// Two elements still, whichever side carries it.
+			expect(
+				scriptCount(`<script ${attribute}>a()</script><script>b()</script>`)
+			).toBe(2);
+			expect(
+				scriptCount(`<script>a()</script><script ${attribute}>b()</script>`)
+			).toBe(2);
+		}
+	});
+
+	it("declines anything but whitespace between them", () => {
+		expect(minify("<script>a()</script><p>x</p><script>b()</script>")).toBe(
+			"<script>a()</script><p>x</p><script>b()</script>"
+		);
+		// The comment goes, but it stood between them when the tree was read.
+		expect(minify("<script>a()</script><!--c--><script>b()</script>")).toBe(
+			"<script>a()</script><script>b()</script>"
+		);
+		expect(
+			scriptCount(
+				"<script>a()</script><style>a{color:red}</style><script>b()</script>"
+			)
+		).toBe(2);
+	});
+
+	it("declines a body that leaves something open", () => {
+		// Each would swallow the next body whole.
+		for (const open of [
+			"a() /* open",
+			'var s = "open',
+			"var s = 'open",
+			"var s = `open",
+			// eslint-disable-next-line no-template-curly-in-string
+			"var s = `open${1}",
+			'var s = "a" + "open'
+		]) {
+			expect(scriptCount(`<script>${open}</script><script>b()</script>`)).toBe(
+				2
+			);
+		}
+	});
+
+	it("folds a body ending in a line comment, which the newline closes", () => {
+		expect(minify("<script>a() // note</script><script>b()</script>")).toBe(
+			"<script>a() // note\n;b()</script>"
+		);
+		// An HTML-like open comment runs to the end of the line just as `//` does.
+		expect(minify("<script>a() <!-- note</script><script>b()</script>")).toBe(
+			"<script>a() <!-- note\n;b()</script>"
+		);
+	});
+
+	it("writes the `;` a next body would otherwise continue", () => {
+		for (const [second, joined] of [
+			["(function(){})()", "(function(){})()"],
+			["[1].forEach(f)", "[1].forEach(f)"],
+			["`x`", "`x`"],
+			["+1", "+1"],
+			["-1", "-1"],
+			["/re/.test(x)", "/re/.test(x)"]
+		]) {
+			expect(
+				minify(`<script>var a = 1</script><script>${second}</script>`)
+			).toBe(`<script>var a = 1\n;${joined}</script>`);
+		}
+	});
+
+	it("reads a closed string, template or comment as closed", () => {
+		expect(
+			minify('<script>var s = "a</script\'"</script><script>b()</script>')
+		).toBe('<script>var s = "a</script\'"\n;b()</script>');
+		expect(minify("<script>/* done */a()</script><script>b()</script>")).toBe(
+			"<script>/* done */a()\n;b()</script>"
+		);
+		expect(minify("<script>var t = `x`</script><script>b()</script>")).toBe(
+			"<script>var t = `x`\n;b()</script>"
+		);
+		// An escaped quote does not close the string it sits in.
+		expect(minify('<script>var s = "a\\""</script><script>b()</script>')).toBe(
+			'<script>var s = "a\\""\n;b()</script>'
+		);
+		// A substitution holding a quote of its own leaves the template closed.
+		/* eslint-disable no-template-curly-in-string */
+		expect(
+			minify('<script>var t = `${ "x" }`</script><script>b()</script>')
+		).toBe('<script>var t = `${ "x" }`\n;b()</script>');
+		/* eslint-enable no-template-curly-in-string */
+	});
+
+	it("declines a body that opens a script of its own", () => {
+		// A prologue means something only at a script's start: appended it is a
+		// plain string, and leading it puts the whole run in strict mode.
+		const strictLater =
+			'<script>var a = 1</script><script>"use strict";x = 1</script>';
+		expect(minify(strictLater)).toBe(strictLater);
+		const strictFirst = '<script>"use strict";a()</script><script>b()</script>';
+		expect(minify(strictFirst)).toBe(strictFirst);
+		const singleQuoted =
+			"<script>a()</script><script>'use strict';b()</script>";
+		expect(minify(singleQuoted)).toBe(singleQuoted);
+		// Comments may precede a prologue, so they are read past to find it.
+		const afterComment =
+			'<script>a()</script><script>/* c */ "use strict";b()</script>';
+		expect(minify(afterComment)).toBe(afterComment);
+		// A line comment ends at every line terminator, so a string opened past
+		// one is really open.
+		for (const terminator of ["\u2028", "\u2029"]) {
+			for (const opener of ['var s = "open', "var s = 'open", "/* open"]) {
+				const html = `<script>a() // c${terminator}${opener}</script><script>b()</script>`;
+				expect(scriptCount(html)).toBe(2);
+			}
+		}
+		// ECMAScript's whitespace is wider than HTML's, and all of it may sit
+		// before a directive: a form feed, a BOM, U+2028.
+		for (const space of ["\f", "\v", "\uFEFF", "\u00A0", "\u2028", "\u2029"]) {
+			const spaced = `<script>a()</script><script>${space}"use strict";x = 1</script>`;
+			expect(minify(spaced)).toBe(spaced);
+		}
+		// The same set ends a line comment, so a directive behind one is found.
+		// Counted, not compared: the parser reads a `\r` in as a `\n`.
+		for (const terminator of ["\n", "\r", "\u2028", "\u2029"]) {
+			expect(
+				scriptCount(
+					`<script>a()</script><script>// c${terminator}"use strict";b()</script>`
+				)
+			).toBe(2);
+		}
+		// A hashbang is only a hashbang at the very start of a script.
+		const hashbang =
+			"<script>a()</script><script>#!/usr/bin/env node\nb()</script>";
+		expect(minify(hashbang)).toBe(hashbang);
+		expect(
+			scriptCount("<script>a()</script><script>\uFEFF#!/x\nb()</script>")
+		).toBe(2);
+	});
+
+	// `-->` is a line comment only where nothing but whitespace and same-line
+	// comments precede it, and an appended body no longer starts a line.
+	it("declines a body opening with `-->` still on its first line", () => {
+		for (const second of ["--> b()", "   --> b()", "/* c */ --> b()"]) {
+			expect(
+				scriptCount(`<script>a()</script><script>${second}</script>`)
+			).toBe(2);
+		}
+	});
+
+	it("folds a `-->` that keeps the line it had", () => {
+		// Already on a line of its own, so appending moves nothing.
+		expect(minify("<script>a()</script><script>\n--> b()</script>")).toBe(
+			"<script>a()\n;\n--> b()</script>"
+		);
+		// A block comment spanning a terminator ends the line it opened.
+		expect(
+			minify("<script>a()</script><script>/* c\n*/ --> b()</script>")
+		).toBe("<script>a()\n;/* c\n*/ --> b()</script>");
+		// Past the first line it is a comment either way.
+		expect(minify("<script>a()</script><script>b()\n--> c()</script>")).toBe(
+			"<script>a()\n;b()\n--> c()</script>"
+		);
+	});
+
+	it("declines an empty element, which has no text node to fold into", () => {
+		expect(minify("<script>a()</script><script></script>")).toBe(
+			"<script>a()</script><script></script>"
+		);
+		// The empty one breaks the run rather than being folded through.
+		expect(
+			minify("<script>a()</script><script></script><script>b()</script>")
+		).toBe("<script>a()</script><script></script><script>b()</script>");
+	});
+
+	it("folds a body that is only whitespace", () => {
+		expect(minify("<script>a()</script><script> </script>")).toBe(
+			"<script>a()\n; </script>"
+		);
+	});
+
+	it("leaves a script in foreign content alone", () => {
+		const svg = "<svg><script>a()</script><script>b()</script></svg>";
+		expect(minify(svg)).toBe(svg);
+	});
+
+	it("stops a run at the first body it cannot take", () => {
+		// `a()` and `b()` join; the open string ends the run before `c()`.
+		expect(
+			minify(
+				"<script>a()</script><script>b()</script><script>var s = 'open</script><script>c()</script>"
+			)
+		).toBe(
+			"<script>a()\n;b()</script><script>var s = 'open</script><script>c()</script>"
+		);
+	});
+
+	it("folds a run in the head as readily as one in the body", () => {
+		expect(
+			minify(
+				"<!doctype html><html><head><script>a()</script><script>b()</script></head><body>x</body></html>"
+			)
+		).toBe(
+			"<!doctype html><head><script>a()\n;b()</script></head><body>x</body></html>"
+		);
+	});
+
+	it("folds scripts and sheets in one pass without confusing the two", () => {
+		expect(
+			new SourceProcessor().process(
+				"<style>a{color:red}</style><style>b{color:blue}</style><script>a()</script><script>b()</script>",
+				{ mode: "minify", mergeStyles: true, mergeScripts: true }
+			).code
+		).toBe(
+			"<style>a{color:red}b{color:blue}</style><script>a()\n;b()</script>"
+		);
+	});
+
+	// `output.html.inline` prints a sentinel and swaps the chunk's code in after
+	// the print, so what a guard would read there is not what ends up running.
+	it("declines a run whose bodies the print does not itself write", () => {
+		const html = "<script>a()</script><script>b()</script>";
+		/** @type {import("../lib/util/dataURL").DeferredEmbeddedSource[]} */
+		const holes = [];
+		const printed = new SourceProcessor().process(html, {
+			mode: "minify",
+			mergeScripts: true,
+			deferEmbeddedSource: holes
+		}).code;
+		expect(holes).toHaveLength(2);
+		expect(holes.map((hole) => hole.source)).toEqual(["a()", "b()"]);
+		expect(printed.match(/<script\b/g)).toHaveLength(2);
+	});
+
+	it("keeps no state between two documents", () => {
+		const processor = new SourceProcessor();
+		expect(
+			processor.process("<script>a()</script><script>b()</script>", {
+				mode: "minify",
+				mergeScripts: true
+			}).code
+		).toBe("<script>a()\n;b()</script>");
+		const off = "<script>c()</script><script>d()</script>";
+		expect(processor.process(off, { mode: "minify" }).code).toBe(off);
+	});
+
+	// Deliberate, and stated in the option's description: a fold is one script
+	// where there were several, so these follow from that rather than from a bug.
+	describe("what folding a run is known to change", () => {
+		it("hoists a later body's declarations into the ones before it", () => {
+			expect(
+				minify("<script>log(typeof f)</script><script>function f(){}</script>")
+			).toBe("<script>log(typeof f)\n;function f(){}</script>");
+		});
+
+		it("puts every body of a run behind the first one's failure", () => {
+			expect(minify("<script>a();null.x</script><script>b()</script>")).toBe(
+				"<script>a();null.x\n;b()</script>"
+			);
+		});
+	});
+});
+
 describe("SourceProcessor — JSON <script> bodies", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
