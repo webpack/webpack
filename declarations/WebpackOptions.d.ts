@@ -3166,6 +3166,10 @@ export interface CopyObjectPattern {
 		| import("../lib/Compilation").AssetInfo
 		| import("../lib/CopyPlugin").CopyInfoFunction;
 	/**
+	 * Whether a copied file keeps the permissions of the file it was copied from. Defaults to 'false', which gives it the ones a new file gets. Has no effect on Windows.
+	 */
+	preservePermissions?: boolean;
+	/**
 	 * Whether a copied file keeps the access and modification times of the file it was copied from. Defaults to 'false', which stamps it with the time it was written.
 	 */
 	preserveTimestamps?: boolean;

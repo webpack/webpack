@@ -13076,6 +13076,19 @@ Object {
     "multiple": true,
     "simpleType": "boolean",
   },
+  "output-copy-preserve-permissions": Object {
+    "configs": Array [
+      Object {
+        "description": "Whether a copied file keeps the permissions of the file it was copied from. Defaults to 'false', which gives it the ones a new file gets. Has no effect on Windows.",
+        "multiple": true,
+        "path": "output.copy[].preservePermissions",
+        "type": "boolean",
+      },
+    ],
+    "description": "Whether a copied file keeps the permissions of the file it was copied from. Defaults to 'false', which gives it the ones a new file gets. Has no effect on Windows.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
   "output-copy-preserve-timestamps": Object {
     "configs": Array [
       Object {
