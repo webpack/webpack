@@ -8,6 +8,10 @@ If not, do: `npm run setup`, the setup will also install `yarn` for you.
 
 That's all.
 
+## Automated environments
+
+`yarn setup` is all any environment needs. Off a terminal — CI, a throwaway sandbox, any coding agent — it switches itself to a non-interactive path: it verifies `yarn.lock` rather than rewriting it, installs no global `yarn`, and links the checkout in as `node_modules/webpack` without touching yarn's machine-global link registry. Safe to re-run either way, and `WEBPACK_SETUP=interactive` or `WEBPACK_SETUP=automated` forces a path.
+
 ## Setup manually
 
 ### Setup your local webpack repository
