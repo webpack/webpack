@@ -204,9 +204,6 @@ const knownHostBugs = [
 	// Adding a private field to a non-extensible object must throw, which the
 	// pinned Node.js does not do, so it fails the same way unbundled.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
-	// webpack emits `delete super[(super(), 0)]` unchanged, and the engine
-	// evaluates the index before the this-binding check, so it fails unbundled.
-	"expressions/delete/super-property-uninitialized-this.js",
 	"destructuring/binding/keyed-destructuring-property-reference-target-evaluation-order-with-bindings.js",
 	"expressions/assignment/S11.13.1_A5_T1.js",
 	"expressions/assignment/S11.13.1_A5_T2.js",
@@ -932,6 +929,9 @@ const knownBugs = [
 	// global object and bare identifiers are scoped to the wrapper.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
+	// webpack emits `delete super[(super(), 0)]` unchanged, so the order the
+	// index and the this-binding check run in is the engine's to fix.
+	"expressions/delete/super-property-uninitialized-this.js",
 
 	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
 	// is a plain object with `__esModule: true` rather than a true namespace
