@@ -3570,7 +3570,7 @@ export interface PerformanceOptions {
 	 */
 	unusedAssets?: boolean;
 	/**
-	 * Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched (requires 'hints' to be enabled).
+	 * Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, and 'module.rules' that never matched.
 	 * @since 5.111.0
 	 */
 	unusedConfig?: boolean;
