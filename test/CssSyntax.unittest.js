@@ -10141,6 +10141,67 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		expect(minify(sheet, true)).toBe(sheet);
 	});
 
+	// Rules inside a block are joined as the block is assembled rather than as
+	// the stylesheet streams, so the same gates are asked a second way.
+	describe("inside a block", () => {
+		const BLOCK = ".aaaaaaaa{color:red;background:blue}";
+		const COPY = ".cccccccc{color:red;background:blue}";
+
+		it("gives an earlier rule the selectors of a later one", () => {
+			expect(
+				minify(`@media screen{${BLOCK}.bbbbbbbb{margin:0}${COPY}}`, true)
+			).toBe(
+				"@media screen{.aaaaaaaa,.cccccccc{color:red;background:blue}.bbbbbbbb{margin:0}}"
+			);
+		});
+
+		it("declines where a rule between declares what the block does", () => {
+			const sheet =
+				"@media screen{.aaaaaaaa{color:red}.bbbbbbbb{color:blue}.cccccccc{color:red}}";
+			expect(minify(sheet, true)).toBe(sheet);
+		});
+
+		it("declines where a rule between sets it through a shorthand", () => {
+			const sheet =
+				"@media screen{.aaaaaaaa{top:1px}.bbbbbbbb{inset:0}.cccccccc{top:1px}}";
+			expect(minify(sheet, true)).toBe(sheet);
+		});
+
+		it("declines across an at-rule it cannot see into", () => {
+			const sheet = `@media screen{${BLOCK}@media print{.x{width:0}}${COPY}}`;
+			expect(minify(sheet, true)).toBe(sheet);
+		});
+
+		it("declines a block that does not outweigh the selector it would write", () => {
+			const sheet =
+				"@media screen{.aaaaaaaaaaaaaaaaaaaaaaaaaaaa{color:red}.b{margin:0}.cccccccccccccccccccccccccccc{color:red}}";
+			expect(minify(sheet, true)).toBe(sheet);
+		});
+
+		it("reads `all` between as declaring everything", () => {
+			const sheet = `@media screen{${BLOCK}.bbbbbbbb{all:unset}${COPY}}`;
+			expect(minify(sheet, true)).toBe(sheet);
+		});
+
+		it("joins across a rule that printed nothing, which declares nothing", () => {
+			expect(minify(`@media screen{${BLOCK}.bbbbbbbb{}${COPY}}`, true)).toBe(
+				"@media screen{.aaaaaaaa,.cccccccc{color:red;background:blue}}"
+			);
+		});
+
+		// The duplicate is dropped either way; with this on it is the earlier copy
+		// that stands, so the block it prints moves up rather than down.
+		it("takes a repeat of the same selector back to where the first stood", () => {
+			const sheet = `@media screen{${BLOCK}.bbbbbbbb{margin:0}${BLOCK}}`;
+			expect(minify(sheet)).toBe(
+				"@media screen{.bbbbbbbb{margin:0}.aaaaaaaa{color:red;background:blue}}"
+			);
+			expect(minify(sheet, true)).toBe(
+				"@media screen{.aaaaaaaa{color:red;background:blue}.bbbbbbbb{margin:0}}"
+			);
+		});
+	});
+
 	// An at-rule this cannot join is emitted on its own path, which is where a
 	// rule waiting behind it is written out — and it declares what it declares.
 	it.each([
