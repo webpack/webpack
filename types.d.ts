@@ -15209,6 +15209,11 @@ declare interface KnownJavascriptModuleBuildInfo {
 	moduleConcatenationBailout?: string;
 
 	/**
+	 * what rules the module out as a concatenation root, while it may still be an inner module
+	 */
+	moduleConcatenationRootBailout?: string;
+
+	/**
 	 * using in APIPlugin
 	 */
 	needCreateRequire?: boolean;

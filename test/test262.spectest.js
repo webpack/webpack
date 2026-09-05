@@ -886,13 +886,14 @@ const knownBugs = [
 	"expressions/dynamic-import/returns-promise.js",
 
 	// webpack bugs and improvements
-	// With namespace import we export and value and `default`, by spec we should export only `default`
+	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
+	// namespace has two own keys where the spec has one.
 	"import/import-attributes/json-via-namespace.js",
-	// `yield` as a strict-mode reserved word: webpack parses the source in
-	// sloppy mode, so the expected parse-time SyntaxError is not raised.
+	// The "strict" scenario prepends the directive to the bundled output, not to
+	// the source, so webpack parses `yield` as a plain identifier.
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
-	// A top-level `await using` makes the module async, like a bare top-level
-	// `await` does, so the Script-goal early error is not raised.
+	// The bundle puts `await using` inside the module wrapper's body, where it
+	// is legal, so an engine supporting the syntax raises no parse error.
 	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
@@ -905,8 +906,6 @@ const knownBugs = [
 	"expressions/dynamic-import/custom-primitive.js",
 	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
 	"import/import-attributes/text-via-namespace.js",
-	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
-	"expressions/import.meta/distinct-for-each-module.js",
 	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
 	"module-code/namespace/internals/own-property-keys-binding-types.js",
 	"module-code/namespace/internals/own-property-keys-sort.js",
@@ -931,9 +930,8 @@ const knownBugs = [
 	// global object and bare identifiers are scoped to the wrapper.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
-	// `delete super[(super(), 0)]` in a derived constructor — webpack rewrites
-	// `super` references in a way that doesn't preserve the uninitialized
-	// `this`-binding ReferenceError before the inner `super()` call runs.
+	// webpack emits `delete super[(super(), 0)]` unchanged, so the order the
+	// index and the this-binding check run in is the engine's to fix.
 	"expressions/delete/super-property-uninitialized-this.js",
 
 	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
