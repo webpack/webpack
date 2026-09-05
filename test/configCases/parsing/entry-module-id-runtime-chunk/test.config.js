@@ -1,7 +1,14 @@
 "use strict";
 
+const BUNDLES = [
+	"./node.main.js",
+	"./web.main.js",
+	"./webworker.main.js",
+	"./universal.main.mjs"
+];
+
 module.exports = {
-	findBundle() {
-		return ["./main.js"];
+	findBundle(i) {
+		return [BUNDLES[i]];
 	}
 };
