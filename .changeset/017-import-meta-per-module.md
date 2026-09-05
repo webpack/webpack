@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Give each module its own `import.meta`, and scope-hoist modules reading `import.meta.main`.
+Fix `import.meta` per module and `require.main` under `runtimeChunk`, and scope-hoist `import.meta.main`.
