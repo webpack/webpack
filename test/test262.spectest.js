@@ -23,6 +23,10 @@ const outputFileSystem = needDebug
 
 const test262Dir = path.resolve(__dirname, "./test262-cases/");
 const test262HarnessDir = path.resolve(test262Dir, "./harness");
+const strictModeLoader = path.resolve(
+	__dirname,
+	"./helpers/test262StrictModeLoader.js"
+);
 
 /* cspell:disable */
 const knownV8EvalBugs = [
@@ -644,7 +648,17 @@ const compile = async (entry, scenario, options = {}) =>
 										requireJs: false,
 										system: false
 									}
-								}
+								},
+								// The "strict" directive has to reach the parser, not only the
+								// bundle: a sloppy parse accepts what only strict mode rejects.
+								...(scenario === "strict"
+									? [
+											{
+												test: (resource) => resource === entry,
+												use: strictModeLoader
+											}
+										]
+									: [])
 							]
 			},
 			externals: [
@@ -889,9 +903,6 @@ const knownBugs = [
 	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
 	// namespace has two own keys where the spec has one.
 	"import/import-attributes/json-via-namespace.js",
-	// The "strict" scenario prepends the directive to the bundled output, not to
-	// the source, so webpack parses `yield` as a plain identifier.
-	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
 	// The bundle puts `await using` inside the module wrapper's body, where it
 	// is legal, so an engine supporting the syntax raises no parse error.
 	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",

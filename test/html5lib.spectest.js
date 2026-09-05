@@ -15,9 +15,8 @@
 //    the expected one, for every tokenizer case in an initial state the public
 //    API can express (the rest are registered as skipped, with the reason).
 //
-// Both conformance suites carry a KNOWN_DIVERGENCES set (currently empty)
-// pinning intentional exceptions: a listed case is asserted to *still*
-// diverge, so accidentally fixing one flags the list as stale.
+// Both suites pin intentional exceptions in a KNOWN_DIVERGENCES set: a listed
+// case is asserted to *still* diverge, so fixing one flags the list as stale.
 
 const fs = require("fs");
 const path = require("path");
