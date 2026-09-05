@@ -5404,6 +5404,11 @@ declare interface CopyObjectPattern {
 	info?: AssetInfo | ((file: CopiedFileData) => AssetInfo);
 
 	/**
+	 * Whether a copied file keeps the permissions of the file it was copied from. Defaults to 'false', which gives it the ones a new file gets. Has no effect on Windows.
+	 */
+	preservePermissions?: boolean;
+
+	/**
 	 * Whether a copied file keeps the access and modification times of the file it was copied from. Defaults to 'false', which stamps it with the time it was written.
 	 */
 	preserveTimestamps?: boolean;
@@ -15195,6 +15200,11 @@ declare interface KnownAssetInfo {
 	symlink?: AssetSymlink;
 
 	/**
+	 * when set, the file the asset is written to is given these permissions
+	 */
+	mode?: number;
+
+	/**
 	 * when set, the file the asset is written to is stamped with these times
 	 */
 	timestamps?: AssetTimestamps;
@@ -21647,6 +21657,11 @@ declare interface OutputFileSystem {
 		callback: (err: null | NodeJS.ErrnoException) => void
 	) => void;
 	readlink?: ReadlinkFs;
+	chmod?: (
+		path: PathLikeFs,
+		mode: string | number,
+		callback: (err: null | NodeJS.ErrnoException) => void
+	) => void;
 	utimes?: (
 		path: PathLikeFs,
 		atime: string | number | Date,

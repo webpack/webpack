@@ -6,9 +6,8 @@ const MTIME = require("./mtime");
 
 const source = path.resolve(__dirname, "static/note.txt");
 
-// a checkout stamps the fixture with the time it was written, and the copy is
-// asserted against a known one — set only when it differs, so a rebuild of the
-// same tree reads an unchanged file
+// a checkout stamps the fixture with the time it was written, so it is pinned
+// to a known one — only when it differs, leaving it untouched on a rebuild
 if (fs.statSync(source).mtimeMs !== MTIME) {
 	fs.utimesSync(source, new Date(MTIME), new Date(MTIME));
 }
