@@ -41,7 +41,7 @@ const ELEMENTS_URL =
 	"https://raw.githubusercontent.com/w3c/webref/main/ed/elements/html.json";
 
 /** @typedef {Record<string, string[] | null>} AttributeScopes attribute name -> the elements it applies to, `null` when global */
-/** @typedef {{ source: { idl: string, elements: string }, boolean: AttributeScopes, url: AttributeScopes, integer: AttributeScopes, signedInteger: string[], tokenList: AttributeScopes }} ReflectTables */
+/** @typedef {{ source: { idl: string, elements: string }, boolean: AttributeScopes, url: AttributeScopes, integer: AttributeScopes, signedInteger: string[], tokenList: AttributeScopes, eventHandler: AttributeScopes }} ReflectTables */
 
 /**
  * Distill webref's HTML IDL into the reflected-attribute facts this generator
@@ -117,25 +117,36 @@ const distill = (idl, elements) => {
 	}
 
 	/** @type {{ [group: string]: { [attribute: string]: string[] | null } }} */
-	const out = { boolean: {}, url: {}, integer: {}, tokenList: {} };
+	const out = {
+		boolean: {},
+		url: {},
+		integer: {},
+		tokenList: {},
+		eventHandler: {}
+	};
 	/** @type {Set<string>} */
 	const signed = new Set();
 	/** @type {Set<string>} */
 	const nonNegative = new Set();
+	// The extended attributes are optional: an event handler IDL member carries
+	// none, and reflects by prose rather than by a `Reflect` marker.
 	const memberRe =
-		/\[([^\]]*)\]\s*(?:readonly\s+)?attribute\s+((?:unsigned\s+)?\w+\??)\s+(\w+)\s*;/g;
+		/(?:\[([^\]]*)\]\s*)?(?:readonly\s+)?attribute\s+((?:unsigned\s+)?\w+\??)\s+(\w+)\s*;/g;
 	for (const [iface, body] of bodies) {
 		for (const member of body.matchAll(memberRe)) {
-			const extended = member[1].replace(/\s+/g, " ");
-			if (!/\bReflect/.test(extended)) continue;
+			const extended = (member[1] || "").replace(/\s+/g, " ");
 			const type = member[2].replace(/\s+/g, " ");
+			// `EventHandler`, and the two the spec gives their own callback type.
+			const isEventHandler = /EventHandler\??$/.test(type);
+			if (!isEventHandler && !/\bReflect/.test(extended)) continue;
 			const explicit = /Reflect\w*="([^"]+)"/.exec(extended);
 			const attribute = explicit ? explicit[1] : member[3].toLowerCase();
 			const on = elementsFor(iface);
 			if (on.size === 0) continue;
 			const isGlobal = [...globalElements].every((e) => on.has(e));
-			const group =
-				type === "boolean"
+			const group = isEventHandler
+				? "eventHandler"
+				: type === "boolean"
 					? "boolean"
 					: /ReflectURL/.test(extended)
 						? "url"
@@ -181,7 +192,8 @@ const distill = (idl, elements) => {
 		url: byName(out.url),
 		integer: byName(out.integer),
 		signedInteger: [...signed].filter((a) => !nonNegative.has(a)).sort(),
-		tokenList: byName(out.tokenList)
+		tokenList: byName(out.tokenList),
+		eventHandler: byName(out.eventHandler)
 	};
 };
 
@@ -450,7 +462,8 @@ const reflect = fetchSource
 			url: {},
 			integer: {},
 			tokenList: {},
-			signedInteger: []
+			signedInteger: [],
+			eventHandler: {}
 		}
 	: JSON.parse(fs.readFileSync(REFLECT_PATH, "utf8"));
 const booleans = merge(reflect.boolean, SUPPLEMENT.boolean, "boolean");
@@ -470,6 +483,9 @@ for (const name of domTokenLists) {
 const signed = [
 	...new Set([...reflect.signedInteger, ...SUPPLEMENT.signedInteger])
 ].sort();
+// No supplement: every event handler content attribute is an IDL member of an
+// event handler type, so the extraction states the whole table.
+const eventHandlers = Object.entries(reflect.eventHandler);
 
 // The heading names, shared by every table that names them rather than copied
 // into each — two lists of the same six drift apart.
@@ -1845,7 +1861,8 @@ const parserTable = ([name, kind, doc, items]) => {
 // of these" or "this attribute's value is a srcset" — so they stay written out.
 // The element and attribute names cspell does not know. Written twice on
 // purpose: the directive covers this file, the string is forwarded into the
-// generated one so it passes `lint:spellcheck` too.
+// generated one so it passes `lint:spellcheck` too. The event handler names
+// join it there from the extraction, so a new one needs no edit here.
 // cspell:ignore advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits contenteditable diffuseconstant enterkeyhint fedropshadow filterunits formenctype formmethod formtarget glyphref gradienttransform gradientunits hotjava hotmetal inputmode jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs writingsuggestions xchannelselector ychannelselector
 const CSPELL_IGNORE =
 	"advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits contenteditable diffuseconstant enterkeyhint fedropshadow filterunits formenctype formmethod formtarget glyphref gradienttransform gradientunits hotjava hotmetal inputmode jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs writingsuggestions xchannelselector ychannelselector";
@@ -1858,6 +1875,7 @@ const EXPORT_NAMES = [
 	"BODY_START_KEPT_BEFORE",
 	"EMPTY_METADATA_ELEMENTS",
 	"ENUMERATED_ATTRIBUTE_NAMES",
+	"EVENT_HANDLER_ATTRIBUTES",
 	"REWRITABLE_ATTRIBUTES",
 	"OPTIONAL_END_TAG_AT_END",
 	"OPTIONAL_END_TAG_FOLLOWERS",
@@ -1879,7 +1897,7 @@ const source = `/*
 "use strict";
 
 // GENERATED by tooling/generate-html-data.js — do not edit.
-// cspell:ignore ${CSPELL_IGNORE}
+// cspell:ignore ${CSPELL_IGNORE} ${eventHandlers.map(([name]) => name).join(" ")}
 // Reflected-attribute tables from ${REFLECT_SOURCE}; everything else is the
 // generator's SUPPLEMENT, which carries the spec facts no dataset states.
 
@@ -2046,11 +2064,20 @@ const SIGNED_INTEGER_ATTRIBUTES = ${setLiteral(signed)};
  */
 const COMMA_LIST_ATTRIBUTES = ${setLiteral(COMMA_LIST_ATTRIBUTES)};
 
+/**
+ * Event handler content attributes, mapped to the elements each is one on
+ * (\`null\` = a global attribute). Elsewhere the same name is an ordinary
+ * attribute holding text — \`onunload\` is a handler on \`<body>\` and data on a
+ * \`<div>\` — so the value is only read as JavaScript where the table says it is.
+ * @type {Map<string, Set<string> | null>}
+ */
+const EVENT_HANDLER_ATTRIBUTES = ${mapLiteral(eventHandlers)};
+
 ${PARSER_TABLES.map(parserTable).join("\n")}
 ${EXPORT_NAMES.map((name) => `module.exports.${name} = ${name};`).join("\n")}
 `;
 
-const summary = `${booleans.length} boolean, ${urls.length} url, ${integers.length} integer (${signed.length} signed), ${tokenLists.length} token-list attributes`;
+const summary = `${booleans.length} boolean, ${urls.length} url, ${integers.length} integer (${signed.length} signed), ${tokenLists.length} token-list, ${eventHandlers.length} event-handler attributes`;
 
 // `--fetch` only refreshes the vendored extraction; the emit runs on its own.
 if (!fetchSource) {
