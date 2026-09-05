@@ -522,6 +522,10 @@
             }
           ]
         },
+        "preservePermissions": {
+          "description": "Whether a copied file keeps the permissions of the file it was copied from. Defaults to 'false', which gives it the ones a new file gets. Has no effect on Windows.",
+          "type": "boolean"
+        },
         "preserveTimestamps": {
           "description": "Whether a copied file keeps the access and modification times of the file it was copied from. Defaults to 'false', which stamps it with the time it was written.",
           "type": "boolean"
