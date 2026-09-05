@@ -6,7 +6,8 @@ const page = fs
 	.readFileSync(path.resolve(__dirname, "page.html"))
 	.toString("utf-8");
 
-const SCRIPT_REGEXP = /<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi;
+// An end tag takes anything after the name, so `</script foo>` closes one too.
+const SCRIPT_REGEXP = /<script\b[^>]*>([\s\S]*?)<\/script(?:[\s/][^>]*)?>/gi;
 const SCRIPT_OPEN_REGEXP = /<script\b/gi;
 
 const bodies = [...page.matchAll(SCRIPT_REGEXP)].map((match) => match[1]);
