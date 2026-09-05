@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<!-- Every event handler attribute is offered to the JavaScript minimizer as the
-	function its body belongs to, so a `return` — the one an author writes to
-	cancel the event — is minified in the production it is in. -->
+<!-- Each handler goes to the JavaScript minimizer as the function its body
+	belongs to, so a `return` is minified in the production it is in. -->
 <div>
 	<button onclick="  var total = 1 + 2 ;  report( total )  ">plain body</button>
 	<form onsubmit="  if ( !window.ready ) { return false } ;  send( )  ">
