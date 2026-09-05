@@ -5,6 +5,8 @@
   <br>
   <br>
 
+[![Agent Friendly](https://agentfriendlycode.com/api/badge/github/webpack/webpack.svg)](https://agentfriendlycode.com/repo/12618)
+
 [![npm][npm]][npm-url]
 
 [![node][node]][node-url]
