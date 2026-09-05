@@ -7,7 +7,7 @@ module.exports = {
 	target: "node",
 	performance: {
 		hints: false,
-		unusedExternals: true
+		unusedConfig: true
 	},
 	externals: {
 		path: "commonjs path",

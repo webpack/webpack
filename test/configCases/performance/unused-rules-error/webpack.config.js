@@ -5,7 +5,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "error",
-		unusedRules: true
+		unusedConfig: true
 	},
 	module: {
 		rules: [

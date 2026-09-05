@@ -6,7 +6,7 @@ module.exports = {
 	target: "node",
 	performance: {
 		hints: "warning",
-		unusedExternals: true
+		unusedConfig: true
 	},
 	// Declared unprefixed, imported as 'node:path' — the resolver accepts either
 	externals: {

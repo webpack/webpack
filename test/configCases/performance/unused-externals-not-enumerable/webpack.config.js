@@ -6,7 +6,7 @@ module.exports = {
 	target: "node",
 	performance: {
 		hints: "warning",
-		unusedExternals: true
+		unusedConfig: true
 	},
 	// A RegExp decides per request, so there is no entry that could be unused.
 	externals: [/^path$/],

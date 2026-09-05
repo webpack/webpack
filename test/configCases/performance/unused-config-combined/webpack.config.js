@@ -8,8 +8,7 @@ module.exports = {
 	target: "node",
 	performance: {
 		hints: "stats",
-		unusedDefines: true,
-		unusedExternals: true
+		unusedConfig: true
 	},
 	externals: {
 		path: "commonjs path",

@@ -9,6 +9,6 @@ module.exports = {
 	performance: {
 		hints: "stats",
 		all: true,
-		unusedReexports: false
+		unusedModules: false
 	}
 };

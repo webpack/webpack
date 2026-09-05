@@ -9,6 +9,6 @@ module.exports = {
 	},
 	performance: {
 		hints: "error",
-		embeddedSourceMaps: true
+		sourceMaps: true
 	}
 };

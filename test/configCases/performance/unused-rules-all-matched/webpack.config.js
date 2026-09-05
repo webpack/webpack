@@ -6,7 +6,7 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: "warning",
-		unusedRules: true
+		unusedConfig: true
 	},
 	module: {
 		rules: [{ test: /\.js$/, use: [] }]

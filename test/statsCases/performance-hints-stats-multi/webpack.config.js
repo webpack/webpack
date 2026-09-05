@@ -7,7 +7,7 @@ module.exports = ["first", "second"].map((name) => ({
 	mode: "development",
 	performance: {
 		hints: "stats",
-		unusedRules: true
+		unusedConfig: true
 	},
 	module: {
 		rules: [{ test: /\.never-matches$/, type: "asset/source" }]

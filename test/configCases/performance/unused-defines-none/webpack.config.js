@@ -7,6 +7,6 @@ module.exports = {
 	optimization: { nodeEnv: false },
 	performance: {
 		hints: "warning",
-		unusedDefines: true
+		unusedConfig: true
 	}
 };

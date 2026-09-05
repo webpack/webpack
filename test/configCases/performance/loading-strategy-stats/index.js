@@ -10,7 +10,7 @@ it("should keep every loading-strategy hint out of warnings and errors", () =>
 		expect(lazy).toBe("lazy");
 		expect(__STATS__.hints.map((hint) => hint.message).sort()).toEqual([
 			expect.stringMatching(/conflicting resource hints/),
-			expect.stringMatching(/entrypoint overlap/),
+			expect.stringMatching(/duplicate modules/),
 			expect.stringMatching(/split chunks capped/),
 			expect.stringMatching(/unsplit vendors/)
 		]);
