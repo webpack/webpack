@@ -40,29 +40,40 @@ const CACHE = path.join(ROOT, "node_modules/.cache/css-minifier-comparison");
 const MODULES = path.join(CACHE, "node_modules");
 
 const PACKAGES = [
+	"98.css@0.1",
 	"animate.css@4",
+	"beercss@5",
 	"bootstrap@5",
 	"bulma@1",
 	"clean-css@5",
+	"crass@0.12",
 	"csso@5",
 	"cssnano@7",
+	"cssnano-preset-advanced@9",
 	"daisyui@5",
 	"esbuild@0.25",
 	"@fortawesome/fontawesome-free@6",
+	"fomantic-ui-css@2",
 	"foundation-sites@6",
 	"lightningcss@1",
 	"materialize-css@1",
 	"milligram@1",
 	"normalize.css@8",
+	"@patternfly/patternfly@6",
 	"@picocss/pico@2",
 	"postcss@8",
 	"postcss-selector-parser@7",
 	"@primer/css@21",
 	"purecss@3",
 	"sanitize.css@13",
+	"@shoelace-style/shoelace@2",
+	"spectre.css@0.5",
+	"@swc/css@0.0.28",
 	"semantic-ui-css@2",
+	"@tabler/core@1",
 	"tachyons@4",
 	"tailwindcss@4",
+	"@tdewolff/minify@2",
 	"@tailwindcss/cli@4",
 	"uikit@3",
 	"water.css@2"
@@ -196,20 +207,27 @@ const load = (name) => require(path.join(MODULES, name));
 // animation and reset sheets) whose CSS looks nothing like a framework's.
 /** @type {[string, string][]} */
 const INSTALLED_FIXTURES = [
+	["98.css", "98.css/dist/98.css"],
 	["Animate.css 4", "animate.css/animate.css"],
+	["Beer CSS 5", "beercss/dist/cdn/beer.css"],
 	["Bootstrap 5 (full)", "bootstrap/dist/css/bootstrap.css"],
 	["Bootstrap 5 (grid)", "bootstrap/dist/css/bootstrap-grid.css"],
 	["Bulma 1", "bulma/css/bulma.css"],
+	["Fomantic-UI 2", "fomantic-ui-css/semantic.css"],
 	["Font Awesome 6", "@fortawesome/fontawesome-free/css/all.css"],
 	["Foundation 6", "foundation-sites/dist/css/foundation.css"],
 	["Materialize 1", "materialize-css/dist/css/materialize.css"],
 	["Milligram 1", "milligram/dist/milligram.css"],
 	["normalize.css 8", "normalize.css/normalize.css"],
+	["PatternFly 6", "@patternfly/patternfly/patternfly-base.css"],
 	["Pico 2", "@picocss/pico/css/pico.css"],
 	["Primer 21", "@primer/css/dist/primer.css"],
 	["Pure 3", "purecss/build/pure.css"],
 	["sanitize.css 13", "sanitize.css/sanitize.css"],
 	["Semantic UI 2", "semantic-ui-css/semantic.css"],
+	["Shoelace 2 (light)", "@shoelace-style/shoelace/dist/themes/light.css"],
+	["Spectre 0.5", "spectre.css/dist/spectre.css"],
+	["Tabler 1", "@tabler/core/dist/css/tabler.css"],
 	["Tachyons 4", "tachyons/css/tachyons.css"],
 	["UIkit 3", "uikit/dist/css/uikit.css"],
 	["Water.css 2", "water.css/out/water.css"]
@@ -248,11 +266,37 @@ const MINIFIERS = [
 			).code
 	],
 	[
+		// The rivals shorten a custom property's value the way they shorten any
+		// other; webpack holds off unless told, since `getPropertyValue()` reads it.
+		"webpack+target+vars",
+		() => async (css) =>
+			(
+				await cssMinify({ "input.css": css }, undefined, {
+					environment: { browsers: MODERN_BROWSERS },
+					rewriteCustomProperties: true
+				})
+			).code
+	],
+	[
 		"esbuild",
 		() => {
 			const esbuild = load("esbuild");
 			return async (css) =>
 				(await esbuild.transform(css, { loader: "css", minify: true })).code;
+		}
+	],
+	[
+		"esbuild+target",
+		() => {
+			const esbuild = load("esbuild");
+			// esbuild names its targets rather than reading browserslist, so the
+			// query resolves to the `<name><major>` strings it accepts.
+			const target = MODERN_BROWSERS.map((entry) =>
+				entry.replace(" ", "").replace(/\..*$/, "")
+			);
+			return async (css) =>
+				(await esbuild.transform(css, { loader: "css", minify: true, target }))
+					.code;
 		}
 	],
 	[
@@ -295,12 +339,67 @@ const MINIFIERS = [
 		}
 	],
 	[
+		"lightningcss+target",
+		() => {
+			const lightningcss = load("lightningcss");
+			const targets = lightningcss.browserslistToTargets(MODERN_BROWSERS);
+			return (css) =>
+				lightningcss
+					.transform({
+						filename: "input.css",
+						code: Buffer.from(css),
+						minify: true,
+						targets
+					})
+					.code.toString("utf8");
+		}
+	],
+	[
 		"cssnano",
 		() => {
 			const postcss = load("postcss");
 			const cssnano = load("cssnano");
 			return async (css) =>
 				(await postcss([cssnano]).process(css, { from: undefined })).css;
+		}
+	],
+	[
+		// The preset cssnano does not ship on by default: it also merges rules,
+		// rebases `z-index` and reduces idents, so it diverges where the rest agree.
+		"cssnano advanced",
+		() => {
+			const postcss = load("postcss");
+			const cssnano = load("cssnano");
+			const advanced = load("cssnano-preset-advanced");
+			return async (css) =>
+				(
+					await postcss([cssnano({ preset: advanced() })]).process(css, {
+						from: undefined
+					})
+				).css;
+		}
+	],
+	[
+		"tdewolff/minify",
+		() => {
+			const { minify } = load("@tdewolff/minify");
+			return (css) => minify("text/css", css);
+		}
+	],
+	[
+		// Its documented entry point, which is what a user calls — it panics on a
+		// stylesheet with anything much in it, and the row then reads as a refusal.
+		"@swc/css",
+		() => {
+			const swc = load("@swc/css");
+			return (css) => swc.minifySync(Buffer.from(css), {}).code.toString();
+		}
+	],
+	[
+		"crass",
+		() => {
+			const crass = load("crass");
+			return (css) => crass.parse(css).optimize({ o1: true }).toString();
 		}
 	]
 ];
