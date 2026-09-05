@@ -533,6 +533,47 @@ describe("Compiler", () => {
 		});
 	});
 
+	it("should stamp an asset which carries times onto a file it did not rewrite", (done) => {
+		const webpack = require("..");
+
+		const timestamps = {
+			atime: Date.UTC(2020, 0, 2, 3, 4, 5),
+			mtime: Date.UTC(2020, 0, 3, 4, 5, 6)
+		};
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [emitAssetWithTimestamps(timestamps)]
+		});
+		const volume = new Volume();
+		const outputFileSystem = createFsFromVolume(volume);
+		// the content the build emits, already on disk with times of its own, so
+		// the emit compares it, writes nothing, and only the times are left to set
+		volume.fromJSON({ "/directory/stamped.txt": "stamped" });
+		outputFileSystem.utimesSync(
+			"/directory/stamped.txt",
+			new Date(0),
+			new Date(0)
+		);
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (outputFileSystem)
+		);
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			expect(
+				/** @type {import("../").Stats} */ (
+					stats
+				).compilation.comparedForEmitAssets.has("stamped.txt")
+			).toBe(true);
+			expect(outputFileSystem.statSync("/directory/stamped.txt").mtimeMs).toBe(
+				timestamps.mtime
+			);
+			done();
+		});
+	});
+
 	it("should fail when the output file system cannot set the times", (done) => {
 		const webpack = require("..");
 
