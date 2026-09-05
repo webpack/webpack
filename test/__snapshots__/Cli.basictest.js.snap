@@ -11176,6 +11176,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-merge-distant-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default on two counts: it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does; and over the framework stylesheets it cuts raw bytes while costing gzip ones, a block repeated at a distance already compressing on its own. It is taken only where the copy of the block it drops outweighs the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
+        "multiple": false,
+        "path": "optimization.minimize.css.mergeDistantRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default on two counts: it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does; and over the framework stylesheets it cuts raw bytes while costing gzip ones, a block repeated at a distance already compressing on its own. It is taken only where the copy of the block it drops outweighs the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-merge-longhands": Object {
     "configs": Array [
       Object {
@@ -11812,6 +11825,19 @@ Object {
       },
     ],
     "description": "Write a spelling the \`browserslist\` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as \`rgba()\`, a double-position gradient stop as the two stops it names, \`inset\` / \`overflow\` / \`place-*\` as the longhands they set, \`text-decoration\` as its own longhands where a slot is newer than the shorthand, \`system-ui\` as the stack of platform font names it stands for, a \`:lang()\` or \`:not()\` holding a list as the \`:is()\` that means it, a media feature range as the \`min-\`/\`max-\` pair, and \`light-dark()\` as the custom-property pair a color scheme switches. On by default, and only in effect for a \`browserslist\` target — any other target names no browsers to answer for. Off leaves every such spelling as written, which is how a stylesheet one of these rewrites gets wrong is minified; it never makes the minifier write a spelling the target cannot read.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-merge-distant-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default on two counts: it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does; and over the framework stylesheets it cuts raw bytes while costing gzip ones, a block repeated at a distance already compressing on its own. It is taken only where the copy of the block it drops outweighs the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.mergeDistantRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default on two counts: it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does; and over the framework stylesheets it cuts raw bytes while costing gzip ones, a block repeated at a distance already compressing on its own. It is taken only where the copy of the block it drops outweighs the selector it writes instead. \`mergeRules\` is the safe half of this, joining only what nothing stands between.",
     "multiple": false,
     "simpleType": "boolean",
   },

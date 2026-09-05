@@ -518,6 +518,51 @@ const BOX_CORNERS = ["top-left", "top-right", "bottom-right", "bottom-left"];
  * which is why only the two-longhand ones are read this way.
  * @returns {[string, string[]][]} `[shorthand, [first, second]]`, sorted
  */
+/**
+ * Every longhand each shorthand sets, transitively — `border` reaches
+ * `border-top-width` through `border-width`. Read off `computed`, which names a
+ * shorthand's longhands, and not filtered by status: a shorthand an engine
+ * supports shadows whatever the spec calls it.
+ * @returns {[string, string[]][]} `[shorthand, longhands]`, longhands sorted
+ */
+const collectShorthandLonghands = () => {
+	/** @type {Map<string, string[]>} */
+	const direct = new Map();
+	for (const [name, property] of Object.entries(properties)) {
+		if (Array.isArray(property.computed)) {
+			direct.set(name, property.computed);
+		}
+	}
+	/** @type {Map<string, Set<string>>} */
+	const closed = new Map();
+	/**
+	 * @param {string} name a shorthand
+	 * @param {Set<string>} seen the shorthands already being expanded
+	 * @returns {Set<string>} every longhand it sets
+	 */
+	const expand = (name, seen) => {
+		const found = closed.get(name);
+		if (found !== undefined) return found;
+		/** @type {Set<string>} */
+		const out = new Set();
+		for (const longhand of direct.get(name) || []) {
+			out.add(longhand);
+			if (!direct.has(longhand) || seen.has(longhand)) continue;
+			seen.add(longhand);
+			for (const deeper of expand(longhand, seen)) out.add(deeper);
+		}
+		closed.set(name, out);
+		return out;
+	};
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const name of [...direct.keys()].sort()) {
+		const longhands = [...expand(name, new Set([name]))].sort();
+		if (longhands.length !== 0) out.push([name, longhands]);
+	}
+	return out;
+};
+
 const collectPairLonghands = () => {
 	/** @type {[string, string[]][]} */
 	const out = [];
@@ -6554,6 +6599,7 @@ const collectData = async () => {
 		SUPPLEMENT.orderedShorthands
 	);
 	const slashLonghands = collectSlashLonghands();
+	const shorthandLonghands = collectShorthandLonghands();
 	const customIdentListProperties = collectCustomIdentListProperties();
 	const unsharedLonghandKeywords = collectUnsharedLonghandKeywords([
 		boxLonghands,
@@ -6728,6 +6774,12 @@ const ORDERED_LONGHANDS = new Map([${orderedLonghands
 
 const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
+
+// Every longhand each shorthand sets, so one block can be asked whether another
+// could shadow it. Not every shorthand prefixes its longhands: \`inset\` sets \`top\`.
+const SHORTHAND_LONGHANDS = new Map([${shorthandLonghands
+		.map(([name, longhands]) => `["${name}", ${setLiteral(longhands)}]`)
 		.join(", ")}]);
 
 // Every longhand the three merge tables above can consume, so a block is asked
@@ -7418,7 +7470,7 @@ module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SHORTHAND_LONGHANDS = SHORTHAND_LONGHANDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
