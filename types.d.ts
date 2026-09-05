@@ -20266,7 +20266,7 @@ declare interface OptimizationMinimizeCss {
 	lowerUnsupported?: boolean;
 
 	/**
-	 * Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default on two counts: it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does; and over the framework stylesheets it cuts raw bytes while costing gzip ones, a block repeated at a distance already compressing on its own. It is taken only where the copy of the block it drops outweighs the selector it writes instead. `mergeRules` is the safe half of this, joining only what nothing stands between.
+	 * Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. `mergeRules` is the safe half of this, joining only what nothing stands between.
 	 * @since 5.111.0
 	 */
 	mergeDistantRules?: boolean;

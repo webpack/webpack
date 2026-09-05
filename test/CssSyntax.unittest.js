@@ -10173,9 +10173,19 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		});
 
 		it("declines a block that does not outweigh the selector it would write", () => {
+			// `{color:red}` is 11, so a selector of 6 or more is not worth the join.
 			const sheet =
-				"@media screen{.aaaaaaaaaaaaaaaaaaaaaaaaaaaa{color:red}.b{margin:0}.cccccccccccccccccccccccccccc{color:red}}";
+				"@media screen{.aaaaa{color:red}.b{margin:0}.ccccc{color:red}}";
 			expect(minify(sheet, true)).toBe(sheet);
+		});
+
+		it("joins a block worth more than twice the selector it writes", () => {
+			expect(
+				minify(
+					"@media screen{.aaaa{color:red}.b{margin:0}.cccc{color:red}}",
+					true
+				)
+			).toBe("@media screen{.aaaa,.cccc{color:red}.b{margin:0}}");
 		});
 
 		it("reads `all` between as declaring everything", () => {
@@ -10230,9 +10240,15 @@ describe("SourceProcessor — mergeDistantRules", () => {
 	});
 
 	it("declines a block that does not outweigh the selector it would write", () => {
-		// `{color:red}` is 11, so a selector of 22 or more is not worth the join.
-		const sheet = `.a{color:red}.b{margin:0}.${"x".repeat(22)}{color:red}`;
+		// `{color:red}` is 11, so a selector of 6 or more is not worth the join.
+		const sheet = `.a{color:red}.b{margin:0}.${"x".repeat(5)}{color:red}`;
 		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("joins a block worth more than twice the selector it writes", () => {
+		expect(
+			minify(`.a{color:red}.b{margin:0}.${"x".repeat(4)}{color:red}`, true)
+		).toBe(".a,.xxxx{color:red}.b{margin:0}");
 	});
 
 	it("does not write a selector the list already carries", () => {
