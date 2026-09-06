@@ -1,13 +1,7 @@
 "use strict";
 
-// Nothing here is transformed (`transformIgnorePatterns`), so `jest.mock` is
-// not hoisted: it has to be registered before the requires below.
-jest.mock("child_process", () => ({ spawn: jest.fn() }));
-
-const { spawn } = require("child_process");
 const { EventEmitter } = require("events");
-const fs = require("fs");
-const { isInteractive, setup } = require("../setup/setup");
+const { effects, isInteractive, setup } = require("../setup/setup");
 
 /**
  * @param {number} exitCode code the process exits with
@@ -100,11 +94,8 @@ describe("Setup paths", () => {
 	const stdin = process.stdin.isTTY;
 	const stdout = process.stdout.isTTY;
 	const { CI, WEBPACK_SETUP } = process.env;
-	/** @type {jest.SpyInstance} */
-	let existsSync;
-	/** @type {jest.SpyInstance} */
-	let lstatSync;
-	/** @type {jest.SpyInstance} */
+	const real = { ...effects };
+	/** @type {jest.Mock} */
 	let symlinkSync;
 
 	/**
@@ -112,11 +103,11 @@ describe("Setup paths", () => {
 	 * @returns {void}
 	 */
 	const link = (linked) => {
-		existsSync.mockReturnValue(true);
-		lstatSync.mockImplementation(() => {
+		effects.existsSync = () => true;
+		effects.lstatSync = () => {
 			if (!linked) throw new Error("ENOENT");
-			return { isSymbolicLink: () => true };
-		});
+			return /** @type {EXPECTED_ANY} */ ({ isSymbolicLink: () => true });
+		};
 	};
 
 	/**
@@ -124,109 +115,110 @@ describe("Setup paths", () => {
 	 */
 	const ran = () =>
 		/** @type {jest.Mock} */
-		(spawn).mock.calls.map(([command, args]) => [command, ...args]);
+		(effects.spawn).mock.calls.map(([command, args]) => [command, ...args]);
 
 	beforeEach(() => {
-		/** @type {jest.Mock} */ (spawn).mockReset();
-		existsSync = jest.spyOn(fs, "existsSync");
-		lstatSync = jest.spyOn(fs, "lstatSync");
-		symlinkSync = jest.spyOn(fs, "symlinkSync").mockReturnValue(undefined);
-		process.exitCode = 0;
+		jest.spyOn(effects, "spawn").mockImplementation();
+		symlinkSync = jest.fn();
+		effects.symlinkSync = symlinkSync;
 	});
 
 	afterEach(() => {
-		jest.restoreAllMocks();
+		Object.assign(effects, real);
 		process.stdin.isTTY = stdin;
 		process.stdout.isTTY = stdout;
 		if (CI === undefined) delete process.env.CI;
 		else process.env.CI = CI;
 		if (WEBPACK_SETUP === undefined) delete process.env.WEBPACK_SETUP;
 		else process.env.WEBPACK_SETUP = WEBPACK_SETUP;
-		process.exitCode = 0;
 	});
 
 	it("should verify the lockfile and link directly when automated", async () => {
 		process.env.WEBPACK_SETUP = "automated";
 		link(false);
-		/** @type {jest.Mock} */ (spawn).mockImplementation((command, args) =>
-			args[0] === "-v" ? child(0, "1.22.22") : child(0)
+		/** @type {jest.Mock} */ (effects.spawn).mockImplementation(
+			(command, args) => (args[0] === "-v" ? child(0, "1.22.22") : child(0))
 		);
-		await setup();
+		const code = await setup();
+		expect(code).toBe(0);
 		expect(ran()).toEqual([
 			["yarn", "-v"],
 			["yarn", "install", "--frozen-lockfile"]
 		]);
 		expect(symlinkSync).toHaveBeenCalledTimes(1);
-		expect(process.exitCode).toBe(0);
 	});
 
 	it("should not install a global yarn when automated", async () => {
 		process.env.WEBPACK_SETUP = "automated";
 		link(false);
-		/** @type {jest.Mock} */ (spawn).mockReturnValue(child(1));
-		await setup();
+		/** @type {jest.Mock} */ (effects.spawn).mockReturnValue(child(1));
+		const code = await setup();
 		expect(ran()).toEqual([["yarn", "-v"]]);
 		expect(symlinkSync).not.toHaveBeenCalled();
-		expect(process.exitCode).toBe(1);
+		expect(code).toBe(1);
 	});
 
 	it("should keep an existing link when automated", async () => {
 		process.env.WEBPACK_SETUP = "automated";
 		link(true);
-		/** @type {jest.Mock} */ (spawn).mockImplementation((command, args) =>
-			args[0] === "-v" ? child(0, "1.22.22") : child(0)
+		/** @type {jest.Mock} */ (effects.spawn).mockImplementation(
+			(command, args) => (args[0] === "-v" ? child(0, "1.22.22") : child(0))
 		);
-		await setup();
+		const code = await setup();
+		expect(code).toBe(0);
 		expect(symlinkSync).not.toHaveBeenCalled();
-		expect(process.exitCode).toBe(0);
 	});
 
 	it("should link through the registry when a contributor", async () => {
 		process.env.WEBPACK_SETUP = "interactive";
 		let linked = false;
-		existsSync.mockReturnValue(true);
-		lstatSync.mockImplementation(() => {
+		effects.existsSync = () => true;
+		effects.lstatSync = () => {
 			if (!linked) throw new Error("ENOENT");
-			return { isSymbolicLink: () => true };
-		});
-		/** @type {jest.Mock} */ (spawn).mockImplementation((command, args) => {
-			if (args[0] === "link" && args[1] === "webpack") linked = true;
-			return args[0] === "-v" ? child(0, "1.22.22") : child(0);
-		});
-		await setup();
+			return /** @type {EXPECTED_ANY} */ ({ isSymbolicLink: () => true });
+		};
+		/** @type {jest.Mock} */ (effects.spawn).mockImplementation(
+			(command, args) => {
+				if (args[0] === "link" && args[1] === "webpack") linked = true;
+				return args[0] === "-v" ? child(0, "1.22.22") : child(0);
+			}
+		);
+		const code = await setup();
+		expect(code).toBe(0);
 		expect(ran()).toEqual([
 			["yarn", "-v"],
 			["yarn", "install"],
 			["yarn", "link"],
 			["yarn", "link", "webpack"]
 		]);
-		expect(process.exitCode).toBe(0);
 	});
 
 	it("should install yarn for a contributor without it", async () => {
 		process.env.WEBPACK_SETUP = "interactive";
 		let linked = false;
-		existsSync.mockReturnValue(true);
-		lstatSync.mockImplementation(() => {
+		effects.existsSync = () => true;
+		effects.lstatSync = () => {
 			if (!linked) throw new Error("ENOENT");
-			return { isSymbolicLink: () => true };
-		});
-		/** @type {jest.Mock} */ (spawn).mockImplementation((command, args) => {
-			if (args[0] === "link" && args[1] === "webpack") linked = true;
-			if (args[0] === "-v") return child(127);
-			return child(0);
-		});
-		await setup();
+			return /** @type {EXPECTED_ANY} */ ({ isSymbolicLink: () => true });
+		};
+		/** @type {jest.Mock} */ (effects.spawn).mockImplementation(
+			(command, args) => {
+				if (args[0] === "link" && args[1] === "webpack") linked = true;
+				if (args[0] === "-v") return child(127);
+				return child(0);
+			}
+		);
+		const code = await setup();
+		expect(code).toBe(0);
 		expect(ran()[0]).toEqual(["yarn", "-v"]);
 		expect(ran()[1]).toEqual(["npm", "install", "-g", "yarn"]);
-		expect(process.exitCode).toBe(0);
 	});
 
 	it("should do nothing for a contributor already linked", async () => {
 		process.env.WEBPACK_SETUP = "interactive";
 		link(true);
-		await setup();
+		const code = await setup();
+		expect(code).toBe(0);
 		expect(ran()).toEqual([]);
-		expect(process.exitCode).toBe(0);
 	});
 });

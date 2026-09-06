@@ -1,8 +1,17 @@
 "use strict";
 
-const { spawn } = require("child_process");
+const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
+
+// A seam for the tests: Bun's jest cannot mock a built-in module, so the
+// effects are reached through this object rather than through the imports.
+const effects = {
+	spawn: childProcess.spawn,
+	existsSync: fs.existsSync,
+	lstatSync: fs.lstatSync,
+	symlinkSync: fs.symlinkSync
+};
 
 const root = process.cwd();
 const nodeModulesFolder = path.resolve(root, "node_modules");
@@ -24,15 +33,17 @@ function isInteractive() {
 }
 
 /**
- * @returns {Promise<void>} result
+ * Returns the exit code rather than setting it, so a caller can observe the
+ * outcome without reading global state.
+ * @returns {Promise<number>} the exit code
  */
 async function setup() {
 	try {
 		await (isInteractive() ? setupForContributor() : setupForAutomation());
-		process.exitCode = 0;
+		return 0;
 	} catch (err) {
 		console.error(err);
-		process.exitCode = 1;
+		return 1;
 	}
 }
 
@@ -67,7 +78,7 @@ async function setupForAutomation() {
 	if (await checkSymlinkExistsAsync()) return;
 	console.log("Setup: Link webpack into itself");
 	const isWindows = process.platform === "win32";
-	fs.symlinkSync(
+	effects.symlinkSync(
 		isWindows ? root : "..",
 		webpackDependencyFolder,
 		isWindows ? "junction" : "dir"
@@ -81,8 +92,8 @@ function checkSymlinkExistsAsync() {
 	return new Promise((resolve) => {
 		try {
 			resolve(
-				fs.existsSync(nodeModulesFolder) &&
-					fs.lstatSync(webpackDependencyFolder).isSymbolicLink()
+				effects.existsSync(nodeModulesFolder) &&
+					effects.lstatSync(webpackDependencyFolder).isSymbolicLink()
 			);
 		} catch {
 			resolve(false);
@@ -127,7 +138,7 @@ function installYarnAsync() {
 function exec(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		const cp = spawn(command, args, {
+		const cp = effects.spawn(command, args, {
 			cwd: root,
 			stdio: "inherit",
 			shell: true
@@ -155,7 +166,7 @@ function exec(command, args, description) {
 function execGetOutput(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		const cp = spawn(command, args, {
+		const cp = effects.spawn(command, args, {
 			cwd: root,
 			stdio: [process.stdin, "pipe", process.stderr],
 			shell: true
@@ -178,9 +189,12 @@ function execGetOutput(command, args, description) {
 	});
 }
 
+module.exports.effects = effects;
 module.exports.isInteractive = isInteractive;
 module.exports.setup = setup;
 
 if (require.main === module) {
-	setup();
+	setup().then((code) => {
+		process.exitCode = code;
+	});
 }
