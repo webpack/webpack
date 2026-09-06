@@ -1,6 +1,12 @@
 "use strict";
 
-const { each, eachLimit, map, parallel } = require("../lib/util/async");
+const {
+	each,
+	eachLimit,
+	map,
+	mapLimit,
+	parallel
+} = require("../lib/util/async");
 
 /**
  * Builds an iterator that completes on a later tick, recording the order in
@@ -451,6 +457,90 @@ describe("map", () => {
 			(err, results) => {
 				expect(err).toBeNull();
 				expect(results).toEqual([2, 3, 4]);
+				done();
+			}
+		);
+	});
+});
+
+describe("mapLimit", () => {
+	it("never exceeds the limit and keeps results in collection order", (done) => {
+		let running = 0;
+		let peak = 0;
+		mapLimit(
+			[30, 10, 20, 40],
+			2,
+			(item, callback) => {
+				running++;
+				peak = Math.max(peak, running);
+				setTimeout(() => {
+					running--;
+					callback(null, item * 2);
+				}, item);
+			},
+			(err, results) => {
+				expect(err).toBeNull();
+				expect(peak).toBe(2);
+				expect(results).toEqual([60, 20, 40, 80]);
+				done();
+			}
+		);
+	});
+
+	it("keeps results in collection order for an iterable", (done) => {
+		mapLimit(
+			new Set([3, 1, 2]),
+			2,
+			(item, callback) => {
+				setTimeout(() => callback(null, `#${item}`), item * 5);
+			},
+			(err, results) => {
+				expect(err).toBeNull();
+				expect(results).toEqual(["#3", "#1", "#2"]);
+				done();
+			}
+		);
+	});
+
+	it("completes an empty collection", (done) => {
+		mapLimit(
+			[],
+			2,
+			(item, callback) => callback(new Error("should not run")),
+			(err, results) => {
+				expect(err).toBeNull();
+				expect(results).toEqual([]);
+				done();
+			}
+		);
+	});
+
+	it("reports the first error", (done) => {
+		mapLimit(
+			[1, 2, 3],
+			2,
+			(item, callback) => {
+				setTimeout(
+					() => callback(item === 2 ? new Error("nope") : null, item),
+					item
+				);
+			},
+			(err, results) => {
+				expect(/** @type {Error} */ (err).message).toBe("nope");
+				expect(results).toBeUndefined();
+				done();
+			}
+		);
+	});
+
+	it("completes immediately when the limit is below one", (done) => {
+		mapLimit(
+			[1, 2],
+			0,
+			(item, callback) => callback(new Error("should not run")),
+			(err, results) => {
+				expect(err).toBeNull();
+				expect(results).toEqual([]);
 				done();
 			}
 		);
