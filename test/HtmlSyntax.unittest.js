@@ -7867,11 +7867,7 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 
 			offered.push(name);
 
-			// A handler arrives as the function its body belongs to, and only the
-			// body of the function answered is written back.
-			return source.startsWith("function ")
-				? `function _(){ANSWER(${name})}`
-				: `ANSWER(${name})`;
+			return `ANSWER(${name})`;
 		};
 
 		const { code } = await htmlMinify({ "page.html": DOCUMENT }, undefined, {
@@ -7885,9 +7881,7 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 			"json",
 			"javascript/script",
 			"css/block-contents",
-			// The handler, spent as a whole script by the minifier before the
-			// renderer sees it — the printer offers it as an event handler.
-			"javascript/script",
+			"javascript/event-handler",
 			"svg",
 			"html",
 			"html"
@@ -9689,7 +9683,7 @@ describe("htmlMinify — the function an event handler is asked about", () => {
 			})
 		).code;
 
-	it("asks about a whole script, since that is what a JS minifier takes", async () => {
+	it("asks about the body it is, and says which production that is", async () => {
 		/** @type {[string, string | undefined][]} */
 		const asked = [];
 
@@ -9698,60 +9692,30 @@ describe("htmlMinify — the function an event handler is asked about", () => {
 			return undefined;
 		});
 
-		// The body arrives inside the function it belongs to, so the production
-		// asked about is the classic script that function is written in.
-		expect(asked).toEqual([["function _(){  f( 1 )  \n}", "script"]]);
+		// Handed over as written: an engine that takes only whole scripts wraps it
+		// itself, which is a choice a renderer supporting the production must keep.
+		expect(asked).toEqual([["  f( 1 )  ", "event-handler"]]);
 	});
 
-	it("writes back the body of the function it is answered with", async () => {
-		expect(
-			await min('<p onclick="  f( 1 )  ">x</p>', () => "function _(){f(1)}")
-		).toBe("<p onclick=f(1)>x");
+	it("writes the answer back", async () => {
+		expect(await min('<p onclick="  f( 1 )  ">x</p>', () => "f(1)")).toBe(
+			"<p onclick=f(1)>x"
+		);
 	});
 
 	it("carries a `return` through, which is what a handler body may hold", async () => {
 		expect(
 			await min('<form onsubmit="return  false"><input></form>', (source) => {
-				expect(source).toBe("function _(){return  false\n}");
-				return "function _(){return!1}";
+				expect(source).toBe("return  false");
+				return "return!1";
 			})
 		).toBe("<form onsubmit=return!1><input></form>");
 	});
 
-	it("names the function past any run of `_` the body holds", async () => {
-		/** @type {string[]} */
-		const asked = [];
-
-		await min('<p onclick="_( __ )">x</p>', (source) => {
-			asked.push(source);
-			return undefined;
-		});
-
-		// A body naming the same binding would resolve to the function around it
-		// rather than to what it meant.
-		expect(asked).toEqual(["function ___(){_( __ )\n}"]);
-	});
-
-	it("ends a line comment the body closes with", async () => {
-		// Without the newline the brace closing the function would be inside the
-		// comment, and nothing could parse what it was handed.
-		expect(
-			await min('<p onclick="f( 1 ) // done">x</p>', (source) =>
-				source.endsWith("// done\n}") ? "function _(){f(1)}" : "BROKEN"
-			)
-		).toBe("<p onclick=f(1)>x");
-	});
-
-	it("keeps the handler where the answer is not that one function", async () => {
-		const html = '<p onclick="f( 1 )">x</p>';
-		const written = '<p onclick="f( 1 )">x';
-
-		// Anything but the function minified: text around it, a second statement,
-		// and the empty answer a minifier dropping an unused declaration gives.
-		expect(await min(html, () => "f(1)")).toBe(written);
-		expect(await min(html, () => "function _(){f(1)}g()")).toBe(written);
-		expect(await min(html, () => "g();function _(){f(1)}")).toBe(written);
-		expect(await min(html, () => "")).toBe(written);
+	it("keeps the handler where the renderer declines", async () => {
+		expect(await min('<p onclick="f( 1 )">x</p>', () => undefined)).toBe(
+			'<p onclick="f( 1 )">x'
+		);
 	});
 
 	it("reports what a renderer threw over a handler", async () => {

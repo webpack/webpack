@@ -52,7 +52,7 @@ exports[`htmlMinify — one document reaching every embedded site minifies with 
 
 exports[`htmlMinify — one document reaching every embedded site offers every body to a caller's renderer, and prints each answer 1`] = `
 "<!doctype html><html lang=en><head><title>   every embedded body   </title><style>ANSWER(css)</style><script type=application/json>ANSWER(json)</script><script>ANSWER(javascript/script)</script></head><body>
-<p style=ANSWER(css/block-contents) onclick=ANSWER(javascript/script)>styled</p>
+<p style=ANSWER(css/block-contents) onclick=ANSWER(javascript/event-handler)>styled</p>
 ANSWER(svg)
 <iframe srcdoc=\\"ANSWER(html)\\"></iframe>
 <iframe srcdoc=\\"ANSWER(html)\\"></iframe>
