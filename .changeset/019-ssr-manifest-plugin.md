@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `SSRManifestPlugin` and collect server styles without a DOM.
+Add `SSRManifestPlugin` and fix server-rendered CSS collection and adoption.
