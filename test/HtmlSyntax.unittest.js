@@ -19,6 +19,7 @@ const {
 	QUOTE_DOUBLE,
 	QUOTE_NONE,
 	QUOTE_SINGLE,
+	builtinEmbeddedRenderer,
 	decodeEntities,
 	escapeAttribute,
 	escapeText,
@@ -4045,8 +4046,11 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify", mergeStyles: true })
-			.code;
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			mergeStyles: true,
+			renderEmbeddedSource: builtinEmbeddedRenderer()
+		}).code;
 
 	it("folds a run into one element", () => {
 		expect(
@@ -4057,9 +4061,12 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	it("keeps every element, minified, unless asked to fold", () => {
 		const html =
 			"<style>a {color: red}</style><style>b {color: #0000ff}</style>";
-		expect(new SourceProcessor().process(html, { mode: "minify" }).code).toBe(
-			"<style>a{color:red}</style><style>b{color:#00f}</style>"
-		);
+		expect(
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			}).code
+		).toBe("<style>a{color:red}</style><style>b{color:#00f}</style>");
 	});
 
 	it("declines a sheet whose `@import` would stop applying", () => {
@@ -4415,7 +4422,10 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			renderEmbeddedSource: builtinEmbeddedRenderer()
+		}).code;
 
 	/**
 	 * @param {string} type the `<script type>` value
@@ -4518,7 +4528,7 @@ describe("SourceProcessor — inline <script> type", () => {
 	const minifyBody = (type, body) => {
 		const out = new SourceProcessor().process(
 			`<script type="${type}">${body}</script>`,
-			{ mode: "minify" }
+			{ mode: "minify", renderEmbeddedSource: builtinEmbeddedRenderer() }
 		).code;
 		return out.slice(out.indexOf(">") + 1, out.lastIndexOf("</script>"));
 	};
@@ -5611,7 +5621,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		);
 	});
 
-	it("offers a `style` attribute to a deferring caller, and falls back to the built-in", async () => {
+	it("offers a `style` attribute to a deferring caller, and keeps it as written when declined", async () => {
 		const declined = await deferred(
 			'<p style="  color : #ff0000 ; margin : 0px  ">x</p>',
 			() => undefined
@@ -5622,12 +5632,21 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			// `module.parser.css.as` uses.
 			["css", "block-contents", "  color : #ff0000 ; margin : 0px  "]
 		]);
-		// Nothing answered, so webpack's own minifier wrote it — byte for byte what
-		// a run with no renderer at all writes.
-		expect(declined.code).toBe("<p style=color:red;margin:0>x");
+		// Nothing answered and the printer minifies no CSS itself — byte for byte
+		// what a run with no renderer at all writes.
+		expect(declined.code).toBe(
+			'<p style="  color : #ff0000 ; margin : 0px  ">x'
+		);
 		expect(declined.code).toBe(
 			minify('<p style="  color : #ff0000 ; margin : 0px  ">x</p>')
 		);
+		// Webpack's own renderer, put behind a declining one, is what answers.
+		expect(
+			minify(
+				'<p style="  color : #ff0000 ; margin : 0px  ">x</p>',
+				builtinEmbeddedRenderer()
+			)
+		).toBe("<p style=color:red;margin:0>x");
 	});
 
 	it("writes a deferred `style` attribute back in whatever shape its answer needs", async () => {
@@ -5648,37 +5667,39 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	});
 
 	it("gives a `style` attribute the transforms a block's contents get", () => {
-		// The printer composes a block-contents list the way it composes a rule's
-		// block, so it gets the same transforms — merging longhands into the
-		// shorthand they imply.
-		expect(minify('<p style="top:0;right:0;bottom:0;left:0">x</p>')).toBe(
+		// Webpack's own renderer composes a block-contents list the way the CSS
+		// printer composes a rule's block: longhands merge into their shorthand.
+		const own = builtinEmbeddedRenderer();
+		expect(minify('<p style="top:0;right:0;bottom:0;left:0">x</p>', own)).toBe(
 			"<p style=inset:0>x"
 		);
 		expect(
 			minify(
-				'<p style="margin-top:1px;margin-right:1px;margin-bottom:1px;margin-left:1px">x</p>'
+				'<p style="margin-top:1px;margin-right:1px;margin-bottom:1px;margin-left:1px">x</p>',
+				own
 			)
 		).toBe("<p style=margin:1px>x");
 		// Foreign content is the same declaration list.
 		expect(
 			minify(
-				'<svg><rect style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0"/></svg>'
+				'<svg><rect style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0"/></svg>',
+				own
 			)
 		).toBe("<svg><rect style=padding:0 /></svg>");
 		// Nothing opened a block, so a `}` closes none: it is a parse error whose
 		// bad declaration runs to the next `;` — two properties, so both survive it.
-		expect(minify('<p style="color:red;};background:blue">x</p>')).toBe(
+		expect(minify('<p style="color:red;};background:blue">x</p>', own)).toBe(
 			"<p style=color:red;background:blue>x"
 		);
 		// No `;` after it, so the bad declaration runs to the end.
-		expect(minify('<p style="background:red;}background:blue">x</p>')).toBe(
-			"<p style=background:red>x"
-		);
+		expect(
+			minify('<p style="background:red;}background:blue">x</p>', own)
+		).toBe("<p style=background:red>x");
 		// Inside a value it is a token like any other, leaving a declaration a
 		// browser drops — so it is handed back exactly as written.
-		expect(minify('<p style="background:red};background:blue">x</p>')).toBe(
-			"<p style=background:red};background:blue>x"
-		);
+		expect(
+			minify('<p style="background:red};background:blue">x</p>', own)
+		).toBe("<p style=background:red};background:blue>x");
 	});
 
 	it("minifies and offers a `style` attribute carrying character references", () => {
@@ -5690,9 +5711,10 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect(offered(html)).toEqual([
 			["css", "block-contents", 'content: "x" ; color : red']
 		]);
-		expect(minify(html)).toBe("<p style='content:\"x\";color:red'>y");
+		const own = builtinEmbeddedRenderer();
+		expect(minify(html, own)).toBe("<p style='content:\"x\";color:red'>y");
 		// Foreign content too: SVG and MathML `style` is the same declaration list.
-		expect(minify('<svg><rect style="fill : &quot;a&quot;"/></svg>')).toBe(
+		expect(minify('<svg><rect style="fill : &quot;a&quot;"/></svg>', own)).toBe(
 			"<svg><rect style='fill:\"a\"'/></svg>"
 		);
 	});
@@ -6172,7 +6194,12 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 	const minifyFor = (browser) =>
 		new SourceProcessor().process(
 			'<p style="color:rgba(255,0,0,.5)">x</p><style>.a{color:rgba(255,0,0,.5)}</style>',
-			{ mode: "minify", environment: { browsers: [browser] } }
+			{
+				mode: "minify",
+				renderEmbeddedSource: builtinEmbeddedRenderer({
+					environment: { browsers: [browser] }
+				})
+			}
 		).code;
 
 	it("shortens both the attribute and the element when the target reads it", () => {
@@ -9389,7 +9416,8 @@ describe("SourceProcessor — minifying what the round-trip guard checks", () =>
 			removeEmptyElements: true,
 			removeRedundantAttributes: /** @type {"all"} */ ("all"),
 			sortAttributes: true,
-			sortTokenLists: true
+			sortTokenLists: true,
+			renderEmbeddedSource: builtinEmbeddedRenderer()
 		}).code;
 
 	/** @type {[string, string][]} */
@@ -9469,11 +9497,13 @@ describe("SourceProcessor — reusing work across a print", () => {
 		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
 	it("minifies a repeated style attribute to the same declarations", () => {
-		// The same raw value twice, which is what the memo is keyed on — a value
-		// that merely minifies to the same text is a different entry.
-		expect(minify('<p style="color: #ff0000"><b style="color: #ff0000">')).toBe(
-			"<p style=color:red><b style=color:red></b>"
-		);
+		// The same raw value twice, which is what webpack's own renderer keys its
+		// memo on — a value that merely minifies to the same text is another entry.
+		expect(
+			minify('<p style="color: #ff0000"><b style="color: #ff0000">', {
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			})
+		).toBe("<p style=color:red><b style=color:red></b>");
 	});
 
 	it("runs a caller's renderer for every style attribute, repeats included", () => {
@@ -9489,13 +9519,18 @@ describe("SourceProcessor — reusing work across a print", () => {
 		expect(code).toBe("<p style=--call:1><b style=--call:2></b>");
 	});
 
-	it("does not carry a style attribute's result into a print with other options", () => {
+	it("does not carry a style attribute's result into a renderer with other options", () => {
 		const html = '<p style="width: 16px">';
-		expect(minify(html)).toBe("<p style=width:16px>");
-		expect(minify(html, { convertLengthUnits: true })).toBe(
-			"<p style=width:1pc>"
-		);
-		expect(minify(html)).toBe("<p style=width:16px>");
+		const plain = { renderEmbeddedSource: builtinEmbeddedRenderer() };
+		expect(minify(html, plain)).toBe("<p style=width:16px>");
+		expect(
+			minify(html, {
+				renderEmbeddedSource: builtinEmbeddedRenderer({
+					convertLengthUnits: true
+				})
+			})
+		).toBe("<p style=width:1pc>");
+		expect(minify(html, plain)).toBe("<p style=width:16px>");
 	});
 
 	/**
@@ -9670,12 +9705,18 @@ describe("htmlMinify — an answered `style` attribute that changes its quoting"
 
 	it("declines an answer that would change a foreign `/>`", async () => {
 		// Whether a space must precede a foreign `/>` is decided when the tag
-		// closes, too early to wait for the answer, so the built-in's text stands.
+		// closes, too early to wait for the answer, so the source's spelling stands.
+		expect(
+			await min("<svg><rect style=color:red /></svg>", (source, info) =>
+				info.type === "css" ? "margin:0 auto" : undefined
+			)
+		).toBe("<svg><rect style=color:red /></svg>");
+		// An answer that keeps the tag ending as the source had it is taken.
 		expect(
 			await min('<svg><rect style="color: red" /></svg>', (source, info) =>
 				info.type === "css" ? "margin:0 auto" : undefined
 			)
-		).toBe("<svg><rect style=color:red /></svg>");
+		).toBe('<svg><rect style="margin:0 auto"/></svg>');
 	});
 });
 
@@ -9842,8 +9883,8 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 	};
 
 	it("keeps one a deferred renderer hands straight back", async () => {
-		// The answer arrives after the attribute is written, so the built-in's
-		// text stood here until the answer was read for what it says.
+		// The answer arrives after the attribute is written, so the source's
+		// spelling stood here until the answer was read for what it says.
 		expect(
 			await deferredStyle(
 				'<p style="color:  #ff0000 ;">x</p>',
@@ -9913,10 +9954,10 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 		).toBe('<p style="margin:0 auto">x');
 	});
 
-	it("minifies one a deferred renderer declines", async () => {
+	it("keeps one a deferred renderer declines as written", async () => {
 		expect(
 			await deferredStyle('<p style="color:  #ff0000 ;">x</p>', () => undefined)
-		).toBe("<p style=color:red>x");
+		).toBe('<p style="color:  #ff0000 ;">x');
 	});
 
 	it("trims the whitespace around a URL, until told not to", () => {
