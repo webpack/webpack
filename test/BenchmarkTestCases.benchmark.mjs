@@ -10,6 +10,7 @@ import { simpleGit } from "simple-git";
 /**
  * @import {
  * 	BenchmarkResult,
+ * 	HeapUsage,
  * 	Result,
  * 	BenchmarkWorkerMethods
  * } from "./harness/benchmark/benchmark.worker.mjs"
@@ -179,6 +180,29 @@ async function getBaselineRevs() {
 			rev: base
 		}
 	];
+}
+
+// Sample spread above which a heap number is reported as not worth comparing.
+// Three samples of a live heap spread 12-15% even when their median repeats to
+// under 1%, so the guard sits well above that and only catches real drift.
+const UNSTABLE_SPREAD = 0.25;
+
+/**
+ * @param {number} bytes bytes
+ * @returns {string} formatted size
+ */
+function formatBytes(bytes) {
+	return `${(bytes / 1024 ** 2).toFixed(2)} MiB`;
+}
+
+/**
+ * @param {number} value value
+ * @param {number} before previous value
+ * @returns {string} signed percentage change
+ */
+function formatPercentage(value, before) {
+	const change = (value / before) * 100 - 100;
+	return `${change >= 0 ? "+" : ""}${change.toFixed(1)}%`;
 }
 
 /**
@@ -461,12 +485,65 @@ class BenchmarkRunner {
 	}
 
 	/**
+	 * Write and print the heap-usage report. This is the harness's own metric —
+	 * GC-settled live bytes for one build or rebuild — so a row reads as memory a
+	 * user would see, unlike an allocation count whose scale depends on how warm
+	 * the measuring process already was. `MEMORY_BASELINE` diffs against a
+	 * previous report, the way `test:size` compares asset sizes.
+	 * @param {BenchmarkResult[]} benchmarkResults benchmark results
+	 * @returns {Promise<void>}
+	 */
+	async reportHeapUsage(benchmarkResults) {
+		/** @type {HeapUsage[]} */
+		const entries = benchmarkResults
+			.flatMap((result) => result.heapUsages || [])
+			.sort((a, b) => b.peak - a.peak);
+
+		if (entries.length === 0) return;
+
+		const reportPath = path.join(this.baseOutputPath, "memory-report.json");
+
+		await fs.mkdir(this.baseOutputPath, { recursive: true });
+		await fs.writeFile(reportPath, `${JSON.stringify({ entries }, null, 2)}\n`);
+
+		/** @type {Map<string, HeapUsage>} */
+		const baseline = new Map();
+		const baselinePath = process.env.MEMORY_BASELINE;
+
+		if (baselinePath) {
+			const previous = JSON.parse(await fs.readFile(baselinePath, "utf8"));
+			for (const entry of previous.entries) baseline.set(entry.uri, entry);
+		}
+
+		console.log(`\nHeap usage (median of ${entries[0].samples} samples)`);
+
+		for (const entry of entries) {
+			const before = baseline.get(entry.uri);
+			const delta = before
+				? ` (was ${formatBytes(before.peak)}, ${formatPercentage(entry.peak, before.peak)})`
+				: "";
+			// Flagged rather than failed: a wide spread means the number is not worth
+			// comparing, which is a different thing from the number having moved.
+			const spread =
+				entry.spread > UNSTABLE_SPREAD
+					? ` [unstable, samples spread ${(entry.spread * 100).toFixed(1)}%]`
+					: "";
+
+			console.log(
+				`  ${formatBytes(entry.peak).padStart(10)} peak  ${formatBytes(entry.marginal).padStart(10)} marginal  ${entry.uri}${delta}${spread}`
+			);
+		}
+
+		console.log(`\nReport written to ${reportPath}`);
+	}
+
+	/**
 	 * Aggregate settled task results and throw if any task failed.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @param {PromiseSettledResult<BenchmarkResult>[]} settledResults settled results
-	 * @returns {void}
+	 * @returns {Promise<void>}
 	 */
-	finalizeResults(benchmarkTasks, settledResults) {
+	async finalizeResults(benchmarkTasks, settledResults) {
 		/** @type {BenchmarkResult[]} */
 		const benchmarkResults = [];
 		/** @type {string[]} */
@@ -492,6 +569,10 @@ class BenchmarkRunner {
 			this.processResults(benchmarkResults);
 		}
 
+		if (failedTasks.length === 0 && getCodspeedRunnerMode() === "memory") {
+			await this.reportHeapUsage(benchmarkResults);
+		}
+
 		if (failedTasks.length > 0) {
 			throw new Error(
 				`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(", ")}`,
@@ -501,50 +582,24 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Run the whole shard in one shared bench in the main process. Used for
-	 * CodSpeed memory mode: a single `Bench` with one global prime pass and one
-	 * setup/teardown, exactly like the pre-parallel harness, so allocation counts
-	 * stay stable and comparable (per-benchmark benches shifted them by 2-4x).
-	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
-	 * @returns {Promise<void>}
-	 */
-	async runInMainThread(benchmarkTasks) {
-		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) in a single process (memory mode)\n`
-		);
-
-		const { runAll } = await import("./harness/benchmark/benchmark.worker.mjs");
-
-		// Any task error aborts the run (bench `throws: true`), matching the
-		// pre-parallel harness where one failure failed the whole shard.
-		const result = await runAll({
-			tasks: benchmarkTasks,
-			casesPath: this.casesPath,
-			baseOutputPath: this.baseOutputPath,
-			callingFile
-		});
-
-		this.processResults([result]);
-	}
-
-	/**
 	 * Run benchmark tasks across a pool of worker processes.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @param {boolean=} oneTaskPerProcess measure each task in a fresh process
 	 * @returns {Promise<void>}
 	 */
-	async runInWorkers(benchmarkTasks) {
+	async runInWorkers(benchmarkTasks, oneTaskPerProcess) {
 		const cpuCount =
 			typeof os.availableParallelism === "function"
 				? os.availableParallelism()
 				: os.cpus().length;
 		const cpuWorkers = Math.max(1, cpuCount - 1);
 
-		// Simulation is the only Valgrind mode here (memory mode runs in-process);
-		// its shadow memory is only freed on process exit.
+		// Simulation is the only Valgrind mode here; its shadow memory is only
+		// freed on process exit.
 		const underValgrind = getCodspeedRunnerMode() === "simulation";
 
 		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
-		// so 16 GiB fits one worker; bigger runners auto-scale. memory mode never gets here.
+		// so 16 GiB fits one worker; bigger runners auto-scale.
 		const totalGiB = os.totalmem() / 1024 ** 3;
 		const reserveGiB = 3;
 		const perWorkerGiB = underValgrind ? 11 : 1.5;
@@ -553,7 +608,9 @@ class BenchmarkRunner {
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
 		);
 
-		const numWorkers = Math.min(cpuWorkers, memWorkers);
+		// Isolated tasks must not share a process with each other either, so the
+		// pool is a single worker that restarts between tasks.
+		const numWorkers = oneTaskPerProcess ? 1 : Math.min(cpuWorkers, memWorkers);
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
@@ -564,7 +621,7 @@ class BenchmarkRunner {
 					// Valgrind memory accumulates across builds and frees only on exit, so
 					// recycle the worker after each task (`0` = always restart) to cap peak
 					// at one build's footprint; otherwise a shard OOMs mid-run (exit 143).
-					idleMemoryLimit: underValgrind ? 0 : undefined,
+					idleMemoryLimit: underValgrind || oneTaskPerProcess ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
 					forkOptions: { silent: false, execArgv: getV8Flags() }
@@ -589,7 +646,7 @@ class BenchmarkRunner {
 				)
 			);
 
-			this.finalizeResults(benchmarkTasks, settledResults);
+			await this.finalizeResults(benchmarkTasks, settledResults);
 		} finally {
 			await workerPool.end();
 		}
@@ -634,9 +691,12 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await (getCodspeedRunnerMode() === "memory"
-			? this.runInMainThread(benchmarkTasks)
-			: this.runInWorkers(benchmarkTasks));
+		// A memory result depends on the heap its process holds, so shard
+		// composition moved untouched benchmarks by tens of percent.
+		await this.runInWorkers(
+			benchmarkTasks,
+			getCodspeedRunnerMode() === "memory"
+		);
 	}
 }
 
