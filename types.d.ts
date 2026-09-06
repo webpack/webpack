@@ -30920,9 +30920,11 @@ declare namespace exports {
 				parentOf(n?: number): number;
 				children(n?: number): number[];
 			};
+			export let BLOCK_CONTENTS: "block-contents";
 			export let CLASSIC_SCRIPT: "script";
 			export let EMBEDDED_LANGUAGES: string[];
 			export let EVENT_HANDLER: "event-handler";
+			export let JSON_TYPE: "json";
 			export let MODULE_SCRIPT: "module";
 			export let NS_HTML: 0;
 			export let NS_MATHML: 1;
