@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Minify the script an event handler attribute holds when minifying HTML.
+Minify an event handler attribute, and name the production each script body is.

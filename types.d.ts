@@ -10588,7 +10588,7 @@ declare interface HtmlProcessOptions {
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript, every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer taking whole scripts has to wrap before it can read (webpack's own `htmlMinify` does) — an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). Replaces the built-in CSS and JSON minifiers wherever it answers, and returning anything but text falls back to them; it is the only way inline JavaScript, SVG and a nested document are reached at all
+	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). Replaces the built-in CSS and JSON minifiers wherever it answers, and returning anything but text falls back to them; it is the only way inline JavaScript, SVG and a nested document are reached at all
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -30642,7 +30642,7 @@ declare namespace exports {
 				}[]
 			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
 			export function cssMinify(
-				input: { [index: string]: string },
+				input: { [index: string]: string | Buffer },
 				sourceMap?: object,
 				minimizerOptions?: {
 					as?: "stylesheet" | "block-contents";
@@ -30925,8 +30925,10 @@ declare namespace exports {
 				parentOf(n?: number): number;
 				children(n?: number): number[];
 			};
+			export let CLASSIC_SCRIPT: "script";
 			export let EMBEDDED_LANGUAGES: string[];
 			export let EVENT_HANDLER: "event-handler";
+			export let MODULE_SCRIPT: "module";
 			export let NS_HTML: 0;
 			export let NS_MATHML: 1;
 			export let NS_SVG: 2;
@@ -30987,7 +30989,7 @@ declare namespace exports {
 			) => string;
 			export let escapeText: (s: string) => string;
 			export function htmlMinify(
-				input: { [index: string]: string },
+				input: { [index: string]: string | Buffer },
 				sourceMap?: RawSourceMap,
 				minimizerOptions?: Omit<
 					HtmlPrintOptions,
