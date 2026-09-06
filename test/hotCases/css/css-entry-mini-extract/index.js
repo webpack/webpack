@@ -1,28 +1,23 @@
-const getFile = name =>
-	__non_webpack_require__("fs").readFileSync(
-		__non_webpack_require__("path").join(__dirname, name),
-		"utf-8"
-	);
+const fs = __non_webpack_require__("fs");
+const path = __non_webpack_require__("path");
 
-it("should work", done => {
-	try {
-		const style = getFile("css-entry.css");
-		expect(style).toContain("color: red;");
-	} catch (e) {}
+// splitChunks renames the extracted stylesheet after its cache group, so the
+// name is discovered rather than spelled out.
+const readStyles = () => {
+	const name = fs.readdirSync(__dirname).find(f => f.endsWith(".css"));
+	return fs.readFileSync(path.join(__dirname, name), "utf-8");
+};
+
+it("should apply a hot update to the extracted stylesheet", done => {
+	expect(readStyles()).toContain("color: red;");
 
 	NEXT(
 		require("../../update")(done, true, () => {
-			try {
-				const style = getFile("css-entry.css");
-				expect(style).toContain("color: blue;");
-			} catch (e) {}
+			expect(readStyles()).toContain("color: blue;");
 
 			NEXT(
 				require("../../update")(done, true, () => {
-					try {
-						const style = getFile("css-entry.css");
-						expect(style).toContain("color: green;");
-					} catch (e) {}
+					expect(readStyles()).toContain("color: green;");
 
 					done();
 				})
@@ -30,4 +25,3 @@ it("should work", done => {
 		})
 	);
 });
-

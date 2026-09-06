@@ -1,26 +1,21 @@
 import "./a.css";
 
-const getFile = name =>
+const readStyles = () =>
 	__non_webpack_require__("fs").readFileSync(
-		__non_webpack_require__("path").join(__dirname, name),
+		__non_webpack_require__("path").join(__dirname, "main.css"),
 		"utf-8"
 	);
 
-it("should work", async function (done) {
-	try {
-		const style = getFile("styles.css");
-		expect(style).toContain("color: red;");
-	} catch (e) {}
+it("should apply a hot update to the extracted stylesheet", function (done) {
+	expect(readStyles()).toContain("color: red;");
 
-	NEXT(require("../../update")(done, true, () => {
-		try {
-			const style = getFile("styles.css");
-			expect(style).toContain("color: blue;");
-		} catch (e) {}
+	NEXT(
+		require("../../update")(done, true, () => {
+			expect(readStyles()).toContain("color: blue;");
 
-		done();
-	}));
+			done();
+		})
+	);
 });
 
 module.hot.accept();
-

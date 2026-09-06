@@ -2,6 +2,7 @@
 
 module.exports = (config) => {
 	const [major] = process.versions.node.split(".").map(Number);
-	// TODO: oom
+	// The case pins target "web" itself, so every other runner would build and
+	// run the same bundle again.
 	return config.target === "web" && major >= 18;
 };
