@@ -1,4 +1,4 @@
-import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
+import { createReadStream, readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -81,15 +81,24 @@ export async function renderDocument({ inlineCss = false } = {}) {
 
 function serveClientFile(pathname, response) {
 	const file = join(clientDirectory, pathname.slice("/dist/client/".length));
-	if (!file.startsWith(clientDirectory) || !existsSync(file)) {
+	const stats = file.startsWith(clientDirectory)
+		? statSync(file, { throwIfNoEntry: false })
+		: undefined;
+
+	// A directory is not an asset: streaming one fails with `EISDIR`, and an
+	// unhandled stream error takes the process down with it.
+	if (!stats || !stats.isFile()) {
 		response.writeHead(404).end("not found");
 		return;
 	}
+
 	response.writeHead(200, {
 		"content-type": CONTENT_TYPES[extname(file)] || "application/octet-stream",
-		"content-length": statSync(file).size
+		"content-length": stats.size
 	});
-	createReadStream(file).pipe(response);
+	createReadStream(file)
+		.on("error", () => response.destroy())
+		.pipe(response);
 }
 
 const server = createServer(async (request, response) => {
