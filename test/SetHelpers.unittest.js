@@ -3,10 +3,46 @@
 const {
 	combine,
 	find,
+	findIntersections,
 	first,
 	intersect,
 	isSubset
 } = require("../lib/util/SetHelpers");
+
+/**
+ * Finds intersections in number sets.
+ * @param {Iterable<number>[]} sets input sets
+ * @param {Partial<{ minimumSize: number, maximumCandidates: number, maximumPairs: number, maximumComparisons: number }>} limits discovery limits
+ * @returns {{ sets: Set<number>[], pairs: number, comparisons: number, limited: boolean }} intersections and discovery statistics
+ */
+const findNumberIntersections = (sets, limits = {}) =>
+	findIntersections(
+		new Map(
+			sets.map((set) => {
+				const values = [...set].sort((a, b) => a - b);
+				const key = values.reduce(
+					(mask, value) => mask | (BigInt("1") << BigInt(value)),
+					BigInt("0")
+				);
+				return [key, new Set(values)];
+			})
+		),
+		{
+			minimumSize: 2,
+			maximumCandidates: 100,
+			maximumPairs: 1000,
+			maximumComparisons: 10000,
+			...limits
+		}
+	);
+
+/**
+ * Serializes number sets for assertions.
+ * @param {Set<number>[]} sets number sets
+ * @returns {string[]} sorted values in each set
+ */
+const serializeSets = (sets) =>
+	sets.map((set) => [...set].sort((a, b) => a - b).join(","));
 
 describe("SetHelpers", () => {
 	describe("intersect", () => {
@@ -29,6 +65,74 @@ describe("SetHelpers", () => {
 
 		it("should return an empty set when there is no overlap", () => {
 			expect([...intersect([new Set([1]), new Set([2])])]).toEqual([]);
+		});
+	});
+
+	describe("findIntersections", () => {
+		it("finds a shared set across many inputs", () => {
+			const result = findNumberIntersections(
+				Array.from({ length: 20 }, (_, i) => [1, 2, i + 3])
+			);
+			expect(serializeSets(result.sets)).toEqual(["1,2"]);
+			expect(result.pairs).toBe(190);
+			expect(result.limited).toBe(false);
+		});
+
+		it("finds intersections that require more than two inputs", () => {
+			const result = findNumberIntersections([
+				[1, 2, 3, 4],
+				[1, 2, 3, 5],
+				[1, 2, 4, 5]
+			]);
+			expect(serializeSets(result.sets)).toContain("1,2");
+			expect(result.limited).toBe(false);
+		});
+
+		it("does not repeat an existing set or keep unrelated items", () => {
+			const result = findNumberIntersections([
+				[1, 2],
+				[1, 2, 3],
+				[1, 2, 4],
+				[5, 6, 7]
+			]);
+			expect(result.sets).toEqual([]);
+		});
+
+		it("limits candidates deterministically", () => {
+			const sets = Array.from({ length: 16 }, (_, i) =>
+				Array.from({ length: 18 }, (_, value) => value + 1).filter(
+					(value) => value !== i + 3
+				)
+			);
+			const a = findNumberIntersections(sets, { maximumCandidates: 8 });
+			const b = findNumberIntersections(sets.reverse(), {
+				maximumCandidates: 8
+			});
+			expect(serializeSets(a.sets)).toEqual(serializeSets(b.sets));
+			expect(a.sets).toHaveLength(8);
+			expect(a.limited).toBe(true);
+		});
+
+		it("does not emit a partial intersection when work is exhausted", () => {
+			const sets = [
+				[1, 2, 3],
+				[1, 2, 4]
+			];
+			const candidates = findNumberIntersections(sets, {
+				maximumCandidates: 0
+			});
+			const pairs = findNumberIntersections(sets, { maximumPairs: 0 });
+			const comparisons = findNumberIntersections(sets, {
+				maximumComparisons: 1
+			});
+			expect(candidates.sets).toEqual([]);
+			expect(pairs.sets).toEqual([]);
+			expect(comparisons.sets).toEqual([]);
+			expect(comparisons.pairs).toBe(0);
+			expect(comparisons.comparisons).toBe(0);
+			expect(candidates.limited && pairs.limited && comparisons.limited).toBe(
+				true
+			);
 		});
 	});
 
