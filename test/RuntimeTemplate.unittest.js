@@ -498,4 +498,26 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 
 		expect(bailouts).toEqual([]);
 	});
+
+	// A module generated once per runtime records into the graph once, but each
+	// generation's result must carry the reason: the cache may restore either alone.
+	it("should hand every generation its reasons whatever the graph holds", () => {
+		/** @type {string[]} */
+		const bailouts = [];
+		const template = create({ devtool: "eval", bailouts });
+		const reason =
+			'devtool "eval" wraps the module in eval(), where import.meta does not parse';
+
+		template.beginAnalyzableBailouts(module);
+		template.supportsAnalyzable("url", undefined, module);
+		template.supportsAnalyzable("url", undefined, module);
+		expect(template.finishAnalyzableBailouts()).toEqual([reason]);
+
+		template.beginAnalyzableBailouts(module);
+		template.supportsAnalyzable("url", undefined, module);
+		expect(template.finishAnalyzableBailouts()).toEqual([reason]);
+
+		expect(bailouts).toHaveLength(1);
+		expect(template.finishAnalyzableBailouts()).toBeUndefined();
+	});
 });
