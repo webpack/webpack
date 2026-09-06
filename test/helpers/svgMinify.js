@@ -5,11 +5,12 @@
  * minifier: webpack ships none, so this is the only way an `<svg>` subtree or an
  * `image/svg+xml` payload is reached at all. Collapsing runs of whitespace is
  * enough to show the source got here and back.
- * @param {{ [file: string]: string }} input a single `{ filename: code }` entry
+ * @param {{ [file: string]: string | Buffer }} input a single `{ filename: code }` entry; a `Buffer` is read as UTF-8
  * @returns {{ code: string }} the minified SVG
  */
 const svgMinify = (input) => {
-	const [[, code]] = Object.entries(input);
+	const [[, given]] = Object.entries(input);
+	const code = typeof given === "string" ? given : given.toString("utf8");
 	return { code: code.replace(/\s+/g, " ").trim() };
 };
 
