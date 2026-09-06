@@ -1276,6 +1276,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "analyzableBailouts": false,
 		+     "asyncChunkWaterfalls": false,
 		+     "broadContexts": false,
 		+     "cacheEffectiveness": false,
@@ -1385,6 +1386,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "analyzableBailouts": false,
 		+     "asyncChunkWaterfalls": false,
 		+     "broadContexts": false,
 		+     "cacheEffectiveness": false,
