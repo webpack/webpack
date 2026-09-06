@@ -179,6 +179,7 @@ function execGetOutput(command, args, description) {
 }
 
 module.exports.isInteractive = isInteractive;
+module.exports.setup = setup;
 
 if (require.main === module) {
 	setup();
