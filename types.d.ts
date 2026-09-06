@@ -22320,6 +22320,20 @@ declare interface PerformanceOptions {
 	dynamicExports?: boolean;
 
 	/**
+	 * @since 5.110.0
+	 * Deprecated in favor of 'sourceMaps'. Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).
+	 * @deprecated
+	 */
+	embeddedSourceMaps?: boolean;
+
+	/**
+	 * @since 5.110.0
+	 * Deprecated in favor of 'duplicateModules'. Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).
+	 * @deprecated
+	 */
+	entrypointOverlap?: boolean;
+
+	/**
 	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -22431,6 +22445,13 @@ declare interface PerformanceOptions {
 	unsplitVendors?: boolean;
 
 	/**
+	 * @since 5.110.0
+	 * Deprecated in favor of 'unusedConfig'. Report 'resolve.alias' entries that no request matched.
+	 * @deprecated
+	 */
+	unusedAliases?: boolean;
+
+	/**
 	 * Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).
 	 * @since 5.111.0
 	 */
@@ -22443,10 +22464,38 @@ declare interface PerformanceOptions {
 	unusedConfig?: boolean;
 
 	/**
+	 * @since 5.110.0
+	 * Deprecated in favor of 'unusedConfig'. Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.
+	 * @deprecated
+	 */
+	unusedDefines?: boolean;
+
+	/**
+	 * @since 5.110.0
+	 * Deprecated in favor of 'unusedConfig'. Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.
+	 * @deprecated
+	 */
+	unusedExternals?: boolean;
+
+	/**
 	 * Report modules bundled although nothing uses what they export, naming the re-export or the side-effect statement that kept each one (requires 'hints' to be enabled).
 	 * @since 5.111.0
 	 */
 	unusedModules?: boolean;
+
+	/**
+	 * @since 5.110.0
+	 * Deprecated in favor of 'unusedModules'. Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).
+	 * @deprecated
+	 */
+	unusedReexports?: boolean;
+
+	/**
+	 * @since 5.110.0
+	 * Deprecated in favor of 'unusedConfig'. Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
+	 * @deprecated
+	 */
+	unusedRules?: boolean;
 }
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
