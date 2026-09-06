@@ -1,11 +1,13 @@
 import module from "./module";
 
-it("should not dispose shared modules when a chunk from a different runtime is removed", done => {
+it("should apply both runtimes' updates where one manifest filename serves both", done => {
 	import("./chunk1").then(chunk1 => {
 		import.meta.webpackHot.accept("./module", async () => {
 			expect(module).toBe(42);
 			expect(chunk1).toMatchObject({
-				active: false // This get incorrectly disposed, due to the runtime-independent filename
+				// Dropping [runtime] from the filename is what warnings1.js warns
+				// about: both manifests merge, so the worker's removals land here too.
+				active: false
 			});
 			done();
 		});
