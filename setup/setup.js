@@ -178,4 +178,8 @@ function execGetOutput(command, args, description) {
 	});
 }
 
-setup();
+module.exports.isInteractive = isInteractive;
+
+if (require.main === module) {
+	setup();
+}
