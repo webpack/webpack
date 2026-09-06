@@ -25692,6 +25692,11 @@ declare abstract class RuntimeTemplate {
 	): boolean;
 
 	/**
+	 * Reports an analyzable-ESM bailout from outside this class.
+	 */
+	analyzableBailout(module: undefined | Module, reason: string): void;
+
+	/**
 	 * Names the module whose code generation starts, so the reasons its references
 	 * record are handed back by `finishAnalyzableBailouts` and attributed to it.
 	 */
@@ -25989,6 +25994,18 @@ declare abstract class RuntimeTemplate {
 		 */
 		weak?: boolean;
 	}): string;
+
+	/**
+	 * The side-effect annotation for output another build reads back, which is the
+	 * only output it can pay for — elsewhere it is bytes with no consumer.
+	 */
+	sideEffectsAnnotation(): string;
+
+	/**
+	 * A module instantiation's side-effect annotation. Write it only where the
+	 * statement ends the call: a minifier reads `f(id)(x)` as one and drops it.
+	 */
+	moduleSideEffectsAnnotation(module: Module, moduleGraph: ModuleGraph): string;
 
 	/**
 	 * Returns the expression.
