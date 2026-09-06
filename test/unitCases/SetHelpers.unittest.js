@@ -155,7 +155,7 @@ describe("SetHelpers", () => {
 				{
 					maximumChecks: 10,
 					maximumComparisons: 10,
-					maximumExpansions: 10
+					maximumExpansions: 20
 				}
 			);
 			expect(result.intersectionsByOriginalKey.get(matchingKey)).toEqual([
@@ -163,7 +163,7 @@ describe("SetHelpers", () => {
 			]);
 			expect(result.checks).toBe(1);
 			expect(result.comparisons).toBe(2);
-			expect(result.expansions).toBe(7);
+			expect(result.expansions).toBe(14);
 			expect(result.limited).toBe(false);
 		});
 
@@ -181,7 +181,7 @@ describe("SetHelpers", () => {
 				{
 					maximumChecks: 10,
 					maximumComparisons: 10,
-					maximumExpansions: 1
+					maximumExpansions: 2
 				}
 			);
 			expect(result.intersectionsByOriginalKey.size).toBe(0);
