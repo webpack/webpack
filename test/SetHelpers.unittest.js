@@ -145,16 +145,25 @@ describe("SetHelpers", () => {
 				new Set([1, i + 10])
 			]);
 			const matchingKey = BigInt("1000");
+			/** @type {[bigint, number][]} */
+			const weights = unrelated.map(([key]) => [key, 1]);
+			weights.push([matchingKey, 7]);
 			const result = associateIntersections(
 				new Map([...unrelated, [matchingKey, new Set([1, 2, 3])]]),
 				[{ key: BigInt("3"), set: new Set([1, 2]) }],
-				{ maximumChecks: 10, maximumComparisons: 10 }
+				new Map(weights),
+				{
+					maximumChecks: 10,
+					maximumComparisons: 10,
+					maximumExpansions: 10
+				}
 			);
 			expect(result.intersectionsByOriginalKey.get(matchingKey)).toEqual([
 				new Set([1, 2])
 			]);
 			expect(result.checks).toBe(1);
 			expect(result.comparisons).toBe(2);
+			expect(result.expansions).toBe(7);
 			expect(result.limited).toBe(false);
 		});
 
@@ -165,10 +174,19 @@ describe("SetHelpers", () => {
 					[BigInt("2"), new Set([1, 2, 4])]
 				]),
 				[{ key: BigInt("3"), set: new Set([1, 2]) }],
-				{ maximumChecks: 1, maximumComparisons: 10 }
+				new Map([
+					[BigInt("1"), 1],
+					[BigInt("2"), 1]
+				]),
+				{
+					maximumChecks: 10,
+					maximumComparisons: 10,
+					maximumExpansions: 1
+				}
 			);
 			expect(result.intersectionsByOriginalKey.size).toBe(0);
-			expect(result.checks).toBe(1);
+			expect(result.checks).toBe(2);
+			expect(result.expansions).toBe(0);
 			expect(result.limited).toBe(true);
 		});
 	});
