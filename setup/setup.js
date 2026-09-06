@@ -1,42 +1,88 @@
 "use strict";
 
+const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
+
+// A seam for the tests: Bun's jest cannot mock a built-in module, so the
+// effects are reached through this object rather than through the imports.
+const effects = {
+	spawn: childProcess.spawn,
+	existsSync: fs.existsSync,
+	lstatSync: fs.lstatSync,
+	symlinkSync: fs.symlinkSync
+};
 
 const root = process.cwd();
 const nodeModulesFolder = path.resolve(root, "node_modules");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
 
 /**
- * @returns {Promise<void>} result
+ * Whether a person is watching: both streams a terminal, and `CI` unset. Any
+ * other environment, including one this predates, takes the safe path.
+ * @returns {boolean} result
  */
-function setup() {
-	return checkSymlinkExistsAsync()
-		.then(async (hasSymlink) => {
-			if (!hasSymlink) {
-				await ensureYarnInstalledAsync();
-				await runSetupSymlinkAsync();
-				if (!(await checkSymlinkExistsAsync())) {
-					throw new Error("windows symlink was not successfully created");
-				}
-			}
-		})
-		.then(() => {
-			process.exitCode = 0;
-		})
-		.catch((err) => {
-			console.error(err);
-			process.exitCode = 1;
-		});
+function isInteractive() {
+	const forced = process.env.WEBPACK_SETUP;
+	if (forced === "interactive") return true;
+	if (forced === "automated") return false;
+	return (
+		Boolean(process.stdin.isTTY && process.stdout.isTTY) &&
+		process.env.CI === undefined
+	);
 }
 
 /**
+ * Returns the exit code rather than setting it, so a caller can observe the
+ * outcome without reading global state.
+ * @returns {Promise<number>} the exit code
+ */
+async function setup() {
+	try {
+		await (isInteractive() ? setupForContributor() : setupForAutomation());
+		return 0;
+	} catch (err) {
+		console.error(err);
+		return 1;
+	}
+}
+
+/**
+ * Installs yarn when it is missing and links through yarn's registry, so the
+ * checkout can be linked into another project. Skipped once the link exists.
  * @returns {Promise<void>} result
  */
-async function runSetupSymlinkAsync() {
+async function setupForContributor() {
+	if (await checkSymlinkExistsAsync()) return;
+	await ensureYarnInstalledAsync();
 	await exec("yarn", ["install"], "Install dependencies");
 	await exec("yarn", ["link"], "Create webpack symlink");
 	await exec("yarn", ["link", "webpack"], "Link webpack into itself");
+	if (!(await checkSymlinkExistsAsync())) {
+		throw new Error("windows symlink was not successfully created");
+	}
+}
+
+/**
+ * Verifies the lockfile rather than rewriting it, installs no global yarn, and
+ * links without touching yarn's machine-global registry. Safe to re-run.
+ * @returns {Promise<void>} result
+ */
+async function setupForAutomation() {
+	if (!(await hasYarnAsync())) {
+		throw new Error(
+			"yarn was not found, and this path installs nothing globally. Install yarn, or re-run with WEBPACK_SETUP=interactive to have setup install it."
+		);
+	}
+	await exec("yarn", ["install", "--frozen-lockfile"], "Install dependencies");
+	if (await checkSymlinkExistsAsync()) return;
+	console.log("Setup: Link webpack into itself");
+	const isWindows = process.platform === "win32";
+	effects.symlinkSync(
+		isWindows ? root : "..",
+		webpackDependencyFolder,
+		isWindows ? "junction" : "dir"
+	);
 }
 
 /**
@@ -45,15 +91,10 @@ async function runSetupSymlinkAsync() {
 function checkSymlinkExistsAsync() {
 	return new Promise((resolve) => {
 		try {
-			if (
-				fs.existsSync(nodeModulesFolder) &&
-				fs.existsSync(webpackDependencyFolder) &&
-				fs.lstatSync(webpackDependencyFolder).isSymbolicLink()
-			) {
-				resolve(true);
-			} else {
-				resolve(false);
-			}
+			resolve(
+				effects.existsSync(nodeModulesFolder) &&
+					effects.lstatSync(webpackDependencyFolder).isSymbolicLink()
+			);
 		} catch {
 			resolve(false);
 		}
@@ -61,19 +102,24 @@ function checkSymlinkExistsAsync() {
 }
 
 /**
+ * @returns {Promise<boolean>} result
+ */
+async function hasYarnAsync() {
+	const semverPattern =
+		/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*))*)?(?:\+[0-9a-z-]+(?:\.[0-9a-z-]+)*)?$/i;
+	try {
+		const stdout = await execGetOutput("yarn", ["-v"], "Check yarn version");
+		return semverPattern.test(stdout);
+	} catch (_err) {
+		return false;
+	}
+}
+
+/**
  * @returns {Promise<void>} result
  */
 async function ensureYarnInstalledAsync() {
-	const semverPattern =
-		/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*))*)?(?:\+[0-9a-z-]+(?:\.[0-9a-z-]+)*)?$/i;
-	let hasYarn = false;
-	try {
-		const stdout = await execGetOutput("yarn", ["-v"], "Check yarn version");
-		hasYarn = semverPattern.test(stdout);
-	} catch (_err) {
-		hasYarn = false;
-	}
-	if (!hasYarn) await installYarnAsync();
+	if (!(await hasYarnAsync())) await installYarnAsync();
 }
 
 /**
@@ -92,7 +138,7 @@ function installYarnAsync() {
 function exec(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		const cp = require("child_process").spawn(command, args, {
+		const cp = effects.spawn(command, args, {
 			cwd: root,
 			stdio: "inherit",
 			shell: true
@@ -120,7 +166,7 @@ function exec(command, args, description) {
 function execGetOutput(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		const cp = require("child_process").spawn(command, args, {
+		const cp = effects.spawn(command, args, {
 			cwd: root,
 			stdio: [process.stdin, "pipe", process.stderr],
 			shell: true
@@ -138,8 +184,17 @@ function execGetOutput(command, args, description) {
 		});
 		/** @type {Buffer[]} */
 		const buffers = [];
-		cp.stdout.on("data", (data) => buffers.push(data));
+		/** @type {import("stream").Readable} */
+		(cp.stdout).on("data", (data) => buffers.push(data));
 	});
 }
 
-setup();
+module.exports.effects = effects;
+module.exports.isInteractive = isInteractive;
+module.exports.setup = setup;
+
+if (require.main === module) {
+	setup().then((code) => {
+		process.exitCode = code;
+	});
+}
