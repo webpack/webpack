@@ -22261,6 +22261,12 @@ declare interface PerformanceOptions {
 	all?: boolean;
 
 	/**
+	 * Report references in ESM output that keep webpack's runtime form, naming what stops each from being written as a literal 'import()' or 'new URL()' another bundler can follow (requires 'hints' to be enabled).
+	 * @since 5.111.0
+	 */
+	analyzableBailouts?: boolean;
+
+	/**
 	 * Filter function to select assets that are checked.
 	 */
 	assetFilter?: (name: string, source: Source, assetInfo: AssetInfo) => boolean;
@@ -25684,6 +25690,27 @@ declare abstract class RuntimeTemplate {
 		module?: Module,
 		runtime?: RuntimeSpec
 	): boolean;
+
+	/**
+	 * Runs one module's code generation and collects the bailouts it records, so they
+	 * can be stored beside the result and reapplied when the cache restores it.
+	 */
+	collectAnalyzableBailouts<T>(
+		module: Module,
+		generate: () => T
+	): [T, string[]];
+
+	/**
+	 * Reapplies the bailouts a cached code generation result was stored with, so a
+	 * restored module reports the same reasons a generated one does.
+	 */
+	restoreAnalyzableBailouts(module: Module, reasons: string[]): void;
+
+	/**
+	 * The reasons a module's references keep the runtime form, as recorded while its
+	 * code was generated.
+	 */
+	analyzableBailoutsOf(module: Module): string[];
 
 	/**
 	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM

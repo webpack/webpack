@@ -15638,6 +15638,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-analyzable-bailouts": Object {
+    "configs": Array [
+      Object {
+        "description": "Report references in ESM output that keep webpack's runtime form, naming what stops each from being written as a literal 'import()' or 'new URL()' another bundler can follow (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.analyzableBailouts",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report references in ESM output that keep webpack's runtime form, naming what stops each from being written as a literal 'import()' or 'new URL()' another bundler can follow (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-async-chunk-waterfalls": Object {
     "configs": Array [
       Object {

@@ -5546,6 +5546,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "analyzableBailouts": {
+          "description": "Report references in ESM output that keep webpack's runtime form, naming what stops each from being written as a literal 'import()' or 'new URL()' another bundler can follow (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.111.0"
+        },
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
           "instanceof": "Function",

@@ -3439,6 +3439,11 @@ export interface PerformanceOptions {
 	 */
 	all?: boolean;
 	/**
+	 * Report references in ESM output that keep webpack's runtime form, naming what stops each from being written as a literal 'import()' or 'new URL()' another bundler can follow (requires 'hints' to be enabled).
+	 * @since 5.111.0
+	 */
+	analyzableBailouts?: boolean;
+	/**
 	 * Filter function to select assets that are checked.
 	 */
 	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
