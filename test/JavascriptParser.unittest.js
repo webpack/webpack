@@ -833,6 +833,43 @@ describe("JavascriptParser", () => {
 		});
 	});
 
+	describe("inBlockScope", () => {
+		it("should isolate definitions and propagate termination only on executed paths", () => {
+			const parser = new JavascriptParser();
+			expect.assertions(8);
+
+			parser.hooks.program.tap("JavascriptParserTest", () => {
+				const outerScope = parser.scope;
+				outerScope.inShorthand = true;
+				parser.inBlockScope(() => {
+					expect(parser.scope).not.toBe(outerScope);
+					expect(parser.scope.inShorthand).toBe(false);
+					parser.defineVariable("inner");
+					expect(parser.scope.definitions.has("inner")).toBe(true);
+					parser.scope.terminated = 1;
+				});
+				expect(parser.scope).toBe(outerScope);
+				expect(outerScope.definitions.has("inner")).toBe(false);
+				expect(outerScope.terminated).toBeUndefined();
+
+				parser.inBlockScope(() => {
+					parser.scope.terminated = 2;
+				}, true);
+				expect(parser.scope).toBe(outerScope);
+				expect(outerScope.terminated).toBe(2);
+				outerScope.inShorthand = false;
+				outerScope.terminated = undefined;
+			});
+
+			parser.parse(
+				"",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+		});
+	});
+
 	describe("parse calculated string", () => {
 		describe("should work", () => {
 			const cases = {
