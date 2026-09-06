@@ -1,3 +1,17 @@
-.headline {
+.route {
+	max-width: 34rem;
+	padding: 1.25rem 1.5rem;
+	border-left: 4px solid rebeccapurple;
+	background: #fff;
+	box-shadow: 0 1px 3px rgb(27 27 58 / 12%);
+}
+
+.route-title {
+	margin-top: 0;
 	color: rebeccapurple;
+}
+
+.route-body {
+	line-height: 1.6;
+	color: #3a3a52;
 }
