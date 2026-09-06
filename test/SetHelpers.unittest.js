@@ -1,6 +1,7 @@
 "use strict";
 
 const {
+	associateIntersections,
 	combine,
 	find,
 	findIntersections,
@@ -133,6 +134,42 @@ describe("SetHelpers", () => {
 			expect(candidates.limited && pairs.limited && comparisons.limited).toBe(
 				true
 			);
+		});
+	});
+
+	describe("associateIntersections", () => {
+		it("checks only originals containing the rarest intersection item", () => {
+			/** @type {[bigint, Set<number>][]} */
+			const unrelated = Array.from({ length: 100 }, (_, i) => [
+				BigInt(i + 1),
+				new Set([1, i + 10])
+			]);
+			const matchingKey = BigInt("1000");
+			const result = associateIntersections(
+				new Map([...unrelated, [matchingKey, new Set([1, 2, 3])]]),
+				[{ key: BigInt("3"), set: new Set([1, 2]) }],
+				{ maximumChecks: 10, maximumComparisons: 10 }
+			);
+			expect(result.intersectionsByOriginalKey.get(matchingKey)).toEqual([
+				new Set([1, 2])
+			]);
+			expect(result.checks).toBe(1);
+			expect(result.comparisons).toBe(2);
+			expect(result.limited).toBe(false);
+		});
+
+		it("does not publish a partially propagated intersection", () => {
+			const result = associateIntersections(
+				new Map([
+					[BigInt("1"), new Set([1, 2, 3])],
+					[BigInt("2"), new Set([1, 2, 4])]
+				]),
+				[{ key: BigInt("3"), set: new Set([1, 2]) }],
+				{ maximumChecks: 1, maximumComparisons: 10 }
+			);
+			expect(result.intersectionsByOriginalKey.size).toBe(0);
+			expect(result.checks).toBe(1);
+			expect(result.limited).toBe(true);
 		});
 	});
 
