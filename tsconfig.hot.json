@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/typescript/hot.tsbuildinfo",
     "target": "ES2015",
     "module": "commonjs",
     "lib": ["es2015", "dom"],

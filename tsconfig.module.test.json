@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/typescript/module-test.tsbuildinfo",
     "target": "esnext",
     "module": "esnext",
     "lib": ["es2017", "dom"],

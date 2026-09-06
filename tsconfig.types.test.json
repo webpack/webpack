@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/typescript/types-test.tsbuildinfo",
     "strict": true,
     "types": ["node", "jest"]
   },

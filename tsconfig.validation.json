@@ -2,6 +2,8 @@
   "extends": "./tsconfig",
   "include": ["types.d.ts"],
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/typescript/validation.tsbuildinfo",
     "lib": ["es2017", "dom"]
   }
 }

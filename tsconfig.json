@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/typescript/lib.tsbuildinfo",
     "target": "ES2017",
     "module": "commonjs",
     "lib": ["es2017", "dom", "es2022.error"],
