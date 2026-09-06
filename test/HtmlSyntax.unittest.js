@@ -4033,11 +4033,8 @@ describe("SourceProcessor — collapseWhitespace", () => {
 	});
 });
 
-// The two conditions that decline a fold cannot be reached through a build:
-// webpack's CSS pipeline resolves an `@import` away long before the HTML
-// minifier sees the sheet, and the minifier only refuses text that overflows
-// its own parser. The rest of the transform is covered by the
-// `configCases/html/minimize-merge-styles` case.
+// The shapes a fold is declined for, which a build does not reach: webpack
+// resolves an `@import` away long before the HTML minifier sees the sheet.
 describe("SourceProcessor — merging adjacent <style>", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
@@ -4083,6 +4080,46 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 				"<style>@import url(x.css);a{color:red}</style><style>b{color:#00f}</style>"
 			)
 		).toBe("<style>@import url(x.css);a{color:red}b{color:#00f}</style>");
+	});
+
+	it("declines a sheet ending inside a comment", () => {
+		// Appending to text the comment swallows would comment the next sheet out.
+		expect(
+			minify("<style>a{color:red}/*x</style><style>b{color:#00f}</style>")
+		).toBe("<style>a{color:red}</style><style>b{color:#00f}</style>");
+		expect(
+			minify("<style>a{color:red}/*x*/</style><style>b{color:#00f}</style>")
+		).toBe("<style>a{color:red}b{color:#00f}</style>");
+	});
+
+	it("declines a sheet ending inside a string", () => {
+		expect(
+			minify('<style>a{content:"x</style><style>b{color:#00f}</style>')
+		).toBe('<style>a{content:"x"}</style><style>b{color:#00f}</style>');
+		// A newline ends a bad string, so this one is over where the sheet is.
+		expect(
+			minify('<style>a{content:"x\n}</style><style>b{color:#00f}</style>')
+		).toBe('<style>a{content:"x\n}b{color:#00f}</style>');
+		// An escaped quote is a character of the string, not its end.
+		expect(
+			minify('<style>a{content:"x\\"y"}</style><style>b{color:#00f}</style>')
+		).toBe("<style>a{content:'x\"y'}b{color:#00f}</style>");
+	});
+
+	it("reads an escape outside a string as one too", () => {
+		// Were the quote not escaped it would open a string running to the end.
+		expect(
+			minify('<style>a{color:red}\\"</style><style>b{color:#00f}</style>')
+		).toBe("<style>a{color:red}b{color:#00f}</style>");
+	});
+
+	it("declines a sheet left inside a bracket", () => {
+		expect(
+			minify("<style>a{color:red</style><style>b{color:#00f}</style>")
+		).toBe("<style>a{color:red}</style><style>b{color:#00f}</style>");
+		expect(
+			minify("<style>a{color:rgb(1,2,3}</style><style>b{color:#00f}</style>")
+		).toBe("<style>a{color:rgb(1,2,3})}</style><style>b{color:#00f}</style>");
 	});
 
 	it("declines a sheet the CSS minifier could not read", () => {
