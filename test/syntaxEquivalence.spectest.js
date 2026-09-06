@@ -30,6 +30,8 @@ const {
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 const launchChrome = require("./helpers/launchChrome");
 const {
+	benchmarkDocuments,
+	benchmarkStylesheets,
 	buildCorpus,
 	compareRules,
 	conditionSignatures,
@@ -73,6 +75,19 @@ const VALUE_BUDGET = 2000;
 const FILED_CONFIG_CSS_DEFECTS = new Map();
 
 const FILED_CONFIG_HTML_DEFECTS = new Map();
+
+const FILED_BENCHMARK_CSS_DEFECTS = new Map([
+	[
+		"Semantic UI 2",
+		"not a printer defect: joining two rules that print one block reorders the selectors, and the comparison sorts a run rather than two — an element matching both computes the same style, checked in Chrome"
+	],
+	[
+		"Tailwind 4 + daisyUI 5",
+		"not a printer defect: the Semantic UI shape with a `@media` between the runs — an element matching both computes the same style at either side of the query, checked in Chrome"
+	]
+]);
+
+const FILED_BENCHMARK_HTML_DEFECTS = new Map();
 
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[
@@ -237,6 +252,20 @@ const buildCorpora = () => {
 			filedCss: FILED_CONFIG_CSS_DEFECTS
 		}
 	];
+	// Real projects, where `configCases` and wpt are both spec fixtures.
+	const benchHtml = benchmarkDocuments((source) => source);
+	const benchCss = benchmarkStylesheets(minifyCss);
+	if (benchHtml.length > 0 || benchCss.length > 0) {
+		built.push({
+			label: "benchmark corpus",
+			html: variant(benchHtml, {}),
+			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
+			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			css: benchCss,
+			filedHtml: FILED_BENCHMARK_HTML_DEFECTS,
+			filedCss: FILED_BENCHMARK_CSS_DEFECTS
+		});
+	}
 	if (!hasCorpus()) return built;
 	/** @type {Fixture[]} */
 	const wptHtml = [];
@@ -288,6 +317,9 @@ const inBatches = async (page, items, evaluate) => {
 // rather than reporting green.
 const NO_CORPUS =
 	"wpt submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)";
+
+const NO_BENCHMARK_CORPUS =
+	"minifier comparison caches not built (run `yarn benchmark:css-minifiers` / `yarn benchmark:html-minifiers`)";
 
 expectNoDeprecations();
 
@@ -495,13 +527,6 @@ describe("printer output in real Chrome", () => {
 
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
-			if (at === 1 && !hasCorpus()) {
-				it(NO_CORPUS, () => {
-					// No-op: the corpus is an optional git submodule.
-				});
-
-				return;
-			}
 			const one = corpora[at];
 
 			// One test per page, not per corpus: the file is what a defect is filed
@@ -656,8 +681,21 @@ describe("printer output in real Chrome", () => {
 		});
 	};
 
-	describeCorpus(0, "configCases");
-	describeCorpus(1, "wpt");
+	// Which corpora were built depends on what is checked out, so each names
+	// itself, and one that could not be built says so rather than going quiet.
+	for (const [at, one] of corpora.entries()) describeCorpus(at, one.label);
+	for (const [label, why] of [
+		["wpt", NO_CORPUS],
+		["benchmark corpus", NO_BENCHMARK_CORPUS]
+	]) {
+		if (corpora.some((one) => one.label === label)) continue;
+
+		describe(label, () => {
+			it(why, () => {
+				// No-op: both are optional, and each is built outside this suite.
+			});
+		});
+	}
 
 	// One test per declaration, not per file: the value is what a defect is filed
 	// against, so the run names it without anything having to narrow it down.
