@@ -49,6 +49,38 @@ ObjectMiddleware.register(Cycle, "test/ObjectMiddleware.unittest", "Cycle", {
 	}
 });
 
+/** Rolls back over its own `setCircularReference`, then writes itself again. */
+class RolledBackCycle {
+	constructor() {
+		/** @type {string} */
+		this.name = "rolled back";
+	}
+}
+
+ObjectMiddleware.register(
+	RolledBackCycle,
+	"test/ObjectMiddleware.unittest",
+	"RolledBackCycle",
+	{
+		/**
+		 * @param {RolledBackCycle} item item
+		 * @param {import("../lib/serialization/ObjectMiddleware").ObjectSerializerContext} context context
+		 */
+		serialize(item, context) {
+			const state = context.snapshot();
+			context.setCircularReference(item);
+			context.rollback(state);
+			context.write(item);
+		},
+		/**
+		 * @returns {RolledBackCycle} item
+		 */
+		deserialize() {
+			return new RolledBackCycle();
+		}
+	}
+);
+
 class Unregistered {}
 
 class NotSerializable {}
@@ -178,6 +210,12 @@ describe("ObjectMiddleware", () => {
 				context
 			)
 		).toThrow(/while serializing Object \{ outer \} -> Object \{ inner \}/);
+	});
+
+	it("forgets a rolled back setCircularReference", () => {
+		expect(() =>
+			middleware.serialize([new RolledBackCycle()], context)
+		).toThrow(/circular references/);
 	});
 
 	it("rejects a class with no registered serializer", () => {
