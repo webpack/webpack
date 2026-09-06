@@ -185,7 +185,9 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          # Pinned; revert to "latest" once https://github.com/nodejs/node/issues/63715 is resolved
+          # Pinned; revert to "latest" once https://github.com/nodejs/node/issues/63715
+          # is resolved and V8 stops dropping global function declarations from
+          # [[VarNames]] (26.8.1 fails 8 test/language/ cases that 26.2.0 passes).
           node-version: "26.2.0"
           cache: yarn
 
