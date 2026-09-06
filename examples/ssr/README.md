@@ -100,7 +100,7 @@ export default function Page() {
 # server.js
 
 ```javascript
-import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
+import { createReadStream, readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -183,15 +183,24 @@ export async function renderDocument({ inlineCss = false } = {}) {
 
 function serveClientFile(pathname, response) {
 	const file = join(clientDirectory, pathname.slice("/dist/client/".length));
-	if (!file.startsWith(clientDirectory) || !existsSync(file)) {
+	const stats = file.startsWith(clientDirectory)
+		? statSync(file, { throwIfNoEntry: false })
+		: undefined;
+
+	// A directory is not an asset: streaming one fails with `EISDIR`, and an
+	// unhandled stream error takes the process down with it.
+	if (!stats || !stats.isFile()) {
 		response.writeHead(404).end("not found");
 		return;
 	}
+
 	response.writeHead(200, {
 		"content-type": CONTENT_TYPES[extname(file)] || "application/octet-stream",
-		"content-length": statSync(file).size
+		"content-length": stats.size
 	});
-	createReadStream(file).pipe(response);
+	createReadStream(file)
+		.on("error", () => response.destroy())
+		.pipe(response);
 }
 
 const server = createServer(async (request, response) => {
@@ -450,14 +459,14 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 21.3 KiB [emitted] [javascript module] (name: main)
+  asset main.mjs 21.4 KiB [emitted] [javascript module] (name: main)
   asset page_js.mjs 1.63 KiB [emitted] [javascript module]
   asset page_js.css 352 bytes [emitted]
-  chunk (runtime: main) main.mjs (main) 4.96 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 5.19 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
     > ./server.js main
     runtime modules 5.9 KiB 9 modules
     dependent modules 1.02 KiB [dependent] 8 modules
-    ./server.js 3.93 KiB [built] [code generated]
+    ./server.js 4.17 KiB [built] [code generated]
       [exports: renderDocument]
       [used exports unknown]
       entry ./server.js main
@@ -509,14 +518,14 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 4.47 KiB [emitted] [javascript module] [minimized] (name: main)
+  asset main.mjs 4.52 KiB [emitted] [javascript module] [minimized] (name: main)
   asset page_js-page_css.mjs 565 bytes [emitted] [javascript module] [minimized]
   asset page_js-page_css.css 197 bytes [emitted] [minimized]
-  chunk (runtime: main) main.mjs (main) 4.96 KiB (javascript) 5.72 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 5.19 KiB (javascript) 5.72 KiB (runtime) [entry] [rendered]
     > ./server.js main
     runtime modules 5.72 KiB 8 modules
     dependent modules 84 bytes [dependent] 2 modules
-    ./server.js + 6 modules 4.88 KiB [not cacheable] [built] [code generated]
+    ./server.js + 6 modules 5.11 KiB [not cacheable] [built] [code generated]
       [exports: renderDocument]
       [all exports used]
       entry ./server.js main
