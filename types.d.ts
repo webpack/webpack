@@ -30612,7 +30612,7 @@ declare namespace exports {
 				}[]
 			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
 			export function cssMinify(
-				input: { [index: string]: string },
+				input: { [index: string]: string | Buffer },
 				sourceMap?: object,
 				minimizerOptions?: {
 					as?: "stylesheet" | "block-contents";
@@ -30959,7 +30959,7 @@ declare namespace exports {
 			) => string;
 			export let escapeText: (s: string) => string;
 			export function htmlMinify(
-				input: { [index: string]: string },
+				input: { [index: string]: string | Buffer },
 				sourceMap?: RawSourceMap,
 				minimizerOptions?: Omit<
 					HtmlPrintOptions,
