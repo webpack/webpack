@@ -2183,9 +2183,8 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 	});
 
 	it("builds fast- and slow-constructed parsers with one field layout", () => {
-		// tripwire for acorn upgrades: the fast construction path replicates
-		// acorn's constructor, so its own-key order and its normalized options
-		// keys must match a super()-built instance and acorn's defaultOptions
+		// tripwire for acorn upgrades: the fast construction path replicates acorn's
+		// constructor, so its key order and option keys must match a super()-built one
 		const acorn = require("acorn");
 
 		const fast = /** @type {EXPECTED_ANY} */ (
