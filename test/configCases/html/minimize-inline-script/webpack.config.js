@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
 const webpack = require("../../../../");
 
 // An HTML asset webpack emits without parsing it: the only shape whose
@@ -68,6 +70,12 @@ module.exports = {
 							compilation.emitAsset(
 								"page.html",
 								new webpack.sources.RawSource(PAGE)
+							);
+							compilation.emitAsset(
+								"test.js",
+								new webpack.sources.RawSource(
+									fs.readFileSync(path.resolve(__dirname, "test.js"))
+								)
 							);
 						}
 					);
