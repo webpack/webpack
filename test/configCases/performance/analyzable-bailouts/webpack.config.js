@@ -10,7 +10,9 @@ module.exports = {
 		outputModule: true
 	},
 	output: {
-		module: true
+		module: true,
+		// A worker loading its chunks some other way is the second reason.
+		workerChunkLoading: "import-scripts"
 	},
 	module: {
 		rules: [{ test: /\.txt$/, type: "asset/resource" }]
