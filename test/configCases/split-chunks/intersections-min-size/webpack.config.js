@@ -41,7 +41,7 @@ const config = ({
 		target: "node",
 		entry: {
 			a: "./a",
-			b: "./b",
+			...(minChunks === 1 ? {} : { b: "./b" }),
 			...(higherOrder
 				? { c: "./pair01", d: "./pair02", e: "./pair12" }
 				: { c: "./c0", d: "./c1", e: "./c2" })
@@ -80,7 +80,7 @@ const config = ({
 			(compiler) => {
 				compiler.hooks.done.tap("AssertIntersectionCandidates", (stats) => {
 					const { chunkGraph, modules } = stats.compilation;
-					const shouldSplit = !belowThreshold && minChunks === 2;
+					const shouldSplit = !belowThreshold && minChunks <= 2;
 					const shared = [...modules].filter((module) => {
 						const name = module.nameForCondition();
 						return name !== null && /[\\/]m[012]\.js$/.test(name);
@@ -114,5 +114,6 @@ module.exports = [
 	{ usedExports: true, higherOrder: true },
 	{ named: true },
 	{ reductionOnly: true },
+	{ minChunks: 1 },
 	{ minChunks: 3 }
 ].map(config);
