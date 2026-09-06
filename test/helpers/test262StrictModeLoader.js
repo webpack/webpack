@@ -1,9 +1,9 @@
 "use strict";
 
 /**
- * Puts test262's "strict" scenario directive where webpack's parser reads it.
- * It stays on line 1 so every diagnostic still points at the source's own line.
+ * Applies test262's strict-mode transformation, which INTERPRETING.md defines as
+ * inserting the directive plus a newline as the file's initial character sequence.
  * @param {string} source the test file's source
  * @returns {string} the same source, parsed as strict mode code
  */
-module.exports = (source) => `"use strict";${source}`;
+module.exports = (source) => `"use strict";\n${source}`;
