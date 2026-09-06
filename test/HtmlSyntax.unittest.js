@@ -7719,12 +7719,12 @@ describe("htmlMinify — assets webpack only passes through", () => {
 	it("reads a Buffer input as UTF-8", async () => {
 		const { code } = await htmlMinify({
 			"page.html": Buffer.from(
-				"<html><body><p>héllo wörld</p></body></html>",
+				"<html><body><p>ça va à Zürich</p></body></html>",
 				"utf8"
 			)
 		});
 
-		expect(code).toBe("<body><p>héllo wörld</body></html>");
+		expect(code).toBe("<body><p>ça va à Zürich</body></html>");
 	});
 
 	it("keeps server-side template tags", async () => {
