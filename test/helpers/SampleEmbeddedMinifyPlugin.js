@@ -52,6 +52,17 @@ class SampleEmbeddedMinifyPlugin {
 			renderEmbeddedSource === undefined ? null : String(renderEmbeddedSource)
 		]);
 
+		// Webpack's own CSS and JSON minifiers stand behind the sample's renderer
+		// for what it declines, as `htmlMinify` puts them behind a caller's.
+		const builtin = htmlSyntax.builtinEmbeddedRenderer();
+		/** @type {EmbeddedSourceRenderer} */
+		const renderer = (source, info) => {
+			const answered =
+				renderEmbeddedSource === undefined
+					? undefined
+					: renderEmbeddedSource(source, info);
+			return answered === undefined ? builtin(source, info) : answered;
+		};
 		compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
 			// One tap per language pair — `info.type` says which arrived. Async on
 			// purpose: a real minifier may only be loadable that way.
@@ -79,9 +90,8 @@ class SampleEmbeddedMinifyPlugin {
 									typeof markup === "string" ? markup : markup.toString("utf8"),
 									{
 										mode: "minify",
-										// What the document itself embeds. Absent, the serializer
-										// falls back to its own CSS and JSON minifiers.
-										renderEmbeddedSource,
+										// What the document itself embeds.
+										renderEmbeddedSource: renderer,
 										...minimizerOptions
 									}
 								).code,

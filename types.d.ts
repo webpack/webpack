@@ -1285,6 +1285,37 @@ type BuildDependencyItem =
 	  };
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
+declare interface BuiltinEmbeddedRendererOptions {
+	/**
+	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 */
+	environment?: CssEnvironment;
+
+	/**
+	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
+	 */
+	convertLengthUnits?: boolean;
+
+	/**
+	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
+	 */
+	rewriteCustomProperties?: boolean;
+
+	/**
+	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
+	 */
+	transforms?: CssTransformOptions;
+
+	/**
+	 * names a whole-project analysis found unused, which the print takes out: a bare name is a class, an id and an `@keyframes` name, and a `--`-prefixed one is a custom property. Only read while printing
+	 */
+	unusedSymbols?: string[];
+
+	/**
+	 * each pseudo-class to write as a class instead (`{ "focus-visible": "focus-visible" }`), so a script can apply it where the engine does not. Only read while printing
+	 */
+	pseudoClasses?: { [index: string]: string };
+}
 declare abstract class ByTypeGenerator extends Generator {
 	map: { [index: string]: undefined | Generator };
 	generateError?: (
@@ -10457,13 +10488,7 @@ declare interface HtmlParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
-type HtmlPrintOptions = Pick<
-	CssProcessOptions,
-	"environment" | "convertLengthUnits" | "rewriteCustomProperties"
-> & {
-	cssTransforms?: CssTransformOptions;
-	cssUnusedSymbols?: string[];
-	cssPseudoClasses?: { [index: string]: string };
+declare interface HtmlPrintOptions {
 	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 	mergeStyles?: boolean;
@@ -10480,7 +10505,7 @@ type HtmlPrintOptions = Pick<
 	) => undefined | string;
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 	deferSrcdoc?: boolean;
-};
+}
 declare interface HtmlProcessOptions {
 	/**
 	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
@@ -10496,36 +10521,6 @@ declare interface HtmlProcessOptions {
 	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening-tag whitespace collapsed) as `process` walks, and return it (default false = walk only, return `""`)
 	 */
 	minimize?: boolean;
-
-	/**
-	 * CSS's, not HTML's: handed to the CSS minifier that runs over an inline `<style>` and every `style=""`, so the inline copy of a declaration agrees with the `.css` asset
-	 */
-	environment?: CssEnvironment;
-
-	/**
-	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
-	 */
-	convertLengthUnits?: boolean;
-
-	/**
-	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
-	 */
-	rewriteCustomProperties?: boolean;
-
-	/**
-	 * CSS's per-transform switches too, handed over with `environment` (see `HtmlPrintOptions`)
-	 */
-	cssTransforms?: CssTransformOptions;
-
-	/**
-	 * CSS's `unusedSymbols` too, handed over with `environment` (see `HtmlPrintOptions`)
-	 */
-	cssUnusedSymbols?: string[];
-
-	/**
-	 * CSS's `pseudoClasses` too, handed over with `environment` (see `HtmlPrintOptions`)
-	 */
-	cssPseudoClasses?: { [index: string]: string };
 
 	/**
 	 * which of the meaning-preserving rewrites the minifying print makes; each is on unless it is `false`
@@ -10583,12 +10578,12 @@ declare interface HtmlProcessOptions {
 	deferSrcdoc?: boolean;
 
 	/**
-	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. A `style=""` stays with the built-in CSS minifier, whose text this print reads back to decide how the attribute is written. Takes precedence over `renderEmbeddedSource`
+	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
 	 */
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 
 	/**
-	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). Replaces the built-in CSS and JSON minifiers wherever it answers, and returning anything but text falls back to them; it is the only way inline JavaScript, SVG and a nested document are reached at all
+	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (as the block's contents it is, SVG's and MathML's included), a `<script>` holding JSON or JavaScript (with `as` naming which production of it the body is — `"module"` for a `<script type=module>`, `"script"` for a classic one), every event handler attribute, with `as: "event-handler"` saying it is a function body rather than a script — the production a `return` at its top level is in, which a renderer whose engine takes only whole scripts wraps before it reads — an `<svg>` subtree, and the document an `<iframe srcdoc>` holds (decoded, and written back escaped). The only way any of them is minified: webpack minifies nothing here itself, and `builtinEmbeddedRenderer` is its own CSS and JSON minifiers for a caller to pass; returning anything but text leaves a body as written
 	 */
 	renderEmbeddedSource?: (
 		source: string,
@@ -30925,9 +30920,11 @@ declare namespace exports {
 				parentOf(n?: number): number;
 				children(n?: number): number[];
 			};
+			export let BLOCK_CONTENTS: "block-contents";
 			export let CLASSIC_SCRIPT: "script";
 			export let EMBEDDED_LANGUAGES: string[];
 			export let EVENT_HANDLER: "event-handler";
+			export let JSON_TYPE: "json";
 			export let MODULE_SCRIPT: "module";
 			export let NS_HTML: 0;
 			export let NS_MATHML: 1;
@@ -30972,6 +30969,12 @@ declare namespace exports {
 					  }
 			) => string;
 			export let buildHeadTags: (opts: OutputHtmlOptions) => string;
+			export let builtinEmbeddedRenderer: (
+				options?: BuiltinEmbeddedRendererOptions
+			) => (
+				source: string,
+				info: { type: string; hostType: string; as?: string }
+			) => undefined | string;
 			export let collectEmbeddedDiagnostics: (
 				reported: {
 					warnings?: (string | Error)[];
@@ -30995,6 +30998,7 @@ declare namespace exports {
 					HtmlPrintOptions,
 					"renderEmbeddedSource" | "deferEmbeddedSource"
 				> & {
+					environment?: CssEnvironment;
 					css?: {
 						convertLengthUnits?: boolean;
 						rewriteCustomProperties?: boolean;
@@ -31178,6 +31182,7 @@ declare namespace exports {
 					HtmlPrintOptions
 				>
 			) => string;
+			export let stripJsonWhitespace: (json: string) => string;
 			export let tokenize: (
 				input: string,
 				pos?: number,
