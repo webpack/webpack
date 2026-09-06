@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `normalizeUrlAttributes`, widen boolean collapsing, free `sortTokenLists`.
+Add `normalizeUrlAttributes`, `mergeScripts`, boolean and token switches.
