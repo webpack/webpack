@@ -25692,13 +25692,16 @@ declare abstract class RuntimeTemplate {
 	): boolean;
 
 	/**
-	 * Runs one module's code generation and collects the bailouts it records, so they
-	 * can be stored beside the result and reapplied when the cache restores it.
+	 * Names the module whose code generation starts, so the reasons its references
+	 * record are handed back by `finishAnalyzableBailouts` and attributed to it.
 	 */
-	collectAnalyzableBailouts<T>(
-		module: Module,
-		generate: () => T
-	): [T, string[]];
+	beginAnalyzableBailouts(module: Module): void;
+
+	/**
+	 * Ends the collection `beginAnalyzableBailouts` started, so the reasons can be
+	 * stored beside the result and reapplied when the cache restores it.
+	 */
+	finishAnalyzableBailouts(): undefined | string[];
 
 	/**
 	 * Reapplies the bailouts a cached code generation result was stored with, so a
