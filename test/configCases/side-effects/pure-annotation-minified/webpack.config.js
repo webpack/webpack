@@ -10,10 +10,8 @@ const expectAnnotation = (compiler) => {
 				(
 					/** @type {Record<string, import("webpack-sources").Source>} */ assets
 				) => {
-					// Terser strips annotations unless the library defaults ask it not to,
-					// so the one in front of the side-effect-free module's instantiation
-					// must still be here. Asserted on the asset rather than at runtime:
-					// reading the bundle back would make it import `node:module`.
+					// Terser strips annotations unless the library defaults ask it
+					// not to; asserted on the asset, which needs no `node:module`.
 					expect(assets["bundle0.mjs"].source()).toMatch(
 						/\/\*#__PURE__\*\/\w+\(/
 					);
