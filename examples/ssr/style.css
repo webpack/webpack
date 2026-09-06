@@ -1,3 +1,15 @@
 body {
-	font-family: sans-serif;
+	margin: 0;
+	padding: 2rem;
+	font-family: system-ui, sans-serif;
+	background: #f7f7fb;
+}
+
+.title {
+	font-size: 1.5rem;
+	color: #1b1b3a;
+}
+
+.pending {
+	color: #8a8aa3;
 }

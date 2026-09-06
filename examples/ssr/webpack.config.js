@@ -3,6 +3,15 @@
 const path = require("path");
 const webpack = require("../../");
 
+const jsx = {
+	test: /\.js$/,
+	include: [path.resolve(__dirname, ".")],
+	use: {
+		loader: "babel-loader",
+		options: { presets: ["@babel/react"] }
+	}
+};
+
 /** @type {import("webpack").Configuration} */
 const client = {
 	name: "client",
@@ -14,6 +23,7 @@ const client = {
 		// baked into the manifests, so the server emits URLs it never has to rewrite
 		publicPath: "/dist/client/"
 	},
+	module: { rules: [jsx] },
 	optimization: {
 		chunkIds: "named" // keep filenames stable across modes (for this example)
 	},
@@ -43,6 +53,7 @@ const server = {
 	externalsPresets: { node: true, nodeModules: true },
 	module: {
 		rules: [
+			jsx,
 			{
 				test: /\.(png|jpe?g|svg|woff2?)$/,
 				type: "asset/resource",
