@@ -13,6 +13,48 @@ const logger = new Logger(
 );
 const context = { logger };
 
+/** A node that reaches itself, so only `setCircularReference` can serialize it. */
+class Cycle {
+	/**
+	 * @param {string} name name
+	 */
+	constructor(name) {
+		/** @type {string} */
+		this.name = name;
+		/** @type {Cycle | undefined} */
+		this.next = undefined;
+	}
+}
+
+ObjectMiddleware.register(Cycle, "test/ObjectMiddleware.unittest", "Cycle", {
+	/**
+	 * @param {Cycle} item item
+	 * @param {import("../lib/serialization/ObjectMiddleware").ObjectSerializerContext} context context
+	 */
+	serialize(item, { write, setCircularReference }) {
+		setCircularReference(item);
+		write(item.name);
+		write(item.next);
+	},
+	/**
+	 * @param {import("../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} context context
+	 * @returns {Cycle} item
+	 */
+	deserialize({ read, setCircularReference }) {
+		const item = new Cycle("");
+		setCircularReference(item);
+		item.name = /** @type {string} */ (read());
+		item.next = /** @type {Cycle | undefined} */ (read());
+		return item;
+	}
+});
+
+class Unregistered {}
+
+class NotSerializable {}
+
+ObjectMiddleware.registerNotSerializable(NotSerializable);
+
 /**
  * @param {EXPECTED_ANY} value the value to round-trip
  * @returns {EXPECTED_ANY} what came back
@@ -116,5 +158,35 @@ describe("ObjectMiddleware", () => {
 		expect(() => middleware.serialize([circular], context)).toThrow(
 			/circular references/
 		);
+	});
+
+	it("round-trips a cycle declared with setCircularReference", () => {
+		const first = new Cycle("first");
+		const second = new Cycle("second");
+		first.next = second;
+		second.next = first;
+		const result = roundTrip(first);
+		expect(result.name).toBe("first");
+		expect(result.next.name).toBe("second");
+		expect(result.next.next).toBe(result);
+	});
+
+	it("names the path to the value it could not serialize", () => {
+		expect(() =>
+			middleware.serialize(
+				[{ outer: { inner: /** @type {EXPECTED_ANY} */ (() => {}) } }],
+				context
+			)
+		).toThrow(/while serializing Object \{ outer \} -> Object \{ inner \}/);
+	});
+
+	it("rejects a class with no registered serializer", () => {
+		expect(() => middleware.serialize([new Unregistered()], context)).toThrow(
+			/No serializer registered for Unregistered/
+		);
+	});
+
+	it("returns null for a class registered as not serializable", () => {
+		expect(middleware.serialize([new NotSerializable()], context)).toBeNull();
 	});
 });
