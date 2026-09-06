@@ -955,6 +955,9 @@
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         },
+        "mergeExports": {
+          "$ref": "#/definitions/EntryMergeExports"
+        },
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
         },
@@ -1029,6 +1032,9 @@
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         },
+        "mergeExports": {
+          "$ref": "#/definitions/EntryMergeExports"
+        },
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
         },
@@ -1082,6 +1088,11 @@
           "minLength": 1
         }
       ]
+    },
+    "EntryMergeExports": {
+      "description": "Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.",
+      "type": "boolean",
+      "added": "5.111.0"
     },
     "EntryNormalized": {
       "description": "The entry point(s) of the compilation.",

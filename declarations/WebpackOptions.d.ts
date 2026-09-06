@@ -203,6 +203,11 @@ export type UmdAmdContainer = string;
  */
 export type UmdNamedDefine = boolean;
 /**
+ * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+ * @since 5.111.0
+ */
+export type EntryMergeExports = boolean;
+/**
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type PublicPath = "auto" | RawPublicPath;
@@ -1370,6 +1375,10 @@ export interface EntryDescription {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+	 */
+	mergeExports?: EntryMergeExports;
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
@@ -4411,6 +4420,10 @@ export interface EntryDescriptionNormalized {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+	 */
+	mergeExports?: EntryMergeExports;
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
