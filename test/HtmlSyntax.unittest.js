@@ -5707,8 +5707,60 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			// rather than a stylesheet.
 			["css", "block-contents", "color : red"],
 			["css", "stylesheet", ".a { color : red }"],
-			["javascript", "stylesheet", "var a = 1"]
+			["javascript", "script", "var a = 1"]
 		]);
+	});
+
+	it("offers a classic script as the production it is", () => {
+		// Every classic spelling is the same production, and the value is matched
+		// the way the parser matched it — trimmed, and ASCII case-insensitively.
+		expect(offered("<script>var a = 1</script>")).toEqual([
+			["javascript", "script", "var a = 1"]
+		]);
+		expect(
+			offered('<script type="text/javascript">var a = 1</script>')
+		).toEqual([["javascript", "script", "var a = 1"]]);
+		expect(
+			offered('<script type="  TEXT/JavaScript  ">var a = 1</script>')
+		).toEqual([["javascript", "script", "var a = 1"]]);
+	});
+
+	it("offers a module script as the module production", () => {
+		// The goal symbol is not readable off the body: this one parses under
+		// both, and only the element says which it is.
+		expect(offered('<script type="module">var a = 1</script>')).toEqual([
+			["javascript", "module", "var a = 1"]
+		]);
+		expect(offered('<script type="  MODULE  ">import "x"</script>')).toEqual([
+			["javascript", "module", 'import "x"']
+		]);
+	});
+
+	it("offers a run of both, each under its own production", () => {
+		expect(
+			offered(
+				'<script>a()</script><script type="module">import "x"</script><script>b()</script>'
+			)
+		).toEqual([
+			["javascript", "script", "a()"],
+			["javascript", "module", 'import "x"'],
+			["javascript", "script", "b()"]
+		]);
+	});
+
+	it("carries the production onto the deferred path", async () => {
+		const { code, offered: holes } = await deferred(
+			'<script>a()</script><script type="module">import "x"</script>',
+			() => undefined
+		);
+
+		expect(holes).toEqual([
+			["javascript", "script", "a()"],
+			["javascript", "module", 'import "x"']
+		]);
+		expect(code).toBe(
+			'<script>a()</script><script type=module>import "x"</script>'
+		);
 	});
 
 	// Stands in for a JS minifier: comments and whitespace out, everything else
@@ -5953,7 +6005,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		).toEqual([
 			["css", "stylesheet", ".s { fill : red }"],
 			["css", "block-contents", "fill : red"],
-			["javascript", "stylesheet", "var b = 2"],
+			["javascript", "script", "var b = 2"],
 			// The subtree comes last: children print before their parent, so it
 			// carries whatever the renderer just made of them.
 			[
@@ -7811,7 +7863,7 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 		 */
 		const render = (source, info) => {
 			const name =
-				info.as === undefined ? info.type : `${info.type}:${info.as}`;
+				info.as === undefined ? info.type : `${info.type}/${info.as}`;
 
 			offered.push(name);
 
@@ -7831,11 +7883,11 @@ describe("htmlMinify — one document reaching every embedded site", () => {
 		expect(offered).toEqual([
 			"css",
 			"json",
-			"javascript",
-			"css:block-contents",
+			"javascript/script",
+			"css/block-contents",
 			// The handler, spent as a whole script by the minifier before the
-			// renderer sees it — the printer offers it as `javascript:event-handler`.
-			"javascript",
+			// renderer sees it — the printer offers it as an event handler.
+			"javascript/script",
 			"svg",
 			"html",
 			"html"
@@ -9646,9 +9698,9 @@ describe("htmlMinify — the function an event handler is asked about", () => {
 			return undefined;
 		});
 
-		// The body arrives inside the function it belongs to, and the production
-		// it was offered under is spent here rather than passed on.
-		expect(asked).toEqual([["function _(){  f( 1 )  \n}", undefined]]);
+		// The body arrives inside the function it belongs to, so the production
+		// asked about is the classic script that function is written in.
+		expect(asked).toEqual([["function _(){  f( 1 )  \n}", "script"]]);
 	});
 
 	it("writes back the body of the function it is answered with", async () => {
