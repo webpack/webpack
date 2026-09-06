@@ -1064,19 +1064,19 @@ url-hints-global:
   url-hints-global (webpack X.X.X) compiled successfully
 
 async-css-preload:
-  assets by path *.js 16.2 KiB
-    asset runtime.ae0db932.js 13 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset mid.2aad1b24.chunk.js 1.21 KiB [emitted] [immutable] [javascript module] (name: mid)
-    asset __html_f953a09c_0.ab627cb9.chunk.js 1.13 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
+  assets by path *.js 14.4 KiB
+    asset runtime.0b71b1fc.js 11.2 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset mid.7429d3ab.chunk.js 1.16 KiB [emitted] [immutable] [javascript module] (name: mid)
+    asset __html_f953a09c_0.b226390a.chunk.js 1.13 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
     asset styled-route.9fa5e111.chunk.js 884 bytes [emitted] [immutable] [javascript module] (name: styled-route)
   assets by chunk 0 bytes (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: styled-route)
   asset styled-route.84a7fce8.chunk.css 313 bytes [emitted] [immutable] (name: styled-route)
-  asset home.aea10c16.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 13 KiB (237 bytes) = runtime.ae0db932.js 1 auxiliary asset
-  Entrypoint __html_f953a09c_0 14.1 KiB = runtime.ae0db932.js 13 KiB __html_f953a09c_0.ab627cb9.chunk.js 1.13 KiB
-  runtime modules 8.59 KiB 12 modules
+  asset home.6b620584.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 11.2 KiB (237 bytes) = runtime.0b71b1fc.js 1 auxiliary asset
+  Entrypoint __html_f953a09c_0 12.3 KiB = runtime.0b71b1fc.js 11.2 KiB __html_f953a09c_0.b226390a.chunk.js 1.13 KiB
+  runtime modules 7.15 KiB 10 modules
   cacheable modules 574 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 104 bytes (html) 181 bytes (css)
     modules by path ./src/ 460 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
       javascript modules 460 bytes
@@ -1197,19 +1197,19 @@ csp-no-polyfill:
   csp-no-polyfill (webpack X.X.X) compiled successfully
 
 async-js-css-preload:
-  assets by path *.js 17.2 KiB
-    asset runtime.f73fd866.js 14 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset mid.e2df623b.chunk.js 1.21 KiB [emitted] [immutable] [javascript module] (name: mid)
-    asset __html_f953a09c_0.205d2e40.chunk.js 1.13 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
+  assets by path *.js 15.3 KiB
+    asset runtime.5acd2f5a.js 12.2 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset mid.7429d3ab.chunk.js 1.16 KiB [emitted] [immutable] [javascript module] (name: mid)
+    asset __html_f953a09c_0.61d40c46.chunk.js 1.13 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
     asset styled-route.9fa5e111.chunk.js 884 bytes [emitted] [immutable] [javascript module] (name: styled-route)
   assets by chunk 0 bytes (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: styled-route)
   asset styled-route.84a7fce8.chunk.css 313 bytes [emitted] [immutable] (name: styled-route)
-  asset home.db3968da.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 14 KiB (237 bytes) = runtime.f73fd866.js 1 auxiliary asset
-  Entrypoint __html_f953a09c_0 15.1 KiB = runtime.f73fd866.js 14 KiB __html_f953a09c_0.205d2e40.chunk.js 1.13 KiB
-  runtime modules 9.5 KiB 12 modules
+  asset home.8d79a4db.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 12.2 KiB (237 bytes) = runtime.5acd2f5a.js 1 auxiliary asset
+  Entrypoint __html_f953a09c_0 13.3 KiB = runtime.5acd2f5a.js 12.2 KiB __html_f953a09c_0.61d40c46.chunk.js 1.13 KiB
+  runtime modules 7.92 KiB 10 modules
   cacheable modules 574 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 104 bytes (html) 181 bytes (css)
     modules by path ./src/ 460 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
       javascript modules 460 bytes
