@@ -1,5 +1,5 @@
 import page from "./page.html";
 
-it("should report an error when a referenced asset is missing", () => {
-	expect(page).toBeDefined();
+it("should report a module-not-found error and render a data: placeholder", () => {
+	expect(page).toMatchSnapshot();
 });

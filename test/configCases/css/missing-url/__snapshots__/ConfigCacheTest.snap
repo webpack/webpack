@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css missing-url exported tests should report a module-not-found error rather than stall code generation 1`] = `
+"/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+.a {
+	background: url(data:,);
+}
+
+"
+`;
