@@ -10310,6 +10310,11 @@ declare class HtmlModulesPlugin {
 	): ChunkFilenameTemplate;
 
 	/**
+	 * Returns true, when the chunk has html.
+	 */
+	static chunkHasHtml(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
+
+	/**
 	 * Per-compilation hooks for the experimental HTML support.
 	 */
 	static getCompilationHooks: (compilation: Compilation) => {
