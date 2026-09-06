@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "Transform failed",
+  "Multiple files of the 'files' pattern of 'output.copy' are copied to 'collide.txt', keep a '[path]' or '[name]' placeholder in the 'filename' option to tell them apart",
+]
+`;

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "The 'missing/**/*.txt' pattern of 'output.copy' copied no file.
+It resolved to '<TEST_DIR>/missing/**/*.txt', which matches nothing on disk — usually a typo, a path relative to the wrong directory, or a directory a previous build step was supposed to create.
+Silence it with 'ignoreWarnings' when the pattern is optional.",
+]
+`;

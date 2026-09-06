@@ -574,6 +574,28 @@ declare abstract class AssetSourceGenerator extends Generator {
 	): null | Source;
 }
 declare abstract class AssetSourceParser extends ParserClass {}
+declare interface AssetSymlink {
+	/**
+	 * what the link points at, left as it is written
+	 */
+	target: string;
+
+	/**
+	 * whether it points at a directory, which is what Windows needs in order to create one
+	 */
+	isDirectory: boolean;
+}
+declare interface AssetTimestamps {
+	/**
+	 * last access time, in milliseconds
+	 */
+	atime: number;
+
+	/**
+	 * last modification time, in milliseconds
+	 */
+	mtime: number;
+}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
@@ -5305,6 +5327,167 @@ declare interface ContextTimestampAndHash {
 	symlinks?: Set<string>;
 }
 type ContextTypes = KnownContext & Record<any, any>;
+declare interface CopiedFileData {
+	/**
+	 * absolute path of the source file
+	 */
+	absoluteFilename: string;
+
+	/**
+	 * path of the source file, relative to the compiler context
+	 */
+	sourceFilename: string;
+
+	/**
+	 * path of the copied file, relative to `to`
+	 */
+	filename: string;
+}
+
+/**
+ * Options of the glob in 'from'.
+ */
+declare interface CopyGlobOptions {
+	/**
+	 * Whether the glob matches the case of a file name. Defaults to 'true'.
+	 */
+	caseSensitive?: boolean;
+
+	/**
+	 * How many directory levels below the base of the glob are read, where '1' reads only the base itself. Defaults to no limit.
+	 */
+	deep?: number;
+
+	/**
+	 * Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.
+	 */
+	dot?: boolean;
+
+	/**
+	 * Whether a symbolic link is resolved and copied as what it points at. Defaults to 'true'; 'false' copies the link itself, pointing where it already points.
+	 */
+	followSymlinks?: boolean;
+
+	/**
+	 * Globs of the files which are not copied, resolved like 'from'. A directory one of them matches is skipped whole.
+	 */
+	ignore?: string[];
+}
+
+/**
+ * A pattern of files which are copied to the output directory.
+ */
+declare interface CopyObjectPattern {
+	/**
+	 * Directory 'from' is resolved from and the copied paths are relative to. Defaults to the compiler context, and to what 'from' names when it is not a glob.
+	 */
+	context?: string;
+
+	/**
+	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
+	 */
+	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Glob or path from where the files are copied.
+	 */
+	from: string | string[];
+
+	/**
+	 * Options of the glob in 'from'.
+	 */
+	globOptions?: CopyGlobOptions;
+
+	/**
+	 * Asset info of a copied file.
+	 */
+	info?: AssetInfo | ((file: CopiedFileData) => AssetInfo);
+
+	/**
+	 * Whether a copied file keeps the permissions of the file it was copied from. Defaults to 'false', which gives it the ones a new file gets. Has no effect on Windows.
+	 */
+	preservePermissions?: boolean;
+
+	/**
+	 * Whether a copied file keeps the access and modification times of the file it was copied from. Defaults to 'false', which stamps it with the time it was written.
+	 */
+	preserveTimestamps?: boolean;
+
+	/**
+	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
+	 */
+	to?: string | ((file: CopiedFileData) => string);
+
+	/**
+	 * Modifies the content of a copied file.
+	 */
+	transform?:
+		| {
+				/**
+				 * Whether the result of the transform is cached, and what it is cached under. Defaults to 'true'.
+				 */
+				cache?:
+					| boolean
+					| {
+							/**
+							 * Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.
+							 */
+							keys?:
+								| CopyTransformCacheKeys
+								| ((
+										defaultKeys: CopyTransformCacheKeys,
+										absoluteFilename: string
+								  ) =>
+										CopyTransformCacheKeys | Promise<CopyTransformCacheKeys>);
+					  };
+				/**
+				 * Modifies the content of a copied file.
+				 */
+				transformer: (
+					content: Buffer,
+					absoluteFilename: string
+				) => string | Buffer | Promise<string | Buffer>;
+		  }
+		| ((
+				content: Buffer,
+				absoluteFilename: string
+		  ) => string | Buffer | Promise<string | Buffer>);
+}
+
+/**
+ * Patterns of files which are copied to the output directory, and the options of the copying itself.
+ */
+declare interface CopyOptions {
+	/**
+	 * Maximum number of files which are read at the same time. Defaults to '100'.
+	 */
+	concurrency?: number;
+
+	/**
+	 * Patterns of files which are copied to the output directory.
+	 */
+	patterns: CopyPattern[];
+
+	/**
+	 * Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.
+	 */
+	stage?: number;
+}
+type CopyPattern = string | CopyObjectPattern;
+declare class CopyPlugin {
+	constructor(options: CopyOptions);
+	patterns: CopyPattern[];
+	concurrency: number;
+	stage: number;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface CopyTransformCacheKeys {
+	[index: string]: any;
+}
 type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
 type CreateReadStreamFSImplementation = FSImplementation & {
 	read: (...args: any[]) => any;
@@ -15007,6 +15190,26 @@ declare interface KnownAssetInfo {
 	sourceFilename?: string;
 
 	/**
+	 * true, when the asset was copied from a file by `output.copy`
+	 */
+	copied?: boolean;
+
+	/**
+	 * when set, the asset is emitted as a symbolic link rather than as its content
+	 */
+	symlink?: AssetSymlink;
+
+	/**
+	 * when set, the file the asset is written to is given these permissions
+	 */
+	mode?: number;
+
+	/**
+	 * when set, the file the asset is written to is stamped with these times
+	 */
+	timestamps?: AssetTimestamps;
+
+	/**
 	 * size in bytes, only set after asset has been emitted
 	 */
 	size?: number;
@@ -21158,6 +21361,12 @@ declare interface Output {
 	compareBeforeEmit?: boolean;
 
 	/**
+	 * Copy files and directories to the output directory.
+	 * @since 5.111.0
+	 */
+	copy?: string | CopyOptions | CopyPattern[];
+
+	/**
 	 * This option enables cross-origin loading of chunks.
 	 */
 	crossOriginLoading?: false | "anonymous" | "use-credentials";
@@ -21441,6 +21650,24 @@ declare interface OutputFileSystem {
 		pathLike: PathLikeFs,
 		callback: (err: null | NodeJS.ErrnoException) => void
 	) => void;
+	symlink?: (
+		target: PathLikeFs,
+		path: PathLikeFs,
+		type: undefined | null | "file" | "dir" | "junction",
+		callback: (err: null | NodeJS.ErrnoException) => void
+	) => void;
+	readlink?: ReadlinkFs;
+	chmod?: (
+		path: PathLikeFs,
+		mode: string | number,
+		callback: (err: null | NodeJS.ErrnoException) => void
+	) => void;
+	utimes?: (
+		path: PathLikeFs,
+		atime: string | number | Date,
+		mtime: string | number | Date,
+		callback: (err: null | NodeJS.ErrnoException) => void
+	) => void;
 	stat: StatFs;
 	lstat?: LStatFs;
 	readFile: ReadFileFs;
@@ -21681,6 +21908,11 @@ declare interface OutputNormalized {
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: boolean;
+
+	/**
+	 * Patterns of files which are copied to the output directory, and the options of the copying itself.
+	 */
+	copy?: CopyOptions;
 
 	/**
 	 * This option enables cross-origin loading of chunks.
@@ -31470,6 +31702,7 @@ declare namespace exports {
 		ConcatenationScope,
 		ContextExclusionPlugin,
 		ContextReplacementPlugin,
+		CopyPlugin,
 		DefinePlugin,
 		Dependency,
 		DynamicEntryPlugin,
