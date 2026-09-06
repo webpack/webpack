@@ -9,8 +9,8 @@ const nodeModulesFolder = path.resolve(root, "node_modules");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
 
 /**
- * Whether a person is watching. Everything else — CI, and every coding agent,
- * including ones that do not exist yet — takes the non-interactive path.
+ * Whether a person is watching: both streams a terminal, and `CI` unset. Any
+ * other environment, including one this predates, takes the safe path.
  * @returns {boolean} result
  */
 function isInteractive() {
@@ -18,7 +18,8 @@ function isInteractive() {
 	if (forced === "interactive") return true;
 	if (forced === "automated") return false;
 	return (
-		Boolean(process.stdin.isTTY && process.stdout.isTTY) && !process.env.CI
+		Boolean(process.stdin.isTTY && process.stdout.isTTY) &&
+		process.env.CI === undefined
 	);
 }
 
@@ -57,6 +58,11 @@ async function setupForContributor() {
  * @returns {Promise<void>} result
  */
 async function setupForAutomation() {
+	if (!(await hasYarnAsync())) {
+		throw new Error(
+			"yarn was not found, and this path installs nothing globally. Install yarn, or re-run with WEBPACK_SETUP=interactive to have setup install it."
+		);
+	}
 	await exec("yarn", ["install", "--frozen-lockfile"], "Install dependencies");
 	if (await checkSymlinkExistsAsync()) return;
 	console.log("Setup: Link webpack into itself");
@@ -85,19 +91,24 @@ function checkSymlinkExistsAsync() {
 }
 
 /**
+ * @returns {Promise<boolean>} result
+ */
+async function hasYarnAsync() {
+	const semverPattern =
+		/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*))*)?(?:\+[0-9a-z-]+(?:\.[0-9a-z-]+)*)?$/i;
+	try {
+		const stdout = await execGetOutput("yarn", ["-v"], "Check yarn version");
+		return semverPattern.test(stdout);
+	} catch (_err) {
+		return false;
+	}
+}
+
+/**
  * @returns {Promise<void>} result
  */
 async function ensureYarnInstalledAsync() {
-	const semverPattern =
-		/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*))*)?(?:\+[0-9a-z-]+(?:\.[0-9a-z-]+)*)?$/i;
-	let hasYarn = false;
-	try {
-		const stdout = await execGetOutput("yarn", ["-v"], "Check yarn version");
-		hasYarn = semverPattern.test(stdout);
-	} catch (_err) {
-		hasYarn = false;
-	}
-	if (!hasYarn) await installYarnAsync();
+	if (!(await hasYarnAsync())) await installYarnAsync();
 }
 
 /**
