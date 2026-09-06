@@ -7716,6 +7716,17 @@ describe("htmlMinify — assets webpack only passes through", () => {
 	 */
 	const min = async (src) => (await htmlMinify({ "page.html": src })).code;
 
+	it("reads a Buffer input as UTF-8", async () => {
+		const { code } = await htmlMinify({
+			"page.html": Buffer.from(
+				"<html><body><p>héllo wörld</p></body></html>",
+				"utf8"
+			)
+		});
+
+		expect(code).toBe("<body><p>héllo wörld</body></html>");
+	});
+
 	it("keeps server-side template tags", async () => {
 		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
 		// would delete the whole directive from a copied template.

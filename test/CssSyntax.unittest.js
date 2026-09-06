@@ -10051,6 +10051,16 @@ describe("cssMinify export", () => {
 
 		expect(code).toMatchInlineSnapshot('"a{color:red}"');
 	});
+
+	it("reads a Buffer input as UTF-8", async () => {
+		const cssMinify = require("../lib/css/cssMinify");
+
+		const { code } = await cssMinify({
+			"a.css": Buffer.from('a::before {\n\tcontent: "é";\n}\n', "utf8")
+		});
+
+		expect(code).toBe('a:before{content:"é"}');
+	});
 });
 
 describe("SourceProcessor — mergeDistantRules", () => {
