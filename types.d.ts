@@ -4954,9 +4954,6 @@ declare class ConsumeSharedPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-	static getDeclaredShared: (
-		compilation: Compilation
-	) => undefined | SharedDeclaration[];
 }
 
 /**
@@ -5081,9 +5078,6 @@ declare class ContainerReferencePlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-	static getDeclaredRemotes: (
-		compilation: Compilation
-	) => undefined | Set<string>;
 }
 declare interface ContainerReferencePluginOptions {
 	/**
@@ -26638,23 +26632,6 @@ declare interface SharedConfig {
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
 	version?: string | false;
-}
-
-declare interface SharedDeclaration {
-	/**
-	 * the config key, as the config spells it
-	 */
-	name: string;
-
-	/**
-	 * the key the modules created for it carry
-	 */
-	shareKey: string;
-
-	/**
-	 * whether it shares everything under the key
-	 */
-	prefix: boolean;
 }
 
 /**
