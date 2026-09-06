@@ -20030,7 +20030,6 @@ declare interface ObjectSerializerSnapshot {
 	length: number;
 	cycleStackSize: number;
 	referenceableSize: number;
-	overwrittenReferencesLength: number;
 	currentPos: number;
 	objectTypeLookupSize: number;
 	currentPosTypeLookup: number;
