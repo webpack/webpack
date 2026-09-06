@@ -4956,7 +4956,7 @@ declare class ConsumeSharedPlugin {
 	apply(compiler: Compiler): void;
 	static getDeclaredShared: (
 		compilation: Compilation
-	) => undefined | Map<string, string>;
+	) => undefined | Map<string, Set<string>>;
 }
 
 /**
