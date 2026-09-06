@@ -22773,7 +22773,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * them ahead of the next top-level node as well.
 	 */
 	takeInserts(start: number, end: number): string;
-	sourceMap(options: SourceMapOptions): SourceMap;
+	sourceMap(options: SourceMapOptions, code?: string): SourceMap;
 
 	/**
 	 * Stand the text `resolve` gives back in place of every deferred write left
@@ -28856,6 +28856,12 @@ declare class TokenStream {
 	 * `consume` / `discard` instead.
 	 */
 	advance(): void;
+
+	/**
+	 * Step over the whitespace the next token would be, without tokenizing it —
+	 * for the sites that discard whitespace tokens. No-op while a token is cached.
+	 */
+	skipWhitespace(): void;
 
 	/**
 	 * Mark (CSS Syntax §3 "mark") — push the current cursor position.
