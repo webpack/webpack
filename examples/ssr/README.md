@@ -37,6 +37,8 @@ The server build targets `node`, so webpack knows there is no DOM: `import.meta.
 
 **Set `output.publicPath` explicitly.** The default `"auto"` is resolved in the browser from the script url, which a manifest written at build time cannot do. `SSRManifestPlugin` falls back to `/` and warns: served from anywhere else, the urls the server prints are not the ones the client runtime builds, so nothing is adopted and every stylesheet is fetched a second time.
 
+**Stylesheet order is per manifest entry.** Each entry lists its stylesheets in the order their rules cascade, which is what a single route needs. Across entries the manifest states no order — a document assembling several is telling the browser what to fetch, not how to resolve conflicts between them. Where that matters, `<link rel="stylesheet" precedence="…">` is the mechanism, and React hoists and orders those for you.
+
 **`__webpack_css_server_styles__` is a process-wide registry, not a per-request one.** It accumulates every chunk the process has loaded, and it holds no initial stylesheet — only what chunk loading pulled in. That is why `/inline` still links the entry's stylesheet, and why inlining suits a per-route render more than a long-lived shared process.
 
 # example.js
