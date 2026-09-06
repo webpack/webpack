@@ -157,4 +157,128 @@ describe("StackedMap", () => {
 		parent.set("late", 42);
 		expect(child.get("late")).toBe(42);
 	});
+
+	describe("stale views (parent used again while child references live on)", () => {
+		it("should keep answering own and inherited keys from a stale child", () => {
+			const root = new StackedMap();
+			root.set("r", 9);
+			const a = root.createChild();
+			a.set("k", 1);
+			// switching back to the root abandons `a`
+			root.set("r2", 10);
+			expect(a.get("k")).toBe(1);
+			expect(a.get("r")).toBe(9);
+			expect(a.has("k")).toBe(true);
+			expect(root.get("k")).toBeUndefined();
+		});
+
+		it("should expose later live-chain writes to stale views", () => {
+			const root = new StackedMap();
+			const a = root.createChild();
+			a.set("k", 1);
+			root.set("late", 42);
+			expect(a.get("late")).toBe(42);
+			expect(a.has("late")).toBe(true);
+		});
+
+		it("should keep sibling branch writes invisible to stale views", () => {
+			const root = new StackedMap();
+			root.set("r", 9);
+			const a = root.createChild();
+			a.set("k", 1);
+			const b = a.createChild();
+			b.set("k", 2);
+			// creating a sibling of `b` abandons it
+			const d = a.createChild();
+			d.set("r", 7);
+			d.set("k", 3);
+			expect(b.get("k")).toBe(2);
+			expect(b.get("r")).toBe(9);
+			expect(b.has("r")).toBe(true);
+			expect(d.get("r")).toBe(7);
+			// returning to `a` abandons `d` too; both stale views stay intact
+			expect(a.get("r")).toBe(9);
+			expect(a.get("k")).toBe(1);
+			expect(d.get("r")).toBe(7);
+			expect(d.get("k")).toBe(3);
+			expect(b.get("k")).toBe(2);
+		});
+
+		it("should answer through a deep stale chain", () => {
+			const root = new StackedMap();
+			root.set("x", "root");
+			const a = root.createChild();
+			a.set("a", 1);
+			const b = a.createChild();
+			b.set("b", 2);
+			const c = b.createChild();
+			c.set("c", 3);
+			c.delete("x");
+			root.set("y", "afterwards");
+			expect(c.get("c")).toBe(3);
+			expect(c.get("b")).toBe(2);
+			expect(c.get("a")).toBe(1);
+			expect(c.get("x")).toBeUndefined();
+			expect(c.has("x")).toBe(false);
+			expect(c.get("y")).toBe("afterwards");
+			expect(b.get("x")).toBe("root");
+			expect(b.get("c")).toBeUndefined();
+		});
+
+		it("should accept writes and deletes on stale views", () => {
+			const root = new StackedMap();
+			root.set("r", 9);
+			const a = root.createChild();
+			a.set("k", 1);
+			root.set("r2", 10);
+			a.set("z", 5);
+			a.delete("r");
+			expect(a.get("z")).toBe(5);
+			expect(a.get("r")).toBeUndefined();
+			expect(a.has("r")).toBe(false);
+			expect(a.get("k")).toBe(1);
+			expect(root.get("r")).toBe(9);
+			expect(root.get("z")).toBeUndefined();
+		});
+
+		it("should preserve explicit undefined in stale views", () => {
+			const root = new StackedMap();
+			const a = root.createChild();
+			a.set("u", undefined);
+			root.set("other", 1);
+			expect(a.get("u")).toBeUndefined();
+			expect(a.has("u")).toBe(true);
+		});
+
+		it("should enumerate stale views", () => {
+			const root = new StackedMap();
+			root.set("r", 9);
+			const a = root.createChild();
+			a.set("k", 1);
+			a.delete("r");
+			const b = root.createChild();
+			b.set("other", 2);
+			expect(a.asArray().sort()).toEqual(["k"]);
+			expect(a.asPairArray().sort((x, y) => (x[0] < y[0] ? -1 : 1))).toEqual([
+				["k", 1]
+			]);
+			expect(a.size).toBe(1);
+			expect(b.asArray().sort()).toEqual(["other", "r"]);
+		});
+
+		it("should support children of stale views", () => {
+			const root = new StackedMap();
+			root.set("r", 9);
+			const a = root.createChild();
+			a.set("k", 1);
+			root.set("r2", 10);
+			const child = a.createChild();
+			expect(child.get("k")).toBe(1);
+			expect(child.get("r")).toBe(9);
+			child.set("k", 2);
+			expect(child.get("k")).toBe(2);
+			expect(a.get("k")).toBe(1);
+			expect(child.asArray().sort()).toEqual(["k", "r", "r2"]);
+		});
+	});
 });
