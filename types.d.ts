@@ -4956,7 +4956,7 @@ declare class ConsumeSharedPlugin {
 	apply(compiler: Compiler): void;
 	static getDeclaredShared: (
 		compilation: Compilation
-	) => undefined | Map<string, Set<string>>;
+	) => undefined | SharedDeclaration[];
 }
 
 /**
@@ -26638,6 +26638,23 @@ declare interface SharedConfig {
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
 	version?: string | false;
+}
+
+declare interface SharedDeclaration {
+	/**
+	 * the config key, as the config spells it
+	 */
+	name: string;
+
+	/**
+	 * the key the modules created for it carry
+	 */
+	shareKey: string;
+
+	/**
+	 * whether it shares everything under the key
+	 */
+	prefix: boolean;
 }
 
 /**
