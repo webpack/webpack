@@ -56,8 +56,11 @@ const exists = (file) =>
  */
 const run = (command, args, options) =>
 	new Promise((resolve, reject) => {
+		// Handed the environment this process holds rather than the one the
+		// spawn defaults to, so a caller's own `PATH` is what names the command.
 		const child = spawn(command, args, {
 			stdio: ["ignore", "inherit", "inherit"],
+			env: process.env,
 			...options
 		});
 		child.on("error", reject);

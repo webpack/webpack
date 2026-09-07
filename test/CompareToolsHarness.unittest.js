@@ -284,6 +284,14 @@ describe("compare-tools-harness", () => {
 		const cacheFor = (name) =>
 			path.resolve(__dirname, "..", "node_modules/.cache", name);
 
+		const RAN = "stand-in-npm-ran";
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {boolean} whether the stand-in npm ran for it
+		 */
+		const npmRan = (name) => fs.existsSync(path.join(cacheFor(name), RAN));
+
 		/**
 		 * @param {string} name which cache
 		 * @returns {EXPECTED_ANY} the manifest it holds
@@ -302,7 +310,9 @@ describe("compare-tools-harness", () => {
 		const withStandInNpm = async (code, what) => {
 			const bin = fs.mkdtempSync(path.join(os.tmpdir(), "stand-in-npm-"));
 			const npm = path.join(bin, "npm");
-			fs.writeFileSync(npm, `#!/bin/sh\nexit ${code}\n`);
+			// It leaves the mark in its working directory, which is the cache the
+			// install was for, so a test can tell a real install from a skipped one.
+			fs.writeFileSync(npm, `#!/bin/sh\n: > ${RAN}\nexit ${code}\n`);
 			fs.chmodSync(npm, 0o755);
 			const before = process.env.PATH;
 			const quiet = jest.spyOn(process.stderr, "write").mockReturnValue(true);
@@ -321,34 +331,52 @@ describe("compare-tools-harness", () => {
 		// of the real npm — and then a test would install over the network.
 		const posixOnly = process.platform === "win32" ? it.skip : it;
 
-		afterAll(() => {
+		/**
+		 * @returns {void}
+		 */
+		const clearCaches = () => {
 			for (const name of NAMES) {
 				fs.rmSync(cacheFor(name), { recursive: true, force: true });
 			}
-		});
+		};
+
+		// A run interrupted before its `afterAll` leaves a cache behind, and a
+		// warm one would send the cold case down the path it exists to cover.
+		beforeAll(clearCaches);
+
+		afterAll(clearCaches);
 
 		// Nothing is installed here: the manifest already lists what was asked
 		// for, which is the branch that keeps a re-run from reaching npm.
-		it("reuses a cache whose manifest lists the same packages", async () => {
-			const [name] = NAMES;
-			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
-				recursive: true
-			});
-			fs.writeFileSync(
-				path.join(cacheFor(name), "package.json"),
-				JSON.stringify({
-					name,
-					comparisonPackages: ["left@1", "right@2"]
-				})
-			);
-			await expect(installPackages(name, ["left@1", "right@2"])).resolves.toBe(
-				cacheFor(name)
-			);
-		});
+		posixOnly(
+			"reuses a cache whose manifest lists the same packages",
+			async () => {
+				const [name] = NAMES;
+				fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+					recursive: true
+				});
+				fs.writeFileSync(
+					path.join(cacheFor(name), "package.json"),
+					JSON.stringify({
+						name,
+						comparisonPackages: ["left@1", "right@2"]
+					})
+				);
+				// The stand-in fails, so taking the install path would fail the case
+				// rather than reach the real npm and the network behind it.
+				await withStandInNpm(1, () =>
+					expect(installPackages(name, ["left@1", "right@2"])).resolves.toBe(
+						cacheFor(name)
+					)
+				);
+				expect(npmRan(name)).toBe(false);
+			}
+		);
 
 		posixOnly("installs into a cache that has none of it yet", async () => {
 			const name = NAMES[1];
 			await withStandInNpm(0, () => installPackages(name, ["left@1"]));
+			expect(npmRan(name)).toBe(true);
 			expect(manifestOf(name).comparisonPackages).toEqual(["left@1"]);
 		});
 
@@ -359,6 +387,7 @@ describe("compare-tools-harness", () => {
 			await expect(
 				withStandInNpm(1, () => installPackages(name, ["right@2"]))
 			).rejects.toThrow("exited with 1");
+			expect(npmRan(name)).toBe(true);
 			expect(manifestOf(name).comparisonPackages).toBeUndefined();
 		});
 	});
