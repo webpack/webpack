@@ -5,8 +5,8 @@ exports[`ConfigTestCases html entry-script-and-stylesheet exported tests should 
 <html>
 <head>
 <title>HTML entry with script and stylesheet</title>
-<link rel=\\"stylesheet\\" href=\\"__html_cbe5b59d_0.chunk.css\\">
-<script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+<link rel=\\"stylesheet\\" href=\\"page.css\\">
+<script src=\\"page.js\\"></script>
 </head>
 <body>
 <h1>Hello</h1>

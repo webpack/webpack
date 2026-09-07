@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop the JS asset an extracted HTML entry leaves behind, which no page loads.
+Emit no JavaScript copy of an HTML entry's page, and name its chunks after it.

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigCacheTestCases embedded everything exported tests extracts the script of an html entry into a chunk of its own 1`] = `"<script src=__html_2a0885fc_0.js>"`;
+exports[`ConfigCacheTestCases embedded everything exported tests extracts the script of an html entry into a chunk of its own 1`] = `"<script src=page.js>"`;
 
 exports[`ConfigCacheTestCases embedded everything exported tests leaves a css data url whose media type names no language 1`] = `".png{background:url(data:image/png;base64,AAAA)}"`;
 
@@ -62,7 +62,7 @@ exports[`ConfigCacheTestCases embedded everything exported tests minifies an htm
 `;
 
 exports[`ConfigCacheTestCases embedded everything exported tests minifies an html document webpack parses as an entry 1`] = `
-"<!doctype html><html lang=en><head><title>entry</title><style>.entryStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script src=__html_2a0885fc_0.js></script><script type=application/json>{\\"entryJson\\":1}</script></head><body>
+"<!doctype html><html lang=en><head><title>entry</title><style>.entryStyle{background:url(\\"data:image/svg+xml,<svg> <rect fill='red' /> </svg>\\");color:red}</style><script src=page.js></script><script type=application/json>{\\"entryJson\\":1}</script></head><body>
 <p style=color:#0f0>hi</p>
 <svg viewBox=\\"0 0 2 2\\"> <rect fill=red /> </svg>
 <iframe srcdoc=\\"<style>.entrySrcdoc{color:#00f}</style>\\"></iframe>
