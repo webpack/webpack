@@ -15441,6 +15441,11 @@ declare interface KnownJavascriptModuleBuildInfo {
 	stableExports?: Set<string>;
 
 	/**
+	 * names a class binds while its own heritage clause is parsed in the enclosing scope, so a reference there resolves to the class at runtime but to the outer name here
+	 */
+	classHeritageNames?: Set<string>;
+
+	/**
 	 * module scope holds a `using`/`await using` declaration, so its resources must be disposed when the module finished evaluating
 	 */
 	usesTopLevelUsingDeclaration?: boolean;
