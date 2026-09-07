@@ -2,7 +2,7 @@
 
 exports[`ConfigTestCases css minify-embedded-svg exported tests should reach an inline svg subtree in embedded HTML 1`] = `
 "<div>
-	<svg viewBox=\\"0 0 2 2\\"> <rect style=\\" fill : red ; \\"/> </svg>
+	<svg viewBox=\\"0 0 2 2\\"> <rect style=fill:red /> </svg>
 </div>
 "
 `;
