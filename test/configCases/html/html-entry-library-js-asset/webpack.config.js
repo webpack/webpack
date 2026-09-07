@@ -17,7 +17,10 @@ module.exports = {
 		chunkFilename: "[name].chunk.js",
 		library: {
 			type: "commonjs2"
-		}
+		},
+		// A hint naming this entry covers both halves of the page: its own
+		// library JavaScript and the script the parser extracted from it.
+		resourceHints: [{ rel: "preload", as: "script", entry: "page" }]
 	},
 	optimization: {
 		chunkIds: "named"
