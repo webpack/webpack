@@ -82,6 +82,14 @@ const FILED_BENCHMARK_CSS_DEFECTS = new Map([
 		"not a printer defect: joining two rules that print one block reorders the selectors, and the comparison sorts a run rather than two — an element matching both computes the same style, checked in Chrome"
 	],
 	[
+		"Beer CSS 5",
+		"not a printer defect: the Semantic UI shape — `.switch.icon > span > i` and `.switch > span::before` print one block, and no element matches both, so their order is unobservable; checked in Chrome"
+	],
+	[
+		"Tabler 1",
+		"not a printer defect: the Semantic UI shape — `.markdown > table` and `.markdown > blockquote` print one block, and no element matches both, so their order is unobservable; checked in Chrome"
+	],
+	[
 		"Tailwind 4 + daisyUI 5",
 		"not a printer defect: the Semantic UI shape with a `@media` between the runs — an element matching both computes the same style at either side of the query, checked in Chrome"
 	]
