@@ -52,12 +52,15 @@ class MergeCopiedAssetsPlugin {
 						.sort((a, b) => (a.name < b.name ? -1 : 1));
 					if (assets.length === 0) return;
 
-					// the content of every part decides whether a merged asset from an
-					// earlier build still holds, so their etags are what it is keyed on
+					// the merged content carries the name of every part as well as its
+					// bytes, so a rename with identical bytes has to miss the cache too
 					const etag = assets
 						.map((asset) => cache.getLazyHashedEtag(asset.source))
 						.reduce((a, b) => cache.mergeEtags(a, b));
-					const itemCache = cache.getItemCache(filename, etag);
+					const itemCache = cache.getItemCache(
+						`${filename}|${JSON.stringify(assets.map((asset) => asset.name))}`,
+						etag
+					);
 
 					let merged = await itemCache.getPromise();
 					if (!merged) {
