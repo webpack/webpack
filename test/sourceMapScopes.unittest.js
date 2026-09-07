@@ -1,9 +1,12 @@
 "use strict";
 
+const DependencyTemplates = require("../lib/DependencyTemplates");
 const {
 	addScopesToSourceMap,
 	collectSourceScopes,
-	encodeScopes
+	enableImportBindingScopes,
+	encodeScopes,
+	isImportBindingScopesEnabled
 } = require("../lib/util/sourceMapScopes");
 
 describe("sourceMapScopes", () => {
@@ -42,6 +45,22 @@ describe("sourceMapScopes", () => {
 
 			expect(scopes[0].rangeStarts).toHaveLength(2);
 			expect(scopes[0].rangeEnds[0]).toEqual({ line: 1, column: 0 });
+		});
+
+		it("opens no run for a source-less segment before any mapped one", () => {
+			/* cspell:disable-next-line */
+			const scopes = collectSourceScopes("A;AAAA", 1);
+
+			expect(scopes).toHaveLength(1);
+			expect(scopes[0].rangeStarts).toEqual([{ line: 1, column: 0 }]);
+		});
+
+		it("survives source-less segments in a row", () => {
+			/* cspell:disable-next-line */
+			const scopes = collectSourceScopes("AAAA;A;A", 1);
+
+			expect(scopes).toHaveLength(1);
+			expect(scopes[0].rangeEnds).toEqual([{ line: 1, column: 0 }]);
 		});
 
 		it("stops at a digit outside the alphabet rather than misplacing the rest", () => {
@@ -119,6 +138,22 @@ describe("sourceMapScopes", () => {
 			);
 
 			expect(encoded.startsWith("A,")).toBe(true);
+		});
+	});
+
+	describe("enableImportBindingScopes", () => {
+		it("moves the code generation cache key, so a build without scopes is not reused", () => {
+			const dependencyTemplates = new DependencyTemplates();
+			const before = dependencyTemplates.getHash();
+			const compilation =
+				/** @type {import("../lib/Compilation")} */
+				(/** @type {unknown} */ ({ moduleGraph: {}, dependencyTemplates }));
+
+			expect(isImportBindingScopesEnabled(compilation.moduleGraph)).toBe(false);
+			enableImportBindingScopes(compilation);
+
+			expect(isImportBindingScopesEnabled(compilation.moduleGraph)).toBe(true);
+			expect(dependencyTemplates.getHash()).not.toBe(before);
 		});
 	});
 
