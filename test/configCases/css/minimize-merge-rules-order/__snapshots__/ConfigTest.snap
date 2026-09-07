@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-merge-rules-order minimize-merge-rules-order should compile 1`] = `
+Array [
+  ".t03-a,.t03-b{position:absolute;display:block;transform:scale(.6)}.t03-b{transform:scale(1)}.cell-late,.row-late{box-shadow:0 0 red;background:white;color:#000}.cell-early,.row-early{box-shadow:0 0 red;background:white;color:#000}",
+]
+`;
