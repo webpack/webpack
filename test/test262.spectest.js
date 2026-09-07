@@ -649,6 +649,23 @@ const compile = async (entry, scenario, options = {}) =>
 										system: false
 									}
 								},
+								// A file without the `module` flag is a Script, and only the
+								// Script goal rejects what is legal in a Module.
+								{
+									test: (resource) => resource === entry,
+									type: "javascript/dynamic"
+								},
+								// Whatever the entry reaches through `import()` is a Module,
+								// whichever goal the entry itself was parsed under.
+								{
+									// Avoid override `type` when we have `bytes` or `text` type
+									with: {
+										type: (value) => value !== "bytes" && value !== "text"
+									},
+									test: /\.js$/,
+									exclude: (resource) => resource === entry,
+									type: "javascript/esm"
+								},
 								// The "strict" directive has to reach the parser, not only the
 								// bundle: a sloppy parse accepts what only strict mode rejects.
 								...(scenario === "strict"
@@ -903,10 +920,8 @@ const knownBugs = [
 	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
 	// namespace has two own keys where the spec has one.
 	"import/import-attributes/json-via-namespace.js",
-	// The bundle puts `await using` inside the module wrapper's body, where it
-	// is legal, so an engine supporting the syntax raises no parse error.
-	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
-	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
+	// `ns[nonExported] = v` has to throw, which needs the namespace to be
+	// non-extensible; `delete ns[exported]` already does.
 	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
 	// module namespace exotic object). webpack's `__webpack_exports__` is a
@@ -969,8 +984,6 @@ const knownBugs = [
 	// throw-on-set in strict, sorted ownKeys, and frozen prop descriptors are
 	// not all satisfied (same root cause as `module-code/namespace/internals/*`).
 	"expressions/dynamic-import/namespace/await-ns-define-own-property.js",
-	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-no-strict.js",
-	"expressions/dynamic-import/namespace/await-ns-delete-non-exported-strict.js",
 	"expressions/dynamic-import/namespace/await-ns-extensible.js",
 	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-direct.js",
 	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-indirect.js",
@@ -983,10 +996,7 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/await-ns-set-no-strict.js",
 	"expressions/dynamic-import/namespace/await-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/await-ns-set-strict.js",
-	"expressions/dynamic-import/namespace/default-property-not-set-own.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-define-own-property.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-delete-non-exported-no-strict.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-delete-non-exported-strict.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-extensible.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-direct.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-indirect.js",
@@ -1000,12 +1010,11 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
-	// Dynamic-import edge cases that don't fit webpack's static module graph:
-	// - Self-importing script that asserts evaluation count.
-	// - `eval("import('...')")` and dynamic `import` reuse-namespace assertions
-	//   require dynamic specifiers webpack cannot resolve at build time.
+	// The file imports itself, so the entry script and the module it loads are
+	// one bundled module, evaluated once where the spec evaluates it twice.
 	"expressions/dynamic-import/eval-self-once-script.js",
-	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
+	// The specifier is written inside an `eval`, so this import never reaches
+	// the module graph.
 	"expressions/dynamic-import/usage-from-eval.js",
 	// `.then` is expected not to be called on the deferred namespace's promise.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
