@@ -304,6 +304,8 @@ For information about the governance of the webpack project, see [GOVERNANCE.md]
   **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
 - [thelarkinn](https://github.com/thelarkinn) -
   **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
+- [xiaoxiaojx](https://github.com/xiaoxiaojx) -
+  **Natsu Xiao** <<xiaojiaixn@gmail.com>> (he/him)
 
 ### Maintenance
 
