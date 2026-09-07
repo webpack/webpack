@@ -16,8 +16,12 @@ A pattern is a `from` plus optional `to`, `filename`, `context`, `globOptions`,
 filename template, so one pattern can rename, flatten and hash.
 
 `output.copy` takes a string or a list of patterns. The plugin behind it takes
-`concurrency` and the `processAssets` `stage` as well — reach for
-`new CopyPlugin({ patterns, stage })` when you need those.
+`concurrency` and the `processAssets` `stage` as well, so reach for
+`new webpack.CopyPlugin({ patterns, concurrency, stage })` when you need those —
+the config below copies a prebuilt vendor bundle that way. `stage` decides which
+asset-processing taps see what was copied; it is not how a file is kept out of
+the minimizer, which re-runs for assets added at any later stage. `info:
+{ minimized: true }` is what leaves an already-built file alone.
 
 The config also registers a small plugin that merges several copied assets into
 one — `copy-webpack-plugin`'s `transformAll`. `output.copy` has no equivalent

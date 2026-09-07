@@ -16,8 +16,12 @@ A pattern is a `from` plus optional `to`, `filename`, `context`, `globOptions`,
 filename template, so one pattern can rename, flatten and hash.
 
 `output.copy` takes a string or a list of patterns. The plugin behind it takes
-`concurrency` and the `processAssets` `stage` as well — reach for
-`new CopyPlugin({ patterns, stage })` when you need those.
+`concurrency` and the `processAssets` `stage` as well, so reach for
+`new webpack.CopyPlugin({ patterns, concurrency, stage })` when you need those —
+the config below copies a prebuilt vendor bundle that way. `stage` decides which
+asset-processing taps see what was copied; it is not how a file is kept out of
+the minimizer, which re-runs for assets added at any later stage. `info:
+{ minimized: true }` is what leaves an already-built file alone.
 
 The config also registers a small plugin that merges several copied assets into
 one — `copy-webpack-plugin`'s `transformAll`. `output.copy` has no equivalent
@@ -29,7 +33,7 @@ key a cache item on their contents, emit the merged asset and delete the parts.
 ```javascript
 "use strict";
 
-const { Compilation, sources } = require("webpack");
+const { Compilation, CopyPlugin, sources } = require("webpack");
 
 /** @import { Compiler } from "webpack" */
 
@@ -143,6 +147,22 @@ const config = {
 		]
 	},
 	plugins: [
+		// the plugin behind `output.copy` is where `concurrency` and `stage` live;
+		// `stage` decides which asset-processing taps see what it copied
+		new CopyPlugin({
+			patterns: [
+				{
+					from: "*.min.js",
+					context: "vendor",
+					to: "vendor",
+					// the minimizer re-runs for assets added at any later stage, so
+					// this, not a late `stage`, is what leaves a built file alone
+					info: { minimized: true }
+				}
+			],
+			concurrency: 50,
+			stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS
+		}),
 		new MergeCopiedAssetsPlugin({
 			include: /^licenses\//,
 			filename: "THIRD_PARTY_LICENSES.txt",
@@ -193,6 +213,7 @@ assets by path *.txt 144 bytes
   asset THIRD_PARTY_LICENSES.txt 121 bytes [emitted] [copied]
   asset robots.txt 23 bytes [emitted] [from: static/robots.txt] [copied]
 asset output.js 222 bytes [emitted] (name: main)
+asset vendor/analytics.min.js 72 bytes [emitted] [from: vendor/analytics.min.js] [copied]
 asset index.html 69 bytes [emitted] [from: static/index.html] [copied]
 asset pages/index.html 69 bytes [emitted] [from: static/index.html] [copied]
 asset runtime/config.json 33 bytes [emitted] [from: config.json] [copied]
@@ -216,6 +237,7 @@ assets by info 44 bytes [immutable]
 assets by path *.txt 144 bytes
   asset THIRD_PARTY_LICENSES.txt 121 bytes [emitted] [copied]
   asset robots.txt 23 bytes [emitted] [from: static/robots.txt] [copied]
+asset vendor/analytics.min.js 72 bytes [emitted] [from: vendor/analytics.min.js] [copied] [minimized]
 asset index.html 64 bytes [emitted] [from: static/index.html] [copied] [minimized]
 asset pages/index.html 64 bytes [emitted] [from: static/index.html] [copied] [minimized]
 asset runtime/config.json 33 bytes [emitted] [from: config.json] [copied]

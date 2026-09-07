@@ -1,6 +1,6 @@
 "use strict";
 
-const { Compilation, sources } = require("webpack");
+const { Compilation, CopyPlugin, sources } = require("webpack");
 
 /** @import { Compiler } from "webpack" */
 
@@ -114,6 +114,22 @@ const config = {
 		]
 	},
 	plugins: [
+		// the plugin behind `output.copy` is where `concurrency` and `stage` live;
+		// `stage` decides which asset-processing taps see what it copied
+		new CopyPlugin({
+			patterns: [
+				{
+					from: "*.min.js",
+					context: "vendor",
+					to: "vendor",
+					// the minimizer re-runs for assets added at any later stage, so
+					// this, not a late `stage`, is what leaves a built file alone
+					info: { minimized: true }
+				}
+			],
+			concurrency: 50,
+			stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONS
+		}),
 		new MergeCopiedAssetsPlugin({
 			include: /^licenses\//,
 			filename: "THIRD_PARTY_LICENSES.txt",
