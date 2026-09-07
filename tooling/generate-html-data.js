@@ -16,6 +16,7 @@
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
+const { toJsStringLiteral } = require("../lib/util/identifier");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
 const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax.js");
@@ -2086,6 +2087,17 @@ const REGION_REGEXP =
 	/\/\/ #region html entities\r?\n[\s\S]+?\/\/ #endregion\r?\n/;
 
 /**
+ * Spell the entity table as an object literal. `JSON.stringify` would leave a
+ * U+2028 or U+2029 raw, and both end a JS string literal though not a JSON one.
+ * @param {Record<string, string>} map entity name to the characters it names
+ * @returns {string} the literal, on one line
+ */
+const entityLiteral = (map) =>
+	`{${Object.keys(map)
+		.map((name) => `${toJsStringLiteral(name)}:${toJsStringLiteral(map[name])}`)
+		.join(",")}}`;
+
+/**
  * Render the `// #region html entities` block. The table is emitted as a
  * single-line frozen object literal so the engine builds it once at load.
  * @param {Record<string, { characters: string }>} entities the WHATWG table
@@ -2110,7 +2122,7 @@ const renderEntities = (entities) => {
 
 // prettier-ignore
 // cspell:disable-next-line
-const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(Object.assign(Object.create(null), ${JSON.stringify(
+const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(Object.assign(Object.create(null), ${entityLiteral(
 		map
 	)})));
 // #endregion

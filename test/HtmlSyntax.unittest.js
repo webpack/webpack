@@ -10140,3 +10140,44 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 		).toBe('<a ping="  b   a ">x</a>');
 	});
 });
+
+describe("SourceProcessor — reflected attributes are read per element", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	// Each case pairs the element the table names with one it does not, so a
+	// rewrite keyed on the attribute name alone fails the second half.
+	it("collapses a boolean attribute only where it is reflected", () => {
+		expect(minify('<marquee truespeed="truespeed">x</marquee>')).toBe(
+			"<marquee truespeed>x</marquee>"
+		);
+		expect(minify('<div truespeed="truespeed">x</div>')).toBe(
+			"<div truespeed=truespeed>x</div>"
+		);
+		expect(minify('<dir compact="compact"><li>x</li></dir>')).toBe(
+			"<dir compact><li>x</dir>"
+		);
+		expect(minify('<div compact="compact">x</div>')).toBe(
+			"<div compact=compact>x</div>"
+		);
+	});
+
+	it("normalizes an integer attribute only where it is reflected", () => {
+		expect(
+			minify('<marquee scrollamount="0010" scrolldelay="0085">x</marquee>')
+		).toBe("<marquee scrollamount=10 scrolldelay=85>x</marquee>");
+		expect(minify('<div scrollamount="0010">x</div>')).toBe(
+			"<div scrollamount=0010>x</div>"
+		);
+		expect(minify('<marquee hspace="007" vspace="008">x</marquee>')).toBe(
+			"<marquee hspace=7 vspace=8>x</marquee>"
+		);
+		expect(minify('<div hspace="007">x</div>')).toBe("<div hspace=007>x</div>");
+	});
+});
