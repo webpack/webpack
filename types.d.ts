@@ -19882,7 +19882,7 @@ declare namespace ObjectDeserializerContextObjectMiddlewareObject_1 {
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
 	T extends ReadonlyArray<any> = ReadonlyArray<any>
@@ -19893,7 +19893,7 @@ declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface ObjectDeserializerContextObjectMiddlewareObject_3 {
 	read: () => string;
@@ -19941,7 +19941,7 @@ declare interface ObjectEncodingOptionsTypes {
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface ObjectSerializer {
 	serialize: (
@@ -19954,7 +19954,7 @@ declare interface ObjectSerializer {
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	write: (
@@ -19986,7 +19986,7 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 	T extends ReadonlyArray<any> = ReadonlyArray<any>
@@ -20005,7 +20005,7 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 	write: (
@@ -20024,7 +20024,7 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface ObjectSerializerSnapshot {
 	length: number;
@@ -27686,7 +27686,7 @@ declare abstract class StackedMap<K, V> {
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface StarListDeserializerContext {
 	read: () => HarmonyExportImportedSpecifierDependency[];
@@ -27695,7 +27695,7 @@ declare interface StarListDeserializerContext {
 }
 
 /**
- * Updates set size using the provided set.
+ * Updates map size using the provided map.
  */
 declare interface StarListSerializerContext {
 	write: (
