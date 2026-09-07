@@ -2330,6 +2330,11 @@ export interface Optimization {
 	 */
 	innerGraph?: boolean;
 	/**
+	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
+	 * @since 5.111.0
+	 */
+	localImportBindings?: boolean;
+	/**
 	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
 	 */
 	mangleExports?: ("size" | "deterministic") | boolean;
@@ -5020,6 +5025,11 @@ export interface OptimizationNormalized {
 	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
 	 */
 	innerGraph?: boolean;
+	/**
+	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
+	 * @since 5.111.0
+	 */
+	localImportBindings?: boolean;
 	/**
 	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
 	 */

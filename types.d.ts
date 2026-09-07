@@ -6829,6 +6829,11 @@ declare interface DependencyTemplateContext {
 	 * chunkInitFragments
 	 */
 	chunkInitFragments: InitFragment<GenerateContext>[];
+
+	/**
+	 * what each imported binding of the current module reads, by its name in the source, for the source map `scopes` field
+	 */
+	importBindings?: Map<string, string>;
 }
 declare abstract class DependencyTemplates {
 	/**
@@ -10181,6 +10186,7 @@ declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 }
 declare abstract class HarmonyImportSideEffectDependency extends HarmonyImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
+	declaredSpecifiers?: [string[], string][];
 }
 declare interface HarmonySettings {
 	ids: string[];
@@ -11683,6 +11689,7 @@ declare class InitFragment<GenerateContext> {
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
+	static STAGE_HARMONY_IMPORT_BINDINGS: number;
 }
 declare abstract class InlinedUsedName {
 	value: InlinedValue;
@@ -15429,6 +15436,11 @@ declare interface KnownJavascriptModuleBuildInfo {
 	inlineExports?: boolean;
 
 	/**
+	 * names of own exports the language pins to one value, so an importer may read them into a local binding
+	 */
+	stableExports?: Set<string>;
+
+	/**
 	 * module scope holds a `using`/`await using` declaration, so its resources must be disposed when the module finished evaluating
 	 */
 	usesTopLevelUsingDeclaration?: boolean;
@@ -17633,6 +17645,7 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
+	static STAGE_HARMONY_IMPORT_BINDINGS: number;
 }
 declare class ModuleFactory {
 	constructor();
@@ -20321,6 +20334,12 @@ declare interface Optimization {
 	innerGraph?: boolean;
 
 	/**
+	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
+	 * @since 5.111.0
+	 */
+	localImportBindings?: boolean;
+
+	/**
 	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
 	 */
 	mangleExports?: boolean | "deterministic" | "size";
@@ -20763,6 +20782,12 @@ declare interface OptimizationNormalized {
 	innerGraph?: boolean;
 
 	/**
+	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
+	 * @since 5.111.0
+	 */
+	localImportBindings?: boolean;
+
+	/**
 	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
 	 */
 	mangleExports?: boolean | "deterministic" | "size";
@@ -20905,6 +20930,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
 	innerGraph: NonNullable<undefined | boolean>;
 	inlineExports: NonNullable<undefined | boolean>;
+	localImportBindings: NonNullable<undefined | boolean>;
 	concatenateModules: NonNullable<
 		undefined | boolean | ConcatenateModulesOptions
 	>;
@@ -27386,6 +27412,12 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Provide a custom public path for the SourceMapping comment.
 	 */
 	publicPath?: string;
+
+	/**
+	 * Emit the 'scopes' field, which tells a debugger the generated expression each imported ESM binding reads, so it resolves under the name the source uses.
+	 * @since 5.111.0
+	 */
+	scopes?: boolean;
 
 	/**
 	 * Provide a custom value for the 'sourceRoot' property in the SourceMap.
