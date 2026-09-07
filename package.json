@@ -67,6 +67,7 @@
     "test:integration:a": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\"",
     "test:integration:b": "yarn test:base --testMatch \"<rootDir>/test/*.longtest.js\"",
     "test:test262": "yarn test:base --testMatch \"<rootDir>/test/test262.spectest.js\"",
+    "test:test262-parser": "yarn test:base --testMatch \"<rootDir>/test/test262-parser.spectest.js\"",
     "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/html5lib.spectest.js\"",
     "test:syntax-equivalence": "yarn test:base --testMatch \"<rootDir>/test/syntaxEquivalence.spectest.js\"",
     "test:css-parsing": "yarn test:base --testMatch \"<rootDir>/test/cssParsing-webpack.spectest.js\"",

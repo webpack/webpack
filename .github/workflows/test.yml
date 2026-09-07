@@ -221,6 +221,44 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # Parses all of test262 with webpack's parser and with acorn, and compares the
+  # trees. Coverage instrumentation makes the parser ~5x slower, so this one job
+  # runs without it — every line it reaches is covered by the suites that upload.
+  test262-parser:
+    needs: basic
+    runs-on: ubuntu-latest
+    # Bounded: the suite allows ten minutes per area per mode, so a stall
+    # would otherwise hold a runner for the 6h default.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check out the test262 corpus
+        run: git submodule update --init --depth 1 test/test262-cases
+
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Cache jest result
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .jest-cache
+          key: jest-test262-parser-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-test262-parser-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-test262-parser-${{ runner.os }}-
+
+      - run: yarn test:test262-parser --ci --cacheDirectory .jest-cache
+
   html5lib:
     needs: basic
     runs-on: ubuntu-latest
