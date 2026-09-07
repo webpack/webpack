@@ -22,8 +22,8 @@ it("should load the shared runtime chunk exactly once even when multiple <script
 	// and overwrite the leader's module registry.
 	expect(runtimeRefs).toHaveLength(1);
 	expect(scriptSrcMatches[0]).toContain("html-runtime");
-	expect(scriptSrcMatches[1]).toMatch(/__html_[a-f0-9]+_0\.chunk\.js/);
-	expect(scriptSrcMatches[2]).toMatch(/__html_[a-f0-9]+_1\.chunk\.js/);
+	expect(scriptSrcMatches[1]).toMatch(/page\.js/);
+	expect(scriptSrcMatches[2]).toMatch(/page1\.js/);
 	// All referenced chunks were emitted to disk.
 	expect(readFile(scriptSrcMatches[0])).toContain("__webpack_require__");
 	expect(readFile(scriptSrcMatches[1])).toContain('module.exports = "entry"');
@@ -49,6 +49,6 @@ it("should propagate safe attributes onto the sibling runtime <script> tag and d
 	);
 	// The original entry tag keeps its own integrity attribute untouched.
 	expect(extracted).toMatch(
-		/<script[^>]*\bsrc="[^"]*__html_[^"]+\.chunk\.js"[^>]*\bintegrity="sha384-IGNOREME"/
+		/<script[^>]*\bsrc="[^"]*page\d*\.js"[^>]*\bintegrity="sha384-IGNOREME"/
 	);
 });

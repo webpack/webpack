@@ -8,16 +8,16 @@ it("should rewrite <link rel=preload/prefetch> of a bundled script/style to chun
 	expect(page).not.toContain('href="./preload-script.js"');
 	expect(page).not.toContain('href="./prefetch-script.js"');
 	expect(page).toMatch(
-		/<link rel="preload" as="script" href="__html_[^"]+\.js">/
+		/<link rel="preload" as="script" href="page\d*\.js">/
 	);
 	expect(page).toMatch(
-		/<link rel="prefetch" as="script" href="__html_[^"]+\.js">/
+		/<link rel="prefetch" as="script" href="page\d*\.js">/
 	);
 
 	// `as="style"` preload → CSS chunk URL.
 	expect(page).not.toContain('href="./preload-style.css"');
 	expect(page).toMatch(
-		/<link rel="preload" as="style" href="__html_[^"]+\.css">/
+		/<link rel="preload" as="style" href="page\d*\.css">/
 	);
 
 	// `webpackIgnore` leaves the resource hint untouched.
