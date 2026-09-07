@@ -101,8 +101,11 @@ const firstDifference = (ours, theirs, at) => {
 	}
 	const left = /** @type {Record<string, unknown>} */ (ours);
 	const right = /** @type {Record<string, unknown>} */ (theirs);
-	const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
-	for (const key of [...keys].sort()) {
+	const ourKeys = Object.keys(left);
+	const theirKeys = Object.keys(right);
+	// Whichever side owns more keys covers the other: two same-sized key sets
+	// that differ must each hold a key the other lacks.
+	for (const key of ourKeys.length >= theirKeys.length ? ourKeys : theirKeys) {
 		if (!(key in left)) {
 			return { at: `${at}.${key}`, ours: "absent", acorn: show(right[key]) };
 		}
