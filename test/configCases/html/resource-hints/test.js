@@ -50,11 +50,16 @@ it("should drop unresolvable and empty hints", () => {
 
 it("should point an entry hint at that entry's JavaScript", () => {
 	const emitted = new Set(fs.readdirSync(__dirname));
-	const hrefs = [
-		...head.matchAll(/<link rel="(?:preload|prefetch)"[^>]* href="([^"]+)"/g)
-	]
-		.map(([, href]) => href)
-		.filter((href) => href.endsWith(".js"));
+	// `String.prototype.matchAll` is newer than the Node baseline the harness
+	// runs this bundle on, so walk the matches with `exec`.
+	const linkRe = /<link rel="(?:preload|prefetch)"[^>]* href="([^"]+)"/g;
+	const hrefs = [];
+	let match = linkRe.exec(head);
+
+	while (match) {
+		if (match[1].endsWith(".js")) hrefs.push(match[1]);
+		match = linkRe.exec(head);
+	}
 
 	expect(hrefs).toContain("second.js");
 	for (const href of hrefs) expect(emitted).toContain(href);
