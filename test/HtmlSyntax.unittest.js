@@ -10175,9 +10175,13 @@ describe("SourceProcessor — reflected attributes are read per element", () => 
 		expect(minify('<div scrollamount="0010">x</div>')).toBe(
 			"<div scrollamount=0010>x</div>"
 		);
+		expect(minify('<div scrolldelay="0085">x</div>')).toBe(
+			"<div scrolldelay=0085>x</div>"
+		);
 		expect(minify('<marquee hspace="007" vspace="008">x</marquee>')).toBe(
 			"<marquee hspace=7 vspace=8>x</marquee>"
 		);
 		expect(minify('<div hspace="007">x</div>')).toBe("<div hspace=007>x</div>");
+		expect(minify('<div vspace="008">x</div>')).toBe("<div vspace=008>x</div>");
 	});
 });
