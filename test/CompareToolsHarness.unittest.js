@@ -173,6 +173,50 @@ describe("compare-tools-harness", () => {
 			expect(result.peak).toBeGreaterThan(0);
 		});
 
+		/**
+		 * @param {() => string} answer what `/proc/self/status` reads as
+		 * @param {() => Promise<EXPECTED_ANY>} what to run meanwhile
+		 * @returns {Promise<EXPECTED_ANY>} whatever it answered
+		 */
+		const withStatusFile = async (answer, what) => {
+			const real = fs.readFileSync;
+			const read = jest
+				.spyOn(fs, "readFileSync")
+				.mockImplementation(
+					/** @type {EXPECTED_ANY} */ (
+						(
+							/** @type {string} */ file,
+							/** @type {EXPECTED_ANY} */ options
+						) =>
+							file === "/proc/self/status"
+								? answer()
+								: real.call(fs, file, options)
+					)
+				);
+			try {
+				return await what();
+			} finally {
+				read.mockRestore();
+			}
+		};
+
+		// Where the file is not there to read, and where it is but names no
+		// high-water mark: the peak is what the platform itself accounts for.
+		it("reports a peak without the status file to read it from", async () => {
+			const thrown = await withStatusFile(
+				() => {
+					throw new Error("ENOENT");
+				},
+				() => measureHere("parse", "counts", "abcd")
+			);
+			expect(thrown.peak).toBeGreaterThan(0);
+			const unnamed = await withStatusFile(
+				() => "Name:\tnode\n",
+				() => measureHere("parse", "counts", "abcd")
+			);
+			expect(unnamed.peak).toBeGreaterThan(0);
+		});
+
 		// Only the first line: a native tool's panic carries a whole backtrace.
 		it("reports the first line of what a tool threw", async () => {
 			expect(await measureHere("minify", "refuses", "a{}")).toEqual({
