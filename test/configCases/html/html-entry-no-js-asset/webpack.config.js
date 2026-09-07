@@ -1,9 +1,7 @@
 "use strict";
 
-// An `.html` file used as a compilation entry. The entry chunk's JS side only
-// re-exports the markup that was written out as `page.html`, and the page loads
-// the `<script src>` entries the parser split out of it — never that chunk — so
-// no JS asset should be emitted for the entry.
+// An `.html` file used as a compilation entry: its chunk's JS side only
+// re-exports `page.html`, so no JS asset should be emitted for the entry.
 
 const fs = require("fs");
 const path = require("path");

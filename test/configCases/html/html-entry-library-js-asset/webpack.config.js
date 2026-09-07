@@ -1,8 +1,7 @@
 "use strict";
 
-// An `.html` entry whose JS side is asked for by name through `output.library`.
-// The page is still emitted, and the entry's JS asset is kept: the library is
-// what the user configured the build to hand back.
+// An `.html` entry whose JS side is asked for through `output.library`: the
+// page is still emitted, and the entry's JS asset is kept as the library.
 
 const fs = require("fs");
 const path = require("path");
