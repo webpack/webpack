@@ -5,27 +5,56 @@
 
 "use strict";
 
-// `node tooling/compare-html-minifiers.js` — size, cost and DOM safety against
-// the ecosystem's HTML minifiers, each cell in its own worker so cpu and memory
-// are attributable. The packages compared against install into
-// `node_modules/.cache/`, never webpack's dependency tree.
+// Compare webpack's own HTML parser and printer against the ecosystem's, over
+// real documents, in the three stages a tool can be asked for.
 
-const { spawn } = require("child_process");
+//   node tooling/compare-html-tools.js
+
+// `parse` builds the tree and stops; `beautify` and `minify` print it back out.
+// Every table reports best-of-3 wall/cpu ms and the worker's own peak RSS.
+
+// The two printing tables add what the output weighs and whether the DOM it
+// parses back to still says what the input's did.
+
+// `FIXTURE=`, `TOOL=` and `STAGE=` narrow the run to rows whose name contains
+// what they name, so one cell is re-measured without the whole matrix.
+
+// Each cell runs in a fresh worker, so cost is attributable to that one tool.
+// The packages compared against install into `node_modules/.cache/`.
+
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
-const { promisify } = require("util");
-const zlib = require("zlib");
 
 const htmlMinify = require("../lib/html/htmlMinify");
+const { SourceProcessor } = require("../lib/html/syntax");
+const {
+	STAGES,
+	compress,
+	filterFrom,
+	formatCost,
+	installPackages,
+	kb,
+	loaderFor,
+	log,
+	measure,
+	measureInWorker
+} = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
-const CACHE = path.join(ROOT, "node_modules/.cache/html-minifier-comparison");
+const CACHE_NAME = "html-tool-comparison";
+const CACHE = path.join(ROOT, "node_modules/.cache", CACHE_NAME);
 const MODULES = path.join(CACHE, "node_modules");
+const load = loaderFor(CACHE);
 
 const PACKAGES = [
+	"angular-html-parser@9",
 	"bootstrap@5",
+	"dom-serializer@2",
+	"htmlparser2@10",
+	"js-beautify@1",
 	"@minify-html/node@0.15",
+	"node-html-parser@7",
 	"@picocss/pico@2",
 	"@swc/html@1",
 	"cssnano@7",
@@ -33,90 +62,17 @@ const PACKAGES = [
 	"html-minifier-terser@7",
 	"html5-boilerplate@9",
 	"htmlnano@2",
+	"linkedom@0.18",
 	"marked@15",
 	"parse5@7",
 	"postcss@8",
+	"prettier@3",
 	"svgo@3",
 	"swagger-ui-dist@5",
 	"water.css@2"
 ];
 
-/**
- * @param {string} message progress line
- */
-const log = (message) => {
-	process.stderr.write(`${message}\n`);
-};
-
-/**
- * @param {string} file a path
- * @returns {Promise<boolean>} whether it exists
- */
-const exists = (file) =>
-	fs.promises.access(file).then(
-		() => true,
-		() => false
-	);
-
-/**
- * @param {string} command executable
- * @param {string[]} args its arguments
- * @param {object=} options spawn options
- * @returns {Promise<void>} resolves when it exits cleanly
- */
-const run = (command, args, options) =>
-	new Promise((resolve, reject) => {
-		const child = spawn(command, args, {
-			stdio: ["ignore", "inherit", "inherit"],
-			...options
-		});
-		child.on("error", reject);
-		child.on("close", (code) => {
-			if (code === 0) resolve();
-			else reject(new Error(`${command} exited with ${code}`));
-		});
-	});
-
-const setup = async () => {
-	const manifest = path.join(CACHE, "package.json");
-	// Reinstall when the package list changes, so an existing cache picks up
-	// newly added fixtures instead of failing on their missing files.
-	const installed =
-		(await exists(MODULES)) && (await exists(manifest))
-			? JSON.parse(await fs.promises.readFile(manifest, "utf8"))
-					.comparisonPackages
-			: undefined;
-	if (JSON.stringify(installed) === JSON.stringify(PACKAGES)) return;
-	log(`installing comparison packages into ${path.relative(ROOT, CACHE)} …`);
-	await fs.promises.mkdir(CACHE, { recursive: true });
-	if (!(await exists(manifest))) {
-		await fs.promises.writeFile(
-			manifest,
-			`${JSON.stringify(
-				{ name: "html-minifier-comparison", private: true },
-				null,
-				2
-			)}\n`
-		);
-	}
-	await run("npm", ["install", "--no-audit", "--no-fund", ...PACKAGES], {
-		cwd: CACHE
-	});
-	// Recorded only after the install succeeded.
-	const written = JSON.parse(await fs.promises.readFile(manifest, "utf8"));
-	written.comparisonPackages = PACKAGES;
-	await fs.promises.writeFile(
-		manifest,
-		`${JSON.stringify(written, null, 2)}\n`
-	);
-};
-
-/**
- * @param {string} name package name
- * @returns {EXPECTED_ANY} the package's export
- */
-const load = (name) => require(path.join(MODULES, name));
-
+const setup = () => installPackages(CACHE_NAME, PACKAGES);
 /**
  * The parse5 node shape this walk reads. parse5 ships its own types, but it is
  * installed outside the repo (see `setup`), so tsc cannot resolve them.
@@ -130,10 +86,8 @@ const load = (name) => require(path.join(MODULES, name));
  */
 /** @typedef {{ parse: (html: string) => Parse5Node }} Parse5 */
 
-// The third real shape: an app shell whose weight is inline critical CSS and
-// form markup. Neither installed fixture carries an inline `<style>`, a
-// `srcset` or a boolean attribute, so without this the comparison cannot see
-// what a minifier does with any of them.
+// An app shell, whose weight is inline critical CSS and form markup: without
+// it no fixture carries a `<style>`, a `srcset` or a boolean attribute.
 const APP_SHELL = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -299,9 +253,8 @@ const fixtures = async () => {
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
 	out.push(["Component library page", componentPage(400)]);
-	// Real framework stylesheets, classless through component-sized, inlined
-	// whole: whether each tool minifies, passes through, or mangles a large
-	// `<style>` decides these pages.
+	// Real framework stylesheets inlined whole: whether a tool minifies, passes
+	// through or mangles a large `<style>` is what decides these pages.
 	for (const [label, file] of [
 		["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
 		["Water.css 2 (inlined)", "water.css/out/water.css"],
@@ -323,20 +276,126 @@ const fixtures = async () => {
 	}
 	return out;
 };
-
-// Each entry is a factory so the measuring worker loads only the one tool it
-// measures — anything else would show up in that tool's peak RSS. The async API
-// is used wherever a tool offers one; minify-html only ships sync.
-/** @type {[string, () => (html: string) => string | Promise<string>][]} */
-const MINIFIERS = [
-	// Two rows per tool: its defaults, and everything it will do when asked.
-	[
-		"webpack",
-		() => async (html) => (await htmlMinify({ "input.html": html })).code
-	],
-	[
-		"webpack (aggressive)",
-		() => async (html) =>
+// Each entry builds its callable on demand, so the measuring worker loads only
+// the one tool it measures — anything else would land in that tool's peak RSS.
+/** @type {import("./compare-tools-harness").Tool[]} */
+const TOOLS = [
+	{
+		// `process` with no mode walks the whole document and prints nothing,
+		// which is exactly the parse stage.
+		name: "webpack",
+		stage: "parse",
+		create: () => (html) => new SourceProcessor().process(html)
+	},
+	{
+		name: "parse5",
+		stage: "parse",
+		create: () => {
+			const parse5 = load("parse5");
+			return (html) => parse5.parse(html);
+		}
+	},
+	{
+		name: "htmlparser2",
+		stage: "parse",
+		create: () => {
+			const htmlparser2 = load("htmlparser2");
+			return (html) => htmlparser2.parseDocument(html);
+		}
+	},
+	{
+		name: "node-html-parser",
+		stage: "parse",
+		create: () => {
+			const nodeHtmlParser = load("node-html-parser");
+			return (html) => nodeHtmlParser.parse(html);
+		}
+	},
+	{
+		name: "linkedom",
+		stage: "parse",
+		create: () => {
+			const { parseHTML } = load("linkedom");
+			return (html) => parseHTML(html);
+		}
+	},
+	{
+		// Angular's parser ships no serializer, so it is measured parsing only.
+		name: "angular-html-parser",
+		stage: "parse",
+		create: () => {
+			const angular = load("angular-html-parser");
+			return (html) => angular.parse(html);
+		}
+	},
+	{
+		name: "webpack",
+		stage: "beautify",
+		create: () => (html) =>
+			new SourceProcessor().process(html, { mode: "beautify" }).code
+	},
+	{
+		// parse5 re-serializes what it parsed without reformatting, which is the
+		// round-trip floor the other printers are read against.
+		name: "parse5",
+		stage: "beautify",
+		create: () => {
+			const parse5 = load("parse5");
+			return (html) => parse5.serialize(parse5.parse(html));
+		}
+	},
+	{
+		name: "htmlparser2",
+		stage: "beautify",
+		create: () => {
+			const htmlparser2 = load("htmlparser2");
+			const serializer = load("dom-serializer");
+			const render = serializer.default || serializer;
+			return (html) => render(htmlparser2.parseDocument(html));
+		}
+	},
+	{
+		name: "node-html-parser",
+		stage: "beautify",
+		create: () => {
+			const nodeHtmlParser = load("node-html-parser");
+			return (html) => nodeHtmlParser.parse(html).toString();
+		}
+	},
+	{
+		name: "linkedom",
+		stage: "beautify",
+		create: () => {
+			const { parseHTML } = load("linkedom");
+			return (html) => parseHTML(html).document.toString();
+		}
+	},
+	{
+		name: "prettier",
+		stage: "beautify",
+		create: () => {
+			const prettier = load("prettier");
+			return (html) => prettier.format(html, { parser: "html" });
+		}
+	},
+	{
+		name: "js-beautify",
+		stage: "beautify",
+		create: () => {
+			const beautify = load("js-beautify");
+			return (html) => beautify.html(html);
+		}
+	},
+	{
+		name: "webpack",
+		stage: "minify",
+		create: () => async (html) =>
+			(await htmlMinify({ "input.html": html })).code
+	},
+	{
+		name: "webpack (aggressive)",
+		stage: "minify",
+		create: () => async (html) =>
 			(
 				await htmlMinify({ "input.html": html }, undefined, {
 					collapseWhitespace: "all",
@@ -350,10 +409,11 @@ const MINIFIERS = [
 					removeImpliedTags: true
 				})
 			).code
-	],
-	[
-		"html-minifier-next",
-		() => {
+	},
+	{
+		name: "html-minifier-next",
+		stage: "minify",
+		create: () => {
 			// ESM only, so the entry its own manifest names is imported by URL —
 			// a bare specifier would resolve against this file, not the cache.
 			const manifest = load("html-minifier-next/package.json");
@@ -364,19 +424,19 @@ const MINIFIERS = [
 			);
 			return async (html) => (await loading).minify(html, {});
 		}
-	],
-	[
-		"html-minifier-next (aggressive)",
-		() => {
+	},
+	{
+		name: "html-minifier-next (aggressive)",
+		stage: "minify",
+		create: () => {
 			const manifest = load("html-minifier-next/package.json");
 			const loading = import(
 				pathToFileURL(
 					path.join(MODULES, "html-minifier-next", manifest.exports["."].import)
 				).href
 			);
-			// The html-minifier-terser row's options plus the four this fork adds
-			// that leave the rendered page alone. `removeUnusedCSS` and `minifySVG`
-			// are left out: both are told to change what the page renders.
+			// html-minifier-terser's options plus the four this fork adds that leave
+			// the page alone; `removeUnusedCSS` and `minifySVG` change what renders.
 			return async (html) =>
 				(await loading).minify(html, {
 					collapseAttributeWhitespace: true,
@@ -397,17 +457,19 @@ const MINIFIERS = [
 					useShortDoctype: true
 				});
 		}
-	],
-	[
-		"html-minifier-terser",
-		() => {
+	},
+	{
+		name: "html-minifier-terser",
+		stage: "minify",
+		create: () => {
 			const terser = load("html-minifier-terser");
 			return (html) => terser.minify(html, {});
 		}
-	],
-	[
-		"html-minifier-terser (aggressive)",
-		() => {
+	},
+	{
+		name: "html-minifier-terser (aggressive)",
+		stage: "minify",
+		create: () => {
 			const terser = load("html-minifier-terser");
 			return (html) =>
 				terser.minify(html, {
@@ -426,17 +488,19 @@ const MINIFIERS = [
 					useShortDoctype: true
 				});
 		}
-	],
-	[
-		"minify-html",
-		() => {
+	},
+	{
+		name: "minify-html",
+		stage: "minify",
+		create: () => {
 			const minifyHtml = load("@minify-html/node");
 			return (html) => minifyHtml.minify(Buffer.from(html), {}).toString();
 		}
-	],
-	[
-		"minify-html (aggressive)",
-		() => {
+	},
+	{
+		name: "minify-html (aggressive)",
+		stage: "minify",
+		create: () => {
 			const minifyHtml = load("@minify-html/node");
 			return (html) =>
 				minifyHtml
@@ -451,33 +515,37 @@ const MINIFIERS = [
 					})
 					.toString();
 		}
-	],
-	[
-		"htmlnano",
-		() => {
+	},
+	{
+		name: "htmlnano",
+		stage: "minify",
+		create: () => {
 			const htmlnano = load("htmlnano");
 			return async (html) =>
 				(await htmlnano.process(html, {}, htmlnano.presets.safe)).html;
 		}
-	],
-	[
-		"htmlnano (aggressive)",
-		() => {
+	},
+	{
+		name: "htmlnano (aggressive)",
+		stage: "minify",
+		create: () => {
 			const htmlnano = load("htmlnano");
 			return async (html) =>
 				(await htmlnano.process(html, {}, htmlnano.presets.max)).html;
 		}
-	],
-	[
-		"@swc/html",
-		() => {
+	},
+	{
+		name: "@swc/html",
+		stage: "minify",
+		create: () => {
 			const swc = load("@swc/html");
 			return async (html) => (await swc.minify(Buffer.from(html), {})).code;
 		}
-	],
-	[
-		"@swc/html (aggressive)",
-		() => {
+	},
+	{
+		name: "@swc/html (aggressive)",
+		stage: "minify",
+		create: () => {
 			const swc = load("@swc/html");
 			return async (html) =>
 				(
@@ -497,7 +565,7 @@ const MINIFIERS = [
 					})
 				).code;
 		}
-	]
+	}
 ];
 
 // Text these elements hold is data, not markup whitespace, so a minifier that
@@ -578,10 +646,8 @@ const fingerprint = (parse5, html) => {
 				text.push(value);
 				return;
 			}
-			// A whitespace-only node between two inline boxes renders as a space,
-			// so losing it is a difference — but never under `<head>` / `<html>`,
-			// where nothing renders it. Recorded as a run, not a count: dropping a
-			// comment merges the nodes either side, which is no loss at all.
+			// A whitespace-only node between two inline boxes renders as a space, so
+			// losing it differs — but nothing under `<head>` / `<html>` renders it.
 			if (!verbatim && parent !== "head" && parent !== "html") {
 				text.push(WHITESPACE_RUN);
 			}
@@ -636,159 +702,16 @@ const missing = (before, after, empty) => {
 	return out;
 };
 
-const gzip = promisify(zlib.gzip);
-const brotliCompress = promisify(zlib.brotliCompress);
-// Node < 22.15 has no zstd in zlib — the column reads "-" there.
-const zstdCompress =
-	typeof zlib.zstdCompress === "function"
-		? promisify(zlib.zstdCompress)
-		: undefined;
-
-/**
- * @param {Buffer} buffer content
- * @returns {Promise<number | undefined>} the zstd size, where zlib has zstd
- */
-const zstdSize = async (buffer) => {
-	if (zstdCompress === undefined) return undefined;
-	return (
-		await zstdCompress(buffer, {
-			params: { [zlib.constants.ZSTD_c_compressionLevel]: 19 }
-		})
-	).length;
-};
-
-/** @typedef {{ raw: number, gzip: number, brotli: number, zstd: number | undefined }} Sizes */
-
-/**
- * What the bytes weigh under the encodings a CDN serves — the same settings as
- * `test/CodeSizeTestCases.size.js`, so numbers line up across the two reports.
- * @param {Buffer} buffer content
- * @returns {Promise<Sizes>} its size under each encoding
- */
-const compress = async (buffer) => ({
-	raw: buffer.length,
-	gzip: (await gzip(buffer, { level: 9 })).length,
-	brotli: (
-		await brotliCompress(buffer, {
-			params: {
-				[zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-				[zlib.constants.BROTLI_PARAM_SIZE_HINT]: buffer.length
-			}
-		})
-	).length,
-	zstd: await zstdSize(buffer)
-});
-
-/**
- * @param {number | undefined} bytes a byte count
- * @returns {string} the count in KB, one decimal ("-" when unmeasurable)
- */
-const kb = (bytes) =>
-	bytes === undefined ? "-" : `${(bytes / 1024).toFixed(1)} KB`;
-
-/** @typedef {{ code: string, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
-
-/**
- * Worker mode: run one minifier over stdin, reporting best-of-three wall and cpu
- * and the `maxRSS` (KB) it added over this process's floor — absolute would
- * report the runner, since the kernel bills a child its parent's pre-exec copy.
- * @param {string} name a `MINIFIERS` entry's name
- * @returns {Promise<void>} resolves after the report is written
- */
-const measure = async (name) => {
-	const entry = MINIFIERS.find(([minifier]) => minifier === name);
-	if (entry === undefined) throw new Error(`unknown minifier ${name}`);
-	const chunks = [];
-	for await (const chunk of process.stdin) chunks.push(chunk);
-	const html = Buffer.concat(chunks).toString("utf8");
-	// Read before the tool is loaded: everything above this is the inherited
-	// floor plus the document itself, neither of which the tool is charged for.
-	const floor = process.resourceUsage().maxRSS;
-	/** @type {Measurement} */
-	let report;
-	try {
-		const minify = entry[1]();
-		// Half of these tools are native binaries, at full speed on their first
-		// call; the other half are JavaScript, which is still being compiled on it.
-		// Timing from cold reports the JavaScript ones' warm-up rather than their
-		// throughput — webpack's own minifier takes ~5x its steady-state time on
-		// the first call and settles by the sixth — and a build minifies many
-		// assets in one process, so steady state is what a user gets. Bounded by
-		// time as well as by count, so a slow tool on a large document is not
-		// multiplied while a fast one still reaches it.
-		const warmStarted = process.hrtime.bigint();
-		for (let i = 0; i < 8; i++) {
-			await minify(html);
-			if (Number(process.hrtime.bigint() - warmStarted) / 1e6 > 500) break;
-		}
-		let code = "";
-		let wall = Infinity;
-		let cpu = Infinity;
-		for (let i = 0; i < 3; i++) {
-			const cpuStarted = process.cpuUsage();
-			const started = process.hrtime.bigint();
-			code = await minify(html);
-			wall = Math.min(wall, Number(process.hrtime.bigint() - started) / 1e6);
-			const used = process.cpuUsage(cpuStarted);
-			cpu = Math.min(cpu, (used.user + used.system) / 1e3);
-		}
-		report = {
-			code,
-			wall,
-			cpu,
-			peak: Math.max(0, process.resourceUsage().maxRSS - floor)
-		};
-	} catch (error) {
-		report = {
-			error: String(
-				error && /** @type {Error} */ (error).message
-					? /** @type {Error} */ (error).message
-					: error
-			).split("\n", 1)[0]
-		};
-	}
-	process.stdout.write(JSON.stringify(report));
-};
-
-/**
- * @param {string} name a `MINIFIERS` entry's name
- * @param {string} input the document
- * @returns {Promise<Measurement>} the worker's report
- */
-const measureInWorker = (name, input) =>
-	new Promise((resolve, reject) => {
-		// Through a bare-node stub: spawned directly, the worker inherits this
-		// runner's fixtures and parse5 tree as its `maxRSS` floor.
-		const child = spawn(
-			process.execPath,
-			[
-				"-e",
-				"require('child_process').spawn(process.execPath,[process.argv[1],'--measure',process.argv[2]],{stdio:'inherit'}).on('close',(c)=>process.exit(c))",
-				__filename,
-				name
-			],
-			{
-				stdio: ["pipe", "pipe", "inherit"]
-			}
-		);
-		/** @type {Buffer[]} */
-		const chunks = [];
-		child.stdout.on("data", (chunk) => chunks.push(chunk));
-		child.on("error", reject);
-		child.on("close", (code) => {
-			if (code !== 0) {
-				reject(new Error(`measuring ${name} exited with ${code}`));
-				return;
-			}
-			resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
-		});
-		child.stdin.end(input);
-	});
+const wantedFixture = filterFrom("FIXTURE");
+const wantedTool = filterFrom("TOOL");
+const wantedStage = filterFrom("STAGE");
 
 const main = async () => {
 	await setup();
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
-	for (const [label, html] of await fixtures()) {
+	for (const [label, html] of (await fixtures()).filter(([name]) =>
+		wantedFixture(name)
+	)) {
 		const before = fingerprint(parse5, html);
 		const input = await compress(Buffer.from(html));
 		process.stdout.write(
@@ -796,52 +719,80 @@ const main = async () => {
 				input.brotli
 			)} brotli, ${kb(input.zstd)} zstd), ${before.elements.size} tags\n`
 		);
-		// `saved` reads off gzip — what a user downloads — with raw the tiebreak.
-		process.stdout.write(
-			`${"minifier".padEnd(34)}${"minified".padStart(10)}${"gzip".padStart(
-				9
-			)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
-				9
-			)}${"ms".padStart(6)}${"cpu".padStart(6)}${"mem".padStart(8)}   differs\n`
-		);
-		for (const [name] of MINIFIERS) {
-			const result = await measureInWorker(name, html);
-			if ("error" in result) {
-				// A tool rejecting the document outright is a comparison result too.
-				process.stdout.write(
-					`${name.padEnd(34)}   rejects it: ${result.error}\n`
-				);
-				continue;
-			}
-			const after = fingerprint(parse5, result.code);
-			const notes = [
-				...missing(before.elements, after.elements, before.empty).map(
-					(entry) => `<${entry}`
-				),
-				...missing(before.attributes, after.attributes, before.empty)
-			];
-			if (before.text !== after.text) notes.push("text");
-			const out = await compress(Buffer.from(result.code));
-			process.stdout.write(
-				`${
-					name.padEnd(34) +
-					kb(out.raw).padStart(10) +
-					kb(out.gzip).padStart(9) +
-					`${(100 - (out.gzip / input.gzip) * 100).toFixed(1)}%`.padStart(8) +
-					kb(out.brotli).padStart(9) +
-					kb(out.zstd).padStart(9) +
-					result.wall.toFixed(0).padStart(6) +
-					result.cpu.toFixed(0).padStart(6) +
-					`${(result.peak / 1024).toFixed(0)} MB`.padStart(8)
-				}   ${notes.length === 0 ? "-" : notes.slice(0, 4).join(", ")}\n`
+		for (const stage of STAGES.filter(wantedStage)) {
+			const tools = TOOLS.filter(
+				(tool) => tool.stage === stage && wantedTool(tool.name)
 			);
+			if (tools.length === 0) continue;
+			// `saved` reads off gzip — what a user downloads — with raw the tiebreak.
+			process.stdout.write(
+				stage === "parse"
+					? `  ${"parse".padEnd(34)}${"ms".padStart(8)}${"cpu".padStart(
+							7
+						)}${"peak".padStart(9)}\n`
+					: `  ${stage.padEnd(34)}${"out".padStart(10)}${"gzip".padStart(
+							9
+						)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
+							9
+						)}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
+							8
+						)}   differs\n`
+			);
+			for (const tool of tools) {
+				const result = await measureInWorker(
+					__filename,
+					stage,
+					tool.name,
+					html
+				);
+				if ("error" in result) {
+					// A tool rejecting the document outright is a comparison result too.
+					process.stdout.write(
+						`  ${tool.name.padEnd(34)} rejects it: ${result.error}\n`
+					);
+					continue;
+				}
+				const cost = formatCost(result, tool.external);
+				if (stage === "parse") {
+					process.stdout.write(
+						`  ${
+							tool.name.padEnd(34) +
+							cost.wall.padStart(8) +
+							cost.cpu.padStart(7) +
+							cost.peak.padStart(9)
+						}\n`
+					);
+					continue;
+				}
+				const code = /** @type {string} */ (result.code);
+				const after = fingerprint(parse5, code);
+				const notes = [
+					...missing(before.elements, after.elements, before.empty).map(
+						(entry) => `<${entry}`
+					),
+					...missing(before.attributes, after.attributes, before.empty)
+				];
+				if (before.text !== after.text) notes.push("text");
+				const out = await compress(Buffer.from(code));
+				process.stdout.write(
+					`  ${
+						tool.name.padEnd(34) +
+						kb(out.raw).padStart(10) +
+						kb(out.gzip).padStart(9) +
+						`${(100 - (out.gzip / input.gzip) * 100).toFixed(1)}%`.padStart(8) +
+						kb(out.brotli).padStart(9) +
+						kb(out.zstd).padStart(9) +
+						cost.wall.padStart(7) +
+						cost.cpu.padStart(6) +
+						cost.peak.padStart(8)
+					}   ${notes.length === 0 ? "-" : notes.slice(0, 4).join(", ")}\n`
+				);
+			}
 		}
 	}
 };
 
-(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
-	(error) => {
-		log(String(error && error.stack ? error.stack : error));
-		process.exitCode = 1;
-	}
-);
+(process.argv[2] === "--measure" ? measure(TOOLS) : main()).catch((error) => {
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+});
