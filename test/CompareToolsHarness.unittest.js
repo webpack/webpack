@@ -268,28 +268,98 @@ describe("compare-tools-harness", () => {
 		});
 	});
 
+	// The installer is reached through `PATH`, so a stand-in on it exercises the
+	// real orchestration without standing in for any of this repo's own code.
 	describe("installPackages", () => {
-		const NAME = "compare-tools-harness-unittest";
-		const cache = path.resolve(__dirname, "..", "node_modules/.cache", NAME);
+		const NAMES = [
+			"compare-tools-harness-unittest-warm",
+			"compare-tools-harness-unittest-cold",
+			"compare-tools-harness-unittest-failed"
+		];
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {string} where it lives
+		 */
+		const cacheFor = (name) =>
+			path.resolve(__dirname, "..", "node_modules/.cache", name);
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {EXPECTED_ANY} the manifest it holds
+		 */
+		const manifestOf = (name) =>
+			JSON.parse(
+				fs.readFileSync(path.join(cacheFor(name), "package.json"), "utf8")
+			);
+
+		/**
+		 * Run with an `npm` of our own first on `PATH`, so nothing is fetched.
+		 * @param {number} code what that npm exits with
+		 * @param {() => Promise<EXPECTED_ANY>} what to run meanwhile
+		 * @returns {Promise<EXPECTED_ANY>} whatever it answered
+		 */
+		const withStandInNpm = async (code, what) => {
+			const bin = fs.mkdtempSync(path.join(os.tmpdir(), "stand-in-npm-"));
+			const npm = path.join(bin, "npm");
+			fs.writeFileSync(npm, `#!/bin/sh\nexit ${code}\n`);
+			fs.chmodSync(npm, 0o755);
+			const before = process.env.PATH;
+			const quiet = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+
+			process.env.PATH = `${bin}${path.delimiter}${before}`;
+			try {
+				return await what();
+			} finally {
+				quiet.mockRestore();
+				process.env.PATH = before;
+				fs.rmSync(bin, { recursive: true, force: true });
+			}
+		};
+
+		// The stand-in is a shell script, which Windows would pass over in favour
+		// of the real npm — and then a test would install over the network.
+		const posixOnly = process.platform === "win32" ? it.skip : it;
 
 		afterAll(() => {
-			fs.rmSync(cache, { recursive: true, force: true });
+			for (const name of NAMES) {
+				fs.rmSync(cacheFor(name), { recursive: true, force: true });
+			}
 		});
 
 		// Nothing is installed here: the manifest already lists what was asked
 		// for, which is the branch that keeps a re-run from reaching npm.
 		it("reuses a cache whose manifest lists the same packages", async () => {
-			fs.mkdirSync(path.join(cache, "node_modules"), { recursive: true });
+			const [name] = NAMES;
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
 			fs.writeFileSync(
-				path.join(cache, "package.json"),
+				path.join(cacheFor(name), "package.json"),
 				JSON.stringify({
-					name: NAME,
+					name,
 					comparisonPackages: ["left@1", "right@2"]
 				})
 			);
-			await expect(installPackages(NAME, ["left@1", "right@2"])).resolves.toBe(
-				cache
+			await expect(installPackages(name, ["left@1", "right@2"])).resolves.toBe(
+				cacheFor(name)
 			);
+		});
+
+		posixOnly("installs into a cache that has none of it yet", async () => {
+			const name = NAMES[1];
+			await withStandInNpm(0, () => installPackages(name, ["left@1"]));
+			expect(manifestOf(name).comparisonPackages).toEqual(["left@1"]);
+		});
+
+		// The list is what a later run compares against, so recording it before
+		// the install succeeded would let a broken cache pass for a warm one.
+		posixOnly("records nothing when the install fails", async () => {
+			const name = NAMES[2];
+			await expect(
+				withStandInNpm(1, () => installPackages(name, ["right@2"]))
+			).rejects.toThrow("exited with 1");
+			expect(manifestOf(name).comparisonPackages).toBeUndefined();
 		});
 	});
 
