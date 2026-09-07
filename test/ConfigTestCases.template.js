@@ -16,6 +16,7 @@ require("./helpers/warmup-webpack");
  * @property {boolean=} noTests
  * @property {boolean=} ecmaConformance hold every emitted asset to `output.environment`, not only webpack's runtime modules — the case's own sources must then stay within it too
  * @property {RegExp[]=} ecmaConformanceExpected findings the case declares deliberate, each with the reason next to it; an entry that stops matching fails the case
+ * @property {RegExp[]=} analyzableConformanceExpected ESM output a foreign bundler cannot follow that the case declares deliberate, each with the reason next to it; an entry that stops matching fails the case
  * @property {boolean=} restrictEnvironment run the bundle in a realm that really lacks what `output.environment` says the target lacks
  * @property {(() => void)=} beforeExecute
  * @property {((options: import("../").Configuration) => void)=} afterExecute
@@ -30,6 +31,9 @@ const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
 const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
+const {
+	reportAnalyzableConformance
+} = require("./helpers/analyzableConformance");
 const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
@@ -560,6 +564,20 @@ const describeCases = (config) => {
 								);
 								if (outranEnvironment) {
 									return done(new Error(outranEnvironment));
+								}
+
+								const children =
+									/** @type {{ stats?: import("../").Stats[] }} */ (stats)
+										.stats || [stats];
+								const analyzableReport = reportAnalyzableConformance(
+									children.map((childStats, i) => ({
+										compilation: childStats.compilation,
+										name: optionsArr.length > 1 ? `config ${i}` : undefined
+									})),
+									testConfig.analyzableConformanceExpected
+								);
+								if (analyzableReport) {
+									return done(new Error(analyzableReport));
 								}
 
 								if (testConfig.noTests) return process.nextTick(done);
