@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Emit no JavaScript copy of an HTML entry's page, and name its chunks after it.
+Name an HTML page's chunks after its entry, drop its JS copy, type `text/html` exactly.

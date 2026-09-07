@@ -1,23 +1,21 @@
 const fs = require("fs");
+const path = require("path");
 
-const chunks = (prefix) =>
+const emitted = (prefix, ext) =>
 	fs
 		.readdirSync(__dirname)
-		.filter((f) => f.startsWith(prefix) && f.endsWith(".js"));
+		.filter((f) => f.startsWith(prefix) && f.endsWith(ext));
 
-const pages = (prefix) =>
-	fs
-		.readdirSync(__dirname)
-		.filter((f) => f.startsWith(prefix) && f.endsWith(".html"));
-
-it("emits a data:text/htmlx entry as a page, with no JS copy of it", () => {
-	expect(pages("data-url.")).toHaveLength(1);
-	expect(chunks("data-url.")).toHaveLength(0);
+it("keeps a data:text/htmlx entry as JavaScript, not as a page", () => {
+	expect(emitted("data-url.", ".js")).toHaveLength(1);
+	expect(emitted("data-url.", ".html")).toHaveLength(0);
 });
 
 it("gives a generated page's filename to the script extracted from it", () => {
-	expect(pages("page.")).toHaveLength(1);
-	expect(chunks("page.")).toHaveLength(1);
-	const js = fs.readFileSync(`${__dirname}/${chunks("page.")[0]}`, "utf-8");
+	expect(emitted("page.", ".html")).toHaveLength(1);
+	const [chunk] = emitted("page.", ".js");
+	expect(chunk).toBeDefined();
+	// The entry's filename now carries the page's script, not a copy of it.
+	const js = fs.readFileSync(path.resolve(__dirname, chunk), "utf-8");
 	expect(js).not.toContain("<!doctype html>");
 });

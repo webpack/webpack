@@ -47,3 +47,19 @@ it("should drop unresolvable and empty hints", () => {
 	expect(head.match(/rel="preconnect"/g)).toHaveLength(1);
 	expect(head).not.toContain("does-not-exist");
 });
+
+it("should point an entry hint at that entry's JavaScript", () => {
+	const emitted = new Set(fs.readdirSync(__dirname));
+	const hrefs = [
+		...head.matchAll(/<link rel="(?:preload|prefetch)"[^>]* href="([^"]+)"/g)
+	]
+		.map(([, href]) => href)
+		.filter((href) => href.endsWith(".js"));
+
+	expect(hrefs).toContain("second.js");
+	for (const href of hrefs) expect(emitted).toContain(href);
+	// `second` emits its page plus the script extracted from it, so the hint
+	// resolves to that script rather than to a JavaScript copy of the page.
+	const hinted = fs.readFileSync(path.resolve(__dirname, "second.js"), "utf-8");
+	expect(hinted).not.toContain("<!doctype html>");
+});
