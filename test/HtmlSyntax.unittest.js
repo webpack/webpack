@@ -5177,6 +5177,17 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		});
 
 		it("keeps the end tag of an item the nested list holds", () => {
+			// The `<script>` after the nested item is content its end tag cannot be
+			// omitted in front of, so only the outer `<li>c` closes a sibling.
+			expect(
+				item("<ul><li>a<ul><li>b</li><script></script></ul><li>c</li></ul>")
+			).toBe("<ul><li>a<ul><li>b</li><script></script></ul><li>c</ul>");
+			expect(item("<ul><li>a<ul><li>b</li>tail</ul><li>c</li></ul>")).toBe(
+				"<ul><li>a<ul><li>b</li>tail</ul><li>c</ul>"
+			);
+		});
+
+		it("omits it where the nested item ends its own list", () => {
 			expect(item("<ul><li>a<ul><li>b</li></ul><li>c</li></ul>")).toBe(
 				"<ul><li>a<ul><li>b</ul><li>c</ul>"
 			);
@@ -5185,9 +5196,11 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		it("keeps the end tag of an item another cell holds", () => {
 			expect(
 				item(
-					"<table><tr><td><ul><li>a</li></ul><td><ul><li>b</li></ul></table>"
+					"<table><tr><td><ul><li>a</li><script></script></ul><td><ul><li>b</li></ul></table>"
 				)
-			).toBe("<table><tr><td><ul><li>a</ul><td><ul><li>b</ul></table>");
+			).toBe(
+				"<table><tr><td><ul><li>a</li><script></script></ul><td><ul><li>b</ul></table>"
+			);
 			expect(
 				item(
 					"<table><tr><th><ol><li>a</li></ol><th><ol><li>b</li></ol></table>"
