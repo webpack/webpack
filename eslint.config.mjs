@@ -226,12 +226,12 @@ export default defineConfig([
 		}
 	},
 	{
-		// The minifier comparisons run on a developer's or CI's modern Node.js,
-		// not on webpack's runtime baseline: they measure with post-10 APIs
-		// (fs.promises, zstd, resourceUsage).
+		// The tool comparisons run on modern Node, not webpack's runtime baseline:
+		// they measure with post-10 APIs (fs.promises, zstd, resourceUsage).
 		files: [
-			"tooling/compare-css-minifiers.js",
-			"tooling/compare-html-minifiers.js"
+			"tooling/compare-css-tools.js",
+			"tooling/compare-html-tools.js",
+			"tooling/compare-tools-harness.js"
 		],
 		rules: {
 			"n/no-unsupported-features/node-builtins": "off"
@@ -242,10 +242,7 @@ export default defineConfig([
 		// through a dynamic import rather than a `require` no jest `vm` supports.
 		// `html-minifier-next` is ESM only, and the HTML comparison imports it the
 		// same way.
-		files: [
-			"tooling/generate-css-data.js",
-			"tooling/compare-html-minifiers.js"
-		],
+		files: ["tooling/generate-css-data.js", "tooling/compare-html-tools.js"],
 		rules: {
 			"n/no-unsupported-features/es-syntax": [
 				"error",
