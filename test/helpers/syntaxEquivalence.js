@@ -1668,14 +1668,28 @@ const compareRules = (before, after, signatures) => {
 		// reads them as one, and the later entry already carries what the earlier
 		// one said. Read from the back so a run emptied this way stops standing
 		// between its neighbors, whether a printer joined the blocks or not.
-		for (let i = runs.length - 2, next = runs.length - 1; i >= 0; i--) {
-			const ahead = new Set(runs[next].map(({ where }) => where));
+		const ahead = new Set();
+		for (let i = runs.length - 1; i >= 0; i--) {
 			runs[i] = runs[i].filter((one) => !ahead.has(one.where));
-			if (runs[i].length !== 0) next = i;
+			for (const one of runs[i]) ahead.add(one.where);
 		}
 		// A key written twice is one rule said twice, and the later copy restates it
 		// all — so keeping the last is what dropping the dead earlier one leaves.
-		const all = runs.flat().map(({ key }) => key);
+		// Emptying a run can leave two that reach one block standing next to each
+		// other, which is one run's worth of cascade however the printer wrote it.
+		/** @type {(typeof flat)[]} */
+		const joined = [];
+		for (const run of runs) {
+			if (run.length === 0) continue;
+			const last = joined[joined.length - 1];
+			if (last !== undefined && last[0].group === run[0].group) {
+				last.push(...run);
+				last.sort((one, other) => (one.key < other.key ? -1 : 1));
+				continue;
+			}
+			joined.push([...run]);
+		}
+		const all = joined.flat().map(({ key }) => key);
 		/** @type {Map<string, number>} */
 		const lastAt = new Map();
 		for (const [i, key] of all.entries()) lastAt.set(key, i);
