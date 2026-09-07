@@ -569,11 +569,32 @@ const describeCases = (config) => {
 								const children =
 									/** @type {{ stats?: import("../").Stats[] }} */ (stats)
 										.stats || [stats];
+								/** @type {import("./helpers/analyzableConformance").Subject[]} */
+								const subjects = [];
+								/**
+								 * A child compiler emits its own assets, so the walk has to
+								 * reach every compilation below the one the stats name.
+								 * @param {EXPECTED_ANY} compilation a sealed compilation
+								 * @param {string=} name what to call it in a report
+								 * @returns {void}
+								 */
+								const addCompilation = (compilation, name) => {
+									subjects.push({ compilation, name });
+									for (const [i, child] of compilation.children.entries()) {
+										addCompilation(
+											child,
+											`${name ? `${name} ` : ""}child ${i}`
+										);
+									}
+								};
+								for (const [i, childStats] of children.entries()) {
+									addCompilation(
+										childStats.compilation,
+										optionsArr.length > 1 ? `config ${i}` : undefined
+									);
+								}
 								const analyzableReport = reportAnalyzableConformance(
-									children.map((childStats, i) => ({
-										compilation: childStats.compilation,
-										name: optionsArr.length > 1 ? `config ${i}` : undefined
-									})),
+									subjects,
 									testConfig.analyzableConformanceExpected
 								);
 								if (analyzableReport) {

@@ -7,10 +7,41 @@ const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
 const { initSync, parse } = require("es-module-lexer");
+const ConcatenatedModule = require("../../lib/optimize/ConcatenatedModule");
 
 /** @import { Compilation, Module } from "../../" */
 
-initSync();
+/** @type {boolean | undefined} */
+let lexerReady;
+
+/**
+ * The lexer reads what acorn is behind on, but its wasm needs a newer engine
+ * than the oldest one the suite runs on, so it is asked for only as a fallback.
+ * @param {string} code the emitted source
+ * @returns {string[] | undefined} literal import specifiers, where it could read
+ */
+const lexerSpecifiersOf = (code) => {
+	if (lexerReady === undefined) {
+		try {
+			initSync();
+			lexerReady = true;
+		} catch (_error) {
+			lexerReady = false;
+		}
+	}
+	if (!lexerReady) return;
+	try {
+		const [imports] = parse(code);
+		/** @type {string[]} */
+		const found = [];
+		for (const entry of imports) {
+			if (entry.n !== undefined) found.push(entry.n);
+		}
+		return found;
+	} catch (_error) {
+		return undefined;
+	}
+};
 
 const JS_ASSET = /\.[cm]?js$/;
 // A specifier naming a place rather than a package: what webpack emitted is
@@ -47,33 +78,55 @@ const walk = (node, visit) => {
 
 /**
  * The string a `new URL(…, import.meta.url)` names, or nothing where it is built
- * rather than written out.
+ * rather than written out. Only that base is read: against any other one the
+ * name says nothing about where the file this output emitted sits.
  * @param {EXPECTED_ANY} node the node to read
  * @returns {string | undefined} the specifier
  */
 const urlSpecifierOf = (node) => {
 	if (node.type !== "NewExpression") return;
 	if (!node.callee || node.callee.name !== "URL") return;
-	const [specifier] = node.arguments;
+	const [specifier, base] = node.arguments;
+	if (node.arguments.length !== 2) return;
 	if (!specifier || specifier.type !== "Literal") return;
-	return typeof specifier.value === "string" ? specifier.value : undefined;
+	if (typeof specifier.value !== "string") return;
+	if (
+		!base ||
+		base.type !== "MemberExpression" ||
+		base.property.name !== "url" ||
+		base.object.type !== "MetaProperty"
+	) {
+		return;
+	}
+	return specifier.value;
 };
 
 /**
- * Specifiers a static analyzer can read out of one emitted file: the imports a
- * lexer reports plus the urls only an AST names.
+ * The specifier an import node names, where it is written out rather than built.
+ * @param {EXPECTED_ANY} node the node to read
+ * @returns {string | undefined} the specifier
+ */
+const importSpecifierOf = (node) => {
+	const source =
+		node.type === "ImportExpression"
+			? node.source
+			: node.type === "ImportDeclaration" ||
+				  node.type === "ExportNamedDeclaration" ||
+				  node.type === "ExportAllDeclaration"
+				? node.source
+				: undefined;
+	if (!source || source.type !== "Literal") return;
+	return typeof source.value === "string" ? source.value : undefined;
+};
+
+/**
+ * Specifiers a static analyzer can read out of one emitted file: the imports and
+ * the urls, each only where it is written out. `undefined` where nothing here
+ * could read the file, which is not the same answer as "it names nothing".
  * @param {string} code the emitted source
- * @returns {string[]} every literal specifier it holds
+ * @returns {string[] | undefined} every literal specifier it holds
  */
 const literalSpecifiersOf = (code) => {
-	/** @type {string[]} */
-	const found = [];
-	const [imports] = parse(code);
-	for (const entry of imports) {
-		// Set only where the specifier is a plain string, which is the whole
-		// question: an expression leaves it undefined.
-		if (entry.n !== undefined) found.push(entry.n);
-	}
 	/** @type {EXPECTED_ANY} */
 	let ast;
 	try {
@@ -83,12 +136,14 @@ const literalSpecifiersOf = (code) => {
 			allowHashBang: true
 		});
 	} catch (_error) {
-		// The lexer read it, so a foreign bundler can follow its imports; only the
-		// url scan below needs a tree, and syntax acorn is behind on stops just it.
-		return found;
+		// Syntax acorn is behind on, which a lexer still reads; a url needs the
+		// tree, so only the imports come back here.
+		return lexerSpecifiersOf(code);
 	}
+	/** @type {string[]} */
+	const found = [];
 	walk(ast, (node) => {
-		const specifier = urlSpecifierOf(node);
+		const specifier = importSpecifierOf(node) || urlSpecifierOf(node);
 		if (specifier !== undefined) found.push(specifier);
 	});
 	return found;
@@ -143,39 +198,56 @@ const assetNamed = (place, assets) => {
 };
 
 /**
- * Every reason the build gives for output another tool cannot follow: what the
- * runtime template recorded, plus the one fact it does not record — an `eval`
- * devtool writes each module's specifiers inside a string, so a literal `import()`
- * is emitted and no lexer can see it.
+ * Whether an `eval` devtool wrote every module's specifiers inside a string,
+ * where a literal `import()` is emitted and no lexer can see it. That is a fact
+ * about the whole build rather than about one reference, so nothing records it.
  * @param {Compilation} compilation the compilation
- * @returns {string[]} the reasons, deduplicated
+ * @returns {boolean} true where no output of this build can be followed
  */
-const recordedBailoutsOf = (compilation) => {
-	const { chunkGraph, runtimeTemplate } = compilation;
-	/** @type {Set<string>} */
-	const reasons = new Set();
+const hidesEverySpecifier = (compilation) => {
 	const { devtool } = compilation.options;
-	if (typeof devtool === "string" && devtool.includes("eval")) {
-		reasons.add(
-			`devtool ${JSON.stringify(devtool)} wraps each module in eval(), where no analyzer reads the specifiers it writes`
-		);
-	}
+	return typeof devtool === "string" && devtool.includes("eval");
+};
+
+/**
+ * Whether the build said why nothing names this chunk. A reason is recorded on
+ * the module that wrote the reference, so the modules to ask are the ones whose
+ * request created the chunk, plus the runtime modules shipped inside it.
+ * @param {Compilation} compilation the compilation that emitted it
+ * @param {string} file the emitted javascript file
+ * @returns {boolean} true where a reason stands behind it
+ */
+const isExplained = (compilation, file) => {
+	if (hidesEverySpecifier(compilation)) return true;
+	const { chunkGraph, runtimeTemplate } = compilation;
 	/**
 	 * @param {Module} module the module to read
-	 * @returns {void}
+	 * @returns {boolean} true where it recorded one
 	 */
-	const collect = (module) => {
-		for (const reason of runtimeTemplate.analyzableBailoutsOf(module)) {
-			reasons.add(reason);
-		}
+	const recorded = (module) => {
+		// Concatenation generates the code of every module it absorbed, so the
+		// reason for a reference an inner module wrote is recorded on the outer one.
+		const generated = ConcatenatedModule.getChunkGraphModule(
+			compilation,
+			module
+		);
+		return (
+			runtimeTemplate.analyzableBailoutsOf(module).length > 0 ||
+			runtimeTemplate.analyzableBailoutsOf(generated).length > 0
+		);
 	};
-	for (const module of compilation.modules) collect(module);
 	for (const chunk of compilation.chunks) {
+		if (!chunk.files.has(file)) continue;
 		for (const module of chunkGraph.getChunkRuntimeModulesIterable(chunk)) {
-			collect(module);
+			if (recorded(module)) return true;
+		}
+		for (const group of chunk.groupsIterable) {
+			for (const origin of group.origins) {
+				if (origin.module && recorded(origin.module)) return true;
+			}
 		}
 	}
-	return [...reasons];
+	return false;
 };
 
 /**
@@ -240,20 +312,20 @@ const checkAnalyzableConformance = (compilation) => {
 		}
 	}
 
+	// A file nothing here could read leaves the walk with holes in it, so what it
+	// did not reach says nothing.
+	let readEverything = true;
+
 	while (queue.length > 0) {
 		const name = /** @type {string} */ (queue.pop());
 		const code = emittedCode(compilation, root, name);
-		if (code === undefined) continue;
-		/** @type {string[]} */
-		let specifiers;
-		try {
-			specifiers = literalSpecifiersOf(code);
-		} catch (error) {
-			findings.push(
-				`${name} does not parse as a module: ${
-					/** @type {Error} */ (error).message
-				}`
-			);
+		if (code === undefined) {
+			readEverything = false;
+			continue;
+		}
+		const specifiers = literalSpecifiersOf(code);
+		if (specifiers === undefined) {
+			readEverything = false;
 			continue;
 		}
 		const from = path.posix.dirname(name.split(path.sep).join("/"));
@@ -278,16 +350,16 @@ const checkAnalyzableConformance = (compilation) => {
 		}
 	}
 
-	const unreached = [...javascript].filter((name) => !reached.has(name)).sort();
-	if (unreached.length > 0) {
-		const reasons = recordedBailoutsOf(compilation);
-		// A recorded reason is webpack saying which reference it could not write
-		// out, so the chunk behind it is explained rather than lost.
-		if (reasons.length === 0) {
-			findings.push(
-				`no literal specifier reaches ${unreached.join(", ")}, and nothing was recorded about why`
-			);
-		}
+	if (!readEverything) return findings;
+
+	const unexplained = [...javascript]
+		.filter((name) => !reached.has(name))
+		.filter((name) => !isExplained(compilation, name))
+		.sort();
+	if (unexplained.length > 0) {
+		findings.push(
+			`no literal specifier reaches ${unexplained.join(", ")}, and nothing was recorded about why`
+		);
 	}
 	return findings;
 };
@@ -330,7 +402,7 @@ const reportAnalyzableConformance = (subjects, expected = []) => {
 
 module.exports = {
 	checkAnalyzableConformance,
+	isExplained,
 	literalSpecifiersOf,
-	recordedBailoutsOf,
 	reportAnalyzableConformance
 };
