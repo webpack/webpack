@@ -286,7 +286,18 @@ const measureInWorker = (entry, stage, name, input) =>
 				reject(new Error(`measuring ${name} exited with ${code}`));
 				return;
 			}
-			resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+			// A tool writing to stdout of its own corrupts the payload, and parsing
+			// straight into `resolve` would throw where nothing names the tool.
+			const output = Buffer.concat(chunks).toString("utf8");
+			try {
+				resolve(JSON.parse(output));
+			} catch (_error) {
+				reject(
+					new Error(
+						`measuring ${name} wrote unreadable output: ${output.slice(0, 200)}`
+					)
+				);
+			}
 		});
 		child.stdin.end(input);
 	});
