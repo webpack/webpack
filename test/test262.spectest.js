@@ -649,6 +649,12 @@ const compile = async (entry, scenario, options = {}) =>
 										system: false
 									}
 								},
+								// A file without the `module` flag is a Script, and only the
+								// Script goal rejects what is legal in a Module.
+								{
+									test: (resource) => resource === entry,
+									type: "javascript/dynamic"
+								},
 								// The "strict" directive has to reach the parser, not only the
 								// bundle: a sloppy parse accepts what only strict mode rejects.
 								...(scenario === "strict"
@@ -903,9 +909,6 @@ const knownBugs = [
 	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
 	// namespace has two own keys where the spec has one.
 	"import/import-attributes/json-via-namespace.js",
-	// The bundle puts `await using` inside the module wrapper's body, where it
-	// is legal, so an engine supporting the syntax raises no parse error.
-	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
 	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
