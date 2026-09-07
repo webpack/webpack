@@ -21987,7 +21987,7 @@ declare interface ParseOptionsJavascriptParser {
 	allowReturnOutsideFunction?: boolean;
 
 	/**
-	 * internal: serve `range` lazily and skip acorn's location/range tracking
+	 * internal: serve `range` lazily and skip the parser's location/range tracking
 	 */
 	lazyNodes?: boolean;
 

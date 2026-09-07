@@ -1165,22 +1165,31 @@ describe("JavascriptParser", () => {
 			});
 		});
 
-		it("should fall back to `loc` without source text", () => {
+		it("should fall back to a copy of `loc` without source text", () => {
 			const parser = new JavascriptParser("module");
 			const loc = {
 				start: { line: 1, column: 0 },
 				end: { line: 1, column: 1 }
 			};
-			expect(parser.getLocation({ start: 0, end: 1, loc })).toBe(loc);
+			const location = parser.getLocation({ start: 0, end: 1, loc });
+			expect(location).toEqual(loc);
+			expect(location).not.toBe(loc);
 		});
 
-		it("should fall back to `loc` for nodes without offsets", () => {
+		it("should fall back to a copy of `loc` for nodes without offsets", () => {
 			const parser = parserFor("a;");
 			const loc = {
 				start: { line: 1, column: 0 },
 				end: { line: 1, column: 1 }
 			};
-			expect(parser.getLocation({ loc })).toBe(loc);
+			const location = parser.getLocation({ loc });
+			expect(location).toEqual(loc);
+			expect(location).not.toBe(loc);
+		});
+
+		it("should leave a missing `loc` alone without source text", () => {
+			const parser = new JavascriptParser("module");
+			expect(parser.getLocation({ start: 0, end: 1 })).toBeUndefined();
 		});
 
 		// `buildLineStarts` serves LF-only and CRLF sources from a native
