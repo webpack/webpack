@@ -11,9 +11,13 @@ build: they become real assets, so `output.clean`, the stats output and the
 watcher all see them, and a rebuild re-reads only what changed.
 
 A pattern is a `from` plus optional `to`, `filename`, `context`, `globOptions`,
-`info` and `transform`. Here the first copies a directory (keeping its structure
-below itself) and the second copies **two** roots into one destination, in
-order.
+`info`, `transform`, `preservePermissions` and `preserveTimestamps`. `to` and
+`info` may each be a function of the copied file, and `filename` is a webpack
+filename template, so one pattern can rename, flatten and hash.
+
+`output.copy` takes a string or a list of patterns. The plugin behind it takes
+`concurrency` and the `processAssets` `stage` as well — reach for
+`new CopyPlugin({ patterns, stage })` when you need those.
 
 The config also registers a small plugin that merges several copied assets into
 one — `copy-webpack-plugin`'s `transformAll`. `output.copy` has no equivalent

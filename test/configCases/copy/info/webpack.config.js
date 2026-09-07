@@ -1,5 +1,7 @@
 "use strict";
 
+const { CopyPlugin } = require("../../../../");
+
 const PLUGIN_NAME = "AssertCopyInfo";
 
 /**
@@ -53,8 +55,8 @@ class AssertCopyInfo {
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	output: {
-		copy: {
+	plugins: [
+		new CopyPlugin({
 			concurrency: 1,
 			patterns: [
 				{ from: "files/a.txt", to: "static", info: { immutable: true } },
@@ -67,7 +69,7 @@ module.exports = {
 						file.filename === "a.txt" ? { development: true } : {}
 				}
 			]
-		}
-	},
-	plugins: [new AssertCopyInfo()]
+		}),
+		new AssertCopyInfo()
+	]
 };

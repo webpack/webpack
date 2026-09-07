@@ -10510,7 +10510,7 @@ declare class HtmlModulesPlugin {
 	 */
 	static computeContentHash(
 		content: string | Buffer,
-		outputOptions: Output
+		outputOptions: OutputNormalizedWithDefaults
 	): string;
 
 	/**
@@ -10520,7 +10520,7 @@ declare class HtmlModulesPlugin {
 	 */
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
-		outputOptions: Output
+		outputOptions: OutputNormalizedWithDefaults
 	): ChunkFilenameTemplate;
 
 	/**
@@ -16811,7 +16811,7 @@ declare abstract class MainTemplate {
 		options: PathData
 	) => InterpolatedPathAndAssetInfo;
 	get requireFn(): "__webpack_require__";
-	get outputOptions(): Output;
+	get outputOptions(): OutputNormalizedWithDefaults;
 }
 declare interface MakeCacheableResult<T> {
 	(value: string, cache?: object): T;
@@ -21359,7 +21359,7 @@ declare interface Output {
 	 * Copy files and directories to the output directory.
 	 * @since 5.111.0
 	 */
-	copy?: string | CopyOptions | CopyPattern[];
+	copy?: string | CopyPattern[];
 
 	/**
 	 * This option enables cross-origin loading of chunks.

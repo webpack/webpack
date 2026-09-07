@@ -87,7 +87,30 @@ const config = {
 			// a directory keeps its structure below itself
 			"static",
 			// several sources into one destination, in order
-			{ from: ["licenses/*.txt", "vendor/licenses/*.txt"], to: "licenses" }
+			{ from: ["licenses/*.txt", "vendor/licenses/*.txt"], to: "licenses" },
+			// a filename template renames, flattens and hashes
+			{ from: "img", to: "i", filename: "[name].[contenthash][ext]" },
+			// a glob, matched by rules of its own
+			{
+				from: "static/**/*.html",
+				to: "pages",
+				globOptions: { dot: false, deep: 2 }
+			},
+			// content rewritten on the way through, cached on what it reads
+			{
+				from: "config.json",
+				to: "runtime",
+				transform: (content) =>
+					content.toString().replace("__API__", "https://example.com")
+			},
+			// an executable keeps the bit and the time it carried
+			{ from: "bin", preservePermissions: true, preserveTimestamps: true },
+			// `to` and `info` decide per file
+			{
+				from: "img",
+				to: (file) => (file.filename.endsWith(".css") ? "css" : "media"),
+				info: (file) => ({ immutable: file.filename.endsWith(".png") })
+			}
 		]
 	},
 	plugins: [

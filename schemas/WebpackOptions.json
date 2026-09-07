@@ -420,9 +420,6 @@
           "description": "Glob or path from where the files are copied. A glob separates with '/', matches dot files, and takes '*', '**', '?', '[]' and '{}'.",
           "type": "string",
           "minLength": 1
-        },
-        {
-          "$ref": "#/definitions/CopyOptions"
         }
       ],
       "added": "5.111.0"

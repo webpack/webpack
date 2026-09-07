@@ -13172,19 +13172,6 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
-  "output-copy-concurrency": Object {
-    "configs": Array [
-      Object {
-        "description": "Maximum number of files which are read at the same time. Defaults to '100'.",
-        "multiple": false,
-        "path": "output.copy.concurrency",
-        "type": "number",
-      },
-    ],
-    "description": "Maximum number of files which are read at the same time. Defaults to '100'.",
-    "multiple": false,
-    "simpleType": "number",
-  },
   "output-copy-context": Object {
     "configs": Array [
       Object {
@@ -13314,19 +13301,6 @@ Object {
     "description": "Clear all items provided in 'output.copy' configuration. Copy files and directories to the output directory.",
     "multiple": false,
     "simpleType": "boolean",
-  },
-  "output-copy-stage": Object {
-    "configs": Array [
-      Object {
-        "description": "Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.",
-        "multiple": false,
-        "path": "output.copy.stage",
-        "type": "number",
-      },
-    ],
-    "description": "Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.",
-    "multiple": false,
-    "simpleType": "number",
   },
   "output-copy-to": Object {
     "configs": Array [

@@ -573,15 +573,11 @@ export type CompareBeforeEmit = boolean;
  * Copy files and directories to the output directory.
  * @since 5.111.0
  */
-export type Copy = CopyPattern[] | string | CopyOptions;
+export type Copy = CopyPattern[] | string;
 /**
  * A glob or a path of files which are copied to the output directory.
  */
 export type CopyPattern = string | CopyObjectPattern;
-/**
- * Patterns of files which are copied to the output directory.
- */
-export type CopyPatterns = CopyPattern[];
 /**
  * This option enables cross-origin loading of chunks.
  */
@@ -891,6 +887,10 @@ export type AssetModuleOutputPath =
  */
 export type AssetParserDataUrlFunction =
 	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
+/**
+ * Patterns of files which are copied to the output directory.
+ */
+export type CopyPatterns = CopyPattern[];
 /**
  * Enable/disable renaming of `@keyframes`.
  */
@@ -3284,23 +3284,6 @@ export interface CopyGlobOptions {
 	ignore?: string[];
 }
 /**
- * Patterns of files which are copied to the output directory, and the options of the copying itself.
- */
-export interface CopyOptions {
-	/**
-	 * Maximum number of files which are read at the same time. Defaults to '100'.
-	 */
-	concurrency?: number;
-	/**
-	 * Patterns of files which are copied to the output directory.
-	 */
-	patterns: CopyPatterns;
-	/**
-	 * Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.
-	 */
-	stage?: number;
-}
-/**
  * The abilities of the environment where the webpack generated code should run.
  */
 export interface Environment {
@@ -4258,6 +4241,23 @@ export interface AssetResourceGeneratorOptions {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: RawPublicPath;
+}
+/**
+ * Patterns of files which are copied to the output directory, and the options of the copying itself.
+ */
+export interface CopyOptions {
+	/**
+	 * Maximum number of files which are read at the same time. Defaults to '100'.
+	 */
+	concurrency?: number;
+	/**
+	 * Patterns of files which are copied to the output directory.
+	 */
+	patterns: CopyPatterns;
+	/**
+	 * Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.
+	 */
+	stage?: number;
 }
 /**
  * Parser options for css/auto and css/module modules.

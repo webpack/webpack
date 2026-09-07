@@ -1,6 +1,6 @@
 "use strict";
 
-const { Compilation } = require("../../../../");
+const { Compilation, CopyPlugin } = require("../../../../");
 
 const PLUGIN_NAME = "RecordAssetsPlugin";
 
@@ -35,13 +35,13 @@ class RecordAssetsPlugin {
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	output: {
-		copy: {
+	plugins: [
+		new CopyPlugin({
 			// after everything which optimizes an asset, so the copied file lands
 			// on disk as it is
 			stage: Compilation.PROCESS_ASSETS_STAGE_REPORT,
 			patterns: [{ from: "files", to: "late" }]
-		}
-	},
-	plugins: [new RecordAssetsPlugin()]
+		}),
+		new RecordAssetsPlugin()
+	]
 };

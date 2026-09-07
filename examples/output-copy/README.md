@@ -11,9 +11,13 @@ build: they become real assets, so `output.clean`, the stats output and the
 watcher all see them, and a rebuild re-reads only what changed.
 
 A pattern is a `from` plus optional `to`, `filename`, `context`, `globOptions`,
-`info` and `transform`. Here the first copies a directory (keeping its structure
-below itself) and the second copies **two** roots into one destination, in
-order.
+`info`, `transform`, `preservePermissions` and `preserveTimestamps`. `to` and
+`info` may each be a function of the copied file, and `filename` is a webpack
+filename template, so one pattern can rename, flatten and hash.
+
+`output.copy` takes a string or a list of patterns. The plugin behind it takes
+`concurrency` and the `processAssets` `stage` as well — reach for
+`new CopyPlugin({ patterns, stage })` when you need those.
 
 The config also registers a small plugin that merges several copied assets into
 one — `copy-webpack-plugin`'s `transformAll`. `output.copy` has no equivalent
@@ -112,7 +116,30 @@ const config = {
 			// a directory keeps its structure below itself
 			"static",
 			// several sources into one destination, in order
-			{ from: ["licenses/*.txt", "vendor/licenses/*.txt"], to: "licenses" }
+			{ from: ["licenses/*.txt", "vendor/licenses/*.txt"], to: "licenses" },
+			// a filename template renames, flattens and hashes
+			{ from: "img", to: "i", filename: "[name].[contenthash][ext]" },
+			// a glob, matched by rules of its own
+			{
+				from: "static/**/*.html",
+				to: "pages",
+				globOptions: { dot: false, deep: 2 }
+			},
+			// content rewritten on the way through, cached on what it reads
+			{
+				from: "config.json",
+				to: "runtime",
+				transform: (content) =>
+					content.toString().replace("__API__", "https://example.com")
+			},
+			// an executable keeps the bit and the time it carried
+			{ from: "bin", preservePermissions: true, preserveTimestamps: true },
+			// `to` and `info` decide per file
+			{
+				from: "img",
+				to: (file) => (file.filename.endsWith(".css") ? "css" : "media"),
+				info: (file) => ({ immutable: file.filename.endsWith(".png") })
+			}
 		]
 	},
 	plugins: [
@@ -158,11 +185,19 @@ Allow: /
 ## Unoptimized
 
 ```
+assets by info 45 bytes [immutable]
+  asset i/theme.8ccbfb9fb3c821e1dd83.css 17 bytes [emitted] [immutable] [from: img/theme.css] [copied]
+  asset i/logo.e47e9a6166b71dc30cfe.png 14 bytes [emitted] [immutable] [from: img/logo.png] [copied]
+  asset media/logo.png 14 bytes [emitted] [immutable] [from: img/logo.png] [copied]
 assets by path *.txt 144 bytes
   asset THIRD_PARTY_LICENSES.txt 121 bytes [emitted] [copied]
   asset robots.txt 23 bytes [emitted] [from: static/robots.txt] [copied]
 asset output.js 222 bytes [emitted] (name: main)
 asset index.html 69 bytes [emitted] [from: static/index.html] [copied]
+asset pages/index.html 69 bytes [emitted] [from: static/index.html] [copied]
+asset runtime/config.json 33 bytes [emitted] [from: config.json] [copied]
+asset build.sh 21 bytes [emitted] [from: bin/build.sh] [copied]
+asset css/theme.css 17 bytes [emitted] [from: img/theme.css] [copied]
 chunk (runtime: main) output.js (main) 20 bytes [entry] [rendered]
   > ./example.js main
   ./example.js 20 bytes [built] [code generated]
@@ -174,11 +209,19 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
+assets by info 44 bytes [immutable]
+  asset i/theme.b14868eb69d5641a6129.css 16 bytes [emitted] [immutable] [from: img/theme.css] [copied] [minimized]
+  asset i/logo.e47e9a6166b71dc30cfe.png 14 bytes [emitted] [immutable] [from: img/logo.png] [copied]
+  asset media/logo.png 14 bytes [emitted] [immutable] [from: img/logo.png] [copied]
 assets by path *.txt 144 bytes
   asset THIRD_PARTY_LICENSES.txt 121 bytes [emitted] [copied]
   asset robots.txt 23 bytes [emitted] [from: static/robots.txt] [copied]
 asset index.html 64 bytes [emitted] [from: static/index.html] [copied] [minimized]
+asset pages/index.html 64 bytes [emitted] [from: static/index.html] [copied] [minimized]
+asset runtime/config.json 33 bytes [emitted] [from: config.json] [copied]
+asset build.sh 21 bytes [emitted] [from: bin/build.sh] [copied]
 asset output.js 19 bytes [emitted] [minimized] (name: main)
+asset css/theme.css 16 bytes [emitted] [from: img/theme.css] [copied] [minimized]
 chunk (runtime: main) output.js (main) 20 bytes [entry] [rendered]
   > ./example.js main
   ./example.js 20 bytes [built] [code generated]
