@@ -9,7 +9,8 @@ const acorn = require("acorn");
 const { initSync, parse } = require("es-module-lexer");
 const ConcatenatedModule = require("../../lib/optimize/ConcatenatedModule");
 
-/** @import { Compilation, Module } from "../../" */
+/** @import Compilation from "../../lib/Compilation" */
+/** @import Module from "../../lib/Module" */
 
 /** @type {boolean | undefined} */
 let lexerReady;
