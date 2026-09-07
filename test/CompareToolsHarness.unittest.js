@@ -258,9 +258,11 @@ describe("compare-tools-harness", () => {
 			).rejects.toThrow("exited with 2");
 		});
 
+		// Matched on the name rather than on `ENOENT`: bun says "Executable not
+		// found in $PATH" where node spells the errno out.
 		it("rejects when it cannot be run at all", async () => {
 			await expect(run("no-such-command-anywhere", [])).rejects.toThrow(
-				"ENOENT"
+				"no-such-command-anywhere"
 			);
 		});
 	});
