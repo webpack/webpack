@@ -6,14 +6,13 @@
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
-const { initSync, parse } = require("es-module-lexer");
 const ConcatenatedModule = require("../../lib/optimize/ConcatenatedModule");
 
 /** @import Compilation from "../../lib/Compilation" */
 /** @import Module from "../../lib/Module" */
 
-/** @type {boolean | undefined} */
-let lexerReady;
+/** @type {typeof import("es-module-lexer") | null | undefined} */
+let lexer;
 
 /**
  * The lexer reads what acorn is behind on, but its wasm needs a newer engine
@@ -22,17 +21,23 @@ let lexerReady;
  * @returns {string[] | undefined} literal import specifiers, where it could read
  */
 const lexerSpecifiersOf = (code) => {
-	if (lexerReady === undefined) {
+	if (lexer === undefined) {
+		lexer = null;
 		try {
-			initSync();
-			lexerReady = true;
+			// Loading it compiles its wasm right there, and an engine too old to
+			// decode that rejects a promise nothing else would ever read.
+			const loaded = require("es-module-lexer");
+
+			loaded.init.catch(() => {});
+			loaded.initSync();
+			lexer = loaded;
 		} catch (_error) {
-			lexerReady = false;
+			lexer = null;
 		}
 	}
-	if (!lexerReady) return;
+	if (!lexer) return;
 	try {
-		const [imports] = parse(code);
+		const [imports] = lexer.parse(code);
 		/** @type {string[]} */
 		const found = [];
 		for (const entry of imports) {
