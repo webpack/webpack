@@ -183,7 +183,7 @@ let sink;
  * This process's own peak resident size, in KB. `resourceUsage().maxRSS` cannot
  * answer it here: Linux carries the high-water mark across `fork`+`exec`, so a
  * spawned worker reports whatever the parent had reached.
- * @returns {number} the peak, or 0 where nothing can measure it
+ * @returns {number} the peak in KB, however the platform accounts for it
  */
 const peakResidentKilobytes = () => {
 	try {
