@@ -1010,9 +1010,11 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
-	// Both assert over an `import()` webpack cannot resolve at build time: one
-	// names its own script, the other is written inside an `eval`.
+	// The file imports itself, so the entry script and the module it loads are
+	// one bundled module, evaluated once where the spec evaluates it twice.
 	"expressions/dynamic-import/eval-self-once-script.js",
+	// The specifier is written inside an `eval`, so this import never reaches
+	// the module graph.
 	"expressions/dynamic-import/usage-from-eval.js",
 	// `.then` is expected not to be called on the deferred namespace's promise.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
