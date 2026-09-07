@@ -91,14 +91,13 @@ const urlSpecifierOf = (node) => {
 	if (node.arguments.length !== 2) return;
 	if (!specifier || specifier.type !== "Literal") return;
 	if (typeof specifier.value !== "string") return;
-	if (
-		!base ||
-		base.type !== "MemberExpression" ||
-		base.property.name !== "url" ||
-		base.object.type !== "MetaProperty"
-	) {
-		return;
-	}
+	if (!base || base.type !== "MemberExpression") return;
+	if (base.property.name !== "url") return;
+	// `new.target` is a meta property too, so the two names are what tells the
+	// base a module url apart from one that says nothing about this output.
+	const { object } = base;
+	if (object.type !== "MetaProperty") return;
+	if (object.meta.name !== "import" || object.property.name !== "meta") return;
 	return specifier.value;
 };
 

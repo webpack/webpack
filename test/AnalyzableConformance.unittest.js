@@ -94,6 +94,12 @@ describe("AnalyzableConformance", () => {
 			expect(literalSpecifiersOf('const u = new URL("./lazy.mjs");')).toEqual(
 				[]
 			);
+			// `new.target` parses as the same kind of node as `import.meta`.
+			expect(
+				literalSpecifiersOf(
+					'function f() { return new URL("./lazy.mjs", new.target.url); }'
+				)
+			).toEqual([]);
 		});
 
 		it("should keep the imports of a module acorn cannot parse", () => {
