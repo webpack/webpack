@@ -39,6 +39,7 @@ const {
 	compress,
 	exists,
 	filterFrom,
+	formatCost,
 	installPackages,
 	kb,
 	loaderFor,
@@ -266,8 +267,11 @@ const TOOLS = [
 		}
 	},
 	{
-		name: "esbuild",
+		// esbuild does the work in a service process of its own, so its cpu and
+		// its memory are spent where neither this worker nor `VmHWM` sees them.
+		name: "esbuild (service)",
 		stage: "beautify",
+		external: true,
 		create: () => {
 			const esbuild = load("esbuild");
 			return async (css) =>
@@ -369,8 +373,9 @@ const TOOLS = [
 			).code
 	},
 	{
-		name: "esbuild",
+		name: "esbuild (service)",
 		stage: "minify",
+		external: true,
 		create: () => {
 			const esbuild = load("esbuild");
 			return async (css) =>
@@ -378,8 +383,9 @@ const TOOLS = [
 		}
 	},
 	{
-		name: "esbuild+target",
+		name: "esbuild+target (service)",
 		stage: "minify",
+		external: true,
 		create: () => {
 			const esbuild = load("esbuild");
 			// esbuild names its targets rather than reading browserslist, so the
@@ -574,10 +580,10 @@ const main = async () => {
 			if (tools.length === 0) continue;
 			process.stdout.write(
 				stage === "parse"
-					? `  ${"parse".padEnd(20)}${"ms".padStart(8)}${"cpu".padStart(
+					? `  ${"parse".padEnd(26)}${"ms".padStart(8)}${"cpu".padStart(
 							7
 						)}${"peak".padStart(9)}\n`
-					: `  ${stage.padEnd(20)}${"out".padStart(10)}${"gzip".padStart(
+					: `  ${stage.padEnd(26)}${"out".padStart(10)}${"gzip".padStart(
 							9
 						)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
 							9
@@ -590,17 +596,18 @@ const main = async () => {
 				if ("error" in result) {
 					// A tool rejecting the stylesheet outright is a comparison result too.
 					process.stdout.write(
-						`  ${tool.name.padEnd(20)} rejects it: ${result.error}\n`
+						`  ${tool.name.padEnd(26)} rejects it: ${result.error}\n`
 					);
 					continue;
 				}
+				const cost = formatCost(result, tool.external);
 				if (stage === "parse") {
 					process.stdout.write(
 						`  ${
-							tool.name.padEnd(20) +
-							result.wall.toFixed(0).padStart(8) +
-							result.cpu.toFixed(0).padStart(7) +
-							`${(result.peak / 1024).toFixed(0)} MB`.padStart(9)
+							tool.name.padEnd(26) +
+							cost.wall.padStart(8) +
+							cost.cpu.padStart(7) +
+							cost.peak.padStart(9)
 						}\n`
 					);
 					continue;
@@ -611,15 +618,15 @@ const main = async () => {
 				const out = await compress(Buffer.from(code));
 				process.stdout.write(
 					`  ${
-						tool.name.padEnd(20) +
+						tool.name.padEnd(26) +
 						kb(out.raw).padStart(10) +
 						kb(out.gzip).padStart(9) +
 						`${(100 - (out.gzip / input.gzip) * 100).toFixed(1)}%`.padStart(8) +
 						kb(out.brotli).padStart(9) +
 						kb(out.zstd).padStart(9) +
-						result.wall.toFixed(0).padStart(7) +
-						result.cpu.toFixed(0).padStart(6) +
-						`${(result.peak / 1024).toFixed(0)} MB`.padStart(8)
+						cost.wall.padStart(7) +
+						cost.cpu.padStart(6) +
+						cost.peak.padStart(8)
 					}   ${
 						lost.length === 0
 							? "-"

@@ -32,6 +32,7 @@ const {
 	STAGES,
 	compress,
 	filterFrom,
+	formatCost,
 	installPackages,
 	kb,
 	loaderFor,
@@ -751,13 +752,14 @@ const main = async () => {
 					);
 					continue;
 				}
+				const cost = formatCost(result, tool.external);
 				if (stage === "parse") {
 					process.stdout.write(
 						`  ${
 							tool.name.padEnd(34) +
-							result.wall.toFixed(0).padStart(8) +
-							result.cpu.toFixed(0).padStart(7) +
-							`${(result.peak / 1024).toFixed(0)} MB`.padStart(9)
+							cost.wall.padStart(8) +
+							cost.cpu.padStart(7) +
+							cost.peak.padStart(9)
 						}\n`
 					);
 					continue;
@@ -780,9 +782,9 @@ const main = async () => {
 						`${(100 - (out.gzip / input.gzip) * 100).toFixed(1)}%`.padStart(8) +
 						kb(out.brotli).padStart(9) +
 						kb(out.zstd).padStart(9) +
-						result.wall.toFixed(0).padStart(7) +
-						result.cpu.toFixed(0).padStart(6) +
-						`${(result.peak / 1024).toFixed(0)} MB`.padStart(8)
+						cost.wall.padStart(7) +
+						cost.cpu.padStart(6) +
+						cost.peak.padStart(8)
 					}   ${notes.length === 0 ? "-" : notes.slice(0, 4).join(", ")}\n`
 				);
 			}

@@ -28,6 +28,7 @@ const STAGES = ["parse", "beautify", "minify"];
  * @property {string} name how the row is labelled
  * @property {string} stage which table it belongs to
  * @property {() => ((source: string) => EXPECTED_ANY)} create builds the callable, loading only what it needs
+ * @property {boolean=} external whether it works in a service process of its own
  */
 
 /**
@@ -252,6 +253,19 @@ const measure = async (tools) => {
 };
 
 /**
+ * The three cost cells, as text. A tool that works in a service process of its
+ * own spends its cpu and its memory there, where nothing here can see them.
+ * @param {{ wall: number, cpu: number, peak: number }} result one measurement
+ * @param {boolean=} external whether the tool works out of process
+ * @returns {{ wall: string, cpu: string, peak: string }} the cells
+ */
+const formatCost = (result, external) => ({
+	wall: result.wall.toFixed(0),
+	cpu: external ? "-" : result.cpu.toFixed(0),
+	peak: external ? "-" : `${(result.peak / 1024).toFixed(0)} MB`
+});
+
+/**
  * @param {string} entry the calling script's path
  * @param {string} stage which table the row belongs to
  * @param {string} name the tool's name
@@ -295,6 +309,7 @@ module.exports = {
 	compress,
 	exists,
 	filterFrom,
+	formatCost,
 	installPackages,
 	kb,
 	loaderFor,
