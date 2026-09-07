@@ -2907,6 +2907,16 @@
     pug "^3.0.3"
     webpack-merge "^6.0.1"
 
+"@webref/elements@^2.8.0":
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/@webref/elements/-/elements-2.8.0.tgz#9f810c3643e12c89149f45eb062b1aeaaffe4653"
+  integrity sha512-EWxcb3d2mkRU0zCfIX8no6xoywnUX3+Pxqhtt4xKwcb+vG4tQUlMZMd3THLH8M1Peg/5ssVRvlMEl/N5sHiFXw==
+
+"@webref/idl@^3.83.1":
+  version "3.83.1"
+  resolved "https://registry.yarnpkg.com/@webref/idl/-/idl-3.83.1.tgz#e4b4cd5272dc367e6260dca68adb911a6da816a0"
+  integrity sha512-Z3b6MzknPTYKhW3cEFQYEJ1UJfIfeZaP5NqHivfeJ1OD/NqQO9nb+OdSo7J/hiTPMfySJVu6OQvLDbFwHzFhaA==
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"

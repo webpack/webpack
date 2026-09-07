@@ -561,7 +561,6 @@
     "test/cases/json/weird-properties/globals.json",
     "test/JavascriptParser.unittest.js",
     "tooling/html-entities.json",
-    "tooling/html-reflect.json",
     "test/test262-cases/**",
     "test/wpt/**",
     "test/css-parsing-tests/**",

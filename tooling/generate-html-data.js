@@ -5,43 +5,48 @@
 
 "use strict";
 
-// Generate `lib/html/data.js` — the tables the HTML minifier decides with — from
-// `tooling/html-reflect.json` plus the spec facts below that no dataset states.
+// Generate every table the HTML parser and minifier look a name up in:
+// `lib/html/data.js`, and the entity region inside `lib/html/syntax.js`.
 //
 //   node tooling/generate-html-data.js --write
 //
-// `yarn fix:special` writes it; `yarn lint:special` runs the same generator
-// without `--write` and fails when the checked-in file no longer matches, so a
-// spec change lands as a reviewable diff rather than as silent drift.
-//
-// `tooling/html-reflect.json` is a distillation of webref's extraction of the
-// HTML IDL (`w3c/webref`: `ed/idl/html.idl` and `ed/elements/html.json`), whose
-// `[Reflect]`, `[ReflectURL]` and `[ReflectNonNegative]` markers state which
-// content attribute an IDL member reflects and how. Refresh it with `--fetch`
-// (one-off, requires network access).
-//
-// It cannot state everything: an attribute the spec defines with prose rather
-// than pure reflection carries no marker. `SUPPLEMENT` below is exactly that
-// remainder, each entry with the reason it is not derivable, and the generator
-// fails if a supplement entry ever becomes derivable — that is the signal to
-// delete it.
+// `yarn fix:special` writes both; `yarn lint:special` runs it without `--write`
+// and fails on a stale file, so a spec change lands as a reviewable diff.
 
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
-const REFLECT_PATH = path.resolve(__dirname, "html-reflect.json");
+const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax.js");
+// Vendored because no package carries WHATWG's table faithfully: the ones that
+// exist drop the semicolon, losing the 106 names that match without one.
+const ENTITIES_PATH = path.resolve(__dirname, "html-entities.json");
 const write = process.argv.includes("--write");
 const fetchSource = process.argv.includes("--fetch");
 
-const IDL_URL =
-	"https://raw.githubusercontent.com/w3c/webref/main/ed/idl/html.idl";
-const ELEMENTS_URL =
-	"https://raw.githubusercontent.com/w3c/webref/main/ed/elements/html.json";
+const ENTITIES_URL = "https://html.spec.whatwg.org/entities.json";
+const ENTITIES_FALLBACK_URL =
+	"https://raw.githubusercontent.com/w3c/html/master/entities.json";
+
+/**
+ * Where a webref package keeps the file this reads, resolved through the
+ * package's own manifest so no path into `node_modules` is written here.
+ * @param {string} pkg the package name
+ * @param {string} file the file in it
+ * @returns {string} the absolute path
+ */
+const webref = (pkg, file) =>
+	path.join(path.dirname(require.resolve(`${pkg}/package.json`)), file);
+
+// webref's own packages, pinned in the lockfile: their `[Reflect]`,
+// `[ReflectURL]` and `[ReflectNonNegative]` markers say what reflects and how.
+
+const IDL_PATH = webref("@webref/idl", "html.idl");
+const ELEMENTS_PATH = webref("@webref/elements", "html.json");
 
 /** @typedef {Record<string, string[] | null>} AttributeScopes attribute name -> the elements it applies to, `null` when global */
-/** @typedef {{ source: { idl: string, elements: string }, boolean: AttributeScopes, url: AttributeScopes, integer: AttributeScopes, signedInteger: string[], tokenList: AttributeScopes, eventHandler: AttributeScopes }} ReflectTables */
+/** @typedef {{ boolean: AttributeScopes, url: AttributeScopes, integer: AttributeScopes, signedInteger: string[], tokenList: AttributeScopes, eventHandler: AttributeScopes }} ReflectTables */
 
 /**
  * Distill webref's HTML IDL into the reflected-attribute facts this generator
@@ -187,7 +192,6 @@ const distill = (idl, elements) => {
 		return sorted;
 	};
 	return {
-		source: { idl: IDL_URL, elements: ELEMENTS_URL },
 		boolean: byName(out.boolean),
 		url: byName(out.url),
 		integer: byName(out.integer),
@@ -197,37 +201,40 @@ const distill = (idl, elements) => {
 	};
 };
 
-if (fetchSource) {
-	const https = require("https");
-
-	/**
-	 * @param {string} url the url
-	 * @returns {Promise<string>} its body
-	 */
-	const get = (url) =>
-		new Promise((resolve, reject) => {
-			https
-				.get(url, (res) => {
-					let body = "";
-					res.setEncoding("utf8");
-					res.on("data", (chunk) => {
-						body += chunk;
-					});
-					res.on("end", () => resolve(body));
-				})
-				.on("error", reject);
-		});
-	Promise.all([get(IDL_URL), get(ELEMENTS_URL)]).then(([idl, elements]) => {
-		const distilled = distill(idl, JSON.parse(elements));
-		fs.writeFileSync(REFLECT_PATH, `${JSON.stringify(distilled, null, 2)}\n`);
-		process.stdout.write(
-			`${path.relative(
-				path.resolve(__dirname, ".."),
-				REFLECT_PATH
-			)} refreshed\n`
-		);
+/**
+ * Fetch one URL, following redirects, so `--fetch` can refresh the vendored
+ * entity table. Each response is drained before the socket is reused.
+ * @param {string} url the url
+ * @returns {Promise<string>} its body
+ */
+const fetchUrl = (url) =>
+	new Promise((resolve, reject) => {
+		require("https")
+			.get(
+				url,
+				{ headers: { "user-agent": "webpack/generate-html-data" } },
+				(res) => {
+					const status = /** @type {number} */ (res.statusCode);
+					if (status >= 301 && status <= 308 && res.headers.location) {
+						res.resume();
+						return fetchUrl(new URL(res.headers.location, url).toString()).then(
+							resolve,
+							reject
+						);
+					}
+					if (status !== 200) {
+						res.resume();
+						return reject(new Error(`Failed to fetch ${url}: HTTP ${status}`));
+					}
+					/** @type {Buffer[]} */
+					const chunks = [];
+					res.on("data", (chunk) => chunks.push(chunk));
+					res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+					res.on("error", reject);
+				}
+			)
+			.on("error", reject);
 	});
-}
 
 // §13.1.2.4's optional-tag conditions and the value grammars below are prose in
 // every source — no dataset states "a `<p>` end tag may be omitted in front of
@@ -456,16 +463,10 @@ const merge = (derived, supplement, group) => {
 	return [...out].sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
-const reflect = fetchSource
-	? {
-			boolean: {},
-			url: {},
-			integer: {},
-			tokenList: {},
-			signedInteger: [],
-			eventHandler: {}
-		}
-	: JSON.parse(fs.readFileSync(REFLECT_PATH, "utf8"));
+const reflect = distill(
+	fs.readFileSync(IDL_PATH, "utf8"),
+	JSON.parse(fs.readFileSync(ELEMENTS_PATH, "utf8"))
+);
 const booleans = merge(reflect.boolean, SUPPLEMENT.boolean, "boolean");
 const urls = merge(reflect.url, SUPPLEMENT.url, "url");
 const integers = merge(reflect.integer, SUPPLEMENT.integer, "integer");
@@ -2079,27 +2080,116 @@ ${EXPORT_NAMES.map((name) => `module.exports.${name} = ${name};`).join("\n")}
 
 const summary = `${booleans.length} boolean, ${urls.length} url, ${integers.length} integer (${signed.length} signed), ${tokenLists.length} token-list, ${eventHandlers.length} event-handler attributes`;
 
-// `--fetch` only refreshes the vendored extraction; the emit runs on its own.
-if (!fetchSource) {
-	// Formatted here rather than left to `yarn fmt`, so the comparison below is
+// Tolerate both LF and CRLF so `check` mode doesn't false-fail on a Windows
+// checkout where git normalized the line endings.
+const REGION_REGEXP =
+	/\/\/ #region html entities\r?\n[\s\S]+?\/\/ #endregion\r?\n/;
+
+/**
+ * Render the `// #region html entities` block. The table is emitted as a
+ * single-line frozen object literal so the engine builds it once at load.
+ * @param {Record<string, { characters: string }>} entities the WHATWG table
+ * @returns {string} the block, newline-terminated
+ */
+const renderEntities = (entities) => {
+	/** @type {Record<string, string>} */
+	const map = {};
+	// Sorted so the emitted literal is deterministic.
+	for (const name of Object.keys(entities).sort()) {
+		map[name.slice(1)] = entities[name].characters;
+	}
+	return `// #region html entities
+// Auto-generated by \`tooling/generate-html-data.js\` from
+// \`tooling/html-entities.json\` — run \`yarn fix:special\` to refresh.
+
+// WHATWG named character references, keyed without the leading \`&\`: the keys
+// that do not end in \`;\` are the legacy names matching unterminated.
+
+// Null-prototype, so \`&toString;\` cannot reach an inherited \`Object.prototype\`
+// key and read back as a matched reference.
+
+// prettier-ignore
+// cspell:disable-next-line
+const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(Object.assign(Object.create(null), ${JSON.stringify(
+		map
+	)})));
+// #endregion
+`;
+};
+
+/**
+ * Write one output, or report it stale. Returns whether it is now in sync.
+ * @param {string} file the file to write
+ * @param {string} next what the generator built
+ * @param {string} label how it is named in the log
+ * @param {string=} note extra detail for the log line
+ * @returns {boolean} true unless a check-mode run found it stale
+ */
+const settle = (file, next, label, note) => {
+	const current = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
+	if (current === next) {
+		process.stdout.write(`${label} is up to date${note ? ` (${note})` : ""}\n`);
+		return true;
+	}
+	if (write) {
+		fs.writeFileSync(file, next);
+		process.stdout.write(`${label} updated${note ? ` (${note})` : ""}\n`);
+		return true;
+	}
+	process.stdout.write(`${label} is out of date — run \`yarn fix:special\`\n`);
+	return false;
+};
+
+/**
+ * Refresh the vendored entity table, then emit both outputs.
+ * @returns {Promise<void>} when both have been written or reported
+ */
+const main = async () => {
+	if (fetchSource) {
+		let body;
+		try {
+			body = await fetchUrl(ENTITIES_URL);
+		} catch (_err) {
+			body = await fetchUrl(ENTITIES_FALLBACK_URL);
+		}
+		fs.writeFileSync(
+			ENTITIES_PATH,
+			`${JSON.stringify(JSON.parse(body), null, 2)}\n`
+		);
+		process.stdout.write("tooling/html-entities.json refreshed\n");
+	}
+
+	// Formatted here rather than left to `yarn fmt`, so the comparison is
 	// against what the repo actually checks in.
-	prettier
-		.resolveConfig(TARGET)
-		.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
-		.then((formatted) => {
-			const current = fs.existsSync(TARGET)
-				? fs.readFileSync(TARGET, "utf8")
-				: "";
-			if (current === formatted) {
-				process.stdout.write(`lib/html/data.js is up to date (${summary})\n`);
-			} else if (write) {
-				fs.writeFileSync(TARGET, formatted);
-				process.stdout.write(`lib/html/data.js updated (${summary})\n`);
-			} else {
-				process.stdout.write(
-					"lib/html/data.js is out of date — run `yarn fix:special`\n"
-				);
-				process.exitCode = 1;
-			}
-		});
-}
+	const config = await prettier.resolveConfig(TARGET);
+	const data = await prettier.format(source, { ...config, filepath: TARGET });
+
+	const entities = JSON.parse(fs.readFileSync(ENTITIES_PATH, "utf8"));
+	const syntax = fs.readFileSync(SYNTAX_TARGET, "utf8");
+	if (!REGION_REGEXP.test(syntax)) {
+		throw new Error(
+			`Could not find the \`// #region html entities\` block in ${SYNTAX_TARGET}`
+		);
+	}
+	// Keep the file's own EOL style, so writing the region cannot mix endings.
+	const eol = syntax.includes("\r\n") ? "\r\n" : "\n";
+	const nextSyntax = syntax.replace(
+		REGION_REGEXP,
+		renderEntities(entities).replace(/\n/g, eol)
+	);
+
+	const ok = [
+		settle(TARGET, data, "lib/html/data.js", summary),
+		settle(
+			SYNTAX_TARGET,
+			nextSyntax,
+			"lib/html/syntax.js entities",
+			`${Object.keys(entities).length} entities`
+		)
+	];
+	if (ok.includes(false)) process.exitCode = 1;
+};
+
+main().catch((err) => {
+	throw err;
+});
