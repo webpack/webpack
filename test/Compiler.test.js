@@ -475,6 +475,213 @@ describe("Compiler", () => {
 		});
 	});
 
+	/**
+	 * @param {import("../").AssetInfo} info info the asset carries
+	 * @returns {import("../").WebpackPluginInstance} a plugin emitting an asset which carries it
+	 */
+	function emitAssetWithFileAttributes(info) {
+		const webpack = require("..");
+		const { RawSource } = require("webpack-sources");
+
+		return {
+			/**
+			 * @param {import("../").Compiler} compiler the compiler
+			 * @returns {void}
+			 */
+			apply(compiler) {
+				compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+					compilation.hooks.processAssets.tap(
+						{
+							name: "Test",
+							stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+						},
+						() => {
+							compilation.emitAsset(
+								"stamped.txt",
+								new RawSource("stamped"),
+								info
+							);
+						}
+					);
+				});
+			}
+		};
+	}
+
+	it("should stamp an emitted asset with the times it carries", (done) => {
+		const webpack = require("..");
+
+		const timestamps = {
+			atime: Date.UTC(2020, 0, 2, 3, 4, 5),
+			mtime: Date.UTC(2020, 0, 3, 4, 5, 6)
+		};
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [emitAssetWithFileAttributes({ timestamps })]
+		});
+		const outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (outputFileSystem)
+		);
+		compiler.run((err) => {
+			if (err) return done(err);
+			const stats = outputFileSystem.statSync("/directory/stamped.txt");
+			expect(stats.mtimeMs).toBe(timestamps.mtime);
+			expect(stats.atimeMs).toBe(timestamps.atime);
+			done();
+		});
+	});
+
+	it("should stamp an asset which carries times onto a file it did not rewrite", (done) => {
+		const webpack = require("..");
+
+		const timestamps = {
+			atime: Date.UTC(2020, 0, 2, 3, 4, 5),
+			mtime: Date.UTC(2020, 0, 3, 4, 5, 6)
+		};
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [emitAssetWithFileAttributes({ timestamps })]
+		});
+		const volume = new Volume();
+		const outputFileSystem = createFsFromVolume(volume);
+		// the content the build emits, already on disk with times of its own, so
+		// the emit compares it, writes nothing, and only the times are left to set
+		volume.fromJSON({ "/directory/stamped.txt": "stamped" });
+		outputFileSystem.utimesSync(
+			"/directory/stamped.txt",
+			new Date(0),
+			new Date(0)
+		);
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (outputFileSystem)
+		);
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			expect(
+				/** @type {import("../").Stats} */ (
+					stats
+				).compilation.comparedForEmitAssets.has("stamped.txt")
+			).toBe(true);
+			expect(outputFileSystem.statSync("/directory/stamped.txt").mtimeMs).toBe(
+				timestamps.mtime
+			);
+			done();
+		});
+	});
+
+	it("should fail when the output file system cannot set the times", (done) => {
+		const webpack = require("..");
+
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [
+				emitAssetWithFileAttributes({
+					timestamps: { atime: Date.now(), mtime: Date.now() }
+				})
+			]
+		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ ({
+				...createFsFromVolume(new Volume()),
+				utimes: undefined
+			})
+		);
+		compiler.run((err) => {
+			expect(/** @type {Error} */ (err).message).toMatch(
+				/Unable to set the times of '.*stamped\.txt': the output file system cannot set them/
+			);
+			done();
+		});
+	});
+
+	it("should give an emitted asset the permissions it carries", (done) => {
+		const webpack = require("..");
+
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [emitAssetWithFileAttributes({ mode: 0o755 })]
+		});
+		const outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (outputFileSystem)
+		);
+		compiler.run((err) => {
+			if (err) return done(err);
+			expect(
+				outputFileSystem.statSync("/directory/stamped.txt").mode & 0o777
+			).toBe(0o755);
+			done();
+		});
+	});
+
+	it("should give an asset which carries permissions to a file it did not rewrite", (done) => {
+		const webpack = require("..");
+
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [emitAssetWithFileAttributes({ mode: 0o755 })]
+		});
+		const volume = new Volume();
+		const outputFileSystem = createFsFromVolume(volume);
+		volume.fromJSON({ "/directory/stamped.txt": "stamped" });
+		outputFileSystem.chmodSync("/directory/stamped.txt", 0o644);
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (outputFileSystem)
+		);
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			expect(
+				/** @type {import("../").Stats} */ (
+					stats
+				).compilation.comparedForEmitAssets.has("stamped.txt")
+			).toBe(true);
+			expect(
+				outputFileSystem.statSync("/directory/stamped.txt").mode & 0o777
+			).toBe(0o755);
+			done();
+		});
+	});
+
+	it("should fail when the output file system cannot set the permissions", (done) => {
+		const webpack = require("..");
+
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [emitAssetWithFileAttributes({ mode: 0o755 })]
+		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ ({
+				...createFsFromVolume(new Volume()),
+				chmod: undefined
+			})
+		);
+		compiler.run((err) => {
+			expect(/** @type {Error} */ (err).message).toMatch(
+				/Unable to set the permissions of '.*stamped\.txt': the output file system cannot set them/
+			);
+			done();
+		});
+	});
+
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		let errored;
 		try {
