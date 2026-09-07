@@ -50,14 +50,16 @@ describe("processAsyncTree", () => {
 					callback(new Error("boom"));
 					return;
 				}
-				process.nextTick(callback);
+				callback();
 			},
 			(err) => {
 				expect(/** @type {Error} */ (err).message).toBe("boom");
-				// with concurrency 1 the queue is drained from the end, so `3`
-				// is hit first and no further items run
-				expect(processed).toBe(1);
-				done();
+				process.nextTick(() => {
+					// with concurrency 1 the queue is drained from the end, so `3`
+					// is hit first and no further items run
+					expect(processed).toBe(1);
+					done();
+				});
 			}
 		);
 	});
