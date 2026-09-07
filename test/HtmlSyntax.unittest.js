@@ -5158,6 +5158,57 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		).toBe("<body><!--c--><p>x");
 	});
 
+	// A `<li>` closes the item it is a sibling of, and no item held below a
+	// list-item-scope boundary — a list it nests into, or the cell it sits in.
+	describe("a later <li> against a list-item-scope boundary", () => {
+		/**
+		 * @param {string} html the source
+		 * @returns {string} the minified serialization
+		 */
+		const item = (html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				removeImpliedTags: true
+			}).code;
+
+		it("omits the end tag of the item it is a sibling of", () => {
+			expect(item("<ul><li>a</li><li>b</li></ul>")).toBe("<ul><li>a<li>b</ul>");
+			expect(item("<li>a</li><li>b</li>")).toBe("<li>a<li>b");
+		});
+
+		it("keeps the end tag of an item the nested list holds", () => {
+			// The `<script>` after the nested item is content its end tag cannot be
+			// omitted in front of, so only the outer `<li>c` closes a sibling.
+			expect(
+				item("<ul><li>a<ul><li>b</li><script></script></ul><li>c</li></ul>")
+			).toBe("<ul><li>a<ul><li>b</li><script></script></ul><li>c</ul>");
+			expect(item("<ul><li>a<ul><li>b</li>tail</ul><li>c</li></ul>")).toBe(
+				"<ul><li>a<ul><li>b</li>tail</ul><li>c</ul>"
+			);
+		});
+
+		it("omits it where the nested item ends its own list", () => {
+			expect(item("<ul><li>a<ul><li>b</li></ul><li>c</li></ul>")).toBe(
+				"<ul><li>a<ul><li>b</ul><li>c</ul>"
+			);
+		});
+
+		it("keeps the end tag of an item another cell holds", () => {
+			expect(
+				item(
+					"<table><tr><td><ul><li>a</li><script></script></ul><td><ul><li>b</li></ul></table>"
+				)
+			).toBe(
+				"<table><tr><td><ul><li>a</li><script></script></ul><td><ul><li>b</ul></table>"
+			);
+			expect(
+				item(
+					"<table><tr><th><ol><li>a</li></ol><th><ol><li>b</li></ol></table>"
+				)
+			).toBe("<table><tr><th><ol><li>a</ol><th><ol><li>b</ol></table>");
+		});
+	});
+
 	it("keeps a <html> that carries an attribute", () => {
 		expect(
 			new SourceProcessor().process("<html lang=en><body>x", { mode: "minify" })

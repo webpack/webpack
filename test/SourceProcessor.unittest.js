@@ -201,6 +201,48 @@ describe("SourceProcessor", () => {
 			});
 		}
 
+		// The map is walked over the flat output, so a piece the print took back
+		// takes its mapping with it and a newline still opens a generated line.
+		describe("over the flat output", () => {
+			// cspell:ignore CAIA
+
+			// The first declaration is the one the second overrides, so minifying
+			// retracts the piece it was written into.
+			const SOURCE =
+				"a {\n  color : red ;\n  color : blue ;\n}\nb {\n  color : lime ;\n}\n";
+
+			/**
+			 * @param {"minify" | "beautify"} mode how to print
+			 * @returns {{ code: string, mappings: string }} output and its mappings
+			 */
+			const printed = (mode) => {
+				const { code, map } = new CssSourceProcessor().process(SOURCE, {
+					mode,
+					source: "in.css",
+					content: SOURCE
+				});
+				return { code, mappings: map.mappings };
+			};
+
+			it("drops the mapping of a piece the print took back", () => {
+				// Two mappings, not three: the anchor written with `color:red` is gone,
+				// and `b` still maps to its own line rather than to the dropped one.
+				expect(printed("minify")).toEqual({
+					code: "a{color:blue}b{color:lime}",
+					mappings: "AAAA,aAIA"
+				});
+			});
+
+			it("counts a generated line for each newline the output holds", () => {
+				// `;;;` is the three line breaks before `b`, found in the flat output
+				// rather than in the pieces it was built from.
+				expect(printed("beautify")).toEqual({
+					code: "a {\ncolor: red;\ncolor: blue;\n}b {\ncolor: lime;\n}",
+					mappings: "AAAA;;;CAIA"
+				});
+			});
+		});
+
 		// A prefixed rule an unprefixed twin makes dead weight is taken back after
 		// it was written, so the mapping anchored to it has to go with it.
 		it("css anchors nothing at a rule the prefix pass took back", () => {
