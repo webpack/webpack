@@ -3,16 +3,42 @@
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const { Readable } = require("stream");
 const {
+	compress,
+	exists,
 	filterFrom,
 	formatCost,
-	measureInWorker
+	installPackages,
+	kb,
+	loaderFor,
+	log,
+	measure,
+	measureInWorker,
+	run
 } = require("../tooling/compare-tools-harness");
 
 /** @type {string} */
 let directory;
 
 let made = 0;
+
+/** @type {import("../tooling/compare-tools-harness").Tool[]} */
+const TOOLS = [
+	{
+		name: "counts",
+		stage: "parse",
+		create: () => (source) => ({ of: source.length })
+	},
+	{ name: "trims", stage: "minify", create: () => (source) => source.trim() },
+	{
+		name: "refuses",
+		stage: "minify",
+		create: () => () => {
+			throw new Error("nope\nand more");
+		}
+	}
+];
 
 /**
  * A stand-in worker: it drains the source it is handed as the real one does,
@@ -91,6 +117,198 @@ describe("compare-tools-harness", () => {
 			expect((await rejection(entry)).message).toBe(
 				"measuring stylis exited with 3"
 			);
+		});
+	});
+
+	// Driven in this process rather than in a worker: coverage does not follow a
+	// child, and these are the branches that decide what a row reports.
+	describe("measure", () => {
+		/**
+		 * @param {string} stage which table the row belongs to
+		 * @param {string} name the tool to run
+		 * @param {string} source what to hand it on stdin
+		 * @returns {Promise<EXPECTED_ANY>} the report it wrote
+		 */
+		const measureHere = async (stage, name, source) => {
+			const argv = process.argv;
+			const stdin = /** @type {PropertyDescriptor} */ (
+				Object.getOwnPropertyDescriptor(process, "stdin")
+			);
+			/** @type {string[]} */
+			const written = [];
+			const write = jest
+				.spyOn(process.stdout, "write")
+				.mockImplementation((chunk) => {
+					written.push(String(chunk));
+					return true;
+				});
+
+			process.argv = ["node", "entry.js", "--measure", stage, name];
+			Object.defineProperty(process, "stdin", {
+				value: Readable.from([Buffer.from(source)]),
+				configurable: true
+			});
+			try {
+				await measure(TOOLS);
+			} finally {
+				write.mockRestore();
+				process.argv = argv;
+				Object.defineProperty(process, "stdin", stdin);
+			}
+			return JSON.parse(written.join(""));
+		};
+
+		it("reports the text a printing tool wrote, and what it cost", async () => {
+			const result = await measureHere("minify", "trims", "  a{}  ");
+			expect(result.code).toBe("a{}");
+			expect(result.wall).toBeGreaterThanOrEqual(0);
+			expect(result.cpu).toBeGreaterThanOrEqual(0);
+			expect(result.peak).toBeGreaterThan(0);
+		});
+
+		// A parse hands back a tree, which is measured but never reported.
+		it("reports no text for a parse", async () => {
+			const result = await measureHere("parse", "counts", "abcd");
+			expect(result.code).toBeUndefined();
+			expect(result.peak).toBeGreaterThan(0);
+		});
+
+		// Only the first line: a native tool's panic carries a whole backtrace.
+		it("reports the first line of what a tool threw", async () => {
+			expect(await measureHere("minify", "refuses", "a{}")).toEqual({
+				error: "nope"
+			});
+		});
+
+		it("refuses a name no tool answers to", async () => {
+			await expect(measureHere("minify", "nothing", "a{}")).rejects.toThrow(
+				"unknown minify tool nothing"
+			);
+		});
+	});
+
+	describe("sizes", () => {
+		it("weighs a buffer under each encoding a CDN serves", async () => {
+			const sizes = await compress(Buffer.from("a{color:red}".repeat(200)));
+			expect(sizes.raw).toBe(2400);
+			expect(sizes.gzip).toBeLessThan(sizes.raw);
+			expect(sizes.brotli).toBeLessThan(sizes.raw);
+			// zlib carries zstd only from Node 22.15, where the column reads "-".
+			expect(sizes.zstd === undefined || sizes.zstd < sizes.raw).toBe(true);
+		});
+
+		it("prints a count in KB, and a dash for one it cannot have", () => {
+			expect(kb(1536)).toBe("1.5 KB");
+			expect(kb(undefined)).toBe("-");
+		});
+	});
+
+	describe("running a command", () => {
+		it("resolves when it exits cleanly", async () => {
+			await expect(run(process.execPath, ["-e", ""])).resolves.toBeUndefined();
+		});
+
+		it("rejects with the code it exited with", async () => {
+			await expect(
+				run(process.execPath, ["-e", "process.exitCode = 2"])
+			).rejects.toThrow("exited with 2");
+		});
+
+		it("rejects when it cannot be run at all", async () => {
+			await expect(run("no-such-command-anywhere", [])).rejects.toThrow(
+				"ENOENT"
+			);
+		});
+	});
+
+	describe("loaderFor", () => {
+		/** @type {string} */
+		let cache;
+
+		beforeAll(() => {
+			cache = path.join(directory, "cache");
+			const plain = path.join(cache, "node_modules", "plain-package");
+			fs.mkdirSync(plain, { recursive: true });
+			fs.writeFileSync(
+				path.join(plain, "package.json"),
+				'{ "name": "plain-package", "main": "index.js" }'
+			);
+			fs.writeFileSync(
+				path.join(plain, "index.js"),
+				'module.exports = { named: "plain" };'
+			);
+			const mapped = path.join(cache, "node_modules", "mapped-package");
+			fs.mkdirSync(mapped, { recursive: true });
+			// No `main`, so only the `exports` map can resolve it — the shape that
+			// a joined path reads as missing.
+			fs.writeFileSync(
+				path.join(mapped, "package.json"),
+				'{ "name": "mapped-package", "exports": { ".": "./entry.js" } }'
+			);
+			fs.writeFileSync(
+				path.join(mapped, "entry.js"),
+				'module.exports = { named: "mapped" };'
+			);
+		});
+
+		it("loads a package that names a main", () => {
+			expect(loaderFor(cache)("plain-package")).toEqual({ named: "plain" });
+		});
+
+		it("loads one that ships only an exports map", () => {
+			expect(loaderFor(cache)("mapped-package")).toEqual({ named: "mapped" });
+		});
+
+		// The map does not list `./package.json`, so resolving it as a specifier
+		// throws and the joined path is what answers.
+		it("falls back to the joined path for a subpath the map withholds", () => {
+			expect(loaderFor(cache)("mapped-package/package.json").name).toBe(
+				"mapped-package"
+			);
+		});
+	});
+
+	describe("installPackages", () => {
+		const NAME = "compare-tools-harness-unittest";
+		const cache = path.resolve(__dirname, "..", "node_modules/.cache", NAME);
+
+		afterAll(() => {
+			fs.rmSync(cache, { recursive: true, force: true });
+		});
+
+		// Nothing is installed here: the manifest already lists what was asked
+		// for, which is the branch that keeps a re-run from reaching npm.
+		it("reuses a cache whose manifest lists the same packages", async () => {
+			fs.mkdirSync(path.join(cache, "node_modules"), { recursive: true });
+			fs.writeFileSync(
+				path.join(cache, "package.json"),
+				JSON.stringify({
+					name: NAME,
+					comparisonPackages: ["left@1", "right@2"]
+				})
+			);
+			await expect(installPackages(NAME, ["left@1", "right@2"])).resolves.toBe(
+				cache
+			);
+		});
+	});
+
+	describe("log", () => {
+		it("writes the line to stderr", () => {
+			const written = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+			try {
+				log("installing …");
+				expect(written).toHaveBeenCalledWith("installing …\n");
+			} finally {
+				written.mockRestore();
+			}
+		});
+	});
+
+	describe("exists", () => {
+		it("answers for a file that is there and one that is not", async () => {
+			await expect(exists(__filename)).resolves.toBe(true);
+			await expect(exists(`${__filename}.absent`)).resolves.toBe(false);
 		});
 	});
 
