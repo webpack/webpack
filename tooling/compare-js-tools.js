@@ -71,6 +71,7 @@ const PACKAGES = [
 	"chart.js@4",
 	"core-js-bundle@3",
 	"d3@7",
+	"echarts@6",
 	"escodegen@2",
 	"esbuild@0.25",
 	"espree@11",
@@ -79,13 +80,17 @@ const PACKAGES = [
 	"jquery@3",
 	"lodash@4",
 	"meriyah@7",
+	"immutable@5",
 	"moment@2",
 	"oxc-minify@0.149",
 	"oxc-parser@0.149",
+	"pdfjs-dist@6",
+	"preact@10",
 	"prettier@3",
 	"react-dom@18",
 	"react@18",
 	"rxjs@7",
+	"swagger-ui-dist@5",
 	"terser@5",
 	"three@0.185",
 	"typescript@5",
@@ -95,9 +100,14 @@ const PACKAGES = [
 
 // Bundles as they ship: the ES5 ones every site still loads, the modern ones
 // written in classes and modules, and two that dwarf both.
+
+// The minified rows matter on their own: that is the shape most of what a build
+// reads from `node_modules` is in, and it is where a parser's hot loop lives.
 /** @type {[string, string, "module" | "script"][]} */
 const INSTALLED_FIXTURES = [
+	["Preact 10 (ESM)", "preact/dist/preact.module.js", "module"],
 	["jQuery 3", "jquery/dist/jquery.js", "script"],
+	["jQuery 3 (minified)", "jquery/dist/jquery.min.js", "script"],
 	["Moment 2", "moment/moment.js", "script"],
 	["axios 1", "axios/dist/axios.js", "script"],
 	["Lodash 4", "lodash/lodash.js", "script"],
@@ -105,10 +115,20 @@ const INSTALLED_FIXTURES = [
 	["Chart.js 4", "chart.js/dist/chart.umd.js", "script"],
 	["D3 7", "d3/dist/d3.js", "script"],
 	["RxJS 7", "rxjs/dist/bundles/rxjs.umd.js", "script"],
+	["Immutable 5 (ESM)", "immutable/dist/immutable.es.js", "module"],
 	["React DOM 18 (dev)", "react-dom/umd/react-dom.development.js", "script"],
+	[
+		"React DOM 18 (production)",
+		"react-dom/umd/react-dom.production.min.js",
+		"script"
+	],
 	["core-js 3 (bundle)", "core-js-bundle/index.js", "script"],
 	["Vue 3 (ESM)", "vue/dist/vue.esm-browser.js", "module"],
+	["Vue 3 (production)", "vue/dist/vue.runtime.global.prod.js", "script"],
 	["three (ESM)", "three/build/three.module.js", "module"],
+	["pdf.js 6 (ESM)", "pdfjs-dist/build/pdf.mjs", "module"],
+	["Swagger UI 5 (bundle)", "swagger-ui-dist/swagger-ui-bundle.js", "script"],
+	["ECharts 6", "echarts/dist/echarts.js", "script"],
 	["Babel 7 (standalone)", "@babel/standalone/babel.js", "script"],
 	["TypeScript 5", "typescript/lib/typescript.js", "script"]
 ];

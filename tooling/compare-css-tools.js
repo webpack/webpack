@@ -61,6 +61,7 @@ const PACKAGES = [
 	"animate.css@4",
 	"beercss@5",
 	"bootstrap@5",
+	"bootstrap-icons@1",
 	"bulma@1",
 	"clean-css@5",
 	"crass@0.12",
@@ -73,10 +74,13 @@ const PACKAGES = [
 	"@fortawesome/fontawesome-free@6",
 	"fomantic-ui-css@2",
 	"foundation-sites@6",
+	"katex@0.18",
 	"lightningcss@1",
 	"materialize-css@1",
 	"milligram@1",
+	"nes.css@2",
 	"normalize.css@8",
+	"open-props@1",
 	"@patternfly/patternfly@6",
 	"@picocss/pico@2",
 	"postcss@8",
@@ -84,10 +88,12 @@ const PACKAGES = [
 	"prettier@3",
 	"@primer/css@21",
 	"purecss@3",
+	"@radix-ui/themes@3",
 	"sanitize.css@13",
 	"@shoelace-style/shoelace@2",
 	"spectre.css@0.5",
 	"stylis@4",
+	"swiper@14",
 	"@swc/css@0.0.28",
 	"semantic-ui-css@2",
 	"@tabler/core@1",
@@ -96,6 +102,7 @@ const PACKAGES = [
 	"@tdewolff/minify@2",
 	"@tailwindcss/cli@4",
 	"uikit@3",
+	"video.js@8",
 	"water.css@2"
 ];
 
@@ -151,6 +158,9 @@ const setup = async () => {
 
 // Every installed stylesheet the comparison runs on: component frameworks, the
 // classless ones, and icon/animation/reset sheets that look nothing like them.
+
+// The odd shapes earn their place: an icon font is thousands of one-declaration
+// rules, and Open Props is custom properties and almost nothing else.
 /** @type {[string, string][]} */
 const INSTALLED_FIXTURES = [
 	["98.css", "98.css/dist/98.css"],
@@ -158,24 +168,31 @@ const INSTALLED_FIXTURES = [
 	["Beer CSS 5", "beercss/dist/cdn/beer.css"],
 	["Bootstrap 5 (full)", "bootstrap/dist/css/bootstrap.css"],
 	["Bootstrap 5 (grid)", "bootstrap/dist/css/bootstrap-grid.css"],
+	["Bootstrap Icons 1", "bootstrap-icons/font/bootstrap-icons.css"],
 	["Bulma 1", "bulma/css/bulma.css"],
 	["Fomantic-UI 2", "fomantic-ui-css/semantic.css"],
 	["Font Awesome 6", "@fortawesome/fontawesome-free/css/all.css"],
 	["Foundation 6", "foundation-sites/dist/css/foundation.css"],
+	["KaTeX 0.18", "katex/dist/katex.css"],
 	["Materialize 1", "materialize-css/dist/css/materialize.css"],
 	["Milligram 1", "milligram/dist/milligram.css"],
+	["NES.css 2", "nes.css/css/nes.css"],
 	["normalize.css 8", "normalize.css/normalize.css"],
+	["Open Props 1 (minified)", "open-props/open-props.min.css"],
 	["PatternFly 6", "@patternfly/patternfly/patternfly-base.css"],
 	["Pico 2", "@picocss/pico/css/pico.css"],
 	["Primer 21", "@primer/css/dist/primer.css"],
 	["Pure 3", "purecss/build/pure.css"],
+	["Radix Themes 3 (components)", "@radix-ui/themes/components.css"],
 	["sanitize.css 13", "sanitize.css/sanitize.css"],
 	["Semantic UI 2", "semantic-ui-css/semantic.css"],
 	["Shoelace 2 (light)", "@shoelace-style/shoelace/dist/themes/light.css"],
 	["Spectre 0.5", "spectre.css/dist/spectre.css"],
+	["Swiper 14", "swiper/swiper-bundle.css"],
 	["Tabler 1", "@tabler/core/dist/css/tabler.css"],
 	["Tachyons 4", "tachyons/css/tachyons.css"],
 	["UIkit 3", "uikit/dist/css/uikit.css"],
+	["Video.js 8", "video.js/dist/video-js.css"],
 	["Water.css 2", "water.css/out/water.css"]
 ];
 
