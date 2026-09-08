@@ -6,7 +6,7 @@ const path = __non_webpack_require__("path");
 const findInlineEntry = (assets) =>
 	assets.find(
 		(a) =>
-			/^__html_/.test(a.name) &&
+			/^page\./.test(a.name) &&
 			/\.js$/.test(a.name) &&
 			a.name !== STATE.inlineEntryName
 	);

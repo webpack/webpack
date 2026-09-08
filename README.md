@@ -306,6 +306,8 @@ For information about the governance of the webpack project, see [GOVERNANCE.md]
   **Sean Larkin** <<selarkin@microsoft.com>> (he/him)
 - [xiaoxiaojx](https://github.com/xiaoxiaojx) -
   **Natsu Xiao** <<xiaojiaixn@gmail.com>> (he/him)
+- [hai-x](https://github.com/hai-x) -
+  **Haijie Xie** <<haijie0619@gmail.com>> (he/him)
 
 ### Maintenance
 

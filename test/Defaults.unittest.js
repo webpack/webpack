@@ -379,7 +379,7 @@ describe("snapshots", () => {
 		        "type": "html",
 		      },
 		      Object {
-		        "mimetype": "text/html",
+		        "mimetype": /\\^text\\\\/html\\$/i,
 		        "resolve": Object {
 		          "fullySpecified": true,
 		          "preferRelative": true,

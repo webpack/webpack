@@ -30,8 +30,8 @@ const copyTest = {
 module.exports = {
 	target: "web",
 	entry: {
-		// `text/htmlx` is JavaScript to DataUriPlugin, not an `output.html`
-		// wrapper — its chunk must survive the wrapper cleanup.
+		// `text/htmlx` is JavaScript, not a page: the html rule matches the
+		// media type exactly, so this entry keeps a JavaScript chunk.
 		"data-url": { import: "data:text/htmlx,module.exports = 42;", html: false },
 		page: "./src/page.js"
 	},

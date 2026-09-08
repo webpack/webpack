@@ -4,7 +4,7 @@ const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
 
 const findInlineEntry = (assets) =>
-	assets.find((a) => /^__html_/.test(a.name) && /\.js$/.test(a.name));
+	assets.find((a) => /^page\./.test(a.name) && /\.js$/.test(a.name));
 
 it("should compile fine and emit the extracted HTML and the inline-script entry chunk", () => {
 	const htmlAsset = STATS_JSON.assets.find((a) => /\.html$/.test(a.name));

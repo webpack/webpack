@@ -5,7 +5,7 @@ exports[`ConfigTestCases html css-split-chunks-order exported tests should refer
 <html>
 <head>
 <title>HTML entry with split CSS chunks</title>
-<link rel=\\"stylesheet\\" href=\\"style1.css\\"><link rel=\\"stylesheet\\" href=\\"style2.css\\"><script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+<link rel=\\"stylesheet\\" href=\\"style1.css\\"><link rel=\\"stylesheet\\" href=\\"style2.css\\"><script src=\\"page.js\\"></script>
 </head>
 <body><div class=\\"hero\\">Box</div></body>
 </html>

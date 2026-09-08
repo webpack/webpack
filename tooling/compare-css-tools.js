@@ -5,48 +5,66 @@
 
 "use strict";
 
-// Compare webpack's own CSS minifier against the ecosystem's on real framework
-// stylesheets, reporting what the output weighs (raw and under the encodings a
-// CDN serves), what producing it costs (wall time, cpu time, peak memory) and —
-// the part a size table hides — whether it still contains everything the input
-// did.
-//
-//   node tooling/compare-css-minifiers.js
-//
-// Each minifier × fixture cell runs in a fresh worker process (this script
-// re-invoked with `--measure <minifier>`, the stylesheet on stdin), so cpu and
-// peak RSS are attributable to that one tool instead of to whatever ran before
-// it in a shared process.
-//
-// The comparison packages are NOT webpack dependencies: they are installed into
-// `node_modules/.cache/css-minifier-comparison` on first run, so nothing here
-// reaches webpack's own dependency tree.
+// Compare webpack's own CSS parser and printer against the ecosystem's, over
+// real framework stylesheets, in the three stages a tool can be asked for.
 
-const { spawn } = require("child_process");
+//   node tooling/compare-css-tools.js
+
+// `parse` builds the tree and stops; `beautify` and `minify` print it back out.
+// Every table reports best-of-3 wall/cpu ms and the worker's own peak RSS.
+
+// The two printing tables add what the output weighs — raw and under the
+// encodings a CDN serves — and whether it still matches every class it did.
+
+// `FIXTURE=`, `TOOL=` and `STAGE=` narrow the run to rows whose name contains
+// what they name, so one cell is re-measured without the whole matrix.
+
+// Each cell runs in a fresh worker (this script with `--measure <stage> <tool>`,
+// the stylesheet on stdin), so cost is attributable to that one tool.
+
+// The comparison packages are NOT webpack dependencies: they install into
+// `node_modules/.cache/`, so nothing here reaches webpack's own tree.
+
 const fs = require("fs");
 const path = require("path");
-const { promisify } = require("util");
-const zlib = require("zlib");
-
 // What every other tool assumes when told no target: current engines only.
 // Resolved rather than written out, so it does not go stale.
 const MODERN_BROWSERS = require("browserslist")(
 	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
 );
 const cssMinify = require("../lib/css/cssMinify");
+const { SourceProcessor } = require("../lib/css/syntax");
+const {
+	STAGES,
+	compress,
+	exists,
+	filterFrom,
+	formatCost,
+	installPackages,
+	kb,
+	loaderFor,
+	log,
+	measure,
+	measureInWorker,
+	run
+} = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
-const CACHE = path.join(ROOT, "node_modules/.cache/css-minifier-comparison");
+const CACHE_NAME = "css-tool-comparison";
+const CACHE = path.join(ROOT, "node_modules/.cache", CACHE_NAME);
 const MODULES = path.join(CACHE, "node_modules");
+const load = loaderFor(CACHE);
 
 const PACKAGES = [
 	"98.css@0.1",
+	"@adobe/css-tools@4",
 	"animate.css@4",
 	"beercss@5",
 	"bootstrap@5",
 	"bulma@1",
 	"clean-css@5",
 	"crass@0.12",
+	"css-tree@3",
 	"csso@5",
 	"cssnano@7",
 	"cssnano-preset-advanced@9",
@@ -63,11 +81,13 @@ const PACKAGES = [
 	"@picocss/pico@2",
 	"postcss@8",
 	"postcss-selector-parser@7",
+	"prettier@3",
 	"@primer/css@21",
 	"purecss@3",
 	"sanitize.css@13",
 	"@shoelace-style/shoelace@2",
 	"spectre.css@0.5",
+	"stylis@4",
 	"@swc/css@0.0.28",
 	"semantic-ui-css@2",
 	"@tabler/core@1",
@@ -103,75 +123,8 @@ const TAILWIND_DAISYUI = `@import "tailwindcss";
 @source inline("{card-body,card-title,card-actions,modal-box,modal-action,navbar-start,navbar-center,navbar-end,menu-title,dropdown-content,collapse-title,collapse-content,drawer-side,drawer-content,hero-content,stat-title,stat-value,stat-desc,join-item,table-zebra,tab-active,loading-spinner,loading-dots}");
 `;
 
-/**
- * @param {string} message progress line
- */
-const log = (message) => {
-	process.stderr.write(`${message}\n`);
-};
-
-/**
- * @param {string} file a path
- * @returns {Promise<boolean>} whether it exists
- */
-const exists = (file) =>
-	fs.promises.access(file).then(
-		() => true,
-		() => false
-	);
-
-/**
- * @param {string} command executable
- * @param {string[]} args its arguments
- * @param {object=} options spawn options
- * @returns {Promise<void>} resolves when it exits cleanly
- */
-const run = (command, args, options) =>
-	new Promise((resolve, reject) => {
-		const child = spawn(command, args, {
-			stdio: ["ignore", "inherit", "inherit"],
-			...options
-		});
-		child.on("error", reject);
-		child.on("close", (code) => {
-			if (code === 0) resolve();
-			else reject(new Error(`${command} exited with ${code}`));
-		});
-	});
-
 const setup = async () => {
-	const manifest = path.join(CACHE, "package.json");
-	// Reinstall when the package list changes, so an existing cache picks up
-	// newly added fixtures instead of failing on their missing files.
-	const installed =
-		(await exists(MODULES)) && (await exists(manifest))
-			? JSON.parse(await fs.promises.readFile(manifest, "utf8"))
-					.comparisonPackages
-			: undefined;
-	if (JSON.stringify(installed) !== JSON.stringify(PACKAGES)) {
-		log(`installing comparison packages into ${path.relative(ROOT, CACHE)} …`);
-		await fs.promises.mkdir(CACHE, { recursive: true });
-		if (!(await exists(manifest))) {
-			await fs.promises.writeFile(
-				manifest,
-				`${JSON.stringify(
-					{ name: "css-minifier-comparison", private: true },
-					null,
-					2
-				)}\n`
-			);
-		}
-		await run("npm", ["install", "--no-audit", "--no-fund", ...PACKAGES], {
-			cwd: CACHE
-		});
-		// Recorded only after the install succeeded.
-		const written = JSON.parse(await fs.promises.readFile(manifest, "utf8"));
-		written.comparisonPackages = PACKAGES;
-		await fs.promises.writeFile(
-			manifest,
-			`${JSON.stringify(written, null, 2)}\n`
-		);
-	}
+	await installPackages(CACHE_NAME, PACKAGES);
 	for (const [source, out] of [
 		[TAILWIND_APP, "tailwind-app.css"],
 		[TAILWIND_WIDE, "tailwind-wide.css"],
@@ -196,15 +149,8 @@ const setup = async () => {
 	}
 };
 
-/**
- * @param {string} name package name
- * @returns {EXPECTED_ANY} the package's export
- */
-const load = (name) => require(path.join(MODULES, name));
-
-// Every installed stylesheet the comparison runs on: the component frameworks,
-// the class-light/classless ones, and the non-framework solutions (icon fonts,
-// animation and reset sheets) whose CSS looks nothing like a framework's.
+// Every installed stylesheet the comparison runs on: component frameworks, the
+// classless ones, and icon/animation/reset sheets that look nothing like them.
 /** @type {[string, string][]} */
 const INSTALLED_FIXTURES = [
 	["98.css", "98.css/dist/98.css"],
@@ -245,49 +191,202 @@ const fixtures = () => [
 	["Tailwind 4 + daisyUI 5", path.join(CACHE, "tailwind-daisyui.css")]
 ];
 
-// Each entry is a factory so the measuring worker loads only the one tool it
-// measures — anything else would show up in that tool's peak RSS. The async API
-// is used wherever a tool offers one; csso and lightningcss only ship sync.
-/** @type {[string, () => (css: string) => string | Promise<string>][]} */
-const MINIFIERS = [
-	[
-		"webpack",
-		() => async (css) => (await cssMinify({ "input.css": css })).code
-	],
-	[
+// Each entry builds its callable on demand, so the measuring worker loads only
+// the one tool it measures — anything else would land in that tool's peak RSS.
+/** @type {import("./compare-tools-harness").Tool[]} */
+const TOOLS = [
+	{
+		// `process` with no mode walks the whole stylesheet and prints nothing,
+		// which is exactly the parse stage.
+		name: "webpack",
+		stage: "parse",
+		create: () => (css) => new SourceProcessor().process(css)
+	},
+	{
+		name: "postcss",
+		stage: "parse",
+		create: () => {
+			const postcss = load("postcss");
+			return (css) => postcss.parse(css);
+		}
+	},
+	{
+		name: "css-tree",
+		stage: "parse",
+		create: () => {
+			const cssTree = load("css-tree");
+			return (css) => cssTree.parse(css);
+		}
+	},
+	{
+		name: "@adobe/css-tools",
+		stage: "parse",
+		create: () => {
+			const adobe = load("@adobe/css-tools");
+			return (css) => adobe.parse(css);
+		}
+	},
+	{
+		name: "stylis",
+		stage: "parse",
+		create: () => {
+			const stylis = load("stylis");
+			return (css) => stylis.compile(css);
+		}
+	},
+	{
+		name: "crass",
+		stage: "parse",
+		create: () => {
+			const crass = load("crass");
+			return (css) => crass.parse(css);
+		}
+	},
+	{
+		name: "webpack",
+		stage: "beautify",
+		create: () => (css) =>
+			new SourceProcessor().process(css, { mode: "beautify" }).code
+	},
+	{
+		// postcss keeps every raw it parsed, so its print reproduces the input —
+		// the round-trip floor the other printers are read against.
+		name: "postcss",
+		stage: "beautify",
+		create: () => {
+			const postcss = load("postcss");
+			return (css) => postcss.parse(css).toString();
+		}
+	},
+	{
+		name: "prettier",
+		stage: "beautify",
+		create: () => {
+			const prettier = load("prettier");
+			return (css) => prettier.format(css, { parser: "css" });
+		}
+	},
+	{
+		// esbuild does the work in a service process of its own, so its cpu and
+		// its memory are spent where neither this worker nor `VmHWM` sees them.
+		name: "esbuild (service)",
+		stage: "beautify",
+		external: true,
+		create: () => {
+			const esbuild = load("esbuild");
+			return async (css) =>
+				(await esbuild.transform(css, { loader: "css" })).code;
+		}
+	},
+	{
+		name: "lightningcss",
+		stage: "beautify",
+		create: () => {
+			const lightningcss = load("lightningcss");
+			return (css) =>
+				lightningcss
+					.transform({
+						filename: "input.css",
+						code: Buffer.from(css),
+						minify: false
+					})
+					.code.toString("utf8");
+		}
+	},
+	{
+		name: "clean-css",
+		stage: "beautify",
+		create: () => {
+			const CleanCSS = load("clean-css");
+			return async (css) =>
+				(
+					await new CleanCSS({
+						level: 0,
+						format: "beautify",
+						returnPromise: true
+					}).minify(css)
+				).styles;
+		}
+	},
+	{
+		name: "@adobe/css-tools",
+		stage: "beautify",
+		create: () => {
+			const adobe = load("@adobe/css-tools");
+			return (css) => adobe.stringify(adobe.parse(css));
+		}
+	},
+	{
+		name: "crass",
+		stage: "beautify",
+		create: () => {
+			const crass = load("crass");
+			return (css) => crass.parse(css).pretty();
+		}
+	},
+	{
+		// css-tree and stylis print compact rather than indented, so their rows
+		// weigh a bare round-trip: parse and print, no transform.
+		name: "css-tree",
+		stage: "beautify",
+		create: () => {
+			const cssTree = load("css-tree");
+			return (css) => cssTree.generate(cssTree.parse(css));
+		}
+	},
+	{
+		name: "stylis",
+		stage: "beautify",
+		create: () => {
+			const stylis = load("stylis");
+			return (css) => stylis.serialize(stylis.compile(css), stylis.stringify);
+		}
+	},
+	{
+		name: "webpack",
+		stage: "minify",
+		create: () => async (css) => (await cssMinify({ "input.css": css })).code
+	},
+	{
 		// The rivals strip the spellings a modern engine makes dead; webpack, told
 		// nothing, keeps them. The two rows say what the target is worth.
-		"webpack+target",
-		() => async (css) =>
+		name: "webpack+target",
+		stage: "minify",
+		create: () => async (css) =>
 			(
 				await cssMinify({ "input.css": css }, undefined, {
 					environment: { browsers: MODERN_BROWSERS }
 				})
 			).code
-	],
-	[
+	},
+	{
 		// The rivals shorten a custom property's value the way they shorten any
 		// other; webpack holds off unless told, since `getPropertyValue()` reads it.
-		"webpack+target+vars",
-		() => async (css) =>
+		name: "webpack+target+vars",
+		stage: "minify",
+		create: () => async (css) =>
 			(
 				await cssMinify({ "input.css": css }, undefined, {
 					environment: { browsers: MODERN_BROWSERS },
 					rewriteCustomProperties: true
 				})
 			).code
-	],
-	[
-		"esbuild",
-		() => {
+	},
+	{
+		name: "esbuild (service)",
+		stage: "minify",
+		external: true,
+		create: () => {
 			const esbuild = load("esbuild");
 			return async (css) =>
 				(await esbuild.transform(css, { loader: "css", minify: true })).code;
 		}
-	],
-	[
-		"esbuild+target",
-		() => {
+	},
+	{
+		name: "esbuild+target (service)",
+		stage: "minify",
+		external: true,
+		create: () => {
 			const esbuild = load("esbuild");
 			// esbuild names its targets rather than reading browserslist, so the
 			// query resolves to the `<name><major>` strings it accepts.
@@ -298,35 +397,39 @@ const MINIFIERS = [
 				(await esbuild.transform(css, { loader: "css", minify: true, target }))
 					.code;
 		}
-	],
-	[
-		"csso",
-		() => {
+	},
+	{
+		name: "csso",
+		stage: "minify",
+		create: () => {
 			const csso = load("csso");
 			return (css) => csso.minify(css).css;
 		}
-	],
-	[
-		"clean-css L1",
-		() => {
+	},
+	{
+		name: "clean-css L1",
+		stage: "minify",
+		create: () => {
 			const CleanCSS = load("clean-css");
 			return async (css) =>
 				(await new CleanCSS({ level: 1, returnPromise: true }).minify(css))
 					.styles;
 		}
-	],
-	[
-		"clean-css L2",
-		() => {
+	},
+	{
+		name: "clean-css L2",
+		stage: "minify",
+		create: () => {
 			const CleanCSS = load("clean-css");
 			return async (css) =>
 				(await new CleanCSS({ level: 2, returnPromise: true }).minify(css))
 					.styles;
 		}
-	],
-	[
-		"lightningcss",
-		() => {
+	},
+	{
+		name: "lightningcss",
+		stage: "minify",
+		create: () => {
 			const lightningcss = load("lightningcss");
 			return (css) =>
 				lightningcss
@@ -337,10 +440,11 @@ const MINIFIERS = [
 					})
 					.code.toString("utf8");
 		}
-	],
-	[
-		"lightningcss+target",
-		() => {
+	},
+	{
+		name: "lightningcss+target",
+		stage: "minify",
+		create: () => {
 			const lightningcss = load("lightningcss");
 			const targets = lightningcss.browserslistToTargets(MODERN_BROWSERS);
 			return (css) =>
@@ -353,21 +457,23 @@ const MINIFIERS = [
 					})
 					.code.toString("utf8");
 		}
-	],
-	[
-		"cssnano",
-		() => {
+	},
+	{
+		name: "cssnano",
+		stage: "minify",
+		create: () => {
 			const postcss = load("postcss");
 			const cssnano = load("cssnano");
 			return async (css) =>
 				(await postcss([cssnano]).process(css, { from: undefined })).css;
 		}
-	],
-	[
+	},
+	{
 		// The preset cssnano does not ship on by default: it also merges rules,
 		// rebases `z-index` and reduces idents, so it diverges where the rest agree.
-		"cssnano advanced",
-		() => {
+		name: "cssnano advanced",
+		stage: "minify",
+		create: () => {
 			const postcss = load("postcss");
 			const cssnano = load("cssnano");
 			const advanced = load("cssnano-preset-advanced");
@@ -378,30 +484,41 @@ const MINIFIERS = [
 					})
 				).css;
 		}
-	],
-	[
-		"tdewolff/minify",
-		() => {
+	},
+	{
+		name: "@adobe/css-tools",
+		stage: "minify",
+		create: () => {
+			const adobe = load("@adobe/css-tools");
+			return (css) => adobe.stringify(adobe.parse(css), { compress: true });
+		}
+	},
+	{
+		name: "tdewolff/minify",
+		stage: "minify",
+		create: () => {
 			const { minify } = load("@tdewolff/minify");
 			return (css) => minify("text/css", css);
 		}
-	],
-	[
+	},
+	{
 		// Its documented entry point, which is what a user calls — it panics on a
 		// stylesheet with anything much in it, and the row then reads as a refusal.
-		"@swc/css",
-		() => {
+		name: "@swc/css",
+		stage: "minify",
+		create: () => {
 			const swc = load("@swc/css");
 			return (css) => swc.minifySync(Buffer.from(css), {}).code.toString();
 		}
-	],
-	[
-		"crass",
-		() => {
+	},
+	{
+		name: "crass",
+		stage: "minify",
+		create: () => {
 			const crass = load("crass");
 			return (css) => crass.parse(css).optimize({ o1: true }).toString();
 		}
-	]
+	}
 ];
 
 /**
@@ -432,145 +549,19 @@ const classSelectors = (postcss, selectorParser, css) => {
 	return set;
 };
 
-const gzip = promisify(zlib.gzip);
-const brotliCompress = promisify(zlib.brotliCompress);
-// Node < 22.15 has no zstd in zlib — the column reads "-" there.
-const zstdCompress =
-	typeof zlib.zstdCompress === "function"
-		? promisify(zlib.zstdCompress)
-		: undefined;
-
-/**
- * @param {Buffer} buffer content
- * @returns {Promise<number | undefined>} the zstd size, where zlib has zstd
- */
-const zstdSize = async (buffer) => {
-	if (zstdCompress === undefined) return undefined;
-	return (
-		await zstdCompress(buffer, {
-			params: { [zlib.constants.ZSTD_c_compressionLevel]: 19 }
-		})
-	).length;
-};
-
-/** @typedef {{ raw: number, gzip: number, brotli: number, zstd: number | undefined }} Sizes */
-
-/**
- * What the bytes weigh under the encodings a CDN serves — the same settings as
- * `test/CodeSizeTestCases.size.js`, so numbers line up across the two reports.
- * @param {Buffer} buffer content
- * @returns {Promise<Sizes>} its size under each encoding
- */
-const compress = async (buffer) => ({
-	raw: buffer.length,
-	gzip: (await gzip(buffer, { level: 9 })).length,
-	brotli: (
-		await brotliCompress(buffer, {
-			params: {
-				[zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-				[zlib.constants.BROTLI_PARAM_SIZE_HINT]: buffer.length
-			}
-		})
-	).length,
-	zstd: await zstdSize(buffer)
-});
-
-/**
- * @param {number | undefined} bytes a byte count
- * @returns {string} the count in KB, one decimal ("-" when unmeasurable)
- */
-const kb = (bytes) =>
-	bytes === undefined ? "-" : `${(bytes / 1024).toFixed(1)} KB`;
-
-/** @typedef {{ code: string, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
-
-/**
- * Worker mode: run one minifier over the stylesheet on stdin and report the
- * output with its cost. Wall and cpu are the best of three runs; peak is the
- * process's `maxRSS` (KB), which deliberately includes loading the tool — that
- * is part of what running it costs. The one understatement is esbuild, whose
- * service process works outside this process's accounting.
- * @param {string} name a `MINIFIERS` entry's name
- * @returns {Promise<void>} resolves after the report is written
- */
-const measure = async (name) => {
-	const entry = MINIFIERS.find(([minifier]) => minifier === name);
-	if (entry === undefined) throw new Error(`unknown minifier ${name}`);
-	const chunks = [];
-	for await (const chunk of process.stdin) chunks.push(chunk);
-	const css = Buffer.concat(chunks).toString("utf8");
-	/** @type {Measurement} */
-	let report;
-	try {
-		const minify = entry[1]();
-		// Half of these tools are native binaries, at full speed on their first
-		// call; the other half are JavaScript, which is still being compiled on it.
-		// Timing from cold reports the JavaScript ones' warm-up rather than their
-		// throughput — webpack's own minifier takes ~5x its steady-state time on
-		// the first call and settles by the sixth — and a build minifies many
-		// assets in one process, so steady state is what a user gets. Bounded by
-		// time as well as by count, so a slow tool on a large stylesheet is not
-		// multiplied while a fast one still reaches it.
-		const warmStarted = process.hrtime.bigint();
-		for (let i = 0; i < 8; i++) {
-			await minify(css);
-			if (Number(process.hrtime.bigint() - warmStarted) / 1e6 > 500) break;
-		}
-		let code = "";
-		let wall = Infinity;
-		let cpu = Infinity;
-		for (let i = 0; i < 3; i++) {
-			const cpuStarted = process.cpuUsage();
-			const started = process.hrtime.bigint();
-			code = await minify(css);
-			wall = Math.min(wall, Number(process.hrtime.bigint() - started) / 1e6);
-			const used = process.cpuUsage(cpuStarted);
-			cpu = Math.min(cpu, (used.user + used.system) / 1e3);
-		}
-		report = { code, wall, cpu, peak: process.resourceUsage().maxRSS };
-	} catch (error) {
-		report = {
-			error: String(
-				error && /** @type {Error} */ (error).message
-					? /** @type {Error} */ (error).message
-					: error
-			).split("\n", 1)[0]
-		};
-	}
-	process.stdout.write(JSON.stringify(report));
-};
-
-/**
- * @param {string} name a `MINIFIERS` entry's name
- * @param {string} input the stylesheet
- * @returns {Promise<Measurement>} the worker's report
- */
-const measureInWorker = (name, input) =>
-	new Promise((resolve, reject) => {
-		const child = spawn(process.execPath, [__filename, "--measure", name], {
-			stdio: ["pipe", "pipe", "inherit"]
-		});
-		/** @type {Buffer[]} */
-		const chunks = [];
-		child.stdout.on("data", (chunk) => chunks.push(chunk));
-		child.on("error", reject);
-		child.on("close", (code) => {
-			if (code !== 0) {
-				reject(new Error(`measuring ${name} exited with ${code}`));
-				return;
-			}
-			resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
-		});
-		child.stdin.end(input);
-	});
+const wantedFixture = filterFrom("FIXTURE");
+const wantedTool = filterFrom("TOOL");
+const wantedStage = filterFrom("STAGE");
 
 const main = async () => {
 	await setup();
 	const postcss = load("postcss");
 	const selectorParser = load("postcss-selector-parser");
-	for (const [label, file] of fixtures()) {
+	for (const [label, file] of fixtures().filter(([name]) =>
+		wantedFixture(name)
+	)) {
 		// A trailing sourceMappingURL is a build artifact, not stylesheet content,
-		// and the minifiers disagree on keeping it.
+		// and the tools disagree on keeping it.
 		const css = (await fs.promises.readFile(file, "utf8")).replace(
 			/\/\*#\s*sourceMappingURL=[^*]*\*\/\s*$/,
 			""
@@ -582,50 +573,72 @@ const main = async () => {
 				input.brotli
 			)} brotli, ${kb(input.zstd)} zstd), ${before.size} classes\n`
 		);
-		// `saved` reads off gzip — what a user downloads — with raw the tiebreak.
-		process.stdout.write(
-			`${"minifier".padEnd(14)}${"minified".padStart(10)}${"gzip".padStart(
-				9
-			)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
-				9
-			)}${"ms".padStart(6)}${"cpu".padStart(6)}${"peak".padStart(8)}   lost\n`
-		);
-		for (const [name] of MINIFIERS) {
-			const result = await measureInWorker(name, css);
-			if ("error" in result) {
-				// A tool rejecting the stylesheet outright is a comparison result too.
-				process.stdout.write(
-					`${name.padEnd(14)}   rejects it: ${result.error}\n`
-				);
-				continue;
-			}
-			const after = classSelectors(postcss, selectorParser, result.code);
-			const lost = [...before].filter((c) => !after.has(c));
-			const out = await compress(Buffer.from(result.code));
-			process.stdout.write(
-				`${
-					name.padEnd(14) +
-					kb(out.raw).padStart(10) +
-					kb(out.gzip).padStart(9) +
-					`${(100 - (out.gzip / input.gzip) * 100).toFixed(1)}%`.padStart(8) +
-					kb(out.brotli).padStart(9) +
-					kb(out.zstd).padStart(9) +
-					result.wall.toFixed(0).padStart(6) +
-					result.cpu.toFixed(0).padStart(6) +
-					`${(result.peak / 1024).toFixed(0)} MB`.padStart(8)
-				}   ${
-					lost.length === 0
-						? "-"
-						: `${lost.length} classes! e.g. ${lost.slice(0, 3).join(", ")}`
-				}\n`
+		for (const stage of STAGES.filter(wantedStage)) {
+			const tools = TOOLS.filter(
+				(tool) => tool.stage === stage && wantedTool(tool.name)
 			);
+			if (tools.length === 0) continue;
+			process.stdout.write(
+				stage === "parse"
+					? `  ${"parse".padEnd(26)}${"ms".padStart(8)}${"cpu".padStart(
+							7
+						)}${"peak".padStart(9)}\n`
+					: `  ${stage.padEnd(26)}${"out".padStart(10)}${"gzip".padStart(
+							9
+						)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
+							9
+						)}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
+							8
+						)}   lost\n`
+			);
+			for (const tool of tools) {
+				const result = await measureInWorker(__filename, stage, tool.name, css);
+				if ("error" in result) {
+					// A tool rejecting the stylesheet outright is a comparison result too.
+					process.stdout.write(
+						`  ${tool.name.padEnd(26)} rejects it: ${result.error}\n`
+					);
+					continue;
+				}
+				const cost = formatCost(result, tool.external);
+				if (stage === "parse") {
+					process.stdout.write(
+						`  ${
+							tool.name.padEnd(26) +
+							cost.wall.padStart(8) +
+							cost.cpu.padStart(7) +
+							cost.peak.padStart(9)
+						}\n`
+					);
+					continue;
+				}
+				const code = /** @type {string} */ (result.code);
+				const after = classSelectors(postcss, selectorParser, code);
+				const lost = [...before].filter((name) => !after.has(name));
+				const out = await compress(Buffer.from(code));
+				process.stdout.write(
+					`  ${
+						tool.name.padEnd(26) +
+						kb(out.raw).padStart(10) +
+						kb(out.gzip).padStart(9) +
+						`${(100 - (out.gzip / input.gzip) * 100).toFixed(1)}%`.padStart(8) +
+						kb(out.brotli).padStart(9) +
+						kb(out.zstd).padStart(9) +
+						cost.wall.padStart(7) +
+						cost.cpu.padStart(6) +
+						cost.peak.padStart(8)
+					}   ${
+						lost.length === 0
+							? "-"
+							: `${lost.length} classes! e.g. ${lost.slice(0, 3).join(", ")}`
+					}\n`
+				);
+			}
 		}
 	}
 };
 
-(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
-	(error) => {
-		log(String(error && error.stack ? error.stack : error));
-		process.exitCode = 1;
-	}
-);
+(process.argv[2] === "--measure" ? measure(TOOLS) : main()).catch((error) => {
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+});

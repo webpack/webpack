@@ -20,8 +20,8 @@ it("should rewrite <link rel=modulepreload> and <script type=module src> to chun
 	expect(page).not.toContain('href="./preload.js"');
 	expect(page).not.toContain('href="./preload-other.js"');
 	expect(page).not.toContain('src="./entry.js"');
-	expect(page).toMatch(/<link rel="modulepreload" href="__html_[^"]+\.mjs">/);
-	expect(page).toMatch(/<script type="module" src="__html_[^"]+\.mjs">/);
+	expect(page).toMatch(/<link rel="modulepreload" href="page\d*\.mjs">/);
+	expect(page).toMatch(/<script type="module" src="page\d*\.mjs">/);
 	// Data URI in modulepreload is also bundled.
 	expect(page).not.toContain('href="data:text/javascript');
 	// webpackIgnore leaves modulepreload and module-script entries untouched.
@@ -33,7 +33,7 @@ it("should rewrite <link rel=modulepreload> and <script type=module src> to chun
 
 it("should emit module-format chunks (no IIFE wrapper) when output.module is enabled", () => {
 	const preloadChunkName = chunkFor(
-		/<link rel="modulepreload" href="(__html_[^"]+\.mjs)">/
+		/<link rel="modulepreload" href="(page\d*\.mjs)">/
 	);
 	const preloadChunk = readChunk(preloadChunkName);
 	expect(preloadChunk).toMatchSnapshot();
@@ -43,7 +43,7 @@ it("should emit module-format chunks (no IIFE wrapper) when output.module is ena
 	expect(preloadChunk).toContain('"preload module"');
 
 	const entryChunkName = chunkFor(
-		/<script type="module" src="(__html_[^"]+\.mjs)">/
+		/<script type="module" src="(page\d*\.mjs)">/
 	);
 	const entryChunk = readChunk(entryChunkName);
 	expect(entryChunk).toMatchSnapshot();
@@ -58,10 +58,10 @@ it("should keep <link rel=modulepreload> entries independent of the module scrip
 	// module to actually run, it must import it via JS, in which case
 	// webpack inlines the module into the script chunk on its own.)
 	const preloadChunkUrls = [
-		...page.matchAll(/<link rel="modulepreload" href="(__html_[^"]+\.mjs)">/g)
+		...page.matchAll(/<link rel="modulepreload" href="(page\d*\.mjs)">/g)
 	].map((m) => m[1]);
 	const moduleScriptUrl = chunkFor(
-		/<script type="module" src="(__html_[^"]+\.mjs)">/
+		/<script type="module" src="(page\d*\.mjs)">/
 	);
 	expect(preloadChunkUrls.length).toBeGreaterThanOrEqual(2);
 	const moduleScriptChunk = readChunk(moduleScriptUrl);
