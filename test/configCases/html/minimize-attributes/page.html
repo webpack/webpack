@@ -45,6 +45,11 @@ b">newline in a value</p>
 	<svg viewBox="0 0 8 8"><rect x="1" y="2"/><circle R="1"/></svg>
 	<DIV CLASS="a">source casing</DIV>
 	<p a=1 a=2>duplicate attribute</p>
+	<p class="a b a">repeated class token, folded</p>
+	<!-- `{%` / `%}` tokenize as attribute names and repeat, so this tag is
+	     echoed whole rather than rebuilt without them (#22013) -->
+	<input type="text"{% if required %} required{% endif %}>
+	<p class="btn{% if active %} btn-active{% endif %}">the same list, as text</p>
 	<p data-slash="/end/">value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>
 	<pre>  preformatted

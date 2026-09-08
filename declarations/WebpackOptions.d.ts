@@ -2613,7 +2613,7 @@ export interface OptimizationMinimizeHtml {
 	 */
 	normalizeEnumeratedAttributes?: boolean;
 	/**
-	 * Normalize a list-shaped attribute value: a space-separated token list (`class`, `rel`, `part`, …), a comma-separated one (`accept`, `sizes`, …), a `srcset` and the viewport `<meta content>`. On by default. Reordering a token list is `sortTokenLists`, which is separate and off by default.
+	 * Normalize a list-shaped attribute value: a space-separated token list (`class`, `rel`, `part`, …), a comma-separated one (`accept`, `sizes`, …), a `srcset` and the viewport `<meta content>`. On by default. A list is read as the set the DOM reflects, so a repeat folds away, only where every token of it is a word: one holding a delimiter another language wrote a statement in is text, and keeps every token it names. Reordering a token list is `sortTokenLists`, which is separate and off by default.
 	 * @since 5.110.0
 	 */
 	normalizeListAttributes?: boolean;

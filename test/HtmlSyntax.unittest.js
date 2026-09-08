@@ -5445,6 +5445,44 @@ describe("SourceProcessor — attribute quote spelling", () => {
 	});
 });
 
+describe("SourceProcessor — a duplicate attribute name", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("is dropped where every name of the tag is a word", () => {
+		expect(minify("<p a=1 a=2>x</p>")).toBe("<p a=1>x");
+		expect(minify('<p data-x="1" data-x="2">x</p>')).toBe("<p data-x=1>x");
+		expect(minify('<svg><rect x="1" x="2"/></svg>')).toBe(
+			"<svg><rect x=1 /></svg>"
+		);
+	});
+
+	it("is written back where the tag spells a foreign delimiter", () => {
+		// `{%` / `%}` tokenize as attribute names, so `{% endif %}` repeats both
+		// and §13.2.5.33 drops them; a re-parse of the echoed tag drops them again.
+		for (const tag of [
+			'<input type="text"{% if required %} required{% endif %}>',
+			"<div {{cond}} id=a id=b></div>",
+			"<div {{#if x}} data-a=1 {{/if}} data-a=2></div>"
+		]) {
+			expect(minify(tag)).toContain(tag);
+		}
+	});
+
+	it("leaves the tag its source spelling, quotes and all", () => {
+		// The whole tag is echoed, so nothing else of it is rewritten either.
+		expect(minify('<input TYPE="TEXT"{% if x %} a{% endif %}>')).toBe(
+			'<input TYPE="TEXT"{% if x %} a{% endif %}>'
+		);
+	});
+});
+
 describe("SourceProcessor — token list values", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
@@ -5483,6 +5521,22 @@ describe("SourceProcessor — token list values", () => {
 			'headers="h h"'
 		);
 		expect(minify('<div accesskey="k k">x</div>')).toContain('accesskey="k k"');
+	});
+
+	it("reads a list holding a foreign delimiter as text, not as a set", () => {
+		// A `{% … %}` statement tokenizes as list tokens, so folding the repeated
+		// `%}` away would lose a delimiter the template needs.
+		for (const list of [
+			'class="btn{% if active %} btn-active{% endif %}"',
+			'class="a {{ if x }} a {{ endif }}"',
+			'rel="preload {{extra}} preload {{extra}}"'
+		]) {
+			expect(minify(`<link ${list} href=x>`)).toContain(list);
+		}
+		// The separators between them still collapse: that keeps every token.
+		expect(minify('<div class="btn{%  if  x  %}">y</div>')).toContain(
+			'class="btn{% if x %}"'
+		);
 	});
 });
 
@@ -5550,6 +5604,14 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 		).toBe('<div class="a b c">x</div>');
 		expect(minify('<div class="b a b a c">x</div>')).toBe(
 			'<div class="b a c">x</div>'
+		);
+	});
+
+	it("leaves a list holding a foreign delimiter in its written order", () => {
+		// Sorting one would move the statements away from what they wrap.
+		const list = 'class="btn{% if active %} btn-active{% endif %}"';
+		expect(minify(`<div ${list}>x</div>`, { sortTokenLists: true })).toBe(
+			`<div ${list}>x</div>`
 		);
 	});
 
