@@ -73,11 +73,12 @@ export default (bench) => {
 		new JavascriptParser("script").parse(typescriptSource, {});
 	});
 
-	// acorn only, no walk; same options as parse() to isolate walker changes
+	// acorn only, no walk, and the options `parse()` really passes: it derives
+	// line and column from offsets, so tracking them here measures nobody's build.
 	bench.add("unit benchmark \"js-parser-unit\", mode 'parse'", () => {
 		JavascriptParser._parse(typescriptSource, {
 			sourceType: "auto",
-			locations: true,
+			locations: false,
 			ranges: true,
 			comments: true,
 			importPhases: false

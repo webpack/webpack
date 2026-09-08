@@ -6,7 +6,7 @@ const acorn = require("acorn");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
-/** @typedef {{ file: string, parsedBy: string, message: string }} VerdictDifference */
+/** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */
 /** @typedef {{ ranges?: boolean, locations?: boolean, comments?: boolean }} Mode */
 /** @typedef {import("acorn").Program} Program */
 /** @typedef {import("acorn").Comment} Comment */
@@ -22,13 +22,17 @@ const AREA_TIMEOUT = 600000;
 // Enough of a regression to see its shape without flooding the log.
 const MAX_REPORTED = 10;
 
-// The option sets a caller can hand `JavascriptParser._parse`. `ranges` is the
-// one webpack itself uses: it switches on the lazy-node path.
+// The option sets a caller can hand `JavascriptParser._parse`. Ranges alone is
+// the one webpack uses, and the only one that takes the lazy-node path.
 /** @type {[string, Mode][]} */
 const MODES = [
 	["without ranges or comments", {}],
 	["with ranges and comments", { ranges: true, comments: true }],
-	["with locations", { locations: true }]
+	["with locations", { locations: true }],
+	[
+		"with ranges, locations and comments",
+		{ ranges: true, locations: true, comments: true }
+	]
 ];
 
 /**
@@ -119,35 +123,11 @@ const firstDifference = (ours, theirs, at) => {
 };
 
 /**
- * Whether acorn only got through the file because the host engine cannot build
- * one of its regexp literals, which acorn records as a null value and webpack
- * (validating with `new RegExp`) reports as a parse error instead.
- * @param {Error} error what webpack's parser threw
- * @param {Program} ast the program acorn built
- * @returns {boolean} true when the engine, not the pattern, is the difference
- */
-const isHostRegExpLimit = (error, ast) => {
-	if (!error.message.startsWith("Invalid regular expression:")) {
-		return false;
-	}
-	/** @type {unknown[]} */
-	const queue = [ast];
-	while (queue.length > 0) {
-		const node = queue.pop();
-		if (typeof node !== "object" || node === null) continue;
-		const record = /** @type {Record<string, unknown>} */ (node);
-		if (record.regex !== undefined && record.value === null) return true;
-		for (const key of Object.keys(record)) queue.push(record[key]);
-	}
-	return false;
-};
-
-/**
  * Parse one file with both parsers and record how they disagreed.
  * @param {string} file absolute path of the test262 file
  * @param {Mode} mode the options both parsers are given
  * @param {TreeDifference[]} trees where tree differences are collected
- * @param {VerdictDifference[]} verdicts where accept/reject differences are collected
+ * @param {VerdictDifference[]} verdicts where verdicts that disagree are collected
  * @returns {void}
  */
 const compareFile = (file, mode, trees, verdicts) => {
@@ -188,20 +168,19 @@ const compareFile = (file, mode, trees, verdicts) => {
 		theirError = /** @type {Error} */ (err);
 	}
 
+	// Rejecting the same source is half of the contract; rejecting it in the
+	// same words is the other half, since webpack reports what the parser threw.
 	if (ourError !== undefined || theirError !== undefined) {
-		if (ourError !== undefined && theirError !== undefined) return;
-		if (
-			ourError !== undefined &&
-			theirs !== undefined &&
-			isHostRegExpLimit(ourError, theirs)
-		) {
-			return;
+		const webpackVerdict = ourError === undefined ? "parsed" : ourError.message;
+		const acornVerdict =
+			theirError === undefined ? "parsed" : theirError.message;
+		if (webpackVerdict !== acornVerdict) {
+			verdicts.push({
+				file: name,
+				webpack: webpackVerdict,
+				acorn: acornVerdict
+			});
 		}
-		verdicts.push({
-			file: name,
-			parsedBy: ourError === undefined ? "webpack" : "acorn",
-			message: /** @type {Error} */ (ourError || theirError).message
-		});
 		return;
 	}
 

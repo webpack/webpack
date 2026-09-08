@@ -1555,5 +1555,29 @@ describe("JavascriptParser", () => {
 			block.range = [1, 2];
 			expect(block.range).toEqual([1, 2]);
 		});
+
+		it("serves a direct caller's `ranges` lazily, leaving its options alone", () => {
+			const options = { ecmaVersion: 2022, lazyNodes: true, ranges: true };
+			const program = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					"var x = 1;",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ (options)
+					)
+				)
+			);
+			expect(options).toEqual({
+				ecmaVersion: 2022,
+				lazyNodes: true,
+				ranges: true
+			});
+			const declaration = program.body[0];
+			// lazy: `range` comes from the prototype getter, not from acorn
+			expect(
+				Object.getOwnPropertyDescriptor(declaration, "range")
+			).toBeUndefined();
+			expect(declaration.range).toEqual([0, 10]);
+			expect(declaration.range).toBe(declaration.range);
+		});
 	});
 });
