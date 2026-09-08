@@ -169,6 +169,23 @@ to every emitted asset, so the case's own sources are held to its
 `ecmaConformanceExpected` declares findings deliberate as regexps, each with its
 reason — one that stops matching fails the case.
 
+### ESM output is held to what a foreign bundler reads
+
+`test/helpers/analyzableConformance.js` walks every `output.module` case the way
+another tool would: it takes the specifiers a lexer reports plus the
+`new URL(…, import.meta.url)` names only an AST sees, follows the literal ones
+from each entry, and asks two questions of what it reaches.
+
+- **Does every chunk have a name someone else can follow?** A chunk only
+  `__webpack_require__.e` reaches is a finding, unless the build recorded why it
+  kept the runtime form — `performance.analyzableBailouts` reads the same
+  reasons — or an `eval` devtool hid every specifier inside a string.
+- **Does every name it writes exist?** A specifier naming a place inside the
+  output that neither the assets nor the directory holds is a finding.
+
+`analyzableConformanceExpected` in `test.config.js` declares findings deliberate
+as regexps, each with its reason — one that stops matching fails the case.
+
 Under `ecmaVersion/`, the `es5-*` cases cover one runtime-emitting feature each
 (jsonp, `importScripts`, `require` and read-file chunk loading, workers and
 asset urls, css, hot updates, wasm, the library wrappers, Module Federation,
