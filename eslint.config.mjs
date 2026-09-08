@@ -231,6 +231,7 @@ export default defineConfig([
 		files: [
 			"tooling/compare-css-tools.js",
 			"tooling/compare-html-tools.js",
+			"tooling/compare-js-tools.js",
 			"tooling/compare-tools-harness.js"
 		],
 		rules: {

@@ -18,6 +18,7 @@
     "argjson",
     "asmjs",
     "assemblyscript",
+    "astring",
     "asyncloader",
     "atlaskit",
     "autocrlf",

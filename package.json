@@ -55,6 +55,7 @@
     "benchmark": "node --max-old-space-size=6144 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
     "benchmark:css-tools": "node tooling/compare-css-tools.js",
     "benchmark:html-tools": "node tooling/compare-html-tools.js",
+    "benchmark:js-tools": "node tooling/compare-js-tools.js",
 		"measure:color-agreement": "node tooling/measure-color-agreement.js",
     "pretest": "yarn lint",
     "test": "yarn test:base",
