@@ -31,14 +31,12 @@ Each member of the working group is required to adhere to the [governance model 
   **Sebastian Beltran** <<bjohansebas@gmail.com>> (he/him)
 - [@hai-x](https://github.com/hai-x) -
   **hai-x** <<haijie0619@gmail.com>>
-- [@sokra](https://github.com/sokra) -
-  **Tobias Koppers** <<tobias.koppers@googlemail.com>>
-- [@snitin315](https://github.com/snitin315) -
-  **Nitin Kumar** <<snitin315@gmail.com>> (he/him)
 - [@thelarkinn](https://github.com/thelarkinn) -
   **Sean Larkin** <<selarkin@microsoft.com>>
 - [@xiaoxiaojx](https://github.com/xiaoxiaojx) -
   **Xiao** <<784487301@qq.com>> (he/him)
+- [@evenstensberg](https://github.com/evenstensberg) -
+  **Even Stensberg** <<evenstensberg@gmail.com>> (he/him)
 
 ### Emeritus Members
 
@@ -48,6 +46,8 @@ Each member of the working group is required to adhere to the [governance model 
   **Joshua Wiens** <<joshuaw@easymetrics.com>>
 - [@spacek33z](https://github.com/spacek33z) -
   **Kees Kluskens** <<kees@kees.im>>
+- [@sokra](https://github.com/sokra) -
+  **Tobias Koppers** <<tobias.koppers@googlemail.com>>
 
 ## Communication
 
