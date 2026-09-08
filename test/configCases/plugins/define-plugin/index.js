@@ -158,7 +158,8 @@ it("should replace unknown member access with undefined (issue 15559)", function
 	expect(typeof OBJECT.UNKNOWN).toBe("undefined");
 	const a = function () { return OBJECT.UNKNOWN.A; };
 	const b = function () { return OBJECT.SUB1.UNKNOWN; };
-	expect(a.toString()).toBe("function () { return undefined; }");
+	expect(a.toString()).toBe("function () { return undefined.A; }");
+	expect(() => OBJECT.UNKNOWN.A).toThrow();
 	expect(b.toString()).toBe("function () { return undefined; }");
 	expect(OBJECT.SUB1.a).toBe(1);
 	expect(OBJECT.SUB2.a).toBe(1);

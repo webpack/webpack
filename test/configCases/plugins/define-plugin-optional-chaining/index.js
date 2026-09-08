@@ -82,6 +82,22 @@ it("should keep a non-optional read after an unknown member throwing (issue 2182
 	expect(() => OBJECT.SUB1.UNKNOWN["a"]?.()).toThrow();
 	expect(() => OBJECT.SUB1.UNKNOWN.deep.method()).toThrow();
 });
+it("should keep a non-optional property access after an unknown member throwing (issue 22014)", function () {
+	const a = function () { return OBJECT.SUB1.UNKNOWN.a; };
+	const b = function () { return OBJECT.SUB1.UNKNOWN["a"]; };
+	const c = function () { return OBJECT.SUB1.UNKNOWN.a.b; };
+	const d = function () { return OBJECT.SUB1.UNKNOWN.a?.b; };
+	expect(a.toString()).toBe("function () { return undefined.a; }");
+	expect(b.toString()).toBe('function () { return undefined["a"]; }');
+	expect(c.toString()).toBe("function () { return undefined.a.b; }");
+	expect(d.toString()).toBe("function () { return undefined.a?.b; }");
+	expect(() => OBJECT.SUB1.UNKNOWN.a).toThrow();
+	expect(() => OBJECT.SUB1.UNKNOWN["a"]).toThrow();
+	expect(() => OBJECT.SUB1.UNKNOWN.a.b).toThrow();
+	expect(() => OBJECT.SUB1.UNKNOWN.a?.b).toThrow();
+	expect(OBJECT.SUB1.UNKNOWN?.a).toBe(undefined);
+	expect(OBJECT.SUB1.UNKNOWN).toBe(undefined);
+});
 it("should keep optional calls on defined members intact (issue 21822)", function () {
 	expect(OBJECT.SUB1.a?.toFixed(2)).toBe("1.00");
 	expect(STRING?.toUpperCase()).toBe("STRING");
