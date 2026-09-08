@@ -11,8 +11,10 @@ const path = require("path");
 const zlib = require("zlib");
 const webpack = require("..");
 const { DEFAULTS } = require("../lib/config/defaults");
+const ConcatenatedModule = require("../lib/optimize/ConcatenatedModule");
 const browserslistConfigPackages = require("./helpers/browserslistConfigPackages");
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
+const codeSizeInputChanges = require("./helpers/codeSizeInputChanges");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
 
@@ -28,13 +30,21 @@ const prepareOptions = require("./helpers/prepareOptions");
  * } from ".."
  */
 
+/** @import LibCompilation from "../lib/Compilation" */
+/** @import LibModule from "../lib/Module" */
+
 /** @typedef {"raw" | "gzip" | "brotli" | "zstd"} Metric */
 /** @typedef {Record<Metric, number>} Metrics */
+/** @typedef {{ modules: number, bytes: number }} Input */
 
 /**
  * @typedef {object} CaseResult
  * @property {Metrics} metrics summed over every emitted asset
  * @property {Record<string, Metrics>} assets metrics per normalized asset name
+ * @property {Input} input how much source the case handed webpack — the
+ * denominator every asset size here is a function of, and the one number that
+ * says whether an asset grew because webpack generates more or because the case
+ * itself does
  * @property {Record<string, string[]>} runtimes runtime module names per runtime,
  * sorted — how many a runtime carries, and which ones, is the deterministic half
  * of what this measures; their bytes in isolation are not what anyone downloads
@@ -62,6 +72,16 @@ const prepareOptions = require("./helpers/prepareOptions");
  */
 
 /**
+ * @typedef {object} Buckets
+ * @property {Change[]} generated assets both runs build from the same source:
+ * a delta here is webpack generating differently, which is what the report is for
+ * @property {Change[]} rebuilt assets whose case was handed different source,
+ * so most of the delta is the case's own edit rather than webpack's doing
+ * @property {Change[]} added assets only this run emits
+ * @property {Change[]} removed assets only the baseline emitted
+ */
+
+/**
  * @typedef {object} RuntimeChange
  * @property {string} name `<case> <runtime>`
  * @property {"added" | "removed" | "changed"} status change kind
@@ -69,13 +89,6 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @property {number} after how many it carries now
  * @property {string[]} added runtime modules it gained
  * @property {string[]} removed runtime modules it lost
- */
-
-/**
- * @typedef {object} SplitDelta
- * @property {number} changed bytes moved by entries present in both runs
- * @property {number} introduced bytes brought in by new entries, less the ones
- * a deleted entry took away
  */
 
 /**
@@ -91,7 +104,7 @@ const outputBaseDir = path.join(__dirname, "js", "size");
 
 // Bumped whenever a compression setting or the report shape changes, so a stale
 // baseline is reported as incomparable instead of compared against silently.
-const REPORT_VERSION = 4;
+const REPORT_VERSION = 5;
 
 // The settings a CDN serves static assets with, so a delta here is a delta a
 // user downloads.
@@ -297,6 +310,47 @@ const collectRuntimes = (compilations, prefix) => {
 };
 
 /**
+ * How much source the case handed webpack: the modules the chunks carry, sized
+ * as they were before webpack transformed them. A case whose own files this
+ * pull request edited feeds the build more bytes, which is why its bundle grew
+ * — the report needs that apart from webpack generating more code for the same
+ * input.
+ * @param {LibCompilation} compilation compilation that emitted, typed against
+ * `lib/` because concatenation is recognized by its class
+ * @param {Input} input accumulator, mutated
+ * @returns {void}
+ */
+const collectInput = (compilation, input) => {
+	const { chunkGraph } = compilation;
+	/** @type {Set<LibModule>} */
+	const seen = new Set();
+	/**
+	 * @param {LibModule} module module reachable from a chunk
+	 * @returns {void}
+	 */
+	const visit = (module) => {
+		if (seen.has(module)) return;
+		seen.add(module);
+		// A concatenated module has no source of its own: what webpack was given
+		// is the source of each module it absorbed.
+		if (module instanceof ConcatenatedModule) {
+			for (const inner of module.modules) visit(inner);
+			return;
+		}
+		const source = module.originalSource();
+		// An external or an ignored module was handed no source at all.
+		if (!source) return;
+		input.modules++;
+		input.bytes += source.size();
+	};
+	for (const chunk of compilation.chunks) {
+		for (const module of chunkGraph.getChunkModulesIterable(chunk)) {
+			visit(module);
+		}
+	}
+};
+
+/**
  * @param {Compiler | MultiCompiler} compiler compiler to close
  * @returns {Promise<void>} resolves once closed, errors ignored
  */
@@ -331,6 +385,7 @@ const measureCase = async ({ category, name }) => {
 	const result = {
 		metrics: createMetrics(),
 		assets: {},
+		input: { modules: 0, bytes: 0 },
 		runtimes: {},
 		errors: 0
 	};
@@ -432,6 +487,11 @@ const measureCase = async ({ category, name }) => {
 		}
 		for (const [compilation, prefix] of emitted) {
 			Object.assign(result.runtimes, collectRuntimes([compilation], prefix));
+			collectInput(
+				/** @type {LibCompilation} */
+				(/** @type {unknown} */ (compilation)),
+				result.input
+			);
 		}
 		if (emitted.size === 0) {
 			result.noOutput = `build: ${result.errors} error(s), nothing emitted`;
@@ -439,6 +499,7 @@ const measureCase = async ({ category, name }) => {
 	} catch (err) {
 		result.noOutput = `build: ${/** @type {Error} */ (err).message}`;
 		result.assets = {};
+		result.input = { modules: 0, bytes: 0 };
 		result.runtimes = {};
 		result.metrics = createMetrics();
 	} finally {
@@ -581,35 +642,43 @@ const sameMetrics = (a, b) =>
 	METRICS.every((metric) => a[metric] === b[metric]);
 
 /**
- * How much an entry set moved in total — the "and by how much" next to the
- * counts, which a count alone does not say. Split by whether the entry exists in
- * both runs: adding a test case brings whole bundles with it, and summed into
- * one number those bytes bury the few a change to `lib/` moved.
- * @template {string} K
- * @param {Record<string, Record<K, number>>} before baseline entries
- * @param {Record<string, Record<K, number>>} after current entries
- * @param {K} key the field to sum
- * @returns {SplitDelta} current minus baseline, over the union of both
+ * @param {Change[]} changes changes in one bucket
+ * @param {Metric} metric metric to sum
+ * @returns {number} bytes the bucket moved
  */
-const splitDelta = (before, after, key) => {
-	const delta = { changed: 0, introduced: 0 };
-	for (const name of new Set([...Object.keys(before), ...Object.keys(after)])) {
-		const from = before[name] ? before[name][key] : 0;
-		const to = after[name] ? after[name][key] : 0;
-		if (name in before && name in after) delta.changed += to - from;
-		else delta.introduced += to - from;
-	}
-	return delta;
+const sumDelta = (changes, metric) =>
+	changes.reduce((sum, change) => sum + change.delta[metric], 0);
+
+/**
+ * Splits every asset the two runs disagree about by why it moved. Only the ones
+ * built from unchanged source say anything about webpack — an asset whose case
+ * gained a test grows with the test, which is what makes a size report on a
+ * test-only pull request read as a regression.
+ * @param {Change[]} changes every asset that moved, largest first
+ * @param {Record<string, string>} assetCase case each asset key belongs to
+ * @param {Set<string>} rebuiltCases cases the two runs handed different source
+ * @returns {Buckets} the changes, bucketed
+ */
+const bucketChanges = (changes, assetCase, rebuiltCases) => {
+	const rebuilt = (/** @type {Change} */ change) =>
+		rebuiltCases.has(assetCase[change.name]);
+	const changed = changes.filter((change) => change.status === "changed");
+	return {
+		generated: changed.filter((change) => !rebuilt(change)),
+		rebuilt: changed.filter(rebuilt),
+		added: changes.filter((change) => change.status === "added"),
+		removed: changes.filter((change) => change.status === "removed")
+	};
 };
 
 /**
- * @param {Report} report report
- * @returns {Record<string, Metrics>} metrics per case
+ * @param {Change[]} changes changes in one bucket
+ * @param {Record<string, string>} assetCase case each asset key belongs to
+ * @returns {string[]} the cases those assets belong to
  */
-const caseMetrics = (report) =>
-	Object.fromEntries(
-		Object.entries(report.cases).map(([name, result]) => [name, result.metrics])
-	);
+const casesOf = (changes, assetCase) => [
+	...new Set(changes.map((change) => assetCase[change.name]))
+];
 
 /**
  * @param {Report} report report
@@ -625,6 +694,35 @@ const assetMetrics = (report) => {
 	}
 	return assets;
 };
+
+/**
+ * The asset keys carry the case name and an asset name that may hold a space of
+ * its own, so which case a row belongs to is recorded rather than parsed back
+ * out of the key.
+ * @param {Report[]} reports every report a key can come from
+ * @returns {Record<string, string>} the case each `<case> <asset>` key belongs to
+ */
+const assetCases = (reports) => {
+	/** @type {Record<string, string>} */
+	const cases = {};
+	for (const report of reports) {
+		for (const [name, result] of Object.entries(report.cases)) {
+			for (const asset of Object.keys(result.assets)) {
+				cases[`${name} ${asset}`] = name;
+			}
+		}
+	}
+	return cases;
+};
+
+/**
+ * @param {Report} report report
+ * @returns {Record<string, Input>} input per case
+ */
+const caseInputs = (report) =>
+	Object.fromEntries(
+		Object.entries(report.cases).map(([name, result]) => [name, result.input])
+	);
 
 /**
  * @param {Report} report report
@@ -715,11 +813,16 @@ const formatSection = ({
  * kept clear of the assets a new test case brought in — a whole new bundle
  * outweighs every real change, which is what used to bury them.
  * @param {Change[]} changes changed assets, largest raw delta first
+ * @param {string} summary what the section holds
+ * @param {Record<string, number>=} inputDeltas source bytes the case behind each
+ * asset gained, rendered as a column when given — an asset built from more
+ * source is expected to be bigger, so the two are only readable side by side
  * @returns {string[]} markdown lines
  */
-const formatChangedAssets = (changes) => {
+const formatChangedAssets = (changes, summary, inputDeltas) => {
 	if (changes.length === 0) return [];
 
+	const withInput = Boolean(inputDeltas);
 	// Raw is what the generator wrote; the rest is what each encoding makes of it
 	// — the byte delta is spelled out because the percentage of it varies with
 	// bundle size.
@@ -740,15 +843,21 @@ const formatChangedAssets = (changes) => {
 						change.after[metric]
 					)})`
 		).join(" | ");
+		const input = inputDeltas
+			? ` ${formatDelta(inputDeltas[change.name])} |`
+			: "";
 		return `| ${changeMarker(direction)} | \`${change.name}\` | ${formatBytes(
 			change.before.raw
 		)} | ${formatBytes(change.after.raw)} | **${formatDelta(
 			change.delta.raw
-		)}** (${formatPercent(change.before.raw, change.after.raw)}) | ${compressed} |`;
+		)}** (${formatPercent(
+			change.before.raw,
+			change.after.raw
+		)}) | ${compressed} |${input}`;
 	});
 
 	return formatSection({
-		summary: `${changes.length} asset(s) changed size${
+		summary: `${summary}${
 			changes.length > MAX_ROWS
 				? `, biggest ${MAX_ROWS} by raw or gzip change`
 				: ""
@@ -756,11 +865,13 @@ const formatChangedAssets = (changes) => {
 		header: [
 			`| | Asset | Before | After | Change | ${COMPRESSED.map(
 				(metric) => METRIC_LABELS[metric]
-			).join(" | ")} |`,
-			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join("")}`
+			).join(" | ")} |${withInput ? " Case source |" : ""}`,
+			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join(
+				""
+			)}${withInput ? " --: |" : ""}`
 		],
 		rows,
-		columns: 5 + COMPRESSED.length,
+		columns: 5 + COMPRESSED.length + (withInput ? 1 : 0),
 		noteColumn: 1,
 		open: true
 	});
@@ -916,18 +1027,25 @@ const formatBiggestAssets = (report) => {
 };
 
 /**
- * The verdict sentence: what a reviewer reads before anything else, so it says
- * how much of the report below is a change and how much of it is new.
- * @param {Change[]} changed assets present in both runs whose size moved
- * @param {Change[]} added assets only this run emits
- * @param {Change[]} removed assets only the baseline emitted
+ * The verdict sentence: what a reviewer reads before anything else, so it leads
+ * with the assets webpack builds from unchanged source — the only ones whose
+ * delta is webpack's doing — and says how much of the rest is the pull request
+ * having edited the cases themselves.
+ * @param {Buckets} buckets every asset that moved, by why it moved
  * @returns {string} one sentence
  */
-const formatVerdict = (changed, added, removed) => {
+const formatVerdict = ({ generated, rebuilt, added, removed }) => {
 	/** @type {string[]} */
 	const parts = [];
-	if (changed.length > 0) {
-		parts.push(`**changes the size of ${changed.length} asset(s)**`);
+	if (generated.length > 0) {
+		parts.push(
+			`**changes the size of ${generated.length} asset(s) built from unchanged case source**`
+		);
+	}
+	if (rebuilt.length > 0) {
+		parts.push(
+			`moves ${rebuilt.length} asset(s) whose case source it changes too`
+		);
 	}
 	if (added.length > 0) parts.push(`adds ${added.length} new asset(s)`);
 	if (removed.length > 0) parts.push(`deletes ${removed.length} asset(s)`);
@@ -972,42 +1090,77 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	}
 
 	const changes = compareMetrics(assetMetrics(baseline), assetMetrics(report));
-	const changed = changes.filter((change) => change.status === "changed");
-	const added = changes.filter((change) => change.status === "added");
-	const removed = changes.filter((change) => change.status === "removed");
+	const assetCase = assetCases([baseline, report]);
+	const inputs = codeSizeInputChanges(caseInputs(baseline), caseInputs(report));
+	const buckets = bucketChanges(changes, assetCase, inputs.cases);
+	const { generated, rebuilt, added, removed } = buckets;
+	const counts = countChanges(
+		assetMetrics(baseline),
+		assetMetrics(report),
+		sameMetrics
+	);
+
+	// The bytes of source the cases behind the rebuilt assets gained: what their
+	// output delta has to be read against.
+	const inputDeltas = Object.fromEntries(
+		[...inputs.cases].map((name) => [
+			name,
+			report.cases[name].input.bytes - baseline.cases[name].input.bytes
+		])
+	);
+	const rebuiltInput = casesOf(rebuilt, assetCase).reduce(
+		(sum, name) => sum + inputDeltas[name],
+		0
+	);
+	const rebuiltInputDeltas = Object.fromEntries(
+		rebuilt.map((change) => [change.name, inputDeltas[assetCase[change.name]]])
+	);
 
 	const rows = [
 		{
-			label: "Cases",
-			counts: countChanges(
-				caseMetrics(baseline),
-				caseMetrics(report),
-				sameMetrics
-			),
-			change: splitDelta(caseMetrics(baseline), caseMetrics(report), "raw"),
-			gzip: splitDelta(caseMetrics(baseline), caseMetrics(report), "gzip")
+			label: "Changed, same case source",
+			cases: casesOf(generated, assetCase).length,
+			assets: generated.length,
+			gzip: sumDelta(generated, "gzip"),
+			raw: sumDelta(generated, "raw"),
+			input: 0,
+			delta: true
 		},
 		{
-			label: "Assets",
-			counts: countChanges(
-				assetMetrics(baseline),
-				assetMetrics(report),
-				sameMetrics
-			),
-			change: splitDelta(assetMetrics(baseline), assetMetrics(report), "raw"),
-			gzip: splitDelta(assetMetrics(baseline), assetMetrics(report), "gzip")
+			label: "Changed, case source moved",
+			cases: casesOf(rebuilt, assetCase).length,
+			assets: rebuilt.length,
+			gzip: sumDelta(rebuilt, "gzip"),
+			raw: sumDelta(rebuilt, "raw"),
+			input: rebuiltInput,
+			delta: true
 		},
 		{
-			// A runtime carries no bytes of its own — its modules land in the assets
-			// above — so this row counts runtimes and leaves the byte columns empty.
-			label: "Runtimes",
-			counts: countChanges(
-				runtimeModules(baseline),
-				runtimeModules(report),
-				(a, b) => a.length === b.length && a.every((name, i) => name === b[i])
-			),
-			change: { changed: 0, introduced: 0 },
-			gzip: { changed: 0, introduced: 0 }
+			label: "New",
+			cases: casesOf(added, assetCase).length,
+			assets: added.length,
+			gzip: sumDelta(added, "gzip"),
+			raw: sumDelta(added, "raw"),
+			input: 0,
+			delta: false
+		},
+		{
+			label: "Deleted",
+			cases: casesOf(removed, assetCase).length,
+			assets: removed.length,
+			gzip: sumDelta(removed, "gzip"),
+			raw: sumDelta(removed, "raw"),
+			input: 0,
+			delta: false
+		},
+		{
+			label: "Unchanged",
+			cases: undefined,
+			assets: counts.unchanged,
+			gzip: 0,
+			raw: 0,
+			input: 0,
+			delta: false
 		}
 	];
 	const short = (/** @type {Report} */ report) =>
@@ -1022,53 +1175,55 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	// How many moved and by how much, then the biggest movers — before any
 	// collapsed section, so the whole verdict is readable without unfolding one.
 	lines.push(
-		`Comparing ${measured} against ${short(baseline)}. ${formatVerdict(
-			changed,
-			added,
-			removed
-		)}`,
+		`Comparing ${measured} against ${short(baseline)}. ${formatVerdict(buckets)}`,
 		"",
 		...(drift ? [drift, ""] : []),
-		"| | Changed | New | Deleted | Unchanged | Gzip change | Raw change | Gzip new/gone | Raw new/gone |",
-		"| :-- | --: | --: | --: | --: | --: | --: | --: | --: |"
+		"| What moved | Cases | Assets | Gzip | Raw | Case source |",
+		"| :-- | --: | --: | --: | --: | --: |"
 	);
-	for (const { label, counts, change, gzip } of rows) {
-		const delta = (
-			/** @type {SplitDelta} */ split,
-			/** @type {keyof SplitDelta} */ key
-		) =>
-			split[key] === 0
+	for (const { label, cases, assets, gzip, raw, input, delta } of rows) {
+		const bytes = (/** @type {number} */ value) =>
+			value === 0
 				? "—"
-				: `${key === "changed" ? `${changeMarker(split[key])} ` : ""}${formatDelta(split[key])}`;
+				: `${delta ? `${changeMarker(value)} ` : ""}${formatDelta(value)}`;
 		lines.push(
-			`| ${label} | ${counts.changed} | ${counts.added} | ${counts.removed} | ${
-				counts.unchanged
-			} | ${delta(gzip, "changed")} | ${delta(change, "changed")} | ${delta(
-				gzip,
-				"introduced"
-			)} | ${delta(change, "introduced")} |`
+			`| ${label} | ${cases === undefined ? "—" : cases} | ${assets} | ${bytes(
+				gzip
+			)} | ${bytes(raw)} | ${bytes(input)} |`
 		);
 	}
 	lines.push(
 		"",
-		"`Gzip change` decides — it is what a user downloads, and a re-encoding can cut raw bytes while costing wire bytes. `Raw change` is the tiebreak: it is what the generator wrote, so it is what has to be decompressed and parsed. Both are over assets both runs emit; bytes an added or deleted case brings with it are counted apart, under `new/gone`. Brotli and zstd are per asset in the table below.",
+		"**`Changed, same case source` is the row that is webpack's doing** — those assets are built from byte-identical module source, so what moved is what webpack generates. `Changed, case source moved` is mostly a case this pull request edited: `Case source` is how many bytes of module source those cases gained, which is what their output delta has to be read against, and a bundle that grew by less than its case did is not a regression. `New` and `Deleted` are whole assets rather than deltas, so a pull request adding cases cannot bury a real change. Gzip decides — it is what a user downloads, and a re-encoding can cut raw bytes while costing wire bytes; raw is the tiebreak, and brotli and zstd are per asset below.",
 		""
 	);
 
-	// The asset view: one row per emitted file, so a minifier change reads as the
-	// files it shrank rather than as one number over the whole suite. Changed
-	// first and unfolded; new and deleted after it, folded away.
+	// One row per emitted file, so a minifier change reads as the files it shrank.
+	// Unchanged-source assets first, then rebuilt ones, then new and deleted.
 	if (changes.length === 0) {
 		lines.push("No asset changed size.", "");
 	} else {
-		if (changed.length === 0) {
+		if (generated.length === 0 && rebuilt.length === 0) {
 			lines.push(
 				"No asset that both runs emit changed size — everything below is new or deleted.",
 				""
 			);
+		} else if (generated.length === 0) {
+			lines.push(
+				"No asset built from unchanged case source changed size — every change below comes with a case whose own source moved too.",
+				""
+			);
 		}
 		lines.push(
-			...formatChangedAssets(changed),
+			...formatChangedAssets(
+				generated,
+				`${generated.length} asset(s) changed size with their case source unchanged`
+			),
+			...formatChangedAssets(
+				rebuilt,
+				`${rebuilt.length} asset(s) changed size, and so did their case's source`,
+				rebuiltInputDeltas
+			),
 			...formatIntroducedAssets(added, "added"),
 			...formatIntroducedAssets(removed, "removed")
 		);
@@ -1225,6 +1380,7 @@ const run = async () => {
 			results[testCase.id] = {
 				metrics: createMetrics(),
 				assets: {},
+				input: { modules: 0, bytes: 0 },
 				runtimes: {},
 				errors: 0,
 				noOutput: `harness: ${/** @type {Error} */ (err).message}`
