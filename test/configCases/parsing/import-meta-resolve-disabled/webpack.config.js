@@ -4,9 +4,6 @@
 module.exports = {
 	mode: "development",
 	target: "node",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		chunkFormat: "module"

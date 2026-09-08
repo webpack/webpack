@@ -17,7 +17,7 @@ const base = (index, name, chunkDirectory) => ({
 	mode: "development",
 	devtool: false,
 	entry: { [name]: "./entry.js" },
-	experiments: { outputModule: true, css: true, asyncWebAssembly: true },
+	experiments: { css: true, asyncWebAssembly: true },
 	module: {
 		rules: [
 			{ test: /\.txt$/, type: "asset/resource" },

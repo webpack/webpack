@@ -8,7 +8,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	entry: { bundle0: { import: "./index.js", baseUri: "//cdn.example/" } },
 	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 	output: {

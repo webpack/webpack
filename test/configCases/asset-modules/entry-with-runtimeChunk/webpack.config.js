@@ -103,7 +103,6 @@ const esm = (i) => ({
 		module: true
 	},
 	experiments: {
-		outputModule: true,
 		css: true
 	}
 });

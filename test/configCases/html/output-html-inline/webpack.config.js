@@ -184,7 +184,7 @@ module.exports = [
 			module: true,
 			html: { inline: true }
 		},
-		experiments: { html: true, css: true, outputModule: true },
+		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
 	// authored `<script type="module">` but classic-IIFE output — the inlined
@@ -244,7 +244,7 @@ module.exports = [
 			module: true,
 			html: { inline: true }
 		},
-		experiments: { html: true, css: true, outputModule: true },
+		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
 	// css at the output root, HTML in a subdirectory — root-relative `url(...)`

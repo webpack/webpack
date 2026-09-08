@@ -27,7 +27,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	plugins: [nameConsumersByContent(["flat", "nested/deep"])],
 	output: {
 		module: true,

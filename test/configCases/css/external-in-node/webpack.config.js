@@ -17,6 +17,7 @@ module.exports = [
 		}
 	},
 	{
+		output: { module: true },
 		context: path.join(__dirname, "../external"),
 		entry: "../external-in-node/index.js",
 		target: "node",
@@ -25,8 +26,7 @@ module.exports = [
 			moduleIds: "named"
 		},
 		experiments: {
-			css: true,
-			outputModule: true
+			css: true
 		}
 	}
 ];

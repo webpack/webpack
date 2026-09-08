@@ -19,7 +19,6 @@ module.exports = [
 			webassemblyModuleFilename: "[id].[hash].module.async.wasm"
 		},
 		experiments: {
-			outputModule: true,
 			asyncWebAssembly: true
 		}
 	},
@@ -54,11 +53,11 @@ module.exports = [
 			]
 		},
 		output: {
+			module: true,
 			chunkFilename: "chunks/[name].sync.mjs",
 			webassemblyModuleFilename: "[id].[hash].module.sync.wasm"
 		},
 		experiments: {
-			outputModule: true,
 			syncWebAssembly: true
 		}
 	},

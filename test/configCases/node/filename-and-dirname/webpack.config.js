@@ -39,9 +39,6 @@ config.push(
 		output: {
 			module: true
 		},
-		experiments: {
-			outputModule: true
-		},
 		plugins: [
 			new webpack.DefinePlugin({
 				NODE_VALUE: typeof value === "boolean" ? value : JSON.stringify(value),
@@ -61,9 +58,6 @@ config.push(
 		},
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		},
 		plugins: [
 			new webpack.DefinePlugin({
@@ -88,9 +82,6 @@ config.push(
 				importMetaDirnameAndFilename: true
 			}
 		},
-		experiments: {
-			outputModule: true
-		},
 		plugins: [
 			new webpack.DefinePlugin({
 				NODE_VALUE: typeof value === "boolean" ? value : JSON.stringify(value),
@@ -113,9 +104,6 @@ config.push(
 			environment: {
 				importMetaDirnameAndFilename: true
 			}
-		},
-		experiments: {
-			outputModule: true
 		},
 		plugins: [
 			new webpack.DefinePlugin({
@@ -144,9 +132,6 @@ config.push({
 	},
 	output: {
 		module: true
-	},
-	experiments: {
-		outputModule: true
 	}
 });
 
@@ -162,9 +147,6 @@ config.push({
 				importMeta: false
 			}
 		}
-	},
-	experiments: {
-		outputModule: true
 	}
 });
 
@@ -174,9 +156,6 @@ config.push({
 	node: false,
 	output: {
 		module: true
-	},
-	experiments: {
-		outputModule: true
 	}
 });
 
@@ -192,9 +171,6 @@ config.push({
 	},
 	output: {
 		module: true
-	},
-	experiments: {
-		outputModule: true
 	}
 });
 

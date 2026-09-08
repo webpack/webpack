@@ -12,9 +12,6 @@ module.exports = [
 			module: true,
 			filename: "[name].mjs"
 		},
-		experiments: {
-			outputModule: true
-		},
 		module: {
 			rules: [
 				{

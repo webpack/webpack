@@ -1,6 +1,6 @@
 "use strict";
 
-// No `experiments.outputModule` and no `output.module` — emitted chunks are
+// No `output.module` — emitted chunks are
 // classic IIFE-wrapped scripts. The parser must NOT auto-upgrade
 // `<script src>` to `<script type="module" src>` in this mode.
 

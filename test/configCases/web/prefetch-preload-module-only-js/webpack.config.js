@@ -6,7 +6,6 @@ const RuntimeGlobals = require("../../../../lib/RuntimeGlobals");
 module.exports = {
 	entry: "./index.mjs",
 	experiments: {
-		outputModule: true,
 		css: true
 	},
 	name: "esm",

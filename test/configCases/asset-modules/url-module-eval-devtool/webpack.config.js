@@ -17,9 +17,6 @@ module.exports = {
 		publicPath: "https://example.com/public/",
 		assetModuleFilename: "[name][ext]"
 	},
-	experiments: {
-		outputModule: true
-	},
 	module: {
 		rules: [
 			{

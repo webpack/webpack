@@ -13,6 +13,5 @@ module.exports = {
 		module: true,
 		chunkFilename: "[name].mjs",
 		publicPath: "auto"
-	},
-	experiments: { outputModule: true }
+	}
 };

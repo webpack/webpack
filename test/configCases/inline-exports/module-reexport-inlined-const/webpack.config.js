@@ -13,9 +13,6 @@ module.exports = {
 			type: "module"
 		}
 	},
-	experiments: {
-		outputModule: true
-	},
 	externals: {
 		external: "./external.mjs"
 	},

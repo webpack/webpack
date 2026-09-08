@@ -26,9 +26,6 @@ module.exports = [
 			chunkFilename: "[name].module.mjs",
 			module: true,
 			workerChunkLoading: "import"
-		},
-		experiments: {
-			outputModule: true
 		}
 	}
 ];

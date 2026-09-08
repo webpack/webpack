@@ -18,6 +18,7 @@ module.exports = {
 		}
 	},
 	output: {
+		module: true,
 		chunkFilename: "[name].chunk.js"
 	},
 	optimization: {
@@ -27,7 +28,6 @@ module.exports = {
 	// keep css off so the built-in CSS pipeline doesn't shift the snapshots.
 	experiments: {
 		html: true,
-		outputModule: true,
 		css: false
 	}
 };

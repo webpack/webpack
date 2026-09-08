@@ -15,9 +15,6 @@ module.exports = {
 			type: "module"
 		}
 	},
-	experiments: {
-		outputModule: true
-	},
 	plugins: [
 		new sharing.SharePlugin({
 			shared: {

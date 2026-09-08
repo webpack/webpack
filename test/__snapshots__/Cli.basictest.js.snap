@@ -1053,19 +1053,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "experiments-output-module": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow output javascript files as module source type.",
-        "multiple": false,
-        "path": "experiments.outputModule",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow output javascript files as module source type.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-source-import": Object {
     "configs": Array [
       Object {

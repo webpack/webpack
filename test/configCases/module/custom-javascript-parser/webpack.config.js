@@ -52,9 +52,6 @@ module.exports = {
 			}
 		]
 	},
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		concatenateModules: true,
 		avoidEntryIife: true

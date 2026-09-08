@@ -38,7 +38,6 @@ module.exports = {
 		}
 	},
 	experiments: {
-		html: true,
-		outputModule: true
+		html: true
 	}
 };

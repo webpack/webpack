@@ -18,8 +18,5 @@ module.exports = {
 				loader: require.resolve("./loader")
 			}
 		]
-	},
-	experiments: {
-		outputModule: true
 	}
 };

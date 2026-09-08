@@ -14,7 +14,7 @@ module.exports = {
 	module: {
 		rules: [{ test: /\.wat$/, loader: "wast-loader", type: "webassembly/sync" }]
 	},
-	experiments: { outputModule: true, syncWebAssembly: true },
+	experiments: { syncWebAssembly: true },
 	optimization: { chunkIds: "named", splitChunks: false },
 	output: {
 		module: true,

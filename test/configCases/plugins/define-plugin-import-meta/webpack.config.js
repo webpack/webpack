@@ -6,9 +6,6 @@ const { DefinePlugin } = require("../../../../");
 module.exports = {
 	target: "node",
 	mode: "development",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		chunkFormat: "module"

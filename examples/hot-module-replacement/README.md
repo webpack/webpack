@@ -120,7 +120,6 @@ const config = [
 		name: "universal",
 		target: ["web", "node"],
 		entry: "./universal.js",
-		experiments: { outputModule: true },
 		output: {
 			path: path.resolve(__dirname, "dist/universal"),
 			filename: "main.mjs",

@@ -32,7 +32,6 @@ module.exports = [
 		},
 		optimization: { concatenateModules: false },
 		experiments: {
-			outputModule: true,
 			deferImport: true,
 			sourceImport: true
 		},
@@ -55,7 +54,6 @@ module.exports = [
 		},
 		optimization: { concatenateModules: false },
 		experiments: {
-			outputModule: true,
 			sourceImport: true
 		},
 		externals: {
@@ -73,7 +71,6 @@ module.exports = [
 		},
 		optimization: { concatenateModules: true, usedExports: true },
 		experiments: {
-			outputModule: true,
 			deferImport: true,
 			sourceImport: true
 		},

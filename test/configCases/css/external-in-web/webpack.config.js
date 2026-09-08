@@ -12,13 +12,13 @@ module.exports = [
 		}
 	},
 	{
+		output: { module: true },
 		target: "web",
 		optimization: {
 			chunkIds: "named"
 		},
 		experiments: {
-			css: true,
-			outputModule: true
+			css: true
 		}
 	}
 ];

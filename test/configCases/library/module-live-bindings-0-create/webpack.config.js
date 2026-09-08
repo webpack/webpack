@@ -42,7 +42,6 @@ const variant = (name, entryAsset, mode, runtimeChunk) => ({
 		library: { type: "module" }
 	},
 	optimization: { concatenateModules: true, runtimeChunk, minimize: false },
-	experiments: { outputModule: true },
 	plugins: [
 		assertLiveBindings(
 			`${name}/${entryAsset}`,

@@ -17,9 +17,6 @@ module.exports = [
 		},
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -30,9 +27,6 @@ module.exports = [
 		},
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -55,9 +49,6 @@ module.exports = [
 		},
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		},
 		resolve: {
 			fallback: {

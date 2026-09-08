@@ -14,7 +14,6 @@ const base = (index, chunkFilename) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", splitChunks: false },
 	output: {
 		module: true,

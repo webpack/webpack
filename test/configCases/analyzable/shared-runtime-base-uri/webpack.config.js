@@ -8,7 +8,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	entry: {
 		bundle0: { import: "./index.js", baseUri: "https://first.example/" },
 		side: { import: "./side.js", baseUri: "https://second.example/" }

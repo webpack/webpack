@@ -12,9 +12,6 @@ const variant = (name, environment, target = "web") => ({
 	name,
 	target,
 	entry: "./index.js",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		filename: `${name}/bundle.mjs`,

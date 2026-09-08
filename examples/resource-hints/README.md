@@ -113,7 +113,7 @@ module.exports = [
 			resourceHints: true
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -133,7 +133,7 @@ module.exports = [
 			resourceHints: "prefetch"
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -171,7 +171,7 @@ module.exports = [
 			]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -208,7 +208,7 @@ module.exports = [
 			}
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -259,7 +259,7 @@ module.exports = [
 			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -298,7 +298,7 @@ module.exports = [
 			}
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -350,7 +350,6 @@ module.exports = [
 			rules: [{ test: /\.(png|woff2)$/, type: "asset/resource" }]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { outputModule: true },
 		stats: { chunkGroupResourceHints: true }
 	},
 
@@ -378,7 +377,7 @@ module.exports = [
 			rules: [{ test: /\.woff2?$/, type: "asset/resource" }]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true, css: true }
+		experiments: { html: true, css: true }
 	},
 
 	/*
@@ -399,7 +398,7 @@ module.exports = [
 			resourceHints: "none"
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -435,7 +434,7 @@ module.exports = [
 			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -459,7 +458,7 @@ module.exports = [
 			parser: { javascript: { dynamicImportCssPreload: true } }
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true, css: true }
+		experiments: { html: true, css: true }
 	},
 
 	/*
@@ -482,7 +481,7 @@ module.exports = [
 			resourceHints: { initial: true, preconnect: true }
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -517,7 +516,7 @@ module.exports = [
 			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -540,7 +539,7 @@ module.exports = [
 			resourceHints: { initial: true, modulePreloadPolyfill: false }
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	},
 
 	/*
@@ -564,7 +563,7 @@ module.exports = [
 			parser: { javascript: { dynamicImportPreload: true } }
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true, css: true }
+		experiments: { html: true, css: true }
 	},
 
 	/*
@@ -585,7 +584,7 @@ module.exports = [
 			// no `resourceHints` — ESM output enables it by default
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
-		experiments: { html: true, outputModule: true }
+		experiments: { html: true }
 	}
 ];
 ```

@@ -10,6 +10,7 @@
 module.exports = {
 	target: ["web", "es2022"],
 	output: {
+		module: true,
 		filename: "[name].js",
 		chunkFilename: "[name].chunk.js"
 	},
@@ -30,7 +31,6 @@ module.exports = {
 		}
 	},
 	experiments: {
-		html: true,
-		outputModule: true
+		html: true
 	}
 };

@@ -4,9 +4,6 @@
 module.exports = {
 	mode: "development",
 	devtool: "eval",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true
 	},

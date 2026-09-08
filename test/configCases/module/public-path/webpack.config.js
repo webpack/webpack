@@ -10,9 +10,6 @@ module.exports = (env, { testPath }) => [
 		output: {
 			module: true,
 			publicPath: "auto"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -22,9 +19,6 @@ module.exports = (env, { testPath }) => [
 			module: true,
 			publicPath: "auto",
 			chunkFilename: "async/[id].bundle1.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -35,9 +29,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "auto",
 			filename: "initial/bundle2.mjs",
 			chunkFilename: "async/[id].bundle2.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -49,9 +40,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "auto",
 			filename: "initial/bundle3.mjs",
 			chunkFilename: "async/[id].bundle3.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -60,9 +48,6 @@ module.exports = (env, { testPath }) => [
 		output: {
 			module: true,
 			publicPath: ""
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -72,9 +57,6 @@ module.exports = (env, { testPath }) => [
 			module: true,
 			publicPath: "",
 			chunkFilename: "async/[id].bundle5.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -85,9 +67,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "",
 			filename: "initial/bundle6.mjs",
 			chunkFilename: "async/[id].bundle6.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -99,9 +78,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "",
 			filename: "initial/bundle7.mjs",
 			chunkFilename: "async/[id].bundle7.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -110,9 +86,6 @@ module.exports = (env, { testPath }) => [
 		output: {
 			module: true,
 			publicPath: "https://example.com/public/path/"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -122,9 +95,6 @@ module.exports = (env, { testPath }) => [
 			module: true,
 			publicPath: "https://example.com/public/path/",
 			chunkFilename: "async/[id].bundle9.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -135,9 +105,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "https://example.com/public/path/",
 			filename: "initial/bundle10.mjs",
 			chunkFilename: "async/[id].bundle10.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -149,9 +116,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "https://example.com/public/path/",
 			filename: "initial/bundle11.mjs",
 			chunkFilename: "async/[id].bundle11.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -163,9 +127,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "auto",
 			filename: "initial/bundle12.mjs",
 			chunkFilename: "async/[id].bundle12.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -177,9 +138,6 @@ module.exports = (env, { testPath }) => [
 			publicPath: "auto",
 			filename: "initial/bundle13.mjs",
 			chunkFilename: "async/[id].bundle13.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -190,9 +148,6 @@ module.exports = (env, { testPath }) => [
 			module: true,
 			filename: "js/bundle14.mjs",
 			chunkFilename: "js/[id].bundle14.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -204,9 +159,6 @@ module.exports = (env, { testPath }) => [
 			module: true,
 			filename: "js/bundle15.mjs",
 			chunkFilename: "js/[id].bundle15.mjs"
-		},
-		experiments: {
-			outputModule: true
 		}
 	}
 ];

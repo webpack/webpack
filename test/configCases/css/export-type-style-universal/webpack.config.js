@@ -17,8 +17,7 @@ module.exports = {
 		]
 	},
 	experiments: {
-		css: true,
-		outputModule: true
+		css: true
 	},
 	output: {
 		module: true

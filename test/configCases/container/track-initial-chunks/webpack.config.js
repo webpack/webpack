@@ -56,15 +56,13 @@ module.exports = [
 			main: "./index.js",
 			other: "./index-2.js"
 		},
-		experiments: {
-			outputModule: true
-		},
 		optimization: {
 			runtimeChunk: "single",
 			moduleIds: "named",
 			chunkIds: "named"
 		},
 		output: {
+			module: true,
 			filename: "module/[name].mjs",
 			uniqueName: "ref-hoist-mjs"
 		},

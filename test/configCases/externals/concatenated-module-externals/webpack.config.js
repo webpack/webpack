@@ -2,14 +2,12 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	output: { module: true },
 	mode: "production",
 	target: "async-node",
 	externalsType: "module",
 	externals: {
 		fs: "module fs"
-	},
-	experiments: {
-		outputModule: true
 	},
 	optimization: {
 		concatenateModules: true,

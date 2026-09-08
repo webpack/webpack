@@ -3,9 +3,6 @@
 const base = {
 	target: ["web", "node"],
 	mode: "development",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		filename: "[name].mjs"

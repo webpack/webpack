@@ -23,9 +23,6 @@ module.exports = {
 			type: "module"
 		}
 	},
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		minimize: true
 	}

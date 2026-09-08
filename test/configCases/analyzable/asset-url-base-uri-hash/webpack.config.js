@@ -45,7 +45,6 @@ const base = (name, index, withBase, publicPath, relative = false) => ({
 	entry: withBase
 		? { main: { import: "./index.js", baseUri: BASE } }
 		: "./index.js",
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: `bundle${index}.mjs`,

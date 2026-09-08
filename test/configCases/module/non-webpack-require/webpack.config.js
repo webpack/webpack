@@ -5,9 +5,6 @@ const webpack = require("../../../../");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: ["node", "es2020"],
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		iife: true

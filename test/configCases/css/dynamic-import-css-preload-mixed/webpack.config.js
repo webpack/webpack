@@ -7,7 +7,7 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: "./index.mjs",
-	experiments: { outputModule: true, css: true },
+	experiments: { css: true },
 	target: "web",
 	output: {
 		publicPath: "https://example.com/public/path/",

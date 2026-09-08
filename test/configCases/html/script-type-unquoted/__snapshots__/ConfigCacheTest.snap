@@ -5,7 +5,7 @@ exports[`ConfigCacheTestCases html script-type-unquoted exported tests should st
 <html>
 <head><title>script-type-unquoted</title></head>
 <body>
-<script src=\\"117.bundle0.mjs\\"></script>
+<script src=\\"117.bundle0.js\\"></script>
 </body>
 </html>
 "

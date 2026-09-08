@@ -74,8 +74,6 @@ const makeConfig = ({ namedExports, outputModule }) => {
 	};
 	if (outputModule) {
 		config.output = { module: true, chunkFormat: "module" };
-		/** @type {NonNullable<Configuration["experiments"]>} */
-		(config.experiments).outputModule = true;
 	}
 	return config;
 };

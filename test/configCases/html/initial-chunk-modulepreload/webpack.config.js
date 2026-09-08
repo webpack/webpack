@@ -28,8 +28,7 @@ module.exports = {
 		runtimeChunk: "single"
 	},
 	experiments: {
-		html: true,
-		outputModule: true
+		html: true
 	},
 	plugins: [
 		{

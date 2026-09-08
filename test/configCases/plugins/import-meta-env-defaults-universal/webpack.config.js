@@ -8,9 +8,6 @@ module.exports = {
 		module: true,
 		filename: "bundle.mjs"
 	},
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		minimize: false
 	}

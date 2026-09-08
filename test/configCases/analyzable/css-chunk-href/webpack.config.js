@@ -17,7 +17,7 @@ const base = (index, name, baked) => ({
 	mode: "development",
 	devtool: false,
 	entry: { [name]: `./${name}-entry.js` },
-	experiments: { outputModule: true, css: true },
+	experiments: { css: true },
 	optimization: { chunkIds: "named" },
 	output: {
 		module: true,

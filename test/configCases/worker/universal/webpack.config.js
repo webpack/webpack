@@ -2,8 +2,6 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: ["web", "node"],
-	experiments: {
-		outputModule: true
-	}
+	output: { module: true },
+	target: ["web", "node"]
 };

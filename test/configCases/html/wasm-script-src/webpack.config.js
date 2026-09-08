@@ -2,6 +2,7 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	output: { module: true },
 	target: ["web", "es2022"],
 	node: {
 		__dirname: false,
@@ -19,7 +20,6 @@ module.exports = {
 	},
 	experiments: {
 		html: true,
-		outputModule: true,
 		asyncWebAssembly: true
 	}
 };

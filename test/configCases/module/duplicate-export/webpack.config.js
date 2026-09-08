@@ -4,15 +4,13 @@
 module.exports = {
 	mode: "development",
 	output: {
+		module: true,
 		filename: "[name].mjs",
 		library: {
 			type: "module"
 		}
 	},
 	target: ["web", "es2020"],
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		minimize: false,
 		runtimeChunk: true,

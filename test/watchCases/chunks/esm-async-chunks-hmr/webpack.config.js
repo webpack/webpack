@@ -2,9 +2,6 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		splitChunks: {
 			chunks: "all",
@@ -27,6 +24,7 @@ module.exports = {
 		}
 	},
 	output: {
+		module: true,
 		filename: "[name].[contenthash].mjs",
 		chunkFilename: "[name].[contenthash].mjs"
 	}

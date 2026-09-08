@@ -2,6 +2,7 @@
 
 /** @type {(variant: boolean) => import("../../../../").Configuration} */
 const config = (o) => ({
+	output: { module: true },
 	externals: {
 		"module-fs": o ? "module fs" : "module fs/promises",
 		fs: o ? "node-commonjs fs" : "node-commonjs fs/promises",
@@ -20,10 +21,7 @@ const config = (o) => ({
 		providedExports: true,
 		mangleExports: true
 	},
-	target: "node14",
-	experiments: {
-		outputModule: true
-	}
+	target: "node14"
 });
 
 module.exports = [config(false), config(true)];

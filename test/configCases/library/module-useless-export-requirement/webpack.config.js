@@ -12,9 +12,6 @@ const common = {
 			type: "module"
 		},
 		chunkFormat: "module"
-	},
-	experiments: {
-		outputModule: true
 	}
 };
 

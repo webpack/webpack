@@ -5,7 +5,6 @@ module.exports = {
 	mode: "development",
 	target: ["node", "web"],
 	experiments: {
-		outputModule: true,
 		lazyCompilation: {
 			entries: false
 		}

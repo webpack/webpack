@@ -15,7 +15,6 @@ module.exports = {
 	target: "web",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		publicPath: "auto",

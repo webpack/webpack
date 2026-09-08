@@ -32,7 +32,6 @@ const nameConsumersByContent = (names) => (compiler) => {
 const base = (name, extra = {}) => ({
 	name,
 	mode: "development",
-	experiments: { outputModule: true, ...extra.experiments },
 	entry: extra.entry || "./index",
 	plugins: extra.plugins,
 	devtool: extra.devtool === undefined ? false : extra.devtool,

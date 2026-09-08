@@ -4,7 +4,6 @@
 module.exports = {
 	mode: "development",
 	experiments: {
-		outputModule: true,
 		css: true
 	},
 	output: {

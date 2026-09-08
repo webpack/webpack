@@ -7,9 +7,6 @@ module.exports = {
 		concatenateModules: true,
 		minimize: false
 	},
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		chunkFormat: "module"

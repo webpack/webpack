@@ -16,7 +16,6 @@ const base = (index, dir, publicPath, specifier) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		chunkFilename: `${dir}/[name].mjs`,

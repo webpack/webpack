@@ -9,7 +9,6 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	optimization: { chunkIds: "named", realContentHash: true },
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		publicPath: "auto",

@@ -5,7 +5,6 @@
 module.exports = {
 	target: "node",
 	devtool: false,
-	experiments: { outputModule: true },
 	output: { module: true },
 	node: { __dirname: "node-module" }
 };

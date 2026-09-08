@@ -11,7 +11,6 @@ module.exports = {
 		bundle: "./index.js",
 		side: "./side.js"
 	},
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: "[name].mjs",

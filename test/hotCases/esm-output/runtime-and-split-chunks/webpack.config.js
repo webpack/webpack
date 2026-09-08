@@ -3,9 +3,6 @@
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
 	mode: "production",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		chunkFormat: "module",

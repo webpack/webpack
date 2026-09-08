@@ -81,7 +81,7 @@ const config = [
 			htmlFilename: "[name].html",
 			module: true
 		},
-		experiments: { html: true, outputModule: true },
+		experiments: { html: true },
 		plugins: [new NoModuleFallbackPlugin()]
 	},
 	{

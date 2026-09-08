@@ -8,7 +8,6 @@ module.exports = {
 	target: "web",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	output: {
 		filename: "[name].mjs",
 		chunkFilename: "[name].mjs",

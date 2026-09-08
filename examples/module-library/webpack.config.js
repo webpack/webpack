@@ -10,9 +10,6 @@ const config = {
 	},
 	optimization: {
 		concatenateModules: true
-	},
-	experiments: {
-		outputModule: true
 	}
 };
 

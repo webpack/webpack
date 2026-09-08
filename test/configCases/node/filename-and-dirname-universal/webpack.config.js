@@ -7,9 +7,6 @@ module.exports = [
 		target: ["node", "web"],
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -17,9 +14,6 @@ module.exports = [
 		target: ["node", "web"],
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -28,9 +22,6 @@ module.exports = [
 		target: ["node", "web"],
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -39,9 +30,6 @@ module.exports = [
 		target: ["node", "web"],
 		output: {
 			module: true
-		},
-		experiments: {
-			outputModule: true
 		}
 	}
 ];

@@ -12,9 +12,6 @@ module.exports = [
 		optimization: {
 			concatenateModules: false,
 			minimize: false
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{

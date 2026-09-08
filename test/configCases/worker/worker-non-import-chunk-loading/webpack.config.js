@@ -14,6 +14,5 @@ module.exports = {
 		chunkFilename: "[name].mjs",
 		workerChunkLoading: "async-node",
 		publicPath: "auto"
-	},
-	experiments: { outputModule: true }
+	}
 };

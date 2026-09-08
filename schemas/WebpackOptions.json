@@ -1611,12 +1611,6 @@
           "experimental": true,
           "added": "5.17.0"
         },
-        "outputModule": {
-          "description": "Allow output javascript files as module source type.",
-          "type": "boolean",
-          "experimental": true,
-          "added": "5.0.0"
-        },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
           "type": "boolean",
@@ -1742,12 +1736,6 @@
           ],
           "experimental": true,
           "added": "5.17.0"
-        },
-        "outputModule": {
-          "description": "Allow output javascript files as module source type.",
-          "type": "boolean",
-          "experimental": true,
-          "added": "5.0.0"
         },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",

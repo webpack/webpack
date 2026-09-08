@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "For the selected environment is no default script chunk format available:
+Module ('module') can be chosen when ES modules are available (please set 'output.module' to \`true\`)
+JSONP Array push ('array-push') can be chosen when 'document' or 'importScripts' is available.
+CommonJs exports ('commonjs') can be chosen when 'require' or node builtins are available.
+Select an appropriate 'target' to allow selecting one by default, or specify the 'output.chunkFormat' directly.",
+]
+`;

@@ -1,9 +1,7 @@
 "use strict";
 
 module.exports = {
+	output: { module: true },
 	mode: "production",
-	entry: "./index",
-	experiments: {
-		outputModule: true
-	}
+	entry: "./index"
 };

@@ -16,7 +16,6 @@ const base = (index, publicPath, baked, hashed = false) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named" },
 	output: {
 		module: true,

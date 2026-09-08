@@ -9,9 +9,6 @@ module.exports = [
 			module: true
 		},
 		target: ["node"],
-		experiments: {
-			outputModule: true
-		},
 		plugins: [
 			{
 				apply(compiler) {
@@ -39,9 +36,6 @@ module.exports = [
 			module: true
 		},
 		target: "web",
-		experiments: {
-			outputModule: true
-		},
 		plugins: [
 			new webpack.BannerPlugin({
 				raw: true,

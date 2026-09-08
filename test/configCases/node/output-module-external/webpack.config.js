@@ -10,9 +10,6 @@ module.exports = {
 		require: "./require.js",
 		import: "./import.js"
 	},
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		filename: "[name].mjs"

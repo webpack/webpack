@@ -1,6 +1,6 @@
 This example shows the **`universal` target** — `target: "universal"` — which makes a single webpack compiler emit **one ESM bundle that runs in the browser, web workers, Node.js, Electron and NW.js**. Because the output is plain ECMAScript modules with no platform assumptions baked in, the same bundle also runs on other ESM runtimes such as **Deno** and **Bun**.
 
-The `universal` preset is the intersection of every platform webpack knows about: it only uses runtime features (chunk loading, global object, etc.) that all of them support, and output is **always ECMAScript modules**. The bundle bakes in no platform-specific assumptions, so anything platform-dependent is resolved at **runtime** instead. Because output is always ESM, `experiments.outputModule` and `output.module` default to `true` for this target — no extra config needed.
+The `universal` preset is the intersection of every platform webpack knows about: it only uses runtime features (chunk loading, global object, etc.) that all of them support, and output is **always ECMAScript modules**. The bundle bakes in no platform-specific assumptions, so anything platform-dependent is resolved at **runtime** instead. Because output is always ESM, `output.module` defaults to `true` for this target — no extra config needed.
 
 This example demonstrates the full potential of that setup:
 
@@ -81,7 +81,7 @@ const path = require("path");
 const config = {
 	// The universal target: one compiler emits a single bundle that runs in the
 	// browser, web workers, Node.js, Electron and NW.js. Output is always ESM, so
-	// `experiments.outputModule` and `output.module` default to `true` here.
+	// `output.module` defaults to `true` here.
 	target: "universal",
 	entry: "./example.js",
 	output: {

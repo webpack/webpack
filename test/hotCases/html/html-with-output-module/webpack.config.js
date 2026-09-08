@@ -5,8 +5,7 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	experiments: {
-		html: true,
-		outputModule: true
+		html: true
 	},
 	output: {
 		module: true,

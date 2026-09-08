@@ -17,7 +17,6 @@ const base = (index, wrapper, extra = {}, inline = false) => ({
 	mode: "development",
 	devtool: extra.devtool !== undefined ? extra.devtool : false,
 	entry: extra.entry || "./index.js",
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		publicPath: "auto",

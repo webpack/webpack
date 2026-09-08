@@ -37,7 +37,7 @@ it("should emit module-format chunks (no IIFE wrapper) when output.module is ena
 	);
 	const preloadChunk = readChunk(preloadChunkName);
 	expect(preloadChunk).toMatchSnapshot();
-	// No IIFE wrapper because output.module / experiments.outputModule is on.
+	// No IIFE wrapper because output.module is on.
 	expect(preloadChunk).not.toContain("// webpackBootstrap");
 	expect(preloadChunk).not.toMatch(/^\/\*+\/ \(\(\) => \{/);
 	expect(preloadChunk).toContain('"preload module"');

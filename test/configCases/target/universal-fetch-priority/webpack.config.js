@@ -3,9 +3,6 @@
 const base = {
 	target: ["web", "node"],
 	entry: "./index.mjs",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		publicPath: "",
 		module: true,

@@ -9,9 +9,6 @@ const base = {
 	optimization: {
 		concatenateModules: true
 	},
-	experiments: {
-		outputModule: true
-	},
 	target: "es2020"
 };
 

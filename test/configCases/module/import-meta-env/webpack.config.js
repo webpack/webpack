@@ -11,9 +11,6 @@ module.exports = {
 			AAA: "aaa"
 		})
 	],
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		chunkFormat: "module"

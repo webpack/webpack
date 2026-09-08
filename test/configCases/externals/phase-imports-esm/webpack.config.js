@@ -26,7 +26,6 @@ module.exports = {
 		usedExports: true
 	},
 	experiments: {
-		outputModule: true,
 		deferImport: true,
 		sourceImport: true
 	},

@@ -18,13 +18,13 @@ module.exports = {
 		}
 	},
 	output: {
+		module: true,
 		chunkFilename: "[name].chunk.js"
 	},
 	optimization: {
 		chunkIds: "named"
 	},
 	experiments: {
-		html: true,
-		outputModule: true
+		html: true
 	}
 };

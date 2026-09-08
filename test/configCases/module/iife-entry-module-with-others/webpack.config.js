@@ -8,9 +8,6 @@ const base = {
 	optimization: {
 		concatenateModules: true
 	},
-	experiments: {
-		outputModule: true
-	},
 	target: "es2020"
 };
 
@@ -20,6 +17,7 @@ module.exports = [
 		...base,
 		name: "module-avoidEntryIife-false",
 		output: {
+			...base.output,
 			filename: "module-avoidEntryIife-false.mjs"
 		},
 		optimization: {
@@ -31,6 +29,7 @@ module.exports = [
 		...base,
 		name: "module-avoidEntryIife-true",
 		output: {
+			...base.output,
 			filename: "module-avoidEntryIife-true.mjs"
 		},
 		optimization: {

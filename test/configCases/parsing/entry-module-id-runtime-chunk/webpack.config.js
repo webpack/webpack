@@ -11,7 +11,6 @@
 const config = (name, target, outputModule) => ({
 	name,
 	target,
-	experiments: outputModule ? { outputModule: true } : {},
 	output: {
 		module: outputModule,
 		filename: `${name}.[name].${outputModule ? "mjs" : "js"}`,

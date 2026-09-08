@@ -12,9 +12,6 @@ module.exports = {
 		path: "module path"
 	},
 	externalsType: "module",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		library: {

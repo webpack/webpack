@@ -692,7 +692,6 @@ module.exports = (env, { testPath }) => [
 		output: {
 			module: true
 		},
-		experiments: { outputModule: true },
 		externals: {
 			lib1: path.resolve(
 				testPath,

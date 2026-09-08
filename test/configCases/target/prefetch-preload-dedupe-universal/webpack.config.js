@@ -4,9 +4,6 @@
 module.exports = {
 	target: ["web", "node"],
 	entry: "./index.mjs",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		publicPath: "https://example.com/public/path/",
 		module: true,

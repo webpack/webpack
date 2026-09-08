@@ -44,7 +44,7 @@ module.exports = [
 		target: "web",
 		entry: { "vite-body-script": "./src/page-body.html" },
 		output: { filename: "[name].mjs", module: true },
-		experiments: { html: true, css: true, outputModule: true },
+		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
 	{
@@ -52,7 +52,7 @@ module.exports = [
 		target: "web",
 		entry: { "vite-head-script": "./src/page-head.html" },
 		output: { filename: "[name].mjs", module: true },
-		experiments: { html: true, css: true, outputModule: true },
+		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
 	{
@@ -60,7 +60,7 @@ module.exports = [
 		target: "web",
 		entry: { "vite-bare-script": "./src/page-bare.html" },
 		output: { filename: "[name].mjs", module: true },
-		experiments: { html: true, css: true, outputModule: true },
+		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	}
 ];

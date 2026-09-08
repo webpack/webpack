@@ -22,7 +22,6 @@ module.exports = [
 			webassemblyModuleFilename: "[id].[fullhash:16].module.async.wasm"
 		},
 		experiments: {
-			outputModule: true,
 			asyncWebAssembly: true
 		}
 	},
@@ -62,7 +61,6 @@ module.exports = [
 			webassemblyModuleFilename: "[id].[fullhash:16].module.sync.wasm"
 		},
 		experiments: {
-			outputModule: true,
 			syncWebAssembly: true
 		}
 	},

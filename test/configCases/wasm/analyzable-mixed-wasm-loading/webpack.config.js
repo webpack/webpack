@@ -34,7 +34,7 @@ const base = (index, name, second, nodeRef) => ({
 		]
 	},
 	optimization: { chunkIds: "named", splitChunks: false },
-	experiments: { outputModule: true, asyncWebAssembly: true },
+	experiments: { asyncWebAssembly: true },
 	output: {
 		module: true,
 		filename: "[name].mjs",

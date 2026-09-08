@@ -6,9 +6,6 @@ module.exports = {
 	// `import.meta` does not parse inside the eval wrapper, so the url keeps the
 	// runtime form and the hint names the devtool.
 	devtool: "eval",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		// A worker loading its chunks some other way is the second reason.

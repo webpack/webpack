@@ -14,7 +14,6 @@ module.exports = {
 	},
 	optimization: { concatenateModules: false },
 	experiments: {
-		outputModule: true,
 		deferImport: true,
 		sourceImport: true
 	},

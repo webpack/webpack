@@ -26,7 +26,6 @@ module.exports = {
 		chunkIds: "named"
 	},
 	experiments: {
-		html: true,
-		outputModule: true
+		html: true
 	}
 };

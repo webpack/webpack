@@ -8,7 +8,6 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	experiments: {
-		outputModule: true,
 		lazyCompilation: { entries: false }
 	},
 	optimization: { chunkIds: "named" },

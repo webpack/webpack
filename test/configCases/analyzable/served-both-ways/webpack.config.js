@@ -8,7 +8,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	entry: { bundle0: "./index.js", side: "./side.js" },
 	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 	output: {
