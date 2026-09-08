@@ -14,6 +14,9 @@ module.exports = async (options) => {
 	/** @type {import("puppeteer-core").LaunchOptions} */
 	const launchOptions = {
 		headless: true,
+		// every caller budgets 120s for the launch, while puppeteer defaults to
+		// 30s — which a cold runner exceeds before Chrome prints its WS endpoint
+		timeout: 120000,
 		args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"],
 		...options
 	};
