@@ -11562,13 +11562,13 @@ Object {
   "optimization-minimize-html-normalize-list-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+        "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. A list is read as the set the DOM reflects, so a repeat folds away, only where every token of it is a word: one holding a delimiter another language wrote a statement in is text, and keeps every token it names. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
         "multiple": false,
         "path": "optimization.minimize.html.normalizeListAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+    "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. A list is read as the set the DOM reflects, so a repeat folds away, only where every token of it is a word: one holding a delimiter another language wrote a statement in is text, and keeps every token it names. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -12227,13 +12227,13 @@ Object {
   "optimization-minimize-options-html-normalize-list-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+        "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. A list is read as the set the DOM reflects, so a repeat folds away, only where every token of it is a word: one holding a delimiter another language wrote a statement in is text, and keeps every token it names. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
         "multiple": false,
         "path": "optimization.minimizeOptions.html.normalizeListAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
+    "description": "Normalize a list-shaped attribute value: a space-separated token list (\`class\`, \`rel\`, \`part\`, …), a comma-separated one (\`accept\`, \`sizes\`, …), a \`srcset\` and the viewport \`<meta content>\`. On by default. A list is read as the set the DOM reflects, so a repeat folds away, only where every token of it is a word: one holding a delimiter another language wrote a statement in is text, and keeps every token it names. Reordering a token list is \`sortTokenLists\`, which is separate and off by default.",
     "multiple": false,
     "simpleType": "boolean",
   },
