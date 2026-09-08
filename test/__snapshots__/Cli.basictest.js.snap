@@ -10998,19 +10998,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-local-import-bindings": Object {
-    "configs": Array [
-      Object {
-        "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
-        "multiple": false,
-        "path": "optimization.localImportBindings",
-        "type": "boolean",
-      },
-    ],
-    "description": "Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-mangle-exports": Object {
     "configs": Array [
       Object {

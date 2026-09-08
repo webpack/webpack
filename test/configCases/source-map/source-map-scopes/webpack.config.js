@@ -6,7 +6,6 @@ module.exports = {
 	devtool: "source-map-scopes",
 	entry: "./index.js",
 	optimization: {
-		localImportBindings: true,
 		concatenateModules: false
 	}
 };

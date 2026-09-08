@@ -11689,7 +11689,6 @@ declare class InitFragment<GenerateContext> {
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
-	static STAGE_HARMONY_IMPORT_BINDINGS: number;
 }
 declare abstract class InlinedUsedName {
 	value: InlinedValue;
@@ -15436,16 +15435,6 @@ declare interface KnownJavascriptModuleBuildInfo {
 	inlineExports?: boolean;
 
 	/**
-	 * names of own exports the language pins to one value, so an importer may read them into a local binding
-	 */
-	stableExports?: Set<string>;
-
-	/**
-	 * per class name, the ranges of the heritage clauses parsed in the enclosing scope, where a reference to that name resolves to the class at runtime but to the outer name here
-	 */
-	classHeritageRanges?: Map<string, [number, number][]>;
-
-	/**
 	 * module scope holds a `using`/`await using` declaration, so its resources must be disposed when the module finished evaluating
 	 */
 	usesTopLevelUsingDeclaration?: boolean;
@@ -17650,7 +17639,6 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
-	static STAGE_HARMONY_IMPORT_BINDINGS: number;
 }
 declare class ModuleFactory {
 	constructor();
@@ -20339,12 +20327,6 @@ declare interface Optimization {
 	innerGraph?: boolean;
 
 	/**
-	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
-	 * @since 5.111.0
-	 */
-	localImportBindings?: boolean;
-
-	/**
 	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
 	 */
 	mangleExports?: boolean | "deterministic" | "size";
@@ -20787,12 +20769,6 @@ declare interface OptimizationNormalized {
 	innerGraph?: boolean;
 
 	/**
-	 * Read an imported ESM binding into a local variable of the same name wherever that is observationally equal to the live binding, so a debugger resolves it under the name the source uses.
-	 * @since 5.111.0
-	 */
-	localImportBindings?: boolean;
-
-	/**
 	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
 	 */
 	mangleExports?: boolean | "deterministic" | "size";
@@ -20935,7 +20911,6 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
 	innerGraph: NonNullable<undefined | boolean>;
 	inlineExports: NonNullable<undefined | boolean>;
-	localImportBindings: NonNullable<undefined | boolean>;
 	concatenateModules: NonNullable<
 		undefined | boolean | ConcatenateModulesOptions
 	>;
