@@ -1566,7 +1566,11 @@ describe("JavascriptParser", () => {
 					)
 				)
 			);
-			expect(options.ranges).toBe(true);
+			expect(options).toEqual({
+				ecmaVersion: 2022,
+				lazyNodes: true,
+				ranges: true
+			});
 			const declaration = program.body[0];
 			// lazy: `range` comes from the prototype getter, not from acorn
 			expect(
