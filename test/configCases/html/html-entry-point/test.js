@@ -9,6 +9,6 @@ it("should emit page.html for an HTML entry without explicit extract: true", () 
 	expect(extracted).toMatchSnapshot();
 	expect(extracted).not.toContain('src="./script.js"');
 	expect(extracted).not.toContain('src="./image.png"');
-	expect(extracted).toMatch(/<script src="__html_[a-f0-9]+_0\.chunk\.js">/);
+	expect(extracted).toMatch(/<script src="page\.js">/);
 	expect(extracted).toMatch(/<img src="[a-f0-9]+\.png" alt="image">/);
 });

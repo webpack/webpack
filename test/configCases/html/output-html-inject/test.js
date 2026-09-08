@@ -42,7 +42,7 @@ it("inject:head synthetic HTML + runtimeChunk: runtime before entry in <head> (l
 	expect(bodyContent(html)).not.toMatch(/<script/);
 	// runtime must appear before the entry to preserve __webpack_require__ availability
 	const runtimeIdx = html.indexOf("runtime.js");
-	const entryIdx = html.search(/__html_[a-f0-9]+_0\.js/);
+	const entryIdx = html.search(/src="(?!runtime\.js)[^"]+\.js"/);
 	expect(runtimeIdx).toBeLessThan(entryIdx);
 });
 
@@ -107,7 +107,7 @@ it("inject:head with no head tags anchors just inside the implicit head", () => 
 	expect(scripts(html).length).toBe(2);
 	// runtime sibling appears before the entry script in document order
 	const runtimeIdx = html.indexOf("runtime.js");
-	const entryIdx = html.search(/__html_[a-f0-9]+_0\.js/);
+	const entryIdx = html.search(/src="(?!runtime\.js)[^"]+\.js"/);
 	expect(runtimeIdx).toBeLessThan(entryIdx);
 	// hints anchor there too
 	expect(html).toMatch(/<link rel="preload" as="script"/);
@@ -124,7 +124,7 @@ it("bare-script page: siblings stay before the entry, hints use the pre-script f
 	const html = read("page-bare-script.html");
 	expect(scripts(html).length).toBe(2);
 	const runtimeIdx = html.indexOf("runtime.js");
-	const entryIdx = html.search(/__html_[a-f0-9]+_0\.js/);
+	const entryIdx = html.search(/src="(?!runtime\.js)[^"]+\.js"/);
 	expect(runtimeIdx).toBeLessThan(entryIdx);
 	expect(html).toMatch(/<link rel="preload" as="script"/);
 });

@@ -5,7 +5,7 @@ exports[`ConfigCacheTestCases html html-entry-point-css exported tests should em
 <html>
 <head>
 <title>HTML entry point with CSS</title>
-<link rel=\\"stylesheet\\" href=\\"__html_cbe5b59d_0.chunk.css\\">
+<link rel=\\"stylesheet\\" href=\\"page.css\\">
 </head>
 <body>
 <h1>Hello</h1>

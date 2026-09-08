@@ -5,8 +5,9 @@ const readHtml = (name) =>
 	fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
 const iconLink = (html) => html.match(/<link rel="icon"[^>]*>/i);
-const scriptRe = /<script[^>]* src="__html_[a-f0-9]+_0\.js"[^>]*>/i;
-const deferScriptRe = /<script defer src="__html_[a-f0-9]+_0\.js">/i;
+// Each page loads the script extracted from it, named after its own entry.
+const scriptRe = (name) => new RegExp(`<script[^>]* src="${name}\\.js"[^>]*>`, "i");
+const deferScriptRe = (name) => new RegExp(`<script defer src="${name}\\.js">`, "i");
 const inHead = (html) => html.match(/<head>([\s\S]*?)<\/head>/i)[1];
 const inBody = (html) => html.match(/<body>([\s\S]*?)<\/body>/i)[1];
 
@@ -17,7 +18,7 @@ it("entries without a per-entry html override inherit output.html", () => {
 	expect(html).toContain("<title>Global title</title>");
 	expect(html).toContain('<meta charset="utf-8">');
 	expect(html).toContain('<meta name="description" content="global description">');
-	expect(inBody(html)).toMatch(deferScriptRe);
+	expect(inBody(html)).toMatch(deferScriptRe("d"));
 });
 
 it("per-entry html object with favicon:false keeps the other output.html options", () => {
@@ -30,8 +31,8 @@ it("per-entry html object with favicon:false keeps the other output.html options
 
 it("per-entry html object with inject:'head' places scripts in <head>", () => {
 	const html = readHtml("b.html");
-	expect(inHead(html)).toMatch(scriptRe);
-	expect(inBody(html)).not.toMatch(scriptRe);
+	expect(inHead(html)).toMatch(scriptRe("b"));
+	expect(inBody(html)).not.toMatch(scriptRe("b"));
 	expect(iconLink(html)).not.toBeNull();
 	expect(html).toContain("<title>Global title</title>");
 });
@@ -50,14 +51,14 @@ it("per-entry html:true inherits every output.html option", () => {
 	expect(iconLink(html)[0]).toBe(iconLink(readHtml("d.html"))[0]);
 	expect(html).toContain('<link rel="manifest"');
 	expect(html).toContain("<title>Global title</title>");
-	expect(inBody(html)).toMatch(deferScriptRe);
+	expect(inBody(html)).toMatch(deferScriptRe("e"));
 });
 
 it("per-entry html object overrides title and scriptLoading", () => {
 	const html = readHtml("f.html");
 	expect(html).toContain("<title>Page f</title>");
 	expect(html).not.toContain("Global title");
-	expect(inBody(html)).toMatch(scriptRe);
+	expect(inBody(html)).toMatch(scriptRe("f"));
 	expect(html).not.toContain("defer");
 	expect(iconLink(html)).not.toBeNull();
 });
