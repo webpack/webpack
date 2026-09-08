@@ -51,6 +51,7 @@ const PACKAGES = [
 	"angular-html-parser@9",
 	"bootstrap@5",
 	"dom-serializer@2",
+	"@fortawesome/fontawesome-free@6",
 	"htmlparser2@10",
 	"js-beautify@1",
 	"@minify-html/node@0.15",
@@ -232,6 +233,100 @@ ${css}
 </html>`;
 
 /**
+ * A page of nothing but tables: rows a parser has to put in an implied
+ * `<tbody>`, cells that span, and a `<caption>` and `<colgroup>` before them.
+ * @param {number} rows how many rows to write
+ * @returns {string} the page
+ */
+const tablePage = (rows) => {
+	let body = "";
+	for (let i = 0; i < rows; i++) {
+		body += `\t\t<tr><th scope="row">Row ${i}</th><td>${i}</td><td colspan="2">${
+			i * 2
+		}</td><td><a href="/row/${i}">open</a></td></tr>\n`;
+	}
+	return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Report</title></head>
+<body>
+<table>
+\t<caption>Rows</caption>
+\t<colgroup><col><col span="2" class="numeric"><col></colgroup>
+\t<thead><tr><th scope="col">Name</th><th scope="col">A</th><th scope="col">B</th><th scope="col">Link</th></tr></thead>
+${body}\t<tfoot><tr><td colspan="4">${rows} rows</td></tr></tfoot>
+</table>
+</body>
+</html>`;
+};
+
+// Every shape §13.2 has a recovery rule for: implied end tags, formatting
+// elements reopened across a block, and text a table fosters out of itself.
+const TAG_SOUP = `<!DOCTYPE html>
+<html>
+<head><title>Soup</title>
+<body>
+<p>One
+<p>Two<b>bold<i>both</b>italic</i>
+<ul>
+<li>first
+<li>second<div>block inside a list item
+<li>third
+</ul>
+<table>fostered text<tr><td>cell<td>next
+<tr><th>head
+</table>
+<div><span>unclosed
+</div>
+</p></span>
+<form><form><input name=a><button>go
+<select><option>a<option>b</select>
+<a href="/x"><a href="/y">nested anchors</a>
+<font size=3><p>font across a paragraph</font>
+</body>`;
+
+// A page as a component library ships it: templates that are not rendered,
+// a declarative shadow root, and elements the parser knows nothing about.
+const WEB_COMPONENTS = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Elements</title></head>
+<body>
+<my-app theme="dark">
+\t<template shadowrootmode="open">
+\t\t<style>:host{display:block}::slotted(p){margin:0}</style>
+\t\t<slot name="header"></slot>
+\t\t<slot></slot>
+\t</template>
+\t<h1 slot="header">Title</h1>
+\t<p>Light DOM child</p>
+</my-app>
+<template id="row">
+\t<tr><td><slot name="cell"></slot></td></tr>
+</template>
+<ul is="sortable-list" data-sort="asc">
+\t<li><x-item value="1">One</x-item></li>
+\t<li><x-item value="2">Two</x-item></li>
+</ul>
+<script type="module">customElements.define("x-item", class extends HTMLElement {});</script>
+</body>
+</html>`;
+
+/**
+ * @param {string} sprite an SVG document
+ * @returns {string} it inlined into a page, as an icon sprite is used
+ */
+const spritePage = (sprite) => `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Icons</title></head>
+<body>
+<div hidden>
+${sprite}
+</div>
+<p><svg width="16" height="16" aria-hidden="true"><use href="#user"></use></svg> Inline reference</p>
+<math><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></math>
+</body>
+</html>`;
+
+/**
  * Two kinds of real HTML: an app shell (attribute- and `<meta>`-heavy, little
  * text) and a document (mostly text, with the `<pre>` blocks whose whitespace no
  * minifier may touch). The documents are rendered from Markdown by `marked`
@@ -270,10 +365,23 @@ const fixtures = async () => {
 	}
 	for (const [label, file] of [
 		["webpack README (rendered)", path.join(ROOT, "README.md")],
+		["webpack AGENTS (rendered)", path.join(ROOT, "AGENTS.md")],
 		["webpack CHANGELOG (rendered)", path.join(ROOT, "CHANGELOG.md")]
 	]) {
 		out.push([label, marked.parse(await fs.promises.readFile(file, "utf8"))]);
 	}
+	out.push(["Table report (600 rows)", tablePage(600)]);
+	out.push(["Tag soup", TAG_SOUP]);
+	out.push(["Web components", WEB_COMPONENTS]);
+	out.push([
+		"Icon sprite (inlined SVG)",
+		spritePage(
+			await fs.promises.readFile(
+				path.join(MODULES, "@fortawesome/fontawesome-free/sprites/solid.svg"),
+				"utf8"
+			)
+		)
+	]);
 	return out;
 };
 // Each entry builds its callable on demand, so the measuring worker loads only
