@@ -39,10 +39,8 @@ module.exports = [
 		]
 	},
 	{
-		experiments: {
-			outputModule: true
-		},
 		output: {
+			module: true,
 			filename: "module/[name].mjs",
 			uniqueName: "0-container-full-mjs"
 		},

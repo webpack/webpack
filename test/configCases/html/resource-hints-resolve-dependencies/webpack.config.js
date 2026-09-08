@@ -38,7 +38,7 @@ module.exports = {
 		]
 	},
 	optimization: { chunkIds: "named" },
-	experiments: { html: true, outputModule: true },
+	experiments: { html: true },
 	stats: { chunkGroupResourceHints: true },
 	plugins: [
 		{

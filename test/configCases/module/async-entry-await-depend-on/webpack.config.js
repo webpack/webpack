@@ -5,7 +5,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	// The runtime lives in the entry depended on, so the async entries run through
 	// the chunk format's own startup rather than the runtime chunk's.
 	entry: {

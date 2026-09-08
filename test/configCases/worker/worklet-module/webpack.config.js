@@ -44,9 +44,6 @@ module.exports = {
 		filename: "[name].mjs",
 		chunkFilename: "[name].chunk.mjs"
 	},
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		// force VENDOR into a split chunk the worklet links via native `import`
 		splitChunks: {

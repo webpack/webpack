@@ -13,8 +13,5 @@ module.exports = {
 	output: {
 		module: true
 	},
-	experiments: {
-		outputModule: true
-	},
 	externals: ["acorn"]
 };

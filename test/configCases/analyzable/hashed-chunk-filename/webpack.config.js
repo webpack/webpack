@@ -16,7 +16,6 @@ const base = (name, chunkFilename, realContentHash = true) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	optimization: {
 		chunkIds: "named",
 		minimize: false,

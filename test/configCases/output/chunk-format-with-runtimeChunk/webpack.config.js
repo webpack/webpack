@@ -12,8 +12,5 @@ module.exports = {
 		filename: "[name].mjs",
 		module: true,
 		chunkFormat: "module"
-	},
-	experiments: {
-		outputModule: true
 	}
 };

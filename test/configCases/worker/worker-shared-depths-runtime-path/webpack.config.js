@@ -19,6 +19,5 @@ module.exports = {
 		chunkFilename: "[name].mjs",
 		workerChunkFilename: "[name].mjs",
 		publicPath: "auto"
-	},
-	experiments: { outputModule: true }
+	}
 };

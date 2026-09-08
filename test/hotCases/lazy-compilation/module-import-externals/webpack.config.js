@@ -8,7 +8,6 @@ module.exports = {
 	},
 	externalsType: "module-import",
 	experiments: {
-		outputModule: true,
 		lazyCompilation: {
 			entries: false
 		}

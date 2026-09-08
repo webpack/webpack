@@ -20,7 +20,7 @@ const base = (index, needed, entry) => ({
 	mode: "development",
 	devtool: false,
 	entry,
-	experiments: { outputModule: true, css: true },
+	experiments: { css: true },
 	output: {
 		module: true,
 		publicPath: "auto",

@@ -10,8 +10,8 @@ const config = (type) => ({
 	mode: "production",
 	target: ["web", "node"],
 	// classic (non-ESM) output: the universal target defaults to ESM otherwise
-	experiments: { outputModule: false },
 	output: {
+		module: false,
 		filename: `${type}.js`,
 		// web + node share no default script chunk format, so pick one explicitly
 		chunkFormat: "array-push",

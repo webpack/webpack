@@ -14,10 +14,10 @@ module.exports = {
 		]
 	},
 	output: {
+		module: true,
 		webassemblyModuleFilename: "[id].[hash].wasm"
 	},
 	experiments: {
-		outputModule: true,
 		asyncWebAssembly: true,
 		sourceImport: true
 	}

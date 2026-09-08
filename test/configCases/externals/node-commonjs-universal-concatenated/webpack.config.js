@@ -7,6 +7,5 @@ module.exports = {
 	externalsType: "node-commonjs",
 	externals: { fs: "fs", path: "path" },
 	optimization: { concatenateModules: true },
-	output: { module: true },
-	experiments: { outputModule: true }
+	output: { module: true }
 };

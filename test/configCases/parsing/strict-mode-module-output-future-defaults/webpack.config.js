@@ -10,7 +10,6 @@ module.exports = {
 		library: { type: "module" }
 	},
 	experiments: {
-		outputModule: true,
 		futureDefaults: true
 	}
 };

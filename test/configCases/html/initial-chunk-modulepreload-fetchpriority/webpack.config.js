@@ -27,7 +27,7 @@ module.exports = {
 			}))
 	},
 	optimization: { chunkIds: "named", runtimeChunk: "single" },
-	experiments: { html: true, outputModule: true },
+	experiments: { html: true },
 	plugins: [
 		{
 			apply(compiler) {

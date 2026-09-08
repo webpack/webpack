@@ -120,9 +120,7 @@ class TestRunner {
 	 * @returns {boolean} whether target is universal
 	 */
 	static isUniversalTarget(webpackOptions) {
-		const outputModule =
-			(webpackOptions.output && webpackOptions.output.module) ||
-			(webpackOptions.experiments && webpackOptions.experiments.outputModule);
+		const outputModule = webpackOptions.output && webpackOptions.output.module;
 		const target = webpackOptions.target;
 
 		const targetProperties =
@@ -482,8 +480,8 @@ class TestRunner {
 		}
 		if (
 			modulePath.endsWith(".mjs") &&
-			this.webpackOptions.experiments &&
-			this.webpackOptions.experiments.outputModule
+			this.webpackOptions.output &&
+			this.webpackOptions.output.module
 		) {
 			return this._moduleRunners.esm(moduleInfo, context);
 		}

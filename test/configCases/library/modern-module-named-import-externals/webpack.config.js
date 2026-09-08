@@ -15,9 +15,6 @@ module.exports = {
 		filename: "[name].js",
 		chunkFormat: "module"
 	},
-	experiments: {
-		outputModule: true
-	},
 	resolve: {
 		extensions: [".js"]
 	},

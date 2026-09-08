@@ -3,9 +3,6 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		publicPath: "/public/"

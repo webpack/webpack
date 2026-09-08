@@ -4,7 +4,7 @@
 module.exports = {
 	target: ["node", "web"],
 	output: { module: true },
-	experiments: { outputModule: true, sourceImport: true },
+	experiments: { sourceImport: true },
 	externals: {
 		// resolvable on both platforms so the source-phase import runs everywhere
 		srcVar: "var 1 + 2",

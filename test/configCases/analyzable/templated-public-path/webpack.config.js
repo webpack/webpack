@@ -25,7 +25,6 @@ const base = (
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", realContentHash },
 	output: {
 		module: true,

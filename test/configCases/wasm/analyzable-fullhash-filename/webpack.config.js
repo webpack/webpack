@@ -33,7 +33,7 @@ const base = (
 		]
 	},
 	optimization: { chunkIds: "named", splitChunks: false, realContentHash },
-	experiments: { outputModule: true, asyncWebAssembly: true },
+	experiments: { asyncWebAssembly: true },
 	output: {
 		module: true,
 		wasmLoading: "async-node",

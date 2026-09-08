@@ -7,7 +7,7 @@
 module.exports = {
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true, css: true },
+	experiments: { css: true },
 	output: {
 		module: true,
 		chunkFormat: "module",

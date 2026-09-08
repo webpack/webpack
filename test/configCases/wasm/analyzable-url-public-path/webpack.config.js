@@ -26,7 +26,6 @@ const base = (name, wasmLoading, wasmChunk, wasmRef) => ({
 	},
 	optimization: { chunkIds: "named", splitChunks: false },
 	experiments: {
-		outputModule: true,
 		asyncWebAssembly: true,
 		sourceImport: true
 	},

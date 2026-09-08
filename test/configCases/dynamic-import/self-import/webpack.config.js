@@ -15,21 +15,17 @@ module.exports = [
 		}
 	},
 	{
-		target: "web",
-		experiments: {
-			outputModule: true
-		}
+		output: { module: true },
+		target: "web"
 	},
 	{
 		target: "web",
 		output: {
+			module: true,
 			filename: "[name].bundle3.mjs"
 		},
 		optimization: {
 			runtimeChunk: "single"
-		},
-		experiments: {
-			outputModule: true
 		}
 	}
 ];

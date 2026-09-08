@@ -4,7 +4,6 @@
 module.exports = () => ({
 	target: "node14",
 	output: { filename: "bundle.mjs", module: true },
-	experiments: { outputModule: true },
 	externalsType: "module",
 	// Consume each built library as a real external ESM module so the emitted
 	// `export { ... }` statements are exercised natively (live bindings).

@@ -6,7 +6,7 @@ const path = require("path");
 const config = {
 	// The universal target: one compiler emits a single bundle that runs in the
 	// browser, web workers, Node.js, Electron and NW.js. Output is always ESM, so
-	// `experiments.outputModule` and `output.module` default to `true` here.
+	// `output.module` defaults to `true` here.
 	target: "universal",
 	entry: "./example.js",
 	output: {

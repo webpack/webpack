@@ -4,7 +4,7 @@ module.exports = {
 	moduleScope(scope, stats) {
 		const link = scope.window.document.createElement("link");
 		link.rel = "stylesheet";
-		link.href = stats.experiments.outputModule ? "bundle1.css" : "bundle0.css";
+		link.href = stats.output.module ? "bundle1.css" : "bundle0.css";
 		scope.window.document.head.appendChild(link);
 	},
 	findBundle(i) {

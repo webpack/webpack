@@ -17,7 +17,6 @@ const base = (index, chunkFilename, analyzable, realContentHash = false) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", splitChunks: false, realContentHash },
 	output: { module: true, chunkFilename, publicPath: "auto" },
 	plugins: [

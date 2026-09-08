@@ -23,7 +23,6 @@ module.exports = [
 		target: "node",
 		entry: "./module.mjs",
 		output: { module: true },
-		experiments: { outputModule: true },
 		externalsPresets: { nodeModules: true }
 	},
 	{

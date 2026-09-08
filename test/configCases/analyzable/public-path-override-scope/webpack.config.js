@@ -13,7 +13,6 @@ module.exports = {
 		overriding: "./overriding.js",
 		plain: "./plain.js"
 	},
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", runtimeChunk: false },
 	output: {
 		module: true,

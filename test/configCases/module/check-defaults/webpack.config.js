@@ -3,16 +3,12 @@
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		experiments: {
-			outputModule: true
-		},
+		output: { module: true },
 		devtool: false,
 		target: "web"
 	},
 	{
-		experiments: {
-			outputModule: true
-		},
+		output: { module: true },
 		devtool: false,
 		target: "node10"
 	}

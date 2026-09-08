@@ -23,7 +23,6 @@ const compile = (context, entry, outputPath) =>
 			target: "node",
 			context,
 			entry,
-			experiments: { outputModule: true },
 			output: {
 				module: true,
 				chunkFormat: "module",

@@ -8,6 +8,7 @@ const supportsAsync = require("../../../helpers/supportsAsync");
 module.exports = (env, { testPath }) => [
 	{
 		output: {
+			module: true,
 			uniqueName: "modern-module",
 			filename: "modern-module.js",
 			library: {
@@ -20,13 +21,11 @@ module.exports = (env, { testPath }) => [
 				external: "./non-external",
 				"external-named": "./non-external-named"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		output: {
+			module: true,
 			uniqueName: "esm",
 			filename: "esm.js",
 			library: {
@@ -39,14 +38,12 @@ module.exports = (env, { testPath }) => [
 				external: "./non-external",
 				"external-named": "./non-external-named"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		entry: "./esm-with-commonjs.js",
 		output: {
+			module: true,
 			uniqueName: "esm-with-commonjs",
 			filename: "esm-with-commonjs.js",
 			library: {
@@ -59,14 +56,12 @@ module.exports = (env, { testPath }) => [
 				external: "./non-external",
 				"external-named": "./non-external-named"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		entry: "./esm-with-commonjs.js",
 		output: {
+			module: true,
 			uniqueName: "esm-with-commonjs",
 			filename: "esm-with-commonjs-avoid-entry-iife.js",
 			library: {
@@ -82,13 +77,11 @@ module.exports = (env, { testPath }) => [
 		},
 		optimization: {
 			avoidEntryIife: false
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		output: {
+			module: true,
 			uniqueName: "esm-export",
 			filename: "esm-export.js",
 			library: {
@@ -102,9 +95,6 @@ module.exports = (env, { testPath }) => [
 				external: "./non-external",
 				"external-named": "./non-external-named"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	...(supportsAsync()
@@ -112,6 +102,7 @@ module.exports = (env, { testPath }) => [
 				{
 					entry: "./index-async.js",
 					output: {
+						module: true,
 						uniqueName: "esm-async",
 						filename: "esm-async.js",
 						library: {
@@ -127,14 +118,12 @@ module.exports = (env, { testPath }) => [
 							external: "./non-external",
 							"external-named": "./non-external-named"
 						}
-					},
-					experiments: {
-						outputModule: true
 					}
 				},
 				{
 					entry: "./index-async.js",
 					output: {
+						module: true,
 						uniqueName: "esm-async-no-concatenate-modules",
 						filename: "esm-async-no-concatenate-modules.js",
 						library: {
@@ -149,15 +138,13 @@ module.exports = (env, { testPath }) => [
 							external: "./non-external",
 							"external-named": "./non-external-named"
 						}
-					},
-					experiments: {
-						outputModule: true
 					}
 				}
 			]
 		: []),
 	{
 		output: {
+			module: true,
 			uniqueName: "esm-export-no-concatenate-modules",
 			filename: "esm-export-no-concatenate-modules.js",
 			library: {
@@ -174,13 +161,11 @@ module.exports = (env, { testPath }) => [
 				external: "./non-external",
 				"external-named": "./non-external-named"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		output: {
+			module: true,
 			uniqueName: "esm-runtimeChunk",
 			filename: "esm-runtimeChunk/[name].js",
 			library: {
@@ -196,13 +181,11 @@ module.exports = (env, { testPath }) => [
 		},
 		optimization: {
 			runtimeChunk: "single"
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		output: {
+			module: true,
 			uniqueName: "esm-runtimeChunk-concatenateModules",
 			filename: "esm-runtimeChunk-concatenateModules/[name].js",
 			library: {
@@ -219,13 +202,11 @@ module.exports = (env, { testPath }) => [
 		optimization: {
 			runtimeChunk: "single",
 			concatenateModules: true
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		output: {
+			module: true,
 			uniqueName: "esm-runtimeChunk-no-concatenateModules",
 			filename: "esm-runtimeChunk-no-concatenateModules/[name].js",
 			library: {
@@ -242,13 +223,11 @@ module.exports = (env, { testPath }) => [
 		optimization: {
 			runtimeChunk: "single",
 			concatenateModules: false
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		output: {
+			module: true,
 			uniqueName: "esm-runtimeChunk-concatenateModules-splitChunks",
 			filename: "esm-runtimeChunk-concatenateModules-splitChunks/[name].js",
 			library: {
@@ -275,14 +254,12 @@ module.exports = (env, { testPath }) => [
 					}
 				}
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
 		entry: ["./foo.js", "./index.js"],
 		output: {
+			module: true,
 			uniqueName: "esm-multiple-entry-modules",
 			filename: "esm-multiple-entry-modules.js",
 			library: {
@@ -295,9 +272,6 @@ module.exports = (env, { testPath }) => [
 				external: "./non-external",
 				"external-named": "./non-external-named"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -812,9 +786,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -826,9 +797,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -840,9 +808,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -854,9 +819,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -868,9 +830,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -882,9 +841,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -896,9 +852,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -910,9 +863,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -945,9 +895,6 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	}
 ];

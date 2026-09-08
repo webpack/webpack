@@ -16,7 +16,6 @@ const base = (index, name) => ({
 	mode: "development",
 	devtool: false,
 	entry: { [name]: `./${name}-entry.js` },
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", minimize: false },
 	output: {
 		module: true,

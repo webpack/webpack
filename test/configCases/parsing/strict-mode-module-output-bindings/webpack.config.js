@@ -8,8 +8,5 @@ module.exports = {
 		module: true,
 		chunkFormat: "module",
 		library: { type: "module" }
-	},
-	experiments: {
-		outputModule: true
 	}
 };

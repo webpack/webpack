@@ -7,7 +7,6 @@
 module.exports = {
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named" },
 	output: {
 		module: true,

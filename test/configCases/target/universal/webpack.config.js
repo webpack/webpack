@@ -5,15 +5,13 @@ module.exports = [
 	{
 		name: "web",
 		output: {
+			module: true,
 			filename: "[name].mjs",
 			library: {
 				type: "module"
 			}
 		},
 		target: ["web", "node"],
-		experiments: {
-			outputModule: true
-		},
 		optimization: {
 			minimize: false,
 			runtimeChunk: "single",
@@ -35,15 +33,13 @@ module.exports = [
 	{
 		name: "node",
 		output: {
+			module: true,
 			filename: "[name].mjs",
 			library: {
 				type: "module"
 			}
 		},
 		target: ["web", "node"],
-		experiments: {
-			outputModule: true
-		},
 		optimization: {
 			minimize: false,
 			runtimeChunk: "single",

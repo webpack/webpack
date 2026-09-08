@@ -6,7 +6,6 @@
 module.exports = {
 	target: "node",
 	devtool: false,
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: "bundle.[chunkhash].mjs",

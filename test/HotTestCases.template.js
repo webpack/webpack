@@ -107,10 +107,6 @@ const describeCases = (config) => {
 							if (!options.output) options.output = {};
 							if (isUniversal) {
 								// universal target requires ESM output to run in node and web
-								if (!options.experiments) options.experiments = {};
-								if (options.experiments.outputModule === undefined) {
-									options.experiments.outputModule = true;
-								}
 								if (options.output.module === undefined) {
 									options.output.module = true;
 								}
@@ -136,16 +132,12 @@ const describeCases = (config) => {
 							if (!options.output.path) options.output.path = outputDirectory;
 							if (!options.output.filename) {
 								options.output.filename = `bundle${
-									options.experiments && options.experiments.outputModule
-										? ".mjs"
-										: ".js"
+									options.output.module ? ".mjs" : ".js"
 								}`;
 							}
 							if (!options.output.chunkFilename) {
 								options.output.chunkFilename = `[name].chunk.[fullhash]${
-									options.experiments && options.experiments.outputModule
-										? ".mjs"
-										: ".js"
+									options.output.module ? ".mjs" : ".js"
 								}`;
 							}
 							if (options.output.pathinfo === undefined) {
@@ -156,10 +148,7 @@ const describeCases = (config) => {
 							}
 							if (options.output.library === undefined) {
 								options.output.library = {
-									type:
-										options.experiments && options.experiments.outputModule
-											? "module"
-											: "commonjs2"
+									type: options.output.module ? "module" : "commonjs2"
 								};
 							}
 							if (!options.optimization) options.optimization = {};

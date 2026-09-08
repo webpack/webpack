@@ -20,7 +20,6 @@ module.exports = [
 			wasmStreamingFallback: true
 		},
 		experiments: {
-			outputModule: true,
 			asyncWebAssembly: true,
 			sourceImport: true
 		}

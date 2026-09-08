@@ -9,9 +9,6 @@ module.exports = {
 		chunkFormat: "module",
 		library: { type: "module" }
 	},
-	experiments: {
-		outputModule: true
-	},
 	module: {
 		parser: {
 			javascript: { strictModeViolations: "error" }

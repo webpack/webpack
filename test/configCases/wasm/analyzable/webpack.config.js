@@ -22,7 +22,6 @@ module.exports = {
 		publicPath: "auto"
 	},
 	experiments: {
-		outputModule: true,
 		asyncWebAssembly: true
 	}
 };

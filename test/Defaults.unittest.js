@@ -154,7 +154,6 @@ describe("snapshots", () => {
 		    "futureDefaults": false,
 		    "html": "auto",
 		    "lazyCompilation": undefined,
-		    "outputModule": false,
 		    "sourceImport": false,
 		    "syncWebAssembly": false,
 		    "typescript": true,
@@ -1526,14 +1525,11 @@ describe("snapshots", () => {
 	`)
 	);
 
-	test("output module", { experiments: { outputModule: true } }, (e) =>
+	test("output module", { output: { module: true } }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
 
-		@@ ... @@
-		-     "outputModule": false,
-		+     "outputModule": true,
 		@@ ... @@
 		-   "externalsType": "var",
 		+   "externalsType": "module-import",
@@ -1674,7 +1670,6 @@ describe("snapshots", () => {
 		"module library in development",
 		{
 			mode: "development",
-			experiments: { outputModule: true },
 			output: { module: true, library: { type: "module" } }
 		},
 		(e) =>
@@ -1689,9 +1684,6 @@ describe("snapshots", () => {
 			+     "maxGenerations": Infinity,
 			+     "type": "memory",
 			+   },
-			@@ ... @@
-			-     "outputModule": false,
-			+     "outputModule": true,
 			@@ ... @@
 			-   "externalsType": "var",
 			+   "externalsType": "module",
@@ -1750,11 +1742,11 @@ describe("snapshots", () => {
 			-       "jsonp",
 			-       "import-scripts",
 			+       "import",
-			+     ],
-			+     "enabledLibraryTypes": Array [
-			+       "module",
 			@@ ... @@
 			-     "enabledLibraryTypes": Array [],
+			+     "enabledLibraryTypes": Array [
+			+       "module",
+			+     ],
 			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
@@ -2535,9 +2527,6 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
-		-     "outputModule": false,
-		+     "outputModule": true,
-		@@ ... @@
 		-     "deno": false,
 		+     "deno": true,
 		@@ ... @@
@@ -2716,9 +2705,6 @@ describe("snapshots", () => {
 		- Expected
 		+ Received
 
-		@@ ... @@
-		-     "outputModule": false,
-		+     "outputModule": true,
 		@@ ... @@
 		-     "deno": false,
 		+     "deno": true,
@@ -2908,9 +2894,6 @@ describe("snapshots", () => {
 		- Expected
 		+ Received
 
-		@@ ... @@
-		-     "outputModule": false,
-		+     "outputModule": true,
 		@@ ... @@
 		-     "bun": false,
 		+     "bun": true,
@@ -3104,9 +3087,6 @@ describe("snapshots", () => {
 		- Expected
 		+ Received
 
-		@@ ... @@
-		-     "outputModule": false,
-		+     "outputModule": true,
 		@@ ... @@
 		-     "bun": false,
 		+     "bun": true,
@@ -3602,17 +3582,13 @@ describe("snapshots", () => {
 		"target node and web (universal)",
 		{
 			target: ["web", "node"],
-			output: { module: true },
-			experiments: { outputModule: true }
+			output: { module: true }
 		},
 		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
 
-			@@ ... @@
-			-     "outputModule": false,
-			+     "outputModule": true,
 			@@ ... @@
 			-     "node": false,
 			+     "node": true,
@@ -3787,9 +3763,6 @@ describe("snapshots", () => {
 			- Expected
 			+ Received
 
-			@@ ... @@
-			-     "outputModule": false,
-			+     "outputModule": true,
 			@@ ... @@
 			-     "electron": false,
 			-     "electronMain": false,
@@ -3967,8 +3940,7 @@ describe("snapshots", () => {
 			// node<12 lacks `globalThis`: globalObject guards `self` against `global`,
 			// environment.globalThis false
 			target: ["web", "node10"],
-			experiments: { outputModule: false },
-			output: { chunkFormat: "array-push" }
+			output: { module: false, chunkFormat: "array-push" }
 		},
 		(e) =>
 			e.toMatchInlineSnapshot(`
@@ -4157,8 +4129,7 @@ describe("snapshots", () => {
 			// so globalObject guards `self` against `global` (not every selected target
 			// supports globalThis)
 			target: ["web", "node10", "node12"],
-			experiments: { outputModule: false },
-			output: { chunkFormat: "array-push" }
+			output: { module: false, chunkFormat: "array-push" }
 		},
 		(e) =>
 			e.toMatchInlineSnapshot(`
@@ -5477,15 +5448,12 @@ describe("snapshots", () => {
 
 	test(
 		"target node with ESM output",
-		{ target: "node14", experiments: { outputModule: true } },
+		{ target: "node14", output: { module: true } },
 		(e) =>
 			e.toMatchInlineSnapshot(`
 			- Expected
 			+ Received
 
-			@@ ... @@
-			-     "outputModule": false,
-			+     "outputModule": true,
 			@@ ... @@
 			-     "node": false,
 			+     "node": true,

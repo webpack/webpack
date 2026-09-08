@@ -15,8 +15,5 @@ module.exports = {
 		module: true,
 		publicPath: "auto",
 		workerChunkFilename: "[name].[contenthash].mjs"
-	},
-	experiments: {
-		outputModule: true
 	}
 };

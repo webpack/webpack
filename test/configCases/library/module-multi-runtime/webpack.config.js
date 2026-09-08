@@ -15,9 +15,6 @@ module.exports = {
 		},
 		filename: "[name].mjs"
 	},
-	experiments: {
-		outputModule: true
-	},
 	externalsType: "module",
 	optimization: {
 		concatenateModules: true,

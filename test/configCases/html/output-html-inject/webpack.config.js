@@ -131,7 +131,7 @@ module.exports = [
 		name: "module-default-head",
 		entry: { "module-default-head": { import: ["./src/main.js"], html: true } },
 		output: { filename: "[name].js", module: true },
-		experiments: { html: true, outputModule: true },
+		experiments: { html: true },
 		plugins: [copyTest]
 	},
 	// inject:false must not disable opt-in resource hints
@@ -192,7 +192,7 @@ module.exports = [
 			"module-inject-body": { import: ["./src/main.js"], html: true }
 		},
 		output: { filename: "[name].js", module: true, html: { inject: "body" } },
-		experiments: { html: true, outputModule: true },
+		experiments: { html: true },
 		plugins: [copyTest]
 	},
 	// stylesheet entry with a split CSS sibling: the sibling clones the

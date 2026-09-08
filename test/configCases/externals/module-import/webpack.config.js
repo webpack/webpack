@@ -19,9 +19,6 @@ module.exports = {
 		concatenateModules: true,
 		usedExports: true
 	},
-	experiments: {
-		outputModule: true
-	},
 	externalsType: "module-import",
 	externals: [
 		function externals({ request }, callback) {

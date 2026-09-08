@@ -15,7 +15,7 @@ const variant = (name, entry, target = ["web", "node"]) => ({
 	mode: "development",
 	devtool: false,
 	entry,
-	experiments: { css: true, outputModule: true },
+	experiments: { css: true },
 	optimization: { chunkIds: "named", minimize: false },
 	output: {
 		module: true,

@@ -8,10 +8,10 @@ module.exports = {
 		external3: "fs"
 	},
 	externalsType: "module-import",
-	experiments: {
-		outputModule: true
+	output: {
+		module: true,
+		chunkFilename: "[name].mjs"
 	},
-	output: { chunkFilename: "[name].mjs" },
 	optimization: {
 		moduleIds: "named",
 		concatenateModules: false

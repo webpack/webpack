@@ -14,7 +14,7 @@ module.exports = {
 			{ test: /\.wat$/, loader: "wast-loader", type: "webassembly/async" }
 		]
 	},
-	experiments: { outputModule: true, asyncWebAssembly: true },
+	experiments: { asyncWebAssembly: true },
 	output: {
 		module: true,
 		chunkFormat: "module",

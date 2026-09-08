@@ -22,7 +22,6 @@ const base = (index, prefix, entry, bases) => ({
 	mode: "development",
 	devtool: false,
 	entry,
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: `${prefix}-[name].mjs`,

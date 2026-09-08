@@ -28,6 +28,5 @@ module.exports = {
 		minimize: false,
 		usedExports: true
 	},
-	experiments: { outputModule: true },
 	plugins: [assertHasDefaultExport("lib.mjs")]
 };

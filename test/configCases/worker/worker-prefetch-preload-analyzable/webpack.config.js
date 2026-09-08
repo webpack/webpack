@@ -17,9 +17,6 @@ module.exports = {
 		chunkFormat: "module",
 		workerChunkLoading: "import"
 	},
-	experiments: {
-		outputModule: true
-	},
 	externals: { fs: "node-commonjs fs", path: "node-commonjs path" },
 	performance: { hints: false }
 };

@@ -1644,12 +1644,6 @@ export interface Experiments {
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
 	/**
-	 * Allow output javascript files as module source type.
-	 * @since 5.0.0
-	 * @experimental
-	 */
-	outputModule?: boolean;
-	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
 	 * @experimental
@@ -4623,12 +4617,6 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
-	/**
-	 * Allow output javascript files as module source type.
-	 * @since 5.0.0
-	 * @experimental
-	 */
-	outputModule?: boolean;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0

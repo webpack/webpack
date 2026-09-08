@@ -9,7 +9,6 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: { bundle0: "./index.js", other: "./other.js" },
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: "[name].mjs",

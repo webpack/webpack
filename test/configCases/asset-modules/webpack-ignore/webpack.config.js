@@ -8,9 +8,6 @@ const path = require("path");
 module.exports = {
 	mode: "development",
 	devtool: false,
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true
 	},

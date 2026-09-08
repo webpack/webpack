@@ -239,7 +239,7 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
 	if (!options.output.path) options.output.path = outputDirectory;
 	if (!options.output.filename) {
 		options.output.filename = `bundle${index}${
-			options.experiments && options.experiments.outputModule ? ".mjs" : ".js"
+			options.output && options.output.module ? ".mjs" : ".js"
 		}`;
 	}
 	if (!options.optimization) options.optimization = {};

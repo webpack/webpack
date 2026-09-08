@@ -8,7 +8,6 @@ module.exports = {
 	target: "node",
 	mode: "production",
 	devtool: false,
-	experiments: { outputModule: true },
 	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 	output: {
 		module: true,

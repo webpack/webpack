@@ -198,6 +198,7 @@ const describeCases = (config) => {
 							output: {
 								pathinfo: "verbose",
 								path: outputDirectory,
+								module: Boolean(config.module),
 								filename: config.module ? "bundle.mjs" : "bundle.js",
 								// generated runtime runs in this Node.js process; avoid `?.` on
 								// Node < 14 and `Object.hasOwn` on Node < 16.9
@@ -289,8 +290,7 @@ const describeCases = (config) => {
 								html: false,
 								// Keep the default resolver behavior these cases assert (no `.ts`
 								// extensionAlias) by pinning the "auto" typescript default off too.
-								typescript: false,
-								...(config.module ? { outputModule: true } : {})
+								typescript: false
 							},
 							infrastructureLogging: config.cache && {
 								debug: true,

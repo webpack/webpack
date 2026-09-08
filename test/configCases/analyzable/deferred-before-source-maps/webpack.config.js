@@ -46,7 +46,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: "source-map",
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", realContentHash: true },
 	output: {
 		module: true,

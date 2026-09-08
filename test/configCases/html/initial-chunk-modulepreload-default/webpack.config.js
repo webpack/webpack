@@ -21,7 +21,7 @@ module.exports = {
 		// no `resourceHints` — defaulted on because output.module is true
 	},
 	optimization: { chunkIds: "named", runtimeChunk: "single" },
-	experiments: { html: true, outputModule: true },
+	experiments: { html: true },
 	plugins: [
 		{
 			apply(compiler) {

@@ -8,7 +8,7 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true, css: true },
+	experiments: { css: true },
 	output: {
 		module: true,
 		filename: "bundle0.mjs",

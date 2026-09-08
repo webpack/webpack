@@ -18,6 +18,7 @@ module.exports = [
 			}
 		},
 		output: {
+			module: true,
 			publicPath: "auto",
 			filename: "[name].mjs",
 			chunkFilename: "[name].[contenthash].mjs",
@@ -44,8 +45,7 @@ module.exports = [
 			]
 		},
 		experiments: {
-			css: true,
-			outputModule: true
+			css: true
 		},
 		optimization: {
 			chunkIds: "named",

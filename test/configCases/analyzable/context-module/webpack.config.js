@@ -16,7 +16,6 @@ const base = (index, name) => ({
 	mode: "development",
 	devtool: false,
 	entry: { [name]: `./${name}-entry.js` },
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", splitChunks: false },
 	output: {
 		module: true,
@@ -57,16 +56,18 @@ module.exports = [
 	base(2, "fake"),
 	// A deferred context adds a trailing slot an async candidate leaves empty.
 	{
+		output: { module: true },
 		...base(3, "defer"),
-		experiments: { outputModule: true, deferImport: true, topLevelAwait: true }
+		experiments: { deferImport: true, topLevelAwait: true }
 	},
 	// A chunk carrying css is loaded by more than the javascript handler, so the baked
 	// import has to keep dispatching the rest of them. Neutral platform so it runs here.
 	{
 		...base(4, "theme"),
 		target: ["web", "node"],
-		experiments: { outputModule: true, css: true },
+		experiments: { css: true },
 		output: {
+			module: true,
 			...base(4, "theme").output,
 			cssChunkFilename: "theme-[name].css"
 		}

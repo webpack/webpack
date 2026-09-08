@@ -5,9 +5,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: {
-		outputModule: true
-	},
 	output: {
 		module: true,
 		library: { type: "module" },

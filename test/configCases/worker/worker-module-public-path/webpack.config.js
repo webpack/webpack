@@ -12,8 +12,5 @@ module.exports = {
 		module: true,
 		// A static workerPublicPath (here resolving locally) keeps the URL analyzable.
 		workerPublicPath: "./"
-	},
-	experiments: {
-		outputModule: true
 	}
 };

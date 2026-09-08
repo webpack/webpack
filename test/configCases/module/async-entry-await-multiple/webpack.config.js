@@ -5,7 +5,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: "bundle0.mjs"

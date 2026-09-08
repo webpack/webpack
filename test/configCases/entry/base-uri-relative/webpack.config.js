@@ -33,7 +33,6 @@ const base = ({
 	devtool: false,
 	entry: { [name]: { import: entryFile || "./index.js", baseUri } },
 	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
-	experiments: { outputModule: esm },
 	output: {
 		module: esm,
 		chunkFormat: esm ? "module" : "commonjs",

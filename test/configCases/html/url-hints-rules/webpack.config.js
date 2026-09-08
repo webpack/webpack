@@ -41,7 +41,7 @@ module.exports = {
 		]
 	},
 	optimization: { chunkIds: "named" },
-	experiments: { html: true, outputModule: true },
+	experiments: { html: true },
 	plugins: [
 		{
 			apply(compiler) {

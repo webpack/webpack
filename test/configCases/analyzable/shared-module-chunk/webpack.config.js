@@ -11,7 +11,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	resolve: {
 		alias: { "shared-lib": path.resolve(__dirname, "lib.js") }
 	},

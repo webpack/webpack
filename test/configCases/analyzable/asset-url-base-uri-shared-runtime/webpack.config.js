@@ -12,7 +12,6 @@ module.exports = {
 		bundle0: { import: "./index.js", baseUri: "https://example.com/base/" },
 		other: { import: "./other.js" }
 	},
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: "[name].mjs",

@@ -10,12 +10,10 @@ module.exports = [
 			providedExports: false
 		},
 		output: {
+			module: true,
 			library: {
 				type: "module"
 			}
-		},
-		experiments: {
-			outputModule: true
 		},
 		externals: ["react"],
 		externalsType: "module"
@@ -26,13 +24,11 @@ module.exports = [
 			providedExports: false
 		},
 		output: {
+			module: true,
 			library: {
 				type: "modern-module",
 				export: ["lib2"]
 			}
-		},
-		experiments: {
-			outputModule: true
 		}
 	},
 	{
@@ -84,6 +80,7 @@ module.exports = [
 			}
 		],
 		output: {
+			module: true,
 			enabledLibraryTypes: ["module", "modern-module"],
 			library: {
 				type: "module"
@@ -91,9 +88,6 @@ module.exports = [
 		},
 		optimization: {
 			providedExports: false
-		},
-		experiments: {
-			outputModule: true
 		}
 	}
 ];

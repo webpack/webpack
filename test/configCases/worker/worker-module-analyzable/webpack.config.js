@@ -11,8 +11,5 @@ module.exports = {
 	output: {
 		module: true,
 		publicPath: "auto"
-	},
-	experiments: {
-		outputModule: true
 	}
 };

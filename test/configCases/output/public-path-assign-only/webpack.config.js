@@ -17,7 +17,6 @@ const variant = (index, name, entry, reads) => ({
 	devtool: false,
 	target: "node",
 	entry,
-	experiments: { outputModule: true },
 	optimization: { chunkIds: "named", minimize: false },
 	output: {
 		module: true,

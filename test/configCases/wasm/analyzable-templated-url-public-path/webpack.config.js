@@ -27,7 +27,7 @@ const base = (index, name, hashPart, digest, extra = {}) => ({
 		splitChunks: false,
 		realContentHash: extra.realContentHash !== false
 	},
-	experiments: { outputModule: true, asyncWebAssembly: true },
+	experiments: { asyncWebAssembly: true },
 	output: {
 		module: true,
 		wasmLoading: "fetch",

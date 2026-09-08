@@ -8,7 +8,6 @@ module.exports = {
 	target: "node",
 	mode: "development",
 	devtool: false,
-	experiments: { outputModule: true },
 	externals: { fs: "node-commonjs fs", path: "node-commonjs path" },
 	output: {
 		filename: "[name].mjs",

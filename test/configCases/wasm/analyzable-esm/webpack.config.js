@@ -49,7 +49,7 @@ const base = (config) => ({
 		]
 	},
 	optimization: { chunkIds: "named", splitChunks: false },
-	experiments: { outputModule: true, asyncWebAssembly: true },
+	experiments: { asyncWebAssembly: true },
 	...config,
 	output: {
 		module: true,

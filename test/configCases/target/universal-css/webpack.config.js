@@ -5,8 +5,7 @@ const base = {
 	devtool: false,
 	mode: "development",
 	experiments: {
-		css: true,
-		outputModule: true
+		css: true
 	},
 	output: {
 		module: true,

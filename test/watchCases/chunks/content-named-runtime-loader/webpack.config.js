@@ -6,9 +6,6 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "node",
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		chunkIds: "named",
 		moduleIds: "named",

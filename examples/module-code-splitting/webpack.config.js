@@ -12,10 +12,7 @@ const config = {
 		usedExports: true,
 		concatenateModules: true
 	},
-	target: "browserslist: last 2 chrome versions",
-	experiments: {
-		outputModule: true
-	}
+	target: "browserslist: last 2 chrome versions"
 };
 
 module.exports = config;

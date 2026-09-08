@@ -11,9 +11,6 @@ const config = {
 	optimization: {
 		usedExports: true,
 		concatenateModules: true
-	},
-	experiments: {
-		outputModule: true
 	}
 };
 

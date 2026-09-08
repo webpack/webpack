@@ -6,6 +6,7 @@ const path = require("path");
 const config = {
 	entry: "./example.js",
 	output: {
+		module: true,
 		path: path.join(__dirname, "dist"),
 		filename: "[name].js",
 		chunkFilename: "[name].js",
@@ -14,10 +15,7 @@ const config = {
 	optimization: {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	},
-	target: "browserslist: last 2 Chrome versions",
-	experiments: {
-		outputModule: true
-	}
+	target: "browserslist: last 2 Chrome versions"
 };
 
 module.exports = config;

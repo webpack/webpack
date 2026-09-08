@@ -52,15 +52,21 @@ module.exports = [
 	{
 		name: "module",
 		entry: { module: "./src/main.js" },
-		output: { html: true },
-		experiments: { html: true, outputModule: true },
+		output: {
+			module: true,
+			html: true
+		},
+		experiments: { html: true },
 		plugins: [copyTest]
 	},
 	{
 		name: "module-warning",
 		entry: { "module-warning": "./src/main.js" },
-		output: { html: { scriptLoading: "blocking" } },
-		experiments: { html: true, outputModule: true },
+		output: {
+			module: true,
+			html: { scriptLoading: "blocking" }
+		},
+		experiments: { html: true },
 		plugins: [copyTest]
 	},
 	{
@@ -83,8 +89,11 @@ module.exports = [
 				html: { scriptLoading: "defer" }
 			}
 		},
-		output: { html: true },
-		experiments: { html: true, outputModule: true },
+		output: {
+			module: true,
+			html: true
+		},
+		experiments: { html: true },
 		plugins: [copyTest]
 	}
 ];

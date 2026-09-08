@@ -57,7 +57,6 @@ module.exports = [
 	base(3, { target: "async-node" }),
 	base(4, {
 		target: "node",
-		experiments: { outputModule: true },
 		output: { module: true, chunkFormat: "module", library: { type: "module" } }
 	})
 ];

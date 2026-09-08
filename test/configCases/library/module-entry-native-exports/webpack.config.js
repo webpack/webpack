@@ -43,7 +43,6 @@ const variant = (
 		library: { type: "module" }
 	},
 	optimization: { concatenateModules: false, minimize: false, avoidEntryIife },
-	experiments: { outputModule: true },
 	plugins: [assertBundle(`${name}.mjs`, assert)]
 });
 

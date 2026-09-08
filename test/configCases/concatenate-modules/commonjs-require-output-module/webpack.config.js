@@ -2,12 +2,10 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	output: { module: true },
 	mode: "production",
 	target: "node",
 	devtool: false,
-	experiments: {
-		outputModule: true
-	},
 	optimization: {
 		concatenateModules: { commonjs: true },
 		minimize: false,

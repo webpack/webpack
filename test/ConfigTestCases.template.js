@@ -199,9 +199,7 @@ const describeCases = (config) => {
 								}
 								if (!options.output.filename) {
 									options.output.filename = `bundle${idx}${
-										options.experiments && options.experiments.outputModule
-											? ".mjs"
-											: ".js"
+										options.output.module ? ".mjs" : ".js"
 									}`;
 								}
 								if (config.cache) {

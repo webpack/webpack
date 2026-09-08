@@ -4,5 +4,5 @@
 module.exports = {
 	target: "web",
 	output: { module: false },
-	experiments: { html: true, outputModule: true }
+	experiments: { html: true }
 };

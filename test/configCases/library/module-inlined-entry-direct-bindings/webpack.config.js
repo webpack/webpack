@@ -42,7 +42,6 @@ const variant = (name, entry, binding, concatenateModules) => ({
 		library: { type: "module" }
 	},
 	optimization: { concatenateModules, minimize: false },
-	experiments: { outputModule: true },
 	plugins: [assertLiveBindings(`${name}.mjs`, binding)]
 });
 

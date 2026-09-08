@@ -16,9 +16,6 @@ module.exports = {
 		publicPath: "https://example.com/public/",
 		assetModuleFilename: "[name][ext]"
 	},
-	experiments: {
-		outputModule: true
-	},
 	// `target: "web"` for the `<link>` injection; the assertions still read the
 	// emitted bundle, so keep the node builtins external.
 	externals: { fs: "node-commonjs fs", path: "node-commonjs path" },

@@ -6,7 +6,7 @@ const url = require("url");
 
 module.exports = {
 	findBundle(i, options) {
-		const isModule = Boolean(options.experiments.outputModule);
+		const isModule = Boolean(options.output.module);
 		const bundle = `./bundle${i}.${isModule ? "mjs" : "js"}`;
 		// Module output links chunks through the ESM linker, so only the entry
 		// bundle is needed. JSONP (non-module) output needs the chunk preloaded

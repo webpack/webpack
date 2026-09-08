@@ -14,7 +14,6 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	entry: { main: { import: "./index.js", baseUri: BASE } },
-	experiments: { outputModule: true },
 	output: {
 		module: true,
 		filename: "[name].mjs",

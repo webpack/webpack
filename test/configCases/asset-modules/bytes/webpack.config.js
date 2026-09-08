@@ -35,11 +35,11 @@ module.exports = [
 		}
 	},
 	{
+		output: { module: true },
 		name: "universal",
 		mode: "development",
 		target: ["web", "node"],
 		experiments: {
-			outputModule: true,
 			css: true
 		},
 		module: {

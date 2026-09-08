@@ -604,7 +604,6 @@ const compile = async (entry, scenario, options = {}) =>
 			stats: "errors-warnings",
 			performance: false,
 			experiments: {
-				outputModule: scenario === "module",
 				deferImport: true
 			},
 			optimization: {

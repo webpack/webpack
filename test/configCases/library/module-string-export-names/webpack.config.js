@@ -56,9 +56,6 @@ const createConfig = (name, concatenateModules) => ({
 		},
 		chunkFormat: "module"
 	},
-	experiments: {
-		outputModule: true
-	},
 	optimization: { minimize: false, concatenateModules },
 	plugins: [expectQuotedExportNames]
 });

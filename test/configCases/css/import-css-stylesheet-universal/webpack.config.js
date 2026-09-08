@@ -6,8 +6,7 @@ module.exports = {
 	target: ["web", "node"],
 	mode: "development",
 	experiments: {
-		css: true,
-		outputModule: true
+		css: true
 	},
 	output: {
 		module: true

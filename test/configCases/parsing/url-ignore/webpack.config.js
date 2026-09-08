@@ -3,10 +3,8 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
+		module: true,
 		publicPath: "/public/"
-	},
-	experiments: {
-		outputModule: true
 	},
 	target: ["web", "es2020"]
 };
