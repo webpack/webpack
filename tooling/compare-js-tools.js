@@ -143,6 +143,19 @@ const fixtures = () =>
 		goal
 	]);
 
+/**
+ * oxc recovers instead of throwing: it answers with whatever tree or text it
+ * managed and puts the diagnostics beside it, which a comparison reads as a
+ * refusal rather than as a tool that disagreed.
+ * @param {EXPECTED_ANY} result what oxc answered
+ * @returns {EXPECTED_ANY} the same answer, where it had no diagnostic
+ */
+const readOxcResult = (result) => {
+	const [first] = result.errors || [];
+	if (first !== undefined) throw new Error(first.message || String(first));
+	return result;
+};
+
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
 /** @type {import("./compare-tools-harness").Tool[]} */
@@ -231,7 +244,8 @@ const TOOLS = [
 			// It keeps the parentheses as nodes of their own unless told not to,
 			// which no other ESTree parser here does.
 			return (code) =>
-				oxc.parseSync(file, code, { preserveParens: false }).program;
+				readOxcResult(oxc.parseSync(file, code, { preserveParens: false }))
+					.program;
 		}
 	},
 	{
@@ -430,7 +444,7 @@ const TOOLS = [
 		create: () => {
 			const oxc = load("oxc-minify");
 			const file = sourceType() === "module" ? "input.mjs" : "input.js";
-			return (code) => oxc.minifySync(file, code).code;
+			return (code) => readOxcResult(oxc.minifySync(file, code)).code;
 		}
 	},
 	{
