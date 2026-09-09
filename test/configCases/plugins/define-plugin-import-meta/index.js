@@ -12,6 +12,17 @@ it("should resolve unknown import.meta member access with undefined (issue 15559
 	expect(import.meta.config?.MISSING).toBe(undefined);
 	expect(import.meta.config.MISSING?.()).toBe(undefined);
 });
+it("should read past an unknown import.meta member as the source would (issue 22014)", function () {
+	const a = function () { return import.meta.config.MISSING.deep; };
+	const b = function () { return import.meta.config.MISSING?.deep; };
+	const c = function () { return import.meta.config.MISSING.deep?.a; };
+	expect(a.toString()).toBe("function () { return undefined.deep; }");
+	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(c.toString()).toBe("function () { return undefined.deep?.a; }");
+	expect(import.meta.config.MISSING?.deep).toBe(undefined);
+	expect(a).toThrow(TypeError);
+	expect(c).toThrow(TypeError);
+});
 it("should short-circuit a call reached through an unknown import.meta member (issue 21822)", function () {
 	const a = function () { return import.meta.config.MISSING?.includes("token"); };
 	const b = function () { return import.meta.config?.MISSING?.deep.method(); };

@@ -82,6 +82,31 @@ it("should keep a non-optional read after an unknown member throwing (issue 2182
 	expect(() => OBJECT.SUB1.UNKNOWN["a"]?.()).toThrow();
 	expect(() => OBJECT.SUB1.UNKNOWN.deep.method()).toThrow();
 });
+it("should short-circuit a read reached through an unknown member (issue 22014)", function () {
+	const a = function () { return OBJECT.SUB1.UNKNOWN?.a; };
+	const b = function () { return OBJECT.SUB1.UNKNOWN?.a.b; };
+	const c = function () { return OBJECT?.SUB1?.UNKNOWN?.["a"]; };
+	const d = function () { return process.env.MISSING?.length; };
+	expect(a.toString()).toBe("function () { return undefined; }");
+	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(c.toString()).toBe("function () { return undefined; }");
+	expect(d.toString()).toBe("function () { return undefined; }");
+	expect(OBJECT.SUB1.UNKNOWN?.a).toBe(undefined);
+	expect(OBJECT.SUB1.UNKNOWN?.a.b).toBe(undefined);
+	expect(OBJECT?.SUB1?.UNKNOWN?.["a"]).toBe(undefined);
+	expect(process.env.MISSING?.length).toBe(undefined);
+});
+it("should keep a non-optional read past an unknown member throwing (issue 22014)", function () {
+	const a = function () { return OBJECT.SUB1.UNKNOWN.a?.b; };
+	const b = function () { return OBJECT.SUB1?.UNKNOWN.a; };
+	const c = function () { return process.env.MISSING.a?.b; };
+	expect(a.toString()).toBe("function () { return undefined.a?.b; }");
+	expect(b.toString()).toBe("function () { return undefined.a; }");
+	expect(c.toString()).toBe("function () { return undefined.a?.b; }");
+	expect(a).toThrow(TypeError);
+	expect(b).toThrow(TypeError);
+	expect(c).toThrow(TypeError);
+});
 it("should keep optional calls on defined members intact (issue 21822)", function () {
 	expect(OBJECT.SUB1.a?.toFixed(2)).toBe("1.00");
 	expect(STRING?.toUpperCase()).toBe("STRING");
