@@ -11694,6 +11694,7 @@ declare abstract class InlinedValue {
 	value?: null | string | number | boolean;
 	renderLiteral(): string;
 	render(comment: string): string;
+	equals(other: InlinedValue): boolean;
 	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_3): void;
 	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 }
