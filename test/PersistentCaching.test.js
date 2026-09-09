@@ -473,4 +473,43 @@ export default 40 + file;
 		await compile(configAdditions);
 		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
+
+	// An inlined export embeds its literal in the consumer's codegen; the
+	// filesystem cache must invalidate that consumer when the value changes.
+	it("should invalidate consumer codegen when an inlined export value changes", async () => {
+		const configAdditions = {
+			mode: "production",
+			optimization: { minimize: false },
+			output: {
+				...config.output,
+				pathinfo: true
+			}
+		};
+		await updateSrc({
+			"index.js": `import { FLAG, NUM } from "./env.js";
+export default [NUM, FLAG];
+`,
+			"env.js": `export const NUM = 5;
+export const FLAG = "on";
+`
+		});
+		await compile(configAdditions);
+		expect(execute()).toEqual([5, "on"]);
+		const first = await readFile(path.resolve(outputPath, "main.js"), "utf8");
+		expect(first).toContain("inlined export .NUM */5");
+		expect(first).toContain('inlined export .FLAG */"on"');
+
+		// Both values stay within the ≤6-byte inline limit so a yes→no
+		// boundary change cannot mask the stale-hash bug (#22019).
+		await updateSrc({
+			"env.js": `export const NUM = 6;
+export const FLAG = "off";
+`
+		});
+		await compile(configAdditions);
+		expect(execute()).toEqual([6, "off"]);
+		const second = await readFile(path.resolve(outputPath, "main.js"), "utf8");
+		expect(second).toContain("inlined export .NUM */6");
+		expect(second).toContain('inlined export .FLAG */"off"');
+	}, 100000);
 });
