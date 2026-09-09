@@ -10247,3 +10247,36 @@ describe("SourceProcessor — reflected attributes are read per element", () => 
 		expect(minify('<div vspace="008">x</div>')).toBe("<div vspace=008>x</div>");
 	});
 });
+
+describe("SourceProcessor — duplicate-attr state reset between tags", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("does not misidentify a zero-attribute tag as foreign-syntax after a dup-attr tag", () => {
+		// <div {%if%} {%if%}> has a duplicate foreign delimiter and is written back
+		// verbatim. The next <br> (zero attributes) must not inherit the dropped-attr
+		// flag and must be processed normally.
+		const result = minify("<div {%if%} {%if%}><br><p id=\"x\">text</p>");
+		expect(result).toContain("<div {%if%} {%if%}>");
+		expect(result).toContain("<br>");
+		expect(result).toContain("<p id=x>");
+	});
+
+	it("does not carry duplicate-attr state across consecutive parse calls", () => {
+		// A document whose last start-tag had a duplicate attribute leaves
+		// `pendAttrDropped=true` at module level; the next `parseHtml` call must
+		// reset it during init so zero-attribute tags in the new document are not
+		// scanned with stale state (which can crash when the attr columns are
+		// empty after a large-document release).
+		const firstResult = minify("<div {%if%} {%if%}>");
+		expect(firstResult).toContain("<div {%if%} {%if%}>");
+		const secondResult = minify("<p id=\"a\">x</p><br>");
+		expect(secondResult).toBe("<p id=a>x<br>");
+	});
+});
