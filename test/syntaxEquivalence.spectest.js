@@ -493,17 +493,14 @@ describe("printer output in real Chrome", () => {
 			filed.has(each.name) ? each.name : `${each.name}: ${each.why}`
 		);
 
-	const describeCorpus = (at, label) => {
-		describe(label, () => {
-			if (at === 1 && !hasCorpus()) {
-				it(NO_CORPUS, () => {
-					// No-op: the corpus is an optional git submodule.
-				});
+	/**
+	 * @param {number} at which of the built corpora to describe
+	 * @returns {void}
+	 */
+	const describeCorpus = (at) => {
+		const one = corpora[at];
 
-				return;
-			}
-			const one = corpora[at];
-
+		describe(one.label, () => {
 			// One test per page, not per corpus: the file is what a defect is filed
 			// against, so a failure names it without anything having to narrow it
 			// down. Every part of the document the engine builds — the element tree,
@@ -695,8 +692,16 @@ describe("printer output in real Chrome", () => {
 		});
 	};
 
-	describeCorpus(0, "configCases");
-	describeCorpus(1, "wpt");
+	// Which corpora were built depends on what is checked out, so each names
+	// itself, and one that could not be built says so rather than going quiet.
+	for (const at of corpora.keys()) describeCorpus(at);
+	if (!corpora.some((one) => one.label === "wpt")) {
+		describe("wpt", () => {
+			it(NO_CORPUS, () => {
+				// No-op: the corpus is an optional git submodule.
+			});
+		});
+	}
 
 	// One test per declaration, not per file: the value is what a defect is filed
 	// against, so the run names it without anything having to narrow it down.
