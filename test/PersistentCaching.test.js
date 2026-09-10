@@ -512,4 +512,77 @@ export const FLAG = "off";
 		expect(second).toContain("inlined export .NUM */6");
 		expect(second).toContain('inlined export .FLAG */"off"');
 	}, 100000);
+
+	// A DefinePlugin value changes the inlined literal without touching the
+	// module source, so its build hash alone cannot key the provided exports.
+	it("should invalidate consumer codegen when a plugin-provided inlined export changes", async () => {
+		const { DefinePlugin } = require("../");
+
+		const configFor = (/** @type {string} */ flag) => ({
+			mode: "production",
+			optimization: { minimize: false },
+			output: {
+				...config.output,
+				pathinfo: true
+			},
+			plugins: [new DefinePlugin({ "process.env.FLAG": JSON.stringify(flag) })]
+		});
+		await updateSrc({
+			"index.js": `import { FLAG } from "./env.js";
+export default FLAG;
+`,
+			"env.js": "export const FLAG = process.env.FLAG;\n"
+		});
+		await compile(configFor("on"));
+		expect(execute()).toBe("on");
+		const first = await readFile(path.resolve(outputPath, "main.js"), "utf8");
+		expect(first).toContain('inlined export .FLAG */"on"');
+
+		await compile(configFor("off"));
+		expect(execute()).toBe("off");
+		const second = await readFile(path.resolve(outputPath, "main.js"), "utf8");
+		expect(second).toContain('inlined export .FLAG */"off"');
+	}, 100000);
+
+	// A value version is user-supplied text; spelling out the encoding's own
+	// separators must not forge another key's entry in the cache key.
+	it("should key value dependencies whose versions contain the separators", async () => {
+		const { DefinePlugin } = require("../");
+
+		const keyB = `${DefinePlugin.VALUE_DEP_PREFIX}process.env.B`;
+		const configFor = (
+			/** @type {string} */ suffix,
+			/** @type {string} */ versionA,
+			/** @type {string} */ versionB
+		) => ({
+			mode: "production",
+			optimization: { minimize: false },
+			plugins: [
+				new DefinePlugin({
+					"process.env.A": DefinePlugin.runtimeValue(
+						() => JSON.stringify(`a${suffix}`),
+						{ version: versionA }
+					),
+					"process.env.B": DefinePlugin.runtimeValue(
+						() => JSON.stringify(`b${suffix}`),
+						{ version: versionB }
+					)
+				})
+			]
+		});
+		await updateSrc({
+			"index.js": `import { A, B } from "./env.js";
+export default [A, B];
+`,
+			"env.js": `export const A = process.env.A;
+export const B = process.env.B;
+`
+		});
+		await compile(configFor("1", `1|${keyB}=2`, "3"));
+		expect(execute()).toEqual(["a1", "b1"]);
+
+		// The two version sets concatenate to the same "key=value|…" text
+		await compile(configFor("2", "1", `2|${keyB}=3`));
+		expect(execute()).toEqual(["a2", "b2"]);
+	}, 100000);
 });
