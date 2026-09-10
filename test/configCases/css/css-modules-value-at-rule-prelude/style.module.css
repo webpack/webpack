@@ -1,0 +1,113 @@
+@value animName: pulseAnim;
+@value prefixedAnimName: spinAnim;
+@value localAnimName: fadeAnim;
+@value globalAnimName: sharedAnim;
+@value counterName: romanCounter;
+@value containerName: sidebarContainer;
+@value containerWidth: 400px;
+@value scopeRootName: scopeRootCls;
+@value scopeLimitName: article;
+@value scopeAttrName: scopeAttrCls;
+@value chainedBase: chainedAnim;
+@value chainedAnimName: chainedBase;
+@value smallScreen: (max-width: 599px);
+@value importedAnimName from "./values.module.css";
+@value importedCounterName from "./values.module.css";
+
+.anim {
+	animation: animName 2s linear;
+	animation-name: animName;
+}
+
+@keyframes animName {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.prefixed-anim {
+	-webkit-animation-name: prefixedAnimName;
+}
+
+@-webkit-keyframes prefixedAnimName {
+	from { opacity: 0; }
+}
+
+.local-anim {
+	animation-name: localAnimName;
+}
+
+@keyframes local(localAnimName) {
+	from { opacity: 0; }
+}
+
+@keyframes global(globalAnimName) {
+	from { opacity: 0; }
+}
+
+.chained-anim {
+	animation-name: chainedAnimName;
+}
+
+@keyframes chainedAnimName {
+	from { opacity: 0; }
+}
+
+.imported-anim {
+	animation-name: importedAnimName;
+}
+
+@keyframes importedAnimName {
+	from { opacity: 0; }
+}
+
+.counter {
+	list-style: counterName;
+}
+
+@counter-style counterName {
+	system: cyclic;
+	symbols: "*";
+	suffix: " ";
+}
+
+.imported-counter {
+	list-style: importedCounterName;
+}
+
+@counter-style importedCounterName {
+	system: cyclic;
+	symbols: "+";
+	suffix: " ";
+}
+
+.container {
+	container-name: containerName;
+}
+
+@container containerName (min-width: containerWidth) {
+	.in-container {
+		color: red;
+	}
+}
+
+.scope-root {
+	color: blue;
+}
+
+@scope (.scopeRootName) to (scopeLimitName) {
+	.in-scope {
+		color: green;
+	}
+}
+
+@scope ([class=scopeAttrName]) {
+	.in-attr-scope {
+		color: teal;
+	}
+}
+
+@media smallScreen {
+	.in-media {
+		color: purple;
+	}
+}
