@@ -190,6 +190,10 @@ const installHelpers = () => {
 	// One word, so a number with its unit is read whole rather than as an ident.
 	const WORD_RE = /[\w-]/;
 
+	// CSS Syntax §4.2: a name code point is also anything non-ASCII, which the
+	// token after a color can start with.
+	const NAME_RE = /[\w-]|[\u0080-\uFFFF]/;
+
 	/**
 	 * Every color a value holds, as the pixel it paints. A color the engine hands
 	 * back as written — a `var()` fallback, the one `image()` carries — is a color
@@ -211,7 +215,16 @@ const installHelpers = () => {
 						: word;
 				word = "";
 			};
-			for (const ch of run.replace(COLOR_TOKEN_RE, (color) => painted(color))) {
+			// A pixel ends in a channel, so `rgba(…)0` — the form the printer writes,
+			// since the `)` parts them — would read as one channel more.
+			const painting = run.replace(
+				COLOR_TOKEN_RE,
+				(color, at, whole) =>
+					`${painted(color)}${
+						NAME_RE.test(whole[at + color.length] || "") ? " " : ""
+					}`
+			);
+			for (const ch of painting) {
 				if (WORD_RE.test(ch)) {
 					word += ch;
 					continue;
@@ -513,7 +526,13 @@ const installHelpers = () => {
 				written || lost
 					? normalizeValue(specified)
 					: style.getPropertyValue(property);
-			out.push(`${property}${bang}:${painted(canonical(resolved))}`);
+			// A value that is not itself a color still carries them: `box-shadow`
+			// keeps the space its color was written in, so each one is painted.
+			const named = canonical(resolved);
+			const whole = painted(named);
+			out.push(
+				`${property}${bang}:${whole === named ? paintedColors(named) : whole}`
+			);
 		}
 		return out;
 	};

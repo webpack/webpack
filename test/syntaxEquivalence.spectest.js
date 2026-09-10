@@ -493,17 +493,14 @@ describe("printer output in real Chrome", () => {
 			filed.has(each.name) ? each.name : `${each.name}: ${each.why}`
 		);
 
-	const describeCorpus = (at, label) => {
-		describe(label, () => {
-			if (at === 1 && !hasCorpus()) {
-				it(NO_CORPUS, () => {
-					// No-op: the corpus is an optional git submodule.
-				});
+	/**
+	 * @param {number} at which of the built corpora to describe
+	 * @returns {void}
+	 */
+	const describeCorpus = (at) => {
+		const one = corpora[at];
 
-				return;
-			}
-			const one = corpora[at];
-
+		describe(one.label, () => {
 			// One test per page, not per corpus: the file is what a defect is filed
 			// against, so a failure names it without anything having to narrow it
 			// down. Every part of the document the engine builds — the element tree,
@@ -612,6 +609,45 @@ describe("printer output in real Chrome", () => {
 				FILE_TIMEOUT
 			);
 
+			// A pixel ends in a channel, so the pixel a color paints has to be parted
+			// from a name code point after it, which the `)` it replaced parted.
+			it(
+				"parts a painted color from the token written against it",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "color-then-name-token",
+							raw: ".a{--s:oklch(0% 0 0) calc(1px)}",
+							min: ".a{--s:oklch(0% 0 0)calc(1px)}"
+						},
+						{
+							name: "color-then-non-ascii-name",
+							raw: ".a{--s:oklch(0% 0 0) \u00E9}",
+							min: ".a{--s:oklch(0% 0 0)\u00E9}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// A value that is not itself a color still carries them, and the computed
+			// value keeps the space each was written in.
+			it(
+				"paints the colors a computed value carries",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "shadow-color-space",
+							raw: ".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}",
+							min: ".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
 			// `/*` inside an unquoted `url()` is the address, so a fixture whose url
 			// spells one out is naming no option.
 			it("reads no cssom note out of a url() body", () => {
@@ -656,8 +692,16 @@ describe("printer output in real Chrome", () => {
 		});
 	};
 
-	describeCorpus(0, "configCases");
-	describeCorpus(1, "wpt");
+	// Which corpora were built depends on what is checked out, so each names
+	// itself, and one that could not be built says so rather than going quiet.
+	for (const at of corpora.keys()) describeCorpus(at);
+	if (!corpora.some((one) => one.label === "wpt")) {
+		describe("wpt", () => {
+			it(NO_CORPUS, () => {
+				// No-op: the corpus is an optional git submodule.
+			});
+		});
+	}
 
 	// One test per declaration, not per file: the value is what a defect is filed
 	// against, so the run names it without anything having to narrow it down.
