@@ -10247,3 +10247,47 @@ describe("SourceProcessor — reflected attributes are read per element", () => 
 		expect(minify('<div vspace="008">x</div>')).toBe("<div vspace=008>x</div>");
 	});
 });
+
+describe("SourceProcessor — the dropped-duplicate flag is per tag", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	/**
+	 * Markup allocating more attributes than the columns are kept at, so the
+	 * release after it drops the name column instead of clearing it.
+	 * @returns {string} the markup
+	 */
+	const oversizedDocument = () => {
+		let src = "";
+		for (let i = 0; i < 660; i++) {
+			src += "<i";
+			for (let j = 0; j < 100; j++) src += ` data-${i}-${j}="1"`;
+			src += "></i>";
+		}
+		return src;
+	};
+
+	it("clears it on a start tag that dropped one", () => {
+		const src = `${oversizedDocument()}<b class="c" class="d"></b>`;
+		expect(minify(src)).toContain("<b class=c></b>");
+		expect(minify("<br>")).toBe("<br>");
+	});
+
+	it("clears it on an end tag, which drops every attribute it parsed", () => {
+		const src = `${oversizedDocument()}</b class="c" class="d">`;
+		expect(minify(src)).toContain("data-659-99=1></i>");
+		expect(minify("<br>")).toBe("<br>");
+	});
+
+	it("clears it on a start tag the tokenizer only emitted at EOF", () => {
+		const src = `${oversizedDocument()}<b class="c" class="d"`;
+		expect(minify(src)).toContain("data-659-99=1></i>");
+		expect(minify("<br>")).toBe("<br>");
+	});
+});
