@@ -89,6 +89,21 @@ const setup = () => installPackages(CACHE_NAME, PACKAGES);
 
 // An app shell, whose weight is inline critical CSS and form markup: without
 // it no fixture carries a `<style>`, a `srcset` or a boolean attribute.
+// The documents the comparison installs rather than builds.
+/** @type {[string, string][]} */
+const INSTALLED_DOCUMENTS = [
+	["HTML5 Boilerplate 9", "html5-boilerplate/dist/index.html"],
+	["Swagger UI 5", "swagger-ui-dist/index.html"]
+];
+
+// Real framework stylesheets, inlined whole into a page of their own.
+/** @type {[string, string][]} */
+const INLINED_STYLESHEETS = [
+	["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
+	["Water.css 2 (inlined)", "water.css/out/water.css"],
+	["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
+];
+
 const APP_SHELL = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -337,24 +352,17 @@ const fixtures = async () => {
 	const { marked } = load("marked");
 	/** @type {[string, string][]} */
 	const out = [];
-	for (const [label, file] of [
-		[
-			"HTML5 Boilerplate 9",
-			path.join(MODULES, "html5-boilerplate/dist/index.html")
-		],
-		["Swagger UI 5", path.join(MODULES, "swagger-ui-dist/index.html")]
-	]) {
-		out.push([label, await fs.promises.readFile(file, "utf8")]);
+	for (const [label, file] of INSTALLED_DOCUMENTS) {
+		out.push([
+			label,
+			await fs.promises.readFile(path.join(MODULES, file), "utf8")
+		]);
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
 	out.push(["Component library page", componentPage(400)]);
 	// Real framework stylesheets inlined whole: whether a tool minifies, passes
 	// through or mangles a large `<style>` is what decides these pages.
-	for (const [label, file] of [
-		["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
-		["Water.css 2 (inlined)", "water.css/out/water.css"],
-		["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
-	]) {
+	for (const [label, file] of INLINED_STYLESHEETS) {
 		out.push([
 			label,
 			inlineCssPage(
@@ -900,7 +908,20 @@ const main = async () => {
 	}
 };
 
-(process.argv[2] === "--measure" ? measure(TOOLS) : main()).catch((error) => {
-	log(String(error && error.stack ? error.stack : error));
-	process.exitCode = 1;
-});
+// Only as the entry point, so a test can read the corpus below without running
+// the comparison.
+if (require.main === module) {
+	(process.argv[2] === "--measure" ? measure(TOOLS) : main()).catch((error) => {
+		log(String(error && error.stack ? error.stack : error));
+		process.exitCode = 1;
+	});
+}
+
+// The documents the cache holds, and the page a reader builds the rest from.
+module.exports = {
+	APP_SHELL,
+	CACHE,
+	INLINED_STYLESHEETS,
+	INSTALLED_DOCUMENTS,
+	inlineCssPage
+};

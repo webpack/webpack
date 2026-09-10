@@ -8,6 +8,19 @@
 
 const fs = require("fs");
 const path = require("path");
+// Read from the comparisons, so a fixture added to one is added here.
+const {
+	CACHE: CSS_CACHE,
+	GENERATED_FIXTURES,
+	INSTALLED_FIXTURES
+} = require("../../tooling/compare-css-tools");
+const {
+	APP_SHELL,
+	CACHE: HTML_CACHE,
+	INLINED_STYLESHEETS,
+	INSTALLED_DOCUMENTS,
+	inlineCssPage
+} = require("../../tooling/compare-html-tools");
 
 /** @typedef {{ name: string, raw: string, min: string }} Fixture */
 
@@ -59,6 +72,76 @@ const buildCorpus = (dir, extension, minify) => {
 			min: minify(raw)
 		};
 	});
+};
+
+/**
+ * Read a benchmark cache as a corpus. A file the cache does not hold is left
+ * out: each cache is built by the comparison that installs it.
+ * @param {string} cache the cache directory
+ * @param {[string, string][]} entries `[label, path within the cache]`
+ * @param {(source: string) => string} minify the printer to run
+ * @returns {Fixture[]} the corpus, empty when the cache is not there
+ */
+const readBenchmarkCache = (cache, entries, minify) => {
+	/** @type {Fixture[]} */
+	const out = [];
+	for (const [label, within] of entries) {
+		const file = path.join(cache, within);
+		if (!fs.existsSync(file)) continue;
+		const raw = fs.readFileSync(file, "utf8");
+		out.push({ name: label, raw, min: minify(raw) });
+	}
+	return out;
+};
+
+/**
+ * The stylesheets `yarn benchmark:css-tools` installs and builds.
+ * @param {(source: string) => string} minify the printer to run
+ * @returns {Fixture[]} the corpus, empty until that has been run once
+ */
+const benchmarkStylesheets = (minify) =>
+	readBenchmarkCache(
+		CSS_CACHE,
+		[
+			...INSTALLED_FIXTURES.map(
+				(/** @type {[string, string]} */ [label, file]) =>
+					/** @type {[string, string]} */ ([label, `node_modules/${file}`])
+			),
+			...GENERATED_FIXTURES
+		],
+		minify
+	);
+
+/**
+ * The documents `yarn benchmark:html-tools` installs, and the pages it builds
+ * around a whole framework stylesheet. Those pages are the ones carrying a
+ * `<style>`, which is what reaches the css minifier nested in the html one.
+ * @param {(source: string) => string} minify the printer to run
+ * @returns {Fixture[]} the corpus, empty until that has been run once
+ */
+const benchmarkDocuments = (minify) => {
+	const out = readBenchmarkCache(
+		HTML_CACHE,
+		INSTALLED_DOCUMENTS.map(
+			(/** @type {[string, string]} */ [label, file]) =>
+				/** @type {[string, string]} */ ([label, `node_modules/${file}`])
+		),
+		minify
+	);
+	if (out.length > 0) {
+		out.push({
+			name: "App shell (inline critical CSS)",
+			raw: APP_SHELL,
+			min: minify(APP_SHELL)
+		});
+	}
+	for (const [label, file] of INLINED_STYLESHEETS) {
+		const sheet = path.join(HTML_CACHE, "node_modules", file);
+		if (!fs.existsSync(sheet)) continue;
+		const raw = inlineCssPage(label, fs.readFileSync(sheet, "utf8"));
+		out.push({ name: label, raw, min: minify(raw) });
+	}
+	return out;
 };
 
 /**
@@ -1727,6 +1810,8 @@ const compareRules = (before, after, signatures) => {
 };
 
 module.exports = {
+	benchmarkDocuments,
+	benchmarkStylesheets,
 	buildCorpus,
 	collectFixtures,
 	compareRules,

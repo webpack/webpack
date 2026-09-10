@@ -30,6 +30,8 @@ const {
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 const launchChrome = require("./helpers/launchChrome");
 const {
+	benchmarkDocuments,
+	benchmarkStylesheets,
 	buildCorpus,
 	compareRules,
 	conditionSignatures,
@@ -73,6 +75,15 @@ const VALUE_BUDGET = 2000;
 const FILED_CONFIG_CSS_DEFECTS = new Map();
 
 const FILED_CONFIG_HTML_DEFECTS = new Map();
+
+const FILED_BENCHMARK_CSS_DEFECTS = new Map([
+	[
+		"Tailwind 4 + daisyUI 5",
+		"unresolved: a rule moves within `@layer utilities >> @layer daisyui.l1.l2.l3`, and which side is wrong is not yet known — merging repeated blocks of one named layer is order-preserving on its own, so this is narrower than that"
+	]
+]);
+
+const FILED_BENCHMARK_HTML_DEFECTS = new Map();
 
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[
@@ -237,6 +248,21 @@ const buildCorpora = () => {
 			filedCss: FILED_CONFIG_CSS_DEFECTS
 		}
 	];
+	// Real projects, where `configCases` and wpt are both written to exercise a
+	// rule rather than to ship.
+	const benchHtml = benchmarkDocuments((source) => source);
+	const benchCss = benchmarkStylesheets(minifyCss);
+	if (benchHtml.length > 0 || benchCss.length > 0) {
+		built.push({
+			label: "benchmark corpus",
+			html: variant(benchHtml, {}),
+			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
+			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			css: benchCss,
+			filedHtml: FILED_BENCHMARK_HTML_DEFECTS,
+			filedCss: FILED_BENCHMARK_CSS_DEFECTS
+		});
+	}
 	if (!hasCorpus()) return built;
 	/** @type {Fixture[]} */
 	const wptHtml = [];
@@ -288,6 +314,9 @@ const inBatches = async (page, items, evaluate) => {
 // rather than reporting green.
 const NO_CORPUS =
 	"wpt submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)";
+
+const NO_BENCHMARK_CORPUS =
+	"comparison caches not built (run `yarn benchmark:css-tools` / `yarn benchmark:html-tools`)";
 
 expectNoDeprecations();
 
@@ -695,10 +724,15 @@ describe("printer output in real Chrome", () => {
 	// Which corpora were built depends on what is checked out, so each names
 	// itself, and one that could not be built says so rather than going quiet.
 	for (const at of corpora.keys()) describeCorpus(at);
-	if (!corpora.some((one) => one.label === "wpt")) {
-		describe("wpt", () => {
-			it(NO_CORPUS, () => {
-				// No-op: the corpus is an optional git submodule.
+	for (const [label, why] of [
+		["wpt", NO_CORPUS],
+		["benchmark corpus", NO_BENCHMARK_CORPUS]
+	]) {
+		if (corpora.some((one) => one.label === label)) continue;
+
+		describe(label, () => {
+			it(why, () => {
+				// No-op: both are optional, and each is built outside this suite.
 			});
 		});
 	}
