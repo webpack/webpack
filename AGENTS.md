@@ -72,7 +72,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/hmr/` — Hot Module Replacement plugins.
   - `lib/html/` — Experimental HTML support.
   - `lib/ids/` — Module/chunk id assignment plugins.
-  - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis.
+  - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis. `syntax.js` serves every production a build reaches, so `grammar.js` (the full grammar) and `regexp.js` (the pattern validator) are installed onto the parser's prototype only when something asks for one — keep it that way and never `require` either from a path a build takes.
   - `lib/json/` — JSON modules.
   - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
   - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader iteration and loader module loading.
