@@ -79,6 +79,11 @@ export interface SourceMapDevToolPluginOptions {
 	 */
 	publicPath?: string;
 	/**
+	 * Emit the 'scopes' field, which tells a debugger the generated expression each imported ESM binding reads, so it resolves under the name the source uses.
+	 * @since 5.111.0
+	 */
+	scopes?: boolean;
+	/**
 	 * Provide a custom value for the 'sourceRoot' property in the SourceMap.
 	 */
 	sourceRoot?: string;
