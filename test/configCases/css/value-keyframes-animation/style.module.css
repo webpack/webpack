@@ -1,0 +1,25 @@
+@value animName: pulseAnim;
+
+.anim {
+	animation: animName 2s linear;
+}
+
+.named {
+	animation-name: animName;
+}
+
+@keyframes animName {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes localSpin {
+	from {
+		opacity: 1;
+	}
+}
+
+.spin {
+	animation: localSpin 1s;
+}

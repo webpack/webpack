@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css value-keyframes-animation exported tests should emit the stylesheet 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+
+
+._anim {
+	animation: pulseAnim 2s linear;
+}
+
+._named {
+	animation-name: pulseAnim;
+}
+
+@keyframes pulseAnim {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes _localSpin {
+	from {
+		opacity: 1;
+	}
+}
+
+._spin {
+	animation: _localSpin 1s;
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;
