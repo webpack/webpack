@@ -72,7 +72,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/hmr/` — Hot Module Replacement plugins.
   - `lib/html/` — Experimental HTML support.
   - `lib/ids/` — Module/chunk id assignment plugins.
-  - `lib/javascript/` — JavaScript parsing (acorn), generation, exports analysis.
+  - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis.
   - `lib/json/` — JSON modules.
   - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
   - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader iteration and loader module loading.
@@ -573,8 +573,9 @@ These files are produced by `yarn fix:special` and must not be edited by hand:
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 - `lib/css/data.js` — every table the CSS minifier looks a name up in, and the arithmetic its math-function descriptors bind to: derived from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) plus the generator's `SUPPLEMENT` of spec-prose tables and math primitives, by `tooling/generate-css-data.js` — which also holds the value-definition-syntax parser those grammars are read with, and runs the generation only as the entry point so its tests can require it.
 - `lib/html/data.js` — every table the HTML parser and minifier look a name up in: the reflected-attribute tables distilled from webref's HTML IDL (the `@webref/idl` and `@webref/elements` packages), plus the generator's `SUPPLEMENT` and `PARSER_TABLES` of §13.2 tree-construction vocabulary, by `tooling/generate-html-data.js` — which also emits the `// #region html entities` block inside `lib/html/syntax.js` from the vendored `tooling/html-entities.json`, WHATWG's own named character references table.
+- `lib/javascript/data.js` and `lib/javascript/regexpData.js` — the Unicode tables the JavaScript parser classifies with: the run-length identifier ranges the tokenizer decodes on its first non-ASCII code point, and the per-edition `\p{...}` property names only a pattern the engine itself rejected reaches, by `tooling/generate-js-data.js` — which reads both back out of the pinned acorn devDependency, so bumping it is what moves them.
 
-Both `syntax.js` files are algorithm only — a new lookup table belongs in the matching generator, not next to the code that reads it.
+The three `syntax.js` files are algorithm only — a new lookup table belongs in the matching generator, not next to the code that reads it.
 
 **And in the generator, derive it — do not type it out.** Read the table out of a published dataset (`mdn-data`, `color-name`, `@webref/idl`) whenever it is derivable at all, _including by analyzing a grammar rather than by listing names_: the value-definition syntax states which properties take an `<integer>`, so that set is computed, never enumerated. A table already in `SUPPLEMENT` counts as a source too — cosine at each eighth turn is sine two eighths along, and each inverse trig table is its forward one read back, so one stated table can carry several.
 
@@ -586,7 +587,7 @@ Re-run `yarn fix:special` **before the next commit** whenever you touch:
 
 - `schemas/**/*.json` — reshapes validators, declarations, and `types.d.ts`.
 - `lib/**/*.js` JSDoc on anything reachable from a public export — regenerates `types.d.ts`.
-- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, `tooling/generate-css-data.js`, `tooling/generate-html-data.js`, or any file they consume (including the `mdn-data` / `color-name` / `@webref/*` versions in `package.json` and the vendored `tooling/html-entities.json`).
+- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, `tooling/generate-css-data.js`, `tooling/generate-html-data.js`, `tooling/generate-js-data.js`, or any file they consume (including the `acorn` / `mdn-data` / `color-name` / `@webref/*` versions in `package.json` and the vendored `tooling/html-entities.json`).
 
 CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step.
 
