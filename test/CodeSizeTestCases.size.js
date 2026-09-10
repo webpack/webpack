@@ -13,6 +13,7 @@ const zlib = require("zlib");
 const webpack = require("..");
 const { DEFAULTS } = require("../lib/config/defaults");
 const ConcatenatedModule = require("../lib/optimize/ConcatenatedModule");
+const { makePathsRelative } = require("../lib/util/identifier");
 const browserslistConfigPackages = require("./helpers/browserslistConfigPackages");
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
 const codeSizeInputChanges = require("./helpers/codeSizeInputChanges");
@@ -154,6 +155,10 @@ const HASH_INFO_KEYS = ["fullhash", "chunkhash", "modulehash", "contenthash"];
 const HASH_REGEXP = /[0-9a-f]{8,}/gi;
 
 const UNITS = ["B", "KiB", "MiB", "GiB"];
+
+// Between a module's identity and its bytes in the digest, so the two cannot
+// run together into one string two different modules could both produce.
+const IDENTITY_SEPARATOR = Buffer.from([0]);
 
 /**
  * A `[contenthash]` renames the asset on every content change, so the report
@@ -329,7 +334,7 @@ const collectRuntimes = (compilations, prefix) => {
 
 /**
  * How much source the case handed webpack: the modules the chunks carry, sized
- * as they were before webpack transformed them. A case whose own files this
+ * and hashed as they were before webpack transformed them. A case whose own files this
  * pull request edited feeds the build more bytes, which is why its bundle grew
  * — the report needs that apart from webpack generating more code for the same
  * input.
@@ -361,9 +366,15 @@ const collectInput = (compilation, input, digests) => {
 		if (!source) return;
 		input.modules++;
 		input.bytes += source.size();
-		// Sizes alone would call an edit that kept a case's byte count — a renamed
-		// symbol, two lines swapped — the same source and blame webpack for it.
-		digests.push(createHash("sha256").update(source.buffer()).digest("hex"));
+		// Bytes and identity both: a module id derives from the path, and paths
+		// are made relative or two machines agree on nothing.
+		digests.push(
+			createHash("sha256")
+				.update(makePathsRelative(rootPath, module.identifier()))
+				.update(IDENTITY_SEPARATOR)
+				.update(source.buffer())
+				.digest("hex")
+		);
 	};
 	for (const chunk of compilation.chunks) {
 		for (const module of chunkGraph.getChunkModulesIterable(chunk)) {
