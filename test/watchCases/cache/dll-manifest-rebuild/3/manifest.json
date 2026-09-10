@@ -1,0 +1,13 @@
+{
+  "name": "function(id) { return { default: 'dll-default', added: 'dll-added' }; }",
+  "content": {
+    "./item.js": {
+      "id": "./item.js",
+      "buildMeta": {
+        "exportsType": "namespace",
+        "strictHarmonyModule": true
+      },
+      "exports": ["added", "default"]
+    }
+  }
+}
