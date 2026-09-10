@@ -23095,6 +23095,18 @@ declare class ParserParser {
 	readToken_numberSign(): void;
 	getTokenFromCode(code: number): void;
 	finishOp(type: TokenType, size: number): void;
+
+	/**
+	 * Check a regexp literal's flags.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/regexp.js
+	 */
+	validateRegExpFlags(state: RegExpValidationState): void;
+
+	/**
+	 * Check a regexp literal's pattern, re-reading it once a group name shows
+	 * that the named-capture goal symbol was the right one.
+	 */
+	validateRegExpPattern(state: RegExpValidationState): void;
 	readRegexp(): void;
 
 	/**
@@ -23129,115 +23141,6 @@ declare class ParserParser {
 	 */
 	readWord1(): string;
 	readWord(): void;
-
-	/**
-	 * Check a regexp literal's flags.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/regexp.js
-	 */
-	validateRegExpFlags(state: RegExpValidationState): void;
-
-	/**
-	 * Check a regexp literal's pattern, re-reading it once a group name shows
-	 * that the named-capture goal symbol was the right one.
-	 */
-	validateRegExpPattern(state: RegExpValidationState): void;
-	regexp_pattern(state: RegExpValidationState): void;
-	regexp_disjunction(state: RegExpValidationState): void;
-	regexp_alternative(state: RegExpValidationState): void;
-	regexp_eatTerm(state: RegExpValidationState): boolean;
-	regexp_eatAssertion(state: RegExpValidationState): boolean;
-	regexp_eatQuantifier(
-		state: RegExpValidationState,
-		noError?: boolean
-	): boolean;
-	regexp_eatQuantifierPrefix(
-		state: RegExpValidationState,
-		noError?: boolean
-	): boolean;
-	regexp_eatBracedQuantifier(
-		state: RegExpValidationState,
-		noError?: boolean
-	): boolean;
-	regexp_eatAtom(state: RegExpValidationState): boolean;
-	regexp_eatReverseSolidusAtomEscape(state: RegExpValidationState): boolean;
-	regexp_eatUncapturingGroup(state: RegExpValidationState): boolean;
-	regexp_eatCapturingGroup(state: RegExpValidationState): boolean;
-	regexp_eatModifiers(state: RegExpValidationState): string;
-	regexp_eatExtendedAtom(state: RegExpValidationState): boolean;
-	regexp_eatInvalidBracedQuantifier(state: RegExpValidationState): boolean;
-	regexp_eatSyntaxCharacter(state: RegExpValidationState): boolean;
-	regexp_eatPatternCharacters(state: RegExpValidationState): boolean;
-	regexp_eatExtendedPatternCharacter(state: RegExpValidationState): boolean;
-
-	/**
-	 * Read a capture group's name, and report one that another branch of the
-	 * same disjunction already used.
-	 */
-	regexp_groupSpecifier(state: RegExpValidationState): void;
-	regexp_eatGroupName(state: RegExpValidationState): boolean;
-	regexp_eatRegExpIdentifierName(state: RegExpValidationState): boolean;
-	regexp_eatRegExpIdentifierStart(state: RegExpValidationState): boolean;
-	regexp_eatRegExpIdentifierPart(state: RegExpValidationState): boolean;
-	regexp_eatAtomEscape(state: RegExpValidationState): boolean;
-	regexp_eatBackReference(state: RegExpValidationState): boolean;
-	regexp_eatKGroupName(state: RegExpValidationState): boolean;
-	regexp_eatCharacterEscape(state: RegExpValidationState): boolean;
-	regexp_eatCControlLetter(state: RegExpValidationState): boolean;
-	regexp_eatZero(state: RegExpValidationState): boolean;
-	regexp_eatControlEscape(state: RegExpValidationState): boolean;
-	regexp_eatControlLetter(state: RegExpValidationState): boolean;
-	regexp_eatRegExpUnicodeEscapeSequence(
-		state: RegExpValidationState,
-		forceU?: boolean
-	): boolean;
-	regexp_eatIdentityEscape(state: RegExpValidationState): boolean;
-	regexp_eatDecimalEscape(state: RegExpValidationState): boolean;
-	regexp_eatCharacterClassEscape(state: RegExpValidationState): number;
-	regexp_eatUnicodePropertyValueExpression(
-		state: RegExpValidationState
-	): number;
-	regexp_validateUnicodePropertyNameAndValue(
-		state: RegExpValidationState,
-		name: string,
-		value: string
-	): void;
-	regexp_validateUnicodePropertyNameOrValue(
-		state: RegExpValidationState,
-		nameOrValue: string
-	): number;
-	regexp_eatUnicodePropertyName(state: RegExpValidationState): boolean;
-	regexp_eatUnicodePropertyValue(state: RegExpValidationState): boolean;
-	regexp_eatLoneUnicodePropertyNameOrValue(
-		state: RegExpValidationState
-	): boolean;
-	regexp_eatCharacterClass(state: RegExpValidationState): boolean;
-	regexp_classContents(state: RegExpValidationState): number;
-	regexp_nonEmptyClassRanges(state: RegExpValidationState): void;
-	regexp_eatClassAtom(state: RegExpValidationState): boolean;
-	regexp_eatClassEscape(state: RegExpValidationState): boolean;
-	regexp_classSetExpression(state: RegExpValidationState): number;
-	regexp_eatClassSetRange(state: RegExpValidationState): boolean;
-	regexp_eatClassSetOperand(state: RegExpValidationState): null | number;
-	regexp_eatNestedClass(state: RegExpValidationState): null | number;
-	regexp_eatClassStringDisjunction(state: RegExpValidationState): null | number;
-	regexp_classStringDisjunctionContents(state: RegExpValidationState): number;
-	regexp_classString(state: RegExpValidationState): number;
-	regexp_eatClassSetCharacter(state: RegExpValidationState): boolean;
-	regexp_eatClassSetReservedPunctuator(state: RegExpValidationState): boolean;
-	regexp_eatClassControlLetter(state: RegExpValidationState): boolean;
-	regexp_eatHexEscapeSequence(state: RegExpValidationState): boolean;
-	regexp_eatDecimalDigits(state: RegExpValidationState): boolean;
-	regexp_eatHexDigits(state: RegExpValidationState): boolean;
-
-	/**
-	 * Read a legacy octal escape, which names only `0` through `377`.
-	 */
-	regexp_eatLegacyOctalEscapeSequence(state: RegExpValidationState): boolean;
-	regexp_eatOctalDigit(state: RegExpValidationState): boolean;
-	regexp_eatFixedHexDigits(
-		state: RegExpValidationState,
-		length: number
-	): boolean;
 	[Symbol.iterator](): Iterator<TokenParser>;
 	static extend(...plugins: ((parser?: any) => any)[]): any;
 	static parse(input: string, options?: Partial<OptionsParser>): ProgramParser;
