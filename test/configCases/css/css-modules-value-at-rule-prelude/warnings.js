@@ -9,5 +9,6 @@ module.exports = [
 	/Conflicting CSS module export "importedAnimName": already declared as @value at line 14:0, redeclared as @keyframes/,
 	/Conflicting CSS module export "counterName": already declared as @value at line 5:0, redeclared as @counter-style/,
 	/Conflicting CSS module export "importedCounterName": already declared as @value at line 15:0, redeclared as @counter-style/,
-	/Conflicting CSS module export "containerName": already declared as @value at line 6:0, redeclared as @container/
+	/Conflicting CSS module export "containerName": already declared as @value at line 6:0, redeclared as @container/,
+	/Conflicting CSS module export "importedKeyframes": already declared as @value at line 136:0, redeclared as @keyframes/
 ];

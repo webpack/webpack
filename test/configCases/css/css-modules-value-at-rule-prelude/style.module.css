@@ -132,3 +132,14 @@
 @keyframes animName {
 	to { opacity: 0.5; }
 }
+
+@value importedKeyframes from "./values.module.css";
+
+.imported-keyframes-anim {
+	animation: importedKeyframes 1s linear;
+	animation-name: importedKeyframes;
+}
+
+@keyframes importedKeyframes {
+	to { opacity: 0.25; }
+}

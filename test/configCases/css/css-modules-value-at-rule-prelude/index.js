@@ -130,6 +130,21 @@ it("should resolve an imported @value used as a @keyframes name", () => {
 	expect(declarationValue("imported-anim", "animation-name")).toBe(name);
 });
 
+it("should resolve an imported @value naming another module's @keyframes", () => {
+	// `@value` resolves first, interpolation second, so all three sites land on
+	// the defining module's scoped name rather than this module's.
+	const name = "value-at-rule-prelude-values_module_css-importedKeyframes";
+	expect(countOf(css, `@keyframes ${name} {`)).toBe(2);
+	expect(declarationValue("imported-keyframes-anim", "animation")).toBe(
+		`${name} 1s linear`
+	);
+	expect(declarationValue("imported-keyframes-anim", "animation-name")).toBe(
+		name
+	);
+	expect(css).not.toMatch(/importedKeyframesimportedKeyframes/);
+	expect(css).not.toMatch(new RegExp(`${name}${name}`));
+});
+
 it("should give @counter-style and its list-style references the same name", () => {
 	const name = preludeName(/@counter-style ([^\s{]+) \{\s+system: cyclic;\s+symbols: "\*"/);
 	expect(name).toBe("value-at-rule-prelude-style_module_css-romanCounter");

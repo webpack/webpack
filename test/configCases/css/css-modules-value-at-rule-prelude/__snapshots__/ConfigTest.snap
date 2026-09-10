@@ -7,6 +7,10 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 
 
 
+@keyframes value-at-rule-prelude-values_module_css-importedKeyframes {
+	from { opacity: 0; }
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -143,6 +147,17 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 
 @keyframes value-at-rule-prelude-style_module_css-pulseAnim {
 	to { opacity: 0.5; }
+}
+
+
+
+.value-at-rule-prelude-style_module_css-imported-keyframes-anim {
+	animation: value-at-rule-prelude-values_module_css-importedKeyframes 1s linear;
+	animation-name: value-at-rule-prelude-values_module_css-importedKeyframes;
+}
+
+@keyframes value-at-rule-prelude-values_module_css-importedKeyframes {
+	to { opacity: 0.25; }
 }
 
 /*!***********************************!*\\\\

@@ -1,2 +1,6 @@
 @value importedAnimName: importedAnim;
 @value importedCounterName: importedCounter;
+
+@keyframes importedKeyframes {
+	from { opacity: 0; }
+}
