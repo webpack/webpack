@@ -3,5 +3,7 @@
 exports[`errors 1`] = `
 Array [
   "Test exception",
+  "Test exception",
+  "Test exception",
 ]
 `;

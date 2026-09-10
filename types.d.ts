@@ -26513,7 +26513,7 @@ declare abstract class RuntimeTemplate {
 	 * The `../` path from a chunk's own asset back to the output root. Hashes are
 	 * neutralized first: a runtime module is generated once to be hashed, before any
 	 * hash exists, so resolving one there throws — and `RuntimeModule.updateHash`
-	 * swallows that, pinning the module's hash to the message.
+	 * lets that throw fail the build rather than hashing it.
 	 */
 	chunkRootOutputDir(chunk: Chunk, enforceRelative: boolean): string;
 
