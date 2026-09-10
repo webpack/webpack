@@ -63,9 +63,14 @@ describe("codeSizeInputChanges", () => {
 	/**
 	 * @param {number} modules how many modules the case built
 	 * @param {number} bytes how much source they carried
-	 * @returns {{ modules: number, bytes: number }} the input record
+	 * @param {string=} digest what that source hashed to
+	 * @returns {{ modules: number, bytes: number, digest: string }} the input record
 	 */
-	const input = (modules, bytes) => ({ modules, bytes });
+	const input = (modules, bytes, digest = `${modules}:${bytes}`) => ({
+		modules,
+		bytes,
+		digest
+	});
 
 	it("says nothing when every case was handed the same source", () => {
 		const before = { "a/b": input(2, 100), "c/d": input(1, 50) };
@@ -83,6 +88,18 @@ describe("codeSizeInputChanges", () => {
 		);
 		expect(changes.cases).toEqual(new Set(["a/b"]));
 		expect(changes.bytes).toBe(40);
+		expect(changes.modules).toBe(0);
+	});
+
+	it("counts an edit that kept the case's size as rebuilt", () => {
+		// A renamed symbol or two swapped lines moves neither total, and the report
+		// would otherwise credit webpack with what the edit did to the bundle.
+		const changes = codeSizeInputChanges(
+			{ "a/b": input(1, 100, "before") },
+			{ "a/b": input(1, 100, "after") }
+		);
+		expect(changes.cases).toEqual(new Set(["a/b"]));
+		expect(changes.bytes).toBe(0);
 		expect(changes.modules).toBe(0);
 	});
 

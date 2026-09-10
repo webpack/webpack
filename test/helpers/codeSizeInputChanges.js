@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {{ modules: number, bytes: number }} Input */
+/** @typedef {{ modules: number, bytes: number, digest: string }} Input */
 
 /**
  * Which cases the two runs built from different source, and by how much it
@@ -22,7 +22,9 @@ const codeSizeInputChanges = (before, after) => {
 		if (!(name in before)) continue;
 		const from = before[name];
 		const to = after[name];
-		if (from.bytes === to.bytes && from.modules === to.modules) continue;
+		// The digest, not the totals: an edit that kept a case's byte count still
+		// handed webpack different source, and its output moved because of that.
+		if (from.digest === to.digest) continue;
 		cases.add(name);
 		bytes += to.bytes - from.bytes;
 		modules += to.modules - from.modules;

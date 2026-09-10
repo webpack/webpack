@@ -6,6 +6,7 @@
 // nothing here fails: a size that moved is information, not a defect.
 
 const { execFileSync } = require("child_process");
+const { createHash } = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
@@ -35,7 +36,7 @@ const prepareOptions = require("./helpers/prepareOptions");
 
 /** @typedef {"raw" | "gzip" | "brotli" | "zstd"} Metric */
 /** @typedef {Record<Metric, number>} Metrics */
-/** @typedef {{ modules: number, bytes: number }} Input */
+/** @typedef {{ modules: number, bytes: number, digest: string }} Input */
 
 /**
  * @typedef {object} CaseResult
@@ -73,8 +74,8 @@ const prepareOptions = require("./helpers/prepareOptions");
 
 /**
  * @typedef {object} Buckets
- * @property {Change[]} generated assets both runs build from the same source:
- * a delta here is webpack generating differently, which is what the report is for
+ * @property {Change[]} generated assets whose case handed webpack the same source
+ * digest in both runs, so a delta here is webpack generating differently
  * @property {Change[]} rebuilt assets whose case was handed different source,
  * so most of the delta is the case's own edit rather than webpack's doing
  * @property {Change[]} added assets only this run emits
@@ -178,6 +179,23 @@ const normalizeAssetName = (name, info) => {
 	}
 	return normalized.replace(HASH_REGEXP, "[hash]");
 };
+
+/**
+ * @returns {Input} the input of a case that handed webpack nothing
+ */
+const createInput = () => ({ modules: 0, bytes: 0, digest: "" });
+
+/**
+ * Sorted, because the order the chunks report their modules in is not stable
+ * across runs and a digest that follows it would call a case rebuilt on every
+ * comparison.
+ * @param {string[]} digests one digest per module
+ * @returns {string} the digest of the source a case handed webpack
+ */
+const combineDigests = (digests) =>
+	digests.length === 0
+		? ""
+		: createHash("sha256").update(digests.sort().join("")).digest("hex");
 
 /**
  * @returns {Metrics} zeroed metrics
@@ -318,9 +336,10 @@ const collectRuntimes = (compilations, prefix) => {
  * @param {LibCompilation} compilation compilation that emitted, typed against
  * `lib/` because concatenation is recognized by its class
  * @param {Input} input accumulator, mutated
+ * @param {string[]} digests one digest per module, appended to
  * @returns {void}
  */
-const collectInput = (compilation, input) => {
+const collectInput = (compilation, input, digests) => {
 	const { chunkGraph } = compilation;
 	/** @type {Set<LibModule>} */
 	const seen = new Set();
@@ -342,6 +361,9 @@ const collectInput = (compilation, input) => {
 		if (!source) return;
 		input.modules++;
 		input.bytes += source.size();
+		// Sizes alone would call an edit that kept a case's byte count — a renamed
+		// symbol, two lines swapped — the same source and blame webpack for it.
+		digests.push(createHash("sha256").update(source.buffer()).digest("hex"));
 	};
 	for (const chunk of compilation.chunks) {
 		for (const module of chunkGraph.getChunkModulesIterable(chunk)) {
@@ -385,7 +407,7 @@ const measureCase = async ({ category, name }) => {
 	const result = {
 		metrics: createMetrics(),
 		assets: {},
-		input: { modules: 0, bytes: 0 },
+		input: createInput(),
 		runtimes: {},
 		errors: 0
 	};
@@ -485,21 +507,25 @@ const measureCase = async ({ category, name }) => {
 		for (const compilation of compilations) {
 			result.errors += compilation.errors.length;
 		}
+		/** @type {string[]} */
+		const digests = [];
 		for (const [compilation, prefix] of emitted) {
 			Object.assign(result.runtimes, collectRuntimes([compilation], prefix));
 			collectInput(
 				/** @type {LibCompilation} */
 				(/** @type {unknown} */ (compilation)),
-				result.input
+				result.input,
+				digests
 			);
 		}
+		result.input.digest = combineDigests(digests);
 		if (emitted.size === 0) {
 			result.noOutput = `build: ${result.errors} error(s), nothing emitted`;
 		}
 	} catch (err) {
 		result.noOutput = `build: ${/** @type {Error} */ (err).message}`;
 		result.assets = {};
-		result.input = { modules: 0, bytes: 0 };
+		result.input = createInput();
 		result.runtimes = {};
 		result.metrics = createMetrics();
 	} finally {
@@ -651,9 +677,9 @@ const sumDelta = (changes, metric) =>
 
 /**
  * Splits every asset the two runs disagree about by why it moved. Only the ones
- * built from unchanged source say anything about webpack — an asset whose case
- * gained a test grows with the test, which is what makes a size report on a
- * test-only pull request read as a regression.
+ * whose case source digest is unchanged say anything about webpack — an asset
+ * whose case gained a test grows with the test, which is what makes a size
+ * report on a test-only pull request read as a regression.
  * @param {Change[]} changes every asset that moved, largest first
  * @param {Record<string, string>} assetCase case each asset key belongs to
  * @param {Set<string>} rebuiltCases cases the two runs handed different source
@@ -865,7 +891,7 @@ const formatChangedAssets = (changes, summary, inputDeltas) => {
 		header: [
 			`| | Asset | Before | After | Change | ${COMPRESSED.map(
 				(metric) => METRIC_LABELS[metric]
-			).join(" | ")} |${withInput ? " Case source |" : ""}`,
+			).join(" | ")} |${withInput ? " Case source (per case) |" : ""}`,
 			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join(
 				""
 			)}${withInput ? " --: |" : ""}`
@@ -1380,7 +1406,7 @@ const run = async () => {
 			results[testCase.id] = {
 				metrics: createMetrics(),
 				assets: {},
-				input: { modules: 0, bytes: 0 },
+				input: createInput(),
 				runtimes: {},
 				errors: 0,
 				noOutput: `harness: ${/** @type {Error} */ (err).message}`
