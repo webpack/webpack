@@ -4,6 +4,7 @@
 // runs a full build on require, so both are unit-tested through their helpers.
 
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
+const codeSizeInputChanges = require("./helpers/codeSizeInputChanges");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 
 describe("codeSizeReportPrefixes", () => {
@@ -55,6 +56,70 @@ describe("codeSizeReportPrefixes", () => {
 		const names = ["a", "a", "a[1]", "a[1]", "a[1][3]", undefined, "5", "a"];
 		const prefixes = codeSizeReportPrefixes(names);
 		expect(new Set(prefixes).size).toBe(names.length);
+	});
+});
+
+describe("codeSizeInputChanges", () => {
+	/**
+	 * @param {number} modules how many modules the case built
+	 * @param {number} bytes how much source they carried
+	 * @param {string=} digest what that source hashed to
+	 * @returns {{ modules: number, bytes: number, digest: string }} the input record
+	 */
+	const input = (modules, bytes, digest = `${modules}:${bytes}`) => ({
+		modules,
+		bytes,
+		digest
+	});
+
+	it("says nothing when every case was handed the same source", () => {
+		const before = { "a/b": input(2, 100), "c/d": input(1, 50) };
+		expect(codeSizeInputChanges(before, { ...before })).toEqual({
+			cases: new Set(),
+			bytes: 0,
+			modules: 0
+		});
+	});
+
+	it("names the cases whose source moved, and by how much", () => {
+		const changes = codeSizeInputChanges(
+			{ "a/b": input(2, 100), "c/d": input(1, 50) },
+			{ "a/b": input(2, 140), "c/d": input(1, 50) }
+		);
+		expect(changes.cases).toEqual(new Set(["a/b"]));
+		expect(changes.bytes).toBe(40);
+		expect(changes.modules).toBe(0);
+	});
+
+	it("counts an edit that kept the case's size as rebuilt", () => {
+		// A renamed symbol or two swapped lines moves neither total, and the report
+		// would otherwise credit webpack with what the edit did to the bundle.
+		const changes = codeSizeInputChanges(
+			{ "a/b": input(1, 100, "before") },
+			{ "a/b": input(1, 100, "after") }
+		);
+		expect(changes.cases).toEqual(new Set(["a/b"]));
+		expect(changes.bytes).toBe(0);
+		expect(changes.modules).toBe(0);
+	});
+
+	it("counts a case that gained a module as rebuilt", () => {
+		const changes = codeSizeInputChanges(
+			{ "a/b": input(1, 100) },
+			{ "a/b": input(2, 100) }
+		);
+		expect(changes.cases).toEqual(new Set(["a/b"]));
+		expect(changes.modules).toBe(1);
+	});
+
+	it("leaves a case only one run builds out of it", () => {
+		// Its assets are reported as new or gone, which is a size and not a delta,
+		// so there is no input delta to attribute them to either.
+		const changes = codeSizeInputChanges(
+			{ "gone/case": input(1, 10) },
+			{ "new/case": input(1, 10) }
+		);
+		expect(changes).toEqual({ cases: new Set(), bytes: 0, modules: 0 });
 	});
 });
 
