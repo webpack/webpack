@@ -612,6 +612,45 @@ describe("printer output in real Chrome", () => {
 				FILE_TIMEOUT
 			);
 
+			// A pixel ends in a channel, so the pixel a color paints has to be parted
+			// from a name code point after it, which the `)` it replaced parted.
+			it(
+				"parts a painted color from the token written against it",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "color-then-name-token",
+							raw: ".a{--s:oklch(0% 0 0) calc(1px)}",
+							min: ".a{--s:oklch(0% 0 0)calc(1px)}"
+						},
+						{
+							name: "color-then-non-ascii-name",
+							raw: ".a{--s:oklch(0% 0 0) \u00E9}",
+							min: ".a{--s:oklch(0% 0 0)\u00E9}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
+			// A value that is not itself a color still carries them, and the computed
+			// value keeps the space each was written in.
+			it(
+				"paints the colors a computed value carries",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "shadow-color-space",
+							raw: ".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}",
+							min: ".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
 			// `/*` inside an unquoted `url()` is the address, so a fixture whose url
 			// spells one out is naming no option.
 			it("reads no cssom note out of a url() body", () => {
