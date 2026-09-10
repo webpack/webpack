@@ -111,3 +111,24 @@
 		color: purple;
 	}
 }
+
+.override-anim {
+	animation: animName 1s linear;
+	animation: animName 2s linear;
+}
+
+.multi-anim {
+	animation-name: animName, prefixedAnimName;
+}
+
+.repeat-anim {
+	animation-name: animName, animName;
+}
+
+.shorthand-list-anim {
+	animation: animName 1s, prefixedAnimName 2s;
+}
+
+@keyframes animName {
+	to { opacity: 0.5; }
+}

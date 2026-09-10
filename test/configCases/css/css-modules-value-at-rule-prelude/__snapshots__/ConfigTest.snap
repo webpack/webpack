@@ -124,6 +124,27 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 	}
 }
 
+.value-at-rule-prelude-style_module_css-override-anim {
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 1s linear;
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 2s linear;
+}
+
+.value-at-rule-prelude-style_module_css-multi-anim {
+	animation-name: value-at-rule-prelude-style_module_css-pulseAnim, value-at-rule-prelude-style_module_css-spinAnim;
+}
+
+.value-at-rule-prelude-style_module_css-repeat-anim {
+	animation-name: value-at-rule-prelude-style_module_css-pulseAnim, value-at-rule-prelude-style_module_css-pulseAnim;
+}
+
+.value-at-rule-prelude-style_module_css-shorthand-list-anim {
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 1s, value-at-rule-prelude-style_module_css-spinAnim 2s;
+}
+
+@keyframes value-at-rule-prelude-style_module_css-pulseAnim {
+	to { opacity: 0.5; }
+}
+
 /*!***********************************!*\\\\
   !*** css ./no-scoping.module.css ***!
   \\\\***********************************/

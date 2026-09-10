@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Replace a `@value` named in an at-rule prelude once, not twice.
+Stop replacing a `@value` twice where an at-rule prelude names it.

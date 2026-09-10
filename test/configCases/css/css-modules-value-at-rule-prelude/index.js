@@ -34,6 +34,27 @@ const declarationValue = (className, property) => {
 	return rule[1].trim();
 };
 
+/**
+ * The declaration block of the rule holding the given (scoped) class.
+ * @param {string} className unscoped class name
+ * @returns {string} everything between the rule's braces
+ */
+const ruleBody = (className) => {
+	const rule = new RegExp(
+		`\\.[^\\s{}]*_css-${className}\\s*\\{([^}]*)\\}`
+	).exec(css);
+	expect(rule).not.toBe(null);
+	return rule[1];
+};
+
+/**
+ * How many times a substring occurs in another.
+ * @param {string} haystack string to search
+ * @param {string} needle substring to count
+ * @returns {number} occurrence count
+ */
+const countOf = (haystack, needle) => haystack.split(needle).length - 1;
+
 it("should emit the whole stylesheet with every prelude ident replaced once", () => {
 	expect(css).toMatchSnapshot();
 });
@@ -56,6 +77,29 @@ it("should not concatenate the @value name onto its own substituted value", () =
 	expect(css).not.toMatch(/articlearticle/);
 	expect(css).not.toMatch(/chainedAnimchainedAnim/);
 	expect(css).not.toMatch(/importedAnimimportedAnim/);
+});
+
+it("should substitute every occurrence of a repeated @value animation name", () => {
+	const pulse = "value-at-rule-prelude-style_module_css-pulseAnim";
+	const spin = "value-at-rule-prelude-style_module_css-spinAnim";
+
+	// An overriding second declaration is substituted like the first.
+	const override = ruleBody("override-anim");
+	expect(countOf(override, pulse)).toBe(2);
+	expect(override).toContain(`animation: ${pulse} 1s linear;`);
+	expect(override).toContain(`animation: ${pulse} 2s linear;`);
+
+	// Comma-separated lists substitute per entry, repeats included.
+	expect(ruleBody("multi-anim")).toContain(`animation-name: ${pulse}, ${spin};`);
+	expect(ruleBody("repeat-anim")).toContain(
+		`animation-name: ${pulse}, ${pulse};`
+	);
+	expect(ruleBody("shorthand-list-anim")).toContain(
+		`animation: ${pulse} 1s, ${spin} 2s;`
+	);
+
+	// Two @keyframes blocks may name the same @value; both preludes replace.
+	expect(countOf(css, `@keyframes ${pulse} {`)).toBe(2);
 });
 
 it("should scope a vendor-prefixed @keyframes named by a @value", () => {
