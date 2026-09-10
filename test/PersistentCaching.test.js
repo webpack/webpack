@@ -585,4 +585,225 @@ export const B = process.env.B;
 		await compile(configFor("2", "1", `2|${keyB}=3`));
 		expect(execute()).toEqual(["a2", "b2"]);
 	}, 100000);
+
+	const inlineConfig = {
+		mode: "production",
+		optimization: { minimize: false },
+		output: {
+			...config.output,
+			pathinfo: true
+		}
+	};
+
+	// Each kind renders its own literal, so a cache that refreshes one may
+	// still hand a consumer the previous kind's text.
+	it("should refresh every kind of inlined literal across cached builds", async () => {
+		const steps = [
+			{ code: "1", value: 1, literal: "1" },
+			{ code: '"ab"', value: "ab", literal: '"ab"' },
+			{ code: "true", value: true, literal: "true" },
+			{ code: "null", value: null, literal: "null" },
+			{ code: "undefined", value: undefined, literal: "undefined" },
+			{ code: "2", value: 2, literal: "2" }
+		];
+		await updateSrc({
+			"index.js": `import { VALUE } from "./env.js";
+export default VALUE;
+`
+		});
+		for (const step of steps) {
+			await updateSrc({ "env.js": `export const VALUE = ${step.code};\n` });
+			await compile(inlineConfig);
+			expect(execute()).toBe(step.value);
+			const source = await readFile(
+				path.resolve(outputPath, "main.js"),
+				"utf8"
+			);
+			expect(source).toContain(`inlined export .VALUE */${step.literal}`);
+		}
+	}, 120000);
+
+	// Inlining stops above 6 bytes, so a cached consumer has to gain the
+	// literal, lose it, and gain it again.
+	it("should add and drop an inlined literal across the size limit", async () => {
+		await updateSrc({
+			"index.js": `import { SHORT, NUM } from "./env.js";
+export default [SHORT, NUM];
+`
+		});
+		const steps = [
+			{ short: "abc", num: 1, inlined: true },
+			{ short: "abcdefgh", num: 1234567, inlined: false },
+			{ short: "xyz", num: 9, inlined: true }
+		];
+		for (const step of steps) {
+			await updateSrc({
+				"env.js": `export const SHORT = ${JSON.stringify(step.short)};
+export const NUM = ${step.num};
+`
+			});
+			await compile(inlineConfig);
+			expect(execute()).toEqual([step.short, step.num]);
+			const source = await readFile(
+				path.resolve(outputPath, "main.js"),
+				"utf8"
+			);
+			if (step.inlined) {
+				expect(source).toContain(
+					`inlined export .SHORT */${JSON.stringify(step.short)}`
+				);
+				expect(source).toContain(`inlined export .NUM */${step.num}`);
+			} else {
+				expect(source).not.toContain("inlined export .SHORT");
+				expect(source).not.toContain("inlined export .NUM");
+			}
+		}
+	}, 120000);
+
+	// The literal travels the whole chain, so any link may serve a stale one.
+	it("should refresh an inlined literal reached through re-exports", async () => {
+		await updateSrc({
+			"index.js": `import { LEAF } from "./barrel.js";
+import { NAMED } from "./renamed.js";
+export default [LEAF, NAMED];
+`,
+			"barrel.js": 'export { LEAF } from "./mid.js";\n',
+			"renamed.js": 'export { LEAF as NAMED } from "./mid.js";\n',
+			"mid.js": 'export { LEAF } from "./leaf.js";\n'
+		});
+		for (const value of [1, 2, 3]) {
+			await updateSrc({ "leaf.js": `export const LEAF = ${value};\n` });
+			await compile(inlineConfig);
+			expect(execute()).toEqual([value, value]);
+			const source = await readFile(
+				path.resolve(outputPath, "main.js"),
+				"utf8"
+			);
+			// A renamed re-export still renders under the name the leaf exports
+			expect(source).toContain(`inlined export .LEAF */${value}`);
+			expect(source).not.toContain(`inlined export .LEAF */${value - 1}`);
+		}
+	}, 120000);
+
+	// Without concatenation the literal comes from RuntimeTemplate instead of
+	// ConcatenatedModule, which is a separate renderer with its own cache path.
+	it("should refresh an inlined literal without module concatenation", async () => {
+		const configAdditions = {
+			...inlineConfig,
+			optimization: { minimize: false, concatenateModules: false }
+		};
+		await updateSrc({
+			"index.js": `import { VALUE } from "./env.js";
+export default VALUE;
+`
+		});
+		for (const value of [10, 11, 12]) {
+			await updateSrc({ "env.js": `export const VALUE = ${value};\n` });
+			await compile(configAdditions);
+			expect(execute()).toBe(value);
+			const source = await readFile(
+				path.resolve(outputPath, "main.js"),
+				"utf8"
+			);
+			expect(source).toContain(`inlined export .VALUE */${value}`);
+		}
+	}, 120000);
+
+	// Every consumer bakes in its own copy, so invalidating one is not enough.
+	it("should refresh an inlined literal in every consumer", async () => {
+		await updateSrc({
+			"index.js": `import { VALUE } from "./env.js";
+import { FROM_A } from "./a.js";
+import { FROM_B } from "./b.js";
+export default [VALUE, FROM_A, FROM_B];
+`,
+			"a.js": `import { VALUE } from "./env.js";
+export const FROM_A = VALUE;
+`,
+			"b.js": `import { VALUE } from "./env.js";
+export const FROM_B = VALUE;
+`
+		});
+		for (const value of [1, 2, 3]) {
+			await updateSrc({ "env.js": `export const VALUE = ${value};\n` });
+			await compile(inlineConfig);
+			expect(execute()).toEqual([value, value, value]);
+			const source = await readFile(
+				path.resolve(outputPath, "main.js"),
+				"utf8"
+			);
+			expect(source).not.toContain(`inlined export .VALUE */${value - 1}`);
+		}
+	}, 120000);
+
+	// EnvironmentPlugin feeds DefinePlugin, so its values reach the inlined
+	// literal without any module source changing.
+	it("should invalidate consumer codegen when an EnvironmentPlugin value changes", async () => {
+		const { EnvironmentPlugin } = require("../");
+
+		const previous = process.env.WEBPACK_TEST_INLINE;
+		try {
+			await updateSrc({
+				"index.js": `import { FLAG } from "./env.js";
+export default FLAG;
+`,
+				"env.js": "export const FLAG = process.env.WEBPACK_TEST_INLINE;\n"
+			});
+			for (const value of ["on", "off"]) {
+				process.env.WEBPACK_TEST_INLINE = value;
+				await compile({
+					...inlineConfig,
+					plugins: [new EnvironmentPlugin(["WEBPACK_TEST_INLINE"])]
+				});
+				expect(execute()).toBe(value);
+				const source = await readFile(
+					path.resolve(outputPath, "main.js"),
+					"utf8"
+				);
+				expect(source).toContain(
+					`inlined export .FLAG */${JSON.stringify(value)}`
+				);
+			}
+		} finally {
+			process.env.WEBPACK_TEST_INLINE = previous;
+		}
+	}, 120000);
+
+	// A chunk shared by two entrypoints carries a runtime set, which the module
+	// graph hash walks down a different branch than a single named runtime.
+	it("should refresh an inlined literal in a chunk shared by two runtimes", async () => {
+		const configAdditions = {
+			...inlineConfig,
+			entry: { main: "./src/index.js", other: "./src/other.js" },
+			optimization: {
+				minimize: false,
+				splitChunks: { chunks: "all", minSize: 0 }
+			}
+		};
+		await updateSrc({
+			"index.js": `import { FROM_SHARED } from "./shared.js";
+export default FROM_SHARED;
+`,
+			"other.js": `import { FROM_SHARED } from "./shared.js";
+export default FROM_SHARED;
+`,
+			"shared.js": `import { VALUE } from "./env.js";
+export const FROM_SHARED = VALUE;
+`
+		});
+		for (const value of [1, 2, 3]) {
+			await updateSrc({ "env.js": `export const VALUE = ${value};\n` });
+			await compile(configAdditions);
+			expect(execute()).toBe(value);
+			const emitted = await readdir(outputPath);
+			const sources = await Promise.all(
+				emitted
+					.filter((name) => name.endsWith(".js"))
+					.map((name) => readFile(path.resolve(outputPath, name), "utf8"))
+			);
+			expect(sources.join("\n")).not.toContain(
+				`inlined export .VALUE */${value - 1}`
+			);
+		}
+	}, 120000);
 });
