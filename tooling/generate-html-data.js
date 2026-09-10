@@ -11,7 +11,8 @@
 //   node tooling/generate-html-data.js --write
 //
 // `yarn fix:special` writes both; `yarn lint:special` runs it without `--write`
-// and fails on a stale file, so a spec change lands as a reviewable diff.
+// and fails on a stale file. Neither output states a source's version, so only
+// a bump that moved a table is a diff — the versions go to the log line.
 
 const fs = require("fs");
 const path = require("path");
@@ -45,6 +46,13 @@ const webref = (pkg, file) =>
 
 const IDL_PATH = webref("@webref/idl", "html.idl");
 const ELEMENTS_PATH = webref("@webref/elements", "html.json");
+
+// The two packages' versions, for the log line alone. Reported rather than
+// emitted, so a bump moving no table moves no byte of `lib/html/data.js`.
+const SOURCE_VERSIONS = [
+	`@webref/idl ${require("@webref/idl/package.json").version}`,
+	`@webref/elements ${require("@webref/elements/package.json").version}`
+].join(", ");
 
 /** @typedef {Record<string, string[] | null>} AttributeScopes attribute name -> the elements it applies to, `null` when global */
 /** @typedef {{ boolean: AttributeScopes, url: AttributeScopes, integer: AttributeScopes, signedInteger: string[], tokenList: AttributeScopes, eventHandler: AttributeScopes }} ReflectTables */
@@ -2079,7 +2087,7 @@ ${PARSER_TABLES.map(parserTable).join("\n")}
 ${EXPORT_NAMES.map((name) => `module.exports.${name} = ${name};`).join("\n")}
 `;
 
-const summary = `${booleans.length} boolean, ${urls.length} url, ${integers.length} integer (${signed.length} signed), ${tokenLists.length} token-list, ${eventHandlers.length} event-handler attributes`;
+const summary = `${SOURCE_VERSIONS}; ${booleans.length} boolean, ${urls.length} url, ${integers.length} integer (${signed.length} signed), ${tokenLists.length} token-list, ${eventHandlers.length} event-handler attributes`;
 
 // Tolerate both LF and CRLF so `check` mode doesn't false-fail on a Windows
 // checkout where git normalized the line endings.
