@@ -1,0 +1,14 @@
+{
+  "name": "function(id) { return { default: 'dll-default', added: 'dll-added' }; }",
+  "content": {
+    "./item.js": {
+      "id": "./item.js",
+      "buildMeta": {
+        "exportsType": "default",
+        "defaultObject": "redirect",
+        "treatAsCommonJs": true
+      },
+      "exports": ["added", "default"]
+    }
+  }
+}
