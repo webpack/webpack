@@ -765,7 +765,12 @@ export default FLAG;
 				);
 			}
 		} finally {
-			process.env.WEBPACK_TEST_INLINE = previous;
+			// Assigning undefined would leave the string "undefined" behind
+			if (previous === undefined) {
+				delete process.env.WEBPACK_TEST_INLINE;
+			} else {
+				process.env.WEBPACK_TEST_INLINE = previous;
+			}
 		}
 	}, 120000);
 
