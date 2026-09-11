@@ -24,12 +24,11 @@ const lexerSpecifiersOf = (code) => {
 	if (lexer === undefined) {
 		lexer = null;
 		try {
-			// Loading it compiles its wasm right there, and an engine too old to
-			// decode that rejects a promise nothing else would ever read.
+			// The first parse compiles its wasm right there, and an engine too old
+			// to decode that throws where nothing else would ever see it.
 			const loaded = require("es-module-lexer");
 
-			loaded.init.catch(() => {});
-			loaded.initSync();
+			loaded.parse("");
 			lexer = loaded;
 		} catch (_error) {
 			lexer = null;
@@ -41,7 +40,13 @@ const lexerSpecifiersOf = (code) => {
 		/** @type {string[]} */
 		const found = [];
 		for (const entry of imports) {
-			if (entry.n !== undefined) found.push(entry.n);
+			// a template specifier reads back as a glob, which names no one module
+			if (
+				typeof entry.specifier === "string" &&
+				!(entry.type === "dynamic" && entry.glob)
+			) {
+				found.push(entry.specifier);
+			}
 		}
 		return found;
 	} catch (_error) {

@@ -1,6 +1,14 @@
-import { getInfo, getInfoFromPullRequest } from "@changesets/get-github-info";
+import { getCommitInfo, getPullRequestInfo } from "@changesets/get-github-info";
 
 /** @import { ChangelogFunctions } from "@changesets/types" */
+/** @import { CommitInfo, PullRequestInfo } from "@changesets/get-github-info" */
+
+/**
+ * @typedef {object} Links
+ * @property {string | null} commit markdown link to the commit
+ * @property {string | null} pull markdown link to the pull request
+ * @property {string | null} user markdown link to the author
+ */
 
 /**
  * @returns {{ GITHUB_SERVER_URL: string }} value
@@ -35,6 +43,20 @@ async function withRetry(fn) {
 	throw lastError;
 }
 
+/**
+ * Flattens a lookup result into the markdown links a changelog line is built
+ * from; a lookup that found nothing leaves every link `null`.
+ * @param {CommitInfo | PullRequestInfo | undefined} info lookup result
+ * @returns {Links} links
+ */
+function toLinks(info) {
+	return {
+		commit: info && info.commit ? info.commit.markdownLink : null,
+		pull: info && info.pull ? info.pull.markdownLink : null,
+		user: info && info.author ? info.author.markdownLink : null
+	};
+}
+
 /** @type {ChangelogFunctions} */
 const changelogFunctions = {
 	getDependencyReleaseLine: async (
@@ -53,13 +75,13 @@ const changelogFunctions = {
 			await Promise.all(
 				changesets.map(async (cs) => {
 					if (cs.commit) {
-						const { links } = await withRetry(() =>
-							getInfo({
+						const info = await withRetry(() =>
+							getCommitInfo({
 								repo: options.repo,
 								commit: cs.commit
 							})
 						);
-						return links.commit;
+						return toLinks(info).commit;
 					}
 				})
 			)
@@ -110,30 +132,28 @@ const changelogFunctions = {
 
 		const links = await (async () => {
 			if (prFromSummary !== undefined) {
-				let { links } = await withRetry(() =>
-					getInfoFromPullRequest({
+				const info = await withRetry(() =>
+					getPullRequestInfo({
 						repo: options.repo,
 						pull: prFromSummary
 					})
 				);
+				const links = toLinks(info);
 				if (commitFromSummary) {
 					const shortCommitId = commitFromSummary.slice(0, 7);
-					links = {
-						...links,
-						commit: `[\`${shortCommitId}\`](${GITHUB_SERVER_URL}/${options.repo}/commit/${commitFromSummary})`
-					};
+					links.commit = `[\`${shortCommitId}\`](${GITHUB_SERVER_URL}/${options.repo}/commit/${commitFromSummary})`;
 				}
 				return links;
 			}
 			const commitToFetchFrom = commitFromSummary || changeset.commit;
 			if (commitToFetchFrom) {
-				const { links } = await withRetry(() =>
-					getInfo({
+				const info = await withRetry(() =>
+					getCommitInfo({
 						repo: options.repo,
 						commit: commitToFetchFrom
 					})
 				);
-				return links;
+				return toLinks(info);
 			}
 			return {
 				commit: null,

@@ -1598,31 +1598,31 @@ ${details(snapshot)}`)
 			const LF = "\n";
 			const LS = "\u2028";
 			const PS = "\u2029";
-			// Template literals keep es-module-lexer's `n` unset, so the specifier
-			// flows through `parseString`; the bad ones throw and are caught.
+			// es-module-lexer decodes a specifier it can read on its own, so only a
+			// wider expression reaches `parseString`; bad escapes throw there.
 			const source = `${[
-				"import(``);",
-				"import(`./plain.mjs`);",
-				"import(`./hex\\x41.mjs`);",
-				"import(`./unicode\\u0041.mjs`);",
-				"import(`./codepoint\\u{1F600}.mjs`);",
-				"import(`./named\\n\\t\\r\\b\\f\\v.mjs`);",
-				"import(`./nul\\0.mjs`);",
-				"import(`./other\\q\\$.mjs`);",
-				`import(\`./cont\\${LF}lf.mjs\`);`,
-				`import(\`./cont\\${CR}cr.mjs\`);`,
-				`import(\`./cont\\${CR}${LF}crlf.mjs\`);`,
-				`import(\`./cont\\${LS}ls.mjs\`);`,
-				`import(\`./cont\\${PS}ps.mjs\`);`,
-				`import(\`./raw${CR}cr.mjs\`);`,
-				"import(`./bad-hex\\xZZ.mjs`);",
-				"import(`./bad-unicode\\uZZZZ.mjs`);",
-				"import(`./bad-codepoint\\u{110000}.mjs`);",
-				"import(`./empty-codepoint\\u{}.mjs`);",
-				"import(`./octal\\101.mjs`);",
-				"import(`./decimal\\8.mjs`);",
-				// Non-analyzable args keep `n` unset and feed a string literal to
-				// parseString: legacy octal, \\8, and a non-literal (returns null).
+				"import(`` + x);",
+				"import(`./plain.mjs` + x);",
+				"import(`./hex\\x41.mjs` + x);",
+				"import(`./unicode\\u0041.mjs` + x);",
+				"import(`./codepoint\\u{1F600}.mjs` + x);",
+				"import(`./named\\n\\t\\r\\b\\f\\v.mjs` + x);",
+				"import(`./nul\\0.mjs` + x);",
+				"import(`./other\\q\\$.mjs` + x);",
+				`import(\`./cont\\${LF}lf.mjs\` + x);`,
+				`import(\`./cont\\${CR}cr.mjs\` + x);`,
+				`import(\`./cont\\${CR}${LF}crlf.mjs\` + x);`,
+				`import(\`./cont\\${LS}ls.mjs\` + x);`,
+				`import(\`./cont\\${PS}ps.mjs\` + x);`,
+				`import(\`./raw${CR}cr.mjs\` + x);`,
+				"import(`./bad-hex\\xZZ.mjs` + x);",
+				"import(`./bad-unicode\\uZZZZ.mjs` + x);",
+				"import(`./bad-codepoint\\u{110000}.mjs` + x);",
+				"import(`./empty-codepoint\\u{}.mjs` + x);",
+				"import(`./octal\\101.mjs` + x);",
+				"import(`./decimal\\8.mjs` + x);",
+				// String literals in the same position: legacy octal, \\8, and a
+				// non-literal (returns null).
 				'import("\\101" + x);',
 				'import("\\8" + x);',
 				'import(x + "\\u0041");'
@@ -1636,6 +1636,40 @@ ${details(snapshot)}`)
 				(err, result) => {
 					if (err) return done(err);
 					expect(result).toBeDefined();
+					done();
+				}
+			);
+		});
+
+		it("tracks the literal ESM specifiers the lexer decodes", (done) => {
+			const fs = createFsFromVolume(new Volume());
+			fs.mkdirSync("/proj", { recursive: true });
+			fs.writeFileSync(
+				"/proj/entry.mjs",
+				`${[
+					'import "./static\\u0041.mjs";',
+					'export * from "./star.mjs";',
+					"import(`./template\\x42.mjs`);",
+					"console.log(import.meta.url);"
+				].join("\n")}\n`
+			);
+			fs.writeFileSync("/proj/staticA.mjs", "export const a = 1;\n");
+			fs.writeFileSync("/proj/star.mjs", "export const b = 2;\n");
+			fs.writeFileSync("/proj/templateB.mjs", "export const c = 3;\n");
+			const fsInfo = createProjectFsInfo(fs);
+			fsInfo.resolveBuildDependencies(
+				"/proj",
+				["/proj/entry.mjs"],
+				undefined,
+				(err, result_) => {
+					if (err) return done(err);
+					const result =
+						/** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+							result_
+						);
+					expect(result.files).toContain("/proj/staticA.mjs");
+					expect(result.files).toContain("/proj/star.mjs");
+					expect(result.files).toContain("/proj/templateB.mjs");
 					done();
 				}
 			);
