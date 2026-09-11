@@ -22,9 +22,10 @@ const removeLink = (link) => {
 };
 
 module.exports = () => {
+	// three suites run this filter at once, so each process probes its own path
 	const probe = path.resolve(
 		__dirname,
-		"../../../js/side-effects-symlinked-probe"
+		`../../../js/side-effects-symlinked-probe-${process.pid}`
 	);
 	fs.mkdirSync(path.dirname(probe), { recursive: true });
 	// a probe a failed cleanup left behind would read as EEXIST, i.e. "cannot"
