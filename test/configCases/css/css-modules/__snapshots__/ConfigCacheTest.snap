@@ -4,7 +4,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "my-app-identifiers_module_css-UsedClassName",
   "VARS": "--my-app-style_module_css-LOCAL-COLOR my-app-style_module_css-VARS undefined my-app-style_module_css-globalVarsUpperCase",
-  "__webpack_modules__": 6,
+  "__webpack_modules__": 12,
   "animation": "my-app-style_module_css-animation",
   "animationName": "my-app-style_module_css-animationName",
   "class": "my-app-style_module_css-class",
@@ -2815,7 +2815,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "my-app-identifiers_module_css-UsedClassName",
   "VARS": "--my-app-style_module_css-LOCAL-COLOR my-app-style_module_css-VARS undefined my-app-style_module_css-globalVarsUpperCase",
-  "__webpack_modules__": 6,
+  "__webpack_modules__": 12,
   "animation": "my-app-style_module_css-animation",
   "animationName": "my-app-style_module_css-animationName",
   "class": "my-app-style_module_css-class",
