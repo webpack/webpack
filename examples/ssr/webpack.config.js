@@ -46,6 +46,7 @@ const server = {
 		path: path.resolve(__dirname, "dist/server"),
 		filename: "[name].mjs",
 		chunkFilename: "[name].mjs",
+		module: true,
 		library: { type: "module" }
 	},
 	// keep node builtins and installed packages out of the server bundle; add
@@ -71,9 +72,6 @@ const server = {
 	},
 	optimization: {
 		chunkIds: "named"
-	},
-	experiments: {
-		outputModule: true
 	}
 };
 

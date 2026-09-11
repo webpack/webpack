@@ -8,10 +8,10 @@ module.exports = {
 	target: ["web", "node"],
 	mode: "development",
 	devtool: false,
-	// implied by the universal target, but the harness reads the raw config to
-	// decide whether to emit (and run) the bundle as `.mjs`
-	experiments: {
-		outputModule: true
+	// the universal target defaults it on, but the harness reads the raw config
+	// to decide whether to emit (and run) the bundle as `.mjs`
+	output: {
+		module: true
 	},
 	plugins: [new SSRManifestPlugin()]
 };
