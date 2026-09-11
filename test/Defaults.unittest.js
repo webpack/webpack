@@ -6175,4 +6175,83 @@ describe("optimization.minimize", () => {
 			html: false
 		});
 	});
+
+	describe("library module output defaults", () => {
+		it("should default output.module to true when library.type is module", () => {
+			const config = getDefaultConfig({
+				mode: "none",
+				output: {
+					library: {
+						type: "module"
+					}
+				}
+			});
+			expect(config.output.module).toBe(true);
+		});
+
+		it("should default output.module to true when library.type is modern-module", () => {
+			const config = getDefaultConfig({
+				mode: "none",
+				output: {
+					library: {
+						type: "modern-module"
+					}
+				}
+			});
+			expect(config.output.module).toBe(true);
+		});
+
+		it("should default output.module to true when entry library.type is module", () => {
+			const config = getDefaultConfig({
+				mode: "none",
+				entry: {
+					main: {
+						import: "./src",
+						library: {
+							type: "module"
+						}
+					}
+				}
+			});
+			expect(config.output.module).toBe(true);
+		});
+
+		it("should throw when library.type is module and output.module is false", () => {
+			const webpack = require("..");
+
+			expect(() => {
+				webpack({
+					mode: "none",
+					entry: "./src",
+					output: {
+						module: false,
+						library: {
+							type: "module"
+						}
+					}
+				});
+			}).toThrow(
+				"library type \"module\" is only allowed when 'output.module' is enabled"
+			);
+		});
+
+		it("should throw when library.type is modern-module and output.module is false", () => {
+			const webpack = require("..");
+
+			expect(() => {
+				webpack({
+					mode: "none",
+					entry: "./src",
+					output: {
+						module: false,
+						library: {
+							type: "modern-module"
+						}
+					}
+				});
+			}).toThrow(
+				"library type \"modern-module\" is only allowed when 'output.module' is enabled"
+			);
+		});
+	});
 });

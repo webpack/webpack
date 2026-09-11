@@ -480,8 +480,12 @@ class TestRunner {
 		}
 		if (
 			modulePath.endsWith(".mjs") &&
-			this.webpackOptions.output &&
-			this.webpackOptions.output.module
+			((this.webpackOptions.output &&
+				(this.webpackOptions.output.module ||
+					(this.webpackOptions.output.library &&
+						(this.webpackOptions.output.library.type === "module" ||
+							this.webpackOptions.output.library.type === "modern-module")))) ||
+				TestRunner.isUniversalTarget(this.webpackOptions))
 		) {
 			return this._moduleRunners.esm(moduleInfo, context);
 		}
