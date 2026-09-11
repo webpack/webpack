@@ -130,13 +130,17 @@ const TAILWIND_DAISYUI = `@import "tailwindcss";
 @source inline("{card-body,card-title,card-actions,modal-box,modal-action,navbar-start,navbar-center,navbar-end,menu-title,dropdown-content,collapse-title,collapse-content,drawer-side,drawer-content,hero-content,stat-title,stat-value,stat-desc,join-item,table-zebra,tab-active,loading-spinner,loading-dots}");
 `;
 
+// Built rather than installed: a label, the file it lands in, and its source.
+/** @type {[string, string, string][]} */
+const GENERATED_FIXTURES = [
+	["Tailwind 4 (app-sized)", "tailwind-app.css", TAILWIND_APP],
+	["Tailwind 4 (wide utilities)", "tailwind-wide.css", TAILWIND_WIDE],
+	["Tailwind 4 + daisyUI 5", "tailwind-daisyui.css", TAILWIND_DAISYUI]
+];
+
 const setup = async () => {
 	await installPackages(CACHE_NAME, PACKAGES);
-	for (const [source, out] of [
-		[TAILWIND_APP, "tailwind-app.css"],
-		[TAILWIND_WIDE, "tailwind-wide.css"],
-		[TAILWIND_DAISYUI, "tailwind-daisyui.css"]
-	]) {
+	for (const [, out, source] of GENERATED_FIXTURES) {
 		const target = path.join(CACHE, out);
 		if (await exists(target)) continue;
 		log(`building ${out} …`);
@@ -203,9 +207,9 @@ const fixtures = () => [
 	.../** @type {[string, string][]} */ (
 		INSTALLED_FIXTURES.map(([label, file]) => [label, path.join(MODULES, file)])
 	),
-	["Tailwind 4 (app-sized)", path.join(CACHE, "tailwind-app.css")],
-	["Tailwind 4 (wide utilities)", path.join(CACHE, "tailwind-wide.css")],
-	["Tailwind 4 + daisyUI 5", path.join(CACHE, "tailwind-daisyui.css")]
+	.../** @type {[string, string][]} */ (
+		GENERATED_FIXTURES.map(([label, file]) => [label, path.join(CACHE, file)])
+	)
 ];
 
 // Each entry builds its callable on demand, so the measuring worker loads only
@@ -655,7 +659,29 @@ const main = async () => {
 	}
 };
 
-(process.argv[2] === "--measure" ? measure(TOOLS) : main()).catch((error) => {
-	log(String(error && error.stack ? error.stack : error));
-	process.exitCode = 1;
-});
+// Only as the entry point, so a test can read the corpus below without running
+// the comparison.
+if (require.main === module) {
+	// `--setup` installs the fixtures and builds nothing else, so a consumer
+	// that only reads them does not run the comparison to get them.
+	const mode = process.argv[2];
+	const started =
+		mode === "--measure"
+			? measure(TOOLS)
+			: mode === "--setup"
+				? setup()
+				: main();
+	started.catch((error) => {
+		log(String(error && error.stack ? error.stack : error));
+		process.exitCode = 1;
+	});
+}
+
+// Where the cache holds each fixture, for a reader that is not this script.
+module.exports = {
+	CACHE,
+	INSTALLED_FIXTURES,
+	GENERATED_FIXTURES: /** @type {[string, string][]} */ (
+		GENERATED_FIXTURES.map(([label, file]) => [label, file])
+	)
+};

@@ -934,6 +934,17 @@ describe("CssSyntax — block streaming", () => {
 		expect(out.slice(at, at + victim.length)).toBe(victim);
 	});
 
+	it("folds no block of a layer over a streamed block of that layer", () => {
+		// A streamed block is one its parent's gather never saw, so a later block
+		// of its layer must not fold in front of it — that order is the cascade's.
+		const src = `@layer outer{@layer a{.one{color:red}}@layer a{${BIG}}@layer a{.three{color:teal}}}`;
+		// The middle block has to stream for the gather to be the one under test.
+		expect(childCount(`@layer a{${BIG}}`)).toBe(0);
+		const out = minify(src);
+		expect(out.indexOf(".one")).toBeLessThan(out.indexOf(".c0"));
+		expect(out.indexOf(".c0")).toBeLessThan(out.indexOf(".three"));
+	});
+
 	it("enters a streamed rule before its children and exits after them", () => {
 		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");

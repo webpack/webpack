@@ -30,6 +30,8 @@ const {
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 const launchChrome = require("./helpers/launchChrome");
 const {
+	benchmarkDocuments,
+	benchmarkStylesheets,
 	buildCorpus,
 	compareRules,
 	conditionSignatures,
@@ -73,6 +75,10 @@ const VALUE_BUDGET = 2000;
 const FILED_CONFIG_CSS_DEFECTS = new Map();
 
 const FILED_CONFIG_HTML_DEFECTS = new Map();
+
+const FILED_BENCHMARK_CSS_DEFECTS = new Map();
+
+const FILED_BENCHMARK_HTML_DEFECTS = new Map();
 
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[
@@ -237,6 +243,21 @@ const buildCorpora = () => {
 			filedCss: FILED_CONFIG_CSS_DEFECTS
 		}
 	];
+	// Real projects, where `configCases` and wpt are both written to exercise a
+	// rule rather than to ship.
+	const benchHtml = benchmarkDocuments((source) => source);
+	const benchCss = benchmarkStylesheets(minifyCss);
+	if (benchHtml.length > 0 || benchCss.length > 0) {
+		built.push({
+			label: "benchmark corpus",
+			html: variant(benchHtml, {}),
+			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
+			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
+			css: benchCss,
+			filedHtml: FILED_BENCHMARK_HTML_DEFECTS,
+			filedCss: FILED_BENCHMARK_CSS_DEFECTS
+		});
+	}
 	if (!hasCorpus()) return built;
 	/** @type {Fixture[]} */
 	const wptHtml = [];
@@ -288,6 +309,9 @@ const inBatches = async (page, items, evaluate) => {
 // rather than reporting green.
 const NO_CORPUS =
 	"wpt submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)";
+
+const NO_BENCHMARK_CORPUS =
+	"comparison caches not built (run `yarn benchmark:css-tools` / `yarn benchmark:html-tools`)";
 
 expectNoDeprecations();
 
@@ -631,6 +655,28 @@ describe("printer output in real Chrome", () => {
 				FILE_TIMEOUT
 			);
 
+			// CSS Cascade 4 §6.2: a normal declaration written after an important one
+			// does not override it, so the later block is the dead one.
+			it(
+				"reads a repeated selector's importance as the cascade does",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "important-then-normal",
+							raw: ".a{--x:red!important}.a{--x:blue}",
+							min: ".a{--x:red!important}"
+						},
+						{
+							name: "normal-then-normal",
+							raw: ".a{--y:red}.a{--y:blue}",
+							min: ".a{--y:blue}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
 			// A value that is not itself a color still carries them, and the computed
 			// value keeps the space each was written in.
 			it(
@@ -695,10 +741,15 @@ describe("printer output in real Chrome", () => {
 	// Which corpora were built depends on what is checked out, so each names
 	// itself, and one that could not be built says so rather than going quiet.
 	for (const at of corpora.keys()) describeCorpus(at);
-	if (!corpora.some((one) => one.label === "wpt")) {
-		describe("wpt", () => {
-			it(NO_CORPUS, () => {
-				// No-op: the corpus is an optional git submodule.
+	for (const [label, why] of [
+		["wpt", NO_CORPUS],
+		["benchmark corpus", NO_BENCHMARK_CORPUS]
+	]) {
+		if (corpora.some((one) => one.label === label)) continue;
+
+		describe(label, () => {
+			it(why, () => {
+				// No-op: both are optional, and each is built outside this suite.
 			});
 		});
 	}
