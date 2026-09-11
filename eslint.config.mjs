@@ -287,6 +287,18 @@ export default defineConfig([
 		}
 	},
 	{
+		// The parser keeps acorn's method and property names, since
+		// `lib/javascript/syntax.js` and any acorn plugin call them by those names.
+		files: [
+			"lib/javascript/grammar.js",
+			"lib/javascript/parser.js",
+			"lib/javascript/regexp.js"
+		],
+		rules: {
+			camelcase: "off"
+		}
+	},
+	{
 		files: [".changeset/**/*.mjs"],
 		languageOptions: {
 			ecmaVersion: 2025

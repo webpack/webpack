@@ -1,0 +1,270 @@
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Alexander Akait @alexander-akait
+*/
+
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const acorn = require("acorn");
+const prettier = require("prettier");
+
+const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
+// The property tables sit in their own module: only a pattern the engine
+// rejected reaches the validator that matches names against them.
+const REGEXP_DATA_TARGET = path.resolve(
+	__dirname,
+	"../lib/javascript/regexpData.js"
+);
+
+// The largest code point Unicode defines, and the first one above the BMP.
+const MAX_CODE_POINT = 0x10ffff;
+const FIRST_ASTRAL = 0x10000;
+
+/**
+ * Run-length encode the code points a predicate accepts, as alternating
+ * gap-since-the-previous-range and range-length pairs.
+ * @param {(code: number) => boolean} accepts the classification to encode
+ * @param {number} from first code point to ask about
+ * @param {number} to last code point to ask about
+ * @returns {number[]} the encoded ranges
+ */
+const encodeRanges = (accepts, from, to) => {
+	/** @type {number[]} */
+	const encoded = [];
+	let previousEnd = from;
+	let code = from;
+	while (code <= to) {
+		if (!accepts(code)) {
+			code++;
+			continue;
+		}
+		const start = code;
+		while (code <= to && accepts(code)) code++;
+		encoded.push(start - previousEnd, code - start);
+		previousEnd = code;
+	}
+	return encoded;
+};
+
+/**
+ * The identifier tables acorn pins, read back through its own predicates so a
+ * bump of the dependency is what moves them.
+ * @returns {{ start: number[], part: number[], astralStart: number[], astralPart: number[] }} the encoded tables
+ */
+const collectIdentifierTables = () => {
+	// acorn exports the predicates at runtime but leaves them out of its types.
+	const { isIdentifierStart, isIdentifierChar } =
+		/** @type {{ isIdentifierStart: (code: number, astral?: boolean) => boolean, isIdentifierChar: (code: number, astral?: boolean) => boolean }} */ (
+			/** @type {unknown} */ (acorn)
+		);
+	return {
+		start: encodeRanges((code) => isIdentifierStart(code, false), 0x80, 0xffff),
+		part: encodeRanges((code) => isIdentifierChar(code, false), 0x80, 0xffff),
+		astralStart: encodeRanges(
+			(code) => isIdentifierStart(code, true),
+			FIRST_ASTRAL,
+			MAX_CODE_POINT
+		),
+		astralPart: encodeRanges(
+			(code) => isIdentifierChar(code, true),
+			FIRST_ASTRAL,
+			MAX_CODE_POINT
+		)
+	};
+};
+
+// The `var` block in acorn's bundle that states the Unicode property names each
+// ECMAScript edition accepts, which nothing exports.
+const PROPERTY_BLOCK_START = "var scriptValuesAddedInUnicode";
+const PROPERTY_BLOCK_END = "var data = {}";
+
+/**
+ * The per-edition Unicode property names, read out of acorn's own bundle: the
+ * spec pins them by edition, so no dataset states them and the dependency is
+ * the only place they are already written down.
+ * @returns {{ binary: Record<string, string>, binaryOfStrings: Record<string, string>, generalCategory: string, script: Record<string, string> }} the tables
+ */
+const collectUnicodeProperties = () => {
+	const bundle = fs.readFileSync(
+		path.join(path.dirname(require.resolve("acorn")), "acorn.js"),
+		"utf8"
+	);
+	const from = bundle.indexOf(PROPERTY_BLOCK_START);
+	const to = bundle.indexOf(PROPERTY_BLOCK_END, from);
+	if (from === -1 || to === -1) {
+		throw new Error(
+			"acorn no longer states its Unicode property tables where this generator reads them"
+		);
+	}
+	const block = bundle.slice(from, to);
+	// eslint-disable-next-line no-new-func
+	const read = new Function(
+		`${block}
+		return {
+			binary: unicodeBinaryProperties,
+			binaryOfStrings: unicodeBinaryPropertiesOfStrings,
+			generalCategory: unicodeGeneralCategoryValues,
+			script: unicodeScriptValues
+		};`
+	);
+	const tables = read();
+	for (const edition of [9, 10, 11, 12, 13, 14]) {
+		if (
+			typeof tables.binary[edition] !== "string" ||
+			typeof tables.script[edition] !== "string"
+		) {
+			throw new Error(
+				`acorn states no Unicode properties for edition ${edition}`
+			);
+		}
+	}
+	return tables;
+};
+
+/**
+ * Render one encoded table as a module-scope constant.
+ * @param {string} name the constant's name
+ * @param {string} description what the table holds
+ * @param {number[]} ranges the encoded ranges
+ * @param {number} base the code point the first gap counts from
+ * @returns {string} the source for it
+ */
+const renderTable = (name, description, ranges, base) =>
+	`// ${description}\n// Pairs of gap-since-the-previous-range and range-length, from ${`0x${base.toString(16)}`}.\n/** @type {number[]} */\nconst ${name} = [${ranges.join(",")}];\n`;
+
+/**
+ * The header every generated module here opens with.
+ * @returns {string} its source
+ */
+const renderHeader = () => `/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Alexander Akait @alexander-akait
+*/
+
+// GENERATED by tooling/generate-js-data.js — do not edit.
+// Sources: acorn ${acorn.version}.
+
+"use strict";
+`;
+
+/**
+ * Build the identifier-classification module.
+ * @returns {string} its source
+ */
+const renderData = () => {
+	const tables = collectIdentifierTables();
+	return `${renderHeader()}
+${renderTable(
+	"IDENTIFIER_START_RANGES",
+	"Non-ASCII code points in the BMP that may start an identifier.",
+	tables.start,
+	0x80
+)}
+${renderTable(
+	"IDENTIFIER_PART_RANGES",
+	"Non-ASCII code points in the BMP that may continue an identifier.",
+	tables.part,
+	0x80
+)}
+${renderTable(
+	"ASTRAL_IDENTIFIER_START_RANGES",
+	"Code points above the BMP that may start an identifier.",
+	tables.astralStart,
+	FIRST_ASTRAL
+)}
+${renderTable(
+	"ASTRAL_IDENTIFIER_PART_RANGES",
+	"Code points above the BMP that may continue an identifier.",
+	tables.astralPart,
+	FIRST_ASTRAL
+)}
+module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
+module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
+module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
+module.exports.IDENTIFIER_START_RANGES = IDENTIFIER_START_RANGES;
+`;
+};
+
+/**
+ * Build the module holding the Unicode property names `\\p{...}` accepts.
+ * @returns {string} its source
+ */
+const renderRegexpData = () => {
+	const properties = collectUnicodeProperties();
+	return `${renderHeader()}
+// The Unicode property names each ECMAScript edition accepts in \\p{...}.
+/** @type {Record<string, string>} */
+const UNICODE_BINARY_PROPERTIES = ${JSON.stringify(properties.binary, null, 1)};
+
+/** @type {Record<string, string>} */
+const UNICODE_BINARY_PROPERTIES_OF_STRINGS = ${JSON.stringify(properties.binaryOfStrings, null, 1)};
+
+/** @type {string} */
+const UNICODE_GENERAL_CATEGORY_VALUES = ${JSON.stringify(properties.generalCategory)};
+
+/** @type {Record<string, string>} */
+const UNICODE_SCRIPT_VALUES = ${JSON.stringify(properties.script, null, 1)};
+
+module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
+module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
+	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
+module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
+module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
+`;
+};
+
+/**
+ * Write one generated module, or report that it is stale.
+ * @param {string} target where it belongs
+ * @param {string} source what it should hold
+ * @returns {Promise<void>} settles once the file is written or checked
+ */
+const writeGenerated = async (target, source) => {
+	const write = process.argv.includes("--write");
+	const name = `lib/javascript/${path.basename(target)}`;
+	const config = await prettier.resolveConfig(target);
+	const formatted = await prettier.format(source, {
+		...config,
+		filepath: target
+	});
+	const current = fs.existsSync(target)
+		? fs.readFileSync(target, "utf8")
+		: null;
+	if (current === formatted) {
+		process.stdout.write(`${name} is up to date\n`);
+		return;
+	}
+	if (write) {
+		fs.writeFileSync(target, formatted);
+		process.stdout.write(`${name} updated\n`);
+		return;
+	}
+	process.stderr.write(`${name} is out of date — run \`yarn fix:special\`\n`);
+	process.exitCode = 1;
+};
+
+/**
+ * Write both generated modules, or report that either is stale.
+ * @returns {Promise<void>} settles once both are written or checked
+ */
+const generate = async () => {
+	await writeGenerated(DATA_TARGET, renderData());
+	await writeGenerated(REGEXP_DATA_TARGET, renderRegexpData());
+};
+
+if (require.main === module) {
+	// `generate` is async, so a failed generation has to be turned back into a
+	// non-zero exit rather than left as an unhandled rejection.
+	generate().catch((error) => {
+		process.stderr.write(`${error.stack}\n`);
+		process.exitCode = 1;
+	});
+}
+
+module.exports.DATA_TARGET = DATA_TARGET;
+module.exports.REGEXP_DATA_TARGET = REGEXP_DATA_TARGET;
+module.exports.collectIdentifierTables = collectIdentifierTables;
+module.exports.collectUnicodeProperties = collectUnicodeProperties;
+module.exports.encodeRanges = encodeRanges;
