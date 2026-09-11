@@ -1801,6 +1801,26 @@ describe("WebpackParser", () => {
 				}).ast.body[0].type
 			).toBe("ImportDeclaration");
 		});
+
+		it("should locate the `import` of import.meta when acorn tracks locations", () => {
+			for (const importPhases of [true, false]) {
+				const declaration =
+					/** @type {import("estree").VariableDeclaration} */ (
+						parse("const y = import.meta;", {
+							sourceType: "module",
+							importPhases,
+							locations: true
+						}).ast.body[0]
+					);
+				const meta = /** @type {import("estree").MetaProperty} */ (
+					declaration.declarations[0].init
+				);
+				expect(meta.meta.loc).toEqual({
+					start: { line: 1, column: 10 },
+					end: { line: 1, column: 16 }
+				});
+			}
+		});
 	});
 
 	describe("import attributes (owned with/assert clause)", () => {
