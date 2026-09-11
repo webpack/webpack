@@ -9044,6 +9044,11 @@ declare interface ExternalModuleInfo {
 	deferredNamespaceObjectName?: string;
 
 	/**
+	 * an import reads the spec namespace object the module hands out
+	 */
+	specNamespaceObjectUsed: boolean;
+
+	/**
 	 * "default-with-named" namespace
 	 */
 	interopNamespaceObjectUsed: boolean;
