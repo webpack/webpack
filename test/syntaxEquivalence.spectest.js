@@ -655,6 +655,28 @@ describe("printer output in real Chrome", () => {
 				FILE_TIMEOUT
 			);
 
+			// CSS Cascade 4 §6.2: a normal declaration written after an important one
+			// does not override it, so the later block is the dead one.
+			it(
+				"reads a repeated selector's importance as the cascade does",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "important-then-normal",
+							raw: ".a{--x:red!important}.a{--x:blue}",
+							min: ".a{--x:red!important}"
+						},
+						{
+							name: "normal-then-normal",
+							raw: ".a{--y:red}.a{--y:blue}",
+							min: ".a{--y:blue}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
 			// A value that is not itself a color still carries them, and the computed
 			// value keeps the space each was written in.
 			it(

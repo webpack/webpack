@@ -343,11 +343,15 @@ jobs:
       # comparisons install. Not fatal — the suite reads whichever fixtures are
       # there and reports the tier as not built when the install did not land, so
       # a registry outage costs that corpus rather than the job.
-      - name: Install the comparison corpus
+      # One step each: `run` stops at the first command that fails, so a single
+      # block would cost both corpora where only one install went wrong.
+      - name: Install the CSS comparison corpus
         continue-on-error: true
-        run: |
-          yarn benchmark:css-tools:setup
-          yarn benchmark:html-tools:setup
+        run: yarn benchmark:css-tools:setup
+
+      - name: Install the HTML comparison corpus
+        continue-on-error: true
+        run: yarn benchmark:html-tools:setup
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

@@ -596,10 +596,13 @@ const installHelpers = () => {
 		for (const source of own || [probe.style]) {
 			for (let at = 0; at < source.length; at++) {
 				const property = source.item(at);
-				stated.set(property, [
-					source.getPropertyValue(property),
-					source.getPropertyPriority(property)
-				]);
+				// CSS Cascade 4 §6.2: an important declaration is not overridden by a
+				// normal one written after it, so the later block does not take it.
+				const priority = source.getPropertyPriority(property);
+				const earlier = stated.get(property);
+				if (earlier === undefined || priority !== "" || earlier[1] === "") {
+					stated.set(property, [source.getPropertyValue(property), priority]);
+				}
 			}
 		}
 		/** @type {string[]} */
