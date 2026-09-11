@@ -4860,7 +4860,7 @@ export interface JavascriptParserOptions {
 	 */
 	sourceImport?: boolean;
 	/**
-	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. An importer that is itself concatenated renders namespace access inline and does not consult this option yet.
+	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.
 	 * @since 5.111.0
 	 * @experimental
 	 */
