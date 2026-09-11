@@ -912,9 +912,6 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
-	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
-	"expressions/dynamic-import/returns-promise.js",
-
 	// webpack bugs and improvements
 	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
 	// namespace has two own keys where the spec has one.
