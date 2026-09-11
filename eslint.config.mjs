@@ -291,6 +291,10 @@ export default defineConfig([
 		languageOptions: {
 			ecmaVersion: 2025
 		},
+		settings: {
+			// exports-only package, which the node resolver predates
+			"import/core-modules": ["@changesets/get-github-info"]
+		},
 		rules: {
 			"no-console": "off",
 			"n/no-unsupported-features/node-builtins": "off"
