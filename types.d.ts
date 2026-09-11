@@ -1305,6 +1305,37 @@ type BuildDependencyItem =
 			 */
 			optional?: boolean;
 	  };
+declare interface BuildDiagnostics {
+	/**
+	 * what parser plugins reported as optimization bailouts, replayed into the module graph of every compilation that reuses the module
+	 */
+	optimizationBailouts?: string[];
+
+	/**
+	 * the statement whose side effect keeps the module in the bundle, as `type at location`
+	 */
+	sideEffectStatement?: string;
+
+	/**
+	 * how many `#__PURE__` annotations sit where the parser does not read them
+	 */
+	ineffectivePureAnnotations?: number;
+
+	/**
+	 * how many times the module reads `this` at its top level
+	 */
+	topLevelThis?: number;
+
+	/**
+	 * true when the module calls `eval` directly
+	 */
+	usesEval?: boolean;
+
+	/**
+	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
+	 */
+	notCacheableReasons?: string[];
+}
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare interface BuiltinEmbeddedRendererOptions {
@@ -15238,11 +15269,6 @@ declare interface KnownAssetModuleBuildInfo {
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
-
-	/**
-	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
-	 */
-	notCacheableReasons?: string[];
 	strict?: boolean;
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -15264,29 +15290,14 @@ declare interface KnownBuildInfo {
 	isCircular?: boolean;
 
 	/**
-	 * true when the module calls `eval` directly
-	 */
-	usesEval?: boolean;
-
-	/**
-	 * how many `#__PURE__` annotations sit where the parser does not read them
-	 */
-	ineffectivePureAnnotations?: number;
-
-	/**
-	 * how many times the module reads `this` at its top level
-	 */
-	topLevelThis?: number;
-
-	/**
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
 
 	/**
-	 * what the build recorded for the module graph to report as optimization bailouts, replayed into every compilation that reuses the module
+	 * what the build recorded for stats and the performance hints to report
 	 */
-	optimizationBailout?: OptimizationBailoutRecord;
+	diagnostics?: BuildDiagnostics;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
@@ -20430,17 +20441,6 @@ declare interface Optimization {
 	usedExports?: boolean | "global";
 }
 
-declare interface OptimizationBailoutRecord {
-	/**
-	 * the bailouts as reported by the module graph
-	 */
-	reasons: string[];
-
-	/**
-	 * the statement whose side effect keeps the module in the bundle, as `type at location`
-	 */
-	sideEffect?: string;
-}
 /**
  * What the CSS minimizer does. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it. Every transform that keeps the stylesheet's meaning is on by default and may be turned off on its own, so a document a rewrite breaks can be minimized without it while the rest still applies; the two that change what the CSSOM hands back (`convertLengthUnits`, `rewriteCustomProperties`) are off until asked for.
  * @since 5.110.0

@@ -1,5 +1,7 @@
 "use strict";
 
+const { getBuildDiagnostics } = require("../../../lib/util/buildDiagnostics");
+
 // Reasons a plugin attaches directly, unlike the loader below which is
 // attributed automatically. `f.js` states none at all.
 /** @type {[string, string[] | undefined][]} */
@@ -41,7 +43,7 @@ module.exports = {
 								);
 
 							buildInfo.cacheable = false;
-							buildInfo.notCacheableReasons = reasons;
+							getBuildDiagnostics(buildInfo).notCacheableReasons = reasons;
 						}
 					});
 				});

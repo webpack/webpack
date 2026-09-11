@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Persist parse-time optimization bailouts in `buildInfo.optimizationBailout`.
+Move diagnostics to `buildInfo.diagnostics`, persisting parse-time bailouts.
