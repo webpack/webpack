@@ -949,4 +949,75 @@ export default Object.keys(ns).sort();
 			expect(execute()).toEqual(step.keys);
 		}
 	}, 120000);
+
+	// The class names a CSS module exports are the keys its consumers destructure,
+	// so a cached mapping outlives a stylesheet that renamed them.
+	it("should refresh the class names a cached CSS module exports", async () => {
+		await updateSrc({
+			"index.js": `import * as styles from "./style.modules.css";
+export default Object.keys(styles).sort();
+`
+		});
+		for (const name of ["alpha", "beta", "alpha"]) {
+			await updateSrc({
+				"style.modules.css": `.${name} { color: red; }\n`
+			});
+			await compile(inlineConfig);
+			expect(execute()).toEqual([name]);
+		}
+	}, 120000);
+
+	// An alias lives in the configuration, which the pack reuses across builds
+	// until cache.version says the configuration changed.
+	it("should re-resolve an alias when the cache version marks the config changed", async () => {
+		await updateSrc({
+			"index.js": `import value from "my-alias";
+export default value;
+`,
+			"target-a.js": 'export default "from-a";\n',
+			"target-b.js": 'export default "from-b";\n'
+		});
+		for (const target of ["a", "b", "a"]) {
+			await compile({
+				...inlineConfig,
+				cache: { version: `alias-${target}` },
+				resolve: {
+					alias: {
+						...config.resolve.alias,
+						"my-alias": path.resolve(srcPath, `target-${target}.js`)
+					}
+				}
+			});
+			expect(execute()).toBe(`from-${target}`);
+		}
+	}, 120000);
+
+	// DefinePlugin hashes the set of keys separately from each value, so adding
+	// one has to invalidate the modules that substituted the others.
+	it("should re-substitute when the define key set changes", async () => {
+		const { DefinePlugin } = require("../");
+
+		await updateSrc({
+			"index.js": `export default [
+	typeof FIRST === "undefined" ? "none" : FIRST,
+	typeof SECOND === "undefined" ? "none" : SECOND
+];
+`
+		});
+		const steps = [
+			{ definitions: { FIRST: '"one"' }, expected: ["one", "none"] },
+			{
+				definitions: { FIRST: '"one"', SECOND: '"two"' },
+				expected: ["one", "two"]
+			},
+			{ definitions: { SECOND: '"two"' }, expected: ["none", "two"] }
+		];
+		for (const step of steps) {
+			await compile({
+				...inlineConfig,
+				plugins: [new DefinePlugin(step.definitions)]
+			});
+			expect(execute()).toEqual(step.expected);
+		}
+	}, 120000);
 });
