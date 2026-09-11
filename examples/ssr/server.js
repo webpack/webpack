@@ -49,10 +49,8 @@ export async function renderDocument({ inlineCss = false } = {}) {
 	const head = entryFiles.filter(isStylesheet).map(stylesheetTag);
 
 	if (inlineCss) {
-		// What chunk loading pulled in during this process, not during this request:
-		// the registry is global and cumulative, so inline it only where
-		// over-inlining is acceptable. It holds no initial stylesheet, which is why
-		// the entry's is still linked above.
+		// process-wide and cumulative rather than per-request, and it carries no
+		// initial stylesheet — which is why the entry's is still linked above
 		head.push(`<style>${__webpack_css_server_styles__}</style>`);
 	} else {
 		head.push(...routeFiles.filter(isStylesheet).map(stylesheetTag));

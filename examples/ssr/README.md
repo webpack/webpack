@@ -153,10 +153,8 @@ export async function renderDocument({ inlineCss = false } = {}) {
 	const head = entryFiles.filter(isStylesheet).map(stylesheetTag);
 
 	if (inlineCss) {
-		// What chunk loading pulled in during this process, not during this request:
-		// the registry is global and cumulative, so inline it only where
-		// over-inlining is acceptable. It holds no initial stylesheet, which is why
-		// the entry's is still linked above.
+		// process-wide and cumulative rather than per-request, and it carries no
+		// initial stylesheet — which is why the entry's is still linked above
 		head.push(`<style>${__webpack_css_server_styles__}</style>`);
 	} else {
 		head.push(...routeFiles.filter(isStylesheet).map(stylesheetTag));
@@ -273,6 +271,7 @@ const server = {
 		path: path.resolve(__dirname, "dist/server"),
 		filename: "[name].mjs",
 		chunkFilename: "[name].mjs",
+		module: true,
 		library: { type: "module" }
 	},
 	// keep node builtins and installed packages out of the server bundle; add
@@ -298,9 +297,6 @@ const server = {
 	},
 	optimization: {
 		chunkIds: "named"
-	},
-	experiments: {
-		outputModule: true
 	}
 };
 
@@ -461,14 +457,14 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 21.4 KiB [emitted] [javascript module] (name: main)
+  asset main.mjs 21.2 KiB [emitted] [javascript module] (name: main)
   asset page_js.mjs 1.63 KiB [emitted] [javascript module]
   asset page_js.css 352 bytes [emitted]
-  chunk (runtime: main) main.mjs (main) 5.19 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
     > ./server.js main
     runtime modules 5.9 KiB 9 modules
     dependent modules 1.02 KiB [dependent] 8 modules
-    ./server.js 4.17 KiB [built] [code generated]
+    ./server.js 4.05 KiB [built] [code generated]
       [exports: renderDocument]
       [used exports unknown]
       entry ./server.js main
@@ -523,11 +519,11 @@ server:
   asset main.mjs 4.52 KiB [emitted] [javascript module] [minimized] (name: main)
   asset page_js-page_css.mjs 565 bytes [emitted] [javascript module] [minimized]
   asset page_js-page_css.css 197 bytes [emitted] [minimized]
-  chunk (runtime: main) main.mjs (main) 5.19 KiB (javascript) 5.72 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 5.72 KiB (runtime) [entry] [rendered]
     > ./server.js main
     runtime modules 5.72 KiB 8 modules
     dependent modules 84 bytes [dependent] 2 modules
-    ./server.js + 6 modules 5.11 KiB [not cacheable] [built] [code generated]
+    ./server.js + 6 modules 4.99 KiB [not cacheable] [built] [code generated]
       [exports: renderDocument]
       [all exports used]
       entry ./server.js main
