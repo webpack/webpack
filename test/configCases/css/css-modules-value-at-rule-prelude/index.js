@@ -177,6 +177,28 @@ it("should replace @scope prelude idents once", () => {
 	);
 });
 
+it("should resolve a @value standing in for a selector and then localize it", () => {
+	// `@value x: .cls` names a class, so it scopes like the selector the author
+	// would have written; a type selector has nothing to localize.
+	expect(css).toMatch(
+		/\.value-at-rule-prelude-style_module_css-resolvedCls \{\s+color: navy;/
+	);
+	expect(css).toMatch(
+		/#value-at-rule-prelude-style_module_css-resolvedId \{\s+color: maroon;/
+	);
+	expect(css).toMatch(/\barticle \{\s+color: olive;/);
+	expect(style.resolvedCls).toBe(
+		"value-at-rule-prelude-style_module_css-resolvedCls"
+	);
+	expect(style.resolvedId).toBe(
+		"value-at-rule-prelude-style_module_css-resolvedId"
+	);
+});
+
+it("should substitute a @value naming a richer selector verbatim", () => {
+	expect(css).toMatch(/\.outer \.inner \{\s+color: gray;/);
+});
+
 it("should keep substituting a @value used as a whole @media query", () => {
 	expect(css).toMatch(/@media \(max-width: 599px\) \{/);
 });

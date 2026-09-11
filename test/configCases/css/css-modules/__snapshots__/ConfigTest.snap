@@ -152,7 +152,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.red {
+.my-app-at-rule-value_module_css-red {
 	color: .red;
 }
 
@@ -8484,7 +8484,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 
 
 
-.red {
+.elijK0 {
 	color: .red;
 }
 
@@ -11506,7 +11506,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to disable 
 
 
 
-.red {
+.my-app-at-rule-value_module_css-red {
 	color: .red;
 }
 

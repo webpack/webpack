@@ -143,3 +143,24 @@
 @keyframes importedKeyframes {
 	to { opacity: 0.25; }
 }
+
+@value classSelValue: .resolvedCls;
+@value idSelValue: #resolvedId;
+@value typeSelValue: article;
+@value richSelValue: .outer .inner;
+
+classSelValue {
+	color: navy;
+}
+
+idSelValue {
+	color: maroon;
+}
+
+typeSelValue {
+	color: olive;
+}
+
+richSelValue {
+	color: gray;
+}

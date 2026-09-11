@@ -160,6 +160,27 @@ exports[`ConfigCacheTestCases css css-modules-value-at-rule-prelude exported tes
 	to { opacity: 0.25; }
 }
 
+
+
+
+
+
+.value-at-rule-prelude-style_module_css-resolvedCls {
+	color: navy;
+}
+
+#value-at-rule-prelude-style_module_css-resolvedId {
+	color: maroon;
+}
+
+article {
+	color: olive;
+}
+
+.outer .inner {
+	color: gray;
+}
+
 /*!***********************************!*\\\\
   !*** css ./no-scoping.module.css ***!
   \\\\***********************************/
