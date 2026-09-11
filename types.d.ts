@@ -11687,7 +11687,12 @@ declare class InitFragment<GenerateContext> {
 declare abstract class InlinedUsedName {
 	value: InlinedValue;
 	suffix: string[];
-	render(comment: string): string;
+	render(comment?: string): string;
+
+	/**
+	 * Updates the hash with the data contributed by this instance.
+	 */
+	updateHash(hash: Hash): void;
 }
 declare abstract class InlinedValue {
 	kind: InlinedValueKind;
