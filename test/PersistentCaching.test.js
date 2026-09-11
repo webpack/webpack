@@ -806,4 +806,147 @@ export const FROM_SHARED = VALUE;
 			);
 		}
 	}, 120000);
+
+	// A JSON module's values reach consumers through the module graph, so a
+	// cached one can hand back the previous document.
+	it("should refresh a cached JSON module's values", async () => {
+		await updateSrc({
+			"index.js": `import data from "./data.json";
+export default data;
+`
+		});
+		for (const step of [0, 1, 2]) {
+			await updateSrc({
+				"data.json": JSON.stringify({
+					value: step + 1,
+					nested: { deep: `deep-${step}` }
+				})
+			});
+			await compile(inlineConfig);
+			expect(execute()).toEqual({
+				value: step + 1,
+				nested: { deep: `deep-${step}` }
+			});
+			const source = await readFile(
+				path.resolve(outputPath, "main.js"),
+				"utf8"
+			);
+			expect(source).not.toContain(`deep-${step - 1}`);
+		}
+	}, 120000);
+
+	// The losing branch is removed at build time, so a stale build keeps code
+	// the current configuration says is unreachable.
+	it("should keep only the branch a changed define value selects", async () => {
+		const { DefinePlugin } = require("../");
+
+		await updateSrc({
+			"index.js": `import { run } from "./feature.js";
+export default run();
+`,
+			"feature.js": `export function run() {
+	if (process.env.PICK === "p0") return "took-p0";
+	if (process.env.PICK === "p1") return "took-p1";
+	return "took-p2";
+}
+`
+		});
+		for (const step of [0, 1, 2]) {
+			await compile({
+				...inlineConfig,
+				plugins: [
+					new DefinePlugin({ "process.env.PICK": JSON.stringify(`p${step}`) })
+				]
+			});
+			expect(execute()).toBe(`took-p${step}`);
+			const source = await readFile(
+				path.resolve(outputPath, "main.js"),
+				"utf8"
+			);
+			for (const other of [0, 1, 2]) {
+				if (other !== step) expect(source).not.toContain(`took-p${other}`);
+			}
+		}
+	}, 120000);
+
+	// A stale url still names a file an earlier build emitted, so reading the
+	// file back catches a consumer that kept the previous hash.
+	it("should point a cached consumer at a changed asset's content hash", async () => {
+		const configAdditions = {
+			...inlineConfig,
+			output: {
+				...config.output,
+				publicPath: "",
+				assetModuleFilename: "[name].[contenthash:8][ext]"
+			},
+			module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] }
+		};
+		await updateSrc({
+			"index.js": `import url from "./data.txt";
+export default url;
+`
+		});
+		for (const step of [0, 1, 2]) {
+			await updateSrc({ "data.txt": `content-${step}\n` });
+			await compile(configAdditions);
+			const url = /** @type {string} */ (execute());
+			const emitted = await readFile(
+				path.resolve(outputPath, path.basename(url)),
+				"utf8"
+			);
+			expect(emitted.trim()).toBe(`content-${step}`);
+		}
+	}, 120000);
+
+	// The module source never changes; only the file the loader declared with
+	// addDependency does, so the pack must not answer with the old result.
+	it("should rebuild a cached loader result when its tracked file changed", async () => {
+		await updateSrc({
+			"loader.js": `const fs = require("fs");
+const path = require("path");
+
+const fileDep = path.resolve(__dirname, "tracked.txt");
+
+module.exports = function () {
+	this.addDependency(fileDep);
+	return "module.exports = " + JSON.stringify(fs.readFileSync(fileDep, "utf8").trim()) + ";";
+};
+`,
+			"stub.js": "module.exports = null;\n",
+			"index.js": `import value from "./loader.js!./stub.js";
+export default value;
+`
+		});
+		for (const step of [0, 1, 2]) {
+			await updateSrc({ "tracked.txt": `tracked-${step}\n` });
+			await compile(inlineConfig);
+			expect(execute()).toBe(`tracked-${step}`);
+		}
+	}, 120000);
+
+	// Provided exports are stored per build hash, so a provider restored from
+	// the pack can report the set it had when it was written.
+	it("should see exports a cached provider gained between builds", async () => {
+		await updateSrc({
+			"index.js": `import * as ns from "./lib.js";
+export default Object.keys(ns).sort();
+`
+		});
+		const steps = [
+			{ code: 'export const BASE = "base";\n', keys: ["BASE"] },
+			{
+				code: 'export const BASE = "base";\nexport const SECOND = "second";\n',
+				keys: ["BASE", "SECOND"]
+			},
+			{
+				code: 'export const BASE = "base";\nexport const THIRD = "third";\n',
+				keys: ["BASE", "THIRD"]
+			}
+		];
+		for (const step of steps) {
+			await updateSrc({ "lib.js": step.code });
+			await compile(inlineConfig);
+			expect(execute()).toEqual(step.keys);
+		}
+	}, 120000);
 });
