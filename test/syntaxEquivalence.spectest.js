@@ -79,7 +79,7 @@ const FILED_CONFIG_HTML_DEFECTS = new Map();
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
 	[
 		"Tailwind 4 + daisyUI 5",
-		"unresolved: a rule moves within `@layer utilities >> @layer daisyui.l1.l2.l3`, and which side is wrong is not yet known — merging repeated blocks of one named layer is order-preserving on its own, so this is narrower than that"
+		"unresolved: the printer writes two blocks of `@layer daisyui.l1.l2.l3` where the source has three, and the one it leaves behind lands after rules that followed it — narrowed to a 82 KB fragment, but no smaller case reproduces it yet"
 	]
 ]);
 

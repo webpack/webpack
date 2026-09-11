@@ -576,9 +576,10 @@ const installHelpers = () => {
 	 * substitution is compared as parsed because `var(--a)` and `var(--b)` both
 	 * compute to nothing on a probe with no ancestor to resolve them.
 	 * @param {string} declaration the declaration block
-	 * @param {CSSStyleDeclaration=} own the block's own declarations, when it has
-	 * them: Chrome serializes an unterminated `var(--a` as `var(--a;`, which no
-	 * longer re-parses, so the probe alone would lose it
+	 * @param {CSSStyleDeclaration[]=} own the blocks' own declarations, later
+	 * winning: a round trip through `cssText` is lossy, so the probe alone would
+	 * lose an unterminated `var(--a` (serialized as `var(--a;`) and every
+	 * longhand of a shorthand awaiting substitution (serialized with no value)
 	 * @returns {string[]} one entry per property it sets, unordered
 	 */
 	const computed = (declaration, own) => {
@@ -588,15 +589,23 @@ const installHelpers = () => {
 		// the previous rule's value, and the computed style would be read in flight.
 		for (const animation of probe.getAnimations()) animation.cancel();
 		const style = getComputedStyle(probe);
-		const source = own || probe.style;
-		/** @type {string[]} */
-		const out = [];
+		/** @type {Map<string, [string, string]>} */
+		const stated = new Map();
 		// Indexed rather than iterated: a `@function` body's `result` descriptor is
 		// counted and named by `item()`, but Chrome's iterator hands back nothing.
-		for (let at = 0; at < source.length; at++) {
-			const property = source.item(at);
-			const specified = source.getPropertyValue(property);
-			const bang = source.getPropertyPriority(property) === "" ? "" : "!";
+		for (const source of own || [probe.style]) {
+			for (let at = 0; at < source.length; at++) {
+				const property = source.item(at);
+				stated.set(property, [
+					source.getPropertyValue(property),
+					source.getPropertyPriority(property)
+				]);
+			}
+		}
+		/** @type {string[]} */
+		const out = [];
+		for (const [property, [specified, priority]] of stated) {
+			const bang = priority === "" ? "" : "!";
 			// A custom property is a token stream the engine keeps verbatim, so it is
 			// compared as written too — the whitespace and comments between its
 			// tokens say nothing once it is substituted.
@@ -639,7 +648,7 @@ const installHelpers = () => {
 		/** @type {Rule[]} */
 		const out = [];
 		// What each selector has been told so far, under each chain of conditions.
-		/** @type {Map<string, string>} */
+		/** @type {Map<string, { css: string, styles: CSSStyleDeclaration[] }>} */
 		const carried = new Map();
 		// A nested declaration block is its own interface, so it can be recognized
 		// rather than guessed at from the shape of its text.
@@ -874,7 +883,7 @@ const installHelpers = () => {
 					// about that selector so far: a printer is free to move a selector
 					// between two adjacent lists, so only the per-selector sequence is
 					// the thing both sides have to agree on.
-					const own = computed(style.cssText, style);
+					const own = computed(style.cssText, [style]);
 					const block = ` { ${[...own].sort().join(";")} }`;
 					const where = held
 						.map((one) => `${one.kind}\u0001${conditionKey(one)}`)
@@ -885,12 +894,15 @@ const installHelpers = () => {
 						const css =
 							earlier === undefined
 								? style.cssText
-								: `${earlier};${style.cssText}`;
-						carried.set(key, css);
+								: `${earlier.css};${style.cssText}`;
+						const styles =
+							earlier === undefined ? [style] : [...earlier.styles, style];
+						carried.set(key, { css, styles });
 						// Read as one block, which is what the cascade reads: a
 						// percentage or a `min()` here resolves against the earlier
-						// declarations, so the two lists cannot simply be added.
-						const list = earlier === undefined ? own : computed(css);
+						// declarations, so the two lists cannot simply be added. The
+						// declarations themselves still say which properties are set.
+						const list = earlier === undefined ? own : computed(css, styles);
 						out.push({
 							chain: held,
 							label: one,
