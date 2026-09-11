@@ -1031,11 +1031,9 @@ const installHelpers = () => {
 		"itemtype",
 		"ping"
 	]);
-	// Of those, the ones the spec calls a set of *unique* tokens, where a repeat
-	// names nothing the first did not. `ping` is not one: it lists URLs.
+	// Of those, the ones the spec reflects as a `DOMTokenList` — a set, so a
+	// repeat names nothing — which this engine implements no IDL member for.
 	const UNIQUE_TOKEN_LIST_ATTRIBUTES = new Set([
-		"accesskey",
-		"headers",
 		"itemprop",
 		"itemref",
 		"itemtype"

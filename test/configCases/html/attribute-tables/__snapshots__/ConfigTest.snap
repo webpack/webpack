@@ -9,6 +9,9 @@ exports[`ConfigTestCases html attribute-tables attribute-tables should compile 1
 </form>
 <img src=data:, alt=a decoding=async ismap>
 <p draggable=true accesskey=\\"s s\\" itemref=\\"one two\\">draggable</p>
+<a href=/x ping=\\"https://example.test/p https://example.test/p https://example.test/q\\">ping</a>
+<div itemscope itemtype=https://example.test/T><span itemprop=\\"m n\\">micro</span></div>
+<table><tr><th id=h1>h<td headers=\\"h1 h1\\">cell</table>
 <video controls autoplay muted playsinline loop></video>
 <iframe src=/x allowfullscreen></iframe>
 <marquee scrollamount=12 scrolldelay=85>scrolling</marquee>
