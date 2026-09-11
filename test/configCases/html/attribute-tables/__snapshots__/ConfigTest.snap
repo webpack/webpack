@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html attribute-tables attribute-tables should compile 1`] = `
+"<!doctype html><head><title>attribute-tables</title></head><body>
+<form action=/post autocomplete=on>
+	<input type=text autocapitalize=sentences autocomplete=EMAIL enterkeyhint=go inputmode=numeric spellcheck=true maxlength=10 minlength=2 autofocus>
+	<textarea writingsuggestions=false maxlength=100>text</textarea>
+	<button formaction=\\"  /submit?a=1&amp;b=2  \\" formenctype=multipart/form-data formmethod=post formnovalidate>send</button>
+</form>
+<img src=data:, alt=a decoding=async ismap>
+<p draggable=true accesskey=\\"s s\\" itemref=\\"one two\\">draggable</p>
+<video controls autoplay muted playsinline loop></video>
+<iframe src=/x allowfullscreen></iframe>
+<marquee scrollamount=12 scrolldelay=85>scrolling</marquee>
+<object declare data=data:,></object>
+<map name=m><area shape=rect coords=0,0,1,1 nohref></map>
+
+
+
+</body></html>"
+`;
