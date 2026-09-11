@@ -7,6 +7,7 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 
 
 
+
 @keyframes value-at-rule-prelude-values_module_css-importedKeyframes {
 	from { opacity: 0; }
 }
@@ -179,6 +180,12 @@ article {
 
 .outer .inner {
 	color: gray;
+}
+
+
+
+.importedCls {
+	color: silver;
 }
 
 /*!***********************************!*\\\\

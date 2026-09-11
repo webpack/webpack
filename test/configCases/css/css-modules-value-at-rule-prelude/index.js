@@ -199,6 +199,13 @@ it("should substitute a @value naming a richer selector verbatim", () => {
 	expect(css).toMatch(/\.outer \.inner \{\s+color: gray;/);
 });
 
+it("should substitute an imported @value used as a selector verbatim", () => {
+	// The defining module owns the scoped name, so an imported value stays a
+	// plain textual substitution rather than being localized here.
+	expect(css).toMatch(/\.importedCls \{\s+color: silver;/);
+	expect(css).not.toMatch(/_css-importedCls/);
+});
+
 it("should keep substituting a @value used as a whole @media query", () => {
 	expect(css).toMatch(/@media \(max-width: 599px\) \{/);
 });

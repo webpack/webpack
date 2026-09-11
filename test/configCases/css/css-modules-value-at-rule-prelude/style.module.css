@@ -164,3 +164,9 @@ typeSelValue {
 richSelValue {
 	color: gray;
 }
+
+@value importedSelValue from "./values.module.css";
+
+importedSelValue {
+	color: silver;
+}
