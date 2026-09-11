@@ -911,7 +911,16 @@ const main = async () => {
 // Only as the entry point, so a test can read the corpus below without running
 // the comparison.
 if (require.main === module) {
-	(process.argv[2] === "--measure" ? measure(TOOLS) : main()).catch((error) => {
+	// `--setup` installs the fixtures and builds nothing else, so a consumer
+	// that only reads them does not run the comparison to get them.
+	const mode = process.argv[2];
+	const started =
+		mode === "--measure"
+			? measure(TOOLS)
+			: mode === "--setup"
+				? setup()
+				: main();
+	started.catch((error) => {
 		log(String(error && error.stack ? error.stack : error));
 		process.exitCode = 1;
 	});
