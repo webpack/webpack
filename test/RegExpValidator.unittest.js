@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore Grek Kawi Mundari Garay Todhri Keycap aeiou gimsuyd dgimsvy
+
 const acorn = require("acorn");
 const { Parser } = require("../lib/javascript/parser");
 
