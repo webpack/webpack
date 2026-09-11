@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("path");
+const { pathToFileURL } = require("url");
 const identifierUtil = require("../lib/util/identifier");
 
 describe("util/identifier", () => {
@@ -292,6 +293,34 @@ describe("util/identifier", () => {
 			// The raw separators must not survive into the emitted literal.
 			expect(literal).not.toContain(LS);
 			expect(literal).not.toContain(PS);
+		});
+	});
+
+	describe("fileUrlToPath", () => {
+		const { fileUrlToPath } = identifierUtil;
+
+		it("converts a file URL back to the path it names", () => {
+			const absolute = path.resolve("/dir/file.js");
+
+			expect(fileUrlToPath(pathToFileURL(absolute).href)).toBe(absolute);
+		});
+
+		it("decodes the percent-encoding a file URL carries", () => {
+			const absolute = path.resolve("/dir/a file.js");
+
+			expect(fileUrlToPath(pathToFileURL(absolute).href)).toBe(absolute);
+		});
+
+		it("returns anything that is not a file URL unchanged", () => {
+			for (const value of [
+				"/dir/file.js",
+				"C:\\dir\\file.js",
+				"./relative.js",
+				"https://example.com/file.js",
+				""
+			]) {
+				expect(fileUrlToPath(value)).toBe(value);
+			}
 		});
 	});
 });

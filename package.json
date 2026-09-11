@@ -122,7 +122,7 @@
     "graceful-fs": "^4.2.11",
     "mime-db": "^1.54.0",
     "minimizer-webpack-plugin": "^5.7.0",
-    "schema-utils": "^4.3.3",
+    "schema-utils": "^4.4.0",
     "tapable": "^2.3.0",
     "watchpack": "^2.5.2",
     "webpack-sources": "^3.5.1"
@@ -213,7 +213,7 @@
     "three": "^0.185.1",
     "tinybench": "^6.0.1",
     "toml": "^5.0.0",
-    "tooling": "webpack/tooling#v1.28.1",
+    "tooling": "webpack/tooling#v1.28.2",
     "ts-loader": "^9.6.0",
     "typescript": "^6.0.3",
     "unified": "^11.0.5",
