@@ -5318,13 +5318,13 @@ Object {
   "module-parser-javascript-auto-spec-namespace-object": Object {
     "configs": Array [
       Object {
-        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
         "multiple": false,
         "path": "module.parser.javascript/auto.specNamespaceObject",
         "type": "boolean",
       },
     ],
-    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6724,13 +6724,13 @@ Object {
   "module-parser-javascript-dynamic-spec-namespace-object": Object {
     "configs": Array [
       Object {
-        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.specNamespaceObject",
         "type": "boolean",
       },
     ],
-    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -7970,13 +7970,13 @@ Object {
   "module-parser-javascript-esm-spec-namespace-object": Object {
     "configs": Array [
       Object {
-        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
         "multiple": false,
         "path": "module.parser.javascript/esm.specNamespaceObject",
         "type": "boolean",
       },
     ],
-    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -9002,13 +9002,13 @@ Object {
   "module-parser-javascript-spec-namespace-object": Object {
     "configs": Array [
       Object {
-        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+        "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
         "multiple": false,
         "path": "module.parser.javascript.specNamespaceObject",
         "type": "boolean",
       },
     ],
-    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer. A namespace re-exported as a named export is not itself wrapped yet.",
+    "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
     "multiple": false,
     "simpleType": "boolean",
   },
