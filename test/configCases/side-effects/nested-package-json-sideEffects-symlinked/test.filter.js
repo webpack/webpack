@@ -22,9 +22,11 @@ const removeLink = (link) => {
 };
 
 module.exports = () => {
+	// per process: jest workers evaluate this filter concurrently, and a shared
+	// probe path makes them race between the unlink below and the symlink
 	const probe = path.resolve(
 		__dirname,
-		"../../../js/side-effects-symlinked-probe"
+		`../../../js/side-effects-symlinked-probe-${process.pid}`
 	);
 	fs.mkdirSync(path.dirname(probe), { recursive: true });
 	// a probe a failed cleanup left behind would read as EEXIST, i.e. "cannot"
