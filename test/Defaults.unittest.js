@@ -704,6 +704,7 @@ describe("snapshots", () => {
 		    "usedExports": false,
 		  },
 		  "output": Object {
+		    "analyzableChunkImport": true,
 		    "assetModuleFilename": "[hash][ext][query][fragment]",
 		    "asyncChunks": true,
 		    "charset": true,

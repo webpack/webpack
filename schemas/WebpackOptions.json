@@ -5041,6 +5041,13 @@
             }
           ]
         },
+        "analyzableChunkImport": {
+          "description": "Bake statically analyzable literal import() specifiers for chunk loading in ESM output. When false, chunk loading uses runtime resolution with chunk IDs, preventing chunk content hashes from being baked into importing modules.",
+          "type": "boolean",
+          "cli": {
+            "negatedDescription": "Do not bake literal import() specifiers for chunk loading in ESM output."
+          }
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
@@ -5495,6 +5502,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "analyzableChunkImport": {
+          "description": "Bake statically analyzable literal import() specifiers for chunk loading in ESM output. When false, chunk loading uses runtime resolution with chunk IDs, preventing chunk content hashes from being baked into importing modules.",
+          "type": "boolean"
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
