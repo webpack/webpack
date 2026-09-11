@@ -15279,14 +15279,14 @@ declare interface KnownBuildInfo {
 	topLevelThis?: number;
 
 	/**
-	 * the statement whose side effect keeps the module in the bundle, as `type at location`
-	 */
-	sideEffectStatement?: string;
-
-	/**
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
+
+	/**
+	 * what the build recorded for the module graph to report as optimization bailouts, replayed into every compilation that reuses the module
+	 */
+	optimizationBailout?: OptimizationBailoutRecord;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
@@ -20430,6 +20430,17 @@ declare interface Optimization {
 	usedExports?: boolean | "global";
 }
 
+declare interface OptimizationBailoutRecord {
+	/**
+	 * the bailouts as reported by the module graph
+	 */
+	reasons: string[];
+
+	/**
+	 * the statement whose side effect keeps the module in the bundle, as `type at location`
+	 */
+	sideEffect?: string;
+}
 /**
  * What the CSS minimizer does. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it. Every transform that keeps the stylesheet's meaning is on by default and may be turned off on its own, so a document a rewrite breaks can be minimized without it while the rest still applies; the two that change what the CSSOM hands back (`convertLengthUnits`, `rewriteCustomProperties`) are off until asked for.
  * @since 5.110.0
@@ -26857,7 +26868,7 @@ declare class SideEffectsFlagPlugin {
 	/**
 	 * Creates an instance of SideEffectsFlagPlugin.
 	 */
-	constructor(analyseSource?: boolean, recordStatement?: boolean);
+	constructor(analyseSource?: boolean);
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
