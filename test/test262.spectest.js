@@ -326,6 +326,184 @@ const knownV8PrefixAndPostfixBugs = [
 	"expressions/postfix-increment/S11.3.1_A5_T1.js"
 ];
 
+// Each entry still builds and runs; only the error it pins is tolerated, so
+// an unrelated break here fails instead of being absorbed.
+/**
+ * @param {RegExp | RegExp[]} divergence the pattern(s) pinned for a test
+ * @param {unknown} errored the error the bundle threw
+ * @returns {boolean} true when the error is the pinned divergence
+ */
+const matchesDivergence = (divergence, errored) => {
+	const text = String(errored);
+
+	return (Array.isArray(divergence) ? divergence : [divergence]).some((item) =>
+		item.test(text)
+	);
+};
+
+/* cspell:disable */
+const webpackRuntimeDivergences = new Map([
+	// The chunk loader reads `Promise` off the global at call time. Capturing
+	// it at init would cost ~20 B gzip per bundle and hide later replacements.
+	[
+		"expressions/dynamic-import/returns-promise.js",
+		/Promise\.all is not a function/
+	],
+	// `__webpack_exports__` is a plain object carrying `__esModule`, so it
+	// has one own key too many and a reachable `Object.prototype`.
+	[
+		"import/import-attributes/json-via-namespace.js",
+		/Test262Error: Expected SameValue\(«2», «1»\) to be true/
+	],
+	[
+		"module-code/export-expname-binding-index.js",
+		[
+			/Test262Error: Expected a TypeError to be thrown but no exception was thrown at all/,
+			/SyntaxError: Delete of an unqualified identifier in strict mode\./
+		]
+	],
+	[
+		"import/import-attributes/text-via-namespace.js",
+		/Test262Error: Expected SameValue\(«2», «1»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/own-property-keys-binding-types.js",
+		/Test262Error: Expected SameValue\(«11», «10»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/own-property-keys-sort.js",
+		/Test262Error: Expected SameValue\(«17», «16»\) to be true/
+	],
+	// Potential improvement for enumerate
+	[
+		"module-code/namespace/internals/enumerate-binding-uninit.js",
+		/Test262Error: Expected a ReferenceError but got a Test262Error/
+	],
+	// `$262.evalScript` and `preventExtensions(this)` need the realm global,
+	// which a wrapped module's `this` is not.
+	[
+		"global-code/decl-func.js",
+		/Test262Error: brandNew should be an own property/
+	],
+	[
+		"global-code/script-decl-func-err-non-configurable.js",
+		/Test262Error: writable, non-enumerable data property Expected a TypeError to be thrown but no exception was thrown at all/
+	],
+	[
+		"global-code/script-decl-func-err-non-extensible.js",
+		/Test262Error: Expected a TypeError to be thrown but no exception was thrown at all/
+	],
+	[
+		"global-code/script-decl-func.js",
+		/Test262Error: brandNew should be an own property/
+	],
+	[
+		"global-code/script-decl-var-collision.js",
+		/Test262Error: no bindings created \(script declaring a `var` on a `let` binding\) Expected a ReferenceError to be thrown but no exception was thrown at all/
+	],
+	[
+		"global-code/script-decl-var-err.js",
+		/Test262Error: Expected a TypeError to be thrown but no exception was thrown at all/
+	],
+	[
+		"global-code/script-decl-var.js",
+		/Test262Error: brandNew should be an own property/
+	],
+	// A getter on a global `this` property has to be observed by a bare
+	// `x--`, which the wrapper's scoping prevents.
+	[
+		"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
+		/Test262Error: Expected true but got false/
+	],
+	[
+		"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
+		/Test262Error: Expected true but got false/
+	],
+	// webpack emits `delete super[(super(), 0)]` unchanged, so the order the
+	// index and the this-binding check run in is the engine's to fix.
+	[
+		"expressions/delete/super-property-uninitialized-this.js",
+		/Test262Error: Expected a ReferenceError but got a Test262Error/
+	],
+	// Namespace exotic semantics: a real namespace has a null prototype and
+	// non-extensible, non-writable bindings; a plain object has none.
+	[
+		"module-code/namespace/internals/get-own-property-str-found-init.js",
+		/Test262Error: Expected SameValue\(«undefined», «201»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/get-own-property-str-found-uninit.js",
+		/Test262Error: hasOwnProperty: local1 Expected a ReferenceError to be thrown but no exception was thrown at all/
+	],
+	[
+		"module-code/namespace/internals/get-prototype-of.js",
+		/Test262Error: Expected SameValue\(«true», «false»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/get-str-not-found.js",
+		/Test262Error: key: __proto__ Expected SameValue\(«\[object Object\]», «undefined»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/has-property-str-not-found.js",
+		/Test262Error: Reflect\.has: __proto__ Expected SameValue\(«true», «false»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/is-extensible.js",
+		/Test262Error: Expected SameValue\(«true», «false»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/object-hasOwnProperty-binding-uninit.js",
+		/Test262Error: Expected a ReferenceError to be thrown but no exception was thrown at all/
+	],
+	[
+		"module-code/namespace/internals/object-keys-binding-uninit.js",
+		/Test262Error: Expected a ReferenceError to be thrown but no exception was thrown at all/
+	],
+	[
+		"module-code/namespace/internals/object-propertyIsEnumerable-binding-uninit.js",
+		/Test262Error: Expected a ReferenceError to be thrown but no exception was thrown at all/
+	],
+	[
+		"module-code/namespace/internals/set-prototype-of.js",
+		/Test262Error: Expected a TypeError to be thrown but no exception was thrown at all/
+	],
+	[
+		"module-code/namespace/internals/set.js",
+		/Test262Error: Reflect\.set: local2 Expected SameValue\(«true», «false»\) to be true/
+	],
+	[
+		"module-code/namespace/internals/define-own-property.js",
+		/Test262Error: Reflect\.defineProperty: local2 Expected SameValue\(«true», «false»\) to be true/
+	],
+	// The same namespace-exotic gap for a dynamically imported namespace,
+	// read through a nested default re-export.
+	[
+		"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-indirect.js",
+		/Test262Error: ns\.namedNS2: is writable Expected SameValue\(«undefined», «true»\) to be true/
+	],
+	[
+		"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-indirect.js",
+		/Test262Error: ns\.namedNS2: is writable Expected SameValue\(«undefined», «true»\) to be true/
+	],
+	// `.then` must not be called on the deferred namespace's promise, and
+	// the async-module runtime calls it internally.
+	[
+		"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
+		/Test262Error: Promise\.prototype\.then must not be called by import\.defer internals Expected SameValue\(«10», «0»\) to be true/
+	],
+	// Same as the postfix pair: the getter must run before the value is
+	// written back, but bare `x` is scoped to the wrapper.
+	[
+		"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
+		/Test262Error: Expected true but got false/
+	],
+	[
+		"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
+		/Test262Error: Expected true but got false/
+	]
+]);
+/* cspell:enable */
+
 const knownV8Bugs = [
 	...knownV8EvalBugs,
 	...knownHostEvalBugs,
@@ -911,72 +1089,23 @@ const linkErrorsAtBuildTime = new Set([
 	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js"
 ]);
 
+// What `webpackRuntimeDivergences` cannot hold: an `async` test rejects
+// outside the harness's error capture, so jest fails it whatever we tolerate.
 const knownBugs = [
-	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
-	"expressions/dynamic-import/returns-promise.js",
-
 	// webpack bugs and improvements
 	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
 	// namespace has two own keys where the spec has one.
-	"import/import-attributes/json-via-namespace.js",
 	// `ns[nonExported] = v` has to throw, which needs the namespace to be
 	// non-extensible; `delete ns[exported]` already does.
-	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
 	// module namespace exotic object). webpack's `__webpack_exports__` is a
 	// plain object inheriting `Object.prototype`, so `Object.prototype.toString`
 	// is reachable and returns `"[object Module]"` instead of falling back to
 	// the exported `valueOf`. Setting the prototype to `null` would impact
 	// other webpack-generated code paths.
-	"expressions/dynamic-import/custom-primitive.js",
 	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
-	"import/import-attributes/text-via-namespace.js",
 	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
-	"module-code/namespace/internals/own-property-keys-binding-types.js",
-	"module-code/namespace/internals/own-property-keys-sort.js",
-
-	// Potential improvement for enumerate
-	"module-code/namespace/internals/enumerate-binding-uninit.js",
-
-	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
-	// or collide global bindings; webpack wraps each module so `this` is not
-	// the realm's global object and there is no Script Record context.
-	"global-code/decl-func.js",
-	"global-code/script-decl-func-err-non-configurable.js",
-	"global-code/script-decl-func-err-non-extensible.js",
-	"global-code/script-decl-func.js",
-	"global-code/script-decl-var-collision.js",
-	"global-code/script-decl-var-err.js",
-	"global-code/script-decl-var.js",
-
-	// `Object.defineProperty(this, "x", { get })` on the global object — the
-	// test relies on the getter side-effect (deleting `this.x`) being visible
-	// to a bare `x--` reference. Webpack wraps modules so `this` is not the
-	// global object and bare identifiers are scoped to the wrapper.
-	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
-	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
-	// webpack emits `delete super[(super(), 0)]` unchanged, so the order the
-	// index and the this-binding check run in is the engine's to fix.
-	"expressions/delete/super-property-uninitialized-this.js",
-
-	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
-	// is a plain object with `__esModule: true` rather than a true namespace
-	// exotic. Adopting `Object.setPrototypeOf(__webpack_exports__, null)` (and
-	// freezing/extensibility tweaks) would change runtime behaviour broadly,
-	// so these spec-conformance tests remain skipped.
-	"module-code/namespace/internals/get-own-property-str-found-init.js",
-	"module-code/namespace/internals/get-own-property-str-found-uninit.js",
-	"module-code/namespace/internals/get-prototype-of.js",
-	"module-code/namespace/internals/get-str-not-found.js",
-	"module-code/namespace/internals/has-property-str-not-found.js",
-	"module-code/namespace/internals/is-extensible.js",
-	"module-code/namespace/internals/object-hasOwnProperty-binding-uninit.js",
-	"module-code/namespace/internals/object-keys-binding-uninit.js",
-	"module-code/namespace/internals/object-propertyIsEnumerable-binding-uninit.js",
-	"module-code/namespace/internals/set-prototype-of.js",
-	"module-code/namespace/internals/set.js",
-	"module-code/namespace/internals/define-own-property.js",
-
+	"expressions/dynamic-import/custom-primitive.js",
 	// Module Namespace Exotic Object semantics for the dynamically imported
 	// namespace — webpack's resolved namespace is a plain `__webpack_exports__`
 	// object with `__esModule: true`, so non-extensibility, prototype-of-null,
@@ -985,7 +1114,6 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/await-ns-define-own-property.js",
 	"expressions/dynamic-import/namespace/await-ns-extensible.js",
 	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-direct.js",
-	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-indirect.js",
 	"expressions/dynamic-import/namespace/await-ns-get-own-property-str-found-init.js",
 	"expressions/dynamic-import/namespace/await-ns-get-str-not-found.js",
 	"expressions/dynamic-import/namespace/await-ns-has-property-str-not-found.js",
@@ -998,7 +1126,6 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-define-own-property.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-extensible.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-direct.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-indirect.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-get-own-property-str-found-init.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-get-str-not-found.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-has-property-str-not-found.js",
@@ -1008,21 +1135,13 @@ const knownBugs = [
 	"expressions/dynamic-import/namespace/promise-then-ns-set-no-strict.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
 	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
-
 	// The file imports itself, so the entry script and the module it loads are
 	// one bundled module, evaluated once where the spec evaluates it twice.
-	"expressions/dynamic-import/eval-self-once-script.js",
 	// The specifier is written inside an `eval`, so this import never reaches
 	// the module graph.
-	"expressions/dynamic-import/usage-from-eval.js",
 	// `.then` is expected not to be called on the deferred namespace's promise.
-	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
-
-	// Same root cause as the postfix variants above: getter on a global `this`
-	// property must run before the increment writes back, but webpack scopes
-	// bare `x` to its module wrapper rather than the realm global.
-	"expressions/prefix-increment/operator-prefix-increment-x-calls-putvalue-lhs-newvalue--1.js",
-	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js"
+	"expressions/dynamic-import/eval-self-once-script.js",
+	"expressions/dynamic-import/usage-from-eval.js"
 ];
 
 const knownProductionBuildBugs = [
@@ -1309,6 +1428,16 @@ describe("test262", () => {
 									} but got ${reasons.length}: ${JSON.stringify(reasons)}`
 								);
 							}
+						}
+
+						const divergence = webpackRuntimeDivergences.get(name);
+
+						if (
+							errored &&
+							divergence &&
+							matchesDivergence(divergence, errored)
+						) {
+							return;
 						}
 
 						if (errored && knownV8Bugs.includes(name)) {
