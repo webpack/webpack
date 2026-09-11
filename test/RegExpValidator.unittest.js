@@ -334,17 +334,21 @@ describe("RegExpValidator", () => {
 	}
 
 	it("reports the flag errors before reading the pattern", () => {
-		expect(() => Parser.parse("/a/gg;", { ecmaVersion: 2024 })).toThrow(
+		// the pattern is malformed too, so the flag error has to win the race
+		expect(() => Parser.parse("/(/gg;", { ecmaVersion: 2024 })).toThrow(
 			/Duplicate regular expression flag/
 		);
-		expect(() => Parser.parse("/a/x;", { ecmaVersion: 2024 })).toThrow(
+		expect(() => Parser.parse("/(/x;", { ecmaVersion: 2024 })).toThrow(
 			/Invalid regular expression flag/
 		);
-		expect(() => Parser.parse("/a/uv;", { ecmaVersion: 2024 })).toThrow(
+		expect(() => Parser.parse("/(/uv;", { ecmaVersion: 2024 })).toThrow(
 			/Invalid regular expression flag/
 		);
-		expect(() => Parser.parse("/a/v;", { ecmaVersion: 2023 })).toThrow(
+		expect(() => Parser.parse("/(/v;", { ecmaVersion: 2023 })).toThrow(
 			/Invalid regular expression flag/
+		);
+		expect(() => Parser.parse("/(/v;", { ecmaVersion: 2024 })).toThrow(
+			/Unterminated group/
 		);
 	});
 });
