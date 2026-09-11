@@ -2926,6 +2926,10 @@ export interface Output {
 	 */
 	amdContainer?: AmdContainer;
 	/**
+	 * Bake statically analyzable literal import() specifiers for chunk loading in ESM output. When false, chunk loading uses runtime resolution with chunk IDs, preventing chunk content hashes from being baked into importing modules.
+	 */
+	analyzableChunkImport?: boolean;
+	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
@@ -5099,6 +5103,10 @@ export interface OptimizationNormalized {
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 export interface OutputNormalized {
+	/**
+	 * Bake statically analyzable literal import() specifiers for chunk loading in ESM output. When false, chunk loading uses runtime resolution with chunk IDs, preventing chunk content hashes from being baked into importing modules.
+	 */
+	analyzableChunkImport?: boolean;
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */

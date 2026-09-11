@@ -374,6 +374,7 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 	// chunk loader is interchangeable with.
 	it("should refuse an import the chunk loader would not spell", () => {
 		const { chunkGraph } = countingChunkGraph();
+		const bailouts = [];
 
 		expect({
 			array: create({
@@ -382,8 +383,15 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 			renamed: create({
 				output: { importFunctionName: "__webpack_import__" }
 			}).supportsAnalyzable("import", chunkGraph, module),
+			disabled: create({
+				output: { analyzableChunkImport: false },
+				bailouts
+			}).supportsAnalyzable("import", chunkGraph, module),
 			both: create({}).supportsAnalyzable("import", chunkGraph, module)
-		}).toEqual({ array: false, renamed: false, both: true });
+		}).toEqual({ array: false, renamed: false, disabled: false, both: true });
+		expect(bailouts).toContain(
+			"Analyzable ESM bailout: output.analyzableChunkImport is disabled"
+		);
 	});
 
 	// A worker on its own chunk loader keeps that runtime; one on `import` shares the
