@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-wrapped-assignment-asi-position commonjs-wrapped-assignment-asi-position should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = (module) => {
+/******/ 		const getter = module && module.__esModule ?
+/******/ 			() => (module['default']) :
+/******/ 			() => (module);
+/******/ 		__webpack_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 1 modules ***!
+  \\\\******************************/
+
+// MODULE: ./vendor/wrapped.js
+var wrapped_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+var container = {
+	outputs: {
+		formats: {
+			text: {
+				wrap: function (state, entry) {
+					return entry;
+				}
+			},
+			html: {
+				wrap: function (state, entry) {
+					return entry;
+				}
+			}
+		}
+	}
+};
+
+module.exports = container;
+
+});
+
+;// ./vendor/wrapped.js
+wrapped_namespaceFn();
+
+function wrapped_default() { return wrapped_default.c || (wrapped_default.c = __webpack_require__.n(wrapped_namespaceFn())); }
+;// ./index.js
+
+
+const proxied = Symbol.for(\\"proxied\\");
+const getWrapper = (original) => {
+	const proxy = function (state, entry) {
+		return original.call(this, state, entry);
+	};
+	proxy[proxied] = true;
+	return proxy;
+};
+
+for (const format in ((wrapped_default()()).outputs).formats) {
+	const original = ((wrapped_default()()).outputs).formats[format][\\"wrap\\"];
+	if (!original || original[proxied]) {
+		continue;
+	}
+	;((wrapped_default()()).outputs).formats[format][\\"wrap\\"] = getWrapper(original);
+}
+
+it(\\"should wrap every entry without a syntax error\\", () => {
+	expect(
+		Object.values(((wrapped_default()()).outputs).formats).map(
+			(format) => format[\\"wrap\\"][proxied]
+		)
+	).toEqual([true, true]);
+});
+
+/******/ })()
+;"
+`;
