@@ -5,9 +5,13 @@ const read = (name) => fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
 it("should name a page reached by several links once", () => {
 	const files = fs.readdirSync(__dirname);
+	// A url claimed twice would take a numbered name, so the suffixed
+	// spellings have to be absent rather than merely outnumbered.
+	const matching = (pattern) =>
+		files.filter((file) => pattern.test(file)).sort();
 
-	expect(files.filter((file) => file === "shared.html")).toHaveLength(1);
-	expect(files.filter((file) => file === "deep.js")).toHaveLength(1);
+	expect(matching(/^shared\d*\.html$/)).toEqual(["shared.html"]);
+	expect(matching(/^deep\d*\.js$/)).toEqual(["deep.js"]);
 	expect(read("shared.html")).toMatch(/<script src="deep\.js">/);
 	expect(read("a.html")).toMatch(/<a href="shared\.html">/);
 	expect(read("b.html")).toMatch(/<a href="shared\.html">/);
