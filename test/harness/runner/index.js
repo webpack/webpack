@@ -130,6 +130,12 @@ class TestRunner {
 		if (output.module) return true;
 		if (isModuleLibraryType(output.libraryTarget)) return true;
 		if (output.library && isModuleLibraryType(output.library.type)) return true;
+		if (
+			output.enabledLibraryTypes &&
+			output.enabledLibraryTypes.some(isModuleLibraryType)
+		) {
+			return true;
+		}
 		const { entry } = webpackOptions;
 		if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
 			return false;

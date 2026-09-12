@@ -41,12 +41,16 @@ module.exports = [
 	{
 		mode: "development",
 		entry: {
-			main: {
+			"entry-module": {
 				import: "./index.js",
 				library: { type: "module" }
+			},
+			"entry-modern-module": {
+				import: "./index.js",
+				library: { type: "modern-module" }
 			}
 		},
-		output: { filename: "entry-library.mjs" },
+		output: { filename: "[name].mjs" },
 		plugins: [expectModuleOutput]
 	}
 ];
