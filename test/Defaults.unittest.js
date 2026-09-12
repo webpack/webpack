@@ -6177,3 +6177,47 @@ describe("optimization.minimize", () => {
 		});
 	});
 });
+
+describe("module library types", () => {
+	it("should enable module output for a library declared by a plugin", () => {
+		const webpack = require("..");
+
+		const compiler = webpack({
+			mode: "none",
+			entry: "./index.js",
+			plugins: [
+				new webpack.container.ModuleFederationPlugin({
+					name: "container",
+					library: { type: "module" },
+					exposes: { "./a": "./index.js" }
+				})
+			]
+		});
+
+		expect(compiler.options.output.module).toBe(true);
+		expect(compiler.options.output.iife).toBe(false);
+	});
+
+	it("should reject a module library when module output is disabled", () => {
+		const webpack = require("..");
+
+		expect(() =>
+			webpack({
+				mode: "none",
+				entry: "./index.js",
+				output: { module: false, library: { type: "module" } }
+			})
+		).toThrow(
+			"library type \"module\" is only allowed when 'output.module' is enabled"
+		);
+		expect(() =>
+			webpack({
+				mode: "none",
+				entry: "./index.js",
+				output: { module: false, library: { type: "modern-module" } }
+			})
+		).toThrow(
+			"library type \"modern-module\" is only allowed when 'output.module' is enabled"
+		);
+	});
+});

@@ -23,6 +23,14 @@ const rewriteImportMeta = require("./rewriteImportMeta");
 const [major] = getNodeVersion();
 
 /**
+ * Mirrors the library types `lib/config/defaults.js` turns `output.module` on for.
+ * @param {string | undefined} type library type
+ * @returns {boolean} true, when the type is only emitted as an ECMAScript module
+ */
+const isModuleLibraryType = (type) =>
+	type === "module" || type === "modern-module";
+
+/**
  * @typedef {object} TestMeta
  * @property {string} category
  * @property {string} name
@@ -109,6 +117,31 @@ class TestRunner {
 		this._environmentRestricted = false;
 		/** @type {ModuleRunner} */
 		this._moduleRunners = this.createModuleRunners();
+	}
+
+	/**
+	 * Whether the bundle is an ECMAScript module. The runner reads the config as
+	 * written, so it has to read the library types `output.module` defaults from.
+	 * @param {EXPECTED_ANY} webpackOptions webpack options
+	 * @returns {boolean} whether the output is an ECMAScript module
+	 */
+	static isModuleOutput(webpackOptions) {
+		const output = webpackOptions.output || {};
+		if (output.module) return true;
+		if (isModuleLibraryType(output.libraryTarget)) return true;
+		if (output.library && isModuleLibraryType(output.library.type)) return true;
+		const { entry } = webpackOptions;
+		if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+			return false;
+		}
+		return Object.keys(entry).some((name) => {
+			const description = entry[name];
+			return Boolean(
+				description &&
+				description.library &&
+				isModuleLibraryType(description.library.type)
+			);
+		});
 	}
 
 	/**
@@ -480,8 +513,7 @@ class TestRunner {
 		}
 		if (
 			modulePath.endsWith(".mjs") &&
-			this.webpackOptions.output &&
-			this.webpackOptions.output.module
+			TestRunner.isModuleOutput(this.webpackOptions)
 		) {
 			return this._moduleRunners.esm(moduleInfo, context);
 		}
