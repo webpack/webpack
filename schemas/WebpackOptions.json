@@ -5046,7 +5046,8 @@
           "type": "boolean",
           "cli": {
             "negatedDescription": "Do not bake literal import() specifiers for chunk loading in ESM output."
-          }
+          },
+          "added": "5.111.0"
         },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
@@ -5504,7 +5505,8 @@
       "properties": {
         "analyzableChunkImport": {
           "description": "Bake statically analyzable literal import() specifiers for chunk loading in ESM output. When false, chunk loading uses runtime resolution with chunk IDs, preventing chunk content hashes from being baked into importing modules.",
-          "type": "boolean"
+          "type": "boolean",
+          "added": "5.111.0"
         },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"

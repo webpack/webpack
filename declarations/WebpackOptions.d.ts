@@ -2927,6 +2927,7 @@ export interface Output {
 	amdContainer?: AmdContainer;
 	/**
 	 * Bake statically analyzable literal import() specifiers for chunk loading in ESM output. When false, chunk loading uses runtime resolution with chunk IDs, preventing chunk content hashes from being baked into importing modules.
+	 * @since 5.111.0
 	 */
 	analyzableChunkImport?: boolean;
 	/**
@@ -5105,6 +5106,7 @@ export interface OptimizationNormalized {
 export interface OutputNormalized {
 	/**
 	 * Bake statically analyzable literal import() specifiers for chunk loading in ESM output. When false, chunk loading uses runtime resolution with chunk IDs, preventing chunk content hashes from being baked into importing modules.
+	 * @since 5.111.0
 	 */
 	analyzableChunkImport?: boolean;
 	/**
