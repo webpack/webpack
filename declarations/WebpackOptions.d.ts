@@ -4860,6 +4860,11 @@ export interface JavascriptParserOptions {
 	 */
 	sourceImport?: boolean;
 	/**
+	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.
+	 * @since 5.111.0
+	 */
+	specNamespaceObject?: boolean;
+	/**
 	 * @deprecated
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
