@@ -99,6 +99,7 @@ export default defineConfig([
 		files: ["lib/**/*.js"],
 		extends: [configs["webpack/special"]]
 	},
+	configs["webpack/schemas"],
 	{
 		files: ["bin/**/*.js"],
 		// Allow to use `dynamic` import
