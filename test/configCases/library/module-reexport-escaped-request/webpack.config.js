@@ -19,6 +19,8 @@ module.exports = [
 		'quoted"module',
 		"backslash\\module",
 		"line\nmodule",
+		"separator\u2028module",
+		"paragraph\u2029module",
 		"plain-module"
 	],
 	optimization: { minimize }

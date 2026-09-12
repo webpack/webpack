@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Escape external module requests in ESM library star reexports.
+Escape external requests in generated ESM imports and star reexports.
