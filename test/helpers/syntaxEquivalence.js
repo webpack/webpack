@@ -1021,13 +1021,22 @@ const installHelpers = () => {
 	// ASCII whitespace" and whose descriptors are then tokenized by skipping
 	// whitespace — so a run of it between the two carries nothing.
 	const SRCSET_ATTRIBUTES = new Set(["imagesrcset", "srcset"]);
-	// A space-separated list the engine does not reflect as a DOMTokenList.
+	// A space-separated list the engine does not reflect as a DOMTokenList, so
+	// the whitespace between its tokens is read here rather than by the engine.
 	const TOKEN_LIST_ATTRIBUTES = new Set([
+		"accesskey",
 		"headers",
 		"itemprop",
 		"itemref",
 		"itemtype",
 		"ping"
+	]);
+	// Of those, the ones the spec reflects as a `DOMTokenList` — a set, so a
+	// repeat names nothing — which this engine implements no IDL member for.
+	const UNIQUE_TOKEN_LIST_ATTRIBUTES = new Set([
+		"itemprop",
+		"itemref",
+		"itemtype"
 	]);
 	// Set by its presence alone, and parsed by the rules for non-negative
 	// integers — for attributes this engine reflects no IDL property for.
@@ -1074,11 +1083,11 @@ const installHelpers = () => {
 		}
 		if (URL_ATTRIBUTES.has(name)) return raw.replace(/[\t\n\r]/g, "").trim();
 		if (TOKEN_LIST_ATTRIBUTES.has(name)) {
-			return raw
-				.split(/[\t\n\f\r ]+/)
-				.filter(Boolean)
-				.sort()
-				.join(" ");
+			const tokens = raw.split(/[\t\n\f\r ]+/).filter(Boolean);
+			const read = UNIQUE_TOKEN_LIST_ATTRIBUTES.has(name)
+				? [...new Set(tokens)]
+				: tokens;
+			return read.sort().join(" ");
 		}
 		// The viewport meta is a comma-separated list of `key=value` pairs; every
 		// other `content` is opaque text.
