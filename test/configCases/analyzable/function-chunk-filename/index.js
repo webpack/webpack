@@ -12,13 +12,13 @@ it("should bake the literal only when the name holds no hash", () => {
 		"utf8"
 	);
 	// Needle built at runtime so it is not a source string literal here.
-	const helper = `${"__webpack_require__"}.ei(`;
+	const importMap = `${"chunkImports"} = {`;
 
 	if (__ANALYZABLE__) {
-		expect(bundle).toContain(helper);
+		expect(bundle).toContain(importMap);
 		// Whatever the name holds, what is baked has to be a file on disk.
 		const specifier = /import\((?:\/\*[^*]*\*\/\s*)?"([^"]+)"\)/.exec(
-			bundle.slice(bundle.indexOf(helper))
+			bundle.slice(bundle.indexOf(importMap))
 		);
 
 		expect(specifier).not.toBe(null);
@@ -26,6 +26,6 @@ it("should bake the literal only when the name holds no hash", () => {
 			fs.existsSync(path.join(__STATS__.children[0].outputPath, specifier[1]))
 		).toBe(true);
 	} else {
-		expect(bundle).not.toContain(helper);
+		expect(bundle).not.toContain(importMap);
 	}
 });

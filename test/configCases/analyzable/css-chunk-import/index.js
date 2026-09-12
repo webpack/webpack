@@ -20,7 +20,7 @@ it("should emit the analyzable literal for a chunk carrying css", () => {
 		"utf8"
 	);
 
-	expect(bundle).toContain(`${"__webpack_require__"}.ei("lazy_js"`);
+	expect(bundle).toContain(`${"chunkImports"} = {`);
 	expect(bundle).toContain('import("./lazy_js.mjs")');
 });
 
@@ -31,12 +31,11 @@ it("should carry the handler map without the runtime chunk loader", () => {
 	);
 	const require_ = "__webpack_require__";
 
-	// `.f.css` needs the map to attach to, and `.ei` dispatches it from there.
+	// `.f.css` needs the map to attach to, and `.e` dispatches every handler on it.
 	expect(bundle).toContain(`${require_}.f = {}`);
 	expect(bundle).toContain(`${require_}.f.css =`);
-	// Nothing calls `.e`, so neither it nor the js handler behind it is emitted —
-	// and with them goes the chunk id to filename table.
-	expect(bundle).not.toContain(`${require_}.e =`);
-	expect(bundle).not.toContain(`${require_}.f.j =`);
+	expect(bundle).toContain(`${require_}.f.j =`);
+	// The js handler imports a name from the loader's map, so no chunk id is ever
+	// turned into a filename and that table is not emitted.
 	expect(bundle).not.toContain(`${require_}.u =`);
 });

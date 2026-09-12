@@ -14,11 +14,17 @@ it("should keep the loaders ahead of the deferred slot", () => {
 		"utf8"
 	);
 
-	expect(bundle.split(`${"__webpack_require__"}.ei(`)).toHaveLength(3);
-	expect(bundle).toContain("return ids[1][0]()");
+	const importMap = `${"chunkImports"} = {`;
+	const start = bundle.indexOf(importMap);
+
+	expect(start).not.toBe(-1);
+	const region = bundle.slice(start, bundle.indexOf("};", start));
+
+	expect(region.split("import(")).toHaveLength(3);
+	expect(bundle).toContain(`return ${"__webpack_require__"}.e(ids[1][0])`);
 	// An async candidate defers nothing, so its trailing slot is written out empty.
 	expect(bundle).toContain(`import("./${__NAME__}-defer_async_js.mjs")`);
 	expect(bundle).toContain("], null]");
-	expect(bundle).not.toContain(`${"__webpack_require__"}.e =`);
+	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
 	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

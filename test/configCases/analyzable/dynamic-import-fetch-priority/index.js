@@ -12,11 +12,9 @@ it("should still emit the analyzable form when a fetchPriority hint is set", () 
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	// `fetchPriority` is not supported for ESM module output: a native `import()`
-	// can't carry the hint, and the ESM chunk-loading runtime ignores the priority
-	// argument too. So the hint must not degrade the output — the analyzable literal
-	// is still emitted and no priority-aware runtime is pulled in.
-	expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.e(`);
-	expect(bundle).not.toContain(`${'"hi'}${'gh"'}`);
+	// A native `import()` cannot carry the hint, but `ensureChunk` hands it to every
+	// handler, one of which puts it on a `modulepreload` link.
+	expect(bundle).toContain(`${"chunkImports"} = {`);
+	expect(bundle).toContain(`${"__webpack_require__"}.e(`);
+	expect(bundle).toContain(`${'"hi'}${'gh"'}`);
 });

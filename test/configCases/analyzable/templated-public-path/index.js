@@ -42,13 +42,14 @@ if (__BAKED__) {
 		expect(fs.existsSync(path.join(stats.outputPath, file))).toBe(true);
 	});
 
-	it("should not fall back to the runtime chunk loader", () => {
-		expect(bundle()).toContain(`${"__webpack_require__"}.ei(`);
-		expect(bundle()).not.toContain(ensureChunkCall);
+	it("should name the chunk in the loader's map rather than from its id", () => {
+		expect(bundle()).toContain(`${"chunkImports"} = {`);
+		expect(bundle()).not.toContain(`${"__webpack_require__"}.u =`);
 	});
 } else {
 	it("should keep the runtime form when the public path cannot be filled in", () => {
 		expect(bundle()).not.toMatch(/import\((?:\/\*[^*]*\*\/\s*)?"https:/);
+		expect(bundle()).not.toContain(`${"chunkImports"} = {`);
 		expect(bundle()).toContain(ensureChunkCall);
 	});
 }

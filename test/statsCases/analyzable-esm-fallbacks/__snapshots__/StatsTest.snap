@@ -4,7 +4,7 @@ exports[`StatsTestCases analyzable-esm-fallbacks should print correct stats for 
 "analyzable:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -14,7 +14,7 @@ shared-chunk:
   asset a.mjs X KiB [emitted] [javascript module] (name: a)
   asset b.mjs X KiB [emitted] [javascript module] (name: b)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 8 modules
+  runtime modules X KiB 10 modules
   cacheable modules X bytes
     ./a.js X bytes [built] [code generated]
     ./b.js X bytes [built] [code generated]
@@ -35,7 +35,7 @@ prefetch:
 bare-public-path:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -44,7 +44,7 @@ bare-public-path:
 fetch-priority:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes
     ./index-fetch-priority.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -62,7 +62,7 @@ hmr:
 templated-public-path:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -71,7 +71,7 @@ templated-public-path:
 content-hash:
   asset main.XXXXXXXXXXXXXXXXXXXX.mjs X KiB [emitted] [immutable] [javascript module] (name: main)
   asset async_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -83,7 +83,7 @@ shared-depths:
     asset flat.XXXXXXXXXXXXXXXXXXXX.mjs X KiB [emitted] [immutable] [javascript module] (name: flat)
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes
     ./index-depths.js X bytes [built] [code generated]
     ./depths-flat.js X bytes [built] [code generated]
@@ -143,7 +143,7 @@ environment-module:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
   asset XXXXXXXXXXXXXXXXXXXX.txt X bytes [emitted] [immutable] [from: asset.txt] (auxiliary name: main)
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes (javascript) X bytes (asset)
     ./index-asset.js X bytes [built] [code generated]
     ./asset.txt X bytes [built] [code generated]
@@ -154,7 +154,7 @@ circular:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset a-cycle_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
   asset b-cycle_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes
     ./index-cycle.js X bytes [built] [code generated]
     ./a-cycle.js X bytes [built] [code generated]
@@ -165,7 +165,7 @@ base-uri:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
   asset XXXXXXXXXXXXXXXXXXXX.txt X bytes [emitted] [immutable] [from: asset.txt] (auxiliary name: main)
-  runtime modules X KiB 4 modules
+  runtime modules X KiB 5 modules
   cacheable modules X bytes (javascript) X bytes (asset)
     ./index-asset.js X bytes [built] [code generated]
     ./asset.txt X bytes [built] [code generated]
@@ -281,7 +281,7 @@ served-both-ways:
   asset XXXXXXXXXXXXXXXXXXXX.txt X bytes [emitted] [immutable] [from: asset.txt]
   Entrypoint main X KiB (X bytes) = both_js.mjs X bytes main.mjs X KiB 1 auxiliary asset
   Entrypoint side X KiB = side.mjs
-  runtime modules X KiB 12 modules
+  runtime modules X KiB 13 modules
   cacheable modules X bytes (javascript) X bytes (asset)
     ./index-both.js X bytes [built] [code generated]
     ./side-both.js X bytes [built] [code generated]

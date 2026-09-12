@@ -3,11 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const HELPER = "__webpack_require__.ei";
+const IMPORT_MAP = "chunkImports = {";
 const BAILOUT = "Analyzable ESM bailout:";
 
-// Per case: which emitted file to inspect, and whether it emits the `.ei` helper
-// ("analyzable") or keeps the runtime form and names its reason ("fallback").
+// Per case: which emitted file to inspect, and whether the loader holds a map of
+// literal specifiers ("analyzable") or names why it does not ("fallback").
 const CASES = {
 	analyzable: { file: "main.mjs", expect: "analyzable" },
 	"public-path-override": {
@@ -15,8 +15,8 @@ const CASES = {
 		expect: "fallback",
 		bailout: "__webpack_public_path__ is reassigned"
 	},
-	// `fetchPriority` is unsupported for ESM output, so it must not degrade the
-	// output — the analyzable form is still emitted (documented limitation).
+	// A native `import()` cannot carry `fetchPriority`, but the hint still reaches
+	// `ensureChunk`, and the chunk is named in the loader's map either way.
 	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
 	// The entry is named by its own content with nothing to repair that name after a
 	// rewrite, so what the stand-in resolves to is folded into its hash instead.
@@ -27,13 +27,12 @@ const CASES = {
 	"bare-public-path": { file: "main.mjs", expect: "analyzable" },
 	"shared-chunk": { file: "a.mjs", expect: "analyzable" },
 	prefetch: { file: "main.mjs", expect: "analyzable" },
-	// The hot require wraps `.ei` like `.e`, so an update still blocks on a chunk
-	// load in flight and HMR does not force the runtime form.
+	// A hot update re-ships the map only when its own text moves, so HMR does not
+	// force the runtime form.
 	hmr: { file: "main.mjs", expect: "analyzable" },
-	// Two depths need a per-asset stand-in for the `../` path, and the chunks it lands in
-	// are named by their content — the depth is read off the template with the hashes
-	// neutralized, so it folds into those names like any other part.
-	"shared-depths": { file: /^flat\./, expect: "analyzable" },
+	// Two depths reach the same chunk, which the loader names once from where it sits
+	// rather than once per depth — so the map is in the entry, not in either depth.
+	"shared-depths": { file: "main.mjs", expect: "analyzable" },
 	"eval-devtool": {
 		file: "main.mjs",
 		expect: "fallback",
@@ -159,16 +158,16 @@ module.exports = {
 			}
 			if (testCase.lacks) expect(output).not.toContain(testCase.lacks);
 			if (testCase.expect === "analyzable") {
-				expect(output).toContain(HELPER);
+				expect(output).toContain(IMPORT_MAP);
 				expect(bailouts).toEqual([]);
 			} else if (testCase.expect === "partial") {
 				// A limitation that stops some references and not others leaves the rest
-				// baked, so the helper is still the right thing to find.
-				expect(output).toContain(HELPER);
+				// named, so the map is still the right thing to find.
+				expect(output).toContain(IMPORT_MAP);
 				expect(bailouts.join("\n")).toContain(testCase.bailout);
 			} else {
-				// A limitation must not emit extra runtime — the `.ei` helper stays out.
-				expect(output).not.toContain(HELPER);
+				// A limitation keeps every name out of the loader, so it holds no map.
+				expect(output).not.toContain(IMPORT_MAP);
 				expect(bailouts.join("\n")).toContain(testCase.bailout);
 			}
 		}

@@ -15,7 +15,7 @@ it("should bake the name into a chunk its own content names", async () => {
 
 	// Nothing repairs `[chunkhash]` after a fill, so the literal is only sound because
 	// the fold put it into this chunk's hash first.
-	expect(source).toContain(`${"__webpack_require__"}.ei(`);
+	expect(source).toContain(`${"chunkImports"} = {`);
 	expect(source).toContain(`"./${lazy}"`);
 	expect(source).not.toContain(`${"__webpack_require__"}.u(`);
 });

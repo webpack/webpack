@@ -1,7 +1,7 @@
 "use strict";
 
-// A chunk reachable from several groups stays analyzable: `.ei` dedupes on the same
-// `installedChunks` map the runtime form uses, so a literal `import()` is equivalent.
+// A chunk reachable from several groups is named once in the loader's map, which
+// installs it through the same `installedChunks` table either form uses.
 // `one` is imported twice (two groups) and `vendor` is split out and shared by both.
 
 /** @type {import("../../../../").Configuration} */

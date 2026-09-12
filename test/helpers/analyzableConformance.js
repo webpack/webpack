@@ -8,6 +8,7 @@ const path = require("path");
 const acorn = require("acorn");
 const ConcatenatedModule = require("../../lib/optimize/ConcatenatedModule");
 
+/** @import Chunk from "../../lib/Chunk" */
 /** @import Compilation from "../../lib/Compilation" */
 /** @import Module from "../../lib/Module" */
 
@@ -215,9 +216,11 @@ const hidesEverySpecifier = (compilation) => {
 };
 
 /**
- * Whether the build said why nothing names this chunk. A reason is recorded on
- * the module that wrote the reference, so the modules to ask are the ones whose
- * request created the chunk, plus the runtime modules shipped inside it.
+ * Whether the build said why nothing names this chunk. A reason is recorded on the
+ * module that wrote the reference: the modules whose request created the chunk, the
+ * runtime modules shipped inside it, and — since a chunk loaded on demand is named
+ * by the chunk loader rather than at the import site — those of every runtime
+ * reaching it.
  * @param {Compilation} compilation the compilation that emitted it
  * @param {string} file the emitted javascript file
  * @returns {boolean} true where a reason stands behind it
@@ -241,15 +244,30 @@ const isExplained = (compilation, file) => {
 			runtimeTemplate.analyzableBailoutsOf(generated).length > 0
 		);
 	};
-	for (const chunk of compilation.chunks) {
-		if (!chunk.files.has(file)) continue;
+	/**
+	 * @param {Chunk} chunk the chunk to read the runtime modules of
+	 * @returns {boolean} true where one of them recorded a reason
+	 */
+	const runtimeRecorded = (chunk) => {
 		for (const module of chunkGraph.getChunkRuntimeModulesIterable(chunk)) {
 			if (recorded(module)) return true;
 		}
+		return false;
+	};
+	for (const chunk of compilation.chunks) {
+		if (!chunk.files.has(file)) continue;
+		if (runtimeRecorded(chunk)) return true;
 		for (const group of chunk.groupsIterable) {
 			for (const origin of group.origins) {
 				if (origin.module && recorded(origin.module)) return true;
 			}
+		}
+		// The loader that would have named it lives in another chunk, so its reason
+		// does too — one per runtime rather than one per import site.
+		for (const other of compilation.chunks) {
+			if (other === chunk || !other.hasRuntime()) continue;
+			if (!other.getAllReferencedChunks().has(chunk)) continue;
+			if (runtimeRecorded(other)) return true;
 		}
 	}
 	return false;

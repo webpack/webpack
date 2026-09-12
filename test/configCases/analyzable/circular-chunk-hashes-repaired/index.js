@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 
+const CHUNK_REFERENCE = /"\.\/[^"]+\.mjs"/g;
+
 it("should build rather than deadlock on two chunks that name each other", async () => {
 	const [a, b, c] = await Promise.all([
 		import("./a.js"),
@@ -12,24 +14,28 @@ it("should build rather than deadlock on two chunks that name each other", async
 	expect(c.default).toBe(3);
 });
 
-it("should bake both directions of the cycle under repaired names", () => {
+it("should name a mutually importing pair from one place", () => {
 	const dir = __STATS__.outputPath;
 	const names = fs.readdirSync(dir).filter((n) => n.endsWith(".mjs"));
 	const emitted = (prefix) =>
 		/** @type {string} */ (names.find((n) => n.startsWith(prefix)));
 	const read = (prefix) =>
 		fs.readFileSync(path.join(dir, emitted(prefix)), "utf8");
-	const helper = `${"__webpack_require__"}.ei`;
 
-	// Both bake, and the repair re-hashes the pair as one group: each spells exactly
-	// the name the other was emitted under.
-	expect(read("a_js")).toContain(`${helper}(`);
-	expect(read("a_js")).toContain(`"./${emitted("b_js")}"`);
-	expect(read("b_js")).toContain(`${helper}(`);
-	expect(read("b_js")).toContain(`"./${emitted("a_js")}"`);
+	// Neither names the other, so with `realContentHash` off there is still no pair
+	// of names chasing each other to re-hash as one group.
+	expect(read("a_js").match(CHUNK_REFERENCE)).toBe(null);
+	expect(read("b_js").match(CHUNK_REFERENCE)).toBe(null);
+
+	const bundle = read("bundle0");
+
+	expect(bundle).toContain(`${"chunkImports"} = {`);
+	for (const prefix of ["a_js", "b_js", "c_js"]) {
+		expect(bundle).toContain(`"./${emitted(prefix)}"`);
+	}
 });
 
-it("should rename only what the repair touched", () => {
+it("should need no repair at all", () => {
 	const dir = __STATS__.outputPath;
 	const before = JSON.parse(
 		Buffer.from(
@@ -40,9 +46,9 @@ it("should rename only what the repair touched", () => {
 	const after = fs.readdirSync(dir);
 	const find = (list, prefix) => list.find((n) => n.startsWith(prefix));
 
-	// The pair's names went stale with the fill, so both moved.
-	expect(find(after, "a_js")).not.toBe(find(before, "a_js"));
-	expect(find(after, "b_js")).not.toBe(find(before, "b_js"));
-	// Nothing the fill touched reaches this one, so it keeps the name it was given.
-	expect(find(after, "c_js")).toBe(find(before, "c_js"));
+	// The fill only ever lands in the chunk holding the loader, whose own name reads
+	// no hash — so no name goes stale and nothing has to be renamed after it.
+	for (const prefix of ["a_js", "b_js", "c_js"]) {
+		expect(find(after, prefix)).toBe(find(before, prefix));
+	}
 });

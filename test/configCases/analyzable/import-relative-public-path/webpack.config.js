@@ -1,7 +1,7 @@
 "use strict";
 
-// The runtime imports a chunk from the chunk holding the runtime — the output root —
-// so a relative public path only bakes behind the `../` path back to that root.
+// The loader names every chunk from the chunk holding the runtime, so a relative
+// public path only bakes behind the `../` path from there back to the output root.
 
 const webpack = require("../../../../");
 
@@ -18,6 +18,8 @@ const base = (index, dir, publicPath, specifier) => ({
 	devtool: false,
 	output: {
 		module: true,
+		// Below the output root, so the specifier has to walk back up to it.
+		filename: `${dir}/entry/[name].mjs`,
 		chunkFilename: `${dir}/[name].mjs`,
 		publicPath
 	},

@@ -26522,24 +26522,10 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 		/**
-		 * the module the `import()` is emitted into
+		 * the module the `import()` is emitted into, to report against
 		 */
 		originModule?: Module;
 	}): string;
-
-	/**
-	 * For ESM module output, load a single statically-named chunk through the
-	 * `analyzableChunkImport` helper — a literal `import("./chunk.js")` other bundlers
-	 * and webpack itself can follow, wrapped to keep `ensureChunk` timing and deduplication.
-	 * Returns `null` to fall back to the runtime `ensureChunk` form.
-	 */
-	analyzableChunkImport(
-		chunk: Chunk,
-		comment: string,
-		runtimeRequirements: Set<string>,
-		originModule: undefined | Module,
-		chunkGraph: ChunkGraph
-	): null | string;
 
 	/**
 	 * The `../` path from a chunk's own asset back to the output root. Hashes are
@@ -26586,6 +26572,26 @@ declare abstract class RuntimeTemplate {
 	 * them and the plugin declaring what it needs ask this, so the two always agree.
 	 */
 	analyzableChunkScriptUrls(
+		runtimeChunk: Chunk,
+		chunkGraph: ChunkGraph,
+		runtimeRequirements: ReadonlySet<string>,
+		consumingModule?: Module
+	): null | Map<ChunkId, string>;
+
+	/**
+	 * Records that this runtime reads its chunks some way other than a native
+	 * `import()`, so no literal can name what it loads. Recorded on the entries that
+	 * chose it, which is where the setting behind it lives.
+	 */
+	reportChunkImportBailout(chunk: Chunk, chunkGraph: ChunkGraph): void;
+
+	/**
+	 * A literal `import()` specifier for every javascript chunk a runtime loads on
+	 * demand, keyed by chunk id, or `null` when one of them cannot be named here. The
+	 * map is written into the runtime chunk rather than at each import site, so a
+	 * hashed chunk name reaches no module that imports it.
+	 */
+	analyzableChunkImports(
 		runtimeChunk: Chunk,
 		chunkGraph: ChunkGraph,
 		runtimeRequirements: ReadonlySet<string>,
@@ -30556,7 +30562,6 @@ declare namespace exports {
 	export namespace RuntimeGlobals {
 		export let amdDefine: "__webpack_require__.amdD";
 		export let amdOptions: "__webpack_require__.amdO";
-		export let analyzableChunkImport: "__webpack_require__.ei";
 		export let asyncModule: "__webpack_require__.a";
 		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
 		export let asyncModuleExportSymbol: "__webpack_require__.aE";

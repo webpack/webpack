@@ -26,6 +26,6 @@ it("should emit the analyzable literal inside the worker chunk", () => {
 		"utf8"
 	);
 
-	expect(source).toContain(`${"__webpack_require__"}.ei("lazy_js"`);
+	expect(source).toContain(`${"chunkImports"} = {`);
 	expect(source).toContain('"./lazy_js.mjs")');
 });

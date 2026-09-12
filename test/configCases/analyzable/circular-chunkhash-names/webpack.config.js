@@ -1,7 +1,7 @@
 "use strict";
 
-// `[chunkhash]` reads a chunk's own modules, which the fill never touches — so a pair
-// naming each other is repaired from what the fill left, and both directions bake.
+// `[chunkhash]` reads a chunk's own modules, which the fill never touches. Only the
+// loader names a chunk, so a pair importing each other needs no repair either.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

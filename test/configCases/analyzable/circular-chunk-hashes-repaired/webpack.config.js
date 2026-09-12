@@ -3,8 +3,8 @@
 const { RawSource } = require("webpack-sources");
 const { Compilation } = require("../../../../");
 
-// Two chunks naming each other, with nothing asked to repair their hashes: the fill
-// marks both, and the repair runs for them alone, so both directions bake.
+// Two chunks importing each other, with nothing asked to repair their hashes: only
+// the loader names a chunk, so no name goes stale and no repair is needed.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -13,7 +13,7 @@ it("should leave a stand-in it cannot read exactly as written", () => {
 
 	expect(typeof load).toBe("function");
 	// The pass ran: the real reference next to these was filled in.
-	expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
+	expect(bundle).toContain(`${"chunkImports"} = {`);
 	for (const [name, text] of Object.entries(lookalikes)) {
 		expect([name, bundle.includes(text)]).toEqual([name, true]);
 	}

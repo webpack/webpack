@@ -13,12 +13,10 @@ it("should emit an analyzable literal import() with an absolute publicPath", () 
 		"utf8"
 	);
 	// A non-`auto` publicPath prefixes an absolute URL specifier a foreign bundler
-	// can follow, wrapped in the analyzable-import helper instead of `ensureChunk(id)`.
-	const ensureChunkCall = `${"__webpack_require__"}.e(`;
-
+	// can follow, held in the loader's map rather than at the import site.
+	expect(bundle).toContain(`${"chunkImports"} = {`);
 	expect(bundle).toContain(
-		'import(/*! import() | dynamic */ "https://cdn.example.com/assets/dynamic.mjs")'
+		'import("https://cdn.example.com/assets/dynamic.mjs")'
 	);
-	expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
-	expect(bundle).not.toContain(ensureChunkCall);
+	expect(bundle).toContain(`${"__webpack_require__"}.e(`);
 });

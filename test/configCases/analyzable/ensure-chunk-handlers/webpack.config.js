@@ -1,7 +1,7 @@
 "use strict";
 
-// `.ei` dispatches the `ensureChunkHandlers` map itself, so the map has to exist for a
-// referenced chunk that carries css — and only for source types some handler loads.
+// `ensureChunk` dispatches the `ensureChunkHandlers` map, so it exists wherever a
+// chunk is loaded on demand — whatever source types that chunk turns out to carry.
 
 const fs = require("fs");
 const path = require("path");
@@ -11,11 +11,10 @@ const handlers = `${"__webpack_require__"}.f`;
 
 /**
  * @param {number} index position of this config, so it finds its own bundle
- * @param {boolean} needed whether the referenced chunk is loaded through a handler
  * @param {string} entry the entry module
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, needed, entry) => ({
+const base = (index, entry) => ({
 	target: "web",
 	mode: "development",
 	devtool: false,
@@ -37,7 +36,7 @@ const base = (index, needed, entry) => ({
 					path.join(outputPath, `bundle${index}.mjs`),
 					"utf8"
 				);
-				expect(bundle.includes(handlers)).toBe(needed);
+				expect(bundle).toContain(handlers);
 			});
 		}
 	]
@@ -45,8 +44,8 @@ const base = (index, needed, entry) => ({
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	// An asset rides its own file; nothing fetches it through a handler.
-	base(0, false, "./index.js"),
-	// A stylesheet is fetched by `.f.css`, which `.ei` has to be able to reach.
-	base(1, true, "./index-css.js")
+	// An asset rides its own file, and the javascript handler still loads the chunk.
+	base(0, "./index.js"),
+	// A stylesheet is fetched by `.f.css`, alongside the javascript handler.
+	base(1, "./index-css.js")
 ];

@@ -21,6 +21,6 @@ it("should emit the analyzable literal for a chunk with prefetch children", () =
 		"utf8"
 	);
 
-	expect(bundle).toContain(`${"__webpack_require__"}.ei("mid_js"`);
+	expect(bundle).toContain(`${"chunkImports"} = {`);
 	expect(bundle).toContain('import("./mid_js.mjs")');
 });

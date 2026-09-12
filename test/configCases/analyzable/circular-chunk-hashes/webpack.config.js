@@ -1,7 +1,7 @@
 "use strict";
 
-// Two chunks naming each other both bake: `optimization.realContentHash` re-hashes
-// the pair as one group, so neither name chases the other.
+// Two chunks importing each other. Only the loader names a chunk, so neither one
+// names the other and the hash cycle the pair used to form cannot arise.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

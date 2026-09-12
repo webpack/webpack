@@ -51,7 +51,11 @@ module.exports = {
 		module: true,
 		chunkFormat: "module",
 		publicPath: "auto",
-		chunkFilename: "[name].[contenthash].mjs"
+		chunkFilename: "[name].[contenthash].mjs",
+		// A hashed asset name is baked into module code, which the mappings do name —
+		// a chunk import is named in the loader, where nothing is mapped to a source.
+		assetModuleFilename: "[name].[contenthash][ext]"
 	},
+	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 	plugins: [new AssertSubstitutedBeforeDevTooling()]
 };

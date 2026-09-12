@@ -18,18 +18,17 @@ it("should dedupe a shared chunk loaded through the analyzable import", async ()
 });
 
 it("should emit the analyzable literal for the shared chunks", () => {
+	// `runtimeChunk: "single"` puts the loader, and so the map, in its own chunk.
 	const bundle = fs.readFileSync(
-		path.join(__STATS__.outputPath, "main.mjs"),
+		path.join(__STATS__.outputPath, "runtime.mjs"),
 		"utf8"
 	);
 	// Needles are built at runtime so they are not source string literals here.
-	const helper = `${"__webpack_require__"}.ei(`;
-	const runtimeForm = `${"__webpack_require__"}.e(`;
+	const importMap = `${"chunkImports"} = {`;
 
-	expect(bundle).toContain(`${helper}"one_js"`);
-	expect(bundle).toContain(`${helper}"vendor"`);
+	expect(bundle).toContain(importMap);
 	expect(bundle).toContain('import("./one_js.mjs")');
 	expect(bundle).toContain('import("./vendor.mjs")');
-	// Nothing falls back to the runtime chunk loader.
-	expect(bundle).not.toContain(runtimeForm);
+	// Every chunk is named here, so none is built from a chunk id.
+	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

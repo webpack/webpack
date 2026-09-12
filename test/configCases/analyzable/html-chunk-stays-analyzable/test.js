@@ -24,9 +24,10 @@ it("should point the page at a stylesheet this build emitted", () => {
 
 it("should reach the chunk an html page's javascript imports by name", () => {
 	const entry = read(attribute("src"));
-	const ensureChunkCall = `${"__webpack_require__"}.e(`;
 
+	expect(entry).toContain(`${"chunkImports"} = {`);
 	expect(entry).toContain('"./lazy-page.mjs"');
-	expect(entry).not.toContain(ensureChunkCall);
+	// The name is in the loader's map, so no chunk id is turned into one.
+	expect(entry).not.toContain(`${"__webpack_require__"}.u =`);
 	expect(emitted("lazy-page.mjs")).toBe(true);
 });

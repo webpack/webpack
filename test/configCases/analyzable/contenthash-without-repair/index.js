@@ -13,7 +13,7 @@ it("should bake the name with no repair pass behind it", async () => {
 	).name;
 	const source = fs.readFileSync(path.join(dir, entry), "utf8");
 
-	expect(source).toContain(`${"__webpack_require__"}.ei(`);
+	expect(source).toContain(`${"chunkImports"} = {`);
 	expect(source).toContain(`"./${lazy}"`);
 	expect(source).not.toContain(`${"__webpack_require__"}.u(`);
 });
