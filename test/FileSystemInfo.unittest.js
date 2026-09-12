@@ -315,7 +315,7 @@ ${details(snapshot)}`)
 			fs.writeFileSync(filename, `${oldContent}!`);
 		}
 		// `tsh` mode reads a context's hash only once its timestamps differ, so a
-		// write the clock is too coarse to date leaves the change invisible.
+		// write that lands in the same clock tick hides the change.
 		const mtime = new Date(
 			Math.max(before.mtime.getTime(), fs.statSync(filename).mtime.getTime()) +
 				1
