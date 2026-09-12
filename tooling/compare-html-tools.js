@@ -96,6 +96,10 @@ const INSTALLED_DOCUMENTS = [
 	["Swagger UI 5", "swagger-ui-dist/index.html"]
 ];
 
+// Where the icon sprite lands in the cache: a real shipped SVG, which is the
+// only inline `<svg>` any document here carries.
+const SPRITE_WITHIN = "@fortawesome/fontawesome-free/sprites/solid.svg";
+
 // Real framework stylesheets, inlined whole into a page of their own.
 /** @type {[string, string][]} */
 const INLINED_STYLESHEETS = [
@@ -384,10 +388,7 @@ const fixtures = async () => {
 	out.push([
 		"Icon sprite (inlined SVG)",
 		spritePage(
-			await fs.promises.readFile(
-				path.join(MODULES, "@fortawesome/fontawesome-free/sprites/solid.svg"),
-				"utf8"
-			)
+			await fs.promises.readFile(path.join(MODULES, SPRITE_WITHIN), "utf8")
 		)
 	]);
 	return out;
@@ -926,11 +927,16 @@ if (require.main === module) {
 	});
 }
 
-// The documents the cache holds, and the page a reader builds the rest from.
+// The documents the cache holds, and the pages a reader builds the rest from.
+// The bulk pages stay unexported: what they carry is size, not a construct.
 module.exports = {
 	APP_SHELL,
 	CACHE,
 	INLINED_STYLESHEETS,
 	INSTALLED_DOCUMENTS,
-	inlineCssPage
+	SPRITE_WITHIN,
+	TAG_SOUP,
+	WEB_COMPONENTS,
+	inlineCssPage,
+	spritePage
 };
