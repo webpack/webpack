@@ -100,6 +100,24 @@ export default defineConfig([
 		extends: [configs["webpack/special"]]
 	},
 	configs["webpack/schemas"],
+	configs["webpack/types"],
+	{
+		files: ["lib/**/*.js"],
+		rules: {
+			// The parser `webpack/types` brings puts the TypeScript `lib` globals in
+			// scope, so both read a local `Cache` or `crypto` as clashing with one.
+			// TODO drop once eslint-config-webpack 4.12.1 is out, it turns them off
+			"no-global-assign": "off",
+			"no-redeclare": "off"
+		}
+	},
+	{
+		rules: {
+			// Converting a re-exported `@typedef` to `@import` drops the re-export,
+			// and that is webpack's public type surface in lib/index.js
+			"webpack/prefer-import-tag": "off"
+		}
+	},
 	{
 		files: ["bin/**/*.js"],
 		// Allow to use `dynamic` import
