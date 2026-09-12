@@ -19,11 +19,11 @@ it("should bake a specifier that is a file on disk", () => {
 		"utf8"
 	);
 	// Needle built at runtime so it is not a source string literal here.
-	const helper = `${"__webpack_require__"}.ei(`;
+	const importMap = `${"chunkImports"} = {`;
 
-	expect(bundle).toContain(helper);
+	expect(bundle).toContain(importMap);
 	const specifier = /import\((?:\/\*[^*]*\*\/\s*)?"([^"]+)"\)/.exec(
-		bundle.slice(bundle.indexOf(helper))
+		bundle.slice(bundle.indexOf(importMap))
 	);
 
 	expect(specifier).not.toBe(null);

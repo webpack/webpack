@@ -25,15 +25,15 @@ it("should bake a literal chunk specifier into a module library", () => {
 	const source = bundle();
 	// Built at runtime so the needle is not a source string literal here — this file
 	// is bundled into what it reads back.
-	const helper = `${"__webpack_require__"}.ei(`;
+	const importMap = `${"chunkImports"} = {`;
 
 	expect(source).toMatch(/export\s*\{/);
-	expect(source).toContain(helper);
+	expect(source).toContain(importMap);
 
 	// A chunk `import()` needs no `import.meta`, so it bakes even where the module
 	// body is wrapped for the eval devtool — quoted with escapes there, plain here.
 	const specifier = /import\((?:\/\*[^*]*\*\/\s*)?\\?"([^"\\]+)\\?"\)/.exec(
-		source.slice(source.indexOf(helper))
+		source.slice(source.indexOf(importMap))
 	);
 
 	expect(specifier).not.toBe(null);

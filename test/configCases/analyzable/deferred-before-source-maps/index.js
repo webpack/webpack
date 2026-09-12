@@ -36,10 +36,13 @@ const generatedColumns = (mappings, line) => {
 	return columns;
 };
 
+const assetUrl = new URL("./asset.txt", import.meta.url);
+
 it("should load the chunk through the baked specifier", async () => {
 	const { value } = await import(/* webpackChunkName: "dynamic" */ "./dynamic");
 
 	expect(value).toBe("dynamic");
+	expect(String(assetUrl)).toMatch(/asset\.[0-9a-f]+\.txt$/);
 });
 
 it("should keep the mappings past the specifier on the columns they name", () => {
@@ -52,19 +55,21 @@ it("should keep the mappings past the specifier on the columns they name", () =>
 	// mappings do not name — drop it so the last column is the same on every platform.
 	const lines = code.split("\n").map((text) => text.replace(/\r$/, ""));
 	const line = lines.findIndex((text) =>
-		/"\.\/dynamic\.[0-9a-f]+\.mjs"/.test(text)
+		/"\.\/asset\.[0-9a-f]+\.txt"/.test(text)
 	);
 
 	expect(line).not.toBe(-1);
-	const specifier = /"(\.\/dynamic\.[0-9a-f]+\.mjs)"/.exec(lines[line]);
+	const specifier = /"(\.\/asset\.[0-9a-f]+\.txt)"/.exec(lines[line]);
 
 	expect(fs.existsSync(path.join(dir, specifier[1].slice(2)))).toBe(true);
 
 	const columns = generatedColumns(map.mappings, line + 1);
 
-	// The statement's last mapping names its last character. A map written against
-	// the stand-in names a column short by what the two names differ in length by.
+	// A map written against the stand-in names columns short by the length the two
+	// names differ by, so its last one would sit left of where the name now ends.
 	expect(columns.length).toBeGreaterThan(1);
-	expect(columns[columns.length - 1]).toBe(lines[line].length - 1);
-	expect(columns[columns.length - 1]).toBeGreaterThan(lines[line].indexOf(specifier[1]));
+	expect(columns[columns.length - 1]).toBe(lines[line].lastIndexOf(")"));
+	expect(columns[columns.length - 1]).toBeGreaterThan(
+		lines[line].indexOf(specifier[1]) + specifier[1].length
+	);
 });

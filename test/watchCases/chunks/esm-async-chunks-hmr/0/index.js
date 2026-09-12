@@ -31,9 +31,9 @@ it("should work where an ESM entryChunk depends on the runtimeChunk", async func
 		expect(mainChunk.hash).not.toBe(STATE.mainChunkHash);
 		// async dynamic1Chunk need to be updated
 		expect(dynamic1Chunk.hash).not.toBe(STATE.dynamic1ChunkHash);
-		// The entry imports each async chunk by name itself, so nothing in the runtime
-		// chunk names one and it needn't be updated.
-		expect(runtimeChunk.hash).toBe(STATE.runtimeChunkHash);
+		// The loader names each async chunk, so the runtime chunk follows their hashes
+		// and the entry, which imports it by name, follows in turn.
+		expect(runtimeChunk.hash).not.toBe(STATE.runtimeChunkHash);
 	}
 	done()
 });

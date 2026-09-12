@@ -11,12 +11,8 @@ it("should name that chunk with a specifier a foreign bundler can follow", () =>
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	const ensureChunkCall = `${"__webpack_require__"}.e(`;
-
-	expect(bundle).toContain(
-		'import(/*! import() | lazy-css */ "./lazy-css.mjs")'
-	);
-	expect(bundle).not.toContain(ensureChunkCall);
+	expect(bundle).toContain(`${"chunkImports"} = {`);
+	expect(bundle).toContain('import("./lazy-css.mjs")');
 });
 
 it("should bake the href of the css that chunk carries", () => {

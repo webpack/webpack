@@ -13,7 +13,13 @@ it("should bake the name with no repair pass behind it", async () => {
 	).name;
 	const source = fs.readFileSync(path.join(dir, entry), "utf8");
 
-	expect(source).toContain(`${"__webpack_require__"}.ei(`);
-	expect(source).toContain(`"./${lazy}"`);
+	const importMap = `${"chunkImports"} = {`;
+	const start = source.indexOf(importMap);
+
+	expect(start).not.toBe(-1);
+	// Read inside the map, so the name cannot be matched from anywhere else in the chunk.
+	const region = source.slice(start, source.indexOf("};", start));
+
+	expect(region).toContain(`"./${lazy}"`);
 	expect(source).not.toContain(`${"__webpack_require__"}.u(`);
 });

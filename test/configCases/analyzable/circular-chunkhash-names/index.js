@@ -1,33 +1,39 @@
 import fs from "fs";
 import path from "path";
 
+const CHUNK_REFERENCE = /"\.\/[^"]+\.mjs"/g;
+
 it("should build rather than deadlock on two chunks that name each other", async () => {
 	const [a, b] = await Promise.all([import("./a.js"), import("./b.js")]);
 	expect(a.default).toBe(1);
 	expect(b.default).toBe(2);
 });
 
-it("should bake both directions of the cycle under repaired names", () => {
+it("should name a mutually importing pair without repairing either", () => {
 	const dir = __STATS__.outputPath;
 	const names = fs.readdirSync(dir).filter((n) => n.endsWith(".mjs"));
 	const emitted = (prefix) =>
 		/** @type {string} */ (names.find((n) => n.startsWith(prefix)));
 	const read = (prefix) =>
 		fs.readFileSync(path.join(dir, emitted(prefix)), "utf8");
-	const helper = `${"__webpack_require__"}.ei`;
 
-	// Both bake, and the repair re-hashes the pair as one group: each spells exactly
-	// the name the other was emitted under.
-	expect(read("a_js")).toContain(`${helper}(`);
-	expect(read("a_js")).toContain(`"./${emitted("b_js")}"`);
-	expect(read("b_js")).toContain(`${helper}(`);
-	expect(read("b_js")).toContain(`"./${emitted("a_js")}"`);
+	// Neither names the other, so nothing has to be repaired from what the fill left
+	// — which `[chunkhash]` could not have been, since it never reads a fill.
+	expect(read("a_js").match(CHUNK_REFERENCE)).toBe(null);
+	expect(read("b_js").match(CHUNK_REFERENCE)).toBe(null);
 
-	// The repaired hash is the one the asset's info carries, not the one it was
-	// named with before the fill.
+	const bundle = read("bundle0");
+
+	expect(bundle).toContain(`${"chunkImports"} = {`);
+	for (const prefix of ["a_js", "b_js"]) {
+		expect(bundle).toContain(`"./${emitted(prefix)}"`);
+	}
+
+	// The hash in each name is the one the asset's info carries.
 	for (const prefix of ["a_js", "b_js"]) {
 		const name = emitted(prefix);
 		const asset = __STATS__.assets.find((a) => a.name === name);
+
 		expect(asset.info.chunkhash).toBe(name.split(".")[1]);
 	}
 });

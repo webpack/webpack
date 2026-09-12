@@ -14,13 +14,17 @@ it("should write a static import next to each request", () => {
 		"utf8"
 	);
 
-	// One per candidate, and every one of them in the map itself.
-	expect(bundle.split(`${"__webpack_require__"}.ei(`)).toHaveLength(3);
+	// One entry per candidate, all of them in the loader's map.
+	const importMap = `${"chunkImports"} = {`;
+	const start = bundle.indexOf(importMap);
+
+	expect(start).not.toBe(-1);
+	const region = bundle.slice(start, bundle.indexOf("};", start));
+
+	expect(region.split("import(")).toHaveLength(3);
 	expect(bundle).toContain(`import("./${__NAME__}-locales_de_js.mjs")`);
 	expect(bundle).toContain(`import("./${__NAME__}-locales_en_js.mjs")`);
 	// A single chunk per request needs no `Promise.all` around it.
-	expect(bundle).toContain("return ids[1][0]()");
-	// Nothing loads a chunk by id any more, so neither runtime module ships.
-	expect(bundle).not.toContain(`${"__webpack_require__"}.e =`);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
+	expect(bundle).toContain(`return ${"__webpack_require__"}.e(ids[1][0])`);
+	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
 });

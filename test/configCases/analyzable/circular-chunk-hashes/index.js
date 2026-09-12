@@ -1,13 +1,15 @@
 import fs from "fs";
 import path from "path";
 
+const CHUNK_REFERENCE = /"\.\/[^"]+\.mjs"/g;
+
 it("should build rather than deadlock on two chunks that name each other", async () => {
 	const [a, b] = await Promise.all([import("./a.js"), import("./b.js")]);
 	expect(a.default).toBe(1);
 	expect(b.default).toBe(2);
 });
 
-it("should bake both directions of the cycle", () => {
+it("should name a mutually importing pair from one place", () => {
 	const dir = __STATS__.outputPath;
 	const names = fs.readdirSync(dir).filter((n) => n.endsWith(".mjs"));
 	const read = (prefix) =>
@@ -18,14 +20,17 @@ it("should bake both directions of the cycle", () => {
 			),
 			"utf8"
 		);
-	const helper = `${"__webpack_require__"}.ei`;
-	const baked = [read("a_js"), read("b_js")].filter((s) => s.includes(helper));
-	// Both bake: the repair re-hashes the pair as one group, so each name on disk is
-	// the one the other file spells.
-	expect(baked).toHaveLength(2);
-	for (const source of baked) {
-		for (const ref of source.match(/"\.\/[^"]+\.mjs"/g) || []) {
-			expect(names).toContain(ref.slice(3, -1));
-		}
-	}
+
+	// Neither chunk names the other, so neither content hash can chase the other —
+	// the cycle the two used to form is not reachable at all.
+	expect(read("a_js").match(CHUNK_REFERENCE)).toBe(null);
+	expect(read("b_js").match(CHUNK_REFERENCE)).toBe(null);
+
+	// The loader names both, and nothing names the chunk holding the loader.
+	const bundle = read("bundle0");
+	const referenced = bundle.match(CHUNK_REFERENCE) || [];
+
+	expect(bundle).toContain(`${"chunkImports"} = {`);
+	expect(referenced).toHaveLength(2);
+	for (const ref of referenced) expect(names).toContain(ref.slice(3, -1));
 });

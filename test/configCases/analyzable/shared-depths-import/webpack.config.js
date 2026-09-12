@@ -1,7 +1,7 @@
 "use strict";
 
-// The module holding the `import()` sits at two depths, so the specifier is reserved
-// and each emitted asset gets its own `../` path once the names exist.
+// The module holding the `import()` sits at two depths. Only the loader names a
+// chunk, so one specifier serves both rather than one `../` path per asset.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

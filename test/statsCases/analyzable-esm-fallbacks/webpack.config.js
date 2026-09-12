@@ -52,7 +52,7 @@ const base = (name, extra = {}) => ({
 
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
-	// Analyzable: emits `import("./async.mjs")` + the `.ei` helper.
+	// Analyzable: the loader holds `import("./async.mjs")`, read by chunk id.
 	base("analyzable"),
 	// Also analyzable: a chunk in several groups still dedupes through `.ei`'s
 	// `installedChunks` bookkeeping, so sharing does not need the runtime form.
@@ -90,7 +90,7 @@ module.exports = [
 		entry: "./index-depths",
 		plugins: [nameConsumersByContent(["flat", "nested/deep"])]
 	}),
-	// Every case below must fall back with no `.ei` emitted.
+	// Every case below must fall back, with the loader holding no map of names.
 	base("public-path-override", { entry: "./index-public-path-override" }),
 	// `import.meta` does not parse inside the `eval()` this devtool wraps a module in.
 	base("eval-devtool", {

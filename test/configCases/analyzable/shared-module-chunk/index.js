@@ -12,6 +12,6 @@ it("should bake the specifier — the chunk's javascript is emitted here", () =>
 		"utf8"
 	);
 
-	expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
+	expect(bundle).toContain(`${"chunkImports"} = {`);
 	expect(bundle).toContain('"./lazy.mjs"');
 });

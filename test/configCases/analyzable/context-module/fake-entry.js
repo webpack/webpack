@@ -14,9 +14,14 @@ it("should keep the loaders behind the fake-map slot", () => {
 		"utf8"
 	);
 
-	expect(bundle.split(`${"__webpack_require__"}.ei(`)).toHaveLength(3);
+	const importMap = `${"chunkImports"} = {`;
+	const start = bundle.indexOf(importMap);
+
+	expect(start).not.toBe(-1);
+	const region = bundle.slice(start, bundle.indexOf("};", start));
+
+	expect(region.split("import(")).toHaveLength(3);
 	// The exports type sits at 1, so the loaders moved one along.
 	expect(bundle).toContain("return ids[2][0]()");
-	expect(bundle).not.toContain(`${"__webpack_require__"}.e =`);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
+	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
 });

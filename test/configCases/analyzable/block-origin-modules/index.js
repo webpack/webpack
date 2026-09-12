@@ -35,10 +35,15 @@ it("should bake the import even though the block names no module of its own", ()
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	const analyzableImport = `${"__webpack_require__"}.ei(`;
-	const ensureChunkCall = `${"__webpack_require__"}.e(`;
+	const importMap = `${"chunkImports"} = {`;
+	const start = bundle.indexOf(importMap);
+
+	expect(start).not.toBe(-1);
+	const region = bundle.slice(start, bundle.indexOf("};", start));
 
 	// One per emitter: `require.ensure`, AMD `require([...])` and the lazy-once context.
-	expect(bundle.split(analyzableImport)).toHaveLength(4);
-	expect(bundle).not.toContain(ensureChunkCall);
+	for (const name of ["ensured", "amd_js", "ctx"]) {
+		expect([name, region.includes(name)]).toEqual([name, true]);
+	}
+	expect(bundle).toContain(`${"__webpack_require__"}.e(`);
 });

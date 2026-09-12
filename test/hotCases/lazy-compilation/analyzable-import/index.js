@@ -12,7 +12,7 @@ const proxyChunks = () => {
 
 import.meta.webpackHot.accept(["./module.js"]);
 
-it("should bake the analyzable import into the lazy compilation proxy", (done) => {
+it("should load a chunk the lazy compilation proxy creates after the build", (done) => {
 	expect(message).toBe("original");
 
 	const promise = import("./lazy-module");
@@ -25,15 +25,12 @@ it("should bake the analyzable import into the lazy compilation proxy", (done) =
 
 					// Needles are built at runtime so they are not source string literals here.
 					const require_ = "__webpack_require__";
-					// The proxy only names a chunk once the module is activated, so the
-					// import lands in the update it is rebuilt into.
+					// The loader's map is fixed when the build runs, so a chunk the proxy
+					// creates after it is loaded by id through the runtime form instead.
 					const chunks = proxyChunks();
 					expect(
-						chunks.filter((chunk) => chunk.includes(`${require_}.ei(`))
-					).not.toHaveLength(0);
-					expect(
 						chunks.filter((chunk) => chunk.includes(`${require_}.e(`))
-					).toHaveLength(0);
+					).not.toHaveLength(0);
 					done();
 				})
 				.catch(done);

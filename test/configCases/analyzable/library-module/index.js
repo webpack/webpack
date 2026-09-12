@@ -19,9 +19,9 @@ it("should emit an analyzable literal import() for a module library", () => {
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	// Library output still emits the analyzable helper + literal specifier that a
-	// foreign bundler can follow, next to the library's own `export` statements.
-	expect(bundle).toContain('import(/*! import() | dynamic */ "./dynamic.mjs")');
-	expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
+	// Library output still carries the loader's map of literal specifiers a foreign
+	// bundler can follow, next to the library's own `export` statements.
+	expect(bundle).toContain('import("./dynamic.mjs")');
+	expect(bundle).toContain(`${"chunkImports"} = {`);
 	expect(bundle).toMatch(/export\s*\{/);
 });

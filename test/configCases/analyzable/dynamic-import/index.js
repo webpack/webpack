@@ -14,11 +14,14 @@ it("should emit an analyzable literal import() for module output", () => {
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	// A statically-named specifier a foreign bundler can follow, wrapped in the
-	// analyzable-import helper instead of the runtime `ensureChunk(id)` call.
-	const ensureChunkCall = `${"__webpack_require__"}.e(`;
+	// The loader imports a statically-named specifier a foreign bundler can follow;
+	// the importing module names only the chunk id.
+	const importMap = `${"chunkImports"} = {`;
 
-	expect(bundle).toContain('import(/*! import() | dynamic */ "./dynamic.mjs")');
-	expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
-	expect(bundle).not.toContain(ensureChunkCall);
+	expect(bundle).toContain(importMap);
+	expect(bundle).toContain('import("./dynamic.mjs")');
+	expect(bundle).toContain(`${"__webpack_require__"}.e(`);
+	// Every chunk the loader can be asked for is named here, so it builds no url from
+	// a chunk id and the table mapping one to a filename is not emitted.
+	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

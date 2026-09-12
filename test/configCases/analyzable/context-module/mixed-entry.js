@@ -14,11 +14,17 @@ it("should keep the runtime form for the chunk it cannot import", () => {
 		"utf8"
 	);
 
-	// `de` was split into the chunk carrying the runtime: importing that from itself
-	// would be a cycle, so only `en` is baked.
-	expect(bundle.split(`${"__webpack_require__"}.ei(`)).toHaveLength(2);
+	// `de` was split into the chunk carrying the runtime, which is loaded before the
+	// loader runs — so the map names only `en` and the id map reaches the other.
+	const importMap = `${"chunkImports"} = {`;
+	const start = bundle.indexOf(importMap);
+
+	expect(start).not.toBe(-1);
+	const region = bundle.slice(start, bundle.indexOf("};", start));
+
+	expect(region.split("import(")).toHaveLength(2);
 	expect(bundle).toContain(`import("./${__NAME__}-mixed_en_js.mjs")`);
-	expect(bundle).toContain(`${"__webpack_require__"}.e(${JSON.stringify(__NAME__)})`);
+	expect(region).not.toContain(`${__NAME__}.mjs`);
 	// One loader still asks for it, so the runtime module has to ship.
 	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
 });

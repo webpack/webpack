@@ -15,18 +15,17 @@ it("should bake a hashed chunk name the deferred pass fills in", () => {
 		"utf8"
 	);
 	// Needle built at runtime so it is not a source string literal here.
-	const helper = `${"__webpack_require__"}.ei(`;
+	const importMap = `${"chunkImports"} = {`;
 
-	expect(bundle).toContain(helper);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.e(`);
+	expect(bundle).toContain(importMap);
 	// No stand-in may reach the bundle, and what is baked has to be on disk.
 	expect(bundle).not.toContain(`@@${"webpackAnalyzableChunk"}:`);
 	const specifier = /import\((?:\/\*[^*]*\*\/\s*)?"([^"]+)"\)/.exec(
-		bundle.slice(bundle.indexOf(helper))
+		bundle.slice(bundle.indexOf(importMap))
 	);
 
 	expect(specifier).not.toBe(null);
-	expect(
-		fs.existsSync(path.join(__STATS__.outputPath, specifier[1]))
-	).toBe(true);
+	expect(fs.existsSync(path.join(__STATS__.outputPath, specifier[1]))).toBe(
+		true
+	);
 });
