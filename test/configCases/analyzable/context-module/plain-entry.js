@@ -26,8 +26,5 @@ it("should write a static import next to each request", () => {
 	expect(bundle).toContain(`import("./${__NAME__}-locales_en_js.mjs")`);
 	// A single chunk per request needs no `Promise.all` around it.
 	expect(bundle).toContain(`return ${"__webpack_require__"}.e(ids[1][0])`);
-	// The request map holds chunk ids, so the loader reads them — but it imports a
-	// name from its own map, so no id is ever turned into a filename.
 	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

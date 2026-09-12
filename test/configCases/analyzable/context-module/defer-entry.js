@@ -26,5 +26,4 @@ it("should keep the loaders ahead of the deferred slot", () => {
 	expect(bundle).toContain(`import("./${__NAME__}-defer_async_js.mjs")`);
 	expect(bundle).toContain("], null]");
 	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

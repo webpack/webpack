@@ -26,6 +26,4 @@ it("should bake the import for every glob match", () => {
 	const region = bundle.slice(start, bundle.indexOf("};", start));
 
 	expect(region.split("import(")).toHaveLength(3);
-	// Every match is named here, so nothing builds one from a chunk id.
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

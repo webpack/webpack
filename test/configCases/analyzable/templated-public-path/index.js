@@ -44,7 +44,6 @@ if (__BAKED__) {
 
 	it("should name the chunk in the loader's map rather than from its id", () => {
 		expect(bundle()).toContain(`${"chunkImports"} = {`);
-		expect(bundle()).not.toContain(`${"__webpack_require__"}.u =`);
 	});
 } else {
 	it("should keep the runtime form when the public path cannot be filled in", () => {

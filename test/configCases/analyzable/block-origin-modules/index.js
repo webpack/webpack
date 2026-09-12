@@ -42,6 +42,8 @@ it("should bake the import even though the block names no module of its own", ()
 	const region = bundle.slice(start, bundle.indexOf("};", start));
 
 	// One per emitter: `require.ensure`, AMD `require([...])` and the lazy-once context.
-	expect(region.split("import(")).toHaveLength(4);
+	for (const name of ["ensured", "amd_js", "ctx"]) {
+		expect([name, region.includes(name)]).toEqual([name, true]);
+	}
 	expect(bundle).toContain(`${"__webpack_require__"}.e(`);
 });

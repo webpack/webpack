@@ -26586,6 +26586,16 @@ declare abstract class RuntimeTemplate {
 	reportChunkImportBailout(chunk: Chunk, chunkGraph: ChunkGraph): void;
 
 	/**
+	 * Whether the loader still needs to build a url from a chunk id: a chunk carrying
+	 * a runtime of its own is reached by a static import and so is never named in the
+	 * map, and only a runtime that can reach one has to keep the fallback.
+	 */
+	chunkImportsNeedRuntimeUrl(
+		runtimeChunk: Chunk,
+		chunkGraph: ChunkGraph
+	): boolean;
+
+	/**
 	 * A literal `import()` specifier for every javascript chunk a runtime loads on
 	 * demand, keyed by chunk id, or `null` when one of them cannot be named here. The
 	 * map is written into the runtime chunk rather than at each import site, so a

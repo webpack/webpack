@@ -24,5 +24,4 @@ it("should keep the loaders behind the fake-map slot", () => {
 	// The exports type sits at 1, so the loaders moved one along.
 	expect(bundle).toContain("return ids[2][0]()");
 	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

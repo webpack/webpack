@@ -21,6 +21,7 @@ it("should emit an analyzable literal import() for module output", () => {
 	expect(bundle).toContain(importMap);
 	expect(bundle).toContain('import("./dynamic.mjs")');
 	expect(bundle).toContain(`${"__webpack_require__"}.e(`);
-	// The runtime builds no name from a chunk id, so it ships no map of them.
+	// Every chunk the loader can be asked for is named here, so it builds no url from
+	// a chunk id and the table mapping one to a filename is not emitted.
 	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });

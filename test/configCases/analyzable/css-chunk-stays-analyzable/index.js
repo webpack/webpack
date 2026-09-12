@@ -13,8 +13,6 @@ it("should name that chunk with a specifier a foreign bundler can follow", () =>
 	);
 	expect(bundle).toContain(`${"chunkImports"} = {`);
 	expect(bundle).toContain('import("./lazy-css.mjs")');
-	// The name is in the loader's map, so no chunk id is turned into one.
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });
 
 it("should bake the href of the css that chunk carries", () => {

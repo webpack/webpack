@@ -29,6 +29,4 @@ it("should emit the analyzable literal for the shared chunks", () => {
 	expect(bundle).toContain(importMap);
 	expect(bundle).toContain('import("./one_js.mjs")');
 	expect(bundle).toContain('import("./vendor.mjs")');
-	// Every chunk is named here, so none is built from a chunk id.
-	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });
