@@ -107,7 +107,7 @@ exports[`ConfigCacheTestCases html modulepreload-esm exported tests should rewri
 <title>Test</title>
 <link rel=\\"modulepreload\\" href=\\"preload.mjs\\">
 <link rel=\\"modulepreload    \\" href=\\"preload-other.mjs\\">
-<link rel=\\"modulepreload\\" href=\\"page.mjs\\">
+<link rel=\\"modulepreload\\" href=\\"__html_cbe5b59d_2.mjs\\">
 <!-- webpackIgnore: true -->
 <link rel=\\"modulepreload\\" href=\\"./ignored-preload.js\\">
 </head>

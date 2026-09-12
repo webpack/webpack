@@ -22,8 +22,8 @@ it("should bundle <script> inside <iframe srcdoc> as an entry chunk", () => {
 	).toBeGreaterThanOrEqual(2);
 
 	// The bundled scripts become their own emitted JS chunks: one named after
-	// its `src`, and the inline body after the page that carries it.
+	// its `src`, and the inline body after its entry, having no url at all.
 	const names = __STATS__.assets.map((a) => a.name);
 	expect(names).toContain("app.js");
-	expect(names).toContain("page.js");
+	expect(names.filter((name) => /^__html_[0-9a-f]+_\d+\.js$/.test(name))).toHaveLength(1);
 });

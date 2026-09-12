@@ -23,7 +23,7 @@ exports[`ConfigTestCases html basic exported tests should compile and export htm
 	<li>Milk</li>
 </ol>
 
-<script src=\\"page.js\\"></script>
+<script src=\\"__html_cbe5b59d_0.js\\"></script>
 
 <!-- comment -->
 
@@ -34,7 +34,7 @@ exports[`ConfigTestCases html basic exported tests should compile and export htm
 
 <input type=\\"text\\" />
 
-<script src=\\"page1.js\\"></script>
+<script src=\\"__html_cbe5b59d_1.js\\"></script>
 
 <picture>
 	<source media=\\"(min-width: 650px)\\" srcset=\\"31d6cfe0d16ae931b73c.png\\">
@@ -103,8 +103,8 @@ or
 <p >Text</p>
 <p   >Text</p>
 
-<script src=\\"page2.js\\"></script>
-<script src=\\"page3.js\\"></script>
+<script src=\\"__html_cbe5b59d_2.js\\"></script>
+<script src=\\"__html_cbe5b59d_3.js\\"></script>
 
 <img src=\\"#hash\\" />
 <img src='31d6cfe0d16ae931b73c.png#hash' />

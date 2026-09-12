@@ -139,8 +139,8 @@ exports[`ConfigCacheTestCases html script-src exported tests should bundle class
 <script type=\\"module\\" src=\\"other.mjs\\"></script>
 <script type=\\"module\\" src=\\"module-entry.mjs\\"></script>
 <script type=\\"module\\" src=\\"classic-typed.mjs\\"></script>
-<script type=\\"module\\" src=\\"page.mjs\\"></script>
-<script type=\\"module\\" src=\\"page1.mjs\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_4.mjs\\"></script>
+<script type=\\"module\\" src=\\"__html_cbe5b59d_5.mjs\\"></script>
 <!-- Non-JS script types must NOT be bundled as JS entries. They flow
      through the regular HtmlSourceDependency path: rewritten as an
      asset URL, the attribute stays as-is. -->

@@ -1,7 +1,7 @@
 "use strict";
 
-// An `<iframe srcdoc>` is a page webpack writes, so it has no file of its own.
-// Its inline `<script>` has no url either, and takes the embedding page's name.
+// Neither an `<iframe srcdoc>` page nor an inline `<script>` carries a url, so
+// the extracted entry keeps the name webpack gave it.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
