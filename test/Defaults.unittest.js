@@ -6198,26 +6198,25 @@ describe("module library types", () => {
 		expect(compiler.options.output.iife).toBe(false);
 	});
 
-	it("should reject a module library when module output is disabled", () => {
-		const webpack = require("..");
+	it("should enable module output when it was disabled by hand", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			entry: "./index.js",
+			output: { module: false, library: { type: "module" } }
+		});
 
-		expect(() =>
-			webpack({
-				mode: "none",
-				entry: "./index.js",
-				output: { module: false, library: { type: "module" } }
-			})
-		).toThrow(
-			"library type \"module\" is only allowed when 'output.module' is enabled"
-		);
-		expect(() =>
-			webpack({
-				mode: "none",
-				entry: "./index.js",
-				output: { module: false, library: { type: "modern-module" } }
-			})
-		).toThrow(
-			"library type \"modern-module\" is only allowed when 'output.module' is enabled"
-		);
+		expect(config.output.module).toBe(true);
+		expect(config.output.iife).toBe(false);
+	});
+
+	it("should enable module output for a modern-module library", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			entry: "./index.js",
+			output: { module: false, library: { type: "modern-module" } }
+		});
+
+		expect(config.output.module).toBe(true);
+		expect(config.output.iife).toBe(false);
 	});
 });
