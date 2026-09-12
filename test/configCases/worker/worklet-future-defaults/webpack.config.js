@@ -4,7 +4,7 @@
 module.exports = {
 	output: {
 		assetModuleFilename: "asset-[name][ext]",
-		filename: "[name].js"
+		filename: "[name].mjs"
 	},
 	target: "web",
 	// `futureDefaults` turns on worklet parsing without an explicit `parser.worklet`

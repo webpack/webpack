@@ -1,6 +1,6 @@
 "use strict";
 
-const NAMES = ["plain", "evaldev", "evalmap"];
+const NAMES = ["plain", "evaldev", "evalmap", "evalarray"];
 
 module.exports = {
 	findBundle(i) {

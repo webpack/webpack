@@ -203,7 +203,7 @@ const describeCases = (config) => {
 								}
 								if (!options.output.filename) {
 									options.output.filename = `bundle${idx}${
-										options.output.module ? ".mjs" : ".js"
+										TestRunner.isModuleOutput(options) ? ".mjs" : ".js"
 									}`;
 								}
 								if (config.cache) {

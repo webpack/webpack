@@ -8,16 +8,17 @@ const webpack = require("../../../../");
 /**
  * @param {number} index position of this config, so an entry finds its own stats
  * @param {string} name output prefix keeping the emitted files of each config apart
- * @param {string | false} devtool the devtool under test
+ * @param {import("../../../../").Configuration["devtool"]} devtool the devtool under test
+ * @param {import("../../../../").Configuration["experiments"]=} experiments extra experiments
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, name, devtool) => ({
+const base = (index, name, devtool, experiments) => ({
 	name,
 	target: ["web", "node"],
 	mode: "development",
 	devtool,
 	entry: { [name]: `./${name}-entry.js` },
-	experiments: { css: true },
+	experiments: { css: true, ...experiments },
 	optimization: { chunkIds: "named", minimize: false },
 	module: { rules: [{ test: /\.(txt|png)$/, type: "asset/resource" }] },
 	output: {
@@ -40,5 +41,16 @@ const base = (index, name, devtool) => ({
 module.exports = [
 	base(0, "plain", false),
 	base(1, "evaldev", "eval"),
-	base(2, "evalmap", "eval-source-map")
+	base(2, "evalmap", "eval-source-map"),
+	// Only `futureDefaults` hands the per-asset-type spelling through as written
+	// (webpack@5 collapses it to one string), so the module form has to read it.
+	base(
+		3,
+		"evalarray",
+		[
+			{ type: "css", use: "source-map" },
+			{ type: "javascript", use: "eval" }
+		],
+		{ futureDefaults: true }
+	)
 ];
