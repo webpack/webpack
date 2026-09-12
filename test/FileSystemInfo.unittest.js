@@ -301,6 +301,7 @@ ${details(snapshot)}`)
 		const oldContent = /** @type {string} */ (
 			/** @type {unknown} */ (fs.readFileSync(filename, "utf8"))
 		);
+		const before = fs.statSync(filename);
 		if (filename.endsWith(".json")) {
 			const data = JSON.parse(oldContent);
 			fs.writeFileSync(
@@ -313,6 +314,13 @@ ${details(snapshot)}`)
 		} else {
 			fs.writeFileSync(filename, `${oldContent}!`);
 		}
+		// `tsh` mode reads a context's hash only once its timestamps differ, so a
+		// write that lands in the same clock tick hides the change.
+		const mtime = new Date(
+			Math.max(before.mtime.getTime(), fs.statSync(filename).mtime.getTime()) +
+				1
+		);
+		fs.utimesSync(filename, before.atime, mtime);
 	};
 
 	for (const [name, options] of /** @type {[string, SnapshotOptions][]} */ ([

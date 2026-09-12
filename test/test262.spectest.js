@@ -915,13 +915,6 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
-	// A namespace re-exported as a named export is not itself wrapped, so the
-	// inner one stays a plain exports object and shows up as an extra key.
-	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-direct.js",
-	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-indirect.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-direct.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-indirect.js",
-	"module-code/namespace/internals/own-property-keys-binding-types.js",
 	// `import()` of a JSON or text module is not parsed as ESM, so the option
 	// never reaches it and `default` sits beside `__esModule`.
 	"import/import-attributes/json-via-namespace.js",
@@ -935,22 +928,6 @@ const knownBugs = [
 	"module-code/namespace/internals/get-str-not-found.js",
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
-
-	// webpack bugs and improvements
-	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
-	// namespace has two own keys where the spec has one.
-	// `ns[nonExported] = v` has to throw, which needs the namespace to be
-	// non-extensible; `delete ns[exported]` already does.
-	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
-	// module namespace exotic object). webpack's `__webpack_exports__` is a
-	// plain object inheriting `Object.prototype`, so `Object.prototype.toString`
-	// is reachable and returns `"[object Module]"` instead of falling back to
-	// the exported `valueOf`. Setting the prototype to `null` would impact
-	// other webpack-generated code paths.
-	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
-	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
-
-	// Potential improvement for enumerate
 
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
@@ -972,18 +949,6 @@ const knownBugs = [
 	// webpack emits `delete super[(super(), 0)]` unchanged, so the order the
 	// index and the this-binding check run in is the engine's to fix.
 	"expressions/delete/super-property-uninitialized-this.js",
-
-	// Module Namespace Exotic Object semantics — webpack's `__webpack_exports__`
-	// is a plain object with `__esModule: true` rather than a true namespace
-	// exotic. Adopting `Object.setPrototypeOf(__webpack_exports__, null)` (and
-	// freezing/extensibility tweaks) would change runtime behaviour broadly,
-	// so these spec-conformance tests remain skipped.
-
-	// Module Namespace Exotic Object semantics for the dynamically imported
-	// namespace — webpack's resolved namespace is a plain `__webpack_exports__`
-	// object with `__esModule: true`, so non-extensibility, prototype-of-null,
-	// throw-on-set in strict, sorted ownKeys, and frozen prop descriptors are
-	// not all satisfied (same root cause as `module-code/namespace/internals/*`).
 
 	// The file imports itself, so the entry script and the module it loads are
 	// one bundled module, evaluated once where the spec evaluates it twice.
