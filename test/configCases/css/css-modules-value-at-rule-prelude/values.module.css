@@ -1,0 +1,7 @@
+@value importedAnimName: importedAnim;
+@value importedCounterName: importedCounter;
+@value importedSelValue: .importedCls;
+
+@keyframes importedKeyframes {
+	from { opacity: 0; }
+}

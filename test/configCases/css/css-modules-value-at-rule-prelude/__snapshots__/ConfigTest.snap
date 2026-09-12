@@ -1,0 +1,244 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests should emit the whole stylesheet with every prelude ident replaced once 1`] = `
+"/*!*******************************!*\\\\
+  !*** css ./values.module.css ***!
+  \\\\*******************************/
+
+
+
+
+@keyframes value-at-rule-prelude-values_module_css-importedKeyframes {
+	from { opacity: 0; }
+}
+
+/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.value-at-rule-prelude-style_module_css-anim {
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 2s linear;
+	animation-name: value-at-rule-prelude-style_module_css-pulseAnim;
+}
+
+@keyframes value-at-rule-prelude-style_module_css-pulseAnim {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.value-at-rule-prelude-style_module_css-prefixed-anim {
+	-webkit-animation-name: value-at-rule-prelude-style_module_css-spinAnim;
+}
+
+@-webkit-keyframes value-at-rule-prelude-style_module_css-spinAnim {
+	from { opacity: 0; }
+}
+
+.value-at-rule-prelude-style_module_css-local-anim {
+	animation-name: value-at-rule-prelude-style_module_css-fadeAnim;
+}
+
+@keyframes value-at-rule-prelude-style_module_css-fadeAnim {
+	from { opacity: 0; }
+}
+
+@keyframes sharedAnim {
+	from { opacity: 0; }
+}
+
+.value-at-rule-prelude-style_module_css-chained-anim {
+	animation-name: value-at-rule-prelude-style_module_css-chainedAnim;
+}
+
+@keyframes value-at-rule-prelude-style_module_css-chainedAnim {
+	from { opacity: 0; }
+}
+
+.value-at-rule-prelude-style_module_css-imported-anim {
+	animation-name: importedAnim;
+}
+
+@keyframes importedAnim {
+	from { opacity: 0; }
+}
+
+.value-at-rule-prelude-style_module_css-counter {
+	list-style: value-at-rule-prelude-style_module_css-romanCounter;
+}
+
+@counter-style value-at-rule-prelude-style_module_css-romanCounter {
+	system: cyclic;
+	symbols: \\"*\\";
+	suffix: \\" \\";
+}
+
+.value-at-rule-prelude-style_module_css-imported-counter {
+	list-style: importedCounter;
+}
+
+@counter-style importedCounter {
+	system: cyclic;
+	symbols: \\"+\\";
+	suffix: \\" \\";
+}
+
+.value-at-rule-prelude-style_module_css-container {
+	container-name: value-at-rule-prelude-style_module_css-sidebarContainer;
+}
+
+@container value-at-rule-prelude-style_module_css-sidebarContainer (min-width: 400px) {
+	.value-at-rule-prelude-style_module_css-in-container {
+		color: red;
+	}
+}
+
+.value-at-rule-prelude-style_module_css-scope-root {
+	color: blue;
+}
+
+@scope (.value-at-rule-prelude-style_module_css-scopeRootCls) to (article) {
+	.value-at-rule-prelude-style_module_css-in-scope {
+		color: green;
+	}
+}
+
+@scope ([class=value-at-rule-prelude-style_module_css-scopeAttrCls]) {
+	.value-at-rule-prelude-style_module_css-in-attr-scope {
+		color: teal;
+	}
+}
+
+@media (max-width: 599px) {
+	.value-at-rule-prelude-style_module_css-in-media {
+		color: purple;
+	}
+}
+
+.value-at-rule-prelude-style_module_css-override-anim {
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 1s linear;
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 2s linear;
+}
+
+.value-at-rule-prelude-style_module_css-multi-anim {
+	animation-name: value-at-rule-prelude-style_module_css-pulseAnim, value-at-rule-prelude-style_module_css-spinAnim;
+}
+
+.value-at-rule-prelude-style_module_css-repeat-anim {
+	animation-name: value-at-rule-prelude-style_module_css-pulseAnim, value-at-rule-prelude-style_module_css-pulseAnim;
+}
+
+.value-at-rule-prelude-style_module_css-shorthand-list-anim {
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 1s, value-at-rule-prelude-style_module_css-spinAnim 2s;
+}
+
+@keyframes value-at-rule-prelude-style_module_css-pulseAnim {
+	to { opacity: 0.5; }
+}
+
+
+
+.value-at-rule-prelude-style_module_css-imported-keyframes-anim {
+	animation: value-at-rule-prelude-values_module_css-importedKeyframes 1s linear;
+	animation-name: value-at-rule-prelude-values_module_css-importedKeyframes;
+}
+
+@keyframes value-at-rule-prelude-values_module_css-importedKeyframes {
+	to { opacity: 0.25; }
+}
+
+
+
+
+
+
+.value-at-rule-prelude-style_module_css-resolvedCls {
+	color: navy;
+}
+
+#value-at-rule-prelude-style_module_css-resolvedId {
+	color: maroon;
+}
+
+article {
+	color: olive;
+}
+
+.outer .inner {
+	color: gray;
+}
+
+
+
+.importedCls {
+	color: silver;
+}
+
+/*!***********************************!*\\\\
+  !*** css ./no-scoping.module.css ***!
+  \\\\***********************************/
+
+
+
+
+.value-at-rule-prelude-no-scoping_module_css-no-scoping-anim {
+	animation: unscopedPulse 2s linear;
+	list-style: unscopedCounter;
+	container-name: unscopedContainer;
+}
+
+@keyframes unscopedPulse {
+	from { opacity: 0; }
+}
+
+@counter-style unscopedCounter {
+	system: cyclic;
+	symbols: \\"#\\";
+	suffix: \\" \\";
+}
+
+@container unscopedContainer (min-width: 400px) {
+	.value-at-rule-prelude-no-scoping_module_css-no-scoping-in-container {
+		color: red;
+	}
+}
+
+/*!************************!*\\\\
+  !*** css ./global.css ***!
+  \\\\************************/
+
+
+
+
+.global-anim {
+	color: rebeccapurple;
+	--animation-name: globalPulse;
+}
+
+@keyframes globalPulse {
+	from { opacity: 0; }
+}
+
+@counter-style globalCounter {
+	system: cyclic;
+	symbols: \\"%\\";
+	suffix: \\" \\";
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;

@@ -152,7 +152,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.red {
+.my-app-at-rule-value_module_css-red {
 	color: .red;
 }
 
@@ -8484,7 +8484,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 
 
-.red {
+.elijK0 {
 	color: .red;
 }
 
@@ -11506,7 +11506,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to dis
 
 
 
-.red {
+.my-app-at-rule-value_module_css-red {
 	color: .red;
 }
 
