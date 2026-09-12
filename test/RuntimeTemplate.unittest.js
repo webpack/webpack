@@ -332,6 +332,16 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 		getEntryOptions: () => ({ worker: true, chunkLoading })
 	});
 
+	/**
+	 * @returns {ChunkGraph} a chunk graph whose chunk carries one entry module
+	 */
+	const entryChunkGraph = () =>
+		/** @type {ChunkGraph} */ (
+			/** @type {unknown} */ ({
+				getChunkEntryModulesIterable: () => [module]
+			})
+		);
+
 	it("should refuse every form unless the build emits ESM", () => {
 		const template = create({ output: { module: false } });
 		const { chunkGraph } = countingChunkGraph();
@@ -386,42 +396,50 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 		}).toEqual({ array: false, renamed: false, both: true });
 	});
 
-	// A worker on its own chunk loader keeps that runtime; one on `import` shares the
-	// ESM loader with the main graph, so the literal reaches the same chunk.
-	it("should follow a worker entry's own chunk loading", () => {
-		const cases = {
-			importWorker: workerChunk("import"),
-			jsonpWorker: workerChunk("jsonp"),
-			nodeWorker: workerChunk("async-node")
-		};
-		/** @type {Record<string, boolean>} */
-		const answers = {};
-		for (const [name, chunk] of Object.entries(cases)) {
-			const { chunkGraph } = countingChunkGraph([chunk]);
-			answers[name] = create({}).supportsAnalyzable(
-				"import",
-				chunkGraph,
-				module
+	// A worker on its own chunk loader gets no ESM loader to name its chunks, so the
+	// reason is recorded against the entry that chose it rather than asked per module.
+	it("should report a worker entry's own chunk loading", () => {
+		/** @type {Record<string, string[]>} */
+		const reported = {};
+		for (const [name, chunkLoading] of [
+			["importWorker", "import"],
+			["jsonpWorker", "jsonp"],
+			["nodeWorker", "async-node"]
+		]) {
+			/** @type {string[]} */
+			const bailouts = [];
+			create({ bailouts }).reportChunkImportBailout(
+				/** @type {EXPECTED_ANY} */ (workerChunk(chunkLoading)),
+				entryChunkGraph()
 			);
+			reported[name] = bailouts;
 		}
 
-		expect(answers).toEqual({
-			importWorker: true,
-			jsonpWorker: false,
-			nodeWorker: false
+		expect(reported).toEqual({
+			importWorker: [],
+			jsonpWorker: [
+				'Analyzable ESM bailout: this worker loads its chunks with "jsonp", not "import"'
+			],
+			nodeWorker: [
+				'Analyzable ESM bailout: this worker loads its chunks with "async-node", not "import"'
+			]
 		});
 	});
 
-	// A non-worker entry carries `chunkLoading` too, and it is not the worker's.
-	it("should ignore chunk loading on an entry that is not a worker", () => {
-		const { chunkGraph } = countingChunkGraph([
-			{ getEntryOptions: () => ({ chunkLoading: "jsonp" }) },
-			{ getEntryOptions: () => undefined }
-		]);
-
-		expect(create({}).supportsAnalyzable("import", chunkGraph, module)).toBe(
-			true
+	// A non-worker entry carries `chunkLoading` too, and the reason names it as such.
+	it("should report an entry that is not a worker as a runtime", () => {
+		/** @type {string[]} */
+		const bailouts = [];
+		create({ bailouts }).reportChunkImportBailout(
+			/** @type {EXPECTED_ANY} */ ({
+				getEntryOptions: () => ({ chunkLoading: "jsonp" })
+			}),
+			entryChunkGraph()
 		);
+
+		expect(bailouts).toEqual([
+			'Analyzable ESM bailout: this runtime loads its chunks with "jsonp", not "import"'
+		]);
 	});
 
 	// `eval` devtool wraps each module in `eval(...)`, where `import.meta` is a syntax
@@ -469,11 +487,11 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 	// unit-testable — the decision short-circuits before reading it unless a real
 	// build registered a `__webpack_public_path__` reassignment — so the case that
 	// pins it is configCases/wasm/analyzable-runtime-scope.
-	it("should walk the origin module's chunks once for an import", () => {
+	it("should read no chunk of the origin module for an import", () => {
 		const { chunkGraph, reads } = countingChunkGraph();
 		create({}).supportsAnalyzable("import", chunkGraph, module);
 
-		expect(reads()).toBe(1);
+		expect(reads()).toBe(0);
 	});
 
 	// `stats.optimizationBailout` is the channel this reports through, and one module
