@@ -9044,6 +9044,11 @@ declare interface ExternalModuleInfo {
 	deferredNamespaceObjectName?: string;
 
 	/**
+	 * an import reads the spec namespace object the module hands out
+	 */
+	specNamespaceObjectUsed: boolean;
+
+	/**
 	 * "default-with-named" namespace
 	 */
 	interopNamespaceObjectUsed: boolean;
@@ -14900,6 +14905,12 @@ declare interface JavascriptParserOptions {
 	sourceImport?: boolean;
 
 	/**
+	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.
+	 * @since 5.111.0
+	 */
+	specNamespaceObject?: boolean;
+
+	/**
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 * @deprecated
 	 */
@@ -15238,6 +15249,10 @@ declare interface KnownAssetModuleBuildInfo {
 	assetResource?: string;
 }
 declare interface KnownBuildInfo {
+	/**
+	 * the module hands out a spec Module Namespace Exotic Object
+	 */
+	specNamespaceObject?: boolean;
 	cacheable?: boolean;
 
 	/**
@@ -30606,6 +30621,7 @@ declare namespace exports {
 		export let scriptNonce: "__webpack_require__.nc";
 		export let setAnonymousDefaultName: "__webpack_require__.dn";
 		export let shareScopeMap: "__webpack_require__.S";
+		export let specNamespaceObject: "__webpack_require__.ns";
 		export let startup: "__webpack_require__.x";
 		export let startupAssetHints: "__webpack_require__.SAH";
 		export let startupEntrypoint: "__webpack_require__.X";

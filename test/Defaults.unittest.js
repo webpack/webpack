@@ -617,6 +617,7 @@ describe("snapshots", () => {
 		        "exprContextRequest": ".",
 		        "importMeta": true,
 		        "sourceImport": false,
+		        "specNamespaceObject": false,
 		        "strictExportPresence": undefined,
 		        "strictModeViolations": "warn",
 		        "strictThisContextOnImports": false,
