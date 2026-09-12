@@ -21319,6 +21319,12 @@ declare interface Output {
 	amdContainer?: string;
 
 	/**
+	 * Bake a statically analyzable `import("./chunk.js")` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.
+	 * @since 5.111.0
+	 */
+	analyzableChunkImport?: boolean;
+
+	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: string | TemplatePathFn<PathDataModule>;
@@ -21873,6 +21879,12 @@ declare interface OutputHtmlOptions {
  */
 declare interface OutputNormalized {
 	/**
+	 * Bake a statically analyzable `import("./chunk.js")` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.
+	 * @since 5.111.0
+	 */
+	analyzableChunkImport?: boolean;
+
+	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: string | TemplatePathFn<PathDataModule>;
@@ -22194,6 +22206,7 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	chunkFormat: NonNullable<undefined | string | false>;
 	module: NonNullable<undefined | boolean>;
 	asyncChunks: NonNullable<undefined | boolean>;
+	analyzableChunkImport: NonNullable<undefined | boolean>;
 	charset: NonNullable<undefined | boolean>;
 	iife: NonNullable<undefined | boolean>;
 	globalObject: string;

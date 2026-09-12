@@ -18,6 +18,11 @@
       "type": "string",
       "minLength": 1
     },
+    "AnalyzableChunkImport": {
+      "description": "Bake a statically analyzable `import(\"./chunk.js\")` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.",
+      "type": "boolean",
+      "added": "5.111.0"
+    },
     "AssetFilterItemTypes": {
       "description": "Filtering value, regexp or function.",
       "cli": {
@@ -5046,6 +5051,9 @@
             }
           ]
         },
+        "analyzableChunkImport": {
+          "$ref": "#/definitions/AnalyzableChunkImport"
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
@@ -5500,6 +5508,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "analyzableChunkImport": {
+          "$ref": "#/definitions/AnalyzableChunkImport"
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },

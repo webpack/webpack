@@ -533,6 +533,11 @@ export type OptimizationSplitChunksSizes =
 			[k: string]: number;
 	  };
 /**
+ * Bake a statically analyzable `import("./chunk.js")` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.
+ * @since 5.111.0
+ */
+export type AnalyzableChunkImport = boolean;
+/**
  * The filename of asset modules as relative path inside the 'output.path' directory.
  */
 export type AssetModuleFilename =
@@ -2926,6 +2931,11 @@ export interface Output {
 	 */
 	amdContainer?: AmdContainer;
 	/**
+	 * Bake a statically analyzable `import("./chunk.js")` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.
+	 * @since 5.111.0
+	 */
+	analyzableChunkImport?: AnalyzableChunkImport;
+	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
@@ -5104,6 +5114,11 @@ export interface OptimizationNormalized {
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 export interface OutputNormalized {
+	/**
+	 * Bake a statically analyzable `import("./chunk.js")` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.
+	 * @since 5.111.0
+	 */
+	analyzableChunkImport?: AnalyzableChunkImport;
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */

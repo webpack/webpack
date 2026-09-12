@@ -13002,6 +13002,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-analyzable-chunk-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Bake a statically analyzable \`import(\\"./chunk.js\\")\` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.",
+        "multiple": false,
+        "path": "output.analyzableChunkImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "Bake a statically analyzable \`import(\\"./chunk.js\\")\` specifier next to the chunk id at every dynamic import site in ESM output. Disable to load chunks through the runtime's chunk id to filename map alone, which keeps hashed chunk filenames out of the modules importing them.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-asset-module-filename": Object {
     "configs": Array [
       Object {

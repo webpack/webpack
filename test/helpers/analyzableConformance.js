@@ -215,6 +215,16 @@ const hidesEverySpecifier = (compilation) => {
 };
 
 /**
+ * Whether the build asked for the runtime chunk-loading form, where no import
+ * site names a chunk. Like an `eval` devtool, that is a fact about the whole
+ * build rather than about one reference, so nothing records it.
+ * @param {Compilation} compilation the compilation
+ * @returns {boolean} true where no import site of this build can name a chunk
+ */
+const namesNoChunkImport = (compilation) =>
+	compilation.outputOptions.analyzableChunkImport === false;
+
+/**
  * Whether the build said why nothing names this chunk. A reason is recorded on
  * the module that wrote the reference, so the modules to ask are the ones whose
  * request created the chunk, plus the runtime modules shipped inside it.
@@ -223,7 +233,9 @@ const hidesEverySpecifier = (compilation) => {
  * @returns {boolean} true where a reason stands behind it
  */
 const isExplained = (compilation, file) => {
-	if (hidesEverySpecifier(compilation)) return true;
+	if (hidesEverySpecifier(compilation) || namesNoChunkImport(compilation)) {
+		return true;
+	}
 	const { chunkGraph, runtimeTemplate } = compilation;
 	/**
 	 * @param {Module} module the module to read
