@@ -1,11 +1,13 @@
-it("should hash ids against the path a file URL context names", function () {
+const ids = Object.keys(__webpack_modules__).sort().join(",");
+
+// The first bundle hashes its ids against a plain path and the second against
+// the file URL naming it - an unconverted URL hashes other identifiers.
+if (global.hashedModuleIdsContext === undefined) {
+	global.hashedModuleIdsContext = ids;
+}
+
+it("should hash the same ids for a path and the file URL naming it", function () {
 	expect(require("./a")).toBe("a");
 	expect(require("./b")).toBe("b");
-	// A file URL left unconverted makes the identifiers absolute, so these
-	// ids would be machine-dependent rather than the ones below.
-	expect(Object.keys(__webpack_modules__).sort()).toEqual([
-		"KpHw",
-		"QfWi",
-		"xEH0"
-	]);
+	expect(ids).toBe(global.hashedModuleIdsContext);
 });
