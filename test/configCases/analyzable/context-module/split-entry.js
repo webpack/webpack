@@ -25,6 +25,8 @@ it("should write one static import per chunk of the request", () => {
 	expect(region.split("import(")).toHaveLength(4);
 	expect(bundle).toContain(`import("./${__NAME__}-shared.mjs")`);
 	expect(bundle).toContain(`import("./${__NAME__}-split_de_js.mjs")`);
-	expect(bundle).toContain(`Promise.all(ids[1].map(${"__webpack_require__"}.e))`);
+	expect(bundle).toContain(
+		`Promise.all(ids[1].map((id) => (${"__webpack_require__"}.e(id))))`
+	);
 	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
 });

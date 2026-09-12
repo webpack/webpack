@@ -26586,9 +26586,9 @@ declare abstract class RuntimeTemplate {
 	reportChunkImportBailout(chunk: Chunk, chunkGraph: ChunkGraph): void;
 
 	/**
-	 * Whether the loader still needs to build a url from a chunk id: a chunk carrying
-	 * a runtime of its own is reached by a static import and so is never named in the
-	 * map, and only a runtime that can reach one has to keep the fallback.
+	 * Whether the loader still needs to build a url from a chunk id, which is the case
+	 * for a chunk it can be asked for that `analyzableChunkImports` leaves unnamed: one
+	 * carrying a runtime of its own, or one a second entrypoint has at startup.
 	 */
 	chunkImportsNeedRuntimeUrl(
 		runtimeChunk: Chunk,

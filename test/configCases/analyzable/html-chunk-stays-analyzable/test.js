@@ -25,7 +25,13 @@ it("should point the page at a stylesheet this build emitted", () => {
 it("should reach the chunk an html page's javascript imports by name", () => {
 	const entry = read(attribute("src"));
 
-	expect(entry).toContain(`${"chunkImports"} = {`);
-	expect(entry).toContain('"./lazy-page.mjs"');
+	const importMap = `${"chunkImports"} = {`;
+	const start = entry.indexOf(importMap);
+
+	expect(start).not.toBe(-1);
+	// Read inside the map, so the name cannot be matched from anywhere else in the chunk.
+	const region = entry.slice(start, entry.indexOf("};", start));
+
+	expect(region).toContain('"./lazy-page.mjs"');
 	expect(emitted("lazy-page.mjs")).toBe(true);
 });
