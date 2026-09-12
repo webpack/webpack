@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html extracted-entry-filenames-function exported tests should name a page's script and link entries after their urls 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Extracted entry filenames (function template)</title>
+<link rel=\\"stylesheet\\" href=\\"styles/a.css\\">
+<script type=\\"module\\" src=\\"assets/a.mjs\\"></script>
+</head>
+<body></body>
+</html>
+"
+`;

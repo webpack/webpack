@@ -1,7 +1,7 @@
 "use strict";
 
-// An entry already called `about` owns that name, so the linked `about.html`
-// page cannot take it and its script keeps the name the parser gave it.
+// An entry already called `about` emits `about.js`, so the linked page's
+// `<script src="./about.js">` cannot have that name and is numbered past it.
 
 const fs = require("fs");
 const path = require("path");

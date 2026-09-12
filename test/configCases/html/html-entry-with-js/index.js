@@ -7,6 +7,7 @@ it("should keep the extracted script's name when the entry also bundles JS", () 
 	expect(files).toContain("page.js");
 
 	const html = fs.readFileSync(path.resolve(__dirname, "page.html"), "utf-8");
-	// `page.js` is this bundle, so the page's script cannot take that name.
-	expect(html).toMatch(/<script src="__html_[a-f0-9]+_0\.chunk\.js">/);
+	// `page.js` is this bundle; the page's script takes its own url's name.
+	expect(html).toMatch(/<script src="script\.js">/);
+	expect(files).toContain("script.js");
 });

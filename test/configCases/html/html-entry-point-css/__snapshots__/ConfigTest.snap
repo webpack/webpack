@@ -5,7 +5,7 @@ exports[`ConfigTestCases html html-entry-point-css exported tests should emit pa
 <html>
 <head>
 <title>HTML entry point with CSS</title>
-<link rel=\\"stylesheet\\" href=\\"page.css\\">
+<link rel=\\"stylesheet\\" href=\\"style.css\\">
 </head>
 <body>
 <h1>Hello</h1>

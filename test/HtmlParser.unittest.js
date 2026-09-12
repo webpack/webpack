@@ -139,6 +139,7 @@ describe("HtmlParser", () => {
 				{
 					request: dependency.request,
 					entryName: dependency.entryName,
+					index: 0,
 					type: "script"
 				}
 			],

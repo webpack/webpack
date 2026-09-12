@@ -5,7 +5,7 @@ exports[`ConfigTestCases html module-sibling-type exported tests rewrites type=m
 <html>
 <head>
 <title>module sibling type</title>
-<script type=\\"module\\" src=\\"html-runtime.mjs\\"></script><script type=\\"module\\" src=\\"page.mjs\\"></script>
+<script type=\\"module\\" src=\\"html-runtime.mjs\\"></script><script type=\\"module\\" src=\\"entry.mjs\\"></script>
 </head>
 <body><h1>Hello</h1></body>
 </html>

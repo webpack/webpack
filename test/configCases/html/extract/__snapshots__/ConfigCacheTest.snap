@@ -6,7 +6,7 @@ exports[`ConfigCacheTestCases html extract exported tests should emit page.html 
 <head>
 <title>Extracted HTML</title>
 <link rel=\\"icon\\" href=\\"31d6cfe0d16ae931b73c.png\\">
-<script src=\\"page.js\\"></script>
+<script src=\\"entry.js\\"></script>
 </head>
 <body>
 <h1>Hello</h1>

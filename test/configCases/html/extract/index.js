@@ -18,7 +18,7 @@ it("should emit page.html with rewritten URLs alongside the JS bundle", () => {
 	expect(extracted).not.toContain('href="./icon.png"');
 	expect(extracted).not.toContain('src="./image.png"');
 	// `<script src>` was rewritten to the chunk URL.
-	expect(extracted).toMatch(/<script src="page\.js">/);
+	expect(extracted).toMatch(/<script src="entry\.js">/);
 	// Asset URLs were rewritten to hashed filenames.
 	expect(extracted).toMatch(/<link rel="icon" href="[a-f0-9]+\.png">/);
 	expect(extracted).toMatch(/<img src="[a-f0-9]+\.png" alt="image">/);

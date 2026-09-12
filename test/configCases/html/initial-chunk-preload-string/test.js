@@ -9,5 +9,6 @@ it('should treat resourceHints: "preload" as an alias of true', () => {
 	// Classic output uses `preload`, never `modulepreload`.
 	expect(page).not.toContain("modulepreload");
 	// The entry chunk itself is not preloaded — it's already the <script src>.
-	expect(page).not.toMatch(/<link rel="preload"[^>]*href="__html_/);
+	expect(page).toContain('<script src="index.js">');
+	expect(page).not.toContain('<link rel="preload" as="script" href="index.js">');
 });

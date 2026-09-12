@@ -7,11 +7,11 @@ exports[`ConfigCacheTestCases html svg-script-href exported tests should bundle 
 <body>
 
 <svg width=\\"10\\" height=\\"10\\">
-	<script xlink:href=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+	<script xlink:href=\\"entry.js\\"></script>
 </svg>
 
 <svg width=\\"10\\" height=\\"10\\">
-	<script href=\\"__html_cbe5b59d_1.chunk.js\\">console.log(\\"fallback ignored when href is present\\")</script>
+	<script href=\\"entry2.js\\">console.log(\\"fallback ignored when href is present\\")</script>
 </svg>
 
 </body>

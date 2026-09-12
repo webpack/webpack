@@ -18,7 +18,7 @@ it("should reference both the split-out vendor chunk and the entry chunk", () =>
 	expect(scriptSrcMatches).toHaveLength(2);
 	const [vendorUrl, entryUrl] = scriptSrcMatches;
 	expect(vendorUrl).toContain("vendor");
-	expect(entryUrl).toMatch(/page\.js/);
+	expect(entryUrl).toMatch(/entry\.js/);
 	// vendor.js is a separate file and the entry chunk references it via require.
 	expect(readFile(vendorUrl)).toContain('"vendor-module"');
 	expect(readFile(entryUrl)).toContain("entry:");

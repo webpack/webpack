@@ -105,15 +105,15 @@ exports[`ConfigTestCases html modulepreload-esm exported tests should rewrite <l
 <html>
 <head>
 <title>Test</title>
-<link rel=\\"modulepreload\\" href=\\"page1.mjs\\">
-<link rel=\\"modulepreload    \\" href=\\"page2.mjs\\">
-<link rel=\\"modulepreload\\" href=\\"page3.mjs\\">
+<link rel=\\"modulepreload\\" href=\\"preload.mjs\\">
+<link rel=\\"modulepreload    \\" href=\\"preload-other.mjs\\">
+<link rel=\\"modulepreload\\" href=\\"__html_cbe5b59d_2.mjs\\">
 <!-- webpackIgnore: true -->
 <link rel=\\"modulepreload\\" href=\\"./ignored-preload.js\\">
 </head>
 <body>
 <h1>Hello</h1>
-<script type=\\"module\\" src=\\"page.mjs\\"></script>
+<script type=\\"module\\" src=\\"entry.mjs\\"></script>
 <!-- webpackIgnore: true -->
 <script type=\\"module\\" src=\\"./ignored-entry.js\\"></script>
 </body>

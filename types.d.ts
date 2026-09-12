@@ -10421,6 +10421,7 @@ declare interface HtmlEmittedContext {
 declare interface HtmlEntryInfo {
 	request: string;
 	entryName: string;
+	index: number;
 	type:
 		| "html"
 		| "script"

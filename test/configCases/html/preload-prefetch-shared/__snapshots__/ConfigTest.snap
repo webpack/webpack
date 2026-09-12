@@ -6,14 +6,14 @@ exports[`ConfigTestCases html preload-prefetch-shared exported tests should buil
 <head>
 <title>Test</title>
 <!-- \`shared.js\` is a real executing entry AND preloaded/prefetched. -->
-<link rel=\\"preload\\" as=\\"script\\" href=\\"page1.js\\">
-<link rel=\\"prefetch\\" as=\\"script\\" href=\\"page3.js\\">
+<link rel=\\"preload\\" as=\\"script\\" href=\\"shared.js\\">
+<link rel=\\"prefetch\\" as=\\"script\\" href=\\"shared1.js\\">
 <!-- \`used.js\` is preloaded but only ever imported from code. -->
-<link rel=\\"preload\\" as=\\"script\\" href=\\"page2.js\\">
+<link rel=\\"preload\\" as=\\"script\\" href=\\"used.js\\">
 </head>
 <body>
 <h1>Hello</h1>
-<script src=\\"page.js\\"></script>
+<script src=\\"shared2.js\\"></script>
 </body>
 </html>
 "

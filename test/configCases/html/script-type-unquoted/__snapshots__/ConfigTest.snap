@@ -5,7 +5,7 @@ exports[`ConfigTestCases html script-type-unquoted exported tests should strip u
 <html>
 <head><title>script-type-unquoted</title></head>
 <body>
-<script src=\\"117.bundle0.js\\"></script>
+<script src=\\"entry.js\\"></script>
 </body>
 </html>
 "

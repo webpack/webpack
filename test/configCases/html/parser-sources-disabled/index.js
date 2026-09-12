@@ -17,7 +17,7 @@ it("should not let Object.prototype-named tags bypass sources:false", () => {
 	// to an inherited value and never becomes a chunk entry (the file
 	// doesn't exist; a bogus entry would fail the build).
 	expect(page).toContain('name="./proto-bypass.js"');
-	expect(page).not.toMatch(/__html_[a-f0-9]+_\d+/);
+	expect(page).not.toMatch(/name="page\d*\.js"/);
 });
 
 it("should still bundle inline <script> bodies when sources is false", () => {

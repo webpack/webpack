@@ -1,14 +1,20 @@
 const fs = require("fs");
 const path = require("path");
 
-it("should leave a page's script alone when its name is taken", () => {
+it("should number a page's script past a name an entry already emits", () => {
 	const about = fs.readFileSync(path.resolve(__dirname, "about.html"), "utf-8");
+	const files = fs.readdirSync(__dirname);
 
-	// `about.js` is the JavaScript entry's bundle, so the page keeps the name
-	// the parser gave its script rather than colliding with it.
-	expect(about).toMatch(/<script src="__html_[a-f0-9]+_0\.chunk\.js">/);
-	expect(fs.readdirSync(__dirname)).toContain("about.js");
+	// `about.js` is the JavaScript entry's bundle, so the page's script of the
+	// same name is numbered past it rather than colliding with it.
+	expect(about).toMatch(/<script src="about1\.js">/);
+	expect(files).toContain("about.js");
+	expect(files).toContain("about1.js");
 
-	const js = fs.readFileSync(path.resolve(__dirname, "about.js"), "utf-8");
-	expect(js).toContain("about-page");
+	expect(
+		fs.readFileSync(path.resolve(__dirname, "about.js"), "utf-8")
+	).toContain("about-page");
+	expect(
+		fs.readFileSync(path.resolve(__dirname, "about1.js"), "utf-8")
+	).toContain("about-script");
 });

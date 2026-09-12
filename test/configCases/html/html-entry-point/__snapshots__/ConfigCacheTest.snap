@@ -5,7 +5,7 @@ exports[`ConfigCacheTestCases html html-entry-point exported tests should emit p
 <html>
 <head>
 <title>HTML entry point</title>
-<script src=\\"page.js\\"></script>
+<script src=\\"script.js\\"></script>
 </head>
 <body>
 <img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"image\\">

@@ -21,10 +21,8 @@ it("should match a tagless entry against any element", () => {
 });
 
 it("should not promote custom sources into compilation entries", () => {
-	// Even if a user adds `{ tag: 'script', attribute: 'src', type: 'src' }`
-	// without `'...'`, it should be a plain URL rewrite — never a chunk
-	// entry. That's verified here by the absence of `__html_*` chunk
-	// names in the rewritten HTML; the custom-source `data-src` /
-	// `data-srcset` / `data-href` URLs are asset URLs, not script chunks.
-	expect(page).not.toMatch(/__html_[a-f0-9]+_\d+/);
+	// A custom source without `'...'` is a plain URL rewrite, so the page
+	// gains no chunk named after it — every rewritten URL is an asset one.
+	expect(page).not.toMatch(/"page\d*\.js"/);
+	expect(__STATS__.assets.map((a) => a.name)).not.toContain("page.js");
 });
