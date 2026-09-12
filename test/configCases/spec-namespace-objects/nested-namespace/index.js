@@ -1,7 +1,7 @@
 import * as direct from "./inner.js";
 
-// Only a dynamic import keeps the nested namespace out of a directly rewired
-// binding, which is what test262 ns-get-nested-namespace-dflt reads.
+// A static member read rewires straight to the import-site binding, so only a
+// dynamic import reaches the re-export getter the wrapping lives in.
 it("should hand out a spec namespace for a re-exported star-as namespace", () =>
 	import("./m.js").then((outer) => {
 		const nested = outer.inner;
