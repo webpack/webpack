@@ -1,7 +1,7 @@
 "use strict";
 
-// A function `output.filename` cannot be read for a `[name]`, and the
-// `[id].css` it leaves behind would name synthetic ids — both fall back.
+// A function `output.filename` is called for an extracted entry too, so the
+// directory it returns is kept and only the file's stem is renamed.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -25,7 +25,8 @@ module.exports = {
 		page: "./page.html"
 	},
 	output: {
-		filename: (pathData) => `${pathData.chunk.name}.mjs`,
+		filename: (pathData) => `assets/${pathData.chunk.name}.mjs`,
+		cssFilename: (pathData) => `styles/${pathData.chunk.name}.css`,
 		module: true
 	},
 	optimization: {

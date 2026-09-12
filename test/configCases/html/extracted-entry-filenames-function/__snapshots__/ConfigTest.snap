@@ -5,8 +5,8 @@ exports[`ConfigTestCases html extracted-entry-filenames-function exported tests 
 <html>
 <head>
 <title>Extracted entry filenames (function template)</title>
-<link rel=\\"stylesheet\\" href=\\"a.css\\">
-<script type=\\"module\\" src=\\"a.mjs\\"></script>
+<link rel=\\"stylesheet\\" href=\\"styles/a.css\\">
+<script type=\\"module\\" src=\\"assets/a.mjs\\"></script>
 </head>
 <body></body>
 </html>
