@@ -14,7 +14,8 @@ it("should preload the entry's initial dependency chunks with <link rel=preload 
 	// Classic output uses `preload`, never `modulepreload`.
 	expect(page).not.toContain("modulepreload");
 	// The entry chunk itself is not preloaded — it's already the <script src>.
-	expect(page).not.toMatch(/<link rel="preload"[^>]*href="__html_/);
+	expect(page).toMatch(/<script[^>]*\bsrc="index\.js">/);
+	expect(page).not.toMatch(/<link rel="preload"[^>]*href="index\.js"/);
 });
 
 it("should place the preloads inside <head>, before the body scripts", () => {

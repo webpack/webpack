@@ -2,7 +2,7 @@ import page from "./page.html";
 
 it("should emit `type=module` <script> siblings for a custom `script` source under output.module", () => {
 	// The custom element's own `src` is rewritten in place to its entry chunk.
-	expect(page).toMatch(/<my-script src="page\d*\.js">/);
+	expect(page).toMatch(/<my-script src="classic\.js">/);
 	// The split-out runtime chunk is ESM (output.module), so its synthesized
 	// sibling must carry `type="module"` — a classic <script> couldn't load it.
 	expect(page).toMatch(

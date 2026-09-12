@@ -5,12 +5,12 @@ exports[`ConfigCacheTestCases html script-src-mixed exported tests should bundle
 <html>
 <head>
 <title>Mixed scripts</title>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"classic-a.mjs\\"></script>
+<script type=\\"module\\" src=\\"module-a.mjs\\"></script>
 </head>
 <body>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_2.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
+<script type=\\"module\\" src=\\"classic-b.mjs\\"></script>
+<script type=\\"module\\" src=\\"module-b.mjs\\"></script>
 </body>
 </html>
 "
@@ -180,7 +180,7 @@ globalThis.__moduleB = \`module-b sees: \${_module_a_js__WEBPACK_IMPORTED_MODULE
 ;
 
 // load runtime
-import { __webpack_require__ } from \\"./__html_cbe5b59d_1.chunk.js\\";
+import { __webpack_require__ } from \\"./module-a.mjs\\";
 var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 __webpack_require__.C({ __webpack_esm_ids__, __webpack_esm_modules__ });
 var __webpack_exports__ = __webpack_exec__(942);
@@ -308,7 +308,7 @@ globalThis.__classicB = \\"classic-b value\\";
 ;
 
 // load runtime
-import { __webpack_require__ } from \\"./__html_cbe5b59d_0.chunk.js\\";
+import { __webpack_require__ } from \\"./classic-a.mjs\\";
 var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 __webpack_require__.C({ __webpack_esm_ids__, __webpack_esm_modules__ });
 var __webpack_exports__ = __webpack_exec__(702);

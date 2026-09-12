@@ -13,7 +13,7 @@ const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 // (because `output.module` is on), so they look identical to native module
 // scripts in HTML; we discriminate by chunk content instead of by tag shape.
 const scriptChunkUrls = [
-	...page.matchAll(/<script[^>]*\bsrc="(__html_[^"]+)">/g)
+	...page.matchAll(/<script[^>]*\bsrc="([\w-]+\.mjs)">/g)
 ].map((m) => m[1]);
 
 it("should bundle classic and module <script src> as separate entry chunks and rewrite their src attributes", () => {
@@ -40,7 +40,7 @@ it("should bundle classic and module <script src> as separate entry chunks and r
 	// `output.module` is on in this fixture; the existing `type="text/javascript"`
 	// is upgraded in place to `type="module"` for the same reason.
 	expect(page).not.toContain('type="text/javascript"');
-	expect(page).not.toContain('<script src="__html_');
+	expect(page).not.toMatch(/<script src="[\w-]+\.mjs">/);
 });
 
 it("should bundle <script src=data:...> inline JS into chunks", () => {

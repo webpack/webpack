@@ -33,11 +33,11 @@ it("should rewrite inline <script> tags and drop `type=module` when output.modul
 	// Classic inline `<script>` (no `type`) stays without a type attribute
 	// — the auto type=module upgrade only runs when `output.module` is on.
 	expect(pageContent).toMatch(
-		/<script src="__html_[^"]+\.chunk\.js"><\/script>/
+		/<script src="page\d*\.js"><\/script>/
 	);
 	// `type="text/javascript"` stays as-is (classic-compatible).
 	expect(pageContent).toMatch(
-		/<script src="__html_[^"]+\.chunk\.js" type="text\/javascript"><\/script>/
+		/<script src="page\d*\.js" type="text\/javascript"><\/script>/
 	);
 	// `type="module"` is REMOVED — the emitted chunk is a classic IIFE,
 	// loading it under module semantics would be wrong.
@@ -52,7 +52,7 @@ it("should emit classic IIFE-wrapped chunks for inline <script> bodies", () => {
 	// First executable inline script in document order is the classic
 	// `<script>` with the `<b>hello</b>` body.
 	const classicChunkName = pageContent.match(
-		/<script src="(__html_[^"]+\.chunk\.js)"><\/script>/
+		/<script src="(page\d*\.js)"><\/script>/
 	)[1];
 	const classicChunk = readChunk(classicChunkName);
 	expect(classicChunk).toMatchSnapshot();
@@ -69,7 +69,7 @@ it("should emit IIFE-wrapped chunks for inline <script type=module> too (no outp
 	// the module-origin chunk is the second.
 	const chunkUrls = collectMatches(
 		pageContent,
-		/<script[^>]*\bsrc="(__html_[^"]+\.chunk\.js)"/g
+		/<script[^>]*\bsrc="(page\d*\.js)"/g
 	).map((m) => m[1]);
 	const moduleChunk = readChunk(chunkUrls[1]);
 	expect(moduleChunk).toMatchSnapshot();
@@ -93,7 +93,7 @@ it("should emit classic chunks for every inline-script body when output.module i
 	// level.
 	const allChunkUrls = collectMatches(
 		pageContent,
-		/<script[^>]*\bsrc="(__html_[^"]+\.chunk\.js)"/g
+		/<script[^>]*\bsrc="(page\d*\.js)"/g
 	).map((m) => m[1]);
 	expect(allChunkUrls).toHaveLength(3);
 	const chunks = allChunkUrls.map(readChunk);

@@ -12,7 +12,7 @@ it("should bundle every executable JavaScript script type", () => {
 	expect(matches(/window\.__t\d+/g)).toEqual([]);
 
 	// Every one became its own entry chunk instead.
-	expect(matches(/<script[^>]*\bsrc="__html_[^"]+"/g)).toHaveLength(18);
+	expect(matches(/<script[^>]*\bsrc="[\w-]+\d*\.js"/g)).toHaveLength(18);
 });
 
 it("should leave a data block inline", () => {

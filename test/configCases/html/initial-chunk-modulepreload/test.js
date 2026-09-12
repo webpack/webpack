@@ -9,7 +9,8 @@ it("should modulepreload the entry's initial dependency chunks under output.modu
 	// ESM output uses `modulepreload`, never `preload as=script`.
 	expect(page).not.toContain('rel="preload"');
 	// The entry chunk itself is not preloaded — it's already the <script src>.
-	expect(page).not.toMatch(/<link rel="modulepreload" href="__html_/);
+	expect(page).toContain('<script type="module" src="index.mjs">');
+	expect(page).not.toContain('<link rel="modulepreload" href="index.mjs">');
 });
 
 it("should place the modulepreloads inside <head>, before the body scripts", () => {

@@ -1,7 +1,7 @@
 "use strict";
 
-// A page linked from another page has no entry name of its own, so the
-// entries extracted from it are named after its file instead.
+// A page linked from another page: the entries extracted from it are named
+// after the urls its tags carry, like the entry page's own.
 
 const fs = require("fs");
 const path = require("path");

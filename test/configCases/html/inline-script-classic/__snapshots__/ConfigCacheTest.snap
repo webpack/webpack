@@ -161,9 +161,9 @@ exports[`ConfigCacheTestCases html inline-script-classic exported tests should r
 <html>
 <head>
 <title>Inline Script Classic Test</title>
-<script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
-<script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
-<script src=\\"__html_cbe5b59d_2.chunk.js\\" type=\\"text/javascript\\"></script>
+<script src=\\"page.js\\"></script>
+<script src=\\"page1.js\\"></script>
+<script src=\\"page2.js\\" type=\\"text/javascript\\"></script>
 <!-- Non-JS type stays untouched -->
 <script type=\\"application/ld+json\\">
 {\\"@context\\": \\"https://schema.org\\"}

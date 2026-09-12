@@ -24,10 +24,10 @@ it("should rewrite script src attributes without changing the type attribute whe
 	expect(page).not.toContain('src="./module-entry.js"');
 	// Classic <script src> (no type) stays without a type attribute — the
 	// auto type=module upgrade only runs when output.module is enabled.
-	expect(page).toMatch(/<script src="__html_[^"]+\.chunk\.js">/);
+	expect(page).toMatch(/<script src="entry\.js">/);
 	// type="text/javascript" stays as-is too (classic-compatible).
 	expect(page).toMatch(
-		/<script type="text\/javascript" src="__html_[^"]+\.chunk\.js">/
+		/<script type="text\/javascript" src="classic-typed\.js">/
 	);
 	// type="module" is REMOVED — the emitted chunk is a classic IIFE,
 	// loading it under module semantics would be wrong.
@@ -37,9 +37,9 @@ it("should rewrite script src attributes without changing the type attribute whe
 });
 
 it("should emit classic IIFE-wrapped chunks for <script src>", () => {
-	// The first classic <script src> chunk lives at __html_*_0.chunk.js.
+	// The first classic <script src> chunk lives at entry.js.
 	const classicChunkName = page.match(
-		/<script src="(__html_[^"]+\.chunk\.js)">/
+		/<script src="(entry\.js)">/
 	)[1];
 	const classicChunk = readChunk(classicChunkName);
 	expect(classicChunk).toMatchSnapshot();
@@ -56,7 +56,7 @@ it("should emit IIFE-wrapped chunks for <script type=module src> too (still vali
 	// chunk by tag shape anymore — find it by content instead.
 	const allChunkUrls = collectMatches(
 		page,
-		/<script[^>]*\bsrc="(__html_[^"]+\.chunk\.js)"/g
+		/<script[^>]*\bsrc="([\w-]+\.js)"/g
 	).map((m) => m[1]);
 	const moduleChunk = allChunkUrls
 		.map(readChunk)

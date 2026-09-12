@@ -28,7 +28,10 @@ it("should rewrite <link rel=preload/prefetch> of asset-module targets to asset 
 	);
 
 	// No chunk was emitted for a resource hint — these are plain assets.
-	expect(page).not.toContain("__html_");
+	expect(page).not.toContain("<script");
+	expect(fs.readdirSync(__dirname).filter((n) => n.endsWith(".js"))).toEqual([
+		"main.js"
+	]);
 });
 
 it("should emit each referenced asset to disk", () => {

@@ -13,7 +13,7 @@ it("rewrites type=module in place when cloning a native module <script> sibling"
 
 	// The entry chunk tag is a module script too.
 	expect(page).toMatch(
-		/<script[^>]*\btype="module"[^>]*\bsrc="[^"]*page\d*\.mjs"/
+		/<script[^>]*\btype="module"[^>]*\bsrc="entry\.mjs"/
 	);
 
 	// No unresolved source path survives.

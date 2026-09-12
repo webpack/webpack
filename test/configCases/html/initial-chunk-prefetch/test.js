@@ -10,5 +10,6 @@ it("should emit `<link rel=\"prefetch\">` for the entry's initial dependency chu
 	expect(page).not.toMatch(/<link rel="modulepreload"/);
 	expect(page).not.toMatch(/<link rel="preload"/);
 	// The entry chunk itself is not hinted — it's already the <script src>.
-	expect(page).not.toMatch(/<link rel="prefetch" href="__html_/);
+	expect(page).toContain('<script type="module" src="index.mjs">');
+	expect(page).not.toContain('<link rel="prefetch" href="index.mjs">');
 });

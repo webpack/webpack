@@ -5,7 +5,7 @@ exports[`ConfigTestCases html extract-split-chunks exported tests should referen
 <html>
 <head>
 <title>Extracted HTML with split chunks</title>
-<script src=\\"vendor.js\\"></script><script src=\\"page.js\\"></script>
+<script src=\\"vendor.js\\"></script><script src=\\"entry.js\\"></script>
 </head>
 <body>
 <h1>Hello</h1>

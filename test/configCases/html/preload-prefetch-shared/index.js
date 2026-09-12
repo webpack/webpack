@@ -8,13 +8,13 @@ it("should build a preload/prefetch target that is also used in code and as a re
 
 	// The real `<script src>` entry is rewritten to its chunk URL.
 	expect(page).not.toContain('src="./shared.js"');
-	expect(page).toMatch(/<script src="page\d*\.js"><\/script>/);
+	expect(page).toMatch(/<script src="shared\d*\.js"><\/script>/);
 
 	// Both the preload and prefetch of `shared.js` are rewritten to chunk
 	// URLs — an entry being preloaded is not a conflict.
 	expect(page).not.toContain('href="./shared.js"');
-	expect(page).toMatch(/<link rel="preload" as="script" href="page\d*\.js">/);
-	expect(page).toMatch(/<link rel="prefetch" as="script" href="page\d*\.js">/);
+	expect(page).toMatch(/<link rel="preload" as="script" href="shared\d*\.js">/);
+	expect(page).toMatch(/<link rel="prefetch" as="script" href="shared\d*\.js">/);
 
 	// `used.js` is preloaded and also imported from code — its hint is
 	// still rewritten to a chunk URL.

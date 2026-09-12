@@ -5,14 +5,14 @@ it("should not emit a JS copy of the page for an HTML entry", () => {
 	const files = fs.readdirSync(__dirname);
 
 	expect(files).toContain("page.html");
-	expect(files).toContain("page.js");
+	expect(files).toContain("script.js");
 
-	// `page.js` is the script the parser split out of the page — it takes the
+	// `script.js` is the script the parser split out of the page — it takes the
 	// entry's filename, which no copy of the markup occupies any more.
-	const js = fs.readFileSync(path.resolve(__dirname, "page.js"), "utf-8");
+	const js = fs.readFileSync(path.resolve(__dirname, "script.js"), "utf-8");
 	expect(js).toContain("html-entry-script");
 	expect(js).not.toContain("<!DOCTYPE html>");
 
 	const html = fs.readFileSync(path.resolve(__dirname, "page.html"), "utf-8");
-	expect(html).toMatch(/<script src="page\.js">/);
+	expect(html).toMatch(/<script src="script\.js">/);
 });

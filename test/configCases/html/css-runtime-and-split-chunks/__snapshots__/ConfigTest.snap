@@ -5,7 +5,7 @@ exports[`ConfigTestCases html css-runtime-and-split-chunks exported tests should
 <html>
 <head>
 <title>HTML entry with runtimeChunk + splitChunks + JS-imported CSS</title>
-<link rel=\\"stylesheet\\" href=\\"page.css\\"><script src=\\"html-runtime.js\\"></script><script src=\\"vendor.js\\"></script><script src=\\"page.js\\"></script>
+<link rel=\\"stylesheet\\" href=\\"entry.css\\"><script src=\\"html-runtime.js\\"></script><script src=\\"vendor.js\\"></script><script src=\\"entry.js\\"></script>
 </head>
 <body><div class=\\"hero\\">Box</div></body>
 </html>

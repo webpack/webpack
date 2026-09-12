@@ -13,7 +13,7 @@ const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 // emitted HTML looks the same. The four chunks appear in document order:
 // classic-a, module-a, classic-b, module-b.
 const scriptChunkUrls = [
-	...page.matchAll(/<script[^>]*\bsrc="(__html_[^"]+\.chunk\.js)">/g)
+	...page.matchAll(/<script[^>]*\bsrc="([\w-]+\.mjs)">/g)
 ].map((m) => m[1]);
 
 const chunkContaining = (substr) =>
