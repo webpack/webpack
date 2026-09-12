@@ -148,7 +148,7 @@ Skipping any layer silently breaks the option. After editing schemas, run `yarn 
 - `"added": "<version>"` → `@since <version>`. The webpack version that first shipped the option. For a **new option that has not been released yet**, use the upcoming release version (current `package.json` version with the pending changesets applied — e.g. while on `5.108.x` with minor changesets pending, new options get `"added": "5.109.0"`).
 - `"experimental": true` → `@experimental`. For options under `experiments` or otherwise subject to breaking changes.
 
-These keywords are documentation-only: the tooling strips them from the precompiled validators. A property that is a pure `$ref` cannot carry them (the `webpack/valid-schema` lint rule forbids extra keys next to `$ref`) — annotate the referenced definition instead.
+These keywords are documentation-only: the tooling strips them from the precompiled validators. A property that is a pure `$ref` cannot carry them (schemas-lint forbids extra keys next to `$ref`) — annotate the referenced definition instead.
 
 The two config layers differ: **`normalization.js`** canonicalizes the user-supplied config shape (shorthand → full form); **`defaults.js`** fills in values (often mode/target-dependent). Edit whichever matches your change.
 

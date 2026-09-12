@@ -3037,11 +3037,6 @@
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
           "type": "boolean"
         },
-        "specNamespaceObject": {
-          "description": "Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.",
-          "type": "boolean",
-          "added": "5.111.0"
-        },
         "strictExportPresence": {
           "description": "Deprecated in favor of \"exportsPresence\". Emit errors instead of warnings when imported names don't exist in imported module.",
           "type": "boolean",

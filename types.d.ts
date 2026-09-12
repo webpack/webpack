@@ -1305,37 +1305,6 @@ type BuildDependencyItem =
 			 */
 			optional?: boolean;
 	  };
-declare interface BuildDiagnostics {
-	/**
-	 * what parser plugins reported as optimization bailouts, replayed into the module graph of every compilation that reuses the module
-	 */
-	optimizationBailouts?: string[];
-
-	/**
-	 * the statement whose side effect keeps the module in the bundle, as `type at location`
-	 */
-	sideEffectStatement?: string;
-
-	/**
-	 * how many `#__PURE__` annotations sit where the parser does not read them
-	 */
-	ineffectivePureAnnotations?: number;
-
-	/**
-	 * how many times the module reads `this` at its top level
-	 */
-	topLevelThis?: number;
-
-	/**
-	 * true when the module calls `eval` directly
-	 */
-	usesEval?: boolean;
-
-	/**
-	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
-	 */
-	notCacheableReasons?: string[];
-}
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare interface BuiltinEmbeddedRendererOptions {
@@ -9075,11 +9044,6 @@ declare interface ExternalModuleInfo {
 	deferredNamespaceObjectName?: string;
 
 	/**
-	 * an import reads the spec namespace object the module hands out
-	 */
-	specNamespaceObjectUsed: boolean;
-
-	/**
 	 * "default-with-named" namespace
 	 */
 	interopNamespaceObjectUsed: boolean;
@@ -11723,12 +11687,7 @@ declare class InitFragment<GenerateContext> {
 declare abstract class InlinedUsedName {
 	value: InlinedValue;
 	suffix: string[];
-	render(comment?: string): string;
-
-	/**
-	 * Updates the hash with the data contributed by this instance.
-	 */
-	updateHash(hash: Hash): void;
+	render(comment: string): string;
 }
 declare abstract class InlinedValue {
 	kind: InlinedValueKind;
@@ -14941,12 +14900,6 @@ declare interface JavascriptParserOptions {
 	sourceImport?: boolean;
 
 	/**
-	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.
-	 * @since 5.111.0
-	 */
-	specNamespaceObject?: boolean;
-
-	/**
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 * @deprecated
 	 */
@@ -15285,11 +15238,12 @@ declare interface KnownAssetModuleBuildInfo {
 	assetResource?: string;
 }
 declare interface KnownBuildInfo {
-	/**
-	 * the module hands out a spec Module Namespace Exotic Object
-	 */
-	specNamespaceObject?: boolean;
 	cacheable?: boolean;
+
+	/**
+	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
+	 */
+	notCacheableReasons?: string[];
 	strict?: boolean;
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -15311,14 +15265,29 @@ declare interface KnownBuildInfo {
 	isCircular?: boolean;
 
 	/**
+	 * true when the module calls `eval` directly
+	 */
+	usesEval?: boolean;
+
+	/**
+	 * how many `#__PURE__` annotations sit where the parser does not read them
+	 */
+	ineffectivePureAnnotations?: number;
+
+	/**
+	 * how many times the module reads `this` at its top level
+	 */
+	topLevelThis?: number;
+
+	/**
+	 * the statement whose side effect keeps the module in the bundle, as `type at location`
+	 */
+	sideEffectStatement?: string;
+
+	/**
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
-
-	/**
-	 * what the build recorded for stats and the performance hints to report
-	 */
-	diagnostics?: BuildDiagnostics;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
@@ -26889,7 +26858,7 @@ declare class SideEffectsFlagPlugin {
 	/**
 	 * Creates an instance of SideEffectsFlagPlugin.
 	 */
-	constructor(analyseSource?: boolean);
+	constructor(analyseSource?: boolean, recordStatement?: boolean);
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -30637,7 +30606,6 @@ declare namespace exports {
 		export let scriptNonce: "__webpack_require__.nc";
 		export let setAnonymousDefaultName: "__webpack_require__.dn";
 		export let shareScopeMap: "__webpack_require__.S";
-		export let specNamespaceObject: "__webpack_require__.ns";
 		export let startup: "__webpack_require__.x";
 		export let startupAssetHints: "__webpack_require__.SAH";
 		export let startupEntrypoint: "__webpack_require__.X";

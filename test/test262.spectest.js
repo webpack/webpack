@@ -618,9 +618,6 @@ const compile = async (entry, scenario, options = {}) =>
 						exprContextRegExp: /.*_FIXTURE\.js$/,
 						exprContextRequest: path.dirname(entry),
 						exprContextCritical: false,
-						// The suite asserts spec namespace semantics, which cost runtime
-						// code a normal build should not pay for.
-						specNamespaceObject: true,
 						// For testing purposes, where the `export` is tested that it is not defined
 						exportsPresence: exportsPresence || false,
 						reexportExportsPresence: exportsPresence || false
@@ -915,42 +912,31 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
-	// A namespace re-exported as a named export is not itself wrapped, so the
-	// inner one stays a plain exports object and shows up as an extra key.
-	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-direct.js",
-	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-indirect.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-direct.js",
-	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-indirect.js",
-	"module-code/namespace/internals/own-property-keys-binding-types.js",
-	// `import()` of a JSON or text module is not parsed as ESM, so the option
-	// never reaches it and `default` sits beside `__esModule`.
-	"import/import-attributes/json-via-namespace.js",
-	"import/import-attributes/text-via-namespace.js",
-	// A static export reference is read directly rather than through the
-	// namespace, so the proxy never sees the delete or the strict assignment.
-	"module-code/export-expname-binding-index.js",
-	"module-code/namespace/internals/set.js",
-	// `ns.__proto__` reaches the exports object instead of reporting undefined
-	// for a name the module does not export.
-	"module-code/namespace/internals/get-str-not-found.js",
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
 
 	// webpack bugs and improvements
 	// `getOwnPropertyNames` sees webpack's `__esModule` next to `default`, so the
 	// namespace has two own keys where the spec has one.
+	"import/import-attributes/json-via-namespace.js",
 	// `ns[nonExported] = v` has to throw, which needs the namespace to be
 	// non-extensible; `delete ns[exported]` already does.
+	"module-code/export-expname-binding-index.js",
 	// `String(ns)`/`Number(ns)` rely on `ns`'s prototype being `null` (a real
 	// module namespace exotic object). webpack's `__webpack_exports__` is a
 	// plain object inheriting `Object.prototype`, so `Object.prototype.toString`
 	// is reachable and returns `"[object Module]"` instead of falling back to
 	// the exported `valueOf`. Setting the prototype to `null` would impact
 	// other webpack-generated code paths.
+	"expressions/dynamic-import/custom-primitive.js",
 	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
+	"import/import-attributes/text-via-namespace.js",
 	// Not a bug, we are adding the `__esModule` property, so we need to think how fix tests
+	"module-code/namespace/internals/own-property-keys-binding-types.js",
+	"module-code/namespace/internals/own-property-keys-sort.js",
 
 	// Potential improvement for enumerate
+	"module-code/namespace/internals/enumerate-binding-uninit.js",
 
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
@@ -978,12 +964,50 @@ const knownBugs = [
 	// exotic. Adopting `Object.setPrototypeOf(__webpack_exports__, null)` (and
 	// freezing/extensibility tweaks) would change runtime behaviour broadly,
 	// so these spec-conformance tests remain skipped.
+	"module-code/namespace/internals/get-own-property-str-found-init.js",
+	"module-code/namespace/internals/get-own-property-str-found-uninit.js",
+	"module-code/namespace/internals/get-prototype-of.js",
+	"module-code/namespace/internals/get-str-not-found.js",
+	"module-code/namespace/internals/has-property-str-not-found.js",
+	"module-code/namespace/internals/is-extensible.js",
+	"module-code/namespace/internals/object-hasOwnProperty-binding-uninit.js",
+	"module-code/namespace/internals/object-keys-binding-uninit.js",
+	"module-code/namespace/internals/object-propertyIsEnumerable-binding-uninit.js",
+	"module-code/namespace/internals/set-prototype-of.js",
+	"module-code/namespace/internals/set.js",
+	"module-code/namespace/internals/define-own-property.js",
 
 	// Module Namespace Exotic Object semantics for the dynamically imported
 	// namespace — webpack's resolved namespace is a plain `__webpack_exports__`
 	// object with `__esModule: true`, so non-extensibility, prototype-of-null,
 	// throw-on-set in strict, sorted ownKeys, and frozen prop descriptors are
 	// not all satisfied (same root cause as `module-code/namespace/internals/*`).
+	"expressions/dynamic-import/namespace/await-ns-define-own-property.js",
+	"expressions/dynamic-import/namespace/await-ns-extensible.js",
+	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-direct.js",
+	"expressions/dynamic-import/namespace/await-ns-get-nested-namespace-dflt-indirect.js",
+	"expressions/dynamic-import/namespace/await-ns-get-own-property-str-found-init.js",
+	"expressions/dynamic-import/namespace/await-ns-get-str-not-found.js",
+	"expressions/dynamic-import/namespace/await-ns-has-property-str-not-found.js",
+	"expressions/dynamic-import/namespace/await-ns-own-property-keys-sort.js",
+	"expressions/dynamic-import/namespace/await-ns-prop-descs.js",
+	"expressions/dynamic-import/namespace/await-ns-prototype.js",
+	"expressions/dynamic-import/namespace/await-ns-set-no-strict.js",
+	"expressions/dynamic-import/namespace/await-ns-set-prototype-of.js",
+	"expressions/dynamic-import/namespace/await-ns-set-strict.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-define-own-property.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-extensible.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-direct.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-get-nested-namespace-dflt-indirect.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-get-own-property-str-found-init.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-get-str-not-found.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-has-property-str-not-found.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-own-property-keys-sort.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-prop-descs.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-prototype.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-set-no-strict.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-set-prototype-of.js",
+	"expressions/dynamic-import/namespace/promise-then-ns-set-strict.js",
 
 	// The file imports itself, so the entry script and the module it loads are
 	// one bundled module, evaluated once where the spec evaluates it twice.

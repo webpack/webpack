@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`ConfigTestCases html quirky-doctype-w3o quirky-doctype-w3o should compile 1`] = `
-"<!doctype html PUBLIC \\"-//W3O//DTD W3 HTML Strict 3.0//EN//\\"><head><title>quirky-doctype-w3o</title></head><body><p>quirks<table><tr><td>cell</table>
-
-</body></html>"
-`;

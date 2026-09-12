@@ -322,13 +322,5 @@ describe("util/identifier", () => {
 				expect(fileUrlToPath(value)).toBe(value);
 			}
 		});
-
-		if (process.platform !== "win32") {
-			it("throws a clear error for a host-based file URL on POSIX", () => {
-				expect(() => fileUrlToPath("file://hostname/path")).toThrow(
-					/file:\/\/hostname\/path/
-				);
-			});
-		}
 	});
 });
