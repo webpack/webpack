@@ -6177,3 +6177,46 @@ describe("optimization.minimize", () => {
 		});
 	});
 });
+
+describe("module library types", () => {
+	it("should enable module output for a library declared by a plugin", () => {
+		const webpack = require("..");
+
+		const compiler = webpack({
+			mode: "none",
+			entry: "./index.js",
+			plugins: [
+				new webpack.container.ModuleFederationPlugin({
+					name: "container",
+					library: { type: "module" },
+					exposes: { "./a": "./index.js" }
+				})
+			]
+		});
+
+		expect(compiler.options.output.module).toBe(true);
+		expect(compiler.options.output.iife).toBe(false);
+	});
+
+	it("should enable module output when it was disabled by hand", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			entry: "./index.js",
+			output: { module: false, library: { type: "module" } }
+		});
+
+		expect(config.output.module).toBe(true);
+		expect(config.output.iife).toBe(false);
+	});
+
+	it("should enable module output for a modern-module library", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			entry: "./index.js",
+			output: { module: false, library: { type: "modern-module" } }
+		});
+
+		expect(config.output.module).toBe(true);
+		expect(config.output.iife).toBe(false);
+	});
+});
