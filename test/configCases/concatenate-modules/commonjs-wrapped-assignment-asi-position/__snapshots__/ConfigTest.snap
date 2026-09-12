@@ -1,0 +1,280 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases concatenate-modules commonjs-wrapped-assignment-asi-position commonjs-wrapped-assignment-asi-position should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = (module) => {
+/******/ 		const getter = module && module.__esModule ?
+/******/ 			() => (module['default']) :
+/******/ 			() => (module);
+/******/ 		__webpack_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 3 modules ***!
+  \\\\******************************/
+
+// MODULE: ./formats.js
+var formats_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// exported through a variable, so the exports stay statically unknown: that is
+// what makes the module wrapped and its default import need interop
+const formats = {
+	loose: {
+		value: \\"original\\",
+		count: 1,
+		flag: false,
+		gone: \\"present\\",
+		deep: { leaf: \\"leaf\\" },
+		run: () => \\"ran\\",
+		Ctor: function Ctor() {
+			this.tag = \\"ctor\\";
+		}
+	},
+	strict: {
+		value: \\"original\\",
+		count: 1,
+		flag: false,
+		deep: { leaf: \\"leaf\\" }
+	},
+	named: () => \\"named\\"
+};
+
+module.exports = formats;
+
+});
+
+;// ./formats.js
+formats_namespaceFn();
+
+function formats_default() { return formats_default.c || (formats_default.c = __webpack_require__.n(formats_namespaceFn())); }
+;// ./loose.js
+// javascript/auto: the default import reads through the interop accessor, which
+// carries an ASI guard of its own that must not end up inside the parentheses
+
+
+
+
+function mutate() {
+	const log = []
+
+	{
+		log.push(\\"assign\\")
+	}
+	;((formats_default()()).loose).value = \\"assigned\\"
+
+	{
+		log.push(\\"compound\\")
+	}
+	;((formats_default()()).loose).count += 2
+
+	{
+		log.push(\\"update\\")
+	}
+	;((formats_default()()).loose).count++
+
+	{
+		log.push(\\"computed\\")
+	}
+	;((formats_default()()).loose)[\\"flag\\"] = true
+
+	{
+		log.push(\\"deep\\")
+	}
+	;((formats_default()()).loose).deep.leaf = \\"reassigned\\"
+
+	{
+		log.push(\\"delete\\")
+	}
+	delete ((formats_default()()).loose).gone
+
+	{
+		log.push(\\"typeof\\")
+	}
+	typeof ((formats_default()()).loose).value
+
+	{
+		log.push(\\"void\\")
+	}
+	void ((formats_default()()).loose).value
+
+	{
+		log.push(\\"call\\")
+	}
+	;(formats_default()().loose).run()
+
+	{
+		log.push(\\"new\\")
+	}
+	new ((formats_default()()).loose).Ctor()
+
+	{
+		log.push(\\"named\\")
+	}
+	;(0,formats_namespaceFn().named)()
+
+	{
+		log.push(\\"namespaceCall\\")
+	}
+	;(formats_namespaceFn().named)()
+
+	{
+		log.push(\\"namespace\\")
+	}
+	;(formats_namespaceFn())
+
+	{
+		log.push(\\"default\\")
+	}
+	;(formats_default()())
+
+	return log
+}
+
+function read() {
+	return ((formats_default()()).loose)
+}
+
+;// ./strict.mjs
+// strict ESM: the default import binds to the wrapper accessor directly, so the
+// same shapes take the other interop path into the one wrapped module
+
+
+
+function strict_mutate() {
+	const log = []
+
+	{
+		log.push(\\"assign\\")
+	}
+	;(formats_namespaceFn().strict).value = \\"assigned\\"
+
+	{
+		log.push(\\"compound\\")
+	}
+	;(formats_namespaceFn().strict).count += 2
+
+	{
+		log.push(\\"update\\")
+	}
+	;(formats_namespaceFn().strict).count++
+
+	{
+		log.push(\\"computed\\")
+	}
+	;(formats_namespaceFn().strict)[\\"flag\\"] = true
+
+	{
+		log.push(\\"deep\\")
+	}
+	;(formats_namespaceFn().strict).deep.leaf = \\"reassigned\\"
+
+	{
+		log.push(\\"namespaceAssign\\")
+	}
+	;(formats_namespaceFn().strict).deep.leaf = \\"namespaced\\"
+
+	return log
+}
+
+function strict_read() {
+	return (formats_namespaceFn().strict)
+}
+
+;// ./index.js
+
+
+
+it(\\"should write through an interop default import at a statement start\\", () => {
+	expect(mutate()).toEqual([
+		\\"assign\\",
+		\\"compound\\",
+		\\"update\\",
+		\\"computed\\",
+		\\"deep\\",
+		\\"delete\\",
+		\\"typeof\\",
+		\\"void\\",
+		\\"call\\",
+		\\"new\\",
+		\\"named\\",
+		\\"namespaceCall\\",
+		\\"namespace\\",
+		\\"default\\"
+	]);
+
+	const loose = read();
+
+	expect(loose.value).toBe(\\"assigned\\");
+	expect(loose.count).toBe(4);
+	expect(loose.flag).toBe(true);
+	expect(loose.deep.leaf).toBe(\\"reassigned\\");
+	expect(\\"gone\\" in loose).toBe(false);
+});
+
+it(\\"should write through a strict ESM default import at a statement start\\", () => {
+	expect(strict_mutate()).toEqual([
+		\\"assign\\",
+		\\"compound\\",
+		\\"update\\",
+		\\"computed\\",
+		\\"deep\\",
+		\\"namespaceAssign\\"
+	]);
+
+	const strict = strict_read();
+
+	expect(strict.value).toBe(\\"assigned\\");
+	expect(strict.count).toBe(4);
+	expect(strict.flag).toBe(true);
+	expect(strict.deep.leaf).toBe(\\"namespaced\\");
+});
+
+it(\\"should reach both interop paths of the one wrapped module\\", () => {
+	expect(read()).not.toBe(strict_read());
+	expect(mutate().length).toBeGreaterThan(0);
+	expect(read().count).toBe(7);
+});
+
+/******/ })()
+;"
+`;

@@ -1,0 +1,509 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-asi-position-require commonjs-wrapped-assignment-asi-position-require should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./body.js
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// semicolon-free: every require below starts a statement where ASI would join
+// the block above it, and each one writes through a parenthesized member access
+const log = []
+
+{
+	log.push(\\"assign\\")
+}
+;(store_namespaceFn().nested).value = \\"assigned\\"
+
+{
+	log.push(\\"compound\\")
+}
+;(store_namespaceFn().nested).count += 2
+
+{
+	log.push(\\"update\\")
+}
+;(store_namespaceFn().nested).count++
+
+{
+	log.push(\\"computed\\")
+}
+;(store_namespaceFn().nested)[\\"flag\\"] = true
+
+{
+	log.push(\\"deep\\")
+}
+;(store_namespaceFn().nested).deep.leaf = \\"reassigned\\"
+
+{
+	log.push(\\"delete\\")
+}
+delete (store_namespaceFn().nested).gone
+
+{
+	log.push(\\"read\\")
+}
+;(store_namespaceFn().nested).value
+
+module.exports.z = () => log
+module.exports.L = () => (store_namespaceFn().nested)
+
+});
+
+// MODULE: ./store.js
+var store_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// exported through a variable, so the exports stay statically unknown and every
+// reader below reaches the module through its wrapper accessor
+const store = {
+	nested: {
+		value: \\"original\\",
+		count: 1,
+		flag: false,
+		gone: \\"present\\",
+		deep: { leaf: \\"leaf\\" }
+	}
+};
+
+module.exports = store;
+
+});
+
+;// ./body.js
+body_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should write through a required wrapped module at a statement start\\", () => {
+	expect((0,body_namespaceFn().z)()).toEqual([
+		\\"assign\\",
+		\\"compound\\",
+		\\"update\\",
+		\\"computed\\",
+		\\"deep\\",
+		\\"delete\\",
+		\\"read\\"
+	]);
+
+	const nested = (0,body_namespaceFn().L)();
+
+	expect(nested.value).toBe(\\"assigned\\");
+	expect(nested.count).toBe(4);
+	expect(nested.flag).toBe(true);
+	expect(nested.deep.leaf).toBe(\\"reassigned\\");
+	expect(\\"gone\\" in nested).toBe(false);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-asi-position-require commonjs-wrapped-assignment-asi-position-require should compile 2`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./body.js
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// semicolon-free: every require below starts a statement where ASI would join
+// the block above it, and each one writes through a parenthesized member access
+const log = []
+
+{
+	log.push(\\"assign\\")
+}
+;(store_namespaceFn().nested).value = \\"assigned\\"
+
+{
+	log.push(\\"compound\\")
+}
+;(store_namespaceFn().nested).count += 2
+
+{
+	log.push(\\"update\\")
+}
+;(store_namespaceFn().nested).count++
+
+{
+	log.push(\\"computed\\")
+}
+;(store_namespaceFn().nested)[\\"flag\\"] = true
+
+{
+	log.push(\\"deep\\")
+}
+;(store_namespaceFn().nested).deep.leaf = \\"reassigned\\"
+
+{
+	log.push(\\"delete\\")
+}
+delete (store_namespaceFn().nested).gone
+
+{
+	log.push(\\"read\\")
+}
+;(store_namespaceFn().nested).value
+
+module.exports.z = () => log
+module.exports.L = () => (store_namespaceFn().nested)
+
+});
+
+// MODULE: ./store.js
+var store_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// exported through a variable, so the exports stay statically unknown and every
+// reader below reaches the module through its wrapper accessor
+const store = {
+	nested: {
+		value: \\"original\\",
+		count: 1,
+		flag: false,
+		gone: \\"present\\",
+		deep: { leaf: \\"leaf\\" }
+	}
+};
+
+module.exports = store;
+
+});
+
+;// ./body.js
+body_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should write through a required wrapped module at a statement start\\", () => {
+	expect((0,body_namespaceFn().z)()).toEqual([
+		\\"assign\\",
+		\\"compound\\",
+		\\"update\\",
+		\\"computed\\",
+		\\"deep\\",
+		\\"delete\\",
+		\\"read\\"
+	]);
+
+	const nested = (0,body_namespaceFn().L)();
+
+	expect(nested.value).toBe(\\"assigned\\");
+	expect(nested.count).toBe(4);
+	expect(nested.flag).toBe(true);
+	expect(nested.deep.leaf).toBe(\\"reassigned\\");
+	expect(\\"gone\\" in nested).toBe(false);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-asi-position-require commonjs-wrapped-assignment-asi-position-require should pre-compile to fill disk cache (1st) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./body.js
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// semicolon-free: every require below starts a statement where ASI would join
+// the block above it, and each one writes through a parenthesized member access
+const log = []
+
+{
+	log.push(\\"assign\\")
+}
+;(store_namespaceFn().nested).value = \\"assigned\\"
+
+{
+	log.push(\\"compound\\")
+}
+;(store_namespaceFn().nested).count += 2
+
+{
+	log.push(\\"update\\")
+}
+;(store_namespaceFn().nested).count++
+
+{
+	log.push(\\"computed\\")
+}
+;(store_namespaceFn().nested)[\\"flag\\"] = true
+
+{
+	log.push(\\"deep\\")
+}
+;(store_namespaceFn().nested).deep.leaf = \\"reassigned\\"
+
+{
+	log.push(\\"delete\\")
+}
+delete (store_namespaceFn().nested).gone
+
+{
+	log.push(\\"read\\")
+}
+;(store_namespaceFn().nested).value
+
+module.exports.z = () => log
+module.exports.L = () => (store_namespaceFn().nested)
+
+});
+
+// MODULE: ./store.js
+var store_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// exported through a variable, so the exports stay statically unknown and every
+// reader below reaches the module through its wrapper accessor
+const store = {
+	nested: {
+		value: \\"original\\",
+		count: 1,
+		flag: false,
+		gone: \\"present\\",
+		deep: { leaf: \\"leaf\\" }
+	}
+};
+
+module.exports = store;
+
+});
+
+;// ./body.js
+body_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should write through a required wrapped module at a statement start\\", () => {
+	expect((0,body_namespaceFn().z)()).toEqual([
+		\\"assign\\",
+		\\"compound\\",
+		\\"update\\",
+		\\"computed\\",
+		\\"deep\\",
+		\\"delete\\",
+		\\"read\\"
+	]);
+
+	const nested = (0,body_namespaceFn().L)();
+
+	expect(nested.value).toBe(\\"assigned\\");
+	expect(nested.count).toBe(4);
+	expect(nested.flag).toBe(true);
+	expect(nested.deep.leaf).toBe(\\"reassigned\\");
+	expect(\\"gone\\" in nested).toBe(false);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-assignment-asi-position-require commonjs-wrapped-assignment-asi-position-require should pre-compile to fill disk cache (2nd) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./body.js
+var body_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// semicolon-free: every require below starts a statement where ASI would join
+// the block above it, and each one writes through a parenthesized member access
+const log = []
+
+{
+	log.push(\\"assign\\")
+}
+;(store_namespaceFn().nested).value = \\"assigned\\"
+
+{
+	log.push(\\"compound\\")
+}
+;(store_namespaceFn().nested).count += 2
+
+{
+	log.push(\\"update\\")
+}
+;(store_namespaceFn().nested).count++
+
+{
+	log.push(\\"computed\\")
+}
+;(store_namespaceFn().nested)[\\"flag\\"] = true
+
+{
+	log.push(\\"deep\\")
+}
+;(store_namespaceFn().nested).deep.leaf = \\"reassigned\\"
+
+{
+	log.push(\\"delete\\")
+}
+delete (store_namespaceFn().nested).gone
+
+{
+	log.push(\\"read\\")
+}
+;(store_namespaceFn().nested).value
+
+module.exports.z = () => log
+module.exports.L = () => (store_namespaceFn().nested)
+
+});
+
+// MODULE: ./store.js
+var store_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// exported through a variable, so the exports stay statically unknown and every
+// reader below reaches the module through its wrapper accessor
+const store = {
+	nested: {
+		value: \\"original\\",
+		count: 1,
+		flag: false,
+		gone: \\"present\\",
+		deep: { leaf: \\"leaf\\" }
+	}
+};
+
+module.exports = store;
+
+});
+
+;// ./body.js
+body_namespaceFn();
+
+;// ./index.js
+
+
+it(\\"should write through a required wrapped module at a statement start\\", () => {
+	expect((0,body_namespaceFn().z)()).toEqual([
+		\\"assign\\",
+		\\"compound\\",
+		\\"update\\",
+		\\"computed\\",
+		\\"deep\\",
+		\\"delete\\",
+		\\"read\\"
+	]);
+
+	const nested = (0,body_namespaceFn().L)();
+
+	expect(nested.value).toBe(\\"assigned\\");
+	expect(nested.count).toBe(4);
+	expect(nested.flag).toBe(true);
+	expect(nested.deep.leaf).toBe(\\"reassigned\\");
+	expect(\\"gone\\" in nested).toBe(false);
+});
+
+/******/ })()
+;"
+`;
