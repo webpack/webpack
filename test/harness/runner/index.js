@@ -31,6 +31,23 @@ const isModuleLibraryType = (type) =>
 	type === "module" || type === "modern-module";
 
 /**
+ * Resolves the target properties of a config as written, so the runner can read
+ * the same answer `lib/config/defaults.js` reads when a default consults them.
+ * @param {EXPECTED_ANY} webpackOptions webpack options
+ * @returns {import("../../../lib/config/target").TargetProperties | false} target properties, or false without a target
+ */
+const resolveTargetProperties = (webpackOptions) => {
+	const { context, target } = webpackOptions;
+	if (target === false || target === undefined) return false;
+	return typeof target === "string"
+		? getTargetProperties(target, /** @type {string} */ (context))
+		: getTargetsProperties(
+				/** @type {string[]} */ (target),
+				/** @type {string} */ (context)
+			);
+};
+
+/**
  * @typedef {object} TestMeta
  * @property {string} category
  * @property {string} name
@@ -136,6 +153,13 @@ class TestRunner {
 		) {
 			return true;
 		}
+		// `futureDefaults` emits ESM wherever the target reads one, which is the
+		// second place the default turns `output.module` on without being told to
+		const { experiments } = webpackOptions;
+		if (experiments && experiments.futureDefaults) {
+			const targetProperties = resolveTargetProperties(webpackOptions);
+			if (targetProperties && targetProperties.module !== false) return true;
+		}
 		const { entry } = webpackOptions;
 		if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
 			return false;
@@ -159,26 +183,15 @@ class TestRunner {
 	 * @returns {boolean} whether target is universal
 	 */
 	static isUniversalTarget(webpackOptions) {
-		const outputModule = webpackOptions.output && webpackOptions.output.module;
-		const target = webpackOptions.target;
-
-		const targetProperties =
-			target === false
-				? /** @type {false} */ (false)
-				: typeof target === "string"
-					? getTargetProperties(
-							target,
-							/** @type {string} */ (webpackOptions.context)
-						)
-					: getTargetsProperties(
-							/** @type {string[]} */ (target),
-							/** @type {string} */ (webpackOptions.context)
-						);
 		const props =
-			/** @type {import("../../../lib/config/target").TargetProperties} */ (
-				targetProperties
-			);
-		return outputModule && props.node === null && props.web === null;
+			/** @type {import("../../../lib/config/target").TargetProperties} */
+			(resolveTargetProperties(webpackOptions));
+		return Boolean(
+			TestRunner.isModuleOutput(webpackOptions) &&
+			props &&
+			props.node === null &&
+			props.web === null
+		);
 	}
 
 	/**

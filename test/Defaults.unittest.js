@@ -1976,6 +1976,14 @@ describe("snapshots", () => {
 			-     "progress": false,
 			+     "progress": "auto",
 			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
 			-   "mode": "none",
 			+   "mode": "development",
 			@@ ... @@
@@ -1985,7 +1993,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -1998,7 +2006,9 @@ describe("snapshots", () => {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
 			+           },
-			+         ],
+			@@ ... @@
+			+       },
+			+     ],
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -2022,6 +2032,9 @@ describe("snapshots", () => {
 			+         "anonymousDefaultExportName": false,
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
 			@@ ... @@
 			-         "strictModeViolations": "warn",
 			+         "strictModeViolations": "error",
@@ -2051,29 +2064,57 @@ describe("snapshots", () => {
 			+       "minRemainingSize": 0,
 			@@ ... @@
 			-     "charset": true,
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
 			+     "charset": false,
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
 			@@ ... @@
+			-     "chunkLoading": "jsonp",
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoading": "import",
 			+     "chunkLoadingGlobal": "webpackChunkmyLib",
 			@@ ... @@
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "myLib",
 			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
 			+     ],
 			+     "enabledLibraryTypes": Array [
 			+       "var",
 			@@ ... @@
 			-     "enabledLibraryTypes": Array [],
 			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "filename": "[name].js",
+			+     "filename": "[name].mjs",
+			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
 			+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
 			@@ ... @@
 			-     "library": undefined,
+			-     "module": false,
 			+     "library": Object {
 			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
@@ -2083,15 +2124,30 @@ describe("snapshots", () => {
 			+       "umdAmdContainer": undefined,
 			+       "umdNamedDefine": undefined,
 			+     },
+			+     "module": true,
 			@@ ... @@
 			-     "pathinfo": false,
 			+     "pathinfo": true,
+			@@ ... @@
+			-     "resourceHints": undefined,
+			-     "scriptType": false,
+			+     "resourceHints": Object {
+			+       "dedupe": false,
+			+       "initial": true,
+			+       "modulePreloadPolyfill": false,
+			+     },
+			+     "scriptType": "module",
 			@@ ... @@
 			-     "strictModuleResolution": false,
 			+     "strictModuleResolution": true,
 			@@ ... @@
 			-     "uniqueName": "webpack",
 			+     "uniqueName": "myLib",
+			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
+			+     "workerChunkLoading": "import",
 			@@ ... @@
 			-           "production",
 			+           "development",
@@ -4597,8 +4653,19 @@ describe("snapshots", () => {
 			+     "futureDefaults": true,
 			+     "html": true,
 			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
 			-     "progress": false,
 			+     "progress": "auto",
+			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
 			@@ ... @@
 			+       },
 			+       Object {
@@ -4614,11 +4681,10 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
-			+           },
 			@@ ... @@
 			+       },
 			+     ],
@@ -4634,6 +4700,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
+			@@ ... @@
 			-         "strictModeViolations": "warn",
 			+         "strictModeViolations": "error",
 			@@ ... @@
@@ -4648,12 +4717,60 @@ describe("snapshots", () => {
 			+     "global": "warn",
 			@@ ... @@
 			-     "charset": true,
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
 			+     "charset": false,
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "filename": "[name].js",
+			+     "filename": "[name].mjs",
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "resourceHints": undefined,
+			-     "scriptType": false,
+			+     "resourceHints": Object {
+			+       "dedupe": false,
+			+       "initial": true,
+			+       "modulePreloadPolyfill": false,
+			+     },
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
+			+     "workerChunkLoading": "import",
 			@@ ... @@
 			+           ".html",
 			@@ ... @@
@@ -5066,8 +5183,19 @@ describe("snapshots", () => {
 			+     "futureDefaults": true,
 			+     "html": true,
 			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
 			-     "progress": false,
 			+     "progress": "auto",
+			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
 			@@ ... @@
 			+       Object {
 			+         "oneOf": Array [
@@ -5087,9 +5215,8 @@ describe("snapshots", () => {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
 			+           },
-			@@ ... @@
+			+         ],
 			+       },
-			+     ],
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -5102,6 +5229,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
+			@@ ... @@
 			-         "strictModeViolations": "warn",
 			+         "strictModeViolations": "error",
 			@@ ... @@
@@ -5113,12 +5243,60 @@ describe("snapshots", () => {
 			+     "global": "warn",
 			@@ ... @@
 			-     "charset": true,
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
 			+     "charset": false,
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "filename": "[name].js",
+			+     "filename": "[name].mjs",
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "resourceHints": undefined,
+			-     "scriptType": false,
+			+     "resourceHints": Object {
+			+       "dedupe": false,
+			+       "initial": true,
+			+       "modulePreloadPolyfill": false,
+			+     },
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
+			+     "workerChunkLoading": "import",
 			@@ ... @@
 			+           ".html",
 			@@ ... @@
@@ -5168,8 +5346,19 @@ describe("snapshots", () => {
 			+     "futureDefaults": true,
 			+     "html": true,
 			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
 			-     "progress": false,
 			+     "progress": "auto",
+			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
 			@@ ... @@
 			-       },
 			-       Object {
@@ -5195,13 +5384,16 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			-         "type": "css",
-			@@ ... @@
+			-       },
+			-       Object {
 			-         "dependency": /css-import-local-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
-			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			-         },
 			-         "type": "css/module",
-			@@ ... @@
+			-       },
 			-       Object {
 			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
@@ -5234,25 +5426,12 @@ describe("snapshots", () => {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
-			-       },
-			-       Object {
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
 			@@ ... @@
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			-       },
-			-       Object {
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			-         "resolve": Object {
+			@@ ... @@
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -5262,6 +5441,14 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
+			-         "resolve": Object {
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
@@ -5284,10 +5471,6 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
-			+           },
-			+           Object {
-			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
-			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/global": Object {
 			-         "exportsConvention": "as-is",
@@ -5297,8 +5480,8 @@ describe("snapshots", () => {
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
 			+           Object {
-			+             "resourceQuery": /(\\?|&)inline(&|$)/,
-			+             "type": "asset/inline",
+			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/module": Object {
 			-         "exportsConvention": "as-is",
@@ -5307,13 +5490,15 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
+			+           Object {
+			+             "resourceQuery": /(\\?|&)inline(&|$)/,
+			+             "type": "asset/inline",
+			+           },
 			+         ],
 			@@ ... @@
 			+     ],
 			+     "generator": Object {
 			@@ ... @@
-			-         },
-			-       },
 			-       "css": Object {
 			-         "customMedia": true,
 			-         "customSelectors": true,
@@ -5340,7 +5525,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			@@ ... @@
+			-       },
 			-       "css/module": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -5350,8 +5535,12 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
+			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
 			@@ ... @@
 			-         "strictModeViolations": "warn",
 			+         "strictModeViolations": "error",
@@ -5366,12 +5555,60 @@ describe("snapshots", () => {
 			-         "css",
 			@@ ... @@
 			-     "charset": true,
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
 			+     "charset": false,
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "filename": "[name].js",
+			+     "filename": "[name].mjs",
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "resourceHints": undefined,
+			-     "scriptType": false,
+			+     "resourceHints": Object {
+			+       "dedupe": false,
+			+       "initial": true,
+			+       "modulePreloadPolyfill": false,
+			+     },
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
+			+     "workerChunkLoading": "import",
 			@@ ... @@
 			-       "css-import": Object {
 			-         "conditionNames": Array [
@@ -6218,5 +6455,100 @@ describe("module library types", () => {
 
 		expect(config.output.module).toBe(true);
 		expect(config.output.iife).toBe(false);
+	});
+});
+
+describe("futureDefaults module output", () => {
+	it("should emit an ECMAScript module when no browserslist narrows the target", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			experiments: { futureDefaults: true }
+		});
+
+		expect(config.output.module).toBe(true);
+		expect(config.output.iife).toBe(false);
+		expect(config.output.chunkFormat).toBe("module");
+		expect(config.output.chunkLoading).toBe("import");
+		expect(config.output.filename).toBe("[name].mjs");
+	});
+
+	it("should emit an ECMAScript module for a browserslist query supporting one", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			target: "browserslist: chrome 100",
+			experiments: { futureDefaults: true }
+		});
+
+		expect(config.output.environment.module).toBe(true);
+		expect(config.output.module).toBe(true);
+		expect(config.output.iife).toBe(false);
+	});
+
+	it("should emit a script for a browserslist query without ESM support", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			target: "browserslist: ie 11",
+			experiments: { futureDefaults: true }
+		});
+
+		expect(config.output.environment.module).toBe(false);
+		expect(config.output.module).toBe(false);
+		expect(config.output.iife).toBe(true);
+		expect(config.output.chunkFormat).toBe("array-push");
+	});
+
+	it("should read the browserslist config of the context", () => {
+		// The fixture selects `ie >= 9`, which reads no ECMAScript module.
+		const config = getDefaultConfig({
+			mode: "none",
+			context: path.resolve(__dirname, "fixtures/browserslist"),
+			experiments: { futureDefaults: true }
+		});
+
+		expect(config.target).toBe("browserslist");
+		expect(config.output.module).toBe(false);
+	});
+
+	it("should emit a script for a target without ESM support", () => {
+		expect(
+			getDefaultConfig({
+				mode: "none",
+				target: ["web", "es5"],
+				experiments: { futureDefaults: true }
+			}).output.module
+		).toBe(false);
+		expect(
+			getDefaultConfig({
+				mode: "none",
+				target: "node10",
+				experiments: { futureDefaults: true }
+			}).output.module
+		).toBe(false);
+	});
+
+	it("should keep an explicit output.module", () => {
+		expect(
+			getDefaultConfig({
+				mode: "none",
+				output: { module: false },
+				experiments: { futureDefaults: true }
+			}).output.module
+		).toBe(false);
+		expect(
+			getDefaultConfig({
+				mode: "none",
+				target: ["web", "es5"],
+				output: { module: true },
+				experiments: { futureDefaults: true }
+			}).output.module
+		).toBe(true);
+	});
+
+	it("should keep script output without futureDefaults", () => {
+		expect(
+			getDefaultConfig({ mode: "none", target: "browserslist: chrome 100" })
+				.output.module
+		).toBe(false);
+		expect(getDefaultConfig({ mode: "none" }).output.module).toBe(false);
 	});
 });
