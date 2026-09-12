@@ -331,6 +331,11 @@ declare interface AllCodeGenerationSchemas {
 	chunkInitFragments: InitFragment<any>[];
 
 	/**
+	 * native external reexport source and attributes
+	 */
+	externalReexport: string;
+
+	/**
 	 * url for asset modules
 	 */
 	url: { javascript?: string; "asset-url"?: string };
@@ -3090,6 +3095,7 @@ type CodeGenValue<K extends string> = K extends
 	| "topLevelDeclarations"
 	| "freeNames"
 	| "chunkInitFragments"
+	| "externalReexport"
 	| "url"
 	| "fullContentHash"
 	? AllCodeGenerationSchemas[K]
