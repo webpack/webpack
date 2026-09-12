@@ -1,7 +1,7 @@
 "use strict";
 
-// Two linked pages whose scripts share a basename: the first page in sorted
-// order keeps `app.js` and the other is numbered past it, on every build.
+// Two linked pages whose scripts share a basename, linked against their lexical
+// order: the one linked first keeps `app.js`, the other is numbered past it.
 
 const fs = require("fs");
 const path = require("path");
