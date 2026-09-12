@@ -3,6 +3,6 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
-		rules: [{ test: /index\.js$/, parser: { specNamespaceObject: true } }]
+		rules: [{ test: /\.js$/, parser: { specNamespaceObject: true } }]
 	}
 };
