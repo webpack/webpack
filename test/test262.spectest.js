@@ -915,10 +915,6 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
-	// `import()` of a JSON or text module is not parsed as ESM, so the option
-	// never reaches it and `default` sits beside `__esModule`.
-	"import/import-attributes/json-via-namespace.js",
-	"import/import-attributes/text-via-namespace.js",
 	// A static export reference is read directly rather than through the
 	// namespace, so the proxy never sees the delete or the strict assignment.
 	"module-code/export-expname-binding-index.js",
