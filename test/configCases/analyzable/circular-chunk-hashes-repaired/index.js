@@ -28,10 +28,14 @@ it("should name a mutually importing pair from one place", () => {
 	expect(read("b_js").match(CHUNK_REFERENCE)).toBe(null);
 
 	const bundle = read("bundle0");
+	const start = bundle.indexOf(`${"chunkImports"} = {`);
 
-	expect(bundle).toContain(`${"chunkImports"} = {`);
+	expect(start).not.toBe(-1);
+	// Read inside the map, so a name cannot be matched from anywhere else in the chunk.
+	const region = bundle.slice(start, bundle.indexOf("};", start));
+
 	for (const prefix of ["a_js", "b_js", "c_js"]) {
-		expect(bundle).toContain(`"./${emitted(prefix)}"`);
+		expect(region).toContain(`"./${emitted(prefix)}"`);
 	}
 });
 

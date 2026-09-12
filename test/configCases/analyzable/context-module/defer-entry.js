@@ -22,8 +22,9 @@ it("should keep the loaders ahead of the deferred slot", () => {
 
 	expect(region.split("import(")).toHaveLength(3);
 	expect(bundle).toContain(`return ${"__webpack_require__"}.e(ids[1][0])`);
-	// An async candidate defers nothing, so its trailing slot is written out empty.
-	expect(bundle).toContain(`import("./${__NAME__}-defer_async_js.mjs")`);
+	// Both candidates are named, whether or not the deferred slot behind them is empty.
+	expect(region).toContain(`import("./${__NAME__}-defer_async_js.mjs")`);
+	expect(region).toContain(`import("./${__NAME__}-defer_sync_js.mjs")`);
 	expect(bundle).toContain("], null]");
 	expect(bundle).toContain(`${"__webpack_require__"}.e =`);
 });
