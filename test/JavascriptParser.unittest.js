@@ -1240,10 +1240,11 @@ describe("JavascriptParser", () => {
 		 * @param {string} source source code
 		 * @returns {EXPECTED_ANY} program AST
 		 */
-		// `lazyNodes` is webpack's private extension of acorn's Options
-		const parseOptions = /** @type {import("acorn").Options} */ (
-			/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true })
-		);
+		// `lazyNodes` is webpack's private extension of the parser's Options
+		const parseOptions =
+			/** @type {import("../lib/javascript/parser").Options} */ (
+				/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true })
+			);
 		/**
 		 * @param {string} source source code
 		 * @returns {EXPECTED_ANY} program AST (loosely typed for node access)
@@ -1295,6 +1296,20 @@ describe("JavascriptParser", () => {
 			expect(() => parse("/a/v;")).toThrow(/Invalid regular expression flag/);
 		});
 
+		it("validates a pattern the engine rejects against the property tables", () => {
+			// the `\\p{...}` name tables load on this path alone, and are memoized
+			// for the second literal
+			expect(() => parse("/\\p{Bogus_Property}/u;")).toThrow(
+				/Invalid property name/
+			);
+			expect(() => parse("/\\p{Script=Nonesuch}/u;")).toThrow(
+				/Invalid property value/
+			);
+			expect(
+				parse("/\\p{Script=Greek}/u;").body[0].expression.regex.flags
+			).toBe("u");
+		});
+
 		it("answers repeated ASI probes across a comment-holding gap", () => {
 			// the newline scan memoizes into the tokenizer's flag; both outcomes
 			const asi = parse("function f() { return /*\n*/ 1 }");
@@ -1322,7 +1337,7 @@ describe("JavascriptParser", () => {
 			const legacy = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					src,
-					/** @type {import("acorn").Options} */ (
+					/** @type {import("../lib/javascript/parser").Options} */ (
 						/** @type {unknown} */ ({ ecmaVersion: 5, lazyNodes: true })
 					)
 				)
@@ -1496,7 +1511,7 @@ describe("JavascriptParser", () => {
 			const second = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					"b;",
-					/** @type {import("acorn").Options} */ (
+					/** @type {import("../lib/javascript/parser").Options} */ (
 						/** @type {unknown} */ ({
 							ecmaVersion: 2022,
 							lazyNodes: true,
@@ -1517,7 +1532,7 @@ describe("JavascriptParser", () => {
 			const parseModule = (source) => () =>
 				WebpackParser.parse(
 					source,
-					/** @type {import("acorn").Options} */ (
+					/** @type {import("../lib/javascript/parser").Options} */ (
 						/** @type {unknown} */ ({
 							ecmaVersion: "latest",
 							sourceType: "module",
@@ -1536,7 +1551,7 @@ describe("JavascriptParser", () => {
 			const comments = [];
 			WebpackParser.parse(
 				"// hi\nvar x = 1; /* block */",
-				/** @type {import("acorn").Options} */ (
+				/** @type {import("../lib/javascript/parser").Options} */ (
 					/** @type {unknown} */ ({
 						ecmaVersion: 2022,
 						lazyNodes: true,
@@ -1561,7 +1576,7 @@ describe("JavascriptParser", () => {
 			const program = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					"var x = 1;",
-					/** @type {import("acorn").Options} */ (
+					/** @type {import("../lib/javascript/parser").Options} */ (
 						/** @type {unknown} */ (options)
 					)
 				)
@@ -1572,7 +1587,7 @@ describe("JavascriptParser", () => {
 				ranges: true
 			});
 			const declaration = program.body[0];
-			// lazy: `range` comes from the prototype getter, not from acorn
+			// lazy: `range` comes from the prototype getter, not from the node
 			expect(
 				Object.getOwnPropertyDescriptor(declaration, "range")
 			).toBeUndefined();
