@@ -226,7 +226,10 @@ const knownHostBugs = [
 	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
 	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
 	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
-	"statements/with/unscopables-inc-dec.js"
+	"statements/with/unscopables-inc-dec.js",
+	// `super[x]` must read the this binding before evaluating `x`, so the
+	// `super()` in the index of a `delete` must not run. V8 evaluates it.
+	"expressions/delete/super-property-uninitialized-this.js"
 ];
 /* cspell:enable */
 
@@ -915,9 +918,6 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
-	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
-	"expressions/dynamic-import/returns-promise.js",
-
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
 	// the realm's global object and there is no Script Record context.
@@ -935,9 +935,6 @@ const knownBugs = [
 	// global object and bare identifiers are scoped to the wrapper.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
-	// webpack emits `delete super[(super(), 0)]` unchanged, so the order the
-	// index and the this-binding check run in is the engine's to fix.
-	"expressions/delete/super-property-uninitialized-this.js",
 
 	// The file imports itself, so the entry script and the module it loads are
 	// one bundled module, evaluated once where the spec evaluates it twice.
@@ -945,7 +942,11 @@ const knownBugs = [
 	// The specifier is written inside an `eval`, so this import never reaches
 	// the module graph.
 	"expressions/dynamic-import/usage-from-eval.js",
-	// `.then` is expected not to be called on the deferred namespace's promise.
+	// The spec builds it from the intrinsic %Promise%; our chunk loading reads the
+	// global binding, which this test replaces before importing.
+	"expressions/dynamic-import/returns-promise.js",
+	// The spec aggregates evaluation promises with SafePerformPromiseAll, which
+	// never reads `then`; our runtime uses `Promise.all` and `.then` and is seen.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
 
 	// Same root cause as the postfix variants above: getter on a global `this`
@@ -955,10 +956,11 @@ const knownBugs = [
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js"
 ];
 
-const knownProductionBuildBugs = [
-	// Deliberate: the inner graph reads an unused class heritage and an unused
-	// export's value as pure, which `configCases/inner-graph/issue-17565` pins.
-	// Used, both are emitted and observe the same as the spec, as does development.
+// Tree shaking drops unused code whose evaluation the spec makes observable, so
+// these diverge in production alone. Used, both match the spec, as does development.
+const deliberateProductionDivergences = [
+	// The inner graph reads an unused class heritage and an unused export's value
+	// as pure, which `configCases/inner-graph/issue-17565` pins.
 	"statements/class/definition/prototype-getter.js",
 	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
@@ -1042,7 +1044,8 @@ describe("test262", () => {
 						meta.features.includes("source-phase-imports-module-source")) &&
 						!(meta.negative && meta.negative.phase === "parse")) ||
 					knownBugs.includes(name) ||
-					(mode === "production" && knownProductionBuildBugs.includes(name))
+					(mode === "production" &&
+						deliberateProductionDivergences.includes(name))
 				) {
 					// eslint-disable-next-line jest/no-disabled-tests
 					it.skip(name, () => {});
