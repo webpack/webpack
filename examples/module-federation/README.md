@@ -696,7 +696,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			const promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", "19.2.8", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 24))))));
+/******/ 					register("react", "19.3.0", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 24))))));
 /******/ 					initExternal(9);
 /******/ 					initExternal(11);
 /******/ 				}
@@ -835,7 +835,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		});
 /******/ 		const installedModules = {};
 /******/ 		const moduleToHandlerMapping = {
-/******/ 			5: () => (loadSingletonVersion("default", "react", false, [1,19,2,8], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24))))))),
+/******/ 			5: () => (loadSingletonVersion("default", "react", false, [1,19,3,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24))))))),
 /******/ 			6: () => (loadSingletonVersion("default", "react", false, [1,19,2,7], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
@@ -1194,7 +1194,7 @@ __webpack_require__.d(exports, {
 /******/ 			switch(name) {
 /******/ 				case "default": {
 /******/ 					register("date-fns", "4.4.0", () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/index.js */ 8))))));
-/******/ 					register("react", "19.2.8", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 311))))));
+/******/ 					register("react", "19.3.0", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 311))))));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -2012,9 +2012,9 @@ __webpack_require__.d(exports, {
 
 ```
 app:
-  asset src_bootstrap_js.js 46 KiB [emitted]
+  asset src_bootstrap_js.js 46.9 KiB [emitted]
+  asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
   asset app.js 29.7 KiB [emitted] (name: app)
-  asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.9 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
     runtime modules 18.9 KiB 13 modules
@@ -2022,16 +2022,16 @@ app:
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
-      provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
-  chunk (runtime: app) src_bootstrap_js.js 27.1 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
+      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+  chunk (runtime: app) src_bootstrap_js.js 27.8 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
     > ./bootstrap ./src/index.js 10:0-21
-    dependent modules 26.7 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 19 modules
+    dependent modules 27.4 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 19 modules
     ./src/bootstrap.js 440 bytes [built] [code generated]
-  chunk (runtime: app) vendors-node_modules_react_index_js.js (id hint: vendors) 17 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js
-    > consume shared module (default) react@^19.2.8 (singleton) (fallback: ../../node_modules/react/index.js)
+  chunk (runtime: app) vendors-node_modules_react_index_js.js (id hint: vendors) 17.8 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
+    > consume shared module (default) react@^19.3.0 (singleton) (fallback: ../../node_modules/react/index.js)
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 16.8 KiB [dependent] 1 module
+    dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 8:49-75
@@ -2041,7 +2041,7 @@ app:
 mfe-b:
   assets by chunk 1 MiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
-    asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
+    asset vendors-node_modules_react_index_js.js 29.7 KiB [emitted] (id hint: vendors)
   asset mfeBBB.js 23.8 KiB [emitted] (name: mfeBBB)
   asset src-b_Component_js.js 4.02 KiB [emitted]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.8 KiB (runtime) [entry] [rendered]
@@ -2050,7 +2050,7 @@ mfe-b:
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
-      provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 1.44 KiB (javascript) 84 bytes (consume-shared) [rendered]
     > ./src-b/Component container entry ./Component
     dependent modules 605 bytes (javascript) 84 bytes (consume-shared) [dependent] 4 modules
@@ -2060,10 +2060,10 @@ mfe-b:
     > consume shared module (default) date-fns@^4.4.0 (strict) (fallback: ../../node_modules/date-fns/index.js)
     dependent modules 515 KiB [dependent] 302 modules
     ../../node_modules/date-fns/index.js 8.68 KiB [built] [code generated]
-  chunk (runtime: mfeBBB) vendors-node_modules_react_index_js.js (id hint: vendors) 17 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js
+  chunk (runtime: mfeBBB) vendors-node_modules_react_index_js.js (id hint: vendors) 17.8 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 16.8 KiB [dependent] 1 module
+    dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   mfe-b (webpack X.X.X) compiled successfully
 
@@ -2110,9 +2110,9 @@ mfe-c:
 
 ```
 app:
-  asset src_bootstrap_js.js 12.8 KiB [emitted] [minimized] 1 related asset
+  asset src_bootstrap_js.js 13.1 KiB [emitted] [minimized] 1 related asset
+  asset node_modules_react_index_js.js 7.79 KiB [emitted] [minimized] 1 related asset
   asset app.js 7.78 KiB [emitted] [minimized] (name: app)
-  asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.2 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
     runtime modules 19.2 KiB 14 modules
@@ -2120,17 +2120,17 @@ app:
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
       external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built] [code generated]
-      provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
-  chunk (runtime: app) node_modules_react_index_js.js 17 KiB [rendered]
-    > provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js
+      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+  chunk (runtime: app) node_modules_react_index_js.js 17.8 KiB [rendered]
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
-    > consume shared module (default) react@^19.2.8 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 16.8 KiB [dependent] 1 module
+    > consume shared module (default) react@^19.3.0 (singleton) (fallback: ../../node_modules/react/index.js)
+    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
+    dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
-  chunk (runtime: app) src_bootstrap_js.js 27.1 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
+  chunk (runtime: app) src_bootstrap_js.js 27.8 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
     > ./bootstrap ./src/index.js 10:0-21
     dependent modules 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 4 modules
-    ./src/bootstrap.js + 15 modules 27.1 KiB [built] [code generated]
+    ./src/bootstrap.js + 15 modules 27.8 KiB [built] [code generated]
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 8:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
@@ -2138,7 +2138,7 @@ app:
 
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
-  asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
+  asset node_modules_react_index_js.js 7.79 KiB [emitted] [minimized] 1 related asset
   asset mfeBBB.js 6.33 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 632 bytes [emitted] [minimized]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
@@ -2147,11 +2147,11 @@ mfe-b:
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
-      provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
-  chunk (runtime: mfeBBB) node_modules_react_index_js.js 17 KiB [rendered]
-    > provide shared module (default) react@19.2.8 = ../../node_modules/react/index.js
+      provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js 42 bytes [built] [code generated]
+  chunk (runtime: mfeBBB) node_modules_react_index_js.js 17.8 KiB [rendered]
     > consume shared module (default) react@^19.2.7 (singleton) (fallback: ../../node_modules/react/index.js)
-    dependent modules 16.8 KiB [dependent] 1 module
+    > provide shared module (default) react@19.3.0 = ../../node_modules/react/index.js
+    dependent modules 17.6 KiB [dependent] 1 module
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 1.44 KiB (javascript) 84 bytes (consume-shared) [rendered]
     > ./src-b/Component container entry ./Component

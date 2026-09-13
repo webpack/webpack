@@ -276,7 +276,7 @@ rewritten to the bundled asset.
 
 		<!-- External stylesheet: goes through webpack's CSS pipeline and the
 		     emitted `.css` chunk is referenced here. -->
-		<link rel="stylesheet" href="__html_6d047296_0.css" />
+		<link rel="stylesheet" href="page.css" />
 
 		<!-- Inline <style>: bundled as a CSS module; its `url()` references
 		     become asset dependencies. -->
@@ -309,11 +309,11 @@ rewritten to the bundled asset.
 		     the emitted bundle. This one imports an HTML module as a string
 		     (see app.js), so HTML-via-import is exercised without a JS
 		     entry point. -->
-		<script src="__html_6d047296_1.js"></script>
+		<script src="page.js"></script>
 
 		<!-- Inline script: its body is bundled and the tag is rewritten to a
 		     `<script src>` pointing at the emitted chunk. -->
-		<script src="__html_6d047296_2.js"></script>
+		<script src="page1.js"></script>
 	</body>
 </html>
 ```
@@ -330,22 +330,25 @@ assets by path *.png 77.9 KiB
   asset apple-touch-icon.png 14.6 KiB [emitted]
   asset icon-192.png 14.6 KiB [emitted]
   asset icon-512.png 14.6 KiB [emitted]
-assets by path *.js 11.3 KiB
-  asset __html_6d047296_1.js 6.72 KiB [emitted] (name: __html_6d047296_1)
-  asset page.js 3.57 KiB [emitted] (name: page)
-  asset __html_6d047296_2.js 1010 bytes [emitted] (name: __html_6d047296_2)
+assets by path *.js 7.71 KiB
+  asset page.js 6.72 KiB [emitted] (name: __html_6d047296_1)
+  asset page1.js 1010 bytes [emitted] (name: __html_6d047296_2)
 asset favicon.ico 14.6 KiB [emitted]
-asset index.html 1.91 KiB [emitted] (auxiliary name: page)
+asset index.html 1.87 KiB [emitted] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]
-asset __html_6d047296_0.css 166 bytes [emitted] (name: __html_6d047296_0)
-chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
+asset page.css 166 bytes [emitted] (name: __html_6d047296_0)
+Entrypoint page (36.1 KiB) = 3 auxiliary assets
+Entrypoint __html_6d047296_1 6.72 KiB (14.6 KiB) = page.js 1 auxiliary asset
+Entrypoint __html_6d047296_2 1010 bytes = page1.js
+Entrypoint __html_6d047296_0 166 bytes = page.css
+chunk (runtime: __html_6d047296_0) page.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 64 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./styles.css __html_6d047296_0
-chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_1) page.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.67 KiB (runtime) [entry] [rendered]
   > ./app.js __html_6d047296_1
   runtime modules 2.67 KiB 4 modules
   dependent modules 124 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 2 modules
@@ -353,16 +356,16 @@ chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 541 
     [no exports]
     [used exports unknown]
     entry ./app.js __html_6d047296_1
-chunk (runtime: __html_6d047296_1) __html_6d047296_2.js (__html_6d047296_2) 56 bytes [initial] [rendered]
+chunk (runtime: __html_6d047296_1) page1.js (__html_6d047296_2) 56 bytes [initial] [rendered]
   > data:text/javascript;base64,CgkJCWNvbnNvbGUubG9nKCJpbmxpbmUgc2NyaXB0LCBidW5kbGVkIGJ5IHdlYnBhY2siKTsKCQk= __html_6d047296_2
   data:text/javascript;base64,CgkJCWNvbnNvbGUu.. 56 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry data:text/javascript;base64,CgkJCWNvbnNvbGUu.. __html_6d047296_2
-chunk (runtime: page) page.js (page) 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) 1.24 KiB (javascript) 1.23 KiB (html) [entry] [rendered]
+chunk (runtime: page) (page) 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) 1.23 KiB (html) [entry]
   > ./src/index.html page
   dependent modules 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) [dependent] 3 modules
-  ./src/index.html 1.24 KiB (javascript) 1.23 KiB (html) [built] [code generated]
+  ./src/index.html 1.23 KiB [built] [code generated]
     [exports: default]
     [used exports unknown]
     entry ./src/index.html page
@@ -379,35 +382,38 @@ assets by path *.png 77.9 KiB
   asset apple-touch-icon.png 14.6 KiB [emitted]
   asset icon-192.png 14.6 KiB [emitted]
   asset icon-512.png 14.6 KiB [emitted]
-assets by path *.js 2.01 KiB
-  asset __html_6d047296_1.js 1.13 KiB [emitted] [minimized] (name: __html_6d047296_1)
-  asset page.js 764 bytes [emitted] [minimized] (name: page)
-  asset __html_6d047296_2.js 139 bytes [emitted] [minimized] (name: __html_6d047296_2)
+assets by path *.js 1.26 KiB
+  asset page.js 1.13 KiB [emitted] [minimized] (name: __html_6d047296_1)
+  asset page1.js 139 bytes [emitted] [minimized] (name: __html_6d047296_2)
 asset favicon.ico 14.6 KiB [emitted]
-asset index.html 749 bytes [emitted] [minimized] (auxiliary name: page)
+asset index.html 711 bytes [emitted] [minimized] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]
-asset __html_6d047296_0.css 39 bytes [emitted] [minimized] (name: __html_6d047296_0)
-chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
+asset page.css 39 bytes [emitted] [minimized] (name: __html_6d047296_0)
+Entrypoint page (34.9 KiB) = 3 auxiliary assets
+Entrypoint __html_6d047296_1 1.13 KiB (14.6 KiB) = page.js 1 auxiliary asset
+Entrypoint __html_6d047296_2 139 bytes = page1.js
+Entrypoint __html_6d047296_0 39 bytes = page.css
+chunk (runtime: __html_6d047296_0) page.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 64 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./styles.css __html_6d047296_0
-chunk (runtime: page) page.js (page) 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) 1.24 KiB (javascript) 1.23 KiB (html) [entry] [rendered]
+chunk (runtime: page) (page) 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) 1.23 KiB (html) [entry]
   > ./src/index.html page
   dependent modules 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) [dependent] 3 modules
-  ./src/index.html 1.24 KiB (javascript) 1.23 KiB (html) [built] [code generated]
+  ./src/index.html 1.23 KiB [built] [code generated]
     [exports: default]
     [no exports used]
     entry ./src/index.html page
-chunk (runtime: __html_6d047296_1) __html_6d047296_2.js (__html_6d047296_2) 56 bytes [initial] [rendered]
+chunk (runtime: __html_6d047296_1) page1.js (__html_6d047296_2) 56 bytes [initial] [rendered]
   > data:text/javascript;base64,CgkJCWNvbnNvbGUubG9nKCJpbmxpbmUgc2NyaXB0LCBidW5kbGVkIGJ5IHdlYnBhY2siKTsKCQk= __html_6d047296_2
   data:text/javascript;base64,CgkJCWNvbnNvbGUu.. 56 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry data:text/javascript;base64,CgkJCWNvbnNvbGUu.. __html_6d047296_2
-chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.47 KiB (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_1) page.js (__html_6d047296_1) 541 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 2.47 KiB (runtime) [entry] [rendered]
   > ./app.js __html_6d047296_1
   runtime modules 2.47 KiB 3 modules
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 1 module

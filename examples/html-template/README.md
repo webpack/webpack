@@ -189,7 +189,7 @@ Custom Eta tags (`{{= }}`) and unescaped output, selected by the rule.
 						<li>Chunks</li>
 						<li>Dependencies</li>
 					</ul>
-		<script src="__html_6d047296_0.js"></script>
+		<script src="index.js"></script>
 		<footer>Built with webpack — 2025</footer>
 	</body>
 </html>
@@ -215,29 +215,29 @@ Custom Eta tags (`{{= }}`) and unescaped output, selected by the rule.
 ## Unoptimized
 
 ```
-assets by path *.js 4.57 KiB
-  asset index.js 2.18 KiB [emitted] (name: index)
-  asset special.js 1.95 KiB [emitted] (name: special)
-  asset __html_6d047296_0.js 445 bytes [emitted] (name: __html_6d047296_0)
-assets by chunk 15 KiB (auxiliary name: index)
+assets by chunk 14.9 KiB (auxiliary name: index)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: index)
-  asset index.html 407 bytes [emitted] (auxiliary name: index)
+  asset index.html 395 bytes [emitted] (auxiliary name: index)
+asset index.js 445 bytes [emitted] (name: __html_6d047296_0)
 asset special.html 218 bytes [emitted] (auxiliary name: special)
-chunk (runtime: __html_6d047296_0) __html_6d047296_0.js (__html_6d047296_0) 243 bytes [entry] [rendered]
+Entrypoint index (14.9 KiB) = 2 auxiliary assets
+Entrypoint special (218 bytes) = 1 auxiliary asset
+Entrypoint __html_6d047296_0 445 bytes = index.js
+chunk (runtime: __html_6d047296_0) index.js (__html_6d047296_0) 243 bytes [entry] [rendered]
   > ./app.js __html_6d047296_0
   ./src/app.js 243 bytes [built] [code generated]
     [used exports unknown]
     entry ./app.js __html_6d047296_0
-chunk (runtime: index) index.js (index) 14.6 KiB (asset) 42 bytes (asset-url) 391 bytes (javascript) 381 bytes (html) [entry] [rendered]
+chunk (runtime: index) (index) 14.6 KiB (asset) 42 bytes (asset-url) 381 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 1 module
-  ./src/index.html 391 bytes (javascript) 381 bytes (html) [built] [code generated]
+  ./src/index.html 381 bytes [built] [code generated]
     [exports: default]
     [used exports unknown]
     entry ./src/index.html index
-chunk (runtime: special) special.js (special) 228 bytes (javascript) 218 bytes (html) [entry] [rendered]
+chunk (runtime: special) (special) 218 bytes [entry]
   > ./src/special.html special
-  ./src/special.html 228 bytes (javascript) 218 bytes (html) [built] [code generated]
+  ./src/special.html 218 bytes [built] [code generated]
     [exports: default]
     [used exports unknown]
     entry ./src/special.html special
@@ -247,29 +247,29 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 1.04 KiB
-  asset index.js 616 bytes [emitted] [minimized] (name: index)
-  asset special.js 399 bytes [emitted] [minimized] (name: special)
-  asset __html_6d047296_0.js 46 bytes [emitted] [minimized] (name: __html_6d047296_0)
 assets by chunk 14.9 KiB (auxiliary name: index)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: index)
-  asset index.html 378 bytes [emitted] [minimized] (auxiliary name: index)
+  asset index.html 366 bytes [emitted] [minimized] (auxiliary name: index)
 asset special.html 199 bytes [emitted] [minimized] (auxiliary name: special)
-chunk (runtime: index) index.js (index) 14.6 KiB (asset) 42 bytes (asset-url) 391 bytes (javascript) 381 bytes (html) [entry] [rendered]
+asset index.js 46 bytes [emitted] [minimized] (name: __html_6d047296_0)
+Entrypoint index (14.9 KiB) = 2 auxiliary assets
+Entrypoint special (199 bytes) = 1 auxiliary asset
+Entrypoint __html_6d047296_0 46 bytes = index.js
+chunk (runtime: index) (index) 14.6 KiB (asset) 42 bytes (asset-url) 381 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 1 module
-  ./src/index.html 391 bytes (javascript) 381 bytes (html) [built] [code generated]
+  ./src/index.html 381 bytes [built] [code generated]
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: __html_6d047296_0) __html_6d047296_0.js (__html_6d047296_0) 243 bytes [entry] [rendered]
+chunk (runtime: __html_6d047296_0) index.js (__html_6d047296_0) 243 bytes [entry] [rendered]
   > ./app.js __html_6d047296_0
   ./src/app.js 243 bytes [built] [code generated]
     [no exports used]
     entry ./app.js __html_6d047296_0
-chunk (runtime: special) special.js (special) 228 bytes (javascript) 218 bytes (html) [entry] [rendered]
+chunk (runtime: special) (special) 218 bytes [entry]
   > ./src/special.html special
-  ./src/special.html 228 bytes (javascript) 218 bytes (html) [built] [code generated]
+  ./src/special.html 218 bytes [built] [code generated]
     [exports: default]
     [no exports used]
     entry ./src/special.html special
