@@ -4288,10 +4288,18 @@ encodeurl@^2.0.0:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-2.0.0.tgz#7b8ea898077d7e409d3ac45474ea38eaf0857a58"
   integrity sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==
 
-enhanced-resolve@^5.17.1, enhanced-resolve@^5.24.4:
+enhanced-resolve@^5.17.1:
   version "5.24.5"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.24.5.tgz#b4dad3255b7545f07ba5535189868e9f85f47573"
   integrity sha512-L1l8TNvomm6UVW5B253AGxQagSQr+vGwhMlrrfRS2qmhx46AMpMVJKQYLvWYbysTMY8VoicOvzHzoHMbyzB+4A==
+  dependencies:
+    graceful-fs "^4.2.4"
+    tapable "^2.3.3"
+
+enhanced-resolve@^5.25.0:
+  version "5.25.0"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.25.0.tgz#0616d1367b42793a6cd090e341048c44342c5471"
+  integrity sha512-ghq3mhs649mvbarTCAlZn2wRhbfHmzAFiKxoWA14B3VtqnxtZt+wz8BroKXU0tF3GiJsnUldjVncQGZ8qk4rdA==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.3.3"
@@ -8897,10 +8905,20 @@ schema-utils@^3.0.0, schema-utils@^3.1.1:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-schema-utils@^4.0.0, schema-utils@^4.3.3, schema-utils@^4.4.0:
+schema-utils@^4.0.0, schema-utils@^4.3.3:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.4.0.tgz#fbc4f90ab5047f01a9c8b07347e74f2cdb567067"
   integrity sha512-ZzWFVzFgyRHi/T2Ecxm37lL6J9+hZO0P9L7LCuLxAbC6XWxkvxcaQBCXhQxMGn/Tdt9nD7zIBk0ELwhMQ3UEDg==
+  dependencies:
+    "@types/json-schema" "^7.0.15"
+    ajv "^8.20.0"
+    ajv-formats "^3.0.1"
+    ajv-keywords "^5.1.0"
+
+schema-utils@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.5.0.tgz#aaf8d588bd2b19511175175a5222baef648c009c"
+  integrity sha512-zJlMCZ0cAR5p/Y4oVpRoqioDMJcGxaXRrQ/4rP4WyR84vc5z/DolXdbvXeDpTwbtocDFr2rhPqHPErDCUtz2kA==
   dependencies:
     "@types/json-schema" "^7.0.15"
     ajv "^8.20.0"
@@ -9586,9 +9604,9 @@ toml@^5.0.0:
   resolved "https://registry.yarnpkg.com/toml/-/toml-5.0.0.tgz#687e98925aa3a5039719d8c652ca30c21a99b7f3"
   integrity sha512-bsqEd+g7fzlrw7LEynQ6W6aOK/lTOlepz5x1sJyIV9fTZVJS2Q76nuju6FK+gZhW5bUpvB7mCEqdR0u4WziMFw==
 
-tooling@webpack/tooling#v1.28.2:
-  version "1.28.2"
-  resolved "https://codeload.github.com/webpack/tooling/tar.gz/15e8f6b03416078b0efe65ffa5863152734ec24a"
+tooling@webpack/tooling#v1.28.3:
+  version "1.28.3"
+  resolved "https://codeload.github.com/webpack/tooling/tar.gz/d42bb245dd2ba96025b19342973859cdbde5bd53"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     ajv "^8.18.0"

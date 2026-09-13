@@ -20,8 +20,12 @@ const hashedIds = (suffix, context) => ({
 	plugins: [new webpack.ids.HashedModuleIdsPlugin({ context })]
 });
 
+const url = pathToFileURL(__dirname).href;
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	hashedIds("path", __dirname),
-	hashedIds("url", pathToFileURL(__dirname).href)
+	hashedIds("url", url),
+	// Node's URL parser normalizes a single slash to three
+	hashedIds("short-url", `file:${url.slice("file://".length)}`)
 ];
