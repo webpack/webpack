@@ -915,13 +915,6 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
-	// A static export reference is read directly rather than through the
-	// namespace, so the proxy never sees the delete or the strict assignment.
-	"module-code/export-expname-binding-index.js",
-	"module-code/namespace/internals/set.js",
-	// `ns.__proto__` reaches the exports object instead of reporting undefined
-	// for a name the module does not export.
-	"module-code/namespace/internals/get-str-not-found.js",
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
 	"expressions/dynamic-import/returns-promise.js",
 
