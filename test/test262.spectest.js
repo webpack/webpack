@@ -955,10 +955,11 @@ const knownBugs = [
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js"
 ];
 
-const knownProductionBuildBugs = [
-	// Deliberate: the inner graph reads an unused class heritage and an unused
-	// export's value as pure, which `configCases/inner-graph/issue-17565` pins.
-	// Used, both are emitted and observe the same as the spec, as does development.
+// Tree shaking drops unused code whose evaluation the spec makes observable, so
+// these diverge in production alone. Used, both match the spec, as does development.
+const deliberateProductionDivergences = [
+	// The inner graph reads an unused class heritage and an unused export's value
+	// as pure, which `configCases/inner-graph/issue-17565` pins.
 	"statements/class/definition/prototype-getter.js",
 	"module-code/eval-export-dflt-expr-err-get-value.js"
 ];
@@ -1042,7 +1043,8 @@ describe("test262", () => {
 						meta.features.includes("source-phase-imports-module-source")) &&
 						!(meta.negative && meta.negative.phase === "parse")) ||
 					knownBugs.includes(name) ||
-					(mode === "production" && knownProductionBuildBugs.includes(name))
+					(mode === "production" &&
+						deliberateProductionDivergences.includes(name))
 				) {
 					// eslint-disable-next-line jest/no-disabled-tests
 					it.skip(name, () => {});
