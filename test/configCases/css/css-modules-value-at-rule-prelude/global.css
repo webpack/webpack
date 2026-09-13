@@ -1,0 +1,18 @@
+@value animName: globalPulse;
+@value counterName: globalCounter;
+@value globalColor: rebeccapurple;
+
+.global-anim {
+	color: globalColor;
+	--animation-name: animName;
+}
+
+@keyframes animName {
+	from { opacity: 0; }
+}
+
+@counter-style counterName {
+	system: cyclic;
+	symbols: "%";
+	suffix: " ";
+}

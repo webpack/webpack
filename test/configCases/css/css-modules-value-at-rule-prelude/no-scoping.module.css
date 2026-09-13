@@ -1,0 +1,25 @@
+@value animName: unscopedPulse;
+@value counterName: unscopedCounter;
+@value containerName: unscopedContainer;
+
+.no-scoping-anim {
+	animation: animName 2s linear;
+	list-style: counterName;
+	container-name: containerName;
+}
+
+@keyframes animName {
+	from { opacity: 0; }
+}
+
+@counter-style counterName {
+	system: cyclic;
+	symbols: "#";
+	suffix: " ";
+}
+
+@container containerName (min-width: 400px) {
+	.no-scoping-in-container {
+		color: red;
+	}
+}

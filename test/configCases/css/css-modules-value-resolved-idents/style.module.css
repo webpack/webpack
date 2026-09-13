@@ -1,0 +1,53 @@
+@value themeColor: --theme-color;
+@value anchorValue: --my-anchor;
+@value timelineValue: --my-timeline;
+@value gridValue: my-grid;
+
+@property --theme-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: red;
+}
+
+.direct-var {
+	--theme-color: blue;
+	color: var(--theme-color);
+}
+
+.value-var {
+	color: var(themeColor);
+}
+
+.direct-anchor {
+	anchor-name: --my-anchor;
+}
+
+.value-anchor {
+	anchor-name: anchorValue;
+}
+
+.direct-timeline {
+	view-timeline-name: --my-timeline;
+}
+
+.value-timeline {
+	view-timeline-name: timelineValue;
+}
+
+.declare-grid-value {
+	grid-template-columns: [gridValue] 1fr;
+}
+
+.reference-grid-direct {
+	grid-row-start: my-grid;
+}
+
+@value importedGrid from "./values.module.css";
+
+.declare-imported-grid {
+	grid-template-columns: [importedGrid] 1fr;
+}
+
+.reference-imported-grid {
+	grid-row-start: importedGrid;
+}
