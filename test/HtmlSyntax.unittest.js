@@ -5440,8 +5440,9 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		expect(minify('<a href="?a=1&amp;b=2">t</a>')).toBe(
 			'<a href="?a=1&amp;b=2">t</a>'
 		);
-		// A bare value ends at `>`, so there the reference has to stay.
-		expect(minify("<p title=a&gt;b>t</p>")).toBe("<p title=a&gt;b>t");
+		// A bare value ends at `>`, so the value is quoted rather than the
+		// reference kept — one character shorter, and the same value.
+		expect(minify("<p title=a&gt;b>t</p>")).toBe('<p title="a>b">t');
 	});
 });
 
@@ -8115,10 +8116,10 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		});
 
 		it("keeps cloned attributes on the reconstructed element", () => {
-			// The reconstructed clone is synthesized, not sliced from source, and
-			// synthesized values always keep their quotes.
+			// The reconstructed clone is synthesized, not sliced from source, so
+			// there is no spelling to beat and the shortest one is written.
 			expect(minify('<b x="1"><p>x</b>y</p>')).toBe(
-				'<b x=1></b><p><b x="1">x</b>y'
+				"<b x=1></b><p><b x=1>x</b>y"
 			);
 		});
 
@@ -8134,18 +8135,18 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("escapes a quote-holding cloned attribute value safely", () => {
 			expect(minify("<b a='x\"y'><p>t</b>")).toBe(
-				'<b a=\'x"y\'></b><p><b a="x&quot;y">t</b>'
+				"<b a='x\"y'></b><p><b a='x\"y'>t</b>"
 			);
 		});
 
 		it("rebuilds renamed void tokens instead of dropping them", () => {
-			expect(minify('<image src="a&amp;b">')).toBe('<img src="a&amp;b">');
+			expect(minify('<image src="a&amp;b">')).toBe("<img src=a&amp;b>");
 			expect(minify("a</br>b")).toBe("a<br>b");
 		});
 
 		it("materializes an implied <body> once attributes merge onto it", () => {
 			expect(minify('<div>a</div><body class="x">')).toBe(
-				'<body class="x"><div>a</div></body>'
+				"<body class=x><div>a</div></body>"
 			);
 		});
 
