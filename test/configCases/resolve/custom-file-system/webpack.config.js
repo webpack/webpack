@@ -51,13 +51,8 @@ module.exports = {
 		{
 			apply(compiler) {
 				compiler.hooks.done.tap("TestPlugin", () => {
-					if (moduleCounter.calls === 0) {
-						throw new Error("resolve.fileSystem was not used");
-					}
-
-					if (loaderCounter.calls === 0) {
-						throw new Error("resolveLoader.fileSystem was not used");
-					}
+					expect(moduleCounter.calls).toBeGreaterThan(0);
+					expect(loaderCounter.calls).toBeGreaterThan(0);
 				});
 			}
 		}
