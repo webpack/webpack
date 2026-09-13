@@ -1,0 +1,11 @@
+"use strict";
+
+/** @type {import("../../../../").Configuration} */
+module.exports = {
+	mode: "production",
+	optimization: {
+		concatenateModules: false,
+		inlineExports: true,
+		minimize: false
+	}
+};

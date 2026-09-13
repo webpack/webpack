@@ -15306,9 +15306,14 @@ declare interface KnownBuildInfo {
 	topLevelDeclarations?: Set<string>;
 
 	/**
-	 * true when the module is part of a circular dependency chain
+	 * true when the module is in a synchronous circular dependency chain
 	 */
 	isCircular?: boolean;
+
+	/**
+	 * CircularKind bit flags from CircularModulesPlugin; unset when the plugin did not run
+	 */
+	circularKind?: number;
 
 	/**
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator

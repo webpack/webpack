@@ -4,8 +4,8 @@ const path = require("path");
 
 /** @import { Compiler, Module } from "../../" */
 
-// Asserts buildInfo.isCircular (set by CircularModulesPlugin) matches the
-// expected set of basename. Reads after optimizeModules, before concatenation,
+// Asserts buildInfo.isCircular (set in optimizeDependencies) matches the
+// expected set of basename. Reads afterOptimizeModules, before concatenation,
 // so original NormalModules are still present.
 /**
  * @param {Iterable<string>} expectedCircular expected circular module basename
