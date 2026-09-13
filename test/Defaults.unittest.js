@@ -1976,14 +1976,6 @@ describe("snapshots", () => {
 			-     "progress": false,
 			+     "progress": "auto",
 			@@ ... @@
-			-       "dynamicImport": undefined,
-			-       "dynamicImportInWorker": undefined,
-			+       "dynamicImport": true,
-			+       "dynamicImportInWorker": true,
-			@@ ... @@
-			-       "module": undefined,
-			+       "module": true,
-			@@ ... @@
 			-   "mode": "none",
 			+   "mode": "development",
 			@@ ... @@
@@ -1993,7 +1985,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -2006,9 +1998,7 @@ describe("snapshots", () => {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
 			+           },
-			@@ ... @@
-			+       },
-			+     ],
+			+         ],
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -2032,9 +2022,6 @@ describe("snapshots", () => {
 			+         "anonymousDefaultExportName": false,
 			@@ ... @@
 			+         "exportsPresence": "error",
-			@@ ... @@
-			-         "importMeta": true,
-			+         "importMeta": "preserve-unknown",
 			@@ ... @@
 			-         "strictModeViolations": "warn",
 			+         "strictModeViolations": "error",
@@ -2064,57 +2051,29 @@ describe("snapshots", () => {
 			+       "minRemainingSize": 0,
 			@@ ... @@
 			-     "charset": true,
-			-     "chunkFilename": "[name].js",
-			-     "chunkFormat": "array-push",
 			+     "charset": false,
-			+     "chunkFilename": "[name].mjs",
-			+     "chunkFormat": "module",
 			@@ ... @@
-			-     "chunkLoading": "jsonp",
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
-			+     "chunkLoading": "import",
 			+     "chunkLoadingGlobal": "webpackChunkmyLib",
 			@@ ... @@
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "myLib",
 			@@ ... @@
-			-       "jsonp",
-			-       "import-scripts",
-			+       "import",
 			+     ],
 			+     "enabledLibraryTypes": Array [
 			+       "var",
 			@@ ... @@
 			-     "enabledLibraryTypes": Array [],
 			@@ ... @@
-			-       "dynamicImport": undefined,
-			-       "dynamicImportInWorker": undefined,
-			+       "dynamicImport": true,
-			+       "dynamicImportInWorker": true,
-			@@ ... @@
-			-       "module": undefined,
-			+       "module": true,
-			@@ ... @@
-			-     "filename": "[name].js",
-			+     "filename": "[name].mjs",
-			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
-			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
-			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
 			+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
-			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
-			@@ ... @@
-			-     "iife": true,
-			+     "iife": false,
 			@@ ... @@
 			-     "library": undefined,
-			-     "module": false,
 			+     "library": Object {
 			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
@@ -2124,30 +2083,15 @@ describe("snapshots", () => {
 			+       "umdAmdContainer": undefined,
 			+       "umdNamedDefine": undefined,
 			+     },
-			+     "module": true,
 			@@ ... @@
 			-     "pathinfo": false,
 			+     "pathinfo": true,
-			@@ ... @@
-			-     "resourceHints": undefined,
-			-     "scriptType": false,
-			+     "resourceHints": Object {
-			+       "dedupe": false,
-			+       "initial": true,
-			+       "modulePreloadPolyfill": false,
-			+     },
-			+     "scriptType": "module",
 			@@ ... @@
 			-     "strictModuleResolution": false,
 			+     "strictModuleResolution": true,
 			@@ ... @@
 			-     "uniqueName": "webpack",
 			+     "uniqueName": "myLib",
-			@@ ... @@
-			-     "workerChunkFilename": "[name].js",
-			-     "workerChunkLoading": "import-scripts",
-			+     "workerChunkFilename": "[name].mjs",
-			+     "workerChunkLoading": "import",
 			@@ ... @@
 			-           "production",
 			+           "development",
@@ -6539,6 +6483,74 @@ describe("futureDefaults module output", () => {
 				mode: "none",
 				target: ["web", "es5"],
 				output: { module: true },
+				experiments: { futureDefaults: true }
+			}).output.module
+		).toBe(true);
+	});
+
+	it("should keep script output for a declared script library type", () => {
+		for (const library of [
+			{ type: /** @type {"var"} */ ("var"), name: "myLib" },
+			{ type: /** @type {"umd"} */ ("umd"), name: "myLib" },
+			{ type: /** @type {"commonjs2"} */ ("commonjs2") }
+		]) {
+			const config = getDefaultConfig({
+				mode: "none",
+				output: { library },
+				experiments: { futureDefaults: true }
+			});
+
+			expect(config.output.module).toBe(false);
+			expect(config.output.iife).toBe(true);
+		}
+	});
+
+	it("should keep script output for a library type declared by an entry", () => {
+		const config = getDefaultConfig({
+			mode: "none",
+			entry: {
+				main: { import: "./index.js", library: { type: "var", name: "myLib" } }
+			},
+			experiments: { futureDefaults: true }
+		});
+
+		expect(config.output.module).toBe(false);
+	});
+
+	it("should keep script output for a library type declared by a plugin", () => {
+		const webpack = require("..");
+
+		const compiler = webpack({
+			mode: "none",
+			entry: "./index.js",
+			experiments: { futureDefaults: true },
+			plugins: [
+				new webpack.container.ModuleFederationPlugin({
+					name: "container",
+					library: { type: "var", name: "container" },
+					exposes: { "./a": "./index.js" }
+				})
+			]
+		});
+
+		expect(compiler.options.output.module).toBe(false);
+	});
+
+	it("should still emit an ECMAScript module for a module library type", () => {
+		expect(
+			getDefaultConfig({
+				mode: "none",
+				output: { library: { type: "module" } },
+				experiments: { futureDefaults: true }
+			}).output.module
+		).toBe(true);
+	});
+
+	it("should let an explicit output.module win over a script library type", () => {
+		expect(
+			getDefaultConfig({
+				mode: "none",
+				output: { module: true, library: { type: "var", name: "myLib" } },
 				experiments: { futureDefaults: true }
 			}).output.module
 		).toBe(true);
