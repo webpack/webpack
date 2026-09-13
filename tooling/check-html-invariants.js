@@ -592,44 +592,15 @@ const wantedSpelling = filterFrom("SPELLING");
 /** @typedef {{ relation: string, what: string, repro: string }} Report */
 
 /**
- * Every invariant this document breaks under one preset.
+ * Every respelling this document's output depends on.
  * @param {(html: string) => string} minify the printer under test
  * @param {string} html the document
+ * @param {string} minified what it minifies to
  * @returns {Report[]} what moved, and the smallest repro found for each
  */
-const sweepDocument = (minify, html) => {
+const sweepRespellings = (minify, html, minified) => {
 	/** @type {Report[]} */
 	const reports = [];
-	/** @type {string} */
-	let minified;
-	try {
-		minified = minify(html);
-	} catch (error) {
-		return [
-			{
-				relation: "minify",
-				what: "threw",
-				repro: `    ${thrownText(error)}`
-			}
-		];
-	}
-	if (wantedRelation("idempotence")) {
-		const again = minify(minified);
-		if (again !== minified) {
-			const kind =
-				tokenStream(again) === tokenStream(minified) ? "bytes" : "differs";
-			const at = firstDifference(minified, again);
-			const repro = idempotenceRepro(minify, minified, at);
-			reports.push({
-				relation: "idempotence",
-				what: `${kind}, ${signed(again.length - minified.length)}`,
-				repro:
-					repro === null
-						? `    ${oneLine(minified.slice(at, at + 70), 70)}\n      -> ${oneLine(again.slice(at, at + 70), 70)}`
-						: `    ${oneLine(repro.source, 80)}\n      -> ${oneLine(repro.again, 80)}`
-			});
-		}
-	}
 	if (!wantedRelation("respelling")) return reports;
 	const sites = attributeSites(html);
 	for (const respelling of RESPELLINGS.filter((one) =>
@@ -669,6 +640,63 @@ const sweepDocument = (minify, html) => {
 };
 
 /**
+ * Every invariant this document breaks under one preset.
+ * @param {(html: string) => string} minify the printer under test
+ * @param {string} html the document
+ * @returns {Report[]} what moved, and the smallest repro found for each
+ */
+const sweepDocument = (minify, html) => {
+	/** @type {Report[]} */
+	const reports = [];
+	/** @type {string} */
+	let minified;
+	try {
+		minified = minify(html);
+	} catch (error) {
+		return [
+			{
+				relation: "minify",
+				what: "threw",
+				repro: `    ${thrownText(error)}`
+			}
+		];
+	}
+	if (wantedRelation("idempotence")) {
+		/** @type {string} */
+		let again;
+		try {
+			again = minify(minified);
+		} catch (error) {
+			// A printer that reads its own output back and throws is the strongest
+			// finding here, so it is reported rather than ending the sweep.
+			return [
+				{
+					relation: "idempotence",
+					what: "threw",
+					repro: `    ${thrownText(error)}`
+				},
+				...sweepRespellings(minify, html, minified)
+			];
+		}
+		if (again !== minified) {
+			const kind =
+				tokenStream(again) === tokenStream(minified) ? "bytes" : "differs";
+			const at = firstDifference(minified, again);
+			const repro = idempotenceRepro(minify, minified, at);
+			reports.push({
+				relation: "idempotence",
+				what: `${kind}, ${signed(again.length - minified.length)}`,
+				repro:
+					repro === null
+						? `    ${oneLine(minified.slice(at, at + 70), 70)}\n      -> ${oneLine(again.slice(at, at + 70), 70)}`
+						: `    ${oneLine(repro.source, 80)}\n      -> ${oneLine(repro.again, 80)}`
+			});
+		}
+	}
+	return [...reports, ...sweepRespellings(minify, html, minified)];
+};
+
+/**
  * The report, grouped by the repro rather than by the document: one printer
  * defect reaches hundreds of pages, and is one thing to fix.
  * @param {(text: string) => void} write receives the report
@@ -678,7 +706,7 @@ const main = (write) => {
 	const corpus = fixtures().filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
-	/** @type {Map<string, { report: Report, presets: Set<string>, documents: string[] }>} */
+	/** @type {Map<string, { report: Report, presets: Set<string>, documents: Set<string> }>} */
 	const groups = new Map();
 	for (const [label, html] of corpus) {
 		for (const [preset, options] of presets) {
@@ -693,24 +721,25 @@ const main = (write) => {
 					groups.set(key, {
 						report,
 						presets: new Set([preset]),
-						documents: [label]
+						documents: new Set([label])
 					});
 					continue;
 				}
 				group.presets.add(preset);
-				group.documents.push(label);
+				group.documents.add(label);
 			}
 		}
 	}
 	const ordered = [...groups.values()].sort(
-		(a, b) => b.documents.length - a.documents.length
+		(a, b) => b.documents.size - a.documents.size
 	);
 	for (const group of ordered) {
 		const { relation, what, repro } = group.report;
+		const documents = [...group.documents];
 		const reach =
-			group.documents.length === 1
-				? group.documents[0]
-				: `${group.documents.length} documents, from ${group.documents[0]}`;
+			documents.length === 1
+				? documents[0]
+				: `${documents.length} documents, from ${documents[0]}`;
 		write(
 			`\n${relation} — ${what}\n${repro}\n    [${[...group.presets].join(
 				", "

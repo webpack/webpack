@@ -148,6 +148,22 @@ describe("check-html-invariants", () => {
 			]);
 		});
 
+		it("reports a printer that throws on its own output", () => {
+			// The strongest finding there is, so it must be reported rather than end
+			// the sweep — and the respellings still answer, they never read pass two.
+			const minify = (/** @type {string} */ html) => {
+				if (html.includes("=1")) throw new Error("nope");
+				return html.replace('a="1"', "a=1");
+			};
+			const reports = sweepDocument(minify, '<input a="1">');
+			expect(reports[0]).toEqual({
+				relation: "idempotence",
+				what: "threw",
+				repro: "    nope"
+			});
+			expect(reports.length).toBeGreaterThan(1);
+		});
+
 		it("reports a second pass that only appends", () => {
 			// No character of the first output differs, so the difference is found
 			// past the end of it rather than inside a tag.
