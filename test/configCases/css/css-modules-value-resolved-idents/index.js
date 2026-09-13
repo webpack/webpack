@@ -65,3 +65,12 @@ it("should give a grid line named by a @value the same name as the direct spelli
 		declarationValue("reference-grid-direct", "grid-row-start")
 	);
 });
+
+it("should keep an imported @value's grid line consistent between the two spellings", () => {
+	// The defining module owns the name, so the line keeps the written suffix —
+	// what matters is that declaring and referencing it agree.
+	expect(gridLineName("declare-imported-grid")).toBe(
+		declarationValue("reference-imported-grid", "grid-row-start")
+	);
+	expect(gridLineName("declare-imported-grid")).toMatch(/^imported-grid-line-/);
+});

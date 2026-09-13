@@ -41,3 +41,13 @@
 .reference-grid-direct {
 	grid-row-start: my-grid;
 }
+
+@value importedGrid from "./values.module.css";
+
+.declare-imported-grid {
+	grid-template-columns: [importedGrid] 1fr;
+}
+
+.reference-imported-grid {
+	grid-row-start: importedGrid;
+}
