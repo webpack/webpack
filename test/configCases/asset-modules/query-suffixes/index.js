@@ -6,6 +6,16 @@ import pngInline from "../_images/file.png?inline";
 import svgNoInline from "../_images/file.svg?no-inline";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+// ESM output resolves an `auto` public path against `import.meta.url`, so the
+// emitted filename arrives as a file url rather than relative to the output path.
+const assetPath = (url) => {
+	const file = url.split("?")[0];
+	return file.startsWith("file:")
+		? fileURLToPath(file)
+		: path.join(__STATS__.outputPath, file);
+};
 
 it("should map ?raw to asset/source", () => {
 	expect(raw).toBe("hello from raw.txt\n");
@@ -13,9 +23,7 @@ it("should map ?raw to asset/source", () => {
 
 it("should map ?url to an emitted asset/resource", () => {
 	expect(pngUrl.startsWith("data:")).toBe(false);
-	// The emitted filename keeps the query, so drop it to find the file.
-	const file = pngUrl.split("?")[0];
-	expect(fs.existsSync(path.join(__STATS__.outputPath, file))).toBe(true);
+	expect(fs.existsSync(assetPath(pngUrl))).toBe(true);
 });
 
 it("should map ?inline to a data URI even above the inline threshold", () => {
@@ -24,6 +32,5 @@ it("should map ?inline to a data URI even above the inline threshold", () => {
 
 it("should map ?no-inline to an emitted file even below the threshold", () => {
 	expect(svgNoInline.startsWith("data:")).toBe(false);
-	const file = svgNoInline.split("?")[0];
-	expect(fs.existsSync(path.join(__STATS__.outputPath, file))).toBe(true);
+	expect(fs.existsSync(assetPath(svgNoInline))).toBe(true);
 });

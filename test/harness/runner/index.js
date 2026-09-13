@@ -31,6 +31,53 @@ const isModuleLibraryType = (type) =>
 	type === "module" || type === "modern-module";
 
 /**
+ * Every library type a config states, wherever it was declared — the runner reads
+ * the config as written, so it has to look everywhere the defaults look.
+ * @param {EXPECTED_ANY} webpackOptions webpack options
+ * @returns {string[]} the declared library types
+ */
+const declaredLibraryTypes = (webpackOptions) => {
+	const output = webpackOptions.output || {};
+	/** @type {string[]} */
+	const types = [];
+	if (output.libraryTarget) types.push(output.libraryTarget);
+	if (output.library && output.library.type) types.push(output.library.type);
+	// `"..."` is the extend placeholder the defaults resolve, never a type of its own.
+	if (output.enabledLibraryTypes) {
+		for (const type of output.enabledLibraryTypes) {
+			if (type !== "...") types.push(type);
+		}
+	}
+	const { entry } = webpackOptions;
+	if (entry && typeof entry === "object" && !Array.isArray(entry)) {
+		for (const name of Object.keys(entry)) {
+			const description = entry[name];
+			if (description && description.library && description.library.type) {
+				types.push(description.library.type);
+			}
+		}
+	}
+	return types;
+};
+
+/**
+ * Resolves the target properties of a config as written, so the runner can read
+ * the same answer `lib/config/defaults.js` reads when a default consults them.
+ * @param {EXPECTED_ANY} webpackOptions webpack options
+ * @returns {import("../../../lib/config/target").TargetProperties | false} target properties, or false without a target
+ */
+const resolveTargetProperties = (webpackOptions) => {
+	const { context, target } = webpackOptions;
+	if (target === false || target === undefined) return false;
+	return typeof target === "string"
+		? getTargetProperties(target, /** @type {string} */ (context))
+		: getTargetsProperties(
+				/** @type {string[]} */ (target),
+				/** @type {string} */ (context)
+			);
+};
+
+/**
  * @typedef {object} TestMeta
  * @property {string} category
  * @property {string} name
@@ -128,26 +175,20 @@ class TestRunner {
 	static isModuleOutput(webpackOptions) {
 		const output = webpackOptions.output || {};
 		if (output.module) return true;
-		if (isModuleLibraryType(output.libraryTarget)) return true;
-		if (output.library && isModuleLibraryType(output.library.type)) return true;
+		const libraryTypes = declaredLibraryTypes(webpackOptions);
+		if (libraryTypes.some(isModuleLibraryType)) return true;
+		// `futureDefaults` emits ESM wherever the target reads one, unless a library
+		// type says the output is read out of a script
+		const { experiments } = webpackOptions;
 		if (
-			output.enabledLibraryTypes &&
-			output.enabledLibraryTypes.some(isModuleLibraryType)
+			experiments &&
+			experiments.futureDefaults &&
+			!libraryTypes.some((type) => !isModuleLibraryType(type))
 		) {
-			return true;
+			const targetProperties = resolveTargetProperties(webpackOptions);
+			if (targetProperties && targetProperties.module !== false) return true;
 		}
-		const { entry } = webpackOptions;
-		if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
-			return false;
-		}
-		return Object.keys(entry).some((name) => {
-			const description = entry[name];
-			return Boolean(
-				description &&
-				description.library &&
-				isModuleLibraryType(description.library.type)
-			);
-		});
+		return false;
 	}
 
 	/**
@@ -159,26 +200,15 @@ class TestRunner {
 	 * @returns {boolean} whether target is universal
 	 */
 	static isUniversalTarget(webpackOptions) {
-		const outputModule = webpackOptions.output && webpackOptions.output.module;
-		const target = webpackOptions.target;
-
-		const targetProperties =
-			target === false
-				? /** @type {false} */ (false)
-				: typeof target === "string"
-					? getTargetProperties(
-							target,
-							/** @type {string} */ (webpackOptions.context)
-						)
-					: getTargetsProperties(
-							/** @type {string[]} */ (target),
-							/** @type {string} */ (webpackOptions.context)
-						);
 		const props =
-			/** @type {import("../../../lib/config/target").TargetProperties} */ (
-				targetProperties
-			);
-		return outputModule && props.node === null && props.web === null;
+			/** @type {import("../../../lib/config/target").TargetProperties} */
+			(resolveTargetProperties(webpackOptions));
+		return Boolean(
+			TestRunner.isModuleOutput(webpackOptions) &&
+			props &&
+			props.node === null &&
+			props.web === null
+		);
 	}
 
 	/**
