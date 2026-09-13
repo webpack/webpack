@@ -30632,6 +30632,7 @@ declare namespace exports {
 		export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
 		export let hasFetchPriority: "has fetch priority";
+		export let hasChunkPriority: "has chunk priority";
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hasSealedDeferredNamespace: "has sealed deferred namespace";
 		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
