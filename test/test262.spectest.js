@@ -226,7 +226,10 @@ const knownHostBugs = [
 	"statements/with/set-mutable-binding-binding-deleted-with-typed-array-in-proto-chain-strict-mode.js",
 	"statements/with/set-mutable-binding-idref-compound-assign-with-proxy-env.js",
 	"statements/with/set-mutable-binding-idref-with-proxy-env.js",
-	"statements/with/unscopables-inc-dec.js"
+	"statements/with/unscopables-inc-dec.js",
+	// `super[x]` must read the this binding before evaluating `x`, so the
+	// `super()` in the index of a `delete` must not run. V8 evaluates it.
+	"expressions/delete/super-property-uninitialized-this.js"
 ];
 /* cspell:enable */
 
@@ -935,9 +938,6 @@ const knownBugs = [
 	// global object and bare identifiers are scoped to the wrapper.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
-	// webpack emits `delete super[(super(), 0)]` unchanged, so the order the
-	// index and the this-binding check run in is the engine's to fix.
-	"expressions/delete/super-property-uninitialized-this.js",
 
 	// The file imports itself, so the entry script and the module it loads are
 	// one bundled module, evaluated once where the spec evaluates it twice.
