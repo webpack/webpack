@@ -175,7 +175,13 @@ const compress = async (buffer) => ({
 const kb = (bytes) =>
 	bytes === undefined ? "-" : `${(bytes / 1024).toFixed(1)} KB`;
 
-/** @typedef {{ code: string | undefined, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
+/**
+ * What a printer made of its own output: `stable` where the second pass wrote
+ * the first back, and what it threw where reading its own output failed.
+ * @typedef {{ stable: boolean, delta: number, error?: string }} SecondPass
+ */
+
+/** @typedef {{ code: string | undefined, second: SecondPass | undefined, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
 
 // Held across the timing loop so a parse whose tree is never read cannot be
 // taken for dead code.
@@ -197,6 +203,34 @@ const peakResidentKilobytes = () => {
 		// Not Linux; the platform's own accounting is all there is.
 	}
 	return process.resourceUsage().maxRSS;
+};
+
+/**
+ * @param {EXPECTED_ANY} error what a tool threw, which can be any value
+ * @returns {string} the first line of what it says
+ */
+const thrownText = (error) => {
+	const said =
+		error && /** @type {Error} */ (error).message
+			? /** @type {Error} */ (error).message
+			: error;
+	return String(said).split("\n", 1)[0];
+};
+
+/**
+ * What a printer makes of its own output. A printer that is done printing
+ * writes it back unchanged, so anything else is work a build repeats forever.
+ * @param {(source: string) => EXPECTED_ANY} call the tool
+ * @param {string} code what it printed
+ * @returns {Promise<SecondPass>} what the second pass made of it
+ */
+const secondPass = async (call, code) => {
+	try {
+		const again = String(await call(code));
+		return { stable: again === code, delta: again.length - code.length };
+	} catch (error) {
+		return { stable: false, delta: 0, error: thrownText(error) };
+	}
 };
 
 /**
@@ -242,15 +276,15 @@ const measure = async (tools) => {
 		// A parse hands back a tree, which is measured but never reported; the two
 		// printing stages must hand back the text they wrote.
 		const code = stage === "parse" ? undefined : String(sink);
-		report = { code, wall, cpu, peak: peakResidentKilobytes() };
-	} catch (error) {
 		report = {
-			error: String(
-				error && /** @type {Error} */ (error).message
-					? /** @type {Error} */ (error).message
-					: error
-			).split("\n", 1)[0]
+			code,
+			second: code === undefined ? undefined : await secondPass(call, code),
+			wall,
+			cpu,
+			peak: peakResidentKilobytes()
 		};
+	} catch (error) {
+		report = { error: thrownText(error) };
 	}
 	process.stdout.write(JSON.stringify(report));
 };
@@ -318,17 +352,271 @@ const filterFrom = (variable) => {
 	return (value) => value.toLowerCase().includes(lowered);
 };
 
+/**
+ * The second-pass cell. A printer nothing is left to do to writes its own
+ * output back, so "-" is the answer every row should carry.
+ * @param {SecondPass | undefined} second what the second pass made of it
+ * @returns {string} the cell
+ */
+const formatSecond = (second) => {
+	if (second === undefined) return "-";
+	if (second.error !== undefined) return "threw";
+	if (second.stable) return "-";
+	return second.delta === 0 ? "moved" : signed(second.delta);
+};
+
+// What a comparison cannot see, because being a few bytes off its own best is
+// not being worse than another tool: an output that moves when nothing moved.
+
+/**
+ * A finding: which relation broke, what it did, and the smallest input found
+ * that shows it.
+ * @typedef {{ relation: string, what: string, repro: string }} Report
+ */
+
+/**
+ * @param {number} delta a byte difference
+ * @returns {string} it signed
+ */
+const signed = (delta) => `${delta > 0 ? "+" : ""}${delta} B`;
+
+/**
+ * @param {string} text any text
+ * @param {number} limit how much of it to keep
+ * @returns {string} it on one line, cut to the limit
+ */
+const oneLine = (text, limit) => {
+	let shown = "";
+	for (const character of text) {
+		const code = /** @type {number} */ (character.codePointAt(0));
+		// Tab, LF, FF and CR are left to the whitespace collapse below; every
+		// other control character is shown, since holding one is some findings.
+		shown +=
+			code > 0x1f ||
+			code === 0x9 ||
+			code === 0xa ||
+			code === 0xc ||
+			code === 0xd
+				? character
+				: `\\x${code.toString(16).padStart(2, "0")}`;
+	}
+	const flat = shown.replace(/\s+/g, " ").trim();
+	return flat.length > limit ? `${flat.slice(0, limit - 1)}…` : flat;
+};
+
+/**
+ * @param {string} before one text
+ * @param {string} after another
+ * @returns {number} the first index they differ at
+ */
+const firstDifference = (before, after) => {
+	const shortest = Math.min(before.length, after.length);
+	for (let i = 0; i < shortest; i++) {
+		if (before.charCodeAt(i) !== after.charCodeAt(i)) return i;
+	}
+	return shortest;
+};
+
+// Each bisection step prints the whole source twice, so a page carrying
+// thousands of sites stops shrinking rather than holding up the report.
+const SHRINK_BUDGET = 40;
+
+/**
+ * Bisect a finding down to the sites that carry it. Where neither half keeps it
+ * the sites interact, and what is left stands as the report's repro.
+ * @template S
+ * @template {{ kind: string }} F
+ * @param {(sites: S[]) => F | null} holds whether a subset still shows it
+ * @param {S[]} sites every mutated site
+ * @param {string} kind the kind to keep
+ * @returns {S[]} the smallest subset found
+ */
+const shrink = (holds, sites, kind) => {
+	let current = sites;
+	let budget = SHRINK_BUDGET;
+	while (current.length > 1 && budget > 0) {
+		const half = Math.ceil(current.length / 2);
+		const left = current.slice(0, half);
+		const right = current.slice(half);
+		budget -= 2;
+		const keptLeft = holds(left);
+		if (keptLeft !== null && keptLeft.kind === kind) {
+			current = left;
+			continue;
+		}
+		const keptRight = holds(right);
+		if (keptRight !== null && keptRight.kind === kind) {
+			current = right;
+			continue;
+		}
+		break;
+	}
+	return current;
+};
+
+/**
+ * Whether printing an already-printed source changes it. A printer that is done
+ * is done, so a second pass that moves is work every build repeats.
+ * @param {object} options what to hold to the relation
+ * @param {(source: string) => string} options.minify the printer under test
+ * @param {string} options.source the input
+ * @param {(text: string) => string} options.says what a text says, as a digest
+ * @param {((printed: string, at: number) => { source: string, again: string } | null)=} options.repro cuts the difference down to what reproduces it
+ * @returns {{ printed: string | null, reports: Report[] }} what it printed, and what moved
+ */
+const idempotence = ({ minify, source, says, repro }) => {
+	/** @type {string} */
+	let printed;
+	try {
+		printed = minify(source);
+	} catch (error) {
+		return {
+			printed: null,
+			reports: [
+				{ relation: "minify", what: "threw", repro: `    ${thrownText(error)}` }
+			]
+		};
+	}
+	/** @type {string} */
+	let again;
+	try {
+		again = minify(printed);
+	} catch (error) {
+		// A printer that reads its own output back and throws is the strongest
+		// finding there is, so it is reported rather than ending the sweep.
+		return {
+			printed,
+			reports: [
+				{
+					relation: "idempotence",
+					what: "threw",
+					repro: `    ${thrownText(error)}`
+				}
+			]
+		};
+	}
+	if (again === printed) return { printed, reports: [] };
+	const kind = says(again) === says(printed) ? "bytes" : "differs";
+	const at = firstDifference(printed, again);
+	const cut = repro === undefined ? null : repro(printed, at);
+	return {
+		printed,
+		reports: [
+			{
+				relation: "idempotence",
+				what: `${kind}, ${signed(again.length - printed.length)}`,
+				repro:
+					cut === null
+						? `    ${oneLine(printed.slice(at, at + 70), 70)}\n      -> ${oneLine(again.slice(at, at + 70), 70)}`
+						: `    ${oneLine(cut.source, 80)}\n      -> ${oneLine(cut.again, 80)}`
+			}
+		]
+	};
+};
+
+/**
+ * Findings gathered by the repro rather than by the source: one printer defect
+ * reaches hundreds of files, and is one thing to fix.
+ * @returns {{ add: (report: Report, preset: string, label: string) => void, write: (out: (text: string) => void) => number }} the collector
+ */
+const findingGroups = () => {
+	/** @type {Map<string, { report: Report, presets: Set<string>, sources: Set<string> }>} */
+	const groups = new Map();
+	return {
+		/**
+		 * @param {Report} report one finding
+		 * @param {string} preset which option set found it
+		 * @param {string} label which source it was found in
+		 */
+		add(report, preset, label) {
+			const key = JSON.stringify([report.relation, report.what, report.repro]);
+			const group = groups.get(key);
+			if (group === undefined) {
+				groups.set(key, {
+					report,
+					presets: new Set([preset]),
+					sources: new Set([label])
+				});
+				return;
+			}
+			group.presets.add(preset);
+			group.sources.add(label);
+		},
+		/**
+		 * @param {(text: string) => void} out receives the report
+		 * @returns {number} how many distinct findings it named
+		 */
+		write(out) {
+			const ordered = [...groups.values()].sort(
+				(a, b) => b.sources.size - a.sources.size
+			);
+			for (const group of ordered) {
+				const { relation, what, repro } = group.report;
+				const sources = [...group.sources];
+				const reach =
+					sources.length === 1
+						? sources[0]
+						: `${sources.length} sources, from ${sources[0]}`;
+				out(
+					`\n${relation} — ${what}\n${repro}\n    [${[...group.presets].join(
+						", "
+					)}] ${reach}\n`
+				);
+			}
+			return ordered.length;
+		}
+	};
+};
+
+/**
+ * Every file of one extension below a directory, skipping the directories a
+ * sweep has no business walking.
+ * @param {string} dir directory to walk
+ * @param {string} extension file extension including the dot
+ * @param {Set<string>} skipped directory names to leave alone
+ * @returns {string[]} sorted paths
+ */
+const collectFiles = (dir, extension, skipped) => {
+	/** @type {string[]} */
+	const files = [];
+	/**
+	 * @param {string} current directory to read
+	 * @returns {void}
+	 */
+	const walk = (current) => {
+		for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+			if (entry.isDirectory()) {
+				if (skipped.has(entry.name)) continue;
+				walk(path.join(current, entry.name));
+			} else if (entry.name.endsWith(extension)) {
+				files.push(path.join(current, entry.name));
+			}
+		}
+	};
+	walk(dir);
+	return files.sort();
+};
+
 module.exports = {
 	STAGES,
+	collectFiles,
 	compress,
 	exists,
 	filterFrom,
+	findingGroups,
+	firstDifference,
 	formatCost,
+	formatSecond,
+	idempotence,
 	installPackages,
 	kb,
 	loaderFor,
 	log,
 	measure,
 	measureInWorker,
-	run
+	oneLine,
+	run,
+	shrink,
+	signed,
+	thrownText
 };
