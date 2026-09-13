@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-text-ending-in-tag-open minimize-text-ending-in-tag-open should compile 1`] = `
+"<!doctype html><head><title>text ending in tag open</title></head><body>
+<iframe srcdoc=\\"<div>a&amp;lt;/</div>\\"></iframe>
+<div>b&lt;/</div></body></html>"
+`;
