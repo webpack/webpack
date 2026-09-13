@@ -208,7 +208,7 @@ externals1__WEBPACK_IMPORTED_MODULE_1__.a;
 externals2__WEBPACK_IMPORTED_MODULE_2__[\\"default\\"];
 externals3__WEBPACK_IMPORTED_MODULE_3__;
 const __webpack_exports__HomeLayout = __webpack_exports__.m;
-const __webpack_exports__a = __webpack_exports__.a;
-export { __webpack_exports__HomeLayout as HomeLayout, __webpack_exports__a as a };
+export { a as a } from \\"externals0\\";
+export { __webpack_exports__HomeLayout as HomeLayout };
 "
 `;
