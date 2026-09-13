@@ -20,7 +20,7 @@ function expectScriptOutput() {
 }
 
 /**
- * @param {import("../../../../").LibraryType} type library type declared on `output`
+ * @param {import("../../../../declarations/WebpackOptions").LibraryType} type library type declared on `output`
  * @returns {Configuration} configuration
  */
 const outputLibrary = (type) => ({
