@@ -9,7 +9,8 @@ const ESCAPED_SPECIFIERS = [
 	/import\s*\*\s*as\s+\S+\s*from\s*"separator\\u2028module"/,
 	/import\s*\*\s*as\s+\S+\s*from\s*"paragraph\\u2029module"/,
 	/export\s*\*\s*from\s*"separator\\u2028module"/,
-	/export\s*\*\s*from\s*"paragraph\\u2029module"/
+	/export\s*\*\s*from\s*"paragraph\\u2029module"/,
+	/export\s*\{[^}]*\}\s*from\s*"separator\\u2028module"/
 ];
 
 module.exports = {
