@@ -25738,6 +25738,14 @@ declare class RuntimeModule extends Module {
 	attach(compilation: Compilation, chunk: Chunk, chunkGraph?: ChunkGraph): void;
 
 	/**
+	 * The `[handlerMap, key]` pairs this module installs onto a chunk handler map
+	 * such as `__webpack_require__.f` — `null` where it installs one it cannot name,
+	 * and `undefined` where it says nothing and its code is read instead. Stating it
+	 * spares that read, which for a module keyed on a hash means rendering it twice.
+	 */
+	getInstalledChunkHandlers(): undefined | null | [string, string][];
+
+	/**
 	 * Generates runtime code for this runtime module.
 	 */
 	generate(): null | string;
