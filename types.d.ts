@@ -5760,6 +5760,11 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	};
 
 	/**
+	 * The answer a runtime module gives when it installs no chunk handler at all
+	 */
+	static NO_CHUNK_HANDLERS: [string, string][];
+
+	/**
 	 * Runtime modules without any dependencies to other runtime modules
 	 */
 	static STAGE_NORMAL: number;
@@ -9941,6 +9946,11 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		| false
 		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	allChunks: boolean;
+
+	/**
+	 * The answer a runtime module gives when it installs no chunk handler at all
+	 */
+	static NO_CHUNK_HANDLERS: [string, string][];
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -15145,6 +15155,11 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	) => JsonpCompilationPluginHooks;
 
 	/**
+	 * The answer a runtime module gives when it installs no chunk handler at all
+	 */
+	static NO_CHUNK_HANDLERS: [string, string][];
+
+	/**
 	 * Runtime modules without any dependencies to other runtime modules
 	 */
 	static STAGE_NORMAL: number;
@@ -16356,6 +16371,11 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	) => LoadScriptCompilationHooks;
 
 	/**
+	 * The answer a runtime module gives when it installs no chunk handler at all
+	 */
+	static NO_CHUNK_HANDLERS: [string, string][];
+
+	/**
 	 * Runtime modules without any dependencies to other runtime modules
 	 */
 	static STAGE_NORMAL: number;
@@ -17550,6 +17570,11 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 		 */
 		linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
 	};
+
+	/**
+	 * The answer a runtime module gives when it installs no chunk handler at all
+	 */
+	static NO_CHUNK_HANDLERS: [string, string][];
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -25739,11 +25764,9 @@ declare class RuntimeModule extends Module {
 
 	/**
 	 * The `[handlerMap, key]` pairs this module installs onto a chunk handler map
-	 * such as `__webpack_require__.f` — `null` where it installs one it cannot name,
-	 * and `undefined` where it says nothing and its code is read instead. Stating it
-	 * spares that read, which for a module keyed on a hash means rendering it twice.
+	 * such as `__webpack_require__.f`, or `null` where it cannot name them.
 	 */
-	getInstalledChunkHandlers(): undefined | null | [string, string][];
+	getInstalledChunkHandlers(): null | [string, string][];
 
 	/**
 	 * Generates runtime code for this runtime module.
@@ -25761,6 +25784,11 @@ declare class RuntimeModule extends Module {
 	 * so a following runtime IIFE is not parsed as a call (ASI).
 	 */
 	shouldIsolate(): boolean;
+
+	/**
+	 * The answer a runtime module gives when it installs no chunk handler at all
+	 */
+	static NO_CHUNK_HANDLERS: [string, string][];
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
