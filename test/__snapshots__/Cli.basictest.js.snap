@@ -1569,13 +1569,13 @@ Object {
   "module-expr-context-critical": Object {
     "configs": Array [
       Object {
-        "description": "Enable warnings for full dynamic dependencies.",
+        "description": "Enable warnings for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextCritical'.",
         "multiple": false,
         "path": "module.exprContextCritical",
         "type": "boolean",
       },
     ],
-    "description": "Enable warnings for full dynamic dependencies.",
+    "description": "Enable warnings for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextCritical'.",
     "multiple": false,
     "simpleType": "boolean",
   },

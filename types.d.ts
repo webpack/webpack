@@ -18348,7 +18348,7 @@ declare interface ModuleOptions {
 	defaultRules?: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
-	 * Enable warnings for full dynamic dependencies.
+	 * Enable warnings for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextCritical'.
 	 * @deprecated
 	 */
 	exprContextCritical?: boolean;
