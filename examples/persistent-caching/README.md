@@ -62,9 +62,9 @@ module.exports = config;
 
 ```
 asset output.js 3.68 MiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 2.29 MiB (javascript) 1.23 KiB (runtime) [entry]
+chunk (runtime: main) output.js (main) 2.3 MiB (javascript) 1.23 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.29 MiB (javascript) 1.23 KiB (runtime) [cached] 1537 modules
+  cached modules 2.3 MiB (javascript) 1.23 KiB (runtime) [cached] 1537 modules
 webpack X.X.X compiled successfully
 ```
 

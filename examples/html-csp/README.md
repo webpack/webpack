@@ -158,9 +158,8 @@ console.log("bundled + inlined script, covered by a CSP hash");
 ## Unoptimized
 
 ```
-asset index.js 2.64 KiB [emitted] (name: index)
 asset index.html 1.59 KiB [emitted] (auxiliary name: index)
-Entrypoint index 2.64 KiB (1.59 KiB) = index.js 1 auxiliary asset
+Entrypoint index (1.59 KiB) = 1 auxiliary asset
 Entrypoint __html_6d047296_1 =
 Entrypoint __html_6d047296_0 =
 chunk (runtime: __html_6d047296_0) (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
@@ -175,10 +174,10 @@ chunk (runtime: __html_6d047296_1) (__html_6d047296_1) 117 bytes [entry] [render
   ./src/app.js 117 bytes [built] [code generated]
     [used exports unknown]
     entry ./app.js __html_6d047296_1
-chunk (runtime: index) index.js (index) 47 bytes (css-text) 559 bytes (javascript) 549 bytes (html) [entry] [rendered]
+chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 47 bytes [dependent] 1 module
-  ./src/index.html 559 bytes (javascript) 549 bytes (html) [built] [code generated]
+  ./src/index.html 549 bytes [built] [code generated]
     [exports: default]
     [used exports unknown]
     entry ./src/index.html index
@@ -189,19 +188,18 @@ webpack X.X.X compiled successfully
 
 ```
 asset index.html 570 bytes [emitted] [minimized] (auxiliary name: index)
-asset index.js 428 bytes [emitted] [minimized] (name: index)
-asset __html_6d047296_0.css 40 bytes [emitted] [minimized] (name: __html_6d047296_0)
-Entrypoint index 428 bytes (570 bytes) = index.js 1 auxiliary asset
+asset index.css 40 bytes [emitted] [minimized] (name: __html_6d047296_0)
+Entrypoint index (570 bytes) = 1 auxiliary asset
 Entrypoint __html_6d047296_1 =
-Entrypoint __html_6d047296_0 40 bytes = __html_6d047296_0.css
-chunk (runtime: index) index.js (index) 47 bytes (css-text) 559 bytes (javascript) 549 bytes (html) [entry] [rendered]
+Entrypoint __html_6d047296_0 40 bytes = index.css
+chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 47 bytes [dependent] 1 module
-  ./src/index.html 559 bytes (javascript) 549 bytes (html) [built] [code generated]
+  ./src/index.html 549 bytes [built] [code generated]
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_0) index.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 55 bytes [built] [code generated]

@@ -380,7 +380,7 @@ const Login = () => {
 ## Unoptimized
 
 ```
-asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 91.4 KiB [emitted] (id hint: vendors)
+asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 95.1 KiB [emitted] (id hint: vendors)
 asset output.js 11.2 KiB [emitted] (name: main)
 asset pages_Dashboard_js.output.js 7.42 KiB [emitted]
 asset pages_Login_js.output.js 7.4 KiB [emitted]
@@ -407,12 +407,12 @@ chunk (runtime: main) pages_Login_js.output.js 1.27 KiB [rendered]
     [exports: default]
     import() context element ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
     import() context element ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
-chunk (runtime: main) vendors-node_modules_react_jsx-dev-runtime_js.output.js (id hint: vendors) 75.5 KiB [rendered] split chunk (cache group: defaultVendors)
+chunk (runtime: main) vendors-node_modules_react_jsx-dev-runtime_js.output.js (id hint: vendors) 78.5 KiB [rendered] split chunk (cache group: defaultVendors)
   > ./Dashboard ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard
   > ./Dashboard.js ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard.js
   > ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
   > ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
-  dependent modules 75.3 KiB [dependent] 5 modules
+  dependent modules 78.3 KiB [dependent] 5 modules
   ../../node_modules/react/jsx-dev-runtime.js 218 bytes [built] [code generated]
     [exports: Fragment, jsxDEV]
     [all exports used]
