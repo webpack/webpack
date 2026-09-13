@@ -16,6 +16,9 @@
 // The two printing tables add what the output weighs and whether the DOM it
 // parses back to still says what the input's did.
 
+// The run opens with the invariants webpack's own printer owes its output,
+// which need no install; `--invariants` prints that section and stops.
+
 // `FIXTURE=`, `TOOL=` and `STAGE=` narrow the run to rows whose name contains
 // what they name, so one cell is re-measured without the whole matrix.
 
@@ -1322,6 +1325,12 @@ const invariantFixtures = () => {
 		]);
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
+	// The shapes the comparison builds rather than installs, at a size the
+	// bisection can still cut down: what they carry is the shape, not the bulk.
+	out.push(["Component library page", componentPage(8)]);
+	out.push(["Table report", tablePage(10)]);
+	out.push(["Tag soup", TAG_SOUP]);
+	out.push(["Web components", WEB_COMPONENTS]);
 	for (const [label, file] of INSTALLED_DOCUMENTS) {
 		const full = path.join(MODULES, file);
 		if (fs.existsSync(full)) out.push([label, fs.readFileSync(full, "utf8")]);
@@ -1357,7 +1366,22 @@ const invariants = (write) => {
 	return groups.write(write);
 };
 
+/**
+ * The sweep as a section of the comparison's own report, so a run that asks
+ * what the output costs is told what it owes as well.
+ * @returns {number} how many distinct findings it named
+ */
+const reportInvariants = () => {
+	process.stdout.write("\ninvariants — what the printer owes its own output\n");
+	const found = invariants((text) => process.stdout.write(text));
+	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
+	return found;
+};
+
 const main = async () => {
+	// Before the install: the relations are webpack's own, so they answer in
+	// seconds whether or not there is anything to compare against yet.
+	reportInvariants();
 	await setup();
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
 	for (const [label, html] of (await fixtures()).filter(([name]) =>
@@ -1450,12 +1474,12 @@ if (require.main === module) {
 	// `--setup` installs the fixtures and builds nothing else, so a consumer
 	// that only reads them does not run the comparison to get them.
 	const mode = process.argv[2];
+	// The sweep alone, for a caller that wants the relations without the ten
+	// minutes the comparison costs; a full run prints the same section.
 	if (mode === "--invariants") {
-		const found = invariants((text) => process.stdout.write(text));
-		log(`\n${found} finding${found === 1 ? "" : "s"}`);
 		// Non-zero while any finding stands, and findings stand today: read it
 		// rather than gating on it until they are gone.
-		process.exitCode = found > 0 ? 1 : 0;
+		process.exitCode = reportInvariants() > 0 ? 1 : 0;
 	} else {
 		const started =
 			mode === "--measure"
