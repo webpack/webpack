@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-attributes-by-value minimize-attributes-by-value should compile 1`] = `
+"<!doctype html><head><title>attributes by value</title></head><body>
+<form method=get action=a><button type=submit formmethod=post>s</button></form>
+<input type=text inputmode=numeric checked disabled>
+<img src=51b834b7c1ef0b59ea50.png crossorigin=anonymous decoding=async>
+<div contenteditable=true draggable=true spellcheck=true>x</div>
+<input value=&>
+<img c=f>
+<div class>y</div>
+<track kind=subtitles src=5a6ee533be65928cb355.vtt>
+
+
+</body></html>"
+`;

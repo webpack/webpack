@@ -26,6 +26,7 @@ test/configCases/html/webmanifest-icons/** eol=lf
 test/configCases/html/webmanifest-build-http/** eol=lf
 test/configCases/html/webmanifest-parsing/** eol=lf
 test/configCases/html/minimize-attributes/** eol=lf
+test/configCases/html/minimize-attributes-by-value/** eol=lf
 test/configCases/html/minimize-integrity/** eol=lf
 test/configCases/html/minimize-transforms/** eol=lf
 test/configCases/html/minimize-round-trip/** eol=lf
