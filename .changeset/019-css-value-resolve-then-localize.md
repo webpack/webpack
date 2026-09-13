@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Resolve a `@value` once and then localize it, in at-rule preludes and selectors.
+Resolve a `@value` once and then localize it, wherever it names an identifier.
