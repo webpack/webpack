@@ -1852,7 +1852,7 @@ export interface ModuleOptions {
 	defaultRules?: RuleSetRules;
 	/**
 	 * @deprecated
-	 * Enable warnings for full dynamic dependencies.
+	 * Enable warnings for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextCritical'.
 	 */
 	exprContextCritical?: boolean;
 	/**
