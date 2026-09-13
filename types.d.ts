@@ -9001,6 +9001,12 @@ declare class ExternalModule extends Module {
 		normalModuleFactory: NormalModuleFactory
 	): void;
 	canBeWrappedInConcatenation(): boolean;
+
+	/**
+	 * The request this external resolves to for its own type, with the record form
+	 * narrowed to its entry. An array is a module specifier plus a property path.
+	 */
+	getResolvedRequest(): undefined | string | string[];
 	static getCompilationHooks: (compilation: Compilation) => {
 		/**
 		 * @since 5.106.0
