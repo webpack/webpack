@@ -751,6 +751,7 @@ const main = (write) => {
 
 module.exports.RESPELLINGS = RESPELLINGS;
 module.exports.attributeSites = attributeSites;
+module.exports.fixtures = fixtures;
 module.exports.main = main;
 module.exports.oneLine = oneLine;
 module.exports.respell = respell;

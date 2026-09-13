@@ -212,12 +212,13 @@ describe("check-html-invariants", () => {
 		it("writes one block per finding over the corpus the filters name", () => {
 			// The filters are read as the module loads, so they are set before it is
 			// loaded again — one fixture and one relation keep the run to a moment.
-			const before = {
-				fixture: process.env.FIXTURE,
-				preset: process.env.PRESET,
-				relation: process.env.RELATION
-			};
-			process.env.FIXTURE = "html/minimize-attributes/page.html";
+			const wanted = "html/minimize-attributes/page.html";
+			const before = new Map([
+				["FIXTURE", process.env.FIXTURE],
+				["PRESET", process.env.PRESET],
+				["RELATION", process.env.RELATION]
+			]);
+			process.env.FIXTURE = wanted;
 			process.env.PRESET = "default";
 			process.env.RELATION = "idempotence";
 			/** @type {string[]} */
@@ -225,13 +226,24 @@ describe("check-html-invariants", () => {
 			let found = 0;
 			try {
 				jest.resetModules();
-				found = require("../tooling/check-html-invariants").main((text) => {
+
+				const sweep = require("../tooling/check-html-invariants");
+
+				// A filter matching nothing would leave every assertion below vacuous,
+				// so what it names has to still be in the corpus.
+				expect(
+					sweep.fixtures().filter(([label]) => label.includes(wanted))
+				).toHaveLength(1);
+				found = sweep.main((text) => {
 					written.push(text);
 				});
 			} finally {
-				process.env.FIXTURE = before.fixture;
-				process.env.PRESET = before.preset;
-				process.env.RELATION = before.relation;
+				for (const [name, value] of before) {
+					// Assigning `undefined` back would store the string, which reads as
+					// a filter matching nothing in whatever loads the module next.
+					if (value === undefined) delete process.env[name];
+					else process.env[name] = value;
+				}
 				jest.resetModules();
 			}
 			expect(found).toBe(written.length);
