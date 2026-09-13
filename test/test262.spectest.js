@@ -918,9 +918,6 @@ const linkErrorsAtBuildTime = new Set([
 ]);
 
 const knownBugs = [
-	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
-	"expressions/dynamic-import/returns-promise.js",
-
 	// Tests use `$262.evalScript`/`Object.preventExtensions(this)` to declare
 	// or collide global bindings; webpack wraps each module so `this` is not
 	// the realm's global object and there is no Script Record context.
@@ -945,7 +942,11 @@ const knownBugs = [
 	// The specifier is written inside an `eval`, so this import never reaches
 	// the module graph.
 	"expressions/dynamic-import/usage-from-eval.js",
-	// `.then` is expected not to be called on the deferred namespace's promise.
+	// The spec builds it from the intrinsic %Promise%; our chunk loading reads the
+	// global binding, which this test replaces before importing.
+	"expressions/dynamic-import/returns-promise.js",
+	// The spec aggregates evaluation promises with SafePerformPromiseAll, which
+	// never reads `then`; our runtime uses `Promise.all` and `.then` and is seen.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
 
 	// Same root cause as the postfix variants above: getter on a global `this`
