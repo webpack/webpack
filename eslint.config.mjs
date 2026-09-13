@@ -258,6 +258,29 @@ export default defineConfig([
 		}
 	},
 	{
+		// The code generators run under the repo's own Node, not the baseline the
+		// code they emit has to meet.
+		files: [
+			"tooling/compile-to-definitions.js",
+			"tooling/generate-types.js",
+			"tooling/precompile-schemas.js",
+			"tooling/type-coverage.js"
+		],
+		rules: {
+			"n/no-unsupported-features/es-builtins": "off",
+			"n/no-unsupported-features/es-syntax": "off",
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
+		// Walking the TypeScript compiler's own AST: the checker hands back nodes
+		// whose shape is only known once a kind has been tested for.
+		files: ["tooling/generate-types.js"],
+		rules: {
+			"jsdoc/reject-any-type": "off"
+		}
+	},
+	{
 		// `color-name` is ESM, so the CSS data generator reaches its table
 		// through a dynamic import rather than a `require` no jest `vm` supports.
 		// `html-minifier-next` is ESM only, and the HTML comparison imports it the

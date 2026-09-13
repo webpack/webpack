@@ -5,6 +5,12 @@ type EXPECTED_OBJECT = object;
 declare module "*.json";
 declare module "rimraf";
 
+declare module "commondir" {
+	function commonDir(paths: string[]): string;
+	function commonDir(basedir: string, relativePaths: string[]): string;
+	export = commonDir;
+}
+
 declare module "color-name" {
 	const colors: { [name: string]: [number, number, number] };
 	export = colors;
