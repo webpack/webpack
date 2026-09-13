@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Accept file URLs where an option or plugin option takes an absolute path.
+Accept a file URL in any spelling Node reads where an absolute path is taken.

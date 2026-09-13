@@ -2,6 +2,6 @@
 
 module.exports = {
 	findBundle(index) {
-		return `./main-${["path", "url"][index]}.js`;
+		return `./main-${["path", "url", "short-url"][index]}.js`;
 	}
 };
