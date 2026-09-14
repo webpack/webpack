@@ -2859,8 +2859,9 @@ const printError = (diagnostic) => {
 						for (const [name, type] of typeExports) {
 							if (exposedNames.has(name)) continue;
 							const code = getCode(type, new Set());
-							if (/^[A-Za-z_0-9]+(<.+>)?$/.test(code)) {
-								const codeWithoutTemplateArgs = code.replace(/<.+>/, "");
+							const named = /^([A-Za-z_0-9]+)(?:<.+>)?$/.exec(code);
+							if (named) {
+								const [, codeWithoutTemplateArgs] = named;
 								exports.push(
 									codeWithoutTemplateArgs === name
 										? name
