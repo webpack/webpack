@@ -226,8 +226,7 @@
     "webpack-cli": "^7.2.1",
     "webpack-dev-server": "^6.0.0",
     "xxhashjs": "^0.2.2",
-    "yamljs": "^0.3.0",
-    "yargs": "^16.1.1"
+    "yamljs": "^0.3.0"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {

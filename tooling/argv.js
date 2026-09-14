@@ -17,50 +17,55 @@
  * @property {boolean} templateLiterals whether template literal types are allowed
  */
 
-module.exports = /** @type {Argv} */ (
-	require("yargs")
-		.boolean("write")
-		.describe(
-			"write",
-			"Write updated files to disk, otherwise it only checks if they are correct."
-		)
+/** @type {Record<string, string | boolean>} */
+const DEFAULTS = {
+	write: false,
+	verbose: false,
+	root: process.env.INIT_CWD || process.cwd(),
+	schemas: "./schemas/**/*.json",
+	declarations: "declarations",
+	source: "./lib/**/*.js",
+	types: "types.d.ts",
+	templateLiterals: true
+};
 
-		.boolean("verbose")
-		.describe("verbose", "Print more info to output.")
+/**
+ * @param {string} name a flag as it was written on the command line
+ * @returns {string} the matching `Argv` key
+ */
+const toCamelCase = (name) =>
+	name.replace(/-([a-z])/g, (_match, letter) => letter.toUpperCase());
 
-		.string("root")
-		.describe(
-			"root",
-			"Root repository directory (optional if calling from package.json scripts)."
-		)
-		.default(
-			"root",
-			process.env.INIT_CWD || process.cwd(),
-			"The root directory from calling package.json or the current directory"
-		)
+/**
+ * Reads the flags the generators take. A boolean is set by naming it and
+ * cleared by prefixing it with `no-`; a string takes the next argument or the
+ * one after its `=`.
+ * @param {string[]} args the arguments to read, without node and the script
+ * @returns {Argv} every option, defaulted where the arguments name none
+ */
+const parseArgv = (args) => {
+	const argv = { ...DEFAULTS };
+	for (let i = 0; i < args.length; i++) {
+		const arg = args[i];
+		if (!arg.startsWith("--")) continue;
+		const at = arg.indexOf("=");
+		const written = at === -1 ? arg.slice(2) : arg.slice(2, at);
+		const negated = written.startsWith("no-");
+		const name = toCamelCase(negated ? written.slice(3) : written);
+		if (!(name in DEFAULTS)) {
+			throw new Error(`Unknown option "${arg}"`);
+		}
+		if (typeof DEFAULTS[name] === "boolean") {
+			argv[name] = !negated;
+			continue;
+		}
+		const value = at === -1 ? args[++i] : arg.slice(at + 1);
+		if (value === undefined) {
+			throw new Error(`Option "${arg}" needs a value`);
+		}
+		argv[name] = value;
+	}
+	return /** @type {Argv} */ (/** @type {unknown} */ (argv));
+};
 
-		.string("schemas")
-		.describe("schemas", "Glob to find schemas in root directory.")
-		.default("schemas", "./schemas/**/*.json")
-
-		.string("declarations")
-		.describe(
-			"declarations",
-			"Output folder for declarations generated from schemas."
-		)
-		.default("declarations", "declarations")
-
-		.string("source")
-		.describe("source", "Glob to find source code in root directory.")
-		.default("source", "./lib/**/*.js")
-
-		.string("types")
-		.describe("types", "Output file for types declarations.")
-		.default("types", "types.d.ts")
-
-		.boolean("templateLiterals")
-		.default("templateLiterals", true)
-		.describe("templateLiterals", "Allow template literal types.")
-
-		.parse()
-);
+module.exports = parseArgv(process.argv.slice(2));
