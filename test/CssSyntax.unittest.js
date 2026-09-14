@@ -4242,7 +4242,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{x:1}a{y:2}b{x:1}b{y:2}", "a,b{x:1;y:2}"],
 			// Grown into the same rule twice over, which is one rule.
 			["a{x:1}a{y:2}a{x:1}a{y:2}", "a{x:1;y:2}"],
+			// The rule between them is one a later copy takes back, so the two it
+			// parted are neighbors by the time the stylesheet is through.
+			["a{top:0}i{q:1}b{top:0}i{q:1}", "a,b{top:0}i{q:1}"],
 			["a{x:1}a{y:2}b{x:1}b{y:2}c{x:1}c{y:2}", "a,b,c{x:1;y:2}"],
+			// A list may not gather what nesting would re-specify: the `i` of
+			// `a,b{i{}}` is one `:is(a,b) i`, not the two it was.
+			["a{i{y:2}}b{i{y:2}}", "a{i{y:2}}b{i{y:2}}"],
 			// A kept comment between the two still parts them.
 			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
 			// And so does anything the join cannot see into.
