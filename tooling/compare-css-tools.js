@@ -16,6 +16,9 @@
 // The two printing tables add what the output weighs — raw and under the
 // encodings a CDN serves — and whether it still matches every class it did.
 
+// The run opens with the invariants webpack's own printer owes its output,
+// which need no install; `--invariants` prints that section and stops.
+
 // `FIXTURE=`, `TOOL=` and `STAGE=` narrow the run to rows whose name contains
 // what they name, so one cell is re-measured without the whole matrix.
 
@@ -33,13 +36,23 @@ const MODERN_BROWSERS = require("browserslist")(
 	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
 );
 const cssMinify = require("../lib/css/cssMinify");
-const { SourceProcessor } = require("../lib/css/syntax");
+const {
+	SourceProcessor,
+	TT_EOF,
+	TT_WHITESPACE,
+	TokenStream,
+	pickTransforms
+} = require("../lib/css/syntax");
 const {
 	STAGES,
+	collectFiles,
 	compress,
 	exists,
 	filterFrom,
+	findingGroups,
 	formatCost,
+	formatSecond,
+	idempotence,
 	installPackages,
 	kb,
 	loaderFor,
@@ -212,6 +225,29 @@ const fixtures = () => [
 	)
 ];
 
+/** @typedef {import("../lib/css/syntax").CssPrintOptions} CssPrintOptions */
+
+/** @type {CssPrintOptions} */
+const DEFAULT_OPTIONS = {};
+
+/** @type {CssPrintOptions} */
+const TARGET_OPTIONS = { environment: { browsers: MODERN_BROWSERS } };
+
+/** @type {CssPrintOptions} */
+const TARGET_VARS_OPTIONS = {
+	environment: { browsers: MODERN_BROWSERS },
+	rewriteCustomProperties: true
+};
+
+// The option sets the invariants are held over, which are the ones the
+// comparison's own webpack rows are measured with.
+/** @type {[string, CssPrintOptions][]} */
+const PRESETS = [
+	["default", DEFAULT_OPTIONS],
+	["target", TARGET_OPTIONS],
+	["target+vars", TARGET_VARS_OPTIONS]
+];
+
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
 /** @type {import("./compare-tools-harness").Tool[]} */
@@ -366,7 +402,8 @@ const TOOLS = [
 	{
 		name: "webpack",
 		stage: "minify",
-		create: () => async (css) => (await cssMinify({ "input.css": css })).code
+		create: () => async (css) =>
+			(await cssMinify({ "input.css": css }, undefined, DEFAULT_OPTIONS)).code
 	},
 	{
 		// The rivals strip the spellings a modern engine makes dead; webpack, told
@@ -374,11 +411,7 @@ const TOOLS = [
 		name: "webpack+target",
 		stage: "minify",
 		create: () => async (css) =>
-			(
-				await cssMinify({ "input.css": css }, undefined, {
-					environment: { browsers: MODERN_BROWSERS }
-				})
-			).code
+			(await cssMinify({ "input.css": css }, undefined, TARGET_OPTIONS)).code
 	},
 	{
 		// The rivals shorten a custom property's value the way they shorten any
@@ -386,12 +419,8 @@ const TOOLS = [
 		name: "webpack+target+vars",
 		stage: "minify",
 		create: () => async (css) =>
-			(
-				await cssMinify({ "input.css": css }, undefined, {
-					environment: { browsers: MODERN_BROWSERS },
-					rewriteCustomProperties: true
-				})
-			).code
+			(await cssMinify({ "input.css": css }, undefined, TARGET_VARS_OPTIONS))
+				.code
 	},
 	{
 		name: "esbuild (service)",
@@ -574,7 +603,129 @@ const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
 const wantedStage = filterFrom("STAGE");
 
+// --- Invariants -------------------------------------------------------------
+
+// What a comparison cannot see, because being a few bytes off its own best is
+// not being worse than another tool: a second pass that moves the stylesheet.
+
+// A stylesheet the repo ships is a shape the printer exists for, so the sweep
+// reads `test/**/*.css` rather than the handful of fixtures timings need.
+
+// A web-platform-tests checkout, which the html5lib job alone fetches: its
+// thousands of stylesheets are a corpus of their own rather than a default run.
+const SKIPPED_FIXTURE_DIRS = new Set(["node_modules", "wpt"]);
+
+/**
+ * @param {CssPrintOptions} options one preset's minimizer options
+ * @returns {(css: string) => string} the printer those options name
+ */
+const printerFor = (options) => {
+	const printOptions = {
+		mode: /** @type {"minify"} */ ("minify"),
+		transforms: pickTransforms(options),
+		...options
+	};
+	return (css) =>
+		/** @type {{ code: string }} */ (
+			new SourceProcessor().process(css, printOptions)
+		).code;
+};
+
+/**
+ * What a stylesheet says, as a flat token stream: whitespace runs collapse to
+ * one marker (dropping a comment leaves the run either side of it), so only a
+ * token the printer actually rewrote separates two outputs. A respelling is one,
+ * which is why `#FFF` -> `#fff` between two passes reads as `differs` here.
+ * @param {string} css a stylesheet
+ * @returns {string} its stream, as the JSON of every token in order
+ */
+const tokenStream = (css) => {
+	const stream = new TokenStream(css);
+	/** @type {string[]} */
+	const out = [];
+	for (;;) {
+		const token = stream.consume();
+		if (token.type === TT_EOF) break;
+		if (token.type === TT_WHITESPACE) {
+			if (out[out.length - 1] !== " ") out.push(" ");
+			continue;
+		}
+		out.push(`${token.type}:${css.slice(token.start, token.end)}`);
+	}
+	return JSON.stringify(out);
+};
+
+const wantedRelation = filterFrom("RELATION");
+const wantedPreset = filterFrom("PRESET");
+
+/**
+ * The stylesheets the invariants are swept over: the repo's own fixtures, plus
+ * whatever framework stylesheets the comparison installed.
+ * @returns {[string, string][]} `[label, css]` for every stylesheet
+ */
+const invariantFixtures = () => {
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const file of collectFiles(
+		path.join(ROOT, "test"),
+		".css",
+		SKIPPED_FIXTURE_DIRS
+	)) {
+		out.push([
+			path.relative(ROOT, file).replace(/\\/g, "/"),
+			fs.readFileSync(file, "utf8")
+		]);
+	}
+	for (const [label, file] of fixtures()) {
+		if (fs.existsSync(file)) out.push([label, fs.readFileSync(file, "utf8")]);
+	}
+	return out;
+};
+
+/**
+ * Sweep mode: hold the printer to its own invariants and report what it breaks.
+ * Nothing is installed and nothing is compared to, so this is the cheap half of
+ * the script and the one a check can be gated on.
+ * @param {(text: string) => void} write receives the report
+ * @returns {number} how many distinct findings it named
+ */
+const invariants = (write) => {
+	const corpus = invariantFixtures().filter(([label]) => wantedFixture(label));
+	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	if (!wantedRelation("idempotence")) return 0;
+	log(
+		`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
+	);
+	const groups = findingGroups();
+	for (const [label, css] of corpus) {
+		for (const [preset, options] of presets) {
+			const { reports } = idempotence({
+				minify: printerFor(options),
+				source: css,
+				says: tokenStream
+			});
+			for (const report of reports) groups.add(report, preset, label);
+		}
+	}
+	return groups.write(write);
+};
+
+/**
+ * The sweep as a section of the comparison's own report, so a run that asks
+ * what the output costs is told what it owes as well.
+ * @returns {number} how many distinct findings it named
+ */
+const reportInvariants = () => {
+	process.stdout.write("\ninvariants — what the printer owes its own output\n");
+	const found = invariants((text) => process.stdout.write(text));
+	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
+	return found;
+};
+
 const main = async () => {
+	// Before the install: the relations are webpack's own, so they answer in
+	// seconds whether or not there is anything to compare against yet.
+	reportInvariants();
 	await setup();
 	const postcss = load("postcss");
 	const selectorParser = load("postcss-selector-parser");
@@ -610,7 +761,7 @@ const main = async () => {
 							9
 						)}${"ms".padStart(7)}${"cpu".padStart(6)}${"peak".padStart(
 							8
-						)}   lost\n`
+						)}${"2nd".padStart(7)}   lost\n`
 			);
 			for (const tool of tools) {
 				const result = await measureInWorker(__filename, stage, tool.name, css);
@@ -647,7 +798,8 @@ const main = async () => {
 						kb(out.zstd).padStart(9) +
 						cost.wall.padStart(7) +
 						cost.cpu.padStart(6) +
-						cost.peak.padStart(8)
+						cost.peak.padStart(8) +
+						formatSecond(result.second).padStart(7)
 					}   ${
 						lost.length === 0
 							? "-"
@@ -665,16 +817,24 @@ if (require.main === module) {
 	// `--setup` installs the fixtures and builds nothing else, so a consumer
 	// that only reads them does not run the comparison to get them.
 	const mode = process.argv[2];
-	const started =
-		mode === "--measure"
-			? measure(TOOLS)
-			: mode === "--setup"
-				? setup()
-				: main();
-	started.catch((error) => {
-		log(String(error && error.stack ? error.stack : error));
-		process.exitCode = 1;
-	});
+	// The sweep alone, for a caller that wants the relations without the ten
+	// minutes the comparison costs; a full run prints the same section.
+	if (mode === "--invariants") {
+		// Non-zero while any finding stands, and findings stand today: read it
+		// rather than gating on it until they are gone.
+		process.exitCode = reportInvariants() > 0 ? 1 : 0;
+	} else {
+		const started =
+			mode === "--measure"
+				? measure(TOOLS)
+				: mode === "--setup"
+					? setup()
+					: main();
+		started.catch((error) => {
+			log(String(error && error.stack ? error.stack : error));
+			process.exitCode = 1;
+		});
+	}
 }
 
 // Where the cache holds each fixture, for a reader that is not this script.
