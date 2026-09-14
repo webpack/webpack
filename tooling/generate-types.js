@@ -10,6 +10,9 @@ const path = require("path");
 const prettier = require("prettier");
 const ts = require("typescript");
 const argv = require("./argv");
+const makeDeclarations = require("./schema-declarations");
+const precompileSchemas = require("./schema-validators");
+const loadSchemas = require("./schemas");
 
 const {
 	write: doWrite,
@@ -290,6 +293,15 @@ const printError = (diagnostic) => {
 
 (async () => {
 	const rootPath = path.resolve(root);
+
+	// The declarations have to be on disk before the program below reads them,
+	// and both passes run before any report so one run names every stale output
+	const schemas = loadSchemas();
+	const declarationsAreCurrent = await makeDeclarations(schemas);
+	const validatorsAreCurrent = await precompileSchemas(schemas);
+	if (!declarationsAreCurrent || !validatorsAreCurrent) {
+		exitCode = 1;
+	}
 
 	const ownConfigPath = path.resolve(rootPath, "generate-types-config.js");
 	/**

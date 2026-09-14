@@ -10,13 +10,11 @@ const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 const { Name, _, default: Ajv } = require("ajv");
 const standaloneCode = require("ajv/dist/standalone").default;
-const findCommonDir = require("commondir");
-const { globSync } = require("glob");
 const terser = require("terser");
 const argv = require("./argv");
 const processSchema = require("./process-schema");
 
-const { write: doWrite, root, declarations, schemas: schemasGlob } = argv;
+const { write: doWrite, root, declarations } = argv;
 
 const ajv = new Ajv({
 	code: { source: true, optimize: true },
@@ -130,8 +128,6 @@ ajv.addKeyword({
 	}
 });
 
-const schemas = globSync(schemasGlob, { cwd: root, absolute: true }).sort();
-
 const EXCLUDED_PROPERTIES = [
 	"title",
 	"description",
@@ -194,11 +190,10 @@ ${code}`;
 /**
  * @param {string} schemaPath absolute path of the schema
  * @param {string} title the schema's title
- * @param {string} schemasDir the directory every schema is resolved against
+ * @param {string} relPath the schema's path relative to the schemas directory
  * @returns {string} the declaration file's content
  */
-const createDeclaration = (schemaPath, title, schemasDir) => {
-	const relPath = path.relative(schemasDir, schemaPath);
+const createDeclaration = (schemaPath, title, relPath) => {
 	const directory = path.dirname(relPath);
 	const basename = path.basename(relPath, path.extname(relPath));
 	const filename = path.resolve(
@@ -226,7 +221,7 @@ export = check;
 /**
  * @param {string} path the file to compare against
  * @param {string} expected the content the file must hold
- * @returns {void}
+ * @returns {boolean} whether the file already holds it
  */
 const updateFile = (path, expected) => {
 	let normalizedContent = "";
@@ -236,26 +231,25 @@ const updateFile = (path, expected) => {
 	} catch (_err) {
 		// ignore
 	}
-	if (normalizedContent.trim() !== expected.trim()) {
-		if (doWrite) {
-			fs.writeFileSync(path, expected, "utf8");
-			console.error(`${path} updated`);
-		} else {
-			console.error(`${path} need to be updated\nExpected:\n${expected}`);
-			process.exitCode = 1;
-		}
+	if (normalizedContent.trim() === expected.trim()) return true;
+	if (doWrite) {
+		fs.writeFileSync(path, expected, "utf8");
+		console.error(`${path} updated`);
+		return true;
 	}
+	console.error(`${path} need to be updated\nExpected:\n${expected}`);
+	return false;
 };
 
 /**
- * @param {string} schemaPath absolute path of the schema to precompile
- * @param {string} schemasDir the directory every schema is resolved against
- * @returns {Promise<void>} resolves once the validator has been written
+ * @param {import("./schemas").SchemaFile} schemaFile the schema to precompile
+ * @returns {Promise<boolean>} whether the validator is up to date
  */
-const precompileSchema = async (schemaPath, schemasDir) => {
-	if (path.basename(schemaPath).startsWith("_")) return;
+const precompileSchema = async (schemaFile) => {
+	const { absPath: schemaPath, relPath } = schemaFile;
+	if (path.basename(schemaPath).startsWith("_")) return true;
 	try {
-		const schema = require(schemaPath);
+		const schema = schemaFile.parse();
 
 		const title = schema.title;
 		const processedSchema = processJson(schema);
@@ -267,11 +261,12 @@ const precompileSchema = async (schemaPath, schemasDir) => {
 			/\.json$/,
 			".check.d.ts"
 		);
-		updateFile(precompiledSchemaPath, code);
-		updateFile(
+		const codeIsCurrent = updateFile(precompiledSchemaPath, code);
+		const declarationIsCurrent = updateFile(
 			precompiledSchemaDeclarationPath,
-			createDeclaration(schemaPath, title, schemasDir)
+			createDeclaration(schemaPath, title, relPath)
 		);
+		return codeIsCurrent && declarationIsCurrent;
 	} catch (err) {
 		const error = /** @type {Error} */ (err);
 
@@ -280,14 +275,16 @@ const precompileSchema = async (schemaPath, schemasDir) => {
 	}
 };
 
-(async () => {
-	const commonDir = path.resolve(findCommonDir(schemas));
+/**
+ * Compiles every schema into the standalone validator webpack validates with.
+ * @param {import("./schemas").SchemaFile[]} schemas every schema, already read
+ * @returns {Promise<boolean>} whether every validator is up to date
+ */
+const precompileSchemas = async (schemas) => {
 	// One `ajv` instance holds them all, and a `$ref` adds the schema it names,
 	// so a schema must not be compiled after another compile has loaded it
-	await Promise.all(
-		schemas.map((absPath) => precompileSchema(absPath, commonDir))
-	);
-})().catch((err) => {
-	console.error(err.stack);
-	process.exitCode = 1;
-});
+	const results = await Promise.all(schemas.map(precompileSchema));
+	return results.every(Boolean);
+};
+
+module.exports = precompileSchemas;

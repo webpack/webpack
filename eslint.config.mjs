@@ -261,9 +261,9 @@ export default defineConfig([
 		// The code generators run under the repo's own Node, not the baseline the
 		// code they emit has to meet.
 		files: [
-			"tooling/compile-to-definitions.js",
 			"tooling/generate-types.js",
-			"tooling/precompile-schemas.js",
+			"tooling/schema-declarations.js",
+			"tooling/schema-validators.js",
 			"tooling/type-coverage.js"
 		],
 		rules: {

@@ -7,25 +7,20 @@
 
 const fs = require("fs");
 const path = require("path");
-const findCommonDir = require("commondir");
-const { globSync } = require("glob");
 const { compile } = require("json-schema-to-typescript");
 const prettier = require("prettier");
 const argv = require("./argv");
 
-const {
-	write: doWrite,
-	root,
-	declarations: outputFolder,
-	schemas: schemasGlob
-} = argv;
+const { write: doWrite, root, declarations: outputFolder } = argv;
 
-const makeSchemas = async () => {
-	const schemas = globSync(schemasGlob, { cwd: root, absolute: true }).sort();
-	const commonDir = path.resolve(findCommonDir(schemas));
-	await Promise.all(
-		schemas.map((absPath) => makeDefinitionsForSchema(absPath, commonDir))
-	);
+/**
+ * Compiles every schema into the declaration file its options are read from.
+ * @param {import("./schemas").SchemaFile[]} schemas every schema, already read
+ * @returns {Promise<boolean>} whether every declaration is up to date
+ */
+const makeDeclarations = async (schemas) => {
+	const results = await Promise.all(schemas.map(makeDefinitionsForSchema));
+	return results.every(Boolean);
 };
 
 /**
@@ -34,23 +29,21 @@ const makeSchemas = async () => {
  */
 
 /**
- * @param {string} absSchemaPath absolute path of the schema
- * @param {string} schemasDir the directory every schema is resolved against
- * @returns {Promise<void>} resolves once the declaration has been written
+ * @param {import("./schemas").SchemaFile} schemaFile the schema to compile
+ * @returns {Promise<boolean>} whether the declaration is up to date
  */
-const makeDefinitionsForSchema = async (absSchemaPath, schemasDir) => {
-	if (path.basename(absSchemaPath).startsWith("_")) return;
-	const relPath = path.relative(schemasDir, absSchemaPath);
+const makeDefinitionsForSchema = async (schemaFile) => {
+	const { relPath, basename } = schemaFile;
+	if (path.basename(relPath).startsWith("_")) return true;
 	const directory = path.dirname(relPath);
-	const basename = path.basename(relPath, path.extname(relPath));
 	const filename = path.resolve(
 		root,
 		outputFolder,
 		`${path.join(directory, basename)}.d.ts`
 	);
-	const schema = JSON.parse(fs.readFileSync(absSchemaPath, "utf8"));
+	const schema = schemaFile.parse();
 	const keys = Object.keys(schema);
-	if (keys.length === 1 && keys[0] === "$ref") return;
+	if (keys.length === 1 && keys[0] === "$ref") return true;
 
 	const prettierConfig = await prettier.resolveConfig(
 		path.resolve(root, outputFolder, "result.d.ts")
@@ -85,27 +78,23 @@ const makeDefinitionsForSchema = async (absSchemaPath, schemasDir) => {
 			} catch (_err) {
 				// ignore
 			}
-			if (normalizedContent.trim() !== ts.trim()) {
-				if (doWrite) {
-					fs.mkdirSync(path.dirname(filename), { recursive: true });
-					fs.writeFileSync(filename, ts, "utf8");
-					console.error(
-						`declarations/${relPath.replace(/\\/g, "/")}.d.ts updated`
-					);
-				} else {
-					console.error(
-						`declarations/${relPath.replace(
-							/\\/g,
-							"/"
-						)}.d.ts need to be updated`
-					);
-					process.exitCode = 1;
-				}
+			if (normalizedContent.trim() === ts.trim()) return true;
+			if (doWrite) {
+				fs.mkdirSync(path.dirname(filename), { recursive: true });
+				fs.writeFileSync(filename, ts, "utf8");
+				console.error(
+					`declarations/${relPath.replace(/\\/g, "/")}.d.ts updated`
+				);
+				return true;
 			}
+			console.error(
+				`declarations/${relPath.replace(/\\/g, "/")}.d.ts need to be updated`
+			);
+			return false;
 		},
 		(err) => {
 			console.error(err);
-			process.exitCode = 1;
+			return false;
 		}
 	);
 };
@@ -267,7 +256,4 @@ const preprocessSchema = (schema, root = schema, path = []) => {
 	}
 };
 
-makeSchemas().catch((err) => {
-	console.error(err.stack);
-	process.exitCode = 1;
-});
+module.exports = makeDeclarations;
