@@ -118,7 +118,7 @@ describe("readToken", () => {
 			const results = [];
 			// Drive the lexer core directly: a fresh `out` per call collects the
 			// raw token list (comments included); `readToken` returns undefined at EOF.
-			for (let pos = 0; ;) {
+			for (let pos = 0; ; ) {
 				const t = readToken(
 					code,
 					pos,
@@ -154,7 +154,7 @@ describe("readToken", () => {
  */
 const tokenRoundtrip = (input) => {
 	let out = "";
-	for (let pos = 0; ;) {
+	for (let pos = 0; ; ) {
 		const t = readToken(
 			input,
 			pos,
@@ -7919,7 +7919,9 @@ describe("CssSyntax minify — one stylesheet reaching every embedded site", () 
 .svg  { background : url("data:image/svg+xml,${PAYLOADS.svg}") ; }
 .html { background : url("data:text/html,${PAYLOADS.html}") ; }
 .json { background : url('data:application/json,${PAYLOADS.json}') ; }
-.javascript { background : url("data:text/javascript,${PAYLOADS.javascript}") ; }
+.javascript { background : url("data:text/javascript,${
+		PAYLOADS.javascript
+	}") ; }
 
 .svg-base64  { background : url(data:image/svg+xml;base64,${base64(
 		PAYLOADS.svg
@@ -9423,9 +9425,7 @@ describe("CssSyntax minify — light-dark()", () => {
 				"chrome 100"
 			])
 		).toBe(
-			`a{content:"color-scheme:x";color:var(--webpack-light,red) var(--webpack-dark,blue)}${
-				DEFAULTS
-			}`
+			`a{content:"color-scheme:x";color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 	});
 
