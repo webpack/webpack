@@ -4240,6 +4240,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Each block is grown by the rule after it, so the two print the same
 			// one only once the second has stopped growing.
 			["a{x:1}a{y:2}b{x:1}b{y:2}", "a,b{x:1;y:2}"],
+			// Grown into the same rule twice over, which is one rule.
+			["a{x:1}a{y:2}a{x:1}a{y:2}", "a{x:1;y:2}"],
 			["a{x:1}a{y:2}b{x:1}b{y:2}c{x:1}c{y:2}", "a,b,c{x:1;y:2}"],
 			// A kept comment between the two still parts them.
 			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
