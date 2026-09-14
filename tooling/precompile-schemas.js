@@ -282,9 +282,11 @@ const precompileSchema = async (schemaPath, schemasDir) => {
 
 (async () => {
 	const commonDir = path.resolve(findCommonDir(schemas));
-	for (const absPath of schemas) {
-		precompileSchema(absPath, commonDir);
-	}
+	// One `ajv` instance holds them all, and a `$ref` adds the schema it names,
+	// so a schema must not be compiled after another compile has loaded it
+	await Promise.all(
+		schemas.map((absPath) => precompileSchema(absPath, commonDir))
+	);
 })().catch((err) => {
 	console.error(err.stack);
 	process.exitCode = 1;

@@ -19,6 +19,15 @@ const parsedConfig = ts.parseJsonSourceFileConfigFileContent(
 	root,
 	{ noEmit: true }
 );
-const { fileNames, options } = parsedConfig;
+const { fileNames, errors, options } = parsedConfig;
+
+// A config error leaves `fileNames` empty or the options half-read, so the
+// program would be built over nothing and report a clean run
+if (errors.length > 0) {
+	for (const error of errors) {
+		console.error(ts.flattenDiagnosticMessageText(error.messageText, "\n"));
+	}
+	throw new Error(`Unable to read ${configPath}`);
+}
 
 module.exports = ts.createProgram(fileNames, options);

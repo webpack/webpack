@@ -20,12 +20,12 @@ const {
 	schemas: schemasGlob
 } = argv;
 
-const makeSchemas = () => {
+const makeSchemas = async () => {
 	const schemas = globSync(schemasGlob, { cwd: root, absolute: true }).sort();
 	const commonDir = path.resolve(findCommonDir(schemas));
-	for (const absPath of schemas) {
-		makeDefinitionsForSchema(absPath, commonDir);
-	}
+	await Promise.all(
+		schemas.map((absPath) => makeDefinitionsForSchema(absPath, commonDir))
+	);
 };
 
 /**
@@ -66,7 +66,7 @@ const makeDefinitionsForSchema = async (absSchemaPath, schemasDir) => {
 	};
 
 	preprocessSchema(schema);
-	compile(schema, basename, {
+	return compile(schema, basename, {
 		bannerComment:
 			"/*\n * This file was automatically generated.\n * DO NOT MODIFY BY HAND.\n * Run `yarn fix:special` to update\n */",
 		unreachableDefinitions: true,
@@ -267,4 +267,7 @@ const preprocessSchema = (schema, root = schema, path = []) => {
 	}
 };
 
-makeSchemas();
+makeSchemas().catch((err) => {
+	console.error(err.stack);
+	process.exitCode = 1;
+});
