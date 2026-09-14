@@ -330,7 +330,8 @@
 
 /*! webpack: a length, a style keyword and a color are each one slot's */
 .t120 { outline-width: 3px; outline-style: dashed; outline-color: red }
-/*! webpack: ...a zero length keeps a slot of its own, and a color keyword too */
+/*! webpack: ...a zero length keeps a slot of its own, and a color keyword too,
+   while a style slot spelling its own initial comes out */
 .t121 { outline-width: 0; outline-style: none; outline-color: currentcolor }
 /*! webpack: declined: `auto` is both an `outline-style` and an `outline-color` */
 .t122 { outline-width: 3px; outline-style: auto; outline-color: auto }
@@ -342,7 +343,8 @@
 .t125 { column-rule-width: medium; color: red; column-rule-style: groove; column-rule-color: rebeccapurple }
 /*! webpack: declined: `outline-offset` is in the family and would be stepped over */
 .t126 { outline-width: 3px; outline-offset: 1px; outline-style: dashed; outline-color: red }
-/*! webpack: four slots, and a percentage only the thickness takes */
+/*! webpack: four slots, a percentage only the thickness takes, and the two
+   spelling their own initials come out */
 .t127 { text-decoration-line: none; text-decoration-style: solid; text-decoration-color: #123; text-decoration-thickness: 10% }
 /*! webpack: a system color is a color keyword like any other */
 .t128 { text-decoration-line: line-through; text-decoration-style: double; text-decoration-color: CanvasText; text-decoration-thickness: from-font }
