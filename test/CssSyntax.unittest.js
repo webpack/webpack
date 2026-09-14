@@ -10117,6 +10117,18 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		).toBe(".a,.c,.e{color:red}.b{margin:0}.d{padding:0}");
 	});
 
+	it("keeps the list it grows canonical", () => {
+		expect(minify(".c{color:red}.b{margin:0}.a{color:red}", true)).toBe(
+			".a,.c{color:red}.b{margin:0}"
+		);
+		expect(
+			minify(
+				".z{color:red}.m{margin:0}.a{color:red}.n{padding:0}.b{color:red}",
+				true
+			)
+		).toBe(".a,.b,.z{color:red}.m{margin:0}.n{padding:0}");
+	});
+
 	it("declines where a rule between declares what the block does", () => {
 		const sheet = ".a{color:red}.b{color:blue}.c{color:red}";
 		expect(minify(sheet, true)).toBe(sheet);
