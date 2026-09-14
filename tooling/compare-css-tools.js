@@ -611,9 +611,12 @@ const wantedStage = filterFrom("STAGE");
 // A stylesheet the repo ships is a shape the printer exists for, so the sweep
 // reads `test/**/*.css` rather than the handful of fixtures timings need.
 
+// `js` is where the test harness writes what a case built, so a sweep that ran
+// after a test run would report the same finding twice.
+
 // A web-platform-tests checkout, which the html5lib job alone fetches: its
 // thousands of stylesheets are a corpus of their own rather than a default run.
-const SKIPPED_FIXTURE_DIRS = new Set(["node_modules", "wpt"]);
+const SKIPPED_FIXTURE_DIRS = new Set(["js", "node_modules", "wpt"]);
 
 /**
  * @param {CssPrintOptions} options one preset's minimizer options
