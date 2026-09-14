@@ -16,8 +16,13 @@ module.exports = {
 		);
 		expect(html).toMatchSnapshot();
 
-		// The start tag goes and the end tag the source wrote stays.
+		// No shell start tag was written, so none is put back; each end tag that
+		// was written stays, `</head>` included.
 		expect(html).not.toContain("<html");
+		expect(html).not.toContain("<head>");
+		expect(html).not.toContain("<body>");
+		expect(html).toContain("</head>");
+		expect(html).toContain("</body>");
 		expect(html.endsWith("</html>")).toBe(true);
 		// A second pass over the first one's output has nothing left to take.
 		const again = await htmlMinify({ "page.html": html }, {});
