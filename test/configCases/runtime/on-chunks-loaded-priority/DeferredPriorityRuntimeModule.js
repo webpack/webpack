@@ -21,6 +21,9 @@ class DeferredPriorityRuntimeModule extends RuntimeModule {
 			`${RuntimeGlobals.onChunksLoaded}(0, ["__never_loaded__"], function() { ${order}.push("blocked"); }, 0);`,
 			`${RuntimeGlobals.onChunksLoaded}(0, [${JSON.stringify(
 				chunk.id
+			)}], function() { ${order}.push("odd"); }, 1);`,
+			`${RuntimeGlobals.onChunksLoaded}(0, [${JSON.stringify(
+				chunk.id
 			)}], function() { ${order}.push("even"); }, 2);`
 		].join("\n");
 	}

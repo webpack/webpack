@@ -16,6 +16,9 @@ module.exports = {
 						(chunk, set) => {
 							set.add(RuntimeGlobals.global);
 							set.add(RuntimeGlobals.onChunksLoaded);
+							// Without this the queue keeps insertion order and drops the
+							// priority these handlers pass.
+							set.add(RuntimeGlobals.hasChunkPriority);
 							compilation.addLazyRuntimeModule(
 								chunk,
 								() =>
