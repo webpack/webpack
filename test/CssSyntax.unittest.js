@@ -4252,6 +4252,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A list may not gather what nesting would re-specify: the `i` of
 			// `a,b{i{}}` is one `:is(a,b) i`, not the two it was.
 			["a{i{y:2}}b{i{y:2}}", "a{i{y:2}}b{i{y:2}}"],
+			// A join writes a text of its own, so the rules it took stand where it
+			// put them — one a later copy makes dead is still taken back.
+			[".a{x:1}.a{.b{y:2}z:3}.a{.b{y:2}w:4}", ".a{x:1;z:3;.b{y:2}w:4}"],
+			[".a{x:1}.a{.b{y:2}}.a{.b{y:2}}", ".a{x:1;.b{y:2}}"],
+			// The cut that took the nested rule out leaves a declaration list, which
+			// is what the block beside it needed to fold into it.
+			[".a{.b{y:2}z:3}.a{.b{y:2}w:4}", ".a{z:3;.b{y:2}w:4}"],
+			// A block a cut empties says nothing the printer wrote it for, and
+			// emptying it can empty the one holding it.
+			[
+				".a{.b{.c{q:1}}top:0}.z{t:0}.a{.b{.c{q:1}.d{w:1}}}",
+				".a{top:0}.z{t:0}.a{.b{.c{q:1}.d{w:1}}}"
+			],
+			// A rule the one after it takes stands next to the one before it, and the
+			// block it just took on may be all that one was waiting for.
+			[
+				".a{color:red}.a{color:rgb(1 2 3/.5)}.a{color:inherit}",
+				".a{color:inherit}"
+			],
 			// A kept comment between the two still parts them.
 			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
 			// And so does anything the join cannot see into.
