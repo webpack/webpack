@@ -4427,7 +4427,13 @@ declare class Compiler {
 	 */
 	newCompilation(params: CompilationParams): Compilation;
 	createNormalModuleFactory(): NormalModuleFactory;
-	createContextModuleFactory(): ContextModuleFactory;
+
+	/**
+	 * Creates a context module factory.
+	 */
+	createContextModuleFactory(
+		normalModuleFactory?: NormalModuleFactory
+	): ContextModuleFactory;
 	newCompilationParams(): {
 		normalModuleFactory: NormalModuleFactory;
 		contextModuleFactory: ContextModuleFactory;
@@ -5317,6 +5323,11 @@ declare interface ContextOptions {
 	 */
 	referencedExports?: null | string[][];
 	layer?: null | string;
+
+	/**
+	 * module that requested the context, only kept when a rule matches on `issuer`
+	 */
+	issuer?: string;
 	attributes?: ImportAttributes;
 	phase?: 0 | 1 | 2;
 
@@ -17581,6 +17592,12 @@ declare class Module extends DependenciesBlock {
 	nameForCondition(): null | string;
 
 	/**
+	 * Returns the path reported as `issuer` when rules are matched for the modules this
+	 * module requests. Only a module that stands in for another one overrides this.
+	 */
+	nameForIssuerCondition(): null | string;
+
+	/**
 	 * Returns the reason this module cannot be concatenated, when one exists.
 	 */
 	getConcatenationBailoutReason(
@@ -25757,6 +25774,11 @@ declare interface RuleSet {
 	 * execute the rule set
 	 */
 	exec: (effectData: EffectData) => Effect[];
+
+	/**
+	 * the effect data properties any rule matches on
+	 */
+	conditionProperties: Set<string>;
 
 	/**
 	 * the rules that never matched, outermost first
