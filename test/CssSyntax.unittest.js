@@ -7060,6 +7060,25 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		).toBe("i{top:0}@keyframes s{to{opacity:1}}");
 	});
 
+	it("drops every prefixed spelling one unprefixed twin makes dead", () => {
+		// A stylesheet writes one rule per engine, so a signature holds more than
+		// the one twin — and the twin behind the last is dead weight just the same.
+		expect(
+			minifyFor(
+				"::-webkit-input-placeholder{color:red}::-moz-placeholder{color:red}" +
+					"::placeholder{color:red}",
+				["chrome 120"]
+			)
+		).toBe("::placeholder{color:red}");
+		expect(
+			minifyFor(
+				"@-webkit-keyframes s{to{opacity:1}}@-o-keyframes s{to{opacity:1}}" +
+					"@keyframes s{to{opacity:1}}",
+				["chrome 120"]
+			)
+		).toBe("@keyframes s{to{opacity:1}}");
+	});
+
 	it("pairs a cased `@Keyframes` with its prefixed twin (case-insensitive)", () => {
 		expect(
 			minifyFor(
