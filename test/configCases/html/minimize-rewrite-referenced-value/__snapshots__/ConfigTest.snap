@@ -4,6 +4,8 @@ exports[`ConfigTestCases html minimize-rewrite-referenced-value minimize-rewrite
 "<!doctype html><head><meta name=viewport content=\\"width=device-width,initial-scale=1\\"><link rel=preload as=image imagesrcset=\\"51b834b7c1ef0b59ea50.png 1x,51b834b7c1ef0b59ea50.png 2x\\"></head><body>
 <img src=51b834b7c1ef0b59ea50.png alt=x srcset=\\"51b834b7c1ef0b59ea50.png 200w,51b834b7c1ef0b59ea50.png 400w\\">
 <input type=text>
+<input type=checkbox checked>
+<option selected>o</option>
 
 
 </body></html>"

@@ -20,5 +20,9 @@ module.exports = {
 		expect(html).toContain("width=device-width,initial-scale=1");
 		expect(html).toContain("type=text");
 		expect(html).not.toMatch(/srcset="[^"]*, /);
+		// A boolean attribute spelled with its own name is the bare name, whichever
+		// way the source spelled that name.
+		expect(html).toContain("<input type=checkbox checked>");
+		expect(html).toContain("<option selected>");
 	}
 };
