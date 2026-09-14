@@ -4237,6 +4237,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["@keyframes k{0%{top:0}50%{top:0}}", "@keyframes k{0%,50%{top:0}}"],
 			// The rule between them prints nothing, so they end up adjacent.
 			["a{color:red}i{}b{color:red}", "a,b{color:red}"],
+			// Each block is grown by the rule after it, so the two print the same
+			// one only once the second has stopped growing.
+			["a{x:1}a{y:2}b{x:1}b{y:2}", "a,b{x:1;y:2}"],
+			["a{x:1}a{y:2}b{x:1}b{y:2}c{x:1}c{y:2}", "a,b,c{x:1;y:2}"],
+			// A kept comment between the two still parts them.
+			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
+			// And so does anything the join cannot see into.
+			[
+				"a{x:1}a{y:2}@media p{i{q:1}}b{x:1}b{y:2}",
+				"a{x:1;y:2}@media p{i{q:1}}b{x:1;y:2}"
+			],
 			// The same selector twice is one rule: its declarations are read in the
 			// order they were written either way.
 			["a{color:red}a{margin:0}", "a{color:red;margin:0}"],
