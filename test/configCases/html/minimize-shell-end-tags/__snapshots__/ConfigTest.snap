@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-shell-end-tags minimize-shell-end-tags should compile 1`] = `
+"<!doctype html><title>shell end tags</title></head><p>the source spelled no shell start tags, only their end tags</p>
+
+
+</body></html>"
+`;
