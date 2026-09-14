@@ -31,7 +31,9 @@ const { root, schemas: schemasGlob } = require("./argv");
  */
 const loadSchemas = () => {
 	const absPaths = globSync(schemasGlob, { cwd: root, absolute: true }).sort();
-	const commonDir = path.resolve(findCommonDir(absPaths));
+	// Over the paths themselves a lone match is its own common directory, which
+	// leaves every path below relative to nothing
+	const commonDir = path.resolve(findCommonDir(absPaths.map(path.dirname)));
 	return absPaths.map((absPath) => {
 		const content = fs.readFileSync(absPath, "utf8");
 		return {
