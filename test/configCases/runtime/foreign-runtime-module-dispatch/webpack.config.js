@@ -1,7 +1,7 @@
 "use strict";
 
-const RuntimeGlobals = require("../../../../lib/RuntimeGlobals");
-const RuntimeModule = require("../../../../lib/RuntimeModule");
+const RuntimeGlobals = require("../../../../").RuntimeGlobals;
+const RuntimeModule = require("../../../../").RuntimeModule;
 
 const PLUGIN_NAME = "ForeignRuntimeModuleTestPlugin";
 
@@ -19,11 +19,6 @@ class ForeignChunkHandlerRuntimeModule extends RuntimeModule {
 	}
 }
 
-// A module built against an older webpack extends a base class predating
-// `getInstalledChunkHandlers`, so looking it up on the instance finds nothing.
-ForeignChunkHandlerRuntimeModule.prototype.getInstalledChunkHandlers =
-	undefined;
-
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "node",
@@ -37,10 +32,12 @@ module.exports = {
 						PLUGIN_NAME,
 						(chunk, set) => {
 							set.add(RuntimeGlobals.ensureChunkHandlers);
-							compilation.addRuntimeModule(
-								chunk,
-								new ForeignChunkHandlerRuntimeModule()
-							);
+							const foreign = new ForeignChunkHandlerRuntimeModule();
+							// A module built against an older webpack extends a base class
+							// predating this, so looking it up on the instance finds nothing.
+							/** @type {Partial<RuntimeModule>} */
+							(foreign).getInstalledChunkHandlers = undefined;
+							compilation.addRuntimeModule(chunk, foreign);
 						}
 					);
 				});
