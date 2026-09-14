@@ -20,7 +20,7 @@ import type {
 	HashSalt,
 	HashDigest,
 	HashFunction
-} from "./WebpackOptions";
+} from "../declarations/WebpackOptions";
 
 type ResolveCallback = Parameters<Resolver["resolve"]>[4];
 type Schema = Parameters<typeof validate>[0];

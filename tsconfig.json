@@ -13,6 +13,7 @@
   "include": [
     "declarations.d.ts",
     "declarations/*.d.ts",
+    "types/*.d.ts",
     "schemas/**/*.json",
     "bin/*.js",
     "lib/**/*.js",

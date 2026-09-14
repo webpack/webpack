@@ -84,6 +84,9 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      - name: Generate the declarations the type check reads
+        run: yarn fix:special
+
       - name: Collect types coverage
         run: yarn types:cover:report
 
