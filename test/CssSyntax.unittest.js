@@ -2368,6 +2368,23 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		);
 	});
 
+	it("folds a keyword the declaration before it does not take", () => {
+		// A node is an index the printer hands back for reuse, so a sheet of this
+		// shape gives `color` the index `font-family` held — and the memo below it.
+		const sheet = [
+			"html:lang(ko),",
+			".lang-ko {",
+			'  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Sample Gothic", "Helvetica Neue", sans-serif;',
+			"}",
+			".btn.btn-clear {",
+			"  background: transparent;",
+			"  border: 0;",
+			"  color: currentColor;",
+			"}"
+		].join("\n");
+		expect(min(sheet)).toContain("color:currentcolor");
+	});
+
 	it("collapses each side of `border-radius`'s `/` on its own", () => {
 		expect(min("a{border-radius:1px 1px 1px 1px / 1px 1px 1px 1px}")).toBe(
 			"a{border-radius:1px}"
@@ -5766,12 +5783,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{column-rule-width:medium;column-rule-style:groove;column-rule-color:rebeccapurple}"
 				)
-			).toBe("a{column-rule:medium groove #639}");
+			).toBe("a{column-rule:groove#639}");
 			expect(
 				minify(
 					"a{text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#123;text-decoration-thickness:10%}"
 				)
-			).toBe("a{text-decoration:none solid #123 10%}");
+			).toBe("a{text-decoration:#123 10%}");
 			expect(minify("a{flex-direction:column;flex-wrap:wrap}")).toBe(
 				"a{flex-flow:column wrap}"
 			);
@@ -5797,7 +5814,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{border-block-end-style:dashed;border-block-end-width:2px;border-block-end-color:#00f}"
 				)
-			).toBe("a{border-block-end:2px dashed #00f}");
+			).toBe("a{border-block-end:2px dashed#00f}");
 			// `border` itself resets `border-image`, which its three longhands leave
 			// alone, so the four-sided family is no family of this merge — nor is the
 			// four-sided one below it, for the same reason.
@@ -5810,7 +5827,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{text-wrap:nowrap balance}"
 			);
 			expect(minify('a{text-emphasis-style:"x";text-emphasis-color:red}')).toBe(
-				'a{text-emphasis:"x" red}'
+				'a{text-emphasis:"x"red}'
 			);
 		});
 
@@ -5864,7 +5881,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{outline-width:0;outline-style:none;outline-color:currentcolor}"
 				)
-			).toBe("a{outline:0 none currentcolor}");
+			).toBe("a{outline:0 currentcolor}");
 			expect(
 				minify(
 					"a{text-decoration-line:line-through;text-decoration-style:double;text-decoration-color:CanvasText;text-decoration-thickness:from-font}"
@@ -5906,7 +5923,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{column-rule-width:medium;color:red;column-rule-style:groove;column-rule-color:rebeccapurple}"
 				)
-			).toBe("a{column-rule:medium groove #639;color:red}");
+			).toBe("a{column-rule:groove#639;color:red}");
 		});
 
 		it("declines a hash that is no color, at the lengths CSS omits", () => {
@@ -5922,7 +5939,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 					minify(
 						`a{outline-width:3px;outline-style:dashed;outline-color:${hash}}`
 					)
-				).toBe(`a{outline:3px dashed ${hash}}`);
+				).toBe(`a{outline:3px dashed${hash}}`);
 			}
 		});
 
