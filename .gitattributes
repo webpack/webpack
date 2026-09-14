@@ -30,6 +30,7 @@ test/configCases/html/minimize-attributes-by-value/** eol=lf
 test/configCases/html/minimize-integrity/** eol=lf
 test/configCases/html/minimize-transforms/** eol=lf
 test/configCases/html/minimize-round-trip/** eol=lf
+test/configCases/html/minimize-shell-end-tags/** eol=lf
 test/configCases/performance/unused-reexports/** eol=lf
 test/configCases/performance/unused-reexports-error/** eol=lf
 examples/* eol=lf

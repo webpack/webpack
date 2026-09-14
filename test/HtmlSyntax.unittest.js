@@ -8239,8 +8239,10 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			// Found by running the html5lib serializer corpus through minify. A
 			// transparent implied `<body>` puts the run where re-parsing drops it:
 			// before `<body>` starts, the insertion modes ignore whitespace.
-			expect(minify("</html> foo")).toBe("<body> foo");
-			expect(minify("</body> foo")).toBe("<body> foo");
+			// The shell end tag the source spelled stays: `removeImpliedTags`
+			// leaves out only the `<html>` start tag outside `"all"`.
+			expect(minify("</html> foo")).toBe("<body> foo</html>");
+			expect(minify("</body> foo")).toBe("<body> foo</body>");
 			expect(minify("<colgroup> foo")).toBe("<body> foo");
 			// Nothing to keep when the run is not in the body to begin with.
 			expect(minify(" foo")).toBe("foo");
@@ -8400,7 +8402,8 @@ describe("SourceProcessor — printing in pieces", () => {
 	it("drops an omitted tag that nothing printed inside", () => {
 		expect(minify("")).toBe("");
 		expect(minify("<html><body>")).toBe("<body></body></html>");
-		expect(minify("</body><!--c-->")).toBe("");
+		// The comment goes, but the `</body>` closing the element was written.
+		expect(minify("</body><!--c-->")).toBe("</body>");
 	});
 
 	it("keeps the end tag of a `<tbody>` whose start tag is omitted", () => {
