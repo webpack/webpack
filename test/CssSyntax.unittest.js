@@ -7094,6 +7094,19 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		).toBe("@media print{::placeholder{color:red}}");
 	});
 
+	it("drops a prefixed spelling its twin makes dead past enough nodes to stream", () => {
+		// Once the block streams, its children go straight out, so the twin is held
+		// as the piece written rather than as the node its parent would assemble.
+		let filler = "";
+		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+		const out = minifyFor(
+			`@media all{::-webkit-input-placeholder{color:red}${filler}::placeholder{color:red}}`,
+			["chrome 120"]
+		);
+		expect(out.startsWith("@media all{.f0{top:0}")).toBe(true);
+		expect(out.endsWith("::placeholder{color:red}}")).toBe(true);
+	});
+
 	it("drops every prefixed spelling one unprefixed twin makes dead", () => {
 		// A stylesheet writes one rule per engine, so a signature holds more than
 		// the one twin — and the twin behind the last is dead weight just the same.
