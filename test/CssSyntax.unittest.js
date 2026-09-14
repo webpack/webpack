@@ -4265,6 +4265,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				".a{.b{.c{q:1}}top:0}.z{t:0}.a{.b{.c{q:1}.d{w:1}}}",
 				".a{top:0}.z{t:0}.a{.b{.c{q:1}.d{w:1}}}"
 			],
+			// A condition whose body the cuts empty says nothing either, and emptying
+			// it can empty the rule holding it.
+			[
+				".p{@supports (x:1){.a{q:1}}top:0}.z{t:0}.p{@supports (x:1){.a{q:1}.b{w:1}}}",
+				".p{top:0}.z{t:0}.p{@supports (x:1){.a{q:1}.b{w:1}}}"
+			],
+			// CSS Cascade 5 §6.4.1: an empty `@layer l{}` still declares where the
+			// layer sits, so a cut that empties one leaves the block standing.
+			[
+				".p{@layer l{.a{q:1}}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}",
+				".p{@layer l{}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}"
+			],
 			// A rule the one after it takes stands next to the one before it, and the
 			// block it just took on may be all that one was waiting for.
 			[
