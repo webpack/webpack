@@ -1635,6 +1635,19 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// An escape that has to stay keeps its whole CRLF terminator.
 		expect(min(".\\31\r\nabc{color:red}")).toBe(".\\31\r\nabc{color:red}");
 	});
+
+	it("parts a value the escape before it already ate the separator for", () => {
+		// The terminator belongs to the identifier, so a value written after it
+		// carries on that identifier instead of starting its own one.
+		for (const digits of ["123456", "12345", "4"]) {
+			const src = `a{b:\\${digits}\n\tc}`;
+			const out = min(src);
+			expect(out).toBe(`a{b:\\${digits}\n c}`);
+			expect(min(out)).toBe(out);
+		}
+		// A CRLF terminator is one terminator, so it needs the one separator too.
+		expect(min("a{b:\\41\r\n\tc}")).toBe("a{b:\\41\r\n c}");
+	});
 });
 
 describe("CssSyntax — minify keeps input the grammar rejects", () => {
