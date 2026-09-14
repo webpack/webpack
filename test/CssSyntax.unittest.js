@@ -4074,7 +4074,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers past enough nodes to stream the block", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
 				`@media all{@layer x{a{color:red}}${filler}@layer x{c{color:lime}}}`
 			);
@@ -4086,9 +4086,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers past enough nodes to stream, but not past that layer again", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@media all{@layer x{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x{c{color:lime}}}`;
 			expect(minify(css)).toBe(css);
+		});
+
+		it("joins the rules a streamed block writes side by side", () => {
+			// A block over the threshold writes its children straight out rather than
+			// assembling a body, which is where `_mergeAdjacentRules` would join them.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const block = "{color:red;outline:1px solid blue}";
+			expect(
+				minify(`@media all{${filler}a:hover${block}b:hover${block}}`)
+			).toBe(`@media all{${filler}a:hover,b:hover${block}}`);
+			// A declaration is read at its own place, so it parts the run — as it does
+			// in a block whose body is assembled in one go.
+			const parted = `.p{${filler}a:hover${block}q:2;b:hover${block}}`;
+			expect(minify(parted)).toBe(parted);
 		});
 
 		it.each([
@@ -7129,7 +7144,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		// Once the block streams, its children go straight out, so the twin is held
 		// as the piece written rather than as the node its parent would assemble.
 		let filler = "";
-		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 		const out = minifyFor(
 			`@media all{::-webkit-input-placeholder{color:red}${filler}::placeholder{color:red}}`,
 			["chrome 120"]
