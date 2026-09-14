@@ -5,22 +5,611 @@
 
 "use strict";
 
-const fs = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
+const { fileURLToPath, pathToFileURL } = require("url");
+const { Name, _, default: Ajv } = require("ajv");
+const standaloneCode = require("ajv/dist/standalone").default;
+const findCommonDir = require("commondir");
+const { globSync } = require("glob");
+const { compile } = require("json-schema-to-typescript");
 const prettier = require("prettier");
+const terser = require("terser");
 const ts = require("typescript");
 const argv = require("./argv");
-const makeDeclarations = require("./schema-declarations");
-const precompileSchemas = require("./schema-validators");
-const loadSchemas = require("./schemas");
+const createTypeScriptProgram = require("./typescript-program");
 
 const {
 	write: doWrite,
 	verbose,
 	root,
+	schemas: schemasGlob,
+	declarations,
 	types: outputFile,
 	templateLiterals
 } = argv;
+
+/**
+ * A schema node holds arbitrary JSON, so its values have no narrower type.
+ * @typedef {{ [key: string]: EXPECTED_ANY }} Schema
+ */
+
+const NESTED_WITH_NAME = ["definitions", "properties"];
+
+const NESTED_DIRECT = ["items", "additionalProperties", "not"];
+
+const NESTED_ARRAY = ["oneOf", "anyOf", "allOf"];
+
+/**
+ * @typedef {object} Visitor
+ * @property {((json: Schema, context: EXPECTED_ANY) => Schema)=} schema visits every schema node
+ * @property {((json: Schema, context: EXPECTED_ANY) => Schema)=} object visits every keyed group of schemas
+ * @property {((json: Schema[], context: EXPECTED_ANY) => void)=} array visits every combinator array
+ */
+
+/**
+ * Walks a schema depth-first, handing each node to the visitor.
+ * @param {Visitor} visitor the visitor to apply
+ * @param {Schema} json the schema node to process
+ * @param {EXPECTED_ANY=} context carried through to every visitor call
+ * @returns {Schema} the processed node
+ */
+const processSchema = (visitor, json, context) => {
+	json = { ...json };
+	if (visitor.schema) json = visitor.schema(json, context);
+
+	for (const name of NESTED_WITH_NAME) {
+		if (name in json && json[name] && typeof json[name] === "object") {
+			if (visitor.object) json[name] = visitor.object(json[name], context);
+			for (const key in json[name]) {
+				json[name][key] = processSchema(visitor, json[name][key], context);
+			}
+		}
+	}
+	for (const name of NESTED_DIRECT) {
+		if (name in json && json[name] && typeof json[name] === "object") {
+			json[name] = processSchema(visitor, json[name], context);
+		}
+	}
+	for (const name of NESTED_ARRAY) {
+		if (name in json && Array.isArray(json[name])) {
+			json[name] = [...json[name]];
+			for (let i = 0; i < json[name].length; i++) {
+				json[name][i] = processSchema(visitor, json[name][i], context);
+			}
+			if (visitor.array) visitor.array(json[name], context);
+		}
+	}
+
+	return json;
+};
+
+/**
+ * @typedef {object} SchemaFile
+ * @property {string} absPath absolute path of the schema
+ * @property {string} relPath path relative to the directory every schema shares
+ * @property {string} basename the schema's name without its extension
+ * @property {() => Schema} parse the file's own copy of the parsed schema
+ */
+
+/**
+ * Reads every schema from disk once; each consumer parses its own copy, because
+ * the declaration pass rewrites the tree the validator pass reads.
+ * @returns {SchemaFile[]} every schema, ordered by path
+ */
+const loadSchemas = () => {
+	const absPaths = globSync(schemasGlob, { cwd: root, absolute: true }).sort();
+	// Over the paths themselves a lone match is its own common directory, which
+	// leaves every path below relative to nothing
+	const commonDir = path.resolve(findCommonDir(absPaths.map(path.dirname)));
+	return absPaths.map((absPath) => {
+		const content = fs.readFileSync(absPath, "utf8");
+		return {
+			absPath,
+			relPath: path.relative(commonDir, absPath),
+			basename: path.basename(absPath, path.extname(absPath)),
+			parse: () => JSON.parse(content)
+		};
+	});
+};
+
+/**
+ * Compiles every schema into the declaration file its options are read from.
+ * These are build output rather than a tracked artifact, so they are written
+ * whatever the mode: a checkout that has never generated them has none
+ * @param {SchemaFile[]} schemas every schema, already read
+ * @returns {Promise<boolean>} whether every declaration could be written
+ */
+const makeDeclarations = async (schemas) => {
+	const results = await Promise.all(schemas.map(makeDefinitionsForSchema));
+	return results.every(Boolean);
+};
+
+/**
+ * @param {SchemaFile} schemaFile the schema to compile
+ * @returns {Promise<boolean>} whether the declaration is up to date
+ */
+const makeDefinitionsForSchema = async (schemaFile) => {
+	const { relPath, basename } = schemaFile;
+	if (path.basename(relPath).startsWith("_")) return true;
+	const directory = path.dirname(relPath);
+	const filename = path.resolve(
+		root,
+		declarations,
+		`${path.join(directory, basename)}.d.ts`
+	);
+	const schema = schemaFile.parse();
+	const keys = Object.keys(schema);
+	if (keys.length === 1 && keys[0] === "$ref") return true;
+
+	const prettierConfig = await prettier.resolveConfig(
+		path.resolve(root, declarations, "result.d.ts")
+	);
+	if (!prettierConfig) {
+		throw new Error("Prettier options not found");
+	}
+
+	const style = {
+		printWidth: prettierConfig.printWidth,
+		useTabs: prettierConfig.useTabs,
+		tabWidth: prettierConfig.tabWidth
+	};
+
+	preprocessSchema(schema);
+	return compile(schema, basename, {
+		bannerComment:
+			"/*\n * This file was automatically generated.\n * DO NOT MODIFY BY HAND.\n * Run `yarn fix:special` to update\n */",
+		unreachableDefinitions: true,
+		unknownAny: false,
+		style
+	}).then(
+		(ts) => {
+			ts = ts.replace(
+				/\s+\*\s+\* This interface was referenced by `.+`'s JSON-Schema\s+\* via the `definition` ".+"\./g,
+				""
+			);
+			let normalizedContent = "";
+			try {
+				const content = fs.readFileSync(filename, "utf8");
+				normalizedContent = content.replace(/\r\n?/g, "\n");
+			} catch (_err) {
+				// ignore
+			}
+			if (normalizedContent.trim() === ts.trim()) return true;
+			fs.mkdirSync(path.dirname(filename), { recursive: true });
+			fs.writeFileSync(filename, ts, "utf8");
+			if (verbose) {
+				console.error(
+					`declarations/${relPath.replace(/\\/g, "/")}.d.ts updated`
+				);
+			}
+			return true;
+		},
+		(err) => {
+			console.error(err);
+			return false;
+		}
+	);
+};
+
+/**
+ * @param {Schema} root the schema the reference is relative to
+ * @param {string} ref a `#/`-prefixed JSON pointer
+ * @returns {Schema} the referenced schema
+ */
+const resolvePath = (root, ref) => {
+	const parts = ref.split("/");
+	if (parts[0] !== "#") throw new Error("Unexpected ref");
+	let current = root;
+	for (const p of parts.slice(1)) {
+		current = current[p];
+	}
+	return current;
+};
+
+/**
+ * Folds the documentation-only keywords into descriptions and splits the shapes
+ * `json-schema-to-typescript` cannot express into named definitions.
+ * @param {Schema} schema the schema node to process
+ * @param {Schema=} root the schema the node belongs to
+ * @param {string[]=} path the property names walked to reach the node
+ * @returns {void}
+ */
+const preprocessSchema = (schema, root = schema, path = []) => {
+	if (schema.added) {
+		const added =
+			typeof schema.added === "string" ? `@since ${schema.added}` : "@since";
+		schema.description = schema.description
+			? `${schema.description}\n${added}`
+			: added;
+		delete schema.added;
+	}
+	if (schema.experimental) {
+		const experimental =
+			typeof schema.experimental === "string"
+				? `@experimental ${schema.experimental}`
+				: "@experimental";
+		schema.description = schema.description
+			? `${schema.description}\n${experimental}`
+			: experimental;
+		delete schema.experimental;
+	}
+	if ("definitions" in schema) {
+		for (const key of Object.keys(schema.definitions)) {
+			preprocessSchema(schema.definitions[key], root, [key]);
+		}
+	}
+	if ("properties" in schema) {
+		for (const key of Object.keys(schema.properties)) {
+			const property = schema.properties[key];
+			if ("$ref" in property) {
+				const result = resolvePath(root, property.$ref);
+				if (!result) {
+					throw new Error(
+						`Unable to resolve "$ref": "${property.$ref}" in ${path.join("/")}`
+					);
+				}
+				schema.properties[key] = {
+					description: result.description,
+					deprecated: result.deprecated,
+					experimental: result.experimental,
+					added: result.added,
+					anyOf: [property]
+				};
+			} else if (
+				"oneOf" in property &&
+				property.oneOf.length === 1 &&
+				"$ref" in property.oneOf[0]
+			) {
+				const result = resolvePath(root, property.oneOf[0].$ref);
+				schema.properties[key] = {
+					description: property.description || result.description,
+					deprecated: property.deprecated || result.deprecated,
+					experimental: property.experimental || result.experimental,
+					added: property.added || result.added,
+					anyOf: property.oneOf
+				};
+				preprocessSchema(schema.properties[key], root, [...path, key]);
+			} else {
+				preprocessSchema(property, root, [...path, key]);
+			}
+		}
+	}
+	if ("items" in schema) {
+		preprocessSchema(schema.items, root, [...path, "item"]);
+	}
+	if (typeof schema.additionalProperties === "object") {
+		preprocessSchema(schema.additionalProperties, root, [...path, "property"]);
+	}
+	const arrayProperties = ["oneOf", "anyOf", "allOf"];
+	for (const prop of arrayProperties) {
+		if (Array.isArray(schema[prop])) {
+			let i = 0;
+			for (const item of schema[prop]) {
+				preprocessSchema(item, root, [...path, item.type || i++]);
+			}
+		}
+	}
+	if ("type" in schema && schema.type === "array") {
+		// Workaround for a typescript bug that
+		// string[] is not assignable to [string, ...string]
+		delete schema.minItems;
+	}
+	if ("implements" in schema) {
+		const implementedProps = new Set();
+		const implementedNames = [];
+		for (const impl of [schema.implements].flat()) {
+			const referencedSchema = resolvePath(root, impl);
+			for (const prop of Object.keys(referencedSchema.properties)) {
+				implementedProps.add(prop);
+			}
+			implementedNames.push(
+				/** @type {RegExpExecArray} */ (/\/([^/]+)$/.exec(impl))[1]
+			);
+		}
+		const propEntries = Object.entries(schema.properties).filter(
+			([name]) => !implementedProps.has(name)
+		);
+		if (propEntries.length > 0) {
+			const key = `${path
+				.map((x) => x[0].toUpperCase() + x.slice(1))
+				.join("")}Extra`;
+			implementedNames.push(key);
+			// `implements` is a reserved word under strict mode, so it is dropped
+			// from the copy rather than destructured out of it
+			const remainingSchema = { ...schema };
+			delete remainingSchema.implements;
+			root.definitions[key] = {
+				...remainingSchema,
+				properties: Object.fromEntries(propEntries)
+			};
+			preprocessSchema(root.definitions[key], root, [key]);
+		}
+		schema.tsType = implementedNames.join(" & ");
+		return;
+	}
+	if (
+		"properties" in schema &&
+		typeof schema.additionalProperties === "object" &&
+		!schema.tsType
+	) {
+		const { properties, additionalProperties, ...remaining } = schema;
+		const key1 = `${path
+			.map((x) => x[0].toUpperCase() + x.slice(1))
+			.join("")}Known`;
+		const key2 = `${path
+			.map((x) => x[0].toUpperCase() + x.slice(1))
+			.join("")}Unknown`;
+		root.definitions[key1] = {
+			...remaining,
+			properties,
+			additionalProperties: false
+		};
+		preprocessSchema(root.definitions[key1], root, [key1]);
+		root.definitions[key2] = {
+			...remaining,
+			additionalProperties
+		};
+		preprocessSchema(root.definitions[key2], root, [key2]);
+		schema.tsType = `${key1} & ${key2}`;
+	}
+};
+
+const ajv = new Ajv({
+	code: { source: true, optimize: true },
+	messages: false,
+	strictNumbers: false,
+	logger: false,
+	/**
+	 * @param {string} uri the `$ref` being resolved
+	 * @returns {Promise<import("ajv").AnySchemaObject>} the referenced schema
+	 */
+	loadSchema: async (uri) => {
+		const schemaPath = fileURLToPath(uri);
+
+		const schema = require(schemaPath);
+
+		const processedSchema = processJson(schema);
+		processedSchema.$id = uri;
+		return processedSchema;
+	}
+});
+
+ajv.addKeyword({
+	keyword: "instanceof",
+	schemaType: "string",
+	code(ctx) {
+		const { data, schema } = ctx;
+		ctx.fail(_`!(${data} instanceof ${new Name(schema)})`);
+	}
+});
+
+ajv.addKeyword({
+	keyword: "absolutePath",
+	type: "string",
+	schemaType: "boolean",
+
+	code(ctx) {
+		const { data, schema } = ctx;
+		ctx.fail(
+			_`${data}.includes("!") || (absolutePathRegExp.test(${data}) !== ${schema})`
+		);
+	}
+});
+
+ajv.removeKeyword("minLength");
+ajv.addKeyword({
+	keyword: "minLength",
+	type: "string",
+	schemaType: "number",
+
+	code(ctx) {
+		const { data } = ctx;
+		ctx.fail(_`${data}.length < 1`);
+	}
+});
+
+ajv.addKeyword({
+	keyword: "undefinedAsNull",
+	schemaType: "boolean",
+
+	code(ctx) {
+		// Nothing, just to avoid failing
+	}
+});
+ajv.removeKeyword("enum");
+ajv.addKeyword({
+	keyword: "enum",
+	schemaType: "array",
+	$data: true,
+
+	code(ctx) {
+		const { data, schema, parentSchema } = ctx;
+		ctx.fail(
+			schema
+				.map(
+					/**
+					 * @param {EXPECTED_ANY} x one allowed value
+					 * @returns {import("ajv").Code} the check rejecting it
+					 */
+					(x) => {
+						if (x === null && parentSchema.undefinedAsNull) {
+							return _`${data} !== null && ${data} !== undefined`;
+						}
+
+						return _`${data} !== ${x}`;
+					}
+				)
+				.reduce(
+					/**
+					 * @param {import("ajv").Code} a the checks so far
+					 * @param {import("ajv").Code} b the next check
+					 * @returns {import("ajv").Code} both checks joined
+					 */
+					(a, b) => _`${a} && ${b}`
+				)
+		);
+	}
+});
+
+const EXCLUDED_PROPERTIES = [
+	"title",
+	"description",
+	"deprecated",
+	"experimental",
+	"added",
+	"cli",
+	"implements",
+	"tsType"
+];
+
+const processJson = processSchema.bind(null, {
+	schema: (json) => {
+		for (const p of EXCLUDED_PROPERTIES) {
+			delete json[p];
+		}
+		return json;
+	}
+});
+
+/**
+ * @param {string} code the generated validator source
+ * @returns {Promise<string>} the source with hoisted values and minified
+ */
+const postprocess = async (code) => {
+	// Keep in sync with the `absolutePath` keyword of `schema-utils`, the
+	// pre-compiled schema has to accept exactly what the real one accepts
+	if (/absolutePathRegExp/.test(code)) {
+		code = `const absolutePathRegExp = /^(?:file:(?=\\/))?(?:[A-Za-z]:[\\\\/]|\\\\\\\\|\\/)/i;${code}`;
+	}
+
+	// remove unnecessary error code:
+	code = code
+		.replace(/\{instancePath[^{}]+,keyword:[^{}]+,/g, "{")
+		// remove extra "$id" property
+		.replace(/"\$id":".+?"/, "");
+
+	// minimize
+	const minified = await terser.minify(code, {
+		compress: {
+			passes: 3
+		},
+		mangle: true,
+		ecma: 2015,
+		toplevel: true
+	});
+
+	code = /** @type {string} */ (minified.code);
+
+	// banner
+	code = `/*
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run \`yarn fix:special\` to update
+ */
+${code}`;
+	return code;
+};
+
+/**
+ * @param {string} schemaPath absolute path of the schema
+ * @param {string} title the schema's title
+ * @param {string} relPath the schema's path relative to the schemas directory
+ * @returns {string} the declaration file's content
+ */
+const createDeclaration = (schemaPath, title, relPath) => {
+	const directory = path.dirname(relPath);
+	const basename = path.basename(relPath, path.extname(relPath));
+	const filename = path.resolve(
+		root,
+		declarations,
+		`${path.join(directory, basename)}`
+	);
+	const fromSchemaToDeclaration = path
+		.relative(path.dirname(schemaPath), filename)
+		.replace(/\\/g, "/");
+	return `/*
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run \`yarn fix:special\` to update
+ */
+declare const check: (options: ${
+		title
+			? `import(${JSON.stringify(fromSchemaToDeclaration)}).${title}`
+			: "any"
+	}) => boolean;
+export = check;
+`;
+};
+
+/**
+ * @param {string} path the file to compare against
+ * @param {string} expected the content the file must hold
+ * @returns {boolean} whether the file already holds it
+ */
+const updateFile = (path, expected) => {
+	let normalizedContent = "";
+	try {
+		const content = fs.readFileSync(path, "utf8");
+		normalizedContent = content.replace(/\r\n?/g, "\n");
+	} catch (_err) {
+		// ignore
+	}
+	if (normalizedContent.trim() === expected.trim()) return true;
+	if (doWrite) {
+		fs.writeFileSync(path, expected, "utf8");
+		console.error(`${path} updated`);
+		return true;
+	}
+	console.error(`${path} need to be updated\nExpected:\n${expected}`);
+	return false;
+};
+
+/**
+ * @param {SchemaFile} schemaFile the schema to precompile
+ * @returns {Promise<boolean>} whether the validator is up to date
+ */
+const precompileSchema = async (schemaFile) => {
+	const { absPath: schemaPath, relPath } = schemaFile;
+	if (path.basename(schemaPath).startsWith("_")) return true;
+	try {
+		const schema = schemaFile.parse();
+
+		const title = schema.title;
+		const processedSchema = processJson(schema);
+		processedSchema.$id = pathToFileURL(schemaPath).href;
+		const validate = await ajv.compileAsync(processedSchema);
+		const code = await postprocess(standaloneCode(ajv, validate));
+		const precompiledSchemaPath = schemaPath.replace(/\.json$/, ".check.js");
+		const precompiledSchemaDeclarationPath = schemaPath.replace(
+			/\.json$/,
+			".check.d.ts"
+		);
+		const codeIsCurrent = updateFile(precompiledSchemaPath, code);
+		const declarationIsCurrent = updateFile(
+			precompiledSchemaDeclarationPath,
+			createDeclaration(schemaPath, title, relPath)
+		);
+		return codeIsCurrent && declarationIsCurrent;
+	} catch (err) {
+		const error = /** @type {Error} */ (err);
+
+		error.message += `\nduring precompilation of ${schemaPath}`;
+		throw error;
+	}
+};
+
+/**
+ * Compiles every schema into the standalone validator webpack validates with.
+ * @param {SchemaFile[]} schemas every schema, already read
+ * @returns {Promise<boolean>} whether every validator is up to date
+ */
+const precompileSchemas = async (schemas) => {
+	// One `ajv` instance holds them all, and a `$ref` adds the schema it names,
+	// so a schema must not be compiled after another compile has loaded it
+	const results = await Promise.all(schemas.map(precompileSchema));
+	return results.every(Boolean);
+};
 
 process.exitCode = 1;
 let exitCode = 0;
@@ -268,29 +857,6 @@ class TupleMap {
 	}
 }
 
-/**
- * @param {ts.Diagnostic} diagnostic info
- * @returns {void}
- */
-const printError = (diagnostic) => {
-	if (diagnostic.file && typeof diagnostic.start === "number") {
-		const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(
-			diagnostic.start
-		);
-		const message = ts.flattenDiagnosticMessageText(
-			diagnostic.messageText,
-			"\n"
-		);
-		console.error(
-			`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`
-		);
-	} else {
-		console.error(
-			ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
-		);
-	}
-};
-
 (async () => {
 	const rootPath = path.resolve(root);
 
@@ -327,40 +893,18 @@ const printError = (diagnostic) => {
 		}
 	}
 
-	const configPath = path.resolve(rootPath, "tsconfig.types.json");
-	const configContent = ts.sys.readFile(configPath);
-	if (!configContent) {
-		console.error("Empty config file");
-		return;
-	}
-	const configJsonFile = ts.parseJsonText(configPath, configContent);
-	const parsedConfig = ts.parseJsonSourceFileConfigFileContent(
-		configJsonFile,
-		ts.sys,
-		rootPath,
-		{
-			noEmit: true
-		}
-	);
-
-	if (parsedConfig.errors && parsedConfig.errors.length > 0) {
-		for (const error of parsedConfig.errors) {
-			printError(error);
-		}
-		return;
-	}
-
-	const program = ts.createProgram(
-		parsedConfig.fileNames,
-		parsedConfig.options
-	);
+	const program = createTypeScriptProgram("tsconfig.types.json");
 
 	const checker = program.getTypeChecker();
 
 	const exposedFiles = ["lib/index.js"];
 
 	try {
-		if ((await fs.stat(path.resolve(rootPath, "types/index.d.ts"))).isFile()) {
+		if (
+			(
+				await fs.promises.stat(path.resolve(rootPath, "types/index.d.ts"))
+			).isFile()
+		) {
 			exposedFiles.push("types/index.d.ts");
 		}
 	} catch {
@@ -1408,7 +1952,9 @@ const printError = (diagnostic) => {
 						);
 					if (!match) {
 						console.error(
-							`${/** @type {ts.SourceFile} */ (externalSource).fileName} doesn't match node_modules import schema`
+							`${
+								/** @type {ts.SourceFile} */ (externalSource).fileName
+							} doesn't match node_modules import schema`
 						);
 					} else {
 						let from = match[2] + match[3];
@@ -3037,7 +3583,7 @@ const printError = (diagnostic) => {
 
 	let needUpdate = true;
 	try {
-		if ((await fs.readFile(outputFilePath, "utf8")) === source) {
+		if ((await fs.promises.readFile(outputFilePath, "utf8")) === source) {
 			needUpdate = false;
 		}
 	} catch (_err) {
@@ -3046,7 +3592,7 @@ const printError = (diagnostic) => {
 
 	if (needUpdate) {
 		if (doWrite) {
-			await fs.writeFile(outputFilePath, source);
+			await fs.promises.writeFile(outputFilePath, source);
 			console.error("types.d.ts updated.");
 		} else {
 			exitCode = 1;

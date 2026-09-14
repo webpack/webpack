@@ -259,12 +259,7 @@ export default defineConfig([
 	{
 		// The code generators run under the repo's own Node, not the baseline the
 		// code they emit has to meet.
-		files: [
-			"tooling/generate-types.js",
-			"tooling/schema-declarations.js",
-			"tooling/schema-validators.js",
-			"tooling/type-coverage.js"
-		],
+		files: ["tooling/generate-types.js", "tooling/type-coverage.js"],
 		rules: {
 			"n/no-unsupported-features/es-builtins": "off",
 			"n/no-unsupported-features/es-syntax": "off",
