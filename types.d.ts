@@ -7668,7 +7668,7 @@ declare interface EntryDescription {
 	library?: LibraryOptions;
 
 	/**
-	 * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+	 * Expose the exports of every module in 'import' instead of only the last one's. A name more than one module binds differently is left out, as 'export *' does. Only observable through 'output.library'.
 	 */
 	mergeExports?: boolean;
 
@@ -7743,7 +7743,7 @@ declare interface EntryDescriptionNormalized {
 	library?: LibraryOptions;
 
 	/**
-	 * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+	 * Expose the exports of every module in 'import' instead of only the last one's. A name more than one module binds differently is left out, as 'export *' does. Only observable through 'output.library'.
 	 */
 	mergeExports?: boolean;
 
@@ -31219,7 +31219,6 @@ declare namespace exports {
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
 		export let makeNamespaceObject: "__webpack_require__.r";
 		export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
-		export let mergeExports: "__webpack_require__.me";
 		export let module: "module";
 		export let moduleCache: "__webpack_require__.c";
 		export let moduleFactories: "__webpack_require__.m";

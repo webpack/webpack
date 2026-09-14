@@ -6,8 +6,12 @@ it("should expose the exports of every entry module", () => {
 	expect(MergedLib.fromIndex).toBe("index");
 });
 
-it("should let a later entry module win a conflicting export name", () => {
-	expect(MergedLib.shared).toBe("from-b");
+it("should leave out a name the entry modules bind differently", () => {
+	expect("shared" in MergedLib).toBe(false);
+});
+
+it("should keep a name the entry modules take from one binding", () => {
+	expect(MergedLib.fromBoth).toBe("both");
 });
 
 it("should mark the merged exports as a namespace object", () => {

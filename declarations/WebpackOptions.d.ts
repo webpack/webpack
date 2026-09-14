@@ -203,7 +203,7 @@ export type UmdAmdContainer = string;
  */
 export type UmdNamedDefine = boolean;
 /**
- * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+ * Expose the exports of every module in 'import' instead of only the last one's. A name more than one module binds differently is left out, as 'export *' does. Only observable through 'output.library'.
  * @since 5.111.0
  */
 export type EntryMergeExports = boolean;
@@ -1389,7 +1389,7 @@ export interface EntryDescription {
 	 */
 	library?: LibraryOptions;
 	/**
-	 * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+	 * Expose the exports of every module in 'import' instead of only the last one's. A name more than one module binds differently is left out, as 'export *' does. Only observable through 'output.library'.
 	 */
 	mergeExports?: EntryMergeExports;
 	/**
@@ -4543,7 +4543,7 @@ export interface EntryDescriptionNormalized {
 	 */
 	library?: LibraryOptions;
 	/**
-	 * Expose the exports of every module in 'import' instead of only the last one's. Modules are merged in order, so a later one wins a conflicting export name. Only observable through 'output.library'.
+	 * Expose the exports of every module in 'import' instead of only the last one's. A name more than one module binds differently is left out, as 'export *' does. Only observable through 'output.library'.
 	 */
 	mergeExports?: EntryMergeExports;
 	/**

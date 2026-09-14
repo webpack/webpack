@@ -2,11 +2,11 @@
 
 /** @import { Compilation, Compiler } from "../../../../" */
 
-// A `module` library names its exports in an `export { … }` clause, so merging
-// has to widen that clause and not only the runtime exports object.
+// A `commonjs-static` library writes one assignment per export name, so merging
+// has to widen that list and not only the runtime exports object.
 const EXPECTED_EXPORTS = ["fromA", "fromB", "fromBoth"];
 // Both modules bind it differently, so `export *` would leave it out too.
-const CONFLICTING_EXPORT = " as shared";
+const CONFLICTING_EXPORT = "shared";
 
 /**
  * @this {Compiler}
@@ -18,12 +18,14 @@ function expectExportNames() {
 	 */
 	const handler = (compilation) => {
 		compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
-			const source = assets["main.mjs"].source().toString();
-			const [, names = ""] = /export \{([^}]*)\};/.exec(source) || [];
-			for (const name of EXPECTED_EXPORTS) {
-				expect(names).toContain(` as ${name}`);
-			}
-			expect(names).not.toContain(CONFLICTING_EXPORT);
+			const source = assets["main.js"].source().toString();
+			const assigned = new Set(
+				[...source.matchAll(/exports\.(\w+) = __webpack_exports__\./g)].map(
+					([, name]) => name
+				)
+			);
+			for (const name of EXPECTED_EXPORTS) expect(assigned).toContain(name);
+			expect(assigned).not.toContain(CONFLICTING_EXPORT);
 		});
 	};
 	this.hooks.compilation.tap("testcase", handler);
@@ -37,13 +39,9 @@ module.exports = {
 			mergeExports: true
 		}
 	},
-	target: "node14",
 	output: {
-		filename: "[name].mjs",
-		module: true,
-		library: { type: "module" }
+		filename: "[name].js",
+		library: { type: "commonjs-static" }
 	},
-	experiments: { outputModule: true },
-	optimization: { concatenateModules: false },
 	plugins: [expectExportNames]
 };
