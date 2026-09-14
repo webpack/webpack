@@ -65,10 +65,7 @@ ajv.addKeyword({
 	schemaType: "number",
 
 	code(ctx) {
-		const { data, schema } = ctx;
-		if (schema !== 1) {
-			throw new Error("Schema precompilation only supports minLength: 1");
-		}
+		const { data } = ctx;
 		ctx.fail(_`${data}.length < 1`);
 	}
 });
@@ -89,18 +86,6 @@ ajv.addKeyword({
 
 	code(ctx) {
 		const { data, schema, parentSchema } = ctx;
-		for (const item of schema) {
-			if (typeof item === "object" && item !== null) {
-				throw new Error(
-					`Schema precompilation only supports primitive values in enum: ${JSON.stringify(
-						item,
-						null,
-						2
-					)}`
-				);
-			}
-		}
-
 		ctx.fail(
 			schema
 				.map(

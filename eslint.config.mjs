@@ -104,9 +104,8 @@ export default defineConfig([
 	{
 		files: ["lib/**/*.js"],
 		rules: {
-			// The parser `webpack/types` brings puts the TypeScript `lib` globals in
-			// scope, so both read a local `Cache` or `crypto` as clashing with one.
-			// TODO drop once eslint-config-webpack 4.12.1 is out, it turns them off
+			// TODO drop once eslint-config-webpack#200 ships: the parser `webpack/types`
+			// brings puts the TypeScript `lib` globals in scope, so a local `Cache` clashes
 			"no-global-assign": "off",
 			"no-redeclare": "off"
 		}

@@ -4574,10 +4574,10 @@ eslint-config-prettier@^10.1.8:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-10.1.8.tgz#15734ce4af8c2778cc32f0b01b37b0b5cd1ecb97"
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
-eslint-config-webpack@^4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.12.0.tgz#2b4f7fd4dea84ea0c85e3fd6d810cb995763b55d"
-  integrity sha512-wAW4sll5tAAP9c9ftOxfHGc1ppVRnoYL1mjxyz1XccUN8wdk3/9OWAVPxM0GgibPvIli+eug7HekKdfb7zWq7Q==
+eslint-config-webpack@^4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-4.13.0.tgz#e39ff2e2a84f3569570cfa9462c51a8c7b3edc6b"
+  integrity sha512-EtGrccM6ZAQjw/P43fYcpIVPIsfFNQGqMed/F71O+4Ul4WdvlGYcNn8EC8LoqVSWp864QQJ2aCdvZGzLvH50OQ==
   dependencies:
     "@eslint/js" "^9.39.2"
     "@eslint/markdown" "^8.0.1"

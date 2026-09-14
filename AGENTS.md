@@ -151,6 +151,8 @@ Skipping any layer silently breaks the option. After editing schemas, run `yarn 
 
 These keywords are documentation-only: the tooling strips them from the precompiled validators. A property that is a pure `$ref` cannot carry them (the `webpack/valid-schema` lint rule forbids extra keys next to `$ref`) — annotate the referenced definition instead.
 
+**What a schema may say is the lint rule's job, not the generator's.** `webpack/valid-schema` is what rejects extra keys next to a `$ref`, a `minLength` other than `1`, and an `enum` holding anything but primitives — the last two because the precompiled validator emits no other length check and can compare nothing else. `yarn lint:code` reports them at the offending key; the generator assumes they hold.
+
 The two config layers differ: **`normalization.js`** canonicalizes the user-supplied config shape (shorthand → full form); **`defaults.js`** fills in values (often mode/target-dependent). Edit whichever matches your change.
 
 **Adding a new dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (it emits the generated code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`.
