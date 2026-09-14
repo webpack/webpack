@@ -8241,9 +8241,9 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			// before `<body>` starts, the insertion modes ignore whitespace.
 			// The shell end tag the source spelled stays: `removeImpliedTags`
 			// leaves out only the `<html>` start tag outside `"all"`.
-			expect(minify("</html> foo")).toBe("<body> foo</html>");
+			expect(minify("</html> foo")).toBe("<body> foo</body></html>");
 			expect(minify("</body> foo")).toBe("<body> foo</body>");
-			expect(minify("<colgroup> foo")).toBe("<body> foo");
+			expect(minify("<colgroup> foo")).toBe("<body> foo</body>");
 			// Nothing to keep when the run is not in the body to begin with.
 			expect(minify(" foo")).toBe("foo");
 			expect(minify("<p>x</p>")).toBe("<p>x");
