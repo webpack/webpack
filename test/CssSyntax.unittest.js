@@ -2368,6 +2368,23 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		);
 	});
 
+	it("folds a keyword the declaration before it does not take", () => {
+		// A node is an index the printer hands back for reuse, so a sheet of this
+		// shape gives `color` the index `font-family` held — and the memo below it.
+		const sheet = [
+			"html:lang(ko),",
+			".lang-ko {",
+			'  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Sample Gothic", "Helvetica Neue", sans-serif;',
+			"}",
+			".btn.btn-clear {",
+			"  background: transparent;",
+			"  border: 0;",
+			"  color: currentColor;",
+			"}"
+		].join("\n");
+		expect(min(sheet)).toContain("color:currentcolor");
+	});
+
 	it("collapses each side of `border-radius`'s `/` on its own", () => {
 		expect(min("a{border-radius:1px 1px 1px 1px / 1px 1px 1px 1px}")).toBe(
 			"a{border-radius:1px}"
