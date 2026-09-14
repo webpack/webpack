@@ -19,7 +19,11 @@ const {
 	CACHE: HTML_CACHE,
 	INLINED_STYLESHEETS,
 	INSTALLED_DOCUMENTS,
-	inlineCssPage
+	SPRITE_WITHIN,
+	TAG_SOUP,
+	WEB_COMPONENTS,
+	inlineCssPage,
+	spritePage
 } = require("../../tooling/compare-html-tools");
 
 /** @typedef {{ name: string, raw: string, min: string }} Fixture */
@@ -112,10 +116,20 @@ const benchmarkStylesheets = (minify) =>
 		minify
 	);
 
+// Written rather than installed, each carrying a construct no shipped page
+// here reaches: recovery from malformed markup, and a declarative shadow root.
+/** @type {[string, string][]} */
+const WRITTEN_DOCUMENTS = [
+	["Tag soup", TAG_SOUP],
+	["Web components", WEB_COMPONENTS]
+];
+
 /**
  * The documents `yarn benchmark:html-tools` installs, and the pages it builds
  * around a whole framework stylesheet. Those pages are the ones carrying a
  * `<style>`, which is what reaches the css minifier nested in the html one.
+ * The comparison's bulk pages are left out: what they carry is size rather than
+ * a construct, and building them would cost that at collection time.
  * @param {(source: string) => string} minify the printer to run
  * @returns {Fixture[]} the corpus, empty until that has been run once
  */
@@ -140,6 +154,18 @@ const benchmarkDocuments = (minify) => {
 		if (!fs.existsSync(sheet)) continue;
 		const raw = inlineCssPage(label, fs.readFileSync(sheet, "utf8"));
 		out.push({ name: label, raw, min: minify(raw) });
+	}
+	// The sprite is a shipped SVG rather than a written one, so it is read out of
+	// the cache like an installed document.
+	const sprite = path.join(HTML_CACHE, "node_modules", SPRITE_WITHIN);
+	if (fs.existsSync(sprite)) {
+		const raw = spritePage(fs.readFileSync(sprite, "utf8"));
+		out.push({ name: "Icon sprite (inlined SVG)", raw, min: minify(raw) });
+	}
+	if (out.length > 0) {
+		for (const [name, raw] of WRITTEN_DOCUMENTS) {
+			out.push({ name, raw, min: minify(raw) });
+		}
 	}
 	return out;
 };
