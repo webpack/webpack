@@ -4246,6 +4246,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// parted are neighbors by the time the stylesheet is through.
 			["a{top:0}i{q:1}b{top:0}i{q:1}", "a,b{top:0}i{q:1}"],
 			["a{x:1}a{y:2}b{x:1}b{y:2}c{x:1}c{y:2}", "a,b,c{x:1;y:2}"],
+			// The list a join grows is ordered once the run of joins has ended, so
+			// it reads the same however the rules were written.
+			["b{x:1}b{y:2}a{x:1}a{y:2}", "a,b{x:1;y:2}"],
 			// A list may not gather what nesting would re-specify: the `i` of
 			// `a,b{i{}}` is one `:is(a,b) i`, not the two it was.
 			["a{i{y:2}}b{i{y:2}}", "a{i{y:2}}b{i{y:2}}"],
@@ -7077,6 +7080,18 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 				["chrome 120"]
 			)
 		).toBe("i{top:0}@keyframes s{to{opacity:1}}");
+	});
+
+	it("drops every prefixed spelling a nested block's twin makes dead", () => {
+		// The block's parent assembles these rather than writing them straight out,
+		// so each twin is held as the node rather than as a piece.
+		expect(
+			minifyFor(
+				"@media print{::-webkit-input-placeholder{color:red}" +
+					"::-moz-placeholder{color:red}::placeholder{color:red}}",
+				["chrome 120"]
+			)
+		).toBe("@media print{::placeholder{color:red}}");
 	});
 
 	it("drops every prefixed spelling one unprefixed twin makes dead", () => {
