@@ -114,6 +114,7 @@ The directory listings below are the canonical map of the repository. **Whenever
 **Hand-maintained type declarations (these _are_ editable)**
 
 - `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`.
+- `types/` — the type sources no schema produces: `LoaderContext.d.ts`, and `index.d.ts`, the barrel `generate-types.js` exposes so what it re-exports reaches `types.d.ts`.
 
 **Configuration**
 
@@ -568,7 +569,7 @@ Every webpack PR is reviewed automatically on the initial commit and on every su
 These files are produced by `yarn fix:special` and must not be edited by hand:
 
 - `types.d.ts` — compiled from JSDoc + schemas.
-- `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
+- `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`. Untracked: `generate-types.js` writes them on every run, in check mode too, because a fresh checkout has none.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 - `lib/css/data.js` — every table the CSS minifier looks a name up in, and the arithmetic its math-function descriptors bind to: derived from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) plus the generator's `SUPPLEMENT` of spec-prose tables and math primitives, by `tooling/generate-css-data.js` — which also holds the value-definition-syntax parser those grammars are read with, and runs the generation only as the entry point so its tests can require it.

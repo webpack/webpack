@@ -23,3 +23,6 @@
 .cspellcache
 package-lock.json
 /events.json
+
+# Generated from schemas/**/*.json by tooling/generate-types.js
+/declarations/

@@ -11,12 +11,14 @@ const { compile } = require("json-schema-to-typescript");
 const prettier = require("prettier");
 const argv = require("./argv");
 
-const { write: doWrite, root, declarations: outputFolder } = argv;
+const { verbose, root, declarations: outputFolder } = argv;
 
 /**
  * Compiles every schema into the declaration file its options are read from.
+ * These are build output rather than a tracked artifact, so they are written
+ * whatever the mode: a checkout that has never generated them has none
  * @param {import("./schemas").SchemaFile[]} schemas every schema, already read
- * @returns {Promise<boolean>} whether every declaration is up to date
+ * @returns {Promise<boolean>} whether every declaration could be written
  */
 const makeDeclarations = async (schemas) => {
 	const results = await Promise.all(schemas.map(makeDefinitionsForSchema));
@@ -79,18 +81,14 @@ const makeDefinitionsForSchema = async (schemaFile) => {
 				// ignore
 			}
 			if (normalizedContent.trim() === ts.trim()) return true;
-			if (doWrite) {
-				fs.mkdirSync(path.dirname(filename), { recursive: true });
-				fs.writeFileSync(filename, ts, "utf8");
+			fs.mkdirSync(path.dirname(filename), { recursive: true });
+			fs.writeFileSync(filename, ts, "utf8");
+			if (verbose) {
 				console.error(
 					`declarations/${relPath.replace(/\\/g, "/")}.d.ts updated`
 				);
-				return true;
 			}
-			console.error(
-				`declarations/${relPath.replace(/\\/g, "/")}.d.ts need to be updated`
-			);
-			return false;
+			return true;
 		},
 		(err) => {
 			console.error(err);

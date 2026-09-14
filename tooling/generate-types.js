@@ -360,12 +360,8 @@ const printError = (diagnostic) => {
 	const exposedFiles = ["lib/index.js"];
 
 	try {
-		if (
-			(
-				await fs.stat(path.resolve(rootPath, "declarations/index.d.ts"))
-			).isFile()
-		) {
-			exposedFiles.push("declarations/index.d.ts");
+		if ((await fs.stat(path.resolve(rootPath, "types/index.d.ts"))).isFile()) {
+			exposedFiles.push("types/index.d.ts");
 		}
 	} catch {
 		// the file is optional
