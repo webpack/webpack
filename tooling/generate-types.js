@@ -13,6 +13,7 @@ const argv = require("./argv");
 const makeDeclarations = require("./schema-declarations");
 const precompileSchemas = require("./schema-validators");
 const loadSchemas = require("./schemas");
+const createTypeScriptProgram = require("./typescript-program");
 
 const {
 	write: doWrite,
@@ -268,29 +269,6 @@ class TupleMap {
 	}
 }
 
-/**
- * @param {ts.Diagnostic} diagnostic info
- * @returns {void}
- */
-const printError = (diagnostic) => {
-	if (diagnostic.file && typeof diagnostic.start === "number") {
-		const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(
-			diagnostic.start
-		);
-		const message = ts.flattenDiagnosticMessageText(
-			diagnostic.messageText,
-			"\n"
-		);
-		console.error(
-			`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`
-		);
-	} else {
-		console.error(
-			ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")
-		);
-	}
-};
-
 (async () => {
 	const rootPath = path.resolve(root);
 
@@ -327,33 +305,7 @@ const printError = (diagnostic) => {
 		}
 	}
 
-	const configPath = path.resolve(rootPath, "tsconfig.types.json");
-	const configContent = ts.sys.readFile(configPath);
-	if (!configContent) {
-		console.error("Empty config file");
-		return;
-	}
-	const configJsonFile = ts.parseJsonText(configPath, configContent);
-	const parsedConfig = ts.parseJsonSourceFileConfigFileContent(
-		configJsonFile,
-		ts.sys,
-		rootPath,
-		{
-			noEmit: true
-		}
-	);
-
-	if (parsedConfig.errors && parsedConfig.errors.length > 0) {
-		for (const error of parsedConfig.errors) {
-			printError(error);
-		}
-		return;
-	}
-
-	const program = ts.createProgram(
-		parsedConfig.fileNames,
-		parsedConfig.options
-	);
+	const program = createTypeScriptProgram("tsconfig.types.json");
 
 	const checker = program.getTypeChecker();
 

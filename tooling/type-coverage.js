@@ -11,8 +11,9 @@ const fs = require("fs");
 const path = require("path");
 const ts = require("typescript");
 const { root } = require("./argv");
-const program = require("./typescript-program");
+const createTypeScriptProgram = require("./typescript-program");
 
+const program = createTypeScriptProgram("tsconfig.json");
 const typeChecker = program.getTypeChecker();
 
 /**
