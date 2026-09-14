@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-rewrite-referenced-value minimize-rewrite-referenced-value should compile 1`] = `
+"<!doctype html><head><meta name=viewport content=\\"width=device-width,initial-scale=1\\"><link rel=preload as=image imagesrcset=\\"51b834b7c1ef0b59ea50.png 1x,51b834b7c1ef0b59ea50.png 2x\\"></head><body>
+<img src=51b834b7c1ef0b59ea50.png alt=x srcset=\\"51b834b7c1ef0b59ea50.png 200w,51b834b7c1ef0b59ea50.png 400w\\">
+<input type=text>
+
+
+</body></html>"
+`;
