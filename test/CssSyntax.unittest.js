@@ -6765,6 +6765,36 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		).toBe("a{user-select:none}");
 	});
 
+	it("merges the longhands a droppable alias stands between", () => {
+		// The alias is dropped whether it stands there or not, so the shorthand is
+		// built over it rather than after a second pass has taken it away.
+		expect(
+			minifyFor(
+				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-direction:row;flex-direction:row}",
+				["chrome 120"]
+			)
+		).toBe("a{flex-flow:wrap}");
+		expect(
+			minifyFor(
+				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}",
+				["chrome 120"]
+			)
+		).toBe(
+			"a{flex-flow:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal}"
+		);
+	});
+
+	it("lets an alias a target still reads block the merge around it", () => {
+		expect(
+			minifyFor(
+				"a{flex-wrap:wrap;-webkit-flex-direction:row;flex-direction:row}",
+				["safari 8"]
+			)
+		).toBe(
+			"a{-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-flex-direction:row;flex-direction:row}"
+		);
+	});
+
 	it("keeps a prefix a target still needs (Safari never unprefixed it)", () => {
 		expect(
 			minifyFor("a{-webkit-user-select:none;user-select:none}", ["safari 17"])
