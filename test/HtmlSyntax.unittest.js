@@ -5430,6 +5430,24 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		);
 	});
 
+	it("rewrites a referenced value with the quoting switch off", () => {
+		// The switch freezes the quoting, not the value: a rewrite that changes
+		// what the value says leaves the source spelling of it unusable.
+		const frozen = (/** @type {string} */ html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				transforms: { normalizeAttributeQuotes: false }
+			}).code;
+		expect(frozen('<a href="&#x20;/a&#x20;">y</a>')).toContain('href="/a"');
+		expect(frozen('<input type="&#x54;&#x45;&#x58;&#x54;">')).toContain(
+			'type="text"'
+		);
+		// The `&` a decoded URL holds is escaped back, not written out bare.
+		expect(frozen('<a href="&#x20;/a?x=1&amp;y=2&#x20;">y</a>')).toContain(
+			'href="/a?x=1&amp;y=2"'
+		);
+	});
+
 	it("writes a reference the parser cannot read back as one", () => {
 		// `<` and `>` mean nothing inside a quoted value, and an `&` no reference
 		// can start after it is data — but one that could start a reference stays.

@@ -24,5 +24,9 @@ module.exports = {
 		// way the source spelled that name.
 		expect(html).toContain("<input type=checkbox checked>");
 		expect(html).toContain("<option selected>");
+		// A URL attribute strips its own padding when parsed, so the rewrite has
+		// to reach one spelled with references too.
+		expect(html).toMatch(/href=["']?\.\/a\.png/);
+		expect(html).not.toContain("&#x20;&#x2e;&#x2f;");
 	}
 };

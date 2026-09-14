@@ -6,6 +6,7 @@ exports[`ConfigCacheTestCases html minimize-rewrite-referenced-value minimize-re
 <input type=text>
 <input type=checkbox checked>
 <option selected>o</option>
+<a href=./a.png>padded url</a>
 
 
 </body></html>"
