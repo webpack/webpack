@@ -7103,8 +7103,9 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 			`@media all{::-webkit-input-placeholder{color:red}${filler}::placeholder{color:red}}`,
 			["chrome 120"]
 		);
-		expect(out.startsWith("@media all{.f0{top:0}")).toBe(true);
-		expect(out.endsWith("::placeholder{color:red}}")).toBe(true);
+		// The whole of it, not its ends: a filler rule the stream lost or reordered
+		// in between is what this is here to catch.
+		expect(out).toBe(`@media all{${filler}::placeholder{color:red}}`);
 	});
 
 	it("drops every prefixed spelling one unprefixed twin makes dead", () => {
