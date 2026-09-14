@@ -4298,6 +4298,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				".a{color:red}.a{color:rgb(1 2 3/.5)}.a{color:inherit}",
 				".a{color:inherit}"
 			],
+			// And the one it frees may in turn be all the rule before *that* needed,
+			// so the retry walks back over the run rather than one step.
+			[".a{x:1}.b{x:9}.c{x:9}.c{x:1}.b{x:1}", ".a,.b,.c{x:1}"],
 			// A kept comment between the two still parts them.
 			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
 			// And so does anything the join cannot see into.
