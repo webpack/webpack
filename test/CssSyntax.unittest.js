@@ -1635,6 +1635,19 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// An escape that has to stay keeps its whole CRLF terminator.
 		expect(min(".\\31\r\nabc{color:red}")).toBe(".\\31\r\nabc{color:red}");
 	});
+
+	it("parts a value the escape before it already ate the separator for", () => {
+		// The terminator belongs to the identifier, so a value written after it
+		// carries on that identifier instead of starting its own one.
+		for (const digits of ["123456", "12345", "4"]) {
+			const src = `a{b:\\${digits}\n\tc}`;
+			const out = min(src);
+			expect(out).toBe(`a{b:\\${digits}\n c}`);
+			expect(min(out)).toBe(out);
+		}
+		// A CRLF terminator is one terminator, so it needs the one separator too.
+		expect(min("a{b:\\41\r\n\tc}")).toBe("a{b:\\41\r\n c}");
+	});
 });
 
 describe("CssSyntax — minify keeps input the grammar rejects", () => {
@@ -4224,6 +4237,28 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["@keyframes k{0%{top:0}50%{top:0}}", "@keyframes k{0%,50%{top:0}}"],
 			// The rule between them prints nothing, so they end up adjacent.
 			["a{color:red}i{}b{color:red}", "a,b{color:red}"],
+			// Each block is grown by the rule after it, so the two print the same
+			// one only once the second has stopped growing.
+			["a{x:1}a{y:2}b{x:1}b{y:2}", "a,b{x:1;y:2}"],
+			// Grown into the same rule twice over, which is one rule.
+			["a{x:1}a{y:2}a{x:1}a{y:2}", "a{x:1;y:2}"],
+			// The rule between them is one a later copy takes back, so the two it
+			// parted are neighbors by the time the stylesheet is through.
+			["a{top:0}i{q:1}b{top:0}i{q:1}", "a,b{top:0}i{q:1}"],
+			["a{x:1}a{y:2}b{x:1}b{y:2}c{x:1}c{y:2}", "a,b,c{x:1;y:2}"],
+			// The list a join grows is ordered once the run of joins has ended, so
+			// it reads the same however the rules were written.
+			["b{x:1}b{y:2}a{x:1}a{y:2}", "a,b{x:1;y:2}"],
+			// A list may not gather what nesting would re-specify: the `i` of
+			// `a,b{i{}}` is one `:is(a,b) i`, not the two it was.
+			["a{i{y:2}}b{i{y:2}}", "a{i{y:2}}b{i{y:2}}"],
+			// A kept comment between the two still parts them.
+			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
+			// And so does anything the join cannot see into.
+			[
+				"a{x:1}a{y:2}@media p{i{q:1}}b{x:1}b{y:2}",
+				"a{x:1;y:2}@media p{i{q:1}}b{x:1;y:2}"
+			],
 			// The same selector twice is one rule: its declarations are read in the
 			// order they were written either way.
 			["a{color:red}a{margin:0}", "a{color:red;margin:0}"],
@@ -7047,6 +7082,51 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		).toBe("i{top:0}@keyframes s{to{opacity:1}}");
 	});
 
+	it("drops every prefixed spelling a nested block's twin makes dead", () => {
+		// The block's parent assembles these rather than writing them straight out,
+		// so each twin is held as the node rather than as a piece.
+		expect(
+			minifyFor(
+				"@media print{::-webkit-input-placeholder{color:red}" +
+					"::-moz-placeholder{color:red}::placeholder{color:red}}",
+				["chrome 120"]
+			)
+		).toBe("@media print{::placeholder{color:red}}");
+	});
+
+	it("drops a prefixed spelling its twin makes dead past enough nodes to stream", () => {
+		// Once the block streams, its children go straight out, so the twin is held
+		// as the piece written rather than as the node its parent would assemble.
+		let filler = "";
+		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+		const out = minifyFor(
+			`@media all{::-webkit-input-placeholder{color:red}${filler}::placeholder{color:red}}`,
+			["chrome 120"]
+		);
+		// The whole of it, not its ends: a filler rule the stream lost or reordered
+		// in between is what this is here to catch.
+		expect(out).toBe(`@media all{${filler}::placeholder{color:red}}`);
+	});
+
+	it("drops every prefixed spelling one unprefixed twin makes dead", () => {
+		// A stylesheet writes one rule per engine, so a signature holds more than
+		// the one twin — and the twin behind the last is dead weight just the same.
+		expect(
+			minifyFor(
+				"::-webkit-input-placeholder{color:red}::-moz-placeholder{color:red}" +
+					"::placeholder{color:red}",
+				["chrome 120"]
+			)
+		).toBe("::placeholder{color:red}");
+		expect(
+			minifyFor(
+				"@-webkit-keyframes s{to{opacity:1}}@-o-keyframes s{to{opacity:1}}" +
+					"@keyframes s{to{opacity:1}}",
+				["chrome 120"]
+			)
+		).toBe("@keyframes s{to{opacity:1}}");
+	});
+
 	it("pairs a cased `@Keyframes` with its prefixed twin (case-insensitive)", () => {
 		expect(
 			minifyFor(
@@ -7874,7 +7954,9 @@ describe("CssSyntax minify — one stylesheet reaching every embedded site", () 
 .svg  { background : url("data:image/svg+xml,${PAYLOADS.svg}") ; }
 .html { background : url("data:text/html,${PAYLOADS.html}") ; }
 .json { background : url('data:application/json,${PAYLOADS.json}') ; }
-.javascript { background : url("data:text/javascript,${PAYLOADS.javascript}") ; }
+.javascript { background : url("data:text/javascript,${
+		PAYLOADS.javascript
+	}") ; }
 
 .svg-base64  { background : url(data:image/svg+xml;base64,${base64(
 		PAYLOADS.svg
@@ -9378,9 +9460,7 @@ describe("CssSyntax minify — light-dark()", () => {
 				"chrome 100"
 			])
 		).toBe(
-			`a{content:"color-scheme:x";color:var(--webpack-light,red) var(--webpack-dark,blue)}${
-				DEFAULTS
-			}`
+			`a{content:"color-scheme:x";color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 	});
 
