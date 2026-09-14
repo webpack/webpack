@@ -1095,9 +1095,9 @@ describe("CssSyntax — block streaming", () => {
 			`.root{color:red;${repeat(n, (i) => `& .n${i}{color:red}`)}}`;
 		/** @type {(n: number) => string} */
 		const joined = (n) =>
-			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`).join(
-				","
-			)}{color:red}}`;
+			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`)
+				.sort()
+				.join(",")}{color:red}}`;
 		expect(minify(nesting(4))).toBe(joined(4));
 		expect(minify(nesting(1800))).toBe(joined(1800));
 	});
@@ -4199,8 +4199,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[".a[x=1]{top:0}.b>.c{top:0}", ".a[x=1],.b>.c{top:0}"],
 			// A `:` an ident escapes, and one an attribute's string holds, both sit
 			// in a selector every engine parses — only a pseudo keeps a rule out.
-			[".sm\\:flex{top:0}.b{top:0}", ".sm\\:flex,.b{top:0}"],
-			['[href="a:b"]{top:0}.b{top:0}', '[href="a:b"],.b{top:0}'],
+			[".sm\\:flex{top:0}.b{top:0}", ".b,.sm\\:flex{top:0}"],
+			['[href="a:b"]{top:0}.b{top:0}', '.b,[href="a:b"]{top:0}'],
 			["@media x{a{top:0}b{top:0}}", "@media x{a,b{top:0}}"],
 			// A named layer is one layer however many blocks open it.
 			["@layer x{a{top:0}}@layer x{b{top:0}}", "@layer x{a,b{top:0}}"],
@@ -4225,7 +4225,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{color:red}a{color:red}", "a{color:red}"],
 			// A pseudo every engine reads joins like any other compound.
 			["a:hover{top:0}b:hover{top:0}", "a:hover,b:hover{top:0}"],
-			["[a=b]:hover{top:0}.b{top:0}", "[a=b]:hover,.b{top:0}"],
+			["[a=b]:hover{top:0}.b{top:0}", ".b,[a=b]:hover{top:0}"],
 			[
 				"a:nth-child(2){top:0}b::before{top:0}",
 				"a:nth-child(2),b:before{top:0}"
@@ -4473,6 +4473,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The two offsets are what the grammar makes mandatory.
 			["the two offsets are all there is", "a{box-shadow:0 0 red}"],
 			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
+			// The printer writes no space a token does not need, so its own output
+			// is where a length meets a color bare — and a spread is not a blur.
+			[
+				"the color is written against the spread",
+				"a{box-shadow:0 0 0 1px#000}"
+			],
+			[
+				"a spread survives the color it is written against",
+				"a{box-shadow:inset 0 0 0 1px#0000000d}"
+			],
 			["the value is a keyword", "a{box-shadow:none}"],
 			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
 			// `0%` is a percentage, which a shadow's `<length>` slots do not take.
@@ -4829,7 +4839,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{& d,& c{top:0}}", "a{& c,& d{top:0}}"],
 			// Two rules reaching the same set are one rule once both are in order.
 			["a,b{color:red}b,a{top:0}", "a,b{color:red;top:0}"],
-			["z{color:red}a{color:red}", "z,a{color:red}"]
+			["z{color:red}a{color:red}", "a,z{color:red}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -4845,10 +4855,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
-		// A join concatenates: canonicalizing there would re-read the whole list
-		// once per rule joined, and no real stylesheet loses a byte to the repeat.
-		it("leaves a selector a join seam repeats", () => {
-			expect(minify(".b{x:1}.a{x:1}.b{x:1}")).toBe(".b,.a,.b{x:1}");
+		// The joins concatenate to stay linear, so the run they build is ordered
+		// and deduplicated once where it ends rather than at every seam.
+		it("canonicalizes the list a run of joins built", () => {
+			expect(minify(".b{x:1}.a{x:1}.b{x:1}")).toBe(".a,.b{x:1}");
 		});
 	});
 
@@ -10105,6 +10115,18 @@ describe("SourceProcessor — mergeDistantRules", () => {
 				true
 			)
 		).toBe(".a,.c,.e{color:red}.b{margin:0}.d{padding:0}");
+	});
+
+	it("keeps the list it grows canonical", () => {
+		expect(minify(".c{color:red}.b{margin:0}.a{color:red}", true)).toBe(
+			".a,.c{color:red}.b{margin:0}"
+		);
+		expect(
+			minify(
+				".z{color:red}.m{margin:0}.a{color:red}.n{padding:0}.b{color:red}",
+				true
+			)
+		).toBe(".a,.b,.z{color:red}.m{margin:0}.n{padding:0}");
 	});
 
 	it("declines where a rule between declares what the block does", () => {
