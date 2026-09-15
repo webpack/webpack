@@ -3,7 +3,8 @@
 module.exports = [
 	[
 		{ moduleName: /wasm\.wat$/ },
-		// the reported error keeps its own stack: only what is emitted is shortened
-		/^Module build failed \(from .*loader\.js\):\nError: sync wasm boom\n/
+		// the `from` is shortened, while the stack the reported error carries is
+		// its own: only what webpack emits is written relative
+		/^Module build failed \(from \.\/loader\.js\):\nError: sync wasm boom\n/
 	]
 ];

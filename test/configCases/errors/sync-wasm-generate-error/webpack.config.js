@@ -14,6 +14,9 @@ module.exports = {
 		]
 	},
 	experiments: { syncWebAssembly: true },
+	// the case reads the asset back, and the harness runs the bundle on node
+	externalsType: "commonjs",
+	externals: { fs: "fs", path: "path" },
 	// the bundle has to be emitted for the failing module to be reported
 	optimization: { emitOnErrors: true }
 };
