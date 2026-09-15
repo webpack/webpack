@@ -5465,6 +5465,43 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		).toBe("<body> x");
 	});
 
+	it("merges across an attribute the print drops", () => {
+		const once = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts = undefined
+		) => new SourceProcessor().process(html, { mode: "minify", ...opts }).code;
+		const drops = { removeRedundantAttributes: /** @type {"all"} */ ("all") };
+		// A `type` this print drops as redundant is not a difference between them.
+		expect(
+			once(
+				'<style>.a{color:red}</style><style type="text/css">.b{color:blue}</style>',
+				{ ...drops, mergeStyles: true }
+			)
+		).toBe("<style>.a{color:red}.b{color:blue}</style>");
+		expect(
+			once(
+				'<script type="text/javascript">var a=1</script><script>var b=2</script>',
+				{ ...drops, mergeScripts: true }
+			)
+		).toBe("<script>var a=1\n;var b=2</script>");
+		// One it keeps is still a difference.
+		expect(
+			once(
+				"<style media=screen>.a{color:red}</style><style>.b{color:blue}</style>",
+				{
+					...drops,
+					mergeStyles: true
+				}
+			)
+		).toContain("</style><style>");
+		expect(
+			once("<script type=module>var a=1</script><script>var b=2</script>", {
+				...drops,
+				mergeScripts: true
+			})
+		).toContain("</script><script>");
+	});
+
 	it("merges across a comment the print drops", () => {
 		const once = (
 			/** @type {string} */ html,
