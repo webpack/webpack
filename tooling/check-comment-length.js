@@ -36,7 +36,8 @@ const overLimit = (diff) => {
 	let lineNumber = 0;
 	let lineRun = 0;
 	// The block before a file's first statement documents the file, like the
-	// license header. Only a hunk opening at line 1 can show where that ends
+	// license header. The `"use strict"` directive above it does not end it, and
+	// only a hunk opening at line 1 can show where it does
 	let inPreamble = false;
 	let blockRun = 0;
 	let blockStart = 0;
@@ -59,7 +60,9 @@ const overLimit = (diff) => {
 			if (blockRun > 0) blockRun++;
 			if (LICENSE_RE.test(line)) blockRun = -1;
 			if (BLOCK_CLOSE_RE.test(line)) {
-				if (blockRun > LIMIT) found.push(`${file}:${blockStart}`);
+				if (!inPreamble && blockRun > LIMIT) {
+					found.push(`${file}:${blockStart}`);
+				}
 				blockRun = 0;
 			}
 		} else if (JSDOC_OPEN_RE.test(line)) {

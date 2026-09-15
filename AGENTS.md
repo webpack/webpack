@@ -230,7 +230,7 @@ yarn lint:comments
 
 It reports every plain comment your added lines grow past three, in either form, and exempts JSDoc. It is not part of `yarn lint`, which has no base branch to diff against.
 
-**Two things are exempt, and both are exempt because they are not commentary.** The block before a file's first statement documents the file, like the license header above it. And a comment whose first line opens `// WHY:` states why the code is shaped the way it is — the spec prose behind a `SUPPLEMENT` entry, a measured engine disagreement, a constraint some other file depends on — which is the one kind of explanation that cannot be made shorter without losing it:
+**Two things are exempt, and both are exempt because they are not commentary.** The block before a file's first statement documents the file, like the license header above it — the `"use strict"` directive between the two does not end it. And a comment whose first line opens `// WHY:` states why the code is shaped the way it is — the spec prose behind a `SUPPLEMENT` entry, a measured engine disagreement, a constraint some other file depends on — which is the one kind of explanation that cannot be made shorter without losing it:
 
 ```js
 // WHY: Chromium reads an Oklch hue as missing well before the chroma reaches
