@@ -114,7 +114,8 @@ The directory listings below are the canonical map of the repository. **Whenever
 **Hand-maintained type declarations (these _are_ editable)**
 
 - `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`.
-- `types/` — the type sources no schema produces: `LoaderContext.d.ts`, and `index.d.ts`, the barrel `generate-types.js` exposes so what it re-exports reaches `types.d.ts`.
+
+The loader context is not one of these: `LoaderContext` and the loader-definition types are JSDoc in `lib/` like every other type, declared where the code that adds each part lives (`lib/NormalModule.js`, `lib/loaders/LoaderRunner.js`, `lib/dependencies/LoaderPlugin.js`, `lib/HotModuleReplacementPlugin.js`) and re-exported from `lib/index.js`, which is the file `generate-types.js` reads webpack's public type surface from.
 
 **Configuration**
 
