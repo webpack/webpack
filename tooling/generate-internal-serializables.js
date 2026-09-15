@@ -22,17 +22,6 @@ const REQUEST_PREFIX = "webpack/lib/";
 /** @typedef {{ requirePath: string | null, source: string }} SerializableEntry */
 
 /**
- * Filesystem-cache aliases for renamed / mistyped historical request strings.
- * @type {Record<string, string>}
- */
-const LEGACY_ALIASES = {
-	NodeStuffInWebError: "../errors/NodeStuffInWebError",
-	RawDataUrlModule: "../asset/RawDataUrlModule",
-	"dependencies/ExternalModuleConstDependency":
-		"../dependencies/ExternalModuleInitFragmentDependency"
-};
-
-/**
  * Prefer these require targets over the defining file (still loads the registrar).
  * @type {Record<string, string>}
  */
@@ -183,15 +172,6 @@ const collectEntries = () => {
 			const request = extractWebpackLibRequest(call);
 			if (request) add(request, requirePath, relative);
 		});
-	}
-
-	for (const [key, requirePath] of Object.entries(LEGACY_ALIASES)) {
-		if (!entries.has(key)) {
-			entries.set(key, {
-				requirePath,
-				source: "(legacy alias)"
-			});
-		}
 	}
 
 	return entries;
