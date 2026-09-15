@@ -3666,7 +3666,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["a{background-position:50% 50%}", "a{background-position:50%}"],
 			["a{background-position:10px center}", "a{background-position:10px}"],
-			["a{background-position:left 50%}", "a{background-position:left}"],
+			// The tail gone, the edge keyword left behind goes on to the percentage
+			// it resolves to — as `left` and `left center` already do.
+			["a{background-position:left 50%}", "a{background-position:0%}"],
+			["a{transform-origin:right 50%}", "a{transform-origin:100%}"],
+			["a{transform-origin:center 50%}", "a{transform-origin:50%}"],
 			["a{background-position:0 center}", "a{background-position:0}"],
 			["a{object-position:25% 50%}", "a{object-position:25%}"],
 			["a{mask-position:3em center}", "a{mask-position:3em}"],
@@ -4333,6 +4337,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[".a{x:1}.b{x:9}.c{x:9}.c{x:1}.b{x:1}", ".a,.b,.c{x:1}"],
 			// A kept comment between the two still parts them.
 			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
+			// The list two rules join into may be the prelude the rule before them
+			// was waiting for, so the grown list is offered back to it.
+			["@media x{.a,.b{q:1}.a{c:2}.b{c:2}}", "@media x{.a,.b{q:1;c:2}}"],
+			["@media x{.a,.b{q:1}.b{c:2}.a{c:2}}", "@media x{.a,.b{q:1;c:2}}"],
+			// Only back over what it stands next to: a rule, an at-rule or a
+			// declaration between them is read at its own place.
+			[
+				"@media x{.a,.b{q:1}.z{t:0}.a{c:2}.b{c:2}}",
+				"@media x{.a,.b{q:1}.z{t:0}.a,.b{c:2}}"
+			],
+			[
+				"@media x{.a,.b{q:1}@media y{.i{t:0}}.a{c:2}.b{c:2}}",
+				"@media x{.a,.b{q:1}@media y{.i{t:0}}.a,.b{c:2}}"
+			],
+			[
+				"@media x{.p{.a,.b{q:1}k:9;.a{c:2}.b{c:2}}}",
+				"@media x{.p{.a,.b{q:1}k:9;.a,.b{c:2}}}"
+			],
 			// And so does anything the join cannot see into.
 			[
 				"a{x:1}a{y:2}@media p{i{q:1}}b{x:1}b{y:2}",
@@ -7332,6 +7354,33 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		expect(minifyFor("::placeholder{color:red}", ["chrome 40"])).toBe(
 			"::-webkit-input-placeholder{color:red}::placeholder{color:red}"
 		);
+	});
+
+	it("drops a prefixed list the rules writing its selectors cover between them", () => {
+		// One twin of the whole list and a twin per selector say the same thing,
+		// and the rules saying it need not have been written as one rule.
+		expect(
+			minifyFor(
+				".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}.b::placeholder{color:#00f}",
+				["firefox 120"]
+			)
+		).toBe(".a::placeholder{color:red}.b::placeholder{color:#00f}");
+		expect(
+			minifyFor(
+				".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder,.b::placeholder{color:red}",
+				["firefox 120"]
+			)
+		).toBe(".a::placeholder,.b::placeholder{color:red}");
+	});
+
+	it("keeps a prefixed list no rule covers every selector of", () => {
+		// Nothing writes `.b::placeholder`, so dropping the list would take the
+		// only rule those elements are styled by with it.
+		const one =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}";
+		expect(minifyFor(one, ["firefox 120"])).toBe(one);
+		const none = ".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}";
+		expect(minifyFor(none, ["firefox 120"])).toBe(none);
 	});
 
 	it("prefixes a pseudo behind a compound selector", () => {
