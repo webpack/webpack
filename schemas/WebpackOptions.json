@@ -1013,7 +1013,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -1025,7 +1025,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
