@@ -16540,12 +16540,12 @@ type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
 	HotModuleReplacementPluginLoaderContext;
 declare interface LoaderContextUtils {
 	/**
-	 * makes a request relative to a context
+	 * returns a new request string using absolute paths when possible
 	 */
 	absolutify: (context: string, request: string) => string;
 
 	/**
-	 * makes a request absolute against a context
+	 * returns a new request string avoiding absolute paths when possible
 	 */
 	contextify: (context: string, request: string) => string;
 
