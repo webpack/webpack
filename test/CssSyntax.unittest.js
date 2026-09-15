@@ -4074,7 +4074,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers past enough nodes to stream the block", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const out = minify(
 				`@media all{@layer x{a{color:red}}${filler}@layer x{c{color:lime}}}`
 			);
@@ -4086,9 +4086,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("gathers past enough nodes to stream, but not past that layer again", () => {
 			let filler = "";
-			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@media all{@layer x{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x{c{color:lime}}}`;
 			expect(minify(css)).toBe(css);
+		});
+
+		it("joins the rules a streamed block writes side by side", () => {
+			// A block over the threshold writes its children straight out rather than
+			// assembling a body, which is where `_mergeAdjacentRules` would join them.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const block = "{color:red;outline:1px solid blue}";
+			expect(
+				minify(`@media all{${filler}a:hover${block}b:hover${block}}`)
+			).toBe(`@media all{${filler}a:hover,b:hover${block}}`);
+			// A declaration is read at its own place, so it parts the run — as it does
+			// in a block whose body is assembled in one go.
+			const parted = `.p{${filler}a:hover${block}q:2;b:hover${block}}`;
+			expect(minify(parted)).toBe(parted);
 		});
 
 		it.each([
@@ -4252,6 +4267,40 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A list may not gather what nesting would re-specify: the `i` of
 			// `a,b{i{}}` is one `:is(a,b) i`, not the two it was.
 			["a{i{y:2}}b{i{y:2}}", "a{i{y:2}}b{i{y:2}}"],
+			// A join writes a text of its own, so the rules it took stand where it
+			// put them — one a later copy makes dead is still taken back.
+			[".a{x:1}.a{.b{y:2}z:3}.a{.b{y:2}w:4}", ".a{x:1;z:3;.b{y:2}w:4}"],
+			[".a{x:1}.a{.b{y:2}}.a{.b{y:2}}", ".a{x:1;.b{y:2}}"],
+			// The cut that took the nested rule out leaves a declaration list, which
+			// is what the block beside it needed to fold into it.
+			[".a{.b{y:2}z:3}.a{.b{y:2}w:4}", ".a{z:3;.b{y:2}w:4}"],
+			// A block a cut empties says nothing the printer wrote it for, and
+			// emptying it can empty the one holding it.
+			[
+				".a{.b{.c{q:1}}top:0}.z{t:0}.a{.b{.c{q:1}.d{w:1}}}",
+				".a{top:0}.z{t:0}.a{.b{.c{q:1}.d{w:1}}}"
+			],
+			// A condition whose body the cuts empty says nothing either, and emptying
+			// it can empty the rule holding it.
+			[
+				".p{@supports (x:1){.a{q:1}}top:0}.z{t:0}.p{@supports (x:1){.a{q:1}.b{w:1}}}",
+				".p{top:0}.z{t:0}.p{@supports (x:1){.a{q:1}.b{w:1}}}"
+			],
+			// CSS Cascade 5 §6.4.1: an empty `@layer l{}` still declares where the
+			// layer sits, so a cut that empties one leaves the block standing.
+			[
+				".p{@layer l{.a{q:1}}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}",
+				".p{@layer l{}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}"
+			],
+			// A rule the one after it takes stands next to the one before it, and the
+			// block it just took on may be all that one was waiting for.
+			[
+				".a{color:red}.a{color:rgb(1 2 3/.5)}.a{color:inherit}",
+				".a{color:inherit}"
+			],
+			// And the one it frees may in turn be all the rule before *that* needed,
+			// so the retry walks back over the run rather than one step.
+			[".a{x:1}.b{x:9}.c{x:9}.c{x:1}.b{x:1}", ".a,.b,.c{x:1}"],
 			// A kept comment between the two still parts them.
 			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
 			// And so does anything the join cannot see into.
@@ -7098,7 +7147,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		// Once the block streams, its children go straight out, so the twin is held
 		// as the piece written rather than as the node its parent would assemble.
 		let filler = "";
-		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 		const out = minifyFor(
 			`@media all{::-webkit-input-placeholder{color:red}${filler}::placeholder{color:red}}`,
 			["chrome 120"]
