@@ -31,5 +31,9 @@ module.exports = {
 		// Spelling the rewrite back costs bytes here, and is still what runs: the
 		// source spelling would leave the padding a plain value loses.
 		expect(html).toContain('href="&amp;x&amp;y"');
+		// What the value itself holds outranks the delimiter the source chose:
+		// each lands under the quote it needs no reference for.
+		expect(html).toContain('title="it\'s"');
+		expect(html).toContain("title='say \"hi\"'");
 	}
 };
