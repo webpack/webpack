@@ -963,6 +963,19 @@ describe("CssSyntax — block streaming", () => {
 		).toContain("-moz-placeholder");
 	});
 
+	it("drops the second of two prefixed lists a streamed block covers", () => {
+		// Each list is held as its own piece, so the one a closing child belongs to
+		// is found by walking past the pieces held for the others.
+		const lists =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}" +
+			".c::-moz-placeholder,.d::-moz-placeholder{opacity:0}" +
+			".a::placeholder{color:red}.b::placeholder{color:#00f}" +
+			".c::placeholder{color:#0f0}.d::placeholder{color:#ff0}";
+		const src = `@media screen{${BIG}${lists}}`;
+		expect(childCount(src)).toBe(0);
+		expect(minifyFor(src, ["firefox 120"])).not.toContain("-moz-placeholder");
+	});
+
 	it("enters a streamed rule before its children and exits after them", () => {
 		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");
@@ -4126,6 +4139,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"@media all{.a,.b{c:1}.dup{c:9}}"
 			],
 			[
+				"the pair a drop leaves side by side but does not join",
+				"@media all{.a{c:1}.dup{c:9}.b{c:2}}@media all{.dup{c:9}}",
+				"@media all{.a{c:1}.b{c:2}.dup{c:9}}"
+			],
+			[
 				"nothing, where the blocks say the same",
 				"@media all{.x{c:1}}@media all{.x{c:1}}",
 				"@media all{.x{c:1}}"
@@ -4255,6 +4273,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(
 				`@media all{@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}}`
 			);
+		});
+
+		it("gathers into a streamed block that is its layer's first at that depth", () => {
+			// Nothing recorded the layer before the streamed block did, so the record
+			// its `}` opens is the one the later block folds into.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@media all{@layer a{${filler}}@layer a{.y{color:#00f}}}`;
+			expect(minify(css)).toBe(`@media all{@layer a{${filler}.y{color:#00f}}}`);
 		});
 
 		it("gathers the same way into a streamed block the sheet itself holds", () => {
