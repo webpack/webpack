@@ -65,7 +65,7 @@ const mdnDataPackage = require("mdn-data/package.json");
 const sourceVersions = () =>
 	`mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}, @mdn/browser-compat-data ${bcd.__meta.version}`;
 
-// CSS Value Definition Syntax (CSS Values 4 §2) — the notation every `mdn-data`
+// WHY: CSS Value Definition Syntax (CSS Values 4 §2) — the notation every `mdn-data`
 // grammar is written in — parsed into a tree the collectors below analyze.
 // Generation time only: `lib/css/data.js` carries the answers, so the minifier
 // never parses a grammar at runtime.
@@ -80,7 +80,7 @@ const sourceVersions = () =>
 /** @typedef {{ type: "multiplier", min: number, max: number, comma: boolean, body: SyntaxNode }} MultiplierNode */
 /** @typedef {KeywordNode | LiteralNode | TypeNode | PropertyNode | FunctionCallNode | GroupNode | CombinatorNode | MultiplierNode} SyntaxNode */
 
-// A keyword or a function name. An at-rule prelude names its keyword with a
+// WHY: A keyword or a function name. An at-rule prelude names its keyword with a
 // leading `@`, so that joins the identifier set; `+` and `(` do not, since a
 // name carrying either (`<an+b>`, `<calc-size()>`) only ever appears inside
 // `< >`, which never reaches here — and both are notation out here.
@@ -468,7 +468,7 @@ const walkValueSyntax = (node, visit) => {
 const TARGET = path.resolve(__dirname, "../lib/css/data.js");
 const write = process.argv.includes("--write");
 
-// The `{1,4}` value-definition notation is CSS's box notation: an omitted value
+// WHY: The `{1,4}` value-definition notation is CSS's box notation: an omitted value
 // is copied from the opposite side (4 -> top right bottom left, 3 -> top
 // right/left bottom, 2 -> top/bottom right/left, 1 -> all). Every property that
 // spells its syntax that way inherits the rule, so matching the notation is
@@ -510,7 +510,7 @@ const collectBoxShorthands = (withSlash) => {
 // The box side a longhand covers, read off its name.
 const BOX_SIDES = ["top", "right", "bottom", "left"];
 
-// The corner order `{1,4}` writes, which is not the order `computed` lists them
+// WHY: The corner order `{1,4}` writes, which is not the order `computed` lists them
 // in: `border-radius` names them clockwise from the top left, `corner-shape`
 // names them by row. Matched on the longhand's own name so neither array's
 // order is trusted.
@@ -1192,7 +1192,7 @@ const grammarOf = (syntax) => {
 	return tree;
 };
 
-// Parse every grammar the datasets state, so a `mdn-data` bump that reaches for
+// WHY: Parse every grammar the datasets state, so a `mdn-data` bump that reaches for
 // notation this parser does not know fails here rather than silently emptying a
 // table below. `selectors.json` is deliberately not among them: it mixes real
 // grammar with prose examples (`".class"`, `"A > B"`), so it is not all parsable
@@ -1805,7 +1805,7 @@ const gamutToLinearSrgb = (primaries, white, adapt) => {
  * of its own.
  * @returns {{ text: string, names: string[] }} the emitted source and the spaces it defines
  */
-// What a color read in one space passes through on its way to a byte. The
+// WHY: What a color read in one space passes through on its way to a byte. The
 // printer's own sRGB encode undoes the sRGB transfer, so a space carrying that
 // transfer and no matrix hands the byte back the component it was written with.
 // sRGB's own gamut constructs the identity to within 1e-16, which is noise a
@@ -1874,7 +1874,7 @@ const collectColorSpaceModel = () => {
 	const names = [];
 	const flat = (/** @type {number[][]} */ m) =>
 		`[${flatten(m).map(String).join(", ")}]`;
-	// `conversion` says what a color read in this space passes through on its way
+	// WHY: `conversion` says what a color read in this space passes through on its way
 	// to a byte, which is how far the answer can sit from an engine's own: `0`
 	// where the components are the gamma-encoded sRGB ones already, `1` where the
 	// sRGB transfer runs, `2` where a matrix runs as well. What each is worth in
@@ -1903,7 +1903,7 @@ const collectColorSpaceModel = () => {
 			);
 		}
 	};
-	// Chromium reads an Oklch hue as missing well before the chroma reaches zero —
+	// WHY: Chromium reads an Oklch hue as missing well before the chroma reaches zero —
 	// measured: kept at 0.02, dropped at 0.015 — where CSS Color 4 §4.4 makes it
 	// powerless only at zero. So a color in that band has no answer two engines
 	// agree on, and a mix naming one is left as it stands. `lch()`, `hsl()` and
@@ -2428,7 +2428,7 @@ const enclosingGroupBody = (text) => {
 	return null;
 };
 
-// A layered shorthand names its last layer apart from the rest, that one
+// WHY: A layered shorthand names its last layer apart from the rest, that one
 // holding the slots the earlier layers do not — `background`'s color. A value
 // with no top-level comma is exactly that layer, which is the only shape the
 // printer folds.
@@ -2584,7 +2584,7 @@ const collectShorthandInitialKeywords = (colorKeywords) => {
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
 };
 
-// The shorthands whose layers carry a `<position>`, a `<bg-size>` after a `/`
+// WHY: The shorthands whose layers carry a `<position>`, a `<bg-size>` after a `/`
 // and a `<box>{1,2}`, as the longhand each of those four slots is. Stated
 // because the grammar names them through `<bg-layer>`, which the value-definition
 // parser follows into a production rather than into slots.
@@ -2761,13 +2761,13 @@ const collectInitialValueKeywords = () => {
 		if (typeof initial !== "string") continue;
 		if (!/^[a-z][a-z-]*$/.test(initial)) continue;
 		if (initial.length >= "initial".length) continue;
-		// `mdn-data` states an initial its own property does not accept for a few
+		// WHY: `mdn-data` states an initial its own property does not accept for a few
 		// entries (`flood-opacity`'s reads `black`), and writing one back would
 		// swap a working declaration for one the engine drops. Only a keyword the
 		// property's own grammar names is the value `initial` computes to.
 		if (typeof entry.syntax !== "string") continue;
 		if (!acceptedValues(entry.syntax).keywords.has(initial)) continue;
-		// A keyword that is itself a length is scaled by `zoom`, where the
+		// WHY: A keyword that is itself a length is scaled by `zoom`, where the
 		// `initial` it would replace is resolved before zoom applies — so the two
 		// are one value without a zoom and two under one. Measured in headless
 		// Chromium: `outline-width:initial` computes to 1.5px at `zoom:2` and
@@ -2824,7 +2824,7 @@ const collectColorOnlyProperties = () => {
 	return out.sort();
 };
 
-// CSS Modules keyword tables. A `css/module` localizes the custom identifiers in
+// WHY: CSS Modules keyword tables. A `css/module` localizes the custom identifiers in
 // a handful of property values (`animation-name: spin` names a scoped
 // `@keyframes`), so the parser needs to know which idents in those values are
 // the grammar's own keywords instead. That set is the literal keywords of each
@@ -3058,7 +3058,7 @@ const keywordTableOf = (node, unbounded, excluded) => {
 const keywordTable = (syntax) =>
 	keywordTableOf(expandValueSyntax(grammarOf(syntax), new Set()), false, false);
 
-// Which properties a `css/module` reads a scoped name out of, and the parser
+// WHY: Which properties a `css/module` reads a scoped name out of, and the parser
 // option gating each. Selecting them is webpack's policy, not something a
 // dataset states; every keyword below is still derived from the named grammar.
 // `@counter-style` descriptors are keyed by descriptor name, which is what the
@@ -3846,13 +3846,13 @@ const SUPPLEMENT = {
 	// What may follow the `*` a compound selector implies: another simple
 	// selector in the same compound. Selector syntax, not a value grammar.
 	compoundContinuations: [":", ".", "#", "["],
-	// The pseudo-classes that select a featureless element, which matches no type
+	// WHY: The pseudo-classes that select a featureless element, which matches no type
 	// or universal selector (CSS Scoping 1 §3.1) — so the `*` a compound implies
 	// before one is not redundant, it is what stops the selector matching.
 	// `mdn-data` states each selector's syntax and says nothing about this.
 	// Measured in headless Chromium: `:host` matches, `*:host` does not.
 	featurelessPseudoClasses: ["host", "host-context"],
-	// The initial values `mdn-data` states as prose rather than as the keyword the
+	// WHY: The initial values `mdn-data` states as prose rather than as the keyword the
 	// spec gives, so nothing reads them off its `initial` field. Only a property
 	// whose initial really is one fixed keyword belongs here: `text-size-adjust`
 	// and `-ms-content-zooming` read differently per user agent, and `all` has no
@@ -3866,7 +3866,7 @@ const SUPPLEMENT = {
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
 	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],
-	// A merge is all-or-nothing: a shorthand carrying one value the engine cannot
+	// WHY: A merge is all-or-nothing: a shorthand carrying one value the engine cannot
 	// read is dropped whole, taking the sibling longhands with it, where the
 	// longhand alone would only have lost itself. So a keyword the grammar states
 	// but no engine reads must not be merged. `mdn-data` states the grammar and
@@ -3876,7 +3876,7 @@ const SUPPLEMENT = {
 	// Not derivable, a grammar naming `<length>` says `calc()` is valid there:
 	// Chrome takes no `calc()` in `overflow-clip-margin`, as it takes no bare `0`.
 	calcRejectingProperties: ["overflow-clip-margin"],
-	// Ranges the spec clamps a `calc()` to at computed-value time while rejecting
+	// WHY: Ranges the spec clamps a `calc()` to at computed-value time while rejecting
 	// the literal outright, so folding one to the value it equals switches the
 	// declaration off. CSS Fonts 4 §2.3 bounds `oblique` at ±90deg; `mdn-data`
 	// states `oblique <angle>` with no range, and no dataset carries the clamp.
@@ -3896,12 +3896,12 @@ const SUPPLEMENT = {
 	// Newer than the longhands they merge, so the merge would lose both
 	// declarations. Named because `mdn-data` states no version.
 	placeShorthands: ["place-content", "place-items", "place-self"],
-	// Pair shorthands whose *two-value* form is the newer one, so the merge is
+	// WHY: Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
 	// 2.1 and reads everywhere `overflow-x` does, while `overflow: hidden scroll`
 	// is 2018-era. Every other name above is newer in its one-value form too.
 	oneValuePairShorthands: ["overflow"],
-	// The `||`-of-longhands shorthands a merge may emit. Positive evidence, so
+	// WHY: The `||`-of-longhands shorthands a merge may emit. Positive evidence, so
 	// named rather than derived twice over: `mdn-data`'s `computed` under-reports
 	// what a shorthand resets (`border` clears `border-image`, `font` clears
 	// `font-size-adjust`), and states no version, so neither "resets nothing
@@ -3935,7 +3935,7 @@ const SUPPLEMENT = {
 		"text-emphasis",
 		"text-wrap"
 	],
-	// The shorthands whose grammar juxtaposes its longhands in a fixed order
+	// WHY: The shorthands whose grammar juxtaposes its longhands in a fixed order
 	// rather than offering them order-free, so `familyShorthands`' slot-by-value
 	// reading does not apply and the merge writes them by position. Named rather
 	// than derived: what an omitted slot leaves is the shorthand's own default,
@@ -3945,7 +3945,7 @@ const SUPPLEMENT = {
 	// Both the property's initial and a whole `||` group, so omitting the group
 	// leaves it — `mdn-data` states neither, and `aspect-ratio:auto 3/2` is not one.
 	omittableInitialKeywords: ["grid-auto-flow"],
-	// Two longhands `mdn-data` maps to the wrong pair. Corrected from headless
+	// WHY: Two longhands `mdn-data` maps to the wrong pair. Corrected from headless
 	// Chromium, which computes `corner-inline-start-shape` onto the two corners
 	// on the inline-start edge; the table gives it the block-start edge's pair,
 	// the one `corner-block-start-shape` already holds.
@@ -3955,7 +3955,7 @@ const SUPPLEMENT = {
 			["corner-start-start-shape", "corner-end-start-shape"]
 		]
 	],
-	// The properties a negative value is valid on, which decides whether
+	// WHY: The properties a negative value is valid on, which decides whether
 	// `calc(-5px)` may lose its parentheses. Not derivable: every range
 	// `mdn-data` states is a non-negative one (`[0,∞]`, `[0,100]`, `[1,∞]`,
 	// `[0,1]`, `[1,1000]`), so an absent annotation is silence rather than
@@ -4010,7 +4010,7 @@ const SUPPLEMENT = {
 		"word-spacing",
 		"z-index"
 	],
-	// At-rules whose empty block is inert. Not `@keyframes` (an empty one still
+	// WHY: At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order). An empty `@starting-style` states no
 	// starting value, so nothing transitions from one (CSS Transitions 2 §3).
@@ -4020,7 +4020,7 @@ const SUPPLEMENT = {
 		"container",
 		"starting-style"
 	],
-	// At-rules holding rules whose prelude names one thing rather than stating a
+	// WHY: At-rules holding rules whose prelude names one thing rather than stating a
 	// condition, so a second block with the same prelude replaces the first
 	// instead of adding to it — merging two would change which one runs.
 	// `@layer` is not here: a layer's blocks do add to it.
@@ -4029,7 +4029,7 @@ const SUPPLEMENT = {
 	// `<url>` entry and `functions.json` neither call, so the one class whose
 	// every value is a call has to be stated for the walk to spell it.
 	classSpellings: [["url", ["url()", "src()"]]],
-	// CSS Values 4 §6.2 and §8: the units fixed against each other. `units.json`
+	// WHY: CSS Values 4 §6.2 and §8: the units fixed against each other. `units.json`
 	// names them but states neither their type nor the ratios. Counted in a base
 	// that makes every one an integer — 1/36576 inch, the smallest subdivision
 	// that clears both the 96/72/6 divisors and the 127 in `2.54` — so the
@@ -4054,7 +4054,7 @@ const SUPPLEMENT = {
 	// argument through trig, which amplifies a truncated digit into a different
 	// computed matrix (measured in headless Chromium).
 	angleUnits: ["deg", "grad", "rad", "turn"],
-	// CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
+	// WHY: CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
 	// The trig functions are only folded on these, so the table is what says
 	// where. `rad` has no entry — a quarter turn is π/2 of them, which no double
 	// is — and, like the ratios above, no dataset states any of this.
@@ -4343,7 +4343,7 @@ const fromHwb = (c) => {
 			0.4505937099, 0.0259040371, 0.7827717662, -0.808675766
 		]
 	],
-	// How each predefined space stores a component, as the function that reads one
+	// WHY: How each predefined space stores a component, as the function that reads one
 	// back to linear light (CSS Color 4 §10, per space, as prose). Emitted beside
 	// the spaces and bound to them by reference, so a space naming a transfer
 	// nothing defines fails generation rather than converting wrongly.
@@ -4415,7 +4415,7 @@ const rec2020Transfer = (c) => {
 };`
 		]
 	],
-	// The font stack `system-ui` names, for a target that does not read the
+	// WHY: The font stack `system-ui` names, for a target that does not read the
 	// keyword. No dataset states it: each entry is the name one platform's engine
 	// reads its own UI font under, and the list is the one autoprefixer,
 	// lightningcss and every CSS framework converged on. `system-ui` leads it, so
@@ -4431,7 +4431,7 @@ const rec2020Transfer = (c) => {
 		"Cantarell",
 		"Helvetica Neue"
 	],
-	// Each predefined color space CSS Color 4 §10 names, as the chromaticities of
+	// WHY: Each predefined color space CSS Color 4 §10 names, as the chromaticities of
 	// its primaries, its white point and the transfer function its components are
 	// stored through. The spec states all three as prose and gives the matrices
 	// only as sample code, so the matrices are computed from these below rather
@@ -4461,7 +4461,7 @@ const rec2020Transfer = (c) => {
 		["D65", [0.3127, 0.329]],
 		["D50", [0.3457, 0.3585]]
 	],
-	// The spaces whose transfer function an engine does not read the way CSS
+	// WHY: The spaces whose transfer function an engine does not read the way CSS
 	// Color 4 §10 states it, so no byte computed from one is the color it paints:
 	// Chromium takes a98-rgb's gamma as 2.2 rather than 563/256 (0.4% out at the
 	// bottom of the range) and ProPhoto's as a pure 1.8 with none of the linear
@@ -4480,7 +4480,7 @@ const rec2020Transfer = (c) => {
 		["grad", 100],
 		["turn", 0.25]
 	],
-	// Sine and tangent an eighth turn apart, `null` where the value is
+	// WHY: Sine and tangent an eighth turn apart, `null` where the value is
 	// irrational. `Math.sin` cannot supply either — `Math.sin(Math.PI)` is
 	// 1.2e-16 rather than 0, and a table that says a value is exactly zero is the
 	// whole point. Tangent is stated beside sine rather than divided out of it:
@@ -4489,7 +4489,7 @@ const rec2020Transfer = (c) => {
 	// derived below.
 	eighthTurnSine: [0, null, 1, null, 0, null, -1, null],
 	eighthTurnTangent: [0, 1, null, -1, 0, 1, null, -1],
-	// What folding each math function comes down to. The grammars state only the
+	// WHY: What folding each math function comes down to. The grammars state only the
 	// shape — every argument of every one of them is a `<calc-sum>` — so what a
 	// function *means* is spelled out here, as the three things the minifier's
 	// engine needs and nothing more:
@@ -4535,7 +4535,7 @@ const rec2020Transfer = (c) => {
 		["sqrt", "readNumber", "squareRoot", "", null, false],
 		["tan", "readAngle", "tangent", "", "EIGHTH_TURN_TANGENT", false]
 	],
-	// The arithmetic each math function folds by, in dependency order. No dataset
+	// WHY: The arithmetic each math function folds by, in dependency order. No dataset
 	// states any of it — the grammars say only that every argument is a
 	// `<calc-sum>` — and it is emitted from here rather than written beside the
 	// printer so that one file carries both what each function does and the
@@ -4790,7 +4790,7 @@ const round = ([value, step], strategy) => {
 	const below = exactFloorDivide(value, step);
 	if (below === null) return null;
 	const at = /** @type {number} */ (exactMultiply(below, step));
-	// Exactly on a step is where engines stop agreeing: these are step functions,
+	// WHY: Exactly on a step is where engines stop agreeing: these are step functions,
 	// so an ulp of error in the engine's own conversion moves the answer a whole
 	// step. Headless Chromium reads \`round(down,10cm,2cm)\` as \`8cm\` and
 	// \`round(down,-7cm,.5cm)\` as \`-7.5cm\`. Away from a boundary the gap is orders
@@ -4993,7 +4993,7 @@ const arcTangent2 = ([y, x]) => {
 };`
 		]
 	],
-	// CSS Counter Styles 3 §6's predefined styles. `mdn-data` models
+	// WHY: CSS Counter Styles 3 §6's predefined styles. `mdn-data` models
 	// `<counter-style-name>` as a bare `<custom-ident>`, so the names a UA already
 	// defines are nowhere in the dataset — but a stylesheet naming one means the
 	// predefined style, not a local `@counter-style`, so they must not be scoped.
@@ -5063,7 +5063,7 @@ const arcTangent2 = ([y, x]) => {
 	// paged-media counters. `<counter-name>` is a bare `<custom-ident>` in the
 	// dataset, so nothing there says a UA already increments these.
 	predefinedCounterNames: ["list-item", "page", "pages"],
-	// Keyword slots the published grammars do not carry yet. Each is a keyword a
+	// WHY: Keyword slots the published grammars do not carry yet. Each is a keyword a
 	// value can spell where a scoped name would otherwise be read, so leaving it
 	// out would localize it.
 	// Each entry is `[property, keyword, count]`, with `count` read the same way
@@ -5174,7 +5174,7 @@ const assertClassesArePrintable = (slots) => {
 	}
 };
 
-// BCD browser id -> the browserslist names it answers for. BCD-only engines
+// WHY: BCD browser id -> the browserslist names it answers for. BCD-only engines
 // (oculus, deno, bun, nodejs) have no browserslist query, so a prefix they alone
 // would need can never be selected — those ids are absent and their entries drop
 // out. `ie_mob` is Windows Phone's Trident on the desktop version line (IE Mobile
@@ -5202,7 +5202,7 @@ const BCD_TO_BROWSERSLIST = new Map([
 // engine's — `-khtml-`, which died with KHTML — and is never reached for.
 const ENGINE_PREFIXES = ["-webkit-", "-moz-", "-ms-", "-o-"];
 
-// The prefix a browser's engine actually uses, so an obsolete cross-engine one
+// WHY: The prefix a browser's engine actually uses, so an obsolete cross-engine one
 // BCD still lists (Safari keeps `-khtml-user-select` from its KHTML days, with
 // no removal version) is never carried and so never added. Edge and Opera list
 // both their old and Chromium prefixes; the version windows sort out which
@@ -5223,7 +5223,7 @@ const BROWSER_PREFIXES = new Map([
 	["ie", ["-ms-"]]
 ]);
 
-// The browserslist names the tables above can answer for: every BCD id that maps
+// WHY: The browserslist names the tables above can answer for: every BCD id that maps
 // to one and has an engine prefix, `ie_mob` among them, reading the same Trident
 // as desktop IE. A selection naming anything else — `op_mini`, `and_uc`,
 // `and_qq`, `baidu`, `kaios`, `bb` — states nothing and is skipped.
@@ -5235,7 +5235,7 @@ const prefixBrowsers = [
 	)
 ].sort();
 
-// The version a browser that never shipped a construct is given, and the one a
+// WHY: The version a browser that never shipped a construct is given, and the one a
 // spelling still prefixed today is unprefixed at. Finite and a plain number, so
 // the two version tables hold numbers alone — `Infinity` prints as an identifier
 // and costs the emitted file six times its lines. Far past any real version
@@ -5257,7 +5257,7 @@ const NEVER_LITERAL = "1e15";
 const versionLiteral = (version) =>
 	version === NEVER ? NEVER_LITERAL : String(version);
 
-// A BCD version to one comparable integer `major * 100000 + minor`, so the
+// WHY: A BCD version to one comparable integer `major * 100000 + minor`, so the
 // runtime orders versions with a plain `<` and never a float compare (`15.10`
 // must sort above `15.4`). `true` (since forever) is 0; `≤n` is that n; a
 // version that never arrived (`false` / `null`) is null.
@@ -5444,13 +5444,13 @@ const supportLiteral = (table, indexes) =>
 		.map(([name], at) => `["${name}", ${indexes[at]}]`)
 		.join(", ")}])`;
 
-// A vendor spelling BCD states as an alternative name rather than a prefix, with
+// WHY: A vendor spelling BCD states as an alternative name rather than a prefix, with
 // its decoration stripped: `":-webkit-any()"` -> `-webkit-any`. The same engine
 // filter applies, so a rename that is not a vendor's (`:matches()`, `:after`) is
 // not one of these.
 const ALTERNATIVE_DECORATION = /^:{1,2}|\(\)$/g;
 
-// One construct's vendor spellings as `spelling -> [browserslistName, from,
+// WHY: One construct's vendor spellings as `spelling -> [browserslistName, from,
 // to][]`: a target browser at version V needs the spelling exactly when
 // `from <= V < to`. A browser whose unprefixed form never arrived carries
 // `NEVER`, so it always needs it (Safari and `-webkit-user-select`); one
@@ -5504,7 +5504,7 @@ const collectPrefixes = (compat, name, alternatives) => {
 			if (prefixedFrom === null || prefixedFrom >= target) continue;
 			covering.push([entry, spelling, prefixedFrom]);
 		}
-		// Its own engine's prefix — or, where nothing of its own covers the gap,
+		// WHY: Its own engine's prefix — or, where nothing of its own covers the gap,
 		// whichever engine's does: Firefox reads `-webkit-line-clamp` and no
 		// `line-clamp` of any spelling, so `-moz-` alone leaves it unprefixed.
 		// A selector prefix is compound (`-webkit-input-` on `::placeholder`), so
@@ -5561,7 +5561,7 @@ const collectPrefixes = (compat, name, alternatives) => {
 	return out;
 };
 
-// The prefixed constructs the minifier looks up, one table per axis it meets a
+// WHY: The prefixed constructs the minifier looks up, one table per axis it meets a
 // prefix on: a property name, a selector, an at-rule. Standard entries only — a
 // construct BCD marks non-standard is a vendor's own, not a spelling of a
 // standard one.
@@ -5594,7 +5594,7 @@ const collectPrefixTable = (
 	if (supplement) applyPrefixSupplement(table);
 	applyEngineSwitch(table);
 	if (!alternatives) return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
-	// A spelling two names claim cannot be right for both, and the one whose own
+	// WHY: A spelling two names claim cannot be right for both, and the one whose own
 	// prefix makes it is the one that means it: BCD gives `:-moz-placeholder` to
 	// `::placeholder` as its prefix and to `:placeholder-shown` as a rename, and
 	// only the first is what an old engine did with it.
@@ -5618,7 +5618,7 @@ const collectPrefixTable = (
 	return kept.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
-// Prefixes BCD records nowhere, though the spelling is real and needed. Where
+// WHY: Prefixes BCD records nowhere, though the spelling is real and needed. Where
 // the engine that read it still ships, a current one still parses the spelling —
 // Gecko's own property database is where an open-ended window comes from; where
 // it does not, caniuse records it, through autoprefixer's table, and that window
@@ -5756,7 +5756,7 @@ const LOGICAL_SIZE_WINDOWS = [
 /** @type {Map<string, [string, [string, string, string | number][], [string, string][]?][]>} */
 const PREFIX_SUPPLEMENT = new Map([
 	[
-		// Multi-column's own gap, prefixed until the module went unprefixed — Chrome
+		// WHY: Multi-column's own gap, prefixed until the module went unprefixed — Chrome
 		// 50, Firefox 52, Safari 9. The `column-gap` of a flex or grid container is
 		// a different feature, which no engine ever prefixed, and no browser needing
 		// this one laid out either.
@@ -5779,7 +5779,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		]
 	],
 	[
-		// Multi-column's shorthand and its `column-span`, unprefixed with the rest
+		// WHY: Multi-column's shorthand and its `column-span`, unprefixed with the rest
 		// of multi-column layout. BCD dates their `-webkit-` at the version the unprefixed form
 		// arrived, which is 46 versions after Chrome first read it. Only WebKit's,
 		// which a current Blink still parses: caniuse marks the whole feature
@@ -5800,7 +5800,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		]
 	],
 	[
-		// Multi-column's own width, standard from Firefox 50 by BCD alone. Gecko's
+		// WHY: Multi-column's own width, standard from Firefox 50 by BCD alone. Gecko's
 		// property database spells it `-moz-column-width` through 51 and gains the
 		// standard name in 52 with the rest of the module, so dropping the prefix
 		// leaves 50 and 51 a declaration Gecko cannot parse.
@@ -5815,7 +5815,7 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
-	// WebKit's logical sizing, named after the physical axis rather than the logical
+	// WHY: WebKit's logical sizing, named after the physical axis rather than the logical
 	// one. BCD records the pair `inline-size` / `block-size` as the renames they are
 	// and files the other four as a prefix on the standard name, which no engine's
 	// property list has ever carried. The six move as one: every WebKit and Blink
@@ -5880,7 +5880,7 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
-	// IE 10's flexbox, the 2012 draft: it renamed the properties rather than
+	// WHY: IE 10's flexbox, the 2012 draft: it renamed the properties rather than
 	// prefixing them, and BCD records the renames unevenly — `-ms-flex-positive`
 	// as an `alternative_name`, `-ms-flex-order` as a `-ms-` prefix on `order`
 	// (a spelling nothing ever read), and the rest not at all, some as plain
@@ -5949,7 +5949,7 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
-	// The four the 2012 draft also renamed the keywords of, each map being that
+	// WHY: The four the 2012 draft also renamed the keywords of, each map being that
 	// property's whole grammar there. Only `writing-mode` is left out of the
 	// renames: IE reads `horizontal-tb` as `lr-tb` or `rl-tb` depending on the
 	// element's `direction`, which the declaration alone does not say.
@@ -6031,7 +6031,7 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
-	// Presto, where BCD dates the unprefixed arrival earlier than caniuse — the
+	// WHY: Presto, where BCD dates the unprefixed arrival earlier than caniuse — the
 	// only dataset that tracks Opera and Opera Mobile version by version, and the
 	// one autoprefixer reads. `border-image` it marks prefixed on every Presto
 	// version that has it at all (`a x` from 11 through 12.1, on both), so Presto
@@ -6080,7 +6080,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		]
 	],
 	["background-size", [["-o-background-size", [["opera", "9.5", "10.2"]]]]],
-	// `text-size-adjust`, which BCD misses at both ends. IE Mobile is the one
+	// WHY: `text-size-adjust`, which BCD misses at both ends. IE Mobile is the one
 	// browser it does not track, so that reads desktop IE's windows — right for
 	// the same engine on the same version line, but caniuse has the property
 	// prefixed on IE Mobile 10 and 11 and absent from desktop IE altogether, and
@@ -6110,7 +6110,7 @@ const PREFIX_SUPPLEMENT = new Map([
 			["-moz-text-size-adjust", [["firefox", "14", NEVER]]]
 		]
 	],
-	// WebKit named the ruby side and the vertical orientation after the box rather
+	// WHY: WebKit named the ruby side and the vertical orientation after the box rather
 	// than the flow, and kept those names on the prefixed properties: a Chromium 41,
 	// 80 and 141 alike read `-webkit-ruby-position: before` and no `over`, and
 	// `-webkit-text-orientation: vertical-right` and no `mixed`. BCD records the
@@ -6143,7 +6143,7 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
-	// BCD dates WebKit's unprefixed `font-kerning` at Safari 9, caniuse a release
+	// WHY: BCD dates WebKit's unprefixed `font-kerning` at Safari 9, caniuse a release
 	// later on desktop and three years later on iOS. The feature is this one
 	// property, so the usual feature-wider-than-property explanation cannot
 	// account for the gap, and a current WebKit still carries the alias — so the
@@ -6245,7 +6245,7 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	// `-ms-order` was never read by anything: IE 10 spelled it `-ms-flex-order`,
 	// which `PREFIX_SUPPLEMENT` states.
 	["order", ["-ms-order"]],
-	// WebKit's and Gecko's font smoothing are a different property under a
+	// WHY: WebKit's and Gecko's font smoothing are a different property under a
 	// similar name: `font-smooth` takes `never`/`always`/a size, while
 	// `-webkit-font-smoothing` takes `antialiased`/`subpixel-antialiased` and
 	// `-moz-osx-font-smoothing` takes `grayscale`. Nothing carries over.
@@ -6254,7 +6254,7 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	// `all`, so the rename alone writes a value it cannot parse. IE's
 	// `-ms-text-combine-horizontal` does take the standard keywords.
 	["text-combine-upright", ["-webkit-text-combine"]],
-	// BCD files WebKit's logical sizing as a prefix on the standard name, but the
+	// WHY: BCD files WebKit's logical sizing as a prefix on the standard name, but the
 	// spelling it shipped is the rename `-webkit-max-logical-width`, which
 	// `PREFIX_SUPPLEMENT` states with the rest of that family. No engine's property
 	// list has ever carried this one.
@@ -6268,13 +6268,13 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 // A vendor spelling BCD files under a keyword it does not spell, by keyword —
 // the grammar it belongs to decides these, not the property. Each carries why.
 const VALUE_SPELLING_EXCLUSIONS = new Map([
-	// `-webkit-fill-available` is WebKit's `stretch`, which fills the container;
+	// WHY: `-webkit-fill-available` is WebKit's `stretch`, which fills the container;
 	// `fit-content` shrinks to the content. BCD files it under both, and taking it
 	// for `fit-content` lays the box out the other way round rather than the same
 	// way under an older name. Neither autoprefixer nor lightningcss reaches for
 	// it there either.
 	["fit-content", ["-webkit-fill-available"]],
-	// `text-align`'s `-webkit-` spellings outlived the versions BCD files them
+	// WHY: `text-align`'s `-webkit-` spellings outlived the versions BCD files them
 	// under and no longer mean the same thing: a current Blink parses `center` and
 	// `-webkit-center` both, and computes them differently — `-webkit-center`
 	// centers block-level children, `center` only inline content. Taking one for
@@ -6287,7 +6287,7 @@ const VALUE_SPELLING_EXCLUSIONS = new Map([
 // A value whose vendor spelling is not the same value spelled another way, which
 // no dataset states — each carries why. Everything else is read from BCD.
 const VALUE_KEYWORD_EXCLUSIONS = new Map([
-	// IE's `-ms-grid` is the 2011 grid, whose tracks and placement are their own
+	// WHY: IE's `-ms-grid` is the 2011 grid, whose tracks and placement are their own
 	// prefixed properties: a copy of the declaration alone lays the box out by a
 	// different algorithm rather than the same one under an older name. It is why
 	// autoprefixer keeps IE grid behind an option of its own.
@@ -6308,7 +6308,7 @@ const VALUE_KEYWORD_EXCLUSIONS = new Map([
 // by more than one value grammar and a stated window cannot say which.
 /** @type {Map<string, [string, [string, string, string][]][]>} */
 const VALUE_PREFIX_SUPPLEMENT = new Map([
-	// Blink shipped bidi isolation as one family, and a Chromium 41 parses
+	// WHY: Blink shipped bidi isolation as one family, and a Chromium 41 parses
 	// `-webkit-isolate-override` and `-webkit-plaintext` while parsing neither
 	// plain name. BCD keeps the `-webkit-` window for `isolate` alone, so the
 	// other two read as needing nothing and lose their only spelling.
@@ -6349,7 +6349,7 @@ const collectPrefixedValues = () => {
 		if (!entry || !entry.syntax) continue;
 		const keywords = lowerSorted(acceptedValues(entry.syntax).keywords);
 		if (keywords.length === 0) continue;
-		// The engines whose prefix the property itself already carries: BCD files
+		// WHY: The engines whose prefix the property itself already carries: BCD files
 		// "IE read this value under `-ms-touch-action`" on the value as well, and a
 		// copy spelling the value instead of the property says nothing an engine
 		// reads. Dropped here rather than at the end, so what the property's own
@@ -6378,7 +6378,7 @@ const collectPrefixedValues = () => {
 		}
 		read.set(property, { keywords, values });
 	}
-	// Properties accepting exactly the same keywords are one value grammar —
+	// WHY: Properties accepting exactly the same keywords are one value grammar —
 	// `block-size` is `<'width'>` and `height` expands to what `width` does — so a
 	// spelling one of them records is the grammar's, not that property's. BCD
 	// files `-webkit-max-content` under `width` and not under `height`, which is
@@ -6708,13 +6708,13 @@ const collectData = async () => {
 /** @typedef {(sums: Map<string, number>[]) => [string, number[]] | null} MathArgumentReader */
 /** @typedef {(values: number[], strategy: string, table: Map<number, number>) => number | null} MathOperation */
 
-// The arithmetic the math-function descriptors at the end of this file bind to.
+// WHY: The arithmetic the math-function descriptors at the end of this file bind to.
 // It knows nothing of CSS beyond the shape of an evaluated argument, and names
 // no math function: which one uses which is the descriptors' business, and
 // \`lib/css/syntax.js\` only drives the binding.
 ${SUPPLEMENT.mathPrimitives.map(([, body]) => body).join("\n\n")}
 
-// Properties whose value is CSS's \`{1,4}\` box notation, where an omitted value
+// WHY: Properties whose value is CSS's \`{1,4}\` box notation, where an omitted value
 // is copied from the opposite side. That makes a repeated value redundant:
 // \`margin:1px 1px 1px 1px\` is \`margin:1px\`. \`border-radius\` collapses each side
 // of its \`/\` independently.
@@ -6725,7 +6725,7 @@ const BOX_SHORTHANDS = ${setLiteral(
 // The subset carrying a second box after a \`/\`, which collapses on its own.
 const SLASH_BOX_SHORTHANDS = ${setLiteral(slashShorthands)};
 
-// The four longhands each box shorthand sets, in the order \`{1,4}\` writes them:
+// WHY: The four longhands each box shorthand sets, in the order \`{1,4}\` writes them:
 // \`top right bottom left\`, or clockwise from the top left for a corner family.
 // Only the families whose longhands are those four: merging those into the
 // shorthand sets exactly the same properties, resetting nothing extra.
@@ -6761,7 +6761,7 @@ const UNSHARED_LONGHAND_KEYWORDS = new Map([${unsharedLonghandKeywords
 		.map(([name, keywords]) => `["${name}", ${setLiteral(keywords)}]`)
 		.join(", ")}]);
 
-// The shorthands written as an order-free \`||\` of their own longhands, each
+// WHY: The shorthands written as an order-free \`||\` of their own longhands, each
 // appearing once, in grammar order. A merge emits every value, so the only
 // question is whether each parses back into the longhand it was authored on.
 // prettier-ignore
@@ -6794,13 +6794,13 @@ const SHORTHAND_LONGHANDS = new Map([${shorthandLonghands
 		.map(([name, longhands]) => `["${name}", ${setLiteral(longhands)}]`)
 		.join(", ")}]);
 
-// Every longhand the three merge tables above can consume, so a block is asked
+// WHY: Every longhand the three merge tables above can consume, so a block is asked
 // once whether it holds anything mergeable at all. Two of them have to be
 // present before any shorthand can be written, and almost no block holds one,
 // which is what keeps the merge off the declarations it cannot serve.
 const MERGE_LONGHANDS = ${setLiteral(lowerSorted(mergeLonghands))};
 
-// The initial keyword each of these may drop when another component stands
+// WHY: The initial keyword each of these may drop when another component stands
 // beside it: omitting the group it belongs to leaves exactly that keyword. The
 // second half is every keyword that group offers — a value naming two of them
 // (\`grid-auto-flow:row dense column\`) fills the slot twice and is invalid, so
@@ -6814,7 +6814,7 @@ const OMITTABLE_INITIAL_KEYWORDS = new Map([${omittableInitialKeywords
 		)
 		.join(", ")}]);
 
-// What each of those longhands accepts as a whole value: the keywords it names,
+// WHY: What each of those longhands accepts as a whole value: the keywords it names,
 // and the value classes it reaches. A value acceptable to a second slot is what
 // makes the merge ambiguous, and \`FAMILY_SLOT_CLASSES\` names a type the printer
 // cannot classify as readily as one it can, so an unknown one declines.
@@ -6834,13 +6834,13 @@ const FAMILY_SLOT_CLASSES = new Map([${[...slotAccepts]
 		)
 		.join(", ")}]);
 
-// The identifiers that are a \`<color>\` on their own — named, system and the two
+// WHY: The identifiers that are a \`<color>\` on their own — named, system and the two
 // context-dependent ones. Read off the \`<color>\` grammar outside any function,
 // so a channel keyword like the \`none\` in \`hsl(0 none 0)\` is not among them.
 // cspell:ignore ${colorKeywords.join(" ")}
 const COLOR_KEYWORDS = ${setLiteral(colorKeywords)};
 
-// The name prefix a declaration between two box longhands must not carry for the
+// WHY: The name prefix a declaration between two box longhands must not carry for the
 // merge to step over it. The shorthand's first segment, which is deliberately
 // wider than the family: \`border-color\` blocks every \`border*\` property, since
 // \`border\`, \`border-top\` and \`border-block-start-color\` all write its longhands
@@ -6875,7 +6875,7 @@ const NTH_NAMED_EQUIVALENTS = ${mapLiteral(nthNamedEquivalents)};
 // a named color written in one is that color and may be spelled the shortest way.
 const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
 
-// The properties whose value is keywords alone, so an identifier standing
+// WHY: The properties whose value is keywords alone, so an identifier standing
 // directly in one is a keyword rather than a name of the author's — and matches
 // ASCII case-insensitively. A call's arguments are read against the function's
 // own grammar, so they are not covered.
@@ -6894,7 +6894,7 @@ ${displayShortForms
 // shadow cannot go below, past which a trailing zero is already implied.
 const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
 
-// Each shorthand -> the keywords one of its values may drop, each with every
+// WHY: Each shorthand -> the keywords one of its values may drop, each with every
 // spelling its own slot takes: the slot's keywords, and each function it
 // accepts written \`name()\`. A sibling out of that set means the value fills the
 // slot twice, which is a declaration the engine drops.
@@ -7037,7 +7037,7 @@ const ZERO_ANGLE_FUNCTIONS = ${setLiteral(zeroAngleFunctions)};
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
 const MATH_FUNCTIONS = ${setLiteral(mathFunctions)};
 
-// How many \`<calc-sum>\` arguments each of them takes, off its own grammar. A
+// WHY: How many \`<calc-sum>\` arguments each of them takes, off its own grammar. A
 // function whose arguments are not all expressions (\`round()\` leads with a
 // strategy, \`calc-size()\` with a basis) is absent, and absence is what the
 // folding reads as "leave this one alone".
@@ -7147,7 +7147,7 @@ const UNIT_GROUP_BASE = new Map([${unitGroupBase
 // cannot outrun what an engine reading the stylesheet already parses.
 const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 
-// How each predefined color space is read back to sRGB: the matrix taking its
+// WHY: How each predefined color space is read back to sRGB: the matrix taking its
 // linear-light components to linear-light sRGB, and the function that reads one
 // stored component back to linear light. Both derived from the primaries,
 // white point and transfer function CSS Color 4 §10 states.
@@ -7178,7 +7178,7 @@ ${colorSpaces
 // wherever the target reads one.
 const LINEAR_SRGB_TO_P3 = [${srgbToP3.map(String).join(", ")}];
 
-// The interpolation spaces a \`color-mix()\` or a relative color is read in, each
+// WHY: The interpolation spaces a \`color-mix()\` or a relative color is read in, each
 // as the pair taking linear-light sRGB to its components and back, and which
 // component is an angle (\`-1\` for none). Every one derived from the primaries,
 // matrices and definitions the generator states.
@@ -7281,7 +7281,7 @@ const readAngle = angleReader(QUARTER_TURN_ANGLE);
 /** @type {Map<number, number>} */
 const NO_TABLE = new Map();
 
-// What folding each math function comes down to, as
+// WHY: What folding each math function comes down to, as
 // \`name -> { read, apply, result, table }\`: how its arguments are read, which
 // arithmetic runs, and the unit the answer carries. \`read\` and \`apply\` are the
 // functions themselves, so \`lib/css/syntax.js\` drives the fold while naming
@@ -7298,7 +7298,7 @@ ${SUPPLEMENT.mathFunctionFold
 	.join(",\n")}
 ]);
 
-// Properties whose grammar can reach an \`<integer>\`. Deliberately wide: a
+// WHY: Properties whose grammar can reach an \`<integer>\`. Deliberately wide: a
 // non-integer where an integer is expected is rounded rather than dropped
 // (\`z-index: calc(1.5)\` computes to \`2\`), so this is read to refuse a rewrite,
 // and one name too many costs only that rewrite.
@@ -7331,7 +7331,7 @@ const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(
 		cssModulesKeywords.map(([name, option]) => [name, option])
 	)};
 
-// The properties a negative value is valid on, so \`calc(-5px)\` may lose its
+// WHY: The properties a negative value is valid on, so \`calc(-5px)\` may lose its
 // parentheses there. Read to permit a rewrite, which is the opposite of
 // \`INTEGER_PROPERTIES\` above: naming one property too many is a bug, naming one
 // too few only costs a rewrite.
@@ -7339,7 +7339,7 @@ const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(
 		negativeAcceptingProperties
 	)};
 
-// The functions whose every numeric argument is a length, so a zero inside one
+// WHY: The functions whose every numeric argument is a length, so a zero inside one
 // drops its unit the way a whole component's does. Read to permit a rewrite:
 // any other numeric type would make the bare \`0\` mean something else, or make
 // a dropped declaration valid.
@@ -7356,7 +7356,7 @@ ${colorNames
 	.join(",\n")}
 ]);
 
-// Prefixed constructs the minifier reads back, one table per axis, as \`name ->
+// WHY: Prefixed constructs the minifier reads back, one table per axis, as \`name ->
 // [prefix, windowList][]\`. Versions are \`major * 100000 + minor\`; a target
 // browser at version V needs the prefix when \`prefixedFrom <= V < unprefixedFrom\`
 // (\`NEVER\` = never unprefixed). Non-standard-only constructs are absent.
@@ -7380,7 +7380,7 @@ const PREFIXED_SELECTORS = ${prefixedSelectorsText};
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_AT_RULES = ${prefixedAtRulesText};
 
-// The version a browser that never shipped a construct is given below, and the
+// WHY: The version a browser that never shipped a construct is given below, and the
 // one a spelling still prefixed today is unprefixed at. Finite and a plain
 // number, so both version tables hold numbers alone; far past any real version,
 // and past the one Safari TP is read as.
@@ -7409,7 +7409,7 @@ const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
 /** @type {Map<string, number>} */
 const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport, pooled.indexes[1])};
 
-// The vendor spellings of a property's own keyword values, as \`property ->
+// WHY: The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
 // Only keywords the property's syntax names are here, so a function whose older
@@ -7417,7 +7417,7 @@ const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport, pooled.indexes
 /** @type {Map<string, Map<string, [string, number][]>>} */
 const PREFIXED_VALUES = ${prefixedValuesText};
 
-// The keywords a vendor spelling reads in place of the standard ones, as
+// WHY: The keywords a vendor spelling reads in place of the standard ones, as
 // \`spelling -> standard -> legacy\` — IE 10's \`-ms-flex-pack\` reads
 // \`space-around\` as \`distribute\`. Each map is the older property's whole
 // grammar, so a value naming anything it does not is one that property cannot

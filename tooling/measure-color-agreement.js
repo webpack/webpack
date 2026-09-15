@@ -315,7 +315,7 @@ const main = async () => {
 		stats.set(sample.space, entry);
 	}
 
-	// Which spaces the engine reads through another transfer altogether, swept
+	// WHY: Which spaces the engine reads through another transfer altogether, swept
 	// separately: a matrix difference scales every value by about the same
 	// factor, where a different transfer bends the low end of the range away from
 	// the rest — so the ratio between what the two compute is what tells them
