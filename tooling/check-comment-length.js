@@ -21,7 +21,8 @@ const JSDOC_OPEN_RE = /^\+[ \t]*\/\*\*/;
 const BLOCK_CLOSE_RE = /\*\//;
 const LICENSE_RE = /MIT License/;
 const MARKER_RE = /^\+[ \t]*\/\/[ \t]*WHY:/;
-const PREAMBLE_SKIP_RE = /^\+([ \t]*$|#!|[ \t]*"use strict")/;
+const PREAMBLE_SKIP_RE =
+	/^\+([ \t]*$|#!|[ \t]*(?:"use strict"|'use strict')[ \t]*;?[ \t]*$)/;
 const HUNK_RE = /^@@ -\d+(?:,\d+)? \+(\d+)/;
 const FILE_RE = /^\+\+\+ b\/(.*)$/;
 

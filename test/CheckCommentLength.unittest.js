@@ -99,6 +99,26 @@ describe("check-comment-length", () => {
 		).toEqual([]);
 	});
 
+	it("carries the preamble past a single-quoted directive", () => {
+		expect(
+			check([
+				"'use strict';",
+				"",
+				"// one",
+				"// two",
+				"// three",
+				"// four",
+				"const a = 1;"
+			])
+		).toEqual([]);
+	});
+
+	it("ends the preamble at a statement the directive only opens", () => {
+		expect(
+			check(['"use strict" + x;', "// one", "// two", "// three", "// four"])
+		).toEqual(["x.js:2"]);
+	});
+
 	it("exempts a JSDoc block however long", () => {
 		expect(
 			check([
