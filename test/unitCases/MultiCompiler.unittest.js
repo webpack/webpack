@@ -319,7 +319,7 @@ describe("MultiCompiler", () => {
 
 	it("should run again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
-		const watching = /** @type {import("../../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err, _stats) => {
 					if (err) return done(err);
@@ -336,7 +336,7 @@ describe("MultiCompiler", () => {
 
 	it("should watch again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
-		const watching = /** @type {import("../../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err, _stats) => {
 					if (err) return done(err);
@@ -354,7 +354,7 @@ describe("MultiCompiler", () => {
 	it("should expose the active MultiWatching on `watching`", (done) => {
 		const compiler = createMultiCompiler();
 		expect(compiler.watching).toBeUndefined();
-		const watching = /** @type {import("../../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err, _stats) => {
 					if (err) return done(err);
@@ -525,7 +525,7 @@ describe("MultiCompiler", () => {
 		);
 		/** @type {Error | null | undefined} */
 		let error;
-		const watching = /** @type {import("../../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err) => {
 					error = err;
@@ -873,7 +873,7 @@ describe("MultiCompiler", () => {
 		);
 
 		let state = 0;
-		const watching = /** @type {import("../../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (error) => {
 					if (error) {
@@ -965,7 +965,7 @@ describe("MultiCompiler", () => {
 		);
 
 		let state = 0;
-		const watching = /** @type {import("../../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (error) => {
 					if (error) {
@@ -1043,7 +1043,7 @@ describe("MultiCompiler", () => {
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 
-		const watching = /** @type {import("../../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (error) => {
 					if (error) {
