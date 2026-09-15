@@ -5430,6 +5430,40 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		);
 	});
 
+	it("leaves an implied tag out on the first pass", () => {
+		// The omission reads what will print: a comment minifying drops is not
+		// content the start tag has to stay for, nor is whitespace `"all"` takes.
+		const once = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts = undefined
+		) => new SourceProcessor().process(html, { mode: "minify", ...opts }).code;
+		const settles = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts = undefined
+		) => {
+			const first = once(html, opts);
+			expect(once(first, opts)).toBe(first);
+			return first;
+		};
+		expect(settles("<table><colgroup><!--c--><col><tr><td>a</table>")).toBe(
+			"<table><col><tr><td>a</table>"
+		);
+		expect(settles("<table><tbody><!--c--><tr><td>a</table>")).toBe(
+			"<table><tr><td>a</table>"
+		);
+		expect(
+			settles("<html><head><title>L</title></head><body> x</body></html>", {
+				collapseWhitespace: "all",
+				removeImpliedTags: true
+			})
+		).toBe("<title>L</title>x");
+		// A tier that keeps the whitespace keeps the tag: without it the parser
+		// drops the run on the way back in.
+		expect(
+			once("<html><body> x</body></html>", { removeImpliedTags: true })
+		).toBe("<body> x");
+	});
+
 	it("rewrites a referenced value with the quoting switch off", () => {
 		// The switch freezes the quoting, not the value: a rewrite that changes
 		// what the value says leaves the source spelling of it unusable.
