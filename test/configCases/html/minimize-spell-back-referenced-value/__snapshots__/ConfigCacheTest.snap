@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-spell-back-referenced-value minimize-spell-back-referenced-value should compile 1`] = `
+"<!doctype html><head><meta name=viewport content=\\"width=device-width\\"></head><body>
+<a href=\\"/a\\">a</a>
+<a href='/b'>b</a>
+<a href='/c'>c</a>
+<a href=\\"&amp;x&amp;y\\">d</a>
+<a title=\\"it's\\">e</a>
+<a title='say \\"hi\\"'>f</a>
+<form action=\\"/post\\"><input type=\\"text\\"><input type=\\"search\\"></form>
+
+
+</body></html>"
+`;
