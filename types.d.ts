@@ -9911,11 +9911,22 @@ declare class Generator {
 	}): ByTypeGenerator;
 
 	/**
+	 * Returns what a module that failed to build says about it in the output.
+	 * The stack it carries is written relative to the context, keeping a
+	 * position only where a second build names the same one.
+	 */
+	static buildErrorMessage(
+		error: Error,
+		requestShortener?: RequestShortener
+	): string;
+
+	/**
 	 * Returns the statement a module that failed to build throws when executed.
 	 */
 	static throwBuildErrorCode(
 		error: Error,
-		parseErrorConstructor?: string
+		parseErrorConstructor?: string,
+		requestShortener?: RequestShortener
 	): string;
 }
 declare interface GeneratorOptions {
