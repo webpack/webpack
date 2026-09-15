@@ -2398,6 +2398,36 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min(sheet)).toContain("color:currentcolor");
 	});
 
+	it("collapses a box whose sides print alike, however they were written", () => {
+		// CSS Values 4 §5: a zero length loses its unit as the declaration prints,
+		// so two zeros are one value whatever unit the source spelled them with.
+		expect(min("a{margin:0em -0.25rem 0rem}")).toBe("a{margin:0 -.25rem}");
+		expect(min("a{padding:0em 1px 0rem 1px}")).toBe("a{padding:0 1px}");
+		expect(min("a{border-radius:0em 1px 0rem}")).toBe("a{border-radius:0 1px}");
+		// A percentage is a type of its own, and keeps its unit — so it collapses
+		// against another percentage, never against a length.
+		expect(min("a{margin:0% 1px 0px}")).toBe("a{margin:0%1px 0}");
+		expect(min("a{margin:0% 1px 0%}")).toBe("a{margin:0%1px}");
+	});
+
+	it("builds a shorthand from what its longhands print, not what they spell", () => {
+		// The zero-unit drop is a declaration's own, so a slot read off the tokens
+		// still carries a unit the declaration would have written without.
+		expect(min("a{top:auto;right:0em;bottom:0em;left:auto}")).toBe(
+			"a{inset:auto 0 0 auto}"
+		);
+		expect(
+			min(
+				"a{margin-top:0em;margin-right:0em;margin-bottom:0em;margin-left:0em}"
+			)
+		).toBe("a{margin:0}");
+		expect(
+			min(
+				"a{margin-top:1PX;margin-right:1PX;margin-bottom:1PX;margin-left:1PX}"
+			)
+		).toBe("a{margin:1px}");
+	});
+
 	it("collapses each side of `border-radius`'s `/` on its own", () => {
 		expect(min("a{border-radius:1px 1px 1px 1px / 1px 1px 1px 1px}")).toBe(
 			"a{border-radius:1px}"
