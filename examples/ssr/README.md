@@ -457,12 +457,12 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 21.2 KiB [emitted] [javascript module] (name: main)
+  asset main.mjs 21.6 KiB [emitted] [javascript module] (name: main)
   asset page_js.mjs 1.63 KiB [emitted] [javascript module]
   asset page_js.css 352 bytes [emitted]
-  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 6.21 KiB (runtime) [entry] [rendered]
     > ./server.js main
-    runtime modules 5.9 KiB 9 modules
+    runtime modules 6.21 KiB 9 modules
     dependent modules 1.02 KiB [dependent] 8 modules
     ./server.js 4.05 KiB [built] [code generated]
       [exports: renderDocument]
@@ -516,12 +516,12 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 4.52 KiB [emitted] [javascript module] [minimized] (name: main)
+  asset main.mjs 4.53 KiB [emitted] [javascript module] [minimized] (name: main)
   asset page_js-page_css.mjs 565 bytes [emitted] [javascript module] [minimized]
   asset page_js-page_css.css 197 bytes [emitted] [minimized]
-  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 5.72 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 6.05 KiB (runtime) [entry] [rendered]
     > ./server.js main
-    runtime modules 5.72 KiB 8 modules
+    runtime modules 6.05 KiB 8 modules
     dependent modules 84 bytes [dependent] 2 modules
     ./server.js + 6 modules 4.99 KiB [not cacheable] [built] [code generated]
       [exports: renderDocument]
