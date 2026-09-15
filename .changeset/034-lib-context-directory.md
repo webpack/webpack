@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Move the context module sources into `lib/context/`.
+Move the context and externals module sources into `lib/context/` and `lib/externals/`.
