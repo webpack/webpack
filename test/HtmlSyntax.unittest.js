@@ -5465,6 +5465,24 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		).toBe("<body> x");
 	});
 
+	it("reads a style type by what it decodes to", () => {
+		// The same rule `_scriptType` follows: the value the spec matches is the
+		// one the parser read, so a `type` spelled with references still names CSS.
+		const css = (/** @type {string} */ html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			}).code;
+		const spelled = "&#x74;&#x65;&#x78;&#x74;&#x2f;&#x63;&#x73;&#x73;";
+		expect(css(`<style type="${spelled}">.a {  color : red ; }</style>`)).toBe(
+			"<style type=text/css>.a{color:red}</style>"
+		);
+		// A type that names something else is still left alone.
+		expect(css('<style type="text/foo">.a {  color : red ; }</style>')).toBe(
+			"<style type=text/foo>.a {  color : red ; }</style>"
+		);
+	});
+
 	it("merges across an attribute the print drops", () => {
 		const once = (
 			/** @type {string} */ html,
