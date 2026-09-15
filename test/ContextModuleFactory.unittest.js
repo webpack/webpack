@@ -1,11 +1,11 @@
 "use strict";
 
 const { Volume, createFsFromVolume } = require("memfs");
-const ContextModuleFactory = require("../lib/ContextModuleFactory");
+const ContextModuleFactory = require("../lib/context/ContextModuleFactory");
 
 /** @import { IFs } from "memfs" */
 /** @import { InputFileSystem } from "../lib/util/fs" */
-/** @import { ContextModuleOptions } from "../lib/ContextModule" */
+/** @import { ContextModuleOptions } from "../lib/context/ContextModule" */
 
 describe("ContextModuleFactory", () => {
 	describe("resolveDependencies", () => {

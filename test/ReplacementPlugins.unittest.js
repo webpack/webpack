@@ -1,8 +1,8 @@
 "use strict";
 
 const SyncHook = require("tapable").SyncHook;
-const ContextReplacementPlugin = require("../lib/ContextReplacementPlugin");
 const NormalModuleReplacementPlugin = require("../lib/NormalModuleReplacementPlugin");
+const ContextReplacementPlugin = require("../lib/context/ContextReplacementPlugin");
 
 const UNC_FILE = "\\\\server\\share\\replacement.js";
 const UNC_DIRECTORY = "\\\\server\\share\\replacement";
