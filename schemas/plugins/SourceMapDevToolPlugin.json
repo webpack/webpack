@@ -155,7 +155,7 @@
     "scopes": {
       "description": "Emit the 'scopes' field, which tells a debugger the generated expression each imported ESM binding reads, so it resolves under the name the source uses.",
       "type": "boolean",
-      "added": "5.111.0"
+      "added": "5.112.0"
     },
     "sourceRoot": {
       "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap.",
