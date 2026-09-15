@@ -4,6 +4,8 @@ exports[`ConfigTestCases html minimize-spell-back-referenced-value minimize-spel
 "<!doctype html><head><meta name=viewport content=\\"width=device-width\\"></head><body>
 <a href=\\"/a\\">a</a>
 <a href='/b'>b</a>
+<a href='/c'>c</a>
+<a href=\\"&amp;x&amp;y\\">d</a>
 <form action=\\"/post\\"><input type=\\"text\\"><input type=\\"search\\"></form>
 
 

@@ -26,5 +26,10 @@ module.exports = {
 		// A delimiter the source chose is the one it keeps, quoted or not.
 		expect(html).toContain("name=viewport");
 		expect(html).toContain("href='/b'");
+		// A value carrying no reference is rewritten under its own delimiter too.
+		expect(html).toContain("href='/c'");
+		// Spelling the rewrite back costs bytes here, and is still what runs: the
+		// source spelling would leave the padding a plain value loses.
+		expect(html).toContain('href="&amp;x&amp;y"');
 	}
 };
