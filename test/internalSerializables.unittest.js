@@ -29,7 +29,17 @@ describe("internalSerializables", () => {
 	// only resolves while lib/ keeps a registerLegacyRequest for it
 	for (const [legacy, current] of [
 		["webpack/lib/ContextModule", "webpack/lib/context/ContextModule"],
-		["webpack/lib/ExternalModule", "webpack/lib/externals/ExternalModule"]
+		["webpack/lib/ExternalModule", "webpack/lib/externals/ExternalModule"],
+		["webpack/lib/InitFragment", "webpack/lib/template/InitFragment"],
+		[
+			"webpack/lib/NodeStuffInWebError",
+			"webpack/lib/errors/NodeStuffInWebError"
+		],
+		["webpack/lib/RawDataUrlModule", "webpack/lib/asset/RawDataUrlModule"],
+		[
+			"webpack/lib/dependencies/ExternalModuleConstDependency",
+			"webpack/lib/dependencies/ExternalModuleInitFragmentDependency"
+		]
 	]) {
 		it(`should restore "${legacy}" from a pre-move cache`, () => {
 			internalSerializables[
