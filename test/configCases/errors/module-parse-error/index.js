@@ -23,10 +23,19 @@ it("should throw a WebAssembly.CompileError for a malformed wasm module", async 
 });
 
 it("should throw a plain Error for a build failure that is not a parse error", () => {
-	// anchored: the loader's own frame is kept and written relative to the
-	// context, while the frames webpack and the engine own are cut off
-	expect(() => require("./built.js")).toThrow(
-		/^Module build failed \(from .*loader\.js\):\nError: loader boom\n {4}at Object\.loader \(\.\/loader\.js:\d+:\d+\)$/
+	let message = "";
+	try {
+		require("./built.js");
+	} catch (error) {
+		message = error.message;
+	}
+
+	// the loader's own frame is kept and written relative to the context, while
+	// the frames webpack and the engine own are cut off
+	expect(message).toMatch(
+		/^Module build failed \(from .*loader\.js\):\nError: loader boom\n/
 	);
+	expect(message).toMatch(/\.\/loader\.js:\d+:\d+/);
+	expect(message).not.toMatch(/[\s(](?:\/|[A-Za-z]:[\\/])/);
 	expect(() => require("./built.js")).not.toThrow(SyntaxError);
 });

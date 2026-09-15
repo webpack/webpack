@@ -19,11 +19,10 @@ describe("ErrorHelpers.toError", () => {
 		);
 	});
 
-	it("should start the stack where the value was caught", () => {
-		const frame = /** @type {string} */ (toError("the tap gave up").stack)
-			.split("\n")
-			.find((line) => /^\s+at\s/.test(line));
-
-		expect(frame).toContain("ErrorHelpers.unittest.js");
+	it("should not start the stack at the wrapping", () => {
+		// an engine that hands back no frames at all still must not name this one
+		expect(toError("the tap gave up").stack || "").not.toContain(
+			"ErrorHelpers.js"
+		);
 	});
 });

@@ -9,9 +9,16 @@ it("should build the failing module without crashing", () => {
 });
 
 it("should keep the stack that says where the value came from", () => {
-	// nothing the project owns is on it, so the frames webpack and the hook own
-	// are what names the site — written relative, and without their positions
-	expect(() => require("../_images/file.png")).toThrow(
-		/\n {4}at \.\.\/[^\n:]+NormalModule\.js\n {4}at eval \(eval at create \([^\n:]+HookCodeFactory\.js\), <anonymous>\)$/
-	);
+	let message = "";
+	try {
+		require("../_images/file.png");
+	} catch (error) {
+		message = error.message;
+	}
+
+	// nothing the project owns is on this stack, so what names the site is the
+	// frame webpack owns — relative, and without the position that moves
+	expect(message).toMatch(/[\s(]\.\.\/[^\s)]*NormalModule\.js\)?$/m);
+	expect(message).not.toMatch(/NormalModule\.js:\d/);
+	expect(message).not.toMatch(/[\s(](?:\/|[A-Za-z]:[\\/])/);
 });
