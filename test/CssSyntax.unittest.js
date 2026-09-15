@@ -4098,11 +4098,36 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("leaves a layer to the merge, which gathers it rather than dropping it", () => {
+			// The block is gathered where it stands rather than dropped as a repeat —
+			// and the rules meeting where the two bodies join are read as neighbors.
 			expect(
 				minify(
 					"@media all{@layer x{a{top:0}}@layer y{b{top:1px}}@layer x{a{top:0}}}"
 				)
-			).toBe("@media all{@layer x{a{top:0}a{top:0}}@layer y{b{top:1px}}}");
+			).toBe("@media all{@layer x{a{top:0}}@layer y{b{top:1px}}}");
+		});
+
+		it("joins the rules a gathered layer block brings together", () => {
+			// The gather is what makes them neighbors, so the join has to run over
+			// the seam it leaves rather than only over the order it was handed.
+			expect(
+				minify(
+					"@media all{@layer x{.a:disabled{top:0}}@layer y{.q{top:1px}}@layer x{.b:disabled{top:0}}}"
+				)
+			).toBe(
+				"@media all{@layer x{.a:disabled,.b:disabled{top:0}}@layer y{.q{top:1px}}}"
+			);
+		});
+
+		it("reads a block written again right behind itself as the one block", () => {
+			// Two identical blocks with nothing between them: the later only restates
+			// what the earlier says, so gathering them adds nothing.
+			expect(minify("@layer x{a{top:0}}@layer x{a{top:0}}")).toBe(
+				"@layer x{a{top:0}}"
+			);
+			expect(minify("@media all{@layer x{c:1;d:2}@layer x{c:1;d:2}}")).toBe(
+				"@media all{@layer x{c:1;d:2}}"
+			);
 		});
 	});
 
