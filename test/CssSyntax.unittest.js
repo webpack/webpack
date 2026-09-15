@@ -2398,6 +2398,48 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min(sheet)).toContain("color:currentcolor");
 	});
 
+	it("drops an empty `@starting-style`, and keeps the ones that still say something", () => {
+		// CSS Transitions 2 §3: with no rules it states no starting value. `@layer`
+		// still declares its cascade order and `@keyframes` still fires its events.
+		expect(min("@starting-style{}")).toBe("");
+		expect(min(".a{x:1}@starting-style{}.b{y:2}")).toBe(".a{x:1}.b{y:2}");
+		expect(min("@starting-style{.a{opacity:0}}")).toBe(
+			"@starting-style{.a{opacity:0}}"
+		);
+		expect(min("@layer l{}")).toBe("@layer l{}");
+		expect(min("@keyframes k{}")).toBe("@keyframes k{}");
+	});
+
+	it("collapses a box whose sides print alike, however they were written", () => {
+		// CSS Values 4 §5: a zero length loses its unit as the declaration prints,
+		// so two zeros are one value whatever unit the source spelled them with.
+		expect(min("a{margin:0em -0.25rem 0rem}")).toBe("a{margin:0 -.25rem}");
+		expect(min("a{padding:0em 1px 0rem 1px}")).toBe("a{padding:0 1px}");
+		expect(min("a{border-radius:0em 1px 0rem}")).toBe("a{border-radius:0 1px}");
+		// A percentage is a type of its own, and keeps its unit — so it collapses
+		// against another percentage, never against a length.
+		expect(min("a{margin:0% 1px 0px}")).toBe("a{margin:0%1px 0}");
+		expect(min("a{margin:0% 1px 0%}")).toBe("a{margin:0%1px}");
+	});
+
+	it("builds a shorthand from what its longhands print, not what they spell", () => {
+		// The zero-unit drop is a declaration's own, so a slot read off the tokens
+		// still carries a unit the declaration would have written without.
+		expect(min("a{top:auto;right:0em;bottom:0em;left:auto}")).toBe(
+			"a{inset:auto 0 0 auto}"
+		);
+		expect(
+			min(
+				"a{margin-top:0em;margin-right:0em;margin-bottom:0em;margin-left:0em}"
+			)
+		).toBe("a{margin:0}");
+		expect(
+			min(
+				"a{margin-top:1PX;margin-right:1PX;margin-bottom:1PX;margin-left:1PX}"
+			)
+		).toBe("a{margin:1px}");
+	});
+
 	it("collapses each side of `border-radius`'s `/` on its own", () => {
 		expect(min("a{border-radius:1px 1px 1px 1px / 1px 1px 1px 1px}")).toBe(
 			"a{border-radius:1px}"
@@ -3636,7 +3678,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["a{background-position:50% 50%}", "a{background-position:50%}"],
 			["a{background-position:10px center}", "a{background-position:10px}"],
-			["a{background-position:left 50%}", "a{background-position:left}"],
+			// The tail gone, the edge keyword left behind goes on to the percentage
+			// it resolves to — as `left` and `left center` already do.
+			["a{background-position:left 50%}", "a{background-position:0%}"],
+			["a{transform-origin:right 50%}", "a{transform-origin:100%}"],
+			["a{transform-origin:center 50%}", "a{transform-origin:50%}"],
 			["a{background-position:0 center}", "a{background-position:0}"],
 			["a{object-position:25% 50%}", "a{object-position:25%}"],
 			["a{mask-position:3em center}", "a{mask-position:3em}"],
@@ -4106,6 +4152,39 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(parted)).toBe(parted);
 		});
 
+		it("gathers past a streamed block that writes another layer", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer a{.x{color:red}}@layer a.b{${filler}}@layer a{.y{color:#00f}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer a{.x{color:red}.y{color:#00f}}")
+			).toBe(true);
+			expect(out.endsWith(`@layer a.b{${filler}}}`)).toBe(true);
+		});
+
+		it("gathers past a streamed block of another layer at the sheet's own level", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@layer a{.x{color:red}}@layer a.b{${filler}}@layer a{.y{color:#00f}}`
+			);
+			expect(out.startsWith("@layer a{.x{color:red}.y{color:#00f}}")).toBe(
+				true
+			);
+			expect(out.endsWith(`@layer a.b{${filler}}`)).toBe(true);
+		});
+
+		it("never gathers past a streamed block of the very same layer", () => {
+			// Its rules are written and gone, so a later block folding back over them
+			// would move itself in front of what that block wrote into their layer.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@media all{@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}}`;
+			expect(minify(css)).toBe(css);
+		});
+
 		it.each([
 			// A block writing only into its own layer reaches nothing the one
 			// between them writes, so the two never contend.
@@ -4292,6 +4371,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				".p{@layer l{.a{q:1}}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}",
 				".p{@layer l{}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}"
 			],
+			// CSS Transitions 2 §3: an empty `@starting-style` states no starting
+			// value, so nothing transitions from one and the block says nothing.
+			[
+				".p{@starting-style{.a{q:1}}top:0}.z{t:0}.p{@starting-style{.a{q:1}.b{w:1}}}",
+				".p{top:0}.z{t:0}.p{@starting-style{.a{q:1}.b{w:1}}}"
+			],
 			// A rule the one after it takes stands next to the one before it, and the
 			// block it just took on may be all that one was waiting for.
 			[
@@ -4303,6 +4388,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[".a{x:1}.b{x:9}.c{x:9}.c{x:1}.b{x:1}", ".a,.b,.c{x:1}"],
 			// A kept comment between the two still parts them.
 			["a{x:1}a{y:2}/*!k*/b{x:1}b{y:2}", "a{x:1;y:2}/*!k*/b{x:1;y:2}"],
+			// The list two rules join into may be the prelude the rule before them
+			// was waiting for, so the grown list is offered back to it.
+			["@media x{.a,.b{q:1}.a{c:2}.b{c:2}}", "@media x{.a,.b{q:1;c:2}}"],
+			["@media x{.a,.b{q:1}.b{c:2}.a{c:2}}", "@media x{.a,.b{q:1;c:2}}"],
+			// Only back over what it stands next to: a rule, an at-rule or a
+			// declaration between them is read at its own place.
+			[
+				"@media x{.a,.b{q:1}.z{t:0}.a{c:2}.b{c:2}}",
+				"@media x{.a,.b{q:1}.z{t:0}.a,.b{c:2}}"
+			],
+			[
+				"@media x{.a,.b{q:1}@media y{.i{t:0}}.a{c:2}.b{c:2}}",
+				"@media x{.a,.b{q:1}@media y{.i{t:0}}.a,.b{c:2}}"
+			],
+			[
+				"@media x{.p{.a,.b{q:1}k:9;.a{c:2}.b{c:2}}}",
+				"@media x{.p{.a,.b{q:1}k:9;.a,.b{c:2}}}"
+			],
 			// And so does anything the join cannot see into.
 			[
 				"a{x:1}a{y:2}@media p{i{q:1}}b{x:1}b{y:2}",
@@ -6765,6 +6868,36 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		).toBe("a{user-select:none}");
 	});
 
+	it("merges the longhands a droppable alias stands between", () => {
+		// The alias is dropped whether it stands there or not, so the shorthand is
+		// built over it rather than after a second pass has taken it away.
+		expect(
+			minifyFor(
+				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-direction:row;flex-direction:row}",
+				["chrome 120"]
+			)
+		).toBe("a{flex-flow:wrap}");
+		expect(
+			minifyFor(
+				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}",
+				["chrome 120"]
+			)
+		).toBe(
+			"a{flex-flow:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal}"
+		);
+	});
+
+	it("lets an alias a target still reads block the merge around it", () => {
+		expect(
+			minifyFor(
+				"a{flex-wrap:wrap;-webkit-flex-direction:row;flex-direction:row}",
+				["safari 8"]
+			)
+		).toBe(
+			"a{-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-flex-direction:row;flex-direction:row}"
+		);
+	});
+
 	it("keeps a prefix a target still needs (Safari never unprefixed it)", () => {
 		expect(
 			minifyFor("a{-webkit-user-select:none;user-select:none}", ["safari 17"])
@@ -7302,6 +7435,33 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		expect(minifyFor("::placeholder{color:red}", ["chrome 40"])).toBe(
 			"::-webkit-input-placeholder{color:red}::placeholder{color:red}"
 		);
+	});
+
+	it("drops a prefixed list the rules writing its selectors cover between them", () => {
+		// One twin of the whole list and a twin per selector say the same thing,
+		// and the rules saying it need not have been written as one rule.
+		expect(
+			minifyFor(
+				".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}.b::placeholder{color:#00f}",
+				["firefox 120"]
+			)
+		).toBe(".a::placeholder{color:red}.b::placeholder{color:#00f}");
+		expect(
+			minifyFor(
+				".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder,.b::placeholder{color:red}",
+				["firefox 120"]
+			)
+		).toBe(".a::placeholder,.b::placeholder{color:red}");
+	});
+
+	it("keeps a prefixed list no rule covers every selector of", () => {
+		// Nothing writes `.b::placeholder`, so dropping the list would take the
+		// only rule those elements are styled by with it.
+		const one =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}";
+		expect(minifyFor(one, ["firefox 120"])).toBe(one);
+		const none = ".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}";
+		expect(minifyFor(none, ["firefox 120"])).toBe(none);
 	});
 
 	it("prefixes a pseudo behind a compound selector", () => {
