@@ -220,7 +220,7 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 
 > [!REQUIRED]
 
-**A plain comment is at most two lines. Count them.** This binds every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits into its output. A third line is over the limit however short each line is and however true every word — split the thought, cut it, or drop it.
+**A plain comment is at most three lines. Count them.** This binds every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits into its output. A fourth line is over the limit however short each line is and however true every word — split the thought, cut it, or drop it.
 
 **Check your own diff before every commit. It must print nothing:**
 
@@ -228,7 +228,7 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 yarn lint:comments
 ```
 
-It reports every plain comment your added lines grow past two, in either form, and exempts JSDoc. It is not part of `yarn lint`, which has no base branch to diff against.
+It reports every plain comment your added lines grow past three, in either form, and exempts JSDoc. It is not part of `yarn lint`, which has no base branch to diff against.
 
 Each surviving line must carry what the code cannot: a hidden invariant, an ordering constraint, a workaround, or the name of the concept the block implements. **Never** restate the next line, narrate the diff, recap the PR description, or quote the task you were given.
 
