@@ -70,6 +70,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
+  - `lib/externals/` — External modules: the `externals` option's module, factory plugin and the presets built on them.
   - `lib/hmr/` — Hot Module Replacement plugins.
   - `lib/html/` — Experimental HTML support.
   - `lib/ids/` — Module/chunk id assignment plugins.

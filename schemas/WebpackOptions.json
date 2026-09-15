@@ -1814,7 +1814,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "import('../lib/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
+                  "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
                 }
               ]
             }
@@ -1839,12 +1839,12 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
+      "tsType": "import(\"../lib/externals/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
+      "tsType": "import(\"../lib/externals/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
     },
     "ExternalItemInterop": {
       "description": "How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.",
