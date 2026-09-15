@@ -4012,8 +4012,14 @@ const SUPPLEMENT = {
 	],
 	// At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
-	// declares the layer's cascade order).
-	droppableWhenEmptyAtRules: ["media", "supports", "container"],
+	// declares the layer's cascade order). An empty `@starting-style` states no
+	// starting value, so nothing transitions from one (CSS Transitions 2 §3).
+	droppableWhenEmptyAtRules: [
+		"media",
+		"supports",
+		"container",
+		"starting-style"
+	],
 	// At-rules holding rules whose prelude names one thing rather than stating a
 	// condition, so a second block with the same prelude replaces the first
 	// instead of adding to it — merging two would change which one runs.

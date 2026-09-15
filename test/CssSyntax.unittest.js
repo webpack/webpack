@@ -2398,6 +2398,18 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min(sheet)).toContain("color:currentcolor");
 	});
 
+	it("drops an empty `@starting-style`, and keeps the ones that still say something", () => {
+		// CSS Transitions 2 §3: with no rules it states no starting value. `@layer`
+		// still declares its cascade order and `@keyframes` still fires its events.
+		expect(min("@starting-style{}")).toBe("");
+		expect(min(".a{x:1}@starting-style{}.b{y:2}")).toBe(".a{x:1}.b{y:2}");
+		expect(min("@starting-style{.a{opacity:0}}")).toBe(
+			"@starting-style{.a{opacity:0}}"
+		);
+		expect(min("@layer l{}")).toBe("@layer l{}");
+		expect(min("@keyframes k{}")).toBe("@keyframes k{}");
+	});
+
 	it("collapses a box whose sides print alike, however they were written", () => {
 		// CSS Values 4 §5: a zero length loses its unit as the declaration prints,
 		// so two zeros are one value whatever unit the source spelled them with.
@@ -4358,6 +4370,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				".p{@layer l{.a{q:1}}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}",
 				".p{@layer l{}top:0}.z{t:0}.p{@layer l{.a{q:1}.b{w:1}}}"
+			],
+			// CSS Transitions 2 §3: an empty `@starting-style` states no starting
+			// value, so nothing transitions from one and the block says nothing.
+			[
+				".p{@starting-style{.a{q:1}}top:0}.z{t:0}.p{@starting-style{.a{q:1}.b{w:1}}}",
+				".p{top:0}.z{t:0}.p{@starting-style{.a{q:1}.b{w:1}}}"
 			],
 			// A rule the one after it takes stands next to the one before it, and the
 			// block it just took on may be all that one was waiting for.
