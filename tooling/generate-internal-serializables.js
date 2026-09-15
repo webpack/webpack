@@ -178,6 +178,11 @@ const collectEntries = () => {
 			}
 			add(request, requirePath, relative);
 		});
+
+		forEachCall(source, "registerLegacyRequest", (call) => {
+			const request = extractWebpackLibRequest(call);
+			if (request) add(request, requirePath, relative);
+		});
 	}
 
 	for (const [key, requirePath] of Object.entries(LEGACY_ALIASES)) {
