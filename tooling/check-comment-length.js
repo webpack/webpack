@@ -5,14 +5,14 @@
 
 "use strict";
 
-// Report every plain comment a change grows past two lines, over a diff's added
-// lines. JSDoc and the license header are exempt.
+// Report every plain comment a change grows past three lines, over a diff's
+// added lines. JSDoc, the license header and a `WHY:` block are exempt.
 
 const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const LIMIT = 2;
+const LIMIT = 3;
 const MAX_BUFFER = 1024 * 1024 * 256;
 const ADDED_RE = /^\+/;
 const LINE_COMMENT_RE = /^\+[ \t]*\/\//;
@@ -20,6 +20,9 @@ const BLOCK_OPEN_RE = /^\+[ \t]*\/\*/;
 const JSDOC_OPEN_RE = /^\+[ \t]*\/\*\*/;
 const BLOCK_CLOSE_RE = /\*\//;
 const LICENSE_RE = /MIT License/;
+const MARKER_RE = /^\+[ \t]*\/\/[ \t]*WHY:/;
+const PREAMBLE_SKIP_RE =
+	/^\+([ \t]*$|#!|[ \t]*(?:"use strict"|'use strict')[ \t]*;?[ \t]*$)/;
 const HUNK_RE = /^@@ -\d+(?:,\d+)? \+(\d+)/;
 const FILE_RE = /^\+\+\+ b\/(.*)$/;
 
@@ -33,6 +36,10 @@ const overLimit = (diff) => {
 	let file = "";
 	let lineNumber = 0;
 	let lineRun = 0;
+	// The block before a file's first statement documents the file, like the
+	// license header. The `"use strict"` directive above it does not end it, and
+	// only a hunk opening at line 1 can show where it does
+	let inPreamble = false;
 	let blockRun = 0;
 	let blockStart = 0;
 	for (const line of diff.split("\n")) {
@@ -41,6 +48,7 @@ const overLimit = (diff) => {
 			lineNumber = Number(hunk[1]);
 			lineRun = 0;
 			blockRun = 0;
+			inPreamble = lineNumber === 1;
 			continue;
 		}
 		const named = FILE_RE.exec(line);
@@ -53,7 +61,9 @@ const overLimit = (diff) => {
 			if (blockRun > 0) blockRun++;
 			if (LICENSE_RE.test(line)) blockRun = -1;
 			if (BLOCK_CLOSE_RE.test(line)) {
-				if (blockRun > LIMIT) found.push(`${file}:${blockStart}`);
+				if (!inPreamble && blockRun > LIMIT) {
+					found.push(`${file}:${blockStart}`);
+				}
 				blockRun = 0;
 			}
 		} else if (JSDOC_OPEN_RE.test(line)) {
@@ -64,10 +74,21 @@ const overLimit = (diff) => {
 				blockStart = lineNumber;
 			}
 			lineRun = 0;
+		} else if (inPreamble && LINE_COMMENT_RE.test(line)) {
+			lineRun = 0;
 		} else if (LINE_COMMENT_RE.test(line)) {
-			if (++lineRun === LIMIT + 1) found.push(`${file}:${lineNumber - LIMIT}`);
+			// A run opening with the marker is exempt whole, so `lineRun` stays at
+			// zero through it and no later line of that run is counted
+			if (lineRun !== -1 && (lineRun !== 0 || !MARKER_RE.test(line))) {
+				if (++lineRun === LIMIT + 1) {
+					found.push(`${file}:${lineNumber - LIMIT}`);
+				}
+			} else {
+				lineRun = -1;
+			}
 		} else {
 			lineRun = 0;
+			if (!PREAMBLE_SKIP_RE.test(line)) inPreamble = false;
 		}
 		lineNumber++;
 	}

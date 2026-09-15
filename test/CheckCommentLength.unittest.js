@@ -28,22 +28,95 @@ const check = (lines) =>
 	);
 
 describe("check-comment-length", () => {
-	it("reports a line comment run past two lines", () => {
-		expect(check(["// one", "// two", "// three", "const a = 1;"])).toEqual([
-			"x.js:1"
-		]);
+	it("reports a line comment run past three lines", () => {
+		expect(
+			check(["const a = 1;", "// one", "// two", "// three", "// four"])
+		).toEqual(["x.js:2"]);
 	});
 
-	it("accepts a run of exactly two", () => {
-		expect(check(["// one", "// two", "const a = 1;"])).toEqual([]);
+	it("accepts a run of exactly three", () => {
+		expect(check(["const a = 1;", "// one", "// two", "// three"])).toEqual([]);
 	});
 
-	it("reports a block comment past two lines", () => {
-		expect(check(["/* one", "   two", "   three */"])).toEqual(["x.js:1"]);
+	it("reports a block comment past three lines", () => {
+		expect(
+			check(["const a = 1;", "/* one", "   two", "   three", "   four */"])
+		).toEqual(["x.js:2"]);
 	});
 
-	it("accepts a block comment of two lines, and of one", () => {
-		expect(check(["/* one", "   two */", "/* just the one */"])).toEqual([]);
+	it("accepts a block comment of three lines, and of one", () => {
+		expect(
+			check([
+				"const a = 1;",
+				"/* one",
+				"   two",
+				"   three */",
+				"/* just the one */"
+			])
+		).toEqual([]);
+	});
+
+	it("exempts a run opening with the marker", () => {
+		expect(
+			check(["const a = 1;", "// WHY: one", "// two", "// three", "// four"])
+		).toEqual([]);
+	});
+
+	it("still reads a later run the marker does not open", () => {
+		expect(
+			check([
+				"const a = 1;",
+				"// WHY: one",
+				"const b = 2;",
+				"// two",
+				"// three",
+				"// four",
+				"// five"
+			])
+		).toEqual(["x.js:4"]);
+	});
+
+	it("exempts the file preamble in either form", () => {
+		expect(
+			check(["// one", "// two", "// three", "// four", "const a = 1;"])
+		).toEqual([]);
+		expect(
+			check(["/* one", "   two", "   three", "   four */", "const a = 1;"])
+		).toEqual([]);
+	});
+
+	it("carries the preamble past the strict-mode directive", () => {
+		expect(
+			check([
+				'"use strict";',
+				"",
+				"// one",
+				"// two",
+				"// three",
+				"// four",
+				"const a = 1;"
+			])
+		).toEqual([]);
+	});
+
+	it("carries the preamble past a single-quoted directive", () => {
+		expect(
+			check([
+				"'use strict';",
+				"",
+				"// one",
+				"// two",
+				"// three",
+				"// four",
+				"const a = 1;"
+			])
+		).toEqual([]);
+	});
+
+	it("ends the preamble at a statement the directive only opens", () => {
+		expect(
+			check(['"use strict" + x;', "// one", "// two", "// three", "// four"])
+		).toEqual(["x.js:2"]);
 	});
 
 	it("exempts a JSDoc block however long", () => {
@@ -77,11 +150,14 @@ describe("check-comment-length", () => {
 				"/*",
 				"\tMIT License http://www.opensource.org/licenses/mit-license.php",
 				"*/",
+				'"use strict";',
+				"const a = 1;",
 				"// one",
 				"// two",
-				"// three"
+				"// three",
+				"// four"
 			])
-		).toEqual(["x.js:4"]);
+		).toEqual(["x.js:6"]);
 	});
 
 	it("exempts an inline `/** @type */` cast", () => {
@@ -95,12 +171,14 @@ describe("check-comment-length", () => {
 				"// one",
 				"// two",
 				"// three",
-				"const b = 2;",
 				"// four",
+				"const b = 2;",
 				"// five",
-				"// six"
+				"// six",
+				"// seven",
+				"// eight"
 			])
-		).toEqual(["x.js:2", "x.js:6"]);
+		).toEqual(["x.js:2", "x.js:7"]);
 	});
 
 	it("reads nothing out of a removed or unchanged line", () => {
@@ -125,16 +203,18 @@ describe("check-comment-length", () => {
 				[
 					"--- a/one.js",
 					"+++ b/one.js",
-					"@@ -0,0 +4,3 @@",
+					"@@ -0,0 +4,4 @@",
 					"+// a",
 					"+// b",
 					"+// c",
+					"+// d",
 					"--- a/two.js",
 					"+++ b/two.js",
-					"@@ -0,0 +9,3 @@",
+					"@@ -0,0 +9,4 @@",
 					"+/* a",
 					"+   b",
-					"+   c */"
+					"+   c",
+					"+   d */"
 				].join("\n")
 			)
 		).toEqual(["one.js:4", "two.js:9"]);
@@ -170,7 +250,7 @@ describe("check-comment-length", () => {
 		it("reads a tracked file's added lines", () => {
 			fs.appendFileSync(
 				path.join(dir, "kept.js"),
-				"// one\n// two\n// three\n"
+				"// one\n// two\n// three\n// four\n"
 			);
 			expect(report("HEAD", dir)).toEqual(["kept.js:2"]);
 		});
@@ -178,9 +258,9 @@ describe("check-comment-length", () => {
 		it("reads a file git does not track yet", () => {
 			fs.writeFileSync(
 				path.join(dir, "new.js"),
-				"/* one\n   two\n   three */\n"
+				"const b = 2;\n/* one\n   two\n   three\n   four */\n"
 			);
-			expect(report("HEAD", dir)).toEqual(["new.js:1"]);
+			expect(report("HEAD", dir)).toEqual(["new.js:2"]);
 		});
 
 		it("reports nothing when every comment is short enough", () => {
@@ -190,11 +270,14 @@ describe("check-comment-length", () => {
 		});
 
 		it("returns 1 and names each offender", () => {
-			fs.writeFileSync(path.join(dir, "new.js"), "// one\n// two\n// three\n");
+			fs.writeFileSync(
+				path.join(dir, "new.js"),
+				"const b = 2;\n// one\n// two\n// three\n// four\n"
+			);
 			/** @type {string[]} */
 			const written = [];
 			expect(main((text) => written.push(text), "HEAD", dir)).toBe(1);
-			expect(written).toEqual(["new.js:1: comment over 2 lines\n"]);
+			expect(written).toEqual(["new.js:2: comment over 3 lines\n"]);
 		});
 
 		it("returns 0 and writes nothing when the diff is clean", () => {
@@ -206,7 +289,10 @@ describe("check-comment-length", () => {
 		});
 
 		it("exits 1 and names the offender when run as a command", () => {
-			fs.writeFileSync(path.join(dir, "new.js"), "// one\n// two\n// three\n");
+			fs.writeFileSync(
+				path.join(dir, "new.js"),
+				"const b = 2;\n// one\n// two\n// three\n// four\n"
+			);
 			let status = 0;
 			let stderr = "";
 			try {
@@ -220,7 +306,7 @@ describe("check-comment-length", () => {
 				stderr = /** @type {EXPECTED_ANY} */ (err).stderr;
 			}
 			expect(status).toBe(1);
-			expect(stderr).toBe("new.js:1: comment over 2 lines\n");
+			expect(stderr).toBe("new.js:2: comment over 3 lines\n");
 		});
 
 		it("exits 0 and says nothing when the diff is clean", () => {

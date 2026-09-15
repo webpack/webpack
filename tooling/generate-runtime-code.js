@@ -32,7 +32,7 @@ const files = ["lib/util/semver.js"];
 		while (match) {
 			const [fullMatch, name] = match;
 			const originalCode = exports[name].toString();
-			// NOTE: Runtime code exports must be written as arrow functions
+			// WHY: Runtime code exports must be written as arrow functions
 			// with a block body, in the form:
 			//
 			//   (args) => {

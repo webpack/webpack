@@ -319,7 +319,7 @@ const OPTIONAL_END_TAG_AT_END = [
 	"p"
 ];
 
-// Cannot be derived: §13.2.6.4.7 states per end tag whether it generates implied
+// WHY: Cannot be derived: §13.2.6.4.7 states per end tag whether it generates implied
 // end tags, as prose on each rule rather than as a list any dataset carries, and
 // the table modes close a `p` through their own rules on top of it. Confirmed
 // element by element against a real engine. §13.1.2.4 names the complement
@@ -501,7 +501,7 @@ const eventHandlers = Object.entries(reflect.eventHandler);
 // into each — two lists of the same six drift apart.
 const HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 
-// §13.2 tree-construction vocabulary: the tag-name groups the insertion modes
+// WHY: §13.2 tree-construction vocabulary: the tag-name groups the insertion modes
 // test membership in, and the name maps foreign content is adjusted with. Spec
 // prose, so they are written out — no dataset states them. Sets rather than
 // arrays because the tree builder runs these tests per token on hot paths.
@@ -1392,7 +1392,7 @@ const PARSER_TABLES = [
 			["th", "IN_ROW"]
 		]
 	],
-	// §15 "Rendering" gives these a non-inline default display, so whitespace at
+	// WHY: §15 "Rendering" gives these a non-inline default display, so whitespace at
 	// their edge sits outside every line box and renders as nothing. Spec prose
 	// — the rendering section is a stylesheet written out in the text, and no
 	// dataset states it — and only the default matters here: a page restyling
@@ -1461,7 +1461,7 @@ const PARSER_TABLES = [
 			"xmp"
 		]
 	],
-	// The enumerated attributes, each with the keywords the spec gives it. Spec
+	// WHY: The enumerated attributes, each with the keywords the spec gives it. Spec
 	// prose: nothing in the IDL marks an attribute as enumerated, and no dataset
 	// states a keyword set, so this is written out — but only a value that *is*
 	// one of the keywords is folded, which is what keeps a case-sensitive value
@@ -1534,7 +1534,7 @@ const PARSER_TABLES = [
 			["video preload", "none metadata auto"]
 		]
 	],
-	// Elements `removeEmptyElements` keeps even with no children and no
+	// WHY: Elements `removeEmptyElements` keeps even with no children and no
 	// attributes, because that is their ordinary form rather than a leftover.
 	// The option's other guards are rules, not names: a void element is always
 	// childless, a foreign one is not ours to judge, and an element carrying any
@@ -1574,7 +1574,7 @@ const PARSER_TABLES = [
 			"tr"
 		]
 	],
-	// Global attributes whose empty value is the state the spec gives their
+	// WHY: Global attributes whose empty value is the state the spec gives their
 	// absence, so `removeEmptyAttributes` may drop them. Deliberately short:
 	// `title=""` and `lang=""` look like members and are not, because the spec
 	// gives each of them a meaning absence does not have — an empty `title` says
@@ -1678,9 +1678,8 @@ const ENUMERATED_ATTRIBUTE_NAMES = [
 ].sort();
 
 // Derived: every attribute name any value rewrite can act on. The printer asks
-// this one question first, and the great majority of attributes on a page — a
-// `data-*`, an `id`, an `aria-*`, a `role` — are answered with a single miss
-// instead of walking each table in turn.
+// this first, so the great majority of attributes on a page — `data-*`, `id`,
+// `aria-*`, `role` — cost one miss instead of a walk through every table.
 const REWRITABLE_ATTRIBUTE_NAMES = [
 	...new Set([
 		...SRCSET_ATTRIBUTES,
@@ -1866,7 +1865,7 @@ const parserTable = ([name, kind, doc, items]) => {
 	return `/**\n * ${doc}\n * @type {${type}}\n */\n${open}const ${name} = ${value};\n${close}`;
 };
 
-// The §13.1.2.4 optional-tag conditions and the value grammars below are prose
+// WHY: The §13.1.2.4 optional-tag conditions and the value grammars below are prose
 // in every source — no dataset states "a `<p>` end tag may be omitted in front
 // of these" or "this attribute's value is a srcset" — so they stay written out.
 // The element and attribute names cspell does not know. Written twice on
