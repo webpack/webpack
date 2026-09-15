@@ -1,5 +1,39 @@
 # webpack
 
+## 5.111.1
+
+### Patch Changes
+
+- Keep the `</html>` a page was written with, whatever opened the element. (by [@aryanraj45](https://github.com/aryanraj45) in [#22103](https://github.com/webpack/webpack/pull/22103))
+
+- Look an attribute up by what its value decodes to, not how it was spelled. (by [@aryanraj45](https://github.com/aryanraj45) in [#22107](https://github.com/webpack/webpack/pull/22107))
+
+- Keep an attribute's delimiter and spell its value back where quoting is frozen. (by [@alexander-akait](https://github.com/alexander-akait) in [#22119](https://github.com/webpack/webpack/pull/22119))
+
+- Rewrite an attribute value the source spelled with character references. (by [@aryanraj45](https://github.com/aryanraj45) in [#22110](https://github.com/webpack/webpack/pull/22110))
+
+- Keep a shadow's spread and canonicalize a merged selector list. (by [@alexander-akait](https://github.com/alexander-akait) in [#22101](https://github.com/webpack/webpack/pull/22101))
+
+- Leave out an implied tag and merge adjacent runs on the first pass. (by [@aryanraj45](https://github.com/aryanraj45) in [#22121](https://github.com/webpack/webpack/pull/22121))
+
+- Minify in one pass what a second pass of the CSS minifier used to find. (by [@alexander-akait](https://github.com/alexander-akait) in [#22106](https://github.com/webpack/webpack/pull/22106))
+
+- Join the CSS rules a cut leaves adjacent, and keep a value an escape ate. (by [@alexander-akait](https://github.com/alexander-akait) in [#22108](https://github.com/webpack/webpack/pull/22108))
+
+- Drop the dead CSS a cut leaves, and join more of the blocks that print alike. (by [@alexander-akait](https://github.com/alexander-akait) in [#22111](https://github.com/webpack/webpack/pull/22111))
+
+- Finish in one CSS pass the joins, drops and collapses left to a second. (by [@alexander-akait](https://github.com/alexander-akait) in [#22117](https://github.com/webpack/webpack/pull/22117))
+
+- Move the context module sources into `lib/context/`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22115](https://github.com/webpack/webpack/pull/22115))
+
+- Declare loader context types in JSDoc instead of hand-written `.d.ts` files. (by [@alexander-akait](https://github.com/alexander-akait) in [#22116](https://github.com/webpack/webpack/pull/22116))
+
+- Emit a failing module's stack relative, and name what a tap failed with. (by [@alexander-akait](https://github.com/alexander-akait) in [#22122](https://github.com/webpack/webpack/pull/22122))
+
+- Finish in one CSS pass the drops, layer gathers and joins left to a second. (by [@alexander-akait](https://github.com/alexander-akait) in [#22120](https://github.com/webpack/webpack/pull/22120))
+
+- Fix loss of export definitions in the module library under cache. (by [@hai-x](https://github.com/hai-x) in [#22114](https://github.com/webpack/webpack/pull/22114))
+
 ## 5.111.0
 
 ### Minor Changes
@@ -991,7 +1025,7 @@
 
 - Fix snapshot validity check for context dependencies in watch mode by treating watchpack's existence-only entries (`{}`) as cache misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#20916](https://github.com/webpack/webpack/pull/20916))
 
-- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+- Support no-expression template literals in computed member access (e.g. `` import.meta[`url`] ``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
 
 - Improve tree-shaking in `isPure`: handle more expression types (`ArrayExpression`, `ObjectExpression`, `NewExpression`, `ChainExpression`, `UnaryExpression` (safe operators), `MetaProperty`, `TaggedTemplateExpression`, `BinaryExpression` (strict equality)), prevent `/*#__PURE__*/` comments from leaking across `ObjectExpression` properties, and detect PURE comments inside `TemplateLiteral` interpolations. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
 
