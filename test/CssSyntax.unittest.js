@@ -4194,13 +4194,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(out.endsWith(`@layer a.b{${filler}}`)).toBe(true);
 		});
 
-		it("never gathers past a streamed block of the very same layer", () => {
-			// Its rules are written and gone, so a later block folding back over them
-			// would move itself in front of what that block wrote into their layer.
+		it("gathers into the end of a streamed block of the very same layer", () => {
+			// Its rules are written and gone, so a later block lands in front of the
+			// `}` closing it rather than over what it wrote into their layer.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@media all{@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}}`;
-			expect(minify(css)).toBe(css);
+			expect(minify(css)).toBe(
+				`@media all{@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}}`
+			);
+		});
+
+		it("gathers the same way into a streamed block the sheet itself holds", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}`;
+			expect(minify(css)).toBe(
+				`@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}`
+			);
 		});
 
 		it.each([
