@@ -19426,7 +19426,12 @@ declare class NormalModule extends Module {
 		sourceMap?: null | string | RawSourceMap,
 		associatedObjectForCache?: object
 	): Source;
-	markModuleAsErrored(error: Error): void;
+
+	/**
+	 * Marks the module as failed, so what it generates says so. A tap or a
+	 * loader may fail with anything, and what reads the failure expects an error.
+	 */
+	markModuleAsErrored(error?: any): void;
 	applyNoParseRule(
 		rule: string | RegExp | ((content: string) => boolean),
 		content: string

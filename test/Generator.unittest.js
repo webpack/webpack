@@ -2,8 +2,12 @@
 
 const path = require("path");
 const Generator = require("../lib/Generator");
-const { JAVASCRIPT_TYPE } = require("../lib/ModuleSourceTypeConstants");
+const {
+	CSS_TYPE,
+	JAVASCRIPT_TYPE
+} = require("../lib/ModuleSourceTypeConstants");
 const RequestShortener = require("../lib/RequestShortener");
+const CssGenerator = require("../lib/css/CssGenerator");
 const ModuleParseError = require("../lib/errors/ModuleParseError");
 const WebAssemblyJavascriptGenerator = require("../lib/wasm-sync/WebAssemblyJavascriptGenerator");
 
@@ -129,6 +133,35 @@ describe("Generator.buildErrorMessage", () => {
 
 		expect(Generator.buildErrorMessage(error, requestShortener)).toBe(
 			"loader boom\n    at eval (eval at create (./node_modules/tapable/lib/HookCodeFactory.js), <anonymous>)"
+		);
+	});
+});
+
+describe("CssGenerator.generateError", () => {
+	it("should write the stack the failed module's css carries relative", () => {
+		const generator = new CssGenerator(
+			/** @type {EXPECTED_ANY} */ ({}),
+			/** @type {EXPECTED_ANY} */ ({})
+		);
+		const error = Object.assign(new Error("boom"), {
+			message:
+				"Module build failed (from ./loader.js):\nError: css error message\n    at Object.loader (/project/loader.js:6:11)"
+		});
+		const source = /** @type {import("webpack-sources").Source} */ (
+			generator.generateError(
+				error,
+				/** @type {EXPECTED_ANY} */ ({}),
+				/** @type {EXPECTED_ANY} */ ({
+					type: CSS_TYPE,
+					runtimeTemplate: { requestShortener }
+				})
+			)
+		)
+			.source()
+			.toString();
+
+		expect(source).toBe(
+			"/**\n Module build failed (from ./loader.js):\nError: css error message\n    at Object.loader (./loader.js:6:11) \n**/"
 		);
 	});
 });
