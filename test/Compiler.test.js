@@ -447,6 +447,38 @@ describe("Compiler", () => {
 		});
 	});
 
+	it("should name what a plugin failed with when it is not an error", (done) => {
+		const webpack = require("..");
+
+		compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./a",
+			output: { path: "/directory", filename: "bundle.js" },
+			plugins: [
+				{
+					apply(compiler) {
+						compiler.hooks.compilation.tap("Test", (compilation) => {
+							compilation.hooks.processAssets.tap("Test", () => {
+								// The literal is the point: a tap may fail with anything.
+								// eslint-disable-next-line no-throw-literal
+								throw "the tap gave up";
+							});
+						});
+					}
+				}
+			]
+		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		/** @type {import("../").Compiler} */ (compiler).run((err) => {
+			expect(err).toBeInstanceOf(Error);
+			expect(/** @type {Error} */ (err).message).toContain("the tap gave up");
+			done();
+		});
+	});
+
 	it("should not emit on errors", (done) => {
 		const webpack = require("..");
 

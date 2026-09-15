@@ -9911,11 +9911,22 @@ declare class Generator {
 	}): ByTypeGenerator;
 
 	/**
+	 * Returns what a module that failed to build says about it in the output.
+	 * The stack it carries is written relative to the context, keeping a
+	 * position only where a second build names the same one.
+	 */
+	static buildErrorMessage(
+		error: Error,
+		requestShortener?: RequestShortener
+	): string;
+
+	/**
 	 * Returns the statement a module that failed to build throws when executed.
 	 */
 	static throwBuildErrorCode(
 		error: Error,
-		parseErrorConstructor?: string
+		parseErrorConstructor?: string,
+		requestShortener?: RequestShortener
 	): string;
 }
 declare interface GeneratorOptions {
@@ -19415,7 +19426,12 @@ declare class NormalModule extends Module {
 		sourceMap?: null | string | RawSourceMap,
 		associatedObjectForCache?: object
 	): Source;
-	markModuleAsErrored(error: Error): void;
+
+	/**
+	 * Marks the module as failed, so what it generates says so. A tap or a
+	 * loader may fail with anything, and what reads the failure expects an error.
+	 */
+	markModuleAsErrored(error?: any): void;
 	applyNoParseRule(
 		rule: string | RegExp | ((content: string) => boolean),
 		content: string
