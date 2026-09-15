@@ -899,18 +899,6 @@ class TupleMap {
 
 	const exposedFiles = ["lib/index.js"];
 
-	try {
-		if (
-			(
-				await fs.promises.stat(path.resolve(rootPath, "types/index.d.ts"))
-			).isFile()
-		) {
-			exposedFiles.push("types/index.d.ts");
-		}
-	} catch {
-		// the file is optional
-	}
-
 	/** @type {Set<ts.Type>} */
 	const collectedTypes = new Set();
 	/** @type {Map<ts.Type, { source: ts.SourceFile, symbol?: ts.Symbol, name?: string }>} */
@@ -2370,6 +2358,7 @@ class TupleMap {
 							: undefined,
 					symbolName: parsed.symbolName,
 					baseTypes: [],
+					typeParameters: parsed.typeParameters,
 					calls: flatten(interfaceSubtypes.map((p) => p.calls)),
 					constructors: flatten(interfaceSubtypes.map((p) => p.constructors)),
 					properties: new Map(

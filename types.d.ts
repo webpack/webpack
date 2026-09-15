@@ -233,8 +233,11 @@ declare interface AbstractLibraryPluginOptions {
 	 */
 	type: string;
 }
-declare interface AdditionalData {
-	[index: string]: any;
+type AdditionalData = AdditionalDataKnown & Record<string, any>;
+declare interface AdditionalDataKnown {
+	/**
+	 * the AST webpack should parse instead of the source
+	 */
 	webpackAST: object;
 }
 type AfterContextResolveData = ContextResolveData &
@@ -362,7 +365,8 @@ declare interface AllCodeGenerationSchemas {
 type AnalyzableForm =
 	"import" | "url" | "url-runtime" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
-	LoaderRunnerLoaderContext<any> &
+	LoaderRunnerMutableContext<any> &
+	LoaderRunnerReadonlyContext<any> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
 
@@ -7335,6 +7339,19 @@ declare interface DotenvPluginOptions {
 	 */
 	template?: string[];
 }
+
+declare interface DualModeResolve {
+	(
+		context: string,
+		request: string,
+		callback: (
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
+		) => void
+	): void;
+	(context: string, request: string): Promise<string>;
+}
 declare class DynamicEntryPlugin {
 	/**
 	 * Creates an instance of DynamicEntryPlugin.
@@ -10049,6 +10066,11 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
 
+declare interface GetOptionsMethod<OptionsType> {
+	(): OptionsType;
+	(schema: Parameters<typeof validateFunction>[0]): OptionsType;
+}
+
 /**
  * Creates a callback wrapper that waits for a fixed number of completions and
  * forwards the first error immediately.
@@ -10457,10 +10479,6 @@ declare class HotModuleReplacementPlugin {
 	 */
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
 }
-
-/**
- * These properties are added by the HotModuleReplacementPlugin
- */
 declare interface HotModuleReplacementPluginLoaderContext {
 	hot?: boolean;
 }
@@ -11661,6 +11679,15 @@ declare interface ImportMetaParserOptionsKnown {
  */
 declare interface ImportMetaParserOptionsUnknown {
 	[index: string]: boolean;
+}
+
+declare interface ImportModuleMethod {
+	(
+		request: string,
+		options: undefined | ImportModuleOptions,
+		callback: (err?: null | Error, exports?: any) => void
+	): void;
+	(request: string, options?: ImportModuleOptions): Promise<any>;
 }
 declare interface ImportModuleOptions {
 	/**
@@ -16500,10 +16527,33 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 declare interface Loader {
 	[index: string]: any;
 }
-type LoaderContext<OptionsType> = NormalModuleLoaderContext<OptionsType> &
-	LoaderRunnerLoaderContext<OptionsType> &
+type LoaderContextLibIndex<OptionsType> =
+	NormalModuleLoaderContext<OptionsType> &
+		LoaderRunnerMutableContext<OptionsType> &
+		LoaderRunnerReadonlyContext<OptionsType> &
+		LoaderPluginLoaderContext &
+		HotModuleReplacementPluginLoaderContext;
+type LoaderContextNormalModule<T> = NormalModuleLoaderContext<T> &
+	LoaderRunnerMutableContext<T> &
+	LoaderRunnerReadonlyContext<T> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
+declare interface LoaderContextUtils {
+	/**
+	 * returns a new request string using absolute paths when possible
+	 */
+	absolutify: (context: string, request: string) => string;
+
+	/**
+	 * returns a new request string avoiding absolute paths when possible
+	 */
+	contextify: (context: string, request: string) => string;
+
+	/**
+	 * creates a hash with the compilation's function
+	 */
+	createHash: (algorithm?: string | typeof Hash) => Hash;
+}
 type LoaderDefinition<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -16517,7 +16567,8 @@ declare interface LoaderDefinitionFunction<
 > {
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
-			LoaderRunnerLoaderContext<OptionsType> &
+			LoaderRunnerMutableContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -16525,6 +16576,21 @@ declare interface LoaderDefinitionFunction<
 		sourceMap?: string | RawSourceMap,
 		additionalData?: AdditionalData
 	): string | void | Buffer | Promise<string | Buffer>;
+}
+declare interface LoaderEntry {
+	request: string;
+	path: string;
+	query: string;
+	fragment: string;
+	options?: string | object;
+	ident: string;
+	normal?: Function;
+	pitch?: Function;
+	raw?: boolean;
+	data?: object;
+	pitchExecuted: boolean;
+	normalExecuted: boolean;
+	type?: "module" | "commonjs";
 }
 declare interface LoaderItem {
 	loader: string;
@@ -16575,10 +16641,6 @@ declare interface LoaderOptionsPluginOptions {
 		context?: string;
 	};
 }
-
-/**
- * These properties are added by the LoaderPlugin
- */
 declare interface LoaderPluginLoaderContext {
 	/**
 	 * Resolves the given request to a module, applies all configured loaders and calls
@@ -16586,7 +16648,7 @@ declare interface LoaderPluginLoaderContext {
 	 * instance of NormalModule). Use this function if you need to know the source code
 	 * of another module to generate the result.
 	 */
-	loadModule(
+	loadModule: (
 		request: string,
 		callback: (
 			err: null | Error,
@@ -16594,36 +16656,27 @@ declare interface LoaderPluginLoaderContext {
 			sourceMap?: null | object,
 			module?: Module
 		) => void
-	): void;
-	importModule(
-		request: string,
-		options: undefined | ImportModuleOptions,
-		callback: (err?: null | Error, exports?: any) => void
-	): void;
-	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
+	) => void;
+	importModule: ImportModuleMethod;
 }
-
-/**
- * The properties are added by https://github.com/webpack/loader-runner
- */
-declare interface LoaderRunnerLoaderContext<OptionsType> {
+declare interface LoaderRunnerMutableContext<OptionsType> {
 	/**
 	 * Add a directory as dependency of the loader result.
 	 */
-	addContextDependency(context: string): void;
+	addContextDependency: (context: string) => void;
 
 	/**
 	 * Adds a file as dependency of the loader result in order to make them watchable.
 	 * For example, html-loader uses this technique as it finds src and src-set attributes.
 	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
 	 */
-	addDependency(file: string): void;
-	addMissingDependency(context: string): void;
+	addDependency: (file: string) => void;
+	addMissingDependency: (context: string) => void;
 
 	/**
 	 * Make this loader async.
 	 */
-	async(): (
+	async: () => (
 		err?: null | Error,
 		content?: string | Buffer,
 		sourceMap?: null | string | RawSourceMap,
@@ -16636,7 +16689,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * This means the loader shouldn't have other dependencies than specified with this.addDependency.
 	 * Most loaders are deterministic and cacheable.
 	 */
-	cacheable(flag?: boolean): void;
+	cacheable: (flag?: boolean) => void;
 	callback: (
 		err?: null | Error,
 		content?: string | Buffer,
@@ -16647,15 +16700,13 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * Remove all dependencies of the loader result. Even initial dependencies and these of other loaders.
 	 */
-	clearDependencies(): void;
+	clearDependencies: () => void;
 
 	/**
 	 * The directory of the module. Can be used as context for resolving other stuff.
 	 * eg '/workspaces/ts-loader/examples/vanilla/src'
 	 */
 	context: string;
-	readonly currentRequest: string;
-	readonly data: any;
 
 	/**
 	 * alias of addDependency
@@ -16663,53 +16714,22 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * For example, html-loader uses this technique as it finds src and src-set attributes.
 	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
 	 */
-	dependency(file: string): void;
-	getContextDependencies(): string[];
-	getDependencies(): string[];
-	getMissingDependencies(): string[];
+	dependency: (file: string) => void;
+	getContextDependencies: () => string[];
+	getDependencies: () => string[];
+	getMissingDependencies: () => string[];
 
 	/**
 	 * The index in the loaders array of the current loader.
 	 * In the example: in loader1: 0, in loader2: 1
 	 */
 	loaderIndex: number;
-	readonly previousRequest: string;
-	readonly query: string | OptionsType;
-	readonly remainingRequest: string;
-	readonly request: string;
 
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
-	 * In the example:
-	 * [
-	 *   { request: "/abc/loader1.js?xyz",
-	 *     path: "/abc/loader1.js",
-	 *     query: "?xyz",
-	 *     module: [Function]
-	 *   },
-	 *   { request: "/abc/node_modules/loader2/index.js",
-	 *     path: "/abc/node_modules/loader2/index.js",
-	 *     query: "",
-	 *     module: [Function]
-	 *   }
-	 * ]
 	 */
-	loaders: {
-		request: string;
-		path: string;
-		query: string;
-		fragment: string;
-		options?: string | object;
-		ident: string;
-		normal?: Function;
-		pitch?: Function;
-		raw?: boolean;
-		data?: object;
-		pitchExecuted: boolean;
-		normalExecuted: boolean;
-		type?: "module" | "commonjs";
-	}[];
+	loaders: LoaderEntry[];
 
 	/**
 	 * The resource path.
@@ -16746,6 +16766,14 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: { arrowFunction: true }
 	 */
 	environment: Environment;
+}
+declare interface LoaderRunnerReadonlyContext<OptionsType> {
+	readonly currentRequest: string;
+	readonly data: any;
+	readonly previousRequest: string;
+	readonly query: string | OptionsType;
+	readonly remainingRequest: string;
+	readonly request: string;
 }
 declare class LoaderTargetPlugin {
 	/**
@@ -20010,62 +20038,38 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveOptions?: ResolveOptionsWithDependencyType
 	): ResolverWithOptions;
 }
-
-/**
- * These properties are added by the NormalModule
- */
 declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
 
 	/**
 	 * Extracts and parses the options of the current loader.
 	 * Parses string options as JSON or a query string.
-	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string, and optionally validates them against a provided schema.
 	 */
-
-	/**
-	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string.
-	 */
-	getOptions(): OptionsType;
-
-	/**
-	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string.
-	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string, and optionally validates them against a provided schema.
-	 */
-
-	/**
-	 * Extracts and parses the options of the current loader.
-	 * Parses string options as JSON or a query string, and optionally validates them against a provided schema.
-	 */
-	getOptions(schema: Parameters<typeof validateFunction>[0]): OptionsType;
+	getOptions: GetOptionsMethod<OptionsType>;
 
 	/**
 	 * Emits a warning for this module.
 	 * The warning will be displayed to the user during compilation.
 	 */
-	emitWarning(warning: string | Error): void;
+	emitWarning: (warning: string | Error) => void;
 
 	/**
 	 * Emits an error for this module.
 	 * The error will be displayed to the user and typically causes the compilation to fail.
 	 */
-	emitError(error: string | Error): void;
+	emitError: (error: string | Error) => void;
 
 	/**
 	 * Gets a logger instance scoped to this loader and module.
 	 * Useful for emitting debug or compilation information in a structured way.
 	 */
-	getLogger(name?: string): WebpackLogger;
+	getLogger: (name?: string) => WebpackLogger;
 
 	/**
 	 * Resolves a module request (e.g., a relative path or module name) to an absolute file path.
 	 * It uses Webpack's internal resolver, taking into account configured aliases and extensions.
 	 */
-	resolve(
+	resolve: (
 		context: string,
 		request: string,
 		callback: (
@@ -20073,41 +20077,26 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			res?: string | false,
 			req?: ResolveRequest
 		) => void
-	): void;
+	) => void;
 
 	/**
 	 * Creates a resolve function with specific options.
 	 * The returned function can be used as a Promise-based resolver or a callback-based resolver.
 	 */
-	getResolve(options?: ResolveOptionsWithDependencyType): {
-		(
-			context: string,
-			request: string,
-			callback: (
-				err: null | ErrorWithDetail,
-				res?: string | false,
-				req?: ResolveRequest
-			) => void
-		): void;
-		(context: string, request: string): Promise<string>;
-	};
+	getResolve: (options?: ResolveOptionsWithDependencyType) => DualModeResolve;
 
 	/**
 	 * Emits a new file (asset) to the compilation output directory.
 	 * This allows loaders to generate additional files alongside the main module output.
 	 */
-	emitFile(
+	emitFile: (
 		name: string,
 		content: string | Buffer,
 		sourceMap?: string,
 		assetInfo?: AssetInfo
-	): void;
-	addBuildDependency(dep: string): void;
-	utils: {
-		absolutify: (context: string, request: string) => string;
-		contextify: (context: string, request: string) => string;
-		createHash: (algorithm?: string | typeof Hash) => Hash;
-	};
+	) => void;
+	addBuildDependency: (dep: string) => void;
+	utils: LoaderContextUtils;
 	rootContext: string;
 	fs: InputFileSystem;
 	sourceMap?: boolean;
@@ -23068,7 +23057,8 @@ declare interface PitchLoaderDefinitionFunction<
 > {
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
-			LoaderRunnerLoaderContext<OptionsType> &
+			LoaderRunnerMutableContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -23737,7 +23727,8 @@ declare interface RawLoaderDefinitionFunction<
 > {
 	(
 		this: NormalModuleLoaderContext<OptionsType> &
-			LoaderRunnerLoaderContext<OptionsType> &
+			LoaderRunnerMutableContext<OptionsType> &
+			LoaderRunnerReadonlyContext<OptionsType> &
 			LoaderPluginLoaderContext &
 			HotModuleReplacementPluginLoaderContext &
 			ContextAdditions,
@@ -30040,7 +30031,7 @@ declare interface VirtualModule {
 	 * The source function that provides the virtual content.
 	 */
 	source: (
-		loaderContext: LoaderContext<any>
+		loaderContext: LoaderContextNormalModule<any>
 	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
@@ -30056,7 +30047,7 @@ declare interface VirtualModule {
 type VirtualModuleContent =
 	| string
 	| ((
-			loaderContext: LoaderContext<any>
+			loaderContext: LoaderContextNormalModule<any>
 	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModule;
 declare interface VirtualModules {
@@ -32498,7 +32489,7 @@ declare namespace exports {
 		LoaderDefinitionFunction,
 		PitchLoaderDefinitionFunction,
 		RawLoaderDefinitionFunction,
-		LoaderContext
+		LoaderContextLibIndex as LoaderContext
 	};
 }
 declare const topLevelSymbolTag: unique symbol;
