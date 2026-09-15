@@ -609,6 +609,7 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	groupOptions: GroupOptionsAsyncDependenciesBlock;
 	loc?: null | SyntheticDependencyLocation | RealDependencyLocation;
 	request?: null | string;
+	promotion?: BlockPromotion;
 	chunkName?: null | string;
 	get circular(): boolean;
 	module: any;
@@ -1235,6 +1236,10 @@ declare interface BindCache<T> {
 }
 declare interface BindCacheResultFn<T> {
 	(value: string): T;
+}
+declare interface BlockPromotion {
+	entryOptions: EntryOptions;
+	chunkFilenameGlobal?: string;
 }
 declare interface Bootstrap {
 	header: string[];
@@ -10073,7 +10078,7 @@ declare interface GroupConfig<T, R> {
 }
 type GroupOptionsAsyncDependenciesBlock = RawChunkGroupOptions & {
 	name?: null | string;
-} & { entryOptions?: EntryOptions } & { circular?: boolean };
+} & { entryOptions?: EntryOptions } & { circular?: boolean; url?: boolean };
 
 /**
  * Returns grouped items.

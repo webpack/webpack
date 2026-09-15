@@ -8,9 +8,7 @@ module.exports = {
 		const outputPath = options.output.path;
 		const files = fs.readdirSync(outputPath);
 		const cssFiles = files.filter((f) => f.endsWith(".css"));
-		// Each config produces 4 CSS files (style.css entry + named.css
-		// entry + chunk-named.css entry + link chunk). Both configs share the
-		// output directory, so link chunk filenames may collide.
+		// Four CSS files per config; shared output may collide on link chunks.
 		const expectedMin = (i + 1) * 4 - i;
 		if (cssFiles.length < expectedMin) {
 			throw new Error(
