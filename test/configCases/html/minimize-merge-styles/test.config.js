@@ -30,11 +30,11 @@ module.exports = {
 		);
 		expect(page).toContain("<style media=screen>.media-a{color:red}</style>");
 
-		// Anything but whitespace between them means the fold would reorder it —
-		// a comment counts even where minifying drops the comment itself.
+		// Anything the print keeps between them means the fold would reorder it;
+		// a comment it drops leaves them adjacent.
 		expect(page).toContain("<style>.link-a{color:red}</style><link");
 		expect(page).toContain(
-			"<style>.cmt-a{color:red}</style><style>.cmt-b{color:#00f}</style>"
+			"<style>.cmt-a{color:red}.cmt-b{color:#00f}</style>"
 		);
 		// A differing `nonce` is a different element to CSP.
 		expect(page).toContain("<style nonce=n1>.nonce-a{color:red}</style>");

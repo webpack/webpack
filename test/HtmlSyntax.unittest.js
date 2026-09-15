@@ -4206,9 +4206,10 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 		expect(minify("<script>a()</script><p>x</p><script>b()</script>")).toBe(
 			"<script>a()</script><p>x</p><script>b()</script>"
 		);
-		// The comment goes, but it stood between them when the tree was read.
+		// A comment this print drops leaves them adjacent, so it is not what
+		// stands between them; one the print keeps still is.
 		expect(minify("<script>a()</script><!--c--><script>b()</script>")).toBe(
-			"<script>a()</script><script>b()</script>"
+			"<script>a()\n;b()</script>"
 		);
 		expect(
 			scriptCount(
@@ -5462,6 +5463,22 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		expect(
 			once("<html><body> x</body></html>", { removeImpliedTags: true })
 		).toBe("<body> x");
+	});
+
+	it("merges across a comment the print drops", () => {
+		const once = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts
+		) => new SourceProcessor().process(html, { mode: "minify", ...opts }).code;
+		const two =
+			"<style>.a{color:red}</style><!--c--><style>.b{color:blue}</style>";
+		expect(once(two, { mergeStyles: true })).toBe(
+			"<style>.a{color:red}.b{color:blue}</style>"
+		);
+		// A comment the print keeps is still something between them.
+		expect(
+			once(two, { mergeStyles: true, transforms: { comments: "all" } })
+		).toBe(two);
 	});
 
 	it("rewrites a referenced value with the quoting switch off", () => {

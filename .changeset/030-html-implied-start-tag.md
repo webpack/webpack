@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Leave out an implied start tag on the first pass, not the second.
+Leave out an implied tag and merge adjacent runs on the first pass.
