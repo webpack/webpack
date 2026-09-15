@@ -23,7 +23,8 @@ module.exports = {
 		// The rewrites reach a referenced value under the same quoting.
 		expect(html).toContain('action="/post"');
 		expect(html).toContain('type="search"');
-		// A delimiter the source chose is the one it keeps.
+		// A delimiter the source chose is the one it keeps, quoted or not.
 		expect(html).toContain("name=viewport");
+		expect(html).toContain("href='/b'");
 	}
 };
