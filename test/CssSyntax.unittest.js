@@ -945,6 +945,47 @@ describe("CssSyntax — block streaming", () => {
 		expect(out.indexOf(".c0")).toBeLessThan(out.indexOf(".three"));
 	});
 
+	it("drops a prefixed list a streamed block's rules cover between them", () => {
+		// The list is held as the node its parent would skip, and a streamed parent
+		// assembles no body — so it has to be held as a piece instead.
+		const covered =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}.b::placeholder{color:#00f}";
+		const src = `@media screen{${BIG}${covered}}`;
+		// The block has to stream for the hold to be the one under test.
+		expect(childCount(src)).toBe(0);
+		const out = minifyFor(src, ["firefox 120"]);
+		expect(out).not.toContain("-moz-placeholder");
+		// The rules covering the list are what has to outlive it.
+		expect(out).toContain(
+			".a::placeholder{color:red}.b::placeholder{color:#00f}"
+		);
+		// Nothing writes `.b::placeholder`, so the list is still the only rule
+		// styling those elements and stays whichever way its block is written.
+		const uncovered =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}";
+		expect(
+			minifyFor(`@media screen{${BIG}${uncovered}}`, ["firefox 120"])
+		).toContain("-moz-placeholder");
+	});
+
+	it("drops the second of two prefixed lists a streamed block covers", () => {
+		// Each list is held as its own piece, so the one a closing child belongs to
+		// is found by walking past the pieces held for the others.
+		const lists =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}" +
+			".c::-moz-placeholder,.d::-moz-placeholder{opacity:0}" +
+			".a::placeholder{color:red}.b::placeholder{color:#00f}" +
+			".c::placeholder{color:#0f0}.d::placeholder{color:#ff0}";
+		const src = `@media screen{${BIG}${lists}}`;
+		expect(childCount(src)).toBe(0);
+		const out = minifyFor(src, ["firefox 120"]);
+		expect(out).not.toContain("-moz-placeholder");
+		// The rules covering the lists are what has to outlive them.
+		expect(out).toContain(
+			".a::placeholder{color:red}.b::placeholder{color:#00f}.c::placeholder{color:#0f0}.d::placeholder{color:#ff0}"
+		);
+	});
+
 	it("enters a streamed rule before its children and exits after them", () => {
 		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");
@@ -4080,11 +4121,68 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("leaves a layer to the merge, which gathers it rather than dropping it", () => {
+			// The block is gathered where it stands rather than dropped as a repeat —
+			// and the rules meeting where the two bodies join are read as neighbors.
 			expect(
 				minify(
 					"@media all{@layer x{a{top:0}}@layer y{b{top:1px}}@layer x{a{top:0}}}"
 				)
-			).toBe("@media all{@layer x{a{top:0}a{top:0}}@layer y{b{top:1px}}}");
+			).toBe("@media all{@layer x{a{top:0}}@layer y{b{top:1px}}}");
+		});
+
+		it.each([
+			// The join hands one block the other's rules, so a rule it already holds
+			// is one the copy only restates — whatever stands between the two.
+			[
+				"a repeat the join carries in",
+				"@media all{.x{c:1}.y{c:2}}@media all{.x{c:1}}",
+				"@media all{.y{c:2}.x{c:1}}"
+			],
+			[
+				"one the layers carry in",
+				"@layer u{@layer a{.x{c:1}.y{c:2}}@layer a{.x{c:1}}}",
+				"@layer u{@layer a{.y{c:2}.x{c:1}}}"
+			],
+			[
+				"the pair the drop leaves side by side",
+				"@media all{.a{c:1}.dup{c:9}.b{c:1}}@media all{.dup{c:9}}",
+				"@media all{.a,.b{c:1}.dup{c:9}}"
+			],
+			[
+				"the pair a drop leaves side by side but does not join",
+				"@media all{.a{c:1}.dup{c:9}.b{c:2}}@media all{.dup{c:9}}",
+				"@media all{.a{c:1}.b{c:2}.dup{c:9}}"
+			],
+			[
+				"nothing, where the blocks say the same",
+				"@media all{.x{c:1}}@media all{.x{c:1}}",
+				"@media all{.x{c:1}}"
+			]
+		])("reads %s once", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it("joins the rules a gathered layer block brings together", () => {
+			// The gather is what makes them neighbors, so the join has to run over
+			// the seam it leaves rather than only over the order it was handed.
+			expect(
+				minify(
+					"@media all{@layer x{.a:disabled{top:0}}@layer y{.q{top:1px}}@layer x{.b:disabled{top:0}}}"
+				)
+			).toBe(
+				"@media all{@layer x{.a:disabled,.b:disabled{top:0}}@layer y{.q{top:1px}}}"
+			);
+		});
+
+		it("reads a block written again right behind itself as the one block", () => {
+			// Two identical blocks with nothing between them: the later only restates
+			// what the earlier says, so gathering them adds nothing.
+			expect(minify("@layer x{a{top:0}}@layer x{a{top:0}}")).toBe(
+				"@layer x{a{top:0}}"
+			);
+			expect(minify("@media all{@layer x{c:1;d:2}@layer x{c:1;d:2}}")).toBe(
+				"@media all{@layer x{c:1;d:2}}"
+			);
 		});
 	});
 
@@ -4176,13 +4274,33 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(out.endsWith(`@layer a.b{${filler}}`)).toBe(true);
 		});
 
-		it("never gathers past a streamed block of the very same layer", () => {
-			// Its rules are written and gone, so a later block folding back over them
-			// would move itself in front of what that block wrote into their layer.
+		it("gathers into the end of a streamed block of the very same layer", () => {
+			// Its rules are written and gone, so a later block lands in front of the
+			// `}` closing it rather than over what it wrote into their layer.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@media all{@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}}`;
-			expect(minify(css)).toBe(css);
+			expect(minify(css)).toBe(
+				`@media all{@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}}`
+			);
+		});
+
+		it("gathers into a streamed block that is its layer's first at that depth", () => {
+			// Nothing recorded the layer before the streamed block did, so the record
+			// its `}` opens is the one the later block folds into.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@media all{@layer a{${filler}}@layer a{.y{color:#00f}}}`;
+			expect(minify(css)).toBe(`@media all{@layer a{${filler}.y{color:#00f}}}`);
+		});
+
+		it("gathers the same way into a streamed block the sheet itself holds", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}`;
+			expect(minify(css)).toBe(
+				`@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}`
+			);
 		});
 
 		it.each([
