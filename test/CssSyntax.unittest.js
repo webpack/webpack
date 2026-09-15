@@ -953,7 +953,12 @@ describe("CssSyntax — block streaming", () => {
 		const src = `@media screen{${BIG}${covered}}`;
 		// The block has to stream for the hold to be the one under test.
 		expect(childCount(src)).toBe(0);
-		expect(minifyFor(src, ["firefox 120"])).not.toContain("-moz-placeholder");
+		const out = minifyFor(src, ["firefox 120"]);
+		expect(out).not.toContain("-moz-placeholder");
+		// The rules covering the list are what has to outlive it.
+		expect(out).toContain(
+			".a::placeholder{color:red}.b::placeholder{color:#00f}"
+		);
 		// Nothing writes `.b::placeholder`, so the list is still the only rule
 		// styling those elements and stays whichever way its block is written.
 		const uncovered =
@@ -973,7 +978,12 @@ describe("CssSyntax — block streaming", () => {
 			".c::placeholder{color:#0f0}.d::placeholder{color:#ff0}";
 		const src = `@media screen{${BIG}${lists}}`;
 		expect(childCount(src)).toBe(0);
-		expect(minifyFor(src, ["firefox 120"])).not.toContain("-moz-placeholder");
+		const out = minifyFor(src, ["firefox 120"]);
+		expect(out).not.toContain("-moz-placeholder");
+		// The rules covering the lists are what has to outlive them.
+		expect(out).toContain(
+			".a::placeholder{color:red}.b::placeholder{color:#00f}.c::placeholder{color:#0f0}.d::placeholder{color:#ff0}"
+		);
 	});
 
 	it("enters a streamed rule before its children and exits after them", () => {
