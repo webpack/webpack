@@ -351,3 +351,92 @@ describe("PackFileCacheStrategy cleanup", () => {
 		]);
 	});
 });
+
+describe("PackContent state-machine invariants", () => {
+	const tempPath = require("path").resolve(__dirname, "js", "pack-content");
+
+	beforeEach((done) => {
+		require("rimraf")(tempPath, done);
+	});
+
+	it("unpack() transitions to state C with the lazy function unmemoized", async () => {
+		// PackContent is an internal class. Extract its constructor by creating
+		// a state-A entry via pack._persistFreshContent(), then introspecting it.
+		const gracefulFs = require("graceful-fs");
+		const PackFileCacheStrategy = require("../lib/cache/PackFileCacheStrategy");
+		const { Logger } = require("../lib/logging/Logger");
+
+		const logger = new Logger(
+			() => {},
+			() => logger
+		);
+		const strategy = new PackFileCacheStrategy({
+			compiler: /** @type {import("../lib/Compiler")} */ (
+				/** @type {unknown} */ ({
+					options: { output: { hashFunction: "md4" } }
+				})
+			),
+			fs: gracefulFs,
+			context: tempPath,
+			cacheLocation: tempPath,
+			version: "test",
+			logger,
+			snapshot: { managedPaths: [], immutablePaths: [] },
+			maxAge: 1000 * 60
+		});
+
+		// _openPack() resolves to a fresh Pack when no cache file exists (ENOENT).
+		const pack = await strategy._getPack();
+
+		// Populate freshContent so _persistFreshContent can create a state-A PackContent,
+		// giving us the constructor without importing the internal class directly.
+		pack.set("seed/key", "etag", "seed-value");
+		pack._persistFreshContent();
+		pack.stopCapturingRequests();
+		const stateAEntry = pack.content.find((c) => c !== undefined);
+		const PackContent =
+			/** @type {new (items: Set<string>, used: Set<string>, fn: () => unknown) => { content: Map<string, unknown> | undefined, lazy: (() => unknown) | undefined, unpack(reason: string): void | Promise<void> }} */ (
+				/** @type {unknown} */ (stateAEntry.constructor)
+			);
+
+		// Build a state-B instance: a proper lazy function tagged with LAZY_TARGET so
+		// that SerializerMiddleware.unMemoizeLazy accepts it (plain functions are
+		// skipped by the guard).  This mirrors what Pack.deserialize() hands to the
+		// constructor after a cold start.
+		const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
+
+		const map = new Map([
+			["key/b", "value-b"],
+			["key/c", "value-c"]
+		]);
+		// createLazy wraps the function and stamps it with LAZY_TARGET so isLazy()
+		// returns true, which is the precondition for unMemoizeLazy to do its job.
+		const lazyFn = SerializerMiddleware.createLazy(
+			() => ({ map }),
+			/** @type {import("../lib/serialization/SerializerMiddleware")} */ (
+				/** @type {unknown} */ ({})
+			)
+		);
+		const stateB = new PackContent(
+			new Set(["key/b", "key/c"]),
+			new Set(),
+			lazyFn
+		);
+
+		// Precondition: state B (lazy set, content absent)
+		expect(stateB.content).toBeUndefined();
+		expect(typeof stateB.lazy).toBe("function");
+
+		// Act: unpack() should move to state C
+		const result = stateB.unpack("unit test");
+		if (result && typeof result.then === "function") await result;
+
+		// Postcondition (state C): content is populated and lazy is unmemoized.
+		// SerializerMiddleware.unMemoizeLazy replaces the closure with a function
+		// that throws, which is the invariant documented in the PackContent state table.
+		expect(stateB.content).toBe(map);
+		expect(() => /** @type {() => unknown} */ (stateB.lazy)()).toThrow(
+			"A lazy value that has been unmemorized can't be called again"
+		);
+	});
+});

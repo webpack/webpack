@@ -503,6 +503,8 @@
     "uniquename",
     "unitless",
     "unlazy",
+    "unmemoize",
+    "unmemoized",
     "unminified",
     "unoptimized",
     "unreviewed",
