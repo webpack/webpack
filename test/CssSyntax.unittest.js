@@ -4140,6 +4140,39 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(parted)).toBe(parted);
 		});
 
+		it("gathers past a streamed block that writes another layer", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer a{.x{color:red}}@layer a.b{${filler}}@layer a{.y{color:#00f}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer a{.x{color:red}.y{color:#00f}}")
+			).toBe(true);
+			expect(out.endsWith(`@layer a.b{${filler}}}`)).toBe(true);
+		});
+
+		it("gathers past a streamed block of another layer at the sheet's own level", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@layer a{.x{color:red}}@layer a.b{${filler}}@layer a{.y{color:#00f}}`
+			);
+			expect(out.startsWith("@layer a{.x{color:red}.y{color:#00f}}")).toBe(
+				true
+			);
+			expect(out.endsWith(`@layer a.b{${filler}}`)).toBe(true);
+		});
+
+		it("never gathers past a streamed block of the very same layer", () => {
+			// Its rules are written and gone, so a later block folding back over them
+			// would move itself in front of what that block wrote into their layer.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@media all{@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}}`;
+			expect(minify(css)).toBe(css);
+		});
+
 		it.each([
 			// A block writing only into its own layer reaches nothing the one
 			// between them writes, so the two never contend.
