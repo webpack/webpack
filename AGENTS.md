@@ -62,6 +62,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/cache/` — Filesystem and memory caches.
   - `lib/config/` — Config defaults, normalization, target presets.
   - `lib/container/` — Module Federation.
+  - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
   - `lib/debug/` — Debug helpers.
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
