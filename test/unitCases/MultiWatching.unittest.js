@@ -1,9 +1,9 @@
 "use strict";
 
 const SyncHook = require("tapable").SyncHook;
-const MultiWatching = require("../../lib/MultiWatching");
+const MultiWatching = require("../../lib/watch/MultiWatching");
 
-/** @import Watching from "../../lib/Watching" */
+/** @import Watching from "../../lib/watch/Watching" */
 /** @import MultiCompiler from "../../lib/MultiCompiler" */
 
 /**
