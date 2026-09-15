@@ -66,6 +66,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/css/` — CSS Modules, CSS parsing and generation.
   - `lib/debug/` — Debug helpers.
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
+  - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/errors/` — Error and warning class hierarchy.
