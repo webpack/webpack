@@ -4206,9 +4206,10 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 		expect(minify("<script>a()</script><p>x</p><script>b()</script>")).toBe(
 			"<script>a()</script><p>x</p><script>b()</script>"
 		);
-		// The comment goes, but it stood between them when the tree was read.
+		// A comment this print drops leaves them adjacent, so it is not what
+		// stands between them; one the print keeps still is.
 		expect(minify("<script>a()</script><!--c--><script>b()</script>")).toBe(
-			"<script>a()</script><script>b()</script>"
+			"<script>a()\n;b()</script>"
 		);
 		expect(
 			scriptCount(
@@ -5428,6 +5429,111 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		expect(minify('<img alt="&#39;a&#39; &quot;b&quot;">')).toBe(
 			"<img alt='&#39;a&#39; \"b\"'>"
 		);
+	});
+
+	it("leaves an implied tag out on the first pass", () => {
+		// The omission reads what will print: a comment minifying drops is not
+		// content the start tag has to stay for, nor is whitespace `"all"` takes.
+		const once = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts = undefined
+		) => new SourceProcessor().process(html, { mode: "minify", ...opts }).code;
+		const settles = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts = undefined
+		) => {
+			const first = once(html, opts);
+			expect(once(first, opts)).toBe(first);
+			return first;
+		};
+		expect(settles("<table><colgroup><!--c--><col><tr><td>a</table>")).toBe(
+			"<table><col><tr><td>a</table>"
+		);
+		expect(settles("<table><tbody><!--c--><tr><td>a</table>")).toBe(
+			"<table><tr><td>a</table>"
+		);
+		expect(
+			settles("<html><head><title>L</title></head><body> x</body></html>", {
+				collapseWhitespace: "all",
+				removeImpliedTags: true
+			})
+		).toBe("<title>L</title>x");
+		// A tier that keeps the whitespace keeps the tag: without it the parser
+		// drops the run on the way back in.
+		expect(
+			once("<html><body> x</body></html>", { removeImpliedTags: true })
+		).toBe("<body> x");
+	});
+
+	it("reads a style type by what it decodes to", () => {
+		// The same rule `_scriptType` follows: the value the spec matches is the
+		// one the parser read, so a `type` spelled with references still names CSS.
+		const css = (/** @type {string} */ html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			}).code;
+		const spelled = "&#x74;&#x65;&#x78;&#x74;&#x2f;&#x63;&#x73;&#x73;";
+		expect(css(`<style type="${spelled}">.a {  color : red ; }</style>`)).toBe(
+			"<style type=text/css>.a{color:red}</style>"
+		);
+		// A type that names something else is still left alone.
+		expect(css('<style type="text/foo">.a {  color : red ; }</style>')).toBe(
+			"<style type=text/foo>.a {  color : red ; }</style>"
+		);
+	});
+
+	it("merges across an attribute the print drops", () => {
+		const once = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts = undefined
+		) => new SourceProcessor().process(html, { mode: "minify", ...opts }).code;
+		const drops = { removeRedundantAttributes: /** @type {"all"} */ ("all") };
+		// A `type` this print drops as redundant is not a difference between them.
+		expect(
+			once(
+				'<style>.a{color:red}</style><style type="text/css">.b{color:blue}</style>',
+				{ ...drops, mergeStyles: true }
+			)
+		).toBe("<style>.a{color:red}.b{color:blue}</style>");
+		expect(
+			once(
+				'<script type="text/javascript">var a=1</script><script>var b=2</script>',
+				{ ...drops, mergeScripts: true }
+			)
+		).toBe("<script>var a=1\n;var b=2</script>");
+		// One it keeps is still a difference.
+		expect(
+			once(
+				"<style media=screen>.a{color:red}</style><style>.b{color:blue}</style>",
+				{
+					...drops,
+					mergeStyles: true
+				}
+			)
+		).toContain("</style><style>");
+		expect(
+			once("<script type=module>var a=1</script><script>var b=2</script>", {
+				...drops,
+				mergeScripts: true
+			})
+		).toContain("</script><script>");
+	});
+
+	it("merges across a comment the print drops", () => {
+		const once = (
+			/** @type {string} */ html,
+			/** @type {EXPECTED_ANY} */ opts
+		) => new SourceProcessor().process(html, { mode: "minify", ...opts }).code;
+		const two =
+			"<style>.a{color:red}</style><!--c--><style>.b{color:blue}</style>";
+		expect(once(two, { mergeStyles: true })).toBe(
+			"<style>.a{color:red}.b{color:blue}</style>"
+		);
+		// A comment the print keeps is still something between them.
+		expect(
+			once(two, { mergeStyles: true, transforms: { comments: "all" } })
+		).toBe(two);
 	});
 
 	it("rewrites a referenced value with the quoting switch off", () => {
