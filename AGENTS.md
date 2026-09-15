@@ -88,6 +88,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/serialization/` — Persistent cache serialization.
   - `lib/sharing/` — Shared modules / Module Federation runtime.
   - `lib/stats/` — Stats output (default printer, JSON factories).
+  - `lib/template/` — Source templates and init fragments the generators print through.
   - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers.

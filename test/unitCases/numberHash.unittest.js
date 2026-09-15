@@ -1,6 +1,6 @@
 "use strict";
 
-const { numberToIdentifier } = require("../../lib/Template");
+const { numberToIdentifier } = require("../../lib/template/Template");
 const numberHash = require("../../lib/util/numberHash");
 
 describe("numberHash", () => {

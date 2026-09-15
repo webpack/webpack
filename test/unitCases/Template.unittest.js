@@ -1,6 +1,6 @@
 "use strict";
 
-const Template = require("../../lib/Template");
+const Template = require("../../lib/template/Template");
 
 describe("Template", () => {
 	it("should generate valid identifiers", () => {

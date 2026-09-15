@@ -149,7 +149,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -162,7 +162,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -753,7 +753,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -2223,7 +2223,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
         }
       ]
     },
@@ -4598,7 +4598,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
             }
           ]
         },
@@ -4921,7 +4921,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
             }
           ]
         },
@@ -6009,7 +6009,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn"
         }
       ]
     },
