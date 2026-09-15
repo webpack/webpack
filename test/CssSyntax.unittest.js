@@ -4107,6 +4107,33 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("@media all{@layer x{a{top:0}}@layer y{b{top:1px}}}");
 		});
 
+		it.each([
+			// The join hands one block the other's rules, so a rule it already holds
+			// is one the copy only restates — whatever stands between the two.
+			[
+				"a repeat the join carries in",
+				"@media all{.x{c:1}.y{c:2}}@media all{.x{c:1}}",
+				"@media all{.y{c:2}.x{c:1}}"
+			],
+			[
+				"one the layers carry in",
+				"@layer u{@layer a{.x{c:1}.y{c:2}}@layer a{.x{c:1}}}",
+				"@layer u{@layer a{.y{c:2}.x{c:1}}}"
+			],
+			[
+				"the pair the drop leaves side by side",
+				"@media all{.a{c:1}.dup{c:9}.b{c:1}}@media all{.dup{c:9}}",
+				"@media all{.a,.b{c:1}.dup{c:9}}"
+			],
+			[
+				"nothing, where the blocks say the same",
+				"@media all{.x{c:1}}@media all{.x{c:1}}",
+				"@media all{.x{c:1}}"
+			]
+		])("reads %s once", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
 		it("joins the rules a gathered layer block brings together", () => {
 			// The gather is what makes them neighbors, so the join has to run over
 			// the seam it leaves rather than only over the order it was handed.
