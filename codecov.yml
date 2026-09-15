@@ -36,6 +36,6 @@ ignore:
   - "schemas/**/*"
   - "examples/**/*"
   # TODO webpack 6 remove
-  - "lib/ChunkTemplate.js"
-  - "lib/MainTemplate.js"
-  - "lib/ModuleTemplate.js"
+  - "lib/template/ChunkTemplate.js"
+  - "lib/template/MainTemplate.js"
+  - "lib/template/ModuleTemplate.js"

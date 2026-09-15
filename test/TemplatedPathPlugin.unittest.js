@@ -1,6 +1,9 @@
 "use strict";
 
-const { getPresentKinds, interpolate } = require("../lib/TemplatedPathPlugin");
+const {
+	getPresentKinds,
+	interpolate
+} = require("../lib/template/TemplatedPathPlugin");
 
 describe("TemplatedPathPlugin.getPresentKinds", () => {
 	it("reports the placeholder kinds a template references, ignoring args", () => {
