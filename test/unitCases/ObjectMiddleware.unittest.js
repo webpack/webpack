@@ -49,6 +49,45 @@ ObjectMiddleware.register(Cycle, "test/unitCases/ObjectMiddleware.unittest", "Cy
 	}
 });
 
+/** Registered under a moved request, still restorable from the old one. */
+class Moved {
+	/**
+	 * @param {number} value value
+	 */
+	constructor(value) {
+		/** @type {number} */
+		this.value = value;
+	}
+}
+
+ObjectMiddleware.register(
+	Moved,
+	"test/ObjectMiddleware.unittest/new",
+	"Moved",
+	{
+		/**
+		 * @param {Moved} item item
+		 * @param {import("../../lib/serialization/ObjectMiddleware").ObjectSerializerContext} context context
+		 */
+		serialize(item, { write }) {
+			write(item.value);
+		},
+		/**
+		 * @param {import("../../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} context context
+		 * @returns {Moved} item
+		 */
+		deserialize({ read }) {
+			return new Moved(/** @type {number} */ (read()));
+		}
+	}
+);
+
+ObjectMiddleware.registerLegacyRequest(
+	Moved,
+	"test/ObjectMiddleware.unittest/old",
+	"Moved"
+);
+
 /** Rolls back over its own `setCircularReference`, then writes itself again. */
 class RolledBackCycle {
 	constructor() {
@@ -226,5 +265,45 @@ describe("ObjectMiddleware", () => {
 
 	it("returns null for a class registered as not serializable", () => {
 		expect(middleware.serialize([new NotSerializable()], context)).toBeNull();
+	});
+});
+
+describe("ObjectMiddleware.registerLegacyRequest", () => {
+	it("restores what was written before the class moved", () => {
+		const written = middleware.serialize([new Moved(42)], context);
+		const oldPack = /** @type {EXPECTED_ANY[]} */ (written).map((token) =>
+			token === "test/ObjectMiddleware.unittest/new"
+				? "test/ObjectMiddleware.unittest/old"
+				: token
+		);
+
+		const [restored] = /** @type {Moved[]} */ (
+			middleware.deserialize(oldPack, context)
+		);
+
+		expect(restored).toBeInstanceOf(Moved);
+		expect(restored.value).toBe(42);
+	});
+
+	it("keeps writing the current request", () => {
+		expect(middleware.serialize([new Moved(1)], context)).toContain(
+			"test/ObjectMiddleware.unittest/new"
+		);
+	});
+
+	it("rejects a constructor that is not registered", () => {
+		expect(() =>
+			ObjectMiddleware.registerLegacyRequest(Unregistered, "test/whatever")
+		).toThrow(/is not registered/);
+	});
+
+	it("rejects a request that is already taken", () => {
+		expect(() =>
+			ObjectMiddleware.registerLegacyRequest(
+				Moved,
+				"test/ObjectMiddleware.unittest/old",
+				"Moved"
+			)
+		).toThrow(/is already registered/);
 	});
 });
