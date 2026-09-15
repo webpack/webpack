@@ -1,0 +1,1 @@
+globalThis.version = 2;
