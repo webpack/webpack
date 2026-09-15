@@ -945,6 +945,24 @@ describe("CssSyntax — block streaming", () => {
 		expect(out.indexOf(".c0")).toBeLessThan(out.indexOf(".three"));
 	});
 
+	it("drops a prefixed list a streamed block's rules cover between them", () => {
+		// The list is held as the node its parent would skip, and a streamed parent
+		// assembles no body — so it has to be held as a piece instead.
+		const covered =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}.b::placeholder{color:#00f}";
+		const src = `@media screen{${BIG}${covered}}`;
+		// The block has to stream for the hold to be the one under test.
+		expect(childCount(src)).toBe(0);
+		expect(minifyFor(src, ["firefox 120"])).not.toContain("-moz-placeholder");
+		// Nothing writes `.b::placeholder`, so the list is still the only rule
+		// styling those elements and stays whichever way its block is written.
+		const uncovered =
+			".a::-moz-placeholder,.b::-moz-placeholder{opacity:1}.a::placeholder{color:red}";
+		expect(
+			minifyFor(`@media screen{${BIG}${uncovered}}`, ["firefox 120"])
+		).toContain("-moz-placeholder");
+	});
+
 	it("enters a streamed rule before its children and exits after them", () => {
 		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
 		expect(seq[0]).toBe("+AtRule|0|0");
