@@ -1,36 +1,37 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
-const Stats = require("../lib/Stats");
-const captureStdio = require("./helpers/captureStdio");
-const deprecationTracking = require("./helpers/deprecationTracking");
+const Stats = require("../../lib/Stats");
+const captureStdio = require("../helpers/captureStdio");
+const deprecationTracking = require("../helpers/deprecationTracking");
 
 describe("Compiler", () => {
 	/**
 	 * @typedef {{ mkdir: string[], writeFile: unknown[] }} CompileLogs
-	 * @typedef {import("../").StatsCompilation & { logs?: CompileLogs }} CompileStats
+	 * @typedef {import("../../").StatsCompilation & { logs?: CompileLogs }} CompileStats
 	 */
 	/**
 	 * @param {string} entry entry file
-	 * @param {import("../").Configuration} options webpack options
-	 * @param {(stats: CompileStats, files: Record<string, string>, compilation: import("../").Compilation) => void} callback done callback
+	 * @param {import("../../").Configuration} options webpack options
+	 * @param {(stats: CompileStats, files: Record<string, string>, compilation: import("../../").Compilation) => void} callback done callback
 	 */
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
 
-		const webpack = require("..");
+		const webpack = require("../..");
 
-		/** @type {import("../").WebpackOptionsNormalized} */
+		/** @type {import("../../").WebpackOptionsNormalized} */
 		const normalizedOptions =
 			webpack.config.getNormalizedWebpackOptions(options);
 		if (!normalizedOptions.mode) normalizedOptions.mode = "production";
-		normalizedOptions.entry = /** @type {import("../").EntryNormalized} */ (
+		normalizedOptions.entry = /** @type {import("../../").EntryNormalized} */ (
 			/** @type {unknown} */ (entry)
 		);
-		normalizedOptions.context = path.join(__dirname, "fixtures");
+		normalizedOptions.context = path.join(testDirectory, "fixtures");
 		if (noOutputPath) normalizedOptions.output.path = "/";
 		normalizedOptions.output.pathinfo = true;
 		normalizedOptions.optimization = {
@@ -43,13 +44,13 @@ describe("Compiler", () => {
 		};
 
 		const c = webpack(
-			/** @type {import("../").Configuration} */ (
+			/** @type {import("../../").Configuration} */ (
 				/** @type {unknown} */ (normalizedOptions)
 			)
 		);
 		/** @type {Record<string, string>} */
 		const files = {};
-		c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		c.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ ({
 				mkdir(
 					/** @type {string} */ path,
@@ -84,16 +85,16 @@ describe("Compiler", () => {
 		c.run(
 			(
 				err,
-				/** @type {import("../").Stats & import("../").StatsCompilation & { logs?: CompileLogs } | undefined} */
+				/** @type {import("../../").Stats & import("../../").StatsCompilation & { logs?: CompileLogs } | undefined} */
 				stats
 			) => {
 				if (err) throw err;
 				expect(typeof stats).toBe("object");
-				const compilation = /** @type {import("../").Stats} */ (stats)
+				const compilation = /** @type {import("../../").Stats} */ (stats)
 					.compilation;
 				stats =
-					/** @type {import("../").Stats & import("../").StatsCompilation & { logs?: CompileLogs }} */ (
-						/** @type {import("../").Stats} */ (stats).toJson({
+					/** @type {import("../../").Stats & import("../../").StatsCompilation & { logs?: CompileLogs }} */ (
+						/** @type {import("../../").Stats} */ (stats).toJson({
 							modules: true,
 							reasons: true
 						})
@@ -102,9 +103,9 @@ describe("Compiler", () => {
 				expect(stats).toHaveProperty("errors");
 				expect(Array.isArray(stats.errors)).toBe(true);
 				if (
-					/** @type {import("../").StatsError[]} */ (stats.errors).length > 0
+					/** @type {import("../../").StatsError[]} */ (stats.errors).length > 0
 				) {
-					const errors = /** @type {import("../").StatsError[]} */ (
+					const errors = /** @type {import("../../").StatsError[]} */ (
 						stats.errors
 					);
 					expect(errors[0]).toBeInstanceOf(Error);
@@ -120,20 +121,20 @@ describe("Compiler", () => {
 					callback(
 						/** @type {CompileStats} */ (stats),
 						files,
-						/** @type {import("../").Compilation} */ (compilation)
+						/** @type {import("../../").Compilation} */ (compilation)
 					);
 				});
 			}
 		);
 	}
 
-	/** @type {import("../").Compiler} */
+	/** @type {import("../../").Compiler} */
 	let compiler;
 
 	afterEach((callback) => {
 		if (compiler) {
 			compiler.close(callback);
-			compiler = /** @type {import("../").Compiler} */ (
+			compiler = /** @type {import("../../").Compiler} */ (
 				/** @type {unknown} */ (undefined)
 			);
 		} else {
@@ -268,15 +269,15 @@ describe("Compiler", () => {
 	});
 
 	describe("methods", () => {
-		/** @type {import("../").Compiler} */
+		/** @type {import("../../").Compiler} */
 		let compiler;
 
 		beforeEach(() => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
 			compiler = webpack({
 				entry: "./c",
-				context: path.join(__dirname, "fixtures"),
+				context: path.join(testDirectory, "fixtures"),
 				output: {
 					path: "/directory",
 					pathinfo: true
@@ -287,7 +288,7 @@ describe("Compiler", () => {
 		afterEach((callback) => {
 			if (compiler) {
 				compiler.close(callback);
-				compiler = /** @type {import("../").Compiler} */ (
+				compiler = /** @type {import("../../").Compiler} */ (
 					/** @type {unknown} */ (undefined)
 				);
 			} else {
@@ -306,7 +307,7 @@ describe("Compiler", () => {
 			it("invokes purge() if inputFileSystem.purge", (done) => {
 				const mockPurge = jest.fn();
 				compiler.inputFileSystem =
-					/** @type {import("../").InputFileSystem} */ (
+					/** @type {import("../../").InputFileSystem} */ (
 						/** @type {unknown} */ ({ purge: mockPurge })
 					);
 				compiler.purgeInputFileSystem();
@@ -326,7 +327,7 @@ describe("Compiler", () => {
 		describe("isChild", () => {
 			it("returns booleanized this.parentCompilation", (done) => {
 				const c =
-					/** @type {Omit<import("../").Compiler, "parentCompilation"> & { parentCompilation: unknown }} */ (
+					/** @type {Omit<import("../../").Compiler, "parentCompilation"> & { parentCompilation: unknown }} */ (
 						/** @type {unknown} */ (compiler)
 					);
 				c.parentCompilation = "stringyStringString";
@@ -372,17 +373,17 @@ describe("Compiler", () => {
 	});
 
 	it("platformPlugin", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		const compiler = webpack(
-			/** @type {import("../").Configuration} */ ({
+			/** @type {import("../../").Configuration} */ ({
 				entry: "./c",
-				context: path.join(__dirname, "fixtures"),
+				context: path.join(testDirectory, "fixtures"),
 				output: {
 					path: "/directory"
 				},
 				plugins: [
-					new (require("../lib/PlatformPlugin"))({ node: true }),
+					new (require("../../lib/PlatformPlugin"))({ node: true }),
 					(compiler) => {
 						compiler.hooks.afterEnvironment.tap("test", () => {
 							const platform = compiler.platform;
@@ -397,10 +398,10 @@ describe("Compiler", () => {
 	});
 
 	it("should release codeGenerationResults on close while Stats stays usable and afterDone still sees them (#15521)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		const compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -408,21 +409,21 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		/** @type {number} */
 		let sizeSeenByAfterDone;
 		compiler.hooks.afterDone.tap("Test", (stats) => {
-			sizeSeenByAfterDone = /** @type {import("../").CodeGenerationResults} */ (
+			sizeSeenByAfterDone = /** @type {import("../../").CodeGenerationResults} */ (
 				stats.compilation.codeGenerationResults
 			).map.size;
 		});
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			const { compilation } = /** @type {import("../").Stats} */ (stats);
+			const { compilation } = /** @type {import("../../").Stats} */ (stats);
 			expect(
-				/** @type {import("../").CodeGenerationResults} */ (
+				/** @type {import("../../").CodeGenerationResults} */ (
 					compilation.codeGenerationResults
 				).map.size
 			).toBeGreaterThan(0);
@@ -434,12 +435,12 @@ describe("Compiler", () => {
 				setTimeout(() => {
 					expect(sizeSeenByAfterDone).toBeGreaterThan(0);
 					expect(
-						/** @type {import("../").CodeGenerationResults} */ (
+						/** @type {import("../../").CodeGenerationResults} */ (
 							compilation.codeGenerationResults
 						).map.size
 					).toBe(0);
 					expect(
-						typeof (/** @type {import("../").Stats} */ (stats).toJson().hash)
+						typeof (/** @type {import("../../").Stats} */ (stats).toJson().hash)
 					).toBe("string");
 					done();
 				}, 0);
@@ -448,10 +449,10 @@ describe("Compiler", () => {
 	});
 
 	it("should name what a plugin failed with when it is not an error", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./a",
 			output: { path: "/directory", filename: "bundle.js" },
@@ -469,10 +470,10 @@ describe("Compiler", () => {
 				}
 			]
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		/** @type {import("../").Compiler} */ (compiler).run((err) => {
+		/** @type {import("../../").Compiler} */ (compiler).run((err) => {
 			expect(err).toBeInstanceOf(Error);
 			expect(/** @type {Error} */ (err).message).toContain("the tap gave up");
 			done();
@@ -480,10 +481,10 @@ describe("Compiler", () => {
 	});
 
 	it("should not emit on errors", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./missing",
 			output: {
@@ -491,14 +492,14 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		/** @type {import("../").Compiler} */ (compiler).run((err, _stats) => {
+		/** @type {import("../../").Compiler} */ (compiler).run((err, _stats) => {
 			if (err) return done(err);
 			if (
 				/** @type {import("memfs").IFs} */ (
-					/** @type {import("../").Compiler} */ (compiler).outputFileSystem
+					/** @type {import("../../").Compiler} */ (compiler).outputFileSystem
 				).existsSync("/bundle.js")
 			) {
 				return done(new Error("Bundle should not be created on error"));
@@ -508,16 +509,16 @@ describe("Compiler", () => {
 	});
 
 	/**
-	 * @param {import("../").AssetInfo} info info the asset carries
-	 * @returns {import("../").WebpackPluginInstance} a plugin emitting an asset which carries it
+	 * @param {import("../../").AssetInfo} info info the asset carries
+	 * @returns {import("../../").WebpackPluginInstance} a plugin emitting an asset which carries it
 	 */
 	function emitAssetWithFileAttributes(info) {
-		const webpack = require("..");
+		const webpack = require("../..");
 		const { RawSource } = require("webpack-sources");
 
 		return {
 			/**
-			 * @param {import("../").Compiler} compiler the compiler
+			 * @param {import("../../").Compiler} compiler the compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {
@@ -541,21 +542,21 @@ describe("Compiler", () => {
 	}
 
 	it("should stamp an emitted asset with the times it carries", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		const timestamps = {
 			atime: Date.UTC(2020, 0, 2, 3, 4, 5),
 			mtime: Date.UTC(2020, 0, 3, 4, 5, 6)
 		};
 		compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./a",
 			output: { path: "/directory", filename: "bundle.js" },
 			plugins: [emitAssetWithFileAttributes({ timestamps })]
 		});
 		const outputFileSystem = createFsFromVolume(new Volume());
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (outputFileSystem)
 		);
 		compiler.run((err) => {
@@ -568,14 +569,14 @@ describe("Compiler", () => {
 	});
 
 	it("should stamp an asset which carries times onto a file it did not rewrite", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		const timestamps = {
 			atime: Date.UTC(2020, 0, 2, 3, 4, 5),
 			mtime: Date.UTC(2020, 0, 3, 4, 5, 6)
 		};
 		compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./a",
 			output: { path: "/directory", filename: "bundle.js" },
@@ -591,13 +592,13 @@ describe("Compiler", () => {
 			new Date(0),
 			new Date(0)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (outputFileSystem)
 		);
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			expect(
-				/** @type {import("../").Stats} */ (
+				/** @type {import("../../").Stats} */ (
 					stats
 				).compilation.comparedForEmitAssets.has("stamped.txt")
 			).toBe(true);
@@ -609,10 +610,10 @@ describe("Compiler", () => {
 	});
 
 	it("should fail when the output file system cannot set the times", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./a",
 			output: { path: "/directory", filename: "bundle.js" },
@@ -622,7 +623,7 @@ describe("Compiler", () => {
 				})
 			]
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ ({
 				...createFsFromVolume(new Volume()),
 				utimes: undefined
@@ -637,17 +638,17 @@ describe("Compiler", () => {
 	});
 
 	it("should give an emitted asset the permissions it carries", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./a",
 			output: { path: "/directory", filename: "bundle.js" },
 			plugins: [emitAssetWithFileAttributes({ mode: 0o755 })]
 		});
 		const outputFileSystem = createFsFromVolume(new Volume());
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (outputFileSystem)
 		);
 		compiler.run((err) => {
@@ -660,10 +661,10 @@ describe("Compiler", () => {
 	});
 
 	it("should give an asset which carries permissions to a file it did not rewrite", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./a",
 			output: { path: "/directory", filename: "bundle.js" },
@@ -673,13 +674,13 @@ describe("Compiler", () => {
 		const outputFileSystem = createFsFromVolume(volume);
 		volume.fromJSON({ "/directory/stamped.txt": "stamped" });
 		outputFileSystem.chmodSync("/directory/stamped.txt", 0o644);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (outputFileSystem)
 		);
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			expect(
-				/** @type {import("../").Stats} */ (
+				/** @type {import("../../").Stats} */ (
 					stats
 				).compilation.comparedForEmitAssets.has("stamped.txt")
 			).toBe(true);
@@ -691,16 +692,16 @@ describe("Compiler", () => {
 	});
 
 	it("should fail when the output file system cannot set the permissions", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			mode: "production",
 			entry: "./a",
 			output: { path: "/directory", filename: "bundle.js" },
 			plugins: [emitAssetWithFileAttributes({ mode: 0o755 })]
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ ({
 				...createFsFromVolume(new Volume()),
 				chmod: undefined
@@ -718,10 +719,10 @@ describe("Compiler", () => {
 		let errored;
 		try {
 			const createCompiler = (
-				/** @type {import("../").Configuration} */ options
+				/** @type {import("../../").Configuration} */ options
 			) =>
 				new Promise((resolve, reject) => {
-					const webpack = require("..");
+					const webpack = require("../..");
 
 					const c = webpack(options);
 					c.run((err, stats) => {
@@ -736,7 +737,7 @@ describe("Compiler", () => {
 					});
 				});
 			compiler = await createCompiler({
-				context: __dirname,
+				context: testDirectory,
 				mode: "production",
 				entry: "./missing-file",
 				output: {
@@ -759,17 +760,17 @@ describe("Compiler", () => {
 	});
 
 	it("should not emit compilation errors in async (watch)", async () => {
-		const createStats = (/** @type {import("../").Configuration} */ options) =>
+		const createStats = (/** @type {import("../../").Configuration} */ options) =>
 			new Promise((resolve, reject) => {
-				const webpack = require("..");
+				const webpack = require("../..");
 
 				const c = webpack(options);
-				c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+				c.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 					/** @type {unknown} */ (createFsFromVolume(new Volume()))
 				);
-				const watching = /** @type {import("../").Watching} */ (
+				const watching = /** @type {import("../../").Watching} */ (
 					c.watch({}, (err, stats) => {
-						/** @type {import("../").Watching} */ (watching).close(() => {
+						/** @type {import("../../").Watching} */ (watching).close(() => {
 							if (err) return reject(err);
 							resolve(stats);
 						});
@@ -777,7 +778,7 @@ describe("Compiler", () => {
 				);
 			});
 		const stats = await createStats({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./missing-file",
 			output: {
@@ -789,10 +790,10 @@ describe("Compiler", () => {
 	});
 
 	it("should not emit on errors (watch)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./missing",
 			output: {
@@ -800,10 +801,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		const watching = /** @type {import("../").Watching} */ (
+		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				/** @type {{ close: () => void }} */ (
 					/** @type {unknown} */ (watching)
@@ -811,7 +812,7 @@ describe("Compiler", () => {
 				if (err) return done(err);
 				if (
 					/** @type {import("memfs").IFs} */ (
-						/** @type {import("../").Compiler} */ (compiler).outputFileSystem
+						/** @type {import("../../").Compiler} */ (compiler).outputFileSystem
 					).existsSync("/bundle.js")
 				) {
 					return done(new Error("Bundle should not be created on error"));
@@ -822,10 +823,10 @@ describe("Compiler", () => {
 	});
 
 	it("should not be running twice at a time (run)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -833,7 +834,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err, _stats) => {
@@ -845,10 +846,10 @@ describe("Compiler", () => {
 	});
 
 	it("should not be running twice at a time (watch)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -856,7 +857,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.watch({}, (err, _stats) => {
@@ -868,10 +869,10 @@ describe("Compiler", () => {
 	});
 
 	it("should not be running twice at a time (run - watch)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -879,7 +880,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err, _stats) => {
@@ -891,10 +892,10 @@ describe("Compiler", () => {
 	});
 
 	it("should not be running twice at a time (watch - run)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -902,7 +903,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.watch({}, (err, _stats) => {
@@ -914,12 +915,12 @@ describe("Compiler", () => {
 	});
 
 	it("should not be running twice at a time (instance cb)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
-		compiler = /** @type {import("../").Compiler} */ (
+		compiler = /** @type {import("../../").Compiler} */ (
 			webpack(
 				{
-					context: __dirname,
+					context: testDirectory,
 					mode: "production",
 					entry: "./c",
 					output: {
@@ -930,7 +931,7 @@ describe("Compiler", () => {
 				() => {}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err, _stats) => {
@@ -939,10 +940,10 @@ describe("Compiler", () => {
 	});
 
 	it("should run again correctly after first compilation", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -950,7 +951,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err, stats1) => {
@@ -959,7 +960,7 @@ describe("Compiler", () => {
 			compiler.run((err, _stats2) => {
 				if (err) return done(err);
 				expect(
-					/** @type {import("../").Stats} */ (stats1).toString({ all: true })
+					/** @type {import("../../").Stats} */ (stats1).toString({ all: true })
 				).toBeTypeOf("string");
 				done();
 			});
@@ -967,10 +968,10 @@ describe("Compiler", () => {
 	});
 
 	it("should set idle state once when run finishes", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -978,7 +979,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		let idle = compiler.idle;
@@ -1002,10 +1003,10 @@ describe("Compiler", () => {
 	});
 
 	it("should watch again correctly after first compilation", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1013,13 +1014,13 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
 
-			const watching = /** @type {import("../").Watching} */ (
+			const watching = /** @type {import("../../").Watching} */ (
 				compiler.watch({}, (err, _stats) => {
 					if (err) return done(err);
 					watching.close(done);
@@ -1029,10 +1030,10 @@ describe("Compiler", () => {
 	});
 
 	it("should run again correctly after first closed watch", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1040,10 +1041,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		const watching = /** @type {import("../").Watching} */ (
+		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
 			})
@@ -1057,10 +1058,10 @@ describe("Compiler", () => {
 	});
 
 	it("should set compiler.watching correctly", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1068,10 +1069,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		const watching = /** @type {import("../").Watching} */ (
+		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
 				watching.close(done);
@@ -1081,10 +1082,10 @@ describe("Compiler", () => {
 	});
 
 	it("should watch again correctly after first closed watch", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1092,10 +1093,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
-		const watching = /** @type {import("../").Watching} */ (
+		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
 			})
@@ -1109,10 +1110,10 @@ describe("Compiler", () => {
 	});
 
 	it("should run again correctly inside afterDone hook", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1120,7 +1121,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		let once = true;
@@ -1138,10 +1139,10 @@ describe("Compiler", () => {
 	});
 
 	it("should call afterDone hook after other callbacks (run)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1149,7 +1150,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		const runCb = jest.fn();
@@ -1169,12 +1170,12 @@ describe("Compiler", () => {
 	it("should call afterDone hook after other callbacks (instance cb)", (done) => {
 		const instanceCb = jest.fn();
 
-		const webpack = require("..");
+		const webpack = require("../..");
 
-		compiler = /** @type {import("../").Compiler} */ (
+		compiler = /** @type {import("../../").Compiler} */ (
 			webpack(
 				{
-					context: __dirname,
+					context: testDirectory,
 					mode: "production",
 					entry: "./c",
 					output: {
@@ -1188,7 +1189,7 @@ describe("Compiler", () => {
 				}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		const doneHookCb = jest.fn();
@@ -1201,10 +1202,10 @@ describe("Compiler", () => {
 	});
 
 	it("should call afterDone hook after other callbacks (watch)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1212,7 +1213,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		const invalidHookCb = jest.fn();
@@ -1228,7 +1229,7 @@ describe("Compiler", () => {
 			expect(invalidateCb).toHaveBeenCalled();
 			watching.close(done);
 		});
-		const watching = /** @type {import("../").Watching} */ (
+		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
 				watchCb();
@@ -1240,10 +1241,10 @@ describe("Compiler", () => {
 	});
 
 	it("should call afterDone hook after other callbacks (watch close)", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1251,7 +1252,7 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		const invalidHookCb = jest.fn();
@@ -1267,7 +1268,7 @@ describe("Compiler", () => {
 			expect(invalidateCb).toHaveBeenCalled();
 			done();
 		});
-		const watch = /** @type {import("../").Watching} */ (
+		const watch = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
 				watch.close(watchCloseCb);
@@ -1279,10 +1280,10 @@ describe("Compiler", () => {
 	});
 
 	it("should flag watchMode as true in watch", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./c",
 			output: {
@@ -1291,11 +1292,11 @@ describe("Compiler", () => {
 			}
 		});
 
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 
-		const watch = /** @type {import("../").Watching} */ (
+		const watch = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err) => {
 				if (err) return done(err);
 				expect(compiler.watchMode).toBeTruthy();
@@ -1308,10 +1309,10 @@ describe("Compiler", () => {
 	});
 
 	it("should use cache on second run call", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
-			context: __dirname,
+			context: testDirectory,
 			mode: "development",
 			devtool: false,
 			entry: "./fixtures/count-loader!./fixtures/count-loader",
@@ -1319,7 +1320,7 @@ describe("Compiler", () => {
 				path: "/directory"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run(() => {
@@ -1336,11 +1337,11 @@ describe("Compiler", () => {
 	it("should call the failed-hook on error", (done) => {
 		const failedSpy = jest.fn();
 
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
 			bail: true,
-			context: __dirname,
+			context: testDirectory,
 			mode: "production",
 			entry: "./missing",
 			output: {
@@ -1349,7 +1350,7 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.hooks.failed.tap("CompilerTest", failedSpy);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err, _stats) => {
@@ -1363,7 +1364,7 @@ describe("Compiler", () => {
 	it("should deprecate when watch option is used without callback", () => {
 		const tracker = deprecationTracking.start();
 
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler = webpack({
 			watch: true
@@ -1395,7 +1396,7 @@ describe("Compiler", () => {
 				.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
 				.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>");
 		class MyPlugin {
-			/** @param {import("../").Compiler} compiler webpack compiler */
+			/** @param {import("../../").Compiler} compiler webpack compiler */
 			apply(compiler) {
 				const logger = compiler.getInfrastructureLogger("MyPlugin");
 				logger.time("Time");
@@ -1414,10 +1415,10 @@ describe("Compiler", () => {
 		}
 
 		it("should log to the console (verbose)", (done) => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
 			compiler = webpack({
-				context: path.join(__dirname, "fixtures"),
+				context: path.join(testDirectory, "fixtures"),
 				entry: "./a",
 				output: {
 					path: "/directory",
@@ -1429,7 +1430,7 @@ describe("Compiler", () => {
 				plugins: [new MyPlugin()]
 			});
 			compiler.outputFileSystem =
-				/** @type {import("../").OutputFileSystem} */ (
+				/** @type {import("../../").OutputFileSystem} */ (
 					/** @type {unknown} */ (createFsFromVolume(new Volume()))
 				);
 			compiler.run((_err, _stats) => {
@@ -1450,10 +1451,10 @@ describe("Compiler", () => {
 		});
 
 		it("should log to the console (debug mode)", (done) => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
 			compiler = webpack({
-				context: path.join(__dirname, "fixtures"),
+				context: path.join(testDirectory, "fixtures"),
 				entry: "./a",
 				output: {
 					path: "/directory",
@@ -1466,7 +1467,7 @@ describe("Compiler", () => {
 				plugins: [new MyPlugin()]
 			});
 			compiler.outputFileSystem =
-				/** @type {import("../").OutputFileSystem} */ (
+				/** @type {import("../../").OutputFileSystem} */ (
 					/** @type {unknown} */ (createFsFromVolume(new Volume()))
 				);
 			compiler.run((_err, _stats) => {
@@ -1488,10 +1489,10 @@ describe("Compiler", () => {
 		});
 
 		it("should log to the console (none)", (done) => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
 			compiler = webpack({
-				context: path.join(__dirname, "fixtures"),
+				context: path.join(testDirectory, "fixtures"),
 				entry: "./a",
 				output: {
 					path: "/directory",
@@ -1503,7 +1504,7 @@ describe("Compiler", () => {
 				plugins: [new MyPlugin()]
 			});
 			compiler.outputFileSystem =
-				/** @type {import("../").OutputFileSystem} */ (
+				/** @type {import("../../").OutputFileSystem} */ (
 					/** @type {unknown} */ (createFsFromVolume(new Volume()))
 				);
 			compiler.run((_err, _stats) => {
@@ -1513,10 +1514,10 @@ describe("Compiler", () => {
 		});
 
 		it("should log to the console with colors (verbose)", (done) => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
 			compiler = webpack({
-				context: path.join(__dirname, "fixtures"),
+				context: path.join(testDirectory, "fixtures"),
 				entry: "./a",
 				output: {
 					path: "/directory",
@@ -1529,7 +1530,7 @@ describe("Compiler", () => {
 				plugins: [new MyPlugin()]
 			});
 			compiler.outputFileSystem =
-				/** @type {import("../").OutputFileSystem} */ (
+				/** @type {import("../../").OutputFileSystem} */ (
 					/** @type {unknown} */ (createFsFromVolume(new Volume()))
 				);
 			compiler.run((_err, _stats) => {
@@ -1550,10 +1551,10 @@ describe("Compiler", () => {
 		});
 
 		it("should log to the console with colors (debug mode)", (done) => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
 			compiler = webpack({
-				context: path.join(__dirname, "fixtures"),
+				context: path.join(testDirectory, "fixtures"),
 				entry: "./a",
 				output: {
 					path: "/directory",
@@ -1567,7 +1568,7 @@ describe("Compiler", () => {
 				plugins: [new MyPlugin()]
 			});
 			compiler.outputFileSystem =
-				/** @type {import("../").OutputFileSystem} */ (
+				/** @type {import("../../").OutputFileSystem} */ (
 					/** @type {unknown} */ (createFsFromVolume(new Volume()))
 				);
 			compiler.run((_err, _stats) => {

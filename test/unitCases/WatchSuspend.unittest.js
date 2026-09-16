@@ -1,10 +1,11 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const fs = require("fs");
 const path = require("path");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const testDirectory = path.resolve(__dirname, "..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();
 
@@ -18,21 +19,21 @@ describe("WatchSuspend", () => {
 
 	describe("suspend and resume watcher", () => {
 		const fixturePath = path.join(
-			__dirname,
+			testDirectory,
 			"fixtures",
 			`temp-watch-${Date.now()}`
 		);
 		const filePath = path.join(fixturePath, "file.js");
 		const file2Path = path.join(fixturePath, "file2.js");
 		const file3Path = path.join(fixturePath, "file3.js");
-		const outputPath = path.join(__dirname, "js/WatchSuspend");
+		const outputPath = path.join(testDirectory, "js/WatchSuspend");
 		const outputFile = path.join(outputPath, "bundle.js");
-		/** @type {import("../").Compiler} */
-		let compiler = /** @type {import("../").Compiler} */ (
+		/** @type {import("../../").Compiler} */
+		let compiler = /** @type {import("../../").Compiler} */ (
 			/** @type {unknown} */ (null)
 		);
-		/** @type {import("../").Watching} */
-		let watching = /** @type {import("../").Watching} */ (
+		/** @type {import("../../").Watching} */
+		let watching = /** @type {import("../../").Watching} */ (
 			/** @type {unknown} */ (null)
 		);
 		/** @type {(() => void) | null} */
@@ -52,7 +53,7 @@ describe("WatchSuspend", () => {
 				// skip
 			}
 
-			const webpack = require("../");
+			const webpack = require("../../");
 
 			compiler = webpack({
 				mode: "development",
@@ -62,7 +63,7 @@ describe("WatchSuspend", () => {
 					filename: "bundle.js"
 				}
 			});
-			watching = /** @type {import("../").Watching} */ (
+			watching = /** @type {import("../../").Watching} */ (
 				compiler.watch({ aggregateTimeout: 50 }, () => {})
 			);
 
@@ -75,7 +76,7 @@ describe("WatchSuspend", () => {
 			/** @type {{ close: () => void }} */ (
 				/** @type {unknown} */ (watching)
 			).close();
-			compiler = /** @type {import("../").Compiler} */ (
+			compiler = /** @type {import("../../").Compiler} */ (
 				/** @type {unknown} */ (null)
 			);
 			try {
@@ -126,7 +127,7 @@ describe("WatchSuspend", () => {
 					//  So set-up new watcher and wait when initial compilation is done
 					await new Promise((resolve) => {
 						watching.close(() => {
-							watching = /** @type {import("../").Watching} */ (
+							watching = /** @type {import("../../").Watching} */ (
 								compiler.watch({ aggregateTimeout: 1000 }, () => {
 									resolve(undefined);
 								})

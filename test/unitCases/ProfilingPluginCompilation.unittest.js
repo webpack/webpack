@@ -1,8 +1,9 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
@@ -15,18 +16,18 @@ describe("Profiling Plugin", () => {
 	jest.setTimeout(120000);
 
 	itSkipBun("should handle output path with folder creation", (done) => {
-		const webpack = require("../");
+		const webpack = require("../../");
 
-		const outputPath = path.join(__dirname, "js/profilingPath");
+		const outputPath = path.join(testDirectory, "js/profilingPath");
 		const finalPath = path.join(outputPath, "events.json");
 		let counter = 0;
 		rimraf(outputPath, () => {
 			const startTime = process.hrtime();
 			const compiler = webpack({
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a.js",
 				output: {
-					path: path.join(__dirname, "js/profilingOut")
+					path: path.join(testDirectory, "js/profilingOut")
 				},
 				plugins: [
 					new webpack.debug.ProfilingPlugin({

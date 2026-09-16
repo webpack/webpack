@@ -115,7 +115,7 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Options**: `--output <file>` (report path), `--baseline <file>` (report to compare against), `--summary <file>` (append the markdown comparison, e.g. `$GITHUB_STEP_SUMMARY`), `--filter` / `--negative-filter` (regexps matched against `<category>/<case>`, also read from `FILTER` / `NEGATIVE_FILTER`).
 - **Note**: the cases are built with the defaults a user gets — minification on, no `output.pathinfo` — not with the `ConfigTestCases` ones. Needs Node.js >= 22.15 for zstd.
 
-### 17. `BannerPlugin.test.js`
+### 17. `unitCases/BannerPlugin.unittest.js`
 
 - **Purpose**: Tests Webpack’s `BannerPlugin` functionality.
 - **Usage**: Ensures that the plugin correctly adds banners to the bundled files.

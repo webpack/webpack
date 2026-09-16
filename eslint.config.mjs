@@ -288,7 +288,7 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["test/Compiler-filesystem-caching.test.js"],
+		files: ["test/unitCases/Compiler-filesystem-caching.unittest.js"],
 		languageOptions: {
 			ecmaVersion: 2022
 		}
@@ -296,8 +296,8 @@ export default defineConfig([
 	{
 		files: [
 			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js",
-			"test/NodeTemplatePlugin.test.js",
-			"test/PersistentCaching.test.js"
+			"test/unitCases/NodeTemplatePlugin.unittest.js",
+			"test/unitCases/PersistentCaching.unittest.js"
 		],
 		rules: {
 			"import/extensions": "off",

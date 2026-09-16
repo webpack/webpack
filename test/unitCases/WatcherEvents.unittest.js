@@ -1,25 +1,26 @@
 "use strict";
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
-const webpack = require("..");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 /**
- * @param {import("../").Configuration | import("../").MultiConfiguration} config webpack config
- * @returns {import("../").Compiler | import("../").MultiCompiler} compiler instance
+ * @param {import("../../").Configuration | import("../../").MultiConfiguration} config webpack config
+ * @returns {import("../../").Compiler | import("../../").MultiCompiler} compiler instance
  */
 const createCompiler = (config) => {
 	const compiler =
-		/** @type {import("../").Compiler | import("../").MultiCompiler} */ (
+		/** @type {import("../../").Compiler | import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").Configuration} */ (
+				/** @type {import("../../").Configuration} */ (
 					/** @type {unknown} */ (config)
 				)
 			)
 		);
-	/** @type {import("../").Compiler} */ (compiler).outputFileSystem =
-		/** @type {import("../").OutputFileSystem} */ (
+	/** @type {import("../../").Compiler} */ (compiler).outputFileSystem =
+		/** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 	return compiler;
@@ -27,14 +28,14 @@ const createCompiler = (config) => {
 
 const createSingleCompiler = () =>
 	createCompiler({
-		context: path.join(__dirname, "fixtures"),
+		context: path.join(testDirectory, "fixtures"),
 		entry: "./a.js"
 	});
 
 const createMultiCompiler = () =>
 	createCompiler([
 		{
-			context: path.join(__dirname, "fixtures"),
+			context: path.join(testDirectory, "fixtures"),
 			entry: "./a.js"
 		}
 	]);
@@ -53,7 +54,7 @@ describe("WatcherEvents", () => {
 		let called = false;
 
 		const compiler = createSingleCompiler();
-		const watcher = /** @type {import("../").Compiler} */ (compiler).watch(
+		const watcher = /** @type {import("../../").Compiler} */ (compiler).watch(
 			{},
 			(err, _stats) => {
 				expect(called).toBe(true);
@@ -76,7 +77,7 @@ describe("WatcherEvents", () => {
 		let called = false;
 
 		const compiler = createMultiCompiler();
-		const watcher = /** @type {import("../").MultiCompiler} */ (compiler).watch(
+		const watcher = /** @type {import("../../").MultiCompiler} */ (compiler).watch(
 			{},
 			(err, _stats) => {
 				expect(called).toBe(true);

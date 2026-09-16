@@ -1,13 +1,14 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const _ = require("lodash");
 const { Volume, createFsFromVolume } = require("memfs");
-const webpack = require("..");
-const captureStdio = require("./helpers/captureStdio");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const captureStdio = require("../helpers/captureStdio");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 const createMultiCompiler = (
 	/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined,
@@ -17,18 +18,18 @@ const createMultiCompiler = (
 		Object.assign(
 			[
 				{
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					entry: "./a.js"
 				},
 				{
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					entry: "./b.js"
 				}
 			],
 			configOptions
 		)
 	);
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 		/** @type {unknown} */ (createFsFromVolume(new Volume()))
 	);
 
@@ -41,7 +42,7 @@ const createSimpleCompiler = (
 	/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined
 ) => {
 	const compiler = webpack({
-		context: path.join(__dirname, "fixtures"),
+		context: path.join(testDirectory, "fixtures"),
 		entry: "./a.js",
 		infrastructureLogging: {
 			debug: /Progress/
@@ -54,7 +55,7 @@ const createSimpleCompiler = (
 		]
 	});
 
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 		/** @type {unknown} */ (createFsFromVolume(new Volume()))
 	);
 
@@ -65,11 +66,11 @@ const createSimpleCompilerWithCustomHandler = (
 	/** @type {Record<string, unknown> | undefined} */ options = undefined
 ) => {
 	const compiler = webpack({
-		context: path.join(__dirname, "fixtures"),
+		context: path.join(testDirectory, "fixtures"),
 		entry: "./a.js"
 	});
 
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 		/** @type {unknown} */ (createFsFromVolume(new Volume()))
 	);
 	const logger = compiler.getInfrastructureLogger("custom test logger");
@@ -87,7 +88,7 @@ const createAutoCompiler = (
 	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown> }} */ extra = {}
 ) => {
 	const compiler = webpack({
-		context: path.join(__dirname, "fixtures"),
+		context: path.join(testDirectory, "fixtures"),
 		entry: "./a.js",
 		experiments: extra.experiments,
 		infrastructureLogging: {
@@ -98,7 +99,7 @@ const createAutoCompiler = (
 		plugins: [new webpack.ProgressPlugin(progressOptions)]
 	});
 
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 		/** @type {unknown} */ (createFsFromVolume(new Volume()))
 	);
 
@@ -106,10 +107,10 @@ const createAutoCompiler = (
 };
 
 const createCoreCompiler = (
-	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown>, plugins?: import("../").Configuration["plugins"] }} */ extra = {}
+	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown>, plugins?: import("../../").Configuration["plugins"] }} */ extra = {}
 ) => {
 	const compiler = webpack({
-		context: path.join(__dirname, "fixtures"),
+		context: path.join(testDirectory, "fixtures"),
 		entry: "./a.js",
 		experiments: extra.experiments,
 		infrastructureLogging: {
@@ -120,7 +121,7 @@ const createCoreCompiler = (
 		plugins: extra.plugins
 	});
 
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 		/** @type {unknown} */ (createFsFromVolume(new Volume()))
 	);
 
@@ -131,7 +132,7 @@ const getLogs = (/** @type {string} */ logsStr) =>
 	logsStr.split(/\r/).filter((/** @type {string} */ v) => v !== " ");
 
 const runCompilerAsync = (
-	/** @type {import("../").Compiler | import("../").MultiCompiler} */ compiler
+	/** @type {import("../../").Compiler | import("../../").MultiCompiler} */ compiler
 ) =>
 	new Promise((resolve, reject) => {
 		compiler.run((/** @type {Error | null} */ err) => {
@@ -588,20 +589,20 @@ describe("ProgressPlugin", () => {
 		it("should auto-apply one aggregated bar for a MultiCompiler", () => {
 			const compiler = webpack([
 				{
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					entry: "./a.js",
 					experiments: { futureDefaults: true },
 					infrastructureLogging: { appendOnly: false, colors: false }
 				},
 				{
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					entry: "./b.js",
 					experiments: { futureDefaults: true },
 					infrastructureLogging: { appendOnly: false, colors: false }
 				}
 			]);
 			for (const c of compiler.compilers) {
-				c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+				c.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 					/** @type {unknown} */ (createFsFromVolume(new Volume()))
 				);
 			}

@@ -1,41 +1,42 @@
 "use strict";
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
 
-const webpack = require("..");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();
 
 describe("HotModuleReplacementPlugin", () => {
 	it("should not have circular hashes but equal if unmodified", (done) => {
 		const entryFile = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"entry.js"
 		);
 		const statsFile1 = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"HotModuleReplacementPlugin.test.stats1.txt"
 		);
 		const statsFile2 = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"HotModuleReplacementPlugin.test.stats2.txt"
 		);
 		const recordsFile = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"records.json"
 		);
 		try {
-			fs.mkdirSync(path.join(__dirname, "js", "HotModuleReplacementPlugin"), {
+			fs.mkdirSync(path.join(testDirectory, "js", "HotModuleReplacementPlugin"), {
 				recursive: true
 			});
 		} catch (_err) {
@@ -51,7 +52,7 @@ describe("HotModuleReplacementPlugin", () => {
 			entry: entryFile,
 			recordsPath: recordsFile,
 			output: {
-				path: path.join(__dirname, "js", "HotModuleReplacementPlugin")
+				path: path.join(testDirectory, "js", "HotModuleReplacementPlugin")
 			},
 			plugins: [new webpack.HotModuleReplacementPlugin()],
 			optimization: {
@@ -62,38 +63,38 @@ describe("HotModuleReplacementPlugin", () => {
 		fs.writeFileSync(entryFile, "1", "utf8");
 		compiler.run((err, _stats) => {
 			if (err) throw err;
-			const stats = /** @type {import("../").Stats} */ (_stats);
+			const stats = /** @type {import("../../").Stats} */ (_stats);
 			const oldHash1 = stats.toJson().hash;
 			fs.writeFileSync(statsFile1, stats.toString());
 			compiler.run((err, _stats) => {
 				if (err) throw err;
-				const stats = /** @type {import("../").Stats} */ (_stats);
+				const stats = /** @type {import("../../").Stats} */ (_stats);
 				const lastHash1 = stats.toJson().hash;
 				fs.writeFileSync(statsFile2, stats.toString());
 				expect(lastHash1).toBe(oldHash1); // hash shouldn't change when bundle stay equal
 				fs.writeFileSync(entryFile, "2", "utf8");
 				compiler.run((err, _stats) => {
 					if (err) throw err;
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {import("../../").Stats} */ (_stats);
 					const lastHash2 = stats.toJson().hash;
 					fs.writeFileSync(statsFile1, stats.toString());
 					expect(lastHash2).not.toBe(lastHash1); // hash should change when bundle changes
 					fs.writeFileSync(entryFile, "1", "utf8");
 					compiler.run((err, _stats) => {
 						if (err) throw err;
-						const stats = /** @type {import("../").Stats} */ (_stats);
+						const stats = /** @type {import("../../").Stats} */ (_stats);
 						const currentHash1 = stats.toJson().hash;
 						fs.writeFileSync(statsFile2, stats.toString());
 						expect(currentHash1).not.toBe(lastHash1); // hash shouldn't change to the first hash if bundle changed back to first bundle
 						fs.writeFileSync(entryFile, "2", "utf8");
 						compiler.run((err, _stats) => {
 							if (err) throw err;
-							const stats = /** @type {import("../").Stats} */ (_stats);
+							const stats = /** @type {import("../../").Stats} */ (_stats);
 							const currentHash2 = stats.toJson().hash;
 							fs.writeFileSync(statsFile1, stats.toString());
 							compiler.run((err, _stats) => {
 								if (err) throw err;
-								const stats = /** @type {import("../").Stats} */ (_stats);
+								const stats = /** @type {import("../../").Stats} */ (_stats);
 								expect(stats.toJson().hash).toBe(currentHash2);
 								expect(currentHash2).not.toBe(lastHash2);
 								expect(currentHash1).not.toBe(currentHash2);
@@ -108,7 +109,7 @@ describe("HotModuleReplacementPlugin", () => {
 	}, 120000);
 
 	it("output.clean=true should keep 1 last update", (done) => {
-		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
+		const outputPath = path.join(testDirectory, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");
 		const recordsFile = path.join(outputPath, "records.json");
 		let step = 0;
@@ -144,10 +145,10 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 		const callback = (
 			/** @type {Error | null} */ err,
-			/** @type {import("../").Stats | undefined} */ _stats
+			/** @type {import("../../").Stats | undefined} */ _stats
 		) => {
 			if (err) return done(err);
-			const stats = /** @type {import("../").Stats} */ (_stats);
+			const stats = /** @type {import("../../").Stats} */ (_stats);
 			const jsonStats = stats.toJson();
 			const hash = jsonStats.hash;
 			const hmrUpdateMainFileName = `0.${hash}.hot-update.json`;
@@ -188,7 +189,7 @@ describe("HotModuleReplacementPlugin", () => {
 	}, 20000);
 
 	it("should correct working when entry is Object and key is a number", (done) => {
-		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
+		const outputPath = path.join(testDirectory, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");
 		const statsFile3 = path.join(
 			outputPath,
@@ -227,7 +228,7 @@ describe("HotModuleReplacementPlugin", () => {
 		fs.writeFileSync(entryFile, "1", "utf8");
 		compiler.run((err, _stats) => {
 			if (err) throw err;
-			const stats = /** @type {import("../").Stats} */ (_stats);
+			const stats = /** @type {import("../../").Stats} */ (_stats);
 			const jsonStats = stats.toJson();
 			const hash = jsonStats.hash;
 			const chunkName = Object.keys(
@@ -236,12 +237,12 @@ describe("HotModuleReplacementPlugin", () => {
 			fs.writeFileSync(statsFile3, stats.toString());
 			compiler.run((err, _stats) => {
 				if (err) throw err;
-				const stats = /** @type {import("../").Stats} */ (_stats);
+				const stats = /** @type {import("../../").Stats} */ (_stats);
 				fs.writeFileSync(statsFile4, stats.toString());
 				fs.writeFileSync(entryFile, "2", "utf8");
 				compiler.run((err, _stats) => {
 					if (err) throw err;
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {import("../../").Stats} */ (_stats);
 					fs.writeFileSync(statsFile3, stats.toString());
 					const result = JSON.parse(
 						fs.readFileSync(
@@ -258,33 +259,33 @@ describe("HotModuleReplacementPlugin", () => {
 
 	it("should handle entryFile that contains path variable", (done) => {
 		const entryFile = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"[name]",
 			"entry.js"
 		);
 		const statsFile3 = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"HotModuleReplacementPlugin.test.stats3.txt"
 		);
 		const statsFile4 = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"HotModuleReplacementPlugin.test.stats4.txt"
 		);
 		const recordsFile = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"records.json"
 		);
 		try {
 			fs.mkdirSync(
-				path.join(__dirname, "js", "HotModuleReplacementPlugin", "[name]"),
+				path.join(testDirectory, "js", "HotModuleReplacementPlugin", "[name]"),
 				{
 					recursive: true
 				}
@@ -307,7 +308,7 @@ describe("HotModuleReplacementPlugin", () => {
 			output: {
 				filename: "[name]",
 				chunkFilename: "[name].js",
-				path: path.join(__dirname, "js", "HotModuleReplacementPlugin"),
+				path: path.join(testDirectory, "js", "HotModuleReplacementPlugin"),
 				hotUpdateChunkFilename: "static/webpack/[id].[fullhash].hot-update.js",
 				hotUpdateMainFilename: "static/webpack/[fullhash].hot-update.json"
 			},
@@ -319,16 +320,16 @@ describe("HotModuleReplacementPlugin", () => {
 		fs.writeFileSync(entryFile, "1", "utf8");
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
-			const stats = /** @type {import("../").Stats} */ (_stats);
+			const stats = /** @type {import("../../").Stats} */ (_stats);
 			fs.writeFileSync(statsFile3, stats.toString());
 			compiler.run((err, _stats) => {
 				if (err) return done(err);
-				const stats = /** @type {import("../").Stats} */ (_stats);
+				const stats = /** @type {import("../../").Stats} */ (_stats);
 				fs.writeFileSync(statsFile4, stats.toString());
 				fs.writeFileSync(entryFile, "2", "utf8");
 				compiler.run((err, _stats) => {
 					if (err) return done(err);
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {import("../../").Stats} */ (_stats);
 					fs.writeFileSync(statsFile3, stats.toString());
 
 					let foundUpdates = false;
@@ -360,7 +361,7 @@ describe("HotModuleReplacementPlugin", () => {
 	// force-loads it.
 	it("should force-load the new owning chunk when a module's only loaded chunk is removed from a runtime", async () => {
 		const dir = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"orphan-on-chunk-migration"
@@ -419,7 +420,7 @@ describe("HotModuleReplacementPlugin", () => {
 			new Promise((resolve, reject) => {
 				compiler.run((err, _stats) => {
 					if (err) return reject(err);
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {import("../../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(
 							new Error(stats.toString({ all: false, errors: true }))
@@ -464,7 +465,7 @@ describe("HotModuleReplacementPlugin", () => {
 	// runtime at all, it is disposed (added to `m`), not force-loaded.
 	it("should dispose a module that no longer lives in a runtime its chunk left", async () => {
 		const dir = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"dispose-on-runtime-removal"
@@ -518,7 +519,7 @@ describe("HotModuleReplacementPlugin", () => {
 			new Promise((resolve, reject) => {
 				compiler.run((err, _stats) => {
 					if (err) return reject(err);
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {import("../../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(
 							new Error(stats.toString({ all: false, errors: true }))
@@ -559,7 +560,7 @@ describe("HotModuleReplacementPlugin", () => {
 	// are merged (with a warning); the merge must carry force-load chunks too.
 	it("should merge force-load chunks across runtimes on hotUpdateMainFilename collision", async () => {
 		const dir = path.join(
-			__dirname,
+			testDirectory,
 			"js",
 			"HotModuleReplacementPlugin",
 			"force-load-filename-collision"
@@ -618,7 +619,7 @@ describe("HotModuleReplacementPlugin", () => {
 			new Promise((resolve, reject) => {
 				compiler.run((err, _stats) => {
 					if (err) return reject(err);
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {import("../../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(
 							new Error(stats.toString({ all: false, errors: true }))
@@ -634,15 +635,15 @@ describe("HotModuleReplacementPlugin", () => {
 			path.join(src, "b.js"),
 			'const p = import(/* webpackChunkName: "lazyShared" */ "./shared");\np.then(({ g }) => console.log("b", g()));\nif (module.hot) module.hot.accept();\n'
 		);
-		const stats = /** @type {import("../").Stats} */ (await run());
+		const stats = /** @type {import("../../").Stats} */ (await run());
 		const { warnings } = stats.toJson({ all: false, warnings: true });
 		await new Promise((resolve) => {
 			compiler.close(resolve);
 		});
 
 		expect(
-			/** @type {import("../").StatsError[]} */ (warnings).some(
-				(/** @type {import("../").StatsError} */ w) =>
+			/** @type {import("../../").StatsError[]} */ (warnings).some(
+				(/** @type {import("../../").StatsError} */ w) =>
 					(w.message || String(w)).includes(
 						"doesn't lead to unique filenames per runtime"
 					)

@@ -30,7 +30,9 @@ const typescriptSource = fs.readFileSync(
 const threeEsmPath = fileURLToPath(import.meta.resolve("three"));
 const threeEsmSource = fs.readFileSync(threeEsmPath, "utf8");
 const threeEsmMinSource = fs.readFileSync(
-	threeEsmPath.replace(/\.js$/, ".min.js"),
+	fileURLToPath(
+		new URL("../../js/benchmark/three.module.min.js", import.meta.url)
+	),
 	"utf8"
 );
 // Popular libraries also shipped as devDependencies.

@@ -1,33 +1,34 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
-const webpack = require("..");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 // Not exported by name; it is the type `MultiCompiler.watching` carries.
-/** @typedef {NonNullable<import("../").MultiCompiler["watching"]>} MultiWatching */
+/** @typedef {NonNullable<import("../../").MultiCompiler["watching"]>} MultiWatching */
 
 /**
- * @param {import("../").MultiCompilerOptions=} options options
- * @returns {import("../").MultiCompiler} compiler
+ * @param {import("../../").MultiCompilerOptions=} options options
+ * @returns {import("../../").MultiCompiler} compiler
  */
 const createMultiCompiler = (options) => {
-	const compiler = /** @type {import("../").MultiCompiler} */ (
+	const compiler = /** @type {import("../../").MultiCompiler} */ (
 		webpack(
-			/** @type {import("../").MultiConfiguration} */ (
+			/** @type {import("../../").MultiConfiguration} */ (
 				Object.assign(
 					[
 						{
 							name: "a",
-							context: path.join(__dirname, "fixtures"),
+							context: path.join(testDirectory, "fixtures"),
 							entry: "./a.js"
 						},
 						{
 							name: "b",
-							context: path.join(__dirname, "fixtures"),
+							context: path.join(testDirectory, "fixtures"),
 							entry: "./b.js"
 						}
 					],
@@ -36,13 +37,13 @@ const createMultiCompiler = (options) => {
 			)
 		)
 	);
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+	compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 		/** @type {unknown} */ (createFsFromVolume(new Volume()))
 	);
 	compiler.watchFileSystem =
-		/** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+		/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
 			watch: (_a, _b, _c, _d, _e, _f, _g) =>
-				/** @type {import("../lib/util/fs").Watcher} */ (
+				/** @type {import("../../lib/util/fs").Watcher} */ (
 					/** @type {unknown} */ (undefined)
 				)
 		});
@@ -72,7 +73,7 @@ describe("MultiCompiler", () => {
 
 		compiler.hooks.watchRun.tap("MultiCompiler test", () => called++);
 		compiler.watch(
-			/** @type {import("../declarations/WebpackOptions").WatchOptions} */ (
+			/** @type {import("../../declarations/WebpackOptions").WatchOptions} */ (
 				/** @type {unknown} */ (1000)
 			),
 			(err) => {
@@ -134,10 +135,10 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should not be running twice at a time (instance cb)", (done) => {
-		const compiler = /** @type {import("../").Compiler} */ (
+		const compiler = /** @type {import("../../").Compiler} */ (
 			webpack(
 				{
-					context: __dirname,
+					context: testDirectory,
 					mode: "production",
 					entry: "./c",
 					output: {
@@ -148,7 +149,7 @@ describe("MultiCompiler", () => {
 				() => {}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err, _stats) => {
@@ -174,12 +175,12 @@ describe("MultiCompiler", () => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			for (const childStats of /** @type {import("../").MultiStats} */ (stats)
+			for (const childStats of /** @type {import("../../").MultiStats} */ (stats)
 				.stats) {
 				const compilation = childStats.compilation;
 				// codeGenerationResults: only used during seal/emit, dropped.
 				expect(
-					/** @type {import("../").CodeGenerationResults} */ (
+					/** @type {import("../../").CodeGenerationResults} */ (
 						compilation.codeGenerationResults
 					).map.size
 				).toBe(0);
@@ -191,19 +192,19 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should release a finished child's codeGenerationResults before a dependent sibling runs (#15521)", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").MultiConfiguration} */ (
+				/** @type {import("../../").MultiConfiguration} */ (
 					Object.assign(
 						[
 							{
 								name: "a",
-								context: path.join(__dirname, "fixtures"),
+								context: path.join(testDirectory, "fixtures"),
 								entry: "./a.js"
 							},
 							{
 								name: "b",
-								context: path.join(__dirname, "fixtures"),
+								context: path.join(testDirectory, "fixtures"),
 								entry: "./b.js",
 								dependencies: ["a"]
 							}
@@ -213,18 +214,18 @@ describe("MultiCompiler", () => {
 				)
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.watchFileSystem =
-			/** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
 				watch: (_a, _b, _c, _d, _e, _f, _g) =>
-					/** @type {import("../lib/util/fs").Watcher} */ (
+					/** @type {import("../../lib/util/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					)
 			});
 		const [a, b] = compiler.compilers;
-		/** @type {import("../").Compilation | undefined} */
+		/** @type {import("../../").Compilation | undefined} */
 		let aCompilation;
 		a.hooks.done.tap("test", (stats) => {
 			aCompilation = stats.compilation;
@@ -235,8 +236,8 @@ describe("MultiCompiler", () => {
 		/** @type {number | undefined} */
 		let aMapSizeWhenBStarts;
 		b.hooks.run.tap("test", () => {
-			aMapSizeWhenBStarts = /** @type {import("../").CodeGenerationResults} */ (
-				/** @type {import("../").Compilation} */ (aCompilation)
+			aMapSizeWhenBStarts = /** @type {import("../../").CodeGenerationResults} */ (
+				/** @type {import("../../").Compilation} */ (aCompilation)
 					.codeGenerationResults
 			).map.size;
 		});
@@ -251,28 +252,28 @@ describe("MultiCompiler", () => {
 		/**
 		 * @param {string} pathA output path for a
 		 * @param {string} pathB output path for b
-		 * @returns {import("../").MultiCompiler} compiler
+		 * @returns {import("../../").MultiCompiler} compiler
 		 */
 		const createWithOutputPaths = (pathA, pathB) =>
-			/** @type {import("../").MultiCompiler} */ (
+			/** @type {import("../../").MultiCompiler} */ (
 				webpack(
-					/** @type {import("../").MultiConfiguration} */ ([
+					/** @type {import("../../").MultiConfiguration} */ ([
 						{
 							name: "a",
-							context: path.join(__dirname, "fixtures"),
+							context: path.join(testDirectory, "fixtures"),
 							entry: "./a.js",
 							output: { path: pathA }
 						},
 						{
 							name: "b",
-							context: path.join(__dirname, "fixtures"),
+							context: path.join(testDirectory, "fixtures"),
 							entry: "./b.js",
 							output: { path: pathB }
 						}
 					])
 				)
 			);
-		const base = path.join(__dirname, "js", "output-path");
+		const base = path.join(testDirectory, "js", "output-path");
 		// A sibling directory sharing a name prefix is not a common ancestor.
 		const prefixed = createWithOutputPaths(
 			path.join(base, "dist"),
@@ -318,7 +319,7 @@ describe("MultiCompiler", () => {
 
 	it("should run again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
-		const watching = /** @type {import("../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err, _stats) => {
 					if (err) return done(err);
@@ -335,7 +336,7 @@ describe("MultiCompiler", () => {
 
 	it("should watch again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
-		const watching = /** @type {import("../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err, _stats) => {
 					if (err) return done(err);
@@ -353,7 +354,7 @@ describe("MultiCompiler", () => {
 	it("should expose the active MultiWatching on `watching`", (done) => {
 		const compiler = createMultiCompiler();
 		expect(compiler.watching).toBeUndefined();
-		const watching = /** @type {import("../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err, _stats) => {
 					if (err) return done(err);
@@ -418,7 +419,7 @@ describe("MultiCompiler", () => {
 			if (phase === 0) {
 				phase = 1;
 				expect(changedNames).toEqual([["a", "b"]]);
-				/** @type {NonNullable<import("../").Compiler["watching"]>} */
+				/** @type {NonNullable<import("../../").Compiler["watching"]>} */
 				(compiler.compilers[1].watching).invalidate();
 			} else if (phase === 1) {
 				phase = 2;
@@ -429,24 +430,24 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should not stay running after dependency validation fails", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").MultiConfiguration} */ ([
+				/** @type {import("../../").MultiConfiguration} */ ([
 					{
 						name: "a",
-						context: path.join(__dirname, "fixtures"),
+						context: path.join(testDirectory, "fixtures"),
 						entry: "./a.js",
 						dependencies: ["missing"]
 					},
 					{
 						name: "b",
-						context: path.join(__dirname, "fixtures"),
+						context: path.join(testDirectory, "fixtures"),
 						entry: "./b.js"
 					}
 				])
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.run((err) => {
@@ -505,18 +506,18 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should expose `watching` when dependency validation fails", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").MultiConfiguration} */ ([
+				/** @type {import("../../").MultiConfiguration} */ ([
 					{
 						name: "a",
-						context: path.join(__dirname, "fixtures"),
+						context: path.join(testDirectory, "fixtures"),
 						entry: "./a.js",
 						dependencies: ["missing"]
 					},
 					{
 						name: "b",
-						context: path.join(__dirname, "fixtures"),
+						context: path.join(testDirectory, "fixtures"),
 						entry: "./b.js"
 					}
 				])
@@ -524,7 +525,7 @@ describe("MultiCompiler", () => {
 		);
 		/** @type {Error | null | undefined} */
 		let error;
-		const watching = /** @type {import("../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (err) => {
 					error = err;
@@ -541,22 +542,22 @@ describe("MultiCompiler", () => {
 
 	it("should respect parallelism and dependencies for running", (done) => {
 		const compiler = createMultiCompiler(
-			/** @type {import("../").MultiCompilerOptions} */ ({
+			/** @type {import("../../").MultiCompilerOptions} */ ({
 				parallelism: 1,
 				2: {
 					name: "c",
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					entry: "./a.js",
 					dependencies: ["d", "e"]
 				},
 				3: {
 					name: "d",
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					entry: "./a.js"
 				},
 				4: {
 					name: "e",
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					entry: "./a.js"
 				}
 			})
@@ -580,28 +581,28 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should respect parallelism and dependencies for watching", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").MultiConfiguration} */ (
+				/** @type {import("../../").MultiConfiguration} */ (
 					Object.assign(
 						[
 							{
 								name: "a",
 								mode: "development",
-								context: path.join(__dirname, "fixtures"),
+								context: path.join(testDirectory, "fixtures"),
 								entry: "./a.js",
 								dependencies: ["b", "c"]
 							},
 							{
 								name: "b",
 								mode: "development",
-								context: path.join(__dirname, "fixtures"),
+								context: path.join(testDirectory, "fixtures"),
 								entry: "./b.js"
 							},
 							{
 								name: "c",
 								mode: "development",
-								context: path.join(__dirname, "fixtures"),
+								context: path.join(testDirectory, "fixtures"),
 								entry: "./a.js"
 							}
 						],
@@ -610,7 +611,7 @@ describe("MultiCompiler", () => {
 				)
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
@@ -618,7 +619,7 @@ describe("MultiCompiler", () => {
 		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
 		const watchCallbacksUndelayed = [];
 		compiler.watchFileSystem =
-			/** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
 				watch(
 					files,
 					directories,
@@ -630,7 +631,7 @@ describe("MultiCompiler", () => {
 				) {
 					watchCallbacks.push(callback);
 					watchCallbacksUndelayed.push(callbackUndelayed);
-					return /** @type {import("../lib/util/fs").Watcher} */ (
+					return /** @type {import("../../lib/util/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					);
 				}
@@ -653,7 +654,7 @@ describe("MultiCompiler", () => {
 		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 			const info = () =>
-				/** @type {import("../").MultiStats} */ (stats).toString({
+				/** @type {import("../../").MultiStats} */ (stats).toString({
 					preset: "summary",
 					version: false
 				});
@@ -769,32 +770,32 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should report a child as blocked only while it waits for its parent", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").MultiConfiguration} */ ([
+				/** @type {import("../../").MultiConfiguration} */ ([
 					{
 						name: "a",
 						mode: "development",
-						context: path.join(__dirname, "fixtures"),
+						context: path.join(testDirectory, "fixtures"),
 						entry: "./a.js"
 					},
 					{
 						name: "b",
 						mode: "development",
-						context: path.join(__dirname, "fixtures"),
+						context: path.join(testDirectory, "fixtures"),
 						entry: "./b.js",
 						dependencies: ["a"]
 					}
 				])
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.watchFileSystem =
-			/** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
 				watch: (_a, _b, _c, _d, _e, _f, _g) =>
-					/** @type {import("../lib/util/fs").Watcher} */ (
+					/** @type {import("../../lib/util/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					)
 			});
@@ -822,9 +823,9 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should respect parallelism when using invalidate", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").MultiConfiguration} */ (
+				/** @type {import("../../").MultiConfiguration} */ (
 					/** @type {unknown} */ (
 						Object.assign(
 							[
@@ -832,13 +833,13 @@ describe("MultiCompiler", () => {
 									name: "a",
 									mode: "development",
 									entry: { a: "./a.js" },
-									context: path.join(__dirname, "fixtures")
+									context: path.join(testDirectory, "fixtures")
 								},
 								{
 									name: "b",
 									mode: "development",
 									entry: { b: "./b.js" },
-									context: path.join(__dirname, "fixtures")
+									context: path.join(testDirectory, "fixtures")
 								}
 							],
 							{ parallelism: 1 }
@@ -863,16 +864,16 @@ describe("MultiCompiler", () => {
 		}
 
 		compiler.watchFileSystem = {
-			watch: /** @type {import("../lib/util/fs").WatchMethod} */ (
+			watch: /** @type {import("../../lib/util/fs").WatchMethod} */ (
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 
 		let state = 0;
-		const watching = /** @type {import("../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (error) => {
 					if (error) {
@@ -922,20 +923,20 @@ describe("MultiCompiler", () => {
 	}, 2000);
 
 	it("should respect dependencies when using invalidate", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack([
 				{
 					name: "a",
 					mode: "development",
 					entry: { a: "./a.js" },
-					context: path.join(__dirname, "fixtures"),
+					context: path.join(testDirectory, "fixtures"),
 					dependencies: ["b"]
 				},
 				{
 					name: "b",
 					mode: "development",
 					entry: { b: "./b.js" },
-					context: path.join(__dirname, "fixtures")
+					context: path.join(testDirectory, "fixtures")
 				}
 			])
 		);
@@ -955,16 +956,16 @@ describe("MultiCompiler", () => {
 		}
 
 		compiler.watchFileSystem = {
-			watch: /** @type {import("../lib/util/fs").WatchMethod} */ (
+			watch: /** @type {import("../../lib/util/fs").WatchMethod} */ (
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 
 		let state = 0;
-		const watching = /** @type {import("../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (error) => {
 					if (error) {
@@ -1016,33 +1017,33 @@ describe("MultiCompiler", () => {
 	it("shouldn't hang when invalidating watchers", (done) => {
 		const entriesA = /** @type {Record<string, string>} */ ({ a: "./a.js" });
 		const entriesB = /** @type {Record<string, string>} */ ({ b: "./b.js" });
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack([
 				{
 					name: "a",
 					mode: "development",
 					entry: () => entriesA,
-					context: path.join(__dirname, "fixtures")
+					context: path.join(testDirectory, "fixtures")
 				},
 				{
 					name: "b",
 					mode: "development",
 					entry: () => entriesB,
-					context: path.join(__dirname, "fixtures")
+					context: path.join(testDirectory, "fixtures")
 				}
 			])
 		);
 
 		compiler.watchFileSystem = {
-			watch: /** @type {import("../lib/util/fs").WatchMethod} */ (
+			watch: /** @type {import("../../lib/util/fs").WatchMethod} */ (
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 
-		const watching = /** @type {import("../lib/MultiWatching")} */ (
+		const watching = /** @type {import("../../lib/MultiWatching")} */ (
 			/** @type {unknown} */ (
 				compiler.watch({}, (error) => {
 					if (error) {
@@ -1063,20 +1064,20 @@ describe("MultiCompiler", () => {
 	}, 2000);
 
 	it("shouldn't hang when invalidating during build", (done) => {
-		const compiler = /** @type {import("../").MultiCompiler} */ (
+		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack(
-				/** @type {import("../").MultiConfiguration} */ (
+				/** @type {import("../../").MultiConfiguration} */ (
 					Object.assign([
 						{
 							name: "a",
 							mode: "development",
-							context: path.join(__dirname, "fixtures"),
+							context: path.join(testDirectory, "fixtures"),
 							entry: "./a.js"
 						},
 						{
 							name: "b",
 							mode: "development",
-							context: path.join(__dirname, "fixtures"),
+							context: path.join(testDirectory, "fixtures"),
 							entry: "./b.js",
 							dependencies: ["a"]
 						}
@@ -1084,7 +1085,7 @@ describe("MultiCompiler", () => {
 				)
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
@@ -1093,7 +1094,7 @@ describe("MultiCompiler", () => {
 		const watchCallbacksUndelayed = [];
 		let firstRun = true;
 		compiler.watchFileSystem =
-			/** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
 				watch(
 					files,
 					directories,
@@ -1108,7 +1109,7 @@ describe("MultiCompiler", () => {
 					if (
 						firstRun &&
 						/** @type {Set<string>} */ (files).has(
-							path.join(__dirname, "fixtures", "a.js")
+							path.join(testDirectory, "fixtures", "a.js")
 						)
 					) {
 						process.nextTick(() => {
@@ -1116,7 +1117,7 @@ describe("MultiCompiler", () => {
 						});
 						firstRun = false;
 					}
-					return /** @type {import("../lib/util/fs").Watcher} */ (
+					return /** @type {import("../../lib/util/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					);
 				}

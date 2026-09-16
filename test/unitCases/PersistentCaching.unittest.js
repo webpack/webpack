@@ -1,15 +1,16 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const fs = require("fs");
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const util = require("util");
 const vm = require("vm");
 const rimraf = require("rimraf");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
+const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
 const readdir = util.promisify(fs.readdir);
 const readFile = util.promisify(fs.readFile);
@@ -20,7 +21,7 @@ const mkdir = util.promisify(fs.mkdir);
 describe("Persistent Caching", () => {
 	expectNoDeprecations();
 
-	const tempPath = path.resolve(__dirname, "js", "persistent-caching");
+	const tempPath = path.resolve(testDirectory, "js", "persistent-caching");
 	const outputPath = path.resolve(tempPath, "output");
 	const cachePath = path.resolve(tempPath, "cache");
 	const srcPath = path.resolve(tempPath, "src");
@@ -76,10 +77,10 @@ describe("Persistent Caching", () => {
 
 	const compile = async (/** @type {EXPECTED_ANY} */ configAdditions = {}) =>
 		new Promise((resolve, reject) => {
-			const webpack = require("../");
+			const webpack = require("../../");
 
 			webpack(
-				/** @type {import("../").Configuration} */ (
+				/** @type {import("../../").Configuration} */ (
 					/** @type {unknown} */ ({
 						...config,
 						...configAdditions,
@@ -91,10 +92,10 @@ describe("Persistent Caching", () => {
 				),
 				(
 					/** @type {Error | null} */ err,
-					/** @type {import("../").Stats | undefined} */ _stats
+					/** @type {import("../../").Stats | undefined} */ _stats
 				) => {
 					if (err) return reject(err);
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {import("../../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(stats.toString({ preset: "errors-only" }));
 					}
@@ -250,7 +251,7 @@ export { style };
 		};
 		await updateSrc(data);
 
-		const webpack = require("../");
+		const webpack = require("../../");
 
 		const configAdditions = {
 			plugins: [
@@ -516,7 +517,7 @@ export const FLAG = "off";
 	// A DefinePlugin value changes the inlined literal without touching the
 	// module source, so its build hash alone cannot key the provided exports.
 	it("should invalidate consumer codegen when a plugin-provided inlined export changes", async () => {
-		const { DefinePlugin } = require("../");
+		const { DefinePlugin } = require("../../");
 
 		const configFor = (/** @type {string} */ flag) => ({
 			mode: "production",
@@ -547,7 +548,7 @@ export default FLAG;
 	// A value version is user-supplied text; spelling out the encoding's own
 	// separators must not forge another key's entry in the cache key.
 	it("should key value dependencies whose versions contain the separators", async () => {
-		const { DefinePlugin } = require("../");
+		const { DefinePlugin } = require("../../");
 
 		const keyB = `${DefinePlugin.VALUE_DEP_PREFIX}process.env.B`;
 		const configFor = (
@@ -739,7 +740,7 @@ export const FROM_B = VALUE;
 	// EnvironmentPlugin feeds DefinePlugin, so its values reach the inlined
 	// literal without any module source changing.
 	it("should invalidate consumer codegen when an EnvironmentPlugin value changes", async () => {
-		const { EnvironmentPlugin } = require("../");
+		const { EnvironmentPlugin } = require("../../");
 
 		const previous = process.env.WEBPACK_TEST_INLINE;
 		try {
@@ -843,7 +844,7 @@ export default data;
 	// The losing branch is removed at build time, so a stale build keeps code
 	// the current configuration says is unreachable.
 	it("should keep only the branch a changed define value selects", async () => {
-		const { DefinePlugin } = require("../");
+		const { DefinePlugin } = require("../../");
 
 		await updateSrc({
 			"index.js": `import { run } from "./feature.js";
@@ -1000,7 +1001,7 @@ export default value;
 	// DefinePlugin hashes the set of keys separately from each value, so adding
 	// one has to invalidate the modules that substituted the others.
 	it("should re-substitute when the define key set changes", async () => {
-		const { DefinePlugin } = require("../");
+		const { DefinePlugin } = require("../../");
 
 		await updateSrc({
 			"index.js": `export default [

@@ -1,24 +1,25 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const testDirectory = path.resolve(__dirname, "..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 // cspell:word nodetest
 expectNoDeprecations();
 
 describe("NodeTemplatePlugin", () => {
 	it("should compile and run a simple module", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		webpack(
 			{
 				mode: "production",
-				context: path.join(__dirname, "fixtures", "nodetest"),
+				context: path.join(testDirectory, "fixtures", "nodetest"),
 				target: "node",
 				output: {
-					path: path.join(__dirname, "js", "NodeTemplatePlugin"),
+					path: path.join(testDirectory, "js", "NodeTemplatePlugin"),
 					filename: "result.js",
 					chunkFilename: "[fullhash].result.[id].js",
 					library: "abc",
@@ -28,15 +29,15 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				expect(/** @type {import("../").Stats} */ (stats).hasErrors()).toBe(
+				expect(/** @type {import("../../").Stats} */ (stats).hasErrors()).toBe(
 					false
 				);
-				expect(/** @type {import("../").Stats} */ (stats).hasWarnings()).toBe(
+				expect(/** @type {import("../../").Stats} */ (stats).hasWarnings()).toBe(
 					false
 				);
 
 				// @ts-expect-error generated file does not exist at type-check time
-				const result = require("./js/NodeTemplatePlugin/result").abc;
+				const result = require("../js/NodeTemplatePlugin/result").abc;
 
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
@@ -60,15 +61,15 @@ describe("NodeTemplatePlugin", () => {
 	});
 
 	it("should compile and run a simple module in single mode", (done) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		webpack(
 			{
 				mode: "production",
-				context: path.join(__dirname, "fixtures", "nodetest"),
+				context: path.join(testDirectory, "fixtures", "nodetest"),
 				target: "node",
 				output: {
-					path: path.join(__dirname, "js", "NodeTemplatePluginSingle"),
+					path: path.join(testDirectory, "js", "NodeTemplatePluginSingle"),
 					filename: "result2.js",
 					chunkFilename: "[fullhash].result2.[id].js",
 					library: "def",
@@ -84,12 +85,12 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				expect(/** @type {import("../").Stats} */ (stats).hasErrors()).toBe(
+				expect(/** @type {import("../../").Stats} */ (stats).hasErrors()).toBe(
 					false
 				);
 
 				// @ts-expect-error generated file does not exist at type-check time
-				const result = require("./js/NodeTemplatePluginSingle/result2");
+				const result = require("../js/NodeTemplatePluginSingle/result2");
 
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
