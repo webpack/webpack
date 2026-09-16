@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minify-at-rules-and-values minify-at-rules-and-values should compile 1`] = `"@document url(https://a.test/){.a{color:red}.b{color:blue}}@-moz-document url-prefix(){.c{color:green}}.d{mask-border:initial}.e{text-emphasis:initial}.f{background:repeating-radial-gradient(red 0%,blue)}.g{background:cross-fade(url(51b834b7c1ef0b59ea50.png) 50%,url(51b834b7c1ef0b59ea50.png))}"`;
