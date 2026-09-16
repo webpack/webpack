@@ -1,18 +1,19 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
 
-/** @typedef {import("../").Compilation} Compilation */
-/** @typedef {import("../").Compiler} Compiler */
-/** @typedef {import("../").Module} Module */
-/** @typedef {import("../").NormalModule} NormalModule */
-/** @typedef {import("../").Stats} Stats */
-/** @typedef {import("../").WebpackPluginInstance} WebpackPluginInstance */
+/** @typedef {import("../../").Compilation} Compilation */
+/** @typedef {import("../../").Compiler} Compiler */
+/** @typedef {import("../../").Module} Module */
+/** @typedef {import("../../").NormalModule} NormalModule */
+/** @typedef {import("../../").Stats} Stats */
+/** @typedef {import("../../").WebpackPluginInstance} WebpackPluginInstance */
 
-const CONTEXT = path.join(__dirname, "fixtures");
+const CONTEXT = path.join(testDirectory, "fixtures");
 
 // One fixture per nesting level, so every level owns a module instance no other
 // level shares — a shared instance is cleaned up by whichever level is reached.
@@ -26,7 +27,7 @@ const LEVEL_ENTRIES = ["./a.js", "./b.js", "./main1.js", "./main2.js"];
  */
 const nestedChildPlugin = (depth) => ({
 	apply(compiler) {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		compiler.hooks.make.tapAsync(
 			"NestedChildPlugin",
@@ -105,12 +106,12 @@ const collectLevels = (compilation, level, out) => {
 /**
  * Runs one compilation and hands the compiler and stats to the caller before
  * closing it.
- * @param {import("../").Configuration} options webpack options
+ * @param {import("../../").Configuration} options webpack options
  * @returns {Promise<{ compiler: Compiler, stats: Stats, close: () => Promise<void> }>} the finished build
  */
 const build = (options) =>
 	new Promise((resolve, reject) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		const compiler = webpack({
 			mode: "production",
@@ -119,7 +120,7 @@ const build = (options) =>
 			...options
 		});
 		compiler.outputFileSystem =
-			/** @type {import("../").OutputFileSystem} */
+			/** @type {import("../../").OutputFileSystem} */
 			(/** @type {unknown} */ (createFsFromVolume(new Volume())));
 		compiler.run((err, stats) => {
 			if (err) return reject(err);
@@ -140,12 +141,12 @@ const build = (options) =>
 
 /**
  * Runs one watch build and resolves once the compiler has gone idle.
- * @param {import("../").Configuration} options webpack options
+ * @param {import("../../").Configuration} options webpack options
  * @returns {Promise<{ compiler: Compiler, stats: Stats, close: () => Promise<void> }>} the finished build
  */
 const watchOnce = (options) =>
 	new Promise((resolve, reject) => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		const compiler = webpack({
 			mode: "production",
@@ -154,10 +155,10 @@ const watchOnce = (options) =>
 			...options
 		});
 		compiler.outputFileSystem =
-			/** @type {import("../").OutputFileSystem} */
+			/** @type {import("../../").OutputFileSystem} */
 			(/** @type {unknown} */ (createFsFromVolume(new Volume())));
 		let settled = false;
-		const watching = /** @type {import("../").Watching} */ (
+		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({ aggregateTimeout: 10 }, (err, stats) => {
 				if (settled) return;
 				settled = true;
@@ -193,7 +194,7 @@ describe("Compilation release", () => {
 
 		// what the next build does before it starts
 		const internalCompiler =
-			/** @type {import("../lib/Compiler")} */
+			/** @type {import("../../lib/Compiler")} */
 			(/** @type {unknown} */ (compiler));
 
 		internalCompiler._cleanupLastCompilation();
@@ -217,7 +218,7 @@ describe("Compilation release", () => {
 			output: { path: "/" }
 		});
 		const internalCompiler =
-			/** @type {import("../lib/Compiler")} */
+			/** @type {import("../../lib/Compiler")} */
 			(/** @type {unknown} */ (compiler));
 
 		expect(stats.compilation.modules.size).toBeGreaterThan(0);

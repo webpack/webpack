@@ -1,25 +1,26 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const testDirectory = path.resolve(__dirname, "..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();
 
 describe("WatchClose", () => {
 	describe("multiple calls watcher", () => {
-		const fixturePath = path.join(__dirname, "fixtures");
-		const outputPath = path.join(__dirname, "js/WatchClose");
+		const fixturePath = path.join(testDirectory, "fixtures");
+		const outputPath = path.join(testDirectory, "js/WatchClose");
 		const filePath = path.join(fixturePath, "a.js");
 
-		/** @type {import("../").Compiler | null} */
+		/** @type {import("../../").Compiler | null} */
 		let compiler;
-		/** @type {import("../").Watching} */
+		/** @type {import("../../").Watching} */
 		let watcher;
 
 		beforeEach(() => {
-			const webpack = require("../");
+			const webpack = require("../../");
 
 			compiler = webpack({
 				mode: "development",
@@ -29,8 +30,8 @@ describe("WatchClose", () => {
 					filename: "bundle.js"
 				}
 			});
-			watcher = /** @type {import("../").Watching} */ (
-				/** @type {import("../").Compiler} */ (compiler).watch(
+			watcher = /** @type {import("../../").Watching} */ (
+				/** @type {import("../../").Compiler} */ (compiler).watch(
 					{ poll: 300 },
 					() => {}
 				)
@@ -45,7 +46,7 @@ describe("WatchClose", () => {
 		});
 
 		/**
-		 * @param {import("../").Watching} watcher watcher
+		 * @param {import("../../").Watching} watcher watcher
 		 * @param {(err?: null | Error) => void} callback callback
 		 * @returns {Promise<void>}
 		 */

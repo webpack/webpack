@@ -1,18 +1,19 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
 /** @type {{ sync: (pattern: string) => void }} */
 const rimraf = require("rimraf");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 let fixtureCount = 0;
 
 /**
  * @typedef {{ mkdir: string[], writeFile: unknown[] }} CachingLogs
- * @typedef {import("../").StatsCompilation & { logs?: CachingLogs, assets: import("../").StatsAsset[], modules: import("../").StatsModule[] }} CachingStats
+ * @typedef {import("../../").StatsCompilation & { logs?: CachingLogs, assets: import("../../").StatsAsset[], modules: import("../../").StatsModule[] }} CachingStats
  */
 
 describe("Compiler (caching)", () => {
@@ -20,27 +21,27 @@ describe("Compiler (caching)", () => {
 
 	/**
 	 * @param {string} entry entry file
-	 * @param {import("../").Configuration} options webpack options
+	 * @param {import("../../").Configuration} options webpack options
 	 * @param {(stats: CachingStats, files: Record<string, string>, iteration: number) => void} callback done callback
-	 * @returns {{ compilerInstance: import("../").Compiler, runAgain: (options: Record<string, unknown> | ((stats: CachingStats, files: Record<string, string>, iteration: number) => void), callback?: (stats: CachingStats, files: Record<string, string>, iteration: number) => void) => void }} helpers
+	 * @returns {{ compilerInstance: import("../../").Compiler, runAgain: (options: Record<string, unknown> | ((stats: CachingStats, files: Record<string, string>, iteration: number) => void), callback?: (stats: CachingStats, files: Record<string, string>, iteration: number) => void) => void }} helpers
 	 */
 	function compile(entry, options, callback) {
-		const webpack = require("..");
+		const webpack = require("../..");
 
-		/** @type {import("../").WebpackOptionsNormalized} */
+		/** @type {import("../../").WebpackOptionsNormalized} */
 		const normalizedOptions =
 			webpack.config.getNormalizedWebpackOptions(options);
 		normalizedOptions.mode = "none";
 		normalizedOptions.cache =
-			/** @type {import("../").WebpackOptionsNormalized["cache"]} */ (
+			/** @type {import("../../").WebpackOptionsNormalized["cache"]} */ (
 				/** @type {unknown} */ (true)
 			);
-		normalizedOptions.entry = /** @type {import("../").EntryNormalized} */ (
+		normalizedOptions.entry = /** @type {import("../../").EntryNormalized} */ (
 			/** @type {unknown} */ (entry)
 		);
 		normalizedOptions.optimization.moduleIds = "natural";
 		normalizedOptions.optimization.minimize = false;
-		normalizedOptions.context = path.join(__dirname, "fixtures");
+		normalizedOptions.context = path.join(testDirectory, "fixtures");
 		normalizedOptions.output.path = "/";
 		normalizedOptions.output.filename = "bundle.js";
 		normalizedOptions.output.pathinfo = true;
@@ -51,13 +52,13 @@ describe("Compiler (caching)", () => {
 		};
 
 		const c = webpack(
-			/** @type {import("../").Configuration} */ (
+			/** @type {import("../../").Configuration} */ (
 				/** @type {unknown} */ (normalizedOptions)
 			)
 		);
 		/** @type {Record<string, string>} */
 		const files = {};
-		c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		c.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ ({
 				/**
 				 * @param {string} dirPath directory path
@@ -108,7 +109,7 @@ describe("Compiler (caching)", () => {
 				if (err) throw err;
 				expect(typeof rawStats).toBe("object");
 				const stats = /** @type {CachingStats} */ (
-					/** @type {import("../").Stats} */ (rawStats).toJson({
+					/** @type {import("../../").Stats} */ (rawStats).toJson({
 						modules: true,
 						reasons: true
 					})
@@ -144,7 +145,7 @@ describe("Compiler (caching)", () => {
 	}
 
 	const tempFixturePath = path.join(
-		__dirname,
+		testDirectory,
 		"fixtures",
 		"temp-cache-fixture"
 	);
@@ -173,8 +174,8 @@ describe("Compiler (caching)", () => {
 
 		// Copy over file since we"ll be modifying some of them
 		fs.mkdirSync(fixturePath);
-		fs.copyFileSync(path.join(__dirname, "fixtures", "a.js"), aFilepath);
-		fs.copyFileSync(path.join(__dirname, "fixtures", "c.js"), cFilepath);
+		fs.copyFileSync(path.join(testDirectory, "fixtures", "a.js"), aFilepath);
+		fs.copyFileSync(path.join(testDirectory, "fixtures", "c.js"), cFilepath);
 
 		fixtureCount++;
 		return {

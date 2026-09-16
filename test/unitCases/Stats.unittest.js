@@ -1,20 +1,22 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+const testDirectory = require("path").resolve(__dirname, "..");
+
+require("../helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 /**
- * @param {import("../").Configuration} options options
- * @returns {Promise<import("../").Stats>} stats
+ * @param {import("../../").Configuration} options options
+ * @returns {Promise<import("../../").Stats>} stats
  */
 const compile = (options) =>
-	/** @type {Promise<import("../").Stats>} */ (
+	/** @type {Promise<import("../../").Stats>} */ (
 		new Promise((resolve, reject) => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
-			const compiler = /** @type {import("../").Compiler} */ (webpack(options));
+			const compiler = /** @type {import("../../").Compiler} */ (webpack(options));
 			compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
 				createFsFromVolume(new Volume())
 			);
@@ -22,7 +24,7 @@ const compile = (options) =>
 				if (err) {
 					reject(err);
 				} else {
-					resolve(/** @type {import("../").Stats} */ (stats));
+					resolve(/** @type {import("../../").Stats} */ (stats));
 				}
 			});
 		})
@@ -33,7 +35,7 @@ expectNoDeprecations();
 describe("Stats", () => {
 	it("should work with a boolean value", async () => {
 		const stats = await compile({
-			context: __dirname,
+			context: testDirectory,
 			entry: "./fixtures/a"
 		});
 		expect(stats.toJson(false)).toMatchInlineSnapshot("Object {}");
@@ -42,7 +44,7 @@ describe("Stats", () => {
 
 	it("should work with a string value", async () => {
 		const stats = await compile({
-			context: __dirname,
+			context: testDirectory,
 			entry: "./fixtures/a"
 		});
 		expect(stats.toJson("none")).toMatchInlineSnapshot("Object {}");
@@ -51,7 +53,7 @@ describe("Stats", () => {
 
 	it("should work with an object value", async () => {
 		const stats = await compile({
-			context: __dirname,
+			context: testDirectory,
 			entry: "./fixtures/a"
 		});
 		expect(
@@ -79,12 +81,12 @@ describe("Stats", () => {
 
 	it("should print env string in stats", async () => {
 		const stats = await compile({
-			context: __dirname,
+			context: testDirectory,
 			entry: "./fixtures/a"
 		});
 		expect(
 			stats.toString(
-				/** @type {import("../").StatsOptions} */ (
+				/** @type {import("../../").StatsOptions} */ (
 					/** @type {unknown} */ ({
 						all: false,
 						env: true,
@@ -95,7 +97,7 @@ describe("Stats", () => {
 		).toBe('Environment (--env): "production"');
 		expect(
 			stats.toString(
-				/** @type {import("../").StatsOptions} */ (
+				/** @type {import("../../").StatsOptions} */ (
 					/** @type {unknown} */ ({
 						all: false,
 						env: true,
@@ -119,7 +121,7 @@ describe("Stats", () => {
 
 	it("should omit all properties with all false", async () => {
 		const stats = await compile({
-			context: __dirname,
+			context: testDirectory,
 			entry: "./fixtures/a"
 		});
 		expect(
@@ -132,7 +134,7 @@ describe("Stats", () => {
 	it("should the results of hasWarnings() be affected by ignoreWarnings", async () => {
 		const stats = await compile({
 			mode: "development",
-			context: __dirname,
+			context: testDirectory,
 			entry: "./fixtures/ignoreWarnings/index",
 			module: {
 				rules: [
@@ -149,7 +151,7 @@ describe("Stats", () => {
 	describe("chunkGroups", () => {
 		it("should be empty when there is no additional chunks", async () => {
 			const stats = await compile({
-				context: __dirname,
+				context: testDirectory,
 				entry: {
 					entryA: "./fixtures/a",
 					entryB: "./fixtures/b"
@@ -206,7 +208,7 @@ describe("Stats", () => {
 
 		it("should contain additional chunks", async () => {
 			const stats = await compile({
-				context: __dirname,
+				context: testDirectory,
 				entry: {
 					entryA: "./fixtures/a",
 					entryB: "./fixtures/chunk-b"
@@ -280,7 +282,7 @@ describe("Stats", () => {
 
 		it("should contain assets", async () => {
 			const stats = await compile({
-				context: __dirname,
+				context: testDirectory,
 				entry: {
 					entryA: "./fixtures/a",
 					entryB: "./fixtures/chunk-b"

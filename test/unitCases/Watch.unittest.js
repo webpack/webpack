@@ -1,11 +1,12 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
-const webpack = require("..");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();
 
@@ -14,10 +15,10 @@ describe("Watch", () => {
 		let counterBeforeCompile = 0;
 		let counterDone = 0;
 		let counterHandler = 0;
-		const compiler = /** @type {import("../").Compiler} */ (
+		const compiler = /** @type {import("../../").Compiler} */ (
 			webpack(
 				{
-					context: path.resolve(__dirname, "fixtures/watch"),
+					context: path.resolve(testDirectory, "fixtures/watch"),
 					watch: true,
 					mode: "development",
 					snapshot: {
@@ -48,16 +49,16 @@ describe("Watch", () => {
 				},
 				(err, stats) => {
 					if (err) return done(err);
-					if (/** @type {import("../").Stats} */ (stats).hasErrors()) {
+					if (/** @type {import("../../").Stats} */ (stats).hasErrors()) {
 						return done(
-							new Error(/** @type {import("../").Stats} */ (stats).toString())
+							new Error(/** @type {import("../../").Stats} */ (stats).toString())
 						);
 					}
 					counterHandler++;
 				}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		setTimeout(() => {
@@ -78,7 +79,7 @@ describe("Watch", () => {
 		let calls = 0;
 		const compiler = webpack({
 			mode: "development",
-			context: path.resolve(__dirname, "fixtures/watch"),
+			context: path.resolve(testDirectory, "fixtures/watch"),
 			plugins: [
 				(c) => {
 					// Ensure the second invalidation can occur during compiler running
@@ -107,10 +108,10 @@ describe("Watch", () => {
 		});
 
 		// First invalidation
-		/** @type {import("../").Watching} */ (compiler.watching).invalidate();
+		/** @type {import("../../").Watching} */ (compiler.watching).invalidate();
 		// Second invalidation while compiler is still running
 		setTimeout(() => {
-			/** @type {import("../").Watching} */ (compiler.watching).invalidate();
+			/** @type {import("../../").Watching} */ (compiler.watching).invalidate();
 		}, 50);
 	});
 });

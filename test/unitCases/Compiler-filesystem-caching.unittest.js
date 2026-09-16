@@ -1,14 +1,15 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
 const rimraf = /** @type {{ sync: (path: string) => void }} */ (
 	require("rimraf")
 );
 const { RawSource } = require("webpack-sources");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 let fixtureCount = 0;
 
@@ -16,39 +17,39 @@ describe("Compiler (filesystem caching)", () => {
 	expectNoDeprecations();
 
 	const tempFixturePath = path.join(
-		__dirname,
+		testDirectory,
 		"fixtures",
 		"temp-filesystem-cache-fixture"
 	);
 
 	function compile(
 		/** @type {string} */ entry,
-		/** @type {(stats: import("../types").StatsCompilation) => void} */ onSuccess,
+		/** @type {(stats: import("../../types").StatsCompilation) => void} */ onSuccess,
 		/** @type {(err: Error) => void} */ onError
 	) {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		const options = webpack.config.getNormalizedWebpackOptions({});
 		options.cache = {
 			type: "filesystem",
 			cacheDirectory: path.join(tempFixturePath, "cache")
 		};
-		options.entry = /** @type {import("../types").EntryNormalized} */ (
+		options.entry = /** @type {import("../../types").EntryNormalized} */ (
 			/** @type {unknown} */ (entry)
 		);
-		options.context = path.join(__dirname, "fixtures");
+		options.context = path.join(testDirectory, "fixtures");
 		options.output.path = path.join(tempFixturePath, "dist");
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
 		options.module =
-			/** @type {import("../types").WebpackOptionsNormalized["module"]} */ (
+			/** @type {import("../../types").WebpackOptionsNormalized["module"]} */ (
 				/** @type {unknown} */ ({
 					rules: [
 						{
 							test: /\.svg$/,
 							type: "asset/resource",
 							use: {
-								loader: require.resolve("./fixtures/empty-svg-loader")
+								loader: require.resolve("../fixtures/empty-svg-loader")
 							}
 						}
 					]
@@ -180,11 +181,11 @@ describe("Compiler (filesystem caching)", () => {
 		];
 
 		function runCompiler(
-			/** @type {(stats: import("../types").StatsCompilation) => void} */ onSuccess,
+			/** @type {(stats: import("../../types").StatsCompilation) => void} */ onSuccess,
 			/** @type {(err: Error) => void} */ onError
 		) {
 			const c = webpack(
-				/** @type {import("../types").Configuration} */ (
+				/** @type {import("../../types").Configuration} */ (
 					/** @type {unknown} */ (options)
 				)
 			);
@@ -195,7 +196,7 @@ describe("Compiler (filesystem caching)", () => {
 			c.run((err, stats_) => {
 				if (err) throw err;
 				expect(typeof stats_).toBe("object");
-				const stats = /** @type {import("../types").Stats} */ (stats_).toJson({
+				const stats = /** @type {import("../../types").Stats} */ (stats_).toJson({
 					modules: true,
 					reasons: true
 				});
@@ -243,10 +244,10 @@ describe("Compiler (filesystem caching)", () => {
 		// Copy over file since we"ll be modifying some of them
 		fs.mkdirSync(fixturePath);
 		fs.copyFileSync(
-			path.join(__dirname, "fixtures", "uses-asset.js"),
+			path.join(testDirectory, "fixtures", "uses-asset.js"),
 			usesAssetFilepath
 		);
-		fs.copyFileSync(path.join(__dirname, "fixtures", "file.svg"), svgFilepath);
+		fs.copyFileSync(path.join(testDirectory, "fixtures", "file.svg"), svgFilepath);
 
 		fixtureCount++;
 		return {
@@ -264,7 +265,7 @@ describe("Compiler (filesystem caching)", () => {
 		const helper = compile(
 			tempFixture.usesAssetFilepath,
 			(stats) => {
-				const assets = /** @type {import("../types").StatsAsset[]} */ (
+				const assets = /** @type {import("../../types").StatsAsset[]} */ (
 					stats.assets
 				);
 				// Not cached the first time
@@ -275,7 +276,7 @@ describe("Compiler (filesystem caching)", () => {
 				expect(assets[0].emitted).toBe(true);
 
 				helper.runAgain((stats) => {
-					const assets = /** @type {import("../types").StatsAsset[]} */ (
+					const assets = /** @type {import("../../types").StatsAsset[]} */ (
 						stats.assets
 					);
 					// Cached the second run
@@ -293,7 +294,7 @@ describe("Compiler (filesystem caching)", () => {
 					fs.writeFileSync(tempFixture.svgFilepath, svgContent);
 
 					helper.runAgain((stats) => {
-						const assets = /** @type {import("../types").StatsAsset[]} */ (
+						const assets = /** @type {import("../../types").StatsAsset[]} */ (
 							stats.assets
 						);
 						// Still cached after file modification because loader always returns empty
@@ -316,7 +317,7 @@ describe("Compiler (filesystem caching, css devtool)", () => {
 	expectNoDeprecations();
 
 	const cachePath = path.join(
-		__dirname,
+		testDirectory,
 		"fixtures",
 		"temp-css-devtool-cache-fixture"
 	);
@@ -330,16 +331,16 @@ describe("Compiler (filesystem caching, css devtool)", () => {
 	});
 
 	/**
-	 * @param {import("../declarations/WebpackOptions").DevTool} devtool devtool to build with
+	 * @param {import("../../declarations/WebpackOptions").DevTool} devtool devtool to build with
 	 * @param {string=} devtoolModuleFilenameTemplate template to build with
 	 * @returns {Promise<string>} the emitted bundle
 	 */
 	function build(devtool, devtoolModuleFilenameTemplate) {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		return new Promise((resolve, reject) => {
 			const compiler = webpack({
-				context: path.join(__dirname, "fixtures", "css-devtool-cache"),
+				context: path.join(testDirectory, "fixtures", "css-devtool-cache"),
 				entry: "./index.js",
 				mode: "development",
 				devtool,
@@ -364,10 +365,10 @@ describe("Compiler (filesystem caching, css devtool)", () => {
 
 			compiler.run((err, stats) => {
 				if (err) return reject(err);
-				if (/** @type {import("../types").Stats} */ (stats).hasErrors()) {
+				if (/** @type {import("../../types").Stats} */ (stats).hasErrors()) {
 					return reject(
 						new Error(
-							/** @type {import("../types").Stats} */ (stats).toString()
+							/** @type {import("../../types").Stats} */ (stats).toString()
 						)
 					);
 				}
@@ -436,7 +437,7 @@ describe("Compiler (filesystem caching, embedded source)", () => {
 	expectNoDeprecations();
 
 	const cachePath = path.join(
-		__dirname,
+		testDirectory,
 		"fixtures",
 		"temp-embedded-source-cache-fixture"
 	);
@@ -460,7 +461,7 @@ describe("Compiler (filesystem caching, embedded source)", () => {
 		}
 
 		/**
-		 * @param {import("../types").Compiler} compiler the compiler
+		 * @param {import("../../types").Compiler} compiler the compiler
 		 * @returns {void}
 		 */
 		apply(compiler) {
@@ -485,11 +486,11 @@ describe("Compiler (filesystem caching, embedded source)", () => {
 	 * @returns {Promise<string>} the emitted bundle
 	 */
 	function build(marker) {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		return new Promise((resolve, reject) => {
 			const compiler = webpack({
-				context: path.join(__dirname, "fixtures", "css-devtool-cache"),
+				context: path.join(testDirectory, "fixtures", "css-devtool-cache"),
 				entry: "./index.js",
 				mode: "development",
 				devtool: false,
@@ -507,10 +508,10 @@ describe("Compiler (filesystem caching, embedded source)", () => {
 
 			compiler.run((err, stats) => {
 				if (err) return reject(err);
-				if (/** @type {import("../types").Stats} */ (stats).hasErrors()) {
+				if (/** @type {import("../../types").Stats} */ (stats).hasErrors()) {
 					return reject(
 						new Error(
-							/** @type {import("../types").Stats} */ (stats).toString()
+							/** @type {import("../../types").Stats} */ (stats).toString()
 						)
 					);
 				}

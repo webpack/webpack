@@ -1,20 +1,22 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+const testDirectory = require("path").resolve(__dirname, "..");
+
+require("../helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 /**
- * @param {import("../").Configuration | import("../").MultiConfiguration} options options
- * @returns {Promise<import("../").MultiStats>} stats
+ * @param {import("../../").Configuration | import("../../").MultiConfiguration} options options
+ * @returns {Promise<import("../../").MultiStats>} stats
  */
 const compile = (options) =>
-	/** @type {Promise<import("../").MultiStats>} */ (
+	/** @type {Promise<import("../../").MultiStats>} */ (
 		new Promise((resolve, reject) => {
-			const webpack = require("..");
+			const webpack = require("../..");
 
-			const compiler = /** @type {import("../").MultiCompiler} */ (
+			const compiler = /** @type {import("../../").MultiCompiler} */ (
 				/** @type {unknown} */ (webpack(/** @type {EXPECTED_ANY} */ (options)))
 			);
 			compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
@@ -24,7 +26,7 @@ const compile = (options) =>
 				if (err) {
 					reject(err);
 				} else {
-					resolve(/** @type {import("../").MultiStats} */ (stats));
+					resolve(/** @type {import("../../").MultiStats} */ (stats));
 				}
 			});
 		})
@@ -36,11 +38,11 @@ describe("MultiStats", () => {
 	it("should create JSON of children stats", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);
@@ -55,11 +57,11 @@ describe("MultiStats", () => {
 	it("should work with a boolean value", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);
@@ -82,11 +84,11 @@ describe("MultiStats", () => {
 	it("should work with a string value", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);
@@ -109,11 +111,11 @@ describe("MultiStats", () => {
 	it("should work with an object value", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);
@@ -160,11 +162,11 @@ describe("MultiStats", () => {
 	it("should work with a boolean value for each children", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);
@@ -191,16 +193,16 @@ describe("MultiStats", () => {
 	it("should work with a string value for each children", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);
 
-		const statsOptions = /** @type {import("../").StatsOptions} */ (
+		const statsOptions = /** @type {import("../../").StatsOptions} */ (
 			/** @type {unknown} */ ({
 				children: ["none", "none"]
 			})
@@ -224,11 +226,11 @@ describe("MultiStats", () => {
 	it("should work with an object value for each children", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);
@@ -281,11 +283,11 @@ describe("MultiStats", () => {
 	it("should work with an mixed values for each children", async () => {
 		const stats = await compile([
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/a"
 			},
 			{
-				context: __dirname,
+				context: testDirectory,
 				entry: "./fixtures/b"
 			}
 		]);

@@ -1,8 +1,9 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const rimraf = require("rimraf");
 
 // Matches VERSION in lib/serialization/FileMiddleware.js.
@@ -56,18 +57,18 @@ const seedUnreferenced = (fs, directory, files) => {
 };
 
 describe("PackFileCacheStrategy cleanup", () => {
-	const tempPath = path.resolve(__dirname, "js", "pack-cleanup");
+	const tempPath = path.resolve(testDirectory, "js", "pack-cleanup");
 
 	/**
-	 * @param {import("../lib/util/fs").IntermediateFileSystem} fs a file system
+	 * @param {import("../../lib/util/fs").IntermediateFileSystem} fs a file system
 	 * @param {string[]=} warnings collects logged warnings
-	 * @returns {import("../lib/cache/PackFileCacheStrategy")} a strategy writing to the temp directory
+	 * @returns {import("../../lib/cache/PackFileCacheStrategy")} a strategy writing to the temp directory
 	 */
 	const createStrategy = (fs, warnings) => {
-		const PackFileCacheStrategy = require("../lib/cache/PackFileCacheStrategy");
-		const { LogType, Logger } = require("../lib/logging/Logger");
+		const PackFileCacheStrategy = require("../../lib/cache/PackFileCacheStrategy");
+		const { LogType, Logger } = require("../../lib/logging/Logger");
 
-		/** @type {import("../lib/logging/Logger").Logger} */
+		/** @type {import("../../lib/logging/Logger").Logger} */
 		const logger = new Logger(
 			(type, args) => {
 				if (warnings && type === LogType.warn && args) {
@@ -77,7 +78,7 @@ describe("PackFileCacheStrategy cleanup", () => {
 			() => logger
 		);
 		return new PackFileCacheStrategy({
-			compiler: /** @type {import("../lib/Compiler")} */ (
+			compiler: /** @type {import("../../lib/Compiler")} */ (
 				/** @type {unknown} */ ({
 					options: { output: { hashFunction: "md4" } }
 				})
@@ -252,15 +253,15 @@ describe("PackFileCacheStrategy cleanup", () => {
 
 		/** @type {Map<string, number>} */
 		const readCounts = new Map();
-		/** @type {import("../lib/util/fs").IntermediateFileSystem} */
+		/** @type {import("../../lib/util/fs").IntermediateFileSystem} */
 		const fs = Object.create(gracefulFs);
 		// only the three argument overload is used by the strategy
-		fs.open = /** @type {import("../lib/util/fs").Open} */ (
+		fs.open = /** @type {import("../../lib/util/fs").Open} */ (
 			/** @type {unknown} */ (
 				(
 					/** @type {string} */ file,
 					/** @type {string} */ flags,
-					/** @type {import("../lib/util/fs").NumberCallback} */ callback
+					/** @type {import("../../lib/util/fs").NumberCallback} */ callback
 				) => {
 					// the strategy joins paths with "/"; normalize so lookups built with
 					// path.join match on Windows too

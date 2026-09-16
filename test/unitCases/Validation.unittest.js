@@ -1,6 +1,6 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 describe("Validation", () => {
 	const createTestCase = (
@@ -11,7 +11,7 @@ describe("Validation", () => {
 	) => {
 		it(`should fail validation for ${name}`, () => {
 			try {
-				const webpack = require("..");
+				const webpack = require("../..");
 
 				webpack(config);
 			} catch (err) {
@@ -34,7 +34,7 @@ describe("Validation", () => {
 	) => {
 		it(`should fail validation for ${name}`, () => {
 			try {
-				const webpack = require("..");
+				const webpack = require("../..");
 
 				webpack.validate(config);
 			} catch (err) {
@@ -58,7 +58,7 @@ describe("Validation", () => {
 			let errored;
 
 			try {
-				const webpack = require("..");
+				const webpack = require("../..");
 
 				webpack(config);
 			} catch (err) {

@@ -1,29 +1,30 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 /** @type {(path: string, callback: (err?: unknown) => void) => void} */
 const rimraf = require("rimraf");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 /**
- * @param {import("../").Configuration} config config
- * @returns {import("../").Compiler} compiler
+ * @param {import("../../").Configuration} config config
+ * @returns {import("../../").Compiler} compiler
  */
 const createCompiler = (config) => {
-	const webpack = require("..");
+	const webpack = require("../..");
 
-	const compiler = /** @type {import("../").Compiler} */ (webpack(config));
+	const compiler = /** @type {import("../../").Compiler} */ (webpack(config));
 	compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
 		createFsFromVolume(new Volume())
 	);
 	return compiler;
 };
 
-const tempFolderPath = path.join(__dirname, "ChangesAndRemovalsTemp");
+const tempFolderPath = path.join(testDirectory, "ChangesAndRemovalsTemp");
 const tempFilePath = path.join(tempFolderPath, "temp-file.js");
 const tempFile2Path = path.join(tempFolderPath, "temp-file2.js");
 
@@ -37,7 +38,7 @@ const createSingleCompiler = () =>
 	});
 
 /**
- * @param {import("../").Compiler} compiler compiler
+ * @param {import("../../").Compiler} compiler compiler
  * @param {() => void} action action
  */
 const onceDone = (compiler, action) => {
@@ -50,7 +51,7 @@ const onceDone = (compiler, action) => {
 };
 
 /**
- * @param {import("../").Compiler} compiler compiler
+ * @param {import("../../").Compiler} compiler compiler
  * @returns {{ removed: string[] | undefined, modified: string[] | undefined }} changes
  */
 const getChanges = (compiler) => {
@@ -127,7 +128,7 @@ describe("ChangesAndRemovals", () => {
 				});
 			})
 		);
-		const watcher = /** @type {import("../").Watching} */ (
+		const watcher = /** @type {import("../../").Watching} */ (
 			compiler.watch({ aggregateTimeout: 200 }, (err) => {
 				if (err) done(err);
 			})
@@ -140,7 +141,7 @@ describe("ChangesAndRemovals", () => {
 
 	it("should track modified files when they've been modified", (done) => {
 		const compiler = createSingleCompiler();
-		/** @type {import("../").Watching | null} */
+		/** @type {import("../../").Watching | null} */
 		let watcher = null;
 
 		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
@@ -154,7 +155,7 @@ describe("ChangesAndRemovals", () => {
 			watcher = null;
 		});
 
-		watcher = /** @type {import("../").Watching} */ (
+		watcher = /** @type {import("../../").Watching} */ (
 			compiler.watch({ aggregateTimeout: 200 }, (err) => {
 				if (err) done(err);
 			})
@@ -167,7 +168,7 @@ describe("ChangesAndRemovals", () => {
 
 	itSkipBun("should track removed file when removing file", (done) => {
 		const compiler = createSingleCompiler();
-		/** @type {import("../").Watching | null} */
+		/** @type {import("../../").Watching | null} */
 		let watcher = null;
 
 		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
@@ -181,7 +182,7 @@ describe("ChangesAndRemovals", () => {
 			watcher = null;
 		});
 
-		watcher = /** @type {import("../").Watching} */ (
+		watcher = /** @type {import("../../").Watching} */ (
 			compiler.watch({ aggregateTimeout: 200 }, (err) => {
 				if (err) done(err);
 			})
