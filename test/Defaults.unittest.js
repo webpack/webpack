@@ -476,6 +476,16 @@ describe("snapshots", () => {
 		            "type": "asset/inline",
 		          },
 		          Object {
+		            "issuer": Object {
+		              "not": /\\\\\\.css\\$/i,
+		            },
+		            "parser": Object {
+		              "exportType": "url",
+		            },
+		            "test": /\\\\\\.css\\$/i,
+		            "type": "css/auto",
+		          },
+		          Object {
 		            "type": "asset/resource",
 		          },
 		        ],
@@ -5344,16 +5354,14 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			-         },
+			@@ ... @@
 			-         "type": "css/global",
 			-       },
-			-       Object {
+			@@ ... @@
 			-         "parser": Object {
 			-           "exportType": "css-style-sheet",
 			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
+			@@ ... @@
 			-         },
 			-         "with": Object {
 			-           "type": "css",
@@ -5365,7 +5373,13 @@ describe("snapshots", () => {
 			-         },
 			-         "parser": Object {
 			-           "exportType": "css-style-sheet",
+			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			-         },
+			-       },
+			-       Object {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
@@ -5393,6 +5407,17 @@ describe("snapshots", () => {
 			-       },
 			-       Object {
 			-         "resolve": Object {
+			@@ ... @@
+			-             "issuer": Object {
+			-               "not": /\\.css$/i,
+			-             },
+			-             "parser": Object {
+			-               "exportType": "url",
+			-             },
+			-             "test": /\\.css$/i,
+			-             "type": "css/auto",
+			-           },
+			-           Object {
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
@@ -5437,11 +5462,13 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
-			+           },
-			+         ],
 			@@ ... @@
+			+         ],
+			+       },
 			+     ],
 			+     "generator": Object {
+			@@ ... @@
+			-         },
 			@@ ... @@
 			-       "css": Object {
 			-         "customMedia": true,
@@ -5479,7 +5506,6 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -5554,6 +5580,9 @@ describe("snapshots", () => {
 			+     "workerChunkFilename": "[name].mjs",
 			+     "workerChunkLoading": "import",
 			@@ ... @@
+			-           "...",
+			-         ],
+			-       },
 			-       "css-import": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -5597,11 +5626,9 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			-           "...",
-			-         ],
+			@@ ... @@
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			-       },
 			@@ ... @@
 			+           ".html",
 			@@ ... @@
