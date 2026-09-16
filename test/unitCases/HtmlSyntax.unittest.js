@@ -7158,6 +7158,19 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		expect(small[0].attributes[0].value).toBe("c");
 	});
 
+	it("handles a large structurally sparse document", () => {
+		// Exercise both byte-length estimate caps without needing enough nodes or
+		// attributes to fill the speculative columns.
+		const nodes = body(`<!--${"x".repeat(3200000)}--><p>x</p>`);
+		expect(nodes).toHaveLength(1);
+		expect(nodes[0]).toEqual(
+			expect.objectContaining({ tagName: "p", children: [expect.any(Object)] })
+		);
+		expect(body("<b>y</b>")[0]).toEqual(
+			expect.objectContaining({ tagName: "b" })
+		);
+	});
+
 	it("merges texts left adjacent by a skipped comment", () => {
 		const nodes = bodyOf("a<!--c-->b", { comments: true });
 		expect(nodes).toEqual([
