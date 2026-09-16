@@ -69,7 +69,12 @@ This document explains the structure of the `test/` directory in the Webpack pro
 ### 12. `specCases/`
 
 - **Purpose**: Holds the runners for specification-conformance suites.
-- **Files**: `*.spectest.js` files for test262, html5lib, WPT syntax equivalence, and CSS parsing.
+- **Files**:
+  - `test262.spectest.js` — `yarn test:test262`
+  - `test262-parser.spectest.js` — `yarn test:test262-parser`
+  - `html5lib.spectest.js` — `yarn test:html5lib`
+  - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
+  - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
 
 ### 13. `test262-cases/`
 
