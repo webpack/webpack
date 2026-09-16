@@ -307,6 +307,7 @@ export default defineConfig([
 		files: ["assembly/**/*.ts"],
 		languageOptions: { parser: tseslint.parser, sourceType: "module" },
 		rules: {
+			eqeqeq: "off",
 			"no-undef": "off",
 			"no-loss-of-precision": "off",
 			"new-cap": ["error", { capIsNew: false }],
