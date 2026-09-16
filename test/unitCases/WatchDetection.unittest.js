@@ -1,11 +1,12 @@
 "use strict";
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 
-const webpack = require("..");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();
 
@@ -36,13 +37,13 @@ describe("WatchDetection", () => {
 			invalidate ? " with invalidate call" : ""
 		}`, () => {
 			const fixturePath = path.join(
-				__dirname,
+				testDirectory,
 				"fixtures",
 				`temp-${changeTimeout}`
 			);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
-			const loaderPath = path.join(__dirname, "fixtures", "delay-loader.js");
+			const loaderPath = path.join(testDirectory, "fixtures", "delay-loader.js");
 
 			beforeAll(() => {
 				try {
@@ -85,7 +86,7 @@ describe("WatchDetection", () => {
 					}
 				});
 				const memfs = (compiler.outputFileSystem =
-					/** @type {import("../").OutputFileSystem & import("memfs").IFs} */ (
+					/** @type {import("../../").OutputFileSystem & import("memfs").IFs} */ (
 						/** @type {unknown} */ (createFsFromVolume(new Volume()))
 					));
 				/** @type {(() => void) | null | undefined} */
@@ -94,7 +95,7 @@ describe("WatchDetection", () => {
 					if (onChange) onChange();
 				});
 
-				/** @type {import("../").Watching} */
+				/** @type {import("../../").Watching} */
 				let watcher;
 
 				step1();
@@ -115,7 +116,7 @@ describe("WatchDetection", () => {
 						}
 					};
 
-					watcher = /** @type {import("../").Watching} */ (
+					watcher = /** @type {import("../../").Watching} */ (
 						compiler.watch(
 							{
 								aggregateTimeout: 50,

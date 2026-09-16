@@ -1,16 +1,17 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const fs = require("fs");
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const rimraf = require("rimraf");
-const DelegatedModule = require("../lib/dll/DelegatedModule");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const DelegatedModule = require("../../lib/dll/DelegatedModule");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 /**
- * @param {import("../").Compiler} compiler compiler
- * @returns {Promise<import("../").Stats>} stats
+ * @param {import("../../").Compiler} compiler compiler
+ * @returns {Promise<import("../../").Stats>} stats
  */
 const run = (compiler) =>
 	new Promise((resolve, reject) => {
@@ -25,7 +26,7 @@ const run = (compiler) =>
 	});
 
 /**
- * @param {import("../").Compiler} compiler compiler
+ * @param {import("../../").Compiler} compiler compiler
  * @returns {Promise<void>}
  */
 const close = (compiler) =>
@@ -37,7 +38,7 @@ describe("DelegatedModule persistent cache without Dll plugins", () => {
 	expectNoDeprecations();
 
 	const tempPath = path.resolve(
-		__dirname,
+		testDirectory,
 		"js",
 		"delegated-module-fs-cache-no-dll"
 	);
@@ -54,7 +55,7 @@ describe("DelegatedModule persistent cache without Dll plugins", () => {
 	});
 
 	it("should restore DelegatedModule from the filesystem cache without Dll plugins", async () => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		fs.writeFileSync(
 			manifestPath,
@@ -79,7 +80,7 @@ describe("DelegatedModule persistent cache without Dll plugins", () => {
 
 		/** @type {string | undefined} */
 		let delegatedIdentifier;
-		/** @type {import("../lib/dll/DelegatedModule").DelegatedModuleData | undefined} */
+		/** @type {import("../../lib/dll/DelegatedModule").DelegatedModuleData | undefined} */
 		let storedDelegateData;
 
 		const first = webpack({
@@ -155,7 +156,7 @@ describe("DelegatedModule persistent cache without Dll plugins", () => {
 		// Drop the manifest so step 2 cannot re-read DLL metadata from disk.
 		fs.unlinkSync(manifestPath);
 
-		/** @type {import("../").Module | undefined} */
+		/** @type {import("../../").Module | undefined} */
 		let restored;
 		/** @type {Error | null | undefined} */
 		let restoreError;
@@ -228,7 +229,7 @@ describe("DelegatedModule persistent cache without Dll plugins", () => {
 	}, 60000);
 
 	it("should not resolve dll/* in a normal compile without DllReferencePlugin", async () => {
-		const webpack = require("..");
+		const webpack = require("../..");
 
 		fs.writeFileSync(
 			manifestPath,

@@ -1,12 +1,13 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const path = require("path");
+const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
 const prettyFormat = require("pretty-format").default;
-const webpack = require("..");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/g;
@@ -106,14 +107,14 @@ expect.addSnapshotSerializer({
 
 const defaults = {
 	options: {
-		context: path.resolve(__dirname, "fixtures", "errors"),
+		context: path.resolve(testDirectory, "fixtures", "errors"),
 		mode: "none",
 		devtool: false,
 		optimization: {
 			minimize: false
 		}
 	},
-	outputFileSystem: /** @type {import("../").OutputFileSystem} */ ({
+	outputFileSystem: /** @type {import("../../").OutputFileSystem} */ ({
 		mkdir(
 			/** @type {string} */ dir,
 			/** @type {(err?: Error | null) => void} */ callback
@@ -137,13 +138,13 @@ const defaults = {
 };
 
 /**
- * @param {import("../").Configuration} options options
- * @returns {Promise<{ errors: import("../").StatsError[], warnings: import("../").StatsError[] }>} errors and warnings
+ * @param {import("../../").Configuration} options options
+ * @returns {Promise<{ errors: import("../../").StatsError[], warnings: import("../../").StatsError[] }>} errors and warnings
  */
 async function compile(options) {
 	const stats = await new Promise((resolve, reject) => {
 		const compiler = webpack(
-			/** @type {import("../").Configuration} */ ({
+			/** @type {import("../../").Configuration} */ ({
 				...defaults.options,
 				...options
 			})
@@ -273,7 +274,7 @@ describe("Errors", () => {
 	});
 
 	const isCaseInsensitiveFilesystem = fs.existsSync(
-		path.resolve(__dirname, "fixtures", "errors", "FILE.js")
+		path.resolve(testDirectory, "fixtures", "errors", "FILE.js")
 	);
 	if (isCaseInsensitiveFilesystem) {
 		it("should emit warning for case-preserved disk", async () => {
@@ -409,7 +410,7 @@ describe("Errors", () => {
 		await expect(
 			compile({
 				entry: "./no-errors-deprecate",
-				plugins: [require("./fixtures/errors/throw-error-plugin")]
+				plugins: [require("../fixtures/errors/throw-error-plugin")]
 			})
 		).rejects.toMatchInlineSnapshot(`
 		Object {
@@ -770,11 +771,11 @@ describe("Loaders", () => {
 	});
 
 	const identityLoader = path.resolve(
-		__dirname,
+		testDirectory,
 		"fixtures/errors/identity-loader.js"
 	);
 	const addCommentLoader = path.resolve(
-		__dirname,
+		testDirectory,
 		"fixtures/errors/add-comment-loader.js"
 	);
 
@@ -896,7 +897,7 @@ describe("Loaders", () => {
 	});
 
 	it("should show 'source code omitted for this binary file' when module parsing fails for binary files", async () => {
-		const folder = path.join(__dirname, "/fixtures");
+		const folder = path.join(testDirectory, "/fixtures");
 		await expect(
 			compile({
 				mode: "development",
