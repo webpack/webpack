@@ -1,15 +1,15 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
 const vm = require("vm");
-const webpack = require("..");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
-/** @import NormalModule from "../lib/NormalModule" */
+/** @import NormalModule from "../../lib/NormalModule" */
 
 const needDebug = typeof process.env.DEBUG !== "undefined";
 
@@ -21,11 +21,11 @@ const outputFileSystem = needDebug
 			return createFsFromVolume(new Volume());
 		})();
 
-const test262Dir = path.resolve(__dirname, "./test262-cases/");
+const test262Dir = path.resolve(__dirname, "../test262-cases/");
 const test262HarnessDir = path.resolve(test262Dir, "./harness");
 const strictModeLoader = path.resolve(
 	__dirname,
-	"./helpers/test262StrictModeLoader.js"
+	"../helpers/test262StrictModeLoader.js"
 );
 
 /* cspell:disable */
@@ -1018,7 +1018,7 @@ describe("test262", () => {
 				const name = path.posix.relative(baseDir, testFile);
 				const outputPath = path.resolve(
 					__dirname,
-					"./js/test262-cases",
+					"../js/test262-cases",
 					mode,
 					path.join(path.dirname(name), path.basename(name, path.extname(name)))
 				);

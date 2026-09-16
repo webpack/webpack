@@ -3,16 +3,16 @@
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
-const JavascriptParser = require("../lib/javascript/JavascriptParser");
+const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
 /** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */
 /** @typedef {{ ranges?: boolean, locations?: boolean, comments?: boolean }} Mode */
 /** @typedef {import("acorn").Program} Program */
 /** @typedef {import("acorn").Comment} Comment */
-/** @typedef {import("../lib/javascript/JavascriptParser").ParseResult} ParseResult */
+/** @typedef {import("../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
 
-const corpusDir = path.resolve(__dirname, "./test262-cases/test");
+const corpusDir = path.resolve(__dirname, "../test262-cases/test");
 const hasCorpus =
 	fs.existsSync(corpusDir) && fs.readdirSync(corpusDir).length > 0;
 

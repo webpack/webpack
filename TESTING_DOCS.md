@@ -66,37 +66,47 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Type-checking tests, likely for TypeScript integration.
 - **Usage**: Ensures proper type definitions and compliance.
 
-### 12. `test262-cases/`
+### 12. `specCases/`
+
+- **Purpose**: Holds the runners for specification-conformance suites.
+- **Files**:
+  - `test262.spectest.js` — `yarn test:test262`
+  - `test262-parser.spectest.js` — `yarn test:test262-parser`
+  - `html5lib.spectest.js` — `yarn test:html5lib`
+  - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
+  - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
+
+### 13. `test262-cases/`
 
 - **Purpose**: ECMAScript test262 conformance test cases.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/test262-cases`. Test runner: `test/test262.spectest.js`.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/test262-cases`. Test runner: `test/specCases/test262.spectest.js`.
 
-### 12b. `html5lib-tests/`
+### 13b. `html5lib-tests/`
 
 - **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/html5lib-webpack.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
 
-### 12c. `wpt/`
+### 13c. `wpt/`
 
 - **Purpose**: web-platform-tests, read two ways. `html/syntax/parsing/resources/*.dat` is the HTML tree-construction conformance corpus for `parseHtml` (html5lib-tests dropped its copy in `224991e`). The `.html` documents under `html/`, `conformance-checkers/` and `dom/nodes`, plus the declarations the `css/**/parsing/` tests state a verdict for, are the printers' corpus: minifying must not change the DOM webpack's parser builds, the DOM Chrome builds, or the style Chrome computes.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/html5lib-tests` — initialize both to run the whole suite — and `test/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`PUPPETEER_EXECUTABLE_PATH` picks a binary other than the installed channel). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/html5lib-tests` — initialize both to run the whole suite — and `test/specCases/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`PUPPETEER_EXECUTABLE_PATH` picks a binary other than the installed channel). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
 
-### 12d. `css-parsing-tests/`
+### 13d. `css-parsing-tests/`
 
 - **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/specCases/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
 
-### 13. `watchCases/`
+### 14. `watchCases/`
 
 - **Purpose**: Tests for Webpack’s watch mode functionality.
 - **Usage**: Ensures file changes trigger correct rebuild behavior.
 
-### 14. `unitCases/`
+### 15. `unitCases/`
 
 - **Purpose**: Contains `*.unittest.js` unit tests for various functionalities.
 - **Usage**: Ensures individual modules and functions work as expected.
 
-### 15. `CodeSizeTestCases.size.js`
+### 16. `CodeSizeTestCases.size.js`
 
 - **Purpose**: Measures how large the code webpack generates is, so a change to `lib/` that grows (or shrinks) every bundle is visible.
 - **Usage**: `yarn test:size` builds every `configCases/` case — one plain Node.js process, outside jest, no worker pool — and writes a JSON report of what each case emitted: the raw, gzip, brotli and zstd size of every asset, plus a per-runtime-module breakdown (total bytes over the suite, how many cases emit it, the biggest single instance) — which is what shows _which_ runtime grew, which is no longer emitted at all, and which one is simply large. The CI job (`.github/workflows/code-size.yml`) compares the report against the one `main` last uploaded, posts it as a pull request comment (updated in place on every push) and repeats it in the job summary.
@@ -105,7 +115,7 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Options**: `--output <file>` (report path), `--baseline <file>` (report to compare against), `--summary <file>` (append the markdown comparison, e.g. `$GITHUB_STEP_SUMMARY`), `--filter` / `--negative-filter` (regexps matched against `<category>/<case>`, also read from `FILTER` / `NEGATIVE_FILTER`).
 - **Note**: the cases are built with the defaults a user gets — minification on, no `output.pathinfo` — not with the `ConfigTestCases` ones. Needs Node.js >= 22.15 for zstd.
 
-### 16. `unitCases/BannerPlugin.unittest.js`
+### 17. `unitCases/BannerPlugin.unittest.js`
 
 - **Purpose**: Tests Webpack’s `BannerPlugin` functionality.
 - **Usage**: Ensures that the plugin correctly adds banners to the bundled files.
@@ -138,7 +148,7 @@ During the test run, webpack compiles this project and compares the result with 
 
 ### Suites that drive a real browser
 
-`unitCases/ProfilingPlugin.unittest.js`, `syntaxEquivalence.spectest.js` and
+`unitCases/ProfilingPlugin.unittest.js`, `specCases/syntaxEquivalence.spectest.js` and
 `WebpackDevServer.longtest.js` launch Chrome through `test/helpers/launchChrome.js`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
@@ -207,6 +217,7 @@ yarn test
 | Modified directory/file        | Command                                                                                                                                    |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `test/unitCases/*.unittest.js` | `yarn test:base --testPathPatterns="<filename>"`                                                                                           |
+| `test/specCases/`              | Run the matching `yarn test:<suite>` command                                                                                               |
 | `test/cases/`                  | `yarn test:basic`                                                                                                                          |
 | `test/configCases/`            | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                     |
 | `test/statsCases/`             | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                                                      |

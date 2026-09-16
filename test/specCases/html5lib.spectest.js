@@ -21,18 +21,18 @@
 const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
-const webpack = require("..");
+const webpack = require("../..");
 const {
 	A,
 	QUOTE_NONE,
 	decodeEntities,
 	parseHtml,
 	tokenize
-} = require("../lib/html/syntax");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
-const serialize = require("./helpers/serializeHtmlTree");
+} = require("../../lib/html/syntax");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const serialize = require("../helpers/serializeHtmlTree");
 
-const testsDir = path.resolve(__dirname, "./html5lib-tests");
+const testsDir = path.resolve(__dirname, "../html5lib-tests");
 
 // ---------------------------------------------------------------------------
 // 1. webpack build (tokenizer corpus, no-crash)
@@ -229,7 +229,7 @@ describe("html5lib-tests webpack build", () => {
 // ---------------------------------------------------------------------------
 
 // The corpus html5lib-tests carried until 224991e, in html5lib's `.dat` format.
-const treeDir = path.resolve(__dirname, "./wpt/html/syntax/parsing/resources");
+const treeDir = path.resolve(__dirname, "../wpt/html/syntax/parsing/resources");
 
 /** @type {Set<string>} intentional, documented exceptions */
 const KNOWN_DIVERGENCES = new Set([

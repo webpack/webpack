@@ -10,14 +10,14 @@ const path = require("path");
 const {
 	SourceProcessor: CssSourceProcessor,
 	readToken
-} = require("../lib/css/syntax");
+} = require("../../lib/css/syntax");
 const {
 	BOOLEAN_ATTRIBUTES,
 	EMPTY_REMOVABLE_ATTRIBUTES,
 	ENUMERATED_ATTRIBUTE_NAMES,
 	ENUMERATED_KEYWORDS,
 	REWRITABLE_ATTRIBUTES
-} = require("../lib/html/data");
+} = require("../../lib/html/data");
 const {
 	A,
 	NS_MATHML,
@@ -26,9 +26,9 @@ const {
 	SourceProcessor: HtmlSourceProcessor,
 	decodeEntities,
 	parseHtml
-} = require("../lib/html/syntax");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
-const launchChrome = require("./helpers/launchChrome");
+} = require("../../lib/html/syntax");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const launchChrome = require("../helpers/launchChrome");
 const {
 	benchmarkDocuments,
 	benchmarkStylesheets,
@@ -37,7 +37,7 @@ const {
 	conditionSignatures,
 	installHelpers,
 	numericallyEqual
-} = require("./helpers/syntaxEquivalence");
+} = require("../helpers/syntaxEquivalence");
 const {
 	WPT,
 	browserCorpus,
@@ -47,11 +47,11 @@ const {
 	hasCorpus,
 	nameOf,
 	readDocument
-} = require("./helpers/wptCorpus");
+} = require("../helpers/wptCorpus");
 
-/** @import { Fixture, PageHelpers } from "./helpers/syntaxEquivalence" */
+/** @import { Fixture, PageHelpers } from "../helpers/syntaxEquivalence" */
 
-const CONFIG_CASES = path.join(__dirname, "configCases");
+const CONFIG_CASES = path.join(__dirname, "../configCases");
 // How many documents go to the page at once — the wpt corpus is far larger than
 // one `evaluate` argument should carry.
 const BATCH = 150;
@@ -1218,7 +1218,7 @@ describe("wpt css token adjacency", () => {
 			const token = readToken(
 				css,
 				pos,
-				/** @type {import("../lib/css/syntax").MutableToken} */ ({})
+				/** @type {import("../../lib/css/syntax").MutableToken} */ ({})
 			);
 			if (token === undefined) break;
 			pos = token.end;
