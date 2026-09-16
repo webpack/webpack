@@ -12,11 +12,11 @@
 const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
-const webpack = require("..");
-const { parseABlocksContents } = require("../lib/css/syntax");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const webpack = require("../..");
+const { parseABlocksContents } = require("../../lib/css/syntax");
+const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
-const casesDir = path.resolve(__dirname, "./css-parsing-tests");
+const casesDir = path.resolve(__dirname, "../css-parsing-tests");
 const MODES = ["development", "production"];
 // A graceful webpack error/warning on malformed input is fine; an internal
 // exception leaking through (parser/generator bug) is not.

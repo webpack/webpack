@@ -17,7 +17,7 @@ const config = {
 		"<rootDir>/test/*.basictest.js",
 		"<rootDir>/test/*.longtest.js",
 		"<rootDir>/test/unitCases/*.unittest.js",
-		"<rootDir>/test/*.spectest.js"
+		"<rootDir>/test/specCases/*.spectest.js"
 	],
 	watchPathIgnorePatterns: [
 		"<rootDir>/.git",

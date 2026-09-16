@@ -69,11 +69,11 @@
     "test:integration": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
     "test:integration:a": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\"",
     "test:integration:b": "yarn test:base --testMatch \"<rootDir>/test/*.longtest.js\"",
-    "test:test262": "yarn test:base --testMatch \"<rootDir>/test/test262.spectest.js\"",
-    "test:test262-parser": "yarn test:base --testMatch \"<rootDir>/test/test262-parser.spectest.js\"",
-    "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/html5lib.spectest.js\"",
-    "test:syntax-equivalence": "yarn test:base --testMatch \"<rootDir>/test/syntaxEquivalence.spectest.js\"",
-    "test:css-parsing": "yarn test:base --testMatch \"<rootDir>/test/cssParsing-webpack.spectest.js\"",
+    "test:test262": "yarn test:base --testMatch \"<rootDir>/test/specCases/test262.spectest.js\"",
+    "test:test262-parser": "yarn test:base --testMatch \"<rootDir>/test/specCases/test262-parser.spectest.js\"",
+    "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/specCases/html5lib.spectest.js\"",
+    "test:syntax-equivalence": "yarn test:base --testMatch \"<rootDir>/test/specCases/syntaxEquivalence.spectest.js\"",
+    "test:css-parsing": "yarn test:base --testMatch \"<rootDir>/test/specCases/cssParsing-webpack.spectest.js\"",
 		"test:deno": "yarn test:base:deno --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" \"<rootDir>/test/unitCases/*.unittest.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|WebpackDevServer)\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --allow-net --import-map=test/deno-import-map.json --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --workerIdleMemoryLimit=512MB --logHeapUsage",
 		"test:bun": "yarn test:base:bun --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" \"<rootDir>/test/unitCases/*.unittest.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|WebpackDevServer)\"",
@@ -93,10 +93,10 @@
     "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
     "cover:integration:a": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
     "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
-    "cover:test262": "yarn cover:base --testMatch \"<rootDir>/test/test262.spectest.js\" --coverage",
-    "cover:html5lib": "yarn cover:base --testMatch \"<rootDir>/test/html5lib.spectest.js\" --coverage",
-    "cover:syntax-equivalence": "yarn cover:base --testMatch \"<rootDir>/test/syntaxEquivalence.spectest.js\" --coverage",
-    "cover:css-parsing": "yarn cover:base --testMatch \"<rootDir>/test/cssParsing-webpack.spectest.js\" --coverage"
+    "cover:test262": "yarn cover:base --testMatch \"<rootDir>/test/specCases/test262.spectest.js\" --coverage",
+    "cover:html5lib": "yarn cover:base --testMatch \"<rootDir>/test/specCases/html5lib.spectest.js\" --coverage",
+    "cover:syntax-equivalence": "yarn cover:base --testMatch \"<rootDir>/test/specCases/syntaxEquivalence.spectest.js\" --coverage",
+    "cover:css-parsing": "yarn cover:base --testMatch \"<rootDir>/test/specCases/cssParsing-webpack.spectest.js\" --coverage"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
