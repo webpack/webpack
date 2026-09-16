@@ -2747,6 +2747,7 @@ const collectInitialValueKeywords = () => {
 	/** @type {[string, string][]} */
 	const out = [];
 	const stated = new Map(SUPPLEMENT.initialValueKeywords);
+	const readsApart = new Set(SUPPLEMENT.initialKeywordsAnEngineReadsApart);
 	for (const [name, entry] of Object.entries(properties)) {
 		// `mdn-data`'s own types omit the field, which its data does carry.
 		const written = /** @type {{ initial?: string | string[] }} */ (entry)
@@ -2773,6 +2774,9 @@ const collectInitialValueKeywords = () => {
 		// Chromium: `outline-width:initial` computes to 1.5px at `zoom:2` and
 		// `outline-width:medium` to 3px.
 		if (lengthKeywords.has(initial)) continue;
+		// WHY: The spec states one initial and an engine reads another, so writing
+		// the keyword back is a different declaration rather than the same one.
+		if (readsApart.has(name)) continue;
 		out.push([name, initial]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
@@ -3773,7 +3777,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3863,6 +3867,20 @@ const SUPPLEMENT = {
 	// Chromium under both `dir=ltr` and `dir=rtl`: `initial`, `start` and `unset`
 	// compute alike and paint the glyph at the same offset.
 	initialValueKeywords: [["text-align", "start"]],
+	// WHY: Not derivable — `mdn-data` states the initial its spec gives, and `bcd`
+	// answers when a value arrived rather than what `initial` computes to. Each of
+	// these ships a keyword an engine reads apart from `initial`, so writing it
+	// back is a different declaration. Measured in headless Chromium:
+	// `outline-color:auto` and `text-emphasis-position:auto` are refused outright,
+	// `overflow-block` and `overflow-inline` compute `visible` where the spec says
+	// `auto`, and `text-autospace` computes `no-autospace` where it says `normal`.
+	initialKeywordsAnEngineReadsApart: [
+		"outline-color",
+		"overflow-block",
+		"overflow-inline",
+		"text-autospace",
+		"text-emphasis-position"
+	],
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
 	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],

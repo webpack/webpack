@@ -36,6 +36,7 @@ test/configCases/html/minimize-rewrite-referenced-value/** eol=lf
 test/configCases/html/minimize-spell-back-referenced-value/** eol=lf
 test/configCases/css/minify-at-rules-and-values/** eol=lf
 test/configCases/css/minify-color-names/** eol=lf
+test/configCases/css/minify-initial-keyword-engine-gap/** eol=lf
 test/configCases/css/minify-modern-longhands/** eol=lf
 test/configCases/css/minify-selectors-and-functions/** eol=lf
 test/configCases/css/minify-value-keywords/** eol=lf
