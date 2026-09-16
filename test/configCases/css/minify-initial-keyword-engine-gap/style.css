@@ -1,0 +1,13 @@
+/* Each spells an initial the spec gives and an engine reads apart from
+   `initial`, so the keyword is not written back. */
+.a { outline-color: initial }
+.b { text-emphasis-position: initial }
+.c { overflow-block: initial }
+.d { overflow-inline: initial }
+.e { text-autospace: initial }
+
+/* A property whose keyword the engine does read as `initial` still takes it.
+   Both are ones this engine implements, so the comparison can see them. */
+.f { text-fit: initial }
+.g { caption-side: initial }
+.h { empty-cells: initial }
