@@ -214,7 +214,7 @@
     "simple-git": "^3.28.0",
     "style-loader": "^4.0.0",
     "terser": "^5.46.2",
-    "three": "^0.185.1",
+    "three": "^0.186.0",
     "tinybench": "^6.0.1",
     "toml": "^5.0.0",
     "ts-loader": "^9.6.0",
