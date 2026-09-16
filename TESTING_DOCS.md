@@ -91,9 +91,9 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Tests for Webpack’s watch mode functionality.
 - **Usage**: Ensures file changes trigger correct rebuild behavior.
 
-### 14. `*.unittest.js`
+### 14. `unitCases/`
 
-- **Purpose**: Contains unit tests for various functionalities.
+- **Purpose**: Contains `*.unittest.js` unit tests for various functionalities.
 - **Usage**: Ensures individual modules and functions work as expected.
 
 ### 15. `CodeSizeTestCases.size.js`
@@ -138,7 +138,7 @@ During the test run, webpack compiles this project and compares the result with 
 
 ### Suites that drive a real browser
 
-`ProfilingPlugin.unittest.js`, `syntaxEquivalence.spectest.js` and
+`unitCases/ProfilingPlugin.unittest.js`, `syntaxEquivalence.spectest.js` and
 `WebpackDevServer.longtest.js` launch Chrome through `test/helpers/launchChrome.js`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
@@ -204,20 +204,20 @@ yarn test
 
 **Choose test command based on modified directory:**
 
-| Modified directory/file   | Command                                                                                                                                    |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `test/*.unittest.js`      | `yarn test:base --testPathPatterns="<filename>"`                                                                                           |
-| `test/cases/`             | `yarn test:basic`                                                                                                                          |
-| `test/configCases/`       | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                     |
-| `test/statsCases/`        | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                                                      |
-| `test/watchCases/`        | `yarn test:base --testPathPatterns="WatchTestCases"`                                                                                       |
-| `test/hotCases/`          | `yarn test:base --testPathPatterns="HotTestCases"`                                                                                         |
-| `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                                                                      |
-| `lib/runtime/`            | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                                                         |
-| `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)                                                      |
-| `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)                                                    |
-| `test/wpt/`               | `yarn test:html5lib` + `yarn test:syntax-equivalence` (require `git submodule update --init --depth 1 test/html5lib-tests test/wpt` first) |
-| `test/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first)                                              |
+| Modified directory/file        | Command                                                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `test/unitCases/*.unittest.js` | `yarn test:base --testPathPatterns="<filename>"`                                                                                           |
+| `test/cases/`                  | `yarn test:basic`                                                                                                                          |
+| `test/configCases/`            | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                     |
+| `test/statsCases/`             | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                                                      |
+| `test/watchCases/`             | `yarn test:base --testPathPatterns="WatchTestCases"`                                                                                       |
+| `test/hotCases/`               | `yarn test:base --testPathPatterns="HotTestCases"`                                                                                         |
+| `test/benchmarkCases/`         | `FILTER="<case-name>" yarn benchmark`                                                                                                      |
+| `lib/runtime/`                 | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                                                         |
+| `test/test262-cases/`          | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)                                                      |
+| `test/html5lib-tests/`         | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)                                                    |
+| `test/wpt/`                    | `yarn test:html5lib` + `yarn test:syntax-equivalence` (require `git submodule update --init --depth 1 test/html5lib-tests test/wpt` first) |
+| `test/css-parsing-tests/`      | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first)                                              |
 
 **Running a single test case** with `--testNamePattern`. The test name format is `<category> <case-name>` (e.g., `css basic`, `asset url`):
 

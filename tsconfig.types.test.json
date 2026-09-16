@@ -14,7 +14,7 @@
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
     "test/*.size.js",
-    "test/*.unittest.js",
+    "test/unitCases/*.unittest.js",
     "test/*.basictest.js",
     "test/*.test.js",
     "test/*.longtest.js",

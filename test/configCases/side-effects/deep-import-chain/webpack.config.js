@@ -10,7 +10,7 @@ const path = require("path");
 // chain via `HarmonyImportSideEffectDependency.getModuleEvaluationSideEffectsState`,
 // which used to recurse and overflow V8's stack on 5.107.0 (issue #20986).
 // The chain here is linear (mod-N is terminal) — that's enough to exercise
-// the same recursive path. The unit test in `test/NormalModule.unittest.js`
+// the same recursive path. The unit test in `test/unitCases/NormalModule.unittest.js`
 // covers a 20000-deep chain to assert the algorithm is stack-safe
 // regardless of size.
 const N = 500;
