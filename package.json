@@ -219,6 +219,7 @@
     "toml": "^5.0.0",
     "ts-loader": "^9.6.0",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.0",
     "unified": "^11.0.5",
     "url-loader": "^4.1.0",
     "wast-loader": "^1.12.1",

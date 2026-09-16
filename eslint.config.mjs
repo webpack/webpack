@@ -2,6 +2,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import config from "eslint-config-webpack";
 import configs from "eslint-config-webpack/configs.js";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig([
 	globalIgnores([
@@ -26,10 +27,6 @@ export default defineConfig([
 		"test/js/**/*.*",
 		"test/test262-cases/**/*.*",
 		"test/wpt/**/*.*",
-
-		// TODO fix me
-		// This is not exactly typescript
-		"assembly/**/*.ts",
 
 		// Ignore some folders
 		"benchmark",
@@ -304,6 +301,17 @@ export default defineConfig([
 		rules: {
 			"import/extensions": "off",
 			"import/no-unresolved": "off"
+		}
+	},
+	{
+		files: ["assembly/**/*.ts"],
+		languageOptions: { parser: tseslint.parser, sourceType: "module" },
+		rules: {
+			"no-undef": "off",
+			"no-loss-of-precision": "off",
+			"new-cap": ["error", { capIsNew: false }],
+			strict: "off",
+			"n/no-unsupported-features/es-syntax": "off"
 		}
 	},
 	{
