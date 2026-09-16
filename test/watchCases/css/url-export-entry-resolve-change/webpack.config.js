@@ -5,6 +5,7 @@ module.exports = {
 	mode: "development",
 	devtool: false,
 	target: "web",
+	// Memory cache keeps the issuer module when only the URL target changes.
 	cache: {
 		type: "memory"
 	},
