@@ -9112,6 +9112,24 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 				{ code: "eof-in-cdata", slice: "", severity: "error" }
 			]);
 		});
+
+		it("reports and replaces NUL characters", () => {
+			const source = `<svg><![CDATA[a${NUL}b${NUL}c]]></svg>`;
+			expect(errorsOf(source, foreign)).toEqual([
+				{
+					code: "unexpected-null-character",
+					slice: NUL,
+					severity: "warning"
+				},
+				{
+					code: "unexpected-null-character",
+					slice: NUL,
+					severity: "warning"
+				}
+			]);
+			const svg = body(source)[0];
+			expect(/** @type {MatText} */ (svg.children[0]).data).toBe("a�b�c");
+		});
 	});
 
 	it("reports unexpected-null-character from each state that consumes one", () => {
