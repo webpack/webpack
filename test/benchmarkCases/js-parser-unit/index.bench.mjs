@@ -29,11 +29,16 @@ const typescriptSource = fs.readFileSync(
 // "three" import condition resolves to build/three.module.js
 const threeEsmPath = fileURLToPath(import.meta.resolve("three"));
 const threeEsmSource = fs.readFileSync(threeEsmPath, "utf8");
+const threeEsmMinSource = fs.readFileSync(
+	fileURLToPath(
+		new URL("../../js/benchmark/three.module.min.js", import.meta.url)
+	),
+	"utf8"
+);
 // Popular libraries also shipped as devDependencies.
 const reactSource = readPkgFile("react", "cjs/react.development.js");
 const reactDomSource = readPkgFile("react-dom", "cjs/react-dom.development.js");
 const lodashSource = readPkgFile("lodash", "lodash.js");
-const lodashMinSource = readPkgFile("lodash", "lodash.min.js");
 const lodashEsSource = readPkgFile("lodash-es", "lodash.js");
 
 // Tokenize-only: drive WebpackParser's owned tokenizer to EOF, no AST/walk.
@@ -89,9 +94,12 @@ export default (bench) => {
 			new JavascriptParser("module").parse(threeEsmSource, {});
 		}
 	);
-	bench.add("unit benchmark \"js-parser-unit\", source 'lodash.min.js'", () => {
-		new JavascriptParser("auto").parse(lodashMinSource, {});
-	});
+	bench.add(
+		"unit benchmark \"js-parser-unit\", source 'three.module.min.js'",
+		() => {
+			new JavascriptParser("module").parse(threeEsmMinSource, {});
+		}
+	);
 	bench.add(
 		"unit benchmark \"js-parser-unit\", source 'react.development.js'",
 		() => {
@@ -116,10 +124,13 @@ export default (bench) => {
 	bench.add('unit benchmark "js-parser-unit", tokenize typescript', () => {
 		tokenizeJs(typescriptSource, "module");
 	});
-	bench.add('unit benchmark "js-parser-unit", tokenize lodash.js', () => {
-		tokenizeJs(lodashSource, "script");
+	bench.add('unit benchmark "js-parser-unit", tokenize three.module.js', () => {
+		tokenizeJs(threeEsmSource, "module");
 	});
-	bench.add('unit benchmark "js-parser-unit", tokenize lodash.min.js', () => {
-		tokenizeJs(lodashMinSource, "script");
-	});
+	bench.add(
+		'unit benchmark "js-parser-unit", tokenize three.module.min.js',
+		() => {
+			tokenizeJs(threeEsmMinSource, "module");
+		}
+	);
 };
