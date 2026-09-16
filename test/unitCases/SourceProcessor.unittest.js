@@ -1,0 +1,339 @@
+"use strict";
+
+const {
+	NodeType: CssNodeType,
+	SourceProcessor: CssSourceProcessor
+} = require("../../lib/css/syntax");
+const {
+	NodeType: HtmlNodeType,
+	SourceProcessor: HtmlSourceProcessor
+} = require("../../lib/html/syntax");
+const { PrintContext } = require("../../lib/util/SourceProcessor");
+
+const CSS = "a {\n\tcolor : #ff0000 ;\n}\n";
+const HTML = "<div   class='a'  >\n  <p>x</p>\n</div>\n";
+
+/** @typedef {{ mode?: "minify" | "beautify", source?: string, content?: string }} PrintAsk */
+
+/** @type {[string, EXPECTED_ANY, string][]} name, processor, source */
+const LANGUAGES = [
+	["css", CssSourceProcessor, CSS],
+	["html", HtmlSourceProcessor, HTML]
+];
+
+describe("SourceProcessor", () => {
+	// Dropping the store has to let go of the text, not just stop answering for
+	// it: a stylesheet prints ~300k nodes, which is the output over again.
+	describe("printed-text store", () => {
+		/**
+		 * @param {InstanceType<typeof PrintContext>} context print context
+		 * @returns {number} characters the store still holds
+		 */
+		const held = (context) => {
+			let chars = 0;
+			for (let i = 0; i < context._storeText.length; i++) {
+				chars += context._storeText[i].length;
+			}
+			return chars;
+		};
+
+		it("lets go of the text when the epoch moves", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"x".repeat(64)
+			);
+			for (let node = 0; node < 500; node++) context.printNode(node, null);
+			expect(held(context)).toBe(500 * 64);
+			context.dropStore();
+			expect(held(context)).toBe(0);
+		});
+
+		it("holds only what was printed since the last drop", () => {
+			const context = new PrintContext({ mode: "minify" }, () => "y".repeat(8));
+			for (let node = 0; node < 300; node++) {
+				context.printNode(node, null);
+				if (node % 10 === 9) context.dropStore();
+			}
+			expect(held(context)).toBe(0);
+			context.printNode(300, null);
+			expect(held(context)).toBe(8);
+		});
+
+		it("lets go of the text when a node is taken", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"t".repeat(16)
+			);
+			context.printNode(1, null);
+			expect(held(context)).toBe(16);
+			context.take(1);
+			expect(held(context)).toBe(0);
+		});
+
+		it("lets go of the text when a retractable node is taken", () => {
+			const context = new PrintContext({ mode: "minify" }, () =>
+				"r".repeat(16)
+			);
+			context.printNode(1, null);
+			expect(held(context)).toBe(16);
+			context.takeRetractable(1);
+			expect(held(context)).toBe(0);
+		});
+
+		it("answers for a node printed since the drop, and no earlier one", () => {
+			const context = new PrintContext({ mode: "minify" }, () => "z");
+			context.printNode(1, null);
+			expect(context.get(1)).toBe("z");
+			context.dropStore();
+			expect(context.get(1)).toBeUndefined();
+			context.printNode(2, null);
+			expect(context.get(2)).toBe("z");
+			expect(context.get(1)).toBeUndefined();
+		});
+	});
+
+	// `mode` is the only thing that names the output, and it resolves in the
+	// shared processor — so both languages bound to it must agree.
+	describe("mode", () => {
+		for (const [language, Processor, source] of LANGUAGES) {
+			describe(language, () => {
+				it("walks without printing when none is asked for", () => {
+					expect(new Processor().process(source)).toBeUndefined();
+					expect(new Processor().process(source, {})).toBeUndefined();
+					// `minimize` used to be a second way to ask; `mode` is the only one.
+					expect(
+						new Processor().process(source, {
+							minimize: true
+						})
+					).toBeUndefined();
+				});
+
+				it("prints for each mode it names", () => {
+					for (const mode of ["minify", "beautify"]) {
+						expect(typeof new Processor().process(source, { mode }).code).toBe(
+							"string"
+						);
+					}
+				});
+
+				it("minifies to something shorter than it beautifies", () => {
+					const minified = new Processor().process(source, {
+						mode: "minify"
+					}).code;
+					const beautified = new Processor().process(source, {
+						mode: "beautify"
+					}).code;
+					expect(minified).not.toBe(beautified);
+					expect(minified.length).toBeLessThanOrEqual(beautified.length);
+				});
+
+				it("prints what it already printed unchanged, in either mode", () => {
+					for (const mode of ["minify", "beautify"]) {
+						const once = new Processor().process(source, { mode }).code;
+						const twice = new Processor().process(once, { mode }).code;
+						expect(twice).toBe(once);
+					}
+				});
+
+				it("carries no state between calls", () => {
+					const processor = new Processor();
+					const first = processor.process(source, { mode: "minify" }).code;
+					processor.process("", { mode: "minify" });
+					processor.process(source, { mode: "beautify" });
+					expect(processor.process(source, { mode: "minify" }).code).toBe(
+						first
+					);
+				});
+			});
+		}
+
+		it("answers alike in every language", () => {
+			/** @type {PrintAsk[]} */
+			const asks = [{}, { mode: "minify" }, { mode: "beautify" }];
+			for (const ask of asks) {
+				const printed = LANGUAGES.map(
+					([, Processor, source]) =>
+						new Processor().process(source, ask) !== undefined
+				);
+				expect(printed[0]).toBe(printed[1]);
+			}
+		});
+	});
+
+	// A map is built only for a caller that named the input, since building one
+	// walks the whole output — an inline `style=""` asks for none.
+	describe("source map", () => {
+		for (const [language, Processor, source] of LANGUAGES) {
+			describe(language, () => {
+				it("is absent when the input is not named", () => {
+					expect(
+						new Processor().process(source, { mode: "minify" }).map
+					).toBeUndefined();
+				});
+
+				it("is a version 3 map naming the input when it is", () => {
+					const { map } = new Processor().process(source, {
+						mode: "minify",
+						source: "in.txt"
+					});
+					expect(map.version).toBe(3);
+					expect(map.file).toBe("in.txt");
+					expect(map.sources).toEqual(["in.txt"]);
+					expect(typeof map.mappings).toBe("string");
+					expect(map.sourcesContent).toBeUndefined();
+				});
+
+				it("carries the input's text only when it is given", () => {
+					const { map } = new Processor().process(source, {
+						mode: "minify",
+						source: "in.txt",
+						content: source
+					});
+					expect(map.sourcesContent).toEqual([source]);
+				});
+
+				it("prints the same output whether or not a map is asked for", () => {
+					expect(
+						new Processor().process(source, {
+							mode: "minify",
+							source: "in.txt"
+						}).code
+					).toBe(new Processor().process(source, { mode: "minify" }).code);
+				});
+			});
+		}
+
+		// The map is walked over the flat output, so a piece the print took back
+		// takes its mapping with it and a newline still opens a generated line.
+		describe("over the flat output", () => {
+			// cspell:ignore CAIA
+
+			// The first declaration is the one the second overrides, so minifying
+			// retracts the piece it was written into.
+			const SOURCE =
+				"a {\n  color : red ;\n  color : blue ;\n}\nb {\n  color : lime ;\n}\n";
+
+			/**
+			 * @param {"minify" | "beautify"} mode how to print
+			 * @returns {{ code: string, mappings: string }} output and its mappings
+			 */
+			const printed = (mode) => {
+				const { code, map } = new CssSourceProcessor().process(SOURCE, {
+					mode,
+					source: "in.css",
+					content: SOURCE
+				});
+				return { code, mappings: map.mappings };
+			};
+
+			it("drops the mapping of a piece the print took back", () => {
+				// Two mappings, not three: the anchor written with `color:red` is gone,
+				// and `b` still maps to its own line rather than to the dropped one.
+				expect(printed("minify")).toEqual({
+					code: "a{color:blue}b{color:lime}",
+					mappings: "AAAA,aAIA"
+				});
+			});
+
+			it("counts a generated line for each newline the output holds", () => {
+				// `;;;` is the three line breaks before `b`, found in the flat output
+				// rather than in the pieces it was built from.
+				expect(printed("beautify")).toEqual({
+					code: "a {\ncolor: red;\ncolor: blue;\n}b {\ncolor: lime;\n}",
+					mappings: "AAAA;;;CAIA"
+				});
+			});
+		});
+
+		// A prefixed rule an unprefixed twin makes dead weight is taken back after
+		// it was written, so the mapping anchored to it has to go with it.
+		it("css anchors nothing at a rule the prefix pass took back", () => {
+			const ask = {
+				mode: /** @type {"minify"} */ ("minify"),
+				source: "in.css",
+				environment: { browsers: ["chrome 120"] }
+			};
+			const dropped = new CssSourceProcessor().process(
+				"@-webkit-keyframes a{from{opacity:0}}\n@keyframes a{from{opacity:0}}\n",
+				ask
+			);
+			// The same stylesheet with the twin never written, so the surviving rule
+			// stands on the same source line: both must map alike.
+			const alone = new CssSourceProcessor().process(
+				"\n@keyframes a{from{opacity:0}}\n",
+				ask
+			);
+			expect(dropped.code).toBe(alone.code);
+			expect(dropped.map.mappings).toBe(alone.map.mappings);
+		});
+	});
+
+	describe("visitors", () => {
+		it("fires a css visitor for each node of that type, and still prints", () => {
+			/** @type {string[]} */
+			const seen = [];
+			const result = new CssSourceProcessor()
+				.use({
+					[CssNodeType.Declaration]: (path) => {
+						seen.push(path.name());
+					}
+				})
+				.process("a{color:red;top:0}", { mode: "minify" });
+			expect(seen).toEqual(["color", "top"]);
+			expect(result.code).toBe("a{color:red;top:0}");
+		});
+
+		it("fires an html visitor for each element", () => {
+			/** @type {string[]} */
+			const seen = [];
+			new HtmlSourceProcessor()
+				.use({
+					[HtmlNodeType.Element]: (path) => {
+						seen.push(path.tagName());
+					}
+				})
+				.process("<div><p>x</p></div>");
+			expect(seen).toEqual(["html", "head", "body", "div", "p"]);
+		});
+
+		it("runs enter before exit", () => {
+			/** @type {string[]} */
+			const order = [];
+			new CssSourceProcessor()
+				.use({
+					[CssNodeType.QualifiedRule]: {
+						enter: () => order.push("enter"),
+						exit: () => order.push("exit")
+					}
+				})
+				.process("a{color:red}");
+			expect(order).toEqual(["enter", "exit"]);
+		});
+
+		it("returns the processor so `use` chains", () => {
+			const processor = new CssSourceProcessor();
+			expect(processor.use({})).toBe(processor);
+		});
+	});
+
+	describe("empty and degenerate input", () => {
+		for (const [language, Processor] of LANGUAGES) {
+			it(`${language} prints empty input without failing`, () => {
+				const { code } = new Processor().process("", { mode: "minify" });
+				expect(typeof code).toBe("string");
+			});
+		}
+
+		it("css prints a stylesheet that is only a comment", () => {
+			expect(
+				new CssSourceProcessor().process("/* c */", { mode: "minify" }).code
+			).toBe("");
+		});
+
+		it("css keeps a license comment", () => {
+			expect(
+				new CssSourceProcessor().process("/*! keep */a{b:c}", {
+					mode: "minify"
+				}).code
+			).toContain("/*! keep */");
+		});
+	});
+});

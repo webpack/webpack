@@ -578,7 +578,7 @@
     "types.d.ts",
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
-    "test/JavascriptParser.unittest.js",
+    "test/unitCases/JavascriptParser.unittest.js",
     "lib/javascript/regexpData.js",
     "tooling/html-entities.json",
     "test/test262-cases/**",
