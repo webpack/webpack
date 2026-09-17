@@ -40,6 +40,10 @@ const KEYWORDS = [
 const SPECIFIER_REGEXP =
 	/["'`](webpack\/lib\/[^"'`\n]+)["'`]|["'`]webpack\/lib\/["'`]\s*\+/g;
 
+// A package name arrives from the registry, so nothing derived from it is
+// trusted as a path: every character outside this set becomes a `+`.
+const UNSAFE_NAME_CHARACTER_REGEXP = /[^a-zA-Z0-9._-]/g;
+
 const SOURCE_EXTENSIONS = new Set([
 	".js",
 	".mjs",
@@ -128,13 +132,22 @@ const searchByKeyword = async (keyword, count) => {
 };
 
 /**
+ * Returns the directory a package caches in, which cannot leave CACHE_ROOT
+ * however the registry spelled the name.
+ * @param {string} name package name
+ * @returns {string} the directory
+ */
+const cacheDirectoryFor = (name) =>
+	path.join(CACHE_ROOT, name.replace(UNSAFE_NAME_CHARACTER_REGEXP, "+"));
+
+/**
  * Downloads a package's tarball and extracts it, reusing a previous extract.
  * Only reads the archive — no install runs, so no lifecycle script executes.
  * @param {string} name package name
  * @returns {Promise<string | null>} the extracted directory, or null when unavailable
  */
 const extractPackage = async (name) => {
-	const target = path.join(CACHE_ROOT, name.replace("/", "+"));
+	const target = cacheDirectoryFor(name);
 
 	if (fs.existsSync(path.join(target, "package"))) {
 		return path.join(target, "package");
@@ -144,7 +157,7 @@ const extractPackage = async (name) => {
 
 	try {
 		const packument = await fetchJson(
-			`${REGISTRY}/${name.replace("/", "%2f")}`
+			`${REGISTRY}/${name.replace(/\//g, "%2f")}`
 		);
 		const latest = packument["dist-tags"] && packument["dist-tags"].latest;
 		if (!latest) return null;
