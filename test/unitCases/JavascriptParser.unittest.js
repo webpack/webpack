@@ -1820,6 +1820,41 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			expect(collected(true)).toBe(collected(false));
 		});
 
+		it("keeps an index too large for the mask in a list of its own", () => {
+			const { BLOCK_DECLARATIONS: SLOT, MAX_MASKED_INDEX } = require(
+				"../../lib/javascript/syntax"
+			);
+			// a mask is one 31-bit number, so an index it cannot hold must reach the
+			// fallback: `1 << 32` is `1 << 0`, which would claim the wrong statement
+			expect(MAX_MASKED_INDEX).toBeLessThan(31);
+			// the filler is fixed rather than derived from the bound above, so a
+			// bound raised past what a mask holds fails this case
+			const filler = "void 0;\n".repeat(40);
+			const source = `const early = 1;\n${filler}const late = 2;`;
+			const { ast } = JavascriptParser._parse(source, {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			const recorded = /** @type {EXPECTED_ANY} */ (ast)[SLOT];
+			expect(Array.isArray(recorded)).toBe(true);
+			expect(recorded).toEqual([0, 41]);
+			expect(blockNames(source)).toEqual(["early", "late"]);
+		});
+
+		it("keeps a short list's declarations in the slot itself", () => {
+			const { BLOCK_DECLARATIONS: SLOT } = require(
+				"../../lib/javascript/syntax"
+			);
+			const { ast } = JavascriptParser._parse("void 0;\nconst only = 1;", {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			// one declaration at index 1 and nothing allocated to say so
+			expect(/** @type {EXPECTED_ANY} */ (ast)[SLOT]).toBe(0b10);
+		});
+
 		it("rejects a statement written before the first case", () => {
 			const { WebpackParser } = require("../../lib/javascript/syntax");
 			expect(() =>
