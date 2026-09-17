@@ -3065,6 +3065,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			["a comment hiding the brace", ".a .b/*{*/.c{color:red}"],
 			["an escaped brace", ".a .b .c\\{d{color:red}"],
 			["a function and its name", ".a .b :not(.x){color:red}"],
+			["a bare url() in the prelude", ".a .b url(p.png){color:red}"],
 			["a url inside the prelude's function", ".a .b :x(url(p.png)){color:red}"],
 			["an attribute block", ".a .b [data-c]{color:red}"],
 			["a non-ASCII selector", ".a .b .\u65e5\u672c\u8a9e{color:red}"],
@@ -3088,14 +3089,11 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			expect(walk(css, true)).toEqual(walk(css, false));
 		});
 
-		// A bare `url(` is the other name the scan hands back to the tokenizer, and
-		// skip mode drops the token lexed there — as it always has, a url visitor
-		// reaching one only through a function. The scan owes the rule boundary.
-		it("reads the rule around a bare url() the prelude drops", () => {
-			expect(walk(".a .b url(p.png){color:red}", true)).toEqual([
-				"rule:0-27",
-				"decl:color"
-			]);
+		// A bare `url(` is the other name the scan hands back to the tokenizer,
+		// and the token it lexes there is a dependency like any other — a stray
+		// top-level declaration is what puts one in a prelude.
+		it("keeps a bare url() the prelude holds", () => {
+			expect(walk(".a .b url(p.png){color:red}", true)).toContain("url:p.png");
 		});
 
 		it("keeps a url the prelude's own function holds", () => {
