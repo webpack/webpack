@@ -1451,6 +1451,52 @@ const emulatesMedia = async (page) => {
 	return can;
 };
 
+// The media types a condition can name, which no viewport varies.
+const MEDIA_TYPES = new Set([
+	"all",
+	"aural",
+	"braille",
+	"embossed",
+	"handheld",
+	"print",
+	"projection",
+	"screen",
+	"speech",
+	"tty",
+	"tv"
+]);
+
+/**
+ * What a media condition asks that no viewport can answer: its media type and
+ * every feature but the dimensions, named once and in order. Built by taking
+ * what is left rather than by cutting the rest out, so a query reduces to the
+ * same text however its parts were spelled or joined.
+ * @param {string} condition the condition as written
+ * @returns {string} what the viewport did not sample
+ */
+const unsampledBy = (condition) => {
+	const parts = [];
+	for (const [word] of condition.toLowerCase().matchAll(/[a-z-]+/g)) {
+		if (MEDIA_TYPES.has(word)) parts.push(word);
+	}
+	for (const [feature] of condition
+		.toLowerCase()
+		.matchAll(/\([^()]*(?:\([^()]*\))?[^()]*\)/g)) {
+		if (/\b(?:min-|max-)?(?:width|height|aspect-ratio)\b/.test(feature)) {
+			continue;
+		}
+		// `min-x: v` and `x >= v` are one query written two ways (Media Queries 4
+		// §2.4), so the prefixed spelling is written as the range one.
+		parts.push(
+			feature
+				.replace(/\s+/g, "")
+				.replace(/^\(min-([a-z-]+):/, "($1>=")
+				.replace(/^\(max-([a-z-]+):/, "($1<=")
+		);
+	}
+	return parts.sort().join("&");
+};
+
 /**
  * What the engine makes of every at-rule condition in a set of rules. A
  * condition is not compared as text: `(min-width: 200px)` and
@@ -1560,10 +1606,16 @@ const conditionSignatures = async (page, groups) => {
 		// WHY: Both calls are CDP, which Gecko's WebDriver BiDi does not answer, and
 		// only `prefers-color-scheme` and `prefers-reduced-motion` have a launch
 		// preference standing in — set at launch, so not switchable per sample.
-		// There the signature carries the viewport dimension alone, which is the
-		// one the printer's own rewrites move (`(min-width:200px)` against
-		// `(width>=200px)`); two conditions differing only in media type or
-		// `color-gamut` would read alike, and that is the discrimination lost.
+		// Measured in Firefox 156: `print`, `speech` and both `color-gamut` values
+		// all answer `0000` across the viewports, so a signature of those bits
+		// alone would call them one condition. What the viewport cannot vary is
+		// carried as text instead, which keeps them apart while the widths still
+		// equate `(min-width:200px)` with `(width>=200px)`.
+		if (!(await emulatesMedia(page))) {
+			for (const [i, condition] of media.entries()) {
+				bits[i] += ` ${unsampledBy(condition)}`;
+			}
+		}
 		if (await emulatesMedia(page)) {
 			for (const type of ["screen", "print"]) {
 				for (const features of [[], ...featureSets]) {
