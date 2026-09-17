@@ -1261,12 +1261,14 @@ function outer() { var inOuter = 1; }
 		/**
 		 * @param {string | object} source what to parse
 		 * @param {("auto" | "module" | "script")=} sourceType the source type to parse it as
+		 * @param {boolean=} legacy whether to tap the hook that walks every statement
 		 * @returns {string[]} the names the hoisting pass declared, in order
 		 */
-		const hoistedNames = (source, sourceType = "script") => {
+		const hoistedNames = (source, sourceType = "script", legacy = false) => {
 			const parser = new JavascriptParser(sourceType);
 			/** @type {string[]} */
 			const names = [];
+			if (legacy) parser.hooks.preStatement.tap("test", () => {});
 			parser.hooks.preDeclarator.tap("test", (declarator) => {
 				names.push(/** @type {EXPECTED_ANY} */ (declarator.id).name);
 			});
@@ -1374,6 +1376,26 @@ function outer() { var inOuter = 1; }
 			expect(typed).toEqual(["DebuggerStatement", "DebuggerStatement"]);
 		});
 
+		it("declares the same names through the walk that tap turns back on", () => {
+			expect(hoistedNames(EVERY_POSITION, "script", true)).toEqual(
+				hoistedNames(EVERY_POSITION)
+			);
+			// the positions `EVERY_POSITION` fills: a `try` missing one of its
+			// two tails, and a loop head declaring nothing
+			const sparse = `
+var target;
+try { var fromTryOnly = 1; } finally { }
+try { var fromTryCaught = 1; } catch (error) { }
+for (; target; ) { var fromBareFor = 1; }
+for (target in { }) { var fromForInTarget = 1; }
+for (target of [ ]) { var fromForOfTarget = 1; }
+`;
+			expect(hoistedNames(sparse, "script", true)).toEqual(
+				hoistedNames(sparse)
+			);
+			expect(hoistedNames(sparse)).toContain("fromForOfTarget");
+		});
+
 		it("records the program's imports and re-exports, and nothing else", () => {
 			const { ast } = JavascriptParser._parse(
 				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;\nvar plain = 1;\nif (plain) { var nested = 1; }",
@@ -1418,6 +1440,32 @@ function outer() { var inOuter = 1; }
 				"VariableDeclaration",
 				"ExportNamedDeclaration"
 			]);
+		});
+
+		it("scans a statement list when a plugin drives the walk itself", () => {
+			const source =
+				"import a from './a';\nvar plain = 1;\nexport * from './b';";
+			const parser = new JavascriptParser("module");
+			/** @type {string[]} */
+			const reported = [];
+			parser.hooks.import.tap("test", (statement, importSource) => {
+				reported.push(`import ${importSource}`);
+			});
+			parser.hooks.exportImport.tap("test", (statement, importSource) => {
+				reported.push(`exportImport ${importSource}`);
+			});
+			// a plugin taking the program over reaches the deprecated scan itself
+			parser.hooks.program.tap("test", (ast) => {
+				parser.modulePreWalkStatements(ast.body);
+				return true;
+			});
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(reported).toEqual(["import ./a", "exportImport ./b"]);
 		});
 
 		it("scans its own module declarations from an AST another parser built", () => {
@@ -1520,6 +1568,68 @@ function outer() { var inOuter = 1; }
 				)
 			);
 			expect(extended[HOISTED_DECLARATIONS]).toBeUndefined();
+		});
+
+		it("keeps no module record when a plugin reads imports or exports", () => {
+			const source = "import a from './a';\nexport * from './b';";
+			const { WebpackParser } = require("../../lib/javascript/syntax");
+			const options = {
+				ecmaVersion: 2022,
+				lazyNodes: true,
+				ranges: true,
+				sourceType: "module"
+			};
+			// a subclass reading an export itself never reaches the recording
+			// site, so the list would be short by every export it read
+			const Subclass = /** @type {EXPECTED_ANY} */ (WebpackParser).extend(
+				(/** @type {EXPECTED_ANY} */ Parser) =>
+					class extends Parser {
+						/**
+						 * @param {EXPECTED_ANY} node the export node
+						 * @param {EXPECTED_ANY} exports where exports are tracked
+						 * @returns {EXPECTED_ANY} the finished export
+						 */
+						parseExport(node, exports) {
+							return super.parseExport(node, exports);
+						}
+					}
+			);
+			const extended = /** @type {EXPECTED_ANY} */ (
+				Subclass.parse(
+					source,
+					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
+				)
+			);
+			expect(extended[MODULE_DECLARATIONS]).toBeUndefined();
+		});
+
+		it("records only the declarations the program itself states", () => {
+			const { WebpackParser } = require("../../lib/javascript/syntax");
+			// the option lets an import stand where no program states it, which
+			// is the one way a declaration reaches the record from a scope below
+			const program = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					"import a from './a';\n{ import b from './b'; }",
+					/** @type {EXPECTED_ANY} */ (
+						/** @type {unknown} */ ({
+							allowImportExportEverywhere: true,
+							ecmaVersion: 2022,
+							lazyNodes: true,
+							ranges: true,
+							sourceType: "module"
+						})
+					)
+				)
+			);
+			expect(
+				program[MODULE_DECLARATIONS].filter(
+					(/** @type {EXPECTED_ANY} */ _entry, /** @type {number} */ index) =>
+						index % 2 === 0
+				).map(
+					(/** @type {EXPECTED_ANY} */ declaration) =>
+						declaration.source.value
+				)
+			).toEqual(["./a"]);
 		});
 
 		it("keeps a declaration under an `export` head out of the scope's list", () => {
