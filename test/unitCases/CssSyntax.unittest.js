@@ -169,6 +169,40 @@ const tokenRoundtrip = (input) => {
 
 // Regressions from the css-parsing-tests corpus: each input previously hung
 // the parser or dropped bytes from the token stream.
+describe("CssSyntax — the token the lexer reuses", () => {
+	// The stream writes every token into one instance, so a field added to it is
+	// paid on every parse and a field left out of the constructor splits the
+	// shape. Both are decisions to take deliberately, which is what this pins.
+	const FIELDS = [
+		"contentEnd",
+		"contentStart",
+		"end",
+		"isId",
+		"start",
+		"type",
+		"unitStart"
+	];
+
+	it("carries exactly the fields it was built with", () => {
+		const stream = new TokenStream("a{color:red}");
+		expect(Object.keys(stream.next()).sort()).toEqual(FIELDS);
+	});
+
+	it("has every field set before a token is read, and after", () => {
+		const stream = new TokenStream("url(a.png) 1px #ff0");
+		for (const field of FIELDS) {
+			expect(/** @type {EXPECTED_ANY} */ (stream.next())[field]).toBeDefined();
+		}
+		// Reading on does not grow it: the same keys, in the same order, whatever
+		// token type wrote into it.
+		for (let i = 0; i < 6; i++) {
+			expect(Object.keys(stream.consume())).toEqual(
+				Object.keys(stream.next())
+			);
+		}
+	});
+});
+
 describe("CssSyntax regressions", () => {
 	const NUL = String.fromCharCode(0);
 	const C1 = String.fromCharCode(0x80); // U+0080: an ident-start code point
