@@ -4992,6 +4992,10 @@ describe("SourceProcessor — an empty value is the bare name", () => {
 	});
 
 	it("reads a reference-spelled empty as empty when dropping them", () => {
+		/**
+		 * @param {string} html input markup
+		 * @returns {string} the minified serialization
+		 */
 		const drop = (html) =>
 			new SourceProcessor().process(html, {
 				mode: "minify",
