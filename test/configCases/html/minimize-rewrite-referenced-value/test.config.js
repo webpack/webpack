@@ -28,5 +28,8 @@ module.exports = {
 		// to reach one spelled with references too.
 		expect(html).toMatch(/href=["']?\.\/a\.png/);
 		expect(html).not.toContain("&#x20;&#x2e;&#x2f;");
+		// With the source spelling out of the running the rewrite is written at
+		// its shortest, which is the fixed point a second pass would reach.
+		expect(html).toContain("<a href=&amp;x&amp;y>");
 	}
 };

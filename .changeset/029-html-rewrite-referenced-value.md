@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Rewrite an attribute value the source spelled with character references.
+Rewrite a referenced attribute value, and write the result at its shortest.
