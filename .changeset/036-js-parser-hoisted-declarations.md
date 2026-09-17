@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Declare a scope's hoisted names and a program's module declarations from the parse instead of re-walking statements.
+Record hoisted and module declarations while parsing instead of re-walking.

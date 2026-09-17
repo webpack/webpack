@@ -1481,6 +1481,47 @@ function outer() { var inOuter = 1; }
 			expect(hoistedNames(ast)).toEqual(["first", "second"]);
 		});
 
+		it("keeps no record when a plugin owns a production that records", () => {
+			const source = "class Declared {}\nvar plain = 1;\nfunction named() {}";
+			const { WebpackParser } = require("../../lib/javascript/syntax");
+			const options = {
+				ecmaVersion: 2022,
+				lazyNodes: true,
+				ranges: true,
+				sourceType: "script"
+			};
+			const recorded = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					source,
+					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
+				)
+			);
+			expect(recorded[HOISTED_DECLARATIONS]).toBeDefined();
+
+			// a subclass reading a class itself never reaches `_recordHoisted`, so
+			// the record would be short by every class it read
+			const Subclass = /** @type {EXPECTED_ANY} */ (WebpackParser).extend(
+				(/** @type {EXPECTED_ANY} */ Parser) =>
+					class extends Parser {
+						/**
+						 * @param {EXPECTED_ANY} node the class node
+						 * @param {EXPECTED_ANY} isStatement whether it is a declaration
+						 * @returns {EXPECTED_ANY} the finished class
+						 */
+						parseClass(node, isStatement) {
+							return super.parseClass(node, isStatement);
+						}
+					}
+			);
+			const extended = /** @type {EXPECTED_ANY} */ (
+				Subclass.parse(
+					source,
+					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
+				)
+			);
+			expect(extended[HOISTED_DECLARATIONS]).toBeUndefined();
+		});
+
 		it("keeps a declaration under an `export` head out of the scope's list", () => {
 			// the export statement reports its own declaration, so listing it
 			// again would declare it twice
