@@ -48,10 +48,9 @@ const makeModule = (namedExports) => ({
 const makeConfig = ({ namedExports, outputModule }) => {
 	/** @type {Configuration} */
 	const config = {
-		// Two entry files: only one form of static import works per
-		// namedExports value (named imports vs default import), so we
-		// switch the entry rather than have one file with imports that
-		// fail to resolve in the other config.
+		// Two entry files: only one form of static import works per `namedExports` value,
+		// so the entry is switched rather than having one file whose imports fail to
+		// resolve in the other config.
 		entry: namedExports ? "./index-named.js" : "./index-default.js",
 		mode: "production",
 		// target: node so the test code can `require("fs")` to inspect the

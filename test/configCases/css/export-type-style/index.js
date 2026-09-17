@@ -144,14 +144,7 @@ it("should have the correct total number of style tags", () => {
 		return;
 	}
 	const styles = window.document.getElementsByTagName("style");
-	// style-imported.css, style.css, style.module.css,
-	// a-dep.css, a.css,
-	// b-dep-dep.css, b-dep.css, b.css,
-	// c-dep-dep-dep.css, c-dep-dep.css, c-dep.css, c.css,
-	// shared.css (once), d.css, e.css,
-	// f-dep-dep.css, f-dep.css, f.css,
-	// empty-middle-dep.css, empty-middle.css,
-	// empty-chain-leaf.css, empty-chain-b.css, empty-chain-a.css, empty-chain-top.css
-	// = 24
+	// 24 stylesheets: style-imported, style, style.module, the a/b/c/d/e/f chains,
+	// shared once, the empty-middle pair and the four empty-chain links.
 	expect(styles.length).toBe(24);
 });

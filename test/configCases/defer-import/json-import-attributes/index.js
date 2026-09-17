@@ -19,17 +19,9 @@ function assertIsNamespaceObject(ns) {
 	}
 }
 
-// Node.js does not yet implement the `import defer` syntax (TC39 stage 3,
-// targeted for Node ~24). Per the proposal, deferring a module must not
-// change which exports are observable on the namespace — only when their
-// evaluation runs. For JSON modules (which have no observable evaluation
-// side effects), the deferred and non-deferred default values must be
-// identical. We use `webpackIgnore: true` on a plain dynamic `import()`
-// to obtain the runtime's reference parse of `with { type: "json" }`,
-// then assert that webpack's `import.defer` produces the same default
-// value. We deliberately compare `.default` only — the surrounding test
-// VM may add CJS-style named exports that differ from native Node.js
-// (where `Object.getOwnPropertyNames(ns) === ["default"]`).
+// Node.js does not implement `import defer` yet, and per the proposal deferring a
+// module changes only when evaluation runs, not which exports are observable — so
+// for JSON the deferred and non-deferred defaults must be identical.
 const nodeJsReference = () =>
 	import(/* webpackIgnore: true */ "./config.json", {
 		with: { type: "json" }

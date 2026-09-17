@@ -48,17 +48,9 @@ module.exports = {
 				"margin:.5px 1px 0;--raw:0.50;fill:red;" +
 				"stroke:#00000080;outline-color:#0000}"
 		);
-		// - #FF0000 -> red, #AABBCC -> #abc, rgb(0,128,128) -> teal (name shortest)
-		// - rgba(0,0,0,0) (transparent black) -> `#0000`, since this build states
-		//   no target and every current engine reads a hex alpha
-		// - hashes inside a value function (gradient) are colors too, so shortened
-		// - margin numbers normalized (leading/trailing zeros)
-		// - custom property `--raw` value stays verbatim (0.50, not normalized)
-		// - hsl(0,100%,50%) lands on a byte with nothing to round, so it converts
-		//   (one that had to round would keep its function); rgba() kept,
-		//   only its numbers normalized (.5)
-		// An id selector that looks like a hex color is NOT shortened (ids are
-		// case-sensitive and not colors).
+		// Colors take their shortest spelling — a name, a short hex, or a hex alpha where
+		// the build states no target — including inside a value function. Numbers are
+		// normalized except in a custom property, and an id that looks like a hex is not.
 		expect(css).toContain("#ABCDEF{x:1}");
 		// Input the grammar rejects (`*zoom: 1`) is carried through verbatim
 		// instead of being dropped, so minifying loses nothing the source had.

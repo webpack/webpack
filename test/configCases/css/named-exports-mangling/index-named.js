@@ -83,12 +83,9 @@ it(`should mangle JS export identifiers in production (${matrixTitle})`, () => {
 	const fs = __non_webpack_require__("fs");
 	const source = fs.readFileSync(`${__dirname}/bundle${__STATS_I__ === 0 ? "0.js" : "2.mjs"}`, "utf-8");
 
-	// When CSS modules are concatenated, every named export becomes a
-	// `const <identifier> = <value>;` declaration in the entry scope
-	// (CssGenerator.js#L472–497). With
-	// `mangleExports: "deterministic"`, that identifier is the mangled
-	// used-name, so the original long names must NOT appear as
-	// const/let/var bindings.
+	// Concatenated CSS modules turn every named export into a `const <identifier> =
+	// <value>;` in the entry scope. Under `mangleExports: "deterministic"` that is the
+	// mangled name, so the long names must not appear as bindings.
 	const longCssExportNames = [
 		"btnInfoIsDisabled",
 		"btnInfoIsDisabled1",

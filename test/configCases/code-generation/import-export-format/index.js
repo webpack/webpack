@@ -32,10 +32,9 @@ it("should use the same accessor syntax for import and export", function() {
 	// Array format: "a", 0, bar (value) or "a", () => bar (getter)
 	expectSourceToMatch(source, `\\/\\* harmony export \\*\\/   "a", .*bar`);
 
-	// Checking formation of imports. The require() edge makes ./harmony-module a
-	// wrapped member, so both sides read the mangled export through `.a`. The
-	// accessor call is parenthesized so `new`/call positions keep binding to the
-	// export rather than to the wrapper accessor.
+	// The `require()` edge makes ./harmony-module a wrapped member, so both sides read
+	// the mangled export through `.a`. The accessor call is parenthesized so `new` and
+	// call positions bind to the export, not the wrapper accessor.
 	expectSourceToContain(source, "(harmony_module_namespaceFn().a);");
 	expectSourceToContain(source, "const { harmonyexport_cjsimport } = (harmony_module_namespaceFn().a);");
 

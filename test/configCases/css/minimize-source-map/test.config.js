@@ -22,9 +22,8 @@ module.exports = {
 		expect(map.sources.some((s) => /style\.css/.test(s))).toBe(true);
 		expect(map.sourcesContent[0]).toContain(".second {");
 
-		// The minified `.second` rule maps back to its line in the original source
-		// (`.second {` is line 5 of style.css) — the minifier's map, composed with
-		// the native-CSS input map, points at the original file.
+		// The minified `.second` rule maps back to line 5 of style.css — the minifier's
+		// map, composed with the native-CSS input map, points at the original file.
 		// `source-map` 0.6 is synchronous, so this runs before `afterExecute` returns.
 		const consumer = new SourceMapConsumer(map);
 		const pos = consumer.originalPositionFor({

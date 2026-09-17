@@ -1,9 +1,8 @@
 import * as css from "STYLE_UNDER_TEST";
 
-// Reference the import so it isn't tree-shaken away for value-returning
-// exportTypes (text / css-style-sheet); side-effect-only imports would
-// otherwise be optimized out and the CSS module would never be included
-// in the JS bundle.
+// Reference the import so it is not tree-shaken for value-returning exportTypes;
+// a side-effect-only import would be optimized out and the CSS module would never
+// reach the JS bundle.
 globalThis.__keepCssAlive = css;
 const fs = __nodeFs;
 const path = __nodePath;
@@ -55,11 +54,9 @@ const decodeVlq = (str, pos) => {
 	return [sign ? -value : value, pos];
 };
 
-// Decodes every segment in `mappings`, asserting per-segment field counts
-// (1, 4, or 5), and that all running counters stay non-negative and that
-// every source/name index points to a real entry in `sources`/`names`.
-// These are the same invariants that prevent Chrome DevTools from
-// silently rejecting individual mappings.
+// Decodes every segment in `mappings`, asserting per-segment field counts of 1, 4
+// or 5, that running counters stay non-negative, and that every source and name
+// index points at a real entry — the invariants DevTools silently rejects on.
 const decodeAllMappings = (map) => {
 	const mappings = map.mappings;
 	const sourcesLen = map.sources.length;
@@ -144,11 +141,9 @@ const validateMap = (map) => {
 	for (const source of map.sources) {
 		expect(typeof source).toBe("string");
 		expect(source.length).toBeGreaterThan(0);
-		// Sources must be relative to the compilation context — never an
-		// absolute filesystem path. The CSS module identifier embeds an
-		// absolute path by default, so this guards against accidentally
-		// passing it raw to OriginalSource instead of going through
-		// requestShortener / readableIdentifier.
+		// Sources must be relative to the compilation context, never an absolute path. The
+		// CSS module identifier embeds one by default, so this guards against passing it
+		// raw to OriginalSource instead of through requestShortener.
 		const stripped = source.replace(/^webpack:\/+/, "");
 		expect(stripped.startsWith("/")).toBe(false);
 		expect(/^[A-Za-z]:[\\/]/.test(stripped)).toBe(false);
@@ -200,10 +195,9 @@ const expectExternalMappingURL = (relativeFile, mapFileName) => {
 	);
 };
 
-// For text/style/css-style-sheet the CSS is embedded as a JS string literal
-// with an inline `sourceMappingURL=data:application/json;base64,...` comment
-// inside the CSS text itself. That comment is what DevTools uses to map
-// the applied stylesheet back to its original sources.
+// For text/style/css-style-sheet the CSS is embedded as a JS string literal with
+// an inline `sourceMappingURL=data:...` comment inside the CSS text, which is what
+// DevTools maps the applied stylesheet back through.
 const SOURCE_MAPPING_DATA_URI =
 	/sourceMappingURL=data:application\/json(?:;charset=[^;,]+)?;base64,([A-Za-z0-9+/=]+)/;
 
@@ -234,14 +228,9 @@ it(`should generate a valid source map for ${label}`, () => {
 	expectExternalMappingURL(`bundle${__STATS_I__}.js`, jsMapName);
 	const jsMap = readExternalMap(jsMapName);
 	validateMap(jsMap);
-	// The full generated JS wrapper for the CSS module must show up in
-	// the bundle's JS source map under the module's identifier — same
-	// shape css-loader produces for CSS modules consumed in JS. That
-	// means sourcesContent here is the emitted runtime call (e.g.
-	// `__webpack_require__.r(module.exports = { "default": "…" });` for
-	// `text`, `__webpack_require__.is(<id>, "…");` for `style`, or the
-	// `new CSSStyleSheet(); sheet.replaceSync(cssText)` IIFE for
-	// `css-style-sheet`), not the raw CSS or just its JS literal form.
+	// The generated JS wrapper for the CSS module must appear in the bundle's JS
+	// source map under the module's identifier — the shape css-loader produces. So
+	// sourcesContent is the emitted runtime call, not the raw CSS or its literal.
 	const cssModuleSourceIdx = jsMap.sources.findIndex((s) =>
 		s.includes(expectedSourceFile)
 	);
