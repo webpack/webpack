@@ -1388,6 +1388,26 @@ function outer() { var inOuter = 1; }
 			expect(reported(source)).toContain("import ./a");
 		});
 
+		it("ignores the record of an AST handed to it, which may have been edited", () => {
+			const { ast, comments } = JavascriptParser._parse("var first = 1;", {
+				sourceType: "script",
+				ranges: true,
+				comments: true
+			});
+			const { ast: spliced } = JavascriptParser._parse("var second = 2;", {
+				sourceType: "script",
+				ranges: true,
+				comments: true
+			});
+			// a loader may hand back a tree it changed after it was read, so the
+			// record the parse left on it no longer says what the tree declares
+			/** @type {EXPECTED_ANY} */
+			(ast).body.push(/** @type {EXPECTED_ANY} */ (spliced).body[0]);
+			/** @type {EXPECTED_ANY} */
+			(ast).comments = comments;
+			expect(hoistedNames(ast)).toEqual(["first", "second"]);
+		});
+
 		it("keeps a declaration under an `export` head out of the scope's list", () => {
 			// the export statement reports its own declaration, so listing it
 			// again would declare it twice
