@@ -13,7 +13,6 @@ const cp = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const prettier = require("prettier");
 
 const LIB_ROOT = path.join(__dirname, "..", "lib");
 const CACHE_ROOT = path.join(
@@ -24,6 +23,8 @@ const CACHE_ROOT = path.join(
 	"deep-webpack-imports"
 );
 const RECORD_PATH = path.join(__dirname, "deep-webpack-imports.json");
+// Keys the pull request comment so each run edits its own rather than adding one.
+const SUMMARY_MARKER = "<!-- deep-imports-report -->";
 const REGISTRY = "https://registry.npmjs.org";
 
 // The search endpoint carries weekly downloads with each hit, so discovery and
@@ -286,11 +287,74 @@ const readRecord = () => {
 };
 
 /**
+ * Renders the check as the markdown a pull request comment carries.
+ * @param {EXPECTED_ANY} record the recorded scan
+ * @param {string[]} requests every recorded request
+ * @param {string[]} broken the requests this checkout cannot resolve
+ * @returns {string} markdown
+ */
+const summarize = (record, requests, broken) => {
+	const lines = [SUMMARY_MARKER, "## Deep imports the ecosystem relies on", ""];
+
+	if (broken.length === 0) {
+		lines.push(
+			`All ${requests.length} recorded \`webpack/lib/…\` path(s) still resolve, ` +
+				"so no published plugin or loader loses one here.",
+			"",
+			`<sub>Recorded from the ${record.perKeyword} most downloaded packages ` +
+				`per keyword, sampled ${record.sampledAt}.</sub>`
+		);
+
+		return `${lines.join("\n")}\n`;
+	}
+
+	const weekly = broken.reduce(
+		(total, request) => total + record.requests[request].weekly,
+		0
+	);
+
+	lines.push(
+		`**${broken.length} path(s) this branch moves or removes are imported by ` +
+			`published packages**, ${formatCount(weekly)} weekly downloads behind them. ` +
+			"Each one breaks at `require` time for anyone on webpack 5.",
+		"",
+		"| Path | Weekly | Imported by |",
+		"| :-- | --: | :-- |"
+	);
+
+	for (const request of broken) {
+		const entry = record.requests[request];
+		const names = entry.packages
+			.map((/** @type {string} */ name) => `\`${name}\``)
+			.join(", ");
+
+		lines.push(
+			`| \`webpack/${request}\` | ${formatCount(entry.weekly)} | ${names} |`
+		);
+	}
+
+	lines.push(
+		"",
+		"Keep each one resolving with a one-line re-export at its old path. If no " +
+			"webpack 5 build can reach it — the importer is webpack 4 only, or probes " +
+			"for it to detect webpack 4 — record it under `removed` in " +
+			"`tooling/deep-webpack-imports.json` with that reason instead.",
+		"",
+		`<sub>Recorded from the ${record.perKeyword} most downloaded packages ` +
+			`per keyword, sampled ${record.sampledAt}. Re-run with ` +
+			"`yarn find-deep-imports --write` to refresh.</sub>"
+	);
+
+	return `${lines.join("\n")}\n`;
+};
+
+/**
  * Verifies every recorded request against this checkout, reading no network.
  * This is the cheap half: it catches a move the moment it lands.
+ * @param {string | null} summaryPath where to write the markdown report, if anywhere
  * @returns {number} how many recorded requests no longer resolve
  */
-const check = () => {
+const check = (summaryPath) => {
 	const record = readRecord();
 	const requests = Object.keys(record.requests).sort();
 
@@ -331,6 +395,10 @@ const check = () => {
 		);
 	}
 
+	if (summaryPath) {
+		fs.writeFileSync(summaryPath, summarize(record, requests, broken));
+	}
+
 	return broken.length;
 };
 
@@ -357,6 +425,9 @@ const writeRecord = async (rows, perKeyword) => {
 		removed: previous.removed,
 		requests
 	};
+
+	// Required here so `--check` needs no install: it never writes the record.
+	const prettier = require("prettier");
 
 	const prettierConfig = (await prettier.resolveConfig(RECORD_PATH)) || {};
 
@@ -520,8 +591,14 @@ const collect = async (perKeyword, write) => {
 const perKeyword = Number(process.env.COUNT || 200);
 const write = process.argv.includes("--write");
 const offline = process.argv.includes("--check");
+const summaryIndex = process.argv.indexOf("--summary");
+const summaryPath =
+	summaryIndex === -1 ? null : process.argv[summaryIndex + 1] || null;
 
-(offline ? Promise.resolve(check()) : collect(perKeyword, write)).then(
+(offline
+	? Promise.resolve(check(summaryPath))
+	: collect(perKeyword, write)
+).then(
 	(broken) => {
 		process.exitCode = broken > 0 ? 1 : 0;
 	},
