@@ -15,7 +15,7 @@ const pageContent = typeof page === "string" ? page : "";
 
 // Document-order list of every inline-script chunk url emitted into the page.
 const scriptChunkUrls = [
-	...pageContent.matchAll(/<script[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.mjs)"/g)
+	...pageContent.matchAll(/<script[^>]*\bsrc="(page\d*\.mjs)"/g)
 ].map((m) => m[1]);
 
 it("should bundle inline <script> bodies as entry chunks and rewrite their tags to `<script src>`", () => {
@@ -49,10 +49,10 @@ it("should auto-upgrade classic inline <script> to type=module when output.modul
 	// already had it keeps it, so every executable inline script is module-typed.
 	const moduleTaggedSrcs = [
 		...pageContent.matchAll(
-			/<script[^>]*\btype="module"[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.mjs)"/g
+			/<script[^>]*\btype="module"[^>]*\bsrc="(page\d*\.mjs)"/g
 		),
 		...pageContent.matchAll(
-			/<script[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.mjs)"[^>]*\btype="module"/g
+			/<script[^>]*\bsrc="(page\d*\.mjs)"[^>]*\btype="module"/g
 		)
 	].map((m) => m[1]);
 	expect(new Set(moduleTaggedSrcs).size).toBe(5);

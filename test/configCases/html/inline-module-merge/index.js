@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 
 import page from "./page.html";
 import unclosed from "./unclosed.html";
+import subPage from "./sub/page.html";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,10 +14,11 @@ const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 // is normalized to a concrete string once.
 const pageContent = typeof page === "string" ? page : "";
 const unclosedContent = typeof unclosed === "string" ? unclosed : "";
+const subContent = typeof subPage === "string" ? subPage : "";
 
 // Document-order list of every inline-script chunk url left in the page.
 const scriptChunkUrls = [
-	...pageContent.matchAll(/<script[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.mjs)"/g)
+	...pageContent.matchAll(/<script[^>]*\bsrc="(page\d*\.mjs)"/g)
 ].map((m) => m[1]);
 
 it("should bundle a run of inline <script type=module> tags into one chunk", () => {
@@ -67,7 +69,7 @@ it("should drop a run member the input ended before closing", () => {
 	expect(unclosedContent).toMatchSnapshot();
 
 	const urls = [
-		...unclosedContent.matchAll(/<script[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.mjs)"/g)
+		...unclosedContent.matchAll(/<script[^>]*\bsrc="(unclosed\d*\.mjs)"/g)
 	].map((m) => m[1]);
 	// The unterminated second tag has no `</script>` to remove with it, so the
 	// element is cut at the end of its body.
@@ -77,4 +79,12 @@ it("should drop a run member the input ended before closing", () => {
 	const merged = readChunk(urls[0]);
 	expect(merged).toContain("unclosed-1");
 	expect(merged).toContain("unclosed-2");
+});
+
+it("should keep two pages of the same basename apart", () => {
+	const subUrl = subContent.match(/<script[^>]*\bsrc="(page\d*\.mjs)"/)[1];
+	// Both pages are named `page`, so the second claims a numbered name
+	// rather than a hash of its path.
+	expect(scriptChunkUrls).not.toContain(subUrl);
+	expect(readChunk(subUrl)).toContain("sub-module");
 });
