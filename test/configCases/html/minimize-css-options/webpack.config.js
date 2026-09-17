@@ -24,6 +24,7 @@ module.exports = {
 		minimize: {
 			css: {
 				convertLengthUnits: true,
+				convertApproximateColors: true,
 				rewriteCustomProperties: true
 			}
 		},

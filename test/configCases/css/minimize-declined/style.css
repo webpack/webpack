@@ -9,7 +9,11 @@
    spelling.
 
    Every case here is a passthrough. A snapshot entry that stops being one means
-   webpack started making the trade, which is a decision, not a detail. */
+   webpack started making the trade, which is a decision, not a detail.
+
+   The color conversions below are declined by default rather than for good:
+   `optimization.minimize.css.convertApproximateColors` makes them, and
+   `minimize-convert-approximate-colors` holds them there. */
 
 /*! declined here only because this case builds for no particular target — for a
    selection with no hex alpha it stays, and otherwise it is `#0000`

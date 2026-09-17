@@ -1384,6 +1384,11 @@ declare interface BuiltinEmbeddedRendererOptions {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * write a polar or Lab color as the nearest hex even where that hex only approximates it: a channel too near a `.5` boundary for two engines to round it alike, and a color outside the sRGB gamut, which hex can only clip. Off by default, and only read while printing; a space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way
+	 */
+	convertApproximateColors?: boolean;
+
+	/**
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
@@ -6236,6 +6241,11 @@ declare interface CssPrintOptions {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * write a polar or Lab color as the nearest hex even where that hex only approximates it: a channel too near a `.5` boundary for two engines to round it alike, and a color outside the sRGB gamut, which hex can only clip. Off by default, and only read while printing; a space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way
+	 */
+	convertApproximateColors?: boolean;
+
+	/**
 	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
 	 */
 	mergeDistantRules?: boolean;
@@ -6310,6 +6320,11 @@ declare interface CssProcessOptions {
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * write a polar or Lab color as the nearest hex even where that hex only approximates it: a channel too near a `.5` boundary for two engines to round it alike, and a color outside the sRGB gamut, which hex can only clip. Off by default, and only read while printing; a space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way
+	 */
+	convertApproximateColors?: boolean;
 
 	/**
 	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
@@ -20627,6 +20642,12 @@ declare interface OptimizationMinimizeCss {
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
 
 	/**
+	 * Write a polar or Lab color as the nearest hex even where that hex only approximates it. `shortenColors` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a `.5` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for `hwb(194 0% 0%)`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what `colorFallbacks` does. A space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.
+	 * @since 5.112.0
+	 */
+	convertApproximateColors?: boolean;
+
+	/**
 	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
 	 * @since 5.110.0
 	 */
@@ -31514,6 +31535,7 @@ declare namespace exports {
 					as?: "stylesheet" | "block-contents";
 					environment?: CssEnvironment;
 					convertLengthUnits?: boolean;
+					convertApproximateColors?: boolean;
 					mergeDistantRules?: boolean;
 					rewriteCustomProperties?: boolean;
 					unusedSymbols?: string[];
@@ -31872,6 +31894,7 @@ declare namespace exports {
 					environment?: CssEnvironment;
 					css?: {
 						convertLengthUnits?: boolean;
+						convertApproximateColors?: boolean;
 						rewriteCustomProperties?: boolean;
 						unusedSymbols?: string[];
 						pseudoClasses?: { [index: string]: string };

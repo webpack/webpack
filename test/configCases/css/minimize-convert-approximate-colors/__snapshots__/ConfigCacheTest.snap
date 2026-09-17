@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-convert-approximate-colors minimize-convert-approximate-colors should compile 1`] = `
+Array [
+  "/*! a channel landing exactly on a \`.5\` boundary, which is the one place two
+   engines round opposite ways (cssnano writes this hex too) */.t01{background:#40bf5e}",
+  "/*! ...and one landing near enough to it for the same disagreement */.t02{background:#00c3ff}",
+  "/*! ...and a Lab channel within the wider margin the matrix chain needs */.t03{background:#610632}",
+  "/*! a color outside the sRGB gamut, which the hex clips rather than respells */.t04{background:#c900ff}",
+  "/*! ...whichever function names it */.t05{background:#4bff00}",
+  "/*! ...including a predefined space wider than sRGB */.t06{background:red}",
+  "/*! ...and one carrying an alpha, where the hex takes a fourth pair */.t07{background:#ff003b80}",
+  "/*! a mix is the color it computes to, so it converts on the same terms */.t08{background:#ef95ff}",
+  "/*! ...as does a relative color */.t09{background:#ff826a}",
+  "/*! declined still: an engine reads these two through a transfer of its own, so
+   the hex would name a color it never paints rather than a near one */.t10{background:color(a98-rgb .2 .4 .6)}",
+  "/*! ...both of them */.t11{background:color(prophoto-rgb .2 .4 .6)}",
+  "/*! a color the conversion is exact for needs no option and takes none */.t12{background:red}",
+]
+`;
