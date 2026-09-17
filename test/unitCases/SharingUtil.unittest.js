@@ -244,10 +244,8 @@ describe("normalize dep version", () => {
 	];
 
 	const gitlabValid = {
-		// shortcuts
-		//
-		// NOTE auth is accepted but ignored
-		// NOTE subgroups are respected, but the subgroup is treated as the project and the real project is lost
+		// shortcuts. Auth is accepted but ignored; a subgroup is respected but treated
+		// as the project, so the real project is lost.
 		"gitlab:foo/bar": "",
 		"gitlab:foo/bar#v1.0": "v1.0",
 		"gitlab:user@foo/bar": "",
@@ -315,10 +313,8 @@ describe("normalize dep version", () => {
 		":password@gitlab.com:foo/bar/baz.git": "",
 		":password@gitlab.com:foo/bar/baz.git#v1.0": "v1.0",
 
-		// git+ssh urls
-		//
-		// NOTE auth is accepted but ignored
-		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
+		// git+ssh urls. Auth is accepted but ignored; a sub project is treated as the
+		// project, so the real project is lost.
 		"git+ssh://gitlab.com:foo/bar": "",
 		"git+ssh://gitlab.com:foo/bar#v1.0": "v1.0",
 		"git+ssh://user@gitlab.com:foo/bar": "",
@@ -355,10 +351,8 @@ describe("normalize dep version", () => {
 		"git+ssh://:password@gitlab.com:foo/bar/baz.git": "",
 		"git+ssh://:password@gitlab.com:foo/bar/baz.git#v1.0": "v1.0",
 
-		// ssh urls
-		//
-		// NOTE auth is accepted but ignored
-		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
+		// ssh urls. Auth is accepted but ignored; a sub project is treated as the
+		// project, so the real project is lost.
 		"ssh://gitlab.com:foo/bar": "",
 		"ssh://gitlab.com:foo/bar#v1.0": "v1.0",
 		"ssh://user@gitlab.com:foo/bar": "",
@@ -395,10 +389,8 @@ describe("normalize dep version", () => {
 		"ssh://:password@gitlab.com:foo/bar/baz.git": "",
 		"ssh://:password@gitlab.com:foo/bar/baz.git#v1.0": "v1.0",
 
-		// git+https urls
-		//
-		// NOTE auth is accepted and respected
-		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
+		// git+https urls. Auth is accepted and respected; a sub project is treated as
+		// the project, so the real project is lost.
 		"git+https://gitlab.com/foo/bar": "",
 		"git+https://gitlab.com/foo/bar#v1.0": "v1.0",
 		"git+https://user@gitlab.com/foo/bar": "",
@@ -435,10 +427,8 @@ describe("normalize dep version", () => {
 		"git+https://:password@gitlab.com/foo/bar/baz.git": "",
 		"git+https://:password@gitlab.com/foo/bar/baz.git#v1.0": "v1.0",
 
-		// https urls
-		//
-		// NOTE auth is accepted and respected
-		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
+		// https urls. Auth is accepted and respected; a sub project is treated as the
+		// project, so the real project is lost.
 		"https://gitlab.com/foo/bar": "",
 		"https://gitlab.com/foo/bar#v1.0": "v1.0",
 		"https://user@gitlab.com/foo/bar": "",
@@ -756,10 +746,8 @@ describe("normalize dep version", () => {
 		":password@gist.github.com:foo/feed.git": "",
 		":password@gist.github.com:foo/feed.git#v1.0": "v1.0",
 
-		// git+ssh urls
-		//
-		// NOTE auth is accepted but ignored
-		// NOTE see TODO at list of invalids, some inputs fail and shouldn't
+		// git+ssh urls. Auth is accepted but ignored; see the TODO at the list of
+		// invalids — some inputs fail and should not.
 		"git+ssh://gist.github.com:feed": "",
 		"git+ssh://gist.github.com:feed#v1.0": "v1.0",
 		"git+ssh://user@gist.github.com:feed": "",

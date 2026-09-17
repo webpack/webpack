@@ -5,12 +5,9 @@ const path = require("path");
 
 const findOutputFiles = require("../../../helpers/findOutputFiles");
 
-// Each config in webpack.config.js emits its assets under `cfg${i}/`. The
-// matchers below pin the exact filename shape each template should produce
-// once webpack has substituted hashes. The hash is captured (`[a-f0-9]+`)
-// rather than asserted on for an exact length, because the digest length
-// depends on `output.hashDigestLength` (default 20) and the `nonNumericOnly`
-// hash adjustment in `lib/util/nonNumericOnlyHash.js`.
+// Each config in webpack.config.js emits under `cfg${i}/`; the matchers below
+// pin the filename shape each template produces. The hash is captured rather
+// than length-checked — `hashDigestLength` and `nonNumericOnlyHash` both move it.
 
 /** @returns {RegExp} bundle matcher */
 const bundleRe = () => /^bundle\.main\.[a-f0-9]+\.js$/;
@@ -40,11 +37,9 @@ module.exports = {
 		const asyncJs = findOutputFiles(options, asyncJsRe(), dir)[0];
 		const asyncCssJs = findOutputFiles(options, asyncCssJsRe(), dir)[0];
 		const asyncCss = findOutputFiles(options, asyncCssRe(), dir)[0];
-		// Async CSS lands on disk as `.css` + a JS wrapper. Returning the JS
-		// wrappers ahead of the main bundle pre-registers the chunks via
-		// `runner.require`, so the runtime `import()` resolves against the
-		// already-installed chunk rather than the JSDOM `<script>` loader
-		// (which can't reach the file:// emit dir under JSDOM).
+		// Async CSS lands on disk as `.css` plus a JS wrapper. Returning the wrappers
+		// ahead of the main bundle pre-registers the chunks via `runner.require`, so
+		// `import()` resolves against them rather than JSDOM's `<script>` loader.
 		expect(asyncCss).toBeDefined();
 		return [
 			`./${dir}/${asyncJs}`,
@@ -53,10 +48,9 @@ module.exports = {
 		];
 	},
 	afterExecute(_options) {
-		// `_options` is the array of option objects (one per config) for a
-		// multi-config test. All configs in this case share the same
-		// `output.path` (the framework defaults each missing `output.path`
-		// to `test/js/.../<testName>/`), so we just take the first.
+		// `_options` is one option object per config. Every config here shares an
+		// `output.path` — the framework defaults each missing one to the same
+		// `test/js/.../<testName>/` — so the first answers for all.
 		const outputPath = (Array.isArray(_options) ? _options[0] : _options).output
 			.path;
 		for (let i = 0; i < 6; i++) {
@@ -80,22 +74,16 @@ module.exports = {
 			expect(bg).toBeDefined();
 			expect(icon).toBeDefined();
 
-			// --- No unresolved hash placeholders ------------------------
-			// `[contenthash]`, `[chunkhash]`, and `[fullhash]` must all
-			// have been substituted; if any survived to disk we'd see
-			// literal `[` characters in a filename.
+			// --- No unresolved hash placeholders
+			// `[contenthash]`, `[chunkhash]` and `[fullhash]` must all have been
+			// substituted; one that survived to disk leaves a literal `[` in a filename.
 			for (const f of files) {
 				expect(f).not.toMatch(/[[\]]/);
 			}
 
 			// --- HTML's rewritten URLs match the actual emitted filenames
-			// This is the html-webpack-plugin#1814 invariant: every URL the
-			// HTML page references must resolve to a file that actually
-			// exists at that path. If `realContentHash` mis-recomputes a
-			// hash, or if a hash placeholder is substituted with the wrong
-			// digest, the HTML's `<img src>` / `<link href>` would point at
-			// a filename that no asset was emitted under, and the browser
-			// would 404. We assert it directly.
+			// The html-webpack-plugin#1814 invariant: every URL the page references must
+			// resolve to a file that exists, or the browser 404s on it.
 			const htmlContent = fs.readFileSync(path.join(dir, html), "utf8");
 
 			const imgMatch = htmlContent.match(/<img src="([^"]+)"/);
@@ -103,10 +91,8 @@ module.exports = {
 			const linkMatch = htmlContent.match(/<link rel="icon" href="([^"]+)"/);
 			expect(linkMatch).not.toBeNull();
 
-			// Resolve the URLs relative to the HTML's location and check
-			// each one is a file that actually exists. `htmlFilename` /
-			// `htmlChunkFilename` emit the HTML into `cfg${i}/`, the same
-			// directory the assets live in, so a relative `<img src>` of
+			// Resolve each URL against the HTML's own location. `htmlFilename` /
+			// `htmlChunkFilename` emit into `cfg${i}/` beside the assets, so a relative
 			// `bg.<hash>.png` resolves to `cfg${i}/bg.<hash>.png`.
 			const resolveFromHtml = (url) => path.resolve(dir, url);
 			expect(fs.existsSync(resolveFromHtml(imgMatch[1]))).toBe(true);
@@ -118,10 +104,8 @@ module.exports = {
 			expect(path.basename(linkMatch[1])).toBe(icon);
 
 			// --- CSS's url() reference also resolves to the emitted asset
-			// `style.css` references `./bg.png` via `url(...)`, and webpack
-			// rewrites it to the hashed filename. Same invariant as the
-			// HTML check above — broken hash recomputation would silently
-			// produce a dangling URL in the stylesheet.
+			// `style.css` references `./bg.png`, which webpack rewrites to the hashed
+			// filename — the same invariant, where a drift leaves a dangling URL.
 			const cssContent = fs.readFileSync(path.join(dir, css), "utf8");
 			const cssUrlMatch = cssContent.match(/url\(([^)]+)\)/);
 			expect(cssUrlMatch).not.toBeNull();
@@ -130,24 +114,13 @@ module.exports = {
 			expect(fs.existsSync(path.resolve(dir, cssUrl))).toBe(true);
 
 			// --- Main JS bundle's chunk URL helpers point at real files
-			// This is the *other* half of html-webpack-plugin#1814: the
-			// runtime in the main bundle holds the chunkId-to-hash mapping
-			// used to build each chunk's URL, and if those hashes drift
-			// from the actual emitted chunks the browser hits a 404 the
-			// moment it tries to lazy-load. We pull the hash expression
-			// out of `__webpack_require__.u` (JS chunks) and
-			// `__webpack_require__.k` (CSS chunks), then verify every
-			// reachable filename it produces actually exists on disk.
+			// The other half of html-webpack-plugin#1814: the runtime holds the
+			// chunkId-to-hash mapping each chunk's URL is built from, and a drift 404s.
 			const bundleContent = fs.readFileSync(path.join(dir, bundle), "utf8");
 
-			// Locate a chunk-URL helper (`u` / `k`), anchored on `chunkId` and the
-			// `".<ext>"` tail so arrow, `return` and `function` forms all match. `<expr>`:
-			//   a) per-chunk map: `{"async_js":"<h>","async_css":"<h>"}[chunkId]`
-			//   b) inlined literal: `"<h>"` (when only one chunk applies)
-			//   c) compilation-hash helper: `__webpack_require__.h()`
-			// Pattern (c) is used for `[fullhash]` configs; we follow it
-			// to the `__webpack_require__.h` definition, which itself may
-			// be an arrow or function form returning the hash literal.
+			// Locate a chunk-URL helper (`u` / `k`), anchored on `chunkId` and the `".<ext>"`
+			// tail so arrow, `return` and `function` forms all match. `<expr>` is a per-chunk
+			// map, an inlined literal, or an `__webpack_require__.h()` this then follows.
 			const extractChunkHashExpr = (prop, ext) => {
 				const re = new RegExp(
 					`\\.${prop}\\s*=\\s*(?:\\(\\s*chunkId\\s*\\)|function\\s*\\(\\s*chunkId\\s*\\))[\\s\\S]*?(?:return|=>)\\s*\\(?\\s*"[^"]+"\\s*\\+\\s*chunkId\\s*\\+\\s*"\\."\\s*\\+\\s*([\\s\\S]*?)\\s*\\+\\s*"\\.${ext}"\\)?;`
@@ -186,10 +159,9 @@ module.exports = {
 				return pairs;
 			};
 
-			// `__webpack_require__.u` — JS chunks. With both `async.js` and
-			// `async.css` reachable, the helper resolves at minimum to the
-			// `async_js` chunk; the per-chunk map form additionally lists
-			// `async_css`'s JS wrapper.
+			// `__webpack_require__.u` — JS chunks. With `async.js` and `async.css` both
+			// reachable the helper resolves at minimum to `async_js`; the per-chunk map
+			// form additionally lists `async_css`'s JS wrapper.
 			const uHashExpr = extractChunkHashExpr("u", "js");
 			expect(uHashExpr).not.toBeNull();
 			const jsExpectedPairs = collectPairs(
