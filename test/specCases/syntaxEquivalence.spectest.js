@@ -677,6 +677,31 @@ describe("printer output in real Chrome", () => {
 				FILE_TIMEOUT
 			);
 
+			// WHY: the whitespace a math operator needs is carried under a marker
+			// across the rule that drops a delimiter's, and a marker a value can
+			// spell is one this tier reads two values as one through. U+0000 is the
+			// one no value holds: CSS Syntax §3.3 names U+FFFD for the null a source
+			// spells and §4.3.7 for the null an escape names.
+			it(
+				"reads a value's own private-use character as no space of its own",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "private-use-is-not-a-space",
+							raw: ".a{--x:a\uE000b}",
+							min: ".a{--x:a b}"
+						}
+					]);
+					expect(differences).toEqual([
+						{
+							name: "private-use-is-not-a-space",
+							why: "rule 0:  .a { --x:a\uE000b } vs  .a { --x:a b }"
+						}
+					]);
+				},
+				FILE_TIMEOUT
+			);
+
 			// A value that is not itself a color still carries them, and the computed
 			// value keeps the space each was written in.
 			it(
