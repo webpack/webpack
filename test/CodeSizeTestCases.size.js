@@ -903,7 +903,7 @@ const formatChangedAssets = (changes, summary, inputDeltas) => {
 		header: [
 			`| | Asset | Before | After | Change | ${COMPRESSED.map(
 				(metric) => METRIC_LABELS[metric]
-			).join(" | ")} |${withInput ? " Case edit (per case) |" : ""}`,
+			).join(" | ")} |${withInput ? " Test edit (per test) |" : ""}`,
 			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join(
 				""
 			)}${withInput ? " --: |" : ""}`
@@ -1077,11 +1077,11 @@ const formatVerdict = ({ generated, rebuilt, added, removed }) => {
 	const parts = [];
 	if (generated.length > 0) {
 		parts.push(
-			`**changes the size of ${generated.length} asset(s) built from an unedited case**`
+			`**changes the size of ${generated.length} asset(s) whose tests it leaves untouched**`
 		);
 	}
 	if (rebuilt.length > 0) {
-		parts.push(`moves ${rebuilt.length} asset(s) whose case it edits too`);
+		parts.push(`moves ${rebuilt.length} asset(s) whose tests it edits too`);
 	}
 	if (added.length > 0) parts.push(`adds ${added.length} new asset(s)`);
 	if (removed.length > 0) parts.push(`deletes ${removed.length} asset(s)`);
@@ -1154,7 +1154,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 
 	const rows = [
 		{
-			label: "Changed by webpack",
+			label: "Changed, test untouched",
 			cases: casesOf(generated, assetCase).length,
 			assets: generated.length,
 			gzip: sumDelta(generated, "gzip"),
@@ -1163,7 +1163,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			delta: true
 		},
 		{
-			label: "Changed, case edited too",
+			label: "Changed, test edited",
 			cases: casesOf(rebuilt, assetCase).length,
 			assets: rebuilt.length,
 			gzip: sumDelta(rebuilt, "gzip"),
@@ -1219,7 +1219,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		)}`,
 		"",
 		...(drift ? [drift, ""] : []),
-		"| What moved | Cases | Assets | Gzip | Raw | Case edit |",
+		"| What moved | Tests | Assets | Gzip | Raw | Test edit |",
 		"| :-- | --: | --: | --: | --: | --: |"
 	);
 	for (const { label, cases, assets, gzip, raw, input, delta } of rows) {
@@ -1235,7 +1235,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	}
 	lines.push(
 		"",
-		"**`Changed by webpack` is the row a size claim is read off** — those assets are built from a case this pull request did not edit, so what moved is what webpack generates. `Changed, case edited too` is mostly the pull request editing the case itself: `Case edit` is how many bytes of source the case gained, and a bundle that grew by less than its case did is not a regression. `New` and `Deleted` are whole assets rather than deltas, so a pull request adding cases cannot bury a real change. Gzip decides — it is what a user downloads, and a re-encoding can cut raw bytes while costing wire bytes; raw is the tiebreak, and brotli and zstd are per asset below.",
+		"**Read `Changed, test untouched` first**: the test is byte-identical on both sides, so webpack generated the difference. `Changed, test edited` moved partly because the test did — `Test edit` is how many bytes the test gained, and a bundle that grew by less is not a regression. `New` and `Deleted` are whole files, not deltas, so adding tests cannot bury a real change. Gzip decides, because that is what users download; raw is the tiebreak, and brotli and zstd are per asset below.",
 		""
 	);
 
@@ -1251,18 +1251,18 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			);
 		} else if (generated.length === 0) {
 			lines.push(
-				"No asset built from an unedited case changed size — every change below comes with a case this pull request edited.",
+				"No asset with an untouched test changed size — every change below comes with a test this pull request edited.",
 				""
 			);
 		}
 		lines.push(
 			...formatChangedAssets(
 				generated,
-				`${generated.length} asset(s) changed size, built from an unedited case`
+				`${generated.length} asset(s) changed size, test untouched`
 			),
 			...formatChangedAssets(
 				rebuilt,
-				`${rebuilt.length} asset(s) changed size, and their case was edited too`,
+				`${rebuilt.length} asset(s) changed size, test edited`,
 				rebuiltInputDeltas
 			),
 			...formatIntroducedAssets(added, "added"),
