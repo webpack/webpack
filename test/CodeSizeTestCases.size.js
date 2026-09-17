@@ -16,6 +16,7 @@ const ConcatenatedModule = require("../lib/optimize/ConcatenatedModule");
 const { makePathsRelative } = require("../lib/util/identifier");
 const browserslistConfigPackages = require("./helpers/browserslistConfigPackages");
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
+const codeSizeCommitLink = require("./helpers/codeSizeCommitLink");
 const codeSizeInputChanges = require("./helpers/codeSizeInputChanges");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
@@ -1200,19 +1201,24 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			delta: false
 		}
 	];
-	const short = (/** @type {Report} */ report) =>
-		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
-	// A pull request is built from its merge ref, so name both halves of what
-	// was measured rather than the head alone.
-	const measured = report.meta.base
-		? `${short(report)} merged into \`${report.meta.base.slice(0, 7)}\``
-		: short(report);
-	const drift = codeSizeBaselineDrift(baseline.meta.commit, report.meta.base);
+	const repositoryUrl = readRepositoryUrl();
+	// The base is the commit the baseline report was produced at, which is what
+	// the numbers below are a delta against — the `main` commit the measured
+	// merge ref carries is named only when the two differ, by the drift note.
+	const named = (/** @type {Report} */ report) =>
+		codeSizeCommitLink(report.meta.commit, repositoryUrl);
+	const drift = codeSizeBaselineDrift(
+		baseline.meta.commit,
+		report.meta.base,
+		repositoryUrl
+	);
 
 	// How many moved and by how much, then the biggest movers — before any
 	// collapsed section, so the whole verdict is readable without unfolding one.
 	lines.push(
-		`Comparing ${measured} against ${short(baseline)}. ${formatVerdict(buckets)}`,
+		`Comparing base (${named(baseline)}) to head (${named(report)}). ${formatVerdict(
+			buckets
+		)}`,
 		"",
 		...(drift ? [drift, ""] : []),
 		"| What moved | Cases | Assets | Gzip | Raw | Case source |",
@@ -1486,6 +1492,15 @@ const run = async () => {
 	if (args.summary) {
 		fs.appendFileSync(path.resolve(rootPath, args.summary), summary);
 	}
+};
+
+/**
+ * @returns {string | undefined} repository the run measured, when CI names one
+ */
+const readRepositoryUrl = () => {
+	const repository = process.env.GITHUB_REPOSITORY;
+	if (!repository) return undefined;
+	return `${process.env.GITHUB_SERVER_URL || "https://github.com"}/${repository}`;
 };
 
 /**

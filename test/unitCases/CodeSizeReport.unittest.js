@@ -4,6 +4,7 @@
 // runs a full build on require, so both are unit-tested through their helpers.
 
 const codeSizeBaselineDrift = require("../helpers/codeSizeBaselineDrift");
+const codeSizeCommitLink = require("../helpers/codeSizeCommitLink");
 const codeSizeInputChanges = require("../helpers/codeSizeInputChanges");
 const codeSizeReportPrefixes = require("../helpers/codeSizeReportPrefixes");
 
@@ -144,5 +145,38 @@ describe("codeSizeBaselineDrift", () => {
 		expect(note).toContain("a0b6a75");
 		expect(note).toContain("e3f177c");
 		expect(note).toContain("[!WARNING]");
+	});
+
+	it("links both commits when the repository is known", () => {
+		const note = codeSizeBaselineDrift(older, base, "https://example.com/o/r");
+		expect(note).toContain(
+			`[\`a0b6a75\`](https://example.com/o/r/tree/${older})`
+		);
+		expect(note).toContain(
+			`[\`e3f177c\`](https://example.com/o/r/tree/${base})`
+		);
+	});
+});
+
+describe("codeSizeCommitLink", () => {
+	const commit = "e3f177ca7e9c645718d1dbe95bf3c6f60563f6e8";
+
+	it("links the short sha to the tree at that commit", () => {
+		expect(codeSizeCommitLink(commit, "https://example.com/o/r")).toBe(
+			`[\`e3f177c\`](https://example.com/o/r/tree/${commit})`
+		);
+	});
+
+	it("names the commit alone when no repository is known", () => {
+		// A local run has no repository to link into, and a link to nowhere is
+		// worse than the sha the report has always printed.
+		expect(codeSizeCommitLink(commit, undefined)).toBe("`e3f177c`");
+	});
+
+	it("says so when the report carries no commit", () => {
+		expect(codeSizeCommitLink(undefined, "https://example.com/o/r")).toBe(
+			"unknown"
+		);
+		expect(codeSizeCommitLink(undefined, undefined)).toBe("unknown");
 	});
 });
