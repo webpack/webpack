@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import page from "./page.html";
 import unclosed from "./unclosed.html";
 import subPage from "./sub/page.html";
+import classicPage from "./classic.html";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,6 +16,7 @@ const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 const pageContent = typeof page === "string" ? page : "";
 const unclosedContent = typeof unclosed === "string" ? unclosed : "";
 const subContent = typeof subPage === "string" ? subPage : "";
+const classicContent = typeof classicPage === "string" ? classicPage : "";
 
 // Document-order list of every inline-script chunk url left in the page.
 const scriptChunkUrls = [
@@ -87,4 +89,26 @@ it("should keep two pages of the same basename apart", () => {
 	// rather than a hash of its path.
 	expect(scriptChunkUrls).not.toContain(subUrl);
 	expect(readChunk(subUrl)).toContain("sub-module");
+});
+
+it("should bundle a run of classic inline scripts into one chunk", () => {
+	expect(classicContent).toMatchSnapshot();
+
+	const urls = [
+		...classicContent.matchAll(/<script[^>]*\bsrc="(classic\d*\.mjs)"/g)
+	].map((m) => m[1]);
+	// Two classic bodies share a chunk; the module body after them starts a
+	// run of its own, since the two kinds compile differently.
+	expect(urls).toHaveLength(2);
+
+	const classicChunk = readChunk(urls[0]);
+	expect(classicChunk).toContain("classic-1");
+	expect(classicChunk).toContain("classic-2");
+	expect(classicChunk.indexOf("classic-1")).toBeLessThan(
+		classicChunk.indexOf("classic-2")
+	);
+
+	const moduleChunk = readChunk(urls[1]);
+	expect(moduleChunk).toContain("after-classic");
+	expect(moduleChunk).not.toContain("classic-1");
 });

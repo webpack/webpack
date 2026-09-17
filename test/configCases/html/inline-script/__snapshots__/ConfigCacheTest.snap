@@ -34,7 +34,7 @@ exports[`ConfigCacheTestCases html inline-script exported tests should bundle in
 <p>Hi</p>
 <script src=\\"page3.mjs\\" type=\\"module\\"></script>
 <!-- A legacy JavaScript MIME essence: still executable JS, so still bundled. -->
-<script src=\\"page4.mjs\\" type=\\"module\\"></script>
+
 </body>
 </html>
 "

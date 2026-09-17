@@ -30,8 +30,9 @@ it("should bundle inline <script> bodies as entry chunks and rewrite their tags 
 	expect(pageContent).not.toContain('console.log("<b>hello</b>")');
 	expect(pageContent).not.toContain("__inlineModuleSum");
 
-	// Five executable inline scripts (4 classic + 1 module) → five chunk urls.
-	expect(scriptChunkUrls).toHaveLength(5);
+	// Seven inline scripts, five of them executable — and the last two sit
+	// next to each other, so one run carries both: four chunk urls.
+	expect(scriptChunkUrls).toHaveLength(4);
 
 	// Non-JS `<script type>` blocks (importmap, JSON-LD) pass through
 	// unchanged — their bodies stay inline.
@@ -55,14 +56,16 @@ it("should auto-upgrade classic inline <script> to type=module when output.modul
 			/<script[^>]*\bsrc="(page\d*\.mjs)"[^>]*\btype="module"/g
 		)
 	].map((m) => m[1]);
-	expect(new Set(moduleTaggedSrcs).size).toBe(5);
+	expect(new Set(moduleTaggedSrcs).size).toBe(4);
 });
 
-it("should bundle each classic inline <script> body into its own chunk", () => {
+it("should bundle each classic inline <script> body into its run's chunk", () => {
 	const chunks = scriptChunkUrls.map(readChunk);
 	expect(chunks[0]).toContain('console.log("<b>hello</b>")');
 	expect(chunks[0]).toContain('var greeting = "hi"');
-	// chunks[1] is the module-typed inline script (see next test).
+	// chunks[1] is the module-typed inline script (see next test), which is a
+	// run of its own — the two kinds never share a chunk.
+	expect(chunks[1]).not.toContain("var greeting");
 	expect(chunks[2]).toContain("var counter");
 	expect(chunks[2]).toContain('"<div><span>nested</span></div>"');
 	expect(chunks[2]).toContain("return a < b");
@@ -103,7 +106,10 @@ it("should emit ES-module chunks for classic inline <script> too when output.mod
 it("should bundle a script typed with a legacy JavaScript MIME essence", () => {
 	// `text/x-javascript` is a JavaScript MIME type, so the browser executes it —
 	// treating it as a data block would leave the body unbundled and unrewritten.
-	const chunk = readChunk(scriptChunkUrls[4]);
+	// It follows the body's other classic script with only a comment between,
+	// so the two share a run and a chunk.
+	const chunk = readChunk(scriptChunkUrls[3]);
 	expect(chunk).toContain("__legacyTyped");
+	expect(chunk).toContain("/* second script */");
 	expect(pageContent).not.toContain("__legacyTyped");
 });
