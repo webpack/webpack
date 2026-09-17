@@ -29691,6 +29691,16 @@ declare class TokenStream {
 	skipWhitespace(): void;
 
 	/**
+	 * Step over the run of selector-prelude leaves a skip-mode parse drops (CSS
+	 * Syntax §5.4.3's "append to prelude", which skip mode does not do), without
+	 * lexing one token each. Only valid where every leaf up to the next
+	 * `BC_PRELUDE_STOP` code point is dropped whatever it is — which in
+	 * `consumeAQualifiedRule` is once the two tokens the `--foo: {`
+	 * disambiguation reads have both been seen. No-op while a token is cached.
+	 */
+	skipPreludeLeaves(): void;
+
+	/**
 	 * Mark (CSS Syntax §3 "mark") — push the current cursor position.
 	 */
 	mark(): void;

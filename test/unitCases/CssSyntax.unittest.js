@@ -2986,6 +2986,91 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		expect(log).toEqual(["decl:color", "ident:red"]);
 	});
 
+	// The skip-mode prelude walk steps over the leaves it drops in bytes, so
+	// every spelling that can hide the `{` it stops at has to hold it back, and
+	// a `(` has to hand the name in front of it back to the tokenizer.
+	describe("skip.selectorPrelude reads the same rules as a full parse", () => {
+		/**
+		 * What a walk sees: each rule's byte range, the declarations in it, and
+		 * every url, which is all skip mode still materializes.
+		 * @param {string} css source
+		 * @param {boolean} skip whether to skip selector preludes
+		 * @returns {string[]} the visit log
+		 */
+		const walk = (css, skip) => {
+			/** @type {string[]} */
+			const log = [];
+			/** @type {import("../../lib/css/syntax").VisitorMap} */
+			const map = {
+				[NodeType.QualifiedRule]: (
+					/** @type {import("../../lib/css/syntax").CssPath} */ path
+				) => log.push(`rule:${path.start()}-${path.end()}`),
+				[NodeType.Declaration]: (
+					/** @type {import("../../lib/css/syntax").CssPath} */ path
+				) => log.push(`decl:${path.name()}`),
+				[NodeType.Url]: (
+					/** @type {import("../../lib/css/syntax").CssPath} */ path
+				) => log.push(`url:${path.value()}`)
+			};
+			new SourceProcessor()
+				.use(map)
+				.process(css, skip ? { skip: { selectorPrelude: true } } : {});
+			return log;
+		};
+
+		// Each case reaches the scan, which runs only past two non-whitespace
+		// tokens: `.a .b` is that prefix, and the shape under test follows it.
+		// Without one the tokenizer would consume the shape as one of the two.
+		/** @type {[string, string][]} */
+		const CASES = [
+			["a plain run of leaves", ".a .b > .c + .d ~ .e{color:red}"],
+			["a string hiding the braces", '.a .b "{}" .c{color:red}'],
+			["a single-quoted string", ".a .b '}' .c{color:red}"],
+			["a quote hiding the brace", ".a .b '{' .c{color:red}"],
+			["a brace inside an attribute block", ".a .b [data-c={]{color:red}"],
+			["a comment hiding the brace", ".a .b/*{*/.c{color:red}"],
+			["an escaped brace", ".a .b .c\\{d{color:red}"],
+			["a function and its name", ".a .b :not(.x){color:red}"],
+			["a url inside the prelude's function", ".a .b :x(url(p.png)){color:red}"],
+			["an attribute block", ".a .b [data-c]{color:red}"],
+			["a non-ASCII selector", ".a .b .\u65e5\u672c\u8a9e{color:red}"],
+			["a stray closer in the prelude", ".a .b )] .c{color:red}"],
+			["a stray brace in the prelude", ".a .b }.c{color:red}"],
+			["a one-token prelude", "a{color:red}"],
+			["a nested rule under a block", "a{color:red;.b .c .d{color:blue}}"],
+			["a nested prelude stopped by a semicolon", "a{color:red;.b .c .d;width:1px}"],
+			[
+				"a nested prelude stopped by the block's brace",
+				"a{color:red;.b .c .d}.e{width:1px}"
+			],
+			["a rule inside an at-rule", "@media screen{.a .b .c{color:red}}"],
+			["a selector that reads as a declaration", "a{b:c{color:red}}"],
+			["a custom-property block", "a{--x:{color:red};width:1px}"],
+			["a prelude running to EOF", ".a .b .c"],
+			["a NUL in the prelude", ".a .b .c\u0000d{color:red}"]
+		];
+
+		it.each(CASES)("%s", (_name, css) => {
+			expect(walk(css, true)).toEqual(walk(css, false));
+		});
+
+		// A bare `url(` is the other name the scan hands back to the tokenizer, and
+		// skip mode drops the token lexed there — as it always has, a url visitor
+		// reaching one only through a function. The scan owes the rule boundary.
+		it("reads the rule around a bare url() the prelude drops", () => {
+			expect(walk(".a .b url(p.png){color:red}", true)).toEqual([
+				"rule:0-27",
+				"decl:color"
+			]);
+		});
+
+		it("keeps a url the prelude's own function holds", () => {
+			expect(walk(".a .b :x(url(p.png)){color:red}", true)).toContain(
+				"url:p.png"
+			);
+		});
+	});
+
 	it("skip.atRulePrelude drops the at-rule prelude but keeps the block", () => {
 		/** @type {string[]} */
 		const log = [];
