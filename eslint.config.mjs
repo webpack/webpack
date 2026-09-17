@@ -100,6 +100,11 @@ export default defineConfig([
 	configs["webpack/schemas"],
 	configs["webpack/types"],
 	{
+		// TODO extend to lib/, which carries 652 comments over the limit
+		files: ["test/**/*.{js,mjs,cjs}", "tooling/**/*.js", "hot/**/*.js"],
+		extends: [configs["webpack/comments"]]
+	},
+	{
 		files: ["lib/**/*.js"],
 		rules: {
 			// TODO drop once eslint-config-webpack#200 ships: the parser `webpack/types`
