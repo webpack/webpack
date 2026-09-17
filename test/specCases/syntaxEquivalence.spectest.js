@@ -59,10 +59,9 @@ const BATCH = 150;
 // the page goes, and a page costs 58ms — so this trades one page per few
 // hundred files against a renderer holding the whole corpus.
 const PAGE_DOCUMENTS = 500;
-// What one file gets, and what one batch's CDP call gets with it. A file is
-// compared in milliseconds, so this is orders above what any needs: generous
-// enough never to fail a slow runner, small enough that every file which hangs
-// is named in one run rather than one per quarter hour.
+// What one file gets, and what one batch's CDP call gets with it. A file compares
+// in milliseconds, so this is orders above what any needs — generous enough never
+// to fail a slow runner, small enough that every hanging file is named in one run.
 const FILE_TIMEOUT = 180000;
 // One declaration, bounded here rather than by jest — which is what lets the
 // page be replaced before the next one runs. A declaration costs a
@@ -525,12 +524,9 @@ describe("printer output in real Chrome", () => {
 		const one = corpora[at];
 
 		describe(one.label, () => {
-			// One test per page, not per corpus: the file is what a defect is filed
-			// against, so a failure names it without anything having to narrow it
-			// down. Every part of the document the engine builds — the element tree,
-			// the rendered text, the comments, the doctype, the CSS, JSON and script
-			// bodies carried inside it, and the CSSOM of every stylesheet it carries
-			// — must survive minification.
+			// One test per page, not per corpus: the file is what a defect is filed against,
+			// so a failure names it with nothing left to narrow down. Every part of the
+			// document the engine builds must survive minification.
 			for (const fixture of one.html) {
 				it(
 					`should build the same DOM and CSSOM from ${fixture.name}`,
@@ -550,10 +546,9 @@ describe("printer output in real Chrome", () => {
 			])(
 				"should build the same DOM and CSSOM with removeImpliedTags %s",
 				async (_mode, pick) => {
-					// The tags this leaves out are the ones the parser puts back, so the
-					// tree it builds — every element's depth in it, and the CSSOM of what
-					// it carries — is untouched. Grouped: what these vary is the option,
-					// not the file, and the tier above already names the file.
+					// The tags this leaves out are the ones the parser puts back, so the tree it
+					// builds — every element's depth, and the CSSOM of what it carries — is untouched.
+					// Grouped: these vary the option, not the file, which the tier above names.
 					const differences = await comparePages(pick(one), true);
 					expect(differences.map((each) => each.name).sort()).toEqual(
 						[...one.filedHtml.keys()].sort()
@@ -765,10 +760,9 @@ describe("printer output in real Chrome", () => {
 		: []) {
 		declarationsRead++;
 		const min = minifyDeclaration(property, value);
-		// A value the printer copied out is compared against itself, which the
-		// engine answers the same way twice by construction. Three quarters of
-		// the corpus is that, and reading one back is not free: the one value
-		// that hangs Chrome is invalid CSS the printer never touched.
+		// A value the printer copied out is compared against itself, which the engine
+		// answers the same way twice by construction. Three quarters of the corpus is
+		// that, and reading one back is not free.
 		if (min === value) continue;
 
 		declarations.push({
@@ -815,10 +809,9 @@ describe("printer output in real Chrome", () => {
 					// boundary ("ab"+"c" against "a"+"bc") reads as equal.
 					let out = "";
 					for (const name of names) {
-						// Under the one name the spec gives the value, its colors painted:
-						// the engine echoes the spelling it was handed — `jump-start`
-						// beside `start`, the color `image()` carries — so without this
-						// the tier reads a synonym as a change of meaning.
+						// Under the one name the spec gives the value, its colors painted: the engine
+						// echoes the spelling it was handed — `jump-start` beside `start` — so without
+						// this the tier reads a synonym as a change of meaning.
 						out += `${name}:${paintedColors(
 							canonical(computed.getPropertyValue(name))
 						)}\u0000`;
@@ -827,11 +820,9 @@ describe("printer output in real Chrome", () => {
 				};
 				const out = [];
 				for (const one of each) {
-					// Each form read against its own longhands, the name included: a form
-					// that sets a property the other does not — an invalid value the
-					// printer brought to life, or a valid one it erased — differs by
-					// that name alone. An erased declaration is read as the empty form
-					// rather than skipped, so the engine says whether it mattered.
+					// Each form read against its own longhands, the name included: a form that sets a
+					// property the other does not — an invalid value the printer brought to life, or a
+					// valid one it erased — differs by that name alone.
 					if (
 						readBack(one.property, one.raw) !== readBack(one.property, one.min)
 					) {
@@ -877,10 +868,9 @@ describe("printer output in real Chrome", () => {
 			// No-op: the corpus is an optional git submodule.
 		});
 	} else {
-		// The tier compares what the printer rewrites, so a printer that rewrote
-		// nothing would leave it with no work and still pass. Bounds well under
-		// today's 8,785 read and 2,198 compared, to fail on that rather than on
-		// the corpus growing or the printer touching a few values more or less.
+		// The tier compares what the printer rewrites, so a printer that rewrote nothing
+		// would pass with no work. Bounds well under today's 8,785 read and 2,198
+		// compared, to fail on that rather than on the corpus growing.
 		it("should have a corpus the printer rewrites a share of", () => {
 			expect(declarationsRead).toBeGreaterThan(5000);
 			expect(declarations.length).toBeGreaterThan(1000);
@@ -911,13 +901,15 @@ describe("printer output in real Chrome", () => {
 	}
 
 	it("should only fold enumerated values the engine folds too", async () => {
-		// The printer lower-cases a value in `ENUMERATED_KEYWORDS`. That is
-		// unobservable exactly where the IDL member is "limited to only known
-		// values", so it hands back one spelling whichever was written — which no
-		// dataset states, and `target` / `<textarea wrap>` reflect verbatim. The
-		// corpus only covers the entries a fixture happens to carry; this covers
-		// every one of them.
-		/** @type {Record<string, Record<string, string[]>>} */
+		/**
+		 * The printer lower-cases a value in `ENUMERATED_KEYWORDS`, which is
+		 * unobservable exactly where the IDL member is "limited to only known
+		 * values" and hands back one spelling whichever was written — something no
+		 * dataset states, and `target` / `<textarea wrap>` reflect verbatim. The
+		 * corpus covers only the entries a fixture happens to carry; this covers
+		 * every one of them.
+		 * @type {Record<string, Record<string, string[]>>}
+		 */
 		const table = {};
 		for (const [element, attributes] of Object.entries(ENUMERATED_KEYWORDS)) {
 			table[element] = {};
@@ -974,13 +966,14 @@ describe("printer output in real Chrome", () => {
 	}, 600000);
 
 	it("should only drop an empty attribute the engine reads back as absent", async () => {
-		// `removeEmptyAttributes` drops each of these when its value is empty. That
-		// is unobservable only where the IDL member reads the same as with no
-		// attribute at all — which is why an event handler is not in the table:
-		// an empty body still compiles, so it reads back a function, not null.
-		// A global is read on `<a>`, as every one of them was before the table
-		// carried a scope; a scoped one on each element it names.
-		/** @type {[string, string[]][]} */
+		/**
+		 * `removeEmptyAttributes` drops each of these when its value is empty,
+		 * which is unobservable only where the IDL member reads the same as with no
+		 * attribute at all — so an event handler is not in the table, its empty
+		 * body still compiling to a function rather than null. A global is read on
+		 * `<a>`, a scoped one on each element it names.
+		 * @type {[string, string[]][]}
+		 */
 		const probes = [];
 		for (const [name, on] of EMPTY_REMOVABLE_ATTRIBUTES) {
 			probes.push([name, on === null ? ["a"] : [...on]]);
@@ -1080,11 +1073,9 @@ const domShapeOf = (source) => {
 			const written = [...A.attributes(child)]
 				.map((attribute) => {
 					const name = attribute.serializedName || attribute.name;
-					// The printer may rewrite these — a boolean written bare, an
-					// enumerated value folded, a `style` re-printed, a `srcset` given
-					// different spacing. Whether it still reflects the same is what IDL
-					// reflection answers, in the tier above, so here only the name is
-					// compared.
+					// The printer may rewrite these — a boolean written bare, an enumerated value
+					// folded, a `style` re-printed. Whether it still reflects the same is what IDL
+					// reflection answers in the tier above, so here only the name is compared.
 					if (isRewritable(name)) return name;
 					// The value as the DOM holds it: `&lt;` and a literal `<` are one
 					// attribute written two ways.
@@ -1134,12 +1125,9 @@ const whatMoved = (before, after) => {
 	return "";
 };
 
-// The whole wpt corpus, with no engine: webpack's parser answers for the DOM,
-// which the tree-construction suite holds to this corpus's own expected trees.
-// Both print modes run — beautifying is where the round-trip fallback lives, so
-// the corpus is the only thing holding it to real documents.
-// One test per spec area rather than per document — 49k test names report
-// nothing a failing list does not, and the list shows every document at once.
+// The whole wpt corpus, with no engine: webpack's parser answers for the DOM, held
+// to this corpus's own expected trees. Both print modes run, since beautifying is
+// where the round-trip fallback lives; one test per spec area, not per document.
 describe("wpt tree stability", () => {
 	/** @type {Map<string, string[]>} the corpus, by wpt spec area */
 	const byGroup = new Map();
@@ -1261,12 +1249,11 @@ describe("wpt css token adjacency", () => {
 	});
 });
 
-// What a lowering is held to: an engine that reads both spellings computes the
-// same style from either. The engine here reads every modern spelling, so a
-// fallback pair resolves to the author's own and a rewrite has to land on it.
-// A lowering that changes the computed value on purpose names the properties it
-// changes, with the reason — nothing is compared as text.
 /**
+ * What a lowering is held to: an engine that reads both spellings computes the
+ * same style from either, so a fallback pair resolves to the author's own and a
+ * rewrite has to land on it. A lowering that changes the computed value on
+ * purpose names the properties it changes, with the reason.
  * @typedef {object} LoweringFixture
  * @property {string} name what it lowers
  * @property {string} css the stylesheet
@@ -1541,11 +1528,9 @@ const LOWERING_FIXTURES = [
 			["#b", "left"],
 			["#b", "right"]
 		],
-		// The engine computes the expression at full precision and serializes what
-		// it computed; the printer writes the six significant digits a stylesheet
-		// can observe. So these are held to `numericallyEqual` — the same relative
-		// 1e-5 the rounding itself rests on, under Chromium's 1/64px layout grid —
-		// rather than to the same text.
+		// The engine computes at full precision and serializes what it computed; the
+		// printer writes the six significant digits a stylesheet can observe. So these
+		// are held to `numericallyEqual` rather than to the same text.
 		numeric: [
 			"width",
 			"height",
@@ -1679,10 +1664,9 @@ describe("a lowering computes as the spelling it replaces", () => {
 	const readComputed = (page, css, html, probes) =>
 		page.setContent(`<style>${css}</style>${html}`).then(() =>
 			page.evaluate((asked) => {
-				// A color is compared as painted rather than as text: the engine
-				// keeps a mix at the precision it computed, while the printer writes
-				// the byte it lands on — which is the trade every color rewrite here
-				// already makes, and the pixel is what a reader sees of it.
+				// A color is compared as painted rather than as text: the engine keeps a mix at
+				// the precision it computed, while the printer writes the byte it lands on — the
+				// trade every color rewrite here already makes, and the pixel is what a reader sees.
 				const canvas = document.createElement("canvas");
 				const context = /** @type {CanvasRenderingContext2D} */ (
 					canvas.getContext("2d", { willReadFrequently: true })

@@ -293,10 +293,9 @@ describe("tokenize", () => {
 				return end;
 			}
 		});
-		// `<![CDATA[` only opens a CDATA section when there is an adjusted current
-		// node outside the HTML namespace (§13.2.5.42). Without an `isForeign`
-		// callback there is none, so this is a bogus comment ending at the first
-		// `>` — as in a browser, which leaves the trailing `]]>` as text.
+		// `<![CDATA[` opens a CDATA section only under an adjusted current node
+		// outside the HTML namespace (§13.2.5.42). With no `isForeign` callback
+		// there is none, so this is a bogus comment ending at the first `>`.
 		expect(results).toEqual([
 			["open", "div"],
 			["comment", "<![CDATA[<img src='x'>"],
@@ -579,9 +578,8 @@ describe("tokenize", () => {
 
 	it("should not exit script-data-double-escaped on tag prefixes longer than 'script'", () => {
 		// Regression: tempBuffer in script-data-double-escape-end-state must
-		// accumulate the full tag name (per WHATWG spec). With a length cap,
-		// `</scripts>` (or any longer prefix) would falsely match `"script"`
-		// and prematurely exit the double-escaped state.
+		// accumulate the whole tag name — under a length cap `</scripts>` falsely
+		// matches `script` and leaves the double-escaped state early.
 		const html = "<script><!--<script>x</scripts>y</script>--></script>";
 		/** @type {unknown[]} */
 		const results = [];
@@ -607,10 +605,9 @@ describe("tokenize", () => {
 	});
 
 	it("should preserve script content when close tag is reached from escaped state without `-->`", () => {
-		// Regression: when the matching `</script>` is emitted directly from
-		// SCRIPT_DATA_ESCAPED (no transition back through SCRIPT_DATA via `-->`),
-		// `tagStart` must point to the `<` of the actual close tag — otherwise
-		// `flushText(tagStart)` emits an empty range and the script body is lost.
+		// Regression: a `</script>` emitted straight from SCRIPT_DATA_ESCAPED,
+		// with no `-->` back through SCRIPT_DATA, needs `tagStart` at its `<` —
+		// otherwise `flushText(tagStart)` empties the range and loses the body.
 		const html = "<script><!--<script></script></script>";
 		/** @type {unknown[]} */
 		const results = [];
@@ -2053,24 +2050,18 @@ describe("tokenize", () => {
 
 		// --- NAMED_CHARACTER_REFERENCE safety cap on very long entities ---
 		it("nAMED_CHARACTER_REFERENCE: caps the alphanumeric run at MAX_ENTITY_NAME_LEN - 1", () => {
-			// The longest WHATWG entity name is 32 chars (with the trailing
-			// `;`); the alphanumeric run before the optional `;` is therefore
-			// at most 31 chars. The scanner bounds the consume loop at
-			// `MAX_ENTITY_NAME_LEN - 1 = 31` so pathological inputs (`&` plus
-			// thousands of alphanumerics) stay linear-time. Beyond the cap the
-			// bytes round-trip as text.
+			// The longest WHATWG entity name is 32 chars including the `;`, so the
+			// run before it is at most 31. The scanner caps the consume loop there,
+			// keeping `&` plus thousands of alphanumerics linear-time.
 			const longEntity = `&${"a".repeat(50)}`;
 			expect(roundtrip(longEntity)).toBe(longEntity);
 		});
 
 		// --- Callback can advance `pos` past the natural end (skip-ahead) ---
 		it("openTag callback returning a larger position causes state to fall to DATA", () => {
-			// When a callback returns nextPos > end (= pos + 1), the state machine
-			// stays in DATA instead of switching to the content mode for
-			// `<script>` / `<style>` / etc. — verifies the `nextPos > pos + 1`
-			// branch in STATE_TAG_NAME, STATE_AFTER_ATTRIBUTE_NAME,
-			// STATE_BEFORE_ATTRIBUTE_VALUE, STATE_ATTRIBUTE_VALUE_UNQUOTED, and
-			// STATE_AFTER_ATTRIBUTE_VALUE_QUOTED `>` handlers.
+			// A callback returning `nextPos > pos + 1` keeps the machine in DATA
+			// rather than switching to `<script>` / `<style>` content mode — the
+			// branch every `>` handler carries, one case per state below.
 			/** @type {[string, ...EXPECTED_ANY[]][]} */
 			const out = [];
 			const skipFn =
@@ -2111,10 +2102,9 @@ describe("tokenize", () => {
 					}
 				}
 			);
-			// Each open tag callback skips one extra char past `>`, so the
-			// following text content is shorter than the source. The exact
-			// text spans aren't important — what matters is that the lexer
-			// stays in DATA mode (no content-mode trapping of `<script>`).
+			// Each open-tag callback skips one char past `>`, so the text that
+			// follows is shorter than the source. The spans do not matter; staying
+			// in DATA mode, with no content-mode trapping of `<script>`, does.
 			expect(out.filter(([k]) => k === "open").map((e) => e[1])).toEqual([
 				"script",
 				"a",
@@ -2689,11 +2679,9 @@ describe("tokenize", () => {
 		});
 
 		it("reports eof-in-tag with correct partial name in content-mode end-tag states", () => {
-			// Regression: EOF inside RCDATA/RAWTEXT/SCRIPT_DATA end-tag-name
-			// states must reset `tagNameEnd` (it carries stale values from the
-			// matching open tag), otherwise `emitCloseTag(len)` slices the
-			// wrong range. Verify the partial close-tag name is emitted for
-			// each content mode.
+			// Regression: EOF in an RCDATA / RAWTEXT / SCRIPT_DATA end-tag-name
+			// state must reset `tagNameEnd`, which still carries the matching open
+			// tag's value — otherwise `emitCloseTag(len)` slices the wrong range.
 			for (const [html, expectedClose] of [
 				["<title>x</tit", "tit"],
 				["<style>x</sty", "sty"],
@@ -2890,10 +2878,9 @@ describe("tokenize", () => {
 		});
 
 		it("should not let decimal references swallow trailing hex-letter chars", () => {
-			// Regression: a decimal numeric reference must consume only [0-9]+.
-			// `&#65b` should decode `&#65` → `A` and leave the trailing `b` as
-			// literal text (the earlier regex matched `[0-9a-fA-F]+` for both
-			// hex and decimal and incorrectly swallowed the `b`).
+			// Regression: a decimal numeric reference consumes only `[0-9]+`, so
+			// `&#65b` decodes to `A` and leaves `b` as text. The earlier regexp
+			// matched `[0-9a-fA-F]+` for both bases and swallowed the `b`.
 			expect(decodeEntities("&#65b")).toBe("Ab");
 			expect(decodeEntities("&#1f")).toBe("f");
 		});
@@ -2911,10 +2898,9 @@ describe("tokenize", () => {
 		});
 
 		it("should not match inherited Object.prototype keys as entities", () => {
-			// Regression: with a regular object literal, `HTML_ENTITIES["toString"]`
-			// would return `Object.prototype.toString` and the lookup would
-			// falsely treat the entity as matched. The generated table now uses
-			// a null prototype so these names stay literal.
+			// Regression: from a plain object literal `HTML_ENTITIES["toString"]`
+			// returns `Object.prototype.toString` and the lookup reads the entity as
+			// matched. The generated table has a null prototype, so it does not.
 			expect(decodeEntities("&toString;")).toBe("&toString;");
 			expect(decodeEntities("&constructor;")).toBe("&constructor;");
 			expect(decodeEntities("&hasOwnProperty;")).toBe("&hasOwnProperty;");
@@ -3098,11 +3084,11 @@ describe("tokenize", () => {
 /** @typedef {{ type: typeof NodeType.DocumentFragment, children: MatNode[] }} MatFragment */
 /** @typedef {MatElement | MatText | MatComment | MatDoctype | MatProcessingInstruction} MatNode */
 
-// `parseHtml` returns integer refs into reused module-level columns, valid
-// only until the next parse; materialize each tree eagerly (reading every
-// field through `A`, so this suite exercises the whole accessor surface) to
-// keep assertions valid across the multiple parses many tests perform.
 /**
+ * `parseHtml` hands back integer refs into reused module-level columns, valid
+ * only until the next parse, so each tree is materialized eagerly. Every field
+ * is read through `A`, which is how this suite reaches the whole accessor
+ * surface.
  * @param {HtmlNodeRef} ref node ref
  * @returns {MatNode} plain-object node
  */
@@ -3575,9 +3561,8 @@ describe("parseHtml", () => {
 		});
 
 		// A formatting end tag the list cannot answer for is read as any other end
-		// tag would be, rather than dropped. The marker a `<select>` leaves behind
-		// outlives the select, so the `<em>` around one is on the far side of it;
-		// Noah's Ark drops the earliest `<b>` while leaving it open.
+		// tag, not dropped. A `<select>`'s marker outlives it, so the `<em>` around
+		// one is beyond it; Noah's Ark drops the earliest `<b>` but leaves it open.
 		it.each([
 			[
 				"a marker stands between them",
@@ -3602,11 +3587,9 @@ describe("parseHtml", () => {
 			}
 		);
 
-		// A `<template shadowrootmode>` is its parent's shadow root, which the
+		// A `<template shadowrootmode>` becomes its parent's shadow root, which the
 		// engine takes out of the tree — so it is not a child the algorithm may
-		// carry into the formatting element it reconstructs around the rest. It
-		// only attaches where `attachShadow()` would: a host it accepts by name,
-		// a mode it knows, and none attached already.
+		// carry into the formatting element it reconstructs around the rest.
 		it.each([
 			[
 				"attaches to its host",
@@ -5273,10 +5256,9 @@ describe("SourceProcessor — the per-transform switches", () => {
 	const minify = (html, transforms) =>
 		new SourceProcessor().process(html, { mode: "minify", transforms }).code;
 
-	// One input per switch, minified twice: with everything on, and with that one
-	// switch off — so a guard that stops firing fails here rather than quietly
-	// making the rewrite unconditional again. `comments` is not one of the
-	// booleans, so it has a describe of its own above.
+	// One input per switch, minified twice: everything on, and that one switch
+	// off — so a guard that stops firing fails here rather than quietly making
+	// the rewrite unconditional. `comments` is not a boolean; it has its own.
 	it.each([
 		[
 			"collapseBooleanAttributes",
@@ -6456,13 +6438,12 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 	const { SourceProcessor } = require("../../lib/html/syntax");
 
-	// A `style=""` is serialized while the walk streams the open tag, before that
-	// element's printer runs, so its options have to be bound for the whole print
-	// — otherwise the attribute reads the previous print's target and emits a
-	// spelling this one cannot read.
-	// `#rrggbbaa` landed in Chrome 62, so these two selections sit either side of
-	// the one ability, and the browsers decide it rather than a flag.
 	/**
+	 * A `style=""` is serialized while the walk streams the open tag, before that
+	 * element's printer runs, so its options must stay bound for the whole print —
+	 * otherwise the attribute reads the previous print's target. `#rrggbbaa`
+	 * landed in Chrome 62, so the two selections sit either side of that one
+	 * ability and the browsers decide it rather than a flag.
 	 * @param {string} browser the browserslist selection to minify for
 	 * @returns {string} the minified serialization
 	 */
@@ -6687,10 +6668,9 @@ describe("parseHtml — stray doctype and <html> re-dispatch", () => {
 	});
 });
 
-// The `skip` options are pure output reductions: tree construction (and quirks
-// detection) must run identically, so the ELEMENT tree — tags, nesting, offsets
-// and attributes — is the same with any skip combination as with none. This
-// guards the risky `skip.text` path, which drops text-node insertion.
+// The `skip` options only reduce output: tree construction and quirks detection
+// still run identically, so the element tree — tags, nesting, offsets and
+// attributes — is the same under any combination as under none.
 describe("parseHtml — skip options preserve element structure", () => {
 	// A spread of construction edge cases: foster parenting, adoption agency,
 	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
@@ -7202,11 +7182,9 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 describe("SourceProcessor — streamed walk recycling", () => {
 	const { SourceProcessor } = require("../../lib/html/syntax");
 
-	// Every case here is sized past the streaming threshold (49152 nodes) so the
-	// walk actually enters an open element, flushes under it and recycles node
-	// ids — the paths a document walked in one pass at EOF never reaches. The
-	// repeat counts are per-shape because the threshold counts nodes, not
-	// repetitions: two/three-node shapes need `BIG`, a five-node row needs fewer.
+	// Every case is sized past the streaming threshold (49152 nodes) to reach
+	// what one pass at EOF cannot: entering an open element, flushing under it,
+	// recycling node ids. It counts nodes, so the repeat counts are per-shape.
 	const BIG = 40000;
 	const BIG_ROWS = 15000;
 
@@ -7321,10 +7299,9 @@ describe("SourceProcessor — streamed walk recycling", () => {
 					[NodeType.Text]: (path) => text.push(path.data())
 				})
 			)
-			// entity references split the tokenizer's text runs; the walk must not
-			// also split the node, so one text child stays one visit. The leading
-			// paragraphs are what push the parse past the streaming threshold, so
-			// the entity run at the tail is reached with the walk already streaming.
+			// Entity references split the tokenizer's text runs; the walk must not
+			// split the node too, so one text child stays one visit. The leading
+			// paragraphs push the parse past the threshold before the entity run.
 			.process(
 				`<!DOCTYPE html><html><body>${"<p>x</p>".repeat(
 					BIG
@@ -7341,10 +7318,9 @@ describe("SourceProcessor — streamed walk recycling", () => {
 	});
 
 	it("does not re-visit an element the form end tag left open", () => {
-		// `</form>` removes the form from the *middle* of the open stack while the
-		// `div` inside it stays open, so nothing has finished. Reconciling against
-		// the open stack there closes and re-enters the live `div` — visits stay
-		// balanced, so only the visit count catches it.
+		// `</form>` removes the form from the middle of the open stack while the
+		// `div` inside stays open, so nothing has finished. Reconciling there
+		// closes and re-enters the live `div`, which only the visit count catches.
 		const log = walk(
 			`<!DOCTYPE html><html><body><form>${"<p>x</p>".repeat(
 				BIG
@@ -7418,12 +7394,9 @@ describe("SourceProcessor — streamed walk recycling", () => {
 describe("SourceProcessor — streamed walk offsets", () => {
 	const { SourceProcessor } = require("../../lib/html/syntax");
 
-	// `HtmlParser` builds its head-injection anchors during the walk, and what it
-	// reads decides what has to be final: `tagEnd()` for the still-open `<html>`
-	// / `<head>` (assigned when the element is inserted) and `end()` only for the
-	// head's completed children. The streamed walk reports a provisional `end` on
-	// an element it has entered but not closed, so those two reads are the
-	// contract — assert them directly, at both walk sizes.
+	// `HtmlParser` builds its head-injection anchors during the walk, so what it
+	// reads must be final: `tagEnd()` for the still-open `<html>` / `<head>`, and
+	// `end()` for the head's completed children. Assert both, at both sizes.
 	it("reports final end offsets for head elements", () => {
 		const SRC = [
 			"<!DOCTYPE html><html><head><title>t</title>",
@@ -7465,11 +7438,11 @@ describe("SourceProcessor — streamed walk offsets", () => {
 	});
 
 	it("reports a provisional end at enter and a final one at exit", () => {
-		// What the streamed walk does that the single pass at EOF cannot: enter an
-		// element before it closes. Its `end` is then provisional until `exit`.
-		// Below `_STREAM_MIN_NODES` the same markup is walked once at EOF, so the
-		// two reads agree — the contrast is what pins the streamed path.
 		/**
+		 * What the streamed walk does that a single pass at EOF cannot: enter an
+		 * element before it closes, leaving its `end` provisional until `exit`.
+		 * Below `_STREAM_MIN_NODES` the same markup is walked once at EOF, so the
+		 * two reads agree and that contrast pins the streamed path.
 		 * @param {number} rows how many children to wrap
 		 * @returns {[number, number]} the outer element's `end` at enter and at exit
 		 */
@@ -7719,11 +7692,9 @@ describe("parseCssUrls", () => {
 	});
 });
 
-// Fused state transitions: the tokenizer executes 100%-predictable follow-up
-// arcs inline (tag-open alpha scan, end-tag peek, fused `<` after text runs,
-// quoted-value scan after the opening quote, end-tag-name alpha runs,
-// attribute-name scan from before-attribute-name) — each case drives one fused
-// branch and its EOF edge, expecting the exact spec token/error stream.
+// Fused state transitions: the tokenizer runs fully predictable follow-up arcs
+// inline. Each case drives one fused branch and its EOF edge, expecting the
+// exact spec token and error stream.
 describe("tokenize — fused state transitions", () => {
 	/**
 	 * @param {string} html input
@@ -8355,16 +8326,13 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	});
 
 	// Every other minify transform is covered end to end by
-	// `configCases/html/minimize-transforms`, whose snapshot is the corpus. CR
-	// cases cannot live there: `.gitattributes` checks every `test/` file out
-	// with LF, so a CR only reaches the parser from a string built here.
+	// `configCases/html/minimize-transforms`. CR cases cannot live there:
+	// `.gitattributes` checks `test/` out with LF, so a CR needs a string here.
 	describe("implied <body> with leading whitespace", () => {
 		it("materializes the tag so the text node survives", () => {
-			// Found by running the html5lib serializer corpus through minify. A
-			// transparent implied `<body>` puts the run where re-parsing drops it:
-			// before `<body>` starts, the insertion modes ignore whitespace.
-			// The shell end tag the source spelled stays: `removeImpliedTags`
-			// leaves out only the `<html>` start tag outside `"all"`.
+			// Found by running the html5lib serializer corpus through minify: a
+			// transparent implied `<body>` puts the run where re-parsing drops it,
+			// since the modes before `<body>` starts ignore whitespace.
 			expect(minify("</html> foo")).toBe("<body> foo</body></html>");
 			expect(minify("</body> foo")).toBe("<body> foo</body>");
 			expect(minify("<colgroup> foo")).toBe("<body> foo</body>");
@@ -8388,9 +8356,8 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("keeps a CRLF text run whole when it leads an insertion mode", () => {
 			// `leadingWs` splits this run, and its source span has to survive the
-			// CRLF collapsing or the tail is dropped. `<colgroup>` is the insertion
-			// mode that both splits the run and keeps it — `<head>`/`<html>` drop
-			// their whitespace as inert.
+			// CRLF collapsing or the tail is dropped. `<colgroup>` both splits the
+			// run and keeps it, where `<head>` / `<html>` drop theirs as inert.
 			expect(minify("<table><colgroup>\r\n\t<col></colgroup></table>")).toBe(
 				"<table><colgroup>\n\t<col></table>"
 			);
@@ -8476,11 +8443,9 @@ describe("SourceProcessor — printing in pieces", () => {
 	const minify = (source) =>
 		new SourceProcessor().process(source, { mode: "minify" }).code;
 
-	// Most of a document prints as `open tag + children + end tag`, so each piece
-	// goes out as the walk reaches it rather than being held for the parent to
-	// read back. These are the elements whose text is not that — printed whole, so
-	// the piecemeal path has to leave them alone — and the pieces that are only
-	// decidable once something inside has printed.
+	// Most of a document prints as open tag, children, end tag, each piece
+	// leaving as the walk reaches it. These are the exceptions: elements printed
+	// whole, and pieces decidable only once something inside has printed.
 
 	it("prints a long sibling chain a piece at a time", () => {
 		// The store is what this avoids: nothing but the node being printed is in
@@ -9675,9 +9640,8 @@ describe("SourceProcessor — beautifying", () => {
 });
 
 // A nested list item, a second `<form>`, a fostered run: shapes whose print the
-// round-trip guard checks. It reads both trees the way minifying leaves them —
-// no comments, text runs joined and collapsed, the elements and values the
-// options rewrite or drop — so only a node that moved hands the source back.
+// round-trip guard checks. It reads both trees as minifying leaves them, so only
+// a node that moved hands the source back.
 describe("SourceProcessor — minifying what the round-trip guard checks", () => {
 	const { SourceProcessor } = require("../../lib/html/syntax");
 
