@@ -156,7 +156,8 @@ helper uses the installed Chrome channel; set `PUPPETEER_EXECUTABLE_PATH` to
 point at another binary.
 
 `syntaxEquivalence.spectest.js` is the one that reads a second engine:
-`EQUIVALENCE_BROWSER=firefox` points the same corpus at Gecko. Fetch that
+`EQUIVALENCE_BROWSER=firefox` points the same corpus at Gecko, which CI runs as
+the `syntax-equivalence-firefox` job beside the Chrome one. Fetch that
 browser first with `yarn setup:firefox`, which installs it into puppeteer's own
 cache (`PUPPETEER_CACHE_DIR`, defaulting to `~/.cache/puppeteer`) rather than
 into webpack's dependencies; `FIREFOX_EXECUTABLE_PATH` points at one already on
