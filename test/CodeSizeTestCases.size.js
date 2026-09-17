@@ -1108,7 +1108,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 
 	const built = `Built \`test/configCases\` with the defaults a user gets: ${
 		report.meta.cases
-	} case(s), ${report.meta.assets} asset(s)${
+	} test(s), ${report.meta.assets} asset(s)${
 		report.meta.withoutOutput > 0
 			? `, ${report.meta.withoutOutput} emitted nothing`
 			: ""
@@ -1283,7 +1283,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			"> [!NOTE]",
 			`> ${
 				stopped.length
-			} case(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped
+			} test(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped
 				.map((name) => `\`${name}\``)
 				.join(", ")}`,
 			""
