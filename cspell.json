@@ -595,6 +595,7 @@
     "**/webpack.lock.data/**",
     "package.json",
     "yarn.lock",
+    "tooling/deep-webpack-imports.json",
     "types.d.ts",
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",

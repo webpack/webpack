@@ -1,0 +1,148 @@
+{
+  "sampledAt": "2026-09-17",
+  "perKeyword": 100,
+  "removed": {
+    "lib/MultiModuleFactory": "Removed in webpack 5 with MultiModule; the package is webpack 4 only.",
+    "lib/RuleSet": "Replaced in webpack 5 by lib/rules/RuleSetCompiler.",
+    "lib/dependencies/SingleEntryDependency": "Renamed in webpack 5 to dependencies/EntryDependency.",
+    "lib/ModuleDependencyWarning": "Moved to lib/errors/ before this record; kept unresolved deliberately."
+  },
+  "requests": {
+    "lib/Chunk": {
+      "weekly": 559,
+      "packages": [
+        "@pixolith/external-svg-sprite-loader",
+        "external-svg-sprite-loader"
+      ]
+    },
+    "lib/Compilation": {
+      "weekly": 1248,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "external-svg-sprite-loader"
+      ]
+    },
+    "lib/dependencies/ConstDependency": {
+      "weekly": 806,
+      "packages": [
+        "@zainulbr/i18n-webpack-plugin",
+        "webpack-extract-translation-keys-plugin"
+      ]
+    },
+    "lib/dependencies/ModuleDependency": {
+      "weekly": 4461,
+      "packages": ["webpack-babel-multi-target-plugin"]
+    },
+    "lib/dependencies/NullDependency": {
+      "weekly": 1365,
+      "packages": ["react-display-name-plugin"]
+    },
+    "lib/dependencies/SingleEntryDependency": {
+      "weekly": 4461,
+      "packages": ["webpack-babel-multi-target-plugin"]
+    },
+    "lib/Dependency": {
+      "weekly": 5037,
+      "packages": ["ignore-webpack-plugin", "webpack-babel-multi-target-plugin"]
+    },
+    "lib/DependencyTemplate": {
+      "weekly": 576,
+      "packages": ["ignore-webpack-plugin"]
+    },
+    "lib/InitFragment": {
+      "weekly": 576,
+      "packages": ["ignore-webpack-plugin"]
+    },
+    "lib/javascript/JavascriptModulesPlugin": {
+      "weekly": 770,
+      "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
+    },
+    "lib/LibraryTemplatePlugin": {
+      "weekly": 770,
+      "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
+    },
+    "lib/ModuleDependencyWarning": {
+      "weekly": 5381,
+      "packages": ["ignore-not-found-export-webpack-plugin"]
+    },
+    "lib/ModuleFilenameHelpers": {
+      "weekly": 521006,
+      "packages": [
+        "@amoo-miki/terser-webpack-plugin",
+        "babel-minify-webpack-plugin",
+        "lightningcss-loader",
+        "terser-webpack-plugin-legacy",
+        "uglifyjs-webpack-plugin",
+        "webpack-parallel-uglify-plugin"
+      ]
+    },
+    "lib/MultiModuleFactory": {
+      "weekly": 4461,
+      "packages": ["webpack-babel-multi-target-plugin"]
+    },
+    "lib/node/NodeTargetPlugin": {
+      "weekly": 770,
+      "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
+    },
+    "lib/node/NodeTemplatePlugin": {
+      "weekly": 770,
+      "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
+    },
+    "lib/NormalModule": {
+      "weekly": 836,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "san-loader"
+      ]
+    },
+    "lib/NullFactory": {
+      "weekly": 806,
+      "packages": [
+        "@zainulbr/i18n-webpack-plugin",
+        "webpack-extract-translation-keys-plugin"
+      ]
+    },
+    "lib/optimize/LimitChunkCountPlugin": {
+      "weekly": 770,
+      "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
+    },
+    "lib/RawModule": { "weekly": 705, "packages": ["google-fonts-plugin"] },
+    "lib/RequestShortener": {
+      "weekly": 505799,
+      "packages": [
+        "@amoo-miki/terser-webpack-plugin",
+        "terser-webpack-plugin-legacy",
+        "uglifyjs-webpack-plugin",
+        "v8-lazy-parse-webpack-plugin"
+      ]
+    },
+    "lib/rules/BasicEffectRulePlugin": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
+    "lib/rules/BasicMatcherRulePlugin": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
+    "lib/rules/RuleSetCompiler": { "weekly": 66, "packages": ["san-loader"] },
+    "lib/rules/UseEffectRulePlugin": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
+    "lib/RuleSet": { "weekly": 66, "packages": ["san-loader"] },
+    "lib/SingleEntryPlugin": {
+      "weekly": 871,
+      "packages": [
+        "@aiot-toolkit/dsl-xvm",
+        "@hap-toolkit/dsl-xvm",
+        "service-worker-loader"
+      ]
+    },
+    "lib/webworker/WebWorkerTemplatePlugin": {
+      "weekly": 101,
+      "packages": ["service-worker-loader"]
+    }
+  }
+}
