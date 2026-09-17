@@ -1379,12 +1379,42 @@ function outer() { var inOuter = 1; }
 				{ sourceType: "module", ranges: true, comments: true }
 			);
 			expect(
-				/** @type {EXPECTED_ANY} */ (ast)[MODULE_DECLARATIONS].map(
-					(/** @type {EXPECTED_ANY} */ declaration) => declaration.type
-				)
+				/** @type {EXPECTED_ANY} */ (ast)[MODULE_DECLARATIONS].filter(
+					(/** @type {EXPECTED_ANY} */ _entry, /** @type {number} */ index) =>
+						index % 2 === 0
+				).map((/** @type {EXPECTED_ANY} */ declaration) => declaration.type)
 			).toEqual([
 				"ImportDeclaration",
 				"ExportAllDeclaration",
+				"ExportNamedDeclaration"
+			]);
+		});
+
+		it("reports the statement written before each module declaration", () => {
+			// removing a module declaration can join the statements around it
+			// through ASI, so what precedes it decides whether a `;` is needed
+			const source =
+				"const num = 1\n\nexport { a } from './a';\nimport b from './b';";
+			const parser = new JavascriptParser("module");
+			/** @type {(string | undefined)[]} */
+			const before = [];
+			const record = () => {
+				before.push(
+					parser.prevStatement === undefined
+						? undefined
+						: parser.prevStatement.type
+				);
+			};
+			parser.hooks.exportImport.tap("test", record);
+			parser.hooks.import.tap("test", record);
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(before).toEqual([
+				"VariableDeclaration",
 				"ExportNamedDeclaration"
 			]);
 		});

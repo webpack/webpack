@@ -13377,7 +13377,37 @@ declare class JavascriptParser extends ParserClass {
 	 * Report what the program imports and re-exports, before anything reads a
 	 * name. The list is what the parser recorded, in source order.
 	 */
-	modulePreWalkDeclarations(declarations: ModuleDeclaration[]): void;
+	modulePreWalkDeclarations(
+		declarations: (
+			| undefined
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+		)[]
+	): void;
 
 	/**
 	 * Declare what the scope the node opens hoists, before anything reads a
@@ -13386,8 +13416,8 @@ declare class JavascriptParser extends ParserClass {
 	preWalkScope(node: ProgramImport | BlockStatement): void;
 
 	/**
-	 * Declare what hoists to the scope being entered. The list is what the
-	 * parser recorded while reading it, in source order.
+	 * Declare what hoists to the scope being entered, from what the parser
+	 * recorded while reading it. `prevStatement` is not available here.
 	 */
 	preWalkHoistedDeclarations(
 		hoisted: (
@@ -17763,11 +17793,6 @@ declare class ModuleConcatenationPlugin {
 	static BAILOUT_PREFIX: string;
 	static REJECTED_PREFIX: string;
 }
-type ModuleDeclaration =
-	| ImportDeclaration
-	| ExportNamedDeclaration
-	| ExportAllDeclaration
-	| ExportDefaultDeclaration;
 declare class ModuleDependency extends Dependency {
 	/**
 	 * Creates an instance of ModuleDependency.
