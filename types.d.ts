@@ -12806,6 +12806,11 @@ declare class JavascriptParser extends ParserClass {
 				boolean | void
 			>
 		>;
+		/**
+		 * Every statement the hoisting pass reads, which a tap on this turns
+		 * back into a walk of them all. Tap `preStatementByType` instead.
+		 * @deprecated TODO webpack 6: remove, with the statement walk it turns on
+		 */
 		preStatement: SyncBailHook<
 			[
 				| ImportDeclaration
@@ -12840,6 +12845,9 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		/**
+		 * Each declaration the parser records: a variable, function or class
+		 * one. Any other type turns the pass back into a walk of every
+		 * statement, and goes away with that walk in webpack 6.
 		 * @since 5.109.0
 		 */
 		preStatementByType: HookMap<
