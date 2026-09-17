@@ -10780,11 +10780,8 @@ describe("SourceProcessor — mergeDistantRules", () => {
 });
 
 
-// The two version tables are `Uint32Array`s, which only works while every entry
-// they hold — real versions and the `NEVER` sentinel alike — stays a non-negative
-// integer below 2**32. Below 2**31 too, so V8 hands each element back as a small
-// integer rather than boxing it. A browser numbering scheme that outgrew either
-// bound would silently truncate every window it appears in, so it fails here.
+// Every entry the tables hold has to stay a non-negative integer below 2**31, or
+// a numbering scheme that outgrew it truncates each window silently.
 describe("CssData — the version tables stay in their element type", () => {
 	const {
 		NEVER,
@@ -10830,10 +10827,8 @@ describe("CssData — the version tables stay in their element type", () => {
 	});
 });
 
-// Each switch answers for its own rewrite and for no other's. A rewrite reached
-// from inside another switch's block is the way that breaks: the second switch
-// silently stops working when the first is turned off, which no test of either
-// one alone would notice.
+// A rewrite reached from inside another switch's block stops when that switch is
+// turned off, which no test of either switch alone would notice.
 describe("CssSyntax — the per-transform switches are independent", () => {
 	const { SourceProcessor } = require("../../lib/css/syntax");
 
