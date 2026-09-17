@@ -5405,16 +5405,21 @@ const collectSupportedFrom = (paths) => {
 const collectSelectorSupport = () => {
 	/** @type {[string, [string, number][]][]} */
 	const table = [];
+	// `::cue` and `::cue()` are two entries naming one pseudo, and the spelling
+	// is what the print looks up — so the second would shadow the first in the
+	// `Map` this becomes rather than say anything new.
+	/** @type {Set<string>} */
+	const spellings = new Set();
 	for (const entry of Object.values(selectors)) {
 		if (entry.status !== "standard") continue;
 		const match = /^(::?)([-\w]+)/.exec(entry.syntax || "");
 		if (match === null) continue;
 		const [, colons, name] = match;
 		if (!bcd.css.selectors[name]) continue;
-		table.push([
-			`${colons}${name}`,
-			collectSupportedFrom([`css.selectors.${name}`])
-		]);
+		const spelling = `${colons}${name}`;
+		if (spellings.has(spelling)) continue;
+		spellings.add(spelling);
+		table.push([spelling, collectSupportedFrom([`css.selectors.${name}`])]);
 	}
 	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
