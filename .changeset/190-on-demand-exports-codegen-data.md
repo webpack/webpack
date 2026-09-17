@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix loss of export definitions in the module library under cache.
+Fix module library exports lost under cache or missing behind a re-export.
