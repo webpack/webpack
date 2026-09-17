@@ -374,6 +374,76 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # The same corpus and the same assertions, asked of Gecko. A rewrite only one
+  # engine reads differently is invisible to a suite that asks one, and five of
+  # the defects filed today are ones only this job can see.
+  syntax-equivalence-firefox:
+    needs: basic
+    runs-on: ubuntu-latest
+    # Bounded: a hung browser would otherwise hold a runner for the 6h default.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # This job runs repository-controlled scripts, and the corpus is public.
+          persist-credentials: false
+
+      - name: Check out the WPT corpus
+        run: git submodule update --init --depth 1 test/wpt
+
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Cache the comparison corpus
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            node_modules/.cache/css-tool-comparison
+            node_modules/.cache/html-tool-comparison
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/compare-css-tools.js', 'tooling/compare-html-tools.js') }}
+
+      # Not fatal, as in the Chrome job: the suite reports a tier it has no
+      # fixtures for as not built, so a registry outage costs that corpus
+      # rather than the job.
+      - name: Install the CSS comparison corpus
+        continue-on-error: true
+        run: yarn benchmark:css-tools:setup
+
+      - name: Install the HTML comparison corpus
+        continue-on-error: true
+        run: yarn benchmark:html-tools:setup
+
+      # Deliberately not cached: the build id resolves to whatever `stable` is
+      # today, so a cache key that never moves would pin the engine this suite
+      # exists to track.
+      - name: Install Firefox
+        run: yarn setup:firefox
+
+      - name: Cache jest result
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .jest-cache
+          key: jest-syntax-equivalence-firefox-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-syntax-equivalence-firefox-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-syntax-equivalence-firefox-${{ runner.os }}-
+
+      # No coverage upload: the Chrome job already reports this suite's lines
+      # under the `syntax-equivalence` flag, and a second uploader would leave
+      # every pull request one report short until this job lands.
+      - run: yarn test:syntax-equivalence --ci --cacheDirectory .jest-cache
+        env:
+          EQUIVALENCE_BROWSER: firefox
+
   css-parsing:
     needs: basic
     runs-on: ubuntu-latest

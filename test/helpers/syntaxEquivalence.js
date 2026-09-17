@@ -1482,26 +1482,28 @@ const VIEWPORT_FEATURE_REGEXP =
  */
 const unsampledBy = (condition) => {
 	const lowered = condition.toLowerCase();
-	const parts = [];
+	// A set: `and`, `or` and `,` are all idempotent, so a condition naming one
+	// feature twice is the condition naming it once, and the printer folds it.
+	const parts = new Set();
 	// Outside the parentheses, where a media type is the only thing that can be
 	// named — a feature's own words are read as the feature, not as a type.
 	for (const [word] of lowered
 		.replace(FEATURE_REGEXP, " ")
 		.matchAll(/[a-z-]+/g)) {
-		if (MEDIA_TYPES.has(word)) parts.push(word);
+		if (MEDIA_TYPES.has(word)) parts.add(word);
 	}
 	for (const [feature] of lowered.matchAll(FEATURE_REGEXP)) {
 		if (VIEWPORT_FEATURE_REGEXP.test(feature)) continue;
 		// `min-x: v` and `x >= v` are one query written two ways (Media Queries 4
 		// §2.4), so the prefixed spelling is written as the range one.
-		parts.push(
+		parts.add(
 			feature
 				.replace(/\s+/g, "")
 				.replace(/^\(min-([a-z-]+):/, "($1>=")
 				.replace(/^\(max-([a-z-]+):/, "($1<=")
 		);
 	}
-	return parts.sort().join("&");
+	return [...parts].sort().join("&");
 };
 
 /**
