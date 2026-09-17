@@ -31,14 +31,19 @@ const REGISTRY = "https://registry.npmjs.org";
 const SEARCH_PAGE_SIZE = 250;
 
 const KEYWORDS = [
+	{ keyword: "webpack", label: "webpack package" },
 	{ keyword: "webpack-plugin", label: "plugin" },
 	{ keyword: "webpack-loader", label: "loader" }
 ];
 
-// Every spelling a package can name a webpack internal with. The `.js` a few
-// of them write is stripped before the path is looked up.
-const SPECIFIER_REGEXP =
-	/["'`](webpack\/lib\/[^"'`\n]+)["'`]|["'`]webpack\/lib\/["'`]\s*\+/g;
+// Every spelling a package imports a webpack internal with; the `.js` a few
+// write is stripped before lookup. Matching import positions only skips the
+// `makeSerializable` requests a package that bundled webpack carries.
+const IMPORT_PREFIX = String.raw`(?:(?:require|import)(?:\.resolve)?\s*\(\s*|from\s+)`;
+const SPECIFIER_REGEXP = new RegExp(
+	`${IMPORT_PREFIX}["'\`](webpack/lib/[^"'\`\\n]+)["'\`]|${IMPORT_PREFIX}["'\`]webpack/lib/["'\`]\\s*\\+`,
+	"g"
+);
 
 // A package name arrives from the registry, so nothing derived from it is
 // trusted as a path: every character outside this set becomes a `+`.
@@ -381,6 +386,10 @@ const collect = async (perKeyword, write) => {
 	const byRequest = new Map();
 	/** @type {{ name: string, weekly: number }[]} */
 	const dynamicPackages = [];
+	// The broad keyword overlaps the narrow ones, so a package they share is
+	// scanned once and counted once.
+	/** @type {Set<string>} */
+	const seen = new Set();
 	let scanned = 0;
 	let unavailable = 0;
 
@@ -392,6 +401,10 @@ const collect = async (perKeyword, write) => {
 		);
 
 		for (const { name, weekly } of packages) {
+			if (seen.has(name)) continue;
+
+			seen.add(name);
+
 			const dir = await extractPackage(name);
 
 			if (dir === null) {
@@ -504,7 +517,7 @@ const collect = async (perKeyword, write) => {
 	return broken.length;
 };
 
-const perKeyword = Number(process.env.COUNT || 100);
+const perKeyword = Number(process.env.COUNT || 200);
 const write = process.argv.includes("--write");
 const offline = process.argv.includes("--check");
 
