@@ -6,6 +6,7 @@
 const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 const {
+	BLOCK_DECLARATIONS,
 	HOISTED_DECLARATIONS,
 	MODULE_DECLARATIONS
 } = require("../../lib/javascript/syntax");
@@ -1641,6 +1642,217 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 					"module"
 				)
 			).toEqual(["plain", "exported", "exportedFunction"]);
+		});
+	});
+
+	describe("block declarations", () => {
+		const EVERY_POSITION = `
+const top = 1;
+let alsoTop = 2;
+({ top: alsoTop } = { top: 1 });
+using alsoUsing = { [Symbol.dispose]() {} };
+class TopClass {}
+export const exported = 3;
+export default class DefaultClass {}
+{ const inBlock = 4; class InBlock {} }
+if (top) { let inIf = 5; } else { const inElse = 6; }
+for (const inFor of [top]) { let inForOfBody = 7; }
+for (let index = 0; index < 1; index++) { const inForBody = 8; }
+for (const key in {}) { let inForInBody = 9; }
+while (top) { const inWhile = 10; }
+do { let inDoWhile = 11; } while (top);
+label: { const inLabeled = 12; }
+try { const inTry = 13; } catch (error) { let inCatch = 14; } finally { const inFinally = 15; }
+switch (top) { case 1: { const inCaseBlock = 16; } case 2: let inCase = 17; break; default: const inDefault = 18; }
+function fn() { const inFunction = 19; }
+class WithStatic { static { const inStaticBlock = 20; } }
+`;
+
+		/**
+		 * @param {string | object} source what to parse
+		 * @param {boolean=} legacy whether to tap the hook that walks every statement
+		 * @returns {string[]} the names the block pass declared, in order
+		 */
+		const blockNames = (source, legacy = false) => {
+			const parser = new JavascriptParser("module");
+			/** @type {string[]} */
+			const names = [];
+			if (legacy) parser.hooks.blockPreStatement.tap("test", () => {});
+			parser.hooks.preDeclarator.tap("test", (declarator, statement) => {
+				if (statement.kind === "var") return;
+				names.push(/** @type {EXPECTED_ANY} */ (declarator.id).name);
+			});
+			parser.hooks.blockPreStatementByType
+				.for("ClassDeclaration")
+				.tap("test", (statement) => {
+					names.push(
+						/** @type {EXPECTED_ANY} */ (statement).id.name
+					);
+				});
+			parser.parse(
+				/** @type {EXPECTED_ANY} */ (source),
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			return names;
+		};
+
+		it("reaches every position a block scope binds a name from", () => {
+			// every name the program itself binds comes first: the block pass reads
+			// the whole list before the walk descends into any of it
+			expect(blockNames(EVERY_POSITION)).toEqual([
+				"top",
+				"alsoTop",
+				"alsoUsing",
+				"TopClass",
+				"exported",
+				"DefaultClass",
+				"WithStatic",
+				"inBlock",
+				"InBlock",
+				"inIf",
+				"inElse",
+				"inFor",
+				"inForOfBody",
+				"index",
+				"inForBody",
+				"key",
+				"inForInBody",
+				"inWhile",
+				"inDoWhile",
+				"inLabeled",
+				"inTry",
+				"inCatch",
+				"inFinally",
+				"inCase",
+				"inDefault",
+				"inCaseBlock",
+				"inFunction",
+				"inStaticBlock"
+			]);
+		});
+
+		it("declares the same names through the walk that tap turns back on", () => {
+			expect(blockNames(EVERY_POSITION, true)).toEqual(
+				blockNames(EVERY_POSITION)
+			);
+		});
+
+		it("collects its own from an AST another parser built", () => {
+			const { ast, comments } = JavascriptParser._parse(EVERY_POSITION, {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			// strip the parser's record: what a preparsed AST from a loader looks
+			// like, and the only thing that separates the two paths
+			const strip = (/** @type {EXPECTED_ANY} */ node) => {
+				if (node === null || typeof node !== "object") return;
+				if (Array.isArray(node)) {
+					for (const item of node) strip(item);
+					return;
+				}
+				node[BLOCK_DECLARATIONS] = undefined;
+				node[HOISTED_DECLARATIONS] = undefined;
+				node[MODULE_DECLARATIONS] = undefined;
+				for (const key of Object.keys(node)) strip(node[key]);
+			};
+			strip(ast);
+			/** @type {EXPECTED_ANY} */
+			(ast).comments = comments;
+			expect(blockNames(ast)).toEqual(blockNames(EVERY_POSITION));
+		});
+
+		it("reports the statement written before each declaration", () => {
+			// removing an `export` can join the statements around it through ASI,
+			// so what precedes it decides whether a `;` is needed
+			const source =
+				"const num = 1\nfunction gap() {}\ndebugger;\nexport { num };";
+			const parser = new JavascriptParser("module");
+			/** @type {(string | undefined)[]} */
+			const before = [];
+			parser.hooks.exportSpecifier.tap("test", () => {
+				before.push(
+					parser.prevStatement === undefined
+						? undefined
+						: parser.prevStatement.type
+				);
+				return true;
+			});
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			// the statement before the export, not the declaration the list records
+			// before it: the two differ by every statement the record leaves out
+			expect(before).toEqual(["DebuggerStatement"]);
+		});
+
+		it("reads the properties a destructuring assignment names", () => {
+			const source = "const obj = { a: 1, b: 2 };\nlet a, b;\n({ a, b } = obj);";
+			/**
+			 * @param {boolean} legacy whether to tap the hook that walks them all
+			 * @returns {number} how many times the collect hook was asked
+			 */
+			const collected = (legacy) => {
+				const parser = new JavascriptParser("module");
+				let asked = 0;
+				if (legacy) parser.hooks.blockPreStatement.tap("test", () => {});
+				parser.hooks.collectDestructuringAssignmentProperties.tap(
+					"test",
+					() => {
+						asked++;
+						return true;
+					}
+				);
+				parser.parse(
+					source,
+					/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return asked;
+			};
+			expect(collected(false)).toBe(1);
+			expect(collected(true)).toBe(collected(false));
+		});
+
+		it("rejects a statement written before the first case", () => {
+			const { WebpackParser } = require("../../lib/javascript/syntax");
+			expect(() =>
+				WebpackParser.parse(
+					"switch (1) { notACase(); }",
+					/** @type {EXPECTED_ANY} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "module",
+							lazyNodes: true
+						})
+					)
+				)
+			).toThrow(/Unexpected token/);
+		});
+
+		it("walks every statement again for a tap that expects them", () => {
+			const source = "debugger;\nconst kept = 1;";
+			/** @type {string[]} */
+			const typed = [];
+			const parser = new JavascriptParser("module");
+			parser.hooks.blockPreStatementByType
+				.for("DebuggerStatement")
+				.tap("test", (statement) => {
+					typed.push(statement.type);
+				});
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(typed).toEqual(["DebuggerStatement"]);
 		});
 	});
 
