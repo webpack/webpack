@@ -1,9 +1,8 @@
 import external3Default, { namedThing } from "external3";
 import "external4";
 
-/* This test verifies that webpack externals are properly indicated as dependencies to System.
- * Also that when System provides the external variables to webpack that the variables get plumbed
- * through correctly and are usable by the webpack bundle.
+/* Verifies that webpack externals are indicated as dependencies to System, and
+ * that the variables System provides are plumbed through and usable by the bundle.
  */
 it("should get an external from System", function () {
 	const external1 = require("external1");

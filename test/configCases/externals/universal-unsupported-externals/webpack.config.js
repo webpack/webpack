@@ -6,9 +6,8 @@ module.exports = {
 	externals: {
 		thisExt: "this Foo"
 	},
-	// Also unsupported but env-/config-specific (not asserted here):
-	//   window/self (browser globals), amd/amd-require/umd/umd2/jsonp/system
-	//   (need a matching `output.libraryTarget`), script (DOM-only),
-	//   asset/asset-url/css-import/css-url (non-JS module types).
+	// Also unsupported but env- or config-specific, so not asserted here: browser
+	// globals, the types needing a matching `output.libraryTarget`, DOM-only `script`,
+	// and the non-JS module types.
 	output: { module: true }
 };

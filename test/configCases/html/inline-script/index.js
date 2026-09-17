@@ -8,10 +8,9 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 
 const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 
-// `import page from "./page.html"` always returns the HTML body as a
-// string, but static analysis can't see through the HTML module type, so
-// it flags property access on `page` as possibly-undefined. Normalize
-// once at the top so the rest of the file accesses a concrete string.
+// `import page from "./page.html"` always returns the body as a string, but static
+// analysis cannot see through the HTML module type. Normalize once so the rest of
+// the file reads a concrete string.
 const pageContent = typeof page === "string" ? page : "";
 
 // Document-order list of every inline-script chunk url emitted into the page.
@@ -45,11 +44,9 @@ it("should bundle inline <script> bodies as entry chunks and rewrite their tags 
 });
 
 it("should auto-upgrade classic inline <script> to type=module when output.module is on", () => {
-	// With `output.module` on every classic inline `<script>` gets
-	// `type="module"` auto-inserted so the emitted ES-module chunk loads
-	// correctly. The inline `<script type="module">` already had it, so
-	// every executable inline script ends up as `type="module"` in the
-	// output.
+	// With `output.module` on, every classic inline `<script>` gets `type="module"`
+	// inserted so the emitted ES-module chunk loads correctly — and the one that
+	// already had it keeps it, so every executable inline script is module-typed.
 	const moduleTaggedSrcs = [
 		...pageContent.matchAll(
 			/<script[^>]*\btype="module"[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.mjs)"/g
@@ -92,11 +89,9 @@ it("should bundle inline <script type=module> as an ES-module chunk", () => {
 });
 
 it("should emit ES-module chunks for classic inline <script> too when output.module is on (mixed case)", () => {
-	// With `output.module` on, the chunk format follows the option, not
-	// the original `<script>` annotation. Every inline-script chunk — both
-	// the ones whose source came from classic `<script>` and the one from
-	// `<script type="module">` — is an ES module: no IIFE bootstrap, no
-	// CommonJS `module.exports`.
+	// With `output.module` on, chunk format follows the option rather than the
+	// original `<script>` annotation: every inline-script chunk is an ES module, with
+	// no IIFE bootstrap and no CommonJS `module.exports`.
 	for (const url of scriptChunkUrls) {
 		const chunk = readChunk(url);
 		expect(chunk).not.toMatch(/^\/\*+\/ \(\(\) => \{/);
