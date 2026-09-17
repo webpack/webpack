@@ -85,7 +85,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/logging/` — Logger API and console formatting.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …).
   - `lib/performance/` — Asset/entrypoint size hints.
-  - `lib/prefetch/` — Prefetch/preload plugins.
+  - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
+    the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
+    and `AutomaticPrefetchPlugin`, which resolve a module eagerly at build time instead.
   - `lib/rules/` — `module.rules` matching engine.
   - `lib/runtime/` — Runtime modules emitted into bundles (chunk loaders, public-path, …),
     the `RuntimeModule` base class they extend, the `RuntimeGlobals` symbols they declare,
