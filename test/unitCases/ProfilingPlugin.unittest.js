@@ -95,10 +95,9 @@ describe("ProfilingPlugin in real Chrome", () => {
 					/** @type {TraceEvent[]} */
 					const events = JSON.parse(fs.readFileSync(eventsPath, "utf8"));
 					const page = await activeBrowser.newPage();
-					// Run Chrome DevTools' trace bootstrap (MetaHandler) in the real
-					// browser: iterate the TracingStartedInBrowser frames and pick the
-					// parent-less main frame. A missing `frames` array threw
-					// "frames is not iterable" and the whole trace failed to load.
+					// Run Chrome DevTools' trace bootstrap in the real browser: iterate the
+					// TracingStartedInBrowser frames and pick the parent-less main frame. A missing
+					// `frames` array threw "frames is not iterable" and the trace failed to load.
 					const result = await page.evaluate(
 						(/** @type {TraceEvent[]} */ evs) => {
 							const event = evs.find(

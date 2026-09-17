@@ -699,12 +699,9 @@ class TestRunner {
 			let instance = esmCache.get(identifier);
 			if (!instance) {
 				let moduleSource = content;
-				// Deno 2.8.3 hard-panics ("Module not found", bindings.rs) the moment
-				// `import.meta` is accessed inside a vm SourceTextModule (no
-				// initializeImportMeta shape avoids it). Rewrite the `import.meta`
-				// meta-property to a prepended object so the module evaluates; parse to
-				// only touch real syntax, never string/comment text. Node/Bun keep the
-				// initializeImportMeta callback below.
+				// Deno 2.8.3 hard-panics the moment `import.meta` is accessed inside a vm
+				// SourceTextModule. Rewrite the meta-property to a prepended object so the module
+				// evaluates, parsing so only real syntax is touched, never string or comment text.
 				if (process.versions.deno && /\bimport\.meta\b/.test(content)) {
 					moduleSource = rewriteImportMeta(content, () => {
 						/** @type {Record<string, string>} */
@@ -839,11 +836,9 @@ class TestRunner {
 					await link();
 				}
 
-				// `document.currentScript` is `null` inside an ES module, so
-				// to test the nonce-from-script-tag path for `output.module: true`
-				// bundles we register a fake `<script>` element whose `src`
-				// matches `import.meta.url` and whose `nonce` matches the
-				// `testConfig.currentScriptNonce`.
+				// `document.currentScript` is `null` inside an ES module, so the
+				// nonce-from-script-tag path for `output.module: true` is tested by registering a
+				// fake `<script>` whose `src` matches `import.meta.url`.
 				if (this.testConfig.currentScriptNonce && this._moduleScope.document) {
 					const document = this._moduleScope.document;
 					const script = document.createElement("script");

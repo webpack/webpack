@@ -1,14 +1,14 @@
 "use strict";
 
-const JSONParseError = require("../../lib/errors/JSONParseError");
-const parseJson = require("../../lib/util/parseJson");
-
 // parseJson wraps the host engine's JSON.parse error into a JSONParseError.
 // JSC (Bun) and V8 (Node, Deno) word their SyntaxError messages differently, so
 // the live cases assert the parts webpack itself produces — name, systemError,
 // position and the appended "while parsing …" context. The normalization logic
 // (token→hex, position extraction, source slicing) targets V8-shaped text, so it
 // is exercised directly against synthetic messages to stay engine-independent.
+
+const JSONParseError = require("../../lib/errors/JSONParseError");
+const parseJson = require("../../lib/util/parseJson");
 
 const catchError = (/** @type {() => void} */ fn) => {
 	try {

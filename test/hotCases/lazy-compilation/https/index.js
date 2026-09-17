@@ -10,10 +10,9 @@ it("should compile to lazy imported module", (done) => {
 	});
 	expect(resolved).toBe(undefined);
 	expect(generation).toBe(0);
-	// The dynamic import above activates ./module on the lazy-compilation backend
-	// over an async (HTTPS) request; under load it can land after the first
-	// recompile, leaving the module a proxy so the rebuild yields "No update
-	// available". Re-run the same version until the activation arrives.
+	// The dynamic import above activates ./module on the lazy-compilation backend over
+	// an async request; under load that can land after the first recompile, leaving
+	// the module a proxy so the rebuild yields "No update available".
 	const awaitActivation = (retries) => (err) => {
 		if (err) return done(err);
 		module.hot

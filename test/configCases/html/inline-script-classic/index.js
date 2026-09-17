@@ -83,14 +83,9 @@ it("should emit IIFE-wrapped chunks for inline <script type=module> too (no outp
 });
 
 it("should emit classic chunks for every inline-script body when output.module is off (mixed case)", () => {
-	// Without `output.module` every inline-script chunk — whether the
-	// source came from classic `<script>`, `<script type="text/javascript">`
-	// or `<script type="module">` — is rendered in classic format. Classic
-	// and module-typed inline scripts go into separate `dependOn` groups,
-	// so each group has its own IIFE-wrapped leader; followers within a
-	// group reuse the leader's runtime via the `webpackChunk` push
-	// pattern. Neither form uses ES-module `import`/`export` at top
-	// level.
+	// Without `output.module` every inline-script chunk is rendered in classic format,
+	// whatever its source `<script>` type. Classic and module-typed scripts go into
+	// separate `dependOn` groups, each with its own IIFE-wrapped leader.
 	const allChunkUrls = collectMatches(
 		pageContent,
 		/<script[^>]*\bsrc="(__html_[0-9a-f]+_\d+\.js)"/g

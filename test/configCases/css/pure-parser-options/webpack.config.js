@@ -14,10 +14,9 @@ module.exports = {
 				type: "css/module"
 			},
 			{
-				// `css/auto` with `pure: true`: pure-check kicks in for
-				// filenames matching `IS_MODULES` (= `.modules?.<ext>`), and
-				// must NOT kick in for other filenames since the file isn't
-				// treated as a CSS module at all.
+				// `css/auto` with `pure: true`: the pure check applies to filenames matching
+				// `IS_MODULES` (`.modules?.<ext>`) and must not apply to others, which are not
+				// treated as CSS modules at all.
 				test: /auto-.*\.css$/,
 				parser: {
 					pure: true

@@ -488,10 +488,8 @@ describe("CssSyntax — parser entry points", () => {
 
 	it("parseADeclaration reads a lone {}-block as a whole value", () => {
 		// §5.4.6 step 8 rejects a `{}` block only when the value holds another
-		// non-whitespace token beside it — a block standing alone is the value.
-		// Measured in headless Chromium: `.a{color:{a:b}}` is a declaration the
-		// grammar then throws out, not a nested rule (`cssRules` stays empty),
-		// while `.a{a:hover{color:red}}` is one.
+		// non-whitespace token beside it. Measured in Chromium: `.a{color:{a:b}}` is a
+		// declaration the grammar throws out, `.a{a:hover{color:red}}` a nested rule.
 		const decl = parseADeclaration("color: { a: b }");
 		expect(decl).toBeDefined();
 		expect(
@@ -837,11 +835,9 @@ describe("CssSyntax — SourceProcessor", () => {
 });
 
 describe("CssSyntax — block streaming", () => {
-	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under
-	// that it is collected and walked in one batch, as it always was. `BIG` clears
-	// the threshold and `SMALL` stays well under, and every case below pins which
-	// of the two it is exercising, so none of them can quietly stop testing the
-	// streamed path if the threshold moves.
+	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under that
+	// it is collected and walked in one batch. `BIG` clears the threshold, `SMALL`
+	// stays under, and each case pins which it exercises if the threshold moves.
 	/** @type {(i: number) => string} */
 	// Distinct blocks: rules printing the same one join into a selector list, and
 	// what these cases are about is the streaming, not the joining.
@@ -1144,10 +1140,9 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("reads a streamed rule's prelude in terms of what encloses it", () => {
-		// `from` is the `0%` a keyframe selector means only inside `@keyframes`, so
-		// the opener has to be printed with the whole path bound, not just the rule.
-		// A block of its own per rule, so the sibling join has nothing to gather
-		// here and what is pinned is the prelude, not the merge.
+		// `from` is the `0%` a keyframe selector means only inside `@keyframes`, so the
+		// opener has to be printed with the whole path bound, not just the rule. A block
+		// per rule, so what is pinned is the prelude, not the sibling merge.
 		const nested = repeat(3000, (i) => `& .x${i}{top:${i + 1}px}`);
 		expect(
 			childCount(`@keyframes k{from{${nested}}}`, NodeType.QualifiedRule)
@@ -1165,9 +1160,8 @@ describe("CssSyntax — block streaming", () => {
 
 	it("falls back past the depth the frame table holds", () => {
 		// Deeper than `_STREAM_MAX_DEPTH`, where a block is materialized instead of
-		// streamed; the levels above it still stream, so the two have to meet.
-		// `@media m0` and not a feature query: a `(min-width:…)` prelude minifies to
-		// the range spelling, and the point here is the nesting, not the prelude.
+		// streamed; the levels above still stream, so the two have to meet. `@media m0`
+		// and not a feature query: the point here is the nesting, not the prelude.
 		const depth = 70;
 		const open = repeat(depth, (i) => `@media m${i}{`);
 		const close = repeat(depth, () => "}");
@@ -1192,10 +1186,9 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("keeps only the last of a streamed block's identical declarations", () => {
-		// Reached by taking the earlier one back out of the output, since a
-		// streamed block cannot look ahead for the later one. The duplicate is
-		// separated from its match by 3000 child rules, so this is the whole block
-		// agreeing, not a run of adjacent declarations.
+		// Reached by taking the earlier one back out of the output, since a streamed
+		// block cannot look ahead. The duplicate is 3000 child rules from its match, so
+		// this is the whole block agreeing, not a run of adjacent declarations.
 		const middle = repeat(3000, (i) => `& .m${i}{top:${i + 1}px}`);
 		const src = `.root{color:red;${middle}color:red;}`;
 		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
@@ -1606,10 +1599,9 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	// instead), and there the stylesheet ends too — so a build never reaches this,
 	// but `webpack.css.syntax` minifies whatever source it is handed.
 	it("keeps an attribute value the tokenizer closed at EOF", () => {
-		// `"bar` has no closing quote, so unquoting it would drop the `r` — the
-		// quote is written back instead, which is what keeps the value `bar` once
-		// the prelude's own `];` follows it. An at-rule prelude still prints at
-		// EOF, unlike a qualified rule (§5.4.3).
+		// `"bar` has no closing quote, so unquoting would drop the `r` — the quote is
+		// written back instead, keeping the value `bar` once the prelude's `];` follows.
+		// An at-rule prelude still prints at EOF, unlike a qualified rule (§5.4.3).
 		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar"];');
 		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar'];");
 		// The escape swallows the final quote, so this one is unterminated too.
@@ -2279,10 +2271,9 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			expect(min(css)).toBe(expected);
 		});
 
-		// The canonical spelling repairs a name that was shouted; a name already
-		// written in one case is left where it is, since the two are the same
-		// bytes either way and reading the table for every unit in a stylesheet
-		// costs more than the spelling is worth.
+		// The canonical spelling repairs a name that was shouted; one already written in
+		// a single case is left alone, since the bytes are the same either way and
+		// reading the table for every unit costs more than the spelling is worth.
 		it.each([["a{width:40q}"], ["a{x:1hz}"], ["a{transform:translatey(1px)}"]])(
 			"leaves an already-lowercase name alone: %s",
 			(css) => {
@@ -2519,10 +2510,9 @@ describe("CssSyntax — the per-transform switches", () => {
 	const min = (src, transforms) =>
 		new SourceProcessor().process(src, { mode: "minify", transforms }).code;
 
-	// One input per switch, minified twice: with everything on, and with that one
-	// switch off — so a guard that stops firing fails here rather than quietly
-	// making the rewrite unconditional again. `comments` is not one of the
-	// booleans, so it has a describe of its own below.
+	// One input per switch, minified twice: everything on, and that one switch off —
+	// so a guard that stops firing fails here rather than quietly making the rewrite
+	// unconditional. `comments` is not a boolean; it has its own describe below.
 	it.each([
 		["shortenColors", "a{color:#ffffff}", "a{color:#fff}", "a{color:#ffffff}"],
 		[
@@ -2832,10 +2822,9 @@ describe("CssSyntax — tokenizer edge cases", () => {
 });
 
 describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
-	// A bare declaration (parsed as block-contents, so there is no selector
-	// prelude to pollute the counts). Every leaf type appears both at the top
-	// level of the value and inside `bar(…)`, so one skip proves both the
-	// value-list and the function-arg builders honour it.
+	// A bare declaration, parsed as block-contents so no selector prelude pollutes
+	// the counts. Every leaf type appears both at the top level and inside `bar(…)`,
+	// so one skip proves both the value-list and function-arg builders honour it.
 	const VALUE_CSS =
 		'p: foo 10 10px 50% #fff / "s" : , bar(9 baz #aaa 2px "t" %)';
 	// Leaf types present in VALUE_CSS's value (Whitespace too, from the spaces).
@@ -3611,10 +3600,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
 			// `initial` computes to the initial value, which is often a shorter word.
 			["a{min-width:initial}", "a{min-width:auto}"],
-			// ...but not where that word is itself a length: `zoom` scales the
-			// keyword and not the `initial` resolved before it, so the two are one
-			// value without a zoom and two under one (measured in headless Chromium:
-			// 3px against 1.5px at `zoom:2`).
+			// ...but not where that word is itself a length: `zoom` scales the keyword and
+			// not the `initial` resolved before it, so the two are one value without a zoom
+			// and two under one — measured in Chromium, 3px against 1.5px at `zoom:2`.
 			["a{outline-width:initial}", "a{outline-width:initial}"],
 			["a{text-align:initial}", "a{text-align:start}"],
 			// The source carries its own comments, so the queued copy is claimed
@@ -3816,10 +3804,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{background:red scroll}", "a{background:red}"],
 			["a{background:red repeat}", "a{background:red}"],
 			["a{background:none red repeat scroll}", "a{background:red}"],
-			// `background-origin` and `background-clip` are two slots of one
-			// production, so neither of their initials is the one slot's own to the
-			// keyword table — the layer reads them as the pair they are, and the
-			// pair is what each holds when nothing writes it.
+			// `background-origin` and `background-clip` are two slots of one production, so
+			// neither initial is that slot's own in the keyword table — the layer reads them
+			// as the pair they are, which is what each holds when nothing writes it.
 			["a{background:padding-box border-box none}", "a{background:none}"],
 			["a{border-image:none 30}", "a{border-image:30}"],
 			["a{mask:none luminance}", "a{mask:luminance}"],
@@ -6739,10 +6726,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			// Exactly on a step is where engines part company: these are step
-			// functions, so an ulp in the engine's own conversion moves the answer a
-			// whole step. Chromium reads `round(down,10cm,2cm)` as `8cm` and
-			// `mod(10px,-2px)` as `-2px`, both a step off the exact answer.
+			// Exactly on a step is where engines part company: these are step functions, so
+			// an ulp in the engine's conversion moves the answer a whole step. Chromium reads
+			// `round(down,10cm,2cm)` as `8cm` and `mod(10px,-2px)` as `-2px`.
 			["round(4px,2px)"],
 			["mod(10px,-2px)"],
 			["rem(10px,2px)"],
@@ -6777,10 +6763,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("keeps the unit a stepped argument was written with", () => {
-			// `4.5cm` and `45mm` are the same length, but not the same step:
-			// Chromium reads `round(down,4.5cm,1.5cm)` as `3cm` and the `mm`
-			// spelling as `4.5cm`, so the conversion that holds everywhere else is
-			// suppressed in here.
+			// `4.5cm` and `45mm` are the same length but not the same step: Chromium reads
+			// `round(down,4.5cm,1.5cm)` as `3cm` and the `mm` spelling as `4.5cm`, so the
+			// conversion that holds everywhere else is suppressed in here.
 			expect(value("round(down,4.5cm,1.5cm)")).toBe("round(down,4.5cm,1.5cm)");
 			// Outside one it still applies.
 			expect(converted("4.5cm")).toBe("45mm");
@@ -7872,10 +7857,9 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 	});
 
 	it("writes the spelling Gecko parses where BCD records only whether it has an effect", () => {
-		// Gecko carries `-moz-text-size-adjust` as a real longhand and no
-		// unprefixed spelling at all, so a Firefox target losing the `-moz-` one is
-		// left with a declaration it cannot parse. BCD calls desktop Firefox
-		// unsupported, which is about effect rather than about parsing.
+		// Gecko carries `-moz-text-size-adjust` as a real longhand with no unprefixed
+		// spelling, so a Firefox target losing the `-moz-` one is left with a declaration
+		// it cannot parse. BCD calls desktop Firefox unsupported, which is about effect.
 		expect(minifyFor("a{text-size-adjust:none}", ["firefox 130"])).toBe(
 			"a{-moz-text-size-adjust:none;text-size-adjust:none}"
 		);
@@ -8226,10 +8210,9 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		const shrunk = run((source, info) =>
 			info.type === "svg" ? source.replace(/\s+/g, "") : source
 		);
-		// Eight characters left the payload, and the last mapping's generated
-		// column is the only thing that moved — by exactly that much.
-		// Eight characters of whitespace, and the two quotes the shorter url no
-		// longer needs.
+		// Ten characters left the payload — eight of whitespace, plus the two quotes the
+		// shorter url no longer needs — and the last mapping's generated column is the
+		// only thing that moved, by exactly that much.
 		expect(plain.code.length - shrunk.code.length).toBe(10);
 		const columns = (/** @type {string} */ mappings) =>
 			mappings.split(",").length;
@@ -9320,10 +9303,9 @@ describe("CssSyntax minify — color-mix()", () => {
 	});
 
 	it("keeps the arc two opposite hues state, whichever is greater", () => {
-		// CSS Color 4 §12.4 breaks the tie by which hue is greater, and a color
-		// reaches its own space through sRGB — so a half turn the trip back leaves
-		// a hair over must not read as the arc the other way round. Both of these
-		// paint 68,153,51 in Chromium; the arc the other way is 136,51,153.
+		// CSS Color 4 §12.4 breaks the tie by which hue is greater, and a color reaches
+		// its own space through sRGB — so a half turn the trip back leaves a hair over
+		// must not read as the arc the other way. Both paint 68,153,51 in Chromium.
 		expect(
 			minify("a{color:color-mix(in hsl,hsl(200 50% 40%),hsl(20 50% 40%))}")
 		).toBe("a{color:#493}");

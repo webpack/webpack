@@ -12,10 +12,9 @@ const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/g;
 
-// Engine-dependent error keys dropped from snapshots: `stack` because JSC (Bun)
-// renders `Error.prototype.stack` non-deterministically (often just "Error",
-// without the V8 "<name>: <message>" header) and the others are JSC-only own
-// props. The `message` field already carries the text under test.
+// Engine-dependent error keys dropped from snapshots: `stack`, because JSC renders
+// it non-deterministically, and the others, which are JSC-only own props. The
+// `message` field already carries the text under test.
 const IGNORED_ERROR_KEYS = new Set([
 	"stack",
 	"line",

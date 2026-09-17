@@ -3,22 +3,9 @@ import "./page.html";
 it("should leave the HTML module's runtime with no module-level update when only external resources change", (done) => {
 	NEXT((err) => {
 		if (err) return done(err);
-		// `<script src="./external.js">` and `<link rel="stylesheet"
-		// href="./style.css">` become their own entry chunks with
-		// content-stable, named chunk filenames (`__html_<hash>_<idx>`).
-		// They run in their own webpack runtimes (the script src entry
-		// owns its chunk's runtime; the stylesheet entry produces a CSS
-		// chunk). When their bodies change:
-		//   - the HTML module's runtime (the main entry, which `import`s
-		//     `./page.html`) sees no module-level update — its array is
-		//     truthy-but-empty because the HTML's rewritten output didn't
-		//     change (the same chunk URL resolves the new content for
-		//     free).
-		//   - the external chunks each emit their own hot-update bundles
-		//     (`__html_<hash>_0.<hash>.hot-update.js` for the script src,
-		//     `__html_<hash>_1.<hash>.hot-update.json` for the
-		//     stylesheet) that the browser fetches when it reloads those
-		//     entries.
+		// `<script src>` and `<link rel="stylesheet">` become their own entry chunks with
+		// content-stable names and their own runtimes. When their bodies change the HTML
+		// module's runtime sees no update, but each chunk emits its own hot-update bundle.
 		module.hot
 			.check(true)
 			.then((updatedModules) => {

@@ -1,13 +1,4 @@
 // cspell:ignore mdash
-import { createRequire } from "module";
-
-const require = createRequire(import.meta.url);
-
-/** @type {typeof import("../../../lib/html/syntax")} */
-const htmlSyntax = require("../../../lib/html/syntax.js");
-
-const { SourceProcessor } = htmlSyntax;
-
 // Printing is the other half of `html-parser-document-unit`: the same walk, but
 // every node also serializes. A node whose text is `open + children + close`
 // emits its pieces as the walk reaches them; anything else is composed from its
@@ -23,6 +14,15 @@ const { SourceProcessor } = htmlSyntax;
 // walk` is what printing costs on that shape and `minify - beautify` is what the
 // rewrites cost on top of serializing. Visitor cost is
 // `html-parser-document-unit`'s.
+
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+
+/** @type {typeof import("../../../lib/html/syntax")} */
+const htmlSyntax = require("../../../lib/html/syntax.js");
+
+const { SourceProcessor } = htmlSyntax;
 
 // No large real-world HTML ships in the repo, so generate a deterministic
 // document mixing tree construction, entity references, comments, lists/tables
@@ -49,11 +49,12 @@ function makeHtml(blocks) {
 	return `${out}</body></html>`;
 }
 
-// One axis each. `wide table` and `nested lists` are wide with a shallow
-// repeating nest, `flat siblings` is one long sibling run at depth 1, `deep
-// nesting` is a narrow 20-deep spine — together they separate the per-sibling
-// cost from the per-frame one.
-/** @type {[string, string, { fragmentContext?: string }][]} name, source, extra process options */
+/**
+ * One axis each: `wide table` and `nested lists` are wide with a shallow
+ * repeating nest, `flat siblings` is one long run at depth 1, `deep nesting` a
+ * narrow 20-deep spine. Together they separate per-sibling from per-frame cost.
+ * @type {[string, string, { fragmentContext?: string }][]} name, source, extra process options
+ */
 const FIXTURES = [
 	["document", makeHtml(2000), {}],
 	// The context element seeds the tokenizer content mode.
@@ -110,10 +111,9 @@ const FIXTURES = [
 		})(),
 		{}
 	],
-	// Elements that cannot print in pieces, so their subtrees are composed and
-	// read back: a `<pre>` / `<textarea>` leading newline only survives
-	// re-parsing once the children's text is in, and a `<template>` holds its
-	// children in a content fragment rather than the child chain.
+	// Elements that cannot print in pieces, so their subtrees are composed and read
+	// back: a `<pre>` / `<textarea>` leading newline only survives re-parsing once the
+	// children's text is in, and a `<template>` holds children in a content fragment.
 	[
 		"composed subtrees",
 		(() => {

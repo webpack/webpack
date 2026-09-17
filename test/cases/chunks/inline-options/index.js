@@ -135,10 +135,7 @@ if (process.env.NODE_ENV === "production") {
 
 	it("should contain only webpackExports from module in eager mode", function () {
 		return import(
-			/*
-			webpackMode: "eager",
-			webpackExports: ["usedExports"]
-		*/ "./dir12/a?3"
+			/* webpackMode: "eager", webpackExports: ["usedExports"] */ "./dir12/a?3"
 		).then(module => {
 			expect(module.usedExports).toEqual(["usedExports"]);
 		});
@@ -147,10 +144,7 @@ if (process.env.NODE_ENV === "production") {
 	it("should contain webpackExports from module in weak mode", function () {
 		require.resolve("./dir12/a?4");
 		return import(
-			/*
-			webpackMode: "weak",
-			webpackExports: ["usedExports"]
-		*/ "./dir12/a?4"
+			/* webpackMode: "weak", webpackExports: ["usedExports"] */ "./dir12/a?4"
 		).then(module => {
 			expect(module.usedExports).toEqual(["usedExports"]);
 		});

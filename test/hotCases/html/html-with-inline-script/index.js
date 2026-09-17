@@ -9,10 +9,9 @@ it("should hot-update an HTML module whose inline <script> body changed", (done)
 
 	NEXT(
 		require("../../update")(done, true, () => {
-			// The HTML module is self-accepting; the new inline-script body
-			// produces a different data-URI entry, so the rewritten src is
-			// different too. The exported string reflects the new title at
-			// minimum.
+			// The HTML module is self-accepting, and the new inline-script body produces a
+			// different data-URI entry, so the rewritten src differs too. The exported string
+			// reflects the new title at minimum.
 			const updated = require("./page.html");
 			expect(updated).toContain("<title>inline script v2</title>");
 			expect(updated).not.toContain("v1</title>");

@@ -242,12 +242,14 @@ const measureAsset = (content) => ({
 	}).length
 });
 
-// ~60 config cases assert on the generated code from inside a compiler hook,
-// which only resolves under jest. Those assertions belong to `ConfigTestCases`
-// — and most of them read a bundle this harness deliberately minifies — so the
-// global is stubbed out rather than evaluated: every access and call returns the
-// stub again, which swallows `expect(x).not.toBe(y)` and friends alike.
-/** @type {EXPECTED_ANY} */
+/**
+ * ~60 config cases assert on generated code from inside a compiler hook, which
+ * only resolves under jest; those assertions belong to `ConfigTestCases`, and
+ * most read a bundle this harness deliberately minifies. The global is stubbed
+ * rather than evaluated, so every access and call returns the stub again and
+ * swallows `expect(x).not.toBe(y)` and friends alike.
+ * @type {EXPECTED_ANY}
+ */
 const expectStub = new Proxy(() => {}, {
 	get: (target, property) => (property === "then" ? undefined : expectStub),
 	apply: () => expectStub
@@ -308,11 +310,9 @@ const collectRuntimes = (compilations, prefix) => {
 	for (const compilation of compilations) {
 		const { chunkGraph } = compilation;
 		for (const chunk of compilation.chunks) {
-			// A worker or `runtimeChunk` runtime is named by a hash, which would
-			// rename the row on every content change — same reason asset names are
-			// normalized. Several hashed runtimes in one case then share a row and
-			// report the union of what they carry, which is stable where their
-			// names are not.
+			// A worker or `runtimeChunk` runtime is named by a hash, which would rename the
+			// row on every content change — the same reason asset names are normalized.
+			// Several hashed runtimes then share a row and report the union they carry.
 			const runtime = (
 				typeof chunk.runtime === "string"
 					? chunk.runtime
@@ -409,10 +409,9 @@ const measureCase = async ({ category, name }) => {
 	// webpack itself has created it.
 	fs.mkdirSync(outputDirectory, { recursive: true });
 
-	// `experiments.futureDefaults` flips this process-wide default
-	// (`lib/config/defaults.js`), so every later case in the same worker hashes
-	// its module ids with a different function and changes size for no reason.
-	// Restored after the build so a case is measured as if built on its own.
+	// `experiments.futureDefaults` flips this process-wide default, so every later
+	// case in the same worker hashes its module ids differently and changes size for
+	// no reason. Restored after the build, so a case is measured as if built alone.
 	const hashFunction = DEFAULTS.HASH_FUNCTION;
 
 	/** @type {CaseResult} */
@@ -475,10 +474,9 @@ const measureCase = async ({ category, name }) => {
 		const prefixes = codeSizeReportPrefixes(
 			compilers.map((child) => child.name)
 		);
-		// Measured on `emit`, per compiler: the output directory holds what the
-		// compilers of one case wrote over each other (and `compareBeforeEmit`
-		// skips a file another one already wrote), and once the build is over the
-		// asset sources have been replaced by `SizeOnlySource`.
+		// Measured on `emit`, per compiler: the output directory holds what the compilers
+		// of one case wrote over each other, and once the build is over the asset sources
+		// have been replaced by `SizeOnlySource`.
 		for (const [index, child] of compilers.entries()) {
 			const prefix = prefixes[index];
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
@@ -637,9 +635,8 @@ const compareMetrics = (before, after) => {
 		});
 	}
 	// Bytes first, then share of the asset: a fixed addition moves every bundle by
-	// the same amount, and the small ones are the ones it actually costs. Ranked
-	// on whichever of raw and gzip moved further, so the row budget cannot drop a
-	// re-encoding that barely moved raw and cost real bytes on the wire.
+	// the same amount, and the small ones are where it costs. Ranked on whichever of
+	// raw and gzip moved further, so a re-encoding cheap in raw is not dropped.
 	const moved = (/** @type {Change} */ change) =>
 		Math.max(Math.abs(change.delta.raw), Math.abs(change.delta.gzip));
 	return changes.sort(
@@ -1411,9 +1408,8 @@ const run = async () => {
 	const started = Date.now();
 
 	// One process, one case at a time. Cases within a category run in order, so a
-	// `1-use-*` case still consumes what its `0-create-*` sibling wrote, and a
-	// worker pool was measured to be worth about a third of the wall clock — not
-	// enough to buy the machinery.
+	// `1-use-*` case still consumes what its `0-create-*` sibling wrote, and a worker
+	// pool measured at about a third of the wall clock — not enough to buy it.
 	for (const [index, testCase] of cases.entries()) {
 		try {
 			results[testCase.id] = await measureCase(testCase);

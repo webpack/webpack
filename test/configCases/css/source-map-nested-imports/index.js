@@ -77,10 +77,9 @@ const sourceLinesByIndex = (map) => {
 const SOURCE_MAPPING_DATA_URI =
 	/sourceMappingURL=data:application\/json(?:;charset=[^;,]+)?;base64,([A-Za-z0-9+/=]+)/g;
 
-// Pulls every inline CSS source map out of `bundle.js`. After this fix
-// each css module's JS literal carries exactly one map covering both the
-// module's own CSS and all of its transitively `@import`ed content; there
-// should never be more than one map per module.
+// Pulls every inline CSS source map out of `bundle.js`. Each css module's JS
+// literal carries exactly one map covering its own CSS and everything it
+// transitively `@import`s, so there is never more than one per module.
 const extractAllInlineMaps = (bundle) => {
 	const matches = [...bundle.matchAll(SOURCE_MAPPING_DATA_URI)];
 	return matches.map((m) =>
@@ -140,10 +139,9 @@ it(`should emit a single merged source map covering every @imported file for exp
 
 it(`should keep no runtime merge helper for exportType="${exportType}"`, () => {
 	const bundle = readBundle();
-	// Old code path generated a runtime helper at <require>.<mcs> and added
-	// a runtime module whose header announces it as merging the imported
-	// sheets. Static merging makes both unnecessary. The needles are split
-	// so they don't appear verbatim in the bundled test source itself.
+	// The old path generated a runtime helper at `<require>.<mcs>` plus a runtime
+	// module announcing the merge; static merging makes both unnecessary. The needles
+	// are split so they do not appear verbatim in the bundled test source.
 	const mcsCall = `${"__webpack" + "_require__"}.${"m" + "cs"}(`;
 	const runtimeHeader = `${"css " + "merge"} ${"stylesheets"}`;
 	expect(bundle.includes(mcsCall)).toBe(false);

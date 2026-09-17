@@ -6,13 +6,9 @@ const path = require("path");
 const { fileURLToPath } = require("url");
 const vm = require("vm");
 
-// Simulates a worklet: `addModule(url)` evaluates the referenced chunk inside a
-// single persistent global scope (as a real worklet global scope would), so the
-// webpack bootstrap blob, the split chunks and the entry chunk all share state.
-// `registerProcessor`/`registerPaint` registrations are captured for assertions.
-// A worklet always loads its chunks as ES modules, so each is evaluated via
-// `vm.SourceTextModule` (with `import.meta.url` populated) and its native
-// `import`s are linked to sibling chunk files.
+// Simulates a worklet: `addModule(url)` evaluates the referenced chunk in one
+// persistent global scope, so the bootstrap blob, split chunks and entry chunk
+// share state. Each is an ES module, evaluated via `vm.SourceTextModule`.
 module.exports = (
 	/** @type {{ outputDirectory: string }} */ { outputDirectory }
 ) => {

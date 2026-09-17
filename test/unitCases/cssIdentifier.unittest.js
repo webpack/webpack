@@ -127,10 +127,9 @@ describe("css identifier utils", () => {
 		});
 	});
 
-	// Deterministic fuzzing: a seeded PRNG drives random/edge-case inputs
-	// (control chars, lone surrogates, backslash escapes, leading digit/hyphen)
-	// so any failure is reproducible. Guards the string utils against crashes
-	// and escape/unescape round-trip violations.
+	// Deterministic fuzzing: a seeded PRNG drives random and edge-case inputs, so any
+	// failure is reproducible. Guards the string utils against crashes and
+	// escape/unescape round-trip violations.
 	describe("fuzzing (seeded)", () => {
 		const { escapeIdentifier, unescapeIdentifier, equalsLowerCase } = cssSyntax;
 		// mulberry32
@@ -214,11 +213,8 @@ describe("css identifier utils", () => {
 	});
 
 	// `escapeIdentifier` / `unescapeIdentifier` are wrapped via the same
-	// `makeCacheable` primitive used by `parseResource` / `makePathsRelative`.
-	// The tests above only check correctness of the returned values, which
-	// String value-equality would satisfy even if no cache were involved. The
-	// tests below observe caching directly by counting how often the wrapped
-	// implementation runs.
+	// `makeCacheable` primitive as `parseResource`. The tests above check returned
+	// values, which value equality satisfies with no cache; these count the runs.
 	describe("makeCacheable (the shared cache primitive)", () => {
 		it("only invokes the wrapped function once per (cache, input)", () => {
 			let calls = 0;

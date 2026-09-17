@@ -1,11 +1,8 @@
 import value, { exception } from "./module";
 
 it("should have a TDZ for exported const values", () => {
-	// TODO: Support disable inline export annotation to keep the TDZ
-	// expect(typeof exception).toBe("object");
-	// expect(exception).toBeInstanceOf(Error);
-	// expect(exception.message).toMatch(
-	// 	/ is not defined$|^Cannot access '.+?' before initialization$/
-	// );
+	// TODO: support disabling the inline export annotation to keep the TDZ, so this
+	// can assert `exception` is an Error whose message matches `is not defined` or
+	// `Cannot access '...' before initialization`.
 	expect(value).toBe("value");
 });

@@ -194,11 +194,9 @@ describe("Examples", () => {
 								return;
 							}
 
-							// Close to flush and await the filesystem cache store, then
-							// fail if it logged a cache store/restore failure. close() is
-							// best-effort here: cache store failures surface as logged
-							// warnings, not as a close error (some examples, e.g.
-							// lazy-compilation, error on close from their own backend).
+							// Close to flush and await the filesystem cache store, then fail if it logged a
+							// store or restore failure. `close()` is best-effort: cache failures surface as
+							// logged warnings, and some examples error on close from their own backend.
 							compiler.close(() => {
 								if (infraStructureErrors.length) {
 									/** @type {Error | undefined} */

@@ -289,11 +289,9 @@ describe("StatsTestCases", () => {
 						// Jest v27: at Object.<anonymous>.module.exports
 						// Jest v30: at Object.module.exports
 						.replace(/Object\.<anonymous>\./g, "Object.");
-					// Normalize logger trace frames across engines: V8 emits one
-					// "at fn (file:line:col)" frame, while JSC (Bun) emits extra
-					// internal frames, omits the function name, and reports different
-					// line:col. Keep only frames inside the test dir, reduced to the
-					// file path.
+					// Normalize logger trace frames across engines: V8 emits one `at fn (file:line:col)`
+					// frame, while JSC (Bun) adds internal frames, omits the name and reports a
+					// different line:col. Keep only frames inside the test dir, reduced to the path.
 					const traceFile = new RegExp(
 						`Xdir/${quoteMeta(testName)}/[^\\s():]+`
 					);

@@ -13,10 +13,9 @@ it("should process CSS inside <iframe srcdoc> (@import, url(), and <link>)", () 
 	// `url("./pixel.png")` inside a `<style>` is rewritten like any other asset.
 	expect(page).toContain("url(handled-pixel.png)");
 
-	// `<link rel="stylesheet" href="./linked.css">` is valid in srcdoc: per the
-	// HTML spec an `about:srcdoc` document inherits its container's base URL, so
-	// the relative href resolves against this file. webpack bundles it into a CSS
-	// chunk and rewrites the href away from the source path.
+	// `<link rel="stylesheet" href="./linked.css">` is valid in srcdoc: an
+	// `about:srcdoc` document inherits its container's base URL, so the href resolves
+	// against this file. webpack bundles it and rewrites the href.
 	expect(page).toMatch(
 		/srcdoc="<link rel=&quot;stylesheet&quot; href=&quot;[^"]+\.css&quot;>"/
 	);

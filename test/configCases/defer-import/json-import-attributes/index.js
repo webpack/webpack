@@ -19,17 +19,9 @@ function assertIsNamespaceObject(ns) {
 	}
 }
 
-// Node.js does not yet implement the `import defer` syntax (TC39 stage 3,
-// targeted for Node ~24). Per the proposal, deferring a module must not
-// change which exports are observable on the namespace — only when their
-// evaluation runs. For JSON modules (which have no observable evaluation
-// side effects), the deferred and non-deferred default values must be
-// identical. We use `webpackIgnore: true` on a plain dynamic `import()`
-// to obtain the runtime's reference parse of `with { type: "json" }`,
-// then assert that webpack's `import.defer` produces the same default
-// value. We deliberately compare `.default` only — the surrounding test
-// VM may add CJS-style named exports that differ from native Node.js
-// (where `Object.getOwnPropertyNames(ns) === ["default"]`).
+// Node.js does not implement `import defer` yet, and per the proposal deferring a
+// module changes only when evaluation runs, not which exports are observable — so
+// for JSON the deferred and non-deferred defaults must be identical.
 const nodeJsReference = () =>
 	import(/* webpackIgnore: true */ "./config.json", {
 		with: { type: "json" }
@@ -53,12 +45,9 @@ it("should match Node.js for static `import defer` of a JSON module", async () =
 	expect(Reflect.has(data, "nested")).toBe(false);
 	expect(Reflect.get(data, "value")).toBe(undefined);
 	expect(Reflect.get(data, "nested")).toBe(undefined);
-	// Structural introspection (Object.getOwnPropertyNames / Object.keys) now
-	// also works — proxy invariants hold for the deferred namespace. Webpack
-	// additionally exposes `__esModule` (because `__webpack_require__.r`
-	// stamps it onto the underlying module exports as a non-configurable
-	// property and the proxy's target is the same object); Node.js's native
-	// dynamic `import("./x.json", { with: { type: "json" } })` does not.
+	// Structural introspection works too — proxy invariants hold for the deferred
+	// namespace. webpack additionally exposes `__esModule`, since
+	// `__webpack_require__.r` stamps it non-configurably onto the proxy's target.
 	expect(Object.getOwnPropertyNames(data)).toContain("default");
 
 	// Quoted-key form of the import attribute should behave identically.
@@ -102,11 +91,9 @@ it("should produce the same JSON value for static and dynamic `import defer`", a
 });
 
 it("should defer evaluation until first access (TC39 spec invariant)", () => {
-	// Synthetic JSON modules have no observable evaluation side effects, so
-	// we wrap the JSON import in a JS module (`wrapper.js`) that calls
-	// `touch()` at top level. `import defer * as wrapped` must not evaluate
-	// the wrapper until the namespace is observably accessed; this is the
-	// core guarantee of the TC39 import-defer proposal.
+	// Synthetic JSON modules have no observable evaluation side effects, so the
+	// JSON import is wrapped in a JS module calling `touch()` at top level, and
+	// `import defer * as wrapped` must not evaluate it until the namespace is read.
 	reset();
 	assertIsNamespaceObject(wrapped);
 	assertUntouched();

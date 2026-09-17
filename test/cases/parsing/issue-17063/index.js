@@ -1,17 +1,8 @@
 import foo, { named } from "./lib";
 
-// The bug we are testing is purely about static analysis: webpack's
-// HarmonyDetectionParserPlugin was skipping the arguments of `define`
-// calls in ES modules, so import bindings used inside the callback
-// were not rewritten to their imported references.
-//
-// To exercise the rewriting we need to actually call `define(...)` so
-// the parser's call hook fires and walks the argument expressions. We
-// briefly install a no-op `define` on the realm's global, capture the
-// callbacks via assignment-in-argument, then remove `define` again so
-// other tests in the suite still see it as undefined. The
-// `Function("return this")()` polyfill is used in place of `globalThis`
-// for Node 10 compatibility.
+// webpack's HarmonyDetectionParserPlugin was skipping the arguments of `define`
+// calls in ES modules, so import bindings used inside the callback were not
+// rewritten. Calling `define(...)` is what fires the parser's call hook.
 var __globalThis = Function("return this")();
 var __hadDefine = Object.prototype.hasOwnProperty.call(__globalThis, "define");
 var __previousDefine = __globalThis.define;

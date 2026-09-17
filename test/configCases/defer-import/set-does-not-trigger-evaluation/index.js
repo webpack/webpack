@@ -34,11 +34,9 @@ it("evaluates when reading a property", () => {
 });
 
 it("`[[Set]]` keeps returning false after evaluation", () => {
-	// After evaluation the proxy switches to forwarding reads via the
-	// underlying target, but `[[Set]]` on a Module Namespace Exotic
-	// Object must still always fail. Without an explicit `set` trap a
-	// dangling assignment would silently create a property on
-	// `ns_target`.
+	// After evaluation the proxy forwards reads through the underlying target, but
+	// `[[Set]]` on a Module Namespace Exotic Object must still always fail. Without an
+	// explicit `set` trap a dangling assignment would create a property on `ns_target`.
 	expect(() => {
 		"use strict";
 

@@ -132,12 +132,9 @@ it("CJS wrapper `module.exports = require(esm).x` re-exports a property of the u
 });
 
 it("should not leak sibling named exports when 'module.exports' unwraps (usedExports regression)", () => {
-	// `"module.exports"` and `named` are bound to *different* values. With
-	// `usedExports: true`, webpack must mark `"module.exports"` referenced
-	// for property-access requires; otherwise `getUsedName` chicken-and-eggs
-	// itself and webpack falls back to `__webpack_require__(id).named`,
-	// returning "named-value" — which would NOT match Node's behavior of
-	// accessing `.named` on the unwrapped string (`undefined`).
+	// `"module.exports"` and `named` are bound to different values. With
+	// `usedExports: true` webpack must mark `"module.exports"` referenced for
+	// property-access requires, or it falls back to `.named` and diverges from Node.
 	const webpackedNamed = require("./distinct.mjs").named;
 	expect(webpackedNamed).toBeUndefined();
 
@@ -152,10 +149,9 @@ it("should not leak sibling named exports when 'module.exports' unwraps (usedExp
 	}
 });
 
-// Underscore-shaped library regression (issue #20896 + the linked underscore
-// and esbuild issues): an ESM-only library that exports itself via
-// `"module.exports"` must be observable from CJS as the library function,
-// not as the ESM namespace.
+// Underscore-shaped library regression (#20896): an ESM-only library exporting
+// itself via `"module.exports"` must be observable from CJS as the library
+// function, not as the ESM namespace.
 
 it("Underscore-like: `const _ = require(lib)` yields the callable library", () => {
 	const _ = require("./underscore-like.mjs");

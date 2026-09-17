@@ -2,10 +2,9 @@
 
 const { sources } = require("../../../../");
 
-// Stands in for the plugins that emit HTML webpack never rendered itself
-// (copy-webpack-plugin, html-webpack-plugin, …). `already.html` arrives flagged
-// `minimized`, the way every minimizer built on `minimizer-webpack-plugin`
-// marks what it has handled.
+// Stands in for the plugins that emit HTML webpack never rendered itself, such as
+// html-webpack-plugin. `already.html` arrives flagged `minimized`, the way every
+// minimizer built on `minimizer-webpack-plugin` marks what it has handled.
 class EmitOtherHtmlAssetsPlugin {
 	/**
 	 * @param {import("../../../../").Compiler} compiler compiler

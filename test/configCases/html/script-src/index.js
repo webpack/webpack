@@ -8,10 +8,9 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 
 const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 
-// Document-order list of every script-src chunk url emitted into the page.
-// Classic <script src> tags get `type="module"` auto-inserted by the parser
-// (because `output.module` is on), so they look identical to native module
-// scripts in HTML; we discriminate by chunk content instead of by tag shape.
+// Document-order list of every script-src chunk url in the page. `output.module`
+// is on, so classic tags get `type="module"` inserted and look identical to native
+// module scripts — they are told apart by chunk content, not by tag shape.
 const scriptChunkUrls = [
 	...page.matchAll(/<script[^>]*\bsrc="([\w-]+\.mjs)">/g)
 ].map((m) => m[1]);
@@ -26,10 +25,9 @@ it("should bundle classic and module <script src> as separate entry chunks and r
 	expect(page).not.toContain('src="./module-entry.js"');
 	expect(page).not.toContain('src="data:text/javascript');
 	expect(page).not.toContain('src="data:application/javascript');
-	// Non-executable script types (ld+json, importmap, …) are NOT bundled
-	// as JS entries — they flow through HtmlSourceDependency, so the
-	// `type` attribute stays as the browser expects but the src gets
-	// rewritten like any other asset URL.
+	// Non-executable script types are not bundled as JS entries; they flow through
+	// HtmlSourceDependency, so the `type` attribute stays as the browser expects while
+	// the src is rewritten like any other asset URL.
 	expect(page).toMatch(/<script type="application\/ld\+json" src="[^"]+">/);
 	expect(page).toMatch(/<script type="importmap" src="[^"]+">/);
 	// The original source paths are NOT in the output — they were rewritten

@@ -3,11 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
-// A wrongly cased request resolves fine where the file system ignores case, so
-// there is no failing request for a casing hint to be attached to. The repo
-// always has a lower-case 'package.json'; the upper-cased name only exists
-// where case is ignored.
 /**
+ * A wrongly cased request resolves fine where the file system ignores case, so
+ * there is no failing request for a casing hint to attach to. The repo always
+ * has a lower-case `package.json`; the upper-cased name exists only where case
+ * is ignored.
  * @returns {boolean} true when the file system tells two casings apart
  */
 module.exports = () =>

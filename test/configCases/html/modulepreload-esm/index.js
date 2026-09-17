@@ -51,12 +51,9 @@ it("should emit module-format chunks (no IIFE wrapper) when output.module is ena
 });
 
 it("should keep <link rel=modulepreload> entries independent of the module script chunk", () => {
-	// Modulepreload entries are emitted as independent chunks with no
-	// `dependOn`, so a later `<script type="module" src>` chunk never
-	// imports them — that's what preserves the "preload but don't execute"
-	// contract of modulepreload. (If a module script wants the preloaded
-	// module to actually run, it must import it via JS, in which case
-	// webpack inlines the module into the script chunk on its own.)
+	// Modulepreload entries are emitted as independent chunks with no `dependOn`, so
+	// no later module script imports them — which is what preserves modulepreload's
+	// "preload but do not execute" contract.
 	const preloadChunkUrls = [
 		...page.matchAll(/<link rel="modulepreload" href="([\w-]+\.mjs)">/g)
 	].map((m) => m[1]);

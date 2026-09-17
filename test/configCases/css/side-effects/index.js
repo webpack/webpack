@@ -22,11 +22,9 @@ it("emits CSS rules from a sideEffects:false package when classes are used", () 
 	expect(css).toMatch(/color:\s*blue/);
 });
 
-// Side-effect-only imports through a `"sideEffects": false` package are
-// dropped, matching Vite/Rollup/Rolldown's strict interpretation of the
-// `sideEffects` field. Libraries that ship CSS through this pattern need
-// to opt CSS in explicitly with `"sideEffects": ["**/*.css"]` (or use a
-// `module.rules[].sideEffects` override).
+// Side-effect-only imports through a `"sideEffects": false` package are dropped,
+// matching Vite/Rollup/Rolldown. A library shipping CSS this way has to opt it in
+// with `"sideEffects": ["**/*.css"]` or a `module.rules[].sideEffects` override.
 it("drops CSS from a side-effect-only import through a sideEffects:false package", () => {
 	const fs = __non_webpack_require__("fs");
 	const path = __non_webpack_require__("path");

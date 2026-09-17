@@ -2,11 +2,13 @@
 
 const path = require("path");
 
-// `data-themed` is registered as an extra source via `parser.html.sources`, so
-// its URL is resolved like a normal reference; a `module.rules` loader keyed to
-// that resource then transforms it, showing developers can attach their own
-// loader to a resource referenced by a specific HTML tag/attribute.
-/** @type {import("../../../../").Configuration} */
+/**
+ * `data-themed` is registered as an extra source via `parser.html.sources`, so
+ * its URL resolves like a normal reference. A `module.rules` loader keyed to
+ * that resource then transforms it, so a loader can be attached to a resource
+ * referenced by a specific HTML tag and attribute.
+ * @type {import("../../../../").Configuration}
+ */
 module.exports = {
 	output: {
 		assetModuleFilename: "[name][ext]"

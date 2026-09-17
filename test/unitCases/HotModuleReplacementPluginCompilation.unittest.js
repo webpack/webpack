@@ -351,14 +351,9 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	});
 
-	// Two runtimes (entries `a` and `b`) initially share `shared`+`x` in one split
-	// chunk. On the second build `b` switches to `import("./shared")`, so for runtime
-	// `b` those modules leave the (loaded) `shared` chunk and move into a new async
-	// chunk `lazyShared` that the client has not loaded. Without the force-load fix the
-	// `b` update would remove the `shared` chunk (`r`) yet dispose nothing (`m` empty),
-	// leaving `shared`/`x` loaded with no installed chunk owning them and cutting off
-	// their future HMR updates. The fix lists the new owning chunk in `f` so the client
-	// force-loads it.
+	// Two runtimes initially share `shared`+`x` in one split chunk; on the second build
+	// `b` moves them into an async chunk the client has not loaded. Without the
+	// force-load fix `b` would remove the loaded chunk yet dispose nothing.
 	it("should force-load the new owning chunk when a module's only loaded chunk is removed from a runtime", async () => {
 		const dir = path.join(
 			testDirectory,

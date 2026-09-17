@@ -466,9 +466,8 @@ const installHelpers = () => {
 				continue;
 			}
 			// A CSS escape is resolved before a name is matched, so `\2d-two` and
-			// `\2d\2d two` are the one identifier — decoded here, and written back
-			// escaped in a single spelling where the character it names would
-			// otherwise read as punctuation.
+			// `\2d\2d two` are one identifier — decoded here, and written back escaped in a
+			// single spelling where the character would otherwise read as punctuation.
 			if (ch === "\\") {
 				// §4.3.4: a `\` before a newline continues the string's line — the pair
 				// names nothing, unlike every other escape.
@@ -856,10 +855,9 @@ const installHelpers = () => {
 			// nothing to evaluate, so it stands as written.
 			return { kind, condition: prelude(rule) };
 		};
-		// `conditionText` is the one prelude the engine hands back verbatim, so a
-		// query's own insignificant whitespace has to be dropped here. Only inside
-		// `(` `)` and around `:`, where no two tokens can join — a `@scope` prelude
-		// or a nested selector spells a combinator with the same space.
+		// `conditionText` is the one prelude the engine hands back verbatim, so a query's
+		// insignificant whitespace is dropped here — only inside `(` `)` and around `:`,
+		// where no two tokens can join and no combinator is spelled with a space.
 		const QUERY_KINDS = new Set(["container", "media", "supports"]);
 		/**
 		 * @param {Condition} condition a chain entry
@@ -898,20 +896,18 @@ const installHelpers = () => {
 							: rule.cssText.includes("{")
 								? prelude(rule)
 								: "&");
-					// `&` alone is the rule it sits in, so the block is read as that
-					// rule's own — which is what it becomes once an empty rule ahead of
-					// it stops splitting the two apart. Only under a style rule: under
-					// an at-rule the declarations cannot fold into the parent either.
+					// `&` alone is the rule it sits in, so the block is read as that rule's own, which
+					// is what it becomes once an empty rule ahead of it stops splitting the two. Only
+					// under a style rule: under an at-rule the declarations cannot fold in either.
 					let held = chain;
 					const inner = chain[chain.length - 1];
 					if (label === "&" && inner !== undefined && inner.kind === "style") {
 						label = inner.condition;
 						held = chain.slice(0, -1);
 					}
-					// One entry per selector, each carrying what the cascade has said
-					// about that selector so far: a printer is free to move a selector
-					// between two adjacent lists, so only the per-selector sequence is
-					// the thing both sides have to agree on.
+					// One entry per selector, each carrying what the cascade has said about it so far:
+					// a printer may move a selector between two adjacent lists, so the per-selector
+					// sequence is the only thing both sides have to agree on.
 					const own = computed(style.cssText, [style]);
 					const block = ` { ${[...own].sort().join(";")} }`;
 					const where = held
@@ -927,10 +923,9 @@ const installHelpers = () => {
 						const styles =
 							earlier === undefined ? [style] : [...earlier.styles, style];
 						carried.set(key, { css, styles });
-						// Read as one block, which is what the cascade reads: a
-						// percentage or a `min()` here resolves against the earlier
-						// declarations, so the two lists cannot simply be added. The
-						// declarations themselves still say which properties are set.
+						// Read as one block, which is what the cascade reads: a percentage or a `min()`
+						// resolves against the earlier declarations, so the two lists cannot simply be
+						// added. The declarations still say which properties are set.
 						const list = earlier === undefined ? own : computed(css, styles);
 						out.push({
 							chain: held,
@@ -950,10 +945,9 @@ const installHelpers = () => {
 					}
 					walk(nested, [...chain, inner]);
 				} else if (!style) {
-					// `@import`, `@namespace` and `@property` neither declare nor group,
-					// so they are compared as written — under the one spelling a value
-					// has, since the engine echoes a descriptor rather than computing
-					// it and `3 red` is the `3 rgb(255, 0, 0)` it was handed.
+					// `@import`, `@namespace` and `@property` neither declare nor group, so they are
+					// compared as written — the engine echoes a descriptor rather than computing it,
+					// so `3 red` stays the `3 rgb(255, 0, 0)` it was handed.
 					out.push({ chain, text: canonical(normalizeValue(rule.cssText)) });
 				}
 			}
@@ -1011,12 +1005,9 @@ const installHelpers = () => {
 		return found;
 	};
 
-	// Written from the HTML spec's value grammars rather than from
-	// `lib/html/data.js`, so the minifier is checked against the spec and not
-	// against its own idea of it.
-	//
-	// "Strip leading and trailing ASCII whitespace", then the URL parser removes
-	// every remaining tab and newline.
+	// Written from the HTML spec's value grammars rather than from `lib/html/data.js`,
+	// so the minifier is checked against the spec and not against its own idea of it.
+	// Leading and trailing ASCII whitespace goes, then every tab and newline.
 	const URL_ATTRIBUTES = new Set([
 		"action",
 		"background",
@@ -1133,10 +1124,9 @@ const installHelpers = () => {
 				.filter(Boolean)
 				.join(",");
 		}
-		// Last: what the engine itself reads the attribute as. An ordinary
-		// reflection hands the raw value straight back, so this changes nothing;
-		// one "limited to only known values" hands back its canonical keyword,
-		// which is the whole of what folding an enumerated value can alter.
+		// Last: what the engine itself reads the attribute as. An ordinary reflection
+		// hands the raw value back unchanged; one limited to known values hands back its
+		// canonical keyword, which is all that folding an enumerated value can alter.
 		if (typeof reflected === "string") return reflected;
 		return raw;
 	};
@@ -1235,11 +1225,9 @@ const installHelpers = () => {
 						(local === "style" || local === "script"))
 						? local
 						: null;
-				// The text this element holds itself, so text moved to a neighbor
-				// cannot hide in the document-wide concatenation. Only where it
-				// reaches the page: whitespace between two `<head>` children, or
-				// between `</head>` and `<body>`, renders nothing, and a `<style>` or
-				// `<script>` body is data — read as CSS or JSON just below.
+				// The text this element holds itself, so text moved to a neighbor cannot hide in
+				// the document-wide concatenation. Only where it reaches the page: whitespace
+				// between `<head>` children renders nothing, and a `<style>` body is data.
 				const inPage = renders || name === "body";
 				if (inPage && name !== "style" && name !== "script") {
 					facets.ownText.push(
@@ -1306,11 +1294,9 @@ const installHelpers = () => {
 				? "no doctype"
 				: `${doctype.name}|${doctype.publicId}|${doctype.systemId}`
 		];
-		// What the page renders: the title (whose getter strips and collapses ASCII
-		// whitespace, as the spec says a title is read) and the body's text. A
-		// `<script>` / `<style>` body is data, compared above; a `<template>`'s
-		// content does not render; and the whitespace between two `<head>`
-		// children renders nothing either.
+		// What the page renders: the title, whose getter strips and collapses ASCII
+		// whitespace as the spec says a title is read, and the body's text. A `<script>`
+		// or `<style>` body is data, and a `<template>`'s content does not render.
 		facets.text = [
 			doc.title,
 			doc.body === null ? "" : renderedTextOf(doc.body)
@@ -1428,10 +1414,9 @@ const conditionSignatures = async (page, groups) => {
 		for (const condition of conditions) {
 			for (const [number] of condition.matchAll(/\d+(?:\.\d+)?/g)) {
 				const value = Math.round(Number(number));
-				// Bounded: each size costs two round trips per condition, and past a
-				// point the trips cost more than the separation they buy. Clamped: a
-				// viewport of width 0 is not a sample point.
-				// Room for the whole triplet, so the cap is never stepped over.
+				// Bounded: each size costs two round trips per condition, and past a point the
+				// trips cost more than the separation they buy. Clamped, since a viewport of
+				// width 0 is not a sample point, with room left for the whole triplet.
 				if (value > 0 && value < 10000 && edges.size <= MAX_SAMPLED_SIZES - 3) {
 					edges
 						.add(Math.max(1, value - 1))
@@ -1634,11 +1619,9 @@ const LAYER_STATEMENT_RE = /^@layer\s+([^{;]+);$/i;
 // One number wherever it stands in a value.
 const NUMBER_RUN = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
 
-// The printer rounds a number to six significant digits, so anything derived
-// from one — a matrix entry, a resolved font size — lands within a relative
-// 1e-5 of what the unrounded input gives. That is under Chromium's own 1/64px
-// layout grid at every length a stylesheet uses, which is the bound the
-// rounding itself rests on. Wider than that is a difference, not a spelling.
+// The printer rounds to six significant digits, so anything derived from one lands
+// within a relative 1e-5 of the unrounded input. That is under Chromium's own
+// 1/64px layout grid at every length a stylesheet uses, which is the bound.
 const NUMERIC_TOLERANCE = 1e-5;
 
 /**
@@ -1778,10 +1761,9 @@ const compareRules = (before, after, signatures) => {
 	const keys = (rules) => {
 		const flat = perSelector(byLayer(rules)).map((rule) => ({
 			key: keyOf(rule, signatures),
-			// Everything but the selector: two entries sharing it are one rule's
-			// worth of cascade, whichever of them is written first. A page entry
-			// carries its own block, which is what it says before the earlier
-			// declarations it is read on top of are folded in.
+			// Everything but the selector: two entries sharing it are one rule's worth of
+			// cascade, whichever is written first. A page entry carries its own block, which
+			// is what it says before the earlier declarations it sits on top of fold in.
 			group: keyOf(
 				{
 					chain: rule.chain,
@@ -1815,20 +1797,17 @@ const compareRules = (before, after, signatures) => {
 			runs.push(entries);
 			from = to;
 		}
-		// A selector carried into the very next run is one rule's declarations
-		// split across two blocks — nothing stands between them, so the cascade
-		// reads them as one, and the later entry already carries what the earlier
-		// one said. Read from the back so a run emptied this way stops standing
-		// between its neighbors, whether a printer joined the blocks or not.
+		// A selector carried into the very next run is one rule's declarations split
+		// across two blocks — nothing stands between them, so the cascade reads them as
+		// one. Read from the back, so a run emptied this way stops separating neighbors.
 		const ahead = new Set();
 		for (let i = runs.length - 1; i >= 0; i--) {
 			runs[i] = runs[i].filter((one) => !ahead.has(one.where));
 			for (const one of runs[i]) ahead.add(one.where);
 		}
-		// A key written twice is one rule said twice, and the later copy restates it
-		// all — so keeping the last is what dropping the dead earlier one leaves.
-		// Emptying a run can leave two that reach one block standing next to each
-		// other, which is one run's worth of cascade however the printer wrote it.
+		// A key written twice is one rule said twice and the later copy restates it all,
+		// so keeping the last is what dropping the earlier one leaves. Emptying a run can
+		// leave two reaching one block adjacent — still one run's worth of cascade.
 		/** @type {(typeof flat)[]} */
 		const joined = [];
 		for (const run of runs) {

@@ -14,9 +14,8 @@ module.exports = {
 		promiseExt: "promise Promise.resolve(42)",
 		dynamicImport: "import os"
 	},
-	// Unsupported in a universal ESM target (would throw in node or the browser):
-	//   this (top-level `this` is undefined in ESM), window/self (browser-only globals),
-	//   amd/amd-require/umd/umd2/jsonp/system (need a matching `output.libraryTarget`),
-	//   script (DOM-only), asset/asset-url/css-import/css-url (non-JS module types).
+	// Unsupported in a universal ESM target: `this`, browser-only `window` / `self`,
+	// the types needing a matching `output.libraryTarget`, DOM-only `script`, and the
+	// non-JS module types.
 	output: { module: true }
 };
