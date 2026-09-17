@@ -5,6 +5,7 @@
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const { HOISTED_DECLARATIONS } = require("../../lib/javascript/syntax");
 
 describe("JavascriptParser", () => {
 	/* eslint-disable no-unused-vars */
@@ -1230,6 +1231,154 @@ describe("JavascriptParser", () => {
 				end: { line: 2, column: 2 }
 			});
 			expect(parser._lineStarts).toBe(lineStarts);
+		});
+	});
+
+	describe("hoisted declarations", () => {
+		const EVERY_POSITION = `
+var top = 1;
+function topFunction() {}
+class TopClass {}
+if (top) { var fromIf = 1; } else { var fromElse = 2; }
+for (var fromFor = 0; fromFor < 1; fromFor++) { var fromForBody = 1; }
+for (var fromForIn in top) { var fromForInBody = 1; }
+for (var fromForOf of [top]) { var fromForOfBody = 1; }
+while (top) { var fromWhile = 1; }
+do { var fromDoWhile = 1; } while (top);
+label: { var fromLabeled = 1; }
+with (top) { var fromWith = 1; }
+try { var fromTry = 1; } catch (error) { var fromCatch = 1; } finally { var fromFinally = 1; }
+switch (top) { case 1: var fromCase = 1; break; default: var fromDefault = 1; }
+{ var fromBlock = 1; function blockFunction() {} }
+let lexical = 1;
+const alsoLexical = 1;
+function outer() { var inOuter = 1; }
+`;
+
+		/**
+		 * @param {string | object} source what to parse
+		 * @param {("auto" | "module" | "script")=} sourceType the source type to parse it as
+		 * @returns {string[]} the names the hoisting pass declared, in order
+		 */
+		const hoistedNames = (source, sourceType = "script") => {
+			const parser = new JavascriptParser(sourceType);
+			/** @type {string[]} */
+			const names = [];
+			parser.hooks.preDeclarator.tap("test", (declarator) => {
+				names.push(/** @type {EXPECTED_ANY} */ (declarator.id).name);
+			});
+			parser.hooks.preStatementByType
+				.for("FunctionDeclaration")
+				.tap("test", (statement) => {
+					names.push(/** @type {EXPECTED_ANY} */ (statement).id.name);
+				});
+			parser.parse(
+				/** @type {EXPECTED_ANY} */ (source),
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			return names;
+		};
+
+		it("reaches every position a `var` or function declaration hoists from", () => {
+			expect(hoistedNames(EVERY_POSITION)).toEqual([
+				"top",
+				"topFunction",
+				"fromIf",
+				"fromElse",
+				"fromFor",
+				"fromForBody",
+				"fromForIn",
+				"fromForInBody",
+				"fromForOf",
+				"fromForOfBody",
+				"fromWhile",
+				"fromDoWhile",
+				"fromLabeled",
+				"fromWith",
+				"fromTry",
+				"fromCatch",
+				"fromFinally",
+				"fromCase",
+				"fromDefault",
+				"fromBlock",
+				"blockFunction",
+				"outer",
+				"lexical",
+				"alsoLexical",
+				"inOuter"
+			]);
+		});
+
+		it("collects its own from an AST another parser built", () => {
+			const { ast, comments } = JavascriptParser._parse(EVERY_POSITION, {
+				sourceType: "script",
+				ranges: true,
+				comments: true
+			});
+			// strip the parser's record: what a preparsed AST from a loader looks
+			// like, and the only thing that separates the two paths
+			/** @type {EXPECTED_ANY} */
+			(ast)[HOISTED_DECLARATIONS] = undefined;
+			/** @type {EXPECTED_ANY} */
+			(ast).comments = comments;
+			expect(hoistedNames(ast)).toEqual(hoistedNames(EVERY_POSITION));
+		});
+
+		it("keeps a declaration under an `export` head out of the scope's list", () => {
+			// the export statement reports its own declaration, so listing it
+			// again would declare it twice
+			expect(
+				hoistedNames(
+					"export var exported = 1; export function exportedFunction() {} var plain = 1;",
+					"module"
+				)
+			).toEqual(["plain", "exported", "exportedFunction"]);
+		});
+	});
+
+	describe("attached comments", () => {
+		/**
+		 * @param {string} source what to parse
+		 * @param {number} index which statement to ask about
+		 * @returns {string} the source the comment run covers
+		 */
+		const attachedTo = (source, index) => {
+			const parser = new JavascriptParser("module");
+			const { ast, comments } = JavascriptParser._parse(source, {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			parser.comments = /** @type {EXPECTED_ANY} */ (comments);
+			parser._source = source;
+			const statement = /** @type {EXPECTED_ANY} */ (ast).body[index];
+			return source.slice(
+				parser.getAttachedCommentsStart(statement),
+				statement.range[0]
+			);
+		};
+
+		it("covers the run of comments whitespace alone separates from it", () => {
+			expect(attachedTo("/* a */\n/* b */\nfunction f() {}", 0)).toBe(
+				"/* a */\n/* b */\n"
+			);
+		});
+
+		it("reaches past the statement before it", () => {
+			expect(attachedTo("first();\n/* a */\nfunction f() {}", 1)).toBe(
+				"/* a */\n"
+			);
+		});
+
+		it("stops at the last token written before it", () => {
+			// the annotation was written for the `;`, so it is not this one's
+			expect(attachedTo("first();\n/* a */\n;\nfunction f() {}", 2)).toBe("");
+		});
+
+		it("reads the statement itself when nothing precedes it", () => {
+			expect(attachedTo("function f() {}", 0)).toBe("");
 		});
 	});
 

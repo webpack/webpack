@@ -13408,10 +13408,11 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Pre walking iterates the scope for variable declarations
+	 * Declare what hoists to the scope being entered. The list is what the
+	 * parser recorded while reading it, in source order.
 	 */
-	preWalkStatements(
-		statements: (
+	preWalkHoistedDeclarations(
+		hoisted: (
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
@@ -13622,11 +13623,6 @@ declare class JavascriptParser extends ParserClass {
 	walkNestedStatement(statement: Statement): void;
 
 	/**
-	 * Pre walk block statement.
-	 */
-	preWalkBlockStatement(statement: BlockStatement): void;
-
-	/**
 	 * Walk block statement.
 	 */
 	walkBlockStatement(statement: BlockStatement | StaticBlock): void;
@@ -13635,11 +13631,6 @@ declare class JavascriptParser extends ParserClass {
 	 * Walk expression statement.
 	 */
 	walkExpressionStatement(statement: ExpressionStatement): void;
-
-	/**
-	 * Pre walk if statement.
-	 */
-	preWalkIfStatement(statement: IfStatement): void;
 
 	/**
 	 * Walks a conditional branch with its guard frame (if any) pushed onto the
@@ -13653,29 +13644,14 @@ declare class JavascriptParser extends ParserClass {
 	walkIfStatement(statement: IfStatement): void;
 
 	/**
-	 * Pre walk labeled statement.
-	 */
-	preWalkLabeledStatement(statement: LabeledStatement): void;
-
-	/**
 	 * Walk labeled statement.
 	 */
 	walkLabeledStatement(statement: LabeledStatement): void;
 
 	/**
-	 * Pre walk with statement.
-	 */
-	preWalkWithStatement(statement: WithStatement): void;
-
-	/**
 	 * Walk with statement.
 	 */
 	walkWithStatement(statement: WithStatement): void;
-
-	/**
-	 * Pre walk switch statement.
-	 */
-	preWalkSwitchStatement(statement: SwitchStatement): void;
 
 	/**
 	 * Walk switch statement.
@@ -13698,19 +13674,9 @@ declare class JavascriptParser extends ParserClass {
 	walkThrowStatement(statement: ThrowStatement): void;
 
 	/**
-	 * Pre walk try statement.
-	 */
-	preWalkTryStatement(statement: TryStatement): void;
-
-	/**
 	 * Walk try statement.
 	 */
 	walkTryStatement(statement: TryStatement): void;
-
-	/**
-	 * Pre walk while statement.
-	 */
-	preWalkWhileStatement(statement: WhileStatement): void;
 
 	/**
 	 * Walk while statement.
@@ -13718,19 +13684,9 @@ declare class JavascriptParser extends ParserClass {
 	walkWhileStatement(statement: WhileStatement): void;
 
 	/**
-	 * Pre walk do while statement.
-	 */
-	preWalkDoWhileStatement(statement: DoWhileStatement): void;
-
-	/**
 	 * Walk do while statement.
 	 */
 	walkDoWhileStatement(statement: DoWhileStatement): void;
-
-	/**
-	 * Pre walk for statement.
-	 */
-	preWalkForStatement(statement: ForStatement): void;
 
 	/**
 	 * Walk for statement.
@@ -13738,19 +13694,9 @@ declare class JavascriptParser extends ParserClass {
 	walkForStatement(statement: ForStatement): void;
 
 	/**
-	 * Pre walk for in statement.
-	 */
-	preWalkForInStatement(statement: ForInStatement): void;
-
-	/**
 	 * Walk for in statement.
 	 */
 	walkForInStatement(statement: ForInStatement): void;
-
-	/**
-	 * Pre walk for of statement.
-	 */
-	preWalkForOfStatement(statement: ForOfStatement): void;
 
 	/**
 	 * Walk for of statement.
@@ -13897,19 +13843,9 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Pre walk switch cases.
-	 */
-	preWalkSwitchCases(switchCases: SwitchCase[]): void;
-
-	/**
 	 * Processes the provided switch case.
 	 */
 	walkSwitchCases(switchCases: SwitchCase[]): void;
-
-	/**
-	 * Pre walk catch clause.
-	 */
-	preWalkCatchClause(catchClause: CatchClause): void;
 
 	/**
 	 * Processes the provided catch clause.
@@ -14552,6 +14488,12 @@ declare class JavascriptParser extends ParserClass {
 	 * Returns comments in the range.
 	 */
 	getComments(range: [number, number]): CommentJavascriptParser[];
+
+	/**
+	 * Where the comments written for `statement` begin: the run of comments
+	 * before it that whitespace alone separates from it and from each other.
+	 */
+	getAttachedCommentsStart(statement: StatementPathItem): number;
 
 	/**
 	 * Reports whether `identifier` may occur as a word in the source text of
@@ -27240,6 +27182,7 @@ declare abstract class ScopeParser {
 	lexical?: Set<string>;
 	functions?: Set<string>;
 	firstLexical?: string;
+	hoisted?: (number | NodeLike)[];
 }
 
 /**
