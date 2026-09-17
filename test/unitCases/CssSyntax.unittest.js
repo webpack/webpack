@@ -4305,19 +4305,33 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it.each([
 			// A block writing only into its own layer reaches nothing the one
-			// between them writes, so the two never contend.
+			// between them writes, so the two never contend — and the pair the
+			// gather leaves side by side is offered the join it makes possible.
 			[
 				"a block for a layer under it stands between them",
 				"@layer a.b{.x{top:0}}@layer a.b.c{.y{top:0}}@layer a.b{.z{top:0}}",
-				"@layer a.b{.x{top:0}.z{top:0}}@layer a.b.c{.y{top:0}}"
+				"@layer a.b{.x,.z{top:0}}@layer a.b.c{.y{top:0}}"
 			],
 			[
 				"a block for the layer above it stands between them",
 				"@layer a.b{.x{top:0}}@layer a{.y{top:0}}@layer a.b{.z{top:0}}",
-				"@layer a.b{.x{top:0}.z{top:0}}@layer a{.y{top:0}}"
+				"@layer a.b{.x,.z{top:0}}@layer a{.y{top:0}}"
 			]
 		])("gathers where %s", (_name, css, expected) => {
 			expect(minify(css)).toBe(expected);
+		});
+
+		it("joins the pair a top-level gather leaves at the seam", () => {
+			// The gather is what makes the two neighbors, so the join has to be
+			// offered here rather than left to a second pass over the output.
+			const d = "{cursor:not-allowed;opacity:.2}";
+			const css = `@layer a.b{.p{c:1}.chk${d}}@layer a.b.c{.q{c:2}}@layer a.b{.rad${d}.r{c:3}}`;
+			const once = minify(css);
+			expect(once).toBe(
+				"@layer a.b{.p{c:1}.chk,.rad{cursor:not-allowed;opacity:.2}.r{c:3}}@layer a.b.c{.q{c:2}}"
+			);
+			// What the printer owes its own output: a second pass finds nothing.
+			expect(minify(once)).toBe(once);
 		});
 
 		it.each([
