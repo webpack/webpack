@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read an attribute's value decoded wherever its spelling must not matter.
+Look an attribute up by what its value decodes to, not how it was spelled.
