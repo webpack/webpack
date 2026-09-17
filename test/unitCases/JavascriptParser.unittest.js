@@ -1596,10 +1596,10 @@ describe("JavascriptParser", () => {
 		});
 	});
 
-	describe("update hooks", () => {
+	describe("write hooks", () => {
 		/**
 		 * @param {string} source source to parse
-		 * @param {"update" | "updateMemberChain"} hook the hook to tap
+		 * @param {"write" | "writeMemberChain"} hook the hook to tap
 		 * @param {boolean} handled what the tap returns
 		 * @returns {string[]} the names the walk reported as read
 		 */
@@ -1627,13 +1627,13 @@ describe("JavascriptParser", () => {
 		};
 
 		it("reports an update and still walks the target it reads", () => {
-			expect(readsWith("x++;", "update", false)).toEqual(["x"]);
-			expect(readsWith("x.y++;", "updateMemberChain", false)).toEqual(["x"]);
+			expect(readsWith("x++;", "write", false)).toEqual(["x"]);
+			expect(readsWith("x.y++;", "writeMemberChain", false)).toEqual(["x"]);
 		});
 
 		it("lets a tap that rendered the whole update stop the walk", () => {
-			expect(readsWith("x++;", "update", true)).toEqual([]);
-			expect(readsWith("x.y++;", "updateMemberChain", true)).toEqual([]);
+			expect(readsWith("x++;", "write", true)).toEqual([]);
+			expect(readsWith("x.y++;", "writeMemberChain", true)).toEqual([]);
 		});
 	});
 });

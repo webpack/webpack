@@ -9,6 +9,12 @@ import {
 	writeAliased,
 	writeThroughNamespace
 } from "./quoted-writer";
+import {
+	loopAwaitIdentifier,
+	loopInIdentifier,
+	loopOfIdentifier,
+	loopOfNamespaceMember
+} from "./loops";
 
 it("should reject a write to an imported binding", () => {
 	expect(writeLet).toThrow(TypeError);
@@ -46,6 +52,16 @@ it("should reject a write to an export no identifier can spell", () => {
 	expect(readQuoted()).toBe(1);
 });
 
+it("should reject a write to a loop's iteration binding", () => {
+	expect(loopOfIdentifier).toThrow(TypeError);
+	expect(loopInIdentifier).toThrow(TypeError);
+	expect(loopOfNamespaceMember).toThrow(TypeError);
+	expect(readCount()).toBe(0);
+});
+
+it("should reject it in an async iteration too", () =>
+	expect(loopAwaitIdentifier()).rejects.toThrow(TypeError));
+
 it("should still concatenate every module", () => {
 	const concatenated = __STATS__.modules.filter((m) => m.modules);
 	expect(concatenated).toHaveLength(1);
@@ -54,6 +70,7 @@ it("should still concatenate every module", () => {
 		"./counter.js",
 		"./helper.js",
 		"./index.js",
+		"./loops.js",
 		"./namespace.js",
 		"./quoted-writer.js",
 		"./quoted.js",

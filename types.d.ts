@@ -13123,9 +13123,9 @@ declare class JavascriptParser extends ParserClass {
 		canRename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
-		update: HookMap<SyncBailHook<[UpdateExpression], boolean | void>>;
-		updateMemberChain: HookMap<
-			SyncBailHook<[UpdateExpression, string[]], boolean | void>
+		write: HookMap<SyncBailHook<[WriteStatement], boolean | void>>;
+		writeMemberChain: HookMap<
+			SyncBailHook<[WriteStatement, string[]], boolean | void>
 		>;
 		assignMemberChain: HookMap<
 			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
@@ -29475,7 +29475,7 @@ declare interface SyncModuleIdsPluginOptions {
 	/**
 	 * operation mode (defaults to merge)
 	 */
-	mode?: "update" | "read" | "create" | "merge";
+	mode?: "read" | "create" | "merge" | "update";
 }
 type SyncWasmModuleBuildMeta = KnownBuildMeta &
 	Record<string, any> &
@@ -30923,6 +30923,7 @@ type WriteFileOptions =
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
 }
+type WriteStatement = UpdateExpression | ForInStatement | ForOfStatement;
 type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
