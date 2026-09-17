@@ -13124,6 +13124,9 @@ declare class JavascriptParser extends ParserClass {
 		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
 		update: HookMap<SyncBailHook<[UpdateExpression], boolean | void>>;
+		updateMemberChain: HookMap<
+			SyncBailHook<[UpdateExpression, string[]], boolean | void>
+		>;
 		assignMemberChain: HookMap<
 			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
 		>;
