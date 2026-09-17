@@ -582,6 +582,38 @@ const installHelpers = () => {
 	]);
 
 	/**
+	 * A font family list with every name the bare spelling would also name left
+	 * unquoted. CSS Fonts 4 §2.2 makes the two the same family, and the engines
+	 * disagree about which to echo.
+	 * @param {string} list a `font-family` or `font` value
+	 * @returns {string} the same list, quoted once
+	 */
+	const unquoteFamilies = (list) =>
+		list.replace(
+			/"((?:[A-Za-z_-][\w-]*)(?: [A-Za-z_-][\w-]*)*)"/g,
+			(quoted, name) =>
+				GENERIC_FAMILIES.has(name.toLowerCase()) ? quoted : name
+		);
+
+	// A generic family is a keyword, so quoting one names a font of that name
+	// instead — the quoting is what tells the two apart and is never dropped.
+	const GENERIC_FAMILIES = new Set([
+		"cursive",
+		"emoji",
+		"fangsong",
+		"fantasy",
+		"math",
+		"monospace",
+		"sans-serif",
+		"serif",
+		"system-ui",
+		"ui-monospace",
+		"ui-rounded",
+		"ui-sans-serif",
+		"ui-serif"
+	]);
+
+	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
 	 * is the curve it stands for, `jump-start` names the step position `start`
 	 * does, and a gradient's last color stop is at the end of the gradient line
@@ -661,7 +693,17 @@ const installHelpers = () => {
 					: style.getPropertyValue(property);
 			// A value that is not itself a color still carries them: `box-shadow`
 			// keeps the space its color was written in, so each one is painted.
-			const named = canonical(resolved);
+
+			// WHY: Gecko carries the source's quoting into the computed family where
+			// Blink drops it, so a respelling neither engine can tell apart reads as
+			// a difference in one of them — measured: `font-family:"Manrope"`
+			// computes `"Manrope"` in Firefox 156 and `Manrope` in Chrome 147, while
+			// the bare spelling computes `Manrope` in both.
+			const named = canonical(
+				property === "font-family" || property === "font"
+					? unquoteFamilies(resolved)
+					: resolved
+			);
 			const whole = painted(named);
 			out.push(
 				`${property}${bang}:${whole === named ? paintedColors(named) : whole}`
@@ -1395,6 +1437,29 @@ const installHelpers = () => {
 		};
 };
 
+/** @type {WeakMap<import("puppeteer-core").Page, boolean>} */
+const emulates = new WeakMap();
+
+/**
+ * Whether the engine behind a page answers the media-emulation calls at all.
+ * Asked once per page and remembered, since the answer is a property of the
+ * protocol rather than of the page.
+ * @param {import("puppeteer-core").Page} page the page to ask
+ * @returns {Promise<boolean>} true when it emulates
+ */
+const emulatesMedia = async (page) => {
+	const known = emulates.get(page);
+	if (known !== undefined) return known;
+	let can = true;
+	try {
+		await page.emulateMediaType(undefined);
+	} catch (_error) {
+		can = false;
+	}
+	emulates.set(page, can);
+	return can;
+};
+
 /**
  * What the engine makes of every at-rule condition in a set of rules. A
  * condition is not compared as text: `(min-width: 200px)` and
@@ -1501,22 +1566,31 @@ const conditionSignatures = async (page, groups) => {
 			[{ name: "prefers-reduced-motion", value: "reduce" }],
 			[{ name: "color-gamut", value: "p3" }]
 		];
-		for (const type of ["screen", "print"]) {
-			for (const features of [[], ...featureSets]) {
-				await page.emulateMediaType(type);
-				await page.emulateMediaFeatures(features);
-				const answers = await page.evaluate(
-					(conditions) =>
-						conditions.map((condition) =>
-							matchMedia(condition).matches ? "1" : "0"
-						),
-					media
-				);
-				for (const [i, bit] of answers.entries()) bits[i] += bit;
+		// WHY: Both calls are CDP, which Gecko's WebDriver BiDi does not answer, and
+		// only `prefers-color-scheme` and `prefers-reduced-motion` have a launch
+		// preference standing in — set at launch, so not switchable per sample.
+		// There the signature carries the viewport dimension alone, which is the
+		// one the printer's own rewrites move (`(min-width:200px)` against
+		// `(width>=200px)`); two conditions differing only in media type or
+		// `color-gamut` would read alike, and that is the discrimination lost.
+		if (await emulatesMedia(page)) {
+			for (const type of ["screen", "print"]) {
+				for (const features of [[], ...featureSets]) {
+					await page.emulateMediaType(type);
+					await page.emulateMediaFeatures(features);
+					const answers = await page.evaluate(
+						(conditions) =>
+							conditions.map((condition) =>
+								matchMedia(condition).matches ? "1" : "0"
+							),
+						media
+					);
+					for (const [i, bit] of answers.entries()) bits[i] += bit;
+				}
 			}
+			await page.emulateMediaType(undefined);
+			await page.emulateMediaFeatures([]);
 		}
-		await page.emulateMediaType(undefined);
-		await page.emulateMediaFeatures([]);
 		for (const [i, condition] of media.entries()) {
 			signatures.set(`media ${condition}`, bits[i]);
 		}

@@ -2138,7 +2138,7 @@
   resolved "https://registry.yarnpkg.com/@pnpm/deps.graph-sequencer/-/deps.graph-sequencer-1100.0.1.tgz#8a2aeed98855391404ad808494f0230ff5f33139"
   integrity sha512-pOr5+q1fLYKwFN3LAJuGZEnfXDcQ73zqgDHMtGy+K+uIoUqyY+6MeDCWFwfu+4EFuq76I5EPFofoNAI+Bmmq4A==
 
-"@puppeteer/browsers@3.2.2":
+"@puppeteer/browsers@3.2.2", "@puppeteer/browsers@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-3.2.2.tgz#5fb046a7ea11d83d8e559efa046118c3066662da"
   integrity sha512-q2BU4YfO9h/Wt7IcWPcggpOOqLk2Tbs1hDwolvKZrweRjy751OJBKMN9zO5bfD0pzU7X/tvKw/exQds4pM/LOg==

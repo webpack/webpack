@@ -28,7 +28,47 @@ const {
 	parseHtml
 } = require("../../lib/html/syntax");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
-const launchChrome = require("../helpers/launchChrome");
+const launchBrowser = require("../helpers/launchBrowser");
+
+// Which engine the comparisons are held against. Chromium is the one CI runs;
+// `EQUIVALENCE_BROWSER=firefox` points the same corpus at Gecko.
+const ENGINE =
+	process.env.EQUIVALENCE_BROWSER === "firefox" ? "firefox" : "chrome";
+
+/**
+ * A tier's filed defects as they stand in this engine. A reason opening
+ * `<engine> only:` names the engine that has it, and the entry is dropped
+ * elsewhere — the exactness check would otherwise fail on a defect the engine
+ * being run does not have.
+ * @param {Map<string, string>} filed every filed defect of a tier
+ * @returns {Map<string, string>} the ones this engine has
+ */
+const forEngine = (filed) => {
+	const other = ENGINE === "firefox" ? "chrome only:" : "firefox only:";
+	return new Map([...filed].filter(([, why]) => !why.startsWith(other)));
+};
+
+/**
+ * `page.evaluate` for a result nested deeper than three levels. Gecko's
+ * WebDriver BiDi truncates a deeper structure to `null` where Chromium's CDP
+ * returns it whole, and puppeteer exposes no depth to raise, so the page hands
+ * back text and the depth is carried by JSON rather than by the protocol.
+ * @template T, A
+ * @param {import("puppeteer-core").Page} page the page to ask
+ * @param {(arg: A) => T} fn what to run in it
+ * @param {A} arg its argument
+ * @returns {Promise<T>} the result, at full depth
+ */
+const evaluateDeep = async (page, fn, arg) =>
+	JSON.parse(
+		await page.evaluate(
+			// eslint-disable-next-line no-new-func
+			(source, each) => JSON.stringify(new Function(`return (${source})`)()(each)),
+			fn.toString(),
+			arg
+		)
+	);
+
 const {
 	benchmarkDocuments,
 	benchmarkStylesheets,
@@ -75,9 +115,35 @@ const CUSTOM_PROPERTY = "--webpack-probe";
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
 // exactly, so an entry outlives its defect by one run.
-const FILED_CONFIG_CSS_DEFECTS = new Map();
+const FILED_CONFIG_CSS_DEFECTS = new Map([
+	[
+		"test/configCases/css/minimize-values/style.css",
+		"firefox only: not a printer defect — Blink folds a `calc()` inside a `var()` fallback as it parses, so both spellings read alike there; Gecko echoes the fallback as written. Measured in Firefox 156: `width:var(--foo,calc(10px + 10px))` reads back whole, while both engines compute `20px`"
+	],
+	[
+		"test/configCases/css/minimize-cssnano-custom-properties/style.css",
+		"firefox only: the `calc()` in a `var()` fallback again — see `minimize-values`"
+	],
+	[
+		"test/configCases/css/minify-modern-longhands/style.css",
+		"firefox only: `font-synthesis-position: initial` computes `auto` in Gecko where the table names `none`, which Blink cannot see because it does not implement the property. A printer defect, fixed separately"
+	]
+]);
 
-const FILED_CONFIG_HTML_DEFECTS = new Map();
+const FILED_CONFIG_HTML_DEFECTS = new Map([
+	[
+		"test/configCases/html/attribute-tables/page.html",
+		"firefox only: not a printer defect — Gecko implements neither `writingSuggestions` nor `blocking` as an IDL attribute, so the comparison falls back to the attribute as written and reads a normalization as a difference. Measured in Firefox 156: both read `undefined`, where Chrome 147 reflects `false` and `render`"
+	],
+	[
+		"test/configCases/html/minimize-round-trip/cases/reflected.html",
+		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
+	],
+	[
+		"test/configCases/html/minimize-transforms/page.html",
+		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
+	]
+]);
 
 const FILED_BENCHMARK_CSS_DEFECTS = new Map();
 
@@ -86,7 +152,7 @@ const FILED_BENCHMARK_HTML_DEFECTS = new Map();
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[
 		"test/wpt/html/syntax/parsing/misnested-form-in-template.html",
-		"not a printer defect: the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented — webpack prints the tree wpt expects"
+		"chrome only: not a printer defect — the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented while Gecko has, so webpack prints the tree wpt expects and only Chromium disagrees"
 	]
 ]);
 
@@ -96,10 +162,41 @@ const FILED_WPT_CSS_DEFECTS = new Map();
 // Keyed `"<mode> <document>"`, so filing one print mode leaves the other held.
 const FILED_WPT_TREE_DEFECTS = new Map();
 
-// Declarations Chromium computes a different style from once printed, keyed by
+// Color rewrites one engine paints differently from the color they replaced,
+// keyed by the color as written.
+const FILED_COLOR_REWRITES = new Map([
+	[
+		"color-mix(in hsl, hwb(322.26 56.57% 49.83%) 7.3%, oklch(0.280497 0.052616 353.043))",
+		"firefox only: a printer defect, not yet decided — the fold matches what Chromium computes and Gecko lands six units away in blue, which is past the byte the quantization explains. Measured in Firefox 156: the source paints 68,35,56 and the `#442332` it is printed as paints 68,35,50; Chrome 147 paints 68,35,50 for both"
+	]
+]);
+
+// Enumerated values the printer lower-cases that one engine does not read
+// case-insensitively, keyed as the check reports them.
+const FILED_ENUMERATED_FOLDS = new Map([
+	[
+		'* spellcheck=true: "false" vs "true"',
+		"firefox only: a printer defect, not yet decided — HTML makes an enumerated attribute ASCII case-insensitive and Gecko does not read `spellcheck` that way, so lower-casing it turns spellchecking on where the page had it off. Measured in Firefox 156: `spellcheck=\"TRUE\"` reflects `false` and `spellcheck=\"true\"` reflects `true`; Chrome 147 reflects `true` for both"
+	]
+]);
+
+// Declarations an engine computes a different style from once printed, keyed by
 // the value as written — and by `var(…):` before it where the value was read
 // through a custom property. A printer defect unless the reason says otherwise.
-const FILED_WPT_VALUE_DEFECTS = new Map();
+const FILED_WPT_VALUE_DEFECTS = new Map([
+	[
+		"-webkit-perspective:calc(1000)",
+		"firefox only: a printer defect, fixed separately — dropping the `calc()` from a unitless number brings a dead declaration to life. Measured in Firefox 156: `calc(1000)` computes `none` while the `1000` it is printed as computes `1000px`; Chrome 147 reads both as `1000px`, which is why it cannot see this"
+	],
+	[
+		"-webkit-perspective:calc(25)",
+		"firefox only: the unitless `calc()` again — see `calc(1000)`"
+	],
+	[
+		"font-family:\"New Century Schoolbook\", serif",
+		"firefox only: not a printer defect — Gecko carries the source's quoting into the computed family where Blink drops it, so unquoting a name neither engine reads differently still reads as a difference there"
+	]
+]);
 
 /**
  * @param {string} source HTML
@@ -243,8 +340,8 @@ const buildCorpora = () => {
 			htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
 			css: configCss,
-			filedHtml: FILED_CONFIG_HTML_DEFECTS,
-			filedCss: FILED_CONFIG_CSS_DEFECTS
+			filedHtml: forEngine(FILED_CONFIG_HTML_DEFECTS),
+			filedCss: forEngine(FILED_CONFIG_CSS_DEFECTS)
 		}
 	];
 	// Real projects, where `configCases` and wpt are both written to exercise a
@@ -258,8 +355,8 @@ const buildCorpora = () => {
 			htmlAllImpliedTags: variant(benchHtml, { removeImpliedTags: true }),
 			htmlSmartTags: variant(benchHtml, { removeImpliedTags: "smart" }),
 			css: benchCss,
-			filedHtml: FILED_BENCHMARK_HTML_DEFECTS,
-			filedCss: FILED_BENCHMARK_CSS_DEFECTS
+			filedHtml: forEngine(FILED_BENCHMARK_HTML_DEFECTS),
+			filedCss: forEngine(FILED_BENCHMARK_CSS_DEFECTS)
 		});
 	}
 	if (!hasCorpus()) return built;
@@ -283,8 +380,8 @@ const buildCorpora = () => {
 		htmlAllImpliedTags: variant(wptHtml, { removeImpliedTags: true }),
 		htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
 		css: wptCss,
-		filedHtml: FILED_WPT_HTML_DEFECTS,
-		filedCss: FILED_WPT_CSS_DEFECTS
+		filedHtml: forEngine(FILED_WPT_HTML_DEFECTS),
+		filedCss: forEngine(FILED_WPT_CSS_DEFECTS)
 	});
 	return built;
 };
@@ -319,7 +416,7 @@ const NO_BENCHMARK_CORPUS =
 
 expectNoDeprecations();
 
-describe("printer output in real Chrome", () => {
+describe(`printer output in real ${ENGINE === "firefox" ? "Firefox" : "Chrome"}`, () => {
 	/** @type {import("puppeteer-core").Browser} */
 	let browser;
 	/** @type {import("puppeteer-core").Page | undefined} the corpus tiers' page */
@@ -359,7 +456,10 @@ describe("printer output in real Chrome", () => {
 	};
 
 	beforeAll(async () => {
-		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
+		browser = await launchBrowser({
+			browser: ENGINE,
+			protocolTimeout: FILE_TIMEOUT
+		});
 		// The probing tiers set a property on one element and read it back, leaving
 		// nothing behind, so they share a page — at 58ms to open one and 1ms to
 		// call into it, a page per test would cost more than the tests do.
@@ -389,7 +489,8 @@ describe("printer output in real Chrome", () => {
 		/** @type {{ name: string, why: string }[]} */
 		const differences = [];
 		for (let at = 0; at < cases.length; at += BATCH) {
-			const collected = await active.evaluate(
+			const collected = await evaluateDeep(
+				active,
 				(batch) => {
 					const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
 						/** @type {unknown} */ (window)
@@ -471,16 +572,20 @@ describe("printer output in real Chrome", () => {
 	const compareStylesheets = async (cases) => {
 		const active = await pageFor(cases.length * 2);
 		const collected = await inBatches(active, cases, (batch) =>
-			active.evaluate((sheets) => {
-				const { cssRules } = /** @type {{ __eq: PageHelpers }} */ (
-					/** @type {unknown} */ (window)
-				).__eq;
-				return sheets.map((each) => ({
-					name: each.name,
-					before: cssRules(each.raw),
-					after: cssRules(each.min)
-				}));
-			}, batch)
+			evaluateDeep(
+				active,
+				(sheets) => {
+					const { cssRules } = /** @type {{ __eq: PageHelpers }} */ (
+						/** @type {unknown} */ (window)
+					).__eq;
+					return sheets.map((each) => ({
+						name: each.name,
+						before: cssRules(each.raw),
+						after: cssRules(each.min)
+					}));
+				},
+				batch
+			)
 		);
 		const signatures = await conditionSignatures(
 			active,
@@ -954,7 +1059,7 @@ describe("printer output in real Chrome", () => {
 	if (declarations.length > 0) {
 		it("should still diverge on every filed value defect", () => {
 			expect([...movedValues].sort()).toEqual(
-				[...FILED_WPT_VALUE_DEFECTS.keys()].sort()
+				[...forEngine(FILED_WPT_VALUE_DEFECTS).keys()].sort()
 			);
 		});
 	}
@@ -1021,7 +1126,9 @@ describe("printer output in real Chrome", () => {
 			}
 			return out;
 		}, table);
-		expect(unfolded).toEqual([]);
+		expect(unfolded).toEqual([
+			...forEngine(FILED_ENUMERATED_FOLDS).keys()
+		]);
 	}, 600000);
 
 	it("should only drop an empty attribute the engine reads back as absent", async () => {
@@ -1705,7 +1812,10 @@ describe("a lowering computes as the spelling it replaces", () => {
 	let browser;
 
 	beforeAll(async () => {
-		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
+		browser = await launchBrowser({
+			browser: ENGINE,
+			protocolTimeout: FILE_TIMEOUT
+		});
 	}, 300000);
 
 	afterAll(async () => {
@@ -1810,9 +1920,15 @@ describe("a lowering computes as the spelling it replaces", () => {
 			const page = await browser.newPage();
 			try {
 				for (const scheme of fixture.schemes || ["light"]) {
-					await page.emulateMediaFeatures([
-						{ name: "prefers-color-scheme", value: scheme }
-					]);
+					// Gecko takes the scheme from a launch preference rather than a
+					// page call, so a run there is held to the default one.
+					if (ENGINE !== "firefox") {
+						await page.emulateMediaFeatures([
+							{ name: "prefers-color-scheme", value: scheme }
+						]);
+					} else if (scheme !== "light") {
+						continue;
+					}
 					for (const direction of fixture.directions || ["ltr"]) {
 						const html = `<script>document.documentElement.dir=${JSON.stringify(
 							direction
@@ -1914,7 +2030,10 @@ describe("a color rewrite paints as the color it replaced", () => {
 	let browser;
 
 	beforeAll(async () => {
-		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
+		browser = await launchBrowser({
+			browser: ENGINE,
+			protocolTimeout: FILE_TIMEOUT
+		});
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
@@ -2017,6 +2136,30 @@ describe("a color rewrite paints as the color it replaced", () => {
 			 * @param {string} after the color the printer wrote
 			 * @returns {boolean} true when only a last digit moved
 			 */
+			// WHY: The margins in `lib/css/syntax.js` are measured against Chromium,
+			// and Gecko's conversion lands a channel elsewhere within the byte —
+			// measured in Firefox 156: `hsl(from rgb(214.7 138.3 226.0) calc(h + 40)
+			// s calc(l * .9))` paints 219,109,159 against the 219,109,160 of the
+			// `#db6da0` it is printed as. One unit is the quantization itself, so
+			// only that much is allowed, and only where the engine is not the one
+			// the margins were cut for.
+			/**
+			 * @param {string} before the pixel the source painted
+			 * @param {string} after the pixel the printed form painted
+			 * @returns {boolean} true when no channel moved by more than one
+			 */
+			const withinAByte = (before, after) => {
+				if (ENGINE !== "firefox") return false;
+				const ours = before.split(",").map(Number);
+				const theirs = after.split(",").map(Number);
+				return (
+					ours.length === theirs.length &&
+					ours.every((value, at) => Math.abs(value - theirs[at]) <= 1)
+				);
+			};
+
+			const filedColors = forEngine(FILED_COLOR_REWRITES);
+
 			const roundedOnly = (before, after) => {
 				const shape = (text) => text.replace(/[\d.]+/g, "#");
 				if (shape(before) !== shape(after)) return false;
@@ -2056,7 +2199,12 @@ describe("a color rewrite paints as the color it replaced", () => {
 						]);
 					}, chunk);
 					for (const [index, [before, after]] of painted.entries()) {
-						if (before !== after && !roundedOnly(...chunk[index])) {
+						if (
+							before !== after &&
+							!roundedOnly(...chunk[index]) &&
+							!withinAByte(before, after) &&
+							!filedColors.has(chunk[index][0])
+						) {
 							differed.push(
 								`${chunk[index][0]}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
 							);

@@ -16,7 +16,7 @@ const net = require("net");
 const os = require("os");
 const path = require("path");
 const webpack = require("..");
-const launchChrome = require("./helpers/launchChrome");
+const launchBrowser = require("./helpers/launchBrowser");
 
 // Drives a real webpack-dev-server, added as a compiler plugin, in real Chrome via
 // puppeteer-core. It needs Node >= 22.15 and the matrix goes down to Node 10, so
@@ -292,7 +292,7 @@ describe("WebpackDevServer integration in real Chrome", () => {
 	beforeAll(async () => {
 		if (!nodeSupported) return;
 		ensureWebpackSelfLink();
-		browser = await launchChrome();
+		browser = await launchBrowser();
 	}, 120000);
 
 	afterAll(async () => {
