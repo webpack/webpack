@@ -1284,12 +1284,12 @@
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').RawEntryDynamic"
+      "tsType": "import('../lib/entry/DynamicEntryPlugin').RawEntryDynamic"
     },
     "EntryDynamicNormalized": {
       "description": "A Function returning a Promise resolving to a normalized entry.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').EntryDynamic"
+      "tsType": "import('../lib/entry/DynamicEntryPlugin').EntryDynamic"
     },
     "EntryFilename": {
       "description": "Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",

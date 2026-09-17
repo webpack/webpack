@@ -69,6 +69,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
+  - `lib/entry/` — The `entry` option: `EntryPlugin`, the `EntryOptionPlugin` that reads
+    the option into it, and `DynamicEntryPlugin` for a function entry. `Entrypoint` is a
+    `ChunkGroup` rather than one of these, so it stays beside `ChunkGroup`.
   - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/externals/` — External modules: the `externals` option's module, factory plugin and the presets built on them.
