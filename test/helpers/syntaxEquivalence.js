@@ -192,7 +192,11 @@ const benchmarkDocuments = (minify) => {
  * inline `<style>` is held to exactly the same standard as a `.css` file.
  * @returns {void}
  */
-const installHelpers = () => {
+/**
+ * @param {string[]} generics the generic font families, from `lib/css/data.js`
+ * @returns {void}
+ */
+const installHelpers = (generics) => {
 	const NS_HTML = "http://www.w3.org/1999/xhtml";
 	const NS_SVG = "http://www.w3.org/2000/svg";
 	const probe = document.createElement("div");
@@ -582,6 +586,25 @@ const installHelpers = () => {
 	]);
 
 	/**
+	 * A font family list with every name the bare spelling would also name left
+	 * unquoted. CSS Fonts 4 §2.2 makes the two the same family, and the engines
+	 * disagree about which to echo.
+	 * @param {string} list a `font-family` or `font` value
+	 * @returns {string} the same list, quoted once
+	 */
+	const unquoteFamilies = (list) =>
+		list.replace(
+			/"((?:[A-Za-z_-][\w-]*)(?: [A-Za-z_-][\w-]*)*)"/g,
+			(quoted, name) =>
+				GENERIC_FAMILIES.has(name.toLowerCase()) ? quoted : name
+		);
+
+	// A generic family is a keyword, so quoting one names a font of that name
+	// instead, and the quoting is what tells the two apart. `CssSyntax.unittest`
+	// holds the printer to the same rule.
+	const GENERIC_FAMILIES = new Set(generics);
+
+	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
 	 * is the curve it stands for, `jump-start` names the step position `start`
 	 * does, and a gradient's last color stop is at the end of the gradient line
@@ -661,7 +684,17 @@ const installHelpers = () => {
 					: style.getPropertyValue(property);
 			// A value that is not itself a color still carries them: `box-shadow`
 			// keeps the space its color was written in, so each one is painted.
-			const named = canonical(resolved);
+
+			// WHY: Gecko carries the source's quoting into the computed family where
+			// Blink drops it, so a respelling neither engine can tell apart reads as
+			// a difference in one of them — measured: `font-family:"Manrope"`
+			// computes `"Manrope"` in Firefox 156 and `Manrope` in Chrome 147, while
+			// the bare spelling computes `Manrope` in both.
+			const named = canonical(
+				property === "font-family" || property === "font"
+					? unquoteFamilies(resolved)
+					: resolved
+			);
 			const whole = painted(named);
 			out.push(
 				`${property}${bang}:${whole === named ? paintedColors(named) : whole}`
@@ -1395,6 +1428,75 @@ const installHelpers = () => {
 		};
 };
 
+/** @type {WeakMap<import("puppeteer-core").Page, boolean>} */
+const emulates = new WeakMap();
+
+/**
+ * Whether the engine behind a page answers the media-emulation calls at all.
+ * Asked once per page and remembered, since the answer is a property of the
+ * protocol rather than of the page.
+ * @param {import("puppeteer-core").Page} page the page to ask
+ * @returns {Promise<boolean>} true when it emulates
+ */
+const emulatesMedia = async (page) => {
+	const known = emulates.get(page);
+	if (known !== undefined) return known;
+	let can = true;
+	try {
+		await page.emulateMediaType(undefined);
+	} catch (_error) {
+		can = false;
+	}
+	emulates.set(page, can);
+	return can;
+};
+
+// The media types a condition can name, which no viewport varies.
+const MEDIA_TYPES = new Set([
+	"all",
+	"aural",
+	"braille",
+	"embossed",
+	"handheld",
+	"print",
+	"projection",
+	"screen",
+	"speech",
+	"tty",
+	"tv"
+]);
+
+/**
+ * What a media condition asks that no viewport can answer: its media type and
+ * every feature but the dimensions, named once and in order. Built by taking
+ * what is left rather than by cutting the rest out, so a query reduces to the
+ * same text however its parts were spelled or joined.
+ * @param {string} condition the condition as written
+ * @returns {string} what the viewport did not sample
+ */
+const unsampledBy = (condition) => {
+	const parts = [];
+	for (const [word] of condition.toLowerCase().matchAll(/[a-z-]+/g)) {
+		if (MEDIA_TYPES.has(word)) parts.push(word);
+	}
+	for (const [feature] of condition
+		.toLowerCase()
+		.matchAll(/\([^()]*(?:\([^()]*\))?[^()]*\)/g)) {
+		if (/\b(?:min-|max-)?(?:width|height|aspect-ratio)\b/.test(feature)) {
+			continue;
+		}
+		// `min-x: v` and `x >= v` are one query written two ways (Media Queries 4
+		// §2.4), so the prefixed spelling is written as the range one.
+		parts.push(
+			feature
+				.replace(/\s+/g, "")
+				.replace(/^\(min-([a-z-]+):/, "($1>=")
+				.replace(/^\(max-([a-z-]+):/, "($1<=")
+		);
+	}
+	return parts.sort().join("&");
+};
+
 /**
  * What the engine makes of every at-rule condition in a set of rules. A
  * condition is not compared as text: `(min-width: 200px)` and
@@ -1501,22 +1603,37 @@ const conditionSignatures = async (page, groups) => {
 			[{ name: "prefers-reduced-motion", value: "reduce" }],
 			[{ name: "color-gamut", value: "p3" }]
 		];
-		for (const type of ["screen", "print"]) {
-			for (const features of [[], ...featureSets]) {
-				await page.emulateMediaType(type);
-				await page.emulateMediaFeatures(features);
-				const answers = await page.evaluate(
-					(conditions) =>
-						conditions.map((condition) =>
-							matchMedia(condition).matches ? "1" : "0"
-						),
-					media
-				);
-				for (const [i, bit] of answers.entries()) bits[i] += bit;
+		// WHY: Both calls are CDP, which Gecko's WebDriver BiDi does not answer, and
+		// only `prefers-color-scheme` and `prefers-reduced-motion` have a launch
+		// preference standing in — set at launch, so not switchable per sample.
+		// Measured in Firefox 156: `print`, `speech` and both `color-gamut` values
+		// all answer `0000` across the viewports, so a signature of those bits
+		// alone would call them one condition. What the viewport cannot vary is
+		// carried as text instead, which keeps them apart while the widths still
+		// equate `(min-width:200px)` with `(width>=200px)`.
+		if (!(await emulatesMedia(page))) {
+			for (const [i, condition] of media.entries()) {
+				bits[i] += ` ${unsampledBy(condition)}`;
 			}
 		}
-		await page.emulateMediaType(undefined);
-		await page.emulateMediaFeatures([]);
+		if (await emulatesMedia(page)) {
+			for (const type of ["screen", "print"]) {
+				for (const features of [[], ...featureSets]) {
+					await page.emulateMediaType(type);
+					await page.emulateMediaFeatures(features);
+					const answers = await page.evaluate(
+						(conditions) =>
+							conditions.map((condition) =>
+								matchMedia(condition).matches ? "1" : "0"
+							),
+						media
+					);
+					for (const [i, bit] of answers.entries()) bits[i] += bit;
+				}
+			}
+			await page.emulateMediaType(undefined);
+			await page.emulateMediaFeatures([]);
+		}
 		for (const [i, condition] of media.entries()) {
 			signatures.set(`media ${condition}`, bits[i]);
 		}

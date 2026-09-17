@@ -38,7 +38,7 @@ const {
 	COLOR_SPACE_MODEL,
 	PREDEFINED_COLOR_SPACES
 } = require("../lib/css/data");
-const launchChrome = require("../test/helpers/launchChrome");
+const launchBrowser = require("../test/helpers/launchBrowser");
 
 /**
  * @param {string} name the flag
@@ -279,7 +279,7 @@ const main = async () => {
 		}
 	}
 
-	browser = await launchChrome({ protocolTimeout: 600000 });
+	browser = await launchBrowser({ protocolTimeout: 600000 });
 	const page = await browser.newPage();
 	await page.setContent('<div id="probe">probe</div>');
 	const theirs = await readSrgb(

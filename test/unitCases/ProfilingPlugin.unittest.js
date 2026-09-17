@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const ProfilingPlugin = require("../../lib/debug/ProfilingPlugin");
-const launchChrome = require("../helpers/launchChrome");
+const launchBrowser = require("../helpers/launchBrowser");
 
 describe("Profiling Plugin", () => {
 	it("should persist the passed output path", () => {
@@ -66,7 +66,7 @@ describe("ProfilingPlugin in real Chrome", () => {
 	let browser;
 
 	beforeAll(async () => {
-		browser = await launchChrome();
+		browser = await launchBrowser();
 	}, 120000);
 
 	afterAll(async () => {
