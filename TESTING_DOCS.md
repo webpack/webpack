@@ -149,11 +149,19 @@ During the test run, webpack compiles this project and compares the result with 
 ### Suites that drive a real browser
 
 `unitCases/ProfilingPlugin.unittest.js`, `specCases/syntaxEquivalence.spectest.js` and
-`WebpackDevServer.longtest.js` launch Chrome through `test/helpers/launchChrome.js`.
+`WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
 helper uses the installed Chrome channel; set `PUPPETEER_EXECUTABLE_PATH` to
 point at another binary.
+
+`syntaxEquivalence.spectest.js` is the one that reads a second engine:
+`EQUIVALENCE_BROWSER=firefox` points the same corpus at Gecko. Fetch that
+browser first with `yarn setup:firefox`, which installs it into puppeteer's own
+cache (`PUPPETEER_CACHE_DIR`, defaulting to `~/.cache/puppeteer`) rather than
+into webpack's dependencies; `FIREFOX_EXECUTABLE_PATH` points at one already on
+the machine. CI runs Chrome, so a defect only one engine has is filed against
+that engine rather than tolerated in both.
 
 They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
 in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails

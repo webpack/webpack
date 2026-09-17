@@ -10,8 +10,12 @@
 // is already there is reported and nothing is fetched.
 
 const os = require("os");
+const path = require("path");
 
-const CACHE_DIR = `${os.homedir()}/.cache/puppeteer`;
+// puppeteer's own cache, which `test/helpers/launchBrowser.js` looks in.
+const CACHE_DIR =
+	process.env.PUPPETEER_CACHE_DIR ||
+	path.join(os.homedir(), ".cache", "puppeteer");
 
 (async () => {
 	// `@puppeteer/browsers` is ESM-only, so it is loaded the way puppeteer itself
@@ -27,4 +31,7 @@ const CACHE_DIR = `${os.homedir()}/.cache/puppeteer`;
 		cacheDir: CACHE_DIR
 	});
 	console.log(`firefox ${buildId}: ${installed.executablePath}`);
-})();
+})().catch((error) => {
+	console.error(error);
+	process.exitCode = 1;
+});
