@@ -7,6 +7,9 @@
 // DOM oracle, held to that corpus's expected trees by html5lib.spectest.js.
 
 const path = require("path");
+// The comparison has to know which family names are keywords, and the table
+// that says so is generated rather than written twice.
+const { GENERIC_FONT_FAMILIES } = require("../../lib/css/data");
 const {
 	SourceProcessor: CssSourceProcessor,
 	readToken
@@ -433,7 +436,7 @@ describe(`printer output in real ${ENGINE === "firefox" ? "Firefox" : "Chrome"}`
 		await opened.setContent(
 			"<!doctype html><html><head></head><body></body></html>"
 		);
-		await opened.evaluate(installHelpers);
+		await opened.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
 		return opened;
 	};
 

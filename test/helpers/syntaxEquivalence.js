@@ -192,7 +192,11 @@ const benchmarkDocuments = (minify) => {
  * inline `<style>` is held to exactly the same standard as a `.css` file.
  * @returns {void}
  */
-const installHelpers = () => {
+/**
+ * @param {string[]} generics the generic font families, from `lib/css/data.js`
+ * @returns {void}
+ */
+const installHelpers = (generics) => {
 	const NS_HTML = "http://www.w3.org/1999/xhtml";
 	const NS_SVG = "http://www.w3.org/2000/svg";
 	const probe = document.createElement("div");
@@ -596,22 +600,9 @@ const installHelpers = () => {
 		);
 
 	// A generic family is a keyword, so quoting one names a font of that name
-	// instead — the quoting is what tells the two apart and is never dropped.
-	const GENERIC_FAMILIES = new Set([
-		"cursive",
-		"emoji",
-		"fangsong",
-		"fantasy",
-		"math",
-		"monospace",
-		"sans-serif",
-		"serif",
-		"system-ui",
-		"ui-monospace",
-		"ui-rounded",
-		"ui-sans-serif",
-		"ui-serif"
-	]);
+	// instead, and the quoting is what tells the two apart. `CssSyntax.unittest`
+	// holds the printer to the same rule.
+	const GENERIC_FAMILIES = new Set(generics);
 
 	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
