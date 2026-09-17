@@ -192,7 +192,8 @@ export default defineConfig([
 		}
 	},
 	{
-		// puppeteer-core is ESM-only (v25+) and is loaded via dynamic import here
+		// puppeteer-core and @puppeteer/browsers are ESM-only and are loaded via
+		// dynamic import here
 		files: ["test/helpers/launchBrowser.js"],
 		languageOptions: {
 			ecmaVersion: 2020
@@ -244,6 +245,22 @@ export default defineConfig([
 		},
 		rules: {
 			"no-console": "off"
+		}
+	},
+	{
+		// Fetches a browser for the suites that compare against one, from a package
+		// that is ESM-only — so it runs on modern Node rather than the baseline.
+		files: ["tooling/install-firefox.js"],
+		languageOptions: {
+			ecmaVersion: 2022
+		},
+		rules: {
+			"n/no-unsupported-features/es-syntax": [
+				"error",
+				{
+					ignores: ["dynamic-import"]
+				}
+			]
 		}
 	},
 	{

@@ -11,11 +11,9 @@ const CACHE_DIR = `${os.homedir()}/.cache/puppeteer`;
  * @returns {Promise<string | undefined>} the executable path
  */
 const installedFirefox = async () => {
-	const {
-		Browser,
-		detectBrowserPlatform,
-		getInstalledBrowsers
-	} = require("@puppeteer/browsers");
+	// ESM-only, like puppeteer-core itself, so it is loaded the same way.
+	const { Browser, detectBrowserPlatform, getInstalledBrowsers } =
+		await import("@puppeteer/browsers");
 
 	const platform = detectBrowserPlatform();
 	for (const one of await getInstalledBrowsers({ cacheDir: CACHE_DIR })) {

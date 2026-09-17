@@ -1,3 +1,8 @@
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Raj Aryan @aryanraj45
+*/
+
 "use strict";
 
 // Downloads the Firefox the browser suites compare against, into puppeteer's own
@@ -5,16 +10,14 @@
 // is already there is reported and nothing is fetched.
 
 const os = require("os");
-const {
-	Browser,
-	detectBrowserPlatform,
-	install,
-	resolveBuildId
-} = require("@puppeteer/browsers");
 
 const CACHE_DIR = `${os.homedir()}/.cache/puppeteer`;
 
 (async () => {
+	// `@puppeteer/browsers` is ESM-only, so it is loaded the way puppeteer itself
+	// is rather than with `require`.
+	const { Browser, detectBrowserPlatform, install, resolveBuildId } =
+		await import("@puppeteer/browsers");
 	const platform = detectBrowserPlatform();
 	if (platform === undefined) throw new Error("no browser platform detected");
 	const buildId = await resolveBuildId(Browser.FIREFOX, platform, "stable");
