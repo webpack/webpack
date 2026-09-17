@@ -13382,6 +13382,156 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
+	 * Walk every statement of a scope to declare what hoists to it. Only a tap
+	 * on the deprecated `preStatement` hook asks for this.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkStatements(
+		statements: (
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+		)[]
+	): void;
+
+	/**
+	 * Pre walk block statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkBlockStatement(statement: BlockStatement): void;
+
+	/**
+	 * Pre walk if statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkIfStatement(statement: IfStatement): void;
+
+	/**
+	 * Pre walk labeled statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkLabeledStatement(statement: LabeledStatement): void;
+
+	/**
+	 * Pre walk with statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkWithStatement(statement: WithStatement): void;
+
+	/**
+	 * Pre walk switch statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkSwitchStatement(statement: SwitchStatement): void;
+
+	/**
+	 * Pre walk switch cases.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkSwitchCases(switchCases: SwitchCase[]): void;
+
+	/**
+	 * Pre walk try statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkTryStatement(statement: TryStatement): void;
+
+	/**
+	 * Pre walk catch clause.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkCatchClause(catchClause: CatchClause): void;
+
+	/**
+	 * Pre walk while statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkWhileStatement(statement: WhileStatement): void;
+
+	/**
+	 * Pre walk do while statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkDoWhileStatement(statement: DoWhileStatement): void;
+
+	/**
+	 * Pre walk for statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkForStatement(statement: ForStatement): void;
+
+	/**
+	 * Pre walk for in statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkForInStatement(statement: ForInStatement): void;
+
+	/**
+	 * Pre walk for of statement. `for await` is reported by the walk, not here.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkForOfStatement(statement: ForOfStatement): void;
+
+	/**
+	 * Scan every top-level statement for the program's module declarations.
+	 * The parser records them now, so nothing inside webpack scans for them.
+	 * @deprecated TODO webpack 6: remove
+	 */
+	modulePreWalkStatements(
+		statements: (
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+		)[]
+	): void;
+
+	/**
 	 * Block pre walking iterates the scope for block variable declarations
 	 */
 	blockPreWalkStatements(
