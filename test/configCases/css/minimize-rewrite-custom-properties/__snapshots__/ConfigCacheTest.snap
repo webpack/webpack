@@ -30,5 +30,8 @@ Array [
   "/*! and the same name in a real color property does shorten */.v04{color:#fff}",
   "/*! a fragment keeps every digit it was written with */.w01{--u:url(#fff)}.w02{--u:url(#ffffff)}",
   "/*! a quoted value is text, hex-shaped or not */.w03{--s:\\"#fff\\"}.w04{--s:\\"0.50\\"}",
+  "/*! a math operator between two substitutions */.x01{--inner:calc(var(--radius) - var(--width))}",
+  "/*! ...with the right operand parenthesised */.x02{--inner-parens:calc(var(--radius) - (var(--width)))}",
+  "/*! ...and outside a math function, where a substitution can still carry it in */.x03{--tail:(10px) - (4px)}",
 ]
 `;

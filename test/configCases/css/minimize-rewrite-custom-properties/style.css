@@ -80,3 +80,14 @@
 /*! a quoted value is text, hex-shaped or not */
 .w03 { --s: "#fff" }
 .w04 { --s: "0.50" }
+
+/* The whitespace CSS Values 4 §10.1 requires on both sides of a `+` or `-`
+   stands on this path too, the value printer keeping it beside a block edge
+   where the verbatim one once dropped it (#22149). */
+
+/*! a math operator between two substitutions */
+.x01 { --inner: calc(var(--radius) - var(--width)) }
+/*! ...with the right operand parenthesised */
+.x02 { --inner-parens: calc(var(--radius) - (var(--width))) }
+/*! ...and outside a math function, where a substitution can still carry it in */
+.x03 { --tail: (10px) - (4px) }
