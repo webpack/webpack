@@ -5,6 +5,10 @@
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const {
+	HOISTED_DECLARATIONS,
+	MODULE_DECLARATIONS
+} = require("../../lib/javascript/syntax");
 
 describe("JavascriptParser", () => {
 	/* eslint-disable no-unused-vars */
@@ -1230,6 +1234,457 @@ describe("JavascriptParser", () => {
 				end: { line: 2, column: 2 }
 			});
 			expect(parser._lineStarts).toBe(lineStarts);
+		});
+	});
+
+	describe("hoisted declarations", () => {
+		const EVERY_POSITION = `
+var top = 1;
+function topFunction() {}
+class TopClass {}
+if (top) { var fromIf = 1; } else { var fromElse = 2; }
+for (var fromFor = 0; fromFor < 1; fromFor++) { var fromForBody = 1; }
+for (var fromForIn in top) { var fromForInBody = 1; }
+for (var fromForOf of [top]) { var fromForOfBody = 1; }
+while (top) { var fromWhile = 1; }
+do { var fromDoWhile = 1; } while (top);
+label: { var fromLabeled = 1; }
+with (top) { var fromWith = 1; }
+try { var fromTry = 1; } catch (error) { var fromCatch = 1; } finally { var fromFinally = 1; }
+switch (top) { case 1: var fromCase = 1; break; default: var fromDefault = 1; }
+{ var fromBlock = 1; function blockFunction() {} }
+let lexical = 1;
+const alsoLexical = 1;
+function outer() { var inOuter = 1; }
+`;
+
+		/**
+		 * @param {string | object} source what to parse
+		 * @param {("auto" | "module" | "script")=} sourceType the source type to parse it as
+		 * @param {boolean=} legacy whether to tap the hook that walks every statement
+		 * @returns {string[]} the names the hoisting pass declared, in order
+		 */
+		const hoistedNames = (source, sourceType = "script", legacy = false) => {
+			const parser = new JavascriptParser(sourceType);
+			/** @type {string[]} */
+			const names = [];
+			if (legacy) parser.hooks.preStatement.tap("test", () => {});
+			parser.hooks.preDeclarator.tap("test", (declarator) => {
+				names.push(/** @type {EXPECTED_ANY} */ (declarator.id).name);
+			});
+			parser.hooks.preStatementByType
+				.for("FunctionDeclaration")
+				.tap("test", (statement) => {
+					names.push(/** @type {EXPECTED_ANY} */ (statement).id.name);
+				});
+			parser.parse(
+				/** @type {EXPECTED_ANY} */ (source),
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			return names;
+		};
+
+		it("reaches every position a `var` or function declaration hoists from", () => {
+			expect(hoistedNames(EVERY_POSITION)).toEqual([
+				"top",
+				"topFunction",
+				"fromIf",
+				"fromElse",
+				"fromFor",
+				"fromForBody",
+				"fromForIn",
+				"fromForInBody",
+				"fromForOf",
+				"fromForOfBody",
+				"fromWhile",
+				"fromDoWhile",
+				"fromLabeled",
+				"fromWith",
+				"fromTry",
+				"fromCatch",
+				"fromFinally",
+				"fromCase",
+				"fromDefault",
+				"fromBlock",
+				"blockFunction",
+				"outer",
+				"lexical",
+				"alsoLexical",
+				"inOuter"
+			]);
+		});
+
+		it("collects its own from an AST another parser built", () => {
+			const { ast, comments } = JavascriptParser._parse(EVERY_POSITION, {
+				sourceType: "script",
+				ranges: true,
+				comments: true
+			});
+			// strip the parser's record: what a preparsed AST from a loader looks
+			// like, and the only thing that separates the two paths
+			/** @type {EXPECTED_ANY} */
+			(ast)[HOISTED_DECLARATIONS] = undefined;
+			/** @type {EXPECTED_ANY} */
+			(ast)[MODULE_DECLARATIONS] = undefined;
+			/** @type {EXPECTED_ANY} */
+			(ast).comments = comments;
+			expect(hoistedNames(ast)).toEqual(hoistedNames(EVERY_POSITION));
+		});
+
+		it("walks every statement again for a tap that expects them", () => {
+			const source =
+				"debugger;\nfunction outer() { if (outer) { debugger; } }";
+			/**
+			 * @param {(parser: EXPECTED_ANY) => void} tap what to tap with
+			 * @returns {string[]} the statement types the pre-walk reported
+			 */
+			const seen = (tap) => {
+				const parser = new JavascriptParser("script");
+				/** @type {string[]} */
+				const types = [];
+				parser.hooks.preStatement.tap("test", (statement) => {
+					types.push(statement.type);
+				});
+				tap(parser);
+				parser.parse(
+					source,
+					/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return types;
+			};
+			// a broadcast tap reaches the statements the record leaves out
+			expect(seen(() => {})).toContain("DebuggerStatement");
+			// so does a typed tap for a statement the record does not carry
+			/** @type {string[]} */
+			const typed = [];
+			const parser = new JavascriptParser("script");
+			parser.hooks.preStatementByType
+				.for("DebuggerStatement")
+				.tap("test", (statement) => {
+					typed.push(statement.type);
+				});
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(typed).toEqual(["DebuggerStatement", "DebuggerStatement"]);
+		});
+
+		it("declares the same names through the walk that tap turns back on", () => {
+			expect(hoistedNames(EVERY_POSITION, "script", true)).toEqual(
+				hoistedNames(EVERY_POSITION)
+			);
+			// the positions `EVERY_POSITION` fills: a `try` missing one of its
+			// two tails, and a loop head declaring nothing
+			const sparse = `
+var target;
+try { var fromTryOnly = 1; } finally { }
+try { var fromTryCaught = 1; } catch (error) { }
+for (; target; ) { var fromBareFor = 1; }
+for (target in { }) { var fromForInTarget = 1; }
+for (target of [ ]) { var fromForOfTarget = 1; }
+`;
+			expect(hoistedNames(sparse, "script", true)).toEqual(
+				hoistedNames(sparse)
+			);
+			expect(hoistedNames(sparse)).toContain("fromForOfTarget");
+		});
+
+		it("records the program's imports and re-exports, and nothing else", () => {
+			const { ast } = JavascriptParser._parse(
+				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;\nvar plain = 1;\nif (plain) { var nested = 1; }",
+				{ sourceType: "module", ranges: true, comments: true }
+			);
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast)[MODULE_DECLARATIONS].filter(
+					(/** @type {EXPECTED_ANY} */ _entry, /** @type {number} */ index) =>
+						index % 2 === 0
+				).map((/** @type {EXPECTED_ANY} */ declaration) => declaration.type)
+			).toEqual([
+				"ImportDeclaration",
+				"ExportAllDeclaration",
+				"ExportNamedDeclaration"
+			]);
+		});
+
+		it("reports the statement written before each module declaration", () => {
+			// removing a module declaration can join the statements around it
+			// through ASI, so what precedes it decides whether a `;` is needed
+			const source =
+				"const num = 1\n\nexport { a } from './a';\nimport b from './b';";
+			const parser = new JavascriptParser("module");
+			/** @type {(string | undefined)[]} */
+			const before = [];
+			const record = () => {
+				before.push(
+					parser.prevStatement === undefined
+						? undefined
+						: parser.prevStatement.type
+				);
+			};
+			parser.hooks.exportImport.tap("test", record);
+			parser.hooks.import.tap("test", record);
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(before).toEqual([
+				"VariableDeclaration",
+				"ExportNamedDeclaration"
+			]);
+		});
+
+		it("scans a statement list when a plugin drives the walk itself", () => {
+			const source =
+				"import a from './a';\nvar plain = 1;\nexport * from './b';";
+			const parser = new JavascriptParser("module");
+			/** @type {string[]} */
+			const reported = [];
+			parser.hooks.import.tap("test", (statement, importSource) => {
+				reported.push(`import ${importSource}`);
+			});
+			parser.hooks.exportImport.tap("test", (statement, importSource) => {
+				reported.push(`exportImport ${importSource}`);
+			});
+			// a plugin taking the program over reaches the deprecated scan itself
+			parser.hooks.program.tap("test", (ast) => {
+				parser.modulePreWalkStatements(ast.body);
+				return true;
+			});
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(reported).toEqual(["import ./a", "exportImport ./b"]);
+		});
+
+		it("scans its own module declarations from an AST another parser built", () => {
+			const source =
+				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;";
+			/**
+			 * @param {string | object} parsed what to parse
+			 * @returns {string[]} the sources reported, in order
+			 */
+			const reported = (parsed) => {
+				const parser = new JavascriptParser("module");
+				/** @type {string[]} */
+				const sources = [];
+				parser.hooks.import.tap("test", (statement, importSource) => {
+					sources.push(`import ${importSource}`);
+				});
+				parser.hooks.exportImport.tap("test", (statement, importSource) => {
+					sources.push(`exportImport ${importSource}`);
+				});
+				parser.hooks.export.tap("test", () => {
+					sources.push("export");
+				});
+				parser.parse(
+					/** @type {EXPECTED_ANY} */ (parsed),
+					/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return sources;
+			};
+			const { ast, comments } = JavascriptParser._parse(source, {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			/** @type {EXPECTED_ANY} */
+			(ast)[MODULE_DECLARATIONS] = undefined;
+			/** @type {EXPECTED_ANY} */
+			(ast).comments = comments;
+			expect(reported(ast)).toEqual(reported(source));
+			expect(reported(source)).toContain("import ./a");
+		});
+
+		it("ignores the record of an AST handed to it, which may have been edited", () => {
+			const { ast, comments } = JavascriptParser._parse("var first = 1;", {
+				sourceType: "script",
+				ranges: true,
+				comments: true
+			});
+			const { ast: spliced } = JavascriptParser._parse("var second = 2;", {
+				sourceType: "script",
+				ranges: true,
+				comments: true
+			});
+			// a loader may hand back a tree it changed after it was read, so the
+			// record the parse left on it no longer says what the tree declares
+			/** @type {EXPECTED_ANY} */
+			(ast).body.push(/** @type {EXPECTED_ANY} */ (spliced).body[0]);
+			/** @type {EXPECTED_ANY} */
+			(ast).comments = comments;
+			expect(hoistedNames(ast)).toEqual(["first", "second"]);
+		});
+
+		it("keeps no record when a plugin owns a production that records", () => {
+			const source = "class Declared {}\nvar plain = 1;\nfunction named() {}";
+			const { WebpackParser } = require("../../lib/javascript/syntax");
+			const options = {
+				ecmaVersion: 2022,
+				lazyNodes: true,
+				ranges: true,
+				sourceType: "script"
+			};
+			const recorded = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					source,
+					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
+				)
+			);
+			expect(recorded[HOISTED_DECLARATIONS]).toBeDefined();
+
+			// a subclass reading a class itself never reaches `_recordHoisted`, so
+			// the record would be short by every class it read
+			const Subclass = /** @type {EXPECTED_ANY} */ (WebpackParser).extend(
+				(/** @type {EXPECTED_ANY} */ Parser) =>
+					class extends Parser {
+						/**
+						 * @param {EXPECTED_ANY} node the class node
+						 * @param {EXPECTED_ANY} isStatement whether it is a declaration
+						 * @returns {EXPECTED_ANY} the finished class
+						 */
+						parseClass(node, isStatement) {
+							return super.parseClass(node, isStatement);
+						}
+					}
+			);
+			const extended = /** @type {EXPECTED_ANY} */ (
+				Subclass.parse(
+					source,
+					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
+				)
+			);
+			expect(extended[HOISTED_DECLARATIONS]).toBeUndefined();
+		});
+
+		it("keeps no module record when a plugin reads imports or exports", () => {
+			const source = "import a from './a';\nexport * from './b';";
+			const { WebpackParser } = require("../../lib/javascript/syntax");
+			const options = {
+				ecmaVersion: 2022,
+				lazyNodes: true,
+				ranges: true,
+				sourceType: "module"
+			};
+			// a subclass reading an export itself never reaches the recording
+			// site, so the list would be short by every export it read
+			const Subclass = /** @type {EXPECTED_ANY} */ (WebpackParser).extend(
+				(/** @type {EXPECTED_ANY} */ Parser) =>
+					class extends Parser {
+						/**
+						 * @param {EXPECTED_ANY} node the export node
+						 * @param {EXPECTED_ANY} exports where exports are tracked
+						 * @returns {EXPECTED_ANY} the finished export
+						 */
+						parseExport(node, exports) {
+							return super.parseExport(node, exports);
+						}
+					}
+			);
+			const extended = /** @type {EXPECTED_ANY} */ (
+				Subclass.parse(
+					source,
+					/** @type {EXPECTED_ANY} */ (/** @type {unknown} */ (options))
+				)
+			);
+			expect(extended[MODULE_DECLARATIONS]).toBeUndefined();
+		});
+
+		it("records only the declarations the program itself states", () => {
+			const { WebpackParser } = require("../../lib/javascript/syntax");
+			// the option lets an import stand where no program states it, which
+			// is the one way a declaration reaches the record from a scope below
+			const program = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					"import a from './a';\n{ import b from './b'; }",
+					/** @type {EXPECTED_ANY} */ (
+						/** @type {unknown} */ ({
+							allowImportExportEverywhere: true,
+							ecmaVersion: 2022,
+							lazyNodes: true,
+							ranges: true,
+							sourceType: "module"
+						})
+					)
+				)
+			);
+			expect(
+				program[MODULE_DECLARATIONS].filter(
+					(/** @type {EXPECTED_ANY} */ _entry, /** @type {number} */ index) =>
+						index % 2 === 0
+				).map(
+					(/** @type {EXPECTED_ANY} */ declaration) =>
+						declaration.source.value
+				)
+			).toEqual(["./a"]);
+		});
+
+		it("keeps a declaration under an `export` head out of the scope's list", () => {
+			// the export statement reports its own declaration, so listing it
+			// again would declare it twice
+			expect(
+				hoistedNames(
+					"export var exported = 1; export function exportedFunction() {} var plain = 1;",
+					"module"
+				)
+			).toEqual(["plain", "exported", "exportedFunction"]);
+		});
+	});
+
+	describe("attached comments", () => {
+		/**
+		 * @param {string} source what to parse
+		 * @param {number} index which statement to ask about
+		 * @returns {string} the source the comment run covers
+		 */
+		const attachedTo = (source, index) => {
+			const parser = new JavascriptParser("module");
+			const { ast, comments } = JavascriptParser._parse(source, {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			parser.comments = /** @type {EXPECTED_ANY} */ (comments);
+			parser._source = source;
+			const statement = /** @type {EXPECTED_ANY} */ (ast).body[index];
+			return source.slice(
+				parser.getAttachedCommentsStart(statement),
+				statement.range[0]
+			);
+		};
+
+		it("covers the run of comments whitespace alone separates from it", () => {
+			expect(attachedTo("/* a */\n/* b */\nfunction f() {}", 0)).toBe(
+				"/* a */\n/* b */\n"
+			);
+		});
+
+		it("reaches past the statement before it", () => {
+			expect(attachedTo("first();\n/* a */\nfunction f() {}", 1)).toBe(
+				"/* a */\n"
+			);
+		});
+
+		it("stops at the last token written before it", () => {
+			// the annotation was written for the `;`, so it is not this one's
+			expect(attachedTo("first();\n/* a */\n;\nfunction f() {}", 2)).toBe("");
+		});
+
+		it("reads the statement itself when nothing precedes it", () => {
+			expect(attachedTo("function f() {}", 0)).toBe("");
 		});
 	});
 

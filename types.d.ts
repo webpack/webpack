@@ -12810,6 +12810,11 @@ declare class JavascriptParser extends ParserClass {
 				boolean | void
 			>
 		>;
+		/**
+		 * Every statement the hoisting pass reads, which a tap on this turns
+		 * back into a walk of them all. Tap `preStatementByType` instead.
+		 * @deprecated TODO webpack 6: remove, with the statement walk it turns on
+		 */
 		preStatement: SyncBailHook<
 			[
 				| ImportDeclaration
@@ -12844,6 +12849,9 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		/**
+		 * Each declaration the parser records: a variable, function or class
+		 * one. Any other type turns the pass back into a walk of every
+		 * statement, and goes away with that walk in webpack 6.
 		 * @since 5.109.0
 		 */
 		preStatementByType: HookMap<
@@ -13382,9 +13390,11 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Module pre walking iterates the scope for import entries
+	 * Walk every statement of a scope to declare what hoists to it. Only a tap
+	 * on the deprecated `preStatement` hook asks for this.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
 	 */
-	modulePreWalkStatements(
+	preWalkStatements(
 		statements: (
 			| ImportDeclaration
 			| ExportNamedDeclaration
@@ -13416,9 +13426,89 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Pre walking iterates the scope for variable declarations
+	 * Pre walk block statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
 	 */
-	preWalkStatements(
+	preWalkBlockStatement(statement: BlockStatement): void;
+
+	/**
+	 * Pre walk if statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkIfStatement(statement: IfStatement): void;
+
+	/**
+	 * Pre walk labeled statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkLabeledStatement(statement: LabeledStatement): void;
+
+	/**
+	 * Pre walk with statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkWithStatement(statement: WithStatement): void;
+
+	/**
+	 * Pre walk switch statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkSwitchStatement(statement: SwitchStatement): void;
+
+	/**
+	 * Pre walk switch cases.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkSwitchCases(switchCases: SwitchCase[]): void;
+
+	/**
+	 * Pre walk try statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkTryStatement(statement: TryStatement): void;
+
+	/**
+	 * Pre walk catch clause.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkCatchClause(catchClause: CatchClause): void;
+
+	/**
+	 * Pre walk while statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkWhileStatement(statement: WhileStatement): void;
+
+	/**
+	 * Pre walk do while statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkDoWhileStatement(statement: DoWhileStatement): void;
+
+	/**
+	 * Pre walk for statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkForStatement(statement: ForStatement): void;
+
+	/**
+	 * Pre walk for in statement.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkForInStatement(statement: ForInStatement): void;
+
+	/**
+	 * Pre walk for of statement. `for await` is reported by the walk, not here.
+	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 */
+	preWalkForOfStatement(statement: ForOfStatement): void;
+
+	/**
+	 * Scan every top-level statement for the program's module declarations.
+	 * The parser records them now, so nothing inside webpack scans for them.
+	 * @deprecated TODO webpack 6: remove
+	 */
+	modulePreWalkStatements(
 		statements: (
 			| ImportDeclaration
 			| ExportNamedDeclaration
@@ -13630,11 +13720,6 @@ declare class JavascriptParser extends ParserClass {
 	walkNestedStatement(statement: Statement): void;
 
 	/**
-	 * Pre walk block statement.
-	 */
-	preWalkBlockStatement(statement: BlockStatement): void;
-
-	/**
 	 * Walk block statement.
 	 */
 	walkBlockStatement(statement: BlockStatement | StaticBlock): void;
@@ -13643,11 +13728,6 @@ declare class JavascriptParser extends ParserClass {
 	 * Walk expression statement.
 	 */
 	walkExpressionStatement(statement: ExpressionStatement): void;
-
-	/**
-	 * Pre walk if statement.
-	 */
-	preWalkIfStatement(statement: IfStatement): void;
 
 	/**
 	 * Walks a conditional branch with its guard frame (if any) pushed onto the
@@ -13661,29 +13741,14 @@ declare class JavascriptParser extends ParserClass {
 	walkIfStatement(statement: IfStatement): void;
 
 	/**
-	 * Pre walk labeled statement.
-	 */
-	preWalkLabeledStatement(statement: LabeledStatement): void;
-
-	/**
 	 * Walk labeled statement.
 	 */
 	walkLabeledStatement(statement: LabeledStatement): void;
 
 	/**
-	 * Pre walk with statement.
-	 */
-	preWalkWithStatement(statement: WithStatement): void;
-
-	/**
 	 * Walk with statement.
 	 */
 	walkWithStatement(statement: WithStatement): void;
-
-	/**
-	 * Pre walk switch statement.
-	 */
-	preWalkSwitchStatement(statement: SwitchStatement): void;
 
 	/**
 	 * Walk switch statement.
@@ -13706,19 +13771,9 @@ declare class JavascriptParser extends ParserClass {
 	walkThrowStatement(statement: ThrowStatement): void;
 
 	/**
-	 * Pre walk try statement.
-	 */
-	preWalkTryStatement(statement: TryStatement): void;
-
-	/**
 	 * Walk try statement.
 	 */
 	walkTryStatement(statement: TryStatement): void;
-
-	/**
-	 * Pre walk while statement.
-	 */
-	preWalkWhileStatement(statement: WhileStatement): void;
 
 	/**
 	 * Walk while statement.
@@ -13726,19 +13781,9 @@ declare class JavascriptParser extends ParserClass {
 	walkWhileStatement(statement: WhileStatement): void;
 
 	/**
-	 * Pre walk do while statement.
-	 */
-	preWalkDoWhileStatement(statement: DoWhileStatement): void;
-
-	/**
 	 * Walk do while statement.
 	 */
 	walkDoWhileStatement(statement: DoWhileStatement): void;
-
-	/**
-	 * Pre walk for statement.
-	 */
-	preWalkForStatement(statement: ForStatement): void;
 
 	/**
 	 * Walk for statement.
@@ -13746,19 +13791,9 @@ declare class JavascriptParser extends ParserClass {
 	walkForStatement(statement: ForStatement): void;
 
 	/**
-	 * Pre walk for in statement.
-	 */
-	preWalkForInStatement(statement: ForInStatement): void;
-
-	/**
 	 * Walk for in statement.
 	 */
 	walkForInStatement(statement: ForInStatement): void;
-
-	/**
-	 * Pre walk for of statement.
-	 */
-	preWalkForOfStatement(statement: ForOfStatement): void;
 
 	/**
 	 * Walk for of statement.
@@ -13905,19 +13940,9 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Pre walk switch cases.
-	 */
-	preWalkSwitchCases(switchCases: SwitchCase[]): void;
-
-	/**
 	 * Processes the provided switch case.
 	 */
 	walkSwitchCases(switchCases: SwitchCase[]): void;
-
-	/**
-	 * Pre walk catch clause.
-	 */
-	preWalkCatchClause(catchClause: CatchClause): void;
 
 	/**
 	 * Processes the provided catch clause.
@@ -14560,6 +14585,12 @@ declare class JavascriptParser extends ParserClass {
 	 * Returns comments in the range.
 	 */
 	getComments(range: [number, number]): CommentJavascriptParser[];
+
+	/**
+	 * Where the comments written for `statement` begin: the run of comments
+	 * before it that whitespace alone separates from it and from each other.
+	 */
+	getAttachedCommentsStart(statement: StatementPathItem): number;
 
 	/**
 	 * Reports whether `identifier` may occur as a word in the source text of
@@ -27248,6 +27279,7 @@ declare abstract class ScopeParser {
 	lexical?: Set<string>;
 	functions?: Set<string>;
 	firstLexical?: string;
+	hoisted?: (number | NodeLike)[];
 }
 
 /**
