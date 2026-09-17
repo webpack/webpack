@@ -16,6 +16,7 @@ const ConcatenatedModule = require("../lib/optimize/ConcatenatedModule");
 const { makePathsRelative } = require("../lib/util/identifier");
 const browserslistConfigPackages = require("./helpers/browserslistConfigPackages");
 const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
+const codeSizeCommitLink = require("./helpers/codeSizeCommitLink");
 const codeSizeInputChanges = require("./helpers/codeSizeInputChanges");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
@@ -902,7 +903,7 @@ const formatChangedAssets = (changes, summary, inputDeltas) => {
 		header: [
 			`| | Asset | Before | After | Change | ${COMPRESSED.map(
 				(metric) => METRIC_LABELS[metric]
-			).join(" | ")} |${withInput ? " Case source (per case) |" : ""}`,
+			).join(" | ")} |${withInput ? " Test edit (per test) |" : ""}`,
 			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join(
 				""
 			)}${withInput ? " --: |" : ""}`
@@ -1076,13 +1077,11 @@ const formatVerdict = ({ generated, rebuilt, added, removed }) => {
 	const parts = [];
 	if (generated.length > 0) {
 		parts.push(
-			`**changes the size of ${generated.length} asset(s) built from unchanged case source**`
+			`**changes the size of ${generated.length} asset(s) whose tests it leaves untouched**`
 		);
 	}
 	if (rebuilt.length > 0) {
-		parts.push(
-			`moves ${rebuilt.length} asset(s) whose case source it changes too`
-		);
+		parts.push(`moves ${rebuilt.length} asset(s) whose tests it edits too`);
 	}
 	if (added.length > 0) parts.push(`adds ${added.length} new asset(s)`);
 	if (removed.length > 0) parts.push(`deletes ${removed.length} asset(s)`);
@@ -1109,7 +1108,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 
 	const built = `Built \`test/configCases\` with the defaults a user gets: ${
 		report.meta.cases
-	} case(s), ${report.meta.assets} asset(s)${
+	} test(s), ${report.meta.assets} asset(s)${
 		report.meta.withoutOutput > 0
 			? `, ${report.meta.withoutOutput} emitted nothing`
 			: ""
@@ -1155,7 +1154,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 
 	const rows = [
 		{
-			label: "Changed, same case source",
+			label: "Changed, test untouched",
 			cases: casesOf(generated, assetCase).length,
 			assets: generated.length,
 			gzip: sumDelta(generated, "gzip"),
@@ -1164,7 +1163,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			delta: true
 		},
 		{
-			label: "Changed, case source moved",
+			label: "Changed, test edited",
 			cases: casesOf(rebuilt, assetCase).length,
 			assets: rebuilt.length,
 			gzip: sumDelta(rebuilt, "gzip"),
@@ -1200,22 +1199,27 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			delta: false
 		}
 	];
-	const short = (/** @type {Report} */ report) =>
-		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
-	// A pull request is built from its merge ref, so name both halves of what
-	// was measured rather than the head alone.
-	const measured = report.meta.base
-		? `${short(report)} merged into \`${report.meta.base.slice(0, 7)}\``
-		: short(report);
-	const drift = codeSizeBaselineDrift(baseline.meta.commit, report.meta.base);
+	const repositoryUrl = readRepositoryUrl();
+	// The base is the commit the baseline report was produced at, which is what
+	// the numbers below are a delta against — the `main` commit the measured
+	// merge ref carries is named only when the two differ, by the drift note.
+	const named = (/** @type {Report} */ report) =>
+		codeSizeCommitLink(report.meta.commit, repositoryUrl);
+	const drift = codeSizeBaselineDrift(
+		baseline.meta.commit,
+		report.meta.base,
+		repositoryUrl
+	);
 
 	// How many moved and by how much, then the biggest movers — before any
 	// collapsed section, so the whole verdict is readable without unfolding one.
 	lines.push(
-		`Comparing ${measured} against ${short(baseline)}. ${formatVerdict(buckets)}`,
+		`Comparing base (${named(baseline)}) to head (${named(report)}). ${formatVerdict(
+			buckets
+		)}`,
 		"",
 		...(drift ? [drift, ""] : []),
-		"| What moved | Cases | Assets | Gzip | Raw | Case source |",
+		"| What moved | Tests | Assets | Gzip | Raw | Test edit |",
 		"| :-- | --: | --: | --: | --: | --: |"
 	);
 	for (const { label, cases, assets, gzip, raw, input, delta } of rows) {
@@ -1231,7 +1235,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	}
 	lines.push(
 		"",
-		"**`Changed, same case source` is the row that is webpack's doing** — those assets are built from byte-identical module source, so what moved is what webpack generates. `Changed, case source moved` is mostly a case this pull request edited: `Case source` is how many bytes of module source those cases gained, which is what their output delta has to be read against, and a bundle that grew by less than its case did is not a regression. `New` and `Deleted` are whole assets rather than deltas, so a pull request adding cases cannot bury a real change. Gzip decides — it is what a user downloads, and a re-encoding can cut raw bytes while costing wire bytes; raw is the tiebreak, and brotli and zstd are per asset below.",
+		"**Read `Changed, test untouched` first**: the test is byte-identical on both sides, so webpack generated the difference. `Changed, test edited` moved partly because the test did — `Test edit` is how many bytes the test gained, and a bundle that grew by less is not a regression. `New` and `Deleted` are whole files, not deltas, so adding tests cannot bury a real change. Gzip decides, because that is what users download; raw is the tiebreak, and brotli and zstd are per asset below.",
 		""
 	);
 
@@ -1247,18 +1251,18 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			);
 		} else if (generated.length === 0) {
 			lines.push(
-				"No asset built from unchanged case source changed size — every change below comes with a case whose own source moved too.",
+				"No asset with an untouched test changed size — every change below comes with a test this pull request edited.",
 				""
 			);
 		}
 		lines.push(
 			...formatChangedAssets(
 				generated,
-				`${generated.length} asset(s) changed size with their case source unchanged`
+				`${generated.length} asset(s) changed size, test untouched`
 			),
 			...formatChangedAssets(
 				rebuilt,
-				`${rebuilt.length} asset(s) changed size, and so did their case's source`,
+				`${rebuilt.length} asset(s) changed size, test edited`,
 				rebuiltInputDeltas
 			),
 			...formatIntroducedAssets(added, "added"),
@@ -1279,7 +1283,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			"> [!NOTE]",
 			`> ${
 				stopped.length
-			} case(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped
+			} test(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped
 				.map((name) => `\`${name}\``)
 				.join(", ")}`,
 			""
@@ -1486,6 +1490,15 @@ const run = async () => {
 	if (args.summary) {
 		fs.appendFileSync(path.resolve(rootPath, args.summary), summary);
 	}
+};
+
+/**
+ * @returns {string | undefined} repository the run measured, when CI names one
+ */
+const readRepositoryUrl = () => {
+	const repository = process.env.GITHUB_REPOSITORY;
+	if (!repository) return undefined;
+	return `${process.env.GITHUB_SERVER_URL || "https://github.com"}/${repository}`;
 };
 
 /**
