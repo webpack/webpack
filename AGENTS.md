@@ -84,7 +84,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch/preload plugins.
   - `lib/rules/` — `module.rules` matching engine.
-  - `lib/runtime/` — Runtime modules emitted into bundles (chunk loaders, public-path, …).
+  - `lib/runtime/` — Runtime modules emitted into bundles (chunk loaders, public-path, …),
+    the `RuntimeModule` base class they extend, the `RuntimeGlobals` symbols they declare,
+    and `RuntimePlugin`, which injects them for the requirements a build collects.
   - `lib/schemes/` — Custom URL scheme handlers (`data:`, `http:`, …).
   - `lib/serialization/` — Persistent cache serialization.
   - `lib/sharing/` — Shared modules / Module Federation runtime.
@@ -181,7 +183,7 @@ The two config layers differ: **`normalization.js`** canonicalizes the user-supp
 
 **Finding a hook:** hook definitions live on the class that owns them — compiler-wide hooks in `lib/Compiler.js`, per-`Compilation` hooks in `lib/Compilation.js`; tap them with a unique plugin-name string.
 
-**Adding a runtime requirement:** declare the symbol in `lib/RuntimeGlobals.js`, emit its code with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (the `…InModule` variants for per-module needs).
+**Adding a runtime requirement:** declare the symbol in `lib/runtime/RuntimeGlobals.js`, emit its code with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (the `…InModule` variants for per-module needs).
 
 ### Diagnostics and hints
 
