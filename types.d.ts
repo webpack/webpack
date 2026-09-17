@@ -13374,38 +13374,10 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Module pre walking iterates the scope for import entries
+	 * Report what the program imports and re-exports, before anything reads a
+	 * name. The list is what the parser recorded, in source order.
 	 */
-	modulePreWalkStatements(
-		statements: (
-			| ImportDeclaration
-			| ExportNamedDeclaration
-			| ExportAllDeclaration
-			| FunctionDeclaration
-			| VariableDeclaration
-			| ClassDeclaration
-			| ExpressionStatement
-			| BlockStatement
-			| StaticBlock
-			| EmptyStatement
-			| DebuggerStatement
-			| WithStatement
-			| ReturnStatement
-			| LabeledStatement
-			| BreakStatement
-			| ContinueStatement
-			| IfStatement
-			| SwitchStatement
-			| ThrowStatement
-			| TryStatement
-			| WhileStatement
-			| DoWhileStatement
-			| ForStatement
-			| ForInStatement
-			| ForOfStatement
-			| ExportDefaultDeclaration
-		)[]
-	): void;
+	modulePreWalkDeclarations(declarations: ModuleDeclaration[]): void;
 
 	/**
 	 * Declare what hoists to the scope being entered. The list is what the
@@ -17635,6 +17607,11 @@ declare class ModuleConcatenationPlugin {
 	static BAILOUT_PREFIX: string;
 	static REJECTED_PREFIX: string;
 }
+type ModuleDeclaration =
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportAllDeclaration
+	| ExportDefaultDeclaration;
 declare class ModuleDependency extends Dependency {
 	/**
 	 * Creates an instance of ModuleDependency.

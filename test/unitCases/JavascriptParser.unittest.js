@@ -5,7 +5,10 @@
 // cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
-const { HOISTED_DECLARATIONS } = require("../../lib/javascript/syntax");
+const {
+	HOISTED_DECLARATIONS,
+	MODULE_DECLARATIONS
+} = require("../../lib/javascript/syntax");
 
 describe("JavascriptParser", () => {
 	/* eslint-disable no-unused-vars */
@@ -1322,8 +1325,67 @@ function outer() { var inOuter = 1; }
 			/** @type {EXPECTED_ANY} */
 			(ast)[HOISTED_DECLARATIONS] = undefined;
 			/** @type {EXPECTED_ANY} */
+			(ast)[MODULE_DECLARATIONS] = undefined;
+			/** @type {EXPECTED_ANY} */
 			(ast).comments = comments;
 			expect(hoistedNames(ast)).toEqual(hoistedNames(EVERY_POSITION));
+		});
+
+		it("records the program's imports and re-exports, and nothing else", () => {
+			const { ast } = JavascriptParser._parse(
+				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;\nvar plain = 1;\nif (plain) { var nested = 1; }",
+				{ sourceType: "module", ranges: true, comments: true }
+			);
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast)[MODULE_DECLARATIONS].map(
+					(/** @type {EXPECTED_ANY} */ declaration) => declaration.type
+				)
+			).toEqual([
+				"ImportDeclaration",
+				"ExportAllDeclaration",
+				"ExportNamedDeclaration"
+			]);
+		});
+
+		it("scans its own module declarations from an AST another parser built", () => {
+			const source =
+				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;";
+			/**
+			 * @param {string | object} parsed what to parse
+			 * @returns {string[]} the sources reported, in order
+			 */
+			const reported = (parsed) => {
+				const parser = new JavascriptParser("module");
+				/** @type {string[]} */
+				const sources = [];
+				parser.hooks.import.tap("test", (statement, importSource) => {
+					sources.push(`import ${importSource}`);
+				});
+				parser.hooks.exportImport.tap("test", (statement, importSource) => {
+					sources.push(`exportImport ${importSource}`);
+				});
+				parser.hooks.export.tap("test", () => {
+					sources.push("export");
+				});
+				parser.parse(
+					/** @type {EXPECTED_ANY} */ (parsed),
+					/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return sources;
+			};
+			const { ast, comments } = JavascriptParser._parse(source, {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			/** @type {EXPECTED_ANY} */
+			(ast)[MODULE_DECLARATIONS] = undefined;
+			/** @type {EXPECTED_ANY} */
+			(ast).comments = comments;
+			expect(reported(ast)).toEqual(reported(source));
+			expect(reported(source)).toContain("import ./a");
 		});
 
 		it("keeps a declaration under an `export` head out of the scope's list", () => {
