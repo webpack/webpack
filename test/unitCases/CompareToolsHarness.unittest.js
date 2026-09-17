@@ -489,6 +489,20 @@ describe("compare-tools-harness", () => {
 		it("does not read one comment's end as the next one's", () => {
 			expect(legalNotices("/*! a */b{}/*! c */")).toBe(2);
 		});
+
+		it("counts only openers, not the same text inside something else", () => {
+			expect(legalNotices("/* ordinary /*! text */")).toBe(0);
+			expect(legalNotices('a{content:"/*! not one */"}')).toBe(0);
+			expect(legalNotices("a{content:'/*! nor this */'}")).toBe(0);
+		});
+
+		it("reads a quote inside a comment as that comment's text", () => {
+			expect(legalNotices("/* it's fine */a{}/*! real */")).toBe(1);
+		});
+
+		it("does not count a notice the source never closes", () => {
+			expect(legalNotices("/*! unterminated")).toBe(0);
+		});
 	});
 
 	describe("lossColumn", () => {

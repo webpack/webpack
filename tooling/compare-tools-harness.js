@@ -183,8 +183,30 @@ const kb = (bytes) =>
  * @returns {number} how many it carries
  */
 const legalNotices = (source) => {
-	const found = source.match(/\/\*![\s\S]*?\*\//g);
-	return found === null ? 0 : found.length;
+	let count = 0;
+	let at = 0;
+	while (at < source.length) {
+		const char = source[at];
+		if (char === '"' || char === "'") {
+			at++;
+			while (at < source.length && source[at] !== char) {
+				at += source[at] === "\\" ? 2 : 1;
+			}
+			at++;
+			continue;
+		}
+		// Only an opener starts one, so `/*!` inside a string or another comment
+		// is the text it sits in rather than a notice of its own.
+		if (char !== "/" || source[at + 1] !== "*") {
+			at++;
+			continue;
+		}
+		const end = source.indexOf("*/", at + 2);
+		if (end === -1) break;
+		if (source[at + 2] === "!") count++;
+		at = end + 2;
+	}
+	return count;
 };
 
 /**
