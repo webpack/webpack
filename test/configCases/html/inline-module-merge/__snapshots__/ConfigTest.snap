@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html inline-module-merge exported tests should bundle a run of inline <script type=module> tags into one chunk 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Inline Module Merge</title>
+<script src=\\"__html_cbe5b59d_0.mjs\\" type=\\"module\\"></script>
+
+</head>
+<body>
+<script src=\\"__html_cbe5b59d_2.mjs\\" type=\\"module\\" async></script>
+<script src=\\"__html_cbe5b59d_3.mjs\\" type=\\"module\\"></script>
+<script src=\\"__html_cbe5b59d_4.mjs\\" type=\\"module\\"></script>
+<script src=\\"__html_cbe5b59d_5.mjs\\" type=\\"module\\"></script>
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html inline-module-merge exported tests should drop a run member the input ended before closing 1`] = `
+"<!DOCTYPE html>
+<title>Unclosed</title>
+<script src=\\"__html_209ff92a_0.mjs\\" type=\\"module\\"></script>
+"
+`;
