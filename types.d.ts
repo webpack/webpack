@@ -13123,6 +13123,10 @@ declare class JavascriptParser extends ParserClass {
 		canRename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
+		write: HookMap<SyncBailHook<[WriteStatement], boolean | void>>;
+		writeMemberChain: HookMap<
+			SyncBailHook<[WriteStatement, string[]], boolean | void>
+		>;
 		assignMemberChain: HookMap<
 			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
 		>;
@@ -30929,6 +30933,8 @@ type WriteFileOptions =
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
 }
+type WriteStatement =
+	AssignmentExpression | UpdateExpression | ForInStatement | ForOfStatement;
 type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;

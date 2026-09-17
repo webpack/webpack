@@ -1595,4 +1595,45 @@ describe("JavascriptParser", () => {
 			expect(declaration.range).toBe(declaration.range);
 		});
 	});
+
+	describe("write hooks", () => {
+		/**
+		 * @param {string} source source to parse
+		 * @param {"write" | "writeMemberChain"} hook the hook to tap
+		 * @param {boolean} handled what the tap returns
+		 * @returns {string[]} the names the walk reported as read
+		 */
+		const readsWith = (source, hook, handled) => {
+			const parser = new JavascriptParser();
+			/** @type {string[]} */
+			const reads = [];
+			parser.hooks[hook].for("x").tap("JavascriptParserTest", () => handled);
+			parser.hooks.expression.for("x").tap("JavascriptParserTest", () => {
+				reads.push("x");
+			});
+			parser.hooks.expressionMemberChain
+				.for("x")
+				.tap("JavascriptParserTest", () => {
+					reads.push("x");
+					return true;
+				});
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			return reads;
+		};
+
+		it("reports an update and still walks the target it reads", () => {
+			expect(readsWith("x++;", "write", false)).toEqual(["x"]);
+			expect(readsWith("x.y++;", "writeMemberChain", false)).toEqual(["x"]);
+		});
+
+		it("lets a tap that rendered the whole update stop the walk", () => {
+			expect(readsWith("x++;", "write", true)).toEqual([]);
+			expect(readsWith("x.y++;", "writeMemberChain", true)).toEqual([]);
+		});
+	});
 });
