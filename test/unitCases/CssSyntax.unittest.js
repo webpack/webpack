@@ -4356,6 +4356,43 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(parted)).toBe(parted);
 		});
 
+		it("gathers past a rule that writes a layer of its own", () => {
+			// Only a write into the very same layer fixes where this one's rules go:
+			// two layers that are not one are ordered where each was first named.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}.y{@layer q{b{top:0}}}@layer x{c{color:lime}}}`
+			);
+			expect(out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")).toBe(
+				true
+			);
+		});
+
+		it("gathers past a rule that writes a layer under it", () => {
+			// A layer's own declarations outrank its sublayers whichever side of them
+			// they are written, so writing into `x.sub` does not pin `x`.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}.y{@layer x.sub{b{top:0}}}@layer x{c{color:lime}}}`
+			);
+			expect(out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")).toBe(
+				true
+			);
+		});
+
+		it("gathers past a rule that writes the layer above it", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x.k{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x.k{c{color:lime}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer x.k{a{color:red}c{color:lime}}")
+			).toBe(true);
+		});
+
 		it("gathers past a streamed block that writes another layer", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
