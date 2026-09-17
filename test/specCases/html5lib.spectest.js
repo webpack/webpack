@@ -363,11 +363,9 @@ describe("wpt tree-construction", () => {
 // 3. tokenizer (token-stream conformance)
 // ---------------------------------------------------------------------------
 
-// `tokenize` is an offset scanner over the original source: it reports where
-// each token sits and leaves the spec's input-stream and data conversions —
-// CR normalization, NULL substitution, character-reference decoding — to the
-// consumer, which is what the tree builder does. This harness therefore does
-// the same conversions before comparing to html5lib's expected token stream.
+// `tokenize` is an offset scanner over the original source: it reports where each
+// token sits and leaves the spec's input-stream conversions to the consumer. This
+// harness therefore does them before comparing to html5lib's expected stream.
 
 /** @type {Set<string>} intentional, documented exceptions (currently none) */
 const KNOWN_TOKENIZER_DIVERGENCES = new Set();
@@ -541,11 +539,9 @@ const runTokenizerCase = (input, context) => {
 			return end;
 		}
 	});
-	// A tag interrupted by EOF is reported so a consumer can see how far the
-	// source got; the spec emits no token for it. The one exception is EOF
-	// inside a raw-text end tag's *name*, which hands the characters back —
-	// `<xmp>foo</xmp` still renders `foo</xmp`, while `<xmp>foo</xmp ` (past
-	// the name, in before-attribute-name) renders `foo`.
+	// A tag interrupted by EOF is reported so a consumer sees how far the source got;
+	// the spec emits no token for it. The exception is EOF inside a raw-text end tag's
+	// name, which hands the characters back — `<xmp>foo</xmp` still renders `foo</xmp`.
 	const last = tokens[tokens.length - 1];
 	if (
 		eofInTag &&
@@ -582,13 +578,9 @@ const coalesceCharacters = (output) => {
 	return result;
 };
 
-// Two shapes in the corpus cannot be asked for through the public API, which
-// takes the initial state from a context element: a CDATA section is reached
-// only from foreign content (a tree-construction decision), and an initial
-// state paired with an appropriate end tag that does not itself imply that
-// state arises from no real fragment parse. They are counted rather than
-// silently dropped — the shape list is asserted below, so a corpus that grows
-// one reads as a diff instead of as coverage that quietly shrank.
+// Two shapes in the corpus cannot be asked for through the public API, which takes
+// its initial state from a context element. They are counted rather than silently
+// dropped, so a corpus that grows one reads as a diff, not as shrinking coverage.
 
 /** @type {{ id: string, state: string, context: (string | undefined), input: string, expected: Html5libToken[] }[]} */
 const tokenizerRuns = [];

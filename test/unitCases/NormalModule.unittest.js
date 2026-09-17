@@ -313,11 +313,10 @@ describe("NormalModule", () => {
 	});
 
 	describe("#getSideEffectsConnectionState", () => {
-		// Builds a synthetic linear chain of `count` side-effect-free modules
-		// linked by HarmonyImportSideEffectDependency. Walking the chain via
-		// the recursive form used 2 stack frames per module and overflowed on
-		// long chains (issue #20986).
 		/**
+		 * Builds a synthetic linear chain of `count` side-effect-free modules linked
+		 * by `HarmonyImportSideEffectDependency`. Walking it recursively used two
+		 * stack frames per module and overflowed on long chains (#20986).
 		 * @param {number} count chain length
 		 * @returns {{ modules: InstanceType<typeof NormalModule>[], moduleGraph: ModuleGraph }} chain
 		 */
@@ -490,12 +489,8 @@ describe("NormalModule", () => {
 
 		it("handles a deep cyclic chain whose modules have extra non-recursive deps", () => {
 			// Mirrors the canonical #20986 reproduction: each module has a
-			// HarmonyImportSideEffectDependency to the next module plus
-			// several other deps (modelled here by ConstDependency which
-			// reports `false` from `getModuleEvaluationSideEffectsState`).
-			// The last module's SideEffectDep closes the loop back to
-			// module 0. Pre-fix this overflowed V8's stack at ~1300 modules
-			// because the linear-chain walker only recognized 1-dep modules.
+			// HarmonyImportSideEffectDependency to the next plus several side-effect-free
+			// deps, and the last closes the loop back to module 0.
 			const ConstDependency = require("../../lib/dependencies/ConstDependency");
 
 			const N = 5000;
@@ -547,15 +542,9 @@ describe("NormalModule", () => {
 		});
 
 		it("falls back to iterative walk past the recursion limit on non-linear graphs", () => {
-			// Each module has two `HarmonyImportSideEffectDependency`s, so
-			// the linear-chain fast path can't apply: the module's first
-			// dep continues the chain, the second points to a shared
-			// side-effect-free leaf. The walker therefore enters the
-			// general for-loop, recurses one V8 frame per module, and
-			// must switch to `walkSideEffectsIterative` once depth crosses
-			// `SIDE_EFFECTS_RECURSION_LIMIT` (2000). 2500 modules is far
-			// enough past that boundary that any regression in the
-			// iterative fallback path will overflow V8's stack.
+			// Each module has two `HarmonyImportSideEffectDependency`s, so the linear-chain
+			// fast path cannot apply and the walker recurses one frame per module. It must
+			// switch to `walkSideEffectsIterative` past `SIDE_EFFECTS_RECURSION_LIMIT` (2000).
 			const N = 2500;
 			/**
 			 * @param {string} id module id

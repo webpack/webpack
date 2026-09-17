@@ -278,10 +278,9 @@ class FakeElement {
 	set innerHTML(value) {
 		this._innerHTML =
 			value === undefined || value === null ? "" : String(value);
-		// Kept verbatim above (tests read the raw string back), and parsed into
-		// children here — the HMR head reconciliation walks them. Parsing alone
-		// registers nothing document-wide: a container built by `createElement` is
-		// detached, so `getElementsByTagName` must not start finding what is in it.
+		// Kept verbatim above, since tests read the raw string back, and parsed into
+		// children here for the HMR head reconciliation. Parsing registers nothing
+		// document-wide: a `createElement` container is detached.
 		for (const child of this._children) {
 			this._document._onElementRemoved(child);
 			child.parentNode = undefined;

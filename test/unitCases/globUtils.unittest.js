@@ -1,5 +1,24 @@
 "use strict";
 
+// WHY: where this matcher stands when the glob tools disagree, and why:
+//   `..`     matched literally — resolving it names another file through a
+//            symlink, where `dir/link/../b` is the `b` beside the link's target
+//   `.` `//` collapsed with a trailing `/`, since all three name the same file
+//   `[!a]`   a negated class, as POSIX reads it — picomatch takes `!` for a
+//            member unless asked for `{ posix: true }`, which fast-glob does
+//   `!(a)`   "not exactly a", so `ab` matches — picomatch and tiny-glob test a
+//            prefix instead and reject it
+//   `!(@(a))` still a negation — minimatch, and so `path.matchesGlob`, matches
+//            every name once a group nests inside the alternatives
+//   `{a,[b,c]}` two alternatives, since a `,` in a class is a member — as
+//            `braces` and picomatch read it, where bash and minimatch split it
+//   `*`      never an empty segment, and `a/**` is not `a` itself
+//   case     always sensitive — `path.matchesGlob` reads it off the host, so it
+//            ignores case on macOS and Windows
+//
+// The corpus below therefore stays lowercase and skips `..`, so that comparing
+// it against `path.matchesGlob` answers the same on every host.
+
 const path = require("path");
 const {
 	commonGlobBaseDir,
@@ -38,25 +57,6 @@ const effectivePattern = (pattern) => {
 };
 
 const PARENT_SEGMENT_REGEXP = /(?:^|\/)\.\.(?:\/|$)/;
-
-// Where this matcher stands when the glob tools disagree, and why:
-//   `..`     matched literally — resolving it names another file through a
-//            symlink, where `dir/link/../b` is the `b` beside the link's target
-//   `.` `//` collapsed with a trailing `/`, since all three name the same file
-//   `[!a]`   a negated class, as POSIX reads it — picomatch takes `!` for a
-//            member unless asked for `{ posix: true }`, which fast-glob does
-//   `!(a)`   "not exactly a", so `ab` matches — picomatch and tiny-glob test a
-//            prefix instead and reject it
-//   `!(@(a))` still a negation — minimatch, and so `path.matchesGlob`, matches
-//            every name once a group nests inside the alternatives
-//   `{a,[b,c]}` two alternatives, since a `,` in a class is a member — as
-//            `braces` and picomatch read it, where bash and minimatch split it
-//   `*`      never an empty segment, and `a/**` is not `a` itself
-//   case     always sensitive — `path.matchesGlob` reads it off the host, so it
-//            ignores case on macOS and Windows
-//
-// The corpus below therefore stays lowercase and skips `..`, so that comparing
-// it against `path.matchesGlob` answers the same on every host.
 
 const PATTERNS = [
 	"**/*.css",
@@ -359,12 +359,9 @@ describe("globUtils", () => {
 			);
 		});
 
-		// A `,` inside a character class is a member, not a separator, so the
-		// alternatives of `{a,[b,c]}` are `a` and `[b,c]`. That is what `braces`,
-		// and so micromatch, picomatch and fast-glob, read — `import.meta.glob`
-		// and `require.context` patterns are written against those. bash expands
-		// braces textually before globbing, and minimatch (so `path.matchesGlob`)
-		// follows it, splitting the class into `[b` and `c]`.
+		// A `,` inside a character class is a member, not a separator, so the alternatives
+		// of `{a,[b,c]}` are `a` and `[b,c]` — as `braces` and picomatch read it. bash
+		// expands braces textually first, and minimatch follows it, splitting the class.
 		it("keeps a `,` inside a character class out of the brace split", () => {
 			for (const str of ["a", "b", "c", ","]) {
 				expect(
@@ -816,10 +813,9 @@ describe("globUtils", () => {
 			expect(createMatcher("**/!(a).js")("x/a.js")).toBe(false);
 		});
 
-		// `path.matchesGlob` compiles through minimatch, which stops negating a
-		// `!(…)` whose alternatives hold a group: it answers true for every name,
-		// the excluded ones included. glibc `fnmatch(3)`, bash and picomatch read
-		// these the way this matcher does.
+		// `path.matchesGlob` compiles through minimatch, which stops negating a `!(…)`
+		// whose alternatives hold a group: it answers true for every name, the excluded
+		// ones included. glibc `fnmatch(3)`, bash and picomatch read these as we do.
 		it("nests extended globs, where path.matchesGlob stops negating", () => {
 			expect(createMatcher("**/@(a|@(b|c)).js")("x/b.js")).toBe(true);
 			expect(createMatcher("**/@(a|@(b|c)).js")("x/d.js")).toBe(false);

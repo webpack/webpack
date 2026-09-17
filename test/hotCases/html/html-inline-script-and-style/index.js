@@ -1,12 +1,9 @@
 import html from "./page.html";
 
 it("should hot-update an HTML module that contains both inline <style> and inline <script>", (done) => {
-	// Inline `<style>` bodies are routed through the CSS pipeline and the
-	// processed CSS is inlined back into the rewritten HTML (exportType
-	// "text"), so it appears verbatim. Inline `<script>` bodies are
-	// bundled as their own data-URI entries — the rewritten HTML only
-	// references them via `<script src=…>`, so the script body itself
-	// does NOT appear in the exported string.
+	// Inline `<style>` bodies go through the CSS pipeline and the processed CSS is
+	// inlined back into the rewritten HTML, so it appears verbatim. Inline `<script>`
+	// bodies become their own data-URI entries, referenced only via `<script src=…>`.
 	expect(html).toContain("<title>combined v1</title>");
 	expect(html).toContain("color: red");
 	expect(html).not.toContain('window.__page_value__ = "v1"');

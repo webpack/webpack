@@ -19,10 +19,8 @@ function writeStderrSync(line) {
 }
 
 // Logs each test file right before it runs, synchronously to stderr so the line
-// survives even a runtime abort that no JS try/catch can catch (e.g. a Deno
-// hard-panic or Bun segfault); the crashed file is then the last logged line.
-// Per-file only (not per-case) to keep CI output readable; rerun that one file
-// locally to narrow down the case.
+// survives a runtime abort no JS try/catch can reach. Per-file only, to keep CI
+// output readable — rerun that one file locally to narrow the case down.
 module.exports = class RuntimeCrashReporter {
 	constructor() {
 		/** @type {string | undefined} */

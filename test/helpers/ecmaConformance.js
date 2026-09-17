@@ -263,10 +263,9 @@ const checkEcmaConformance = ({ code, environment, sourceType = "script" }) => {
 			}
 		}
 	});
-	// Only when no flag explains it: syntax carrying no flag (classes, shorthand
-	// properties, default parameters, `**`, `??`) is caught here, and reporting
-	// it next to the flag that already named it reads as two findings for one
-	// line.
+	// Only when no flag explains it: syntax carrying no flag — classes, shorthand
+	// properties, default parameters, `**`, `??` — is caught here, since reporting it
+	// beside the flag that already named it reads as two findings for one line.
 	if (violations.length === 0 && outranVersion) violations.push(outranVersion);
 	return violations;
 };
@@ -316,10 +315,9 @@ const collectGeneratedCode = (optionsArr, options = {}) => {
 							);
 							for (const chunk of compilation.chunks) {
 								const entryOptions = chunk.getEntryOptions();
-								// A worklet chunk goes to `addModule()`, so it is an ES module
-								// whatever `output.module` says — the same rule
-								// `AutoPublicPathRuntimeModule` reads before writing
-								// `import.meta.url` into it.
+								// A worklet chunk goes to `addModule()`, so it is an ES module whatever
+								// `output.module` says — the same rule `AutoPublicPathRuntimeModule` reads before
+								// writing `import.meta.url` into it.
 								const worklet = Boolean(entryOptions && entryOptions.worklet);
 								for (const runtimeModule of compilation.chunkGraph.getChunkRuntimeModulesIterable(
 									chunk

@@ -712,10 +712,8 @@ describe("ScopeAnalyzer", () => {
 			expect(varNames(classScope)).toEqual(["C"]);
 			expect(refNames(classScope)).toEqual(["foo", "C"]);
 
-			/*
-			 * `class C` creates two variables `C`: one in the scope where the
-			 * class is declared, another in the class scope. References inside
-			 * the class should be to the variable in the class scope.
+			/* `class C` creates two `C` variables, one in the declaring scope and one
+			 * in the class scope. References inside the class are to the class one.
 			 */
 			expect(refs(classScope)[1].resolved).toBe(classScope.variables[0]);
 			expect(refs(classScope)[1]).toBe(classScope.variables[0].references[0]);

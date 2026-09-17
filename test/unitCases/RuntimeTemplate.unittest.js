@@ -485,10 +485,8 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 	});
 
 	// A wasm loader is emitted once per runtime, so its answer cannot depend on where
-	// one module sits. That the two wasm forms therefore skip the chunk graph is not
-	// unit-testable — the decision short-circuits before reading it unless a real
-	// build registered a `__webpack_public_path__` reassignment — so the case that
-	// pins it is configCases/wasm/analyzable-runtime-scope.
+	// one module sits. That the two wasm forms skip the chunk graph is not
+	// unit-testable, so `configCases/wasm/analyzable-runtime-scope` is what pins it.
 	it("should read no chunk of the origin module for an import", () => {
 		const { chunkGraph, reads } = countingChunkGraph();
 		create({}).supportsAnalyzable("import", chunkGraph, module);

@@ -287,13 +287,9 @@ const withCodSpeed = async (bench) => {
 	const callingFile = getCallingFile();
 
 	if (codspeedRunnerMode === "simulation" || codspeedRunnerMode === "memory") {
-		// Memory mode counts allocations in the instrumented region. With `--no-opt`
-		// (required by CodSpeed analysis mode), JIT stabilization isn't a factor,
-		// so 2 warmup runs are enough to populate require.cache, webpack lazy
-		// singletons, and V8 hidden classes. More warmup just bloats the heap with
-		// garbage that the pre-measurement drain has to clean up, raising the
-		// chance of an in-measurement GC and introducing variance across PRs that
-		// would otherwise touch identical code paths.
+		// Memory mode counts allocations in the instrumented region, and with `--no-opt`
+		// JIT stabilization is not a factor, so two warmup runs populate require.cache and
+		// V8 hidden classes. More warmup only bloats the heap and invites an in-run GC.
 		const warmupIterations =
 			codspeedRunnerMode === "memory" ? 2 : bench.iterations - 1;
 
@@ -393,10 +389,9 @@ const withCodSpeed = async (bench) => {
 				codspeedRunnerMode === "simulation" ||
 				codspeedRunnerMode === "memory"
 			) {
-				// Custom warmup
-				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack.
-				// Memory mode also needs warmup so the first measured sample isn't
-				// polluted by module loading, lazy webpack init, and JIT shape transitions.
+				// Custom warmup: `optimizeFunction` is not run because the function is never
+				// optimized — webpack itself is warmed instead. Memory mode needs it too, so the
+				// first sample is not polluted by module loading and lazy init.
 				const samples = [];
 
 				while (samples.length < warmupIterations) {
@@ -406,14 +401,9 @@ const withCodSpeed = async (bench) => {
 
 			await options?.beforeEach?.call(task, "run");
 			await mongoMeasurement.start(uri);
-			// Drain heap before the instrumented region so allocations from the
-			// warmup runs aren't attributed to the measured sample (especially
-			// under massif). One GC can leave promoted-but-unreachable objects
-			// pending finalization; finalizers themselves can allocate. Loop
-			// `gc -> microtask` three times so each GC's finalizers get a chance
-			// to run and any garbage they produce is collected on the next pass,
-			// then drain pending IO with `setImmediate`, then one final GC to
-			// catch anything the IO callbacks left behind.
+			// Drain the heap before the instrumented region so warmup allocations are not
+			// attributed to the measured sample. One GC can leave objects pending
+			// finalization, and finalizers allocate, so loop gc → microtask three times.
 			for (let i = 0; i < 3; i++) {
 				global.gc?.();
 				await new Promise((resolve) => {

@@ -839,12 +839,9 @@ ${details(snapshot)}`)
 		});
 	});
 
-	// Reproduces the type-lie discussed in webpack/webpack#16886:
-	// `addFileTimestamps`/`addContextTimestamps` accept watchpack-style
-	// `ExistenceOnlyTimeEntry` (`{}`) values, but the cached entries used to
-	// be compared directly against snapshots that include a `timestamp` /
-	// `timestampHash`. Cache lookups now treat existence-only entries as a
-	// cache miss and re-read from disk so snapshots stay valid.
+	// Reproduces the type-lie in #16886: the timestamp setters accept watchpack-style
+	// existence-only `{}` values, but cached entries used to be compared against
+	// snapshots holding a `timestamp`. A lookup now treats those as a miss.
 	describe("existence-only watchpack entries", () => {
 		const buildFsInfoWithSnapshot = (
 			/** @type {(err?: Error | null, fs?: IFs, snapshot?: InstanceType<Snapshot> | null) => void} */ callback
@@ -1059,11 +1056,9 @@ ${details(snapshot)}`)
 		it("snapshot creation re-reads disk when cache for a context dir lacks `timestampHash`", (done) => {
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
-			// Pre-populate the cache with a watchpack-style `{ safeTime }`
-			// entry (no `timestampHash`). Without re-reading disk during
-			// snapshot creation, the snapshot would be stored without a
-			// `timestampHash` and could miss directory-change detection on
-			// subsequent validations.
+			// Pre-populate the cache with a watchpack-style `{ safeTime }` entry carrying no
+			// `timestampHash`. Without re-reading disk during snapshot creation the snapshot
+			// is stored without one and can miss directory-change detection later.
 			fsInfo.addContextTimestamps(
 				new Map([["/path/context+files", { safeTime: 1 }]]),
 				true
@@ -1088,11 +1083,9 @@ ${details(snapshot)}`)
 			);
 		});
 
-		// #21378: `_resolveContextTimestamp` walks symlink targets via
-		// `_getUnresolvedContextTimestamp`. Watchpack rebuild entries carry
-		// `{ safeTime, timestamp }` but never `timestampHash`; returning
-		// them for a symlink target makes the hash walk crash. Relative
-		// symlink targets (pnpm-style) resolve to the real directory path.
+		// #21378: `_resolveContextTimestamp` walks symlink targets, and watchpack rebuild
+		// entries carry `{ safeTime, timestamp }` but never `timestampHash`, so returning
+		// one for a symlink target crashes the hash walk.
 		it("checkSnapshotValid resolves context dirs with symlinks when watchpack reports `{ safeTime, timestamp }` for the symlink target (#21378)", (done) => {
 			const fs = createFsFromVolume(new Volume());
 			const ctxDir = "/root/ctx";
@@ -1148,11 +1141,9 @@ ${details(snapshot)}`)
 		});
 	});
 
-	// A context directory tracked when the snapshot was created can become
-	// ignored later (e.g. `managedPaths` changed between builds). The
-	// `cache === "ignore"` branches must then both skip the directory while
-	// creating a snapshot and keep an existing snapshot valid even when the
-	// directory's contents changed.
+	// A context directory tracked when the snapshot was created can become ignored
+	// later. The `cache === "ignore"` branches must then both skip it while creating a
+	// snapshot and keep an existing snapshot valid when its contents changed.
 	describe("ignored context entries", () => {
 		const ignoredDir = "/path/context+files";
 		// Only this captured directory hashes the file below, so changing it

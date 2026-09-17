@@ -929,10 +929,9 @@ const knownBugs = [
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
 
-	// `Object.defineProperty(this, "x", { get })` on the global object — the
-	// test relies on the getter side-effect (deleting `this.x`) being visible
-	// to a bare `x--` reference. Webpack wraps modules so `this` is not the
-	// global object and bare identifiers are scoped to the wrapper.
+	// `Object.defineProperty(this, "x", { get })` on the global object — the test
+	// relies on the getter's side effect being visible to a bare `x--`. webpack wraps
+	// modules, so `this` is not the global and bare identifiers are wrapper-scoped.
 	"expressions/postfix-decrement/operator-x-postfix-decrement-calls-putvalue-lhs-newvalue--1.js",
 	"expressions/postfix-increment/operator-x-postfix-increment-calls-putvalue-lhs-newvalue--1.js",
 
@@ -1152,10 +1151,9 @@ describe("test262", () => {
 
 						const context = vm.createContext(
 							sandbox,
-							// `afterEvaluate` drains microtasks only at evaluate/runInContext
-							// boundaries; in the module scenario that deadlocks a top-level
-							// `await import(...)`, whose resolution needs a microtask
-							// checkpoint while `evaluate()` is still running.
+							// `afterEvaluate` drains microtasks only at evaluate boundaries, which in the
+							// module scenario deadlocks a top-level `await import(...)` — its resolution needs
+							// a microtask checkpoint while `evaluate()` is still running.
 							scenario === "module" ? {} : { microtaskMode: "afterEvaluate" }
 						);
 

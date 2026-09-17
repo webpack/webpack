@@ -163,11 +163,9 @@ describe("css-parsing-tests webpack build", () => {
 	}
 });
 
-// The suite above says the pipeline survives the corpus; this one says the
-// parser reads it the way the corpus says to. `blocks_contents.json` is the
-// §5.4.5 production `parseABlocksContents` implements, and what it settles is
-// the one decision that has no other oracle: whether `<ident>:<value>` is a
-// declaration or a qualified rule.
+// The suite above says the pipeline survives the corpus; this one says the parser
+// reads it the way the corpus says to. `blocks_contents.json` settles the one
+// decision with no other oracle: `<ident>:<value>` as declaration or rule.
 describe("css-parsing-tests block contents", () => {
 	const file = path.join(casesDir, "blocks_contents.json");
 	if (!fs.existsSync(file)) {
