@@ -18,6 +18,10 @@ exports[`ConfigTestCases html attribute-tables attribute-tables should compile 1
 <object declare data=data:,></object>
 <map name=m><area shape=rect coords=0,0,1,1 nohref></map>
 
+<dialog closedby=any>d</dialog>
+<template shadowrootmode=open><span>t</span></template>
+<button popovertargetaction=show popovertarget=p>open</button>
+<input popovertargetaction=hide popovertarget=p type=button>
 
 
 </body></html>"
