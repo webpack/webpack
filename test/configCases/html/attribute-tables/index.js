@@ -7,7 +7,7 @@ it("should rewrite every attribute the tables name", () => {
 });
 
 it("should fold the enumerated attributes limited to known values", () => {
-	// `closedby`, `shadowrootmode` and `popovertargetaction`; `<area shape>`
-	// and `<textarea wrap>` stay as written, their IDL reflecting verbatim.
+	// `closedby`, `shadowrootmode` and `popovertargetaction` — asserted on the
+	// emitted page in test.config.js, which is where the output can be read.
 	expect(true).toBe(true);
 });
