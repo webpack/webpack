@@ -4985,9 +4985,20 @@ describe("SourceProcessor — an empty value is the bare name", () => {
 		);
 	});
 
-	it("leaves a value a reference only decodes to empty", () => {
-		// Read raw: what a reference decodes to is not the printer's business.
-		expect(minify('<div title="&#x20;">x</div>')).toContain("title=&#x20;");
+	it("writes out a value a reference only spells as whitespace", () => {
+		// A reference is how the value is written, not what it says: the element
+		// is handed the same one space either way, so the shorter spelling wins.
+		expect(minify('<div title="&#x20;">x</div>')).toBe('<div title=" ">x</div>');
+	});
+
+	it("reads a reference-spelled empty as empty when dropping them", () => {
+		const drop = (html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				removeEmptyAttributes: true
+			}).code;
+		expect(drop('<div class="&#x20;">x</div>')).toBe("<div>x</div>");
+		expect(drop('<div class=" ">x</div>')).toBe("<div>x</div>");
 	});
 
 	it("prints a boolean attribute repeating its own name as the name", () => {
