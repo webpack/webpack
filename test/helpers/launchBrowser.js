@@ -1,8 +1,13 @@
 "use strict";
 
 const os = require("os");
+const path = require("path");
 
-const CACHE_DIR = `${os.homedir()}/.cache/puppeteer`;
+// The same cache `yarn setup:firefox` installs into, and the one puppeteer's
+// own tooling reads, so the two agree wherever it has been pointed elsewhere.
+const CACHE_DIR =
+	process.env.PUPPETEER_CACHE_DIR ||
+	path.join(os.homedir(), ".cache", "puppeteer");
 
 /**
  * Where an already-downloaded Firefox sits, or `undefined` when none is. The
@@ -16,6 +21,7 @@ const installedFirefox = async () => {
 		await import("@puppeteer/browsers");
 
 	const platform = detectBrowserPlatform();
+	if (platform === undefined) return undefined;
 	for (const one of await getInstalledBrowsers({ cacheDir: CACHE_DIR })) {
 		if (one.browser === Browser.FIREFOX && one.platform === platform) {
 			return one.executablePath;
@@ -50,18 +56,24 @@ module.exports = async (options) => {
 		...options
 	};
 	if (firefox) {
+		// A caller that named one wins: the environment and the cache are what to
+		// fall back to, not what to override it with.
 		const executablePath =
-			process.env.FIREFOX_EXECUTABLE_PATH || (await installedFirefox());
+			launchOptions.executablePath ||
+			process.env.FIREFOX_EXECUTABLE_PATH ||
+			(await installedFirefox());
 		if (executablePath === undefined) {
 			throw new Error(
 				"no Firefox to launch: run `yarn setup:firefox`, or point FIREFOX_EXECUTABLE_PATH at one"
 			);
 		}
 		launchOptions.executablePath = executablePath;
-	} else if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-		launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-	} else {
-		launchOptions.channel = "chrome";
+	} else if (!launchOptions.executablePath) {
+		if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+			launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+		} else {
+			launchOptions.channel = "chrome";
+		}
 	}
 	return puppeteer.launch(launchOptions);
 };

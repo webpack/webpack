@@ -1129,9 +1129,9 @@ describe(`printer output in real ${ENGINE === "firefox" ? "Firefox" : "Chrome"}`
 			}
 			return out;
 		}, table);
-		expect(unfolded).toEqual([
-			...forEngine(FILED_ENUMERATED_FOLDS).keys()
-		]);
+		expect([...unfolded].sort()).toEqual(
+			[...forEngine(FILED_ENUMERATED_FOLDS).keys()].sort()
+		);
 	}, 600000);
 
 	it("should only drop an empty attribute the engine reads back as absent", async () => {
@@ -2139,6 +2139,20 @@ describe("a color rewrite paints as the color it replaced", () => {
 			 * @param {string} after the color the printer wrote
 			 * @returns {boolean} true when only a last digit moved
 			 */
+			const roundedOnly = (before, after) => {
+				const shape = (text) => text.replace(/[\d.]+/g, "#");
+				if (shape(before) !== shape(after)) return false;
+				const ours = before.match(/[\d.]+/g) || [];
+				const theirs = after.match(/[\d.]+/g) || [];
+				return (
+					ours.length === theirs.length &&
+					ours.every(
+						(num, at) =>
+							Number(num).toPrecision(5) === Number(theirs[at]).toPrecision(5)
+					)
+				);
+			};
+
 			// WHY: The margins in `lib/css/syntax.js` are measured against Chromium,
 			// and Gecko's conversion lands a channel elsewhere within the byte —
 			// measured in Firefox 156: `hsl(from rgb(214.7 138.3 226.0) calc(h + 40)
@@ -2162,20 +2176,8 @@ describe("a color rewrite paints as the color it replaced", () => {
 			};
 
 			const filedColors = forEngine(FILED_COLOR_REWRITES);
-
-			const roundedOnly = (before, after) => {
-				const shape = (text) => text.replace(/[\d.]+/g, "#");
-				if (shape(before) !== shape(after)) return false;
-				const ours = before.match(/[\d.]+/g) || [];
-				const theirs = after.match(/[\d.]+/g) || [];
-				return (
-					ours.length === theirs.length &&
-					ours.every(
-						(num, at) =>
-							Number(num).toPrecision(5) === Number(theirs[at]).toPrecision(5)
-					)
-				);
-			};
+			/** @type {Set<string>} */
+			const stillFiled = new Set();
 			try {
 				await page.setContent("<body></body>");
 				const CHUNK = 300;
@@ -2202,16 +2204,18 @@ describe("a color rewrite paints as the color it replaced", () => {
 						]);
 					}, chunk);
 					for (const [index, [before, after]] of painted.entries()) {
-						if (
-							before !== after &&
-							!roundedOnly(...chunk[index]) &&
-							!withinAByte(before, after) &&
-							!filedColors.has(chunk[index][0])
-						) {
-							differed.push(
-								`${chunk[index][0]}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
-							);
+						if (before === after || roundedOnly(...chunk[index])) continue;
+						const written = chunk[index][0];
+						// Counted before the tolerance, so an entry filed for this engine
+						// still reads as diverging where the byte would have swallowed it.
+						if (filedColors.has(written)) {
+							stillFiled.add(written);
+							continue;
 						}
+						if (withinAByte(before, after)) continue;
+						differed.push(
+							`${written}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
+						);
 					}
 				}
 			} finally {
@@ -2221,6 +2225,9 @@ describe("a color rewrite paints as the color it replaced", () => {
 				rewrites: rewritten.length,
 				differed: []
 			});
+			// A filed entry outlives its defect by one run: the set is matched
+			// exactly, so a rewrite the engine stopped moving fails here.
+			expect([...stillFiled].sort()).toEqual([...filedColors.keys()].sort());
 		},
 		FILE_TIMEOUT
 	);
