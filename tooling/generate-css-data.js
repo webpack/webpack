@@ -5420,6 +5420,53 @@ const collectSelectorSupport = () => {
 };
 
 /**
+ * When each browser first read a value a declaration may name, keyed by the
+ * spelling the printer looks one up by: a color function by its own name, and a
+ * property's keyword as `"<property> <keyword>"`. Only a construct BCD gives a
+ * row of its own is here — a parent's row answers for the construct it was
+ * filed under rather than for one it never names, which is why `canvastext` is
+ * absent and its ancient `<system-color>` parent is not read for it.
+ * @param {string[]} colorFunctions the functions `<color>` names
+ * @returns {[string, [string, number][]][]} the versions, by spelling
+ */
+const collectValueSupport = (colorFunctions) => {
+	/** @type {[string, [string, number][]][]} */
+	const table = [];
+	for (const name of colorFunctions) {
+		const node = /** @type {EXPECTED_ANY} */ (bcd.css.types.color)[name];
+		if (!node || !node.__compat) continue;
+		table.push([name, collectSupportedFrom([`css.types.color.${name}`])]);
+	}
+	for (const [property, node] of Object.entries(bcd.css.properties)) {
+		if (property.startsWith("__")) continue;
+		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		if (!entry || !entry.syntax || entry.status !== "standard") continue;
+		const keywords = new Set(
+			lowerSorted(acceptedValues(entry.syntax).keywords)
+		);
+		for (const value of Object.keys(node)) {
+			if (value === "__compat") continue;
+			const sub = /** @type {BcdNode} */ (
+				/** @type {EXPECTED_ANY} */ (node)[value]
+			);
+			const keyword = value.toLowerCase();
+			// A sub-feature the grammar does not name is something else BCD files
+			// under the property — an animation, a syntax variant, a longhand's own
+			// behaviour — rather than a value a declaration can be written with.
+			if (!sub.__compat || !keywords.has(keyword)) continue;
+			table.push([
+				`${property} ${keyword}`,
+				collectSupportedFrom([`css.properties.${property}.${value}`])
+			]);
+		}
+	}
+	if (table.length === 0) {
+		throw new Error("no value carries a support row of its own: bcd moved");
+	}
+	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
  * Both support tables as one profile pool and two name-to-profile maps. Every
  * profile covers the same browsers in the same order, so the versions are a
  * positional array — the names are stated once for all of them — and a profile
@@ -5453,6 +5500,36 @@ const poolSupport = (tables) => {
 		})
 	);
 	return { browsers, profiles, indexes };
+};
+
+/**
+ * The value table as one string: a group per property, `property:keyword index
+ * keyword index`, groups joined by `|`, and the functions that are nobody's
+ * keyword in the group with no property name. A `Map` literal of the same
+ * entries costs 3.7x this and is built whether or not a build looks one up.
+ * @param {[string, [string, number][]][]} table the values
+ * @param {number[]} indexes each one's profile
+ * @returns {string} the packed string, quoted
+ */
+const valueSupportLiteral = (table, indexes) => {
+	/** @type {Map<string, string[]>} */
+	const byProperty = new Map();
+	for (const [at, [name]] of table.entries()) {
+		const space = name.indexOf(" ");
+		const property = space === -1 ? "" : name.slice(0, space);
+		const keyword = space === -1 ? name : name.slice(space + 1);
+		let group = byProperty.get(property);
+		if (group === undefined) {
+			group = [];
+			byProperty.set(property, group);
+		}
+		group.push(`${keyword} ${indexes[at]}`);
+	}
+	return JSON.stringify(
+		[...byProperty]
+			.map(([name, group]) => `${name}:${group.join(" ")}`)
+			.join("|")
+	);
 };
 
 /**
@@ -6687,7 +6764,8 @@ const collectData = async () => {
 		name,
 		collectSupportedFrom(paths)
 	]);
-	const pooled = poolSupport([supportedFrom, selectorSupport]);
+	const valueSupport = collectValueSupport(colorValueFunctions);
+	const pooled = poolSupport([supportedFrom, selectorSupport, valueSupport]);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
 	// Built before the template so the window pool below is complete when it is
@@ -7430,6 +7508,12 @@ const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
 /** @type {Map<string, number>} */
 const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport, pooled.indexes[1])};
 
+// When each browser first read a value a declaration may name, as
+// \`property:keyword index keyword index|...\` with the color functions under no
+// property. A value missing here is one no target is known to read.
+const VALUE_SUPPORT_PACKED =
+	${valueSupportLiteral(valueSupport, pooled.indexes[2])};
+
 // WHY: The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
@@ -7507,7 +7591,7 @@ module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
-module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.VALUE_SUPPORT_PACKED = VALUE_SUPPORT_PACKED;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The arithmetic the printer's own evaluator needs. Sorted after the tables:\n// \`import/order\` orders exports by case, uppercase first.\nmodule.exports.foldAdd = foldAdd;\nmodule.exports.foldDivide = foldDivide;\nmodule.exports.foldMultiply = foldMultiply;
 `;

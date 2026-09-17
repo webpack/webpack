@@ -7410,8 +7410,14 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 			minifyFor("a{text-align:center;text-align:-webkit-center}", target)
 		).toBe("a{text-align:center;text-align:-webkit-center}");
 		expect(
+			minifyFor("a{text-align:-webkit-center}b{text-align:center}", target)
+		).toBe("a{text-align:-webkit-center}b{text-align:center}");
+		// In one block it is the cascade's question rather than the prefixes':
+		// every target parses the `center` after it, so the spelling before it is
+		// read by nothing whatever the two compute to.
+		expect(
 			minifyFor("a{text-align:-webkit-center;text-align:center}", target)
-		).toBe("a{text-align:-webkit-center;text-align:center}");
+		).toBe("a{text-align:center}");
 		expect(minifyFor("a{text-align:center}", target)).toBe(
 			"a{text-align:center}"
 		);
