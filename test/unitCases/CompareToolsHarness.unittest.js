@@ -11,8 +11,10 @@ const {
 	formatCost,
 	installPackages,
 	kb,
+	legalNotices,
 	loaderFor,
 	log,
+	lossColumn,
 	measure,
 	measureInWorker,
 	run
@@ -474,6 +476,40 @@ describe("compare-tools-harness", () => {
 				cpu: "-",
 				peak: "-"
 			});
+		});
+	});
+
+	describe("legalNotices", () => {
+		it("counts the `/*!` comments a source carries, over any number of lines", () => {
+			expect(legalNotices("a{color:red}")).toBe(0);
+			expect(legalNotices("/*! one */a{color:red}/* not one */")).toBe(1);
+			expect(legalNotices("/*!\n one\n*/a{}/*!two*/")).toBe(2);
+		});
+
+		it("does not read one comment's end as the next one's", () => {
+			expect(legalNotices("/*! a */b{}/*! c */")).toBe(2);
+		});
+	});
+
+	describe("lossColumn", () => {
+		it("reads as a dash when the output lost nothing", () => {
+			expect(lossColumn(0, [], 0)).toBe("-");
+			expect(lossColumn(0, [], -1)).toBe("-");
+		});
+
+		it("counts the classes and names the examples it was given", () => {
+			expect(lossColumn(2, ["a", "b"], 0)).toBe("2 classes! e.g. a, b");
+			expect(lossColumn(9, ["a", "b", "c"], 0)).toBe("9 classes! e.g. a, b, c");
+		});
+
+		it("says class and notice in the singular", () => {
+			expect(lossColumn(1, ["a"], 0)).toBe("1 class! e.g. a");
+			expect(lossColumn(0, [], 1)).toBe("1 legal notice!");
+			expect(lossColumn(0, [], 3)).toBe("3 legal notices!");
+		});
+
+		it("says both when the output lost both", () => {
+			expect(lossColumn(1, ["a"], 2)).toBe("1 class! e.g. a, 2 legal notices!");
 		});
 	});
 

@@ -176,6 +176,39 @@ const kb = (bytes) =>
 	bytes === undefined ? "-" : `${(bytes / 1024).toFixed(1)} KB`;
 
 /**
+ * The legal notices a source carries. A `/*!` comment is the convention every
+ * minifier is meant to preserve, so dropping one loses the copyright a license
+ * requires as silently as a dropped class loses a rule.
+ * @param {string} source a stylesheet or a script
+ * @returns {number} how many it carries
+ */
+const legalNotices = (source) => {
+	const found = source.match(/\/\*![\s\S]*?\*\//g);
+	return found === null ? 0 : found.length;
+};
+
+/**
+ * What a tool's output no longer carries, as the comparison's last column: a
+ * size win that drops a class or a legal notice is not a size win.
+ * @param {number} classes how many classes its selectors stopped matching
+ * @param {string[]} examples a few of them, named so the row can be chased
+ * @param {number} notices how many legal notices it dropped
+ * @returns {string} the column, "-" when it lost nothing
+ */
+const lossColumn = (classes, examples, notices) => {
+	/** @type {string[]} */
+	const parts = [];
+	if (classes > 0) {
+		const plural = classes === 1 ? "class" : "classes";
+		parts.push(`${classes} ${plural}! e.g. ${examples.join(", ")}`);
+	}
+	if (notices > 0) {
+		parts.push(`${notices} legal notice${notices === 1 ? "" : "s"}!`);
+	}
+	return parts.length === 0 ? "-" : parts.join(", ");
+};
+
+/**
  * What a printer made of its own output: `stable` where the second pass wrote
  * the first back, and what it threw where reading its own output failed.
  * @typedef {{ stable: boolean, delta: number, error?: string }} SecondPass
@@ -610,8 +643,10 @@ module.exports = {
 	idempotence,
 	installPackages,
 	kb,
+	legalNotices,
 	loaderFor,
 	log,
+	lossColumn,
 	measure,
 	measureInWorker,
 	oneLine,

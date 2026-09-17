@@ -55,8 +55,10 @@ const {
 	idempotence,
 	installPackages,
 	kb,
+	legalNotices,
 	loaderFor,
 	log,
+	lossColumn,
 	measure,
 	measureInWorker,
 	run
@@ -247,18 +249,6 @@ const PRESETS = [
 	["target", TARGET_OPTIONS],
 	["target+vars", TARGET_VARS_OPTIONS]
 ];
-
-/**
- * The legal notices a stylesheet carries. A `/*!` comment is the convention
- * every minifier is meant to preserve, and dropping one is content lost the way
- * a class is — silently, with the copyright its license requires gone.
- * @param {string} css a stylesheet
- * @returns {number} how many it carries
- */
-const legalNotices = (css) => {
-	const found = css.match(/\/\*![\s\S]*?\*\//g);
-	return found === null ? 0 : found.length;
-};
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
@@ -817,18 +807,7 @@ const main = async () => {
 						cost.cpu.padStart(6) +
 						cost.peak.padStart(8) +
 						formatSecond(result.second).padStart(7)
-					}   ${
-						[
-							lost.length === 0
-								? ""
-								: `${lost.length} classes! e.g. ${lost.slice(0, 3).join(", ")}`,
-							notices <= 0
-								? ""
-								: `${notices} legal notice${notices === 1 ? "" : "s"}!`
-						]
-							.filter(Boolean)
-							.join(", ") || "-"
-					}\n`
+					}   ${lossColumn(lost.length, lost.slice(0, 3), notices)}\n`
 				);
 			}
 		}
