@@ -5,14 +5,15 @@
 
 "use strict";
 
-// Reports which `webpack/lib/…` paths the published ecosystem imports directly,
-// and which of them this checkout no longer resolves. A path a popular package
-// reaches for and webpack no longer has is a break a re-export would prevent.
+// Records which `webpack/lib/…` paths the published ecosystem imports directly.
+// `--write` refreshes that record from npm; `--check` reads no network and fails
+// when a recorded path stopped resolving, which is a move owing a re-export.
 
 const cp = require("child_process");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const prettier = require("prettier");
 
 const LIB_ROOT = path.join(__dirname, "..", "lib");
 const CACHE_ROOT = path.join(
@@ -22,6 +23,7 @@ const CACHE_ROOT = path.join(
 	".cache",
 	"deep-webpack-imports"
 );
+const RECORD_PATH = path.join(__dirname, "deep-webpack-imports.json");
 const REGISTRY = "https://registry.npmjs.org";
 
 // The search endpoint carries weekly downloads with each hit, so discovery and
@@ -255,13 +257,113 @@ const scanPackage = (dir) => {
 const formatCount = (value) => value.toLocaleString("en-US");
 
 /**
+ * @returns {EXPECTED_ANY} the recorded scan, or an empty one
+ */
+const readRecord = () => {
+	if (!fs.existsSync(RECORD_PATH)) {
+		return { sampledAt: null, perKeyword: 0, removed: {}, requests: {} };
+	}
+
+	return JSON.parse(fs.readFileSync(RECORD_PATH, "utf8"));
+};
+
+/**
+ * Verifies every recorded request against this checkout, reading no network.
+ * This is the cheap half: it catches a move the moment it lands.
+ * @returns {number} how many recorded requests no longer resolve
+ */
+const check = () => {
+	const record = readRecord();
+	const requests = Object.keys(record.requests).sort();
+
+	if (requests.length === 0) {
+		process.stdout.write(
+			`No record at ${path.relative(process.cwd(), RECORD_PATH)}; ` +
+				"run with --write to collect one.\n"
+		);
+
+		return 0;
+	}
+
+	const broken = requests.filter(
+		(request) => !(request in record.removed) && !resolvesInCheckout(request)
+	);
+
+	process.stdout.write(
+		`Checked ${requests.length} recorded request(s) against this checkout ` +
+			`(sampled ${record.sampledAt}).\n`
+	);
+
+	for (const request of broken) {
+		const entry = record.requests[request];
+
+		process.stdout.write(
+			`  webpack/${request} no longer resolves — ${formatCount(
+				entry.weekly
+			)} weekly across ${entry.packages.length} package(s): ${entry.packages.join(
+				", "
+			)}\n`
+		);
+	}
+
+	if (broken.length > 0) {
+		process.stdout.write(
+			"\nRe-export each at its old path, or record it under `removed` with " +
+				"the reason it is deliberate.\n"
+		);
+	}
+
+	return broken.length;
+};
+
+/**
+ * Writes the record prettier-formatted, so a refresh never fails `fmt:check`.
+ * @param {{ request: string, packages: string[], weekly: number }[]} rows scanned rows
+ * @param {number} perKeyword how many packages per keyword produced them
+ * @returns {Promise<void>} once written
+ */
+const writeRecord = async (rows, perKeyword) => {
+	const previous = readRecord();
+	/** @type {EXPECTED_ANY} */
+	const requests = {};
+
+	for (const row of [...rows].sort((a, b) =>
+		a.request.localeCompare(b.request)
+	)) {
+		requests[row.request] = { weekly: row.weekly, packages: row.packages };
+	}
+
+	const record = {
+		sampledAt: new Date().toISOString().slice(0, 10),
+		perKeyword,
+		removed: previous.removed,
+		requests
+	};
+
+	const prettierConfig = (await prettier.resolveConfig(RECORD_PATH)) || {};
+
+	fs.writeFileSync(
+		RECORD_PATH,
+		await prettier.format(JSON.stringify(record), {
+			...prettierConfig,
+			filepath: RECORD_PATH
+		})
+	);
+	process.stdout.write(
+		`\nWrote ${path.relative(process.cwd(), RECORD_PATH)}.\n`
+	);
+};
+
+/**
  * Discovers, downloads and scans, then prints what the ecosystem reaches for.
  * @param {number} perKeyword how many packages to take per keyword
- * @returns {Promise<number>} the number of requests this checkout cannot resolve
+ * @param {boolean} write whether to refresh the record with what it found
+ * @returns {Promise<number>} how many requests this checkout cannot resolve
  */
-const run = async (perKeyword) => {
+const collect = async (perKeyword, write) => {
 	fs.mkdirSync(CACHE_ROOT, { recursive: true });
 
+	const record = readRecord();
 	/** @type {Map<string, { packages: Set<string>, weekly: number }>} */
 	const byRequest = new Map();
 	/** @type {{ name: string, weekly: number }[]} */
@@ -315,7 +417,10 @@ const run = async (perKeyword) => {
 		}))
 		.sort((a, b) => b.weekly - a.weekly);
 
-	const missing = rows.filter((row) => !row.resolves);
+	const broken = rows.filter(
+		(row) => !row.resolves && !(row.request in record.removed)
+	);
+	const fresh = rows.filter((row) => !(row.request in record.requests));
 
 	process.stdout.write(
 		`\nScanned ${scanned} package(s); ${unavailable} could not be fetched.\n` +
@@ -330,22 +435,38 @@ const run = async (perKeyword) => {
 			const names = row.packages.slice(0, 4).join(", ");
 			const more =
 				row.packages.length > 4 ? ` +${row.packages.length - 4}` : "";
+			const verdict = row.resolves
+				? "yes"
+				: row.request in record.removed
+					? "no, recorded as removed"
+					: "NO";
 
 			process.stdout.write(
-				`webpack/${row.request} | ${formatCount(row.weekly)} | ${names}${more} | ${
-					row.resolves ? "yes" : "NO"
-				}\n`
+				`webpack/${row.request} | ${formatCount(row.weekly)} | ${names}${more} | ${verdict}\n`
 			);
 		}
 	}
 
-	if (missing.length > 0) {
+	if (fresh.length > 0) {
 		process.stdout.write(
-			`\n${missing.length} request(s) this checkout does not resolve — each ` +
-				"needs a re-export at the old path, or is a deliberate removal:\n"
+			`\n${fresh.length} request(s) the record has not seen before; ` +
+				"re-run with --write to keep it current:\n"
 		);
 
-		for (const row of missing) {
+		for (const row of fresh) {
+			process.stdout.write(
+				`  webpack/${row.request}  (${formatCount(row.weekly)} weekly)\n`
+			);
+		}
+	}
+
+	if (broken.length > 0) {
+		process.stdout.write(
+			`\n${broken.length} request(s) this checkout does not resolve and the ` +
+				"record does not excuse:\n"
+		);
+
+		for (const row of broken) {
 			process.stdout.write(
 				`  webpack/${row.request}  (${formatCount(row.weekly)} weekly, ${
 					row.packages.length
@@ -365,14 +486,18 @@ const run = async (perKeyword) => {
 		}
 	}
 
-	return missing.length;
+	if (write) await writeRecord(rows, perKeyword);
+
+	return broken.length;
 };
 
 const perKeyword = Number(process.env.COUNT || 100);
+const write = process.argv.includes("--write");
+const offline = process.argv.includes("--check");
 
-run(perKeyword).then(
-	(missing) => {
-		process.exitCode = missing > 0 ? 1 : 0;
+(offline ? Promise.resolve(check()) : collect(perKeyword, write)).then(
+	(broken) => {
+		process.exitCode = broken > 0 ? 1 : 0;
 	},
 	(error) => {
 		process.stderr.write(`${error.stack}${os.EOL}`);
