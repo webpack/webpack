@@ -55,8 +55,10 @@ const {
 	idempotence,
 	installPackages,
 	kb,
+	legalNotices,
 	loaderFor,
 	log,
+	lossColumn,
 	measure,
 	measureInWorker,
 	run
@@ -742,6 +744,7 @@ const main = async () => {
 			""
 		);
 		const before = classSelectors(postcss, selectorParser, css);
+		const noticesBefore = legalNotices(css);
 		const input = await compress(Buffer.from(css));
 		process.stdout.write(
 			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
@@ -790,6 +793,7 @@ const main = async () => {
 				const code = /** @type {string} */ (result.code);
 				const after = classSelectors(postcss, selectorParser, code);
 				const lost = [...before].filter((name) => !after.has(name));
+				const notices = noticesBefore - legalNotices(code);
 				const out = await compress(Buffer.from(code));
 				process.stdout.write(
 					`  ${
@@ -803,11 +807,7 @@ const main = async () => {
 						cost.cpu.padStart(6) +
 						cost.peak.padStart(8) +
 						formatSecond(result.second).padStart(7)
-					}   ${
-						lost.length === 0
-							? "-"
-							: `${lost.length} classes! e.g. ${lost.slice(0, 3).join(", ")}`
-					}\n`
+					}   ${lossColumn(lost.length, lost.slice(0, 3), notices)}\n`
 				);
 			}
 		}

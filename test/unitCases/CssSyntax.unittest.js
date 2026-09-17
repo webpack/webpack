@@ -4292,19 +4292,33 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it.each([
 			// A block writing only into its own layer reaches nothing the one
-			// between them writes, so the two never contend.
+			// between them writes, so the two never contend — and the pair the
+			// gather leaves side by side is offered the join it makes possible.
 			[
 				"a block for a layer under it stands between them",
 				"@layer a.b{.x{top:0}}@layer a.b.c{.y{top:0}}@layer a.b{.z{top:0}}",
-				"@layer a.b{.x{top:0}.z{top:0}}@layer a.b.c{.y{top:0}}"
+				"@layer a.b{.x,.z{top:0}}@layer a.b.c{.y{top:0}}"
 			],
 			[
 				"a block for the layer above it stands between them",
 				"@layer a.b{.x{top:0}}@layer a{.y{top:0}}@layer a.b{.z{top:0}}",
-				"@layer a.b{.x{top:0}.z{top:0}}@layer a{.y{top:0}}"
+				"@layer a.b{.x,.z{top:0}}@layer a{.y{top:0}}"
 			]
 		])("gathers where %s", (_name, css, expected) => {
 			expect(minify(css)).toBe(expected);
+		});
+
+		it("joins the pair a top-level gather leaves at the seam", () => {
+			// The gather is what makes the two neighbors, so the join has to be
+			// offered here rather than left to a second pass over the output.
+			const d = "{cursor:not-allowed;opacity:.2}";
+			const css = `@layer a.b{.p{c:1}.chk${d}}@layer a.b.c{.q{c:2}}@layer a.b{.rad${d}.r{c:3}}`;
+			const once = minify(css);
+			expect(once).toBe(
+				"@layer a.b{.p{c:1}.chk,.rad{cursor:not-allowed;opacity:.2}.r{c:3}}@layer a.b.c{.q{c:2}}"
+			);
+			// What the printer owes its own output: a second pass finds nothing.
+			expect(minify(once)).toBe(once);
 		});
 
 		it.each([
@@ -10760,3 +10774,108 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		}
 	});
 });
+
+
+// Every entry the tables hold has to stay a non-negative integer below 2**31, or
+// a numbering scheme that outgrew it truncates each window silently.
+describe("CssData — the version tables stay in their element type", () => {
+	const {
+		NEVER,
+		PREFIX_WINDOWS,
+		PREFIX_WINDOW_STARTS,
+		SUPPORT_PROFILES
+	} = require("../../lib/css/data");
+
+	it.each([
+		["PREFIX_WINDOWS", () => PREFIX_WINDOWS],
+		["SUPPORT_PROFILES", () => SUPPORT_PROFILES]
+	])("%s holds versions the element type represents exactly", (_name, get) => {
+		const table = get();
+		expect(table).toBeInstanceOf(Uint32Array);
+		let realMax = 0;
+		for (const version of table) {
+			expect(Number.isInteger(version)).toBe(true);
+			expect(version).toBeGreaterThanOrEqual(0);
+			if (version !== NEVER && version > realMax) realMax = version;
+		}
+		// The sentinel has to stay above every real version, or a still-prefixed
+		// window would end before a browser that is in it.
+		expect(realMax).toBeLessThan(NEVER);
+	});
+
+	it("keeps NEVER a small integer, and Safari TP below it", () => {
+		expect(Number.isInteger(NEVER)).toBe(true);
+		expect(NEVER).toBeLessThan(2 ** 31);
+		// `_encodeBrowserVersion` reads Safari TP as `NEVER - 1`, which must still
+		// be newer than any real version rather than a version of its own.
+		expect(NEVER - 1).toBeGreaterThan(100 * 100000);
+	});
+
+	it("indexes the window table within its element type", () => {
+		expect(PREFIX_WINDOW_STARTS).toBeInstanceOf(Uint16Array);
+		for (const start of PREFIX_WINDOW_STARTS) {
+			expect(start).toBeLessThanOrEqual(PREFIX_WINDOWS.length);
+		}
+		// The last start is the end of the last list, so it is the table's length.
+		expect(PREFIX_WINDOW_STARTS[PREFIX_WINDOW_STARTS.length - 1]).toBe(
+			PREFIX_WINDOWS.length
+		);
+	});
+});
+
+// A rewrite reached from inside another switch's block stops when that switch is
+// turned off, which no test of either switch alone would notice.
+describe("CssSyntax — the per-transform switches are independent", () => {
+	const { SourceProcessor } = require("../../lib/css/syntax");
+
+	/**
+	 * @param {string} src css source
+	 * @param {import("../../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src, transforms) =>
+		new SourceProcessor().process(src, { mode: "minify", transforms }).code;
+
+	// One input per switch, which that switch alone rewrites.
+	/** @type {Record<string, string>} */
+	const PROBES = {
+		comments: ".a{b:c}/*note*/",
+		mergeLonghands: ".a{margin:1px;margin-top:2px}",
+		mergeRules: ".a{x:1}.b{x:1}",
+		normalizeQuotes: ".a{content:'x'}",
+		reduceFunctions: ".a{width:calc(1px + 2px)}",
+		removeDeadRules: ".a{}.b{y:1}",
+		shortenColors: ".a{color:#ffffff}",
+		shortenMediaQueries: "@media (min-width:1px){.a{b:c}}",
+		shortenNumbers: ".a{width:0.50px}",
+		shortenSelectors: ".b,.a,.b{c:1}",
+		shortenValues: ".a{margin:1px 1px}"
+	};
+	const NAMES = Object.keys(PROBES);
+	/**
+	 * @param {string} name a switch
+	 * @returns {import("../../lib/css/syntax").CssTransformOptions} it turned off
+	 */
+	const turnOff = (name) => ({
+		[name]: name === "comments" ? "all" : false
+	});
+
+	it.each(NAMES)("%s is the only switch that stops its own rewrite", (name) => {
+		const probe = PROBES[name];
+		// The probe has to isolate the switch, or the rows below prove nothing.
+		expect(min(probe, turnOff(name))).not.toBe(min(probe));
+	});
+
+	it.each(NAMES)("%s keeps rewriting while any other switch is off", (name) => {
+		const probe = PROBES[name];
+		const expected = min(probe);
+		for (const other of NAMES) {
+			if (other === name) continue;
+			// Named in the message so a failure says which pair coupled.
+			expect({ [other]: min(probe, turnOff(other)) }).toEqual({
+				[other]: expected
+			});
+		}
+	});
+});
+
