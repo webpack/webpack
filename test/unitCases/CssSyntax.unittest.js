@@ -4341,6 +4341,19 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("gathers past a string that only looks like it opens the layer", () => {
+			// The gather reads a streamed node's printed text, where a `@layer` inside
+			// a string is a value rather than an at-rule nothing may fold across.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}.b{content:"@layer x{"}@layer x{c{color:lime}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")
+			).toBe(true);
+		});
+
 		it("joins the rules a streamed block writes side by side", () => {
 			// A block over the threshold writes its children straight out rather than
 			// assembling a body, which is where `_mergeAdjacentRules` would join them.
