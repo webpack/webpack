@@ -3060,6 +3060,11 @@
           "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
           "type": "boolean"
         },
+        "topLevelThis": {
+          "description": "Set what top-level \"this\" refers to in a non-ES module: \"exports\" (the exports object, as in Node.js) or \"global\" (the global object, as in a classic script).",
+          "enum": ["exports", "global"],
+          "added": "5.112.0"
+        },
         "typescript": {
           "description": "Enable typescript support.",
           "type": "boolean",

@@ -5385,6 +5385,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-typescript": Object {
     "configs": Array [
       Object {
@@ -6791,6 +6808,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-typescript": Object {
     "configs": Array [
       Object {
@@ -8037,6 +8071,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-typescript": Object {
     "configs": Array [
       Object {
@@ -9068,6 +9119,23 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-top-level-this": Object {
+    "configs": Array [
+      Object {
+        "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+        "multiple": false,
+        "path": "module.parser.javascript.topLevelThis",
+        "type": "enum",
+        "values": Array [
+          "exports",
+          "global",
+        ],
+      },
+    ],
+    "description": "Set what top-level \\"this\\" refers to in a non-ES module: \\"exports\\" (the exports object, as in Node.js) or \\"global\\" (the global object, as in a classic script).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-typescript": Object {
     "configs": Array [
