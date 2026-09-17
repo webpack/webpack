@@ -30923,7 +30923,8 @@ type WriteFileOptions =
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
 }
-type WriteStatement = UpdateExpression | ForInStatement | ForOfStatement;
+type WriteStatement =
+	AssignmentExpression | UpdateExpression | ForInStatement | ForOfStatement;
 type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
