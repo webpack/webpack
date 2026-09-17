@@ -6564,3 +6564,23 @@ describe("futureDefaults module output", () => {
 		expect(getDefaultConfig({ mode: "none" }).output.module).toBe(false);
 	});
 });
+
+describe("cache.buildDependencies.defaultWebpack", () => {
+	// Derived from defaults.js's own directory, so this pins it to lib/: a pack
+	// stops invalidating on a webpack change the moment it names anything else.
+	it("should name the lib directory webpack ships", () => {
+		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+			require("../..").config;
+
+		const normalized = getNormalizedWebpackOptions({
+			cache: { type: "filesystem" }
+		});
+		applyWebpackOptionsDefaults(normalized);
+
+		const cache = /** @type {EXPECTED_ANY} */ (normalized.cache);
+
+		expect(cache.buildDependencies.defaultWebpack).toEqual([
+			path.join(__dirname, "..", "..", "lib") + path.sep
+		]);
+	});
+});
