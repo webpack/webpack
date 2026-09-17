@@ -1,9 +1,10 @@
 import { value, T } from './re-export'
+import { NamedT } from './re-export-named'
 import logo from './file.png';
 
 type MyType = string;
 
-export { logo, value, T, MyType }
+export { logo, value, T, NamedT, MyType }
 
 it("should not reexport type", function () {
 	expect(value).toBe(1)

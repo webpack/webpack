@@ -8514,7 +8514,9 @@ declare abstract class ExportInfo {
 	isReexport(): undefined | boolean;
 
 	/**
-	 * Returns the target, undefined when there is no target, false when no target is valid.
+	 * Walks the reexport chain and returns the first target whose module passes
+	 * `validTargetModuleFilter`. Returns undefined when there is no target, false
+	 * when the chain ends without a valid module.
 	 */
 	findTarget(
 		moduleGraph: ModuleGraph,
@@ -8522,7 +8524,9 @@ declare abstract class ExportInfo {
 	): undefined | null | false | TargetItemWithoutConnection;
 
 	/**
-	 * Returns the target.
+	 * Resolves the reexport chain as far as `resolveTargetFilter` allows and
+	 * returns where it ends. Returns undefined when there is no target, the
+	 * targets disagree, or the chain is circular.
 	 */
 	getTarget(
 		moduleGraph: ModuleGraph,
