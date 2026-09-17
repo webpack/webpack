@@ -1,6 +1,6 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 /** @typedef {{ name: string, tests: string[] }} Category */
 /**
@@ -10,21 +10,23 @@ require("./helpers/warmup-webpack");
  */
 /**
  * @typedef {object} HotTestConfig
- * @property {((scope: EXPECTED_ANY, options: import("../").Configuration) => void)=} moduleScope
+ * @property {((scope: EXPECTED_ANY, options: import("../../").Configuration) => void)=} moduleScope
  */
 
 const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void }} */
 const rimraf = require("rimraf");
-const checkArrayExpectation = require("./checkArrayExpectation");
-const { TestRunner } = require("./harness/runner");
-const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const deprecationTracking = require("./helpers/deprecationTracking");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
+const checkArrayExpectation = require("../checkArrayExpectation");
+const { TestRunner } = require("../harness/runner");
+const createLazyTestEnv = require("../helpers/createLazyTestEnv");
+const deprecationTracking = require("../helpers/deprecationTracking");
+const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
+const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
-const casesPath = path.join(__dirname, "hotCases");
+const testRootDirectory = path.join(__dirname, "..");
+
+const casesPath = path.join(testRootDirectory, "hotCases");
 /** @type {Category[]} */
 const categories = fs
 	.readdirSync(casesPath)
@@ -68,7 +70,7 @@ const describeCases = (config) => {
 					}
 
 					describe(testName, () => {
-						/** @type {import("../").Compiler} */
+						/** @type {import("../../").Compiler} */
 						let compiler;
 
 						afterAll((/** @type {EXPECTED_ANY} */ callback) => {
@@ -77,10 +79,10 @@ const describeCases = (config) => {
 						});
 
 						it(`${testName} should compile`, (done) => {
-							const webpack = require("..");
+							const webpack = require("../..");
 
 							const outputDirectory = path.join(
-								__dirname,
+								testRootDirectory,
 								"js",
 								`hot-cases-${config.name}`,
 								category.name,
@@ -92,8 +94,8 @@ const describeCases = (config) => {
 								updateIndex: 0
 							};
 							const configPath = path.join(testDirectory, "webpack.config.js");
-							/** @type {import("../").Configuration} */
-							let options = /** @type {import("../").Configuration} */ ({});
+							/** @type {import("../../").Configuration} */
+							let options = /** @type {import("../../").Configuration} */ ({});
 							if (fs.existsSync(configPath)) options = require(configPath);
 							if (
 								typeof (/** @type {EXPECTED_ANY} */ (options)) === "function"
@@ -159,7 +161,7 @@ const describeCases = (config) => {
 							if (!options.module.rules) options.module.rules = [];
 							options.module.rules.push({
 								loader: path.join(
-									__dirname,
+									testRootDirectory,
 									"hotCases",
 									"fake-update-loader.js"
 								),
@@ -186,7 +188,7 @@ const describeCases = (config) => {
 
 							const onCompiled = (
 								/** @type {Error | null} */ err,
-								/** @type {import("../").Stats} */ stats
+								/** @type {import("../../").Stats} */ stats
 							) => {
 								const deprecations = deprecationTracker();
 								if (err) return done(err);
@@ -236,7 +238,7 @@ const describeCases = (config) => {
 									fakeUpdateLoaderOptions.updateIndex++;
 									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err, _stats) => {
-										const stats = /** @type {import("../").Stats} */ (_stats);
+										const stats = /** @type {import("../../").Stats} */ (_stats);
 										const deprecations = deprecationTracker();
 										if (err) return callback(err);
 										const jsonStats = stats.toJson({
