@@ -1,7 +1,7 @@
 "use strict";
 
-const RuntimeGlobals = require("../../../../lib/RuntimeGlobals");
-const RuntimeModule = require("../../../../lib/RuntimeModule");
+const RuntimeGlobals = require("../../../../lib/runtime/RuntimeGlobals");
+const RuntimeModule = require("../../../../lib/runtime/RuntimeModule");
 
 // Only an odd priority waits for lower ones, so the even handler must run while
 // the blocked priority-0 one stays deferred.
