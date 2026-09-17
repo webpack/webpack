@@ -37,7 +37,7 @@ export default defineConfig([
 		"*.check.js",
 
 		// Ignore not supported files
-		"*.d.ts",
+		"**/*.d.ts",
 
 		// Ignore precompiled schemas
 		"schemas/**/*.check.js",
@@ -99,10 +99,14 @@ export default defineConfig([
 	},
 	configs["webpack/schemas"],
 	configs["webpack/types"],
+	configs["webpack/comments"],
 	{
-		// TODO extend to lib/, which carries 652 comments over the limit
-		files: ["test/**/*.{js,mjs,cjs}", "tooling/**/*.js", "hot/**/*.js"],
-		extends: [configs["webpack/comments"]]
+		// An example's commented-out config is what a reader copies, and its prose
+		// is the example's own documentation — neither is commentary to shorten.
+		files: ["examples/**/*.{js,cjs,mjs}"],
+		rules: {
+			"webpack/comment-length": "off"
+		}
 	},
 	{
 		files: ["lib/**/*.js"],
@@ -278,10 +282,9 @@ export default defineConfig([
 		}
 	},
 	{
-		// `color-name` is ESM, so the CSS data generator reaches its table
-		// through a dynamic import rather than a `require` no jest `vm` supports.
-		// `html-minifier-next` is ESM only, and the HTML comparison imports it the
-		// same way.
+		// `color-name` is ESM, so the CSS data generator reaches its table through a
+		// dynamic import rather than a `require` no jest `vm` supports.
+		// `html-minifier-next` is ESM only and is imported the same way.
 		files: ["tooling/generate-css-data.js", "tooling/compare-html-tools.js"],
 		rules: {
 			"n/no-unsupported-features/es-syntax": [
