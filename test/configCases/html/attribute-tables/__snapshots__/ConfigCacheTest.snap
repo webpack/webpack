@@ -5,7 +5,7 @@ exports[`ConfigCacheTestCases html attribute-tables attribute-tables should comp
 <form action=/post autocomplete=on>
 	<input type=text autocapitalize=sentences autocomplete=EMAIL enterkeyhint=go inputmode=numeric spellcheck=true maxlength=10 minlength=2 autofocus>
 	<textarea writingsuggestions=false maxlength=100>text</textarea>
-	<button formaction=\\"/submit?a=1&amp;b=2\\" formenctype=multipart/form-data formmethod=post formnovalidate>send</button>
+	<button formaction=\\"/submit?a=1&b=2\\" formenctype=multipart/form-data formmethod=post formnovalidate>send</button>
 </form>
 <img src=data:, alt=a decoding=async ismap>
 <p draggable=true accesskey=\\"s s\\" itemref=\\"one two\\">draggable</p>
