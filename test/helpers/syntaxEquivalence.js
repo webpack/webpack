@@ -441,9 +441,9 @@ const installHelpers = () => {
 	const BARE_ESCAPED = /[\w\u00A0-\uFFFF-]/;
 
 	// What a math operator's own whitespace is held under while the delimiters
-	// beside it lose theirs (see `normalizeValue`). Private use: nothing a
-	// stylesheet spells a value out of can be mistaken for it.
-	const MATH_OPERATOR_SPACE = "\uE000";
+	// beside it lose theirs (see `normalizeValue`). §4.3.7 names U+FFFD for a
+	// null escape and §3.3 for a null the source spells, so no value holds one.
+	const MATH_OPERATOR_SPACE = "\u0000";
 
 	/**
 	 * A value spelled one way, for the values that have to be compared as written
