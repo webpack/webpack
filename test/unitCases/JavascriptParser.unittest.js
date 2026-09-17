@@ -1331,6 +1331,48 @@ function outer() { var inOuter = 1; }
 			expect(hoistedNames(ast)).toEqual(hoistedNames(EVERY_POSITION));
 		});
 
+		it("walks every statement again for a tap that expects them", () => {
+			const source =
+				"debugger;\nfunction outer() { if (outer) { debugger; } }";
+			/**
+			 * @param {(parser: EXPECTED_ANY) => void} tap what to tap with
+			 * @returns {string[]} the statement types the pre-walk reported
+			 */
+			const seen = (tap) => {
+				const parser = new JavascriptParser("script");
+				/** @type {string[]} */
+				const types = [];
+				parser.hooks.preStatement.tap("test", (statement) => {
+					types.push(statement.type);
+				});
+				tap(parser);
+				parser.parse(
+					source,
+					/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return types;
+			};
+			// a broadcast tap reaches the statements the record leaves out
+			expect(seen(() => {})).toContain("DebuggerStatement");
+			// so does a typed tap for a statement the record does not carry
+			const typed = [];
+			const parser = new JavascriptParser("script");
+			parser.hooks.preStatementByType
+				.for("DebuggerStatement")
+				.tap("test", (statement) => {
+					typed.push(statement.type);
+				});
+			parser.parse(
+				source,
+				/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(typed).toEqual(["DebuggerStatement", "DebuggerStatement"]);
+		});
+
 		it("records the program's imports and re-exports, and nothing else", () => {
 			const { ast } = JavascriptParser._parse(
 				"import a from './a';\nexport * from './b';\nexport { a };\nexport default 1;\nvar plain = 1;\nif (plain) { var nested = 1; }",
