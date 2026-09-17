@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html parser-decoded-attribute-values parser-decoded-attribute-values should compile 1`] = `
+"<!doctype html><title>decoded attribute values</title><math><mi>x</mi><annotation-xml encoding=text/html><div>an HTML integration point</div></annotation-xml></math>
+<table><input type=hidden><tr><td>a hidden input is not foster parented</table>
+<a href=#x></a><div><template shadowrootmode=open><slot></slot></template><a href=#x></a>
+</div>"
+`;
