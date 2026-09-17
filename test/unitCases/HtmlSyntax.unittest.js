@@ -5722,6 +5722,15 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 		);
 	});
 
+	it("ranks on the attributes that reach the output, not the dropped ones", () => {
+		// `<input type=text>` is redundant and goes, so counting it would rank
+		// `type` above `checked` on the first pass and tie them on the second.
+		const options = { removeRedundantAttributes: "all", sortAttributes: true };
+		const once = minify("<input type=text><input type=checkbox checked>", options);
+		expect(once).toBe("<input><input checked type=checkbox>");
+		expect(minify(once, options)).toBe(once);
+	});
+
 	it("leaves foreign content alone, where a name is not case-folded", () => {
 		expect(
 			minify('<svg><rect zz="1" aa="2"/></svg>', { sortAttributes: true })
