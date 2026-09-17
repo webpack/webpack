@@ -2,7 +2,7 @@
 
 const Dependency = require("../../lib/Dependency");
 const Module = require("../../lib/Module");
-const ModuleGraph = require("../../lib/ModuleGraph");
+const ModuleGraph = require("../../lib/graph/ModuleGraph");
 
 /**
  * @returns {Module} module
@@ -46,7 +46,7 @@ describe("ModuleGraph", () => {
 			moduleGraph._flushUnassignedConnections(origin);
 
 			const connection =
-				/** @type {import("../../lib/ModuleGraphConnection")} */
+				/** @type {import("../../lib/graph/ModuleGraphConnection")} */
 				(moduleGraph.getConnection(dependency));
 			expect(connection).toBeDefined();
 			expect(connection.module).toBe(target);

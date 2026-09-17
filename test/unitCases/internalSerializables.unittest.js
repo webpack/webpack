@@ -27,7 +27,7 @@ describe("internalSerializables", () => {
 
 	// A pack written before these moved names them by their old request, which
 	// only resolves while lib/ keeps a registerLegacyRequest for it
-	for (const [legacy, current] of [
+	for (const [legacy, current, name = null] of [
 		["webpack/lib/ContextModule", "webpack/lib/context/ContextModule"],
 		["webpack/lib/ExternalModule", "webpack/lib/externals/ExternalModule"],
 		["webpack/lib/InitFragment", "webpack/lib/template/InitFragment"],
@@ -39,6 +39,11 @@ describe("internalSerializables", () => {
 		[
 			"webpack/lib/dependencies/ExternalModuleConstDependency",
 			"webpack/lib/dependencies/ExternalModuleInitFragmentDependency"
+		],
+		[
+			"webpack/lib/ModuleGraph",
+			"webpack/lib/graph/ModuleGraph",
+			"RestoreProvidedData"
 		]
 	]) {
 		it(`should restore "${legacy}" from a pre-move cache`, () => {
@@ -47,8 +52,8 @@ describe("internalSerializables", () => {
 				(legacy.slice("webpack/lib/".length))
 			]();
 
-			expect(ObjectMiddleware.getDeserializerFor(legacy, null)).toBe(
-				ObjectMiddleware.getDeserializerFor(current, null)
+			expect(ObjectMiddleware.getDeserializerFor(legacy, name)).toBe(
+				ObjectMiddleware.getDeserializerFor(current, name)
 			);
 		});
 	}
