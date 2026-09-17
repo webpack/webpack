@@ -7,3 +7,11 @@ export function bump() {
 export function bumpInExpression() {
 	return [(count = 9)];
 }
+
+export function bumpPostfix() {
+	count++;
+}
+
+export function bumpPrefix() {
+	++count;
+}

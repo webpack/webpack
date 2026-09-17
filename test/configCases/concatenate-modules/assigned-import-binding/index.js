@@ -1,6 +1,6 @@
 import { read } from "./state";
-import { sum, writeConst, writeLet } from "./writer";
-import { bump, bumpInExpression } from "./bump";
+import { sum, updateConst, writeConst, writeLet } from "./writer";
+import { bump, bumpInExpression, bumpPostfix, bumpPrefix } from "./bump";
 import { readCount } from "./counter";
 
 it("should reject a write to an imported binding", () => {
@@ -14,6 +14,15 @@ it("should reject a compound write and one in expression position", () => {
 	expect(bump).toThrow(TypeError);
 	expect(bumpInExpression).toThrow(TypeError);
 	expect(readCount()).toBe(0);
+});
+
+it("should reject an update of an imported binding", () => {
+	expect(bumpPostfix).toThrow(TypeError);
+	expect(bumpPrefix).toThrow(TypeError);
+	// an inlined literal is no update target at all, so the export stays a binding
+	expect(updateConst).toThrow(TypeError);
+	expect(readCount()).toBe(0);
+	expect(sum()).toBe(103);
 });
 
 it("should still concatenate every module", () => {

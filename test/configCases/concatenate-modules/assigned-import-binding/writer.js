@@ -9,6 +9,10 @@ export function writeConst() {
 	constant = 20;
 }
 
+export function updateConst() {
+	constant++;
+}
+
 export function sum() {
 	return helper() + value + constant;
 }

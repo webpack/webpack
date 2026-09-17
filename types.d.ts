@@ -13123,6 +13123,7 @@ declare class JavascriptParser extends ParserClass {
 		canRename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
+		update: HookMap<SyncBailHook<[UpdateExpression], boolean | void>>;
 		assignMemberChain: HookMap<
 			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
 		>;
@@ -29471,7 +29472,7 @@ declare interface SyncModuleIdsPluginOptions {
 	/**
 	 * operation mode (defaults to merge)
 	 */
-	mode?: "read" | "create" | "merge" | "update";
+	mode?: "update" | "read" | "create" | "merge";
 }
 type SyncWasmModuleBuildMeta = KnownBuildMeta &
 	Record<string, any> &
