@@ -8433,13 +8433,21 @@ describe("SourceProcessor — print modes", () => {
 	});
 
 	it("escapes text to the letter of \u00A713.3 outside minification", () => {
-		// A bare `>` is only ever a character, so minification keeps it; the CR is
-		// a reference either way, since a literal one would be read back as LF.
+		// A bare `>` is only ever a character, and so is a `<` before a space, so
+		// minification keeps both; the CR is a reference either way.
 		const source = "<p>a &amp; b &lt; c &gt; d &#13; e</p>";
 		expect(print(source, "beautify")).toBe(
 			"<p>a &amp; b &lt; c &gt; d &#13; e</p>"
 		);
-		expect(print(source, "minify")).toBe("<p>a & b &lt; c > d &#13; e");
+		expect(print(source, "minify")).toBe("<p>a & b < c > d &#13; e");
+	});
+
+	it("keeps a `<` that stands as a character, so a second pass adds nothing", () => {
+		// The comment splits the text in two, and dropping it merges them: escaping
+		// per node rather than per `<` would then escape what the first pass kept.
+		const once = print("<boo/>hay\n<<<<>foo\n<!-- -->>><", "minify");
+		expect(once).toBe("<boo>hay\n<<<<>foo\n>>&lt;</boo>");
+		expect(print(once, "minify")).toBe(once);
 	});
 
 	it("beautifies to something that minifies back the same", () => {
