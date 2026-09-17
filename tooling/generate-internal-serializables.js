@@ -22,10 +22,6 @@ const REQUEST_PREFIX = "webpack/lib/";
 /** @typedef {{ requirePath: string | null, source: string }} SerializableEntry */
 
 /**
- * Prefer these require targets over the defining file (still loads the registrar).
- * @type {Record<string, string>}
- */
-/**
  * @param {string} dir directory
  * @param {string[]} out accumulator
  * @returns {string[]} absolute paths
