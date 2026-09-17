@@ -8,10 +8,9 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 
 const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 
-// In this fixture `output.module` is on, so the parser auto-upgrades classic
-// `<script src>` to `<script type="module" src>` and every script tag in the
-// emitted HTML looks the same. The four chunks appear in document order:
-// classic-a, module-a, classic-b, module-b.
+// `output.module` is on, so the parser auto-upgrades classic `<script src>` to
+// `<script type="module" src>` and every tag looks the same. The four chunks appear
+// in document order: classic-a, module-a, classic-b, module-b.
 const scriptChunkUrls = [
 	...page.matchAll(/<script[^>]*\bsrc="([\w-]+\.mjs)">/g)
 ].map((m) => m[1]);

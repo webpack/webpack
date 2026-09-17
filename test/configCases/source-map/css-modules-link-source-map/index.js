@@ -21,10 +21,9 @@ it("should map link-type CSS module class exports in the JS source map", () => {
 	);
 	expect(cssSourceIndex).toBeGreaterThanOrEqual(0);
 
-	// `sourcesContent` must carry a non-empty entry for that source —
-	// without it the entry in `sources` would be unresolvable. The exact
-	// content (original CSS vs. generated JS wrapper) depends on whether
-	// the CSS module emits class exports; either way it must be non-empty.
+	// `sourcesContent` must carry a non-empty entry for that source, or the `sources`
+	// entry is unresolvable. Whether it holds the original CSS or the generated JS
+	// wrapper depends on class exports; either way it must be non-empty.
 	expect(Array.isArray(sourceMap.sourcesContent)).toBe(true);
 	expect(typeof sourceMap.sourcesContent[cssSourceIndex]).toBe("string");
 	expect(sourceMap.sourcesContent[cssSourceIndex].length).toBeGreaterThan(0);

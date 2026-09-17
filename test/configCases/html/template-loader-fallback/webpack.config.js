@@ -7,13 +7,9 @@ const CHILD = "MiniHtmlWebpackCompiler";
 
 /** @typedef {(templateParameters: { title: string }) => string} Render */
 
-// A faithful miniature of html-webpack-plugin: it compiles the HTML template in
-// a *child compiler* via `templateLoader!template.html`, evaluates the resulting
-// JS module to a render function, and emits the rendered page. `experiments.html`
-// stays at its "auto" default (no `.html` rule), so this reproduces the real
-// regression: the child module for `template.html` must be parsed as JavaScript
-// (a loader is applied) and not as the built-in HTML type, or the loader's JS
-// output is misparsed and the build breaks.
+// A faithful miniature of html-webpack-plugin: it compiles the template in a child
+// compiler, evaluates the resulting JS module to a render function and emits the
+// page. The child module must be parsed as JavaScript, not as the built-in type.
 class MiniHtmlWebpackPlugin {
 	/**
 	 * @param {{ template: string, filename: string, templateParameters: { title: string } }} options options
