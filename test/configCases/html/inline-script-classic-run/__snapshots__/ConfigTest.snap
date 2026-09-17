@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html inline-script-classic-run exported tests should merge only tags a classic script runs straight through 1`] = `
+"<!DOCTYPE html>
+<title>Classic run</title>
+<script src=\\"page.js\\"></script>
+<!-- nothing a body could read sits here -->
+
+<p>markup a later body can read</p>
+<script src=\\"page1.js\\"></script>
+"
+`;

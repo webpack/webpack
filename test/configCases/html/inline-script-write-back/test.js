@@ -25,3 +25,13 @@ it("should leave an unmarked page fetching its chunk", () => {
 	expect(html).not.toContain("plain-body");
 	expect(read(match[1])).toContain("plain-body");
 });
+
+it("should keep a chunk another entry takes its runtime from in a file", () => {
+	const html = read("leader.html");
+	// The `<script src>` after the run imports the run chunk's runtime by url,
+	// so writing the run into the page would run two copies of it.
+	expect(html).toContain('src="leader.mjs"');
+	expect(html).toContain('src="follower.mjs"');
+	expect(html).not.toContain("leader-body");
+	expect(read("follower.mjs")).toContain('from "./leader.mjs"');
+});

@@ -34,7 +34,7 @@ module.exports = {
 	output: {
 		module: true,
 		filename: "[name].mjs",
-		html: { inline: "script" }
+		html: { inline: [/^page\./] }
 	},
 	optimization: {
 		chunkIds: "named"

@@ -1,4 +1,7 @@
-import page from "./page.html";
+const fs = require("fs");
+const path = require("path");
+
+const page = require("./page.html");
 
 // `import page` is typed loosely through the html module type; normalize once.
 const pageContent = typeof page === "string" ? page : "";
@@ -11,8 +14,14 @@ it("should bundle every executable JavaScript script type", () => {
 	// mis-routed leaves its own body inline and names itself in the failure.
 	expect(matches(/window\.__t\d+/g)).toEqual([]);
 
-	// Every one became its own entry chunk instead.
-	expect(matches(/<script[^>]*\bsrc="[\w-]+\d*\.js"/g)).toHaveLength(18);
+	// The tags are adjacent, so one run carries every body — the markers above
+	// are what says each type was routed to it rather than left as data.
+	const urls = matches(/<script[^>]*\bsrc="([\w-]+\d*\.js)"/g);
+	expect(urls).toHaveLength(1);
+	const chunk = fs.readFileSync(path.resolve(__dirname, "page.js"), "utf-8");
+	for (let i = 0; i < 18; i++) {
+		expect(chunk).toContain(`window.__t${i} = true`);
+	}
 });
 
 it("should leave a data block inline", () => {

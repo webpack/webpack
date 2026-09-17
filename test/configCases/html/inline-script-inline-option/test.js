@@ -1,12 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 
-it("should write a run's chunk into the page under `output.html.inline`", () => {
+it("should write a run's chunk into the page under an `output.html.inline` pattern", () => {
 	const html = fs
 		.readFileSync(path.resolve(__dirname, "page.html"))
 		.toString("utf-8");
-	// One run holds both bodies, and the option writes its chunk into the tag
-	// the run opened with.
+	// The pattern names the page the run is emitted under, not the synthetic
+	// entry the parser minted for it.
 	expect(html).toContain("option-body");
 	expect(html).toContain("classic-option-body");
 	expect(html).not.toContain("__WEBPACK_HTML_INLINE__");

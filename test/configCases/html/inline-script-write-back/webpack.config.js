@@ -30,7 +30,11 @@ const copyTest = {
 module.exports = {
 	target: ["web", "es2022"],
 	mode: "development",
-	entry: { page: "./page.html", plain: "./plain.html" },
+	entry: {
+		page: "./page.html",
+		plain: "./plain.html",
+		leader: "./leader.html"
+	},
 	output: {
 		module: true,
 		filename: "[name].mjs"
