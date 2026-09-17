@@ -1,6 +1,6 @@
 "use strict";
 
-const { toError } = require("../../lib/ErrorHelpers");
+const { toError } = require("../../lib/errors/ErrorHelpers");
 const NonErrorEmittedError = require("../../lib/errors/NonErrorEmittedError");
 
 describe("ErrorHelpers.toError", () => {
