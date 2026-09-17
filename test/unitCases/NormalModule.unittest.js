@@ -9,7 +9,7 @@ const HarmonyImportSideEffectDependency = require("../../lib/dependencies/Harmon
 /** @import { LoaderItem } from "../../lib/NormalModule" */
 /** @import Parser from "../../lib/Parser" */
 /** @import Generator from "../../lib/Generator" */
-/** @import ModuleGraph from "../../lib/ModuleGraph" */
+/** @import ModuleGraph from "../../lib/graph/ModuleGraph" */
 /** @import { ImportPhaseType } from "../../lib/dependencies/ImportPhase" */
 
 describe("NormalModule", () => {

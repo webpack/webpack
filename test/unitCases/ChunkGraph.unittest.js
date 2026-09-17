@@ -1,9 +1,9 @@
 "use strict";
 
 const Chunk = require("../../lib/Chunk");
-const ChunkGraph = require("../../lib/ChunkGraph");
+const ChunkGraph = require("../../lib/graph/ChunkGraph");
 const Entrypoint = require("../../lib/Entrypoint");
-const ModuleGraph = require("../../lib/ModuleGraph");
+const ModuleGraph = require("../../lib/graph/ModuleGraph");
 
 // The build-level behaviour lives in `configCases/runtime/depend-on-diamond-chain`.
 // Only the visit counts are here: a real build can show the cost as elapsed time

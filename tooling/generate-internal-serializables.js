@@ -25,12 +25,6 @@ const REQUEST_PREFIX = "webpack/lib/";
  * Prefer these require targets over the defining file (still loads the registrar).
  * @type {Record<string, string>}
  */
-const REQUIRE_OVERRIDES = {
-	// RestoreProvidedData is registered in ExportsInfo under this request;
-	// ModuleGraph requires ExportsInfo, matching the historical map entry.
-	ModuleGraph: "../ModuleGraph"
-};
-
 /**
  * @param {string} dir directory
  * @param {string[]} out accumulator
@@ -121,10 +115,7 @@ const collectEntries = () => {
 	const add = (request, requirePath, source) => {
 		if (!request.startsWith(REQUEST_PREFIX)) return;
 		const key = request.slice(REQUEST_PREFIX.length);
-		const resolved =
-			requirePath !== null && REQUIRE_OVERRIDES[key]
-				? REQUIRE_OVERRIDES[key]
-				: requirePath;
+		const resolved = requirePath;
 		const existing = entries.get(key);
 		if (existing && existing.requirePath !== resolved) {
 			throw new Error(

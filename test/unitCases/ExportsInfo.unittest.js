@@ -1,6 +1,6 @@
 "use strict";
 
-const ExportsInfo = require("../../lib/ExportsInfo");
+const ExportsInfo = require("../../lib/graph/ExportsInfo");
 
 const { ExportInfo, UsageState } = ExportsInfo;
 
@@ -28,7 +28,7 @@ describe("ExportInfo", () => {
 			info._resetProvideInfo();
 
 			const kept =
-				/** @type {import("../../lib/ExportsInfo")} */
+				/** @type {import("../../lib/graph/ExportsInfo")} */
 				(info.getNestedExportsInfo());
 			expect(kept).toBe(nested);
 			// provide side reset in place, use side untouched

@@ -72,6 +72,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/externals/` — External modules: the `externals` option's module, factory plugin and the presets built on them.
+  - `lib/graph/` — The module and chunk graphs a compilation holds: `ModuleGraph` and its
+    connections, `ChunkGraph` and the `buildChunkGraph` that fills it, and the `ExportsInfo`
+    recording what each module exports and who uses it.
   - `lib/hmr/` — Hot Module Replacement plugins.
   - `lib/html/` — Experimental HTML support.
   - `lib/ids/` — Module/chunk id assignment plugins.

@@ -265,7 +265,7 @@ describe("RuntimeTemplate.assignOr", () => {
 });
 
 describe("RuntimeTemplate.supportsAnalyzable", () => {
-	/** @import ChunkGraph from "../../lib/ChunkGraph" */
+	/** @import ChunkGraph from "../../lib/graph/ChunkGraph" */
 	/** @import Compilation from "../../lib/Compilation" */
 	/** @import Module from "../../lib/Module" */
 
