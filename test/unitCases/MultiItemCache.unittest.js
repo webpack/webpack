@@ -1,7 +1,7 @@
 "use strict";
 
-const Cache = require("../../lib/Cache");
-const { ItemCacheFacade, MultiItemCache } = require("../../lib/CacheFacade");
+const Cache = require("../../lib/cache/Cache");
+const { ItemCacheFacade, MultiItemCache } = require("../../lib/cache/CacheFacade");
 
 describe("MultiItemCache", () => {
 	it("throws when getting items from an empty Cache", () => {
