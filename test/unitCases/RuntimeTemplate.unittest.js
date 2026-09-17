@@ -2,7 +2,7 @@
 
 const path = require("path");
 const RequestShortener = require("../../lib/RequestShortener");
-const RuntimeTemplate = require("../../lib/RuntimeTemplate");
+const RuntimeTemplate = require("../../lib/template/RuntimeTemplate");
 const testDirectory = path.resolve(__dirname, "..");
 
 /**
