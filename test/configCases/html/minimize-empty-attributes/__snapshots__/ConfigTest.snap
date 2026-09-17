@@ -3,7 +3,7 @@
 exports[`ConfigTestCases html minimize-empty-attributes minimize-empty-attributes should compile 1`] = `
 "<!doctype html><head><title>Empty attributes</title></head><body>
 <div>dropped</div>
-<div id=&#x20;>whitespace is empty too, a reference is not</div>
+<div>whitespace is empty too, however it is spelled</div>
 <div>valueless is the empty value</div>
 <div title lang>kept: an empty value means something the spec does not give absence</div>
 <div>dropped: an empty token list is no tokens</div>

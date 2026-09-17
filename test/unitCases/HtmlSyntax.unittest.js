@@ -4985,9 +4985,24 @@ describe("SourceProcessor — an empty value is the bare name", () => {
 		);
 	});
 
-	it("leaves a value a reference only decodes to empty", () => {
-		// Read raw: what a reference decodes to is not the printer's business.
-		expect(minify('<div title="&#x20;">x</div>')).toContain("title=&#x20;");
+	it("writes out a value a reference only spells as whitespace", () => {
+		// A reference is how the value is written, not what it says: the element
+		// is handed the same one space either way, so the shorter spelling wins.
+		expect(minify('<div title="&#x20;">x</div>')).toBe('<div title=" ">x</div>');
+	});
+
+	it("reads a reference-spelled empty as empty when dropping them", () => {
+		/**
+		 * @param {string} html input markup
+		 * @returns {string} the minified serialization
+		 */
+		const drop = (html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				removeEmptyAttributes: true
+			}).code;
+		expect(drop('<div class="&#x20;">x</div>')).toBe("<div>x</div>");
+		expect(drop('<div class=" ">x</div>')).toBe("<div>x</div>");
 	});
 
 	it("prints a boolean attribute repeating its own name as the name", () => {
@@ -5720,6 +5735,15 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 		expect(minify(`<div ${list}>x</div>`, { sortTokenLists: true })).toBe(
 			`<div ${list}>x</div>`
 		);
+	});
+
+	it("ranks on the attributes that reach the output, not the dropped ones", () => {
+		// `<input type=text>` is redundant and goes, so counting it would rank
+		// `type` above `checked` on the first pass and tie them on the second.
+		const options = { removeRedundantAttributes: "all", sortAttributes: true };
+		const once = minify("<input type=text><input type=checkbox checked>", options);
+		expect(once).toBe("<input><input checked type=checkbox>");
+		expect(minify(once, options)).toBe(once);
 	});
 
 	it("leaves foreign content alone, where a name is not case-folded", () => {
