@@ -30,9 +30,9 @@ it("should bundle inline <script> bodies as entry chunks and rewrite their tags 
 	expect(pageContent).not.toContain('console.log("<b>hello</b>")');
 	expect(pageContent).not.toContain("__inlineModuleSum");
 
-	// Seven inline scripts, five of them executable — and the last two sit
-	// next to each other, so one run carries both: four chunk urls.
-	expect(scriptChunkUrls).toHaveLength(4);
+	// Five executable inline scripts in two runs: the data blocks between
+	// them end the first, and the body's two are the second.
+	expect(scriptChunkUrls).toHaveLength(2);
 
 	// Non-JS `<script type>` blocks (importmap, JSON-LD) pass through
 	// unchanged — their bodies stay inline.
@@ -56,27 +56,26 @@ it("should auto-upgrade classic inline <script> to type=module when output.modul
 			/<script[^>]*\bsrc="(page\d*\.mjs)"[^>]*\btype="module"/g
 		)
 	].map((m) => m[1]);
-	expect(new Set(moduleTaggedSrcs).size).toBe(4);
+	expect(new Set(moduleTaggedSrcs).size).toBe(2);
 });
 
-it("should bundle each classic inline <script> body into its run's chunk", () => {
+it("should bundle the head's inline bodies into one run's chunk", () => {
 	const chunks = scriptChunkUrls.map(readChunk);
+	// The head's three executable bodies are adjacent — a classic one, the
+	// module-typed one, a `text/javascript` one — so one chunk carries them.
 	expect(chunks[0]).toContain('console.log("<b>hello</b>")');
 	expect(chunks[0]).toContain('var greeting = "hi"');
-	// chunks[1] is the module-typed inline script (see next test), which is a
-	// run of its own — the two kinds never share a chunk.
-	expect(chunks[1]).not.toContain("var greeting");
-	expect(chunks[2]).toContain("var counter");
-	expect(chunks[2]).toContain('"<div><span>nested</span></div>"');
-	expect(chunks[2]).toContain("return a < b");
-	expect(chunks[3]).toContain("/* second script */");
-	expect(chunks[3]).toContain('document.createTextNode("done")');
+	expect(chunks[0]).toContain("__inlineModuleSum");
+	expect(chunks[0]).toContain("var counter");
+	expect(chunks[0]).toContain('"<div><span>nested</span></div>"');
+	expect(chunks[0]).toContain("return a < b");
+	expect(chunks[1]).toContain("/* second script */");
+	expect(chunks[1]).toContain('document.createTextNode("done")');
 });
 
 it("should bundle inline <script type=module> as an ES-module chunk", () => {
-	// The `<script type="module">` is the second executable script in
-	// document order (after the first classic inline script).
-	const moduleChunk = readChunk(scriptChunkUrls[1]);
+	// It is the second body of the head's run, so its chunk is the first.
+	const moduleChunk = readChunk(scriptChunkUrls[0]);
 	expect(moduleChunk).toMatchSnapshot();
 	// The original ESM source still appears verbatim in the bundled chunk.
 	expect(moduleChunk).toContain("__inlineModuleSum");
@@ -108,7 +107,7 @@ it("should bundle a script typed with a legacy JavaScript MIME essence", () => {
 	// treating it as a data block would leave the body unbundled and unrewritten.
 	// It follows the body's other classic script with only a comment between,
 	// so the two share a run and a chunk.
-	const chunk = readChunk(scriptChunkUrls[3]);
+	const chunk = readChunk(scriptChunkUrls[1]);
 	expect(chunk).toContain("__legacyTyped");
 	expect(chunk).toContain("/* second script */");
 	expect(pageContent).not.toContain("__legacyTyped");

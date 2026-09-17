@@ -26,10 +26,10 @@ const scriptChunkUrls = [
 it("should bundle a run of inline <script type=module> tags into one chunk", () => {
 	expect(pageContent).toMatchSnapshot();
 
-	// Six executable inline scripts, but the second module tag joined the
-	// first one's chunk and is gone from the document.
-	expect(scriptChunkUrls).toHaveLength(5);
-	expect(new Set(scriptChunkUrls).size).toBe(5);
+	// Six executable inline scripts in three runs: the async tag ends the
+	// first, and everything after it shares the third.
+	expect(scriptChunkUrls).toHaveLength(3);
+	expect(new Set(scriptChunkUrls).size).toBe(3);
 
 	const merged = readChunk(scriptChunkUrls[0]);
 	expect(merged).toContain("module-1");
@@ -48,17 +48,15 @@ it("should keep an async inline module out of the run", () => {
 	expect(pageContent).toMatch(/<script[^>]*\basync\b/);
 });
 
-it("should not merge across another script", () => {
-	// An async module, then a classic body, each end the run they follow:
-	// `module-3` and `module-4` keep chunks of their own.
-	const third = readChunk(scriptChunkUrls[2]);
-	const classic = readChunk(scriptChunkUrls[3]);
-	const fourth = readChunk(scriptChunkUrls[4]);
-	expect(third).toContain("module-3");
-	expect(third).not.toContain("module-4");
-	expect(classic).toContain("classic-body");
-	expect(fourth).toContain("module-4");
-	expect(fourth).not.toContain("module-3");
+it("should hold both kinds of body in one run, in document order", () => {
+	// A classic body between two module ones joins their run: under module
+	// output every extracted tag is deferred, so all three keep tag order.
+	const mixed = readChunk(scriptChunkUrls[2]);
+	expect(mixed).toContain("module-3");
+	expect(mixed).toContain("classic-body");
+	expect(mixed).toContain("module-4");
+	expect(mixed.indexOf("module-3")).toBeLessThan(mixed.indexOf("classic-body"));
+	expect(mixed.indexOf("classic-body")).toBeLessThan(mixed.indexOf("module-4"));
 });
 
 it("should leave no inline JS body in the page", () => {
@@ -97,18 +95,14 @@ it("should bundle a run of classic inline scripts into one chunk", () => {
 	const urls = [
 		...classicContent.matchAll(/<script[^>]*\bsrc="(classic\d*\.mjs)"/g)
 	].map((m) => m[1]);
-	// Two classic bodies share a chunk; the module body after them starts a
-	// run of its own, since the two kinds compile differently.
-	expect(urls).toHaveLength(2);
+	// Two classic bodies and the module one after them are one run.
+	expect(urls).toHaveLength(1);
 
 	const classicChunk = readChunk(urls[0]);
 	expect(classicChunk).toContain("classic-1");
 	expect(classicChunk).toContain("classic-2");
+	expect(classicChunk).toContain("after-classic");
 	expect(classicChunk.indexOf("classic-1")).toBeLessThan(
 		classicChunk.indexOf("classic-2")
 	);
-
-	const moduleChunk = readChunk(urls[1]);
-	expect(moduleChunk).toContain("after-classic");
-	expect(moduleChunk).not.toContain("classic-1");
 });

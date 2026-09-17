@@ -5,7 +5,7 @@ exports[`ConfigCacheTestCases html inline-module-merge exported tests should bun
 <title>Classic run</title>
 <script src=\\"classic.mjs\\" type=\\"module\\"></script>
 
-<script src=\\"classic1.mjs\\" type=\\"module\\"></script>
+
 "
 `;
 
@@ -20,8 +20,8 @@ exports[`ConfigCacheTestCases html inline-module-merge exported tests should bun
 <body>
 <script src=\\"page1.mjs\\" type=\\"module\\" async></script>
 <script src=\\"page2.mjs\\" type=\\"module\\"></script>
-<script src=\\"page3.mjs\\" type=\\"module\\"></script>
-<script src=\\"page4.mjs\\" type=\\"module\\"></script>
+
+
 </body>
 </html>
 "
