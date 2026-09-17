@@ -3,6 +3,12 @@ import { sum, updateConst, writeConst, writeLet } from "./writer";
 import { bump, bumpInExpression, bumpPostfix, bumpPrefix } from "./bump";
 import { readCount } from "./counter";
 import { updateMember, updateMemberPrefix, writeMember } from "./namespace";
+import { readQuoted } from "./quoted";
+import {
+	updateThroughNamespace,
+	writeAliased,
+	writeThroughNamespace
+} from "./quoted-writer";
 
 it("should reject a write to an imported binding", () => {
 	expect(writeLet).toThrow(TypeError);
@@ -33,6 +39,13 @@ it("should reject a write through the namespace object", () => {
 	expect(readCount()).toBe(0);
 });
 
+it("should reject a write to an export no identifier can spell", () => {
+	expect(writeThroughNamespace).toThrow(TypeError);
+	expect(updateThroughNamespace).toThrow(TypeError);
+	expect(writeAliased).toThrow(TypeError);
+	expect(readQuoted()).toBe(1);
+});
+
 it("should still concatenate every module", () => {
 	const concatenated = __STATS__.modules.filter((m) => m.modules);
 	expect(concatenated).toHaveLength(1);
@@ -42,6 +55,8 @@ it("should still concatenate every module", () => {
 		"./helper.js",
 		"./index.js",
 		"./namespace.js",
+		"./quoted-writer.js",
+		"./quoted.js",
 		"./state.js",
 		"./writer.js"
 	]);
