@@ -1357,6 +1357,7 @@ function outer() { var inOuter = 1; }
 			// a broadcast tap reaches the statements the record leaves out
 			expect(seen(() => {})).toContain("DebuggerStatement");
 			// so does a typed tap for a statement the record does not carry
+			/** @type {string[]} */
 			const typed = [];
 			const parser = new JavascriptParser("script");
 			parser.hooks.preStatementByType
