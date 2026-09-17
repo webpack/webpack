@@ -35,10 +35,9 @@ it("should use the same accessor syntax for import and export", function() {
 	// Array format: "bar", 0, bar (value) or "bar", () => bar (getter)
 	expectSourceToMatch(source, `\\/\\* harmony export \\*\\/   "bar", .*bar`);
 
-	// Checking formation of imports. Both targets become wrapped members, read
-	// through lazy accessors: `.bar` unquoted and `["default"]` quoted, as exported.
-	// The accessor call is parenthesized so `new`/call positions keep binding to the
-	// export rather than to the wrapper accessor.
+	// Both targets become wrapped members read through lazy accessors: `.bar`
+	// unquoted and `["default"]` quoted, as exported. The call is parenthesized so
+	// `new` and call positions bind to the export, not the wrapper accessor.
 	expectSourceToContain(source, "const { harmonyexport_cjsimport } = (harmony_module_namespaceFn().bar);");
 	expectSourceToContain(source, "const harmonyexport_cjsimportdefault = (export_default_expression_namespaceFn()[\"default\"]);");
 

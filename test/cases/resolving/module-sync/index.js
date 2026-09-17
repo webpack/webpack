@@ -7,11 +7,9 @@ const wpRequireSyncFirst = require("module-sync-first");
 import wpImportFirst from "import-require-first";
 const wpRequireFirst = require("import-require-first");
 
-// Expected values mirror Node.js v22.10+ behavior:
-//   - "module-sync" is in the active condition set for both require() and
-//     dynamic import().
-//   - The first matching key in package.json's "exports" object wins, so
-//     condition order in package.json is what decides which file is picked.
+// Expected values mirror Node.js v22.10+: `module-sync` is in the active condition
+// set for both `require()` and dynamic `import()`, and the first matching key in
+// `exports` wins, so condition order in package.json decides the file.
 
 // Package exports `{ "module-sync": "...", "default": "..." }` — Node.js
 // matches "module-sync" for both require() and import() before falling

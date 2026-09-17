@@ -7,9 +7,8 @@ module.exports = () => supportsWorker();
 const _origFilter = module.exports;
 
 // Bun only binds CJS `require` for `eval()` in strict mode; the minified
-// eval-devtool chunk is sloppy at the top level and reaches the `worker_threads`
-// external via `require` inside `eval`, so only the minimize+eval variant throws
-// "require is not defined" — every other variant runs fine under Bun.
+// eval-devtool chunk is sloppy at the top level and reaches `worker_threads` via
+// `require` inside `eval`, so only the minimize+eval variant throws under Bun.
 module.exports = (config) => {
 	if (
 		process.versions.bun &&

@@ -1,15 +1,4 @@
 // cspell:ignore tailwind rgba
-import fs from "fs";
-import { createRequire } from "module";
-import { fileURLToPath } from "url";
-
-const require = createRequire(import.meta.url);
-
-/** @type {typeof import("../../../lib/css/syntax")} */
-const cssSyntax = require("../../../lib/css/syntax.js");
-
-const { SourceProcessor } = cssSyntax;
-
 // Printing is the other half of `css-parser-tailwind-unit`: the same walk, but
 // every node also serializes and the input->output source map is resolved.
 // A nested block that grows past the streaming threshold hands its children back
@@ -27,6 +16,17 @@ const { SourceProcessor } = cssSyntax;
 // printing and the map cost on that shape and `minify - beautify` is what the
 // transforms cost on top of serializing. Visitor cost is
 // `css-parser-tailwind-unit`'s.
+
+import fs from "fs";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+
+const require = createRequire(import.meta.url);
+
+/** @type {typeof import("../../../lib/css/syntax")} */
+const cssSyntax = require("../../../lib/css/syntax.js");
+
+const { SourceProcessor } = cssSyntax;
 
 // Real-world ~1.9 MiB minified stylesheet (Tailwind), shared with the
 // `css/large` configCase and the parser benchmark.

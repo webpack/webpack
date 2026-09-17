@@ -44,11 +44,12 @@ const supportsWebpackCli =
  * @property {boolean=} whenDev
  */
 
-// Runs webpack-cli in-process against a mock webpack module injected via the
-// documented WEBPACK_PACKAGE env var (webpack-cli loads webpack through a native
-// import jest.mock cannot intercept). process.exit/console.error are spied so a
-// validation failure surfaces as an exit code plus the captured messages.
 /**
+ * Runs webpack-cli in-process against a mock webpack module injected via the
+ * documented `WEBPACK_PACKAGE` env var, since webpack-cli loads webpack through
+ * a native import `jest.mock` cannot intercept. `process.exit` and
+ * `console.error` are spied, so a validation failure surfaces as an exit code
+ * plus the captured messages.
  * @param {string[]} args args
  * @returns {Promise<{ config: CapturedConfig, exitCode: number, errors: string }>} result
  */

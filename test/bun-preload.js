@@ -161,11 +161,9 @@ const align = (target) => {
 
 align(nodeModule.Module);
 
-// Bun's stream reader/writer `.closed`/`.ready` getters return a *rejected*
-// promise (not a sync throw) when read off the prototype. jest's globals cleanup
-// reads every global getter during env setup, so those rejections surface as
-// unhandled and fail tests. Attach a no-op catch so they are never "unhandled";
-// real instances still return the original promise to their consumers.
+// Bun's stream `.closed` / `.ready` getters return a rejected promise, not a sync
+// throw, when read off the prototype, and jest's globals cleanup reads every
+// getter — so attach a no-op catch and they are never unhandled.
 for (const [name, keys] of [
 	["ReadableStreamDefaultReader", ["closed"]],
 	["ReadableStreamBYOBReader", ["closed"]],

@@ -34,11 +34,11 @@ const cssMin = fs.readFileSync(
 	"utf8"
 );
 
-// Whitespace-expanded form of the same stylesheet: re-emit every token with a
-// separating space (newline after `{` `}` `;`). Tokenizer-driven so strings and
-// url()s stay intact. Same rules, far more whitespace — isolates the cost of
-// tokenizing whitespace vs. the minified input.
 /**
+ * Whitespace-expanded form of the same stylesheet: every token re-emitted with a
+ * separating space, newline after `{` `}` `;`. Tokenizer-driven so strings and
+ * `url()`s stay intact, which isolates the cost of tokenizing whitespace from
+ * the minified input's.
  * @param {string} css minified css
  * @returns {string} expanded css
  */

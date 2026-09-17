@@ -6,12 +6,9 @@ const findLink = (predicate) =>
 	);
 
 it("should inject a <link rel=prefetch> for new URL() with webpackPrefetch", () => {
-	// The link is injected by the chunk's startup runtime — not by the
-	// `new URL(...)` call site — so it must already exist before any
-	// user code in this chunk runs. CSP nonce is picked up from
-	// `document.currentScript.nonce` (the `<script>` tag that loaded
-	// the bundle), since `__webpack_nonce__ = ...` inside the entry
-	// module would run too late for these startup-fired links.
+	// The link is injected by the chunk's startup runtime, not by the `new URL(...)`
+	// call site, so it exists before any user code in this chunk runs. The CSP nonce
+	// comes from `document.currentScript.nonce`; `__webpack_nonce__` would run late.
 	const link = findLink((l) => l.href.endsWith("/image.png"));
 	expect(link).toBeDefined();
 	expect(link.rel).toBe("prefetch");

@@ -38,10 +38,9 @@ import { simpleGit } from "simple-git";
  * @property {Baseline[]} baselines baselines measured in one task
  */
 
-// One libuv thread → fs completions fire in submission order, making module
-// build order (and thus allocation counts) deterministic run-to-run. Set before
-// any async fs so libuv reads it when the pool first initializes; `??=` lets the
-// CI env override stand. This is the main lever against memory-benchmark noise.
+// One libuv thread → fs completions fire in submission order, so module build
+// order and allocation counts are deterministic run-to-run. Set before any async
+// fs so libuv reads it at pool init; `??=` lets a CI override stand.
 process.env.UV_THREADPOOL_SIZE ??= "1";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -64,10 +63,9 @@ const checkV8Flags = () => {
 		(flag) => !actualFlags.includes(flag)
 	);
 	if (missingFlags.length > 0) {
-		// Missing flags invalidate deterministic benchmarking (hash/random seeds,
-		// GC scheduling, JIT). Throw instead of warning so CI and local runs can't
-		// silently produce unstable numbers — use `yarn benchmark` to run with
-		// the correct flags.
+		// Missing flags invalidate deterministic benchmarking — hash and random seeds, GC
+		// scheduling, JIT. Throw rather than warn so no run silently produces unstable
+		// numbers; `yarn benchmark` sets them.
 		throw new Error(
 			`Missing required V8 flags for stable benchmarking: ${missingFlags.join(
 				", "

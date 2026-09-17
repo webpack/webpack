@@ -306,12 +306,9 @@ const describeCases = (config) => {
 											STATE: jsonStats,
 											NEXT: runCompiler,
 											NEXT_DEFERRED: (/** @type {EXPECTED_ANY} */ cb) => {
-												// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
-												// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
-												// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
-												// have already reached lazyCompilationBackend. This prevents NEXT from triggering
-												// a recompilation while moduleA is still not marked as Activated and still returns
-												// LazyCompilationProxyModule, which would cause a "No update available" error.
+												// Under lazyCompilation, delay the first re-run so a dynamic import's request
+												// reaches the backend — otherwise NEXT recompiles while the module is still a
+												// proxy, raising "No update available". See webpack/webpack actions run 22039709807.
 												setTimeout(() => {
 													runCompiler(cb);
 												}, 1000);

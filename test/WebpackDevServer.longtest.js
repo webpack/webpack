@@ -18,10 +18,9 @@ const path = require("path");
 const webpack = require("..");
 const launchChrome = require("./helpers/launchChrome");
 
-// Drives a real webpack-dev-server (added as a compiler plugin) in real Chrome via
-// puppeteer-core. webpack-dev-server needs Node >= 22.15 and the integration matrix
-// goes down to Node 10, so the suite is skipped there — a Chrome that will not
-// launch is a failure, not a skip.
+// Drives a real webpack-dev-server, added as a compiler plugin, in real Chrome via
+// puppeteer-core. It needs Node >= 22.15 and the matrix goes down to Node 10, so
+// the suite is skipped there — a Chrome that will not launch is a failure.
 const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
 const nodeSupported = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 15);
 
@@ -30,9 +29,8 @@ let WebpackDevServer;
 if (nodeSupported) WebpackDevServer = require("webpack-dev-server");
 
 // webpack-dev-server resolves `webpack/hot/dev-server` from its own location, but
-// this repo is the `webpack` package itself and is not installed under
-// node_modules, so self-link it there once (CI does the same via `yarn link
-// webpack`). node_modules is gitignored, so this is a harmless test-time side effect.
+// this repo is the `webpack` package and is not installed under node_modules, so
+// self-link it once. node_modules is gitignored, so this is a test-time effect.
 const ensureWebpackSelfLink = () => {
 	const root = path.resolve(__dirname, "..");
 	const link = path.join(root, "node_modules", "webpack");
