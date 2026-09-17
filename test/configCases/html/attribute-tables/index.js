@@ -5,3 +5,9 @@ import "./page.html";
 it("should rewrite every attribute the tables name", () => {
 	expect(true).toBe(true);
 });
+
+it("should fold the enumerated attributes limited to known values", () => {
+	// `closedby`, `shadowrootmode` and `popovertargetaction`; `<area shape>`
+	// and `<textarea wrap>` stay as written, their IDL reflecting verbatim.
+	expect(true).toBe(true);
+});

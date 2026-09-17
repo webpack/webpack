@@ -4782,7 +4782,9 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		"audio preload",
 		"button formenctype",
 		"button formmethod",
+		"button popovertargetaction",
 		"button type",
+		"dialog closedby",
 		"form autocomplete",
 		"form enctype",
 		"form method",
@@ -4793,12 +4795,14 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		"img loading",
 		"input formenctype",
 		"input formmethod",
+		"input popovertargetaction",
 		"input type",
 		"link crossorigin",
 		"link fetchpriority",
 		"script crossorigin",
 		"script fetchpriority",
 		"td scope",
+		"template shadowrootmode",
 		"th scope",
 		"track kind",
 		"video crossorigin",
@@ -4863,6 +4867,85 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		);
 		expect(minify('<map><area shape="RECT"></map>')).toContain("shape=RECT");
 		expect(minify('<textarea wrap="SOFT"></textarea>')).toContain("wrap=SOFT");
+	});
+});
+
+describe("SourceProcessor — an enumerated value naming no keyword", () => {
+	const { SourceProcessor } = require("../../lib/html/syntax");
+	const {
+		ENUMERATED_KEYWORDS,
+		INVALID_VALUE_DEFAULT_DIFFERS,
+		REDUNDANT_DEFAULT_ATTRIBUTES
+	} = require("../../lib/html/data");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization, spec defaults dropped
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			removeRedundantAttributes: "all"
+		}).code;
+
+	// The pairs both tables name are the only ones the drop can reach: it needs a
+	// default to fall to, and a keyword set to know the value names none of them.
+	/** @type {[string, string][]} */
+	const PAIRS = [];
+	for (const element of Object.keys(REDUNDANT_DEFAULT_ATTRIBUTES)) {
+		const enumerated = ENUMERATED_KEYWORDS[element];
+		if (enumerated === undefined) continue;
+		for (const attribute of Object.keys(
+			REDUNDANT_DEFAULT_ATTRIBUTES[element]
+		)) {
+			if (enumerated[attribute] !== undefined) {
+				PAIRS.push([element, attribute]);
+			}
+		}
+	}
+
+	it("reaches exactly the pairs both tables name", () => {
+		expect(PAIRS.map(([element, attribute]) => `${element} ${attribute}`).sort())
+			.toEqual(["button type", "form enctype", "form method", "input type", "track kind"]);
+	});
+
+	it("names no pair the drop cannot reach", () => {
+		const reachable = new Set(
+			PAIRS.map(([element, attribute]) => `${element} ${attribute}`)
+		);
+		for (const entry of INVALID_VALUE_DEFAULT_DIFFERS) {
+			expect(reachable.has(entry)).toBe(true);
+		}
+	});
+
+	it.each(PAIRS)("drops it on <%s %s> unless the two defaults part", (element, attribute) => {
+		// A track outside a media element is dropped by tree construction.
+		const open = element === "track" ? "<video>" : "";
+		const out = minify(`${open}<${element} ${attribute}="ZzCustomZz">`);
+		if (INVALID_VALUE_DEFAULT_DIFFERS.has(`${element} ${attribute}`)) {
+			expect(out).toContain(`${attribute}=ZzCustomZz`);
+		} else {
+			expect(out).not.toContain(attribute);
+		}
+	});
+
+	it("keeps one the element states no default for", () => {
+		// `<img decoding>` is enumerated but has no entry to fall to, and
+		// `<area shape>` has one but reflects whatever was written.
+		expect(minify('<img decoding="ZzCustomZz" alt="a">')).toContain(
+			"decoding=ZzCustomZz"
+		);
+		expect(minify('<map><area shape="ZzCustomZz"></map>')).toContain(
+			"shape=ZzCustomZz"
+		);
+	});
+
+	it("keeps it where the switch is not `all`", () => {
+		const out = new SourceProcessor().process('<input type="ZzCustomZz">', {
+			mode: "minify",
+			removeRedundantAttributes: "smart"
+		}).code;
+		expect(out).toContain("type=ZzCustomZz");
 	});
 });
 

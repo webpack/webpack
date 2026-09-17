@@ -1502,7 +1502,9 @@ const PARSER_TABLES = [
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
 			],
 			["button formmethod", "get post dialog"],
+			["button popovertargetaction", "toggle show hide"],
 			["button type", "submit reset button"],
+			["dialog closedby", "any closerequest none"],
 			["form autocomplete", "on off"],
 			[
 				"form enctype",
@@ -1519,6 +1521,7 @@ const PARSER_TABLES = [
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
 			],
 			["input formmethod", "get post dialog"],
+			["input popovertargetaction", "toggle show hide"],
 			[
 				"input type",
 				"hidden text search tel url email password date month week time datetime-local number range color checkbox radio file submit image reset button"
@@ -1528,11 +1531,27 @@ const PARSER_TABLES = [
 			["script crossorigin", "anonymous use-credentials"],
 			["script fetchpriority", "high low auto"],
 			["td scope", "row col rowgroup colgroup"],
+			["template shadowrootmode", "open closed"],
 			["th scope", "row col rowgroup colgroup"],
 			["track kind", "subtitles captions descriptions chapters metadata"],
 			["video crossorigin", "anonymous use-credentials"],
 			["video preload", "none metadata auto"]
 		]
+	],
+	// WHY: An enumerated attribute names two defaults — the state a missing
+	// attribute takes, and the state a value matching no keyword takes — and
+	// `REDUNDANT_DEFAULT_ATTRIBUTES` states only the first. For every attribute
+	// both tables name they are the same state but one, so `<input type=zzz>`
+	// says what no `type` at all says and may go with it, while `<track
+	// kind=zzz>` is the metadata state where a missing `kind` is subtitles.
+	// Measured rather than read off the prose, since the IDL states neither:
+	// an engine hands `track.kind` back as metadata for a value it does not
+	// know and as subtitles for no attribute at all.
+	[
+		"INVALID_VALUE_DEFAULT_DIFFERS",
+		"set",
+		"`<element> <attribute>` for each enumerated attribute whose invalid value default names a different state from its missing value default, so a value matching no keyword may not be dropped as redundant.",
+		["track kind"]
 	],
 	// WHY: Elements `removeEmptyElements` keeps even with no children and no
 	// attributes, because that is their ordinary form rather than a leftover.

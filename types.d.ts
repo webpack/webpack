@@ -10917,7 +10917,7 @@ declare interface HtmlProcessOptions {
 	sortTokenLists?: boolean;
 
 	/**
-	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match (default false)
+	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match, and with them a value naming no keyword where that says the same (default false)
 	 */
 	removeRedundantAttributes?: boolean | "all" | "smart";
 
