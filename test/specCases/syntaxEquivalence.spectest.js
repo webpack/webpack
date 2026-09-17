@@ -67,6 +67,10 @@ const FILE_TIMEOUT = 180000;
 // page be replaced before the next one runs. A declaration costs a
 // millisecond, so this is three orders above what it needs.
 const VALUE_BUDGET = 2000;
+// The custom property a value is held in to be read back through `var()`. Any
+// name does: it is unregistered, so the engine keeps whatever tokens it is
+// given and resolves them where the substitution stands.
+const CUSTOM_PROPERTY = "--webpack-probe";
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
@@ -93,7 +97,8 @@ const FILED_WPT_CSS_DEFECTS = new Map();
 const FILED_WPT_TREE_DEFECTS = new Map();
 
 // Declarations Chromium computes a different style from once printed, keyed by
-// the value as written. A printer defect unless the reason says otherwise.
+// the value as written — and by `var(…):` before it where the value was read
+// through a custom property. A printer defect unless the reason says otherwise.
 const FILED_WPT_VALUE_DEFECTS = new Map();
 
 /**
@@ -751,26 +756,34 @@ describe("printer output in real Chrome", () => {
 
 	// One test per declaration, not per file: the value is what a defect is filed
 	// against, so the run names it without anything having to narrow it down.
-	/** @type {{ name: string, property: string, key: string, raw: string, min: string }[]} */
+	/** @type {{ name: string, property: string, key: string, raw: string, min: string | null, held: string | null }[]} */
 	const declarations = [];
 	/** @type {number} every declaration the corpus holds, compared or not */
 	let declarationsRead = 0;
+	/** @type {number} how many reach the custom property printer */
+	let valuesHeld = 0;
 	for (const { property, value, name } of hasCorpus()
 		? cssDeclarations()
 		: []) {
 		declarationsRead++;
 		const min = minifyDeclaration(property, value);
+		// The same value as a custom property's: a path of its own, written back
+		// token for token, and reached by any value at all — the corpus names no
+		// custom property, so nothing else here exercises it.
+		const held = minifyDeclaration(CUSTOM_PROPERTY, value);
 		// A value the printer copied out is compared against itself, which the engine
 		// answers the same way twice by construction. Three quarters of the corpus is
 		// that, and reading one back is not free.
-		if (min === value) continue;
+		if (min === value && held === value) continue;
+		if (held !== value) valuesHeld++;
 
 		declarations.push({
 			name,
 			property,
 			key: `${property}:${value}`,
 			raw: value,
-			min
+			min: min === value ? null : min,
+			held: held === value ? null : held
 		});
 	}
 	/** @type {Set<string>} every value that moved, filled as the files run */
@@ -778,7 +791,7 @@ describe("printer output in real Chrome", () => {
 
 	const compareValues = (cases) =>
 		inBatches(probePage, cases, (batch) =>
-			probePage.evaluate((each) => {
+			probePage.evaluate((each, custom) => {
 				const { canonical, paintedColors } =
 					/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
 						.__eq;
@@ -794,11 +807,15 @@ describe("printer output in real Chrome", () => {
 				 * anchor positioning makes one cost orders more than the rest.
 				 * @param {string} property the property name
 				 * @param {string} value the value to set
+				 * @param {boolean=} through whether to reach the property through a
+				 * custom property rather than to set it directly
 				 * @returns {string} each longhand it sets, with what it computes to
 				 */
-				const readBack = (property, value) => {
+				const readBack = (property, value, through) => {
 					probe.style.cssText = "";
-					probe.style.cssText = `${property}:${value}`;
+					probe.style.cssText = through
+						? `${custom}:${value};${property}:var(${custom})`
+						: `${property}:${value}`;
 					/** @type {string[]} */
 					const names = [];
 					for (let at = 0; at < probe.style.length; at++) {
@@ -809,6 +826,9 @@ describe("printer output in real Chrome", () => {
 					// boundary ("ab"+"c" against "a"+"bc") reads as equal.
 					let out = "";
 					for (const name of names) {
+						// The holder is the token stream itself, which a safe rewrite moves —
+						// what it substitutes into is the value, and that is read below.
+						if (name === custom) continue;
 						// Under the one name the spec gives the value, its colors painted: the engine
 						// echoes the spelling it was handed — `jump-start` beside `start` — so without
 						// this the tier reads a synonym as a change of meaning.
@@ -824,15 +844,28 @@ describe("printer output in real Chrome", () => {
 					// property the other does not — an invalid value the printer brought to life, or a
 					// valid one it erased — differs by that name alone.
 					if (
+						one.min !== null &&
 						readBack(one.property, one.raw) !== readBack(one.property, one.min)
 					) {
 						out.push({ name: one.name, key: one.key });
+					}
+					// WHY: a custom property is a token stream nothing reads until it is
+					// substituted, so what it means is what the property consuming it
+					// computes — `calc(var(--a)- var(--b))` parses and then fails there.
+					// Asking the engine through a `var()` is the only reading of that
+					// path that is not a comparison of two spellings (#22149).
+					if (
+						one.held !== null &&
+						readBack(one.property, one.raw, true) !==
+							readBack(one.property, one.held, true)
+					) {
+						out.push({ name: one.name, key: `var(${custom}):${one.key}` });
 					}
 				}
 				// The page is shared, so what this tier appends it takes back out.
 				probe.remove();
 				return out;
-			}, batch)
+			}, batch, CUSTOM_PROPERTY)
 		);
 
 	/**
@@ -840,7 +873,7 @@ describe("printer output in real Chrome", () => {
 	 * A value that hangs leaves the renderer mid-recalculation, so the page is
 	 * replaced rather than reused — without that, one bad read times out every
 	 * read behind it and the run ends on the job's budget with nothing named.
-	 * @param {{ name: string, property: string, key: string, raw: string, min: string }[]} cases the declarations to read
+	 * @param {{ name: string, property: string, key: string, raw: string, min: string | null, held: string | null }[]} cases the declarations to read
 	 * @param {number} budget milliseconds to allow
 	 * @returns {Promise<{ name: string, key: string }[]>} what moved
 	 */
@@ -868,12 +901,13 @@ describe("printer output in real Chrome", () => {
 			// No-op: the corpus is an optional git submodule.
 		});
 	} else {
-		// The tier compares what the printer rewrites, so a printer that rewrote nothing
-		// would pass with no work. Bounds well under today's 8,785 read and 2,198
-		// compared, to fail on that rather than on the corpus growing.
+		// The tier compares what the printer rewrites, so a printer that rewrote
+		// nothing would pass with no work. Bounds well under today's 8,901 read,
+		// 2,981 compared and 1,859 of those held in a custom property.
 		it("should have a corpus the printer rewrites a share of", () => {
 			expect(declarationsRead).toBeGreaterThan(5000);
 			expect(declarations.length).toBeGreaterThan(1000);
+			expect(valuesHeld).toBeGreaterThan(1000);
 		});
 	}
 

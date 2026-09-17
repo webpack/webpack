@@ -440,6 +440,11 @@ const installHelpers = () => {
 	// differently — everything a name is spelled out of.
 	const BARE_ESCAPED = /[\w\u00A0-\uFFFF-]/;
 
+	// What a math operator's own whitespace is held under while the delimiters
+	// beside it lose theirs (see `normalizeValue`). Private use: nothing a
+	// stylesheet spells a value out of can be mistaken for it.
+	const MATH_OPERATOR_SPACE = "\uE000";
+
 	/**
 	 * A value spelled one way, for the values that have to be compared as written
 	 * rather than as computed. CSS does not need the whitespace around a `,`, a
@@ -534,9 +539,17 @@ const installHelpers = () => {
 		out = paintedColors(out);
 		return (
 			out
+				// WHY: a `+` or `-` spelled with whitespace on both sides is the math
+				// operator CSS Values 4 §10.1 requires that whitespace for, not a sign.
+				// Held aside first, or the rule below reads `) - ` as a space beside a
+				// delimiter and drops it — which is how `calc(var(--a) - var(--b))` and
+				// the invalid `calc(var(--a)- var(--b))` read as one value (#22149).
+				.replace(/ ([+-]) /g, `${MATH_OPERATOR_SPACE}$1${MATH_OPERATOR_SPACE}`)
 				// Nothing fuses with a comma or a block's delimiters, so the whitespace
 				// beside one says only what the delimiter already does.
 				.replace(/ ?([,()[\]{}*/]) ?/g, "$1")
+				.split(MATH_OPERATOR_SPACE)
+				.join(" ")
 				// `.25` and `0.25` are one number, and an absolute unit converts to px,
 				// degrees or seconds exactly — the spec fixes every ratio.
 				.replace(

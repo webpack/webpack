@@ -60,6 +60,16 @@ Array [
   "/*! unwrap: an integer through that same longhand is still an integer */.u12{columns:2}",
   "/*! declined: a \`@supports\` condition is the syntax being tested */@supports (width:calc(1px + 2px)){.s01{color:red}}",
   "/*! declined: a custom property hands its text back through getPropertyValue() */.s02{--gap:calc(1px + 2px)}",
+  "/*! declined: ...and the whitespace CSS Values 4 §10.1 requires on both sides of
+   a \`+\` or \`-\` stands even where a block edge is beside it */.s03{--inner:calc(var(--radius) - var(--width))}",
+  "/*! declined: ...on either side of the operator */.s04{--inner-parens:calc(var(--radius) - (var(--width)))}",
+  "/*! declined: ...for \`+\` the same way */.s05{--sum:calc(var(--radius) + var(--width))}",
+  "/*! declined: ...with no substitution in it either */.s06{--difference:calc((10px) - (4px))}",
+  "/*! declined: ...and at every depth the value nests */.s07{--nested:calc(var(--a)* (var(--b) - var(--c)))}",
+  "/*! declined: a value a math function never reads is still one that can be
+   substituted into one, so the operator's whitespace stands there too */.s08{--tail:(10px) - (4px)}",
+  "/*! declined: a kept comment standing in the boundary is not the operator's
+   whitespace, which stands on either side of it */.s09{--commented:calc(var(--radius) /*!kept*/ - var(--width))}.s10{--commented-after:calc(var(--radius) - /*!kept*/ var(--width))}",
   "/*! math: the smallest of a list of one unit */.m01{width:1px}",
   "/*! math: ...and the largest */.m02{width:2px}",
   "/*! math: however many arguments the grammar allows */.m03{width:1px}",
