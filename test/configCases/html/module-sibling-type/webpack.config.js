@@ -5,7 +5,8 @@
 // captures the original `type` value range and the sibling-clone template
 // overwrites it instead of re-parsing the tag. `output.module` keeps the whole
 // graph ESM so the cloned module tag is consistent with the entry tag. The
-// `runtimeChunk` name function only splits the synthetic `__html_*` entries, so
+// `runtimeChunk` name function only splits the entries extracted from the
+// page (named after it), so
 // the test's own bundle keeps its inline runtime and stays loadable.
 
 /** @type {import("../../../../").Configuration} */
@@ -34,7 +35,7 @@ module.exports = {
 		chunkIds: "named",
 		runtimeChunk: {
 			name: (entrypoint) =>
-				entrypoint.name.startsWith("__html_") ? "html-runtime" : undefined
+				entrypoint.name.startsWith("page-") ? "html-runtime" : undefined
 		}
 	},
 	experiments: {

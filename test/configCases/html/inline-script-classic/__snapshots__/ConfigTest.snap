@@ -78,7 +78,7 @@ exports[`ConfigTestCases html inline-script-classic exported tests should emit I
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		const installedChunks = {
-/******/ 			\\"__html_cbe5b59d_0\\": 0
+/******/ 			\\"page-0\\": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -223,7 +223,7 @@ exports[`ConfigTestCases html inline-script-classic exported tests should emit c
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		const installedChunks = {
-/******/ 			\\"__html_cbe5b59d_0\\": 0
+/******/ 			\\"page-0\\": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading

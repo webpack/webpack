@@ -28,10 +28,10 @@ it("should surface the same hints in stats.entrypoints[name].resourceHints", () 
 	const stats = JSON.parse(
 		fs.readFileSync(path.resolve(__dirname, "stats.json"), "utf-8")
 	);
-	// The HTML parser creates a synthetic `__html_<hash>_<index>` entry per
+	// The HTML parser creates one entry per extracted tag, named after the
 	// `<script>` tag; the assets referenced from that script land under it.
 	const [, htmlScriptEntry] = Object.entries(stats.entrypoints).find(
-		([name]) => name.startsWith("__html_")
+		([name]) => name.startsWith("page-")
 	);
 	const hints = htmlScriptEntry.resourceHints;
 	expect(Array.isArray(hints)).toBe(true);
