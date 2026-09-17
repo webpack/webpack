@@ -91,9 +91,9 @@ it("should produce the same JSON value for static and dynamic `import defer`", a
 });
 
 it("should defer evaluation until first access (TC39 spec invariant)", () => {
-	// Synthetic JSON modules have no observable evaluation side effects, so the JSON
-	// import is wrapped in a JS module calling `touch()` at top level. `import defer
-	* as wrapped` must not evaluate the wrapper until the namespace is accessed.
+	// Synthetic JSON modules have no observable evaluation side effects, so the
+	// JSON import is wrapped in a JS module calling `touch()` at top level, and
+	// `import defer * as wrapped` must not evaluate it until the namespace is read.
 	reset();
 	assertIsNamespaceObject(wrapped);
 	assertUntouched();
