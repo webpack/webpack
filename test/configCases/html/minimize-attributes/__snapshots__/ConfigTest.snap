@@ -18,7 +18,8 @@ exports[`ConfigTestCases html minimize-attributes minimize-attributes should com
 b\\">newline in a value</p>
 	<p data-dq='a\\"b'>double quote in a value</p>
 	<p data-sq='a\\"b'>the other quote wins</p>
-	<p data-amp=a?b&c data-ref=a&amp;b>raw value bytes</p>
+	<p data-amp=a?b&c data-ref=a&b>raw value bytes</p>
+	<p data-keep=\\"&amp;copy x\\" data-num=&amp;#38; data-bare=&zz data-query=\\"x?a=1&b=2\\">ampersands</p>
 	<input type=text value disabled checked>
 	
 	<input type=\\"time \\" id=padded-type>
