@@ -8525,6 +8525,20 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
 		});
 
+		it("writes back a `/` the tokenizer read as the separator", () => {
+			// A template engine reads `{{/if}}` as one word, and the space this print
+			// used to put there instead split it. Both separate, at the same byte.
+			expect(
+				minify('<a href="x"{{#if y}} target="_blank"{{/if}}>t</a>')
+			).toBe("<a href=x {{#if y}} target=_blank {{/if}}>t</a>");
+			expect(minify("<p a/b>t</p>")).toBe("<p a/b>t");
+			// A run holding whitespace still collapses to the one space it needs.
+			expect(minify("<p a / b>t</p>")).toBe("<p a b>t");
+			// After an unquoted value the `/` would read as its last character, so
+			// the space stands instead.
+			expect(minify('<p a="b"/c>t</p>')).toBe("<p a=b c>t");
+		});
+
 		it("unquotes a value carrying a vertical tab, which is no whitespace", () => {
 			// \u000B ends no unquoted value: §13.1.2.3 admits every code point but
 			// ASCII whitespace — tab, line feed, form feed, carriage return, space.
