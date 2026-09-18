@@ -119,9 +119,9 @@ if (nodeVm.SourceTextModule) {
 }
 
 // Bun's native `fs.watch` does not deliver change events reliably under jest's
-// worker threads, so watchpack misses edits and WatchTestCases hang or read stale
-// output. Poll instead, at the 10ms interval the Deno setup explains.
-if (!process.env.WATCHPACK_POLLING) process.env.WATCHPACK_POLLING = "10";
+// worker threads, so watchpack misses edits and the WatchTestCases hang or read
+// stale output. Force watchpack into polling mode (honored unless already set).
+if (!process.env.WATCHPACK_POLLING) process.env.WATCHPACK_POLLING = "100";
 
 // Bun's TLS layer reads the real environment at process start, so the CA the
 // lazy-compilation https case needs is exported by `test:base:bun`, not here.

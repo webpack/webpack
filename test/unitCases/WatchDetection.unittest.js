@@ -10,13 +10,6 @@ const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();
 
-const { WATCHPACK_POLLING } = process.env;
-const POLLING = Boolean(WATCHPACK_POLLING) && WATCHPACK_POLLING !== "false";
-// Polling notices a change no sooner than the next interval, and this case walks
-// several change-and-rebuild round trips, so the runtimes the harness polls on
-// need more than jest's default budget.
-const TEST_TIMEOUT = POLLING ? 120000 : 30000;
-
 describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		// eslint-disable-next-line jest/no-disabled-tests
@@ -98,6 +91,8 @@ describe("WatchDetection", () => {
 					));
 				/** @type {(() => void) | null | undefined} */
 				let onChange;
+				/** @type {NodeJS.Timeout | undefined} */
+				let retry;
 				compiler.hooks.done.tap("WatchDetectionTest", () => {
 					if (onChange) onChange();
 				});
@@ -177,7 +172,14 @@ describe("WatchDetection", () => {
 						}
 					};
 
+					// This is the one step that advances only on a `done` carrying the new
+					// content, so a watcher that drops or coalesces this single change
+					// strands it. Re-touch until the rebuild carrying it arrives.
 					fs.writeFile(file2Path, "correct", "utf8", handleError);
+					retry = setInterval(() => {
+						fs.writeFile(file2Path, "correct", "utf8", handleError);
+					}, 500);
+					retry.unref();
 				}
 
 				/**
@@ -185,6 +187,7 @@ describe("WatchDetection", () => {
 				 */
 				function step5() {
 					onChange = null;
+					if (retry) clearInterval(retry);
 
 					watcher.close(() => {
 						setTimeout(done, 500);
@@ -197,7 +200,7 @@ describe("WatchDetection", () => {
 				function handleError(err) {
 					if (err) done(err);
 				}
-			}, TEST_TIMEOUT);
+			});
 		});
 	}
 });

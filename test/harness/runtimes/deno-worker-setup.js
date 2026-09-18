@@ -8,9 +8,9 @@
 // --unstable-detect-cjs flag. No-op on Node/Bun (gated on process.versions.deno).
 if (process.versions.deno) {
 	// Deno's native fs.watch (like Bun's) misses change events under jest's worker
-	// threads, so watchpack drops edits and the watch suites hang; poll instead, at
-	// 10ms — the gap WatchDetection writes at, which a 100ms poll cannot resolve.
-	if (!process.env.WATCHPACK_POLLING) process.env.WATCHPACK_POLLING = "10";
+	// threads, so watchpack drops edits and the watch suites hang until timeout;
+	// force polling. Mirrors the Bun preload's workaround.
+	if (!process.env.WATCHPACK_POLLING) process.env.WATCHPACK_POLLING = "100";
 
 	const fs = require("fs");
 	const os = require("os");
