@@ -5789,7 +5789,7 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 		// block is minified like any other, the boolean and the list alike.
 		expect(
 			minify('<input type="checkbox"{% if on %} checked="checked"{% endif %}>')
-		).toBe("<input type=checkbox {% if on %} checked{% endif %}>");
+		).toBe("<input type=checkbox {% if on %} checked {% endif %}>");
 		expect(
 			minify('<p class="  a   b  "{% if wide %} data-c="2"{% endif %}>t</p>')
 		).toBe('<p class="a b"{% if wide %} data-c=2 {% endif %}>t');
