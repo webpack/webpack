@@ -5699,11 +5699,26 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 		for (const tag of [
 			'<input type="text"{% if x %} a{% endif %}>',
 			"<input type='text'{% if x %} a{% endif %}>",
-			'<INPUT TYPE="TEXT"{% if x %} a{% endif %}>',
 			'<input type="&#x74;ext"{% if x %} a{% endif %}>'
 		]) {
 			expect(minify(tag)).toBe("<input type=text {% if x %} a{% endif %}>");
 		}
+	});
+
+	it("preserves case-sensitive template names", () => {
+		for (const condition of ["isRequired", "Foo", "options.isRequired"]) {
+			const printed = minify(
+				`<input type="text"{% if ${condition} %} required{% endif %}>`
+			);
+			const match = /\{% if ([^ ]+) %\}/.exec(printed);
+			expect(match && match[1]).toBe(condition);
+		}
+	});
+
+	it("preserves source attribute names on a template tag", () => {
+		expect(
+			minify('<INPUT TYPE="TEXT"{% if isRequired %} required{% endif %}>')
+		).toMatchSnapshot();
 	});
 
 	it("separates an unquoted value from what the source wrote next", () => {

@@ -49,7 +49,7 @@ b">newline in a value</p>
 	<p class="a b a">repeated class token, folded</p>
 	<!-- `{%` / `%}` tokenize as attribute names and repeat, so the bytes between
 	     the names kept are copied from the source rather than rebuilt (#22013) -->
-	<input type="text"{% if required %} required{% endif %}>
+	<input type="text"{% if isRequired %} required{% endif %}>
 	<p class="btn{% if active %} btn-active{% endif %}">the same list, as text</p>
 	<p data-slash="/end/">value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>
