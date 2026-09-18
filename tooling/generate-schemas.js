@@ -1033,8 +1033,8 @@ const fromDocumentationTags = (tags) => {
 	if (tags.has("experimental")) keywords.experimental = true;
 	if (tags.has("deprecated")) keywords.deprecated = true;
 	if (tags.has("undefinedAsNull")) keywords.undefinedAsNull = true;
-	if (tags.has("cliHelper")) keywords.cli = { helper: true };
-	if (tags.has("cliExclude")) keywords.cli = { exclude: true };
+	if (tags.has("cliHelper")) keywords.cli = { ...keywords.cli, helper: true };
+	if (tags.has("cliExclude")) keywords.cli = { ...keywords.cli, exclude: true };
 	if (tags.has("implements")) {
 		keywords.implements = /** @type {string} */ (tags.get("implements"))
 			.split(",")
