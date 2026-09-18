@@ -16,5 +16,13 @@ module.exports = {
 		expect(css).not.toContain(".zeta,.eta");
 		expect(css).not.toContain(".theta,.iota");
 		expect(css).not.toContain(".kappa,.lambda-is-a-long-name");
+		// The same, for at-rules: those join by stating one condition twice, and
+		// a run of them gathers into the first.
+		expect(css).toContain("@media (width>=100px){.mu{color:red}.nu");
+		expect(css).toContain(".xi{color:lime}}");
+		expect(css).not.toContain(".omicron{color:red}.pi");
+		expect(css).not.toContain(".rho{width:0}.sigma");
+		expect(css).not.toContain(".tau{color:red}.upsilon");
+		expect(css).not.toContain("opacity:0}.5");
 	}
 };
