@@ -2345,9 +2345,8 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		// `acorn-import-phases` is not the dependency this boundary is about.
 		const ACORN_REQUIRE_REGEXP = /\brequire\s*\(\s*["']acorn["'/]/;
 
-		// the parser core owns the acorn dependency; every other file uses
-		// webpack's own `parse`, so a new `require("acorn")` is a regression
-		it("keeps acorn out of every lib file but the parser core", () => {
+		// webpack owns the parser, so importing acorn anywhere in lib is a regression.
+		it("keeps acorn out of every lib file", () => {
 			const fs = require("fs");
 			const path = require("path");
 
@@ -2366,7 +2365,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 						walk(file);
 					} else if (entry.name.endsWith(".js")) {
 						const relative = path.relative(dir, file).replace(/\\/g, "/");
-						if (relative === "javascript/syntax.js") continue;
 						if (ACORN_REQUIRE_REGEXP.test(fs.readFileSync(file, "utf8"))) {
 							offenders.push(relative);
 						}
