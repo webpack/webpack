@@ -2570,9 +2570,17 @@ const MODES = [
 	["as commonjs", { sourceType: "commonjs" }]
 ];
 
-// Both parsers give up on input nested deeper than the stack takes, at the
-// depth their own frames allow — the same verdict, reached a few frames apart.
-const STACK_LIMIT = "Not enough stack space to parse input";
+// How deep input may nest before a parser gives up is the runtime's answer,
+// not the parser's — JavaScriptCore reaches the depth acorn recorded on
+// neither side. The phrase is what a thrown message and that record share.
+const STACK_LIMIT = "Not enough stack space";
+
+/**
+ * @param {string=} verdict a parse verdict, or acorn's recorded expectation
+ * @returns {boolean} whether it is a parser running out of stack
+ */
+const isStackDepth = (verdict) =>
+	verdict !== undefined && verdict.includes(STACK_LIMIT);
 
 /**
  * Whether this host's own `RegExp` built every pattern in a tree, and there was
@@ -2714,10 +2722,9 @@ const compareCase = (testCase, parse, engineValidates, mode, trees, verdicts) =>
 	}
 
 	if (ourVerdict !== theirVerdict) {
-		const bothRanOut =
-			ourVerdict.startsWith(STACK_LIMIT) && theirVerdict.startsWith(STACK_LIMIT);
 		if (
-			bothRanOut ||
+			isStackDepth(ourVerdict) ||
+			isStackDepth(theirVerdict) ||
 			(engineValidates && isEngineValidated(ours, theirVerdict))
 		) {
 			return;
@@ -2752,6 +2759,7 @@ const compareCase = (testCase, parse, engineValidates, mode, trees, verdicts) =>
  * @returns {boolean} whether the case passes acorn's own assertion
  */
 const meetsExpectation = (testCase, verdict) => {
+	if (isStackDepth(testCase.error) || isStackDepth(verdict)) return true;
 	if (testCase.error === undefined) return verdict === "parsed";
 	return testCase.error.startsWith("~")
 		? verdict.includes(testCase.error.slice(1))
