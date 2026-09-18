@@ -8555,6 +8555,21 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
 		});
 
+		it("drops a `/` the attribute it separated left behind", () => {
+			const minifyAll = (source) =>
+				new SourceProcessor().process(source, {
+					mode: "minify",
+					removeRedundantAttributes: "all"
+				}).code;
+			// The `/` stood before an attribute the redundant-default drop then took
+			// out, so nothing is left for it to separate.
+			expect(minifyAll("<input a/type=text>")).toBe("<input a>");
+			expect(minifyAll("<input a/type=text b>")).toBe("<input a b>");
+			expect(minifyAll("<form a/method=get>x</form>")).toBe("<form a>x</form>");
+			// One the drop left alone still separates at the same byte.
+			expect(minifyAll("<input a/b>")).toBe("<input a/b>");
+		});
+
 		it("writes back a `/` the tokenizer read as the separator", () => {
 			// A template engine reads `{{/if}}` as one word, and the space this print
 			// used to put there instead split it. Both separate, at the same byte.
