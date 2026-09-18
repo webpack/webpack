@@ -49,6 +49,14 @@ const PATTERNS = [
 	["(?:(?<x>a)|(?<x>b))\\k<x>", "u"],
 	["(?<x>a)(?:(?<x>b))", "u"],
 	["(?<x>a)(?:(?<x>b)|c)", "u"],
+	// a name repeated across nested disjunctions, where the two are separated
+	// only when one alternative of one disjunction rules the other out
+	["(?:(?<x>a)|b)(?:(?<x>c)|d)", "u"],
+	["(?:(?:(?<x>a)|b)|(?:(?<x>c)|d))", "u"],
+	["(?:(?<x>a)|(?:(?<x>b)|c))", "u"],
+	["(?:(?<x>a)|(?:b(?<x>c)))|(?<x>d)", "u"],
+	["(?:(?:(?:(?<x>a))))|(?:(?:(?:(?<x>b))))", "u"],
+	["(?:(?:(?:(?<x>a))))(?:(?:(?:(?<x>b))))", "u"],
 	["(?<n>a)\\k<m>", ""],
 	["(?<n>a)\\k<m>", "u"],
 	["\\k<n>", ""],
@@ -350,5 +358,48 @@ describe("RegExpValidator", () => {
 		expect(() => Parser.parse("/(/v;", { ecmaVersion: 2024 })).toThrow(
 			/Unterminated group/
 		);
+	});
+
+	it("reads a name repeated across alternatives at the cost of distinct ones", () => {
+		// Both patterns are legal and the same size; only the duplicate one asks
+		// which alternatives rule each other out, which acorn answers by walking
+		// one branch chain per node of the other (acornjs/acorn#1445).
+		/**
+		 * @param {number} depth how many disjunctions enclose the group
+		 * @param {string} name the group's name
+		 * @returns {string} one named group, nested that deep
+		 */
+		const nest = (depth, name) =>
+			`${"(?:".repeat(depth)}(?<${name}>a)${")".repeat(depth)}`;
+
+		/**
+		 * @param {number} count how many alternatives to write
+		 * @param {number} depth how deep each one nests its group
+		 * @param {boolean} duplicate whether every group carries the same name
+		 * @returns {string} the program holding that regexp literal
+		 */
+		const pattern = (count, depth, duplicate) =>
+			`/${Array.from({ length: count }, (_, i) =>
+				nest(depth, duplicate ? "x" : `x${i}`)
+			).join("|")}/v;`;
+
+		/**
+		 * @param {string} source the program to parse
+		 * @returns {number} the fastest of three parses, in nanoseconds
+		 */
+		const best = (source) => {
+			let fastest = Infinity;
+			for (let run = 0; run < 3; run++) {
+				const started = process.hrtime.bigint();
+				Parser.parse(source, { ecmaVersion: "latest" });
+				fastest = Math.min(fastest, Number(process.hrtime.bigint() - started));
+			}
+			return fastest;
+		};
+		const distinct = best(pattern(160, 160, false));
+		const repeated = best(pattern(160, 160, true));
+		// The two were ~80x apart before the rewrite and are within noise of each
+		// other after it, so the bound only has to catch the quadratic walk.
+		expect(repeated).toBeLessThan(distinct * 10);
 	});
 });
