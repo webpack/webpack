@@ -45,7 +45,7 @@ This document explains the structure of the `test/` directory in the Webpack pro
 
 - **Purpose**: The suite drivers — `TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js` — each exporting `describeCases(config)`.
 - **Usage**: The `*.test.js` / `*.basictest.js` / `*.longtest.js` files at the top of `test/` are thin shims that call `describeCases` with one suite's options, so one driver serves every variant (targets, devtools, cache modes). Jest parallelizes per file, which is why the variants stay separate files rather than being folded into one.
-- **Note**: A driver lives one directory below the cases it runs, so it resolves paths against `testRootDirectory` (`path.join(__dirname, "..")`), never against `__dirname`.
+- **Note**: `templates/` is a sibling of the case directories it runs (`cases/`, `configCases/`, `hotCases/`, `watchCases/`), so a driver resolves paths from the shared `test/` root via `testRootDirectory` (`path.join(__dirname, "..")`), never against `__dirname`.
 
 ### 7. `hotCases/`
 
