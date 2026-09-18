@@ -2535,8 +2535,9 @@ const renderCorpus = (version, entries) =>
 const CORPUS_TIMEOUT = 300000;
 
 // The two entry points into webpack's parser: the subclass every build runs,
-// and the ported base it specializes. Both owe acorn the same trees.
-/** @type {[string, (code: string, options: Options) => EXPECTED_ANY][]} */
+// and the ported base it specializes. Both owe acorn the same trees; only the
+// first hands a regexp literal to the host engine before validating it.
+/** @type {[string, (code: string, options: Options) => EXPECTED_ANY, boolean][]} */
 const PARSERS = [
 	[
 		"the parser a build runs",
@@ -2546,9 +2547,14 @@ const PARSERS = [
 				/** @type {import("../../lib/javascript/syntax").ParserOptions} */ (
 					options
 				)
-			)
+			),
+		true
 	],
-	["the ported base parser", (code, options) => Parser.parse(code, options)]
+	[
+		"the ported base parser",
+		(code, options) => Parser.parse(code, options),
+		false
+	]
 ];
 
 // What is asked on top of the options each case carries. Ranges, locations and
@@ -2564,41 +2570,60 @@ const MODES = [
 	["as commonjs", { sourceType: "commonjs" }]
 ];
 
-// WHY: the parser a build runs hands a regexp literal to the host engine and
-// only re-reads it with the ported validator when the engine refused it, so a
-// pattern this engine builds is accepted whatever `ecmaVersion` says. These
-// are acorn's cases for exactly that: syntax of a later edition, parsed at an
-// earlier one, which acorn rejects by edition and webpack takes as written.
-const ENGINE_VALIDATED = new Set([
-	"/(?<a>a)\\k<a>/@2017",
-	"/(?<a>a)\\k<a>/u@2017",
-	"/\\p{ASCII}/u@2017",
-	"/(?<=a)/@2017",
-	"/(?<=a)/u@2017",
-	"/(?<!a)/@2017",
-	"/(?<!a)/u@2017",
-	"/(?<\\ud835\\udc9c>.)/@2019",
-	"/(?<\\u{1d49c}>.)/@2019",
-	"/(?<𝒜>.)/@2019"
-]);
-
 // Both parsers give up on input nested deeper than the stack takes, at the
 // depth their own frames allow — the same verdict, reached a few frames apart.
 const STACK_LIMIT = "Not enough stack space to parse input";
 
 /**
+ * Whether this host's own `RegExp` built every pattern in a tree, and there was
+ * one to build.
+ * @param {EXPECTED_ANY} node a node of the tree webpack returned
+ * @returns {boolean} whether the engine read them all
+ */
+const engineBuiltEveryRegExp = (node) => {
+	let seen = 0;
+	let built = 0;
+
+	/**
+	 * @param {EXPECTED_ANY} value anything a node holds
+	 * @returns {void}
+	 */
+	const walk = (value) => {
+		if (value === null || typeof value !== "object") return;
+		if (Array.isArray(value)) {
+			for (const item of value) walk(item);
+			return;
+		}
+		if (value.type === "Literal" && value.regex !== undefined) {
+			seen++;
+			if (value.value instanceof RegExp) built++;
+			return;
+		}
+		for (const key of Object.keys(value)) walk(value[key]);
+	};
+
+	walk(node);
+
+	return seen > 0 && seen === built;
+};
+
+// WHY: the parser a build runs hands a regexp literal to the host engine and
+// re-reads it with the ported validator only where the engine refused it, so a
+// pattern this engine builds is taken as written whatever `ecmaVersion` says.
+// Which patterns those are is the running V8's answer, not a list — a newer one
+// reads more of them, so the tree it built is what the exemption asks.
+/**
  * Whether acorn's stricter answer is the one webpack's engine-backed regexp
  * validation is documented to decline to give.
- * @param {Corpus} testCase the case
- * @param {string} ours webpack's verdict
- * @param {string} theirs acorn's verdict
+ * @param {EXPECTED_ANY} ours the tree webpack built, or undefined when it threw
+ * @param {string=} theirs acorn's verdict
  * @returns {boolean} whether the disagreement is that contract
  */
-const isEngineValidated = (testCase, ours, theirs) =>
-	ours === "parsed" &&
+const isEngineValidated = (ours, theirs) =>
+	ours !== undefined &&
 	theirs !== undefined &&
 	theirs.startsWith("Invalid regular expression:") &&
-	ENGINE_VALIDATED.has(`${testCase.code}@${testCase.options.ecmaVersion}`);
+	engineBuiltEveryRegExp(ours);
 
 /**
  * A token as both parsers describe one: their `TokenType` instances are
@@ -2645,12 +2670,13 @@ const runsAsCommonjs = (testCase) =>
  * Parse one case with both parsers and record how they disagreed.
  * @param {Corpus} testCase the case
  * @param {(code: string, options: Options) => EXPECTED_ANY} parse webpack's entry point
+ * @param {boolean} engineValidates whether that entry defers a regexp to the host engine
  * @param {Options} mode what the run asks on top of the case's own options
  * @param {TreeDifference[]} trees where tree, comment and token differences are collected
  * @param {VerdictDifference[]} verdicts where verdicts that disagree are collected
  * @returns {void}
  */
-const compareCase = (testCase, parse, mode, trees, verdicts) => {
+const compareCase = (testCase, parse, engineValidates, mode, trees, verdicts) => {
 	/** @type {object[]} */
 	const ourComments = [];
 	/** @type {TokenLike[]} */
@@ -2690,7 +2716,10 @@ const compareCase = (testCase, parse, mode, trees, verdicts) => {
 	if (ourVerdict !== theirVerdict) {
 		const bothRanOut =
 			ourVerdict.startsWith(STACK_LIMIT) && theirVerdict.startsWith(STACK_LIMIT);
-		if (bothRanOut || isEngineValidated(testCase, ourVerdict, theirVerdict)) {
+		if (
+			bothRanOut ||
+			(engineValidates && isEngineValidated(ours, theirVerdict))
+		) {
 			return;
 		}
 		verdicts.push({
@@ -2753,7 +2782,7 @@ describe("acorn corpus", () => {
 		expect(refreshed).toBe(fs.readFileSync(CORPUS_FILE, "utf8"));
 	});
 
-	for (const [parserName, parse] of PARSERS) {
+	for (const [parserName, parse, engineValidates] of PARSERS) {
 		describe(parserName, () => {
 			for (const [modeName, mode] of MODES) {
 				it(
@@ -2768,7 +2797,14 @@ describe("acorn corpus", () => {
 							if (mode.sourceType === "commonjs" && !runsAsCommonjs(testCase)) {
 								continue;
 							}
-							compareCase(testCase, parse, mode, trees, verdicts);
+							compareCase(
+								testCase,
+								parse,
+								engineValidates,
+								mode,
+								trees,
+								verdicts
+							);
 							compared++;
 						}
 						expect(reportable(trees)).toEqual([]);
@@ -2785,21 +2821,17 @@ describe("acorn corpus", () => {
 					/** @type {{ case: string, file: string, expected: string, webpack: string }[]} */
 					const differences = [];
 					for (const testCase of corpus.cases) {
+						/** @type {EXPECTED_ANY} */
+						let ours;
 						/** @type {string} */
 						let verdict = "parsed";
 						try {
-							parse(testCase.code, optionsFor(testCase, {}, [], []));
+							ours = parse(testCase.code, optionsFor(testCase, {}, [], []));
 						} catch (err) {
 							verdict = /** @type {Error} */ (err).message;
 						}
 						if (meetsExpectation(testCase, verdict)) continue;
-						if (
-							isEngineValidated(
-								testCase,
-								verdict,
-								/** @type {string} */ (testCase.error)
-							)
-						) {
+						if (engineValidates && isEngineValidated(ours, testCase.error)) {
 							continue;
 						}
 						differences.push({
