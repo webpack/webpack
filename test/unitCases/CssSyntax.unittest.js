@@ -4341,6 +4341,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("reads a small block's siblings as the streamed path reads them", () => {
+			// Which blocks gather must not turn on whether the block was small enough
+			// to assemble in one go rather than stream.
+			const gather = (mid) =>
+				minify(
+					`@media all{@layer x{a{color:red}}${mid}@layer x{c{color:lime}}}`
+				);
+			expect(gather(".b{@layer y{q{top:0}}}")).toBe(
+				"@media all{@layer x{a{color:red}c{color:lime}}.b{@layer y{q{top:0}}}}"
+			);
+			expect(gather('.b{content:"@layer x{"}')).toBe(
+				'@media all{@layer x{a{color:red}c{color:lime}}.b{content:"@layer x{"}}'
+			);
+			// A real write into that layer still parts them, small or streamed.
+			expect(gather(".y{@layer x{b{top:0}}}")).toBe(
+				"@media all{@layer x{a{color:red}}.y{@layer x{b{top:0}}}@layer x{c{color:lime}}}"
+			);
+		});
+
 		it("gathers past a string that only looks like it opens the layer", () => {
 			// The gather reads a streamed node's printed text, where a `@layer` inside
 			// a string is a value rather than an at-rule nothing may fold across.
