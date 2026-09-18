@@ -44,6 +44,11 @@ describe("WatchDetection", () => {
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
 			const loaderPath = path.join(testDirectory, "fixtures", "delay-loader.js");
+			// Scoped here rather than to the test: a timed-out or errored test never
+			// reaches its own cleanup, and an interval still writing into the fixture
+			// during `afterAll` fails the case after it has already finished.
+			/** @type {NodeJS.Timeout | undefined} */
+			let retry;
 
 			beforeAll(() => {
 				try {
@@ -56,6 +61,7 @@ describe("WatchDetection", () => {
 			});
 
 			afterAll((done) => {
+				if (retry) clearInterval(retry);
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
@@ -91,8 +97,6 @@ describe("WatchDetection", () => {
 					));
 				/** @type {(() => void) | null | undefined} */
 				let onChange;
-				/** @type {NodeJS.Timeout | undefined} */
-				let retry;
 				compiler.hooks.done.tap("WatchDetectionTest", () => {
 					if (onChange) onChange();
 				});
@@ -188,6 +192,7 @@ describe("WatchDetection", () => {
 				function step5() {
 					onChange = null;
 					if (retry) clearInterval(retry);
+					retry = undefined;
 
 					watcher.close(() => {
 						setTimeout(done, 500);
