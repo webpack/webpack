@@ -5,6 +5,6 @@
 
 "use strict";
 
-const { create } = require("./helpers/browserslistConfigPackages");
+const { remove } = require("../helpers/browserslistConfigPackages");
 
-module.exports = create;
+module.exports = remove;

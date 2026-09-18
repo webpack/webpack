@@ -31,9 +31,9 @@ const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
 const rimraf = require("rimraf");
 const { parseResource } = require("../../lib/util/identifier");
-const checkArrayExpectation = require("../checkArrayExpectation");
 const { TestRunner } = require("../harness/runner");
 const captureStdio = require("../helpers/captureStdio");
+const checkArrayExpectation = require("../helpers/checkArrayExpectation");
 const createLazyTestEnv = require("../helpers/createLazyTestEnv");
 const deprecationTracking = require("../helpers/deprecationTracking");
 const filterInfraStructureErrors = require("../helpers/infrastructureLogErrors");

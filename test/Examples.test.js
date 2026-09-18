@@ -4,7 +4,7 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
-const checkArrayExpectation = require("./checkArrayExpectation");
+const checkArrayExpectation = require("./helpers/checkArrayExpectation");
 const {
 	expectOnlyListedDeprecations
 } = require("./helpers/expectNoDeprecations");

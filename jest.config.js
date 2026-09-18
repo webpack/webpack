@@ -5,13 +5,13 @@ const config = {
 	testTimeout: 30000,
 	prettierPath: require.resolve("prettier-2"),
 	forceExit: true,
-	globalSetup: "<rootDir>/test/globalSetup.js",
-	globalTeardown: "<rootDir>/test/globalTeardown.js",
+	globalSetup: "<rootDir>/test/harness/globalSetup.js",
+	globalTeardown: "<rootDir>/test/harness/globalTeardown.js",
 	setupFiles: [
-		"<rootDir>/test/bun-sandbox-setup.js",
-		"<rootDir>/test/deno-worker-setup.js"
+		"<rootDir>/test/harness/runtimes/bun-sandbox-setup.js",
+		"<rootDir>/test/harness/runtimes/deno-worker-setup.js"
 	],
-	setupFilesAfterEnv: ["<rootDir>/test/setupTestFramework.js"],
+	setupFilesAfterEnv: ["<rootDir>/test/harness/setupTestFramework.js"],
 	testMatch: [
 		"<rootDir>/test/*.test.js",
 		"<rootDir>/test/*.basictest.js",
