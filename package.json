@@ -42,6 +42,7 @@
     "lint:types-module-test": "tsc -p tsconfig.module.test.json",
     "lint:spellcheck": "cspell --cache --no-must-find-files --quiet \"**/*.*\"",
     "validate:changeset": "node .changeset/changeset-validate.mjs",
+    "version:release": "node ./node_modules/.bin/changeset version && node node_modules/prettier/bin/prettier.cjs --log-level warn --write CHANGELOG.md",
     "validate:types": "tsc -p tsconfig.validation.json",
     "fmt": "yarn fmt:base --log-level warn --write",
     "fmt:check": "yarn fmt:base --check",

@@ -36,6 +36,9 @@ jobs:
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Formats what `changeset version` wrote before the action commits
+          # it, so the release pull request is not born failing fmt:check.
+          version-script: yarn version:release
           # `changeset publish` refuses to run under Yarn Classic, so npm
           # publishes instead. The action runs this on every push that leaves no
           # changeset behind, hence the skip when npm already carries the
