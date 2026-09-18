@@ -31,8 +31,8 @@ module.exports = {
 	},
 	plugins: [
 		new DefinePlugin({
-			FREE_VERSION: DefinePlugin.runtimeValue(
-				(ctx) => ctx.module.layer === "free"
+			FREE_VERSION: DefinePlugin.runtimeValue((ctx) =>
+				ctx.module === undefined ? undefined : ctx.module.layer === "free"
 			)
 		})
 	]

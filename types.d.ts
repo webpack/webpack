@@ -6517,10 +6517,19 @@ declare class DefinePlugin {
 	 */
 	static runtimeValue(
 		fn: (value: {
-			module: NormalModule;
+			module?: NormalModule;
 			key: string;
 			readonly version: ValueCacheVersion;
-		}) => CodeValuePrimitive,
+		}) =>
+			| undefined
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| Function
+			| RegExp
+			| Promise<CodeValuePrimitive>,
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
 	static getCompilationHooks: (compilation: Compilation) => {
@@ -27238,10 +27247,20 @@ declare abstract class RuntimeTemplate {
 }
 declare abstract class RuntimeValue {
 	fn: (value: {
-		module: NormalModule;
+		module?: NormalModule;
 		key: string;
 		readonly version: ValueCacheVersion;
-	}) => CodeValuePrimitive;
+	}) =>
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| Function
+		| RegExp
+		| Promise<CodeValuePrimitive>;
+	isAsync: boolean;
 	options: true | RuntimeValueOptions;
 	get fileDependencies(): true | string[];
 
