@@ -1,5 +1,6 @@
 "use strict";
 
+const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -26,6 +27,23 @@ function collectRepositoryPaths(patch) {
 	return paths;
 }
 
+/**
+ * Asks git whether a patch still applies to the working tree.
+ * @param {string} name file name inside the patches directory
+ * @param {boolean} reverse true to check the patch as already applied
+ * @returns {{ status: number | null, stderr: string }} what git answered
+ */
+function checkApply(name, reverse) {
+	const args = ["apply", "--check"];
+	if (reverse) args.push("--reverse");
+	args.push(path.join("test", "patches", name));
+	const { status, stderr } = spawnSync("git", args, {
+		cwd: repositoryRoot,
+		encoding: "utf8"
+	});
+	return { status, stderr };
+}
+
 describe("patches", () => {
 	const patchFiles = fs
 		.readdirSync(patchesDirectory)
@@ -48,14 +66,15 @@ describe("patches", () => {
 		});
 
 		it("should apply to the installed dependency", () => {
-			const applied = require("child_process").spawnSync(
-				"git",
-				["apply", "--check", path.join("test", "patches", name)],
-				{ cwd: repositoryRoot, encoding: "utf8" }
-			);
+			// CI applies the patches before running this suite, so a patch that
+			// is already in place only reverse-applies. Either direction proves
+			// it still matches the installed dependency.
+			const forward = checkApply(name, false);
+			const reverse = checkApply(name, true);
 
-			expect(applied.stderr).toBe("");
-			expect(applied.status).toBe(0);
+			const applies = forward.status === 0 || reverse.status === 0;
+
+			expect(applies ? "" : forward.stderr).toBe("");
 		});
 	});
 });
