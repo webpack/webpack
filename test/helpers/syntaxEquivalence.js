@@ -1330,13 +1330,17 @@ const installHelpers = (generics) => {
 			}
 		}
 		const doctype = doc.doctype;
-		// Quirks mode changes layout, so the doctype has to survive as one.
-		facets.document = [
-			doc.compatMode,
+		// WHY: Quirks mode changes layout, so a doctype has to survive as one —
+		// but `compatMode` is a function of the doctype alone, so with none it
+		// reports what the engine defaults a parsed document to rather than
+		// anything the printer wrote, and WebKit answers that unlike Blink.
+		facets.document =
 			doctype === null
-				? "no doctype"
-				: `${doctype.name}|${doctype.publicId}|${doctype.systemId}`
-		];
+				? ["no doctype"]
+				: [
+						`${doctype.name}|${doctype.publicId}|${doctype.systemId}`,
+						doc.compatMode
+					];
 		// What the page renders: the title, whose getter strips and collapses ASCII
 		// whitespace as the spec says a title is read, and the body's text. A `<script>`
 		// or `<style>` body is data, and a `<template>`'s content does not render.

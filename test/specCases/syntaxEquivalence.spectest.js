@@ -171,54 +171,6 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 		"firefox, webkit only: not a printer defect — an IDL attribute the engine does not implement falls back to the attribute as written, so a normalization reads as a difference. Measured in Firefox 156: `writingSuggestions` and `blocking` both read `undefined` where Chrome 147 reflects `false` and `render`; WebKit reads `autofocus`, `enterkeyhint` and `inputmode` apart from Blink the same way"
 	],
 	[
-		"test/configCases/html/parser-as-fragment/div.html",
-		"webkit only: not a printer defect, not yet diagnosed — WebKit reads a different `document.compatMode` for the source and the printed form where Blink and Gecko read one. Measured in the first WebKit run: eleven files report `BackCompat vs CSS1Compat` and two the reverse, and a direction that flips per file points at how the harness builds the document rather than at what the printer wrote"
-	],
-	[
-		"test/configCases/asset-modules/minimize-embedded-asset-source/text.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/embedded/everything/inline.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/embedded/everything/source.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/fragment-context-select/page.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/minify-embedded-html-in-js/page.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/minimize-embedded-in-js/page.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/minimize-round-trip/cases/adoption.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/minimize-round-trip/cases/attributes.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/parser-as-fragment/document.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/parser-as-fragment/tbody.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
-		"test/configCases/html/parser-as-fragment/template.html",
-		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
-	],
-	[
 		"test/configCases/html/minimize-round-trip/cases/reflected.html",
 		"firefox only: the unimplemented `blocking` IDL again — see `attribute-tables`"
 	],
@@ -800,6 +752,45 @@ describe(`printer output in real ${ENGINE}`, () => {
 					FILE_TIMEOUT
 				);
 			}
+
+			// WHY: `compatMode` is a function of the doctype alone — measured in
+			// Chrome 147, any two that read back as the same doctype compute the same
+			// mode — so with none it reports what the engine defaults a parsed document
+			// to, which WebKit and Blink answer differently. Only the doctype is the
+			// printer's to keep, so a page carrying one is still held to its effect.
+			it(
+				"reads quirks mode off the doctype rather than off the parse",
+				async () => {
+					const differences = await comparePages(
+						[
+							{
+								name: "doctype-absent",
+								raw: '<p class="a">a<b>b<i>c</p>d</i>e</b>f',
+								min: "<p class=a>a<b>b<i>c</p>d</i>e</b>f"
+							},
+							{
+								name: "doctype-dropped",
+								raw: "<!DOCTYPE html><p>x</p>",
+								min: "<p>x</p>"
+							},
+							{
+								name: "doctype-shortened",
+								raw: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><p>x</p>',
+								min: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><p>x</p>'
+							}
+						],
+						false
+					);
+					expect(differences).toEqual([
+						{ name: "doctype-dropped", why: "document: 2 vs 1" },
+						{
+							name: "doctype-shortened",
+							why: "document 0: html|-//W3C//DTD HTML 4.01 Transitional//EN|http://www.w3.org/TR/html4/loose.dtd vs html|-//W3C//DTD HTML 4.01 Transitional//EN|"
+						}
+					]);
+				},
+				FILE_TIMEOUT
+			);
 
 			// A `)` inside a quoted `url()` belongs to the address; one met after an
 			// illegal quote ends the bad url, and the rest is a color again.
