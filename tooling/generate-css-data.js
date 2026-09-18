@@ -5427,9 +5427,15 @@ const collectSelectorSupport = () => {
  * filed under rather than for one it never names, which is why `canvastext` is
  * absent and its ancient `<system-color>` parent is not read for it.
  * @param {string[]} colorFunctions the functions `<color>` names
+ * @param {{ [name: string]: BcdNode }=} propertyNodes the BCD property tree to read
  * @returns {[string, [string, number][]][]} the versions, by spelling
  */
-const collectValueSupport = (colorFunctions) => {
+const collectValueSupport = (
+	colorFunctions,
+	propertyNodes = /** @type {{ [name: string]: BcdNode }} */ (
+		/** @type {unknown} */ (bcd.css.properties)
+	)
+) => {
 	/** @type {[string, [string, number][]][]} */
 	const table = [];
 	for (const name of colorFunctions) {
@@ -5437,7 +5443,7 @@ const collectValueSupport = (colorFunctions) => {
 		if (!node || !node.__compat) continue;
 		table.push([name, collectSupportedFrom([`css.types.color.${name}`])]);
 	}
-	for (const [property, node] of Object.entries(bcd.css.properties)) {
+	for (const [property, node] of Object.entries(propertyNodes)) {
 		if (property.startsWith("__")) continue;
 		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
 		if (!entry || !entry.syntax || entry.status !== "standard") continue;
@@ -7683,6 +7689,7 @@ module.exports.collectOmittableInitialKeywords =
 module.exports.collectRatioProperties = collectRatioProperties;
 module.exports.collectUnsharedLonghandKeywords =
 	collectUnsharedLonghandKeywords;
+module.exports.collectValueSupport = collectValueSupport;
 module.exports.collectZeroUnitAmbiguousProperties =
 	collectZeroUnitAmbiguousProperties;
 module.exports.isPlainSupport = isPlainSupport;
