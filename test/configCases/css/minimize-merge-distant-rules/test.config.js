@@ -32,6 +32,9 @@ module.exports = {
 		expect(css).not.toContain(".wide-first{width:0}.wide-second");
 		expect(css).not.toContain(".framed-first{color:red}.framed-second");
 		expect(css).not.toContain(".layered-first{color:red}.layered-second");
-		expect(css).not.toContain("opacity:0}to{");
+		expect(css).not.toContain(".anonymous-first{color:red}.anonymous-second");
+		expect(css).toContain(
+			"@keyframes fading{0%{opacity:0}}.between-frames{margin:2px}@keyframes fading{to{opacity:1}}"
+		);
 	}
 };
