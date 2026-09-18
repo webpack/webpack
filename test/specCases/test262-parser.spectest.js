@@ -4,6 +4,10 @@ const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const {
+	firstDifference,
+	reportable
+} = require("../helpers/compareParserOutput");
 
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
 /** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */
@@ -19,8 +23,6 @@ const hasCorpus =
 // Every area is parsed twice per mode, and coverage instrumentation makes the
 // parser several times slower, so jest's default 30s is far too tight.
 const AREA_TIMEOUT = 600000;
-// Enough of a regression to see its shape without flooding the log.
-const MAX_REPORTED = 10;
 
 // The option sets a caller can hand `JavascriptParser._parse`. Ranges alone is
 // the one webpack uses, and the only one that takes the lazy-node path.
@@ -48,78 +50,6 @@ const sourceTypeOf = (code) => {
 	return flags[1].split(",").some((flag) => flag.trim() === "module")
 		? "module"
 		: "script";
-};
-
-/**
- * A value as it reads in a difference report, kept short enough to scan.
- * @param {unknown} value either parser's value at the differing path
- * @returns {string} how the value prints
- */
-const show = (value) => {
-	if (typeof value === "bigint") return `${value}n`;
-	if (value instanceof RegExp) return String(value);
-	if (typeof value === "object" && value !== null) {
-		return Array.isArray(value)
-			? `[${value.length} items]`
-			: `{${Object.keys(value).sort().join(",")}}`;
-	}
-	return JSON.stringify(value) || String(value);
-};
-
-/**
- * The first place two parse trees disagree, or null when they match. Key
- * presence is asked with `in`, since the lazy path serves `range` from a
- * prototype getter rather than an own property.
- * @param {unknown} ours what webpack's parser built
- * @param {unknown} theirs what acorn built
- * @param {string} at the path walked so far
- * @returns {{ at: string, ours: string, acorn: string } | null} the difference
- */
-const firstDifference = (ours, theirs, at) => {
-	if (ours === theirs) return null;
-	const report = { at, ours: show(ours), acorn: show(theirs) };
-	if (typeof ours !== typeof theirs) return report;
-	if (typeof ours === "number") {
-		return Number.isNaN(ours) && Number.isNaN(/** @type {number} */ (theirs))
-			? null
-			: report;
-	}
-	if (typeof ours === "bigint") {
-		return String(ours) === String(theirs) ? null : report;
-	}
-	if (typeof ours !== "object" || ours === null || theirs === null) {
-		return report;
-	}
-	if (ours instanceof RegExp || theirs instanceof RegExp) {
-		return String(ours) === String(theirs) ? null : report;
-	}
-	if (Array.isArray(ours) !== Array.isArray(theirs)) return report;
-	if (Array.isArray(ours)) {
-		const other = /** @type {unknown[]} */ (theirs);
-		if (ours.length !== other.length) return report;
-		for (let i = 0; i < ours.length; i++) {
-			const difference = firstDifference(ours[i], other[i], `${at}[${i}]`);
-			if (difference) return difference;
-		}
-		return null;
-	}
-	const left = /** @type {Record<string, unknown>} */ (ours);
-	const right = /** @type {Record<string, unknown>} */ (theirs);
-	const ourKeys = Object.keys(left);
-	const theirKeys = Object.keys(right);
-	// Whichever side owns more keys covers the other: two same-sized key sets
-	// that differ must each hold a key the other lacks.
-	for (const key of ourKeys.length >= theirKeys.length ? ourKeys : theirKeys) {
-		if (!(key in left)) {
-			return { at: `${at}.${key}`, ours: "absent", acorn: show(right[key]) };
-		}
-		if (!(key in right)) {
-			return { at: `${at}.${key}`, ours: show(left[key]), acorn: "absent" };
-		}
-		const difference = firstDifference(left[key], right[key], `${at}.${key}`);
-		if (difference) return difference;
-	}
-	return null;
 };
 
 /**
@@ -198,20 +128,6 @@ const compareFile = (file, mode, trees, verdicts) => {
 	);
 	if (commentDifference) trees.push({ file: name, ...commentDifference });
 };
-
-/**
- * The first few differences, with a count when more were found.
- * @template T
- * @param {T[]} differences everything the run collected
- * @returns {(T | string)[]} what the assertion prints
- */
-const reportable = (differences) =>
-	differences.length > MAX_REPORTED
-		? [
-				...differences.slice(0, MAX_REPORTED),
-				`…and ${differences.length - MAX_REPORTED} more`
-			]
-		: differences;
 
 const areas = hasCorpus
 	? fs

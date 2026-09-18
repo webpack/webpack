@@ -2,7 +2,17 @@
 
 // cspell:ignore ypeof averyvery ahri aafom Unsyntactic
 
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const acorn = require("acorn");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
+const { Parser } = require("../../lib/javascript/parser");
+const { parse: webpackParse } = require("../../lib/javascript/syntax");
+const {
+	firstDifference,
+	reportable
+} = require("../helpers/compareParserOutput");
 
 /**
  * @param {string} code source code the parser mapped
@@ -2347,9 +2357,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 
 		// webpack owns the parser, so importing acorn anywhere in lib is a regression.
 		it("keeps acorn out of every lib file", () => {
-			const fs = require("fs");
-			const path = require("path");
-
 			const dir = path.resolve(__dirname, "../../lib");
 			/** @type {string[]} */
 			const offenders = [];
@@ -2374,5 +2381,544 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			walk(dir);
 			expect(offenders).toEqual([]);
 		});
+	});
+});
+
+// webpack's JavaScript parser is a port of acorn, so acorn's own test suite is
+// the corpus it owes the same answers on. What each case expects comes from
+// acorn itself, parsed side by side below.
+
+/** @typedef {{ type: { label: string }, value: unknown, start: number, end: number, loc?: object, range?: [number, number] }} TokenLike */
+/** @typedef {Record<string, EXPECTED_ANY>} Options */
+/** @typedef {{ file: string, code: string, options: Options, commonjs?: false, error?: string }} Corpus */
+/** @typedef {{ file: string, code: string, options?: Options, error?: string }} RecordedCase */
+/** @typedef {{ case: string, file: string, at: string, ours: string, acorn: string }} TreeDifference */
+/** @typedef {{ case: string, file: string, webpack: string, acorn: string }} VerdictDifference */
+
+const CORPUS_FILE = path.resolve(__dirname, "../fixtures/acorn-corpus.json");
+const ACORN_VERSION = require("acorn/package.json").version;
+// acorn ships no tests in its npm tarball, so the corpus is vendored. Refresh
+// it by cloning acorn at this version here, then re-running this file with
+// WEBPACK_UPDATE_ACORN_CORPUS=1 set.
+const ACORN_CHECKOUT = path.resolve(
+	__dirname,
+	"../../node_modules/.cache",
+	`acorn-${ACORN_VERSION}`
+);
+
+const corpus = /** @type {{ acornVersion: string, cases: Corpus[] }} */ (
+	JSON.parse(fs.readFileSync(CORPUS_FILE, "utf8"))
+);
+
+// Options acorn's own driver reads rather than passes on: they pick which of
+// its parsers a case runs under, so only the commonjs filter survives here.
+const DRIVER_OPTIONS = new Set(["loose", "commonjs"]);
+// Options whose value is a callback, which no vendored corpus can carry.
+const CALLBACK_OPTIONS = new Set(["onInsertedSemicolon", "onTrailingComma"]);
+// Options acorn's driver hands an array of expectations and reads back after
+// the parse. The corpus records that the case asked for them, not what it
+// expected, because the run below diffs both parsers' output instead.
+const COLLECTOR_OPTIONS = new Set(["onComment", "onToken"]);
+
+/**
+ * Load every `tests*.js` of an acorn checkout against a driver that records
+ * each case instead of running it. Each file runs as the script it is, against
+ * a `require` of this module's own, because a source checkout has no built
+ * entry point for the one test file that reads token types off it.
+ * @param {string} tests the checkout's `test` directory
+ * @returns {RecordedCase[]} every case, in upstream order
+ */
+const collectAcornCases = (tests) => {
+	/** @type {RecordedCase[]} */
+	const cases = [];
+	let file = "";
+	const driver = {
+		/**
+		 * @param {string} code the source
+		 * @param {EXPECTED_ANY} _ast the tree acorn expects, which this file takes from acorn itself instead
+		 * @param {Options=} options what the case parses with
+		 * @returns {void}
+		 */
+		test: (code, _ast, options) => {
+			cases.push({ file, code, options });
+		},
+		/**
+		 * @param {string} code the source
+		 * @param {string} error the message acorn expects, `~`-prefixed when only a substring
+		 * @param {Options=} options what the case parses with
+		 * @returns {void}
+		 */
+		testFail: (code, error, options) => {
+			cases.push({ file, code, options, error });
+		},
+		/**
+		 * @param {string} code the source
+		 * @param {(ast: EXPECTED_ANY) => string | null} _assert what upstream asserts over the tree, which no corpus can carry
+		 * @param {Options=} options what the case parses with
+		 * @returns {void}
+		 */
+		testAssert: (code, _assert, options) => {
+			cases.push({ file, code, options });
+		}
+	};
+
+	/**
+	 * @param {string} request what the test file asked for
+	 * @returns {EXPECTED_ANY} the driver, or the acorn it reads token types from
+	 */
+	const resolve = (request) =>
+		request.endsWith("driver.js") ? driver : acorn;
+
+	for (const entry of fs.readdirSync(tests).sort()) {
+		if (!/^tests.*\.js$/.test(entry)) continue;
+		file = entry;
+		const source = fs.readFileSync(path.join(tests, entry), "utf8");
+		// eslint-disable-next-line no-new-func
+		new Function("require", "exports", "module", source)(resolve, {}, {});
+	}
+
+	return cases;
+};
+
+/**
+ * One case as the corpus records it: the source, the options that survive
+ * vendoring, and acorn's own verdict.
+ * @param {RecordedCase} testCase what the driver recorded
+ * @returns {Corpus} the corpus entry
+ */
+const corpusEntryOf = ({ file, code, options, error }) => {
+	/** @type {Options} */
+	const kept = {};
+
+	for (const [name, value] of Object.entries(options || { locations: true })) {
+		if (CALLBACK_OPTIONS.has(name)) continue;
+		if (COLLECTOR_OPTIONS.has(name)) {
+			kept[name] = true;
+			continue;
+		}
+		if (!DRIVER_OPTIONS.has(name)) kept[name] = value;
+	}
+	// acorn's driver parses at ES5 wherever a case named no version.
+	if (!kept.ecmaVersion) kept.ecmaVersion = 5;
+
+	/** @type {Corpus} */
+	const entry = { file, code, options: kept };
+
+	// `sourceType: "commonjs"` is a second goal symbol acorn runs its script
+	// cases under; a case that opts out says so where the run below reads it.
+	if (options && options.commonjs === false) entry.commonjs = false;
+	if (error !== undefined) entry.error = error;
+
+	return entry;
+};
+
+/**
+ * The corpus as it is written: one case per line, so a refreshed corpus diffs
+ * as the cases that moved.
+ * @param {string} version the acorn the cases came from
+ * @param {Corpus[]} entries every case
+ * @returns {string} the file's contents
+ */
+const renderCorpus = (version, entries) =>
+	[
+		"{",
+		`"acornVersion": ${JSON.stringify(version)},`,
+		'"cases": [',
+		entries.map((entry) => JSON.stringify(entry)).join(",\n"),
+		"]",
+		"}",
+		""
+	].join("\n");
+
+// Every case is parsed by both parsers, and coverage instrumentation makes the
+// parser several times slower, so jest's default 30s is too tight.
+const CORPUS_TIMEOUT = 300000;
+
+// The two entry points into webpack's parser: the subclass every build runs,
+// and the ported base it specializes. Both owe acorn the same trees.
+/** @type {[string, (code: string, options: Options) => EXPECTED_ANY][]} */
+const PARSERS = [
+	[
+		"the parser a build runs",
+		(code, options) =>
+			webpackParse(
+				code,
+				/** @type {import("../../lib/javascript/syntax").ParserOptions} */ (
+					options
+				)
+			)
+	],
+	["the ported base parser", (code, options) => Parser.parse(code, options)]
+];
+
+// What is asked on top of the options each case carries. Ranges, locations and
+// the two collectors are off in most of acorn's cases, and turning them on is
+// what reaches webpack's lazy nodes and its own comment and token bookkeeping.
+/** @type {[string, Options][]} */
+const MODES = [
+	["as acorn's own suite runs them", {}],
+	[
+		"with ranges, locations, comments and tokens",
+		{ ranges: true, locations: true, onComment: true, onToken: true }
+	],
+	["as commonjs", { sourceType: "commonjs" }]
+];
+
+// WHY: the parser a build runs hands a regexp literal to the host engine and
+// only re-reads it with the ported validator when the engine refused it, so a
+// pattern this engine builds is accepted whatever `ecmaVersion` says. These
+// are acorn's cases for exactly that: syntax of a later edition, parsed at an
+// earlier one, which acorn rejects by edition and webpack takes as written.
+const ENGINE_VALIDATED = new Set([
+	"/(?<a>a)\\k<a>/@2017",
+	"/(?<a>a)\\k<a>/u@2017",
+	"/\\p{ASCII}/u@2017",
+	"/(?<=a)/@2017",
+	"/(?<=a)/u@2017",
+	"/(?<!a)/@2017",
+	"/(?<!a)/u@2017",
+	"/(?<\\ud835\\udc9c>.)/@2019",
+	"/(?<\\u{1d49c}>.)/@2019",
+	"/(?<𝒜>.)/@2019"
+]);
+
+// Both parsers give up on input nested deeper than the stack takes, at the
+// depth their own frames allow — the same verdict, reached a few frames apart.
+const STACK_LIMIT = "Not enough stack space to parse input";
+
+/**
+ * Whether acorn's stricter answer is the one webpack's engine-backed regexp
+ * validation is documented to decline to give.
+ * @param {Corpus} testCase the case
+ * @param {string} ours webpack's verdict
+ * @param {string} theirs acorn's verdict
+ * @returns {boolean} whether the disagreement is that contract
+ */
+const isEngineValidated = (testCase, ours, theirs) =>
+	ours === "parsed" &&
+	theirs !== undefined &&
+	theirs.startsWith("Invalid regular expression:") &&
+	ENGINE_VALIDATED.has(`${testCase.code}@${testCase.options.ecmaVersion}`);
+
+/**
+ * A token as both parsers describe one: their `TokenType` instances are
+ * different objects of different classes, so the label stands in for the type.
+ * @param {TokenLike} token the token either parser reported
+ * @returns {object} what the comparison reads
+ */
+const tokenShape = (token) => ({
+	type: token.type.label,
+	value: token.value,
+	start: token.start,
+	end: token.end,
+	loc: token.loc,
+	range: token.range
+});
+
+/**
+ * The options one case is parsed with, and where its comments and tokens land.
+ * @param {Corpus} testCase the case
+ * @param {Options} mode what the run asks on top of it
+ * @param {object[]} comments where comments are collected
+ * @param {TokenLike[]} tokens where tokens are collected
+ * @returns {Options} the options both parsers are handed
+ */
+const optionsFor = (testCase, mode, comments, tokens) => {
+	const options = { ...testCase.options, ...mode };
+	if (options.onComment) options.onComment = comments;
+	if (options.onToken) options.onToken = tokens;
+	return options;
+};
+
+/**
+ * Whether a case is one acorn also runs under `sourceType: "commonjs"`, which
+ * is the filter its own runner applies.
+ * @param {Corpus} testCase the case
+ * @returns {boolean} whether the commonjs goal symbol applies to it
+ */
+const runsAsCommonjs = (testCase) =>
+	testCase.commonjs !== false &&
+	!testCase.options.allowAwaitOutsideFunction &&
+	(!testCase.options.sourceType || testCase.options.sourceType === "script");
+
+/**
+ * Parse one case with both parsers and record how they disagreed.
+ * @param {Corpus} testCase the case
+ * @param {(code: string, options: Options) => EXPECTED_ANY} parse webpack's entry point
+ * @param {Options} mode what the run asks on top of the case's own options
+ * @param {TreeDifference[]} trees where tree, comment and token differences are collected
+ * @param {VerdictDifference[]} verdicts where verdicts that disagree are collected
+ * @returns {void}
+ */
+const compareCase = (testCase, parse, mode, trees, verdicts) => {
+	/** @type {object[]} */
+	const ourComments = [];
+	/** @type {TokenLike[]} */
+	const ourTokens = [];
+	/** @type {object[]} */
+	const theirComments = [];
+	/** @type {TokenLike[]} */
+	const theirTokens = [];
+	const { code } = testCase;
+	const name = JSON.stringify(code);
+
+	/** @type {EXPECTED_ANY} */
+	let ours;
+	/** @type {string} */
+	let ourVerdict = "parsed";
+	try {
+		ours = parse(code, optionsFor(testCase, mode, ourComments, ourTokens));
+	} catch (err) {
+		ourVerdict = /** @type {Error} */ (err).message;
+	}
+
+	/** @type {EXPECTED_ANY} */
+	let theirs;
+	/** @type {string} */
+	let theirVerdict = "parsed";
+	try {
+		theirs = acorn.parse(
+			code,
+			/** @type {import("acorn").Options} */ (
+				optionsFor(testCase, mode, theirComments, theirTokens)
+			)
+		);
+	} catch (err) {
+		theirVerdict = /** @type {Error} */ (err).message;
+	}
+
+	if (ourVerdict !== theirVerdict) {
+		const bothRanOut =
+			ourVerdict.startsWith(STACK_LIMIT) && theirVerdict.startsWith(STACK_LIMIT);
+		if (bothRanOut || isEngineValidated(testCase, ourVerdict, theirVerdict)) {
+			return;
+		}
+		verdicts.push({
+			case: name,
+			file: testCase.file,
+			webpack: ourVerdict,
+			acorn: theirVerdict
+		});
+		return;
+	}
+	if (ourVerdict !== "parsed") return;
+
+	const tree = firstDifference(ours, theirs, "program");
+	if (tree) trees.push({ case: name, file: testCase.file, ...tree });
+	const comments = firstDifference(ourComments, theirComments, "comments");
+	if (comments) trees.push({ case: name, file: testCase.file, ...comments });
+	const tokens = firstDifference(
+		ourTokens.map((token) => tokenShape(token)),
+		theirTokens.map((token) => tokenShape(token)),
+		"tokens"
+	);
+	if (tokens) trees.push({ case: name, file: testCase.file, ...tokens });
+};
+
+/**
+ * Whether webpack's verdict is the one acorn's own suite recorded for a case.
+ * A `~`-prefixed expectation asks for a substring, as acorn's driver does.
+ * @param {Corpus} testCase the case
+ * @param {string} verdict what webpack answered
+ * @returns {boolean} whether the case passes acorn's own assertion
+ */
+const meetsExpectation = (testCase, verdict) => {
+	if (testCase.error === undefined) return verdict === "parsed";
+	return testCase.error.startsWith("~")
+		? verdict.includes(testCase.error.slice(1))
+		: verdict === testCase.error;
+};
+
+describe("acorn corpus", () => {
+	it("is vendored from the acorn webpack is compared against", () => {
+		// The corpus carries acorn's own error messages, so a bumped
+		// devDependency needs the refresh below run against the new version.
+		expect(corpus.acornVersion).toBe(ACORN_VERSION);
+		expect(corpus.cases.length).toBeGreaterThan(3000);
+	});
+
+	it("still says what acorn's checked-out suite says", () => {
+		// Only where acorn's sources were checked out, which is the one place the
+		// vendored corpus can be checked against what it came from.
+		const tests = path.join(ACORN_CHECKOUT, "test");
+		if (!fs.existsSync(path.join(tests, "driver.js"))) return;
+		const refreshed = renderCorpus(
+			ACORN_VERSION,
+			collectAcornCases(tests).map((testCase) => corpusEntryOf(testCase))
+		);
+		if (process.env.WEBPACK_UPDATE_ACORN_CORPUS) {
+			fs.writeFileSync(CORPUS_FILE, refreshed);
+			return;
+		}
+		expect(refreshed).toBe(fs.readFileSync(CORPUS_FILE, "utf8"));
+	});
+
+	for (const [parserName, parse] of PARSERS) {
+		describe(parserName, () => {
+			for (const [modeName, mode] of MODES) {
+				it(
+					`builds acorn's tree ${modeName}`,
+					() => {
+						/** @type {TreeDifference[]} */
+						const trees = [];
+						/** @type {VerdictDifference[]} */
+						const verdicts = [];
+						let compared = 0;
+						for (const testCase of corpus.cases) {
+							if (mode.sourceType === "commonjs" && !runsAsCommonjs(testCase)) {
+								continue;
+							}
+							compareCase(testCase, parse, mode, trees, verdicts);
+							compared++;
+						}
+						expect(reportable(trees)).toEqual([]);
+						expect(reportable(verdicts)).toEqual([]);
+						expect(compared).toBeGreaterThan(1000);
+					},
+					CORPUS_TIMEOUT
+				);
+			}
+
+			it(
+				"answers every case the way acorn's own suite asserts",
+				() => {
+					/** @type {{ case: string, file: string, expected: string, webpack: string }[]} */
+					const differences = [];
+					for (const testCase of corpus.cases) {
+						/** @type {string} */
+						let verdict = "parsed";
+						try {
+							parse(testCase.code, optionsFor(testCase, {}, [], []));
+						} catch (err) {
+							verdict = /** @type {Error} */ (err).message;
+						}
+						if (meetsExpectation(testCase, verdict)) continue;
+						if (
+							isEngineValidated(
+								testCase,
+								verdict,
+								/** @type {string} */ (testCase.error)
+							)
+						) {
+							continue;
+						}
+						differences.push({
+							case: JSON.stringify(testCase.code),
+							file: testCase.file,
+							expected: testCase.error || "parsed",
+							webpack: verdict
+						});
+					}
+					expect(reportable(differences)).toEqual([]);
+				},
+				CORPUS_TIMEOUT
+			);
+		});
+	}
+});
+
+describe("acorn corpus recording", () => {
+	/**
+	 * A checkout holding one test file, written the way acorn writes them.
+	 * @param {string} source what the file calls the driver with
+	 * @returns {string} the directory to collect from
+	 */
+	const checkoutWith = (source) => {
+		const dir = fs.mkdtempSync(path.join(os.tmpdir(), "acorn-corpus-"));
+		fs.writeFileSync(path.join(dir, "tests-fake.js"), source);
+		// only `tests*.js` is read, so a sibling the collector must skip
+		fs.writeFileSync(path.join(dir, "driver.js"), "throw new Error('read')");
+		return dir;
+	};
+
+	it("records what acorn's driver would have run", () => {
+		const dir = checkoutWith(
+			[
+				'var driver = require("./driver.js");',
+				'var acorn = require("../acorn");',
+				'driver.test("var x", { type: "Program" }, { ecmaVersion: 2015 });',
+				'driver.testFail("var", "Unexpected token (1:3)");',
+				'driver.testAssert("x", function (ast) { return ast ? null : "no"; });',
+				'if (!acorn.tokTypes) throw new Error("no token types");'
+			].join("\n")
+		);
+
+		expect(collectAcornCases(dir)).toEqual([
+			{
+				file: "tests-fake.js",
+				code: "var x",
+				options: { ecmaVersion: 2015 }
+			},
+			{
+				file: "tests-fake.js",
+				code: "var",
+				options: undefined,
+				error: "Unexpected token (1:3)"
+			},
+			{ file: "tests-fake.js", code: "x", options: undefined }
+		]);
+		fs.rmSync(dir, { recursive: true });
+	});
+
+	it("keeps only the options a vendored case can carry", () => {
+		expect(
+			corpusEntryOf({
+				file: "tests-fake.js",
+				code: "x",
+				options: {
+					ecmaVersion: 2020,
+					sourceType: "module",
+					onComment: [],
+					onToken: [],
+					onTrailingComma() {},
+					loose: false,
+					commonjs: false
+				},
+				error: "~boom"
+			})
+		).toEqual({
+			file: "tests-fake.js",
+			code: "x",
+			options: {
+				ecmaVersion: 2020,
+				sourceType: "module",
+				onComment: true,
+				onToken: true
+			},
+			commonjs: false,
+			error: "~boom"
+		});
+	});
+
+	it("parses a case naming no version as acorn's driver does", () => {
+		expect(corpusEntryOf({ file: "f.js", code: "x" }).options).toEqual({
+			locations: true,
+			ecmaVersion: 5
+		});
+	});
+
+	it("writes one case per line under the version they came from", () => {
+		/**
+		 * @param {string} code the case's source
+		 * @returns {Corpus} the entry
+		 */
+		const entry = (code) => ({
+			file: "f.js",
+			code,
+			options: { ecmaVersion: 5 }
+		});
+
+		expect(renderCorpus("8.0.0", [entry("a"), entry("b")])).toBe(
+			[
+				"{",
+				'"acornVersion": "8.0.0",',
+				'"cases": [',
+				'{"file":"f.js","code":"a","options":{"ecmaVersion":5}},',
+				'{"file":"f.js","code":"b","options":{"ecmaVersion":5}}',
+				"]",
+				"}",
+				""
+			].join("\n")
+		);
 	});
 });
