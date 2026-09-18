@@ -23,6 +23,8 @@ export default defineConfig([
 		"!test/templates/*.js",
 		"!test/specCases/*.js",
 		"!test/benchmarkCases/**/*.mjs",
+		"!test/harness/*.js",
+		"!test/harness/runtimes/*.js",
 		"!test/harness/benchmark/**/*.mjs",
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",

@@ -36,6 +36,12 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Stores sample/mock data used in tests.
 - **Usage**: Helps in creating consistent test cases with predefined inputs.
 
+### 5b. `harness/`
+
+- **Purpose**: What runs the suites, as opposed to what they test. Jest's lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` test environment, `runtimeCrashReporter.js`, the case `runner/`, the `snapshot/` resolver and matchers, `benchmark/`, and `runtimes/`.
+- **`runtimes/`**: The preload and setup files that let jest run under a non-Node runtime — `bun-preload.js` and `bun-sandbox-setup.js` for `yarn test:bun`, `deno-worker-setup.js` and `deno-import-map.json` for `yarn test:deno`. Wired in through `jest.config.js` and the `test:base:bun` / `test:base:deno` scripts.
+- **Not helpers**: a reusable assertion or fixture belongs in `helpers/`; `harness/` is only for machinery the test runner itself loads.
+
 ### 6. `helpers/`
 
 - **Purpose**: Utility functions and scripts to assist in testing.

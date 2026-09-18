@@ -2,7 +2,7 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const { matchKindSnapshot } = require("./harness/snapshot");
+const { matchKindSnapshot } = require("../harness/snapshot");
 
 /**
  * @param {string} str string to escape for use in a RegExp

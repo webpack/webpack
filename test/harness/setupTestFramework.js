@@ -1,7 +1,7 @@
 "use strict";
 
 const { toMatchSnapshot } = require("jest-snapshot");
-const { getActiveSnapshotState } = require("./harness/snapshot");
+const { getActiveSnapshotState } = require("./snapshot");
 
 expect.extend({
 	toBeTypeOf(received, expected) {
