@@ -1349,6 +1349,56 @@ const invariantFixtures = () => {
 };
 
 /**
+ * What the sweep reports that the printer owes nothing for. Each entry states
+ * the reason, since a divergence with no reason beside it is one nobody can
+ * tell from a defect later.
+ * @type {readonly import("./compare-tools-harness").Expected[]}
+ */
+const EXPECTED = [
+	{
+		relation: "respelling references",
+		contains: "&nbsp;",
+		why: "WHATWG 'escape a string' replaces U+00A0 with `&nbsp;`, which is what `escapeAttribute` implements; the literal costs 32 raw bytes less over 939 documents and nothing compressed either way"
+	},
+	{
+		relation: "respelling quote-double",
+		contains: "&nbsp;",
+		why: "the same escaping, reached through the delimiter the value is written in"
+	},
+	{
+		relation: "respelling quote-single",
+		contains: "&nbsp;",
+		why: "the same escaping, reached through the delimiter the value is written in"
+	},
+	{
+		relation: "respelling unquote",
+		contains: "&nbsp;",
+		why: "the same escaping, reached through a value written without quotes"
+	},
+	{
+		relation: "respelling quote-double",
+		contains: "&#34;",
+		source: "style-attribute",
+		why: "`&quot;` for `&#34;` is 3 raw bytes more and 11 gzip bytes less, and gzip decides"
+	},
+	{
+		relation: "respelling quote-double",
+		contains: "{%",
+		why: "a tag whose duplicate attribute names HTML parsing drops is echoed from source: rebuilding it would print the drop (#22013)"
+	},
+	{
+		relation: "respelling quote-single",
+		contains: "{%",
+		why: "the same echo, reached through the other delimiter"
+	},
+	{
+		relation: "respelling references",
+		contains: "{%",
+		why: "the same echo, which also leaves the tag's other values spelled as the source wrote them"
+	}
+];
+
+/**
  * Sweep mode: hold the printer to its own invariants and report what it breaks.
  * Nothing is installed and nothing is compared to, so this is the cheap half of
  * the script and the one a check can be gated on.
@@ -1359,7 +1409,7 @@ const invariants = (write) => {
 	const corpus = invariantFixtures().filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
-	const groups = findingGroups();
+	const groups = findingGroups(EXPECTED);
 	for (const [label, html] of corpus) {
 		for (const [preset, options] of presets) {
 			for (const report of sweepDocument(printerFor(options), html)) {
