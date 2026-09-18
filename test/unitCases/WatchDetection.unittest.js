@@ -10,6 +10,13 @@ const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 expectNoDeprecations();
 
+const { WATCHPACK_POLLING } = process.env;
+const POLLING = Boolean(WATCHPACK_POLLING) && WATCHPACK_POLLING !== "false";
+// Polling notices a change no sooner than the next interval, and this case walks
+// several change-and-rebuild round trips, so the runtimes the harness polls on
+// need more than jest's default budget.
+const TEST_TIMEOUT = POLLING ? 120000 : 30000;
+
 describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		// eslint-disable-next-line jest/no-disabled-tests
@@ -116,16 +123,11 @@ describe("WatchDetection", () => {
 						}
 					};
 
+					// No `poll` here: watchpack's WATCHPACK_POLLING overrides the option
+					// on every watcher, and the harness sets it for the runtimes whose
+					// native watch is unreliable.
 					watcher = /** @type {import("../../").Watching} */ (
-						compiler.watch(
-							{
-								aggregateTimeout: 50,
-								// Deno's node:fs.watch compat drops/delays change events, so
-								// native detection is flaky here; poll for deterministic pickup.
-								...(process.versions.deno ? { poll: 100 } : {})
-							},
-							() => {}
-						)
+						compiler.watch({ aggregateTimeout: 50 }, () => {})
 					);
 				}
 
@@ -195,7 +197,7 @@ describe("WatchDetection", () => {
 				function handleError(err) {
 					if (err) done(err);
 				}
-			});
+			}, TEST_TIMEOUT);
 		});
 	}
 });
