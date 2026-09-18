@@ -1,16 +1,29 @@
 "use strict";
 
 const path = require("path");
-const webpack = require("../../");
 
 /** @type {import("../../").Configuration} */
 module.exports = {
-	entry: ["../../hot/dev-server", "./index.js"],
+	mode: "development",
+	context: __dirname,
+	entry: "./index.js",
 	output: {
+		path: path.resolve(__dirname, "dist"),
 		filename: "bundle.js",
-		hotUpdateChunkFilename: "[id].[fullhash].bundle-update.js",
-		hashDigestLength: 4
+		assetModuleFilename: "[name][ext]",
+		clean: true
 	},
-	plugins: [new webpack.HotModuleReplacementPlugin()],
-	recordsPath: path.resolve(__dirname, "./records.json") // this is not required for the webpack-dev-server, but when compiled.
+	// Every module type the playground demonstrates, so a change to one of
+	// them can be watched update in a browser rather than in a test log.
+	experiments: { css: true },
+	module: {
+		rules: [{ test: /\.svg$/, type: "asset/resource" }]
+	},
+	devServer: {
+		hot: true,
+		open: false,
+		port: 8080,
+		static: { directory: __dirname, watch: false }
+	},
+	devtool: "source-map"
 };

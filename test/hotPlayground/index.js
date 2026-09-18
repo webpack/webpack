@@ -1,62 +1,97 @@
-// This module is not accepted nor declined.
-// Any change will make the update fail.
-// If running in webpack-dev-server, it will do a complete reload on abort or fail.
+// A playground for watching HMR happen in a browser. Each module below is a
+// different type, so editing one shows how that type updates — see README.md.
 
-window.onload = function() {
+import "./styles.css";
+import * as styles from "./styles.module.css";
+import data from "./data.json";
+import logo from "./logo.svg";
 
-	if(module.hot) {
+function panel(heading) {
+	const element = document.createElement("section");
 
-		var checkButton = document.createElement("button");
-		checkButton.innerText = "Update!";
-		checkButton.onclick = function() {
-			module.hot.check(function(err, updatedModules) {
-				if(err) {
-					if(module.hot.status() in {abort:1,fail:1})
-						window.location.reload();
-					else
-						console.warn("Update failed: " + err);
-					return;
-				}
+	element.className = styles.panel;
 
-				if(!updatedModules || updatedModules.length === 0)
-					return console.log("Update is empty.");
-				console.log("Updated modules:");
-				updatedModules.forEach(function(moduleId) {
-					console.log(" - " + moduleId);
-				});
-			});
-		};
-		document.body.appendChild(checkButton);
-	}
+	const title = document.createElement("h3");
 
-	var element1 = document.createElement("div");
-	element1.innerHTML = require("./html.js");
-	document.body.appendChild(element1);
+	title.className = styles.heading;
+	title.innerText = heading;
+	element.appendChild(title);
 
-	var element2 = require("./element.js");
-	document.body.appendChild(element2);
+	return element;
+}
 
-	require("./style.js");
+// A module the entry accepts: the callback re-renders it in place.
+const htmlPanel = panel("Accepted by the entry");
+const htmlBody = document.createElement("div");
 
-	require("./applyStyle2");
+htmlBody.innerHTML = require("./html.js");
+htmlPanel.appendChild(htmlBody);
 
-	if(module.hot) {
+// A module that bubbles: element-dependency.js is accepted by nobody, so a
+// change to it replaces element.js too.
+const bubblePanel = panel("Bubbles to its parent");
+let element = require("./element.js");
 
-		module.hot.accept("./html.js", function() {
-			console.log("Replacing 'html.js' in 'index.js'");
-			element1.innerHTML = require("./html.js");
-		});
+bubblePanel.appendChild(element);
 
-		module.hot.accept("./element.js", function() {
-			document.body.removeChild(element2);
-			console.log("Replacing 'element.js' in 'index.js'");
-			element2 = require("./element.js");
-			document.body.appendChild(element2);
-		});
+// A JSON module.
+const jsonPanel = panel("JSON module");
+const jsonBody = document.createElement("pre");
 
-		module.hot.accept("./applyStyle2", function() {
-			require("./applyStyle2");
-		});
+jsonBody.innerText = `${data.title}: ${data.note}`;
+jsonPanel.appendChild(jsonBody);
 
-	}
-};
+// An asset module: the URL changes when the file does.
+const assetPanel = panel("Asset module");
+const image = document.createElement("img");
+
+image.src = logo;
+image.alt = "logo";
+assetPanel.appendChild(image);
+
+// An async chunk, fetched on demand.
+const lazyPanel = panel("Async chunk");
+const lazyBody = document.createElement("div");
+
+lazyPanel.appendChild(lazyBody);
+
+function renderLazy() {
+	import("./lazy.js").then((module) => {
+		lazyBody.innerText = module.default;
+	});
+}
+
+renderLazy();
+
+for (const section of [
+	htmlPanel,
+	bubblePanel,
+	jsonPanel,
+	assetPanel,
+	lazyPanel
+]) {
+	document.body.appendChild(section);
+}
+
+if (module.hot) {
+	module.hot.accept("./html.js", () => {
+		htmlBody.innerHTML = require("./html.js");
+	});
+
+	module.hot.accept("./element.js", () => {
+		const replacement = require("./element.js");
+
+		bubblePanel.replaceChild(replacement, element);
+		element = replacement;
+	});
+
+	module.hot.accept("./data.json", () => {
+		jsonBody.innerText = `${data.title}: ${data.note}`;
+	});
+
+	module.hot.accept("./logo.svg", () => {
+		image.src = logo;
+	});
+
+	module.hot.accept("./lazy.js", renderLazy);
+}

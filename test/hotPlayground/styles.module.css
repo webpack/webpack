@@ -1,0 +1,13 @@
+/* A CSS module: the class name is hashed and imported as a JS binding. */
+
+.panel {
+	margin: 1rem 0;
+	padding: 1rem;
+	border: 1px solid #373b41;
+	border-radius: 6px;
+}
+
+.heading {
+	margin: 0 0 0.5rem;
+	color: #81a2be;
+}

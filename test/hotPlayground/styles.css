@@ -1,0 +1,14 @@
+/* Native CSS, no loader. Self-accepting: webpack swaps the <link> in place. */
+
+body {
+	margin: 0;
+	padding: 2rem;
+	background: #1d1f21;
+	color: #c5c8c6;
+	font-family: system-ui, sans-serif;
+}
+
+button {
+	padding: 0.4rem 0.9rem;
+	cursor: pointer;
+}
