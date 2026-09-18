@@ -5693,6 +5693,21 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 		).toBe("<input type=text {% if required %} required{% endif %}>");
 	});
 
+	it("keeps a name this print left bare off the template's next byte", () => {
+		// A quoted value ends at its quote, so the source needed nothing between
+		// it and `{%`. Collapsing it to a bare name leaves the two to fuse.
+		expect(
+			minify('<input type="checkbox"{% if on %} checked="checked"{% endif %}>')
+		).toBe("<input type=checkbox {% if on %} checked {% endif %}>");
+		expect(
+			minify('<li class="row"{% for x in y %} data-x="1"{% endfor %}>a</li>')
+		).toBe("<li class=row {% for x in y %} data-x=1 {% endfor %}>a");
+		// A `/` terminates a bare name by itself, so it still needs no space.
+		expect(minify("<div {{#if x}} a {{/if}} a></div>")).toBe(
+			"<div {{#if x}} a {{/if}} a></div>"
+		);
+	});
+
 	it("still spells the attributes the tag does keep the one way", () => {
 		// Every spelling of the same tag prints as one, which is what a tag echoed
 		// whole could not do: the name folds, the references decode, the quotes go.
