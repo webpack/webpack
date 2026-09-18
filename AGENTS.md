@@ -587,6 +587,21 @@ Every webpack PR is reviewed automatically on the initial commit and on every su
 3. After every push, the reviewers run again. Repeat step 2. The loop ends when the latest review from each has zero outstanding threads.
 4. Only `unsubscribe_pr_activity` once all comments are handled and CI is green, or when the user tells you to stop.
 
+### While watching — report only what needs a decision
+
+> [!REQUIRED]
+
+**A wake that changes nothing ends with no message.** Watching a PR wakes the session on every check, bot comment and edit-in-place, and most of them say nothing a reader can act on. Stay silent unless one of these holds, then report that alone, in a line or two:
+
+- a review comment needs an action or a decision — from a human or a bot, judged on the claim;
+- a check failed for a reason that is this PR's, with the fix you pushed or what blocks it;
+- a measuring report is **final** and moved: code size (read gzip), coverage once every uploading suite has reported, a benchmark whose own output does not disclaim itself;
+- the PR merged or closed, or something needs the requester to choose.
+
+**Never narrate the rest.** An intermediate coverage recompute, a partial-upload percentage, a bot echo (changeset, preview publish, "review in progress"), a check that turned green, a list of jobs and their states — none of that is a finding, and repeating it buries the one wake that is.
+
+Silence is not the same as skipping. Read every event and investigate what it names; the rule governs what reaches the requester, never what you look at. A finding you judged an artifact is still reported once, with the evidence — see [After opening the PR](#after-opening-the-pr--every-check-ends-green).
+
 ## Do not touch
 
 > [!REQUIRED]

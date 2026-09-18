@@ -21,8 +21,9 @@ const { toJsStringLiteral } = require("../lib/util/identifier");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
 const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax.js");
-// Vendored because no package carries WHATWG's table faithfully: the ones that
-// exist drop the semicolon, losing the 106 names that match without one.
+// Vendored because the table is frozen — the spec says it "will not be expanded
+// or changed in the future" — and no package carries it faithfully: the ones
+// that exist drop the semicolon, losing the 106 names that match without one.
 const ENTITIES_PATH = path.resolve(__dirname, "html-entities.json");
 const write = process.argv.includes("--write");
 const fetchSource = process.argv.includes("--fetch");
