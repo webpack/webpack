@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`SourceProcessor — a duplicate attribute name preserves source attribute names on a template tag 1`] = `"<input TYPE=TEXT {% if isRequired %} required{% endif %}>"`;
+
 exports[`SourceProcessor — beautifying should beautify a comment 1`] = `"<div><!--c--></div>"`;
 
 exports[`SourceProcessor — beautifying should beautify a form the table kept 1`] = `"<table><p><form></form></p></table>"`;

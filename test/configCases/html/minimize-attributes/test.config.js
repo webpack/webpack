@@ -15,6 +15,8 @@ module.exports = {
 			path.join(options.output.path, "page.html"),
 			"utf8"
 		);
+		const condition = /\{% if (\w+) %\} required\{% endif %\}/.exec(page);
+		expect(condition && condition[1]).toBe("isRequired");
 		expect(page).toMatchSnapshot();
 
 		// An `&` keeps its escape only where the tokenizer would read on into a
