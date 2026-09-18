@@ -33,7 +33,7 @@ b\\">newline in a value</p>
 	<p a=1>duplicate attribute</p>
 	<p class=\\"a b\\">repeated class token, folded</p>
 	
-	<input type=\\"text\\"{% if required %} required{% endif %}>
+	<input type=text {% if required %} required{% endif %}>
 	<p class=\\"btn{% if active %} btn-active{% endif %}\\">the same list, as text</p>
 	<p data-slash=/end/>value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>

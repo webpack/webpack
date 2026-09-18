@@ -5677,23 +5677,59 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 		);
 	});
 
-	it("is written back where the tag spells a foreign delimiter", () => {
+	it("is carried over where the tag spells a foreign delimiter", () => {
 		// `{%` / `%}` tokenize as attribute names, so `{% endif %}` repeats both
-		// and §13.2.5.33 drops them; a re-parse of the echoed tag drops them again.
-		for (const tag of [
-			'<input type="text"{% if required %} required{% endif %}>',
-			"<div {{cond}} id=a id=b></div>",
+		// and §13.2.5.33 drops them. What the print may not do is write that drop
+		// out: the bytes between the names it kept are the template's, so they are
+		// copied from the source rather than rebuilt from the attributes.
+		expect(minify("<div {{cond}} id=a id=b></div>")).toBe(
+			"<div {{cond}} id=a id=b></div>"
+		);
+		expect(minify("<div {{#if x}} data-a=1 {{/if}} data-a=2></div>")).toBe(
 			"<div {{#if x}} data-a=1 {{/if}} data-a=2></div>"
+		);
+		expect(
+			minify('<input type="text"{% if required %} required{% endif %}>')
+		).toBe("<input type=text {% if required %} required{% endif %}>");
+	});
+
+	it("still spells the attributes the tag does keep the one way", () => {
+		// Every spelling of the same tag prints as one, which is what a tag echoed
+		// whole could not do: the name folds, the references decode, the quotes go.
+		for (const tag of [
+			'<input type="text"{% if x %} a{% endif %}>',
+			"<input type='text'{% if x %} a{% endif %}>",
+			'<INPUT TYPE="TEXT"{% if x %} a{% endif %}>',
+			'<input type="&#x74;ext"{% if x %} a{% endif %}>'
 		]) {
-			expect(minify(tag)).toContain(tag);
+			expect(minify(tag)).toBe("<input type=text {% if x %} a{% endif %}>");
 		}
 	});
 
-	it("leaves the tag its source spelling, quotes and all", () => {
-		// The whole tag is echoed, so nothing else of it is rewritten either.
-		expect(minify('<input TYPE="TEXT"{% if x %} a{% endif %}>')).toBe(
-			'<input TYPE="TEXT"{% if x %} a{% endif %}>'
+	it("separates an unquoted value from what the source wrote next", () => {
+		// Dropping the quotes leaves nothing between the value and the template, and
+		// an unquoted value reads on to the next ASCII whitespace or `>`.
+		expect(
+			minify('<img src="a.png"{% if lazy %} loading="lazy"{% endif %}/>')
+		).toBe("<img src=a.png {% if lazy %} loading=lazy {% endif %}/>");
+		// A `/` the tokenizer read as a separator is one of those bytes too.
+		expect(minify('<p a="b"/{{x}} c=1 c=1>t</p>')).toBe(
+			"<p a=b /{{x}} c=1 c=1>t"
 		);
+		expect(minify('<img src="a.png" {{x}} b=1 b=2 c="d"/>')).toBe(
+			"<img src=a.png {{x}} b=1 b=2 c=d />"
+		);
+	});
+
+	it("leaves the values it has no minifier for as the source wrote them", () => {
+		// A nested language is read by the renderer the host hands in, and none is
+		// set here, so both are the source's own bytes with the references decoded.
+		expect(minify('<p style="color : red ;"{% if x %} a{% endif %}>t</p>')).toBe(
+			'<p style="color : red ;"{% if x %} a{% endif %}>t'
+		);
+		expect(
+			minify('<p onclick="a  &amp;&amp;  b()"{% if x %} a{% endif %}>t</p>')
+		).toBe('<p onclick="a  &&  b()"{% if x %} a{% endif %}>t');
 	});
 });
 
