@@ -307,6 +307,9 @@ jobs:
   # one engine reads differently is invisible to a suite that asks one, and
   # several of the defects filed today are ones only Gecko sees.
   syntax-equivalence:
+    # Named for the engine alone: a matrix row carries the script and the
+    # coverage flag too, and the generated name would otherwise print all three.
+    name: syntax-equivalence (${{ matrix.browser }})
     needs: basic
     strategy:
       fail-fast: false
