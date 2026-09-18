@@ -1,0 +1,1 @@
+This text is an asset/source module: webpack inlines the file contents as a string.

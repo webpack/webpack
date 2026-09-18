@@ -80,7 +80,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 ### `hotPlayground/`
 
-- **Purpose**: A hand-driven counterpart to `hotCases/` — those assert what an update does, this one lets you watch it happen in a browser. One panel per module type (CommonJS, CSS, CSS modules, JSON, asset, async chunk), so a change to HMR can be tried against each without writing a case first. Nothing here runs in CI.
+- **Purpose**: A hand-driven counterpart to `hotCases/` — those assert what an update does, this one lets you watch it happen in a browser. One panel per module type and ECMAScript form: an html entry, CommonJS, CSS, CSS modules, JSON via an import attribute, all three asset types, async and source-phase WebAssembly, `import defer` and an async chunk, plus a panel driving the HMR API itself (`data`/`dispose`, `addStatusHandler`, `check`, `invalidate`). Nothing here runs in CI.
 - **Usage**: `yarn playground` serves it on `http://localhost:8080` with hot reloading on; edit any file and watch the page. See `test/hotPlayground/README.md` for what each file demonstrates.
 
 ### `memoryLimitCases/`
