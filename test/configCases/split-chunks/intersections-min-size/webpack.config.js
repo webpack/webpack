@@ -11,6 +11,9 @@ const sharedSize = [0, 1, 2].reduce(
 /**
  * Creates one intersection test configuration.
  * @param {object} options test options
+ * @param {number=} options.dedupDepth discovery depth
+ * @param {boolean=} options.filtered whether chunks merge after filtering
+ * @param {"production" | "development" | "none"=} options.mode build mode
  * @param {boolean=} options.usedExports whether exports are grouped by runtime usage
  * @param {boolean=} options.belowThreshold whether the combined group misses minSize
  * @param {boolean=} options.higherOrder whether three inputs are needed for the candidate
@@ -21,6 +24,9 @@ const sharedSize = [0, 1, 2].reduce(
  */
 const config = ({
 	usedExports = false,
+	dedupDepth,
+	filtered = false,
+	mode = "production",
 	belowThreshold = false,
 	higherOrder = false,
 	named = false,
@@ -33,25 +39,32 @@ const config = ({
 		higherOrder ? "higher" : "pair",
 		named ? "named" : "unnamed",
 		reductionOnly ? "reduction" : "size",
-		`min-${minChunks}`
+		`min-${minChunks}`,
+		`depth-${dedupDepth}`,
+		mode,
+		filtered ? "filtered" : "unfiltered"
 	].join("-");
 	return {
 		name,
-		mode: "production",
+		mode,
 		target: "node",
 		entry: {
 			a: "./a",
 			...(minChunks === 1 ? {} : { b: "./b" }),
-			...(higherOrder
+			...(higherOrder || filtered
 				? { c: "./pair01", d: "./pair02", e: "./pair12" }
-				: { c: "./c0", d: "./c1", e: "./c2" })
+				: { c: "./c0", d: "./c1", e: "./c2" }),
+			...(filtered ? { p0: "./c0", p1: "./c1", p2: "./c2" } : {})
 		},
 		output: { filename: `${name}-[name].js` },
 		optimization: {
 			minimize: false,
 			concatenateModules: false,
 			splitChunks: {
-				chunks: "all",
+				chunks: filtered
+					? (chunk) => !["c", "d", "e"].includes(chunk.name || "")
+					: "all",
+				dedupDepth,
 				usedExports,
 				minChunks,
 				minSize: reductionOnly ? 0 : sharedSize + (belowThreshold ? 1 : 0),
@@ -80,7 +93,16 @@ const config = ({
 			(compiler) => {
 				compiler.hooks.done.tap("AssertIntersectionCandidates", (stats) => {
 					const { chunkGraph, modules } = stats.compilation;
-					const shouldSplit = !belowThreshold && minChunks <= 2;
+					const depth =
+						dedupDepth === undefined
+							? mode === "production"
+								? 1
+								: 0
+							: dedupDepth;
+					const shouldSplit =
+						!belowThreshold &&
+						minChunks <= 2 &&
+						(named || (depth > 0 && (!higherOrder || depth >= 2)));
 					const shared = [...modules].filter((module) => {
 						const name = module.nameForCondition();
 						return name !== null && /[\\/]m[012]\.js$/.test(name);
@@ -88,7 +110,17 @@ const config = ({
 					expect(shared).toHaveLength(3);
 					for (const module of shared) {
 						expect(chunkGraph.getModuleChunks(module)).toHaveLength(
-							shouldSplit ? (named ? 1 : higherOrder ? 3 : 2) : 3
+							filtered
+								? 4
+								: shouldSplit
+									? named
+										? 1
+										: higherOrder
+											? 3
+											: 2
+									: higherOrder
+										? 4
+										: 3
 						);
 					}
 					const common = chunkGraph
@@ -106,14 +138,25 @@ const config = ({
 };
 
 /** @type {import("../../../../").Configuration[]} */
-module.exports = [
+const cases = /** @type {Parameters<typeof config>[0][]} */ ([
 	{},
 	{ usedExports: true },
 	{ usedExports: true, belowThreshold: true },
-	{ higherOrder: true },
-	{ usedExports: true, higherOrder: true },
+	{ higherOrder: true, dedupDepth: 2 },
+	{ higherOrder: true, dedupDepth: 1 },
+	{ usedExports: true, higherOrder: true, dedupDepth: 2 },
+	{ usedExports: true, higherOrder: true, dedupDepth: 1 },
 	{ named: true },
 	{ reductionOnly: true },
 	{ minChunks: 1 },
-	{ minChunks: 3 }
-].map(config);
+	{ minChunks: 3 },
+	{ dedupDepth: 0 },
+	{ usedExports: true, dedupDepth: 0 },
+	{ filtered: true },
+	{ filtered: true, usedExports: true },
+	{ mode: "development" },
+	{ mode: "none" },
+	{ mode: "development", dedupDepth: 1 }
+]);
+
+module.exports = cases.map(config);

@@ -13,8 +13,8 @@ const {
 /**
  * Finds intersections in number sets.
  * @param {Iterable<number>[]} sets input sets
- * @param {Partial<{ minimumSize: number, maximumCandidates: number, maximumPairs: number, maximumComparisons: number }>} limits discovery limits
- * @returns {{ sets: Set<number>[], pairs: number, comparisons: number, limited: boolean }} intersections and discovery statistics
+ * @param {Partial<{ minimumSize: number, dedupDepth: number }>} limits discovery limits
+ * @returns {{ key: bigint, set: Set<number> }[]} intersections
  */
 const findNumberIntersections = (sets, limits = {}) =>
 	findIntersections(
@@ -30,9 +30,7 @@ const findNumberIntersections = (sets, limits = {}) =>
 		),
 		{
 			minimumSize: 2,
-			maximumCandidates: 100,
-			maximumPairs: 1000,
-			maximumComparisons: 10000,
+			dedupDepth: 2,
 			...limits
 		}
 	);
@@ -74,9 +72,7 @@ describe("SetHelpers", () => {
 			const result = findNumberIntersections(
 				Array.from({ length: 20 }, (_, i) => [1, 2, i + 3])
 			);
-			expect(serializeSets(result.sets)).toEqual(["1,2"]);
-			expect(result.pairs).toBe(190);
-			expect(result.limited).toBe(false);
+			expect(serializeSets(result.map(({ set }) => set))).toEqual(["1,2"]);
 		});
 
 		it("finds intersections that require more than two inputs", () => {
@@ -85,8 +81,7 @@ describe("SetHelpers", () => {
 				[1, 2, 3, 5],
 				[1, 2, 4, 5]
 			]);
-			expect(serializeSets(result.sets)).toContain("1,2");
-			expect(result.limited).toBe(false);
+			expect(serializeSets(result.map(({ set }) => set))).toContain("1,2");
 		});
 
 		it("does not repeat an existing set or keep unrelated items", () => {
@@ -96,98 +91,56 @@ describe("SetHelpers", () => {
 				[1, 2, 4],
 				[5, 6, 7]
 			]);
-			expect(result.sets).toEqual([]);
+			expect(result).toEqual([]);
 		});
 
-		it("limits candidates deterministically", () => {
-			const sets = Array.from({ length: 16 }, (_, i) =>
-				Array.from({ length: 18 }, (_, value) => value + 1).filter(
-					(value) => value !== i + 3
-				)
-			);
-			const a = findNumberIntersections(sets, { maximumCandidates: 8 });
-			const b = findNumberIntersections(sets.reverse(), {
-				maximumCandidates: 8
-			});
-			expect(serializeSets(a.sets)).toEqual(serializeSets(b.sets));
-			expect(a.sets).toHaveLength(8);
-			expect(a.limited).toBe(true);
-		});
-
-		it("does not emit a partial intersection when work is exhausted", () => {
+		it("freezes each round and stops when no new intersections exist", () => {
 			const sets = [
-				[1, 2, 3],
-				[1, 2, 4]
+				[1, 2, 3, 4],
+				[1, 2, 3, 5],
+				[1, 2, 4, 5]
 			];
-			const candidates = findNumberIntersections(sets, {
-				maximumCandidates: 0
-			});
-			const pairs = findNumberIntersections(sets, { maximumPairs: 0 });
-			const comparisons = findNumberIntersections(sets, {
-				maximumComparisons: 1
-			});
-			expect(candidates.sets).toEqual([]);
-			expect(pairs.sets).toEqual([]);
-			expect(comparisons.sets).toEqual([]);
-			expect(comparisons.pairs).toBe(0);
-			expect(comparisons.comparisons).toBe(0);
-			expect(candidates.limited && pairs.limited && comparisons.limited).toBe(
-				true
+			const collect = (/** @type {number} */ dedupDepth) =>
+				serializeSets(
+					findNumberIntersections(sets, { dedupDepth }).map(({ set }) => set)
+				);
+			expect(collect(0)).toEqual([]);
+			expect(collect(1)).not.toContain("1,2");
+			expect(collect(2)).toContain("1,2");
+			expect(collect(0xffffffff)).toEqual(collect(2));
+		});
+
+		it("discovers singleton intersections without keeping empty ones", () => {
+			const result = findNumberIntersections(
+				[
+					[1, 2],
+					[1, 3],
+					[4, 5]
+				],
+				{ minimumSize: 1 }
 			);
+			expect(serializeSets(result.map(({ set }) => set))).toEqual(["1"]);
 		});
 	});
 
 	describe("associateIntersections", () => {
-		it("checks only originals containing the rarest intersection item", () => {
-			/** @type {[bigint, Set<number>][]} */
-			const unrelated = Array.from({ length: 100 }, (_, i) => [
-				BigInt(i + 1),
-				new Set([1, i + 10])
+		it("includes every containing original, including non-generating inputs", () => {
+			const originals = new Map([
+				[BigInt("1"), new Set([1, 2, 3])],
+				[BigInt("2"), new Set([1, 2, 4])],
+				[BigInt("3"), new Set([1, 2, 5])],
+				[BigInt("4"), new Set([1, 9])]
 			]);
-			const matchingKey = BigInt("1000");
-			/** @type {[bigint, number][]} */
-			const weights = unrelated.map(([key]) => [key, 1]);
-			weights.push([matchingKey, 7]);
-			const result = associateIntersections(
-				new Map([...unrelated, [matchingKey, new Set([1, 2, 3])]]),
-				[{ key: BigInt("3"), set: new Set([1, 2]) }],
-				new Map(weights),
-				{
-					maximumChecks: 10,
-					maximumComparisons: 10,
-					maximumExpansions: 20
-				}
-			);
-			expect(result.intersectionsByOriginalKey.get(matchingKey)).toEqual([
-				new Set([1, 2])
+			const subset = new Set([1, 2]);
+			const result = associateIntersections(originals, [
+				{ key: BigInt("3"), set: subset }
 			]);
-			expect(result.checks).toBe(1);
-			expect(result.comparisons).toBe(2);
-			expect(result.expansions).toBe(14);
-			expect(result.limited).toBe(false);
-		});
-
-		it("does not publish a partially propagated intersection", () => {
-			const result = associateIntersections(
-				new Map([
-					[BigInt("1"), new Set([1, 2, 3])],
-					[BigInt("2"), new Set([1, 2, 4])]
-				]),
-				[{ key: BigInt("3"), set: new Set([1, 2]) }],
-				new Map([
-					[BigInt("1"), 1],
-					[BigInt("2"), 1]
-				]),
-				{
-					maximumChecks: 10,
-					maximumComparisons: 10,
-					maximumExpansions: 2
-				}
-			);
-			expect(result.intersectionsByOriginalKey.size).toBe(0);
-			expect(result.checks).toBe(2);
-			expect(result.expansions).toBe(0);
-			expect(result.limited).toBe(true);
+			expect([...result.keys()]).toEqual([
+				BigInt("1"),
+				BigInt("2"),
+				BigInt("3")
+			]);
+			for (const subsets of result.values()) expect(subsets).toEqual([subset]);
 		});
 	});
 

@@ -21266,6 +21266,12 @@ declare interface OptimizationSplitChunksOptions {
 		| ((chunk: Chunk) => undefined | boolean);
 
 	/**
+	 * Maximum rounds of shared chunk intersection discovery. Defaults to 1 in production and 0 in development or none; 0 uses only existing chunk combinations. Higher depths can increase computation exponentially. Applies to splitChunks, not individual cache groups.
+	 * @since 5.112.0
+	 */
+	dedupDepth?: number;
+
+	/**
 	 * Sets the size types which are used when a number is used for sizes.
 	 */
 	defaultSizeTypes?: string[];
@@ -28336,6 +28342,7 @@ type SourceTypeOrResolver =
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
+	dedupDepth?: number;
 	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	defaultSizeTypes: string[];
 	minSize: SplitChunksSizes;
