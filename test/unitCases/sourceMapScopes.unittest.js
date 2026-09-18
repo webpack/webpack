@@ -1,13 +1,13 @@
 "use strict";
 
-const DependencyTemplates = require("../lib/DependencyTemplates");
+const DependencyTemplates = require("../../lib/DependencyTemplates");
 const {
 	addScopesToSourceMap,
 	collectSourceScopes,
 	enableImportBindingScopes,
 	encodeScopes,
 	isImportBindingScopesEnabled
-} = require("../lib/util/sourceMapScopes");
+} = require("../../lib/util/sourceMapScopes");
 
 describe("sourceMapScopes", () => {
 	describe("collectSourceScopes", () => {
@@ -146,7 +146,7 @@ describe("sourceMapScopes", () => {
 			const dependencyTemplates = new DependencyTemplates();
 			const before = dependencyTemplates.getHash();
 			const compilation =
-				/** @type {import("../lib/Compilation")} */
+				/** @type {import("../../lib/Compilation")} */
 				(/** @type {unknown} */ ({ moduleGraph: {}, dependencyTemplates }));
 
 			expect(isImportBindingScopesEnabled(compilation.moduleGraph)).toBe(false);
@@ -159,7 +159,7 @@ describe("sourceMapScopes", () => {
 
 	describe("addScopesToSourceMap", () => {
 		/**
-		 * @returns {import("../lib/util/sourceMapScopes").ScopedSourceMap} a two-source map
+		 * @returns {import("../../lib/util/sourceMapScopes").ScopedSourceMap} a two-source map
 		 */
 		const map = () => ({
 			version: 3,
