@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Preserve sloppy mode for parenthesized and escaped "use strict" strings.
+Recognize strict mode only from valid directives throughout the prologue.

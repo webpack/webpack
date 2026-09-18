@@ -10,3 +10,12 @@ it("should not make escaped strings strict directives", () => {
 it("should preserve real strict directives", () => {
 	expect(require("./strict")).toBe(true);
 });
+
+it("should preserve strict mode after other directives when prepending code", () => {
+	expect(require("./prologue")).toEqual([42, true]);
+});
+
+it("should not recognize strict directives after the prologue ends", () => {
+	expect(require("./after-expression")).toBe(false);
+	expect(require("./after-parenthesized")).toBe(false);
+});

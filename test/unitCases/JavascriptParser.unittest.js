@@ -16,6 +16,11 @@ describe("JavascriptParser", () => {
 		it.each([
 			['"use strict";', true],
 			["'use strict';", true],
+			['"custom"; "use strict";', true],
+			['""; "custom"; "use strict"; "use strict";', true],
+			['0; "use strict";', false],
+			['("custom"); "use strict";', false],
+			['"custom"; "use\\x20strict";', false],
 			['("use strict");', false],
 			['"use\\x20strict";', false],
 			['"use \\\nstrict";', false]
