@@ -159,10 +159,6 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 		"test/configCases/css/minimize-cssnano-custom-properties/style.css",
 		"firefox only: the `calc()` in a `var()` fallback again — see `minimize-values`"
 	],
-	[
-		"test/configCases/css/minify-modern-longhands/style.css",
-		"firefox only: `font-synthesis-position: initial` computes `auto` in Gecko where the table names `none`, which Blink cannot see because it does not implement the property. A printer defect, fixed separately"
-	]
 ]);
 
 const FILED_CONFIG_HTML_DEFECTS = new Map([
