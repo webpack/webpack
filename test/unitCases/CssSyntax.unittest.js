@@ -4396,6 +4396,35 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe(true);
 		});
 
+		it("reads past an escaped quote rather than out of the string", () => {
+			// A string carrying both quote kinds keeps one escape, and a scanner that
+			// ended the string at it would read the `@layer` behind it as a write.
+			/**
+			 * @param {string} mid the sibling written between the two blocks
+			 * @returns {string} the minified stylesheet
+			 */
+			const gather = (mid) =>
+				minify(
+					`@media all{@layer x{a{color:red}}${mid}@layer x{c{color:lime}}}`
+				);
+			expect(gather('.b{content:"\'\\"@layer x{"}')).toBe(
+				'@media all{@layer x{a{color:red}c{color:lime}}.b{content:"\'\\"@layer x{"}}'
+			);
+			expect(gather('.b{content:"\\\\@layer x{"}')).toBe(
+				'@media all{@layer x{a{color:red}c{color:lime}}.b{content:"\\\\@layer x{"}}'
+			);
+		});
+
+		it("gathers past an anonymous layer, which names nothing", () => {
+			// `@layer{` opens a layer no name reaches, so it writes into none of the
+			// blocks held back and collides with nothing.
+			expect(
+				minify(
+					"@media all{@layer x{a{color:red}}.b{@layer{q{top:0}}}@layer x{c{color:lime}}}"
+				)
+			).toBe("@media all{@layer x{a{color:red}c{color:lime}}.b{@layer{q{top:0}}}}");
+		});
+
 		it("joins the rules a streamed block writes side by side", () => {
 			// A block over the threshold writes its children straight out rather than
 			// assembling a body, which is where `_mergeAdjacentRules` would join them.
