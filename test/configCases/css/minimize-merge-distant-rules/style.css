@@ -53,3 +53,43 @@
 	@layer inner { .psi { margin: 0 } }
 	.omega { outline: 1px dashed red }
 }
+
+/* Two at-rules stating one condition are the one block they resolve to, and
+   nothing between them declares what their rules do. */
+@media (min-width: 100px) { .first-condition { color: red } }
+.apart { margin: 0 }
+@media (min-width: 100px) { .second-condition { color: blue } }
+.apart-again { padding: 0 }
+@media (min-width: 100px) { .third-condition { color: lime } }
+
+/* `color` between them, so these stay apart. */
+@media (min-width: 200px) { .shadowed-first { color: red } }
+.shadows { color: green }
+@media (min-width: 200px) { .shadowed-second { color: blue } }
+
+/* A condition between counts for what its own rules declare, so one declaring
+   `height` leaves these alone and one declaring `width` stands in the way. */
+@media (min-width: 300px) { .narrow-first { width: 0 } }
+@media (min-width: 400px) { .tall-between { height: 0 } }
+@media (min-width: 300px) { .narrow-second { width: 1px } }
+
+@media (min-width: 500px) { .wide-first { width: 0 } }
+@media (min-width: 600px) { .wide-between { width: 1px } }
+@media (min-width: 500px) { .wide-second { width: 2px } }
+
+/* An at-rule whose declarations cannot be read is not a condition its rules are
+   read under, so it stands in the way whatever it declares. */
+@media (min-width: 700px) { .framed-first { color: red } }
+@keyframes sliding { from { rotate: 0deg } }
+@media (min-width: 700px) { .framed-second { color: blue } }
+
+/* A layer's place in the cascade is where its name is first written, not what
+   its prelude states, so these are not the pair of equal conditions this joins. */
+@layer named { .layered-first { color: red } }
+.between-layers { margin: 1px }
+@layer named { .layered-second { color: blue } }
+
+/* `@keyframes` is redeclared by a later copy rather than added to. */
+@keyframes fading { from { opacity: 0 } }
+.between-frames { margin: 2px }
+@keyframes fading { to { opacity: 1 } }

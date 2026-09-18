@@ -22,5 +22,16 @@ module.exports = {
 		expect(css).toContain(".pi,.sigma");
 		expect(css).not.toContain(".tau,.phi");
 		expect(css).not.toContain(".chi,.omega");
+		// The same, for at-rules: those join by stating one condition twice, and
+		// a run of them gathers into the first.
+		expect(css).toContain(
+			"{.first-condition{color:red}.second-condition{color:blue}.third-condition{color:lime}}"
+		);
+		expect(css).toContain(".narrow-first{width:0}.narrow-second{width:1px}");
+		expect(css).not.toContain(".shadowed-first{color:red}.shadowed-second");
+		expect(css).not.toContain(".wide-first{width:0}.wide-second");
+		expect(css).not.toContain(".framed-first{color:red}.framed-second");
+		expect(css).not.toContain(".layered-first{color:red}.layered-second");
+		expect(css).not.toContain("opacity:0}to{");
 	}
 };
