@@ -3,6 +3,53 @@
 require("../helpers/warmup-webpack");
 
 describe("Validation", () => {
+	it.each([-1, 1.5, Number.NaN, Infinity, 0x100000000])(
+		"rejects invalid splitChunks.dedupDepth %s",
+		(dedupDepth) => {
+			const webpack = require("../..");
+
+			expect(() =>
+				webpack.validate({ optimization: { splitChunks: { dedupDepth } } })
+			).toThrow(/dedupDepth/);
+			expect(
+				() => new webpack.optimize.SplitChunksPlugin({ dedupDepth })
+			).toThrow(/dedupDepth/);
+		}
+	);
+
+	it.each([0, 1, 2, 0xffffffff])(
+		"accepts splitChunks.dedupDepth %s",
+		(dedupDepth) => {
+			const webpack = require("../..");
+
+			expect(() =>
+				webpack.validate({ optimization: { splitChunks: { dedupDepth } } })
+			).not.toThrow();
+			expect(
+				() => new webpack.optimize.SplitChunksPlugin({ dedupDepth })
+			).not.toThrow();
+		}
+	);
+
+	it("does not accept splitChunks.dedupDepth on cache groups", () => {
+		const webpack = require("../..");
+
+		expect(() =>
+			webpack.validate({
+				optimization: {
+					splitChunks: {
+						cacheGroups: {
+							shared: {
+								// @ts-expect-error dedupDepth is not a cache-group option.
+								dedupDepth: 1
+							}
+						}
+					}
+				}
+			})
+		).toThrow(/dedupDepth/);
+	});
+
 	const createTestCase = (
 		/** @type {string} */ name,
 		/** @type {EXPECTED_ANY} */ config,
@@ -904,7 +951,7 @@ describe("Validation", () => {
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.optimization.splitChunks has an unknown property 'automaticNamePrefix'. These properties are valid:
-			   object { automaticNameDelimiter?, cacheGroups?, chunks?, defaultSizeTypes?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, minSizeReduction?, name?, usedExports? }
+			   object { automaticNameDelimiter?, cacheGroups?, chunks?, dedupDepth?, defaultSizeTypes?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, minSizeReduction?, name?, usedExports? }
 			   -> Options object for splitting chunks into smaller chunks."
 		`)
 		);

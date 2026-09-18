@@ -1,12 +1,47 @@
 "use strict";
 
 const {
+	associateIntersections,
 	combine,
 	find,
+	findIntersections,
 	first,
 	intersect,
 	isSubset
 } = require("../../lib/util/SetHelpers");
+
+/**
+ * Finds intersections in number sets.
+ * @param {Iterable<number>[]} sets input sets
+ * @param {Partial<{ minimumSize: number, dedupDepth: number }>} limits discovery limits
+ * @returns {{ key: bigint, set: Set<number> }[]} intersections
+ */
+const findNumberIntersections = (sets, limits = {}) =>
+	findIntersections(
+		new Map(
+			sets.map((set) => {
+				const values = [...set].sort((a, b) => a - b);
+				const key = values.reduce(
+					(mask, value) => mask | (BigInt("1") << BigInt(value)),
+					BigInt("0")
+				);
+				return [key, new Set(values)];
+			})
+		),
+		{
+			minimumSize: 2,
+			dedupDepth: 2,
+			...limits
+		}
+	);
+
+/**
+ * Serializes number sets for assertions.
+ * @param {Set<number>[]} sets number sets
+ * @returns {string[]} sorted values in each set
+ */
+const serializeSets = (sets) =>
+	sets.map((set) => [...set].sort((a, b) => a - b).join(","));
 
 describe("SetHelpers", () => {
 	describe("intersect", () => {
@@ -29,6 +64,83 @@ describe("SetHelpers", () => {
 
 		it("should return an empty set when there is no overlap", () => {
 			expect([...intersect([new Set([1]), new Set([2])])]).toEqual([]);
+		});
+	});
+
+	describe("findIntersections", () => {
+		it("finds a shared set across many inputs", () => {
+			const result = findNumberIntersections(
+				Array.from({ length: 20 }, (_, i) => [1, 2, i + 3])
+			);
+			expect(serializeSets(result.map(({ set }) => set))).toEqual(["1,2"]);
+		});
+
+		it("finds intersections that require more than two inputs", () => {
+			const result = findNumberIntersections([
+				[1, 2, 3, 4],
+				[1, 2, 3, 5],
+				[1, 2, 4, 5]
+			]);
+			expect(serializeSets(result.map(({ set }) => set))).toContain("1,2");
+		});
+
+		it("does not repeat an existing set or keep unrelated items", () => {
+			const result = findNumberIntersections([
+				[1, 2],
+				[1, 2, 3],
+				[1, 2, 4],
+				[5, 6, 7]
+			]);
+			expect(result).toEqual([]);
+		});
+
+		it("freezes each round and stops when no new intersections exist", () => {
+			const sets = [
+				[1, 2, 3, 4],
+				[1, 2, 3, 5],
+				[1, 2, 4, 5]
+			];
+			const collect = (/** @type {number} */ dedupDepth) =>
+				serializeSets(
+					findNumberIntersections(sets, { dedupDepth }).map(({ set }) => set)
+				);
+			expect(collect(0)).toEqual([]);
+			expect(collect(1)).not.toContain("1,2");
+			expect(collect(2)).toContain("1,2");
+			expect(collect(0xffffffff)).toEqual(collect(2));
+		});
+
+		it("discovers singleton intersections without keeping empty ones", () => {
+			const result = findNumberIntersections(
+				[
+					[1, 2],
+					[1, 3],
+					[4, 5]
+				],
+				{ minimumSize: 1 }
+			);
+			expect(serializeSets(result.map(({ set }) => set))).toEqual(["1"]);
+		});
+	});
+
+	describe("associateIntersections", () => {
+		it("includes every containing original, including non-generating inputs", () => {
+			const originals = new Map([
+				[BigInt("1"), new Set([1, 2, 3])],
+				[BigInt("2"), new Set([1, 2, 4])],
+				[BigInt("3"), new Set([1, 2, 5])],
+				[BigInt("4"), new Set([1, 9])]
+			]);
+			const subset = new Set([1, 2]);
+			const result = associateIntersections(originals, [
+				{ key: BigInt("3"), set: subset }
+			]);
+			expect([...result.keys()]).toEqual([
+				BigInt("1"),
+				BigInt("2"),
+				BigInt("3")
+			]);
+			for (const subsets of result.values()) expect(subsets).toEqual([subset]);
 		});
 	});
 

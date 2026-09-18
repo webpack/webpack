@@ -4825,6 +4825,13 @@
             }
           ]
         },
+        "dedupDepth": {
+          "description": "Maximum rounds of shared chunk intersection discovery. Defaults to 1 in production and 0 in development or none; 0 uses only existing chunk combinations. Higher depths can increase computation exponentially. Applies to splitChunks, not individual cache groups.",
+          "type": "integer",
+          "minimum": 0,
+          "added": "5.112.0",
+          "maximum": 4294967295
+        },
         "defaultSizeTypes": {
           "description": "Sets the size types which are used when a number is used for sizes.",
           "type": "array",
