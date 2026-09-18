@@ -43,5 +43,12 @@ Array [
   "/*! webpack: a custom property's easing function is opaque, bar its spacing */.t39{--easing:cubic-bezier(0.25,0.1,0.25,1)}",
   "/*! webpack: a signed argument still resolves to the keyword */.t40{animation-timing-function:ease-in-out}",
   "/*! webpack: a non-integer step count keeps the function */.t41{animation-timing-function:steps(1.5,end)}",
+  "/*! webpack: jump-none takes two intervals, so a calc() holding one has to stay */.t42{animation-timing-function:steps(calc(1),jump-none)}",
+  "/*! webpack: the same count is folded where jump-none can hold it */.t43{animation-timing-function:steps(2,jump-none)}",
+  "/*! webpack: every other position takes one, so its calc() folds */.t44{animation-timing-function:steps(1,jump-both)}",
+  "/*! webpack: an omitted position is end, which takes one */.t45{animation-timing-function:steps(1)}",
+  "/*! webpack: a position no grammar here states keeps its calc() */.t46{animation-timing-function:steps(calc(1),jump-sideways)}",
+  "/*! webpack: a substitution could name jump-none, so its calc() has to stay */.t47{animation-timing-function:steps(calc(1),var(--pos))}",
+  "/*! webpack: the same count is folded where no position could reject it */.t48{animation-timing-function:steps(2,jump-sideways)}",
 ]
 `;

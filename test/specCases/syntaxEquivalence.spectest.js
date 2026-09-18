@@ -256,10 +256,6 @@ const FILED_WPT_VALUE_DEFECTS = new Map([
 		"webkit only: the unimplemented `paint()` again \u2014 see `paint( mypaint`"
 	],
 	[
-		"animation-timing-function:steps(calc(1), jump-none)",
-		"webkit only: a printer defect, not yet decided \u2014 WebKit reads the step count through a `calc()` where the printed form drops it. Measured in the first WebKit run"
-	],
-	[
 		"font-family:\"New Century Schoolbook\", serif",
 		"firefox only: not a printer defect — Gecko carries the source's quoting into the computed family where Blink drops it, so unquoting a name neither engine reads differently still reads as a difference there"
 	]

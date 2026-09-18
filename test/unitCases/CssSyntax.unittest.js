@@ -6888,6 +6888,48 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{width:calc(5px - 5px)}")).toBe("a{width:0}");
 		});
 
+		it("keeps them on a `steps()` count its position would reject", () => {
+			// CSS Easing 2 puts the minimum at two under `jump-none` and one under
+			// every other position, and the bare literal is rejected where the
+			// `calc()` around the same value is clamped instead.
+			expect(value("steps(calc(1),jump-none)")).toBe("steps(calc(1),jump-none)");
+			expect(value("steps(calc(2),jump-none)")).toBe("steps(2,jump-none)");
+			expect(value("steps(calc(1),jump-both)")).toBe("steps(1,jump-both)");
+			// An omitted position is `end`, which takes one.
+			expect(value("steps(calc(1))")).toBe("steps(1)");
+			// Both names are read case-insensitively, so the guard still reads the
+			// position a source spelled in capitals.
+			expect(value("STEPS(calc(1),JUMP-NONE)")).toBe("steps(calc(1),JUMP-NONE)");
+		});
+
+		it("reads a `steps()` position it cannot name as the largest", () => {
+			// An unknown spelling, and a substitution standing where the keyword
+			// goes, could both resolve to `jump-none`, so the fold declines below
+			// two rather than guess.
+			expect(value("steps(calc(1),jump-sideways)")).toBe(
+				"steps(calc(1),jump-sideways)"
+			);
+			expect(value("steps(calc(2),jump-sideways)")).toBe(
+				"steps(2,jump-sideways)"
+			);
+			expect(value("steps(calc(1),var(--pos))")).toBe(
+				"steps(calc(1),var(--pos))"
+			);
+			// A comment between the arguments is not the position.
+			expect(value("steps(calc(1),/*c*/jump-none)")).toBe(
+				"steps(calc(1),jump-none)"
+			);
+		});
+
+		it("drives every `<step-position>` the table names", () => {
+			// `steps(1, …)` has a keyword of its own at each end, which is what the
+			// positions taking one count print as.
+			expect(value("steps(calc(1),jump-start)")).toBe("step-start");
+			expect(value("steps(calc(1),start)")).toBe("step-start");
+			expect(value("steps(calc(1),jump-end)")).toBe("step-end");
+			expect(value("steps(calc(1),end)")).toBe("step-end");
+		});
+
 		it("does not run inside a `@supports` condition or a custom property", () => {
 			const supports = "@supports (width:calc(1px + 2px)){a{color:red}}";
 			expect(minify(supports)).toBe(supports);
