@@ -4,6 +4,25 @@ import configs from "eslint-config-webpack/configs.js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
+/**
+ * Reads one config out of `eslint-config-webpack`, failing with the reason when
+ * it has none under that name. Otherwise `defineConfig` reports the `undefined`
+ * without naming what produced it.
+ * @param {string} name name of a config `eslint-config-webpack` publishes
+ * @returns {import("eslint").Linter.Config} the config published under that name
+ */
+function getSharedConfig(name) {
+	const sharedConfig = configs[name];
+
+	if (!sharedConfig) {
+		throw new Error(
+			`eslint-config-webpack publishes no "${name}" config. The installed one is older than the version package.json asks for — run \`yarn setup\`.`
+		);
+	}
+
+	return sharedConfig;
+}
+
 export default defineConfig([
 	globalIgnores([
 		// Ignore some test files
@@ -100,11 +119,11 @@ export default defineConfig([
 	},
 	{
 		files: ["lib/**/*.js"],
-		extends: [configs["webpack/special"]]
+		extends: [getSharedConfig("webpack/special")]
 	},
-	configs["webpack/schemas"],
-	configs["webpack/types"],
-	configs["webpack/comments"],
+	getSharedConfig("webpack/schemas"),
+	getSharedConfig("webpack/types"),
+	getSharedConfig("webpack/comments"),
 	{
 		// An example's commented-out config is what a reader copies, and its prose
 		// is the example's own documentation — neither is commentary to shorten.
@@ -150,7 +169,7 @@ export default defineConfig([
 	{
 		files: ["lib/**/*.runtime.js", "hot/*.js"],
 		ignores: ["hot/load-http.js"],
-		extends: [configs["javascript/es5"]],
+		extends: [getSharedConfig("javascript/es5")],
 		languageOptions: {
 			sourceType: "commonjs",
 			globals: {
