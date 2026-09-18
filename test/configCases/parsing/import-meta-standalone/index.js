@@ -4,11 +4,9 @@ import path from "path";
 const url = pathToFileURL(
 	path.resolve("./test/configCases/parsing/import-meta-standalone/index.js")
 ).toString();
-const webpackVersion = parseInt(
-	// eslint-disable-next-line n/no-missing-require
-	require("../../../../package.json").version,
-	10
-);
+// Defined by the config, which reads package.json in node rather than making
+// the case bundle it.
+const webpackVersion = WEBPACK_MAJOR;
 
 it("should preserve properties when import.meta is assigned to a variable", () => {
 	const meta = import.meta;

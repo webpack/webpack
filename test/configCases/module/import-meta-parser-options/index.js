@@ -1,11 +1,9 @@
 import disabledFields from "./disabled-fields";
 import emptyOptions from "./empty-options";
 
-const webpackVersion = parseInt(
-	// eslint-disable-next-line n/no-missing-require
-	require("../../../../package.json").version,
-	10
-);
+// Defined by the config, which reads package.json in node rather than making
+// the case bundle it.
+const webpackVersion = WEBPACK_MAJOR;
 
 it("should treat an empty importMeta object like preserve-unknown", () => {
 	expect(emptyOptions.url).toBe(emptyOptions.sourceUrl);
