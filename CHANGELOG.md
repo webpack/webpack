@@ -1,5 +1,73 @@
 # webpack
 
+## 5.111.1
+
+### Patch Changes
+
+- Throw on a write to an imported binding without losing concatenation. (by [@alexander-akait](https://github.com/alexander-akait) in [#22141](https://github.com/webpack/webpack/pull/22141))
+
+- Keep the `</html>` a page was written with, whatever opened the element. (by [@aryanraj45](https://github.com/aryanraj45) in [#22103](https://github.com/webpack/webpack/pull/22103))
+
+- Look an attribute up by what its value decodes to, not how it was spelled. (by [@aryanraj45](https://github.com/aryanraj45) in [#22107](https://github.com/webpack/webpack/pull/22107))
+
+- Minify HTML by what a value says rather than how it was spelled. (by [@alexander-akait](https://github.com/alexander-akait) in [#22154](https://github.com/webpack/webpack/pull/22154))
+
+- Follow HTML template form and frameset rules during tree construction. (by [@dependabot](https://github.com/apps/dependabot) in [#22129](https://github.com/webpack/webpack/pull/22129))
+
+- Keep the whitespace `calc()` needs around `+` and `-` in a custom property. (by [@alexander-akait](https://github.com/alexander-akait) in [#22150](https://github.com/webpack/webpack/pull/22150))
+
+- Keep an attribute's delimiter and spell its value back where quoting is frozen. (by [@alexander-akait](https://github.com/alexander-akait) in [#22119](https://github.com/webpack/webpack/pull/22119))
+
+- Rewrite an attribute value the source spelled with character references. (by [@aryanraj45](https://github.com/aryanraj45) in [#22110](https://github.com/webpack/webpack/pull/22110))
+
+- Unquote an HTML attribute value carrying a vertical tab. (by [@alexander-akait](https://github.com/alexander-akait) in [#22162](https://github.com/webpack/webpack/pull/22162))
+
+- Keep a shadow's spread and canonicalize a merged selector list. (by [@alexander-akait](https://github.com/alexander-akait) in [#22101](https://github.com/webpack/webpack/pull/22101))
+
+- Leave out an implied tag and merge adjacent runs on the first pass. (by [@aryanraj45](https://github.com/aryanraj45) in [#22121](https://github.com/webpack/webpack/pull/22121))
+
+- Minify in one pass what a second pass of the CSS minifier used to find. (by [@alexander-akait](https://github.com/alexander-akait) in [#22106](https://github.com/webpack/webpack/pull/22106))
+
+- Cover the CSS lookup tables no stylesheet in the corpus reaches. (by [@aryanraj45](https://github.com/aryanraj45) in [#22126](https://github.com/webpack/webpack/pull/22126))
+
+- Keep `initial` where an engine reads the property's initial keyword apart. (by [@aryanraj45](https://github.com/aryanraj45) in [#22128](https://github.com/webpack/webpack/pull/22128))
+
+- Join the CSS rules a cut leaves adjacent, and keep a value an escape ate. (by [@alexander-akait](https://github.com/alexander-akait) in [#22108](https://github.com/webpack/webpack/pull/22108))
+
+- Drop the dead CSS a cut leaves, and join more of the blocks that print alike. (by [@alexander-akait](https://github.com/alexander-akait) in [#22111](https://github.com/webpack/webpack/pull/22111))
+
+- Run the printer equivalence suite against Firefox as well as Chrome. (by [@aryanraj45](https://github.com/aryanraj45) in [#22151](https://github.com/webpack/webpack/pull/22151))
+
+- Finish in one CSS pass the joins, drops and collapses left to a second. (by [@alexander-akait](https://github.com/alexander-akait) in [#22117](https://github.com/webpack/webpack/pull/22117))
+
+- Move the context module sources into `lib/context/`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22115](https://github.com/webpack/webpack/pull/22115))
+
+- Declare loader context types in JSDoc instead of hand-written `.d.ts` files. (by [@alexander-akait](https://github.com/alexander-akait) in [#22116](https://github.com/webpack/webpack/pull/22116))
+
+- Emit a failing module's stack relative, and name what a tap failed with. (by [@alexander-akait](https://github.com/alexander-akait) in [#22122](https://github.com/webpack/webpack/pull/22122))
+
+- Finish in one CSS pass the drops, layer gathers and joins left to a second. (by [@alexander-akait](https://github.com/alexander-akait) in [#22120](https://github.com/webpack/webpack/pull/22120))
+
+- Speed up CSS parsing by stepping over dropped selector preludes in bytes. (by [@alexander-akait](https://github.com/alexander-akait) in [#22142](https://github.com/webpack/webpack/pull/22142))
+
+- Record hoisted, module and block declarations while parsing, not by re-walking. (by [@alexander-akait](https://github.com/alexander-akait) in [#22147](https://github.com/webpack/webpack/pull/22147))
+
+- Fold more enumerated attribute values and drop those naming no keyword. (by [@alexander-akait](https://github.com/alexander-akait) in [#22148](https://github.com/webpack/webpack/pull/22148))
+
+- Halve the CSS minifier's browser-version tables by narrowing their element type. (by [@alexander-akait](https://github.com/alexander-akait) in [#22140](https://github.com/webpack/webpack/pull/22140))
+
+- Make each `optimization.minimize.css` switch govern its own rewrite alone. (by [@alexander-akait](https://github.com/alexander-akait) in [#22140](https://github.com/webpack/webpack/pull/22140))
+
+- Join the rules a top-level `@layer` gather leaves meeting at the seam. (by [@alexander-akait](https://github.com/alexander-akait) in [#22140](https://github.com/webpack/webpack/pull/22140))
+
+- Gather a CSS layer past a rule that writes only a different one. (by [@alexander-akait](https://github.com/alexander-akait) in [#22154](https://github.com/webpack/webpack/pull/22154))
+
+- Order HTML attributes by what reaches the output, and read values decoded. (by [@alexander-akait](https://github.com/alexander-akait) in [#22146](https://github.com/webpack/webpack/pull/22146))
+
+- Drop a fallback declaration every `browserslist` target reads past. (by [@alexander-akait](https://github.com/alexander-akait) in [#22158](https://github.com/webpack/webpack/pull/22158))
+
+- Fix module library exports lost under cache or missing behind a re-export. (by [@hai-x](https://github.com/hai-x) in [#22114](https://github.com/webpack/webpack/pull/22114))
+
 ## 5.111.0
 
 ### Minor Changes
@@ -991,7 +1059,7 @@
 
 - Fix snapshot validity check for context dependencies in watch mode by treating watchpack's existence-only entries (`{}`) as cache misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#20916](https://github.com/webpack/webpack/pull/20916))
 
-- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+- Support no-expression template literals in computed member access (e.g. `` import.meta[`url`] ``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
 
 - Improve tree-shaking in `isPure`: handle more expression types (`ArrayExpression`, `ObjectExpression`, `NewExpression`, `ChainExpression`, `UnaryExpression` (safe operators), `MetaProperty`, `TaggedTemplateExpression`, `BinaryExpression` (strict equality)), prevent `/*#__PURE__*/` comments from leaking across `ObjectExpression` properties, and detect PURE comments inside `TemplateLiteral` interpolations. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
 
