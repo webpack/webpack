@@ -1,7 +1,7 @@
 "use strict";
 
 // Both printers held to what an engine makes of their output, over `configCases`
-// and `test/wpt` alike, through the one path in `helpers/syntaxEquivalence`.
+// and `test/external/wpt` alike, through the one path in `helpers/syntaxEquivalence`.
 // Nothing is compared as text where the engine can be asked instead. A third
 // tier needs no engine and so reads the whole corpus: webpack's own parser is a
 // DOM oracle, held to that corpus's expected trees by html5lib.spectest.js.
@@ -192,7 +192,7 @@ const FILED_BENCHMARK_HTML_DEFECTS = new Map();
 
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[
-		"test/wpt/html/syntax/parsing/misnested-form-in-template.html",
+		"test/external/wpt/html/syntax/parsing/misnested-form-in-template.html",
 		"chrome only: not a printer defect — the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented while Gecko has, so webpack prints the tree wpt expects and only Chromium disagrees"
 	]
 ]);
@@ -480,7 +480,7 @@ const inBatches = async (page, items, evaluate) => {
 // The corpus is an optional submodule, so a tier that cannot run reports that
 // rather than reporting green.
 const NO_CORPUS =
-	"wpt submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)";
+	"wpt submodule not initialized (run `git submodule update --init --depth 1 test/external/wpt`)";
 
 const NO_BENCHMARK_CORPUS =
 	"comparison caches not built (run `yarn benchmark:css-tools` / `yarn benchmark:html-tools`)";

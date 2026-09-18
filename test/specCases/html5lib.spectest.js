@@ -1,7 +1,7 @@
 "use strict";
 
-// Three HTML conformance suites over optional submodules — `test/html5lib-tests`
-// for 1 and 3, `test/wpt` for 2; an absent one degrades its suite to a no-op.
+// Three HTML conformance suites over optional submodules — `test/external/html5lib-tests`
+// for 1 and 3, `test/external/wpt` for 2; an absent one degrades its suite to a no-op.
 //
 // 1. "html5lib-tests webpack build" — compiles every tokenizer input as a
 //    webpack HTML entry (development + production) to confirm the full
@@ -32,7 +32,7 @@ const {
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const serialize = require("../helpers/serializeHtmlTree");
 
-const testsDir = path.resolve(__dirname, "../html5lib-tests");
+const testsDir = path.resolve(__dirname, "../external/html5lib-tests");
 
 // ---------------------------------------------------------------------------
 // 1. webpack build (tokenizer corpus, no-crash)
@@ -208,7 +208,7 @@ describe("html5lib-tests webpack build", () => {
 	}, 600000);
 
 	if (buildCases.length === 0) {
-		it("submodule not initialized (run `git submodule update --init test/html5lib-tests`)", () => {
+		it("submodule not initialized (run `git submodule update --init test/external/html5lib-tests`)", () => {
 			// No-op: the conformance data is an optional git submodule.
 		});
 
@@ -229,7 +229,7 @@ describe("html5lib-tests webpack build", () => {
 // ---------------------------------------------------------------------------
 
 // The corpus html5lib-tests carried until 224991e, in html5lib's `.dat` format.
-const treeDir = path.resolve(__dirname, "../wpt/html/syntax/parsing/resources");
+const treeDir = path.resolve(__dirname, "../external/wpt/html/syntax/parsing/resources");
 
 /** @type {Set<string>} intentional, documented exceptions */
 const KNOWN_DIVERGENCES = new Set([
@@ -324,7 +324,7 @@ const hasTreeCorpus =
 
 describe("wpt tree-construction", () => {
 	if (!hasTreeCorpus) {
-		it("submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)", () => {
+		it("submodule not initialized (run `git submodule update --init --depth 1 test/external/wpt`)", () => {
 			// No-op: the conformance data is an optional git submodule.
 		});
 
@@ -628,7 +628,7 @@ for (const testCase of tokenizerCases) {
 
 describe("html5lib tokenizer", () => {
 	if (tokenizerCases.length === 0) {
-		it("submodule not initialized (run `git submodule update --init test/html5lib-tests`)", () => {
+		it("submodule not initialized (run `git submodule update --init test/external/html5lib-tests`)", () => {
 			// No-op: the conformance data is an optional git submodule.
 		});
 

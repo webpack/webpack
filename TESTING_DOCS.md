@@ -88,25 +88,25 @@ This document explains the structure of the `test/` directory in the Webpack pro
   - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
   - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
 
-### 13. `test262-cases/`
+### 13. `external/test262-cases/`
 
 - **Purpose**: ECMAScript test262 conformance test cases.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/test262-cases`. Test runner: `test/specCases/test262.spectest.js`.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runner: `test/specCases/test262.spectest.js`.
 
-### 13b. `html5lib-tests/`
+### 13b. `external/html5lib-tests/`
 
 - **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/html5lib-tests`. Test runner: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
 
-### 13c. `wpt/`
+### 13c. `external/wpt/`
 
 - **Purpose**: web-platform-tests, read two ways. `html/syntax/parsing/resources/*.dat` is the HTML tree-construction conformance corpus for `parseHtml` (html5lib-tests dropped its copy in `224991e`). The `.html` documents under `html/`, `conformance-checkers/` and `dom/nodes`, plus the declarations the `css/**/parsing/` tests state a verdict for, are the printers' corpus: minifying must not change the DOM webpack's parser builds, the DOM Chrome builds, or the style Chrome computes.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/html5lib-tests` — initialize both to run the whole suite — and `test/specCases/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`PUPPETEER_EXECUTABLE_PATH` picks a binary other than the installed channel). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/wpt` (the repository is ~161k files, so keep it shallow). Test runners: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/external/html5lib-tests` — initialize both to run the whole suite — and `test/specCases/syntaxEquivalence.spectest.js` (`yarn test:syntax-equivalence`), whose browser tiers need a Chrome (`PUPPETEER_EXECUTABLE_PATH` picks a binary other than the installed channel). A document that is not UTF-8 is skipped: the encoding fixtures are UTF-16, which no string API can read as source.
 
-### 13d. `css-parsing-tests/`
+### 13d. `external/css-parsing-tests/`
 
 - **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/specCases/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/css-parsing-tests`. Test runner: `test/specCases/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
 
 ### 14. `watchCases/`
 
@@ -239,21 +239,21 @@ yarn test
 
 **Choose test command based on modified directory:**
 
-| Modified directory/file        | Command                                                                                                                                    |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `test/unitCases/*.unittest.js` | `yarn test:base --testPathPatterns="<filename>"`                                                                                           |
-| `test/specCases/`              | Run the matching `yarn test:<suite>` command                                                                                               |
-| `test/cases/`                  | `yarn test:basic`                                                                                                                          |
-| `test/configCases/`            | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                     |
-| `test/statsCases/`             | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                                                      |
-| `test/watchCases/`             | `yarn test:base --testPathPatterns="WatchTestCases"`                                                                                       |
-| `test/hotCases/`               | `yarn test:base --testPathPatterns="HotTestCases"`                                                                                         |
-| `test/benchmarkCases/`         | `FILTER="<case-name>" yarn benchmark`                                                                                                      |
-| `lib/runtime/`                 | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                                                         |
-| `test/test262-cases/`          | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)                                                      |
-| `test/html5lib-tests/`         | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)                                                    |
-| `test/wpt/`                    | `yarn test:html5lib` + `yarn test:syntax-equivalence` (require `git submodule update --init --depth 1 test/html5lib-tests test/wpt` first) |
-| `test/css-parsing-tests/`      | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first)                                              |
+| Modified directory/file            | Command                                                                                                                                                      |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `test/unitCases/*.unittest.js`     | `yarn test:base --testPathPatterns="<filename>"`                                                                                                             |
+| `test/specCases/`                  | Run the matching `yarn test:<suite>` command                                                                                                                 |
+| `test/cases/`                      | `yarn test:basic`                                                                                                                                            |
+| `test/configCases/`                | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                                                                       |
+| `test/statsCases/`                 | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                                                                        |
+| `test/watchCases/`                 | `yarn test:base --testPathPatterns="WatchTestCases"`                                                                                                         |
+| `test/hotCases/`                   | `yarn test:base --testPathPatterns="HotTestCases"`                                                                                                           |
+| `test/benchmarkCases/`             | `FILTER="<case-name>" yarn benchmark`                                                                                                                        |
+| `lib/runtime/`                     | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                                                                           |
+| `test/external/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/external/test262-cases` first)                                                               |
+| `test/external/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/external/html5lib-tests` first)                                                             |
+| `test/external/wpt/`               | `yarn test:html5lib` + `yarn test:syntax-equivalence` (require `git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt` first) |
+| `test/external/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/external/css-parsing-tests` first)                                                       |
 
 **Running a single test case** with `--testNamePattern`. The test name format is `<category> <case-name>` (e.g., `css basic`, `asset url`):
 

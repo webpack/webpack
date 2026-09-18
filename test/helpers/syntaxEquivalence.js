@@ -3,7 +3,7 @@
 // The machinery both equivalence suites share: the helpers installed into the
 // page (an engine is the only thing that can say two spellings mean the same),
 // and the comparisons built on what they report. Nothing here knows which
-// corpus it is reading — `configCases` and `test/wpt` go through one path, so
+// corpus it is reading — `configCases` and `test/external/wpt` go through one path, so
 // an inline `<style>` is held to exactly the same standard as a `.css` file.
 
 const fs = require("fs");

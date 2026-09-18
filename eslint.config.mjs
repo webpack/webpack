@@ -31,8 +31,8 @@ export default defineConfig([
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",
 		"test/js/**/*.*",
-		"test/test262-cases/**/*.*",
-		"test/wpt/**/*.*",
+		"test/external/test262-cases/**/*.*",
+		"test/external/wpt/**/*.*",
 
 		// Ignore some folders
 		"benchmark",

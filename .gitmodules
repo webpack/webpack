@@ -1,12 +1,12 @@
-[submodule "test/test262-cases"]
-	path = test/test262-cases
+[submodule "test/external/test262-cases"]
+	path = test/external/test262-cases
 	url = https://github.com/tc39/test262
-[submodule "test/html5lib-tests"]
-	path = test/html5lib-tests
+[submodule "test/external/html5lib-tests"]
+	path = test/external/html5lib-tests
 	url = https://github.com/html5lib/html5lib-tests.git
-[submodule "test/css-parsing-tests"]
-	path = test/css-parsing-tests
+[submodule "test/external/css-parsing-tests"]
+	path = test/external/css-parsing-tests
 	url = https://github.com/CourtBouillon/css-parsing-tests.git
-[submodule "test/wpt"]
-	path = test/wpt
+[submodule "test/external/wpt"]
+	path = test/external/wpt
 	url = https://github.com/web-platform-tests/wpt.git

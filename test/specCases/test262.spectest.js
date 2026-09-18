@@ -21,7 +21,7 @@ const outputFileSystem = needDebug
 			return createFsFromVolume(new Volume());
 		})();
 
-const test262Dir = path.resolve(__dirname, "../test262-cases/");
+const test262Dir = path.resolve(__dirname, "../external/test262-cases/");
 const test262HarnessDir = path.resolve(test262Dir, "./harness");
 const strictModeLoader = path.resolve(
 	__dirname,

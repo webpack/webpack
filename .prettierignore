@@ -19,8 +19,8 @@ test/**/*.*
 !test/harness/**/*.*
 !test/benchmarkCases/**/*.mjs
 test/js/**/*.*
-test/test262-cases/**/*.*
-test/wpt/**
+test/external/test262-cases/**/*.*
+test/external/wpt/**
 
 # Ignore some folders
 benchmark/

@@ -16,7 +16,7 @@ const webpack = require("../..");
 const { parseABlocksContents } = require("../../lib/css/syntax");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
-const casesDir = path.resolve(__dirname, "../css-parsing-tests");
+const casesDir = path.resolve(__dirname, "../external/css-parsing-tests");
 const MODES = ["development", "production"];
 // A graceful webpack error/warning on malformed input is fine; an internal
 // exception leaking through (parser/generator bug) is not.
@@ -147,7 +147,7 @@ describe("css-parsing-tests webpack build", () => {
 	}, 600000);
 
 	if (cases.length === 0) {
-		it("submodule not initialized (run `git submodule update --init test/css-parsing-tests`)", () => {
+		it("submodule not initialized (run `git submodule update --init test/external/css-parsing-tests`)", () => {
 			// No-op: the conformance data is an optional git submodule.
 		});
 
@@ -169,7 +169,7 @@ describe("css-parsing-tests webpack build", () => {
 describe("css-parsing-tests block contents", () => {
 	const file = path.join(casesDir, "blocks_contents.json");
 	if (!fs.existsSync(file)) {
-		it("submodule not initialized (run `git submodule update --init test/css-parsing-tests`)", () => {
+		it("submodule not initialized (run `git submodule update --init test/external/css-parsing-tests`)", () => {
 			// No-op: the conformance data is an optional git submodule.
 		});
 
