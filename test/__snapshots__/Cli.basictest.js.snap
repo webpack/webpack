@@ -20488,6 +20488,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "watch-options-additional": Object {
+    "configs": Array [
+      Object {
+        "description": "A file, or a directory when it ends with a slash, to watch.",
+        "multiple": true,
+        "path": "watchOptions.additional[]",
+        "type": "string",
+      },
+    ],
+    "description": "A file, or a directory when it ends with a slash, to watch.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "watch-options-additional-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'watchOptions.additional' configuration. Additional paths to watch that no module depends on (a trailing slash marks a directory). Relative paths resolve against 'context'.",
+        "multiple": false,
+        "path": "watchOptions.additional",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'watchOptions.additional' configuration. Additional paths to watch that no module depends on (a trailing slash marks a directory). Relative paths resolve against 'context'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "watch-options-aggregate-timeout": Object {
     "configs": Array [
       Object {

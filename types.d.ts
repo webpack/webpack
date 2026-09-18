@@ -30197,6 +30197,12 @@ declare interface WatchIgnorePluginOptions {
  */
 declare interface WatchOptions {
 	/**
+	 * Additional paths to watch that no module depends on (a trailing slash marks a directory). Relative paths resolve against 'context'.
+	 * @since 5.112.0
+	 */
+	additional?: string | string[];
+
+	/**
 	 * Delay the rebuilt after the first change. Value is a time in ms.
 	 */
 	aggregateTimeout?: number;
