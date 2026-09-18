@@ -1847,7 +1847,7 @@ const compareRules = (before, after, signatures) => {
 		const idOf = (each) => {
 			let id = ids.get(each);
 			if (id === undefined) {
-				id = ` ${anonymous++}`;
+				id = `\u0000${anonymous++}`;
 				ids.set(each, id);
 			}
 			return id;
@@ -1873,8 +1873,8 @@ const compareRules = (before, after, signatures) => {
 						.map((each) =>
 							each.condition.trim() === "@layer" ? idOf(each) : each.condition
 						)
-						.join(" ")
-				: chain.map((each) => each.condition).join(" ");
+						.join("\u0000")
+				: chain.map((each) => each.condition).join("\u0000");
 			// Every block of one is its own layer, so the key says which block a rule
 			// stood in — two of them hold two rules, not one said twice.
 			const one = anon
