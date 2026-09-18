@@ -4344,6 +4344,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("tells a layer named with a no-break space from one without", () => {
 			// CSS skips only its own whitespace, so `\u00A0x` is an identifier of its
 			// own — `String#trim` would read it as `x` and forget the wrong block.
+			/**
+			 * @param {string} mid the sibling written between the two blocks
+			 * @returns {string} the minified stylesheet
+			 */
 			const gather = (mid) =>
 				minify(
 					`@media all{@layer \u00A0x{a{color:red}}${mid}@layer \u00A0x{c{color:lime}}}`
@@ -4359,6 +4363,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("reads a small block's siblings as the streamed path reads them", () => {
 			// Which blocks gather must not turn on whether the block was small enough
 			// to assemble in one go rather than stream.
+			/**
+			 * @param {string} mid the sibling written between the two blocks
+			 * @returns {string} the minified stylesheet
+			 */
 			const gather = (mid) =>
 				minify(
 					`@media all{@layer x{a{color:red}}${mid}@layer x{c{color:lime}}}`
