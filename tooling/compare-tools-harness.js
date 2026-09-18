@@ -570,11 +570,37 @@ const idempotence = ({ minify, source, says, repro }) => {
 };
 
 /**
+ * A finding the printer owes nothing for, with the reason it is owed nothing.
+ * `relation` and `contains` together name it; `source` narrows it to one
+ * fixture where the same repro is a defect elsewhere.
+ * @typedef {{ relation: string, contains: string, source?: string, why: string }} Expected
+ */
+
+/**
+ * Whether one expectation covers one group.
+ * @param {Expected} expected the entry
+ * @param {Report} report the finding
+ * @param {Set<string>} sources the fixtures it was found in
+ * @returns {boolean} true when the entry names this finding
+ */
+const _covers = (expected, report, sources) => {
+	if (expected.relation !== report.relation) return false;
+	if (!report.repro.includes(expected.contains)) return false;
+	if (expected.source === undefined) return true;
+	for (const source of sources) {
+		if (source.includes(expected.source)) return true;
+	}
+	return false;
+};
+
+/**
  * Findings gathered by the repro rather than by the source: one printer defect
- * reaches hundreds of files, and is one thing to fix.
+ * reaches hundreds of files, and is one thing to fix. An expected finding is
+ * counted apart, so the number a run reports is what is left to answer for.
+ * @param {readonly Expected[]=} expected findings already answered for
  * @returns {{ add: (report: Report, preset: string, label: string) => void, write: (out: (text: string) => void) => number }} the collector
  */
-const findingGroups = () => {
+const findingGroups = (expected = []) => {
 	/** @type {Map<string, { report: Report, presets: Set<string>, sources: Set<string> }>} */
 	const groups = new Map();
 	return {
@@ -605,7 +631,18 @@ const findingGroups = () => {
 			const ordered = [...groups.values()].sort(
 				(a, b) => b.sources.size - a.sources.size
 			);
+			/** @type {Set<Expected>} */
+			const matched = new Set();
+			/** @type {typeof ordered} */
+			const unexpected = [];
 			for (const group of ordered) {
+				const covering = expected.find((entry) =>
+					_covers(entry, group.report, group.sources)
+				);
+				if (covering === undefined) unexpected.push(group);
+				else matched.add(covering);
+			}
+			for (const group of unexpected) {
 				const { relation, what, repro } = group.report;
 				const sources = [...group.sources];
 				const reach =
@@ -618,7 +655,22 @@ const findingGroups = () => {
 					)}] ${reach}\n`
 				);
 			}
-			return ordered.length;
+			if (matched.size !== 0) {
+				out(`\nexpected, and why — ${matched.size} of ${expected.length}\n`);
+				for (const entry of expected) {
+					if (matched.has(entry)) out(`    ${entry.relation}: ${entry.why}\n`);
+				}
+			}
+			// An entry matching nothing is the divergence it named being gone: the
+			// list has to lose it, or it stops saying anything true.
+			const stale = expected.filter((entry) => !matched.has(entry));
+			if (stale.length !== 0) {
+				out(`\nstale — ${stale.length} expectation(s) matched nothing\n`);
+				for (const entry of stale) {
+					out(`    ${entry.relation}: ${entry.contains}\n`);
+				}
+			}
+			return unexpected.length + stale.length;
 		}
 	};
 };
