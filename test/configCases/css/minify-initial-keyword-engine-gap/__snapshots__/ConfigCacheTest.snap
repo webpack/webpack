@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigCacheTestCases css minify-initial-keyword-engine-gap minify-initial-keyword-engine-gap should compile 1`] = `".a{outline-color:initial}.b{text-emphasis-position:initial}.c{overflow-block:initial}.d{overflow-inline:initial}.e{text-autospace:initial}.f{text-fit:none}.g{caption-side:top}.h{empty-cells:show}"`;
+exports[`ConfigCacheTestCases css minify-initial-keyword-engine-gap minify-initial-keyword-engine-gap should compile 1`] = `".a{outline-color:initial}.b{text-emphasis-position:initial}.c{overflow-block:initial}.d{overflow-inline:initial}.e{text-autospace:initial}.i{font-synthesis-position:initial}.j{grid-auto-flow:initial}.k{user-select:initial}.l{-webkit-user-select:initial}.f{text-fit:none}.g{caption-side:top}.h{empty-cells:show}"`;

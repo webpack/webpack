@@ -3874,12 +3874,21 @@ const SUPPLEMENT = {
 	// `outline-color:auto` and `text-emphasis-position:auto` are refused outright,
 	// `overflow-block` and `overflow-inline` compute `visible` where the spec says
 	// `auto`, and `text-autospace` computes `no-autospace` where it says `normal`.
+	// In Gecko `font-synthesis-position` computes `auto` where the spec says
+	// `none`; in WebKit `grid-auto-flow` computes `normal` where it says `row`,
+	// and `-webkit-user-select` computes `text` where the standard `user-select`
+	// computes `auto` in all three — the standard spelling is what goes, since the
+	// value rules run on it. Each is a property the other engines do not
+	// implement, which is why one engine alone could not see it.
 	initialKeywordsAnEngineReadsApart: [
+		"font-synthesis-position",
+		"grid-auto-flow",
 		"outline-color",
 		"overflow-block",
 		"overflow-inline",
 		"text-autospace",
-		"text-emphasis-position"
+		"text-emphasis-position",
+		"user-select"
 	],
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.

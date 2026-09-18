@@ -6,6 +6,14 @@
 .d { overflow-inline: initial }
 .e { text-autospace: initial }
 
+/* The same, found once Gecko and WebKit were asked as well — each is a
+   property the other two do not implement. The prefixed spelling rides on the
+   standard one, which is where the value rules are read. */
+.i { font-synthesis-position: initial }
+.j { grid-auto-flow: initial }
+.k { user-select: initial }
+.l { -webkit-user-select: initial }
+
 /* A property whose keyword the engine does read as `initial` still takes it.
    Both are ones this engine implements, so the comparison can see them. */
 .f { text-fit: initial }

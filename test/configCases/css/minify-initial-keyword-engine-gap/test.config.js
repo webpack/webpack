@@ -19,6 +19,13 @@ module.exports = {
 		expect(css).toContain("overflow-block:initial");
 		expect(css).toContain("overflow-inline:initial");
 		expect(css).toContain("text-autospace:initial");
+		// Gecko reads `none` as `auto`; WebKit reads `row` as `normal` and the
+		// prefixed `user-select` as `text`, which the standard spelling carries
+		// since the value rules run on it.
+		expect(css).toContain("font-synthesis-position:initial");
+		expect(css).toContain("grid-auto-flow:initial");
+		expect(css).toContain("user-select:initial");
+		expect(css).toContain("-webkit-user-select:initial");
 		// Where the engine reads the keyword as `initial`, it is still written.
 		expect(css).toContain("text-fit:none");
 		expect(css).toContain("caption-side:top");
