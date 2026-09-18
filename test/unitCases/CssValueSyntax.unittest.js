@@ -17,6 +17,7 @@ const {
 	collectOmittableInitialKeywords,
 	collectRatioProperties,
 	collectUnsharedLonghandKeywords,
+	collectValueSupport,
 	collectZeroUnitAmbiguousProperties,
 	isPlainSupport,
 	isSpelledSyntax,
@@ -884,6 +885,28 @@ describe("CssValueSyntax", () => {
 		it("rejects a `<named-color>` node where every name lost its row", () => {
 			expect(() => collectLaterColorNames({ __compat: {} })).toThrow(
 				"no <named-color> carries a row of its own: bcd moved"
+			);
+		});
+
+		it("takes a property's keyword only where its own grammar names one, past bcd's own `__compat`", () => {
+			// Cast because bcd's tree is recursive where `BcdNode` names only its
+			// own `__compat`, so a stub holding sub-features is not one literally.
+			const tree = /** @type {EXPECTED_ANY} */ ({
+				__compat: {},
+				display: {
+					__compat: { support: {} },
+					flex: { __compat: { support: {} } },
+					is_transitionable: { __compat: { support: {} } }
+				}
+			});
+			expect(
+				collectValueSupport([], tree).map(([spelling]) => spelling)
+			).toEqual(["display flex"]);
+		});
+
+		it("rejects a tree where no value carries a row of its own", () => {
+			expect(() => collectValueSupport([], {})).toThrow(
+				"no value carries a support row of its own: bcd moved"
 			);
 		});
 	});

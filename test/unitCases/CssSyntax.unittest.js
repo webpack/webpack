@@ -7531,8 +7531,14 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 			minifyFor("a{text-align:center;text-align:-webkit-center}", target)
 		).toBe("a{text-align:center;text-align:-webkit-center}");
 		expect(
+			minifyFor("a{text-align:-webkit-center}b{text-align:center}", target)
+		).toBe("a{text-align:-webkit-center}b{text-align:center}");
+		// In one block it is the cascade's question rather than the prefixes':
+		// every target parses the `center` after it, so the spelling before it is
+		// read by nothing whatever the two compute to.
+		expect(
 			minifyFor("a{text-align:-webkit-center;text-align:center}", target)
-		).toBe("a{text-align:-webkit-center;text-align:center}");
+		).toBe("a{text-align:center}");
 		expect(minifyFor("a{text-align:center}", target)).toBe(
 			"a{text-align:center}"
 		);
@@ -11119,3 +11125,105 @@ describe("CssSyntax — the per-transform switches are independent", () => {
 	});
 });
 
+
+describe("CssSyntax minify — a fallback the target reads past", () => {
+	const MODERN = ["chrome 130", "firefox 130", "safari 18"];
+	const LEGACY = ["chrome 60", "firefox 60", "safari 11"];
+
+	it("drops the declaration before a color function every target reads", () => {
+		expect(minifyFor("a{color:red;color:lab(50% 100 -100)}", MODERN)).toBe(
+			"a{color:lab(50% 100 -100)}"
+		);
+	});
+
+	it("keeps it where one selected engine reads no such function", () => {
+		expect(minifyFor("a{color:red;color:lab(50% 100 -100)}", LEGACY)).toBe(
+			"a{color:red;color:lab(50% 100 -100)}"
+		);
+	});
+
+	it("declines where the selection names a browser nothing states", () => {
+		// `op_mini` is no browser the compat tables cover, so the selection is
+		// answered for in part; the declaration before the color has to stand.
+		expect(
+			minifyFor("a{color:#c65d06;color:lab(50% 100 -100)}", [
+				...MODERN,
+				"op_mini all"
+			])
+		).toBe("a{color:#c65d06;color:lab(50% 100 -100)}");
+	});
+
+	it("leaves the prefixes such a selection asks for alone", () => {
+		// Reaching for a spelling an uncovered browser may not read costs it
+		// nothing, so only the rewrite that takes a declaration away declines.
+		expect(minifyFor("a{width:max-content}", ["chrome 40", "op_mini all"])).toBe(
+			"a{width:-webkit-max-content;width:max-content}"
+		);
+	});
+
+	it("names a hue's angle unit among the arguments it can read", () => {
+		expect(minifyFor("a{color:red;color:lch(50% 130 20deg)}", MODERN)).toBe(
+			"a{color:lch(50% 130 20deg)}"
+		);
+	});
+
+	it("names a plain hex argument, which is what a color pair is written as", () => {
+		expect(minifyFor("a{color:red;color:light-dark(#fff,#000)}", MODERN)).toBe(
+			"a{color:light-dark(#fff,#000)}"
+		);
+	});
+
+	it("names a color argument spelled as a color", () => {
+		expect(minifyFor("a{color:#fff;color:light-dark(red,blue)}", MODERN)).toBe(
+			"a{color:light-dark(red,blue)}"
+		);
+	});
+
+	it("leaves a hex stating an alpha to the target's own question", () => {
+		expect(
+			minifyFor("a{color:red;color:light-dark(transparent,#000)}", MODERN)
+		).toBe("a{color:red;color:light-dark(#0000,#000)}");
+	});
+
+	it("reads no keyword argument the color grammar alone names", () => {
+		expect(
+			minifyFor("a{color:red;color:light-dark(canvastext,#000)}", MODERN)
+		).toBe("a{color:red;color:light-dark(canvastext,#000)}");
+	});
+
+	it("reads no predefined space, which is a keyword of its own", () => {
+		expect(minifyFor("a{color:red;color:color(display-p3 1 0 0)}", MODERN)).toBe(
+			"a{color:red;color:color(display-p3 1 0 0)}"
+		);
+	});
+
+	it("reads no relative color, whose origin is no argument of that kind", () => {
+		expect(minifyFor("a{color:red;color:oklch(from red l c h)}", MODERN)).toBe(
+			"a{color:red;color:oklch(from red l c h)}"
+		);
+	});
+
+	it("reads no mix, which names its space as a keyword", () => {
+		expect(
+			minifyFor("a{color:red;color:color-mix(in oklch,red,blue)}", MODERN)
+		).toBe("a{color:red;color:color-mix(in oklch,red,blue)}");
+	});
+
+	it("reads no function the table does not name", () => {
+		expect(
+			minifyFor("a{background:red;background:linear-gradient(red,blue)}", MODERN)
+		).toBe("a{background:red;background:linear-gradient(red,blue)}");
+	});
+
+	it("reads no empty call, which names a value no engine can read", () => {
+		expect(minifyFor("a{color:red;color:light-dark()}", MODERN)).toBe(
+			"a{color:red;color:light-dark()}"
+		);
+	});
+
+	it("reads no value holding more than one call", () => {
+		expect(minifyFor("a{filter:none;filter:blur(1px) invert(1)}", MODERN)).toBe(
+			"a{filter:none;filter:blur(1px)invert()}"
+		);
+	});
+});

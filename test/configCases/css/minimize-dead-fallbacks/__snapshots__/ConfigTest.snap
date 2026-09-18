@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-dead-fallbacks minimize-dead-fallbacks should compile 1`] = `
+Array [
+  "/*! the hex before it is read by nothing: every target reads \`lab()\` */.t01{color:lab(50% 100 -100)}",
+  "/*! ...whichever color function stands last */.t02{color:oklch(90% .3 140)}",
+  "/*! ...and whatever the earlier one was spelled as */.t03{color:lch(50% 130 20)}",
+  "/*! ...including where the later one is \`!important\` */.t04{color:oklch(90% .3 140)!important}",
+  "/*! ...and where its arguments are colors this can name, a plain hex among them
+   (which is what a \`light-dark()\` pair is written as) */.t04a{color:light-dark(#fff,#000)}",
+  "/*! a keyword the property's own grammar names is the same question */.t05{display:flex}",
+  "/*! ...however much newer it is */.t06{overflow:clip}",
+  "/*! ...and however the target spells it */.t07{width:fit-content}",
+  "/*! declined: an \`!important\` earlier one wins wherever it is read, so it is the
+   later one that carries nothing */.t08{color:red!important;color:oklch(90% .3 140)}",
+  "/*! declined: \`canvastext\` carries no row of its own, and the ancient
+   \`<system-color>\` it is filed under answers for the names of its own age
+   rather than for this one */.t09{color:red;color:canvastext}",
+  "/*! declined: the space a \`color()\` names is a keyword this cannot answer for,
+   so the whole value is left unknown */.t10{color:red;color:color(display-p3 1 0 0)}",
+  "/*! declined: ...as is a relative color, whose origin is no argument of the
+   kind this reads */.t11{color:red;color:oklch(from red l c h)}",
+  "/*! declined: a mix names its space and its colors as keywords, and the space is
+   one of the unknown ones */.t12{color:red;color:color-mix(in oklch,red,blue)}",
+]
+`;

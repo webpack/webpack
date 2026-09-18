@@ -79,6 +79,10 @@
 /*! declined: ...and in the Lab family a channel within 0.1 of a boundary, since
    webpack's matrix chain and the engine's disagree by up to 0.035 of a byte */
 .t20b { background: lab(20% 40 0) }
+/*! declined here only because this case builds for no particular target — for a
+   selection that reads `oklch()` the hex before it is read by nothing and goes
+   (see the `minimize-dead-fallbacks` case) */
+.t20d { color: #c65d06; color: oklch(90% .3 140) }
 /*! merge-longhand: a duplicate declaration resolves to the last of them */
 .t21 { color: red; color: red }
 /*! ...whatever stands between */
