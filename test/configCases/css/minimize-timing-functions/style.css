@@ -100,4 +100,4 @@
 /*! webpack: a substitution could name jump-none, so its calc() has to stay */
 .t47 { animation-timing-function: steps(calc(1), var(--pos)) }
 /*! webpack: the same count is folded where no position could reject it */
-.t48 { animation-timing-function: steps(calc(2), var(--pos)) }
+.t48 { animation-timing-function: steps(calc(2), jump-sideways) }

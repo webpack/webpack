@@ -49,6 +49,6 @@ Array [
   "/*! webpack: an omitted position is end, which takes one */.t45{animation-timing-function:steps(1)}",
   "/*! webpack: a position no grammar here states keeps its calc() */.t46{animation-timing-function:steps(calc(1),jump-sideways)}",
   "/*! webpack: a substitution could name jump-none, so its calc() has to stay */.t47{animation-timing-function:steps(calc(1),var(--pos))}",
-  "/*! webpack: the same count is folded where no position could reject it */.t48{animation-timing-function:steps(2,var(--pos))}",
+  "/*! webpack: the same count is folded where no position could reject it */.t48{animation-timing-function:steps(2,jump-sideways)}",
 ]
 `;
