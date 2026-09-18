@@ -1384,17 +1384,12 @@ const EXPECTED = [
 	{
 		relation: "respelling quote-double",
 		contains: "{%",
-		why: "a tag whose duplicate attribute names HTML parsing drops is echoed from source: rebuilding it would print the drop (#22013)"
+		why: 'the respelling writes `=""` onto a bare name, and a tag carrying template syntax keeps the empty value this print drops elsewhere, so the two spellings differ by the 3 bytes the respelling added'
 	},
 	{
 		relation: "respelling quote-single",
 		contains: "{%",
-		why: "the same echo, reached through the other delimiter"
-	},
-	{
-		relation: "respelling references",
-		contains: "{%",
-		why: "the same echo, which also leaves the tag's other values spelled as the source wrote them"
+		why: "the same kept value, reached through the other delimiter"
 	}
 ];
 
