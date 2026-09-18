@@ -105,16 +105,16 @@ The directory listings below are the canonical map of the repository. **Whenever
 
 **Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for directory structure, naming, and how to run a single case.
 
-- `test/` — All test suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `test262-cases/`, `html5lib-tests/`, `wpt/`, `css-parsing-tests/`, `benchmarkCases/`, `memoryLimitCases/`, etc.). `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file. `wpt/` is web-platform-tests, checked out one commit deep by the `html5lib` and the two `syntax-equivalence` jobs — it is where the HTML tree-construction corpus lives since html5lib-tests dropped it.
+- `test/` — All test suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `test262-cases/`, `html5lib-tests/`, `wpt/`, `css-parsing-tests/`, `benchmarkCases/`, `memoryLimitCases/`, etc.). `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file. `wpt/` is web-platform-tests, checked out one commit deep by the `html5lib` and `syntax-equivalence` jobs — it is where the HTML tree-construction corpus lives since html5lib-tests dropped it.
 
 **Git submodules** — the spec-conformance corpora are submodules, checked out on demand: `yarn setup` does not fetch them, and each CI job fetches only the submodules it needs, one commit deep.
 
-| Path                     | Upstream                                                                              | Fetched by                                 |
-| ------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `test/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `test262-parser`                |
-| `test/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `html5lib`                                 |
-| `test/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, both `syntax-equivalence` jobs |
-| `test/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `css-parsing`                              |
+| Path                     | Upstream                                                                              | Fetched by                                       |
+| ------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `test/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `test262-parser`                      |
+| `test/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `html5lib`                                       |
+| `test/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, `syntax-equivalence` (both browsers) |
+| `test/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `css-parsing`                                    |
 
 ```sh
 git submodule update --init --recursive --depth 1   # check out the commits the repo pins
