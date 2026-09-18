@@ -8430,6 +8430,20 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
 		});
 
+		it("unquotes a value carrying a vertical tab, which is no whitespace", () => {
+			// \u000B ends no unquoted value: §13.1.2.3 admits every code point but
+			// ASCII whitespace — tab, line feed, form feed, carriage return, space.
+			const VT = String.fromCharCode(0x0b);
+			expect(minify(`<p data-x="a${VT}b">t</p>`)).toBe(`<p data-x=a${VT}b>t`);
+			// The five that are whitespace keep the quotes they need.
+			for (const code of [0x09, 0x0a, 0x0c, 0x0d, 0x20]) {
+				const ws = String.fromCharCode(code);
+				expect(minify(`<p data-x="a${ws}b">t</p>`)).toBe(
+					`<p data-x="a${ws}b">t`
+				);
+			}
+		});
+
 		it("folds the name of a tag that carries nothing else", () => {
 			expect(minify("<DIV>t</DIV>")).toBe("<div>t</div>");
 			// Foreign content keeps its source bytes, name included.
