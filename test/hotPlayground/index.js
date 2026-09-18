@@ -60,7 +60,10 @@ const inlineImage = document.createElement("img");
 inlineImage.src = inlineLogo;
 inlineImage.alt = "inline logo";
 inlinePanel.appendChild(inlineImage);
-line(inlinePanel, `src starts with ${inlineLogo.slice(0, 24)}…`);
+const inlineBody = line(
+	inlinePanel,
+	`src starts with ${inlineLogo.slice(0, 24)}…`
+);
 
 // asset/source — the file contents arrive as a string.
 const sourcePanel = section("Asset module, asset/source");
@@ -126,6 +129,12 @@ if (module.hot) {
 	module.hot.accept("./logo.svg", () => {
 		image.src = logo;
 		urlBody.innerText = String(new URL("./logo.svg", import.meta.url));
+	});
+
+	// A query makes it a different module, so it needs its own handler.
+	module.hot.accept("./logo.svg?inline", () => {
+		inlineImage.src = inlineLogo;
+		inlineBody.innerText = `src starts with ${inlineLogo.slice(0, 24)}…`;
 	});
 
 	module.hot.accept("./notes.txt", () => {

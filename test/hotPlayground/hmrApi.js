@@ -16,6 +16,15 @@ line(hmrPanel, `generation ${generation} — survives updates via dispose/data`)
 
 const statusLine = line(hmrPanel, `status: ${hot ? hot.status() : "no hmr"}`);
 
+/** @type {((status: string) => void) | undefined} */
+let updateStatus;
+
+// index.js mounts the first panel; every version after this one has to put
+// itself where its predecessor was, since nothing else will.
+if (previous.panel && previous.panel.parentNode) {
+	previous.panel.parentNode.replaceChild(hmrPanel, previous.panel);
+}
+
 /**
  * Adds a button to the panel.
  * @param {string} label button text
@@ -32,9 +41,13 @@ function button(label, onClick) {
 
 if (hot) {
 	// Every status the update machine passes through, reported as it happens.
-	hot.addStatusHandler((status) => {
+	// Held by name so the next version can take it off again — otherwise each
+	// update leaves another handler pointing at a detached line.
+	updateStatus = (status) => {
 		statusLine.innerText = `status: ${status}`;
-	});
+	};
+
+	hot.addStatusHandler(updateStatus);
 
 	// Ask the server for an update by hand — what the dev-server client does
 	// for you, useful for watching apply() decide what to replace.
@@ -62,7 +75,9 @@ if (hot) {
 
 	// Hand the next version everything it needs to carry on.
 	hot.dispose((data) => {
+		hot.removeStatusHandler(updateStatus);
 		data.generation = generation;
+		data.panel = hmrPanel;
 	});
 
 	hot.accept();

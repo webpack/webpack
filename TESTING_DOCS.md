@@ -45,7 +45,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 #### `html5lib-tests/`
 
 - **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/external/html5lib-tests`. Test runner: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt`: the runner reads both corpora. Test runner: `test/specCases/html5lib.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
 
 #### `wpt/`
 
@@ -258,7 +258,7 @@ yarn test
 | `test/benchmarkCases/`             | `FILTER="<case-name>" yarn benchmark`                                                                                                                        |
 | `lib/runtime/`                     | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                                                                           |
 | `test/external/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/external/test262-cases` first)                                                               |
-| `test/external/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/external/html5lib-tests` first)                                                             |
+| `test/external/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt` first)                                 |
 | `test/external/wpt/`               | `yarn test:html5lib` + `yarn test:syntax-equivalence` (require `git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt` first) |
 | `test/external/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/external/css-parsing-tests` first)                                                       |
 
