@@ -4341,6 +4341,21 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("tells a layer named with a no-break space from one without", () => {
+			// CSS skips only its own whitespace, so `\u00A0x` is an identifier of its
+			// own — `String#trim` would read it as `x` and forget the wrong block.
+			const gather = (mid) =>
+				minify(
+					`@media all{@layer \u00A0x{a{color:red}}${mid}@layer \u00A0x{c{color:lime}}}`
+				);
+			expect(gather(".y{@layer x{b{top:0}}}")).toBe(
+				"@media all{@layer \u00A0x{a{color:red}c{color:lime}}.y{@layer x{b{top:0}}}}"
+			);
+			expect(gather(".y{@layer \u00A0x{b{top:0}}}")).toBe(
+				"@media all{@layer \u00A0x{a{color:red}}.y{@layer \u00A0x{b{top:0}}}@layer \u00A0x{c{color:lime}}}"
+			);
+		});
+
 		it("reads a small block's siblings as the streamed path reads them", () => {
 			// Which blocks gather must not turn on whether the block was small enough
 			// to assemble in one go rather than stream.
