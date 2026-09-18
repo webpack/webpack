@@ -1,6 +1,6 @@
 "use strict";
 
-const { describeCases } = require("./HotTestCases.template");
+const { describeCases } = require("./templates/HotTestCases");
 
 describe("HotTestCases", () => {
 	describeCases({

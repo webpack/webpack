@@ -1,6 +1,6 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
 /** @typedef {{ testPath: string, srcPath: string }} TestOptions */
@@ -20,15 +20,17 @@ const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
 const rimraf = require("rimraf");
-const { parseResource } = require("../lib/util/identifier");
-const checkArrayExpectation = require("./checkArrayExpectation");
-const { TestRunner } = require("./harness/runner");
-const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const deprecationTracking = require("./helpers/deprecationTracking");
-const prepareOptions = require("./helpers/prepareOptions");
-const { remove } = require("./helpers/remove");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
+const { parseResource } = require("../../lib/util/identifier");
+const checkArrayExpectation = require("../checkArrayExpectation");
+const { TestRunner } = require("../harness/runner");
+const createLazyTestEnv = require("../helpers/createLazyTestEnv");
+const deprecationTracking = require("../helpers/deprecationTracking");
+const prepareOptions = require("../helpers/prepareOptions");
+const { remove } = require("../helpers/remove");
+const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
+const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
+
+const testRootDirectory = path.join(__dirname, "..");
 
 /**
  * @param {string} src src
@@ -71,9 +73,9 @@ function copyDiff(src, dest, initial) {
 const describeCases = (config) => {
 	describe(config.name, () => {
 		beforeAll(() => {
-			let dest = path.join(__dirname, "js");
+			let dest = path.join(testRootDirectory, "js");
 			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
-			dest = path.join(__dirname, "js", `${config.name}-src`);
+			dest = path.join(testRootDirectory, "js", `${config.name}-src`);
 			if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 		});
 
@@ -84,7 +86,7 @@ const describeCases = (config) => {
 			return;
 		}
 
-		const casesPath = path.join(__dirname, "watchCases");
+		const casesPath = path.join(testRootDirectory, "watchCases");
 		const categories = fs.readdirSync(casesPath).map((cat) => ({
 			name: cat,
 			tests: fs
@@ -108,7 +110,7 @@ const describeCases = (config) => {
 			// eslint-disable-next-line jest/prefer-hooks-on-top, jest/no-duplicate-hooks
 			beforeAll(() => {
 				const dest = path.join(
-					__dirname,
+					testRootDirectory,
 					"js",
 					`${config.name}-src`,
 					category.name
@@ -120,14 +122,14 @@ const describeCases = (config) => {
 				for (const testName of category.tests) {
 					describe(testName, () => {
 						const tempDirectory = path.join(
-							__dirname,
+							testRootDirectory,
 							"js",
 							`${config.name}-src`,
 							category.name,
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
-						/** @type {{ name: string, done?: boolean, stats?: import("../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
+						/** @type {{ name: string, done?: boolean, stats?: import("../../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -142,7 +144,7 @@ const describeCases = (config) => {
 
 						it(`${testName} should compile`, (done) => {
 							const outputDirectory = path.join(
-								__dirname,
+								testRootDirectory,
 								"js",
 								config.name,
 								category.name,
@@ -160,7 +162,7 @@ const describeCases = (config) => {
 								});
 							}
 							const applyConfig = (
-								/** @type {import("../").Configuration} */ options,
+								/** @type {import("../../").Configuration} */ options,
 								/** @type {number} */ idx
 							) => {
 								if (!options.mode) options.mode = "development";
@@ -199,14 +201,14 @@ const describeCases = (config) => {
 								}
 								if (
 									options.cache &&
-									/** @type {import("../").FileCacheOptions} */ (options.cache)
+									/** @type {import("../../").FileCacheOptions} */ (options.cache)
 										.type === "filesystem"
 								) {
 									const cacheDirectory = path.join(tempDirectory, ".cache");
-									/** @type {import("../").FileCacheOptions} */ (
+									/** @type {import("../../").FileCacheOptions} */ (
 										options.cache
 									).cacheDirectory = cacheDirectory;
-									/** @type {import("../").FileCacheOptions} */ (
+									/** @type {import("../../").FileCacheOptions} */ (
 										options.cache
 									).name = `config-${idx}`;
 								}
@@ -252,7 +254,7 @@ const describeCases = (config) => {
 							let triggeringFilename;
 							let lastHash = "";
 
-							const currentWatchStepModule = require("./helpers/currentWatchStep");
+							const currentWatchStepModule = require("../helpers/currentWatchStep");
 
 							/** @type {(err?: Error | null) => void} */
 							let compilationFinished = /** @type {EXPECTED_ANY} */ (done);
@@ -264,7 +266,7 @@ const describeCases = (config) => {
 							setTimeout(() => {
 								const deprecationTracker = deprecationTracking.start();
 
-								const webpack = require("..");
+								const webpack = require("../..");
 
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(

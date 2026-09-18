@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const { describeCases } = require("./TestCases.template");
+const { describeCases } = require("./templates/TestCases");
 
 describe("TestCases", () => {
 	describeCases({

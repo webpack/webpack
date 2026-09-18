@@ -1,7 +1,7 @@
 "use strict";
 
 const vm = require("vm");
-const { describeCases } = require("./TestCases.template");
+const { describeCases } = require("./templates/TestCases");
 
 describe("TestCases", () => {
 	if (!vm.SourceTextModule) {

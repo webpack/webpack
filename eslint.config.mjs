@@ -20,6 +20,7 @@ export default defineConfig([
 		"!test/**/deprecations.js",
 		"!test/**/infrastructure-log.js",
 		"!test/helpers/*.*",
+		"!test/templates/*.js",
 		"!test/specCases/*.js",
 		"!test/benchmarkCases/**/*.mjs",
 		"!test/harness/benchmark/**/*.mjs",

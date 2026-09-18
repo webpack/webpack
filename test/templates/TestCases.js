@@ -1,6 +1,6 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 /** @typedef {{ name: string, tests: string[] }} Category */
 /**
@@ -30,17 +30,19 @@ const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
 const rimraf = require("rimraf");
-const { parseResource } = require("../lib/util/identifier");
-const checkArrayExpectation = require("./checkArrayExpectation");
-const { TestRunner } = require("./harness/runner");
-const captureStdio = require("./helpers/captureStdio");
-const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const deprecationTracking = require("./helpers/deprecationTracking");
-const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
+const { parseResource } = require("../../lib/util/identifier");
+const checkArrayExpectation = require("../checkArrayExpectation");
+const { TestRunner } = require("../harness/runner");
+const captureStdio = require("../helpers/captureStdio");
+const createLazyTestEnv = require("../helpers/createLazyTestEnv");
+const deprecationTracking = require("../helpers/deprecationTracking");
+const filterInfraStructureErrors = require("../helpers/infrastructureLogErrors");
+const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
+const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
-const casesPath = path.join(__dirname, "cases");
+const testRootDirectory = path.join(__dirname, "..");
+
+const casesPath = path.join(testRootDirectory, "cases");
 /** @type {Category[]} */
 const categories = fs.readdirSync(casesPath).map((cat) => ({
 	name: cat,
@@ -123,14 +125,14 @@ const describeCases = (config) => {
 					describe(testName, () => {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const outputDirectory = path.join(
-							__dirname,
+							testRootDirectory,
 							"js",
 							config.name,
 							category.name,
 							testName
 						);
 						const cacheDirectory = path.join(
-							__dirname,
+							testRootDirectory,
 							"js/.cache",
 							config.name,
 							category.name,
@@ -155,8 +157,8 @@ const describeCases = (config) => {
 						const terserForTesting = new TerserPlugin({
 							parallel: false
 						});
-						/** @type {import("../").Configuration} */
-						let options = /** @type {import("../").Configuration} */ ({
+						/** @type {import("../../").Configuration} */
+						let options = /** @type {import("../../").Configuration} */ ({
 							context: casesPath,
 							entry: `./${category.name}/${testName}/`,
 							target: config.target || "async-node",
@@ -260,7 +262,7 @@ const describeCases = (config) => {
 							},
 							plugins: [
 								...(config.plugins || []),
-								/** @this {import("../").Compiler} */
+								/** @this {import("../../").Compiler} */
 								function testCasesTest() {
 									this.hooks.compilation.tap(
 										"TestCasesTest",
@@ -325,7 +327,7 @@ const describeCases = (config) => {
 									infraStructureErrors.length = 0;
 									const deprecationTracker = deprecationTracking.start();
 
-									const webpack = require("..");
+									const webpack = require("../..");
 
 									webpack(options, (err) => {
 										deprecationTracker();
@@ -371,7 +373,7 @@ const describeCases = (config) => {
 									infraStructureErrors.length = 0;
 									const deprecationTracker = deprecationTracking.start();
 
-									const webpack = require("..");
+									const webpack = require("../..");
 
 									webpack(options, (err) => {
 										deprecationTracker();
@@ -410,13 +412,13 @@ const describeCases = (config) => {
 							(done) => {
 								infraStructureLog.length = 0;
 
-								const webpack = require("..");
+								const webpack = require("../..");
 
 								const compiler = webpack(options);
 								const run = () => {
 									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err, _stats) => {
-										const stats = /** @type {import("../").Stats} */ (_stats);
+										const stats = /** @type {import("../../").Stats} */ (_stats);
 										const deprecations = deprecationTracker();
 										if (err) return done(err);
 										const infrastructureLogErrors = [

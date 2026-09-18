@@ -1,17 +1,17 @@
 "use strict";
 
-require("./helpers/warmup-webpack");
+require("../helpers/warmup-webpack");
 
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
 /** @typedef {{ testPath: string }} TestOptions */
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
- * @property {import("../").FileCacheOptions=} cache filesystem cache options
+ * @property {import("../../").FileCacheOptions=} cache filesystem cache options
  */
 /**
  * @typedef {object} TestConfig
- * @property {((i: number, options: import("../").Configuration) => string | undefined)=} findBundle
+ * @property {((i: number, options: import("../../").Configuration) => string | undefined)=} findBundle
  * @property {number=} timeout
  * @property {boolean=} noTests
  * @property {boolean=} ecmaConformance hold every emitted asset to `output.environment`, not only webpack's runtime modules — the case's own sources must then stay within it too
@@ -19,34 +19,36 @@ require("./helpers/warmup-webpack");
  * @property {RegExp[]=} analyzableConformanceExpected ESM output a foreign bundler cannot follow that the case declares deliberate, each with the reason next to it; an entry that stops matching fails the case
  * @property {boolean=} restrictEnvironment run the bundle in a realm that really lacks what `output.environment` says the target lacks
  * @property {(() => void)=} beforeExecute
- * @property {((options: import("../").Configuration) => void)=} afterExecute
- * @property {((scope: EXPECTED_ANY, options: import("../").Configuration, target: EXPECTED_ANY) => void)=} moduleScope
+ * @property {((options: import("../../").Configuration) => void)=} afterExecute
+ * @property {((scope: EXPECTED_ANY, options: import("../../").Configuration, target: EXPECTED_ANY) => void)=} moduleScope
  */
 
 const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void }} */
 const rimraf = require("rimraf");
-const { parseResource } = require("../lib/util/identifier");
-const checkArrayExpectation = require("./checkArrayExpectation");
-const { TestRunner } = require("./harness/runner");
-const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
+const { parseResource } = require("../../lib/util/identifier");
+const checkArrayExpectation = require("../checkArrayExpectation");
+const { TestRunner } = require("../harness/runner");
+const { registerPerCaseSnapshotHooks } = require("../harness/snapshot");
 const {
 	reportAnalyzableConformance
-} = require("./helpers/analyzableConformance");
-const captureStdio = require("./helpers/captureStdio");
-const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const deprecationTracking = require("./helpers/deprecationTracking");
+} = require("../helpers/analyzableConformance");
+const captureStdio = require("../helpers/captureStdio");
+const createLazyTestEnv = require("../helpers/createLazyTestEnv");
+const deprecationTracking = require("../helpers/deprecationTracking");
 const {
 	collectGeneratedCode,
 	reportEcmaConformance
-} = require("./helpers/ecmaConformance");
-const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
-const prepareOptions = require("./helpers/prepareOptions");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
+} = require("../helpers/ecmaConformance");
+const filterInfraStructureErrors = require("../helpers/infrastructureLogErrors");
+const prepareOptions = require("../helpers/prepareOptions");
+const supportsObjectHasOwn = require("../helpers/supportsObjectHasOwn");
+const supportsOptionalChaining = require("../helpers/supportsOptionalChaining");
 
-const casesPath = path.join(__dirname, "configCases");
+const testRootDirectory = path.join(__dirname, "..");
+
+const casesPath = path.join(testRootDirectory, "configCases");
 const categories = fs.readdirSync(casesPath).map((cat) => ({
 	name: cat,
 	tests: fs
@@ -124,23 +126,23 @@ const describeCases = (config) => {
 						const infraStructureLog = [];
 						/** @type {string[]} */
 						const infraStructureErrors = [];
-						const outBaseDir = path.join(__dirname, "js");
+						const outBaseDir = path.join(testRootDirectory, "js");
 						const testSubPath = path.join(config.name, category.name, testName);
 						const outputDirectory = path.join(outBaseDir, testSubPath);
 						const cacheDirectory = path.join(outBaseDir, ".cache", testSubPath);
-						/** @type {import("../").Configuration} */
+						/** @type {import("../../").Configuration} */
 						let options;
-						/** @type {import("../").Configuration[]} */
+						/** @type {import("../../").Configuration[]} */
 						let optionsArr;
 						/** @type {TestConfig} */
 						let testConfig;
-						/** @type {Map<string, import("./helpers/ecmaConformance").Subject>} */
+						/** @type {Map<string, import("../helpers/ecmaConformance").Subject>} */
 						let generatedCode;
 
 						registerPerCaseSnapshotHooks(testDirectory, config.name);
 
 						beforeAll(async () => {
-							options = /** @type {import("../").Configuration} */ (
+							options = /** @type {import("../../").Configuration} */ (
 								await prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
@@ -211,7 +213,7 @@ const describeCases = (config) => {
 										cacheDirectory,
 										name:
 											options.cache && options.cache !== true
-												? /** @type {import("../").FileCacheOptions} */ (
+												? /** @type {import("../../").FileCacheOptions} */ (
 														options.cache
 													).name
 												: `config-${idx}`,
@@ -236,7 +238,7 @@ const describeCases = (config) => {
 								if (!options.snapshot) options.snapshot = {};
 								if (!options.snapshot.managedPaths) {
 									options.snapshot.managedPaths = [
-										path.resolve(__dirname, "../node_modules")
+										path.resolve(testRootDirectory, "../node_modules")
 									];
 								}
 							}
@@ -323,7 +325,7 @@ const describeCases = (config) => {
 								infraStructureErrors.length = 0;
 								const deprecationTracker = deprecationTracking.start();
 
-								const compiler = require("..")(options);
+								const compiler = require("../..")(options);
 
 								compiler.run((err) => {
 									deprecationTracker();
@@ -373,7 +375,7 @@ const describeCases = (config) => {
 								infraStructureErrors.length = 0;
 								const deprecationTracker = deprecationTracking.start();
 
-								const compiler = require("..")(options);
+								const compiler = require("../..")(options);
 
 								compiler.run((err, stats) => {
 									deprecationTracker();
@@ -381,7 +383,7 @@ const describeCases = (config) => {
 										return handleFatalError(/** @type {Error} */ (err), done);
 									}
 									const { modules, children, errorsCount } =
-										/** @type {import("../").Stats} */ (stats).toJson({
+										/** @type {import("../../").Stats} */ (stats).toJson({
 											all: false,
 											modules: true,
 											errorsCount: true
@@ -391,24 +393,24 @@ const describeCases = (config) => {
 											? children.reduce(
 													(all, { modules }) => [
 														...all,
-														.../** @type {import("../").StatsModule[]} */ (
+														.../** @type {import("../../").StatsModule[]} */ (
 															modules || []
 														)
 													],
-													/** @type {import("../").StatsModule[]} */ (
+													/** @type {import("../../").StatsModule[]} */ (
 														modules || []
 													)
 												)
 											: modules;
 										if (
-											/** @type {import("../").StatsModule[]} */ (
+											/** @type {import("../../").StatsModule[]} */ (
 												allModules
 											).some((m) => m.type !== "cached modules" && !m.cached)
 										) {
 											return done(
 												new Error(
 													`Some modules were not cached:\n${
-														/** @type {import("../").Stats} */ (stats).toString(
+														/** @type {import("../../").Stats} */ (stats).toString(
 															{
 																all: false,
 																modules: true,
@@ -468,7 +470,7 @@ const describeCases = (config) => {
 							const deprecationTracker = deprecationTracking.start();
 							const onCompiled = (
 								/** @type {Error | null} */ err,
-								/** @type {import("../").Stats} */ stats
+								/** @type {import("../../").Stats} */ stats
 							) => {
 								const deprecations = deprecationTracker();
 								if (err) return handleFatalError(err, done);
@@ -565,9 +567,9 @@ const describeCases = (config) => {
 								}
 
 								const children =
-									/** @type {{ stats?: import("../").Stats[] }} */ (stats)
+									/** @type {{ stats?: import("../../").Stats[] }} */ (stats)
 										.stats || [stats];
-								/** @type {import("./helpers/analyzableConformance").Subject[]} */
+								/** @type {import("../helpers/analyzableConformance").Subject[]} */
 								const subjects = [];
 								/**
 								 * A child compiler emits its own assets, so the walk has to
@@ -660,7 +662,7 @@ const describeCases = (config) => {
 							};
 							if (config.cache) {
 								try {
-									const compiler = require("..")(options);
+									const compiler = require("../..")(options);
 
 									compiler.run((err) => {
 										if (err) {
@@ -676,7 +678,7 @@ const describeCases = (config) => {
 												}
 												onCompiled(
 													/** @type {Error | null} */ (error),
-													/** @type {import("../").Stats} */ (stats)
+													/** @type {import("../../").Stats} */ (stats)
 												);
 											});
 										});
@@ -685,7 +687,7 @@ const describeCases = (config) => {
 									handleFatalError(/** @type {Error} */ (err), done);
 								}
 							} else {
-								require("..")(
+								require("../..")(
 									options,
 									/** @type {EXPECTED_ANY} */ (onCompiled)
 								);

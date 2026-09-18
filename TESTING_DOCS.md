@@ -41,6 +41,12 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Utility functions and scripts to assist in testing.
 - **Usage**: Provides reusable functions for mock data generation, cleanup, and assertions.
 
+### 6b. `templates/`
+
+- **Purpose**: The suite drivers — `TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js` — each exporting `describeCases(config)`.
+- **Usage**: The `*.test.js` / `*.basictest.js` / `*.longtest.js` files at the top of `test/` are thin shims that call `describeCases` with one suite's options, so one driver serves every variant (targets, devtools, cache modes). Jest parallelizes per file, which is why the variants stay separate files rather than being folded into one.
+- **Note**: `templates/` is a sibling of the case directories it runs (`cases/`, `configCases/`, `hotCases/`, `watchCases/`), so a driver resolves paths from the shared `test/` root via `testRootDirectory` (`path.join(__dirname, "..")`), never against `__dirname`.
+
 ### 7. `hotCases/`
 
 - **Purpose**: Focuses on Webpack’s Hot Module Replacement (HMR) functionality.
