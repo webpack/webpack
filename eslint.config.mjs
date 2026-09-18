@@ -23,6 +23,8 @@ export default defineConfig([
 		"!test/templates/*.js",
 		"!test/specCases/*.js",
 		"!test/benchmarkCases/**/*.mjs",
+		// Only what these two directories hold directly: `runner/` and `snapshot/`
+		// carry lint errors of their own, which are not this list's to unblock.
 		"!test/harness/*.js",
 		"!test/harness/runtimes/*.js",
 		"!test/harness/benchmark/**/*.mjs",
