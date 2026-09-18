@@ -11021,6 +11021,25 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 		);
 	});
 
+	it("declines where the selection names a browser nothing states", () => {
+		// `op_mini` is no browser the compat tables cover, so the selection is
+		// answered for in part; the declaration before the color has to stand.
+		expect(
+			minifyFor("a{color:#c65d06;color:lab(50% 100 -100)}", [
+				...MODERN,
+				"op_mini all"
+			])
+		).toBe("a{color:#c65d06;color:lab(50% 100 -100)}");
+	});
+
+	it("leaves the prefixes such a selection asks for alone", () => {
+		// Reaching for a spelling an uncovered browser may not read costs it
+		// nothing, so only the rewrite that takes a declaration away declines.
+		expect(minifyFor("a{width:max-content}", ["chrome 40", "op_mini all"])).toBe(
+			"a{width:-webkit-max-content;width:max-content}"
+		);
+	});
+
 	it("names a hue's angle unit among the arguments it can read", () => {
 		expect(minifyFor("a{color:red;color:lch(50% 130 20deg)}", MODERN)).toBe(
 			"a{color:lch(50% 130 20deg)}"
