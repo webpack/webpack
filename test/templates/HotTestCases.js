@@ -379,3 +379,5 @@ const describeCases = (config) => {
 
 // eslint-disable-next-line jest/no-export
 module.exports.describeCases = describeCases;
+// eslint-disable-next-line jest/no-export
+module.exports.variants = require("./variants").hotTestCases;

@@ -1,9 +1,7 @@
 "use strict";
 
-const { describeCases } = require("./templates/TestCases");
+const { describeCases, variants } = require("./templates/TestCases");
 
 describe("TestCases", () => {
-	describeCases({
-		name: "normal"
-	});
+	describeCases(variants.normal);
 });

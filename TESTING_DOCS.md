@@ -107,6 +107,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: The suite drivers — `TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js` — each exporting `describeCases(config)`.
 - **Usage**: The `*.test.js` / `*.basictest.js` / `*.longtest.js` files at the top of `test/` are thin shims that call `describeCases` with one suite's options, so one driver serves every variant (targets, devtools, cache modes). Jest parallelizes per file, which is why the variants stay separate files rather than being folded into one.
+- **Variants**: `variants.js` holds the option sets the `TestCases*` and `HotTestCases*` shims run under, re-exported from each driver as `variants`. Add a variant by adding an entry there and one shim naming it — the shims stay separate files because jest parallelizes per file.
 - **Note**: `templates/` is a sibling of the case directories it runs (`cases/`, `configCases/`, `hotCases/`, `watchCases/`), so a driver resolves paths from the shared `test/` root via `testRootDirectory` (`path.join(__dirname, "..")`), never against `__dirname`.
 
 ### `typesCases/`

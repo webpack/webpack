@@ -1,10 +1,7 @@
 "use strict";
 
-const { describeCases } = require("./templates/HotTestCases");
+const { describeCases, variants } = require("./templates/HotTestCases");
 
 describe("HotTestCases", () => {
-	describeCases({
-		name: "async-node",
-		target: "async-node"
-	});
+	describeCases(variants["async-node"]);
 });

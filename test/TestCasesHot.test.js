@@ -1,11 +1,7 @@
 "use strict";
 
-const webpack = require("..");
-const { describeCases } = require("./templates/TestCases");
+const { describeCases, variants } = require("./templates/TestCases");
 
 describe("TestCases", () => {
-	describeCases({
-		name: "hot",
-		plugins: [new webpack.HotModuleReplacementPlugin()]
-	});
+	describeCases(variants.hot);
 });

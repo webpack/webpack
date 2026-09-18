@@ -1,14 +1,7 @@
 "use strict";
 
-const { describeCases } = require("./templates/TestCases");
+const { describeCases, variants } = require("./templates/TestCases");
 
 describe("TestCasesProdGlobalUsed", () => {
-	describeCases({
-		name: "production with usedExports global",
-		mode: "production",
-		optimization: {
-			usedExports: "global",
-			minimize: false
-		}
-	});
+	describeCases(variants["production-global-used"]);
 });

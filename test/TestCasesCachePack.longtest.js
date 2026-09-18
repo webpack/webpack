@@ -1,24 +1,7 @@
 "use strict";
 
-const path = require("path");
-const { describeCases } = require("./templates/TestCases");
+const { describeCases, variants } = require("./templates/TestCases");
 
 describe("TestCases", () => {
-	describeCases({
-		name: "cache pack",
-		cache: {
-			type: "filesystem",
-			buildDependencies: {
-				defaultWebpack: []
-			}
-		},
-		snapshot: {
-			managedPaths: [path.resolve(__dirname, "../node_modules")]
-		},
-		optimization: {
-			innerGraph: true,
-			usedExports: true,
-			concatenateModules: true
-		}
-	});
+	describeCases(variants["cache-pack"]);
 });
