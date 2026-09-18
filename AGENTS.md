@@ -35,7 +35,7 @@ All commands are defined in `package.json` `scripts`.
 | `yarn test:unit`                                                     | Run all `*.unittest.js`.                                                                                        |
 | `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                     |
 | `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                        |
-| `yarn test:syntax-equivalence`                                       | Holds the HTML/CSS printers to what Chrome makes of their output, over `configCases` and `test/wpt`.            |
+| `yarn test:syntax-equivalence`                                       | Holds the HTML/CSS printers to a real browser's reading of their output, over `configCases` and `test/wpt`.     |
 | `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                      |
 | `yarn test:size`                                                     | Size of the generated code over all `configCases/` (per asset, plus runtime module counts per runtime).         |
 | `yarn cover:unit`                                                    | Unit-test coverage.                                                                                             |
@@ -109,12 +109,12 @@ The directory listings below are the canonical map of the repository. **Whenever
 
 **Git submodules** — the spec-conformance corpora are submodules, checked out on demand: `yarn setup` does not fetch them, and each CI job fetches only the submodules it needs, one commit deep.
 
-| Path                     | Upstream                                                                              | Fetched by                       |
-| ------------------------ | ------------------------------------------------------------------------------------- | -------------------------------- |
-| `test/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `test262-parser`      |
-| `test/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `html5lib`                       |
-| `test/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, `syntax-equivalence` |
-| `test/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `css-parsing`                    |
+| Path                     | Upstream                                                                              | Fetched by                                       |
+| ------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `test/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `test262-parser`                      |
+| `test/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `html5lib`                                       |
+| `test/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, `syntax-equivalence` (every browser) |
+| `test/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `css-parsing`                                    |
 
 ```sh
 git submodule update --init --recursive --depth 1   # check out the commits the repo pins

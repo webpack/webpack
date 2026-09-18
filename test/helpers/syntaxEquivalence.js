@@ -190,9 +190,6 @@ const benchmarkDocuments = (minify) => {
 /**
  * Installed once into the page. Everything both suites need lives here so an
  * inline `<style>` is held to exactly the same standard as a `.css` file.
- * @returns {void}
- */
-/**
  * @param {string[]} generics the generic font families, from `lib/css/data.js`
  * @returns {void}
  */
@@ -585,6 +582,11 @@ const installHelpers = (generics) => {
 		["step-end", "steps(1, end)"]
 	]);
 
+	// A generic family is a keyword, so quoting one names a font of that name
+	// instead, and the quoting is what tells the two apart. `CssSyntax.unittest`
+	// holds the printer to the same rule.
+	const GENERIC_FAMILIES = new Set(generics);
+
 	/**
 	 * A font family list with every name the bare spelling would also name left
 	 * unquoted. CSS Fonts 4 §2.2 makes the two the same family, and the engines
@@ -598,11 +600,6 @@ const installHelpers = (generics) => {
 			(quoted, name) =>
 				GENERIC_FAMILIES.has(name.toLowerCase()) ? quoted : name
 		);
-
-	// A generic family is a keyword, so quoting one names a font of that name
-	// instead, and the quoting is what tells the two apart. `CssSyntax.unittest`
-	// holds the printer to the same rule.
-	const GENERIC_FAMILIES = new Set(generics);
 
 	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
@@ -1466,6 +1463,15 @@ const MEDIA_TYPES = new Set([
 	"tv"
 ]);
 
+// One media feature, including a range one holding a nested function.
+const FEATURE_REGEXP = /\([^()]*(?:\([^()]*\))?[^()]*\)/g;
+
+// What `setViewport` varies, and so what the sampled bits already tell apart.
+// The `device-` features are the screen's rather than the viewport's, so they
+// are left out of this and carried as text like any other unsampled feature.
+const VIEWPORT_FEATURE_REGEXP =
+	/(?:^|[^\w-])(?:min-|max-)?(?:width|height|aspect-ratio)(?![\w-])/;
+
 /**
  * What a media condition asks that no viewport can answer: its media type and
  * every feature but the dimensions, named once and in order. Built by taking
@@ -1475,26 +1481,29 @@ const MEDIA_TYPES = new Set([
  * @returns {string} what the viewport did not sample
  */
 const unsampledBy = (condition) => {
-	const parts = [];
-	for (const [word] of condition.toLowerCase().matchAll(/[a-z-]+/g)) {
-		if (MEDIA_TYPES.has(word)) parts.push(word);
+	const lowered = condition.toLowerCase();
+	// A set: `and`, `or` and `,` are all idempotent, so a condition naming one
+	// feature twice is the condition naming it once, and the printer folds it.
+	const parts = new Set();
+	// Outside the parentheses, where a media type is the only thing that can be
+	// named — a feature's own words are read as the feature, not as a type.
+	for (const [word] of lowered
+		.replace(FEATURE_REGEXP, " ")
+		.matchAll(/[a-z-]+/g)) {
+		if (MEDIA_TYPES.has(word)) parts.add(word);
 	}
-	for (const [feature] of condition
-		.toLowerCase()
-		.matchAll(/\([^()]*(?:\([^()]*\))?[^()]*\)/g)) {
-		if (/\b(?:min-|max-)?(?:width|height|aspect-ratio)\b/.test(feature)) {
-			continue;
-		}
+	for (const [feature] of lowered.matchAll(FEATURE_REGEXP)) {
+		if (VIEWPORT_FEATURE_REGEXP.test(feature)) continue;
 		// `min-x: v` and `x >= v` are one query written two ways (Media Queries 4
 		// §2.4), so the prefixed spelling is written as the range one.
-		parts.push(
+		parts.add(
 			feature
 				.replace(/\s+/g, "")
 				.replace(/^\(min-([a-z-]+):/, "($1>=")
 				.replace(/^\(max-([a-z-]+):/, "($1<=")
 		);
 	}
-	return parts.sort().join("&");
+	return [...parts].sort().join("&");
 };
 
 /**
@@ -1615,8 +1624,7 @@ const conditionSignatures = async (page, groups) => {
 			for (const [i, condition] of media.entries()) {
 				bits[i] += ` ${unsampledBy(condition)}`;
 			}
-		}
-		if (await emulatesMedia(page)) {
+		} else {
 			for (const type of ["screen", "print"]) {
 				for (const features of [[], ...featureSets]) {
 					await page.emulateMediaType(type);

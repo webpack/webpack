@@ -33,10 +33,39 @@ const {
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
-// Which engine the comparisons are held against. Chromium is the one CI runs;
-// `EQUIVALENCE_BROWSER=firefox` points the same corpus at Gecko.
-const ENGINE =
-	process.env.EQUIVALENCE_BROWSER === "firefox" ? "firefox" : "chrome";
+// Which engine the comparisons are held against. `EQUIVALENCE_BROWSER` points
+// the same corpus at Gecko or at WebKit; anything else is Blink.
+const ENGINES = new Set(["chrome", "firefox", "webkit"]);
+const ENGINE = ENGINES.has(String(process.env.EQUIVALENCE_BROWSER))
+	? String(process.env.EQUIVALENCE_BROWSER)
+	: "chrome";
+
+// Only Chromium answers the media-emulation calls: they are CDP, and playwright
+// offers no `color-gamut` either. Elsewhere the signature carries what no
+// viewport varies as text.
+const EMULATES_MEDIA = ENGINE === "chrome";
+
+// WHY: The printer caps a number at six significant digits, so a computed value
+// that differs past the sixth is the engine's own serialization rather than
+// anything the printer wrote — WebKit reads 38.7953px where Blink reads
+// 38.795277px for the one declaration. Chromium, whose serialization the
+// fixtures were measured against, stays held to the byte.
+/**
+ * A computed declaration with every number read at the precision the printer
+ * writes, where the engine serializes to fewer digits than Chromium.
+ * @param {string} line one `property:value` line
+ * @returns {string} it, at the printed precision
+ */
+const atPrintedPrecision = (line) =>
+	ENGINE === "chrome"
+		? line
+		: line.replace(/\d+\.\d+/g, (number) =>
+				String(Number(Number(number).toPrecision(6)))
+			);
+
+// A filed reason opening `<engine> only:` names the engines that have it, comma
+// separated where a file is filed by more than one for different causes.
+const ENGINE_ONLY_REGEXP = /^([a-z]+(?:, [a-z]+)*) only:/;
 
 /**
  * A tier's filed defects as they stand in this engine. A reason opening
@@ -46,10 +75,13 @@ const ENGINE =
  * @param {Map<string, string>} filed every filed defect of a tier
  * @returns {Map<string, string>} the ones this engine has
  */
-const forEngine = (filed) => {
-	const other = ENGINE === "firefox" ? "chrome only:" : "firefox only:";
-	return new Map([...filed].filter(([, why]) => !why.startsWith(other)));
-};
+const forEngine = (filed) =>
+	new Map(
+		[...filed].filter(([, why]) => {
+			const named = ENGINE_ONLY_REGEXP.exec(why);
+			return named === null || named[1].split(", ").includes(ENGINE);
+		})
+	);
 
 /**
  * `page.evaluate` for a result nested deeper than three levels. Gecko's
@@ -121,7 +153,7 @@ const CUSTOM_PROPERTY = "--webpack-probe";
 const FILED_CONFIG_CSS_DEFECTS = new Map([
 	[
 		"test/configCases/css/minimize-values/style.css",
-		"firefox only: not a printer defect — Blink folds a `calc()` inside a `var()` fallback as it parses, so both spellings read alike there; Gecko echoes the fallback as written. Measured in Firefox 156: `width:var(--foo,calc(10px + 10px))` reads back whole, while both engines compute `20px`"
+		"firefox, webkit only: not a printer defect — Gecko echoes a `calc()` inside a `var()` fallback as written where Blink folds it as it parses, so both spellings read alike there. Measured in Firefox 156: `width:var(--foo,calc(10px + 10px))` reads back whole, while both engines compute `20px`. WebKit drops a `shape-image-threshold` the others keep, which shifts every rule index after it"
 	],
 	[
 		"test/configCases/css/minimize-cssnano-custom-properties/style.css",
@@ -136,7 +168,55 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 const FILED_CONFIG_HTML_DEFECTS = new Map([
 	[
 		"test/configCases/html/attribute-tables/page.html",
-		"firefox only: not a printer defect — Gecko implements neither `writingSuggestions` nor `blocking` as an IDL attribute, so the comparison falls back to the attribute as written and reads a normalization as a difference. Measured in Firefox 156: both read `undefined`, where Chrome 147 reflects `false` and `render`"
+		"firefox, webkit only: not a printer defect — an IDL attribute the engine does not implement falls back to the attribute as written, so a normalization reads as a difference. Measured in Firefox 156: `writingSuggestions` and `blocking` both read `undefined` where Chrome 147 reflects `false` and `render`; WebKit reads `autofocus`, `enterkeyhint` and `inputmode` apart from Blink the same way"
+	],
+	[
+		"test/configCases/html/parser-as-fragment/div.html",
+		"webkit only: not a printer defect, not yet diagnosed — WebKit reads a different `document.compatMode` for the source and the printed form where Blink and Gecko read one. Measured in the first WebKit run: eleven files report `BackCompat vs CSS1Compat` and two the reverse, and a direction that flips per file points at how the harness builds the document rather than at what the printer wrote"
+	],
+	[
+		"test/configCases/asset-modules/minimize-embedded-asset-source/text.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/embedded/everything/inline.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/embedded/everything/source.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/fragment-context-select/page.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/minify-embedded-html-in-js/page.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/minimize-embedded-in-js/page.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/minimize-round-trip/cases/adoption.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/minimize-round-trip/cases/attributes.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/parser-as-fragment/document.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/parser-as-fragment/tbody.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
+	],
+	[
+		"test/configCases/html/parser-as-fragment/template.html",
+		"webkit only: the `compatMode` the harness reads again — see `parser-as-fragment/div.html`"
 	],
 	[
 		"test/configCases/html/minimize-round-trip/cases/reflected.html",
@@ -148,7 +228,13 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 	]
 ]);
 
-const FILED_BENCHMARK_CSS_DEFECTS = new Map();
+const FILED_BENCHMARK_CSS_DEFECTS = new Map([
+	["Fomantic-UI 2", "webkit only: not a printer defect — WebKit lays out in units of a sixty-fourth of a pixel, so a width the others compute whole lands one step below it. Measured in the first WebKit run: `112px` against `111.984375px`, which is `112 - 1/64`"],
+	["Foundation 6", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
+	["Radix Themes 3 (components)", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
+	["Semantic UI 2", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
+	["Tailwind 4 + daisyUI 5", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"]
+]);
 
 const FILED_BENCHMARK_HTML_DEFECTS = new Map();
 
@@ -177,6 +263,12 @@ const FILED_COLOR_REWRITES = new Map([
 // Enumerated values the printer lower-cases that one engine does not read
 // case-insensitively, keyed as the check reports them.
 const FILED_ENUMERATED_FOLDS = new Map([
+	['img fetchpriority=high: "auto" vs "high"', "webkit only: WebKit reflects no `fetchpriority`, so `high` and `low` both read `auto` and lower-casing one cannot be told from folding it away"],
+	['img fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['link fetchpriority=high: "auto" vs "high"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['link fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['script fetchpriority=high: "auto" vs "high"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	['script fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
 	[
 		'* spellcheck=true: "false" vs "true"',
 		"firefox only: a printer defect, not yet decided — HTML makes an enumerated attribute ASCII case-insensitive and Gecko does not read `spellcheck` that way, so lower-casing it turns spellchecking on where the page had it off. Measured in Firefox 156: `spellcheck=\"TRUE\"` reflects `false` and `spellcheck=\"true\"` reflects `true`; Chrome 147 reflects `true` for both"
@@ -194,6 +286,30 @@ const FILED_WPT_VALUE_DEFECTS = new Map([
 	[
 		"-webkit-perspective:calc(25)",
 		"firefox only: the unitless `calc()` again — see `calc(1000)`"
+	],
+	[
+		"shape-image-threshold:50%",
+		"webkit only: WebKit reads a `shape-image-threshold` percentage as the number it means and the others keep the percentage, so a spelling neither reads differently still reads as a difference"
+	],
+	[
+		"shape-image-threshold:300%",
+		"webkit only: the `shape-image-threshold` percentage again \u2014 see `50%`"
+	],
+	[
+		"shape-image-threshold:-100%",
+		"webkit only: the `shape-image-threshold` percentage again \u2014 see `50%`"
+	],
+	[
+		"background-image:paint( mypaint",
+		"webkit only: WebKit implements no CSS Painting API, so a `paint()` image is dropped rather than echoed and the two spellings both read as absent"
+	],
+	[
+		"background-image:paint(mypaint ",
+		"webkit only: the unimplemented `paint()` again \u2014 see `paint( mypaint`"
+	],
+	[
+		"animation-timing-function:steps(calc(1), jump-none)",
+		"webkit only: a printer defect, not yet decided \u2014 WebKit reads the step count through a `calc()` where the printed form drops it. Measured in the first WebKit run"
 	],
 	[
 		"font-family:\"New Century Schoolbook\", serif",
@@ -419,7 +535,7 @@ const NO_BENCHMARK_CORPUS =
 
 expectNoDeprecations();
 
-describe(`printer output in real ${ENGINE === "firefox" ? "Firefox" : "Chrome"}`, () => {
+describe(`printer output in real ${ENGINE}`, () => {
 	/** @type {import("puppeteer-core").Browser} */
 	let browser;
 	/** @type {import("puppeteer-core").Page | undefined} the corpus tiers' page */
@@ -1129,9 +1245,9 @@ describe(`printer output in real ${ENGINE === "firefox" ? "Firefox" : "Chrome"}`
 			}
 			return out;
 		}, table);
-		expect(unfolded).toEqual([
-			...forEngine(FILED_ENUMERATED_FOLDS).keys()
-		]);
+		expect([...unfolded].sort()).toEqual(
+			[...forEngine(FILED_ENUMERATED_FOLDS).keys()].sort()
+		);
 	}, 600000);
 
 	it("should only drop an empty attribute the engine reads back as absent", async () => {
@@ -1923,9 +2039,9 @@ describe("a lowering computes as the spelling it replaces", () => {
 			const page = await browser.newPage();
 			try {
 				for (const scheme of fixture.schemes || ["light"]) {
-					// Gecko takes the scheme from a launch preference rather than a
-					// page call, so a run there is held to the default one.
-					if (ENGINE !== "firefox") {
+					// An engine with no media emulation takes the scheme from its own
+					// launch settings, so a run there is held to the default one.
+					if (EMULATES_MEDIA) {
 						await page.emulateMediaFeatures([
 							{ name: "prefers-color-scheme", value: scheme }
 						]);
@@ -1977,6 +2093,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 							text
 								.split("\n")
 								.filter((line) => !loose.has(line.slice(0, line.indexOf(":"))))
+								.map(atPrintedPrecision)
 								.join("\n");
 						expect(wholeAfter.map(kept)).toEqual(wholeBefore.map(kept));
 					}
@@ -2139,6 +2256,20 @@ describe("a color rewrite paints as the color it replaced", () => {
 			 * @param {string} after the color the printer wrote
 			 * @returns {boolean} true when only a last digit moved
 			 */
+			const roundedOnly = (before, after) => {
+				const shape = (text) => text.replace(/[\d.]+/g, "#");
+				if (shape(before) !== shape(after)) return false;
+				const ours = before.match(/[\d.]+/g) || [];
+				const theirs = after.match(/[\d.]+/g) || [];
+				return (
+					ours.length === theirs.length &&
+					ours.every(
+						(num, at) =>
+							Number(num).toPrecision(5) === Number(theirs[at]).toPrecision(5)
+					)
+				);
+			};
+
 			// WHY: The margins in `lib/css/syntax.js` are measured against Chromium,
 			// and Gecko's conversion lands a channel elsewhere within the byte —
 			// measured in Firefox 156: `hsl(from rgb(214.7 138.3 226.0) calc(h + 40)
@@ -2162,20 +2293,8 @@ describe("a color rewrite paints as the color it replaced", () => {
 			};
 
 			const filedColors = forEngine(FILED_COLOR_REWRITES);
-
-			const roundedOnly = (before, after) => {
-				const shape = (text) => text.replace(/[\d.]+/g, "#");
-				if (shape(before) !== shape(after)) return false;
-				const ours = before.match(/[\d.]+/g) || [];
-				const theirs = after.match(/[\d.]+/g) || [];
-				return (
-					ours.length === theirs.length &&
-					ours.every(
-						(num, at) =>
-							Number(num).toPrecision(5) === Number(theirs[at]).toPrecision(5)
-					)
-				);
-			};
+			/** @type {Set<string>} */
+			const stillFiled = new Set();
 			try {
 				await page.setContent("<body></body>");
 				const CHUNK = 300;
@@ -2202,16 +2321,18 @@ describe("a color rewrite paints as the color it replaced", () => {
 						]);
 					}, chunk);
 					for (const [index, [before, after]] of painted.entries()) {
-						if (
-							before !== after &&
-							!roundedOnly(...chunk[index]) &&
-							!withinAByte(before, after) &&
-							!filedColors.has(chunk[index][0])
-						) {
-							differed.push(
-								`${chunk[index][0]}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
-							);
+						if (before === after || roundedOnly(...chunk[index])) continue;
+						const written = chunk[index][0];
+						// Counted before the tolerance, so an entry filed for this engine
+						// still reads as diverging where the byte would have swallowed it.
+						if (filedColors.has(written)) {
+							stillFiled.add(written);
+							continue;
 						}
+						if (withinAByte(before, after)) continue;
+						differed.push(
+							`${written}\n  -> ${chunk[index][1]}\n  ${before} vs ${after}`
+						);
 					}
 				}
 			} finally {
@@ -2221,6 +2342,9 @@ describe("a color rewrite paints as the color it replaced", () => {
 				rewrites: rewritten.length,
 				differed: []
 			});
+			// A filed entry outlives its defect by one run: the set is matched
+			// exactly, so a rewrite the engine stopped moving fails here.
+			expect([...stillFiled].sort()).toEqual([...filedColors.keys()].sort());
 		},
 		FILE_TIMEOUT
 	);

@@ -155,11 +155,24 @@ During the test run, webpack compiles this project and compares the result with 
 ### Suites that drive a real browser
 
 `unitCases/ProfilingPlugin.unittest.js`, `specCases/syntaxEquivalence.spectest.js` and
-`WebpackDevServer.longtest.js` launch Chrome through `test/helpers/launchChrome.js`.
+`WebpackDevServer.longtest.js` launch a browser through `test/helpers/launchBrowser.js`.
 **A browser that will not launch fails the suite — it is never skipped**, so no
 environment can report these checks as passing without having run them. The
 helper uses the installed Chrome channel; set `PUPPETEER_EXECUTABLE_PATH` to
 point at another binary.
+
+`syntaxEquivalence.spectest.js` is the one that reads more than one engine:
+`EQUIVALENCE_BROWSER` takes `chrome`, `firefox` or `webkit`, and CI runs all
+three as one matrix. Chrome and Firefox go through puppeteer; WebKit goes
+through playwright, which is what reaches it, under a shim in
+`test/helpers/launchBrowser.js` that answers to the puppeteer names the suites
+call. Fetch the browser first — `yarn setup:firefox`, `yarn setup:webkit` —
+which installs into puppeteer's own cache (`PUPPETEER_CACHE_DIR`, defaulting to
+`~/.cache/puppeteer`) or playwright's; `FIREFOX_EXECUTABLE_PATH` and
+`WEBKIT_EXECUTABLE_PATH` point at one already on the machine. Only Chromium
+answers the media-emulation calls, so elsewhere a condition carries what no
+viewport varies as text. A defect only one engine has is filed against it with a
+reason opening `<engine> only:` rather than tolerated in all three.
 
 They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
 in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails

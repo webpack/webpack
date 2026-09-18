@@ -303,10 +303,30 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # One job per engine, the way `runtimes` is one per runtime: a rewrite only
+  # one engine reads differently is invisible to a suite that asks one, and
+  # several of the defects filed today are ones only Gecko sees.
   syntax-equivalence:
+    # Named for the engine alone: a matrix row carries the script and the
+    # coverage flag too, and the generated name would otherwise print all three.
+    name: syntax-equivalence (${{ matrix.browser }})
     needs: basic
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Chrome's run is the one that reports coverage. Both cover the same
+          # lines, so a second uploader would only leave every pull request a
+          # report short until the other engine lands.
+          - browser: chrome
+            script: cover:syntax-equivalence
+            coverage: true
+          - browser: firefox
+            script: test:syntax-equivalence
+          - browser: webkit
+            script: test:syntax-equivalence
     runs-on: ubuntu-latest
-    # Bounded: a hung Chromium would otherwise hold a runner for the 6h default.
+    # Bounded: a hung browser would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -356,18 +376,34 @@ jobs:
         continue-on-error: true
         run: yarn benchmark:html-tools:setup
 
+      # Chrome comes with the runner. Firefox is fetched, and deliberately not
+      # cached: the build id resolves to whatever `stable` is today, so a cache
+      # key that never moves would pin the engine this suite exists to track.
+      - name: Install Firefox
+        if: matrix.browser == 'firefox'
+        run: yarn setup:firefox
+
+      # `--with-deps` because a runner carries none of WebKit's shared
+      # libraries, where it already carries Chrome's.
+      - name: Install WebKit
+        if: matrix.browser == 'webkit'
+        run: node node_modules/playwright-core/cli.js install --with-deps webkit
+
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .jest-cache
-          key: jest-syntax-equivalence-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          key: jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
           restore-keys: |
-            jest-syntax-equivalence-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-syntax-equivalence-${{ runner.os }}-
+            jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-syntax-equivalence-${{ matrix.browser }}-${{ runner.os }}-
 
-      - run: yarn cover:syntax-equivalence --ci --cacheDirectory .jest-cache
+      - run: yarn ${{ matrix.script }} --ci --cacheDirectory .jest-cache
+        env:
+          EQUIVALENCE_BROWSER: ${{ matrix.browser }}
 
       - name: Codecov
+        if: matrix.coverage
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           flags: syntax-equivalence
