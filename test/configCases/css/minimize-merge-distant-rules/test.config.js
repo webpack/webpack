@@ -23,6 +23,9 @@ module.exports = {
 		expect(css).not.toContain(".omicron{color:red}.pi");
 		expect(css).not.toContain(".rho{width:0}.sigma");
 		expect(css).not.toContain(".tau{color:red}.upsilon");
-		expect(css).not.toContain("opacity:0}.5");
+		expect(css).not.toContain(".chi{color:red}.psi");
+		expect(css).toContain(
+			"@keyframes phi{0%{opacity:0}}.between-frames{margin:2px}@keyframes phi{to{opacity:1}}"
+		);
 	}
 };

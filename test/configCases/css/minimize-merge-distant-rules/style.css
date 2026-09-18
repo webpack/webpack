@@ -47,6 +47,12 @@
 .between-layers { margin: 1px }
 @layer named { .upsilon { color: blue } }
 
+/* ...and an anonymous one opens a layer of its own every time it is written,
+   so two of them are two layers rather than one condition stated twice. */
+@layer { .chi { color: red } }
+.between-anonymous { margin: 3px }
+@layer { .psi { color: blue } }
+
 /* `@keyframes` is redeclared by a later copy rather than added to. */
 @keyframes phi { from { opacity: 0 } }
 .between-frames { margin: 2px }
