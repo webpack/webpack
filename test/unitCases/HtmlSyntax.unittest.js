@@ -5746,6 +5746,50 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 			minify('<p onclick="a  &amp;&amp;  b()"{% if x %} a{% endif %}>t</p>')
 		).toBe('<p onclick="a  &&  b()"{% if x %} a{% endif %}>t');
 	});
+
+	it("keeps the block however the engine spells its delimiters", () => {
+		// Jinja, Nunjucks, Liquid and Twig close with a word rather than a `/`, and
+		// admit the tight and the whitespace-control spelling beside the spaced one.
+		expect(minify('<input type="text"{%if required%} required{%endif%}>')).toBe(
+			"<input type=text {%if required%} required{%endif%}>"
+		);
+		expect(
+			minify('<input type="text"{%- if required -%} required{%- endif -%}>')
+		).toBe("<input type=text {%- if required -%} required{%- endif -%}>");
+		expect(
+			minify('<li class="row"{% for x in y %} data-x="1"{% endfor %}>t</li>')
+		).toBe("<li class=row {% for x in y %} data-x=1 {% endfor %}>t");
+		// Two blocks in one tag, the second opening where the first closed.
+		expect(
+			minify(
+				'<input type="text"{% if a %} required{% endif %}{% if b %} disabled{% endif %}>'
+			)
+		).toBe(
+			"<input type=text {% if a %} required{% endif %}{% if b %} disabled{% endif %}>"
+		);
+	});
+
+	it("minifies the attributes the block is written around", () => {
+		// What rebuilding the tag buys over echoing it: an attribute inside the
+		// block is minified like any other, the boolean and the list alike.
+		expect(
+			minify('<input type="checkbox"{% if on %} checked="checked"{% endif %}>')
+		).toBe("<input type=checkbox {% if on %} checked{% endif %}>");
+		expect(
+			minify('<p class="  a   b  "{% if wide %} data-c="2"{% endif %}>t</p>')
+		).toBe('<p class="a b"{% if wide %} data-c=2 {% endif %}>t');
+	});
+
+	it("reads a block written against the element name as part of it", () => {
+		// A tag name runs to the first ASCII whitespace, `/` or `>`, so `<span{%`
+		// names an element nothing closes: the space is the template's to write.
+		expect(minify('<span{% if x %} title="a"{% endif %}>t</span>')).toBe(
+			"<span{% if x %} title=a {% endif %}>t</span{%>"
+		);
+		expect(minify('<span {% if x %} title="a"{% endif %}>t</span>')).toBe(
+			"<span {% if x %} title=a {% endif %}>t</span>"
+		);
+	});
 });
 
 describe("SourceProcessor — token list values", () => {
