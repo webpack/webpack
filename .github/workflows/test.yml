@@ -323,14 +323,9 @@ jobs:
             coverage: true
           - browser: firefox
             script: test:syntax-equivalence
-          # WebKit reports rather than blocks until its filed set is written
-          # from what its first runs actually see — the other two engines each
-          # opened with hundreds of differences, nearly all of them the harness.
           - browser: webkit
             script: test:syntax-equivalence
-            optional: true
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.optional == true }}
     # Bounded: a hung browser would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
     steps:
