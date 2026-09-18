@@ -12889,6 +12889,11 @@ declare class JavascriptParser extends ParserClass {
 				boolean | void
 			>
 		>;
+		/**
+		 * Every statement the block pass reads, which a tap on this turns back
+		 * into a walk of them all. Tap `blockPreStatementByType` instead.
+		 * @deprecated TODO webpack 6: remove, with the statement walk it turns on
+		 */
 		blockPreStatement: SyncBailHook<
 			[
 				| ImportDeclaration
@@ -12923,6 +12928,9 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		/**
+		 * Each statement the parser records for the block pass: a variable, class
+		 * or export declaration. Any other type turns the pass back into a walk
+		 * of every statement, and goes away with that walk in webpack 6.
 		 * @since 5.109.0
 		 */
 		blockPreStatementByType: HookMap<
@@ -13540,7 +13548,9 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Block pre walking iterates the scope for block variable declarations
+	 * Walk every statement of a list to declare what it binds. Only a tap on the
+	 * deprecated `blockPreStatement` hook asks for this.
+	 * @deprecated TODO webpack 6: remove, with the `blockPreStatement` hook
 	 */
 	blockPreWalkStatements(
 		statements: (

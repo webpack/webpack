@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Record hoisted and module declarations while parsing instead of re-walking.
+Record hoisted, module and block declarations while parsing, not by re-walking.
