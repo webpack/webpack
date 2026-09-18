@@ -4341,6 +4341,90 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
+		it("tells a layer named with a no-break space from one without", () => {
+			// CSS skips only its own whitespace, so `\u00A0x` is an identifier of its
+			// own — `String#trim` would read it as `x` and forget the wrong block.
+			/**
+			 * @param {string} mid the sibling written between the two blocks
+			 * @returns {string} the minified stylesheet
+			 */
+			const gather = (mid) =>
+				minify(
+					`@media all{@layer \u00A0x{a{color:red}}${mid}@layer \u00A0x{c{color:lime}}}`
+				);
+			expect(gather(".y{@layer x{b{top:0}}}")).toBe(
+				"@media all{@layer \u00A0x{a{color:red}c{color:lime}}.y{@layer x{b{top:0}}}}"
+			);
+			expect(gather(".y{@layer \u00A0x{b{top:0}}}")).toBe(
+				"@media all{@layer \u00A0x{a{color:red}}.y{@layer \u00A0x{b{top:0}}}@layer \u00A0x{c{color:lime}}}"
+			);
+		});
+
+		it("reads a small block's siblings as the streamed path reads them", () => {
+			// Which blocks gather must not turn on whether the block was small enough
+			// to assemble in one go rather than stream.
+			/**
+			 * @param {string} mid the sibling written between the two blocks
+			 * @returns {string} the minified stylesheet
+			 */
+			const gather = (mid) =>
+				minify(
+					`@media all{@layer x{a{color:red}}${mid}@layer x{c{color:lime}}}`
+				);
+			expect(gather(".b{@layer y{q{top:0}}}")).toBe(
+				"@media all{@layer x{a{color:red}c{color:lime}}.b{@layer y{q{top:0}}}}"
+			);
+			expect(gather('.b{content:"@layer x{"}')).toBe(
+				'@media all{@layer x{a{color:red}c{color:lime}}.b{content:"@layer x{"}}'
+			);
+			// A real write into that layer still parts them, small or streamed.
+			expect(gather(".y{@layer x{b{top:0}}}")).toBe(
+				"@media all{@layer x{a{color:red}}.y{@layer x{b{top:0}}}@layer x{c{color:lime}}}"
+			);
+		});
+
+		it("gathers past a string that only looks like it opens the layer", () => {
+			// The gather reads a streamed node's printed text, where a `@layer` inside
+			// a string is a value rather than an at-rule nothing may fold across.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}.b{content:"@layer x{"}@layer x{c{color:lime}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")
+			).toBe(true);
+		});
+
+		it("reads past an escaped quote rather than out of the string", () => {
+			// A string carrying both quote kinds keeps one escape, and a scanner that
+			// ended the string at it would read the `@layer` behind it as a write.
+			/**
+			 * @param {string} mid the sibling written between the two blocks
+			 * @returns {string} the minified stylesheet
+			 */
+			const gather = (mid) =>
+				minify(
+					`@media all{@layer x{a{color:red}}${mid}@layer x{c{color:lime}}}`
+				);
+			expect(gather('.b{content:"\'\\"@layer x{"}')).toBe(
+				'@media all{@layer x{a{color:red}c{color:lime}}.b{content:"\'\\"@layer x{"}}'
+			);
+			expect(gather('.b{content:"\\\\@layer x{"}')).toBe(
+				'@media all{@layer x{a{color:red}c{color:lime}}.b{content:"\\\\@layer x{"}}'
+			);
+		});
+
+		it("gathers past an anonymous layer, which names nothing", () => {
+			// `@layer{` opens a layer no name reaches, so it writes into none of the
+			// blocks held back and collides with nothing.
+			expect(
+				minify(
+					"@media all{@layer x{a{color:red}}.b{@layer{q{top:0}}}@layer x{c{color:lime}}}"
+				)
+			).toBe("@media all{@layer x{a{color:red}c{color:lime}}.b{@layer{q{top:0}}}}");
+		});
+
 		it("joins the rules a streamed block writes side by side", () => {
 			// A block over the threshold writes its children straight out rather than
 			// assembling a body, which is where `_mergeAdjacentRules` would join them.
@@ -4354,6 +4438,43 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// in a block whose body is assembled in one go.
 			const parted = `.p{${filler}a:hover${block}q:2;b:hover${block}}`;
 			expect(minify(parted)).toBe(parted);
+		});
+
+		it("gathers past a rule that writes a layer of its own", () => {
+			// Only a write into the very same layer fixes where this one's rules go:
+			// two layers that are not one are ordered where each was first named.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}.y{@layer q{b{top:0}}}@layer x{c{color:lime}}}`
+			);
+			expect(out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")).toBe(
+				true
+			);
+		});
+
+		it("gathers past a rule that writes a layer under it", () => {
+			// A layer's own declarations outrank its sublayers whichever side of them
+			// they are written, so writing into `x.sub` does not pin `x`.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}.y{@layer x.sub{b{top:0}}}@layer x{c{color:lime}}}`
+			);
+			expect(out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")).toBe(
+				true
+			);
+		});
+
+		it("gathers past a rule that writes the layer above it", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const out = minify(
+				`@media all{@layer x.k{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x.k{c{color:lime}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer x.k{a{color:red}c{color:lime}}")
+			).toBe(true);
 		});
 
 		it("gathers past a streamed block that writes another layer", () => {

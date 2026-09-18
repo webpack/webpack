@@ -5628,9 +5628,10 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		expect(frozen('<input type="&#x54;&#x45;&#x58;&#x54;">')).toContain(
 			'type="text"'
 		);
-		// The `&` a decoded URL holds is escaped back, not written out bare.
+		// The `&` a decoded URL holds is written out bare: `y=` is no reference,
+		// and an attribute would not read one there even if it were.
 		expect(frozen('<a href="&#x20;/a?x=1&amp;y=2&#x20;">y</a>')).toContain(
-			'href="/a?x=1&amp;y=2"'
+			'href="/a?x=1&y=2"'
 		);
 	});
 
@@ -5642,11 +5643,19 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		);
 		expect(minify('<p title="a &amp; b">t</p>')).toBe('<p title="a & b">t');
 		expect(minify('<a href="?a=1&amp;b=2">t</a>')).toBe(
-			'<a href="?a=1&amp;b=2">t</a>'
+			'<a href="?a=1&b=2">t</a>'
 		);
 		// A bare value ends at `>`, so the value is quoted rather than the
 		// reference kept — one character shorter, and the same value.
 		expect(minify("<p title=a&gt;b>t</p>")).toBe('<p title="a>b">t');
+	});
+
+	it("reads a value's last run as the whole of it, unlike a text node's", () => {
+		// Text keeps the escape because the next sibling could complete the run
+		// once a comment between them goes (`&am` + `p;`); an attribute value
+		// ends at its delimiter, so nothing can follow it there.
+		expect(minify("<p>a &amp;am</p>")).toBe("<p>a &amp;am");
+		expect(minify('<p title="a &amp;am">t</p>')).toBe('<p title="a &am">t');
 	});
 });
 
@@ -6238,9 +6247,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		expect(offered(html)).toEqual([
 			["javascript", "event-handler", "a&&b( 1 )"]
 		]);
-		expect(minify(html, squeeze)).toBe(
-			"<button onclick=a&&amp;b(1)>x</button>"
-		);
+		expect(minify(html, squeeze)).toBe("<button onclick=a&&b(1)>x</button>");
 	});
 
 	it("quotes a handler answer that needs it", () => {
@@ -8342,7 +8349,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		});
 
 		it("rebuilds renamed void tokens instead of dropping them", () => {
-			expect(minify('<image src="a&amp;b">')).toBe("<img src=a&amp;b>");
+			expect(minify('<image src="a&amp;b">')).toBe("<img src=a&b>");
 			expect(minify("a</br>b")).toBe("a<br>b");
 		});
 
@@ -8516,13 +8523,21 @@ describe("SourceProcessor — print modes", () => {
 	});
 
 	it("escapes text to the letter of \u00A713.3 outside minification", () => {
-		// A bare `>` is only ever a character, so minification keeps it; the CR is
-		// a reference either way, since a literal one would be read back as LF.
+		// A bare `>` is only ever a character, and so is a `<` before a space, so
+		// minification keeps both; the CR is a reference either way.
 		const source = "<p>a &amp; b &lt; c &gt; d &#13; e</p>";
 		expect(print(source, "beautify")).toBe(
 			"<p>a &amp; b &lt; c &gt; d &#13; e</p>"
 		);
-		expect(print(source, "minify")).toBe("<p>a & b &lt; c > d &#13; e");
+		expect(print(source, "minify")).toBe("<p>a & b < c > d &#13; e");
+	});
+
+	it("keeps a `<` that stands as a character, so a second pass adds nothing", () => {
+		// The comment splits the text in two, and dropping it merges them: escaping
+		// per node rather than per `<` would then escape what the first pass kept.
+		const once = print("<boo/>hay\n<<<<>foo\n<!-- -->>><", "minify");
+		expect(once).toBe("<boo>hay\n<<<<>foo\n>>&lt;</boo>");
+		expect(print(once, "minify")).toBe(once);
 	});
 
 	it("beautifies to something that minifies back the same", () => {
