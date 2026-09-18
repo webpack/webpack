@@ -8556,6 +8556,10 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		});
 
 		it("drops a `/` the attribute it separated left behind", () => {
+			/**
+			 * @param {string} source html source
+			 * @returns {string} minified serialization
+			 */
 			const minifyAll = (source) =>
 				new SourceProcessor().process(source, {
 					mode: "minify",
