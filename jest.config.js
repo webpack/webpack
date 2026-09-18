@@ -26,7 +26,6 @@ const config = {
 		"<rootDir>/test/js",
 		"<rootDir>/test/fixtures/temp-cache-fixture",
 		"<rootDir>/test/fixtures/temp-",
-		"<rootDir>/benchmark",
 		"<rootDir>/assembly",
 		"<rootDir>/tooling",
 		"<rootDir>/examples/*/dist",
@@ -40,7 +39,6 @@ const config = {
 		"<rootDir>/test/js",
 		"<rootDir>/test/fixtures/temp-cache-fixture",
 		"<rootDir>/test/fixtures/temp-",
-		"<rootDir>/benchmark",
 		"<rootDir>/examples/*/dist",
 		"<rootDir>/coverage",
 		"<rootDir>/.eslintcache"
