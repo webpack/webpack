@@ -5889,6 +5889,21 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 		).toBe("<div aa=2 mm=3 zz=1>x</div>");
 	});
 
+	it("leaves a tag alone where a name is another language's", () => {
+		// Sorting `{{`, `if}}` and the rest by name would reorder the statement
+		// the delimiters spell, which no byte count is worth.
+		expect(
+			minify('<a href="x"{{#if y}} target="_blank"{{/if}}>t</a>', {
+				sortAttributes: true
+			})
+		).toBe("<a href=x {{#if y}} target=_blank {{/if}}>t</a>");
+		expect(
+			minify('<input type="text"{% if required %} required{% endif %}>', {
+				sortAttributes: true
+			})
+		).toBe("<input type=text {% if required %} required{% endif %}>");
+	});
+
 	it("sorts a class list, and only `class`", () => {
 		expect(
 			minify('<div class="zz aa mm">x</div>', { sortTokenLists: true })
