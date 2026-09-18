@@ -78,9 +78,7 @@ reviews:
     - "!lib/html/data.js"
     - "!test/**/__snapshots__/**"
     - "!yarn.lock"
-    - "!test/test262-cases/**"
-    - "!test/html5lib-tests/**"
-    - "!test/css-parsing-tests/**"
+    - "!test/external/**"
 
   path_instructions:
     - path: "lib/**"

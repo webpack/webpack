@@ -23,25 +23,25 @@ webpack is a JavaScript module bundler. It builds a dependency graph from entry 
 
 All commands are defined in `package.json` `scripts`.
 
-| Command                                                              | What it does                                                                                                    |
-| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `yarn fix`                                                           | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step. |
-| `yarn setup`                                                         | Install dependencies and link the checkout in as `webpack`; non-interactive off a TTY.                          |
-| `yarn fix:special`                                                   | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code.                           |
-| `yarn lint`                                                          | Full lint: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck (what CI runs).       |
-| `yarn tsc`                                                           | TypeScript type check of `lib/` JSDoc (catches type errors in annotations).                                     |
-| `yarn validate:changeset`                                            | Validate the pending `.changeset/` files.                                                                       |
-| `yarn test:base --testPathPatterns="<pattern>"`                      | Run targeted tests. Also `yarn test:base -t "<name>"`.                                                          |
-| `yarn test:unit`                                                     | Run all `*.unittest.js`.                                                                                        |
-| `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                     |
-| `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                        |
-| `yarn test:syntax-equivalence`                                       | Holds the HTML/CSS printers to a real browser's reading of their output, over `configCases` and `test/wpt`.     |
-| `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                      |
-| `yarn test:size`                                                     | Size of the generated code over all `configCases/` (per asset, plus runtime module counts per runtime).         |
-| `yarn cover:unit`                                                    | Unit-test coverage.                                                                                             |
-| `yarn types:cover`                                                   | Type-coverage report (share of `lib/` that is precisely typed).                                                 |
-| `yarn build:examples`                                                | Build the `examples/` (verify after changing options).                                                          |
-| `yarn test`                                                          | Full suite — don't run unless asked.                                                                            |
+| Command                                                              | What it does                                                                                                         |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `yarn fix`                                                           | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step.      |
+| `yarn setup`                                                         | Install dependencies and link the checkout in as `webpack`; non-interactive off a TTY.                               |
+| `yarn fix:special`                                                   | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code.                                |
+| `yarn lint`                                                          | Full lint: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck (what CI runs).            |
+| `yarn tsc`                                                           | TypeScript type check of `lib/` JSDoc (catches type errors in annotations).                                          |
+| `yarn validate:changeset`                                            | Validate the pending `.changeset/` files.                                                                            |
+| `yarn test:base --testPathPatterns="<pattern>"`                      | Run targeted tests. Also `yarn test:base -t "<name>"`.                                                               |
+| `yarn test:unit`                                                     | Run all `*.unittest.js`.                                                                                             |
+| `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                          |
+| `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                             |
+| `yarn test:syntax-equivalence`                                       | Holds the HTML/CSS printers to a real browser's reading of their output, over `configCases` and `test/external/wpt`. |
+| `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                           |
+| `yarn test:size`                                                     | Size of the generated code over all `configCases/` (per asset, plus runtime module counts per runtime).              |
+| `yarn cover:unit`                                                    | Unit-test coverage.                                                                                                  |
+| `yarn types:cover`                                                   | Type-coverage report (share of `lib/` that is precisely typed).                                                      |
+| `yarn build:examples`                                                | Build the `examples/` (verify after changing options).                                                               |
+| `yarn test`                                                          | Full suite — don't run unless asked.                                                                                 |
 
 Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. See [TESTING_DOCS.md](TESTING_DOCS.md) for how to run a single case.
 
@@ -105,16 +105,16 @@ The directory listings below are the canonical map of the repository. **Whenever
 
 **Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for directory structure, naming, and how to run a single case.
 
-- `test/` — All test suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `test262-cases/`, `html5lib-tests/`, `wpt/`, `css-parsing-tests/`, `benchmarkCases/`, `memoryLimitCases/`, etc.). `templates/` holds the suite drivers (`TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js`) that the `*.test.js` / `*.basictest.js` / `*.longtest.js` files at the top of `test/` are thin shims over — each exports `describeCases(config)` and resolves case directories against the `test/` root, never against its own. `harness/` holds what runs those suites rather than what they test — jest's own lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` environment, the crash reporter, the case `runner/` and `snapshot/` resolver, and `runtimes/` for the preload and setup files that let jest run under Bun and Deno. Reusable assertions and fixtures stay in `helpers/`. `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file. `wpt/` is web-platform-tests, checked out one commit deep by the `html5lib` and `syntax-equivalence` jobs — it is where the HTML tree-construction corpus lives since html5lib-tests dropped it.
+- `test/` — All test suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `benchmarkCases/`, `memoryLimitCases/`, etc.). `templates/` holds the suite drivers (`TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js`) that the `*.test.js` / `*.basictest.js` / `*.longtest.js` files at the top of `test/` are thin shims over — each exports `describeCases(config)` and resolves case directories against the `test/` root, never against its own. The option sets those shims pass live together in `templates/variants.js`, re-exported as `variants`, so what differs between the suites reads side by side rather than one file at a time — a shim exists per entry because jest parallelizes per file, not per describe. `harness/` holds what runs those suites rather than what they test — jest's own lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` environment, the crash reporter, the case `runner/` and `snapshot/` resolver, and `runtimes/` for the preload and setup files that let jest run under Bun and Deno. Reusable assertions and fixtures stay in `helpers/`. `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file. `external/` holds what webpack does not maintain — every git submodule checked out for testing, today the four spec corpora below, so a directory there is upstream's to change and ours only to pin. `external/wpt/` is web-platform-tests, checked out one commit deep by the `html5lib` and `syntax-equivalence` jobs — it is where the HTML tree-construction corpus lives since html5lib-tests dropped it.
 
-**Git submodules** — the spec-conformance corpora are submodules, checked out on demand: `yarn setup` does not fetch them, and each CI job fetches only the submodules it needs, one commit deep.
+**Git submodules** — every submodule lives under `test/external/`, checked out on demand: `yarn setup` does not fetch them, and each CI job fetches only the submodules it needs, one commit deep.
 
-| Path                     | Upstream                                                                              | Fetched by                                       |
-| ------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `test/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `test262-parser`                      |
-| `test/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `html5lib`                                       |
-| `test/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, `syntax-equivalence` (every browser) |
-| `test/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `css-parsing`                                    |
+| Path                              | Upstream                                                                              | Fetched by                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `test/external/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `test262-parser`                      |
+| `test/external/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `html5lib`                                       |
+| `test/external/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, `syntax-equivalence` (every browser) |
+| `test/external/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `css-parsing`                                    |
 
 ```sh
 git submodule update --init --recursive --depth 1   # check out the commits the repo pins
@@ -335,7 +335,7 @@ Pitfalls that have produced wrong conclusions here:
 yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<category> <case>"
 ```
 
-Swap `ConfigTestCases` for `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [TESTING_DOCS.md](TESTING_DOCS.md)). The `test262`, `html5lib`, `syntax-equivalence`, and `css-parsing` suites use git submodules — run `git submodule update --init --depth 1 test/test262-cases test/html5lib-tests test/wpt test/css-parsing-tests` first, or they fail confusingly.
+Swap `ConfigTestCases` for `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [TESTING_DOCS.md](TESTING_DOCS.md)). The `test262`, `html5lib`, `syntax-equivalence`, and `css-parsing` suites use git submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
 
 **Writing a `configCases/` case:** a case is a mini project — `index.js` (runs assertions; a thrown error fails the test) plus `webpack.config.js`. The emitted bundle is actually executed, so it must run. Optional per-case files: `errors.js` / `warnings.js` export arrays of matchers for expected build diagnostics (without them, any error/warning fails the case); `test.filter.js` returns `false` to skip the case (e.g. gate by Node version — see [Target the Node baseline](#target-the-node-baseline) when the fixture itself needs newer syntax); `test.config.js` customizes the run (e.g. `findBundle`).
 

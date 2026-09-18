@@ -1,12 +1,7 @@
 "use strict";
 
-const { describeCases } = require("./templates/TestCases");
+const { describeCases, variants } = require("./templates/TestCases");
 
 describe("TestCases", () => {
-	describeCases({
-		name: "minimized-source-map",
-		mode: "production",
-		devtool: "eval-cheap-module-source-map",
-		minimize: true
-	});
+	describeCases(variants["minimized-source-map"]);
 });

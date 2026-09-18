@@ -1,10 +1,7 @@
 "use strict";
 
-const { describeCases } = require("./templates/HotTestCases");
+const { describeCases, variants } = require("./templates/HotTestCases");
 
 describe("HotTestCases", () => {
-	describeCases({
-		name: "webworker",
-		target: "webworker"
-	});
+	describeCases(variants.webworker);
 });

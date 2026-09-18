@@ -183,7 +183,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check out the test262 corpus
-        run: git submodule update --init --depth 1 test/test262-cases
+        run: git submodule update --init --depth 1 test/external/test262-cases
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -237,7 +237,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check out the test262 corpus
-        run: git submodule update --init --depth 1 test/test262-cases
+        run: git submodule update --init --depth 1 test/external/test262-cases
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -271,7 +271,7 @@ jobs:
       # WPT is 161k files, so only this job checks it out, and only one commit
       # deep — it carries the tree-construction corpus html5lib-tests dropped.
       - name: Check out the html5lib and WPT corpora
-        run: git submodule update --init --depth 1 test/html5lib-tests test/wpt
+        run: git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -337,7 +337,7 @@ jobs:
       # Held to both corpora: webpack's own fixtures and the web's. WPT is 161k
       # files, so it is checked out one commit deep.
       - name: Check out the WPT corpus
-        run: git submodule update --init --depth 1 test/wpt
+        run: git submodule update --init --depth 1 test/external/wpt
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -417,7 +417,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check out the css-parsing corpus
-        run: git submodule update --init --depth 1 test/css-parsing-tests
+        run: git submodule update --init --depth 1 test/external/css-parsing-tests
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0

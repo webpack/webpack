@@ -12,7 +12,7 @@ const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 /** @typedef {import("acorn").Comment} Comment */
 /** @typedef {import("../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
 
-const corpusDir = path.resolve(__dirname, "../test262-cases/test");
+const corpusDir = path.resolve(__dirname, "../external/test262-cases/test");
 const hasCorpus =
 	fs.existsSync(corpusDir) && fs.readdirSync(corpusDir).length > 0;
 
@@ -223,7 +223,7 @@ const areas = hasCorpus
 
 describe("test262 parser parity", () => {
 	if (!hasCorpus) {
-		it("submodule not initialized (run `git submodule update --init --depth 1 test/test262-cases`)", () => {
+		it("submodule not initialized (run `git submodule update --init --depth 1 test/external/test262-cases`)", () => {
 			// No-op: the conformance corpus is an optional git submodule.
 		});
 
