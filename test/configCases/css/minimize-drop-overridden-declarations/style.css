@@ -1,0 +1,26 @@
+/* Only the last of a set of declarations of one property can be read, so the
+   earlier carry nothing. With a `browserslist` selection that is answered from
+   what the named browsers read (`minimize-dead-fallbacks`); with no selection
+   there are no engines to name, and `dropOverriddenDeclarations` is what asks
+   for the drop to be made anyway. What it gives up is the fallback pair. */
+
+/*! the hex before it goes, though nothing here states `lab()` can be read */
+.t01 { color: #c65d06; color: lab(50% 100 -100) }
+/*! a keyword the property's own grammar names is the same question */
+.t02 { display: block; display: flex }
+/*! ...and a value no table could answer for */
+.t03 { color: red; color: var(--brand) }
+/*! ...and one spelled in a way that is not a fallback at all */
+.t04 { margin-top: 1px; margin-top: 2px }
+
+/*! an earlier `!important` is not overridden by a later plain one */
+.t10 { color: red !important; color: blue }
+/*! ...but a later `!important` does override an earlier plain one */
+.t11 { color: red; color: blue !important }
+/*! a custom property's value is handed back by `getPropertyValue()`, so the
+   pair stands whatever this option says */
+.t12 { --x: red; --x: lab(50% 100 -100) }
+/*! a rule between them parts the two, so neither overrides the other */
+.t13 { color: red; & .inner { color: lime } color: blue }
+/*! a keyframe ignores `!important`, so one there stands over nothing */
+@keyframes t14 { 0% { color: red !important; color: blue } }

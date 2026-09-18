@@ -11202,6 +11202,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-drop-overridden-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+        "multiple": false,
+        "path": "optimization.minimize.css.dropOverriddenDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-css-fold-case": Object {
     "configs": Array [
       Object {
@@ -11877,6 +11890,19 @@ Object {
       },
     ],
     "description": "Rewrite a length into a shorter unit it is exactly equal in (\`16px\` -> \`1pc\`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-css-drop-overridden-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.css.dropOverriddenDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a \`browserslist\` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: \`color:#c65d06;color:lab(50% 100 -100)\` loses the hex, so an engine that cannot read \`lab()\` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
     "multiple": false,
     "simpleType": "boolean",
   },

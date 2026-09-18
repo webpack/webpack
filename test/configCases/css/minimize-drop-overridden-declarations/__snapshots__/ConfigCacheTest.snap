@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-drop-overridden-declarations minimize-drop-overridden-declarations should compile 1`] = `
+Array [
+  "/*! the hex before it goes, though nothing here states \`lab()\` can be read */.t01{color:lab(50% 100 -100)}",
+  "/*! a keyword the property's own grammar names is the same question */.t02{display:flex}",
+  "/*! ...and a value no table could answer for */.t03{color:var(--brand)}",
+  "/*! ...and one spelled in a way that is not a fallback at all */.t04{margin-top:2px}",
+  "/*! an earlier \`!important\` is not overridden by a later plain one */.t10{color:red!important;color:blue}",
+  "/*! ...but a later \`!important\` does override an earlier plain one */.t11{color:blue!important}",
+  "/*! a custom property's value is handed back by \`getPropertyValue()\`, so the
+   pair stands whatever this option says */.t12{--x:red;--x:lab(50% 100 -100)}",
+  "/*! a rule between them parts the two, so neither overrides the other */.t13{color:red;& .inner{color:lime}color:blue}",
+  "/*! a keyframe ignores \`!important\`, so one there stands over nothing */@keyframes t14{0%{color:red!important;color:blue}}",
+]
+`;

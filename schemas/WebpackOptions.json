@@ -4024,6 +4024,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "dropOverriddenDeclarations": {
+          "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name \u2014 which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "foldCase": {
           "description": "Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.",
           "type": "boolean",
