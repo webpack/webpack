@@ -8,6 +8,7 @@ const {
 	compress,
 	exists,
 	filterFrom,
+	findingGroups,
 	formatCost,
 	installPackages,
 	kb,
@@ -543,6 +544,102 @@ describe("compare-tools-harness", () => {
 			const wanted = filterFrom(VARIABLE);
 			expect(wanted("lightningcss+target")).toBe(true);
 			expect(wanted("csso")).toBe(false);
+		});
+	});
+
+	describe("findingGroups", () => {
+		/**
+		 * @param {string} relation what the finding is about
+		 * @param {string} repro the lines reproducing it
+		 * @returns {import("../../tooling/compare-tools-harness").Report} the finding
+		 */
+		const finding = (relation, repro) => ({ relation, what: "bytes", repro });
+
+		/**
+		 * @param {ReturnType<typeof findingGroups>} groups the collector
+		 * @returns {{ text: string, count: number }} what it wrote and counted
+		 */
+		const written = (groups) => {
+			let text = "";
+			const count = groups.write((line) => {
+				text += line;
+			});
+			return { text, count };
+		};
+
+		it("names a finding no entry expects, and counts it", () => {
+			const groups = findingGroups();
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("idempotence — bytes");
+			expect(text).toContain("one.html");
+		});
+
+		it("gathers one repro found in several sources into one finding", () => {
+			const groups = findingGroups();
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "aggressive", "two.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("2 sources, from one.html");
+			expect(text).toContain("[default, aggressive]");
+		});
+
+		it("counts an expected finding apart, and says why it is owed nothing", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", why: "the spec says so" }
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			const { text, count } = written(groups);
+			expect(count).toBe(0);
+			expect(text).toContain("expected, and why — 1 of 1");
+			expect(text).toContain("the spec says so");
+		});
+
+		it("expects nothing on a relation or a repro the entry does not name", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", why: "…" }
+			]);
+			groups.add(finding("respelling", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    c -> d"), "default", "two.html");
+			expect(written(groups).count).toBe(3);
+		});
+
+		it("reports an entry that matched nothing as stale", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "gone", why: "…" }
+			]);
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("stale — 1 expectation(s) matched nothing");
+			expect(text).toContain("idempotence: gone");
+		});
+
+		it("lets a source-scoped entry cover the fixture it names", () => {
+			const groups = findingGroups([
+				{
+					relation: "idempotence",
+					contains: "a ->",
+					source: "one",
+					why: "that fixture writes it"
+				}
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			expect(written(groups).count).toBe(0);
+		});
+
+		it("leaves a group unexpected where it reaches a fixture the entry omits", () => {
+			const groups = findingGroups([
+				{ relation: "idempotence", contains: "a ->", source: "one", why: "…" }
+			]);
+			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
+			groups.add(finding("idempotence", "    a -> b"), "default", "other.html");
+			const { text, count } = written(groups);
+			// The finding itself, and the entry that then covers nothing.
+			expect(count).toBe(2);
+			expect(text).toContain("idempotence — bytes");
+			expect(text).toContain("stale — 1 expectation(s) matched nothing");
 		});
 	});
 });

@@ -587,10 +587,12 @@ const _covers = (expected, report, sources) => {
 	if (expected.relation !== report.relation) return false;
 	if (!report.repro.includes(expected.contains)) return false;
 	if (expected.source === undefined) return true;
+	// Every fixture the group reaches, not any one of them: the same repro found
+	// somewhere the entry does not name is a divergence it says nothing about.
 	for (const source of sources) {
-		if (source.includes(expected.source)) return true;
+		if (!source.includes(expected.source)) return false;
 	}
-	return false;
+	return true;
 };
 
 /**
