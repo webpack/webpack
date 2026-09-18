@@ -113,7 +113,7 @@ The directory listings below are the canonical map of the repository. **Whenever
 | ------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | `test/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `test262-parser`                      |
 | `test/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `html5lib`                                       |
-| `test/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, `syntax-equivalence` (both browsers) |
+| `test/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `html5lib`, `syntax-equivalence` (every browser) |
 | `test/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `css-parsing`                                    |
 
 ```sh

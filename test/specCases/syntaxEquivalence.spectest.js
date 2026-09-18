@@ -33,10 +33,20 @@ const {
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
-// Which engine the comparisons are held against. Chromium is the one CI runs;
-// `EQUIVALENCE_BROWSER=firefox` points the same corpus at Gecko.
-const ENGINE =
-	process.env.EQUIVALENCE_BROWSER === "firefox" ? "firefox" : "chrome";
+// Which engine the comparisons are held against. `EQUIVALENCE_BROWSER` points
+// the same corpus at Gecko or at WebKit; anything else is Blink.
+const ENGINES = new Set(["chrome", "firefox", "webkit"]);
+const ENGINE = ENGINES.has(String(process.env.EQUIVALENCE_BROWSER))
+	? String(process.env.EQUIVALENCE_BROWSER)
+	: "chrome";
+
+// Only Chromium answers the media-emulation calls: they are CDP, and playwright
+// offers no `color-gamut` either. Elsewhere the signature carries what no
+// viewport varies as text.
+const EMULATES_MEDIA = ENGINE === "chrome";
+
+// A filed reason opening `<engine> only:` names the engine that has it.
+const ENGINE_ONLY_REGEXP = /^([a-z]+) only:/;
 
 /**
  * A tier's filed defects as they stand in this engine. A reason opening
@@ -46,10 +56,13 @@ const ENGINE =
  * @param {Map<string, string>} filed every filed defect of a tier
  * @returns {Map<string, string>} the ones this engine has
  */
-const forEngine = (filed) => {
-	const other = ENGINE === "firefox" ? "chrome only:" : "firefox only:";
-	return new Map([...filed].filter(([, why]) => !why.startsWith(other)));
-};
+const forEngine = (filed) =>
+	new Map(
+		[...filed].filter(([, why]) => {
+			const named = ENGINE_ONLY_REGEXP.exec(why);
+			return named === null || named[1] === ENGINE;
+		})
+	);
 
 /**
  * `page.evaluate` for a result nested deeper than three levels. Gecko's
@@ -419,7 +432,7 @@ const NO_BENCHMARK_CORPUS =
 
 expectNoDeprecations();
 
-describe(`printer output in real ${ENGINE === "firefox" ? "Firefox" : "Chrome"}`, () => {
+describe(`printer output in real ${ENGINE}`, () => {
 	/** @type {import("puppeteer-core").Browser} */
 	let browser;
 	/** @type {import("puppeteer-core").Page | undefined} the corpus tiers' page */
@@ -1923,9 +1936,9 @@ describe("a lowering computes as the spelling it replaces", () => {
 			const page = await browser.newPage();
 			try {
 				for (const scheme of fixture.schemes || ["light"]) {
-					// Gecko takes the scheme from a launch preference rather than a
-					// page call, so a run there is held to the default one.
-					if (ENGINE !== "firefox") {
+					// An engine with no media emulation takes the scheme from its own
+					// launch settings, so a run there is held to the default one.
+					if (EMULATES_MEDIA) {
 						await page.emulateMediaFeatures([
 							{ name: "prefers-color-scheme", value: scheme }
 						]);

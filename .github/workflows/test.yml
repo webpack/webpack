@@ -323,7 +323,14 @@ jobs:
             coverage: true
           - browser: firefox
             script: test:syntax-equivalence
+          # WebKit reports rather than blocks until its filed set is written
+          # from what its first runs actually see — the other two engines each
+          # opened with hundreds of differences, nearly all of them the harness.
+          - browser: webkit
+            script: test:syntax-equivalence
+            optional: true
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.optional == true }}
     # Bounded: a hung browser would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
     steps:
@@ -380,6 +387,12 @@ jobs:
       - name: Install Firefox
         if: matrix.browser == 'firefox'
         run: yarn setup:firefox
+
+      # `--with-deps` because a runner carries none of WebKit's shared
+      # libraries, where it already carries Chrome's.
+      - name: Install WebKit
+        if: matrix.browser == 'webkit'
+        run: node node_modules/playwright-core/cli.js install --with-deps webkit
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
