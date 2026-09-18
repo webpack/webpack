@@ -223,7 +223,7 @@ const FILED_ENUMERATED_FOLDS = new Map([
 	['script fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
 	[
 		'* spellcheck=true: "false" vs "true"',
-		"firefox only: a printer defect, not yet decided — HTML makes an enumerated attribute ASCII case-insensitive and Gecko does not read `spellcheck` that way, so lower-casing it turns spellchecking on where the page had it off. Measured in Firefox 156: `spellcheck=\"TRUE\"` reflects `false` and `spellcheck=\"true\"` reflects `true`; Chrome 147 reflects `true` for both"
+		"firefox only: not a printer defect — HTML reads an enumerated attribute's value as an ASCII case-insensitive match for one of its keywords (Keywords and enumerated attributes), and `spellcheck` is one with the keywords `true` and `false`, so `TRUE` names the True state its IDL getter reads back. Gecko matches it case-sensitively instead. Measured in Firefox 156: `spellcheck=\"TRUE\"` reflects `false` and `spellcheck=\"true\"` reflects `true`; Chrome 147 reflects `true` for both, as the spec requires"
 	]
 ]);
 
