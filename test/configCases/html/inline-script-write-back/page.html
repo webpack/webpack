@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<title>Write back</title>
+<script type="module">
+import { push } from "./shared.js";
+push("first-body");
+</script>
+<!-- webpackInline: true -->
+<script type="module">
+import { push } from "./shared.js";
+push("second-body");
+</script>

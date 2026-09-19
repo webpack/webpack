@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<title>Ignored</title>
+<script type="module">
+import { push } from "./shared.js";
+push("before-ignored");
+</script>
+<!-- webpackIgnore: true -->
+<script type="module">
+globalThis.__ignoredBody = "stays inline";
+</script>
+<script type="module">
+import { push } from "./shared.js";
+push("after-ignored");
+</script>

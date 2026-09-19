@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html inline-module-merge exported tests should bundle a run of classic inline scripts into one chunk 1`] = `
+"<!DOCTYPE html>
+<title>Classic run</title>
+<script src=\\"classic.mjs\\" type=\\"module\\"></script>
+
+
+"
+`;
+
+exports[`ConfigTestCases html inline-module-merge exported tests should bundle a run of inline <script type=module> tags into one chunk 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Inline Module Merge</title>
+<script src=\\"page.mjs\\" type=\\"module\\"></script>
+
+</head>
+<body>
+<script src=\\"page1.mjs\\" type=\\"module\\" async></script>
+<script src=\\"page2.mjs\\" type=\\"module\\"></script>
+
+
+</body>
+</html>
+"
+`;
+
+exports[`ConfigTestCases html inline-module-merge exported tests should drop a run member the input ended before closing 1`] = `
+"<!DOCTYPE html>
+<title>Unclosed</title>
+<script src=\\"unclosed.mjs\\" type=\\"module\\"></script>
+"
+`;
+
+exports[`ConfigTestCases html inline-module-merge exported tests should end a run at an ignored script 1`] = `
+"<!DOCTYPE html>
+<title>Ignored</title>
+<script src=\\"ignored.mjs\\" type=\\"module\\"></script>
+<!-- webpackIgnore: true -->
+<script type=\\"module\\">
+globalThis.__ignoredBody = \\"stays inline\\";
+</script>
+<script src=\\"ignored1.mjs\\" type=\\"module\\"></script>
+"
+`;

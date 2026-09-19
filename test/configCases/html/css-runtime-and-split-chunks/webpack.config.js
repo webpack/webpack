@@ -32,7 +32,7 @@ module.exports = {
 		chunkIds: "named",
 		runtimeChunk: {
 			name: (entrypoint) =>
-				entrypoint.name.startsWith("__html_") ? "html-runtime" : undefined
+				entrypoint.name.startsWith("page-") ? "html-runtime" : undefined
 		},
 		splitChunks: {
 			cacheGroups: {
