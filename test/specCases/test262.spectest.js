@@ -132,7 +132,13 @@ const knownHostEvalBugs = [
 	"eval-code/direct/var-env-func-init-global-update-configurable.js",
 	"eval-code/direct/var-env-var-init-global-exstng.js",
 	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
-	"eval-code/indirect/var-env-var-init-global-exstng.js"
+	"eval-code/indirect/var-env-var-init-global-exstng.js",
+	// and it lets `function NaN(){}` be declared, so the eval's declarations are
+	// not abandoned and the `var` beside it reaches the global after all
+	"eval-code/direct/non-definable-function-with-function.js",
+	"eval-code/direct/non-definable-function-with-variable.js",
+	"eval-code/indirect/non-definable-function-with-function.js",
+	"eval-code/indirect/non-definable-function-with-variable.js"
 ];
 /* cspell:enable */
 
@@ -229,7 +235,12 @@ const knownHostBugs = [
 	"statements/with/unscopables-inc-dec.js",
 	// `super[x]` must read the this binding before evaluating `x`, so the
 	// `super()` in the index of a `delete` must not run. V8 evaluates it.
-	"expressions/delete/super-property-uninitialized-this.js"
+	"expressions/delete/super-property-uninitialized-this.js",
+	// A `vm` contextified global refuses `Object.preventExtensions`.
+	"global-code/script-decl-lex.js",
+	// The store to an unresolvable name must throw before its right side
+	// creates that name. V8 resolves it afterwards and finds it.
+	"identifier-resolution/assign-to-global-undefined.js"
 ];
 /* cspell:enable */
 
