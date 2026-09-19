@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const RequestShortener = require("../../lib/RequestShortener");
+const RequestShortener = require("../../lib/util/RequestShortener");
 const ErrorHelpers = require("../../lib/errors/ErrorHelpers");
 const NonErrorEmittedError = require("../../lib/errors/NonErrorEmittedError");
 

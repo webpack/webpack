@@ -101,7 +101,7 @@ describe("NormalModule", () => {
 		it("calls the given requestShortener with the user request", () => {
 			const spy = jest.fn();
 			normalModule.readableIdentifier(
-				/** @type {import("../../lib/RequestShortener")} */ (
+				/** @type {import("../../lib/util/RequestShortener")} */ (
 					/** @type {unknown} */ ({
 						shorten: spy
 					})
