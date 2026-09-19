@@ -156,34 +156,6 @@ const VOCABULARY = [
 		underlying: "number",
 		description: "A number of at least one.",
 		constraints: { type: "number", minimum: 1 }
-	},
-	{
-		name: "NonEmptyArray",
-		typeParameter: "T",
-		underlying: "T[]",
-		description: "An array holding at least one item.",
-		constraints: { type: "array", minItems: 1 }
-	},
-	{
-		name: "NonEmptyUniqueArray",
-		typeParameter: "T",
-		underlying: "T[]",
-		description: "An array holding at least one item, all of them different.",
-		constraints: { type: "array", minItems: 1, uniqueItems: true }
-	},
-	{
-		name: "UniqueArray",
-		typeParameter: "T",
-		underlying: "T[]",
-		description: "An array whose items are all different.",
-		constraints: { type: "array", uniqueItems: true }
-	},
-	{
-		name: "NonEmptyObject",
-		typeParameter: "T",
-		underlying: "{ [key: string]: T }",
-		description: "An object holding at least one property.",
-		constraints: { type: "object", minProperties: 1 }
 	}
 ];
 
@@ -547,6 +519,15 @@ const toDocumentationTags = (schema) => {
 	// WHY: where a shape is validated and typed as something else, the shape is
 	// what the members say and the tag is the only place left for the type.
 	if (statesShape(schema)) tags.push(`@tsType ${schema.tsType}`);
+	// WHY: an array or object states its constraint through a generic alias, and
+	// `generate-types.js` prints no generic alias, so it travels as a tag.
+	if (hasConstraints(schema) && !matchVocabulary(schema)) {
+		for (const keyword of CONSTRAINT_TAGS) {
+			if (schema[keyword] === undefined) continue;
+			tags.push(`@${keyword} ${schema[keyword]}`);
+		}
+		return tags;
+	}
 	if (!needsTag(schema)) return tags;
 	const entry = /** @type {VocabularyEntry} */ (matchVocabulary(schema));
 	for (const [keyword, value] of Object.entries(entry.constraints)) {
@@ -1013,6 +994,7 @@ const readJsDoc = (node) => {
 // The keywords a declaration states as a tag rather than through an alias.
 const CONSTRAINT_TAGS = [
 	"minLength",
+	"uniqueItems",
 	"absolutePath",
 	"pattern",
 	"minimum",
@@ -1088,8 +1070,9 @@ const describedItems = (node, checker, known) => {
 
 // The tags a leading comment may carry, matched by name so prose holding an
 // "@" is left alone. `not` takes JSON, so it reads to the end of the comment.
-const KNOWN_TAG_REGEXP =
-	/@(since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|typeOnly|tsType|jsonType|inline|not)(?:[ \t]+([^@]*))?/;
+const KNOWN_TAG_REGEXP = new RegExp(
+	`@(since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join("|")})(?:[ \\t]+([^@]*))?`
+);
 
 /**
  * The description a source wrote in front of a type, where no JSDoc block can
