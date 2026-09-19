@@ -5693,6 +5693,21 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 		).toBe("<input type=text {% if required %} required{% endif %}>");
 	});
 
+	it("keeps a name this print left bare off the template's next byte", () => {
+		// A quoted value ends at its quote, so the source needed nothing between
+		// it and `{%`. Collapsing it to a bare name leaves the two to fuse.
+		expect(
+			minify('<input type="checkbox"{% if on %} checked="checked"{% endif %}>')
+		).toBe("<input type=checkbox {% if on %} checked {% endif %}>");
+		expect(
+			minify('<li class="row"{% for x in y %} data-x="1"{% endfor %}>a</li>')
+		).toBe("<li class=row {% for x in y %} data-x=1 {% endfor %}>a");
+		// A `/` terminates a bare name by itself, so it still needs no space.
+		expect(minify("<div {{#if x}} a {{/if}} a></div>")).toBe(
+			"<div {{#if x}} a {{/if}} a></div>"
+		);
+	});
+
 	it("still spells the attributes the tag does keep the one way", () => {
 		// Every spelling of the same tag prints as one, which is what a tag echoed
 		// whole could not do: the name folds, the references decode, the quotes go.
@@ -5774,7 +5789,7 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 		// block is minified like any other, the boolean and the list alike.
 		expect(
 			minify('<input type="checkbox"{% if on %} checked="checked"{% endif %}>')
-		).toBe("<input type=checkbox {% if on %} checked{% endif %}>");
+		).toBe("<input type=checkbox {% if on %} checked {% endif %}>");
 		expect(
 			minify('<p class="  a   b  "{% if wide %} data-c="2"{% endif %}>t</p>')
 		).toBe('<p class="a b"{% if wide %} data-c=2 {% endif %}>t');
@@ -5887,6 +5902,21 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 		expect(
 			minify('<div zz="1" aa="2" mm="3">x</div>', { sortAttributes: true })
 		).toBe("<div aa=2 mm=3 zz=1>x</div>");
+	});
+
+	it("leaves a tag alone where a name is another language's", () => {
+		// Sorting `{{`, `if}}` and the rest by name would reorder the statement
+		// the delimiters spell, which no byte count is worth.
+		expect(
+			minify('<a href="x"{{#if y}} target="_blank"{{/if}}>t</a>', {
+				sortAttributes: true
+			})
+		).toBe("<a href=x {{#if y}} target=_blank {{/if}}>t</a>");
+		expect(
+			minify('<input type="text"{% if required %} required{% endif %}>', {
+				sortAttributes: true
+			})
+		).toBe("<input type=text {% if required %} required{% endif %}>");
 	});
 
 	it("sorts a class list, and only `class`", () => {
@@ -8523,6 +8553,39 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("leaves a `/` that is the last character of an unquoted value", () => {
 			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
+		});
+
+		it("drops a `/` the attribute it separated left behind", () => {
+			/**
+			 * @param {string} source html source
+			 * @returns {string} minified serialization
+			 */
+			const minifyAll = (source) =>
+				new SourceProcessor().process(source, {
+					mode: "minify",
+					removeRedundantAttributes: "all"
+				}).code;
+			// The `/` stood before an attribute the redundant-default drop then took
+			// out, so nothing is left for it to separate.
+			expect(minifyAll("<input a/type=text>")).toBe("<input a>");
+			expect(minifyAll("<input a/type=text b>")).toBe("<input a b>");
+			expect(minifyAll("<form a/method=get>x</form>")).toBe("<form a>x</form>");
+			// One the drop left alone still separates at the same byte.
+			expect(minifyAll("<input a/b>")).toBe("<input a/b>");
+		});
+
+		it("writes back a `/` the tokenizer read as the separator", () => {
+			// A template engine reads `{{/if}}` as one word, and the space this print
+			// used to put there instead split it. Both separate, at the same byte.
+			expect(
+				minify('<a href="x"{{#if y}} target="_blank"{{/if}}>t</a>')
+			).toBe("<a href=x {{#if y}} target=_blank {{/if}}>t</a>");
+			expect(minify("<p a/b>t</p>")).toBe("<p a/b>t");
+			// A run holding whitespace still collapses to the one space it needs.
+			expect(minify("<p a / b>t</p>")).toBe("<p a b>t");
+			// After an unquoted value the `/` would read as its last character, so
+			// the space stands instead.
+			expect(minify('<p a="b"/c>t</p>')).toBe("<p a=b c>t");
 		});
 
 		it("unquotes a value carrying a vertical tab, which is no whitespace", () => {
