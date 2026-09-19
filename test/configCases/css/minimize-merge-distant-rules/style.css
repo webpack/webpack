@@ -22,3 +22,38 @@
 .kappa { outline: 0 }
 .spacing { margin: 2px }
 .lambda-is-a-long-name { outline: 0 }
+
+/* Two at-rules stating one condition are the one block they resolve to, and
+   nothing between them declares what their rules do. */
+@media (min-width: 100px) { .mu { color: red } }
+.apart { margin: 0 }
+@media (min-width: 100px) { .nu { color: blue } }
+.apart-again { padding: 0 }
+@media (min-width: 100px) { .xi { color: lime } }
+
+/* `color` between them, so these stay apart. */
+@media (min-width: 200px) { .omicron { color: red } }
+.shadows { color: green }
+@media (min-width: 200px) { .pi { color: blue } }
+
+/* An at-rule between is read as declaring everything, so these stay apart. */
+@media (min-width: 300px) { .rho { width: 0 } }
+@media (min-width: 400px) { .opaque { height: 0 } }
+@media (min-width: 300px) { .sigma { width: 1px } }
+
+/* A layer's place in the cascade is where its name is first written, not what
+   its prelude states, so these are not the pair of equal conditions this joins. */
+@layer named { .tau { color: red } }
+.between-layers { margin: 1px }
+@layer named { .upsilon { color: blue } }
+
+/* ...and an anonymous one opens a layer of its own every time it is written,
+   so two of them are two layers rather than one condition stated twice. */
+@layer { .chi { color: red } }
+.between-anonymous { margin: 3px }
+@layer { .psi { color: blue } }
+
+/* `@keyframes` is redeclared by a later copy rather than added to. */
+@keyframes phi { from { opacity: 0 } }
+.between-frames { margin: 2px }
+@keyframes phi { to { opacity: 1 } }
