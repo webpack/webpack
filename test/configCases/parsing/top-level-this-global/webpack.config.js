@@ -52,6 +52,23 @@ module.exports = [
 	},
 	{
 		target: "node",
+		// a module declaring `globalThis` itself must still reach the real global
+		entry: "./entry-shadowed.js",
+		module: {
+			parser: {
+				javascript: {
+					topLevelThis: "global"
+				}
+			}
+		},
+		output: {
+			environment: {
+				globalThis: true
+			}
+		}
+	},
+	{
+		target: "node",
 		entry: "./entry-default.js"
 	},
 	{
