@@ -44,6 +44,11 @@ describe("WatchDetection", () => {
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
 			const loaderPath = path.join(testDirectory, "fixtures", "delay-loader.js");
+			// Scoped here rather than to the test: a timed-out or errored test never
+			// reaches its own cleanup, and an interval still writing into the fixture
+			// during `afterAll` fails the case after it has already finished.
+			/** @type {NodeJS.Timeout | undefined} */
+			let retry;
 
 			beforeAll(() => {
 				try {
@@ -56,6 +61,7 @@ describe("WatchDetection", () => {
 			});
 
 			afterAll((done) => {
+				if (retry) clearInterval(retry);
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
@@ -116,16 +122,11 @@ describe("WatchDetection", () => {
 						}
 					};
 
+					// No `poll` here: watchpack's WATCHPACK_POLLING overrides the option
+					// on every watcher, and the harness sets it for the runtimes whose
+					// native watch is unreliable.
 					watcher = /** @type {import("../../").Watching} */ (
-						compiler.watch(
-							{
-								aggregateTimeout: 50,
-								// Deno's node:fs.watch compat drops/delays change events, so
-								// native detection is flaky here; poll for deterministic pickup.
-								...(process.versions.deno ? { poll: 100 } : {})
-							},
-							() => {}
-						)
+						compiler.watch({ aggregateTimeout: 50 }, () => {})
 					);
 				}
 
@@ -175,7 +176,14 @@ describe("WatchDetection", () => {
 						}
 					};
 
+					// This is the one step that advances only on a `done` carrying the new
+					// content, so a watcher that drops or coalesces this single change
+					// strands it. Re-touch until the rebuild carrying it arrives.
 					fs.writeFile(file2Path, "correct", "utf8", handleError);
+					retry = setInterval(() => {
+						fs.writeFile(file2Path, "correct", "utf8", handleError);
+					}, 500);
+					retry.unref();
 				}
 
 				/**
@@ -183,6 +191,8 @@ describe("WatchDetection", () => {
 				 */
 				function step5() {
 					onChange = null;
+					if (retry) clearInterval(retry);
+					retry = undefined;
 
 					watcher.close(() => {
 						setTimeout(done, 500);
