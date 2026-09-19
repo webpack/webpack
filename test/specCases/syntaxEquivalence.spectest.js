@@ -201,12 +201,7 @@ const FILED_WPT_TREE_DEFECTS = new Map();
 
 // Color rewrites one engine paints differently from the color they replaced,
 // keyed by the color as written.
-const FILED_COLOR_REWRITES = new Map([
-	[
-		"color-mix(in hsl, hwb(322.26 56.57% 49.83%) 7.3%, oklch(0.280497 0.052616 353.043))",
-		"firefox only: a printer defect, not yet decided — the fold matches what Chromium computes and Gecko lands six units away in blue, which is past the byte the quantization explains. Measured in Firefox 156: the source paints 68,35,56 and the `#442332` it is printed as paints 68,35,50; Chrome 147 paints 68,35,50 for both"
-	]
-]);
+const FILED_COLOR_REWRITES = new Map();
 
 // Enumerated values the printer lower-cases that one engine does not read
 // case-insensitively, keyed as the check reports them.

@@ -9501,6 +9501,42 @@ describe("CssSyntax minify — color-mix()", () => {
 		expect(minify(pale)).toBe(pale);
 	});
 
+	it("declines a mix whose hue is only its conversion's residue", () => {
+		// A chroma of zero in Lab or Oklch is neutral there and reaches sRGB a
+		// residue away from neutral, so the hue is wherever that residue points:
+		// Chromium 141 reads 160.8deg for this color where webpack reads 91.76deg.
+		const lab =
+			"a{color:color-mix(in hsl,lch(50 0 200) 50%,oklch(.280497 .052616 353.043))}";
+		expect(minify(lab)).toBe(lab);
+		// The residue names a hue however small the chroma stating it is, since a
+		// hue interpolates at full weight: this folded to 96,83,68 against the
+		// 71,68,96 Chromium paints.
+		const written =
+			"a{color:color-mix(in hsl,lab(50 0 0) 50%,oklch(.280497 .052616 353.043))}";
+		expect(minify(written)).toBe(written);
+		const slight =
+			"a{color:color-mix(in hsl,lch(50 0 200) 7.3%,oklch(.280497 .052616 353.043))}";
+		expect(minify(slight)).toBe(slight);
+		// A gray that reached sRGB through no conversion states no hue at all, so
+		// that mix is still the one every engine computes.
+		expect(minify("a{color:color-mix(in hsl,#808080 50%,#f00)}")).toBe(
+			"a{color:#bf4040}"
+		);
+	});
+
+	it("declines a mix where a gray states a hue of its own", () => {
+		// A gray written in a polar space states a hue the engines split over:
+		// Chrome 147 reads it as missing and takes the other color's, painting
+		// 68,35,50, where Firefox 156 keeps the 322.26 and paints 68,35,56.
+		const hwb =
+			"a{color:color-mix(in hsl,hwb(322.26 56.57% 49.83%) 7.3%,oklch(.280497 .052616 353.043))}";
+		expect(minify(hwb)).toBe(hwb);
+		// The same gray with no hue to state leaves the mix every engine agrees on.
+		expect(minify("a{color:color-mix(in hsl,#888 7.3%,oklch(.280497 .052616 353.043))}")).toBe(
+			"a{color:#442332}"
+		);
+	});
+
 	it("writes a mix in the space it was made in where no byte holds it", () => {
 		// A channel landing on a `.5` boundary is where implementations disagree
 		// over the byte — but not over the mix, which both colors were written in
