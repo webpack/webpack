@@ -11,6 +11,15 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 
 const readChunk = (name) => fs.readFileSync(path.resolve(here, name), "utf-8");
 
+// exec()-in-a-loop rather than String.prototype.matchAll, which is newer than
+// the Node baseline the harness runs this bundle on.
+const collectMatches = (str, regex) => {
+	const out = [];
+	let match;
+	while ((match = regex.exec(str)) !== null) out.push(match[1]);
+	return out;
+};
+
 // The HTML module type is opaque to static analysis, so each imported page
 // is normalized to a concrete string once.
 const pageContent = typeof page === "string" ? page : "";
@@ -19,9 +28,10 @@ const subContent = typeof subPage === "string" ? subPage : "";
 const classicContent = typeof classicPage === "string" ? classicPage : "";
 
 // Document-order list of every inline-script chunk url left in the page.
-const scriptChunkUrls = [
-	...pageContent.matchAll(/<script[^>]*\bsrc="(page\d*\.mjs)"/g)
-].map((m) => m[1]);
+const scriptChunkUrls = collectMatches(
+	pageContent,
+	/<script[^>]*\bsrc="(page\d*\.mjs)"/g
+);
 
 it("should bundle a run of inline <script type=module> tags into one chunk", () => {
 	expect(pageContent).toMatchSnapshot();
@@ -68,9 +78,10 @@ it("should leave no inline JS body in the page", () => {
 it("should drop a run member the input ended before closing", () => {
 	expect(unclosedContent).toMatchSnapshot();
 
-	const urls = [
-		...unclosedContent.matchAll(/<script[^>]*\bsrc="(unclosed\d*\.mjs)"/g)
-	].map((m) => m[1]);
+	const urls = collectMatches(
+		unclosedContent,
+		/<script[^>]*\bsrc="(unclosed\d*\.mjs)"/g
+	);
 	// The unterminated second tag has no `</script>` to remove with it, so the
 	// element is cut at the end of its body.
 	expect(urls).toHaveLength(1);
@@ -92,9 +103,10 @@ it("should keep two pages of the same basename apart", () => {
 it("should bundle a run of classic inline scripts into one chunk", () => {
 	expect(classicContent).toMatchSnapshot();
 
-	const urls = [
-		...classicContent.matchAll(/<script[^>]*\bsrc="(classic\d*\.mjs)"/g)
-	].map((m) => m[1]);
+	const urls = collectMatches(
+		classicContent,
+		/<script[^>]*\bsrc="(classic\d*\.mjs)"/g
+	);
 	// Two classic bodies and the module one after them are one run.
 	expect(urls).toHaveLength(1);
 
