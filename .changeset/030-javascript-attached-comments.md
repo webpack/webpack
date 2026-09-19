@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up attached comment lookup during JavaScript analysis.
+Speed up JavaScript parsing: attached comment lookup and the tokenizer.

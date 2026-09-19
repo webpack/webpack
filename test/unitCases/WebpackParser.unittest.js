@@ -259,7 +259,7 @@ describe("WebpackParser", () => {
 			);
 		});
 
-		it("should cook the common single-char escapes on the fast path", () => {
+		it("should cook the common single-char escapes", () => {
 			expect(literal('var x = "a\\nb"').value).toBe("a\nb");
 			expect(literal('var x = "a\\tb"').value).toBe("a\tb");
 			expect(literal('var x = "a\\rb"').value).toBe("a\rb");
@@ -274,7 +274,7 @@ describe("WebpackParser", () => {
 			expect(literal('var x = "a\\éb"').value).toBe("aéb");
 		});
 
-		it("should cook line continuations on the fast path", () => {
+		it("should cook line continuations", () => {
 			expect(literal('var x = "a\\\nb"').value).toBe("ab");
 			expect(literal('var x = "a\\\r\nb"').value).toBe("ab");
 			expect(literal('var x = "a\\\rb"').value).toBe("ab");
@@ -286,7 +286,7 @@ describe("WebpackParser", () => {
 			).toBe("ab");
 		});
 
-		it("should route hex, unicode and octal escapes through the cold reader", () => {
+		it("should route every escape through the cold reader", () => {
 			expect(literal('var x = "a\\x41b"').value).toBe("aAb");
 			expect(literal('var x = "a\\u0041b"').value).toBe("aAb");
 			expect(literal('var x = "a\\u{1F600}b"').value).toBe("a\u{1F600}b");
@@ -515,12 +515,13 @@ describe("WebpackParser", () => {
 	describe("identifier word cache", () => {
 		/**
 		 * @param {string} code source
+		 * @param {object=} options extra parse options
 		 * @returns {string[]} every Identifier name in program order
 		 */
-		const names = (code) => {
+		const names = (code, options) => {
 			/** @type {string[]} */
 			const found = [];
-			JSON.stringify(parse(code).ast, (_key, value) => {
+			JSON.stringify(parse(code, options).ast, (_key, value) => {
 				if (value && value.type === "Identifier") found.push(value.name);
 				return value;
 			});
@@ -534,6 +535,32 @@ describe("WebpackParser", () => {
 				"foo",
 				"f",
 				"averyveryLongIdentifier"
+			]);
+		});
+
+		it("should read identifiers written with a unicode escape", () => {
+			// a `\\` classifies with the non-ASCII chars, so `nextToken` reaches the
+			// escape-aware cold reader through `readToken` rather than directly
+			expect(names("var \\u0061bc = a\\u0062c + \\u{61}x;")).toEqual([
+				"abc",
+				"abc",
+				"ax"
+			]);
+			// and the same word read plainly is the same name
+			expect(names("var abc = \\u0061bc;")).toEqual(["abc", "abc"]);
+		});
+
+		it("should reclassify a cached word for a second keyword set", () => {
+			// `static` is reserved under a module goal and a plain name under a
+			// script one, so the second parse finds the slot typed by the first
+			expect(names("var static_ = 1;", { sourceType: "module" })).toEqual([
+				"static_"
+			]);
+			expect(names("var static_ = 1;", { sourceType: "script" })).toEqual([
+				"static_"
+			]);
+			expect(names("var static_ = 1;", { sourceType: "module" })).toEqual([
+				"static_"
 			]);
 		});
 
