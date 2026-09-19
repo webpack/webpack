@@ -53,6 +53,7 @@ b">newline in a value</p>
 	<input type="checkbox"{% if on %} checked="checked"{% endif %}>
 	<li class="row"{% for x in y %} data-x="1"{% endfor %}>a block over a list</li>
 	<input type="text"{%- if isRequired -%} required{%- endif -%}>
+	<input type="text"{% if on %} a{% endif %}="">
 	<p class="btn{% if active %} btn-active{% endif %}">the same list, as text</p>
 	<p data-slash="/end/">value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>
