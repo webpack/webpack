@@ -5720,6 +5720,18 @@ describe("SourceProcessor — a duplicate attribute name", () => {
 		}
 	});
 
+	it("keeps an empty value written onto a name the block spells", () => {
+		// What the sweep's two surviving `{%` expectations report: the print drops
+		// `=""` elsewhere, and a tag carrying template syntax keeps what was written.
+		expect(minify('<p a="">t</p>')).toBe("<p a>t");
+		expect(minify('<input type="text"{% if x %} a{% endif %}="">')).toBe(
+			'<input type=text {% if x %} a{% endif %}="">'
+		);
+		expect(minify("<input type='text'{% if x %} a{% endif %}=''>")).toBe(
+			"<input type=text {% if x %} a{% endif %}=''>"
+		);
+	});
+
 	it("preserves case-sensitive template names", () => {
 		for (const condition of ["isRequired", "Foo", "options.isRequired"]) {
 			const printed = minify(
