@@ -32252,6 +32252,11 @@ declare namespace exports {
 				name: null | string,
 				serializer: ObjectSerializer
 			) => void;
+			export const registerLegacyRequest: (
+				Constructor: Constructor,
+				request: string,
+				name?: null | string
+			) => void;
 			export const registerLoader: (
 				regExp: RegExp,
 				loader: (request: string) => boolean

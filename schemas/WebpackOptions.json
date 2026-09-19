@@ -149,7 +149,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -162,7 +162,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -753,7 +753,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -1013,7 +1013,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -1025,7 +1025,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/devtool/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -1284,12 +1284,12 @@
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').RawEntryDynamic"
+      "tsType": "import('../lib/entry/DynamicEntryPlugin').RawEntryDynamic"
     },
     "EntryDynamicNormalized": {
       "description": "A Function returning a Promise resolving to a normalized entry.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').EntryDynamic"
+      "tsType": "import('../lib/entry/DynamicEntryPlugin').EntryDynamic"
     },
     "EntryFilename": {
       "description": "Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -1814,7 +1814,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "import('../lib/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
+                  "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
                 }
               ]
             }
@@ -1839,12 +1839,12 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
+      "tsType": "import(\"../lib/externals/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
+      "tsType": "import(\"../lib/externals/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
     },
     "ExternalItemInterop": {
       "description": "How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.",
@@ -2223,7 +2223,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
         }
       ]
     },
@@ -4603,7 +4603,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
             }
           ]
         },
@@ -4926,7 +4926,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
             }
           ]
         },
@@ -6014,7 +6014,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn"
         }
       ]
     },

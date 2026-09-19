@@ -2,7 +2,7 @@
 
 const path = require("path");
 const RequestShortener = require("../../lib/RequestShortener");
-const RuntimeTemplate = require("../../lib/RuntimeTemplate");
+const RuntimeTemplate = require("../../lib/template/RuntimeTemplate");
 const testDirectory = path.resolve(__dirname, "..");
 
 /**
@@ -265,7 +265,7 @@ describe("RuntimeTemplate.assignOr", () => {
 });
 
 describe("RuntimeTemplate.supportsAnalyzable", () => {
-	/** @import ChunkGraph from "../../lib/ChunkGraph" */
+	/** @import ChunkGraph from "../../lib/graph/ChunkGraph" */
 	/** @import Compilation from "../../lib/Compilation" */
 	/** @import Module from "../../lib/Module" */
 

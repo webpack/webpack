@@ -1,7 +1,7 @@
 "use strict";
 
-const RuntimeGlobals = require("../../../../lib/RuntimeGlobals");
-const RuntimeModule = require("../../../../lib/RuntimeModule");
+const RuntimeGlobals = require("../../../../lib/runtime/RuntimeGlobals");
+const RuntimeModule = require("../../../../lib/runtime/RuntimeModule");
 
 // Loaded through `addLazyRuntimeModule`, so it must reach the chunk's runtime.
 class MarkerRuntimeModule extends RuntimeModule {

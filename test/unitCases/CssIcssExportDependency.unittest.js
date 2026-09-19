@@ -13,7 +13,7 @@ const makeModuleGraph = (
 	/** @type {unknown} */ module,
 	/** @type {unknown} */ exportsInfo = undefined
 ) =>
-	/** @type {import("../../lib/ModuleGraph")} */ (
+	/** @type {import("../../lib/graph/ModuleGraph")} */ (
 		/** @type {unknown} */ ({
 			getParentModule: () => module,
 			getExportsInfo: () => exportsInfo

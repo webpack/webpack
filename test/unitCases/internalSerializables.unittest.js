@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const ObjectMiddleware = require("../../lib/serialization/ObjectMiddleware");
 const internalSerializables = require("../../lib/util/internalSerializables");
 
 // The generator formats with prettier, which trips Bun's `module` builtin
@@ -23,6 +24,39 @@ describe("internalSerializables", () => {
 			);
 		}
 	});
+
+	// A pack written before these moved names them by their old request, which
+	// only resolves while lib/ keeps a registerLegacyRequest for it
+	for (const [legacy, current, name = null] of [
+		["webpack/lib/ContextModule", "webpack/lib/context/ContextModule"],
+		["webpack/lib/ExternalModule", "webpack/lib/externals/ExternalModule"],
+		["webpack/lib/InitFragment", "webpack/lib/template/InitFragment"],
+		[
+			"webpack/lib/NodeStuffInWebError",
+			"webpack/lib/errors/NodeStuffInWebError"
+		],
+		["webpack/lib/RawDataUrlModule", "webpack/lib/asset/RawDataUrlModule"],
+		[
+			"webpack/lib/dependencies/ExternalModuleConstDependency",
+			"webpack/lib/dependencies/ExternalModuleInitFragmentDependency"
+		],
+		[
+			"webpack/lib/ModuleGraph",
+			"webpack/lib/graph/ModuleGraph",
+			"RestoreProvidedData"
+		]
+	]) {
+		it(`should restore "${legacy}" from a pre-move cache`, () => {
+			internalSerializables[
+				/** @type {keyof typeof internalSerializables} */
+				(legacy.slice("webpack/lib/".length))
+			]();
+
+			expect(ObjectMiddleware.getDeserializerFor(legacy, name)).toBe(
+				ObjectMiddleware.getDeserializerFor(current, name)
+			);
+		});
+	}
 
 	it('should not expose a stale "errors/Module" entry', () => {
 		expect(

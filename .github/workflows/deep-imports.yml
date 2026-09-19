@@ -1,0 +1,88 @@
+name: Deep Imports
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  # Posting the report as a pull request comment.
+  pull-requests: write
+
+jobs:
+  deep-imports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: lts/*
+
+      # No install: `--check` reads the recorded scan and this checkout, and
+      # nothing else. It takes no network and runs in well under a second.
+      - name: Check the paths the ecosystem imports directly
+        id: check
+        run: |
+          if node tooling/find-deep-webpack-imports.js \
+            --check --summary deep-imports-report.md; then
+            echo "broken=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "broken=true" >> "$GITHUB_OUTPUT"
+          fi
+          cat deep-imports-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Only once something is broken, and afterwards to retract it — a comment
+      # on every green pull request is noise nobody reads. Skipped for forks,
+      # whose token cannot comment; the job summary still carries the report.
+      - name: Comment the report on the pull request
+        if: >
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          BROKEN: ${{ steps.check.outputs.broken }}
+        with:
+          script: |
+            const body = require("fs").readFileSync("deep-imports-report.md", "utf8");
+            const marker = "<!-- deep-imports-report -->";
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              { ...context.repo, issue_number: context.issue.number, per_page: 100 }
+            );
+            // Only a comment this workflow itself wrote: anyone can post one
+            // carrying the marker, and overwriting it would let them edit the
+            // report afterwards and pass their own findings off as CI's.
+            const previous = comments.find(
+              (comment) =>
+                comment.user.type === "Bot" &&
+                comment.user.login === "github-actions[bot]" &&
+                comment.body.startsWith(marker)
+            );
+            if (previous) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: previous.id,
+                body
+              });
+            } else if (process.env.BROKEN === "true") {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      # After the comment, so the thread names what failed rather than only the
+      # red check.
+      - name: Fail on a path that stopped resolving
+        if: steps.check.outputs.broken == 'true'
+        run: exit 1
