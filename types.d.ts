@@ -1396,6 +1396,11 @@ declare interface BuiltinEmbeddedRendererOptions {
 	convertApproximateColors?: boolean;
 
 	/**
+	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 */
+	dropOverriddenDeclarations?: boolean;
+
+	/**
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
 	 */
 	rewriteCustomProperties?: boolean;
@@ -6253,6 +6258,11 @@ declare interface CssPrintOptions {
 	convertApproximateColors?: boolean;
 
 	/**
+	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 */
+	dropOverriddenDeclarations?: boolean;
+
+	/**
 	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
 	 */
 	mergeDistantRules?: boolean;
@@ -6337,6 +6347,11 @@ declare interface CssProcessOptions {
 	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
 	 */
 	mergeDistantRules?: boolean;
+
+	/**
+	 * drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value; off by default, and only read while printing. With a `browserslist` selection the drop is already made wherever every browser it names is known to read the later value, so this widens the case where no target is selected — a selection naming a browser the tables do not cover still answers for the whole of it
+	 */
+	dropOverriddenDeclarations?: boolean;
 
 	/**
 	 * shorten a custom property's value the way any other value is shortened (`--x:#ffffff` -> `#fff`); off by default because `getPropertyValue()` hands that text back, and only read while printing. What it may rewrite is what any other value's tokens may be, a color in a substitution's fallback included — that being the property's value rather than the function's own argument
@@ -20661,6 +20676,12 @@ declare interface OptimizationMinimizeCss {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * @since 5.112.0
+	 */
+	dropOverriddenDeclarations?: boolean;
+
+	/**
 	 * Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.
 	 * @since 5.111.0
 	 */
@@ -31543,6 +31564,7 @@ declare namespace exports {
 					environment?: CssEnvironment;
 					convertLengthUnits?: boolean;
 					convertApproximateColors?: boolean;
+					dropOverriddenDeclarations?: boolean;
 					mergeDistantRules?: boolean;
 					rewriteCustomProperties?: boolean;
 					unusedSymbols?: string[];
@@ -31902,6 +31924,7 @@ declare namespace exports {
 					css?: {
 						convertLengthUnits?: boolean;
 						convertApproximateColors?: boolean;
+						dropOverriddenDeclarations?: boolean;
 						rewriteCustomProperties?: boolean;
 						unusedSymbols?: string[];
 						pseudoClasses?: { [index: string]: string };

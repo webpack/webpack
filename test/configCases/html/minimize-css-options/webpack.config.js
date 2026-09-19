@@ -25,6 +25,7 @@ module.exports = {
 			css: {
 				convertLengthUnits: true,
 				convertApproximateColors: true,
+				dropOverriddenDeclarations: true,
 				rewriteCustomProperties: true
 			}
 		},

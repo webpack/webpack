@@ -12,6 +12,9 @@
 	.t04 { --a: #ffffff }
 	/* a color the hex only approximates converts here as it does there */
 	.t05 { background: hwb(194 0% 0%) }
+	/* a declaration a later one overrides goes here as it does in a `.css`
+	   asset, this target naming no browser to answer for it */
+	.t06 { color: #c65d06; color: lab(50% 100 -100) }
 </style>
 </head>
 <body>
@@ -19,5 +22,6 @@
 <p style="width: 17px">...and declines the same cases</p>
 <p style="--a: #ffffff">...and rewrites a custom property the same way</p>
 <p style="background: hwb(194 0% 0%)">...and approximates a color the same way</p>
+<p style="color: #c65d06; color: lab(50% 100 -100)">...and drops an overridden declaration the same way</p>
 </body>
 </html>
