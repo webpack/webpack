@@ -6,7 +6,7 @@ const {
 	CSS_TYPE,
 	JAVASCRIPT_TYPE
 } = require("../../lib/ModuleSourceTypeConstants");
-const RequestShortener = require("../../lib/RequestShortener");
+const RequestShortener = require("../../lib/util/RequestShortener");
 const CssGenerator = require("../../lib/css/CssGenerator");
 const ModuleParseError = require("../../lib/errors/ModuleParseError");
 const WebAssemblyJavascriptGenerator = require("../../lib/wasm-sync/WebAssemblyJavascriptGenerator");

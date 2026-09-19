@@ -7,6 +7,7 @@
     "lib/JavascriptGenerator": "@sector-labs/lingui-loader probes for it to detect webpack 4, so a re-export would send it down the wrong branch; its other importer, hard-source-webpack-plugin, is webpack 4 only.",
     "lib/JsonGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/JsonParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/LoaderTargetPlugin": "Only miniprogram-webpack-plugin imports it, and that package also imports lib/FunctionModulePlugin and lib/MultiEntryPlugin, both removed in webpack 5.",
     "lib/ModuleDependencyWarning": "Moved to lib/errors/ before this record; kept unresolved deliberately.",
     "lib/ModuleError": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/ModuleWarning": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -311,7 +312,10 @@
       "weekly": 188538,
       "packages": ["@vue/preload-webpack-plugin"]
     },
-    "lib/ExternalsPlugin": { "weekly": 596945, "packages": ["worker-loader"] },
+    "lib/ExternalsPlugin": {
+      "weekly": 596945,
+      "packages": ["worker-loader"]
+    },
     "lib/FileSystemInfo": {
       "weekly": 10690048,
       "packages": ["html-webpack-plugin"]
@@ -362,10 +366,6 @@
         "extract-css-chunks-webpack-plugin",
         "styling"
       ]
-    },
-    "lib/LoaderTargetPlugin": {
-      "weekly": 20,
-      "packages": ["miniprogram-webpack-plugin"]
     },
     "lib/logging/runtime.js": {
       "weekly": 17483282,
@@ -476,9 +476,18 @@
       "weekly": 120643,
       "packages": ["@sector-labs/lingui-loader", "hard-source-webpack-plugin"]
     },
-    "lib/ParserHelpers": { "weekly": 96595, "packages": ["worker-plugin"] },
-    "lib/ProgressPlugin": { "weekly": 163660, "packages": ["webpack-stream"] },
-    "lib/RawModule": { "weekly": 852, "packages": ["google-fonts-plugin"] },
+    "lib/ParserHelpers": {
+      "weekly": 96595,
+      "packages": ["worker-plugin"]
+    },
+    "lib/ProgressPlugin": {
+      "weekly": 163660,
+      "packages": ["webpack-stream"]
+    },
+    "lib/RawModule": {
+      "weekly": 852,
+      "packages": ["google-fonts-plugin"]
+    },
     "lib/RequestShortener": {
       "weekly": 1642680,
       "packages": [
@@ -500,7 +509,10 @@
       "weekly": 66,
       "packages": ["san-loader"]
     },
-    "lib/rules/RuleSetCompiler": { "weekly": 66, "packages": ["san-loader"] },
+    "lib/rules/RuleSetCompiler": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
     "lib/rules/UseEffectRulePlugin": {
       "weekly": 66,
       "packages": ["san-loader"]
@@ -528,12 +540,18 @@
         "worker-plugin"
       ]
     },
-    "lib/SizeFormatHelpers": { "weekly": 282121, "packages": ["laravel-mix"] },
+    "lib/SizeFormatHelpers": {
+      "weekly": 282121,
+      "packages": ["laravel-mix"]
+    },
     "lib/util/createHash": {
       "weekly": 120902,
       "packages": ["@stylable/webpack-extensions", "hard-source-webpack-plugin"]
     },
-    "lib/util/identifier": { "weekly": 1095163, "packages": ["thread-loader"] },
+    "lib/util/identifier": {
+      "weekly": 1095163,
+      "packages": ["thread-loader"]
+    },
     "lib/util/makeSerializable.js": {
       "weekly": 3659559,
       "packages": [

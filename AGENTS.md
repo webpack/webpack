@@ -85,17 +85,23 @@ The directory listings below are the canonical map of the repository. **Whenever
     recording what each module exports and who uses it.
   - `lib/hmr/` — Hot Module Replacement plugins.
   - `lib/html/` — Experimental HTML support.
-  - `lib/ids/` — Module/chunk id assignment plugins.
+  - `lib/ids/` — Module/chunk id assignment plugins, and `RecordIdsPlugin`, which persists
+    the assignment across builds through `recordsPath`.
   - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis. `syntax.js` serves every production a build reaches, so `grammar.js` (the full grammar) and `regexp.js` (the pattern validator) are installed onto the parser's prototype only when something asks for one — keep it that way and never `require` either from a path a build takes.
   - `lib/json/` — JSON modules.
   - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
-  - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader iteration and loader module loading.
+  - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader
+    iteration and loader module loading, plus the `LoaderOptionsPlugin` and
+    `LoaderTargetPlugin` that feed the loader context.
   - `lib/logging/` — Logger API and console formatting.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …).
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
     and `AutomaticPrefetchPlugin`, which resolve a module eagerly at build time instead.
+  - `lib/resolve/` — Turning a request into a file: the `ResolverFactory` every resolve goes
+    through, and the two plugins that redirect a request before it gets there —
+    `IgnorePlugin` and `NormalModuleReplacementPlugin`.
   - `lib/rules/` — `module.rules` matching engine.
   - `lib/runtime/` — Runtime modules emitted into bundles (chunk loaders, public-path, …),
     the `RuntimeModule` base class they extend, the `RuntimeGlobals` symbols they declare,
@@ -109,7 +115,8 @@ The directory listings below are the canonical map of the repository. **Whenever
     template is handed.
   - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
-  - `lib/util/` — Utility helpers.
+  - `lib/util/` — Utility helpers, including `RequestShortener`, which renders a request
+    relative to the context for every message a user reads.
   - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
   - `lib/watch/` — Watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
