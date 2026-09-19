@@ -1895,21 +1895,31 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		/**
 		 * @param {string} source what to parse
 		 * @param {number} index which statement to ask about
+		 * @param {boolean} sourceAvailable whether the original source is available
 		 * @returns {string} the source the comment run covers
 		 */
-		const attachedTo = (source, index) => {
+		const attachedTo = (source, index, sourceAvailable = true) => {
 			const parser = new JavascriptParser("module");
 			const { ast, comments } = JavascriptParser._parse(source, {
 				sourceType: "module",
 				ranges: true,
 				comments: true
 			});
-			parser.comments = /** @type {EXPECTED_ANY} */ (comments);
-			parser._source = source;
-			const statement = /** @type {EXPECTED_ANY} */ (ast).body[index];
+			parser.comments = comments;
+			parser._source = sourceAvailable ? source : undefined;
+			const statement = ast.body[index];
+			const target =
+				(statement.type === "ExportNamedDeclaration" ||
+					statement.type === "ExportDefaultDeclaration") &&
+				statement.declaration
+					? statement.declaration
+					: statement;
+			if (target !== statement) {
+				parser.statementPath = [statement, target];
+			}
 			return source.slice(
-				parser.getAttachedCommentsStart(statement),
-				statement.range[0]
+				parser.getAttachedCommentsStart(target),
+				/** @type {[number, number]} */ (statement.range)[0]
 			);
 		};
 
@@ -1932,6 +1942,58 @@ class WithStatic { static { const inStaticBlock = 20; } }
 
 		it("reads the statement itself when nothing precedes it", () => {
 			expect(attachedTo("function f() {}", 0)).toBe("");
+		});
+
+		it("ignores comments inside and after the statement", () => {
+			expect(
+				attachedTo("/* before */function f() {/* inside */}\n/* after */", 0)
+			).toBe("/* before */");
+			expect(attachedTo("function f() {/* inside */}\n/* after */", 0)).toBe(
+				""
+			);
+		});
+
+		it("keeps the conservative comment run without source text", () => {
+			expect(
+				attachedTo(
+					"/* first */first();\n/* second */function f() {}/* after */",
+					1,
+					false
+				)
+			).toBe("/* first */first();\n/* second */");
+		});
+
+		it.each(["export function f() {}", "export default function() {}"])(
+			"finds comments before %s",
+			(declaration) => {
+				expect(attachedTo(`/* before */${declaration}/* after */`, 0)).toBe(
+					"/* before */"
+				);
+			}
+		);
+
+		it("does not read every later comment to find an attached run", () => {
+			const source = "/* before */function f() {}" + "/* after */".repeat(1024);
+			const parser = new JavascriptParser("module");
+			const { ast, comments } = JavascriptParser._parse(source, {
+				sourceType: "module",
+				ranges: true,
+				comments: true
+			});
+			let reads = 0;
+			for (const comment of comments) {
+				const range = comment.range;
+				Object.defineProperty(comment, "range", {
+					get() {
+						reads++;
+						return range;
+					}
+				});
+			}
+			parser.comments = comments;
+			parser._source = source;
+			expect(parser.getAttachedCommentsStart(ast.body[0])).toBe(0);
+			expect(reads).toBeLessThan(32);
 		});
 	});
 
