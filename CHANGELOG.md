@@ -1,5 +1,29 @@
 # webpack
 
+## 5.112.0
+
+### Minor Changes
+
+- Add `optimization.minimize.css.dropOverriddenDeclarations`, dropping a declaration a later one overrides where no target is named. (by [@alexander-akait](https://github.com/alexander-akait) in [#22175](https://github.com/webpack/webpack/pull/22175))
+
+- Add `optimization.minimize.css.convertApproximateColors`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22157](https://github.com/webpack/webpack/pull/22157))
+
+### Patch Changes
+
+- Minify the attributes of an HTML tag without rewriting the template in it. (by [@alexander-akait](https://github.com/alexander-akait) in [#22166](https://github.com/webpack/webpack/pull/22166))
+
+- Preserve case-sensitive template identifiers when minifying HTML tag attributes. (by [@bjohansebas](https://github.com/bjohansebas) in [#22177](https://github.com/webpack/webpack/pull/22177))
+
+- Read a regular expression repeating a capture group name in linear time. (by [@alexander-akait](https://github.com/alexander-akait) in [#22187](https://github.com/webpack/webpack/pull/22187))
+
+- Speed up attached comment lookup during JavaScript analysis. (by [@bjohansebas](https://github.com/bjohansebas) in [#22179](https://github.com/webpack/webpack/pull/22179))
+
+- Keep `initial` where Gecko or WebKit reads the property's keyword apart. (by [@aryanraj45](https://github.com/aryanraj45) in [#22176](https://github.com/webpack/webpack/pull/22176))
+
+- Group loose `lib/` sources into directories, keeping old deep paths working. (by [@alexander-akait](https://github.com/alexander-akait) in [#22118](https://github.com/webpack/webpack/pull/22118))
+
+- Keep the `calc()` around a `steps()` count `jump-none` would reject bare. (by [@alexander-akait](https://github.com/alexander-akait) in [#22168](https://github.com/webpack/webpack/pull/22168))
+
 ## 5.111.1
 
 ### Patch Changes
