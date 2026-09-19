@@ -1,5 +1,3 @@
-require("./common");
-
 // built rather than written out, so the needle is not in the bundle it reads
 const globalThisAccess = ["globalThis", "fromEntry"].join(".");
 const runtimeGlobalAccess = ["__webpack_require__", "g", "fromEntry"].join(".");

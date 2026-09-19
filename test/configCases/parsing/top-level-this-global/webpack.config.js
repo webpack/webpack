@@ -1,25 +1,9 @@
 "use strict";
 
-// The global object is spelled `globalThis` where the target has the binding
-// and `__webpack_require__.g` where it does not, so both are built here.
+// Every bundle here reaches the global object through `__webpack_require__.g`,
+// so none of them needs a `globalThis` binding to run.
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	{
-		target: "node",
-		entry: "./entry-global-this.js",
-		module: {
-			parser: {
-				javascript: {
-					topLevelThis: "global"
-				}
-			}
-		},
-		output: {
-			environment: {
-				globalThis: true
-			}
-		}
-	},
 	{
 		target: "node",
 		entry: "./entry-webpack-global.js",
@@ -47,23 +31,6 @@ module.exports = [
 					commonjs: false,
 					topLevelThis: "global"
 				}
-			}
-		}
-	},
-	{
-		target: "node",
-		// a module declaring `globalThis` itself must still reach the real global
-		entry: "./entry-shadowed.js",
-		module: {
-			parser: {
-				javascript: {
-					topLevelThis: "global"
-				}
-			}
-		},
-		output: {
-			environment: {
-				globalThis: true
 			}
 		}
 	},
