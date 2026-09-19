@@ -125,6 +125,21 @@ export default defineConfig([
 	getSharedConfig("webpack/types"),
 	getSharedConfig("webpack/comments"),
 	{
+		// The option sources `tooling/generate-schemas.js` derives the schemas from
+		// are modules, and their comments are what a schema says rather than prose.
+		files: ["schemas/types/**/*.ts"],
+		languageOptions: { parser: tseslint.parser, sourceType: "module" },
+		rules: {
+			"webpack/comment-length": "off",
+			// They declare types and emit nothing, so the runtime baseline is moot
+			"n/no-unsupported-features/es-syntax": "off",
+			// TypeScript resolves the names here, including the ambient ones
+			"no-undef": "off",
+			// The spellings are the ones the option takes, not ones to choose from
+			"unicorn/text-encoding-identifier-case": "off"
+		}
+	},
+	{
 		// An example's commented-out config is what a reader copies, and its prose
 		// is the example's own documentation — neither is commentary to shorten.
 		files: ["examples/**/*.{js,cjs,mjs}"],
