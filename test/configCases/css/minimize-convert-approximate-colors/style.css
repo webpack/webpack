@@ -1,0 +1,31 @@
+/* `optimization.minimize.css.convertApproximateColors` lets a color be written
+   as the nearest hex where that hex only approximates it — off by default, on
+   here. Every declaration below is one the `minimize-declined` case holds as a
+   passthrough, so the two read against each other. */
+
+/*! a channel landing exactly on a `.5` boundary, which is the one place two
+   engines round opposite ways (cssnano writes this hex too) */
+.t01 { background: hsl(134, 50%, 50%) }
+/*! ...and one landing near enough to it for the same disagreement */
+.t02 { background: hwb(194 0% 0%) }
+/*! ...and a Lab channel within the wider margin the matrix chain needs */
+.t03 { background: lab(20% 40 0) }
+/*! a color outside the sRGB gamut, which the hex clips rather than respells */
+.t04 { background: lab(50% 100 -100) }
+/*! ...whichever function names it */
+.t05 { background: oklch(90% 0.3 140) }
+/*! ...including a predefined space wider than sRGB */
+.t06 { background: color(display-p3 1 0 0) }
+/*! ...and one carrying an alpha, where the hex takes a fourth pair */
+.t07 { background: lch(50% 130 20 / 0.5) }
+/*! a mix is the color it computes to, so it converts on the same terms */
+.t08 { background: color-mix(in lch, white, lab(50% 100 -100)) }
+/*! ...as does a relative color */
+.t09 { background: oklch(from red calc(l * 1.4) c h) }
+/*! declined still: an engine reads these two through a transfer of its own, so
+   the hex would name a color it never paints rather than a near one */
+.t10 { background: color(a98-rgb 0.2 0.4 0.6) }
+/*! ...both of them */
+.t11 { background: color(prophoto-rgb 0.2 0.4 0.6) }
+/*! a color the conversion is exact for needs no option and takes none */
+.t12 { background: hsl(0 100% 50%) }
