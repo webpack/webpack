@@ -8,6 +8,7 @@ import subPage from "./sub/page.html";
 import classicPage from "./classic.html";
 import ignoredPage from "./ignored.html";
 import dashPage from "./sub-page.html";
+import plusPage from "./sub+page.html";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -30,6 +31,7 @@ const subContent = typeof subPage === "string" ? subPage : "";
 const classicContent = typeof classicPage === "string" ? classicPage : "";
 const ignoredContent = typeof ignoredPage === "string" ? ignoredPage : "";
 const dashContent = typeof dashPage === "string" ? dashPage : "";
+const plusContent = typeof plusPage === "string" ? plusPage : "";
 
 // Document-order list of every inline-script chunk url left in the page.
 const scriptChunkUrls = collectMatches(
@@ -148,4 +150,14 @@ it("should keep pages apart whose paths differ only by a separator", () => {
 	expect(readChunk(dashUrl)).not.toContain("sub-module");
 	expect(readChunk(subUrl)).toContain("sub-module");
 	expect(readChunk(subUrl)).not.toContain("dash-named-page");
+});
+
+it("should escape a page path a name cannot spell", () => {
+	// `sub+page.html` keeps a character an entry name may not hold, so it is
+	// escaped rather than dropped — dropping it would read as `subpage`.
+	const plusUrl = plusContent.match(/<script[^>]*\bsrc="([\w.+-]+\.mjs)"/)[1];
+	const dashUrl = dashContent.match(/<script[^>]*\bsrc="([\w.+-]+\.mjs)"/)[1];
+	expect(plusUrl).not.toBe(dashUrl);
+	expect(readChunk(plusUrl)).toContain("plus-named-page");
+	expect(readChunk(plusUrl)).not.toContain("dash-named-page");
 });
