@@ -33,3 +33,15 @@ exports[`ConfigTestCases html inline-module-merge exported tests should drop a r
 <script src=\\"unclosed.mjs\\" type=\\"module\\"></script>
 "
 `;
+
+exports[`ConfigTestCases html inline-module-merge exported tests should end a run at an ignored script 1`] = `
+"<!DOCTYPE html>
+<title>Ignored</title>
+<script src=\\"ignored.mjs\\" type=\\"module\\"></script>
+<!-- webpackIgnore: true -->
+<script type=\\"module\\">
+globalThis.__ignoredBody = \\"stays inline\\";
+</script>
+<script src=\\"ignored1.mjs\\" type=\\"module\\"></script>
+"
+`;

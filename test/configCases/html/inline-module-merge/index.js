@@ -6,6 +6,8 @@ import page from "./page.html";
 import unclosed from "./unclosed.html";
 import subPage from "./sub/page.html";
 import classicPage from "./classic.html";
+import ignoredPage from "./ignored.html";
+import dashPage from "./sub-page.html";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -26,6 +28,8 @@ const pageContent = typeof page === "string" ? page : "";
 const unclosedContent = typeof unclosed === "string" ? unclosed : "";
 const subContent = typeof subPage === "string" ? subPage : "";
 const classicContent = typeof classicPage === "string" ? classicPage : "";
+const ignoredContent = typeof ignoredPage === "string" ? ignoredPage : "";
+const dashContent = typeof dashPage === "string" ? dashPage : "";
 
 // Document-order list of every inline-script chunk url left in the page.
 const scriptChunkUrls = collectMatches(
@@ -117,4 +121,31 @@ it("should bundle a run of classic inline scripts into one chunk", () => {
 	expect(classicChunk.indexOf("classic-1")).toBeLessThan(
 		classicChunk.indexOf("classic-2")
 	);
+});
+
+it("should end a run at an ignored script", () => {
+	expect(ignoredContent).toMatchSnapshot();
+
+	// The ignored tag stays in the document and runs where it stands, so the
+	// bodies on either side of it cannot share a chunk.
+	expect(ignoredContent).toContain("stays inline");
+	const urls = collectMatches(
+		ignoredContent,
+		/<script[^>]*\bsrc="(ignored\d*\.mjs)"/g
+	);
+	expect(urls).toHaveLength(2);
+	expect(readChunk(urls[0])).toContain("before-ignored");
+	expect(readChunk(urls[1])).toContain("after-ignored");
+});
+
+it("should keep pages apart whose paths differ only by a separator", () => {
+	// `sub/page.html` and `sub-page.html` must not sanitize to one entry name,
+	// or each page would load the other's code.
+	const dashUrl = dashContent.match(/<script[^>]*\bsrc="([\w.-]+\.mjs)"/)[1];
+	const subUrl = subContent.match(/<script[^>]*\bsrc="([\w.-]+\.mjs)"/)[1];
+	expect(dashUrl).not.toBe(subUrl);
+	expect(readChunk(dashUrl)).toContain("dash-named-page");
+	expect(readChunk(dashUrl)).not.toContain("sub-module");
+	expect(readChunk(subUrl)).toContain("sub-module");
+	expect(readChunk(subUrl)).not.toContain("dash-named-page");
 });
