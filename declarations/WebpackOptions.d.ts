@@ -26,6 +26,22 @@ export type CacheOptions = true | CacheOptionsNormalized;
 export type CacheOptionsNormalized =
 	false | MemoryCacheOptions | FileCacheOptions;
 /**
+ * A build dependency for filesystem cache invalidation.
+ * @since 5.111.0
+ */
+export type BuildDependencyItem =
+	| string
+	| {
+			/**
+			 * Request to a dependency (resolved as directory relative to the context directory).
+			 */
+			dependency: string;
+			/**
+			 * When true, the dependency may be missing. Existence changes invalidate the cache.
+			 */
+			optional?: boolean;
+	  };
+/**
  * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
  */
 export type Context = string;
@@ -71,7 +87,8 @@ export type Entry = EntryDynamic | EntryStatic;
 /**
  * A Function returning an entry object, an entry string, an entry array or a promise to these things.
  */
-export type EntryDynamic = import("../lib/DynamicEntryPlugin").RawEntryDynamic;
+export type EntryDynamic =
+	import("../lib/entry/DynamicEntryPlugin").RawEntryDynamic;
 /**
  * A static entry description.
  */
@@ -98,7 +115,7 @@ export type EntryFilename = FilenameTemplate;
  */
 export type FilenameTemplate =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+	| import("../lib/template/TemplatedPathPlugin").TemplatePathFn<
 			import("../lib/Compilation").PathDataChunk
 	  >;
 /**
@@ -199,7 +216,7 @@ export type PublicPath = "auto" | RawPublicPath;
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type RawPublicPath =
-	string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	string | import("../lib/template/TemplatedPathPlugin").TemplatePathFn;
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
@@ -255,12 +272,12 @@ export type ExternalItemFunction =
  * The function is called on each dependency (`function(context, request, callback(err, result))`).
  */
 export type ExternalItemFunctionCallback =
-	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionCallback;
+	import("../lib/externals/ExternalModuleFactoryPlugin").ExternalItemFunctionCallback;
 /**
  * The function is called on each dependency (`function(context, request)`).
  */
 export type ExternalItemFunctionPromise =
-	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionPromise;
+	import("../lib/externals/ExternalModuleFactoryPlugin").ExternalItemFunctionPromise;
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -526,7 +543,7 @@ export type OptimizationSplitChunksSizes =
  */
 export type AssetModuleFilename =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+	| import("../lib/template/TemplatedPathPlugin").TemplatePathFn<
 			import("../lib/Compilation").PathDataModule
 	  >;
 /**
@@ -559,6 +576,15 @@ export type Clean = boolean | CleanOptions;
  */
 export type CompareBeforeEmit = boolean;
 /**
+ * Copy files and directories to the output directory.
+ * @since 5.111.0
+ */
+export type Copy = CopyPattern[] | string;
+/**
+ * A glob or a path of files which are copied to the output directory.
+ */
+export type CopyPattern = string | CopyObjectPattern;
+/**
  * This option enables cross-origin loading of chunks.
  */
 export type CrossOriginLoading = false | "anonymous" | "use-credentials";
@@ -575,13 +601,13 @@ export type CssFilename = FilenameTemplate;
  */
 export type DevtoolFallbackModuleFilenameTemplate =
 	| string
-	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+	| import("../lib/devtool/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
 export type DevtoolModuleFilenameTemplate =
 	| string
-	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+	| import("../lib/devtool/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
 /**
  * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
  */
@@ -859,7 +885,7 @@ export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
  */
 export type AssetModuleOutputPath =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+	| import("../lib/template/TemplatedPathPlugin").TemplatePathFn<
 			import("../lib/Compilation").PathDataModule
 	  >;
 /**
@@ -867,6 +893,10 @@ export type AssetModuleOutputPath =
  */
 export type AssetParserDataUrlFunction =
 	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
+/**
+ * Patterns of files which are copied to the output directory.
+ */
+export type CopyPatterns = CopyPattern[];
 /**
  * Enable/disable renaming of `@keyframes`.
  */
@@ -954,7 +984,7 @@ export type CssGeneratorExportsOnly = boolean;
  */
 export type CssGeneratorLocalIdentName =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+	| import("../lib/template/TemplatedPathPlugin").TemplatePathFn<
 			import("../lib/Compilation").PathDataModule
 	  >;
 /**
@@ -965,7 +995,7 @@ export type DeferImportExperimentOptions = boolean;
  * A Function returning a Promise resolving to a normalized entry.
  */
 export type EntryDynamicNormalized =
-	import("../lib/DynamicEntryPlugin").EntryDynamic;
+	import("../lib/entry/DynamicEntryPlugin").EntryDynamic;
 /**
  * The entry point(s) of the compilation.
  */
@@ -1218,7 +1248,7 @@ export interface FileCacheOptions {
 		/**
 		 * List of dependencies the build depends on.
 		 */
-		[k: string]: string[];
+		[k: string]: BuildDependencyItem[];
 	};
 	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
@@ -1625,12 +1655,6 @@ export interface Experiments {
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
 	/**
-	 * Allow output javascript files as module source type.
-	 * @since 5.0.0
-	 * @experimental
-	 */
-	outputModule?: boolean;
-	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
 	 * @experimental
@@ -1839,7 +1863,7 @@ export interface ModuleOptions {
 	defaultRules?: RuleSetRules;
 	/**
 	 * @deprecated
-	 * Enable warnings for full dynamic dependencies.
+	 * Enable warnings for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextCritical'.
 	 */
 	exprContextCritical?: boolean;
 	/**
@@ -2329,9 +2353,13 @@ export interface Optimization {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
+	 * Enable minimizing the output. Uses optimization.minimizer. An options object implies 'true' and sets optimization.minimizeOptions.
 	 */
 	minimize?: boolean | OptimizationMinimizeOptions;
+	/**
+	 * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
+	 */
+	minimizeOptions?: OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
@@ -2415,20 +2443,140 @@ export interface OptimizationMinimizeOptions {
 	javascript?: false | OptimizationMinimizeJavascript;
 }
 /**
- * What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it.
+ * What the CSS minimizer does. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it. Every transform that keeps the stylesheet's meaning is on by default and may be turned off on its own, so a document a rewrite breaks can be minimized without it while the rest still applies; the two that change what the CSSOM hands back (`convertLengthUnits`, `rewriteCustomProperties`) are off until asked for.
  * @since 5.110.0
  */
 export interface OptimizationMinimizeCss {
+	/**
+	 * Write a color the `browserslist` target cannot read as an extra declaration before the one naming it, in a spelling it does read: `color: oklch(59.686% 0.15619 49.7694)` is written as `color: #c65d06` and then the `oklch()` itself, so an engine reading neither the Lab family nor `hwb()` is left with a color rather than with nothing. The fallback is that color clipped into the sRGB gamut and rounded, which the declaration standing after it corrects wherever it is read. Nothing is written where the author already set the property earlier in the same block, where the color holds a substitution or a relative reference this cannot fold, or where the fallback would still name a function the target cannot read. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for.
+	 * @since 5.111.0
+	 */
+	colorFallbacks?: boolean;
+	/**
+	 * Which comments survive. `"some"`, the default, keeps a `/*!` banner and a comment annotated `@license` or `@preserve`; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's `format.comments` does, so a pattern that names nothing else drops the ones `"some"` would have kept. A `/*#` source-map pragma is a link rather than a comment, so `"some"` and `"all"` keep it; `false`, a pattern or a predicate decides it like any other. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
+	 * @since 5.110.0
+	 */
+	comments?:
+		| ("all" | "some")
+		| RegExp
+		| boolean
+		| string
+		| ((comment: string) => boolean);
+	/**
+	 * Write a polar or Lab color as the nearest hex even where that hex only approximates it. `shortenColors` converts one only where webpack can prove an engine's own conversion lands on the same bytes, and keeps the function in the two places it cannot: a channel sitting too near a `.5` boundary for two implementations to round it alike (it is why esbuild and lightningcss emit different bytes for `hwb(194 0% 0%)`), and a color outside the sRGB gamut, which hex can only clip to a different color. Off by default, for those two reasons, and the two are not the same trade: on the boundary this writes the byte esbuild, lightningcss and cssnano write anyway, while outside the gamut it goes further than any of them — lightningcss keeps the function there and writes a fallback before it, which is what `colorFallbacks` does. A space engines read through transfers of their own (`a98-rgb`, `prophoto-rgb`) is left alone either way, the hex there naming a color no engine paints rather than a near one. This is about replacing the function: a fallback stands before it rather than in its place, so it already clips and rounds this way.
+	 * @since 5.112.0
+	 */
+	convertApproximateColors?: boolean;
 	/**
 	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
 	 * @since 5.110.0
 	 */
 	convertLengthUnits?: boolean;
 	/**
+	 * Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * @since 5.112.0
+	 */
+	dropOverriddenDeclarations?: boolean;
+	/**
+	 * Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.
+	 * @since 5.111.0
+	 */
+	foldCase?: boolean;
+	/**
+	 * Write a spelling the `browserslist` target cannot read as one it can — the same value said another way, rather than left for an engine that will drop it: a 4-/8-digit hex as `rgba()`, a double-position gradient stop as the two stops it names, `inset` / `overflow` / `place-*` as the longhands they set, `text-decoration` as its own longhands where a slot is newer than the shorthand, `system-ui` as the stack of platform font names it stands for, a `:lang()` or `:not()` holding a list as the `:is()` that means it, a media feature range as the `min-`/`max-` pair, and `light-dark()` as the custom-property pair a color scheme switches. On by default, and only in effect for a `browserslist` target — any other target names no browsers to answer for. Off leaves every such spelling as written, which is how a stylesheet one of these rewrites gets wrong is minified; it never makes the minifier write a spelling the target cannot read.
+	 * @since 5.111.0
+	 */
+	lowerUnsupported?: boolean;
+	/**
+	 * Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. `mergeRules` is the safe half of this, joining only what nothing stands between.
+	 * @since 5.111.0
+	 */
+	mergeDistantRules?: boolean;
+	/**
+	 * Write a family of longhands as the one shorthand that sets them — four sides or corners, the two a pair shorthand sets, or the slots of an order-free one — even where unrelated declarations stand between them. On by default.
+	 * @since 5.110.0
+	 */
+	mergeLonghands?: boolean;
+	/**
+	 * Join rules nothing stands between: adjacent rules that print the same block become one selector list, at-rules that share a prelude become one rule, and a named `@layer` block a later sibling opens again is folded into the first. On by default.
+	 * @since 5.110.0
+	 */
+	mergeRules?: boolean;
+	/**
+	 * Normalize quoting: a string takes whichever quote needs fewer escapes, a `url()` and an attribute selector's value drop theirs where the content is still one token, and a font family whose name is a run of identifiers is written unquoted. On by default.
+	 * @since 5.110.0
+	 */
+	normalizeQuotes?: boolean;
+	/**
+	 * Each pseudo-class to write as an ordinary class instead, as `{ "focus-visible": "focus-visible" }` — so a script can apply the class where the engine reads no such pseudo. Only a plain pseudo-class is rewritten, wherever it stands in a selector: a pseudo-element (`::hover`) and a functional pseudo of the same name (`:hover(…)`) are not what a class stands in for, and a `:name` inside a quoted attribute value is nobody's pseudo. Nothing applies the class — that is the script's part.
+	 * @since 5.111.0
+	 */
+	pseudoClasses?: {
+		/**
+		 * The class to write instead, without its `.`.
+		 */
+		[k: string]: string;
+	};
+	/**
+	 * Compute a call into the shorter call naming the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.
+	 * @since 5.110.0
+	 */
+	reduceFunctions?: boolean;
+	/**
+	 * Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the `@charset` naming an encoding the output is not written in. On by default. Joining rules that are not dead is `mergeRules`.
+	 * @since 5.110.0
+	 */
+	removeDeadRules?: boolean;
+	/**
+	 * Resolve the `@custom-media` and `@custom-selector` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`, and `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off until asked for: `module.parser.css.customMedia` and `module.parser.css.customSelectors` already resolve both in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as `:is(…)`, so a name is substituted only where the target reads `:is()`.
+	 * @since 5.111.0
+	 */
+	resolveCustomAtRules?: boolean;
+	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
 	 * @since 5.110.0
 	 */
 	rewriteCustomProperties?: boolean;
+	/**
+	 * Write a `:dir()` the `browserslist` target cannot read as the `[dir]` attribute selector it approximates: `a:dir(rtl)` becomes `a[dir=rtl]`. Off until asked for, because the two are not the same question — `:dir()` reads the directionality an element resolves to, which it may inherit from an ancestor, while `[dir=rtl]` reads the attribute on the element itself, so an element inside a `dir="rtl"` ancestor matches the first and not the second. Only in effect for a `browserslist` target that reads no `:dir()`; any other target names no browsers to answer for.
+	 * @since 5.111.0
+	 */
+	rewriteDirSelector?: boolean;
+	/**
+	 * Write an escaped identifier the shortest way that names the same thing, in a value or an id: `grid-area:\66oot` becomes `grid-area:foot` and `#\41 x` becomes `#Ax`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.
+	 * @since 5.111.0
+	 */
+	rewriteEscapes?: boolean;
+	/**
+	 * Write each color in the shortest spelling of the same value: `#ffffff` -> `#fff`, `rgb(1 2 3)` -> `#010203`, a named color where the property takes no identifier of the author's own, and every polar and Lab function the target agrees with hex on. On by default.
+	 * @since 5.110.0
+	 */
+	shortenColors?: boolean;
+	/**
+	 * Shorten a rule's condition prelude: a media feature in its range spelling where the target reads one (`(min-width:100px)` -> `(width>=100px)`), an `and` of two one-sided ranges collapsed into the interval it describes, the `all` a query states before an `and` (which matches what the condition alone matches), and an operand a condition already states — in `@supports` and `@container` as well as `@media`. On by default.
+	 * @since 5.110.0
+	 */
+	shortenMediaQueries?: boolean;
+	/**
+	 * Write each number in its shortest equal spelling — dropping a leading zero, a trailing fraction and a `+`, rounding to the six significant digits a stylesheet can observe, dropping the unit a zero does not need, and writing an alpha and a ratio the one way its grammar spells them. On by default.
+	 * @since 5.110.0
+	 */
+	shortenNumbers?: boolean;
+	/**
+	 * Rewrite a selector into an equal one: a selector list deduplicated and ordered, a CSS2 pseudo-element's second colon dropped, the universal a compound already implies dropped, an `An+B` written the shortest way its microsyntax allows, and a `from` / `100%` keyframe selector written as the shorter of the pair. On by default.
+	 * @since 5.110.0
+	 */
+	shortenSelectors?: boolean;
+	/**
+	 * Write a value the shortest way its property's own grammar allows: a `{1,4}` box or corner notation collapsed, a slot holding its own initial dropped, and `flex` / `font-weight` / `display` / `transition` / `<position>` / `<repeat-style>` written the short way. On by default. Merging separate longhand declarations is `mergeLonghands`.
+	 * @since 5.110.0
+	 */
+	shortenValues?: boolean;
+	/**
+	 * Names a whole-project analysis found nothing uses, which the minimizer then takes out: a bare name is matched against every class and id a selector names and against every `@keyframes` name, and a `--`-prefixed one against every custom property a declaration sets. A selector list keeps the selectors that do not name one, and a rule left with none goes; a name inside a functional pseudo (`:not(.gone)`, `:is(.gone, .kept)`) is not one the rule needs, so it is left alone. Nothing is derived here — the list is the caller's, and a name on it that something does use takes working CSS out.
+	 * @since 5.111.0
+	 */
+	unusedSymbols?: string[];
 	/**
 	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
 	 * @since 5.110.0
@@ -2436,15 +2584,35 @@ export interface OptimizationMinimizeCss {
 	vendorPrefixes?: boolean;
 }
 /**
- * What the HTML minimizer may do beyond the transforms that always apply.
+ * What the HTML minimizer does. Every transform that keeps the document's DOM is on by default and may be turned off on its own, so a page a rewrite breaks can be minimized without it while the rest still applies; the ones that change what a script or a selector reads back are off until asked for.
  * @since 5.110.0
  */
 export interface OptimizationMinimizeHtml {
+	/**
+	 * Write a boolean attribute as the bare name its presence already means. The DOM reads `checked` from the attribute being there and never from its value, so `checked="checked"` and `checked=""` are the same element — but `getAttribute` hands back what was written. `true`, the default, rewrites only the spelling the spec itself canonicalizes, the attribute's own name; `"all"` rewrites any value, including the `checked="false"` that already means checked.
+	 * @since 5.110.0
+	 */
+	collapseBooleanAttributes?: "all" | boolean;
 	/**
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: ("conservative" | "smart" | "all") | boolean;
+	/**
+	 * Which comments survive. `"some"`, the default, keeps nothing: every comment an HTML parser reads is inert; `true` (or `"all"`) keeps every comment and `false` keeps none; a string is read as a regular expression source, and it, a `RegExp` or a `(comment) => boolean` predicate is asked about each comment's own text and keeps the ones it accepts — standing in for the default rule rather than beside it, as terser's `format.comments` does, so a pattern that names nothing else drops the ones `"some"` would have kept. A downlevel conditional comment, a server-side include and a `<?…?>` template directive are code rather than comments and stay whatever this says. A predicate is handed to the minimizer's worker pool as source, so it must not close over anything.
+	 * @since 5.110.0
+	 */
+	comments?:
+		| ("all" | "some")
+		| RegExp
+		| boolean
+		| string
+		| ((comment: string) => boolean);
+	/**
+	 * Print a run of adjacent `<script>` elements as one, joined by a newline and a `;`. Only bare ones fold — any attribute at all, a `src`, `type`, `nonce`, `async` or `id` among them, says the two are not interchangeable with one — and only where the print writes the bodies itself, so a `<script>` that `output.html.inline` fills in after the print is left alone. A body is left alone too wherever appending it would change what it means: one still inside a string, template or block comment would swallow the next, and a directive prologue, a hashbang or a leading `-->` mean what they do only at a start the appended body no longer has. Off by default: it removes elements, so `document.scripts`, a `script:nth-child()` selector and `querySelectorAll("script").length` all read a different document; a later body's `var` and `function` declarations become visible to the bodies before it; and a body that throws takes the rest of its run with it rather than only itself, while one that does not parse takes the whole run, its own code included.
+	 * @since 5.111.0
+	 */
+	mergeScripts?: boolean;
 	/**
 	 * Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll("style").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.
 	 * @since 5.110.0
@@ -2456,15 +2624,30 @@ export interface OptimizationMinimizeHtml {
 	 */
 	minifyConditionalComments?: boolean;
 	/**
-	 * Minify the document held in an `<iframe srcdoc>` attribute. Off by default: the body is a whole document of its own (its base URL is `about:srcdoc`), so minifying it is safe, but the attribute is readable from script and a consumer comparing `iframe.srcdoc` byte for byte would see it change.
+	 * Write an attribute value with whichever delimiters cost least — bare where the grammar allows it, else under the quote that needs fewer character references. On by default: the DOM reads the same value either way.
 	 * @since 5.110.0
 	 */
-	minifySrcdoc?: boolean;
+	normalizeAttributeQuotes?: boolean;
 	/**
-	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
+	 * Fold an enumerated attribute's value to the keyword it names (`type="TEXT"` -> `type=text`), which the DOM matches ASCII case-insensitively. A value the spec does not enumerate is left as written. On by default.
 	 * @since 5.110.0
 	 */
-	preserveComments?: (RegExp | string)[];
+	normalizeEnumeratedAttributes?: boolean;
+	/**
+	 * Normalize a list-shaped attribute value: a space-separated token list (`class`, `rel`, `part`, …), a comma-separated one (`accept`, `sizes`, …), a `srcset` and the viewport `<meta content>`. On by default. A list is read as the set the DOM reflects, so a repeat folds away, only where every token of it is a word: one holding a delimiter another language wrote a statement in is text, and keeps every token it names. Reordering a token list is `sortTokenLists`, which is separate and off by default.
+	 * @since 5.110.0
+	 */
+	normalizeListAttributes?: boolean;
+	/**
+	 * Write an integer attribute (`tabindex`, `colspan`, `width`, …) the one way its own rules read it — leading whitespace, a `+` and leading zeros all go. On by default.
+	 * @since 5.110.0
+	 */
+	normalizeNumericAttributes?: boolean;
+	/**
+	 * Drop the ASCII whitespace around a URL value (`href`, `src`, `action`, `poster`, …), which resolving the URL skips over, so the request goes to the same place either way. On by default: `getAttribute` hands back the attribute as written, so a script comparing those bytes is the one this is turned off for.
+	 * @since 5.111.0
+	 */
+	normalizeUrlAttributes?: boolean;
 	/**
 	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals `class`, `id`, `style`, `dir`, `accesskey`, `itemprop`, `itemref`, `itemtype` and `part`, and every attribute reflecting a token list on the elements the spec defines it for — `rel` on `<a>`, `<area>`, `<form>` and `<link>`, `ping` on `<a>` and `<area>`, `headers` on `<td>` and `<th>`, `blocking` on `<link>`, `<script>` and `<style>`, `sizes` on `<link>`, `for` on `<output>` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so `<x-foo rel="">` and `<label for="">` keep it. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
 	 * @since 5.110.0
@@ -2481,6 +2664,11 @@ export interface OptimizationMinimizeHtml {
 	 */
 	removeImpliedTags?: ("smart" | "all") | boolean;
 	/**
+	 * Leave out a tag §13.1.2.4 lets the parser imply, other than the `<html>` / `<head>` / `<body>` shell, which `removeImpliedTags` decides on its own. On by default: nothing can observe the difference, the tree parses the same either way. A tag still stays wherever the spec keeps it — a comment or whitespace behind it, or a following element the insertion mode does not close it through.
+	 * @since 5.110.0
+	 */
+	removeOptionalTags?: boolean;
+	/**
 	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0
 	 */
@@ -2491,7 +2679,7 @@ export interface OptimizationMinimizeHtml {
 	 */
 	sortAttributes?: boolean;
 	/**
-	 * Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.
+	 * Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. Asked for on its own: a list this reorders is rewritten whether or not `normalizeListAttributes` is on, since another order is another spelling. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.
 	 * @since 5.110.0
 	 */
 	sortTokenLists?: boolean;
@@ -2591,7 +2779,7 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	filename?:
 		| string
-		| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+		| import("../lib/template/TemplatedPathPlugin").TemplatePathFn<
 				import("../lib/Compilation").PathDataChunk
 		  >;
 	/**
@@ -2671,7 +2859,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	filename?:
 		| string
-		| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+		| import("../lib/template/TemplatedPathPlugin").TemplatePathFn<
 				import("../lib/Compilation").PathDataChunk
 		  >;
 	/**
@@ -2802,6 +2990,11 @@ export interface Output {
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
+	/**
+	 * Copy files and directories to the output directory.
+	 * @since 5.111.0
+	 */
+	copy?: Copy;
 	/**
 	 * This option enables cross-origin loading of chunks.
 	 */
@@ -3018,6 +3211,94 @@ export interface CleanOptions {
 	keep?: RegExp | string | import("../lib/CleanPlugin").KeepFn;
 }
 /**
+ * A pattern of files which are copied to the output directory.
+ */
+export interface CopyObjectPattern {
+	/**
+	 * Directory 'from' is resolved from and the copied paths are relative to. Defaults to the compiler context, and to what 'from' names when it is not a glob.
+	 */
+	context?: string;
+	/**
+	 * Filename template of a copied file inside 'to'. Defaults to '[path][base]', which keeps the name and the directory structure below 'from'.
+	 */
+	filename?: string | import("../lib/CopyPlugin").CopyFilenameFunction;
+	/**
+	 * Glob or path from where the files are copied.
+	 */
+	from: string[] | string;
+	/**
+	 * Options of the glob in 'from'.
+	 */
+	globOptions?: CopyGlobOptions;
+	/**
+	 * Asset info of a copied file.
+	 */
+	info?:
+		| import("../lib/Compilation").AssetInfo
+		| import("../lib/CopyPlugin").CopyInfoFunction;
+	/**
+	 * Whether a copied file keeps the permissions of the file it was copied from. Defaults to 'false', which gives it the ones a new file gets. Has no effect on Windows.
+	 */
+	preservePermissions?: boolean;
+	/**
+	 * Whether a copied file keeps the access and modification times of the file it was copied from. Defaults to 'false', which stamps it with the time it was written.
+	 */
+	preserveTimestamps?: boolean;
+	/**
+	 * Directory the files are copied to, relative to 'output.path', which is where they land by default.
+	 */
+	to?: string | import("../lib/CopyPlugin").CopyToFunction;
+	/**
+	 * Modifies the content of a copied file.
+	 */
+	transform?:
+		| {
+				/**
+				 * Whether the result of the transform is cached, and what it is cached under. Defaults to 'true'.
+				 */
+				cache?:
+					| boolean
+					| {
+							/**
+							 * Everything beside the content of the file the transform depends on, serialized into the cache key as JSON.
+							 */
+							keys?:
+								| import("../lib/CopyPlugin").CopyTransformCacheKeys
+								| import("../lib/CopyPlugin").CopyTransformCacheKeysFunction;
+					  };
+				/**
+				 * Modifies the content of a copied file.
+				 */
+				transformer: import("../lib/CopyPlugin").CopyTransform;
+		  }
+		| import("../lib/CopyPlugin").CopyTransform;
+}
+/**
+ * Options of the glob in 'from'.
+ */
+export interface CopyGlobOptions {
+	/**
+	 * Whether the glob matches the case of a file name. Defaults to 'true'.
+	 */
+	caseSensitive?: boolean;
+	/**
+	 * How many directory levels below the base of the glob are read, where '1' reads only the base itself. Defaults to no limit.
+	 */
+	deep?: number;
+	/**
+	 * Whether the glob reaches a file or a directory whose name starts with a dot without naming it. Defaults to 'true'.
+	 */
+	dot?: boolean;
+	/**
+	 * Whether a symbolic link is resolved and copied as what it points at. Defaults to 'true'; 'false' copies the link itself, pointing where it already points.
+	 */
+	followSymlinks?: boolean;
+	/**
+	 * Globs of the files which are not copied, resolved like 'from'. A directory one of them matches is skipped whole.
+	 */
+	ignore?: string[];
+}
+/**
  * The abilities of the environment where the webpack generated code should run.
  */
 export interface Environment {
@@ -3131,6 +3412,11 @@ export interface Environment {
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+	/**
+	 * The environment supports top-level await ('await x' at the top level of a module).
+	 * @since 5.111.0
+	 */
+	topLevelAwait?: boolean;
 }
 /**
  * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
@@ -3274,6 +3560,11 @@ export interface PerformanceOptions {
 	 */
 	all?: boolean;
 	/**
+	 * Report references in ESM output that keep webpack's runtime form, naming what stops each from being written as a literal 'import()' or 'new URL()' another bundler can follow (requires 'hints' to be enabled).
+	 * @since 5.111.0
+	 */
+	analyzableBailouts?: boolean;
+	/**
 	 * Filter function to select assets that are checked.
 	 */
 	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
@@ -3317,16 +3608,6 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	dynamicExports?: boolean;
-	/**
-	 * Report a production build whose 'devtool' writes the source map into the JavaScript, so everyone loading the page downloads it (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	embeddedSourceMaps?: boolean;
-	/**
-	 * Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	entrypointOverlap?: boolean;
 	/**
 	 * Report modules that call 'eval' directly, which stops minification, scope hoisting and tree shaking (requires 'hints' to be enabled).
 	 * @since 5.110.0
@@ -3395,6 +3676,11 @@ export interface PerformanceOptions {
 	 */
 	scopeHoistingBailouts?: boolean;
 	/**
+	 * Report source maps that cost more than they give: a production 'devtool' that writes the map into the JavaScript, and modules a loader transformed without returning a map, which leaves positions pointing at the loader's output (requires 'hints' to be enabled).
+	 * @since 5.111.0
+	 */
+	sourceMaps?: boolean;
+	/**
 	 * Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -3415,30 +3701,20 @@ export interface PerformanceOptions {
 	 */
 	unsplitVendors?: boolean;
 	/**
-	 * Report 'resolve.alias' entries that no request matched.
-	 * @since 5.110.0
+	 * Report asset files emitted for an import whose binding nothing reads, so the bytes ship for nothing (requires 'hints' to be enabled).
+	 * @since 5.111.0
 	 */
-	unusedAliases?: boolean;
+	unusedAssets?: boolean;
 	/**
-	 * Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.
-	 * @since 5.110.0
+	 * Report configuration that no build used: 'resolve.alias' entries nothing matched, 'DefinePlugin' keys nothing referenced, 'externals' nothing imported, 'module.rules' that never matched, and Module Federation 'shared' keys or 'remotes' nothing imported.
+	 * @since 5.111.0
 	 */
-	unusedDefines?: boolean;
+	unusedConfig?: boolean;
 	/**
-	 * Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.
-	 * @since 5.110.0
+	 * Report modules bundled although nothing uses what they export, naming the re-export or the side-effect statement that kept each one (requires 'hints' to be enabled).
+	 * @since 5.111.0
 	 */
-	unusedExternals?: boolean;
-	/**
-	 * Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).
-	 * @since 5.110.0
-	 */
-	unusedReexports?: boolean;
-	/**
-	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
-	 * @since 5.110.0
-	 */
-	unusedRules?: boolean;
+	unusedModules?: boolean;
 }
 /**
  * Options affecting how file system snapshots are created and validated.
@@ -3982,6 +4258,23 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
+ * Patterns of files which are copied to the output directory, and the options of the copying itself.
+ */
+export interface CopyOptions {
+	/**
+	 * Maximum number of files which are read at the same time. Defaults to '100'.
+	 */
+	concurrency?: number;
+	/**
+	 * Patterns of files which are copied to the output directory.
+	 */
+	patterns: CopyPatterns;
+	/**
+	 * Stage of 'processAssets' the files are copied at. Defaults to 'Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL', where a copied file is still minimized and compressed like every other asset; a later stage leaves it as it is on disk.
+	 */
+	stage?: number;
+}
+/**
  * Parser options for css/auto and css/module modules.
  */
 export interface CssAutoOrModuleParserOptions {
@@ -4346,12 +4639,6 @@ export interface ExperimentsNormalized {
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
 	/**
-	 * Allow output javascript files as module source type.
-	 * @since 5.0.0
-	 * @experimental
-	 */
-	outputModule?: boolean;
-	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
 	 * @experimental
@@ -4594,6 +4881,11 @@ export interface JavascriptParserOptions {
 	 */
 	sourceImport?: boolean;
 	/**
+	 * Hand out a spec-compliant Module Namespace Exotic Object for 'import * as ns' and 'import()' of this module instead of the plain exports object. Requires 'Proxy' in the target environment, keeps every exported name, and costs runtime code, so enable it per module. Set it on the imported module, not on the importer.
+	 * @since 5.111.0
+	 */
+	specNamespaceObject?: boolean;
+	/**
 	 * @deprecated
 	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
@@ -4767,9 +5059,14 @@ export interface OptimizationNormalized {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer. An object configures the built-in minimizer per asset type.
+	 * Enable minimizing the output. Uses optimization.minimizer.
 	 */
-	minimize?: false | OptimizationMinimizeOptions;
+	minimize?: boolean;
+	/**
+	 * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
+	 * @since 5.110.0
+	 */
+	minimizeOptions?: OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
@@ -4868,6 +5165,10 @@ export interface OutputNormalized {
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
+	/**
+	 * Patterns of files which are copied to the output directory, and the options of the copying itself.
+	 */
+	copy?: CopyOptions;
 	/**
 	 * This option enables cross-origin loading of chunks.
 	 */
@@ -5218,7 +5519,7 @@ export interface ExternalItemObjectKnown {
 		| {
 				[k: string]: ExternalItem;
 		  }
-		| import("../lib/ExternalModuleFactoryPlugin").ExternalItemByLayerFn;
+		| import("../lib/externals/ExternalModuleFactoryPlugin").ExternalItemByLayerFn;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
