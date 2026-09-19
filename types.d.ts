@@ -1270,6 +1270,13 @@ declare interface Bootstrap {
 declare abstract class BranchID {
 	parent: null | BranchID;
 	base: BranchID;
+	walk: number;
+	taken: null | BranchID;
+
+	/**
+	 * Two branches are separated when some disjunction they both sit under took
+	 * a different alternative for each, so nothing can match both.
+	 */
 	separatedFrom(alt: BranchID): boolean;
 	sibling(): BranchID;
 }
