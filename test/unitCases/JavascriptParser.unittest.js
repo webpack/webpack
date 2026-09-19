@@ -44,6 +44,37 @@ describe("JavascriptParser", () => {
 				expect(modes).toEqual([expected]);
 			}
 		});
+
+		it.each([
+			['"use strict";', true],
+			['"custom";', false]
+		])("reads %s from an AST that states no directive", (directive, expected) => {
+			const source = `${directive} probe();`;
+			const parser = new JavascriptParser("script");
+			const state =
+				/** @type {import("../../lib/Parser").ParserState} */
+				(/** @type {unknown} */ ({ source }));
+			/** @type {EXPECTED_ANY} */
+			let ast;
+			parser.hooks.program.tap("test", (program) => {
+				ast = program;
+			});
+			parser.parse(source, state);
+			// a parser of the caller's own may report a directive as a plain
+			// expression statement, and may carry no raw text either
+			for (const statement of ast.body) {
+				statement.directive = undefined;
+				if (statement.expression) statement.expression.raw = undefined;
+			}
+			ast.comments = [];
+			/** @type {boolean[]} */
+			const modes = [];
+			parser.hooks.call.for("probe").tap("test", () => {
+				modes.push(parser.scope.isStrict);
+			});
+			parser.parse(ast, state);
+			expect(modes).toEqual([expected]);
+		});
 	});
 
 	/* eslint-disable no-unused-vars */
