@@ -60,7 +60,12 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/async-modules/` — Top-level await.
   - `lib/bun/` — Bun target externals preset (`bun:*` and node.js built-in modules).
   - `lib/cache/` — Filesystem and memory caches.
-  - `lib/config/` — Config defaults, normalization, target presets.
+  - `lib/config/` — Everything between a user's config object and a `Compiler`:
+    `validateSchema` checks it against the schema, `normalization.js` canonicalizes its
+    shape, `defaults.js` fills values in, and `WebpackOptionsApply` reads the result into
+    the plugins it implies. `WebpackOptionsDefaulter` is the normalize-then-default pair
+    under one deprecated name, and `OptionsApply` the base class the apply step extends.
+    Also holds the target presets and `defineConfig`.
   - `lib/container/` — Module Federation.
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
