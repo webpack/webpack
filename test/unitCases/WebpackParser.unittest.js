@@ -257,6 +257,12 @@ describe("WebpackParser", () => {
 			expect(() => parse("var x = '\u2028'", { ecmaVersion: 2018 })).toThrow(
 				/Unterminated string constant/
 			);
+			// an escape in the same string routes it through the cold reader, which
+			// carries the version rule of its own
+			expect(literal('var x = "a\\tb\u2028c"').value).toBe("a\tb\u2028c");
+			expect(() =>
+				parse('var x = "a\\tb\u2028c"', { ecmaVersion: 2018 })
+			).toThrow(/Unterminated string constant/);
 		});
 
 		it("should cook the common single-char escapes", () => {
@@ -304,6 +310,14 @@ describe("WebpackParser", () => {
 
 		it("should report a lone trailing backslash as unterminated", () => {
 			expect(() => parse('var x = "abc\\')).toThrow(
+				/Unterminated string constant/
+			);
+		});
+
+		it("should report a string ending after a cooked escape as unterminated", () => {
+			// the escape cooks and then the cold reader's own loop meets EOF, which
+			// is a different raise from the trailing backslash above
+			expect(() => parse('var x = "a\\tb')).toThrow(
 				/Unterminated string constant/
 			);
 		});
@@ -2086,6 +2100,31 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		];
 		expect(calls).toBeGreaterThan(0);
 		expect(tokens.length).toBeGreaterThan(5);
+	});
+
+	it("allows an expression after a closing paren at the root context", () => {
+		/**
+		 * @param {string} code source
+		 * @returns {string[]} every token's type label in order
+		 */
+		const labels = (code) =>
+			[
+				...WebpackParser.tokenizer(code, {
+					ecmaVersion: "latest",
+					sourceType: "script"
+				})
+			].map((token) => token.type.label);
+		// the root context has nothing to pop, so `)` leaves an expression allowed
+		// and the `/` after it opens a regexp rather than dividing
+		expect(labels(")/re/g")).toEqual([")", "regexp"]);
+		expect(labels("a/b/g")).toEqual(["name", "/", "name", "/", "name"]);
+	});
+
+	it("finishes an unmatched closing paren before the parser rejects it", () => {
+		// the token's context hook runs while tokenizing, so the root context is
+		// left expecting an expression and only then does the parser refuse it
+		expect(() => parse(")")).toThrow(/Unexpected token/);
+		expect(() => parse("}")).toThrow(/Unexpected token/);
 	});
 
 	it("keeps the delegated tokenizer cold paths reachable with the fast loop off", () => {
