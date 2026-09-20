@@ -12,3 +12,9 @@
 
 /* The name holds the same text the function does, and turns nothing on. */
 .scheme-light-dark { color: red }
+
+/* A name the author chose, not the pair this writes — the toggle still goes in. */
+.authored { color-scheme: light dark; --webpack-light: red }
+
+/* The call, spelled as the spec allows: a function name is case-insensitive. */
+.shouted { color: LIGHT-DARK(#abc, #123) }

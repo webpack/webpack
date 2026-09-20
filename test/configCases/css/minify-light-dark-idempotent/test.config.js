@@ -20,17 +20,22 @@ module.exports = {
 		// The block stating the scheme carries the toggle, and the pair is written
 		// there once.
 		expect(css).toContain("color-scheme:light dark;--own:1;--webpack-light:");
-		// Three: the block stating the scheme, the one that already carried the
-		// pair, and the defaulting rule — never a fourth from re-reading one.
-		expect(css.match(/--webpack-light:initial/g)).toHaveLength(3);
+		// Four: the two blocks stating the scheme, the one that already carried the
+		// pair, and the defaulting rule — never a fifth from re-reading one.
+		expect(css.match(/--webpack-light:initial/g)).toHaveLength(4);
 		// A class whose name holds the same text as the function turns nothing on.
 		expect(css).toContain(".scheme-light-dark{color:red}");
+		// An authored `--webpack-light` is the author's, so the toggle still goes in.
+		expect(css).toContain(
+			".authored{color-scheme:light dark;--webpack-light:red;"
+		);
+		// A shouted call is the same call.
+		expect(css).toContain(".shouted{color:var(--webpack-light,#abc)");
 
 		// A second pass over this output has nothing left to take.
-		const again = await cssMinify(
-			{ "bundle0.css": css },
-			{ environment: { browsers: ["chrome 100"] } }
-		);
+		const again = await cssMinify({ "bundle0.css": css }, undefined, {
+			environment: { browsers: ["chrome 100"] }
+		});
 		expect(again.code).toBe(css);
 	}
 };

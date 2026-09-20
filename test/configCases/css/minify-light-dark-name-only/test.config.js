@@ -16,5 +16,6 @@ module.exports = {
 		expect(css).not.toContain("--webpack-dark");
 		expect(css).not.toContain(":where(:root)");
 		expect(css).toContain(".scheme-light-dark{color-scheme:light dark}");
+		expect(css).toContain("my-light-dark(1px)");
 	}
 };
