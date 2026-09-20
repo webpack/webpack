@@ -6,6 +6,10 @@ it("should resolve a definition introduced by a loader's AST", () => {
 	expect(require("./ast")).toBe(42);
 });
 
+it("should resolve a definition a custom parse function introduces", () => {
+	expect(require("./parsed")).toBe(42);
+});
+
 it("should evaluate an async value reached through another definition", () => {
 	expect(require("./alias")).toBe(42);
 	expect(require("./generated")).toBe(42);

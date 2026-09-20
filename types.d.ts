@@ -19588,8 +19588,8 @@ declare class NormalModule extends Module {
 		loader: SyncHook<[AnyLoaderContext, NormalModule]>;
 		beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
 		/**
-		 * Async since 5.112.0, so a plugin can resolve values a module needs
-		 * before it is parsed.
+		 * Async since 5.112.0, so a tap can resolve values a module needs
+		 * before it is parsed. `tap` keeps working.
 		 * @since 5.59.0
 		 */
 		beforeParse: AsyncSeriesHook<[NormalModule]>;

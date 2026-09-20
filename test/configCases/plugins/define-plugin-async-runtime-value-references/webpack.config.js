@@ -8,12 +8,16 @@ let unparsedCalls = 0;
 module.exports = {
 	module: {
 		noParse: /unparsed\.js$/,
-		rules: [{ test: /ast\.js$/, use: require.resolve("./ast-loader") }]
+		rules: [
+			{ test: /ast\.js$/, use: require.resolve("./ast-loader") },
+			{ test: /parsed\.js$/, parser: { parse: require("./custom-parse") } }
+		]
 	},
 	plugins: [
 		new DefinePlugin({
 			ESCAPED_VALUE: DefinePlugin.runtimeValue(async () => 42),
 			AST_VALUE: DefinePlugin.runtimeValue(async () => 42),
+			PARSE_VALUE: DefinePlugin.runtimeValue(async () => 42),
 			ALIAS_VALUE: "INDIRECT_VALUE",
 			INDIRECT_VALUE: DefinePlugin.runtimeValue(async () => 42),
 			GENERATED_VALUE: DefinePlugin.runtimeValue(async () => "INDIRECT_VALUE"),
