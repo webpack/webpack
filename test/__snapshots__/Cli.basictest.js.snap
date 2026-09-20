@@ -4217,6 +4217,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-html-chunk-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Name the chunk an extracted \`<script>\`/\`<link>\` tag becomes, in place of the page and the tag's position. A string may carry \`[page]\` (the page's path, escaped for a name), \`[name]\` (the tag's own basename, empty for an inline body), \`[index]\` (the tag's position in the page) and \`[type]\`; a function is called with the same values and returns the name. A \`<!-- webpackChunkName: \\"...\\" -->\` comment before a tag wins over it, and either way the name is also the stem the chunk's file is emitted under.",
+        "multiple": false,
+        "path": "module.parser.html.chunkName",
+        "type": "string",
+      },
+    ],
+    "description": "Name the chunk an extracted \`<script>\`/\`<link>\` tag becomes, in place of the page and the tag's position. A string may carry \`[page]\` (the page's path, escaped for a name), \`[name]\` (the tag's own basename, empty for an inline body), \`[index]\` (the tag's position in the page) and \`[type]\`; a function is called with the same values and returns the name. A \`<!-- webpackChunkName: \\"...\\" -->\` comment before a tag wins over it, and either way the name is also the stem the chunk's file is emitted under.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-html-sources": Object {
     "configs": Array [
       Object {

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<title>Named by the option</title>
+<script type="module">
+import { push } from "./shared.js";
+push("first");
+</script>
+<script type="module">
+import { push } from "./shared.js";
+push("second");
+</script>
+<script async type="module">
+import { push } from "./shared.js";
+push("async");
+</script>
+<script type="module" src="./external.js"></script>

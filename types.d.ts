@@ -10600,6 +10600,34 @@ declare interface HtmlAttribute {
 	valueStart: number;
 	valueEnd: number;
 }
+declare interface HtmlChunkNameData {
+	/**
+	 * the page's path, escaped for use in a name
+	 */
+	page: string;
+
+	/**
+	 * the tag's own basename, empty for an inline body
+	 */
+	name: string;
+
+	/**
+	 * the tag's position in the page, across all kinds
+	 */
+	index: number;
+
+	/**
+	 * what the tag is extracted as
+	 */
+	type:
+		| "html"
+		| "script"
+		| "stylesheet"
+		| "prefetch"
+		| "preload"
+		| "script-module"
+		| "modulepreload";
+}
 declare interface HtmlEmittedContext {
 	outputName: string;
 }
@@ -10613,9 +10641,10 @@ declare interface HtmlEntryInfo {
 		| "stylesheet"
 		| "prefetch"
 		| "preload"
-		| "modulepreload"
-		| "script-module";
+		| "script-module"
+		| "modulepreload";
 	css?: boolean;
+	chunkName?: string;
 }
 type HtmlFaviconIcon =
 	| string
@@ -10827,6 +10856,12 @@ declare interface HtmlParserOptions {
 	 * @since 5.109.0
 	 */
 	as?: string;
+
+	/**
+	 * Name the chunk an extracted `<script>`/`<link>` tag becomes, in place of the page and the tag's position. A string may carry `[page]` (the page's path, escaped for a name), `[name]` (the tag's own basename, empty for an inline body), `[index]` (the tag's position in the page) and `[type]`; a function is called with the same values and returns the name. A `<!-- webpackChunkName: "..." -->` comment before a tag wins over it, and either way the name is also the stem the chunk's file is emitted under.
+	 * @since 5.112.0
+	 */
+	chunkName?: string | ((data: HtmlChunkNameData) => string);
 
 	/**
 	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
@@ -28401,8 +28436,8 @@ type SourceType =
 	| "stylesheet"
 	| "prefetch"
 	| "preload"
-	| "modulepreload"
 	| "script-module"
+	| "modulepreload"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
@@ -28416,8 +28451,8 @@ type SourceTypeOrResolver =
 	| "stylesheet"
 	| "prefetch"
 	| "preload"
-	| "modulepreload"
 	| "script-module"
+	| "modulepreload"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"

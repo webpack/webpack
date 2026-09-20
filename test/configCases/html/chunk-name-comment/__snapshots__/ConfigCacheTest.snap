@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html chunk-name-comment exported tests should name a chunk after the comment before its tag 1`] = `
+"<!DOCTYPE html>
+<title>Named by comments</title>
+<!-- webpackChunkName: \\"header\\" -->
+<script src=\\"header.mjs\\" type=\\"module\\"></script>
+
+<!-- webpackChunkName: \\"footer\\" -->
+<script src=\\"footer.mjs\\" type=\\"module\\"></script>
+<!-- webpackChunkName: \\"vendor\\" -->
+<script type=\\"module\\" src=\\"vendor.mjs\\"></script>
+"
+`;
