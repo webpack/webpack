@@ -28453,6 +28453,7 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 		nameStart(n?: NodeSyntax): number;
 		nameEnd(n?: NodeSyntax): number;
 		unescapedName(n?: NodeSyntax): string;
+		atKeyword(n?: NodeSyntax): string;
 		children(n?: NodeSyntax): ComponentValue[];
 		prelude(n?: NodeSyntax): ComponentValue[];
 		childCount(n?: NodeSyntax): number;
@@ -31600,6 +31601,7 @@ declare namespace exports {
 				nameStart(n?: NodeSyntax): number;
 				nameEnd(n?: NodeSyntax): number;
 				unescapedName(n?: NodeSyntax): string;
+				atKeyword(n?: NodeSyntax): string;
 				children(n?: NodeSyntax): ComponentValue[];
 				prelude(n?: NodeSyntax): ComponentValue[];
 				childCount(n?: NodeSyntax): number;
@@ -31813,6 +31815,7 @@ declare namespace exports {
 					nameStart(n?: NodeSyntax): number;
 					nameEnd(n?: NodeSyntax): number;
 					unescapedName(n?: NodeSyntax): string;
+					atKeyword(n?: NodeSyntax): string;
 					children(n?: NodeSyntax): ComponentValue[];
 					prelude(n?: NodeSyntax): ComponentValue[];
 					childCount(n?: NodeSyntax): number;
@@ -31863,6 +31866,7 @@ declare namespace exports {
 						nameStart(n?: NodeSyntax): number;
 						nameEnd(n?: NodeSyntax): number;
 						unescapedName(n?: NodeSyntax): string;
+						atKeyword(n?: NodeSyntax): string;
 						children(n?: NodeSyntax): ComponentValue[];
 						prelude(n?: NodeSyntax): ComponentValue[];
 						childCount(n?: NodeSyntax): number;

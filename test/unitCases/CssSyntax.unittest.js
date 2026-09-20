@@ -11383,3 +11383,109 @@ describe("CssSyntax minify — a fallback the target reads past", () => {
 		);
 	});
 });
+
+describe("SourceProcessor — an at-rule named with CSS escapes", () => {
+	/**
+	 * @param {string} sheet the stylesheet
+	 * @param {object=} options what the minifying print is asked for
+	 * @returns {string} the minified stylesheet
+	 */
+	const minify = (sheet, options) =>
+		new SourceProcessor().process(sheet, { mode: "minify", ...options }).code;
+
+	/**
+	 * The same at-rule name with its first letter written as a hexadecimal CSS
+	 * escape, which the syntax makes a legal spelling of that same name. Built
+	 * rather than written out so no fragment of a name stands in the source.
+	 * @param {string} name the at-rule name, the `@` excluded
+	 * @returns {string} the escaped spelling, the `@` included
+	 */
+	const escaped = (name) =>
+		`@\\${name.charCodeAt(0).toString(16)} ${name.slice(1)}`;
+
+	it("keeps a layer statement a later copy of it restates", () => {
+		// The place a layer is first named is its place in the cascade, so the
+		// earlier statement is the one that says where it sits.
+		const layer = `${escaped("layer")} a;`;
+		expect(minify(`@supports (color:red){${layer}s{p:v}${layer}}`)).toBe(
+			`@supports (color:red){${layer}s{p:v}${escaped("layer")} a}`
+		);
+	});
+
+	it("keeps an import a later copy of it restates", () => {
+		const rule = `${escaped("import")} url(x);`;
+		expect(minify(`@media print{${rule}t{p:v}${rule}}`)).toBe(
+			`@media print{${rule}t{p:v}${escaped("import")} url(x)}`
+		);
+	});
+
+	it("reads a keyframe selector under the rule it is written in", () => {
+		expect(minify(`${escaped("keyframes")} x{from{opacity:0}}`)).toBe(
+			`${escaped("keyframes")} x{0%{opacity:0}}`
+		);
+	});
+
+	it("reads a media feature in the prelude as a range", () => {
+		expect(minify(`${escaped("media")} (min-width:1px){.a{color:red}}`)).toBe(
+			`${escaped("media")} (width>=1px){.a{color:red}}`
+		);
+	});
+
+	it("drops a condition whose block is empty", () => {
+		expect(minify(`.a{color:red}${escaped("supports")} (color:red){}`)).toBe(
+			".a{color:red}"
+		);
+	});
+
+	it("leaves two anonymous layers as the two layers they are", () => {
+		// Each `@layer {` opens a layer of its own, so joining the pair would hand
+		// the blocks back to specificity.
+		const sheet = `${escaped("layer")} {.a{color:red}}${escaped("layer")} {.a{color:blue}}`;
+		expect(minify(sheet)).toBe(
+			`${escaped("layer")}{.a{color:red}}${escaped("layer")}{.a{color:blue}}`
+		);
+	});
+
+	it("keeps an empty rule a namespace after it would move up into", () => {
+		const sheet = `@media print{}${escaped("namespace")} url(x);`;
+		expect(minify(sheet)).toBe(sheet);
+	});
+
+	it("lets a rule before one gather a later rule's selectors", () => {
+		// The name is read rather than the backslash, so a sheet writing one keeps
+		// every transform a sheet without one gets.
+		expect(
+			minify(
+				`.a{color:red}.b{margin:0}.c{color:red}${escaped("media")} print{.z{color:blue}}`,
+				{ mergeDistantRules: true }
+			)
+		).toBe(
+			`.a,.c{color:red}.b{margin:0}${escaped("media")} print{.z{color:blue}}`
+		);
+	});
+
+	it("keeps a non-ASCII code point inside the name it is written in", () => {
+		// U+00A0 is an identifier code point, not CSS whitespace, so `@layer` and
+		// `@layer\u00a0x` are two names rather than one rule and its prelude.
+		const sheet = `@layer\u00a0x{.p{color:red}}@layer\u00a0x{.q{color:blue}}`;
+		expect(minify(sheet)).toBe(sheet);
+		expect(minify("@layer x{.p{color:red}}@layer x{.q{color:blue}}")).toBe(
+			"@layer x{.p{color:red}.q{color:blue}}"
+		);
+	});
+
+	it("reads a name no table names as the unknown rule it is", () => {
+		const sheet = `.a{color:red}${escaped("unknown-rule")} (color:red){}`;
+		expect(minify(sheet)).toBe(sheet);
+	});
+
+	// A run of hex escapes before a prelude the opener never matches: two
+	// alternatives that could each take `\\6d` repartitioned it on every
+	// backtrack, so 20 of them took minutes rather than the millisecond here.
+	it("reads a run of escapes the opener rejects without backtracking", () => {
+		const sheet = `@${"\\6d".repeat(20)} (x){.a{color:red}}`;
+		const started = Date.now();
+		expect(typeof minify(sheet)).toBe("string");
+		expect(Date.now() - started).toBeLessThan(2000);
+	});
+});
