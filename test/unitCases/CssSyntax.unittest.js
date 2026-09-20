@@ -8328,6 +8328,51 @@ describe("CssSyntax minify — vendor prefixes (joined rules)", () => {
 	});
 });
 
+describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
+	// Every at-rule whose block holds rules, since the seam is joined the same
+	// way for each and a list left unordered in one is left unordered in all.
+	const PRELUDES = [
+		"@media print",
+		"@supports (color:red)",
+		"@layer a",
+		"@container (width>0px)",
+		"@scope (.x)",
+		"@starting-style"
+	];
+
+	for (const prelude of PRELUDES) {
+		it(`orders the list two ${prelude} blocks join into`, () => {
+			expect(minifyFor(`${prelude}{.b{color:red}}${prelude}{.a{color:red}}`)).toBe(
+				`${prelude}{.a,.b{color:red}}`
+			);
+		});
+	}
+
+	it("orders a list a run of joins grows", () => {
+		expect(
+			minifyFor(
+				"@media print{.d{color:red}}@media print{.c{color:red}}@media print{.b{color:red}}@media print{.a{color:red}}"
+			)
+		).toBe("@media print{.a,.b,.c,.d{color:red}}");
+	});
+
+	it("writes a seam a second pass would leave alone", () => {
+		const once = minifyFor(
+			"@layer u{@starting-style{.modal:target{opacity:0%}}@starting-style{.modal-toggle:checked + .modal{opacity:0%}}}"
+		);
+		expect(once).toBe(
+			"@layer u{@starting-style{.modal-toggle:checked+.modal,.modal:target{opacity:0}}}"
+		);
+		expect(minifyFor(once)).toBe(once);
+	});
+
+	it("leaves a seam that joins nothing as one rule", () => {
+		expect(minifyFor("@media print{.b{color:red}}@media print{.a{color:blue}}")).toBe(
+			"@media print{.b{color:red}.a{color:blue}}"
+		);
+	});
+});
+
 describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 	it("drops a prefixed at-rule its unprefixed twin follows", () => {
 		expect(
