@@ -11175,6 +11175,57 @@ describe("SourceProcessor — mergeDistantRules", () => {
 			expect(out).toContain(declaration);
 		}
 	});
+
+	it("joins an at-rule with a later one stating the same condition", () => {
+		expect(
+			minify(
+				"@media (min-width:1px){.a{color:red}}.b{margin:0}@media (min-width:1px){.c{color:blue}}",
+				true
+			)
+		).toBe("@media (width>=1px){.a{color:red}.c{color:blue}}.b{margin:0}");
+	});
+
+	/**
+	 * The same at-rule name with its first letter written as a hexadecimal CSS
+	 * escape, which the syntax makes a legal spelling of that same name.
+	 * @param {string} name the at-rule name, `@` excluded
+	 * @returns {string} the escaped spelling, `@` included
+	 */
+	const escapedName = (name) =>
+		`@\\${name.charCodeAt(0).toString(16)} ${name.slice(1)}`;
+
+	it("leaves an at-rule written under an escaped name as it stands", () => {
+		// The merge is keyed by the name the parser read, and an escaped spelling
+		// is not that name, so the block carries no entries to join.
+		const media = escapedName("media");
+		const sheet = `${media} (min-width:1px){.a{color:red}}.b{margin:0}${media} (min-width:1px){.c{color:blue}}`;
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("leaves `@keyframes` alone however it is spelled", () => {
+		// A later copy redeclares rather than adds to, so the two stay two blocks
+		// — `from` becoming `0%` is the keyframe selector's own shortening.
+		expect(
+			minify(
+				"@keyframes k{to{opacity:1}}.b{margin:0}@keyframes k{from{opacity:0}}",
+				true
+			)
+		).toBe("@keyframes k{to{opacity:1}}.b{margin:0}@keyframes k{0%{opacity:0}}");
+		const frames = escapedName("keyframes");
+		const escaped = `${frames} k{to{opacity:1}}.b{margin:0}${frames} k{from{opacity:0}}`;
+		expect(minify(escaped, true)).toBe(escaped);
+	});
+
+	it("leaves `@layer` alone however it is spelled", () => {
+		const layer = escapedName("layer");
+		for (const sheet of [
+			"@layer L{.a{color:red}}.b{margin:0}@layer L{.c{color:blue}}",
+			"@layer{.a{color:red}}.b{margin:0}@layer{.c{color:blue}}",
+			`${layer} L{.a{color:red}}.b{margin:0}${layer} L{.c{color:blue}}`
+		]) {
+			expect(minify(sheet, true)).toBe(sheet);
+		}
+	});
 });
 
 
