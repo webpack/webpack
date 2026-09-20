@@ -159,17 +159,19 @@ console.log("bundled + inlined script, covered by a CSP hash");
 
 ```
 asset index.html 1.59 KiB [emitted] (auxiliary name: index)
+asset app.js 319 bytes [emitted] (name: __html_6d047296_1)
+asset styles.css 157 bytes [emitted] (name: __html_6d047296_0)
 Entrypoint index (1.59 KiB) = 1 auxiliary asset
-Entrypoint __html_6d047296_1 =
-Entrypoint __html_6d047296_0 =
-chunk (runtime: __html_6d047296_0) (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
+Entrypoint __html_6d047296_1 319 bytes = app.js
+Entrypoint __html_6d047296_0 157 bytes = styles.css
+chunk (runtime: __html_6d047296_0) styles.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 55 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./styles.css __html_6d047296_0
-chunk (runtime: __html_6d047296_1) (__html_6d047296_1) 117 bytes [entry] [rendered]
+chunk (runtime: __html_6d047296_1) app.js (__html_6d047296_1) 117 bytes [entry] [rendered]
   > ./app.js __html_6d047296_1
   ./src/app.js 117 bytes [built] [code generated]
     [used exports unknown]
@@ -188,10 +190,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset index.html 570 bytes [emitted] [minimized] (auxiliary name: index)
-asset index.css 40 bytes [emitted] [minimized] (name: __html_6d047296_0)
+asset styles.css 40 bytes [emitted] [minimized] (name: __html_6d047296_0)
 Entrypoint index (570 bytes) = 1 auxiliary asset
 Entrypoint __html_6d047296_1 =
-Entrypoint __html_6d047296_0 40 bytes = index.css
+Entrypoint __html_6d047296_0 40 bytes = styles.css
 chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 47 bytes [dependent] 1 module
@@ -199,7 +201,7 @@ chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: __html_6d047296_0) index.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_0) styles.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 55 bytes [built] [code generated]

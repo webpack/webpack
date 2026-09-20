@@ -189,7 +189,7 @@ Custom Eta tags (`{{= }}`) and unescaped output, selected by the rule.
 						<li>Chunks</li>
 						<li>Dependencies</li>
 					</ul>
-		<script src="index.js"></script>
+		<script src="app.js"></script>
 		<footer>Built with webpack — 2025</footer>
 	</body>
 </html>
@@ -217,13 +217,13 @@ Custom Eta tags (`{{= }}`) and unescaped output, selected by the rule.
 ```
 assets by chunk 14.9 KiB (auxiliary name: index)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: index)
-  asset index.html 395 bytes [emitted] (auxiliary name: index)
-asset index.js 445 bytes [emitted] (name: __html_6d047296_0)
+  asset index.html 393 bytes [emitted] (auxiliary name: index)
+asset app.js 445 bytes [emitted] (name: __html_6d047296_0)
 asset special.html 218 bytes [emitted] (auxiliary name: special)
 Entrypoint index (14.9 KiB) = 2 auxiliary assets
 Entrypoint special (218 bytes) = 1 auxiliary asset
-Entrypoint __html_6d047296_0 445 bytes = index.js
-chunk (runtime: __html_6d047296_0) index.js (__html_6d047296_0) 243 bytes [entry] [rendered]
+Entrypoint __html_6d047296_0 445 bytes = app.js
+chunk (runtime: __html_6d047296_0) app.js (__html_6d047296_0) 243 bytes [entry] [rendered]
   > ./app.js __html_6d047296_0
   ./src/app.js 243 bytes [built] [code generated]
     [used exports unknown]
@@ -249,12 +249,12 @@ webpack X.X.X compiled successfully
 ```
 assets by chunk 14.9 KiB (auxiliary name: index)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: index)
-  asset index.html 366 bytes [emitted] [minimized] (auxiliary name: index)
+  asset index.html 364 bytes [emitted] [minimized] (auxiliary name: index)
 asset special.html 199 bytes [emitted] [minimized] (auxiliary name: special)
-asset index.js 46 bytes [emitted] [minimized] (name: __html_6d047296_0)
+asset app.js 46 bytes [emitted] [minimized] (name: __html_6d047296_0)
 Entrypoint index (14.9 KiB) = 2 auxiliary assets
 Entrypoint special (199 bytes) = 1 auxiliary asset
-Entrypoint __html_6d047296_0 46 bytes = index.js
+Entrypoint __html_6d047296_0 46 bytes = app.js
 chunk (runtime: index) (index) 14.6 KiB (asset) 42 bytes (asset-url) 381 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 1 module
@@ -262,7 +262,7 @@ chunk (runtime: index) (index) 14.6 KiB (asset) 42 bytes (asset-url) 381 bytes (
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: __html_6d047296_0) index.js (__html_6d047296_0) 243 bytes [entry] [rendered]
+chunk (runtime: __html_6d047296_0) app.js (__html_6d047296_0) 243 bytes [entry] [rendered]
   > ./app.js __html_6d047296_0
   ./src/app.js 243 bytes [built] [code generated]
     [no exports used]

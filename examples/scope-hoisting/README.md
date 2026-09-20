@@ -199,10 +199,9 @@ var x = "x";
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -489,7 +488,7 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 10.6 KiB [emitted] (name: main)
+asset output.js 10.5 KiB [emitted] (name: main)
 asset lazy_js.output.js 2.35 KiB [emitted]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
@@ -498,9 +497,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.35 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.35 KiB 8 modules
+  runtime modules 5.29 KiB 8 modules
   dependent modules 100 bytes [dependent] 1 module
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]
@@ -512,7 +511,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.08 KiB [emitted] [minimized] (name: main)
+asset output.js 2.07 KiB [emitted] [minimized] (name: main)
 asset lazy_js.output.js 265 bytes [emitted] [minimized]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
@@ -521,9 +520,9 @@ chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
     [exports: c, d, x, y]
     [all exports used]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.35 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.29 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.35 KiB 8 modules
+  runtime modules 5.29 KiB 8 modules
   dependent modules 100 bytes [dependent] 2 modules
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]

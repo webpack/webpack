@@ -143,7 +143,7 @@ The emitted page, with the modern `type="module"` entry tag plus the injected
 		<h1>Differential serving</h1>
 		<!-- Modern browsers load this as an ES module; the classic build is
 		injected as a `<script nomodule>` fallback by the plugin below. -->
-		<script type="module" src="page.modern.js"></script><script nomodule defer src="app.legacy.js"></script>
+		<script type="module" src="app.modern.js"></script><script nomodule defer src="app.legacy.js"></script>
 	</body>
 </html>
 ```
@@ -154,11 +154,11 @@ The emitted page, with the modern `type="module"` entry tag plus the injected
 
 ```
 modern:
-  asset index.html 746 bytes [emitted] (auxiliary name: page)
-  asset page.modern.js 449 bytes [emitted] [javascript module] (name: __html_6d047296_0)
-  Entrypoint page (746 bytes) = 1 auxiliary asset
-  Entrypoint __html_6d047296_0 449 bytes = page.modern.js
-  chunk (runtime: __html_6d047296_0) page.modern.js (__html_6d047296_0) 300 bytes [entry] [rendered]
+  asset index.html 745 bytes [emitted] (auxiliary name: page)
+  asset app.modern.js 449 bytes [emitted] [javascript module] (name: __html_6d047296_0)
+  Entrypoint page (745 bytes) = 1 auxiliary asset
+  Entrypoint __html_6d047296_0 449 bytes = app.modern.js
+  chunk (runtime: __html_6d047296_0) app.modern.js (__html_6d047296_0) 300 bytes [entry] [rendered]
     > ./app.js __html_6d047296_0
     ./src/app.js 300 bytes [built] [code generated]
       [used exports unknown]
@@ -185,11 +185,11 @@ legacy:
 
 ```
 modern:
-  asset index.html 585 bytes [emitted] [minimized] (auxiliary name: page)
-  asset page.modern.js 90 bytes [emitted] [javascript module] [minimized] (name: __html_6d047296_0)
-  Entrypoint page (585 bytes) = 1 auxiliary asset
-  Entrypoint __html_6d047296_0 90 bytes = page.modern.js
-  chunk (runtime: __html_6d047296_0) page.modern.js (__html_6d047296_0) 300 bytes [entry] [rendered]
+  asset index.html 584 bytes [emitted] [minimized] (auxiliary name: page)
+  asset app.modern.js 90 bytes [emitted] [javascript module] [minimized] (name: __html_6d047296_0)
+  Entrypoint page (584 bytes) = 1 auxiliary asset
+  Entrypoint __html_6d047296_0 90 bytes = app.modern.js
+  chunk (runtime: __html_6d047296_0) app.modern.js (__html_6d047296_0) 300 bytes [entry] [rendered]
     > ./app.js __html_6d047296_0
     ./src/app.js 300 bytes [built] [code generated]
       [no exports used]
