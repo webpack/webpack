@@ -31,12 +31,19 @@ module.exports = {
 	target: ["web", "es2022"],
 	entry: {
 		page: "./page.html",
-		bad: "./bad.html"
+		bad: "./bad.html",
+		linked: "./linked.html",
+		collide: "./collide.html"
 	},
 	output: { module: true, htmlFilename: "[name].html" },
 	module: {
-		// A tag's own comment wins over this, so the pages below show both.
-		parser: { html: { chunkName: "option-[index]" } }
+		parser: {
+			html: {
+				// A tag's own comment wins over this, so the pages below show both.
+				chunkName: "option-[index]",
+				sources: ["...", { tag: "a", attribute: "href", type: "html" }]
+			}
+		}
 	},
 	optimization: { chunkIds: "named" },
 	experiments: { html: true },

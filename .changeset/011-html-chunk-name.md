@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `output.html.chunkName` and a `webpackChunkName` comment for extracted tags.
+Add `module.parser.html.chunkName` and a `webpackChunkName` comment for tags.

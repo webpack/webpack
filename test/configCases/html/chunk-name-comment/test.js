@@ -51,3 +51,23 @@ it("should warn and fall back when the comment names nothing usable", () => {
 	expect(scriptUrls(html)).toEqual(["option-0.mjs"]);
 	expect(read("option-0.mjs")).toContain("unnamed");
 });
+
+it("should name a linked page's own file too", () => {
+	const html = read("linked.html");
+	// The page is emitted under the name the link asked for, and the link is
+	// rewritten to it rather than to `other.html`.
+	expect(html).toContain('href="docs.html"');
+	expect(fs.existsSync(path.resolve(__dirname, "other.html"))).toBe(false);
+	expect(read("docs.html")).toContain("<title>Linked page</title>");
+});
+
+it("should keep names apart when the page asks for one twice", () => {
+	const urls = scriptUrls(read("collide.html"));
+	// The third tag asks for a taken name, and the position it falls back to
+	// is taken by the first, so it counts on from there.
+	expect(urls).toEqual(["dup-2.mjs", "dup.mjs", "dup-3.mjs"]);
+	expect(new Set(urls).size).toBe(3);
+	expect(read("dup-2.mjs")).toContain("first-dup");
+	expect(read("dup.mjs")).toContain("second-dup");
+	expect(read("dup-3.mjs")).toContain("third-dup");
+});
