@@ -1,0 +1,14 @@
+/* The lowering writes a pair of custom properties and a rule defaulting them.
+   Its own output has to be what a second pass would write. */
+.a { color: light-dark(#fff, #000) }
+
+/* A block that states the scheme carries the toggle instead. */
+:root { color-scheme: light dark; --own: 1 }
+
+/* One that already carries the pair is one a lowering pass wrote, so nothing
+   is added to it a second time. */
+.scheme-written { color-scheme: light dark; --webpack-light: initial; --webpack-dark: }
+.written { color: light-dark(#eee, #111) }
+
+/* The name holds the same text the function does, and turns nothing on. */
+.scheme-light-dark { color: red }

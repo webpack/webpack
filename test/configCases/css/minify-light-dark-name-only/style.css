@@ -1,0 +1,4 @@
+/* The class name holds the same text the function does, and a name is not a
+   call, so the lowering has nothing to write here. */
+.scheme-light-dark { color-scheme: light dark }
+.a { color: red }
