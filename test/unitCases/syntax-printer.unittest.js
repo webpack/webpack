@@ -2,7 +2,7 @@
 
 // cspell:ignore fnames
 
-const { load } = require("../../lib/javascript/syntax-printer");
+const { load } = require("../../lib/javascript/syntax").printer;
 
 /**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
@@ -86,7 +86,7 @@ const CASES = [
 	]
 ];
 
-describe("syntax-mangle", () => {
+describe("syntax-printer", () => {
 	it("should install onto terser", async () => {
 		const terser = await load();
 		expect(terser.phases).toContain("mangle");

@@ -757,6 +757,7 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
+declare const BLOCK_DECLARATIONS: unique symbol;
 declare interface BackendApi {
 	dispose: (callback: (err?: null | Error) => void) => void;
 	module: (module: Module) => ModuleResult;
@@ -3321,6 +3322,7 @@ type CodeValue =
 	  >[];
 type CodeValuePrimitive =
 	undefined | null | string | number | bigint | boolean | Function | RegExp;
+type CollectedComment = CommentImport & { start: number; end: number };
 declare interface Colors {
 	reset: (value?: any) => string;
 	bold: (value?: any) => string;
@@ -10171,6 +10173,474 @@ declare interface GotHandler<T> {
 }
 
 /**
+ * The productions `install` copies onto the parser's prototype. It extends
+ * `Parser` so each one reads the cursor it is handed through `this`, the way
+ * acorn declares them.
+ */
+declare abstract class Grammar extends ParserParser {
+	eat(type: TokenType): boolean;
+	isContextual(name: string): boolean;
+	eatContextual(name: string): boolean;
+
+	/**
+	 * Turn the host's stack overflow into a parse error, since a deeply nested
+	 * expression is an input the caller can act on rather than a crash.
+	 */
+	catchStackOverflow<T>(f: () => T): T;
+	expectContextual(name: string): void;
+	canInsertSemicolon(): boolean;
+	insertSemicolon(): undefined | boolean;
+	semicolon(): void;
+	afterTrailingComma(
+		tokType: TokenType,
+		notNext?: boolean
+	): undefined | boolean;
+	expect(type: TokenType): void;
+	checkPatternErrors(refDestructuringErrors?: any, isAssign?: boolean): void;
+	checkExpressionErrors(
+		refDestructuringErrors?: any,
+		andThrow?: boolean
+	): undefined | boolean;
+	checkYieldAwaitInDefaultParams(): void;
+	isSimpleAssignTarget(expr?: any): boolean;
+
+	/**
+	 * Read statements until the end of input and wrap them in a `Program`.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/statement.js
+	 */
+	parseTopLevel(node?: any): any;
+
+	/**
+	 * Whether a `let` here opens a lexical declaration rather than naming a
+	 * variable, which needs a look-ahead past the keyword.
+	 */
+	isLet(context?: null | string): boolean;
+
+	/**
+	 * Whether `async` here heads a function declaration, which no line break may
+	 * separate from the `function` keyword.
+	 */
+	isAsyncFunction(): boolean;
+
+	/**
+	 * Whether `using` (or `await using`) here heads a declaration rather than
+	 * naming a variable.
+	 */
+	isUsingKeyword(isAwaitUsing: boolean, isFor?: boolean): boolean;
+	isAwaitUsing(isFor?: boolean): boolean;
+	isUsing(isFor?: boolean): boolean;
+
+	/**
+	 * Read one statement. A statement head that is only a keyword by position —
+	 * `let`, `async`, `using` — is settled by the probes above.
+	 */
+	parseStatement(
+		context?: null | string,
+		topLevel?: boolean,
+		exports?: any
+	): any;
+	parseBreakContinueStatement(node: any, keyword: string): any;
+	parseDebuggerStatement(node?: any): any;
+	parseDoStatement(node?: any): any;
+
+	/**
+	 * Read a `for` head, which is only known to be plain, `in` or `of` once its
+	 * init part has been parsed with `in` held back as an operator.
+	 */
+	parseForStatement(node?: any): any;
+	parseForAfterInit(node: any, init: any, awaitAt: number): any;
+	parseFunctionStatement(
+		node: any,
+		isAsync: boolean,
+		declarationPosition: boolean
+	): any;
+	parseIfStatement(node?: any): any;
+	parseReturnStatement(node?: any): any;
+	parseSwitchStatement(node?: any): any;
+	parseThrowStatement(node?: any): any;
+	parseCatchClauseParam(): any;
+	parseTryStatement(node?: any): any;
+	parseVarStatement(
+		node: any,
+		kind: string,
+		allowMissingInitializer?: boolean
+	): any;
+	parseWhileStatement(node?: any): any;
+	parseWithStatement(node?: any): any;
+	parseEmptyStatement(node?: any): any;
+	parseLabeledStatement(
+		node?: any,
+		maybeName?: any,
+		expr?: any,
+		context?: null | string
+	): any;
+	parseExpressionStatement(node?: any, expr?: any): any;
+	parseBlock(
+		createNewLexicalScope?: boolean,
+		node?: any,
+		exitStrict?: boolean
+	): any;
+	parseFor(node?: any, init?: any): any;
+	parseForIn(node?: any, init?: any): any;
+	parseVar(
+		node: any,
+		isFor: boolean,
+		kind: string,
+		allowMissingInitializer?: boolean
+	): any;
+	parseVarId(decl: any, kind: string): void;
+	parseFunction(
+		node: any,
+		statement: number,
+		allowExpressionBody?: boolean,
+		isAsync?: boolean,
+		forInit?: string | boolean
+	): any;
+	parseFunctionParams(node?: any): void;
+	parseClass(node?: any, isStatement?: string | boolean): any;
+	parseClassElement(constructorAllowsSuper: boolean): any;
+	isClassElementNameStart(): boolean;
+	parseClassElementName(element?: any): void;
+	parseClassMethod(
+		method: any,
+		isGenerator: boolean,
+		isAsync: boolean,
+		allowsDirectSuper: boolean
+	): any;
+	parseClassField(field?: any): any;
+	parseClassStaticBlock(node?: any): any;
+	parseClassId(node?: any, isStatement?: string | boolean): void;
+	parseClassSuper(node?: any): void;
+	enterClassBody(): any;
+	exitClassBody(): void;
+	parseExportAllDeclaration(node?: any, exports?: any): any;
+	parseExport(node?: any, exports?: any): any;
+	parseExportDeclaration(node?: any): any;
+	parseExportDefaultDeclaration(): any;
+	checkExport(exports: any, name: any, pos: number): void;
+	checkPatternExport(exports?: any, pat?: any): void;
+	checkVariableExport(exports: any, declarations: any[]): void;
+	shouldParseExportStatement(): boolean;
+	parseExportSpecifier(exports?: any): any;
+	parseExportSpecifiers(exports?: any): any[];
+	parseImport(node?: any): any;
+	parseImportSpecifier(): any;
+	parseImportDefaultSpecifier(): any;
+	parseImportNamespaceSpecifier(): any;
+	parseImportSpecifiers(): any[];
+	parseWithClause(): any[];
+	parseImportAttribute(): any;
+	parseModuleExportName(): any;
+	adaptDirectivePrologue(statements: any[]): void;
+	isDirectiveCandidate(statement: NodeLike & { expression?: any }): boolean;
+
+	/**
+	 * Rewrite an expression as the binding pattern it turns out to be, which is
+	 * only known once the `=` or `of` after it has been read.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/lval.js
+	 */
+	toAssignable(
+		node?: any,
+		isBinding?: boolean,
+		refDestructuringErrors?: any
+	): any;
+	toAssignableList(exprList: any[], isBinding?: boolean): any[];
+	parseSpread(refDestructuringErrors?: any): any;
+	parseRestBinding(): any;
+	parseBindingAtom(): any;
+	parseBindingList(
+		close: TokenType,
+		allowEmpty: boolean,
+		allowTrailingComma: boolean,
+		allowModifiers?: boolean
+	): any[];
+	parseAssignableListItem(allowModifiers?: boolean): any;
+	parseBindingListItem(param?: any): any;
+	parseMaybeDefault(
+		startPos: number,
+		startLoc?: null | PositionLike,
+		left?: any
+	): any;
+
+	/**
+	 * Check a target that may only be an identifier or member expression, and
+	 * record the binding it introduces.
+	 */
+	checkLValSimple(expr?: any, bindingType?: number, checkClashes?: any): void;
+	checkLValPattern(expr?: any, bindingType?: number, checkClashes?: any): void;
+	checkLValInnerPattern(
+		expr?: any,
+		bindingType?: number,
+		checkClashes?: any
+	): void;
+	curContext(): TokContextLike;
+
+	/**
+	 * Whether a `{` here opens a block rather than an object literal, which the
+	 * token before it decides.
+	 */
+	braceIsBlock(prevType: TokenType): boolean;
+	inGeneratorContext(): boolean;
+	updateContext(prevType: TokenType): void;
+	overrideContext(tokenCtx: TokContextLike): void;
+	exitScope(): void;
+
+	/**
+	 * Record a name in the scope its binding belongs to, and report a name that
+	 * was already declared there.
+	 */
+	declareName(name: string, bindingType: number, pos: number): void;
+	checkLocalExport(id?: any): void;
+	startNode(): any;
+	startNodeAt(pos: number, loc?: null | PositionLike): any;
+	finishNode(node: any, type: string): any;
+	finishNodeAt(
+		node: any,
+		type: string,
+		pos: number,
+		loc?: null | PositionLike
+	): any;
+	copyNode(node?: any): any;
+
+	/**
+	 * Report a property name that may not be repeated: a getter or setter that
+	 * clashes, and under ES5 a repeated `init` in strict mode.
+	 */
+	checkPropClash(
+		prop?: any,
+		propHash?: any,
+		refDestructuringErrors?: any
+	): void;
+	parseMaybeAssign(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any,
+		afterLeftParse?: any
+	): any;
+	parseMaybeConditional(
+		forInit?: string | boolean,
+		refDestructuringErrors?: any
+	): any;
+	parseExprOps(forInit?: string | boolean, refDestructuringErrors?: any): any;
+
+	/**
+	 * Read binary operators by precedence climbing, stopping where an operator
+	 * binds less tightly than the caller is parsing.
+	 */
+	parseExprOp(
+		left: any,
+		leftStartPos: number,
+		leftStartLoc: undefined | null | PositionLike,
+		minPrec: number,
+		forInit?: string | boolean
+	): any;
+	buildBinary(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		left: any,
+		right: any,
+		op: any,
+		logical: boolean
+	): any;
+	parseMaybeUnary(
+		refDestructuringErrors?: any,
+		sawUnary?: boolean,
+		incDec?: boolean,
+		forInit?: string | boolean
+	): any;
+	parseExprSubscripts(
+		refDestructuringErrors?: any,
+		forInit?: string | boolean
+	): any;
+	parseSubscripts(
+		baseExpr: any,
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		noCalls: boolean,
+		forInit?: string | boolean
+	): any;
+	shouldParseAsyncArrow(): boolean;
+	parseSubscriptAsyncArrow(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		exprList: any[],
+		forInit?: string | boolean
+	): any;
+	parseSubscript(
+		baseExpr: any,
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		noCalls: boolean,
+		maybeAsyncArrow: boolean,
+		optionalChained: boolean,
+		forInit?: string | boolean
+	): any;
+
+	/**
+	 * Read an expression that no operator binds into: a token that is an
+	 * expression on its own, or one that punctuation encloses.
+	 */
+	parseExprAtom(
+		refDestructuringErrors?: any,
+		forInit?: string | boolean,
+		forNew?: boolean
+	): any;
+	parseExprAtomDefault(): never;
+	parseExprImport(forNew?: boolean): any;
+	parseDynamicImport(node?: any): any;
+	parseImportMeta(node?: any): any;
+	parseLiteral(value?: any): any;
+	parseParenExpression(): any;
+	shouldParseArrow(exprList: any[]): boolean;
+
+	/**
+	 * Read a parenthesized expression, which is only known to be an arrow's
+	 * parameter list once the `=>` after the closing paren is seen.
+	 */
+	parseParenAndDistinguishExpression(
+		canBeArrow: boolean,
+		forInit?: string | boolean
+	): any;
+	parseParenItem(item?: any): any;
+	parseParenArrowList(
+		startPos: number,
+		startLoc: undefined | null | PositionLike,
+		exprList: any[],
+		forInit?: string | boolean
+	): any;
+
+	/**
+	 * Read a `new` expression, whose callee takes subscripts but not a call —
+	 * the argument list belongs to the `new` itself.
+	 */
+	parseNew(): any;
+	parseTemplateElement(opts: { isTagged: boolean }): any;
+	parseTemplate(opts?: { isTagged?: boolean }): any;
+	isAsyncProp(prop?: any): boolean;
+	parseObj(isPattern: boolean, refDestructuringErrors?: any): any;
+	parseProperty(isPattern: boolean, refDestructuringErrors?: any): any;
+	parseGetterSetter(prop?: any): void;
+	parsePropertyValue(
+		prop: any,
+		isPattern: boolean,
+		isGenerator: undefined | boolean,
+		isAsync: undefined | boolean,
+		startPos: undefined | number,
+		startLoc: undefined | null | PositionLike,
+		refDestructuringErrors: any,
+		containsEsc: boolean
+	): void;
+	parsePropertyName(prop?: any): any;
+	initFunction(node?: any): void;
+	parseMethod(
+		isGenerator?: boolean,
+		isAsync?: boolean,
+		allowDirectSuper?: boolean
+	): any;
+	parseArrowExpression(
+		node: any,
+		params: any[],
+		isAsync: boolean,
+		forInit?: string | boolean
+	): any;
+	parseFunctionBody(
+		node?: any,
+		isArrowFunction?: boolean,
+		isMethod?: boolean,
+		forInit?: string | boolean
+	): void;
+	isSimpleParamList(params: any[]): boolean;
+	checkParams(node: any, allowDuplicates: boolean): void;
+	parseExprList(
+		close: TokenType,
+		allowTrailingComma: boolean,
+		allowEmpty: boolean,
+		refDestructuringErrors?: any
+	): any[];
+
+	/**
+	 * Report a name that the surrounding code may not use as an identifier.
+	 */
+	checkUnreserved(ref?: any): void;
+	parseIdent(liberal?: boolean): any;
+	parseIdentNode(): any;
+	parsePrivateIdent(): any;
+	parseYield(forInit?: string | boolean): any;
+	parseAwait(forInit?: string | boolean): any;
+
+	/**
+	 * Move past the current token.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/tokenize.js
+	 */
+	next(ignoreEscapeSequenceInKeyword?: boolean): void;
+	nextToken(): void;
+	readToken(code: number): void;
+	fullCharCodeAt(pos: number): number;
+	fullCharCodeAtPos(): number;
+	skipBlockComment(): void;
+	skipSpace(): void;
+	finishToken(type: TokenType, value?: any): void;
+	readToken_dot(): void;
+	readToken_slash(): void;
+	readToken_mult_modulo_exp(code: number): void;
+	readToken_pipe_amp(code: number): void;
+	readToken_caret(): void;
+	readToken_plus_min(code: number): void;
+	readToken_lt_gt(code: number): void;
+	readToken_eq_excl(code: number): void;
+	readToken_question(): void;
+	readToken_numberSign(): void;
+	getTokenFromCode(code: number): void;
+	finishOp(type: TokenType, size: number): void;
+
+	/**
+	 * Check a regexp literal's flags.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/regexp.js
+	 */
+	validateRegExpFlags(state: RegExpValidationState): void;
+
+	/**
+	 * Check a regexp literal's pattern, re-reading it once a group name shows
+	 * that the named-capture goal symbol was the right one.
+	 */
+	validateRegExpPattern(state: RegExpValidationState): void;
+	readRegexp(): void;
+
+	/**
+	 * Read digits in the given radix, or `null` where none were there or the
+	 * count did not match what an escape asked for.
+	 */
+	readInt(
+		radix: number,
+		len?: number,
+		maybeLegacyOctalNumericLiteral?: boolean
+	): null | number;
+	readRadixNumber(radix: number): void;
+	readNumber(startsWithDot: boolean): void;
+	readCodePoint(): number;
+	readString(quote: number): void;
+	tryReadTemplateToken(): void;
+	inTemplateElement?: boolean;
+
+	/**
+	 * Report a bad escape, unless it sits in a tagged template, where the raw
+	 * text is still well-formed and only the cooked value is lost.
+	 */
+	invalidStringToken(position: number, message: string): void;
+	readTmplToken(): void;
+	readInvalidTemplateToken(): void;
+	readEscapedChar(inTemplate: boolean): string;
+	readHexChar(len: number): number;
+
+	/**
+	 * Read an identifier's text, recording in `containsEsc` whether any of it
+	 * was written as an escape — which stops it reading as a keyword.
+	 */
+	readWord1(): string;
+	readWord(): void;
+	[Symbol.iterator](): Iterator<TokenParser>;
+}
+
+/**
  * Returns grouped items.
  */
 declare interface GroupConfig<T, R> {
@@ -10233,6 +10703,7 @@ declare interface HMRJavascriptParserHooks {
 	>;
 	hotAcceptWithoutCallback: SyncBailHook<[CallExpression, string[]], void>;
 }
+declare const HOISTED_DECLARATIONS: unique symbol;
 declare interface HandleModuleCreationOptions {
 	factory: ModuleFactory;
 	dependencies: Dependency[];
@@ -16165,9 +16636,10 @@ declare interface KnownUnsafeCacheData {
 	 * resolve options
 	 */
 	resolveOptions?: ResolveOptions;
-	parserOptions?: ParserOptions;
+	parserOptions?: ParserOptionsNormalModule;
 	generatorOptions?: GeneratorOptions;
 }
+declare const LEGACY_ASSERT_ATTRIBUTES: unique symbol;
 declare interface LStatFs {
 	(
 		path: PathLikeFs,
@@ -16991,6 +17463,7 @@ type LogTypeEnum =
 	| "status";
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
+declare const MODULE_DECLARATIONS: unique symbol;
 declare interface MainRenderContext {
 	/**
 	 * the chunk
@@ -19515,7 +19988,7 @@ declare class NormalModule extends Module {
 	rawRequest: string;
 	binary: boolean;
 	parser?: ParserClass;
-	parserOptions?: ParserOptions;
+	parserOptions?: ParserOptionsNormalModule;
 	generator?: Generator;
 	generatorOptions?: GeneratorOptions;
 	resource: string;
@@ -19727,7 +20200,7 @@ declare interface NormalModuleCreateData<T extends string = string> {
 		Record<"css/module", CssModuleParserOptions> &
 		Record<"css/global", CssModuleParserOptions> &
 		Record<"html", EmptyParserOptions> &
-		Record<string, ParserOptions>)[T];
+		Record<string, ParserOptionsNormalModule>)[T];
 
 	/**
 	 * the generator used
@@ -19855,7 +20328,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssModuleParserOptions], CssParser>
 				> &
 				Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> &
-				Record<string, SyncBailHook<[ParserOptions], ParserClass>>
+				Record<string, SyncBailHook<[ParserOptionsNormalModule], ParserClass>>
 		>;
 		parser: TypedHookMap<
 			Record<
@@ -19913,7 +20386,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					SyncBailHook<[CssParser, CssModuleParserOptions], void>
 				> &
 				Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> &
-				Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>
+				Record<
+					string,
+					SyncBailHook<[ParserClass, ParserOptionsNormalModule], void>
+				>
 		>;
 		createGenerator: TypedHookMap<
 			Record<
@@ -20045,7 +20521,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<ParserOptions, ParserClass>>;
+	parserCache: Map<string, WeakMap<ParserOptionsNormalModule, ParserClass>>;
 	generatorCache: Map<string, WeakMap<GeneratorOptions, Generator>>;
 	cleanupForCache(): void;
 
@@ -20082,7 +20558,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptions
+		parserOptions?: ParserOptionsNormalModule
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -20106,7 +20582,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	createParser<T extends string>(
 		type: T,
-		parserOptions?: ParserOptions
+		parserOptions?: ParserOptionsNormalModule
 	): (Record<"javascript/auto", JavascriptParser> &
 		Record<"javascript/dynamic", JavascriptParser> &
 		Record<"javascript/esm", JavascriptParser> &
@@ -22716,9 +23192,6 @@ declare class ParserClass {
 		state: ParserState
 	): ParserState;
 }
-declare interface ParserOptions {
-	[index: string]: any;
-}
 type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
 	ParserOptionsByModuleTypeUnknown;
 
@@ -22808,6 +23281,18 @@ declare interface ParserOptionsByModuleTypeKnown {
 declare interface ParserOptionsByModuleTypeUnknown {
 	[index: string]: { [index: string]: any };
 }
+declare interface ParserOptionsNormalModule {
+	[index: string]: any;
+}
+type ParserOptionsSyntaxParser = Omit<OptionsParser, "onComment"> & {
+	onComment?:
+		| CollectedComment[]
+		| ((isBlock: boolean, text: string, start: number, end: number) => void);
+	lazyNodes?: boolean;
+	lazyComments?: CollectedComment[];
+	importPhases?: boolean;
+	moduleFallback?: boolean;
+};
 
 /**
  * The ECMAScript parser webpack owns, ported from acorn 8.18.0 so the bundler
@@ -22912,6 +23397,18 @@ declare class ParserParser {
 		input: string,
 		options?: Partial<OptionsParser>
 	): ParserParser;
+}
+
+/**
+ * Mirror of acorn's `Position` (line/column pair with its `offset` helper),
+ * served by the owned `raise`/`curPosition`.
+ * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/locutil.js
+ */
+declare class ParserPosition {
+	constructor(line: number, col: number);
+	line: number;
+	column: number;
+	offset(n: number): ParserPosition;
 }
 type ParserState = ParserStateBase & Record<string, any>;
 declare interface ParserStateBase {
@@ -31121,6 +31618,42 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 } & { dotenv: NonNullable<undefined | boolean | DotenvPluginOptions> };
 
 /**
+ * webpack's parser: acorn plus lazy `range` (no `loc` at all), Set-based scopes,
+ * tokenizer fast paths, import attributes and import phases (with acorn's
+ * `!forNew` guard, unlike the former `acorn-import-phases` package).
+ */
+declare class WebpackParser extends Grammar {
+	constructor(
+		options: OptionsParser & {
+			lazyNodes?: boolean;
+			lazyComments?: CollectedComment[];
+			importPhases?: boolean;
+			moduleFallback?: boolean;
+		},
+		input: string,
+		startPos?: number
+	);
+	[Symbol.iterator](): Iterator<TokenParser>;
+
+	/**
+	 * Applies parser plugins, keeping the result typed as this parser.
+	 */
+	static extend(
+		...plugins: ((BaseParser: typeof ParserParser) => typeof ParserParser)[]
+	): typeof WebpackParser;
+	static parse(input: string, options?: Partial<OptionsParser>): ProgramParser;
+	static parseExpressionAt(
+		input: string,
+		pos: number,
+		options?: Partial<OptionsParser>
+	): ExpressionParser;
+	static tokenizer(
+		input: string,
+		options?: Partial<OptionsParser>
+	): ParserParser;
+}
+
+/**
  * Plugin instance.
  */
 declare interface WebpackPluginInstance {
@@ -31509,9 +32042,40 @@ declare namespace exports {
 		};
 	}
 	export namespace javascript {
-		export namespace printer {
-			export let load: () => Promise<Terser>;
-			export let PHASES: Phase[];
+		export namespace syntax {
+			export namespace parser {
+				export let MAX_MASKED_INDEX: 30;
+				export let buildLineStarts: (source: string) => number[];
+				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
+				export let declaresIntoBlock: (statement?: any) => boolean;
+				export let overflowFrom: (mask: number, index: number) => number[];
+				export let hasOctalEscape: (raw: string) => boolean;
+				export let isIdentifierChar: (
+					code: number,
+					astral?: boolean
+				) => boolean;
+				export let parse: (
+					input: string,
+					options: ParserOptionsSyntaxParser
+				) => ProgramImport;
+				export let positionAt: (
+					lineStarts: number[],
+					offset: number
+				) => SourcePosition;
+				export let releaseParserCaches: () => void;
+				export {
+					BLOCK_DECLARATIONS,
+					HOISTED_DECLARATIONS,
+					MODULE_DECLARATIONS,
+					LEGACY_ASSERT_ATTRIBUTES,
+					ParserPosition,
+					WebpackParser
+				};
+			}
+			export namespace printer {
+				export let load: () => Promise<Terser>;
+				export let PHASES: Phase[];
+			}
 		}
 		export {
 			EnableChunkLoadingPlugin,

@@ -1,7 +1,7 @@
 "use strict";
 
 const acorn = require("acorn");
-const { collectCjsRequireSpecifiers } = require("../../lib/javascript/syntax");
+const { collectCjsRequireSpecifiers } = require("../../lib/javascript/syntax-parser");
 
 /**
  * The AST-based reference the scanner replaces.

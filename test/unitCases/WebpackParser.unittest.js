@@ -8,7 +8,7 @@ const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 const { Parser } = require("../../lib/javascript/parser");
-const { parse: webpackParse } = require("../../lib/javascript/syntax");
+const { parse: webpackParse } = require("../../lib/javascript/syntax-parser");
 const {
 	firstDifference,
 	reportable
@@ -837,7 +837,7 @@ describe("WebpackParser", () => {
 		});
 
 		it("should keep the statement fast path off for parser plugins overriding statement parsers", () => {
-			const { WebpackParser } = require("../../lib/javascript/syntax");
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 			let calls = 0;
 			class Plugin extends WebpackParser {
@@ -1277,7 +1277,7 @@ describe("WebpackParser", () => {
 			// unreachable from the dispatch fast path (nextToken finishes plain
 			// `=`/`.` itself) but part of the getTokenFromCode contract
 			const { tokTypes } = require("../../lib/javascript/parser");
-			const { WebpackParser } = require("../../lib/javascript/syntax");
+			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 			const source = "= .";
 			const parser = new WebpackParser(
@@ -1638,7 +1638,7 @@ describe("WebpackParser", () => {
 	});
 
 	describe("auto source type module->script fallback", () => {
-		const { WebpackParser } = require("../../lib/javascript/syntax");
+		const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 		/**
 		 * @param {string} code source
@@ -1906,7 +1906,7 @@ describe("WebpackParser", () => {
 });
 
 describe("WebpackParser acorn-override fast-path gates", () => {
-	const { WebpackParser } = require("../../lib/javascript/syntax");
+	const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 	/** @type {import("../../lib/javascript/parser").Options} */
 	const lazyOptions =
@@ -2352,7 +2352,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		const {
 			WebpackParser: CacheParser,
 			releaseParserCaches
-		} = require("../../lib/javascript/syntax");
+		} = require("../../lib/javascript/syntax-parser");
 
 		const options = /** @type {import("../../lib/javascript/parser").Options} */ (
 			/** @type {unknown} */ ({
@@ -2607,7 +2607,7 @@ const PARSERS = [
 		(code, options) =>
 			webpackParse(
 				code,
-				/** @type {import("../../lib/javascript/syntax").ParserOptions} */ (
+				/** @type {import("../../lib/javascript/syntax-parser").ParserOptions} */ (
 					options
 				)
 			),
