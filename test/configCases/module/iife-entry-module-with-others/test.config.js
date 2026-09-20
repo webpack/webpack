@@ -5,6 +5,7 @@ module.exports = {
 		return [
 			"module-avoidEntryIife-false.mjs",
 			"module-avoidEntryIife-true.mjs",
+			"module-avoidEntryIife-wrapped.mjs",
 			"test.js"
 		];
 	}
