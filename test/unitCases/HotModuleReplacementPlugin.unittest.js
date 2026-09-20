@@ -1,6 +1,6 @@
 "use strict";
 
-const HotModuleReplacementPlugin = require("../../lib/HotModuleReplacementPlugin");
+const HotModuleReplacementPlugin = require("../../lib/hmr/HotModuleReplacementPlugin");
 const getParserHooks = require("../../lib/hmr/parserHooks");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 

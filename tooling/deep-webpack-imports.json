@@ -1,15 +1,15 @@
 {
-  "sampledAt": "2026-09-19",
+  "sampledAt": "2026-09-20",
   "perKeyword": 200,
   "removed": {
     "lib/DependenciesBlockVariable": "Removed in webpack 5 with block variables.",
     "lib/FunctionModulePlugin": "Removed in webpack 5.",
-    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only — it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/JavascriptGenerator": "@sector-labs/lingui-loader probes for it to detect webpack 4, so a re-export would send it down the wrong branch; its other importer, hard-source-webpack-plugin, is webpack 4 only.",
     "lib/JsonGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/JsonParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/LoaderTargetPlugin": "Only miniprogram-webpack-plugin imports it, and that package also imports lib/FunctionModulePlugin and lib/MultiEntryPlugin, both removed in webpack 5.",
-    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only — it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/ModuleDependencyWarning": "Moved to lib/errors/ before this record; kept unresolved deliberately.",
     "lib/ModuleError": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/ModuleWarning": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -33,15 +33,14 @@
   },
   "requests": {
     "lib/AsyncDependenciesBlock": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/Chunk": {
-      "weekly": 690,
+      "weekly": 684,
       "packages": [
         "@pixolith/external-svg-sprite-loader",
-        "external-svg-sprite-loader",
-        "sequisimilique"
+        "external-svg-sprite-loader"
       ]
     },
     "lib/Compilation": {
@@ -60,44 +59,40 @@
       "weekly": 12160713,
       "packages": ["mini-css-extract-plugin"]
     },
-    "lib/dependencies/${dependency[0]}": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/dependencies/AMDDefineDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/AMDRequireArrayDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/AMDRequireContextDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/AMDRequireDependenciesBlock": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/AMDRequireDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/AMDRequireItemDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/CommonJsRequireContextDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/CommonJsRequireDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ConstDependency": {
-      "weekly": 122681,
+      "weekly": 134683,
       "packages": [
         "@zainulbr/i18n-webpack-plugin",
         "hard-source-webpack-plugin",
@@ -106,130 +101,114 @@
       ]
     },
     "lib/dependencies/ContextDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ContextElementDependency": {
-      "weekly": 120758,
+      "weekly": 132760,
       "packages": ["context-map-webpack-plugin", "hard-source-webpack-plugin"]
     },
     "lib/dependencies/CriticalDependencyWarning": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/DelegatedExportsDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/DelegatedSourceDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/DllEntryDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyAcceptDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyAcceptImportDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyCompatibilityDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyExportExpressionDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyExportHeaderDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyExportImportedSpecifierDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyExportSpecifierDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyImportDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyImportSideEffectDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/HarmonyImportSpecifierDependency": {
-      "weekly": 217223,
+      "weekly": 271860,
       "packages": ["hard-source-webpack-plugin", "worker-plugin"]
     },
-    "lib/dependencies/HarmonyInitDependency": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/dependencies/ImportContextDependency": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/ImportDependenciesBlock": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ImportDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ImportEagerDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ImportWeakDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/JsonExportsDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/LoaderDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/LocalModule": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/LocalModuleDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ModuleDependency": {
-      "weekly": 125749,
+      "weekly": 137751,
       "packages": [
         "hard-source-webpack-plugin",
         "webpack-babel-multi-target-plugin"
       ]
     },
     "lib/dependencies/ModuleHotAcceptDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ModuleHotDeclineDependency": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/MultiEntryDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/NullDependency": {
-      "weekly": 121993,
+      "weekly": 133995,
       "packages": ["hard-source-webpack-plugin", "react-display-name-plugin"]
     },
     "lib/dependencies/NullDependency.js": {
@@ -240,62 +219,51 @@
       ]
     },
     "lib/dependencies/PrefetchDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireContextDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireEnsureDependenciesBlock": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireEnsureDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireEnsureItemDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireHeaderDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireIncludeDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireResolveContextDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireResolveDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireResolveHeaderDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
-    "lib/dependencies/SingleEntryDependency": {
-      "weekly": 125749,
-      "packages": [
-        "hard-source-webpack-plugin",
-        "webpack-babel-multi-target-plugin"
-      ]
-    },
     "lib/dependencies/UnsupportedDependency": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/WebAssemblyImportDependency": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/DependenciesBlockVariable": {
-      "weekly": 120628,
+      "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/Dependency": {
@@ -314,17 +282,10 @@
       "weekly": 188538,
       "packages": ["@vue/preload-webpack-plugin"]
     },
-    "lib/ExternalsPlugin": {
-      "weekly": 596945,
-      "packages": ["worker-loader"]
-    },
+    "lib/ExternalsPlugin": { "weekly": 596945, "packages": ["worker-loader"] },
     "lib/FileSystemInfo": {
       "weekly": 10690048,
       "packages": ["html-webpack-plugin"]
-    },
-    "lib/FunctionModulePlugin": {
-      "weekly": 20,
-      "packages": ["miniprogram-webpack-plugin"]
     },
     "lib/ids/IdHelpers": {
       "weekly": 39,
@@ -339,23 +300,11 @@
       "packages": ["@aiot-toolkit/dsl-xvm", "@hap-toolkit/dsl-xvm"]
     },
     "lib/javascript/JavascriptParserHelpers": {
-      "weekly": 96595,
+      "weekly": 139230,
       "packages": ["worker-plugin"]
     },
-    "lib/JavascriptGenerator": {
-      "weekly": 120643,
-      "packages": ["@sector-labs/lingui-loader", "hard-source-webpack-plugin"]
-    },
-    "lib/JsonGenerator": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/JsonParser": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/LibraryTemplatePlugin": {
-      "weekly": 138760,
+      "weekly": 121040,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
@@ -369,16 +318,8 @@
       "weekly": 17483282,
       "packages": ["webpack-dev-middleware"]
     },
-    "lib/ModuleDependencyWarning": {
-      "weekly": 8549,
-      "packages": ["ignore-not-found-export-webpack-plugin"]
-    },
-    "lib/ModuleError": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/ModuleFilenameHelpers": {
-      "weekly": 680151,
+      "weekly": 768841,
       "packages": [
         "@amoo-miki/terser-webpack-plugin",
         "babel-minify-webpack-plugin",
@@ -394,24 +335,8 @@
       "weekly": 1041546,
       "packages": ["esbuild-loader"]
     },
-    "lib/ModuleWarning": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/MultiEntryPlugin": {
-      "weekly": 20,
-      "packages": ["miniprogram-webpack-plugin"]
-    },
-    "lib/MultiModuleFactory": {
-      "weekly": 5121,
-      "packages": ["webpack-babel-multi-target-plugin"]
-    },
-    "lib/node/NodeSourcePlugin": {
-      "weekly": 20,
-      "packages": ["miniprogram-webpack-plugin"]
-    },
     "lib/node/NodeTargetPlugin": {
-      "weekly": 735705,
+      "weekly": 717985,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
@@ -423,7 +348,7 @@
       ]
     },
     "lib/node/NodeTemplatePlugin": {
-      "weekly": 138760,
+      "weekly": 121040,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
@@ -434,7 +359,7 @@
       ]
     },
     "lib/NormalModule": {
-      "weekly": 268060,
+      "weekly": 280062,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
@@ -456,7 +381,7 @@
       "packages": ["svg-sprite-loader"]
     },
     "lib/optimize/LimitChunkCountPlugin": {
-      "weekly": 138760,
+      "weekly": 121040,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
@@ -467,23 +392,13 @@
       ]
     },
     "lib/Parser": {
-      "weekly": 120643,
+      "weekly": 132645,
       "packages": ["@sector-labs/lingui-loader", "hard-source-webpack-plugin"]
     },
-    "lib/ParserHelpers": {
-      "weekly": 96595,
-      "packages": ["worker-plugin"]
-    },
-    "lib/ProgressPlugin": {
-      "weekly": 163660,
-      "packages": ["webpack-stream"]
-    },
-    "lib/RawModule": {
-      "weekly": 852,
-      "packages": ["google-fonts-plugin"]
-    },
+    "lib/ProgressPlugin": { "weekly": 164184, "packages": ["webpack-stream"] },
+    "lib/RawModule": { "weekly": 852, "packages": ["google-fonts-plugin"] },
     "lib/RequestShortener": {
-      "weekly": 1642680,
+      "weekly": 1754736,
       "packages": [
         "@amoo-miki/terser-webpack-plugin",
         "@nuxt/friendly-errors-webpack-plugin",
@@ -503,49 +418,29 @@
       "weekly": 66,
       "packages": ["san-loader"]
     },
-    "lib/rules/RuleSetCompiler": {
-      "weekly": 66,
-      "packages": ["san-loader"]
-    },
+    "lib/rules/RuleSetCompiler": { "weekly": 66, "packages": ["san-loader"] },
     "lib/rules/UseEffectRulePlugin": {
       "weekly": 66,
       "packages": ["san-loader"]
     },
-    "lib/RuleSet": {
-      "weekly": 266667,
-      "packages": [
-        "hard-source-webpack-plugin",
-        "san-loader",
-        "svg-sprite-loader"
-      ]
-    },
     "lib/SingleEntryPlugin": {
-      "weekly": 832449,
+      "weekly": 857338,
       "packages": [
         "@aiot-toolkit/dsl-xvm",
         "@hap-toolkit/dsl-xvm",
         "@vivo-hap-toolkit/dsl-xvm",
         "extract-css-chunks-webpack-plugin",
-        "metaloader-loader",
-        "miniprogram-webpack-plugin",
         "service-worker-loader",
         "styling",
         "worker-loader",
         "worker-plugin"
       ]
     },
-    "lib/SizeFormatHelpers": {
-      "weekly": 282121,
-      "packages": ["laravel-mix"]
-    },
     "lib/util/createHash": {
-      "weekly": 120902,
+      "weekly": 132904,
       "packages": ["@stylable/webpack-extensions", "hard-source-webpack-plugin"]
     },
-    "lib/util/identifier": {
-      "weekly": 1095163,
-      "packages": ["thread-loader"]
-    },
+    "lib/util/identifier": { "weekly": 856277, "packages": ["thread-loader"] },
     "lib/util/makeSerializable.js": {
       "weekly": 3659559,
       "packages": [
@@ -553,48 +448,20 @@
         "react-docgen-typescript-plugin"
       ]
     },
-    "lib/wasm/WebAssemblyGenerator": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/wasm/WebAssemblyJavascriptGenerator": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/wasm/WebAssemblyParser": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/web/FetchCompileAsyncWasmPlugin": {
       "weekly": 596945,
       "packages": ["worker-loader"]
     },
     "lib/web/FetchCompileWasmPlugin": {
-      "weekly": 693540,
+      "weekly": 736175,
       "packages": ["worker-loader", "worker-plugin"]
-    },
-    "lib/web/FetchCompileWasmTemplatePlugin": {
-      "weekly": 693540,
-      "packages": ["worker-loader", "worker-plugin"]
-    },
-    "lib/web/JsonpTemplatePlugin": {
-      "weekly": 20,
-      "packages": ["miniprogram-webpack-plugin"]
-    },
-    "lib/WebAssemblyGenerator": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/WebAssemblyParser": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/WebpackError": {
-      "weekly": 120648,
+      "weekly": 132650,
       "packages": ["hard-source-webpack-plugin", "webpack-mjml-plugin"]
     },
     "lib/webworker/WebWorkerTemplatePlugin": {
-      "weekly": 693937,
+      "weekly": 736572,
       "packages": ["service-worker-loader", "worker-loader", "worker-plugin"]
     }
   }

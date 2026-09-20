@@ -65,7 +65,8 @@ The directory listings below are the canonical map of the repository. **Whenever
     shape, `defaults.js` fills values in, and `WebpackOptionsApply` reads the result into
     the plugins it implies. `WebpackOptionsDefaulter` is the normalize-then-default pair
     under one deprecated name, and `OptionsApply` the base class the apply step extends.
-    Also holds the target presets and `defineConfig`.
+    Also holds the target presets, `defineConfig`, and `PlatformPlugin`, which pins the
+    target platform a `target: false` build cannot infer.
   - `lib/container/` — Module Federation.
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
@@ -88,7 +89,8 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/graph/` — The module and chunk graphs a compilation holds: `ModuleGraph` and its
     connections, `ChunkGraph` and the `buildChunkGraph` that fills it, and the `ExportsInfo`
     recording what each module exports and who uses it.
-  - `lib/hmr/` — Hot Module Replacement plugins.
+  - `lib/hmr/` — Hot Module Replacement: `HotModuleReplacementPlugin` and the runtime
+    modules, lazy-compilation backend and helpers it drives.
   - `lib/html/` — Experimental HTML support.
   - `lib/ids/` — Module/chunk id assignment plugins, and `RecordIdsPlugin`, which persists
     the assignment across builds through `recordsPath`.
@@ -174,7 +176,7 @@ Keep `--depth 1`: `wpt` alone is ~161k files. `--remote` changes the commit the 
 
 - `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`.
 
-The loader context is not one of these: `LoaderContext` and the loader-definition types are JSDoc in `lib/` like every other type, declared where the code that adds each part lives (`lib/NormalModule.js`, `lib/loaders/LoaderRunner.js`, `lib/dependencies/LoaderPlugin.js`, `lib/HotModuleReplacementPlugin.js`) and re-exported from `lib/index.js`, which is the file `generate-types.js` reads webpack's public type surface from.
+The loader context is not one of these: `LoaderContext` and the loader-definition types are JSDoc in `lib/` like every other type, declared where the code that adds each part lives (`lib/module/NormalModule.js`, `lib/loaders/LoaderRunner.js`, `lib/dependencies/LoaderPlugin.js`, `lib/hmr/HotModuleReplacementPlugin.js`) and re-exported from `lib/index.js`, which is the file `generate-types.js` reads webpack's public type surface from.
 
 **Configuration**
 
@@ -220,6 +222,47 @@ The two config layers differ: **`normalization.js`** canonicalizes the user-supp
 **Finding a hook:** hook definitions live on the class that owns them — compiler-wide hooks in `lib/Compiler.js`, per-`Compilation` hooks in `lib/Compilation.js`; tap them with a unique plugin-name string.
 
 **Adding a runtime requirement:** declare the symbol in `lib/runtime/RuntimeGlobals.js`, emit its code with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (the `…InModule` variants for per-module needs).
+
+### Moving a file out of `lib/` root
+
+> [!REQUIRED]
+
+**Run `yarn find-deep-imports:check` on every move, before the commit.** A path that
+leaves `lib/` root breaks any published package importing it, and the recorded scan in
+`tooling/deep-webpack-imports.json` is what says which those are. `--write` refreshes it
+off the registry; `--check` needs no network and is what CI runs. Its `removed` map names
+the paths no webpack 5 build can reach, and the two maps are disjoint — `--write` skips a
+path `removed` names rather than recording it as a request.
+
+**A re-export is owed only to a webpack-5 package that imports the path unconditionally.**
+Read the importer's tarball, not its download count: a package whose `peerDependencies`
+or `dependencies` name webpack 5 and which requires the path at the top level gets a
+`// TODO remove in webpack 6` re-export at the old path. One that is webpack 4 only — it
+imports something webpack 5 deleted — or that probes for the path inside a `try` to detect
+webpack 4 gets an entry under `removed` with that reason instead, because a re-export
+would send it down the wrong branch.
+
+**Five things carry a path, and only the first is obvious.** Rewrite every one, then
+confirm the move by regenerating rather than by reading:
+
+1. `require("…")` and `require.resolve("…")`, including template literals and a string
+   sitting in a ternary branch lines away from its call.
+2. `@import … from "…"` in a JSDoc block.
+3. `@typedef {import("…")}` — a different form from the one above, and missing it drops
+   the type from webpack's public surface without failing anything.
+4. `tsType` in `schemas/**/*.json`, which can fail loudly in `fix:special` or silently
+   degrade a public type to `any`.
+5. `makeSerializable(Class, "webpack/lib/…")` — the request moves with the class and the
+   old one stays restorable through `registerLegacyRequest`, or a pre-move cache pack
+   stops loading.
+
+`yarn fix:special` leaving `types.d.ts` byte-identical is the check that 3 and 4 are done;
+`ConfigCacheTestCases` reporting no `Pack got invalid` line is the check that 5 is. Nothing
+static catches 1 — only building `lib/index.js` does.
+
+**Update the Architecture listing above in the same commit**, and grep it for the old path:
+prose elsewhere in this guide names files too, and those references go stale just as
+quietly.
 
 ### Diagnostics and hints
 

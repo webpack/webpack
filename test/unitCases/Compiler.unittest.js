@@ -383,7 +383,7 @@ describe("Compiler", () => {
 					path: "/directory"
 				},
 				plugins: [
-					new (require("../../lib/PlatformPlugin"))({ node: true }),
+					new (require("../../lib/config/PlatformPlugin"))({ node: true }),
 					(compiler) => {
 						compiler.hooks.afterEnvironment.tap("test", () => {
 							const platform = compiler.platform;
