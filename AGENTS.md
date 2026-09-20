@@ -72,6 +72,11 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/debug/` — Debug helpers.
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
   - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
+  - `lib/diagnostics/` — Plugins that raise a build-wide error or warning of their own:
+    a case-insensitive filesystem collision, a deprecated option, a missing `mode`, and
+    `IgnoreWarningsPlugin`, which filters what the others produced. `NoEmitOnErrorsPlugin`
+    joins them because it reacts to the errors rather than raising one. The classes they
+    construct live in `lib/errors/`, and the `performance` hints in `lib/performance/`.
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/entry/` — The `entry` option: `EntryPlugin`, the `EntryOptionPlugin` that reads
@@ -89,12 +94,14 @@ The directory listings below are the canonical map of the repository. **Whenever
     the assignment across builds through `recordsPath`.
   - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis. `syntax.js` serves every production a build reaches, so `grammar.js` (the full grammar) and `regexp.js` (the pattern validator) are installed onto the parser's prototype only when something asks for one — keep it that way and never `require` either from a path a build takes.
   - `lib/json/` — JSON modules.
-  - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
+  - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats, and the deprecated
+    `LibraryTemplatePlugin` that reaches them through the old two-argument API.
   - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader
     iteration and loader module loading, plus the `LoaderOptionsPlugin` and
     `LoaderTargetPlugin` that feed the loader context.
   - `lib/logging/` — Logger API and console formatting.
-  - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …).
+  - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …),
+    including `CircularModulesPlugin`, which flags the import cycles the others reason about.
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`

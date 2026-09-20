@@ -2722,7 +2722,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+            "tsType": "import(\"../lib/diagnostics/IgnoreWarningsPlugin\").IgnoreFn"
           }
         ]
       }
@@ -2733,7 +2733,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+        "tsType": "import(\"../lib/diagnostics/IgnoreWarningsPlugin\").IgnoreFn"
       }
     },
     "Iife": {
