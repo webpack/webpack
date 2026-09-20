@@ -382,13 +382,9 @@ export default defineConfig([
 		}
 	},
 	{
-		// The parser keeps acorn's method and property names, since the grammar
-		// and any acorn plugin call them by those names.
-		files: [
-			"lib/javascript/grammar.js",
-			"lib/javascript/regexp.js",
-			"lib/javascript/syntax-parser.js"
-		],
+		// The parser keeps acorn's method and property names, since any acorn
+		// plugin calls them by those names.
+		files: ["lib/javascript/regexp.js", "lib/javascript/syntax-parser.js"],
 		rules: {
 			camelcase: "off"
 		}
