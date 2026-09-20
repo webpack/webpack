@@ -65,9 +65,9 @@ module.exports = {
 						// 5 - parse module, 2 - concatenate module, 4 - inline
 						expect(parses).toBe(11);
 					} else {
-						// 1 - parse the changed module2, 1 - inline it again, 1 - inline
-						// the entry; module3 and module4 come back from the cache with
-						// their free names, so neither is rendered or parsed again
+						// 1 - parse the changed module2, 1 - inline it again, 1 -
+						// inline the entry; module3 and module4 render to the same
+						// source as before, so their free names are not recomputed
 						expect(parses).toBe(3);
 					}
 				});
