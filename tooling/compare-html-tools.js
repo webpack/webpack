@@ -920,8 +920,18 @@ const afterAttribute = (valueStart, valueEnd, nameEnd, quoteType) => {
 };
 
 /**
+ * Whether a name reads as HTML vocabulary rather than as another language's
+ * text, which is the printer's own `_isWordSpan` asked of an attribute name.
+ * Stated here rather than imported so the sweep keeps a reading of its own.
+ * @param {string} name an attribute name as written
+ * @returns {boolean} true when the name is a word
+ */
+const isWordName = (name) => /^[A-Za-z_-][^{}<>]*$/.test(name);
+
+/**
  * Every attribute the tokenizer reports, with the open tag holding it. A close
- * tag's attributes are dropped by the tree builder, so they are dropped here.
+ * tag's attributes are dropped by the tree builder, so they are dropped here,
+ * as is every attribute of a tag carrying template syntax.
  * @param {string} html a document
  * @returns {Site[]} the sites, in source order
  */
@@ -947,7 +957,12 @@ const attributeSites = (html) => {
 			return end;
 		},
 		openTag: (input, start, end) => {
+			// One name that is not a word makes the whole tag another language's:
+			// `{% endif %}` tokenizes as three attributes, of which `if` is a word
+			// and would otherwise be respelled into the statement holding it.
+			const templated = pending.some((site) => !isWordName(site.name));
 			for (const site of pending) {
+				if (templated) continue;
 				site.tagStart = start;
 				site.tagEnd = end;
 				sites.push(site);
@@ -1356,40 +1371,10 @@ const invariantFixtures = () => {
  */
 const EXPECTED = [
 	{
-		relation: "respelling references",
-		contains: "&nbsp;",
-		why: "WHATWG 'escape a string' replaces U+00A0 with `&nbsp;`, which is what `escapeAttribute` implements; the literal costs 32 raw bytes less over 939 documents and nothing compressed either way"
-	},
-	{
-		relation: "respelling quote-double",
-		contains: "&nbsp;",
-		why: "the same escaping, reached through the delimiter the value is written in"
-	},
-	{
-		relation: "respelling quote-single",
-		contains: "&nbsp;",
-		why: "the same escaping, reached through the delimiter the value is written in"
-	},
-	{
-		relation: "respelling unquote",
-		contains: "&nbsp;",
-		why: "the same escaping, reached through a value written without quotes"
-	},
-	{
 		relation: "respelling quote-double",
 		contains: "&#34;",
 		source: "style-attribute",
-		why: "`&quot;` for `&#34;` is 3 raw bytes more and 11 gzip bytes less, and gzip decides"
-	},
-	{
-		relation: "respelling quote-double",
-		contains: "{%",
-		why: 'the respelling writes `=""` onto a bare name, and a tag carrying template syntax keeps the empty value this print drops elsewhere, so the two spellings differ by the 3 bytes the respelling added'
-	},
-	{
-		relation: "respelling quote-single",
-		contains: "{%",
-		why: "the same kept value, reached through the other delimiter"
+		why: "the value carries both quotes, so one is escaped whichever delimiter is picked and the printer's own `&quot;` costs a byte more than the `&#34;` the source wrote — it writes the shorter of the two, which is the source"
 	}
 ];
 
