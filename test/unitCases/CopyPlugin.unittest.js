@@ -17,11 +17,15 @@ const staticPath = path.join(tempFolderPath, "static");
 // what a project emitting its bundle into its own static folder looks like
 const outputPath = path.join(staticPath, "build");
 const stalePath = path.join(outputPath, "stale.txt");
+const aliasPath = path.join(staticPath, "alias");
+
+// codes a machine that cannot make a directory symlink reports
+const SYMLINK_UNSUPPORTED = new Set(["EPERM", "EACCES", "ENOSYS", "UNKNOWN"]);
 
 /**
  * Lay out a project whose `output.path` is below what the pattern copies, with
  * a file an earlier build left in the output directory.
- * @returns {void}
+ * @returns {boolean} whether the symlink aliasing the output directory was made
  */
 const createFiles = () => {
 	fs.mkdirSync(path.join(staticPath, "nested"), { recursive: true });
@@ -33,6 +37,18 @@ const createFiles = () => {
 	fs.writeFileSync(path.join(staticPath, "keep.txt"), "keep");
 	fs.writeFileSync(path.join(staticPath, "nested", "deep.txt"), "deep");
 	fs.writeFileSync(stalePath, "stale");
+
+	try {
+		fs.symlinkSync(outputPath, aliasPath, "junction");
+	} catch (err) {
+		const { code } = /** @type {NodeJS.ErrnoException} */ (err);
+		// anything else is a broken fixture, which must fail rather than skip
+		if (code === undefined || !SYMLINK_UNSUPPORTED.has(code)) {
+			throw err;
+		}
+		return false;
+	}
+	return true;
 };
 
 /**
@@ -71,12 +87,14 @@ const compile = () => {
 describe("CopyPlugin", () => {
 	/** @type {import("../../").Compilation} */
 	let compilation;
+	/** @type {boolean} */
+	let aliased;
 
 	beforeAll(async () => {
 		await new Promise((resolve) => {
 			rimraf(tempFolderPath, resolve);
 		});
-		createFiles();
+		aliased = createFiles();
 		compilation = await compile();
 	});
 
@@ -93,6 +111,13 @@ describe("CopyPlugin", () => {
 	it("should copy the rest of the directory the output path sits in", () => {
 		expect(compilation.getAsset("keep.txt")).toBeDefined();
 		expect(compilation.getAsset("nested/deep.txt")).toBeDefined();
+	});
+
+	it("should not follow a symlink which aliases the output path", () => {
+		if (!aliased) return;
+		// the link resolves into the output directory, so following it would copy
+		// the build's own output under a name the lexical check never sees
+		expect(compilation.getAsset("alias/stale.txt")).toBeUndefined();
 	});
 
 	it("should not make a file inside the output path a dependency", () => {
