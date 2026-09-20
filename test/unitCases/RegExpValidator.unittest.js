@@ -3,7 +3,7 @@
 // cspell:ignore Grek Kawi Mundari Garay Todhri Keycap aeiou gimsuyd dgimsvy
 
 const acorn = require("acorn");
-const { Parser } = require("../../lib/javascript/parser");
+const { Parser } = require("../../lib/javascript/syntax-parser");
 
 // The owned validator runs on the lazy path only for a pattern the host
 // engine rejected; the base parser validates every literal, as acorn does.

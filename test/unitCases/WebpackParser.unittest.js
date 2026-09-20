@@ -7,7 +7,7 @@ const os = require("os");
 const path = require("path");
 const acorn = require("acorn");
 const JavascriptParser = require("../../lib/javascript/JavascriptParser");
-const { Parser } = require("../../lib/javascript/parser");
+const { Parser } = require("../../lib/javascript/syntax-parser");
 const { parse: webpackParse } = require("../../lib/javascript/syntax-parser");
 const {
 	firstDifference,
@@ -842,8 +842,8 @@ describe("WebpackParser", () => {
 			let calls = 0;
 			class Plugin extends WebpackParser {
 				/**
-				 * @param {import("../../lib/javascript/parser").NodeLike} node started statement node
-				 * @returns {import("../../lib/javascript/parser").NodeLike} if statement
+				 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node started statement node
+				 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} if statement
 				 */
 				parseIfStatement(node) {
 					calls++;
@@ -851,8 +851,8 @@ describe("WebpackParser", () => {
 				}
 
 				/**
-				 * @param {import("../../lib/javascript/parser").NodeLike} node started statement node
-				 * @returns {import("../../lib/javascript/parser").NodeLike} return statement
+				 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node started statement node
+				 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} return statement
 				 */
 				parseReturnStatement(node) {
 					calls++;
@@ -862,7 +862,7 @@ describe("WebpackParser", () => {
 			const code = "if (a) { b(); } var x = 1; function f() { return x; }";
 			const ast = Plugin.parse(
 				code,
-				/** @type {import("../../lib/javascript/parser").Options} */ (
+				/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 					/** @type {unknown} */ ({
 						ecmaVersion: "latest",
 						sourceType: "script",
@@ -1276,7 +1276,7 @@ describe("WebpackParser", () => {
 		it("should keep single-char tails for direct getTokenFromCode calls", () => {
 			// unreachable from the dispatch fast path (nextToken finishes plain
 			// `=`/`.` itself) but part of the getTokenFromCode contract
-			const { tokTypes } = require("../../lib/javascript/parser");
+			const { tokTypes } = require("../../lib/javascript/syntax-parser");
 			const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
 			const source = "= .";
@@ -1908,9 +1908,9 @@ describe("WebpackParser", () => {
 describe("WebpackParser acorn-override fast-path gates", () => {
 	const { WebpackParser } = require("../../lib/javascript/syntax-parser");
 
-	/** @type {import("../../lib/javascript/parser").Options} */
+	/** @type {import("../../lib/javascript/syntax-parser").Options} */
 	const lazyOptions =
-		/** @type {import("../../lib/javascript/parser").Options} */ (
+		/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 			/** @type {unknown} */ ({
 				ecmaVersion: "latest",
 				sourceType: "script",
@@ -1922,7 +1922,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").NodeLike} node function node
+			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node function node
 			 * @returns {void}
 			 */
 			initFunction(node) {
@@ -1931,7 +1931,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			}
 
 			/**
-			 * @param {import("../../lib/javascript/parser").NodeLike[]} params parameter nodes
+			 * @param {import("../../lib/javascript/syntax-parser").NodeLike[]} params parameter nodes
 			 * @returns {boolean} whether all params are plain identifiers
 			 */
 			isSimpleParamList(params) {
@@ -1955,7 +1955,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").NodeLike} node function node
+			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node function node
 			 * @param {boolean} allowDuplicates whether duplicate params are allowed
 			 * @returns {void}
 			 */
@@ -1972,8 +1972,8 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").NodeLike} node started statement node
-			 * @returns {import("../../lib/javascript/parser").NodeLike} for statement
+			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} node started statement node
+			 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} for statement
 			 */
 			parseForStatement(node) {
 				calls++;
@@ -2025,7 +2025,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 
 	it("serves the strict-bind probe from the Set stand-in and its .test fallback", () => {
 		const strictOptions =
-			/** @type {import("../../lib/javascript/parser").Options} */ (
+			/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 				/** @type {unknown} */ ({
 					ecmaVersion: "latest",
 					sourceType: "module",
@@ -2038,7 +2038,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		// a runtime-replaced reservedWordsStrictBind takes the .test() fallback
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").Options} options parser options
+			 * @param {import("../../lib/javascript/syntax-parser").Options} options parser options
 			 * @param {string} input source code
 			 * @param {number=} startPos start position
 			 */
@@ -2063,8 +2063,8 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").NodeLike} item paren item
-			 * @returns {import("../../lib/javascript/parser").NodeLike} paren item
+			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} item paren item
+			 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} paren item
 			 */
 			parseParenItem(item) {
 				calls++;
@@ -2083,7 +2083,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").TokenType} prevType previous token type
+			 * @param {import("../../lib/javascript/syntax-parser").TokenType} prevType previous token type
 			 * @returns {void}
 			 */
 			updateContext(prevType) {
@@ -2130,7 +2130,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 	it("keeps the delegated tokenizer cold paths reachable with the fast loop off", () => {
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").TokenType} prevType previous token type
+			 * @param {import("../../lib/javascript/syntax-parser").TokenType} prevType previous token type
 			 * @returns {void}
 			 */
 			updateContext(prevType) {
@@ -2159,7 +2159,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").TokenType} type token type
+			 * @param {import("../../lib/javascript/syntax-parser").TokenType} type token type
 			 * @param {string=} value token value
 			 * @returns {void}
 			 */
@@ -2196,7 +2196,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 	it("executes no base parser prototype code on the lazy path", () => {
 		// every method and accessor on the base parser's prototype is counted
 		// while a feature-rich module parses lazily
-		const { Parser } = require("../../lib/javascript/parser");
+		const { Parser } = require("../../lib/javascript/syntax-parser");
 
 		const source = [
 			"#!/usr/bin/env node",
@@ -2215,7 +2215,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			"debugger;",
 			"await ns.ready;"
 		].join("\n");
-		const options = /** @type {import("../../lib/javascript/parser").Options} */ (
+		const options = /** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 			/** @type {unknown} */ ({
 				ecmaVersion: "latest",
 				sourceType: "module",
@@ -2275,13 +2275,13 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 	it("builds fast- and slow-constructed parsers with one field layout", () => {
 		// the fast construction path replicates the base constructor, so its key
 		// order and option keys must match a super()-built one
-		const { defaultOptions } = require("../../lib/javascript/parser");
+		const { defaultOptions } = require("../../lib/javascript/syntax-parser");
 
 		const fast = /** @type {EXPECTED_ANY} */ (
 			new WebpackParser(lazyOptions, "let x = 1;")
 		);
 		const slowOptions =
-			/** @type {import("../../lib/javascript/parser").Options} */ (
+			/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 				/** @type {unknown} */ (
 					// present-but-undefined checkPrivateFields fails the fast gate
 					{
@@ -2304,7 +2304,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @param {import("../../lib/javascript/parser").NodeLike} element class element node
+			 * @param {import("../../lib/javascript/syntax-parser").NodeLike} element class element node
 			 * @returns {void}
 			 */
 			parseClassElementName(element) {
@@ -2325,7 +2325,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		let calls = 0;
 		class Plugin extends WebpackParser {
 			/**
-			 * @returns {import("../../lib/javascript/parser").NodeLike} import specifier
+			 * @returns {import("../../lib/javascript/syntax-parser").NodeLike} import specifier
 			 */
 			parseImportSpecifier() {
 				calls++;
@@ -2333,7 +2333,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			}
 		}
 		const moduleOptions =
-			/** @type {import("../../lib/javascript/parser").Options} */ (
+			/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 				/** @type {unknown} */ ({
 					ecmaVersion: "latest",
 					sourceType: "module",
@@ -2354,7 +2354,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			releaseParserCaches
 		} = require("../../lib/javascript/syntax-parser");
 
-		const options = /** @type {import("../../lib/javascript/parser").Options} */ (
+		const options = /** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 			/** @type {unknown} */ ({
 				ecmaVersion: "latest",
 				sourceType: "module",

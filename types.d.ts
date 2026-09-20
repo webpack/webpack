@@ -66,7 +66,7 @@ import {
 	SequenceExpression,
 	SimpleCallExpression,
 	SimpleLiteral,
-	SourceLocation as SourceLocationImport,
+	SourceLocation,
 	SpreadElement,
 	StaticBlock,
 	Super,
@@ -3379,7 +3379,7 @@ declare interface ColorsOptions {
 type CommentJavascriptParser = CommentImport & {
 	start: number;
 	end: number;
-	loc?: null | SourceLocationImport;
+	loc?: null | SourceLocation;
 };
 declare interface CommonJsImportSettings {
 	name?: string;
@@ -6983,6 +6983,20 @@ declare interface DestructuringAssignmentProperty {
 	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
 }
+
+/**
+ * Where a shorthand assignment, trailing comma or parenthesized pattern was
+ * seen, so the expression parser can raise once it knows whether it is
+ * parsing an expression or a binding pattern.
+ */
+declare class DestructuringErrors {
+	constructor();
+	shorthandAssign: number;
+	trailingComma: number;
+	parenthesizedAssign: number;
+	parenthesizedBind: number;
+	doubleProto: number;
+}
 declare class DeterministicChunkIdsPlugin {
 	/**
 	 * Creates an instance of DeterministicChunkIdsPlugin.
@@ -8961,7 +8975,7 @@ declare interface ExpressionExpressionInfo {
 	getMembersOptionals: () => boolean[];
 	getMemberRanges: () => [number, number][];
 }
-type ExpressionParser =
+type ExpressionSyntaxParser =
 	| (ImportExpressionImport & NodeLike)
 	| (UnaryExpression & NodeLike)
 	| (ArrayExpression & NodeLike)
@@ -8991,7 +9005,7 @@ type ExpressionParser =
 	| (YieldExpression & NodeLike)
 	| (NodeLike & {
 			type: "ParenthesizedExpression";
-			expression: ExpressionParser;
+			expression: ExpressionSyntaxParser;
 	  });
 declare interface ExtensionAliasOption {
 	alias: string | string[];
@@ -10177,7 +10191,12 @@ declare interface GotHandler<T> {
  * `Parser` so each one reads the cursor it is handed through `this`, the way
  * acorn declares them.
  */
-declare abstract class Grammar extends ParserParser {
+declare class Grammar extends ParserSyntaxParser {
+	constructor(
+		options: undefined | null | Partial<OptionsSyntaxParser>,
+		input: string,
+		startPos?: number
+	);
 	eat(type: TokenType): boolean;
 	isContextual(name: string): boolean;
 	eatContextual(name: string): boolean;
@@ -10637,7 +10656,21 @@ declare abstract class Grammar extends ParserParser {
 	 */
 	readWord1(): string;
 	readWord(): void;
-	[Symbol.iterator](): Iterator<TokenParser>;
+	[Symbol.iterator](): Iterator<TokenSyntaxParser>;
+	static extend(...plugins: ((parser?: any) => any)[]): any;
+	static parse(
+		input: string,
+		options?: Partial<OptionsSyntaxParser>
+	): ProgramSyntaxParser;
+	static parseExpressionAt(
+		input: string,
+		pos: number,
+		options?: Partial<OptionsSyntaxParser>
+	): ExpressionSyntaxParser;
+	static tokenizer(
+		input: string,
+		options?: Partial<OptionsSyntaxParser>
+	): ParserSyntaxParser;
 }
 
 /**
@@ -15179,7 +15212,7 @@ declare class JavascriptParser extends ParserClass {
 		start?: number;
 		end?: number;
 		range?: [number, number];
-		loc?: null | SourceLocationImport;
+		loc?: null | SourceLocation;
 	}): DependencyLocation;
 
 	/**
@@ -15495,7 +15528,9 @@ declare class JavascriptParser extends ParserClass {
 	 * Returns parser.
 	 */
 	static extend(
-		...plugins: ((BaseParser: typeof ParserParser) => typeof ParserParser)[]
+		...plugins: ((
+			BaseParser: typeof ParserSyntaxParser
+		) => typeof ParserSyntaxParser)[]
 	): typeof JavascriptParser;
 	static ALLOWED_MEMBER_TYPES_ALL: number;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: number;
@@ -16720,6 +16755,16 @@ declare interface LStatTypes {
 			result?: IStatsTypes | IBigIntStatsTypes
 		) => void
 	): void;
+}
+
+/**
+ * A label in scope, and what may jump to it.
+ */
+declare class Label {
+	constructor(kind: null | string, name?: string, statementStart?: number);
+	kind?: null | string;
+	name?: string;
+	statementStart?: number;
 }
 declare interface LabelLike {
 	kind?: null | string;
@@ -22044,7 +22089,7 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
 	 */
 	associatedObjectForCache?: object;
 }
-declare interface OptionsParser {
+declare interface OptionsSyntaxParser {
 	/**
 	 * which edition to parse
 	 */
@@ -23192,6 +23237,19 @@ declare class ParserClass {
 		state: ParserState
 	): ParserState;
 }
+
+/**
+ * An ESTree node, as this parser builds one.
+ */
+declare class ParserNode {
+	constructor(parser: ParserSyntaxParser, pos: number, loc?: Position);
+	type: string;
+	start: number;
+	end: number;
+	loc?: ParserSourceLocation;
+	sourceFile?: string;
+	range?: number[];
+}
 type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
 	ParserOptionsByModuleTypeUnknown;
 
@@ -23284,7 +23342,7 @@ declare interface ParserOptionsByModuleTypeUnknown {
 declare interface ParserOptionsNormalModule {
 	[index: string]: any;
 }
-type ParserOptionsSyntaxParser = Omit<OptionsParser, "onComment"> & {
+type ParserOptionsSyntaxParser = Omit<OptionsSyntaxParser, "onComment"> & {
 	onComment?:
 		| CollectedComment[]
 		| ((isBlock: boolean, text: string, start: number, end: number) => void);
@@ -23295,18 +23353,48 @@ type ParserOptionsSyntaxParser = Omit<OptionsParser, "onComment"> & {
 };
 
 /**
+ * Mirror of acorn's `Position` (line/column pair with its `offset` helper),
+ * served by the owned `raise`/`curPosition`.
+ * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/locutil.js
+ */
+declare class ParserPosition {
+	constructor(line: number, col: number);
+	line: number;
+	column: number;
+	offset(n: number): ParserPosition;
+}
+
+/**
+ * The `loc` a node carries when `options.locations` is on.
+ */
+declare class ParserSourceLocation {
+	constructor(p: any, start?: null | PositionLike, end?: null | PositionLike);
+	start?: null | PositionLike;
+	end?: null | PositionLike;
+	source: any;
+}
+type ParserState = ParserStateBase & Record<string, any>;
+declare interface ParserStateBase {
+	source: string | Buffer;
+	current: NormalModule;
+	module: NormalModule;
+	compilation: Compilation;
+	options: WebpackOptionsNormalizedWithDefaults;
+}
+
+/**
  * The ECMAScript parser webpack owns, ported from acorn 8.18.0 so the bundler
  * ships no parser dependency. `lib/javascript/syntax.js` subclasses it and
  * overrides the hot paths.
  * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/state.js
  */
-declare class ParserParser {
+declare class ParserSyntaxParser {
 	constructor(
-		options: undefined | null | Partial<OptionsParser>,
+		options: undefined | null | Partial<OptionsSyntaxParser>,
 		input: string,
 		startPos?: number
 	);
-	options: ResolvedOptionsParser;
+	options: ResolvedOptionsSyntaxParser;
 	sourceFile: null | string;
 	keywords: RegExp;
 	reservedWords: RegExp;
@@ -23338,7 +23426,7 @@ declare class ParserParser {
 	yieldPos: number;
 	labels: LabelLike[];
 	undefinedExports: Record<string, NodeLike>;
-	scopeStack: ScopeParser[];
+	scopeStack: ScopeSyntaxParser[];
 	regexpState: null | RegExpValidationState;
 	privateNameStack: any[];
 	get inFunction(): boolean;
@@ -23369,13 +23457,13 @@ declare class ParserParser {
 		forInit?: string | boolean,
 		refDestructuringErrors?: any
 	): any;
-	getToken(): TokenParser;
+	getToken(): TokenSyntaxParser;
 	initialContext(): TokContextLike[];
 	enterScope(flags: number): void;
 	treatFunctionsAsVarInScope(scope: { flags: number }): number | boolean;
-	currentScope(): ScopeParser;
-	currentVarScope(): ScopeParser;
-	currentThisScope(): ScopeParser;
+	currentScope(): ScopeSyntaxParser;
+	currentVarScope(): ScopeSyntaxParser;
+	currentThisScope(): ScopeSyntaxParser;
 
 	/**
 	 * Report a parse error, naming where in the source it was found.
@@ -23385,38 +23473,21 @@ declare class ParserParser {
 	raiseRecoverable(pos: number, message: string): never;
 	curPosition(): undefined | Position;
 	skipLineComment(startSkip: number): void;
-	[Symbol.iterator](): Iterator<TokenParser>;
+	[Symbol.iterator](): Iterator<TokenSyntaxParser>;
 	static extend(...plugins: ((parser?: any) => any)[]): any;
-	static parse(input: string, options?: Partial<OptionsParser>): ProgramParser;
+	static parse(
+		input: string,
+		options?: Partial<OptionsSyntaxParser>
+	): ProgramSyntaxParser;
 	static parseExpressionAt(
 		input: string,
 		pos: number,
-		options?: Partial<OptionsParser>
-	): ExpressionParser;
+		options?: Partial<OptionsSyntaxParser>
+	): ExpressionSyntaxParser;
 	static tokenizer(
 		input: string,
-		options?: Partial<OptionsParser>
-	): ParserParser;
-}
-
-/**
- * Mirror of acorn's `Position` (line/column pair with its `offset` helper),
- * served by the owned `raise`/`curPosition`.
- * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/locutil.js
- */
-declare class ParserPosition {
-	constructor(line: number, col: number);
-	line: number;
-	column: number;
-	offset(n: number): ParserPosition;
-}
-type ParserState = ParserStateBase & Record<string, any>;
-declare interface ParserStateBase {
-	source: string | Buffer;
-	current: NormalModule;
-	module: NormalModule;
-	compilation: Compilation;
-	options: WebpackOptionsNormalizedWithDefaults;
+		options?: Partial<OptionsSyntaxParser>
+	): ParserSyntaxParser;
 }
 declare interface PathCacheFunctions {
 	/**
@@ -23813,7 +23884,8 @@ declare interface PnpApi {
 /**
  * A `{ line, column }` pair, as `options.locations` reports one.
  */
-declare abstract class Position {
+declare class Position {
+	constructor(line: number, col: number);
 	line: number;
 	column: number;
 	offset(n: number): Position;
@@ -24145,7 +24217,7 @@ declare interface ProfilingPluginOptions {
 	 */
 	outputPath?: string;
 }
-type ProgramParser = ProgramImport & NodeLike;
+type ProgramSyntaxParser = ProgramImport & NodeLike;
 declare class ProgressPlugin {
 	/**
 	 * Creates an instance of ProgressPlugin.
@@ -25136,7 +25208,7 @@ declare interface ReferencedExport {
  * The cursor a regexp literal is validated through.
  */
 declare abstract class RegExpValidationState {
-	parser: ParserParser;
+	parser: ParserSyntaxParser;
 	validFlags: string;
 	unicodeProperties: any;
 	source: string;
@@ -26014,7 +26086,7 @@ declare interface ResolvedOptionsDefaults {
 	 */
 	platform: false | PlatformTargetProperties;
 }
-declare interface ResolvedOptionsParser {
+declare interface ResolvedOptionsSyntaxParser {
 	/**
 	 * the edition, as the number the parser compares against
 	 */
@@ -27969,19 +28041,6 @@ declare interface ScopeInfo {
 }
 
 /**
- * One lexical scope, holding the names declared directly in it. Each set is
- * built only once a name goes into it, which most scopes never do.
- */
-declare abstract class ScopeParser {
-	flags: number;
-	var?: Set<string>;
-	lexical?: Set<string>;
-	functions?: Set<string>;
-	firstLexical?: string;
-	hoisted?: (number | NodeLike)[];
-}
-
-/**
  * A lexical scope. One shape for every kind, so the property loads in the
  * resolution loop stay monomorphic.
  */
@@ -28003,17 +28062,31 @@ declare abstract class ScopeScopeAnalyzer {
 	paramBoundary: number;
 	getBinding(name: string): undefined | Variable;
 }
+
+/**
+ * One lexical scope, holding the names declared directly in it. Each set is
+ * built only once a name goes into it, which most scopes never do.
+ */
+declare class ScopeSyntaxParser {
+	constructor(flags: number);
+	flags: number;
+	var?: Set<string>;
+	lexical?: Set<string>;
+	functions?: Set<string>;
+	firstLexical?: string;
+	hoisted?: (number | NodeLike)[];
+}
 type ScopeType =
 	| "function"
 	| "module"
 	| "global"
+	| "catch"
+	| "for"
+	| "switch"
+	| "with"
+	| "class"
 	| "function-expression-name"
 	| "block"
-	| "switch"
-	| "catch"
-	| "with"
-	| "for"
-	| "class"
 	| "class-field-initializer"
 	| "class-static-block";
 declare interface Selector<A, B> {
@@ -28183,7 +28256,7 @@ type SimpleBlock = NodeSyntax & {
 	token: SimpleBlockToken;
 	value: ComponentValue[];
 };
-type SimpleBlockToken = "[" | "(" | "{";
+type SimpleBlockToken = "{" | "(" | "[";
 type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -28593,15 +28666,6 @@ declare interface SourceLike {
 	 * clear cache
 	 */
 	clearCache?: (options?: ClearCacheOptions, visited?: WeakSet<Source>) => void;
-}
-
-/**
- * The `loc` a node carries when `options.locations` is on.
- */
-declare abstract class SourceLocationParser {
-	start?: null | PositionLike;
-	end?: null | PositionLike;
-	source: any;
 }
 declare interface SourceMap {
 	version: 3;
@@ -30352,24 +30416,31 @@ declare interface TimestampAndHash {
 	timestamp?: number;
 	hash: string;
 }
+
+/**
+ * A tokenizer context: what kind of brace, paren or template the tokenizer is
+ * inside, which decides how the next `/` or `}` reads.
+ */
+declare class TokContext {
+	constructor(
+		token: string,
+		isExpr: boolean,
+		preserveSpace?: boolean,
+		override?: (parser?: any) => void,
+		generator?: boolean
+	);
+	token: string;
+	isExpr: boolean;
+	preserveSpace: boolean;
+	override?: (parser?: any) => void;
+	generator: boolean;
+}
 declare interface TokContextLike {
 	token: string;
 	isExpr: boolean;
 	preserveSpace?: boolean;
 	override?: any;
 	generator?: boolean;
-}
-
-/**
- * A token as `options.onToken` receives one.
- */
-declare abstract class TokenParser {
-	type: any;
-	value: any;
-	start: any;
-	end: any;
-	loc?: SourceLocationParser;
-	range?: any[];
 }
 
 /**
@@ -30478,11 +30549,37 @@ type TokenSyntax = NodeSyntax & {
 };
 
 /**
+ * A token as `options.onToken` receives one.
+ */
+declare class TokenSyntaxParser {
+	constructor(p?: any);
+	type: any;
+	value: any;
+	start: any;
+	end: any;
+	loc?: ParserSourceLocation;
+	range?: any[];
+}
+
+/**
  * A token's kind, carrying what the parser needs to know about it without
  * re-inspecting the source: whether an expression may follow, its binary
  * precedence, and how it updates the tokenizer's context.
  */
-declare abstract class TokenType {
+declare class TokenType {
+	constructor(
+		label: string,
+		conf?: {
+			keyword?: string;
+			beforeExpr?: boolean;
+			startsExpr?: boolean;
+			isLoop?: boolean;
+			isAssign?: boolean;
+			prefix?: boolean;
+			postfix?: boolean;
+			binop?: number;
+		}
+	);
 	label: string;
 	keyword?: string;
 	beforeExpr: boolean;
@@ -31624,7 +31721,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
  */
 declare class WebpackParser extends Grammar {
 	constructor(
-		options: OptionsParser & {
+		options: OptionsSyntaxParser & {
 			lazyNodes?: boolean;
 			lazyComments?: CollectedComment[];
 			importPhases?: boolean;
@@ -31633,24 +31730,29 @@ declare class WebpackParser extends Grammar {
 		input: string,
 		startPos?: number
 	);
-	[Symbol.iterator](): Iterator<TokenParser>;
+	[Symbol.iterator](): Iterator<TokenSyntaxParser>;
 
 	/**
 	 * Applies parser plugins, keeping the result typed as this parser.
 	 */
 	static extend(
-		...plugins: ((BaseParser: typeof ParserParser) => typeof ParserParser)[]
+		...plugins: ((
+			BaseParser: typeof ParserSyntaxParser
+		) => typeof ParserSyntaxParser)[]
 	): typeof WebpackParser;
-	static parse(input: string, options?: Partial<OptionsParser>): ProgramParser;
+	static parse(
+		input: string,
+		options?: Partial<OptionsSyntaxParser>
+	): ProgramSyntaxParser;
 	static parseExpressionAt(
 		input: string,
 		pos: number,
-		options?: Partial<OptionsParser>
-	): ExpressionParser;
+		options?: Partial<OptionsSyntaxParser>
+	): ExpressionSyntaxParser;
 	static tokenizer(
 		input: string,
-		options?: Partial<OptionsParser>
-	): ParserParser;
+		options?: Partial<OptionsSyntaxParser>
+	): ParserSyntaxParser;
 }
 
 /**
@@ -32044,16 +32146,145 @@ declare namespace exports {
 	export namespace javascript {
 		export namespace syntax {
 			export namespace parser {
+				export let BIND_FUNCTION: 3;
+				export let BIND_LEXICAL: 2;
+				export let BIND_NONE: 0;
+				export let BIND_OUTSIDE: 5;
+				export let BIND_SIMPLE_CATCH: 4;
+				export let BIND_VAR: 1;
+				export let SCOPE_ARROW: 16;
+				export let SCOPE_ASYNC: 4;
+				export let SCOPE_CLASS_FIELD_INIT: 512;
+				export let SCOPE_CLASS_STATIC_BLOCK: 256;
+				export let SCOPE_DIRECT_SUPER: 128;
+				export let SCOPE_FUNCTION: 2;
+				export let SCOPE_GENERATOR: 8;
+				export let SCOPE_SIMPLE_CATCH: 32;
+				export let SCOPE_SUPER: 64;
+				export let SCOPE_SWITCH: 1024;
+				export let SCOPE_TOP: 1;
+				export let SCOPE_VAR: number;
+				export let codePointToString: (code: number) => string;
+				export namespace defaultOptions {
+					export let ecmaVersion: null;
+					export let sourceType: string;
+					export let strict: boolean;
+					export let onInsertedSemicolon: null;
+					export let onTrailingComma: null;
+					export let allowReserved: null;
+					export let allowReturnOutsideFunction: boolean;
+					export let allowImportExportEverywhere: boolean;
+					export let allowAwaitOutsideFunction: null;
+					export let allowSuperOutsideMethod: null;
+					export let allowHashBang: boolean;
+					export let checkPrivateFields: boolean;
+					export let locations: boolean;
+					export let startLocation: null;
+					export let onToken: null;
+					export let onComment: null;
+					export let ranges: boolean;
+					export let program: null;
+					export let sourceFile: null;
+					export let directSourceFile: null;
+					export let preserveParens: boolean;
+				}
+				export let functionFlags: (
+					async: boolean,
+					generator: boolean
+				) => number;
+				export let getLineInfo: (input: string, offset: number) => Position;
+				export let getOptions: (
+					opts?: null | Partial<OptionsSyntaxParser>
+				) => ResolvedOptionsSyntaxParser;
+				export let installGrammar: () => typeof grammar;
+				export let isIdentifierChar: (
+					code: number,
+					astral?: boolean
+				) => boolean;
+				export let isIdentifierStart: (
+					code: number,
+					astral?: boolean
+				) => boolean;
+				export let isLocalVariableAccess: (node?: any) => boolean;
+				export let isNewLine: (code: number) => boolean;
+				export let isPrivateFieldAccess: (node?: any) => boolean;
+				export let keywordTypes: Record<string, TokenType>;
+				export let lineBreak: RegExp;
+				export let lineBreakG: RegExp;
+				export let nextLineBreak: (
+					code: string,
+					from: number,
+					end?: number
+				) => number;
+				export let nonASCIIwhitespace: RegExp;
+				export let skipWhiteSpace: RegExp;
+				export let stringToNumber: (
+					str: string,
+					isLegacyOctalNumericLiteral: boolean
+				) => number;
+				export namespace tokContexts {
+					export let b_stat: TokContext;
+					export let b_expr: TokContext;
+					export let b_tmpl: TokContext;
+					export let p_stat: TokContext;
+					export let p_expr: TokContext;
+					export let q_tmpl: TokContext;
+					export let f_stat: TokContext;
+					export let f_expr: TokContext;
+					export let f_expr_gen: TokContext;
+					export let f_gen: TokContext;
+				}
+				export namespace tokTypes {
+					export let num: TokenType;
+					export let regexp: TokenType;
+					export let string: TokenType;
+					export let name: TokenType;
+					export let privateId: TokenType;
+					export let eof: TokenType;
+					export let bracketL: TokenType;
+					export let bracketR: TokenType;
+					export let braceL: TokenType;
+					export let braceR: TokenType;
+					export let parenL: TokenType;
+					export let parenR: TokenType;
+					export let comma: TokenType;
+					export let semi: TokenType;
+					export let colon: TokenType;
+					export let dot: TokenType;
+					export let question: TokenType;
+					export let questionDot: TokenType;
+					export let arrow: TokenType;
+					export let template: TokenType;
+					export let invalidTemplate: TokenType;
+					export let ellipsis: TokenType;
+					export let backQuote: TokenType;
+					export let dollarBraceL: TokenType;
+					export let eq: TokenType;
+					export let assign: TokenType;
+					export let incDec: TokenType;
+					export let prefix: TokenType;
+					export let logicalOR: TokenType;
+					export let logicalAND: TokenType;
+					export let bitwiseOR: TokenType;
+					export let bitwiseXOR: TokenType;
+					export let bitwiseAND: TokenType;
+					export let equality: TokenType;
+					export let relational: TokenType;
+					export let bitShift: TokenType;
+					export let plusMin: TokenType;
+					export let modulo: TokenType;
+					export let star: TokenType;
+					export let slash: TokenType;
+					export let starstar: TokenType;
+					export let coalesce: TokenType;
+				}
+				export let wordsRegexp: (words: string) => RegExp;
 				export let MAX_MASKED_INDEX: 30;
 				export let buildLineStarts: (source: string) => number[];
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
 				export let declaresIntoBlock: (statement?: any) => boolean;
 				export let overflowFrom: (mask: number, index: number) => number[];
 				export let hasOctalEscape: (raw: string) => boolean;
-				export let isIdentifierChar: (
-					code: number,
-					astral?: boolean
-				) => boolean;
 				export let parse: (
 					input: string,
 					options: ParserOptionsSyntaxParser
@@ -32064,6 +32295,16 @@ declare namespace exports {
 				) => SourcePosition;
 				export let releaseParserCaches: () => void;
 				export {
+					DestructuringErrors,
+					Label,
+					ParserNode,
+					ParserSyntaxParser as Parser,
+					Position,
+					ScopeSyntaxParser as Scope,
+					ParserSourceLocation,
+					TokContext,
+					TokenSyntaxParser as Token,
+					TokenType,
 					BLOCK_DECLARATIONS,
 					HOISTED_DECLARATIONS,
 					MODULE_DECLARATIONS,
@@ -33301,6 +33542,10 @@ declare namespace exports {
 		RawLoaderDefinitionFunction,
 		LoaderContextLibIndex as LoaderContext
 	};
+}
+declare namespace grammar {
+	export let install: (target: typeof ParserSyntaxParser) => void;
+	export { Grammar };
 }
 declare const topLevelSymbolTag: unique symbol;
 

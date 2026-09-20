@@ -2071,7 +2071,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 		 */
 		// `lazyNodes` is webpack's private extension of the parser's Options
 		const parseOptions =
-			/** @type {import("../../lib/javascript/parser").Options} */ (
+			/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 				/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true })
 			);
 		/**
@@ -2166,7 +2166,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const legacy = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					src,
-					/** @type {import("../../lib/javascript/parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ ({ ecmaVersion: 5, lazyNodes: true })
 					)
 				)
@@ -2340,7 +2340,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const second = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					"b;",
-					/** @type {import("../../lib/javascript/parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ ({
 							ecmaVersion: 2022,
 							lazyNodes: true,
@@ -2361,7 +2361,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const parseModule = (source) => () =>
 				WebpackParser.parse(
 					source,
-					/** @type {import("../../lib/javascript/parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ ({
 							ecmaVersion: "latest",
 							sourceType: "module",
@@ -2380,7 +2380,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const comments = [];
 			WebpackParser.parse(
 				"// hi\nvar x = 1; /* block */",
-				/** @type {import("../../lib/javascript/parser").Options} */ (
+				/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 					/** @type {unknown} */ ({
 						ecmaVersion: 2022,
 						lazyNodes: true,
@@ -2405,7 +2405,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			const program = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
 					"var x = 1;",
-					/** @type {import("../../lib/javascript/parser").Options} */ (
+					/** @type {import("../../lib/javascript/syntax-parser").Options} */ (
 						/** @type {unknown} */ (options)
 					)
 				)
