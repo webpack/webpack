@@ -61,6 +61,13 @@ it("should name a linked page's own file too", () => {
 	expect(read("docs.html")).toContain("<title>Linked page</title>");
 });
 
+it("should emit one page when two of them link it under one name", () => {
+	// The second link claims a name the same page already holds, so it shares
+	// that page rather than asking for a second copy of it.
+	expect(read("linked2.html")).toContain('href="docs.html"');
+	expect(read("docs.html")).toContain("<title>Linked page</title>");
+});
+
 it("should keep names apart when the page asks for one twice", () => {
 	const urls = scriptUrls(read("collide.html"));
 	// The third tag asks for a taken name, and the position it falls back to

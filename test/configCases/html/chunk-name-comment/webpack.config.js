@@ -33,6 +33,7 @@ module.exports = {
 		page: "./page.html",
 		bad: "./bad.html",
 		linked: "./linked.html",
+		linked2: "./linked2.html",
 		collide: "./collide.html"
 	},
 	output: { module: true, htmlFilename: "[name].html" },
