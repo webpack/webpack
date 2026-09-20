@@ -2,9 +2,11 @@
 
 const {
 	backoffFor,
+	main,
 	readAttempts,
 	readDelay,
 	retry,
+	runAsScript,
 	runOnce
 } = require("../../tooling/retry");
 
@@ -121,6 +123,75 @@ describe("retry", () => {
 					run: () => Promise.reject(new Error("spawn failed"))
 				})
 			).rejects.toThrow("spawn failed");
+		});
+	});
+
+	describe("main", () => {
+		it("runs what the arguments name and returns its exit code", async () => {
+			expect(await main([process.execPath, "-e", ""], {})).toBe(0);
+			expect(
+				await main([process.execPath, "-e", "process.exitCode = 5"], {
+					RETRY_ATTEMPTS: "1"
+				})
+			).toBe(5);
+		});
+
+		it("reads the attempts and delay from the environment", async () => {
+			const code = await main([process.execPath, "-e", "process.exitCode = 2"], {
+				RETRY_ATTEMPTS: "2",
+				RETRY_DELAY: "0"
+			});
+			expect(code).toBe(2);
+		});
+
+		it("refuses an invalid setting", () => {
+			expect(() => main(["true"], { RETRY_ATTEMPTS: "abc" })).toThrow(
+				"RETRY_ATTEMPTS"
+			);
+			expect(() => main(["true"], { RETRY_DELAY: "-1" })).toThrow("RETRY_DELAY");
+		});
+
+		it("names its usage when given nothing to run", () => {
+			expect(() => main([], {})).toThrow("usage:");
+		});
+	});
+
+	describe("runAsScript", () => {
+		/**
+		 * Runs it with this process's exit code put back afterwards, so a case
+		 * asserting a failure cannot decide what the test run itself exits with.
+		 * @param {string[]} argv the command and its arguments
+		 * @param {NodeJS.ProcessEnv} env the settings to read
+		 * @returns {Promise<number | undefined>} the code it set
+		 */
+		const run = async (argv, env) => {
+			const before = process.exitCode;
+			try {
+				return await runAsScript(argv, env);
+			} finally {
+				process.exitCode = before;
+			}
+		};
+
+		it("sets the exit code of what it ran", async () => {
+			expect(await run([process.execPath, "-e", ""], {})).toBe(0);
+			expect(
+				await run([process.execPath, "-e", "process.exitCode = 3"], {
+					RETRY_ATTEMPTS: "1"
+				})
+			).toBe(3);
+		});
+
+		it("reports a refused setting as exit code 1", async () => {
+			const errors = jest.spyOn(console, "error").mockImplementation(() => {});
+			try {
+				expect(await run(["true"], { RETRY_ATTEMPTS: "abc" })).toBe(1);
+				expect(errors).toHaveBeenCalledWith(
+					expect.stringContaining("RETRY_ATTEMPTS")
+				);
+			} finally {
+				errors.mockRestore();
+			}
 		});
 	});
 

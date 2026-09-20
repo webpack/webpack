@@ -117,20 +117,49 @@ const retry = async (command, args, options) => {
 	}
 };
 
-module.exports = { backoffFor, readAttempts, readDelay, retry, runOnce };
-
-if (require.main === module) {
-	(async () => {
-		const argv = process.argv.slice(2);
-		if (argv.length === 0) {
-			throw new Error("usage: node tooling/retry.js <command> [args...]");
-		}
-		process.exitCode = await retry(argv[0], argv.slice(1), {
-			attempts: readAttempts(process.env.RETRY_ATTEMPTS),
-			delay: readDelay(process.env.RETRY_DELAY)
-		});
-	})().catch((error) => {
-		console.error(error.message);
-		process.exitCode = 1;
+/**
+ * Runs what the arguments name, under the settings the environment carries.
+ * @param {string[]} argv the command and its arguments
+ * @param {NodeJS.ProcessEnv} env where `RETRY_ATTEMPTS` and `RETRY_DELAY` are read
+ * @returns {Promise<number>} the exit code to end with
+ */
+const main = (argv, env) => {
+	if (argv.length === 0) {
+		throw new Error("usage: node tooling/retry.js <command> [args...]");
+	}
+	return retry(argv[0], argv.slice(1), {
+		attempts: readAttempts(env.RETRY_ATTEMPTS),
+		delay: readDelay(env.RETRY_DELAY)
 	});
-}
+};
+
+/**
+ * Runs as the entry point, reporting a refused setting rather than throwing it
+ * at a caller that has nowhere to put it.
+ * @param {string[]} argv the command and its arguments
+ * @param {NodeJS.ProcessEnv} env where the settings are read
+ * @returns {Promise<number>} the exit code it set
+ */
+const runAsScript = (argv, env) =>
+	Promise.resolve()
+		.then(() => main(argv, env))
+		.catch((error) => {
+			console.error(error.message);
+			return 1;
+		})
+		.then((code) => {
+			process.exitCode = code;
+			return code;
+		});
+
+module.exports = {
+	backoffFor,
+	main,
+	readAttempts,
+	readDelay,
+	retry,
+	runAsScript,
+	runOnce
+};
+
+if (require.main === module) runAsScript(process.argv.slice(2), process.env);
