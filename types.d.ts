@@ -14411,6 +14411,42 @@ declare class JavascriptParser extends ParserClass {
 	inBlockScope(fn: () => void, inExecutedPath?: boolean): void;
 
 	/**
+	 * The directive a statement spells, or `undefined` when it is not one. An
+	 * AST webpack did not parse may leave the metadata off a directive, so the
+	 * spelling is recovered from the literal itself there.
+	 */
+	getDirective(
+		statement:
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportAllDeclaration
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ExportDefaultDeclaration
+			| Directive
+	): undefined | string;
+
+	/**
 	 * Processes the provided statement.
 	 */
 	detectMode(

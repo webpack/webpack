@@ -12,6 +12,71 @@ const {
 } = require("../../lib/javascript/syntax");
 
 describe("JavascriptParser", () => {
+	describe("strict directive spelling", () => {
+		it.each([
+			['"use strict";', true],
+			["'use strict';", true],
+			['"custom"; "use strict";', true],
+			['""; "custom"; "use strict"; "use strict";', true],
+			['0; "use strict";', false],
+			['("custom"); "use strict";', false],
+			['"custom"; "use\\x20strict";', false],
+			['("use strict");', false],
+			['"use\\x20strict";', false],
+			['"use \\\nstrict";', false]
+		])("detects the mode of %s", (directive, expected) => {
+			for (const source of [
+				`${directive} probe();`,
+				`function test() { ${directive} probe(); }`
+			]) {
+				const parser = new JavascriptParser("script");
+				/** @type {boolean[]} */
+				const modes = [];
+				parser.hooks.call.for("probe").tap("test", () => {
+					modes.push(parser.scope.isStrict);
+				});
+				parser.parse(
+					source,
+					/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				expect(modes).toEqual([expected]);
+			}
+		});
+
+		it.each([
+			['"use strict";', true],
+			['"custom";', false]
+		])("reads %s from an AST that states no directive", (directive, expected) => {
+			const source = `${directive} probe();`;
+			const parser = new JavascriptParser("script");
+			const state =
+				/** @type {import("../../lib/Parser").ParserState} */
+				(/** @type {unknown} */ ({ source }));
+			/** @type {EXPECTED_ANY} */
+			let ast;
+			parser.hooks.program.tap("test", (program) => {
+				ast = program;
+			});
+			parser.parse(source, state);
+			// a parser of the caller's own may report a directive as a plain
+			// expression statement, and may carry no raw text either
+			for (const statement of ast.body) {
+				statement.directive = undefined;
+				if (statement.expression) statement.expression.raw = undefined;
+			}
+			ast.comments = [];
+			/** @type {boolean[]} */
+			const modes = [];
+			parser.hooks.call.for("probe").tap("test", () => {
+				modes.push(parser.scope.isStrict);
+			});
+			parser.parse(ast, state);
+			expect(modes).toEqual([expected]);
+		});
+	});
+
 	/* eslint-disable no-unused-vars */
 	/** @type {EXPECTED_ANY} */ let abc;
 	/** @type {EXPECTED_ANY} */ let cde;
