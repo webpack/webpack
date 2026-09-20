@@ -551,17 +551,14 @@ describe("WebpackParser", () => {
 		});
 
 		it("should reclassify a cached word for a second keyword set", () => {
-			// `static` is reserved under a module goal and a plain name under a
-			// script one, so the second parse finds the slot typed by the first
-			expect(names("var static_ = 1;", { sourceType: "module" })).toEqual([
-				"static_"
-			]);
-			expect(names("var static_ = 1;", { sourceType: "script" })).toEqual([
-				"static_"
-			]);
-			expect(names("var static_ = 1;", { sourceType: "module" })).toEqual([
-				"static_"
-			]);
+			// `abstract` is an ordinary name under a recent ecmaVersion and reserved
+			// under ES3, so each parse retypes the slot the one before it typed
+			const code = "var abstract = 1;";
+			expect(names(code)).toEqual(["abstract"]);
+			expect(() => parse(code, { ecmaVersion: 3, allowReserved: false })).toThrow(
+				/'abstract' is reserved/
+			);
+			expect(names(code)).toEqual(["abstract"]);
 		});
 
 		it("should survive hash collisions by content check", () => {
