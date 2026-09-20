@@ -9487,7 +9487,7 @@ tempy@^3.2.0:
     type-fest "^2.12.2"
     unique-string "^3.0.0"
 
-terser@^5.15.1, terser@^5.46.2, terser@^5.51.0:
+terser@^5.15.1, terser@^5.51.0:
   version "5.51.2"
   resolved "https://registry.yarnpkg.com/terser/-/terser-5.51.2.tgz#555912425a7f2ff7737425c3718fa76c7069f6ef"
   integrity sha512-bWnjSNscmuI+GJze6ZupnHP8G/cTcsJF+bXCeQknk2SHQsgbNJnLrqiH9jZ2W4STPVXH2mDKKRX3iwPhc9Cn/Q==
