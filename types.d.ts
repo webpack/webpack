@@ -6550,14 +6550,15 @@ declare class DefinePlugin {
 	apply(compiler: Compiler): void;
 
 	/**
-	 * Returns runtime value.
+	 * Creates a runtime value. Async generators resolve once per module and key
+	 * before parsing; promise-returning functions require the `async` option.
 	 */
 	static runtimeValue(
 		fn: (value: {
 			module: NormalModule;
 			key: string;
 			readonly version: ValueCacheVersion;
-		}) => CodeValuePrimitive,
+		}) => GeneratedValue,
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
 	static getCompilationHooks: (compilation: Compilation) => {
@@ -9935,6 +9936,16 @@ declare interface GeneratedSourceInfo {
 	 */
 	source?: string;
 }
+type GeneratedValue =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| Function
+	| RegExp
+	| PromiseLike<CodeValuePrimitive>;
 declare class Generator {
 	constructor();
 
@@ -19577,9 +19588,11 @@ declare class NormalModule extends Module {
 		loader: SyncHook<[AnyLoaderContext, NormalModule]>;
 		beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
 		/**
+		 * Async since 5.112.0, so a tap can resolve values a module needs
+		 * before it is parsed. `tap` keeps working.
 		 * @since 5.59.0
 		 */
-		beforeParse: SyncHook<[NormalModule]>;
+		beforeParse: AsyncSeriesHook<[NormalModule]>;
 		/**
 		 * @since 5.59.0
 		 */
@@ -27384,9 +27397,30 @@ declare abstract class RuntimeValue {
 		module: NormalModule;
 		key: string;
 		readonly version: ValueCacheVersion;
-	}) => CodeValuePrimitive;
+	}) => GeneratedValue;
 	options: true | RuntimeValueOptions;
+
+	/**
+	 * Resolved before the module is parsed, since the parser cannot wait.
+	 * Use the option for promise-returning functions not declared `async`.
+	 */
+	async: boolean;
 	get fileDependencies(): true | string[];
+
+	/**
+	 * Records what the value is computed from on the module it is rendered into,
+	 * so a change to any of it rebuilds that module.
+	 */
+	addDependencies(module: NormalModule, key: string): void;
+
+	/**
+	 * Runs the generator for one module.
+	 */
+	call(
+		module: NormalModule,
+		valueCacheVersions: Map<string, ValueCacheVersion>,
+		key: string
+	): GeneratedValue;
 
 	/**
 	 * Returns code.
@@ -27398,12 +27432,21 @@ declare abstract class RuntimeValue {
 	): CodeValuePrimitive;
 	getCacheVersion(): undefined | string;
 }
+
+/**
+ * Whether the generator is declared `async`.
+ */
 declare interface RuntimeValueOptions {
 	fileDependencies?: string[];
 	contextDependencies?: string[];
 	missingDependencies?: string[];
 	buildDependencies?: string[];
 	version?: string | (() => string);
+
+	/**
+	 * resolve the generator before parsing, including promise-returning functions not declared `async`
+	 */
+	async?: boolean;
 }
 
 /**
