@@ -58,10 +58,9 @@ getTemplate("b", function(b) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -328,11 +327,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 8.64 KiB [emitted] (name: main)
+asset output.js 8.57 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_.output.js 2.28 KiB [emitted]
-chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   ./example.js 266 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -349,11 +348,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.86 KiB [emitted] [minimized] (name: main)
+asset output.js 1.84 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_.output.js 652 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   ./example.js 266 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

@@ -187,10 +187,9 @@ module.exports = webpackAsyncContext;
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -388,7 +387,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Unoptimized
 
 ```
-asset output.js 13.1 KiB [emitted] (name: main)
+asset output.js 13 KiB [emitted] (name: main)
 asset 140.output.js 284 bytes [emitted]
 asset 197.output.js 284 bytes [emitted]
 asset 414.output.js 276 bytes [emitted]
@@ -411,9 +410,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.7 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.63 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.7 KiB 10 modules
+  runtime modules 6.63 KiB 10 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -425,7 +424,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.91 KiB [emitted] [minimized] (name: main)
+asset output.js 2.89 KiB [emitted] [minimized] (name: main)
 asset 140.output.js 66 bytes [emitted] [minimized]
 asset 197.output.js 66 bytes [emitted] [minimized]
 asset 414.output.js 66 bytes [emitted] [minimized]
@@ -448,9 +447,9 @@ chunk (runtime: main) 414.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.43 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.37 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.43 KiB 9 modules
+  runtime modules 6.37 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 243 bytes [built] [code generated]
     [no exports]

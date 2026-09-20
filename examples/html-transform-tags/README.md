@@ -133,14 +133,14 @@ the script moved to the end of `<body>` as `<script defer>`.
 		
 
 		<!-- External stylesheet: the plugin adds `crossorigin`. -->
-		<link rel="stylesheet" href="index.css" crossorigin="anonymous">
+		<link rel="stylesheet" href="styles.css" crossorigin="anonymous">
 
 		<!-- Authored in <head>; the plugin moves it to the end of <body>
 		     (deferred) and adds `crossorigin`. -->
 		
 	</head>
 	<body>
-		<h1>transformTags</h1><script src="index.js" crossorigin="anonymous" defer></script>
+		<h1>transformTags</h1><script src="app.js" crossorigin="anonymous" defer></script>
 	</body>
 </html>
 ```
@@ -150,20 +150,20 @@ the script moved to the end of `<body>` as `<script defer>`.
 ## Unoptimized
 
 ```
-asset index.html 546 bytes [emitted] (auxiliary name: index)
-asset index.js 255 bytes [emitted] (name: __html_6d047296_1)
-asset index.css 183 bytes [emitted] (name: __html_6d047296_0)
-Entrypoint index (546 bytes) = 1 auxiliary asset
-Entrypoint __html_6d047296_1 255 bytes = index.js
-Entrypoint __html_6d047296_0 183 bytes = index.css
-chunk (runtime: __html_6d047296_0) index.css (__html_6d047296_0) 81 bytes (css) 0 bytes (runtime) [entry] [rendered]
+asset index.html 545 bytes [emitted] (auxiliary name: index)
+asset app.js 255 bytes [emitted] (name: __html_6d047296_1)
+asset styles.css 183 bytes [emitted] (name: __html_6d047296_0)
+Entrypoint index (545 bytes) = 1 auxiliary asset
+Entrypoint __html_6d047296_1 255 bytes = app.js
+Entrypoint __html_6d047296_0 183 bytes = styles.css
+chunk (runtime: __html_6d047296_0) styles.css (__html_6d047296_0) 81 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 81 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./styles.css __html_6d047296_0
-chunk (runtime: __html_6d047296_1) index.js (__html_6d047296_1) 53 bytes [entry] [rendered]
+chunk (runtime: __html_6d047296_1) app.js (__html_6d047296_1) 53 bytes [entry] [rendered]
   > ./app.js __html_6d047296_1
   ./src/app.js 53 bytes [built] [code generated]
     [used exports unknown]
@@ -180,26 +180,26 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset index.html 265 bytes [emitted] [minimized] (auxiliary name: index)
-asset index.css 63 bytes [emitted] [minimized] (name: __html_6d047296_0)
-asset index.js 52 bytes [emitted] [minimized] (name: __html_6d047296_1)
-Entrypoint index (265 bytes) = 1 auxiliary asset
-Entrypoint __html_6d047296_1 52 bytes = index.js
-Entrypoint __html_6d047296_0 63 bytes = index.css
+asset index.html 264 bytes [emitted] [minimized] (auxiliary name: index)
+asset styles.css 63 bytes [emitted] [minimized] (name: __html_6d047296_0)
+asset app.js 52 bytes [emitted] [minimized] (name: __html_6d047296_1)
+Entrypoint index (264 bytes) = 1 auxiliary asset
+Entrypoint __html_6d047296_1 52 bytes = app.js
+Entrypoint __html_6d047296_0 63 bytes = styles.css
 chunk (runtime: index) (index) 530 bytes [entry]
   > ./src/index.html index
   ./src/index.html 530 bytes [built] [code generated]
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: __html_6d047296_0) index.css (__html_6d047296_0) 81 bytes (css) 0 bytes (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_0) styles.css (__html_6d047296_0) 81 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 81 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./styles.css __html_6d047296_0
-chunk (runtime: __html_6d047296_1) index.js (__html_6d047296_1) 53 bytes [entry] [rendered]
+chunk (runtime: __html_6d047296_1) app.js (__html_6d047296_1) 53 bytes [entry] [rendered]
   > ./app.js __html_6d047296_1
   ./src/app.js 53 bytes [built] [code generated]
     [no exports used]

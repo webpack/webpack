@@ -88,10 +88,9 @@ require.ensure(["./a"], function(require) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -341,7 +340,7 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 8.84 KiB [emitted] (name: main)
+asset output.js 8.77 KiB [emitted] (name: main)
 asset a_js-b_js.output.js 618 bytes [emitted]
 asset c_js.output.js 329 bytes [emitted]
 asset d_js.output.js 329 bytes [emitted]
@@ -370,9 +369,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -382,7 +381,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.86 KiB [emitted] [minimized] (name: main)
+asset output.js 1.84 KiB [emitted] [minimized] (name: main)
 asset a_js-b_js.output.js 110 bytes [emitted] [minimized]
 asset c_js.output.js 83 bytes [emitted] [minimized]
 asset d_js.output.js 83 bytes [emitted] [minimized]
@@ -411,9 +410,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

@@ -186,10 +186,9 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -470,11 +469,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 13.4 KiB [emitted] (name: main)
+asset output.js 13.3 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 2.29 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.55 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.61 KiB 9 modules
+  runtime modules 5.55 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -492,11 +491,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.5 KiB [emitted] [minimized] (name: main)
+asset output.js 2.48 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.55 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.61 KiB 9 modules
+  runtime modules 5.55 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]

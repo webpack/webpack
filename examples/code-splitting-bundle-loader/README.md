@@ -87,10 +87,9 @@ __webpack_require__.e(/*! require.ensure */ "file_js").then((function(require) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.j(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -286,7 +285,7 @@ module.exports = "It works";
 ## Unoptimized
 
 ```
-asset output.js 9.34 KiB [emitted] (name: main)
+asset output.js 9.27 KiB [emitted] (name: main)
 asset file_js.output.js 348 bytes [emitted]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
@@ -294,9 +293,9 @@ chunk (runtime: main) file_js.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [used exports unknown]
@@ -307,7 +306,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.88 KiB [emitted] [minimized] (name: main)
+asset output.js 1.86 KiB [emitted] [minimized] (name: main)
 asset file_js.output.js 93 bytes [emitted] [minimized]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
@@ -315,9 +314,9 @@ chunk (runtime: main) file_js.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.83 KiB 6 modules
+  runtime modules 4.77 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [no exports used]

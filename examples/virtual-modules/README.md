@@ -600,10 +600,9 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 			__webpack_require__.f[key](chunkId, promises);
-/******/ 			return promises;
-/******/ 		}, []));
+/******/ 		const promises = [];
+/******/ 		__webpack_require__.f.require(chunkId, promises);
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -693,10 +692,10 @@ asset output.js 19.8 KiB [emitted] (name: main)
 asset 1.output.js 787 bytes [emitted]
 asset 2.output.js 787 bytes [emitted]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 4.01 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 3.95 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 617 bytes (javascript) 78 bytes (asset) [dependent] 12 modules
-  runtime modules 4.01 KiB 8 modules
+  runtime modules 3.95 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -719,7 +718,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.61 KiB [emitted] [minimized] (name: main)
+asset output.js 2.6 KiB [emitted] [minimized] (name: main)
 asset 263.output.js 93 bytes [emitted] [minimized]
 asset 722.output.js 93 bytes [emitted] [minimized]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
@@ -733,10 +732,10 @@ chunk (runtime: main) 722.output.js 20 bytes [rendered]
   ./routes/b.js 20 bytes [built] [code generated]
     [exports: default]
     import() ./routes/b.js virtual:routes 2:9-32
-chunk (runtime: main) output.js (main) 1.85 KiB (javascript) 78 bytes (asset) 4.38 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.85 KiB (javascript) 78 bytes (asset) 4.32 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 482 bytes (javascript) 78 bytes (asset) [dependent] 8 modules
-  runtime modules 4.38 KiB 8 modules
+  runtime modules 4.32 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [no exports used]
