@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minify-light-dark-name-only minify-light-dark-name-only should compile 1`] = `".scheme-light-dark{color-scheme:light dark}.b{width:my-light-dark(1px)}.a{color:red}"`;

@@ -10079,7 +10079,7 @@ describe("CssSyntax minify — the version each rewrite turns on at", () => {
 		expect(minifyFor(css, ["chrome 87"])).toBe(css);
 		expect(minifyFor(css, ["chrome 88"])).toBe(
 			"a{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
-				":where(:root){--webpack-light:initial;--webpack-dark: }"
+				":where(:root){--webpack-light:initial;--webpack-dark:}"
 		);
 		// ...and at the version the function itself arrived, there is nothing to
 		// write another way.
@@ -10103,7 +10103,7 @@ describe("CssSyntax minify — the version each rewrite turns on at", () => {
 });
 
 describe("CssSyntax minify — light-dark()", () => {
-	const DEFAULTS = ":where(:root){--webpack-light:initial;--webpack-dark: }";
+	const DEFAULTS = ":where(:root){--webpack-light:initial;--webpack-dark:}";
 
 	it("writes the pair the color scheme switches", () => {
 		expect(minifyFor("a{color:light-dark(red,blue)}", ["chrome 100"])).toBe(
@@ -10117,8 +10117,8 @@ describe("CssSyntax minify — light-dark()", () => {
 				"chrome 100"
 			])
 		).toBe(
-			"html{color-scheme:light dark;--webpack-light:initial;--webpack-dark: }" +
-				"@media (prefers-color-scheme:dark){html{--webpack-light: ;--webpack-dark:initial}}" +
+			"html{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}" +
+				"@media (prefers-color-scheme:dark){html{--webpack-light:;--webpack-dark:initial}}" +
 				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 		// One scheme alone answers for itself, with no query to defer to.
@@ -10127,7 +10127,7 @@ describe("CssSyntax minify — light-dark()", () => {
 				"chrome 100"
 			])
 		).toBe(
-			"html{color-scheme:dark;--webpack-light: ;--webpack-dark:initial}" +
+			"html{color-scheme:dark;--webpack-light:;--webpack-dark:initial}" +
 				`a{color:var(--webpack-light,red) var(--webpack-dark,blue)}${DEFAULTS}`
 		);
 		// `only` narrows how the scheme is chosen, and `normal` is the light one.
@@ -10135,12 +10135,12 @@ describe("CssSyntax minify — light-dark()", () => {
 			minifyFor("html{color-scheme:only dark}a{color:light-dark(red,blue)}", [
 				"chrome 100"
 			])
-		).toContain("--webpack-light: ;--webpack-dark:initial");
+		).toContain("--webpack-light:;--webpack-dark:initial");
 		expect(
 			minifyFor("html{color-scheme:normal}a{color:light-dark(red,blue)}", [
 				"chrome 100"
 			])
-		).toContain("--webpack-light:initial;--webpack-dark: ");
+		).toContain("--webpack-light:initial;--webpack-dark:}");
 	});
 
 	it("leaves a `color-scheme` it cannot read alone", () => {
