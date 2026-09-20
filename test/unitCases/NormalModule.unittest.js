@@ -355,7 +355,7 @@ describe("NormalModule", () => {
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
 					/**
-					 * @param {import("../../lib/Dependency")} dep dependency
+					 * @param {import("../../lib/graph/Dependency")} dep dependency
 					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => depToModule.get(dep),
@@ -393,7 +393,7 @@ describe("NormalModule", () => {
 			const originalGetModule = moduleGraph.getModule;
 			moduleGraph.getModule = /** @type {ModuleGraph["getModule"]} */ (
 				/**
-				 * @param {import("../../lib/Dependency")} dep dependency
+				 * @param {import("../../lib/graph/Dependency")} dep dependency
 				 * @returns {import("../../lib/module/Module") | null} module
 				 */
 				(dep) => (dep === lastDep ? modules[0] : originalGetModule(dep))
@@ -474,7 +474,7 @@ describe("NormalModule", () => {
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
 					/**
-					 * @param {import("../../lib/Dependency")} dep dependency
+					 * @param {import("../../lib/graph/Dependency")} dep dependency
 					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => (dep === depA ? a : dep === depB ? b : null),
@@ -531,7 +531,7 @@ describe("NormalModule", () => {
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
 					/**
-					 * @param {import("../../lib/Dependency")} dep dependency
+					 * @param {import("../../lib/graph/Dependency")} dep dependency
 					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => depToModule.get(dep),
@@ -593,7 +593,7 @@ describe("NormalModule", () => {
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
 					/**
-					 * @param {import("../../lib/Dependency")} dep dependency
+					 * @param {import("../../lib/graph/Dependency")} dep dependency
 					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => depToModule.get(dep),

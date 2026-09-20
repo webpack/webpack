@@ -87,7 +87,7 @@ describe("formatLocation", () => {
 		it(`should format location correctly for ${testCase.name}`, () => {
 			expect(
 				formatLocation(
-					/** @type {import("../../lib/Dependency").DependencyLocation} */ (
+					/** @type {import("../../lib/graph/Dependency").DependencyLocation} */ (
 						testCase.loc
 					)
 				)

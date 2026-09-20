@@ -5475,7 +5475,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((asset: { chunk: import('../lib/Chunk'), filename: string }) => string[] | false)"
+              "tsType": "((asset: { chunk: import('../lib/graph/Chunk'), filename: string }) => string[] | false)"
             }
           ],
           "added": "5.109.0"
@@ -6506,7 +6506,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((context: { entryName: string, entrypoint: import('../lib/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: (import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint & { hostChunks: string[] })[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
+          "tsType": "((context: { entryName: string, entrypoint: import('../lib/graph/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: (import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint & { hostChunks: string[] })[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
         }
       ],
       "added": "5.109.0"

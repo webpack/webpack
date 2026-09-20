@@ -1,6 +1,6 @@
 "use strict";
 
-const Dependency = require("../../lib/Dependency");
+const Dependency = require("../../lib/graph/Dependency");
 const CssIcssExportDependency = require("../../lib/dependencies/CssIcssExportDependency");
 
 const { EXPORT_MODE, EXPORT_TYPE } = CssIcssExportDependency;
@@ -105,7 +105,7 @@ describe("CssIcssExportDependency", () => {
 		/** @type {string[]} */
 		const updates = [];
 		const context =
-			/** @type {import("../../lib/Dependency").UpdateHashContext} */ ({
+			/** @type {import("../../lib/graph/Dependency").UpdateHashContext} */ ({
 				chunkGraph: { moduleGraph: makeModuleGraph(makeModule()) }
 			});
 		dep.updateHash(

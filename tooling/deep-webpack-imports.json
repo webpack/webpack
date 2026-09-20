@@ -2,14 +2,15 @@
   "sampledAt": "2026-09-20",
   "perKeyword": 200,
   "removed": {
+    "lib/AsyncDependenciesBlock": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/DependenciesBlockVariable": "Removed in webpack 5 with block variables.",
     "lib/FunctionModulePlugin": "Removed in webpack 5.",
-    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only — it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/JavascriptGenerator": "@sector-labs/lingui-loader probes for it to detect webpack 4, so a re-export would send it down the wrong branch; its other importer, hard-source-webpack-plugin, is webpack 4 only.",
     "lib/JsonGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/JsonParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/LoaderTargetPlugin": "Only miniprogram-webpack-plugin imports it, and that package also imports lib/FunctionModulePlugin and lib/MultiEntryPlugin, both removed in webpack 5.",
-    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only — it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
+    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/ModuleDependencyWarning": "Moved to lib/errors/ before this record; kept unresolved deliberately.",
     "lib/ModuleError": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/ModuleWarning": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -32,10 +33,6 @@
     "lib/web/FetchCompileWasmTemplatePlugin": "Renamed in webpack 5 to web/FetchCompileWasmPlugin."
   },
   "requests": {
-    "lib/AsyncDependenciesBlock": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/Chunk": {
       "weekly": 684,
       "packages": [
@@ -282,7 +279,10 @@
       "weekly": 188538,
       "packages": ["@vue/preload-webpack-plugin"]
     },
-    "lib/ExternalsPlugin": { "weekly": 596945, "packages": ["worker-loader"] },
+    "lib/ExternalsPlugin": {
+      "weekly": 596945,
+      "packages": ["worker-loader"]
+    },
     "lib/FileSystemInfo": {
       "weekly": 10690048,
       "packages": ["html-webpack-plugin"]
@@ -395,8 +395,14 @@
       "weekly": 132645,
       "packages": ["@sector-labs/lingui-loader", "hard-source-webpack-plugin"]
     },
-    "lib/ProgressPlugin": { "weekly": 164184, "packages": ["webpack-stream"] },
-    "lib/RawModule": { "weekly": 852, "packages": ["google-fonts-plugin"] },
+    "lib/ProgressPlugin": {
+      "weekly": 164184,
+      "packages": ["webpack-stream"]
+    },
+    "lib/RawModule": {
+      "weekly": 852,
+      "packages": ["google-fonts-plugin"]
+    },
     "lib/RequestShortener": {
       "weekly": 1754736,
       "packages": [
@@ -418,7 +424,10 @@
       "weekly": 66,
       "packages": ["san-loader"]
     },
-    "lib/rules/RuleSetCompiler": { "weekly": 66, "packages": ["san-loader"] },
+    "lib/rules/RuleSetCompiler": {
+      "weekly": 66,
+      "packages": ["san-loader"]
+    },
     "lib/rules/UseEffectRulePlugin": {
       "weekly": 66,
       "packages": ["san-loader"]
@@ -440,7 +449,10 @@
       "weekly": 132904,
       "packages": ["@stylable/webpack-extensions", "hard-source-webpack-plugin"]
     },
-    "lib/util/identifier": { "weekly": 856277, "packages": ["thread-loader"] },
+    "lib/util/identifier": {
+      "weekly": 856277,
+      "packages": ["thread-loader"]
+    },
     "lib/util/makeSerializable.js": {
       "weekly": 3659559,
       "packages": [

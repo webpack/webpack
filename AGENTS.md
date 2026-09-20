@@ -71,7 +71,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
   - `lib/debug/` — Debug helpers.
-  - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
+  - `lib/dependencies/` — The concrete `Dependency` subclasses and their templates
+    (HarmonyImport, CommonJsRequire, RequireContext, …); the `Dependency` they extend is
+    in `lib/graph/` and the `DependencyTemplate` in `lib/template/`.
   - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
   - `lib/diagnostics/` — Plugins that raise a build-wide error or warning of their own:
     a case-insensitive filesystem collision, a deprecated option, a missing `mode`, and
@@ -82,13 +84,18 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/entry/` — The `entry` option: `EntryPlugin`, the `EntryOptionPlugin` that reads
     the option into it, and `DynamicEntryPlugin` for a function entry. `Entrypoint` is a
-    `ChunkGroup` rather than one of these, so it stays beside `ChunkGroup`.
+    `ChunkGroup` rather than one of these, so it lives beside `ChunkGroup` in `lib/graph/`.
   - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/externals/` — External modules: the `externals` option's module, factory plugin and the presets built on them.
-  - `lib/graph/` — The module and chunk graphs a compilation holds: `ModuleGraph` and its
-    connections, `ChunkGraph` and the `buildChunkGraph` that fills it, and the `ExportsInfo`
-    recording what each module exports and who uses it.
+  - `lib/graph/` — The module and chunk graphs a compilation holds, and the things they
+    are graphs of: `ModuleGraph` and its connections, `ChunkGraph` and the
+    `buildChunkGraph` that fills it, and the `ExportsInfo` recording what each module
+    exports and who uses it. The edges are `Dependency`, held by a `DependenciesBlock`
+    (`AsyncDependenciesBlock` where the block is loaded on demand); the chunk side holds
+    `Chunk`, `ChunkGroup`, `Entrypoint` and `HotUpdateChunk`. A `Dependency` subclass a
+    plugin owns lives in `lib/dependencies/` and the `DependencyTemplate` it prints
+    through in `lib/template/` — this holds the base classes every build has.
   - `lib/hmr/` — Hot Module Replacement: `HotModuleReplacementPlugin` and the runtime
     modules, lazy-compilation backend and helpers it drives.
   - `lib/html/` — Experimental HTML support.
