@@ -15163,6 +15163,12 @@ declare interface JavascriptParserOptions {
 	system?: boolean;
 
 	/**
+	 * Set what top-level "this" refers to in a non-ES module: "exports" (the exports object, as in Node.js) or "global" (the global object, as in a classic script).
+	 * @since 5.112.0
+	 */
+	topLevelThis?: "global" | "exports";
+
+	/**
 	 * Enable typescript support.
 	 * @experimental
 	 */
