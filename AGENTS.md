@@ -100,6 +100,13 @@ The directory listings below are the canonical map of the repository. **Whenever
     iteration and loader module loading, plus the `LoaderOptionsPlugin` and
     `LoaderTargetPlugin` that feed the loader context.
   - `lib/logging/` — Logger API and console formatting.
+  - `lib/module/` — What a module is and what makes one: the `Module` base class and
+    `NormalModule`, the `ModuleFactory` hierarchy that builds them (`NormalModuleFactory`,
+    `NullFactory`, `SelfModuleFactory`), the `Generator` base class and the
+    `CodeGenerationResults` its output lands in, `ModuleProfile`, and the two constant
+    files naming module and source types. A module subclass a plugin owns lives with
+    that plugin — `ExternalModule` in `lib/externals/`, `CssModule` in `lib/css/` — so
+    this holds the ones every build has.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …),
     including `CircularModulesPlugin`, which flags the import cycles the others reason about.
   - `lib/performance/` — Asset/entrypoint size hints.

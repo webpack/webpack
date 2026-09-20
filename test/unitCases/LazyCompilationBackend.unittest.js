@@ -79,10 +79,10 @@ const makeSocket = () => {
 
 /**
  * @param {string} id module identifier
- * @returns {import("../../lib/Module")} a fake module
+ * @returns {import("../../lib/module/Module")} a fake module
  */
 const makeModule = (id) =>
-	/** @type {import("../../lib/Module")} */ (
+	/** @type {import("../../lib/module/Module")} */ (
 		/** @type {unknown} */ ({ identifier: () => id })
 	);
 

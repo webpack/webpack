@@ -3745,7 +3745,7 @@
               },
               {
                 "instanceof": "Function",
-                "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+                "tsType": "import(\"../lib/module/NormalModule\").NoParseFn"
               }
             ]
           },
@@ -3763,7 +3763,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+          "tsType": "import(\"../lib/module/NormalModule\").NoParseFn"
         }
       ]
     },
@@ -4846,7 +4846,7 @@
           "items": {
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string",
-            "tsType": "import(\"../lib/Module\").SourceType"
+            "tsType": "import(\"../lib/module/Module\").SourceType"
           },
           "minItems": 1
         },

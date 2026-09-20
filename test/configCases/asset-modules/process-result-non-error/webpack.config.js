@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 
 // A tap that rejects with something that is not an Error still has to name the
 // module it failed, so the value is wrapped rather than reported bare.

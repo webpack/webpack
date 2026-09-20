@@ -267,7 +267,7 @@ describe("RuntimeTemplate.assignOr", () => {
 describe("RuntimeTemplate.supportsAnalyzable", () => {
 	/** @import ChunkGraph from "../../lib/graph/ChunkGraph" */
 	/** @import Compilation from "../../lib/Compilation" */
-	/** @import Module from "../../lib/Module" */
+	/** @import Module from "../../lib/module/Module" */
 
 	/** Stands for the module a reference is emitted into; no field of it is read. */
 	const module = /** @type {Module} */ (/** @type {unknown} */ ({}));

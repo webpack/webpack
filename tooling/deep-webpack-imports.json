@@ -4,10 +4,12 @@
   "removed": {
     "lib/DependenciesBlockVariable": "Removed in webpack 5 with block variables.",
     "lib/FunctionModulePlugin": "Removed in webpack 5.",
+    "lib/Generator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/JavascriptGenerator": "@sector-labs/lingui-loader probes for it to detect webpack 4, so a re-export would send it down the wrong branch; its other importer, hard-source-webpack-plugin, is webpack 4 only.",
     "lib/JsonGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/JsonParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/LoaderTargetPlugin": "Only miniprogram-webpack-plugin imports it, and that package also imports lib/FunctionModulePlugin and lib/MultiEntryPlugin, both removed in webpack 5.",
+    "lib/Module": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only \u2014 it also imports lib/DependenciesBlockVariable and lib/JavascriptGenerator, both removed in webpack 5.",
     "lib/ModuleDependencyWarning": "Moved to lib/errors/ before this record; kept unresolved deliberately.",
     "lib/ModuleError": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/ModuleWarning": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -324,10 +326,6 @@
       "weekly": 20,
       "packages": ["miniprogram-webpack-plugin"]
     },
-    "lib/Generator": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/ids/IdHelpers": {
       "weekly": 39,
       "packages": ["@automattic/i18n-check-webpack-plugin"]
@@ -370,10 +368,6 @@
     "lib/logging/runtime.js": {
       "weekly": 17483282,
       "packages": ["webpack-dev-middleware"]
-    },
-    "lib/Module": {
-      "weekly": 120628,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/ModuleDependencyWarning": {
       "weekly": 8549,

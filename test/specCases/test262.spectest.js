@@ -9,7 +9,7 @@ const vm = require("vm");
 const webpack = require("../..");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
-/** @import NormalModule from "../../lib/NormalModule" */
+/** @import NormalModule from "../../lib/module/NormalModule" */
 
 const needDebug = typeof process.env.DEBUG !== "undefined";
 

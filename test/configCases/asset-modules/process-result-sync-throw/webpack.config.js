@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 
 // The sync hook runs inside the async one's callback, where a throw would be
 // an unhandled rejection rather than this module's build error.
