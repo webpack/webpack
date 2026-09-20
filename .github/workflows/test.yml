@@ -115,7 +115,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - name: CSS printer invariants
         run: yarn test:invariants:css
