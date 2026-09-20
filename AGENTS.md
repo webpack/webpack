@@ -122,7 +122,11 @@ The directory listings below are the canonical map of the repository. **Whenever
     that plugin — `ExternalModule` in `lib/externals/`, `CssModule` in `lib/css/` — so
     this holds the ones every build has.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …),
-    including `CircularModulesPlugin`, which flags the import cycles the others reason about.
+    including `CircularModulesPlugin`, which flags the import cycles the others reason
+    about, and `LazyBarrel`, which finds the barrel files worth deferring.
+    `ConcatenationScope` is the protocol scope hoisting runs on: `ConcatenatedModule`
+    is the only thing that constructs one, and a generator anywhere in `lib/` renders
+    through it.
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
@@ -140,7 +144,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/stats/` — Stats output (default printer, JSON factories).
   - `lib/template/` — Source templates and init fragments the generators print through,
     including `RuntimeTemplate`, the printing helper every generator and dependency
-    template is handed.
+    template is handed, the `DependencyTemplate` base class, and
+    `ModuleInfoHeaderPlugin`, which prints the per-module comment header into the
+    generated bundle.
   - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers, including `RequestShortener`, which renders a request
