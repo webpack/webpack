@@ -11175,6 +11175,95 @@ describe("SourceProcessor — mergeDistantRules", () => {
 			expect(out).toContain(declaration);
 		}
 	});
+
+	it("joins an at-rule with a later one stating the same condition", () => {
+		expect(
+			minify(
+				"@media (min-width:1px){.a{color:red}}.b{margin:0}@media (min-width:1px){.c{color:blue}}",
+				true
+			)
+		).toBe("@media (width>=1px){.a{color:red}.c{color:blue}}.b{margin:0}");
+	});
+
+	/**
+	 * The same at-rule name with its first letter written as a hexadecimal CSS
+	 * escape, which the syntax makes a legal spelling of that same name.
+	 * @param {string} name the at-rule name, `@` excluded
+	 * @returns {string} the escaped spelling, `@` included
+	 */
+	const escapedName = (name) =>
+		`@\\${name.charCodeAt(0).toString(16)} ${name.slice(1)}`;
+
+	it("leaves an at-rule written under an escaped name as it stands", () => {
+		// The merge is keyed by the name the parser read, and an escaped spelling
+		// is not that name, so the block carries no entries to join.
+		const media = escapedName("media");
+		const sheet = `${media} (min-width:1px){.a{color:red}}.b{margin:0}${media} (min-width:1px){.c{color:blue}}`;
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("leaves `@keyframes` alone however it is spelled", () => {
+		// A later copy redeclares rather than adds to, so the two stay two blocks
+		// — `from` becoming `0%` is the keyframe selector's own shortening.
+		expect(
+			minify(
+				"@keyframes k{to{opacity:1}}.b{margin:0}@keyframes k{from{opacity:0}}",
+				true
+			)
+		).toBe("@keyframes k{to{opacity:1}}.b{margin:0}@keyframes k{0%{opacity:0}}");
+		const frames = escapedName("keyframes");
+		const escaped = `${frames} k{to{opacity:1}}.b{margin:0}${frames} k{from{opacity:0}}`;
+		expect(minify(escaped, true)).toBe(escaped);
+	});
+
+	it("leaves `@layer` alone however it is spelled", () => {
+		const layer = escapedName("layer");
+		for (const sheet of [
+			"@layer L{.a{color:red}}.b{margin:0}@layer L{.c{color:blue}}",
+			"@layer{.a{color:red}}.b{margin:0}@layer{.c{color:blue}}",
+			`${layer} L{.a{color:red}}.b{margin:0}${layer} L{.c{color:blue}}`
+		]) {
+			expect(minify(sheet, true)).toBe(sheet);
+		}
+	});
+
+	// The same question asked of a block's own children, which are gathered as
+	// the block is assembled rather than as the stylesheet streams.
+	it("joins two conditions stated inside one block", () => {
+		expect(
+			minify(
+				"@layer w{.a{color:red}@media print{.b{margin:0}}.c{color:blue}@media print{.d{padding:0}}}",
+				true
+			)
+		).toBe(
+			"@layer w{.a{color:red}@media print{.b{margin:0}.d{padding:0}}.c{color:blue}}"
+		);
+	});
+
+	it("leaves two conditions in a block apart where one between declares what they do", () => {
+		const sheet =
+			"@layer w{@media print{.b{margin:0}}.c{margin:1px}@media print{.d{margin:2px}}}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("leaves a block whose declarations cannot be read where it stands", () => {
+		// The condition holds a rule this cannot read the declarations of, so what
+		// moving it would shadow has no answer and it stays put.
+		const sheet =
+			"@layer w{@media print{@supports (color:red){.b{margin:0}}}.c{color:blue}@media print{@supports (color:red){.d{margin:2px}}}}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("gathers a named layer inside a block as the layer it is", () => {
+		// Not the pair of equal conditions this joins: `_mergeNamedLayerBlocks`
+		// takes it, which is why the body moves although the prelude is a layer's.
+		expect(
+			minify(
+				"@layer w{@layer inner{.b{margin:0}}.c{color:blue}@layer inner{.d{padding:0}}}",
+				true
+			)
+		).toBe("@layer w{@layer inner{.b{margin:0}.d{padding:0}}.c{color:blue}}");
+	});
 });
 
 
