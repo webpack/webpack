@@ -28689,6 +28689,11 @@ declare interface StartupRenderContext {
 	 * whether the top-level exports declaration needs to be generated
 	 */
 	needExportsDeclaration?: boolean;
+
+	/**
+	 * the inlined entry's top-level declarations renamed to avoid a collision, original to new name
+	 */
+	renamedDeclarations?: Map<string, string>;
 }
 declare interface StatFs {
 	(

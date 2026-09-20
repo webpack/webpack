@@ -23,6 +23,7 @@ const assertBundle = (assetName, assert) =>
  * @param {(source: string) => void} assert what the emitted bundle must look like
  * @param {("production" | "development")=} mode which mode to build in
  * @param {boolean=} avoidEntryIife whether the entry may be inlined without an IIFE
+ * @param {boolean=} concatenateModules whether the entry may absorb its ESM dependencies
  * @returns {import("../../../../").Configuration} config
  */
 const variant = (
@@ -30,7 +31,8 @@ const variant = (
 	entry,
 	assert,
 	mode = "production",
-	avoidEntryIife = undefined
+	avoidEntryIife = undefined,
+	concatenateModules = false
 ) => ({
 	mode,
 	devtool: false,
@@ -42,7 +44,7 @@ const variant = (
 		module: true,
 		library: { type: "module" }
 	},
-	optimization: { concatenateModules: false, minimize: false, avoidEntryIife },
+	optimization: { concatenateModules, minimize: false, avoidEntryIife },
 	plugins: [assertBundle(`${name}.mjs`, assert)]
 });
 
@@ -111,6 +113,26 @@ module.exports = [
 			expect(source).toContain(defineMarkNamespace);
 		},
 		"development",
+		true
+	),
+	// The sibling script reads globals spelled like the entry's own declarations,
+	// so those are renamed in the inlined body — and the export statement follows.
+	variant("renamed", "./renamed.js", (source) => {
+		expect(source).toContain("const renamed_fetch =");
+		expect(source).toMatch(/export \{[^}]*\brenamed_fetch as fetch\b/);
+	}),
+	// Concatenated, the CommonJS store is reached through a variable of the body,
+	// so the re-export reads a property of a renamed declaration.
+	variant(
+		"renamed-concat",
+		"./renamed.js",
+		(source) => {
+			expect(source).toContain("var renamed_store =");
+			expect(source).toContain("export const x = renamed_store.x;");
+			expect(source).toMatch(/export \{[^}]*\brenamed_fetch as fetch\b/);
+		},
+		"production",
+		undefined,
 		true
 	)
 ];
