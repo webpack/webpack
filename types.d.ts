@@ -31509,7 +31509,7 @@ declare namespace exports {
 		};
 	}
 	export namespace javascript {
-		export namespace terser {
+		export namespace printer {
 			export let load: () => Promise<Terser>;
 			export let PHASES: Phase[];
 		}
