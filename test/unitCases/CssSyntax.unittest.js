@@ -11464,6 +11464,16 @@ describe("SourceProcessor — an at-rule named with CSS escapes", () => {
 		);
 	});
 
+	it("keeps a non-ASCII code point inside the name it is written in", () => {
+		// U+00A0 is an identifier code point, not CSS whitespace, so `@layer` and
+		// `@layer\u00a0x` are two names rather than one rule and its prelude.
+		const sheet = `@layer\u00a0x{.p{color:red}}@layer\u00a0x{.q{color:blue}}`;
+		expect(minify(sheet)).toBe(sheet);
+		expect(minify("@layer x{.p{color:red}}@layer x{.q{color:blue}}")).toBe(
+			"@layer x{.p{color:red}.q{color:blue}}"
+		);
+	});
+
 	it("reads a name no table names as the unknown rule it is", () => {
 		const sheet = `.a{color:red}${escaped("unknown-rule")} (color:red){}`;
 		expect(minify(sheet)).toBe(sheet);
