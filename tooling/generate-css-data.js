@@ -3777,7 +3777,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3903,6 +3903,25 @@ const SUPPLEMENT = {
 	// Not derivable, a grammar naming `<length>` says `calc()` is valid there:
 	// Chrome takes no `calc()` in `overflow-clip-margin`, as it takes no bare `0`.
 	calcRejectingProperties: ["overflow-clip-margin"],
+	// WHY: These read a bare number as a length of their own, so taking the
+	// parentheses off brings a declaration the engine had thrown away back to
+	// life — the opposite of `calcRejectingProperties`, and not derivable either,
+	// since the grammar names `<number>` beside `<length>` for all four. Measured
+	// in Gecko over every property `mdn-data` and the prefix table name: it
+	// refuses `calc(2)` on each of these and reads a bare `2` as `2px`. Blink and
+	// WebKit read both alike, which is why one engine alone could not see it.
+	// `perspective` is here for its prefixed spelling, which is the one Gecko
+	// reads apart. Both names are named because the fold reads the declaration as
+	// written and the declaration printer reads the standard spelling it maps to,
+	// and `perspective`'s own two spellings are refused by all three anyway — so
+	// keeping the `calc()` there costs a declaration that does nothing either way.
+	numberOnlyOutsideCalcProperties: [
+		"-webkit-perspective",
+		"perspective",
+		"stroke-dasharray",
+		"stroke-dashoffset",
+		"stroke-width"
+	],
 	// WHY: Ranges the spec clamps a `calc()` to at computed-value time while rejecting
 	// the literal outright, so folding one to the value it equals switches the
 	// declaration off. CSS Fonts 4 §2.3 bounds `oblique` at ±90deg; `mdn-data`
@@ -7239,6 +7258,13 @@ const CALC_REJECTING_PROPERTIES = ${setLiteral(
 		SUPPLEMENT.calcRejectingProperties
 	)};
 
+// The properties that read a bare number as a length of their own, where an
+// engine refuses the same number inside \`calc()\` — so taking the parentheses
+// off would revive a declaration it had thrown away.
+const NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = ${setLiteral(
+		SUPPLEMENT.numberOnlyOutsideCalcProperties
+	)};
+
 // The range a \`calc()\` is clamped to where the literal outside it is invalid,
 // keyed by property: \`[unit, min, max]\`.
 /** @type {Map<string, [string, number, number]>} */
@@ -7618,7 +7644,7 @@ module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodul
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.ORDERED_LONGHANDS = ORDERED_LONGHANDS;
-module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
+module.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREDEFINED_COLOR_SPACES = PREDEFINED_COLOR_SPACES;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;

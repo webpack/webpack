@@ -223,14 +223,6 @@ const FILED_ENUMERATED_FOLDS = new Map([
 // through a custom property. A printer defect unless the reason says otherwise.
 const FILED_WPT_VALUE_DEFECTS = new Map([
 	[
-		"-webkit-perspective:calc(1000)",
-		"firefox only: a printer defect, fixed separately — dropping the `calc()` from a unitless number brings a dead declaration to life. Measured in Firefox 156: `calc(1000)` computes `none` while the `1000` it is printed as computes `1000px`; Chrome 147 reads both as `1000px`, which is why it cannot see this"
-	],
-	[
-		"-webkit-perspective:calc(25)",
-		"firefox only: the unitless `calc()` again — see `calc(1000)`"
-	],
-	[
 		"shape-image-threshold:50%",
 		"webkit only: WebKit reads a `shape-image-threshold` percentage as the number it means and the others keep the percentage, so a spelling neither reads differently still reads as a difference"
 	],

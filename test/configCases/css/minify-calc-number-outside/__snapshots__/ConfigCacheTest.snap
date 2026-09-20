@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minify-calc-number-outside minify-calc-number-outside should compile 1`] = `".a{stroke-width:calc(2)}.b{stroke-dasharray:calc(1000)}.c{stroke-dashoffset:calc(1.5)}.d{-webkit-perspective:calc(1000)}.e,.f{stroke-width:2px}.g{opacity:.5}.h{z-index:2}.i{width:10px}"`;
