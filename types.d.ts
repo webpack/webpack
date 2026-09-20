@@ -121,6 +121,7 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
+import { minify } from "terser";
 import { URL } from "url";
 import { Context as ContextImport } from "vm";
 
@@ -23205,6 +23206,11 @@ declare interface PerformanceOptions {
 	 */
 	unusedModules?: boolean;
 }
+declare interface Phase {
+	name: string;
+	supports: (modules?: any) => boolean;
+	install: (modules?: any) => void;
+}
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -29840,6 +29846,10 @@ type TemplatePath = string | TemplatePathFn<PathData>;
 declare interface TemplatePathFn<T extends PathData = PathData> {
 	(pathData: T, assetInfo?: AssetInfo): string;
 }
+declare interface Terser {
+	minify: typeof minify;
+	phases: string[];
+}
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
@@ -31499,6 +31509,10 @@ declare namespace exports {
 		};
 	}
 	export namespace javascript {
+		export namespace terser {
+			export let load: () => Promise<Terser>;
+			export let PHASES: Phase[];
+		}
 		export {
 			EnableChunkLoadingPlugin,
 			JavascriptModulesPlugin,

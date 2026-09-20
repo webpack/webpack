@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`terserMangle should mangle exactly as terser does: a catch parameter redefining a function-scoped name 1`] = `"function run(n){try{sink(n)}catch(n){sink(n)}return n}sink(run(1));"`;
+
+exports[`terserMangle should mangle exactly as terser does: a function declared inside a block 1`] = `"function host(){sink(1);return\\"function\\"}sink(host());"`;
+
+exports[`terserMangle should mangle exactly as terser does: a function expression whose argument could shadow its name 1`] = `"sink(function n(i){return n&&i});"`;
+
+exports[`terserMangle should mangle exactly as terser does: a name referenced from an inner scope 1`] = `"const shared=1;function reader(){return 3}sink(reader());"`;
+
+exports[`terserMangle should mangle exactly as terser does: class and method names beside mangled locals 1`] = `"class Thing{constructor(e){this.value=e}read(e){return this.value+e}}sink(new Thing(1).read(2));"`;
+
+exports[`terserMangle should mangle exactly as terser does: exported names, which a module may not rename 1`] = `"export const exported=1;export function run(r){return r+1}"`;
+
+exports[`terserMangle should mangle exactly as terser does: labels, which are numbered on their own 1`] = `"e:for(let e=0;e<10;e++)f:for(let f=0;f<10;f++){if(f>e)continue e;if(3===f)break f;sink(e,f)}"`;
+
+exports[`terserMangle should mangle exactly as terser does: many names in one scope, where one-character names run out 1`] = `"function crowded(e){let t=e+0;let l=e+1;let d=e+2;let n=e+3;let r=e+4;let c=e+5;let o=e+6;let i=e+7;let u=e+8;let w=e+9;let f=e+10;let k=e+11;let s=e+12;let a=e+13;let b=e+14;let g=e+15;let h=e+16;let j=e+17;let m=e+18;let p=e+19;let q=e+20;let v=e+21;let x=e+22;let y=e+23;let z=e+24;let A=e+25;let B=e+26;let C=e+27;let D=e+28;let E=e+29;let F=e+30;let G=e+31;let H=e+32;let I=e+33;let J=e+34;let K=e+35;let L=e+36;let M=e+37;let N=e+38;let O=e+39;let P=e+40;let Q=e+41;let R=e+42;let S=e+43;let T=e+44;let U=e+45;let V=e+46;let W=e+47;let X=e+48;let Y=e+49;let Z=e+50;let $=e+51;let _=e+52;let ee=e+53;let te=e+54;let le=e+55;let de=e+56;let ne=e+57;let re=e+58;let ce=e+59;let oe=e+60;let ie=e+61;let ue=e+62;let we=e+63;let fe=e+64;let ke=e+65;let se=e+66;let ae=e+67;let be=e+68;let ge=e+69;let he=e+70;let je=e+71;let me=e+72;let pe=e+73;let qe=e+74;let ve=e+75;let xe=e+76;let ye=e+77;let ze=e+78;let Ae=e+79;return t+l+d+n+r+c+o+i+u+w+f+k+s+a+b+g+h+j+m+p+q+v+x+y+z+A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+U+V+W+X+Y+Z+$+_+ee+te+le+de+ne+re+ce+oe+ie+ue+we+fe+ke+se+ae+be+ge+he+je+me+pe+qe+ve+xe+ye+ze+Ae}sink(crowded(1));"`;
+
+exports[`terserMangle should mangle exactly as terser does: nested scopes 1`] = `"function outer(n,r){return n+r+1+n}sink(outer(1,2));"`;
+
+exports[`terserMangle should mangle exactly as terser does: options this phase declines, which terser mangles itself 1`] = `"function kept(n){return n}sink(kept(1));"`;
+
+exports[`terserMangle should mangle exactly as terser does: reserved names, which stay as written 1`] = `"function keep(reservedName,e){return reservedName+e}sink(keep(1,2));"`;
