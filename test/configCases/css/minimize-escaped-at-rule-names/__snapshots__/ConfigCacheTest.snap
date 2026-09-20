@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-escaped-at-rule-names minimize-escaped-at-rule-names should compile 1`] = `
+Array [
+  "/*! the first statement of a layer is where it sits in the cascade, so a later
+   copy of it never stands in for it */@\\\\6c ayer first;.t01{color:red}@\\\\6c ayer first;",
+  "/*! a keyframe selector is read under the rule it is written in */@\\\\6b eyframes t02{0%{opacity:0}to{opacity:1}}",
+  "/*! a media feature in the prelude is read as a range */@\\\\6d edia (width>=1px){.t03{color:red}}",
+  "/*! a condition whose block is empty paints nothing */.t04{color:red}",
+  "/*! ...but each anonymous layer is a layer of its own, so the pair stands */@\\\\6c ayer{.t05{color:red}}@\\\\6c ayer{.t05{color:blue}}",
+  "/*! a name no table names takes no branch */@\\\\75 nknown-rule (color:red){.t06{color:red}}",
+]
+`;
