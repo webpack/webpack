@@ -3036,6 +3036,19 @@ describe("tokenize", () => {
 			expect(escapeAttribute('say "hi"', apostrophe)).toBe('say "hi"');
 			expect(escapeAttribute("plain", apostrophe)).toBe("plain");
 		});
+
+		it("leaves U+00A0 literal only where the caller minifies", () => {
+			// Generated markup stays ASCII-safe; the minifier writes the character,
+			// as `_escapeTextContent` does for a text node. Both the fast path and
+			// the loop have to answer the same way.
+			const quote = '"'.charCodeAt(0);
+			expect(escapeAttribute('c"d\u00A0e', quote, true)).toBe(
+				'c&quot;d\u00A0e'
+			);
+			expect(escapeAttribute('c"d\u00A0e', quote)).toBe("c&quot;d&nbsp;e");
+			expect(escapeAttribute("a\u00A0b", quote, true)).toBe("a\u00A0b");
+			expect(escapeAttribute("a\u00A0b", quote)).toBe("a&nbsp;b");
+		});
 	});
 
 	describe("escapeText", () => {
@@ -5485,14 +5498,24 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		);
 	});
 
+	it("writes U+00A0 as the character, however the source spelled it", () => {
+		// A value's own spelling does not decide the output, so the character and
+		// `&nbsp;` are one attribute and print as one.
+		expect(minify('<img alt="nb\u00a0sp">')).toBe(
+			minify('<img alt="nb&nbsp;sp">')
+		);
+		expect(minify('<img alt="nb&nbsp;sp">')).toBe("<img alt=nb\u00a0sp>");
+	});
+
 	it("keeps every other reference the value spells", () => {
-		// `&amp;quot;` is the text `&quot;`, not a quote, so it stays escaped —
-		// and `&nbsp;` / `&#10;` still need a reference under either delimiter.
+		// `&amp;quot;` is the text `&quot;`, not a quote, so it stays escaped, and
+		// `&#10;` still needs a reference under either delimiter. U+00A0 does not:
+		// the minifier writes the character it names.
 		expect(minify('<img alt="&amp;quot; literal &quot;q&quot;">')).toBe(
 			"<img alt='&amp;quot; literal \"q\"'>"
 		);
 		expect(minify('<img alt="nb&nbsp;sp &quot;q&quot;">')).toBe(
-			"<img alt='nb&nbsp;sp \"q\"'>"
+			"<img alt='nb\u00a0sp \"q\"'>"
 		);
 		expect(minify('<img alt="line&#10;br &quot;q&quot;">')).toBe(
 			"<img alt='line&#10;br \"q\"'>"
