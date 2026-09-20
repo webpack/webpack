@@ -975,6 +975,61 @@ describe("CssSyntax — block streaming", () => {
 		expect(out.indexOf(".c0")).toBeLessThan(out.indexOf(".three"));
 	});
 
+	it("joins the pair a gathered layer block leaves side by side", () => {
+		// The gather is what makes the two neighbors, so nothing else reads them
+		// as adjacent — and the sheet would join them only on a second minify.
+		const src = `@layer outer{${repeat(
+			6000,
+			(i) => `.f${i}{color:red}`
+		)}@layer a{.w{color:teal}.x{color:lime}}@layer b{.m{color:#00f}}@layer a{.y{color:lime}.z{color:teal}}}`;
+		// The outer block has to stream for the gather to be the one under test.
+		expect(childCount(src)).toBe(0);
+		const out = minify(src);
+		expect(out).toContain(".x,.y{color:lime}");
+		// Only the seam joins: the pair either side of it keeps its own block.
+		expect(out).toContain(".w{color:teal}");
+		expect(out).toContain(".z{color:teal}");
+		expect(minify(out)).toBe(out);
+	});
+
+	it("leaves the pair at a gathered seam alone where it cannot join", () => {
+		// The gather still runs; only the join at the seam is declined, so each
+		// case reads as the two bodies side by side under one opener.
+		const gathered = (/** @type {string} */ tail) => {
+			const out = minify(
+				`@layer outer{${repeat(6000, (i) => `.f${i}{color:red}`)}${tail}}`
+			);
+			return out.slice(out.indexOf("@layer a{"));
+		};
+		const lead = "@layer a{.p{color:teal}}.mid{margin:0}";
+		// A control, so a case that stopped gathering reads apart from one that
+		// stopped joining.
+		expect(gathered(`${lead}@layer a{.q{color:teal}}`)).toBe(
+			"@layer a{.p,.q{color:teal}}.mid{margin:0}}"
+		);
+		// Only a qualified rule lends its selectors.
+		expect(gathered(`${lead}@layer a{@media print{.q{color:teal}}}`)).toBe(
+			"@layer a{.p{color:teal}@media print{.q{color:teal}}}.mid{margin:0}}"
+		);
+		// One selector an engine cannot parse invalidates the list it joins.
+		expect(gathered(`${lead}@layer a{.q:not(.r){color:teal}}`)).toBe(
+			"@layer a{.p{color:teal}.q:not(.r){color:teal}}.mid{margin:0}}"
+		);
+		expect(
+			gathered("@layer a{.p:not(.r){color:teal}}.mid{margin:0}@layer a{.q{color:teal}}")
+		).toBe("@layer a{.p:not(.r){color:teal}.q{color:teal}}.mid{margin:0}}");
+		// Two rules join on the block they share, which these do not.
+		expect(gathered(`${lead}@layer a{.q{color:lime}}`)).toBe(
+			"@layer a{.p{color:teal}.q{color:lime}}.mid{margin:0}}"
+		);
+		// A selector the grown list already carries would only be written twice.
+		expect(
+			gathered(
+				"@layer a{.p{color:teal}.q{color:teal}}.mid{margin:0}@layer a{.q{color:teal}}"
+			)
+		).toBe("@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}");
+	});
+
 	it("drops a prefixed list a streamed block's rules cover between them", () => {
 		// The list is held as the node its parent would skip, and a streamed parent
 		// assembles no body — so it has to be held as a piece instead.
@@ -10923,9 +10978,22 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		expect(minify(sheet, true)).toBe(sheet);
 	});
 
-	it("declines across an at-rule, whose own rules it cannot see into", () => {
-		const sheet = ".a{color:red}@media print{.x{width:0}}.c{color:red}";
-		expect(minify(sheet, true)).toBe(sheet);
+	it("reads a condition between as declaring what its own rules declare", () => {
+		expect(
+			minify(".a{color:red}@media print{.x{width:0}}.c{color:red}", true)
+		).toBe(".a,.c{color:red}@media print{.x{width:0}}");
+		const shadows = ".a{color:red}@media print{.x{color:#00f}}.c{color:red}";
+		expect(minify(shadows, true)).toBe(shadows);
+	});
+
+	it("declines across an at-rule whose declarations it cannot read", () => {
+		// A later `@keyframes` of a name replaces the earlier, so its block is not
+		// a set of rules read against these — and neither is a nested condition.
+		const frames = ".a{color:red}@keyframes k{from{color:#00f}}.c{color:red}";
+		expect(minify(frames, true)).toBe(minify(frames));
+		const nested =
+			".a{color:red}@media print{@media screen{.x{width:0}}}.c{color:red}";
+		expect(minify(nested, true)).toBe(nested);
 	});
 
 	// Rules inside a block are joined as the block is assembled rather than as
@@ -10954,9 +11022,19 @@ describe("SourceProcessor — mergeDistantRules", () => {
 			expect(minify(sheet, true)).toBe(sheet);
 		});
 
-		it("declines across an at-rule it cannot see into", () => {
-			const sheet = `@media screen{${BLOCK}@media print{.x{width:0}}${COPY}}`;
-			expect(minify(sheet, true)).toBe(sheet);
+		it("reads a condition between as declaring what its own rules declare", () => {
+			expect(
+				minify(`@media screen{${BLOCK}@media print{.x{width:0}}${COPY}}`, true)
+			).toBe(
+				"@media screen{.aaaaaaaa,.cccccccc{color:red;background:blue}@media print{.x{width:0}}}"
+			);
+			const shadows = `@media screen{${BLOCK}@media print{.x{color:#0f0}}${COPY}}`;
+			expect(minify(shadows, true)).toBe(shadows);
+		});
+
+		it("declines across an at-rule whose declarations it cannot read", () => {
+			const sheet = `@media screen{${BLOCK}@keyframes k{from{color:#0f0}}${COPY}}`;
+			expect(minify(sheet, true)).toBe(minify(sheet));
 		});
 
 		it("declines a block that does not outweigh the selector it would write", () => {
