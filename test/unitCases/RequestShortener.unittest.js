@@ -1,6 +1,6 @@
 "use strict";
 
-const RequestShortener = require("../../lib/RequestShortener");
+const RequestShortener = require("../../lib/util/RequestShortener");
 
 describe("RequestShortener", () => {
 	it("should create RequestShortener and shorten with ./ file in directory", () => {
