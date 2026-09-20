@@ -603,7 +603,7 @@
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
     "test/unitCases/JavascriptParser.unittest.js",
-    "lib/javascript/regexpData.js",
+    "lib/javascript/data.js",
     "tooling/html-entities.json",
     "test/external/test262-cases/**",
     "test/external/wpt/**",
