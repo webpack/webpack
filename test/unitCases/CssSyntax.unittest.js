@@ -11478,4 +11478,14 @@ describe("SourceProcessor — an at-rule named with CSS escapes", () => {
 		const sheet = `.a{color:red}${escaped("unknown-rule")} (color:red){}`;
 		expect(minify(sheet)).toBe(sheet);
 	});
+
+	// A run of hex escapes before a prelude the opener never matches: two
+	// alternatives that could each take `\\6d` repartitioned it on every
+	// backtrack, so 20 of them took minutes rather than the millisecond here.
+	it("reads a run of escapes the opener rejects without backtracking", () => {
+		const sheet = `@${"\\6d".repeat(20)} (x){.a{color:red}}`;
+		const started = Date.now();
+		expect(typeof minify(sheet)).toBe("string");
+		expect(Date.now() - started).toBeLessThan(2000);
+	});
 });
