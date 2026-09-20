@@ -1,6 +1,12 @@
 "use strict";
 
-const { readAttempts, readDelay, retry, runOnce } = require("../../tooling/retry");
+const {
+	backoffFor,
+	readAttempts,
+	readDelay,
+	retry,
+	runOnce
+} = require("../../tooling/retry");
 
 describe("retry", () => {
 	describe("readAttempts", () => {
@@ -37,6 +43,21 @@ describe("retry", () => {
 
 		it.each([["abc"], ["-5"], ["Infinity"]])("refuses %p", (value) => {
 			expect(() => readDelay(value)).toThrow("RETRY_DELAY");
+		});
+	});
+
+	describe("backoffFor", () => {
+		it("doubles the wait for each attempt", () => {
+			expect(backoffFor(100, 1)).toBe(100);
+			expect(backoffFor(100, 2)).toBe(200);
+			expect(backoffFor(100, 4)).toBe(800);
+		});
+
+		// Node clamps a timer above 2**31-1 ms to 1 ms, so an unclamped doubling
+		// would retry at once where it meant to wait longest.
+		it("stays inside the range a timer accepts", () => {
+			expect(backoffFor(2147483648, 1)).toBe(2147483647);
+			expect(backoffFor(3600000, 13)).toBe(2147483647);
 		});
 	});
 

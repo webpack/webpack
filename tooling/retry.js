@@ -13,6 +13,7 @@ const { spawn } = require("child_process");
 
 const DEFAULT_ATTEMPTS = 3;
 const DEFAULT_DELAY = 5000;
+const MAX_TIMEOUT = 2147483647;
 
 /**
  * Reads how many times to run the command.
@@ -48,6 +49,18 @@ const readDelay = (value) => {
 	}
 	return delay;
 };
+
+/**
+ * How long to wait after the given attempt failed.
+ * @param {number} delay what the first wait is
+ * @param {number} attempt the attempt that just failed, counted from 1
+ * @returns {number} milliseconds, within the range a timer accepts
+ */
+const backoffFor = (delay, attempt) =>
+	// WHY: node clamps a timer above 2**31-1 ms to 1 ms, so an unclamped
+	// doubling turns the longest backoff into an immediate retry — the one
+	// case where waiting longer would have helped most.
+	Math.min(delay * 2 ** (attempt - 1), MAX_TIMEOUT);
 
 /**
  * Waits for the given time.
@@ -96,7 +109,7 @@ const retry = async (command, args, options) => {
 		const code = await run(command, args);
 		if (code === 0) return 0;
 		if (attempt >= attempts) return code;
-		const wait = delay * 2 ** (attempt - 1);
+		const wait = backoffFor(delay, attempt);
 		console.error(
 			`retry: "${label}" exited with ${code} on attempt ${attempt} of ${attempts}, retrying in ${wait}ms`
 		);
@@ -104,7 +117,7 @@ const retry = async (command, args, options) => {
 	}
 };
 
-module.exports = { readAttempts, readDelay, retry, runOnce };
+module.exports = { backoffFor, readAttempts, readDelay, retry, runOnce };
 
 if (require.main === module) {
 	(async () => {
