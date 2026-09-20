@@ -19,19 +19,19 @@ exports[`ConfigCacheTestCases html chunk-name-option exported tests should name 
 exports[`ConfigCacheTestCases html chunk-name-option exported tests should name every extracted chunk from the template 1`] = `
 "<!DOCTYPE html>
 <title>Named by the option</title>
-<script src=\\"page_script-module_0.mjs\\" type=\\"module\\"></script>
+<script src=\\"page__script-module_0.mjs\\" type=\\"module\\"></script>
 
-<script src=\\"page_script-module_2.mjs\\" async type=\\"module\\"></script>
-<script type=\\"module\\" src=\\"page_script-module_3.mjs\\"></script>
+<script src=\\"page__script-module_2.mjs\\" async type=\\"module\\"></script>
+<script type=\\"module\\" src=\\"page_external_script-module_3.mjs\\"></script>
 "
 `;
 
 exports[`ConfigCacheTestCases html chunk-name-option exported tests should name every extracted chunk from the template 2`] = `
 "<!DOCTYPE html>
 <title>Named by the option</title>
-<script src=\\"page_script-module_0.mjs\\" type=\\"module\\"></script>
+<script src=\\"page__script-module_0.mjs\\" type=\\"module\\"></script>
 
-<script src=\\"page_script-module_2.mjs\\" async type=\\"module\\"></script>
-<script type=\\"module\\" src=\\"page_script-module_3.mjs\\"></script>
+<script src=\\"page__script-module_2.mjs\\" async type=\\"module\\"></script>
+<script type=\\"module\\" src=\\"page_external_script-module_3.mjs\\"></script>
 "
 `;

@@ -20,13 +20,14 @@ it("should name every extracted chunk from the template", () => {
 	const html = read("page.html");
 	expect(html).toMatchSnapshot();
 
-	// `[page]_[type]_[index]`: the run's leader, the async tag and the `src`
-	// tag, each at the position its tag holds in the document.
+	// `[page]_[name]_[type]_[index]`: the run's leader, the async tag and the
+	// `src` tag, each at the position its tag holds in the document. Only the
+	// `src` tag has a url to lend `[name]` a basename.
 	const urls = scriptUrls(html);
 	expect(urls).toEqual([
-		"page_script-module_0.mjs",
-		"page_script-module_2.mjs",
-		"page_script-module_3.mjs"
+		"page__script-module_0.mjs",
+		"page__script-module_2.mjs",
+		"page_external_script-module_3.mjs"
 	]);
 });
 

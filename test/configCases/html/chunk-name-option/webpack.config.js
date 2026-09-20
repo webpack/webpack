@@ -37,7 +37,7 @@ module.exports = [
 			parser: {
 				// The placeholders name every chunk this page extracts, in place
 				// of the default `<page>-<index>`.
-				html: { chunkName: "[page]_[type]_[index]" }
+				html: { chunkName: "[page]_[name]_[type]_[index]" }
 			}
 		},
 		optimization: { chunkIds: "named" },
