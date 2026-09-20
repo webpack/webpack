@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<title>Named by comments</title>
+<!-- webpackChunkName: "header" -->
+<script type="module">
+import { push } from "./shared.js";
+push("head-1");
+</script>
+<script type="module">
+import { push } from "./shared.js";
+push("head-2");
+</script>
+<!-- webpackChunkName: "footer" -->
+<script type="module">
+import { push } from "./shared.js";
+push("foot");
+</script>
+<!-- webpackChunkName: "vendor" -->
+<script type="module" src="./external.js"></script>
