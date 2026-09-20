@@ -11,8 +11,43 @@
 
 const { spawn } = require("child_process");
 
-const ATTEMPTS = Number(process.env.RETRY_ATTEMPTS || 3);
-const DELAY = Number(process.env.RETRY_DELAY || 5000);
+const DEFAULT_ATTEMPTS = 3;
+const DEFAULT_DELAY = 5000;
+
+/**
+ * Reads how many times to run the command.
+ * @param {string | undefined} value what `RETRY_ATTEMPTS` was set to
+ * @returns {number} a positive integer
+ */
+const readAttempts = (value) => {
+	if (value === undefined || value === "") return DEFAULT_ATTEMPTS;
+	const attempts = Number(value);
+	// WHY: a typo here used to reach the loop as NaN, where every `attempt >=
+	// ATTEMPTS` is false, so a failing command retried until the job timed out.
+	// Refusing to start says which variable is wrong in one line instead.
+	if (!Number.isInteger(attempts) || attempts < 1) {
+		throw new Error(
+			`RETRY_ATTEMPTS must be a positive integer, got "${value}"`
+		);
+	}
+	return attempts;
+};
+
+/**
+ * Reads how long to wait before the second attempt.
+ * @param {string | undefined} value what `RETRY_DELAY` was set to
+ * @returns {number} a non-negative number of milliseconds
+ */
+const readDelay = (value) => {
+	if (value === undefined || value === "") return DEFAULT_DELAY;
+	const delay = Number(value);
+	if (!Number.isFinite(delay) || delay < 0) {
+		throw new Error(
+			`RETRY_DELAY must be a non-negative number, got "${value}"`
+		);
+	}
+	return delay;
+};
 
 /**
  * Waits for the given time.
@@ -42,28 +77,47 @@ const runOnce = (command, args) =>
 		child.on("close", (code) => resolve(code === null ? 1 : code));
 	});
 
-(async () => {
-	const argv = process.argv.slice(2);
-	if (argv.length === 0) {
-		throw new Error("usage: node tooling/retry.js <command> [args...]");
-	}
-	const command = argv[0];
-	const args = argv.slice(1);
-	const label = argv.join(" ");
+/**
+ * Runs the command until it succeeds or the attempts run out, backing off
+ * between them.
+ * @param {string} command the command to run
+ * @param {string[]} args its arguments
+ * @param {{ attempts?: number, delay?: number, run?: (command: string, args: string[]) => Promise<number> }=} options how many times to try, how long to wait first, and what runs it
+ * @returns {Promise<number>} the exit code of the last attempt
+ */
+const retry = async (command, args, options) => {
+	const settings = options || {};
+	const attempts =
+		settings.attempts === undefined ? DEFAULT_ATTEMPTS : settings.attempts;
+	const delay = settings.delay === undefined ? DEFAULT_DELAY : settings.delay;
+	const run = settings.run || runOnce;
+	const label = [command, ...args].join(" ");
 	for (let attempt = 1; ; attempt++) {
-		const code = await runOnce(command, args);
-		if (code === 0) return;
-		if (attempt >= ATTEMPTS) {
-			process.exitCode = code;
-			return;
-		}
-		const delay = DELAY * 2 ** (attempt - 1);
+		const code = await run(command, args);
+		if (code === 0) return 0;
+		if (attempt >= attempts) return code;
+		const wait = delay * 2 ** (attempt - 1);
 		console.error(
-			`retry: "${label}" exited with ${code} on attempt ${attempt} of ${ATTEMPTS}, retrying in ${delay}ms`
+			`retry: "${label}" exited with ${code} on attempt ${attempt} of ${attempts}, retrying in ${wait}ms`
 		);
-		await sleep(delay);
+		await sleep(wait);
 	}
-})().catch((error) => {
-	console.error(error);
-	process.exitCode = 1;
-});
+};
+
+module.exports = { readAttempts, readDelay, retry, runOnce };
+
+if (require.main === module) {
+	(async () => {
+		const argv = process.argv.slice(2);
+		if (argv.length === 0) {
+			throw new Error("usage: node tooling/retry.js <command> [args...]");
+		}
+		process.exitCode = await retry(argv[0], argv.slice(1), {
+			attempts: readAttempts(process.env.RETRY_ATTEMPTS),
+			delay: readDelay(process.env.RETRY_DELAY)
+		});
+	})().catch((error) => {
+		console.error(error.message);
+		process.exitCode = 1;
+	});
+}
