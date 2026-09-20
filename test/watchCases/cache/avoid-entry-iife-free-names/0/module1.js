@@ -1,0 +1,3 @@
+let value;
+
+export { value };
