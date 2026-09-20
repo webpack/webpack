@@ -11226,6 +11226,44 @@ describe("SourceProcessor — mergeDistantRules", () => {
 			expect(minify(sheet, true)).toBe(sheet);
 		}
 	});
+
+	// The same question asked of a block's own children, which are gathered as
+	// the block is assembled rather than as the stylesheet streams.
+	it("joins two conditions stated inside one block", () => {
+		expect(
+			minify(
+				"@layer w{.a{color:red}@media print{.b{margin:0}}.c{color:blue}@media print{.d{padding:0}}}",
+				true
+			)
+		).toBe(
+			"@layer w{.a{color:red}@media print{.b{margin:0}.d{padding:0}}.c{color:blue}}"
+		);
+	});
+
+	it("leaves two conditions in a block apart where one between declares what they do", () => {
+		const sheet =
+			"@layer w{@media print{.b{margin:0}}.c{margin:1px}@media print{.d{margin:2px}}}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("leaves a block whose declarations cannot be read where it stands", () => {
+		// The condition holds a rule this cannot read the declarations of, so what
+		// moving it would shadow has no answer and it stays put.
+		const sheet =
+			"@layer w{@media print{@supports (color:red){.b{margin:0}}}.c{color:blue}@media print{@supports (color:red){.d{margin:2px}}}}";
+		expect(minify(sheet, true)).toBe(sheet);
+	});
+
+	it("gathers a named layer inside a block as the layer it is", () => {
+		// Not the pair of equal conditions this joins: `_mergeNamedLayerBlocks`
+		// takes it, which is why the body moves although the prelude is a layer's.
+		expect(
+			minify(
+				"@layer w{@layer inner{.b{margin:0}}.c{color:blue}@layer inner{.d{padding:0}}}",
+				true
+			)
+		).toBe("@layer w{@layer inner{.b{margin:0}.d{padding:0}}.c{color:blue}}");
+	});
 });
 
 
