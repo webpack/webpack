@@ -13,12 +13,43 @@
 .shorthand { margin: 1px }
 .eta { margin-top: 0 }
 
-/* An at-rule between is read as declaring everything. */
+/* A condition between only narrows what reads it, so what it can shadow is
+   what its own rules declare — `width` here, which leaves `padding` alone. */
 .theta { padding: 0 }
 @media print { .printed { width: 0 } }
 .iota { padding: 0 }
+
+/* The same condition, declaring the property this time. */
+.mu { border-width: 0 }
+@media print { .bordered { border: 1px solid red } }
+.nu { border-width: 0 }
+
+/* An at-rule a later one of its name replaces is read as declaring
+   everything, since its block is not a set of conditioned rules. */
+.xi { inset: 0 }
+@keyframes spin { from { rotate: 0deg } }
+.omicron { inset: 0 }
 
 /* The copy dropped is not worth twice the selector written, so these stay apart. */
 .kappa { outline: 0 }
 .spacing { margin: 2px }
 .lambda-is-a-long-name { outline: 0 }
+
+/* Inside a block the same gates are asked a second way, the rules there being
+   joined as the block is assembled rather than as the stylesheet streams. */
+@layer wrapped {
+	.pi { padding: 3px 4px 5px 6px }
+	@media print { .rho { margin: 0 } }
+	.sigma { padding: 3px 4px 5px 6px }
+
+	/* `padding` between them, inside a condition, so these stay apart. */
+	.tau { padding: 7px 8px 9px 10px }
+	@media print { .upsilon { padding-top: 0 } }
+	.phi { padding: 7px 8px 9px 10px }
+
+	/* Where a layer is first named fixes its order, so what it holds is read
+	   where the layer sits rather than where the block stands. */
+	.chi { outline: 1px dashed red }
+	@layer inner { .psi { margin: 0 } }
+	.omega { outline: 1px dashed red }
+}

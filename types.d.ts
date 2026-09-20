@@ -6263,7 +6263,7 @@ declare interface CssPrintOptions {
 	dropOverriddenDeclarations?: boolean;
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
+	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does — a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
 
@@ -6344,7 +6344,7 @@ declare interface CssProcessOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does
+	 * give a rule the selectors of a later one printing the same block, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block does — a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
 
@@ -20736,7 +20736,7 @@ declare interface OptimizationMinimizeCss {
 	lowerUnsupported?: boolean;
 
 	/**
-	 * Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. `mergeRules` is the safe half of this, joining only what nothing stands between.
+	 * Give a rule the selectors of a later one printing the same block, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the shared block does — a condition between counts for what its own rules declare, while `@layer` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so the join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead. `mergeRules` is the safe half of this, joining only what nothing stands between.
 	 * @since 5.111.0
 	 */
 	mergeDistantRules?: boolean;
