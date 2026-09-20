@@ -379,6 +379,31 @@ const TOOLS = [
 		}
 	},
 	{
+		// webpack's own printing path: `jsMinify` with every transform off, which
+		// today prints through terser. The row is here so that a printer webpack
+		// owns is read against what it replaced, in the same table.
+		name: "webpack (format only)",
+		stage: "beautify",
+		create: () => {
+			const jsMinify = require("../lib/javascript/jsMinify");
+
+			return async (code) =>
+				(
+					await jsMinify(
+						{ "input.js": code },
+						undefined,
+						{
+							as: sourceType() === "module" ? "module" : "script",
+							compress: false,
+							mangle: false,
+							format: { beautify: true, comments: false }
+						},
+						false
+					)
+				).code;
+		}
+	},
+	{
 		// Terser told to neither compress nor mangle is a printer, and the row
 		// weighs what its own output format costs against the others'.
 		name: "terser (format only)",
@@ -393,6 +418,29 @@ const TOOLS = [
 						module: sourceType() === "module",
 						format: { beautify: true, comments: false }
 					})
+				).code;
+		}
+	},
+	{
+		// What a production build pays: webpack's own minify function under the
+		// options `optimization.minimize` defaults to, whose second compress pass
+		// is why this row is not a like for like against terser's default row.
+		name: "webpack (2 passes)",
+		stage: "minify",
+		create: () => {
+			const jsMinify = require("../lib/javascript/jsMinify");
+
+			return async (code) =>
+				(
+					await jsMinify(
+						{ "input.js": code },
+						undefined,
+						{
+							as: sourceType() === "module" ? "module" : "script",
+							compress: { passes: 2 }
+						},
+						false
+					)
 				).code;
 		}
 	},
