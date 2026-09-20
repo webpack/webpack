@@ -136,6 +136,18 @@ const FIXTURES = [
 			return s;
 		})(),
 		{}
+	],
+	// Critical CSS inlined into `<head>`: megabytes behind a handful of markup
+	// delimiters. Every other fixture here runs about 12 bytes per `<`, so this is
+	// the only one whose columns are sized from length rather than from markup.
+	[
+		"sparse inline style",
+		(() => {
+			const rule = ".a{color:red;margin:0;padding:0;border:0}\n";
+			const css = rule.repeat(Math.ceil((2 * 1024 * 1024) / rule.length));
+			return `<!DOCTYPE html><html><head><style>${css}</style></head><body><p>hello</p></body></html>`;
+		})(),
+		{}
 	]
 ];
 
