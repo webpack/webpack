@@ -394,6 +394,16 @@ A perf/memory claim needs evidence, and the cheap kinds are the trustworthy ones
 
 `FILTER="<case-name>" yarn benchmark` drives the repo's own cases; `test/benchmarkCases/` is the fixture set.
 
+**Some hot methods are sized to V8's inlining budget, and an edit can undo that silently.** TurboFan declines to inline a callee over its bytecode limit (460 at the time of writing), so a method sitting just under it loses the inlining — and the speed that came with it — the moment anything is added. `lib/javascript/syntax.js` keeps `readWord`, `readString` and `finishToken` under that limit deliberately, with their rare arms split into `_readWordIntoCache`, `_readWordUncacheable`, `_readStringCold` and `_updateContext`; `readWord` has about six bytes of headroom, and once cost 1.4% from one added argument. Read the size back before and after touching them:
+
+```sh
+node --print-bytecode --print-bytecode-filter=readWord <script that parses something>
+```
+
+`node --trace-turbo-inlining` names what was inlined where, and reports `Cannot consider <name> for inlining (reason: 5)` for a callee that is too large.
+
+**Instruction counts and time are not the same claim.** Callgrind over a warmed parse (`valgrind --tool=callgrind --smc-check=all-non-file`, differencing two run lengths so startup and tier-up drop out) resolves work to about ±0.2% and is the right tool for "does this do less". It does not establish that a build gets faster: CPU time on a shared machine needs tens of fresh processes per arm before it resolves a few percent, and an allocation change moves GC timing in steps that swamp the mutator delta. Say which of the two a number is.
+
 A claim about **webpack's CSS or HTML minifier, or its JavaScript parser, versus the ecosystem's** (size, speed, memory, or safety) is already harnessed: run `yarn benchmark:css-tools` / `yarn benchmark:html-tools` / `yarn benchmark:js-tools` and read the tables — see the `tooling/` entry in [Architecture](#architecture) for what they report — rather than hand-rolling a comparison.
 
 A claim about the **size of what webpack emits** is the counting kind, and `yarn test:size` is how it is counted: it builds every `configCases/` case with the defaults a user gets and reports the raw/gzip/brotli/zstd size of every asset, so a change to `lib/runtime/` or to a dependency template shows up as bytes on the wire. Compare two runs with `--baseline <report>`; the `Code Size` CI job does the same against the report `main` last uploaded and comments the diff on the pull request.

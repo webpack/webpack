@@ -257,9 +257,15 @@ describe("WebpackParser", () => {
 			expect(() => parse("var x = '\u2028'", { ecmaVersion: 2018 })).toThrow(
 				/Unterminated string constant/
 			);
+			// an escape in the same string routes it through the cold reader, which
+			// carries the version rule of its own
+			expect(literal('var x = "a\\tb\u2028c"').value).toBe("a\tb\u2028c");
+			expect(() =>
+				parse('var x = "a\\tb\u2028c"', { ecmaVersion: 2018 })
+			).toThrow(/Unterminated string constant/);
 		});
 
-		it("should cook the common single-char escapes on the fast path", () => {
+		it("should cook the common single-char escapes", () => {
 			expect(literal('var x = "a\\nb"').value).toBe("a\nb");
 			expect(literal('var x = "a\\tb"').value).toBe("a\tb");
 			expect(literal('var x = "a\\rb"').value).toBe("a\rb");
@@ -274,7 +280,7 @@ describe("WebpackParser", () => {
 			expect(literal('var x = "a\\éb"').value).toBe("aéb");
 		});
 
-		it("should cook line continuations on the fast path", () => {
+		it("should cook line continuations", () => {
 			expect(literal('var x = "a\\\nb"').value).toBe("ab");
 			expect(literal('var x = "a\\\r\nb"').value).toBe("ab");
 			expect(literal('var x = "a\\\rb"').value).toBe("ab");
@@ -286,7 +292,7 @@ describe("WebpackParser", () => {
 			).toBe("ab");
 		});
 
-		it("should route hex, unicode and octal escapes through the cold reader", () => {
+		it("should route every escape through the cold reader", () => {
 			expect(literal('var x = "a\\x41b"').value).toBe("aAb");
 			expect(literal('var x = "a\\u0041b"').value).toBe("aAb");
 			expect(literal('var x = "a\\u{1F600}b"').value).toBe("a\u{1F600}b");
@@ -304,6 +310,14 @@ describe("WebpackParser", () => {
 
 		it("should report a lone trailing backslash as unterminated", () => {
 			expect(() => parse('var x = "abc\\')).toThrow(
+				/Unterminated string constant/
+			);
+		});
+
+		it("should report a string ending after a cooked escape as unterminated", () => {
+			// the escape cooks and then the cold reader's own loop meets EOF, which
+			// is a different raise from the trailing backslash above
+			expect(() => parse('var x = "a\\tb')).toThrow(
 				/Unterminated string constant/
 			);
 		});
@@ -515,12 +529,13 @@ describe("WebpackParser", () => {
 	describe("identifier word cache", () => {
 		/**
 		 * @param {string} code source
+		 * @param {object=} options extra parse options
 		 * @returns {string[]} every Identifier name in program order
 		 */
-		const names = (code) => {
+		const names = (code, options) => {
 			/** @type {string[]} */
 			const found = [];
-			JSON.stringify(parse(code).ast, (_key, value) => {
+			JSON.stringify(parse(code, options).ast, (_key, value) => {
 				if (value && value.type === "Identifier") found.push(value.name);
 				return value;
 			});
@@ -535,6 +550,29 @@ describe("WebpackParser", () => {
 				"f",
 				"averyveryLongIdentifier"
 			]);
+		});
+
+		it("should read identifiers written with a unicode escape", () => {
+			// a `\\` classifies with the non-ASCII chars, so `nextToken` reaches the
+			// escape-aware cold reader through `readToken` rather than directly
+			expect(names("var \\u0061bc = a\\u0062c + \\u{61}x;")).toEqual([
+				"abc",
+				"abc",
+				"ax"
+			]);
+			// and the same word read plainly is the same name
+			expect(names("var abc = \\u0061bc;")).toEqual(["abc", "abc"]);
+		});
+
+		it("should reclassify a cached word for a second keyword set", () => {
+			// `abstract` is an ordinary name under a recent ecmaVersion and reserved
+			// under ES3, so each parse retypes the slot the one before it typed
+			const code = "var abstract = 1;";
+			expect(names(code)).toEqual(["abstract"]);
+			expect(() => parse(code, { ecmaVersion: 3, allowReserved: false })).toThrow(
+				/'abstract' is reserved/
+			);
+			expect(names(code)).toEqual(["abstract"]);
 		});
 
 		it("should survive hash collisions by content check", () => {
@@ -2062,6 +2100,31 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		];
 		expect(calls).toBeGreaterThan(0);
 		expect(tokens.length).toBeGreaterThan(5);
+	});
+
+	it("allows an expression after a closing paren at the root context", () => {
+		/**
+		 * @param {string} code source
+		 * @returns {string[]} every token's type label in order
+		 */
+		const labels = (code) =>
+			[
+				...WebpackParser.tokenizer(code, {
+					ecmaVersion: "latest",
+					sourceType: "script"
+				})
+			].map((token) => token.type.label);
+		// the root context has nothing to pop, so `)` leaves an expression allowed
+		// and the `/` after it opens a regexp rather than dividing
+		expect(labels(")/re/g")).toEqual([")", "regexp"]);
+		expect(labels("a/b/g")).toEqual(["name", "/", "name", "/", "name"]);
+	});
+
+	it("finishes an unmatched closing paren before the parser rejects it", () => {
+		// the token's context hook runs while tokenizing, so the root context is
+		// left expecting an expression and only then does the parser refuse it
+		expect(() => parse(")")).toThrow(/Unexpected token/);
+		expect(() => parse("}")).toThrow(/Unexpected token/);
 	});
 
 	it("keeps the delegated tokenizer cold paths reachable with the fast loop off", () => {
