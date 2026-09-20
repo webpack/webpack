@@ -18,7 +18,7 @@ const injectFreeNamePlugin = {
 
 				return new ConcatSource(
 					source,
-					"\nglobalThis.injectedTypeOfValue = typeof value;\n"
+					"\nglobal.injectedTypeOfValue = typeof value;\n"
 				);
 			});
 		});
