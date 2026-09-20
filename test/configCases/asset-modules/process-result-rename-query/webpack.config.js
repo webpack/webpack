@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 const { parseResource } = require("../../../../lib/util/identifier");
 
 // A request carries its query and fragment into the asset's name, so a rename

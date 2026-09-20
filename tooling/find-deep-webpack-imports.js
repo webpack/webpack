@@ -413,9 +413,13 @@ const writeRecord = async (rows, perKeyword) => {
 	/** @type {EXPECTED_ANY} */
 	const requests = {};
 
+	// A path `removed` names is one no webpack 5 build can reach, so recording
+	// it as a request too would claim the ecosystem needs it. The two maps stay
+	// disjoint, and `--check` reads `removed` first either way.
 	for (const row of [...rows].sort((a, b) =>
 		a.request.localeCompare(b.request)
 	)) {
+		if (row.request in previous.removed) continue;
 		requests[row.request] = { weekly: row.weekly, packages: row.packages };
 	}
 

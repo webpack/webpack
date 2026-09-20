@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 
 // The inline half: there is no file name to change, but the media type makes
 // the same claim about the bytes, so it has to follow too.

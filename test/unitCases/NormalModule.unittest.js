@@ -3,12 +3,12 @@
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
-const NormalModule = require("../../lib/NormalModule");
+const NormalModule = require("../../lib/module/NormalModule");
 const HarmonyImportSideEffectDependency = require("../../lib/dependencies/HarmonyImportSideEffectDependency");
 
-/** @import { LoaderItem } from "../../lib/NormalModule" */
+/** @import { LoaderItem } from "../../lib/module/NormalModule" */
 /** @import Parser from "../../lib/Parser" */
-/** @import Generator from "../../lib/Generator" */
+/** @import Generator from "../../lib/module/Generator" */
 /** @import ModuleGraph from "../../lib/graph/ModuleGraph" */
 /** @import { ImportPhaseType } from "../../lib/dependencies/ImportPhase" */
 
@@ -41,7 +41,7 @@ describe("NormalModule", () => {
 			})
 		);
 		normalModule = new NormalModule(
-			/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+			/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 				/** @type {unknown} */ ({
 					type: "javascript/auto",
 					request,
@@ -81,7 +81,7 @@ describe("NormalModule", () => {
 				/** @type {unknown} */ ({ generate() {} })
 			);
 			const normalModuleFactory =
-				/** @type {import("../../lib/NormalModuleFactory")} */ (
+				/** @type {import("../../lib/module/NormalModuleFactory")} */ (
 					/** @type {unknown} */ ({
 						getParser: () => factoryParser,
 						getGenerator: () => factoryGenerator
@@ -126,7 +126,7 @@ describe("NormalModule", () => {
 				userRequest =
 					"/some/userRequest!/some/other/userRequest!/some/thing/is/off/here";
 				normalModule = new NormalModule(
-					/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 						/** @type {unknown} */ ({
 							type: "javascript/auto",
 							request,
@@ -155,7 +155,7 @@ describe("NormalModule", () => {
 				userRequest =
 					"F:\\some\\context\\loader?query=foo\\bar&otherPath=testpath/other";
 				normalModule = new NormalModule(
-					/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 						/** @type {unknown} */ ({
 							type: "javascript/auto",
 							request,
@@ -187,7 +187,7 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				resource = `${baseResource}?some=query`;
 				normalModule = new NormalModule(
-					/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 						/** @type {unknown} */ ({
 							type: "javascript/auto",
 							request,
@@ -324,7 +324,7 @@ describe("NormalModule", () => {
 			const modules = [];
 			for (let i = 0; i < count; i++) {
 				const mod = new NormalModule(
-					/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 						/** @type {unknown} */ ({
 							type: "javascript/auto",
 							request: `/m${i}`,
@@ -356,7 +356,7 @@ describe("NormalModule", () => {
 				/** @type {unknown} */ ({
 					/**
 					 * @param {import("../../lib/Dependency")} dep dependency
-					 * @returns {import("../../lib/Module") | null} module
+					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => depToModule.get(dep),
 					getOptimizationBailout: () => []
@@ -394,7 +394,7 @@ describe("NormalModule", () => {
 			moduleGraph.getModule = /** @type {ModuleGraph["getModule"]} */ (
 				/**
 				 * @param {import("../../lib/Dependency")} dep dependency
-				 * @returns {import("../../lib/Module") | null} module
+				 * @returns {import("../../lib/module/Module") | null} module
 				 */
 				(dep) => (dep === lastDep ? modules[0] : originalGetModule(dep))
 			);
@@ -412,7 +412,7 @@ describe("NormalModule", () => {
 			const bailouts = new Map();
 			/** @type {EXPECTED_ANY} */ (moduleGraph).getOptimizationBailout =
 				/**
-				 * @param {import("../../lib/NormalModule")} mod module
+				 * @param {import("../../lib/module/NormalModule")} mod module
 				 * @returns {unknown[]} bailout list
 				 */
 				(mod) => {
@@ -439,7 +439,7 @@ describe("NormalModule", () => {
 			 */
 			const make = (id) => {
 				const mod = new NormalModule(
-					/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 						/** @type {unknown} */ ({
 							type: "javascript/auto",
 							request: `/${id}`,
@@ -475,7 +475,7 @@ describe("NormalModule", () => {
 				/** @type {unknown} */ ({
 					/**
 					 * @param {import("../../lib/Dependency")} dep dependency
-					 * @returns {import("../../lib/Module") | null} module
+					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => (dep === depA ? a : dep === depB ? b : null),
 					getOptimizationBailout: () => []
@@ -497,7 +497,7 @@ describe("NormalModule", () => {
 			const modules = [];
 			for (let i = 0; i < N; i++) {
 				const mod = new NormalModule(
-					/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 						/** @type {unknown} */ ({
 							type: "javascript/auto",
 							request: `/m${i}`,
@@ -532,7 +532,7 @@ describe("NormalModule", () => {
 				/** @type {unknown} */ ({
 					/**
 					 * @param {import("../../lib/Dependency")} dep dependency
-					 * @returns {import("../../lib/Module") | null} module
+					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => depToModule.get(dep),
 					getOptimizationBailout: () => []
@@ -552,7 +552,7 @@ describe("NormalModule", () => {
 			 */
 			const make = (id) => {
 				const mod = new NormalModule(
-					/** @type {import("../../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {import("../../lib/module/NormalModule").NormalModuleCreateData} */ (
 						/** @type {unknown} */ ({
 							type: "javascript/auto",
 							request: `/${id}`,
@@ -594,7 +594,7 @@ describe("NormalModule", () => {
 				/** @type {unknown} */ ({
 					/**
 					 * @param {import("../../lib/Dependency")} dep dependency
-					 * @returns {import("../../lib/Module") | null} module
+					 * @returns {import("../../lib/module/Module") | null} module
 					 */
 					getModule: (dep) => depToModule.get(dep),
 					getOptimizationBailout: () => []

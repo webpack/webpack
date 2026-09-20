@@ -1,11 +1,11 @@
 "use strict";
 
 const path = require("path");
-const Generator = require("../../lib/Generator");
+const Generator = require("../../lib/module/Generator");
 const {
 	CSS_TYPE,
 	JAVASCRIPT_TYPE
-} = require("../../lib/ModuleSourceTypeConstants");
+} = require("../../lib/module/ModuleSourceTypeConstants");
 const RequestShortener = require("../../lib/util/RequestShortener");
 const CssGenerator = require("../../lib/css/CssGenerator");
 const ModuleParseError = require("../../lib/errors/ModuleParseError");
@@ -108,11 +108,11 @@ describe("Generator.buildErrorMessage", () => {
 
 	it("should drop the position of a frame webpack's own files own", () => {
 		const error = errorWith(
-			`loader boom\n    at run (${require.resolve("../../lib/NormalModule")}:940:11)`
+			`loader boom\n    at run (${require.resolve("../../lib/module/NormalModule")}:940:11)`
 		);
 
 		expect(Generator.buildErrorMessage(error, repositoryShortener)).toBe(
-			"loader boom\n    at run (./lib/NormalModule.js)"
+			"loader boom\n    at run (./lib/module/NormalModule.js)"
 		);
 	});
 

@@ -65,13 +65,19 @@ The directory listings below are the canonical map of the repository. **Whenever
     shape, `defaults.js` fills values in, and `WebpackOptionsApply` reads the result into
     the plugins it implies. `WebpackOptionsDefaulter` is the normalize-then-default pair
     under one deprecated name, and `OptionsApply` the base class the apply step extends.
-    Also holds the target presets and `defineConfig`.
+    Also holds the target presets, `defineConfig`, and `PlatformPlugin`, which pins the
+    target platform a `target: false` build cannot infer.
   - `lib/container/` — Module Federation.
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
   - `lib/debug/` — Debug helpers.
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
   - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
+  - `lib/diagnostics/` — Plugins that raise a build-wide error or warning of their own:
+    a case-insensitive filesystem collision, a deprecated option, a missing `mode`, and
+    `IgnoreWarningsPlugin`, which filters what the others produced. `NoEmitOnErrorsPlugin`
+    joins them because it reacts to the errors rather than raising one. The classes they
+    construct live in `lib/errors/`, and the `performance` hints in `lib/performance/`.
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/entry/` — The `entry` option: `EntryPlugin`, the `EntryOptionPlugin` that reads
@@ -83,18 +89,28 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/graph/` — The module and chunk graphs a compilation holds: `ModuleGraph` and its
     connections, `ChunkGraph` and the `buildChunkGraph` that fills it, and the `ExportsInfo`
     recording what each module exports and who uses it.
-  - `lib/hmr/` — Hot Module Replacement plugins.
+  - `lib/hmr/` — Hot Module Replacement: `HotModuleReplacementPlugin` and the runtime
+    modules, lazy-compilation backend and helpers it drives.
   - `lib/html/` — Experimental HTML support.
   - `lib/ids/` — Module/chunk id assignment plugins, and `RecordIdsPlugin`, which persists
     the assignment across builds through `recordsPath`.
   - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis. `syntax.js` serves every production a build reaches, so `grammar.js` (the full grammar) and `regexp.js` (the pattern validator) are installed onto the parser's prototype only when something asks for one — keep it that way and never `require` either from a path a build takes.
   - `lib/json/` — JSON modules.
-  - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
+  - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats, and the deprecated
+    `LibraryTemplatePlugin` that reaches them through the old two-argument API.
   - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader
     iteration and loader module loading, plus the `LoaderOptionsPlugin` and
     `LoaderTargetPlugin` that feed the loader context.
   - `lib/logging/` — Logger API and console formatting.
-  - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …).
+  - `lib/module/` — What a module is and what makes one: the `Module` base class and
+    `NormalModule`, the `ModuleFactory` hierarchy that builds them (`NormalModuleFactory`,
+    `NullFactory`, `SelfModuleFactory`), the `Generator` base class and the
+    `CodeGenerationResults` its output lands in, `ModuleProfile`, and the two constant
+    files naming module and source types. A module subclass a plugin owns lives with
+    that plugin — `ExternalModule` in `lib/externals/`, `CssModule` in `lib/css/` — so
+    this holds the ones every build has.
+  - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …),
+    including `CircularModulesPlugin`, which flags the import cycles the others reason about.
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
@@ -160,7 +176,7 @@ Keep `--depth 1`: `wpt` alone is ~161k files. `--remote` changes the commit the 
 
 - `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`.
 
-The loader context is not one of these: `LoaderContext` and the loader-definition types are JSDoc in `lib/` like every other type, declared where the code that adds each part lives (`lib/NormalModule.js`, `lib/loaders/LoaderRunner.js`, `lib/dependencies/LoaderPlugin.js`, `lib/HotModuleReplacementPlugin.js`) and re-exported from `lib/index.js`, which is the file `generate-types.js` reads webpack's public type surface from.
+The loader context is not one of these: `LoaderContext` and the loader-definition types are JSDoc in `lib/` like every other type, declared where the code that adds each part lives (`lib/module/NormalModule.js`, `lib/loaders/LoaderRunner.js`, `lib/dependencies/LoaderPlugin.js`, `lib/hmr/HotModuleReplacementPlugin.js`) and re-exported from `lib/index.js`, which is the file `generate-types.js` reads webpack's public type surface from.
 
 **Configuration**
 
@@ -206,6 +222,47 @@ The two config layers differ: **`normalization.js`** canonicalizes the user-supp
 **Finding a hook:** hook definitions live on the class that owns them — compiler-wide hooks in `lib/Compiler.js`, per-`Compilation` hooks in `lib/Compilation.js`; tap them with a unique plugin-name string.
 
 **Adding a runtime requirement:** declare the symbol in `lib/runtime/RuntimeGlobals.js`, emit its code with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (the `…InModule` variants for per-module needs).
+
+### Moving a file out of `lib/` root
+
+> [!REQUIRED]
+
+**Run `yarn find-deep-imports:check` on every move, before the commit.** A path that
+leaves `lib/` root breaks any published package importing it, and the recorded scan in
+`tooling/deep-webpack-imports.json` is what says which those are. `--write` refreshes it
+off the registry; `--check` needs no network and is what CI runs. Its `removed` map names
+the paths no webpack 5 build can reach, and the two maps are disjoint — `--write` skips a
+path `removed` names rather than recording it as a request.
+
+**A re-export is owed only to a webpack-5 package that imports the path unconditionally.**
+Read the importer's tarball, not its download count: a package whose `peerDependencies`
+or `dependencies` name webpack 5 and which requires the path at the top level gets a
+`// TODO remove in webpack 6` re-export at the old path. One that is webpack 4 only — it
+imports something webpack 5 deleted — or that probes for the path inside a `try` to detect
+webpack 4 gets an entry under `removed` with that reason instead, because a re-export
+would send it down the wrong branch.
+
+**Five things carry a path, and only the first is obvious.** Rewrite every one, then
+confirm the move by regenerating rather than by reading:
+
+1. `require("…")` and `require.resolve("…")`, including template literals and a string
+   sitting in a ternary branch lines away from its call.
+2. `@import … from "…"` in a JSDoc block.
+3. `@typedef {import("…")}` — a different form from the one above, and missing it drops
+   the type from webpack's public surface without failing anything.
+4. `tsType` in `schemas/**/*.json`, which can fail loudly in `fix:special` or silently
+   degrade a public type to `any`.
+5. `makeSerializable(Class, "webpack/lib/…")` — the request moves with the class and the
+   old one stays restorable through `registerLegacyRequest`, or a pre-move cache pack
+   stops loading.
+
+`yarn fix:special` leaving `types.d.ts` byte-identical is the check that 3 and 4 are done;
+`ConfigCacheTestCases` reporting no `Pack got invalid` line is the check that 5 is. Nothing
+static catches 1 — only building `lib/index.js` does.
+
+**Update the Architecture listing above in the same commit**, and grep it for the old path:
+prose elsewhere in this guide names files too, and those references go stale just as
+quietly.
 
 ### Diagnostics and hints
 

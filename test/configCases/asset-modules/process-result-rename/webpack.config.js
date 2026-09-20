@@ -1,6 +1,6 @@
 "use strict";
 
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../lib/module/NormalModule");
 
 // An image minimizer's shape: it awaits, and re-encodes the asset as another
 // format, so the name it is emitted under has to change with the bytes.

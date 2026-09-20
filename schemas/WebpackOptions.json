@@ -2736,7 +2736,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+            "tsType": "import(\"../lib/diagnostics/IgnoreWarningsPlugin\").IgnoreFn"
           }
         ]
       }
@@ -2747,7 +2747,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+        "tsType": "import(\"../lib/diagnostics/IgnoreWarningsPlugin\").IgnoreFn"
       }
     },
     "Iife": {
@@ -3759,7 +3759,7 @@
               },
               {
                 "instanceof": "Function",
-                "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+                "tsType": "import(\"../lib/module/NormalModule\").NoParseFn"
               }
             ]
           },
@@ -3777,7 +3777,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+          "tsType": "import(\"../lib/module/NormalModule\").NoParseFn"
         }
       ]
     },
@@ -4860,7 +4860,7 @@
           "items": {
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string",
-            "tsType": "import(\"../lib/Module\").SourceType"
+            "tsType": "import(\"../lib/module/Module\").SourceType"
           },
           "minItems": 1
         },

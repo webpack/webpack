@@ -1,7 +1,7 @@
 "use strict";
 
 const Dependency = require("../../lib/Dependency");
-const Module = require("../../lib/Module");
+const Module = require("../../lib/module/Module");
 const ModuleGraph = require("../../lib/graph/ModuleGraph");
 
 /**

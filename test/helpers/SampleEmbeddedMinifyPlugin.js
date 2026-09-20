@@ -1,12 +1,15 @@
 "use strict";
 
 const { RawSource, SourceMapSource } = require("webpack-sources");
-const { CSS_TYPE, HTML_TYPE } = require("../../lib/ModuleSourceTypeConstants");
 const cssSyntax = require("../../lib/css/syntax");
 const htmlSyntax = require("../../lib/html/syntax");
+const {
+	CSS_TYPE,
+	HTML_TYPE
+} = require("../../lib/module/ModuleSourceTypeConstants");
 
 /** @typedef {import("../../lib/Compiler")} Compiler */
-/** @typedef {import("../../lib/Module")} Module */
+/** @typedef {import("../../lib/module/Module")} Module */
 /** @typedef {import("../../lib/html/syntax").EmbeddedSourceRenderer} EmbeddedSourceRenderer */
 /** @typedef {import("webpack-sources").Source} Source */
 

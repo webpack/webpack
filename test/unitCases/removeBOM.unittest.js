@@ -123,7 +123,7 @@ describe("removeBOMFromResult", () => {
 
 	it("keeps the arity of a result carrying no source map", () => {
 		const result = removeBOMFromResult(
-			/** @type {import("../../lib/NormalModule").Result} */
+			/** @type {import("../../lib/module/NormalModule").Result} */
 			(/** @type {unknown} */ ([`${BOM}const a = 1;`]))
 		);
 
@@ -132,7 +132,7 @@ describe("removeBOMFromResult", () => {
 	});
 
 	it("returns a result without a BOM as it is", () => {
-		/** @type {import("../../lib/NormalModule").Result} */
+		/** @type {import("../../lib/module/NormalModule").Result} */
 		const result = ["const a = 1;", map("CAAA"), undefined];
 
 		expect(removeBOMFromResult(result)).toBe(result);
