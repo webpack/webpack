@@ -27,7 +27,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - name: Cache prettier result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -54,8 +54,8 @@ jobs:
 
       - name: Validate types using old typescript version
         run: |
-          yarn upgrade typescript@5.0 @types/node@20
-          yarn --frozen-lockfile
+          node tooling/retry.js yarn upgrade typescript@5.0 @types/node@20
+          node tooling/retry.js yarn --frozen-lockfile
           yarn validate:types
 
       - name: Validate changeset format
@@ -78,7 +78,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -115,7 +115,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - name: CSS printer invariants
         run: yarn test:invariants:css
@@ -143,7 +143,7 @@ jobs:
 
       # `--ignore-engines`: some transitive deps (e.g. node-releases) declare
       # `engines.node >= 18` but run fine on old Node; matches the other legacy jobs
-      - run: yarn install --production --frozen-lockfile --ignore-engines
+      - run: node tooling/retry.js yarn install --production --frozen-lockfile --ignore-engines
 
   basic:
     runs-on: ubuntu-latest
@@ -156,7 +156,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -175,7 +175,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -210,7 +210,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check out the test262 corpus
-        run: git submodule update --init --depth 1 test/external/test262-cases
+        run: node tooling/retry.js git submodule update --init --depth 1 test/external/test262-cases
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -219,7 +219,7 @@ jobs:
           node-version: "26.2.0"
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -264,7 +264,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check out the test262 corpus
-        run: git submodule update --init --depth 1 test/external/test262-cases
+        run: node tooling/retry.js git submodule update --init --depth 1 test/external/test262-cases
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -272,7 +272,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -298,7 +298,7 @@ jobs:
       # WPT is 161k files, so only this job checks it out, and only one commit
       # deep — it carries the tree-construction corpus html5lib-tests dropped.
       - name: Check out the html5lib and WPT corpora
-        run: git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt
+        run: node tooling/retry.js git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -306,7 +306,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -364,7 +364,7 @@ jobs:
       # Held to both corpora: webpack's own fixtures and the web's. WPT is 161k
       # files, so it is checked out one commit deep.
       - name: Check out the WPT corpus
-        run: git submodule update --init --depth 1 test/external/wpt
+        run: node tooling/retry.js git submodule update --init --depth 1 test/external/wpt
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -372,7 +372,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -408,13 +408,13 @@ jobs:
       # key that never moves would pin the engine this suite exists to track.
       - name: Install Firefox
         if: matrix.browser == 'firefox'
-        run: yarn setup:firefox
+        run: node tooling/retry.js yarn setup:firefox
 
       # `--with-deps` because a runner carries none of WebKit's shared
       # libraries, where it already carries Chrome's.
       - name: Install WebKit
         if: matrix.browser == 'webkit'
-        run: node node_modules/playwright-core/cli.js install --with-deps webkit
+        run: node tooling/retry.js node node_modules/playwright-core/cli.js install --with-deps webkit
 
       - name: Cache jest result
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -444,7 +444,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check out the css-parsing corpus
-        run: git submodule update --init --depth 1 test/external/css-parsing-tests
+        run: node tooling/retry.js git submodule update --init --depth 1 test/external/css-parsing-tests
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -452,7 +452,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -505,7 +505,7 @@ jobs:
         with:
           bun-version: latest
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -588,36 +588,36 @@ jobs:
 
       # Install old `jest` version and deps for legacy node versions
       - run: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 less@4.5.1 mini-css-extract-plugin@^1.6.1 nyc@^15.1.0 memfs@4.14.0 toml@^4.3.0 --ignore-engines
-          yarn --frozen-lockfile --ignore-engines
+          node tooling/retry.js yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 less@4.5.1 mini-css-extract-plugin@^1.6.1 nyc@^15.1.0 memfs@4.14.0 toml@^4.3.0 --ignore-engines
+          node tooling/retry.js yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
 
       - run: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 coffee-loader@1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 toml@^4.3.0 --ignore-engines
-          yarn --frozen-lockfile
+          node tooling/retry.js yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 coffee-loader@1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 toml@^4.3.0 --ignore-engines
+          node tooling/retry.js yarn --frozen-lockfile
         if: matrix.node-version == '16.x'
 
       - run: |
-          yarn upgrade cspell@^8.8.4 lint-staged@^15.2.5 toml@^4.3.0 --ignore-engines
-          yarn --frozen-lockfile
+          node tooling/retry.js yarn upgrade cspell@^8.8.4 lint-staged@^15.2.5 toml@^4.3.0 --ignore-engines
+          node tooling/retry.js yarn --frozen-lockfile
         if: matrix.node-version == '18.x'
 
       - run: |
-          yarn upgrade cspell@^9 --ignore-engines
-          yarn --frozen-lockfile
+          node tooling/retry.js yarn upgrade cspell@^9 --ignore-engines
+          node tooling/retry.js yarn --frozen-lockfile
         if: matrix.node-version == '20.x'
 
       - run: |
-          yarn upgrade pkg-pr-new@0.0.66
-          yarn --frozen-lockfile
+          node tooling/retry.js yarn upgrade pkg-pr-new@0.0.66
+          node tooling/retry.js yarn --frozen-lockfile
         if: matrix.node-version == '22.x'
 
       # Install main version of our deps
-      - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#main
+      - run: node tooling/retry.js yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#main
         if: matrix.use_main_branches == '1'
 
       # Install dependencies for LTS node versions
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
         if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x' && matrix.node-version != '22.x'
 
       - run: yarn link --frozen-lockfile || true

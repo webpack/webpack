@@ -48,7 +48,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
@@ -96,7 +96,7 @@ jobs:
           node-version: lts/*
           cache: yarn
 
-      - run: yarn --frozen-lockfile
+      - run: node tooling/retry.js yarn --frozen-lockfile
 
       - run: yarn link --frozen-lockfile || true
 
