@@ -992,6 +992,44 @@ describe("CssSyntax — block streaming", () => {
 		expect(minify(out)).toBe(out);
 	});
 
+	it("leaves the pair at a gathered seam alone where it cannot join", () => {
+		// The gather still runs; only the join at the seam is declined, so each
+		// case reads as the two bodies side by side under one opener.
+		const gathered = (/** @type {string} */ tail) => {
+			const out = minify(
+				`@layer outer{${repeat(6000, (i) => `.f${i}{color:red}`)}${tail}}`
+			);
+			return out.slice(out.indexOf("@layer a{"));
+		};
+		const lead = "@layer a{.p{color:teal}}.mid{margin:0}";
+		// A control, so a case that stopped gathering reads apart from one that
+		// stopped joining.
+		expect(gathered(`${lead}@layer a{.q{color:teal}}`)).toBe(
+			"@layer a{.p,.q{color:teal}}.mid{margin:0}}"
+		);
+		// Only a qualified rule lends its selectors.
+		expect(gathered(`${lead}@layer a{@media print{.q{color:teal}}}`)).toBe(
+			"@layer a{.p{color:teal}@media print{.q{color:teal}}}.mid{margin:0}}"
+		);
+		// One selector an engine cannot parse invalidates the list it joins.
+		expect(gathered(`${lead}@layer a{.q:not(.r){color:teal}}`)).toBe(
+			"@layer a{.p{color:teal}.q:not(.r){color:teal}}.mid{margin:0}}"
+		);
+		expect(
+			gathered("@layer a{.p:not(.r){color:teal}}.mid{margin:0}@layer a{.q{color:teal}}")
+		).toBe("@layer a{.p:not(.r){color:teal}.q{color:teal}}.mid{margin:0}}");
+		// Two rules join on the block they share, which these do not.
+		expect(gathered(`${lead}@layer a{.q{color:lime}}`)).toBe(
+			"@layer a{.p{color:teal}.q{color:lime}}.mid{margin:0}}"
+		);
+		// A selector the grown list already carries would only be written twice.
+		expect(
+			gathered(
+				"@layer a{.p{color:teal}.q{color:teal}}.mid{margin:0}@layer a{.q{color:teal}}"
+			)
+		).toBe("@layer a{.p,.q{color:teal}.q{color:teal}}.mid{margin:0}}");
+	});
+
 	it("drops a prefixed list a streamed block's rules cover between them", () => {
 		// The list is held as the node its parent would skip, and a streamed parent
 		// assembles no body — so it has to be held as a piece instead.
