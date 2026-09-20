@@ -52,9 +52,10 @@ const createFiles = () => {
 };
 
 /**
+ * @param {{ from: string, to: string }} pattern what the build copies
  * @returns {Promise<import("../../").Compilation>} the compilation of one build
  */
-const compile = () => {
+const compile = (pattern) => {
 	const webpack = require("../..");
 	const compiler = webpack({
 		mode: "development",
@@ -63,7 +64,7 @@ const compile = () => {
 		output: {
 			path: outputPath,
 			filename: "bundle.js",
-			copy: [{ from: "static", to: "." }]
+			copy: [pattern]
 		}
 	});
 
@@ -87,6 +88,8 @@ const compile = () => {
 describe("CopyPlugin", () => {
 	/** @type {import("../../").Compilation} */
 	let compilation;
+	/** @type {import("../../").Compilation | undefined} */
+	let fromAliasCompilation;
 	/** @type {boolean} */
 	let aliased;
 
@@ -95,7 +98,13 @@ describe("CopyPlugin", () => {
 			rimraf(tempFolderPath, resolve);
 		});
 		aliased = createFiles();
-		compilation = await compile();
+		compilation = await compile({ from: "static", to: "." });
+		if (aliased) {
+			fromAliasCompilation = await compile({
+				from: "static/alias",
+				to: "aliased"
+			});
+		}
 	});
 
 	afterAll((done) => {
@@ -118,6 +127,21 @@ describe("CopyPlugin", () => {
 		// the link resolves into the output directory, so following it would copy
 		// the build's own output under a name the lexical check never sees
 		expect(compilation.getAsset("alias/stale.txt")).toBeUndefined();
+	});
+
+	it("should copy nothing when the pattern itself names such a symlink", () => {
+		if (!fromAliasCompilation) return;
+		// the base resolves into the output directory, so the pattern reaches no
+		// file and says so rather than copying the build's own output
+		expect(
+			[...fromAliasCompilation.getAssets()].filter((asset) =>
+				asset.name.startsWith("aliased/")
+			)
+		).toHaveLength(0);
+		expect(fromAliasCompilation.warnings).toHaveLength(1);
+		expect(fromAliasCompilation.warnings[0].name).toBe(
+			"EmptyCopyPatternWarning"
+		);
 	});
 
 	it("should not make a file inside the output path a dependency", () => {
