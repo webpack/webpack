@@ -71,6 +71,11 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
   - `lib/debug/` — Debug helpers.
+  - `lib/define/` — Replacing a free identifier with a constant at parse time:
+    `DefinePlugin`, and the two plugins that are a `DefinePlugin` fed from somewhere
+    else — `EnvironmentPlugin` from `process.env` and `DotenvPlugin` from a `.env`
+    file. `ProvidePlugin` substitutes an import rather than a value, so it is not one
+    of these.
   - `lib/dependencies/` — The concrete `Dependency` subclasses and their templates
     (HarmonyImport, CommonJsRequire, RequireContext, …); the `Dependency` they extend is
     in `lib/graph/` and the `DependencyTemplate` in `lib/template/`.
