@@ -5426,7 +5426,7 @@
           "added": "5.109.0"
         },
         "inline": {
-          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `\"script\"` inlines only JavaScript, `\"style\"` only CSS; an array of `RegExp` patterns matches against the chunk name.",
+          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `\"script\"` inlines only JavaScript, `\"style\"` only CSS; an array of `RegExp` patterns matches against the chunk name and the filename template it is emitted under. A chunk another entry loads its runtime from by url stays a separate file.",
           "anyOf": [
             {
               "type": "array",

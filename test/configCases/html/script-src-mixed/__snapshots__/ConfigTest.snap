@@ -105,7 +105,7 @@ globalThis.__moduleA = moduleA;
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
 /******/ 	const installedChunks = {
-/******/ 		\\"__html_cbe5b59d_1\\": 0
+/******/ 		\\"page-1\\": 0
 /******/ 	};
 /******/ 	
 /******/ 	const installChunk = (data) => {
@@ -154,7 +154,7 @@ globalThis.__moduleA = moduleA;
 `;
 
 exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple <script type=module src> via dependOn and share modules across them 2`] = `
-"export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_3\\"];
+"export const __webpack_esm_ids__ = [\\"page-3\\"];
 export const __webpack_esm_modules__ = {
 
 /***/ 942
@@ -236,7 +236,7 @@ exports[`ConfigTestCases html script-src-mixed exported tests should chain multi
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
 /******/ 	const installedChunks = {
-/******/ 		\\"__html_cbe5b59d_0\\": 0
+/******/ 		\\"page-0\\": 0
 /******/ 	};
 /******/ 	
 /******/ 	const installChunk = (data) => {
@@ -284,7 +284,7 @@ globalThis.__classicA = \\"classic-a value\\";
 `;
 
 exports[`ConfigTestCases html script-src-mixed exported tests should chain multiple classic <script src> via dependOn 2`] = `
-"export const __webpack_esm_ids__ = [\\"__html_cbe5b59d_2\\"];
+"export const __webpack_esm_ids__ = [\\"page-2\\"];
 export const __webpack_esm_modules__ = {
 
 /***/ 702
