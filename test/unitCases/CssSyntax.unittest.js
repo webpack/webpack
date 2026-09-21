@@ -48,7 +48,7 @@ const {
 /**
  * @param {string} css a stylesheet
  * @param {string[]=} browsers the browserslist selection to target
- * @param {import("../../lib/css/syntax").CssEnvironment=} abilities the CSS abilities the target reads
+ * @param {import("../../lib/css/syntax-parser").CssEnvironment=} abilities the CSS abilities the target reads
  * @returns {string} its minified serialization
  */
 const minifyFor = (css, browsers, abilities) =>
@@ -61,7 +61,7 @@ const minifyFor = (css, browsers, abilities) =>
  * Minify for a browserslist selection with some of the rewrites set.
  * @param {string} css source text
  * @param {string[]} browsers the browserslist selection to target
- * @param {import("../../lib/css/syntax").CssTransformOptions} transforms the rewrites to set
+ * @param {import("../../lib/css/syntax-parser").CssTransformOptions} transforms the rewrites to set
  * @returns {string} its minified serialization
  */
 const minifyForWith = (css, browsers, transforms) =>
@@ -122,7 +122,7 @@ describe("readToken", () => {
 				const t = readToken(
 					code,
 					pos,
-					/** @type {import("../../lib/css/syntax").MutableToken} */ ({})
+					/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
 				);
 				if (t === undefined) break;
 				pos = t.end;
@@ -158,7 +158,7 @@ const tokenRoundtrip = (input) => {
 		const t = readToken(
 			input,
 			pos,
-			/** @type {import("../../lib/css/syntax").MutableToken} */ ({})
+			/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
 		);
 		if (t === undefined) break;
 		pos = t.end;
@@ -242,11 +242,11 @@ const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
  * @returns {number} the first token's type
  */
 const firstTokenType = (src) =>
-	/** @type {import("../../lib/css/syntax").MutableToken} */ (
+	/** @type {import("../../lib/css/syntax-parser").MutableToken} */ (
 		readToken(
 			src,
 			0,
-			/** @type {import("../../lib/css/syntax").MutableToken} */ ({})
+			/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
 		)
 	).type;
 
@@ -254,10 +254,10 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 	it("classifies each leaf token type", () => {
 		/**
 		 * @param {string} s source
-		 * @returns {import("../../lib/css/syntax").ComponentValue} parsed component value
+		 * @returns {import("../../lib/css/syntax-parser").ComponentValue} parsed component value
 		 */
 		const cv = (s) =>
-			/** @type {import("../../lib/css/syntax").ComponentValue} */ (
+			/** @type {import("../../lib/css/syntax-parser").ComponentValue} */ (
 				parseAComponentValue(s)
 			);
 		expect(cv("123").type).toBe(NodeType.Number);
@@ -282,10 +282,10 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 	it("reads every escaped spelling of `url(` as a url", () => {
 		/**
 		 * @param {string} s source
-		 * @returns {import("../../lib/css/syntax").ComponentValue} parsed value
+		 * @returns {import("../../lib/css/syntax-parser").ComponentValue} parsed value
 		 */
 		const cv = (s) =>
-			/** @type {import("../../lib/css/syntax").ComponentValue} */ (
+			/** @type {import("../../lib/css/syntax-parser").ComponentValue} */ (
 				parseAComponentValue(s)
 			);
 		// Longest spelling: each code point as `\` + 6 hex digits + CRLF.
@@ -308,10 +308,10 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 	it("decodes numeric token metadata", () => {
 		/**
 		 * @param {string} s source
-		 * @returns {import("../../lib/css/syntax").NumberToken} parsed number token
+		 * @returns {import("../../lib/css/syntax-parser").NumberToken} parsed number token
 		 */
 		const num = (s) =>
-			/** @type {import("../../lib/css/syntax").NumberToken} */ (
+			/** @type {import("../../lib/css/syntax-parser").NumberToken} */ (
 				parseAComponentValue(s)
 			);
 		const int = num("123");
@@ -331,11 +331,11 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 	});
 
 	it("decodes percentage and dimension metadata", () => {
-		const pct = /** @type {import("../../lib/css/syntax").PercentageToken} */ (
+		const pct = /** @type {import("../../lib/css/syntax-parser").PercentageToken} */ (
 			parseAComponentValue("-50%")
 		);
 		expect([pct.numericValue, pct.sign]).toEqual([-50, "-"]);
-		const dim = /** @type {import("../../lib/css/syntax").DimensionToken} */ (
+		const dim = /** @type {import("../../lib/css/syntax-parser").DimensionToken} */ (
 			parseAComponentValue("10px")
 		);
 		expect([dim.numericValue, dim.unit, dim.typeFlag]).toEqual([
@@ -344,7 +344,7 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 			"integer"
 		]);
 		expect(
-			/** @type {import("../../lib/css/syntax").DimensionToken} */ (
+			/** @type {import("../../lib/css/syntax-parser").DimensionToken} */ (
 				parseAComponentValue("1.5EM")
 			).unit
 		).toBe("em");
@@ -352,16 +352,16 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 
 	it("decodes hash id vs unrestricted and url content", () => {
 		expect(
-			/** @type {import("../../lib/css/syntax").HashToken} */ (
+			/** @type {import("../../lib/css/syntax-parser").HashToken} */ (
 				parseAComponentValue("#id")
 			).typeFlag
 		).toBe("id");
 		expect(
-			/** @type {import("../../lib/css/syntax").HashToken} */ (
+			/** @type {import("../../lib/css/syntax-parser").HashToken} */ (
 				parseAComponentValue("#123")
 			).typeFlag
 		).toBe("unrestricted");
-		const url = /** @type {import("../../lib/css/syntax").UrlToken} */ (
+		const url = /** @type {import("../../lib/css/syntax-parser").UrlToken} */ (
 			parseAComponentValue("url(a.png)")
 		);
 		expect(url.value).toBe("a.png");
@@ -369,14 +369,14 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 	});
 
 	it("exposes function name and nested values", () => {
-		const fn = /** @type {import("../../lib/css/syntax").FunctionNode} */ (
+		const fn = /** @type {import("../../lib/css/syntax-parser").FunctionNode} */ (
 			parseAComponentValue("calc(1 + 2)")
 		);
 		expect(fn.name).toBe("calc");
 		expect(
 			fn.value.some(
 				/**
-				 * @param {import("../../lib/css/syntax").ComponentValue} c component value
+				 * @param {import("../../lib/css/syntax-parser").ComponentValue} c component value
 				 * @returns {boolean} true if the value is a Number node
 				 */ (c) => c.type === NodeType.Number
 			)
@@ -386,7 +386,7 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 	it("reads declarations / childRules as null on non-rule nodes", () => {
 		// Only rules populate the decl / child-rule slots; a function (or any
 		// non-rule container) has no entry and must read back `null`.
-		const fn = /** @type {import("../../lib/css/syntax").QualifiedRule} */ (
+		const fn = /** @type {import("../../lib/css/syntax-parser").QualifiedRule} */ (
 			/** @type {unknown} */ (parseAComponentValue("calc(1 + 2)"))
 		);
 		expect(fn.declarations).toBeNull();
@@ -414,14 +414,14 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 
 describe("CssSyntax — parser entry points", () => {
 	it("parseADeclaration parses name, value and !important", () => {
-		const d = /** @type {import("../../lib/css/syntax").Declaration} */ (
+		const d = /** @type {import("../../lib/css/syntax-parser").Declaration} */ (
 			parseADeclaration("color: red")
 		);
 		expect(d.name).toBe("color");
 		expect(d.important).toBe(false);
 		expect(d.value.length).toBeGreaterThan(0);
 		expect(
-			/** @type {import("../../lib/css/syntax").Declaration} */ (
+			/** @type {import("../../lib/css/syntax-parser").Declaration} */ (
 				parseADeclaration("color: red !important")
 			).important
 		).toBe(true);
@@ -433,12 +433,12 @@ describe("CssSyntax — parser entry points", () => {
 	});
 
 	it("parseARule parses qualified rules and at-rules", () => {
-		const qr = /** @type {import("../../lib/css/syntax").QualifiedRule} */ (
+		const qr = /** @type {import("../../lib/css/syntax-parser").QualifiedRule} */ (
 			parseARule("a { color: red }")
 		);
 		expect(qr.type).toBe(NodeType.QualifiedRule);
 		expect(qr.declarations).toHaveLength(1);
-		const at = /** @type {import("../../lib/css/syntax").AtRule} */ (
+		const at = /** @type {import("../../lib/css/syntax-parser").AtRule} */ (
 			parseARule('@import "x";')
 		);
 		expect(at.type).toBe(NodeType.AtRule);
@@ -458,7 +458,7 @@ describe("CssSyntax — parser entry points", () => {
 		expect(parseAComponentValue("   ")).toBeUndefined();
 		expect(parseAComponentValue("a b")).toBeUndefined();
 		expect(
-			/** @type {import("../../lib/css/syntax").ComponentValue} */ (
+			/** @type {import("../../lib/css/syntax-parser").ComponentValue} */ (
 				parseAComponentValue("  a  ")
 			).type
 		).toBe(NodeType.Ident);
@@ -492,8 +492,8 @@ describe("CssSyntax — parser entry points", () => {
 		const { rules } = parseABlocksContents("x:1;y:2", 0);
 		expect(rules).toHaveLength(0);
 		const ss = parseAStylesheet(".a{x:1}.b{y:2}");
-		const a = /** @type {import("../../lib/css/syntax").Rule} */ (ss.rules[0]);
-		const b = /** @type {import("../../lib/css/syntax").Rule} */ (ss.rules[1]);
+		const a = /** @type {import("../../lib/css/syntax-parser").Rule} */ (ss.rules[0]);
+		const b = /** @type {import("../../lib/css/syntax-parser").Rule} */ (ss.rules[1]);
 		expect(a.childRules).toHaveLength(0);
 		expect(a.childRules).toBe(b.childRules);
 		expect(Object.isFrozen(a.childRules)).toBe(true);
@@ -507,7 +507,7 @@ describe("CssSyntax — parser entry points", () => {
 		);
 		expect(decls).toHaveLength(0);
 		expect(rules).toHaveLength(1);
-		const rule = /** @type {import("../../lib/css/syntax").Rule} */ (rules[0]);
+		const rule = /** @type {import("../../lib/css/syntax-parser").Rule} */ (rules[0]);
 		expect(rule.type).toBe(NodeType.QualifiedRule);
 		expect(rule.declarations).toHaveLength(1);
 	});
@@ -516,7 +516,7 @@ describe("CssSyntax — parser entry points", () => {
 		const { decls } = parseABlocksContents("--x: { a: b }; color: red");
 		expect(decls).toHaveLength(2);
 		expect(
-			/** @type {import("../../lib/css/syntax").Declaration} */ (decls[0]).name
+			/** @type {import("../../lib/css/syntax-parser").Declaration} */ (decls[0]).name
 		).toBe("--x");
 	});
 
@@ -527,7 +527,7 @@ describe("CssSyntax — parser entry points", () => {
 		const decl = parseADeclaration("color: { a: b }");
 		expect(decl).toBeDefined();
 		expect(
-			/** @type {import("../../lib/css/syntax").Declaration} */ (decl).name
+			/** @type {import("../../lib/css/syntax-parser").Declaration} */ (decl).name
 		).toBe("color");
 		// Anything beside the block sends it back to the nested-rule reading.
 		expect(parseADeclaration("color: { a: b } c")).toBeUndefined();
@@ -543,7 +543,7 @@ describe("CssSyntax — parser entry points", () => {
 		expect(rules).toHaveLength(0);
 		expect(
 			decls.map(
-				(d) => /** @type {import("../../lib/css/syntax").Declaration} */ (d).name
+				(d) => /** @type {import("../../lib/css/syntax-parser").Declaration} */ (d).name
 			)
 		).toEqual(["color", "background"]);
 	});
@@ -557,11 +557,11 @@ describe("CssSyntax — parser entry points", () => {
 			NodeType.QualifiedRule
 		]);
 		expect(
-			/** @type {import("../../lib/css/syntax").AtRule} */ (ss.rules[0]).name
+			/** @type {import("../../lib/css/syntax-parser").AtRule} */ (ss.rules[0]).name
 		).toBe("media");
 		expect(
-			/** @type {import("../../lib/css/syntax").Rule[]} */ (
-				/** @type {import("../../lib/css/syntax").AtRule} */ (ss.rules[0])
+			/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
+				/** @type {import("../../lib/css/syntax-parser").AtRule} */ (ss.rules[0])
 					.childRules
 			).map((r) => r.type)
 		).toEqual([NodeType.QualifiedRule]);
@@ -583,7 +583,7 @@ describe("CssSyntax — parser entry points", () => {
 
 describe("CssSyntax — Node / Token", () => {
 	it("exposes range, loc and toString over the source", () => {
-		const decl = /** @type {import("../../lib/css/syntax").Declaration} */ (
+		const decl = /** @type {import("../../lib/css/syntax-parser").Declaration} */ (
 			parseADeclaration("color: red")
 		);
 		expect(decl.type).toBe(NodeType.Declaration);
@@ -597,7 +597,7 @@ describe("CssSyntax — Node / Token", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.Declaration]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => (loc = path.loc())
 			})
 			.process("a{\n  color: red\n}");
@@ -612,7 +612,7 @@ describe("CssSyntax — Node / Token", () => {
 	});
 
 	it("lazily computes a token's value once", () => {
-		const ident = /** @type {import("../../lib/css/syntax").Token} */ (
+		const ident = /** @type {import("../../lib/css/syntax-parser").Token} */ (
 			parseAComponentValue("foo")
 		);
 		expect(ident.type).toBe(NodeType.Ident);
@@ -623,15 +623,15 @@ describe("CssSyntax — Node / Token", () => {
 	it("exposes every parseA* reader accessor", () => {
 		/**
 		 * @param {string} src source
-		 * @returns {import("../../lib/css/syntax").Token} the component value as a token
+		 * @returns {import("../../lib/css/syntax-parser").Token} the component value as a token
 		 */
 		const tok = (src) =>
-			/** @type {import("../../lib/css/syntax").Token} */ (
+			/** @type {import("../../lib/css/syntax-parser").Token} */ (
 				parseAComponentValue(src)
 			);
 
 		// loc over the source
-		const decl = /** @type {import("../../lib/css/syntax").Declaration} */ (
+		const decl = /** @type {import("../../lib/css/syntax-parser").Declaration} */ (
 			parseADeclaration("color: red")
 		);
 		expect(decl.loc.start).toEqual({ line: 1, column: 0 });
@@ -645,7 +645,7 @@ describe("CssSyntax — Node / Token", () => {
 		expect(tok("#id").value).toBe("id");
 
 		// function name offsets + unescapedName
-		const fn = /** @type {import("../../lib/css/syntax").FunctionNode} */ (
+		const fn = /** @type {import("../../lib/css/syntax-parser").FunctionNode} */ (
 			parseAComponentValue("foo(1)")
 		);
 		expect([fn.nameStart, fn.nameEnd]).toEqual([0, 3]);
@@ -653,14 +653,14 @@ describe("CssSyntax — Node / Token", () => {
 
 		// simple-block opening token
 		expect(
-			/** @type {import("../../lib/css/syntax").SimpleBlock} */ (
+			/** @type {import("../../lib/css/syntax-parser").SimpleBlock} */ (
 				parseAComponentValue("[a]")
 			).token
 		).toBe("[");
 
 		// prelude + blockEnd on a qualified rule
 		const src = "a { x: 1 }";
-		const rule = /** @type {import("../../lib/css/syntax").QualifiedRule} */ (
+		const rule = /** @type {import("../../lib/css/syntax-parser").QualifiedRule} */ (
 			parseARule(src)
 		);
 		expect(rule.prelude.length).toBeGreaterThan(0);
@@ -674,31 +674,31 @@ describe("CssSyntax — SourceProcessor", () => {
 		const seen = {};
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Hash]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						seen.typeFlag = path.typeFlag();
 						// `A.value` on a hash drops the `#` (raw-value slice).
 						seen.hashValue = path.value();
 					},
 					[NodeType.Number]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						seen.numFlag = path.typeFlag();
 					},
 					[NodeType.String]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						seen.unescaped = path.unescaped();
 					},
 					[NodeType.Ident]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						seen.range = path.range();
 					},
 					[NodeType.QualifiedRule]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						// Round-trip the writers (set each field back to its own value).
 						path.setEnd(path.node, path.end());
@@ -719,13 +719,13 @@ describe("CssSyntax — SourceProcessor", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.QualifiedRule]: {
 						enter: () => log.push("enter"),
 						exit: () => log.push("exit")
 					},
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`decl:${path.name()}`)
 				})
 			)
@@ -739,7 +739,7 @@ describe("CssSyntax — SourceProcessor", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.QualifiedRule]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => {
 					log.push("qr");
 					path.skipChildren();
@@ -767,9 +767,9 @@ describe("CssSyntax — SourceProcessor", () => {
 		const names = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => names.push(path.name())
 				})
 			)
@@ -819,9 +819,9 @@ describe("CssSyntax — SourceProcessor", () => {
 		const names = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => names.push(path.name())
 				})
 			)
@@ -836,12 +836,12 @@ describe("CssSyntax — SourceProcessor", () => {
 		const urls = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => names.push(path.name()),
 					[NodeType.Url]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => urls.push(path.value())
 				})
 			)
@@ -857,14 +857,109 @@ describe("CssSyntax — SourceProcessor", () => {
 		const names = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => names.push(path.name())
 				})
 			)
 			.process("color: red; background: url(a.png)");
 		expect(names).toEqual([]);
+	});
+});
+
+describe("CssSyntax — the facade", () => {
+	const syntax = require("../../lib/css/syntax");
+
+	it("names its two halves the way `javascript` does", () => {
+		expect(typeof syntax.parser.grammar).toBe("function");
+		expect(typeof syntax.printer.printer).toBe("function");
+	});
+
+	it("takes every name it publishes from the half that owns it", () => {
+		const parser = require("../../lib/css/syntax-parser");
+		const dataURL = require("../../lib/util/dataURL");
+		const cssMinify = require("../../lib/css/cssMinify");
+		// Spelled out rather than derived from the facade: a name that changed
+		// spelling, or an alias repointed at another export of the same module,
+		// keeps every count identical and only a stated binding catches it.
+		const bindings = {
+			A: parser.A,
+			EMBEDDED_LANGUAGES: dataURL.EMBEDDED_LANGUAGES,
+			NodeType: parser.NodeType,
+			TT_AT_KEYWORD: parser.TT_AT_KEYWORD,
+			TT_BAD_STRING_TOKEN: parser.TT_BAD_STRING_TOKEN,
+			TT_BAD_URL_TOKEN: parser.TT_BAD_URL_TOKEN,
+			TT_CDC: parser.TT_CDC,
+			TT_CDO: parser.TT_CDO,
+			TT_COLON: parser.TT_COLON,
+			TT_COMMA: parser.TT_COMMA,
+			TT_COMMENT: parser.TT_COMMENT,
+			TT_DELIM: parser.TT_DELIM,
+			TT_DIMENSION: parser.TT_DIMENSION,
+			TT_EOF: parser.TT_EOF,
+			TT_FUNCTION: parser.TT_FUNCTION,
+			TT_HASH: parser.TT_HASH,
+			TT_IDENTIFIER: parser.TT_IDENTIFIER,
+			TT_LEFT_CURLY_BRACKET: parser.TT_LEFT_CURLY_BRACKET,
+			TT_LEFT_PARENTHESIS: parser.TT_LEFT_PARENTHESIS,
+			TT_LEFT_SQUARE_BRACKET: parser.TT_LEFT_SQUARE_BRACKET,
+			TT_NUMBER: parser.TT_NUMBER,
+			TT_PERCENTAGE: parser.TT_PERCENTAGE,
+			TT_RIGHT_CURLY_BRACKET: parser.TT_RIGHT_CURLY_BRACKET,
+			TT_RIGHT_PARENTHESIS: parser.TT_RIGHT_PARENTHESIS,
+			TT_RIGHT_SQUARE_BRACKET: parser.TT_RIGHT_SQUARE_BRACKET,
+			TT_SEMICOLON: parser.TT_SEMICOLON,
+			TT_STRING: parser.TT_STRING,
+			TT_URL: parser.TT_URL,
+			TT_WHITESPACE: parser.TT_WHITESPACE,
+			TokenStream: parser.TokenStream,
+			askEmbeddedRenderer: dataURL.askEmbeddedRenderer,
+			buildSkipSet: parser.buildSkipSet,
+			collectEmbeddedDiagnostics: dataURL.collectEmbeddedDiagnostics,
+			cssMinify,
+			embeddedText: dataURL.embeddedText,
+			equalsLowerCase: parser.equalsLowerCase,
+			escapeIdentifier: parser.escapeIdentifier,
+			isDashedIdentifier: parser.isDashedIdentifier,
+			isWhitespace: parser._isWhiteSpace,
+			normalizeUrl: parser.normalizeUrl,
+			parseABlocksContents: parser.parseABlocksContents,
+			parseACommaSeparatedListOfComponentValues: parser.parseACommaSeparatedListOfComponentValues,
+			parseAComponentValue: parser.parseAComponentValue,
+			parseADeclaration: parser.parseADeclaration,
+			parseAListOfComponentValues: parser.parseAListOfComponentValues,
+			parseARule: parser.parseARule,
+			parseAStylesheet: parser.parseAStylesheet,
+			parseAStylesheetsContents: parser.parseAStylesheetsContents,
+			pickTransforms: parser.pickTransforms,
+			rangeEquals: parser.rangeEquals,
+			rangeEqualsLowerCase: parser.rangeEqualsLowerCase,
+			readToken: parser.readToken,
+			skipEscape: parser.skipEscape,
+			toLowerCaseIfNeeded: parser.toLowerCaseIfNeeded,
+			unescapeIdentifier: parser.unescapeIdentifier,
+		};
+		const surface = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (syntax)
+		);
+		expect(Object.keys(surface).sort()).toEqual(
+			["SourceProcessor", "parser", "printer", ...Object.keys(bindings)].sort()
+		);
+		for (const [name, owned] of Object.entries(bindings)) {
+			expect(owned).toBeDefined();
+			expect(surface[name]).toBe(owned);
+		}
+	});
+
+	it("holds no printer until something prints", () => {
+		const processor = new SourceProcessor();
+		processor.process("a{color:red}");
+		expect(processor._printer).toBeUndefined();
+		expect(processor.process("a{color:red}", { mode: "minify" }).code).toBe(
+			"a{color:red}"
+		);
+		expect(typeof processor._printer).toBe("function");
 	});
 });
 
@@ -899,7 +994,7 @@ describe("CssSyntax — block streaming", () => {
 		let seen = false;
 		new SourceProcessor()
 			.use({
-				[type]: (/** @type {import("../../lib/css/syntax").CssPath} */ path) => {
+				[type]: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) => {
 					if (seen) return;
 					seen = true;
 					const rules = path.childRules();
@@ -913,20 +1008,20 @@ describe("CssSyntax — block streaming", () => {
 	/**
 	 * Every node the walk visits, as `type|index|start`, entering and exiting.
 	 * @param {string} src css source
-	 * @param {import("../../lib/css/syntax").CssProcessOptions=} extra more options
+	 * @param {import("../../lib/css/syntax-parser").CssProcessOptions=} extra more options
 	 * @returns {string[]} the visit sequence
 	 */
 	const walk = (src, extra) => {
 		/** @type {string[]} */
 		const seq = [];
-		/** @type {import("../../lib/css/syntax").VisitorMap} */
+		/** @type {import("../../lib/css/syntax-parser").VisitorMap} */
 		const map = {};
 		for (const name of Object.keys(NodeType)) {
 			const type = NodeType[/** @type {keyof typeof NodeType} */ (name)];
 			map[type] = {
-				enter: (/** @type {import("../../lib/css/syntax").CssPath} */ path) =>
+				enter: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
 					seq.push(`+${name}|${path.index}|${path.start()}`),
-				exit: (/** @type {import("../../lib/css/syntax").CssPath} */ path) =>
+				exit: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
 					seq.push(`-${name}|${path.index}|${path.start()}`)
 			};
 		}
@@ -1134,7 +1229,7 @@ describe("CssSyntax — block streaming", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.Declaration]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => {
 					const parent = path.parent;
 					if (parent !== null && path.type(parent) === NodeType.AtRule) {
@@ -1142,7 +1237,7 @@ describe("CssSyntax — block streaming", () => {
 					}
 				},
 				[NodeType.QualifiedRule]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => seen.push(`r${path.index}`)
 			})
 			.process(src, { mode: "minify" });
@@ -1167,7 +1262,7 @@ describe("CssSyntax — block streaming", () => {
 			new SourceProcessor()
 				.use({
 					[NodeType.AtRule]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						const decls = path.declarations();
 						const rules = path.childRules();
@@ -1187,13 +1282,13 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("honours skipChildren() and recurseBlocks on a streamed rule", () => {
-		/** @type {(opts: import("../../lib/css/syntax").CssProcessOptions, skip: boolean) => number} */
+		/** @type {(opts: import("../../lib/css/syntax-parser").CssProcessOptions, skip: boolean) => number} */
 		const children = (opts, skip) => {
 			let n = 0;
 			new SourceProcessor()
 				.use({
 					[NodeType.AtRule]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => {
 						if (skip) path.skipChildren();
 					},
@@ -1317,7 +1412,7 @@ describe("CssSyntax — block streaming", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.QualifiedRule]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => {
 					if (seen) return;
 					seen = true;
@@ -1419,7 +1514,7 @@ describe("CssSyntax — minify comment preservation", () => {
 		const { code: out } = new SourceProcessor()
 			.use({
 				[NodeType.Comment]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => seen.push(path.source())
 			})
 			.process("/*! k */a{color:red}", { mode: "minify" });
@@ -1948,7 +2043,7 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 	it("does not leak the value context into the next parse after a visitor throw", () => {
 		const processor = new SourceProcessor().use({
 			[NodeType.Ident]: (
-				/** @type {import("../../lib/css/syntax").CssPath} */ path
+				/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 			) => {
 				if (path.inValue()) throw new Error("boom");
 			}
@@ -1965,7 +2060,7 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 describe("CssSyntax — every rewrite has a switch", () => {
 	/**
 	 * @param {string} css a stylesheet
-	 * @param {import("../../lib/css/syntax").CssTransformOptions} transforms which rewrites may run
+	 * @param {import("../../lib/css/syntax-parser").CssTransformOptions} transforms which rewrites may run
 	 * @param {string[]=} browsers the target
 	 * @returns {string} the minified serialization
 	 */
@@ -2593,7 +2688,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 describe("CssSyntax — the per-transform switches", () => {
 	/**
 	 * @param {string} src css source
-	 * @param {import("../../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+	 * @param {import("../../lib/css/syntax-parser").CssTransformOptions=} transforms which rewrites to make
 	 * @returns {string} the minified serialization
 	 */
 	const min = (src, transforms) =>
@@ -2687,7 +2782,7 @@ describe("CssSyntax — the per-transform switches", () => {
 		const renderEmbeddedSource = (source) =>
 			source.replace("<svg>", "<svg id=r>");
 		/**
-		 * @param {import("../../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+		 * @param {import("../../lib/css/syntax-parser").CssTransformOptions=} transforms which rewrites to make
 		 * @returns {string} the minified serialization
 		 */
 		const render = (transforms) =>
@@ -2886,14 +2981,14 @@ describe("CssSyntax — tokenizer edge cases", () => {
 			readToken(
 				"a",
 				0,
-				/** @type {import("../../lib/css/syntax").MutableToken} */ ({})
+				/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
 			)
 		).toBeDefined();
 		expect(
 			readToken(
 				"a",
 				1,
-				/** @type {import("../../lib/css/syntax").MutableToken} */ ({})
+				/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
 			)
 		).toBeUndefined();
 	});
@@ -2940,10 +3035,10 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 	const countByType = (css, skipTypes) => {
 		/** @type {Record<number, number>} */
 		const counts = {};
-		/** @type {import("../../lib/css/syntax").VisitorMap} */
+		/** @type {import("../../lib/css/syntax-parser").VisitorMap} */
 		const map = {};
 		for (const t of Object.values(NodeType)) {
-			map[t] = (/** @type {import("../../lib/css/syntax").CssPath} */ path) => {
+			map[t] = (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) => {
 				counts[path.type()] = (counts[path.type()] || 0) + 1;
 			};
 		}
@@ -3019,12 +3114,12 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Ident]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`ident:${path.value()}`),
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`decl:${path.name()}`)
 				})
 			)
@@ -3041,9 +3136,9 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		const urls = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Url]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => urls.push(path.value())
 				})
 			)
@@ -3058,12 +3153,12 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`decl:${path.name()}`),
 					[NodeType.Ident]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`ident:${path.value()}`)
 				})
 			)
@@ -3089,16 +3184,16 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		const walk = (css, skip) => {
 			/** @type {string[]} */
 			const log = [];
-			/** @type {import("../../lib/css/syntax").VisitorMap} */
+			/** @type {import("../../lib/css/syntax-parser").VisitorMap} */
 			const map = {
 				[NodeType.QualifiedRule]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => log.push(`rule:${path.start()}-${path.end()}`),
 				[NodeType.Declaration]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => log.push(`decl:${path.name()}`),
 				[NodeType.Url]: (
-					/** @type {import("../../lib/css/syntax").CssPath} */ path
+					/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 				) => log.push(`url:${path.value()}`)
 			};
 			new SourceProcessor()
@@ -3165,15 +3260,15 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.AtRule]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`at:${path.name()}`),
 					[NodeType.Ident]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`ident:${path.value()}`),
 					[NodeType.Declaration]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => log.push(`decl:${path.name()}`)
 				})
 			)
@@ -3190,9 +3285,9 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		const urls = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Url]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => urls.push(path.value())
 				})
 			)
@@ -3210,7 +3305,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			.process("a{p:1 2px}", {
 				skip: { types: buildSkipSet([NodeType.Number]) }
 			});
-		const decl = /** @type {import("../../lib/css/syntax").Declaration} */ (
+		const decl = /** @type {import("../../lib/css/syntax-parser").Declaration} */ (
 			parseADeclaration("p:1 2px")
 		);
 		// Object-backend nodes expose fields directly (not via the SoA `A` seam).
@@ -3224,10 +3319,10 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		const seen = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.Number]: () => seen.push("num"),
 					[NodeType.Ident]: (
-						/** @type {import("../../lib/css/syntax").CssPath} */ path
+						/** @type {import("../../lib/css/syntax-parser").CssPath} */ path
 					) => seen.push(path.value())
 				})
 			)
@@ -3281,7 +3376,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 });
 
 describe("CssSyntax — path accessors", () => {
-	/** @import { CssPath } from "../../lib/css/syntax" */
+	/** @import { CssPath } from "../../lib/css/syntax-parser" */
 	const SRC =
 		"@media screen { .a { co\\6cor: red !important; background: url(x.png) var(--v, calc(1 + 2)); } } /* note */ .b { grid: [x] 1; }";
 
@@ -3290,7 +3385,7 @@ describe("CssSyntax — path accessors", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.AtRule]: (/** @type {CssPath} */ path) => {
 						log.push(`at:${path.name()}`);
 						log.push(
@@ -3299,14 +3394,14 @@ describe("CssSyntax — path accessors", () => {
 						log.push(`prelude:${path.prelude().length > 0}`);
 						log.push(
 							`childRules:${
-								/** @type {import("../../lib/css/syntax").Rule[]} */ (
+								/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
 									path.childRules()
 								).length
 							}`
 						);
 						log.push(
 							`decls:${
-								/** @type {import("../../lib/css/syntax").Declaration[]} */ (
+								/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
 									path.declarations()
 								).length
 							}`
@@ -3375,14 +3470,14 @@ describe("CssSyntax — path accessors", () => {
 		const out = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/css/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/css/syntax-parser").VisitorMap} */ ({
 					[NodeType.QualifiedRule]: (/** @type {CssPath} */ path) => {
 						out.push([
 							path.prelude().length > 0,
-							/** @type {import("../../lib/css/syntax").Declaration[]} */ (
+							/** @type {import("../../lib/css/syntax-parser").Declaration[]} */ (
 								path.declarations()
 							).length,
-							/** @type {import("../../lib/css/syntax").Rule[]} */ (
+							/** @type {import("../../lib/css/syntax-parser").Rule[]} */ (
 								path.childRules()
 							).length
 						]);
@@ -3517,7 +3612,7 @@ describe("CssSyntax — print modes", () => {
 });
 
 describe("CssSyntax minify — the value transforms' rejection paths", () => {
-	/** @import { CssEnvironment } from "../../lib/css/syntax" */
+	/** @import { CssEnvironment } from "../../lib/css/syntax-parser" */
 
 	/**
 	 * @param {string} css a stylesheet
@@ -7931,7 +8026,7 @@ describe("CssSyntax — a string the source never closed", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.String]: {
-					enter: (/** @type {import("../../lib/css/syntax").CssPath} */ path) =>
+					enter: (/** @type {import("../../lib/css/syntax-parser").CssPath} */ path) =>
 						seen.push(path.unescaped())
 				}
 			})
@@ -8631,7 +8726,7 @@ describe("CssSyntax — beautifying the parsing corpus", () => {
 describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 	/**
 	 * @param {string} sheet the stylesheet
-	 * @param {import("../../lib/css/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+	 * @param {import("../../lib/css/syntax-parser").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
 	 * @returns {string} the minified stylesheet
 	 */
 	const minify = (sheet, renderEmbeddedSource) =>
@@ -8738,7 +8833,7 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 		const sheet =
 			'.a {\n\tcolor : red ;\n}\n.b {\n\tbackground : url("data:image/svg+xml,<svg>    <rect/>    </svg>") ;\n}\n.c {\n\tcolor : blue ;\n}\n';
 		/**
-		 * @param {import("../../lib/css/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+		 * @param {import("../../lib/css/syntax-parser").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
 		 * @returns {{ code: string, map: EXPECTED_ANY }} the printed sheet and its map
 		 */
 		const run = (renderEmbeddedSource) =>
@@ -8831,7 +8926,7 @@ describe("CssSyntax minify — one stylesheet reaching every embedded site", () 
 `;
 
 	/**
-	 * @param {import("../../lib/css/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+	 * @param {import("../../lib/css/syntax-parser").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
 	 * @returns {string} the minified stylesheet
 	 */
 	const minify = (renderEmbeddedSource) =>
@@ -11516,7 +11611,7 @@ describe("CssSyntax — the per-transform switches are independent", () => {
 
 	/**
 	 * @param {string} src css source
-	 * @param {import("../../lib/css/syntax").CssTransformOptions=} transforms which rewrites to make
+	 * @param {import("../../lib/css/syntax-parser").CssTransformOptions=} transforms which rewrites to make
 	 * @returns {string} the minified serialization
 	 */
 	const min = (src, transforms) =>
@@ -11540,7 +11635,7 @@ describe("CssSyntax — the per-transform switches are independent", () => {
 	const NAMES = Object.keys(PROBES);
 	/**
 	 * @param {string} name a switch
-	 * @returns {import("../../lib/css/syntax").CssTransformOptions} it turned off
+	 * @returns {import("../../lib/css/syntax-parser").CssTransformOptions} it turned off
 	 */
 	const turnOff = (name) => ({
 		[name]: name === "comments" ? "all" : false
