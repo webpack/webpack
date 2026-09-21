@@ -131,6 +131,7 @@
     "minimizer-webpack-plugin": "^5.7.0",
     "schema-utils": "^4.5.0",
     "tapable": "^2.3.0",
+    "terser": "^5.51.0",
     "watchpack": "^2.5.2",
     "webpack-sources": "^3.5.1"
   },
@@ -223,7 +224,6 @@
     "script-loader": "^0.7.2",
     "simple-git": "^3.28.0",
     "style-loader": "^4.0.0",
-    "terser": "^5.46.2",
     "three": "^0.186.0",
     "tinybench": "^6.0.1",
     "toml": "^5.0.0",

@@ -2,8 +2,8 @@
 
 /* eslint-disable no-template-curly-in-string */
 
-/** @typedef {typeof import("../../lib/javascript/parser")} ParserExports */
-/** @typedef {Partial<import("../../lib/javascript/parser").Options>} Options */
+/** @typedef {typeof import("../../lib/javascript/syntax-parser")} ParserExports */
+/** @typedef {Partial<import("../../lib/javascript/syntax-parser").Options>} Options */
 
 // acorn's typings omit half its exports, and the port's types are its contract
 const acorn = /** @type {ParserExports} */ (
@@ -12,7 +12,7 @@ const acorn = /** @type {ParserExports} */ (
 const {
 	Parser,
 	Position,
-	SourceLocation,
+	ParserSourceLocation,
 	defaultOptions,
 	getLineInfo,
 	isIdentifierChar,
@@ -22,7 +22,7 @@ const {
 	stringToNumber,
 	tokContexts,
 	tokTypes
-} = require("../../lib/javascript/parser");
+} = require("../../lib/javascript/syntax-parser");
 
 // The base parser is what `Parser.parse`, acorn plugins and the tokenizer
 // reach; a build never does, so this holds it to acorn on its own.
@@ -1065,7 +1065,7 @@ describe("Parser", () => {
 			}
 			expect(new Position(3, 4).offset(2)).toEqual(new Position(3, 6));
 			expect(
-				new SourceLocation(
+				new ParserSourceLocation(
 					/** @type {EXPECTED_ANY} */ ({ sourceFile: "f.js" }),
 					new Position(1, 0),
 					new Position(1, 1)

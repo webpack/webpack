@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/javascript/JavascriptParser")} */
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser.js");
-const { WebpackParser } = require("../../../lib/javascript/syntax.js");
+const { WebpackParser } = require("../../../lib/javascript/syntax-parser.js");
 
 // Read a file that ships inside a package, resolved via the package's
 // package.json so an `exports` map can't block a deep path (fs bypasses it).

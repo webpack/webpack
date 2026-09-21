@@ -11,12 +11,6 @@ const acorn = require("acorn");
 const prettier = require("prettier");
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
-// The property tables sit in their own module: only a pattern the engine
-// rejected reaches the validator that matches names against them.
-const REGEXP_DATA_TARGET = path.resolve(
-	__dirname,
-	"../lib/javascript/regexpData.js"
-);
 
 // The largest code point Unicode defines, and the first one above the BMP.
 const MAX_CODE_POINT = 0x10ffff;
@@ -150,7 +144,8 @@ const renderHeader = () => `/*
 `;
 
 /**
- * Build the identifier-classification module.
+ * Build the module the parser classifies with: the identifier ranges the
+ * tokenizer reads, and the property names `\\p{...}` accepts.
  * @returns {string} its source
  */
 const renderData = () => {
@@ -180,20 +175,26 @@ ${renderTable(
 	tables.astralPart,
 	FIRST_ASTRAL
 )}
+${renderUnicodeProperties()}
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
 module.exports.IDENTIFIER_START_RANGES = IDENTIFIER_START_RANGES;
+module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
+module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
+	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
+module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
+module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
 `;
 };
 
 /**
- * Build the module holding the Unicode property names `\\p{...}` accepts.
+ * The Unicode property names `\\p{...}` accepts, as a section of that module.
  * @returns {string} its source
  */
-const renderRegexpData = () => {
+const renderUnicodeProperties = () => {
 	const properties = collectUnicodeProperties();
-	return `${renderHeader()}
+	return `
 // The Unicode property names each ECMAScript edition accepts in \\p{...}.
 /** @type {Record<string, string>} */
 const UNICODE_BINARY_PROPERTIES = ${JSON.stringify(properties.binary, null, 1)};
@@ -206,12 +207,6 @@ const UNICODE_GENERAL_CATEGORY_VALUES = ${JSON.stringify(properties.generalCateg
 
 /** @type {Record<string, string>} */
 const UNICODE_SCRIPT_VALUES = ${JSON.stringify(properties.script, null, 1)};
-
-module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
-module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
-	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
-module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
-module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
 `;
 };
 
@@ -246,12 +241,11 @@ const writeGenerated = async (target, source) => {
 };
 
 /**
- * Write both generated modules, or report that either is stale.
- * @returns {Promise<void>} settles once both are written or checked
+ * Write the generated module, or report that it is stale.
+ * @returns {Promise<void>} settles once it is written or checked
  */
 const generate = async () => {
 	await writeGenerated(DATA_TARGET, renderData());
-	await writeGenerated(REGEXP_DATA_TARGET, renderRegexpData());
 };
 
 if (require.main === module) {
@@ -264,7 +258,6 @@ if (require.main === module) {
 }
 
 module.exports.DATA_TARGET = DATA_TARGET;
-module.exports.REGEXP_DATA_TARGET = REGEXP_DATA_TARGET;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;

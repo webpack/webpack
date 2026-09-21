@@ -1,0 +1,223 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`jsMinify should minify: compress off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){const n=[1,2,3].map(e=>e*2);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
+
+exports[`jsMinify should minify: compress off (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: compress off 1`] = `"\\"use strict\\";function unusedHelper(e,n){return e+n}sink(function e(){const n=[1,2,3].map(e=>e*2);if(n.length>0){console.log(n)}else{console.log(\\"empty\\")}return n});"`;
+
+exports[`jsMinify should minify: compress off 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: defaults (with source map) 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: defaults (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: defaults 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: defaults 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: deprecated output spelling (with source map) 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"
+`;
+
+exports[`jsMinify should minify: deprecated output spelling (with source map) 2`] = `Array []`;
+
+exports[`jsMinify should minify: deprecated output spelling 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"
+`;
+
+exports[`jsMinify should minify: deprecated output spelling 2`] = `Array []`;
+
+exports[`jsMinify should minify: ecma 5 (with source map) 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: ecma 5 (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: ecma 5 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: ecma 5 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: event handler (with source map) 1`] = `"window.x?console.log(\\"clicked\\",event):alert(\\"no\\")"`;
+
+exports[`jsMinify should minify: event handler (with source map) 2`] = `Array []`;
+
+exports[`jsMinify should minify: event handler 1`] = `"window.x?console.log(\\"clicked\\",event):alert(\\"no\\")"`;
+
+exports[`jsMinify should minify: event handler 2`] = `Array []`;
+
+exports[`jsMinify should minify: extract by condition (with source map) 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: extract by condition (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: extract by condition 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: extract by condition 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: extract by pattern (with source map) 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: extract by pattern (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: extract by pattern 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: extract by pattern 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: extract nothing named (with source map) 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: extract nothing named (with source map) 2`] = `Array []`;
+
+exports[`jsMinify should minify: extract nothing named 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: extract nothing named 2`] = `Array []`;
+
+exports[`jsMinify should minify: extraction off (with source map) 1`] = `
+"/*! @license MIT - keep me */
+\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"
+`;
+
+exports[`jsMinify should minify: extraction off (with source map) 2`] = `Array []`;
+
+exports[`jsMinify should minify: extraction off 1`] = `
+"/*! @license MIT - keep me */
+\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"
+`;
+
+exports[`jsMinify should minify: extraction off 2`] = `Array []`;
+
+exports[`jsMinify should minify: keep every comment (with source map) 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"
+`;
+
+exports[`jsMinify should minify: keep every comment (with source map) 2`] = `Array []`;
+
+exports[`jsMinify should minify: keep every comment 1`] = `
+"/*! @license MIT - keep me */
+// a line comment
+\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"
+`;
+
+exports[`jsMinify should minify: keep every comment 2`] = `Array []`;
+
+exports[`jsMinify should minify: keep no comment (with source map) 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: keep no comment (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: keep no comment 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: keep no comment 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: mangle off (with source map) 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){const list=[1,2,3].map(value=>2*value);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
+
+exports[`jsMinify should minify: mangle off (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: mangle off 1`] = `"\\"use strict\\";function unusedHelper(a,b){return a+b}sink(function(){const list=[1,2,3].map(value=>2*value);return list.length>0?console.log(list):console.log(\\"empty\\"),list});"`;
+
+exports[`jsMinify should minify: mangle off 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: module goal (with source map) 1`] = `"import{readFile as o}from\\"node:fs/promises\\";export async function read(t){const n=await o(t,\\"utf8\\");return n.length>0?n:void 0}"`;
+
+exports[`jsMinify should minify: module goal (with source map) 2`] = `
+Array [
+  "/*! @preserve banner */",
+]
+`;
+
+exports[`jsMinify should minify: module goal 1`] = `"import{readFile as o}from\\"node:fs/promises\\";export async function read(t){const n=await o(t,\\"utf8\\");return n.length>0?n:void 0}"`;
+
+exports[`jsMinify should minify: module goal 2`] = `
+Array [
+  "/*! @preserve banner */",
+]
+`;
+
+exports[`jsMinify should minify: module option (with source map) 1`] = `"import{readFile as o}from\\"node:fs/promises\\";export async function read(t){const n=await o(t,\\"utf8\\");return n.length>0?n:void 0}"`;
+
+exports[`jsMinify should minify: module option (with source map) 2`] = `
+Array [
+  "/*! @preserve banner */",
+]
+`;
+
+exports[`jsMinify should minify: module option 1`] = `"import{readFile as o}from\\"node:fs/promises\\";export async function read(t){const n=await o(t,\\"utf8\\");return n.length>0?n:void 0}"`;
+
+exports[`jsMinify should minify: module option 2`] = `
+Array [
+  "/*! @preserve banner */",
+]
+`;
+
+exports[`jsMinify should minify: script goal (with source map) 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: script goal (with source map) 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
+
+exports[`jsMinify should minify: script goal 1`] = `"\\"use strict\\";function unusedHelper(n,e){return n+e}sink(function(){const n=[1,2,3].map(n=>2*n);return n.length>0?console.log(n):console.log(\\"empty\\"),n});"`;
+
+exports[`jsMinify should minify: script goal 2`] = `
+Array [
+  "/*! @license MIT - keep me */",
+]
+`;
