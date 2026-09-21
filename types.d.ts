@@ -9184,7 +9184,6 @@ declare class ExternalModule extends Module {
 		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
-	canBeWrappedInConcatenation(): boolean;
 
 	/**
 	 * The request this external resolves to for its own type, with the record form
@@ -17785,6 +17784,12 @@ declare class Module extends DependenciesBlock {
 	getConcatenationBailoutReason(
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
+
+	/**
+	 * Whether a concatenation may defer this module behind its lazy CommonJS
+	 * accessor. A generator ignoring `ConcatenationScope#isWrapped` answers false.
+	 */
+	canBeWrappedInConcatenation(): boolean;
 
 	/**
 	 * Gets side effects connection state.
