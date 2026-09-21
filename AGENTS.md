@@ -122,7 +122,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader
     iteration and loader module loading, plus the `LoaderOptionsPlugin` and
     `LoaderTargetPlugin` that feed the loader context.
-  - `lib/logging/` — Logger API and console formatting.
+  - `lib/logging/` — Logger API and console formatting, and `ProgressPlugin`, which
+    reports a build's progress through that same surface. The old `lib/ProgressPlugin`
+    path stays as a re-export, since webpack-stream requires it directly.
   - `lib/module/` — What a module is and what makes one: the `Module` base class and
     `NormalModule`, the `ModuleFactory` hierarchy that builds them (`NormalModuleFactory`,
     `NullFactory`, `SelfModuleFactory`), the `Parser` and `Generator` base classes every
