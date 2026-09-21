@@ -22897,7 +22897,7 @@ declare interface ParserStateBase {
 
 /**
  * The ECMAScript parser webpack owns, ported from acorn 8.18.0 so the bundler
- * ships no parser dependency. `lib/javascript/syntax.js` subclasses it and
+ * ships no parser dependency. `WebpackParser` below subclasses it and
  * overrides the hot paths.
  * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/state.js
  */
