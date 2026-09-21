@@ -19,11 +19,12 @@ function expectExportNames() {
 	const handler = (compilation) => {
 		compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 			const source = assets["main.js"].source().toString();
-			const assigned = new Set(
-				[...source.matchAll(/exports\.(\w+) = __webpack_exports__\./g)].map(
-					([, name]) => name
-				)
-			);
+			// `matchAll` is newer than the Node baseline the harness runs on.
+			const regexp = /exports\.(\w+) = __webpack_exports__\./g;
+			/** @type {Set<string>} */
+			const assigned = new Set();
+			let match;
+			while ((match = regexp.exec(source)) !== null) assigned.add(match[1]);
 			for (const name of EXPECTED_EXPORTS) expect(assigned).toContain(name);
 			expect(assigned).not.toContain(CONFLICTING_EXPORT);
 		});
