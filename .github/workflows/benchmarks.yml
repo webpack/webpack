@@ -3,8 +3,11 @@ name: Benchmarks
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  # A pull request reaches this through `test.yml`, which holds it behind the
+  # three cheap jobs rather than spending four runner-hours on a tree that is
+  # not going to merge. There is no `pull_request` trigger here, or every pull
+  # request would run these shards twice.
+  workflow_call:
   # The only trigger that measures the `-on-schedule` cases; every other one
   # filters them out as too expensive to run per pull request.
   schedule:
@@ -12,7 +15,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Named rather than `github.workflow`, which reads as the caller's name when
+  # `test.yml` calls this — sharing that group would have the run cancel itself.
+  group: Benchmarks-${{ github.ref }}
   # Every push to `main` shares one group, so cancelling leaves that commit with
   # no run for CodSpeed to compare against — it then falls back to an older
   # `main`, attributing the commits in between to the pull request. Only a

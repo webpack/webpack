@@ -225,8 +225,11 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # Every suite from here down is held behind the three cheap ones, which are
+  # also the three a merge needs: each costs tens of runner-minutes, and a tree
+  # that fails `lint`, `basic` or `unit` is not going to land on what they say.
   test262:
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -281,7 +284,7 @@ jobs:
   # trees. Coverage instrumentation makes the parser ~5x slower, so this one job
   # runs without it — every line it reaches is covered by the suites that upload.
   test262-parser:
-    needs: basic
+    needs: [lint, basic, unit]
     runs-on: ubuntu-latest
     # Bounded: the suite allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
@@ -316,7 +319,7 @@ jobs:
       - run: yarn test:test262-parser --ci --cacheDirectory .jest-cache
 
   html5lib:
-    needs: basic
+    needs: [lint, basic, unit]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -363,7 +366,7 @@ jobs:
     # Named for the engine alone: a matrix row carries the script and the
     # coverage flag too, and the generated name would otherwise print all three.
     name: syntax-equivalence (${{ matrix.browser }})
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -464,7 +467,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   css-parsing:
-    needs: basic
+    needs: [lint, basic, unit]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -504,7 +507,7 @@ jobs:
 
   # Run webpack's test suite under Deno and Bun (spec validation suites excluded).
   runtimes:
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -560,7 +563,7 @@ jobs:
       - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -681,3 +684,19 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+
+  # The eight benchmark shards are around four runner-hours, so on a pull
+  # request they come through here, behind the same three cheap jobs. A push to
+  # `main` runs `benchmarks.yml` on its own trigger instead and is never gated:
+  # CodSpeed draws every later comparison against that commit's baseline.
+  benchmarks:
+    if: github.event_name == 'pull_request'
+    needs: [lint, basic, unit]
+    # At least what the called workflow declares, or the call is rejected.
+    permissions:
+      contents: read
+      id-token: write
+      issues: write
+      pull-requests: write
+    uses: ./.github/workflows/benchmarks.yml
+    secrets: inherit
