@@ -404,9 +404,9 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      # Keyed on the scripts that declare the package lists; a cache that
-      # predates a fixture being added is rebuilt by the install below, which
-      # reinstalls whenever the recorded list differs from the wanted one.
+      # Keyed on each corpus's manifest and lockfile; a cache predating an edit
+      # to either is rebuilt by the install below, which reinstalls whenever the
+      # recorded pair differs from the wanted one.
       - name: Cache the comparison corpus
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
