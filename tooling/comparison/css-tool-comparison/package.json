@@ -53,5 +53,8 @@
     "uikit": "3.25.23",
     "video.js": "8.24.1",
     "water.css": "2.1.1"
+  },
+  "overrides": {
+    "js-yaml": "^3.15.2"
   }
 }
