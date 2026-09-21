@@ -189,6 +189,11 @@ The directory listings below are the canonical map of the repository. **Whenever
     relative to the context for every message a user reads, and `terminalColors`, the
     color support detection and escape-code wrappers every terminal-facing message goes
     through — `ProgressPlugin`, `nodeConsole` and, via `webpack.cli`, webpack-cli.
+    What belongs here is a helper no one subsystem owns: a data structure, an
+    algorithm, or something several directories share. One that only a single
+    subsystem can use lives with that subsystem instead — `semver` in
+    `lib/sharing/`, `numberHash` in `lib/ids/`, `deterministicGrouping` in
+    `lib/optimize/` — so that reading a directory shows what it is made of.
   - `lib/wasm/` — WebAssembly module support: the async path a build takes today,
     plus the two pieces neither path owns — `EnableWasmLoadingPlugin` and
     `wasmModuleFilename`.

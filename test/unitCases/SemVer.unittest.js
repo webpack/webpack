@@ -10,7 +10,7 @@ const {
 	satisfyRuntimeCode,
 	versionLt,
 	versionLtRuntimeCode
-} = require("../../lib/util/semver");
+} = require("../../lib/sharing/semver");
 
 describe("SemVer", () => {
 	const createRuntimeFunction = (

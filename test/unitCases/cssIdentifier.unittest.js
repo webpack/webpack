@@ -1,7 +1,7 @@
 "use strict";
 
 const cssParser = require("../../lib/css/syntax-parser");
-const { cssExportConvention } = require("../../lib/util/conventions");
+const { cssExportConvention } = require("../../lib/css/conventions");
 const { makeCacheable } = require("../../lib/util/identifier");
 
 describe("css identifier utils", () => {

@@ -14,7 +14,7 @@ const terser = require("terser");
 // Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
-const files = ["lib/util/semver.js"];
+const files = ["lib/sharing/semver.js"];
 
 (async () => {
 	for (const file of files) {
