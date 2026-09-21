@@ -70,7 +70,7 @@ const createFiles = () => {
 };
 
 /**
- * @param {{ from: string, to: string, globOptions?: { followSymlinks?: boolean } }} pattern what the build copies
+ * @param {{ from: string, to: string, globOptions?: { followSymlinks?: boolean, ignore?: string[] } }} pattern what the build copies
  * @param {((copiedPath: string) => boolean | void)=} ignore what to tap the `ignore` hook with
  * @returns {Promise<import("../../").Compilation>} the compilation of one build
  */
@@ -241,6 +241,22 @@ describe("CopyPlugin", () => {
 		// the default is there to stop a build reading what it wrote; a plugin
 		// that wants exactly that says so and is not overruled
 		expect(hookedCompilation.getAsset("build/stale.txt")).toBeDefined();
+	});
+
+	it("should copy what globOptions.ignore names when the hook says so", async () => {
+		const pattern = {
+			from: "static",
+			to: ".",
+			globOptions: { ignore: ["**/keep.txt"] }
+		};
+		// the hook answers ahead of everything, so one answer overrules whichever
+		// of them would otherwise have kept the file out
+		const overruled = await compile(pattern, (copiedPath) =>
+			copiedPath.endsWith("/keep.txt") ? false : undefined
+		);
+		expect(overruled.getAsset("keep.txt")).toBeDefined();
+		const byDefault = await compile(pattern);
+		expect(byDefault.getAsset("keep.txt")).toBeUndefined();
 	});
 
 	it("should report no error or warning", () => {
