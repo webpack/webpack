@@ -18,7 +18,9 @@ const {
 	lossColumn,
 	measure,
 	measureInWorker,
-	run
+	missingReport,
+	run,
+	sweepExitCode
 } = require("../../tooling/compare-tools-harness");
 
 /** @type {string} */
@@ -641,5 +643,45 @@ describe("compare-tools-harness", () => {
 			expect(text).toContain("idempotence — bytes");
 			expect(text).toContain("stale — 1 expectation(s) matched nothing");
 		});
+	});
+});
+
+describe("missingReport", () => {
+	it("says nothing where the corpus was whole", () => {
+		expect(missingReport([])).toBe("");
+	});
+
+	it("names every fixture the sweep did not find", () => {
+		expect(missingReport(["Tailwind 4 + daisyUI 5", "Bootstrap 5"])).toBe(
+			"\nnot built — 2\n    Tailwind 4 + daisyUI 5\n    Bootstrap 5\n"
+		);
+	});
+});
+
+describe("sweepExitCode", () => {
+	it("passes a whole corpus with nothing found", () => {
+		expect(sweepExitCode(0, [], [])).toBe(0);
+		expect(sweepExitCode(0, [], ["--require-corpus"])).toBe(0);
+	});
+
+	it("fails on a finding whether or not the corpus is required", () => {
+		expect(sweepExitCode(1, [], [])).toBe(1);
+		expect(sweepExitCode(2, [], ["--require-corpus"])).toBe(1);
+	});
+
+	// The silent pass this flag exists to remove: the sweep reports the findings
+	// of the fixtures it kept, and says nothing about the one it lost.
+	it("passes a short corpus only where it is not required", () => {
+		expect(sweepExitCode(0, ["Tailwind 4 + daisyUI 5"], [])).toBe(0);
+		expect(
+			sweepExitCode(0, ["Tailwind 4 + daisyUI 5"], ["--require-corpus"])
+		).toBe(1);
+	});
+
+	it("reads the flag out of the whole command line", () => {
+		expect(
+			sweepExitCode(0, ["A"], ["node", "x.js", "--invariants", "--require-corpus"])
+		).toBe(1);
+		expect(sweepExitCode(0, ["A"], ["node", "x.js", "--invariants"])).toBe(0);
 	});
 });

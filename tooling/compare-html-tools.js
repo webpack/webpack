@@ -52,9 +52,11 @@ const {
 	log,
 	measure,
 	measureInWorker,
+	missingReport,
 	oneLine,
 	shrink,
 	signed,
+	sweepExitCode,
 	thrownText
 } = require("./compare-tools-harness");
 
@@ -1330,6 +1332,10 @@ const sweepDocument = (minify, html) => {
  * are the shapes the printer exists for, plus whatever the comparison installed.
  * @returns {[string, string][]} `[label, html]` for every document
  */
+// What the last sweep did not find, read by the report and by the gate.
+/** @type {string[]} */
+let _missingFixtures = [];
+
 const invariantFixtures = () => {
 	/** @type {[string, string][]} */
 	const out = [];
@@ -1350,17 +1356,22 @@ const invariantFixtures = () => {
 	out.push(["Table report", tablePage(10)]);
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
+	/** @type {string[]} */
+	const missing = [];
 	for (const [label, file] of INSTALLED_DOCUMENTS) {
 		const full = path.join(MODULES, file);
 		if (fs.existsSync(full)) out.push([label, fs.readFileSync(full, "utf8")]);
+		else missing.push(label);
 	}
 	for (const [label, file] of INLINED_STYLESHEETS) {
 		const full = path.join(MODULES, file);
 		if (fs.existsSync(full)) {
 			out.push([label, inlineCssPage(label, fs.readFileSync(full, "utf8"))]);
+		} else {
+			missing.push(label);
 		}
 	}
-	return out;
+	return { corpus: out, missing };
 };
 
 /**
@@ -1386,7 +1397,9 @@ const EXPECTED = [
  * @returns {number} how many distinct findings it named
  */
 const invariants = (write) => {
-	const corpus = invariantFixtures().filter(([label]) => wantedFixture(label));
+	const built = invariantFixtures();
+	_missingFixtures = built.missing;
+	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	const groups = findingGroups(EXPECTED);
@@ -1408,6 +1421,7 @@ const invariants = (write) => {
 const reportInvariants = () => {
 	process.stdout.write("\ninvariants — what the printer owes its own output\n");
 	const found = invariants((text) => process.stdout.write(text));
+	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
 };
@@ -1511,9 +1525,11 @@ if (require.main === module) {
 	// The sweep alone, for a caller that wants the relations without the ten
 	// minutes the comparison costs; a full run prints the same section.
 	if (mode === "--invariants") {
-		// Non-zero while any finding stands, and findings stand today: read it
-		// rather than gating on it until they are gone.
-		process.exitCode = reportInvariants() > 0 ? 1 : 0;
+		process.exitCode = sweepExitCode(
+			reportInvariants(),
+			_missingFixtures,
+			process.argv
+		);
 	} else {
 		const started =
 			mode === "--measure"
