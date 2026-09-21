@@ -21384,6 +21384,11 @@ declare interface OptimizationSplitChunksOptions {
 		| ((chunk: Chunk) => undefined | boolean);
 
 	/**
+	 * Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).
+	 */
+	dedupDepth?: number;
+
+	/**
 	 * Sets the size types which are used when a number is used for sizes.
 	 */
 	defaultSizeTypes?: string[];
@@ -29012,6 +29017,7 @@ type SourceTypeOrResolver =
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
+	dedupDepth?: number;
 	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	defaultSizeTypes: string[];
 	minSize: SplitChunksSizes;

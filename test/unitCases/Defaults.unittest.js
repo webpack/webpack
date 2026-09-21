@@ -688,6 +688,7 @@ describe("snapshots", () => {
 		        },
 		      },
 		      "chunks": "async",
+		      "dedupDepth": 0,
 		      "defaultSizeTypes": Array [
 		        "javascript",
 		        "css",
@@ -1258,6 +1259,9 @@ describe("snapshots", () => {
 		-     "sideEffects": "flag",
 		+     "sideEffects": true,
 		@@ ... @@
+		-       "dedupDepth": 0,
+		+       "dedupDepth": 1,
+		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -1367,6 +1371,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "sideEffects": "flag",
 		+     "sideEffects": true,
+		@@ ... @@
+		-       "dedupDepth": 0,
+		+       "dedupDepth": 1,
 		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
@@ -4792,6 +4799,7 @@ describe("snapshots", () => {
 			-         },
 			-       },
 			-       "chunks": "async",
+			-       "dedupDepth": 0,
 			-       "defaultSizeTypes": Array [
 			-         "javascript",
 			-         "css",
