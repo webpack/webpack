@@ -141,7 +141,8 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/schemes/` — Custom URL scheme handlers (`data:`, `http:`, …).
   - `lib/serialization/` — Persistent cache serialization.
   - `lib/sharing/` — Shared modules / Module Federation runtime.
-  - `lib/stats/` — Stats output (default printer, JSON factories).
+  - `lib/stats/` — Stats output: the `Stats` and `MultiStats` a run hands back,
+    and the default printer and JSON factories they render through.
   - `lib/template/` — Source templates and init fragments the generators print through,
     including `RuntimeTemplate`, the printing helper every generator and dependency
     template is handed, the `DependencyTemplate` base class, and

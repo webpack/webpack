@@ -32,7 +32,7 @@ describe("parsing without acorn", () => {
 		);
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			const { errors, warnings } = /** @type {import("../../lib/Stats")} */ (
+			const { errors, warnings } = /** @type {import("../../lib/stats/Stats")} */ (
 				stats
 			).toJson({ all: false, errors: true, warnings: true });
 			expect(errors).toEqual([]);
