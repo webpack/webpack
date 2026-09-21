@@ -4,6 +4,9 @@
   "private": true,
   "description": "The CSS tools and fixtures tooling/compare-css-tools.js compares against. Not a webpack dependency: installed into node_modules/.cache/ on demand.",
   "license": "MIT",
+  "overrides": {
+    "js-yaml": "^3.15.2"
+  },
   "dependencies": {
     "98.css": "0.1.21",
     "@adobe/css-tools": "4.5.0",
@@ -53,8 +56,5 @@
     "uikit": "3.25.23",
     "video.js": "8.24.1",
     "water.css": "2.1.1"
-  },
-  "overrides": {
-    "js-yaml": "^3.15.2"
   }
 }
