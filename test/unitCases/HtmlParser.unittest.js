@@ -50,10 +50,10 @@ const makeModule = () => {
 /**
  * @param {EXPECTED_ANY} module module double
  * @param {{ outputModule?: boolean, css?: boolean }=} options options
- * @returns {import("../../lib/Parser").ParserState} parser state
+ * @returns {import("../../lib/module/Parser").ParserState} parser state
  */
 const makeState = (module, { outputModule = false, css = false } = {}) =>
-	/** @type {import("../../lib/Parser").ParserState} */ (
+	/** @type {import("../../lib/module/Parser").ParserState} */ (
 		/** @type {unknown} */ ({
 			module,
 			compilation: {
@@ -96,7 +96,7 @@ describe("HtmlParser", () => {
 		const parser = new HtmlParser({});
 		parser.parse(
 			source,
-			/** @type {import("../../lib/Parser").ParserState} */ (
+			/** @type {import("../../lib/module/Parser").ParserState} */ (
 				/** @type {unknown} */ ({
 					module,
 					compilation: {
@@ -181,7 +181,7 @@ describe("HtmlParser", () => {
 		const parser = new HtmlParser({});
 		parser.parse(
 			source,
-			/** @type {import("../../lib/Parser").ParserState} */ (
+			/** @type {import("../../lib/module/Parser").ParserState} */ (
 				/** @type {unknown} */ ({
 					module,
 					compilation: {

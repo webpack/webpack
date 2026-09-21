@@ -380,7 +380,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/CleanPlugin\").KeepFn"
+              "tsType": "import(\"../lib/output/CleanPlugin\").KeepFn"
             }
           ]
         }
@@ -475,7 +475,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyFilenameFunction"
+              "tsType": "import('../lib/output/CopyPlugin').CopyFilenameFunction"
             }
           ]
         },
@@ -515,7 +515,7 @@
             {
               "description": "Asset info of a copied file, from the file itself.",
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyInfoFunction"
+              "tsType": "import('../lib/output/CopyPlugin').CopyInfoFunction"
             }
           ]
         },
@@ -538,7 +538,7 @@
             {
               "description": "Directory a copied file is copied to, relative to 'output.path', from the file itself.",
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyToFunction"
+              "tsType": "import('../lib/output/CopyPlugin').CopyToFunction"
             }
           ]
         },
@@ -570,12 +570,12 @@
                               "type": "object",
                               "additionalProperties": true,
                               "properties": {},
-                              "tsType": "import('../lib/CopyPlugin').CopyTransformCacheKeys"
+                              "tsType": "import('../lib/output/CopyPlugin').CopyTransformCacheKeys"
                             },
                             {
                               "description": "Everything beside the content of the file the transform depends on, from the file itself.",
                               "instanceof": "Function",
-                              "tsType": "import('../lib/CopyPlugin').CopyTransformCacheKeysFunction"
+                              "tsType": "import('../lib/output/CopyPlugin').CopyTransformCacheKeysFunction"
                             }
                           ]
                         }
@@ -586,7 +586,7 @@
                 "transformer": {
                   "description": "Modifies the content of a copied file.",
                   "instanceof": "Function",
-                  "tsType": "import('../lib/CopyPlugin').CopyTransform"
+                  "tsType": "import('../lib/output/CopyPlugin').CopyTransform"
                 }
               },
               "required": ["transformer"]
@@ -594,7 +594,7 @@
             {
               "description": "Modifies the content of a copied file.",
               "instanceof": "Function",
-              "tsType": "import('../lib/CopyPlugin').CopyTransform"
+              "tsType": "import('../lib/output/CopyPlugin').CopyTransform"
             }
           ]
         }

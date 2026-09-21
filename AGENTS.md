@@ -116,9 +116,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/logging/` — Logger API and console formatting.
   - `lib/module/` — What a module is and what makes one: the `Module` base class and
     `NormalModule`, the `ModuleFactory` hierarchy that builds them (`NormalModuleFactory`,
-    `NullFactory`, `SelfModuleFactory`), the `Generator` base class and the
-    `CodeGenerationResults` its output lands in, `ModuleProfile`, and the two constant
-    files naming module and source types. A module subclass a plugin owns lives with
+    `NullFactory`, `SelfModuleFactory`), the `Parser` and `Generator` base classes every
+    language's pair extends, the `CodeGenerationResults` the generated output lands in,
+    `ModuleProfile`, and the two constant files naming module and source types. A module subclass a plugin owns lives with
     that plugin — `ExternalModule` in `lib/externals/`, `CssModule` in `lib/css/` — so
     this holds the ones every build has.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …),
@@ -127,6 +127,12 @@ The directory listings below are the canonical map of the repository. **Whenever
     `ConcatenationScope` is the protocol scope hoisting runs on: `ConcatenatedModule`
     is the only thing that constructs one, and a generator anywhere in `lib/` renders
     through it.
+  - `lib/output/` — The plugins that shape the set of files a build writes into
+    `output.path`, rather than the modules it writes them from: `CopyPlugin` adds
+    to it and `CleanPlugin` prunes it — the two `output.copy` and `output.clean`
+    turn on — while `BannerPlugin` rewrites what an asset holds and
+    `ManifestPlugin` emits a description of the rest. How a name or a format is
+    decided is not this: that is `lib/template/`, `lib/library/` and `lib/devtool/`.
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
@@ -141,7 +147,8 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/schemes/` — Custom URL scheme handlers (`data:`, `http:`, …).
   - `lib/serialization/` — Persistent cache serialization.
   - `lib/sharing/` — Shared modules / Module Federation runtime.
-  - `lib/stats/` — Stats output (default printer, JSON factories).
+  - `lib/stats/` — Stats output: the `Stats` and `MultiStats` a run hands back,
+    and the default printer and JSON factories they render through.
   - `lib/template/` — Source templates and init fragments the generators print through,
     including `RuntimeTemplate`, the printing helper every generator and dependency
     template is handed, the `DependencyTemplate` base class, and
@@ -151,7 +158,11 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers, including `RequestShortener`, which renders a request
     relative to the context for every message a user reads.
-  - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
+  - `lib/wasm/` — WebAssembly module support: the async path a build takes today,
+    plus the two pieces neither path owns — `EnableWasmLoadingPlugin` and
+    `wasmModuleFilename`.
+  - `lib/wasm-sync/` — The synchronous WebAssembly path, kept until webpack 6
+    removes it, which is why it stands apart rather than joining `lib/wasm/`.
   - `lib/watch/` — Watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
 - `bin/` — `webpack` CLI entry point.

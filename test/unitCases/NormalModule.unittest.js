@@ -7,7 +7,7 @@ const NormalModule = require("../../lib/module/NormalModule");
 const HarmonyImportSideEffectDependency = require("../../lib/dependencies/HarmonyImportSideEffectDependency");
 
 /** @import { LoaderItem } from "../../lib/module/NormalModule" */
-/** @import Parser from "../../lib/Parser" */
+/** @import Parser from "../../lib/module/Parser" */
 /** @import Generator from "../../lib/module/Generator" */
 /** @import ModuleGraph from "../../lib/graph/ModuleGraph" */
 /** @import { ImportPhaseType } from "../../lib/dependencies/ImportPhase" */

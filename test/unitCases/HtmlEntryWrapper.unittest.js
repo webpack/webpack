@@ -26,7 +26,7 @@ describe("output.html with a JavaScript entry", () => {
 		);
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			const { errors } = /** @type {import("../../lib/Stats")} */ (stats).toJson({
+			const { errors } = /** @type {import("../../lib/stats/Stats")} */ (stats).toJson({
 				all: false,
 				errors: true
 			});

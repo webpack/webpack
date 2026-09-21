@@ -32,7 +32,7 @@ const compile = (context, entry, outputPath) =>
 		});
 		compiler.run((err, stats) => {
 			if (err) return reject(err);
-			const { errors } = /** @type {import("../../lib/Stats")} */ (stats).toJson({
+			const { errors } = /** @type {import("../../lib/stats/Stats")} */ (stats).toJson({
 				all: false,
 				errors: true
 			});
