@@ -328,7 +328,8 @@ describe("compare-tools-harness", () => {
 			"compare-tools-harness-unittest-warm",
 			"compare-tools-harness-unittest-cold",
 			"compare-tools-harness-unittest-failed",
-			"compare-tools-harness-unittest-moved"
+			"compare-tools-harness-unittest-moved",
+			"compare-tools-harness-unittest-derived"
 		];
 
 		/**
@@ -465,6 +466,20 @@ describe("compare-tools-harness", () => {
 			).rejects.toThrow("exited with 1");
 			expect(npmRan(name)).toBe(true);
 			expect(stampOf(name)).toBeUndefined();
+		});
+
+		// A fixture the caller generated with the packages it installed is as
+		// stale as they are, and nothing else would clear it: `npm ci` rewrites
+		// `node_modules` alone, and the builder skips an output already there.
+		posixOnly("clears what the last corpus derived", async () => {
+			const name = NAMES[4];
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.0"}');
+			fs.mkdirSync(cacheFor(name), { recursive: true });
+			const derived = path.join(cacheFor(name), "tailwind-app.css");
+			fs.writeFileSync(derived, ".from-the-old-tailwind{}");
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
+			await withStandInNpm(0, () => installPackages(name));
+			expect(fs.existsSync(derived)).toBe(false);
 		});
 
 		// The case the lockfile exists for: Dependabot moves a pin, and a cache

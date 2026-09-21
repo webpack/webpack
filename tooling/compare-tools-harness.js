@@ -104,6 +104,10 @@ const installPackages = async (name) => {
 			: undefined;
 	if (installed === wanted) return cache;
 	log(`installing comparison packages into ${path.relative(ROOT, cache)} …`);
+	// `npm ci` refreshes `node_modules` alone, so a stylesheet the last corpus
+	// generated would outlive the tool that wrote it and pass for current under
+	// the new stamp. Everything here is derived, so none of it survives.
+	await fs.promises.rm(cache, { recursive: true, force: true });
 	await fs.promises.mkdir(cache, { recursive: true });
 	// `npm ci` reads both out of its working directory and installs exactly what
 	// the lockfile names, so the corpus is what was committed rather than
