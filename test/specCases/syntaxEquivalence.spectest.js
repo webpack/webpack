@@ -1461,7 +1461,7 @@ describe("wpt css token adjacency", () => {
 			const token = readToken(
 				css,
 				pos,
-				/** @type {import("../../lib/css/syntax").MutableToken} */ ({})
+				/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
 			);
 			if (token === undefined) break;
 			pos = token.end;

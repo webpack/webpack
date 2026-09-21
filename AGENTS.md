@@ -71,8 +71,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation. `syntax.js` names its two
     halves the way `javascript` does: `syntax-parser.js` reads a stylesheet and
-    `syntax-printer.js` writes one back out. The facade holds `SourceProcessor` and
-    re-exports both, so what a caller imports is unchanged.
+    `syntax-printer.js` writes one back out. `syntax.js` reaches both through a
+    getter, as `javascript` does, so a walk that never prints never loads the
+    printer; it holds `SourceProcessor` and every name it published before.
   - `lib/debug/` — Debug helpers.
   - `lib/define/` — Replacing a free identifier with a constant at parse time:
     `DefinePlugin`, and the two plugins that are a `DefinePlugin` fed from somewhere

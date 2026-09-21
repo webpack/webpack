@@ -227,7 +227,7 @@ const fixtures = () => [
 	)
 ];
 
-/** @typedef {import("../lib/css/syntax").CssPrintOptions} CssPrintOptions */
+/** @typedef {import("../lib/css/syntax-parser").CssPrintOptions} CssPrintOptions */
 
 /** @type {CssPrintOptions} */
 const DEFAULT_OPTIONS = {};
