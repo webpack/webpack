@@ -357,16 +357,29 @@ describe("css-parsing-tests trees", () => {
 		["one_declaration #19", "trailing token in a value"]
 	]);
 
+	// Upstream writes two unrelated things as `["error", …]`: an entry point's
+	// failure return, which webpack answers with the nodes it read instead, and a
+	// token the tokenizer produced, which the serializer states like any other.
+	const PARSE_FAILURES = new Set([
+		"empty",
+		"eof-in-string",
+		"eof-in-url",
+		"extra-input",
+		"invalid"
+	]);
+
 	/**
-	 * Whether upstream states a parse error for a case. webpack's entry points
-	 * answer with the nodes they read rather than with the spec's error returns,
-	 * so there is nothing to compare.
+	 * Whether upstream states a failure return for a case, at any depth — a rule
+	 * list holds its invalid rule inside the list. A stray closer, a bad string
+	 * and a bad url are tokens rather than failures, so they stay comparable.
 	 * @param {EXPECTED_ANY} value an expected value
-	 * @returns {boolean} true when it names an error
+	 * @returns {boolean} true when nothing webpack produces answers it
 	 */
-	const statesAnError = (value) =>
+	const statesAFailure = (value) =>
 		Array.isArray(value) &&
-		(value[0] === "error" || value.some(statesAnError));
+		(value[0] === "error"
+			? PARSE_FAILURES.has(value[1])
+			: value.some(statesAFailure));
 
 	for (const [file, parse] of ENTRY_POINTS) {
 		const path_ = path.join(casesDir, `${file}.json`);
@@ -382,7 +395,7 @@ describe("css-parsing-tests trees", () => {
 			const source = data[i];
 			const expected = data[i + 1];
 			if (typeof source !== "string") continue;
-			if (statesAnError(expected)) continue;
+			if (statesAFailure(expected)) continue;
 			// A NUL is preprocessed to U+FFFD by the spec and not by webpack, and
 			// the character has no place in a test name either.
 			if (source.includes("\u0000")) continue;
