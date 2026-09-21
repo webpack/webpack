@@ -868,6 +868,30 @@ describe("CssSyntax — SourceProcessor", () => {
 	});
 });
 
+describe("CssSyntax — the facade", () => {
+	const syntax = require("../../lib/css/syntax");
+
+	it("names its two halves the way `javascript` does", () => {
+		expect(typeof syntax.parser.grammar).toBe("function");
+		expect(typeof syntax.printer.printer).toBe("function");
+	});
+
+	it("takes every name it publishes from the half that owns it", () => {
+		expect(syntax.parseAStylesheet).toBe(syntax.parser.parseAStylesheet);
+		expect(syntax.NodeType).toBe(syntax.parser.NodeType);
+	});
+
+	it("holds no printer until something prints", () => {
+		const processor = new SourceProcessor();
+		processor.process("a{color:red}");
+		expect(processor._printer).toBeUndefined();
+		expect(processor.process("a{color:red}", { mode: "minify" }).code).toBe(
+			"a{color:red}"
+		);
+		expect(typeof processor._printer).toBe("function");
+	});
+});
+
 describe("CssSyntax — block streaming", () => {
 	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under that
 	// it is collected and walked in one batch. `BIG` clears the threshold, `SMALL`
