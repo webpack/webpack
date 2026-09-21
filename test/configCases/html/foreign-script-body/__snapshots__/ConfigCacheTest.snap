@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html foreign-script-body exported tests should read a foreign script body as character data 1`] = `
+"<!DOCTYPE html>
+<title>Foreign script body</title>
+<svg><script src=\\"page.js\\"></script></svg>
+"
+`;
