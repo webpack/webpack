@@ -732,13 +732,13 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	 */
 	mangleImports?: boolean;
 }
-type AtRule = NodeSyntax & {
+type AtRule = NodeSyntaxParser & {
 	name: string;
 	nameStart: number;
 	nameEnd: number;
 	prelude: ComponentValue[];
-	declarations: null | DeclarationSyntax[];
-	childRules: null | RuleSyntax[];
+	declarations: null | DeclarationSyntaxParser[];
+	childRules: null | RuleSyntaxParser[];
 	blockStart: number;
 	blockEnd: number;
 };
@@ -4503,7 +4503,7 @@ declare class Compiler {
 		check?: (value: T) => boolean
 	): void;
 }
-type ComponentValue = TokenSyntax | FunctionNode | SimpleBlock;
+type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
 declare class ConcatSource extends Source {
 	constructor(...args: ConcatSourceChild[]);
 	getChildren(): Source[];
@@ -6481,7 +6481,7 @@ declare interface CssTransformOptions {
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
-type DeclarationSyntax = NodeSyntax & {
+type DeclarationSyntaxParser = NodeSyntaxParser & {
 	name: string;
 	nameStart: number;
 	nameEnd: number;
@@ -9884,7 +9884,7 @@ declare interface Flags {
 declare interface FullHashChunkModuleHashes {
 	[index: string]: string;
 }
-type FunctionNode = NodeSyntax & {
+type FunctionNode = NodeSyntaxParser & {
 	name: string;
 	nameStart: number;
 	nameEnd: number;
@@ -19472,7 +19472,7 @@ declare class NodeSourcePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare interface NodeSyntax {
+declare interface NodeSyntaxParser {
 	/**
 	 * node-type discriminator
 	 */
@@ -22697,7 +22697,7 @@ declare interface ParseOptionsJavascriptParser {
 	 */
 	moduleFallback?: boolean;
 }
-declare interface ParseOptionsSyntax {
+declare interface ParseOptionsSyntaxParser {
 	/**
 	 * optional comment-token callback; the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
 	 */
@@ -23383,7 +23383,7 @@ declare class ParserSyntaxParser {
 	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/tokenize.js
 	 */
 	next(ignoreEscapeSequenceInKeyword?: boolean): void;
-	getToken(): TokenSyntaxParser;
+	getToken(): TokenSyntaxParserClass;
 	nextToken(): void;
 	readToken(code: number): void;
 	fullCharCodeAt(pos: number): number;
@@ -23449,7 +23449,7 @@ declare class ParserSyntaxParser {
 	 */
 	readWord1(): string;
 	readWord(): void;
-	[Symbol.iterator](): Iterator<TokenSyntaxParser>;
+	[Symbol.iterator](): Iterator<TokenSyntaxParserClass>;
 	static extend(...plugins: ((parser?: any) => any)[]): any;
 	static parse(
 		input: string,
@@ -24401,10 +24401,10 @@ declare interface ProvidesObject {
 }
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
-type QualifiedRule = NodeSyntax & {
+type QualifiedRule = NodeSyntaxParser & {
 	prelude: ComponentValue[];
-	declarations: null | DeclarationSyntax[];
-	childRules: null | RuleSyntax[];
+	declarations: null | DeclarationSyntaxParser[];
+	childRules: null | RuleSyntaxParser[];
 	blockStart: number;
 	blockEnd: number;
 };
@@ -26915,7 +26915,7 @@ type RuleSetUseItem =
 			 */
 			options?: string | { [index: string]: any };
 	  };
-type RuleSyntax = AtRule | QualifiedRule;
+type RuleSyntaxParser = AtRule | QualifiedRule;
 declare class RuntimeChunkPlugin {
 	/**
 	 * Creates an instance of RuntimeChunkPlugin.
@@ -28228,7 +28228,7 @@ declare class SideEffectsFlagPlugin {
 	): undefined | boolean;
 }
 type SideEffectsFlagValue = undefined | string | boolean | string[];
-type SimpleBlock = NodeSyntax & {
+type SimpleBlock = NodeSyntaxParser & {
 	token: SimpleBlockToken;
 	value: ComponentValue[];
 };
@@ -28970,56 +28970,56 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
  */
 declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 	{
-		get node(): NodeSyntax;
-		get parent(): null | NodeSyntax;
+		get node(): NodeSyntaxParser;
+		get parent(): null | NodeSyntaxParser;
 		get index(): number;
 		/**
 		 * Stop the walk descending into the current node (enter only).
 		 */
 		skipChildren(): void;
 		inValue(): boolean;
-		type(n?: NodeSyntax): number;
-		start(n?: NodeSyntax): number;
-		end(n?: NodeSyntax): number;
-		range(n?: NodeSyntax): [number, number];
-		loc(n?: NodeSyntax): {
+		type(n?: NodeSyntaxParser): number;
+		start(n?: NodeSyntaxParser): number;
+		end(n?: NodeSyntaxParser): number;
+		range(n?: NodeSyntaxParser): [number, number];
+		loc(n?: NodeSyntaxParser): {
 			start: { line: number; column: number };
 			end: { line: number; column: number };
 		};
-		source(n?: NodeSyntax): string;
-		value(n?: NodeSyntax): string;
-		unescaped(n?: NodeSyntax): string;
-		typeFlag(n?: NodeSyntax): string;
-		contentStart(n?: NodeSyntax): number;
-		contentEnd(n?: NodeSyntax): number;
-		name(n?: NodeSyntax): string;
-		nameStart(n?: NodeSyntax): number;
-		nameEnd(n?: NodeSyntax): number;
-		unescapedName(n?: NodeSyntax): string;
-		atKeyword(n?: NodeSyntax): string;
-		children(n?: NodeSyntax): ComponentValue[];
-		prelude(n?: NodeSyntax): ComponentValue[];
-		childCount(n?: NodeSyntax): number;
-		childAt(n: NodeSyntax, i: number): ComponentValue;
+		source(n?: NodeSyntaxParser): string;
+		value(n?: NodeSyntaxParser): string;
+		unescaped(n?: NodeSyntaxParser): string;
+		typeFlag(n?: NodeSyntaxParser): string;
+		contentStart(n?: NodeSyntaxParser): number;
+		contentEnd(n?: NodeSyntaxParser): number;
+		name(n?: NodeSyntaxParser): string;
+		nameStart(n?: NodeSyntaxParser): number;
+		nameEnd(n?: NodeSyntaxParser): number;
+		unescapedName(n?: NodeSyntaxParser): string;
+		atKeyword(n?: NodeSyntaxParser): string;
+		children(n?: NodeSyntaxParser): ComponentValue[];
+		prelude(n?: NodeSyntaxParser): ComponentValue[];
+		childCount(n?: NodeSyntaxParser): number;
+		childAt(n: NodeSyntaxParser, i: number): ComponentValue;
 		/**
 		 * A block big enough to stream hands its children to the visitors as each one
 		 * finishes rather than collecting them, so both lists read as an empty block
 		 * on it — `null`, which means no block at all, is still only for the `@…;`
 		 * forms. Read a block's children from the walk, not from here.
 		 */
-		declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+		declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
 		/**
 		 * Reads as an empty block on a streamed rule; see {@link declarations }.
 		 */
-		childRules(n?: NodeSyntax): null | RuleSyntax[];
-		blockStart(n?: NodeSyntax): number;
-		blockEnd(n?: NodeSyntax): number;
-		important(n?: NodeSyntax): boolean;
-		blockToken(n?: NodeSyntax): SimpleBlockToken;
-		setEnd(n: NodeSyntax, v: number): void;
-		setBlockEnd(n: NodeSyntax, v: number): void;
+		childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+		blockStart(n?: NodeSyntaxParser): number;
+		blockEnd(n?: NodeSyntaxParser): number;
+		important(n?: NodeSyntaxParser): boolean;
+		blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+		setEnd(n: NodeSyntaxParser, v: number): void;
+		setBlockEnd(n: NodeSyntaxParser, v: number): void;
 	},
-	NodeSyntax,
+	NodeSyntaxParser,
 	CssProcessOptions
 > {
 	constructor();
@@ -30223,7 +30223,7 @@ declare interface StreamOptions {
 declare interface Stringable {
 	toString: () => string;
 }
-type Stylesheet = NodeSyntax & { rules: RuleSyntax[] };
+type Stylesheet = NodeSyntaxParser & { rules: RuleSyntaxParser[] };
 type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
 	/**
@@ -30513,7 +30513,20 @@ declare class TokenStream {
 	 */
 	discardMark(): void;
 }
-type TokenSyntax = NodeSyntax & {
+
+/**
+ * A token as `options.onToken` receives one.
+ */
+declare class TokenSyntaxParserClass {
+	constructor(p?: any);
+	type: any;
+	value: any;
+	start: any;
+	end: any;
+	loc?: ParserSourceLocation;
+	range?: any[];
+}
+type TokenSyntaxParserObject = NodeSyntaxParser & {
 	value: string;
 	unescaped: string;
 	numericValue: number;
@@ -30523,19 +30536,6 @@ type TokenSyntax = NodeSyntax & {
 	contentStart: number;
 	contentEnd: number;
 };
-
-/**
- * A token as `options.onToken` receives one.
- */
-declare class TokenSyntaxParser {
-	constructor(p?: any);
-	type: any;
-	value: any;
-	start: any;
-	end: any;
-	loc?: ParserSourceLocation;
-	range?: any[];
-}
 
 /**
  * A token's kind, carrying what the parser needs to know about it without
@@ -31706,7 +31706,7 @@ declare class WebpackParser extends ParserSyntaxParser {
 		input: string,
 		startPos?: number
 	);
-	[Symbol.iterator](): Iterator<TokenSyntaxParser>;
+	[Symbol.iterator](): Iterator<TokenSyntaxParserClass>;
 
 	/**
 	 * Applies parser plugins, keeping the result typed as this parser.
@@ -32278,7 +32278,7 @@ declare namespace exports {
 					ScopeSyntaxParser as Scope,
 					ParserSourceLocation,
 					TokContext,
-					TokenSyntaxParser as Token,
+					TokenSyntaxParserClass as Token,
 					TokenType,
 					BLOCK_DECLARATIONS,
 					HOISTED_DECLARATIONS,
@@ -32369,54 +32369,54 @@ declare namespace exports {
 	export namespace css {
 		export namespace syntax {
 			export let A: {
-				get node(): NodeSyntax;
-				get parent(): null | NodeSyntax;
+				get node(): NodeSyntaxParser;
+				get parent(): null | NodeSyntaxParser;
 				get index(): number;
 				/**
 				 * Stop the walk descending into the current node (enter only).
 				 */
 				skipChildren(): void;
 				inValue(): boolean;
-				type(n?: NodeSyntax): number;
-				start(n?: NodeSyntax): number;
-				end(n?: NodeSyntax): number;
-				range(n?: NodeSyntax): [number, number];
-				loc(n?: NodeSyntax): {
+				type(n?: NodeSyntaxParser): number;
+				start(n?: NodeSyntaxParser): number;
+				end(n?: NodeSyntaxParser): number;
+				range(n?: NodeSyntaxParser): [number, number];
+				loc(n?: NodeSyntaxParser): {
 					start: { line: number; column: number };
 					end: { line: number; column: number };
 				};
-				source(n?: NodeSyntax): string;
-				value(n?: NodeSyntax): string;
-				unescaped(n?: NodeSyntax): string;
-				typeFlag(n?: NodeSyntax): string;
-				contentStart(n?: NodeSyntax): number;
-				contentEnd(n?: NodeSyntax): number;
-				name(n?: NodeSyntax): string;
-				nameStart(n?: NodeSyntax): number;
-				nameEnd(n?: NodeSyntax): number;
-				unescapedName(n?: NodeSyntax): string;
-				atKeyword(n?: NodeSyntax): string;
-				children(n?: NodeSyntax): ComponentValue[];
-				prelude(n?: NodeSyntax): ComponentValue[];
-				childCount(n?: NodeSyntax): number;
-				childAt(n: NodeSyntax, i: number): ComponentValue;
+				source(n?: NodeSyntaxParser): string;
+				value(n?: NodeSyntaxParser): string;
+				unescaped(n?: NodeSyntaxParser): string;
+				typeFlag(n?: NodeSyntaxParser): string;
+				contentStart(n?: NodeSyntaxParser): number;
+				contentEnd(n?: NodeSyntaxParser): number;
+				name(n?: NodeSyntaxParser): string;
+				nameStart(n?: NodeSyntaxParser): number;
+				nameEnd(n?: NodeSyntaxParser): number;
+				unescapedName(n?: NodeSyntaxParser): string;
+				atKeyword(n?: NodeSyntaxParser): string;
+				children(n?: NodeSyntaxParser): ComponentValue[];
+				prelude(n?: NodeSyntaxParser): ComponentValue[];
+				childCount(n?: NodeSyntaxParser): number;
+				childAt(n: NodeSyntaxParser, i: number): ComponentValue;
 				/**
 				 * A block big enough to stream hands its children to the visitors as each one
 				 * finishes rather than collecting them, so both lists read as an empty block
 				 * on it — `null`, which means no block at all, is still only for the `@…;`
 				 * forms. Read a block's children from the walk, not from here.
 				 */
-				declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+				declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
 				/**
 				 * Reads as an empty block on a streamed rule; see {@link declarations }.
 				 */
-				childRules(n?: NodeSyntax): null | RuleSyntax[];
-				blockStart(n?: NodeSyntax): number;
-				blockEnd(n?: NodeSyntax): number;
-				important(n?: NodeSyntax): boolean;
-				blockToken(n?: NodeSyntax): SimpleBlockToken;
-				setEnd(n: NodeSyntax, v: number): void;
-				setBlockEnd(n: NodeSyntax, v: number): void;
+				childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+				blockStart(n?: NodeSyntaxParser): number;
+				blockEnd(n?: NodeSyntaxParser): number;
+				important(n?: NodeSyntaxParser): boolean;
+				blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+				setEnd(n: NodeSyntaxParser, v: number): void;
+				setBlockEnd(n: NodeSyntaxParser, v: number): void;
 			};
 			export let EMBEDDED_LANGUAGES: string[];
 			export namespace NodeType {
@@ -32541,149 +32541,151 @@ declare namespace exports {
 			export let parseABlocksContents: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
-			) => { decls: DeclarationSyntax[]; rules: RuleSyntax[] };
+				options?: ParseOptionsSyntaxParser
+			) => { decls: DeclarationSyntaxParser[]; rules: RuleSyntaxParser[] };
 			export let parseACommaSeparatedListOfComponentValues: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
+				options?: ParseOptionsSyntaxParser
 			) => ComponentValue[][];
 			export let parseAComponentValue: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
-			) => undefined | TokenSyntax | FunctionNode | SimpleBlock;
+				options?: ParseOptionsSyntaxParser
+			) => undefined | TokenSyntaxParserObject | FunctionNode | SimpleBlock;
 			export let parseADeclaration: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
-			) => undefined | DeclarationSyntax;
+				options?: ParseOptionsSyntaxParser
+			) => undefined | DeclarationSyntaxParser;
 			export let parseAListOfComponentValues: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
+				options?: ParseOptionsSyntaxParser
 			) => ComponentValue[];
 			export let parseARule: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
+				options?: ParseOptionsSyntaxParser
 			) => undefined | AtRule | QualifiedRule;
 			export let parseAStylesheet: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
+				options?: ParseOptionsSyntaxParser
 			) => Stylesheet;
 			export let parseAStylesheetsContents: (
 				input: string | TokenStream,
 				pos?: number,
-				options?: ParseOptionsSyntax
-			) => RuleSyntax[];
+				options?: ParseOptionsSyntaxParser
+			) => RuleSyntaxParser[];
 			export let pickTransforms: (
 				options: object
 			) => undefined | CssTransformOptions;
 			export let printer: (
 				path: {
-					get node(): NodeSyntax;
-					get parent(): null | NodeSyntax;
+					get node(): NodeSyntaxParser;
+					get parent(): null | NodeSyntaxParser;
 					get index(): number;
 					/**
 					 * Stop the walk descending into the current node (enter only).
 					 */
 					skipChildren(): void;
 					inValue(): boolean;
-					type(n?: NodeSyntax): number;
-					start(n?: NodeSyntax): number;
-					end(n?: NodeSyntax): number;
-					range(n?: NodeSyntax): [number, number];
-					loc(n?: NodeSyntax): {
+					type(n?: NodeSyntaxParser): number;
+					start(n?: NodeSyntaxParser): number;
+					end(n?: NodeSyntaxParser): number;
+					range(n?: NodeSyntaxParser): [number, number];
+					loc(n?: NodeSyntaxParser): {
 						start: { line: number; column: number };
 						end: { line: number; column: number };
 					};
-					source(n?: NodeSyntax): string;
-					value(n?: NodeSyntax): string;
-					unescaped(n?: NodeSyntax): string;
-					typeFlag(n?: NodeSyntax): string;
-					contentStart(n?: NodeSyntax): number;
-					contentEnd(n?: NodeSyntax): number;
-					name(n?: NodeSyntax): string;
-					nameStart(n?: NodeSyntax): number;
-					nameEnd(n?: NodeSyntax): number;
-					unescapedName(n?: NodeSyntax): string;
-					atKeyword(n?: NodeSyntax): string;
-					children(n?: NodeSyntax): ComponentValue[];
-					prelude(n?: NodeSyntax): ComponentValue[];
-					childCount(n?: NodeSyntax): number;
-					childAt(n: NodeSyntax, i: number): ComponentValue;
+					source(n?: NodeSyntaxParser): string;
+					value(n?: NodeSyntaxParser): string;
+					unescaped(n?: NodeSyntaxParser): string;
+					typeFlag(n?: NodeSyntaxParser): string;
+					contentStart(n?: NodeSyntaxParser): number;
+					contentEnd(n?: NodeSyntaxParser): number;
+					name(n?: NodeSyntaxParser): string;
+					nameStart(n?: NodeSyntaxParser): number;
+					nameEnd(n?: NodeSyntaxParser): number;
+					unescapedName(n?: NodeSyntaxParser): string;
+					atKeyword(n?: NodeSyntaxParser): string;
+					children(n?: NodeSyntaxParser): ComponentValue[];
+					prelude(n?: NodeSyntaxParser): ComponentValue[];
+					childCount(n?: NodeSyntaxParser): number;
+					childAt(n: NodeSyntaxParser, i: number): ComponentValue;
 					/**
 					 * A block big enough to stream hands its children to the visitors as each one
 					 * finishes rather than collecting them, so both lists read as an empty block
 					 * on it — `null`, which means no block at all, is still only for the `@…;`
 					 * forms. Read a block's children from the walk, not from here.
 					 */
-					declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+					declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
 					/**
 					 * Reads as an empty block on a streamed rule; see {@link declarations }.
 					 */
-					childRules(n?: NodeSyntax): null | RuleSyntax[];
-					blockStart(n?: NodeSyntax): number;
-					blockEnd(n?: NodeSyntax): number;
-					important(n?: NodeSyntax): boolean;
-					blockToken(n?: NodeSyntax): SimpleBlockToken;
-					setEnd(n: NodeSyntax, v: number): void;
-					setBlockEnd(n: NodeSyntax, v: number): void;
+					childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+					blockStart(n?: NodeSyntaxParser): number;
+					blockEnd(n?: NodeSyntaxParser): number;
+					important(n?: NodeSyntaxParser): boolean;
+					blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+					setEnd(n: NodeSyntaxParser, v: number): void;
+					setBlockEnd(n: NodeSyntaxParser, v: number): void;
 				},
 				writer: PrintContext<
 					{
-						get node(): NodeSyntax;
-						get parent(): null | NodeSyntax;
+						get node(): NodeSyntaxParser;
+						get parent(): null | NodeSyntaxParser;
 						get index(): number;
 						/**
 						 * Stop the walk descending into the current node (enter only).
 						 */
 						skipChildren(): void;
 						inValue(): boolean;
-						type(n?: NodeSyntax): number;
-						start(n?: NodeSyntax): number;
-						end(n?: NodeSyntax): number;
-						range(n?: NodeSyntax): [number, number];
-						loc(n?: NodeSyntax): {
+						type(n?: NodeSyntaxParser): number;
+						start(n?: NodeSyntaxParser): number;
+						end(n?: NodeSyntaxParser): number;
+						range(n?: NodeSyntaxParser): [number, number];
+						loc(n?: NodeSyntaxParser): {
 							start: { line: number; column: number };
 							end: { line: number; column: number };
 						};
-						source(n?: NodeSyntax): string;
-						value(n?: NodeSyntax): string;
-						unescaped(n?: NodeSyntax): string;
-						typeFlag(n?: NodeSyntax): string;
-						contentStart(n?: NodeSyntax): number;
-						contentEnd(n?: NodeSyntax): number;
-						name(n?: NodeSyntax): string;
-						nameStart(n?: NodeSyntax): number;
-						nameEnd(n?: NodeSyntax): number;
-						unescapedName(n?: NodeSyntax): string;
-						atKeyword(n?: NodeSyntax): string;
-						children(n?: NodeSyntax): ComponentValue[];
-						prelude(n?: NodeSyntax): ComponentValue[];
-						childCount(n?: NodeSyntax): number;
-						childAt(n: NodeSyntax, i: number): ComponentValue;
+						source(n?: NodeSyntaxParser): string;
+						value(n?: NodeSyntaxParser): string;
+						unescaped(n?: NodeSyntaxParser): string;
+						typeFlag(n?: NodeSyntaxParser): string;
+						contentStart(n?: NodeSyntaxParser): number;
+						contentEnd(n?: NodeSyntaxParser): number;
+						name(n?: NodeSyntaxParser): string;
+						nameStart(n?: NodeSyntaxParser): number;
+						nameEnd(n?: NodeSyntaxParser): number;
+						unescapedName(n?: NodeSyntaxParser): string;
+						atKeyword(n?: NodeSyntaxParser): string;
+						children(n?: NodeSyntaxParser): ComponentValue[];
+						prelude(n?: NodeSyntaxParser): ComponentValue[];
+						childCount(n?: NodeSyntaxParser): number;
+						childAt(n: NodeSyntaxParser, i: number): ComponentValue;
 						/**
 						 * A block big enough to stream hands its children to the visitors as each one
 						 * finishes rather than collecting them, so both lists read as an empty block
 						 * on it — `null`, which means no block at all, is still only for the `@…;`
 						 * forms. Read a block's children from the walk, not from here.
 						 */
-						declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+						declarations(
+							n?: NodeSyntaxParser
+						): null | DeclarationSyntaxParser[];
 						/**
 						 * Reads as an empty block on a streamed rule; see {@link declarations }.
 						 */
-						childRules(n?: NodeSyntax): null | RuleSyntax[];
-						blockStart(n?: NodeSyntax): number;
-						blockEnd(n?: NodeSyntax): number;
-						important(n?: NodeSyntax): boolean;
-						blockToken(n?: NodeSyntax): SimpleBlockToken;
-						setEnd(n: NodeSyntax, v: number): void;
-						setBlockEnd(n: NodeSyntax, v: number): void;
+						childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
+						blockStart(n?: NodeSyntaxParser): number;
+						blockEnd(n?: NodeSyntaxParser): number;
+						important(n?: NodeSyntaxParser): boolean;
+						blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
+						setEnd(n: NodeSyntaxParser, v: number): void;
+						setBlockEnd(n: NodeSyntaxParser, v: number): void;
 					},
-					NodeSyntax,
+					NodeSyntaxParser,
 					CssPrintOptions
 				>
 			) => string;
