@@ -151,7 +151,11 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers, including `RequestShortener`, which renders a request
     relative to the context for every message a user reads.
-  - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
+  - `lib/wasm/` — WebAssembly module support: the async path a build takes today,
+    plus the two pieces neither path owns — `EnableWasmLoadingPlugin` and
+    `wasmModuleFilename`.
+  - `lib/wasm-sync/` — The synchronous WebAssembly path, kept until webpack 6
+    removes it, which is why it stands apart rather than joining `lib/wasm/`.
   - `lib/watch/` — Watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
 - `bin/` — `webpack` CLI entry point.
