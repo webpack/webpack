@@ -5,6 +5,17 @@ const {
 } = require("../../lib/util/chunkSetIntersections");
 
 /**
+ * Counts the bits of a number.
+ * @param {number} value the number
+ * @returns {number} how many bits are set
+ */
+const popcountOf = (value) => {
+	let count = 0;
+	for (let bit = value; bit !== 0; bit >>= 1) count += bit & 1;
+	return count;
+};
+
+/**
  * Runs discovery over sets written as member lists.
  * @param {number[][]} sets the sets to intersect
  * @param {object} options the rest of the discovery options
@@ -257,6 +268,89 @@ describe("chunkSetIntersections", () => {
 		expect(discover(sets, { minMembers: 1 }).intersections).toEqual([
 			{ members: [0], support: [0, 1] }
 		]);
+	});
+
+	describe("over many sets", () => {
+		// Pairs of blocks: two sets sharing a block intersect to it. Each member
+		// is held by few sets, so the pairs are reached through the members.
+		const blockCount = 12;
+		/** @type {number[][]} */
+		const blockPairs = [];
+		for (let first = 0; first < blockCount; first++) {
+			for (let second = first + 1; second < blockCount; second++) {
+				blockPairs.push([
+					first * 2,
+					first * 2 + 1,
+					second * 2,
+					second * 2 + 1
+				]);
+			}
+		}
+
+		it("should reach a pair through the member they share", () => {
+			const { intersections, capped } = discover(blockPairs);
+			expect(capped).toBe(false);
+			expect(intersections).toHaveLength(blockCount);
+			for (const { members, support } of intersections) {
+				expect(members).toHaveLength(2);
+				expect(members[1]).toBe(members[0] + 1);
+				expect(support).toHaveLength(blockCount - 1);
+			}
+		});
+
+		it("should leave out a set holding one member of an intersection", () => {
+			// Each of these holds one member of the first block and nothing else of
+			// it, so the support scan reaches them and drops them again
+			const sets = [...blockPairs, [0, 100, 101], [1, 102, 103]];
+			const { intersections } = discover(sets);
+			const first = intersections.find(
+				(intersection) =>
+					intersection.members.length === 2 && intersection.members[0] === 0
+			);
+			expect(first).toEqual({
+				members: [0, 1],
+				support: blockPairs
+					.map((_, index) => index)
+					.filter((index) => blockPairs[index].includes(0))
+			});
+		});
+
+		it("should skip a pair a round before it already intersected", () => {
+			const { intersections, capped } = discover(blockPairs, { depth: 2 });
+			expect(capped).toBe(false);
+			// A block is all two of these sets share, so a second round adds nothing
+			expect(intersections).toHaveLength(blockCount);
+		});
+
+		it("should report being cut short of a member's pairs", () => {
+			const { intersections, capped } = discover(blockPairs, { maxWork: 8 });
+			expect(capped).toBe(true);
+			expect(intersections.length).toBeLessThan(blockCount);
+		});
+
+		it("should hold more intersections than the sets it started from", () => {
+			// Every five of eight members, so a round finds every smaller subset —
+			// more patterns than the table was opened for
+			/** @type {number[][]} */
+			const sets = [];
+			for (let mask = 0; mask < 256; mask++) {
+				if (popcountOf(mask) !== 5) continue;
+				sets.push(
+					[0, 1, 2, 3, 4, 5, 6, 7].filter((member) => (mask >> member) & 1)
+				);
+			}
+			expect(sets).toHaveLength(56);
+			const { intersections, capped } = discover(sets, {
+				depth: 1,
+				maxIntersections: 1000
+			});
+			expect(capped).toBe(false);
+			// Every subset of two, three and four of the eight members
+			expect(intersections).toHaveLength(154);
+			expect(new Set(intersections.map((i) => i.members.join(","))).size).toBe(
+				154
+			);
+		});
 	});
 
 	it("should hold intersections of more members than a word", () => {
