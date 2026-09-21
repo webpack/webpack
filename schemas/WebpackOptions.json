@@ -4865,7 +4865,8 @@
         "dedupDepth": {
           "description": "Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).",
           "type": "number",
-          "minimum": 0
+          "minimum": 0,
+          "added": "5.112.0"
         },
         "defaultSizeTypes": {
           "description": "Sets the size types which are used when a number is used for sizes.",

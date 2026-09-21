@@ -21385,6 +21385,7 @@ declare interface OptimizationSplitChunksOptions {
 
 	/**
 	 * Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).
+	 * @since 5.112.0
 	 */
 	dedupDepth?: number;
 

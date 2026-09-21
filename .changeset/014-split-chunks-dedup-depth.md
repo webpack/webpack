@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `optimization.splitChunks.dedupDepth` to split modules chunks share.
+Add `optimization.splitChunks.dedupDepth` to discover chunk intersections.
