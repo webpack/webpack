@@ -877,8 +877,26 @@ describe("CssSyntax — the facade", () => {
 	});
 
 	it("takes every name it publishes from the half that owns it", () => {
-		expect(syntax.parseAStylesheet).toBe(syntax.parser.parseAStylesheet);
-		expect(syntax.NodeType).toBe(syntax.parser.NodeType);
+		const parser = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (syntax.parser)
+		);
+		const surface = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (syntax)
+		);
+		const published = Object.keys(surface).filter(
+			(name) =>
+				name !== "parser" && name !== "printer" && name !== "SourceProcessor"
+		);
+		expect(published).toHaveLength(55);
+		let owned = 0;
+		for (const name of published) {
+			expect(surface[name]).toBeDefined();
+			if (name in parser) {
+				expect(surface[name]).toBe(parser[name]);
+				owned++;
+			}
+		}
+		expect(owned).toBe(49);
 	});
 
 	it("holds no printer until something prints", () => {
