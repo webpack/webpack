@@ -4790,7 +4790,7 @@ declare interface Configuration {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "css" | "all" | "javascript";
+				type: "all" | "css" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
@@ -16571,6 +16571,12 @@ declare interface LibraryOptions {
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
+
+	/**
+	 * Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.
+	 * @since 5.112.0
+	 */
+	entryExports?: "last" | "all";
 
 	/**
 	 * Specify which export should be exposed as library.
@@ -31404,7 +31410,7 @@ declare interface WebpackOptionsInterception {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "css" | "all" | "javascript";
+				type: "all" | "css" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
@@ -31456,7 +31462,7 @@ declare interface WebpackOptionsNormalized {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "css" | "all" | "javascript";
+				type: "all" | "css" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
@@ -31652,7 +31658,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "css" | "all" | "javascript";
+				type: "all" | "css" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
