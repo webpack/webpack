@@ -57,6 +57,7 @@ const {
 	shrink,
 	signed,
 	sweepExitCode,
+	sweepMode,
 	thrownText
 } = require("./compare-tools-harness");
 
@@ -1398,7 +1399,10 @@ const EXPECTED = [
  */
 const invariants = (write) => {
 	const built = invariantFixtures();
-	_missingFixtures = built.missing;
+	// Filtered the same way the corpus is: a run narrowed to one fixture is not
+	// short of the ones it was never going to read, and the gate answers for the
+	// sweep that happened.
+	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
@@ -1521,7 +1525,7 @@ const main = async () => {
 if (require.main === module) {
 	// `--setup` installs the fixtures and builds nothing else, so a consumer
 	// that only reads them does not run the comparison to get them.
-	const mode = process.argv[2];
+	const mode = sweepMode(process.argv);
 	// The sweep alone, for a caller that wants the relations without the ten
 	// minutes the comparison costs; a full run prints the same section.
 	if (mode === "--invariants") {

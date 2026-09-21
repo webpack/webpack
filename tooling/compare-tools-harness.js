@@ -707,6 +707,16 @@ const collectFiles = (dir, extension, skipped) => {
 };
 
 /**
+ * The mode a comparison script was asked for, which is its first argument that
+ * is not a modifier. `--require-corpus` says how `--invariants` ends rather
+ * than what to run, so it may stand either side of it.
+ * @param {readonly string[]} argv the command line, `process.argv` included
+ * @returns {string | undefined} the mode, or undefined where none was given
+ */
+const sweepMode = (argv) =>
+	argv.slice(2).find((arg) => arg !== "--require-corpus");
+
+/**
  * What a sweep did not find, as a section of its report. A fixture the install
  * did not land is coverage lost with nothing to read it off, so it is named
  * rather than swept past — a finding has already lived in exactly the fixtures
@@ -760,5 +770,6 @@ module.exports = {
 	shrink,
 	signed,
 	sweepExitCode,
+	sweepMode,
 	thrownText
 };

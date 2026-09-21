@@ -20,7 +20,8 @@ const {
 	measureInWorker,
 	missingReport,
 	run,
-	sweepExitCode
+	sweepExitCode,
+	sweepMode
 } = require("../../tooling/compare-tools-harness");
 
 /** @type {string} */
@@ -683,5 +684,27 @@ describe("sweepExitCode", () => {
 			sweepExitCode(0, ["A"], ["node", "x.js", "--invariants", "--require-corpus"])
 		).toBe(1);
 		expect(sweepExitCode(0, ["A"], ["node", "x.js", "--invariants"])).toBe(0);
+	});
+});
+
+describe("sweepMode", () => {
+	it("reads the mode whichever side of the modifier it stands", () => {
+		expect(sweepMode(["node", "x.js", "--invariants", "--require-corpus"])).toBe(
+			"--invariants"
+		);
+		expect(sweepMode(["node", "x.js", "--require-corpus", "--invariants"])).toBe(
+			"--invariants"
+		);
+	});
+
+	it("reads the other modes unchanged", () => {
+		expect(sweepMode(["node", "x.js", "--setup"])).toBe("--setup");
+		expect(sweepMode(["node", "x.js", "--measure"])).toBe("--measure");
+	});
+
+	// The comparison, which is what no mode has always meant.
+	it("names no mode where only the modifier was given", () => {
+		expect(sweepMode(["node", "x.js"])).toBeUndefined();
+		expect(sweepMode(["node", "x.js", "--require-corpus"])).toBeUndefined();
 	});
 });
