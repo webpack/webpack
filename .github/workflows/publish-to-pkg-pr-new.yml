@@ -7,6 +7,12 @@ on:
     branches: [main]
     tags: ["!**"]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # A preview of a commit that has been replaced is one nobody will install.
+  # Every push to `main` publishes its own preview, so those are not dropped.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   issues: write
   pull-requests: write

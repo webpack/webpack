@@ -13,6 +13,8 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
+const { COLOR_NAME_TO_RGB } = require("../../lib/css/data");
+const { SourceProcessor } = require("../../lib/css/syntax");
 const { parseABlocksContents } = require("../../lib/css/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
@@ -218,5 +220,55 @@ describe("css-parsing-tests block contents", () => {
 		it(`reads ${JSON.stringify(source)} as ${want.join(" + ") || "nothing"}`, () => {
 			expect(actual(source)).toEqual(want);
 		});
+	}
+});
+
+// The corpus states each color as CSSOM serializes it, which is not what a
+// minifier writes — so this compares webpack's reading of the input against its
+// reading of that serialization, and only where both resolved to sRGB.
+describe("css-parsing-tests colors", () => {
+	const files = fs.existsSync(casesDir)
+		? fs.readdirSync(casesDir).filter((f) => f.startsWith("color"))
+		: [];
+	if (files.length === 0) {
+		it("submodule not initialized (run `git submodule update --init test/external/css-parsing-tests`)", () => {
+			// No-op: the conformance data is an optional git submodule.
+		});
+
+		return;
+	}
+
+	const fold = (color) =>
+		new SourceProcessor()
+			.process(`a{color:${color}}`, { mode: "minify" })
+			.code.slice(8, -1);
+
+	/**
+	 * @param {string} folded what the minifier wrote
+	 * @returns {string | null} the same color as `#rrggbb`, or null if it is not sRGB
+	 */
+	const canonical = (folded) => {
+		const named = COLOR_NAME_TO_RGB.get(folded);
+		if (named !== undefined) return `#${named.toString(16).padStart(6, "0")}`;
+		const short = /^#([0-9a-f]{3})$/.exec(folded);
+		if (short) return `#${[...short[1]].map((c) => c + c).join("")}`;
+		return /^#[0-9a-f]{6}$/.test(folded) ? folded : null;
+	};
+
+	for (const file of files) {
+		const data = JSON.parse(fs.readFileSync(path.join(casesDir, file), "utf8"));
+		for (let i = 0; i < data.length; i += 2) {
+			const source = data[i];
+			const serialized = data[i + 1];
+			if (typeof source !== "string" || serialized === null) continue;
+			const want = canonical(fold(serialized));
+			if (want === null) continue;
+			const got = canonical(fold(source));
+			if (got === null) continue;
+
+			it(`${file} reads ${JSON.stringify(source)} as ${want}`, () => {
+				expect(got).toBe(want);
+			});
+		}
 	}
 });

@@ -4,6 +4,13 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
+concurrency:
+  # Keyed on the pull request rather than on `github.ref`, which under
+  # `pull_request_target` is the base branch — every open pull request would
+  # share one group and cancel the others' labelling.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

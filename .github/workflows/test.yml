@@ -225,8 +225,11 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # Every suite from here down is held behind the three cheap ones, which are
+  # also the three a merge needs: each costs tens of runner-minutes, and a tree
+  # that fails `lint`, `basic` or `unit` is not going to land on what they say.
   test262:
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -277,20 +280,45 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  # Parses all of test262 with webpack's parser and with acorn, and compares the
-  # trees. Coverage instrumentation makes the parser ~5x slower, so this one job
-  # runs without it — every line it reaches is covered by the suites that upload.
-  test262-parser:
-    needs: basic
+  # One job per language, the way `runtimes` is one per runtime: each reads that
+  # language's upstream corpus, and they differ only in which submodule they
+  # check out and which suite they run.
+  parser:
+    # Named for the language alone: a matrix row carries the suite and the
+    # coverage flag too, and the generated name would otherwise print all three.
+    name: parser (${{ matrix.language }})
+    needs: [lint, basic, unit]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: css
+            submodules: test/external/css-parsing-tests
+            script: cover:css-parsing
+            flags: css-parsing
+          # WPT is 161k files, so only this leg checks it out, and only one
+          # commit deep — it carries the tree-construction corpus html5lib-tests
+          # dropped.
+          - language: html
+            submodules: test/external/html5lib-tests test/external/wpt
+            script: cover:html5lib
+            flags: html5lib
+          # Parses all of test262 with webpack's parser and with acorn and
+          # compares the trees. Coverage instrumentation makes the parser ~5x
+          # slower, so this leg runs without it — every line it reaches is
+          # covered by the suites that upload.
+          - language: js
+            submodules: test/external/test262-cases
+            script: test:test262-parser
     runs-on: ubuntu-latest
-    # Bounded: the suite allows ten minutes per area per mode, so a stall
+    # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Check out the test262 corpus
-        run: node tooling/retry.js git submodule update --init --depth 1 test/external/test262-cases
+      - name: Check out the ${{ matrix.language }} corpus
+        run: node tooling/retry.js git submodule update --init --depth 1 ${{ matrix.submodules }}
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -308,51 +336,18 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .jest-cache
-          key: jest-test262-parser-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          key: jest-parser-${{ matrix.language }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
           restore-keys: |
-            jest-test262-parser-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-test262-parser-${{ runner.os }}-
+            jest-parser-${{ matrix.language }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-parser-${{ matrix.language }}-${{ runner.os }}-
 
-      - run: yarn test:test262-parser --ci --cacheDirectory .jest-cache
-
-  html5lib:
-    needs: basic
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      # WPT is 161k files, so only this job checks it out, and only one commit
-      # deep — it carries the tree-construction corpus html5lib-tests dropped.
-      - name: Check out the html5lib and WPT corpora
-        run: node tooling/retry.js git submodule update --init --depth 1 test/external/html5lib-tests test/external/wpt
-
-      - name: Use Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: lts/*
-          cache: yarn
-
-      - run: node tooling/retry.js yarn --frozen-lockfile
-
-      - run: yarn link --frozen-lockfile || true
-
-      - run: yarn link webpack --frozen-lockfile
-
-      - name: Cache jest result
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .jest-cache
-          key: jest-html5lib-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
-          restore-keys: |
-            jest-html5lib-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-html5lib-${{ runner.os }}-
-
-      - run: yarn cover:html5lib --ci --cacheDirectory .jest-cache
+      - run: yarn ${{ matrix.script }} --ci --cacheDirectory .jest-cache
 
       - name: Codecov
+        if: matrix.flags
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
-          flags: html5lib
+          flags: ${{ matrix.flags }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -363,7 +358,7 @@ jobs:
     # Named for the engine alone: a matrix row carries the script and the
     # coverage flag too, and the generated name would otherwise print all three.
     name: syntax-equivalence (${{ matrix.browser }})
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -463,48 +458,9 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  css-parsing:
-    needs: basic
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Check out the css-parsing corpus
-        run: node tooling/retry.js git submodule update --init --depth 1 test/external/css-parsing-tests
-
-      - name: Use Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: lts/*
-          cache: yarn
-
-      - run: node tooling/retry.js yarn --frozen-lockfile
-
-      - run: yarn link --frozen-lockfile || true
-
-      - run: yarn link webpack --frozen-lockfile
-
-      - name: Cache jest result
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: .jest-cache
-          key: jest-css-parsing-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
-          restore-keys: |
-            jest-css-parsing-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
-            jest-css-parsing-${{ runner.os }}-
-
-      - run: yarn cover:css-parsing --ci --cacheDirectory .jest-cache
-
-      - name: Codecov
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
-        with:
-          flags: css-parsing
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   # Run webpack's test suite under Deno and Bun (spec validation suites excluded).
   runtimes:
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -560,7 +516,7 @@ jobs:
       - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
-    needs: basic
+    needs: [lint, basic, unit]
     strategy:
       fail-fast: false
       matrix:
@@ -681,3 +637,19 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+
+  # The eight benchmark shards are around four runner-hours, so on a pull
+  # request they come through here, behind the same three cheap jobs. A push to
+  # `main` runs `benchmarks.yml` on its own trigger instead and is never gated:
+  # CodSpeed draws every later comparison against that commit's baseline.
+  benchmarks:
+    if: github.event_name == 'pull_request'
+    needs: [lint, basic, unit]
+    # At least what the called workflow declares, or the call is rejected.
+    permissions:
+      contents: read
+      id-token: write
+      issues: write
+      pull-requests: write
+    uses: ./.github/workflows/benchmarks.yml
+    secrets: inherit

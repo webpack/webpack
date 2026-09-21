@@ -3,6 +3,11 @@ name: Dependency Review
 on:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Pull requests only, so every superseded run is one nobody is waiting on.
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
