@@ -3226,6 +3226,28 @@ const find = (src, tagName) => {
 	return /** @type {MatElement} */ (found);
 };
 
+describe("HtmlSyntax — the facade", () => {
+	const syntax = require("../../lib/html/syntax");
+
+	it("names its two halves the way `javascript` does", () => {
+		expect(typeof syntax.parser.grammar).toBe("function");
+		expect(typeof syntax.printer.printer).toBe("function");
+	});
+
+	it("takes every name it publishes from the half that owns it", () => {
+		expect(syntax.parseHtml).toBe(syntax.parser.parseHtml);
+		expect(syntax.NodeType).toBe(syntax.parser.NodeType);
+	});
+
+	it("holds no printer until something prints", () => {
+		const processor = new syntax.SourceProcessor();
+		processor.process("<p>x</p>");
+		expect(processor._printer).toBeUndefined();
+		expect(processor.process("<p>x</p>", { mode: "minify" }).code).toBe("<p>x");
+		expect(typeof processor._printer).toBe("function");
+	});
+});
+
 describe("parseHtml", () => {
 	it("should produce an empty document with html/head/body scaffolding", () => {
 		const ast = parseHtml("");

@@ -8,6 +8,7 @@ const {
 	NodeType: HtmlNodeType,
 	SourceProcessor: HtmlSourceProcessor
 } = require("../../lib/html/syntax");
+const GenericSourceProcessor = require("../../lib/util/SourceProcessor");
 const { PrintContext } = require("../../lib/util/SourceProcessor");
 
 const CSS = "a {\n\tcolor : #ff0000 ;\n}\n";
@@ -22,6 +23,55 @@ const LANGUAGES = [
 ];
 
 describe("SourceProcessor", () => {
+	// A language whose printer is a module of its own hands one of these over
+	// instead of the printer, so a walk that never prints never loads it.
+	describe("deferred printer", () => {
+		/**
+		 * @returns {{ processor: EXPECTED_ANY, loads: () => number }} a processor that counts what it was asked for
+		 */
+		const counting = () => {
+			let loads = 0;
+			const processor = new GenericSourceProcessor(
+				() => {},
+				undefined,
+				() => {
+					loads++;
+					return () => "";
+				}
+			);
+			return { processor, loads: () => loads };
+		};
+
+		it("is not asked for by a walk", () => {
+			const { processor, loads } = counting();
+			expect(processor.process("x")).toBeUndefined();
+			expect(loads()).toBe(0);
+		});
+
+		it("is asked for once, by the first print", () => {
+			const { processor, loads } = counting();
+			processor.process("x");
+			processor.process("x", { mode: "minify" });
+			expect(loads()).toBe(1);
+		});
+
+		it("is reused by every print after it", () => {
+			const { processor, loads } = counting();
+			processor.process("x", { mode: "minify" });
+			const first = processor._printer;
+			processor.process("x", { mode: "beautify" });
+			expect(loads()).toBe(1);
+			expect(processor._printer).toBe(first);
+		});
+
+		it("stays out of a processor that was handed its printer", () => {
+			const printer = () => "";
+			const processor = new GenericSourceProcessor(() => {}, printer);
+			processor.process("x", { mode: "minify" });
+			expect(processor._printer).toBe(printer);
+		});
+	});
+
 	// Dropping the store has to let go of the text, not just stop answering for
 	// it: a stylesheet prints ~300k nodes, which is the output over again.
 	describe("printed-text store", () => {
