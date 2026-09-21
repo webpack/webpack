@@ -246,7 +246,7 @@ describe("FileMiddleware getReferencedFilenames", () => {
 	/**
 	 * @param {Buffer} content file content returned for any file
 	 * @param {number=} maxBytesPerRead cap for a single positional read
-	 * @returns {import("../../lib/util/fs").IntermediateFileSystem} fake fs
+	 * @returns {import("../../lib/fs/fs").IntermediateFileSystem} fake fs
 	 */
 	// callbacks fire asynchronously like a real fs, so a `throw` inside them
 	// is not swallowed by a surrounding Promise executor

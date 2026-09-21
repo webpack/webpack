@@ -97,6 +97,13 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/externals/` — External modules: the `externals` option's module, factory plugin and the presets built on them.
+  - `lib/fs/` — The filesystem webpack reads and writes through: `fs.js` declares the
+    `InputFileSystem` / `OutputFileSystem` surface every caller is typed against and the
+    path helpers built on it, and `FileSystemInfo` records the snapshots, timestamps and
+    build dependencies a watch or a cache decides staleness from. A filesystem a target
+    supplies is not one of these — `NodeWatchFileSystem` stays in `lib/node/`. The old
+    `lib/FileSystemInfo` path stays as a re-export, since html-webpack-plugin types
+    against it.
   - `lib/graph/` — The module and chunk graphs a compilation holds, and the things they
     are graphs of: `ModuleGraph` and its connections, `ChunkGraph` and the
     `buildChunkGraph` that fills it, and the `ExportsInfo` recording what each module

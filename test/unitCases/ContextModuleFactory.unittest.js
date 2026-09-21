@@ -4,7 +4,7 @@ const { Volume, createFsFromVolume } = require("memfs");
 const ContextModuleFactory = require("../../lib/context/ContextModuleFactory");
 
 /** @import { IFs } from "memfs" */
-/** @import { InputFileSystem } from "../../lib/util/fs" */
+/** @import { InputFileSystem } from "../../lib/fs/fs" */
 /** @import { ContextModuleOptions } from "../../lib/context/ContextModule" */
 
 describe("ContextModuleFactory", () => {

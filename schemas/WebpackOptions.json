@@ -6291,7 +6291,7 @@
         },
         "fileSystem": {
           "description": "Filesystem for the resolver.",
-          "tsType": "import('../lib/util/fs').InputFileSystem"
+          "tsType": "import('../lib/fs/fs').InputFileSystem"
         },
         "fullySpecified": {
           "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",

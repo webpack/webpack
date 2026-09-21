@@ -60,7 +60,7 @@ describe("PackFileCacheStrategy cleanup", () => {
 	const tempPath = path.resolve(testDirectory, "js", "pack-cleanup");
 
 	/**
-	 * @param {import("../../lib/util/fs").IntermediateFileSystem} fs a file system
+	 * @param {import("../../lib/fs/fs").IntermediateFileSystem} fs a file system
 	 * @param {string[]=} warnings collects logged warnings
 	 * @returns {import("../../lib/cache/PackFileCacheStrategy")} a strategy writing to the temp directory
 	 */
@@ -253,15 +253,15 @@ describe("PackFileCacheStrategy cleanup", () => {
 
 		/** @type {Map<string, number>} */
 		const readCounts = new Map();
-		/** @type {import("../../lib/util/fs").IntermediateFileSystem} */
+		/** @type {import("../../lib/fs/fs").IntermediateFileSystem} */
 		const fs = Object.create(gracefulFs);
 		// only the three argument overload is used by the strategy
-		fs.open = /** @type {import("../../lib/util/fs").Open} */ (
+		fs.open = /** @type {import("../../lib/fs/fs").Open} */ (
 			/** @type {unknown} */ (
 				(
 					/** @type {string} */ file,
 					/** @type {string} */ flags,
-					/** @type {import("../../lib/util/fs").NumberCallback} */ callback
+					/** @type {import("../../lib/fs/fs").NumberCallback} */ callback
 				) => {
 					// the strategy joins paths with "/"; normalize so lookups built with
 					// path.join match on Windows too

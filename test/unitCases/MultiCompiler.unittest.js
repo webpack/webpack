@@ -41,9 +41,9 @@ const createMultiCompiler = (options) => {
 		/** @type {unknown} */ (createFsFromVolume(new Volume()))
 	);
 	compiler.watchFileSystem =
-		/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
+		/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
 			watch: (_a, _b, _c, _d, _e, _f, _g) =>
-				/** @type {import("../../lib/util/fs").Watcher} */ (
+				/** @type {import("../../lib/fs/fs").Watcher} */ (
 					/** @type {unknown} */ (undefined)
 				)
 		});
@@ -218,9 +218,9 @@ describe("MultiCompiler", () => {
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.watchFileSystem =
-			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
 				watch: (_a, _b, _c, _d, _e, _f, _g) =>
-					/** @type {import("../../lib/util/fs").Watcher} */ (
+					/** @type {import("../../lib/fs/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					)
 			});
@@ -619,7 +619,7 @@ describe("MultiCompiler", () => {
 		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
 		const watchCallbacksUndelayed = [];
 		compiler.watchFileSystem =
-			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
 				watch(
 					files,
 					directories,
@@ -631,7 +631,7 @@ describe("MultiCompiler", () => {
 				) {
 					watchCallbacks.push(callback);
 					watchCallbacksUndelayed.push(callbackUndelayed);
-					return /** @type {import("../../lib/util/fs").Watcher} */ (
+					return /** @type {import("../../lib/fs/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					);
 				}
@@ -793,9 +793,9 @@ describe("MultiCompiler", () => {
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
 		compiler.watchFileSystem =
-			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
 				watch: (_a, _b, _c, _d, _e, _f, _g) =>
-					/** @type {import("../../lib/util/fs").Watcher} */ (
+					/** @type {import("../../lib/fs/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					)
 			});
@@ -864,7 +864,7 @@ describe("MultiCompiler", () => {
 		}
 
 		compiler.watchFileSystem = {
-			watch: /** @type {import("../../lib/util/fs").WatchMethod} */ (
+			watch: /** @type {import("../../lib/fs/fs").WatchMethod} */ (
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
@@ -956,7 +956,7 @@ describe("MultiCompiler", () => {
 		}
 
 		compiler.watchFileSystem = {
-			watch: /** @type {import("../../lib/util/fs").WatchMethod} */ (
+			watch: /** @type {import("../../lib/fs/fs").WatchMethod} */ (
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
@@ -1035,7 +1035,7 @@ describe("MultiCompiler", () => {
 		);
 
 		compiler.watchFileSystem = {
-			watch: /** @type {import("../../lib/util/fs").WatchMethod} */ (
+			watch: /** @type {import("../../lib/fs/fs").WatchMethod} */ (
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
@@ -1094,7 +1094,7 @@ describe("MultiCompiler", () => {
 		const watchCallbacksUndelayed = [];
 		let firstRun = true;
 		compiler.watchFileSystem =
-			/** @type {import("../../lib/util/fs").WatchFileSystem} */ ({
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
 				watch(
 					files,
 					directories,
@@ -1117,7 +1117,7 @@ describe("MultiCompiler", () => {
 						});
 						firstRun = false;
 					}
-					return /** @type {import("../../lib/util/fs").Watcher} */ (
+					return /** @type {import("../../lib/fs/fs").Watcher} */ (
 						/** @type {unknown} */ (undefined)
 					);
 				}

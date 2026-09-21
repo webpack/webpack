@@ -1,12 +1,12 @@
 "use strict";
 
-/** @import { Snapshot, SnapshotOptions } from "../../lib/FileSystemInfo" */
+/** @import { Snapshot, SnapshotOptions } from "../../lib/fs/FileSystemInfo" */
 /** @import WebpackError from "../../lib/errors/WebpackError" */
 /** @import { IFs } from "memfs" */
 
 const util = require("util");
 const { Volume, createFsFromVolume } = require("memfs");
-const FileSystemInfo = require("../../lib/FileSystemInfo");
+const FileSystemInfo = require("../../lib/fs/FileSystemInfo");
 const { buffersSerializer } = require("../../lib/util/serialization");
 
 describe("FileSystemInfo", () => {
@@ -146,11 +146,11 @@ describe("FileSystemInfo", () => {
 					}
 				})
 			);
-		/** @type {import("../../lib/FileSystemInfo") & Record<string, unknown>} */
+		/** @type {import("../../lib/fs/FileSystemInfo") & Record<string, unknown>} */
 		const fsInfo =
-			/** @type {import("../../lib/FileSystemInfo") & Record<string, unknown>} */ (
+			/** @type {import("../../lib/fs/FileSystemInfo") & Record<string, unknown>} */ (
 				new FileSystemInfo(
-					/** @type {import("../../lib/util/fs").InputFileSystem} */ (
+					/** @type {import("../../lib/fs/fs").InputFileSystem} */ (
 						/** @type {unknown} */ (fs)
 					),
 					{
@@ -527,10 +527,10 @@ ${details(snapshot)}`)
 		);
 
 		const createRegExpFsInfo = (/** @type {IFs} */ fs) =>
-			/** @type {import("../../lib/FileSystemInfo") & Record<string, unknown>} */ (
+			/** @type {import("../../lib/fs/FileSystemInfo") & Record<string, unknown>} */ (
 				/** @type {unknown} */ (
 					new FileSystemInfo(
-						/** @type {import("../../lib/util/fs").InputFileSystem} */ (
+						/** @type {import("../../lib/fs/fs").InputFileSystem} */ (
 							/** @type {unknown} */ (fs)
 						),
 						{
@@ -1218,7 +1218,7 @@ ${details(snapshot)}`)
 
 	describe("cache maintenance", () => {
 		/**
-		 * @typedef {import("../../lib/FileSystemInfo") & Record<string, unknown>} FsInfoExt
+		 * @typedef {import("../../lib/fs/FileSystemInfo") & Record<string, unknown>} FsInfoExt
 		 * @param {(err: Error | null | undefined, fsInfo?: FsInfoExt) => void} callback result callback
 		 */
 		const buildWithStats = (
@@ -1503,7 +1503,7 @@ ${details(snapshot)}`)
 				logger[method] = () => {};
 			}
 			return new FileSystemInfo(
-				/** @type {import("../../lib/util/fs").InputFileSystem} */ (
+				/** @type {import("../../lib/fs/fs").InputFileSystem} */ (
 					/** @type {unknown} */ (fs)
 				),
 				{ logger, hashFunction: "sha256" }
@@ -1520,7 +1520,7 @@ ${details(snapshot)}`)
 				(err, result_) => {
 					if (err) return done(err);
 					const result =
-						/** @type {import("../../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+						/** @type {import("../../lib/fs/FileSystemInfo").ResolveBuildDependenciesResult} */ (
 							result_
 						);
 					expect(result.files).toContain("/proj/entry.js");
@@ -1556,7 +1556,7 @@ ${details(snapshot)}`)
 				(err, result_) => {
 					if (err) return done(err);
 					const result =
-						/** @type {import("../../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+						/** @type {import("../../lib/fs/FileSystemInfo").ResolveBuildDependenciesResult} */ (
 							result_
 						);
 					// Create the previously-missing optional dependency.
@@ -1667,7 +1667,7 @@ ${details(snapshot)}`)
 				};
 			}
 			const fsInfo = new FileSystemInfo(
-				/** @type {import("../../lib/util/fs").InputFileSystem} */ (
+				/** @type {import("../../lib/fs/fs").InputFileSystem} */ (
 					/** @type {unknown} */ (fs)
 				),
 				{
@@ -1680,7 +1680,7 @@ ${details(snapshot)}`)
 		};
 
 		const snapshotFiles = (
-			/** @type {import("../../lib/FileSystemInfo")} */ fsInfo,
+			/** @type {import("../../lib/fs/FileSystemInfo")} */ fsInfo,
 			/** @type {string[]} */ fileList,
 			/** @type {(err?: Error | null, snapshot?: InstanceType<Snapshot> | null) => void} */ callback
 		) => {
