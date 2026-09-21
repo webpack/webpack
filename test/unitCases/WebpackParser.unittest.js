@@ -91,7 +91,7 @@ describe("WebpackParser", () => {
 			expect(
 				comments.map(
 					(c) =>
-						/** @type {import("../../lib/Dependency").RealDependencyLocation} */
+						/** @type {import("../../lib/graph/Dependency").RealDependencyLocation} */
 						(mapper.getLocation(c)).start
 				)
 			).toEqual([

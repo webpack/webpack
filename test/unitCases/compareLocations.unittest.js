@@ -7,7 +7,7 @@ const { compareLocations } = require("../../lib/util/comparators");
  * 	DependencyLocation,
  * 	SourcePosition,
  * 	RealDependencyLocation
- * } from "../../lib/Dependency"
+ * } from "../../lib/graph/Dependency"
  */
 
 /**

@@ -2,7 +2,7 @@
 
 const { sortWithSourceOrder } = require("../../lib/util/comparators");
 
-/** @import Dependency from "../../lib/Dependency" */
+/** @import Dependency from "../../lib/graph/Dependency" */
 /** @import { DependencySourceOrder } from "../../lib/util/comparators" */
 
 describe("sortWithSourceOrder", () => {

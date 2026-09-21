@@ -1,6 +1,6 @@
 "use strict";
 
-const Chunk = require("../../lib/Chunk");
+const Chunk = require("../../lib/graph/Chunk");
 
 describe("Chunk", () => {
 	/** @type {InstanceType<typeof Chunk>} */

@@ -11194,12 +11194,20 @@ describe("SourceProcessor — mergeDistantRules", () => {
 	const escapedName = (name) =>
 		`@\\${name.charCodeAt(0).toString(16)} ${name.slice(1)}`;
 
-	it("leaves an at-rule written under an escaped name as it stands", () => {
-		// The merge is keyed by the name the parser read, and an escaped spelling
-		// is not that name, so the block carries no entries to join.
+	it("joins an at-rule written under an escaped name", () => {
+		// The name the parser read is the name the escape spells, so the two state
+		// one condition — the spelling itself is echoed back as it was written.
 		const media = escapedName("media");
 		const sheet = `${media} (min-width:1px){.a{color:red}}.b{margin:0}${media} (min-width:1px){.c{color:blue}}`;
-		expect(minify(sheet, true)).toBe(sheet);
+		expect(minify(sheet, true)).toBe(
+			`${media} (width>=1px){.a{color:red}.c{color:blue}}.b{margin:0}`
+		);
+		// Reading the name is what reaches the refusal too, so a rule between that
+		// declares what the block does keeps the two apart under either spelling.
+		const shadowed = `${media} (min-width:1px){.a{color:red}}.b{color:green}${media} (min-width:1px){.c{color:blue}}`;
+		expect(minify(shadowed, true)).toBe(
+			`${media} (width>=1px){.a{color:red}}.b{color:green}${media} (width>=1px){.c{color:blue}}`
+		);
 	});
 
 	it("leaves `@keyframes` alone however it is spelled", () => {
@@ -11213,7 +11221,9 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		).toBe("@keyframes k{to{opacity:1}}.b{margin:0}@keyframes k{0%{opacity:0}}");
 		const frames = escapedName("keyframes");
 		const escaped = `${frames} k{to{opacity:1}}.b{margin:0}${frames} k{from{opacity:0}}`;
-		expect(minify(escaped, true)).toBe(escaped);
+		expect(minify(escaped, true)).toBe(
+			`${frames} k{to{opacity:1}}.b{margin:0}${frames} k{0%{opacity:0}}`
+		);
 	});
 
 	it("leaves `@layer` alone however it is spelled", () => {

@@ -71,7 +71,14 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
   - `lib/debug/` — Debug helpers.
-  - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
+  - `lib/define/` — Replacing a free identifier with a constant at parse time:
+    `DefinePlugin`, and the two plugins that are a `DefinePlugin` fed from somewhere
+    else — `EnvironmentPlugin` from `process.env` and `DotenvPlugin` from a `.env`
+    file. `ProvidePlugin` substitutes an import rather than a value, so it is not one
+    of these.
+  - `lib/dependencies/` — The concrete `Dependency` subclasses and their templates
+    (HarmonyImport, CommonJsRequire, RequireContext, …); the `Dependency` they extend is
+    in `lib/graph/` and the `DependencyTemplate` in `lib/template/`.
   - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
   - `lib/diagnostics/` — Plugins that raise a build-wide error or warning of their own:
     a case-insensitive filesystem collision, a deprecated option, a missing `mode`, and
@@ -82,13 +89,18 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/entry/` — The `entry` option: `EntryPlugin`, the `EntryOptionPlugin` that reads
     the option into it, and `DynamicEntryPlugin` for a function entry. `Entrypoint` is a
-    `ChunkGroup` rather than one of these, so it stays beside `ChunkGroup`.
+    `ChunkGroup` rather than one of these, so it lives beside `ChunkGroup` in `lib/graph/`.
   - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/externals/` — External modules: the `externals` option's module, factory plugin and the presets built on them.
-  - `lib/graph/` — The module and chunk graphs a compilation holds: `ModuleGraph` and its
-    connections, `ChunkGraph` and the `buildChunkGraph` that fills it, and the `ExportsInfo`
-    recording what each module exports and who uses it.
+  - `lib/graph/` — The module and chunk graphs a compilation holds, and the things they
+    are graphs of: `ModuleGraph` and its connections, `ChunkGraph` and the
+    `buildChunkGraph` that fills it, and the `ExportsInfo` recording what each module
+    exports and who uses it. The edges are `Dependency`, held by a `DependenciesBlock`
+    (`AsyncDependenciesBlock` where the block is loaded on demand); the chunk side holds
+    `Chunk`, `ChunkGroup`, `Entrypoint` and `HotUpdateChunk`. A `Dependency` subclass a
+    plugin owns lives in `lib/dependencies/` and the `DependencyTemplate` it prints
+    through in `lib/template/` — this holds the base classes every build has.
   - `lib/hmr/` — Hot Module Replacement: `HotModuleReplacementPlugin` and the runtime
     modules, lazy-compilation backend and helpers it drives.
   - `lib/html/` — Experimental HTML support.
@@ -110,7 +122,11 @@ The directory listings below are the canonical map of the repository. **Whenever
     that plugin — `ExternalModule` in `lib/externals/`, `CssModule` in `lib/css/` — so
     this holds the ones every build has.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …),
-    including `CircularModulesPlugin`, which flags the import cycles the others reason about.
+    including `CircularModulesPlugin`, which flags the import cycles the others reason
+    about, and `LazyBarrel`, which finds the barrel files worth deferring.
+    `ConcatenationScope` is the protocol scope hoisting runs on: `ConcatenatedModule`
+    is the only thing that constructs one, and a generator anywhere in `lib/` renders
+    through it.
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
@@ -128,7 +144,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/stats/` — Stats output (default printer, JSON factories).
   - `lib/template/` — Source templates and init fragments the generators print through,
     including `RuntimeTemplate`, the printing helper every generator and dependency
-    template is handed.
+    template is handed, the `DependencyTemplate` base class, and
+    `ModuleInfoHeaderPlugin`, which prints the per-module comment header into the
+    generated bundle.
   - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers, including `RequestShortener`, which renders a request

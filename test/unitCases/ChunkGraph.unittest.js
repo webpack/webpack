@@ -1,8 +1,8 @@
 "use strict";
 
-const Chunk = require("../../lib/Chunk");
+const Chunk = require("../../lib/graph/Chunk");
 const ChunkGraph = require("../../lib/graph/ChunkGraph");
-const Entrypoint = require("../../lib/Entrypoint");
+const Entrypoint = require("../../lib/graph/Entrypoint");
 const ModuleGraph = require("../../lib/graph/ModuleGraph");
 
 // The build-level behaviour lives in `configCases/runtime/depend-on-diamond-chain`.

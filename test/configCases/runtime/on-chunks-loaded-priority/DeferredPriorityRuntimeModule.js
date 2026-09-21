@@ -14,7 +14,7 @@ class DeferredPriorityRuntimeModule extends RuntimeModule {
 	 * @returns {string} runtime code
 	 */
 	generate() {
-		const chunk = /** @type {import("../../../../lib/Chunk")} */ (this.chunk);
+		const chunk = /** @type {import("../../../../lib/graph/Chunk")} */ (this.chunk);
 		const order = `${RuntimeGlobals.global}.__onChunksLoadedOrder`;
 		return [
 			`${order} = [];`,
