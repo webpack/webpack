@@ -12794,6 +12794,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-dedup-depth": Object {
+    "configs": Array [
+      Object {
+        "description": "Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).",
+        "multiple": false,
+        "path": "optimization.splitChunks.dedupDepth",
+        "type": "number",
+      },
+    ],
+    "description": "Rounds of intersections of the chunk sets to look through for modules shared by chunks no single chunk set holds together (0 looks through the chunk sets alone; every round costs more computation).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "optimization-split-chunks-default-size-types": Object {
     "configs": Array [
       Object {
