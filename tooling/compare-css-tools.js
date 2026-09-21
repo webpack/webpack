@@ -145,7 +145,7 @@ const INSTALLED_FIXTURES = [
 	["Font Awesome 6", "@fortawesome/fontawesome-free/css/all.css"],
 	["Foundation 6", "foundation-sites/dist/css/foundation.css"],
 	["KaTeX 0.18", "katex/dist/katex.css"],
-	["Materialize 1", "materialize-css/dist/css/materialize.css"],
+	["Materialize 2", "@materializecss/materialize/dist/css/materialize.css"],
 	["Milligram 1", "milligram/dist/milligram.css"],
 	["NES.css 2", "nes.css/css/nes.css"],
 	["normalize.css 8", "normalize.css/normalize.css"],
