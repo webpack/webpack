@@ -1941,7 +1941,7 @@ describe("snapshots", () => {
 		`)
 	);
 
-	// Every other library type waits for webpack@6, where it joins the module ones.
+	// Every other library type waits for the next major release, where it joins the module ones.
 	test(
 		"non-module library in development with future defaults",
 		{

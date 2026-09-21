@@ -5846,7 +5846,7 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -9208,7 +9208,7 @@ declare class ExternalModule extends Module {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -10171,7 +10171,7 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -12959,7 +12959,7 @@ declare class JavascriptParser extends ParserClass {
 		/**
 		 * Each declaration the parser records: a variable, function or class
 		 * one. Any other type turns the pass back into a walk of every
-		 * statement, and goes away with that walk in webpack 6.
+		 * statement, and goes away with that walk in the next major release.
 		 * @since 5.109.0
 		 */
 		preStatementByType: HookMap<
@@ -13038,7 +13038,7 @@ declare class JavascriptParser extends ParserClass {
 		/**
 		 * Each statement the parser records for the block pass: a variable, class
 		 * or export declaration. Any other type turns the pass back into a walk
-		 * of every statement, and goes away with that walk in webpack 6.
+		 * of every statement, and goes away with that walk in the next major release.
 		 * @since 5.109.0
 		 */
 		blockPreStatementByType: HookMap<
@@ -15467,7 +15467,7 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -16695,7 +16695,7 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -17857,7 +17857,7 @@ declare class Module extends DependenciesBlock {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -17904,7 +17904,7 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -19604,7 +19604,7 @@ declare class NormalModule extends Module {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -26948,7 +26948,7 @@ declare class RuntimeModule extends Module {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }

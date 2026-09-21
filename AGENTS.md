@@ -197,7 +197,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/wasm/` — WebAssembly module support: the async path a build takes today,
     plus the two pieces neither path owns — `EnableWasmLoadingPlugin` and
     `wasmModuleFilename`.
-  - `lib/wasm-sync/` — The synchronous WebAssembly path, kept until webpack 6
+  - `lib/wasm-sync/` — The synchronous WebAssembly path, kept until the next major release
     removes it, which is why it stands apart rather than joining `lib/wasm/`.
   - `lib/watch/` — Watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
@@ -425,14 +425,14 @@ Work that has to wait for the next breaking release is marked with one wording, 
 // TODO in the next major release: remove, `css-url` is the old spelling of `asset-url`
 ```
 
-**Never name a version.** `TODO webpack 6`, `TODO remove in webpack 6`, `TODO webpack6 - …` and `TODO reconsider this for webpack 6` all meant the same thing, and none of them found the others — which is how one cleanup came to be written a dozen ways. A number also goes stale the moment that major ships: what was deferred to 6 and missed is deferred to 7, and the comment still says 6. The phrase names the next breaking release whenever it happens to be read.
+**Never name a version, in a marker or in the prose beside one.** `TODO webpack 6`, `TODO remove in webpack 6`, `TODO webpack6 - …`, `TODO webpack@6` and `TODO reconsider this for webpack 6` all meant the same thing, and none of them found the others — which is how one cleanup came to be written a dozen ways. A `@deprecated` tag or a description saying what the next major does goes stale the same way, so it takes the same phrase. A number also goes stale the moment that major ships: what was deferred to 6 and missed is deferred to 7, and the comment still says 6. The phrase names the next breaking release whenever it happens to be read.
 
 **Always say what to do**, not merely that something is pending — a bare marker tells the branch doing the work nothing. The comment is a plain comment, so the [three-line limit](#code-comments) binds it too.
 
 The whole list is then one command, which is the point of the wording:
 
 ```sh
-grep -rn "TODO in the next major release" bin hot lib setup test tooling
+grep -rn "TODO in the next major release" codecov.yml bin hot lib setup test tooling
 ```
 
 ## Testing
