@@ -6,7 +6,7 @@ const {
 	findCaseMismatch
 } = require("../../lib/util/findCaseMismatch");
 
-/** @import { InputFileSystem } from "../../lib/util/fs" */
+/** @import { InputFileSystem } from "../../lib/fs/fs" */
 
 /**
  * @param {Record<string, string>} files volume contents

@@ -3,7 +3,7 @@
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 
-/** @import { OutputFileSystem } from "../../lib/util/fs" */
+/** @import { OutputFileSystem } from "../../lib/fs/fs" */
 
 // Any `require("acorn")` from `lib/` fails the build rather than resolving the
 // devDependency the parity tests still use.

@@ -11,12 +11,12 @@ let watchers;
 
 /**
  * Starts a watcher over the same file with the given options.
- * @param {import("../../lib/util/fs").WatchOptions} options watch options
+ * @param {import("../../lib/fs/fs").WatchOptions} options watch options
  * @returns {InstanceType<import("watchpack")>} the watchpack instance behind it
  */
 const watch = (options) => {
 	const wfs = new NodeWatchFileSystem(
-		/** @type {import("../../lib/util/fs").InputFileSystem} */ ({})
+		/** @type {import("../../lib/fs/fs").InputFileSystem} */ ({})
 	);
 	watchers.push(
 		wfs.watch(

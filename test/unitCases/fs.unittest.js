@@ -1,12 +1,12 @@
 "use strict";
 
-const { mkdirp, mkdirpSync } = require("../../lib/util/fs");
+const { mkdirp, mkdirpSync } = require("../../lib/fs/fs");
 
 /**
  * @import {
  * 	IntermediateFileSystem,
  * 	OutputFileSystem
- * } from "../../lib/util/fs"
+ * } from "../../lib/fs/fs"
  */
 
 /**
@@ -177,7 +177,7 @@ const IMPLEMENTATIONS = [
 	]
 ];
 
-describe("util/fs", () => {
+describe("fs", () => {
 	for (const [name, run] of IMPLEMENTATIONS) {
 		describe(name, () => {
 			it("creates every missing directory of the path", async () => {
