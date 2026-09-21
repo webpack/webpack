@@ -16,6 +16,10 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
+          # robust-predicates is the comparison corpus's, reached through d3,
+          # and declares Unlicense — which this list allows. GitHub reports it
+          # as `LicenseRef-scancode-public-domain AND Unlicense`, and the half
+          # scancode names is no SPDX identifier, so the pair can never match.
           allow-dependencies-licenses: |
             pkg:npm/@cspell/dict-django,
             pkg:npm/@cspell/dict-en-common-misspellings,
@@ -30,7 +34,8 @@ jobs:
             pkg:npm/ansis,
             pkg:npm/strtok3,
             pkg:npm/@sinclair/typebox,
-            pkg:npm/fs-monkey
+            pkg:npm/fs-monkey,
+            pkg:npm/robust-predicates
           allow-licenses: |
             0BSD,
             AFL-1.1,

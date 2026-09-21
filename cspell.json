@@ -423,6 +423,7 @@
     "scalex",
     "scaley",
     "scalez",
+    "scancode",
     "sccs",
     "scrollamount",
     "scrolldelay",
