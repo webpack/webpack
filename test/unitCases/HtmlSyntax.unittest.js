@@ -3235,26 +3235,62 @@ describe("HtmlSyntax — the facade", () => {
 	});
 
 	it("takes every name it publishes from the half that owns it", () => {
-		const parser = /** @type {Record<string, unknown>} */ (
-			/** @type {unknown} */ (syntax.parser)
-		);
+		const parser = require("../../lib/html/syntax-parser");
+		const printer = require("../../lib/html/syntax-printer");
+		const htmlData = require("../../lib/html/data");
+		const dataURL = require("../../lib/util/dataURL");
+		const htmlMinify = require("../../lib/html/htmlMinify");
+		const builtinRenderer = require("../../lib/html/builtinEmbeddedRenderer");
+		// Spelled out rather than derived from the facade: a name that changed
+		// spelling, or an alias repointed at another export of the same module,
+		// keeps every count identical and only a stated binding catches it.
+		const bindings = {
+			A: parser.A,
+			BLOCK_CONTENTS: parser.BLOCK_CONTENTS,
+			CLASSIC_SCRIPT: printer.CLASSIC_SCRIPT,
+			EMBEDDED_LANGUAGES: parser.EMBEDDED_LANGUAGES,
+			EVENT_HANDLER: parser.EVENT_HANDLER,
+			JSON_TYPE: parser.JSON_TYPE,
+			MODULE_SCRIPT: printer.MODULE_SCRIPT,
+			NS_HTML: parser.NS_HTML,
+			NS_MATHML: parser.NS_MATHML,
+			NS_SVG: parser.NS_SVG,
+			NodeType: parser.NodeType,
+			QUOTE_DOUBLE: parser.QUOTE_DOUBLE,
+			QUOTE_NONE: parser.QUOTE_NONE,
+			QUOTE_SINGLE: parser.QUOTE_SINGLE,
+			SVG_TAG_ADJUST: htmlData.SVG_TAG_ADJUST,
+			askEmbeddedRenderer: dataURL.askEmbeddedRenderer,
+			baseTag: parser.baseTag,
+			buildHeadTags: parser.buildHeadTags,
+			builtinEmbeddedRenderer: builtinRenderer.builtinEmbeddedRenderer,
+			collectEmbeddedDiagnostics: dataURL.collectEmbeddedDiagnostics,
+			decodeEntities: parser.decodeEntities,
+			embeddedText: dataURL.embeddedText,
+			escapeAttribute: parser.escapeAttribute,
+			escapeText: parser.escapeText,
+			htmlMinify,
+			isAsciiWhitespace: parser.isSpace,
+			metaTag: parser.metaTag,
+			parseCssUrls: parser.parseCssUrls,
+			parseHtml: parser.parseHtml,
+			parseMsapplicationTask: parser.parseMsapplicationTask,
+			parseSrc: parser.parseSrc,
+			parseSrcset: parser.parseSrcset,
+			pickTransforms: parser.pickTransforms,
+			stripJsonWhitespace: builtinRenderer.stripJsonWhitespace,
+			tokenize: parser.tokenize,
+		};
 		const surface = /** @type {Record<string, unknown>} */ (
 			/** @type {unknown} */ (syntax)
 		);
-		const published = Object.keys(surface).filter(
-			(name) =>
-				name !== "parser" && name !== "printer" && name !== "SourceProcessor"
+		expect(Object.keys(surface).sort()).toEqual(
+			["SourceProcessor", "parser", "printer", ...Object.keys(bindings)].sort()
 		);
-		expect(published).toHaveLength(35);
-		let owned = 0;
-		for (const name of published) {
-			expect(surface[name]).toBeDefined();
-			if (name in parser) {
-				expect(surface[name]).toBe(parser[name]);
-				owned++;
-			}
+		for (const [name, owned] of Object.entries(bindings)) {
+			expect(owned).toBeDefined();
+			expect(surface[name]).toBe(owned);
 		}
-		expect(owned).toBe(25);
 	});
 
 	it("holds no printer until something prints", () => {
