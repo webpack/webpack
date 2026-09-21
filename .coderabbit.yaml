@@ -89,9 +89,12 @@ reviews:
         coalescing (??), and newer runtime APIs. Every instance field must be
         initialized in the constructor (V8 shape stability); never `delete` an
         instance field. Path-shape regexps and helpers must be imported from
-        lib/util/identifier.js, never re-declared locally. Comments must be at
-        most two short lines and add non-obvious information. Prefer specific
-        types over EXPECTED_ANY/unknown when a real type fits.
+        lib/util/identifier.js, never re-declared locally. A plain // or /* */
+        comment is at most three lines and must add non-obvious information; a
+        // WHY: comment and the block before a file's first statement are
+        exempt. JSDoc tags are exempt too, and a JSDoc description is capped at
+        two sentences rather than lines. Prefer specific types over
+        EXPECTED_ANY/unknown when a real type fits.
     - path: "hot/**"
       instructions: >-
         Runtime code shipped to browsers; same Node >= 10.13 syntax baseline as
