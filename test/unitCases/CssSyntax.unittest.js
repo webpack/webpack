@@ -4556,15 +4556,61 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(out.endsWith(`@layer a.b{${filler}}`)).toBe(true);
 		});
 
-		it("gathers into the end of a streamed block of the very same layer", () => {
-			// Its rules are written and gone, so a later block lands in front of the
-			// `}` closing it rather than over what it wrote into their layer.
+		it("gathers a block big enough to stream into the one before it", () => {
+			// A block whose layer a sibling already opened is held rather than
+			// streamed, so the gather still reads its body whole and all three land
+			// in the block the layer was opened in, in the order they were written.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@media all{@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}}`;
 			expect(minify(css)).toBe(
-				`@media all{@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}}`
+				`@media all{@layer a{.x{color:red}${filler}.y{color:#00f}}}`
 			);
+		});
+
+		it("holds a block big enough to stream whatever the one before it holds", () => {
+			// Which blocks gather must not turn on what the first of them carries:
+			// an empty block declares where the layer sits and gathers the same.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(minify(`@layer u{@layer a{}@layer a{${filler}}}`)).toBe(
+				`@layer u{@layer a{${filler}}}`
+			);
+		});
+
+		it("gathers a run of blocks each big enough to stream", () => {
+			let one = "";
+			for (let i = 0; i < 17000; i++) one += `.f${i}{top:${i + 1}px}`;
+			let two = "";
+			for (let i = 0; i < 17000; i++) two += `.g${i}{left:${i + 1}px}`;
+			expect(
+				minify(`@layer u{@layer a{}@layer a{${one}}@layer a{${two}}}`)
+			).toBe(`@layer u{@layer a{${one}${two}}}`);
+		});
+
+		it("leaves an anonymous block big enough to stream alone", () => {
+			// `@layer {` is a layer of its own, so a second one gathers with nothing.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(minify(`@layer u{@layer{}@layer{${filler}}}`)).toBe(
+				`@layer u{@layer{}@layer{${filler}}}`
+			);
+		});
+
+		it("leaves a block big enough to stream that names another layer", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(
+				minify(`@layer u{@layer a{.q{top:0}}@layer b{${filler}}}`)
+			).toBe(`@layer u{@layer a{.q{top:0}}@layer b{${filler}}}`);
+		});
+
+		it("gathers a dotted layer a block big enough to stream repeats", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(
+				minify(`@layer u{@layer a.b.c{.q{top:0}}@layer a.b.c{${filler}}}`)
+			).toBe(`@layer u{@layer a.b.c{.q{top:0}${filler}}}`);
 		});
 
 		it("gathers into a streamed block that is its layer's first at that depth", () => {
@@ -4576,12 +4622,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(`@media all{@layer a{${filler}.y{color:#00f}}}`);
 		});
 
-		it("gathers the same way into a streamed block the sheet itself holds", () => {
+		it("gathers the same way for a block the sheet itself holds", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}`;
 			expect(minify(css)).toBe(
-				`@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}`
+				`@layer a{.x{color:red}${filler}.y{color:#00f}}`
 			);
 		});
 
