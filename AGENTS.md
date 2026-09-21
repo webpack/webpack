@@ -66,7 +66,11 @@ The directory listings below are the canonical map of the repository. **Whenever
     the plugins it implies. `WebpackOptionsDefaulter` is the normalize-then-default pair
     under one deprecated name, and `OptionsApply` the base class the apply step extends.
     Also holds the target presets, `defineConfig`, and `PlatformPlugin`, which pins the
-    target platform a `target: false` build cannot infer.
+    target platform a `target: false` build cannot infer. `cli.js` is the same schema read
+    the other way — it derives the CLI flags from it and applies parsed arguments back onto
+    a config, which is why webpack-cli reaches it through `webpack.cli`. The terminal colors
+    that object also carries are `lib/util/terminalColors.js`, kept apart so that reading a
+    color does not parse the options schema.
   - `lib/container/` — Module Federation.
   - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
   - `lib/css/` — CSS Modules, CSS parsing and generation.
@@ -157,7 +161,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers, including `RequestShortener`, which renders a request
-    relative to the context for every message a user reads.
+    relative to the context for every message a user reads, and `terminalColors`, the
+    color support detection and escape-code wrappers every terminal-facing message goes
+    through — `ProgressPlugin`, `nodeConsole` and, via `webpack.cli`, webpack-cli.
   - `lib/wasm/` — WebAssembly module support: the async path a build takes today,
     plus the two pieces neither path owns — `EnableWasmLoadingPlugin` and
     `wasmModuleFilename`.

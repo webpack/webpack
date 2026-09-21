@@ -31878,6 +31878,7 @@ declare namespace exports {
 	export const version: string;
 	export namespace cli {
 		export let createColors: (__0?: ColorsOptions) => Colors;
+		export let isColorSupported: () => boolean;
 		export let getArguments: (
 			schema?:
 				| (JSONSchema4 & {
@@ -31914,7 +31915,6 @@ declare namespace exports {
 						};
 				  })
 		) => Flags;
-		export let isColorSupported: () => boolean;
 		export let processArguments: (
 			args: Flags,
 			config: ObjectConfiguration,
