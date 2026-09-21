@@ -67,7 +67,7 @@ export default defineConfig([
 		"schemas/**/*.check.js",
 
 		// Auto generation
-		"lib/util/semver.js",
+		"lib/sharing/semver.js",
 
 		// Ignore some examples files
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",

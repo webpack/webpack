@@ -1,6 +1,6 @@
 "use strict";
 
-const findGraphRoots = require("../../lib/util/findGraphRoots");
+const findGraphRoots = require("../../lib/graph/findGraphRoots");
 
 const args = (/** @type {Record<string, string[]>} */ g) =>
 	/** @type {[string[], (m: string) => string[]]} */ ([

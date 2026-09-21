@@ -84,7 +84,7 @@ The directory listings below are the canonical map of the repository. **Whenever
     `DefinePlugin`, and the two plugins that are a `DefinePlugin` fed from somewhere
     else — `EnvironmentPlugin` from `process.env` and `DotenvPlugin` from a `.env`
     file. `ProvidePlugin` substitutes an import rather than a value, so it is not one
-    of these.
+    of these and lives in `lib/provide/`.
   - `lib/dependencies/` — The concrete `Dependency` subclasses and their templates
     (HarmonyImport, CommonJsRequire, RequireContext, …); the `Dependency` they extend is
     in `lib/graph/` and the `DependencyTemplate` in `lib/template/`.
@@ -128,7 +128,7 @@ The directory listings below are the canonical map of the repository. **Whenever
     each body a document embeds to webpack's own minifier for that language.
   - `lib/ids/` — Module/chunk id assignment plugins, and `RecordIdsPlugin`, which persists
     the assignment across builds through `recordsPath`.
-  - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis, and the always-on plugins implementing the language surface a build gets for free — `APIPlugin` (`__webpack_require__` and the other free variables), `CompatibilityPlugin`, `ConstPlugin`, `ExportsInfoApiPlugin`, `JavascriptMetaInfoPlugin`, `UseStrictPlugin` and `WebpackIsIncludedPlugin`, each applied unconditionally by `WebpackOptionsApply` and none of them on the public API. A parser plugin the user constructs is not one of these: `DefinePlugin` lives in `lib/define/` and `ProvidePlugin` at `lib/` root, because what decides the home is who applies it, not which parser it taps. `syntax.js` is the pair `css` and `html` name the same way — `parser` and `printer` — and reaches each through a getter, so parsing never loads the printer and printing never loads the parser. `syntax-parser.js` is the parser a build reads source with: tokenizer, acorn-derived core and every production in one file, since a build that parses at all reaches the productions, and the struct-of-arrays rewrite ahead of it moves node creation through them. `regexp.js` (the pattern validator) is the one piece still loaded on demand, because only a pattern the host engine itself rejected reaches it — never `require` it from a path a build takes. `syntax-printer.js` is where JavaScript is printed back out: `jsMinify.js`, the `minify` function the default minimizer dispatches JavaScript to, goes through it rather than through terser's published entry point, because that loader reads terser's own sources — which is what lets a phase webpack implements itself replace the method terser installs. The name says where this is going: each phase webpack takes over is one less thing terser does. A phase states what it reads with `supports`, and a minifier that moved any of it, or a runtime that cannot import those sources, keeps its own. Add a phase to the `PHASES` list there and nowhere else, and hold it to writing byte-for-byte what it replaced.
+  - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis, and the always-on plugins implementing the language surface a build gets for free — `APIPlugin` (`__webpack_require__` and the other free variables), `CompatibilityPlugin`, `ConstPlugin`, `ExportsInfoApiPlugin`, `JavascriptMetaInfoPlugin`, `UseStrictPlugin` and `WebpackIsIncludedPlugin`, each applied unconditionally by `WebpackOptionsApply` and none of them on the public API. A parser plugin the user constructs is not one of these: `DefinePlugin` lives in `lib/define/` and `ProvidePlugin` in `lib/provide/`, because what decides the home is who applies it, not which parser it taps. `syntax.js` is the pair `css` and `html` name the same way — `parser` and `printer` — and reaches each through a getter, so parsing never loads the printer and printing never loads the parser. `syntax-parser.js` is the parser a build reads source with: tokenizer, acorn-derived core and every production in one file, since a build that parses at all reaches the productions, and the struct-of-arrays rewrite ahead of it moves node creation through them. `regexp.js` (the pattern validator) is the one piece still loaded on demand, because only a pattern the host engine itself rejected reaches it — never `require` it from a path a build takes. `syntax-printer.js` is where JavaScript is printed back out: `jsMinify.js`, the `minify` function the default minimizer dispatches JavaScript to, goes through it rather than through terser's published entry point, because that loader reads terser's own sources — which is what lets a phase webpack implements itself replace the method terser installs. The name says where this is going: each phase webpack takes over is one less thing terser does. A phase states what it reads with `supports`, and a minifier that moved any of it, or a runtime that cannot import those sources, keeps its own. Add a phase to the `PHASES` list there and nowhere else, and hold it to writing byte-for-byte what it replaced.
   - `lib/json/` — JSON modules.
   - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats, and the deprecated
     `LibraryTemplatePlugin` that reaches them through the old two-argument API.
@@ -161,6 +161,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
     and `AutomaticPrefetchPlugin`, which resolve a module eagerly at build time instead.
+  - `lib/provide/` — `ProvidePlugin`, which substitutes a free identifier with an
+    import of a module rather than with a value — which is what keeps it out of
+    `lib/define/`, and out of `lib/javascript/` because a user constructs it.
   - `lib/resolve/` — Turning a request into a file: the `ResolverFactory` every resolve goes
     through, and the two plugins that redirect a request before it gets there —
     `IgnorePlugin` and `NormalModuleReplacementPlugin`.
@@ -186,6 +189,11 @@ The directory listings below are the canonical map of the repository. **Whenever
     relative to the context for every message a user reads, and `terminalColors`, the
     color support detection and escape-code wrappers every terminal-facing message goes
     through — `ProgressPlugin`, `nodeConsole` and, via `webpack.cli`, webpack-cli.
+    What belongs here is a helper no one subsystem owns: a data structure, an
+    algorithm, or something several directories share. One that only a single
+    subsystem can use lives with that subsystem instead — `semver` in
+    `lib/sharing/`, `numberHash` in `lib/ids/`, `deterministicGrouping` in
+    `lib/optimize/` — so that reading a directory shows what it is made of.
   - `lib/wasm/` — WebAssembly module support: the async path a build takes today,
     plus the two pieces neither path owns — `EnableWasmLoadingPlugin` and
     `wasmModuleFilename`.
@@ -299,7 +307,7 @@ imports something webpack 5 deleted — or that probes for the path inside a `tr
 webpack 4 gets an entry under `removed` with that reason instead, because a re-export
 would send it down the wrong branch.
 
-**Five things carry a path, and only the first is obvious.** Rewrite every one, then
+**Six things carry a path, and only the first is obvious.** Rewrite every one, then
 confirm the move by regenerating rather than by reading:
 
 1. `require("…")` and `require.resolve("…")`, including template literals and a string
@@ -313,9 +321,17 @@ confirm the move by regenerating rather than by reading:
    old one stays restorable through `registerLegacyRequest`, or a pre-move cache pack
    stops loading.
 
+6. A path written into a config or a generator rather than into `lib/` — the input list
+   in `tooling/generate-runtime-code.js`, an `ignores` entry in `eslint.config.mjs`. Each
+   silently stops matching, and the second fails as style errors in a file nobody edited.
+
 `yarn fix:special` leaving `types.d.ts` byte-identical is the check that 3 and 4 are done;
 `ConfigCacheTestCases` reporting no `Pack got invalid` line is the check that 5 is. Nothing
 static catches 1 — only building `lib/index.js` does.
+
+This list is not only for `lib/` root: moving a file **between** `lib/` directories carries
+the same six, and 6 is the one that has actually gone wrong — `lib/util/semver.js` was named
+in both files above.
 
 **Update the Architecture listing above in the same commit**, and grep it for the old path:
 prose elsewhere in this guide names files too, and those references go stale just as

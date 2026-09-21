@@ -1,11 +1,11 @@
 "use strict";
 
-const smartGrouping = require("../../lib/util/smartGrouping");
+const smartGrouping = require("../../lib/stats/smartGrouping");
 
-describe("util/smartGrouping", () => {
+describe("stats/smartGrouping", () => {
 	it("should group correctly", () => {
 		const groupConfigs =
-			/** @type {import("../../lib/util/smartGrouping").GroupConfig<string, { name: string, items: string[] }>[]} */ ([
+			/** @type {import("../../lib/stats/smartGrouping").GroupConfig<string, { name: string, items: string[] }>[]} */ ([
 				{
 					/**
 					 * @param {string} item group item

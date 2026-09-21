@@ -4,7 +4,7 @@ const {
 	camelCase,
 	cssExportConvention,
 	dashesCamelCase
-} = require("../../lib/util/conventions");
+} = require("../../lib/css/conventions");
 
 describe("conventions", () => {
 	describe("camelCase", () => {
