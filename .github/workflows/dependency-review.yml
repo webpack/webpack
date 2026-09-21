@@ -16,6 +16,11 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
+          # The last five are the comparison corpora's, not webpack's: they
+          # reach no build and ship to nobody, and each declares no license in
+          # its metadata rather than one this list would refuse. The action
+          # reviews every manifest a pull request changes and offers no way to
+          # scope itself to one, so naming them here is what there is.
           allow-dependencies-licenses: |
             pkg:npm/@cspell/dict-django,
             pkg:npm/@cspell/dict-en-common-misspellings,
@@ -30,7 +35,12 @@ jobs:
             pkg:npm/ansis,
             pkg:npm/strtok3,
             pkg:npm/@sinclair/typebox,
-            pkg:npm/fs-monkey
+            pkg:npm/fs-monkey,
+            pkg:npm/coa,
+            pkg:npm/dom-walk,
+            pkg:npm/@minify-html/node-darwin-x64,
+            pkg:npm/@minify-html/node-linux-x64,
+            pkg:npm/@minify-html/node-win32-x64
           allow-licenses: |
             0BSD,
             AFL-1.1,
