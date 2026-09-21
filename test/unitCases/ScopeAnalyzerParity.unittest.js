@@ -26,7 +26,9 @@ const supportsEslintScope = require("../helpers/supportsEslintScope");
  * The surface shared by the classes each analyser builds.
  * @typedef {object} AnyScope
  * @property {string} type what opened the scope
- * @property {AnyNode} block the node that opened it
+ * @property {AnyNode=} block the node that opened it, as eslint-scope names it
+ * @property {string=} blockType its type, as webpack's analyser names it
+ * @property {number=} blockStart where it starts, as webpack's analyser names it
  * @property {AnyScope[]} childScopes the scopes nested in it
  * @property {AnyVariable[]} variables the bindings it declares
  */
@@ -67,13 +69,24 @@ const REFERENCE_OPTIONS = {
 const startOf = (node) => /** @type {EXPECTED_ANY} */ (node).start;
 
 /**
+ * Names the node that opened a scope. eslint-scope keeps it, webpack's analyser
+ * keeps only its type and offset so the ast it came from can be released.
+ * @param {AnyScope} scope a scope
+ * @returns {string} a key equal for the same scope in both analyses
+ */
+const blockOf = (scope) =>
+	scope.block === undefined
+		? `${scope.blockType}@${scope.blockStart}`
+		: `${scope.block.type}@${startOf(scope.block)}`;
+
+/**
  * Identifies a binding by where it was declared — one shared AST, so an offset
  * names the same node on either side.
  * @param {AnyVariable} variable a binding
  * @returns {string} a key equal for the same binding in both analyses
  */
 const bindingKey = (variable) =>
-	`${variable.scope.type}@${startOf(variable.scope.block)}:${variable.name}`;
+	`${variable.scope.type}@${blockOf(variable.scope)}:${variable.name}`;
 
 /**
  * Such a scope changes no resolution, and the built-in analyser skips opening
@@ -99,7 +112,7 @@ const normalizeScope = (scope) => {
 	}
 	return {
 		type: scope.type,
-		block: `${scope.block.type}@${startOf(scope.block)}`,
+		block: blockOf(scope),
 		variables: scope.variables.map((variable) => ({
 			name: variable.name,
 			// `arguments` is implicit, so it declares no identifier

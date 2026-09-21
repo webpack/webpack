@@ -84,6 +84,7 @@ const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
  * @property {Scope} moduleScope the module body scope
  * @property {Scope[]} scopes every scope, in creation order
  * @property {Reference[]} unresolvedReferences the module's free references
+ * @property {Set<number>} shorthandIdentifierStarts where each shorthand property's identifier starts
  */
 
 /**
@@ -209,8 +210,10 @@ describe("ScopeAnalyzer", () => {
 			expect(globalScope.upper).toBeNull();
 			expect(globalScope.childScopes).toEqual([moduleScope]);
 			expect(moduleScope.upper).toBe(globalScope);
-			expect(globalScope.block).toBe(ast);
-			expect(moduleScope.block).toBe(ast);
+			expect(globalScope.blockType).toBe("Program");
+			expect(globalScope.blockStart).toBe(startOf(ast));
+			expect(moduleScope.blockType).toBe("Program");
+			expect(moduleScope.blockStart).toBe(startOf(ast));
 			expect(varNames(moduleScope)).toEqual(["a"]);
 		});
 	});
@@ -259,7 +262,7 @@ describe("ScopeAnalyzer", () => {
 
 			const catchScope = scopes[3];
 
-			expect(catchScope.block.type).toBe("CatchClause");
+			expect(catchScope.blockType).toBe("CatchClause");
 			expect(varNames(catchScope)).toEqual(["e"]);
 			expect(catchScope.variables[0].identifiers).toHaveLength(1);
 			expect(catchScope.variables[0].identifiers[0].name).toBe("e");
@@ -315,7 +318,7 @@ describe("ScopeAnalyzer", () => {
 
 			const scope = scopes[2];
 
-			expect(scope.block.type).toBe("ArrowFunctionExpression");
+			expect(scope.blockType).toBe("ArrowFunctionExpression");
 
 			// there is no "arguments"
 			expect(varNames(scope)).toEqual(["i", "j"]);
@@ -328,7 +331,7 @@ describe("ScopeAnalyzer", () => {
 
 			const scope = scopes[2];
 
-			expect(scope.block.type).toBe("ArrowFunctionExpression");
+			expect(scope.blockType).toBe("ArrowFunctionExpression");
 			expect(varNames(scope)).toEqual(["a", "b", "c", "d"]);
 		});
 
@@ -488,7 +491,7 @@ describe("ScopeAnalyzer", () => {
 
 			const catchScope = scopes[2];
 
-			expect(catchScope.block.type).toBe("CatchClause");
+			expect(catchScope.blockType).toBe("CatchClause");
 			expect(varNames(catchScope)).toEqual(["a", "b", "c", "d"]);
 			expect(refs(catchScope)).toHaveLength(0);
 
@@ -524,13 +527,13 @@ describe("ScopeAnalyzer", () => {
 
 			const classScope = scopes[2];
 
-			expect(classScope.block.type).toBe("ClassDeclaration");
+			expect(classScope.blockType).toBe("ClassDeclaration");
 			expect(varNames(classScope)).toEqual(["Derived"]);
 			expect(refNames(classScope)).toEqual(["Base"]);
 
 			const functionScope = scopes[3];
 
-			expect(functionScope.block.type).toBe("FunctionExpression");
+			expect(functionScope.blockType).toBe("FunctionExpression");
 			expect(varNames(functionScope)).toEqual(["arguments"]);
 			expect(refs(functionScope)).toHaveLength(0);
 		});
@@ -554,7 +557,7 @@ describe("ScopeAnalyzer", () => {
 
 			const classScope = scopes[2];
 
-			expect(classScope.block.type).toBe("ClassExpression");
+			expect(classScope.blockType).toBe("ClassExpression");
 			expect(varNames(classScope)).toEqual(["Derived"]);
 			expect(refNames(classScope)).toEqual(["Base"]);
 		});
@@ -576,7 +579,7 @@ describe("ScopeAnalyzer", () => {
 
 			const classScope = scopes[2];
 
-			expect(classScope.block.type).toBe("ClassExpression");
+			expect(classScope.blockType).toBe("ClassExpression");
 			expect(classScope.variables).toHaveLength(0);
 			expect(refNames(classScope)).toEqual(["Base"]);
 		});
@@ -612,7 +615,7 @@ describe("ScopeAnalyzer", () => {
 
 			const classScope = scopes[3];
 
-			expect(classScope.block.type).toBe("ClassExpression");
+			expect(classScope.blockType).toBe("ClassExpression");
 			expect(classScope.variables).toHaveLength(0);
 			expect(refNames(classScope)).toEqual(["yuyushiki", "yuyushiki"]);
 			for (const reference of refs(classScope)) {
@@ -708,7 +711,7 @@ describe("ScopeAnalyzer", () => {
 
 			const classScope = scopes[2];
 
-			expect(classScope.block.type).toBe("ClassDeclaration");
+			expect(classScope.blockType).toBe("ClassDeclaration");
 			expect(varNames(classScope)).toEqual(["C"]);
 			expect(refNames(classScope)).toEqual(["foo", "C"]);
 
@@ -1924,7 +1927,7 @@ describe("ScopeAnalyzer", () => {
 
 			const scope = scopes[3];
 
-			expect(scope.block.type).toBe("FunctionExpression");
+			expect(scope.blockType).toBe("FunctionExpression");
 			expect(varNames(scope)).toEqual(["arguments"]);
 			expect(refs(scope)).toHaveLength(0);
 		});
@@ -1943,7 +1946,7 @@ describe("ScopeAnalyzer", () => {
 
 			const scope = scopes[2];
 
-			expect(scope.block.type).toBe("FunctionExpression");
+			expect(scope.blockType).toBe("FunctionExpression");
 			expect(varNames(scope)).toEqual(["arguments"]);
 			expect(refs(scope)).toHaveLength(0);
 		});
@@ -2061,7 +2064,7 @@ describe("ScopeAnalyzer", () => {
 
 			const scope = scopes[2];
 
-			expect(scope.block.type).toBe("SwitchStatement");
+			expect(scope.blockType).toBe("SwitchStatement");
 			expect(varNames(scope)).toEqual(["i", "test"]);
 			expect(refNames(scope)).toEqual(["hello", "i", "i", "test", "test"]);
 		});
@@ -2211,7 +2214,7 @@ describe("ScopeAnalyzer", () => {
 
 			const withScope = scopes[3];
 
-			expect(withScope.block.type).toBe("WithStatement");
+			expect(withScope.blockType).toBe("WithStatement");
 			expect(withScope.variables).toHaveLength(0);
 			expect(refNames(withScope)).toEqual(["testing"]);
 			expect(refs(withScope)[0].resolved).toBeUndefined();
@@ -2239,10 +2242,8 @@ describe("ScopeAnalyzer", () => {
 			expect(initializerScope.type).toBe("class-field-initializer");
 
 			// the scope's block is the node of the field initializer
-			expect(initializerScope.block.type).toBe("Identifier");
-			expect(
-				/** @type {import("estree").Identifier} */ (initializerScope.block).name
-			).toBe("g");
+			expect(initializerScope.blockType).toBe("Identifier");
+			expect(initializerScope.blockStart).toBe("class C { f = ".length);
 
 			expect(initializerScope.variableScope).toBe(initializerScope);
 			expect(refNames(initializerScope)).toEqual(["g"]);
@@ -2356,7 +2357,8 @@ describe("ScopeAnalyzer", () => {
 				.body[0];
 
 			expect(staticBlockNode.type).toBe("StaticBlock");
-			expect(staticBlockScope.block).toBe(staticBlockNode);
+			expect(staticBlockScope.blockType).toBe("StaticBlock");
+			expect(staticBlockScope.blockStart).toBe(staticBlockNode.start);
 
 			const expectedVariableNames = ["a", "b", "c", "d", "e"];
 
@@ -2565,8 +2567,8 @@ describe("ScopeAnalyzer", () => {
 				"class-static-block"
 			]);
 			expect(classScope.childScopes[0]).not.toBe(classScope.childScopes[1]);
-			expect(classScope.childScopes[0].block).not.toBe(
-				classScope.childScopes[1].block
+			expect(classScope.childScopes[0].blockStart).not.toBe(
+				classScope.childScopes[1].blockStart
 			);
 			expect(classScope.childScopes[0].upper).toBe(
 				classScope.childScopes[1].upper
@@ -2587,10 +2589,10 @@ describe("ScopeAnalyzer", () => {
 
 				// the reference is inside this static block, not the other one
 				expect(startOf(reference.identifier)).toBeGreaterThanOrEqual(
-					startOf(staticBlockScope.block)
+					staticBlockScope.blockStart
 				);
 				expect(startOf(reference.identifier)).toBeLessThan(
-					/** @type {EXPECTED_ANY} */ (staticBlockScope.block).end
+					staticBlockScope.blockStart + "static { let a; a; }".length
 				);
 			}
 		});
@@ -3461,6 +3463,40 @@ describe("ScopeAnalyzer", () => {
 			const analysis = analyzeAst(ast);
 
 			expect(freeNames(analysis)).toEqual(["a", "b"]);
+		});
+	});
+
+	describe("shorthand properties", () => {
+		/**
+		 * @param {string} code source code
+		 * @returns {string[]} the identifier each recorded offset starts
+		 */
+		const shorthandNames = (code) =>
+			[...analyze(code).shorthandIdentifierStarts]
+				.sort((a, b) => a - b)
+				.map(
+					(start) =>
+						/** @type {RegExpExecArray} */ (/\w+/.exec(code.slice(start)))[0]
+				);
+
+		it("records the identifier of a shorthand in an object expression", () => {
+			expect(shorthandNames("const a = 1; ({ a, b: a, [a]: a });")).toEqual([
+				"a"
+			]);
+		});
+
+		it("records the identifier of a shorthand in a pattern", () => {
+			expect(shorthandNames("const { a, b: c } = x;")).toEqual(["a"]);
+		});
+
+		it("records the bound identifier of a shorthand with a default", () => {
+			expect(shorthandNames("const { a = 1 } = x;")).toEqual(["a"]);
+		});
+
+		it("records nothing for a method or a getter", () => {
+			expect(shorthandNames("({ a() {}, get b() {}, set c(v) {} });")).toEqual(
+				[]
+			);
 		});
 	});
 
