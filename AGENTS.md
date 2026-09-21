@@ -307,7 +307,7 @@ imports something webpack 5 deleted — or that probes for the path inside a `tr
 webpack 4 gets an entry under `removed` with that reason instead, because a re-export
 would send it down the wrong branch.
 
-**Five things carry a path, and only the first is obvious.** Rewrite every one, then
+**Six things carry a path, and only the first is obvious.** Rewrite every one, then
 confirm the move by regenerating rather than by reading:
 
 1. `require("…")` and `require.resolve("…")`, including template literals and a string
@@ -321,9 +321,17 @@ confirm the move by regenerating rather than by reading:
    old one stays restorable through `registerLegacyRequest`, or a pre-move cache pack
    stops loading.
 
+6. A path written into a config or a generator rather than into `lib/` — the input list
+   in `tooling/generate-runtime-code.js`, an `ignores` entry in `eslint.config.mjs`. Each
+   silently stops matching, and the second fails as style errors in a file nobody edited.
+
 `yarn fix:special` leaving `types.d.ts` byte-identical is the check that 3 and 4 are done;
 `ConfigCacheTestCases` reporting no `Pack got invalid` line is the check that 5 is. Nothing
 static catches 1 — only building `lib/index.js` does.
+
+This list is not only for `lib/` root: moving a file **between** `lib/` directories carries
+the same six, and 6 is the one that has actually gone wrong — `lib/util/semver.js` was named
+in both files above.
 
 **Update the Architecture listing above in the same commit**, and grep it for the old path:
 prose elsewhere in this guide names files too, and those references go stale just as
