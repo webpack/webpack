@@ -5,7 +5,7 @@
 // implementation over a schema covering every CLI argument type; the callable
 // captures the config webpack-cli assembles from the parsed flags.
 const fs = require("fs");
-const cli = require("../../../lib/cli");
+const cli = require("../../../lib/config/cli");
 
 const schema = {
 	type: "object",

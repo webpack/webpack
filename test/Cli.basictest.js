@@ -152,7 +152,7 @@ describe("Cli", () => {
 				const problems = processArguments(
 					args,
 					config,
-					/** @type {import("../lib/cli").Values} */ (values)
+					/** @type {import("../lib/config/cli").Values} */ (values)
 				);
 				fn(expect(problems || config));
 			});
@@ -648,18 +648,20 @@ describe("Cli", () => {
 
 		for (const key of ["__proto__", "constructor", "prototype"]) {
 			it(`should not pollute the prototype through a "${key}" path segment`, () => {
-				/** @type {import("../lib/cli").Flags} */
+				/** @type {import("../lib/config/cli").Flags} */
 				const args = {
 					"evil-flag": {
 						description: undefined,
 						configs: [
 							{
-								type: /** @type {import("../lib/cli").SimpleType} */ ("string"),
+								type: /** @type {import("../lib/config/cli").SimpleType} */ (
+									"string"
+								),
 								multiple: false,
 								path: `${key}.polluted`
 							}
 						],
-						simpleType: /** @type {import("../lib/cli").SimpleType} */ (
+						simpleType: /** @type {import("../lib/config/cli").SimpleType} */ (
 							"string"
 						),
 						multiple: false
@@ -669,7 +671,7 @@ describe("Cli", () => {
 				const problems = processArguments(
 					args,
 					config,
-					/** @type {import("../lib/cli").Values} */ (
+					/** @type {import("../lib/config/cli").Values} */ (
 						/** @type {unknown} */ ({ "evil-flag": "PWNED" })
 					)
 				);
@@ -683,18 +685,20 @@ describe("Cli", () => {
 			});
 
 			it(`should not pollute the prototype through a trailing "${key}" path segment`, () => {
-				/** @type {import("../lib/cli").Flags} */
+				/** @type {import("../lib/config/cli").Flags} */
 				const args = {
 					"evil-flag": {
 						description: undefined,
 						configs: [
 							{
-								type: /** @type {import("../lib/cli").SimpleType} */ ("string"),
+								type: /** @type {import("../lib/config/cli").SimpleType} */ (
+									"string"
+								),
 								multiple: false,
 								path: key
 							}
 						],
-						simpleType: /** @type {import("../lib/cli").SimpleType} */ (
+						simpleType: /** @type {import("../lib/config/cli").SimpleType} */ (
 							"string"
 						),
 						multiple: false
@@ -704,7 +708,7 @@ describe("Cli", () => {
 				const problems = processArguments(
 					args,
 					config,
-					/** @type {import("../lib/cli").Values} */ (
+					/** @type {import("../lib/config/cli").Values} */ (
 						/** @type {unknown} */ ({ "evil-flag": "PWNED" })
 					)
 				);
@@ -862,7 +866,7 @@ describe("Cli", () => {
 		it("simple", () => {
 			for (const [name, open, close] of colorsMap) {
 				expect(
-					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+					/** @type {Record<string, import("../lib/util/terminalColors").PrintFunction>} */ (
 						/** @type {unknown} */ (colors)
 					)[name](name)
 				).toBe(open + name + close);
@@ -918,7 +922,7 @@ describe("Cli", () => {
 		it("simple (no colors)", () => {
 			for (const [name] of colorsMap) {
 				expect(
-					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+					/** @type {Record<string, import("../lib/util/terminalColors").PrintFunction>} */ (
 						/** @type {unknown} */ (noColors)
 					)[name](name)
 				).toBe(name);
@@ -930,7 +934,7 @@ describe("Cli", () => {
 		it("simple (colors by default)", () => {
 			for (const [name, open, close] of colorsMap) {
 				expect(
-					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+					/** @type {Record<string, import("../lib/util/terminalColors").PrintFunction>} */ (
 						/** @type {unknown} */ (defaultColors)
 					)[name](name)
 				).toBe(open + name + close);

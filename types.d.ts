@@ -31881,8 +31881,7 @@ declare namespace exports {
 	) => void;
 	export const version: string;
 	export namespace cli {
-		export let createColors: (__0?: ColorsOptions) => Colors;
-		export let getArguments: (
+		export const getArguments: (
 			schema?:
 				| (JSONSchema4 & {
 						absolutePath: boolean;
@@ -31918,12 +31917,13 @@ declare namespace exports {
 						};
 				  })
 		) => Flags;
-		export let isColorSupported: () => boolean;
-		export let processArguments: (
+		export const processArguments: (
 			args: Flags,
 			config: ObjectConfiguration,
 			values: Values
 		) => null | Problem[];
+		export const createColors: (__0?: ColorsOptions) => Colors;
+		export const isColorSupported: () => boolean;
 	}
 	export namespace ModuleFilenameHelpers {
 		export let DEFAULT_MODULE_FILENAME_TEMPLATE: string;
