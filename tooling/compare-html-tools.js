@@ -410,7 +410,7 @@ const fixtures = async () => {
 	]);
 	return out;
 };
-/** @typedef {import("../lib/html/syntax").HtmlPrintOptions} HtmlPrintOptions */
+/** @typedef {import("../lib/html/syntax-printer").HtmlPrintOptions} HtmlPrintOptions */
 
 /** @type {HtmlPrintOptions} */
 const DEFAULT_OPTIONS = {};

@@ -106,8 +106,9 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/html/` — Experimental HTML support. `syntax.js` names its two halves the
     way `javascript` does: `syntax-parser.js` reads a document — tokenizer, §13.2
     tree construction and the entity table — and `syntax-printer.js` writes one back
-    out. The facade holds `SourceProcessor` and re-exports both, so what a caller
-    imports is unchanged.
+    out. `syntax.js` reaches both through a getter, as `javascript` does, so a walk
+    that never prints never loads the printer; it holds `SourceProcessor` and every
+    name it published before.
   - `lib/ids/` — Module/chunk id assignment plugins, and `RecordIdsPlugin`, which persists
     the assignment across builds through `recordsPath`.
   - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis. `syntax.js` is the pair `css` and `html` name the same way — `parser` and `printer` — and reaches each through a getter, so parsing never loads the printer and printing never loads the parser. `syntax-parser.js` is the parser a build reads source with: tokenizer, acorn-derived core and every production in one file, since a build that parses at all reaches the productions, and the struct-of-arrays rewrite ahead of it moves node creation through them. `regexp.js` (the pattern validator) is the one piece still loaded on demand, because only a pattern the host engine itself rejected reaches it — never `require` it from a path a build takes. `syntax-printer.js` is where JavaScript is printed back out: `jsMinify.js`, the `minify` function the default minimizer dispatches JavaScript to, goes through it rather than through terser's published entry point, because that loader reads terser's own sources — which is what lets a phase webpack implements itself replace the method terser installs. The name says where this is going: each phase webpack takes over is one less thing terser does. A phase states what it reads with `supports`, and a minifier that moved any of it, or a runtime that cannot import those sources, keeps its own. Add a phase to the `PHASES` list there and nowhere else, and hold it to writing byte-for-byte what it replaced.

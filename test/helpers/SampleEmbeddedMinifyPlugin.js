@@ -10,7 +10,7 @@ const {
 
 /** @typedef {import("../../lib/Compiler")} Compiler */
 /** @typedef {import("../../lib/module/Module")} Module */
-/** @typedef {import("../../lib/html/syntax").EmbeddedSourceRenderer} EmbeddedSourceRenderer */
+/** @typedef {import("../../lib/html/syntax-printer").EmbeddedSourceRenderer} EmbeddedSourceRenderer */
 /** @typedef {import("webpack-sources").Source} Source */
 
 const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";

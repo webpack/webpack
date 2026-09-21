@@ -4279,6 +4279,10 @@ declare interface CompiledRule {
 	rules?: CompiledRule[];
 	oneOf?: CompiledRule[];
 }
+declare interface CompiledVisitorBucket<TPath> {
+	enter: VisitorFn<TPath>[];
+	exit: VisitorFn<TPath>[];
+}
 declare class Compiler {
 	/**
 	 * Creates an instance of Compiler.
@@ -32711,199 +32715,8 @@ declare namespace exports {
 	}
 	export namespace html {
 		export namespace syntax {
-			export let A: {
-				get node(): number;
-				get parent(): null | number;
-				/**
-				 * Stop the walk descending into the current node (enter only).
-				 */
-				skipChildren(): void;
-				type(n?: number): number;
-				start(n?: number): number;
-				end(n?: number): number;
-				/**
-				 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-				 * window), before `parseHtml` releases `_htmlSource`.
-				 */
-				source(n?: number): string;
-				sourceSpanAt(from: number, to: number): string;
-				tagName(n?: number): string;
-				namespace(n?: number): number;
-				selfClosing(n?: number): boolean;
-				attributes(n?: number): HtmlAttribute[];
-				attributeCount(n?: number): number;
-				/**
-				 * The i-th attribute of an element, as an id for the `attribute*` reads.
-				 */
-				attributeAt(i: number, n?: number): number;
-				/**
-				 * Linear lookup by (lowercased) name.
-				 */
-				findAttribute(name: string, n?: number): number;
-				attributeName(a: number): string;
-				attributeValue(a: number): string;
-				attributeNameStart(a: number): number;
-				attributeNameEnd(a: number): number;
-				attributeValueStart(a: number): number;
-				attributeValueEnd(a: number): number;
-				tagEnd(n?: number): number;
-				nameEnd(n?: number): number;
-				/**
-				 * Whether the source wrote this element's end tag rather than the parser
-				 * popping it for an implied close. Read back off the range instead of marked
-				 * during the parse: an element's end spans the token that closed it, so its
-				 * own end tag is the last thing in it — and only the few elements around a
-				 * region printed from source ever ask.
-				 */
-				sourceClosed(n?: number): boolean;
-				openTag(n?: number): string;
-				/**
-				 * An element's end tag, generated as `</name>` from the opening tag's own name
-				 * (exact source casing, correct for foreign camelCase elements). Generated, not
-				 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-				 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-				 * parser inserted the element, as {@link openTag } does — it has no name in the
-				 * source to echo, and slicing one would spell `</>`.
-				 */
-				closeTag(n?: number): string;
-				contentEnd(n?: number): number;
-				templateContent(n?: number): number;
-				data(n?: number): string;
-				piTarget(n?: number): string;
-				doctypeName(n?: number): string;
-				doctypePublicId(_n?: number): null | string;
-				doctypeSystemId(_n?: number): null | string;
-				firstChild(n?: number): number;
-				nextSibling(n?: number): number;
-				parentOf(n?: number): number;
-				children(n?: number): number[];
-			};
-			export let BLOCK_CONTENTS: "block-contents";
-			export let CLASSIC_SCRIPT: "script";
-			export let EMBEDDED_LANGUAGES: string[];
-			export let EVENT_HANDLER: "event-handler";
-			export let JSON_TYPE: "json";
-			export let MODULE_SCRIPT: "module";
-			export let NS_HTML: 0;
-			export let NS_MATHML: 1;
-			export let NS_SVG: 2;
-			export namespace NodeType {
-				export let Document: 1;
-				export let DocumentFragment: 2;
-				export let Element: 3;
-				export let Text: 4;
-				export let Comment: 5;
-				export let Doctype: 6;
-				export let ProcessingInstruction: 7;
-			}
-			export let QUOTE_DOUBLE: 1;
-			export let QUOTE_NONE: 0;
-			export let QUOTE_SINGLE: 2;
-			export let SVG_TAG_ADJUST: Record<string, string>;
-			export let askEmbeddedRenderer: (
-				render: (
-					source: string,
-					info: { type: string; hostType: string; as?: string }
-				) =>
-					| undefined
-					| string
-					| EmbeddedSourceResult
-					| Promise<undefined | string | EmbeddedSourceResult>,
-				hole: { source: string; type: string; hostType: string; as?: string },
-				reported: EmbeddedSourceResult[]
-			) => Promise<undefined | string | EmbeddedSourceResult>;
-			export let baseTag: (
-				base:
-					| string
-					| {
-							/**
-							 * Value for the `href` attribute of the `<base>` element.
-							 */
-							href: string;
-							/**
-							 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
-							 */
-							target?: string;
-					  }
-			) => string;
-			export let buildHeadTags: (opts: OutputHtmlOptions) => string;
-			export let builtinEmbeddedRenderer: (
-				options?: BuiltinEmbeddedRendererOptions
-			) => (
-				source: string,
-				info: { type: string; hostType: string; as?: string }
-			) => undefined | string;
-			export let collectEmbeddedDiagnostics: (
-				reported: {
-					warnings?: (string | Error)[];
-					errors?: (string | Error)[];
-				}[]
-			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
-			export let decodeEntities: _functionSyntaxParser;
-			export let embeddedText: (
-				answer?: string | { code?: string }
-			) => undefined | string;
-			export let escapeAttribute: (
-				s: string,
-				delimiter?: number,
-				minimal?: boolean
-			) => string;
-			export let escapeText: (s: string) => string;
-			export function htmlMinify(
-				input: { [index: string]: string | Buffer },
-				sourceMap?: RawSourceMap,
-				minimizerOptions?: Omit<
-					HtmlPrintOptions,
-					"renderEmbeddedSource" | "deferEmbeddedSource"
-				> & {
-					environment?: CssEnvironment;
-					css?: {
-						convertLengthUnits?: boolean;
-						convertApproximateColors?: boolean;
-						dropOverriddenDeclarations?: boolean;
-						rewriteCustomProperties?: boolean;
-						unusedSymbols?: string[];
-						pseudoClasses?: { [index: string]: string };
-					};
-					minifyConditionalComments?: boolean;
-					renderEmbeddedSource?: (
-						source: string,
-						info: { type: string; hostType: string; as?: string }
-					) =>
-						| undefined
-						| string
-						| EmbeddedSourceResult
-						| Promise<undefined | string | EmbeddedSourceResult>;
-				}
-			): Promise<{
-				code: string;
-				warnings?: (string | Error)[];
-				errors?: (string | Error)[];
-			}>;
-			export namespace htmlMinify {
-				export let supportsWorkerThreads: () => boolean;
-				export let getTypes: () => string[];
-				export let getEmbeddedTypes: () => string[];
-				export let filter: (name: string) => boolean;
-			}
-			export let isAsciiWhitespace: (cc: number) => boolean;
-			export let metaTag: (name: string, content: string) => string;
-			export let parseCssUrls: (input: string) => [string, number, number][];
-			export let parseHtml: (
-				input: string,
-				pos?: number,
-				options?: HtmlParseOptions
-			) => number;
-			export let parseMsapplicationTask: (
-				input: string
-			) => [string, number, number][];
-			export let parseSrc: (input: string) => [string, number, number][];
-			export let parseSrcset: (input: string) => [string, number, number][];
-			export let pickTransforms: (
-				options: object
-			) => undefined | HtmlTransformOptions;
-			export let printer: (
-				path: {
+			export namespace parser {
+				export let A: {
 					get node(): number;
 					get parent(): null | number;
 					/**
@@ -32969,9 +32782,232 @@ declare namespace exports {
 					nextSibling(n?: number): number;
 					parentOf(n?: number): number;
 					children(n?: number): number[];
-				},
-				writer: PrintContext<
-					{
+				};
+				export let BLOCK_CONTENTS: "block-contents";
+				export let CC_APOSTROPHE: 39;
+				export let CC_LEFT_SQUARE_BRACKET: 91;
+				export let CC_LF: 10;
+				export let CC_NUMBER_SIGN: 35;
+				export let CC_QUOTATION_MARK: 34;
+				export let CC_RIGHT_SQUARE_BRACKET: 93;
+				export let CC_SOLIDUS: 47;
+				export let EMBEDDED_LANGUAGES: string[];
+				export let EVENT_HANDLER: "event-handler";
+				export let FLAG_FOSTER_REGION: 128;
+				export let JSON_TYPE: "json";
+				export let NS_HTML: 0;
+				export let NS_MATHML: 1;
+				export let NS_SVG: 2;
+				export namespace NodeType {
+					export let Document: 1;
+					export let DocumentFragment: 2;
+					export let Element: 3;
+					export let Text: 4;
+					export let Comment: 5;
+					export let Doctype: 6;
+					export let ProcessingInstruction: 7;
+				}
+				export let QUOTE_DOUBLE: 1;
+				export let QUOTE_NONE: 0;
+				export let QUOTE_SINGLE: 2;
+				export let SVG_TYPE: "svg";
+				export let baseTag: (
+					base:
+						| string
+						| {
+								/**
+								 * Value for the `href` attribute of the `<base>` element.
+								 */
+								href: string;
+								/**
+								 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
+								 */
+								target?: string;
+						  }
+				) => string;
+				export let buildHeadTags: (opts: OutputHtmlOptions) => string;
+				export let collapseWhitespaceRuns: (s: string) => string;
+				export let decodeEntities: _functionSyntaxParser;
+				export let escapeAttribute: (
+					s: string,
+					delimiter?: number,
+					minimal?: boolean
+				) => string;
+				export let escapeText: (s: string) => string;
+				export let grammar: (
+					input: string,
+					visitors: CompiledVisitorBucket<{
+						get node(): number;
+						get parent(): null | number;
+						/**
+						 * Stop the walk descending into the current node (enter only).
+						 */
+						skipChildren(): void;
+						type(n?: number): number;
+						start(n?: number): number;
+						end(n?: number): number;
+						/**
+						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+						 * window), before `parseHtml` releases `_htmlSource`.
+						 */
+						source(n?: number): string;
+						sourceSpanAt(from: number, to: number): string;
+						tagName(n?: number): string;
+						namespace(n?: number): number;
+						selfClosing(n?: number): boolean;
+						attributes(n?: number): HtmlAttribute[];
+						attributeCount(n?: number): number;
+						/**
+						 * The i-th attribute of an element, as an id for the `attribute*` reads.
+						 */
+						attributeAt(i: number, n?: number): number;
+						/**
+						 * Linear lookup by (lowercased) name.
+						 */
+						findAttribute(name: string, n?: number): number;
+						attributeName(a: number): string;
+						attributeValue(a: number): string;
+						attributeNameStart(a: number): number;
+						attributeNameEnd(a: number): number;
+						attributeValueStart(a: number): number;
+						attributeValueEnd(a: number): number;
+						tagEnd(n?: number): number;
+						nameEnd(n?: number): number;
+						/**
+						 * Whether the source wrote this element's end tag rather than the parser
+						 * popping it for an implied close. Read back off the range instead of marked
+						 * during the parse: an element's end spans the token that closed it, so its
+						 * own end tag is the last thing in it — and only the few elements around a
+						 * region printed from source ever ask.
+						 */
+						sourceClosed(n?: number): boolean;
+						openTag(n?: number): string;
+						/**
+						 * An element's end tag, generated as `</name>` from the opening tag's own name
+						 * (exact source casing, correct for foreign camelCase elements). Generated, not
+						 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+						 * parser inserted the element, as {@link openTag } does — it has no name in the
+						 * source to echo, and slicing one would spell `</>`.
+						 */
+						closeTag(n?: number): string;
+						contentEnd(n?: number): number;
+						templateContent(n?: number): number;
+						data(n?: number): string;
+						piTarget(n?: number): string;
+						doctypeName(n?: number): string;
+						doctypePublicId(_n?: number): null | string;
+						doctypeSystemId(_n?: number): null | string;
+						firstChild(n?: number): number;
+						nextSibling(n?: number): number;
+						parentOf(n?: number): number;
+						children(n?: number): number[];
+					}>[],
+					writer:
+						| undefined
+						| PrintContext<
+								{
+									get node(): number;
+									get parent(): null | number;
+									/**
+									 * Stop the walk descending into the current node (enter only).
+									 */
+									skipChildren(): void;
+									type(n?: number): number;
+									start(n?: number): number;
+									end(n?: number): number;
+									/**
+									 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+									 * window), before `parseHtml` releases `_htmlSource`.
+									 */
+									source(n?: number): string;
+									sourceSpanAt(from: number, to: number): string;
+									tagName(n?: number): string;
+									namespace(n?: number): number;
+									selfClosing(n?: number): boolean;
+									attributes(n?: number): HtmlAttribute[];
+									attributeCount(n?: number): number;
+									/**
+									 * The i-th attribute of an element, as an id for the `attribute*` reads.
+									 */
+									attributeAt(i: number, n?: number): number;
+									/**
+									 * Linear lookup by (lowercased) name.
+									 */
+									findAttribute(name: string, n?: number): number;
+									attributeName(a: number): string;
+									attributeValue(a: number): string;
+									attributeNameStart(a: number): number;
+									attributeNameEnd(a: number): number;
+									attributeValueStart(a: number): number;
+									attributeValueEnd(a: number): number;
+									tagEnd(n?: number): number;
+									nameEnd(n?: number): number;
+									/**
+									 * Whether the source wrote this element's end tag rather than the parser
+									 * popping it for an implied close. Read back off the range instead of marked
+									 * during the parse: an element's end spans the token that closed it, so its
+									 * own end tag is the last thing in it — and only the few elements around a
+									 * region printed from source ever ask.
+									 */
+									sourceClosed(n?: number): boolean;
+									openTag(n?: number): string;
+									/**
+									 * An element's end tag, generated as `</name>` from the opening tag's own name
+									 * (exact source casing, correct for foreign camelCase elements). Generated, not
+									 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+									 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+									 * parser inserted the element, as {@link openTag } does — it has no name in the
+									 * source to echo, and slicing one would spell `</>`.
+									 */
+									closeTag(n?: number): string;
+									contentEnd(n?: number): number;
+									templateContent(n?: number): number;
+									data(n?: number): string;
+									piTarget(n?: number): string;
+									doctypeName(n?: number): string;
+									doctypePublicId(_n?: number): null | string;
+									doctypeSystemId(_n?: number): null | string;
+									firstChild(n?: number): number;
+									nextSibling(n?: number): number;
+									parentOf(n?: number): number;
+									children(n?: number): number[];
+								},
+								number,
+								HtmlPrintOptions
+						  >,
+					options: HtmlProcessOptions
+				) => void;
+				export let isAllWs: (s: string) => boolean;
+				export let isAsciiAlphanumeric: (cc: number) => boolean;
+				export let isSpace: (cc: number) => boolean;
+				export let metaTag: (name: string, content: string) => string;
+				export let parseCssUrls: (input: string) => [string, number, number][];
+				export let parseHtml: (
+					input: string,
+					pos?: number,
+					options?: HtmlParseOptions
+				) => number;
+				export let parseMsapplicationTask: (
+					input: string
+				) => [string, number, number][];
+				export let parseSrc: (input: string) => [string, number, number][];
+				export let parseSrcset: (input: string) => [string, number, number][];
+				export let pickTransforms: (
+					options: object
+				) => undefined | HtmlTransformOptions;
+				export let startsWithWs: (s: string) => boolean;
+				export let tokenize: (
+					input: string,
+					pos?: number,
+					callbacks?: HtmlTokenCallbacks
+				) => number;
+			}
+			export namespace printer {
+				export let CLASSIC_SCRIPT: "script";
+				export let MODULE_SCRIPT: "module";
+				export let printer: (
+					path: {
 						get node(): number;
 						get parent(): null | number;
 						/**
@@ -33038,12 +33074,272 @@ declare namespace exports {
 						parentOf(n?: number): number;
 						children(n?: number): number[];
 					},
-					number,
-					HtmlPrintOptions
-				>
+					writer: PrintContext<
+						{
+							get node(): number;
+							get parent(): null | number;
+							/**
+							 * Stop the walk descending into the current node (enter only).
+							 */
+							skipChildren(): void;
+							type(n?: number): number;
+							start(n?: number): number;
+							end(n?: number): number;
+							/**
+							 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+							 * window), before `parseHtml` releases `_htmlSource`.
+							 */
+							source(n?: number): string;
+							sourceSpanAt(from: number, to: number): string;
+							tagName(n?: number): string;
+							namespace(n?: number): number;
+							selfClosing(n?: number): boolean;
+							attributes(n?: number): HtmlAttribute[];
+							attributeCount(n?: number): number;
+							/**
+							 * The i-th attribute of an element, as an id for the `attribute*` reads.
+							 */
+							attributeAt(i: number, n?: number): number;
+							/**
+							 * Linear lookup by (lowercased) name.
+							 */
+							findAttribute(name: string, n?: number): number;
+							attributeName(a: number): string;
+							attributeValue(a: number): string;
+							attributeNameStart(a: number): number;
+							attributeNameEnd(a: number): number;
+							attributeValueStart(a: number): number;
+							attributeValueEnd(a: number): number;
+							tagEnd(n?: number): number;
+							nameEnd(n?: number): number;
+							/**
+							 * Whether the source wrote this element's end tag rather than the parser
+							 * popping it for an implied close. Read back off the range instead of marked
+							 * during the parse: an element's end spans the token that closed it, so its
+							 * own end tag is the last thing in it — and only the few elements around a
+							 * region printed from source ever ask.
+							 */
+							sourceClosed(n?: number): boolean;
+							openTag(n?: number): string;
+							/**
+							 * An element's end tag, generated as `</name>` from the opening tag's own name
+							 * (exact source casing, correct for foreign camelCase elements). Generated, not
+							 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+							 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+							 * parser inserted the element, as {@link openTag } does — it has no name in the
+							 * source to echo, and slicing one would spell `</>`.
+							 */
+							closeTag(n?: number): string;
+							contentEnd(n?: number): number;
+							templateContent(n?: number): number;
+							data(n?: number): string;
+							piTarget(n?: number): string;
+							doctypeName(n?: number): string;
+							doctypePublicId(_n?: number): null | string;
+							doctypeSystemId(_n?: number): null | string;
+							firstChild(n?: number): number;
+							nextSibling(n?: number): number;
+							parentOf(n?: number): number;
+							children(n?: number): number[];
+						},
+						number,
+						HtmlPrintOptions
+					>
+				) => string;
+			}
+			export const A: {
+				get node(): number;
+				get parent(): null | number;
+				/**
+				 * Stop the walk descending into the current node (enter only).
+				 */
+				skipChildren(): void;
+				type(n?: number): number;
+				start(n?: number): number;
+				end(n?: number): number;
+				/**
+				 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+				 * window), before `parseHtml` releases `_htmlSource`.
+				 */
+				source(n?: number): string;
+				sourceSpanAt(from: number, to: number): string;
+				tagName(n?: number): string;
+				namespace(n?: number): number;
+				selfClosing(n?: number): boolean;
+				attributes(n?: number): HtmlAttribute[];
+				attributeCount(n?: number): number;
+				/**
+				 * The i-th attribute of an element, as an id for the `attribute*` reads.
+				 */
+				attributeAt(i: number, n?: number): number;
+				/**
+				 * Linear lookup by (lowercased) name.
+				 */
+				findAttribute(name: string, n?: number): number;
+				attributeName(a: number): string;
+				attributeValue(a: number): string;
+				attributeNameStart(a: number): number;
+				attributeNameEnd(a: number): number;
+				attributeValueStart(a: number): number;
+				attributeValueEnd(a: number): number;
+				tagEnd(n?: number): number;
+				nameEnd(n?: number): number;
+				/**
+				 * Whether the source wrote this element's end tag rather than the parser
+				 * popping it for an implied close. Read back off the range instead of marked
+				 * during the parse: an element's end spans the token that closed it, so its
+				 * own end tag is the last thing in it — and only the few elements around a
+				 * region printed from source ever ask.
+				 */
+				sourceClosed(n?: number): boolean;
+				openTag(n?: number): string;
+				/**
+				 * An element's end tag, generated as `</name>` from the opening tag's own name
+				 * (exact source casing, correct for foreign camelCase elements). Generated, not
+				 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+				 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
+				 * parser inserted the element, as {@link openTag } does — it has no name in the
+				 * source to echo, and slicing one would spell `</>`.
+				 */
+				closeTag(n?: number): string;
+				contentEnd(n?: number): number;
+				templateContent(n?: number): number;
+				data(n?: number): string;
+				piTarget(n?: number): string;
+				doctypeName(n?: number): string;
+				doctypePublicId(_n?: number): null | string;
+				doctypeSystemId(_n?: number): null | string;
+				firstChild(n?: number): number;
+				nextSibling(n?: number): number;
+				parentOf(n?: number): number;
+				children(n?: number): number[];
+			};
+			export const BLOCK_CONTENTS: "block-contents";
+			export const CLASSIC_SCRIPT: "script";
+			export const EMBEDDED_LANGUAGES: string[];
+			export const EVENT_HANDLER: "event-handler";
+			export const JSON_TYPE: "json";
+			export const MODULE_SCRIPT: "module";
+			export const NS_HTML: 0;
+			export const NS_MATHML: 1;
+			export const NS_SVG: 2;
+			export namespace NodeType {
+				export let Document: 1;
+				export let DocumentFragment: 2;
+				export let Element: 3;
+				export let Text: 4;
+				export let Comment: 5;
+				export let Doctype: 6;
+				export let ProcessingInstruction: 7;
+			}
+			export const QUOTE_DOUBLE: 1;
+			export const QUOTE_NONE: 0;
+			export const QUOTE_SINGLE: 2;
+			export const SVG_TAG_ADJUST: Record<string, string>;
+			export const askEmbeddedRenderer: (
+				render: (
+					source: string,
+					info: { type: string; hostType: string; as?: string }
+				) =>
+					| undefined
+					| string
+					| EmbeddedSourceResult
+					| Promise<undefined | string | EmbeddedSourceResult>,
+				hole: { source: string; type: string; hostType: string; as?: string },
+				reported: EmbeddedSourceResult[]
+			) => Promise<undefined | string | EmbeddedSourceResult>;
+			export const baseTag: (
+				base:
+					| string
+					| {
+							/**
+							 * Value for the `href` attribute of the `<base>` element.
+							 */
+							href: string;
+							/**
+							 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
+							 */
+							target?: string;
+					  }
 			) => string;
-			export let stripJsonWhitespace: (json: string) => string;
-			export let tokenize: (
+			export const buildHeadTags: (opts: OutputHtmlOptions) => string;
+			export const builtinEmbeddedRenderer: (
+				options?: BuiltinEmbeddedRendererOptions
+			) => (
+				source: string,
+				info: { type: string; hostType: string; as?: string }
+			) => undefined | string;
+			export const collectEmbeddedDiagnostics: (
+				reported: {
+					warnings?: (string | Error)[];
+					errors?: (string | Error)[];
+				}[]
+			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
+			export const decodeEntities: _functionSyntaxParser;
+			export const embeddedText: (
+				answer?: string | { code?: string }
+			) => undefined | string;
+			export const escapeAttribute: (
+				s: string,
+				delimiter?: number,
+				minimal?: boolean
+			) => string;
+			export const escapeText: (s: string) => string;
+			export function htmlMinify(
+				input: { [index: string]: string | Buffer },
+				sourceMap?: RawSourceMap,
+				minimizerOptions?: Omit<
+					HtmlPrintOptions,
+					"renderEmbeddedSource" | "deferEmbeddedSource"
+				> & {
+					environment?: CssEnvironment;
+					css?: {
+						convertLengthUnits?: boolean;
+						convertApproximateColors?: boolean;
+						dropOverriddenDeclarations?: boolean;
+						rewriteCustomProperties?: boolean;
+						unusedSymbols?: string[];
+						pseudoClasses?: { [index: string]: string };
+					};
+					minifyConditionalComments?: boolean;
+					renderEmbeddedSource?: (
+						source: string,
+						info: { type: string; hostType: string; as?: string }
+					) =>
+						| undefined
+						| string
+						| EmbeddedSourceResult
+						| Promise<undefined | string | EmbeddedSourceResult>;
+				}
+			): Promise<{
+				code: string;
+				warnings?: (string | Error)[];
+				errors?: (string | Error)[];
+			}>;
+			export namespace htmlMinify {
+				export let supportsWorkerThreads: () => boolean;
+				export let getTypes: () => string[];
+				export let getEmbeddedTypes: () => string[];
+				export let filter: (name: string) => boolean;
+			}
+			export const isAsciiWhitespace: (cc: number) => boolean;
+			export const metaTag: (name: string, content: string) => string;
+			export const parseCssUrls: (input: string) => [string, number, number][];
+			export const parseHtml: (
+				input: string,
+				pos?: number,
+				options?: HtmlParseOptions
+			) => number;
+			export const parseMsapplicationTask: (
+				input: string
+			) => [string, number, number][];
+			export const parseSrc: (input: string) => [string, number, number][];
+			export const parseSrcset: (input: string) => [string, number, number][];
+			export const pickTransforms: (
+				options: object
+			) => undefined | HtmlTransformOptions;
+			export const stripJsonWhitespace: (json: string) => string;
+			export const tokenize: (
 				input: string,
 				pos?: number,
 				callbacks?: HtmlTokenCallbacks
