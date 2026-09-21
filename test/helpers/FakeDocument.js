@@ -48,7 +48,10 @@ const VOID_ELEMENTS = new Set([
  */
 const parseFragment = (html) => {
 	if (htmlSyntax === undefined) htmlSyntax = require("../../lib/html/syntax");
-	const { SourceProcessor, NodeType } = htmlSyntax;
+	const { SourceProcessor } = htmlSyntax;
+
+	const { NodeType } = require("../../lib/html/syntax-parser");
+
 	/** @type {{ tag: string, attributes: { name: string, value: string }[], text: string }[]} */
 	const elements = [];
 	let lastEnd = 0;
@@ -641,7 +644,7 @@ class FakeSheet {
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
 			readToken
-		} = require("../../lib/css/syntax");
+		} = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -770,7 +773,7 @@ class CSSStyleSheet {
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
 			readToken
-		} = require("../../lib/css/syntax");
+		} = require("../../lib/css/syntax-parser");
 
 		/** @type {CssRule[]} */
 		const rules = [];

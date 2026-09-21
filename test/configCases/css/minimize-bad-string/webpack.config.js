@@ -3,7 +3,7 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 
-const { cssMinify } = webpack.css.syntax;
+const { cssMinify } = webpack.css;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

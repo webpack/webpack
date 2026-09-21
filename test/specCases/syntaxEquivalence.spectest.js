@@ -10,10 +10,8 @@ const path = require("path");
 // The comparison has to know which family names are keywords, and the table
 // that says so is generated rather than written twice.
 const { GENERIC_FONT_FAMILIES } = require("../../lib/css/data");
-const {
-	SourceProcessor: CssSourceProcessor,
-	readToken
-} = require("../../lib/css/syntax");
+const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
+const { readToken } = require("../../lib/css/syntax-parser");
 const {
 	BOOLEAN_ATTRIBUTES,
 	EMPTY_REMOVABLE_ATTRIBUTES,
@@ -21,15 +19,8 @@ const {
 	ENUMERATED_KEYWORDS,
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
-const {
-	A,
-	NS_MATHML,
-	NS_SVG,
-	NodeType,
-	SourceProcessor: HtmlSourceProcessor,
-	decodeEntities,
-	parseHtml
-} = require("../../lib/html/syntax");
+const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
+const { A, NS_MATHML, NS_SVG, NodeType, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 

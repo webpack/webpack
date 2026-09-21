@@ -22,13 +22,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
-const {
-	A,
-	QUOTE_NONE,
-	decodeEntities,
-	parseHtml,
-	tokenize
-} = require("../../lib/html/syntax");
+const { A, QUOTE_NONE, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const serialize = require("../helpers/serializeHtmlTree");
 

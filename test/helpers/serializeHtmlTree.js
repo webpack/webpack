@@ -6,7 +6,7 @@ const {
 	NS_SVG,
 	NodeType,
 	decodeEntities
-} = require("../../lib/html/syntax");
+} = require("../../lib/html/syntax-parser");
 
 /** @import { HtmlNodeRef } from "../../lib/html/syntax-parser" */
 

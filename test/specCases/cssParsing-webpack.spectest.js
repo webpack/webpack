@@ -13,7 +13,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
-const { parseABlocksContents } = require("../../lib/css/syntax");
+const { parseABlocksContents } = require("../../lib/css/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 
 const casesDir = path.resolve(__dirname, "../external/css-parsing-tests");

@@ -10,26 +10,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const {
-	A,
-	NS_HTML,
-	NS_MATHML,
-	NS_SVG,
-	NodeType,
-	QUOTE_DOUBLE,
-	QUOTE_NONE,
-	QUOTE_SINGLE,
-	builtinEmbeddedRenderer,
-	decodeEntities,
-	escapeAttribute,
-	escapeText,
-	parseCssUrls,
-	parseHtml: parseHtmlRefs,
-	parseMsapplicationTask,
-	parseSrc,
-	parseSrcset,
-	tokenize
-} = require("../../lib/html/syntax");
+const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
 describe("tokenize", () => {
@@ -3234,63 +3216,14 @@ describe("HtmlSyntax — the facade", () => {
 		expect(typeof syntax.printer.printer).toBe("function");
 	});
 
-	it("takes every name it publishes from the half that owns it", () => {
-		const parser = require("../../lib/html/syntax-parser");
-		const printer = require("../../lib/html/syntax-printer");
-		const htmlData = require("../../lib/html/data");
-		const dataURL = require("../../lib/util/dataURL");
-		const htmlMinify = require("../../lib/html/htmlMinify");
-		const builtinRenderer = require("../../lib/html/builtinEmbeddedRenderer");
-		// Spelled out rather than derived from the facade: a name that changed
-		// spelling, or an alias repointed at another export of the same module,
-		// keeps every count identical and only a stated binding catches it.
-		const bindings = {
-			A: parser.A,
-			BLOCK_CONTENTS: parser.BLOCK_CONTENTS,
-			CLASSIC_SCRIPT: printer.CLASSIC_SCRIPT,
-			EMBEDDED_LANGUAGES: parser.EMBEDDED_LANGUAGES,
-			EVENT_HANDLER: parser.EVENT_HANDLER,
-			JSON_TYPE: parser.JSON_TYPE,
-			MODULE_SCRIPT: printer.MODULE_SCRIPT,
-			NS_HTML: parser.NS_HTML,
-			NS_MATHML: parser.NS_MATHML,
-			NS_SVG: parser.NS_SVG,
-			NodeType: parser.NodeType,
-			QUOTE_DOUBLE: parser.QUOTE_DOUBLE,
-			QUOTE_NONE: parser.QUOTE_NONE,
-			QUOTE_SINGLE: parser.QUOTE_SINGLE,
-			SVG_TAG_ADJUST: htmlData.SVG_TAG_ADJUST,
-			askEmbeddedRenderer: dataURL.askEmbeddedRenderer,
-			baseTag: parser.baseTag,
-			buildHeadTags: parser.buildHeadTags,
-			builtinEmbeddedRenderer: builtinRenderer.builtinEmbeddedRenderer,
-			collectEmbeddedDiagnostics: dataURL.collectEmbeddedDiagnostics,
-			decodeEntities: parser.decodeEntities,
-			embeddedText: dataURL.embeddedText,
-			escapeAttribute: parser.escapeAttribute,
-			escapeText: parser.escapeText,
-			htmlMinify,
-			isAsciiWhitespace: parser.isSpace,
-			metaTag: parser.metaTag,
-			parseCssUrls: parser.parseCssUrls,
-			parseHtml: parser.parseHtml,
-			parseMsapplicationTask: parser.parseMsapplicationTask,
-			parseSrc: parser.parseSrc,
-			parseSrcset: parser.parseSrcset,
-			pickTransforms: parser.pickTransforms,
-			stripJsonWhitespace: builtinRenderer.stripJsonWhitespace,
-			tokenize: parser.tokenize,
-		};
-		const surface = /** @type {Record<string, unknown>} */ (
-			/** @type {unknown} */ (syntax)
-		);
-		expect(Object.keys(surface).sort()).toEqual(
-			["SourceProcessor", "parser", "printer", ...Object.keys(bindings)].sort()
-		);
-		for (const [name, owned] of Object.entries(bindings)) {
-			expect(owned).toBeDefined();
-			expect(surface[name]).toBe(owned);
-		}
+	it("publishes only the two halves and the processor", () => {
+		expect(Object.keys(syntax).sort()).toEqual([
+			"SourceProcessor",
+			"parser",
+			"printer"
+		]);
+		expect(syntax.parser).toBe(require("../../lib/html/syntax-parser"));
+		expect(syntax.printer).toBe(require("../../lib/html/syntax-printer"));
 	});
 
 	it("holds no printer until something prints", () => {
@@ -3970,7 +3903,8 @@ describe("parseHtml", () => {
 });
 
 describe("parseHtml — SourceProcessor", () => {
-	const { NodeType, SourceProcessor } = require("../../lib/html/syntax");
+	const { SourceProcessor } = require("../../lib/html/syntax");
+const { NodeType } = require("../../lib/html/syntax-parser");
 
 	it("fires enter / exit visitors in source order", () => {
 		/** @type {string[]} */
@@ -6538,7 +6472,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	});
 
 	it("offers every language `EMBEDDED_LANGUAGES` names, and prints each answer", () => {
-		const { EMBEDDED_LANGUAGES } = require("../../lib/html/syntax");
+		const { EMBEDDED_LANGUAGES } = require("../../lib/html/syntax-parser");
 
 		// One document reaching every offer site, an `<iframe srcdoc>` among them.
 		const html =
@@ -9786,7 +9720,8 @@ describe("parseHtml — insertion modes", () => {
 });
 
 describe("SourceProcessor — re-serializing keeps the tree", () => {
-	const { SourceProcessor, parseHtml } = require("../../lib/html/syntax");
+	const { SourceProcessor } = require("../../lib/html/syntax");
+const { parseHtml } = require("../../lib/html/syntax-parser");
 
 	/**
 	 * @param {string} source html source
@@ -10010,7 +9945,8 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 // Beautifying is no pretty-printer: it completes the tags the source left out
 // and echoes the rest byte for byte, so what it writes is snapshotted.
 describe("SourceProcessor — beautifying", () => {
-	const { SourceProcessor, parseHtml } = require("../../lib/html/syntax");
+	const { SourceProcessor } = require("../../lib/html/syntax");
+const { parseHtml } = require("../../lib/html/syntax-parser");
 
 	/**
 	 * @param {string} source html source
@@ -10035,6 +9971,10 @@ describe("SourceProcessor — beautifying", () => {
 		["a form the table kept", "<table><p><form>"],
 		// Raw text keeps its content, and a comment survives.
 		["raw text", "<style>a{b:c}</style><script>1<2</script>"],
+		// The same two names in a foreign subtree hold character data, not raw
+		// text, so what they carry stays escaped.
+		["a foreign script", "<svg><script>&lt;b&gt;</script></svg>"],
+		["a foreign style", "<svg><style>&lt;/style&gt;</style></svg>"],
 		["a comment", "<div><!--c--></div>"]
 	];
 
@@ -10470,7 +10410,7 @@ describe("htmlMinify export", () => {
 	it("is the minifier itself, reachable from the public entry", () => {
 		const webpack = require("../..");
 
-		expect(webpack.html.syntax.htmlMinify).toBe(
+		expect(webpack.html.htmlMinify).toBe(
 			require("../../lib/html/htmlMinify")
 		);
 	});
@@ -10478,7 +10418,7 @@ describe("htmlMinify export", () => {
 	it("carries the minimizer contract minimizer-webpack-plugin dispatches on", () => {
 		const webpack = require("../..");
 
-		const { htmlMinify } = webpack.html.syntax;
+		const { htmlMinify } = webpack.html;
 
 		expect(htmlMinify.getTypes()).toEqual(["html"]);
 		expect(htmlMinify.getEmbeddedTypes()).toContain("css");
@@ -10490,7 +10430,7 @@ describe("htmlMinify export", () => {
 	it("minifies through the public entry", async () => {
 		const webpack = require("../..");
 
-		const { htmlMinify } = webpack.html.syntax;
+		const { htmlMinify } = webpack.html;
 
 		const { code } = await htmlMinify({
 			"a.html": "<p class='x'>  a  </p>"
