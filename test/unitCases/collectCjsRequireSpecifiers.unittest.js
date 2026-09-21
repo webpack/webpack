@@ -70,6 +70,17 @@ describe("collectCjsRequireSpecifiers", () => {
 			`const s = \`x${OPEN}require('./a')}y\`; require('./b');`
 		],
 		["member access is not a call", 'foo.require("./nope"); require("./a");'],
+		[
+			"optional member access is not a call",
+			'foo?.require("./nope"); require("./a");'
+		],
+		["spread into an object", 'module.exports = { ...require("./a") };'],
+		["spread into an array", 'module.exports = [...require("./a")];'],
+		["spread into a call", 'f(...require("./a"));'],
+		[
+			"spread beside a member access",
+			'({ ...require("./a"), x: foo.require("./nope") });'
+		],
 		["longer identifier", 'requireX("./nope"); require("./a");'],
 		["identifier ending in require", 'preRequire("./nope"); require("./a");'],
 		["nested call", 'f(require("./a"), require("./b"));'],
