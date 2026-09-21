@@ -80,6 +80,9 @@ const run = (command, args, options) =>
  */
 const corpusDirectory = (name) => path.join(ROOT, "tooling/comparison", name);
 
+// What a corpus is declared by, and so what decides whether one is current.
+const MANIFEST_FILES = ["package.json", "package-lock.json"];
+
 /**
  * Install a corpus under `node_modules/.cache/<name>` from its committed
  * manifest, reusing what is there while the lockfile it was installed from
@@ -91,13 +94,18 @@ const installPackages = async (name) => {
 	const source = corpusDirectory(name);
 	const cache = path.join(ROOT, "node_modules/.cache", name);
 	const modules = path.join(cache, "node_modules");
-	// The lockfile this cache was last installed from, written only once the
-	// install succeeded — a restored cache reinstalls nothing, a stale one does.
+	// What this cache was last installed from, written only once the install
+	// succeeded — a restored cache reinstalls nothing, a stale one does.
 	const stamp = path.join(cache, ".corpus-lock");
-	const lock = await fs.promises.readFile(
-		path.join(source, "package-lock.json")
-	);
-	const wanted = createHash("sha256").update(lock).digest("hex");
+	// Both files, because either one alone decides too little: a manifest edited
+	// without regenerating the lockfile is what `npm ci` refuses, and reading the
+	// lockfile only would skip the install that would have refused it.
+	const identity = createHash("sha256");
+	for (const file of MANIFEST_FILES) {
+		identity.update(await fs.promises.readFile(path.join(source, file)));
+		identity.update("\0");
+	}
+	const wanted = identity.digest("hex");
 	const installed =
 		(await exists(modules)) && (await exists(stamp))
 			? await fs.promises.readFile(stamp, "utf8")
@@ -112,7 +120,7 @@ const installPackages = async (name) => {
 	// `npm ci` reads both out of its working directory and installs exactly what
 	// the lockfile names, so the corpus is what was committed rather than
 	// whatever the registry serves today.
-	for (const file of ["package.json", "package-lock.json"]) {
+	for (const file of MANIFEST_FILES) {
 		await fs.promises.copyFile(path.join(source, file), path.join(cache, file));
 	}
 	await run("npm", ["ci", "--no-audit", "--no-fund"], { cwd: cache });

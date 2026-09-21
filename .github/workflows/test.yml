@@ -128,7 +128,7 @@ jobs:
           path: |
             node_modules/.cache/css-tool-comparison
             node_modules/.cache/html-tool-comparison
-          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
 
       # Fatal here, unlike the equivalence job: that one reads whichever
       # fixtures are there, and this one is the check that the whole corpus
@@ -413,7 +413,7 @@ jobs:
           path: |
             node_modules/.cache/css-tool-comparison
             node_modules/.cache/html-tool-comparison
-          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
 
       # The third corpus: the framework stylesheets and documents the tool
       # comparisons install. Not fatal — the suite reads whichever fixtures are

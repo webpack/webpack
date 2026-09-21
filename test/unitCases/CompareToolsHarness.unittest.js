@@ -329,7 +329,8 @@ describe("compare-tools-harness", () => {
 			"compare-tools-harness-unittest-cold",
 			"compare-tools-harness-unittest-failed",
 			"compare-tools-harness-unittest-moved",
-			"compare-tools-harness-unittest-derived"
+			"compare-tools-harness-unittest-derived",
+			"compare-tools-harness-unittest-manifest"
 		];
 
 		/**
@@ -355,20 +356,21 @@ describe("compare-tools-harness", () => {
 			path.resolve(__dirname, "../..", "tooling/comparison", name);
 
 		/**
-		 * Write a corpus of the shape `installPackages` reads: a manifest and the
-		 * lockfile whose contents decide whether an install is owed.
+		 * Write a corpus of the shape `installPackages` reads: the manifest and the
+		 * lockfile, whose contents together decide whether an install is owed.
 		 * @param {string} name which corpus
 		 * @param {string} lock what its lockfile says
+		 * @param {string=} manifest what its package.json says
 		 * @returns {string} the hash a matching stamp would carry
 		 */
-		const writeCorpus = (name, lock) => {
+		const writeCorpus = (name, lock, manifest) => {
+			const written = manifest || JSON.stringify({ name, private: true });
 			fs.mkdirSync(corpusFor(name), { recursive: true });
-			fs.writeFileSync(
-				path.join(corpusFor(name), "package.json"),
-				JSON.stringify({ name, private: true })
-			);
+			fs.writeFileSync(path.join(corpusFor(name), "package.json"), written);
 			fs.writeFileSync(path.join(corpusFor(name), "package-lock.json"), lock);
-			return createHash("sha256").update(lock).digest("hex");
+			const identity = createHash("sha256");
+			for (const part of [written, lock]) identity.update(part).update("\0");
+			return identity.digest("hex");
 		};
 
 		/**
@@ -466,6 +468,31 @@ describe("compare-tools-harness", () => {
 			).rejects.toThrow("exited with 1");
 			expect(npmRan(name)).toBe(true);
 			expect(stampOf(name)).toBeUndefined();
+		});
+
+		// The manifest decides as much as the lockfile does: one edited without
+		// regenerating the other is what `npm ci` refuses, and a warm cache that
+		// read the lockfile alone would skip the install that would refuse it.
+		posixOnly("reinstalls when only the manifest moved", async () => {
+			const name = NAMES[5];
+			const lock = '{"lockfileVersion":3,"pinned":"1.0.0"}';
+			writeCorpus(name, lock, JSON.stringify({ name, asked: "1.0.0" }));
+			await withStandInNpm(0, () => installPackages(name));
+			const before = stampOf(name);
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			// The lockfile is byte-identical; only what the manifest asks for moved.
+			const after = writeCorpus(
+				name,
+				lock,
+				JSON.stringify({ name, asked: "1.0.1" })
+			);
+			expect(after).not.toBe(before);
+			fs.rmSync(path.join(cacheFor(name), RAN), { force: true });
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(after);
 		});
 
 		// A fixture the caller generated with the packages it installed is as
