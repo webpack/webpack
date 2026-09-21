@@ -24,26 +24,12 @@ const fileAliasPath = path.join(staticPath, "stale-link.txt");
 const SYMLINK_UNSUPPORTED = new Set(["EPERM", "EACCES", "ENOSYS", "UNKNOWN"]);
 
 /**
- * Lay out a project whose `output.path` is below what the pattern copies, with
- * a file an earlier build left in the output directory.
- * @returns {boolean} whether the symlink aliasing the output directory was made
+ * @param {() => void} link what makes one of the links
+ * @returns {boolean} whether this machine could make it
  */
-const createFiles = () => {
-	fs.mkdirSync(path.join(staticPath, "nested"), { recursive: true });
-	fs.mkdirSync(outputPath, { recursive: true });
-	fs.writeFileSync(
-		path.join(tempFolderPath, "index.js"),
-		"module.exports = 1;"
-	);
-	fs.writeFileSync(path.join(staticPath, "keep.txt"), "keep");
-	fs.writeFileSync(path.join(staticPath, "nested", "deep.txt"), "deep");
-	fs.writeFileSync(stalePath, "stale");
-
+const tryLink = (link) => {
 	try {
-		// a file link is what `stat` reports as a plain file, so it reaches the
-		// output directory without ever being recognized as a link
-		fs.symlinkSync(stalePath, fileAliasPath, "file");
-		fs.symlinkSync(outputPath, aliasPath, "junction");
+		link();
 	} catch (err) {
 		const { code } = /** @type {NodeJS.ErrnoException} */ (err);
 		// anything else is a broken fixture, which must fail rather than skip
@@ -56,7 +42,35 @@ const createFiles = () => {
 };
 
 /**
- * @param {{ from: string, to: string }} pattern what the build copies
+ * Lay out a project whose `output.path` is below what the pattern copies, with
+ * a file an earlier build left in the output directory.
+ * @returns {{ aliased: boolean, fileAliased: boolean }} which links this machine could make
+ */
+const createFiles = () => {
+	fs.mkdirSync(path.join(staticPath, "nested"), { recursive: true });
+	fs.mkdirSync(outputPath, { recursive: true });
+	fs.writeFileSync(
+		path.join(tempFolderPath, "index.js"),
+		"module.exports = 1;"
+	);
+	fs.writeFileSync(path.join(staticPath, "keep.txt"), "keep");
+	fs.writeFileSync(path.join(staticPath, "nested", "deep.txt"), "deep");
+	fs.writeFileSync(stalePath, "stale");
+
+	// each link is attempted on its own: a machine that refuses one may well
+	// make the other, and one refusal must not skip both groups of tests
+	return {
+		// a file link is what `stat` reports as a plain file, so it reaches the
+		// output directory without ever being recognized as a link
+		fileAliased: tryLink(() =>
+			fs.symlinkSync(stalePath, fileAliasPath, "file")
+		),
+		aliased: tryLink(() => fs.symlinkSync(outputPath, aliasPath, "junction"))
+	};
+};
+
+/**
+ * @param {{ from: string, to: string, globOptions?: { followSymlinks?: boolean } }} pattern what the build copies
  * @param {((copiedPath: string) => boolean | void)=} ignore what to tap the `ignore` hook with
  * @returns {Promise<import("../../").Compilation>} the compilation of one build
  */
@@ -108,12 +122,14 @@ describe("CopyPlugin", () => {
 	let hookedCompilation;
 	/** @type {boolean} */
 	let aliased;
+	/** @type {boolean} */
+	let fileAliased;
 
 	beforeAll(async () => {
 		await new Promise((resolve) => {
 			rimraf(tempFolderPath, resolve);
 		});
-		aliased = createFiles();
+		({ aliased, fileAliased } = createFiles());
 		compilation = await compile({ from: "static", to: "." });
 		// the output directory is answered too: one left ignored is never walked,
 		// so the file below it would not be reached
@@ -166,14 +182,14 @@ describe("CopyPlugin", () => {
 	});
 
 	it("should not follow a file symlink into the output path", () => {
-		if (!aliased) return;
+		if (!fileAliased) return;
 		// `stat` follows the link and reports a plain file, so nothing about the
 		// walk says the bytes come from the output directory
 		expect(compilation.getAsset("stale-link.txt")).toBeUndefined();
 	});
 
 	it("should copy nothing when the pattern names such a file symlink", async () => {
-		if (!aliased) return;
+		if (!fileAliased) return;
 		const fromFileAlias = await compile({
 			from: "static/stale-link.txt",
 			to: "named"
@@ -185,6 +201,27 @@ describe("CopyPlugin", () => {
 				asset.name.startsWith("named")
 			)
 		).toHaveLength(0);
+	});
+
+	it("should copy a named file symlink as a link when told not to follow", async () => {
+		if (!fileAliased) return;
+		const fromFileAlias = await compile({
+			from: "static/stale-link.txt",
+			to: "linked",
+			globOptions: { followSymlinks: false }
+		});
+		const asset = fromFileAlias.getAsset("linked/stale-link.txt");
+		// `stat` follows the link to call the `from` a file, so nothing else says
+		// the link itself is what this pattern copies
+		expect(asset).toBeDefined();
+		expect(
+			/** @type {import("../../").Asset} */ (asset).info.symlink
+		).toBeDefined();
+		// what the link says is its whole content, so the file it points at inside
+		// the output directory is never read
+		expect(
+			/** @type {import("../../").Asset} */ (asset).source.source().toString()
+		).toBe(stalePath);
 	});
 
 	it("should not make a symlink into the output path a dependency", () => {
