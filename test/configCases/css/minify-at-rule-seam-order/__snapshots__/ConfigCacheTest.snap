@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minify-at-rule-seam-order minify-at-rule-seam-order should compile 1`] = `"@media print{.a,.b{color:red}}@supports (color:red){.c,.d{top:0}}@layer named{.e,.f{left:0}}@starting-style{.g,.h{opacity:0}}@container (width>0px){.s1,.s2,.s3,.s4{right:0}}@media screen{.keep-first{color:red}.keep-second{color:blue}}"`;
