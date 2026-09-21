@@ -8457,6 +8457,50 @@ describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
 			"@media print{.b{color:red}.a{color:blue}}"
 		);
 	});
+
+	// A gather makes the same seam out of two blocks a sibling stands between,
+	// and the run it ends is the one that orders the list it grew.
+	it("orders the list a gathered layer's seam leaves", () => {
+		expect(
+			minifyFor("@media all{@layer a{.b{color:red}}.q{left:0}@layer a{.a{color:red}}}")
+		).toBe("@media all{@layer a{.a,.b{color:red}}.q{left:0}}");
+	});
+
+	it("orders the list a gathered layer's seam leaves, block by block", () => {
+		expect(
+			minifyFor(
+				"@media all{@layer a{.d{color:red}}.q{left:0}@layer a{.c{color:red}}@layer a{.b{color:red}}@layer a{.a{color:red}}}"
+			)
+		).toBe("@media all{@layer a{.a,.b,.c,.d{color:red}}.q{left:0}}");
+	});
+
+	it("orders the list a distant at-rule's seam leaves", () => {
+		const sheet =
+			"@media print{.b{color:red}}.q{left:0}@media print{.a{color:red}}";
+		const once = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true
+		}).code;
+		expect(once).toBe("@media print{.a,.b{color:red}}.q{left:0}");
+	});
+
+	it("orders the list a nested distant at-rule's seam leaves", () => {
+		const sheet =
+			"@media all{@media print{.b{color:red}}.q{left:0}@media print{.a{color:red}}}";
+		const once = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true
+		}).code;
+		expect(once).toBe("@media all{@media print{.a,.b{color:red}}.q{left:0}}");
+	});
+
+	it("orders the list a gathered block big enough to stream leaves", () => {
+		let filler = "";
+		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+		expect(minifyFor(`@layer a{.b{top:0}}@layer a{.a{top:0}${filler}}`)).toBe(
+			`@layer a{.a,.b{top:0}${filler}}`
+		);
+	});
 });
 
 describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
