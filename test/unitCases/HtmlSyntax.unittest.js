@@ -3235,8 +3235,26 @@ describe("HtmlSyntax — the facade", () => {
 	});
 
 	it("takes every name it publishes from the half that owns it", () => {
-		expect(syntax.parseHtml).toBe(syntax.parser.parseHtml);
-		expect(syntax.NodeType).toBe(syntax.parser.NodeType);
+		const parser = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (syntax.parser)
+		);
+		const surface = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (syntax)
+		);
+		const published = Object.keys(surface).filter(
+			(name) =>
+				name !== "parser" && name !== "printer" && name !== "SourceProcessor"
+		);
+		expect(published).toHaveLength(35);
+		let owned = 0;
+		for (const name of published) {
+			expect(surface[name]).toBeDefined();
+			if (name in parser) {
+				expect(surface[name]).toBe(parser[name]);
+				owned++;
+			}
+		}
+		expect(owned).toBe(25);
 	});
 
 	it("holds no printer until something prints", () => {
