@@ -15,8 +15,22 @@ const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
 const { COLOR_NAME_TO_RGB } = require("../../lib/css/data");
 const { SourceProcessor } = require("../../lib/css/syntax");
-const { parseABlocksContents } = require("../../lib/css/syntax-parser");
+const {
+	parseABlocksContents,
+	parseAComponentValue,
+	parseADeclaration,
+	parseAListOfComponentValues,
+	parseARule,
+	parseAStylesheet,
+	parseAStylesheetsContents
+} = require("../../lib/css/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const {
+	serializeComponentValue,
+	serializeComponentValues,
+	serializeDeclaration,
+	serializeRule
+} = require("../helpers/serializeCssTree");
 
 const casesDir = path.resolve(__dirname, "../external/css-parsing-tests");
 const MODES = ["development", "production"];
@@ -268,6 +282,129 @@ describe("css-parsing-tests colors", () => {
 
 			it(`${file} reads ${JSON.stringify(source)} as ${want}`, () => {
 				expect(got).toBe(want);
+			});
+		}
+	}
+});
+
+// The corpus states a parse as a tree, and webpack's parser entry points are
+// the spec's own algorithms, so the two compare directly once the nodes are
+// written in upstream's JSON form. What is not compared says why below.
+describe("css-parsing-tests trees", () => {
+	const ENTRY_POINTS = [
+		[
+			"component_value_list",
+			(source) =>
+				serializeComponentValues(parseAListOfComponentValues(source))
+		],
+		[
+			"one_component_value",
+			(source) => serializeComponentValue(parseAComponentValue(source))
+		],
+		["one_declaration", (source) => serializeDeclaration(parseADeclaration(source))],
+		["one_rule", (source) => serializeRule(parseARule(source), source)],
+		[
+			"rule_list",
+			(source) =>
+				parseAStylesheetsContents(source).map((rule) =>
+					serializeRule(rule, source)
+				)
+		],
+		[
+			"stylesheet",
+			(source) =>
+				parseAStylesheet(source).rules.map((rule) => serializeRule(rule, source))
+		]
+	];
+
+	// Each case webpack reads differently, with the reason. A listed one is
+	// asserted to *still* diverge, so fixing it fails here rather than leaving
+	// the list to rot.
+	const KNOWN_DIVERGENCES = new Map([
+		// CSS Syntax 3 dropped `<unicode-range-token>` and the `~=`-style match
+		// tokens; this corpus predates that, so it still states them.
+		["component_value_list #38", "unicode-range token"],
+		["component_value_list #39", "unicode-range token"],
+		["component_value_list #40", "unicode-range token"],
+		["component_value_list #41", "unicode-range token"],
+		["component_value_list #42", "unicode-range token"],
+		["component_value_list #43", "unicode-range token"],
+		["component_value_list #44", "unicode-range token"],
+		["component_value_list #45", "unicode-range token"],
+		["component_value_list #46", "unicode-range token"],
+		["component_value_list #47", "match token"],
+		["component_value_list #48", "match token"],
+		// A `\` with nothing after it is a parse error the spec resolves to
+		// U+FFFD; webpack keeps the character it was written as.
+		["component_value_list #7", "backslash at end of input"],
+		["component_value_list #10", "backslash at end of input"],
+		["component_value_list #11", "backslash at end of input"],
+		// A `\` before a newline inside a string is a line continuation the spec
+		// removes, and webpack keeps.
+		["component_value_list #12", "escaped newline in a string"],
+		// CDO and CDC are preserved tokens in a prelude the spec reads at the top
+		// level; webpack drops them.
+		["rule_list #10", "CDO/CDC in a prelude"],
+		// A declaration's value is the run webpack will print, so the trailing
+		// whitespace and `;` the spec keeps as component values are not in it.
+		["one_declaration #11", "trailing token in a value"],
+		["one_declaration #12", "trailing token in a value"],
+		["one_declaration #14", "trailing token in a value"],
+		["one_declaration #15", "trailing token in a value"],
+		["one_declaration #16", "trailing token in a value"],
+		["one_declaration #17", "trailing token in a value"],
+		["one_declaration #18", "trailing token in a value"],
+		["one_declaration #19", "trailing token in a value"]
+	]);
+
+	/**
+	 * Whether upstream states a parse error for a case. webpack's entry points
+	 * answer with the nodes they read rather than with the spec's error returns,
+	 * so there is nothing to compare.
+	 * @param {EXPECTED_ANY} value an expected value
+	 * @returns {boolean} true when it names an error
+	 */
+	const statesAnError = (value) =>
+		Array.isArray(value) &&
+		(value[0] === "error" || value.some(statesAnError));
+
+	for (const [file, parse] of ENTRY_POINTS) {
+		const path_ = path.join(casesDir, `${file}.json`);
+		if (!fs.existsSync(path_)) {
+			it(`submodule not initialized (${file})`, () => {
+				// No-op: the conformance data is an optional git submodule.
+			});
+
+			continue;
+		}
+		const data = JSON.parse(fs.readFileSync(path_, "utf8"));
+		for (let i = 0; i < data.length; i += 2) {
+			const source = data[i];
+			const expected = data[i + 1];
+			if (typeof source !== "string") continue;
+			if (statesAnError(expected)) continue;
+			// A NUL is preprocessed to U+FFFD by the spec and not by webpack, and
+			// the character has no place in a test name either.
+			if (source.includes("\u0000")) continue;
+
+			const name = `${file} #${i / 2}`;
+			const divergence = KNOWN_DIVERGENCES.get(name);
+			const label = divergence
+				? `${name} still diverges: ${divergence}`
+				: `${name} reads ${JSON.stringify(source).slice(0, 60)}`;
+
+			it(label, () => {
+				let actual;
+				try {
+					actual = parse(source);
+				} catch (err) {
+					actual = `threw: ${/** @type {Error} */ (err).message}`;
+				}
+				if (divergence) {
+					expect(actual).not.toEqual(expected);
+				} else {
+					expect(actual).toEqual(expected);
+				}
 			});
 		}
 	}
