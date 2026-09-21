@@ -14641,6 +14641,23 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-library-entry-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.",
+        "multiple": false,
+        "path": "output.library.entryExports",
+        "type": "enum",
+        "values": Array [
+          "last",
+          "all",
+        ],
+      },
+    ],
+    "description": "Which modules of an entry the library exposes the exports of: only the last one, or all of them, where a name more than one module binds differently is left out, as 'export *' does.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-library-export": Object {
     "configs": Array [
       Object {
