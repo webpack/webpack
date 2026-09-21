@@ -25,6 +25,7 @@
     "lib/ModuleWarning": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/MultiEntryPlugin": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
     "lib/MultiModuleFactory": "Removed in webpack 5 with MultiModule; the package is webpack 4 only.",
+    "lib/Parser": "Both importers require it inside a `try` to detect webpack 4 \u2014 hard-source-webpack-plugin pairs it with `lib/JsonParser`, and @sector-labs/lingui-loader with `lib/JavascriptGenerator` \u2014 so a re-export would pick the webpack 4 branch.",
     "lib/ParserHelpers": "Replaced in webpack 5 by javascript/JavascriptParserHelpers.",
     "lib/RuleSet": "Replaced in webpack 5 by lib/rules/RuleSetCompiler.",
     "lib/SizeFormatHelpers": "Removed in webpack 5; nothing in lib/ formats sizes under that name.",
@@ -399,10 +400,6 @@
         "extract-css-chunks-webpack-plugin",
         "styling"
       ]
-    },
-    "lib/Parser": {
-      "weekly": 132645,
-      "packages": ["@sector-labs/lingui-loader", "hard-source-webpack-plugin"]
     },
     "lib/ProgressPlugin": {
       "weekly": 164184,

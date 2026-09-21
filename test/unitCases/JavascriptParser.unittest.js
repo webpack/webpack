@@ -37,7 +37,7 @@ describe("JavascriptParser", () => {
 				});
 				parser.parse(
 					source,
-					/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({})
 					)
 				);
@@ -52,7 +52,7 @@ describe("JavascriptParser", () => {
 			const source = `${directive} probe();`;
 			const parser = new JavascriptParser("script");
 			const state =
-				/** @type {import("../../lib/Parser").ParserState} */
+				/** @type {import("../../lib/module/Parser").ParserState} */
 				(/** @type {unknown} */ ({ source }));
 			/** @type {EXPECTED_ANY} */
 			let ast;
@@ -457,7 +457,7 @@ describe("JavascriptParser", () => {
 			});
 			const actual = testParser.parse(
 				source,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -490,7 +490,7 @@ describe("JavascriptParser", () => {
 
 		const actual = testParser.parse(
 			source,
-			/** @type {import("../../lib/Parser").ParserState} */ (
+			/** @type {import("../../lib/module/Parser").ParserState} */ (
 				/** @type {unknown} */ ({})
 			)
 		);
@@ -538,7 +538,7 @@ describe("JavascriptParser", () => {
 				);
 			return parser.parse(
 				`test(${source});`,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			).result;
@@ -808,7 +808,7 @@ describe("JavascriptParser", () => {
 				it(name, () => {
 					const actual = parser.parse(
 						expr,
-						/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {import("../../lib/module/Parser").ParserState} */ (
 							/** @type {unknown} */ ({})
 						)
 					);
@@ -847,7 +847,7 @@ describe("JavascriptParser", () => {
 				it(name, () => {
 					const actual = parser.parse(
 						/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][0],
-						/** @type {import("../../lib/Parser").ParserState} */ (
+						/** @type {import("../../lib/module/Parser").ParserState} */ (
 							/** @type {unknown} */ ({})
 						)
 					);
@@ -893,7 +893,7 @@ describe("JavascriptParser", () => {
 
 			parser.parse(
 				"const { a, ...rest } = { a: 1, b: 2 };",
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -933,7 +933,7 @@ describe("JavascriptParser", () => {
 
 			parser.parse(
 				"",
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1098,7 +1098,7 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("defined-identifier evaluation fast path", () => {
-		/** @type {import("../../lib/Parser").ParserState} */
+		/** @type {import("../../lib/module/Parser").ParserState} */
 		const state = /** @type {EXPECTED_ANY} */ ({});
 
 		it("still walks callee and arguments of defined-callee calls", () => {
@@ -1170,7 +1170,7 @@ describe("JavascriptParser", () => {
 			try {
 				new JavascriptParser("auto", { importPhases: true }).parse(
 					source,
-					/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({ source })
 					)
 				);
@@ -1345,7 +1345,7 @@ function outer() { var inOuter = 1; }
 				});
 			parser.parse(
 				/** @type {EXPECTED_ANY} */ (source),
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1416,7 +1416,7 @@ function outer() { var inOuter = 1; }
 				tap(parser);
 				parser.parse(
 					source,
-					/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({})
 					)
 				);
@@ -1435,7 +1435,7 @@ function outer() { var inOuter = 1; }
 				});
 			parser.parse(
 				source,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1498,7 +1498,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			parser.hooks.import.tap("test", record);
 			parser.parse(
 				source,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1527,7 +1527,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 			});
 			parser.parse(
 				source,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1556,7 +1556,7 @@ for (target of [ ]) { var fromForOfTarget = 1; }
 				});
 				parser.parse(
 					/** @type {EXPECTED_ANY} */ (parsed),
-					/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({})
 					)
 				);
@@ -1756,7 +1756,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				});
 			parser.parse(
 				/** @type {EXPECTED_ANY} */ (source),
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1847,7 +1847,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 			});
 			parser.parse(
 				source,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -1875,7 +1875,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				);
 				parser.parse(
 					source,
-					/** @type {import("../../lib/Parser").ParserState} */ (
+					/** @type {import("../../lib/module/Parser").ParserState} */ (
 						/** @type {unknown} */ ({})
 					)
 				);
@@ -1948,7 +1948,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				});
 			parser.parse(
 				source,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
@@ -2448,7 +2448,7 @@ class WithStatic { static { const inStaticBlock = 20; } }
 				});
 			parser.parse(
 				source,
-				/** @type {import("../../lib/Parser").ParserState} */ (
+				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
 			);
