@@ -975,19 +975,19 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
-		| AssignmentProperty
-		| Property
+		| SwitchCase
 		| CatchClause
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| Property
+		| AssignmentProperty
 		| ClassBody
 		| ImportSpecifier
 		| ImportDefaultSpecifier
 		| ImportNamespaceSpecifier
 		| ExportSpecifier
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| SwitchCase
 		| TemplateElement;
 	quasis?: BasicEvaluatedExpression[];
 	parts?: BasicEvaluatedExpression[];
@@ -1234,19 +1234,19 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
-			| AssignmentProperty
-			| Property
+			| SwitchCase
 			| CatchClause
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| Property
+			| AssignmentProperty
 			| ClassBody
 			| ImportSpecifier
 			| ImportDefaultSpecifier
 			| ImportNamespaceSpecifier
 			| ExportSpecifier
-			| ObjectPattern
-			| ArrayPattern
-			| RestElement
-			| AssignmentPattern
-			| SwitchCase
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
@@ -4557,7 +4557,11 @@ declare interface ConcatenatedModuleInfo {
 	eager: boolean;
 	module: Module;
 	index: number;
-	ast?: ProgramImport;
+
+	/**
+	 * where each shorthand property's identifier starts
+	 */
+	shorthandIdentifierStarts?: Set<number>;
 	internalSource?: Source;
 	source?: ReplaceSource;
 	chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
@@ -14441,11 +14445,11 @@ declare class JavascriptParser extends ParserClass {
 			| string
 			| Identifier
 			| MemberExpression
-			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
+			| Property
 		)[],
 		fn: () => void
 	): void;
@@ -14556,11 +14560,11 @@ declare class JavascriptParser extends ParserClass {
 			| string
 			| Identifier
 			| MemberExpression
-			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
 			| AssignmentPattern
+			| Property
 		)[],
 		onIdent: (ident: string) => void
 	): void;
@@ -14572,11 +14576,11 @@ declare class JavascriptParser extends ParserClass {
 		pattern:
 			| Identifier
 			| MemberExpression
-			| Property
 			| ObjectPattern
 			| ArrayPattern
 			| RestElement
-			| AssignmentPattern,
+			| AssignmentPattern
+			| Property,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 
@@ -19369,81 +19373,6 @@ declare interface NodeEnvironmentPluginOptions {
 	 */
 	infrastructureLogging: InfrastructureLogging;
 }
-type NodeEstreeIndex =
-	| ProgramImport
-	| ImportDeclaration
-	| ExportNamedDeclaration
-	| ExportAllDeclaration
-	| ImportExpressionImport
-	| UnaryExpression
-	| ArrayExpression
-	| ArrowFunctionExpression
-	| AssignmentExpression
-	| AwaitExpression
-	| BinaryExpression
-	| SimpleCallExpression
-	| NewExpression
-	| ChainExpression
-	| ClassExpression
-	| ConditionalExpression
-	| FunctionExpression
-	| Identifier
-	| SimpleLiteral
-	| RegExpLiteral
-	| BigIntLiteral
-	| LogicalExpression
-	| MemberExpression
-	| MetaProperty
-	| ObjectExpression
-	| SequenceExpression
-	| TaggedTemplateExpression
-	| TemplateLiteral
-	| ThisExpression
-	| UpdateExpression
-	| YieldExpression
-	| SpreadElement
-	| PrivateIdentifier
-	| Super
-	| FunctionDeclaration
-	| VariableDeclaration
-	| ClassDeclaration
-	| ExpressionStatement
-	| BlockStatement
-	| StaticBlock
-	| EmptyStatement
-	| DebuggerStatement
-	| WithStatement
-	| ReturnStatement
-	| LabeledStatement
-	| BreakStatement
-	| ContinueStatement
-	| IfStatement
-	| SwitchStatement
-	| ThrowStatement
-	| TryStatement
-	| WhileStatement
-	| DoWhileStatement
-	| ForStatement
-	| ForInStatement
-	| ForOfStatement
-	| ExportDefaultDeclaration
-	| MethodDefinition
-	| PropertyDefinition
-	| VariableDeclarator
-	| AssignmentProperty
-	| Property
-	| CatchClause
-	| ClassBody
-	| ImportSpecifier
-	| ImportDefaultSpecifier
-	| ImportNamespaceSpecifier
-	| ExportSpecifier
-	| ObjectPattern
-	| ArrayPattern
-	| RestElement
-	| AssignmentPattern
-	| SwitchCase
-	| TemplateElement;
 declare interface NodeLike {
 	type: string;
 	start: number;
@@ -28038,7 +27967,8 @@ declare interface ScopeInfo {
  */
 declare abstract class ScopeScopeAnalyzer {
 	type: ScopeType;
-	block: NodeEstreeIndex;
+	blockType: string;
+	blockStart: number;
 	upper: null | ScopeScopeAnalyzer;
 	childScopes: ScopeScopeAnalyzer[];
 	variables: Variable[];
