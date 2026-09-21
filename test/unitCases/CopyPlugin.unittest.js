@@ -53,9 +53,10 @@ const createFiles = () => {
 
 /**
  * @param {{ from: string, to: string }} pattern what the build copies
+ * @param {((copiedPath: string) => boolean | void)=} ignore what to tap the `ignore` hook with
  * @returns {Promise<import("../../").Compilation>} the compilation of one build
  */
-const compile = (pattern) => {
+const compile = (pattern, ignore) => {
 	const webpack = require("../..");
 	const compiler = webpack({
 		mode: "development",
@@ -67,6 +68,15 @@ const compile = (pattern) => {
 			copy: [pattern]
 		}
 	});
+
+	if (ignore) {
+		compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+			webpack.CopyPlugin.getCompilationHooks(compilation).ignore.tap(
+				"Test",
+				ignore
+			);
+		});
+	}
 
 	compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
 		createFsFromVolume(new Volume())
@@ -90,6 +100,8 @@ describe("CopyPlugin", () => {
 	let compilation;
 	/** @type {import("../../").Compilation | undefined} */
 	let fromAliasCompilation;
+	/** @type {import("../../").Compilation} */
+	let hookedCompilation;
 	/** @type {boolean} */
 	let aliased;
 
@@ -99,6 +111,11 @@ describe("CopyPlugin", () => {
 		});
 		aliased = createFiles();
 		compilation = await compile({ from: "static", to: "." });
+		// the output directory is answered too: one left ignored is never walked,
+		// so the file below it would not be reached
+		hookedCompilation = await compile({ from: "static", to: "." }, (copiedPath) =>
+			copiedPath.includes("/static/build") ? false : undefined
+		);
 		if (aliased) {
 			fromAliasCompilation = await compile({
 				from: "static/alias",
@@ -146,6 +163,12 @@ describe("CopyPlugin", () => {
 
 	it("should not make a file inside the output path a dependency", () => {
 		expect([...compilation.fileDependencies]).not.toContain(stalePath);
+	});
+
+	it("should copy from inside the output path when the hook says so", () => {
+		// the default is there to stop a build reading what it wrote; a plugin
+		// that wants exactly that says so and is not overruled
+		expect(hookedCompilation.getAsset("build/stale.txt")).toBeDefined();
 	});
 
 	it("should report no error or warning", () => {

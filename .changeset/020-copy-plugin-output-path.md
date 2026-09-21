@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Stop `output.copy` reading files from inside `output.path`.
+Stop `output.copy` reading from `output.path`, with an `ignore` hook to override it.

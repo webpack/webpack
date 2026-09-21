@@ -5645,6 +5645,13 @@ declare class CopyPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Answers whether a path is copied, before `output.path` is considered: true ignores it, false copies it even from inside the output directory, and nothing leaves the decision to webpack. A directory has to be answered as well as the files below it, because one that is ignored is never walked.
+		 * @since 5.112.0
+		 */
+		ignore: SyncBailHook<[string], boolean | void>;
+	};
 }
 declare interface CopyTransformCacheKeys {
 	[index: string]: any;
