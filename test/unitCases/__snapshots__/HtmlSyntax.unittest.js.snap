@@ -4,6 +4,10 @@ exports[`SourceProcessor — a duplicate attribute name preserves source attribu
 
 exports[`SourceProcessor — beautifying should beautify a comment 1`] = `"<div><!--c--></div>"`;
 
+exports[`SourceProcessor — beautifying should beautify a foreign script 1`] = `"<svg><script>&lt;b&gt;</script></svg>"`;
+
+exports[`SourceProcessor — beautifying should beautify a foreign style 1`] = `"<svg><style>&lt;/style&gt;</style></svg>"`;
+
 exports[`SourceProcessor — beautifying should beautify a form the table kept 1`] = `"<table><p><form></form></p></table>"`;
 
 exports[`SourceProcessor — beautifying should beautify a fostered formatting run 1`] = `"<nobr><table><b><colgroup><nobr>"`;

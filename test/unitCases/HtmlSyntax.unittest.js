@@ -9971,6 +9971,10 @@ const { parseHtml } = require("../../lib/html/syntax-parser");
 		["a form the table kept", "<table><p><form>"],
 		// Raw text keeps its content, and a comment survives.
 		["raw text", "<style>a{b:c}</style><script>1<2</script>"],
+		// The same two names in a foreign subtree hold character data, not raw
+		// text, so what they carry stays escaped.
+		["a foreign script", "<svg><script>&lt;b&gt;</script></svg>"],
+		["a foreign style", "<svg><style>&lt;/style&gt;</style></svg>"],
 		["a comment", "<div><!--c--></div>"]
 	];
 
