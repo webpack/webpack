@@ -30,13 +30,13 @@ const path = require("path");
 const { pathToFileURL } = require("url");
 
 const htmlMinify = require("../lib/html/htmlMinify");
+const { SourceProcessor } = require("../lib/html/syntax");
 const {
 	QUOTE_NONE,
-	SourceProcessor,
 	decodeEntities,
 	pickTransforms,
 	tokenize
-} = require("../lib/html/syntax");
+} = require("../lib/html/syntax-parser");
 const {
 	STAGES,
 	collectFiles,

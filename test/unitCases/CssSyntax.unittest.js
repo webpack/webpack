@@ -2,48 +2,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const {
-	NodeType,
-	SourceProcessor,
-	TT_AT_KEYWORD,
-	TT_BAD_STRING_TOKEN,
-	TT_BAD_URL_TOKEN,
-	TT_CDC,
-	TT_CDO,
-	TT_COLON,
-	TT_COMMA,
-	TT_COMMENT,
-	TT_DELIM,
-	TT_DIMENSION,
-	TT_EOF,
-	TT_FUNCTION,
-	TT_HASH,
-	TT_IDENTIFIER,
-	TT_LEFT_CURLY_BRACKET,
-	TT_LEFT_PARENTHESIS,
-	TT_LEFT_SQUARE_BRACKET,
-	TT_NUMBER,
-	TT_PERCENTAGE,
-	TT_RIGHT_CURLY_BRACKET,
-	TT_RIGHT_PARENTHESIS,
-	TT_RIGHT_SQUARE_BRACKET,
-	TT_SEMICOLON,
-	TT_STRING,
-	TT_URL,
-	TT_WHITESPACE,
-	TokenStream,
-	buildSkipSet,
-	normalizeUrl,
-	parseABlocksContents,
-	parseACommaSeparatedListOfComponentValues,
-	parseAComponentValue,
-	parseADeclaration,
-	parseAListOfComponentValues,
-	parseARule,
-	parseAStylesheet,
-	parseAStylesheetsContents,
-	readToken
-} = require("../../lib/css/syntax");
+const { SourceProcessor } = require("../../lib/css/syntax");
+const { NodeType, TT_AT_KEYWORD, TT_BAD_STRING_TOKEN, TT_BAD_URL_TOKEN, TT_CDC, TT_CDO, TT_COLON, TT_COMMA, TT_COMMENT, TT_DELIM, TT_DIMENSION, TT_EOF, TT_FUNCTION, TT_HASH, TT_IDENTIFIER, TT_LEFT_CURLY_BRACKET, TT_LEFT_PARENTHESIS, TT_LEFT_SQUARE_BRACKET, TT_NUMBER, TT_PERCENTAGE, TT_RIGHT_CURLY_BRACKET, TT_RIGHT_PARENTHESIS, TT_RIGHT_SQUARE_BRACKET, TT_SEMICOLON, TT_STRING, TT_URL, TT_WHITESPACE, TokenStream, buildSkipSet, normalizeUrl, parseABlocksContents, parseACommaSeparatedListOfComponentValues, parseAComponentValue, parseADeclaration, parseAListOfComponentValues, parseARule, parseAStylesheet, parseAStylesheetsContents, readToken } = require("../../lib/css/syntax-parser");
 
 /**
  * @param {string} css a stylesheet
@@ -876,80 +836,14 @@ describe("CssSyntax — the facade", () => {
 		expect(typeof syntax.printer.printer).toBe("function");
 	});
 
-	it("takes every name it publishes from the half that owns it", () => {
-		const parser = require("../../lib/css/syntax-parser");
-		const dataURL = require("../../lib/util/dataURL");
-		const cssMinify = require("../../lib/css/cssMinify");
-		// Spelled out rather than derived from the facade: a name that changed
-		// spelling, or an alias repointed at another export of the same module,
-		// keeps every count identical and only a stated binding catches it.
-		const bindings = {
-			A: parser.A,
-			EMBEDDED_LANGUAGES: dataURL.EMBEDDED_LANGUAGES,
-			NodeType: parser.NodeType,
-			TT_AT_KEYWORD: parser.TT_AT_KEYWORD,
-			TT_BAD_STRING_TOKEN: parser.TT_BAD_STRING_TOKEN,
-			TT_BAD_URL_TOKEN: parser.TT_BAD_URL_TOKEN,
-			TT_CDC: parser.TT_CDC,
-			TT_CDO: parser.TT_CDO,
-			TT_COLON: parser.TT_COLON,
-			TT_COMMA: parser.TT_COMMA,
-			TT_COMMENT: parser.TT_COMMENT,
-			TT_DELIM: parser.TT_DELIM,
-			TT_DIMENSION: parser.TT_DIMENSION,
-			TT_EOF: parser.TT_EOF,
-			TT_FUNCTION: parser.TT_FUNCTION,
-			TT_HASH: parser.TT_HASH,
-			TT_IDENTIFIER: parser.TT_IDENTIFIER,
-			TT_LEFT_CURLY_BRACKET: parser.TT_LEFT_CURLY_BRACKET,
-			TT_LEFT_PARENTHESIS: parser.TT_LEFT_PARENTHESIS,
-			TT_LEFT_SQUARE_BRACKET: parser.TT_LEFT_SQUARE_BRACKET,
-			TT_NUMBER: parser.TT_NUMBER,
-			TT_PERCENTAGE: parser.TT_PERCENTAGE,
-			TT_RIGHT_CURLY_BRACKET: parser.TT_RIGHT_CURLY_BRACKET,
-			TT_RIGHT_PARENTHESIS: parser.TT_RIGHT_PARENTHESIS,
-			TT_RIGHT_SQUARE_BRACKET: parser.TT_RIGHT_SQUARE_BRACKET,
-			TT_SEMICOLON: parser.TT_SEMICOLON,
-			TT_STRING: parser.TT_STRING,
-			TT_URL: parser.TT_URL,
-			TT_WHITESPACE: parser.TT_WHITESPACE,
-			TokenStream: parser.TokenStream,
-			askEmbeddedRenderer: dataURL.askEmbeddedRenderer,
-			buildSkipSet: parser.buildSkipSet,
-			collectEmbeddedDiagnostics: dataURL.collectEmbeddedDiagnostics,
-			cssMinify,
-			embeddedText: dataURL.embeddedText,
-			equalsLowerCase: parser.equalsLowerCase,
-			escapeIdentifier: parser.escapeIdentifier,
-			isDashedIdentifier: parser.isDashedIdentifier,
-			isWhitespace: parser._isWhiteSpace,
-			normalizeUrl: parser.normalizeUrl,
-			parseABlocksContents: parser.parseABlocksContents,
-			parseACommaSeparatedListOfComponentValues: parser.parseACommaSeparatedListOfComponentValues,
-			parseAComponentValue: parser.parseAComponentValue,
-			parseADeclaration: parser.parseADeclaration,
-			parseAListOfComponentValues: parser.parseAListOfComponentValues,
-			parseARule: parser.parseARule,
-			parseAStylesheet: parser.parseAStylesheet,
-			parseAStylesheetsContents: parser.parseAStylesheetsContents,
-			pickTransforms: parser.pickTransforms,
-			rangeEquals: parser.rangeEquals,
-			rangeEqualsLowerCase: parser.rangeEqualsLowerCase,
-			readToken: parser.readToken,
-			skipEscape: parser.skipEscape,
-			toLowerCaseIfNeeded: parser.toLowerCaseIfNeeded,
-			unescapeIdentifier: parser.unescapeIdentifier,
-		};
-		const surface = /** @type {Record<string, unknown>} */ (
-			/** @type {unknown} */ (syntax)
-		);
-		expect(Object.keys(surface).sort()).toEqual(
-			["SourceProcessor", "parser", "printer", ...Object.keys(bindings)].sort()
-		);
-		for (const [name, owned] of Object.entries(bindings)) {
-			expect(owned).toBeDefined();
-			expect(surface[name]).toBe(owned);
-		}
+	it("publishes only the two halves and the processor", () => {
+		expect(Object.keys(syntax).sort()).toEqual([
+			"SourceProcessor",
+			"parser",
+			"printer"
+		]);
+		expect(syntax.parser).toBe(require("../../lib/css/syntax-parser"));
+		expect(syntax.printer).toBe(require("../../lib/css/syntax-printer"));
 	});
 
 	it("holds no printer until something prints", () => {
@@ -8775,7 +8669,7 @@ describe("SourceProcessor — renderEmbeddedSource over a data: url", () => {
 	});
 
 	it("offers every language `EMBEDDED_LANGUAGES` names, and prints each answer", () => {
-		const { EMBEDDED_LANGUAGES } = require("../../lib/css/syntax");
+		const { EMBEDDED_LANGUAGES } = require("../../lib/util/dataURL");
 
 		// One stylesheet reaching every language a media type can name.
 		const sheet =
@@ -8936,7 +8830,7 @@ describe("CssSyntax minify — one stylesheet reaching every embedded site", () 
 		}).code;
 
 	it("offers each embedded body once, written out and base64 alike", () => {
-		const { EMBEDDED_LANGUAGES } = require("../../lib/css/syntax");
+		const { EMBEDDED_LANGUAGES } = require("../../lib/util/dataURL");
 
 		/** @type {[string, string][]} */
 		const offered = [];
@@ -11127,13 +11021,13 @@ describe("cssMinify export", () => {
 	it("is the minifier itself, reachable from the public entry", () => {
 		const webpack = require("../..");
 
-		expect(webpack.css.syntax.cssMinify).toBe(require("../../lib/css/cssMinify"));
+		expect(webpack.css.cssMinify).toBe(require("../../lib/css/cssMinify"));
 	});
 
 	it("carries the minimizer contract minimizer-webpack-plugin dispatches on", () => {
 		const webpack = require("../..");
 
-		const { cssMinify } = webpack.css.syntax;
+		const { cssMinify } = webpack.css;
 
 		expect(cssMinify.getTypes()).toEqual(["css"]);
 		expect(cssMinify.getEmbeddedTypes()).toContain("css");
@@ -11145,7 +11039,7 @@ describe("cssMinify export", () => {
 	it("minifies through the public entry", async () => {
 		const webpack = require("../..");
 
-		const { cssMinify } = webpack.css.syntax;
+		const { cssMinify } = webpack.css;
 
 		const { code } = await cssMinify({ "a.css": "a {\n\tcolor: red;\n}\n" });
 

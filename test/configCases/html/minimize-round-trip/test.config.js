@@ -12,12 +12,12 @@ const {
 	TOKEN_LIST_ATTRIBUTES,
 	URL_ATTRIBUTES
 } = require("../../../../lib/html/data");
+const { SourceProcessor } = require("../../../../lib/html/syntax");
 const {
 	NodeType,
-	SourceProcessor,
 	decodeEntities,
 	parseSrcset
-} = require("../../../../lib/html/syntax");
+} = require("../../../../lib/html/syntax-parser");
 
 /**
  * The HTML integer parse rules, spelled out here rather than reused from `lib/`

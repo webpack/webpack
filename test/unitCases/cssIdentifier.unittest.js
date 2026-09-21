@@ -1,12 +1,12 @@
 "use strict";
 
-const cssSyntax = require("../../lib/css/syntax");
+const cssParser = require("../../lib/css/syntax-parser");
 const { cssExportConvention } = require("../../lib/util/conventions");
 const { makeCacheable } = require("../../lib/util/identifier");
 
 describe("css identifier utils", () => {
 	describe("escapeIdentifier", () => {
-		const { escapeIdentifier } = cssSyntax;
+		const { escapeIdentifier } = cssParser;
 
 		// [input, expected]
 		/** @type {[string, string][]} */
@@ -55,7 +55,7 @@ describe("css identifier utils", () => {
 	});
 
 	describe("unescapeIdentifier", () => {
-		const { unescapeIdentifier } = cssSyntax;
+		const { unescapeIdentifier } = cssParser;
 
 		// [input, expected]
 		/** @type {[string, string][]} */
@@ -113,7 +113,7 @@ describe("css identifier utils", () => {
 		});
 
 		it("round-trips through escapeIdentifier for common values", () => {
-			const { escapeIdentifier } = cssSyntax;
+			const { escapeIdentifier } = cssParser;
 			for (const value of [
 				"foo bar",
 				"foo.bar",
@@ -131,7 +131,7 @@ describe("css identifier utils", () => {
 	// failure is reproducible. Guards the string utils against crashes and
 	// escape/unescape round-trip violations.
 	describe("fuzzing (seeded)", () => {
-		const { escapeIdentifier, unescapeIdentifier, equalsLowerCase } = cssSyntax;
+		const { escapeIdentifier, unescapeIdentifier, equalsLowerCase } = cssParser;
 		// mulberry32
 		const makeRng = (/** @type {number} */ seed) => {
 			let s = seed >>> 0;

@@ -4,7 +4,10 @@ const {
 	sources: { RawSource, OriginalSource, ReplaceSource },
 	Compilation,
 	html: {
-		syntax: { NodeType, SourceProcessor }
+		syntax: {
+			SourceProcessor,
+			parser: { NodeType }
+		}
 	},
 	util: { createHash },
 	optimize: { RealContentHashPlugin }

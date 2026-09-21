@@ -57,7 +57,9 @@ class SampleEmbeddedMinifyPlugin {
 
 		// Webpack's own CSS and JSON minifiers stand behind the sample's renderer
 		// for what it declines, as `htmlMinify` puts them behind a caller's.
-		const builtin = htmlSyntax.builtinEmbeddedRenderer();
+		const builtin =
+			require("../../lib/html/builtinEmbeddedRenderer").builtinEmbeddedRenderer();
+
 		/** @type {EmbeddedSourceRenderer} */
 		const renderer = (source, info) => {
 			const answered =

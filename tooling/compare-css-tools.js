@@ -36,13 +36,13 @@ const MODERN_BROWSERS = require("browserslist")(
 	"last 1 chrome version, last 1 firefox version, last 1 safari version, last 1 edge version"
 );
 const cssMinify = require("../lib/css/cssMinify");
+const { SourceProcessor } = require("../lib/css/syntax");
 const {
-	SourceProcessor,
 	TT_EOF,
 	TT_WHITESPACE,
 	TokenStream,
 	pickTransforms
-} = require("../lib/css/syntax");
+} = require("../lib/css/syntax-parser");
 const {
 	STAGES,
 	collectFiles,

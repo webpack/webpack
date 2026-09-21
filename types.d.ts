@@ -22707,6 +22707,11 @@ declare interface ParseResult {
 	ast: ProgramImport;
 	comments: CommentJavascriptParser[];
 }
+declare interface ParsedDataURI {
+	mediaType: string;
+	base64: boolean;
+	payload: string;
+}
 declare interface ParsedIdentifier {
 	/**
 	 * request
@@ -32367,6 +32372,40 @@ declare namespace exports {
 		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
 	}
 	export namespace css {
+		export function cssMinify(
+			input: { [index: string]: string | Buffer },
+			sourceMap?: object,
+			minimizerOptions?: {
+				as?: "stylesheet" | "block-contents";
+				environment?: CssEnvironment;
+				convertLengthUnits?: boolean;
+				convertApproximateColors?: boolean;
+				dropOverriddenDeclarations?: boolean;
+				mergeDistantRules?: boolean;
+				rewriteCustomProperties?: boolean;
+				unusedSymbols?: string[];
+				pseudoClasses?: { [index: string]: string };
+				renderEmbeddedSource?: (
+					source: string,
+					info: { type: string; hostType: string }
+				) =>
+					| undefined
+					| string
+					| EmbeddedSourceResult
+					| Promise<undefined | string | EmbeddedSourceResult>;
+			} & CssTransformOptions
+		): Promise<{
+			code: string;
+			map?: SourceMap;
+			warnings?: (string | Error)[];
+			errors?: (string | Error)[];
+		}>;
+		export namespace cssMinify {
+			export let supportsWorkerThreads: () => boolean;
+			export let getTypes: () => string[];
+			export let getEmbeddedTypes: () => string[];
+			export let filter: (name: string) => boolean;
+		}
 		export namespace syntax {
 			export namespace parser {
 				export let A: {
@@ -32648,6 +32687,7 @@ declare namespace exports {
 					options: CssProcessOptions
 				) => void;
 				export let isDashedIdentifier: (identifier: string) => boolean;
+				export let isWhitespace: (cc: number) => boolean;
 				export let normalizeUrl: (str: string, isString: boolean) => string;
 				export let parseABlocksContents: (
 					input: string | TokenStream,
@@ -32828,246 +32868,54 @@ declare namespace exports {
 					>
 				) => string;
 			}
-			export const A: {
-				get node(): NodeSyntaxParser;
-				get parent(): null | NodeSyntaxParser;
-				get index(): number;
-				/**
-				 * Stop the walk descending into the current node (enter only).
-				 */
-				skipChildren(): void;
-				inValue(): boolean;
-				type(n?: NodeSyntaxParser): number;
-				start(n?: NodeSyntaxParser): number;
-				end(n?: NodeSyntaxParser): number;
-				range(n?: NodeSyntaxParser): [number, number];
-				loc(n?: NodeSyntaxParser): {
-					start: { line: number; column: number };
-					end: { line: number; column: number };
+			export { SourceProcessorSyntaxClass_2 as SourceProcessor };
+		}
+		export { CssModulesPlugin };
+	}
+	export namespace html {
+		export const builtinEmbeddedRenderer: (
+			options?: BuiltinEmbeddedRendererOptions
+		) => (
+			source: string,
+			info: { type: string; hostType: string; as?: string }
+		) => undefined | string;
+		export function htmlMinify(
+			input: { [index: string]: string | Buffer },
+			sourceMap?: RawSourceMap,
+			minimizerOptions?: Omit<
+				HtmlPrintOptions,
+				"renderEmbeddedSource" | "deferEmbeddedSource"
+			> & {
+				environment?: CssEnvironment;
+				css?: {
+					convertLengthUnits?: boolean;
+					convertApproximateColors?: boolean;
+					dropOverriddenDeclarations?: boolean;
+					rewriteCustomProperties?: boolean;
+					unusedSymbols?: string[];
+					pseudoClasses?: { [index: string]: string };
 				};
-				source(n?: NodeSyntaxParser): string;
-				value(n?: NodeSyntaxParser): string;
-				unescaped(n?: NodeSyntaxParser): string;
-				typeFlag(n?: NodeSyntaxParser): string;
-				contentStart(n?: NodeSyntaxParser): number;
-				contentEnd(n?: NodeSyntaxParser): number;
-				name(n?: NodeSyntaxParser): string;
-				nameStart(n?: NodeSyntaxParser): number;
-				nameEnd(n?: NodeSyntaxParser): number;
-				unescapedName(n?: NodeSyntaxParser): string;
-				atKeyword(n?: NodeSyntaxParser): string;
-				children(n?: NodeSyntaxParser): ComponentValue[];
-				prelude(n?: NodeSyntaxParser): ComponentValue[];
-				childCount(n?: NodeSyntaxParser): number;
-				childAt(n: NodeSyntaxParser, i: number): ComponentValue;
-				/**
-				 * A block big enough to stream hands its children to the visitors as each one
-				 * finishes rather than collecting them, so both lists read as an empty block
-				 * on it — `null`, which means no block at all, is still only for the `@…;`
-				 * forms. Read a block's children from the walk, not from here.
-				 */
-				declarations(n?: NodeSyntaxParser): null | DeclarationSyntaxParser[];
-				/**
-				 * Reads as an empty block on a streamed rule; see {@link declarations }.
-				 */
-				childRules(n?: NodeSyntaxParser): null | RuleSyntaxParser[];
-				blockStart(n?: NodeSyntaxParser): number;
-				blockEnd(n?: NodeSyntaxParser): number;
-				important(n?: NodeSyntaxParser): boolean;
-				blockToken(n?: NodeSyntaxParser): SimpleBlockToken;
-				setEnd(n: NodeSyntaxParser, v: number): void;
-				setBlockEnd(n: NodeSyntaxParser, v: number): void;
-			};
-			export const EMBEDDED_LANGUAGES: string[];
-			export namespace NodeType {
-				export let Ident: number;
-				export let Function: number;
-				export let AtKeyword: number;
-				export let Hash: number;
-				export let String: number;
-				export let BadString: number;
-				export let Url: number;
-				export let BadUrl: number;
-				export let Delim: number;
-				export let Number: number;
-				export let Percentage: number;
-				export let Dimension: number;
-				export let Whitespace: number;
-				export let Colon: number;
-				export let Semicolon: number;
-				export let Comma: number;
-				export let RightParenthesis: number;
-				export let RightSquareBracket: number;
-				export let RightCurlyBracket: number;
-				export let CDO: number;
-				export let CDC: number;
-				export let SimpleBlock: number;
-				export let Declaration: number;
-				export let AtRule: number;
-				export let QualifiedRule: number;
-				export let Stylesheet: number;
-				export let Comment: number;
-				export let Raw: number;
-			}
-			export const TT_AT_KEYWORD: 16;
-			export const TT_BAD_STRING_TOKEN: 4;
-			export const TT_BAD_URL_TOKEN: 19;
-			export const TT_CDC: 25;
-			export const TT_CDO: 24;
-			export const TT_COLON: 14;
-			export const TT_COMMA: 13;
-			export const TT_COMMENT: 1;
-			export const TT_DELIM: 6;
-			export const TT_DIMENSION: 23;
-			export const TT_EOF: 26;
-			export const TT_FUNCTION: 17;
-			export const TT_HASH: 5;
-			export const TT_IDENTIFIER: 20;
-			export const TT_LEFT_CURLY_BRACKET: 9;
-			export const TT_LEFT_PARENTHESIS: 7;
-			export const TT_LEFT_SQUARE_BRACKET: 8;
-			export const TT_NUMBER: 21;
-			export const TT_PERCENTAGE: 22;
-			export const TT_RIGHT_CURLY_BRACKET: 12;
-			export const TT_RIGHT_PARENTHESIS: 10;
-			export const TT_RIGHT_SQUARE_BRACKET: 11;
-			export const TT_SEMICOLON: 15;
-			export const TT_STRING: 3;
-			export const TT_URL: 18;
-			export const TT_WHITESPACE: 2;
-			export const askEmbeddedRenderer: (
-				render: (
+				minifyConditionalComments?: boolean;
+				renderEmbeddedSource?: (
 					source: string,
 					info: { type: string; hostType: string; as?: string }
 				) =>
 					| undefined
 					| string
 					| EmbeddedSourceResult
-					| Promise<undefined | string | EmbeddedSourceResult>,
-				hole: { source: string; type: string; hostType: string; as?: string },
-				reported: EmbeddedSourceResult[]
-			) => Promise<undefined | string | EmbeddedSourceResult>;
-			export const buildSkipSet: (nodeTypes: number[]) => Uint8Array;
-			export const collectEmbeddedDiagnostics: (
-				reported: {
-					warnings?: (string | Error)[];
-					errors?: (string | Error)[];
-				}[]
-			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
-			export function cssMinify(
-				input: { [index: string]: string | Buffer },
-				sourceMap?: object,
-				minimizerOptions?: {
-					as?: "stylesheet" | "block-contents";
-					environment?: CssEnvironment;
-					convertLengthUnits?: boolean;
-					convertApproximateColors?: boolean;
-					dropOverriddenDeclarations?: boolean;
-					mergeDistantRules?: boolean;
-					rewriteCustomProperties?: boolean;
-					unusedSymbols?: string[];
-					pseudoClasses?: { [index: string]: string };
-					renderEmbeddedSource?: (
-						source: string,
-						info: { type: string; hostType: string }
-					) =>
-						| undefined
-						| string
-						| EmbeddedSourceResult
-						| Promise<undefined | string | EmbeddedSourceResult>;
-				} & CssTransformOptions
-			): Promise<{
-				code: string;
-				map?: SourceMap;
-				warnings?: (string | Error)[];
-				errors?: (string | Error)[];
-			}>;
-			export namespace cssMinify {
-				export let supportsWorkerThreads: () => boolean;
-				export let getTypes: () => string[];
-				export let getEmbeddedTypes: () => string[];
-				export let filter: (name: string) => boolean;
+					| Promise<undefined | string | EmbeddedSourceResult>;
 			}
-			export const embeddedText: (
-				answer?: string | { code?: string }
-			) => undefined | string;
-			export const equalsLowerCase: (s: string, lit: string) => boolean;
-			export const escapeIdentifier: MakeCacheableResult<string> & {
-				bindCache: BindCache<string>;
-			};
-			export const isDashedIdentifier: (identifier: string) => boolean;
-			export const isWhitespace: (cc: number) => boolean;
-			export const normalizeUrl: (str: string, isString: boolean) => string;
-			export const parseABlocksContents: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => { decls: DeclarationSyntaxParser[]; rules: RuleSyntaxParser[] };
-			export const parseACommaSeparatedListOfComponentValues: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => ComponentValue[][];
-			export const parseAComponentValue: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => undefined | TokenSyntaxParserObject | FunctionNode | SimpleBlock;
-			export const parseADeclaration: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => undefined | DeclarationSyntaxParser;
-			export const parseAListOfComponentValues: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => ComponentValue[];
-			export const parseARule: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => undefined | AtRule | QualifiedRule;
-			export const parseAStylesheet: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => Stylesheet;
-			export const parseAStylesheetsContents: (
-				input: string | TokenStream,
-				pos?: number,
-				options?: ParseOptionsSyntaxParser
-			) => RuleSyntaxParser[];
-			export const pickTransforms: (
-				options: object
-			) => undefined | CssTransformOptions;
-			export const rangeEquals: (
-				input: string,
-				start: number,
-				end: number,
-				lit: string
-			) => boolean;
-			export const rangeEqualsLowerCase: (
-				input: string,
-				start: number,
-				end: number,
-				lit: string
-			) => boolean;
-			export const readToken: (
-				input: string,
-				pos: number,
-				out: MutableToken
-			) => undefined | MutableToken;
-			export const skipEscape: (input: string, pos: number) => number;
-			export const toLowerCaseIfNeeded: (s: string) => string;
-			export const unescapeIdentifier: MakeCacheableResult<string> & {
-				bindCache: BindCache<string>;
-			};
-			export { SourceProcessorSyntaxClass_2 as SourceProcessor, TokenStream };
+		): Promise<{
+			code: string;
+			warnings?: (string | Error)[];
+			errors?: (string | Error)[];
+		}>;
+		export namespace htmlMinify {
+			export let supportsWorkerThreads: () => boolean;
+			export let getTypes: () => string[];
+			export let getEmbeddedTypes: () => string[];
+			export let filter: (name: string) => boolean;
 		}
-		export { CssModulesPlugin };
-	}
-	export namespace html {
 		export namespace syntax {
 			export namespace parser {
 				export let A: {
@@ -33334,7 +33182,7 @@ declare namespace exports {
 				) => void;
 				export let isAllWs: (s: string) => boolean;
 				export let isAsciiAlphanumeric: (cc: number) => boolean;
-				export let isSpace: (cc: number) => boolean;
+				export let isAsciiWhitespace: (cc: number) => boolean;
 				export let metaTag: (name: string, content: string) => string;
 				export let parseCssUrls: (input: string) => [string, number, number][];
 				export let parseHtml: (
@@ -33501,203 +33349,6 @@ declare namespace exports {
 					>
 				) => string;
 			}
-			export const A: {
-				get node(): number;
-				get parent(): null | number;
-				/**
-				 * Stop the walk descending into the current node (enter only).
-				 */
-				skipChildren(): void;
-				type(n?: number): number;
-				start(n?: number): number;
-				end(n?: number): number;
-				/**
-				 * Raw source slice `[start, end)` — valid only during the walk (the printer's
-				 * window), before `parseHtml` releases `_htmlSource`.
-				 */
-				source(n?: number): string;
-				sourceSpanAt(from: number, to: number): string;
-				tagName(n?: number): string;
-				namespace(n?: number): number;
-				selfClosing(n?: number): boolean;
-				attributes(n?: number): HtmlAttribute[];
-				attributeCount(n?: number): number;
-				/**
-				 * The i-th attribute of an element, as an id for the `attribute*` reads.
-				 */
-				attributeAt(i: number, n?: number): number;
-				/**
-				 * Linear lookup by (lowercased) name.
-				 */
-				findAttribute(name: string, n?: number): number;
-				attributeName(a: number): string;
-				attributeValue(a: number): string;
-				attributeNameStart(a: number): number;
-				attributeNameEnd(a: number): number;
-				attributeValueStart(a: number): number;
-				attributeValueEnd(a: number): number;
-				tagEnd(n?: number): number;
-				nameEnd(n?: number): number;
-				/**
-				 * Whether the source wrote this element's end tag rather than the parser
-				 * popping it for an implied close. Read back off the range instead of marked
-				 * during the parse: an element's end spans the token that closed it, so its
-				 * own end tag is the last thing in it — and only the few elements around a
-				 * region printed from source ever ask.
-				 */
-				sourceClosed(n?: number): boolean;
-				openTag(n?: number): string;
-				/**
-				 * An element's end tag, generated as `</name>` from the opening tag's own name
-				 * (exact source casing, correct for foreign camelCase elements). Generated, not
-				 * sliced: element `end` offsets don't span the end tag, and an omitted optional
-				 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. `""` when the
-				 * parser inserted the element, as {@link openTag } does — it has no name in the
-				 * source to echo, and slicing one would spell `</>`.
-				 */
-				closeTag(n?: number): string;
-				contentEnd(n?: number): number;
-				templateContent(n?: number): number;
-				data(n?: number): string;
-				piTarget(n?: number): string;
-				doctypeName(n?: number): string;
-				doctypePublicId(_n?: number): null | string;
-				doctypeSystemId(_n?: number): null | string;
-				firstChild(n?: number): number;
-				nextSibling(n?: number): number;
-				parentOf(n?: number): number;
-				children(n?: number): number[];
-			};
-			export const BLOCK_CONTENTS: "block-contents";
-			export const CLASSIC_SCRIPT: "script";
-			export const EMBEDDED_LANGUAGES: string[];
-			export const EVENT_HANDLER: "event-handler";
-			export const JSON_TYPE: "json";
-			export const MODULE_SCRIPT: "module";
-			export const NS_HTML: 0;
-			export const NS_MATHML: 1;
-			export const NS_SVG: 2;
-			export namespace NodeType {
-				export let Document: 1;
-				export let DocumentFragment: 2;
-				export let Element: 3;
-				export let Text: 4;
-				export let Comment: 5;
-				export let Doctype: 6;
-				export let ProcessingInstruction: 7;
-			}
-			export const QUOTE_DOUBLE: 1;
-			export const QUOTE_NONE: 0;
-			export const QUOTE_SINGLE: 2;
-			export const SVG_TAG_ADJUST: Record<string, string>;
-			export const askEmbeddedRenderer: (
-				render: (
-					source: string,
-					info: { type: string; hostType: string; as?: string }
-				) =>
-					| undefined
-					| string
-					| EmbeddedSourceResult
-					| Promise<undefined | string | EmbeddedSourceResult>,
-				hole: { source: string; type: string; hostType: string; as?: string },
-				reported: EmbeddedSourceResult[]
-			) => Promise<undefined | string | EmbeddedSourceResult>;
-			export const baseTag: (
-				base:
-					| string
-					| {
-							/**
-							 * Value for the `href` attribute of the `<base>` element.
-							 */
-							href: string;
-							/**
-							 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
-							 */
-							target?: string;
-					  }
-			) => string;
-			export const buildHeadTags: (opts: OutputHtmlOptions) => string;
-			export const builtinEmbeddedRenderer: (
-				options?: BuiltinEmbeddedRendererOptions
-			) => (
-				source: string,
-				info: { type: string; hostType: string; as?: string }
-			) => undefined | string;
-			export const collectEmbeddedDiagnostics: (
-				reported: {
-					warnings?: (string | Error)[];
-					errors?: (string | Error)[];
-				}[]
-			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
-			export const decodeEntities: _functionSyntaxParser;
-			export const embeddedText: (
-				answer?: string | { code?: string }
-			) => undefined | string;
-			export const escapeAttribute: (
-				s: string,
-				delimiter?: number,
-				minimal?: boolean
-			) => string;
-			export const escapeText: (s: string) => string;
-			export function htmlMinify(
-				input: { [index: string]: string | Buffer },
-				sourceMap?: RawSourceMap,
-				minimizerOptions?: Omit<
-					HtmlPrintOptions,
-					"renderEmbeddedSource" | "deferEmbeddedSource"
-				> & {
-					environment?: CssEnvironment;
-					css?: {
-						convertLengthUnits?: boolean;
-						convertApproximateColors?: boolean;
-						dropOverriddenDeclarations?: boolean;
-						rewriteCustomProperties?: boolean;
-						unusedSymbols?: string[];
-						pseudoClasses?: { [index: string]: string };
-					};
-					minifyConditionalComments?: boolean;
-					renderEmbeddedSource?: (
-						source: string,
-						info: { type: string; hostType: string; as?: string }
-					) =>
-						| undefined
-						| string
-						| EmbeddedSourceResult
-						| Promise<undefined | string | EmbeddedSourceResult>;
-				}
-			): Promise<{
-				code: string;
-				warnings?: (string | Error)[];
-				errors?: (string | Error)[];
-			}>;
-			export namespace htmlMinify {
-				export let supportsWorkerThreads: () => boolean;
-				export let getTypes: () => string[];
-				export let getEmbeddedTypes: () => string[];
-				export let filter: (name: string) => boolean;
-			}
-			export const isAsciiWhitespace: (cc: number) => boolean;
-			export const metaTag: (name: string, content: string) => string;
-			export const parseCssUrls: (input: string) => [string, number, number][];
-			export const parseHtml: (
-				input: string,
-				pos?: number,
-				options?: HtmlParseOptions
-			) => number;
-			export const parseMsapplicationTask: (
-				input: string
-			) => [string, number, number][];
-			export const parseSrc: (input: string) => [string, number, number][];
-			export const parseSrcset: (input: string) => [string, number, number][];
-			export const pickTransforms: (
-				options: object
-			) => undefined | HtmlTransformOptions;
-			export const stripJsonWhitespace: (json: string) => string;
-			export const tokenize: (
-				input: string,
-				pos?: number,
-				callbacks?: HtmlTokenCallbacks
-			) => number;
 			export { SourceProcessorSyntaxClass_1 as SourceProcessor };
 		}
 		export { HtmlModulesPlugin };
@@ -33892,6 +33543,39 @@ declare namespace exports {
 				negativeItems: string[]
 			) => (value: string) => string;
 			export let itemsToRegexp: (itemsArr: string[]) => string;
+		}
+		export namespace dataURL {
+			export let EMBEDDED_LANGUAGES: string[];
+			export let URIRegEx: RegExp;
+			export let askEmbeddedRenderer: (
+				render: (
+					source: string,
+					info: { type: string; hostType: string; as?: string }
+				) =>
+					| undefined
+					| string
+					| EmbeddedSourceResult
+					| Promise<undefined | string | EmbeddedSourceResult>,
+				hole: { source: string; type: string; hostType: string; as?: string },
+				reported: EmbeddedSourceResult[]
+			) => Promise<undefined | string | EmbeddedSourceResult>;
+			export let buildDataURI: (parsed: ParsedDataURI, text: string) => string;
+			export let collectEmbeddedDiagnostics: (
+				reported: {
+					warnings?: (string | Error)[];
+					errors?: (string | Error)[];
+				}[]
+			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
+			export let decodeDataURI: (uri: string) => null | Buffer;
+			export let decodeDataURIPayload: (parsed: ParsedDataURI) => null | string;
+			export let embeddedText: (
+				answer?: string | { code?: string }
+			) => undefined | string;
+			export let languageOfFilename: (
+				filename: null | string
+			) => undefined | string;
+			export let languageOfMediaType: (mediaType: string) => undefined | string;
+			export let parseDataURI: (uri: string) => null | ParsedDataURI;
 		}
 		export { LazySet };
 	}

@@ -1,13 +1,9 @@
 "use strict";
 
-const {
-	NodeType: CssNodeType,
-	SourceProcessor: CssSourceProcessor
-} = require("../../lib/css/syntax");
-const {
-	NodeType: HtmlNodeType,
-	SourceProcessor: HtmlSourceProcessor
-} = require("../../lib/html/syntax");
+const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
+const { NodeType: CssNodeType } = require("../../lib/css/syntax-parser");
+const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
+const { NodeType: HtmlNodeType } = require("../../lib/html/syntax-parser");
 const GenericSourceProcessor = require("../../lib/util/SourceProcessor");
 const { PrintContext } = require("../../lib/util/SourceProcessor");
 
