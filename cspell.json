@@ -598,6 +598,7 @@
     "**/webpack.lock.data/**",
     "package.json",
     "yarn.lock",
+    "**/package-lock.json",
     "tooling/deep-webpack-imports.json",
     "types.d.ts",
     "**/**/*.snap",

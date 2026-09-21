@@ -22,6 +22,28 @@ updates:
           - "major"
         exclude-patterns:
           - "rimraf"
+  # The corpora the comparison scripts measure against, one manifest each. They
+  # reach no webpack build, so a bump is only ever a wider corpus to sweep — and
+  # a bump that breaks a printer invariant reds its own pull request, where it
+  # is attributable, rather than somebody else's.
+  - package-ecosystem: npm
+    directories:
+      - "/tooling/comparison/css-tool-comparison"
+      - "/tooling/comparison/html-tool-comparison"
+      - "/tooling/comparison/js-tool-comparison"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - "area: tooling"
+    # `increase` rather than the root's `widen`: these are pinned exactly, so a
+    # bump replaces the version rather than loosening the range it sits in.
+    versioning-strategy: increase
+    groups:
+      comparison-corpus:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
