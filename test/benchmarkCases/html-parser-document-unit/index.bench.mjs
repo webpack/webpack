@@ -4,9 +4,12 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/html/syntax")} */
+const htmlParser = require("../../../lib/html/syntax-parser.js");
 const htmlSyntax = require("../../../lib/html/syntax.js");
+/** @type {typeof import("../../../lib/html/syntax-parser")} */
 
-const { SourceProcessor, NodeType, parseHtml, tokenize } = htmlSyntax;
+const { SourceProcessor } = htmlSyntax;
+const { NodeType, parseHtml, tokenize } = htmlParser;
 
 // No large real-world HTML ships in the repo, so generate a deterministic
 // ~1.6 MiB document that exercises tree construction, attributes with entity

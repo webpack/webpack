@@ -6,10 +6,12 @@ import { fileURLToPath } from "url";
 const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/css/syntax")} */
+const cssParser = require("../../../lib/css/syntax-parser.js");
 const cssSyntax = require("../../../lib/css/syntax.js");
+/** @type {typeof import("../../../lib/css/syntax-parser")} */
 
+const { SourceProcessor } = cssSyntax;
 const {
-	SourceProcessor,
 	NodeType,
 	readToken,
 	parseAStylesheet,
@@ -23,7 +25,7 @@ const {
 	TT_LEFT_CURLY_BRACKET,
 	TT_RIGHT_CURLY_BRACKET,
 	TT_SEMICOLON
-} = cssSyntax;
+} = cssParser;
 
 // Real-world ~1.9 MiB minified stylesheet (Tailwind), shared with the
 // `css/large` configCase.
