@@ -117,6 +117,12 @@
 .h07 { color: hsl(var(--h), 100%, 50%); background: hsl(0, 150%, 50%) }
 /*! declined: hwb() — esbuild says #00c3ff, lightningcss says #00c4ff */
 .h08 { color: hwb(194 0% 0%) }
+/*! the modern grammar takes a bare number for the two channels after the hue,
+   so these name the colors their percentage spellings do */
+.h09 { color: hsl(120 50 50); background: hwb(0 20 40) }
+/*! declined: the legacy comma form takes percentages alone, so a bare number
+   there is invalid CSS rather than a color to fold */
+.h10 { color: hsl(120, 50, 50); background: hwb(0, 20, 40) }
 /*! declined: the stops interpolate in the space the gradient names, and a
    color converted through sRGB maps back into it as a different point */
 .g01 { background-image: linear-gradient(90deg in lch, red, lch(50 20 30)) }
