@@ -1,7 +1,8 @@
 "use strict";
 
 // Ported from rspack's `configCases/split-chunks/intersections-min-size`, so
-// both bundlers answer the same configurations the same way.
+// both bundlers answer the same configurations the same way. webpack defaults
+// the option under `experiments.futureDefaults` where rspack reads the mode.
 
 const assert = require("assert");
 const fs = require("fs");
@@ -63,8 +64,7 @@ module.exports = variants.map(
 		},
 		index
 	) => {
-		const depth =
-			dedupDepth === undefined ? (mode === "production" ? 1 : 0) : dedupDepth;
+		const depth = dedupDepth === undefined ? 0 : dedupDepth;
 		// In the higher-order case every first-round pair misses `minSize`, so
 		// only a second round reaches the chunks all three modules share.
 		const extracted =

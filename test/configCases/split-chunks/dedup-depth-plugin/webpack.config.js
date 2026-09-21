@@ -1,8 +1,9 @@
 "use strict";
 
 // Ported from rspack's `configCases/split-chunks/dedup-depth-plugin`: a plugin
-// constructed by hand reads no defaults, so it resolves the depth from the mode
-// itself. The fixtures are the ones the intersection suite next door builds on.
+// constructed by hand reads no defaults, so it resolves the depth itself — from
+// `futureDefaults`, where rspack reads the mode. The fixtures are the ones the
+// intersection suite next door builds on.
 
 const assert = require("assert");
 const fs = require("fs");
@@ -19,25 +20,27 @@ const sharedSize = [0, 1, 2].reduce(
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	{ mode: /** @type {const} */ ("production"), defaultDepth: 1 },
-	{ mode: /** @type {const} */ ("development"), defaultDepth: 0 },
-	{ mode: /** @type {const} */ ("none"), defaultDepth: 0 },
-	{ mode: undefined, defaultDepth: 1 }
+	{ futureDefaults: true, defaultDepth: 1 },
+	{ futureDefaults: false, defaultDepth: 0 }
 ]
-	.flatMap(({ mode, defaultDepth }) =>
+	.flatMap(({ futureDefaults, defaultDepth }) =>
 		[undefined, 0, 1, 2].map((dedupDepth) => ({
-			mode,
+			futureDefaults,
 			dedupDepth,
 			expectedDepth: dedupDepth === undefined ? defaultDepth : dedupDepth
 		}))
 	)
-	.map(({ mode, dedupDepth, expectedDepth }, index) => ({
+	.map(({ futureDefaults, dedupDepth, expectedDepth }, index) => ({
 		name: `dedup-depth-plugin-${index}`,
 		context,
-		mode,
+		mode: /** @type {const} */ ("production"),
+		// The suite runs the bundle as a script, so the module output the next
+		// major's defaults would bring stays off
+		experiments: { futureDefaults, outputModule: false },
 		target: "node",
 		entry: { a: "./a", b: "./b", c: "./c0", d: "./c1", e: "./c2" },
 		output: {
+			module: false,
 			filename: `[name]-${index}.js`,
 			chunkFilename: `[name]-${index}.js`
 		},

@@ -1259,9 +1259,6 @@ describe("snapshots", () => {
 		-     "sideEffects": "flag",
 		+     "sideEffects": true,
 		@@ ... @@
-		-       "dedupDepth": 0,
-		+       "dedupDepth": 1,
-		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -1371,9 +1368,6 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "sideEffects": "flag",
 		+     "sideEffects": true,
-		@@ ... @@
-		-       "dedupDepth": 0,
-		+       "dedupDepth": 1,
 		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
@@ -2056,6 +2050,9 @@ describe("snapshots", () => {
 			-     "nodeEnv": false,
 			+     "moduleIds": "named",
 			+     "nodeEnv": "development",
+			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
 			@@ ... @@
 			-       "minRemainingSize": undefined,
 			+       "minRemainingSize": 0,
@@ -4626,7 +4623,6 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
@@ -4644,6 +4640,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
+			+           },
 			@@ ... @@
 			+       },
 			+     ],
@@ -4674,6 +4671,9 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
 			@@ ... @@
 			-     "charset": true,
 			-     "chunkFilename": "[name].js",
@@ -5157,6 +5157,7 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
@@ -5170,7 +5171,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -5201,6 +5202,9 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
 			@@ ... @@
 			-     "charset": true,
 			-     "chunkFilename": "[name].js",
@@ -5353,13 +5357,10 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			-         "type": "css/module",
-			-       },
-			-       Object {
+			@@ ... @@
 			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
+			@@ ... @@
 			-         },
 			-         "type": "css/global",
 			-       },
@@ -5381,17 +5382,30 @@ describe("snapshots", () => {
 			-         },
 			-         "parser": Object {
 			-           "exportType": "css-style-sheet",
+			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			-         },
+			-       },
+			-       Object {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
 			@@ ... @@
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			@@ ... @@
+			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -5401,14 +5415,6 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			-       },
-			-       Object {
-			-         "resolve": Object {
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
@@ -5420,19 +5426,12 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			@@ ... @@
-			-       "css/auto": Object {
-			-         "exportsConvention": "as-is",
-			-         "localIdentHashDigest": "base64url",
-			-         "localIdentHashDigestLength": 6,
-			-         "localIdentHashFunction": "md4",
-			-         "localIdentHashSalt": undefined,
-			-         "localIdentName": "[fullhash]",
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
 			@@ ... @@
-			-       "css/global": Object {
+			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
 			-         "localIdentHashDigest": "base64url",
 			-         "localIdentHashDigestLength": 6,
@@ -5443,7 +5442,7 @@ describe("snapshots", () => {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
 			@@ ... @@
-			-       "css/module": Object {
+			-       "css/global": Object {
 			-         "exportsConvention": "as-is",
 			-         "localIdentHashDigest": "base64url",
 			-         "localIdentHashDigestLength": 6,
@@ -5453,7 +5452,14 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
-			+           },
+			@@ ... @@
+			-       "css/module": Object {
+			-         "exportsConvention": "as-is",
+			-         "localIdentHashDigest": "base64url",
+			-         "localIdentHashDigestLength": 6,
+			-         "localIdentHashFunction": "md4",
+			-         "localIdentHashSalt": undefined,
+			-         "localIdentName": "[fullhash]",
 			+         ],
 			@@ ... @@
 			+     ],
@@ -5511,6 +5517,9 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
 			@@ ... @@
 			-         "css",
 			@@ ... @@
@@ -5570,6 +5579,9 @@ describe("snapshots", () => {
 			+     "workerChunkFilename": "[name].mjs",
 			+     "workerChunkLoading": "import",
 			@@ ... @@
+			-           "...",
+			-         ],
+			-       },
 			-       "css-import": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -5597,11 +5609,10 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			-           "...",
-			-         ],
+			@@ ... @@
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			-       },
+			@@ ... @@
 			-       "css-import-local-module": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
