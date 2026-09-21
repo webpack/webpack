@@ -17786,10 +17786,8 @@ declare class Module extends DependenciesBlock {
 	): undefined | string;
 
 	/**
-	 * Whether this module may be deferred behind the lazy CommonJS accessor of a
-	 * concatenation it takes part in. A generator that registers shared-scope
-	 * export bindings rather than honouring `ConcatenationScope#isWrapped` keeps
-	 * no name the accessor could read back, and answers false.
+	 * Whether a concatenation may defer this module behind its lazy CommonJS
+	 * accessor. A generator ignoring `ConcatenationScope#isWrapped` answers false.
 	 */
 	canBeWrappedInConcatenation(): boolean;
 
