@@ -9,6 +9,13 @@ on:
   schedule:
     - cron: "0 0 * * 1"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # A superseded pull request analysis is work on code nobody will merge. A
+  # push to `main` is not superseded: code scanning reads a pull request's
+  # alerts against the default branch's last analysis, so that one must land.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
