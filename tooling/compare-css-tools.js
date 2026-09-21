@@ -61,7 +61,10 @@ const {
 	lossColumn,
 	measure,
 	measureInWorker,
-	run
+	missingReport,
+	run,
+	sweepExitCode,
+	sweepMode
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -668,6 +671,10 @@ const wantedPreset = filterFrom("PRESET");
  * whatever framework stylesheets the comparison installed.
  * @returns {[string, string][]} `[label, css]` for every stylesheet
  */
+// What the last sweep did not find, read by the report and by the gate.
+/** @type {string[]} */
+let _missingFixtures = [];
+
 const invariantFixtures = () => {
 	/** @type {[string, string][]} */
 	const out = [];
@@ -681,10 +688,13 @@ const invariantFixtures = () => {
 			fs.readFileSync(file, "utf8")
 		]);
 	}
+	/** @type {string[]} */
+	const missing = [];
 	for (const [label, file] of fixtures()) {
 		if (fs.existsSync(file)) out.push([label, fs.readFileSync(file, "utf8")]);
+		else missing.push(label);
 	}
-	return out;
+	return { corpus: out, missing };
 };
 
 /**
@@ -695,7 +705,12 @@ const invariantFixtures = () => {
  * @returns {number} how many distinct findings it named
  */
 const invariants = (write) => {
-	const corpus = invariantFixtures().filter(([label]) => wantedFixture(label));
+	const built = invariantFixtures();
+	// Filtered the same way the corpus is: a run narrowed to one fixture is not
+	// short of the ones it was never going to read, and the gate answers for the
+	// sweep that happened.
+	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
+	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
 	if (!wantedRelation("idempotence")) return 0;
 	log(
@@ -723,6 +738,7 @@ const invariants = (write) => {
 const reportInvariants = () => {
 	process.stdout.write("\ninvariants — what the printer owes its own output\n");
 	const found = invariants((text) => process.stdout.write(text));
+	process.stdout.write(missingReport(_missingFixtures));
 	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
 	return found;
 };
@@ -819,13 +835,15 @@ const main = async () => {
 if (require.main === module) {
 	// `--setup` installs the fixtures and builds nothing else, so a consumer
 	// that only reads them does not run the comparison to get them.
-	const mode = process.argv[2];
+	const mode = sweepMode(process.argv);
 	// The sweep alone, for a caller that wants the relations without the ten
 	// minutes the comparison costs; a full run prints the same section.
 	if (mode === "--invariants") {
-		// Non-zero while any finding stands, and findings stand today: read it
-		// rather than gating on it until they are gone.
-		process.exitCode = reportInvariants() > 0 ? 1 : 0;
+		process.exitCode = sweepExitCode(
+			reportInvariants(),
+			_missingFixtures,
+			process.argv
+		);
 	} else {
 		const started =
 			mode === "--measure"

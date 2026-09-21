@@ -102,8 +102,7 @@ jobs:
 
   # What the CSS and HTML printers owe whatever they printed, which no
   # comparison against another tool can see: being a few bytes off its own best
-  # is not being worse than a rival. Needs no install and no submodule, so it
-  # runs in seconds on every pull request.
+  # is not being worse than a rival.
   invariants:
     runs-on: ubuntu-latest
     steps:
@@ -117,15 +116,42 @@ jobs:
 
       - run: node tooling/retry.js yarn --frozen-lockfile
 
+      # The framework stylesheets and documents the comparisons install, which
+      # the sweep reads as well: the corpus a contributor builds is 34
+      # stylesheets wider than the one a bare checkout holds, and a finding has
+      # already lived in exactly those. Shares its key and its paths with the
+      # equivalence job, so whichever runs first fills it for the other and the
+      # 698 MB is stored once. ~20s on a hit, ~3 min on a miss.
+      - name: Cache the comparison corpus
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            node_modules/.cache/css-tool-comparison
+            node_modules/.cache/html-tool-comparison
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/compare-css-tools.js', 'tooling/compare-html-tools.js') }}
+
+      # Fatal here, unlike the equivalence job: that one reads whichever
+      # fixtures are there, and this one is the check that the whole corpus
+      # stays clean. Retried rather than tolerated, a registry blip being the
+      # only reason it fails.
+      - name: Install the CSS comparison corpus
+        run: node tooling/retry.js yarn benchmark:css-tools:setup
+
+      - name: Install the HTML comparison corpus
+        run: node tooling/retry.js yarn benchmark:html-tools:setup
+
+      # `--require-corpus`: without it a sweep that lost a fixture reports the
+      # findings of the ones it kept and passes, which is coverage lost with
+      # nothing to read it off.
       - name: CSS printer invariants
-        run: yarn test:invariants:css
+        run: yarn test:invariants:css --require-corpus
 
       # A CSS finding must not hide an HTML one: each names a repro of its own
       # and both are read in the same sitting. `!cancelled()` rather than
       # `always()`, so a cancelled run stops here instead of sweeping again.
       - name: HTML printer invariants
         if: ${{ !cancelled() }}
-        run: yarn test:invariants:html
+        run: yarn test:invariants:html --require-corpus
 
   validate-legacy-node:
     runs-on: ubuntu-latest
