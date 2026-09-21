@@ -4556,15 +4556,83 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(out.endsWith(`@layer a.b{${filler}}`)).toBe(true);
 		});
 
-		it("gathers into the end of a streamed block of the very same layer", () => {
-			// Its rules are written and gone, so a later block lands in front of the
-			// `}` closing it rather than over what it wrote into their layer.
+		it("gathers a block big enough to stream into the one before it", () => {
+			// A block whose layer a sibling already opened is held rather than
+			// streamed, so the gather still reads its body whole and all three land
+			// in the block the layer was opened in, in the order they were written.
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@media all{@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}}`;
 			expect(minify(css)).toBe(
-				`@media all{@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}}`
+				`@media all{@layer a{.x{color:red}${filler}.y{color:#00f}}}`
 			);
+		});
+
+		it("holds a block big enough to stream whatever the one before it holds", () => {
+			// Which blocks gather must not turn on what the first of them carries:
+			// an empty block declares where the layer sits and gathers the same.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(minify(`@layer u{@layer a{}@layer a{${filler}}}`)).toBe(
+				`@layer u{@layer a{${filler}}}`
+			);
+		});
+
+		it("gathers a run of blocks each big enough to stream", () => {
+			let one = "";
+			for (let i = 0; i < 17000; i++) one += `.f${i}{top:${i + 1}px}`;
+			let two = "";
+			for (let i = 0; i < 17000; i++) two += `.g${i}{left:${i + 1}px}`;
+			expect(
+				minify(`@layer u{@layer a{}@layer a{${one}}@layer a{${two}}}`)
+			).toBe(`@layer u{@layer a{${one}${two}}}`);
+		});
+
+		it("reads the name of a block big enough to stream past a comment", () => {
+			// The name is read off the source, where a comment stands wherever a
+			// space may — and the name itself carries no whitespace.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(
+				minifyFor(`@layer u{@layer a{.q{top:0}}@layer /*c*/ a{${filler}}}`)
+			).toBe(`@layer u{@layer a{.q{top:0}${filler}}}`);
+			expect(
+				minifyFor(`@layer u{@layer a.b{.q{top:0}}@layer a/*c*/.b{${filler}}}`)
+			).toBe(`@layer u{@layer a.b{.q{top:0}${filler}}}`);
+		});
+
+		it("leaves a block big enough to stream where rules are not merged", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@layer u{@layer a{.q{top:0}}@layer a{${filler}}}`;
+			expect(minifyForWith(css, ["chrome 120"], { mergeRules: false })).toBe(
+				css
+			);
+		});
+
+		it("leaves an anonymous block big enough to stream alone", () => {
+			// `@layer {` is a layer of its own, so a second one gathers with nothing.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(minify(`@layer u{@layer{}@layer{${filler}}}`)).toBe(
+				`@layer u{@layer{}@layer{${filler}}}`
+			);
+		});
+
+		it("leaves a block big enough to stream that names another layer", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(
+				minify(`@layer u{@layer a{.q{top:0}}@layer b{${filler}}}`)
+			).toBe(`@layer u{@layer a{.q{top:0}}@layer b{${filler}}}`);
+		});
+
+		it("gathers a dotted layer a block big enough to stream repeats", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(
+				minify(`@layer u{@layer a.b.c{.q{top:0}}@layer a.b.c{${filler}}}`)
+			).toBe(`@layer u{@layer a.b.c{.q{top:0}${filler}}}`);
 		});
 
 		it("gathers into a streamed block that is its layer's first at that depth", () => {
@@ -4576,12 +4644,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(`@media all{@layer a{${filler}.y{color:#00f}}}`);
 		});
 
-		it("gathers the same way into a streamed block the sheet itself holds", () => {
+		it("gathers the same way for a block the sheet itself holds", () => {
 			let filler = "";
 			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
 			const css = `@layer a{.x{color:red}}@layer a{${filler}}@layer a{.y{color:#00f}}`;
 			expect(minify(css)).toBe(
-				`@layer a{.x{color:red}}@layer a{${filler}.y{color:#00f}}`
+				`@layer a{.x{color:red}${filler}.y{color:#00f}}`
 			);
 		});
 
@@ -8325,6 +8393,123 @@ describe("CssSyntax minify — vendor prefixes (joined rules)", () => {
 		).toBe(
 			"@media screen{a{-webkit-user-select:none;user-select:none}b{color:red}}"
 		);
+	});
+});
+
+describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
+	// Every at-rule whose block holds rules, since the seam is joined the same
+	// way for each and a list left unordered in one is left unordered in all.
+	const PRELUDES = [
+		"@media print",
+		"@supports (color:red)",
+		"@layer a",
+		"@container (width>0px)",
+		"@scope (.x)",
+		"@starting-style"
+	];
+
+	for (const prelude of PRELUDES) {
+		it(`orders the list two ${prelude} blocks join into`, () => {
+			expect(minifyFor(`${prelude}{.b{color:red}}${prelude}{.a{color:red}}`)).toBe(
+				`${prelude}{.a,.b{color:red}}`
+			);
+		});
+	}
+
+	it("orders a list a run of joins grows", () => {
+		expect(
+			minifyFor(
+				"@media print{.d{color:red}}@media print{.c{color:red}}@media print{.b{color:red}}@media print{.a{color:red}}"
+			)
+		).toBe("@media print{.a,.b,.c,.d{color:red}}");
+	});
+
+	it("writes a seam a second pass would leave alone", () => {
+		const once = minifyFor(
+			"@layer u{@starting-style{.modal:target{opacity:0%}}@starting-style{.modal-toggle:checked + .modal{opacity:0%}}}"
+		);
+		expect(once).toBe(
+			"@layer u{@starting-style{.modal-toggle:checked+.modal,.modal:target{opacity:0}}}"
+		);
+		expect(minifyFor(once)).toBe(once);
+	});
+
+	it("takes out a selector both sides of the seam carry", () => {
+		// The join concatenates, so a selector in both lists is written twice; a
+		// list is a set, and ordering it is what reads the repeat back out.
+		expect(
+			minifyFor("@media print{.a,.b{color:red}}@media print{.b,.c{color:red}}")
+		).toBe("@media print{.a,.b,.c{color:red}}");
+	});
+
+	it("leaves the seam's list as written where selectors are not shortened", () => {
+		expect(
+			minifyForWith(
+				"@media print{.b{color:red}}@media print{.a{color:red}}",
+				["chrome 120"],
+				{ shortenSelectors: false }
+			)
+		).toBe("@media print{.b,.a{color:red}}");
+	});
+
+	it("leaves a seam that joins nothing as one rule", () => {
+		expect(minifyFor("@media print{.b{color:red}}@media print{.a{color:blue}}")).toBe(
+			"@media print{.b{color:red}.a{color:blue}}"
+		);
+	});
+
+	// A gather makes the same seam out of two blocks a sibling stands between,
+	// and the run it ends is the one that orders the list it grew.
+	it("orders the list a gathered layer's seam leaves", () => {
+		expect(
+			minifyFor("@media all{@layer a{.b{color:red}}.q{left:0}@layer a{.a{color:red}}}")
+		).toBe("@media all{@layer a{.a,.b{color:red}}.q{left:0}}");
+	});
+
+	it("orders the list a gathered layer's seam leaves, block by block", () => {
+		expect(
+			minifyFor(
+				"@media all{@layer a{.d{color:red}}.q{left:0}@layer a{.c{color:red}}@layer a{.b{color:red}}@layer a{.a{color:red}}}"
+			)
+		).toBe("@media all{@layer a{.a,.b,.c,.d{color:red}}.q{left:0}}");
+	});
+
+	it("orders the list a distant at-rule's seam leaves", () => {
+		const sheet =
+			"@media print{.b{color:red}}.q{left:0}@media print{.a{color:red}}";
+		const once = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true
+		}).code;
+		expect(once).toBe("@media print{.a,.b{color:red}}.q{left:0}");
+	});
+
+	it("orders the list a nested distant at-rule's seam leaves", () => {
+		const sheet =
+			"@media all{@media print{.b{color:red}}.q{left:0}@media print{.a{color:red}}}";
+		const once = new SourceProcessor().process(sheet, {
+			mode: "minify",
+			mergeDistantRules: true
+		}).code;
+		expect(once).toBe("@media all{@media print{.a,.b{color:red}}.q{left:0}}");
+	});
+
+	it("orders the list a gathered block big enough to stream leaves", () => {
+		let filler = "";
+		for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+		expect(minifyFor(`@layer a{.b{top:0}}@layer a{.a{top:0}${filler}}`)).toBe(
+			`@layer a{.a,.b{top:0}${filler}}`
+		);
+	});
+
+	// The same gather for a layer the sheet itself holds, where the block the
+	// later one folds into is a rule already written out.
+	it("orders the list a gathered top-level layer's seam leaves", () => {
+		expect(
+			minifyFor(
+				"@layer a{.b{color:red}}@supports (color:red){.q{top:0}}@layer a{.a{color:red}}"
+			)
+		).toBe("@layer a{.a,.b{color:red}}@supports (color:red){.q{top:0}}");
 	});
 });
 
