@@ -67,30 +67,33 @@ const CACHE = path.join(ROOT, "node_modules/.cache", CACHE_NAME);
 const MODULES = path.join(CACHE, "node_modules");
 const load = loaderFor(CACHE);
 
+// Pinned exactly rather than by range: this list is the corpus a sweep's
+// findings are read off, and CI keys its cache on this file — so a version
+// moves when an edit here says so, never because a cache entry expired.
 const PACKAGES = [
-	"angular-html-parser@9",
-	"bootstrap@5",
-	"dom-serializer@2",
-	"@fortawesome/fontawesome-free@6",
-	"htmlparser2@10",
-	"js-beautify@1",
-	"@minify-html/node@0.15",
-	"node-html-parser@7",
-	"@picocss/pico@2",
-	"@swc/html@1",
-	"cssnano@7",
-	"html-minifier-next@8",
-	"html-minifier-terser@7",
-	"html5-boilerplate@9",
-	"htmlnano@2",
-	"linkedom@0.18",
-	"marked@15",
-	"parse5@7",
-	"postcss@8",
-	"prettier@3",
-	"svgo@3",
-	"swagger-ui-dist@5",
-	"water.css@2"
+	"angular-html-parser@9.3.0",
+	"bootstrap@5.3.8",
+	"dom-serializer@2.0.0",
+	"@fortawesome/fontawesome-free@6.7.2",
+	"htmlparser2@10.1.0",
+	"js-beautify@1.15.4",
+	"@minify-html/node@0.15.0",
+	"node-html-parser@7.1.0",
+	"@picocss/pico@2.1.1",
+	"@swc/html@1.16.2",
+	"cssnano@7.1.9",
+	"html-minifier-next@8.5.3",
+	"html-minifier-terser@7.2.0",
+	"html5-boilerplate@9.0.1",
+	"htmlnano@2.1.5",
+	"linkedom@0.18.13",
+	"marked@15.0.12",
+	"parse5@7.3.0",
+	"postcss@8.5.28",
+	"prettier@3.9.8",
+	"svgo@3.3.5",
+	"swagger-ui-dist@5.33.0",
+	"water.css@2.1.1"
 ];
 
 const setup = () => installPackages(CACHE_NAME, PACKAGES);
