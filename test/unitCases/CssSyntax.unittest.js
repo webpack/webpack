@@ -8501,6 +8501,16 @@ describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
 			`@layer a{.a,.b{top:0}${filler}}`
 		);
 	});
+
+	// The same gather for a layer the sheet itself holds, where the block the
+	// later one folds into is a rule already written out.
+	it("orders the list a gathered top-level layer's seam leaves", () => {
+		expect(
+			minifyFor(
+				"@layer a{.b{color:red}}@supports (color:red){.q{top:0}}@layer a{.a{color:red}}"
+			)
+		).toBe("@layer a{.a,.b{color:red}}@supports (color:red){.q{top:0}}");
+	});
 });
 
 describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
