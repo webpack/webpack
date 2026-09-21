@@ -127,6 +127,12 @@ The directory listings below are the canonical map of the repository. **Whenever
     `ConcatenationScope` is the protocol scope hoisting runs on: `ConcatenatedModule`
     is the only thing that constructs one, and a generator anywhere in `lib/` renders
     through it.
+  - `lib/output/` — The plugins that shape the set of files a build writes into
+    `output.path`, rather than the modules it writes them from: `CopyPlugin` adds
+    to it and `CleanPlugin` prunes it — the two `output.copy` and `output.clean`
+    turn on — while `BannerPlugin` rewrites what an asset holds and
+    `ManifestPlugin` emits a description of the rest. How a name or a format is
+    decided is not this: that is `lib/template/`, `lib/library/` and `lib/devtool/`.
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
     the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
