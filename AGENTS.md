@@ -302,7 +302,7 @@ path `removed` names rather than recording it as a request.
 **A re-export is owed only to a webpack-5 package that imports the path unconditionally.**
 Read the importer's tarball, not its download count: a package whose `peerDependencies`
 or `dependencies` name webpack 5 and which requires the path at the top level gets a
-`// TODO remove in webpack 6` re-export at the old path. One that is webpack 4 only — it
+`// TODO in the next major release: remove` re-export at the old path. One that is webpack 4 only — it
 imports something webpack 5 deleted — or that probes for the path inside a `try` to detect
 webpack 4 gets an entry under `removed` with that reason instead, because a re-export
 would send it down the wrong branch.
@@ -414,6 +414,26 @@ Each surviving line must carry what the code cannot: a hidden invariant, an orde
 **A JSDoc block's tags are exempt** — they are the type contract, not commentary, and are multi-line by construction. Every named function gets one, module-scope helper or not: one `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply. Never shorten, flatten or delete a tag, and never trade a JSDoc block for a `//` comment that hides the types in an inline `/** @type {T} */` cast — that loses the parameter and return documentation. (Such a cast is for a throwaway callback argument only.)
 
 **The description above those tags is prose, so it is capped at two sentences.** Say what the function does when its name doesn't, plus the one constraint a caller needs. Moving an essay out of a `//` comment into a JSDoc description is the same essay indented differently, not a fix — an explanation of the algorithm, the history, or the alternatives considered belongs in neither. Prose about a documented symbol goes inside its JSDoc, never as a `//` comment stacked on top of the block or standing in for it.
+
+### Marking work for the next major
+
+> [!REQUIRED]
+
+Work that has to wait for the next breaking release is marked with one wording, everywhere, in every file type:
+
+```js
+// TODO in the next major release: remove, `css-url` is the old spelling of `asset-url`
+```
+
+**Never name a version.** `TODO webpack 6`, `TODO remove in webpack 6`, `TODO webpack6 - …` and `TODO reconsider this for webpack 6` all meant the same thing, and none of them found the others — which is how one cleanup came to be written a dozen ways. A number also goes stale the moment that major ships: what was deferred to 6 and missed is deferred to 7, and the comment still says 6. The phrase names the next breaking release whenever it happens to be read.
+
+**Always say what to do**, not merely that something is pending — a bare marker tells the branch doing the work nothing. The comment is a plain comment, so the [three-line limit](#code-comments) binds it too.
+
+The whole list is then one command, which is the point of the wording:
+
+```sh
+grep -rn "TODO in the next major release" bin hot lib setup test tooling
+```
 
 ## Testing
 
