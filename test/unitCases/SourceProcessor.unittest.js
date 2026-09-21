@@ -66,9 +66,14 @@ describe("SourceProcessor", () => {
 
 		it("stays out of a processor that was handed its printer", () => {
 			const printer = () => "";
-			const processor = new GenericSourceProcessor(() => {}, printer);
+			let loads = 0;
+			const processor = new GenericSourceProcessor(() => {}, printer, () => {
+				loads++;
+				return () => "";
+			});
 			processor.process("x", { mode: "minify" });
 			expect(processor._printer).toBe(printer);
+			expect(loads).toBe(0);
 		});
 	});
 
