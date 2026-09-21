@@ -5,7 +5,7 @@ require("../helpers/warmup-webpack");
 const path = require("path");
 const testDirectory = path.resolve(__dirname, "..");
 const { Volume, createFsFromVolume } = require("memfs");
-const Stats = require("../../lib/Stats");
+const Stats = require("../../lib/stats/Stats");
 const captureStdio = require("../helpers/captureStdio");
 const deprecationTracking = require("../helpers/deprecationTracking");
 
