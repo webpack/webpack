@@ -18,6 +18,7 @@ const staticPath = path.join(tempFolderPath, "static");
 const outputPath = path.join(staticPath, "build");
 const stalePath = path.join(outputPath, "stale.txt");
 const aliasPath = path.join(staticPath, "alias");
+const fileAliasPath = path.join(staticPath, "stale-link.txt");
 
 // codes a machine that cannot make a directory symlink reports
 const SYMLINK_UNSUPPORTED = new Set(["EPERM", "EACCES", "ENOSYS", "UNKNOWN"]);
@@ -39,6 +40,9 @@ const createFiles = () => {
 	fs.writeFileSync(stalePath, "stale");
 
 	try {
+		// a file link is what `stat` reports as a plain file, so it reaches the
+		// output directory without ever being recognized as a link
+		fs.symlinkSync(stalePath, fileAliasPath, "file");
 		fs.symlinkSync(outputPath, aliasPath, "junction");
 	} catch (err) {
 		const { code } = /** @type {NodeJS.ErrnoException} */ (err);
@@ -159,6 +163,28 @@ describe("CopyPlugin", () => {
 		expect(fromAliasCompilation.warnings[0].name).toBe(
 			"EmptyCopyPatternWarning"
 		);
+	});
+
+	it("should not follow a file symlink into the output path", () => {
+		if (!aliased) return;
+		// `stat` follows the link and reports a plain file, so nothing about the
+		// walk says the bytes come from the output directory
+		expect(compilation.getAsset("stale-link.txt")).toBeUndefined();
+	});
+
+	it("should copy nothing when the pattern names such a file symlink", async () => {
+		if (!aliased) return;
+		const fromFileAlias = await compile({
+			from: "static/stale-link.txt",
+			to: "named"
+		});
+		// `to` names a directory, so the copy would land as `named/stale-link.txt`
+		// rather than under the name `to` gives
+		expect(
+			[...fromFileAlias.getAssets()].filter((asset) =>
+				asset.name.startsWith("named")
+			)
+		).toHaveLength(0);
 	});
 
 	it("should not make a file inside the output path a dependency", () => {
