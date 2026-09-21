@@ -4,7 +4,10 @@ const ENTRIES = [
 	"forms",
 	"alias-default",
 	"reexport-default",
-	"named-as-default"
+	"named-as-default",
+	"anonymous-function",
+	"anonymous-class",
+	"expression"
 ];
 
 module.exports = {
