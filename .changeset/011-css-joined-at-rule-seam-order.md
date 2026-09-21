@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Order the list two joined at-rule blocks meet at, and gather a repeated `@layer` block too big to assemble.
+Order joined at-rule selector lists and gather a repeated large `@layer` block.
