@@ -187,6 +187,15 @@ describe("CopyPlugin", () => {
 		).toHaveLength(0);
 	});
 
+	it("should not make a symlink into the output path a dependency", () => {
+		if (!fromAliasCompilation) return;
+		// the base resolves into the output directory, so watching it would
+		// rebuild on what this compilation itself wrote there, under the alias
+		expect([...fromAliasCompilation.contextDependencies]).not.toContain(
+			aliasPath
+		);
+	});
+
 	it("should not make a file inside the output path a dependency", () => {
 		expect([...compilation.fileDependencies]).not.toContain(stalePath);
 	});
