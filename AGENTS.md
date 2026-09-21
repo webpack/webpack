@@ -77,7 +77,8 @@ The directory listings below are the canonical map of the repository. **Whenever
     halves the way `javascript` does: `syntax-parser.js` reads a stylesheet and
     `syntax-printer.js` writes one back out. `syntax.js` reaches both through a
     getter, as `javascript` does, so a walk that never prints never loads the
-    printer; it holds `SourceProcessor` and every name it published before.
+    printer; it publishes those two and `SourceProcessor`, and nothing else — a
+    helper it used to re-export is read off `parser` or `printer` instead.
   - `lib/debug/` — Debug helpers.
   - `lib/define/` — Replacing a free identifier with a constant at parse time:
     `DefinePlugin`, and the two plugins that are a `DefinePlugin` fed from somewhere
@@ -122,8 +123,9 @@ The directory listings below are the canonical map of the repository. **Whenever
     way `javascript` does: `syntax-parser.js` reads a document — tokenizer, §13.2
     tree construction and the entity table — and `syntax-printer.js` writes one back
     out. `syntax.js` reaches both through a getter, as `javascript` does, so a walk
-    that never prints never loads the printer; it holds `SourceProcessor` and every
-    name it published before.
+    that never prints never loads the printer; it publishes those two and
+    `SourceProcessor`, and nothing else. `builtinEmbeddedRenderer` is what hands
+    each body a document embeds to webpack's own minifier for that language.
   - `lib/ids/` — Module/chunk id assignment plugins, and `RecordIdsPlugin`, which persists
     the assignment across builds through `recordsPath`.
   - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis, and the always-on plugins implementing the language surface a build gets for free — `APIPlugin` (`__webpack_require__` and the other free variables), `CompatibilityPlugin`, `ConstPlugin`, `ExportsInfoApiPlugin`, `JavascriptMetaInfoPlugin`, `UseStrictPlugin` and `WebpackIsIncludedPlugin`, each applied unconditionally by `WebpackOptionsApply` and none of them on the public API. A parser plugin the user constructs is not one of these: `DefinePlugin` lives in `lib/define/` and `ProvidePlugin` at `lib/` root, because what decides the home is who applies it, not which parser it taps. `syntax.js` is the pair `css` and `html` name the same way — `parser` and `printer` — and reaches each through a getter, so parsing never loads the printer and printing never loads the parser. `syntax-parser.js` is the parser a build reads source with: tokenizer, acorn-derived core and every production in one file, since a build that parses at all reaches the productions, and the struct-of-arrays rewrite ahead of it moves node creation through them. `regexp.js` (the pattern validator) is the one piece still loaded on demand, because only a pattern the host engine itself rejected reaches it — never `require` it from a path a build takes. `syntax-printer.js` is where JavaScript is printed back out: `jsMinify.js`, the `minify` function the default minimizer dispatches JavaScript to, goes through it rather than through terser's published entry point, because that loader reads terser's own sources — which is what lets a phase webpack implements itself replace the method terser installs. The name says where this is going: each phase webpack takes over is one less thing terser does. A phase states what it reads with `supports`, and a minifier that moved any of it, or a runtime that cannot import those sources, keeps its own. Add a phase to the `PHASES` list there and nowhere else, and hold it to writing byte-for-byte what it replaced.
@@ -178,7 +180,9 @@ The directory listings below are the canonical map of the repository. **Whenever
     generated bundle.
   - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
-  - `lib/util/` — Utility helpers, including `RequestShortener`, which renders a request
+  - `lib/util/` — Utility helpers, including `dataURL`, which reads and writes `data:`
+    URLs and holds the helpers a minifier drives a caller's `renderEmbeddedSource`
+    through, `RequestShortener`, which renders a request
     relative to the context for every message a user reads, and `terminalColors`, the
     color support detection and escape-code wrappers every terminal-facing message goes
     through — `ProgressPlugin`, `nodeConsole` and, via `webpack.cli`, webpack-cli.
