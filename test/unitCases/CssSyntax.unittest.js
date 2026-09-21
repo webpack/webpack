@@ -4588,6 +4588,28 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe(`@layer u{@layer a{${one}${two}}}`);
 		});
 
+		it("reads the name of a block big enough to stream past a comment", () => {
+			// The name is read off the source, where a comment stands wherever a
+			// space may — and the name itself carries no whitespace.
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			expect(
+				minifyFor(`@layer u{@layer a{.q{top:0}}@layer /*c*/ a{${filler}}}`)
+			).toBe(`@layer u{@layer a{.q{top:0}${filler}}}`);
+			expect(
+				minifyFor(`@layer u{@layer a.b{.q{top:0}}@layer a/*c*/.b{${filler}}}`)
+			).toBe(`@layer u{@layer a.b{.q{top:0}${filler}}}`);
+		});
+
+		it("leaves a block big enough to stream where rules are not merged", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:${i + 1}px}`;
+			const css = `@layer u{@layer a{.q{top:0}}@layer a{${filler}}}`;
+			expect(minifyForWith(css, ["chrome 120"], { mergeRules: false })).toBe(
+				css
+			);
+		});
+
 		it("leaves an anonymous block big enough to stream alone", () => {
 			// `@layer {` is a layer of its own, so a second one gathers with nothing.
 			let filler = "";
@@ -8410,6 +8432,24 @@ describe("CssSyntax minify — the list a joined at-rule's seam leaves", () => {
 			"@layer u{@starting-style{.modal-toggle:checked+.modal,.modal:target{opacity:0}}}"
 		);
 		expect(minifyFor(once)).toBe(once);
+	});
+
+	it("takes out a selector both sides of the seam carry", () => {
+		// The join concatenates, so a selector in both lists is written twice; a
+		// list is a set, and ordering it is what reads the repeat back out.
+		expect(
+			minifyFor("@media print{.a,.b{color:red}}@media print{.b,.c{color:red}}")
+		).toBe("@media print{.a,.b,.c{color:red}}");
+	});
+
+	it("leaves the seam's list as written where selectors are not shortened", () => {
+		expect(
+			minifyForWith(
+				"@media print{.b{color:red}}@media print{.a{color:red}}",
+				["chrome 120"],
+				{ shortenSelectors: false }
+			)
+		).toBe("@media print{.b,.a{color:red}}");
 	});
 
 	it("leaves a seam that joins nothing as one rule", () => {
