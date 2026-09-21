@@ -3071,7 +3071,7 @@ describe("tokenize", () => {
 	});
 });
 
-/** @import { HtmlNodeRef, HtmlAttribute } from "../../lib/html/syntax" */
+/** @import { HtmlNodeRef, HtmlAttribute } from "../../lib/html/syntax-parser" */
 /**
  * Materialized plain-object views of the struct-of-arrays AST — the shape
  * `parseHtml` used to return, rebuilt through the accessor `A`.
@@ -3164,7 +3164,7 @@ const materialize = (ref) => {
 /**
  * @param {string} src source
  * @param {string=} fragmentContext fragment context
- * @param {import("../../lib/html/syntax").HtmlAstSkip=} skip skip options
+ * @param {import("../../lib/html/syntax-parser").HtmlAstSkip=} skip skip options
  * @returns {MatDocument} materialized document
  */
 const parseHtml = (src, fragmentContext, skip) => {
@@ -3225,6 +3225,82 @@ const find = (src, tagName) => {
 	for (const c of parseHtml(src).children) walk(c);
 	return /** @type {MatElement} */ (found);
 };
+
+describe("HtmlSyntax — the facade", () => {
+	const syntax = require("../../lib/html/syntax");
+
+	it("names its two halves the way `javascript` does", () => {
+		expect(typeof syntax.parser.grammar).toBe("function");
+		expect(typeof syntax.printer.printer).toBe("function");
+	});
+
+	it("takes every name it publishes from the half that owns it", () => {
+		const parser = require("../../lib/html/syntax-parser");
+		const printer = require("../../lib/html/syntax-printer");
+		const htmlData = require("../../lib/html/data");
+		const dataURL = require("../../lib/util/dataURL");
+		const htmlMinify = require("../../lib/html/htmlMinify");
+		const builtinRenderer = require("../../lib/html/builtinEmbeddedRenderer");
+		// Spelled out rather than derived from the facade: a name that changed
+		// spelling, or an alias repointed at another export of the same module,
+		// keeps every count identical and only a stated binding catches it.
+		const bindings = {
+			A: parser.A,
+			BLOCK_CONTENTS: parser.BLOCK_CONTENTS,
+			CLASSIC_SCRIPT: printer.CLASSIC_SCRIPT,
+			EMBEDDED_LANGUAGES: parser.EMBEDDED_LANGUAGES,
+			EVENT_HANDLER: parser.EVENT_HANDLER,
+			JSON_TYPE: parser.JSON_TYPE,
+			MODULE_SCRIPT: printer.MODULE_SCRIPT,
+			NS_HTML: parser.NS_HTML,
+			NS_MATHML: parser.NS_MATHML,
+			NS_SVG: parser.NS_SVG,
+			NodeType: parser.NodeType,
+			QUOTE_DOUBLE: parser.QUOTE_DOUBLE,
+			QUOTE_NONE: parser.QUOTE_NONE,
+			QUOTE_SINGLE: parser.QUOTE_SINGLE,
+			SVG_TAG_ADJUST: htmlData.SVG_TAG_ADJUST,
+			askEmbeddedRenderer: dataURL.askEmbeddedRenderer,
+			baseTag: parser.baseTag,
+			buildHeadTags: parser.buildHeadTags,
+			builtinEmbeddedRenderer: builtinRenderer.builtinEmbeddedRenderer,
+			collectEmbeddedDiagnostics: dataURL.collectEmbeddedDiagnostics,
+			decodeEntities: parser.decodeEntities,
+			embeddedText: dataURL.embeddedText,
+			escapeAttribute: parser.escapeAttribute,
+			escapeText: parser.escapeText,
+			htmlMinify,
+			isAsciiWhitespace: parser.isSpace,
+			metaTag: parser.metaTag,
+			parseCssUrls: parser.parseCssUrls,
+			parseHtml: parser.parseHtml,
+			parseMsapplicationTask: parser.parseMsapplicationTask,
+			parseSrc: parser.parseSrc,
+			parseSrcset: parser.parseSrcset,
+			pickTransforms: parser.pickTransforms,
+			stripJsonWhitespace: builtinRenderer.stripJsonWhitespace,
+			tokenize: parser.tokenize,
+		};
+		const surface = /** @type {Record<string, unknown>} */ (
+			/** @type {unknown} */ (syntax)
+		);
+		expect(Object.keys(surface).sort()).toEqual(
+			["SourceProcessor", "parser", "printer", ...Object.keys(bindings)].sort()
+		);
+		for (const [name, owned] of Object.entries(bindings)) {
+			expect(owned).toBeDefined();
+			expect(surface[name]).toBe(owned);
+		}
+	});
+
+	it("holds no printer until something prints", () => {
+		const processor = new syntax.SourceProcessor();
+		processor.process("<p>x</p>");
+		expect(processor._printer).toBeUndefined();
+		expect(processor.process("<p>x</p>", { mode: "minify" }).code).toBe("<p>x");
+		expect(typeof processor._printer).toBe("function");
+	});
+});
 
 describe("parseHtml", () => {
 	it("should produce an empty document with html/head/body scaffolding", () => {
@@ -3901,7 +3977,7 @@ describe("parseHtml — SourceProcessor", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
 						enter: (path) => log.push(`enter:${path.tagName()}`),
 						exit: (path) => log.push(`exit:${path.tagName()}`)
@@ -4709,7 +4785,7 @@ describe("SourceProcessor — which comments survive", () => {
 
 	/**
 	 * @param {string} html input markup
-	 * @param {import("../../lib/html/syntax").HtmlTransformOptions["comments"]=} comments which comments to keep
+	 * @param {import("../../lib/html/syntax-parser").HtmlTransformOptions["comments"]=} comments which comments to keep
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html, comments) =>
@@ -5361,7 +5437,7 @@ describe("SourceProcessor — the per-transform switches", () => {
 
 	/**
 	 * @param {string} html input markup
-	 * @param {import("../../lib/html/syntax").HtmlTransformOptions=} transforms which rewrites to make
+	 * @param {import("../../lib/html/syntax-parser").HtmlTransformOptions=} transforms which rewrites to make
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html, transforms) =>
@@ -6034,7 +6110,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	/**
 	 * @param {string} html input markup
-	 * @param {import("../../lib/html/syntax").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
+	 * @param {import("../../lib/html/syntax-printer").EmbeddedSourceRenderer=} renderEmbeddedSource the renderer
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html, renderEmbeddedSource) =>
@@ -6071,7 +6147,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			mode: "minify",
 			renderEmbeddedSource: (
 				/** @type {string} */ source,
-				/** @type {import("../../lib/html/syntax").DeferredEmbeddedSource} */ hole
+				/** @type {import("../../lib/html/syntax-parser").DeferredEmbeddedSource} */ hole
 			) => {
 				offered.push([hole.type, hole.as || "stylesheet", source]);
 				return Promise.resolve(answer(source, hole.type));
@@ -6106,7 +6182,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	it("keeps `srcdoc` off the deferred path when the caller says so", () => {
 		// Both renderers set: `deferSrcdoc: false` asks for the attribute on the
 		// normal path, so it is answered synchronously and collected nowhere.
-		/** @type {import("../../lib/html/syntax").DeferredEmbeddedSource[]} */
+		/** @type {import("../../lib/html/syntax-parser").DeferredEmbeddedSource[]} */
 		const holes = [];
 		const { code } = new SourceProcessor().process(
 			'<iframe srcdoc="<p>  a  </p>"></iframe>',
@@ -7162,7 +7238,7 @@ describe("parseHtml — skip options preserve element structure", () => {
 describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	/**
 	 * @param {string} src source
-	 * @param {import("../../lib/html/syntax").HtmlAstSkip=} skip skip options
+	 * @param {import("../../lib/html/syntax-parser").HtmlAstSkip=} skip skip options
 	 * @returns {MatNode[]} body children
 	 */
 	const bodyOf = (src, skip) =>
@@ -7485,7 +7561,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 
 	/**
 	 * @param {string} src source
-	 * @param {import("../../lib/html/syntax").HtmlProcessOptions=} options options
+	 * @param {import("../../lib/html/syntax-parser").HtmlProcessOptions=} options options
 	 * @returns {string[]} `+tag` / `-tag` in visit order
 	 */
 	const walk = (src, options) => {
@@ -7493,7 +7569,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
 						enter: (path) => log.push(`+${path.tagName()}`),
 						exit: (path) => log.push(`-${path.tagName()}`)
@@ -7545,7 +7621,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: {
 						enter: (path) => {
 							log.push(`+${path.tagName()}`);
@@ -7582,7 +7658,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		const text = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Text]: (path) => text.push(path.data())
 				})
 			)
@@ -7658,7 +7734,7 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Document]: {
 						enter: (path) => {
 							log.push("+doc");
@@ -7696,7 +7772,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		const seen = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: (path) => {
 						seen.push([path.tagName(), path.start(), path.end()]);
 					}
@@ -7739,7 +7815,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 			let atExit = -1;
 			new SourceProcessor()
 				.use(
-					/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+					/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 						[NodeType.Element]: {
 							enter: (path) => {
 								if (path.tagName() === "div" && atEnter === -1) {
@@ -7776,7 +7852,7 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		expect(() =>
 			new SourceProcessor()
 				.use(
-					/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+					/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 						[NodeType.Element]: () => {
 							new SourceProcessor().process("<b>nested</b>");
 						}
@@ -7796,7 +7872,7 @@ describe("parseHtml — path accessor completeness", () => {
 		const log = [];
 		new SourceProcessor()
 			.use(
-				/** @type {import("../../lib/html/syntax").VisitorMap} */ ({
+				/** @type {import("../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Doctype]: (path) => {
 						const n = path.node;
 						log.push(
@@ -8942,7 +9018,7 @@ describe("token parts reported by the tokenizer", () => {
 		/** @type {string[]} */
 		const out = [];
 		/**
-		 * @param {import("../../lib/html/syntax").HtmlNodeRef} node node
+		 * @param {import("../../lib/html/syntax-parser").HtmlNodeRef} node node
 		 */
 		const walk = (node) => {
 			if (A.type(node) === NodeType.Comment) out.push(A.data(node));
@@ -9009,7 +9085,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 
 	/**
 	 * @param {string} source HTML
-	 * @param {import("../../lib/html/syntax").HtmlTokenCallbacks=} extra extra callbacks
+	 * @param {import("../../lib/html/syntax-parser").HtmlTokenCallbacks=} extra extra callbacks
 	 * @returns {[string, ...EXPECTED_ANY[]][]} token stream
 	 */
 	const walk = (source, extra) => {
@@ -9039,7 +9115,7 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 
 	/**
 	 * @param {string} source HTML
-	 * @param {import("../../lib/html/syntax").HtmlTokenCallbacks=} extra extra callbacks
+	 * @param {import("../../lib/html/syntax-parser").HtmlTokenCallbacks=} extra extra callbacks
 	 * @returns {{ code: string, slice: string, severity: string }[]} reported errors
 	 */
 	const errorsOf = (source, extra) => {
@@ -10078,7 +10154,7 @@ describe("SourceProcessor — minifying what the round-trip guard checks", () =>
 			mode: /** @type {"minify"} */ ("minify"),
 			renderEmbeddedSource: (
 				/** @type {string} */ body,
-				/** @type {import("../../lib/html/syntax").DeferredEmbeddedSource} */ hole
+				/** @type {import("../../lib/html/syntax-parser").DeferredEmbeddedSource} */ hole
 			) => Promise.resolve(hole.type === "svg" ? body : undefined)
 		});
 
@@ -10092,7 +10168,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 
 	/**
 	 * @param {string} html input markup
-	 * @param {Partial<import("../../lib/html/syntax").HtmlProcessOptions>=} options extra process options
+	 * @param {Partial<import("../../lib/html/syntax-parser").HtmlProcessOptions>=} options extra process options
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html, options) =>
@@ -10167,7 +10243,7 @@ describe("SourceProcessor — reusing work across a print", () => {
 		/** @type {string[]} */
 		const names = [];
 		/**
-		 * @param {import("../../lib/html/syntax").HtmlNodeRef} node node
+		 * @param {import("../../lib/html/syntax-parser").HtmlNodeRef} node node
 		 * @returns {void}
 		 */
 		const walk = (node) => {
@@ -10437,8 +10513,8 @@ describe("SourceProcessor — attribute rewrites as switches", () => {
 		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
 	/**
-	 * @param {import("../../lib/html/syntax").HtmlTransformOptions} transforms the switches
-	 * @returns {{ mode: "minify", transforms: import("../../lib/html/syntax").HtmlTransformOptions }} print options
+	 * @param {import("../../lib/html/syntax-parser").HtmlTransformOptions} transforms the switches
+	 * @returns {{ mode: "minify", transforms: import("../../lib/html/syntax-parser").HtmlTransformOptions }} print options
 	 */
 	const off = (transforms) => ({
 		mode: /** @type {"minify"} */ ("minify"),

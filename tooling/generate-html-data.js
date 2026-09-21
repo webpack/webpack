@@ -6,7 +6,7 @@
 "use strict";
 
 // Generate every table the HTML parser and minifier look a name up in:
-// `lib/html/data.js`, and the entity region inside `lib/html/syntax.js`.
+// `lib/html/data.js`, and the entity region inside `lib/html/syntax-parser.js`.
 //
 //   node tooling/generate-html-data.js --write
 //
@@ -20,7 +20,7 @@ const prettier = require("prettier");
 const { toJsStringLiteral } = require("../lib/util/identifier");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
-const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax.js");
+const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax-parser.js");
 // Vendored because the table is frozen — the spec says it "will not be expanded
 // or changed in the future" — and no package carries it faithfully: the ones
 // that exist drop the semicolon, losing the 106 names that match without one.
@@ -2222,7 +2222,7 @@ const main = async () => {
 		settle(
 			SYNTAX_TARGET,
 			nextSyntax,
-			"lib/html/syntax.js entities",
+			"lib/html/syntax-parser.js entities",
 			`${Object.keys(entities).length} entities`
 		)
 	];
