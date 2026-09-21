@@ -29,17 +29,20 @@ const discover = (
 ) => {
 	const offsets = new Int32Array(sets.length + 1);
 	let memberCount = 0;
+	/** @type {number[]} */
+	const flattened = [];
 	for (let i = 0; i < sets.length; i++) {
 		offsets[i + 1] = offsets[i] + sets[i].length;
 		for (const member of sets[i]) {
 			memberCount = Math.max(memberCount, member + 1);
+			flattened.push(member);
 		}
 	}
 	return discoverIntersections({
 		setCount: sets.length,
 		memberCount,
 		offsets,
-		members: new Int32Array(sets.flat()),
+		members: new Int32Array(flattened),
 		depth,
 		minMembers,
 		sizes: sizes === undefined ? undefined : new Float64Array(sizes),

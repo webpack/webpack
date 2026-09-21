@@ -17,78 +17,86 @@ const sharedSize = [0, 1, 2, 3, 4].reduce(
 	0
 );
 
+/** @type {{ usedExports: boolean, dedupDepth: number }[]} */
+const variants = [];
+// The harness evaluates this on the oldest Node the matrix runs, which has
+// neither `Array.prototype.flatMap` nor `Object.fromEntries`
+for (const usedExports of [false, true]) {
+	for (const dedupDepth of [0, 1, 2, 3, 4, 0xffffffff]) {
+		variants.push({ usedExports, dedupDepth });
+	}
+}
+
+/**
+ * The two entries sharing every module, plus the five each miss one of.
+ * @returns {Record<string, string>} the entry option
+ */
+const makeEntry = () => {
+	/** @type {Record<string, string>} */
+	const entry = { a: "./a", b: "./b" };
+	for (let i = 0; i < 5; i++) entry[`c${i}`] = `./c${i}`;
+	return entry;
+};
+
 /** @type {import("../../../../").Configuration[]} */
-module.exports = [false, true]
-	.flatMap((usedExports) =>
-		[0, 1, 2, 3, 4, 0xffffffff].map((dedupDepth) => ({
+module.exports = variants.map(({ usedExports, dedupDepth }, index) => ({
+	name: `dedup-depth-${index}`,
+	mode: "production",
+	target: "node",
+	entry: makeEntry(),
+	output: {
+		filename: `[name]-${index}.js`,
+		chunkFilename: `[name]-${index}.js`
+	},
+	optimization: {
+		minimize: false,
+		concatenateModules: false,
+		chunkIds: "named",
+		splitChunks: {
+			chunks: "all",
 			usedExports,
-			dedupDepth
-		}))
-	)
-	.map(({ usedExports, dedupDepth }, index) => ({
-		name: `dedup-depth-${index}`,
-		mode: "production",
-		target: "node",
-		entry: {
-			a: "./a",
-			b: "./b",
-			...Object.fromEntries(
-				Array.from({ length: 5 }, (_, i) => [`c${i}`, `./c${i}`])
-			)
-		},
-		output: {
-			filename: `[name]-${index}.js`,
-			chunkFilename: `[name]-${index}.js`
-		},
-		optimization: {
-			minimize: false,
-			concatenateModules: false,
-			chunkIds: "named",
-			splitChunks: {
-				chunks: "all",
-				usedExports,
-				dedupDepth,
-				minSize: sharedSize,
-				minSizeReduction: 0,
-				maxInitialRequests: Infinity,
-				maxAsyncRequests: Infinity,
-				cacheGroups: {
-					default: false,
-					defaultVendors: false,
-					shared: { test: /[\\/]m[0-4]\.js$/, minChunks: 2 }
-				}
+			dedupDepth,
+			minSize: sharedSize,
+			minSizeReduction: 0,
+			maxInitialRequests: Infinity,
+			maxAsyncRequests: Infinity,
+			cacheGroups: {
+				default: false,
+				defaultVendors: false,
+				shared: { test: /[\\/]m[0-4]\.js$/, minChunks: 2 }
 			}
-		},
-		plugins: [
-			{
-				apply(compiler) {
-					compiler.hooks.done.tap("AssertDedupDepth", (stats) => {
-						const { chunkGraph, modules } = stats.compilation;
-						const shared = [...modules].filter((module) =>
-							/[\\/]m[0-4]\.js$/.test(module.identifier())
-						);
-						assert.strictEqual(shared.length, 5, `config ${index}`);
-						const sharedChunks = shared.map((module) =>
-							chunkGraph.getModuleChunks(module)
-						);
-						const extracted = dedupDepth >= 3;
-						for (const chunks of sharedChunks) {
-							assert.strictEqual(
-								chunks.length,
-								extracted ? 5 : 6,
-								`config ${index}`
-							);
-						}
-						const together = sharedChunks[0].filter((chunk) =>
-							sharedChunks.every((chunks) => chunks.includes(chunk))
-						);
+		}
+	},
+	plugins: [
+		{
+			apply(compiler) {
+				compiler.hooks.done.tap("AssertDedupDepth", (stats) => {
+					const { chunkGraph, modules } = stats.compilation;
+					const shared = [...modules].filter((module) =>
+						/[\\/]m[0-4]\.js$/.test(module.identifier())
+					);
+					assert.strictEqual(shared.length, 5, `config ${index}`);
+					const sharedChunks = shared.map((module) =>
+						chunkGraph.getModuleChunks(module)
+					);
+					const extracted = dedupDepth >= 3;
+					for (const chunks of sharedChunks) {
 						assert.strictEqual(
-							together.length,
-							extracted ? 1 : 2,
+							chunks.length,
+							extracted ? 5 : 6,
 							`config ${index}`
 						);
-					});
-				}
+					}
+					const together = sharedChunks[0].filter((chunk) =>
+						sharedChunks.every((chunks) => chunks.includes(chunk))
+					);
+					assert.strictEqual(
+						together.length,
+						extracted ? 1 : 2,
+						`config ${index}`
+					);
+				});
 			}
-		]
-	}));
+		}
+	]
+}));

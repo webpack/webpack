@@ -18,19 +18,33 @@ const sharedSize = [0, 1, 2].reduce(
 	0
 );
 
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [
+/**
+ * @typedef {object} Variant
+ * @property {boolean} futureDefaults whether the next major's defaults are on
+ * @property {number=} dedupDepth the depth the plugin is constructed with
+ * @property {number} expectedDepth the depth it resolves to
+ */
+
+/** @type {Variant[]} */
+const variants = [];
+// The harness evaluates this on the oldest Node the matrix runs, which has no
+// `Array.prototype.flatMap`
+for (const { futureDefaults, defaultDepth } of [
 	{ futureDefaults: true, defaultDepth: 1 },
 	{ futureDefaults: false, defaultDepth: 0 }
-]
-	.flatMap(({ futureDefaults, defaultDepth }) =>
-		[undefined, 0, 1, 2].map((dedupDepth) => ({
+]) {
+	for (const dedupDepth of [undefined, 0, 1, 2]) {
+		variants.push({
 			futureDefaults,
 			dedupDepth,
 			expectedDepth: dedupDepth === undefined ? defaultDepth : dedupDepth
-		}))
-	)
-	.map(({ futureDefaults, dedupDepth, expectedDepth }, index) => ({
+		});
+	}
+}
+
+/** @type {import("../../../../").Configuration[]} */
+module.exports = variants.map(
+	({ futureDefaults, dedupDepth, expectedDepth }, index) => ({
 		name: `dedup-depth-plugin-${index}`,
 		context,
 		mode: /** @type {const} */ ("production"),
@@ -89,4 +103,5 @@ module.exports = [
 				}
 			}
 		]
-	}));
+	})
+);
