@@ -31794,7 +31794,7 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
-declare interface _functionSyntax {
+declare interface _functionSyntaxParser {
 	/**
 	 * Decode HTML character references in a string. Handles all numeric
 	 * references (with WHATWG remap of 0x00, surrogates, out-of-range, and the
@@ -32839,7 +32839,7 @@ declare namespace exports {
 					errors?: (string | Error)[];
 				}[]
 			) => { warnings?: (string | Error)[]; errors?: (string | Error)[] };
-			export let decodeEntities: _functionSyntax;
+			export let decodeEntities: _functionSyntaxParser;
 			export let embeddedText: (
 				answer?: string | { code?: string }
 			) => undefined | string;
