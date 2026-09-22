@@ -27879,6 +27879,32 @@ declare abstract class RuntimeTemplate {
 		 */
 		request?: string;
 	}): string;
+	moduleFactoryFnHeader(__0: {
+		/**
+		 * the module the body belongs to
+		 */
+		module: Module;
+		/**
+		 * whether the body reads `module`
+		 */
+		needModule: boolean;
+		/**
+		 * whether the body reads `exports`
+		 */
+		needExports: boolean;
+		/**
+		 * whether the body reads `__webpack_require__`
+		 */
+		needRequire: boolean;
+		/**
+		 * whether the body reads `this` as exports
+		 */
+		needThisAsExports: boolean;
+		/**
+		 * render as a method shorthand, without the `function` keyword
+		 */
+		shorthand?: boolean;
+	}): string;
 
 	/**
 	 * Define es module flag statement.

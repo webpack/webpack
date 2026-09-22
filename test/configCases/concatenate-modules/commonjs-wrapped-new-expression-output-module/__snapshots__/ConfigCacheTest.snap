@@ -51,7 +51,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-new-expressio
   \\\\******************************/
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 class Thing {
@@ -158,7 +158,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-new-expressio
   \\\\******************************/
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 class Thing {
@@ -265,7 +265,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-new-expressio
   \\\\******************************/
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 class Thing {
@@ -372,7 +372,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-new-expressio
   \\\\******************************/
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 class Thing {

@@ -51,7 +51,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-wrapped-new-expression-out
   \\\\******************************/
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 class Thing {

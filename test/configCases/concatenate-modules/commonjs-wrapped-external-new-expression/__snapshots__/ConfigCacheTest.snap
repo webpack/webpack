@@ -53,12 +53,12 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
   \\\\******************************/
 
 // MODULE: external \\"events\\"
-var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 module.exports = require(\\"events\\");
 });
 
 // MODULE: ./mid.cjs
-var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const { make, raw } = (esm_user_namespaceFn());
@@ -69,7 +69,7 @@ exports.l = raw;
 });
 
 // MODULE: ./esm-user.mjs
-var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   make: () => (/* binding */ make)
 /* harmony export */ });
@@ -160,12 +160,12 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
   \\\\******************************/
 
 // MODULE: external \\"events\\"
-var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 module.exports = require(\\"events\\");
 });
 
 // MODULE: ./mid.cjs
-var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const { make, raw } = (esm_user_namespaceFn());
@@ -176,7 +176,7 @@ exports.l = raw;
 });
 
 // MODULE: ./esm-user.mjs
-var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   make: () => (/* binding */ make)
 /* harmony export */ });
@@ -267,12 +267,12 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
   \\\\******************************/
 
 // MODULE: external \\"events\\"
-var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 module.exports = require(\\"events\\");
 });
 
 // MODULE: ./mid.cjs
-var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const { make, raw } = (esm_user_namespaceFn());
@@ -283,7 +283,7 @@ exports.l = raw;
 });
 
 // MODULE: ./esm-user.mjs
-var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   make: () => (/* binding */ make)
 /* harmony export */ });
@@ -374,12 +374,12 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-wrapped-external-new-
   \\\\******************************/
 
 // MODULE: external \\"events\\"
-var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var external_events_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 module.exports = require(\\"events\\");
 });
 
 // MODULE: ./mid.cjs
-var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var mid_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 
 
 const { make, raw } = (esm_user_namespaceFn());
@@ -390,7 +390,7 @@ exports.l = raw;
 });
 
 // MODULE: ./esm-user.mjs
-var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__webpack_module__, __webpack_exports__) {
+var esm_user_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack___webpack_module__, __webpack_exports__) => {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   make: () => (/* binding */ make)
 /* harmony export */ });

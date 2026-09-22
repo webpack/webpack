@@ -53,7 +53,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
   \\\\******************************/
 
 // MODULE: ./defaults.js
-var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 var __webpack_unused_export__;
 
 
@@ -64,7 +64,7 @@ __webpack_unused_export__ = { name: \\"core\\" };
 });
 
 // MODULE: ./failsafe.js
-var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"failsafe\\");
@@ -74,7 +74,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
 });
 
 // MODULE: ./json.js
-var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"json\\");
@@ -84,7 +84,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
 });
 
 // MODULE: ./lib.js
-var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module, exports) => {
 
 
 // semicolon-free re-exports, in every spelling: dropping the unused ones must
@@ -99,7 +99,7 @@ module.exports.H = () => \\"loaded\\"
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -107,7 +107,7 @@ module.exports = [];
 });
 
 // MODULE: ./schema.js
-var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"schema\\");
@@ -121,7 +121,7 @@ module.exports = Schema;
 });
 
 // MODULE: ./type.js
-var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"type\\");
@@ -210,7 +210,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
   \\\\******************************/
 
 // MODULE: ./defaults.js
-var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 var __webpack_unused_export__;
 
 
@@ -221,7 +221,7 @@ __webpack_unused_export__ = { name: \\"core\\" };
 });
 
 // MODULE: ./failsafe.js
-var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"failsafe\\");
@@ -231,7 +231,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
 });
 
 // MODULE: ./json.js
-var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"json\\");
@@ -241,7 +241,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
 });
 
 // MODULE: ./lib.js
-var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module, exports) => {
 
 
 // semicolon-free re-exports, in every spelling: dropping the unused ones must
@@ -256,7 +256,7 @@ module.exports.H = () => \\"loaded\\"
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -264,7 +264,7 @@ module.exports = [];
 });
 
 // MODULE: ./schema.js
-var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"schema\\");
@@ -278,7 +278,7 @@ module.exports = Schema;
 });
 
 // MODULE: ./type.js
-var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"type\\");
@@ -367,7 +367,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
   \\\\******************************/
 
 // MODULE: ./defaults.js
-var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 var __webpack_unused_export__;
 
 
@@ -378,7 +378,7 @@ __webpack_unused_export__ = { name: \\"core\\" };
 });
 
 // MODULE: ./failsafe.js
-var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"failsafe\\");
@@ -388,7 +388,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
 });
 
 // MODULE: ./json.js
-var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"json\\");
@@ -398,7 +398,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
 });
 
 // MODULE: ./lib.js
-var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module, exports) => {
 
 
 // semicolon-free re-exports, in every spelling: dropping the unused ones must
@@ -413,7 +413,7 @@ module.exports.H = () => \\"loaded\\"
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -421,7 +421,7 @@ module.exports = [];
 });
 
 // MODULE: ./schema.js
-var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"schema\\");
@@ -435,7 +435,7 @@ module.exports = Schema;
 });
 
 // MODULE: ./type.js
-var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"type\\");
@@ -524,7 +524,7 @@ exports[`ConfigCacheTestCases concatenate-modules commonjs-unused-reexport-asi-p
   \\\\******************************/
 
 // MODULE: ./defaults.js
-var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var defaults_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 var __webpack_unused_export__;
 
 
@@ -535,7 +535,7 @@ __webpack_unused_export__ = { name: \\"core\\" };
 });
 
 // MODULE: ./failsafe.js
-var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var failsafe_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"failsafe\\");
@@ -545,7 +545,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"failsafe\\")) };
 });
 
 // MODULE: ./json.js
-var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var json_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"json\\");
@@ -555,7 +555,7 @@ module.exports = { ...(/* unused pure expression */ null && (\\"json\\")) };
 });
 
 // MODULE: ./lib.js
-var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var lib_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module, exports) => {
 
 
 // semicolon-free re-exports, in every spelling: dropping the unused ones must
@@ -570,7 +570,7 @@ module.exports.H = () => \\"loaded\\"
 });
 
 // MODULE: ./log.js
-var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var log_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = [];
@@ -578,7 +578,7 @@ module.exports = [];
 });
 
 // MODULE: ./schema.js
-var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var schema_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"schema\\");
@@ -592,7 +592,7 @@ module.exports = Schema;
 });
 
 // MODULE: ./type.js
-var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var type_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 (log_namespaceFn().push)(\\"type\\");
