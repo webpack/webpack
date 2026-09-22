@@ -1104,12 +1104,12 @@ const EXPECTED = [
 		// Every one of them writes an escape, and nothing else in this relation
 		// does, so the backslash is what they have in common.
 		contains: "\\",
-		why: "a defect, not something owed nothing: a property name is looked up as the source spelled it, so `\\66 ont-weight:bold` keeps `bold` where `font-weight:bold` folds to `700`, and a box shorthand written that way collapses to `0 0 0 0` rather than `0`. The lookups have to read the unescaped name. Retire this entry with that fix"
+		why: "the printed name keeps the source's spelling, so an escaped one costs the bytes the escape takes — the lookups behind it read the unescaped name, which is what `fix(css): read an escaped property name as the name it spells` settled. Unescaping the printed name where the plain spelling is valid would retire this; it is a re-encoding, so it has to show a compressed win first"
 	},
 	{
 		relation: "respelling leading-zero",
 		contains: "-> 0",
-		why: "two places where a number is not normalized at all, so the source's leading zero survives: exponent form, where `opacity:0.2e2` keeps every byte and `20` would do, and an `@supports` prelude, which is kept as authored since it is a feature test rather than a declaration to print. The first is a gap to close with the escape fix; the second is a judgement to confirm before changing"
+		why: "the printer leaves scientific notation alone on purpose — `_normalizeNumber` says so in as many words — so `opacity:0.2e2` keeps every byte, and an `@supports` prelude is kept as authored because it is a feature test rather than a declaration to print. Both are judgements to revisit rather than defects; retire this entry if either changes"
 	}
 ];
 
