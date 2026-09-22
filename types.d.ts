@@ -25430,7 +25430,12 @@ declare interface RequestRecord {
  * Shortens absolute or verbose request strings so diagnostics and stats output
  * can be rendered relative to a chosen base directory.
  */
-declare abstract class RequestShortener {
+declare class RequestShortener {
+	/**
+	 * Binds a context-aware shortening function to the provided directory and
+	 * optional cache owner.
+	 */
+	constructor(dir: string, associatedObjectForCache?: object);
 	contextify: (value: string) => string;
 
 	/**
@@ -33767,7 +33772,7 @@ declare namespace exports {
 			export let languageOfMediaType: (mediaType: string) => undefined | string;
 			export let parseDataURI: (uri: string) => null | ParsedDataURI;
 		}
-		export { LazySet };
+		export { LazySet, RequestShortener };
 	}
 	export namespace sources {
 		export {
