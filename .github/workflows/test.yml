@@ -130,6 +130,15 @@ jobs:
             node_modules/.cache/html-tool-comparison
           key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
 
+      # A key of its own rather than a third path on the one above: the
+      # equivalence job shares that entry and reads neither the JavaScript
+      # corpus nor a key that moves when it is bumped.
+      - name: Cache the JavaScript comparison corpus
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules/.cache/js-tool-comparison
+          key: comparison-corpus-js-${{ runner.os }}-${{ hashFiles('tooling/comparison/js-tool-comparison/package.json', 'tooling/comparison/js-tool-comparison/package-lock.json') }}
+
       # Fatal here, unlike the equivalence job: that one reads whichever
       # fixtures are there, and this one is the check that the whole corpus
       # stays clean. Retried rather than tolerated, a registry blip being the
@@ -152,6 +161,15 @@ jobs:
       - name: HTML printer invariants
         if: ${{ !cancelled() }}
         run: yarn test:invariants:html --require-corpus
+
+      # No sweep reads the JavaScript corpus yet, so installing it is what this
+      # job can say about it — and it is the half a bump breaks: a manifest and
+      # lockfile `npm ci` refuses, or a platform package the lockfile misses.
+      # Last, and `!cancelled()`, so it neither hides a printer finding nor is
+      # hidden by one.
+      - name: Install the JavaScript comparison corpus
+        if: ${{ !cancelled() }}
+        run: node tooling/retry.js yarn benchmark:js-tools:setup
 
   validate-legacy-node:
     runs-on: ubuntu-latest

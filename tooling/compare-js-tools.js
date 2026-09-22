@@ -805,13 +805,33 @@ const roundTrip = (acorn, before, printed, goal) => {
 		: `${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`;
 };
 
-const mode = process.argv[2];
-(mode === "--measure"
-	? measure(TOOLS)
-	: mode === "--compare"
-		? compare()
-		: main()
-).catch((error) => {
+// A lookup rather than a chain of ternaries: each entry point is bound where
+// it is named, so reading the dispatch is reading the whole table. `--setup`
+// installs the corpus and stops, without paying for the comparison.
+const RUNNERS = new Map(
+	/** @type {[string, () => Promise<unknown>][]} */ ([
+		["--measure", measure.bind(null, TOOLS)],
+		["--compare", compare],
+		["--setup", installPackages.bind(null, CACHE_NAME)]
+	])
+);
+
+/**
+ * Runs the entry point the mode names, defaulting to the whole comparison.
+ * @param {string=} mode which entry point to run
+ * @returns {Promise<unknown>} what that entry point resolves to
+ */
+const runMode = (mode = "") => (RUNNERS.get(mode) || main)();
+
+// Only as the entry point, the way the CSS and HTML scripts guard: requiring
+// this file otherwise starts the whole comparison, so nothing could read the
+// dispatch above without paying ten minutes for it.
+const started =
+	require.main === module ? runMode(process.argv[2]) : Promise.resolve();
+
+started.catch((error) => {
 	log(String(error && error.stack ? error.stack : error));
 	process.exitCode = 1;
 });
+
+module.exports = { runMode };
