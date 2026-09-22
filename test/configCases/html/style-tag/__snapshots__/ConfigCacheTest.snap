@@ -11,14 +11,12 @@ exports[`ConfigCacheTestCases html style-tag exported tests should process inlin
 
 body { color: red; }
 .foo { background: url(handled-pixel.png); }
-
 </style>
 <style type=\\"text/css\\">/*!************************************************************************************!*\\\\
   !*** css data:text/css;base64,Ci5iYXIgeyBjb2xvcjogYmx1ZTsgfQo= (exportType: text) ***!
   \\\\************************************************************************************/
 
 .bar { color: blue; }
-
 </style>
 <!-- Non-CSS type stays untouched -->
 <style type=\\"text/foo\\">
@@ -31,7 +29,6 @@ this stays
   /* second sheet — non-ASCII content must round-trip (UTF-8, not ASCII) */
   .baz { color: green; }
   .qux::before { content: \\"café →\\"; }
-
 </style>
 </head>
 <body>

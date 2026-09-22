@@ -91,8 +91,7 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<input type=file accept= .png,.jpg>
 	<img srcset=\\"a.png  1x\\" alt=\\"nbsp descriptor kept\\">
 	<script type= application/json>{ \\"a\\" : 1 }</script>
-	<style type= text/css>a { color : red ; }
-</style>
+	<style type= text/css>a { color : red ; }</style>
 	<aİx id=x>only ascii folds in a name</aİx>
 	<table><caption>caption end tag goes<col><col><tr><td>a</table>
 	<table><caption>whitespace behind it keeps the tag</caption> <col><tr><td>a</table>
