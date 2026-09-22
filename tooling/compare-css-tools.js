@@ -38,10 +38,20 @@ const MODERN_BROWSERS = require("browserslist")(
 const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
 const {
+	NodeType,
+	TT_AT_KEYWORD,
+	TT_DIMENSION,
 	TT_EOF,
+	TT_FUNCTION,
+	TT_HASH,
+	TT_IDENTIFIER,
+	TT_NUMBER,
+	TT_PERCENTAGE,
+	TT_STRING,
 	TT_WHITESPACE,
 	TokenStream,
-	pickTransforms
+	pickTransforms,
+	unescapeIdentifier
 } = require("../lib/css/syntax-parser");
 const {
 	STAGES,
@@ -52,6 +62,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatSecond,
+	hasher,
 	idempotence,
 	installPackages,
 	kb,
@@ -62,9 +73,17 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
+	oneLine,
+	pathSpanWalk,
+	purityRelation,
 	run,
+	shrink,
+	signed,
+	sliceRelation,
+	spans,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	thrownText
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -612,7 +631,605 @@ const tokenStream = (css) => {
 	return JSON.stringify(out);
 };
 
+/** @type {Record<number, string>} */
+const NODE_TYPE_NAMES = {};
+for (const [name, type] of Object.entries(NodeType)) {
+	NODE_TYPE_NAMES[type] = name;
+}
+
+// Which types state a sub-range of their own. One accessor view answers every
+// property for every node, so reading `nameStart` off a token reports whatever
+// that column holds for it — the type decides, never what came back.
+const NAMED = new Set([
+	NodeType.Declaration,
+	NodeType.AtRule,
+	NodeType.Function
+]);
+const BLOCKED = new Set([NodeType.AtRule, NodeType.QualifiedRule]);
+
+/**
+ * The sub-ranges a node names, as the span relation reads them.
+ * @param {import("../lib/css/syntax-parser").CssPath} nodePath the accessor
+ * @returns {readonly [string, number, number][] | undefined} each `[name, start, end]`
+ */
+const cssInnerRanges = (nodePath) => {
+	const type = nodePath.type();
+	/** @type {[string, number, number][]} */
+	const inner = [];
+	if (NAMED.has(type)) {
+		inner.push(["name", nodePath.nameStart(), nodePath.nameEnd()]);
+	}
+	if (BLOCKED.has(type)) {
+		inner.push(["block", nodePath.blockStart(), nodePath.blockEnd()]);
+	}
+	return inner.length === 0 ? undefined : inner;
+};
+
+/**
+ * Hold the parser's ranges to what they claim about the stylesheet they came
+ * from. CSS owes every part of the relation: a component value sits inside the
+ * declaration that holds it, and two of them never overlap.
+ * @param {string} css a stylesheet
+ * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ */
+const cssSpans = (css) =>
+	spans({
+		length: css.length,
+		contains: true,
+		siblings: true,
+		walk: pathSpanWalk({
+			length: css.length,
+			run: (enter, exit) => {
+				/** @type {Record<number, { enter: typeof enter, exit: typeof exit }>} */
+				const visitors = {};
+				for (const type of Object.values(NodeType)) {
+					visitors[type] = { enter, exit };
+				}
+				new SourceProcessor().use(visitors).process(css, {});
+			},
+			start: (nodePath) => nodePath.start(),
+			end: (nodePath) => nodePath.end(),
+			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
+			// A comment reaches the walk from the tokenizer rather than from the
+			// tree, so it arrives before the rule holding it has opened.
+			structural: (nodePath) => nodePath.type() !== NodeType.Comment,
+			inner: cssInnerRanges
+		})
+	});
+
+// What a node's own source has to be wrapped in to parse on its own. A rule
+// stands alone; a declaration needs a rule around it and a component value a
+// declaration, which is the offset shift each answer is read back through.
+/** @type {Record<number, [string, string]>} */
+const CSS_SLICE_CONTEXT = {
+	[NodeType.AtRule]: ["", ""],
+	[NodeType.QualifiedRule]: ["", ""],
+	[NodeType.Declaration]: ["a{", "}"]
+};
+
+const CSS_VALUE_CONTEXT = /** @type {[string, string]} */ (["a{b:", "}"]);
+
+// Reparsing every node costs a parse of its own, so a stylesheet would cost its
+// size times its depth. Each one is capped at this many times its own bytes,
+// spent leaves first, which is where a range is most likely to be wrong.
+const SLICE_BUDGET_FACTOR = 4;
+
+/**
+ * @typedef {{ type: number, start: number, end: number, size: number }} NodeRun
+ */
+
+/**
+ * Every node in one stylesheet, in post-order with the size of its subtree —
+ * which is what lets a subtree be read as a run rather than walked again. A
+ * comment is left out: it reaches the walk from the tokenizer, so it would land
+ * in whichever node happened to be open.
+ * @param {string} css a stylesheet
+ * @returns {NodeRun[]} each node, children before parents
+ */
+const cssNodeRuns = (css) => {
+	/** @type {NodeRun[]} */
+	const runs = [];
+	// How many nodes each open node has collected, so a size is a sum rather
+	// than a second descent.
+	/** @type {number[]} */
+	const held = [0];
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = {
+			enter: () => {
+				held.push(0);
+			},
+			exit: (nodePath) => {
+				const inside = /** @type {number} */ (held.pop());
+				if (nodePath.type() === NodeType.Comment) return;
+				const size = inside + 1;
+				held[held.length - 1] += size;
+				runs.push({
+					type: nodePath.type(),
+					start: nodePath.start(),
+					end: nodePath.end(),
+					size
+				});
+			}
+		};
+	}
+	new SourceProcessor().use(visitors).process(css, {});
+	return runs;
+};
+
+/**
+ * What one node's subtree says: its shape and the offsets inside it, read
+ * against the node's own start so the same construct digests the same wherever
+ * it was found.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at which one to digest
+ * @returns {string} its digest
+ */
+const runDigest = (runs, at) => {
+	const node = runs[at];
+	/** @type {string[]} */
+	const out = [];
+	for (let index = at - node.size + 1; index <= at; index++) {
+		const one = runs[index];
+		out.push(
+			`${NODE_TYPE_NAMES[one.type]}[${one.start - node.start},${
+				one.end - node.start
+			})`
+		);
+	}
+	return out.join(" ");
+};
+
+/**
+ * Hold each node's own source to the node it came from: the bytes between its
+ * offsets, wrapped in the least context that lets them parse, give that node
+ * back.
+ * @param {string} css a stylesheet
+ * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ */
+const cssSlices = (css) => {
+	const runs = cssNodeRuns(css);
+	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	const candidates = [];
+	let budget = css.length * SLICE_BUDGET_FACTOR;
+	let capped = 0;
+	let repeats = 0;
+	// One shape is one question: a bundle carries the same `Identifier[0,3)`
+	// hundreds of thousands of times, and reparsing each one asks nothing the
+	// first did not. Spends the budget on the shapes a source actually holds.
+	/** @type {Set<string>} */
+	const seen = new Set();
+	for (let at = 0; at < runs.length; at++) {
+		const node = runs[at];
+		const said = runDigest(runs, at);
+		// Before the budget, not after: a shape already asked about must not spend
+		// what is left, or a bundle's millionth identifier crowds out every
+		// composite node in it.
+		if (seen.has(said)) {
+			repeats++;
+			continue;
+		}
+		seen.add(said);
+		const text = css.slice(node.start, node.end);
+		if (text.length > budget) {
+			capped++;
+			continue;
+		}
+		budget -= text.length;
+		const [prefix, suffix] = CSS_SLICE_CONTEXT[node.type] || CSS_VALUE_CONTEXT;
+		candidates.push({
+			what: NODE_TYPE_NAMES[node.type],
+			said,
+			reparse: () => {
+				/** @type {NodeRun[]} */
+				let again;
+				try {
+					again = cssNodeRuns(`${prefix}${text}${suffix}`);
+				} catch (_error) {
+					return null;
+				}
+				// The node this slice is meant to be, where the wrapper put it. Read
+				// out of its stylesheet the parser can take these bytes for something
+				// else, or for nothing: what they lacked is context, not a range.
+				const want = again.findIndex(
+					(one) =>
+						one.type === node.type &&
+						one.start === prefix.length &&
+						one.end === prefix.length + text.length
+				);
+				return want === -1 ? null : runDigest(again, want);
+			}
+		});
+	}
+	return { ...sliceRelation(candidates), capped, repeats };
+};
+
+/**
+ * What one parse of a stylesheet amounts to: every node's type and range, the
+ * names and values it derived, and the bytes the printer makes of it.
+ *
+ * WHY: the derived values are the point, not the offsets. An unescaped name or
+ * a cached word can come back from the last parse with every offset still
+ * right, and printing reads all of them — so the output is digested too, which
+ * covers the derived fields a node type does not name here.
+ * @param {string} css a stylesheet
+ * @param {(css: string) => string} print the printer to read it back out with
+ * @returns {string} the digest
+ */
+const cssPurityDigest = (css, print) => {
+	const digest = hasher();
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
+		const type = nodePath.type();
+		digest.update(
+			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
+		);
+		if (NAMED.has(type)) {
+			digest.update(`|${nodePath.name()}|${nodePath.unescapedName()}`);
+		}
+		digest.update("\n");
+	};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = { enter: () => {}, exit: read };
+	}
+	try {
+		new SourceProcessor().use(visitors).process(css, {});
+		digest.update(print(css));
+	} catch (error) {
+		return `refused: ${/** @type {Error} */ (error).message}`;
+	}
+	return digest.hex();
+};
+
+/**
+ * What a stylesheet says, token by token, with each one's value as the parser
+ * resolves it rather than as the source wrote it: an escape resolved, a string
+ * without its delimiters, a number as its value and its unit folded.
+ *
+ * WHY: this is what a respelling has to be judged against. The raw stream
+ * `idempotence` reads would call `8PX` and `8px`, or `"a"` and `'a'`, two
+ * different outputs — so every respelling would report the printer for keeping
+ * a spelling that says exactly what the other one says.
+ * @param {string} css a stylesheet
+ * @returns {string} its meaning, as the JSON of every token in order
+ */
+const tokenMeaning = (css) => {
+	const stream = new TokenStream(css);
+	/** @type {string[]} */
+	const out = [];
+	for (;;) {
+		const token = stream.consume();
+		if (token.type === TT_EOF) break;
+		const text = css.slice(token.start, token.end);
+		out.push(`${token.type}:${canonicalToken(token.type, text, token)}`);
+	}
+	return JSON.stringify(out);
+};
+
+/**
+ * One token's value as the parser resolves it.
+ * @param {number} type which token it is
+ * @param {string} text the token as the source spelled it
+ * @param {EXPECTED_ANY} token the token, for a dimension's unit
+ * @returns {string} its value
+ */
+const canonicalToken = (type, text, token) => {
+	if (type === TT_IDENTIFIER) return unescapeIdentifier(text);
+	// The sigil is not part of the name, and an at-rule name is matched
+	// case-insensitively where an identifier is not.
+	if (type === TT_AT_KEYWORD) {
+		return unescapeIdentifier(text.slice(1)).toLowerCase();
+	}
+	if (type === TT_HASH) return unescapeIdentifier(text.slice(1));
+	if (type === TT_FUNCTION) {
+		return unescapeIdentifier(text.slice(0, -1)).toLowerCase();
+	}
+	if (type === TT_STRING) return unescapeIdentifier(text.slice(1, -1));
+	if (type === TT_DIMENSION) {
+		const at = token.unitStart - token.start;
+		return `${Number(text.slice(0, at))}${text.slice(at).toLowerCase()}`;
+	}
+	if (type === TT_NUMBER || type === TT_PERCENTAGE) {
+		return String(Number(type === TT_PERCENTAGE ? text.slice(0, -1) : text));
+	}
+	return text;
+};
+
+/**
+ * @typedef {object} Site
+ * @property {number} start where the token begins
+ * @property {number} end where it ends
+ * @property {number} type which token it is
+ * @property {string} text the token as the source spelled it
+ * @property {number} unitStart where a dimension's unit begins, or -1
+ */
+
+/**
+ * Where a custom property's value sits. Its value is an arbitrary token stream
+ * the spec keeps as authored — `var()` substitutes it into somewhere else, so
+ * nothing may normalize it — which makes it the one region where how something
+ * was spelled decides the output on purpose.
+ * @param {string} css a stylesheet
+ * @returns {[number, number][]} each range, in source order
+ */
+const customPropertyRanges = (css) => {
+	/** @type {[number, number][]} */
+	const ranges = [];
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {
+		[NodeType.Declaration]: {
+			enter: () => {},
+			exit: (nodePath) => {
+				if (nodePath.name().startsWith("--")) {
+					ranges.push([nodePath.start(), nodePath.end()]);
+				}
+			}
+		}
+	};
+	new SourceProcessor().use(visitors).process(css, {});
+	return ranges;
+};
+
+/**
+ * Every token a respelling could rewrite, in source order.
+ * @param {string} css a stylesheet
+ * @returns {Site[]} the sites
+ */
+const cssSites = (css) => {
+	const kept = customPropertyRanges(css);
+	const stream = new TokenStream(css);
+	/** @type {Site[]} */
+	const sites = [];
+	// Both are in source order, so the ranges are walked alongside the tokens
+	// rather than searched for each one: a stylesheet of custom properties holds
+	// thousands, and asking every token about all of them is quadratic.
+	let range = 0;
+	for (;;) {
+		const token = stream.consume();
+		if (token.type === TT_EOF) break;
+		while (range < kept.length && kept[range][1] <= token.start) range++;
+		if (range < kept.length && token.start >= kept[range][0]) continue;
+		sites.push({
+			start: token.start,
+			end: token.end,
+			type: token.type,
+			text: css.slice(token.start, token.end),
+			unitStart: token.type === TT_DIMENSION ? token.unitStart : -1
+		});
+	}
+	return sites;
+};
+
+/**
+ * One character of an identifier written as the escape §4.3.7 resolves to the
+ * same character, which is the spelling a minifier comparing raw text misses.
+ * @param {string} name an identifier, or the name part of one
+ * @returns {string | null} it with its first ASCII letter escaped, or null
+ */
+const asEscaped = (name) => {
+	const at = name.search(/[a-z]/i);
+	if (at === -1) return null;
+	const code = name.charCodeAt(at).toString(16);
+	// The space ends the escape, so the character after it stays its own.
+	return `${name.slice(0, at)}\\${code} ${name.slice(at + 1)}`;
+};
+
+/**
+ * @param {string} text a string token as written, delimiters included
+ * @param {string} quote the delimiter to write it with
+ * @returns {string | null} the same string under that delimiter, or null
+ */
+const asQuoted = (text, quote) => {
+	const had = text[0];
+	if (had !== '"' && had !== "'") return null;
+	if (had === quote) return null;
+	// Unterminated at end of input: re-delimiting it would close it.
+	if (text.length < 2 || text[text.length - 1] !== had) return null;
+	const body = text.slice(1, -1);
+	// Already escaped for the old delimiter, and the new one is not escaped at
+	// all: both would have to be rewritten, so leave those alone.
+	if (body.includes("\\") || body.includes(quote)) return null;
+	return `${quote}${body}${quote}`;
+};
+
+/**
+ * @typedef {object} Respelling
+ * @property {string} name how the row is labelled
+ * @property {(site: Site) => string | null} write the token's new source text, or null to leave it alone
+ */
+
+/**
+ * Each writes the same value a different way, which the spec says in so many
+ * words: §4.3.7 for an escape, an ASCII case-insensitive match for a unit and
+ * an at-rule name.
+ *
+ * WHY: an identifier is deliberately not case-respelled, though a property name
+ * and a keyword are case-insensitive too. Which of those an identifier is
+ * depends on where it sits, and a class, an id, a custom property, a font
+ * family and a counter name are all case-sensitive — so a case respelling there
+ * would report the printer for keeping a distinction the source made.
+ * @type {Respelling[]}
+ */
+const CSS_RESPELLINGS = [
+	{
+		name: "escape",
+		write: (site) => (site.type === TT_IDENTIFIER ? asEscaped(site.text) : null)
+	},
+	{
+		name: "quote-double",
+		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, '"') : null)
+	},
+	{
+		name: "quote-single",
+		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, "'") : null)
+	},
+	{
+		name: "leading-zero",
+		write: (site) => {
+			if (site.type !== TT_NUMBER && site.type !== TT_DIMENSION) return null;
+			const written = site.text.replace(/^([+-]?)\./, "$10.");
+			return written === site.text ? null : written;
+		}
+	},
+	{
+		name: "unit-case",
+		write: (site) => {
+			if (site.unitStart === -1) return null;
+			const unit = site.text.slice(site.unitStart - site.start);
+			const upper = unit.toUpperCase();
+			return upper === unit
+				? null
+				: `${site.text.slice(0, site.unitStart - site.start)}${upper}`;
+		}
+	},
+	{
+		name: "at-keyword-case",
+		write: (site) => {
+			if (site.type !== TT_AT_KEYWORD) return null;
+			const upper = site.text.toUpperCase();
+			return upper === site.text ? null : upper;
+		}
+	}
+];
+
+// A divergence the printer has not answered for yet, with what it is. Read by
+// the report and the gate: an entry matching nothing is itself a finding, so
+// the fix retires its entry rather than leaving it to rot.
+/** @type {import("./compare-tools-harness").Expected[]} */
+const EXPECTED = [
+	{
+		relation: "respelling escape",
+		// Every one of them writes an escape, and nothing else in this relation
+		// does, so the backslash is what they have in common.
+		contains: "\\",
+		why: "the printed name keeps the source's spelling, so an escaped one costs the bytes the escape takes — the lookups behind it read the unescaped name, which is what `fix(css): read an escaped property name as the name it spells` settled. Unescaping the printed name where the plain spelling is valid would retire this; it is a re-encoding, so it has to show a compressed win first"
+	},
+	{
+		relation: "respelling leading-zero",
+		contains: "-> 0",
+		why: "the printer leaves scientific notation alone on purpose — `_normalizeNumber` says so in as many words — so `opacity:0.2e2` keeps every byte, and an `@supports` prelude is kept as authored because it is a feature test rather than a declaration to print. Both are judgements to revisit rather than defects; retire this entry if either changes"
+	}
+];
+
+/**
+ * @param {string} css a stylesheet
+ * @param {Site[]} sites the sites to respell
+ * @param {Respelling} respelling how to respell them
+ * @returns {string} the stylesheet, respelled
+ */
+const respell = (css, sites, respelling) => {
+	let out = "";
+	let read = 0;
+	for (const site of sites) {
+		const written = respelling.write(site);
+		if (written === null) continue;
+		out += css.slice(read, site.start) + written;
+		read = site.end;
+	}
+	return out + css.slice(read);
+};
+
+/** @typedef {{ kind: "differs" | "bytes" | "throws", delta: number, note: string }} Finding */
+
+/**
+ * Whether respelling these sites moved the output, and how. An output of the
+ * same length saying the same thing is not a finding: webpack keeps the
+ * source's spelling where nothing beats it.
+ * @param {(css: string) => string} minify the printer under test
+ * @param {string} css a stylesheet
+ * @param {string} minified what it minifies to
+ * @param {Site[]} sites the sites to respell
+ * @param {Respelling} respelling how to respell them
+ * @returns {Finding | null} what moved, or null
+ */
+const spellingFinding = (minify, css, minified, sites, respelling) => {
+	const mutated = respell(css, sites, respelling);
+	if (mutated === css) return null;
+	// Verified against the tokenizer rather than argued for: a respelling that
+	// moved the stylesheet is dropped instead of reported.
+	if (tokenMeaning(mutated) !== tokenMeaning(css)) return null;
+	/** @type {string} */
+	let answer;
+	try {
+		answer = minify(mutated);
+	} catch (error) {
+		return { kind: "throws", delta: 0, note: thrownText(error) };
+	}
+	if (answer === minified) return null;
+	const says = tokenMeaning(answer) !== tokenMeaning(minified);
+	if (!says && answer.length === minified.length) return null;
+	return {
+		kind: says ? "differs" : "bytes",
+		delta: answer.length - minified.length,
+		note: ""
+	};
+};
+
+/**
+ * What the report shows for a set of sites: how they were written, and how the
+ * respelling writes them.
+ * @param {Site[]} sites the sites carrying the finding
+ * @param {Respelling} respelling how they are respelled
+ * @returns {string} the repro
+ */
+const reproOf = (sites, respelling) =>
+	`    ${oneLine(sites.map((site) => site.text).join(" "), 76)}\n      -> ${oneLine(
+		sites.map((site) => respelling.write(site) || site.text).join(" "),
+		76
+	)}`;
+
+/**
+ * Every respelling this stylesheet's output depends on.
+ * @param {(css: string) => string} minify the printer under test
+ * @param {string} css a stylesheet
+ * @param {string} minified what it minifies to
+ * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
+ */
+const sweepRespellings = (minify, css, minified) => {
+	/** @type {import("./compare-tools-harness").Report[]} */
+	const reports = [];
+	const sites = cssSites(css);
+	for (const respelling of CSS_RESPELLINGS.filter((one) =>
+		wantedSpelling(one.name)
+	)) {
+		/**
+		 * @param {Site[]} subset the sites to respell
+		 * @returns {Finding | null} what moved
+		 */
+		const holds = (subset) =>
+			spellingFinding(minify, css, minified, subset, respelling);
+		const found = holds(sites);
+		if (found === null) continue;
+		const relation = `respelling ${respelling.name}`;
+		// Bisecting costs a minify of the whole stylesheet per step, and it is
+		// there to name a repro for something that needs looking at. A divergence
+		// already answered for needs none, so the sites it was found over stand.
+		const answered = EXPECTED.some(
+			(entry) =>
+				entry.relation === relation &&
+				reproOf(sites, respelling).includes(entry.contains)
+		);
+		const carried =
+			found.kind === "throws" || answered
+				? sites
+				: shrink(holds, sites, found.kind);
+		const blamed = (carried === sites ? found : holds(carried)) || found;
+		reports.push({
+			relation,
+			what:
+				blamed.kind === "throws"
+					? `threw: ${blamed.note}`
+					: `${blamed.kind}, ${signed(blamed.delta)}`,
+			repro: reproOf(carried, respelling)
+		});
+	}
+	return reports;
+};
+
 const wantedRelation = filterFrom("RELATION");
+const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -661,19 +1278,81 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	if (!wantedRelation("idempotence")) return 0;
-	log(
-		`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
+	// Filtered like the corpus is: an expectation for a relation this run was
+	// never going to reach matched nothing because nothing asked it to, which is
+	// not the divergence having gone away.
+	const groups = findingGroups(
+		EXPECTED.filter(
+			(entry) =>
+				wantedRelation(entry.relation) && wantedSpelling(entry.relation)
+		)
 	);
-	const groups = findingGroups();
-	for (const [label, css] of corpus) {
-		for (const [preset, options] of presets) {
-			const { reports } = idempotence({
-				minify: printerFor(options),
-				source: css,
-				says: tokenStream
-			});
-			for (const report of reports) groups.add(report, preset, label);
+	// Nothing is printed to reach this one, so it is read under no preset: what
+	// the parser said about the stylesheet it was handed.
+	if (wantedRelation("spans")) {
+		log(`reading ranges over ${corpus.length} stylesheets …`);
+		for (const [label, css] of corpus) {
+			for (const report of cssSpans(css)) groups.add(report, "parse", label);
+		}
+	}
+	if (wantedRelation("slices")) {
+		let read = 0;
+		let skipped = 0;
+		let capped = 0;
+		let repeats = 0;
+		for (const [label, css] of corpus) {
+			const answered = cssSlices(css);
+			read += answered.read;
+			skipped += answered.skipped;
+			capped += answered.capped;
+			repeats += answered.repeats;
+			for (const report of answered.reports) groups.add(report, "parse", label);
+		}
+		log(
+			`reparsed ${read} shapes on their own (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
+		);
+	}
+	if (wantedRelation("purity")) {
+		// Under one preset: what is asked is whether reading the same bytes again
+		// gives the same answer, which every option set would ask the same way.
+		const [, options] = presets[0] || PRESETS[0];
+		const print = printerFor(options);
+		const { reports, read } = purityRelation(
+			corpus.map(([label, css]) => ({
+				what: label,
+				digest: () => cssPurityDigest(css, print)
+			}))
+		);
+		for (const report of reports) {
+			groups.add(report, "parse", report.repro.trim());
+		}
+		log(`read ${read} stylesheets twice over …`);
+	}
+	// The printer's two relations share a sweep: both need the output, and
+	// printing it twice to ask two questions of it would double the run.
+	const wantsIdempotence = wantedRelation("idempotence");
+	const wantsRespelling = wantedRelation("respelling");
+	if (wantsIdempotence || wantsRespelling) {
+		log(
+			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
+		);
+		for (const [label, css] of corpus) {
+			for (const [preset, options] of presets) {
+				const print = printerFor(options);
+				const { printed, reports } = wantsIdempotence
+					? idempotence({ minify: print, source: css, says: tokenStream })
+					: { printed: print(css), reports: [] };
+				for (const report of reports) groups.add(report, preset, label);
+				// Under the first preset only: whether a spelling decides the
+				// output is the same question under every option set, and each
+				// asking of it is a full minify of the whole stylesheet.
+				if (printed === null || !wantsRespelling || preset !== presets[0][0]) {
+					continue;
+				}
+				for (const report of sweepRespellings(print, css, printed)) {
+					groups.add(report, preset, label);
+				}
+			}
 		}
 	}
 	return groups.write(write);

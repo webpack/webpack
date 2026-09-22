@@ -149,27 +149,30 @@ jobs:
       - name: Install the HTML comparison corpus
         run: node tooling/retry.js yarn benchmark:html-tools:setup
 
+      # The shipped bundles the JavaScript sweep reads, which are the shape most
+      # of what a build parses is in. Installing it is also the half a bump
+      # breaks — a manifest and lockfile `npm ci` refuses, or a platform package
+      # the lockfile misses — so it is held to installing either way.
+      - name: Install the JavaScript comparison corpus
+        run: node tooling/retry.js yarn benchmark:js-tools:setup
+
       # `--require-corpus`: without it a sweep that lost a fixture reports the
       # findings of the ones it kept and passes, which is coverage lost with
       # nothing to read it off.
       - name: CSS printer invariants
         run: yarn test:invariants:css --require-corpus
 
-      # A CSS finding must not hide an HTML one: each names a repro of its own
-      # and both are read in the same sitting. `!cancelled()` rather than
-      # `always()`, so a cancelled run stops here instead of sweeping again.
+      # One language's finding must not hide another's: each names a repro of
+      # its own and all three are read in the same sitting. `!cancelled()`
+      # rather than `always()`, so a cancelled run stops here instead of
+      # sweeping again.
       - name: HTML printer invariants
         if: ${{ !cancelled() }}
         run: yarn test:invariants:html --require-corpus
 
-      # No sweep reads the JavaScript corpus yet, so installing it is what this
-      # job can say about it — and it is the half a bump breaks: a manifest and
-      # lockfile `npm ci` refuses, or a platform package the lockfile misses.
-      # Last, and `!cancelled()`, so it neither hides a printer finding nor is
-      # hidden by one.
-      - name: Install the JavaScript comparison corpus
+      - name: JavaScript parser invariants
         if: ${{ !cancelled() }}
-        run: node tooling/retry.js yarn benchmark:js-tools:setup
+        run: yarn test:invariants:js --require-corpus
 
   validate-legacy-node:
     runs-on: ubuntu-latest

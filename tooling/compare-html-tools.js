@@ -32,6 +32,7 @@ const { pathToFileURL } = require("url");
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
+	NodeType,
 	QUOTE_NONE,
 	decodeEntities,
 	pickTransforms,
@@ -45,6 +46,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatSecond,
+	hasher,
 	idempotence,
 	installPackages,
 	kb,
@@ -54,8 +56,12 @@ const {
 	measureInWorker,
 	missingReport,
 	oneLine,
+	pathSpanWalk,
+	purityRelation,
 	shrink,
 	signed,
+	sliceRelation,
+	spans,
 	sweepExitCode,
 	sweepMode,
 	thrownText
@@ -1231,6 +1237,288 @@ const idempotenceRepro = (minify, minified, at) => {
 	}
 };
 
+/** @type {Record<number, string>} */
+const NODE_TYPE_NAMES = {};
+for (const [name, type] of Object.entries(NodeType)) {
+	NODE_TYPE_NAMES[type] = name;
+}
+
+/**
+ * The sub-ranges an element states: its own opening tag, and the name and value
+ * of every attribute the source wrote into that tag. §13.2 merges a second
+ * `<html>` or `<body>` tag's attributes onto the element already open, so an
+ * attribute can be written outside the tag holding it and is left to the tag it
+ * was written in.
+ * @param {import("../lib/html/syntax-parser").HtmlPath} nodePath the accessor
+ * @returns {readonly [string, number, number][] | undefined} each `[name, start, end]`
+ */
+const htmlInnerRanges = (nodePath) => {
+	if (nodePath.type() !== NodeType.Element) return undefined;
+	const start = nodePath.start();
+	const tagEnd = nodePath.tagEnd();
+	// The parser inserted this element, or the adoption agency cloned it: no tag
+	// was written, so it states no offsets to hold.
+	if (tagEnd <= start) return undefined;
+	/** @type {[string, number, number][]} */
+	const inner = [["opening tag", start, tagEnd]];
+	const count = nodePath.attributeCount();
+	for (let index = 0; index < count; index++) {
+		const attribute = nodePath.attributeAt(index);
+		const nameStart = nodePath.attributeNameStart(attribute);
+		const nameEnd = nodePath.attributeNameEnd(attribute);
+		if (nameStart < start || nameStart >= tagEnd) continue;
+		inner.push(["attribute name", nameStart, nameEnd]);
+		inner.push([
+			"attribute value",
+			nodePath.attributeValueStart(attribute),
+			nodePath.attributeValueEnd(attribute)
+		]);
+	}
+	return inner;
+};
+
+/**
+ * Hold the parser's ranges to what they claim about the document they came
+ * from. HTML owes less here than CSS does, and the two exclusions are §13.2
+ * rather than slack — turning them on reports 4031 and 22 findings over the
+ * fixtures. An element's end is its start tag's until an end tag is read, so
+ * `<html>` in a document omitting `</html>` ends before the `<body>` it holds;
+ * and an element left open is closed by the next tag, so `<p>a<p>b` gives two
+ * paragraphs whose ranges share those bytes.
+ * @param {string} html a document
+ * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ */
+const htmlSpans = (html) =>
+	spans({
+		length: html.length,
+		contains: false,
+		siblings: false,
+		walk: pathSpanWalk({
+			length: html.length,
+			run: (enter, exit) => {
+				/** @type {Record<number, { enter: typeof enter, exit: typeof exit }>} */
+				const visitors = {};
+				for (const type of Object.values(NodeType)) {
+					visitors[type] = { enter, exit };
+				}
+				new SourceProcessor().use(visitors).process(html, {});
+			},
+			start: (nodePath) => nodePath.start(),
+			end: (nodePath) => nodePath.end(),
+			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
+			inner: htmlInnerRanges
+		})
+	});
+
+/**
+ * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string }} NodeRun
+ */
+
+// Reparsing every node costs a parse of its own, so a document would cost its
+// size times its depth. Each one is capped at this many times its own bytes.
+const SLICE_BUDGET_FACTOR = 4;
+
+/**
+ * Every node in one document, in post-order with the size of its subtree —
+ * which is what lets a subtree be read as a run rather than walked again. `lo`
+ * and `hi` are how far that subtree reaches, and `context` the tag the node sat
+ * in, which is what the fragment parsing algorithm needs to read it back.
+ * @param {string} html a document
+ * @param {string=} fragmentContext the element to parse it as the contents of
+ * @returns {NodeRun[]} each node, children before parents
+ */
+const htmlNodeRuns = (html, fragmentContext) => {
+	/** @type {NodeRun[]} */
+	const runs = [];
+	/** @type {{ held: number, lo: number, hi: number, tag: string }[]} */
+	const stack = [{ held: 0, lo: html.length, hi: 0, tag: "" }];
+	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = {
+			enter: (nodePath) => {
+				stack.push({
+					held: 0,
+					lo: html.length,
+					hi: 0,
+					tag: nodePath.type() === NodeType.Element ? nodePath.tagName() : ""
+				});
+			},
+			exit: (nodePath) => {
+				const frame = /** @type {EXPECTED_ANY} */ (stack.pop());
+				const type = nodePath.type();
+				const tag = type === NodeType.Element ? nodePath.tagName() : "";
+				const start = nodePath.start();
+				const end = nodePath.end();
+				const size = frame.held + 1;
+				const lo = Math.min(frame.lo, start);
+				const hi = Math.max(frame.hi, end);
+				const parent = stack[stack.length - 1];
+				parent.held += size;
+				parent.lo = Math.min(parent.lo, lo);
+				parent.hi = Math.max(parent.hi, hi);
+				runs.push({
+					what: `${NODE_TYPE_NAMES[type]}${tag === "" ? "" : `:${tag}`}`,
+					type,
+					tag,
+					start,
+					end,
+					size,
+					lo,
+					hi,
+					context: parent.tag
+				});
+			}
+		};
+	}
+	new SourceProcessor()
+		.use(visitors)
+		.process(html, fragmentContext === undefined ? {} : { fragmentContext });
+	return runs;
+};
+
+/**
+ * What one node's subtree says: its shape and the offsets inside it, read
+ * against the node's own start so the same construct digests the same wherever
+ * it was found.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at which one to digest
+ * @returns {string} its digest
+ */
+const runDigest = (runs, at) => {
+	const node = runs[at];
+	/** @type {string[]} */
+	const out = [];
+	for (let index = at - node.size + 1; index <= at; index++) {
+		const one = runs[index];
+		out.push(`${one.what}[${one.start - node.start},${one.end - node.start})`);
+	}
+	return out.join(" ");
+};
+
+/**
+ * Hold each node's own source to the node it came from: the bytes between its
+ * offsets, read back as the contents of the element they sat in, give that node
+ * back.
+ *
+ * The context is the whole point here. §13.2 decides what a tag means from the
+ * insertion mode it is read in, so `<td>x</td>` on its own is not a cell at all
+ * — the parser drops it and foster-parents the text. Handing the enclosing tag
+ * to the fragment parsing algorithm is the spec's own answer to that, and it is
+ * what the browser does for `innerHTML`.
+ *
+ * Two shapes are left out rather than normalized: an element the parser
+ * inserted or cloned wrote no tag to slice, and an element whose end is its
+ * start tag's — §13.2 leaves it there until an end tag is read — has a range
+ * that does not hold its own children, so there is no slice to reparse.
+ * @param {string} html a document
+ * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ */
+const htmlSlices = (html) => {
+	const runs = htmlNodeRuns(html);
+	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	const candidates = [];
+	let budget = html.length * SLICE_BUDGET_FACTOR;
+	let capped = 0;
+	let repeats = 0;
+	let skipped = 0;
+	/** @type {Set<string>} */
+	const seen = new Set();
+	for (let at = 0; at < runs.length; at++) {
+		const node = runs[at];
+		// No tag to slice, no range holding its own subtree, or nothing to be the
+		// contents of: each is the document saying where the node came from.
+		if (
+			node.end <= node.start ||
+			node.start > node.lo ||
+			node.end < node.hi ||
+			node.context === ""
+		) {
+			skipped++;
+			continue;
+		}
+		const said = runDigest(runs, at);
+		if (seen.has(said)) {
+			repeats++;
+			continue;
+		}
+		seen.add(said);
+		const text = html.slice(node.start, node.end);
+		if (text.length > budget) {
+			capped++;
+			continue;
+		}
+		budget -= text.length;
+		candidates.push({
+			what: node.what,
+			said,
+			reparse: () => {
+				/** @type {NodeRun[]} */
+				let again;
+				try {
+					again = htmlNodeRuns(text, node.context);
+				} catch (_error) {
+					return null;
+				}
+				const want = again.findIndex(
+					(one) =>
+						one.what === node.what && one.start === 0 && one.end === text.length
+				);
+				return want === -1 ? null : runDigest(again, want);
+			}
+		});
+	}
+	const answered = sliceRelation(candidates);
+	return { ...answered, skipped: answered.skipped + skipped, capped, repeats };
+};
+
+/**
+ * What one parse of a document amounts to: every node's type and range, every
+ * tag and attribute name and value it derived, and the bytes the printer makes
+ * of it.
+ *
+ * WHY: the names are the point, not the offsets. `parseHtml` interns a tag or
+ * attribute name a document spells for the first time as a slice of that
+ * document, and drops those entries on the next parse — so a name from the
+ * previous document would come back with every offset still right. Reading the
+ * names back is what would catch that, and printing reads the rest.
+ * @param {string} html a document
+ * @param {(html: string) => string} print the printer to read it back out with
+ * @returns {string} the digest
+ */
+const htmlPurityDigest = (html, print) => {
+	const digest = hasher();
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
+		const type = nodePath.type();
+		digest.update(
+			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
+		);
+		if (type === NodeType.Element) {
+			digest.update(`|<${nodePath.tagName()}>|${nodePath.namespace()}`);
+			const count = nodePath.attributeCount();
+			for (let index = 0; index < count; index++) {
+				const attribute = nodePath.attributeAt(index);
+				digest.update(
+					`|${nodePath.attributeName(attribute)}=${nodePath.attributeValue(attribute)}`
+				);
+			}
+		}
+		digest.update("\n");
+	};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = { enter: () => {}, exit: read };
+	}
+	try {
+		new SourceProcessor().use(visitors).process(html, {});
+		digest.update(print(html));
+	} catch (error) {
+		return `refused: ${/** @type {Error} */ (error).message}`;
+	}
+	return digest.hex();
+};
+
 const wantedRelation = filterFrom("RELATION");
 const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
@@ -1379,8 +1667,54 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	// Filtered like the corpus is: an expectation for a relation this run was
+	// never going to reach matched nothing because nothing asked it to, which is
+	// not the divergence having gone away.
+	const groups = findingGroups(
+		EXPECTED.filter((entry) => wantedRelation(entry.relation))
+	);
+	// Nothing is printed to reach this one, so it is read under no preset: what
+	// the parser said about the document it was handed.
+	if (wantedRelation("spans")) {
+		log(`reading ranges over ${corpus.length} documents …`);
+		for (const [label, html] of corpus) {
+			for (const report of htmlSpans(html)) groups.add(report, "parse", label);
+		}
+	}
+	if (wantedRelation("slices")) {
+		let read = 0;
+		let skipped = 0;
+		let capped = 0;
+		let repeats = 0;
+		for (const [label, html] of corpus) {
+			const answered = htmlSlices(html);
+			read += answered.read;
+			skipped += answered.skipped;
+			capped += answered.capped;
+			repeats += answered.repeats;
+			for (const report of answered.reports) groups.add(report, "parse", label);
+		}
+		log(
+			`reparsed ${read} shapes in their own context (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
+		);
+	}
+	if (wantedRelation("purity")) {
+		// Under one preset: what is asked is whether reading the same bytes again
+		// gives the same answer, which every option set would ask the same way.
+		const [, options] = presets[0] || PRESETS[0];
+		const print = printerFor(options);
+		const { reports, read } = purityRelation(
+			corpus.map(([label, html]) => ({
+				what: label,
+				digest: () => htmlPurityDigest(html, print)
+			}))
+		);
+		for (const report of reports) {
+			groups.add(report, "parse", report.repro.trim());
+		}
+		log(`read ${read} documents twice over …`);
+	}
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
-	const groups = findingGroups(EXPECTED);
 	for (const [label, html] of corpus) {
 		for (const [preset, options] of presets) {
 			for (const report of sweepDocument(printerFor(options), html)) {
