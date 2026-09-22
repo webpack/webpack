@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Join the rules a lowered nesting hoist leaves side by side, so the printer writes what a second pass would.
+Join the rules a lowered nesting hoist leaves beside each other, which only a second pass reached.
