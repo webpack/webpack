@@ -4,7 +4,7 @@ const { Volume, createFsFromVolume } = require("memfs");
 const {
 	applyCaseCorrections,
 	findCaseMismatch
-} = require("../../lib/util/findCaseMismatch");
+} = require("../../lib/module/findCaseMismatch");
 
 /** @import { InputFileSystem } from "../../lib/fs/fs" */
 
@@ -17,7 +17,7 @@ const createFileSystem = (files) =>
 		/** @type {unknown} */ (createFsFromVolume(Volume.fromJSON(files)))
 	);
 
-describe("util/findCaseMismatch", () => {
+describe("module/findCaseMismatch", () => {
 	describe("findCaseMismatch", () => {
 		it("finds a wrongly cased file in an existing directory", (done) => {
 			const fs = createFileSystem({ "/app/src/fileName.js": "" });
