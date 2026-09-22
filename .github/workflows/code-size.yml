@@ -55,12 +55,18 @@ jobs:
           # one is a baseline too, while a pull request whose head branch is
           # itself named `main` is not. The API takes one `event` at a time, so
           # the unwanted one is filtered out here rather than in the query.
-          mine='.workflow_runs[] | select(.event != "pull_request")'
+          # This run is dropped as well: a push to `main` measures the commit it
+          # was itself triggered by, and waiting for a run to finish from inside
+          # it would spend the whole deadline below every time.
+          self='(env.GITHUB_RUN_ID // "0" | tonumber)'
+          mine=".workflow_runs[] | select(.event != \"pull_request\") | select(.id != $self)"
           # `|| true` throughout: without a baseline the run still reports its
           # own totals, so a query a fork's token may not answer must not fail
           # the job.
           exact="$runs?branch=main&head_sha=$REF_SHA&per_page=100"
-          state="[$mine][0] | \"\(.status) \(.conclusion // \"none\") \(.id)\""
+          # `// empty` so that no run at all prints nothing: without it the
+          # missing entry formats as the string "null" and reads as a status.
+          state="[$mine][0] // empty | \"\(.status) \(.conclusion // \"none\") \(.id)\""
           run_id=""
           # Only the base commit's own report charges this pull request for its
           # own commits alone, and `main` moving is exactly when that run is
