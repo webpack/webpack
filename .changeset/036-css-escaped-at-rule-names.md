@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read a CSS escape as the character it spells, in an at-rule name and at end of input.
+Read a CSS escape as what it spells, an at-rule name and end of input included.
