@@ -46,6 +46,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatSecond,
+	hasher,
 	idempotence,
 	installPackages,
 	kb,
@@ -56,6 +57,7 @@ const {
 	missingReport,
 	oneLine,
 	pathSpanWalk,
+	purityRelation,
 	shrink,
 	signed,
 	sliceRelation,
@@ -1470,6 +1472,53 @@ const htmlSlices = (html) => {
 	return { ...answered, skipped: answered.skipped + skipped, capped, repeats };
 };
 
+/**
+ * What one parse of a document amounts to: every node's type and range, every
+ * tag and attribute name and value it derived, and the bytes the printer makes
+ * of it.
+ *
+ * WHY: the names are the point, not the offsets. `parseHtml` interns a tag or
+ * attribute name a document spells for the first time as a slice of that
+ * document, and drops those entries on the next parse — so a name from the
+ * previous document would come back with every offset still right. Reading the
+ * names back is what would catch that, and printing reads the rest.
+ * @param {string} html a document
+ * @param {(html: string) => string} print the printer to read it back out with
+ * @returns {string} the digest
+ */
+const htmlPurityDigest = (html, print) => {
+	const digest = hasher();
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
+		const type = nodePath.type();
+		digest.update(
+			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
+		);
+		if (type === NodeType.Element) {
+			digest.update(`|<${nodePath.tagName()}>|${nodePath.namespace()}`);
+			const count = nodePath.attributeCount();
+			for (let index = 0; index < count; index++) {
+				const attribute = nodePath.attributeAt(index);
+				digest.update(
+					`|${nodePath.attributeName(attribute)}=${nodePath.attributeValue(attribute)}`
+				);
+			}
+		}
+		digest.update("\n");
+	};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = { enter: () => {}, exit: read };
+	}
+	try {
+		new SourceProcessor().use(visitors).process(html, {});
+		digest.update(print(html));
+	} catch (error) {
+		return `refused: ${/** @type {Error} */ (error).message}`;
+	}
+	return digest.hex();
+};
+
 const wantedRelation = filterFrom("RELATION");
 const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
@@ -1648,6 +1697,22 @@ const invariants = (write) => {
 		log(
 			`reparsed ${read} shapes in their own context (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
 		);
+	}
+	if (wantedRelation("purity")) {
+		// Under one preset: what is asked is whether reading the same bytes again
+		// gives the same answer, which every option set would ask the same way.
+		const [, options] = presets[0] || PRESETS[0];
+		const print = printerFor(options);
+		const { reports, read } = purityRelation(
+			corpus.map(([label, html]) => ({
+				what: label,
+				digest: () => htmlPurityDigest(html, print)
+			}))
+		);
+		for (const report of reports) {
+			groups.add(report, "parse", report.repro.trim());
+		}
+		log(`read ${read} documents twice over …`);
 	}
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, html] of corpus) {

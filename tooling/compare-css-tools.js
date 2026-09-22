@@ -53,6 +53,7 @@ const {
 	findingGroups,
 	formatCost,
 	formatSecond,
+	hasher,
 	idempotence,
 	installPackages,
 	kb,
@@ -64,6 +65,7 @@ const {
 	measureInWorker,
 	missingReport,
 	pathSpanWalk,
+	purityRelation,
 	run,
 	sliceRelation,
 	spans,
@@ -828,6 +830,44 @@ const cssSlices = (css) => {
 	return { ...sliceRelation(candidates), capped, repeats };
 };
 
+/**
+ * What one parse of a stylesheet amounts to: every node's type and range, the
+ * names and values it derived, and the bytes the printer makes of it.
+ *
+ * WHY: the derived values are the point, not the offsets. An unescaped name or
+ * a cached word can come back from the last parse with every offset still
+ * right, and printing reads all of them — so the output is digested too, which
+ * covers the derived fields a node type does not name here.
+ * @param {string} css a stylesheet
+ * @param {(css: string) => string} print the printer to read it back out with
+ * @returns {string} the digest
+ */
+const cssPurityDigest = (css, print) => {
+	const digest = hasher();
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	const read = (/** @type {EXPECTED_ANY} */ nodePath) => {
+		const type = nodePath.type();
+		digest.update(
+			`${NODE_TYPE_NAMES[type]}[${nodePath.start()},${nodePath.end()})`
+		);
+		if (NAMED.has(type)) {
+			digest.update(`|${nodePath.name()}|${nodePath.unescapedName()}`);
+		}
+		digest.update("\n");
+	};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = { enter: () => {}, exit: read };
+	}
+	try {
+		new SourceProcessor().use(visitors).process(css, {});
+		digest.update(print(css));
+	} catch (error) {
+		return `refused: ${/** @type {Error} */ (error).message}`;
+	}
+	return digest.hex();
+};
+
 const wantedRelation = filterFrom("RELATION");
 const wantedPreset = filterFrom("PRESET");
 
@@ -902,6 +942,22 @@ const invariants = (write) => {
 		log(
 			`reparsed ${read} shapes on their own (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
 		);
+	}
+	if (wantedRelation("purity")) {
+		// Under one preset: what is asked is whether reading the same bytes again
+		// gives the same answer, which every option set would ask the same way.
+		const [, options] = presets[0] || PRESETS[0];
+		const print = printerFor(options);
+		const { reports, read } = purityRelation(
+			corpus.map(([label, css]) => ({
+				what: label,
+				digest: () => cssPurityDigest(css, print)
+			}))
+		);
+		for (const report of reports) {
+			groups.add(report, "parse", report.repro.trim());
+		}
+		log(`read ${read} stylesheets twice over …`);
 	}
 	if (wantedRelation("idempotence")) {
 		log(

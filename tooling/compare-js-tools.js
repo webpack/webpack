@@ -39,6 +39,7 @@ const {
 	filterFrom,
 	findingGroups,
 	formatCost,
+	hasher,
 	installPackages,
 	kb,
 	loaderFor,
@@ -47,6 +48,7 @@ const {
 	measureInWorker,
 	missingReport,
 	pathSpanWalk,
+	purityRelation,
 	sliceRelation,
 	spans,
 	sweepExitCode,
@@ -966,6 +968,78 @@ const jsSlices = (source, options) => {
 	return { ...sliceRelation(candidates), capped, repeats };
 };
 
+// What `catchStackOverflow` raises, whose position is where the stack ran out.
+const STACK_REFUSAL = "Not enough stack space to parse input";
+
+/**
+ * What one parse of a source amounts to: every node's type and range and every
+ * primitive a node carries, in walk order.
+ *
+ * WHY: the derived values are the point, not the offsets. A cached word, an
+ * interned name or a reused column can hand back the last parse's answer with
+ * every offset still right, so an identifier's `name`, a literal's `value` and
+ * `raw`, an operator and a regexp's flags all go in. Read off the node's own
+ * keys rather than a list of types, so a production added later is covered
+ * without this being edited.
+ * @param {string} source a script or a module
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {string} the digest
+ */
+const jsPurityDigest = (source, options) => {
+	const digest = hasher();
+	/** @type {EXPECTED_ANY} */
+	let root;
+	try {
+		root = webpackParse(source, options);
+	} catch (error) {
+		// A refusal is an answer too, and one that has to be the same answer: a
+		// source rejected only after something else was read is state leaking.
+		const message = /** @type {Error} */ (error).message;
+		// Except this one. Running out of stack is a fact about the machine, and
+		// the position it names is wherever the call depth around the parse
+		// happened to run out, so only that it happened is owed.
+		return message.startsWith(STACK_REFUSAL)
+			? `refused: ${STACK_REFUSAL}`
+			: `refused: ${message}`;
+	}
+	/** @type {EXPECTED_ANY[]} */
+	const stack = [root];
+	while (stack.length > 0) {
+		const node = /** @type {EXPECTED_ANY} */ (stack.pop());
+		digest.update(`${node.type}[${node.start},${node.end})`);
+		/** @type {EXPECTED_ANY[]} */
+		const children = [];
+		for (const key of Object.keys(node)) {
+			if (NOT_CHILD_KEYS.has(key)) continue;
+			const value = node[key];
+			if (value === null || typeof value !== "object") {
+				digest.update(`|${key}=${String(value)}`);
+				continue;
+			}
+			if (Array.isArray(value)) {
+				for (const item of value) {
+					if (item !== null && typeof item.type === "string") {
+						children.push(item);
+					}
+				}
+			} else if (typeof value.type === "string") {
+				children.push(value);
+			} else {
+				// A regexp literal's `regex`, an import attribute's `with`: a plain
+				// object the parser filled in rather than a node.
+				for (const inner of Object.keys(value)) {
+					digest.update(`|${key}.${inner}=${String(value[inner])}`);
+				}
+			}
+		}
+		digest.update("\n");
+		for (let index = children.length - 1; index >= 0; index--) {
+			stack.push(children[index]);
+		}
+	}
+	return digest.hex();
+};
+
 const wantedRelation = filterFrom("RELATION");
 
 // What the last sweep did not find, read by the report and by the gate.
@@ -1075,6 +1149,23 @@ const invariants = (write) => {
 		log(
 			`reparsed ${read} shapes on their own (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
 		);
+	}
+	if (wantedRelation("purity")) {
+		/** @type {import("./compare-tools-harness").PuritySource[]} */
+		const sources = [];
+		for (const [label, source, options] of corpus) {
+			const settled = options === undefined ? goalFor(source) : options;
+			if (settled === null) continue;
+			sources.push({
+				what: label,
+				digest: () => jsPurityDigest(source, settled)
+			});
+		}
+		const { reports, read } = purityRelation(sources);
+		for (const report of reports) {
+			groups.add(report, "parse", report.repro.trim());
+		}
+		log(`read ${read} sources twice over …`);
 	}
 	return groups.write(write);
 };

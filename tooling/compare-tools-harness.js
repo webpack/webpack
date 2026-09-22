@@ -826,6 +826,60 @@ const sliceRelation = (candidates) => {
 };
 
 /**
+ * An incremental digest, so a source's whole tree never has to be held as one
+ * string to be compared with another run of it.
+ * @returns {{ update: (text: string) => void, hex: () => string }} the digest
+ */
+const hasher = () => {
+	const hash = createHash("sha256");
+	return {
+		update: (text) => {
+			hash.update(text);
+		},
+		hex: () => hash.digest("hex")
+	};
+};
+
+/**
+ * One source to parse more than once. `digest` has to carry what the parse
+ * derived and not only where it read — an interned name or a cached word is
+ * exactly what a second parse can get wrong while every offset stays right.
+ * @typedef {{ what: string, digest: () => string }} PuritySource
+ */
+
+/**
+ * Whether a parser carries nothing from one source into the next: reading the
+ * same bytes again gives the same answer.
+ *
+ * Every source is read once before any is read a second time, so what sits
+ * between a source's two readings is every other source — which is the shape a
+ * build has, and the one a cache keyed on the last input gets wrong. A source
+ * that disagrees is read a third time back to back, which says which of the two
+ * it is: state another parse left, or a parse that is not even repeatable.
+ * @param {readonly PuritySource[]} sources every source, each read twice
+ * @returns {{ reports: Report[], read: number }} what disagreed, and how many were read
+ */
+const purityRelation = (sources) => {
+	const first = sources.map((source) => source.digest());
+	/** @type {Report[]} */
+	const reports = [];
+	for (let index = 0; index < sources.length; index++) {
+		const again = sources[index].digest();
+		if (again === first[index]) continue;
+		const third = sources[index].digest();
+		reports.push({
+			relation: "purity",
+			what:
+				third === again
+					? "reads differently once something else has been read"
+					: "reads differently every time",
+			repro: `    ${sources[index].what}`
+		});
+	}
+	return { reports, read: sources.length };
+};
+
+/**
  * A finding the printer owes nothing for, with the reason it is owed nothing.
  * `relation` and `contains` together name it; `source` narrows it to one
  * fixture where the same repro is a defect elsewhere.
@@ -1011,6 +1065,7 @@ module.exports = {
 	firstDifference,
 	formatCost,
 	formatSecond,
+	hasher,
 	idempotence,
 	installPackages,
 	kb,
@@ -1023,6 +1078,7 @@ module.exports = {
 	missingReport,
 	oneLine,
 	pathSpanWalk,
+	purityRelation,
 	run,
 	shrink,
 	signed,
