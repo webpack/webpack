@@ -1,30 +1,14 @@
 "use strict";
 
-const fs = require("fs");
 const ObjectMiddleware = require("../../lib/serialization/ObjectMiddleware");
 const internalSerializables = require("../../lib/util/internalSerializables");
 
-// The generator formats with prettier, which trips Bun's `module` builtin
-// ("not an instance of Module"), so this check is Node-only. The per-entry
-// require checks below run fine on Bun (loading all 143 costs only a few MB).
-const itSkipBun = process.versions.bun ? it.skip : it;
-
+// WHY: `yarn lint:special` is what compares the committed file with what the
+// generator writes and says to run `yarn fix:serializables`. Comparing it here
+// too only repeated that report — and, since the generator formats with
+// prettier, repeated it as a formatting failure on a prettier bump. What these
+// cases state instead is what the committed entries owe a cold cache.
 describe("internalSerializables", () => {
-	itSkipBun("committed file should match the generator", async () => {
-		const {
-			TARGET,
-			generateInternalSerializables
-		} = require("../../tooling/generate-internal-serializables");
-
-		const generated = await generateInternalSerializables();
-		const current = fs.readFileSync(TARGET, "utf8");
-		if (current !== generated) {
-			throw new Error(
-				"lib/util/internalSerializables.js is outdated. Run: yarn fix:serializables"
-			);
-		}
-	});
-
 	// A pack written before these moved names them by their old request, which
 	// only resolves while lib/ keeps a registerLegacyRequest for it
 	for (const [legacy, current, name = null] of [
