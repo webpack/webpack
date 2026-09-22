@@ -1,0 +1,21 @@
+/* A property name may be written with the escapes §4.3.7 resolves, so `\63 olor`
+   is `color`. Every per-property rule has to read the name it means: the pairs
+   below write the same declaration twice and each pair has to minify alike,
+   apart from the escape the printed name keeps. */
+
+/*! the value rules a property name selects */
+.t01 { font-weight: bold }
+/*! the same property, spelled with an escape */
+.t02 { \66 ont-weight: bold }
+/*! a shorthand whose value repeats what the notation implies */
+.t03 { margin: 0px 0px 0px 0px }
+/*! the same shorthand, spelled with an escape */
+.t04 { \6d argin: 0px 0px 0px 0px }
+/*! a custom property's value is kept as authored */
+.t05 { --kept: 0px 0px 0px 0px }
+/*! the same custom property, its leading dashes escaped */
+.t06 { \2d -kept: 0px 0px 0px 0px }
+/*! a prefixed spelling reads through to the standard property */
+.t07 { -webkit-box-flex: 1 }
+/*! the same prefixed spelling, with an escape */
+.t08 { -\77 ebkit-box-flex: 1 }

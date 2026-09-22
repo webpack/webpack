@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css escaped-property-names escaped-property-names should compile 1`] = `
+Array [
+  "/*! the value rules a property name selects */.t01{font-weight:700}",
+  "/*! the same property, spelled with an escape */.t02{\\\\66 ont-weight:700}",
+  "/*! a shorthand whose value repeats what the notation implies */.t03{margin:0}",
+  "/*! the same shorthand, spelled with an escape */.t04{\\\\6d argin:0}",
+  "/*! a custom property's value is kept as authored */.t05{--kept:0px 0px 0px 0px}",
+  "/*! the same custom property, its leading dashes escaped */.t06{\\\\2d -kept:0px 0px 0px 0px}",
+  "/*! a prefixed spelling reads through to the standard property */.t07{-webkit-box-flex:1}",
+  "/*! the same prefixed spelling, with an escape */.t08{-\\\\77 ebkit-box-flex:1}",
+]
+`;
