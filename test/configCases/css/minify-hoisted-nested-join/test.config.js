@@ -20,6 +20,12 @@ module.exports = {
 		expect(css).toContain("@media print{.f .x,.f .y{padding:0}}");
 		expect(css).toContain(".g{top:0;.x{top:0}left:0}");
 
+		// The rule a hoist wrote is a neighbor of what stands either side of it.
+		expect(css).toContain(".h,.i .x{color:teal}");
+		expect(css).toContain(".j .x,.k .y{outline-width:1px}");
+		expect(css).toContain(".l,.m .x{outline-color:red}");
+		expect(css).toContain(".n,.o,.o .x{order:3}");
+
 		// What the printer wrote is what a second pass writes.
 		const again = await cssMinify({ "bundle0.css": css }, undefined, {
 			environment: { browsers: ["chrome 100"] }
