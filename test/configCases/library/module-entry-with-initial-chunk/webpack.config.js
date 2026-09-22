@@ -1,6 +1,23 @@
 "use strict";
 
-/** @import { Configuration } from "../../../../" */
+/** @import { Compiler, Configuration } from "../../../../" */
+
+/**
+ * Asserts the emitted entry still exposes both of its bindings, which the
+ * definitions put back into the factory are what define.
+ * @param {string} assetName emitted entry asset to assert on
+ * @returns {(this: Compiler) => void} plugin
+ */
+const assertExportNames = (assetName) =>
+	function apply() {
+		this.hooks.compilation.tap("testcase", (compilation) => {
+			compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
+				const source = assets[assetName].source().toString();
+				expect(source).toContain("as default");
+				expect(source).toContain("as keep");
+			});
+		});
+	};
 
 /**
  * The split chunk loads with the entry, so the entry is executed as a factory
@@ -35,7 +52,8 @@ const createConfig = (name, concatenateModules) => ({
 				}
 			}
 		}
-	}
+	},
+	plugins: [assertExportNames(`${name}.mjs`)]
 });
 
 /** @type {Configuration[]} */
