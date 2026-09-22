@@ -66,6 +66,11 @@ Array [
    stands between the channels */.h13{color:hsl(120 50% 50% .5);background:hsl(120 / 50% / 50%)}",
   "/*! declined: the Lab family was specified after the legacy form and takes the
    modern grammar only, so a comma there is invalid however it is spelled */.h14{color:lch(50,20,30);background:oklch(.5,.1,30)}",
+  "/*! \`rgb()\` has both grammars, so both spellings fold — and a mixed one matches
+   neither, whichever separator was the odd one out */.c01{color:#010203;background:#010203}.c02{color:rgb(1,2 3);background:rgb(1 2,3)}",
+  "/*! ...the same where the alpha is the argument spelled wrong, and where a \`/\`
+   stands between the channels rather than before the alpha */.c03{color:rgb(1 2 3,.5);background:rgb(1,2,3 / .5)}.c04{color:rgb(1 2 3 .5);background:rgb(1 / 2 / 3)}",
+  "/*! ...and \`rgba()\` is the same function, so it reads the same grammars */.c05{color:#01020380;background:rgba(255,0 0,.5)}",
   "/*! declined: the stops interpolate in the space the gradient names, and a
    color converted through sRGB maps back into it as a different point */.g01{background-image:linear-gradient(90deg in lch,red,lch(50 20 30))}.g02{background-image:linear-gradient(in oklch,red,oklch(.7 .1 200))}",
   "/*! declined without a space too: a stop outside sRGB is handed back as written
