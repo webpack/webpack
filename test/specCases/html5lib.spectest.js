@@ -33,7 +33,10 @@ const testsDir = path.resolve(__dirname, "../external/html5lib-tests");
 // ---------------------------------------------------------------------------
 
 const tokenizerDir = path.join(testsDir, "tokenizer");
-const SKIP_FILES = new Set(["xmlViolation.test", "pendingSpecChanges.test"]);
+// The one file that states something other than what the spec says: its cases
+// are the optional XML-compatible serialization, which webpack does not
+// implement. It is keyed `xmlViolationTests`, so the loader finds none anyway.
+const SKIP_FILES = new Set(["xmlViolation.test"]);
 const MODES = ["development", "production"];
 // A graceful webpack error/warning on malformed input is fine; an internal
 // exception leaking through (parser/generator bug) is not.
@@ -233,9 +236,17 @@ const KNOWN_DIVERGENCES = new Set([
 ]);
 
 /**
+ * @typedef {object} TreeCase
+ * @property {string} data the document to parse
+ * @property {string | null} document the expected tree, absent where the case states none
+ * @property {string | null} fragment the context element, for a fragment case
+ * @property {string | null} scriptMode whether the case needs scripting
+ */
+
+/**
  * Parse a html5lib `.dat` file into test cases.
  * @param {string} text file content
- * @returns {{ data: string, document: string | null, fragment: string | null, scriptMode: string | null }[]} cases
+ * @returns {TreeCase[]} cases
  */
 const parseDat = (text) => {
 	const cases = [];
@@ -316,6 +327,38 @@ const runTreeCase = (c) => {
 const hasTreeCorpus =
 	fs.existsSync(treeDir) && fs.readdirSync(treeDir).length > 0;
 
+/** @type {Map<string, { id: string, c: TreeCase }[]>} the cases to compare, by file */
+const treeRuns = new Map();
+// Counted rather than dropped: a case the suite never compares is coverage
+// nothing reads, so the shape of what it declines is asserted below.
+const treeSkipped = { scripting: 0, withoutTree: 0 };
+
+if (hasTreeCorpus) {
+	for (const file of fs
+		.readdirSync(treeDir)
+		.filter((f) => f.endsWith(".dat"))
+		.sort()) {
+		/** @type {{ id: string, c: TreeCase }[]} */
+		const runs = [];
+		const cases = parseDat(fs.readFileSync(path.join(treeDir, file), "utf8"));
+		for (const [index, c] of cases.entries()) {
+			// Scripting is disabled in webpack, so a case that needs it describes a
+			// document webpack never builds; one without an expected tree states
+			// nothing to compare to.
+			if (c.scriptMode === "on") {
+				treeSkipped.scripting++;
+				continue;
+			}
+			if (c.document === null) {
+				treeSkipped.withoutTree++;
+				continue;
+			}
+			runs.push({ id: `${file} #${index}`, c });
+		}
+		treeRuns.set(file, runs);
+	}
+}
+
 describe("wpt tree-construction", () => {
 	if (!hasTreeCorpus) {
 		it("submodule not initialized (run `git submodule update --init --depth 1 test/external/wpt`)", () => {
@@ -325,18 +368,13 @@ describe("wpt tree-construction", () => {
 		return;
 	}
 
-	for (const file of fs
-		.readdirSync(treeDir)
-		.filter((f) => f.endsWith(".dat"))) {
+	it("compares every case that describes a document webpack can build", () => {
+		expect(treeSkipped).toEqual({ scripting: 14, withoutTree: 0 });
+	});
+
+	for (const [file, runs] of treeRuns) {
 		describe(file, () => {
-			const cases = parseDat(fs.readFileSync(path.join(treeDir, file), "utf8"));
-			for (const [index, c] of cases.entries()) {
-				const id = `${file} #${index}`;
-				// Scripting is disabled in webpack; skip script-required cases and
-				// cases without an expected tree.
-				if (c.scriptMode === "on" || c.document === null) {
-					continue;
-				}
+			for (const { id, c } of runs) {
 				if (KNOWN_DIVERGENCES.has(id)) {
 					it(`${id} (known divergence)`, () => {
 						expect(runTreeCase(c)).not.toBe(c.document);
