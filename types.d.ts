@@ -32404,7 +32404,7 @@ declare namespace exports {
 			FetchCompileAsyncWasmPlugin,
 			JsonpChunkLoadingRuntimeModule,
 			JsonpTemplatePlugin,
-			CssLoadingRuntimeModule
+			/** The runtime module that loads a chunk's CSS. @deprecated use `css.CssLoadingRuntimeModule`, the scope this module lives in — TODO in the next major release: remove */ CssLoadingRuntimeModule
 		};
 	}
 	export namespace esm {
@@ -32940,7 +32940,7 @@ declare namespace exports {
 			}
 			export { SourceProcessorSyntaxClass_2 as SourceProcessor };
 		}
-		export { CssModulesPlugin };
+		export { CssLoadingRuntimeModule, CssModulesPlugin };
 	}
 	export namespace html {
 		export const builtinEmbeddedRenderer: (

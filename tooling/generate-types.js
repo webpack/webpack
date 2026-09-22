@@ -1367,6 +1367,21 @@ class TupleMap {
 	};
 
 	/**
+	 * Renders a documentation block onto one line, for a place that has no
+	 * line of its own — an export specifier inside `export { … }`.
+	 * @param {string} documentation a block from `getDocumentation`
+	 * @returns {string} the same content as a one-line block comment
+	 */
+	const toInlineDocumentation = (documentation) => {
+		const content = documentation
+			.split("\n")
+			.map((line) => line.replace(/^\s*\/?\*+\/?/, "").trim())
+			.filter(Boolean)
+			.join(" ");
+		return `/** ${content} */ `;
+	};
+
+	/**
 	 * @param {ts.Signature} signature signature
 	 * @returns {ParsedSignature} parsed signature
 	 */
@@ -3370,7 +3385,7 @@ class TupleMap {
 					const exposedNames = new Set();
 					for (const [
 						name,
-						{ type: exportedType, readonly, getter }
+						{ type: exportedType, readonly, getter, documentation }
 					] of parsed.exports) {
 						const code = getCode(
 							/** @type {ts.Type} */
@@ -3382,8 +3397,15 @@ class TupleMap {
 							declarations.push(code);
 						} else if (/^typeof [A-Za-z_0-9]+$/.test(code)) {
 							const exportName = code.slice("typeof ".length);
+							const specifier =
+								exportName === name ? name : `${exportName} as ${name}`;
+							// The comment goes inside the braces, on the specifier:
+							// TypeScript reads an `@deprecated` there, and ignores one
+							// written on the `export { … }` statement itself.
 							exports.push(
-								exportName === name ? name : `${exportName} as ${name}`
+								documentation
+									? `${toInlineDocumentation(documentation)}${specifier}`
+									: specifier
 							);
 						} else if (name === "default") {
 							declarations.push(
