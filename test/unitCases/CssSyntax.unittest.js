@@ -245,11 +245,103 @@ describe("CssSyntax — an escape the input ran out of", () => {
 	});
 });
 
+// §4.3.8 leaves a `\` a delim only where a newline follows it. Printing one is
+// therefore printing that newline: every other character it could be followed
+// by makes it an escape of that character instead.
+describe("CssSyntax — a backslash delim", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} minified twice, to show the first pass is a fixed point
+	 */
+	const twice = (src) => minifyFor(minifyFor(src));
+
+	it("keeps the newline that makes it a delim", () => {
+		expect(minifyFor("a{color:re\\\n}")).toBe("a{color:re \\\n}");
+		expect(minifyFor("@foo bar\\\n")).toBe("@foo bar \\\n;");
+		expect(minifyFor("a[x=y\\\n]{color:red}")).toBe("a[x=y \\\n]{color:red}");
+	});
+
+	it("prints a fixed point wherever one ends a run", () => {
+		// Each of these ends the run the printer then writes `;`, `}`, `{` or
+		// `]` after — the characters a `\` would otherwise escape.
+		for (const src of [
+			"@foo bar\\\n",
+			"@foo\\\n",
+			"@media a\\\n{b{color:red}}",
+			"a{color:re\\\n}",
+			"a\\\n{color:red}",
+			"a{b\\\n{color:red}}",
+			"a{color:rgb(1 2 3 \\\n)}",
+			"a[x=y\\\n]{color:red}",
+			"a{color:red\\\n!important}"
+		]) {
+			expect(twice(src)).toBe(minifyFor(src));
+		}
+	});
+});
+
+// CSS Syntax 3 §3.3, the half webpack does not get from reading newlines as it
+// tokenizes: a NUL stands for the replacement character.
+describe("CssSyntax — preprocessing the input stream", () => {
+	const NUL = String.fromCharCode(0);
+
+	it("reads a NUL as the replacement character", () => {
+		// U+FFFD is an ident code point where a NUL is not, so the runs either
+		// side of one are a single identifier rather than three tokens.
+		expect(cvTypes(`a${NUL}b`)).toEqual(cvTypes("a�b"));
+		expect(
+			/** @type {import("../../lib/css/syntax-parser").Token} */ (
+				parseAListOfComponentValues(`a${NUL}b`)[0]
+			).unescaped
+		).toBe("a\uFFFDb");
+	});
+
+	it("leaves a surrogate, which tokenizes as that character already", () => {
+		// §3.3 names surrogates too, and webpack skips them because a lone one is
+		// an ident code point here. Should that stop being true, this fails and
+		// the replacement is owed after all.
+		const HIGH = String.fromCharCode(0xd800);
+		/** @type {((code: string) => string)[]} */
+		const WRAPS = [
+			(c) => `a${c}b`,
+			(c) => `#a${c}b`,
+			(c) => `@a${c}b`,
+			(c) => `12${c}red`,
+			(c) => `url(a${c}b)`
+		];
+		for (const wrap of WRAPS) {
+			expect(cvTypes(wrap(HIGH))).toEqual(cvTypes(wrap("\uFFFD")));
+			// And each token carries the same run, so the boundaries agree too \u2014
+			// modulo the one code point, which is what is not being replaced.
+			expect(
+				cvUnescaped(wrap(HIGH)).map(
+					(value) => value && value.split(HIGH).join("\uFFFD")
+				)
+			).toEqual(cvUnescaped(wrap("\uFFFD")));
+		}
+	});
+
+	it("reads one wherever the source holds it", () => {
+		expect(cvTypes(`12${NUL}red`)).toEqual(cvTypes("12�red"));
+		expect(cvTypes(`url(a${NUL}b)`)).toEqual(cvTypes("url(a�b)"));
+		expect(minifyFor(`.x${NUL}y{color:red}`)).toBe(".x�y{color:red}");
+	});
+});
+
 /**
  * @param {string} src css source
  * @returns {number[]} component value types
  */
 const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
+/**
+ * @param {string} src css source
+ * @returns {(string | undefined)[]} what each component value unescapes to
+ */
+const cvUnescaped = (src) =>
+	parseAListOfComponentValues(src).map(
+		(n) =>
+			/** @type {import("../../lib/css/syntax-parser").Token} */ (n).unescaped
+	);
 /**
  * @param {string} src css source
  * @returns {number} the first token's type
@@ -3164,7 +3256,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 			["a function and its name", ".a .b :not(.x){color:red}"],
 			["a url inside the prelude's function", ".a .b :x(url(p.png)){color:red}"],
 			["an attribute block", ".a .b [data-c]{color:red}"],
-			["a non-ASCII selector", ".a .b .\u65e5\u672c\u8a9e{color:red}"],
+			["a non-ASCII selector", ".a .b .\u65E5\u672C\u8A9E{color:red}"],
 			["a stray closer in the prelude", ".a .b )] .c{color:red}"],
 			["a stray brace in the prelude", ".a .b }.c{color:red}"],
 			["a one-token prelude", "a{color:red}"],
@@ -11793,7 +11885,7 @@ describe("SourceProcessor — an at-rule named with CSS escapes", () => {
 	it("keeps a non-ASCII code point inside the name it is written in", () => {
 		// U+00A0 is an identifier code point, not CSS whitespace, so `@layer` and
 		// `@layer\u00a0x` are two names rather than one rule and its prelude.
-		const sheet = `@layer\u00a0x{.p{color:red}}@layer\u00a0x{.q{color:blue}}`;
+		const sheet = "@layer\u00A0x{.p{color:red}}@layer\u00A0x{.q{color:blue}}";
 		expect(minify(sheet)).toBe(sheet);
 		expect(minify("@layer x{.p{color:red}}@layer x{.q{color:blue}}")).toBe(
 			"@layer x{.p{color:red}.q{color:blue}}"

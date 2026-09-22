@@ -290,18 +290,30 @@ describe("css-parsing-tests colors", () => {
 // the spec's own algorithms, so the two compare directly once the nodes are
 // written in upstream's JSON form. What is not compared says why below.
 describe("css-parsing-tests trees", () => {
+	// What an entry point returning one value says instead of a tree when the
+	// spec says "syntax error": no serialization could stand for it.
+	const SYNTAX_ERROR = "<syntax error>";
+
+	/**
+	 * Read a one-value entry point the way the comparison needs it.
+	 * @param {(source: string) => EXPECTED_ANY} parse the entry point
+	 * @param {(value: EXPECTED_ANY, source: string) => EXPECTED_ANY} serialize how to write what it returned
+	 * @returns {(source: string) => EXPECTED_ANY} its reading, or `SYNTAX_ERROR`
+	 */
+	const one = (parse, serialize) => (source) => {
+		const value = parse(source);
+		return value === undefined ? SYNTAX_ERROR : serialize(value, source);
+	};
+
 	const ENTRY_POINTS = [
 		[
 			"component_value_list",
 			(source) =>
 				serializeComponentValues(parseAListOfComponentValues(source))
 		],
-		[
-			"one_component_value",
-			(source) => serializeComponentValue(parseAComponentValue(source))
-		],
-		["one_declaration", (source) => serializeDeclaration(parseADeclaration(source))],
-		["one_rule", (source) => serializeRule(parseARule(source), source)],
+		["one_component_value", one(parseAComponentValue, serializeComponentValue), true],
+		["one_declaration", one(parseADeclaration, serializeDeclaration), true],
+		["one_rule", one(parseARule, serializeRule), true],
 		// `rule_list` is the spec's "parse a list of rules" with the top-level flag
 		// unset, which is what a block's contents are read as — a stylesheet's are
 		// the flag set, and the two differ over whether CDO/CDC are discarded.
@@ -319,12 +331,14 @@ describe("css-parsing-tests trees", () => {
 		]
 	];
 
-	// Each case webpack reads differently, with the reason. A listed one is
-	// asserted to *still* diverge, so fixing it fails here rather than leaving
-	// the list to rot.
+	// WHY: every entry is the same thing — upstream's README pins the 2021
+	// candidate recommendation and webpack implements the editor's draft, which
+	// changed each of these. None is webpack reading the spec it targets
+	// differently, which would be a defect rather than a line here. A listed
+	// case is asserted to *still* diverge, so fixing one fails this suite.
 	const KNOWN_DIVERGENCES = new Map([
-		// CSS Syntax 3 dropped `<unicode-range-token>` and the `~=`-style match
-		// tokens; this corpus predates that, so it still states them.
+		// The editor's draft dropped `<unicode-range-token>` and the `~=`-style
+		// match tokens; both are delims it reassembles at the grammar level.
 		["component_value_list #38", "unicode-range token"],
 		["component_value_list #39", "unicode-range token"],
 		["component_value_list #40", "unicode-range token"],
@@ -336,21 +350,21 @@ describe("css-parsing-tests trees", () => {
 		["component_value_list #46", "unicode-range token"],
 		["component_value_list #47", "match token"],
 		["component_value_list #48", "match token"],
-		// A declaration's value is the run webpack will print, so the trailing
-		// whitespace and `;` the spec keeps as component values are not in it.
-		["one_declaration #11", "trailing token in a value"],
-		["one_declaration #12", "trailing token in a value"],
-		["one_declaration #14", "trailing token in a value"],
-		["one_declaration #15", "trailing token in a value"],
-		["one_declaration #16", "trailing token in a value"],
-		["one_declaration #17", "trailing token in a value"],
-		["one_declaration #18", "trailing token in a value"],
-		["one_declaration #19", "trailing token in a value"]
+		// §5.4.6 steps 2 and 4 now discard the whitespace around a value and step
+		// 5 stops it at a `;`; the 2021 draft kept all three as component values.
+		["one_declaration #11", "whitespace around a value"],
+		["one_declaration #15", "whitespace around a value"],
+		["one_declaration #16", "whitespace around a value"],
+		["one_declaration #17", "whitespace around a value"],
+		["one_declaration #18", "whitespace around a value"],
+		["one_declaration #19", "whitespace around a value"],
+		["one_declaration #12", "a `;` stopping a value"],
+		["one_declaration #14", "a `;` stopping a value"]
 	]);
 
-	// Upstream writes two unrelated things as `["error", …]`: an entry point's
-	// failure return, which webpack answers with the nodes it read instead, and a
-	// token the tokenizer produced, which the serializer states like any other.
+	// The two unrelated things upstream writes as `["error", …]`: these, an entry
+	// point's failure return, and a token the tokenizer produced — a stray closer,
+	// a bad string, a bad url — which the serializer states like any other.
 	const PARSE_FAILURES = new Set([
 		"empty",
 		"eof-in-string",
@@ -361,10 +375,9 @@ describe("css-parsing-tests trees", () => {
 
 	/**
 	 * Whether upstream states a failure return for a case, at any depth — a rule
-	 * list holds its invalid rule inside the list. A stray closer, a bad string
-	 * and a bad url are tokens rather than failures, so they stay comparable.
+	 * list holds its invalid rule inside the list.
 	 * @param {EXPECTED_ANY} value an expected value
-	 * @returns {boolean} true when nothing webpack produces answers it
+	 * @returns {boolean} true when the case states a failure
 	 */
 	const statesAFailure = (value) =>
 		Array.isArray(value) &&
@@ -372,7 +385,25 @@ describe("css-parsing-tests trees", () => {
 			? PARSE_FAILURES.has(value[1])
 			: value.some(statesAFailure));
 
-	for (const [file, parse] of ENTRY_POINTS) {
+	/**
+	 * The same expectation with the failures taken out, at any depth: what a list
+	 * entry point still holds once it has discarded what it could not read.
+	 * @param {EXPECTED_ANY} value an expected value
+	 * @returns {EXPECTED_ANY} the items that survive
+	 */
+	const withoutFailures = (value) =>
+		Array.isArray(value)
+			? value
+					.filter(
+						(item) =>
+							!Array.isArray(item) ||
+							item[0] !== "error" ||
+							!PARSE_FAILURES.has(item[1])
+					)
+					.map(withoutFailures)
+			: value;
+
+	for (const [file, parse, single] of ENTRY_POINTS) {
 		const path_ = path.join(casesDir, `${file}.json`);
 		if (!fs.existsSync(path_)) {
 			it(`submodule not initialized (${file})`, () => {
@@ -386,11 +417,15 @@ describe("css-parsing-tests trees", () => {
 			const source = data[i];
 			const expected = data[i + 1];
 			if (typeof source !== "string") continue;
-			if (statesAFailure(expected)) continue;
-			// A NUL is preprocessed to U+FFFD by the spec and not by webpack, and
-			// the character has no place in a test name either.
-			if (source.includes("\u0000")) continue;
-
+			// A stated failure is compared too: a one-value entry point owes the
+			// syntax error, and a list owes what it holds once the failure is
+			// discarded — which is the only part of it webpack ever materializes.
+			const failed = statesAFailure(expected);
+			const want = failed
+				? single === true
+					? SYNTAX_ERROR
+					: withoutFailures(expected)
+				: expected;
 			const name = `${file} #${i / 2}`;
 			const divergence = KNOWN_DIVERGENCES.get(name);
 			const label = divergence
@@ -405,9 +440,9 @@ describe("css-parsing-tests trees", () => {
 					actual = `threw: ${/** @type {Error} */ (err).message}`;
 				}
 				if (divergence) {
-					expect(actual).not.toEqual(expected);
+					expect(actual).not.toEqual(want);
 				} else {
-					expect(actual).toEqual(expected);
+					expect(actual).toEqual(want);
 				}
 			});
 		}

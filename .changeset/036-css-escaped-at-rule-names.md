@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read a CSS escape as what it spells, an at-rule name and end of input included.
+Read and print a CSS backslash as the spec does, and a NUL as U+FFFD.

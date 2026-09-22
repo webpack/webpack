@@ -1,0 +1,23 @@
+/* A `\` that a newline follows is a delim token rather than an escape
+   (CSS Syntax 3 §4.3.8), so printing one prints that newline too. Without it
+   the `\` escapes whatever the printer writes next — the `;`, `}`, `{` and `]`
+   below — and a second pass then reads one construct where the first wrote
+   one. Each rule here ends a printed run on such a delim. */
+
+@foo bar\
+;
+
+a\
+{ color: red }
+
+b { color: re\
+}
+
+c { color: rgb(1 2 3 \
+) }
+
+d[x=y\
+] { color: red }
+
+e { color: red\
+!important }
