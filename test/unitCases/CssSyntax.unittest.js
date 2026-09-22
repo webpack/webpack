@@ -311,6 +311,13 @@ describe("CssSyntax — preprocessing the input stream", () => {
 		];
 		for (const wrap of WRAPS) {
 			expect(cvTypes(wrap(HIGH))).toEqual(cvTypes(wrap("\uFFFD")));
+			// And each token carries the same run, so the boundaries agree too \u2014
+			// modulo the one code point, which is what is not being replaced.
+			expect(
+				cvUnescaped(wrap(HIGH)).map(
+					(value) => value && value.split(HIGH).join("\uFFFD")
+				)
+			).toEqual(cvUnescaped(wrap("\uFFFD")));
 		}
 	});
 
@@ -326,6 +333,15 @@ describe("CssSyntax — preprocessing the input stream", () => {
  * @returns {number[]} component value types
  */
 const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
+/**
+ * @param {string} src css source
+ * @returns {(string | undefined)[]} what each component value unescapes to
+ */
+const cvUnescaped = (src) =>
+	parseAListOfComponentValues(src).map(
+		(n) =>
+			/** @type {import("../../lib/css/syntax-parser").Token} */ (n).unescaped
+	);
 /**
  * @param {string} src css source
  * @returns {number} the first token's type
