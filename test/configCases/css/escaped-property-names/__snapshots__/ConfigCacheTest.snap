@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases css escaped-property-names escaped-property-names should compile 1`] = `
+exports[`ConfigCacheTestCases css escaped-property-names escaped-property-names should compile 1`] = `
 Array [
   "/*! the value rules a property name selects */.t01{font-weight:700}",
   "/*! the same property, spelled with an escape */.t02{\\\\66 ont-weight:700}",

@@ -19,3 +19,11 @@
 .t07 { -webkit-box-flex: 1 }
 /*! the same prefixed spelling, with an escape */
 .t08 { -\77 ebkit-box-flex: 1 }
+/*! an integer property keeps a value that is not an integer, so the engine drops it */
+.t09 { z-index: 1.0 }
+/*! the same, spelled with an escape: still not an integer, still dropped */
+.t10 { \7a -index: 1.0 }
+/*! a family list is read as one, not folded into a keyword */
+.t11 { font-family: A B }
+/*! the same family list, spelled with an escape */
+.t12 { \66 ont-family: A B }
