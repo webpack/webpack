@@ -1169,16 +1169,24 @@ const spellingFinding = (minify, css, minified, sites, respelling) => {
 
 /**
  * What the report shows for a set of sites: how they were written, and how the
- * respelling writes them.
+ * respelling writes them, each cut to a line around the first place they part.
  * @param {Site[]} sites the sites carrying the finding
  * @param {Respelling} respelling how they are respelled
  * @returns {string} the repro
  */
-const reproOf = (sites, respelling) =>
-	`    ${oneLine(sites.map((site) => site.text).join(" "), 76)}\n      -> ${oneLine(
-		sites.map((site) => respelling.write(site) || site.text).join(" "),
-		76
-	)}`;
+const reproOf = (sites, respelling) => {
+	const from = sites.map((site) => site.text).join(" ");
+	const to = sites.map((site) => respelling.write(site) || site.text).join(" ");
+	// Shown from where they part rather than from the start, which for sites
+	// past the line is the same prefix twice with the respelling itself cut off
+	// — where the entry answering for it, read off this string, misses it too.
+	let at = 0;
+	while (at < from.length && at < to.length && from[at] === to[at]) at++;
+	const start = at < 60 ? 0 : at - 16;
+	const cut = (/** @type {string} */ text) =>
+		start === 0 ? text : `…${text.slice(start)}`;
+	return `    ${oneLine(cut(from), 76)}\n      -> ${oneLine(cut(to), 76)}`;
+};
 
 /**
  * Every respelling this stylesheet's output depends on.
