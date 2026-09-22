@@ -47,6 +47,7 @@ const {
 	measureInWorker,
 	missingReport,
 	pathSpanWalk,
+	sliceRelation,
 	spans,
 	sweepExitCode,
 	sweepMode
@@ -748,21 +749,221 @@ const jsSpans = (source, options) =>
  * @returns {import("./compare-tools-harness").Report[] | null} what its ranges broke, or null where the parser refused it
  */
 const spansEitherGoal = (source) => {
-	for (const sourceType of ["module", "script"]) {
+	const options = goalFor(source);
+	return options === null ? null : jsSpans(source, options);
+};
+
+// Both goals a build reads a file under, in the order it tries them.
+const GOALS = /** @type {("module" | "script")[]} */ (["module", "script"]);
+
+/**
+ * The options one source parses under, as a build would read it: a module where
+ * that works and a script otherwise.
+ * @param {string} source a script or a module
+ * @returns {EXPECTED_ANY} those options, or null where the parser refuses it either way
+ */
+const goalFor = (source) => {
+	for (const sourceType of GOALS) {
+		// The options a build parses with, so what is held is what ships:
+		// `ranges` is on there, and a range is what this reads.
+		/** @type {import("../lib/javascript/syntax-parser").ParserOptions} */
+		const options = {
+			sourceType,
+			ecmaVersion: "latest",
+			ranges: true,
+			allowHashBang: true
+		};
 		try {
-			// The options a build parses with, so what is held is what ships:
-			// `ranges` is on there, and a range is what this reads.
-			return jsSpans(source, {
-				sourceType,
-				ecmaVersion: "latest",
-				ranges: true,
-				allowHashBang: true
-			});
+			webpackParse(source, options);
+			return options;
 		} catch (_error) {
 			continue;
 		}
 	}
 	return null;
+};
+
+/**
+ * @typedef {{ what: string, start: number, end: number, size: number }} NodeRun
+ */
+
+/**
+ * Every node in one source, in post-order with the size of its subtree — which
+ * is what lets a subtree be read as a run rather than walked again.
+ * @param {EXPECTED_ANY} root the tree
+ * @returns {NodeRun[]} each node, children before parents
+ */
+const nodeRuns = (root) => {
+	/** @type {NodeRun[]} */
+	const runs = [];
+	/** @type {{ node: EXPECTED_ANY, children: EXPECTED_ANY[], index: number, held: number }[]} */
+	const stack = [
+		{ node: root, children: sortedChildren(root), index: 0, held: 0 }
+	];
+	while (stack.length > 0) {
+		const top = stack[stack.length - 1];
+		if (top.index === top.children.length) {
+			const size = top.held + 1;
+			stack.pop();
+			if (stack.length > 0) stack[stack.length - 1].held += size;
+			runs.push({
+				what: top.node.type,
+				start: top.node.start,
+				end: top.node.end,
+				size
+			});
+			continue;
+		}
+		const child = top.children[top.index++];
+		stack.push({
+			node: child,
+			children: sortedChildren(child),
+			index: 0,
+			held: 0
+		});
+	}
+	return runs;
+};
+
+/**
+ * @param {EXPECTED_ANY} node an ESTree node
+ * @returns {EXPECTED_ANY[]} the nodes it holds, in source order
+ */
+const sortedChildren = (node) =>
+	childNodesOf(node).sort((a, b) => a.start - b.start || a.end - b.end);
+
+/**
+ * What one node's subtree says: its shape and the offsets inside it, read
+ * against the node's own start so the same construct digests the same wherever
+ * it was found.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at which one to digest
+ * @returns {string} its digest
+ */
+const runDigest = (runs, at) => {
+	const node = runs[at];
+	/** @type {string[]} */
+	const out = [];
+	for (let index = at - node.size + 1; index <= at; index++) {
+		const one = runs[index];
+		out.push(`${one.what}[${one.start - node.start},${one.end - node.start})`);
+	}
+	return out.join(" ");
+};
+
+/**
+ * What a node's own source may have to be wrapped in to stand alone, widest
+ * context last. Parentheses let an object literal, a function expression or a
+ * class expression open a statement.
+ *
+ * WHY: the function and class contexts are this relation's normalization, not
+ * a convenience. Out of context `yield x` and `await x` are not invalid, they
+ * are an identifier and a call, and `super.x` and `return` are only syntax
+ * inside a method and a function — so a slice read at the top level is
+ * reported for meaning something else when only its extent is owed. Each is
+ * tried under the source's own options, which is why the ladder runs from the
+ * edition-neutral ones up: a case pinned to ES6 cannot parse `async function*`,
+ * and its `yield` would read as an identifier if that were the only context
+ * offering a generator.
+ * @type {[string, string][]}
+ */
+const JS_SLICE_CONTEXTS = [
+	["", ""],
+	["(", ")"],
+	// Named, because an anonymous function declaration cannot open a statement.
+	["function f(){", "}"],
+	["function* f(){", "}"],
+	["async function f(){", "}"],
+	["async function* f(){", "}"],
+	["class X extends Y{ m(){", "} }"],
+	["class X extends Y{ async *m(){", "} }"]
+];
+
+// Reparsing every node costs a parse of its own, so a source would cost its
+// size times its depth. Each one is capped at this many times its own bytes,
+// spent leaves first, which is where a range is most likely to be wrong.
+const SLICE_BUDGET_FACTOR = 4;
+
+/**
+ * Hold each node's own source to the node it came from: the bytes between its
+ * offsets, wrapped in the least context that lets them parse, give that node
+ * back.
+ * @param {string} source a script or a module
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number } | null} what broke, how many answered and how many the budget cut, or null where the parser refuses the source
+ */
+const jsSlices = (source, options) => {
+	/** @type {EXPECTED_ANY} */
+	let root;
+	try {
+		root = webpackParse(source, options);
+	} catch (_error) {
+		// One of the corpus cases asserting the parser refuses it.
+		return null;
+	}
+	const runs = nodeRuns(root);
+	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	const candidates = [];
+	let budget = source.length * SLICE_BUDGET_FACTOR;
+	let capped = 0;
+	let repeats = 0;
+	// One shape is one question: a bundle carries the same `Identifier[0,3)`
+	// hundreds of thousands of times, and reparsing each one asks nothing the
+	// first did not. Spends the budget on the shapes a source actually holds.
+	/** @type {Set<string>} */
+	const seen = new Set();
+	for (let at = 0; at < runs.length; at++) {
+		const node = runs[at];
+		const said = runDigest(runs, at);
+		// Before the budget, not after: a shape already asked about must not spend
+		// what is left, or a bundle's millionth identifier crowds out every
+		// composite node in it.
+		if (seen.has(said)) {
+			repeats++;
+			continue;
+		}
+		seen.add(said);
+		const text = source.slice(node.start, node.end);
+		if (text.length > budget) {
+			capped++;
+			continue;
+		}
+		budget -= text.length;
+		candidates.push({
+			what: node.what,
+			said,
+			reparse: () => {
+				/** @type {string | null} */
+				let disagreed = null;
+				for (const [prefix, suffix] of JS_SLICE_CONTEXTS) {
+					/** @type {NodeRun[]} */
+					let again;
+					try {
+						again = nodeRuns(
+							webpackParse(`${prefix}${text}${suffix}`, options)
+						);
+					} catch (_error) {
+						continue;
+					}
+					// The node this slice is meant to be, where the wrapper put it.
+					const want = again.findIndex(
+						(one) =>
+							one.what === node.what &&
+							one.start === prefix.length &&
+							one.end === prefix.length + text.length
+					);
+					if (want === -1) continue;
+					const answer = runDigest(again, want);
+					if (answer === said) return answer;
+					if (disagreed === null) disagreed = answer;
+				}
+				// Nothing here stood these bytes alone, so what they lacked is a
+				// context rather than a range: a labelled `break` needs its label.
+				return disagreed;
+			}
+		});
+	}
+	return { ...sliceRelation(candidates), capped, repeats };
 };
 
 const wantedRelation = filterFrom("RELATION");
@@ -829,30 +1030,52 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const groups = findingGroups();
-	if (!wantedRelation("spans")) return groups.write(write);
-	let refused = 0;
-	for (const [label, source, options] of corpus) {
-		let reports;
-		if (options === undefined) {
-			reports = spansEitherGoal(source);
-		} else {
-			try {
-				reports = jsSpans(source, options);
-			} catch (_error) {
-				reports = null;
+	if (wantedRelation("spans")) {
+		let refused = 0;
+		for (const [label, source, options] of corpus) {
+			let reports;
+			if (options === undefined) {
+				reports = spansEitherGoal(source);
+			} else {
+				try {
+					reports = jsSpans(source, options);
+				} catch (_error) {
+					reports = null;
+				}
 			}
+			// A fixture the parser refuses is one the suites are asserting it
+			// refuses, so it is counted rather than reported: the number moving is
+			// the signal.
+			if (reports === null) {
+				refused++;
+				continue;
+			}
+			for (const report of reports) groups.add(report, "parse", label);
 		}
-		// A fixture the parser refuses is one the suites are asserting it refuses,
-		// so it is counted rather than reported: the number moving is the signal.
-		if (reports === null) {
-			refused++;
-			continue;
-		}
-		for (const report of reports) groups.add(report, "parse", label);
+		log(
+			`read ranges over ${corpus.length - refused} sources (${refused} the parser refuses) …`
+		);
 	}
-	log(
-		`read ranges over ${corpus.length - refused} sources (${refused} the parser refuses) …`
-	);
+	if (wantedRelation("slices")) {
+		let read = 0;
+		let skipped = 0;
+		let capped = 0;
+		let repeats = 0;
+		for (const [label, source, options] of corpus) {
+			const settled = options === undefined ? goalFor(source) : options;
+			if (settled === null) continue;
+			const answered = jsSlices(source, settled);
+			if (answered === null) continue;
+			read += answered.read;
+			skipped += answered.skipped;
+			capped += answered.capped;
+			repeats += answered.repeats;
+			for (const report of answered.reports) groups.add(report, "parse", label);
+		}
+		log(
+			`reparsed ${read} shapes on their own (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
+		);
+	}
 	return groups.write(write);
 };
 

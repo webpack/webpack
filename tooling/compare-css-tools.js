@@ -65,6 +65,7 @@ const {
 	missingReport,
 	pathSpanWalk,
 	run,
+	sliceRelation,
 	spans,
 	sweepExitCode,
 	sweepMode
@@ -681,6 +682,152 @@ const cssSpans = (css) =>
 		})
 	});
 
+// What a node's own source has to be wrapped in to parse on its own. A rule
+// stands alone; a declaration needs a rule around it and a component value a
+// declaration, which is the offset shift each answer is read back through.
+/** @type {Record<number, [string, string]>} */
+const CSS_SLICE_CONTEXT = {
+	[NodeType.AtRule]: ["", ""],
+	[NodeType.QualifiedRule]: ["", ""],
+	[NodeType.Declaration]: ["a{", "}"]
+};
+
+const CSS_VALUE_CONTEXT = /** @type {[string, string]} */ (["a{b:", "}"]);
+
+// Reparsing every node costs a parse of its own, so a stylesheet would cost its
+// size times its depth. Each one is capped at this many times its own bytes,
+// spent leaves first, which is where a range is most likely to be wrong.
+const SLICE_BUDGET_FACTOR = 4;
+
+/**
+ * @typedef {{ type: number, start: number, end: number, size: number }} NodeRun
+ */
+
+/**
+ * Every node in one stylesheet, in post-order with the size of its subtree —
+ * which is what lets a subtree be read as a run rather than walked again. A
+ * comment is left out: it reaches the walk from the tokenizer, so it would land
+ * in whichever node happened to be open.
+ * @param {string} css a stylesheet
+ * @returns {NodeRun[]} each node, children before parents
+ */
+const cssNodeRuns = (css) => {
+	/** @type {NodeRun[]} */
+	const runs = [];
+	// How many nodes each open node has collected, so a size is a sum rather
+	// than a second descent.
+	/** @type {number[]} */
+	const held = [0];
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = {
+			enter: () => {
+				held.push(0);
+			},
+			exit: (nodePath) => {
+				const inside = /** @type {number} */ (held.pop());
+				if (nodePath.type() === NodeType.Comment) return;
+				const size = inside + 1;
+				held[held.length - 1] += size;
+				runs.push({
+					type: nodePath.type(),
+					start: nodePath.start(),
+					end: nodePath.end(),
+					size
+				});
+			}
+		};
+	}
+	new SourceProcessor().use(visitors).process(css, {});
+	return runs;
+};
+
+/**
+ * What one node's subtree says: its shape and the offsets inside it, read
+ * against the node's own start so the same construct digests the same wherever
+ * it was found.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at which one to digest
+ * @returns {string} its digest
+ */
+const runDigest = (runs, at) => {
+	const node = runs[at];
+	/** @type {string[]} */
+	const out = [];
+	for (let index = at - node.size + 1; index <= at; index++) {
+		const one = runs[index];
+		out.push(
+			`${NODE_TYPE_NAMES[one.type]}[${one.start - node.start},${one.end - node.start})`
+		);
+	}
+	return out.join(" ");
+};
+
+/**
+ * Hold each node's own source to the node it came from: the bytes between its
+ * offsets, wrapped in the least context that lets them parse, give that node
+ * back.
+ * @param {string} css a stylesheet
+ * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ */
+const cssSlices = (css) => {
+	const runs = cssNodeRuns(css);
+	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	const candidates = [];
+	let budget = css.length * SLICE_BUDGET_FACTOR;
+	let capped = 0;
+	let repeats = 0;
+	// One shape is one question: a bundle carries the same `Identifier[0,3)`
+	// hundreds of thousands of times, and reparsing each one asks nothing the
+	// first did not. Spends the budget on the shapes a source actually holds.
+	/** @type {Set<string>} */
+	const seen = new Set();
+	for (let at = 0; at < runs.length; at++) {
+		const node = runs[at];
+		const said = runDigest(runs, at);
+		// Before the budget, not after: a shape already asked about must not spend
+		// what is left, or a bundle's millionth identifier crowds out every
+		// composite node in it.
+		if (seen.has(said)) {
+			repeats++;
+			continue;
+		}
+		seen.add(said);
+		const text = css.slice(node.start, node.end);
+		if (text.length > budget) {
+			capped++;
+			continue;
+		}
+		budget -= text.length;
+		const [prefix, suffix] = CSS_SLICE_CONTEXT[node.type] || CSS_VALUE_CONTEXT;
+		candidates.push({
+			what: NODE_TYPE_NAMES[node.type],
+			said,
+			reparse: () => {
+				/** @type {NodeRun[]} */
+				let again;
+				try {
+					again = cssNodeRuns(`${prefix}${text}${suffix}`);
+				} catch (_error) {
+					return null;
+				}
+				// The node this slice is meant to be, where the wrapper put it. Read
+				// out of its stylesheet the parser can take these bytes for something
+				// else, or for nothing: what they lacked is context, not a range.
+				const want = again.findIndex(
+					(one) =>
+						one.type === node.type &&
+						one.start === prefix.length &&
+						one.end === prefix.length + text.length
+				);
+				return want === -1 ? null : runDigest(again, want);
+			}
+		});
+	}
+	return { ...sliceRelation(candidates), capped, repeats };
+};
+
 const wantedRelation = filterFrom("RELATION");
 const wantedPreset = filterFrom("PRESET");
 
@@ -738,6 +885,23 @@ const invariants = (write) => {
 		for (const [label, css] of corpus) {
 			for (const report of cssSpans(css)) groups.add(report, "parse", label);
 		}
+	}
+	if (wantedRelation("slices")) {
+		let read = 0;
+		let skipped = 0;
+		let capped = 0;
+		let repeats = 0;
+		for (const [label, css] of corpus) {
+			const answered = cssSlices(css);
+			read += answered.read;
+			skipped += answered.skipped;
+			capped += answered.capped;
+			repeats += answered.repeats;
+			for (const report of answered.reports) groups.add(report, "parse", label);
+		}
+		log(
+			`reparsed ${read} shapes on their own (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
+		);
 	}
 	if (wantedRelation("idempotence")) {
 		log(

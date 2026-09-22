@@ -58,6 +58,7 @@ const {
 	pathSpanWalk,
 	shrink,
 	signed,
+	sliceRelation,
 	spans,
 	sweepExitCode,
 	sweepMode,
@@ -1307,6 +1308,168 @@ const htmlSpans = (html) =>
 		})
 	});
 
+/**
+ * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string }} NodeRun
+ */
+
+// Reparsing every node costs a parse of its own, so a document would cost its
+// size times its depth. Each one is capped at this many times its own bytes.
+const SLICE_BUDGET_FACTOR = 4;
+
+/**
+ * Every node in one document, in post-order with the size of its subtree —
+ * which is what lets a subtree be read as a run rather than walked again. `lo`
+ * and `hi` are how far that subtree reaches, and `context` the tag the node sat
+ * in, which is what the fragment parsing algorithm needs to read it back.
+ * @param {string} html a document
+ * @param {string=} fragmentContext the element to parse it as the contents of
+ * @returns {NodeRun[]} each node, children before parents
+ */
+const htmlNodeRuns = (html, fragmentContext) => {
+	/** @type {NodeRun[]} */
+	const runs = [];
+	/** @type {{ held: number, lo: number, hi: number, tag: string }[]} */
+	const stack = [{ held: 0, lo: html.length, hi: 0, tag: "" }];
+	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {};
+	for (const type of Object.values(NodeType)) {
+		visitors[type] = {
+			enter: (nodePath) => {
+				stack.push({
+					held: 0,
+					lo: html.length,
+					hi: 0,
+					tag: nodePath.type() === NodeType.Element ? nodePath.tagName() : ""
+				});
+			},
+			exit: (nodePath) => {
+				const frame = /** @type {EXPECTED_ANY} */ (stack.pop());
+				const type = nodePath.type();
+				const tag = type === NodeType.Element ? nodePath.tagName() : "";
+				const start = nodePath.start();
+				const end = nodePath.end();
+				const size = frame.held + 1;
+				const lo = Math.min(frame.lo, start);
+				const hi = Math.max(frame.hi, end);
+				const parent = stack[stack.length - 1];
+				parent.held += size;
+				parent.lo = Math.min(parent.lo, lo);
+				parent.hi = Math.max(parent.hi, hi);
+				runs.push({
+					what: `${NODE_TYPE_NAMES[type]}${tag === "" ? "" : `:${tag}`}`,
+					type,
+					tag,
+					start,
+					end,
+					size,
+					lo,
+					hi,
+					context: parent.tag
+				});
+			}
+		};
+	}
+	new SourceProcessor()
+		.use(visitors)
+		.process(html, fragmentContext === undefined ? {} : { fragmentContext });
+	return runs;
+};
+
+/**
+ * What one node's subtree says: its shape and the offsets inside it, read
+ * against the node's own start so the same construct digests the same wherever
+ * it was found.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {number} at which one to digest
+ * @returns {string} its digest
+ */
+const runDigest = (runs, at) => {
+	const node = runs[at];
+	/** @type {string[]} */
+	const out = [];
+	for (let index = at - node.size + 1; index <= at; index++) {
+		const one = runs[index];
+		out.push(`${one.what}[${one.start - node.start},${one.end - node.start})`);
+	}
+	return out.join(" ");
+};
+
+/**
+ * Hold each node's own source to the node it came from: the bytes between its
+ * offsets, read back as the contents of the element they sat in, give that node
+ * back.
+ *
+ * The context is the whole point here. §13.2 decides what a tag means from the
+ * insertion mode it is read in, so `<td>x</td>` on its own is not a cell at all
+ * — the parser drops it and foster-parents the text. Handing the enclosing tag
+ * to the fragment parsing algorithm is the spec's own answer to that, and it is
+ * what the browser does for `innerHTML`.
+ *
+ * Two shapes are left out rather than normalized: an element the parser
+ * inserted or cloned wrote no tag to slice, and an element whose end is its
+ * start tag's — §13.2 leaves it there until an end tag is read — has a range
+ * that does not hold its own children, so there is no slice to reparse.
+ * @param {string} html a document
+ * @returns {{ reports: import("./compare-tools-harness").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
+ */
+const htmlSlices = (html) => {
+	const runs = htmlNodeRuns(html);
+	/** @type {import("./compare-tools-harness").SliceCandidate[]} */
+	const candidates = [];
+	let budget = html.length * SLICE_BUDGET_FACTOR;
+	let capped = 0;
+	let repeats = 0;
+	let skipped = 0;
+	/** @type {Set<string>} */
+	const seen = new Set();
+	for (let at = 0; at < runs.length; at++) {
+		const node = runs[at];
+		// No tag to slice, no range holding its own subtree, or nothing to be the
+		// contents of: each is the document saying where the node came from.
+		if (
+			node.end <= node.start ||
+			node.start > node.lo ||
+			node.end < node.hi ||
+			node.context === ""
+		) {
+			skipped++;
+			continue;
+		}
+		const said = runDigest(runs, at);
+		if (seen.has(said)) {
+			repeats++;
+			continue;
+		}
+		seen.add(said);
+		const text = html.slice(node.start, node.end);
+		if (text.length > budget) {
+			capped++;
+			continue;
+		}
+		budget -= text.length;
+		candidates.push({
+			what: node.what,
+			said,
+			reparse: () => {
+				/** @type {NodeRun[]} */
+				let again;
+				try {
+					again = htmlNodeRuns(text, node.context);
+				} catch (_error) {
+					return null;
+				}
+				const want = again.findIndex(
+					(one) =>
+						one.what === node.what && one.start === 0 && one.end === text.length
+				);
+				return want === -1 ? null : runDigest(again, want);
+			}
+		});
+	}
+	const answered = sliceRelation(candidates);
+	return { ...answered, skipped: answered.skipped + skipped, capped, repeats };
+};
+
 const wantedRelation = filterFrom("RELATION");
 const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
@@ -1468,6 +1631,23 @@ const invariants = (write) => {
 		for (const [label, html] of corpus) {
 			for (const report of htmlSpans(html)) groups.add(report, "parse", label);
 		}
+	}
+	if (wantedRelation("slices")) {
+		let read = 0;
+		let skipped = 0;
+		let capped = 0;
+		let repeats = 0;
+		for (const [label, html] of corpus) {
+			const answered = htmlSlices(html);
+			read += answered.read;
+			skipped += answered.skipped;
+			capped += answered.capped;
+			repeats += answered.repeats;
+			for (const report of answered.reports) groups.add(report, "parse", label);
+		}
+		log(
+			`reparsed ${read} shapes in their own context (${skipped} out of context, ${repeats} repeats, ${capped} past the budget) …`
+		);
 	}
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, html] of corpus) {

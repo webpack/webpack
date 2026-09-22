@@ -779,6 +779,53 @@ const pathSpanWalk =
 	};
 
 /**
+ * One node to hold to its own source. `said` is the subtree digested as it
+ * stands, which has to be read while the tree it came from is still current;
+ * `reparse` digests what the node's own bytes parse to on their own, and
+ * answers null where the parser will not take them out of context.
+ * @typedef {{ what: string, said: string, reparse: () => string | null }} SliceCandidate
+ */
+
+/**
+ * Whether a node's own source says what the node does: the bytes between its
+ * offsets, parsed on their own, give that node back.
+ *
+ * WHY: the candidates are collected before any of them is reparsed, and each
+ * carries its digest rather than a way to compute one. Every parser here keeps
+ * one set of node columns, so a reparse in the middle of a walk pulls the tree
+ * out from under it — it crashed in `_walkRule` rather than reporting anything.
+ *
+ * A node the parser refuses out of context is skipped rather than reported:
+ * `await x` outside an async function, a `<td>` outside its table. What each
+ * language can normalize it does first — HTML reparses in the node's own
+ * insertion mode, handing its parent to the fragment parsing algorithm — so
+ * what is skipped is what no context would settle.
+ * @param {Iterable<SliceCandidate>} candidates every node worth slicing, already digested
+ * @returns {{ reports: Report[], read: number, skipped: number }} what broke, and how many answered
+ */
+const sliceRelation = (candidates) => {
+	/** @type {Report[]} */
+	const reports = [];
+	let read = 0;
+	let skipped = 0;
+	for (const candidate of candidates) {
+		const again = candidate.reparse();
+		if (again === null) {
+			skipped++;
+			continue;
+		}
+		read++;
+		if (again === candidate.said) continue;
+		reports.push({
+			relation: "slices",
+			what: `parses to something else on its own (${candidate.what})`,
+			repro: `    ${candidate.said}\n      -> ${again}`
+		});
+	}
+	return { reports, read, skipped };
+};
+
+/**
  * A finding the printer owes nothing for, with the reason it is owed nothing.
  * `relation` and `contains` together name it; `source` narrows it to one
  * fixture where the same repro is a defect elsewhere.
@@ -979,6 +1026,7 @@ module.exports = {
 	run,
 	shrink,
 	signed,
+	sliceRelation,
 	spans,
 	sweepExitCode,
 	sweepMode,
