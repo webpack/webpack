@@ -2,7 +2,7 @@
 
 const {
 	discoverIntersections
-} = require("../../lib/util/chunkSetIntersections");
+} = require("../../lib/optimize/chunkSetIntersections");
 
 /**
  * Counts the bits of a number.
