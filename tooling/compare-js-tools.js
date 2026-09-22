@@ -805,18 +805,31 @@ const roundTrip = (acorn, before, printed, goal) => {
 		: `${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`;
 };
 
-const mode = process.argv[2];
-// `--setup` installs the corpus and nothing else, for a caller that wants the
-// install proven without paying for the comparison. Nothing is generated here,
-// unlike the CSS corpus, so the install is the whole of it.
-(mode === "--measure"
-	? measure(TOOLS)
-	: mode === "--compare"
-		? compare()
-		: mode === "--setup"
-			? installPackages(CACHE_NAME)
-			: main()
-).catch((error) => {
-	log(String(error && error.stack ? error.stack : error));
-	process.exitCode = 1;
-});
+/**
+ * Runs the entry point the mode names, defaulting to the whole comparison.
+ * `--setup` installs the corpus and stops, for a caller that wants the install
+ * proven without paying for the comparison; nothing is generated here, unlike
+ * the CSS corpus, so the install is the whole of it.
+ * @param {string | undefined} mode which entry point to run
+ * @returns {Promise<EXPECTED_ANY>} what that entry point resolves to
+ */
+const runMode = (mode) =>
+	mode === "--measure"
+		? measure(TOOLS)
+		: mode === "--compare"
+			? compare()
+			: mode === "--setup"
+				? installPackages(CACHE_NAME)
+				: main();
+
+// Only as the entry point, the way the CSS and HTML scripts guard: requiring
+// this file otherwise starts the whole comparison, so nothing could read the
+// dispatch above without paying for it.
+if (require.main === module) {
+	runMode(process.argv[2]).catch((error) => {
+		log(String(error && error.stack ? error.stack : error));
+		process.exitCode = 1;
+	});
+}
+
+module.exports = { runMode };
