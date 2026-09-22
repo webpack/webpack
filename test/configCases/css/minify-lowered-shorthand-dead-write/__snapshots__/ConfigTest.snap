@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minify-lowered-shorthand-dead-write minify-lowered-shorthand-dead-write should compile 1`] = `".a,.b,.c{text-decoration:underline;text-decoration-style:dotted}.d{& i{top:0}text-decoration:underline;text-decoration-style:dotted}.e{text-decoration:overline!important;text-decoration:underline;text-decoration-style:dotted}.f{text-decoration-line:underline;text-decoration:underline;text-decoration-style:dotted}.g{text-decoration:overline;text-decoration:var(--x)}"`;

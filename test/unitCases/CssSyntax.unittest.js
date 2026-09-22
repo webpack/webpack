@@ -10825,6 +10825,91 @@ describe("CssSyntax minify — the rules a hoist leaves side by side", () => {
 		expect(
 			minifyForWith("a{.y{top:0}.x{top:0}}", T, { shortenSelectors: false })
 		).toBe("a .y,a .x{top:0}");
+describe("CssSyntax minify — the declaration a lowered shorthand kills", () => {
+	// Reads `text-decoration` as CSS 2.1's line alone, so the shorthand is
+	// written out as the line plus the longhands beside it — and reads those.
+	const T = ["safari 15"];
+
+	it("takes out an earlier declaration the lowered one writes over", () => {
+		expect(
+			minifyFor("a{text-decoration:underline;text-decoration:underline dotted}", T)
+		).toBe("a{text-decoration:underline;text-decoration-style:dotted}");
+	});
+
+	it("takes it out whatever the earlier one said", () => {
+		expect(
+			minifyFor("a{text-decoration:overline;text-decoration:underline dotted}", T)
+		).toBe("a{text-decoration:underline;text-decoration-style:dotted}");
+	});
+
+	it("takes out every earlier one", () => {
+		expect(
+			minifyFor(
+				"a{text-decoration:overline;text-decoration:blink;text-decoration:underline dotted}",
+				T
+			)
+		).toBe("a{text-decoration:underline;text-decoration-style:dotted}");
+	});
+
+	it("takes one out past a rule written between them", () => {
+		expect(
+			minifyFor(
+				"a{text-decoration:overline;& b{top:0}text-decoration:underline dotted}",
+				T
+			)
+		).toBe("a{& b{top:0}text-decoration:underline;text-decoration-style:dotted}");
+	});
+
+	it("keeps the earlier one where the target reads the later whole", () => {
+		// Nothing is lowered, so the later value is the one a target may not read
+		// — and the earlier one is the fallback the author wrote.
+		const css = "a{text-decoration:overline;text-decoration:underline dotted}";
+		expect(minifyFor(css, ["chrome 130"])).toBe(css);
+	});
+
+	it("keeps it where the longhands the lowering writes are unread too", () => {
+		// The lowered form is no more readable than the shorthand was, so the
+		// earlier declaration is still the fallback it was written as.
+		expect(
+			minifyFor(
+				"a{text-decoration:overline;text-decoration:underline dotted}",
+				["ie 11"]
+			)
+		).toBe(
+			"a{text-decoration:overline;text-decoration:underline;text-decoration-style:dotted}"
+		);
+	});
+
+	it("keeps an `!important` earlier one, which wins the tie", () => {
+		expect(
+			minifyFor(
+				"a{text-decoration:overline!important;text-decoration:underline dotted}",
+				T
+			)
+		).toBe(
+			"a{text-decoration:overline!important;text-decoration:underline;text-decoration-style:dotted}"
+		);
+	});
+
+	it("keeps an earlier longhand, which the shorthand does not repeat", () => {
+		expect(
+			minifyFor(
+				"a{text-decoration-line:underline;text-decoration:underline dotted}",
+				T
+			)
+		).toBe(
+			"a{text-decoration-line:underline;text-decoration:underline;text-decoration-style:dotted}"
+		);
+	});
+
+	it("keeps an earlier one where the later is a substitution", () => {
+		const css = "a{text-decoration:overline;text-decoration:var(--x)}";
+		expect(minifyFor(css, T)).toBe(css);
+	});
+
+	it("keeps both with the rewrite off", () => {
+		const css = "a{text-decoration:overline;text-decoration:underline dotted}";
+		expect(minifyForWith(css, T, { lowerUnsupported: false })).toBe(css);
 	});
 });
 
