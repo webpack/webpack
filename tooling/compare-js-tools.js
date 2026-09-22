@@ -806,11 +806,16 @@ const roundTrip = (acorn, before, printed, goal) => {
 };
 
 const mode = process.argv[2];
+// `--setup` installs the corpus and nothing else, for a caller that wants the
+// install proven without paying for the comparison. Nothing is generated here,
+// unlike the CSS corpus, so the install is the whole of it.
 (mode === "--measure"
 	? measure(TOOLS)
 	: mode === "--compare"
 		? compare()
-		: main()
+		: mode === "--setup"
+			? installPackages(CACHE_NAME)
+			: main()
 ).catch((error) => {
 	log(String(error && error.stack ? error.stack : error));
 	process.exitCode = 1;
