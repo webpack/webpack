@@ -74,6 +74,10 @@ const sourceType = () =>
 // Bundles as they ship: the ES5 ones every site still loads, the modern ones
 // written in classes and modules, and two that dwarf both.
 
+// A path here is what the package publishes, so a bump can move it: React 19
+// dropped its UMD builds, and TypeScript 7 is the Go port and publishes no
+// bundle to parse at all, which is why neither is named the way it once was.
+
 // The minified rows matter on their own: that is the shape most of what a build
 // reads from `node_modules` is in, and it is where a parser's hot loop lives.
 /** @type {[string, string, "module" | "script"][]} */
@@ -89,10 +93,14 @@ const INSTALLED_FIXTURES = [
 	["D3 7", "d3/dist/d3.js", "script"],
 	["RxJS 7", "rxjs/dist/bundles/rxjs.umd.js", "script"],
 	["Immutable 5 (ESM)", "immutable/dist/immutable.es.js", "module"],
-	["React DOM 18 (dev)", "react-dom/umd/react-dom.development.js", "script"],
 	[
-		"React DOM 18 (production)",
-		"react-dom/umd/react-dom.production.min.js",
+		"React DOM 19 (dev)",
+		"react-dom/cjs/react-dom-client.development.js",
+		"script"
+	],
+	[
+		"React DOM 19 (production)",
+		"react-dom/cjs/react-dom-client.production.js",
 		"script"
 	],
 	["core-js 3 (bundle)", "core-js-bundle/index.js", "script"],
@@ -102,8 +110,7 @@ const INSTALLED_FIXTURES = [
 	["pdf.js 6 (ESM)", "pdfjs-dist/build/pdf.mjs", "module"],
 	["Swagger UI 5 (bundle)", "swagger-ui-dist/swagger-ui-bundle.js", "script"],
 	["ECharts 6", "echarts/dist/echarts.js", "script"],
-	["Babel 7 (standalone)", "@babel/standalone/babel.js", "script"],
-	["TypeScript 5", "typescript/lib/typescript.js", "script"]
+	["Babel 7 (standalone)", "@babel/standalone/babel.js", "script"]
 ];
 
 /**

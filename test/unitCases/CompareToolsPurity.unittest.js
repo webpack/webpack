@@ -1,6 +1,9 @@
 "use strict";
 
-const { purityRelation } = require("../../tooling/compare-tools-harness");
+const {
+	hasher,
+	purityRelation
+} = require("../../tooling/compare-tools-harness");
 
 /**
  * One source whose readings are scripted, so a parser that carries state can be
@@ -92,5 +95,24 @@ describe("the purity relation", () => {
 			repro: ["a.css", "c.css"],
 			read: 3
 		});
+	});
+});
+
+describe("the digest a purity source is read through", () => {
+	it("should answer the same for the same reading", () => {
+		const once = hasher();
+		once.update("a");
+		once.update("b");
+		const twice = hasher();
+		twice.update("ab");
+		expect(once.hex()).toBe(twice.hex());
+	});
+
+	it("should answer differently for a different one", () => {
+		const one = hasher();
+		one.update("<p>");
+		const other = hasher();
+		other.update("<q>");
+		expect(one.hex()).not.toBe(other.hex());
 	});
 });
