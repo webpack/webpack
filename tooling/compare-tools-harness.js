@@ -49,6 +49,41 @@ const exists = (file) =>
 		() => false
 	);
 
+// The exit code a run ends on when the tree as committed is what is wrong,
+// rather than the network — 78, the conventional one for a bad configuration.
+
+// `tooling/retry.js` reads it as "this will fail the same way next time".
+const CONFIGURATION_EXIT_CODE = 78;
+
+/**
+ * A failure whose message is the whole report, either because it was written
+ * for a reader or because the command it names already wrote its own. Printed
+ * as that message rather than as a stack into this file, which names nothing
+ * anybody can act on.
+ * @param {string} message what to print, and nothing else
+ * @param {number} code the exit code to end on
+ * @returns {Error} the error to throw
+ */
+const fatal = (message, code) =>
+	Object.assign(new Error(message), { fatalExit: code });
+
+/**
+ * End a run on what was thrown: the message alone where the message is the
+ * report, and the stack where it is a defect in this code.
+ * @param {EXPECTED_ANY} error what was thrown
+ * @returns {void}
+ */
+const fail = (error) => {
+	const code = error === null ? undefined : error && error.fatalExit;
+	if (typeof code === "number") {
+		log(error.message);
+		process.exitCode = code;
+		return;
+	}
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+};
+
 /**
  * @param {string} command executable
  * @param {string[]} args its arguments
@@ -67,7 +102,9 @@ const run = (command, args, options) =>
 		child.on("error", reject);
 		child.on("close", (code) => {
 			if (code === 0) resolve();
-			else reject(new Error(`${command} exited with ${code}`));
+			// The command wrote its own diagnosis to this process's stderr, so the
+			// four frames it took to get here are four lines that say nothing.
+			else reject(fatal(`${command} exited with ${code}`, 1));
 		});
 	});
 
@@ -82,6 +119,87 @@ const corpusDirectory = (name) => path.join(ROOT, "tooling/comparison", name);
 
 // What a corpus is declared by, and so what decides whether one is current.
 const MANIFEST_FILES = ["package.json", "package-lock.json"];
+
+/**
+ * One package the manifest and the lockfile do not agree on. `undefined` on
+ * either side is the package being absent from it altogether.
+ * @typedef {{ name: string, asked: string | undefined, locked: string | undefined }} Drift
+ */
+
+/**
+ * Where a corpus's two files disagree, which is the same question `npm ci` asks
+ * before it installs anything. Asked here so it can be answered in the handful
+ * of lines a reader needs: npm answers it with every affected package — the
+ * transitive ones included, which is hundreds — followed by its own usage text,
+ * and the one thing to do about it appears nowhere in either.
+ * @param {EXPECTED_ANY} manifest the parsed package.json
+ * @param {EXPECTED_ANY} lock the parsed package-lock.json
+ * @returns {Drift[]} one entry per package they disagree on, manifest order
+ */
+const corpusDrift = (manifest, lock) => {
+	const asked = (manifest && manifest.dependencies) || {};
+	const packages = (lock && lock.packages) || {};
+	// A lockfile keeps the manifest's own dependency list beside the tree it
+	// resolved to, and `npm ci` holds both to it.
+	const root = (packages[""] && packages[""].dependencies) || {};
+	/** @type {Drift[]} */
+	const drift = [];
+	for (const [name, wanted] of Object.entries(asked)) {
+		const installed = packages[`node_modules/${name}`];
+		// The version the tree carries where it carries one, since that is what an
+		// install would actually put on disk; the recorded range otherwise.
+		const locked =
+			installed && installed.version ? installed.version : root[name];
+		if (locked !== wanted || root[name] !== wanted) {
+			drift.push({ name, asked: wanted, locked });
+		}
+	}
+	for (const name of Object.keys(root)) {
+		if (asked[name] === undefined) {
+			drift.push({ name, asked: undefined, locked: root[name] });
+		}
+	}
+	return drift;
+};
+
+// Enough to recognize what moved without the list becoming the wall of text it
+// replaces; the command below prints the rest.
+const DRIFT_SHOWN = 10;
+
+/**
+ * What to print when a corpus cannot be installed because its two files
+ * disagree: which corpus, which packages, and the one command that fixes it.
+ * @param {string} name the corpus directory name
+ * @param {readonly Drift[]} drift what the two files disagree on
+ * @returns {string} the report, ready to print
+ */
+const driftMessage = (name, drift) => {
+	const directory = `tooling/comparison/${name}`;
+	const shown = drift.slice(0, DRIFT_SHOWN);
+	const width = Math.max(...shown.map((entry) => entry.name.length));
+	const rows = shown
+		.map(
+			(entry) =>
+				`    ${entry.name.padEnd(width)}  package.json ${
+					entry.asked === undefined ? "(absent)" : entry.asked
+				}, lockfile ${entry.locked === undefined ? "(absent)" : entry.locked}\n`
+		)
+		.join("");
+	const rest =
+		drift.length > shown.length
+			? `    … and ${drift.length - shown.length} more\n`
+			: "";
+	const packages = `${drift.length} package${drift.length === 1 ? "" : "s"}`;
+	return `${directory}/package.json and package-lock.json disagree, so the corpus cannot be installed.
+
+${packages} the two name differently:
+${rows}${rest}
+To fix it, regenerate the lockfile and commit it with the manifest:
+
+    cd ${directory} && npm install --package-lock-only
+
+This is not a flaky download: running the job again fails the same way until the lockfile is regenerated.`;
+};
 
 /**
  * Install a corpus under `node_modules/.cache/<name>` from its committed
@@ -101,8 +219,12 @@ const installPackages = async (name) => {
 	// without regenerating the lockfile is what `npm ci` refuses, and reading the
 	// lockfile only would skip the install that would have refused it.
 	const identity = createHash("sha256");
+	/** @type {Buffer[]} */
+	const declared = [];
 	for (const file of MANIFEST_FILES) {
-		identity.update(await fs.promises.readFile(path.join(source, file)));
+		const content = await fs.promises.readFile(path.join(source, file));
+		declared.push(content);
+		identity.update(content);
 		identity.update("\0");
 	}
 	const wanted = identity.digest("hex");
@@ -111,6 +233,15 @@ const installPackages = async (name) => {
 			? await fs.promises.readFile(stamp, "utf8")
 			: undefined;
 	if (installed === wanted) return cache;
+	// Before the install rather than after it fails: `npm ci` refuses a manifest
+	// and a lockfile that disagree, and what it refuses with is not a report.
+	const drift = corpusDrift(
+		JSON.parse(declared[0].toString("utf8")),
+		JSON.parse(declared[1].toString("utf8"))
+	);
+	if (drift.length !== 0) {
+		throw fatal(driftMessage(name, drift), CONFIGURATION_EXIT_CODE);
+	}
 	log(`installing comparison packages into ${path.relative(ROOT, cache)} …`);
 	// `npm ci` refreshes `node_modules` alone, so a stylesheet the last corpus
 	// generated would outlive the tool that wrote it and pass for current under
@@ -763,11 +894,60 @@ const sweepExitCode = (found, missing, argv) =>
 		? 1
 		: 0;
 
+/**
+ * Why a gated sweep ended the way it did, in the words a reader needs. The
+ * count alone cannot say it: a run that found nothing and swept an incomplete
+ * corpus still fails, so "0 findings" is the last line above a red job and the
+ * report reads as contradicting itself.
+ * @param {number} found how many findings the sweep named
+ * @param {readonly string[]} missing the fixtures it did not find
+ * @param {readonly string[]} argv the command line to read the flag off
+ * @param {string} setup the command that builds the corpus
+ * @returns {string} the verdict, ready to print
+ */
+const sweepVerdict = (found, missing, argv, setup) => {
+	/** @type {string[]} */
+	const lines = [];
+	if (found > 0) {
+		lines.push(
+			`FAILED: ${found} finding${found === 1 ? "" : "s"} above to answer for.`
+		);
+	}
+	const one = missing.length === 1;
+	const fixtures = `${missing.length} fixture${one ? "" : "s"} ${
+		one ? "was" : "were"
+	} never built`;
+	if (argv.includes("--require-corpus") && missing.length !== 0) {
+		lines.push(
+			`FAILED: ${fixtures}, so this sweep never read ${
+				one ? "it" : "them"
+			} — ${one ? "the one" : "the ones"} listed under "not built" above.`,
+			"This run was given --require-corpus, which passes only on the whole corpus: a finding has already lived in exactly the fixtures a bare checkout does not hold.",
+			`Build ${one ? "it" : "them"} with \`${setup}\`, then run this again.`
+		);
+	}
+	if (lines.length === 0) {
+		lines.push(
+			missing.length === 0
+				? "PASSED: no findings, and every fixture was swept."
+				: `PASSED: no findings. ${fixtures} and so ${
+						one ? "was" : "were"
+					} not swept — pass --require-corpus to make that a failure.`
+		);
+	}
+	return `\n${lines.join("\n")}\n`;
+};
+
 module.exports = {
+	CONFIGURATION_EXIT_CODE,
 	STAGES,
 	collectFiles,
 	compress,
+	corpusDrift,
+	driftMessage,
 	exists,
+	fail,
+	fatal,
 	filterFrom,
 	findingGroups,
 	firstDifference,
@@ -789,5 +969,6 @@ module.exports = {
 	signed,
 	sweepExitCode,
 	sweepMode,
+	sweepVerdict,
 	thrownText
 };

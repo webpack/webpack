@@ -1,6 +1,7 @@
 "use strict";
 
 const {
+	CONFIGURATION_EXIT_CODE,
 	backoffFor,
 	main,
 	readAttempts,
@@ -113,6 +114,22 @@ describe("retry", () => {
 				}
 			});
 			expect(code).toBe(3);
+			expect(runs).toBe(1);
+		});
+
+		// A corpus whose lockfile was never regenerated fails the same way every
+		// time, so three attempts buy nothing and cost the reader the report
+		// twice over — in a CI log, scrolled off the top of it.
+		it("does not retry a failure the tree itself carries", async () => {
+			let runs = 0;
+			const code = await retry("cmd", [], {
+				delay: 0,
+				run: () => {
+					runs++;
+					return Promise.resolve(CONFIGURATION_EXIT_CODE);
+				}
+			});
+			expect(code).toBe(CONFIGURATION_EXIT_CODE);
 			expect(runs).toBe(1);
 		});
 

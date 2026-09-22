@@ -32,12 +32,12 @@ const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
 const {
 	STAGES,
 	compress,
+	fail,
 	filterFrom,
 	formatCost,
 	installPackages,
 	kb,
 	loaderFor,
-	log,
 	measure,
 	measureInWorker
 } = require("./compare-tools-harness");
@@ -811,7 +811,4 @@ const mode = process.argv[2];
 	: mode === "--compare"
 		? compare()
 		: main()
-).catch((error) => {
-	log(String(error && error.stack ? error.stack : error));
-	process.exitCode = 1;
-});
+).catch(fail);

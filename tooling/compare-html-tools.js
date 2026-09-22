@@ -41,6 +41,7 @@ const {
 	STAGES,
 	collectFiles,
 	compress,
+	fail,
 	filterFrom,
 	findingGroups,
 	formatCost,
@@ -58,6 +59,7 @@ const {
 	signed,
 	sweepExitCode,
 	sweepMode,
+	sweepVerdict,
 	thrownText
 } = require("./compare-tools-harness");
 
@@ -1503,11 +1505,19 @@ if (require.main === module) {
 	// The sweep alone, for a caller that wants the relations without the ten
 	// minutes the comparison costs; a full run prints the same section.
 	if (mode === "--invariants") {
-		process.exitCode = sweepExitCode(
-			reportInvariants(),
-			_missingFixtures,
-			process.argv
+		const found = reportInvariants();
+		// The verdict last, under the counts it reads: a gated sweep that found
+		// nothing still fails on a corpus it could not read the whole of, and the
+		// count on its own leaves a red job explained by nothing.
+		process.stdout.write(
+			sweepVerdict(
+				found,
+				_missingFixtures,
+				process.argv,
+				"yarn benchmark:html-tools:setup"
+			)
 		);
+		process.exitCode = sweepExitCode(found, _missingFixtures, process.argv);
 	} else {
 		const started =
 			mode === "--measure"
@@ -1515,10 +1525,7 @@ if (require.main === module) {
 				: mode === "--setup"
 					? setup()
 					: main();
-		started.catch((error) => {
-			log(String(error && error.stack ? error.stack : error));
-			process.exitCode = 1;
-		});
+		started.catch(fail);
 	}
 }
 

@@ -6,8 +6,12 @@ const os = require("os");
 const path = require("path");
 const { Readable } = require("stream");
 const {
+	CONFIGURATION_EXIT_CODE,
 	compress,
+	corpusDrift,
+	driftMessage,
 	exists,
+	fail,
 	filterFrom,
 	findingGroups,
 	formatCost,
@@ -22,7 +26,8 @@ const {
 	missingReport,
 	run,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	sweepVerdict
 } = require("../../tooling/compare-tools-harness");
 
 /** @type {string} */
@@ -330,7 +335,8 @@ describe("compare-tools-harness", () => {
 			"compare-tools-harness-unittest-failed",
 			"compare-tools-harness-unittest-moved",
 			"compare-tools-harness-unittest-derived",
-			"compare-tools-harness-unittest-manifest"
+			"compare-tools-harness-unittest-manifest",
+			"compare-tools-harness-unittest-drifted"
 		];
 
 		/**
@@ -507,6 +513,34 @@ describe("compare-tools-harness", () => {
 			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
 			await withStandInNpm(0, () => installPackages(name));
 			expect(fs.existsSync(derived)).toBe(false);
+		});
+
+		// What npm answers with here is its own usage text and every affected
+		// package, transitive ones included, three times over once the retry has
+		// had its way. The corpus is read first so the answer is the six lines
+		// that name what to do, and so nothing is downloaded to reach them.
+		posixOnly("refuses a corpus its lockfile was not regenerated for", async () => {
+			const name = NAMES[6];
+			writeCorpus(
+				name,
+				JSON.stringify({
+					lockfileVersion: 3,
+					packages: {
+						"": { dependencies: { cssnano: "7.1.9" } },
+						"node_modules/cssnano": { version: "7.1.9" }
+					}
+				}),
+				JSON.stringify({ name, dependencies: { cssnano: "9.0.5" } })
+			);
+			await withStandInNpm(0, async () => {
+				await expect(installPackages(name)).rejects.toThrow(
+					"cssnano  package.json 9.0.5, lockfile 7.1.9"
+				);
+			});
+			// Nothing ran and nothing was stamped, so the next run reads the corpus
+			// again rather than trusting a cache no install ever filled.
+			expect(npmRan(name)).toBe(false);
+			expect(stampOf(name)).toBeUndefined();
 		});
 
 		// The case the lockfile exists for: Dependabot moves a pin, and a cache
@@ -792,5 +826,207 @@ describe("sweepMode", () => {
 	it("names no mode where only the modifier was given", () => {
 		expect(sweepMode(["node", "x.js"])).toBeUndefined();
 		expect(sweepMode(["node", "x.js", "--require-corpus"])).toBeUndefined();
+	});
+});
+
+describe("corpusDrift", () => {
+	/**
+	 * A lockfile of the shape npm writes: the manifest's own dependency list
+	 * beside the tree it resolved to.
+	 * @param {Record<string, string>} dependencies what the manifest asked for
+	 * @param {Record<string, string>=} tree what it resolved to, where it differs
+	 * @returns {EXPECTED_ANY} the lockfile
+	 */
+	const lockOf = (dependencies, tree) => {
+		/** @type {EXPECTED_ANY} */
+		const packages = { "": { dependencies } };
+		for (const [name, version] of Object.entries(tree || dependencies)) {
+			packages[`node_modules/${name}`] = { version };
+		}
+		return { lockfileVersion: 3, packages };
+	};
+
+	it("finds nothing where the two agree", () => {
+		const dependencies = { cssnano: "7.1.9", esbuild: "0.25.12" };
+		expect(corpusDrift({ dependencies }, lockOf(dependencies))).toEqual([]);
+	});
+
+	// What Dependabot opened: the pins moved and the lockfile stayed where it
+	// was, which is the one thing `npm ci` will not install.
+	it("names a pin the lockfile was never regenerated for", () => {
+		expect(
+			corpusDrift(
+				{ dependencies: { cssnano: "9.0.5", esbuild: "0.25.12" } },
+				lockOf({ cssnano: "7.1.9", esbuild: "0.25.12" })
+			)
+		).toEqual([{ name: "cssnano", asked: "9.0.5", locked: "7.1.9" }]);
+	});
+
+	it("names a package one side has and the other does not", () => {
+		expect(
+			corpusDrift({ dependencies: { added: "1.0.0" } }, lockOf({}))
+		).toEqual([{ name: "added", asked: "1.0.0", locked: undefined }]);
+		expect(
+			corpusDrift({ dependencies: {} }, lockOf({ dropped: "1.0.0" }))
+		).toEqual([{ name: "dropped", asked: undefined, locked: "1.0.0" }]);
+	});
+
+	// The list and the tree are two records of the same thing, and `npm ci`
+	// installs the tree, so a tree that drifted from the list is drift too.
+	it("reads the version the tree carries, not only the list", () => {
+		expect(
+			corpusDrift(
+				{ dependencies: { cssnano: "7.1.9" } },
+				lockOf({ cssnano: "7.1.9" }, { cssnano: "7.1.8" })
+			)
+		).toEqual([{ name: "cssnano", asked: "7.1.9", locked: "7.1.8" }]);
+	});
+
+	it("reads a corpus that declares nothing as agreeing", () => {
+		expect(corpusDrift({}, { lockfileVersion: 3 })).toEqual([]);
+	});
+});
+
+describe("driftMessage", () => {
+	/**
+	 * @param {number} count how many packages disagree
+	 * @returns {import("../../tooling/compare-tools-harness").Drift[]} them
+	 */
+	const drifted = (count) =>
+		Array.from({ length: count }, (_value, index) => ({
+			name: `package-${index}`,
+			asked: "2.0.0",
+			locked: "1.0.0"
+		}));
+
+	it("names the corpus, what moved, and the command that fixes it", () => {
+		const text = driftMessage("css-tool-comparison", drifted(1));
+		expect(text).toContain(
+			"tooling/comparison/css-tool-comparison/package.json and package-lock.json disagree"
+		);
+		expect(text).toContain("package-0  package.json 2.0.0, lockfile 1.0.0");
+		expect(text).toContain(
+			"cd tooling/comparison/css-tool-comparison && npm install --package-lock-only"
+		);
+	});
+
+	// The report npm writes runs to hundreds of lines, which is what this one
+	// replaces: past a handful the names stop telling a reader anything new.
+	it("counts the rest rather than printing them", () => {
+		const text = driftMessage("js-tool-comparison", drifted(14));
+		expect(text).toContain("14 packages the two name differently");
+		expect(text).toContain("package-9  package.json 2.0.0");
+		expect(text).not.toContain("package-10 ");
+		expect(text).toContain("… and 4 more");
+	});
+
+	it("says which side a package is missing from", () => {
+		expect(
+			driftMessage("html-tool-comparison", [
+				{ name: "added", asked: "1.0.0", locked: undefined }
+			])
+		).toContain("added  package.json 1.0.0, lockfile (absent)");
+	});
+
+	// A retry costs the reader the report twice over and reaches the same
+	// answer, so the report says not to read the failure as a blip.
+	it("says a second attempt will not help", () => {
+		expect(driftMessage("css-tool-comparison", drifted(1))).toContain(
+			"This is not a flaky download"
+		);
+	});
+});
+
+describe("fail", () => {
+	/**
+	 * @param {EXPECTED_ANY} error what to end on
+	 * @returns {{ code: number | string | null | undefined, printed: string }} what it did
+	 */
+	const ending = (error) => {
+		const before = process.exitCode;
+		const written = jest.spyOn(process.stderr, "write").mockReturnValue(true);
+		try {
+			fail(error);
+			return {
+				code: process.exitCode,
+				printed: written.mock.calls.map(([text]) => String(text)).join("")
+			};
+		} finally {
+			written.mockRestore();
+			process.exitCode = before === null ? undefined : before;
+		}
+	};
+
+	// The message was written for a reader; the frames that carried it here
+	// name this file, which is not where anything is wrong.
+	it("prints the message alone, on the code it names", () => {
+		const { code, printed } = ending(
+			Object.assign(new Error("the corpus is out of date"), {
+				fatalExit: CONFIGURATION_EXIT_CODE
+			})
+		);
+		expect(code).toBe(CONFIGURATION_EXIT_CODE);
+		expect(printed).toBe("the corpus is out of date\n");
+	});
+
+	it("prints the stack of a defect, on 1", () => {
+		const { code, printed } = ending(new TypeError("x is not a function"));
+		expect(code).toBe(1);
+		expect(printed).toContain("TypeError: x is not a function");
+		expect(printed).toContain("CompareToolsHarness.unittest.js");
+	});
+
+	it("prints what was thrown where what was thrown is not an error", () => {
+		expect(ending("just a string").printed).toBe("just a string\n");
+		expect(ending(null).code).toBe(1);
+	});
+});
+
+describe("sweepVerdict", () => {
+	const BUILD = "yarn benchmark:html-tools:setup";
+
+	it("passes a whole corpus with nothing found", () => {
+		expect(sweepVerdict(0, [], ["--require-corpus"], BUILD)).toBe(
+			"\nPASSED: no findings, and every fixture was swept.\n"
+		);
+	});
+
+	// The line this exists for: "0 findings" was the last thing a gated run
+	// printed before exiting 1, and nothing above it said why.
+	it("says why a gated run fails on a corpus it could not read", () => {
+		const text = sweepVerdict(0, ["A", "B"], ["--require-corpus"], BUILD);
+		expect(text).toContain("FAILED: 2 fixtures were never built");
+		expect(text).toContain("--require-corpus");
+		expect(text).toContain(`Build them with \`${BUILD}\``);
+	});
+
+	it("says it in the singular for one fixture", () => {
+		const text = sweepVerdict(0, ["A"], ["--require-corpus"], BUILD);
+		expect(text).toContain("1 fixture was never built");
+		expect(text).toContain(`Build it with \`${BUILD}\``);
+	});
+
+	it("counts the findings a run has to answer for", () => {
+		expect(sweepVerdict(1, [], [], BUILD)).toContain(
+			"FAILED: 1 finding above to answer for."
+		);
+		expect(sweepVerdict(3, [], [], BUILD)).toContain(
+			"FAILED: 3 findings above to answer for."
+		);
+	});
+
+	it("says both where a gated run has both", () => {
+		const text = sweepVerdict(2, ["A"], ["--require-corpus"], BUILD);
+		expect(text).toContain("2 findings above to answer for");
+		expect(text).toContain("1 fixture was never built");
+	});
+
+	// Without the flag a short corpus is what a contributor gets, so it passes
+	// — and the verdict says what it did not read rather than implying it did.
+	it("passes a run that lost a fixture without the flag, and says so", () => {
+		const text = sweepVerdict(0, ["A", "B"], ["--invariants"], BUILD);
+		expect(text).toContain("PASSED: no findings.");
+		expect(text).toContain("2 fixtures were never built and so were not swept");
+		expect(text).toContain("pass --require-corpus");
 	});
 });

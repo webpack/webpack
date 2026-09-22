@@ -135,22 +135,32 @@ jobs:
       # stays clean. Retried rather than tolerated, a registry blip being the
       # only reason it fails.
       - name: Install the CSS comparison corpus
+        id: css-corpus
         run: node tooling/retry.js yarn benchmark:css-tools:setup
 
+      # `!cancelled()`, so a CSS corpus that would not install still leaves the
+      # HTML one installed and its sweep below able to say something.
       - name: Install the HTML comparison corpus
+        id: html-corpus
+        if: ${{ !cancelled() }}
         run: node tooling/retry.js yarn benchmark:html-tools:setup
 
       # `--require-corpus`: without it a sweep that lost a fixture reports the
       # findings of the ones it kept and passes, which is coverage lost with
       # nothing to read it off.
+      #
+      # Gated on the install its corpus came from, so a run that has no corpus
+      # reds once, where the reason is, instead of a second time under a sweep
+      # that was only ever going to say the corpus is not there.
       - name: CSS printer invariants
+        if: ${{ !cancelled() && steps.css-corpus.outcome == 'success' }}
         run: yarn test:invariants:css --require-corpus
 
       # A CSS finding must not hide an HTML one: each names a repro of its own
       # and both are read in the same sitting. `!cancelled()` rather than
       # `always()`, so a cancelled run stops here instead of sweeping again.
       - name: HTML printer invariants
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.html-corpus.outcome == 'success' }}
         run: yarn test:invariants:html --require-corpus
 
   validate-legacy-node:

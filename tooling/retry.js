@@ -15,6 +15,14 @@ const DEFAULT_ATTEMPTS = 3;
 const DEFAULT_DELAY = 5000;
 const MAX_TIMEOUT = 2147483647;
 
+// What a command exits with to say the tree as committed is what is wrong,
+// not the network — `tooling/compare-tools-harness.js` ends on it for a corpus
+// whose lockfile was never regenerated. 78 is the conventional one for that.
+
+// Retrying one of those reaches the same answer three times over, and prints
+// the report that says what to fix three times with it.
+const CONFIGURATION_EXIT_CODE = 78;
+
 /**
  * Reads how many times to run the command.
  * @param {string | undefined} value what `RETRY_ATTEMPTS` was set to
@@ -108,7 +116,7 @@ const retry = async (command, args, options) => {
 	for (let attempt = 1; ; attempt++) {
 		const code = await run(command, args);
 		if (code === 0) return 0;
-		if (attempt >= attempts) return code;
+		if (code === CONFIGURATION_EXIT_CODE || attempt >= attempts) return code;
 		const wait = backoffFor(delay, attempt);
 		console.error(
 			`retry: "${label}" exited with ${code} on attempt ${attempt} of ${attempts}, retrying in ${wait}ms`
@@ -153,6 +161,7 @@ const runAsScript = (argv, env) =>
 		});
 
 module.exports = {
+	CONFIGURATION_EXIT_CODE,
 	backoffFor,
 	main,
 	readAttempts,
