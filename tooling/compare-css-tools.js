@@ -39,10 +39,19 @@ const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
 const {
 	NodeType,
+	TT_AT_KEYWORD,
+	TT_DIMENSION,
 	TT_EOF,
+	TT_FUNCTION,
+	TT_HASH,
+	TT_IDENTIFIER,
+	TT_NUMBER,
+	TT_PERCENTAGE,
+	TT_STRING,
 	TT_WHITESPACE,
 	TokenStream,
-	pickTransforms
+	pickTransforms,
+	unescapeIdentifier
 } = require("../lib/css/syntax-parser");
 const {
 	STAGES,
@@ -64,13 +73,17 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
+	oneLine,
 	pathSpanWalk,
 	purityRelation,
 	run,
+	shrink,
+	signed,
 	sliceRelation,
 	spans,
 	sweepExitCode,
-	sweepMode
+	sweepMode,
+	thrownText
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -760,7 +773,9 @@ const runDigest = (runs, at) => {
 	for (let index = at - node.size + 1; index <= at; index++) {
 		const one = runs[index];
 		out.push(
-			`${NODE_TYPE_NAMES[one.type]}[${one.start - node.start},${one.end - node.start})`
+			`${NODE_TYPE_NAMES[one.type]}[${one.start - node.start},${
+				one.end - node.start
+			})`
 		);
 	}
 	return out.join(" ");
@@ -868,7 +883,353 @@ const cssPurityDigest = (css, print) => {
 	return digest.hex();
 };
 
+/**
+ * What a stylesheet says, token by token, with each one's value as the parser
+ * resolves it rather than as the source wrote it: an escape resolved, a string
+ * without its delimiters, a number as its value and its unit folded.
+ *
+ * WHY: this is what a respelling has to be judged against. The raw stream
+ * `idempotence` reads would call `8PX` and `8px`, or `"a"` and `'a'`, two
+ * different outputs — so every respelling would report the printer for keeping
+ * a spelling that says exactly what the other one says.
+ * @param {string} css a stylesheet
+ * @returns {string} its meaning, as the JSON of every token in order
+ */
+const tokenMeaning = (css) => {
+	const stream = new TokenStream(css);
+	/** @type {string[]} */
+	const out = [];
+	for (;;) {
+		const token = stream.consume();
+		if (token.type === TT_EOF) break;
+		const text = css.slice(token.start, token.end);
+		out.push(`${token.type}:${canonicalToken(token.type, text, token)}`);
+	}
+	return JSON.stringify(out);
+};
+
+/**
+ * One token's value as the parser resolves it.
+ * @param {number} type which token it is
+ * @param {string} text the token as the source spelled it
+ * @param {EXPECTED_ANY} token the token, for a dimension's unit
+ * @returns {string} its value
+ */
+const canonicalToken = (type, text, token) => {
+	if (type === TT_IDENTIFIER) return unescapeIdentifier(text);
+	// The sigil is not part of the name, and an at-rule name is matched
+	// case-insensitively where an identifier is not.
+	if (type === TT_AT_KEYWORD) {
+		return unescapeIdentifier(text.slice(1)).toLowerCase();
+	}
+	if (type === TT_HASH) return unescapeIdentifier(text.slice(1));
+	if (type === TT_FUNCTION) {
+		return unescapeIdentifier(text.slice(0, -1)).toLowerCase();
+	}
+	if (type === TT_STRING) return unescapeIdentifier(text.slice(1, -1));
+	if (type === TT_DIMENSION) {
+		const at = token.unitStart - token.start;
+		return `${Number(text.slice(0, at))}${text.slice(at).toLowerCase()}`;
+	}
+	if (type === TT_NUMBER || type === TT_PERCENTAGE) {
+		return String(Number(type === TT_PERCENTAGE ? text.slice(0, -1) : text));
+	}
+	return text;
+};
+
+/**
+ * @typedef {object} Site
+ * @property {number} start where the token begins
+ * @property {number} end where it ends
+ * @property {number} type which token it is
+ * @property {string} text the token as the source spelled it
+ * @property {number} unitStart where a dimension's unit begins, or -1
+ */
+
+/**
+ * Where a custom property's value sits. Its value is an arbitrary token stream
+ * the spec keeps as authored — `var()` substitutes it into somewhere else, so
+ * nothing may normalize it — which makes it the one region where how something
+ * was spelled decides the output on purpose.
+ * @param {string} css a stylesheet
+ * @returns {[number, number][]} each range, in source order
+ */
+const customPropertyRanges = (css) => {
+	/** @type {[number, number][]} */
+	const ranges = [];
+	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	const visitors = {
+		[NodeType.Declaration]: {
+			enter: () => {},
+			exit: (nodePath) => {
+				if (nodePath.name().startsWith("--")) {
+					ranges.push([nodePath.start(), nodePath.end()]);
+				}
+			}
+		}
+	};
+	new SourceProcessor().use(visitors).process(css, {});
+	return ranges;
+};
+
+/**
+ * Every token a respelling could rewrite, in source order.
+ * @param {string} css a stylesheet
+ * @returns {Site[]} the sites
+ */
+const cssSites = (css) => {
+	const kept = customPropertyRanges(css);
+	const stream = new TokenStream(css);
+	/** @type {Site[]} */
+	const sites = [];
+	// Both are in source order, so the ranges are walked alongside the tokens
+	// rather than searched for each one: a stylesheet of custom properties holds
+	// thousands, and asking every token about all of them is quadratic.
+	let range = 0;
+	for (;;) {
+		const token = stream.consume();
+		if (token.type === TT_EOF) break;
+		while (range < kept.length && kept[range][1] <= token.start) range++;
+		if (range < kept.length && token.start >= kept[range][0]) continue;
+		sites.push({
+			start: token.start,
+			end: token.end,
+			type: token.type,
+			text: css.slice(token.start, token.end),
+			unitStart: token.type === TT_DIMENSION ? token.unitStart : -1
+		});
+	}
+	return sites;
+};
+
+/**
+ * One character of an identifier written as the escape §4.3.7 resolves to the
+ * same character, which is the spelling a minifier comparing raw text misses.
+ * @param {string} name an identifier, or the name part of one
+ * @returns {string | null} it with its first ASCII letter escaped, or null
+ */
+const asEscaped = (name) => {
+	const at = name.search(/[a-z]/i);
+	if (at === -1) return null;
+	const code = name.charCodeAt(at).toString(16);
+	// The space ends the escape, so the character after it stays its own.
+	return `${name.slice(0, at)}\\${code} ${name.slice(at + 1)}`;
+};
+
+/**
+ * @param {string} text a string token as written, delimiters included
+ * @param {string} quote the delimiter to write it with
+ * @returns {string | null} the same string under that delimiter, or null
+ */
+const asQuoted = (text, quote) => {
+	const had = text[0];
+	if (had !== '"' && had !== "'") return null;
+	if (had === quote) return null;
+	// Unterminated at end of input: re-delimiting it would close it.
+	if (text.length < 2 || text[text.length - 1] !== had) return null;
+	const body = text.slice(1, -1);
+	// Already escaped for the old delimiter, and the new one is not escaped at
+	// all: both would have to be rewritten, so leave those alone.
+	if (body.includes("\\") || body.includes(quote)) return null;
+	return `${quote}${body}${quote}`;
+};
+
+/**
+ * @typedef {object} Respelling
+ * @property {string} name how the row is labelled
+ * @property {(site: Site) => string | null} write the token's new source text, or null to leave it alone
+ */
+
+/**
+ * Each writes the same value a different way, which the spec says in so many
+ * words: §4.3.7 for an escape, an ASCII case-insensitive match for a unit and
+ * an at-rule name.
+ *
+ * WHY: an identifier is deliberately not case-respelled, though a property name
+ * and a keyword are case-insensitive too. Which of those an identifier is
+ * depends on where it sits, and a class, an id, a custom property, a font
+ * family and a counter name are all case-sensitive — so a case respelling there
+ * would report the printer for keeping a distinction the source made.
+ * @type {Respelling[]}
+ */
+const CSS_RESPELLINGS = [
+	{
+		name: "escape",
+		write: (site) => (site.type === TT_IDENTIFIER ? asEscaped(site.text) : null)
+	},
+	{
+		name: "quote-double",
+		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, '"') : null)
+	},
+	{
+		name: "quote-single",
+		write: (site) => (site.type === TT_STRING ? asQuoted(site.text, "'") : null)
+	},
+	{
+		name: "leading-zero",
+		write: (site) => {
+			if (site.type !== TT_NUMBER && site.type !== TT_DIMENSION) return null;
+			const written = site.text.replace(/^([+-]?)\./, "$10.");
+			return written === site.text ? null : written;
+		}
+	},
+	{
+		name: "unit-case",
+		write: (site) => {
+			if (site.unitStart === -1) return null;
+			const unit = site.text.slice(site.unitStart - site.start);
+			const upper = unit.toUpperCase();
+			return upper === unit
+				? null
+				: `${site.text.slice(0, site.unitStart - site.start)}${upper}`;
+		}
+	},
+	{
+		name: "at-keyword-case",
+		write: (site) => {
+			if (site.type !== TT_AT_KEYWORD) return null;
+			const upper = site.text.toUpperCase();
+			return upper === site.text ? null : upper;
+		}
+	}
+];
+
+// A divergence the printer has not answered for yet, with what it is. Read by
+// the report and the gate: an entry matching nothing is itself a finding, so
+// the fix retires its entry rather than leaving it to rot.
+/** @type {import("./compare-tools-harness").Expected[]} */
+const EXPECTED = [
+	{
+		relation: "respelling escape",
+		// Every one of them writes an escape, and nothing else in this relation
+		// does, so the backslash is what they have in common.
+		contains: "\\",
+		why: "a defect, not something owed nothing: a property name is looked up as the source spelled it, so `\\66 ont-weight:bold` keeps `bold` where `font-weight:bold` folds to `700`, and a box shorthand written that way collapses to `0 0 0 0` rather than `0`. The lookups have to read the unescaped name. Retire this entry with that fix"
+	},
+	{
+		relation: "respelling leading-zero",
+		contains: "-> 0",
+		why: "two places where a number is not normalized at all, so the source's leading zero survives: exponent form, where `opacity:0.2e2` keeps every byte and `20` would do, and an `@supports` prelude, which is kept as authored since it is a feature test rather than a declaration to print. The first is a gap to close with the escape fix; the second is a judgement to confirm before changing"
+	}
+];
+
+/**
+ * @param {string} css a stylesheet
+ * @param {Site[]} sites the sites to respell
+ * @param {Respelling} respelling how to respell them
+ * @returns {string} the stylesheet, respelled
+ */
+const respell = (css, sites, respelling) => {
+	let out = "";
+	let read = 0;
+	for (const site of sites) {
+		const written = respelling.write(site);
+		if (written === null) continue;
+		out += css.slice(read, site.start) + written;
+		read = site.end;
+	}
+	return out + css.slice(read);
+};
+
+/** @typedef {{ kind: "differs" | "bytes" | "throws", delta: number, note: string }} Finding */
+
+/**
+ * Whether respelling these sites moved the output, and how. An output of the
+ * same length saying the same thing is not a finding: webpack keeps the
+ * source's spelling where nothing beats it.
+ * @param {(css: string) => string} minify the printer under test
+ * @param {string} css a stylesheet
+ * @param {string} minified what it minifies to
+ * @param {Site[]} sites the sites to respell
+ * @param {Respelling} respelling how to respell them
+ * @returns {Finding | null} what moved, or null
+ */
+const spellingFinding = (minify, css, minified, sites, respelling) => {
+	const mutated = respell(css, sites, respelling);
+	if (mutated === css) return null;
+	// Verified against the tokenizer rather than argued for: a respelling that
+	// moved the stylesheet is dropped instead of reported.
+	if (tokenMeaning(mutated) !== tokenMeaning(css)) return null;
+	/** @type {string} */
+	let answer;
+	try {
+		answer = minify(mutated);
+	} catch (error) {
+		return { kind: "throws", delta: 0, note: thrownText(error) };
+	}
+	if (answer === minified) return null;
+	const says = tokenMeaning(answer) !== tokenMeaning(minified);
+	if (!says && answer.length === minified.length) return null;
+	return {
+		kind: says ? "differs" : "bytes",
+		delta: answer.length - minified.length,
+		note: ""
+	};
+};
+
+/**
+ * What the report shows for a set of sites: how they were written, and how the
+ * respelling writes them.
+ * @param {Site[]} sites the sites carrying the finding
+ * @param {Respelling} respelling how they are respelled
+ * @returns {string} the repro
+ */
+const reproOf = (sites, respelling) =>
+	`    ${oneLine(sites.map((site) => site.text).join(" "), 76)}\n      -> ${oneLine(
+		sites.map((site) => respelling.write(site) || site.text).join(" "),
+		76
+	)}`;
+
+/**
+ * Every respelling this stylesheet's output depends on.
+ * @param {(css: string) => string} minify the printer under test
+ * @param {string} css a stylesheet
+ * @param {string} minified what it minifies to
+ * @returns {import("./compare-tools-harness").Report[]} what moved, and the smallest repro found for each
+ */
+const sweepRespellings = (minify, css, minified) => {
+	/** @type {import("./compare-tools-harness").Report[]} */
+	const reports = [];
+	const sites = cssSites(css);
+	for (const respelling of CSS_RESPELLINGS.filter((one) =>
+		wantedSpelling(one.name)
+	)) {
+		/**
+		 * @param {Site[]} subset the sites to respell
+		 * @returns {Finding | null} what moved
+		 */
+		const holds = (subset) =>
+			spellingFinding(minify, css, minified, subset, respelling);
+		const found = holds(sites);
+		if (found === null) continue;
+		const relation = `respelling ${respelling.name}`;
+		// Bisecting costs a minify of the whole stylesheet per step, and it is
+		// there to name a repro for something that needs looking at. A divergence
+		// already answered for needs none, so the sites it was found over stand.
+		const answered = EXPECTED.some(
+			(entry) =>
+				entry.relation === relation &&
+				reproOf(sites, respelling).includes(entry.contains)
+		);
+		const carried =
+			found.kind === "throws" || answered
+				? sites
+				: shrink(holds, sites, found.kind);
+		const blamed = (carried === sites ? found : holds(carried)) || found;
+		reports.push({
+			relation,
+			what:
+				blamed.kind === "throws"
+					? `threw: ${blamed.note}`
+					: `${blamed.kind}, ${signed(blamed.delta)}`,
+			repro: reproOf(carried, respelling)
+		});
+	}
+	return reports;
+};
+
 const wantedRelation = filterFrom("RELATION");
+const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
 
 /**
@@ -917,7 +1278,15 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	const groups = findingGroups();
+	// Filtered like the corpus is: an expectation for a relation this run was
+	// never going to reach matched nothing because nothing asked it to, which is
+	// not the divergence having gone away.
+	const groups = findingGroups(
+		EXPECTED.filter(
+			(entry) =>
+				wantedRelation(entry.relation) && wantedSpelling(entry.relation)
+		)
+	);
 	// Nothing is printed to reach this one, so it is read under no preset: what
 	// the parser said about the stylesheet it was handed.
 	if (wantedRelation("spans")) {
@@ -959,18 +1328,30 @@ const invariants = (write) => {
 		}
 		log(`read ${read} stylesheets twice over …`);
 	}
-	if (wantedRelation("idempotence")) {
+	// The printer's two relations share a sweep: both need the output, and
+	// printing it twice to ask two questions of it would double the run.
+	const wantsIdempotence = wantedRelation("idempotence");
+	const wantsRespelling = wantedRelation("respelling");
+	if (wantsIdempotence || wantsRespelling) {
 		log(
 			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
 		);
 		for (const [label, css] of corpus) {
 			for (const [preset, options] of presets) {
-				const { reports } = idempotence({
-					minify: printerFor(options),
-					source: css,
-					says: tokenStream
-				});
+				const print = printerFor(options);
+				const { printed, reports } = wantsIdempotence
+					? idempotence({ minify: print, source: css, says: tokenStream })
+					: { printed: print(css), reports: [] };
 				for (const report of reports) groups.add(report, preset, label);
+				// Under the first preset only: whether a spelling decides the
+				// output is the same question under every option set, and each
+				// asking of it is a full minify of the whole stylesheet.
+				if (printed === null || !wantsRespelling || preset !== presets[0][0]) {
+					continue;
+				}
+				for (const report of sweepRespellings(print, css, printed)) {
+					groups.add(report, preset, label);
+				}
 			}
 		}
 	}
