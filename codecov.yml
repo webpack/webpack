@@ -35,6 +35,12 @@ ignore:
   - "**/*.runtime.js"
   - "schemas/**/*"
   - "examples/**/*"
+  # Benchmark harnesses, not code webpack ships: what they measure is another
+  # tool, and most of each one is only reachable from a ten-minute sweep or a
+  # spawned worker. A test that loads one entered its whole file in the metric.
+  - "tooling/compare-css-tools.js"
+  - "tooling/compare-html-tools.js"
+  - "tooling/compare-js-tools.js"
   # TODO in the next major release: remove
   - "lib/template/ChunkTemplate.js"
   - "lib/template/MainTemplate.js"
