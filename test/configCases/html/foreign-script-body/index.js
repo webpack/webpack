@@ -21,4 +21,8 @@ it("should read a foreign script body as character data", () => {
 	expect(chunk).toContain("1 < 2");
 	expect(chunk).not.toContain("&lt;");
 	expect(chunk).not.toMatch(/\blt\b/);
+	// Character data decodes a named reference the `=` after it would keep in
+	// an attribute, so the two contexts disagree on exactly this shape.
+	expect(chunk).toContain("\u00a9=1");
+	expect(chunk).not.toContain("&copy=1");
 });
