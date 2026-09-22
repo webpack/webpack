@@ -128,7 +128,7 @@ jobs:
           path: |
             node_modules/.cache/css-tool-comparison
             node_modules/.cache/html-tool-comparison
-          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/compare-css-tools.js', 'tooling/compare-html-tools.js') }}
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
 
       # Fatal here, unlike the equivalence job: that one reads whichever
       # fixtures are there, and this one is the check that the whole corpus
@@ -399,16 +399,16 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      # Keyed on the scripts that declare the package lists; a cache that
-      # predates a fixture being added is rebuilt by the install below, which
-      # reinstalls whenever the recorded list differs from the wanted one.
+      # Keyed on each corpus's manifest and lockfile; a cache predating an edit
+      # to either is rebuilt by the install below, which reinstalls whenever the
+      # recorded pair differs from the wanted one.
       - name: Cache the comparison corpus
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             node_modules/.cache/css-tool-comparison
             node_modules/.cache/html-tool-comparison
-          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/compare-css-tools.js', 'tooling/compare-html-tools.js') }}
+          key: comparison-corpus-${{ runner.os }}-${{ hashFiles('tooling/comparison/css-tool-comparison/package.json', 'tooling/comparison/css-tool-comparison/package-lock.json', 'tooling/comparison/html-tool-comparison/package.json', 'tooling/comparison/html-tool-comparison/package-lock.json') }}
 
       # The third corpus: the framework stylesheets and documents the tool
       # comparisons install. Not fatal — the suite reads whichever fixtures are

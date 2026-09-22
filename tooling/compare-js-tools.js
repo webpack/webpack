@@ -58,46 +58,6 @@ const SOURCE_TYPE_VARIABLE = "COMPARE_JS_SOURCE_TYPE";
 const sourceType = () =>
 	process.env[SOURCE_TYPE_VARIABLE] === "module" ? "module" : "script";
 
-const PACKAGES = [
-	"@babel/generator@7",
-	"@babel/parser@7",
-	"@babel/standalone@7",
-	"@swc/core@1",
-	"@tdewolff/minify@2",
-	"acorn@8",
-	"astring@1",
-	"axios@1",
-	"bootstrap@5",
-	"chart.js@4",
-	"core-js-bundle@3",
-	"d3@7",
-	"echarts@6",
-	"escodegen@2",
-	"esbuild@0.25",
-	"espree@11",
-	"esprima@4",
-	"hermes-parser@0.37",
-	"jquery@3",
-	"lodash@4",
-	"meriyah@7",
-	"immutable@5",
-	"moment@2",
-	"oxc-minify@0.149",
-	"oxc-parser@0.149",
-	"pdfjs-dist@6",
-	"preact@10",
-	"prettier@3",
-	"react-dom@18",
-	"react@18",
-	"rxjs@7",
-	"swagger-ui-dist@5",
-	"terser@5",
-	"three@0.185",
-	"typescript@5",
-	"uglify-js@3",
-	"vue@3"
-];
-
 // Bundles as they ship: the ES5 ones every site still loads, the modern ones
 // written in classes and modules, and two that dwarf both.
 
@@ -696,7 +656,7 @@ const header = (stage) =>
 			)}   round-trip\n`;
 
 const main = async () => {
-	await installPackages(CACHE_NAME, PACKAGES);
+	await installPackages(CACHE_NAME);
 	const acorn = load("acorn");
 	for (const [label, file, goal] of fixtures().filter(([name]) =>
 		wantedFixture(/** @type {string} */ (name))

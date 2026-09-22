@@ -12,6 +12,7 @@
 // installs its own into `node_modules/.cache/`, never webpack's own tree.
 
 const { spawn } = require("child_process");
+const { createHash } = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
@@ -71,42 +72,59 @@ const run = (command, args, options) =>
 	});
 
 /**
- * Install the comparison packages under `node_modules/.cache/<name>`, reusing
- * what is there unless the list changed.
+ * Where a corpus is declared: `tooling/comparison/<name>/`, holding the
+ * package.json a comparison installs and the lockfile pinning what that
+ * resolves to.
+ * @param {string} name cache directory name, which is also the corpus directory
+ * @returns {string} the corpus directory
+ */
+const corpusDirectory = (name) => path.join(ROOT, "tooling/comparison", name);
+
+// What a corpus is declared by, and so what decides whether one is current.
+const MANIFEST_FILES = ["package.json", "package-lock.json"];
+
+/**
+ * Install a corpus under `node_modules/.cache/<name>` from its committed
+ * manifest, reusing what is there while the lockfile it was installed from
+ * still matches.
  * @param {string} name cache directory name
- * @param {string[]} packages what to install
  * @returns {Promise<string>} the cache directory
  */
-const installPackages = async (name, packages) => {
+const installPackages = async (name) => {
+	const source = corpusDirectory(name);
 	const cache = path.join(ROOT, "node_modules/.cache", name);
 	const modules = path.join(cache, "node_modules");
-	const manifest = path.join(cache, "package.json");
-	// Reinstall when the list changes, so an existing cache picks up newly added
-	// fixtures instead of failing on their missing files.
-	const installed =
-		(await exists(modules)) && (await exists(manifest))
-			? JSON.parse(await fs.promises.readFile(manifest, "utf8"))
-					.comparisonPackages
-			: undefined;
-	if (JSON.stringify(installed) === JSON.stringify(packages)) return cache;
-	log(`installing comparison packages into ${path.relative(ROOT, cache)} …`);
-	await fs.promises.mkdir(cache, { recursive: true });
-	if (!(await exists(manifest))) {
-		await fs.promises.writeFile(
-			manifest,
-			`${JSON.stringify({ name, private: true }, null, 2)}\n`
-		);
+	// What this cache was last installed from, written only once the install
+	// succeeded — a restored cache reinstalls nothing, a stale one does.
+	const stamp = path.join(cache, ".corpus-lock");
+	// Both files, because either one alone decides too little: a manifest edited
+	// without regenerating the lockfile is what `npm ci` refuses, and reading the
+	// lockfile only would skip the install that would have refused it.
+	const identity = createHash("sha256");
+	for (const file of MANIFEST_FILES) {
+		identity.update(await fs.promises.readFile(path.join(source, file)));
+		identity.update("\0");
 	}
-	await run("npm", ["install", "--no-audit", "--no-fund", ...packages], {
-		cwd: cache
-	});
-	// Recorded only after the install succeeded.
-	const written = JSON.parse(await fs.promises.readFile(manifest, "utf8"));
-	written.comparisonPackages = packages;
-	await fs.promises.writeFile(
-		manifest,
-		`${JSON.stringify(written, null, 2)}\n`
-	);
+	const wanted = identity.digest("hex");
+	const installed =
+		(await exists(modules)) && (await exists(stamp))
+			? await fs.promises.readFile(stamp, "utf8")
+			: undefined;
+	if (installed === wanted) return cache;
+	log(`installing comparison packages into ${path.relative(ROOT, cache)} …`);
+	// `npm ci` refreshes `node_modules` alone, so a stylesheet the last corpus
+	// generated would outlive the tool that wrote it and pass for current under
+	// the new stamp. Everything here is derived, so none of it survives.
+	await fs.promises.rm(cache, { recursive: true, force: true });
+	await fs.promises.mkdir(cache, { recursive: true });
+	// `npm ci` reads both out of its working directory and installs exactly what
+	// the lockfile names, so the corpus is what was committed rather than
+	// whatever the registry serves today.
+	for (const file of MANIFEST_FILES) {
+		await fs.promises.copyFile(path.join(source, file), path.join(cache, file));
+	}
+	await run("npm", ["ci", "--no-audit", "--no-fund"], { cwd: cache });
+	await fs.promises.writeFile(stamp, wanted);
 	return cache;
 };
 

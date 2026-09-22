@@ -1,0 +1,32 @@
+{
+  "name": "html-tool-comparison",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The HTML tools and fixtures tooling/compare-html-tools.js compares against. Not a webpack dependency: installed into node_modules/.cache/ on demand.",
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "6.7.2",
+    "@minify-html/node": "0.18.1",
+    "@picocss/pico": "2.1.1",
+    "@swc/html": "1.16.2",
+    "angular-html-parser": "9.3.0",
+    "bootstrap": "5.3.8",
+    "cssnano": "7.1.9",
+    "dom-serializer": "2.0.0",
+    "html-minifier-next": "8.5.3",
+    "html-minifier-terser": "7.2.0",
+    "html5-boilerplate": "9.0.1",
+    "htmlnano": "2.1.5",
+    "htmlparser2": "10.1.0",
+    "js-beautify": "1.15.4",
+    "linkedom": "0.18.13",
+    "marked": "15.0.12",
+    "node-html-parser": "7.1.0",
+    "parse5": "7.3.0",
+    "postcss": "8.5.28",
+    "prettier": "3.9.8",
+    "svgo": "3.3.5",
+    "swagger-ui-dist": "5.33.0",
+    "water.css": "2.1.1"
+  }
+}

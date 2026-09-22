@@ -1,4 +1,6 @@
 package.json
+# npm writes these; reformatting one only makes the next `npm ci` rewrite it.
+package-lock.json
 
 # Ignore some test files
 test/**/*.*

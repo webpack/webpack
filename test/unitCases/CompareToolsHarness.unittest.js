@@ -1,5 +1,6 @@
 "use strict";
 
+const { createHash } = require("crypto");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
@@ -326,7 +327,10 @@ describe("compare-tools-harness", () => {
 		const NAMES = [
 			"compare-tools-harness-unittest-warm",
 			"compare-tools-harness-unittest-cold",
-			"compare-tools-harness-unittest-failed"
+			"compare-tools-harness-unittest-failed",
+			"compare-tools-harness-unittest-moved",
+			"compare-tools-harness-unittest-derived",
+			"compare-tools-harness-unittest-manifest"
 		];
 
 		/**
@@ -345,13 +349,38 @@ describe("compare-tools-harness", () => {
 		const npmRan = (name) => fs.existsSync(path.join(cacheFor(name), RAN));
 
 		/**
-		 * @param {string} name which cache
-		 * @returns {EXPECTED_ANY} the manifest it holds
+		 * @param {string} name which corpus
+		 * @returns {string} where its committed manifest lives
 		 */
-		const manifestOf = (name) =>
-			JSON.parse(
-				fs.readFileSync(path.join(cacheFor(name), "package.json"), "utf8")
-			);
+		const corpusFor = (name) =>
+			path.resolve(__dirname, "../..", "tooling/comparison", name);
+
+		/**
+		 * Write a corpus of the shape `installPackages` reads: the manifest and the
+		 * lockfile, whose contents together decide whether an install is owed.
+		 * @param {string} name which corpus
+		 * @param {string} lock what its lockfile says
+		 * @param {string=} manifest what its package.json says
+		 * @returns {string} the hash a matching stamp would carry
+		 */
+		const writeCorpus = (name, lock, manifest) => {
+			const written = manifest || JSON.stringify({ name, private: true });
+			fs.mkdirSync(corpusFor(name), { recursive: true });
+			fs.writeFileSync(path.join(corpusFor(name), "package.json"), written);
+			fs.writeFileSync(path.join(corpusFor(name), "package-lock.json"), lock);
+			const identity = createHash("sha256");
+			for (const part of [written, lock]) identity.update(part).update("\0");
+			return identity.digest("hex");
+		};
+
+		/**
+		 * @param {string} name which cache
+		 * @returns {string | undefined} the lockfile hash it was installed from
+		 */
+		const stampOf = (name) => {
+			const stamp = path.join(cacheFor(name), ".corpus-lock");
+			return fs.existsSync(stamp) ? fs.readFileSync(stamp, "utf8") : undefined;
+		};
 
 		/**
 		 * Run with an `npm` of our own first on `PATH`, so nothing is fetched.
@@ -389,6 +418,7 @@ describe("compare-tools-harness", () => {
 		const clearCaches = () => {
 			for (const name of NAMES) {
 				fs.rmSync(cacheFor(name), { recursive: true, force: true });
+				fs.rmSync(corpusFor(name), { recursive: true, force: true });
 			}
 		};
 
@@ -398,49 +428,105 @@ describe("compare-tools-harness", () => {
 
 		afterAll(clearCaches);
 
-		// Nothing is installed here: the manifest already lists what was asked
-		// for, which is the branch that keeps a re-run from reaching npm.
-		posixOnly(
-			"reuses a cache whose manifest lists the same packages",
-			async () => {
-				const [name] = NAMES;
-				fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
-					recursive: true
-				});
-				fs.writeFileSync(
-					path.join(cacheFor(name), "package.json"),
-					JSON.stringify({
-						name,
-						comparisonPackages: ["left@1", "right@2"]
-					})
-				);
-				// The stand-in fails, so taking the install path would fail the case
-				// rather than reach the real npm and the network behind it.
-				await withStandInNpm(1, () =>
-					expect(installPackages(name, ["left@1", "right@2"])).resolves.toBe(
-						cacheFor(name)
-					)
-				);
-				expect(npmRan(name)).toBe(false);
-			}
-		);
+		// Nothing is installed here: the cache was installed from this very
+		// lockfile, which is the branch a restored CI cache takes.
+		posixOnly("reuses a cache whose stamp matches the lockfile", async () => {
+			const [name] = NAMES;
+			const hash = writeCorpus(name, '{"lockfileVersion":3,"warm":true}');
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			fs.writeFileSync(path.join(cacheFor(name), ".corpus-lock"), hash);
+			// The stand-in fails, so taking the install path would fail the case
+			// rather than reach the real npm and the network behind it.
+			await withStandInNpm(1, () =>
+				expect(installPackages(name)).resolves.toBe(cacheFor(name))
+			);
+			expect(npmRan(name)).toBe(false);
+		});
 
 		posixOnly("installs into a cache that has none of it yet", async () => {
 			const name = NAMES[1];
-			await withStandInNpm(0, () => installPackages(name, ["left@1"]));
+			const hash = writeCorpus(name, '{"lockfileVersion":3,"cold":true}');
+			await withStandInNpm(0, () => installPackages(name));
 			expect(npmRan(name)).toBe(true);
-			expect(manifestOf(name).comparisonPackages).toEqual(["left@1"]);
+			expect(stampOf(name)).toBe(hash);
+			// Both are what `npm ci` reads, so the install ran against the corpus
+			// as committed rather than against whatever the cache last held.
+			expect(
+				fs.existsSync(path.join(cacheFor(name), "package-lock.json"))
+			).toBe(true);
 		});
 
-		// The list is what a later run compares against, so recording it before
+		// The stamp is what a later run compares against, so writing it before
 		// the install succeeded would let a broken cache pass for a warm one.
 		posixOnly("records nothing when the install fails", async () => {
 			const name = NAMES[2];
+			writeCorpus(name, '{"lockfileVersion":3,"failed":true}');
 			await expect(
-				withStandInNpm(1, () => installPackages(name, ["right@2"]))
+				withStandInNpm(1, () => installPackages(name))
 			).rejects.toThrow("exited with 1");
 			expect(npmRan(name)).toBe(true);
-			expect(manifestOf(name).comparisonPackages).toBeUndefined();
+			expect(stampOf(name)).toBeUndefined();
+		});
+
+		// The manifest decides as much as the lockfile does: one edited without
+		// regenerating the other is what `npm ci` refuses, and a warm cache that
+		// read the lockfile alone would skip the install that would refuse it.
+		posixOnly("reinstalls when only the manifest moved", async () => {
+			const name = NAMES[5];
+			const lock = '{"lockfileVersion":3,"pinned":"1.0.0"}';
+			writeCorpus(name, lock, JSON.stringify({ name, asked: "1.0.0" }));
+			await withStandInNpm(0, () => installPackages(name));
+			const before = stampOf(name);
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			// The lockfile is byte-identical; only what the manifest asks for moved.
+			const after = writeCorpus(
+				name,
+				lock,
+				JSON.stringify({ name, asked: "1.0.1" })
+			);
+			expect(after).not.toBe(before);
+			fs.rmSync(path.join(cacheFor(name), RAN), { force: true });
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(after);
+		});
+
+		// A fixture the caller generated with the packages it installed is as
+		// stale as they are, and nothing else would clear it: `npm ci` rewrites
+		// `node_modules` alone, and the builder skips an output already there.
+		posixOnly("clears what the last corpus derived", async () => {
+			const name = NAMES[4];
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.0"}');
+			fs.mkdirSync(cacheFor(name), { recursive: true });
+			const derived = path.join(cacheFor(name), "tailwind-app.css");
+			fs.writeFileSync(derived, ".from-the-old-tailwind{}");
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
+			await withStandInNpm(0, () => installPackages(name));
+			expect(fs.existsSync(derived)).toBe(false);
+		});
+
+		// The case the lockfile exists for: Dependabot moves a pin, and a cache
+		// installed from the version before it is stale rather than warm.
+		posixOnly("reinstalls when the lockfile has moved", async () => {
+			const name = NAMES[3];
+			writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.0"}');
+			await withStandInNpm(0, () => installPackages(name));
+			const before = stampOf(name);
+			// The stand-in installs nothing, so the tree it would have written is
+			// what makes this cache warm — without it the stamp is never consulted.
+			fs.mkdirSync(path.join(cacheFor(name), "node_modules"), {
+				recursive: true
+			});
+			const after = writeCorpus(name, '{"lockfileVersion":3,"pinned":"1.0.1"}');
+			expect(after).not.toBe(before);
+			fs.rmSync(path.join(cacheFor(name), RAN), { force: true });
+			await withStandInNpm(0, () => installPackages(name));
+			expect(npmRan(name)).toBe(true);
+			expect(stampOf(name)).toBe(after);
 		});
 	});
 
