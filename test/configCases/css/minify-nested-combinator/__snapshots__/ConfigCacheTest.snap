@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minify-nested-combinator minify-nested-combinator should compile 1`] = `".a>.child{top:0}.b+.next{top:1px}.c~.later{top:2px}.d>.child{top:3px}.e || .col{top:4px}.f .inside{top:5px}:is(.g,.h)>.child{top:6px}.i>.child{top:7px}"`;

@@ -1,0 +1,19 @@
+/* A nested selector opening on a combinator is parted from its parent by that
+   combinator, and the printer writes those tight — so writing a space in front
+   of one leaves a space a second pass takes off. */
+.a { > .child { top: 0 } }
+.b { + .next { top: 1px } }
+.c { ~ .later { top: 2px } }
+
+/* However the source spaced it. */
+.d {   >   .child { top: 3px } }
+
+/* `||` is not one the printer writes tight, so neither is this. */
+.e { || .col { top: 4px } }
+
+/* A descendant is written with the space it means. */
+.f { .inside { top: 5px } }
+
+/* A parent written as a list, and a selector naming it itself. */
+.g, .h { > .child { top: 6px } }
+.i { &> .child { top: 7px } }

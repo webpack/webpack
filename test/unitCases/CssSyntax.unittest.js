@@ -10939,6 +10939,39 @@ describe("CssSyntax minify — the declaration a lowered shorthand kills", () =>
 	});
 });
 
+describe("CssSyntax minify — a nested selector opening on a combinator", () => {
+	const T = ["chrome 100"];
+
+	it.each([
+		["child", "a{>b{top:0}}", "a>b{top:0}"],
+		["next sibling", "a{+b{top:0}}", "a+b{top:0}"],
+		["subsequent sibling", "a{~b{top:0}}", "a~b{top:0}"]
+	])("writes the %s combinator tight, as the printer does", (_n, css, out) => {
+		expect(minifyFor(css, T)).toBe(out);
+	});
+
+	it("writes it tight however the source spaced it", () => {
+		expect(minifyFor("a{ > b{top:0}}", T)).toBe("a>b{top:0}");
+	});
+
+	it("keeps the space in front of a column combinator", () => {
+		// `||` is not one the printer writes tight, so neither is this.
+		expect(minifyFor("a{||b{top:0}}", T)).toBe("a ||b{top:0}");
+	});
+
+	it("keeps the space in front of a descendant", () => {
+		expect(minifyFor("a{b{top:0}}", T)).toBe("a b{top:0}");
+	});
+
+	it("writes a parent that is a list the same way", () => {
+		expect(minifyFor("a,e{>b{top:0}}", T)).toBe(":is(a,e)>b{top:0}");
+	});
+
+	it("leaves a selector naming the parent to the `&` it spells", () => {
+		expect(minifyFor("a{&>b{top:0}}", T)).toBe("a>b{top:0}");
+	});
+});
+
 describe("CssSyntax minify — nesting the target cannot read", () => {
 	it("writes a rule nested in another on its own", () => {
 		expect(minifyFor("a{color:red;& b{color:blue}}", ["chrome 100"])).toBe(
