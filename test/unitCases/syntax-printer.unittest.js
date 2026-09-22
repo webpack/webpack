@@ -2,7 +2,7 @@
 
 // cspell:ignore fnames
 
-const { load } = require("../../lib/javascript/syntax").printer;
+const { load, PHASES } = require("../../lib/javascript/syntax").printer;
 
 /**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
@@ -90,13 +90,16 @@ describe("syntax-printer", () => {
 	it("should install onto terser", async () => {
 		const terser = await load();
 		expect(typeof terser.minify).toBe("function");
-		// Deno cannot import terser's own sources here, so `load` hands back
-		// terser's published entry point with no phase of ours installed —
-		// the fallback every phase is written to allow.
+		// WHY: whether a runtime reaches terser's own sources is the one thing
+		// `load` is written to tolerate, and Deno reaches them only sometimes —
+		// so asserting either outcome there failed at random. What it owes
+		// everywhere is to install phases this build declares and nothing else;
+		// Node, which always reaches the sources, owes the whole set.
+		expect(PHASES.map((phase) => phase.name)).toEqual(
+			expect.arrayContaining(terser.phases)
+		);
 		if (!("Deno" in globalThis)) {
 			expect(terser.phases).toContain("mangle");
-		} else {
-			expect(terser.phases).toEqual([]);
 		}
 	});
 
