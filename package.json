@@ -205,7 +205,7 @@
     "node-gyp": "^13.0.0",
     "nyc": "^18.0.0",
     "open-cli": "^9.0.0",
-    "oxc-parser": "^0.149.0",
+    "oxc-parser": "^0.150.0",
     "pkg-pr-new": "^0.0.88",
     "playwright-core": "^1.63.0",
     "prettier": "^3.8.2",
