@@ -56,6 +56,16 @@ The directory listings below are the canonical map of the repository. **Whenever
 **Source**
 
 - `lib/` — Main source code (CommonJS only; types declared via JSDoc `@typedef`).
+  Its **root is the core** — what a build is made of (`Compilation`, `Compiler`,
+  `Dependency`, `MultiCompiler`) and what publishes it (`webpack.js`, `index.js`)
+  — alongside the re-export shims that hold the old `webpack/lib/<Name>` paths
+  open for the ecosystem. **A plugin never belongs there.** It goes in the
+  directory for what it acts on — the asset set in `lib/output/`, the module
+  graph in `lib/optimize/`, the entry in `lib/entry/` — and when nothing fits, a
+  new directory is added, with its bullet in this map, in the same commit. A file
+  that leaves the root owes a shim at its old path only once it has shipped under
+  it; `yarn find-deep-imports --check` and `deepPathShims.unittest.js` are what
+  say so.
   - `lib/asset/` — Asset modules (images, fonts, raw files); includes the `asset/webmanifest` type that parses `<link rel="manifest">` icon URLs.
   - `lib/async-modules/` — Top-level await.
   - `lib/bun/` — Bun target externals preset (`bun:*` and node.js built-in modules).
@@ -155,7 +165,10 @@ The directory listings below are the canonical map of the repository. **Whenever
     `output.path`, rather than the modules it writes them from: `CopyPlugin` adds
     to it and `CleanPlugin` prunes it — the two `output.copy` and `output.clean`
     turn on — while `BannerPlugin` rewrites what an asset holds and
-    `ManifestPlugin` emits a description of the rest. How a name or a format is
+    `ManifestPlugin` emits a description of the rest. `SSRManifestPlugin` emits
+    the description a server renders from: which client files each source module
+    needs, so an SSR response can name the stylesheet of a route the browser has
+    not asked for yet. How a name or a format is
     decided is not this: that is `lib/template/`, `lib/library/` and `lib/devtool/`.
   - `lib/performance/` — Asset/entrypoint size hints.
   - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
