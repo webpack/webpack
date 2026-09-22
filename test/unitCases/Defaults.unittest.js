@@ -688,6 +688,7 @@ describe("snapshots", () => {
 		        },
 		      },
 		      "chunks": "async",
+		      "dedupDepth": 0,
 		      "defaultSizeTypes": Array [
 		        "javascript",
 		        "css",
@@ -1981,6 +1982,7 @@ describe("snapshots", () => {
 			-   "mode": "none",
 			+   "mode": "development",
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
@@ -1994,14 +1996,13 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
 			+           },
-			@@ ... @@
+			+         ],
 			+       },
-			+     ],
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -2050,6 +2051,9 @@ describe("snapshots", () => {
 			+     "moduleIds": "named",
 			+     "nodeEnv": "development",
 			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
+			@@ ... @@
 			-       "minRemainingSize": undefined,
 			+       "minRemainingSize": 0,
 			@@ ... @@
@@ -2062,10 +2066,11 @@ describe("snapshots", () => {
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "myLib",
 			@@ ... @@
-			-     "enabledLibraryTypes": Array [],
+			+     ],
 			+     "enabledLibraryTypes": Array [
 			+       "var",
-			+     ],
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
@@ -4619,7 +4624,6 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
@@ -4637,6 +4641,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
+			+           },
 			@@ ... @@
 			+       },
 			+     ],
@@ -4667,6 +4672,9 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
 			@@ ... @@
 			-     "charset": true,
 			-     "chunkFilename": "[name].js",
@@ -4792,6 +4800,7 @@ describe("snapshots", () => {
 			-         },
 			-       },
 			-       "chunks": "async",
+			-       "dedupDepth": 0,
 			-       "defaultSizeTypes": Array [
 			-         "javascript",
 			-         "css",
@@ -5149,6 +5158,7 @@ describe("snapshots", () => {
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
@@ -5162,7 +5172,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -5193,6 +5203,9 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
 			@@ ... @@
 			-     "charset": true,
 			-     "chunkFilename": "[name].js",
@@ -5345,13 +5358,10 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			-         "type": "css/module",
-			-       },
-			-       Object {
+			@@ ... @@
 			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
+			@@ ... @@
 			-         },
 			-         "type": "css/global",
 			-       },
@@ -5373,17 +5383,30 @@ describe("snapshots", () => {
 			-         },
 			-         "parser": Object {
 			-           "exportType": "css-style-sheet",
+			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			-         },
+			-       },
+			-       Object {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
 			@@ ... @@
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			@@ ... @@
+			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -5393,14 +5416,6 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			-       },
-			-       Object {
-			-         "resolve": Object {
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
@@ -5412,19 +5427,12 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			@@ ... @@
-			-       "css/auto": Object {
-			-         "exportsConvention": "as-is",
-			-         "localIdentHashDigest": "base64url",
-			-         "localIdentHashDigestLength": 6,
-			-         "localIdentHashFunction": "md4",
-			-         "localIdentHashSalt": undefined,
-			-         "localIdentName": "[fullhash]",
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
 			@@ ... @@
-			-       "css/global": Object {
+			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
 			-         "localIdentHashDigest": "base64url",
 			-         "localIdentHashDigestLength": 6,
@@ -5435,7 +5443,7 @@ describe("snapshots", () => {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
 			@@ ... @@
-			-       "css/module": Object {
+			-       "css/global": Object {
 			-         "exportsConvention": "as-is",
 			-         "localIdentHashDigest": "base64url",
 			-         "localIdentHashDigestLength": 6,
@@ -5445,7 +5453,14 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
-			+           },
+			@@ ... @@
+			-       "css/module": Object {
+			-         "exportsConvention": "as-is",
+			-         "localIdentHashDigest": "base64url",
+			-         "localIdentHashDigestLength": 6,
+			-         "localIdentHashFunction": "md4",
+			-         "localIdentHashSalt": undefined,
+			-         "localIdentName": "[fullhash]",
 			+         ],
 			@@ ... @@
 			+     ],
@@ -5503,6 +5518,9 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-       "dedupDepth": 0,
+			+       "dedupDepth": 1,
 			@@ ... @@
 			-         "css",
 			@@ ... @@
@@ -5562,6 +5580,9 @@ describe("snapshots", () => {
 			+     "workerChunkFilename": "[name].mjs",
 			+     "workerChunkLoading": "import",
 			@@ ... @@
+			-           "...",
+			-         ],
+			-       },
 			-       "css-import": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -5589,11 +5610,10 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			-           "...",
-			-         ],
+			@@ ... @@
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			-       },
+			@@ ... @@
 			-       "css-import-local-module": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
