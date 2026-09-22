@@ -296,6 +296,24 @@ describe("CssSyntax — preprocessing the input stream", () => {
 		).toBe("a\uFFFDb");
 	});
 
+	it("leaves a surrogate, which tokenizes as that character already", () => {
+		// §3.3 names surrogates too, and webpack skips them because a lone one is
+		// an ident code point here. Should that stop being true, this fails and
+		// the replacement is owed after all.
+		const HIGH = String.fromCharCode(0xd800);
+		/** @type {((code: string) => string)[]} */
+		const WRAPS = [
+			(c) => `a${c}b`,
+			(c) => `#a${c}b`,
+			(c) => `@a${c}b`,
+			(c) => `12${c}red`,
+			(c) => `url(a${c}b)`
+		];
+		for (const wrap of WRAPS) {
+			expect(cvTypes(wrap(HIGH))).toEqual(cvTypes(wrap("\uFFFD")));
+		}
+	});
+
 	it("reads one wherever the source holds it", () => {
 		expect(cvTypes(`12${NUL}red`)).toEqual(cvTypes("12�red"));
 		expect(cvTypes(`url(a${NUL}b)`)).toEqual(cvTypes("url(a�b)"));
