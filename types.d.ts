@@ -523,6 +523,21 @@ type AssetModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownAssetModuleBuildInfo;
+declare class AssetModulesPlugin {
+	/**
+	 * Creates an instance of AssetModulesPlugin.
+	 */
+	constructor(options: AssetModulesPluginOptions);
+	options: AssetModulesPluginOptions;
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface AssetModulesPluginOptions {
+	sideEffectFree?: boolean;
+}
 declare abstract class AssetParser extends ParserClass {
 	dataUrlCondition?:
 		| boolean
@@ -1421,6 +1436,14 @@ declare interface BuiltinEmbeddedRendererOptions {
 	 * each pseudo-class to write as a class instead (`{ "focus-visible": "focus-visible" }`), so a script can apply it where the engine does not. Only read while printing
 	 */
 	pseudoClasses?: { [index: string]: string };
+}
+declare class BunTargetPlugin {
+	constructor();
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
 }
 declare abstract class ByTypeGenerator extends Generator {
 	map: { [index: string]: undefined | Generator };
@@ -6618,6 +6641,14 @@ declare class DelegatedPlugin {
 	 */
 	constructor(options: OptionsDelegatedModuleFactoryPlugin);
 	options: OptionsDelegatedModuleFactoryPlugin;
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+}
+declare class DenoTargetPlugin {
+	constructor();
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -15401,6 +15432,19 @@ type JsonModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownJsonModuleBuildInfo;
+
+/**
+ * The JsonModulesPlugin is the entrypoint plugin for the json modules feature.
+ * It adds the json module type to the compiler and registers the json parser and generator.
+ */
+declare class JsonModulesPlugin {
+	constructor();
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface JsonObjectFs {
 	[index: string]:
 		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
@@ -30672,6 +30716,10 @@ declare interface TsconfigPathsMap {
 	 */
 	fileDependencies: Set<string>;
 }
+declare class TypeScriptPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+}
 declare const UNDEFINED_MARKER: unique symbol;
 declare interface URL_url extends URL {}
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
@@ -32378,8 +32426,20 @@ declare namespace exports {
 	export namespace electron {
 		export { ElectronTargetPlugin };
 	}
+	export namespace bun {
+		export { BunTargetPlugin };
+	}
+	export namespace deno {
+		export { DenoTargetPlugin };
+	}
 	export namespace wasm {
 		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
+	}
+	export namespace asset {
+		export { AssetModulesPlugin };
+	}
+	export namespace json {
+		export { JsonModulesPlugin };
 	}
 	export namespace css {
 		export function cssMinify(
@@ -33609,6 +33669,9 @@ declare namespace exports {
 		}
 		export namespace ids {
 			export { SyncModuleIdsPlugin };
+		}
+		export namespace typescript {
+			export { TypeScriptPlugin };
 		}
 	}
 	export type RuleSetUseFunction = (data: EffectData) =>
