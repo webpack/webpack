@@ -29,17 +29,27 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { parse: webpackParse } = require("../lib/javascript/syntax-parser");
+// Acorn's own suite, recorded case by case: what `WebpackParser.unittest.js`
+// replays, read here for the ranges rather than for the trees.
+const ACORN_CORPUS = require("../test/fixtures/acorn-corpus.json");
 const {
 	STAGES,
+	collectFiles,
 	compress,
 	filterFrom,
+	findingGroups,
 	formatCost,
 	installPackages,
 	kb,
 	loaderFor,
 	log,
 	measure,
-	measureInWorker
+	measureInWorker,
+	missingReport,
+	pathSpanWalk,
+	spans,
+	sweepExitCode,
+	sweepMode
 } = require("./compare-tools-harness");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -638,6 +648,236 @@ const wantedFixture = filterFrom("FIXTURE");
 const wantedTool = filterFrom("TOOL");
 const wantedStage = filterFrom("STAGE");
 
+// --- Invariants -------------------------------------------------------------
+
+// What a comparison cannot see: the parser agreeing with acorn about the tree
+// while disagreeing with the source about where each node sat.
+
+// `js` is where the test harness writes what a case built, and the three spec
+// corpora are submodules whose own suites read them.
+const SKIPPED_FIXTURE_DIRS = new Set([
+	"js",
+	"node_modules",
+	"wpt",
+	"test262-cases",
+	"html5lib-tests",
+	"css-parsing-tests"
+]);
+
+// Neither a child nor a range: `start` and `end` are the range itself, `range`
+// and `loc` restate it, and `type` is a string.
+const NOT_CHILD_KEYS = new Set(["type", "start", "end", "range", "loc"]);
+
+/**
+ * The nodes one ESTree node holds, in whatever order its keys are in.
+ * @param {EXPECTED_ANY} node an ESTree node
+ * @returns {EXPECTED_ANY[]} the nodes it holds
+ */
+const childNodesOf = (node) => {
+	/** @type {EXPECTED_ANY[]} */
+	const children = [];
+	for (const key of Object.keys(node)) {
+		if (NOT_CHILD_KEYS.has(key)) continue;
+		const value = node[key];
+		if (value === null || typeof value !== "object") continue;
+		if (Array.isArray(value)) {
+			for (const item of value) {
+				if (item !== null && typeof item.type === "string") children.push(item);
+			}
+		} else if (typeof value.type === "string") {
+			children.push(value);
+		}
+	}
+	return children;
+};
+
+/**
+ * Hold the parser's ranges to what they claim about the source they came from.
+ *
+ * `siblings` is off because ESTree says two siblings may share a range rather
+ * than because webpack's parser drifts: a shorthand `{ a }` carries `key` and
+ * `value` as separate nodes over the same bytes, and `{ a = 1 }` nests the
+ * key's range inside the value's `AssignmentPattern`. Asking for it reports
+ * 6136 of those over the fixtures and not one defect.
+ * @param {string} source a script or a module
+ * @param {EXPECTED_ANY} options what to parse it as
+ * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ */
+const jsSpans = (source, options) =>
+	spans({
+		length: source.length,
+		contains: true,
+		siblings: false,
+		walk: pathSpanWalk({
+			length: source.length,
+			run: (enter, exit) => {
+				const root = webpackParse(source, options);
+				// WHY: an explicit stack, not recursion — the acorn corpus carries a
+				// case nesting hundreds of arrays, which overflows a recursive walk
+				// well before the parser that built it minds.
+				/** @type {{ node: EXPECTED_ANY, children: EXPECTED_ANY[], index: number }[]} */
+				const stack = [{ node: root, children: childNodesOf(root), index: 0 }];
+				enter(root);
+				while (stack.length > 0) {
+					const top = stack[stack.length - 1];
+					if (top.index === top.children.length) {
+						exit(top.node);
+						stack.pop();
+						continue;
+					}
+					const child = top.children[top.index++];
+					enter(child);
+					stack.push({
+						node: child,
+						children: childNodesOf(child),
+						index: 0
+					});
+				}
+			},
+			start: (node) => node.start,
+			end: (node) => node.end,
+			name: (node) => node.type,
+			inner: () => undefined
+		})
+	});
+
+/**
+ * Parse one source the way a build would, as a module where that reads and as a
+ * script otherwise.
+ * @param {string} source a script or a module
+ * @returns {import("./compare-tools-harness").Report[] | null} what its ranges broke, or null where the parser refused it
+ */
+const spansEitherGoal = (source) => {
+	for (const sourceType of ["module", "script"]) {
+		try {
+			// The options a build parses with, so what is held is what ships:
+			// `ranges` is on there, and a range is what this reads.
+			return jsSpans(source, {
+				sourceType,
+				ecmaVersion: "latest",
+				ranges: true,
+				allowHashBang: true
+			});
+		} catch (_error) {
+			continue;
+		}
+	}
+	return null;
+};
+
+const wantedRelation = filterFrom("RELATION");
+
+// What the last sweep did not find, read by the report and by the gate.
+/** @type {string[]} */
+let _missingFixtures = [];
+
+/**
+ * What the invariants are swept over: every script the repo ships, acorn's own
+ * corpus with the options each case names, and whatever bundles the comparison
+ * installed — which are the shape most of what a build reads is in.
+ * @returns {{ corpus: [string, string, EXPECTED_ANY][], missing: string[] }} `[label, source, options]` for each, and the fixtures not built
+ */
+const invariantFixtures = () => {
+	/** @type {[string, string, EXPECTED_ANY][]} */
+	const out = [];
+	for (const file of collectFiles(
+		path.join(ROOT, "test"),
+		".js",
+		SKIPPED_FIXTURE_DIRS
+	)) {
+		out.push([
+			path.relative(ROOT, file).replace(/\\/g, "/"),
+			fs.readFileSync(file, "utf8"),
+			undefined
+		]);
+	}
+	// Every production in every edition, under the options acorn tests it with:
+	// the corpus is recorded from acorn's own suite, so a range the parser gets
+	// wrong in a construct no fixture writes is still reached.
+	for (const one of ACORN_CORPUS.cases) {
+		out.push([`acorn corpus: ${one.file}`, one.code, one.options]);
+	}
+
+	/** @type {string[]} */
+	const missing = [];
+	for (const [label, file, goal] of fixtures()) {
+		if (fs.existsSync(file)) {
+			out.push([
+				label,
+				fs.readFileSync(file, "utf8"),
+				{ sourceType: goal, ecmaVersion: "latest", ranges: true }
+			]);
+		} else {
+			missing.push(label);
+		}
+	}
+	return { corpus: out, missing };
+};
+
+/**
+ * Sweep mode: hold the parser to its own invariants and report what it breaks.
+ * Nothing is installed and nothing is compared to, so this is the cheap half of
+ * the script and the one a check can be gated on.
+ * @param {(text: string) => void} write receives the report
+ * @returns {number} how many distinct findings it named
+ */
+const invariants = (write) => {
+	const built = invariantFixtures();
+	// Filtered the same way the corpus is: a run narrowed to one fixture is not
+	// short of the ones it was never going to read, and the gate answers for the
+	// sweep that happened.
+	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
+	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
+	const groups = findingGroups();
+	if (!wantedRelation("spans")) return groups.write(write);
+	let refused = 0;
+	for (const [label, source, options] of corpus) {
+		let reports;
+		if (options === undefined) {
+			reports = spansEitherGoal(source);
+		} else {
+			try {
+				reports = jsSpans(source, options);
+			} catch (_error) {
+				reports = null;
+			}
+		}
+		// A fixture the parser refuses is one the suites are asserting it refuses,
+		// so it is counted rather than reported: the number moving is the signal.
+		if (reports === null) {
+			refused++;
+			continue;
+		}
+		for (const report of reports) groups.add(report, "parse", label);
+	}
+	log(
+		`read ranges over ${corpus.length - refused} sources (${refused} the parser refuses) …`
+	);
+	return groups.write(write);
+};
+
+/**
+ * The sweep as a section of the comparison's own report, so a run that asks
+ * what the parser costs is told what it owes as well.
+ * @returns {number} how many distinct findings it named
+ */
+const reportInvariants = () => {
+	process.stdout.write("\ninvariants — what the parser owes its own source\n");
+	const found = invariants((text) => process.stdout.write(text));
+	process.stdout.write(missingReport(_missingFixtures));
+	process.stdout.write(`\n${found} finding${found === 1 ? "" : "s"}\n`);
+	return found;
+};
+
+/**
+ * `--invariants`: the relations alone, which need no install.
+ * @returns {Promise<void>} resolves once the exit code is set
+ */
+const reportInvariantsOnly = async () => {
+	const found = reportInvariants();
+	process.exitCode = sweepExitCode(found, _missingFixtures, process.argv);
+};
+
 /**
  * @param {string} stage which table
  * @returns {string} its header line
@@ -812,7 +1052,8 @@ const RUNNERS = new Map(
 	/** @type {[string, () => Promise<unknown>][]} */ ([
 		["--measure", measure.bind(null, TOOLS)],
 		["--compare", compare],
-		["--setup", installPackages.bind(null, CACHE_NAME)]
+		["--setup", installPackages.bind(null, CACHE_NAME)],
+		["--invariants", reportInvariantsOnly]
 	])
 );
 
@@ -827,7 +1068,9 @@ const runMode = (mode = "") => (RUNNERS.get(mode) || main)();
 // this file otherwise starts the whole comparison, so nothing could read the
 // dispatch above without paying ten minutes for it.
 const started =
-	require.main === module ? runMode(process.argv[2]) : Promise.resolve();
+	require.main === module
+		? runMode(sweepMode(process.argv))
+		: Promise.resolve();
 
 started.catch((error) => {
 	log(String(error && error.stack ? error.stack : error));

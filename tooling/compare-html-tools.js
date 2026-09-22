@@ -32,6 +32,7 @@ const { pathToFileURL } = require("url");
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
+	NodeType,
 	QUOTE_NONE,
 	decodeEntities,
 	pickTransforms,
@@ -54,8 +55,10 @@ const {
 	measureInWorker,
 	missingReport,
 	oneLine,
+	pathSpanWalk,
 	shrink,
 	signed,
+	spans,
 	sweepExitCode,
 	sweepMode,
 	thrownText
@@ -1231,6 +1234,79 @@ const idempotenceRepro = (minify, minified, at) => {
 	}
 };
 
+/** @type {Record<number, string>} */
+const NODE_TYPE_NAMES = {};
+for (const [name, type] of Object.entries(NodeType)) {
+	NODE_TYPE_NAMES[type] = name;
+}
+
+/**
+ * The sub-ranges an element states: its own opening tag, and the name and value
+ * of every attribute the source wrote into that tag. §13.2 merges a second
+ * `<html>` or `<body>` tag's attributes onto the element already open, so an
+ * attribute can be written outside the tag holding it and is left to the tag it
+ * was written in.
+ * @param {import("../lib/html/syntax-parser").HtmlPath} nodePath the accessor
+ * @returns {readonly [string, number, number][] | undefined} each `[name, start, end]`
+ */
+const htmlInnerRanges = (nodePath) => {
+	if (nodePath.type() !== NodeType.Element) return undefined;
+	const start = nodePath.start();
+	const tagEnd = nodePath.tagEnd();
+	// The parser inserted this element, or the adoption agency cloned it: no tag
+	// was written, so it states no offsets to hold.
+	if (tagEnd <= start) return undefined;
+	/** @type {[string, number, number][]} */
+	const inner = [["opening tag", start, tagEnd]];
+	const count = nodePath.attributeCount();
+	for (let index = 0; index < count; index++) {
+		const attribute = nodePath.attributeAt(index);
+		const nameStart = nodePath.attributeNameStart(attribute);
+		const nameEnd = nodePath.attributeNameEnd(attribute);
+		if (nameStart < start || nameStart >= tagEnd) continue;
+		inner.push(["attribute name", nameStart, nameEnd]);
+		inner.push([
+			"attribute value",
+			nodePath.attributeValueStart(attribute),
+			nodePath.attributeValueEnd(attribute)
+		]);
+	}
+	return inner;
+};
+
+/**
+ * Hold the parser's ranges to what they claim about the document they came
+ * from. HTML owes less here than CSS does, and the two exclusions are §13.2
+ * rather than slack — turning them on reports 4031 and 22 findings over the
+ * fixtures. An element's end is its start tag's until an end tag is read, so
+ * `<html>` in a document omitting `</html>` ends before the `<body>` it holds;
+ * and an element left open is closed by the next tag, so `<p>a<p>b` gives two
+ * paragraphs whose ranges share those bytes.
+ * @param {string} html a document
+ * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ */
+const htmlSpans = (html) =>
+	spans({
+		length: html.length,
+		contains: false,
+		siblings: false,
+		walk: pathSpanWalk({
+			length: html.length,
+			run: (enter, exit) => {
+				/** @type {Record<number, { enter: typeof enter, exit: typeof exit }>} */
+				const visitors = {};
+				for (const type of Object.values(NodeType)) {
+					visitors[type] = { enter, exit };
+				}
+				new SourceProcessor().use(visitors).process(html, {});
+			},
+			start: (nodePath) => nodePath.start(),
+			end: (nodePath) => nodePath.end(),
+			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
+			inner: htmlInnerRanges
+		})
+	});
+
 const wantedRelation = filterFrom("RELATION");
 const wantedSpelling = filterFrom("SPELLING");
 const wantedPreset = filterFrom("PRESET");
@@ -1379,8 +1455,21 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	// Filtered like the corpus is: an expectation for a relation this run was
+	// never going to reach matched nothing because nothing asked it to, which is
+	// not the divergence having gone away.
+	const groups = findingGroups(
+		EXPECTED.filter((entry) => wantedRelation(entry.relation))
+	);
+	// Nothing is printed to reach this one, so it is read under no preset: what
+	// the parser said about the document it was handed.
+	if (wantedRelation("spans")) {
+		log(`reading ranges over ${corpus.length} documents …`);
+		for (const [label, html] of corpus) {
+			for (const report of htmlSpans(html)) groups.add(report, "parse", label);
+		}
+	}
 	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
-	const groups = findingGroups(EXPECTED);
 	for (const [label, html] of corpus) {
 		for (const [preset, options] of presets) {
 			for (const report of sweepDocument(printerFor(options), html)) {

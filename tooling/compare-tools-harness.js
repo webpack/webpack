@@ -588,6 +588,197 @@ const idempotence = ({ minify, source, says, repro }) => {
 };
 
 /**
+ * The range a node sits in, as a span check reads it.
+ * @typedef {{ what: string, start: number, end: number }} SpanParent
+ */
+
+/**
+ * A node a span check reads. `after` is the furthest any earlier sibling
+ * reached, or `-1` for the first; `inner` names the sub-ranges the node states
+ * itself, each `-1` where this node has none. `structural` is false for a node
+ * the walk hands over without placing it in the tree — a CSS comment arrives
+ * from the tokenizer, before the rule holding it has even opened — so it is
+ * held to its own offsets and to nothing about where it sits.
+ * @typedef {{ what: string, start: number, end: number, parent: SpanParent | null, after: number, structural?: boolean, inner?: readonly [string, number, number][] }} SpanNode
+ */
+
+/**
+ * Offsets read against an origin, so one construct's finding reads the same
+ * wherever in a file it was found and groups with itself.
+ * @param {number} origin what to measure from
+ * @param {number} start a range's start
+ * @param {number} end its end
+ * @returns {string} the range relative to the origin
+ */
+const _relative = (origin, start, end) => `[${start - origin},${end - origin})`;
+
+/**
+ * Whether a tree's ranges say what the source says: nothing inverted, nothing
+ * off the end of the source, and every sub-range inside the node that names it.
+ * `contains` and `siblings` are asked for rather than assumed, because two of
+ * webpack's three parsers owe one of them nothing — each adapter says which.
+ * @param {object} options what to hold to the relation
+ * @param {number} options.length the source's length
+ * @param {(visit: (node: SpanNode) => void) => void} options.walk hands every node over, each after its parent
+ * @param {boolean} options.contains whether a node's range must sit inside its parent's
+ * @param {boolean} options.siblings whether two siblings' ranges may not overlap
+ * @returns {Report[]} what the ranges broke
+ */
+const spans = ({ length, walk, contains, siblings }) => {
+	/** @type {Report[]} */
+	const reports = [];
+	/**
+	 * @param {string} what the violation and what carried it
+	 * @param {string} detail the ranges that show it
+	 * @returns {void}
+	 */
+	const report = (what, detail) => {
+		reports.push({ relation: "spans", what, repro: `    ${detail}` });
+	};
+	walk((node) => {
+		const { what, start, end, parent, after, structural, inner } = node;
+		if (start > end) report(`inverted (${what})`, `[${start},${end})`);
+		if (start < 0) report(`starts before the source (${what})`, `${start}`);
+		if (end > length) {
+			report(`ends past the source (${what})`, `${end - length} past the end`);
+		}
+		const placed = structural !== false;
+		if (
+			placed &&
+			contains &&
+			parent !== null &&
+			(start < parent.start || end > parent.end)
+		) {
+			report(
+				`escapes parent (${what} in ${parent.what})`,
+				`${_relative(parent.start, start, end)} not inside ${_relative(parent.start, parent.start, parent.end)}`
+			);
+		}
+		if (placed && siblings && after !== -1 && start < after) {
+			report(
+				`overlaps an earlier sibling (${what})`,
+				`${_relative(start, start, end)} starts ${after - start} before that sibling ended`
+			);
+		}
+		if (inner === undefined) return;
+		for (const [name, innerStart, innerEnd] of inner) {
+			// `-1` is the node saying it has no such sub-range, which is not a
+			// range that fails to sit inside it.
+			if (innerStart === -1) continue;
+			if (innerStart > innerEnd || innerStart < start || innerEnd > end) {
+				report(
+					`${name} outside its node (${what})`,
+					`${_relative(start, innerStart, innerEnd)} not inside ${_relative(start, start, end)}`
+				);
+			}
+		}
+	});
+	return reports;
+};
+
+/**
+ * Turn a walk over one of webpack's accessor-based parsers into span nodes.
+ *
+ * WHY: neither a node's own range nor a ref to it is final while the walk is
+ * inside it. Both parsers stream — an `@layer` rule is entered holding only its
+ * six-byte prelude and has its end set once the body is read — and both recycle
+ * refs per top-level node, so a range read on the way in, or read back through
+ * a retained ref, is whatever was known at the time. Every range is therefore
+ * read on the way out, and a node is held to its parent when the parent leaves,
+ * which is the first moment both are settled.
+ * @template P
+ * @param {object} options how to drive that parser
+ * @param {number} options.length the source's length
+ * @param {(enter: (path: P) => void, exit: (path: P) => void) => void} options.run registers the pair for every node type and runs the walk
+ * @param {(path: P) => string} options.name what to call the current node in a report
+ * @param {(path: P) => readonly [string, number, number][] | undefined} options.inner the sub-ranges the current node states
+ * @param {(path: P) => number} options.start the current node's start
+ * @param {(path: P) => number} options.end its end
+ * @param {((path: P) => boolean)=} options.structural whether the walk places this node in the tree (default: every node)
+ * @returns {(visit: (node: SpanNode) => void) => void} the walk `spans` reads
+ */
+const pathSpanWalk =
+	({ length, run, name, inner, start, end, structural = () => true }) =>
+	(visit) => {
+		/**
+		 * @typedef {object} SpanFrame
+		 * @property {string} what what to call it
+		 * @property {number} start its start, once it has left
+		 * @property {number} end its end, once it has left
+		 * @property {readonly [string, number, number][] | undefined} inner its sub-ranges
+		 * @property {boolean} placed whether the walk put it where it belongs
+		 * @property {SpanFrame[]} children what it held, each settled
+		 */
+		/** @type {SpanFrame} */
+		const root = {
+			what: "source",
+			start: 0,
+			end: length,
+			inner: undefined,
+			placed: true,
+			children: []
+		};
+		/** @type {SpanFrame[]} */
+		const stack = [root];
+		/**
+		 * Hand one settled node's children over, each against the node and against
+		 * how far the ones before it reached.
+		 * @param {SpanFrame} frame the node they sat in
+		 * @returns {void}
+		 */
+		const emit = (frame) => {
+			let reached = -1;
+			// WHY: source order, not visit order — CSS consumes a block into
+			// separate declaration and child-rule lists (§5.4.2), so a rule written
+			// between two declarations is walked after both. What is owed is that
+			// two siblings' ranges do not overlap, never the order they arrive in.
+			frame.children.sort((a, b) => a.start - b.start || a.end - b.end);
+			for (const child of frame.children) {
+				visit({
+					what: child.what,
+					start: child.start,
+					end: child.end,
+					parent: { what: frame.what, start: frame.start, end: frame.end },
+					after: reached,
+					structural: child.placed,
+					inner: child.inner
+				});
+				// A node the walk never placed says nothing about how far its
+				// siblings reach, so it does not move the mark either.
+				if (child.placed) reached = Math.max(reached, child.end);
+			}
+			// Held no longer than they are read: a document is one walk, and keeping
+			// every node's children would retain the whole tree a second time.
+			frame.children.length = 0;
+		};
+		run(
+			(path) => {
+				stack.push({
+					what: name(path),
+					start: 0,
+					end: 0,
+					inner: undefined,
+					placed: true,
+					children: []
+				});
+			},
+			(path) => {
+				// A walk that exits more than it entered would pop the root and read
+				// every node after it against nothing.
+				if (stack.length === 1) return;
+				const frame = /** @type {SpanFrame} */ (stack.pop());
+				frame.start = start(path);
+				frame.end = end(path);
+				frame.inner = inner(path);
+				frame.placed = structural(path);
+				stack[stack.length - 1].children.push(frame);
+				emit(frame);
+			}
+		);
+		emit(root);
+	};
+
+/**
  * A finding the printer owes nothing for, with the reason it is owed nothing.
  * `relation` and `contains` together name it; `source` narrows it to one
  * fixture where the same repro is a defect elsewhere.
@@ -784,9 +975,11 @@ module.exports = {
 	measureInWorker,
 	missingReport,
 	oneLine,
+	pathSpanWalk,
 	run,
 	shrink,
 	signed,
+	spans,
 	sweepExitCode,
 	sweepMode,
 	thrownText

@@ -38,6 +38,7 @@ const MODERN_BROWSERS = require("browserslist")(
 const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
 const {
+	NodeType,
 	TT_EOF,
 	TT_WHITESPACE,
 	TokenStream,
@@ -62,7 +63,9 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
+	pathSpanWalk,
 	run,
+	spans,
 	sweepExitCode,
 	sweepMode
 } = require("./compare-tools-harness");
@@ -612,6 +615,72 @@ const tokenStream = (css) => {
 	return JSON.stringify(out);
 };
 
+/** @type {Record<number, string>} */
+const NODE_TYPE_NAMES = {};
+for (const [name, type] of Object.entries(NodeType)) {
+	NODE_TYPE_NAMES[type] = name;
+}
+
+// Which types state a sub-range of their own. One accessor view answers every
+// property for every node, so reading `nameStart` off a token reports whatever
+// that column holds for it — the type decides, never what came back.
+const NAMED = new Set([
+	NodeType.Declaration,
+	NodeType.AtRule,
+	NodeType.Function
+]);
+const BLOCKED = new Set([NodeType.AtRule, NodeType.QualifiedRule]);
+
+/**
+ * The sub-ranges a node names, as the span relation reads them.
+ * @param {import("../lib/css/syntax-parser").CssPath} nodePath the accessor
+ * @returns {readonly [string, number, number][] | undefined} each `[name, start, end]`
+ */
+const cssInnerRanges = (nodePath) => {
+	const type = nodePath.type();
+	/** @type {[string, number, number][]} */
+	const inner = [];
+	if (NAMED.has(type)) {
+		inner.push(["name", nodePath.nameStart(), nodePath.nameEnd()]);
+	}
+	if (BLOCKED.has(type)) {
+		inner.push(["block", nodePath.blockStart(), nodePath.blockEnd()]);
+	}
+	return inner.length === 0 ? undefined : inner;
+};
+
+/**
+ * Hold the parser's ranges to what they claim about the stylesheet they came
+ * from. CSS owes every part of the relation: a component value sits inside the
+ * declaration that holds it, and two of them never overlap.
+ * @param {string} css a stylesheet
+ * @returns {import("./compare-tools-harness").Report[]} what the ranges broke
+ */
+const cssSpans = (css) =>
+	spans({
+		length: css.length,
+		contains: true,
+		siblings: true,
+		walk: pathSpanWalk({
+			length: css.length,
+			run: (enter, exit) => {
+				/** @type {Record<number, { enter: typeof enter, exit: typeof exit }>} */
+				const visitors = {};
+				for (const type of Object.values(NodeType)) {
+					visitors[type] = { enter, exit };
+				}
+				new SourceProcessor().use(visitors).process(css, {});
+			},
+			start: (nodePath) => nodePath.start(),
+			end: (nodePath) => nodePath.end(),
+			name: (nodePath) => NODE_TYPE_NAMES[nodePath.type()],
+			// A comment reaches the walk from the tokenizer rather than from the
+			// tree, so it arrives before the rule holding it has opened.
+			structural: (nodePath) => nodePath.type() !== NodeType.Comment,
+			inner: cssInnerRanges
+		})
+	});
+
 const wantedRelation = filterFrom("RELATION");
 const wantedPreset = filterFrom("PRESET");
 
@@ -661,19 +730,28 @@ const invariants = (write) => {
 	_missingFixtures = built.missing.filter((label) => wantedFixture(label));
 	const corpus = built.corpus.filter(([label]) => wantedFixture(label));
 	const presets = PRESETS.filter(([name]) => wantedPreset(name));
-	if (!wantedRelation("idempotence")) return 0;
-	log(
-		`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
-	);
 	const groups = findingGroups();
-	for (const [label, css] of corpus) {
-		for (const [preset, options] of presets) {
-			const { reports } = idempotence({
-				minify: printerFor(options),
-				source: css,
-				says: tokenStream
-			});
-			for (const report of reports) groups.add(report, preset, label);
+	// Nothing is printed to reach this one, so it is read under no preset: what
+	// the parser said about the stylesheet it was handed.
+	if (wantedRelation("spans")) {
+		log(`reading ranges over ${corpus.length} stylesheets …`);
+		for (const [label, css] of corpus) {
+			for (const report of cssSpans(css)) groups.add(report, "parse", label);
+		}
+	}
+	if (wantedRelation("idempotence")) {
+		log(
+			`sweeping ${corpus.length} stylesheets under ${presets.length} presets …`
+		);
+		for (const [label, css] of corpus) {
+			for (const [preset, options] of presets) {
+				const { reports } = idempotence({
+					minify: printerFor(options),
+					source: css,
+					says: tokenStream
+				});
+				for (const report of reports) groups.add(report, preset, label);
+			}
 		}
 	}
 	return groups.write(write);
