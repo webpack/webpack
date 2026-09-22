@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-unclosed-string minimize-unclosed-string should compile 1`] = `
+"<!doctype html><title>t</title><div style='content:\\"a\\"'>a string the value leaves open</div>
+<div style=\\"font-family:Some Face\\">the same, where unquoting applies</div>
+<div style='content:\\"b\\"'>the same, with the quote escaped away</div>
+<style>.a:before{content:\\"c\\"}</style>
+"
+`;
