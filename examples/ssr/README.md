@@ -516,8 +516,8 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 4.53 KiB [emitted] [javascript module] [minimized] (name: main)
-  asset page_js-page_css.mjs 565 bytes [emitted] [javascript module] [minimized]
+  asset main.mjs 4.69 KiB [emitted] [javascript module] [minimized] (name: main)
+  asset page_js-page_css.mjs 647 bytes [emitted] [javascript module] [minimized]
   asset page_js-page_css.css 197 bytes [emitted] [minimized]
   chunk (runtime: main) main.mjs (main) 5.07 KiB (javascript) 6.05 KiB (runtime) [entry] [rendered]
     > ./server.js main
