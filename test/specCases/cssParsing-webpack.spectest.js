@@ -21,8 +21,7 @@ const {
 	parseADeclaration,
 	parseAListOfComponentValues,
 	parseARule,
-	parseAStylesheet,
-	parseAStylesheetsContents
+	parseAStylesheet
 } = require("../../lib/css/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const {
@@ -303,10 +302,13 @@ describe("css-parsing-tests trees", () => {
 		],
 		["one_declaration", (source) => serializeDeclaration(parseADeclaration(source))],
 		["one_rule", (source) => serializeRule(parseARule(source), source)],
+		// `rule_list` is the spec's "parse a list of rules" with the top-level flag
+		// unset, which is what a block's contents are read as — a stylesheet's are
+		// the flag set, and the two differ over whether CDO/CDC are discarded.
 		[
 			"rule_list",
 			(source) =>
-				parseAStylesheetsContents(source).map((rule) =>
+				parseABlocksContents(source).rules.map((rule) =>
 					serializeRule(rule, source)
 				)
 		],
@@ -334,17 +336,6 @@ describe("css-parsing-tests trees", () => {
 		["component_value_list #46", "unicode-range token"],
 		["component_value_list #47", "match token"],
 		["component_value_list #48", "match token"],
-		// A `\` with nothing after it is a parse error the spec resolves to
-		// U+FFFD; webpack keeps the character it was written as.
-		["component_value_list #7", "backslash at end of input"],
-		["component_value_list #10", "backslash at end of input"],
-		["component_value_list #11", "backslash at end of input"],
-		// A `\` before a newline inside a string is a line continuation the spec
-		// removes, and webpack keeps.
-		["component_value_list #12", "escaped newline in a string"],
-		// CDO and CDC are preserved tokens in a prelude the spec reads at the top
-		// level; webpack drops them.
-		["rule_list #10", "CDO/CDC in a prelude"],
 		// A declaration's value is the run webpack will print, so the trailing
 		// whitespace and `;` the spec keeps as component values are not in it.
 		["one_declaration #11", "trailing token in a value"],
