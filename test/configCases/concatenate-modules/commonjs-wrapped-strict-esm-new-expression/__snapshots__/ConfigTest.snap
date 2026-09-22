@@ -30,7 +30,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-wrapped-strict-esm-new-exp
   \\\\******************************/
 
 // MODULE: ./identity.cjs
-var identity_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var identity_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 module.exports = function identity(value) {
@@ -40,7 +40,7 @@ module.exports = function identity(value) {
 });
 
 // MODULE: ./thing.cjs
-var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var thing_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 class Thing {

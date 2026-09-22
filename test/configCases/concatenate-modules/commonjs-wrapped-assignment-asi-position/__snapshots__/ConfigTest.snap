@@ -53,7 +53,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-wrapped-assignment-asi-pos
   \\\\******************************/
 
 // MODULE: ./formats.js
-var formats_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var formats_namespaceFn = /*#__PURE__*/__webpack_require__.cw((module) => {
 
 
 // exported through a variable, so the exports stay statically unknown: that is

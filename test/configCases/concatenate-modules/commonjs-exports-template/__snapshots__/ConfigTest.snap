@@ -30,7 +30,7 @@ exports[`ConfigTestCases concatenate-modules commonjs-exports-template commonjs-
   \\\\******************************/
 
 // MODULE: ./cjs.js
-var cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw((__unused_webpack_module, exports) => {
 var __webpack_unused_export__;
 
 
@@ -42,7 +42,7 @@ exports.readBack = \`\${exports.used}!\`;
 });
 
 // MODULE: ./this-cjs.js
-var this_cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var this_cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(__unused_webpack_module, exports) {
 
 
 // \`this\` is the exports object at module top level, and stays untouched
