@@ -1648,7 +1648,7 @@ const EXPECTED = [
 		relation: "respelling quote-double",
 		contains: "&#34;",
 		source: "style-attribute",
-		why: "the value carries both quotes, so one is escaped whichever delimiter is picked and the printer's own `&quot;` costs a byte more than the `&#34;` the source wrote — it writes the shorter of the two, which is the source"
+		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
 	}
 ];
 

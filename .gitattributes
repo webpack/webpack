@@ -49,4 +49,5 @@ examples/* eol=lf
 bin/* eol=lf
 *.svg eol=lf
 *.css eol=lf
+*.html eol=lf
 **/*webpack.lock.data/** -text
