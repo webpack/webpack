@@ -39,32 +39,81 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      # The report `main` last produced. Prefer the run for this PR's base commit
-      # and fall back to the newest successful one, so a PR opened against an
-      # older `main` is still compared against something.
+      # The newest successful `main` run whose commit the measured tree already
+      # contains. A run on a commit it does not contain charges this pull request
+      # for whatever landed in between, so no baseline beats the wrong one.
       - name: Find the baseline run
         id: baseline
         env:
           GH_TOKEN: ${{ github.token }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          # The `main` commit this run measures against: a pull request's base,
+          # or the pushed commit itself, whose parent is then the nearest match.
+          REF_SHA: ${{ github.event.pull_request.base.sha || github.sha }}
         run: |
-          query="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs?branch=main&status=success&per_page=20"
+          runs="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs"
           # Any run of `main` that is not a pull request: a manually dispatched
           # one is a baseline too, while a pull request whose head branch is
           # itself named `main` is not. The API takes one `event` at a time, so
           # the unwanted one is filtered out here rather than in the query.
-          pick='[.workflow_runs[] | select(.event != "pull_request")][0].id // empty'
+          # This run is dropped as well: a push to `main` measures the commit it
+          # was itself triggered by, and waiting for a run to finish from inside
+          # it would spend the whole deadline below every time.
+          self='(env.GITHUB_RUN_ID // "0" | tonumber)'
+          mine=".workflow_runs[] | select(.event != \"pull_request\") | select(.id != $self)"
+          # `|| true` throughout: without a baseline the run still reports its
+          # own totals, so a query a fork's token may not answer must not fail
+          # the job.
+          exact="$runs?branch=main&head_sha=$REF_SHA&per_page=100"
+          # `// empty` so that no run at all prints nothing: without it the
+          # missing entry formats as the string "null" and reads as a status.
+          state="[$mine][0] // empty | \"\(.status) \(.conclusion // \"none\") \(.id)\""
           run_id=""
-          # `|| true`: without a baseline the run still reports its own totals,
-          # so a query a fork's token may not answer must not fail the job.
-          if [ -n "$BASE_SHA" ]; then
-            run_id=$(gh api "$query&head_sha=$BASE_SHA" --jq "$pick" || true)
-          fi
+          # Only the base commit's own report charges this pull request for its
+          # own commits alone, and `main` moving is exactly when that run is
+          # still going — so wait for it rather than settle for an older one.
+          deadline=$(($(date +%s) + 600))
+          while :; do
+            read -r status conclusion id <<STATE
+          $(gh api "$exact" --jq "$state" || true)
+          STATE
+            # No run for this commit at all, so there is nothing to wait for.
+            [ -n "$status" ] || break
+            if [ "$status" = "completed" ]; then
+              [ "$conclusion" = "success" ] && run_id="$id"
+              break
+            fi
+            [ "$(date +%s)" -lt "$deadline" ] || break
+            echo "Base commit's run is $status, waiting…"
+            sleep 30
+          done
+          # Failing that, the newest run the measured tree already contains. A
+          # page of 100 because the filter above drops rows, and a page of 20
+          # held too few `main` runs to reach one the base descends from.
           if [ -z "$run_id" ]; then
-            run_id=$(gh api "$query" --jq "$pick" || true)
+            keep="$mine | \"\(.head_sha) \(.id)\""
+            candidates=$(gh api "$runs?branch=main&status=success&per_page=100" --jq "$keep" || true)
+            checked=0
+            while read -r sha id; do
+              [ -n "$sha" ] || continue
+              # Newest first, so the first ancestor is the closest. Capped: a
+              # diverged history would otherwise compare every row.
+              checked=$((checked + 1))
+              [ "$checked" -le 20 ] || break
+              # `ahead` means REF_SHA is ahead of that commit and `identical`
+              # that they are the same — either way the tree contains it, so
+              # the delta is this pull request's plus whatever landed between.
+              compare="repos/$GITHUB_REPOSITORY/compare/$sha...$REF_SHA"
+              contains=$(gh api "$compare" --jq .status || true)
+              if [ "$contains" = "ahead" ] || [ "$contains" = "identical" ]; then
+                run_id="$id"
+                break
+              fi
+            done <<CANDIDATES
+          $candidates
+          CANDIDATES
           fi
           echo "run-id=$run_id" >> "$GITHUB_OUTPUT"
-          echo "Baseline run: ${run_id:-none}"
+          echo "Baseline run: ${run_id:-none}, measured against $REF_SHA"
 
       - name: Download the baseline report
         if: steps.baseline.outputs.run-id != ''
