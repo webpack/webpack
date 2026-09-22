@@ -10672,6 +10672,72 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 	});
 });
 
+describe("CssSyntax minify — the rules a hoist leaves side by side", () => {
+	const T = ["chrome 100"];
+
+	it("joins two nested rules printing one block", () => {
+		expect(minifyFor("a{.x{top:0}.y{top:0}}", T)).toBe("a .x,a .y{top:0}");
+	});
+
+	it("joins a run of them, ordered once where it ends", () => {
+		expect(minifyFor("a{.d{top:0}.c{top:0}.b{top:0}}", T)).toBe(
+			"a .b,a .c,a .d{top:0}"
+		);
+	});
+
+	it("joins the rules `&` writes as well", () => {
+		expect(minifyFor("a{&:hover{top:0}&.mix{top:0}}", T)).toBe(
+			"a.mix,a:hover{top:0}"
+		);
+	});
+
+	it("takes in the rule the hoist emptied where it prints the same block", () => {
+		expect(minifyFor("a{top:0;.x{top:0}.y{top:0}}", T)).toBe(
+			"a,a .x,a .y{top:0}"
+		);
+	});
+
+	it("leaves that rule alone where it prints another", () => {
+		expect(minifyFor("a{left:0;.x{top:0}.y{top:0}}", T)).toBe(
+			"a{left:0}a .x,a .y{top:0}"
+		);
+	});
+
+	it("parts the run where a rule prints another block", () => {
+		expect(minifyFor("a{.x{top:0}.y{top:1px}.z{top:0}}", T)).toBe(
+			"a .x{top:0}a .y{top:1px}a .z{top:0}"
+		);
+	});
+
+	it("joins them under the at-rule they were written in", () => {
+		expect(minifyFor("@media print{a{.x{top:0}.y{top:0}}}", T)).toBe(
+			"@media print{a .x,a .y{top:0}}"
+		);
+	});
+
+	it("leaves a block that keeps its nesting alone", () => {
+		// A declaration written after a nested rule is read after it, so the block
+		// is not hoisted at all and there is no run to join.
+		expect(minifyFor("a{top:0;.x{top:0}left:0}", T)).toBe(
+			"a{top:0;.x{top:0}left:0}"
+		);
+	});
+
+	it("joins nothing where the rules are not hoisted", () => {
+		// The sibling merge reads them where they stay in the block, so they join
+		// there instead — the hoist is what the run below is about.
+		expect(minifyFor("a{.x{top:0}.y{top:0}}", ["chrome 130"])).toBe(
+			"a{.x,.y{top:0}}"
+		);
+	});
+
+	it("leaves the list as written where selectors are not shortened", () => {
+		expect(
+			minifyForWith("a{.y{top:0}.x{top:0}}", T, { shortenSelectors: false })
+		).toBe("a .y,a .x{top:0}");
+	});
+});
+
 describe("CssSyntax minify — nesting the target cannot read", () => {
 	it("writes a rule nested in another on its own", () => {
 		expect(minifyFor("a{color:red;& b{color:blue}}", ["chrome 100"])).toBe(
