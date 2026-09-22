@@ -31932,11 +31932,7 @@ declare function exports(
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
 	export const webpack: _functionWebpack;
-	/** Types a configuration object, or a factory returning one. @deprecated use `config.defineConfig` — TODO in the next major release: remove */ export const defineConfig: <
-		T extends DefineConfigInput
-	>(
-		config: T
-	) => T;
+	export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
