@@ -1317,6 +1317,13 @@ class TupleMap {
 		return [...new Set(result.filter((x) => x !== undefined))];
 	};
 
+	// The tags a consumer acts on, so they are carried into the declarations
+	// rather than left behind in the source.
+	const FORWARDED_TAG_NAMES = ["since", "deprecated", "experimental"];
+	const FORWARDED_TAG_REGEXP = new RegExp(
+		`@(?:${FORWARDED_TAG_NAMES.join("|")})\\b`
+	);
+
 	/**
 	 * @param {ts.Symbol | ts.Signature | undefined} symbol symbol
 	 * @returns {string} documentation comment
@@ -1336,8 +1343,7 @@ class TupleMap {
 
 		const commentText = normalizeText(symbol.getDocumentationComment(checker));
 		const jsDocTags = symbol.getJsDocTags(checker);
-		const forwardedTagNames = ["since", "deprecated", "experimental"];
-		const forwardedTags = forwardedTagNames.flatMap((name) =>
+		const forwardedTags = FORWARDED_TAG_NAMES.flatMap((name) =>
 			jsDocTags.filter((tag) => tag.name === name)
 		);
 
@@ -3393,8 +3399,15 @@ class TupleMap {
 							new Set(),
 							`in namespace ${name}`
 						);
+						// Only a tag a consumer has to act on earns a comment here.
+						// These positions hold no line of their own, so a description
+						// would render as one very long one.
+						const inlineDocumentation =
+							documentation && FORWARDED_TAG_REGEXP.test(documentation)
+								? toInlineDocumentation(documentation)
+								: "";
 						if (code.startsWith("export ")) {
-							declarations.push(code);
+							declarations.push(`${inlineDocumentation}${code}`);
 						} else if (/^typeof [A-Za-z_0-9]+$/.test(code)) {
 							const exportName = code.slice("typeof ".length);
 							const specifier =
@@ -3402,11 +3415,7 @@ class TupleMap {
 							// The comment goes inside the braces, on the specifier:
 							// TypeScript reads an `@deprecated` there, and ignores one
 							// written on the `export { … }` statement itself.
-							exports.push(
-								documentation
-									? `${toInlineDocumentation(documentation)}${specifier}`
-									: specifier
-							);
+							exports.push(`${inlineDocumentation}${specifier}`);
 						} else if (name === "default") {
 							declarations.push(
 								`${readonly || getter ? "const" : "let"} _default: ${code};\n`
@@ -3414,7 +3423,7 @@ class TupleMap {
 							exports.push("_default as default");
 						} else {
 							declarations.push(
-								`export ${
+								`${inlineDocumentation}export ${
 									readonly || getter ? "const" : "let"
 								} ${name}: ${code};\n`
 							);

@@ -31932,11 +31932,15 @@ declare function exports(
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
 	export const webpack: _functionWebpack;
-	export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
+	/** Types a configuration object, or a factory returning one. @deprecated use `config.defineConfig` — TODO in the next major release: remove */ export const defineConfig: <
+		T extends DefineConfigInput
+	>(
+		config: T
+	) => T;
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
-	export const validateSchema: (
+	/** Validates a value against a JSON schema. @deprecated use `config.validateSchema` — TODO in the next major release: remove */ export const validateSchema: (
 		schema: Parameters<typeof validateFunction>[0],
 		options: Parameters<typeof validateFunction>[1],
 		validationConfiguration?: ValidationErrorConfiguration
@@ -32037,12 +32041,12 @@ declare namespace exports {
 		export let matchPart: (str: string, test: Matcher) => boolean;
 		export let matchObject: (obj: MatchObject, str: string) => boolean;
 	}
-	export namespace OptimizationStages {
+	/** The stage constants the optimization hooks are tapped at. @deprecated use `optimize.OptimizationStages` — TODO in the next major release: remove */ export namespace OptimizationStages {
 		export let STAGE_ADVANCED: 10;
 		export let STAGE_BASIC: -10;
 		export let STAGE_DEFAULT: 0;
 	}
-	export namespace RuntimeGlobals {
+	/** The symbols a runtime module may declare a requirement on. @deprecated use `runtime.RuntimeGlobals` — TODO in the next major release: remove */ export namespace RuntimeGlobals {
 		export let amdDefine: "__webpack_require__.amdD";
 		export let amdOptions: "__webpack_require__.amdO";
 		export let asyncModule: "__webpack_require__.a";
@@ -32131,7 +32135,7 @@ declare namespace exports {
 		export let startup: "__webpack_require__.x";
 		export let startupAssetHints: "__webpack_require__.SAH";
 		export let startupEntrypoint: "__webpack_require__.X";
-		export let startupNoDefault: "__webpack_require__.x (no default handler)";
+		/** Describes how this item operation behaves. @deprecated creating a default startup function with the entry modules */ export let startupNoDefault: "__webpack_require__.x (no default handler)";
 		export let startupOnlyAfter: "__webpack_require__.x (only after)";
 		export let startupOnlyBefore: "__webpack_require__.x (only before)";
 		export let system: "__webpack_require__.System";
@@ -32150,9 +32154,15 @@ declare namespace exports {
 		Used: 4;
 	}>;
 	export namespace cache {
-		export { MemoryCachePlugin };
+		export { CacheClass as Cache, MemoryCachePlugin };
 	}
 	export namespace config {
+		export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
+		export const validateSchema: (
+			schema: Parameters<typeof validateFunction>[0],
+			options: Parameters<typeof validateFunction>[1],
+			validationConfiguration?: ValidationErrorConfiguration
+		) => void;
 		export const getNormalizedWebpackOptions: (
 			config: Configuration
 		) => WebpackOptionsNormalized;
@@ -32160,6 +32170,7 @@ declare namespace exports {
 			options: WebpackOptionsNormalized,
 			compilerIndex?: number
 		) => ResolvedOptionsDefaults;
+		export { PlatformPlugin, WebpackOptionsApply };
 	}
 	export namespace dependencies {
 		export {
@@ -32363,6 +32374,11 @@ declare namespace exports {
 		};
 	}
 	export namespace optimize {
+		export namespace OptimizationStages {
+			export let STAGE_ADVANCED: 10;
+			export let STAGE_BASIC: -10;
+			export let STAGE_DEFAULT: 0;
+		}
 		export namespace InnerGraph {
 			export let getDependencyUsedByExportsCondition: (
 				dependency: Dependency,
@@ -32380,6 +32396,7 @@ declare namespace exports {
 			export { TopLevelSymbol, topLevelSymbolTag };
 		}
 		export {
+			ConcatenationScope,
 			AggressiveMergingPlugin,
 			AggressiveSplittingPlugin,
 			LimitChunkCountPlugin,
@@ -32393,10 +32410,117 @@ declare namespace exports {
 		};
 	}
 	export namespace runtime {
-		export { GetChunkFilenameRuntimeModule, LoadScriptRuntimeModule };
+		export namespace RuntimeGlobals {
+			export let amdDefine: "__webpack_require__.amdD";
+			export let amdOptions: "__webpack_require__.amdO";
+			export let asyncModule: "__webpack_require__.a";
+			export let asyncModuleDoneSymbol: "__webpack_require__.aD";
+			export let asyncModuleExportSymbol: "__webpack_require__.aE";
+			export let asyncModuleGenerator: "__webpack_require__.aG";
+			export let baseURI: "__webpack_require__.b";
+			export let chunkCallback: "webpackChunk";
+			export let chunkName: "__webpack_require__.cn";
+			export let compatGetDefaultExport: "__webpack_require__.n";
+			export let compileWasm: "__webpack_require__.vs";
+			export let concatenationWrap: "__webpack_require__.cw";
+			export let constructRequire: "__webpack_require__.cr";
+			export let createFakeNamespaceObject: "__webpack_require__.t";
+			export let createScript: "__webpack_require__.ts";
+			export let createScriptUrl: "__webpack_require__.tu";
+			export let cssInjectStyle: "__webpack_require__.is";
+			export let currentRemoteGetScope: "__webpack_require__.R";
+			export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
+			export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+			export let definePropertyGetters: "__webpack_require__.d";
+			export let definePropertyGettersFromArray: "__webpack_require__.d (array)";
+			export let ensureChunk: "__webpack_require__.e";
+			export let ensureChunkHandlers: "__webpack_require__.f";
+			export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
+			export let entryModuleId: "__webpack_require__.s";
+			export let esmIds: "__webpack_esm_ids__";
+			export let esmModules: "__webpack_esm_modules__";
+			export let esmRuntime: "__webpack_esm_runtime__";
+			export let exports: "__webpack_exports__";
+			export let externalInstallChunk: "__webpack_require__.C";
+			export let getChunkCssFilename: "__webpack_require__.k";
+			export let getChunkScriptFilename: "__webpack_require__.u";
+			export let getChunkUpdateCssFilename: "__webpack_require__.hk";
+			export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
+			export let getCssServerStyles: "__webpack_require__.cs";
+			export let getFullHash: "__webpack_require__.h";
+			export let getTrustedTypesPolicy: "__webpack_require__.tt";
+			export let getUpdateManifestFilename: "__webpack_require__.hmrF";
+			export let getWorkletBootstrap: "__webpack_require__.wb";
+			export let global: "__webpack_require__.g";
+			export let harmonyModuleDecorator: "__webpack_require__.hmd";
+			export let hasCssModules: "has css modules";
+			export let hasFetchPriority: "has fetch priority";
+			export let hasChunkPriority: "has chunk priority";
+			export let hasOwnProperty: "__webpack_require__.o";
+			export let hasSealedDeferredNamespace: "has sealed deferred namespace";
+			export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+			export let hmrDownloadManifest: "__webpack_require__.hmrM";
+			export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
+			export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+			export let hmrModuleData: "__webpack_require__.hmrD";
+			export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
+			export let initializeSharing: "__webpack_require__.I";
+			export let instantiateWasm: "__webpack_require__.v";
+			export let interceptModuleExecution: "__webpack_require__.i";
+			export let loadScript: "__webpack_require__.l";
+			export let makeDeferredNamespaceObject: "__webpack_require__.z";
+			export let makeNamespaceObject: "__webpack_require__.r";
+			export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
+			export let module: "module";
+			export let moduleCache: "__webpack_require__.c";
+			export let moduleFactories: "__webpack_require__.m";
+			export let moduleFactoriesAddOnly: "__webpack_require__.m (add only)";
+			export let moduleId: "module.id";
+			export let moduleLoaded: "module.loaded";
+			export let nodeModuleDecorator: "__webpack_require__.nmd";
+			export let onChunksLoaded: "__webpack_require__.O";
+			export let prefetchAsset: "__webpack_require__.PA";
+			export let prefetchChunk: "__webpack_require__.E";
+			export let prefetchChunkHandlers: "__webpack_require__.F";
+			export let preloadAsset: "__webpack_require__.LA";
+			export let preloadChunk: "__webpack_require__.G";
+			export let preloadChunkHandlers: "__webpack_require__.H";
+			export let publicPath: "__webpack_require__.p";
+			export let relativeUrl: "__webpack_require__.U";
+			export let require: "__webpack_require__";
+			export let requireScope: "__webpack_require__.*";
+			export let returnExportsFromRuntime: "return-exports-from-runtime";
+			export let runtimeId: "__webpack_require__.j";
+			export let scriptNonce: "__webpack_require__.nc";
+			export let setAnonymousDefaultName: "__webpack_require__.dn";
+			export let shareScopeMap: "__webpack_require__.S";
+			export let specNamespaceObject: "__webpack_require__.ns";
+			export let startup: "__webpack_require__.x";
+			export let startupAssetHints: "__webpack_require__.SAH";
+			export let startupEntrypoint: "__webpack_require__.X";
+			/** Describes how this item operation behaves. @deprecated creating a default startup function with the entry modules */ export let startupNoDefault: "__webpack_require__.x (no default handler)";
+			export let startupOnlyAfter: "__webpack_require__.x (only after)";
+			export let startupOnlyBefore: "__webpack_require__.x (only before)";
+			export let system: "__webpack_require__.System";
+			export let systemContext: "__webpack_require__.y";
+			export let thisAsExports: "top-level-this-exports";
+			export let toBinary: "__webpack_require__.tb";
+			export let uncaughtErrorHandler: "__webpack_require__.oe";
+			export let wasmInstances: "__webpack_require__.w";
+			export let worker: "__webpack_require__.wc";
+		}
+		export {
+			RuntimeModule,
+			GetChunkFilenameRuntimeModule,
+			LoadScriptRuntimeModule
+		};
 	}
 	export namespace prefetch {
-		export { ChunkPrefetchPreloadPlugin };
+		export {
+			AutomaticPrefetchPlugin,
+			PrefetchPlugin,
+			ChunkPrefetchPreloadPlugin
+		};
 	}
 	export namespace web {
 		export {
@@ -33767,16 +33891,16 @@ declare namespace exports {
 	export type ObjectDeserializerContext =
 		typeof ObjectDeserializerContextObjectMiddlewareObject_1;
 	export {
-		AutomaticPrefetchPlugin,
+		/** Resolves every module of the last build eagerly. @deprecated use `prefetch.AutomaticPrefetchPlugin` — TODO in the next major release: remove */ AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
 		BannerPlugin,
-		CacheClass as Cache,
+		/** The cache a compilation stores and restores through. @deprecated use `cache.Cache` — TODO in the next major release: remove */ CacheClass as Cache,
 		Chunk,
 		ChunkGraph,
 		CleanPlugin,
 		Compilation,
 		Compiler,
-		ConcatenationScope,
+		/** The protocol scope hoisting renders through. @deprecated use `optimize.ConcatenationScope` — TODO in the next major release: remove */ ConcatenationScope,
 		ContextExclusionPlugin,
 		ContextReplacementPlugin,
 		CopyPlugin,
@@ -33809,11 +33933,11 @@ declare namespace exports {
 		NormalModuleReplacementPlugin,
 		MultiCompiler,
 		ParserClass as Parser,
-		PlatformPlugin,
-		PrefetchPlugin,
+		/** Pins the target platform a `target: false` build cannot infer. @deprecated use `config.PlatformPlugin` — TODO in the next major release: remove */ PlatformPlugin,
+		/** Resolves one request eagerly at build time. @deprecated use `prefetch.PrefetchPlugin` — TODO in the next major release: remove */ PrefetchPlugin,
 		ProgressPlugin,
 		ProvidePlugin,
-		RuntimeModule,
+		/** The base class every emitted runtime module extends. @deprecated use `runtime.RuntimeModule` — TODO in the next major release: remove */ RuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
 		SSRManifestPlugin,
 		SourceMapDevToolPlugin,
@@ -33822,7 +33946,7 @@ declare namespace exports {
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,
-		WebpackOptionsApply,
+		/** Reads a resolved configuration into the plugins it implies. @deprecated use `config.WebpackOptionsApply` — TODO in the next major release: remove */ WebpackOptionsApply,
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
 		ValidationError,
