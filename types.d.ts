@@ -12206,7 +12206,7 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 }
 declare abstract class JavascriptGenerator extends Generator {
 	/**
-	 * Processes the provided module.
+	 * Processes the provided dependency.
 	 */
 	sourceDependency(
 		dependency: Dependency,
@@ -12216,7 +12216,7 @@ declare abstract class JavascriptGenerator extends Generator {
 	): void;
 
 	/**
-	 * Processes the provided module.
+	 * Processes the provided dependencies block.
 	 */
 	sourceBlock(
 		module: Module,
