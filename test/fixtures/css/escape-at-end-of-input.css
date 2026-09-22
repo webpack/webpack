@@ -1,0 +1,5 @@
+/* A stylesheet the invariants sweep reads: its last token is an escape the
+   input ran out of, which names the replacement character rather than the `\`
+   that spells it. Printing the `\` would escape the `;` the statement is
+   closed with, and each pass would then add another. */
+@\30 media\

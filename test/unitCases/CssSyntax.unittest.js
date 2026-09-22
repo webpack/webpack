@@ -192,6 +192,59 @@ describe("CssSyntax regressions", () => {
 	});
 });
 
+// A `\` carries three meanings a stylesheet a build reads never reaches, since
+// each needs the source to stop mid-escape or to spell a newline the corpus
+// does not: §4.3.5 inside a string and §4.3.7 everywhere else.
+describe("CssSyntax — an escape the input ran out of", () => {
+	const CR = String.fromCharCode(0x0d);
+	const FF = String.fromCharCode(0x0c);
+
+	/**
+	 * @param {string} src css source whose first component value is a leaf token
+	 * @returns {string} that token's unescaped text
+	 */
+	const unescapedOf = (src) =>
+		/** @type {import("../../lib/css/syntax-parser").Token} */ (
+			parseAListOfComponentValues(src)[0]
+		).unescaped;
+
+	it("removes a line continuation however the newline is spelled", () => {
+		expect(unescapedOf('"a\\\nb"')).toBe("ab");
+		expect(unescapedOf(`"a\\${CR}b"`)).toBe("ab");
+		expect(unescapedOf(`"a\\${CR}\nb"`)).toBe("ab");
+		expect(unescapedOf(`"a\\${FF}b"`)).toBe("ab");
+	});
+
+	it("reads an escape before a continuation as the escape it is", () => {
+		// The `\` closing `\41` is what opens the continuation, so reading the
+		// two together would spell U+041B rather than `A` and `b`.
+		expect(unescapedOf('"\\41\\\nb"')).toBe("Ab");
+		expect(unescapedOf('"a\\\\b"')).toBe("a\\b");
+		expect(unescapedOf('"a\\\\\\\nb"')).toBe("a\\b");
+	});
+
+	it("names nothing at end of input inside a string", () => {
+		expect(unescapedOf('"ab\\')).toBe("ab");
+		// An odd run of backslashes escaped the quote, so it closes nothing and
+		// the token runs to the end of the input.
+		expect(unescapedOf('"ab\\"')).toBe('ab"');
+	});
+
+	it("names the replacement character at end of input anywhere else", () => {
+		expect(unescapedOf("ab\\")).toBe("ab�");
+		expect(unescapedOf("#ab\\")).toBe("ab�");
+		expect(unescapedOf("@ab\\")).toBe("ab�");
+	});
+
+	it("prints what the escape names rather than the backslash", () => {
+		// Printing the `\` would escape the `}` or `;` written after it, so a
+		// second pass would read one construct where the first wrote one.
+		expect(minifyFor("a{color:re\\")).toBe("a{color:re�}");
+		expect(minifyFor("@\\30 media\\")).toBe("@\\30 media�;");
+		expect(minifyFor('a{content:"x\\')).toBe('a{content:"x"}');
+	});
+});
+
 /**
  * @param {string} src css source
  * @returns {number[]} component value types
