@@ -824,12 +824,13 @@ const runMode = (mode) =>
 
 // Only as the entry point, the way the CSS and HTML scripts guard: requiring
 // this file otherwise starts the whole comparison, so nothing could read the
-// dispatch above without paying for it.
-if (require.main === module) {
-	runMode(process.argv[2]).catch((error) => {
-		log(String(error && error.stack ? error.stack : error));
-		process.exitCode = 1;
-	});
-}
+// dispatch above without paying ten minutes for it.
+const started =
+	require.main === module ? runMode(process.argv[2]) : Promise.resolve();
+
+started.catch((error) => {
+	log(String(error && error.stack ? error.stack : error));
+	process.exitCode = 1;
+});
 
 module.exports = { runMode };
