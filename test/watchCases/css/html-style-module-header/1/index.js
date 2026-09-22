@@ -12,6 +12,7 @@ it("should write a header for the sheet the rebuild read", () => {
 	// there, and one cached against that module would still read `red`.
 	expect(style.headers).toHaveLength(1);
 	expect(style.html).not.toContain(".stale");
+	expect(style.html).not.toContain(".staler");
 	expect(style.names).toBe(SHEET);
 	expect(style.heads).toBe(SHEET);
 });
