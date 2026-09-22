@@ -10731,6 +10731,29 @@ describe("CssSyntax minify — the rules a hoist leaves side by side", () => {
 		);
 	});
 
+	it("joins a run under a rule that declares nothing itself", () => {
+		expect(minifyFor("a{.x{top:0}.y{top:0}}", T)).toBe("a .x,a .y{top:0}");
+	});
+
+	it("reads back out a selector the hoist wrote twice", () => {
+		// The join concatenates, so one rule written twice lands in the list
+		// twice — and a list is a set.
+		expect(minifyFor("a{.x{top:0}.x{top:0}}", T)).toBe("a .x{top:0}");
+	});
+
+	it("joins what a deeper hoist feeds the run above it", () => {
+		expect(minifyFor("a{.b{.c{top:0}.d{top:0}}}", T)).toBe(
+			"a .b .c,a .b .d{top:0}"
+		);
+		expect(minifyFor("a{top:0;.b{top:0;.c{top:0}}}", T)).toBe(
+			"a,a .b,a .b .c{top:0}"
+		);
+	});
+
+	it("takes in a parent written as a list", () => {
+		expect(minifyFor("a,b{top:0;.x{top:0}}", T)).toBe(":is(a,b) .x,a,b{top:0}");
+	});
+
 	it("leaves the list as written where selectors are not shortened", () => {
 		expect(
 			minifyForWith("a{.y{top:0}.x{top:0}}", T, { shortenSelectors: false })
