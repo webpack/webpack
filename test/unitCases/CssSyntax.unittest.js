@@ -10825,6 +10825,9 @@ describe("CssSyntax minify — the rules a hoist leaves side by side", () => {
 		expect(
 			minifyForWith("a{.y{top:0}.x{top:0}}", T, { shortenSelectors: false })
 		).toBe("a .y,a .x{top:0}");
+	});
+});
+
 describe("CssSyntax minify — the declaration a lowered shorthand kills", () => {
 	// Reads `text-decoration` as CSS 2.1's line alone, so the shorthand is
 	// written out as the line plus the longhands beside it — and reads those.
@@ -10905,6 +10908,29 @@ describe("CssSyntax minify — the declaration a lowered shorthand kills", () =>
 	it("keeps an earlier one where the later is a substitution", () => {
 		const css = "a{text-decoration:overline;text-decoration:var(--x)}";
 		expect(minifyFor(css, T)).toBe(css);
+	});
+
+	it.each([
+		// These lowerings write the longhands alone, so nothing later writes the
+		// property at all — what stands in front of it is read as it was written.
+		[
+			"inset",
+			"a{inset:10px;inset:10px 20px 30px 40px}",
+			"a{top:10px;right:10px;bottom:10px;left:10px;top:10px;right:20px;bottom:30px;left:40px}"
+		],
+		[
+			"place-items",
+			"a{place-items:center;place-items:center start}",
+			"a{place-items:center;place-items:center start}"
+		],
+		[
+			"overflow",
+			"a{overflow:hidden;overflow:hidden auto}",
+			"a{overflow:hidden;overflow:hidden auto}"
+		],
+		["gap", "a{gap:1px;gap:1px 2px}", "a{gap:1px;gap:1px 2px}"]
+	])("keeps what stands in front of a lowered %s", (_name, css, expected) => {
+		expect(minifyFor(css, ["chrome 80"])).toBe(expected);
 	});
 
 	it("keeps both with the rewrite off", () => {
