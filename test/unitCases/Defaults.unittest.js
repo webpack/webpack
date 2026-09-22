@@ -1982,6 +1982,7 @@ describe("snapshots", () => {
 			-   "mode": "none",
 			+   "mode": "development",
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "oneOf": Array [
 			+           Object {
@@ -1995,14 +1996,13 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
 			+           },
-			@@ ... @@
+			+         ],
 			+       },
-			+     ],
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -2066,10 +2066,11 @@ describe("snapshots", () => {
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "myLib",
 			@@ ... @@
-			-     "enabledLibraryTypes": Array [],
+			+     ],
 			+     "enabledLibraryTypes": Array [
 			+       "var",
-			+     ],
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
