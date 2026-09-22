@@ -6,17 +6,14 @@ exports[`ConfigCacheTestCases html foreign-style-body exported tests should read
 <style>/*!************************************************************************************************!*\\\\
   !*** css data:text/css;base64,Lmh0bWxuczo6YWZ0ZXJ7Y29udGVudDoiJmFtcDsifQ== (exportType: text) ***!
   \\\\************************************************************************************************/
-.htmlns::after{content:\\"&amp;\\"}
-</style>
+.htmlns::after{content:\\"&amp;\\"}</style>
 <svg><style>/*!********************************************************************************!*\\\\
   !*** css data:text/css;base64,LmZvcmVpZ257Y29sb3I6Z3JlZW59 (exportType: text) ***!
   \\\\********************************************************************************/
-.foreign{color:green}
-</style></svg>
+.foreign{color:green}</style></svg>
 <svg><style>/*!************************************************************************************!*\\\\
   !*** css data:text/css;base64,LmVzYzo6YWZ0ZXJ7Y29udGVudDoiJiJ9 (exportType: text) ***!
   \\\\************************************************************************************/
-.esc::after{content:\\"&amp;\\"}
-</style></svg>
+.esc::after{content:\\"&amp;\\"}</style></svg>
 "
 `;
