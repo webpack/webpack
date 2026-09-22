@@ -35,7 +35,7 @@ ignore:
   - "**/*.runtime.js"
   - "schemas/**/*"
   - "examples/**/*"
-  # TODO webpack 6 remove
+  # TODO in the next major release: remove
   - "lib/template/ChunkTemplate.js"
   - "lib/template/MainTemplate.js"
   - "lib/template/ModuleTemplate.js"

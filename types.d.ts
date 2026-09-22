@@ -5846,7 +5846,7 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -9208,7 +9208,7 @@ declare class ExternalModule extends Module {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -10171,7 +10171,7 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -12921,7 +12921,7 @@ declare class JavascriptParser extends ParserClass {
 		/**
 		 * Every statement the hoisting pass reads, which a tap on this turns
 		 * back into a walk of them all. Tap `preStatementByType` instead.
-		 * @deprecated TODO webpack 6: remove, with the statement walk it turns on
+		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
 		 */
 		preStatement: SyncBailHook<
 			[
@@ -12959,7 +12959,7 @@ declare class JavascriptParser extends ParserClass {
 		/**
 		 * Each declaration the parser records: a variable, function or class
 		 * one. Any other type turns the pass back into a walk of every
-		 * statement, and goes away with that walk in webpack 6.
+		 * statement, and goes away with that walk in the next major release.
 		 * @since 5.109.0
 		 */
 		preStatementByType: HookMap<
@@ -13000,7 +13000,7 @@ declare class JavascriptParser extends ParserClass {
 		/**
 		 * Every statement the block pass reads, which a tap on this turns back
 		 * into a walk of them all. Tap `blockPreStatementByType` instead.
-		 * @deprecated TODO webpack 6: remove, with the statement walk it turns on
+		 * @deprecated TODO in the next major release: remove, with the statement walk it turns on
 		 */
 		blockPreStatement: SyncBailHook<
 			[
@@ -13038,7 +13038,7 @@ declare class JavascriptParser extends ParserClass {
 		/**
 		 * Each statement the parser records for the block pass: a variable, class
 		 * or export declaration. Any other type turns the pass back into a walk
-		 * of every statement, and goes away with that walk in webpack 6.
+		 * of every statement, and goes away with that walk in the next major release.
 		 * @since 5.109.0
 		 */
 		blockPreStatementByType: HookMap<
@@ -13508,7 +13508,7 @@ declare class JavascriptParser extends ParserClass {
 	/**
 	 * Walk every statement of a scope to declare what hoists to it. Only a tap
 	 * on the deprecated `preStatement` hook asks for this.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkStatements(
 		statements: (
@@ -13543,86 +13543,86 @@ declare class JavascriptParser extends ParserClass {
 
 	/**
 	 * Pre walk block statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkBlockStatement(statement: BlockStatement): void;
 
 	/**
 	 * Pre walk if statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkIfStatement(statement: IfStatement): void;
 
 	/**
 	 * Pre walk labeled statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkLabeledStatement(statement: LabeledStatement): void;
 
 	/**
 	 * Pre walk with statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkWithStatement(statement: WithStatement): void;
 
 	/**
 	 * Pre walk switch statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkSwitchStatement(statement: SwitchStatement): void;
 
 	/**
 	 * Pre walk switch cases.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkSwitchCases(switchCases: SwitchCase[]): void;
 
 	/**
 	 * Pre walk try statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkTryStatement(statement: TryStatement): void;
 
 	/**
 	 * Pre walk catch clause.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkCatchClause(catchClause: CatchClause): void;
 
 	/**
 	 * Pre walk while statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkWhileStatement(statement: WhileStatement): void;
 
 	/**
 	 * Pre walk do while statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkDoWhileStatement(statement: DoWhileStatement): void;
 
 	/**
 	 * Pre walk for statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkForStatement(statement: ForStatement): void;
 
 	/**
 	 * Pre walk for in statement.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkForInStatement(statement: ForInStatement): void;
 
 	/**
 	 * Pre walk for of statement. `for await` is reported by the walk, not here.
-	 * @deprecated TODO webpack 6: remove, with the `preStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `preStatement` hook
 	 */
 	preWalkForOfStatement(statement: ForOfStatement): void;
 
 	/**
 	 * Scan every top-level statement for the program's module declarations.
 	 * The parser records them now, so nothing inside webpack scans for them.
-	 * @deprecated TODO webpack 6: remove
+	 * @deprecated TODO in the next major release: remove
 	 */
 	modulePreWalkStatements(
 		statements: (
@@ -13658,7 +13658,7 @@ declare class JavascriptParser extends ParserClass {
 	/**
 	 * Walk every statement of a list to declare what it binds. Only a tap on the
 	 * deprecated `blockPreStatement` hook asks for this.
-	 * @deprecated TODO webpack 6: remove, with the `blockPreStatement` hook
+	 * @deprecated TODO in the next major release: remove, with the `blockPreStatement` hook
 	 */
 	blockPreWalkStatements(
 		statements: (
@@ -15467,7 +15467,7 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -16695,7 +16695,7 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -17857,7 +17857,7 @@ declare class Module extends DependenciesBlock {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -17904,7 +17904,7 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -19604,7 +19604,7 @@ declare class NormalModule extends Module {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
@@ -26954,7 +26954,7 @@ declare class RuntimeModule extends Module {
 
 	/**
 	 * Gets source basic types.
-	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
+	 * @deprecated In the next major release, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }

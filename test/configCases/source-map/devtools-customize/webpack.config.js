@@ -16,7 +16,7 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				// TODO webpack6 - we will remove compatibility logic
+				// TODO in the next major release: we will remove compatibility logic
 				expect(compiler.options.devtool).toBe("source-map");
 
 				compiler.options.devtool = false;
