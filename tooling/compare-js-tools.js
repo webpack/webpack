@@ -805,22 +805,23 @@ const roundTrip = (acorn, before, printed, goal) => {
 		: `${lost.length} names! e.g. ${lost.slice(0, 3).join(", ")}`;
 };
 
+// A lookup rather than a chain of ternaries: each entry point is bound where
+// it is named, so reading the dispatch is reading the whole table. `--setup`
+// installs the corpus and stops, without paying for the comparison.
+const RUNNERS = new Map(
+	/** @type {[string, () => Promise<unknown>][]} */ ([
+		["--measure", measure.bind(null, TOOLS)],
+		["--compare", compare],
+		["--setup", installPackages.bind(null, CACHE_NAME)]
+	])
+);
+
 /**
  * Runs the entry point the mode names, defaulting to the whole comparison.
- * `--setup` installs the corpus and stops, for a caller that wants the install
- * proven without paying for the comparison; nothing is generated here, unlike
- * the CSS corpus, so the install is the whole of it.
- * @param {string | undefined} mode which entry point to run
- * @returns {Promise<EXPECTED_ANY>} what that entry point resolves to
+ * @param {string=} mode which entry point to run
+ * @returns {Promise<unknown>} what that entry point resolves to
  */
-const runMode = (mode) =>
-	mode === "--measure"
-		? measure(TOOLS)
-		: mode === "--compare"
-			? compare()
-			: mode === "--setup"
-				? installPackages(CACHE_NAME)
-				: main();
+const runMode = (mode = "") => (RUNNERS.get(mode) || main)();
 
 // Only as the entry point, the way the CSS and HTML scripts guard: requiring
 // this file otherwise starts the whole comparison, so nothing could read the
