@@ -1,5 +1,7 @@
 "use strict";
 
+const { SSRManifestPlugin } = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -11,6 +13,8 @@ module.exports = {
 	output: {
 		chunkFilename: "[name].js",
 		cssChunkFilename: "[name].css",
+		// keeps SSRManifestPlugin from warning about an "auto" public path
+		publicPath: "",
 		// the adopted link below never fires an event, so the case waits this out
 		chunkLoadTimeout: 50
 	},
@@ -19,5 +23,6 @@ module.exports = {
 	},
 	optimization: {
 		minimize: false
-	}
+	},
+	plugins: [new SSRManifestPlugin()]
 };

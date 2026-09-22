@@ -32012,6 +32012,7 @@ declare namespace exports {
 		export let global: "__webpack_require__.g";
 		export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
+		export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 		export let hasFetchPriority: "has fetch priority";
 		export let hasChunkPriority: "has chunk priority";
 		export let hasOwnProperty: "__webpack_require__.o";
