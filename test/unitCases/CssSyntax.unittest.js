@@ -10686,6 +10686,148 @@ describe("CssSyntax minify — a slot holding its own initial", () => {
 	});
 });
 
+describe("CssSyntax minify — the rules a hoist leaves side by side", () => {
+	const T = ["chrome 100"];
+
+	it("joins two nested rules printing one block", () => {
+		expect(minifyFor("a{.x{top:0}.y{top:0}}", T)).toBe("a .x,a .y{top:0}");
+	});
+
+	it("joins a run of them, ordered once where it ends", () => {
+		expect(minifyFor("a{.d{top:0}.c{top:0}.b{top:0}}", T)).toBe(
+			"a .b,a .c,a .d{top:0}"
+		);
+	});
+
+	it("joins the rules `&` writes as well", () => {
+		expect(minifyFor("a{&:hover{top:0}&.mix{top:0}}", T)).toBe(
+			"a.mix,a:hover{top:0}"
+		);
+	});
+
+	it("takes in the rule the hoist emptied where it prints the same block", () => {
+		expect(minifyFor("a{top:0;.x{top:0}.y{top:0}}", T)).toBe(
+			"a,a .x,a .y{top:0}"
+		);
+	});
+
+	it("leaves that rule alone where it prints another", () => {
+		expect(minifyFor("a{left:0;.x{top:0}.y{top:0}}", T)).toBe(
+			"a{left:0}a .x,a .y{top:0}"
+		);
+	});
+
+	it("parts the run where a rule prints another block", () => {
+		expect(minifyFor("a{.x{top:0}.y{top:1px}.z{top:0}}", T)).toBe(
+			"a .x{top:0}a .y{top:1px}a .z{top:0}"
+		);
+	});
+
+	it("joins them under the at-rule they were written in", () => {
+		expect(minifyFor("@media print{a{.x{top:0}.y{top:0}}}", T)).toBe(
+			"@media print{a .x,a .y{top:0}}"
+		);
+	});
+
+	it("leaves a block that keeps its nesting alone", () => {
+		// A declaration written after a nested rule is read after it, so the block
+		// is not hoisted at all and there is no run to join.
+		expect(minifyFor("a{top:0;.x{top:0}left:0}", T)).toBe(
+			"a{top:0;.x{top:0}left:0}"
+		);
+	});
+
+	it("joins nothing where the rules are not hoisted", () => {
+		// The sibling merge reads them where they stay in the block, so they join
+		// there instead — the hoist is what the run below is about.
+		expect(minifyFor("a{.x{top:0}.y{top:0}}", ["chrome 130"])).toBe(
+			"a{.x,.y{top:0}}"
+		);
+	});
+
+	it("joins a run under a rule that declares nothing itself", () => {
+		expect(minifyFor("a{.x{top:0}.y{top:0}}", T)).toBe("a .x,a .y{top:0}");
+	});
+
+	it("reads back out a selector the hoist wrote twice", () => {
+		// The join concatenates, so one rule written twice lands in the list
+		// twice — and a list is a set.
+		expect(minifyFor("a{.x{top:0}.x{top:0}}", T)).toBe("a .x{top:0}");
+	});
+
+	it("joins what a deeper hoist feeds the run above it", () => {
+		expect(minifyFor("a{.b{.c{top:0}.d{top:0}}}", T)).toBe(
+			"a .b .c,a .b .d{top:0}"
+		);
+		expect(minifyFor("a{top:0;.b{top:0;.c{top:0}}}", T)).toBe(
+			"a,a .b,a .b .c{top:0}"
+		);
+	});
+
+	it("takes in a parent written as a list", () => {
+		expect(minifyFor("a,b{top:0;.x{top:0}}", T)).toBe(":is(a,b) .x,a,b{top:0}");
+	});
+
+	it("joins the rule a hoist wrote onto the sibling in front of it", () => {
+		// The hoist writes it out on its own, so it is a neighbor of what stands
+		// either side of it — and neighbors printing one block are one rule.
+		expect(minifyFor("a{color:red}a{.x{color:red}}", T)).toBe(
+			"a,a .x{color:red}"
+		);
+	});
+
+	it("joins it onto the sibling after it", () => {
+		expect(minifyFor("a{.x{color:red}}a{color:red}", T)).toBe(
+			"a,a .x{color:red}"
+		);
+	});
+
+	it("joins what two hoists wrote", () => {
+		expect(minifyFor("a{.x{color:red}}b{.y{color:red}}", T)).toBe(
+			"a .x,b .y{color:red}"
+		);
+	});
+
+	it("joins it onto a rule the hoist had nothing to do with", () => {
+		expect(minifyFor(".p{color:red}a{.x{color:red}}", T)).toBe(
+			".p,a .x{color:red}"
+		);
+		expect(minifyFor("a{.x{color:red}}.p{color:red}", T)).toBe(
+			".p,a .x{color:red}"
+		);
+	});
+
+	it("leaves a neighbor printing another block alone", () => {
+		expect(minifyFor("a{color:blue}a{.x{color:red}}", T)).toBe(
+			"a{color:blue}a .x{color:red}"
+		);
+	});
+
+	it("joins a run that took its own parent in onto its neighbors", () => {
+		// The parent went into the run, so what the hoist wrote is one rule — and
+		// it is offered the join like any other.
+		expect(minifyFor("b{top:0}a{top:0;.x{top:0}}", T)).toBe("a,a .x,b{top:0}");
+		expect(minifyFor("a{top:0;.x{top:0}}b{top:0}", T)).toBe("a,a .x,b{top:0}");
+		expect(minifyFor("b{top:0}a{top:0;.x{top:0}.y{top:0}}", T)).toBe(
+			"a,a .x,a .y,b{top:0}"
+		);
+	});
+
+	it("leaves a hoist that wrote several rules where it stands", () => {
+		// There is no one prelude to read off a text that is several rules, so
+		// what stands beside it is not offered the join.
+		expect(minifyFor("a{left:1px;.x{top:0}.y{top:0}}", T)).toBe(
+			"a{left:1px}a .x,a .y{top:0}"
+		);
+	});
+
+	it("leaves the list as written where selectors are not shortened", () => {
+		expect(
+			minifyForWith("a{.y{top:0}.x{top:0}}", T, { shortenSelectors: false })
+		).toBe("a .y,a .x{top:0}");
+	});
+});
+
 describe("CssSyntax minify — nesting the target cannot read", () => {
 	it("writes a rule nested in another on its own", () => {
 		expect(minifyFor("a{color:red;& b{color:blue}}", ["chrome 100"])).toBe(
