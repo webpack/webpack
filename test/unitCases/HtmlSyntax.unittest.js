@@ -3471,6 +3471,32 @@ describe("parseHtml", () => {
 			});
 		});
 
+		it("should not decode HTML-only or differently-cased entity names", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root>&nbsp;&AMP;&amp;</root>").children[0]
+			);
+			expect(root.children[0]).toMatchObject({
+				type: NodeType.Text,
+				data: "&nbsp;&AMP;&"
+			});
+		});
+
+		it("should not apply selectedcontent HTML behavior", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml(
+					"<root><select><option selected=\"\"><span/></option><selectedcontent/></select></root>"
+				).children[0]
+			);
+			const select = /** @type {MatElement} */ (root.children[0]);
+			expect(select.children.map((node) => node.type)).toEqual([
+				NodeType.Element,
+				NodeType.Element
+			]);
+			expect(
+				/** @type {MatElement} */ (select.children[1]).children
+			).toHaveLength(0);
+		});
+
 		it("should honor AST skip options without changing XML structure", () => {
 			const root = /** @type {MatElement} */ (
 				parseXml("<root>text<!-- comment --><child/></root>", {
