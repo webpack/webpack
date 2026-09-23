@@ -15,3 +15,9 @@ exports.unwrappedNamed = unwrappedNamed;
 exports.sharedNs = sharedNs;
 exports.bumpFromCjs = bump;
 exports.chain = chain;
+
+// direct form
+exports.nsDirect = require("./plain-esm.js");
+exports.unwrappedDirect = require("./value-esm.js");
+// require() hop into a CommonJS module that re-exports again
+exports.mid = require("./cjs-mid.js");

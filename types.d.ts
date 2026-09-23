@@ -9103,7 +9103,7 @@ declare abstract class ExportInfo {
 	findTarget(
 		moduleGraph: ModuleGraph,
 		validTargetModuleFilter: (module: Module) => boolean
-	): undefined | null | false | TargetItemWithoutConnection;
+	): undefined | null | false | FoundTargetItem;
 
 	/**
 	 * Resolves the reexport chain as far as `resolveTargetFilter` allows and
@@ -10434,6 +10434,12 @@ type FileTimestamp =
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
+}
+declare interface FoundTargetItem {
+	module: Module;
+	connection: ModuleGraphConnection;
+	export: string[];
+	deferred: boolean;
 }
 declare interface FullHashChunkModuleHashes {
 	[index: string]: string;
@@ -31384,11 +31390,6 @@ declare interface TargetItemWithConnection {
 	module: Module;
 	connection: ModuleGraphConnection;
 	export?: string[];
-}
-declare interface TargetItemWithoutConnection {
-	module: Module;
-	export: string[];
-	deferred: boolean;
 }
 declare class Template {
 	constructor();
