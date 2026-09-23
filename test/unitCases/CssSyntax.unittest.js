@@ -1822,18 +1822,32 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	// instead), and there the stylesheet ends too — so a build never reaches this,
 	// but `webpack.css.syntax` minifies whatever source it is handed.
 	it("keeps an attribute value the tokenizer closed at EOF", () => {
-		// `"bar` has no closing quote, so unquoting would drop the `r` — the quote is
-		// written back instead, keeping the value `bar` once the prelude's `];` follows.
-		// An at-rule prelude still prints at EOF, unlike a qualified rule (§5.4.3).
-		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar"];');
-		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar'];");
-		// The escape swallows the final quote, so this one is unterminated too.
-		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\""];');
+		// The quote is written back before the transforms read the string, so `bar`
+		// is the value either way and the same unquoting a closed string gets
+		// applies. An at-rule prelude still prints at EOF, unlike a qualified rule
+		// (§5.4.3), so the `];` follows.
+		expect(min('@unknown [foo="bar')).toBe("@unknown [foo=bar];");
+		expect(min("@unknown [foo='bar")).toBe("@unknown [foo=bar];");
+		// The escape swallows the final quote, so this one is unterminated too. Its
+		// value holds a `"` and is no bare identifier, so it stays a string — and
+		// picks the delimiter that needs no escape, as a closed one would.
+		expect(min('@unknown [foo="bar\\"')).toBe("@unknown [foo='bar\"'];");
 		// A `\` left dangling at EOF contributes nothing, so it goes rather than
 		// escaping the quote written back after it.
-		expect(min('@unknown [foo="bar\\')).toBe('@unknown [foo="bar"];');
-		// A closed string still unquotes.
+		expect(min('@unknown [foo="bar\\')).toBe("@unknown [foo=bar];");
+		// A closed string reads the same, which is the point: how the source ended
+		// does not decide what the value minifies to.
 		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
+		// So the output is a fixed point, where before it took a second pass to
+		// reach one: the quote written back kept a transform from reading it.
+		for (const source of [
+			'@unknown [foo="bar',
+			"@unknown [foo='bar",
+			'@unknown [foo="bar\\"',
+			'@unknown [foo="bar\\'
+		]) {
+			expect(min(min(source))).toBe(min(source));
+		}
 	});
 
 	it("keeps an empty rule a `@namespace` after it is made inert by", () => {

@@ -29,6 +29,9 @@ const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
 
+const {
+	builtinEmbeddedRenderer
+} = require("../lib/html/builtinEmbeddedRenderer");
 const htmlMinify = require("../lib/html/htmlMinify");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
@@ -410,12 +413,20 @@ const AGGRESSIVE_OPTIONS = {
 	removeImpliedTags: true
 };
 
-// The option sets the invariants are held over, which are the ones the
-// comparison's own webpack rows are measured with.
+/** @type {HtmlPrintOptions} */
+const EMBEDDED_OPTIONS = {
+	...AGGRESSIVE_OPTIONS,
+	renderEmbeddedSource: builtinEmbeddedRenderer()
+};
+
+// The option sets the invariants are held over. The first two are the ones the
+// comparison's own webpack rows are measured with; the third is what a build
+// actually runs, where a `<style>` and every `style=""` reach the CSS minifier.
 /** @type {[string, HtmlPrintOptions][]} */
 const PRESETS = [
 	["default", DEFAULT_OPTIONS],
-	["aggressive", AGGRESSIVE_OPTIONS]
+	["aggressive", AGGRESSIVE_OPTIONS],
+	["embedded", EMBEDDED_OPTIONS]
 ];
 
 // Each entry builds its callable on demand, so the measuring worker loads only
@@ -1649,6 +1660,18 @@ const EXPECTED = [
 		contains: "&#34;",
 		source: "style-attribute",
 		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
+	},
+	{
+		relation: "respelling quote-single",
+		contains: 'content:"&#39;"',
+		source: "minimize-transforms",
+		why: 'a `style` the CSS minifier shortens is written back only where the shorter CSS survives being escaped into the attribute, and respelling the apostrophes as character references makes the source the longer of the two — so the minified declarations win here where the source won as written. Both spell `content: "\'"`; the relation reads the attribute as HTML, which cannot see that two spellings of one declaration list are the same CSS'
+	},
+	{
+		relation: "respelling references",
+		contains: 'content:"&#39;"',
+		source: "minimize-transforms",
+		why: "the same `style` attribute as the entry above, reached by respelling its text as character references rather than its delimiter: it lengthens the source the same way, so the minified declarations win the same comparison"
 	}
 ];
 
