@@ -1,0 +1,20 @@
+/* The shorthand is lowered into the line it keeps plus a longhand beside it,
+   and the line every target reads — so the declaration in front of it is
+   written over rather than read as the fallback its spelling suggests. */
+.a { text-decoration: underline; text-decoration: underline dotted }
+.b { text-decoration: overline; text-decoration: underline dotted }
+
+/* Every earlier one goes, not just the last. */
+.c { text-decoration: overline; text-decoration: blink; text-decoration: underline dotted }
+
+/* A rule written between them parts nothing the later one writes over. */
+.d { text-decoration: overline; & i { top: 0 } text-decoration: underline dotted }
+
+/* `!important` wins the tie wherever both are read. */
+.e { text-decoration: overline !important; text-decoration: underline dotted }
+
+/* A longhand is not the property the shorthand repeats. */
+.f { text-decoration-line: underline; text-decoration: underline dotted }
+
+/* A substitution is a value nothing here reads. */
+.g { text-decoration: overline; text-decoration: var(--x) }
