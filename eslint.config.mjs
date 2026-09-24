@@ -128,7 +128,7 @@ export default defineConfig([
 	{
 		// The option sources `tooling/generate-schemas.js` derives the schemas from
 		// are modules, and their comments are what a schema says rather than prose.
-		files: ["schemas/types/**/*.ts"],
+		files: ["declarations/**/*.ts"],
 		languageOptions: { parser: tseslint.parser, sourceType: "module" },
 		rules: {
 			"webpack/comment-length": "off",
