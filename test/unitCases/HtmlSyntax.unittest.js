@@ -3880,6 +3880,30 @@ b&#10;c">
 				).toMatchSnapshot();
 			});
 
+			it("should write only what the target browsers read", () => {
+				const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
+				const document =
+					'<svg xmlns="http://www.w3.org/2000/svg"><style>g > .b { fill: rgba(0,0,255,0.5) } @media (min-width: 0px) { .e { fill: red } } .p { user-select: none }</style><rect style="fill: rgba(255,0,0,0.5)"/></svg>';
+				/**
+				 * @param {string[]=} browsers the browserslist selection
+				 * @returns {string} the minified document
+				 */
+				const minify = (browsers) =>
+					/** @type {{ code: string }} */ (
+						new SourceProcessor().process(document, {
+							xml: true,
+							mode: "minify",
+							renderEmbeddedSource: builtinEmbeddedRenderer(
+								browsers === undefined ? undefined : { environment: { browsers } }
+							)
+						})
+					).code;
+				expect(minify()).toMatchSnapshot("every ability");
+				expect(minify(["chrome 60", "safari 10", "ie 11"])).toMatchSnapshot(
+					"legacy browsers"
+				);
+			});
+
 			it("should defer an XML stylesheet to an asynchronous renderer", async () => {
 				/** @type {string[]} */
 				const offered = [];
