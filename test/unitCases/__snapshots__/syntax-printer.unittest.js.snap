@@ -45,6 +45,8 @@ exports[`syntax-printer should print exactly as terser does: output long enough 
 
 exports[`syntax-printer should print exactly as terser does: parentheses the tree does not hold 1`] = `"a,b,x=(a,b),(async()=>{})();for(var i=(0 in x);i;);a=b=c,x=({a:a}=y);"`;
 
+exports[`syntax-printer should print exactly as terser does: regular expressions escaping characters beyond ASCII 1`] = `"sink(/🏳0🌈️☺/,/\\\\\\\\é[é]\\\\x41/g);"`;
+
 exports[`syntax-printer should print exactly as terser does: statements a missing semicolon would join 1`] = `"a=b(c||d).e(),f=g[h].forEach(i),j=k\`l\`.m(),n=o+p;do{q()}while(r);for(;!t;);var u=function(){},v=class{},w={};"`;
 
 exports[`syntax-printer should print exactly as terser does: strings needing each escape and each quote 1`] = `"sink('a\\"b',\\"c'd\\",\\"e'f\\\\\\"g'\\",\\"\\\\\\\\ \\\\b \\\\f \\\\n \\\\r \\\\t \\\\v\\",\\"\\\\0\\",\\"\\\\x001\\",\\"\\\\x001\\",\\"\\\\u2028\\\\u2029\\\\ufeff\\",\\"é ☃ 😀\\",\\"\\\\ud800 \\\\udc00 \\\\ud83d\\",\\"'\\\\\\"'\\",\\"q'\\\\n\\",'r\\"\\\\t');"`;
