@@ -10954,6 +10954,23 @@ describe("CssSyntax minify — a nested selector opening on a combinator", () =>
 		expect(minifyFor("a{ > b{top:0}}", T)).toBe("a>b{top:0}");
 	});
 
+	it("orders the list on what is written, not on what was", () => {
+		// The list was canonical as the nested rule spelled it; writing the parent
+		// in front of each selector is what decides the order they read in.
+		expect(minifyFor("a{>b,+c,d{top:0}}", T)).toBe("a d,a+c,a>b{top:0}");
+		expect(minifyFor("a,e{>b,+c{top:0}}", T)).toBe(
+			":is(a,e)+c,:is(a,e)>b{top:0}"
+		);
+	});
+
+	it("reads back out a selector the substitution made a twin", () => {
+		expect(minifyFor("a{>b,>b{top:0}}", T)).toBe("a>b{top:0}");
+	});
+
+	it("leaves a list the substitution leaves canonical", () => {
+		expect(minifyFor("a{b,c,d{top:0}}", T)).toBe("a b,a c,a d{top:0}");
+	});
+
 	it("keeps the space in front of a column combinator", () => {
 		// `||` is not one the printer writes tight, so neither is this.
 		expect(minifyFor("a{||b{top:0}}", T)).toBe("a ||b{top:0}");
