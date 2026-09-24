@@ -16717,7 +16717,11 @@ declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
-	constructor(withCreateScriptUrl?: boolean, withFetchPriority?: boolean);
+	constructor(
+		withCreateScriptUrl?: boolean,
+		withFetchPriority?: boolean,
+		withImportScripts?: boolean
+	);
 	static getCompilationHooks: (
 		compilation: Compilation
 	) => LoadScriptCompilationHooks;
