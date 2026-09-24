@@ -81,6 +81,34 @@ export default defineConfig([
 		ignores: ["lib/**/*.runtime.js", "hot/*.js"],
 		extends: [config],
 		rules: {
+			// The keywords an option type states for `tooling/generate-schemas.js`,
+			// which JSON Schema has and JSDoc does not
+			"jsdoc/check-tag-names": [
+				"error",
+				{
+					definedTags: [
+						"schema",
+						"inline",
+						"minLength",
+						"minItems",
+						"minProperties",
+						"minimum",
+						"uniqueItems",
+						"absolutePath",
+						"pattern",
+						"additionalProperties",
+						"emptyProperties",
+						"undefinedAsNull",
+						"cliHelper",
+						"cliExclude",
+						"jsonType",
+						"tsType",
+						"typeOnly",
+						"properties",
+						"not"
+					]
+				}
+			],
 			// Too noise
 			"jsdoc/require-property-description": "off",
 			// Indents are used for imports
