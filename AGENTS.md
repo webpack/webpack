@@ -96,7 +96,7 @@ The directory listings below are the canonical map of the repository. **Whenever
     file. `ProvidePlugin` substitutes an import rather than a value, so it is not one
     of these and lives in `lib/provide/`.
   - `lib/dependencies/` — The concrete `Dependency` subclasses and their templates
-    (HarmonyImport, CommonJsRequire, RequireContext, …); the `Dependency` they extend is
+    (ESMImport, CommonJsRequire, RequireContext, …); the `Dependency` they extend is
     in `lib/graph/` and the `DependencyTemplate` in `lib/template/`.
   - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
   - `lib/diagnostics/` — Plugins that raise a build-wide error or warning of their own:
