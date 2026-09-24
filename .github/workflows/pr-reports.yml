@@ -4,7 +4,7 @@ name: Pull Request Reports
 # `pull_request` run gets a read-only token, so the comment is written here, in
 # the base repository's context, which is why nothing here runs the PR's code.
 on:
-  # zizmor: ignore[dangerous-triggers] -- no checkout, and the artifact is data
+  # zizmor: ignore[dangerous-triggers] -- only `main` is checked out; artifact is data
   workflow_run:
     workflows: [Code Size, Types Coverage]
     types: [completed]
@@ -21,6 +21,14 @@ jobs:
       actions: read
       pull-requests: write
     steps:
+      # `github.sha` of a `workflow_run` is the default branch's head, so this
+      # is the base repository's own script, never the pull request's.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+          sparse-checkout-cone-mode: false
+
       # WHY: the artifact is written by the pull request's own run, whose
       # workflow file a fork can edit, so it is data only: never executed,
       # never interpolated into a shell, and its bytes are checked below.
@@ -74,11 +82,9 @@ jobs:
               core.info(`No open pull request is at ${run.head_sha}, skipping.`);
               return;
             }
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              ...context.repo,
-              issue_number: pull.number,
-              per_page: 100
-            });
+            const { upsertReportComment } = await import(
+              `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
+            );
             const footer = `\n\n<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}.</sub>`;
             for (const [name, { file, marker }] of Object.entries(REPORTS)) {
               const reportPath = path.join(process.env.REPORTS_DIR, name, file);
@@ -99,26 +105,12 @@ jobs:
                 continue;
               }
               // A zero-width space after `@` keeps a report from pinging anyone.
-              const body = report.replace(/@/g, "@​") + footer;
-              // Only a comment this workflow wrote: anyone can post the marker,
-              // and editing theirs would pass their numbers off as CI's.
-              const previous = comments.find(
-                (comment) =>
-                  comment.user.type === "Bot" &&
-                  comment.user.login === "github-actions[bot]" &&
-                  comment.body.startsWith(marker)
-              );
-              if (previous) {
-                await github.rest.issues.updateComment({
-                  ...context.repo,
-                  comment_id: previous.id,
-                  body
-                });
-              } else {
-                await github.rest.issues.createComment({
-                  ...context.repo,
-                  issue_number: pull.number,
-                  body
-                });
-              }
+              const body = report.replace(/@/g, "@\u200b") + footer;
+              await upsertReportComment({
+                github,
+                context,
+                issueNumber: pull.number,
+                marker,
+                body
+              });
             }
