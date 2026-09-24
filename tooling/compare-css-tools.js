@@ -223,13 +223,22 @@ const TARGET_VARS_OPTIONS = {
 	rewriteCustomProperties: true
 };
 
-// The option sets the invariants are held over, which are the ones the
-// comparison's own webpack rows are measured with.
+// WHY: every engine `MODERN_BROWSERS` names reads nesting, color-mix and the
+// rest, so under it the lowerings never run. A pinned pre-nesting target that
+// reads `:is()` is the one the nesting lowering needs, and never goes stale.
+/** @type {CssPrintOptions} */
+const LEGACY_TARGET_OPTIONS = {
+	environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
+};
+
+// The option sets the invariants are held over: the ones the comparison's own
+// webpack rows are measured with, plus the legacy target for the lowerings.
 /** @type {[string, CssPrintOptions][]} */
 const PRESETS = [
 	["default", DEFAULT_OPTIONS],
 	["target", TARGET_OPTIONS],
-	["target+vars", TARGET_VARS_OPTIONS]
+	["target+vars", TARGET_VARS_OPTIONS],
+	["legacy", LEGACY_TARGET_OPTIONS]
 ];
 
 // Each entry builds its callable on demand, so the measuring worker loads only
