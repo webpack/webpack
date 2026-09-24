@@ -101,6 +101,28 @@ describe("jsMinify", () => {
 				expect(mine.extractedComments).toEqual(reference.extractedComments);
 				expect(mine.map).toEqual(reference.map);
 			});
+
+			// `futureDefaults` minifies through webpack's printer, which owes the
+			// same answer as terser as published.
+			it(`should match the reference minifier through the printer: ${label}`, async () => {
+				const map = withMap ? INPUT_MAP : undefined;
+				const mine = await jsMinify(
+					input,
+					map,
+					{ ...options, printer: true },
+					extractComments
+				);
+				const reference = await terserMinify(
+					input,
+					/** @type {EXPECTED_ANY} */ (map),
+					{ ...options },
+					extractComments
+				);
+
+				expect(mine.code).toBe(reference.code);
+				expect(mine.extractedComments).toEqual(reference.extractedComments);
+				expect(mine.map).toEqual(reference.map);
+			});
 		}
 	}
 

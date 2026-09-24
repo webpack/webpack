@@ -279,6 +279,7 @@ describe("syntax-printer", () => {
 			expect(terser.phases).toContain("mangle");
 			expect(terser.phases).toContain("output");
 			expect(terser.phases).toContain("print");
+			expect(terser.phases).toContain("parse");
 		}
 	});
 
@@ -381,6 +382,70 @@ describe("syntax-printer", () => {
 		// Knows the option set but hands its generators other members.
 		expect(
 			fits((options) => (options ? rejectNaming(FORMAT_DEFAULTS) : { print() {} }))
+		).toBe(false);
+	});
+
+	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
+	const PARSED_BY_TERSER = [
+		["an expression rather than a program", "a + b", { parse: { expression: true } }],
+		["an option this does not read", "a + b", { parse: { strict: true } }],
+		["sources embedded in the map", "sink(1)", { sourceMap: { includeSources: true } }],
+		[
+			"an inline input map",
+			`sink(1)\n//# sourceMappingURL=data:application/json;base64,${Buffer.from(
+				JSON.stringify({ version: 3, sources: ["x.js"], names: [], mappings: "AAAA" })
+			).toString("base64")}`,
+			{ sourceMap: { content: "inline" } }
+		],
+		["a tree printed as ESTree", "sink(1)", { format: { spidermonkey: true } }],
+		["a shebang terser is told to refuse", "#!/bin/node\nsink(1)", { parse: { shebang: false } }],
+		["two files", { "a.js": "sink(1)", "b.js": "sink(2)" }, {}],
+		["an array of sources", ["sink(1)", "sink(2)"], {}],
+		["a file that is not text", { "a.js": 1 }, {}],
+		["a source webpack's parser refuses", "sink(", {}],
+		["a source terser reads its own way", "x = 0123;", {}],
+		["a module", "export const a = 1; import b from 'c'; sink(b);", { module: true }],
+		["a module named by the parse options", "export const a = 1;", { parse: { module: true } }],
+		["a return outside a function", "return 1;", { parse: { bare_returns: true } }],
+		["a string rather than files", "sink(1)", {}]
+	];
+
+	for (const [name, files, options] of PARSED_BY_TERSER) {
+		it(`should minify as terser does where terser parses: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/**
+			 * @param {typeof minify} run a minify
+			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
+			 */
+			const outcome = async (run) => {
+				try {
+					const result = await run(JSON.parse(JSON.stringify(files)), {
+						...options,
+						compress: false
+					});
+					return { code: result.code, map: result.map };
+				} catch (err) {
+					return { error: /** @type {Error} */ (err).message };
+				}
+			};
+			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
+		});
+	}
+
+	it("should decline a terser whose parse it does not reproduce", () => {
+		const parse =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "parse")
+			);
+		expect(parse.supports({ ast: {}, parse: {} })).toBe(false);
+		// A parser whose tree differs from what the conversion builds.
+		const reference = { AST_Token: class {}, AST_Node: { prototype: { print_to_string() {} } } };
+		expect(
+			parse.supports({
+				ast: reference,
+				parse: { parse: () => ({ TYPE: "Toplevel", body: [] }) }
+			})
 		).toBe(false);
 	});
 
