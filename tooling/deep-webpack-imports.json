@@ -40,6 +40,8 @@
     "lib/dependencies/AMDRequireItemDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/CommonJsRequireContextDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/CommonJsRequireDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ContextDependency": "Grouped under lib/dependencies/context/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/CriticalDependencyWarning": "Moved to lib/errors/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/DelegatedExportsDependency": "Removed in webpack 5.",
     "lib/dependencies/DelegatedSourceDependency": "Moved to lib/dll/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/DllEntryDependency": "Moved to lib/dll/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
@@ -62,6 +64,7 @@
     "lib/dependencies/ModuleHotAcceptDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/ModuleHotDeclineDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/MultiEntryDependency": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
+    "lib/dependencies/RequireContextDependency": "Grouped under lib/dependencies/context/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/RequireEnsureDependenciesBlock": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, inside a `try` to detect webpack 4, where a re-export would pick the wrong branch.",
     "lib/dependencies/RequireEnsureDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/RequireEnsureItemDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
@@ -109,17 +112,9 @@
         "webpack-svgstore"
       ]
     },
-    "lib/dependencies/ContextDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/dependencies/ContextElementDependency": {
       "weekly": 132760,
       "packages": ["context-map-webpack-plugin", "hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/CriticalDependencyWarning": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ImportContextDependency": {
       "weekly": 132630,
@@ -156,10 +151,6 @@
       ]
     },
     "lib/dependencies/PrefetchDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireContextDependency": {
       "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
