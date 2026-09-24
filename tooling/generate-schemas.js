@@ -5,13 +5,13 @@
 
 "use strict";
 
-// Derive every option schema from the TypeScript module that declares it.
-// `declarations/**/*.ts` is the source and is written by hand; nothing here
-// writes it.
+// Derive every option schema from the module that declares it: a plugin's
+// options are JSDoc typedefs in its own `lib/` module, named by an `@schema`
+// tag, and `declarations/WebpackOptions.ts` holds the configuration itself.
+// Both are written by hand; nothing here writes them.
 //
 //   node tooling/generate-schemas.js          # report what each source derives
 //   node tooling/generate-schemas.js --write  # write those schemas
-//   node tooling/generate-schemas.js --strict # report what an allowance forgives
 //
 // WHY: the report holds each derived schema against the committed one, so a
 // source that stops deriving what webpack validates says so rather than
@@ -29,8 +29,6 @@ const VOCABULARY_NAME = "vocabulary";
 
 const write = process.argv.includes("--write");
 const verbose = process.argv.includes("--verbose");
-// Report every difference, including the ones an allowance would forgive.
-const strict = process.argv.includes("--strict");
 
 // The order every committed schema already writes its keywords in: a
 // topological sort of the corpus, which has no conflicting pair, so a
@@ -190,27 +188,21 @@ const isObject = (value) =>
 
 /**
  * Walks every node of a schema, replacing each with what the transform answers.
- * The keyword a node was reached through is passed along, which is how a node
- * inside a union is told apart from one a property names.
  * @param {unknown} value the schema, or any part of one
- * @param {(node: Record<string, EXPECTED_ANY>, through: string) => Record<string, EXPECTED_ANY>} transform what each node becomes
- * @param {string} through the keyword this node was reached through
+ * @param {(node: Record<string, EXPECTED_ANY>) => Record<string, EXPECTED_ANY>} transform what each node becomes
  * @returns {unknown} the rewritten schema
  */
-const walkSchema = (value, transform, through = "") => {
+const walkSchema = (value, transform) => {
 	if (Array.isArray(value)) {
-		return value.map((one) => walkSchema(one, transform, through));
+		return value.map((one) => walkSchema(one, transform));
 	}
 	if (!isObject(value)) return value;
-	const node = transform(
-		/** @type {Record<string, EXPECTED_ANY>} */ (value),
-		through
-	);
+	const node = transform(/** @type {Record<string, EXPECTED_ANY>} */ (value));
 	/** @type {Record<string, unknown>} */
 	const walked = {};
 	for (const [keyword, nested] of Object.entries(node)) {
 		if (keyword !== "properties" && keyword !== "definitions") {
-			walked[keyword] = walkSchema(nested, transform, keyword);
+			walked[keyword] = walkSchema(nested, transform);
 			continue;
 		}
 		/** @type {Record<string, unknown>} */
@@ -218,7 +210,7 @@ const walkSchema = (value, transform, through = "") => {
 		for (const [name, schema] of Object.entries(
 			/** @type {Record<string, unknown>} */ (nested)
 		)) {
-			inner[name] = walkSchema(schema, transform, "");
+			inner[name] = walkSchema(schema, transform);
 		}
 		walked[keyword] = inner;
 	}
@@ -314,92 +306,6 @@ const normalizeTsTypes = (value) =>
 				}
 			: node
 	);
-
-/**
- * @typedef {object} Allowance
- * @property {string} name what the two documents are allowed to differ by
- * @property {(schema: unknown) => unknown} apply what it rewrites away
- */
-
-// WHY: five differences say nothing about whether the types carry the schema,
-// so a run reports them apart from a failure. Each leaves what the validator
-// does untouched: a keyword another implies, an order nothing reads, a shape
-// `$ref` already expresses, or prose where TypeScript has no syntax for it.
-/** @type {Allowance[]} */
-const ALLOWANCES = [
-	{
-		name: "a description on a union branch or an array item",
-		apply: (schema) =>
-			walkSchema(schema, (node, through) => {
-				if (through !== "anyOf" && through !== "items") return node;
-				const kept = omit(node, ["description"]);
-				const only = Object.keys(kept).length === 1;
-				return only && Array.isArray(kept.oneOf) && kept.oneOf.length === 1
-					? kept.oneOf[0]
-					: kept;
-			})
-	},
-	{
-		name: "the order a required list names its properties in",
-		apply: (schema) =>
-			walkSchema(schema, (node) =>
-				Array.isArray(node.required)
-					? { ...node, required: [...node.required].sort() }
-					: node
-			)
-	},
-	{
-		name: "an enum branch flattened into the union around it",
-		apply: (schema) =>
-			walkSchema(schema, (node) =>
-				Array.isArray(node.anyOf)
-					? {
-							...node,
-							anyOf: node.anyOf.flatMap(
-								(/** @type {Record<string, EXPECTED_ANY>} */ branch) =>
-									Array.isArray(branch.enum) && Object.keys(branch).length === 1
-										? branch.enum.map((one) => ({ enum: [one] }))
-										: [branch]
-							)
-						}
-					: node
-			)
-	},
-	{
-		name: "a titled object written inline rather than as a definition",
-		apply: (schema) => {
-			const document = /** @type {Record<string, EXPECTED_ANY>} */ (schema);
-			/** @type {Record<string, EXPECTED_ANY>} */
-			const definitions = { ...document.definitions };
-			const lifted = walkSchema(
-				omit(document, ["definitions"]),
-				(node, through) => {
-					if (through === "" || !node.properties) return node;
-					if (typeof node.title !== "string") return node;
-					definitions[node.title] = omit(node, ["title"]);
-					return { $ref: `#/definitions/${node.title}` };
-				}
-			);
-			const walked = /** @type {Record<string, EXPECTED_ANY>} */ (lifted);
-			return Object.keys(definitions).length > 0
-				? { ...walked, definitions }
-				: walked;
-		}
-	},
-	{
-		name: "a type keyword the enum beside it already implies",
-		apply: (schema) =>
-			walkSchema(schema, (node) => (node.enum ? omit(node, ["type"]) : node))
-	}
-];
-
-/**
- * @param {unknown} schema a schema
- * @param {Allowance[]} allowances the differences to rewrite away
- * @returns {unknown} the schema each of them has been applied to
- */
-const allow = (schema, allowances) =>
-	allowances.reduce((current, allowance) => allowance.apply(current), schema);
 
 /**
  * @param {unknown} left one value
@@ -578,6 +484,7 @@ const fromDocumentationTags = (tags) => {
 	if (tags.has("since")) {
 		keywords.added = /** @type {string} */ (tags.get("since"));
 	}
+	if (tags.has("title")) keywords.title = tags.get("title");
 	if (tags.has("experimental")) keywords.experimental = true;
 	if (tags.has("deprecated")) keywords.deprecated = true;
 	if (tags.has("undefinedAsNull")) keywords.undefinedAsNull = true;
@@ -662,7 +569,9 @@ const describedItems = (node, checker, known) => {
 // The tags a leading comment may carry, matched by name so prose holding an
 // "@" is left alone. `not` takes JSON, so it reads to the end of the comment.
 const KNOWN_TAG_REGEXP = new RegExp(
-	`@(since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|properties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join("|")})(?:[ \\t]+([^@]*))?`
+	`@(title|since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|properties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join(
+		"|"
+	)})(?:[ \\t]+([^@]*))?`
 );
 
 /**
@@ -1006,8 +915,8 @@ const declarationsOf = (source) => {
 			/** @type {unknown} */ (node)
 		).jsDoc;
 		for (const block of blocks || []) {
-			const typedef = (block.tags || []).find((tag) =>
-				ts.isJSDocTypedefTag(tag)
+			const typedef = /** @type {ts.JSDocTypedefTag | undefined} */ (
+				(block.tags || []).find((tag) => ts.isJSDocTypedefTag(tag))
 			);
 			if (!typedef || !typedef.name) continue;
 			/** @type {Map<string, string>} */
@@ -1146,7 +1055,6 @@ const typeScriptToSchema = (source, checker) => {
 			$ref: `${from}.json#/definitions/${exported.elements[0].name.text}`
 		};
 	}
-	/** @type {ts.Statement[]} */
 	const declarations = declarationsOf(source);
 	const known = new Map(
 		declarations.map((declaration) => [
@@ -1203,7 +1111,7 @@ const typeScriptToSchema = (source, checker) => {
 			root = schema;
 			rootName = name;
 		} else if (tags.has("inline")) {
-			inlined.set(name, { title: name, ...omit(schema, ["inline"]) });
+			inlined.set(name, omit(schema, ["inline"]));
 		} else {
 			definitions[name] = schema;
 		}
@@ -1217,6 +1125,13 @@ const typeScriptToSchema = (source, checker) => {
 			}
 		: { definitions };
 	const resolved = walkSchema(document, (node) => {
+		// WHY: a reference written with a description of its own is wrapped in a
+		// `oneOf`, which an inlined body does not need: it merges in place.
+		if (Array.isArray(node.oneOf) && node.oneOf.length === 1) {
+			const one = node.oneOf[0];
+			const body = one && one.$ref && inlined.get(readReference(one.$ref).name);
+			if (body) return { ...omit(node, ["oneOf"]), ...body };
+		}
 		const held = node.$ref && inlined.get(readReference(node.$ref).name);
 		return held || node;
 	});
@@ -1336,8 +1251,6 @@ const main = async () => {
 	let identical = 0;
 	/** @type {string[]} */
 	const failures = [];
-	/** @type {Map<string, string[]>} */
-	const allowed = new Map();
 	/** @type {string[]} */
 	const reordered = [];
 
@@ -1377,47 +1290,22 @@ const main = async () => {
 			if (write) writeFile(schemaFile, text);
 			continue;
 		}
-		const left = allow(committed, strict ? [] : ALLOWANCES);
-		const right = allow(generated, strict ? [] : ALLOWANCES);
-		if (!deepEqual(left, right)) {
-			const differences = findDifferences(left, right);
-			failures.push(
-				`${name}: ${differences.length} difference(s)\n${differences
-					.map((difference) => `    ${difference}`)
-					.join("\n")}`
-			);
-			continue;
-		}
-		// It round-trips: what differs is validation-neutral, and the allowance
-		// each file needed is named below rather than counted against it.
-		matching++;
-		const needed = ALLOWANCES.filter((allowance) => {
-			const rest = ALLOWANCES.filter((other) => other !== allowance);
-			return !deepEqual(allow(committed, rest), allow(generated, rest));
-		});
-		for (const allowance of needed) {
-			allowed.set(allowance.name, [
-				...(allowed.get(allowance.name) || []),
-				name
-			]);
-		}
+		const differences = findDifferences(committed, generated);
+		failures.push(
+			`${name}: ${differences.length} difference(s)\n${differences
+				.map((difference) => `    ${difference}`)
+				.join("\n")}`
+		);
 	}
 
 	console.log(
-		`${matching} of ${sourceOf.size} schemas derive from ${path.relative(
-			ROOT,
-			TYPES_DIRECTORY
-		)}, ${identical} byte for byte.`
+		`${matching} of ${sourceOf.size} schemas derive from their sources, ${identical} byte for byte.`
 	);
 	if (reordered.length > 0) {
 		console.log(
 			`\n${reordered.length} round-trip but are written differently:`
 		);
 		for (const file of reordered) console.log(`  ${file}`);
-	}
-	for (const [allowance, files] of allowed) {
-		console.log(`\n${files.length} differ only by ${allowance}:`);
-		for (const file of files) console.log(`  ${file}`);
 	}
 	if (failures.length > 0) console.log("");
 	for (const failure of failures) {

@@ -1,7 +1,6 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import config from "eslint-config-webpack";
 import configs from "eslint-config-webpack/configs.js";
-import jsdoc from "eslint-plugin-jsdoc";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -22,6 +21,26 @@ function getSharedConfig(name) {
 	}
 
 	return sharedConfig;
+}
+
+/**
+ * The `jsdoc` plugin as `eslint-config-webpack` already registers it: a rule set
+ * to anything but "off" needs the plugin resolved, and taking it from the shared
+ * config keeps the version webpack lints with in one place.
+ * @returns {import("eslint").ESLint.Plugin} the plugin object
+ */
+function getJsdocPlugin() {
+	const shared = getSharedConfig("typescript/jsdoc");
+	const flat = Array.isArray(shared) ? shared : [shared];
+	const holder = flat.find((one) => one && one.plugins && one.plugins.jsdoc);
+
+	if (!holder) {
+		throw new Error(
+			'eslint-config-webpack\'s "typescript/jsdoc" config registers no `jsdoc` plugin. The installed one is older than the version package.json asks for — run `yarn setup`.'
+		);
+	}
+
+	return holder.plugins.jsdoc;
 }
 
 export default defineConfig([
@@ -127,7 +146,7 @@ export default defineConfig([
 	getSharedConfig("webpack/types"),
 	{
 		files: ["lib/**/*.js"],
-		plugins: { jsdoc },
+		plugins: { jsdoc: getJsdocPlugin() },
 		rules: {
 			// The keywords an option type states for `tooling/generate-schemas.js`,
 			// which JSON Schema has and JSDoc does not
@@ -137,6 +156,7 @@ export default defineConfig([
 					definedTags: [
 						"schema",
 						"inline",
+						"title",
 						"minLength",
 						"minItems",
 						"minProperties",

@@ -11810,23 +11810,25 @@ declare class IgnorePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface IgnorePluginCheckOptions {
+	/**
+	 * A filter function for resource and context.
+	 */
+	checkResource: (resource: string, context: string) => boolean;
+}
 type IgnorePluginOptions =
-	| {
-			/**
-			 * A RegExp to test the context (directory) against.
-			 */
-			contextRegExp?: RegExp;
-			/**
-			 * A RegExp to test the request against.
-			 */
-			resourceRegExp: RegExp;
-	  }
-	| {
-			/**
-			 * A filter function for resource and context.
-			 */
-			checkResource: (resource: string, context: string) => boolean;
-	  };
+	IgnorePluginPatternOptions | IgnorePluginCheckOptions;
+declare interface IgnorePluginPatternOptions {
+	/**
+	 * A RegExp to test the context (directory) against.
+	 */
+	contextRegExp?: RegExp;
+
+	/**
+	 * A RegExp to test the request against.
+	 */
+	resourceRegExp: RegExp;
+}
 type ImportAttributes = Record<string, string> & {};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
