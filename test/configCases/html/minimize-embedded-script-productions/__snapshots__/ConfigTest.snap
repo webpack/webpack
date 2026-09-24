@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-embedded-script-productions minimize-embedded-script-productions should compile 1`] = `
+"<!doctype html><html lang=en><head><title>x</title><script>(()=>{if(localStorage&&window.matchMedia){const e=window.matchMedia(\\"(prefers-color-scheme: dark)\\").matches;document.documentElement.dataset.theme=e?\\"dark\\":\\"light\\"}})();</script><script type=module>window.moduleRan=!0;</script></head><body>
+		<button onclick=if(a)return!1;b() style=color:red;margin:0>x</button>
+	
+
+</body></html>"
+`;
