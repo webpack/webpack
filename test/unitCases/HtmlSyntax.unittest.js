@@ -3866,6 +3866,8 @@ b&#10;c">
 <x:style xmlns:x="urn:not-css">keep  { this }</x:style>
 <g xmlns="urn:not-css" style="keep : this"><style>keep { this }</style></g>
 <style>a { b : c }<!-- split --></style>
+<style type="text/less">@c: red; .b { fill: @c }</style>
+<style type=" TEXT/CSS ">b { c : d }</style>
 </svg>`;
 				expect(
 					/** @type {{ code: string }} */ (
