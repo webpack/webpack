@@ -1,5 +1,4 @@
 {
-  "definitions": {},
   "title": "SSRManifestPluginOptions",
   "type": "object",
   "additionalProperties": false,

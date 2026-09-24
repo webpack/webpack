@@ -1076,6 +1076,10 @@ const readJsDoc = (node) => {
 };
 
 // The keywords a declaration states as a tag rather than through an alias.
+// The keywords an array states about itself rather than about its items, which
+// share one comment position with it.
+const ARRAY_CONSTRAINTS = ["minItems", "uniqueItems"];
+
 const CONSTRAINT_TAGS = [
 	"minLength",
 	"uniqueItems",
@@ -1138,11 +1142,23 @@ const fromDocumentationTags = (tags) => {
  * @param {Set<string>} known the names declared in the same file
  * @returns {Record<string, EXPECTED_ANY>} the schema for the items
  */
+/**
+ * Whether the tags alone say what the node is, because the source wrote its
+ * `tsType` in place of a shape it has none of.
+ * @param {Record<string, EXPECTED_ANY>} stated what the tags say
+ * @returns {boolean} whether the parsed type underneath adds nothing
+ */
+const tagsAreWholeType = (stated) =>
+	Boolean(stated.tsType) &&
+	stated.type === "object" &&
+	isObject(stated.properties) &&
+	Object.keys(stated.properties).length === 0;
+
 const describedItems = (node, checker, known) => {
 	const items = fromTypeNode(node, checker, known, 1);
 	const held = ts.isUnionTypeNode(node) ? node.types[0] : node;
 	const { description, tags } = readLeadingComment(held, 0, node.pos);
-	const stated = fromDocumentationTags(tags);
+	const stated = omit(fromDocumentationTags(tags), ARRAY_CONSTRAINTS);
 	const carries = description !== "" || Object.keys(stated).length > 0;
 	return carries
 		? {
@@ -1198,7 +1214,12 @@ const toTsType = (node) =>
 			.replace(/\s+/g, " ")
 			.replace(/([<(])\s+/g, "$1")
 			.replace(/\s+([>)])/g, "$1")
-			.replace(/(=>|[(<:,])\s*\|\s*/g, "$1 "),
+			.replace(/(=>|[(<:,])\s*\|\s*/g, "$1 ")
+			// WHY: the corpus writes a type in one spelling and TypeScript prints it
+			// in another, so what a source round-trips through is put back.
+			.replace(/"([^"\\]*)"/g, "'$1'")
+			.replace(/;\s*/g, ", ")
+			.replace(/,\s*\}/g, " }"),
 		"'"
 	);
 
@@ -1246,7 +1267,9 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 				? {
 						...(description ? { description } : {}),
 						...stated,
-						...wrapReference(described, carries)
+						...(tagsAreWholeType(stated)
+							? {}
+							: wrapReference(described, carries))
 					}
 				: described;
 		});
@@ -1275,8 +1298,18 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 			: union;
 	}
 	if (ts.isArrayTypeNode(node)) {
+		// WHY: an array and its item share one comment position, so what the array
+		// itself states is taken here and left out of the items below.
+		const { tags } = readLeadingComment(node.elementType, 0, node.pos);
+		const stated = fromDocumentationTags(tags);
+		/** @type {Record<string, EXPECTED_ANY>} */
+		const constraints = {};
+		for (const keyword of ARRAY_CONSTRAINTS) {
+			if (stated[keyword] !== undefined) constraints[keyword] = stated[keyword];
+		}
 		return {
 			type: "array",
+			...constraints,
 			items: describedItems(node.elementType, checker, known)
 		};
 	}
