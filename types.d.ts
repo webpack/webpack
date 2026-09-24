@@ -5155,9 +5155,19 @@ declare interface ConsumesConfig {
 	eager?: boolean;
 
 	/**
+	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+	 */
+	exclude?: SharedModuleFilter;
+
+	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: string | false;
+
+	/**
+	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+	 */
+	include?: SharedModuleFilter;
 
 	/**
 	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
@@ -24400,6 +24410,16 @@ declare interface ProvidesConfig {
 	eager?: boolean;
 
 	/**
+	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+	 */
+	exclude?: SharedModuleFilter;
+
+	/**
+	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+	 */
+	include?: SharedModuleFilter;
+
+	/**
 	 * Key in the share scope under which the shared modules should be stored.
 	 */
 	shareKey?: string;
@@ -28240,9 +28260,19 @@ declare interface SharedConfig {
 	eager?: boolean;
 
 	/**
+	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+	 */
+	exclude?: SharedModuleFilter;
+
+	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: string | false;
+
+	/**
+	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+	 */
+	include?: SharedModuleFilter;
 
 	/**
 	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
@@ -28278,6 +28308,22 @@ declare interface SharedConfig {
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
 	version?: string | false;
+}
+
+/**
+ * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+ * @since 5.112.0
+ */
+declare interface SharedModuleFilter {
+	/**
+	 * Request remainder after a key ending in a slash (e.g. 'get' for 'lodash/get' under 'lodash/'). Has no effect on other keys.
+	 */
+	request?: string | RegExp;
+
+	/**
+	 * Version range the module's version (from its description file or the 'version' option) is tested against. A consumed module is tested through its fallback module, so this has no effect on consumes without one.
+	 */
+	version?: string;
 }
 
 /**
