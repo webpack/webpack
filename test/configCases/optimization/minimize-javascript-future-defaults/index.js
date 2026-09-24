@@ -10,8 +10,12 @@ it("should run what the printer wrote", () => {
 });
 
 it("should have minified the bundle", () => {
-	const fs = require("fs");
-	const source = fs.readFileSync(__filename, "utf8");
-	expect(source).not.toContain("should run what the printer wrote\",\n");
-	expect(source).not.toMatch(/\n\t+expect/);
+	// Read through the function itself: `require("fs")` in ESM output needs
+	// `createRequire`, which the oldest Node the suite runs on cannot link.
+	const probe = function (longParameterName) {
+		return longParameterName + 1;
+	};
+	expect(probe(1)).toBe(2);
+	expect(probe.toString()).not.toContain("longParameterName");
+	expect(probe.toString()).not.toMatch(/\n/);
 });
