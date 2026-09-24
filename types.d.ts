@@ -30513,6 +30513,9 @@ declare interface Terser {
 	minify: typeof minify;
 	phases: string[];
 }
+declare interface TerserFormatOptions {
+	[index: string]: any;
+}
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
@@ -32429,6 +32432,7 @@ declare namespace exports {
 			export namespace printer {
 				export let load: () => Promise<Terser>;
 				export let PHASES: Phase[];
+				export let FORMAT_DEFAULTS: TerserFormatOptions;
 			}
 		}
 		export {
