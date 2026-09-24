@@ -26,6 +26,7 @@ test/external/wpt/**
 test/external/terser/**
 test/external/swc/**
 test/external/oxc/**
+test/external/xml-conformance-suite/**
 
 # Ignore some folders
 benchmark/

@@ -19,6 +19,7 @@ coverage:
           - test262
           - minify-corpora
           - test262-parser
+          - xmlconf
         target: auto
     patch:
       default:
@@ -43,6 +44,7 @@ ignore:
   - "tooling/compare-css-tools.js"
   - "tooling/compare-html-tools.js"
   - "tooling/compare-js-tools.js"
+  - "tooling/compare-xml-tools.js"
   # TODO in the next major release: remove
   - "lib/template/ChunkTemplate.js"
   - "lib/template/MainTemplate.js"
