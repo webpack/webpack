@@ -1023,8 +1023,10 @@ describe(`printer output in real ${ENGINE}`, () => {
 				 */
 				const readBack = (property, value, through) => {
 					probe.style.cssText = "";
+					// The holder goes last: a value left open would swallow a declaration
+					// after it, where the end of the list closes it as its own source did.
 					probe.style.cssText = through
-						? `${custom}:${value};${property}:var(${custom})`
+						? `${property}:var(${custom});${custom}:${value}`
 						: `${property}:${value}`;
 					/** @type {string[]} */
 					const names = [];
