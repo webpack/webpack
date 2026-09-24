@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minify-nested-idempotent minify-nested-idempotent should compile 1`] = `".a{width:1px}.mid{color:teal}.a{height:2px}.a .x{color:red}.p,.q .r{color:blue}.q .s{color:green}.t{--c:1;color:navy}.t .u{color:navy}.v,.v .w{top:0}.z{top:1px}.y{--c:1;color:olive}.y{.y{color:olive}--c:1;color:olive}.k .l,.l .m{left:0}@media print{.k .l{left:0}}.e,.e f: (1) [2]{g:h}.e .i{top:0}"`;
