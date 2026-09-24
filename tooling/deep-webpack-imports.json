@@ -68,6 +68,7 @@
     "lib/dependencies/ModuleHotAcceptDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/ModuleHotDeclineDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/MultiEntryDependency": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
+    "lib/dependencies/PrefetchDependency": "Moved to lib/prefetch/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/RequireContextDependency": "Grouped under lib/dependencies/context/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/RequireEnsureDependenciesBlock": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, inside a `try` to detect webpack 4, where a re-export would pick the wrong branch.",
     "lib/dependencies/RequireEnsureDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
@@ -139,10 +140,6 @@
         "@storybook/react-docgen-typescript-plugin",
         "react-docgen-typescript-plugin"
       ]
-    },
-    "lib/dependencies/PrefetchDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/Dependency": {
       "weekly": 5849,
