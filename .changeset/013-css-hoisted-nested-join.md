@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Join the rules a lowered nesting hoist leaves beside each other, which only a second pass reached.
+Join rules a nesting lowering or duplicate drop left for a second pass.

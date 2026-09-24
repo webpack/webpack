@@ -10999,6 +10999,92 @@ describe("CssSyntax minify — the declaration a lowered shorthand kills", () =>
 	});
 });
 
+describe("CssSyntax minify — what a nesting lowering writes is minified once", () => {
+	const T = ["chrome 100"];
+
+	/**
+	 * @param {string} css source text
+	 * @param {string[] | undefined} browsers the browserslist selection to target
+	 * @returns {string} its minified serialization, checked against a second pass
+	 */
+	const settled = (css, browsers) => {
+		const once = minifyFor(css, browsers);
+		expect(minifyFor(once, browsers)).toBe(once);
+		return once;
+	};
+
+	it("offers each rule a hoist wrote to the drop of a restated rule", () => {
+		expect(
+			settled(
+				"a{width:1px;.x{color:red}}.mid{color:teal}a{height:2px;.x{color:red}}",
+				T
+			)
+		).toBe("a{width:1px}.mid{color:teal}a{height:2px}a .x{color:red}");
+	});
+
+	it("offers each rule a hoist wrote to the join with the rule before", () => {
+		expect(settled(".p{color:blue}.q{.r{color:blue}.s{color:green}}", T)).toBe(
+			".p,.q .r{color:blue}.q .s{color:green}"
+		);
+	});
+
+	it("keys the rule a hoist wrote for the rule it emptied", () => {
+		expect(settled(".t{.u{color:navy}}.t{--c:1;color:navy;.u{color:navy}}", T)).toBe(
+			".t{--c:1;color:navy}.t .u{color:navy}"
+		);
+	});
+
+	it("lowers a rule whose only rule before a declaration is restated", () => {
+		expect(settled(".v{.w{top:0}top:0;.w{top:0}}", T)).toBe(".v,.v .w{top:0}");
+		// Not restated after the declaration: the nesting stays.
+		expect(settled(".v{.w{top:0}top:0;.x{top:0}}", T)).toBe(
+			".v{.w{top:0}top:0;.x{top:0}}"
+		);
+	});
+
+	it("keeps the first rule a hoist wrote in front of a `@namespace`", () => {
+		// Taking it back would make the `@namespace` the first thing in the sheet.
+		expect(
+			settled("a{.b{x:y}.c{z:w}}@namespace url(x);a .b{x:y}a .c{z:w}", T)
+		).toBe("a{}@namespace url(x);a .b{x:y}a .c{z:w}");
+		expect(
+			settled("a{d:e;.b{x:y}}@namespace url(x);a{d:e}a .b{x:y}", T)
+		).toBe("a{d:e}@namespace url(x);a{d:e}a .b{x:y}");
+	});
+
+	it("writes no space in front of an empty selector", () => {
+		expect(settled(".e{f:(1) [2], {g:h};.i{top:0}}", T)).toBe(
+			".e,.e f:(1) [2]{g:h}.e .i{top:0}"
+		);
+	});
+
+	it.each([T, undefined])(
+		"drops the earlier rule a cut shrank a later one into (%p)",
+		(browsers) => {
+			expect(
+				settled(
+					".y{--c:1;color:olive}.z{top:1px}.y{--c:1;.y{color:olive}color:olive}.y{.y{color:olive}--c:1;color:olive}",
+					browsers
+				)
+			).toBe(
+				".z{top:1px}.y{--c:1;color:olive}.y{.y{color:olive}--c:1;color:olive}"
+			);
+		}
+	);
+
+	it.each([T, undefined])(
+		"joins the rules a dropped block stood between (%p)",
+		(browsers) => {
+			expect(
+				settled(
+					".k .l{left:0}@media print{.k .l{left:0}}.l .m{left:0}@media print{.k .l{left:0}}",
+					browsers
+				)
+			).toBe(".k .l,.l .m{left:0}@media print{.k .l{left:0}}");
+		}
+	);
+});
+
 describe("CssSyntax minify — a nested selector opening on a combinator", () => {
 	const T = ["chrome 100"];
 
