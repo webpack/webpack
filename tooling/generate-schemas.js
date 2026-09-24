@@ -1618,6 +1618,9 @@ const main = async () => {
 			);
 			continue;
 		}
+		// It round-trips: what differs is validation-neutral, and the allowance
+		// each file needed is named below rather than counted against it.
+		matching++;
 		const needed = ALLOWANCES.filter((allowance) => {
 			const rest = ALLOWANCES.filter((other) => other !== allowance);
 			return !deepEqual(allow(committed, rest), allow(generated, rest));
