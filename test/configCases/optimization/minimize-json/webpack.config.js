@@ -1,7 +1,20 @@
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
 const MinimizerPlugin = require("minimizer-webpack-plugin");
-const webpack = require("../../../../");
+
+/**
+ * @param {string} file fixture file name
+ * @returns {string} its content as written
+ */
+const readFixture = (file) =>
+	fs.readFileSync(path.join(__dirname, file), "utf8");
+
+const DATA = readFixture("data.json");
+const NOT_JSON = readFixture("not-json.json");
+const MINIFIED =
+	'{"name":"webpack","list":[1,2,3],"nested":{"empty":{}},"id":9007199254740993,"precise":1.50,"huge":1e400,"text":"keep  \\"these\\"  spaces\\\\"}';
 
 // Declares JSON through `include`, but its `test` keeps it to JavaScript, so the
 // plugin never hands it a JSON asset and webpack's own minimizer must.
@@ -44,7 +57,36 @@ const config = (name, expected, options) => ({
 	},
 	plugins: [
 		...(options.plugins || []),
-		new webpack.DefinePlugin({ EXPECTED: JSON.stringify(expected) })
+		/**
+		 * @param {import("../../../../").Compiler} compiler compiler
+		 */
+		(compiler) => {
+			// Checked here rather than in the bundle: futureDefaults emits ESM,
+			// which reaches `fs` through `createRequire`, missing on Node 10.
+			compiler.hooks.afterEmit.tap("CheckJsonAssets", (compilation) => {
+				/**
+				 * @param {string} file asset name suffix
+				 * @returns {string} the emitted content
+				 */
+				const emitted = (file) =>
+					fs.readFileSync(
+						path.join(
+							/** @type {string} */ (compilation.outputOptions.path),
+							`${name}-${file}`
+						),
+						"utf8"
+					);
+				const data = emitted("data.json");
+				if (expected === "minified") {
+					expect(data).toBe(MINIFIED);
+				} else if (expected === "user") {
+					expect(data).toBe(JSON.stringify(JSON.parse(data), null, 1));
+				} else {
+					expect(data).toBe(DATA);
+				}
+				expect(emitted("not-json.json")).toBe(NOT_JSON);
+			});
+		}
 	]
 });
 
