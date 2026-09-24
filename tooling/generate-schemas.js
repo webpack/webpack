@@ -639,7 +639,7 @@ const describe = (schema, written) => {
  * @typedef {object} EmitContext
  * @property {{ text: string, name: string }[]} lifted declarations pulled out of a nested node
  * @property {Map<string, Set<string>>} imports names to import, keyed by module
- * @property {Set<string>} halved definitions declared as a Known/Unknown pair
+ * @property {Map<string, string>} said each definition's own description
  */
 
 /**
@@ -653,18 +653,12 @@ const describe = (schema, written) => {
 const toTypeScriptType = (schema, collected) => {
 	if (schema.$ref) {
 		const { name, from } = readReference(schema.$ref);
-		const halved = collected.halved.has(name);
 		if (from !== "") {
 			const names = collected.imports.get(from) || new Set();
-			if (halved) {
-				names.add(`${name}Known`);
-				names.add(`${name}Unknown`);
-			} else {
-				names.add(name);
-			}
+			names.add(name);
 			collected.imports.set(from, names);
 		}
-		return halved ? `${name}Known & ${name}Unknown` : name;
+		return name;
 	}
 	// WHY: a `$ref` takes no siblings, so a reference that needs a description
 	// is written as a `oneOf` of one — the only shape `oneOf` has in the corpus.
@@ -776,7 +770,7 @@ const OBJECT_HALVES = "\n} & {\n";
 /**
  * The two halves of one definition, or an empty name for anything else.
  * @param {ts.IntersectionTypeNode} node the intersection to read
- * @param {Set<string>} known every name the file declares
+ * @param {Map<string, string>} known what each name the file declares says
  * @returns {string} the definition both halves belong to
  */
 const halvedReference = (node, known) => {
@@ -795,33 +789,28 @@ const halvedReference = (node, known) => {
 
 /**
  * @param {Record<string, EXPECTED_ANY>} schema a whole schema document
- * @returns {Set<string>} every definition written as a Known/Unknown pair
+ * @returns {Map<string, string>} what each definition says about itself
  */
-const halvedOf = (schema) => {
-	/** @type {Set<string>} */
-	const names = new Set();
-	walkSchema(schema, (node) => {
-		if (
-			typeof node.title === "string" &&
-			Object.keys(node.properties || {}).length > 0 &&
-			isObject(node.additionalProperties)
-		) {
-			names.add(node.title);
-		}
-		return node;
-	});
-	for (const [name, value] of Object.entries(schema.definitions || {})) {
-		const node = /** @type {Record<string, EXPECTED_ANY>} */ (value);
-		if (
-			Object.keys(node.properties || {}).length > 0 &&
-			isObject(node.additionalProperties)
-		) {
-			names.add(name);
-		}
-	}
-	return names;
-};
+const describedDefinitions = (schema) =>
+	new Map(
+		Object.entries(schema.definitions || {})
+			.filter(
+				([, value]) =>
+					typeof (
+						/** @type {Record<string, EXPECTED_ANY>} */ (value).description
+					) === "string"
+			)
+			.map(([name, value]) => [
+				name,
+				/** @type {Record<string, EXPECTED_ANY>} */ (value).description
+			])
+	);
 
+/**
+ * @param {Record<string, EXPECTED_ANY>} schema an object schema node
+ * @param {EmitContext} collected what the node needs declared or imported
+ * @returns {string} the members it is written with, in braces
+ */
 const toMembers = (schema, collected) => {
 	const required = new Set(schema.required || []);
 	const members = Object.entries(schema.properties || {}).map(
@@ -831,10 +820,10 @@ const toMembers = (schema, collected) => {
 			const name = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(property)
 				? property
 				: JSON.stringify(property);
-			const documentation = toJsDoc(
-				node.description,
-				toDocumentationTags(node)
-			);
+			const said =
+				node.description ||
+				(node.$ref ? collected.said.get(readReference(node.$ref).name) : "");
+			const documentation = toJsDoc(said || "", toDocumentationTags(node));
 			return `${documentation}${name}${optional}: ${toTypeScriptType(
 				node,
 				collected
@@ -886,7 +875,8 @@ const toDeclaration = (schema, name, isRoot, collected) => {
 		const unknown = `{\n${body.slice(at + OBJECT_HALVES.length)}`;
 		return [
 			`${documentation}export interface ${name}Known ${known}`,
-			`${documentation}export interface ${name}Unknown ${unknown}`
+			`${documentation}export interface ${name}Unknown ${unknown}`,
+			`${documentation}export type ${name} = ${name}Known & ${name}Unknown;`
 		].join("\n\n");
 	}
 	return `${documentation}export type ${name} = ${toTypeScriptType(
@@ -908,7 +898,7 @@ const schemaToTypeScript = (schema, relativePath) => {
 	const collected = {
 		lifted: [],
 		imports: new Map(),
-		halved: halvedOf(schema)
+		said: describedDefinitions(schema)
 	};
 	const definitions = Object.entries(schema.definitions || {}).map(
 		([name, value]) =>
@@ -1139,7 +1129,7 @@ const fromDocumentationTags = (tags) => {
  * An array's item type, carrying the description written in front of it.
  * @param {ts.TypeNode} node the item type
  * @param {ts.TypeChecker} checker the checker that resolves its references
- * @param {Set<string>} known the names declared in the same file
+ * @param {Map<string, string>} known what each name declared in the same file says
  * @returns {Record<string, EXPECTED_ANY>} the schema for the items
  */
 /**
@@ -1235,7 +1225,7 @@ const isCallable = (type) =>
  * Turns one TypeScript type node into a schema node.
  * @param {ts.TypeNode} node the type to read
  * @param {ts.TypeChecker} checker the checker that resolves its references
- * @param {Set<string>} known the names declared in the same file
+ * @param {Map<string, string>} known what each name declared in the same file says
  * @param {number} spoken how many comments in front of it a caller already read
  * @returns {Record<string, EXPECTED_ANY>} the schema node
  */
@@ -1412,7 +1402,7 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 /**
  * @param {ts.NodeArray<ts.TypeElement>} members the members of an interface or type literal
  * @param {ts.TypeChecker} checker the checker that resolves their types
- * @param {Set<string>} known the names declared in the same file
+ * @param {Map<string, string>} known what each name declared in the same file says
  * @param {Record<string, EXPECTED_ANY>} head keywords the declaration itself carries
  * @returns {Record<string, EXPECTED_ANY>} the object schema they become
  */
@@ -1448,8 +1438,12 @@ const fromMembers = (members, checker, known, head) => {
 		const name = ts.isIdentifier(member.name)
 			? member.name.text
 			: /** @type {ts.StringLiteral} */ (member.name).text;
-		const { description, tags } = readJsDoc(member);
+		const { description: written, tags } = readJsDoc(member);
 		const value = fromTypeNode(member.type, checker, known);
+		const echoed =
+			Boolean(value.$ref) &&
+			known.get(readReference(value.$ref).name) === written;
+		const description = echoed ? "" : written;
 		const stated = fromDocumentationTags(tags);
 		const carries = description !== "" || Object.keys(stated).length > 0;
 		properties[name] = applyTypeOnly({
@@ -1522,10 +1516,11 @@ const typeScriptToSchema = (source, checker) => {
 			ts.isTypeAliasDeclaration(statement) ||
 			ts.isInterfaceDeclaration(statement)
 	);
-	const known = new Set(
-		declarations.map((declaration) =>
-			/** @type {ts.InterfaceDeclaration} */ (declaration).name.getText()
-		)
+	const known = new Map(
+		declarations.map((declaration) => [
+			/** @type {ts.InterfaceDeclaration} */ (declaration).name.getText(),
+			readJsDoc(declaration).description
+		])
 	);
 	/** @type {Record<string, EXPECTED_ANY>} */
 	const definitions = {};
@@ -1555,6 +1550,13 @@ const typeScriptToSchema = (source, checker) => {
 			...stated,
 			...wrapReference(body, carries)
 		});
+		if (
+			ts.isTypeAliasDeclaration(declaration) &&
+			ts.isIntersectionTypeNode(declaration.type) &&
+			halvedReference(declaration.type, known) === name
+		) {
+			continue;
+		}
 		const half = /^(.+)(Known|Unknown)$/.exec(name);
 		const base = half ? half[1] : "";
 		if (half && known.has(`${base}Known`) && known.has(`${base}Unknown`)) {
