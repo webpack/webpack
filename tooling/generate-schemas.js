@@ -634,6 +634,7 @@ const describe = (schema, written) => {
  * @typedef {object} EmitContext
  * @property {{ text: string, name: string }[]} lifted declarations pulled out of a nested node
  * @property {Map<string, Set<string>>} imports names to import, keyed by module
+ * @property {Set<string>} halved definitions declared as a Known/Unknown pair
  */
 
 /**
@@ -647,12 +648,18 @@ const describe = (schema, written) => {
 const toTypeScriptType = (schema, collected) => {
 	if (schema.$ref) {
 		const { name, from } = readReference(schema.$ref);
+		const halved = collected.halved.has(name);
 		if (from !== "") {
 			const names = collected.imports.get(from) || new Set();
-			names.add(name);
+			if (halved) {
+				names.add(`${name}Known`);
+				names.add(`${name}Unknown`);
+			} else {
+				names.add(name);
+			}
 			collected.imports.set(from, names);
 		}
-		return name;
+		return halved ? `${name}Known & ${name}Unknown` : name;
 	}
 	// WHY: a `$ref` takes no siblings, so a reference that needs a description
 	// is written as a `oneOf` of one — the only shape `oneOf` has in the corpus.
@@ -749,6 +756,57 @@ const toRequiredOrderTag = (schema) => {
  * @param {EmitContext} collected what the node needs declared or imported
  * @returns {string} the members, braced, as an interface body or a type literal
  */
+const OBJECT_HALVES = "\n} & {\n";
+
+/**
+ * The two halves of one definition, or an empty name for anything else.
+ * @param {ts.IntersectionTypeNode} node the intersection to read
+ * @param {Set<string>} known every name the file declares
+ * @returns {string} the definition both halves belong to
+ */
+const halvedReference = (node, known) => {
+	if (node.types.length !== 2) return "";
+	const [first, second] = node.types.map((one) =>
+		ts.isTypeReferenceNode(one) ? one.typeName.getText() : ""
+	);
+	const base = first.replace(/Known$/, "");
+	return first === `${base}Known` &&
+		second === `${base}Unknown` &&
+		known.has(first) &&
+		known.has(second)
+		? base
+		: "";
+};
+
+/**
+ * @param {Record<string, EXPECTED_ANY>} schema a whole schema document
+ * @returns {Set<string>} every definition written as a Known/Unknown pair
+ */
+const halvedOf = (schema) => {
+	/** @type {Set<string>} */
+	const names = new Set();
+	walkSchema(schema, (node) => {
+		if (
+			typeof node.title === "string" &&
+			Object.keys(node.properties || {}).length > 0 &&
+			isObject(node.additionalProperties)
+		) {
+			names.add(node.title);
+		}
+		return node;
+	});
+	for (const [name, value] of Object.entries(schema.definitions || {})) {
+		const node = /** @type {Record<string, EXPECTED_ANY>} */ (value);
+		if (
+			Object.keys(node.properties || {}).length > 0 &&
+			isObject(node.additionalProperties)
+		) {
+			names.add(name);
+		}
+	}
+	return names;
+};
+
 const toMembers = (schema, collected) => {
 	const required = new Set(schema.required || []);
 	const members = Object.entries(schema.properties || {}).map(
@@ -786,7 +844,7 @@ const toMembers = (schema, collected) => {
 	// WHY: TypeScript rejects a named property an index signature does not admit,
 	// where a schema takes both, so the two halves meet as an intersection.
 	if (members.length === 0) return `{\n${index}\n}`;
-	return `{\n${members.join("\n")}\n} & {\n${index}\n}`;
+	return `{\n${members.join("\n")}${OBJECT_HALVES}${index}\n}`;
 };
 
 /**
@@ -805,9 +863,16 @@ const toDeclaration = (schema, name, isRoot, collected) => {
 	const documentation = toJsDoc(schema.description, tags);
 	if (schema.type === "object" && schema.properties) {
 		const body = toMembers(schema, collected);
-		return body.includes("} & {")
-			? `${documentation}export type ${name} = ${body};`
-			: `${documentation}export interface ${name} ${body}`;
+		const at = body.indexOf(OBJECT_HALVES);
+		if (at === -1) return `${documentation}export interface ${name} ${body}`;
+		// WHY: the halves are what `lib/` imports — nothing names the whole — so
+		// each is declared rather than the intersection they meet in.
+		const known = `${body.slice(0, at)}\n}`;
+		const unknown = `{\n${body.slice(at + OBJECT_HALVES.length)}`;
+		return [
+			`${documentation}export interface ${name}Known ${known}`,
+			`${documentation}export interface ${name}Unknown ${unknown}`
+		].join("\n\n");
 	}
 	return `${documentation}export type ${name} = ${toTypeScriptType(
 		schema,
@@ -825,7 +890,11 @@ const toDeclaration = (schema, name, isRoot, collected) => {
  */
 const schemaToTypeScript = (schema, relativePath) => {
 	/** @type {EmitContext} */
-	const collected = { lifted: [], imports: new Map() };
+	const collected = {
+		lifted: [],
+		imports: new Map(),
+		halved: halvedOf(schema)
+	};
 	const definitions = Object.entries(schema.definitions || {}).map(
 		([name, value]) =>
 			toDeclaration(
@@ -1206,6 +1275,8 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 	// WHY: an intersection names a value the schema has no vocabulary for, so it
 	// travels as its own text the way a reference to one does.
 	if (ts.isIntersectionTypeNode(node)) {
+		const base = halvedReference(node, known);
+		if (base !== "") return { $ref: `#/definitions/${base}` };
 		if (node.types.every((one) => ts.isTypeLiteralNode(one))) {
 			const members = node.types.flatMap((one) => [
 				.../** @type {ts.TypeLiteralNode} */ (one).members
@@ -1436,6 +1507,16 @@ const typeScriptToSchema = (source, checker) => {
 			...stated,
 			...wrapReference(body, carries)
 		});
+		const half = /^(.+)(Known|Unknown)$/.exec(name);
+		const base = half ? half[1] : "";
+		if (half && known.has(`${base}Known`) && known.has(`${base}Unknown`)) {
+			if (half[2] === "Known") {
+				definitions[base] = schema;
+			} else if (definitions[base]) {
+				definitions[base].additionalProperties = schema.additionalProperties;
+			}
+			continue;
+		}
 		if (tags.has("schema")) {
 			root = schema;
 			rootName = name;
