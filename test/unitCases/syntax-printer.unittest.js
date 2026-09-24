@@ -240,6 +240,11 @@ const OUTPUT_CASES = [
 		"sink(0x10, 1e21, 1.5e-7, .5, 5., 0b101, 1_000, 10n, /[/]\\//gu, /<\\/script>/, void 0, typeof x, x in y, x instanceof Y, a ** -b, (-a) ** b, new (f())(), new f, a?.b?.[c]?.(d));"
 	],
 	[
+		"asm.js, whose numbers are printed as written",
+		`function module(stdlib) { "use asm"; var x = 1.0, y = 0x10; function f() { return +(x + 2.50); } return { f: f }; }
+		sink(module, 1.0);`
+	],
+	[
 		"parentheses the tree does not hold",
 		"(function () {})(); (() => {})(); ({}).x; (a, b); x = (a, b); (async () => {})(); (class {}).y; !function () {}(); for (var i = (0 in x); i;) ; a = (b = c); x = ({ a } = y);"
 	],
@@ -273,6 +278,7 @@ describe("syntax-printer", () => {
 		if (!("Deno" in globalThis)) {
 			expect(terser.phases).toContain("mangle");
 			expect(terser.phases).toContain("output");
+			expect(terser.phases).toContain("print");
 		}
 	});
 
@@ -376,5 +382,34 @@ describe("syntax-printer", () => {
 		expect(
 			fits((options) => (options ? rejectNaming(FORMAT_DEFAULTS) : { print() {} }))
 		).toBe(false);
+	});
+
+	it("should decline a terser whose per-node print it does not know", () => {
+		const print =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "print")
+			);
+		/**
+		 * @param {object} prototype the node prototype's print methods
+		 * @param {unknown=} MinifiedOutput the stream the output phase installed
+		 * @returns {boolean} whether the phase fits
+		 */
+		const fits = (prototype, MinifiedOutput = class {}) =>
+			print.supports({ ast: { AST_Node: { prototype } }, MinifiedOutput });
+		/**
+		 * @param {unknown} output the stream
+		 * @returns {boolean} whether one was given
+		 */
+		function other(output) {
+			return Boolean(output);
+		}
+
+		// Without the output phase there is no stream to print into.
+		expect(fits({ print: other, _print: other }, undefined)).toBe(false);
+		expect(fits({ print: other, _print: undefined })).toBe(false);
+		// Already wrapped by something else.
+		expect(fits({ print: () => {}, _print: other })).toBe(false);
+		// A print terser rewrote.
+		expect(fits({ print: other, _print: other })).toBe(false);
 	});
 });
