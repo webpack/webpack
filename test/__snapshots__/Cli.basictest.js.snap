@@ -11884,6 +11884,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-json": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+        "multiple": false,
+        "path": "optimization.minimize.json",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-options-css": Object {
     "configs": Array [
       Object {
@@ -12572,6 +12585,19 @@ Object {
       },
     ],
     "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-options-json": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.json",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to \`true\` with \`experiments.futureDefaults\`, otherwise \`false\`).",
     "multiple": false,
     "simpleType": "boolean",
   },

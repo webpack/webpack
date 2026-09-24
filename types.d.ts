@@ -21066,6 +21066,12 @@ declare interface OptimizationMinimizeOptions {
 	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
 	 */
 	javascript?: false | OptimizationMinimizeJavascript;
+
+	/**
+	 * Minimize JSON assets by re-serializing them without whitespace (defaults to `true` with `experiments.futureDefaults`, otherwise `false`).
+	 * @since 5.112.0
+	 */
+	json?: boolean;
 }
 
 /**

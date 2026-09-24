@@ -1,0 +1,5 @@
+{
+	"name": "webpack",
+	"list": [1, 2, 3],
+	"nested": { "empty": {} }
+}

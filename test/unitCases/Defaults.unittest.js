@@ -1246,6 +1246,7 @@ describe("snapshots", () => {
 		+           "passes": 2,
 		+         },
 		+       },
+		+       "json": false,
 		+     },
 		@@ ... @@
 		-     "moduleIds": "natural",
@@ -1356,6 +1357,7 @@ describe("snapshots", () => {
 		+           "passes": 2,
 		+         },
 		+       },
+		+       "json": false,
 		+     },
 		@@ ... @@
 		-     "moduleIds": "natural",
@@ -6280,7 +6282,8 @@ describe("optimization.minimize", () => {
 	const DEFAULT_MINIMIZE_OPTIONS = {
 		css: {},
 		html: {},
-		javascript: { compress: { passes: 2 } }
+		javascript: { compress: { passes: 2 } },
+		json: false
 	};
 
 	/**
