@@ -4,7 +4,7 @@ const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
 const NormalModule = require("../../lib/module/NormalModule");
-const HarmonyImportSideEffectDependency = require("../../lib/dependencies/HarmonyImportSideEffectDependency");
+const ESMImportSideEffectDependency = require("../../lib/dependencies/ESMImportSideEffectDependency");
 
 /** @import { LoaderItem } from "../../lib/module/NormalModule" */
 /** @import Parser from "../../lib/module/Parser" */
@@ -315,7 +315,7 @@ describe("NormalModule", () => {
 	describe("#getSideEffectsConnectionState", () => {
 		/**
 		 * Builds a synthetic linear chain of `count` side-effect-free modules linked
-		 * by `HarmonyImportSideEffectDependency`. Walking it recursively used two
+		 * by `ESMImportSideEffectDependency`. Walking it recursively used two
 		 * stack frames per module and overflowed on long chains (#20986).
 		 * @param {number} count chain length
 		 * @returns {{ modules: InstanceType<typeof NormalModule>[], moduleGraph: ModuleGraph }} chain
@@ -343,7 +343,7 @@ describe("NormalModule", () => {
 			}
 			const depToModule = new Map();
 			for (let i = 0; i < count - 1; i++) {
-				const dep = new HarmonyImportSideEffectDependency(
+				const dep = new ESMImportSideEffectDependency(
 					`m${i + 1}`,
 					0,
 					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
@@ -384,7 +384,7 @@ describe("NormalModule", () => {
 		it("detects cycles in the side-effect graph", () => {
 			const { modules, moduleGraph } = buildChain(50);
 			// close the loop: last module's dep points to modules[0]
-			const lastDep = new HarmonyImportSideEffectDependency(
+			const lastDep = new ESMImportSideEffectDependency(
 				"m0",
 				0,
 				/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
@@ -460,12 +460,12 @@ describe("NormalModule", () => {
 			const root = make("root");
 			const a = make("a");
 			const b = make("b");
-			const depA = new HarmonyImportSideEffectDependency(
+			const depA = new ESMImportSideEffectDependency(
 				"a",
 				0,
 				/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
 			);
-			const depB = new HarmonyImportSideEffectDependency(
+			const depB = new ESMImportSideEffectDependency(
 				"b",
 				1,
 				/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
@@ -489,7 +489,7 @@ describe("NormalModule", () => {
 
 		it("handles a deep cyclic chain whose modules have extra non-recursive deps", () => {
 			// Mirrors the canonical #20986 reproduction: each module has a
-			// HarmonyImportSideEffectDependency to the next plus several side-effect-free
+			// ESMImportSideEffectDependency to the next plus several side-effect-free
 			// deps, and the last closes the loop back to module 0.
 			const ConstDependency = require("../../lib/dependencies/ConstDependency");
 
@@ -516,7 +516,7 @@ describe("NormalModule", () => {
 			}
 			const depToModule = new Map();
 			for (let i = 0; i < N; i++) {
-				const sideDep = new HarmonyImportSideEffectDependency(
+				const sideDep = new ESMImportSideEffectDependency(
 					`m${(i + 1) % N}`,
 					0,
 					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
@@ -542,7 +542,7 @@ describe("NormalModule", () => {
 		});
 
 		it("falls back to iterative walk past the recursion limit on non-linear graphs", () => {
-			// Each module has two `HarmonyImportSideEffectDependency`s, so the linear-chain
+			// Each module has two `ESMImportSideEffectDependency`s, so the linear-chain
 			// fast path cannot apply and the walker recurses one frame per module. It must
 			// switch to `walkSideEffectsIterative` past `SIDE_EFFECTS_RECURSION_LIMIT` (2000).
 			const N = 2500;
@@ -575,12 +575,12 @@ describe("NormalModule", () => {
 			for (let i = 0; i < N; i++) modules.push(make(`m${i}`));
 			const depToModule = new Map();
 			for (let i = 0; i < N - 1; i++) {
-				const next = new HarmonyImportSideEffectDependency(
+				const next = new ESMImportSideEffectDependency(
 					`m${i + 1}`,
 					0,
 					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
 				);
-				const aside = new HarmonyImportSideEffectDependency(
+				const aside = new ESMImportSideEffectDependency(
 					"leaf",
 					1,
 					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))

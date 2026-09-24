@@ -7492,6 +7492,159 @@ declare class DynamicEntryPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDependency {
+	ids: string[];
+	name: null | string;
+	activeExports: Set<string>;
+	otherStarExports: null | ReadonlyArray<ESMExportImportedSpecifierDependency>;
+	exportPresenceMode: ExportPresenceMode;
+	allStarExports: null | HarmonyStarExportsList;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	get id(): void;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	getId(): void;
+
+	/**
+	 * Updates id.
+	 * @deprecated
+	 */
+	setId(): void;
+
+	/**
+	 * Returns the imported id.
+	 */
+	getIds(moduleGraph: ModuleGraph): string[];
+
+	/**
+	 * Updates ids using the provided module graph.
+	 */
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
+
+	/**
+	 * Returns the export mode.
+	 */
+	getMode(moduleGraph: ModuleGraph, runtime: RuntimeSpec): ExportMode;
+
+	/**
+	 * Gets star reexports.
+	 */
+	getStarReexports(
+		moduleGraph: ModuleGraph,
+		runtime: RuntimeSpec,
+		exportsInfo?: ExportsInfo,
+		importedModule?: Module
+	): {
+		exports?: Set<string>;
+		checked?: Set<string>;
+		ignoredExports: Set<string>;
+		hidden?: Set<string>;
+	};
+}
+declare class ESMImportDependency extends ModuleDependency {
+	/**
+	 * Creates an instance of HarmonyImportDependency.
+	 */
+	constructor(
+		request: string,
+		sourceOrder: number,
+		phase?: 0 | 1 | 2,
+		attributes?: ImportAttributes
+	);
+	phase: ImportPhaseType;
+	attributes?: ImportAttributes;
+
+	/**
+	 * Returns name of the variable for the import.
+	 */
+	getImportVar(moduleGraph: ModuleGraph): string;
+
+	/**
+	 * Gets module exports.
+	 */
+	getModuleExports(__0: DependencyTemplateContext): string;
+
+	/**
+	 * Gets import statement.
+	 */
+	getImportStatement(
+		update: boolean,
+		__1: DependencyTemplateContext
+	): [string, string];
+
+	/**
+	 * Gets linking errors.
+	 */
+	getLinkingErrors(
+		moduleGraph: ModuleGraph,
+		ids: string[],
+		additionalMessage: string
+	): undefined | WebpackError[];
+	static Template: typeof HarmonyImportDependencyTemplate;
+	static ExportPresenceModes: {
+		NONE: ExportPresenceMode;
+		WARN: ExportPresenceMode;
+		AUTO: ExportPresenceMode;
+		ERROR: ExportPresenceMode;
+		/**
+		 * Returns result.
+		 */
+		fromUserOption(str: string | false): ExportPresenceMode;
+		/**
+		 * Resolve export presence mode from parser options with a specific key and shared fallbacks.
+		 */
+		resolveFromOptions(
+			specificValue: undefined | string | false,
+			options: JavascriptParserOptions
+		): ExportPresenceMode;
+	};
+	static getNonOptionalPart: (
+		members: string[],
+		membersOptionals: boolean[]
+	) => string[];
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
+
+	/**
+	 * Returns true if the dependency is a low priority dependency.
+	 */
+	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency can be concatenated (scope hoisting).
+	 */
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean
+	): boolean;
+	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
+}
+declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
+	unusedSpecifiers?: UnusedSpecifiers;
+}
 type EcmaVersion =
 	| 3
 	| 5
@@ -10320,156 +10473,6 @@ declare interface HandleModuleCreationOptions {
 	 */
 	checkCycle?: boolean;
 }
-declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyImportDependency {
-	ids: string[];
-	name: null | string;
-	activeExports: Set<string>;
-	otherStarExports: null | ReadonlyArray<HarmonyExportImportedSpecifierDependency>;
-	exportPresenceMode: ExportPresenceMode;
-	allStarExports: null | HarmonyStarExportsList;
-
-	/**
-	 * Returns id.
-	 * @deprecated
-	 */
-	get id(): void;
-
-	/**
-	 * Returns id.
-	 * @deprecated
-	 */
-	getId(): void;
-
-	/**
-	 * Updates id.
-	 * @deprecated
-	 */
-	setId(): void;
-
-	/**
-	 * Returns the imported id.
-	 */
-	getIds(moduleGraph: ModuleGraph): string[];
-
-	/**
-	 * Updates ids using the provided module graph.
-	 */
-	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
-
-	/**
-	 * Returns the export mode.
-	 */
-	getMode(moduleGraph: ModuleGraph, runtime: RuntimeSpec): ExportMode;
-
-	/**
-	 * Gets star reexports.
-	 */
-	getStarReexports(
-		moduleGraph: ModuleGraph,
-		runtime: RuntimeSpec,
-		exportsInfo?: ExportsInfo,
-		importedModule?: Module
-	): {
-		exports?: Set<string>;
-		checked?: Set<string>;
-		ignoredExports: Set<string>;
-		hidden?: Set<string>;
-	};
-}
-declare class HarmonyImportDependency extends ModuleDependency {
-	/**
-	 * Creates an instance of HarmonyImportDependency.
-	 */
-	constructor(
-		request: string,
-		sourceOrder: number,
-		phase?: 0 | 1 | 2,
-		attributes?: ImportAttributes
-	);
-	phase: ImportPhaseType;
-	attributes?: ImportAttributes;
-
-	/**
-	 * Returns name of the variable for the import.
-	 */
-	getImportVar(moduleGraph: ModuleGraph): string;
-
-	/**
-	 * Gets module exports.
-	 */
-	getModuleExports(__0: DependencyTemplateContext): string;
-
-	/**
-	 * Gets import statement.
-	 */
-	getImportStatement(
-		update: boolean,
-		__1: DependencyTemplateContext
-	): [string, string];
-
-	/**
-	 * Gets linking errors.
-	 */
-	getLinkingErrors(
-		moduleGraph: ModuleGraph,
-		ids: string[],
-		additionalMessage: string
-	): undefined | WebpackError[];
-	static Template: typeof HarmonyImportDependencyTemplate;
-	static ExportPresenceModes: {
-		NONE: ExportPresenceMode;
-		WARN: ExportPresenceMode;
-		AUTO: ExportPresenceMode;
-		ERROR: ExportPresenceMode;
-		/**
-		 * Returns result.
-		 */
-		fromUserOption(str: string | false): ExportPresenceMode;
-		/**
-		 * Resolve export presence mode from parser options with a specific key and shared fallbacks.
-		 */
-		resolveFromOptions(
-			specificValue: undefined | string | false,
-			options: JavascriptParserOptions
-		): ExportPresenceMode;
-	};
-	static getNonOptionalPart: (
-		members: string[],
-		membersOptionals: boolean[]
-	) => string[];
-
-	/**
-	 * Compares two dependencies by source location for sorting a module's
-	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
-	 * its result, so comparing through it would retain a location object on every
-	 * sorted dependency). These dependencies always carry a real source position,
-	 * so only start (line, column) and the within-statement index are compared; a
-	 * dependency without an index sorts after one that has an index at the same
-	 * position.
-	 */
-	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
-	static NO_EXPORTS_REFERENCED: string[][];
-	static EXPORTS_OBJECT_REFERENCED: string[][];
-	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
-
-	/**
-	 * Returns true if the dependency is a low priority dependency.
-	 */
-	static isLowPriorityDependency(dependency: Dependency): boolean;
-
-	/**
-	 * Returns true if the dependency can be concatenated (scope hoisting).
-	 */
-	static canConcatenate(
-		dependency: Dependency,
-		concatenateCommonJsModules: boolean
-	): boolean;
-	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
-}
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 	constructor();
 
@@ -10480,9 +10483,6 @@ declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 		module: Module,
 		referencedModule: Module
 	): undefined | string | boolean | SortableSet<string>;
-}
-declare abstract class HarmonyImportSideEffectDependency extends HarmonyImportDependency {
-	unusedSpecifiers?: UnusedSpecifiers;
 }
 declare interface HarmonySettings {
 	ids: string[];
@@ -10501,16 +10501,16 @@ declare interface HarmonySettings {
 	/**
 	 * the statement's own dependency
 	 */
-	dependency?: HarmonyImportSideEffectDependency;
+	dependency?: ESMImportSideEffectDependency;
 }
 declare abstract class HarmonyStarExportsList {
-	dependencies: HarmonyExportImportedSpecifierDependency[];
+	dependencies: ESMExportImportedSpecifierDependency[];
 
 	/**
 	 * Processes the provided dep.
 	 */
-	push(dep: HarmonyExportImportedSpecifierDependency): void;
-	slice(): HarmonyExportImportedSpecifierDependency[];
+	push(dep: ESMExportImportedSpecifierDependency): void;
+	slice(): ESMExportImportedSpecifierDependency[];
 
 	/**
 	 * Serializes this instance into the provided serializer context.
@@ -29320,7 +29320,7 @@ declare abstract class StackedMap<K, V> {
  * Updates map size using the provided map.
  */
 declare interface StarListDeserializerContext {
-	read: () => HarmonyExportImportedSpecifierDependency[];
+	read: () => ESMExportImportedSpecifierDependency[];
 	rest: ObjectDeserializerContextObjectMiddlewareObject_2<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
@@ -29330,7 +29330,7 @@ declare interface StarListDeserializerContext {
  */
 declare interface StarListSerializerContext {
 	write: (
-		value: HarmonyExportImportedSpecifierDependency[]
+		value: ESMExportImportedSpecifierDependency[]
 	) => ObjectSerializerContextObjectMiddlewareObject_3<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
@@ -32176,7 +32176,7 @@ declare namespace exports {
 	export namespace dependencies {
 		export {
 			ModuleDependency,
-			HarmonyImportDependency,
+			ESMImportDependency as HarmonyImportDependency,
 			ConstDependency,
 			NullDependency
 		};

@@ -33,6 +33,16 @@
     "lib/WebAssemblyParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/dependencies/${dependency[0]}": "Not a path: a template literal the scanner reads from a dynamic require.",
     "lib/dependencies/DelegatedExportsDependency": "Removed in webpack 5.",
+    "lib/dependencies/HarmonyAcceptDependency": "Renamed to lib/dependencies/ESMAcceptDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyAcceptImportDependency": "Renamed to lib/dependencies/ESMAcceptImportDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyCompatibilityDependency": "Renamed to lib/dependencies/ESMCompatibilityDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportExpressionDependency": "Renamed to lib/dependencies/ESMExportExpressionDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportHeaderDependency": "Renamed to lib/dependencies/ESMExportHeaderDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportImportedSpecifierDependency": "Renamed to lib/dependencies/ESMExportImportedSpecifierDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyExportSpecifierDependency": "Renamed to lib/dependencies/ESMExportSpecifierDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyImportDependency": "Renamed to lib/dependencies/ESMImportDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyImportSideEffectDependency": "Renamed to lib/dependencies/ESMImportSideEffectDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
+    "lib/dependencies/HarmonyImportSpecifierDependency": "Renamed to lib/dependencies/ESMImportSpecifierDependency without a re-export; its importers are hard-source-webpack-plugin, which is webpack 4 only, and worker-plugin.",
     "lib/dependencies/HarmonyInitDependency": "Removed in webpack 5.",
     "lib/dependencies/ImportDependenciesBlock": "Removed in webpack 5.",
     "lib/dependencies/MultiEntryDependency": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
@@ -126,46 +136,6 @@
     "lib/dependencies/DllEntryDependency": {
       "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyAcceptDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyAcceptImportDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyCompatibilityDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyExportExpressionDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyExportHeaderDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyExportImportedSpecifierDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyExportSpecifierDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyImportDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyImportSideEffectDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/HarmonyImportSpecifierDependency": {
-      "weekly": 271860,
-      "packages": ["hard-source-webpack-plugin", "worker-plugin"]
     },
     "lib/dependencies/ImportContextDependency": {
       "weekly": 132630,
