@@ -173,4 +173,50 @@ describe("WatchBuildDependencies", () => {
 			});
 		}
 	});
+
+	// Following imports of a `.ts` file needs Node.js type stripping
+	const itWithTypeStripping =
+		"stripTypeScriptTypes" in require("module") ? it : it.skip;
+
+	itWithTypeStripping(
+		"should watch what a TypeScript build dependency imports",
+		async () => {
+			const tsConfigPath = path.join(fixturePath, "config.ts");
+			const helperPath = path.join(fixturePath, "helper.ts");
+
+			fs.writeFileSync(
+				tsConfigPath,
+				'import { value } from "./helper.ts";\nexport default { value } as { value: number };\n',
+				"utf8"
+			);
+			fs.writeFileSync(
+				helperPath,
+				"export const value: number = 1;\n",
+				"utf8"
+			);
+
+			const compiler = createCompiler({
+				buildDependencies: { config: [tsConfigPath] }
+			});
+			let builds = 0;
+
+			const watching = /** @type {import("../../").Watching} */ (
+				compiler.watch({ aggregateTimeout: 50 }, (err) => {
+					if (err) throw err;
+					builds++;
+				})
+			);
+
+			try {
+				while (builds === 0) await wait(50);
+				expect(compiler.buildDependencyFiles).toEqual(
+					new Set([tsConfigPath, helperPath])
+				);
+			} finally {
+				await new Promise((resolve) => {
+					watching.close(resolve);
+				});
+			}
+		}
+	);
 });
