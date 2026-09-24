@@ -10904,6 +10904,11 @@ declare interface HtmlParseOptions {
 	fragmentContext?: string;
 
 	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
+
+	/**
 	 * node kinds to omit from the AST (see `HtmlAstSkip`); omit to build the full tree
 	 */
 	skip?: HtmlAstSkip;
@@ -11014,6 +11019,11 @@ declare interface HtmlProcessOptions {
 	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
 	 */
 	fragmentContext?: string;
+
+	/**
+	 * parse as XML instead of applying the HTML tree-construction rules
+	 */
+	xml?: boolean;
 
 	/**
 	 * node kinds to omit from the AST for speed/memory (see `HtmlAstSkip`)
@@ -33196,6 +33206,7 @@ declare namespace exports {
 				export let NS_HTML: 0;
 				export let NS_MATHML: 1;
 				export let NS_SVG: 2;
+				export let NS_XML: 3;
 				export namespace NodeType {
 					export let Document: 1;
 					export let DocumentFragment: 2;
