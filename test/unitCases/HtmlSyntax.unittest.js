@@ -10,8 +10,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
+const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
 describe("tokenize", () => {
@@ -3025,7 +3025,7 @@ describe("tokenize", () => {
 			// the loop have to answer the same way.
 			const quote = '"'.charCodeAt(0);
 			expect(escapeAttribute('c"d\u00A0e', quote, true)).toBe(
-				'c&quot;d\u00A0e'
+				"c&quot;d\u00A0e"
 			);
 			expect(escapeAttribute('c"d\u00A0e', quote)).toBe("c&quot;d&nbsp;e");
 			expect(escapeAttribute("a\u00A0b", quote, true)).toBe("a\u00A0b");
@@ -3151,6 +3151,19 @@ const materialize = (ref) => {
  */
 const parseHtml = (src, fragmentContext, skip) => {
 	const doc = parseHtmlRefs(src, 0, { fragmentContext, skip });
+	return {
+		type: NodeType.Document,
+		children: A.children(doc).map(materialize)
+	};
+};
+
+/**
+ * @param {string} src source
+ * @param {import("../../lib/html/syntax-parser").HtmlAstSkip=} skip skip options
+ * @returns {MatDocument} materialized XML document
+ */
+const parseXml = (src, skip) => {
+	const doc = parseHtmlRefs(src, 0, { xml: true, skip });
 	return {
 		type: NodeType.Document,
 		children: A.children(doc).map(materialize)
@@ -3301,6 +3314,212 @@ describe("parseHtml", () => {
 		const nodes = body("<input/>");
 		expect(nodes[0].tagName).toBe("input");
 		expect(nodes[0].selfClosing).toBe(true);
+	});
+
+	describe("XML mode", () => {
+		it("should not synthesize the HTML document scaffold", () => {
+			const document = parseXml("<root/>");
+			expect(document.children).toHaveLength(1);
+			expect(document.children[0]).toMatchObject({
+				type: NodeType.Element,
+				tagName: "root",
+				selfClosing: true
+			});
+		});
+
+		it("should preserve case-sensitive element and attribute names", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml('<Root ID="upper" id="lower"><Child/></Root>').children[0]
+			);
+			expect(root.tagName).toBe("Root");
+			expect(root.attributes.map(({ name, value }) => [name, value])).toEqual([
+				["ID", "upper"],
+				["id", "lower"]
+			]);
+			expect(/** @type {MatElement} */ (root.children[0]).tagName).toBe(
+				"Child"
+			);
+		});
+
+		it("should distinguish empty-element syntax from an explicit end tag", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root><empty/><paired></paired></root>").children[0]
+			);
+			expect(
+				root.children.map((node) => ({
+					name: /** @type {MatElement} */ (node).tagName,
+					selfClosing: /** @type {MatElement} */ (node).selfClosing
+				}))
+			).toEqual([
+				{ name: "empty", selfClosing: true },
+				{ name: "paired", selfClosing: false }
+			]);
+		});
+
+		it("should not apply the HTML void-element list", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root><br><child/></br><img></img></root>").children[0]
+			);
+			const br = /** @type {MatElement} */ (root.children[0]);
+			const img = /** @type {MatElement} */ (root.children[1]);
+			expect(br.selfClosing).toBe(false);
+			expect(br.children).toHaveLength(1);
+			expect(img.selfClosing).toBe(false);
+		});
+
+		it("should not apply HTML paragraph, list, or table repairs", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml(
+					"<root><p><div/></p><ul><li><li/></li></ul><table><span/></table></root>"
+				).children[0]
+			);
+			const paragraph = /** @type {MatElement} */ (root.children[0]);
+			const list = /** @type {MatElement} */ (root.children[1]);
+			const table = /** @type {MatElement} */ (root.children[2]);
+			expect(/** @type {MatElement} */ (paragraph.children[0]).tagName).toBe(
+				"div"
+			);
+			expect(
+				/** @type {MatElement} */ (
+					/** @type {MatElement} */ (list.children[0]).children[0]
+				).tagName
+			).toBe("li");
+			expect(/** @type {MatElement} */ (table.children[0]).tagName).toBe(
+				"span"
+			);
+		});
+
+		it("should keep markup inside names that are raw text in HTML", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root><script><dependency/></script><style><rule/></style></root>")
+					.children[0]
+			);
+			expect(
+				root.children.map(
+					(node) => /** @type {MatElement} */ (node).children[0].type
+				)
+			).toEqual([NodeType.Element, NodeType.Element]);
+		});
+
+		it("should parse XML declarations and processing instructions", () => {
+			const document = parseXml(
+				'<?xml version="1.0" encoding="UTF-8"?><?build mode="fast"?><root/><?done?>'
+			);
+			expect(
+				document.children
+					.filter((node) => node.type === NodeType.ProcessingInstruction)
+					.map((node) => ({
+						target: /** @type {MatProcessingInstruction} */ (node).target,
+						data: /** @type {MatProcessingInstruction} */ (node).data
+					}))
+			).toEqual([
+				{ target: "xml", data: 'version="1.0" encoding="UTF-8"' },
+				{ target: "build", data: 'mode="fast"' },
+				{ target: "done", data: "" }
+			]);
+		});
+
+		it("should keep comments and read CDATA as character data", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root><!-- note --><![CDATA[<child>&value;]]></root>")
+					.children[0]
+			);
+			expect(root.children[0]).toMatchObject({
+				type: NodeType.Comment,
+				data: " note "
+			});
+			expect(root.children[1]).toMatchObject({
+				type: NodeType.Text,
+				data: "<child>&value;"
+			});
+		});
+
+		it("should preserve qualified names", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml(
+					'<feed xmlns:x="urn:example"><x:entry x:kind="test"/></feed>'
+				).children[0]
+			);
+			const entry = /** @type {MatElement} */ (root.children[0]);
+			expect(entry.tagName).toBe("x:entry");
+			expect(entry.attributes[0]).toMatchObject({
+				name: "x:kind",
+				value: "test"
+			});
+		});
+
+		it("should preserve the document type name and identifiers", () => {
+			const document = parseXml(
+				'<!DOCTYPE Root PUBLIC "-//EXAMPLE//DTD ROOT 1.0//EN" "root.dtd"><Root/>'
+			);
+			expect(document.children[0]).toMatchObject({
+				type: NodeType.Doctype,
+				name: "Root",
+				publicId: "-//EXAMPLE//DTD ROOT 1.0//EN",
+				systemId: "root.dtd"
+			});
+		});
+
+		it("should decode predefined and numeric character references in text", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root>&lt;&gt;&amp;&quot;&apos;&#65;&#x42;</root>")
+					.children[0]
+			);
+			expect(root.children[0]).toMatchObject({
+				type: NodeType.Text,
+				data: '<>&"\'AB'
+			});
+		});
+
+		it("should require a lowercase hexadecimal marker", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root>&#x4A;&#X4A;</root>").children[0]
+			);
+			expect(root.children[0]).toMatchObject({
+				type: NodeType.Text,
+				data: "J&#X4A;"
+			});
+		});
+
+		it("should not decode HTML-only or differently-cased entity names", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root>&nbsp;&AMP;&amp;</root>").children[0]
+			);
+			expect(root.children[0]).toMatchObject({
+				type: NodeType.Text,
+				data: "&nbsp;&AMP;&"
+			});
+		});
+
+		it("should not apply selectedcontent HTML behavior", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml(
+					"<root><select><option selected=\"\"><span/></option><selectedcontent/></select></root>"
+				).children[0]
+			);
+			const select = /** @type {MatElement} */ (root.children[0]);
+			expect(select.children.map((node) => node.type)).toEqual([
+				NodeType.Element,
+				NodeType.Element
+			]);
+			expect(
+				/** @type {MatElement} */ (select.children[1]).children
+			).toHaveLength(0);
+		});
+
+		it("should honor AST skip options without changing XML structure", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root>text<!-- comment --><child/></root>", {
+					text: true,
+					comments: true
+				}).children[0]
+			);
+			expect(root.children).toHaveLength(1);
+			expect(root.children[0]).toMatchObject({
+				type: NodeType.Element,
+				tagName: "child"
+			});
+		});
 	});
 
 	it("should auto-close <p> when a block element opens", () => {
@@ -5511,10 +5730,10 @@ describe("SourceProcessor — attribute quote spelling", () => {
 	it("writes U+00A0 as the character, however the source spelled it", () => {
 		// A value's own spelling does not decide the output, so the character and
 		// `&nbsp;` are one attribute and print as one.
-		expect(minify('<img alt="nb\u00a0sp">')).toBe(
+		expect(minify('<img alt="nb\u00A0sp">')).toBe(
 			minify('<img alt="nb&nbsp;sp">')
 		);
-		expect(minify('<img alt="nb&nbsp;sp">')).toBe("<img alt=nb\u00a0sp>");
+		expect(minify('<img alt="nb&nbsp;sp">')).toBe("<img alt=nb\u00A0sp>");
 	});
 
 	it("keeps every other reference the value spells", () => {
@@ -5525,7 +5744,7 @@ describe("SourceProcessor — attribute quote spelling", () => {
 			"<img alt='&amp;quot; literal \"q\"'>"
 		);
 		expect(minify('<img alt="nb&nbsp;sp &quot;q&quot;">')).toBe(
-			"<img alt='nb\u00a0sp \"q\"'>"
+			"<img alt='nb\u00A0sp \"q\"'>"
 		);
 		expect(minify('<img alt="line&#10;br &quot;q&quot;">')).toBe(
 			"<img alt='line&#10;br \"q\"'>"
