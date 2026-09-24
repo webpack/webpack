@@ -1582,6 +1582,54 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
+// Where a cut lands, by the construct it interrupts: each pattern ends where the
+// document is cut, just inside what the end of the input then has to close.
+/** @type {[string, RegExp][]} */
+const HTML_CUTS = [
+	["in a start tag's name", /<[a-z]/gi],
+	["in an end tag's name", /<\/[a-z]/gi],
+	["in an attribute's name", /<[a-z][^\s<>]*\s+[a-z]/gi],
+	["after an attribute's =", /<[a-z][^\s<>]*\s+[a-z-]+=/gi],
+	["in a double-quoted value", /[=]"[^"]/g],
+	["in a single-quoted value", /[=]'[^']/g],
+	["in an unquoted value", /[=][a-z0-9]/gi],
+	["before a tag's >", /<[a-z][^<>]*(?=>)/gi],
+	["between a tag's / and >", /<[a-z][^<>]*\/(?=>)/gi],
+	["in a comment", /<!--./g],
+	["in a doctype", /<!doctype/gi],
+	["in a character reference", /&[a-z#]/gi],
+	["in a <style> body", /<style[^>]*>[^<]/gi],
+	["in a <script> body", /<script[^>]*>[^<]/gi],
+	["in escapable raw text", /<(?:textarea|title)[^>]*>[^<]/gi],
+	["in foreign content", /<(?:svg|math)[^>]*>/gi],
+	["in a CDATA section", /<!\[CDATA\[./g],
+	["in a style attribute", /style="[^"]/gi]
+];
+
+/**
+ * The document cut short just inside the first of each construct past its
+ * midpoint, or the first anywhere when none lies past it: the end of the input
+ * is where the tokenizer closes what the source left open.
+ * @param {string} html a document
+ * @returns {[string, string][]} `[where, cut]` for each construct it holds
+ */
+const htmlCuts = (html) => {
+	/** @type {[string, string][]} */
+	const cuts = [];
+	for (const [where, pattern] of HTML_CUTS) {
+		pattern.lastIndex = html.length >> 1;
+		let match = pattern.exec(html);
+		if (match === null) {
+			pattern.lastIndex = 0;
+			match = pattern.exec(html);
+		}
+		if (match === null) continue;
+		const at = match.index + match[0].length;
+		if (at < html.length) cuts.push([where, html.slice(0, at)]);
+	}
+	return cuts;
+};
+
 /**
  * Every invariant this document breaks under one preset.
  * @param {(html: string) => string} minify the printer under test
@@ -1655,6 +1703,24 @@ const invariantFixtures = () => {
  * @type {readonly import("./compare-tools-harness").Expected[]}
  */
 const EXPECTED = [
+	{
+		relation: "idempotence",
+		contains: "<style>",
+		source: "cut in a <style> body",
+		why: "owed, not excused: `removeEmptyElements` judges an element on its source, before the renderer has minified what it holds, so a `<style>` whose body minifies to nothing — here a lone selector the cut left without its block — prints empty and only goes on the next pass. The same holds uncut for `<style>a{}</style>` and for an element whose only attribute is dropped. The fix has to render first or decide after, and a deferred renderer answers only once the print is done; retire this entry with it"
+	},
+	{
+		relation: "idempotence",
+		contains: "<body>",
+		source: "cut in a <style> body",
+		why: "the entry above, where the emptied `<style>` was all the body held: it goes on the next pass, and the body's tags with it"
+	},
+	{
+		relation: "idempotence",
+		contains: ".b{&:is()}",
+		source: "minimize-end-of-input/cases/css.html",
+		why: "owed, the same way as the `<style>` entries above: `mergeStyles` decides on the source, and a body the input left open cannot be joined as written — the next body would be read inside what it left open. The renderer closes each one, so the next pass joins them. Merging the rendered bodies rather than the written ones would retire this"
+	},
 	{
 		relation: "respelling quote-double",
 		contains: "&#34;",
@@ -1744,6 +1810,27 @@ const invariants = (write) => {
 				groups.add(report, preset, label);
 			}
 		}
+	}
+	if (wantedRelation("idempotence")) {
+		let cut = 0;
+		for (const [label, html] of corpus) {
+			for (const [where, source] of htmlCuts(html)) {
+				cut++;
+				for (const [preset, options] of presets) {
+					const minify = printerFor(options);
+					const { reports } = idempotence({
+						minify,
+						source,
+						says: tokenStream,
+						repro: (minified, at) => idempotenceRepro(minify, minified, at)
+					});
+					for (const report of reports) {
+						groups.add(report, preset, `${label}, cut ${where}`);
+					}
+				}
+			}
+		}
+		log(`… and ${cut} of them cut short inside a construct …`);
 	}
 	return groups.write(write);
 };

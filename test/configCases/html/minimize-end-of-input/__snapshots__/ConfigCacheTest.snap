@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-end-of-input minimize-end-of-input should compile 1`] = `
+Object {
+  "bogus-comment.html": "<!doctype html><body><p>a bogus comment the input ends inside<?xml version=\\"1></body></html>",
+  "comment.html": "<!doctype html><body><p>a conditional comment the input ends inside<!--[if IE 8]><p>x--></body></html>",
+  "css.html": "<!doctype html><title>css</title><div style=--x:lab(50%>a custom property left inside a function</div>
+<div style=--x:[>inside a block</div>
+<div style=--x:f(g(x>inside two</div>
+<div style='--s:\\"x'>inside a string</div>
+<div style=--u:url(#x)>inside a url</div>
+<div style='--x:f(\\")'>inside a string that ends on the closer</div>
+<div style=--x:a�>after a dangling backslash</div>
+<div style=background:url(#i)>a url folded on the first pass</div>
+<div style=background:url(#x\\\\\\\\)>a url padded, with a dangling backslash</div>
+<style>.a{--x:f()}</style>
+<style>.b{&:is()}</style>
+<style>.c{color:red}</style>
+",
+  "end-tag-br.html": "<!doctype html><body><div>an end tag the input ends inside</div></body></html>",
+  "end-tag-p.html": "<!doctype html><body><div>an end tag the input ends inside</div></body></html>",
+  "style-body.html": "<!doctype html><body><style>.a{--x:lab(50%)}</style></body></html>",
+}
+`;

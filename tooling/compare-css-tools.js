@@ -37,6 +37,8 @@ const MODERN_BROWSERS = require("browserslist")(
 );
 const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
+const cssSyntaxParser = require("../lib/css/syntax-parser");
+
 const {
 	NodeType,
 	TT_AT_KEYWORD,
@@ -45,14 +47,22 @@ const {
 	TT_FUNCTION,
 	TT_HASH,
 	TT_IDENTIFIER,
+	TT_LEFT_CURLY_BRACKET,
+	TT_LEFT_PARENTHESIS,
+	TT_LEFT_SQUARE_BRACKET,
 	TT_NUMBER,
 	TT_PERCENTAGE,
+	TT_RIGHT_CURLY_BRACKET,
+	TT_RIGHT_PARENTHESIS,
+	TT_RIGHT_SQUARE_BRACKET,
+	TT_SEMICOLON,
 	TT_STRING,
 	TT_WHITESPACE,
 	TokenStream,
 	pickTransforms,
 	unescapeIdentifier
-} = require("../lib/css/syntax-parser");
+} = cssSyntaxParser;
+
 const {
 	STAGES,
 	collectFiles,
@@ -605,6 +615,82 @@ const printerFor = (options) => {
 		/** @type {{ code: string }} */ (
 			new SourceProcessor().process(css, printOptions)
 		).code;
+};
+
+// Each token type by what a report calls it, read off the exports rather than
+// listed, so a type the tokenizer gains is named without editing this.
+/** @type {Map<number, string>} */
+const TOKEN_TYPE_NAMES = new Map();
+for (const [name, value] of Object.entries(cssSyntaxParser)) {
+	if (name.startsWith("TT_") && typeof value === "number") {
+		TOKEN_TYPE_NAMES.set(value, name.slice(3).toLowerCase().replace(/_/g, " "));
+	}
+}
+
+// How much of a stylesheet one cut keeps at most, where the source offers a
+// construct that small: the cost is two prints of it under every preset.
+const CUT_CONSTRUCT_LIMIT = 2048;
+
+/**
+ * The stylesheet cut short inside and just after one token of each type, since
+ * the end of the input is where the tokenizer and the parser close what the
+ * source left open. Each cut keeps only the top-level construct it falls in,
+ * which is all the end of the input can reach — the first one small enough.
+ * @param {string} css a stylesheet
+ * @returns {[string, string][]} `[where, cut]` for each place it was cut
+ */
+const cssCuts = (css) => {
+	/** @type {Map<number, [number, number, number]>} */
+	const first = new Map();
+	/** @type {Set<number>} */
+	const small = new Set();
+	const stream = new TokenStream(css);
+	let depth = 0;
+	let construct = 0;
+	for (;;) {
+		const token = stream.consume();
+		const type = token.type;
+		if (type === TT_EOF) break;
+		if (!small.has(type)) {
+			if (token.end - construct <= CUT_CONSTRUCT_LIMIT) {
+				first.set(type, [construct, token.start, token.end]);
+				small.add(type);
+			} else if (!first.has(type)) {
+				first.set(type, [construct, token.start, token.end]);
+			}
+		}
+		if (
+			type === TT_FUNCTION ||
+			type === TT_LEFT_PARENTHESIS ||
+			type === TT_LEFT_SQUARE_BRACKET ||
+			type === TT_LEFT_CURLY_BRACKET
+		) {
+			depth++;
+		} else if (
+			depth !== 0 &&
+			(type === TT_RIGHT_PARENTHESIS ||
+				type === TT_RIGHT_SQUARE_BRACKET ||
+				type === TT_RIGHT_CURLY_BRACKET)
+		) {
+			depth--;
+			if (depth === 0 && type === TT_RIGHT_CURLY_BRACKET) construct = token.end;
+		} else if (depth === 0 && type === TT_SEMICOLON) {
+			construct = token.end;
+		}
+	}
+	/** @type {[string, string][]} */
+	const cuts = [];
+	for (const [type, [from, start, end]] of first) {
+		const name = TOKEN_TYPE_NAMES.get(type) || String(type);
+		if (end - start > 1) {
+			cuts.push([
+				`inside a ${name}`,
+				css.slice(from, start + ((end - start) >> 1))
+			]);
+		}
+		cuts.push([`after a ${name}`, css.slice(from, end)]);
+	}
+	return cuts;
 };
 
 /**
@@ -1362,6 +1448,25 @@ const invariants = (write) => {
 				}
 			}
 		}
+	}
+	if (wantsIdempotence) {
+		let cut = 0;
+		for (const [label, css] of corpus) {
+			for (const [where, source] of cssCuts(css)) {
+				cut++;
+				for (const [preset, options] of presets) {
+					const { reports } = idempotence({
+						minify: printerFor(options),
+						source,
+						says: tokenStream
+					});
+					for (const report of reports) {
+						groups.add(report, preset, `${label}, cut ${where}`);
+					}
+				}
+			}
+		}
+		log(`… and ${cut} of them cut short inside a token …`);
 	}
 	return groups.write(write);
 };

@@ -1,0 +1,16 @@
+<!doctype html>
+<title>css</title>
+<!-- Each value below is a whole stylesheet to the CSS minifier, ending inside
+     what it left open (CSS Syntax 4.3, 5.4): the tokenizer closes it there. -->
+<div style="--x:lab(50%">a custom property left inside a function</div>
+<div style="--x:[">inside a block</div>
+<div style="--x:f(g(x">inside two</div>
+<div style='--s:"x'>inside a string</div>
+<div style="--u:url(#x">inside a url</div>
+<div style="--x:f(&quot;)">inside a string that ends on the closer</div>
+<div style="--x:a\">after a dangling backslash</div>
+<div style="background:URL(#i">a url folded on the first pass</div>
+<div style="background:url( #x\">a url padded, with a dangling backslash</div>
+<style>.a{--x:f(</style>
+<style>.b{&:is(</style>
+<style>.c{color:red;/* open</style>
