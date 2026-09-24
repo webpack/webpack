@@ -5,19 +5,17 @@
 
 "use strict";
 
-// Derive every option schema from its TypeScript type, the direction
-// `generate-types.js` runs in reverse. Each output has a committed schema to be
-// judged against, which is what makes the round trip a measurement.
+// Derive every option schema from the TypeScript module that declares it.
+// `declarations/**/*.ts` is the source and is written by hand; nothing here
+// writes it.
 //
-//   node tooling/generate-schemas.js             # round-trip report, writes nothing
-//   node tooling/generate-schemas.js --bootstrap # schemas -> schemas/types/**.ts
-//   node tooling/generate-schemas.js --write     # schemas/types/**.ts -> schemas
-//   node tooling/generate-schemas.js --strict    # report what an allowance forgives
+//   node tooling/generate-schemas.js          # report what each source derives
+//   node tooling/generate-schemas.js --write  # write those schemas
+//   node tooling/generate-schemas.js --strict # report what an allowance forgives
 //
-// WHY: the round-trip report is the point, not the writing. A source that has
-// been written is read from `schemas/types`; one that has not is bootstrapped in
-// memory from the committed schema, so a run measures all of them either way,
-// rather than one migrated schema at a time.
+// WHY: the report holds each derived schema against the committed one, so a
+// source that stops deriving what webpack validates says so rather than
+// rewriting it on the next run.
 
 const fs = require("fs");
 const path = require("path");
@@ -29,7 +27,6 @@ const SCHEMAS_DIRECTORY = path.resolve(ROOT, "schemas");
 const TYPES_DIRECTORY = path.resolve(ROOT, "declarations");
 const VOCABULARY_NAME = "vocabulary";
 
-const bootstrap = process.argv.includes("--bootstrap");
 const write = process.argv.includes("--write");
 const verbose = process.argv.includes("--verbose");
 // Report every difference, including the ones an allowance would forgive.
@@ -161,16 +158,6 @@ const VOCABULARY = [
 
 // Every keyword an alias may carry, which is also what a node must state none
 // of beyond its own for that alias to be the right name for it.
-const CONSTRAINT_KEYWORDS = [
-	"minLength",
-	"absolutePath",
-	"pattern",
-	"minimum",
-	"minItems",
-	"minProperties",
-	"uniqueItems"
-];
-
 const VOCABULARY_BY_NAME = new Map(
 	VOCABULARY.map((entry) => [entry.name, entry])
 );
@@ -458,143 +445,10 @@ const findDifferences = (expected, actual, at = "") => {
 // #region schema to TypeScript
 
 /**
- * @param {string} text the description a schema keyword carries
- * @param {string[]} tags JSDoc tags to write below it
- * @returns {string} a JSDoc block, or the empty string when there is nothing to say
- */
-const toJsDoc = (text, tags = []) => {
-	const lines = [...(text ? [escapeComment(text)] : []), ...tags];
-	if (lines.length === 0) return "";
-	return `/**\n${lines.map((line) => ` * ${line}`).join("\n")}\n */\n`;
-};
-
-/**
- * @param {string} text prose a schema states
- * @returns {string} the same prose, with nothing in it closing the block
- */
-const escapeComment = (text) => text.replace(/\*\//g, "*\\/");
-
-/**
  * @param {string} text prose read back out of a comment
  * @returns {string} the same prose, as the schema states it
  */
 const unescapeComment = (text) => text.replace(/\*\\\//g, "*/");
-
-/**
- * The tags a schema node carries that are documentation rather than validation.
- * @param {Record<string, EXPECTED_ANY>} schema a schema node
- * @returns {string[]} the JSDoc tags it becomes
- */
-const toDocumentationTags = (schema) => {
-	/** @type {string[]} */
-	const tags = [];
-	if (typeof schema.added === "string") tags.push(`@since ${schema.added}`);
-	if (schema.experimental) tags.push("@experimental");
-	if (schema.deprecated) tags.push("@deprecated");
-	if (schema.undefinedAsNull) tags.push("@undefinedAsNull");
-	if (schema.cli && schema.cli.helper) tags.push("@cliHelper");
-	if (schema.cli && schema.cli.exclude) tags.push("@cliExclude");
-	if (Array.isArray(schema.implements)) {
-		tags.push(`@implements ${schema.implements.join(", ")}`);
-	}
-	// WHY: a negated schema is the one thing TypeScript states no form of, so it
-	// travels as what it is and the tag is the record that it had to.
-	if (schema.not) tags.push(`@not ${JSON.stringify(schema.not)}`);
-	// WHY: an index signature of `any` is what an object states nothing about and
-	// what one open by `additionalProperties` both read as, so the tag separates
-	// them where the type cannot.
-	if (schema.additionalProperties === true) tags.push("@additionalProperties");
-	if (schema.properties && Object.keys(schema.properties).length === 0) {
-		tags.push("@emptyProperties");
-	}
-	// WHY: the type took the place the members would have been written in, so
-	// what the schema validates travels as it stands, the way a negation does.
-	if (statesShape(schema) && Object.keys(schema.properties || {}).length > 0) {
-		tags.push(`@properties ${JSON.stringify(schema.properties)}`);
-	}
-	// WHY: a name and a literal each say what they are, and neither carries the
-	// type a schema validates beside it. The command line flags read that, so it
-	// survives rather than being dropped as redundant.
-	if (
-		schema.type &&
-		(schema.$ref || schema.oneOf || schema.enum || statesShape(schema))
-	) {
-		tags.push(`@jsonType ${schema.type}`);
-	}
-	// WHY: a `tsType` with no `type` beside it validates nothing — it names what
-	// the value is for a reader and lets anything through.
-	if (schema.tsType && !schema.type && !schema.enum && !schema.instanceof) {
-		tags.push("@typeOnly");
-	}
-	// WHY: where a shape is validated and typed as something else, the shape is
-	// what the members say and the tag is the only place left for the type.
-	if (statesShape(schema)) tags.push(`@tsType ${schema.tsType}`);
-	// WHY: an array or object states its constraint through a generic alias, and
-	// `generate-types.js` prints no generic alias, so it travels as a tag.
-	if (hasConstraints(schema) && !matchVocabulary(schema)) {
-		for (const keyword of CONSTRAINT_TAGS) {
-			if (schema[keyword] === undefined) continue;
-			tags.push(`@${keyword} ${schema[keyword]}`);
-		}
-		return tags;
-	}
-	if (!needsTag(schema)) return tags;
-	const entry = /** @type {VocabularyEntry} */ (matchVocabulary(schema));
-	for (const [keyword, value] of Object.entries(entry.constraints)) {
-		if (keyword !== "type") tags.push(`@${keyword} ${value}`);
-	}
-	return tags;
-};
-
-/**
- * Whether the alias that carries this node's constraints would swallow a
- * description the node's own values need, leaving a tag as the only place.
- * @param {Record<string, EXPECTED_ANY>} schema a schema node
- * @returns {boolean} whether the constraints belong in a JSDoc tag instead
- */
-const needsTag = (schema) =>
-	hasConstraints(schema) &&
-	Boolean(matchVocabulary(schema)) &&
-	isObject(schema.additionalProperties) &&
-	typeof schema.additionalProperties.description === "string";
-
-/**
- * Whether the node's own keywords, rather than its `tsType`, are what the source
- * writes out — because that type would not read back as itself.
- * @param {Record<string, EXPECTED_ANY>} schema a schema node
- * @returns {boolean} whether the type belongs in a tag instead
- */
-const statesShape = (schema) =>
-	Boolean(schema.tsType) &&
-	!schema.instanceof &&
-	(Object.keys(schema.properties || {}).length > 0 ||
-		(Boolean(schema.type) && schema.type !== "object") ||
-		(schema.type === "object" && schema.tsType.includes("|")));
-
-/**
- * @param {Record<string, EXPECTED_ANY>} schema a schema node
- * @returns {VocabularyEntry | undefined} the alias that carries its constraints
- */
-const matchVocabulary = (schema) =>
-	VOCABULARY.find(
-		(entry) =>
-			Object.entries(entry.constraints).every(
-				([keyword, value]) => schema[keyword] === value
-			) &&
-			CONSTRAINT_KEYWORDS.every(
-				(keyword) =>
-					schema[keyword] === undefined || keyword in entry.constraints
-			)
-	);
-
-/**
- * Whether a node says anything a plain TypeScript type cannot, which is what
- * decides between an alias from the vocabulary and the bare type.
- * @param {Record<string, EXPECTED_ANY>} schema a schema node
- * @returns {boolean} whether it carries a validation-only keyword
- */
-const hasConstraints = (schema) =>
-	CONSTRAINT_KEYWORDS.some((keyword) => schema[keyword] !== undefined);
 
 /**
  * A reference either points inside the same schema or at a definition of
@@ -608,165 +462,11 @@ const readReference = (reference) => {
 };
 
 /**
- * @param {unknown} value a value an `enum` lists
- * @returns {string} the TypeScript literal type for it
- */
-const toLiteralType = (value) =>
-	value === null ? "null" : JSON.stringify(value);
-
-/**
- * Parenthesizes a branch that is itself a union, which is what keeps it one
- * branch: prettier preserves the parentheses, so the grouping survives.
- * @param {string} written the type syntax a branch became
- * @returns {string} that syntax, parenthesized where it has to be
- */
-const group = (written) => (written.includes(" | ") ? `(${written})` : written);
-
-/**
- * A union branch and an array's items are the two places a schema describes and
- * no JSDoc block reaches, so the description leads the type instead.
- * @param {Record<string, EXPECTED_ANY>} schema the node being written
- * @param {string} written the type syntax it became
- * @returns {string} that syntax, behind its description
- */
-const describe = (schema, written) => {
-	const tags = toDocumentationTags(schema);
-	if (!schema.description && tags.length === 0) return written;
-	const held = group(written);
-	const said = [
-		...(schema.description ? [escapeComment(schema.description)] : []),
-		...tags
-	].join(" ");
-	return `/** ${said} */ ${held}`;
-};
-
-/**
  * @typedef {object} EmitContext
  * @property {{ text: string, name: string }[]} lifted declarations pulled out of a nested node
  * @property {Map<string, Set<string>>} imports names to import, keyed by module
  * @property {Map<string, Record<string, EXPECTED_ANY>>} said the definitions by name
  */
-
-/**
- * Turns one schema node into TypeScript type syntax. A nested object carrying a
- * title becomes its own declaration and a reference to another schema becomes
- * an import, both of which the context collects.
- * @param {Record<string, EXPECTED_ANY>} schema the node to write
- * @param {EmitContext} collected what the node needs declared or imported
- * @returns {string} the type syntax
- */
-const toTypeScriptType = (schema, collected) => {
-	if (schema.$ref) {
-		const { name, from } = readReference(schema.$ref);
-		if (from !== "") {
-			const names = collected.imports.get(from) || new Set();
-			names.add(name);
-			collected.imports.set(from, names);
-		}
-		return name;
-	}
-	// WHY: a `$ref` takes no siblings, so a reference that needs a description
-	// is written as a `oneOf` of one — the only shape `oneOf` has in the corpus.
-	if (schema.oneOf) return toTypeScriptType(schema.oneOf[0], collected);
-	if (schema.anyOf) {
-		return schema.anyOf
-			.map((/** @type {Record<string, EXPECTED_ANY>} */ branch) =>
-				describe(branch, group(toTypeScriptType(branch, collected)))
-			)
-			.join(" | ");
-	}
-	if (schema.instanceof === "RegExp") return "RegExp";
-	// WHY: `instanceof: "Function"` always comes with the `tsType` naming what
-	// the function is, and a callable type is how the checker reads it back. A
-	// `tsType` beside an `enum` is the wider of the two, so it wins there too.
-	if (schema.tsType && !statesShape(schema)) {
-		return quoteImports(schema.tsType, '"');
-	}
-	if (schema.enum) {
-		return schema.enum.map(toLiteralType).join(" | ");
-	}
-	const entry =
-		hasConstraints(schema) && !needsTag(schema)
-			? matchVocabulary(schema)
-			: undefined;
-	if (entry && entry.typeParameter === "") return entry.name;
-	if (schema.type === "array") {
-		const items = schema.items || {};
-		const written = schema.items
-			? describe(items, toTypeScriptType(items, collected))
-			: "unknown";
-		if (entry) return `${entry.name}<${written}>`;
-		// WHY: prettier lifts a comment out of `T[]` and leaves it in front of the
-		// whole array, where it reads as the array's own. `Array<T>` holds it.
-		return items.description || written.includes(" ")
-			? `Array<${written}>`
-			: `${written}[]`;
-	}
-	if (schema.type === "object") {
-		if (entry) {
-			const values = isObject(schema.additionalProperties)
-				? toTypeScriptType(schema.additionalProperties, collected)
-				: "unknown";
-			return `${entry.name}<${values}>`;
-		}
-		// WHY: an object with no properties of its own says everything it has to say
-		// through `tsType`, and the tags carry the keywords back.
-		if (schema.tsType && statesShape(schema)) {
-			return quoteImports(schema.tsType, '"');
-		}
-		// WHY: an object with nothing in it and nothing allowed into it is an empty
-		// type, where one that states nothing about its values is an index signature.
-		if (!schema.properties && schema.additionalProperties === false) {
-			return "{}";
-		}
-		// WHY: an object stating nothing about its values admits any of them, and
-		// `unknown` would reject what `lib/` passes today — a RegExp, an array.
-		if (!schema.properties && !isObject(schema.additionalProperties)) {
-			return "{ [key: string]: any }";
-		}
-		if (!schema.properties) return toMembers(schema, collected);
-		// WHY: an object the schema titled is a type worth naming, and one it did
-		// not is anonymous in TypeScript too, so both keep the shape they had.
-		if (!schema.title) return toMembers(schema, collected);
-		// WHY: TypeScript has no way to name a type without declaring one, so an
-		// object the schema writes inline is lifted and marked to be put back.
-		const tags = [...toDocumentationTags(schema), "@inline"];
-		const documentation = toJsDoc(schema.description, tags);
-		const body = toMembers(schema, collected);
-		const text = body.includes("} & {")
-			? `${documentation}export type ${schema.title} = ${body};`
-			: `${documentation}export interface ${schema.title} ${body}`;
-		collected.lifted.push({ name: schema.title, text });
-		return schema.title;
-	}
-	if (schema.type === "string") return "string";
-	if (schema.type === "number") return "number";
-	if (schema.type === "boolean") return "boolean";
-	return "unknown";
-};
-
-/**
- * A missing property is reported in the order `required` names them, so an
- * order the properties are not declared in has to be stated to be kept.
- * @param {Record<string, EXPECTED_ANY>} schema a schema node
- * @returns {string[]} the tag that states it, or nothing when it matches
- */
-const toRequiredOrderTag = (schema) => {
-	if (!Array.isArray(schema.required) || !schema.properties) return [];
-	const declared = Object.keys(schema.properties).filter((name) =>
-		schema.required.includes(name)
-	);
-	return declared.join(",") === schema.required.join(",")
-		? []
-		: [`@required ${schema.required.join(", ")}`];
-};
-
-/**
- * @param {Record<string, EXPECTED_ANY>} schema an object node holding properties
- * @param {EmitContext} collected what the node needs declared or imported
- * @returns {string} the members, braced, as an interface body or a type literal
- */
-const OBJECT_HALVES = "\n} & {\n";
 
 /**
  * The two halves of one definition, or an empty name for anything else.
@@ -786,213 +486,6 @@ const halvedReference = (node, known) => {
 		known.has(second)
 		? base
 		: "";
-};
-
-/**
- * @param {Record<string, EXPECTED_ANY>} schema a whole schema document
- * @returns {Map<string, Record<string, EXPECTED_ANY>>} its definitions by name
- */
-const describedDefinitions = (schema) =>
-	new Map(Object.entries(schema.definitions || {}));
-
-/**
- * @param {Record<string, EXPECTED_ANY>} schema an object schema node
- * @param {EmitContext} collected what the node needs declared or imported
- * @returns {string} the members it is written with, in braces
- */
-const toMembers = (schema, collected) => {
-	const required = new Set(schema.required || []);
-	const members = Object.entries(schema.properties || {}).map(
-		([property, value]) => {
-			const node = /** @type {Record<string, EXPECTED_ANY>} */ (value);
-			const optional = required.has(property) ? "" : "?";
-			const name = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(property)
-				? property
-				: JSON.stringify(property);
-			// WHY: a member written as a bare reference is documented by the
-			// definition it points at, tags and all.
-			const pointed =
-				node.$ref && !node.description
-					? collected.said.get(readReference(node.$ref).name)
-					: undefined;
-			const documentation = toJsDoc(
-				node.description || (pointed && pointed.description) || "",
-				pointed ? toDocumentationTags(pointed) : toDocumentationTags(node)
-			);
-			return `${documentation}${name}${optional}: ${toTypeScriptType(
-				node,
-				collected
-			)};`;
-		}
-	);
-	if (schema.additionalProperties === true) {
-		members.push("[key: string]: any;");
-		return `{\n${members.join("\n")}\n}`;
-	}
-	if (!isObject(schema.additionalProperties)) {
-		return `{\n${members.join("\n")}\n}`;
-	}
-	const values = /** @type {Record<string, EXPECTED_ANY>} */ (
-		schema.additionalProperties
-	);
-	const documentation = toJsDoc(
-		values.description,
-		toDocumentationTags(values)
-	);
-	const index = `${documentation}[key: string]: ${toTypeScriptType(values, collected)};`;
-	// WHY: TypeScript rejects a named property an index signature does not admit,
-	// where a schema takes both, so the two halves meet as an intersection.
-	if (members.length === 0) return `{\n${index}\n}`;
-	return `{\n${members.join("\n")}${OBJECT_HALVES}${index}\n}`;
-};
-
-/**
- * @param {Record<string, EXPECTED_ANY>} schema a definition, or the schema root
- * @param {string} name the name to declare it under
- * @param {boolean} isRoot whether it is the type the schema validates
- * @param {EmitContext} collected what the node needs declared or imported
- * @returns {string} the declaration
- */
-const toDeclaration = (schema, name, isRoot, collected) => {
-	const tags = [
-		...toDocumentationTags(schema),
-		...toRequiredOrderTag(schema),
-		...(isRoot ? ["@schema"] : [])
-	];
-	const documentation = toJsDoc(schema.description, tags);
-	if (schema.type === "object" && schema.properties) {
-		const body = toMembers(schema, collected);
-		const at = body.indexOf(OBJECT_HALVES);
-		if (at === -1) return `${documentation}export interface ${name} ${body}`;
-		// WHY: the halves are what `lib/` imports — nothing names the whole — so
-		// each is declared rather than the intersection they meet in.
-		const known = `${body.slice(0, at)}\n}`;
-		const unknown = `{\n${body.slice(at + OBJECT_HALVES.length)}`;
-		return [
-			`${documentation}export interface ${name}Known ${known}`,
-			`${documentation}export interface ${name}Unknown ${unknown}`,
-			`${documentation}export type ${name} = ${name}Known & ${name}Unknown;`
-		].join("\n\n");
-	}
-	return `${documentation}export type ${name} = ${toTypeScriptType(
-		schema,
-		collected
-	)};`;
-};
-
-/**
- * Writes the TypeScript source a schema would be derived from. The output is
- * the migration's starting point, not a record of the schema: everything it
- * carries is ordinary TypeScript plus the aliases in the vocabulary.
- * @param {Record<string, EXPECTED_ANY>} schema the committed schema
- * @param {string} relativePath where the source lives, below the types directory
- * @returns {string} the source text
- */
-const schemaToTypeScript = (schema, relativePath) => {
-	/** @type {EmitContext} */
-	const collected = {
-		lifted: [],
-		imports: new Map(),
-		said: describedDefinitions(schema)
-	};
-	const definitions = Object.entries(schema.definitions || {}).map(
-		([name, value]) =>
-			toDeclaration(
-				/** @type {Record<string, EXPECTED_ANY>} */ (value),
-				name,
-				false,
-				collected
-			)
-	);
-	const { definitions: _held, ...root } = schema;
-	// WHY: a schema with no title of its own is a plain reference to a
-	// definition of another one, which TypeScript already has a spelling for.
-	// WHY: one holding nothing but definitions has no root to declare at all.
-	const rootDeclarations = [];
-	if (schema.title) {
-		rootDeclarations.push(toDeclaration(root, schema.title, true, collected));
-	} else if (root.$ref) {
-		const { name, from } = readReference(root.$ref);
-		rootDeclarations.push(
-			`${toJsDoc("", ["@schema"])}export type { ${name} } from "${from}";`
-		);
-	}
-	const body = [
-		...definitions,
-		...deduplicate(collected.lifted, schema.title),
-		...rootDeclarations
-	];
-	const upwards = "../".repeat(relativePath.split("/").length - 1) || "./";
-	const used = VOCABULARY.filter((entry) =>
-		new RegExp(`\\b${entry.name}\\b`).test(body.join("\n"))
-	);
-	/** @type {string[]} */
-	const imports = [];
-	if (used.length > 0) {
-		const names = used.map((entry) => `type ${entry.name}`).sort();
-		imports.push(
-			`import { ${names.join(", ")} } from "${upwards}${VOCABULARY_NAME}";`
-		);
-	}
-	for (const [from, names] of collected.imports) {
-		const inline = [...names].sort().map((name) => `type ${name}`);
-		imports.push(`import { ${inline.join(", ")} } from "${from}";`);
-	}
-	const header = [
-		"/*",
-		"\tMIT License http://www.opensource.org/licenses/mit-license.php",
-		"\tAuthor Alexander Akait @alexander-akait",
-		"*/",
-		"",
-		"// The options this plugin takes. `tooling/generate-schemas.js` derives the",
-		"// matching JSON schema from this file, so a change here is a change to what",
-		"// webpack validates, to its types and to its command line flags alike."
-	].join("\n");
-	return [header, ...imports, ...body].join("\n\n");
-};
-
-/**
- * @param {{ text: string, name: string }[]} lifted declarations pulled out of nested nodes
- * @param {string | undefined} rootName the name the root is declared under
- * @returns {string[]} each declaration once, leaving out the root's own
- */
-const deduplicate = (lifted, rootName) => {
-	/** @type {Set<string>} */
-	const seen = new Set();
-	/** @type {string[]} */
-	const kept = [];
-	for (const one of lifted) {
-		if (seen.has(one.name) || one.name === rootName) continue;
-		seen.add(one.name);
-		kept.push(one.text);
-	}
-	return kept;
-};
-
-/**
- * @returns {string} the source of the file the aliases are declared in
- */
-const vocabularyToTypeScript = () => {
-	const declarations = VOCABULARY.map((entry) => {
-		const parameters = entry.typeParameter ? `<${entry.typeParameter}>` : "";
-		const keywords = Object.entries(entry.constraints)
-			.filter(([keyword]) => keyword !== "type")
-			.map(([keyword, value]) => ` * @${keyword} ${value}`)
-			.join("\n");
-		return `/**\n * ${entry.description}\n${keywords}\n */\nexport type ${entry.name}${parameters} = ${entry.underlying};`;
-	});
-	const header = [
-		"/*",
-		"\tMIT License http://www.opensource.org/licenses/mit-license.php",
-		"\tAuthor Alexander Akait @alexander-akait",
-		"*/",
-		"",
-		"// The whole of what a JSON schema states and a TypeScript type cannot: each",
-		"// alias is one combination of validation-only keywords, named. A source",
-		"// writes the alias where it would write the underlying type, and nothing",
-		"// here changes what that type means."
-	].join("\n");
-	return [header, ...declarations].join("\n\n");
 };
 
 // #endregion
@@ -1656,12 +1149,8 @@ const main = async () => {
 	const sources = new Map();
 	/** @type {Map<string, string>} */
 	const sourceOf = new Map();
-	let onDisk = 0;
 	const vocabularyPath = path.resolve(TYPES_DIRECTORY, `${VOCABULARY_NAME}.ts`);
-	sources.set(
-		vocabularyPath,
-		await format(vocabularyPath, vocabularyToTypeScript())
-	);
+	sources.set(vocabularyPath, fs.readFileSync(vocabularyPath, "utf8"));
 
 	for (const schemaFile of schemaFiles) {
 		const relative = path
@@ -1669,35 +1158,12 @@ const main = async () => {
 			.replace(/\.json$/, ".ts")
 			.split(path.sep)
 			.join("/");
-		const schema = JSON.parse(fs.readFileSync(schemaFile, "utf8"));
 		const target = path.resolve(TYPES_DIRECTORY, relative);
-		// WHY: a source that has been written is the one that counts. Bootstrapping
-		// what has not is what lets a run report on all 39 before any is migrated.
-		const written = !bootstrap && fs.existsSync(target);
-		if (written) onDisk++;
-		sources.set(
-			target,
-			written
-				? fs.readFileSync(target, "utf8")
-				: await format(
-						target,
-						repointImports(
-							schemaToTypeScript(schema, relative),
-							path.dirname(schemaFile),
-							path.dirname(target)
-						)
-					)
-		);
-		sourceOf.set(target, schemaFile);
-	}
-
-	if (bootstrap) {
-		let written = 0;
-		for (const [target, text] of sources) {
-			if (writeFile(target, text)) written++;
+		if (!fs.existsSync(target)) {
+			throw new Error(`${relative} declares no options in declarations/`);
 		}
-		console.log(`${written} of ${sources.size} type declarations written.`);
-		return;
+		sources.set(target, fs.readFileSync(target, "utf8"));
+		sourceOf.set(target, schemaFile);
 	}
 
 	const program = createProgram(sources);
@@ -1773,12 +1239,11 @@ const main = async () => {
 		}
 	}
 
-	const from =
-		onDisk === 0
-			? "bootstrapped in memory"
-			: `${onDisk} read from ${path.relative(ROOT, TYPES_DIRECTORY)}`;
 	console.log(
-		`${matching} of ${sourceOf.size} schemas round-trip, ${identical} byte for byte (${from}).`
+		`${matching} of ${sourceOf.size} schemas derive from ${path.relative(
+			ROOT,
+			TYPES_DIRECTORY
+		)}, ${identical} byte for byte.`
 	);
 	if (reordered.length > 0) {
 		console.log(
