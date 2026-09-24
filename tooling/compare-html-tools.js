@@ -1704,24 +1704,6 @@ const invariantFixtures = () => {
  */
 const EXPECTED = [
 	{
-		relation: "idempotence",
-		contains: "<style>",
-		source: "cut in a <style> body",
-		why: "owed, not excused: `removeEmptyElements` judges an element on its source, before the renderer has minified what it holds, so a `<style>` whose body minifies to nothing — here a lone selector the cut left without its block — prints empty and only goes on the next pass. The same holds uncut for `<style>a{}</style>` and for an element whose only attribute is dropped. The fix has to render first or decide after, and a deferred renderer answers only once the print is done; retire this entry with it"
-	},
-	{
-		relation: "idempotence",
-		contains: "<body>",
-		source: "cut in a <style> body",
-		why: "the entry above, where the emptied `<style>` was all the body held: it goes on the next pass, and the body's tags with it"
-	},
-	{
-		relation: "idempotence",
-		contains: ".b{&:is()}",
-		source: "minimize-end-of-input/cases/css.html",
-		why: "owed, the same way as the `<style>` entries above: `mergeStyles` decides on the source, and a body the input left open cannot be joined as written — the next body would be read inside what it left open. The renderer closes each one, so the next pass joins them. Merging the rendered bodies rather than the written ones would retire this"
-	},
-	{
 		relation: "respelling quote-double",
 		contains: "&#34;",
 		source: "style-attribute",

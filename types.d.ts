@@ -6557,6 +6557,7 @@ type DeferredEmbeddedSource = DeferredWrite & {
 declare interface DeferredWrite {
 	source: string;
 	build: (answer?: string) => string;
+	decides?: (answer?: string) => boolean;
 }
 type DefineConfigInput =
 	| Configuration
@@ -11007,6 +11008,9 @@ declare interface HtmlPrintOptions {
 		info: { type: string; hostType: string; as?: string }
 	) => undefined | string;
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
+	embeddedAnswers?: (
+		offer: Omit<DeferredEmbeddedSource, "build">
+	) => undefined | string;
 	deferSrcdoc?: boolean;
 }
 declare interface HtmlProcessOptions {
@@ -11079,6 +11083,13 @@ declare interface HtmlProcessOptions {
 	 * whether an `<iframe srcdoc>` is among what `deferEmbeddedSource` collects (default true); false for a caller that minifies them itself, which keeps the attribute on the normal path and its shorter delimiter
 	 */
 	deferSrcdoc?: boolean;
+
+	/**
+	 * what a print before this one was answered for each offer, which `processAsync` passes where an answer overturned a choice made without it: a body it answers is written from it rather than deferred
+	 */
+	embeddedAnswers?: (
+		offer: Omit<DeferredEmbeddedSource, "build">
+	) => undefined | string;
 
 	/**
 	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
