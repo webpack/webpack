@@ -38,6 +38,8 @@
     "lib/dependencies/AMDRequireDependenciesBlock": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, inside a `try` to detect webpack 4, where a re-export would pick the wrong branch.",
     "lib/dependencies/AMDRequireDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/AMDRequireItemDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/CommonJsRequireContextDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/CommonJsRequireDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/DelegatedExportsDependency": "Removed in webpack 5.",
     "lib/dependencies/HarmonyAcceptDependency": "Renamed to lib/dependencies/ESMAcceptDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/dependencies/HarmonyAcceptImportDependency": "Renamed to lib/dependencies/ESMAcceptImportDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -56,6 +58,14 @@
     "lib/dependencies/ModuleHotAcceptDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/ModuleHotDeclineDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/MultiEntryDependency": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
+    "lib/dependencies/RequireEnsureDependenciesBlock": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, inside a `try` to detect webpack 4, where a re-export would pick the wrong branch.",
+    "lib/dependencies/RequireEnsureDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireEnsureItemDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireHeaderDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireIncludeDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireResolveContextDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireResolveDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/RequireResolveHeaderDependency": "Grouped under lib/dependencies/commonjs/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/SingleEntryDependency": "Renamed in webpack 5 to dependencies/EntryDependency.",
     "lib/wasm/WebAssemblyGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/wasm/WebAssemblyJavascriptGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -85,14 +95,6 @@
     "lib/css/CssModulesPlugin": {
       "weekly": 12160713,
       "packages": ["mini-css-extract-plugin"]
-    },
-    "lib/dependencies/CommonJsRequireContextDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/CommonJsRequireDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ConstDependency": {
       "weekly": 134683,
@@ -170,38 +172,6 @@
       "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/RequireContextDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireEnsureDependenciesBlock": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireEnsureDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireEnsureItemDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireHeaderDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireIncludeDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireResolveContextDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireResolveDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/RequireResolveHeaderDependency": {
       "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
