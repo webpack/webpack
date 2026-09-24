@@ -31,6 +31,9 @@ const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
 
+const {
+	builtinEmbeddedRenderer
+} = require("../lib/html/builtinEmbeddedRenderer");
 const { SourceProcessor } = require("../lib/html/syntax");
 const {
 	NodeType,
@@ -407,9 +410,20 @@ const TOOLS = [
 		}
 	},
 	{
+		// With the renderer a build hands it, so an SVG's stylesheets are minified.
 		name: "webpack",
 		stage: "minify",
-		create: () => (xml) => printXml(xml, "minify")
+		create: () => {
+			const renderEmbeddedSource = builtinEmbeddedRenderer();
+			return (xml) =>
+				/** @type {{ code: string }} */ (
+					new SourceProcessor().process(xml, {
+						xml: true,
+						mode: "minify",
+						renderEmbeddedSource
+					})
+				).code;
+		}
 	},
 	{
 		// SVG's own optimizer: it rewrites path data and drops what it deems
@@ -456,6 +470,31 @@ const TOOLS = [
 const SVG_ONLY = new Set(["svgo"]);
 const SVG_ROOT = /<svg[\s>]/;
 
+const STYLE_ELEMENT = /(?:^|:)style$/;
+
+/**
+ * A stylesheet as webpack's CSS minifier reads it, run to a fixed point, so a
+ * tool that minified an SVG's `<style>` is not reported for changing its text.
+ * @param {string} css a `<style>` body
+ * @returns {string} its canonical form
+ */
+const canonicalCss = (css) => {
+	try {
+		const { SourceProcessor: CssProcessor } = require("../lib/css/syntax");
+
+		const processor = new CssProcessor();
+		let out = css;
+		for (let i = 0; i < 3; i++) {
+			const next = processor.process(out, { mode: "minify" }).code;
+			if (next === out) break;
+			out = next;
+		}
+		return out;
+	} catch (_err) {
+		return css;
+	}
+};
+
 /**
  * What a document says, read by a strict XML parser that shares nothing with
  * webpack's: every element and attribute, and the text with whitespace runs
@@ -484,7 +523,13 @@ const fingerprint = (parseXml, xml) => {
 	 */
 	const walk = (node) => {
 		if (node.type === "text" || node.type === "cdata") {
-			const value = node.text.replace(/\s+/g, " ").trim();
+			const value = (
+				STYLE_ELEMENT.test(node.parent.name || "")
+					? canonicalCss(node.text)
+					: node.text
+			)
+				.replace(/\s+/g, " ")
+				.trim();
 			if (value !== "") text.push(value);
 			return;
 		}
