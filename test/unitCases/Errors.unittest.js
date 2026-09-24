@@ -934,3 +934,49 @@ describe("Loaders", () => {
 	`);
 	});
 });
+
+describe("Stats.hasErrors", () => {
+	/**
+	 * @param {(compilation: import("../../").Compilation) => void=} tap
+	 * optional per-compilation setup, e.g. to tap `processErrors`
+	 * @returns {Promise<import("../../").Stats>} the stats object
+	 */
+	function compileToStats(tap) {
+		return new Promise((resolve, reject) => {
+			const compiler = webpack(
+				/** @type {import("../../").Configuration} */ ({
+					...defaults.options,
+					entry: "./missingFile"
+				})
+			);
+			compiler.outputFileSystem = defaults.outputFileSystem;
+			if (tap) {
+				compiler.hooks.compilation.tap("test", tap);
+			}
+			compiler.run((bailedError, stats) => {
+				if (bailedError) return reject(bailedError);
+				compiler.close((closeError) => {
+					if (closeError) return reject(closeError);
+					resolve(/** @type {import("../../").Stats} */ (stats));
+				});
+			});
+		});
+	}
+
+	it("reports true when the compilation has errors", async () => {
+		const stats = await compileToStats();
+		expect(stats.hasErrors()).toBe(true);
+	});
+
+	// `hasErrors()` must go through `getErrors()` (the `processErrors` waterfall
+	// hook), not read `compilation.errors` directly — otherwise a plugin that
+	// filters errors out of the hook is contradicted by `hasErrors()`, which is
+	// exactly the asymmetry `hasWarnings()`/`processWarnings` already avoids.
+	it("respects a processErrors hook that filters errors out", async () => {
+		const stats = await compileToStats((compilation) => {
+			compilation.hooks.processErrors.tap("test", () => []);
+		});
+		expect(stats.toJson({ errorDetails: false }).errors).toHaveLength(0);
+		expect(stats.hasErrors()).toBe(false);
+	});
+});
