@@ -6596,17 +6596,31 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 	});
 
 	it("declines a `data:` payload it cannot read back as written", () => {
-		// A media type naming no language, a percent-escaped payload, an empty
-		// one, a newline the URL parser drops and a `#` starting a fragment.
+		// A media type naming no language, an empty payload, and a newline the
+		// URL parser drops before anything reads it.
 		expect(
 			offered(
 				'<img src="data:image/png;base64,AAAA">' +
-					'<a href="data:application/json,%7B%7D">a</a>' +
 					'<a href="data:application/json,">b</a>' +
-					'<a href="data:application/json,{\n}">c</a>' +
-					'<a href="data:application/json,{ &quot;a&quot; : &quot;#&quot; }">d</a>'
+					'<a href="data:application/json,{\n}">c</a>'
 			)
 		).toEqual([]);
+	});
+
+	it("offers a percent-escaped `data:` payload decoded, and reads `#` as content", () => {
+		const html =
+			'<a href="data:application/json,%7B%20%22a%22%20:%201%20%7D">a</a>' +
+			'<a href="data:application/json,{ &quot;b&quot; : &quot;#&quot; }">b</a>';
+
+		expect(offered(html)).toEqual([
+			["json", "stylesheet", '{ "a" : 1 }'],
+			["json", "stylesheet", '{ "b" : "#" }']
+		]);
+		// Written back escaping only what changes a URL's meaning: the `#`.
+		expect(minify(html, compactJson)).toBe(
+			"<a href='data:application/json,{\"a\":1}'>a</a>" +
+				"<a href='data:application/json,{\"b\":\"%23\"}'>b</a>"
+		);
 	});
 
 	it("offers a `data:` payload decoded and escapes the answer back", () => {

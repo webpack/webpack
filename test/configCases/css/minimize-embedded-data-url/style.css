@@ -11,4 +11,4 @@
 .json { background : url('data:application/json,{ "a" :  1 }') ; }
 .html { background : url("data:text/html,<div>  <!-- dropped -->  <p>hi</p>  </div>") ; }
 .png { background : url("data:image/png;base64,AAAA") ; }
-.fragment { background : url("data:text/html,<p>  a  </p>#x") ; }
+.hash { background : url("data:text/css,.x  {  color : #ff0000  }") ; }

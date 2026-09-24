@@ -119,18 +119,46 @@ describe("decodeDataURIPayload", () => {
 		expect(decodeDataURIPayload(parsed)).toBe("a{color:red}");
 	});
 
-	it("should decline a payload a fragment cuts short", () => {
+	it("should read a raw # as content", () => {
 		const parsed = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
-			parseDataURI("data:image/svg+xml,<svg/>#x")
+			parseDataURI("data:image/svg+xml,<svg fill='#f00'/>")
 		);
-		expect(decodeDataURIPayload(parsed)).toBeNull();
+		expect(decodeDataURIPayload(parsed)).toBe("<svg fill='#f00'/>");
 	});
 
-	it("should decline a percent-escaped payload rather than re-escape it", () => {
-		const parsed = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
-			parseDataURI("data:text/css,a%7Bcolor%3Ared%7D")
-		);
-		expect(decodeDataURIPayload(parsed)).toBeNull();
+	it("should decode percent-escapes the way the URL parser does", () => {
+		/**
+		 * @param {string} uri the URI
+		 * @returns {string | null} its decoded payload
+		 */
+		const decode = (uri) =>
+			decodeDataURIPayload(
+				/** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
+					parseDataURI(uri)
+				)
+			);
+		expect(decode("data:text/css,a%7Bcolor%3Ared%7D")).toBe("a{color:red}");
+		expect(decode("data:text/css,%C3%A9")).toBe("\u00e9");
+		// A `%` starting no escape is itself, as the URL parser reads it.
+		expect(decode("data:text/css,a%zz%2")).toBe("a%zz%2");
+		expect(decode("data:text/css;charset=utf-8,%41")).toBe("A");
+	});
+
+	it("should decline escapes naming bytes that are no UTF-8 text", () => {
+		expect(
+			decodeDataURIPayload(
+				/** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
+					parseDataURI("data:text/css,%E9")
+				)
+			)
+		).toBeNull();
+		expect(
+			decodeDataURIPayload(
+				/** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
+					parseDataURI("data:text/css;charset=iso-8859-1,%41")
+				)
+			)
+		).toBeNull();
 	});
 
 	it("should decode base64 that round-trips", () => {
@@ -219,7 +247,6 @@ describe("readEmbeddedDataURI", () => {
 	it("should decline what offers nothing to render", () => {
 		expect(readEmbeddedDataURI("https://example.com/a.json")).toBeNull();
 		expect(readEmbeddedDataURI("data:image/png;base64,AAAA")).toBeNull();
-		expect(readEmbeddedDataURI("data:application/json,%7B%7D")).toBeNull();
 		expect(readEmbeddedDataURI("data:application/json,")).toBeNull();
 	});
 });
