@@ -3852,6 +3852,78 @@ b&#10;c">
 				expect(printXml(minified, "minify")).toBe(minified);
 			});
 
+			it("should hand SVG and XHTML stylesheets to the embedded renderer", () => {
+				const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
+				const document = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:h="http://www.w3.org/1999/xhtml">
+<style type="text/css"><![CDATA[
+	.a  { fill : #FFFFFF ; }
+	text > tspan { stroke: red }
+	a[href="x&y"] { fill: blue }
+]]></style>
+<rect style="fill: #ff0000 ;  stroke : none"/>
+<h:style>p  { color : red }</h:style>
+<foreignObject><h:p style="color : red">x</h:p></foreignObject>
+<x:style xmlns:x="urn:not-css">keep  { this }</x:style>
+<g xmlns="urn:not-css" style="keep : this"><style>keep { this }</style></g>
+<style>a { b : c }<!-- split --></style>
+</svg>`;
+				expect(
+					/** @type {{ code: string }} */ (
+						new SourceProcessor().process(document, {
+							xml: true,
+							mode: "minify",
+							renderEmbeddedSource: builtinEmbeddedRenderer()
+						})
+					).code
+				).toMatchSnapshot();
+			});
+
+			it("should defer an XML stylesheet to an asynchronous renderer", async () => {
+				/** @type {string[]} */
+				const offered = [];
+				const { code } = await new SourceProcessor().processAsync(
+					'<svg xmlns="http://www.w3.org/2000/svg"><style>a { b : c }</style><rect style="fill: red"/><style> </style></svg>',
+					{
+						xml: true,
+						mode: "minify",
+						renderEmbeddedSource: (
+							/** @type {string} */ source,
+							/** @type {{ as?: string }} */ hole
+						) => {
+							offered.push(source);
+							return Promise.resolve(hole.as ? 'fill:"a<b"' : "a<b{}");
+						}
+					}
+				);
+				expect(offered).toEqual(["a { b : c }", "fill: red"]);
+				expect(code).toMatchSnapshot();
+			});
+
+			it("should write a rendered stylesheet in the shortest character data", () => {
+				const { _xmlCharacterData } = require("../../lib/html/syntax-parser");
+				expect(_xmlCharacterData("a>b{}")).toBe("a>b{}");
+				expect(_xmlCharacterData("a]]>b\r")).toBe("a]]&gt;b&#13;");
+				expect(_xmlCharacterData("a<b&c")).toBe("<![CDATA[a<b&c]]>");
+				expect(_xmlCharacterData("a<b]]>")).toBe("a&lt;b]]&gt;");
+			});
+
+			it("should leave a stylesheet as written when nothing renders it", () => {
+				const document =
+					'<svg xmlns="http://www.w3.org/2000/svg"><style>a { b : c }</style><rect style="fill : red"/></svg>';
+				expect(printXml(document, "minify")).toBe(
+					'<svg xmlns="http://www.w3.org/2000/svg"><style>a { b : c }</style><rect style="fill : red"/></svg>'
+				);
+				expect(
+					/** @type {{ code: string }} */ (
+						new SourceProcessor().process(document, {
+							xml: true,
+							mode: "minify",
+							renderEmbeddedSource: () => undefined
+						})
+					).code
+				).toBe(document);
+			});
+
 			it("should close what the input ran out in", () => {
 				expect(printXml("<r><!-- open", "beautify")).toBe("<r><!-- open--></r>");
 				expect(printXml("<r><![CDATA[a<b", "beautify")).toBe("<r>a&lt;b</r>");

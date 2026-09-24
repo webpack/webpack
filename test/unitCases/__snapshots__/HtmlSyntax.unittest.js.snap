@@ -66,6 +66,20 @@ ANSWER(svg)
 </body></html>"
 `;
 
+exports[`parseHtml XML mode printing should defer an XML stylesheet to an asynchronous renderer 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style><![CDATA[a<b{}]]></style><rect style='fill:\\"a&lt;b\\"'/><style> </style></svg>"`;
+
+exports[`parseHtml XML mode printing should hand SVG and XHTML stylesheets to the embedded renderer 1`] = `
+"<svg xmlns=\\"http://www.w3.org/2000/svg\\" xmlns:h=\\"http://www.w3.org/1999/xhtml\\">
+<style type=\\"text/css\\"><![CDATA[.a{fill:#fff}text>tspan{stroke:red}a[href=\\"x&y\\"]{fill:blue}]]></style>
+<rect style=\\"fill:red;stroke:none\\"/>
+<h:style>p{color:red}</h:style>
+<foreignObject><h:p style=\\"color:red\\">x</h:p></foreignObject>
+<x:style xmlns:x=\\"urn:not-css\\">keep  { this }</x:style>
+<g xmlns=\\"urn:not-css\\" style=\\"keep : this\\"><style>keep { this }</style></g>
+<style>a { b : c }</style>
+</svg>"
+`;
+
 exports[`parseHtml XML mode printing should write XML back as written when beautifying 1`] = `
 "<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><!-- drawn by hand --><svg xmlns=\\"&ns;\\" viewBox = \\"0 0 10 10\\"  data-q='say \\"hi\\"' data-both=\\"it's &quot;q&quot;\\" data-ws=\\"a
 b&#10;c\\">
