@@ -4356,6 +4356,11 @@
               "$ref": "#/definitions/OptimizationMinimizeJavascript"
             }
           ]
+        },
+        "json": {
+          "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to `true` with `experiments.futureDefaults`, otherwise `false`).",
+          "type": "boolean",
+          "added": "5.112.0"
         }
       },
       "added": "5.110.0"
