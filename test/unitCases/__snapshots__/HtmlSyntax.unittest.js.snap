@@ -66,6 +66,33 @@ ANSWER(svg)
 </body></html>"
 `;
 
+exports[`parseHtml XML mode printing should write XML back as written when beautifying 1`] = `
+"<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><!-- drawn by hand --><svg xmlns=\\"&ns;\\" viewBox = \\"0 0 10 10\\"  data-q='say \\"hi\\"' data-both=\\"it's &quot;q&quot;\\" data-ws=\\"a
+b&#10;c\\">
+  <title>A &amp; B &gt; C</title>
+  <g><!-- inert --></g>
+  <path d=\\"M0 0L10 10\\" ></path>
+  <br></br>
+  <text>&ns;</text>
+  <style><![CDATA[a > b { fill: red } a < b && c]]></style>
+  <script><![CDATA[x]]></script>
+  <?render mode=\\"fast\\"?>
+</svg>"
+`;
+
+exports[`parseHtml XML mode printing should write the shortest well-formed XML when minifying 1`] = `
+"<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><svg xmlns=\\"&ns;\\" viewBox=\\"0 0 10 10\\" data-q='say \\"hi\\"' data-both='it&apos;s \\"q\\"' data-ws=\\"a b&#10;c\\">
+  <title>A &amp; B &gt; C</title>
+  <g/>
+  <path d=\\"M0 0L10 10\\"/>
+  <br/>
+  <text>&ns;</text>
+  <style><![CDATA[a > b { fill: red } a < b && c]]></style>
+  <script>x</script>
+  <?render mode=\\"fast\\"?>
+</svg>"
+`;
+
 exports[`parseHtml — insertion modes appends a comment after the body to the html element 1`] = `
 "| <!DOCTYPE html>
 | <html>

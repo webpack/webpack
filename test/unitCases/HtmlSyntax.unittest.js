@@ -11,7 +11,7 @@
 const fs = require("fs");
 const path = require("path");
 const { builtinEmbeddedRenderer } = require("../../lib/html/builtinEmbeddedRenderer");
-const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize } = require("../../lib/html/syntax-parser");
+const { A, NS_HTML, NS_MATHML, NS_SVG, NodeType, QUOTE_DOUBLE, QUOTE_NONE, QUOTE_SINGLE, decodeEntities, decodeXmlAttribute, escapeAttribute, escapeText, parseCssUrls, parseHtml: parseHtmlRefs, parseMsapplicationTask, parseSrc, parseSrcset, tokenize, tokenizeXml } = require("../../lib/html/syntax-parser");
 const serializeHtmlTree = require("../helpers/serializeHtmlTree");
 
 describe("tokenize", () => {
@@ -3317,6 +3317,8 @@ describe("parseHtml", () => {
 	});
 
 	describe("XML mode", () => {
+		const { SourceProcessor } = require("../../lib/html/syntax");
+
 		it("should not synthesize the HTML document scaffold", () => {
 			const document = parseXml("<root/>");
 			expect(document.children).toHaveLength(1);
@@ -3518,6 +3520,334 @@ describe("parseHtml", () => {
 			expect(root.children[0]).toMatchObject({
 				type: NodeType.Element,
 				tagName: "child"
+			});
+		});
+
+		it("should close misnested elements at the end tag naming an open one", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<root><a><b>x</a><c/></stray></root>").children[0]
+			);
+			expect(
+				root.children.map((node) => /** @type {MatElement} */ (node).tagName)
+			).toEqual(["a", "c"]);
+			const a = /** @type {MatElement} */ (root.children[0]);
+			expect(/** @type {MatElement} */ (a.children[0]).tagName).toBe("b");
+		});
+
+		it("should keep a `>` quoted in the internal subset inside the DOCTYPE", () => {
+			const document = parseXml(
+				'<!DOCTYPE r [<!ENTITY gt2 "a>b"><!-- ]> --><?pi ]>?>]><r>&gt2;</r>'
+			);
+			expect(document.children.map((node) => node.type)).toEqual([
+				NodeType.Doctype,
+				NodeType.Element
+			]);
+			expect(
+				/** @type {MatElement} */ (document.children[1]).children[0]
+			).toMatchObject({ type: NodeType.Text, data: "a>b" });
+		});
+
+		it("should expand the internal entities the DTD declares", () => {
+			const document = parseXml(
+				'<!DOCTYPE svg [<!ENTITY ns "http://www.w3.org/2000/svg"><!ENTITY both "&ns; &#38;amp; &undeclared;"><!ENTITY ns "second">]><svg xmlns="&ns;">&both;</svg>'
+			);
+			const svg = /** @type {MatElement} */ (document.children[1]);
+			expect(decodeXmlAttribute(svg.attributes[0].value)).toBe(
+				"http://www.w3.org/2000/svg"
+			);
+			expect(svg.children[0]).toMatchObject({
+				type: NodeType.Text,
+				data: "http://www.w3.org/2000/svg & &undeclared;"
+			});
+		});
+
+		it("should not read a parameter entity or what is declared after one", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml(
+					'<!DOCTYPE r [<!ENTITY % p "x"><!ENTITY a "A">%p;<!ENTITY b "B">]><r>&a;&b;</r>'
+				).children[1]
+			);
+			expect(root.children[0]).toMatchObject({ data: "A&b;" });
+		});
+
+		it("should tokenize an entity whose replacement text is markup", () => {
+			const source =
+				'<!DOCTYPE r [<!ENTITY e "<x a=\'1\'>t</x>"><!ENTITY w "(&e;)">]><r>a&w;b</r>';
+			const root = /** @type {MatElement} */ (parseXml(source).children[1]);
+			expect(root.children.map((node) => node.type)).toEqual([
+				NodeType.Text,
+				NodeType.Element,
+				NodeType.Text
+			]);
+			const x = /** @type {MatElement} */ (root.children[1]);
+			expect(x).toMatchObject({ tagName: "x", start: 65, end: 70 });
+			expect(decodeXmlAttribute(x.attributes[0].value)).toBe("1");
+			expect(root.children[0]).toMatchObject({ data: "a(" });
+			expect(root.children[2]).toMatchObject({ data: ")b" });
+			// No reference can be rebuilt from the elements, so it prints as written.
+			expect(
+				new SourceProcessor().process(source, { xml: true, mode: "minify" })
+					.code
+			).toBe(source);
+		});
+
+		it("should leave a recursive or exponential entity unexpanded", () => {
+			const recursive = /** @type {MatElement} */ (
+				parseXml(
+					'<!DOCTYPE r [<!ENTITY a "&b;"><!ENTITY b "&a;">]><r>&a;</r>'
+				).children[1]
+			);
+			expect(recursive.children[0]).toMatchObject({ data: "&a;" });
+			let subset = '<!ENTITY l0 "0123456789">';
+			for (let i = 1; i < 10; i++) {
+				subset += `<!ENTITY l${i} "${`&l${i - 1};`.repeat(10)}">`;
+			}
+			const bomb = /** @type {MatElement} */ (
+				parseXml(`<!DOCTYPE r [${subset}]><r a="&l9;">&l9;</r>`).children[1]
+			);
+			const text = /** @type {MatText} */ (bomb.children[0]).data;
+			expect(text.length).toBeLessThan(2 << 20);
+			expect(text).toContain("&l");
+			const markupBomb = /** @type {MatElement} */ (
+				parseXml(
+					`<!DOCTYPE r [<!ENTITY m "<m/>">${subset.replace('"0123456789"', '"&m;"')}]><r>&l9;</r>`
+				).children[1]
+			);
+			expect(markupBomb.children.length).toBeLessThan(1 << 20);
+		});
+
+		it("should normalize attribute values as §3.3.3 does", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml(
+					'<!DOCTYPE r [<!ATTLIST r t NMTOKENS #IMPLIED c CDATA #IMPLIED>]><r t="  a \r\n b  " c=" a\r\n\tb&#10;&#9;c "/>'
+				).children[1]
+			);
+			expect(
+				root.attributes.map(({ name, value }) => [
+					name,
+					decodeXmlAttribute(value)
+				])
+			).toEqual([
+				["t", "a b"],
+				["c", " a  b\n\tc "]
+			]);
+		});
+
+		it("should supply the defaults the DTD declares", () => {
+			const document = parseXml(
+				"<!DOCTYPE r [<!ATTLIST r a CDATA 'one' b ( x | y ) #FIXED ' y ' c CDATA #REQUIRED a CDATA 'two'><!ATTLIST e f CDATA 'g'>]><r a='mine'><e/></r>"
+			);
+			const root = /** @type {MatElement} */ (document.children[1]);
+			expect(
+				root.attributes.map(({ name, value, nameStart }) => [
+					name,
+					decodeXmlAttribute(value),
+					nameStart
+				])
+			).toEqual([
+				["a", "mine", 125],
+				["b", "y", -1]
+			]);
+			expect(
+				/** @type {MatElement} */ (root.children[0]).attributes.map(
+					({ name, value }) => [name, value]
+				)
+			).toEqual([["f", "g"]]);
+		});
+
+		it("should read what follows a PI target as its data", () => {
+			const document = parseXml(
+				"<?xml-stylesheet href='a.css' media=\"a>b\"?><?target.v1\r\n two\r\n lines ?><r/>"
+			);
+			expect(
+				document.children.slice(0, 2).map((node) => ({
+					target: /** @type {MatProcessingInstruction} */ (node).target,
+					data: /** @type {MatProcessingInstruction} */ (node).data
+				}))
+			).toEqual([
+				{ target: "xml-stylesheet", data: "href='a.css' media=\"a>b\"" },
+				{ target: "target.v1", data: "two\n lines " }
+			]);
+		});
+
+		it("should read malformed markup the way a lenient reader does", () => {
+			const document = parseXml(
+				'<r a=unquoted b c="x" / d="y">1 < 2 &amp; <3<!ELEMENT e ANY><t x="1"<u/></r><![CDATA[never closed'
+			);
+			const root = /** @type {MatElement} */ (document.children[0]);
+			expect(
+				root.attributes.map(({ name, value }) => [name, value])
+			).toEqual([
+				["a", "unquoted"],
+				["b", ""],
+				["c", "x"],
+				["d", "y"]
+			]);
+			expect(root.children).toMatchObject([
+				{ type: NodeType.Text, data: "1 < 2 & <3" },
+				{ type: NodeType.Comment, data: "ELEMENT e ANY" },
+				{ type: NodeType.Element, tagName: "t", children: [{ tagName: "u" }] }
+			]);
+			// Outside the root there is no element for character data to go in.
+			expect(document.children[1]).toMatchObject({
+				type: NodeType.Comment,
+				data: "never closed"
+			});
+		});
+
+		it("should read every shape a DOCTYPE declaration takes", () => {
+			/**
+			 * @param {string} source XML source
+			 * @returns {MatNode[]} the document's children
+			 */
+			const nodes = (source) => parseXml(source).children;
+			expect(nodes('<!DOCTYPE r SYSTEM "r.dtd"><r/>')[0]).toMatchObject({
+				name: "r",
+				publicId: null,
+				systemId: "r.dtd"
+			});
+			expect(nodes("<!DOCTYPE r PUBLIC 'p'><r/>")[0]).toMatchObject({
+				publicId: "p",
+				systemId: null
+			});
+			expect(nodes("<!DOCTYPE><r/>")[0]).toMatchObject({ name: "" });
+			const subset =
+				"<!DOCTYPE r [ <!-- ] --> <?pi ]?> <!ENTITY q ']>'> <!ENTITY % p 'x'> <!ENTITY ext SYSTEM 'e.xml'> <!ELEMENT r ANY> ]><r>&q;&ext;</r>";
+			expect(
+				/** @type {MatElement} */ (nodes(subset)[1]).children[0]
+			).toMatchObject({ data: "]>&ext;" });
+			// The input ends inside the subset, a literal, or a comment in it.
+			for (const source of [
+				"<!DOCTYPE r [<!ENTITY a 'x'>",
+				"<!DOCTYPE r [<!ENTITY a 'x",
+				"<!DOCTYPE r [<!-- open",
+				"<!DOCTYPE r [<?open",
+				"<!DOCTYPE r [<!ELEMENT r 'open",
+				'<!DOCTYPE r "open'
+			]) {
+				expect(nodes(source)).toMatchObject([{ type: NodeType.Doctype }]);
+			}
+		});
+
+		it("should read every shape an attribute-list declaration takes", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml(
+					"<!DOCTYPE r [<!ATTLIST r n NOTATION (a|b) 'a' e (x | y) 'y' i ID #IMPLIED f CDATA #FIXED \"f\" t NMTOKEN ' t '><!ATTLIST q><!ATTLIST r broken (open]><r i=' 1 '/>"
+				).children[1]
+			);
+			expect(
+				root.attributes.map(({ name, value }) => [
+					name,
+					decodeXmlAttribute(value)
+				])
+			).toEqual([
+				["i", "1"],
+				["n", "a"],
+				["e", "y"],
+				["f", "f"],
+				["t", "t"]
+			]);
+			// A literal left open runs to the end of the input, subset and all.
+			expect(
+				parseXml("<!DOCTYPE r [<!ATTLIST r a CDATA 'open]><r/>").children
+			).toMatchObject([{ type: NodeType.Doctype }]);
+		});
+
+		it("should drop a tag, instruction or end tag the input ends inside", () => {
+			for (const source of ["<r>x<y a='1'", "<r>x<?pi data", "<r>x</r"]) {
+				const root = /** @type {MatElement} */ (parseXml(source).children[0]);
+				expect(root.children).toEqual([
+					expect.objectContaining({ type: NodeType.Text, data: "x" })
+				]);
+			}
+		});
+
+		it("should replace a character XML does not allow", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml("<r>&#0;&#xD800;&#x1F600;&#12;a\0b</r>").children[0]
+			);
+			expect(root.children[0]).toMatchObject({
+				data: "��\u{1F600}�a�b"
+			});
+		});
+
+		it("should report XML tokens through the tokenizer callbacks", () => {
+			/** @type {string[]} */
+			const log = [];
+			tokenizeXml(
+				'x<!DOCTYPE d PUBLIC "p" \'s\' [<!ENTITY e "]">]><a k="v"/><!--c--><?p d?></a>y',
+				0,
+				{
+					text: (input, start, end) => log.push(`text ${input.slice(start, end)}`),
+					doctype: (input, start, end, nameStart, nameEnd, publicStart, publicEnd, systemStart, systemEnd, forceQuirks, subsetStart, subsetEnd) =>
+						log.push(
+							`doctype ${input.slice(nameStart, nameEnd)} ${input.slice(publicStart, publicEnd)} ${input.slice(systemStart, systemEnd)} ${input.slice(/** @type {number} */ (subsetStart), subsetEnd)}`
+						),
+					attribute: (input, nameStart, nameEnd, valueStart, valueEnd) =>
+						log.push(`attribute ${input.slice(nameStart, nameEnd)}=${input.slice(valueStart, valueEnd)}`),
+					openTag: (input, start, end, nameStart, nameEnd, selfClosing) =>
+						log.push(`open ${input.slice(nameStart, nameEnd)} ${selfClosing}`),
+					comment: (input, start, end, dataStart, dataEnd) =>
+						log.push(`comment ${input.slice(dataStart, dataEnd)}`),
+					closeTag: (input, start, end, nameStart, nameEnd) =>
+						log.push(`close ${input.slice(nameStart, nameEnd)}`)
+				}
+			);
+			expect(log).toEqual([
+				"text x",
+				'doctype d p s <!ENTITY e "]">',
+				"attribute k=v",
+				"open a true",
+				"comment c",
+				"comment p d",
+				"close a",
+				"text y"
+			]);
+			expect(tokenizeXml("<a>")).toBe(3);
+		});
+
+		describe("printing", () => {
+			/**
+			 * @param {string} source XML source
+			 * @param {"minify" | "beautify"} mode print mode
+			 * @returns {string} printed XML
+			 */
+			const printXml = (source, mode) =>
+				/** @type {{ code: string }} */ (
+					new SourceProcessor().process(source, { xml: true, mode })
+				).code;
+			const source = `<?xml version="1.0"?>
+<!DOCTYPE svg [ <!ENTITY ns "http://www.w3.org/2000/svg"> <!ATTLIST svg version CDATA "1.1"> ]>
+<!-- drawn by hand -->
+<svg xmlns="&ns;" viewBox = "0 0 10 10"  data-q='say "hi"' data-both="it's &quot;q&quot;" data-ws="a
+b&#10;c">
+  <title>A &amp; B &gt; C</title>
+  <g><!-- inert --></g>
+  <path d="M0 0L10 10" ></path>
+  <br></br>
+  <text>&ns;</text>
+  <style><![CDATA[a > b { fill: red } a < b && c]]></style>
+  <script><![CDATA[x]]></script>
+  <?render mode="fast"?>
+</svg>
+`;
+
+			it("should write XML back as written when beautifying", () => {
+				expect(printXml(source, "beautify")).toMatchSnapshot();
+			});
+
+			it("should write the shortest well-formed XML when minifying", () => {
+				const minified = printXml(source, "minify");
+				expect(minified).toMatchSnapshot();
+				expect(printXml(minified, "minify")).toBe(minified);
+			});
+
+			it("should close what the input ran out in", () => {
+				expect(printXml("<r><!-- open", "beautify")).toBe("<r><!-- open--></r>");
+				expect(printXml("<r><![CDATA[a<b", "beautify")).toBe("<r>a&lt;b</r>");
+				expect(printXml("<r><![CDATA[]]>]]&gt;&#13;", "minify")).toBe(
+					"<r>]]&gt;&#13;</r>"
+				);
 			});
 		});
 	});

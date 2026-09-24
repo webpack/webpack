@@ -31,6 +31,7 @@ updates:
       - "/tooling/comparison/css-tool-comparison"
       - "/tooling/comparison/html-tool-comparison"
       - "/tooling/comparison/js-tool-comparison"
+      - "/tooling/comparison/xml-tool-comparison"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
