@@ -19192,12 +19192,10 @@ declare class MultiCompiler {
 			SyncBailHook<[string, string, undefined | any[]], true | void>
 		>;
 		/**
-		 * Taps `buildDependenciesChanged` of every child compiler; each reports its own changes.
+		 * Called once per change of build dependencies, however many child compilers depend on them; return `true` to take over.
 		 * @since 5.112.0
 		 */
-		buildDependenciesChanged: MultiHook<
-			SyncBailHook<[ReadonlySet<string>], true | void>
-		>;
+		buildDependenciesChanged: SyncBailHook<[ReadonlySet<string>], true | void>;
 	}>;
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;

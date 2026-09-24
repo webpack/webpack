@@ -560,34 +560,112 @@ describe("WatchBuildDependencies", () => {
 		}
 	});
 
-	it("should report changed build dependencies through the MultiCompiler hook", async () => {
-		const webpack = require("../../");
-		/** @type {(name: string) => import("../../").Configuration} */
-		const createOptions = (name) => ({
-			name,
-			mode: "development",
-			context: fixturePath,
-			entry: entryPath,
-			output: {
-				path: path.join(testDirectory, "js/WatchBuildDependencies", name),
-				filename: "bundle.js"
-			},
-			buildDependencies: { config: [configPath] }
+	for (const withDependencies of [false, true]) {
+		it(`should report changed build dependencies once through the MultiCompiler hook${
+			withDependencies ? " when compilers depend on each other" : ""
+		}`, async () => {
+			const webpack = require("../../");
+			/** @type {(name: string, dependencies?: string[]) => import("../../").Configuration} */
+			const createOptions = (name, dependencies) => ({
+				name,
+				dependencies,
+				mode: "development",
+				context: fixturePath,
+				entry: entryPath,
+				output: {
+					path: path.join(testDirectory, "js/WatchBuildDependencies", name),
+					filename: "bundle.js"
+				},
+				buildDependencies: { config: [configPath] }
+			});
+			const compiler = webpack([
+				createOptions("a"),
+				createOptions("b", withDependencies ? ["a"] : undefined)
+			]);
+			/** @type {ReadonlySet<string>[]} */
+			const reported = [];
+			let builds = 0;
+
+			compiler.hooks.buildDependenciesChanged.tap(
+				"Test",
+				(/** @type {ReadonlySet<string>} */ changedFiles) => {
+					reported.push(changedFiles);
+					return true;
+				}
+			);
+
+			const watching =
+				/** @type {NonNullable<ReturnType<import("../../").MultiCompiler["watch"]>>} */ (
+					compiler.watch({ aggregateTimeout: 50 }, (err) => {
+						if (err) throw err;
+						builds++;
+					})
+				);
+			const children = () =>
+				compiler.compilers.map(
+					(child) => /** @type {import("../../").Watching} */ (child.watching)
+				);
+
+			try {
+				while (builds === 0) await wait(50);
+				// files written just before the start may cause one more build
+				await wait(500);
+				const settledBuilds = builds;
+
+				fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+				// both children report the change, the hook is called once
+				while (!children().every((child) => child.suspended)) await wait(50);
+				await wait(300);
+				expect(reported).toEqual([new Set([configPath])]);
+
+				// e.g. the new configuration failed to load, both builds go on
+				watching.resume();
+				await wait(500);
+				expect(builds).toBe(settledBuilds);
+
+				// another save is a new change
+				fs.writeFileSync(configPath, '{ "value": 3 }', "utf8");
+				while (!children().every((child) => child.suspended)) await wait(50);
+				await wait(300);
+				expect(reported).toEqual([new Set([configPath]), new Set([configPath])]);
+			} finally {
+				await new Promise((resolve) => {
+					watching.close(resolve);
+				});
+			}
 		});
-		const compiler = webpack([createOptions("a"), createOptions("b")]);
+	}
+
+	it("should not watch cache.buildDependencies", async () => {
+		const cacheDependencyPath = path.join(fixturePath, "cache-dependency.json");
+		fs.writeFileSync(cacheDependencyPath, '{ "value": 1 }', "utf8");
+		/** @type {string[]} */
+		const warnings = [];
+		const compiler = createCompiler({
+			buildDependencies: {},
+			cache: {
+				type: "filesystem",
+				cacheDirectory: path.join(fixturePath, ".cache"),
+				buildDependencies: { config: [cacheDependencyPath] }
+			},
+			infrastructureLogging: {
+				level: "warn",
+				console: /** @type {Console} */ (
+					/** @type {unknown} */ ({
+						warn: (/** @type {string} */ message) => warnings.push(message)
+					})
+				)
+			}
+		});
 		/** @type {ReadonlySet<string>[]} */
 		const reported = [];
 		let builds = 0;
+		compiler.hooks.buildDependenciesChanged.tap("Test", (changedFiles) => {
+			reported.push(changedFiles);
+			return true;
+		});
 
-		compiler.hooks.buildDependenciesChanged.tap(
-			"Test",
-			(/** @type {ReadonlySet<string>} */ changedFiles) => {
-				reported.push(changedFiles);
-				return true;
-			}
-		);
-
-		const watching = /** @type {NonNullable<ReturnType<import("../../").MultiCompiler["watch"]>>} */ (
+		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({ aggregateTimeout: 50 }, (err) => {
 				if (err) throw err;
 				builds++;
@@ -596,19 +674,18 @@ describe("WatchBuildDependencies", () => {
 
 		try {
 			while (builds === 0) await wait(50);
-
-			fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
-			// each child compiler reports its own change
-			while (reported.length < 2) await wait(50);
-			expect(reported).toEqual([new Set([configPath]), new Set([configPath])]);
-			for (const child of compiler.compilers) {
-				expect(
-					/** @type {import("../../").Watching} */ (child.watching).suspended
-				).toBe(true);
-			}
+			// only the top-level option restarts, the cache one keeps invalidating the cache only
+			expect(compiler.buildDependencyFiles).toBeUndefined();
+			fs.writeFileSync(cacheDependencyPath, '{ "value": 2 }', "utf8");
+			await wait(500);
+			expect(reported).toEqual([]);
+			expect(warnings).toEqual([]);
 		} finally {
 			await new Promise((resolve) => {
 				watching.close(resolve);
+			});
+			await new Promise((resolve) => {
+				compiler.close(resolve);
 			});
 		}
 	});
