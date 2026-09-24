@@ -4390,7 +4390,7 @@ declare class Compiler {
 	managedPaths: Set<string | RegExp>;
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
-	buildDependencyFiles?: ReadonlySet<string>;
+	buildDependencyFiles?: Map<string, undefined | null | number>;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
 	fileTimestamps?: Map<

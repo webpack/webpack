@@ -89,7 +89,8 @@ describe("WatchBuildDependencies", () => {
 
 		try {
 			while (builds === 0) await wait(50);
-			expect(compiler.buildDependencyFiles).toEqual(new Set([configPath]));
+			expect(new Set(/** @type {Map<string, number | null | undefined>} */ (compiler.buildDependencyFiles).keys())).toEqual(
+				new Set([configPath]));
 
 			fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
 			while (reported.length === 0) await wait(50);
@@ -209,8 +210,8 @@ describe("WatchBuildDependencies", () => {
 
 			try {
 				while (builds === 0) await wait(50);
-				expect(compiler.buildDependencyFiles).toEqual(
-					new Set([tsConfigPath, helperPath])
+				expect(new Set(/** @type {Map<string, number | null | undefined>} */ (compiler.buildDependencyFiles).keys())).toEqual(
+				new Set([tsConfigPath, helperPath])
 				);
 			} finally {
 				await new Promise((resolve) => {

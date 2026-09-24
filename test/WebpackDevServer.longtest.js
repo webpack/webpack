@@ -413,4 +413,134 @@ describe("WebpackDevServer integration in real Chrome", () => {
 		},
 		90000
 	);
+
+	itChrome(
+		"reloads the page with the new configuration when a build dependency changes",
+		async () => {
+			const { dir } = writeFixture();
+			const port = await findPort();
+			const configDependencyPath = path.join(dir, "config-dependency.json");
+			fs.writeFileSync(
+				path.join(dir, "src/index.js"),
+				'document.getElementById("app").textContent = __CONFIG_MESSAGE__;\n'
+			);
+			fs.writeFileSync(configDependencyPath, '{ "message": "CONFIG_V1" }\n');
+
+			// The watcher reports a file modified around the build's start as changed,
+			// which must not count as a changed build dependency
+			const soon = new Date(Date.now() + 1000);
+			fs.utimesSync(configDependencyPath, soon, soon);
+
+			// Like webpack-cli: load the config fresh, create the compiler and a dev
+			// server around it (not as a plugin), and listen.
+			const start = async () => {
+				// read from disk, jest's `require` keeps its own module registry
+				const { message } = JSON.parse(
+					fs.readFileSync(configDependencyPath, "utf8")
+				);
+				const compiler = webpack({
+					mode: "development",
+					context: dir,
+					target: "web",
+					entry: path.join(dir, "src/index.js"),
+					output: {
+						path: path.join(dir, "dist"),
+						filename: "main.js",
+						publicPath: "/"
+					},
+					buildDependencies: { config: [configDependencyPath] },
+					infrastructureLogging: { level: "error" },
+					stats: "none",
+					watchOptions: { poll: 200 },
+					plugins: [
+						new webpack.DefinePlugin({
+							__CONFIG_MESSAGE__: JSON.stringify(message)
+						})
+					]
+				});
+				let builds = 0;
+				compiler.hooks.done.tap("WebpackDevServerLongtest", () => {
+					builds++;
+				});
+				const Server = /** @type {typeof import("webpack-dev-server")} */ (
+					WebpackDevServer
+				);
+				const server = new Server(
+					{
+						port,
+						host: "127.0.0.1",
+						static: false,
+						setupExitSignals: false,
+						client: { logging: "none", overlay: false },
+						setupMiddlewares
+					},
+					compiler
+				);
+				await server.start();
+				return { compiler, server, getBuilds: () => builds };
+			};
+
+			let current = await start();
+			/** @type {ReadonlySet<string>[]} */
+			const reported = [];
+			/** @type {Promise<void> | undefined} */
+			let restarting;
+			let buildsWhenReported = 0;
+			const listen = () => {
+				const previous = current;
+				previous.compiler.hooks.buildDependenciesChanged.tap(
+					"WebpackDevServerLongtest",
+					(changedFiles) => {
+						reported.push(changedFiles);
+						buildsWhenReported = previous.getBuilds();
+						restarting = (async () => {
+							await stopServer(previous.server);
+							await new Promise((resolve) => {
+								previous.compiler.close(resolve);
+							});
+							current = await start();
+						})();
+						// keeps the old watching suspended, nothing builds with the old config
+						return true;
+					}
+				);
+			};
+			listen();
+
+			const page = await browser.newPage();
+			try {
+				await page.goto(`http://127.0.0.1:${port}/`, {
+					waitUntil: "domcontentloaded"
+				});
+				await waitForAppText(page, "CONFIG_V1", 20000);
+				const previous = current;
+				expect(
+					new Set(
+						/** @type {Map<string, number | null | undefined>} */ (
+							previous.compiler.buildDependencyFiles
+						).keys()
+					)
+				).toEqual(new Set([configDependencyPath]));
+
+				fs.writeFileSync(configDependencyPath, '{ "message": "CONFIG_V2" }\n');
+				// The client reconnects to the restarted server, finds no hot update for
+				// the new compiler and reloads the page
+				await waitForAppText(page, "CONFIG_V2", 30000);
+				await restarting;
+
+				expect(reported).toEqual([new Set([configDependencyPath])]);
+				// nothing was built with the old configuration after the change
+				expect(previous.getBuilds()).toBe(buildsWhenReported);
+				expect(current.compiler).not.toBe(previous.compiler);
+			} finally {
+				await page.close();
+				await stopServer(current.server);
+				await new Promise((resolve) => {
+					current.compiler.close(resolve);
+				});
+				fs.rmSync(dir, { recursive: true, force: true });
+			}
+		},
+		90000
+	);
 });
