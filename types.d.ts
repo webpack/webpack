@@ -4872,7 +4872,7 @@ declare interface Configuration {
 	externals?:
 		| string
 		| RegExp
-		| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
+		| ExternalItemObject
 		| ((
 				data: ExternalItemFunctionData,
 				callback: (
@@ -9261,7 +9261,7 @@ declare interface ExtensionAliasOptions {
 type ExternalItem =
 	| string
 	| RegExp
-	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
+	| ExternalItemObject
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (
@@ -9332,6 +9332,7 @@ declare interface ExternalItemFunctionData {
 	 */
 	originalRequest: string;
 }
+type ExternalItemObject = ExternalItemObjectKnown & ExternalItemObjectUnknown;
 
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
@@ -9554,7 +9555,7 @@ type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
 	| string
 	| RegExp
-	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
+	| ExternalItemObject
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (

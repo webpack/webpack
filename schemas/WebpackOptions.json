@@ -1797,28 +1797,7 @@
           "type": "string"
         },
         {
-          "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/ExternalItemValue"
-          },
-          "properties": {
-            "byLayer": {
-              "description": "Specify externals depending on the layer.",
-              "anyOf": [
-                {
-                  "type": "object",
-                  "additionalProperties": {
-                    "$ref": "#/definitions/ExternalItem"
-                  }
-                },
-                {
-                  "instanceof": "Function",
-                  "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
-                }
-              ]
-            }
-          }
+          "$ref": "#/definitions/ExternalItemObject"
         },
         {
           "$ref": "#/definitions/ExternalItemFunction"
@@ -1850,6 +1829,30 @@
       "description": "How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.",
       "enum": ["default", "esModule"],
       "added": "5.109.0"
+    },
+    "ExternalItemObject": {
+      "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ExternalItemValue"
+      },
+      "properties": {
+        "byLayer": {
+          "description": "Specify externals depending on the layer.",
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/ExternalItem"
+              }
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
+            }
+          ]
+        }
+      }
     },
     "ExternalItemSideEffects": {
       "description": "Whether importing the external has side effects (like the `sideEffects` flag in a package.json). `false` allows webpack to drop the external when none of its exports are used. Defaults to `true`, as webpack can't analyze an external.",
@@ -4052,7 +4055,7 @@
           "added": "5.110.0"
         },
         "dropOverriddenDeclarations": {
-          "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name \u2014 which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+          "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
           "type": "boolean",
           "added": "5.112.0"
         },
