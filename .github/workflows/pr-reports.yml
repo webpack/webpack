@@ -68,11 +68,13 @@ jobs:
             const { data: pulls } = await github.rest.pulls.list({
               ...context.repo,
               state: "open",
+              base: "main",
               head: `${run.head_repository.owner.login}:${run.head_branch}`,
               per_page: 100
             });
             const pull = pulls.find(
               (candidate) =>
+                candidate.base.ref === "main" &&
                 candidate.head.sha === run.head_sha &&
                 candidate.head.repo &&
                 candidate.head.repo.id === run.head_repository.id &&
@@ -85,7 +87,7 @@ jobs:
             const { upsertReportComment } = await import(
               `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
             );
-            const footer = `\n\n<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}.</sub>`;
+            const footer = `\n\n<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}, computed by this pull request's own code.</sub>`;
             for (const [name, { file, marker }] of Object.entries(REPORTS)) {
               const reportPath = path.join(process.env.REPORTS_DIR, name, file);
               let stat;
