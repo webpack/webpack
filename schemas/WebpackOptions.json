@@ -2095,8 +2095,9 @@
           "type": "boolean"
         },
         "buildDependencies": {
-          "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').",
+          "description": "Deprecated in favor of the top-level \"buildDependencies\" option. Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').",
           "type": "object",
+          "deprecated": true,
           "additionalProperties": {
             "description": "List of dependencies the build depends on.",
             "type": "array",

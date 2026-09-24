@@ -9813,7 +9813,8 @@ declare interface FileCacheOptions {
 	allowCollectingMemory?: boolean;
 
 	/**
-	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
+	 * Deprecated in favor of the top-level "buildDependencies" option. Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
+	 * @deprecated
 	 */
 	buildDependencies?: { [index: string]: BuildDependencyItem[] };
 
