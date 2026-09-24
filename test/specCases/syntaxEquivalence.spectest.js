@@ -234,6 +234,14 @@ const FILED_WPT_VALUE_DEFECTS = new Map([
 		"webkit only: the unimplemented `paint()` again \u2014 see `paint( mypaint`"
 	],
 	[
+		"var(--webpack-probe):background-image:paint( mypaint",
+		"webkit only: the unimplemented `paint()` again, read through the custom property \u2014 see `paint( mypaint`"
+	],
+	[
+		"var(--webpack-probe):background-image:paint(mypaint ",
+		"webkit only: the unimplemented `paint()` again, read through the custom property \u2014 see `paint( mypaint`"
+	],
+	[
 		"font-family:\"New Century Schoolbook\", serif",
 		"firefox only: not a printer defect — Gecko carries the source's quoting into the computed family where Blink drops it, so unquoting a name neither engine reads differently still reads as a difference there"
 	]
@@ -1023,8 +1031,10 @@ describe(`printer output in real ${ENGINE}`, () => {
 				 */
 				const readBack = (property, value, through) => {
 					probe.style.cssText = "";
+					// The holder goes last: a value left open would swallow a declaration
+					// after it, where the end of the list closes it as its own source did.
 					probe.style.cssText = through
-						? `${custom}:${value};${property}:var(${custom})`
+						? `${property}:var(${custom});${custom}:${value}`
 						: `${property}:${value}`;
 					/** @type {string[]} */
 					const names = [];

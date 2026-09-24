@@ -1582,6 +1582,54 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
+// Where a cut lands, by the construct it interrupts: each pattern ends where the
+// document is cut, just inside what the end of the input then has to close.
+/** @type {[string, RegExp][]} */
+const HTML_CUTS = [
+	["in a start tag's name", /<[a-z]/gi],
+	["in an end tag's name", /<\/[a-z]/gi],
+	["in an attribute's name", /<[a-z][^\s<>]*\s+[a-z]/gi],
+	["after an attribute's =", /<[a-z][^\s<>]*\s+[a-z-]+=/gi],
+	["in a double-quoted value", /[=]"[^"]/g],
+	["in a single-quoted value", /[=]'[^']/g],
+	["in an unquoted value", /[=][a-z0-9]/gi],
+	["before a tag's >", /<[a-z][^<>]*(?=>)/gi],
+	["between a tag's / and >", /<[a-z][^<>]*\/(?=>)/gi],
+	["in a comment", /<!--./g],
+	["in a doctype", /<!doctype/gi],
+	["in a character reference", /&[a-z#]/gi],
+	["in a <style> body", /<style[^>]*>[^<]/gi],
+	["in a <script> body", /<script[^>]*>[^<]/gi],
+	["in escapable raw text", /<(?:textarea|title)[^>]*>[^<]/gi],
+	["in foreign content", /<(?:svg|math)[^>]*>/gi],
+	["in a CDATA section", /<!\[CDATA\[./g],
+	["in a style attribute", /style="[^"]/gi]
+];
+
+/**
+ * The document cut short just inside the first of each construct past its
+ * midpoint, or the first anywhere when none lies past it: the end of the input
+ * is where the tokenizer closes what the source left open.
+ * @param {string} html a document
+ * @returns {[string, string][]} `[where, cut]` for each construct it holds
+ */
+const htmlCuts = (html) => {
+	/** @type {[string, string][]} */
+	const cuts = [];
+	for (const [where, pattern] of HTML_CUTS) {
+		pattern.lastIndex = html.length >> 1;
+		let match = pattern.exec(html);
+		if (match === null) {
+			pattern.lastIndex = 0;
+			match = pattern.exec(html);
+		}
+		if (match === null) continue;
+		const at = match.index + match[0].length;
+		if (at < html.length) cuts.push([where, html.slice(0, at)]);
+	}
+	return cuts;
+};
+
 /**
  * Every invariant this document breaks under one preset.
  * @param {(html: string) => string} minify the printer under test
@@ -1744,6 +1792,27 @@ const invariants = (write) => {
 				groups.add(report, preset, label);
 			}
 		}
+	}
+	if (wantedRelation("idempotence")) {
+		let cut = 0;
+		for (const [label, html] of corpus) {
+			for (const [where, source] of htmlCuts(html)) {
+				cut++;
+				for (const [preset, options] of presets) {
+					const minify = printerFor(options);
+					const { reports } = idempotence({
+						minify,
+						source,
+						says: tokenStream,
+						repro: (minified, at) => idempotenceRepro(minify, minified, at)
+					});
+					for (const report of reports) {
+						groups.add(report, preset, `${label}, cut ${where}`);
+					}
+				}
+			}
+		}
+		log(`… and ${cut} of them cut short inside a construct …`);
 	}
 	return groups.write(write);
 };

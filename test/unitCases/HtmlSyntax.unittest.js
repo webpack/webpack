@@ -4055,6 +4055,14 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			renderEmbeddedSource: builtinEmbeddedRenderer()
 		}).code;
 
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the serialization with every sheet printed as written
+	 */
+	const minifyAsWritten = (html) =>
+		new SourceProcessor().process(html, { mode: "minify", mergeStyles: true })
+			.code;
+
 	it("folds a run into one element", () => {
 		expect(
 			minify("<style>a{color:red}</style><style>b{color:#00f}</style>")
@@ -4089,19 +4097,20 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 
 	it("declines a sheet ending inside a comment", () => {
-		// Appending to text the comment swallows would comment the next sheet out.
-		expect(
-			minify("<style>a{color:red}/*x</style><style>b{color:#00f}</style>")
-		).toBe("<style>a{color:red}</style><style>b{color:#00f}</style>");
+		// Appending to text the comment swallows would comment the next sheet out;
+		// what is judged is what printed, so a sheet the renderer closed joins.
+		const open = "<style>a{color:red}/*x</style><style>b{color:#00f}</style>";
+		expect(minifyAsWritten(open)).toBe(open);
+		expect(minify(open)).toBe("<style>a{color:red}b{color:#00f}</style>");
 		expect(
 			minify("<style>a{color:red}/*x*/</style><style>b{color:#00f}</style>")
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
 	});
 
 	it("declines a sheet ending inside a string", () => {
-		expect(
-			minify('<style>a{content:"x</style><style>b{color:#00f}</style>')
-		).toBe('<style>a{content:"x"}</style><style>b{color:#00f}</style>');
+		const open = '<style>a{content:"x</style><style>b{color:#00f}</style>';
+		expect(minifyAsWritten(open)).toBe(open);
+		expect(minify(open)).toBe('<style>a{content:"x"}b{color:#00f}</style>');
 		// A newline ends a bad string, so this one is over where the sheet is.
 		expect(
 			minify('<style>a{content:"x\n}</style><style>b{color:#00f}</style>')
@@ -4120,12 +4129,15 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 
 	it("declines a sheet left inside a bracket", () => {
-		expect(
-			minify("<style>a{color:red</style><style>b{color:#00f}</style>")
-		).toBe("<style>a{color:red}</style><style>b{color:#00f}</style>");
-		expect(
-			minify("<style>a{color:rgb(1,2,3}</style><style>b{color:#00f}</style>")
-		).toBe("<style>a{color:rgb(1,2,3})}</style><style>b{color:#00f}</style>");
+		const block = "<style>a{color:red</style><style>b{color:#00f}</style>";
+		const call =
+			"<style>a{color:rgb(1,2,3}</style><style>b{color:#00f}</style>";
+		expect(minifyAsWritten(block)).toBe(block);
+		expect(minifyAsWritten(call)).toBe(call);
+		expect(minify(block)).toBe("<style>a{color:red}b{color:#00f}</style>");
+		expect(minify(call)).toBe(
+			"<style>a{color:rgb(1,2,3})}b{color:#00f}</style>"
+		);
 	});
 
 	it("declines a sheet the CSS minifier could not read", () => {
@@ -6133,6 +6145,91 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 		expect(holes).toEqual([]);
 		expect(code).toBe('<iframe srcdoc="<p>answered</p>"></iframe>');
+	});
+
+	it("writes a `srcdoc` answered empty as the bare name, on either path", async () => {
+		// `srcdoc=""` is what a second pass reads as the bare name, so the first
+		// writes that rather than leaving the second to.
+		const html = '<iframe srcdoc="<p>  a  </p>"></iframe>';
+		const empty = (
+			/** @type {string} */ _source,
+			/** @type {{ type: string }} */ info
+		) => (info.type === "html" ? "" : undefined);
+		const now = new SourceProcessor().process(html, {
+			mode: "minify",
+			renderEmbeddedSource: empty
+		});
+		const later = await new SourceProcessor().processAsync(html, {
+			mode: "minify",
+			renderEmbeddedSource: async (source, hole) => empty(source, hole)
+		});
+
+		expect(now.code).toBe("<iframe srcdoc></iframe>");
+		expect(later.code).toBe(now.code);
+	});
+
+	it("prints again where an answer overturns a choice made on the source", async () => {
+		// Each choice is one a deferred print makes on the source: the emptied
+		// sheet and list go with their elements, and the open sheet joins the next.
+		const html =
+			'<p>x<style>a{}</style><div style="color:"></div>' +
+			"<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>";
+		const options = {
+			mode: /** @type {"minify"} */ ("minify"),
+			mergeStyles: true,
+			removeEmptyAttributes: true,
+			removeEmptyElements: true
+		};
+		const builtin = builtinEmbeddedRenderer();
+		/** @type {string[]} */
+		const offered = [];
+		const now = new SourceProcessor().process(html, {
+			...options,
+			renderEmbeddedSource: builtin
+		});
+		const later = await new SourceProcessor().processAsync(html, {
+			...options,
+			renderEmbeddedSource: async (source, hole) => {
+				offered.push(source);
+				return builtin(source, hole);
+			}
+		});
+
+		expect(now.code).toBe(
+			"<p>x<style>.a{--x:f()}.b{color:red}</style><script>1</script>"
+		);
+		expect(later.code).toBe(now.code);
+		// The second print reads the first one's answers rather than asking again.
+		expect(offered).toEqual([
+			"a{}",
+			"color:",
+			".a{--x:f(",
+			".b{color:red}",
+			"1"
+		]);
+	});
+
+	it("prints again where an answer leaves open a sheet its source closed", async () => {
+		// Joined on the source, the next sheet would land inside the answer's
+		// string; the answer is what is joined, so it is what decides.
+		const html = "<style>a{b:c}</style><style>d{e:f}</style>";
+		const open = (/** @type {string} */ source) =>
+			source === "a{b:c}" ? 'a{b:"c' : source;
+		const options = {
+			mode: /** @type {"minify"} */ ("minify"),
+			mergeStyles: true
+		};
+		const now = new SourceProcessor().process(html, {
+			...options,
+			renderEmbeddedSource: open
+		});
+		const later = await new SourceProcessor().processAsync(html, {
+			...options,
+			renderEmbeddedSource: async (source) => open(source)
+		});
+
+		expect(now.code).toBe('<style>a{b:"c</style><style>d{e:f}</style>');
+		expect(later.code).toBe(now.code);
 	});
 
 	it("leaves a NUL the source carried where it stands", async () => {

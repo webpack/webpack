@@ -24,5 +24,8 @@ module.exports = {
 		// Foreign content keeps its source spelling — a name there is not folded.
 		expect(page).toContain("<rect zz=1 aa=2 />");
 		expect(page).toContain("<div data-only=1>");
+		// The `type` the print drops has no rank; it must not stop the sort, or
+		// `src` stays ahead of `async` until a second pass.
+		expect(page).toContain("<script async src=/a.js></script>");
 	}
 };

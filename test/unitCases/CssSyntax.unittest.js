@@ -1692,8 +1692,9 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(a)}");
 		// A kept one is placed where it stood, at depth too.
 		expect(min("a{--x:foo(a/*!k*/b)}")).toBe("a{--x:foo(a/*!k*/b)}");
-		// A function closed at EOF has no `)` to write back.
-		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b}");
+		// A function closed at EOF gets its `)` written back, or the rule's `}`
+		// lands inside it and the declaration is lost.
+		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b)}");
 	});
 
 	it("minifies the whitespace between a custom property's tokens", () => {
@@ -1848,6 +1849,65 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		]) {
 			expect(min(min(source))).toBe(min(source));
 		}
+	});
+
+	// Printed as written and left open, the `}` the rule ends on is read inside
+	// what is open — in Chromium a custom property is then lost whole, and each
+	// pass writes another `}`. So what the input left open is closed once.
+	it("closes what a value written as it stands left open at EOF", () => {
+		const cases = [
+			["a{--x:lab(50%", "a{--x:lab(50%)}"],
+			["a{--x:[", "a{--x:[]}"],
+			["a{--x:{", "a{--x:{}}"],
+			["a{--x:f(g(x", "a{--x:f(g(x))}"],
+			// §5.4.8 ends a block only on its own closer; `]` is a token in `(`.
+			["a{--x:(]", "a{--x:(])}"],
+			// Read off the children: the string ends on the closer's character.
+			['a{--x:f(")', 'a{--x:f(")")}'],
+			['a{--s:"x', 'a{--s:"x"}'],
+			// §4.3.5 drops a `\` a string ends on; §4.3.7 reads one elsewhere as
+			// U+FFFD. Kept, either would escape the closer written after it.
+			['a{--s:"x\\', 'a{--s:"x"}'],
+			["a{--x:a\\", "a{--x:a�}"],
+			["a{--u:url(x", "a{--u:url(x)}"],
+			["a{--u:url(x\\", "a{--u:url(x�)}"],
+			// Kept verbatim too: text the rule's block holds that is no declaration.
+			[".f{&:is(", ".f{&:is()}"],
+			[".f{&:is(a /* c", ".f{&:is(a /* c*/)}"],
+			[".f{&:is(a  ", ".f{&:is(a)}"],
+			// A url is closed before it is folded, not instead.
+			["a{b:URL(./i", "a{b:url(./i)}"],
+			["a{b:url(  x  ", "a{b:url(x)}"],
+			["a{b:url( x\\", "a{b:url(x�)}"]
+		];
+		for (const [source, expected] of cases) {
+			expect({ source, printed: min(source) }).toEqual({
+				source,
+				printed: expected
+			});
+			expect(min(expected)).toBe(expected);
+		}
+		// Written as it stands when minifying too: the same closing applies.
+		/**
+		 * @param {string} src css source
+		 * @returns {string} the minified serialization, custom properties rewritten
+		 */
+		const rewrite = (src) =>
+			new SourceProcessor().process(src, {
+				mode: "minify",
+				rewriteCustomProperties: true
+			}).code;
+		expect(rewrite("a{--x:lab(50%")).toBe("a{--x:lab(50%)}");
+		// And beautifying, where the value is the source's own slice.
+		/**
+		 * @param {string} src css source
+		 * @returns {string} the beautified serialization
+		 */
+		const beautify = (src) =>
+			new SourceProcessor().process(src, { mode: "beautify" }).code;
+		expect(beautify("a{--x:lab(50%")).toBe("a {\n--x: lab(50%);\n}");
+		// Raw text the input did not end inside is written as it stands.
+		expect(min(".f{&:is(a);color:red}")).toBe(".f{&:is(a);color:red}");
 	});
 
 	it("keeps an empty rule a `@namespace` after it is made inert by", () => {
