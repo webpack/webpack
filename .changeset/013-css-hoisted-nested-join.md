@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Join and drop the rules a nesting lowering or a dropped duplicate leaves, which only a second pass reached.
+Join rules a nesting lowering or duplicate drop left for a second pass.

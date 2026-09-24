@@ -11042,6 +11042,16 @@ describe("CssSyntax minify — what a nesting lowering writes is minified once",
 		);
 	});
 
+	it("keeps the first rule a hoist wrote in front of a `@namespace`", () => {
+		// Taking it back would make the `@namespace` the first thing in the sheet.
+		expect(
+			settled("a{.b{x:y}.c{z:w}}@namespace url(x);a .b{x:y}a .c{z:w}", T)
+		).toBe("a{}@namespace url(x);a .b{x:y}a .c{z:w}");
+		expect(
+			settled("a{d:e;.b{x:y}}@namespace url(x);a{d:e}a .b{x:y}", T)
+		).toBe("a{d:e}@namespace url(x);a{d:e}a .b{x:y}");
+	});
+
 	it("writes no space in front of an empty selector", () => {
 		expect(settled(".e{f:(1) [2], {g:h};.i{top:0}}", T)).toBe(
 			".e,.e f:(1) [2]{g:h}.e .i{top:0}"
