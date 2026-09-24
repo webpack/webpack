@@ -1862,6 +1862,8 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			["a{--x:f(g(x", "a{--x:f(g(x))}"],
 			// §5.4.8 ends a block only on its own closer; `]` is a token in `(`.
 			["a{--x:(]", "a{--x:(])}"],
+			// A bracket the source closed is not closed again.
+			["a{--x:f((b)[c", "a{--x:f((b)[c])}"],
 			// Read off the children: the string ends on the closer's character.
 			['a{--x:f(")', 'a{--x:f(")")}'],
 			['a{--s:"x', 'a{--s:"x"}'],
@@ -3706,8 +3708,11 @@ describe("CssSyntax — print modes", () => {
 			const once = print("{y/*", mode);
 			expect(print(once, mode)).toBe(once);
 		}
-		// A comment the source did close is written back as it stands.
+		// A comment the source did close is written back as it stands, the input
+		// ending on it or on one it left open after it.
 		expect(print("{y/**/ z", "minify")).toBe("{y/**/ z}");
+		expect(print("a{!x/* c */", "minify")).toBe("a{!x/* c */}");
+		expect(print("a{!x/* c */ /* d", "minify")).toBe("a{!x/* c */ /* d*/}");
 	});
 
 	it("beautifies to something that minifies back the same", () => {

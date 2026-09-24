@@ -4153,6 +4153,123 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		);
 		expect(tail).toContain("<style>a{color:red}</style><style>a{a{");
 	});
+
+	it("minifies a joined run as the one sheet it prints", () => {
+		// Each sheet minified on its own, the joined text still holds two rules a
+		// second pass folds into one.
+		const once = minify(
+			"<style>a{color:red}</style><style>b{color:red}</style>"
+		);
+		expect(once).toBe("<style>a,b{color:red}</style>");
+		expect(minify(once)).toBe(once);
+	});
+
+	it("joins a blank sheet as nothing", () => {
+		const once = minify("<style> </style><style>b{color:red}</style>");
+		expect(once).toBe("<style>b{color:red}</style>");
+		expect(minify(once)).toBe(once);
+		expect(minify("<style> </style><style>  </style>")).toBe(
+			"<style>   </style>"
+		);
+	});
+
+	it("reads the attributes each sheet will print, not the ones it holds", () => {
+		const html =
+			'<style type="text/css">a{color:red}</style><style>b{color:#00f}</style>';
+		const print = (/** @type {boolean} */ removeRedundantAttributes) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				mergeStyles: true,
+				removeRedundantAttributes,
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			}).code;
+		expect(print(true)).toBe("<style>a{color:red}b{color:#00f}</style>");
+		expect(print(false)).toBe(
+			"<style type=text/css>a{color:red}</style><style>b{color:#00f}</style>"
+		);
+	});
+
+	it("declines a run parted by text", () => {
+		expect(
+			minify("<body><style>a{color:red}</style>x<style>b{color:#00f}</style>")
+		).toBe(
+			"<body><style>a{color:red}</style>x<style>b{color:#00f}</style></body>"
+		);
+	});
+
+	it("reads a sheet's closed comment, escape and escaped quote as closed", () => {
+		for (const sheet of ["a{}/* x */", ".a\\{b{}", 'a{content:"\\""}']) {
+			expect(
+				minifyAsWritten(`<style>${sheet}</style><style>b{}</style>`)
+			).toBe(`<style>${sheet}b{}</style>`);
+		}
+		// Unanswered, a later sheet is read off its source, and so declined there.
+		for (const html of [
+			'<style>a{}</style><style>b{c:"d</style>',
+			"<style>a{}</style><style>@import url(x.css);</style>"
+		]) {
+			expect(minifyAsWritten(html)).toBe(html);
+		}
+	});
+
+	it("drops a run's first element only where every sheet in it prints nothing", () => {
+		/**
+		 * @param {string} html input markup
+		 * @returns {string} the minified serialization
+		 */
+		const emptying = (html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				mergeStyles: true,
+				removeEmptyElements: true,
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			}).code;
+		expect(emptying("<style>a{}</style><style>b{color:red}</style>")).toBe(
+			"<style>b{color:red}</style>"
+		);
+		expect(emptying("<style>a{}</style><style>b{}</style>")).toBe("");
+		expect(
+			emptying("<style>a{}</style><style>@import url(x.css);</style>")
+		).toBe("<style>@import url(x.css);</style>");
+		expect(emptying('<style>a{}</style><style>b{c:"d</style>')).toBe(
+			'<style>b{c:"d"}</style>'
+		);
+		// A sheet printed open is not joined, so it prints in its own element.
+		const { code } = new SourceProcessor().process(
+			"<style>a{}</style><style>b{}</style>",
+			{
+				mode: "minify",
+				mergeStyles: true,
+				removeEmptyElements: true,
+				renderEmbeddedSource: (source) => (source === "a{}" ? "" : 'b{c:"d')
+			}
+		);
+		expect(code).toBe('<style>b{c:"d</style>');
+	});
+
+	it("minifies a joined run as one sheet on the asynchronous path too", async () => {
+		const builtin = builtinEmbeddedRenderer();
+		/** @type {string[]} */
+		const offered = [];
+		const { code } = await new SourceProcessor().processAsync(
+			"<style>a{color:red}</style><style> </style><style>b{color:red}</style>",
+			{
+				mode: "minify",
+				mergeStyles: true,
+				renderEmbeddedSource: async (source, hole) => {
+					offered.push(source);
+					return builtin(source, hole);
+				}
+			}
+		);
+		expect(code).toBe("<style>a,b{color:red}</style>");
+		// Each sheet, then the run they join into; a blank one is joined as written.
+		expect(offered).toEqual([
+			"a{color:red}",
+			"b{color:red}",
+			"a{color:red} b{color:red}"
+		]);
+	});
 });
 
 // Only what a unit test reaches better than a build does: the shapes a run is
@@ -6199,13 +6316,15 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			"<p>x<style>.a{--x:f()}.b{color:red}</style><script>1</script>"
 		);
 		expect(later.code).toBe(now.code);
-		// The second print reads the first one's answers rather than asking again.
+		// A print reads the earlier ones' answers rather than asking again; what it
+		// alone offers — the joined run, as the one sheet it prints — is asked once.
 		expect(offered).toEqual([
 			"a{}",
 			"color:",
 			".a{--x:f(",
 			".b{color:red}",
-			"1"
+			"1",
+			".a{--x:f()}.b{color:red}"
 		]);
 	});
 
