@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases optimization minimize-json exported tests should minify an emitted JSON asset only when \`minimizeOptions.json\` is on 1`] = `"{\\"name\\":\\"webpack\\",\\"list\\":[1,2,3],\\"nested\\":{\\"empty\\":{}},\\"id\\":9007199254740993,\\"precise\\":1.50,\\"huge\\":1e400,\\"text\\":\\"keep  \\\\\\"these\\\\\\"  spaces\\\\\\\\\\"}"`;
+
+exports[`ConfigTestCases optimization minimize-json exported tests should minify an emitted JSON asset only when \`minimizeOptions.json\` is on 2`] = `"{\\"name\\":\\"webpack\\",\\"list\\":[1,2,3],\\"nested\\":{\\"empty\\":{}},\\"id\\":9007199254740993,\\"precise\\":1.50,\\"huge\\":1e400,\\"text\\":\\"keep  \\\\\\"these\\\\\\"  spaces\\\\\\\\\\"}"`;
+
+exports[`ConfigTestCases optimization minimize-json exported tests should minify an emitted JSON asset only when \`minimizeOptions.json\` is on 3`] = `"{\\"name\\":\\"webpack\\",\\"list\\":[1,2,3],\\"nested\\":{\\"empty\\":{}},\\"id\\":9007199254740993,\\"precise\\":1.50,\\"huge\\":1e400,\\"text\\":\\"keep  \\\\\\"these\\\\\\"  spaces\\\\\\\\\\"}"`;

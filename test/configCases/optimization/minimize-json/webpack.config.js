@@ -3,6 +3,20 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 
+// Declares JSON through `include`, but its `test` keeps it to JavaScript, so the
+// plugin never hands it a JSON asset and webpack's own minimizer must.
+class JavascriptOnlyMinimizer {
+	constructor() {
+		this.options = {
+			test: /\.js$/,
+			include: /\.json$/,
+			minimizer: { implementation: () => {} }
+		};
+	}
+
+	apply() {}
+}
+
 /** @typedef {"minified" | "unchanged" | "user"} Expected */
 
 /**
@@ -23,7 +37,7 @@ const config = (name, expected, options) => ({
 	},
 	output: {
 		publicPath: "",
-		assetModuleFilename: `${name}[ext]`
+		assetModuleFilename: `${name}-[name][ext]`
 	},
 	module: {
 		rules: [{ test: /\.json$/, type: "asset/resource" }]
@@ -47,6 +61,10 @@ module.exports = [
 	config("opt-in", "minified", {
 		optimization: { minimizeOptions: { json: true } }
 	}),
+	config("test-and-include", "minified", {
+		experiments: { futureDefaults: true },
+		optimization: { minimizer: ["...", new JavascriptOnlyMinimizer()] }
+	}),
 	config("user-minimizer", "user", {
 		experiments: { futureDefaults: true },
 		optimization: {
@@ -56,6 +74,7 @@ module.exports = [
 				"...",
 				new MinimizerPlugin({
 					test: /\.json$/,
+					exclude: /not-json/,
 					minify: MinimizerPlugin.jsonMinify,
 					minimizerOptions: { space: 1 }
 				})

@@ -1,5 +1,9 @@
 {
 	"name": "webpack",
 	"list": [1, 2, 3],
-	"nested": { "empty": {} }
+	"nested": { "empty": {} },
+	"id": 9007199254740993,
+	"precise": 1.50,
+	"huge": 1e400,
+	"text": "keep  \"these\"  spaces\\"
 }
