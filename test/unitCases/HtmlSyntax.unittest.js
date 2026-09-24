@@ -3591,6 +3591,16 @@ describe("parseHtml", () => {
 			).toBe(source);
 		});
 
+		it("should keep the rest of the document after an entity ending inside a tag", () => {
+			const root = /** @type {MatElement} */ (
+				parseXml('<!DOCTYPE r [<!ENTITY e "<x">]><r>&e;<y/><z/></r>')
+					.children[1]
+			);
+			expect(
+				root.children.map((node) => /** @type {MatElement} */ (node).tagName)
+			).toEqual(["y", "z"]);
+		});
+
 		it("should leave a recursive or exponential entity unexpanded", () => {
 			const recursive = /** @type {MatElement} */ (
 				parseXml(

@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add an `xml` mode to `html.syntax` that parses and prints XML, DTD entities included.
+Add an `xml` mode to `html.syntax` that parses and prints XML.
