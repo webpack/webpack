@@ -163,6 +163,7 @@ const CASES = [
 	["annotations", "/*#__PURE__*/ a(); /*@__PURE__*/ new B(); /*#__INLINE__*/ c(); /*#__NOINLINE__*/ d.e(); x = /*#__KEY__*/ 'k'; y = { /*@__MANGLE_PROP__*/ f: 1 }; /*#__PURE__*/ (g)(); /* x */ (/*#__PURE__*/ h());"],
 	["member chains, optional chains and calls", "a.b.c(); d?.e.f(); g.h?.[i]?.(j); k()(); l`m`.n; (o.p)(); async(q, ...r); new s.t.u(v).w;"],
 	["private names", "class A { #a; b(c) { return #a in c; } }"],
+	["regular expressions escaping characters beyond ASCII", "x = /\\🏳0\\🌈️\\☺/; y = /\\\\é[\\é]\\x41/g;"],
 	["regular expressions read twice", "{}\n/a/.test(b); if (c) /d/.test(e); x = yield_ => /f/;"],
 	["literals", "a = [1, 1.5, .5, 1e3, 0x10, 0b1, 0o7, 1_000, 10n, 0x1Fn, 1e400, 'x', \"y\", null, true, false, /re/giu];"],
 	["identifiers beyond ASCII", "var été = 1, \u{1d49c} = 2; sink(été, \u{1d49c});"],

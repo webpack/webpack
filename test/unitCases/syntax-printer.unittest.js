@@ -240,6 +240,10 @@ const OUTPUT_CASES = [
 		"sink(0x10, 1e21, 1.5e-7, .5, 5., 0b101, 1_000, 10n, /[/]\\//gu, /<\\/script>/, void 0, typeof x, x in y, x instanceof Y, a ** -b, (-a) ** b, new (f())(), new f, a?.b?.[c]?.(d));"
 	],
 	[
+		"regular expressions escaping characters beyond ASCII",
+		"sink(/\\🏳0\\🌈️\\☺/, /\\\\é[\\é]\\x41/g);"
+	],
+	[
 		"asm.js, whose numbers are printed as written",
 		`function module(stdlib) { "use asm"; var x = 1.0, y = 0x10; function f() { return +(x + 2.50); } return { f: f }; }
 		sink(module, 1.0);`
