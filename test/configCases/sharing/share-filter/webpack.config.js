@@ -17,7 +17,8 @@ module.exports = {
 					exclude: { version: "<2.0.0" }
 				},
 				"lib/": {
-					include: { request: /^[ab]$/ },
+					// "g" keeps lastIndex, but every request must be tested afresh
+					include: { request: /^[ab]$/g },
 					exclude: { request: "b" }
 				},
 				"./local": {
