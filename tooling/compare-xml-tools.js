@@ -266,6 +266,24 @@ const printXml = (xml, mode) =>
 		new SourceProcessor().process(xml, { xml: true, mode })
 	).code;
 
+// The option sets the invariants are held over, as the other comparisons name
+// theirs. XML printing takes no options yet, so there is the one.
+/** @type {[string, Record<string, never>][]} */
+const PRESETS = [["default", {}]];
+
+/**
+ * @param {Record<string, never>} options one preset's printer options
+ * @returns {(xml: string) => string} the minifier those options name
+ */
+const printerFor = (options) => (xml) =>
+	/** @type {{ code: string }} */ (
+		new SourceProcessor().process(xml, {
+			...options,
+			xml: true,
+			mode: "minify"
+		})
+	).code;
+
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
 /** @type {import("./compare-tools-harness").Tool[]} */
@@ -503,6 +521,7 @@ const wantedTool = filterFrom("TOOL");
 const wantedStage = filterFrom("STAGE");
 const wantedRelation = filterFrom("RELATION");
 const wantedSpelling = filterFrom("SPELLING");
+const wantedPreset = filterFrom("PRESET");
 
 // --- Invariants -------------------------------------------------------------
 
@@ -1094,38 +1113,40 @@ const invariants = (write) => {
 		}
 		log(`read ${read} documents twice over …`);
 	}
-	log(`sweeping ${corpus.length} documents …`);
+	const presets = PRESETS.filter(([name]) => wantedPreset(name));
+	log(`sweeping ${corpus.length} documents under ${presets.length} presets …`);
 	for (const [label, xml] of corpus) {
-		/**
-		 * @param {string} source a document
-		 * @returns {string} what it minifies to
-		 */
-		const minify = (source) => printXml(source, "minify");
-		const { printed, reports } = wantedRelation("idempotence")
-			? idempotence({
-					minify,
-					source: xml,
-					says: canonical,
-					repro: idempotenceRepro
-				})
-			: { printed: minify(xml), reports: [] };
-		for (const report of reports) groups.add(report, "minify", label);
-		if (printed === null) continue;
-		// What minifying keeps is what the document says, which a reader other
-		// than the printer's own has to agree with.
-		if (wantedRelation("meaning") && canonical(printed) !== canonical(xml)) {
-			groups.add(
-				{
-					relation: "meaning",
-					what: "the minified document says something else",
-					repro: `    ${oneLine(xml, 80)}`
-				},
-				"minify",
-				label
-			);
-		}
-		for (const report of sweepRespellings(xml, printed)) {
-			groups.add(report, "minify", label);
+		for (const [preset, options] of presets) {
+			const minify = printerFor(options);
+			const { printed, reports } = wantedRelation("idempotence")
+				? idempotence({
+						minify,
+						source: xml,
+						says: canonical,
+						repro: idempotenceRepro
+					})
+				: { printed: minify(xml), reports: [] };
+			for (const report of reports) groups.add(report, preset, label);
+			if (printed === null) continue;
+			// What minifying keeps is what the document says, which a reader other
+			// than the printer's own has to agree with.
+			if (wantedRelation("meaning") && canonical(printed) !== canonical(xml)) {
+				groups.add(
+					{
+						relation: "meaning",
+						what: "the minified document says something else",
+						repro: `    ${oneLine(xml, 80)}`
+					},
+					preset,
+					label
+				);
+			}
+			// Under the first preset only, as the other comparisons ask it: whether
+			// a spelling decides the output is the same question under every set.
+			if (preset !== presets[0][0]) continue;
+			for (const report of sweepRespellings(xml, printed)) {
+				groups.add(report, preset, label);
+			}
 		}
 	}
 	return groups.write(write);
