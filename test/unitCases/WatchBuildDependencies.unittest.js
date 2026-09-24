@@ -336,6 +336,165 @@ describe("WatchBuildDependencies", () => {
 		}
 	});
 
+	it("should resolve build dependencies once for watching and the persistent cache", async () => {
+		const FileSystemInfo = require("../../lib/fs/FileSystemInfo");
+		const cache = /** @type {import("../../").FileCacheOptions} */ ({
+			type: "filesystem",
+			cacheDirectory: path.join(fixturePath, ".cache")
+		});
+		/** @type {string[][]} */
+		const resolvedDependencies = [];
+		const original = FileSystemInfo.prototype.resolveBuildDependencies;
+		const spy = jest
+			.spyOn(FileSystemInfo.prototype, "resolveBuildDependencies")
+			.mockImplementation(
+				/**
+				 * @this {import("../../lib/fs/FileSystemInfo")}
+				 * @param {Parameters<typeof original>} args arguments
+				 * @returns {void}
+				 */
+				function mock(...args) {
+					const [context, deps, optional, callback] = args;
+					resolvedDependencies.push([...deps]);
+					return original.call(this, context, deps, optional, callback);
+				}
+			);
+
+		try {
+			const compiler = createCompiler({ cache });
+			let builds = 0;
+			const watching = /** @type {import("../../").Watching} */ (
+				compiler.watch({ aggregateTimeout: 50 }, (err) => {
+					if (err) throw err;
+					builds++;
+				})
+			);
+			while (builds === 0) await wait(50);
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+			// closing stores the pack, with the build dependencies of the cache
+			await new Promise((resolve) => {
+				compiler.close(resolve);
+			});
+
+			const withConfig = resolvedDependencies.filter((deps) =>
+				deps.includes(configPath)
+			);
+			expect(withConfig).toEqual([[configPath]]);
+			// the cache still resolves its own, e.g. webpack itself
+			expect(resolvedDependencies.length).toBeGreaterThan(1);
+		} finally {
+			spy.mockRestore();
+		}
+
+		// the stored pack still knows the configuration
+		fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+		/** @type {string[]} */
+		const logs = [];
+		const log = (/** @type {string} */ message) => logs.push(message);
+		const compiler = createCompiler({
+			cache,
+			infrastructureLogging: {
+				level: "log",
+				debug: /PackFileCacheStrategy/,
+				console: /** @type {Console} */ (
+					/** @type {unknown} */ ({
+						log,
+						info: log,
+						warn: log,
+						error: log,
+						debug: log
+					})
+				)
+			}
+		});
+		await new Promise((resolve, reject) => {
+			compiler.run((err) => {
+				if (err) return reject(err);
+				compiler.close(resolve);
+			});
+		});
+		expect(logs).toContainEqual(
+			expect.stringContaining("but build dependencies have changed")
+		);
+	});
+
+	it("should watch a package through its package.json", async () => {
+		const packagePath = path.join(fixturePath, "node_modules", "some-package");
+		const packageJsonPath = path.join(packagePath, "package.json");
+		const helperPath = path.join(fixturePath, "helper.mjs");
+		fs.mkdirSync(packagePath, { recursive: true });
+		fs.writeFileSync(
+			packageJsonPath,
+			'{ "name": "some-package", "version": "1.0.0", "main": "index.js" }',
+			"utf8"
+		);
+		fs.writeFileSync(
+			path.join(packagePath, "index.js"),
+			"module.exports = 1;",
+			"utf8"
+		);
+		fs.writeFileSync(
+			helperPath,
+			'import value from "some-package";\nexport default value;\n',
+			"utf8"
+		);
+
+		const compiler = createCompiler({
+			buildDependencies: { config: [helperPath] },
+			snapshot: {
+				managedPaths: [path.join(fixturePath, "node_modules") + path.sep]
+			}
+		});
+		/** @type {ReadonlySet<string>[]} */
+		const reported = [];
+		let builds = 0;
+		compiler.hooks.buildDependenciesChanged.tap("Test", (changedFiles) => {
+			reported.push(changedFiles);
+			return true;
+		});
+
+		const watching = /** @type {import("../../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 50 }, (err) => {
+				if (err) throw err;
+				builds++;
+			})
+		);
+
+		try {
+			while (builds === 0) await wait(50);
+			expect(
+				new Set(
+					/** @type {Map<string, number | null | undefined>} */ (
+						compiler.buildDependencyFiles
+					).keys()
+				)
+			).toEqual(new Set([helperPath, packageJsonPath]));
+
+			// a package changes with its version, like for the persistent cache
+			fs.writeFileSync(
+				path.join(packagePath, "index.js"),
+				"module.exports = 2;",
+				"utf8"
+			);
+			await wait(500);
+			expect(reported).toEqual([]);
+
+			fs.writeFileSync(
+				packageJsonPath,
+				'{ "name": "some-package", "version": "1.0.1", "main": "index.js" }',
+				"utf8"
+			);
+			while (reported.length === 0) await wait(50);
+			expect(reported).toEqual([new Set([packageJsonPath])]);
+		} finally {
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+		}
+	});
+
 	it("should report changed build dependencies through the MultiCompiler hook", async () => {
 		const webpack = require("../../");
 		/** @type {(name: string) => import("../../").Configuration} */
@@ -412,9 +571,11 @@ describe("WatchBuildDependencies", () => {
 		}
 	});
 
-	// Following imports of a `.ts` file needs Node.js type stripping
+	// Following imports of a `.ts` file needs Node.js type stripping, Bun reads TypeScript itself
 	const itWithTypeStripping =
-		"stripTypeScriptTypes" in require("module") ? it : it.skip;
+		"stripTypeScriptTypes" in require("module") || "Bun" in globalThis
+			? it
+			: it.skip;
 
 	itWithTypeStripping(
 		"should watch what a TypeScript build dependency imports",
