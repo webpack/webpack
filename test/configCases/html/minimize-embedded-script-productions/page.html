@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>x</title>
+		<script>
+			;(() => {
+				if (localStorage && window.matchMedia) {
+					const  dark  =  window.matchMedia("(prefers-color-scheme: dark)").matches ;
+					document.documentElement.dataset.theme = dark ? "dark" : "light" ;
+				}
+			})() ;
+		</script>
+		<script type="module">
+			const  unused  =  import.meta.url ;
+			window.moduleRan  =  true ;
+		</script>
+	</head>
+	<body>
+		<button onclick="  if ( a )  return  false ;  b ( )  " style="  color :  red ;  margin : 0px  ">x</button>
+	</body>
+</html>
