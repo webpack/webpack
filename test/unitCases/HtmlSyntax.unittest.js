@@ -4140,9 +4140,9 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		);
 	});
 
-	it("declines a sheet the CSS minifier could not read", () => {
-		// Deep enough to overflow the CSS parser's stack. Text it never parsed may
-		// be unterminated, and appending to that makes the next sheet part of it.
+	it("appends nothing to a sheet the CSS minifier could not read", () => {
+		// Deep enough to overflow the CSS parser's stack. Its blocks are left open,
+		// so a sheet appended would be part of it; last in a run, it stays as written.
 		const unreadable = "a{".repeat(20000);
 		const head = minify(
 			`<style>${unreadable}</style><style>b{color:#00f}</style>`
@@ -4151,7 +4151,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		const tail = minify(
 			`<style>a{color:red}</style><style>${unreadable}</style>`
 		);
-		expect(tail).toContain("<style>a{color:red}</style><style>a{a{");
+		expect(tail).toContain("<style>a{color:red}a{a{");
 	});
 
 	it("minifies a joined run as the one sheet it prints", () => {
@@ -4198,18 +4198,38 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 
 	it("reads a sheet's closed comment, escape and escaped quote as closed", () => {
-		for (const sheet of ["a{}/* x */", ".a\\{b{}", 'a{content:"\\""}']) {
+		for (const sheet of [
+			"a{}/* x */",
+			".a\\{b{}",
+			'a{content:"\\""}',
+			"a[x]{}",
+			// §5.4.8: a `]` in a `(` is a token in it, not the block's end.
+			"a{b:(])}"
+		]) {
 			expect(
 				minifyAsWritten(`<style>${sheet}</style><style>b{}</style>`)
 			).toBe(`<style>${sheet}b{}</style>`);
 		}
-		// Unanswered, a later sheet is read off its source, and so declined there.
+		// Nothing follows the last sheet, so it may be left open; one that leads
+		// with `@import` is not joined, and nothing is joined after an open one.
+		expect(minifyAsWritten('<style>a{}</style><style>b{c:"d</style>')).toBe(
+			'<style>a{}b{c:"d</style>'
+		);
 		for (const html of [
-			'<style>a{}</style><style>b{c:"d</style>',
-			"<style>a{}</style><style>@import url(x.css);</style>"
+			"<style>a{}</style><style>@import url(x.css);</style>",
+			'<style>b{c:"d</style><style>a{}</style>',
+			"<style>a{}b</style><style>c{}</style>",
+			"<style>@import url(x)</style><style>c{}</style>",
+			"<style>a{}}</style><style>c{}</style>"
 		]) {
 			expect(minifyAsWritten(html)).toBe(html);
 		}
+		// A rule, an at-rule's `;` and a CDC each end where a rule may start.
+		expect(
+			minifyAsWritten(
+				"<style>@import url(x);</style><style><!-- a{} --></style><style>b{}</style>"
+			)
+		).toBe("<style>@import url(x);<!-- a{} -->b{}</style>");
 	});
 
 	it("drops a run's first element only where every sheet in it prints nothing", () => {
@@ -4263,12 +4283,8 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			}
 		);
 		expect(code).toBe("<style>a,b{color:red}</style>");
-		// Each sheet, then the run they join into; a blank one is joined as written.
-		expect(offered).toEqual([
-			"a{color:red}",
-			"b{color:red}",
-			"a{color:red} b{color:red}"
-		]);
+		// Once, joined as written: each ends at a rule, so no answer is waited for.
+		expect(offered).toEqual(["a{color:red} b{color:red}"]);
 	});
 });
 
@@ -6328,9 +6344,9 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		]);
 	});
 
-	it("prints again where an answer leaves open a sheet its source closed", async () => {
-		// Joined on the source, the next sheet would land inside the answer's
-		// string; the answer is what is joined, so it is what decides.
+	it("joins sheets on their sources, where no answer can leave one open", async () => {
+		// Were answers joined, this one's open string would take in the next sheet;
+		// sources ending at a rule are joined first and the run is asked for once.
 		const html = "<style>a{b:c}</style><style>d{e:f}</style>";
 		const open = (/** @type {string} */ source) =>
 			source === "a{b:c}" ? 'a{b:"c' : source;
@@ -6347,7 +6363,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			renderEmbeddedSource: async (source) => open(source)
 		});
 
-		expect(now.code).toBe('<style>a{b:"c</style><style>d{e:f}</style>');
+		expect(now.code).toBe("<style>a{b:c}d{e:f}</style>");
 		expect(later.code).toBe(now.code);
 	});
 
