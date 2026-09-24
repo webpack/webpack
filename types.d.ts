@@ -19186,6 +19186,13 @@ declare class MultiCompiler {
 		infrastructureLog: MultiHook<
 			SyncBailHook<[string, string, undefined | any[]], true | void>
 		>;
+		/**
+		 * Taps `buildDependenciesChanged` of every child compiler; each reports its own changes.
+		 * @since 5.112.0
+		 */
+		buildDependenciesChanged: MultiHook<
+			SyncBailHook<[ReadonlySet<string>], true | void>
+		>;
 	}>;
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;

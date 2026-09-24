@@ -113,7 +113,7 @@ describe("WatchBuildDependencies", () => {
 		}
 	});
 
-	it("should warn and rebuild when nobody handles changed build dependencies", async () => {
+	it("should warn without rebuilding when nobody handles changed build dependencies", async () => {
 		/** @type {string[]} */
 		const warnings = [];
 		const compiler = createCompiler({
@@ -130,21 +130,258 @@ describe("WatchBuildDependencies", () => {
 
 		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({ aggregateTimeout: 50 }, (err) => {
-			if (err) throw err;
-			builds++;
-		})
+				if (err) throw err;
+				builds++;
+			})
+		);
+
+		try {
+			while (builds === 0) await wait(50);
+
+			// files written just before the start may cause one more build
+			await wait(500);
+			const settledBuilds = builds;
+
+			fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+			while (warnings.length === 0) await wait(50);
+			await wait(300);
+
+			// the configuration isn't part of the build, nothing to rebuild with it unchanged
+			expect(builds).toBe(settledBuilds);
+			expect(watching.suspended).toBe(false);
+			expect(warnings).toEqual([
+				expect.stringContaining("Build dependencies changed")
+			]);
+
+			// still watching the build's own files
+			fs.writeFileSync(entryPath, "'changed'", "utf8");
+			while (builds === settledBuilds) await wait(50);
+		} finally {
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+		}
+	});
+
+	it("should resume without rebuilding when only build dependencies changed", async () => {
+		const compiler = createCompiler();
+		/** @type {ReadonlySet<string>[]} */
+		const reported = [];
+		let builds = 0;
+
+		compiler.hooks.buildDependenciesChanged.tap("Test", (changedFiles) => {
+			reported.push(changedFiles);
+			return true;
+		});
+
+		const watching = /** @type {import("../../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 50 }, (err) => {
+				if (err) throw err;
+				builds++;
+			})
+		);
+
+		try {
+			while (builds === 0) await wait(50);
+			// files written just before the start may cause one more build
+			await wait(500);
+			const settledBuilds = builds;
+
+			fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+			while (reported.length === 0) await wait(50);
+
+			// e.g. the new configuration failed to load, the old build goes on
+			watching.resume();
+			await wait(500);
+			expect(builds).toBe(settledBuilds);
+
+			// the build dependencies are watched again
+			fs.writeFileSync(configPath, '{ "value": 3 }', "utf8");
+			while (reported.length === 1) await wait(50);
+			expect(reported).toEqual([
+				new Set([configPath]),
+				new Set([configPath])
+			]);
+			expect(builds).toBe(settledBuilds);
+		} finally {
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+		}
+	});
+
+	it("should ignore a build dependency reported changed without a new timestamp", async () => {
+		/** @type {string[]} */
+		const warnings = [];
+		const compiler = createCompiler({
+			infrastructureLogging: {
+				level: "warn",
+				console: /** @type {Console} */ (
+					/** @type {unknown} */ ({
+						warn: (/** @type {string} */ message) => warnings.push(message)
+					})
+				)
+			}
+		});
+		/** @type {ReadonlySet<string>[]} */
+		const reported = [];
+		let builds = 0;
+		compiler.hooks.buildDependenciesChanged.tap("Test", (changedFiles) => {
+			reported.push(changedFiles);
+			return true;
+		});
+
+		// The watcher reports files modified around the build's start as changed, do so on purpose
+		const watchFileSystem =
+			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ (
+				compiler.watchFileSystem
+			);
+		let injected = false;
+		/** @type {import("../../lib/fs/fs").WatchFileSystem} */
+		const injectingWatchFileSystem = {
+			watch(files, dirs, missing, startTime, options, callback, undelayed) {
+				const watcher = watchFileSystem.watch(
+					files,
+					dirs,
+					missing,
+					startTime,
+					options,
+					callback,
+					undelayed
+				);
+				if (!injected) {
+					injected = true;
+					const timestamp = Number(fs.statSync(configPath).mtime);
+					setTimeout(() => {
+						watcher.pause();
+						callback(
+							null,
+							new Map([[configPath, { safeTime: timestamp, timestamp }]]),
+							new Map(),
+							new Set([configPath]),
+							new Set()
+						);
+					}, 100);
+				}
+				return watcher;
+			}
+		};
+		compiler.watchFileSystem = injectingWatchFileSystem;
+
+		const watching = /** @type {import("../../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 50 }, (err) => {
+				if (err) throw err;
+				builds++;
+			})
+		);
+
+		try {
+			while (!injected || builds === 0) await wait(50);
+			await wait(500);
+			const settledBuilds = builds;
+			expect(reported).toEqual([]);
+			expect(warnings).toEqual([]);
+			expect(watching.suspended).toBe(false);
+
+			// a real change is still reported
+			fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+			while (reported.length === 0) await wait(50);
+			expect(reported).toEqual([new Set([configPath])]);
+			expect(builds).toBe(settledBuilds);
+		} finally {
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+		}
+	});
+
+	it("should report a build dependency changed after the configuration was loaded", async () => {
+		const compiler = createCompiler();
+		/** @type {ReadonlySet<string>[]} */
+		const reported = [];
+		let builds = 0;
+
+		compiler.hooks.buildDependenciesChanged.tap("Test", (changedFiles) => {
+			reported.push(changedFiles);
+			return true;
+		});
+		// changed after the configuration was loaded, before the build reads its timestamp
+		let written = false;
+		compiler.hooks.watchRun.tapAsync(
+			{ name: "Test", stage: -100 },
+			(_compiler, callback) => {
+				if (written) return callback();
+				written = true;
+				setTimeout(() => {
+					fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+					callback();
+				}, 20);
+			}
+		);
+
+		const watching = /** @type {import("../../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 50 }, (err) => {
+				if (err) throw err;
+				builds++;
+			})
+		);
+
+		try {
+			while (reported.length === 0) await wait(50);
+			expect(reported).toEqual([new Set([configPath])]);
+		} finally {
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+		}
+	});
+
+	it("should report changed build dependencies through the MultiCompiler hook", async () => {
+		const webpack = require("../../");
+		/** @type {(name: string) => import("../../").Configuration} */
+		const createOptions = (name) => ({
+			name,
+			mode: "development",
+			context: fixturePath,
+			entry: entryPath,
+			output: {
+				path: path.join(testDirectory, "js/WatchBuildDependencies", name),
+				filename: "bundle.js"
+			},
+			buildDependencies: { config: [configPath] }
+		});
+		const compiler = webpack([createOptions("a"), createOptions("b")]);
+		/** @type {ReadonlySet<string>[]} */
+		const reported = [];
+		let builds = 0;
+
+		compiler.hooks.buildDependenciesChanged.tap(
+			"Test",
+			(/** @type {ReadonlySet<string>} */ changedFiles) => {
+				reported.push(changedFiles);
+				return true;
+			}
+		);
+
+		const watching = /** @type {NonNullable<ReturnType<import("../../").MultiCompiler["watch"]>>} */ (
+			compiler.watch({ aggregateTimeout: 50 }, (err) => {
+				if (err) throw err;
+				builds++;
+			})
 		);
 
 		try {
 			while (builds === 0) await wait(50);
 
 			fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
-			while (builds === 1) await wait(50);
-
-			expect(watching.suspended).toBe(false);
-			expect(warnings).toEqual([
-				expect.stringContaining("Build dependencies changed")
-			]);
+			// each child compiler reports its own change
+			while (reported.length < 2) await wait(50);
+			expect(reported).toEqual([new Set([configPath]), new Set([configPath])]);
+			for (const child of compiler.compilers) {
+				expect(
+					/** @type {import("../../").Watching} */ (child.watching).suspended
+				).toBe(true);
+			}
 		} finally {
 			await new Promise((resolve) => {
 				watching.close(resolve);

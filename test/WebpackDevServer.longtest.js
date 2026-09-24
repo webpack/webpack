@@ -426,11 +426,6 @@ describe("WebpackDevServer integration in real Chrome", () => {
 			);
 			fs.writeFileSync(configDependencyPath, '{ "message": "CONFIG_V1" }\n');
 
-			// The watcher reports a file modified around the build's start as changed,
-			// which must not count as a changed build dependency
-			const soon = new Date(Date.now() + 1000);
-			fs.utimesSync(configDependencyPath, soon, soon);
-
 			// Like webpack-cli: load the config fresh, create the compiler and a dev
 			// server around it (not as a plugin), and listen.
 			const start = async () => {
@@ -480,32 +475,39 @@ describe("WebpackDevServer integration in real Chrome", () => {
 				return { compiler, server, getBuilds: () => builds };
 			};
 
-			let current = await start();
 			/** @type {ReadonlySet<string>[]} */
 			const reported = [];
+			/** @type {(() => boolean)[]} */
+			const noBuildAfterReport = [];
 			/** @type {Promise<void> | undefined} */
 			let restarting;
-			let buildsWhenReported = 0;
-			const listen = () => {
-				const previous = current;
-				previous.compiler.hooks.buildDependenciesChanged.tap(
+			/** @type {Awaited<ReturnType<typeof start>>} */
+			let current;
+			// Like webpack-cli: every new compiler restarts again on the next change
+			const startAndListen = async () => {
+				const started = await start();
+				started.compiler.hooks.buildDependenciesChanged.tap(
 					"WebpackDevServerLongtest",
 					(changedFiles) => {
 						reported.push(changedFiles);
-						buildsWhenReported = previous.getBuilds();
+						const buildsWhenReported = started.getBuilds();
+						noBuildAfterReport.push(
+							() => started.getBuilds() === buildsWhenReported
+						);
 						restarting = (async () => {
-							await stopServer(previous.server);
+							await stopServer(started.server);
 							await new Promise((resolve) => {
-								previous.compiler.close(resolve);
+								started.compiler.close(resolve);
 							});
-							current = await start();
+							current = await startAndListen();
 						})();
 						// keeps the old watching suspended, nothing builds with the old config
 						return true;
 					}
 				);
+				return started;
 			};
-			listen();
+			current = await startAndListen();
 
 			const page = await browser.newPage();
 			try {
@@ -530,7 +532,7 @@ describe("WebpackDevServer integration in real Chrome", () => {
 
 				expect(reported).toEqual([new Set([configDependencyPath])]);
 				// nothing was built with the old configuration after the change
-				expect(previous.getBuilds()).toBe(buildsWhenReported);
+				expect(noBuildAfterReport.map((check) => check())).toEqual([true]);
 				expect(current.compiler).not.toBe(previous.compiler);
 			} finally {
 				await page.close();
