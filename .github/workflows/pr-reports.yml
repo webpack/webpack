@@ -58,8 +58,6 @@ jobs:
               "code-size-report.md": "<!-- code-size-report -->",
               "types-coverage-report.md": "<!-- types-coverage-report -->"
             };
-            // GitHub rejects a comment body longer than this many characters.
-            const MAX_COMMENT_LENGTH = 65536;
             // WHY: `workflow_run.pull_requests` is empty for a fork, so the pull
             // request is looked up by head branch and owner, and accepted only
             // when its head is still the commit this run measured — a stale run
@@ -106,15 +104,12 @@ jobs:
                 continue;
               }
               // A zero-width space after `@` keeps a report from pinging anyone.
-              let text = report.replace(/@/g, "@\u200b");
-              const room = MAX_COMMENT_LENGTH - footer.length - 20;
-              if (text.length > room) text = `${text.slice(0, room)}\n\n…truncated`;
-              const body = text + footer;
               await upsertReportComment({
                 github,
                 context,
                 issueNumber: pull.number,
                 marker,
-                body
+                report: report.replace(/@/g, "@\u200b"),
+                footer
               });
             }

@@ -158,7 +158,7 @@ jobs:
               context,
               issueNumber: context.issue.number,
               marker: "<!-- code-size-report -->",
-              body: require("fs").readFileSync("code-size-report.md", "utf8")
+              report: require("fs").readFileSync("code-size-report.md", "utf8")
             });
 
       # A fork's token cannot comment, so `pr-reports.yml` posts this from the
