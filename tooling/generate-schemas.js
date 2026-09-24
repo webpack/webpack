@@ -959,6 +959,88 @@ const fromMembers = (members, checker, known, head) => {
 };
 
 /**
+ * @typedef {object} Declared
+ * @property {string} name what it is declared as
+ * @property {string} description what it says about itself
+ * @property {Map<string, string>} tags the keywords beside that
+ * @property {ts.NodeArray<ts.TypeElement>=} members an interface's members
+ * @property {readonly ts.JSDocPropertyLikeTag[]=} propertyTags a typedef's members
+ * @property {ts.TypeNode=} type the type it is an alias for
+ */
+
+/**
+ * Every option type a file declares, written either as TypeScript or as a JSDoc
+ * `@typedef` in the module that reads it.
+ * @param {ts.SourceFile} source the file to read
+ * @returns {Declared[]} what it declares, in the order it declares them
+ */
+const declarationsOf = (source) => {
+	/** @type {Declared[]} */
+	const declared = [];
+	for (const statement of source.statements) {
+		if (ts.isInterfaceDeclaration(statement)) {
+			const { description, tags } = readJsDoc(statement);
+			declared.push({
+				name: statement.name.getText(),
+				description,
+				tags,
+				members: statement.members
+			});
+		} else if (ts.isTypeAliasDeclaration(statement)) {
+			const { description, tags } = readJsDoc(statement);
+			declared.push({
+				name: statement.name.getText(),
+				description,
+				tags,
+				type: statement.type
+			});
+		}
+	}
+	if (declared.length > 0) return declared;
+	/**
+	 * @param {ts.Node} node the node to read the blocks of
+	 * @returns {void}
+	 */
+	const visit = (node) => {
+		const blocks = /** @type {{ jsDoc?: ts.JSDoc[] }} */ (
+			/** @type {unknown} */ (node)
+		).jsDoc;
+		for (const block of blocks || []) {
+			const typedef = (block.tags || []).find((tag) =>
+				ts.isJSDocTypedefTag(tag)
+			);
+			if (!typedef || !typedef.name) continue;
+			/** @type {Map<string, string>} */
+			const tags = new Map();
+			for (const tag of block.tags || []) {
+				if (tag === typedef || tag.tagName.text === "property") continue;
+				tags.set(
+					tag.tagName.text,
+					typeof tag.comment === "string" ? tag.comment.trim() : ""
+				);
+			}
+			const held = typedef.typeExpression;
+			declared.push({
+				name: typedef.name.getText(),
+				description:
+					typeof block.comment === "string"
+						? unescapeComment(block.comment.trim())
+						: "",
+				tags,
+				...(held && ts.isJSDocTypeLiteral(held)
+					? { propertyTags: held.jsDocPropertyTags || [] }
+					: {
+							type: /** @type {ts.JSDocTypeExpression} */ (held).type
+						})
+			});
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(source);
+	return declared;
+};
+
+/**
  * @param {Record<string, EXPECTED_ANY>} head keywords the declaration carries
  * @param {Record<string, EXPECTED_ANY>} properties the members it declares
  * @param {string[]} required the members it does not make optional
@@ -1065,15 +1147,11 @@ const typeScriptToSchema = (source, checker) => {
 		};
 	}
 	/** @type {ts.Statement[]} */
-	const declarations = source.statements.filter(
-		(statement) =>
-			ts.isTypeAliasDeclaration(statement) ||
-			ts.isInterfaceDeclaration(statement)
-	);
+	const declarations = declarationsOf(source);
 	const known = new Map(
 		declarations.map((declaration) => [
-			/** @type {ts.InterfaceDeclaration} */ (declaration).name.getText(),
-			readJsDoc(declaration).description
+			declaration.name,
+			declaration.description
 		])
 	);
 	/** @type {Record<string, EXPECTED_ANY>} */
@@ -1085,32 +1163,32 @@ const typeScriptToSchema = (source, checker) => {
 	/** @type {string} */
 	let rootName = "";
 	for (const declaration of declarations) {
-		const name = /** @type {ts.InterfaceDeclaration} */ (
-			declaration
-		).name.getText();
-		const { description, tags } = readJsDoc(declaration);
+		const { name, description, tags, members, propertyTags, type } =
+			declaration;
 		const keywords = fromDocumentationTags(tags);
-		const body = ts.isInterfaceDeclaration(declaration)
-			? fromMembers(declaration.members, checker, known, keywords)
-			: fromTypeNode(
-					/** @type {ts.TypeAliasDeclaration} */ (declaration).type,
-					checker,
-					known
-				);
+		const body = propertyTags
+			? fromPropertyTags(propertyTags, checker, known, keywords)
+			: members
+				? fromMembers(members, checker, known, keywords)
+				: fromTypeNode(/** @type {ts.TypeNode} */ (type), checker, known);
 		const stated = omit(keywords, ["required"]);
 		const carries = description !== "" || Object.keys(stated).length > 0;
 		const schema = applyTypeOnly({
 			...(description ? { description } : {}),
 			...stated,
-			...wrapReference(body, carries)
+			...wrapReference(body, carries),
+			// WHY: a type the source names for the schema is what the schema says,
+			// where the type it is written as is what the module reads it by.
+			...(stated.tsType ? { tsType: stated.tsType } : {})
 		});
 		if (
-			ts.isTypeAliasDeclaration(declaration) &&
-			ts.isIntersectionTypeNode(declaration.type) &&
-			halvedReference(declaration.type, known) === name
+			type &&
+			ts.isIntersectionTypeNode(type) &&
+			halvedReference(type, known) === name
 		) {
 			continue;
 		}
+		if (VOCABULARY_BY_NAME.has(name)) continue;
 		const half = /^(.+)(Known|Unknown)$/.exec(name);
 		const base = half ? half[1] : "";
 		if (half && known.has(`${base}Known`) && known.has(`${base}Unknown`)) {
@@ -1195,6 +1273,36 @@ const writeFile = (filePath, text) => {
  * out of it, and reports where the two disagree.
  * @returns {Promise<void>}
  */
+/**
+ * Every module under `lib/` that declares a schema, by the name its `@schema`
+ * tag gives — which is what makes the declaration find its own schema.
+ * @returns {Map<string, string>} the module declaring each schema
+ */
+const findDeclaringModules = () => {
+	/** @type {Map<string, string>} */
+	const declaring = new Map();
+	/**
+	 * @param {string} directory the directory to read
+	 * @returns {void}
+	 */
+	const walk = (directory) => {
+		for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+			const absolute = path.resolve(directory, entry.name);
+			if (entry.isDirectory()) {
+				walk(absolute);
+			} else if (entry.name.endsWith(".js")) {
+				const text = fs.readFileSync(absolute, "utf8");
+				if (!text.includes("@schema ")) continue;
+				for (const [, named] of text.matchAll(/@schema[ \t]+([\w/-]+)/g)) {
+					declaring.set(named, absolute);
+				}
+			}
+		}
+	};
+	walk(path.resolve(ROOT, "lib"));
+	return declaring;
+};
+
 const main = async () => {
 	const schemaFiles = findSchemas(SCHEMAS_DIRECTORY);
 	/** @type {Map<string, string>} */
@@ -1204,15 +1312,19 @@ const main = async () => {
 	const vocabularyPath = path.resolve(TYPES_DIRECTORY, `${VOCABULARY_NAME}.ts`);
 	sources.set(vocabularyPath, fs.readFileSync(vocabularyPath, "utf8"));
 
+	const declaredInLib = findDeclaringModules();
 	for (const schemaFile of schemaFiles) {
-		const relative = path
+		const name = path
 			.relative(SCHEMAS_DIRECTORY, schemaFile)
-			.replace(/\.json$/, ".ts")
+			.replace(/\.json$/, "")
 			.split(path.sep)
 			.join("/");
-		const target = path.resolve(TYPES_DIRECTORY, relative);
+		// WHY: a plugin declares its own options beside the code that reads them;
+		// what has not moved there yet is still read from `declarations/`.
+		const target =
+			declaredInLib.get(name) || path.resolve(TYPES_DIRECTORY, `${name}.ts`);
 		if (!fs.existsSync(target)) {
-			throw new Error(`${relative} declares no options in declarations/`);
+			throw new Error(`${name} declares no options in lib/`);
 		}
 		sources.set(target, fs.readFileSync(target, "utf8"));
 		sourceOf.set(target, schemaFile);
