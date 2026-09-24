@@ -34,6 +34,9 @@ module.exports = [
 		target: "node",
 		devtool: false,
 		output: { module: true, filename: "bundle0.mjs" },
+		// `./url` is inlined into the entry's module, so the call copying the
+		// url is generated as part of the module concatenation made.
+		optimization: { concatenateModules: true },
 		plugins: [minifyJson]
 	},
 	// The runtime form reads the url off the asset's own wrapper.

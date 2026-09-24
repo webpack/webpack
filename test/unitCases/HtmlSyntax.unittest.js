@@ -6635,6 +6635,15 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		);
 	});
 
+	it("keeps the parameters a `data:` URL was written with", () => {
+		expect(
+			minify(
+				'<a href="data:application/json;charset=utf-8,{ &quot;a&quot; : 1 }">x</a>',
+				compactJson
+			)
+		).toBe("<a href='data:application/json;charset=utf-8,{\"a\":1}'>x</a>");
+	});
+
 	it("keeps a `data:` URL the renderer declined or answered no shorter", () => {
 		const html = '<a href="data:application/json,{&quot;a&quot;:1}">x</a>';
 

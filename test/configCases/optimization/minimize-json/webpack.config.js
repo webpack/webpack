@@ -31,7 +31,7 @@ class JavascriptOnlyMinimizer {
 	apply() {}
 }
 
-/** @typedef {"minified" | "unchanged" | "user"} Expected */
+/** @typedef {"minified" | "unchanged" | "user" | "user-manifest"} Expected */
 
 /**
  * @param {string} name asset name prefix
@@ -86,6 +86,10 @@ const config = (name, expected, options) => ({
 					);
 				} else if (expected === "user") {
 					expect(data).toBe(JSON.stringify(JSON.parse(data), null, 1));
+				} else if (expected === "user-manifest") {
+					// Claiming manifests claims JSON, so the built-in one stands aside.
+					expect(data).toBe(DATA);
+					expect(manifest).toBe(JSON.stringify(JSON.parse(MANIFEST), null, 1));
 				} else {
 					expect(data).toBe(DATA);
 					expect(manifest).toBe(MANIFEST);
@@ -112,6 +116,29 @@ module.exports = [
 	config("test-and-include", "minified", {
 		experiments: { futureDefaults: true },
 		optimization: { minimizer: ["...", new JavascriptOnlyMinimizer()] }
+	}),
+	config("user-manifest-minimizer", "user-manifest", {
+		experiments: { futureDefaults: true },
+		optimization: {
+			minimizer: [
+				"...",
+				new MinimizerPlugin({
+					test: /\.webmanifest$/,
+					parallel: false,
+					/**
+					 * @param {Record<string, string | Buffer>} input the one manifest
+					 * @returns {Promise<{ code: string }>} it, re-indented
+					 */
+					minify: async (input) => ({
+						code: JSON.stringify(
+							JSON.parse(String(Object.values(input)[0])),
+							null,
+							1
+						)
+					})
+				})
+			]
+		}
 	}),
 	config("user-minimizer", "user", {
 		experiments: { futureDefaults: true },

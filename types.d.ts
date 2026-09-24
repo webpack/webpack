@@ -22726,6 +22726,7 @@ declare interface ParseResult {
 }
 declare interface ParsedDataURI {
 	mediaType: string;
+	parameters: string;
 	base64: boolean;
 	payload: string;
 }

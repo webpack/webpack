@@ -91,6 +91,7 @@ describe("parseDataURI", () => {
 	it("should split a base64 URI", () => {
 		expect(parseDataURI("data:text/css;base64,YQ==")).toEqual({
 			mediaType: "text/css",
+			parameters: ";base64",
 			base64: true,
 			payload: "YQ=="
 		});
@@ -99,6 +100,7 @@ describe("parseDataURI", () => {
 	it("should split a plain URI, newlines in the payload included", () => {
 		expect(parseDataURI("data:image/svg+xml,<svg>\n</svg>")).toEqual({
 			mediaType: "image/svg+xml",
+			parameters: "",
 			base64: false,
 			payload: "<svg>\n</svg>"
 		});
@@ -157,6 +159,20 @@ describe("buildDataURI", () => {
 		);
 	});
 
+	it("should keep the parameters the URI was written with", () => {
+		const parsed = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
+			parseDataURI("data:text/css;charset=utf-8;base64,YQ==")
+		);
+		expect(parsed.parameters).toBe(";charset=utf-8;base64");
+		expect(buildDataURI(parsed, "a{}")).toBe(
+			"data:text/css;charset=utf-8;base64,YXt9"
+		);
+		const plain = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
+			parseDataURI("data:text/css;charset=utf-8,a { }")
+		);
+		expect(buildDataURI(plain, "a{}")).toBe("data:text/css;charset=utf-8,a{}");
+	});
+
 	it("should rebuild a base64 URI in the form it was written", () => {
 		const parsed = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
 			parseDataURI("data:text/css;base64,YQ==")
@@ -191,6 +207,7 @@ describe("readEmbeddedDataURI", () => {
 		expect(readEmbeddedDataURI('data:application/json,{"a":1}')).toEqual({
 			parsed: {
 				mediaType: "application/json",
+				parameters: "",
 				base64: false,
 				payload: '{"a":1}'
 			},
