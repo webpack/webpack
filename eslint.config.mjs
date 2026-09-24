@@ -52,6 +52,7 @@ export default defineConfig([
 		"test/js/**/*.*",
 		"test/external/test262-cases/**/*.*",
 		"test/external/wpt/**/*.*",
+		"test/external/terser/**",
 
 		// Ignore some folders
 		"benchmark",

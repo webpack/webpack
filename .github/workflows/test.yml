@@ -294,6 +294,11 @@ jobs:
           - language: js
             submodules: test/external/test262-cases
             script: test:test262-parser
+          # Minifies every case of terser's own corpus with terser as published
+          # and with webpack's printer, and requires the same bytes back.
+          - language: js-printer
+            submodules: test/external/terser
+            script: test:terser
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.

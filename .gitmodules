@@ -10,3 +10,6 @@
 [submodule "test/external/wpt"]
 	path = test/external/wpt
 	url = https://github.com/web-platform-tests/wpt.git
+[submodule "test/external/terser"]
+	path = test/external/terser
+	url = https://github.com/terser/terser

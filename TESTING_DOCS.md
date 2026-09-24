@@ -35,7 +35,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 ### `external/`
 
-- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
+- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below and terser's own test corpus. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
 
 #### `test262-cases/`
 
@@ -56,6 +56,11 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/external/css-parsing-tests`. Test runner: `test/specCases/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
+
+#### `terser/`
+
+- **Purpose**: terser's own repository, pinned to the version webpack depends on. Its `test/compress` cases are the corpus `lib/javascript/syntax-printer.js` is held to: each is minified by terser as published and by webpack's printer, under the case's own options and under the ones webpack's default minimizer passes, and the outputs must be byte-for-byte the same.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/terser.spectest.js` (`yarn test:terser`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it.
 
 ### `fixtures/`
 
@@ -97,6 +102,7 @@ Directories come first, in alphabetical order, then the individual files worth t
   - `html5lib.spectest.js` — `yarn test:html5lib`
   - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
   - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
+  - `terser.spectest.js` — `yarn test:terser`
 
 ### `statsCases/`
 
