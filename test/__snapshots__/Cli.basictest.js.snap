@@ -20664,6 +20664,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "watch-options-build-dependencies": Object {
+    "configs": Array [
+      Object {
+        "description": "Watch the files of the 'buildDependencies' option (and what they import) and report their changes via 'compiler.hooks.buildDependenciesChanged'.",
+        "multiple": false,
+        "path": "watchOptions.buildDependencies",
+        "type": "boolean",
+      },
+    ],
+    "description": "Watch the files of the 'buildDependencies' option (and what they import) and report their changes via 'compiler.hooks.buildDependenciesChanged'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "watch-options-follow-symlinks": Object {
     "configs": Array [
       Object {

@@ -240,6 +240,18 @@
       "description": "Report the first error as a hard error instead of tolerating it.",
       "type": "boolean"
     },
+    "BuildDependencies": {
+      "description": "Dependencies the configuration depends on (in multiple categories, e.g. 'defaultConfig'). They invalidate the persistent cache, and in watch mode a change to them is reported instead of rebuilding with the outdated configuration.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "List of dependencies the configuration depends on.",
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BuildDependencyItem"
+        }
+      },
+      "added": "5.112.0"
+    },
     "BuildDependencyItem": {
       "description": "A build dependency for filesystem cache invalidation.",
       "anyOf": [
@@ -7984,6 +7996,11 @@
           "description": "Delay the rebuilt after the first change. Value is a time in ms.",
           "type": "number"
         },
+        "buildDependencies": {
+          "description": "Watch the files of the 'buildDependencies' option (and what they import) and report their changes via 'compiler.hooks.buildDependenciesChanged'.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "followSymlinks": {
           "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
           "type": "boolean"
@@ -8044,6 +8061,9 @@
         },
         "bail": {
           "$ref": "#/definitions/Bail"
+        },
+        "buildDependencies": {
+          "$ref": "#/definitions/BuildDependencies"
         },
         "cache": {
           "$ref": "#/definitions/CacheOptionsNormalized"
@@ -8149,6 +8169,7 @@
         }
       },
       "required": [
+        "buildDependencies",
         "cache",
         "snapshot",
         "entry",
@@ -8208,6 +8229,9 @@
     },
     "bail": {
       "$ref": "#/definitions/Bail"
+    },
+    "buildDependencies": {
+      "$ref": "#/definitions/BuildDependencies"
     },
     "cache": {
       "$ref": "#/definitions/CacheOptions"

@@ -1351,6 +1351,14 @@ declare interface BufferedMap {
 	 */
 	file: string;
 }
+
+/**
+ * Dependencies the configuration depends on (in multiple categories, e.g. 'defaultConfig'). They invalidate the persistent cache, and in watch mode a change to them is reported instead of rebuilding with the outdated configuration.
+ * @since 5.112.0
+ */
+declare interface BuildDependencies {
+	[index: string]: BuildDependencyItem[];
+}
 type BuildDependencyItem =
 	| string
 	| {
@@ -4344,6 +4352,11 @@ declare class Compiler {
 		invalid: SyncHook<[null | string, number]>;
 		watchClose: SyncHook<[]>;
 		/**
+		 * Called in watch mode when files of `buildDependencies` changed; return `true` to take over (the watching stays suspended until resumed or closed).
+		 * @since 5.112.0
+		 */
+		buildDependenciesChanged: SyncBailHook<[ReadonlySet<string>], true | void>;
+		/**
 		 * @since 5.17.0
 		 */
 		shutdown: AsyncSeriesHook<[]>;
@@ -4377,6 +4390,7 @@ declare class Compiler {
 	managedPaths: Set<string | RegExp>;
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
+	buildDependencyFiles?: ReadonlySet<string>;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
 	fileTimestamps?: Map<
@@ -4791,6 +4805,12 @@ declare interface Configuration {
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
 	bail?: boolean;
+
+	/**
+	 * Dependencies the configuration depends on (in multiple categories, e.g. 'defaultConfig'). They invalidate the persistent cache, and in watch mode a change to them is reported instead of rebuilding with the outdated configuration.
+	 * @since 5.112.0
+	 */
+	buildDependencies?: BuildDependencies;
 
 	/**
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
@@ -9953,6 +9973,11 @@ declare abstract class FileSystemInfo {
 	immutablePathsRegExps: RegExp[];
 	logStatistics(): void;
 	clear(): void;
+
+	/**
+	 * Returns the managed item (package directory) containing a path.
+	 */
+	getManagedItemOf(path: string): undefined | string | true;
 
 	/**
 	 * Adds file timestamps.
@@ -31041,6 +31066,12 @@ declare interface WatchOptions {
 	aggregateTimeout?: number;
 
 	/**
+	 * Watch the files of the 'buildDependencies' option (and what they import) and report their changes via 'compiler.hooks.buildDependenciesChanged'.
+	 * @since 5.112.0
+	 */
+	buildDependencies?: boolean;
+
+	/**
 	 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
 	 */
 	followSymlinks?: boolean;
@@ -31482,6 +31513,12 @@ declare interface WebpackOptionsNormalized {
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
 	bail?: boolean;
+
+	/**
+	 * Dependencies the configuration depends on (in multiple categories, e.g. 'defaultConfig'). They invalidate the persistent cache, and in watch mode a change to them is reported instead of rebuilding with the outdated configuration.
+	 * @since 5.112.0
+	 */
+	buildDependencies: BuildDependencies;
 
 	/**
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.

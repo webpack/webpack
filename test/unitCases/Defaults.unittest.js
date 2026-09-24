@@ -131,6 +131,7 @@ describe("snapshots", () => {
 		Object {
 		  "amd": undefined,
 		  "bail": undefined,
+		  "buildDependencies": Object {},
 		  "cache": false,
 		  "context": "<cwd>",
 		  "dependencies": undefined,
