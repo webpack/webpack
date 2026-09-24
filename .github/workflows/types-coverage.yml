@@ -49,19 +49,19 @@ jobs:
           pr-number: ${{ github.event.pull_request.number }}
           lcov-file: ./coverage/lcov.info
           title: Types Coverage
-          output-file: types-coverage-report.md
+          output-file: lcov-report.md
 
       - name: Mark the report for the commenter
         run: |
           {
             echo "<!-- types-coverage-report -->"
-            cat types-coverage-report.md
-          } > report.md
-          cat types-coverage-report.md >> "$GITHUB_STEP_SUMMARY"
+            cat lcov-report.md
+          } > types-coverage-report.md
+          cat lcov-report.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the report
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pr-report-types-coverage
-          path: report.md
-          retention-days: 7
+          path: types-coverage-report.md
+          retention-days: 90

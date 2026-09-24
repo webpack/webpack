@@ -171,7 +171,7 @@ jobs:
         with:
           name: pr-report-code-size
           path: code-size-report.md
-          retention-days: 7
+          retention-days: 90
 
       # Uploaded from `main` too — that upload is the next run's baseline.
       - name: Upload the report
