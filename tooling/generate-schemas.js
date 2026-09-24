@@ -789,22 +789,10 @@ const halvedReference = (node, known) => {
 
 /**
  * @param {Record<string, EXPECTED_ANY>} schema a whole schema document
- * @returns {Map<string, string>} what each definition says about itself
+ * @returns {Map<string, Record<string, EXPECTED_ANY>>} its definitions by name
  */
 const describedDefinitions = (schema) =>
-	new Map(
-		Object.entries(schema.definitions || {})
-			.filter(
-				([, value]) =>
-					typeof (
-						/** @type {Record<string, EXPECTED_ANY>} */ (value).description
-					) === "string"
-			)
-			.map(([name, value]) => [
-				name,
-				/** @type {Record<string, EXPECTED_ANY>} */ (value).description
-			])
-	);
+	new Map(Object.entries(schema.definitions || {}));
 
 /**
  * @param {Record<string, EXPECTED_ANY>} schema an object schema node
@@ -820,10 +808,16 @@ const toMembers = (schema, collected) => {
 			const name = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(property)
 				? property
 				: JSON.stringify(property);
-			const said =
-				node.description ||
-				(node.$ref ? collected.said.get(readReference(node.$ref).name) : "");
-			const documentation = toJsDoc(said || "", toDocumentationTags(node));
+			// WHY: a member written as a bare reference is documented by the
+			// definition it points at, tags and all.
+			const pointed =
+				node.$ref && !node.description
+					? collected.said.get(readReference(node.$ref).name)
+					: undefined;
+			const documentation = toJsDoc(
+				node.description || (pointed && pointed.description) || "",
+				pointed ? toDocumentationTags(pointed) : toDocumentationTags(node)
+			);
 			return `${documentation}${name}${optional}: ${toTypeScriptType(
 				node,
 				collected
@@ -1440,11 +1434,13 @@ const fromMembers = (members, checker, known, head) => {
 			: /** @type {ts.StringLiteral} */ (member.name).text;
 		const { description: written, tags } = readJsDoc(member);
 		const value = fromTypeNode(member.type, checker, known);
+		// WHY: a member written as a bare reference carries the definition's own
+		// documentation, which the schema states there rather than twice.
 		const echoed =
 			Boolean(value.$ref) &&
 			known.get(readReference(value.$ref).name) === written;
 		const description = echoed ? "" : written;
-		const stated = fromDocumentationTags(tags);
+		const stated = echoed ? {} : fromDocumentationTags(tags);
 		const carries = description !== "" || Object.keys(stated).length > 0;
 		properties[name] = applyTypeOnly({
 			...(description ? { description } : {}),
