@@ -96,6 +96,10 @@ b&#10;c\\">
 </svg>"
 `;
 
+exports[`parseHtml XML mode printing should write only what the target browsers read: every ability 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>g>.b{fill:#0000ff80}@media (width>=0px){.e{fill:red}}.p{user-select:none}</style><rect style=\\"fill:#ff000080\\"/></svg>"`;
+
+exports[`parseHtml XML mode printing should write only what the target browsers read: legacy browsers 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\"><style>g>.b{fill:rgba(0,0,255,.5)}@media (min-width:0px){.e{fill:red}}.p{-webkit-user-select:none;-ms-user-select:none;user-select:none}</style><rect style=\\"fill:rgba(255,0,0,.5)\\"/></svg>"`;
+
 exports[`parseHtml XML mode printing should write the shortest well-formed XML when minifying 1`] = `
 "<?xml version=\\"1.0\\"?><!DOCTYPE svg [ <!ENTITY ns \\"http://www.w3.org/2000/svg\\"> <!ATTLIST svg version CDATA \\"1.1\\"> ]><svg xmlns=\\"&ns;\\" viewBox=\\"0 0 10 10\\" data-q='say \\"hi\\"' data-both='it&apos;s \\"q\\"' data-ws=\\"a b&#10;c\\">
   <title>A &amp; B &gt; C</title>
