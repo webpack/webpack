@@ -139,6 +139,13 @@ jobs:
           path: node_modules/.cache/js-tool-comparison
           key: comparison-corpus-js-${{ runner.os }}-${{ hashFiles('tooling/comparison/js-tool-comparison/package.json', 'tooling/comparison/js-tool-comparison/package-lock.json') }}
 
+      # Its own key for the same reason: nothing else reads the XML corpus.
+      - name: Cache the XML comparison corpus
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules/.cache/xml-tool-comparison
+          key: comparison-corpus-xml-${{ runner.os }}-${{ hashFiles('tooling/comparison/xml-tool-comparison/package.json', 'tooling/comparison/xml-tool-comparison/package-lock.json') }}
+
       # Fatal here, unlike the equivalence job: that one reads whichever
       # fixtures are there, and this one is the check that the whole corpus
       # stays clean. Retried rather than tolerated, a registry blip being the
@@ -155,6 +162,9 @@ jobs:
       # the lockfile misses — so it is held to installing either way.
       - name: Install the JavaScript comparison corpus
         run: node tooling/retry.js yarn benchmark:js-tools:setup
+
+      - name: Install the XML comparison corpus
+        run: node tooling/retry.js yarn benchmark:xml-tools:setup
 
       # `--require-corpus`: without it a sweep that lost a fixture reports the
       # findings of the ones it kept and passes, which is coverage lost with
@@ -173,6 +183,10 @@ jobs:
       - name: JavaScript parser invariants
         if: ${{ !cancelled() }}
         run: yarn test:invariants:js --require-corpus
+
+      - name: XML parser and printer invariants
+        if: ${{ !cancelled() }}
+        run: yarn test:invariants:xml --require-corpus
 
   validate-legacy-node:
     runs-on: ubuntu-latest
@@ -331,6 +345,12 @@ jobs:
           - language: js
             submodules: test/external/test262-cases
             script: test:test262-parser
+          # The W3C XML Conformance Test Suite: every document is read back in
+          # canonical form and printed, which is small enough to run covered.
+          - language: xml
+            submodules: test/external/xml-conformance-suite
+            script: cover:xmlconf
+            flags: xmlconf
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
