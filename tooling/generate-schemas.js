@@ -375,6 +375,31 @@ const readReference = (reference) => {
  */
 
 /**
+ * What an `@implements` intersection is written out as: the members of every
+ * definition it names, in the order they are named, each property once.
+ * @param {ts.IntersectionTypeNode} node the intersection the declaration is
+ * @param {Map<string, Declared>} declaredByName what the file declares, by name
+ * @returns {ts.TypeElement[] | undefined} their members, when all of them resolve
+ */
+const implementedMembers = (node, declaredByName) => {
+	/** @type {ts.TypeElement[]} */
+	const members = [];
+	const seen = new Set();
+	for (const one of node.types) {
+		if (!ts.isTypeReferenceNode(one)) return undefined;
+		const declared = declaredByName.get(one.typeName.getText());
+		if (!declared || !declared.members) return undefined;
+		for (const member of declared.members) {
+			const name = member.name && member.name.getText();
+			if (!name || seen.has(name)) continue;
+			seen.add(name);
+			members.push(member);
+		}
+	}
+	return members;
+};
+
+/**
  * The two halves of one definition, or an empty name for anything else.
  * @param {ts.IntersectionTypeNode} node the intersection to read
  * @param {Map<string, string>} known what each name the file declares says
@@ -1070,15 +1095,34 @@ const typeScriptToSchema = (source, checker) => {
 	let root;
 	/** @type {string} */
 	let rootName = "";
+	const declaredByName = new Map(
+		declarations.map((declaration) => [declaration.name, declaration])
+	);
 	for (const declaration of declarations) {
 		const { name, description, tags, members, propertyTags, type } =
 			declaration;
 		const keywords = fromDocumentationTags(tags);
-		const body = propertyTags
-			? fromPropertyTags(propertyTags, checker, known, keywords)
-			: members
-				? fromMembers(members, checker, known, keywords)
-				: fromTypeNode(/** @type {ts.TypeNode} */ (type), checker, known);
+		// WHY: a definition written as the intersection of the ones it implements
+		// is the object holding all of their properties, not a type the schema has
+		// no vocabulary for.
+		const implemented =
+			tags.has("implements") && type && ts.isIntersectionTypeNode(type)
+				? implementedMembers(type, declaredByName)
+				: undefined;
+		const body = implemented
+			? fromMembers(
+					/** @type {ts.NodeArray<ts.TypeElement>} */ (
+						/** @type {unknown} */ (implemented)
+					),
+					checker,
+					known,
+					keywords
+				)
+			: propertyTags
+				? fromPropertyTags(propertyTags, checker, known, keywords)
+				: members
+					? fromMembers(members, checker, known, keywords)
+					: fromTypeNode(/** @type {ts.TypeNode} */ (type), checker, known);
 		const stated = omit(keywords, ["required"]);
 		const carries = description !== "" || Object.keys(stated).length > 0;
 		const schema = applyTypeOnly({
