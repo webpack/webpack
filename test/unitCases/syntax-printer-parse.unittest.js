@@ -4,7 +4,7 @@
 
 const path = require("path");
 const { pathToFileURL } = require("url");
-const createTerserTree = require("../../lib/javascript/terserTree");
+const { createTerserTree } = require("../../lib/javascript/syntax").printer;
 const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
 
 /** @typedef {EXPECTED_ANY} Node one of terser's nodes */
@@ -205,7 +205,7 @@ const DECLINED = [
 	["what webpack's parser refuses", "function ("]
 ];
 
-describe("terserTree", () => {
+describe("syntax-printer parse", () => {
 	/** @type {{ ast: EXPECTED_ANY, parse: EXPECTED_ANY }} */
 	let terser;
 	/** @type {ReturnType<typeof createTerserTree>} */
