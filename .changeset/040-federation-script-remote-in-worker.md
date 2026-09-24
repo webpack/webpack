@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Load Module Federation script remotes in Web Workers through `importScripts`.
+Load script remotes in Web Workers via `importScripts`, or explain why a worker can't.

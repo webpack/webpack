@@ -16720,7 +16720,7 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	constructor(
 		withCreateScriptUrl?: boolean,
 		withFetchPriority?: boolean,
-		withImportScripts?: boolean
+		loader?: "script" | "import-scripts" | "unavailable"
 	);
 	static getCompilationHooks: (
 		compilation: Compilation
