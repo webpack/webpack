@@ -84,7 +84,9 @@ jobs:
             const { upsertReportComment } = await import(
               `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
             );
-            const footer = `\n\n<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}, computed by this pull request's own code.</sub>`;
+            // WHY: right after the marker rather than at the end, where a report
+            // left open (an unclosed `<!--`) would swallow it out of sight.
+            const provenance = `<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}, computed by this pull request's own code.</sub>`;
             for (const [file, marker] of Object.entries(REPORTS)) {
               const reportPath = path.join(process.env.REPORTS_DIR, file);
               let stat;
@@ -109,7 +111,8 @@ jobs:
                 context,
                 issueNumber: pull.number,
                 marker,
-                report: report.replace(/@/g, "@\u200b"),
-                footer
+                report: `${marker}\n${provenance}\n\n${report
+                  .slice(marker.length)
+                  .replace(/@/g, "@\u200b")}`
               });
             }

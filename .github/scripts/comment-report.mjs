@@ -6,7 +6,7 @@ const MAX_COMMENT_LENGTH = 65536;
 /**
  * Creates the pull request comment opening with `marker`, or updates the one this workflow wrote.
  * Only a `github-actions[bot]` comment is updated, since anyone can post the marker and pass their numbers off as CI's.
- * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY, issueNumber: number, marker: string, report: string, footer?: string }} params params
+ * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY, issueNumber: number, marker: string, report: string }} params params
  * @returns {Promise<void>}
  */
 export async function upsertReportComment({
@@ -14,14 +14,12 @@ export async function upsertReportComment({
 	context,
 	issueNumber,
 	marker,
-	report,
-	footer = ""
+	report
 }) {
 	const truncated = "\n\n…truncated";
-	const room = MAX_COMMENT_LENGTH - footer.length - truncated.length;
+	const room = MAX_COMMENT_LENGTH - truncated.length;
 	const body =
-		(report.length > room ? report.slice(0, room) + truncated : report) +
-		footer;
+		report.length > room ? report.slice(0, room) + truncated : report;
 	const comments = await github.paginate(github.rest.issues.listComments, {
 		...context.repo,
 		issue_number: issueNumber,
