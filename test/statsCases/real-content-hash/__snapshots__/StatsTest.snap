@@ -24,8 +24,8 @@ exports[`StatsTestCases real-content-hash should print correct stats for real-co
       ./a/lazy.js + 2 modules X bytes [built] [code generated]
     asset modules X KiB (asset) X bytes (javascript)
       ./a/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
-      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
       ./a/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
   a-normal (webpack x.x.x) compiled successfully in X ms
 
 b-normal:
@@ -51,8 +51,8 @@ b-normal:
       ./b/lazy.js + 2 modules X bytes [built] [code generated]
     asset modules X KiB (asset) X bytes (javascript)
       ./b/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
-      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
       ./b/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
   b-normal (webpack x.x.x) compiled successfully in X ms
 
 a-source-map:
@@ -82,8 +82,8 @@ a-source-map:
       ./a/lazy.js + 2 modules X bytes [built] [code generated]
     asset modules X KiB (asset) X bytes (javascript)
       ./a/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
-      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
       ./a/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./a/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
   a-source-map (webpack x.x.x) compiled successfully in X ms
 
 b-source-map:
@@ -113,7 +113,7 @@ b-source-map:
       ./b/lazy.js + 2 modules X bytes [built] [code generated]
     asset modules X KiB (asset) X bytes (javascript)
       ./b/file.jpg X KiB (asset) X bytes (javascript) [built] [code generated]
-      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
       ./b/file.jpg?query X KiB (asset) X bytes (javascript) [built] [code generated]
+      ./b/file.png X KiB (asset) X bytes (javascript) [built] [code generated]
   b-source-map (webpack x.x.x) compiled successfully in X ms"
 `;
