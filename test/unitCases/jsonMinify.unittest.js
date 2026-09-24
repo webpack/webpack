@@ -37,6 +37,8 @@ describe("jsonMinify", () => {
 		expect(jsonMinify.getTypes()).toEqual(["json"]);
 		expect(jsonMinify.filter("data.json")).toBe(true);
 		expect(jsonMinify.filter("data.JSON?v=1")).toBe(true);
+		expect(jsonMinify.filter("data.json#abc123")).toBe(true);
+		expect(jsonMinify.filter("data.json.map")).toBe(false);
 		expect(jsonMinify.filter("data.js")).toBe(false);
 		expect(jsonMinify.filter("data.jsonc")).toBe(false);
 	});
