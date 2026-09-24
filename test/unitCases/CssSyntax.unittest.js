@@ -11367,20 +11367,49 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		).toBe(css);
 	});
 
-	it("keeps a rule the prefixes rewrote where it was written", () => {
-		// Prefix copies are several rules with preludes of their own, so there is
-		// no one rule to take out — it stays, and its siblings still come out.
+	it("takes out a rule the prefixes rewrote, copy and all", () => {
+		// Prefix copies are several rules with preludes of their own, and each
+		// carries this rule's own block — so every one of them goes out against
+		// the parent. A target that reads no nesting reads none of what stays.
 		expect(
 			minifyFor("a{color:red;&:autofill{color:blue}}", ["chrome 100"])
-		).toBe("a{color:red;&:-webkit-autofill{color:blue}&:autofill{color:blue}}");
+		).toBe("a{color:red}a:-webkit-autofill,a:autofill{color:blue}");
 		expect(
 			minifyFor("a{color:red;&:autofill{color:blue}& b{color:teal}}", [
 				"chrome 100"
 			])
 		).toBe(
-			"a{color:red;&:-webkit-autofill{color:blue}&:autofill{color:blue}}" +
-				"a b{color:teal}"
+			"a{color:red}a:-webkit-autofill,a:autofill{color:blue}a b{color:teal}"
 		);
+	});
+
+	it.each([
+		["one prefixed rule", "a{&:fullscreen{top:0}}", "a:-webkit-full-screen,a:fullscreen{top:0}"],
+		[
+			"a prefixed and a plain one",
+			"a{&:defined{top:0}&:fullscreen{top:0}}",
+			"a:-webkit-full-screen,a:defined,a:fullscreen{top:0}"
+		],
+		[
+			"two prefixed",
+			"a{&:fullscreen{top:0}&:autofill{top:0}}",
+			"a:-webkit-autofill,a:-webkit-full-screen,a:autofill,a:fullscreen{top:0}"
+		],
+		[
+			"a parent that declares as well",
+			"a{top:0;&:fullscreen{left:0}}",
+			"a{top:0}a:-webkit-full-screen,a:fullscreen{left:0}"
+		]
+	])("hoists %s", (_name, css, expected) => {
+		expect(minifyFor(css, ["chrome 100", "firefox 100", "safari 15.4"])).toBe(
+			expected
+		);
+	});
+
+	it("leaves a prefixed rule that was never nested alone", () => {
+		expect(
+			minifyFor("a:fullscreen{top:0}", ["chrome 100", "firefox 100", "safari 15.4"])
+		).toBe("a:-webkit-full-screen{top:0}a:fullscreen{top:0}");
 	});
 
 	it("leaves a rule written in an at-rule where it stands", () => {
