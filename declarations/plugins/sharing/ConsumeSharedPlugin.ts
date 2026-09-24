@@ -27,10 +27,12 @@ export interface ConsumesConfig {
 	 * Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
+	exclude?: SharedModuleFilter;
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: /** No fallback module. */ false | ConsumesItem;
+	include?: SharedModuleFilter;
 	/**
 	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
 	 */
@@ -73,6 +75,21 @@ export type ConsumesObject = {
 	 */
 	[key: string]: ConsumesConfig | ConsumesItem;
 };
+
+/**
+ * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+ * @since 5.112.0
+ */
+export interface SharedModuleFilter {
+	/**
+	 * Request remainder after a key ending in a slash (e.g. 'get' for 'lodash/get' under 'lodash/'). Has no effect on other keys.
+	 */
+	request?: RegExp | NonEmptyString;
+	/**
+	 * Version range the module's version (from its description file or the 'version' option) is tested against. A consumed module is tested through its fallback module, so this has no effect on consumes without one.
+	 */
+	version?: NonEmptyString;
+}
 
 /**
  * Options for consuming shared modules.

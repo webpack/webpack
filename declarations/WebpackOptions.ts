@@ -543,7 +543,7 @@ export type CssGeneratorEsModule = boolean;
  */
 export type CssGeneratorExportsConvention =
 	| ("as-is" | "camel-case" | "camel-case-only" | "dashes" | "dashes-only")
-	| import("../lib/dependencies/CssIcssExportDependency").ExportsConventionFn;
+	| import("../lib/dependencies/css/CssIcssExportDependency").ExportsConventionFn;
 
 /**
  * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
@@ -3308,6 +3308,11 @@ export interface OptimizationMinimizeOptions {
 	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
 	 */
 	javascript?: false | OptimizationMinimizeJavascript;
+	/**
+	 * Minimize JSON assets by re-serializing them without whitespace (defaults to `true` with `experiments.futureDefaults`, otherwise `false`).
+	 * @since 5.112.0
+	 */
+	json?: boolean;
 }
 
 /**
@@ -4918,10 +4923,10 @@ export type ResourceHintsInitial =
 			entrypoint: import("../lib/graph/Entrypoint");
 			hostType: "html" | "js";
 			compilation: import("../lib/Compilation");
-			defaultHints: (import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint & {
+			defaultHints: (import("../lib/dependencies/html/HtmlEntryDependency").HtmlResourceHint & {
 				hostChunks: string[];
 			})[];
-	  }) => import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[]);
+	  }) => import("../lib/dependencies/html/HtmlEntryDependency").HtmlResourceHint[]);
 
 /**
  * Full resource-hint configuration.

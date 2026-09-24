@@ -27,6 +27,8 @@ export interface ProvidesConfig {
 	 * Include the provided module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
+	exclude?: SharedModuleFilter;
+	include?: SharedModuleFilter;
 	/**
 	 * Key in the share scope under which the shared modules should be stored.
 	 */
@@ -57,6 +59,21 @@ export type ProvidesObject = {
 	 */
 	[key: string]: ProvidesConfig | ProvidesItem;
 };
+
+/**
+ * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
+ * @since 5.112.0
+ */
+export interface SharedModuleFilter {
+	/**
+	 * Request remainder after a key ending in a slash (e.g. 'get' for 'lodash/get' under 'lodash/'). Has no effect on other keys.
+	 */
+	request?: RegExp | NonEmptyString;
+	/**
+	 * Version range the module's version (from its description file or the 'version' option) is tested against. A consumed module is tested through its fallback module, so this has no effect on consumes without one.
+	 */
+	version?: NonEmptyString;
+}
 
 /**
  * @schema
