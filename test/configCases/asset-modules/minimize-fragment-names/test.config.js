@@ -18,8 +18,11 @@ module.exports = {
 			expect(read(`${index}/script.js`)).toMatchSnapshot();
 		}
 
-		// The extension is read before the fragment, so `#a.css` claims nothing.
-		expect(read("1/data.txt")).toBe("not   css  {\n");
+		// The extension is read before the fragment, so `#a.css` claims nothing:
+		// the copy matches its source byte for byte, whatever line endings it has.
+		expect(read("1/data.txt")).toBe(
+			fs.readFileSync(path.join(__dirname, "files/data.txt"), "utf8")
+		);
 
 		// Only the second build enables native CSS and HTML.
 		expect(read("1/style.css")).toMatchSnapshot();
