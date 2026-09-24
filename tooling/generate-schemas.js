@@ -500,15 +500,20 @@ const toDocumentationTags = (schema) => {
 	// WHY: a negated schema is the one thing TypeScript states no form of, so it
 	// travels as what it is and the tag is the record that it had to.
 	if (schema.not) tags.push(`@not ${JSON.stringify(schema.not)}`);
-	// WHY: an object the schema types through `tsType` still states whether it is
-	// open, and the type says nothing about that either way.
-	if (schema.tsType && schema.additionalProperties === true) {
-		tags.push("@additionalProperties");
+	// WHY: an index signature of `any` is what an object states nothing about and
+	// what one open by `additionalProperties` both read as, so the tag separates
+	// them where the type cannot.
+	if (schema.additionalProperties === true) tags.push("@additionalProperties");
+	if (schema.properties && Object.keys(schema.properties).length === 0) {
+		tags.push("@emptyProperties");
 	}
 	// WHY: a name and a literal each say what they are, and neither carries the
 	// type a schema validates beside it. The command line flags read that, so it
 	// survives rather than being dropped as redundant.
-	if (schema.type && (schema.$ref || schema.oneOf || schema.enum)) {
+	if (
+		schema.type &&
+		(schema.$ref || schema.oneOf || schema.enum || statesShape(schema))
+	) {
 		tags.push(`@jsonType ${schema.type}`);
 	}
 	// WHY: a `tsType` with no `type` beside it validates nothing — it names what
@@ -557,7 +562,7 @@ const needsTag = (schema) =>
 const statesShape = (schema) =>
 	Boolean(schema.tsType) &&
 	!schema.instanceof &&
-	(Boolean(schema.properties) ||
+	(Object.keys(schema.properties || {}).length > 0 ||
 		(Boolean(schema.type) && schema.type !== "object") ||
 		(schema.type === "object" && schema.tsType.includes("|")));
 
@@ -705,14 +710,24 @@ const toTypeScriptType = (schema, collected) => {
 				: "unknown";
 			return `${entry.name}<${values}>`;
 		}
+		// WHY: an object with no properties of its own says everything it has to say
+		// through `tsType`, and the tags carry the keywords back.
+		if (
+			schema.tsType &&
+			Object.keys(schema.properties || {}).length === 0 &&
+			statesShape(schema)
+		) {
+			return quoteImports(schema.tsType, '"');
+		}
 		// WHY: an object with nothing in it and nothing allowed into it is an empty
 		// type, where one that states nothing about its values is an index signature.
 		if (!schema.properties && schema.additionalProperties === false) {
 			return "{}";
 		}
+		// WHY: an object stating nothing about its values admits any of them, and
+		// `unknown` would reject what `lib/` passes today — a RegExp, an array.
 		if (!schema.properties && !isObject(schema.additionalProperties)) {
-			const values = schema.additionalProperties === true ? "any" : "unknown";
-			return `{ [key: string]: ${values} }`;
+			return "{ [key: string]: any }";
 		}
 		if (!schema.properties) return toMembers(schema, collected);
 		// WHY: an object the schema titled is a type worth naming, and one it did
@@ -1095,6 +1110,7 @@ const fromDocumentationTags = (tags) => {
 		keywords.not = JSON.parse(/** @type {string} */ (tags.get("not")));
 	}
 	if (tags.has("additionalProperties")) keywords.additionalProperties = true;
+	if (tags.has("emptyProperties")) keywords.properties = {};
 	if (tags.has("typeOnly")) keywords.typeOnly = true;
 	if (tags.has("inline")) keywords.inline = true;
 	if (tags.has("jsonType")) keywords.type = tags.get("jsonType");
@@ -1140,7 +1156,7 @@ const describedItems = (node, checker, known) => {
 // The tags a leading comment may carry, matched by name so prose holding an
 // "@" is left alone. `not` takes JSON, so it reads to the end of the comment.
 const KNOWN_TAG_REGEXP = new RegExp(
-	`@(since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join("|")})(?:[ \\t]+([^@]*))?`
+	`@(since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join("|")})(?:[ \\t]+([^@]*))?`
 );
 
 /**
@@ -1372,18 +1388,17 @@ const fromMembers = (members, checker, known, head) => {
 	const properties = {};
 	/** @type {string[]} */
 	const required = [];
-	// WHY: `unknown` values are how a source says the schema states nothing about
-	// them, which is not the same as stating that anything goes (`any`).
+	// WHY: an index signature says nothing a schema keyword does not, so what it
+	// holds is read from the `@additionalProperties` tag rather than from it.
 	/** @type {Record<string, EXPECTED_ANY> | boolean | undefined} */
 	let additionalProperties = false;
 	for (const member of members) {
 		if (ts.isIndexSignatureDeclaration(member)) {
 			const valueType = /** @type {ts.TypeNode} */ (member.type);
-			if (valueType.kind === ts.SyntaxKind.AnyKeyword) {
-				additionalProperties = true;
-				continue;
-			}
-			if (valueType.kind === ts.SyntaxKind.UnknownKeyword) {
+			if (
+				valueType.kind === ts.SyntaxKind.AnyKeyword ||
+				valueType.kind === ts.SyntaxKind.UnknownKeyword
+			) {
 				additionalProperties = undefined;
 				continue;
 			}
