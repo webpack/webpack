@@ -1,0 +1,124 @@
+name: Pull Request Reports
+
+# Posts the reports `code-size.yml` and `types-coverage.yml` upload. A fork's
+# `pull_request` run gets a read-only token, so the comment is written here, in
+# the base repository's context, which is why nothing here runs the PR's code.
+on:
+  # zizmor: ignore[dangerous-triggers] -- no checkout, and the artifact is data
+  workflow_run:
+    workflows: [Code Size, Types Coverage]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  comment:
+    if: >
+      github.repository == 'webpack/webpack' &&
+      github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      pull-requests: write
+    steps:
+      # WHY: the artifact is written by the pull request's own run, whose
+      # workflow file a fork can edit, so it is data only: never executed,
+      # never interpolated into a shell, and its bytes are checked below.
+      - name: Download the reports
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pr-report-*
+          path: ${{ runner.temp }}/pr-reports
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Comment the reports on the pull request
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          REPORTS_DIR: ${{ runner.temp }}/pr-reports
+        with:
+          script: |
+            const fs = require("fs");
+            const path = require("path");
+            const run = context.payload.workflow_run;
+            // Each artifact name maps to the one marker its body must open with.
+            const REPORTS = {
+              "pr-report-code-size": {
+                file: "code-size-report.md",
+                marker: "<!-- code-size-report -->"
+              },
+              "pr-report-types-coverage": {
+                file: "report.md",
+                marker: "<!-- types-coverage-report -->"
+              }
+            };
+            // WHY: `workflow_run.pull_requests` is empty for a fork, so the pull
+            // request is looked up by head branch and owner, and accepted only
+            // when its head is still the commit this run measured — a stale run
+            // then cannot overwrite a newer report.
+            const { data: pulls } = await github.rest.pulls.list({
+              ...context.repo,
+              state: "open",
+              head: `${run.head_repository.owner.login}:${run.head_branch}`,
+              per_page: 100
+            });
+            const pull = pulls.find(
+              (candidate) =>
+                candidate.head.sha === run.head_sha &&
+                candidate.head.repo &&
+                candidate.head.repo.id === run.head_repository.id &&
+                candidate.base.repo.id === run.repository.id
+            );
+            if (!pull) {
+              core.info(`No open pull request is at ${run.head_sha}, skipping.`);
+              return;
+            }
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...context.repo,
+              issue_number: pull.number,
+              per_page: 100
+            });
+            const footer = `\n\n<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}.</sub>`;
+            for (const [name, { file, marker }] of Object.entries(REPORTS)) {
+              const reportPath = path.join(process.env.REPORTS_DIR, name, file);
+              let stat;
+              try {
+                stat = fs.lstatSync(reportPath);
+              } catch {
+                continue;
+              }
+              // A symlink could point the read at a file on the runner.
+              if (!stat.isFile() || stat.size > 60000) {
+                core.warning(`Ignoring ${name}: not a plain file under 60000 bytes.`);
+                continue;
+              }
+              const report = fs.readFileSync(reportPath, "utf8");
+              if (!report.startsWith(marker)) {
+                core.warning(`Ignoring ${name}: it does not open with ${marker}.`);
+                continue;
+              }
+              // A zero-width space after `@` keeps a report from pinging anyone.
+              const body = report.replace(/@/g, "@​") + footer;
+              // Only a comment this workflow wrote: anyone can post the marker,
+              // and editing theirs would pass their numbers off as CI's.
+              const previous = comments.find(
+                (comment) =>
+                  comment.user.type === "Bot" &&
+                  comment.user.login === "github-actions[bot]" &&
+                  comment.body.startsWith(marker)
+              );
+              if (previous) {
+                await github.rest.issues.updateComment({
+                  ...context.repo,
+                  comment_id: previous.id,
+                  body
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  ...context.repo,
+                  issue_number: pull.number,
+                  body
+                });
+              }
+            }
