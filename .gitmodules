@@ -10,3 +10,6 @@
 [submodule "test/external/wpt"]
 	path = test/external/wpt
 	url = https://github.com/web-platform-tests/wpt.git
+[submodule "test/external/xml-conformance-suite"]
+	path = test/external/xml-conformance-suite
+	url = https://github.com/lddubeau/xml-conformance-suite.git

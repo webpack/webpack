@@ -11311,6 +11311,10 @@ declare interface HtmlTokenCallbacks {
 		dataStart: number,
 		dataEnd: number
 	) => number;
+
+	/**
+	 * `subsetStart` / `subsetEnd` delimit an XML internal subset (`tokenizeXml` only; -1 when absent)
+	 */
 	doctype?: (
 		input: string,
 		start: number,
@@ -11321,7 +11325,9 @@ declare interface HtmlTokenCallbacks {
 		publicEnd: number,
 		systemStart: number,
 		systemEnd: number,
-		forceQuirks: boolean
+		forceQuirks: boolean,
+		subsetStart?: number,
+		subsetEnd?: number
 	) => number;
 	parseError?: (
 		input: string,
@@ -33237,12 +33243,16 @@ declare namespace exports {
 				export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 				export let collapseWhitespaceRuns: (s: string) => string;
 				export let decodeEntities: _functionSyntaxParser;
+				export let decodeXmlAttribute: (value: string) => string;
+				export let decodeXmlEntities: (value: string) => string;
 				export let escapeAttribute: (
 					s: string,
 					delimiter?: number,
 					minimal?: boolean
 				) => string;
 				export let escapeText: (s: string) => string;
+				export let escapeXmlAttribute: (value: string, quote: string) => string;
+				export let escapeXmlText: (data: string) => string;
 				export let grammar: (
 					input: string,
 					visitors: CompiledVisitorBucket<{
@@ -33407,6 +33417,11 @@ declare namespace exports {
 				) => undefined | HtmlTransformOptions;
 				export let startsWithWs: (s: string) => boolean;
 				export let tokenize: (
+					input: string,
+					pos?: number,
+					callbacks?: HtmlTokenCallbacks
+				) => number;
+				export let tokenizeXml: (
 					input: string,
 					pos?: number,
 					callbacks?: HtmlTokenCallbacks
