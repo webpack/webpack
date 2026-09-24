@@ -1720,6 +1720,18 @@ const EXPECTED = [
 		contains: 'content:"&#39;"',
 		source: "minimize-transforms",
 		why: "the same `style` attribute as the entry above, reached by respelling its text as character references rather than its delimiter: it lengthens the source the same way, so the minified declarations win the same comparison"
+	},
+	{
+		relation: "idempotence",
+		contains: "</style><style>.open-b{color:red}",
+		source: "minimize-merge-styles",
+		why: "`mergeStyles` joins sheets on their sources and appends nothing after one the input left open, which would take the next sheet in; the renderer closes that one, so a second pass reads it closed and joins it. Joining on the answer instead costs a print per open sheet on the asynchronous path, for markup no one writes on purpose"
+	},
+	{
+		relation: "idempotence",
+		contains: "</style><style>.c{color:red}",
+		source: "minimize-end-of-input",
+		why: "the same open sheet as the entry above, from the end-of-input case: `.b{&:is(` is closed by the renderer, and joined to the next sheet only on the second pass"
 	}
 ];
 

@@ -4097,11 +4097,13 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 
 	it("declines a sheet ending inside a comment", () => {
-		// Appending to text the comment swallows would comment the next sheet out;
-		// what is judged is what printed, so a sheet the renderer closed joins.
+		// Appending to text the comment swallows would comment the next sheet out.
+		// Judged on the source, so a sheet the renderer closes is not joined either.
 		const open = "<style>a{color:red}/*x</style><style>b{color:#00f}</style>";
 		expect(minifyAsWritten(open)).toBe(open);
-		expect(minify(open)).toBe("<style>a{color:red}b{color:#00f}</style>");
+		expect(minify(open)).toBe(
+			"<style>a{color:red}</style><style>b{color:#00f}</style>"
+		);
 		expect(
 			minify("<style>a{color:red}/*x*/</style><style>b{color:#00f}</style>")
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
@@ -4110,7 +4112,9 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	it("declines a sheet ending inside a string", () => {
 		const open = '<style>a{content:"x</style><style>b{color:#00f}</style>';
 		expect(minifyAsWritten(open)).toBe(open);
-		expect(minify(open)).toBe('<style>a{content:"x"}b{color:#00f}</style>');
+		expect(minify(open)).toBe(
+			'<style>a{content:"x"}</style><style>b{color:#00f}</style>'
+		);
 		// A newline ends a bad string, so this one is over where the sheet is.
 		expect(
 			minify('<style>a{content:"x\n}</style><style>b{color:#00f}</style>')
@@ -4122,10 +4126,11 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 
 	it("reads an escape outside a string as one too", () => {
-		// Were the quote not escaped it would open a string running to the end.
+		// Were the quote not escaped it would open a string running to the end; as
+		// it is, the escape starts a rule the sheet does not finish.
 		expect(
 			minify('<style>a{color:red}\\"</style><style>b{color:#00f}</style>')
-		).toBe("<style>a{color:red}b{color:#00f}</style>");
+		).toBe("<style>a{color:red}</style><style>b{color:#00f}</style>");
 	});
 
 	it("declines a sheet left inside a bracket", () => {
@@ -4134,9 +4139,11 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			"<style>a{color:rgb(1,2,3}</style><style>b{color:#00f}</style>";
 		expect(minifyAsWritten(block)).toBe(block);
 		expect(minifyAsWritten(call)).toBe(call);
-		expect(minify(block)).toBe("<style>a{color:red}b{color:#00f}</style>");
+		expect(minify(block)).toBe(
+			"<style>a{color:red}</style><style>b{color:#00f}</style>"
+		);
 		expect(minify(call)).toBe(
-			"<style>a{color:rgb(1,2,3})}b{color:#00f}</style>"
+			"<style>a{color:rgb(1,2,3})}</style><style>b{color:#00f}</style>"
 		);
 	});
 
@@ -6303,7 +6310,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("prints again where an answer overturns a choice made on the source", async () => {
 		// Each choice is one a deferred print makes on the source: the emptied
-		// sheet and list go with their elements, and the open sheet joins the next.
+		// sheet and list go with their elements; the open sheet joins nothing.
 		const html =
 			'<p>x<style>a{}</style><div style="color:"></div>' +
 			"<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>";
@@ -6329,18 +6336,16 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		});
 
 		expect(now.code).toBe(
-			"<p>x<style>.a{--x:f()}.b{color:red}</style><script>1</script>"
+			"<p>x<style>.a{--x:f()}</style><style>.b{color:red}</style><script>1</script>"
 		);
 		expect(later.code).toBe(now.code);
-		// A print reads the earlier ones' answers rather than asking again; what it
-		// alone offers — the joined run, as the one sheet it prints — is asked once.
+		// The second print reads the first one's answers rather than asking again.
 		expect(offered).toEqual([
 			"a{}",
 			"color:",
 			".a{--x:f(",
 			".b{color:red}",
-			"1",
-			".a{--x:f()}.b{color:red}"
+			"1"
 		]);
 	});
 

@@ -40,9 +40,15 @@ module.exports = {
 		expect(page).toContain("<style nonce=n1>.nonce-a{color:red}</style>");
 		// An empty sheet has no text node to fold into the one before it.
 		expect(page).toContain("<style>.empty-a{color:red}</style><style></style>");
-		// What is joined is what the renderer printed, which closes what the
-		// source left open, so the next sheet is not read inside it.
-		expect(page).toContain("<style>.open-a{--x:f()}.open-b{color:red}</style>");
+		// Nothing is appended to a sheet the source left open, which would take
+		// the next sheet in; the renderer closes it in its own element.
+		expect(page).toContain(
+			"<style>.open-a{--x:f()}</style><style>.open-b{color:red}</style>"
+		);
+		// Joined, the run is minified as one sheet, so rules fold across it; a
+		// blank sheet joined is nothing.
+		expect(page).toContain("<style>.fold-a,.fold-b{color:red}</style>");
+		expect(page).toContain("<style>.blank-b{color:red}</style>");
 
 		// Not CSS, so the bodies are not sheets to join.
 		expect(page).toContain(
