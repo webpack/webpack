@@ -19,5 +19,9 @@ module.exports = {
 		// A media type naming no language webpack knows keeps its payload byte for
 		// byte — only the url token's own quoting is normalized.
 		expect(css).toContain("url(data:image/png;base64,AAAA)");
+		// A raw `#` starts a fragment, so the payload a browser reads ends there.
+		expect(css).toContain(
+			'.fragment{background:url("data:text/html,<p>  a  </p>#x")}'
+		);
 	}
 };

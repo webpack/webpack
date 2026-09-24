@@ -13,6 +13,7 @@ const readFixture = (file) =>
 
 const DATA = readFixture("data.json");
 const NOT_JSON = readFixture("not-json.json");
+const MANIFEST = readFixture("site.webmanifest");
 const MINIFIED =
 	'{"name":"webpack","list":[1,2,3],"nested":{"empty":{}},"id":9007199254740993,"precise":1.50,"huge":1e400,"text":"keep  \\"these\\"  spaces\\\\"}';
 
@@ -53,7 +54,7 @@ const config = (name, expected, options) => ({
 		assetModuleFilename: `${name}-[name][ext]`
 	},
 	module: {
-		rules: [{ test: /\.json$/, type: "asset/resource" }]
+		rules: [{ test: /\.(?:json|webmanifest)$/, type: "asset/resource" }]
 	},
 	plugins: [
 		...(options.plugins || []),
@@ -77,12 +78,17 @@ const config = (name, expected, options) => ({
 						"utf8"
 					);
 				const data = emitted("data.json");
+				const manifest = emitted("site.webmanifest");
 				if (expected === "minified") {
 					expect(data).toBe(MINIFIED);
+					expect(manifest).toBe(
+						'{"name":"webpack","icons":[{"src":"icon.png","sizes":"48x48"}]}'
+					);
 				} else if (expected === "user") {
 					expect(data).toBe(JSON.stringify(JSON.parse(data), null, 1));
 				} else {
 					expect(data).toBe(DATA);
+					expect(manifest).toBe(MANIFEST);
 				}
 				expect(emitted("not-json.json")).toBe(NOT_JSON);
 			});

@@ -41,5 +41,7 @@ describe("jsonMinify", () => {
 		expect(jsonMinify.filter("data.json.map")).toBe(false);
 		expect(jsonMinify.filter("data.js")).toBe(false);
 		expect(jsonMinify.filter("data.jsonc")).toBe(false);
+		expect(jsonMinify.filter("site.webmanifest")).toBe(true);
+		expect(jsonMinify.filter("a1b2.webmanifest?v=1")).toBe(true);
 	});
 });

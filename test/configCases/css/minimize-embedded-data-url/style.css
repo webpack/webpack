@@ -1,4 +1,4 @@
-@import url("data:text/css,.inner {  color : #ff0000  }") ;
+@import url("data:text/css,.inner {  color : rgb( 255 , 0 , 0 )  }") ;
 
 .svg {
 	background : url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'>   <rect  fill='red' />   </svg>") ;
@@ -11,3 +11,4 @@
 .json { background : url('data:application/json,{ "a" :  1 }') ; }
 .html { background : url("data:text/html,<div>  <!-- dropped -->  <p>hi</p>  </div>") ; }
 .png { background : url("data:image/png;base64,AAAA") ; }
+.fragment { background : url("data:text/html,<p>  a  </p>#x") ; }

@@ -6559,6 +6559,111 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		).toBe('<svg><circle onclick="f(1)"/></svg>');
 	});
 
+	// Stands in for a JSON minifier.
+	const compactJson = (/** @type {string} */ source) =>
+		JSON.stringify(JSON.parse(source));
+
+	it("offers a URL attribute's `data:` payload as its media type's language", () => {
+		const html =
+			"<img src=\"data:image/svg+xml,<svg>  </svg>\">" +
+			"<iframe src=\"  data:text/html,<p>  a  </p>  \"></iframe>" +
+			"<object data='data:application/json,{ \"a\" : 1 }'></object>";
+
+		expect(offered(html)).toEqual([
+			["svg", "stylesheet", "<svg>  </svg>"],
+			["html", "stylesheet", "<p>  a  </p>"],
+			["json", "stylesheet", '{ "a" : 1 }']
+		]);
+		expect(
+			minify(html, (source, { type }) =>
+				type === "json" ? compactJson(source) : source.replace(/\s+/g, "")
+			)
+		).toBe(
+			'<img src="data:image/svg+xml,<svg></svg>">' +
+				'<iframe src="data:text/html,<p>a</p>"></iframe>' +
+				"<object data='data:application/json,{\"a\":1}'></object>"
+		);
+	});
+
+	it("offers a `data:` payload only where the attribute is a URL on that element", () => {
+		// `title` holds text, and `href` is no URL on a `<div>`.
+		expect(
+			offered(
+				"<p title='data:application/json,{ }'>a</p>" +
+					"<div href='data:application/json,{ }'>b</div>"
+			)
+		).toEqual([]);
+	});
+
+	it("declines a `data:` payload it cannot read back as written", () => {
+		// A media type naming no language, a percent-escaped payload, an empty
+		// one, a newline the URL parser drops and a `#` starting a fragment.
+		expect(
+			offered(
+				'<img src="data:image/png;base64,AAAA">' +
+					'<a href="data:application/json,%7B%7D">a</a>' +
+					'<a href="data:application/json,">b</a>' +
+					'<a href="data:application/json,{\n}">c</a>' +
+					'<a href="data:application/json,{ &quot;a&quot; : &quot;#&quot; }">d</a>'
+			)
+		).toEqual([]);
+	});
+
+	it("offers a `data:` payload decoded and escapes the answer back", () => {
+		// `&quot;` is how the attribute spells a quote, not part of the JSON, and
+		// what the rebuilt URL carries is escaped for the value it lands in.
+		const html =
+			'<a href="data:application/json,{ &quot;a&quot; : &quot;&apos;&quot; }">x</a>';
+
+		expect(offered(html)).toEqual([["json", "stylesheet", '{ "a" : "\'" }']]);
+		expect(minify(html, compactJson)).toBe(
+			"<a href='data:application/json,{\"a\":\"&#39;\"}'>x</a>"
+		);
+		// A `#` the answer brings is escaped, or it would start a fragment.
+		expect(minify(html, () => '{"a":"#"}')).toBe(
+			"<a href='data:application/json,{\"a\":\"%23\"}'>x</a>"
+		);
+	});
+
+	it("rebuilds a base64 `data:` payload as base64", () => {
+		const payload = Buffer.from('{ "a" : 1 }').toString("base64");
+
+		expect(
+			minify(`<a href="data:application/json;base64,${payload}">x</a>`, compactJson)
+		).toBe(
+			`<a href="data:application/json;base64,${Buffer.from('{"a":1}').toString("base64")}">x</a>`
+		);
+	});
+
+	it("keeps a `data:` URL the renderer declined or answered no shorter", () => {
+		const html = '<a href="data:application/json,{&quot;a&quot;:1}">x</a>';
+
+		expect(minify(html, () => undefined)).toBe(minify(html));
+		expect(minify(html, (source) => source)).toBe(minify(html));
+		expect(minify(html, (source) => `${source}   `)).toBe(minify(html));
+	});
+
+	it("answers a `data:` payload on a deferred print", async () => {
+		expect(
+			await deferred(
+				"<object data='data:application/json,{ \"a\" : 1 }'></object>",
+				compactJson
+			)
+		).toEqual({
+			code: "<object data='data:application/json,{\"a\":1}'></object>",
+			offered: [["json", "stylesheet", '{ "a" : 1 }']]
+		});
+		expect(
+			(
+				await deferred(
+					"<svg><image href='data:application/json,{ }'/></svg>" +
+						"<a href='data:application/json,{ }'>x</a>",
+					() => undefined
+				)
+			).code
+		).toBe("<svg><image href='data:application/json,{ }'/></svg><a href='data:application/json,{ }'>x</a>");
+	});
+
 	it("names html as the host of every body it offers", () => {
 		const hosts = new Set();
 		minify("<style>.a{color:red}</style><script>var a=1</script>", (s, i) => {
@@ -8382,6 +8487,17 @@ describe("htmlMinify — assets webpack only passes through", () => {
 	 * @returns {Promise<string>} the minified serialization
 	 */
 	const min = async (src) => (await htmlMinify({ "page.html": src })).code;
+
+	it("minifies an HTML `data:` URL an attribute holds with no renderer passed", async () => {
+		// A nested document takes the asynchronous pass, which the synchronous
+		// built-in cannot answer for.
+		expect(
+			await min('<iframe src="data:text/html,<p>a<!-- c --></p>"></iframe>')
+		).toBe('<iframe src="data:text/html,<p>a"></iframe>');
+		expect(
+			await min("<a href='data:application/json,{ \"a\" : 1 }'>x</a>")
+		).toBe("<a href='data:application/json,{\"a\":1}'>x</a>");
+	});
 
 	it("reads a Buffer input as UTF-8", async () => {
 		const { code } = await htmlMinify({

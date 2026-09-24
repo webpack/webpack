@@ -5,9 +5,11 @@ const {
 	buildDataURI,
 	decodeDataURI,
 	decodeDataURIPayload,
+	encodeDataURIPayload,
 	languageOfFilename,
 	languageOfMediaType,
-	parseDataURI
+	parseDataURI,
+	readEmbeddedDataURI
 } = require("../../lib/util/dataURL");
 
 describe("dataURL", () => {
@@ -115,6 +117,13 @@ describe("decodeDataURIPayload", () => {
 		expect(decodeDataURIPayload(parsed)).toBe("a{color:red}");
 	});
 
+	it("should decline a payload a fragment cuts short", () => {
+		const parsed = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
+			parseDataURI("data:image/svg+xml,<svg/>#x")
+		);
+		expect(decodeDataURIPayload(parsed)).toBeNull();
+	});
+
 	it("should decline a percent-escaped payload rather than re-escape it", () => {
 		const parsed = /** @type {NonNullable<ReturnType<typeof parseDataURI>>} */ (
 			parseDataURI("data:text/css,a%7Bcolor%3Ared%7D")
@@ -155,5 +164,45 @@ describe("buildDataURI", () => {
 		expect(buildDataURI(parsed, "a{color:red}")).toBe(
 			"data:text/css;base64,YXtjb2xvcjpyZWR9"
 		);
+	});
+});
+
+describe("encodeDataURIPayload", () => {
+	it("should escape only what the URL parser would read differently", () => {
+		expect(encodeDataURIPayload("a b\"<>'{}")).toBe("a b\"<>'{}");
+		expect(encodeDataURIPayload("100%#x")).toBe("100%25%23x");
+		expect(encodeDataURIPayload("a\tb\nc\rd\u0000\u007f")).toBe(
+			"a%09b%0Ac%0Dd%00%7F"
+		);
+		// Trailing spaces are stripped off a URL, leading ones inside it are not.
+		expect(encodeDataURIPayload("  a  ")).toBe("  a%20%20");
+	});
+
+	it("should round-trip through the decoder a data: module reads with", () => {
+		const text = "var a = '100%';\n// #x \t";
+		expect(
+			decodeDataURI(`data:text/javascript,${encodeDataURIPayload(text)}`)
+		).toEqual(Buffer.from(text, "utf8"));
+	});
+});
+
+describe("readEmbeddedDataURI", () => {
+	it("should read the payload and the language its media type names", () => {
+		expect(readEmbeddedDataURI('data:application/json,{"a":1}')).toEqual({
+			parsed: {
+				mediaType: "application/json",
+				base64: false,
+				payload: '{"a":1}'
+			},
+			type: "json",
+			payload: '{"a":1}'
+		});
+	});
+
+	it("should decline what offers nothing to render", () => {
+		expect(readEmbeddedDataURI("https://example.com/a.json")).toBeNull();
+		expect(readEmbeddedDataURI("data:image/png;base64,AAAA")).toBeNull();
+		expect(readEmbeddedDataURI("data:application/json,%7B%7D")).toBeNull();
+		expect(readEmbeddedDataURI("data:application/json,")).toBeNull();
 	});
 });

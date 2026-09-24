@@ -33784,11 +33784,15 @@ declare namespace exports {
 			export let embeddedText: (
 				answer?: string | { code?: string }
 			) => undefined | string;
+			export let encodeDataURIPayload: (text: string) => string;
 			export let languageOfFilename: (
 				filename: null | string
 			) => undefined | string;
 			export let languageOfMediaType: (mediaType: string) => undefined | string;
 			export let parseDataURI: (uri: string) => null | ParsedDataURI;
+			export let readEmbeddedDataURI: (
+				uri: string
+			) => null | { parsed: ParsedDataURI; type: string; payload: string };
 		}
 		export { LazySet, RequestShortener };
 	}
