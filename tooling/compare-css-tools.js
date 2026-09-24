@@ -1357,6 +1357,57 @@ const wantedPreset = filterFrom("PRESET");
 /** @type {string[]} */
 let _missingFixtures = [];
 
+// The constructs the installed corpus barely reaches: each is in two of its
+// stylesheets or fewer, several in none. Written in the shapes the rewrites act
+// on — the same rule twice, a rule between two, and nested for the hoist.
+const COLD_CONSTRUCTS = `@layer reset;
+@layer reset, components, utilities;
+@import url("a.css") layer(components) supports(display:grid) screen;
+@view-transition{navigation:auto}
+@view-transition{navigation:auto}
+@font-feature-values F{@styleset{a:1}}
+@font-feature-values F{@styleset{a:1}}
+@font-palette-values --p{font-family:F;base-palette:1}
+@font-palette-values --p{font-family:F;base-palette:1}
+@position-try --t{inset:1px;margin:2px}
+@position-try --t{inset:1px;margin:2px}
+@counter-style c{system:cyclic;symbols:"x";suffix:" "}
+@property --l{syntax:"<length>";inherits:false;initial-value:0px}
+@layer a;
+@layer a{.p1{top:0}}
+@layer a;
+@layer a{.p2{top:0}}
+.m1{width:rem(10px,3px);height:mod(10px,3px)}
+.m2{top:abs(-5px);left:sign(-3)}
+.m3{width:pow(2,3)*1px;height:sqrt(16)*1px}
+.m4{top:hypot(3px,4px);left:exp(1)*1px}
+.m5{transform:rotate(atan2(1,1))}
+.m6{width:round(up,10.2px,1px)}
+.m7{width:round(up,10.2px,1px)}
+.m8{width:calc(abs(-5px) + sqrt(16) * 1px)}
+.a1{top:anchor(--x top);width:anchor-size(--x width)}
+.i1{background:cross-fade(url(a.png) 50%,url(b.png))}
+.i2{background:element(#src)}
+.i3{background:image-set(url(a.png) 1x,url(b.png) 2x)}
+.i4{background-image:paint(worklet)}
+.c1{color:device-cmyk(0 0 0 1);background:device-cmyk(0 0 0 1)}
+.c2{color:color(display-p3 1 0 0)}
+.c3{color:color(display-p3 1 0 0)}
+.s1:user-invalid{color:red}
+.s2:fullscreen{color:red}
+.s3:defined{color:red}
+.s4:state(checked){color:red}
+.s5::part(label){color:red}
+.s6::slotted(span){color:red}
+.t1:defined{top:0}
+.mid{left:0}
+.t2:defined{top:0}
+.n1{&:defined{top:0}&:fullscreen{top:0}}
+.n2{.x:state(on){top:0}.y:state(on){top:0}}
+@supports selector(:has(a)){.f1{color:red}}
+@supports not (display:grid){.f2{color:red}}
+@media not all and (min-width:1px){.f3{color:red}}`;
+
 const invariantFixtures = () => {
 	/** @type {[string, string][]} */
 	const out = [];
@@ -1370,6 +1421,9 @@ const invariantFixtures = () => {
 			fs.readFileSync(file, "utf8")
 		]);
 	}
+	// Written rather than installed: what ships repeats what ships, and these are
+	// the constructs it does not.
+	out.push(["cold constructs", COLD_CONSTRUCTS]);
 	/** @type {string[]} */
 	const missing = [];
 	for (const [label, file] of fixtures()) {
