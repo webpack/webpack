@@ -124,21 +124,6 @@ import {
 import { minify } from "terser";
 import { URL } from "url";
 import { Context as ContextImport } from "vm";
-import {
-	addScopesToSourceMap,
-	collectSourceScopes,
-	createScopeCollector,
-	createScopesWriter,
-	encodeScopes
-} from "webpack-sources/types/helpers/scopes";
-import {
-	disableDualStringBufferCaching,
-	enableDualStringBufferCaching,
-	enterStringInterningRange,
-	exitStringInterningRange,
-	internString,
-	isDualStringBufferCachingEnabled
-} from "webpack-sources/types/helpers/stringBufferUtils";
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -511,8 +496,46 @@ declare interface AssetGeneratorDataUrlOptions {
 	 */
 	mimetype?: string;
 }
-type AssetGeneratorOptions = AssetInlineGeneratorOptions &
-	AssetResourceGeneratorOptions;
+
+/**
+ * Generator options for asset modules.
+ */
+declare interface AssetGeneratorOptions {
+	/**
+	 * Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.
+	 */
+	binary?: boolean;
+
+	/**
+	 * The options for data url generator.
+	 */
+	dataUrl?:
+		| AssetGeneratorDataUrlOptions
+		| ((
+				source: string | Buffer,
+				context: { filename: string; module: Module }
+		  ) => string);
+
+	/**
+	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
+	 */
+	emit?: boolean;
+
+	/**
+	 * The filename of asset modules as relative path inside the 'output.path' directory.
+	 */
+	filename?: string | TemplatePathFn<PathDataModule>;
+
+	/**
+	 * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
+	 */
+	outputPath?: string | TemplatePathFn<PathDataModule>;
+
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: string | TemplatePathFn<PathData>;
+}
 type AssetInfo = KnownAssetInfo & Record<string, any>;
 
 /**
@@ -1329,7 +1352,6 @@ type BufferEncodingOption = "buffer" | { encoding: "buffer" };
 declare interface BufferEntry {
 	map?: null | RawSourceMap;
 	bufferedMap?: null | BufferedMap;
-	scopes?: ScopesReplay;
 }
 declare interface BufferedMap {
 	/**
@@ -1687,7 +1709,7 @@ declare class CachedSource extends Source {
 	originalLazy(): Source | (() => Source);
 	original(): Source;
 	streamChunks(
-		options: OptionsStreamChunks,
+		options: StreamChunksOptions,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -1700,8 +1722,7 @@ declare class CachedSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string,
-			scopeBindings?: Map<string, string>
+			sourceContent?: string
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -1792,7 +1813,6 @@ declare interface CappedSplit {
 	modules: number;
 }
 type Cell<T> = undefined | T;
-type Child = string | Source | SourceLike;
 
 /**
  * A Chunk is a unit of encapsulation for Modules.
@@ -4546,12 +4566,12 @@ declare class Compiler {
 }
 type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
 declare class ConcatSource extends Source {
-	constructor(...args: Child[]);
+	constructor(...args: ConcatSourceChild[]);
 	getChildren(): Source[];
-	add(item: Child): void;
-	addAllSkipOptimizing(items: Child[]): void;
+	add(item: ConcatSourceChild): void;
+	addAllSkipOptimizing(items: ConcatSourceChild[]): void;
 	streamChunks(
-		options: OptionsStreamChunks,
+		options: StreamChunksOptions,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -4564,12 +4584,12 @@ declare class ConcatSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string,
-			scopeBindings?: Map<string, string>
+			sourceContent?: string
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
 }
+type ConcatSourceChild = string | Source | SourceLike;
 
 /**
  * Advanced options for module concatenation.
@@ -5127,7 +5147,6 @@ declare class ConstDependency extends NullDependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
-	static ESM_CATEGORY: "esm";
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -5174,19 +5193,9 @@ declare interface ConsumesConfig {
 	eager?: boolean;
 
 	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
-	exclude?: SharedModuleFilter;
-
-	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: string | false;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
-	include?: SharedModuleFilter;
 
 	/**
 	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
@@ -5218,10 +5227,6 @@ declare interface ConsumesConfig {
 	 */
 	strictVersion?: boolean;
 }
-
-/**
- * Modules that should be consumed from share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
- */
 declare interface ConsumesObject {
 	[index: string]: string | ConsumesConfig;
 }
@@ -5664,13 +5669,6 @@ declare class CopyPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-	static getCompilationHooks: (compilation: Compilation) => {
-		/**
-		 * Answers whether a path is copied, ahead of `globOptions.ignore`: true never copies it, false copies it whatever `globOptions.ignore` says, and nothing leaves the decision to webpack. A directory has to be answered as well as the files below it, because one that is ignored is never walked.
-		 * @since 5.112.0
-		 */
-		ignore: SyncBailHook<[string], boolean | void>;
-	};
 }
 declare interface CopyTransformCacheKeys {
 	[index: string]: any;
@@ -5717,11 +5715,13 @@ declare interface CssAutoOrModuleParserOptions {
 
 	/**
 	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 * @since 5.109.0
 	 */
 	customMedia?: boolean;
 
 	/**
 	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 * @since 5.109.0
 	 */
 	customSelectors?: boolean;
 
@@ -5737,6 +5737,7 @@ declare interface CssAutoOrModuleParserOptions {
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 * @since 5.109.0
 	 */
 	fontPreload?: boolean;
 
@@ -5772,6 +5773,7 @@ declare interface CssAutoOrModuleParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
@@ -6006,11 +6008,13 @@ declare interface CssModuleParserOptions {
 
 	/**
 	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 * @since 5.109.0
 	 */
 	customMedia?: boolean;
 
 	/**
 	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 * @since 5.109.0
 	 */
 	customSelectors?: boolean;
 
@@ -6026,6 +6030,7 @@ declare interface CssModuleParserOptions {
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 * @since 5.109.0
 	 */
 	fontPreload?: boolean;
 
@@ -6056,6 +6061,7 @@ declare interface CssModuleParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
@@ -6207,10 +6213,12 @@ declare abstract class CssParser extends ParserClass {
 		customIdents: boolean;
 		/**
 		 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+		 * @since 5.109.0
 		 */
 		customMedia: boolean;
 		/**
 		 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+		 * @since 5.109.0
 		 */
 		customSelectors: boolean;
 		/**
@@ -6223,6 +6231,7 @@ declare abstract class CssParser extends ParserClass {
 		exportType?: "link" | "text" | "css-style-sheet" | "style";
 		/**
 		 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+		 * @since 5.109.0
 		 */
 		fontPreload?: boolean;
 		/**
@@ -6251,6 +6260,7 @@ declare abstract class CssParser extends ParserClass {
 		url: boolean;
 		/**
 		 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+		 * @since 5.109.0
 		 */
 		urlHints?: UrlHintRule[];
 		/**
@@ -6310,6 +6320,7 @@ declare interface CssParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
@@ -6379,7 +6390,7 @@ declare interface CssProcessOptions {
 	locConverter?: LocConverter;
 
 	/**
-	 * walk into block bodies' nested rules (default true); ignored while printing, as `skip` is, since a block is printed from the children it would leave unread
+	 * walk into block bodies' nested rules (default true)
 	 */
 	recurseBlocks?: boolean;
 
@@ -6593,7 +6604,6 @@ type DeferredEmbeddedSource = DeferredWrite & {
 declare interface DeferredWrite {
 	source: string;
 	build: (answer?: string) => string;
-	decides?: (answer?: string) => boolean;
 }
 type DefineConfigInput =
 	| Configuration
@@ -6824,7 +6834,7 @@ declare class Dependency {
 	/**
 	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
 	 */
-	isLazy(): undefined | boolean;
+	isLazy(): boolean;
 
 	/**
 	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
@@ -6943,7 +6953,6 @@ declare class Dependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
-	static ESM_CATEGORY: "esm";
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -7038,8 +7047,6 @@ declare interface DependencyTemplateContext {
 	getData?: () => CodeGenerationResultData;
 }
 declare abstract class DependencyTemplates {
-	importBindingScopes: boolean;
-
 	/**
 	 * Returns template for this dependency.
 	 */
@@ -7420,10 +7427,6 @@ type DllReferencePluginOptions =
 			 */
 			type?: "object" | "require";
 	  };
-
-/**
- * The mappings from request to module info.
- */
 declare interface DllReferencePluginOptionsContent {
 	[index: string]: {
 		/**
@@ -7531,161 +7534,6 @@ declare class DynamicEntryPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-}
-declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDependency {
-	ids: string[];
-	name: null | string;
-	activeExports: Set<string>;
-	otherStarExports: null | ReadonlyArray<ESMExportImportedSpecifierDependency>;
-	exportPresenceMode: ExportPresenceMode;
-	allStarExports: null | HarmonyStarExportsList;
-
-	/**
-	 * Returns id.
-	 * @deprecated
-	 */
-	get id(): void;
-
-	/**
-	 * Returns id.
-	 * @deprecated
-	 */
-	getId(): void;
-
-	/**
-	 * Updates id.
-	 * @deprecated
-	 */
-	setId(): void;
-
-	/**
-	 * Returns the imported id.
-	 */
-	getIds(moduleGraph: ModuleGraph): string[];
-
-	/**
-	 * Updates ids using the provided module graph.
-	 */
-	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
-
-	/**
-	 * Returns the export mode.
-	 */
-	getMode(moduleGraph: ModuleGraph, runtime: RuntimeSpec): ExportMode;
-
-	/**
-	 * Gets star reexports.
-	 */
-	getStarReexports(
-		moduleGraph: ModuleGraph,
-		runtime: RuntimeSpec,
-		exportsInfo?: ExportsInfo,
-		importedModule?: Module
-	): {
-		exports?: Set<string>;
-		checked?: Set<string>;
-		ignoredExports: Set<string>;
-		hidden?: Set<string>;
-	};
-}
-declare class ESMImportDependency extends ModuleDependency {
-	/**
-	 * Creates an instance of HarmonyImportDependency.
-	 */
-	constructor(
-		request: string,
-		sourceOrder: number,
-		phase?: 0 | 1 | 2,
-		attributes?: ImportAttributes
-	);
-	phase: ImportPhaseType;
-	attributes?: ImportAttributes;
-
-	/**
-	 * Returns name of the variable for the import.
-	 */
-	getImportVar(moduleGraph: ModuleGraph): string;
-
-	/**
-	 * Gets module exports.
-	 */
-	getModuleExports(__0: DependencyTemplateContext): string;
-
-	/**
-	 * Gets import statement.
-	 */
-	getImportStatement(
-		update: boolean,
-		__1: DependencyTemplateContext
-	): [string, string];
-
-	/**
-	 * Gets linking errors.
-	 */
-	getLinkingErrors(
-		moduleGraph: ModuleGraph,
-		ids: string[],
-		additionalMessage: string
-	): undefined | WebpackError[];
-	static Template: typeof HarmonyImportDependencyTemplate;
-	static ExportPresenceModes: {
-		NONE: ExportPresenceMode;
-		WARN: ExportPresenceMode;
-		AUTO: ExportPresenceMode;
-		ERROR: ExportPresenceMode;
-		/**
-		 * Returns result.
-		 */
-		fromUserOption(str: string | false): ExportPresenceMode;
-		/**
-		 * Resolve export presence mode from parser options with a specific key and shared fallbacks.
-		 */
-		resolveFromOptions(
-			specificValue: undefined | string | false,
-			options: JavascriptParserOptions
-		): ExportPresenceMode;
-	};
-	static getNonOptionalPart: (
-		members: string[],
-		membersOptionals: boolean[]
-	) => string[];
-
-	/**
-	 * Compares two dependencies by source location for sorting a module's
-	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
-	 * its result, so comparing through it would retain a location object on every
-	 * sorted dependency). These dependencies always carry a real source position,
-	 * so only start (line, column) and the within-statement index are compared; a
-	 * dependency without an index sorts after one that has an index at the same
-	 * position.
-	 */
-	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
-	static NO_EXPORTS_REFERENCED: string[][];
-	static EXPORTS_OBJECT_REFERENCED: string[][];
-	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
-
-	/**
-	 * Returns true if the dependency is a low priority dependency.
-	 */
-	static isLowPriorityDependency(dependency: Dependency): boolean;
-
-	/**
-	 * Returns true if the dependency can be concatenated (scope hoisting).
-	 */
-	static canConcatenate(
-		dependency: Dependency,
-		concatenateCommonJsModules: boolean
-	): boolean;
-	static TRANSITIVE: symbol;
-	static LAZY_UNTIL_LOCAL: "local";
-	static LAZY_UNTIL_ID: "id";
-	static LAZY_UNTIL_FALLBACK: "*";
-	static LAZY_UNTIL_REQUEST: "@";
-	static ESM_CATEGORY: "esm";
-}
-declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
-	unusedSpecifiers?: UnusedSpecifiers;
-	namespaceSpecifiers?: string[];
 }
 type EcmaVersion =
 	| 3
@@ -7810,15 +7658,7 @@ declare interface EmbeddedSourceResult {
 	warnings?: (string | Error)[];
 	errors?: (string | Error)[];
 }
-
-/**
- * No generator options are supported for this module type.
- */
 declare interface EmptyGeneratorOptions {}
-
-/**
- * No parser options are supported for this module type.
- */
 declare interface EmptyParserOptions {}
 declare class EnableChunkLoadingPlugin {
 	/**
@@ -8104,10 +7944,6 @@ type EntryLibIndex =
 	| string[];
 type EntryNormalized =
 	(() => Promise<EntryStaticNormalized>) | EntryStaticNormalized;
-
-/**
- * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
- */
 declare interface EntryObject {
 	[index: string]: string | string[] | EntryDescription;
 }
@@ -8174,10 +8010,6 @@ declare class EntryPlugin {
 	): EntryDependency;
 }
 type EntryStatic = string | EntryObject | string[];
-
-/**
- * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
- */
 declare interface EntryStaticNormalized {
 	[index: string]: EntryDescriptionNormalized;
 }
@@ -8373,7 +8205,7 @@ declare class EnvironmentPlugin {
 	/**
 	 * Creates an instance of EnvironmentPlugin.
 	 */
-	constructor(...keys: (string | string[] | Record<string, any>)[]);
+	constructor(...keys: (string | Record<string, any> | string[])[]);
 	keys: string[];
 	defaultValues: Record<string, any>;
 
@@ -9176,10 +9008,6 @@ declare interface ExposesConfig {
 	 */
 	name?: string;
 }
-
-/**
- * Modules that should be exposed by this container. Property names are used as public paths.
- */
 declare interface ExposesObject {
 	[index: string]: string | ExposesConfig | string[];
 }
@@ -10516,6 +10344,156 @@ declare interface HandleModuleCreationOptions {
 	 */
 	checkCycle?: boolean;
 }
+declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyImportDependency {
+	ids: string[];
+	name: null | string;
+	activeExports: Set<string>;
+	otherStarExports: null | ReadonlyArray<HarmonyExportImportedSpecifierDependency>;
+	exportPresenceMode: ExportPresenceMode;
+	allStarExports: null | HarmonyStarExportsList;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	get id(): void;
+
+	/**
+	 * Returns id.
+	 * @deprecated
+	 */
+	getId(): void;
+
+	/**
+	 * Updates id.
+	 * @deprecated
+	 */
+	setId(): void;
+
+	/**
+	 * Returns the imported id.
+	 */
+	getIds(moduleGraph: ModuleGraph): string[];
+
+	/**
+	 * Updates ids using the provided module graph.
+	 */
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
+
+	/**
+	 * Returns the export mode.
+	 */
+	getMode(moduleGraph: ModuleGraph, runtime: RuntimeSpec): ExportMode;
+
+	/**
+	 * Gets star reexports.
+	 */
+	getStarReexports(
+		moduleGraph: ModuleGraph,
+		runtime: RuntimeSpec,
+		exportsInfo?: ExportsInfo,
+		importedModule?: Module
+	): {
+		exports?: Set<string>;
+		checked?: Set<string>;
+		ignoredExports: Set<string>;
+		hidden?: Set<string>;
+	};
+}
+declare class HarmonyImportDependency extends ModuleDependency {
+	/**
+	 * Creates an instance of HarmonyImportDependency.
+	 */
+	constructor(
+		request: string,
+		sourceOrder: number,
+		phase?: 0 | 1 | 2,
+		attributes?: ImportAttributes
+	);
+	phase: ImportPhaseType;
+	attributes?: ImportAttributes;
+
+	/**
+	 * Returns name of the variable for the import.
+	 */
+	getImportVar(moduleGraph: ModuleGraph): string;
+
+	/**
+	 * Gets module exports.
+	 */
+	getModuleExports(__0: DependencyTemplateContext): string;
+
+	/**
+	 * Gets import statement.
+	 */
+	getImportStatement(
+		update: boolean,
+		__1: DependencyTemplateContext
+	): [string, string];
+
+	/**
+	 * Gets linking errors.
+	 */
+	getLinkingErrors(
+		moduleGraph: ModuleGraph,
+		ids: string[],
+		additionalMessage: string
+	): undefined | WebpackError[];
+	static Template: typeof HarmonyImportDependencyTemplate;
+	static ExportPresenceModes: {
+		NONE: ExportPresenceMode;
+		WARN: ExportPresenceMode;
+		AUTO: ExportPresenceMode;
+		ERROR: ExportPresenceMode;
+		/**
+		 * Returns result.
+		 */
+		fromUserOption(str: string | false): ExportPresenceMode;
+		/**
+		 * Resolve export presence mode from parser options with a specific key and shared fallbacks.
+		 */
+		resolveFromOptions(
+			specificValue: undefined | string | false,
+			options: JavascriptParserOptions
+		): ExportPresenceMode;
+	};
+	static getNonOptionalPart: (
+		members: string[],
+		membersOptionals: boolean[]
+	) => string[];
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
+
+	/**
+	 * Returns true if the dependency is a low priority dependency.
+	 */
+	static isLowPriorityDependency(dependency: Dependency): boolean;
+
+	/**
+	 * Returns true if the dependency can be concatenated (scope hoisting).
+	 */
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean
+	): boolean;
+	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
+}
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 	constructor();
 
@@ -10526,6 +10504,9 @@ declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 		module: Module,
 		referencedModule: Module
 	): undefined | string | boolean | SortableSet<string>;
+}
+declare abstract class HarmonyImportSideEffectDependency extends HarmonyImportDependency {
+	unusedSpecifiers?: UnusedSpecifiers;
 }
 declare interface HarmonySettings {
 	ids: string[];
@@ -10544,16 +10525,16 @@ declare interface HarmonySettings {
 	/**
 	 * the statement's own dependency
 	 */
-	dependency?: ESMImportSideEffectDependency;
+	dependency?: HarmonyImportSideEffectDependency;
 }
 declare abstract class HarmonyStarExportsList {
-	dependencies: ESMExportImportedSpecifierDependency[];
+	dependencies: HarmonyExportImportedSpecifierDependency[];
 
 	/**
 	 * Processes the provided dep.
 	 */
-	push(dep: ESMExportImportedSpecifierDependency): void;
-	slice(): ESMExportImportedSpecifierDependency[];
+	push(dep: HarmonyExportImportedSpecifierDependency): void;
+	slice(): HarmonyExportImportedSpecifierDependency[];
 
 	/**
 	 * Serializes this instance into the provided serializer context.
@@ -11031,6 +11012,7 @@ declare interface HtmlParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
@@ -11050,9 +11032,6 @@ declare interface HtmlPrintOptions {
 		info: { type: string; hostType: string; as?: string }
 	) => undefined | string;
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
-	embeddedAnswers?: (
-		offer: Omit<DeferredEmbeddedSource, "build">
-	) => undefined | string;
 	deferSrcdoc?: boolean;
 }
 declare interface HtmlProcessOptions {
@@ -11125,13 +11104,6 @@ declare interface HtmlProcessOptions {
 	 * whether an `<iframe srcdoc>` is among what `deferEmbeddedSource` collects (default true); false for a caller that minifies them itself, which keeps the attribute on the normal path and its shorter delimiter
 	 */
 	deferSrcdoc?: boolean;
-
-	/**
-	 * what a print before this one was answered for each offer, which `processAsync` passes where an answer overturned a choice made without it: a body it answers is written from it rather than deferred
-	 */
-	embeddedAnswers?: (
-		offer: Omit<DeferredEmbeddedSource, "build">
-	) => undefined | string;
 
 	/**
 	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
@@ -15404,6 +15376,7 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 
@@ -16706,6 +16679,7 @@ declare interface LibraryOptions {
 
 	/**
 	 * Add a branch to the UMD wrapper for an AMD-style loader exposing `define` on a container object, given as a dot-separated path, after the `define.amd` branch.
+	 * @since 5.110.0
 	 */
 	umdAmdContainer?: string;
 
@@ -16806,10 +16780,6 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
-
-/**
- * Custom values available in the loader context.
- */
 declare interface Loader {
 	[index: string]: any;
 }
@@ -17383,11 +17353,6 @@ declare interface MapOptions {
 	 * is module
 	 */
 	module?: boolean;
-
-	/**
-	 * emit the `scopes` field from the bindings the sources declare
-	 */
-	scopes?: boolean;
 }
 declare interface MatchObject {
 	test?:
@@ -18073,7 +18038,6 @@ declare class ModuleDependency extends Dependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
-	static ESM_CATEGORY: "esm";
 }
 
 /**
@@ -18832,8 +18796,8 @@ declare interface ModuleOptions {
 	noParse?:
 		| string
 		| RegExp
-		| ((content: string) => boolean)
-		| (string | RegExp | ((content: string) => boolean))[];
+		| (string | RegExp | ((content: string) => boolean))[]
+		| ((content: string) => boolean);
 
 	/**
 	 * Specify options for each parser.
@@ -18925,8 +18889,8 @@ declare interface ModuleOptionsNormalized {
 	noParse?:
 		| string
 		| RegExp
-		| ((content: string) => boolean)
-		| (string | RegExp | ((content: string) => boolean))[];
+		| (string | RegExp | ((content: string) => boolean))[]
+		| ((content: string) => boolean);
 
 	/**
 	 * Specify options for each parser.
@@ -19654,8 +19618,8 @@ declare class NormalModule extends Module {
 			| undefined
 			| string
 			| RegExp
-			| ((content: string) => boolean)
-			| (string | RegExp | ((content: string) => boolean))[],
+			| (string | RegExp | ((content: string) => boolean))[]
+			| ((content: string) => boolean),
 		request: string
 	): boolean;
 	static getCompilationHooks(compilation: Compilation): {
@@ -20448,12 +20412,8 @@ declare class NullDependency extends Dependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
-	static ESM_CATEGORY: "esm";
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
-	constructor();
-}
-declare class NullFactory extends ModuleFactory {
 	constructor();
 }
 declare interface ObjectConfiguration {
@@ -20744,6 +20704,7 @@ declare interface Optimization {
 
 	/**
 	 * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
+	 * @since 5.110.0
 	 */
 	minimizeOptions?: OptimizationMinimizeOptions;
 
@@ -21101,11 +21062,6 @@ declare interface OptimizationMinimizeHtml {
 	 */
 	sortTokenLists?: boolean;
 }
-
-/**
- * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.
- * @since 5.110.0
- */
 declare interface OptimizationMinimizeJavascript {
 	[index: string]: any;
 }
@@ -21129,12 +21085,6 @@ declare interface OptimizationMinimizeOptions {
 	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
 	 */
 	javascript?: false | OptimizationMinimizeJavascript;
-
-	/**
-	 * Minimize JSON assets by re-serializing them without whitespace (defaults to `true` with `experiments.futureDefaults`, otherwise `false`).
-	 * @since 5.112.0
-	 */
-	json?: boolean;
 }
 
 /**
@@ -21675,12 +21625,6 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
 	 */
 	associatedObjectForCache?: object;
 }
-declare interface OptionsStreamChunks {
-	source?: boolean;
-	finalSource?: boolean;
-	columns?: boolean;
-	scopes?: boolean;
-}
 declare interface OptionsSyntaxParser {
 	/**
 	 * which edition to parse
@@ -21808,14 +21752,10 @@ declare interface OriginRecord {
 	request: string;
 }
 declare class OriginalSource extends Source {
-	constructor(
-		value: string | Buffer,
-		name: string,
-		scopeBindings?: Map<string, string>
-	);
+	constructor(value: string | Buffer, name: string);
 	getName(): string;
 	streamChunks(
-		options: OptionsStreamChunks,
+		options: StreamChunksOptions,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -21828,8 +21768,7 @@ declare class OriginalSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string,
-			scopeBindings?: Map<string, string>
+			sourceContent?: string
 		) => void,
 		_onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -21839,9 +21778,6 @@ declare class OriginalSource extends Source {
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 declare interface Output {
-	/**
-	 * Add a container for define/require functions in the AMD module.
-	 */
 	amdContainer?: string;
 
 	/**
@@ -21853,10 +21789,6 @@ declare interface Output {
 	 * Enable/disable creating async chunks that are loaded on demand.
 	 */
 	asyncChunks?: boolean;
-
-	/**
-	 * Add a comment in the UMD wrapper.
-	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
 
 	/**
@@ -22040,16 +21972,8 @@ declare interface Output {
 	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
-	library?: string | string[] | LibraryOptions | LibraryCustomUmdObject;
-
-	/**
-	 * Specify which export should be exposed as library.
-	 */
+	library?: string | LibraryOptions | string[] | LibraryCustomUmdObject;
 	libraryExport?: string | string[];
-
-	/**
-	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
-	 */
 	libraryTarget?: string;
 
 	/**
@@ -22074,6 +21998,7 @@ declare interface Output {
 
 	/**
 	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">` / `<link rel="preconnect">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `"prefetch"` / `"preload"` / `"none"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`. `initial` defaults on for ESM output (`output.module`), where native `import()` would otherwise waterfall; classic output stays opt-in.
+	 * @since 5.109.0
 	 */
 	resourceHints?:
 		| boolean
@@ -22127,10 +22052,6 @@ declare interface Output {
 	 * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
 	 */
 	trustedTypes?: string | true | TrustedTypes;
-
-	/**
-	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
-	 */
 	umdNamedDefine?: boolean;
 
 	/**
@@ -22145,6 +22066,7 @@ declare interface Output {
 
 	/**
 	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 * @since 5.109.0
 	 */
 	wasmStreamingFallback?: boolean;
 
@@ -22612,6 +22534,7 @@ declare interface OutputNormalized {
 
 	/**
 	 * Full resource-hint configuration.
+	 * @since 5.109.0
 	 */
 	resourceHints?: ResourceHintsOptions;
 
@@ -22663,6 +22586,7 @@ declare interface OutputNormalized {
 
 	/**
 	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 * @since 5.109.0
 	 */
 	wasmStreamingFallback?: boolean;
 
@@ -22789,7 +22713,6 @@ declare interface ParseResult {
 }
 declare interface ParsedDataURI {
 	mediaType: string;
-	parameters: string;
 	base64: boolean;
 	payload: string;
 }
@@ -23771,7 +23694,7 @@ declare interface PerformanceOptions {
 	osDependentRules?: boolean;
 
 	/**
-	 * Report '/*#__PURE__* /' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).
+	 * Report '/*#__PURE__*\/' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	pureAnnotations?: boolean;
@@ -23974,7 +23897,7 @@ declare class PrefixSource extends Source {
 	getPrefix(): string;
 	original(): Source;
 	streamChunks(
-		options: OptionsStreamChunks,
+		options: StreamChunksOptions,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -23987,8 +23910,7 @@ declare class PrefixSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string,
-			scopeBindings?: Map<string, string>
+			sourceContent?: string
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -24073,12 +23995,6 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * pieces emptied by {@link retract}, so it sees what the output reads as.
 	 */
 	dropTrailing(from: number, charCode: number): void;
-
-	/**
-	 * Stand `text` in place of the output's end, where that is `printed` followed
-	 * only by `closer`s — what the printer wrote after a value the input ran out in.
-	 */
-	replaceEnd(printed: string, text: string, closer: number): boolean;
 
 	/**
 	 * Run the node printer for `node` and store what it returns (the grammar calls
@@ -24471,16 +24387,6 @@ declare interface ProvidesConfig {
 	eager?: boolean;
 
 	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
-	exclude?: SharedModuleFilter;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
-	include?: SharedModuleFilter;
-
-	/**
 	 * Key in the share scope under which the shared modules should be stored.
 	 */
 	shareKey?: string;
@@ -24495,10 +24401,6 @@ declare interface ProvidesConfig {
 	 */
 	version?: string | false;
 }
-
-/**
- * Modules that should be provided as shared modules to the share scope. Property names are used as share keys.
- */
 declare interface ProvidesObject {
 	[index: string]: string | ProvidesConfig;
 }
@@ -24549,7 +24451,7 @@ declare class RawSource extends Source {
 	constructor(value: string | Buffer, convertToString?: boolean);
 	isBuffer(): boolean;
 	streamChunks(
-		options: OptionsStreamChunks,
+		options: StreamChunksOptions,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -24562,8 +24464,7 @@ declare class RawSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string,
-			scopeBindings?: Map<string, string>
+			sourceContent?: string
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -24613,11 +24514,6 @@ declare interface RawSourceMap {
 	 * ignore list
 	 */
 	ignoreList?: number[];
-
-	/**
-	 * encoded `scopes` field of the "Scopes" proposal
-	 */
-	scopes?: string;
 }
 declare interface Read<
 	TBuffer extends NodeJS.ArrayBufferView = NodeJS.ArrayBufferView
@@ -25342,10 +25238,6 @@ declare interface RemotesConfig {
 	 */
 	shareScope?: string;
 }
-
-/**
- * Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.
- */
 declare interface RemotesObject {
 	[index: string]: string | RemotesConfig | string[];
 }
@@ -25499,7 +25391,7 @@ declare class ReplaceSource extends Source {
 	insert(pos: number, newValue: string, name?: string): void;
 	original(): Source;
 	streamChunks(
-		options: OptionsStreamChunks,
+		options: StreamChunksOptions,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -25512,8 +25404,7 @@ declare class ReplaceSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string,
-			scopeBindings?: Map<string, string>
+			sourceContent?: string
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -28232,17 +28123,6 @@ type ScopeType =
 	| "block"
 	| "class-field-initializer"
 	| "class-static-block";
-declare interface ScopesReplay {
-	/**
-	 * bindings by source index
-	 */
-	bindings: (undefined | Map<string, string>)[];
-
-	/**
-	 * number of names the stream reported
-	 */
-	names: number;
-}
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
@@ -28339,19 +28219,9 @@ declare interface SharedConfig {
 	eager?: boolean;
 
 	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
-	exclude?: SharedModuleFilter;
-
-	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: string | false;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
-	include?: SharedModuleFilter;
 
 	/**
 	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
@@ -28388,26 +28258,6 @@ declare interface SharedConfig {
 	 */
 	version?: string | false;
 }
-
-/**
- * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
- * @since 5.112.0
- */
-declare interface SharedModuleFilter {
-	/**
-	 * Request remainder after a key ending in a slash (e.g. 'get' for 'lodash/get' under 'lodash/'). Has no effect on other keys.
-	 */
-	request?: string | RegExp;
-
-	/**
-	 * Version range the module's version (from its description file or the 'version' option) is tested against. A consumed module is tested through its fallback module, so this has no effect on consumes without one.
-	 */
-	version?: string;
-}
-
-/**
- * Modules that should be shared in the share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
- */
 declare interface SharedObject {
 	[index: string]: string | SharedConfig;
 }
@@ -28946,12 +28796,6 @@ declare interface SourceMapDevToolPluginOptions {
 	publicPath?: string;
 
 	/**
-	 * Emit the 'scopes' field, which tells a debugger the generated expression each imported ESM binding reads, so it resolves under the name the source uses.
-	 * @since 5.112.0
-	 */
-	scopes?: boolean;
-
-	/**
 	 * Provide a custom value for the 'sourceRoot' property in the SourceMap.
 	 */
 	sourceRoot?: string;
@@ -28983,7 +28827,7 @@ declare class SourceMapSource extends Source {
 		undefined | boolean
 	];
 	streamChunks(
-		options: OptionsStreamChunks,
+		options: StreamChunksOptions,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -28996,8 +28840,7 @@ declare class SourceMapSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string,
-			scopeBindings?: Map<string, string>
+			sourceContent?: string
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -29469,7 +29312,7 @@ declare abstract class StackedMap<K, V> {
  * Updates map size using the provided map.
  */
 declare interface StarListDeserializerContext {
-	read: () => ESMExportImportedSpecifierDependency[];
+	read: () => HarmonyExportImportedSpecifierDependency[];
 	rest: ObjectDeserializerContextObjectMiddlewareObject_2<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
@@ -29479,7 +29322,7 @@ declare interface StarListDeserializerContext {
  */
 declare interface StarListSerializerContext {
 	write: (
-		value: ESMExportImportedSpecifierDependency[]
+		value: HarmonyExportImportedSpecifierDependency[]
 	) => ObjectSerializerContextObjectMiddlewareObject_3<[]>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
@@ -30401,6 +30244,11 @@ type StatsValue =
 	| "normal"
 	| "detailed"
 	| "verbose";
+declare interface StreamChunksOptions {
+	source?: boolean;
+	finalSource?: boolean;
+	columns?: boolean;
+}
 
 /**
  * Returns location of targetPath relative to rootPath.
@@ -30593,9 +30441,6 @@ declare interface TemplatePathFn<T extends PathData = PathData> {
 declare interface Terser {
 	minify: typeof minify;
 	phases: string[];
-}
-declare interface TerserFormatOptions {
-	[index: string]: any;
 }
 declare interface TimestampAndHash {
 	safeTime: number;
@@ -30794,27 +30639,6 @@ declare class TopLevelSymbol {
 	 */
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
-}
-declare interface TreeOptions {
-	/**
-	 * whether the source is a module
-	 */
-	module?: boolean;
-
-	/**
-	 * whether `return` may sit at the top level
-	 */
-	bare_returns?: boolean;
-
-	/**
-	 * the name tokens carry
-	 */
-	filename?: null | string;
-
-	/**
-	 * whether a leading `#!` line is a comment
-	 */
-	shebang?: boolean;
 }
 
 /**
@@ -32344,7 +32168,7 @@ declare namespace exports {
 	export namespace dependencies {
 		export {
 			ModuleDependency,
-			ESMImportDependency as HarmonyImportDependency,
+			HarmonyImportDependency,
 			ConstDependency,
 			NullDependency
 		};
@@ -32534,10 +32358,6 @@ declare namespace exports {
 			export namespace printer {
 				export let load: () => Promise<Terser>;
 				export let PHASES: Phase[];
-				export let FORMAT_DEFAULTS: TerserFormatOptions;
-				export let createTerserTree: (
-					__0?: any
-				) => (source: string, options: TreeOptions) => any;
 			}
 		}
 		export {
@@ -32688,12 +32508,6 @@ declare namespace exports {
 			GetChunkFilenameRuntimeModule,
 			LoadScriptRuntimeModule
 		};
-	}
-	export namespace module {
-		export { NullFactory };
-	}
-	export namespace template {
-		export { DependencyTemplate };
 	}
 	export namespace prefetch {
 		export {
@@ -33904,11 +33718,6 @@ declare namespace exports {
 			) => Serializer<D, S, C>;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
-		export const makeSerializable: <T extends Constructor>(
-			Constructor: T,
-			request: string,
-			name?: null | string
-		) => void;
 		export const cleverMerge: <T, O>(
 			first?: null | T,
 			second?: null | O
@@ -33950,40 +33759,15 @@ declare namespace exports {
 			export let embeddedText: (
 				answer?: string | { code?: string }
 			) => undefined | string;
-			export let encodeDataURIPayload: (text: string) => string;
 			export let languageOfFilename: (
 				filename: null | string
 			) => undefined | string;
 			export let languageOfMediaType: (mediaType: string) => undefined | string;
 			export let parseDataURI: (uri: string) => null | ParsedDataURI;
-			export let readEmbeddedDataURI: (
-				uri: string
-			) => null | { parsed: ParsedDataURI; type: string; payload: string };
 		}
 		export { LazySet, RequestShortener };
 	}
 	export namespace sources {
-		export namespace util {
-			export namespace scopes {
-				export {
-					addScopesToSourceMap,
-					collectSourceScopes,
-					createScopeCollector,
-					createScopesWriter,
-					encodeScopes
-				};
-			}
-			export namespace stringBufferUtils {
-				export {
-					disableDualStringBufferCaching,
-					enableDualStringBufferCaching,
-					enterStringInterningRange,
-					exitStringInterningRange,
-					internString,
-					isDualStringBufferCachingEnabled
-				};
-			}
-		}
 		export {
 			Source,
 			RawSource,

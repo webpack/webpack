@@ -26,7 +26,7 @@ const ts = require("typescript");
 
 const ROOT = path.resolve(__dirname, "..");
 const SCHEMAS_DIRECTORY = path.resolve(ROOT, "schemas");
-const TYPES_DIRECTORY = path.resolve(ROOT, "schemas", "types");
+const TYPES_DIRECTORY = path.resolve(ROOT, "declarations");
 const VOCABULARY_NAME = "vocabulary";
 
 const bootstrap = process.argv.includes("--bootstrap");
@@ -644,7 +644,7 @@ const describe = (schema, written) => {
  * @typedef {object} EmitContext
  * @property {{ text: string, name: string }[]} lifted declarations pulled out of a nested node
  * @property {Map<string, Set<string>>} imports names to import, keyed by module
- * @property {Map<string, string>} said each definition's own description
+ * @property {Map<string, Record<string, EXPECTED_ANY>>} said the definitions by name
  */
 
 /**
@@ -1144,6 +1144,13 @@ const tagsAreWholeType = (stated) =>
 	isObject(stated.properties) &&
 	Object.keys(stated.properties).length === 0;
 
+/**
+ * The item type of an array, with the description written in front of it.
+ * @param {ts.TypeNode} node the item type
+ * @param {ts.TypeChecker} checker the checker that resolves its references
+ * @param {Map<string, string>} known what each name declared in the same file says
+ * @returns {Record<string, EXPECTED_ANY>} the schema the items are
+ */
 const describedItems = (node, checker, known) => {
 	const items = fromTypeNode(node, checker, known, 1);
 	const held = ts.isUnionTypeNode(node) ? node.types[0] : node;
