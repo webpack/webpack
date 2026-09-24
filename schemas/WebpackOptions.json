@@ -4415,9 +4415,29 @@
           "description": "Minimize JSON assets by re-serializing them without whitespace (defaults to `true` with `experiments.futureDefaults`, otherwise `false`).",
           "type": "boolean",
           "added": "5.112.0"
+        },
+        "xml": {
+          "description": "Minimize `.svg` and `.xml` assets: `false` disables it, an object enables it. Absent means off unless `experiments.futureDefaults` is set.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/OptimizationMinimizeXml"
+            }
+          ],
+          "experimental": true,
+          "added": "5.112.0"
         }
       },
       "added": "5.110.0"
+    },
+    "OptimizationMinimizeXml": {
+      "description": "What the XML minimizer does. It has no switches of its own yet: the stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.",
+      "type": "object",
+      "additionalProperties": false,
+      "experimental": true,
+      "added": "5.112.0"
     },
     "OptimizationNormalized": {
       "description": "Enables/Disables integrated optimizations.",

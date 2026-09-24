@@ -3406,7 +3406,20 @@ export interface OptimizationMinimizeOptions {
 	 * @since 5.112.0
 	 */
 	json?: boolean;
+	/**
+	 * Minimize `.svg` and `.xml` assets: `false` disables it, an object enables it. Absent means off unless `experiments.futureDefaults` is set.
+	 * @since 5.112.0
+	 * @experimental
+	 */
+	xml?: false | OptimizationMinimizeXml;
 }
+
+/**
+ * What the XML minimizer does. It has no switches of its own yet: the stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * @since 5.112.0
+ * @experimental
+ */
+export interface OptimizationMinimizeXml {}
 
 /**
  * Enables/Disables integrated optimizations.
