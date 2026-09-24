@@ -20,6 +20,9 @@ module.exports = {
 			);
 		}
 
+		// The extension is read before the fragment, so `#a.css` claims nothing.
+		expect(read("1/data.txt")).toBe("not   css  {\n");
+
 		// Only the second build enables native CSS and HTML.
 		expect(read("1/style.css")).toBe(".fragment{color:red}");
 		expect(read("1/page.html")).toBe(
