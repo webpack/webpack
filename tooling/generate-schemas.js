@@ -955,6 +955,17 @@ const fromMembers = (members, checker, known, head) => {
 		});
 		if (!member.questionToken) required.push(name);
 	}
+	return toObjectSchema(head, properties, required, additionalProperties);
+};
+
+/**
+ * @param {Record<string, EXPECTED_ANY>} head keywords the declaration carries
+ * @param {Record<string, EXPECTED_ANY>} properties the members it declares
+ * @param {string[]} required the members it does not make optional
+ * @param {Record<string, EXPECTED_ANY> | boolean | undefined} additionalProperties what else it admits
+ * @returns {Record<string, EXPECTED_ANY>} the object schema they are
+ */
+const toObjectSchema = (head, properties, required, additionalProperties) => {
 	const stated = head.required;
 	if (typeof stated === "string") {
 		const order = stated.split(",").map((name) => name.trim());
@@ -968,6 +979,47 @@ const fromMembers = (members, checker, known, head) => {
 		...(named ? { properties } : {}),
 		...(required.length > 0 ? { required } : {})
 	};
+};
+
+/**
+ * The same as `fromMembers`, for an object written as a JSDoc `@typedef` whose
+ * members are `@property` tags rather than an interface's.
+ * @param {readonly ts.JSDocPropertyLikeTag[]} propertyTags the `@property` tags
+ * @param {ts.TypeChecker} checker the checker that resolves their types
+ * @param {Map<string, string>} known what each name declared in the file says
+ * @param {Record<string, EXPECTED_ANY>} head keywords the typedef carries
+ * @returns {Record<string, EXPECTED_ANY>} the object schema they are
+ */
+const fromPropertyTags = (propertyTags, checker, known, head) => {
+	/** @type {Record<string, EXPECTED_ANY>} */
+	const properties = {};
+	/** @type {string[]} */
+	const required = [];
+	for (const tag of propertyTags) {
+		const held = /** @type {ts.JSDocTypeExpression} */ (tag.typeExpression);
+		const optional = ts.isJSDocOptionalType(held.type);
+		const node = optional
+			? /** @type {ts.JSDocOptionalType} */ (held.type).type
+			: held.type;
+		const name = tag.name.getText();
+		const written =
+			typeof tag.comment === "string"
+				? unescapeComment(tag.comment.trim())
+				: "";
+		const value = fromTypeNode(node, checker, known);
+		// WHY: a member written as a bare reference carries the definition's own
+		// documentation, which the schema states there rather than twice.
+		const echoed =
+			Boolean(value.$ref) &&
+			known.get(readReference(value.$ref).name) === written;
+		const description = echoed ? "" : written;
+		properties[name] = applyTypeOnly({
+			...(description ? { description } : {}),
+			...wrapReference(value, description !== "")
+		});
+		if (!optional && !tag.isBracketed) required.push(name);
+	}
+	return toObjectSchema(head, properties, required, false);
 };
 
 /**
