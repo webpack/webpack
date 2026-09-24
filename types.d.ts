@@ -21082,7 +21082,21 @@ declare interface OptimizationMinimizeOptions {
 	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
 	 */
 	javascript?: false | OptimizationMinimizeJavascript;
+
+	/**
+	 * Minimize `.svg` and `.xml` assets: `false` disables it, an object enables it. Absent means off unless `experiments.futureDefaults` is set.
+	 * @since 5.112.0
+	 * @experimental
+	 */
+	xml?: false | OptimizationMinimizeXml;
 }
+
+/**
+ * What the XML minimizer does. It has no switches of its own yet: the stylesheets an SVG or XHTML element holds are minified with `optimization.minimizeOptions.css` for the target's browsers.
+ * @since 5.112.0
+ * @experimental
+ */
+declare interface OptimizationMinimizeXml {}
 
 /**
  * Enables/Disables integrated optimizations.
@@ -33572,6 +33586,26 @@ declare namespace exports {
 				) => string;
 			}
 			export { SourceProcessorSyntaxClass_1 as SourceProcessor };
+		}
+		export function xmlMinify(
+			input: { [index: string]: string | Buffer },
+			sourceMap?: RawSourceMap,
+			minimizerOptions?: {
+				environment?: CssEnvironment;
+				css?: {
+					convertLengthUnits?: boolean;
+					convertApproximateColors?: boolean;
+					dropOverriddenDeclarations?: boolean;
+					rewriteCustomProperties?: boolean;
+					unusedSymbols?: string[];
+					pseudoClasses?: { [index: string]: string };
+				};
+			}
+		): Promise<{ code: string }>;
+		export namespace xmlMinify {
+			export let supportsWorkerThreads: () => boolean;
+			export let getTypes: () => string[];
+			export let filter: (name: string) => boolean;
 		}
 		export { HtmlModulesPlugin };
 	}

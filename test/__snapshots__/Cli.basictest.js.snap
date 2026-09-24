@@ -12575,6 +12575,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-options-xml": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+        "multiple": false,
+        "path": "optimization.minimizeOptions.xml",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-xml": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+        "multiple": false,
+        "path": "optimization.minimize.xml",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize \`.svg\` and \`.xml\` assets: \`false\` disables it, an object enables it. Absent means off unless \`experiments.futureDefaults\` is set.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-module-ids": Object {
     "configs": Array [
       Object {
