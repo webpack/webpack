@@ -4,414 +4,295 @@
 
 ## Conventions in this guide
 
-A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory and not optional**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Reviewers have repeatedly flagged that REQUIRED sections (especially the [Pull request body](#pull-request-body)) are being skipped or partially filled in — doing so blocks the PR every time. Read each REQUIRED section in full whenever it applies; do not rely on memory or on a previous task's output. Sections without the callout are normal guidance — apply judgement.
+A `> [!REQUIRED]` callout directly under a heading makes that whole section **mandatory**: follow it exactly — do not paraphrase, skip, or substitute a similar-looking convention from other tooling. Reviewers keep flagging skipped or partly filled REQUIRED sections (especially the [Pull request body](#pull-request-body)), and every such skip blocks the PR — so re-read each one in full whenever it applies instead of relying on memory or a previous task's output. Sections without the callout are guidance — apply judgement.
 
 ## Project overview
 
-webpack is a JavaScript module bundler. It builds a dependency graph from entry modules and emits optimized static assets (chunks) for browsers, Node.js, and other targets. The config API is defined by JSON schemas and everything is wired through a `tapable` plugin/hook architecture.
+webpack is a JavaScript module bundler: it builds a dependency graph from entry modules and emits optimized static assets (chunks) for browsers, Node.js and other targets. The config API is defined by JSON schemas, and everything is wired through `tapable` hooks.
 
-**Core model:** a `Compiler` drives the build; each run creates a `Compilation` holding the module graph (`Module`s) and output `Chunk`s, which is then `seal`ed and `emit`ted. Plugins expose an `apply(compiler)` method and tap the `tapable` hooks they need.
+**Core model:** a `Compiler` drives the build; each run creates a `Compilation` holding the module graph (`Module`s) and output `Chunk`s, which is `seal`ed and `emit`ted. Plugins expose `apply(compiler)` and tap the hooks they need.
 
 ## Tech stack
 
-- **Language:** JavaScript. `lib/` is **CommonJS only**; types are declared via JSDoc `@typedef` and compiled into `types.d.ts`.
+- **Language:** JavaScript. `lib/` is **CommonJS only**; types are JSDoc `@typedef`s compiled into `types.d.ts`.
 - **Package manager:** **yarn** (not npm).
-- **Tests:** jest, run through the `test:base` wrapper (never bare `jest`).
-- **Type checking / generation:** TypeScript, driven over the JSDoc annotations.
+- **Tests:** jest, through the `test:base` wrapper (never bare `jest`).
+- **Types:** TypeScript over the JSDoc annotations.
 
 ## Commands
 
-All commands are defined in `package.json` `scripts`.
+All defined in `package.json` `scripts`.
 
-| Command                                                              | What it does                                                                                                         |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `yarn fix`                                                           | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step.      |
-| `yarn setup`                                                         | Install dependencies and link the checkout in as `webpack`; non-interactive off a TTY.                               |
-| `yarn fix:special`                                                   | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code.                                |
-| `yarn lint`                                                          | Full lint: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck (what CI runs).            |
-| `yarn tsc`                                                           | TypeScript type check of `lib/` JSDoc (catches type errors in annotations).                                          |
-| `yarn validate:changeset`                                            | Validate the pending `.changeset/` files.                                                                            |
-| `yarn test:base --testPathPatterns="<pattern>"`                      | Run targeted tests. Also `yarn test:base -t "<name>"`.                                                               |
-| `yarn test:unit`                                                     | Run all `*.unittest.js`.                                                                                             |
-| `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                          |
-| `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                             |
-| `yarn test:syntax-equivalence`                                       | Holds the HTML/CSS printers to a real browser's reading of their output, over `configCases` and `test/external/wpt`. |
-| `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                           |
-| `yarn test:size`                                                     | Size of the generated code over all `configCases/` (per asset, plus runtime module counts per runtime).              |
-| `yarn cover:unit`                                                    | Unit-test coverage.                                                                                                  |
-| `yarn types:cover`                                                   | Type-coverage report (share of `lib/` that is precisely typed).                                                      |
-| `yarn build:examples`                                                | Build the `examples/` (verify after changing options).                                                               |
-| `yarn test`                                                          | Full suite — don't run unless asked.                                                                                 |
+- `yarn fix` — `fix:code` (ESLint) + `fix:special` + `fmt` (Prettier). Prefer as the final step.
+- `yarn setup` — Install dependencies and link the checkout as `webpack`; non-interactive off a TTY.
+- `yarn fix:special` — Regenerate `types.d.ts`, declarations, schema validators and generated runtime code.
+- `yarn lint` — What CI runs: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck.
+- `yarn tsc` — Type check the `lib/` JSDoc.
+- `yarn validate:changeset` — Validate pending `.changeset/` files.
+- `yarn test:base --testPathPatterns="<pattern>"` / `-t "<name>"` — Targeted tests.
+- `yarn test:unit` — All `*.unittest.js`.
+- `yarn test:integration` — Integration suites (`basictest`/`longtest`/`test`).
+- `yarn test:test262` / `test:html5lib` / `test:css-parsing` — Spec-conformance suites.
+- `yarn test:syntax-equivalence` — HTML/CSS printers vs a real browser's reading of their output (`configCases`, `wpt`).
+- `yarn test:base -u` — Update snapshots (eyeball the diff first).
+- `yarn test:size` — Generated-code size over all `configCases/` (per asset, plus runtime modules per runtime).
+- `yarn cover:unit` — Unit-test coverage.
+- `yarn types:cover` — Share of `lib/` that is precisely typed.
+- `yarn build:examples` — Build `examples/` (verify after changing options).
+- `yarn test` — Full suite — only when asked.
 
-Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. See [TESTING_DOCS.md](TESTING_DOCS.md) for how to run a single case.
+Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag lives only in `test:base`, and bare jest crashes the ESM/test262 suites. Running a single case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
-**CI must come back green in full** — see [After opening the PR](#after-opening-the-pr--every-check-ends-green); the jobs are defined in `.github/workflows/`, which is the list to read rather than one memorized here. Two of them behave unlike the rest and are worth knowing about: the benchmark job's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs the Node suites don't. Watch both when touching hot paths or large test fixtures. Every job that costs more than a few minutes waits on `lint`, `basic` and `unit` — the three a merge needs anyway — so on a pull request where one of the three is red most of the run reports `skipped` rather than a result, and going green is what starts it. The benchmark shards are in that set: on a pull request `test.yml` calls `benchmarks.yml` behind the same three, which is why they report as `benchmarks / benchmark (1/4)` there and as plain `benchmark (1/4)` on `main`, where nothing gates them so CodSpeed always has a baseline to compare against.
+**CI must come back fully green** ([details](#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Two jobs are unusual — watch both when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one of them is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (reported as `benchmarks / benchmark (1/4)`); on `main` nothing gates them (plain `benchmark (1/4)`) so CodSpeed always has a baseline.
 
 ## Architecture
 
 > [!REQUIRED]
 
-The directory listings below are the canonical map of the repository. **Whenever you add, rename, or remove a top-level directory** (under the repo root, under `lib/`, under `test/`, or under `schemas/`) you must update the matching bullet here in the same commit. CI does not check this — drift is only caught by humans, which is why it must be part of the change itself. If a new directory does not fit any existing group, add a new group rather than dropping the entry.
+This is the canonical repository map. **When you add, rename or remove a top-level directory** (under the repo root, `lib/`, `test/` or `schemas/`), update its bullet here in the same commit — CI doesn't check it, only humans catch drift. If a directory fits no group, add a group rather than dropping the entry.
 
 **Source**
 
-- `lib/` — Main source code (CommonJS only; types declared via JSDoc `@typedef`).
-  Its **root is the core** — what a build is made of (`Compilation`, `Compiler`,
-  `Dependency`, `MultiCompiler`) and what publishes it (`webpack.js`, `index.js`)
-  — alongside the re-export shims that hold the old `webpack/lib/<Name>` paths
-  open for the ecosystem. **A plugin never belongs there.** It goes in the
-  directory for what it acts on — the asset set in `lib/output/`, the module
-  graph in `lib/optimize/`, the entry in `lib/entry/` — and when nothing fits, a
-  new directory is added, with its bullet in this map, in the same commit. A file
-  that leaves the root owes a shim at its old path only once it has shipped under
-  it; `yarn find-deep-imports --check` and `deepPathShims.unittest.js` are what
-  say so.
-  - `lib/asset/` — Asset modules (images, fonts, raw files); includes the `asset/webmanifest` type that parses `<link rel="manifest">` icon URLs.
-  - `lib/async-modules/` — Top-level await.
-  - `lib/bun/` — Bun target externals preset (`bun:*` and node.js built-in modules).
-  - `lib/cache/` — Filesystem and memory caches.
-  - `lib/config/` — Everything between a user's config object and a `Compiler`:
-    `validateSchema` checks it against the schema, `normalization.js` canonicalizes its
-    shape, `defaults.js` fills values in, and `WebpackOptionsApply` reads the result into
-    the plugins it implies. `WebpackOptionsDefaulter` is the normalize-then-default pair
-    under one deprecated name, and `OptionsApply` the base class the apply step extends.
-    Also holds the target presets, `defineConfig`, and `PlatformPlugin`, which pins the
-    target platform a `target: false` build cannot infer. `cli.js` is the same schema read
-    the other way — it derives the CLI flags from it and applies parsed arguments back onto
-    a config, which is why webpack-cli reaches it through `webpack.cli`. The terminal colors
-    that object also carries are `lib/util/terminalColors.js`, kept apart so that reading a
-    color does not parse the options schema.
+- `lib/` — main source (CommonJS; JSDoc types). Its **root is the core** — what a build is made of (`Compilation`, `Compiler`, `Dependency`, `MultiCompiler`) and what publishes it (`webpack.js`, `index.js`) — plus re-export shims keeping old `webpack/lib/<Name>` paths open for the ecosystem. **A plugin never belongs in the root**: it goes in the directory for what it acts on (asset set → `lib/output/`, module graph → `lib/optimize/`, entry → `lib/entry/`); if none fits, add a directory, with its bullet here, in the same commit. A file leaving the root owes a shim at its old path only once it has shipped there; `yarn find-deep-imports --check` and `deepPathShims.unittest.js` decide.
+  - `lib/asset/` — asset modules (images, fonts, raw files), incl. the `asset/webmanifest` type parsing `<link rel="manifest">` icon URLs.
+  - `lib/async-modules/` — top-level await.
+  - `lib/bun/` — Bun target externals preset (`bun:*` and Node built-ins).
+  - `lib/cache/` — filesystem and memory caches.
+  - `lib/config/` — user config → `Compiler`: `validateSchema` checks the schema, `normalization.js` canonicalizes the shape, `defaults.js` fills values, `WebpackOptionsApply` applies the implied plugins. `WebpackOptionsDefaulter` is the deprecated normalize+default pair; `OptionsApply` is the apply step's base class. Also the target presets, `defineConfig`, and `PlatformPlugin` (pins the platform a `target: false` build can't infer). `cli.js` reads the schema the other way — derives CLI flags and applies parsed args back — hence webpack-cli uses it via `webpack.cli`. That object's terminal colors are `lib/util/terminalColors.js`, kept apart so reading a color doesn't parse the schema.
   - `lib/container/` — Module Federation.
-  - `lib/context/` — Context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
-  - `lib/css/` — CSS Modules, CSS parsing and generation. `syntax.js` names its two
-    halves the way `javascript` does: `syntax-parser.js` reads a stylesheet and
-    `syntax-printer.js` writes one back out. `syntax.js` reaches both through a
-    getter, as `javascript` does, so a walk that never prints never loads the
-    printer; it publishes those two and `SourceProcessor`, and nothing else — a
-    helper it used to re-export is read off `parser` or `printer` instead.
-  - `lib/debug/` — Debug helpers.
-  - `lib/define/` — Replacing a free identifier with a constant at parse time:
-    `DefinePlugin`, and the two plugins that are a `DefinePlugin` fed from somewhere
-    else — `EnvironmentPlugin` from `process.env` and `DotenvPlugin` from a `.env`
-    file. `ProvidePlugin` substitutes an import rather than a value, so it is not one
-    of these and lives in `lib/provide/`.
-  - `lib/dependencies/` — The concrete `Dependency` subclasses and their templates
-    (ESMImport, CommonJsRequire, RequireContext, …); the `Dependency` they extend is
-    in `lib/graph/` and the `DependencyTemplate` in `lib/template/`.
-  - `lib/devtool/` — Source maps: the `devtool` plugins and the filename helpers they template with.
-  - `lib/diagnostics/` — Plugins that raise a build-wide error or warning of their own:
-    a case-insensitive filesystem collision, a deprecated option, a missing `mode`, and
-    `IgnoreWarningsPlugin`, which filters what the others produced. `NoEmitOnErrorsPlugin`
-    joins them because it reacts to the errors rather than raising one. The classes they
-    construct live in `lib/errors/`, and the `performance` hints in `lib/performance/`.
+  - `lib/context/` — context modules (`require.context`, dynamic request directories) and the plugins narrowing them.
+  - `lib/css/` — CSS Modules, parsing, generation. `syntax.js` reaches `syntax-parser.js` (reads) and `syntax-printer.js` (writes) through getters, like `javascript`, so a walk that never prints never loads the printer. It publishes those two plus `SourceProcessor` only — read a former re-export off `parser` or `printer`.
+  - `lib/debug/` — debug helpers.
+  - `lib/define/` — replacing a free identifier with a constant at parse time: `DefinePlugin`, plus `EnvironmentPlugin` (fed from `process.env`) and `DotenvPlugin` (from `.env`). `ProvidePlugin` substitutes an import, not a value → `lib/provide/`.
+  - `lib/dependencies/` — concrete `Dependency` subclasses and their templates (ESMImport, CommonJsRequire, RequireContext, …); the base `Dependency` is in `lib/graph/`, `DependencyTemplate` in `lib/template/`.
+  - `lib/devtool/` — source maps: the `devtool` plugins and their filename helpers.
+  - `lib/diagnostics/` — plugins raising a build-wide error/warning of their own (case-insensitive filesystem collision, deprecated option, missing `mode`), `IgnoreWarningsPlugin` (filters them) and `NoEmitOnErrorsPlugin` (reacts to errors). Their classes live in `lib/errors/`; `performance` hints in `lib/performance/`.
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
-  - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
-  - `lib/entry/` — The `entry` option: `EntryPlugin`, the `EntryOptionPlugin` that reads
-    the option into it, and `DynamicEntryPlugin` for a function entry. `Entrypoint` is a
-    `ChunkGroup` rather than one of these, so it lives beside `ChunkGroup` in `lib/graph/`.
-  - `lib/errors/` — Error and warning class hierarchy.
+  - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — target-specific runtime templates and externals presets.
+  - `lib/entry/` — the `entry` option: `EntryPlugin`, `EntryOptionPlugin` (reads the option into it), `DynamicEntryPlugin` (function entry). `Entrypoint` is a `ChunkGroup` → `lib/graph/`.
+  - `lib/errors/` — error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
-  - `lib/externals/` — External modules: the `externals` option's module, factory plugin and the presets built on them.
-  - `lib/fs/` — The filesystem webpack reads and writes through: `fs.js` declares the
-    `InputFileSystem` / `OutputFileSystem` surface every caller is typed against and the
-    path helpers built on it, and `FileSystemInfo` records the snapshots, timestamps and
-    build dependencies a watch or a cache decides staleness from. A filesystem a target
-    supplies is not one of these — `NodeWatchFileSystem` stays in `lib/node/`. The old
-    `lib/FileSystemInfo` path stays as a re-export, since html-webpack-plugin types
-    against it.
-  - `lib/graph/` — The module and chunk graphs a compilation holds, and the things they
-    are graphs of: `ModuleGraph` and its connections, `ChunkGraph` and the
-    `buildChunkGraph` that fills it, and the `ExportsInfo` recording what each module
-    exports and who uses it. The edges are `Dependency`, held by a `DependenciesBlock`
-    (`AsyncDependenciesBlock` where the block is loaded on demand); the chunk side holds
-    `Chunk`, `ChunkGroup`, `Entrypoint` and `HotUpdateChunk`. A `Dependency` subclass a
-    plugin owns lives in `lib/dependencies/` and the `DependencyTemplate` it prints
-    through in `lib/template/` — this holds the base classes every build has.
-  - `lib/hmr/` — Hot Module Replacement: `HotModuleReplacementPlugin` and the runtime
-    modules, lazy-compilation backend and helpers it drives.
-  - `lib/html/` — Experimental HTML support. `syntax.js` names its two halves the
-    way `javascript` does: `syntax-parser.js` reads a document — tokenizer, §13.2
-    tree construction and the entity table — and `syntax-printer.js` writes one back
-    out. `syntax.js` reaches both through a getter, as `javascript` does, so a walk
-    that never prints never loads the printer; it publishes those two and
-    `SourceProcessor`, and nothing else. `builtinEmbeddedRenderer` is what hands
-    each body a document embeds to webpack's own minifier for that language.
-  - `lib/ids/` — Module/chunk id assignment plugins, and `RecordIdsPlugin`, which persists
-    the assignment across builds through `recordsPath`.
-  - `lib/javascript/` — JavaScript parsing (webpack's own ECMAScript parser, ported from acorn), generation, exports analysis, and the always-on plugins implementing the language surface a build gets for free — `APIPlugin` (`__webpack_require__` and the other free variables), `CompatibilityPlugin`, `ConstPlugin`, `ExportsInfoApiPlugin`, `JavascriptMetaInfoPlugin`, `UseStrictPlugin` and `WebpackIsIncludedPlugin`, each applied unconditionally by `WebpackOptionsApply` and none of them on the public API. A parser plugin the user constructs is not one of these: `DefinePlugin` lives in `lib/define/` and `ProvidePlugin` in `lib/provide/`, because what decides the home is who applies it, not which parser it taps. `syntax.js` is the pair `css` and `html` name the same way — `parser` and `printer` — and reaches each through a getter, so parsing never loads the printer and printing never loads the parser. `syntax-parser.js` is the parser a build reads source with: tokenizer, acorn-derived core and every production in one file, since a build that parses at all reaches the productions, and the struct-of-arrays rewrite ahead of it moves node creation through them. `regexp.js` (the pattern validator) is the one piece still loaded on demand, because only a pattern the host engine itself rejected reaches it — never `require` it from a path a build takes. `syntax-printer.js` is where JavaScript is printed back out: `jsMinify.js`, the `minify` function the default minimizer dispatches JavaScript to, goes through it rather than through terser's published entry point, because that loader reads terser's own sources — which is what lets a phase webpack implements itself replace the method terser installs. The name says where this is going: each phase webpack takes over is one less thing terser does. A phase states what it reads with `supports`, and a minifier that moved any of it, or a runtime that cannot import those sources, keeps its own. Add a phase to the `PHASES` list there and nowhere else, and hold it to writing byte-for-byte what it replaced.
+  - `lib/externals/` — the `externals` option's module, factory plugin and presets.
+  - `lib/fs/` — the filesystem webpack reads/writes through: `fs.js` declares the `InputFileSystem`/`OutputFileSystem` surface callers are typed against, plus path helpers; `FileSystemInfo` records the snapshots, timestamps and build dependencies watch and cache judge staleness from. A target-supplied filesystem stays with its target (`NodeWatchFileSystem` in `lib/node/`). `lib/FileSystemInfo` stays a re-export (html-webpack-plugin types against it).
+  - `lib/graph/` — the module and chunk graphs and the base classes every build has: `ModuleGraph` + connections, `ChunkGraph` + `buildChunkGraph`, `ExportsInfo` (what each module exports, who uses it); edges are `Dependency`, held by `DependenciesBlock` (`AsyncDependenciesBlock` when loaded on demand); chunk side `Chunk`, `ChunkGroup`, `Entrypoint`, `HotUpdateChunk`. A plugin's `Dependency` subclass → `lib/dependencies/`, its template → `lib/template/`.
+  - `lib/hmr/` — Hot Module Replacement: `HotModuleReplacementPlugin` and its runtime modules, lazy-compilation backend and helpers.
+  - `lib/html/` — experimental HTML. `syntax.js` mirrors `css`: `syntax-parser.js` (tokenizer, §13.2 tree construction, entity table) and `syntax-printer.js` behind getters; it publishes those two plus `SourceProcessor` only. `builtinEmbeddedRenderer` hands each embedded body to webpack's own minifier for its language.
+  - `lib/ids/` — module/chunk id plugins, and `RecordIdsPlugin` (persists ids across builds via `recordsPath`).
+  - `lib/javascript/` — JS parsing (webpack's own parser, ported from acorn), generation, exports analysis, and the always-on, non-public plugins `WebpackOptionsApply` applies unconditionally: `APIPlugin` (`__webpack_require__` and other free variables), `CompatibilityPlugin`, `ConstPlugin`, `ExportsInfoApiPlugin`, `JavascriptMetaInfoPlugin`, `UseStrictPlugin`, `WebpackIsIncludedPlugin`. Who applies a plugin decides its home, not which parser it taps — user-constructed ones live in `lib/define/` and `lib/provide/`.
+    - `syntax.js` reaches `parser` and `printer` through getters: parsing never loads the printer, printing never the parser.
+    - `syntax-parser.js` — tokenizer, acorn-derived core and every production in one file (any parse reaches the productions, and the coming struct-of-arrays rewrite moves node creation through them). `regexp.js` (pattern validator) is the one on-demand piece, reached only for a pattern the host engine rejected — never `require` it from a build path.
+    - `syntax-printer.js` — prints JS back out. `jsMinify.js` (the `minify` the default minimizer dispatches JS to) goes through it rather than terser's published entry, because that loader reads terser's sources — letting a phase webpack implements replace terser's method. Each phase taken over is one less thing terser does. A phase states what it reads with `supports`; a minifier that moved any of it, or a runtime that can't import those sources, keeps its own. Add phases to the `PHASES` list there and nowhere else, each writing byte-for-byte what it replaced.
   - `lib/json/` — JSON modules.
-  - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats, and the deprecated
-    `LibraryTemplatePlugin` that reaches them through the old two-argument API.
-  - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader
-    iteration and loader module loading, plus the `LoaderOptionsPlugin` and
-    `LoaderTargetPlugin` that feed the loader context.
-  - `lib/logging/` — Logger API and console formatting, and `ProgressPlugin`, which
-    reports a build's progress through that same surface. The old `lib/ProgressPlugin`
-    path stays as a re-export, since webpack-stream requires it directly.
-  - `lib/module/` — What a module is and what makes one: the `Module` base class and
-    `NormalModule`, the `ModuleFactory` hierarchy that builds them (`NormalModuleFactory`,
-    `NullFactory`, `SelfModuleFactory`), the `Parser` and `Generator` base classes every
-    language's pair extends, the `CodeGenerationResults` the generated output lands in,
-    `ModuleProfile`, and the two constant files naming module and source types. A module subclass a plugin owns lives with
-    that plugin — `ExternalModule` in `lib/externals/`, `CssModule` in `lib/css/` — so
-    this holds the ones every build has.
-  - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …),
-    including `CircularModulesPlugin`, which flags the import cycles the others reason
-    about, and `LazyBarrel`, which finds the barrel files worth deferring.
-    `ConcatenationScope` is the protocol scope hoisting runs on: `ConcatenatedModule`
-    is the only thing that constructs one, and a generator anywhere in `lib/` renders
-    through it.
-  - `lib/output/` — The plugins that shape the set of files a build writes into
-    `output.path`, rather than the modules it writes them from: `CopyPlugin` adds
-    to it and `CleanPlugin` prunes it — the two `output.copy` and `output.clean`
-    turn on — while `BannerPlugin` rewrites what an asset holds and
-    `ManifestPlugin` emits a description of the rest. `SSRManifestPlugin` emits
-    the description a server renders from: which client files each source module
-    needs, so an SSR response can name the stylesheet of a route the browser has
-    not asked for yet. How a name or a format is
-    decided is not this: that is `lib/template/`, `lib/library/` and `lib/devtool/`.
-  - `lib/performance/` — Asset/entrypoint size hints.
-  - `lib/prefetch/` — Prefetch and preload, which are two mechanisms sharing a word:
-    the runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`
-    and `AutomaticPrefetchPlugin`, which resolve a module eagerly at build time instead.
-  - `lib/provide/` — `ProvidePlugin`, which substitutes a free identifier with an
-    import of a module rather than with a value — which is what keeps it out of
-    `lib/define/`, and out of `lib/javascript/` because a user constructs it.
-  - `lib/resolve/` — Turning a request into a file: the `ResolverFactory` every resolve goes
-    through, and the two plugins that redirect a request before it gets there —
-    `IgnorePlugin` and `NormalModuleReplacementPlugin`.
+  - `lib/library/` — UMD/AMD/ESM/CommonJS library formats, and the deprecated `LibraryTemplatePlugin` (old two-argument API).
+  - `lib/loaders/` — loader execution (vendored loader-runner): pitching/normal iteration and loader loading, plus `LoaderOptionsPlugin` and `LoaderTargetPlugin`, which feed the loader context.
+  - `lib/logging/` — Logger API, console formatting, and `ProgressPlugin` (reports through it). `lib/ProgressPlugin` stays a re-export (webpack-stream requires it).
+  - `lib/module/` — what a module is and what makes one: `Module`, `NormalModule`, the factories (`NormalModuleFactory`, `NullFactory`, `SelfModuleFactory`), base `Parser`/`Generator`, `CodeGenerationResults`, `ModuleProfile`, and the two constants files naming module and source types. A plugin's module subclass lives with the plugin (`ExternalModule` → `lib/externals/`, `CssModule` → `lib/css/`).
+  - `lib/optimize/` — optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …), `CircularModulesPlugin` (flags import cycles) and `LazyBarrel` (finds barrel files worth deferring). `ConcatenationScope` is scope hoisting's protocol: only `ConcatenatedModule` constructs one; any generator renders through it.
+  - `lib/output/` — plugins shaping the set of files written to `output.path` (not the modules in them): `CopyPlugin` adds (`output.copy`), `CleanPlugin` prunes (`output.clean`), `BannerPlugin` rewrites an asset, `ManifestPlugin` describes the rest, and `SSRManifestPlugin` emits which client files each source module needs, so an SSR response can name the stylesheet of a route not yet requested. How names and formats are decided is `lib/template/`, `lib/library/`, `lib/devtool/`.
+  - `lib/performance/` — asset/entrypoint size hints.
+  - `lib/prefetch/` — two mechanisms sharing a word: runtime modules emitting `<link rel="prefetch">` for a chunk, and `PrefetchPlugin`/`AutomaticPrefetchPlugin`, which resolve a module eagerly at build time.
+  - `lib/provide/` — `ProvidePlugin`: free identifier → import of a module (not a value, so not `lib/define/`; user-constructed, so not `lib/javascript/`).
+  - `lib/resolve/` — request → file: `ResolverFactory`, and `IgnorePlugin` / `NormalModuleReplacementPlugin`, which redirect a request before it.
   - `lib/rules/` — `module.rules` matching engine.
-  - `lib/runtime/` — Runtime modules emitted into bundles (chunk loaders, public-path, …),
-    the `RuntimeModule` base class they extend, the `RuntimeGlobals` symbols they declare,
-    and `RuntimePlugin`, which injects them for the requirements a build collects.
-  - `lib/schemes/` — Custom URL scheme handlers (`data:`, `http:`, …).
-  - `lib/serialization/` — Persistent cache serialization.
-  - `lib/sharing/` — Shared modules / Module Federation runtime.
-  - `lib/stats/` — Stats output: the `Stats` and `MultiStats` a run hands back,
-    and the default printer and JSON factories they render through.
-  - `lib/template/` — Source templates and init fragments the generators print through,
-    including `RuntimeTemplate`, the printing helper every generator and dependency
-    template is handed, the `DependencyTemplate` base class, and
-    `ModuleInfoHeaderPlugin`, which prints the per-module comment header into the
-    generated bundle.
-  - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
-  - `lib/url/` — `new URL(asset, import.meta.url)` references.
-  - `lib/util/` — Utility helpers, including `dataURL`, which reads and writes `data:`
-    URLs and holds the helpers a minifier drives a caller's `renderEmbeddedSource`
-    through, `RequestShortener`, which renders a request
-    relative to the context for every message a user reads, and `terminalColors`, the
-    color support detection and escape-code wrappers every terminal-facing message goes
-    through — `ProgressPlugin`, `nodeConsole` and, via `webpack.cli`, webpack-cli.
-    What belongs here is a helper no one subsystem owns: a data structure, an
-    algorithm, or something several directories share. One that only a single
-    subsystem can use lives with that subsystem instead — `semver` in
-    `lib/sharing/`, `numberHash` in `lib/ids/`, `deterministicGrouping` in
-    `lib/optimize/` — so that reading a directory shows what it is made of.
-  - `lib/wasm/` — WebAssembly module support: the async path a build takes today,
-    plus the two pieces neither path owns — `EnableWasmLoadingPlugin` and
-    `wasmModuleFilename`.
-  - `lib/wasm-sync/` — The synchronous WebAssembly path, kept until the next major release
-    removes it, which is why it stands apart rather than joining `lib/wasm/`.
-  - `lib/watch/` — Watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
-- `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
+  - `lib/runtime/` — runtime modules emitted into bundles (chunk loaders, public-path, …), their `RuntimeModule` base, the `RuntimeGlobals` symbols, and `RuntimePlugin` (injects them for the collected requirements).
+  - `lib/schemes/` — URL scheme handlers (`data:`, `http:`, …).
+  - `lib/serialization/` — persistent cache serialization.
+  - `lib/sharing/` — shared modules / Module Federation runtime.
+  - `lib/stats/` — `Stats`/`MultiStats` and their default printer and JSON factories.
+  - `lib/template/` — source templates and init fragments generators print through: `RuntimeTemplate` (the printing helper every generator and dependency template gets), the `DependencyTemplate` base, and `ModuleInfoHeaderPlugin` (per-module comment header).
+  - `lib/typescript/` — experimental TypeScript modules (types stripped via Node's TypeScript API).
+  - `lib/url/` — `new URL(asset, import.meta.url)`.
+  - `lib/util/` — helpers no one subsystem owns (a data structure, an algorithm, something several directories share): e.g. `dataURL` (reads/writes `data:` URLs; helpers a minifier drives a caller's `renderEmbeddedSource` through), `RequestShortener` (context-relative requests in user-facing messages), `terminalColors` (color detection and escape wrappers for all terminal output — `ProgressPlugin`, `nodeConsole`, webpack-cli via `webpack.cli`). A helper only one subsystem uses lives there (`semver` → `lib/sharing/`, `numberHash` → `lib/ids/`, `deterministicGrouping` → `lib/optimize/`), so a directory's contents show what it is made of.
+  - `lib/wasm/` — WebAssembly's async path, plus `EnableWasmLoadingPlugin` and `wasmModuleFilename`, which neither path owns.
+  - `lib/wasm-sync/` — the sync WebAssembly path, kept apart until the next major release removes it.
+  - `lib/watch/` — watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
+- `hot/` — browser-side HMR runtime (not Node tooling).
 - `bin/` — `webpack` CLI entry point.
-- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool, and `generate-types.js`, the one entry point and one file for everything derived from `schemas/**/*.json` — it reads each schema once, emits that schema's declaration and its precompiled validator, then emits `types.d.ts`, so ordering is internal and one check run names every stale output) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-tools.js` / `compare-html-tools.js` / `compare-js-tools.js` (`yarn benchmark:css-tools`, `yarn benchmark:html-tools`, `yarn benchmark:js-tools`), which share the measuring harness in `compare-tools-harness.js`. Those three need no arguments and no reading of their source: each runs what webpack owns for that language and the ecosystem's equivalents over popular framework stylesheets, real documents and shipped JavaScript bundles, printing **three tables per fixture** — parsing alone, parsing and printing readably (`beautify`), and parsing and printing minified (`minify`) — so what a parse costs is separated from what the printing and the transforms on top of it cost. Every table reports best-of-3 wall and cpu ms and the worker's own peak RSS (each tool × fixture measured in its own process, so the numbers are attributable; read from `/proc/self/status`, since Linux carries `maxRSS` across `fork`+`exec` and a worker asking for its own would report the parent's). **Read wall and cpu together**: cpu above wall is a tool using more than one core (V8's background threads, a native thread pool), cpu below it is a tool waiting rather than computing. A tool that works in a service process of its own says so in its name and reports `-` for cpu and peak, which are spent where nothing here can see them — esbuild is the one today. The two printing tables add output size raw and under gzip/brotli/zstd (the `test:size` settings) and whether the output lost classes / changed the DOM / stopped naming a property ("rejects it" rows mean the tool errored on that input), plus what printing the output a second time moved (`2nd`). The JavaScript one is shaped by webpack owning a parser there and no printer: webpack's parse row is its own parser, while its two printing rows are `lib/javascript/jsMinify.js`, the minify entry point a build runs, which prints through terser today — so a phase webpack takes over is read against what it replaced, in the same table, rather than in a comparison written for the occasion. `webpack (2 passes)` carries the options `optimization.minimize` defaults to, which is why it is not a like for like against terser's default-option row. The parse table's last column holds every ESTree parser against acorn's tree and names the first node where the two differ — which, with the `spans` relation below, is how a divergence in `lib/javascript/syntax-parser.js` is caught: one reads the tree and the other the offsets, and a range can be wrong while every node agrees — while a parser answering in a dialect of its own reads as `own dialect` rather than as a disagreement. A round-trip printer that reformats nothing — postcss for CSS, parse5 for HTML — sits in the `beautify` table as the floor the others are read against. `FIXTURE=`, `TOOL=` and `STAGE=` narrow a run to matching rows. Each corpus they compare against is declared in `tooling/comparison/<cache name>/`, as a `package.json` pinning every package exactly and the `package-lock.json` freezing what that resolved to, transitive dependencies included — so a sweep runs what was committed rather than whatever the registry serves that day, and a finding names a corpus anyone can reproduce. `installPackages` materializes one with `npm ci` into `node_modules/.cache/<cache name>/` on first run rather than into webpack's dependencies, and skips the install entirely while the lockfile it last installed from still matches; expect the first run to install for a minute and every full run to take upwards of ten. Bumping a corpus is editing that manifest, never the script, and Dependabot watches the three directories so a bump arrives as its own pull request — where a version that breaks a printer invariant reds the `invariants` job on that pull request, which is where it is attributable, instead of on somebody else's. That job installs all three and sweeps all three, so a bump is held to installing as well as to the relations — a manifest and lockfile `npm ci` refuses, or a platform package the lockfile misses, reds it there as well (`yarn benchmark:<language>-tools:setup` is that install on its own). Each corpus keeps an `.npmrc` saying `package-lock=true` for a reason no one would guess from reading it: Dependabot takes npm config from the parent directories, where npm itself does not, so without it the root's `package-lock=false` — right for the tree yarn owns — leaves a bump with its lockfile unregenerated, which is exactly the pair `npm ci` refuses. `type-coverage.js` (`yarn types:cover`) reports how much of `lib/` is precisely typed. `find-deep-webpack-imports.js` (`yarn find-deep-imports`) answers which `webpack/lib/…` paths the published ecosystem imports directly: it ranks the most downloaded `webpack`, `webpack-plugin` and `webpack-loader` packages off the registry's search endpoint — which carries weekly downloads with each hit, so `api.npmjs.org` is never needed — then reads each one's tarball rather than installing it, so no lifecycle script of a stranger's package runs. It counts a path only where it is imported, never a bare string, because a package that bundled webpack carries webpack's own `makeSerializable` requests and imports none of them. What it finds is kept in `tooling/deep-webpack-imports.json`, which `--write` refreshes and whose `removed` map names the paths no webpack 5 build can reach with the reason — deleted with the webpack 4 API, imported only by a package that is webpack 4 only, or probed for inside a `try` to detect webpack 4, where a re-export would pick the wrong branch — so only a genuine break fails. `--check` reads that record and nothing else — no network, and no install, so the `Deep Imports` job runs it on every pull request in under a second, comments what broke and what imports it, and fails; it names the packages and the downloads behind each one, and retracts the comment once the paths resolve again; `test/unitCases/deepPathShims.unittest.js` asserts the same thing off the same record, so a move out of `lib/` root learns it owes a re-export from a test rather than from a bug report. `COUNT=` sets how many packages per keyword (default 200), and a package the broad keyword shares with a narrow one is scanned once; tarballs cache under `node_modules/.cache/`, so a re-run costs nothing. Only the collecting half needs the network. `measure-color-agreement.js` (`yarn measure:color-agreement`) is the third: it asks a real browser for its own color conversions rather than for a pixel, and prints how far they sit from webpack's — which is where the rounding margins in `lib/css/syntax-parser.js` and the list of spaces an engine reads through another transfer come from. Re-run it (a few seconds; `PUPPETEER_EXECUTABLE_PATH` picks the binary) rather than adjusting either by hand. **All three comparisons open with a section no one has to ask for**: before the install, each holds what webpack owns for that language to what it owes its own input, over `test/**/*.css` / `test/**/*.html` / `test/**/*.js` plus its own fixtures and whatever the cache already holds, in seconds rather than minutes. `--invariants` runs that section and stops, for a caller that wants the relations without the comparison behind them. Five relations. Two are the printer's: minifying an already-minified source changes nothing, under each option set the script's own webpack rows are measured with, and how a value was spelled does not decide what it minifies to, under the first of them — whether a spelling decides the output is the same question under every option set, and each asking of it is a full minify. **What a respelling may rewrite is what the spec says means the same thing**: for HTML a delimiter, a character reference or the case of a name; for CSS an escape (§4.3.7), a string's delimiter, a leading zero, and the case of a unit or an at-rule name. An identifier is deliberately not case-respelled, though a property name and a keyword are case-insensitive: which of those an identifier is depends on where it sits, and a class, an id, a custom property, a font family and a counter name are all case-sensitive. A custom property's value is skipped whole, since `var()` substitutes it somewhere else and the spec keeps it as authored — which makes it the one region where how something was spelled decides the output on purpose, the same way a tag another language writes into is skipped in HTML. **The two outputs are compared by meaning rather than by bytes**, or every respelling would report the printer for keeping a spelling that says what the other one says: `8PX` and `8px`, or `"a"` and `'a'`, read as one output through a stream that resolves each token's value. A shorter-or-equal output saying the same thing is not a finding; a longer one is. The other three are the parser's and run under no option set. `spans` holds every node's range to the source it came from: nothing inverted, nothing off the end, a node inside the one holding it, two siblings not overlapping, and every sub-range a node names (a CSS declaration's name and block, an HTML opening tag and each attribute) inside it. **What each parser owes there differs, and the exclusions are the specs rather than slack.** CSS owes all of it. HTML owes neither containment nor sibling non-overlap, because §13.2 ends an element at its start tag until an end tag is read (`<html>` in a document omitting `</html>` ends before the `<body>` it holds) and closes an open element with the next tag (`<p>a<p>b` gives two paragraphs sharing bytes) — asking for them reports 4031 and 22 findings and not one defect. JavaScript owes containment but not sibling non-overlap, because ESTree aliases a shorthand property's key and value over one range. `slices` asks the other half of the same question — that a range delimits the node rather than merely sitting inside its parent: the bytes between a node's offsets, parsed on their own, give that node back. **A slice is read in a context that keeps its meaning, never at the top level**, because out of context the parsers are not wrong but answer something else: `yield x` is an identifier outside a generator, and `<td>x</td>` is not a cell at all — §13.2 drops the tag and foster-parents the text. So CSS wraps a declaration in a rule and a value in a declaration, JavaScript tries a ladder of function and class-method contexts under the source's own `ecmaVersion` (an anonymous `function*(){}` cannot open a statement, and a case pinned to ES6 cannot parse `async function*`), and HTML hands the enclosing tag to the fragment parsing algorithm, which is the spec's own answer and what a browser does for `innerHTML`. A node no context stands alone is counted, not reported: what it lacked is the context rather than a range. Two shapes are left out instead of normalized, both §13.2 again — an element the parser inserted or cloned wrote no tag to slice, and one whose end is still its start tag's has a range that does not hold its own children. **Two things keep it to seconds.** One shape is one question, so a bundle's millionth `Identifier[0,3)` is skipped rather than reparsed — which took the CSS sweep from 30s to 4.6s — and each source may spend only four times its own bytes on reparsing, leaves first. Both counts are reported, since a shape not asked about is coverage nothing reads. The JavaScript sweep also reads `fixtures/acorn-corpus.json` under the options each case names, so a range wrong in a production no fixture writes is still reached, and a source the parser refuses is counted rather than reported, since the error cases are asserting that refusal. `purity` asks the question a build asks by reading thousands of files in one process: reading the same bytes again gives the same answer. **Every source is read once before any is read a second time**, so what sits between a source's two readings is every other source — the shape that catches a cache keyed on the last input, which reading one source twice in a row never would. **Its digest carries what the parse derived, not only where it read**, because that is the whole hazard: `parseHtml` interns a tag or attribute name as a slice of the document that first spelled it and drops those entries on the next parse, so a stale name would come back with every offset still right. So the digest holds tag and attribute names and values for HTML, derived names for CSS, and for JavaScript every primitive a node carries — read off the node's own keys rather than a list of types, so a production added later is covered without editing it — and CSS and HTML digest the printed bytes too, which reads the derived fields the walk does not name. A refusal is digested as well, since a source rejected only after something else was read is state leaking; the one exception is running out of stack, whose position is wherever the call depth around the parse happened to run out rather than a fact about the source. A source that disagrees is read a third time back to back, which says which of the two it is — state another parse left, or a parse that is not repeatable at all. A parser that also prints is held to both halves; webpack's JavaScript printing is terser's today, so its two printer relations are not asked for yet. This is the shape of defect a comparison cannot see, because being a few bytes off its own best is not being worse than another tool: `method=GET` folding only where the source quoted it went unnoticed until this sweep, which is what #22095 fixed. A respelling is lexical (a delimiter, a character reference, the case of a name) and is checked against webpack's own tokenizer before use, so a mutation that moved the document is dropped rather than reported; whitespace inside a tag is deliberately not one, since a tag nothing beats is echoed as written, and a tag another language writes into is skipped whole, since `=""` on a `{% endif %}` restates no value. Each finding is bisected to what carries it and re-run on the enclosing tag alone, so the report names a repro, and groups by it — one printer defect reaches hundreds of pages. `FIXTURE=`, `RELATION=`, `PRESET=` and `SPELLING=` narrow a run. `--invariants` exits non-zero on any finding, which is what the `invariants` job gates every pull request on (`yarn test:invariants`, or `:css` / `:html` / `:js` for one of them) — a relation is cheap to hold and a regression in one is a defect, so it fails rather than reporting. A divergence the printer owes nothing for is carried in the script's own `EXPECTED` table with the reason beside it, never suppressed by a passing gate, and an entry there that stops matching is itself a finding, so a fix retires its expectation rather than leaving it to rot. The HTML sweep runs a third option set, `embedded`, which is the aggressive one plus `builtinEmbeddedRenderer` — what a build actually runs, so an inline `<style>` and every `style=""` reach the CSS minifier and the two printers are held to their invariants as one. It is where a recovered CSS string keeping the quote its source opened with was caught — a shape the `.css` suites never reach, since a css module hands the minifier a newline after the declarations and a string open at one is a bad-string instead. The same question is asked of every other tool in the comparison's own tables, where the `2nd` column is what a second pass over the tool's own output moved — `-` being the answer a printer that is done printing gives. `retry.js` is the one that runs a command rather than reporting on one: it runs a setup command again when it fails, so a registry 503 or a dropped browser download reds no job. Every command in `.github/workflows/` that reaches the network goes through it — installs, `yarn upgrade`, the Firefox and WebKit downloads and the `git submodule update` fetches — as `node tooling/retry.js <command>`, with `RETRY_ATTEMPTS` (3) and `RETRY_DELAY` (5000ms) tuning it; a value that is not a positive integer or a non-negative number is refused rather than defaulted, since one reaching the loop as `NaN` retried until the job timed out. It uses node builtins only, because each caller runs before `yarn install` has written `node_modules`.
+- `tooling/` — repo-internal scripts:
+  - Codegen run by `yarn fix:special`: runtime/wasm generators, the hash-debug tool, and `generate-types.js` — the one entry point and file for everything derived from `schemas/**/*.json`. It reads each schema once, emits its declaration and precompiled validator, then `types.d.ts`, so ordering is internal and one check run names every stale output.
+  - `compare-css-tools.js` / `compare-html-tools.js` / `compare-js-tools.js` (`yarn benchmark:css-tools` / `:html-tools` / `:js-tools`, sharing `compare-tools-harness.js`) — no arguments or source reading needed. Each runs webpack's implementation for the language and ecosystem equivalents over popular framework stylesheets, real documents and shipped JS bundles.
+    - **Three tables per fixture**: parse only, parse + readable print (`beautify`), parse + minified print (`minify`) — separating parse cost from printing/transform cost. Each shows best-of-3 wall and cpu ms and the worker's peak RSS, every tool × fixture in its own process; RSS comes from `/proc/self/status`, since Linux carries `maxRSS` across `fork`+`exec` and a worker asking for its own gets the parent's. **Read wall and cpu together**: cpu above wall = more than one core (V8 background threads, a native pool); below = waiting. A tool working in its own service process says so in its name and shows `-` for cpu and peak (esbuild today).
+    - Printing tables add output size raw and gzip/brotli/zstd (`test:size` settings), whether the output lost classes / changed the DOM / stopped naming a property ("rejects it" = the tool errored), and `2nd`: what printing the output again moved — the idempotence question asked of every tool (`-` is a printer done printing). A round-trip printer that reformats nothing (postcss for CSS, parse5 for HTML) sits in `beautify` as the floor.
+    - JS owns a parser but no printer yet: webpack's parse row is its own parser, its printing rows are `lib/javascript/jsMinify.js` (the build's minify entry, printing through terser today), so a phase taken over is read against what it replaced in the same table. `webpack (2 passes)` uses `optimization.minimize`'s default options, so it isn't like for like with terser's default row. The parse table's last column compares each ESTree parser to acorn's tree and names the first differing node; with the `spans` relation this catches a divergence in `lib/javascript/syntax-parser.js` (one reads the tree, the other the offsets — a range can be wrong while every node agrees). A parser with a dialect of its own reads `own dialect`, not a disagreement.
+    - `FIXTURE=`, `TOOL=`, `STAGE=` narrow the rows.
+    - **Corpora** are declared in `tooling/comparison/<cache name>/`: a `package.json` pinning every package exactly and a `package-lock.json` freezing the resolution, transitive deps included, so a sweep runs what was committed rather than what the registry serves that day, and a finding names a reproducible corpus. `installPackages` runs `npm ci` into `node_modules/.cache/<cache name>/` (not webpack's deps) on first run, skipped while the lockfile it last installed from matches; expect ~a minute of install first, and 10+ minutes per full run. Bump a corpus by editing its manifest, never the script. Dependabot watches the three directories, so a bump arrives as its own PR — where a break is attributable, not on somebody else's — and there the `invariants` job — which installs and sweeps all three — reds on a broken printer invariant, an `npm ci`-refused manifest/lockfile, or a platform package the lockfile misses (`yarn benchmark:<language>-tools:setup` is the install alone). Each corpus keeps an `.npmrc` with `package-lock=true`: Dependabot reads npm config from parent directories (npm doesn't), so otherwise the root's `package-lock=false` (right for yarn's tree) leaves a bump's lockfile unregenerated — exactly what `npm ci` refuses.
+    - **Invariants.** Each comparison first holds webpack's implementation to five relations over its own input — `test/**/*.css` / `*.html` / `*.js`, its own fixtures, whatever the cache holds — in seconds, before any install. `--invariants` runs only that and exits non-zero on any finding; the `invariants` job gates every PR on it (`yarn test:invariants`, or `:css` / `:html` / `:js`). A relation is cheap to hold, so a regression fails rather than reports. `FIXTURE=`, `RELATION=`, `PRESET=`, `SPELLING=` narrow a run.
+      1. Printer, idempotence: minifying already-minified output changes nothing, under every option set the webpack rows use.
+      2. Printer, spelling: how a value was spelled doesn't decide what it minifies to, under the first option set (the question is the same under each; each asking is a full minify). **A respelling may only rewrite what the spec calls equivalent**: HTML — a delimiter, a character reference, name case; CSS — an escape (§4.3.7), a string's delimiter, a leading zero, unit and at-rule-name case. Identifiers are never case-respelled: which kind one is depends on position, and class, id, custom property, font family and counter name are case-sensitive. A custom property's value is skipped whole (`var()` substitutes it elsewhere and the spec keeps it as authored) — the one region where spelling decides output on purpose, as a tag another language writes into is skipped in HTML. **Outputs are compared by meaning, not bytes**, through a stream resolving each token's value (`8PX` ≡ `8px`, `"a"` ≡ `'a'`); a shorter-or-equal output saying the same isn't a finding, a longer one is. HTML respellings are lexical and checked against webpack's tokenizer first, dropping any that moved the document; whitespace inside a tag isn't one (a tag nothing beats is echoed as written), and a tag another language writes into is skipped whole (`=""` on `{% endif %}` restates nothing). Each finding is bisected to what carries it, re-run on the enclosing tag alone to name a repro, and grouped by it — one defect reaches hundreds of pages. (`method=GET` folding only where quoted, fixed in #22095, was found this way.)
+      3. Parser, `spans`: every node's range against its source — nothing inverted or past the end, a node inside its holder, siblings not overlapping, every sub-range (CSS declaration name and block, HTML opening tag, each attribute) inside the node. **The exclusions are the specs, not slack**: CSS owes all of it. HTML owes neither containment nor sibling non-overlap — §13.2 ends an element at its start tag until an end tag is read (`<html>` omitting `</html>` ends before its `<body>`) and closes an open element at the next tag (`<p>a<p>b` shares bytes); asking reports 4031 and 22 findings, none a defect. JS owes containment but not sibling non-overlap (ESTree aliases a shorthand property's key and value over one range).
+      4. Parser, `slices`: the bytes between a node's offsets, parsed alone, give the node back. **A slice is parsed in a context keeping its meaning, never at top level** (`yield x` is an identifier outside a generator; a lone `<td>x</td>` is dropped and its text foster-parented): CSS wraps a declaration in a rule and a value in a declaration; JS tries a ladder of function and class-method contexts under the source's own `ecmaVersion` (`function*(){}` can't open a statement; an ES6-pinned case can't parse `async function*`); HTML runs the fragment parsing algorithm on the enclosing tag, as browsers do for `innerHTML`. A node no context parses is counted, not reported. Left out (§13.2 again): an element the parser inserted or cloned (no tag to slice), and one whose end is still its start tag's (its range doesn't hold its children). **Two limits keep it to seconds**: one shape is one question (a bundle's millionth `Identifier[0,3)` is skipped — CSS went 30s → 4.6s), and each source may spend at most four times its bytes on reparsing, leaves first; both skip counts are reported, as unread coverage. The JS sweep also reads `fixtures/acorn-corpus.json` under each case's options, reaching productions no fixture writes; sources the parser refuses are counted, not reported (those cases assert the refusal).
+      5. Parser, `purity`: rereading the same bytes in one process gives the same answer. **Every source is read once before any is read again**, so every other source sits between a source's two readings — catching a cache keyed on the last input. **The digest holds what the parse derived, not only offsets** (`parseHtml` interns tag and attribute names as slices of the document first spelling them and drops those on the next parse, so a stale name keeps correct offsets): HTML tag/attribute names and values, CSS derived names, and every primitive on a JS node, read off the node's own keys so new productions are covered; CSS and HTML also digest the printed bytes. Refusals are digested too, except running out of stack (its position depends on the surrounding call depth). A disagreeing source is read a third time back to back, telling leaked state from a non-repeatable parse.
+      - Relations 3–5 are the parser's and run under no option set. A parser that also prints is held to both halves; JS printing is terser's today, so its printer relations aren't asked yet. These catch what a comparison can't: being a few bytes off one's own best isn't being worse than another tool.
+      - A divergence the printer owes nothing for goes in the script's `EXPECTED` table with its reason, never suppressed by a passing gate; an entry that stops matching is itself a finding, so a fix retires it.
+      - The HTML sweep adds a third option set, `embedded` (the aggressive one + `builtinEmbeddedRenderer`) — what a build runs, so inline `<style>` and `style=""` reach the CSS minifier and both printers are checked as one. It caught a recovered CSS string keeping the quote its source opened with, which `.css` suites can't reach (a css module ends declarations with a newline, making an open string a bad-string).
+  - `type-coverage.js` (`yarn types:cover`) — how much of `lib/` is precisely typed.
+  - `find-deep-webpack-imports.js` (`yarn find-deep-imports`) — which `webpack/lib/…` paths published packages import directly. It ranks the most downloaded `webpack`, `webpack-plugin` and `webpack-loader` packages via the registry search endpoint (which carries weekly downloads, so `api.npmjs.org` is never needed) and reads each tarball rather than installing it, so no stranger's lifecycle script runs. A path counts only where imported, never as a bare string (a package bundling webpack carries its `makeSerializable` requests but imports none). Results live in `tooling/deep-webpack-imports.json` (`--write` refreshes); its `removed` map names paths no webpack 5 build can reach, with the reason — deleted with the webpack 4 API, imported only by a webpack-4-only package, or probed in a `try` to detect webpack 4 (a re-export would pick the wrong branch) — so only a genuine break fails. `--check` reads only that record (no network, no install): the `Deep Imports` job runs it on every PR in under a second, fails, and comments what broke with the importing packages and their downloads, retracting the comment once the paths resolve. `test/unitCases/deepPathShims.unittest.js` asserts the same off the same record, so a move learns it owes a re-export from a test rather than a bug report. `COUNT=` sets packages per keyword (default 200); a package in two keywords is scanned once; tarballs cache under `node_modules/.cache/`, so a re-run costs nothing. Only collecting needs the network.
+  - `measure-color-agreement.js` (`yarn measure:color-agreement`) — asks a real browser for its own color conversions (not pixels) and prints how far webpack's sit from them; it is the source of the rounding margins in `lib/css/syntax-parser.js` and the list of spaces an engine reads through another transfer. Re-run it (seconds; `PUPPETEER_EXECUTABLE_PATH` picks the binary) rather than adjusting either by hand.
+  - `retry.js` — reruns a failing setup command so a registry 503 or dropped browser download reds no job. Every network-reaching command in `.github/workflows/` (installs, `yarn upgrade`, Firefox/WebKit downloads, `git submodule update` fetches) runs as `node tooling/retry.js <command>`, tuned by `RETRY_ATTEMPTS` (3) and `RETRY_DELAY` (5000ms). A value that isn't a positive integer / non-negative number is refused, not defaulted (one reaching the loop as `NaN` retried until the job timed out). Node builtins only — callers run before `yarn install`.
 - `assembly/` — WebAssembly source for the hash function.
-- `setup/` — One-time setup. `setup.js` (`yarn setup`) is the only entry point and picks its own path: a contributor at a terminal gets the interactive one, which installs yarn when it is missing and links through yarn's registry, while everything else gets the non-interactive one — it verifies the lockfile instead of rewriting it, installs no global yarn, and links the checkout in as `node_modules/webpack` without touching yarn's machine-global registry. What it reads is both streams being a terminal plus an unset `CI`, never a list of vendor variables, so an agent nobody has heard of yet takes the safe path — but one that allocates a PTY reads as a contributor, and should set `WEBPACK_SETUP=automated`, which with `interactive` forces either path. Safe to re-run.
+- `setup/` — one-time setup; `setup.js` (`yarn setup`) is the only entry point and safe to re-run. A contributor at a terminal gets the interactive path (installs yarn if missing, links through yarn's registry); everything else gets the non-interactive one (verifies the lockfile instead of rewriting it, installs no global yarn, links the checkout as `node_modules/webpack` without touching yarn's machine-global registry). It decides from both streams being a TTY with `CI` unset — never a vendor-variable list, so an unknown agent takes the safe path. An agent allocating a PTY reads as a contributor and should set `WEBPACK_SETUP=automated` (`interactive` forces the other path).
 
-**Schemas (the source of truth for webpack's config API)**
+**Schemas (source of truth for the config API)**
 
-- `schemas/WebpackOptions.json` — top-level webpack options schema.
-- `schemas/plugins/*.json` — per-plugin option schemas (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
+- `schemas/WebpackOptions.json` — top-level options.
+- `schemas/plugins/*.json` — per-plugin options (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
 - `schemas/_container.json`, `schemas/_sharing.json` — Module Federation sub-schemas.
 
-**Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for directory structure, naming, and how to run a single case.
+**Tests** — structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
-- `test/` — All test suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `benchmarkCases/`, `memoryLimitCases/`, etc.). `templates/` holds the suite drivers (`TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js`) that the `*.test.js` / `*.basictest.js` / `*.longtest.js` files at the top of `test/` are thin shims over — each exports `describeCases(config)` and resolves case directories against the `test/` root, never against its own. The option sets those shims pass live together in `templates/variants.js`, re-exported as `variants`, so what differs between the suites reads side by side rather than one file at a time — a shim exists per entry because jest parallelizes per file, not per describe. `harness/` holds what runs those suites rather than what they test — jest's own lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` environment, the crash reporter, the case `runner/` and `snapshot/` resolver, and `runtimes/` for the preload and setup files that let jest run under Bun and Deno. Reusable assertions and fixtures stay in `helpers/`. `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file. `external/` holds what webpack does not maintain — every git submodule checked out for testing, today the four spec corpora below, so a directory there is upstream's to change and ours only to pin. `external/wpt/` is web-platform-tests, checked out one commit deep by the `parser (html)` and `syntax-equivalence` jobs — it is where the HTML tree-construction corpus lives since html5lib-tests dropped it. acorn's own test suite is the one upstream corpus that is vendored instead of pinned, as `fixtures/acorn-corpus.json`, because acorn's npm tarball ships no tests. `unitCases/WebpackParser.unittest.js` holds both of webpack's parser entry points to it, and owns the recording of it too — no generator script and no `package.json` entry: it replays acorn's `test/tests*.js` against a driver that records each case instead of running it, and keeps the sources and options, never the expected trees, which it takes from acorn itself. Bumping the `acorn` devDependency is what moves the corpus, and the same file is what refreshes it: clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run it with `WEBPACK_UPDATE_ACORN_CORPUS=1`. Where that checkout exists the run checks the vendored corpus against it; where it does not — CI, and every machine that never cloned — the corpus stands on the version it names, which the run pins to the installed acorn.
+- `test/` — all suites (`unitCases/`, `cases/`, `configCases/`, `specCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `benchmarkCases/`, `memoryLimitCases/`, …).
+  - `templates/` — suite drivers (`TestCases.js`, `ConfigTestCases.js`, `HotTestCases.js`, `WatchTestCases.js`); the top-level `*.test.js` / `*.basictest.js` / `*.longtest.js` are thin shims over them. Each exports `describeCases(config)` and resolves case directories against `test/`, never its own. The shims' option sets live together in `templates/variants.js` (re-exported as `variants`) so suite differences read side by side; there's one shim per entry because jest parallelizes per file, not per describe.
+  - `harness/` — what runs the suites: jest lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` environment, the crash reporter, the case `runner/`, the `snapshot/` resolver, and `runtimes/` (preload/setup files for Bun and Deno). Reusable assertions and fixtures go in `helpers/`.
+  - `RoundTripConfigCases` re-bundles the output of `configCases` that have a `roundTrip.js`.
+  - `external/` — what webpack doesn't maintain: every git submodule (today the four spec corpora below) — upstream's to change, ours only to pin. `external/wpt/` (web-platform-tests), checked out one commit deep by `parser (html)` and `syntax-equivalence`, holds the HTML tree-construction corpus since html5lib-tests dropped it.
+  - `fixtures/acorn-corpus.json` — acorn's test suite — the one upstream corpus vendored rather than pinned, because acorn's npm tarball ships no tests. `unitCases/WebpackParser.unittest.js` holds both webpack parser entry points to it and owns recording it (no generator script or `package.json` entry): it replays acorn's `test/tests*.js` against a recording driver, keeping sources and options but never expected trees, which come from acorn itself. Bumping the `acorn` devDependency moves the corpus; to refresh, clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run with `WEBPACK_UPDATE_ACORN_CORPUS=1`. With that checkout present the run checks the vendored corpus against it; without it (CI, most machines) the corpus stands on the version it names, which the run pins to the installed acorn.
 
-**Git submodules** — every submodule lives under `test/external/`, checked out on demand: `yarn setup` does not fetch them, and each CI job fetches only the submodules it needs, one commit deep.
+**Git submodules** — all under `test/external/`, checked out on demand: `yarn setup` doesn't fetch them, and each CI job fetches only its own, one commit deep.
 
-| Path                              | Upstream                                                                              | Fetched by                                       |
-| --------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `test/external/test262-cases`     | [tc39/test262](https://github.com/tc39/test262)                                       | `test262`, `parser (js)`                         |
-| `test/external/html5lib-tests`    | [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests)                 | `parser (html)`                                  |
-| `test/external/wpt`               | [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt)                   | `parser (html)`, `syntax-equivalence` (browsers) |
-| `test/external/css-parsing-tests` | [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests) | `parser (css)`                                   |
+- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `parser (js)`
+- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `parser (html)`
+- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `parser (html)`, `syntax-equivalence` (browsers)
+- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `parser (css)`
 
 ```sh
 git submodule update --init --recursive --depth 1   # check out the commits the repo pins
 git submodule update --init --recursive --remote --depth 1 # move every pin to its upstream tip
 ```
 
-Keep `--depth 1`: `wpt` alone is ~161k files. `--remote` changes the commit the repo records for each path, so `git status` shows the four `test/…` paths modified — commit that only once CI is green on the new commits, or run `git submodule update` to return to the pinned ones.
+Keep `--depth 1` (`wpt` alone is ~161k files). `--remote` changes the recorded commits, so `git status` shows the four paths modified — commit that only once CI is green on them, or `git submodule update` back to the pins.
 
 **Examples & changesets**
 
-- `examples/` — Usage examples (build with `yarn build:examples`).
-- `.changeset/` — Pending changeset files for the next release.
+- `examples/` — usage examples (`yarn build:examples`).
+- `.changeset/` — pending changesets for the next release.
 
-**Hand-maintained type declarations (these _are_ editable)**
-
-- `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`.
-
-The loader context is not one of these: `LoaderContext` and the loader-definition types are JSDoc in `lib/` like every other type, declared where the code that adds each part lives (`lib/module/NormalModule.js`, `lib/loaders/LoaderRunner.js`, `lib/dependencies/LoaderPlugin.js`, `lib/hmr/HotModuleReplacementPlugin.js`) and re-exported from `lib/index.js`, which is the file `generate-types.js` reads webpack's public type surface from.
+**Hand-maintained type declarations (editable)** — `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`. The loader context is not one of them: `LoaderContext` and the loader-definition types are JSDoc in `lib/`, declared where the code adding each part lives (`lib/module/NormalModule.js`, `lib/loaders/LoaderRunner.js`, `lib/dependencies/LoaderPlugin.js`, `lib/hmr/HotModuleReplacementPlugin.js`) and re-exported from `lib/index.js`, the file `generate-types.js` reads the public type surface from.
 
 **Configuration**
 
-- `package.json` — All commands (defined in `scripts`).
-- `tsconfig*.json` — TypeScript configs (one per surface: `lib`, `hot`, types tests, validation, benchmarks).
-- `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — Lint/spell/test/type-gen configs.
+- `package.json` — all commands (`scripts`).
+- `tsconfig*.json` — one per surface: `lib`, `hot`, types tests, validation, benchmarks.
+- `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — lint/spell/test/type-gen configs.
 - `.github/workflows/`, `.github/scripts/` — CI.
-- `test/patches/` — test-only dependency patches (e.g. jest-worker) applied via `git apply` in the CI Bun test job.
+- `test/patches/` — test-only dependency patches (e.g. jest-worker), `git apply`'d in the CI Bun job.
 
-**How data flows — adding or renaming a webpack option** requires edits in every layer, in this order:
+**Adding or renaming a webpack option** touches every layer, in order — skipping one silently breaks the option:
 
 1. **Schema** — `schemas/WebpackOptions.json` (or `schemas/plugins/<Name>.json`).
 2. **Defaults** — `lib/config/defaults.js`.
 3. **Normalization** — `lib/config/normalization.js`.
-4. **Implementation** — the site that consumes the option.
-
-5. **Generated output and snapshots** — run `yarn fix:special`, then update the snapshots the option's _name_ leaks into. A schema property is read back by several tests that no `configCases/` pattern will match:
-   - `test/__snapshots__/Cli.basictest.js.snap` — the CLI flags are derived from the schema, so every new property adds one.
-   - `test/configCases/ecmaVersion/browserslist*/webpack.config.js` — these carry an **inline** snapshot of the resolved `output.environment`, so an entry there must be added to nine config files.
+4. **Implementation** — where the option is consumed.
+5. **Generated output and snapshots** — run `yarn fix:special` (so `lib/` can reference the new types), then update the snapshots the option's _name_ leaks into, which no `configCases/` pattern matches:
+   - `test/__snapshots__/Cli.basictest.js.snap` — CLI flags derive from the schema; every property adds one.
+   - `test/configCases/ecmaVersion/browserslist*/webpack.config.js` — **inline** snapshots of the resolved `output.environment`: one entry across nine config files.
    - `test/unitCases/__snapshots__/target-browserslist.unittest.js.snap` — same, per browserslist query.
-   - `test/unitCases/Defaults.unittest.js` — its **inline** snapshots carry the whole resolved config twice over, once for the base defaults and once per browserslist fixture, so an `output.environment` property adds a line to each. It runs in the `unit` flag, which no `configCases` or `basic` run reaches.
-   - `test/unitCases/Validation.unittest.js` — its **inline** snapshots quote the "these properties are valid" list, so a new property under `module.rules` changes one. It runs in the `unit` matrix, not `basic`.
+   - `test/unitCases/Defaults.unittest.js` — **inline** snapshots of the whole resolved config (base defaults plus once per browserslist fixture), so an `output.environment` property adds a line to each. Runs in the `unit` flag, which no `configCases` or `basic` run reaches.
+   - `test/unitCases/Validation.unittest.js` — **inline** snapshots quote the "these properties are valid" list, so a new `module.rules` property changes one. Runs in the `unit` matrix, not `basic`.
 
-Skipping any layer silently breaks the option. After editing schemas, run `yarn fix:special` so `lib/` code can reference the updated types. If you added or modified options, consider updating `examples/` and run `yarn build:examples` to verify.
+Consider updating `examples/` and running `yarn build:examples` after adding or modifying options.
 
-> [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you did not touch. That churn means your local toolchain resolved differently from CI's — the fix is to commit only your own hunks, then **verify them against the generator** (re-run it and diff), never to hand-write what you think it would emit. A hand-written JSDoc block that omits the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with `… need to be updated` and nothing else.
+> [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you didn't touch. That churn means your toolchain resolved differently from CI's: commit only your own hunks, then **verify them against the generator** (re-run and diff) — never hand-write what you think it would emit. A hand-written JSDoc block missing the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with only `… need to be updated`.
 
-**A nested minifier needs the same options as the outer one.** `lib/html/htmlMinify.js` runs the CSS minifier over an inline `<style>` and every `style=""`, so `output.environment` has to be handed to both — otherwise a `.css` asset and the same declaration inline disagree about what the target can read. Any future HTML-minifies-JS hook has the same obligation.
+**A nested minifier needs the outer one's options.** `lib/html/htmlMinify.js` runs the CSS minifier over inline `<style>` and every `style=""`, so `output.environment` must reach both, or a `.css` asset and the same declaration inline disagree about what the target reads. Any future HTML-minifies-JS hook has the same obligation.
 
-**Schema documentation keywords** — option entries in the schemas support these annotation keywords, which become JSDoc tags in the generated declarations:
+**Schema documentation keywords** become JSDoc tags in the generated declarations:
 
-- `"added": "<version>"` → `@since <version>`. The webpack version that first shipped the option. For a **new option that has not been released yet**, use the upcoming release version (current `package.json` version with the pending changesets applied — e.g. while on `5.108.x` with minor changesets pending, new options get `"added": "5.109.0"`).
-- `"experimental": true` → `@experimental`. For options under `experiments` or otherwise subject to breaking changes.
+- `"added": "<version>"` → `@since`: the first webpack version shipping the option. An unreleased option gets the upcoming version (`package.json` version with pending changesets applied — on `5.108.x` with minor changesets pending, `"added": "5.109.0"`).
+- `"experimental": true` → `@experimental`, for `experiments` options or others subject to breaking changes.
 
-These keywords are documentation-only: the tooling strips them from the precompiled validators. A property that is a pure `$ref` cannot carry them (the `webpack/valid-schema` lint rule forbids extra keys next to `$ref`) — annotate the referenced definition instead.
+They are documentation only (stripped from precompiled validators). A pure `$ref` property can't carry them — annotate the referenced definition.
 
-**What a schema may say is the lint rule's job, not the generator's.** `webpack/valid-schema` is what rejects extra keys next to a `$ref`, a `minLength` other than `1`, and an `enum` holding anything but primitives — the last two because the precompiled validator emits no other length check and can compare nothing else. `yarn lint:code` reports them at the offending key; the generator assumes they hold.
+**What a schema may say is the lint rule's job, not the generator's.** `webpack/valid-schema` rejects extra keys beside a `$ref`, any `minLength` but `1`, and an `enum` holding non-primitives (the validator emits no other length check and compares nothing else); `yarn lint:code` reports them at the key, and the generator assumes they hold.
 
-The two config layers differ: **`normalization.js`** canonicalizes the user-supplied config shape (shorthand → full form); **`defaults.js`** fills in values (often mode/target-dependent). Edit whichever matches your change.
+**`normalization.js`** canonicalizes the user's config shape (shorthand → full form); **`defaults.js`** fills values (often mode/target-dependent). Edit whichever matches.
 
-**Adding a new dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (it emits the generated code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`.
+**New dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (emits the code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`.
 
-**Finding a hook:** hook definitions live on the class that owns them — compiler-wide hooks in `lib/Compiler.js`, per-`Compilation` hooks in `lib/Compilation.js`; tap them with a unique plugin-name string.
+**Finding a hook:** hooks live on their owning class — compiler-wide in `lib/Compiler.js`, per-compilation in `lib/Compilation.js`; tap with a unique plugin-name string.
 
-**Adding a runtime requirement:** declare the symbol in `lib/runtime/RuntimeGlobals.js`, emit its code with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (the `…InModule` variants for per-module needs).
+**New runtime requirement:** declare it in `lib/runtime/RuntimeGlobals.js`, emit it with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (`…InModule` variants for per-module needs).
 
 ### Moving a file out of `lib/` root
 
 > [!REQUIRED]
 
-**Run `yarn find-deep-imports:check` on every move, before the commit.** A path that
-leaves `lib/` root breaks any published package importing it, and the recorded scan in
-`tooling/deep-webpack-imports.json` is what says which those are. `--write` refreshes it
-off the registry; `--check` needs no network and is what CI runs. Its `removed` map names
-the paths no webpack 5 build can reach, and the two maps are disjoint — `--write` skips a
-path `removed` names rather than recording it as a request.
+**Run `yarn find-deep-imports:check` on every move, before committing.** A path leaving `lib/` root breaks any published package importing it; `tooling/deep-webpack-imports.json` records which. `--write` refreshes it off the registry; `--check` needs no network and is what CI runs. Its `removed` map (paths no webpack 5 build can reach) is disjoint from the imports — `--write` skips a path `removed` names.
 
-**A re-export is owed only to a webpack-5 package that imports the path unconditionally.**
-Read the importer's tarball, not its download count: a package whose `peerDependencies`
-or `dependencies` name webpack 5 and which requires the path at the top level gets a
-`// TODO in the next major release: remove` re-export at the old path. One that is webpack 4 only — it
-imports something webpack 5 deleted — or that probes for the path inside a `try` to detect
-webpack 4 gets an entry under `removed` with that reason instead, because a re-export
-would send it down the wrong branch.
+**A re-export is owed only to a webpack-5 package importing the path unconditionally.** Read the importer's tarball, not its download count: if its `peerDependencies`/`dependencies` name webpack 5 and it requires the path at top level, add a `// TODO in the next major release: remove` re-export at the old path. If it is webpack 4 only (imports something webpack 5 deleted) or probes the path inside a `try` to detect webpack 4, add a `removed` entry with that reason instead — a re-export would send it down the wrong branch.
 
-**Six things carry a path, and only the first is obvious.** Rewrite every one, then
-confirm the move by regenerating rather than by reading:
+**Six things carry a path, only the first obvious.** Rewrite all, then confirm by regenerating, not reading:
 
-1. `require("…")` and `require.resolve("…")`, including template literals and a string
-   sitting in a ternary branch lines away from its call.
-2. `@import … from "…"` in a JSDoc block.
-3. `@typedef {import("…")}` — a different form from the one above, and missing it drops
-   the type from webpack's public surface without failing anything.
-4. `tsType` in `schemas/**/*.json`, which can fail loudly in `fix:special` or silently
-   degrade a public type to `any`.
-5. `makeSerializable(Class, "webpack/lib/…")` — the request moves with the class and the
-   old one stays restorable through `registerLegacyRequest`, or a pre-move cache pack
-   stops loading.
+1. `require("…")` / `require.resolve("…")`, including template literals and a string in a ternary branch lines away from its call.
+2. `@import … from "…"` in JSDoc.
+3. `@typedef {import("…")}` — a different form; missing it silently drops the type from the public surface.
+4. `tsType` in `schemas/**/*.json` — fails loudly in `fix:special` or silently degrades a public type to `any`.
+5. `makeSerializable(Class, "webpack/lib/…")` — the request moves with the class and the old one stays restorable via `registerLegacyRequest`, or pre-move cache packs stop loading.
+6. A path in a config or generator outside `lib/` — the input list in `tooling/generate-runtime-code.js`, an `ignores` entry in `eslint.config.mjs`. Both silently stop matching; the second fails as style errors in a file nobody edited.
 
-6. A path written into a config or a generator rather than into `lib/` — the input list
-   in `tooling/generate-runtime-code.js`, an `ignores` entry in `eslint.config.mjs`. Each
-   silently stops matching, and the second fails as style errors in a file nobody edited.
+`yarn fix:special` leaving `types.d.ts` byte-identical confirms 3 and 4; `ConfigCacheTestCases` reporting no `Pack got invalid` line confirms 5; nothing static catches 1 — only building `lib/index.js` does.
 
-`yarn fix:special` leaving `types.d.ts` byte-identical is the check that 3 and 4 are done;
-`ConfigCacheTestCases` reporting no `Pack got invalid` line is the check that 5 is. Nothing
-static catches 1 — only building `lib/index.js` does.
+This applies equally to moves **between** `lib/` directories, where 6 is what has actually gone wrong (`lib/util/semver.js` was named in both files above).
 
-This list is not only for `lib/` root: moving a file **between** `lib/` directories carries
-the same six, and 6 is the one that has actually gone wrong — `lib/util/semver.js` was named
-in both files above.
-
-**Update the Architecture listing above in the same commit**, and grep it for the old path:
-prose elsewhere in this guide names files too, and those references go stale just as
-quietly.
+**Update the Architecture listing in the same commit**, and grep this guide for the old path — prose elsewhere names files too.
 
 ### Diagnostics and hints
 
 > [!REQUIRED]
 
-**Error and warning classes live in `lib/errors/`**, whatever raises them — the plugin that pushes one stays where it belongs, but the class itself goes there.
+**Error and warning classes live in `lib/errors/`**, whatever raises them; the raising plugin stays where it belongs.
 
-A hint reuses the reporting webpack already has rather than inventing its own: `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`, so a hint that hardcodes one of the two cannot be escalated. Prefer an option that says _whether_ to run the check and leave the severity to `performance.hints`.
+A hint reuses existing reporting: `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`; hardcoding one list makes a hint impossible to escalate. Prefer an option saying _whether_ to run the check and leave severity to `performance.hints`.
 
-**Whether a diagnostic needs `makeSerializable` follows from where it is created.** Anything reachable from a module — `ModuleError`, `ModuleWarning`, `ModuleBuildError` — is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack, which is why nothing in `lib/performance/` registers a serializer. Guessing wrong is silent: it surfaces only as `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there rather than assuming.
+**`makeSerializable` follows from where a diagnostic is created.** Anything reachable from a module (`ModuleError`, `ModuleWarning`, `ModuleBuildError`) is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack (why nothing in `lib/performance/` registers). A wrong guess is silent except for `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there.
 
 ## Code conventions
 
 ### Source language: CommonJS + JSDoc
 
-`lib/` is CommonJS only. Use `module.exports` / `require()`, never `import`/`export` syntax. Types are declared via JSDoc — `@typedef {import("./Other")} Other` and friends — never TypeScript syntax inside `.js` files. The JSDoc annotations are compiled into `types.d.ts` by `yarn fix:special`.
+`lib/` is CommonJS only: `module.exports` / `require()`, never `import`/`export`. Types are JSDoc (`@typedef {import("./Other")} Other` etc.), never TypeScript syntax in `.js` files; `yarn fix:special` compiles them into `types.d.ts`.
 
 ### Type annotations
 
-Prefer the most specific real type. `EXPECTED_ANY`, `EXPECTED_OBJECT`, and `EXPECTED_FUNCTION` (aliases for `any`, `object`, `Function`) are an escape hatch, not a default — reach for one **only** when the value genuinely can be any value, any object, or any function, and **never** when a real type fits. `unknown` is the same: use it for a value whose type you can't yet name (then narrow it), but if a real type (e.g. an imported `import("…").Foo`) fits, use that instead. This applies in `test/` too.
+Use the most specific real type. `EXPECTED_ANY`, `EXPECTED_OBJECT`, `EXPECTED_FUNCTION` (aliases for `any`, `object`, `Function`) are an escape hatch **only** for a value that genuinely can be any value/object/function — never when a real type fits. Likewise `unknown` is for a type you can't yet name (then narrow); prefer a real type such as `import("…").Foo`. Applies in `test/` too.
 
-Prefer a generic (`@template`) over a widened type whenever a function's output type depends on its input — it keeps callers precisely typed instead of collapsing to `EXPECTED_ANY`.
+When a function's output type depends on its input, use a generic (`@template`) rather than widening, so callers stay precisely typed.
 
 ### Naming
 
-Spell names out in full — functions, variables, parameters, properties. Prefer `insertHtmlElement` over `insHtmlEl`, `attributeCount` over `attrCnt`, `current` over `cur`, `element` over `el`. Don't truncate or drop vowels to save characters; a clear name is worth the extra keystrokes.
-
-The only exceptions are (1) established abbreviations webpack already uses pervasively (`ast`, `ns` for namespace, `id`, `url`, `css`, `js`, `dir`, `env`, `fs`) or spec-defined ones (`afe` for the HTML spec's "active formatting elements"), and (2) throwaway loop indices (`i`, `j`, `k`). When an abbreviation isn't already common in the codebase or the relevant spec, write the full word.
+Spell names out in full (functions, variables, parameters, properties): `insertHtmlElement` not `insHtmlEl`, `attributeCount` not `attrCnt`, `current` not `cur`, `element` not `el`. Exceptions: abbreviations webpack already uses pervasively (`ast`, `ns`, `id`, `url`, `css`, `js`, `dir`, `env`, `fs`) or spec-defined ones (`afe` — the HTML spec's active formatting elements), and throwaway loop indices (`i`, `j`, `k`). Otherwise write the full word.
 
 ### Path regexps and helpers live in one file
 
 > [!REQUIRED]
 
-`lib/util/identifier.js` is the single home for path-shape regexps (`ABSOLUTE_PATH_REGEXP`, `WINDOWS_ABS_PATH_REGEXP`, `WINDOWS_PATH_SEPARATOR_REGEXP`, …) and for the helpers built on them (`parseResource`, `makePathsRelative`, `contextify`, `absolutify`, `getUndoPath`, …). **Import them from there — never re-declare a local copy**, even a one-liner like `/^[a-z]:[\\/]/i` or `/\\/g`. Duplicates drift apart, and each one becomes a second, subtly different definition of "absolute path" or "path separator" for the same codebase.
+`lib/util/identifier.js` is the single home of path-shape regexps (`ABSOLUTE_PATH_REGEXP`, `WINDOWS_ABS_PATH_REGEXP`, `WINDOWS_PATH_SEPARATOR_REGEXP`, …) and the helpers built on them (`parseResource`, `makePathsRelative`, `contextify`, `absolutify`, `getUndoPath`, …). **Import from there — never re-declare a local copy**, even a one-liner like `/^[a-z]:[\\/]/i` or `/\\/g`; duplicates drift into subtly different definitions of "absolute path" or "separator".
 
-Before writing any regexp that matches a path shape, read the top of `lib/util/identifier.js` and its `module.exports` block. If the regexp you need is defined there but not exported, **export it and import it** rather than copying it. Only define a new one locally when nothing there fits — and then keep it next to the single function that uses it.
+Before writing a path-shape regexp, read the top of that file and its `module.exports`. If what you need is defined but not exported, **export and import it**. Define one locally only when nothing fits, next to the single function using it.
 
 ### Don't enumerate module or source types
 
 > [!REQUIRED]
 
-A list of module types, source types or dependency types written into `lib/` claims those are the only ones there will ever be. It is wrong the day one is added, and nothing fails — the new type silently takes whichever branch the list forgot. Ask instead:
+A list of module, source or dependency types in `lib/` claims those are all there will ever be; the day one is added it is silently wrong, and the new type takes whichever branch the list forgot. Instead:
 
-- **Ask the object.** `module.getSourceTypes()`, `chunkGraph.getModuleSourceTypes(module)` and `moduleGraph.getParentModule(dependency)` answer for whatever exists, a plugin's own types included. `getParentModule` is the one worth knowing: concatenation re-points an incoming connection at the javascript module that absorbed the one holding the reference, so `connection.originModule.type` reads `javascript` for a css `url()` or an html `src`, while the module the dependency belongs to still reads `css` or `html`.
-- **Match the class, not its name.** `dependency instanceof URLDependency` says what `dependency.type === "new URL()"` only approximates, and it survives a rename.
+- **Ask the object.** `module.getSourceTypes()`, `chunkGraph.getModuleSourceTypes(module)`, `moduleGraph.getParentModule(dependency)` answer for whatever exists, plugin types included. Know `getParentModule`: concatenation re-points an incoming connection at the javascript module absorbing the referencing one, so `connection.originModule.type` reads `javascript` for a css `url()` or html `src`, while the dependency's own module still reads `css`/`html`.
+- **Match the class, not its name.** `dependency instanceof URLDependency` says what `dependency.type === "new URL()"` only approximates, and survives renames.
 
-**A feature flag is that same list in disguise.** Gating on `options.experiments.<x>` to mean "which types can exist here" is the harder version of the mistake to spot, because it reads like configuration rather than an enumeration — and it goes stale the same way.
+**A feature flag is the same list in disguise**: gating on `options.experiments.<x>` to mean "which types can exist here" reads like configuration but goes stale the same way.
 
-When a branch genuinely has to name types, **write it so an unknown type takes the safe side**. Name the one special case and let everything else fall to the general answer (`typePrefixEquals(type, JAVASCRIPT_TYPE)` … `else` reads the asset url), or list what provably needs nothing and treat the rest as needing it (`TYPES_WITHOUT_CHUNK_HANDLER`). A list whose `else` branch does nothing is the shape to avoid.
+When a branch must name types, **let an unknown type take the safe side**: name the special case and let the rest fall to the general answer (`typePrefixEquals(type, JAVASCRIPT_TYPE)` … `else` reads the asset url), or list what provably needs nothing and treat the rest as needing it (`TYPES_WITHOUT_CHUNK_HANDLER`). Avoid a list whose `else` does nothing.
 
 ### Source file headers
 
-Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT license header. When adding a **new** file, set the `Author` line to its actual author (`Author <Name> @<github-handle>`) — don't copy another file's author line.
+Every source file in `lib/`, `hot/` and `tooling/` opens with the MIT license header. A **new** file's `Author` line names its actual author (`Author <Name> @<github-handle>`) — never copied from another file.
 
 ### Code comments
 
 > [!REQUIRED]
 
-**A plain comment is at most three lines. Count them.** This binds every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits into its output. A fourth line is over the limit however short each line is and however true every word — split the thought, cut it, or drop it.
+**A plain comment is at most three lines. Count them.** This binds every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits. A fourth line is over however short or true — split, cut or drop it. `webpack/comment-length` enforces it repo-wide (`lib/` included; `yarn lint:code` shows it, over whole files, reading comment tokens only, so comment-like text in strings doesn't count) and fails `lint`. Only `examples/` is exempt: a commented-out config there is what readers copy, and the prose is the example's documentation.
 
-`webpack/comment-length` reports it, so `yarn lint:code` is where you see it — over whole files rather than a diff, and it reads comment tokens, so comment-shaped lines inside a string are not comments. It is on for the whole repository, `lib/` included, so a comment over the limit fails `lint` rather than waiting for a reviewer. `examples/` is the one exception: a commented-out config there is what a reader copies, and the prose is the example's own documentation.
-
-**Three things are exempt. JSDoc is a type contract rather than commentary, and the other two are not commentary either.** The block before a file's first statement documents the file, like the license header above it — the `"use strict"` directive between the two does not end it. And a comment whose first line opens `// WHY:` states why the code is shaped the way it is — the spec prose behind a `SUPPLEMENT` entry, a measured engine disagreement, a constraint some other file depends on — which is the one kind of explanation that cannot be made shorter without losing it:
+**Three things are exempt, none of them commentary**: JSDoc (a type contract); the block before a file's first statement (documents the file like the license header — a `"use strict"` between them doesn't end it); and a comment whose first line opens `// WHY:`, stating why code is shaped as it is — spec prose behind a `SUPPLEMENT` entry, a measured engine disagreement, a constraint another file depends on — which can't be shortened without loss:
 
 ```js
 // WHY: Chromium reads an Oklch hue as missing well before the chroma reaches
@@ -420,29 +301,27 @@ Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT licen
 // engines agree on, and a mix naming one is left as it stands.
 ```
 
-The marker is not a way to keep a long comment: reach for it only when every line carries something the code cannot, and expect a reviewer to ask which line that is. `grep -rn "// WHY:"` is how often it was reached for.
+`WHY:` is not a way to keep a long comment: use it only when every line carries something the code can't, and expect a reviewer to ask which line that is (`grep -rn "// WHY:"` shows how often it's used).
 
-Each surviving line must carry what the code cannot: a hidden invariant, an ordering constraint, a workaround, or the name of the concept the block implements. **Never** restate the next line, narrate the diff, recap the PR description, or quote the task you were given.
+Each surviving line must carry what code can't: a hidden invariant, an ordering constraint, a workaround, or the name of the concept implemented. **Never** restate the next line, narrate the diff, recap the PR, or quote your task.
 
-**A JSDoc block's tags are exempt** — they are the type contract, not commentary, and are multi-line by construction. Every named function gets one, module-scope helper or not: one `@param` per parameter, an `@returns`, `@template`/`@typedef` where they apply. Never shorten, flatten or delete a tag, and never trade a JSDoc block for a `//` comment that hides the types in an inline `/** @type {T} */` cast — that loses the parameter and return documentation. (Such a cast is for a throwaway callback argument only.)
+**JSDoc tags are exempt**, multi-line by construction. Every named function gets a block, module-scope helpers included: one `@param` per parameter, `@returns`, `@template`/`@typedef` where they apply. Never shorten, flatten or delete a tag, and never trade a JSDoc block for a `//` comment plus an inline `/** @type {T} */` cast (that loses parameter and return docs; such casts are for throwaway callback arguments only).
 
-**The description above those tags is prose, so it is capped at two sentences.** Say what the function does when its name doesn't, plus the one constraint a caller needs. Moving an essay out of a `//` comment into a JSDoc description is the same essay indented differently, not a fix — an explanation of the algorithm, the history, or the alternatives considered belongs in neither. Prose about a documented symbol goes inside its JSDoc, never as a `//` comment stacked on top of the block or standing in for it.
+**The description above the tags is prose, capped at two sentences**: what the function does when its name doesn't say, plus the one constraint a caller needs. An essay moved from `//` into JSDoc is the same essay; algorithm explanations, history and alternatives belong in neither. Prose about a documented symbol goes inside its JSDoc, never as a `//` comment above or instead of it.
 
 ### Marking work for the next major
 
 > [!REQUIRED]
 
-Work that has to wait for the next breaking release is marked with one wording, everywhere, in every file type:
+Work waiting for the next breaking release uses one wording, in every file type:
 
 ```js
 // TODO in the next major release: remove, `css-url` is the old spelling of `asset-url`
 ```
 
-**Never name a version, in a marker or in the prose beside one.** `TODO webpack 6`, `TODO remove in webpack 6`, `TODO webpack6 - …`, `TODO webpack@6` and `TODO reconsider this for webpack 6` all meant the same thing, and none of them found the others — which is how one cleanup came to be written a dozen ways. A `@deprecated` tag or a description saying what the next major does goes stale the same way, so it takes the same phrase. A number also goes stale the moment that major ships: what was deferred to 6 and missed is deferred to 7, and the comment still says 6. The phrase names the next breaking release whenever it happens to be read.
+**Never name a version**, in the marker or the prose beside it (`TODO webpack 6`, `TODO remove in webpack 6`, `TODO webpack6 - …`, `TODO webpack@6`, `TODO reconsider this for webpack 6` — one cleanup got written a dozen unsearchable ways). A number goes stale when that major ships and the work slips to the next; a `@deprecated` tag or description of what the next major does takes the same phrase.
 
-**Always say what to do**, not merely that something is pending — a bare marker tells the branch doing the work nothing. The comment is a plain comment, so the [three-line limit](#code-comments) binds it too.
-
-The whole list is then one command, which is the point of the wording:
+**Always say what to do** — a bare marker tells the branch doing the work nothing. It is a plain comment, so the [three-line limit](#code-comments) applies. The whole list is then one command, which is the point of the single wording:
 
 ```sh
 grep -rn "TODO in the next major release" codecov.yml bin hot lib setup test tooling
@@ -450,85 +329,77 @@ grep -rn "TODO in the next major release" codecov.yml bin hot lib setup test too
 
 ## Testing
 
-For directory structure, naming, and how to run a single case, see [TESTING_DOCS.md](TESTING_DOCS.md).
+Directory structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
-**For bug fixes, always write the test case first.** Run the test to confirm it fails, then make the code change and re-run. For new features, tests can be written alongside or after.
+**For bug fixes, write the test first**, confirm it fails, then fix and re-run. For features, tests may come alongside or after.
 
-**Prefer integration tests over unit tests.** Cover behavior with an integration case (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) that drives a real `webpack()` build whenever the behavior can be exercised that way — they catch real-world regressions a mocked unit test misses. Reach for a `*.unittest.js` only for pure helpers/utilities that a build can't naturally reach.
+**Prefer integration tests** (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) driving a real `webpack()` build whenever the behavior is reachable that way — they catch regressions mocked unit tests miss. Use `*.unittest.js` only for pure helpers a build can't naturally reach.
 
-**Snapshot printed code; assert everything else.** When what a test checks _is_ generated output — emitted bundles, minified CSS / HTML, serialized ASTs, stats text — use `toMatchSnapshot()` rather than hand-written `expect(...).toBe(...)` on fragments of it. A hand-written expectation over printed code pins one substring and silently ignores every other byte the printer emits, so a regression next to it passes; a snapshot shows the whole diff and is reviewed as one. The reverse holds for everything that is not printed output — behavior, invariants, equivalences, error paths — where an explicit `expect` states the contract and a snapshot only records whatever happened to be true.
+**Snapshot printed code; assert everything else.** When the thing tested _is_ generated output — bundles, minified CSS/HTML, serialized ASTs, stats text — use `toMatchSnapshot()`, not `expect(...).toBe(...)` on fragments (which pins one substring and ignores every other byte). For behavior, invariants, equivalences and error paths use explicit `expect`s; a snapshot there only records what happened to be true. Never snapshot a value some machine can't produce (a snapshot skipped without an optional browser or native binary is reported obsolete and fails the run there), and keep control characters out of snapshots (one NUL makes git treat the file as binary and hide its diff).
 
-Two things follow. Never snapshot a value a test cannot produce on every machine: a snapshot that is skipped when an optional tool (a browser, a native binary) is absent is reported as obsolete and fails the run there. And keep control characters out of a snapshot — one NUL makes git treat the file as binary and stop showing its diff, which is the only reason the snapshot exists.
+Run targeted tests only — `yarn test:base --testPathPatterns="<pattern>"` or `-t "<name>"` — covering the touched code, and leave broad suites to CI. Never bare `yarn jest`/`npx jest` (see [Commands](#commands)); no `yarn test` unless asked; eyeball the diff before `yarn test:base -u`.
 
-Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first.
+> [!REQUIRED] > **Two kinds of change widen the blast radius.** Touching `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates moves the whole option surface. Still don't sweep suites locally: push, let CI sweep, and [read the failing job's log](#read-ci-rather-than-re-running-it). Locally run only the touched `configCases/`, `yarn lint:code` and `yarn fix:special` (whose output says whether a generated file is stale). `lint`, `basic` and `unit` gate the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: [lint, basic, unit]`), so a red one — `lint` included — stops every integration upload, and coverage then computes patch coverage from whichever cheap suite did report: it reads like a coverage problem but isn't.
 
-**Run only tests specific to your change — leave the broad suites to CI.** Pick the cases that cover the touched code (`--testPathPatterns` / `--testNamePattern`) instead of sweeping whole suites.
-
-> [!REQUIRED] > **Two kinds of change widen the blast radius past "the tests for my change".** Touch `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates, and what moves is the whole option surface, not the feature. That does **not** mean sweeping the suites locally — push and let CI sweep them, then [read the failing job's log](#read-ci-rather-than-re-running-it). Locally, run only the cheap targeted stages: the `configCases/` your change touches, plus `yarn lint:code` and `yarn fix:special` (whose own output tells you whether a generated file is stale). `lint`, `basic` and `unit` gate the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: [lint, basic, unit]`), so a red one of the three stops every integration upload and leaves the coverage report computing patch coverage from whichever cheap suite did report — a failure that reads like a coverage problem but is not one, and one a `lint` failure can now cause.
-
-> [!REQUIRED] > **Every stage of `lint` runs before every push — not a chosen few, and not only the files you edited.** `yarn lint:types` plus `npx eslint <the files I touched>` is **not** "lint passed": it skips `lint:special`, which fails on a stale generated file, and `lint:spellcheck`, which reads every Markdown file in the repo. `yarn fix` is not it either — it regenerates and formats, but runs no type check and no spellcheck, so **run `yarn lint` after it** (or walk all nine stages by hand when an earlier one trips on sandbox drift). And read each stage's output whole: piping it through `tail` or `grep` is how a finding two lines above the summary reaches CI instead of you.
+> [!REQUIRED] > **Run every stage of `lint` before every push — not a chosen few, not only your files.** `yarn lint:types` plus `npx eslint <files>` is **not** "lint passed": it skips `lint:special` (fails on stale generated files) and `lint:spellcheck` (reads every Markdown file). `yarn fix` isn't it either — it regenerates and formats but doesn't type check or spellcheck — so **run `yarn lint` after it** (or all nine stages by hand if an early one trips on sandbox drift). Read each stage's output whole: piping through `tail`/`grep` is how a finding just above the summary reaches CI instead of you.
 >
-> **A generated file is stale the moment any JSDoc it copies changes — including the prose.** `types.d.ts` carries the comment above `process()`, not just its signature, so rewording that comment invalidates the check. Editing a signature and forgetting its doc paragraph fails `lint` with `types.d.ts need to be updated` and nothing else — the same message a missing member gives, which is why it reads as a code problem when it is a comment problem. After splicing your hunks, diff your file against the generator's whole output for that symbol's region and confirm the **region** matches, not just the lines you meant to change.
+> **A generated file is stale as soon as any JSDoc it copies changes — prose included.** `types.d.ts` carries the comment above `process()`, not just its signature; a reworded comment, or a signature edited without its doc paragraph, fails `lint` with the same `types.d.ts need to be updated` a missing member gives. After splicing your hunks, diff your file against the generator's whole output for that symbol's **region**, not just the lines you meant to change.
 
-`yarn lint` is a `&&` chain, so the first stage that trips on sandbox drift hides every stage after it. When `lint:special` reports declarations "need to be updated" that `main` reports too, do not stop there — run the rest by hand (`lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`). `lint:types-test` is the one that catches `tsc` errors in `test/`, and skipping it is how a red `lint` survives a "lint passed locally".
+`yarn lint` is an `&&` chain, so the first stage tripping on sandbox drift hides the rest. If `lint:special` reports declarations "need to be updated" that `main` reports too, run the rest by hand: `lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`. `lint:types-test` catches `tsc` errors in `test/`; skipping it is how a red `lint` survives "lint passed locally".
 
-Also note that a local failure is only yours if it does not reproduce on `main`. Check with a worktree (`git worktree add <dir> origin/main`) before spending time on it: sandboxes routinely fail `Cli createColors`, `profiling-plugin` and the `many-replacements` cases for environment reasons, and the generated-declaration check flags files CI is perfectly happy with. In particular, do **not** run the spec-conformance suites (`yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing`) as a routine local verification step — `test262` alone takes tens of minutes — and don't run the full `test:integration` matrix locally. CI runs all of them on every push; locally, run the `configCases/` relevant to your change.
+A local failure is yours only if it doesn't reproduce on `main` — check in a worktree (`git worktree add <dir> origin/main`) first. Sandboxes routinely fail `Cli createColors`, `profiling-plugin` and the `many-replacements` cases for environment reasons, and the generated-declaration check flags files CI accepts. **Hard rule — no broad local sweeps**: never run the spec-conformance suites (`test:test262` alone takes tens of minutes, `test:html5lib`, `test:css-parsing`) or the full `test:integration` matrix as routine local verification — CI runs them on every push; locally, run the `configCases/` relevant to your change. Broad local sweeps cost minutes and, on a busy machine, manufacture timeouts that look like regressions. Narrow the pattern until a run takes seconds, and:
 
-This is a hard rule, not a preference: a broad local sweep costs many minutes, and on a busy machine it manufactures timeout failures that look like regressions but reproduce nowhere else. Narrow the pattern until the run is seconds. Two habits keep this honest:
-
-- **Never read a pass/fail verdict through a pipe.** `yarn test:base … | grep …` discards jest's exit code, so a red run reads as green. Check the exit status, or read the `Tests:` summary line directly.
-- **Never attribute a failure without a base run.** Before assuming a failing case is yours, re-run that exact case on the unmodified files. Most surprises are pre-existing or contention flakes.
+- **Never read pass/fail through a pipe** — `yarn test:base … | grep …` discards jest's exit code. Check the exit status or read the `Tests:` line.
+- **Never attribute a failure without a base run** — re-run that exact case on unmodified files first; most surprises are pre-existing or contention flakes.
 
 ### Read CI rather than re-running it
 
 > [!REQUIRED]
 
-**When CI is red, read its log — do not reproduce the whole job locally.** The run already holds the answer, and re-running `yarn lint` or a whole suite to rediscover one line costs minutes and a great many tokens. Filter the run to its failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content` — its tail is mostly `Post job cleanup`, so ask for enough lines to clear that), then reproduce **only the case it names**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
+**When CI is red, read its log instead of reproducing the whole job locally** — rediscovering one line by re-running `yarn lint` or a suite wastes minutes and tokens. Filter the run to failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content`, asking for enough lines to clear the trailing `Post job cleanup`), then reproduce **only the named case**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
 
-Two traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first stage, so a CI failure in `lint:code` says nothing about the later ones, just as a local `lint:special` complaint `main` also makes says nothing about CI.
+Traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first failing stage, so a CI failure in `lint:code` says nothing about later stages — just as a local `lint:special` complaint `main` also makes says nothing about CI.
 
 ### Verifying a performance or memory change
 
 > [!REQUIRED]
 
-A perf/memory claim needs evidence, and the cheap kinds are the trustworthy ones. Prefer, in this order:
+Perf/memory claims need evidence, and the cheap kinds are the trustworthy ones; prefer, in order:
 
-1. **Counting** — call counts, allocation counts, retained object counts. Deterministic; run it once.
-2. **CPU-profile attribution** — `node --cpu-prof`, then sum self time per bucket. Robust to a loaded machine.
+1. **Counting** — calls, allocations, retained objects. Deterministic; run once.
+2. **CPU-profile attribution** — `node --cpu-prof`, sum self time per bucket. Robust to load.
 3. **Retained heap** — `node --expose-gc`, GC several times, read `v8.getHeapStatistics().used_heap_size`.
-4. **Wall/CPU timing** — last resort. Interleave the arms in one process, report `n` and dispersion, and treat a difference smaller than the run-to-run spread as no result.
+4. **Wall/CPU timing** — last resort: interleave arms in one process, report `n` and dispersion; a difference below run-to-run spread is no result.
 
-`FILTER="<case-name>" yarn benchmark` drives the repo's own cases; `test/benchmarkCases/` is the fixture set.
+`FILTER="<case-name>" yarn benchmark` drives the repo's cases; fixtures are in `test/benchmarkCases/`.
 
-**Some hot methods are sized to V8's inlining budget, and an edit can undo that silently.** TurboFan declines to inline a callee over its bytecode limit (460 at the time of writing), so a method sitting just under it loses the inlining — and the speed that came with it — the moment anything is added. `lib/javascript/syntax-parser.js` keeps `readWord`, `readString` and `finishToken` under that limit deliberately, with their rare arms split into `_readWordIntoCache`, `_readWordUncacheable`, `_readStringCold` and `_updateContext`; `readWord` has about six bytes of headroom, and once cost 1.4% from one added argument. Read the size back before and after touching them:
+**Some hot methods are sized to V8's inlining budget.** TurboFan won't inline a callee over its bytecode limit (460 at the time of writing), so adding anything to a method just under it silently loses the inlining. `lib/javascript/syntax-parser.js` keeps `readWord`, `readString` and `finishToken` under it deliberately, with rare arms split into `_readWordIntoCache`, `_readWordUncacheable`, `_readStringCold` and `_updateContext`; `readWord` has ~6 bytes of headroom and once cost 1.4% from one added argument. Check the size before and after touching them:
 
 ```sh
 node --print-bytecode --print-bytecode-filter=readWord <script that parses something>
 ```
 
-`node --trace-turbo-inlining` names what was inlined where, and reports `Cannot consider <name> for inlining (reason: 5)` for a callee that is too large.
+`node --trace-turbo-inlining` shows what was inlined where and reports `Cannot consider <name> for inlining (reason: 5)` for a too-large callee.
 
-**Instruction counts and time are not the same claim.** Callgrind over a warmed parse (`valgrind --tool=callgrind --smc-check=all-non-file`, differencing two run lengths so startup and tier-up drop out) resolves work to about ±0.2% and is the right tool for "does this do less". It does not establish that a build gets faster: CPU time on a shared machine needs tens of fresh processes per arm before it resolves a few percent, and an allocation change moves GC timing in steps that swamp the mutator delta. Say which of the two a number is.
+**Instruction counts and time are different claims** — say which a number is. Callgrind over a warmed parse (`valgrind --tool=callgrind --smc-check=all-non-file`, differencing two run lengths so startup and tier-up drop out) resolves work to ~±0.2% and answers "does this do less", not "is the build faster": CPU time on a shared machine needs tens of fresh processes per arm to resolve a few percent, and allocation changes move GC timing in steps that swamp the mutator delta.
 
-A claim about **webpack's CSS or HTML minifier, or its JavaScript parser, versus the ecosystem's** (size, speed, memory, or safety) is already harnessed: run `yarn benchmark:css-tools` / `yarn benchmark:html-tools` / `yarn benchmark:js-tools` and read the tables — see the `tooling/` entry in [Architecture](#architecture) for what they report — rather than hand-rolling a comparison.
+Claims about **webpack's CSS/HTML minifier or JS parser vs the ecosystem** (size, speed, memory, safety): run `yarn benchmark:css-tools` / `:html-tools` / `:js-tools` and read the tables (see `tooling/` in [Architecture](#architecture)) instead of hand-rolling a comparison.
 
-A claim about the **size of what webpack emits** is the counting kind, and `yarn test:size` is how it is counted: it builds every `configCases/` case with the defaults a user gets and reports the raw/gzip/brotli/zstd size of every asset, so a change to `lib/runtime/` or to a dependency template shows up as bytes on the wire. Compare two runs with `--baseline <report>`; the `Code Size` CI job does the same against the report `main` last uploaded and comments the diff on the pull request.
+Claims about **emitted size** are counted with `yarn test:size`: it builds every `configCases/` case with user defaults and reports each asset's raw/gzip/brotli/zstd size, so `lib/runtime/` or dependency-template changes show as bytes on the wire. Compare runs with `--baseline <report>`; the `Code Size` CI job compares against `main`'s last report and comments the diff on the PR.
 
-**Which column decides it: gzip. Raw is the tiebreak, never the case on its own.** Compressed bytes are what crosses the wire, and gzip is the floor every client gets where brotli and zstd are subsets of it — so where the compressed columns disagree with each other, the one saying "no" wins and the change has to earn its way in. Raw still buys real decompress, parse and memory, so a change that is compressed-neutral and cuts raw is worth taking; one that cuts raw and grows gzip is not, whatever the raw number looks like.
+**gzip decides; raw is only the tiebreak.** Compressed bytes cross the wire and gzip is the floor every client gets (brotli and zstd are subsets), so when compressed columns disagree the "no" wins and the change must earn its way in. Raw still buys decompress, parse and memory: compressed-neutral with less raw is worth taking; less raw but more gzip is not. The columns part along one seam, and knowing a change's side saves measuring it:
 
-The two columns disagree along one seam, and knowing which side a change is on saves measuring it:
+- **Removing information** (dead rule, duplicate declaration, a longhand its shorthand implies, whitespace, comments) normally shrinks all columns — no routine check needed, but read the compressed column for small removals, which can delete a run a later match pointed back to.
+- **Re-encoding** (a shorter spelling) is where they diverge, because compressors reward repetition and a short novel token widens the literal alphabet. **A re-encoding must show a compressed win.** Both size-based refusals webpack ships are this shape: `output.environment.convertLengthUnits` (`16px` → `1pc`) is off by default for earning nothing compressed, and a string's hex escape stays as written because writing the character saves 6422 raw bytes but costs 595 gzip over the `benchmark:css-tools` fixtures (the same trade leaves a rival 3.8 KB smaller raw on Font Awesome but 0.3 KB bigger gzipped).
 
-- **Removing information** — a dead rule, a duplicate declaration, a longhand its shorthand implies, whitespace, a comment — shrinks raw and normally the compressed columns with it, so it needs no routine check. Not a guarantee: a small removal can delete a run a later match pointed back to, so read the compressed column when the removal is small.
-- **Re-encoding it** — swapping one spelling for a shorter one — is where they part, because a compressor rewards repetition and a short-but-novel token widens the literal alphabet. **A re-encoding has to show a compressed win to be worth taking.** Both of the refusals webpack ships on size grounds rather than correctness ones are this shape: `output.environment.convertLengthUnits` (`16px` → `1pc`) is off by default because it earns nothing compressed, and a string's hex escape is left as written because writing the character it names saves 6422 raw bytes and costs 595 gzip ones over the `benchmark:css-tools` fixtures — the same trade that makes a rival 3.8 KB smaller raw on Font Awesome and 0.3 KB bigger gzipped.
+This is a review-time acceptance rule, not something a printer consults: no minifier runs a compressor in its inner loop, and ours must not either.
 
-This is a rule for which number a change is accepted on at review time, not something a printer can consult: no minifier runs a compressor in its inner loop, and neither should ours.
+Pitfalls that produced wrong conclusions here:
 
-Pitfalls that have produced wrong conclusions here:
-
-- **Micro-benchmarks of one function lie.** V8's escape analysis deletes non-escaping allocations and the compilation cache hides repeated `new Function` cost. Measure inside a real build.
-- **Changing async structure is not neutral.** Adding a `process.nextTick`/`setImmediate`, or collapsing callbacks, reorders module processing and drags order-dependent work with it. Prove the order is unchanged before believing the delta.
-- **Pick a fixture that actually emits.** `three-long` tree-shakes to a 0-byte bundle in production, so it skips codegen/render/minify entirely and inflates any front-end phase's share. Corroborate on a case that emits code.
-- **Verify semantics every time** — module count, hash of the emitted files on disk, and errors/warnings counts must be unchanged. Comparing two empty outputs proves nothing.
+- **Micro-benchmarks of one function lie** — V8's escape analysis deletes non-escaping allocations and the compilation cache hides repeated `new Function` cost. Measure inside a real build.
+- **Changing async structure is not neutral** — adding `process.nextTick`/`setImmediate` or collapsing callbacks reorders module processing and drags order-dependent work along. Prove order unchanged before believing the delta.
+- **Pick a fixture that emits** — `three-long` tree-shakes to 0 bytes in production, skipping codegen/render/minify and inflating any front-end phase's share. Corroborate on a case that emits.
+- **Verify semantics every time** — module count, on-disk output hashes, and error/warning counts unchanged. Two empty outputs prove nothing.
 
 **Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
 
@@ -536,19 +407,19 @@ Pitfalls that have produced wrong conclusions here:
 yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<category> <case>"
 ```
 
-Swap `ConfigTestCases` for `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [TESTING_DOCS.md](TESTING_DOCS.md)). The `test262`, `html5lib`, `syntax-equivalence`, and `css-parsing` suites use git submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
+Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [TESTING_DOCS.md](TESTING_DOCS.md)). The `test262`, `html5lib`, `syntax-equivalence` and `css-parsing` suites need submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
 
-**Writing a `configCases/` case:** a case is a mini project — `index.js` (runs assertions; a thrown error fails the test) plus `webpack.config.js`. The emitted bundle is actually executed, so it must run. Optional per-case files: `errors.js` / `warnings.js` export arrays of matchers for expected build diagnostics (without them, any error/warning fails the case); `test.filter.js` returns `false` to skip the case (e.g. gate by Node version — see [Target the Node baseline](#target-the-node-baseline) when the fixture itself needs newer syntax); `test.config.js` customizes the run (e.g. `findBundle`).
+**A `configCases/` case** is a mini project: `index.js` (assertions; a throw fails) plus `webpack.config.js`; the emitted bundle is executed, so it must run. Optional: `errors.js` / `warnings.js` export matcher arrays for expected diagnostics (otherwise any error/warning fails the case); `test.filter.js` returns `false` to skip (e.g. by Node version when the fixture itself needs newer syntax — see [Target the Node baseline](#target-the-node-baseline)); `test.config.js` customizes the run (e.g. `findBundle`).
 
-**Cover every line you add or change.** A commit must not lower coverage: each new branch, fast path, and fallback needs a test that exercises it (CI's coverage report enforces this on the patch, target 90%+). Cover new branches with `configCases/` whenever a real build can reach them; fall back to a focused `*.unittest.js` only when a config case can't reasonably drive the branch (or a build-level test adds nothing) — e.g. tokenizer cold-path fallbacks, where each branch (fast and delegated) still needs exercising. Check `yarn cover:unit` locally, or the PR's "patch" coverage report, and add cases until no changed line is missing.
+**Cover every line you add or change** — a commit must not lower coverage (CI enforces patch coverage, target 90%+). Every new branch, fast path and fallback needs a test: `configCases/` when a real build reaches it, a focused `*.unittest.js` only when a config case can't reasonably drive it or adds nothing (e.g. tokenizer cold-path fallbacks, where fast and delegated branches each still need exercising). Check with `yarn cover:unit` or the PR's "patch" report until no changed line is missing.
 
-**Don't lower type coverage either.** webpack tracks how much of `lib/` is precisely typed; CI collects it (`yarn types:cover:report`) and reports the delta on the PR. Keep it from dropping — prefer real types over `EXPECTED_ANY` (see [Type annotations](#type-annotations)), and run `yarn types:cover` locally if you widened any annotations.
+**Don't lower type coverage either.** CI collects it (`yarn types:cover:report`) and reports the delta on the PR. Prefer real types over `EXPECTED_ANY` ([Type annotations](#type-annotations)), and run `yarn types:cover` if you widened any annotation.
 
 ## Git & PR rules
 
 ### Adding a Changeset
 
-Every user-facing change needs a changeset file:
+Every user-facing change needs one:
 
 ```bash
 # Create .changeset/<NNN>-<descriptive-name>.md with this format:
@@ -559,127 +430,107 @@ Every user-facing change needs a changeset file:
 Description of the change.
 ```
 
-Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes. Do not prefix the description with `fix:`, `feat:`, etc.
+`patch` = bug fix, `minor` = feature, `major` = breaking. No `fix:`/`feat:` prefix.
 
-**Keep the description as short as possible** — a single imperative sentence, ≤ 80 characters, **first character capitalized**, **trailing period** ("Fix split-chunks cache key collision."). Changesets are concatenated into `CHANGELOG.md` verbatim. Multi-paragraph rationale belongs in the PR body, not the changeset.
+**Description**: one imperative sentence, ≤ 80 characters, **capitalized**, **trailing period** ("Fix split-chunks cache key collision."). Changesets go into `CHANGELOG.md` verbatim; rationale belongs in the PR body.
 
-**One changeset per pull request** — when a PR contains several related changes, fold them into a single changeset entry (one sentence naming them, using the highest applicable bump level) instead of adding one file per change. Only add separate changeset files when the changes are genuinely unrelated to each other; the length limit may be relaxed slightly for a combined entry.
+**One changeset per PR** — fold related changes into one entry (one sentence, highest bump level; length may stretch slightly); separate files only for genuinely unrelated changes. **Union same-topic entries**: first scan `.changeset/` for a pending entry on the same area (option, parser, subsystem, bug family) and fold into it — seven "Speed up JavaScript parsing." lines are one entry.
 
-**Union same-topic entries** — before adding a changeset, scan `.changeset/` for an existing pending entry covering the same area (same option, parser, subsystem, or bug family) and fold your change into it rather than adding a near-duplicate. A cluster of "Speed up JavaScript parsing." lines is one entry, not seven.
-
-**Filename controls ordering — prefix by importance.** Changesets render grouped by bump level (Major → Minor → Patch); within each section entries appear in **sorted `.changeset` filename order**. Name every changeset `NNN-<description>.md` with a zero-padded numeric prefix (`010-`, `020-`, …) so the lowest number sorts first and lands at the top of its section. Order by importance: user-facing features first, then correctness fixes, then performance, then internal/build/chore. Pick a prefix that slots your entry into the right place relative to the files already there (leave gaps so later entries fit between).
+**Filename sets order.** Entries render grouped by bump level (Major → Minor → Patch), then in sorted filename order. Name each `NNN-<description>.md` with a zero-padded prefix (`010-`, `020-`, …; lowest sorts first), ordered by importance: user-facing features, correctness fixes, performance, then internal/build/chore. Leave gaps and slot yours relative to existing files.
 
 ### Branch name
 
 > [!REQUIRED]
 
-Format: `<type>/<short-description>` (e.g. `fix/split-chunks-cache-key`, `feat/css-modules-named-exports`).
+Format `<type>/<short-description>` (e.g. `fix/split-chunks-cache-key`, `feat/css-modules-named-exports`), where `<type>` is one of `fix`, `feat`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`, `style`, `revert`, `docs` and matches the PR body's "What kind of change…" answer.
 
-Valid `<type>` values: `fix`, `feat`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`, `style`, `revert`, `docs`. Must match the answer to "What kind of change does this PR introduce?" in the PR body.
+**Pick `<type>` from the diff** — never guess or reuse a previous task's. Inspect the staged changes and take the first match describing their _primary intent_:
 
-**Choose `<type>` automatically from the diff** — do not guess or reuse a previous task's prefix. Inspect the staged changes and pick the single type describing their _primary intent_, using the first match in this priority order:
-
-1. `revert` — the change reverts a previous commit.
-2. `fix` — corrects incorrect runtime behavior (a bug); normally paired with a regression test.
-3. `feat` — adds a new user-facing capability or config option (touches `schemas/`, `lib/config/`, or adds a new public API).
-4. `perf` — improves build time or memory without changing behavior.
-5. `refactor` — restructures `lib/` code without changing behavior or adding features.
-6. `test` — touches only `test/`.
-7. `docs` — touches only documentation (`*.md`, example READMEs, JSDoc-only prose).
-8. `build` — changes the build system or dependencies (`package.json`, `tooling/`, generator scripts).
-9. `ci` — touches only `.github/`.
-10. `style` — formatting-only changes with no behavior impact.
+1. `revert` — reverts a previous commit.
+2. `fix` — corrects incorrect runtime behavior; normally with a regression test.
+3. `feat` — new user-facing capability or option (touches `schemas/`, `lib/config/`, or adds public API).
+4. `perf` — faster builds or less memory, behavior unchanged.
+5. `refactor` — restructures `lib/` without behavior change or features.
+6. `test` — only `test/`.
+7. `docs` — only documentation (`*.md`, example READMEs, JSDoc-only prose).
+8. `build` — build system or dependencies (`package.json`, `tooling/`, generators).
+9. `ci` — only `.github/`.
+10. `style` — formatting only.
 11. `chore` — anything else.
 
-When a change spans several categories, classify by its primary purpose (a bug fix that also adds a test is `fix`, not `test`; a feature with docs is `feat`). The chosen `<type>` is the same value used for the "What kind of change does this PR introduce?" answer, so derive both from this list.
+Classify mixed changes by primary purpose (a fix with a test is `fix`; a feature with docs is `feat`).
 
-**PR/commit titles** follow conventional-commit `type(scope): subject`, scope optional (e.g. `perf(css): …`, `feat(caching): …`, `fix: …`). The `type` matches the branch prefix above.
+**PR/commit titles**: conventional-commit `type(scope): subject`, scope optional (`perf(css): …`, `feat(caching): …`, `fix: …`), `type` matching the branch prefix.
 
-Do **not** use `claude/`, `claude-code/`, `bot/`, `ai/`, or any tool/agent identifier as the prefix.
-
-If the task harness pre-created a branch with a different prefix, rename it before the first push: `git branch -m <new-name>`.
+Never prefix with `claude/`, `claude-code/`, `bot/`, `ai/` or any tool/agent identifier. If the harness pre-created a branch with any other prefix (an agent identifier or the wrong `<type>`), rename it before the first push: `git branch -m <new-name>`.
 
 ### One ref per task — report the leftovers
 
 > [!REQUIRED]
 
-A task must leave **one** branch on `origin`: the one its PR is opened from. What accumulates here is usually not that ref — this repository deletes a merged PR's head automatically, unless a branch rule forbids it — but the refs no PR ever pointed at, which nothing can find afterwards: a squash merge leaves no ancestry, so a landed draft looks exactly like unmerged work.
+A task leaves **one** branch on `origin`: its PR's. Merged PR heads are deleted automatically here (unless a branch rule forbids it); what accumulates are refs no PR ever pointed at, which nothing finds later — a squash merge leaves no ancestry, so a landed draft looks like unmerged work. So:
 
-Three habits prevent that, and the fourth reports what they cannot:
-
-- **Rename before the _first_ push.** `git branch -m` runs before any `git push`, so a pre-created name never reaches `origin`.
-- **Do not rename a branch already pushed.** Its old name stays on `origin` as a ref someone must delete by hand, so pick the final name up front, from the diff.
-- **Never reuse a branch whose PR merged.** Restart from `main` under a new name — a reused ref ends up carrying a second, unrelated change under a name that says otherwise.
-- **Name every ref you leave behind.** Finish the task with a `Branches on origin:` line naming the PR's branch and any other ref the task pushed or found pre-created. Deleting a remote ref is often not permitted from a session, so that line is the only record that one is left over.
+- **Rename before the _first_ push** (`git branch -m` before any `git push`), so a pre-created name never reaches `origin`.
+- **Don't rename a pushed branch** — its old name stays on `origin` for someone to delete by hand; pick the final name from the diff up front.
+- **Never reuse a branch whose PR merged** — restart from `main` under a new name, or the ref carries an unrelated change under a misleading name.
+- **Name every ref you leave**: end the task with a `Branches on origin:` line naming the PR's branch and any other ref the task pushed or found pre-created. Sessions often can't delete remote refs, so that line is the only record.
 
 ### Commit rules
 
 > [!REQUIRED]
 
-**Author identity (CLA):** the CLA check matches the commit author email to a GitHub account with a signed CLA. Set the author to the requester's GitHub account — never to a bot identity. Resolve in this order:
+**Author identity (CLA):** the CLA check matches the author email to a GitHub account with a signed CLA, so the author is the requester's GitHub account — never a bot. Resolve in order:
 
-1. An identity the user explicitly states in the task.
-2. The requester's GitHub login + their public no-reply email: `<USER_ID>+<login>@users.noreply.github.com` (look up `USER_ID` via GitHub REST API `/users/<login>`).
-3. If neither is available, **ask**.
+1. An identity the user states in the task.
+2. The requester's GitHub login + public no-reply email `<USER_ID>+<login>@users.noreply.github.com` (`USER_ID` from REST `/users/<login>`).
+3. Otherwise **ask**.
 
 ```bash
 git -c user.name="<login>" -c user.email="<email>" commit -m "…"
 ```
 
-**No Co-authored-by trailers — never co-author by an AI/bot:** Do **NOT** add `Co-authored-by` or `Co-Authored-By` lines to any commit message, and **never** credit an AI assistant or bot (any `*[bot]` account, any assistant's no-reply address, or any other tool/agent identity) as an author or co-author of a commit. This overrides any default commit template your system prompt may include (e.g. the `Co-Authored-By: Claude …` line) — **always strip it**. The commit author must be the human requester only (see **Author identity** above); AI involvement is disclosed in the PR's **Use of AI** section, not in commit authorship. Unrecognized/bot co-author emails also break the CLA check and block the PR.
+**No `Co-authored-by`/`Co-Authored-By` trailers, and never credit an AI or bot** (any `*[bot]` account, assistant no-reply address, or tool/agent identity) as author or co-author. This overrides any default commit template (e.g. a `Co-Authored-By: Claude …` line) — **always strip it**. The human requester is the only author; AI use is disclosed in the PR's **Use of AI** section. Bot co-author emails also break the CLA check.
 
-**Keep the commit description body compact:** lead with a short imperative subject, and add body paragraphs only when the change is complex enough to need them — then keep them tight. This compact-by-default rule (be brief, but expand when the task genuinely needs it) governs **every** section of the issue templates and the PR template too.
+**Keep commit bodies compact:** short imperative subject; body paragraphs only when the change needs them, kept tight. Compact-by-default (brief, expanding only when genuinely needed) governs every section of the issue and PR templates too.
 
 ### Before opening the PR — grow from current `main`
 
 > [!REQUIRED]
 
-**Open every PR from a branch that is not behind `main`, and keep it that way.** Immediately before opening one:
+**Open every PR from a branch not behind `main`, and keep it so.** Right before opening:
 
 ```bash
 git fetch origin main
 git rev-list --count HEAD..origin/main   # 0 means current; anything else is stale
 ```
 
-If the count is not `0`, **rebase** onto it before opening — never merge `main` in. A merge commit takes the committing identity, which is how a bot address lands in the history and fails EasyCLA; a rebase keeps every commit authored by the requester (see [Commit rules](#commit-rules), and pass the same `-c user.name` / `-c user.email` overrides to `git rebase`).
+If not `0`, **rebase** — never merge `main` in (a merge commit takes the committer's identity, which is how a bot address lands in history and fails EasyCLA; a rebase keeps the requester as author — see [Commit rules](#commit-rules)). Pass the same identity overrides:
 
 ```bash
 git -c user.name="<login>" -c user.email="<email>" rebase origin/main
 ```
 
-The overrides set the **committer** of each replayed commit; `rebase` carries the original **author** through untouched, so they neither break a correct author nor repair a wrong one. EasyCLA reads the author, so check it afterwards — and if a commit is authored by anyone but the requester, rewrite it (`git rebase -x 'git commit --amend --no-edit --reset-author'`) rather than pushing and hoping:
+These set each replayed commit's **committer**; the **author**, which EasyCLA reads, carries through untouched — so check it, and rewrite any commit not authored by the requester (`git rebase -x 'git commit --amend --no-edit --reset-author'`) before pushing:
 
 ```bash
 git log --format='%h author=%an <%ae> committer=%cn <%ce>' origin/main..HEAD
 ```
 
-**Then re-run the tests that cover your change.** A stale base is not only a merge-conflict risk: git rebases text, not meaning, so a change that lands on `main` while you work can pass the merge cleanly and still break your code — a renamed helper, a changed default, a fixture your case now shares. Only a run on the rebased tree says otherwise.
+**Then re-run the tests covering your change**: git rebases text, not meaning, so a renamed helper, changed default or shared fixture landing on `main` can break your code with no conflict.
 
-This matters past the opening, too, because a stale base makes CI lie in both directions:
-
-- The `Code Size` and benchmark jobs compare against the report `main` last uploaded. Measure a tree containing commits your branch predates and their bytes are attributed to you — which is how a one-line diff gets reported as `+163 KiB` of somebody else's work.
-- A red check can belong to a defect already fixed on `main`, so the log names a failure your diff never caused.
-
-So when a PR sits long enough for `main` to move, rebase and push again rather than reading a comparison drawn across two different bases. `update_pull_request_branch` is fine when the repository is configured to rebase; otherwise do it locally with the command above.
+A stale base also makes CI lie both ways: `Code Size` and benchmarks compare against `main`'s last report, attributing commits your branch predates to you (a one-line diff reported as `+163 KiB`), and a red check may be a defect already fixed on `main`. So when `main` moves under a long-lived PR, rebase and push again instead of reading a cross-base comparison. `update_pull_request_branch` is fine when the repo is configured to rebase; otherwise rebase locally as above.
 
 ### Pull request body
 
 > [!REQUIRED]
 
-webpack uses an **org-wide** PR template. `gh pr create` does **not** prefill it — you must paste it yourself. Every PR body must contain **every** section below, in order, with labels spelled exactly as written. Write `n/a` for sections that don't apply. Never delete sections or substitute a different template (e.g. `## Summary` / `## Test plan`).
+webpack uses an **org-wide** PR template that `gh pr create` does **not** prefill — paste it yourself. Every PR body, whatever its size or framing, contains **every** section below, in order, labels spelled exactly; write `n/a` where a section doesn't apply. Never delete sections or substitute another template (e.g. `## Summary` / `## Test plan`). Titles are plain text — raw `<`, `>`, never HTML entities.
 
-The template is mandatory for **every** PR regardless of size or framing. Titles are plain text — use raw `<`, `>`, never HTML entities.
+**Keep answers short — ideally one sentence, at most two or three**: the body orients reviewers rather than recapping the investigation, and a reviewer should read the whole body in well under 30 seconds. Where another section of this guide requires rationale in the PR body, give enough to satisfy it (concise multi-paragraph is fine). No bench tables, code blocks, or walkthroughs of iterations/reverts; put extra background in a linked issue/discussion, the relevant inline review thread, or the squash-merge commit body.
 
-**Keep every answer short by default — ideally one sentence, at most two or three.** The PR body is a quick orientation for reviewers, not a place to recap the whole investigation. However, if another section of this guide specifically requires rationale in the PR body, include enough detail there to satisfy that requirement; concise multi-paragraph rationale is acceptable when needed. Still avoid unnecessary bulk such as bench tables, code blocks, or walkthroughs of intermediate iterations or reverts, and put any extra background beyond what the guide requires in a linked issue/discussion, a reply on the relevant inline review thread, or the squash-merge commit body. A reviewer should usually be able to read the entire PR body in well under 30 seconds; if yours takes longer without a guide-required reason, trim it.
+Mistakes that block PRs: `## Summary` headings instead of `**Summary**` bold labels; omitting **Use of AI** (mandatory per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md)); omitting or mis-answering **What kind of change…** (must match the branch prefix); dropping the HTML comment hints or leaving sections blank instead of `n/a`.
 
-Common mistakes that block PRs:
-
-- Using `## Summary` headings instead of `**Summary**` bold labels.
-- Omitting **Use of AI** (mandatory per [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md)).
-- Omitting or mis-answering **What kind of change does this PR introduce?** (must match branch prefix).
-- Dropping HTML comment hints or leaving sections blank instead of `n/a`.
-
-Paste the body from the fenced block below (do **not** include the fence lines themselves):
+Paste this body (without the fence lines):
 
 ```markdown
 <!-- Thanks for submitting a pull request! Please provide enough information so that others can review your pull request. -->
@@ -714,134 +565,124 @@ Paste the body from the fenced block below (do **not** include the fence lines t
 Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due to irresponsible use of AI. -->
 ```
 
-Required answer per section — **one sentence each is the target, two or three the absolute maximum**:
+Answers (one sentence each is the target, two or three the maximum):
 
-- **Summary** — motivation and what problem is solved; link the related issue. When the PR actually fixes the bug or implements the feature the issue asks for, use the auto-closing form `Closes #…` / `Fixes #…` (not `Refs #…`); reserve `Refs #…` for issues the PR only relates to but does not resolve.
-- **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
-- **Did you add tests for your changes?** — yes/no + which test files.
-- **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
-- **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
-- **Use of AI** — state that AI was used and how. Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+- **Summary** — motivation and the problem solved; link the issue. Use `Closes #…` / `Fixes #…` when the PR resolves it, `Refs #…` only for issues it merely relates to.
+- **What kind of change…** — one of fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
+- **Did you add tests…** — yes/no + which files.
+- **Breaking change** — yes/no + migration path if yes.
+- **Documentation** — doc updates, or `n/a`.
+- **Use of AI** — that AI was used and how; omitting or misrepresenting it can get the PR closed per the AI policy.
 
 ### After push — verify PR body
 
-After every `git push` of a new branch, check whether a PR was auto-created (webpack has this webhook). If so, `update_pull_request` to install the full template — the auto-created body never matches.
+After every `git push` of a new branch, check whether a PR was auto-created (webpack has this webhook); if so, `update_pull_request` to install the full template — the auto-created body never matches.
 
 ### Watching a PR, and updating its branch
 
 > [!REQUIRED]
 
-**Subscribe to every pull request you open** (`subscribe_pr_activity`), as the last step of opening it. Not a question to put to the requester: a PR you opened is one you own until it lands, and [every check ends green](#after-opening-the-pr--every-check-ends-green) and [the automated reviews](#after-opening-the-pr--wait-for-the-automated-reviews) both need the session awake to be honoured at all. Stay subscribed until the PR is merged or closed, or the requester says to stop.
+**Subscribe to every PR you open** (`subscribe_pr_activity`) as the last step of opening it — not a question for the requester. You own it until it lands, and [every check ends green](#after-opening-the-pr--every-check-ends-green) and [the automated reviews](#after-opening-the-pr--wait-for-the-automated-reviews) need the session awake. Stay subscribed until merged or closed, or the requester says stop.
 
-What an agent reaches for by the same reflex and must **not** do unasked, because webpack's maintainers usually land a PR through their own pipeline:
-
-- **Rebasing, or merging the base branch into the PR branch.** A branch merely behind `main` is not a defect to fix, and doing it unasked rewrites history someone else's pipeline was about to handle, restarts every check, and can drop an approval. Do it when the requester asks, or when the PR is reported genuinely un-mergeable — and say which of the two applies before pushing.
-
-Pushing your own commits to your own branch stays free. What needs asking is anything that changes how the PR gets landed.
+Don't, unasked, **rebase or merge the base branch into the PR** — maintainers usually land PRs through their own pipeline. Merely being behind `main` isn't a defect; doing it unasked rewrites history their pipeline was about to handle, restarts every check, and can drop an approval. Do it when the requester asks or the PR is reported genuinely un-mergeable, and say which applies before pushing. Pushing your own commits to your own branch is free; anything changing how the PR gets landed needs asking.
 
 ### Writing on GitHub — ask first
 
 > [!REQUIRED]
 
-**Never post to GitHub on your own initiative.** Pushing commits to your own branch is fine; publishing text other people read is not. This covers PR comments, review replies, issue comments, edits to the PR body after it is opened, and every reply to a bot, whichever bots the repository happens to run.
+**Never post to GitHub on your own initiative.** Pushing to your own branch is fine; publishing text others read is not — PR comments, review replies, issue comments, PR body edits after opening, and every reply to any bot.
 
-The rule bans **posting**, not **reading**. What may be skipped is bot noise — a status check, a benchmark that swings on a re-run, a coverage report still waiting on uploads, a changeset/preview echo. Replying to those costs maintainers more attention than the finding did.
+Reading is never banned. Bot noise may be skipped: status checks, a benchmark that swings on re-run, a coverage report still waiting on uploads, changeset/preview echoes — replying to those costs maintainers more attention than the finding.
 
-Everything that names a possible bug, regression, or improvement must be investigated, whoever raised it — a human reviewer or an automated one. Being posted by a bot account is no reason to dismiss it; judge the claim, not the author. Reproduce it, then either fix it in code and push (that needs no permission) or, if you believe it is wrong, bring it **into the session**: report what you found, show the reply you would send, and let the requester decide whether it is posted. Never leave such a finding unanswered.
+Anything naming a possible bug, regression or improvement must be investigated, whoever raised it — being a bot is no reason to dismiss it; judge the claim. Reproduce it, then fix and push (no permission needed) or, if you believe it's wrong, bring it **into the session**: what you found, the reply you'd send, and let the requester decide whether to post. Never leave such a finding unanswered.
 
 ### After opening the PR — every check ends green
 
 > [!REQUIRED]
 
-**The target is the whole run green — every check, not a chosen few.** A red check on your PR is never something to explain, defer, or wait out. There is no such thing as ending a wake on one without either a pushed commit or a reply naming the blocker, and "that one is not important" is not a judgement to make on your own.
+**The target is the whole run green — every check.** A red check is never something to explain, defer or wait out; no wake on one ends without a pushed commit or a reply naming the blocker, and "that one isn't important" is not your call.
 
-Two things follow from that, and neither is an exception to it:
+- **A check that failed once is re-run before it's believed.** Infrastructure fails (runner dies, network fetch times out, an engine crashes on its own bug — the tell is a job reporting every test passing then dying anyway). Re-run the failing job; **if the re-run fails the same way, ignore it and move on** — no more re-runs, no rewriting working code around it, no holding the PR.
+- **Coverage is read only once the uploading suites finish** (below).
 
-- **A check that failed once is re-run before it is believed.** Infrastructure fails: a runner dies, a network fetch times out, an engine crashes on its own bug rather than on yours — the tell is a job that reports every test passing and then dies anyway. Re-run the failing job. **If the re-run fails the same way, ignore it and move on** — do not keep re-running it, do not rewrite working code around it, and do not hold the PR on it.
-- **Coverage is read once the suites that upload it have finished** — see the rule at the end of this section.
+Neither excuses a check you can run yourself: **one that reproduces locally is never re-run and shrugged at** — it's your failure until a run on unmodified `main` proves otherwise. Fix and push.
 
-Neither of those excuses a check you can run yourself. **A check that reproduces locally is never one you re-run and shrug at**: it runs the same command you can type, so a failure in it is a failure you introduced until a run on unmodified `main` proves otherwise. Fix it and push.
+Read the failing job's log ([how](#read-ci-rather-than-re-running-it)), reproduce **only the named case**, fix the cause, re-run that case, then push — never re-run the whole job to find what the log already says. Two recurring failures:
 
-Read the failing job's log rather than guessing — see [Read CI rather than re-running it](#read-ci-rather-than-re-running-it) for how to get to it in three calls — then reproduce **only the case it names**, fix the cause, and re-run that one case before pushing. Re-running the whole job locally to find what the log already says is the waste that section exists to stop. Two failures recur often enough to name:
+- **cspell** rejects a word — reword (the codebase is American English, and [Naming](#naming) forbids abbreviations) or add a genuine term to `cspell.json`.
+- **A snapshot lives in two suites** — `ConfigTestCases` and `ConfigCacheTestCases` both snapshot `configCases/`, and `--testPathPatterns=ConfigTestCases` doesn't match the latter. Use `yarn test:basic --testNamePattern="<case>" -u` (no path filter): the name filter covers that case in both suites, no full `test:basic` needed.
 
-- **cspell** rejects a word — reword it (the codebase is American English, and [Naming](#naming) forbids abbreviations) or, for a genuine term, add it to `cspell.json`.
-- **A snapshot lives in more than one suite.** `ConfigTestCases` and `ConfigCacheTestCases` both snapshot `configCases/`, and `--testPathPatterns=ConfigTestCases` does **not** match `ConfigCacheTestCases`. Update snapshots with `yarn test:basic --testNamePattern="<case>" -u` (no path filter) — the name filter keeps it to that case in both suites, so there is no need to follow it with a full `test:basic`.
+A measuring report (performance, memory, a preview build) is investigated and answered with evidence, not a reflex commit. Reproduce the claim first ([how](#verifying-a-performance-or-memory-change)); a comparison against a base that never ran, across different runner environments, or with a different set of co-running cases is an artifact and usually says so. Reporting an artifact as one is a green outcome; leaving it unexamined is not. Replying to the bot needs permission ([Writing on GitHub](#writing-on-github--ask-first)).
 
-A report that measures rather than tests — performance, memory, a preview build — still gets investigated, but it is answered with evidence, not with a reflex commit. Reproduce the claim first (see [Verifying a performance or memory change](#verifying-a-performance-or-memory-change)); a comparison against a base that never ran, or one drawn across different runner environments or a different set of co-running cases, is an artifact and usually says so in its own output. Reporting an artifact as an artifact is a green outcome — silently leaving it unexamined is not. Posting a reply to the bot needs permission ([Writing on GitHub — ask first](#writing-on-github--ask-first)).
+**Don't read, chase or act on coverage until every suite uploading it has finished.** Each suite uploads its flag on completion and the service recomputes after each, so until the last lands the number is a partial sum — a large drop, a comment rewritten in place with changing percentages — meaning "not all suites reported", not "coverage lost". The report names how many uploads the head still lacks; **read that line before the percentage**, and treat non-zero as "not ready". **A red coverage check while coverage changed is normal mid-run**, not a failure.
 
-**Do not read, chase, or act on coverage until every suite that uploads it has finished.** Coverage arrives in pieces: each test suite uploads its own flag as it completes, and the service recomputes the totals after every upload. Until the last one lands the number on the PR is a partial sum — it will show a large drop, the comment will be rewritten in place several times with different percentages, and a deficit at that moment means "some suites have not reported yet", not "you lost coverage". The report itself says so, naming how many uploads the head is still missing; **read that line before reading the percentage**, and treat a non-zero count as "not ready" no matter how alarming the number next to it. **A red coverage check while coverage changed is the normal state of a healthy PR mid-run** and is not a failure to fix.
+**Wait for those suites, not the whole run.** Uploaders are the jobs calling the coverage action in `.github/workflows/test.yml` — today `unit`, `integration` (sharded, most uploads, gated behind `lint`, `basic`, `unit`), `test262`, `syntax-equivalence (chrome)` and the `parser (css)` / `parser (html)` legs; the other two browsers and `parser (js)` run uninstrumented. Read the workflow if they've moved. Benchmarks, code scanning, dependency review, preview publishing, type-coverage and the changeset echo never upload and can't move the number, so a coverage gap is safe to fix while they run or are red.
 
-**What you are waiting for is those suites, not the whole run.** The uploading suites are the jobs that call the coverage action in `.github/workflows/test.yml` — today `unit`, `integration`, `test262`, `syntax-equivalence (chrome)` and the `parser (css)` / `parser (html)` legs — the other two browsers and `parser (js)` run their suites without coverage instrumentation, so they upload nothing (`integration` is sharded, so it alone accounts for most of the uploads, and it is gated behind `lint`, `basic` and `unit`). Read the workflow rather than this list if they have moved. Everything else on the PR — benchmarks, code scanning, dependency review, preview publishing, type-coverage, the changeset echo — never uploads a coverage report and cannot move the number, so a coverage gap is safe to fix while they are still running or even while one of them is red. Waiting on them buys nothing.
-
-Once those suites are in, read the report; only then is a genuine patch gap worth adding a test for. Chasing an intermediate number costs a round of pointless commits and, worse, tempts changes to `lib/` that exist only to move a percentage.
+Once the uploaders are in, read the report; only then is a genuine patch gap worth a test. Chasing an intermediate number costs pointless commits and tempts `lib/` changes that exist only to move a percentage.
 
 ### After opening the PR — wait for the automated reviews
 
 > [!REQUIRED]
 
-Every webpack PR is reviewed automatically on the initial commit and on every subsequent push, by whichever automated reviewers the repository has enabled. You must always wait for them and address every comment from each. A finding from a bot is judged on the claim, never on the author: reproduce it before you decide.
+Every webpack PR is reviewed automatically on the initial commit and every push, by whichever automated reviewers the repo enables. Always wait for them and address every comment; judge a bot's finding on the claim and reproduce it before deciding.
 
-1. After `create_pull_request`, subscribe to the PR (`subscribe_pr_activity`) — see [Watching a PR, and updating its branch](#watching-a-pr-and-updating-its-branch). Once subscribed, a review wakes the session, so do **not** poll.
-2. When a review arrives, read every comment:
-   - If correct, push a fix in a new commit — **including when the bug is one your own PR introduced**, which is the common case for a bot flagging a line you just wrote.
-   - If wrong, draft the reply and ask the requester before posting it (see [Writing on GitHub — ask first](#writing-on-github--ask-first)) — never ignore silently.
-3. After every push, the reviewers run again. Repeat step 2. The loop ends when the latest review from each has zero outstanding threads.
-4. Only `unsubscribe_pr_activity` once all comments are handled and CI is green, or when the user tells you to stop.
+1. After `create_pull_request`, `subscribe_pr_activity` ([see above](#watching-a-pr-and-updating-its-branch)); reviews then wake the session — do **not** poll.
+2. For each review comment: if correct, push a fix in a new commit — **including for bugs your own PR introduced**, the common case. If wrong, draft a reply and ask the requester before posting ([Writing on GitHub](#writing-on-github--ask-first)) — never ignore it silently.
+3. Every push re-runs the reviewers; repeat step 2 until each one's latest review has zero outstanding threads.
+4. `unsubscribe_pr_activity` only once every comment is handled and CI is green, or when the user says stop.
 
 ### While watching — report only what needs a decision
 
 > [!REQUIRED]
 
-**A wake that changes nothing ends with no message.** Watching a PR wakes the session on every check, bot comment and edit-in-place, and most of them say nothing a reader can act on. Stay silent unless one of these holds, then report that alone, in a line or two:
+**A wake that changes nothing ends with no message.** Report — in a line or two — only when:
 
-- a review comment needs an action or a decision — from a human or a bot, judged on the claim;
-- a check failed for a reason that is this PR's, with the fix you pushed or what blocks it;
-- a measuring report is **final** and moved: code size (read gzip), coverage once every uploading suite has reported, a benchmark whose own output does not disclaim itself;
-- the PR merged or closed, or something needs the requester to choose.
+- a review comment (human or bot, judged on the claim) needs an action or decision;
+- a check failed for this PR's reason, with the fix pushed or what blocks it;
+- a measuring report is **final** and moved: code size (read gzip), coverage once every uploader reported, a benchmark whose output doesn't disclaim itself;
+- the PR merged or closed, or the requester must choose something.
 
-**Never narrate the rest.** An intermediate coverage recompute, a partial-upload percentage, a bot echo (changeset, preview publish, "review in progress"), a check that turned green, a list of jobs and their states — none of that is a finding, and repeating it buries the one wake that is.
+**Never narrate the rest** — intermediate coverage recomputes, partial-upload percentages, bot echoes (changeset, preview publish, "review in progress"), a check turning green, lists of job states. That buries the one wake that matters.
 
-Silence is not the same as skipping. Read every event and investigate what it names; the rule governs what reaches the requester, never what you look at. A finding you judged an artifact is still reported once, with the evidence — see [After opening the PR](#after-opening-the-pr--every-check-ends-green).
+Silence isn't skipping: read every event and investigate what it names; this governs only what reaches the requester. A finding judged an artifact is still reported once, with evidence ([see above](#after-opening-the-pr--every-check-ends-green)).
 
 ## Do not touch
 
 > [!REQUIRED]
 
-These files are produced by `yarn fix:special` and must not be edited by hand:
+Produced by `yarn fix:special` — never edit by hand:
 
-- `types.d.ts` — compiled from JSDoc + schemas.
-- `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`. Untracked: `generate-types.js` writes them on every run, in check mode too, because a fresh checkout has none.
+- `types.d.ts` — from JSDoc + schemas.
+- `declarations/**/*.d.ts` — per-schema/plugin declarations from `schemas/**/*.json`. Untracked: `generate-types.js` writes them every run, check mode included, since a fresh checkout has none.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
-- Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
-- `lib/css/data.js` — every table the CSS minifier looks a name up in, and the arithmetic its math-function descriptors bind to: derived from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) plus the generator's `SUPPLEMENT` of spec-prose tables and math primitives, by `tooling/generate-css-data.js` — which also holds the value-definition-syntax parser those grammars are read with, and runs the generation only as the entry point so its tests can require it.
-- `lib/html/data.js` — every table the HTML parser and minifier look a name up in: the reflected-attribute tables distilled from webref's HTML IDL (the `@webref/idl` and `@webref/elements` packages), plus the generator's `SUPPLEMENT` and `PARSER_TABLES` of §13.2 tree-construction vocabulary, by `tooling/generate-html-data.js` — which also emits the `// #region html entities` block inside `lib/html/syntax-parser.js` from the vendored `tooling/html-entities.json`, WHATWG's own named character references table.
-- `lib/javascript/data.js` — the Unicode tables the JavaScript parser classifies with, in one module: the run-length identifier ranges the tokenizer decodes on its first non-ASCII code point, and the per-edition `\p{...}` property names only a pattern the engine itself rejected reaches, by `tooling/generate-js-data.js` — which reads both back out of the pinned acorn devDependency, so bumping it is what moves them.
+- Generated runtime code under `lib/` (`tooling/generate-runtime-code.js`).
+- `lib/css/data.js` — every table the CSS minifier looks names up in, plus the arithmetic its math-function descriptors bind to: from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) and the generator's `SUPPLEMENT` of spec-prose tables and math primitives, by `tooling/generate-css-data.js` — which also holds the value-definition-syntax parser those grammars are read with, and runs generation only as the entry point so its tests can require it.
+- `lib/html/data.js` — every table the HTML parser and minifier look names up in: reflected-attribute tables from webref's HTML IDL (`@webref/idl`, `@webref/elements`) plus the generator's `SUPPLEMENT` and `PARSER_TABLES` of §13.2 tree-construction vocabulary, by `tooling/generate-html-data.js` — which also emits the `// #region html entities` block in `lib/html/syntax-parser.js` from the vendored `tooling/html-entities.json` (WHATWG's named character references).
+- `lib/javascript/data.js` — the JS parser's Unicode tables in one module: run-length identifier ranges the tokenizer decodes at its first non-ASCII code point, and per-edition `\p{...}` property names (reached only for a pattern the engine rejected), by `tooling/generate-js-data.js`, which reads both from the pinned acorn devDependency — bumping it moves them.
 
-A `syntax-parser.js` or `syntax-printer.js` is algorithm only — a new lookup table belongs in the matching generator, not next to the code that reads it. A region a generator writes itself, such as `// #region html entities`, is the exception; `syntax.js` is a facade rather than either.
+A `syntax-parser.js` or `syntax-printer.js` is algorithm only — a new lookup table belongs in the matching generator. Generator-written regions such as `// #region html entities` are the exception; `syntax.js` is a facade, neither.
 
-**And in the generator, derive it — do not type it out.** Read the table out of a published dataset (`mdn-data`, `color-name`, `@webref/idl`) whenever it is derivable at all, _including by analyzing a grammar rather than by listing names_: the value-definition syntax states which properties take an `<integer>`, so that set is computed, never enumerated. A table already in `SUPPLEMENT` counts as a source too — cosine at each eighth turn is sine two eighths along, and each inverse trig table is its forward one read back, so one stated table can carry several.
+**In the generator, derive — don't type out.** Read tables from published datasets (`mdn-data`, `color-name`, `@webref/idl`) whenever derivable, _including by analyzing a grammar rather than listing names_: the value-definition syntax says which properties take an `<integer>`, so that set is computed. An existing `SUPPLEMENT` table counts as a source too — cosine at each eighth turn is sine two eighths along, and each inverse trig table is its forward one read back.
 
-**Per-construct behaviour is a table as well.** Where the minifier does something different for each name — each math function, and whatever comes next for properties or at-rules — the per-name part belongs in the generator as a descriptor and the shared part in `syntax-printer.js` as an engine keyed by it. `MATH_FUNCTION_FOLD` is the worked example: it says how each function's arguments are read, which arithmetic runs and what unit the answer carries, so the printer implements neither and names no function of its own. The arithmetic is emitted alongside the descriptors and bound to them by reference rather than by name, so a name nothing defines fails generation rather than folding nothing. Adding a function is then adding a line, and a name whose arithmetic already exists needs nothing else. A test must still drive every descriptor — one input per entry is enough to turn a wrong-but-existing binding into a failure instead of a silent decline. Listing names by hand into a generator's `SUPPLEMENT` is the last resort, and every entry there carries the reason it cannot be derived — spec prose, an equivalence between two spellings, a judgement no dataset states. A hand-typed list goes stale the next time a spec moves and nothing in CI notices; a derived one turns the same spec change into a reviewable diff.
+**Per-construct behavior is a table too.** Where the minifier differs per name (each math function; next, properties or at-rules), the per-name part is a descriptor in the generator and the shared part an engine in `syntax-printer.js` keyed by it. `MATH_FUNCTION_FOLD` is the example: it says how each function's arguments are read, which arithmetic runs and what unit results carry, so the printer implements none and names no function. The arithmetic is emitted alongside and bound by reference, not name, so an undefined name fails generation instead of folding nothing. A new function is one line; one whose arithmetic exists needs nothing else. A test must drive every descriptor (one input per entry) so a wrong-but-existing binding fails instead of silently declining. Hand-listing names into `SUPPLEMENT` is the last resort, each entry stating why it can't be derived (spec prose, an equivalence between spellings, a judgement no dataset states) — hand lists go stale unnoticed when specs move; derived ones turn a spec change into a reviewable diff.
 
-The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
+`declarations.d.ts`, `declarations.test.d.ts` and `module.d.ts` _are_ editable.
 
-Re-run `yarn fix:special` **before the next commit** whenever you touch:
+Re-run `yarn fix:special` **before the next commit** after touching:
 
-- `schemas/**/*.json` — reshapes validators, declarations, and `types.d.ts`.
-- `lib/**/*.js` JSDoc on anything reachable from a public export — regenerates `types.d.ts`.
-- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, `tooling/generate-css-data.js`, `tooling/generate-html-data.js`, `tooling/generate-js-data.js`, or any file they consume (including the `acorn` / `mdn-data` / `color-name` / `@webref/*` versions in `package.json` and the vendored `tooling/html-entities.json`).
+- `schemas/**/*.json` — validators, declarations, `types.d.ts`.
+- JSDoc in `lib/**/*.js` reachable from a public export — `types.d.ts`.
+- `tooling/generate-runtime-code.js`, `generate-wasm-code.js`, `generate-css-data.js`, `generate-html-data.js`, `generate-js-data.js`, or anything they consume (incl. the `acorn` / `mdn-data` / `color-name` / `@webref/*` versions in `package.json` and `tooling/html-entities.json`).
 
-CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step.
+CI's `lint` job verifies these are current; `yarn fix` (`fix:code` + `fix:special` + `fmt`) is the preferred final step.
 
 ## Gotchas
 
 ### Target the Node baseline
 
-`lib/` and `hot/` ship as raw source (no build step) and must run on **Node ≥ 10.13** (the CI matrix goes down to Node 10.x). Don't use syntax or runtime APIs newer than that baseline — e.g. no optional chaining (`?.`) or nullish coalescing (`??`) — or the code passes locally and fails the Node 10 CI job.
+`lib/` and `hot/` ship as raw source (no build step) and must run on **Node ≥ 10.13** (CI goes down to 10.x): no newer syntax or APIs, e.g. no `?.` or `??`, or it passes locally and fails the Node 10 job.
 
-**The baseline covers what a test executes, too.** The harness runs each `configCases/` bundle, so a fixture written in syntax newer than the baseline — a class static field or static block, `??=`, `await using` — parses everywhere you try it locally and then fails the Node 10 job with a bare `SyntaxError` pointing into the emitted bundle. webpack does not transpile the fixture, so `output.environment` will not save you: it constrains the code webpack _generates_, never the code you wrote.
-
-When the behaviour under test needs that syntax, gate the case with a `test.filter.js` returning `false` below the first version supporting it, and say which syntax in a comment:
+**This covers what tests execute too.** The harness runs each `configCases/` bundle, and webpack doesn't transpile fixtures (`output.environment` constrains only generated code), so a fixture using newer syntax — class static fields/blocks, `??=`, `await using` — fails the Node 10 job with a bare `SyntaxError` in the emitted bundle. When the syntax _is_ the point, gate the case with a `test.filter.js` returning `false` below the first supporting version, naming the syntax in a comment:
 
 ```js
 "use strict";
@@ -854,59 +695,55 @@ module.exports = function filter() {
 };
 ```
 
-Reach for the filter only when the syntax _is_ the point. If the same behaviour can be covered with syntax the baseline accepts, write it that way and keep the case running everywhere. And note this is a capability gate, unrelated to the cache-suite silencing forbidden under [The persistent cache has to keep working](#the-persistent-cache-has-to-keep-working) — a filtered case still runs in both suites on every version that can execute it.
+Otherwise write it in baseline syntax so it runs everywhere. This capability gate is unrelated to the cache-suite silencing forbidden [below](#the-persistent-cache-has-to-keep-working) — a filtered case still runs in both suites wherever it can execute.
 
 ### Runtime code ships to every target
 
-Code that emits runtime into the bundle — chunk loading (`lib/web/` JSONP, `lib/esm/`, `lib/node/`, `lib/webworker/`), prefetch/preload/resource hints, library and externals presets — is **per-target**: each preset (browsers/JSONP, ESM `output.module`, `node`, `webworker`, `deno`, `electron`, `bun`, and the **universal** `target: ["web", "node"]` neutral-platform path) has its own runtime module or wiring. Changing one and forgetting the others is the easy mistake here. When you touch runtime-emitting code, apply it to **every** affected target and add an integration case per target (typically `target: "web"`, `output.module`, and `target: ["web", "node"]`; add `node`/`webworker`/`bun`/`deno`/`electron` when they're in scope). The universal/neutral-platform runtime guards browser-only APIs behind `typeof document === "undefined"`, so those bundles run Node-side without a DOM — its config case must gate DOM assertions on `typeof document !== "undefined"` (see `configCases/target/universal-prefetch-preload`).
+Runtime-emitting code — chunk loading (`lib/web/` JSONP, `lib/esm/`, `lib/node/`, `lib/webworker/`), prefetch/preload/resource hints, library and externals presets — is **per-target**: browsers/JSONP, ESM `output.module`, `node`, `webworker`, `deno`, `electron`, `bun`, and the **universal** `target: ["web", "node"]` neutral-platform path each have their own module or wiring — changing one and forgetting the others is the easy mistake. Apply a change to **every** affected target, with an integration case per target (typically `target: "web"`, `output.module`, `target: ["web", "node"]`; plus `node`/`webworker`/`bun`/`deno`/`electron` when in scope). The universal runtime guards browser APIs behind `typeof document === "undefined"` so its bundles run in Node without a DOM, and its config case must gate DOM assertions on `typeof document !== "undefined"` (see `configCases/target/universal-prefetch-preload`).
 
-**Then look at what it costs on the wire.** `yarn test:size` — and the `Code Size` CI job, which compares against the report `main` last uploaded and comments the diff on the pull request — builds every `configCases/` case and reports **one row per changed asset**: raw before → after, plus what each of gzip/brotli/zstd makes of it. **It is information, never a verdict: it does not fail, and a change that moves the numbers is not a defect.** It exists to answer a few questions, so answer them:
+**Then check wire cost.** `yarn test:size` (and the `Code Size` CI job, which compares against `main`'s last report and comments on the PR) builds every `configCases/` case and reports **one row per changed asset**: raw before → after plus gzip/brotli/zstd. **It is information, never a verdict** — it doesn't fail, and moving numbers isn't a defect. It answers:
 
-- **Which files changed, and by how much?** The asset table is the headline, so a generator or minifier change reads as the files it moved rather than as one number over the suite. A suite-wide total is deliberately not reported: it says nothing you can act on. Raw is what the generator wrote; the compressed columns are what a user downloads, and the two disagree often enough to be worth reading together — a rewrite that saves raw bytes but not gzip bytes has mostly moved entropy around. Which column decides it is [gzip](#verifying-a-performance-or-memory-change).
-- **Which way did it go?** A row is marked 🔴 ↑ when it grew and 🟢 ↓ when it shrank, so the direction reads before the number does.
-- **What is a change, and what is merely new?** An asset both runs emit has a before and an after, so it is a change; one only this run emits is a whole new file whose size is not a delta of anything. They are reported in separate tables — changed first and unfolded, new and deleted folded away, each with its own row budget — and counted in separate rows of the verdict table (`Changed …` against `New` / `Deleted`), because a pull request adding test cases brings whole bundles with it that would otherwise outrank and bury every real change.
-- **Did webpack generate that, or did the case grow?** A bundle is a function of the source its case feeds webpack, so a pull request that adds assertions to an existing `configCases/` case makes that case's bundle bigger without changing a byte of `lib/`. The report measures each case's module source and splits the changed assets by it: `Changed, test untouched` is webpack's doing and is the row a size claim is read off, while `Changed, test edited` carries a `Test edit` column saying how many bytes of source those cases gained — a bundle that grew by less than its case did is not a regression. Cite the first row, never the suite-wide numbers, when a pull request touches both `lib/` and its tests.
-- **Did a runtime gain or lose a runtime module?** A second table counts the runtime modules each runtime carries and names the ones that came or went, split the same way — a runtime a new case brought in gained nothing. Bytes are deliberately not reported per runtime module — what one weighs in isolation is not what anyone downloads, and the asset table already carries the real number. The count is: it catches a runtime module added for one target and forgotten for another, which is the mistake this section is about.
+- **Which files changed, by how much?** The per-asset table is the headline; no suite-wide total is reported (nothing actionable). Raw is what the generator wrote, compressed is what users download — read both; a raw saving with no gzip saving mostly moved entropy. [gzip decides](#verifying-a-performance-or-memory-change).
+- **Which way?** 🔴 ↑ grew, 🟢 ↓ shrank.
+- **Change or new?** Assets both runs emit are changes; ones only this run emits are new files, not deltas. They're in separate tables — changed first and unfolded, new/deleted folded, each with its own row budget — and separate verdict rows (`Changed …` vs `New` / `Deleted`), so new test cases' bundles don't bury real changes.
+- **webpack or the case?** A bundle is a function of its case's source, so adding assertions to a `configCases/` case grows its bundle without touching `lib/`. The report measures each case's module source and splits changed assets: `Changed, test untouched` is webpack's doing and the row size claims are read from; `Changed, test edited` has a `Test edit` column with bytes of source gained — a bundle growing less than its case isn't a regression. Cite the first row, never suite-wide numbers, when a PR touches both `lib/` and tests.
+- **Did a runtime gain or lose a runtime module?** A second table counts runtime modules per runtime and names those that came or went, split the same way (a runtime a new case brought gained nothing). Deliberately no per-runtime-module bytes (not what anyone downloads); the count catches a runtime module added for one target and forgotten for another.
 
-Read the "emitted nothing" note before the numbers: a case whose build now errors contributes no bytes, which otherwise reads as an improvement.
-
-Say what it reported in the PR when the numbers moved.
+Read the "emitted nothing" note first: a case whose build now errors contributes no bytes, which otherwise looks like an improvement. When the numbers moved, say what it reported in the PR.
 
 ### Lint covers every file, docs included
 
-The `lint` job runs Prettier (`fmt:check`) and cspell (`lint:spellcheck`) across the **whole repo** — Markdown and this guide too, not just `lib/`. Run `yarn fix` before pushing even a docs-only change: an unaligned Markdown table or a word cspell doesn't know fails `lint` on its own. For a new/unusual word, add it to the `words` list in `cspell.json` (or reword); Prettier reformats Markdown tables, so hand-written columns must match its output.
+`lint` runs Prettier (`fmt:check`) and cspell (`lint:spellcheck`) over the **whole repo**, Markdown and this guide included. Run `yarn fix` before pushing even a docs change: an unaligned Markdown table or unknown word fails `lint` alone. Add a genuine new word to `words` in `cspell.json` (or reword); Prettier reformats Markdown tables, so hand-written columns must match its output.
 
 ### The persistent cache has to keep working
 
 > [!REQUIRED]
 
-Persistent caching is a shipped feature, not a test mode. `ConfigCacheTestCases` re-runs **every** `configCases/` case with `cache.type: "filesystem"` and fails it if the second or third run writes anything back into the pack. The log line is:
+Persistent caching is a shipped feature, not a test mode. `ConfigCacheTestCases` re-runs **every** `configCases/` case with `cache.type: "filesystem"` and fails it if the second or third run writes to the pack:
 
 ```
 Pack got invalid because of write to: <identifier>
 ```
 
-and `<identifier>` is the thing that was **not** restored — it was rebuilt instead. On a user's machine that is work redone on every incremental build, so **treat this as a defect and find the cause**. Do not silence it.
+`<identifier>` was **not** restored but rebuilt — on a user's machine, work redone every incremental build. **Treat it as a defect and find the cause**; don't silence it.
 
-Persistent caching serializes the module graph, so any new serializable class (a `Module`, `Dependency`, or error subclass, a cached value, …) must call `makeSerializable(...)` — the pattern is used across ~140 files — and `yarn fix:serializables` regenerates `internalSerializables`. Forgetting is the most common cause, and it is silent apart from the line above.
+The cache serializes the module graph, so every new serializable class (a `Module`, `Dependency` or error subclass, a cached value, …) must call `makeSerializable(...)` (~140 files do), and `yarn fix:serializables` regenerates `internalSerializables`. Forgetting is the most common cause, silent apart from the line above. The suite runs with `infrastructureLogging.debug`, so the log usually names the cause a few lines earlier:
 
-The cache suite runs with `infrastructureLogging.debug`, so the log usually names the real cause a few lines earlier. What each one means:
+- `No serializer registered for <Class>` — the class never called `makeSerializable(...)`.
+- `Skipped not serializable cache item '<key>'` — something reachable from the value can't be written.
+- `Restoring failed for <identifier> from pack: <err>` — written, but deserialization threw. It re-enters the constructor with **no arguments**, so a constructor dereferencing a parameter (`err.message`) must guard (`err ? err.message : ""`).
+- Nothing — the identifier isn't stable between runs, or the module reports it needs rebuilding.
 
-- `No serializer registered for <Class>` — that class never called `makeSerializable(...)`.
-- `Skipped not serializable cache item '<key>'` — something reachable from the value cannot be written.
-- `Restoring failed for <identifier> from pack: <err>` — it _was_ written, and deserialization threw. Deserialization re-enters the constructor with **no arguments**, so a constructor that dereferences a parameter (`err.message`) must guard (`err ? err.message : ""`).
-- Nothing at all — the identifier is not stable between runs, or the module reports that it needs rebuilding.
+**Never silence it with `test.filter.js`** (`module.exports = (config) => !config.cache`): that drops the case from the cache suite entirely, including the parts that worked. A new case must pass both suites. (Gating a fixture needing post-baseline syntax is different and fine — see [Target the Node baseline](#target-the-node-baseline).)
 
-**Never silence it with `test.filter.js`.** `module.exports = (config) => !config.cache` drops the case from the cache suite entirely, so nothing about that feature is cache-tested any more — including the parts that did work. A new case must pass under both suites. (Gating a case whose _fixture_ needs syntax newer than the Node baseline is a different thing and is fine — see [Target the Node baseline](#target-the-node-baseline).)
-
-The one expected write webpack ships today is a module carrying a **build error**: `NormalModule.needBuild` returns true whenever `this.error` is set, because webpack retries errors on every build. A case whose subject _is_ an error therefore invalidates the pack by design, and states so with an `infrastructure-log.js` returning `[/Pack got invalid because of write to/]` when `cache.type === "filesystem"` (~20 cases already do). That is the only mechanism that needs no further justification; any other expectation carries the reason it is not a bug, written next to it — and "it is noise here" is not a reason.
+The one expected write webpack ships is a module carrying a **build error**: `NormalModule.needBuild` returns true while `this.error` is set, since errors are retried every build. A case whose subject is an error therefore invalidates the pack by design and says so with an `infrastructure-log.js` returning `[/Pack got invalid because of write to/]` when `cache.type === "filesystem"` (~20 cases do). That's the only expectation needing no justification; any other must carry, next to it, why it isn't a bug — "it is noise here" isn't a reason.
 
 ### Performance and memory
 
-webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface. Sanity-check a perf change locally with `FILTER="<case-name>" yarn benchmark` before CI's performance benchmarks flag a regression.
+Users measure webpack by build time and peak heap. Much of `lib/` sits on per-module hot paths (sometimes per module × runtime, or per chunk × module), so constant factors compound: weigh time and memory in every change, bug fixes and refactors included. Less allocation, smaller `Map`/`Set` footprints and fewer closures retained on hot paths are wins. For any per-`Compilation` state, ask whether it can be released after seal/emit so large structures aren't retained longer than needed (see #15521). Sanity-check perf changes with `FILTER="<case-name>" yarn benchmark` before CI's benchmarks flag them.
 
 ### Keep instance shapes stable
 
-Initialize **every** instance field in the constructor, including ones first assigned later in a method — default them to `undefined`/`null`. Assigning `this.newField` for the first time outside the constructor forces a V8 hidden-class (Shape) transition, so instances of one class end up split across shapes and the inline caches reading them go polymorphic/megamorphic — a hot property read can cost ~2× at two shapes and more when megamorphic, and code already optimized for the first shape deopts with a `wrong map` bailout. Never `delete` an instance field (it forces the object into dictionary mode); set it to `undefined` instead. The win per field is small for a single trailing field, but the rule is uniform on purpose so reviewers don't judge it case by case — it is why, for example, `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
+Initialize **every** instance field in the constructor — `undefined`/`null` for those first assigned later. A first assignment outside the constructor forces a V8 hidden-class (Shape) transition, splitting instances across shapes: inline caches go polymorphic/megamorphic (a hot read can cost ~2× at two shapes, more when megamorphic), and code optimized for the first shape deopts with `wrong map`. Never `delete` a field (dictionary mode); set it to `undefined`. One trailing field gains little, but the rule is uniform so reviewers needn't judge case by case — it's why `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
 
-When adding a field to a class whose fields are compiled into `types.d.ts` (public, non-`_`-prefixed), re-run `yarn fix:special` — constructor order determines member order in the generated declarations.
+Adding a public (non-`_`) field to a class compiled into `types.d.ts` needs `yarn fix:special` — constructor order sets member order in the generated declarations.
