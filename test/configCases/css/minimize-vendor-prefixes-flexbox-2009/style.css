@@ -1,0 +1,11 @@
+/* Android 4.3 and Firefox 20 read the 2009 flexbox draft, which named every
+   property anew and read `display: -webkit-box` / `-moz-box` as the container. */
+
+/*! a container, and the keywords the draft renamed */
+.t01 { display: flex; align-items: flex-start; justify-content: space-between }
+/*! one direction is two properties there */
+.t02 { display: inline-flex; flex-direction: column-reverse }
+/*! `box-flex` and `box-ordinal-group` read numbers, so no copy is written */
+.t03 { flex: 1; order: 2 }
+/*! a value the draft cannot read gets no copy at all */
+.t04 { justify-content: space-evenly }

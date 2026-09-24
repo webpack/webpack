@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-vendor-prefixes-flexbox-2009 minimize-vendor-prefixes-flexbox-2009 should compile 1`] = `
+Array [
+  "/*! a container, and the keywords the draft renamed */.t01{display:-webkit-box;display:-moz-box;display:flex;-webkit-box-align:start;-moz-box-align:start;align-items:flex-start;-webkit-box-pack:justify;-moz-box-pack:justify;justify-content:space-between}",
+  "/*! one direction is two properties there */.t02{display:-webkit-inline-box;display:-moz-inline-box;display:inline-flex;-webkit-box-orient:vertical;-webkit-box-direction:reverse;-moz-box-orient:vertical;-moz-box-direction:reverse;flex-direction:column-reverse}",
+  "/*! \`box-flex\` and \`box-ordinal-group\` read numbers, so no copy is written */.t03{flex:1;order:2}",
+  "/*! a value the draft cannot read gets no copy at all */.t04{justify-content:space-evenly}",
+]
+`;

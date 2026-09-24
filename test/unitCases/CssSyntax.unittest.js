@@ -7600,7 +7600,8 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 
 	it("merges the longhands a droppable alias stands between", () => {
 		// The alias is dropped whether it stands there or not, so the shorthand is
-		// built over it rather than after a second pass has taken it away.
+		// built over it rather than after a second pass has taken it away. The 2009
+		// draft's names are aliases too, of `flex-direction`.
 		expect(
 			minifyFor(
 				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-direction:row;flex-direction:row}",
@@ -7612,9 +7613,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}",
 				["chrome 120"]
 			)
-		).toBe(
-			"a{flex-flow:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal}"
-		);
+		).toBe("a{flex-flow:wrap}");
 	});
 
 	it("lets an alias a target still reads block the merge around it", () => {
