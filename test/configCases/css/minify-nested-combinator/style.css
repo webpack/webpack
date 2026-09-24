@@ -17,3 +17,7 @@
 /* A parent written as a list, and a selector naming it itself. */
 .g, .h { > .child { top: 6px } }
 .i { &> .child { top: 7px } }
+
+/* The list was canonical as the nested rule spelled it; writing the parent in
+   front of each selector is what decides the order they read in. */
+.j { > .x, + .y, .z { left: 0 } }

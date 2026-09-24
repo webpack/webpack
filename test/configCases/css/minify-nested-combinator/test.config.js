@@ -21,6 +21,9 @@ module.exports = {
 		expect(css).toContain(":is(.g,.h)>.child{top:6px}");
 		expect(css).toContain(".i>.child{top:7px}");
 
+		// The list reads in the order the written selectors settle on.
+		expect(css).toContain(".j .z,.j+.y,.j>.x{left:0}");
+
 		// What the printer wrote is what a second pass writes.
 		const again = await cssMinify({ "bundle0.css": css }, undefined, {
 			environment: { browsers: ["chrome 100"] }
