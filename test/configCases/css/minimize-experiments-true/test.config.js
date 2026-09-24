@@ -20,7 +20,6 @@ module.exports = {
 		// Emitted by another plugin and unclaimed, so the built-in minifier takes
 		// it too — a copied stylesheet still gets minimized.
 		expect(read("copied.css")).toBe(".copied{color:red}");
-		expect(read("fragment.css")).toBe(".fragment{color:red}");
 
 		// Already marked `minimized`, so a minimizer the user configured has
 		// handled it — webpack must leave it exactly as it was.

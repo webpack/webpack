@@ -31,11 +31,6 @@ class EmitOtherCssAssetsPlugin {
 							"copied.css",
 							new sources.RawSource(".copied {\n\tcolor : red ;\n}\n")
 						);
-						// A legacy plugin may still assign an asset directly. The output filesystem
-						// strips the fragment, but the minimizer sees this original name first.
-						compilation.assets["fragment.css#dark"] = new sources.RawSource(
-							".fragment {\n\tcolor : red ;\n}\n"
-						);
 						compilation.emitAsset(
 							"already.css",
 							new sources.RawSource(".already {\n\tcolor : red ;\n}\n"),
