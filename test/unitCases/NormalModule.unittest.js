@@ -4,7 +4,7 @@ const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
 const NormalModule = require("../../lib/module/NormalModule");
-const ESMImportSideEffectDependency = require("../../lib/dependencies/ESMImportSideEffectDependency");
+const ESMImportSideEffectDependency = require("../../lib/dependencies/esm/ESMImportSideEffectDependency");
 
 /** @import { LoaderItem } from "../../lib/module/NormalModule" */
 /** @import Parser from "../../lib/module/Parser" */
