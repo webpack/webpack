@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add an `xml` mode to `html.syntax` that parses and prints XML.
+Add an `xml` mode to `html.syntax` and a futureDefaults SVG/XML minimizer.

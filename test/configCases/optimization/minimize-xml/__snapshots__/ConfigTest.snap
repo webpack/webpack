@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: absent 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
+<!-- An editor's comment the minified output drops. -->
+<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>
+		.dot {
+			fill: #ff0000;
+			user-select: none;
+		}
+	</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" />
+</svg>
+"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: claimed 1`] = `"<svg/>"`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: disabled 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>
+<!-- An editor's comment the minified output drops. -->
+<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>
+		.dot {
+			fill: #ff0000;
+			user-select: none;
+		}
+	</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\" />
+</svg>
+"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: future 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
+</svg>"
+`;
+
+exports[`ConfigTestCases optimization minimize-xml minimize-xml should compile: object 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?><svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\">
+	<style>.dot{fill:red;-webkit-user-select:none;user-select:none}</style>
+	<circle class=\\"dot\\" cx=\\"5\\" cy=\\"5\\" r=\\"4\\"/>
+</svg>"
+`;
