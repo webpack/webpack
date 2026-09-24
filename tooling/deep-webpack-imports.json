@@ -32,6 +32,12 @@
     "lib/WebAssemblyGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/WebAssemblyParser": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/dependencies/${dependency[0]}": "Not a path: a template literal the scanner reads from a dynamic require.",
+    "lib/dependencies/AMDDefineDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireArrayDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireContextDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireDependenciesBlock": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, inside a `try` to detect webpack 4, where a re-export would pick the wrong branch.",
+    "lib/dependencies/AMDRequireDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/AMDRequireItemDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/DelegatedExportsDependency": "Removed in webpack 5.",
     "lib/dependencies/HarmonyAcceptDependency": "Renamed to lib/dependencies/ESMAcceptDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/dependencies/HarmonyAcceptImportDependency": "Renamed to lib/dependencies/ESMAcceptImportDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -45,6 +51,10 @@
     "lib/dependencies/HarmonyImportSpecifierDependency": "Renamed to lib/dependencies/ESMImportSpecifierDependency without a re-export; its importers are hard-source-webpack-plugin, which is webpack 4 only, and worker-plugin.",
     "lib/dependencies/HarmonyInitDependency": "Removed in webpack 5.",
     "lib/dependencies/ImportDependenciesBlock": "Removed in webpack 5.",
+    "lib/dependencies/LocalModule": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/LocalModuleDependency": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ModuleHotAcceptDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ModuleHotDeclineDependency": "Grouped under lib/dependencies/hmr/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/MultiEntryDependency": "Removed in webpack 5 with MultiEntry; EntryPlugin takes an array.",
     "lib/dependencies/SingleEntryDependency": "Renamed in webpack 5 to dependencies/EntryDependency.",
     "lib/wasm/WebAssemblyGenerator": "Only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
@@ -75,30 +85,6 @@
     "lib/css/CssModulesPlugin": {
       "weekly": 12160713,
       "packages": ["mini-css-extract-plugin"]
-    },
-    "lib/dependencies/AMDDefineDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/AMDRequireArrayDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/AMDRequireContextDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/AMDRequireDependenciesBlock": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/AMDRequireDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/AMDRequireItemDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/CommonJsRequireContextDependency": {
       "weekly": 132630,
@@ -161,28 +147,12 @@
       "weekly": 132630,
       "packages": ["hard-source-webpack-plugin"]
     },
-    "lib/dependencies/LocalModule": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/LocalModuleDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
     "lib/dependencies/ModuleDependency": {
       "weekly": 137751,
       "packages": [
         "hard-source-webpack-plugin",
         "webpack-babel-multi-target-plugin"
       ]
-    },
-    "lib/dependencies/ModuleHotAcceptDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/ModuleHotDeclineDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/NullDependency": {
       "weekly": 133995,

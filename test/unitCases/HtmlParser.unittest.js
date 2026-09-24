@@ -4,9 +4,9 @@ const path = require("path");
 
 // `HtmlParser` builds the AST inside `SourceProcessor.process`, so nothing is
 // mocked: each case parses real HTML and asserts the extracted dependencies.
-const HtmlInlineScriptDependency = require("../../lib/dependencies/HtmlInlineScriptDependency");
-const HtmlInlineStyleDependency = require("../../lib/dependencies/HtmlInlineStyleDependency");
-const HtmlSourceDependency = require("../../lib/dependencies/HtmlSourceDependency");
+const HtmlInlineScriptDependency = require("../../lib/dependencies/html/HtmlInlineScriptDependency");
+const HtmlInlineStyleDependency = require("../../lib/dependencies/html/HtmlInlineStyleDependency");
+const HtmlSourceDependency = require("../../lib/dependencies/html/HtmlSourceDependency");
 const CommentCompilationWarning = require("../../lib/errors/CommentCompilationWarning");
 const UnsupportedFeatureWarning = require("../../lib/errors/UnsupportedFeatureWarning");
 const HtmlParser = require("../../lib/html/HtmlParser");

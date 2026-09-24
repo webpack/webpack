@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Group loose `lib/` sources into directories, keeping old deep paths working.
+Group `lib/` and `lib/dependencies/` sources into directories, keeping deep paths working.

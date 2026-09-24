@@ -1,7 +1,7 @@
 "use strict";
 
 const Dependency = require("../../lib/graph/Dependency");
-const CssIcssExportDependency = require("../../lib/dependencies/CssIcssExportDependency");
+const CssIcssExportDependency = require("../../lib/dependencies/css/CssIcssExportDependency");
 
 const { EXPORT_MODE, EXPORT_TYPE } = CssIcssExportDependency;
 
@@ -21,7 +21,7 @@ const makeModuleGraph = (
 	);
 
 const entry = (
-	/** @type {Partial<import("../../lib/dependencies/CssIcssExportDependency").CssExportEntry>} */ over
+	/** @type {Partial<import("../../lib/dependencies/css/CssIcssExportDependency").CssExportEntry>} */ over
 ) => ({
 	name: "a",
 	value: "a",
