@@ -280,6 +280,7 @@ describe("syntax-printer", () => {
 			expect(terser.phases).toContain("output");
 			expect(terser.phases).toContain("print");
 			expect(terser.phases).toContain("parse");
+			expect(terser.phases).toContain("frequency");
 		}
 	});
 
@@ -432,6 +433,36 @@ describe("syntax-printer", () => {
 			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
 		});
 	}
+
+	it("should decline a terser whose names it does not reproduce", () => {
+		const frequency =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "frequency")
+			);
+		/**
+		 * @param {string} alphabet the characters it names with
+		 * @returns {object} a counter that ignores what it is shown
+		 */
+		const counter = (alphabet) => ({
+			reset() {},
+			consider() {},
+			sort() {},
+			get: (/** @type {number} */ num) => alphabet[num % alphabet.length]
+		});
+		/**
+		 * @param {EXPECTED_ANY[]} items items to sort
+		 * @param {(a: EXPECTED_ANY, b: EXPECTED_ANY) => number} compare their order
+		 * @returns {EXPECTED_ANY[]} them, sorted
+		 */
+		const mergeSort = (items, compare) => [...items].sort(compare);
+		expect(frequency.supports({ scope: {}, utils: { mergeSort } })).toBe(false);
+		expect(
+			frequency.supports({ scope: { base54: counter("abc") }, utils: {} })
+		).toBe(false);
+		expect(
+			frequency.supports({ scope: { base54: counter("xyz") }, utils: { mergeSort } })
+		).toBe(false);
+	});
 
 	it("should decline a terser whose parse it does not reproduce", () => {
 		const parse =
