@@ -28,6 +28,9 @@ const {
 	templateLiterals
 } = argv;
 
+// Where the hand-written option types that are not a plugin's own live.
+const DECLARATIONS_DIRECTORY = path.resolve(root, declarations);
+
 /**
  * A schema node holds arbitrary JSON, so its values have no narrower type.
  * @typedef {{ [key: string]: EXPECTED_ANY }} Schema
@@ -1108,6 +1111,52 @@ class TupleMap {
 		`@(?:${FORWARDED_TAG_NAMES.join("|")})\\b`
 	);
 
+	// WHY: a schema property written as a bare `$ref` says what its target says,
+	// so a property named by a schema type shows that type's description where it
+	// has none of its own. Only the schema sources count: elsewhere a property
+	// named by a type says something else than the type does.
+	const schemaSources = new Set([
+		DECLARATIONS_DIRECTORY,
+		...[...declaringModules().values()].map((one) => `${one}.js`)
+	]);
+
+	/**
+	 * @param {ts.Symbol} prop the property to read the written type of
+	 * @returns {ts.Symbol | undefined} the schema type it names, when it names one
+	 */
+	const schemaAlias = (prop) => {
+		const declaration = (prop.declarations || [])[0];
+		const written =
+			declaration &&
+			(ts.isPropertySignature(declaration) ||
+				ts.isPropertyDeclaration(declaration)) &&
+			declaration.type;
+		if (!written || !ts.isTypeReferenceNode(written)) return undefined;
+		const alias = checker.getSymbolAtLocation(written.typeName);
+		const declared = alias && (alias.declarations || [])[0];
+		if (!declared) return undefined;
+		const file = declared.getSourceFile().fileName;
+		const fromSchemaSource = [...schemaSources].some(
+			(source) => file === source || file.startsWith(`${source}${path.sep}`)
+		);
+		return fromSchemaSource ? alias : undefined;
+	};
+
+	/**
+	 * A `@typedef {object}` declares its type as a `JSDocTypeLiteral`, and a JSDoc
+	 * block attaches to the statement after it — so TypeScript documents that
+	 * symbol with the next statement's comment, which says nothing about the type.
+	 * The block the typedef is written in is the one that describes it.
+	 * @param {ts.Symbol | ts.Signature} symbol the symbol a type was read from
+	 * @returns {ts.JSDoc | undefined} the block it was declared in, when it is one
+	 */
+	const declaringJsDoc = (symbol) => {
+		const declarations = /** @type {ts.Symbol} */ (symbol).declarations;
+		const declaration = declarations && declarations[0];
+		if (!declaration || !ts.isJSDocTypeLiteral(declaration)) return undefined;
+		return ts.findAncestor(declaration, ts.isJSDoc);
+	};
+
 	/**
 	 * @param {ts.Symbol | ts.Signature | undefined} symbol symbol
 	 * @returns {string} documentation comment
@@ -1125,8 +1174,23 @@ class TupleMap {
 				.replace(/\n+/g, "\n")
 				.trim();
 
-		const commentText = normalizeText(symbol.getDocumentationComment(checker));
-		const jsDocTags = symbol.getJsDocTags(checker);
+		const block = declaringJsDoc(symbol);
+		const commentText = block
+			? normalizeText([
+					{ kind: "text", text: ts.getTextOfJSDocComment(block.comment) || "" }
+				])
+			: normalizeText(symbol.getDocumentationComment(checker));
+		const jsDocTags = block
+			? (block.tags || []).map((tag) => ({
+					name: tag.tagName.text,
+					text: [
+						{
+							kind: "text",
+							text: ts.getTextOfJSDocComment(tag.comment) || ""
+						}
+					]
+				}))
+			: symbol.getJsDocTags(checker);
 		const forwardedTags = FORWARDED_TAG_NAMES.flatMap((name) =>
 			jsDocTags.filter((tag) => tag.name === name)
 		);
@@ -1386,7 +1450,8 @@ class TupleMap {
 					getter:
 						(flags & ts.SymbolFlags.GetAccessor) !== 0 &&
 						(flags & ts.SymbolFlags.SetAccessor) === 0,
-					documentation: getDocumentation(prop)
+					documentation:
+						getDocumentation(prop) || getDocumentation(schemaAlias(prop))
 				});
 			}
 			return properties;
@@ -1634,7 +1699,11 @@ class TupleMap {
 				constructors: [],
 				calls: [],
 				baseTypes: [],
-				documentation: getDocumentation(type.getSymbol())
+				// WHY: a type alias to an anonymous object holds the description, where
+				// the type it names has none of its own.
+				documentation:
+					getDocumentation(type.getSymbol()) ||
+					getDocumentation(type.aliasSymbol)
 			};
 		}
 
@@ -1862,7 +1931,10 @@ class TupleMap {
 						  type.aliasTypeArguments.length > 0
 						? type.aliasTypeArguments
 						: undefined,
-			documentation: getDocumentation(type.getSymbol())
+			// WHY: a type alias to an anonymous object holds the description, where
+			// the type it names has none of its own.
+			documentation:
+				getDocumentation(type.getSymbol()) || getDocumentation(type.aliasSymbol)
 		};
 	};
 

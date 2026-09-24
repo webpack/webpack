@@ -80,32 +80,8 @@ export interface AssetGeneratorDataUrlOptions {
  * Generator options for asset modules.
  * @implements #/definitions/AssetInlineGeneratorOptions, #/definitions/AssetResourceGeneratorOptions
  */
-export interface AssetGeneratorOptions {
-	/**
-	 * Whether or not this asset module should be considered binary. This can be set to 'false' to treat this asset module as text.
-	 */
-	binary?: boolean;
-	/**
-	 * The options for data url generator.
-	 */
-	dataUrl?: AssetGeneratorDataUrl;
-	/**
-	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
-	 */
-	emit?: boolean;
-	/**
-	 * The filename of asset modules as relative path inside the 'output.path' directory.
-	 */
-	filename?: AssetModuleFilename;
-	/**
-	 * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
-	 */
-	outputPath?: AssetModuleOutputPath;
-	/**
-	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
-	 */
-	publicPath?: RawPublicPath;
-}
+export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
+	AssetResourceGeneratorOptions;
 
 /**
  * Generator options for asset/inline modules.
