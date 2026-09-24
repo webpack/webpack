@@ -8,6 +8,10 @@ const url = require("url");
 const vm = require("vm");
 const webpack = require("../..");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const {
+	AbstractModuleSource,
+	moduleSource
+} = require("../helpers/test262ModuleSource");
 
 /** @import NormalModule from "../../lib/module/NormalModule" */
 
@@ -349,6 +353,19 @@ const knownV8Bugs = [
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
 
+const MODULE_SOURCE_FIXTURE = path.resolve(
+	__dirname,
+	"../fixtures/test262/moduleSource_FIXTURE.js"
+);
+
+// A `phase: "source"` rule declares that a module is built as its own source
+// representation, which is the only way a JavaScript one gets a module source.
+const MODULE_SOURCE_RULE = {
+	test: MODULE_SOURCE_FIXTURE,
+	phase: "source",
+	type: "javascript/esm"
+};
+
 const compile = async (entry, scenario, options = {}) =>
 	new Promise((resolve, reject) => {
 		const { exportsPresence, ...webpackOptions } = options;
@@ -369,7 +386,15 @@ const compile = async (entry, scenario, options = {}) =>
 			stats: "errors-warnings",
 			performance: false,
 			experiments: {
-				deferImport: true
+				deferImport: true,
+				sourceImport: true
+			},
+			resolve: {
+				alias: {
+					// test262 spells a module that carries a module source this way, and
+					// leaves providing one to the host.
+					"<module source>$": MODULE_SOURCE_FIXTURE
+				}
 			},
 			optimization: {
 				emitOnErrors: true,
@@ -398,6 +423,7 @@ const compile = async (entry, scenario, options = {}) =>
 					// For top level await, maybe we can improve our parser to detect and switch to module
 					scenario === "module"
 						? [
+								MODULE_SOURCE_RULE,
 								{
 									// Avoid override `type` when we have `bytes` or `text` type
 									with: {
@@ -408,6 +434,7 @@ const compile = async (entry, scenario, options = {}) =>
 								}
 							]
 						: [
+								MODULE_SOURCE_RULE,
 								// A file without the `module` flag is a Script, and only the
 								// Script goal rejects what is legal in a Module.
 								{
@@ -529,6 +556,8 @@ const createRequire = (currentDir, context) =>
 	};
 
 const create262Host = (context) => ({
+	AbstractModuleSource,
+	moduleSource,
 	evalScript(code, options = {}) {
 		return vm.runInContext(code, context, options);
 	},
@@ -668,7 +697,10 @@ const linkErrorsAtBuildTime = new Set([
 	"expressions/dynamic-import/catch/nested-function-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-if-import-catch-instn-iee-err-circular.js",
 	"expressions/dynamic-import/catch/nested-while-import-catch-instn-iee-err-circular.js",
-	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js"
+	"expressions/dynamic-import/catch/top-level-import-catch-instn-iee-err-circular.js",
+	// Its fixtures import '<do not resolve>', which webpack reports as a build
+	// error where the spec rejects the `import()` of the fixture at runtime.
+	"module-code/source-phase-import/import-source.js"
 ]);
 
 const knownBugs = [
@@ -791,11 +823,6 @@ describe("test262", () => {
 				if (
 					// Decorators are not supported
 					meta.features.includes("decorators") ||
-					// TODO Not implemented. A negative parse test still runs: the
-					// syntax it rejects is rejected either way.
-					((meta.features.includes("source-phase-imports") ||
-						meta.features.includes("source-phase-imports-module-source")) &&
-						!(meta.negative && meta.negative.phase === "parse")) ||
 					knownBugs.includes(name) ||
 					(mode === "production" &&
 						deliberateProductionDivergences.includes(name))

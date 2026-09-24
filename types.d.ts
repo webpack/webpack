@@ -5287,6 +5287,7 @@ type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
 	referencedExports?: null | string[][];
 	attributes?: ImportAttributes;
+	phase?: 0 | 1 | 2;
 
 	/**
 	 * The request as the user wrote it, e.g. `#configs/file.mjs` where `request`
@@ -10406,6 +10407,12 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		update: boolean,
 		__1: DependencyTemplateContext
 	): [string, string];
+
+	/**
+	 * Linking error for a source phase import of a module that carries no module
+	 * source, which the spec's GetModuleSource reports as a `SyntaxError`.
+	 */
+	getSourcePhaseErrors(moduleGraph: ModuleGraph): undefined | WebpackError[];
 
 	/**
 	 * Gets linking errors.
@@ -17809,6 +17816,12 @@ declare class Module extends DependenciesBlock {
 	getReferencedSourceTypes(): undefined | ReadonlySet<string>;
 
 	/**
+	 * Whether this module carries a module source object, which is what a source
+	 * phase import binds. Importing a module without one is a `SyntaxError`.
+	 */
+	hasModuleSource(): boolean;
+
+	/**
 	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
 	 * We only have built-in knowledge about the javascript basic type here; other basic types may be
 	 * added or changed over time by generators and do not need to be handled or detected here.
@@ -19552,6 +19565,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	moduleSource?: boolean;
 	hot: boolean;
 	error: null | Error;
 	getResource(): null | string;
@@ -19809,6 +19823,11 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
+
+	/**
+	 * the module was built as the source phase representation of its resource
+	 */
+	moduleSource?: boolean;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
@@ -26462,7 +26481,7 @@ declare interface RuleSet {
 	/**
 	 * execute the rule set
 	 */
-	exec: (effectData: EffectData) => Effect[];
+	exec: (effectData: EffectData, matchedProperties?: Set<string>) => Effect[];
 
 	/**
 	 * the rules that never matched, outermost first

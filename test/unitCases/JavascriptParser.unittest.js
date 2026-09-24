@@ -8,8 +8,11 @@ const JavascriptParser = require("../../lib/javascript/JavascriptParser");
 const {
 	BLOCK_DECLARATIONS,
 	HOISTED_DECLARATIONS,
-	MODULE_DECLARATIONS
+	MODULE_DECLARATIONS,
+	parse: parseModule
 } = require("../../lib/javascript/syntax-parser");
+
+/** @import { ImportDeclaration } from "estree" */
 
 describe("JavascriptParser", () => {
 	describe("strict directive spelling", () => {
@@ -1204,6 +1207,61 @@ describe("JavascriptParser", () => {
 		]) {
 			it(`accepts ${JSON.stringify(source)}`, () => {
 				expect(parse(source)).toBeNull();
+			});
+		}
+	});
+
+	describe("import source declarations", () => {
+		/**
+		 * @param {string} source source
+		 * @returns {string} the phase and the local names it binds
+		 */
+		function phaseAndBindings(source) {
+			const ast = parseModule(source, {
+				sourceType: "module",
+				ecmaVersion: "latest",
+				importPhases: true
+			});
+			return ast.body
+				.map((node) => {
+					const declaration =
+						/** @type {ImportDeclaration & { phase?: string }} */
+						(node);
+					return `${declaration.phase || "evaluation"}:${declaration.specifiers
+						.map((specifier) => specifier.local.name)
+						.join(",")}`;
+				})
+				.join(" ");
+		}
+
+		// `source` and `from` are contextual, so which one is the phase and which
+		// the binding takes a look-ahead past the first `from`.
+		const cases = [
+			['import source x from "m";', "source:x"],
+			['import source source from "m";', "source:source"],
+			['import source from from "m";', "source:from"],
+			['import source from "m";', "evaluation:source"],
+			['import source, { a } from "m";', "evaluation:source,a"],
+			['import source /* c */ from /* c */ from "m";', "source:from"],
+			[
+				'import source source from "a";\nimport source from from "b";',
+				"source:source source:from"
+			]
+		];
+
+		for (const [source, expected] of cases) {
+			it(`parses ${JSON.stringify(source)}`, () => {
+				expect(phaseAndBindings(source)).toBe(expected);
+			});
+		}
+
+		// A name that merely starts with `from` is a binding, not the clause.
+		for (const source of [
+			'import source from fromage from "m";',
+			'import source from from from "m";'
+		]) {
+			it(`rejects ${JSON.stringify(source)}`, () => {
+				expect(() => phaseAndBindings(source)).toThrow(SyntaxError);
 			});
 		}
 	});
