@@ -839,6 +839,11 @@ type BannerPluginArgument =
 	| string
 	| BannerPluginOptions
 	| ((data: { hash?: string; chunk: Chunk; filename: string }) => string);
+
+/**
+ * Wraps banner text in a JavaScript block comment, preserving multi-line
+ * formatting and escaping accidental comment terminators.
+ */
 declare interface BannerPluginOptions {
 	/**
 	 * Specifies the banner.
@@ -855,7 +860,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	exclude?: string | RegExp | ((str: string) => boolean) | Rule_1[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -865,7 +870,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	include?: string | RegExp | ((str: string) => boolean) | Rule_1[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -880,7 +885,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	test?: string | RegExp | ((str: string) => boolean) | Rule_1[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -26427,7 +26432,6 @@ declare interface RestoreProvidedDataExports {
 	pureProvide?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
-type RuleAlias = string | RegExp | ((str: string) => boolean);
 declare interface RuleCondition {
 	property: string | string[];
 	matchWhenEmpty: boolean;
@@ -26922,6 +26926,7 @@ type RuleSetUseItem =
 			options?: string | { [index: string]: any };
 	  };
 type RuleSyntaxParser = AtRule | QualifiedRule;
+type Rule_1 = string | RegExp | ((str: string) => boolean);
 declare class RuntimeChunkPlugin {
 	/**
 	 * Creates an instance of RuntimeChunkPlugin.
@@ -28741,7 +28746,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	exclude?: string | RegExp | ((str: string) => boolean) | Rule_1[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -28762,12 +28767,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	ignoreList?: string | RegExp | ((str: string) => boolean) | Rule_1[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	include?: string | RegExp | ((str: string) => boolean) | Rule_1[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -28803,7 +28808,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	test?: string | RegExp | ((str: string) => boolean) | Rule_1[];
 }
 declare interface SourceMapOptions {
 	source: string;
