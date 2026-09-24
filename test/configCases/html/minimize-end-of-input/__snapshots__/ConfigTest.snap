@@ -3,6 +3,7 @@
 exports[`ConfigTestCases html minimize-end-of-input minimize-end-of-input should compile 1`] = `
 Object {
   "bogus-comment.html": "<!doctype html><body><p>a bogus comment the input ends inside<?xml version=\\"1></body></html>",
+  "comment-closing-bracket.html": "<!doctype html><body><div>a conditional comment the input ends inside, on a > of its own<!--[if IE]>--></div></body></html>",
   "comment.html": "<!doctype html><body><p>a conditional comment the input ends inside<!--[if IE 8]><p>x--></body></html>",
   "css.html": "<!doctype html><title>css</title><div style=--x:lab(50%>a custom property left inside a function</div>
 <div style=--x:[>inside a block</div>

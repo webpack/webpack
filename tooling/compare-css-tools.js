@@ -42,6 +42,7 @@ const cssSyntaxParser = require("../lib/css/syntax-parser");
 const {
 	NodeType,
 	TT_AT_KEYWORD,
+	TT_COMMENT,
 	TT_DIMENSION,
 	TT_EOF,
 	TT_FUNCTION,
@@ -644,21 +645,33 @@ const cssCuts = (css) => {
 	const first = new Map();
 	/** @type {Set<number>} */
 	const small = new Set();
-	const stream = new TokenStream(css);
 	let depth = 0;
 	let construct = 0;
+	/**
+	 * @param {number} type the token's type
+	 * @param {number} start where it starts
+	 * @param {number} end where it ends
+	 */
+	const offer = (type, start, end) => {
+		if (small.has(type)) return;
+		if (end - construct <= CUT_CONSTRUCT_LIMIT) {
+			first.set(type, [construct, start, end]);
+			small.add(type);
+		} else if (!first.has(type)) {
+			first.set(type, [construct, start, end]);
+		}
+	};
+	// The stream skips a comment rather than returning it, so its callback is
+	// the one place a comment is seen to cut inside.
+	const stream = new TokenStream(css, 0, undefined, (_input, start, end) => {
+		offer(TT_COMMENT, start, end);
+		return end;
+	});
 	for (;;) {
 		const token = stream.consume();
 		const type = token.type;
 		if (type === TT_EOF) break;
-		if (!small.has(type)) {
-			if (token.end - construct <= CUT_CONSTRUCT_LIMIT) {
-				first.set(type, [construct, token.start, token.end]);
-				small.add(type);
-			} else if (!first.has(type)) {
-				first.set(type, [construct, token.start, token.end]);
-			}
-		}
+		offer(type, token.start, token.end);
 		if (
 			type === TT_FUNCTION ||
 			type === TT_LEFT_PARENTHESIS ||

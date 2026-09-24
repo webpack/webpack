@@ -6209,6 +6209,29 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		]);
 	});
 
+	it("prints again where an answer leaves open a sheet its source closed", async () => {
+		// Joined on the source, the next sheet would land inside the answer's
+		// string; the answer is what is joined, so it is what decides.
+		const html = "<style>a{b:c}</style><style>d{e:f}</style>";
+		const open = (/** @type {string} */ source) =>
+			source === "a{b:c}" ? 'a{b:"c' : source;
+		const options = {
+			mode: /** @type {"minify"} */ ("minify"),
+			mergeStyles: true
+		};
+		const now = new SourceProcessor().process(html, {
+			...options,
+			renderEmbeddedSource: open
+		});
+		const later = await new SourceProcessor().processAsync(html, {
+			...options,
+			renderEmbeddedSource: async (source) => open(source)
+		});
+
+		expect(now.code).toBe('<style>a{b:"c</style><style>d{e:f}</style>');
+		expect(later.code).toBe(now.code);
+	});
+
 	it("leaves a NUL the source carried where it stands", async () => {
 		// An RCDATA element and an attribute value keep the NUL they were written
 		// with, so one reaches printed output — where a write's marker also stands.
