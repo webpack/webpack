@@ -184,13 +184,15 @@ const CASES = [
 	["default exports", "export default async function () {}", true],
 	["default export of an expression", "export default (a, b);", true],
 	["default export of an object", "export default { a };", true],
-	["import.meta and dynamic imports", "x = import.meta.url; y = import('z'); w = import('v', { with: {} });", true]
+	["import.meta and dynamic imports", "x = import.meta.url; y = import('z'); w = import('v', { with: {} });", true],
+	["a default export ending at a line break", "export default function () {}\nfoo();", true],
+	["BigInt keys, which terser keys by their digits", "x = { 0b1n: 1, 1_0n: 2, 0x1Fn: 3 }; class A { 0o7n() {} }"]
 ];
 
 /**
  * Sources terser reads unlike the specification, which the conversion leaves
- * to terser's own parser.
- * @type {[string, string][]}
+ * to terser's own parser, and whether each is a module.
+ * @type {[string, string, boolean?][]}
  */
 const DECLINED = [
 	["an HTML comment opening", "x = 1; <!-- y\n"],
@@ -203,7 +205,20 @@ const DECLINED = [
 	["let as an identifier", "let = 1;"],
 	["a class field named async", "class A { async\n*b() {} }"],
 	["more operators after a private in", "class A { #a; b(c) { return #a in c && c; } }"],
-	["what webpack's parser refuses", "function ("]
+	["what webpack's parser refuses", "function ("],
+	["a keyword spelled with escapes", "x = { \\u0074his: 1 };"],
+	["let as a declared name", "var let = 1;"],
+	["let as a shorthand property", "x = { let };"],
+	["yield naming a function inside a generator", "function* g() { (function yield() {}); }"],
+	["await as a name", "var a = await;"],
+	["a class field named get before a generator", "class A { get\n*b() {} }"],
+	["a trailing comma in a dynamic import", "import('a', {},);"],
+	["a whitespace character terser does not know", "x = 1;\u1680y = 2;"],
+	["a regular expression after await", "await /x/;", true],
+	["a default function export read on as a call", "export default function () {}(foo);", true],
+	["a default class export read on past a line break", "export default class {}\n[a];", true],
+	["a keyword after export star as", "export * as class from 'a';", true],
+	["import attributes after a line break", "import a from 'b'\nwith { type: 'json' };", true]
 ];
 
 describe("syntax-printer parse", () => {
@@ -246,10 +261,12 @@ describe("syntax-printer parse", () => {
 		});
 	}
 
-	for (const [name, source] of DECLINED) {
+	for (const [name, source, module] of DECLINED) {
 		it(`should leave to terser: ${name}`, () => {
 			if (!loaded) return;
-			expect(toTree(source, { filename: "input.js" })).toBeUndefined();
+			expect(
+				toTree(source, { module: Boolean(module), filename: "input.js" })
+			).toBeUndefined();
 		});
 	}
 

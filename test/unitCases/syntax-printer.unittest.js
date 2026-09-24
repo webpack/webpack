@@ -69,6 +69,14 @@ const CASES = [
 		{ module: true }
 	],
 	[
+		"short exported names, which no scope hands out even where unseen",
+		`export const z = 1, y = 2;
+		export function crowded(${Array.from({ length: 60 }, (_, i) => `parameter${i}`).join(", ")}) {
+			return sink(${Array.from({ length: 60 }, (_, i) => `parameter${i}`).join(", ")});
+		}`,
+		{ compress: false, module: true }
+	],
+	[
 		"many names in one scope, where one-character names run out",
 		`function crowded(input) {
 			${Array.from({ length: 80 }, (_, i) => `let variable${i} = input + ${i};`).join("\n")}
@@ -411,6 +419,9 @@ describe("syntax-printer", () => {
 		["a source terser reads its own way", "x = 0123;", {}],
 		["a module", "export const a = 1; import b from 'c'; sink(b);", { module: true }],
 		["a module named by the parse options", "export const a = 1;", { parse: { module: true } }],
+		["a module whose parse options are unset", "await x;", { module: true, parse: undefined }],
+		["a module whose parse options are not an object", "await x;", { module: true, parse: true }],
+		["a module the parse options say is not one", "await x;", { module: true, parse: { module: false } }],
 		["a return outside a function", "return 1;", { parse: { bare_returns: true } }],
 		["a string rather than files", "sink(1)", {}]
 	];
