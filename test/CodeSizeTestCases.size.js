@@ -602,6 +602,31 @@ const changeMarker = (delta) =>
 	delta > 0 ? "🔴 ↑" : delta < 0 ? "🟢 ↓" : "🔀";
 
 /**
+ * An asset whose test gained source is expected to grow with it: the bytes came
+ * with what the test added, not from webpack, so they read gray rather than as a
+ * regression, and a shrink stays green. Only growth the test did not bring in —
+ * the test lost bytes or kept its size — keeps the red marker.
+ * @param {number} delta byte delta of the output
+ * @param {number} input bytes the test's source gained
+ * @returns {string} marker for that direction
+ */
+const editedChangeMarker = (delta, input) =>
+	delta > 0 && input > 0 ? "⚪ ↑" : changeMarker(delta);
+
+/**
+ * Source a test gained is content added, not a size to judge, so it reads as an
+ * addition or a removal and never as red or green.
+ * @param {number} bytes bytes the test's source gained
+ * @returns {string} signed size, marked as added or removed
+ */
+const formatInputDelta = (bytes) =>
+	bytes === 0
+		? "—"
+		: `${bytes > 0 ? "➕" : "➖"} ${formatDelta(bytes)}${
+				bytes > 0 ? " added" : " removed"
+			}`;
+
+/**
  * @param {string[]} parts sentence fragments
  * @returns {string} them read as a list
  */
@@ -879,9 +904,12 @@ const formatChangedAssets = (changes, summary, inputDeltas) => {
 					)})`
 		).join(" | ");
 		const input = inputDeltas
-			? ` ${formatDelta(inputDeltas[change.name])} |`
+			? ` ${formatInputDelta(inputDeltas[change.name])} |`
 			: "";
-		return `| ${changeMarker(direction)} | \`${change.name}\` | ${formatBytes(
+		const marker = inputDeltas
+			? editedChangeMarker(direction, inputDeltas[change.name])
+			: changeMarker(direction);
+		return `| ${marker} | \`${change.name}\` | ${formatBytes(
 			change.before.raw
 		)} | ${formatBytes(change.after.raw)} | **${formatDelta(
 			change.delta.raw
@@ -1223,16 +1251,18 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		const bytes = (/** @type {number} */ value) =>
 			value === 0
 				? "—"
-				: `${delta ? `${changeMarker(value)} ` : ""}${formatDelta(value)}`;
+				: `${
+						delta ? editedChangeMarker(value, input) : value > 0 ? "➕" : "➖"
+					} ${formatDelta(value)}`;
 		lines.push(
 			`| ${label} | ${cases === undefined ? "—" : cases} | ${assets} | ${bytes(
 				gzip
-			)} | ${bytes(raw)} | ${bytes(input)} |`
+			)} | ${bytes(raw)} | ${formatInputDelta(input)} |`
 		);
 	}
 	lines.push(
 		"",
-		"**Read `Changed, test untouched` first**: the test is byte-identical on both sides, so webpack generated the difference. `Changed, test edited` moved partly because the test did — `Test edit` is how many bytes the test gained, and a bundle that grew by less is not a regression. `New` and `Deleted` are whole files, not deltas, so adding tests cannot bury a real change. Gzip decides, because that is what users download; raw is the tiebreak, and brotli and zstd are per asset below.",
+		"**Read `Changed, test untouched` first**: the test is byte-identical on both sides, so webpack generated the difference. `Changed, test edited` moved partly because the test did — `Test edit` is how many bytes the test gained, and growth that came with it is gray (⚪ ↑), not red: a bundle that grew by less is not a regression. `New` and `Deleted` are whole files, not deltas, so adding tests cannot bury a real change. Gzip decides, because that is what users download; raw is the tiebreak, and brotli and zstd are per asset below.",
 		""
 	);
 
