@@ -8,11 +8,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# Read-only on purpose, forks included: the report is uploaded as an artifact
-# and posted by `pr-reports.yml`, which never runs this pull request's code.
 permissions:
   contents: read
-  pull-requests: read
+  # Posting the report as a pull request comment; a fork's token stays read-only.
+  pull-requests: write
 
 jobs:
   types-coverage:
@@ -59,7 +58,27 @@ jobs:
           } > types-coverage-report.md
           cat lcov-report.md >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload the report
+      # Updated in place on every push, so the thread keeps one comment.
+      - name: Comment the report on the pull request
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { upsertReportComment } = await import(
+              `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
+            );
+            await upsertReportComment({
+              github,
+              context,
+              issueNumber: context.issue.number,
+              marker: "<!-- types-coverage-report -->",
+              body: require("fs").readFileSync("types-coverage-report.md", "utf8")
+            });
+
+      # A fork's token cannot comment, so `pr-reports.yml` posts this from the
+      # base repository's context, without running this pull request's code.
+      - name: Upload the report for the pull request comment
+        if: github.event.pull_request.head.repo.full_name != github.repository
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pr-report-types-coverage

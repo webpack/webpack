@@ -1,8 +1,8 @@
 name: Pull Request Reports
 
-# Posts the reports `code-size.yml` and `types-coverage.yml` upload. A fork's
-# `pull_request` run gets a read-only token, so the comment is written here, in
-# the base repository's context, which is why nothing here runs the PR's code.
+# Posts the reports a fork's `code-size.yml` and `types-coverage.yml` runs
+# upload, since their token is read-only; a same-repo run comments by itself.
+# This runs in the base repository's context, so it never runs the PR's code.
 on:
   # zizmor: ignore[dangerous-triggers] -- only `main` is checked out; artifact is data
   workflow_run:
