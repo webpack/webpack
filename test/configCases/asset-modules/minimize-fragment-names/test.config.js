@@ -15,18 +15,14 @@ module.exports = {
 			// Named `bundle<index>.js#<contenthash>` by `output.filename`.
 			expect(read(`bundle${index}.js`)).not.toContain("webpackBootstrap");
 			// Named `<index>/script.js#frag` by `assetModuleFilename`.
-			expect(read(`${index}/script.js`)).toBe(
-				"export const answer=function(){return 3};"
-			);
+			expect(read(`${index}/script.js`)).toMatchSnapshot();
 		}
 
 		// The extension is read before the fragment, so `#a.css` claims nothing.
 		expect(read("1/data.txt")).toBe("not   css  {\n");
 
 		// Only the second build enables native CSS and HTML.
-		expect(read("1/style.css")).toBe(".fragment{color:red}");
-		expect(read("1/page.html")).toBe(
-			"<!doctype html><head><title>Fragment</title></head><body><p class=a>hi</p>\n\n</body></html>"
-		);
+		expect(read("1/style.css")).toMatchSnapshot();
+		expect(read("1/page.html")).toMatchSnapshot();
 	}
 };
