@@ -22,7 +22,7 @@ describe("internalSerializables", () => {
 		["webpack/lib/RawDataUrlModule", "webpack/lib/asset/RawDataUrlModule"],
 		[
 			"webpack/lib/dependencies/ExternalModuleConstDependency",
-			"webpack/lib/dependencies/ExternalModuleInitFragmentDependency"
+			"webpack/lib/node/ExternalModuleInitFragmentDependency"
 		],
 		[
 			"webpack/lib/ModuleGraph",
