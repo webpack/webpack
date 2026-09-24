@@ -82,7 +82,7 @@
     "test:integration:b": "yarn test:base --testMatch \"<rootDir>/test/*.longtest.js\"",
     "test:test262": "yarn test:base --testMatch \"<rootDir>/test/specCases/test262.spectest.js\"",
     "test:test262-parser": "yarn test:base --testMatch \"<rootDir>/test/specCases/test262-parser.spectest.js\"",
-    "test:terser": "yarn test:base --testMatch \"<rootDir>/test/specCases/terser.spectest.js\"",
+    "test:js-minify": "yarn test:base --testMatch \"<rootDir>/test/specCases/js-minify.spectest.js\"",
     "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/specCases/html5lib.spectest.js\"",
     "test:syntax-equivalence": "yarn test:base --testMatch \"<rootDir>/test/specCases/syntaxEquivalence.spectest.js\"",
     "test:css-parsing": "yarn test:base --testMatch \"<rootDir>/test/specCases/cssParsing-webpack.spectest.js\"",
