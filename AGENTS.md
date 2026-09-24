@@ -1,7 +1,5 @@
 # Webpack Development Guide
 
-> Note: CLAUDE.md is a symlink to AGENTS.md. They are the same file.
-
 ## Conventions in this guide
 
 A `> [!REQUIRED]` callout directly under a heading makes that whole section **mandatory**: follow it exactly — do not paraphrase, skip, or substitute a similar-looking convention from other tooling. Reviewers keep flagging skipped or partly filled REQUIRED sections (especially the [Pull request body](#pull-request-body)), and every such skip blocks the PR — so re-read each one in full whenever it applies instead of relying on memory or a previous task's output. Sections without the callout are guidance — apply judgement.
