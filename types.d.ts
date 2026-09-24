@@ -4391,6 +4391,11 @@ declare class Compiler {
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
 	buildDependencyFiles?: Map<string, undefined | null | number>;
+
+	/**
+	 * When loading the configuration started, build dependencies changed later count as changed.
+	 */
+	buildDependenciesStartTime?: number;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
 	fileTimestamps?: Map<

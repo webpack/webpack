@@ -211,6 +211,9 @@ describe("WatchBuildDependencies", () => {
 	});
 
 	it("should ignore a build dependency reported changed without a new timestamp", async () => {
+		// written well before, like a configuration edited earlier
+		const earlier = new Date(Date.now() - 5000);
+		fs.utimesSync(configPath, earlier, earlier);
 		/** @type {string[]} */
 		const warnings = [];
 		const compiler = createCompiler({
@@ -488,6 +491,68 @@ describe("WatchBuildDependencies", () => {
 			);
 			while (reported.length === 0) await wait(50);
 			expect(reported).toEqual([new Set([packageJsonPath])]);
+		} finally {
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+		}
+	});
+
+	it("should report a build dependency changed before the first build started", async () => {
+		const compiler = createCompiler();
+		/** @type {ReadonlySet<string>[]} */
+		const reported = [];
+		compiler.hooks.buildDependenciesChanged.tap("Test", (changedFiles) => {
+			reported.push(changedFiles);
+			return true;
+		});
+
+		// after the configuration was loaded, well before watching starts
+		await wait(50);
+		fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+		await wait(300);
+
+		const watching = /** @type {import("../../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 50 }, (err) => {
+				if (err) throw err;
+			})
+		);
+
+		try {
+			while (reported.length === 0) await wait(50);
+			expect(reported).toEqual([new Set([configPath])]);
+		} finally {
+			await new Promise((resolve) => {
+				watching.close(resolve);
+			});
+		}
+	});
+
+	it("should report a build dependency changed while the configuration was loading", async () => {
+		const loadingStarted = Date.now();
+		// e.g. saved while a slow configuration was still evaluated
+		await wait(50);
+		fs.writeFileSync(configPath, '{ "value": 2 }', "utf8");
+		await wait(50);
+
+		const compiler = createCompiler();
+		compiler.buildDependenciesStartTime = loadingStarted;
+		/** @type {ReadonlySet<string>[]} */
+		const reported = [];
+		compiler.hooks.buildDependenciesChanged.tap("Test", (changedFiles) => {
+			reported.push(changedFiles);
+			return true;
+		});
+
+		const watching = /** @type {import("../../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 50 }, (err) => {
+				if (err) throw err;
+			})
+		);
+
+		try {
+			while (reported.length === 0) await wait(50);
+			expect(reported).toEqual([new Set([configPath])]);
 		} finally {
 			await new Promise((resolve) => {
 				watching.close(resolve);
