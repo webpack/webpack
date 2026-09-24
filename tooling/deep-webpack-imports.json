@@ -56,7 +56,11 @@
     "lib/dependencies/HarmonyImportSideEffectDependency": "Renamed to lib/dependencies/esm/ESMImportSideEffectDependency; only hard-source-webpack-plugin imports it, and that is webpack 4 only.",
     "lib/dependencies/HarmonyImportSpecifierDependency": "Renamed to lib/dependencies/esm/ESMImportSpecifierDependency without a re-export; its importers are hard-source-webpack-plugin, which is webpack 4 only, and worker-plugin.",
     "lib/dependencies/HarmonyInitDependency": "Removed in webpack 5.",
+    "lib/dependencies/ImportContextDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/ImportDependenciesBlock": "Removed in webpack 5.",
+    "lib/dependencies/ImportDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ImportEagerDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
+    "lib/dependencies/ImportWeakDependency": "Grouped under lib/dependencies/import/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/JsonExportsDependency": "Moved to lib/json/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/LoaderDependency": "Moved to lib/loaders/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
     "lib/dependencies/LocalModule": "Grouped under lib/dependencies/amd/; only hard-source-webpack-plugin imports it, from its lib/schema-4 module, which is webpack 4 only and requires 14 paths webpack 5 deleted.",
@@ -117,22 +121,6 @@
     "lib/dependencies/ContextElementDependency": {
       "weekly": 132760,
       "packages": ["context-map-webpack-plugin", "hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/ImportContextDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/ImportDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/ImportEagerDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
-    },
-    "lib/dependencies/ImportWeakDependency": {
-      "weekly": 132630,
-      "packages": ["hard-source-webpack-plugin"]
     },
     "lib/dependencies/ModuleDependency": {
       "weekly": 137751,
