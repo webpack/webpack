@@ -1,0 +1,118 @@
+name: Pull Request Reports
+
+# Posts the reports a fork's `code-size.yml` and `types-coverage.yml` runs
+# upload, since their token is read-only; a same-repo run comments by itself.
+# This runs in the base repository's context, so it never runs the PR's code.
+on:
+  # zizmor: ignore[dangerous-triggers] -- only `main` is checked out; artifact is data
+  workflow_run:
+    workflows: [Code Size, Types Coverage]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  comment:
+    if: >
+      github.repository == 'webpack/webpack' &&
+      github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      pull-requests: write
+    steps:
+      # `github.sha` of a `workflow_run` is the default branch's head, so this
+      # is the base repository's own script, never the pull request's.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+          sparse-checkout-cone-mode: false
+
+      # WHY: the artifact is written by the pull request's own run, whose
+      # workflow file a fork can edit, so it is data only: never executed,
+      # never interpolated into a shell, and its bytes are checked below.
+      - name: Download the reports
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pr-report-*
+          # Flat whatever the count: v8 only adds a directory per artifact when
+          # more than one matches, and each report has a file name of its own.
+          merge-multiple: true
+          path: ${{ runner.temp }}/pr-reports
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Comment the reports on the pull request
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          REPORTS_DIR: ${{ runner.temp }}/pr-reports
+        with:
+          script: |
+            const fs = require("fs");
+            const path = require("path");
+            const run = context.payload.workflow_run;
+            // Each report file maps to the one marker its body must open with.
+            const REPORTS = {
+              "code-size-report.md": "<!-- code-size-report -->",
+              "types-coverage-report.md": "<!-- types-coverage-report -->"
+            };
+            // WHY: `workflow_run.pull_requests` is empty for a fork, so the pull
+            // request is looked up by head branch and owner, and accepted only
+            // when its head is still the commit this run measured — a stale run
+            // then cannot overwrite a newer report.
+            const { data: pulls } = await github.rest.pulls.list({
+              ...context.repo,
+              state: "open",
+              base: "main",
+              head: `${run.head_repository.owner.login}:${run.head_branch}`,
+              per_page: 100
+            });
+            const pull = pulls.find(
+              (candidate) =>
+                candidate.base.ref === "main" &&
+                candidate.head.sha === run.head_sha &&
+                candidate.head.repo &&
+                candidate.head.repo.id === run.head_repository.id &&
+                candidate.base.repo.id === run.repository.id
+            );
+            if (!pull) {
+              core.info(`No open pull request is at ${run.head_sha}, skipping.`);
+              return;
+            }
+            const { upsertReportComment } = await import(
+              `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
+            );
+            // WHY: right after the marker rather than at the end, where a report
+            // left open (an unclosed `<!--`) would swallow it out of sight.
+            const provenance = `<sub>Reported by [${run.name} #${run.run_number}](${run.html_url}) for ${run.head_sha}, computed by this pull request's own code.</sub>`;
+            for (const [file, marker] of Object.entries(REPORTS)) {
+              const reportPath = path.join(process.env.REPORTS_DIR, file);
+              let stat;
+              try {
+                stat = fs.lstatSync(reportPath);
+              } catch {
+                continue;
+              }
+              // A symlink could point the read at a file on the runner.
+              if (!stat.isFile() || stat.size > 1024 * 1024) {
+                core.warning(`Ignoring ${file}: not a plain file under 1 MiB.`);
+                continue;
+              }
+              const report = fs.readFileSync(reportPath, "utf8");
+              if (!report.startsWith(marker)) {
+                core.warning(`Ignoring ${file}: it does not open with ${marker}.`);
+                continue;
+              }
+              // A zero-width space after `@` keeps a report from pinging anyone.
+              await upsertReportComment({
+                github,
+                context,
+                issueNumber: pull.number,
+                marker,
+                report: `${marker}\n${provenance}\n\n${report
+                  .slice(marker.length)
+                  .replace(/@/g, "@\u200b")}`
+              });
+            }

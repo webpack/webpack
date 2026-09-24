@@ -1,0 +1,86 @@
+name: Types Coverage
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  # Posting the report as a pull request comment; a fork's token stays read-only.
+  pull-requests: write
+
+jobs:
+  types-coverage:
+    if: github.repository == 'webpack/webpack'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: node tooling/retry.js yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Generate the declarations the type check reads
+        run: yarn fix:special
+
+      - name: Collect types coverage
+        run: yarn types:cover:report
+
+      # `output-file` renders the comment without posting it, which is all a
+      # fork's token allows; `pulls.get` for the title only needs read access.
+      - name: Render the report
+        uses: Nef10/lcov-reporter-action@797ec1c1e78e3a9a7890c1a104d58b9e05fcef76 # v0.6.1
+        with:
+          pr-number: ${{ github.event.pull_request.number }}
+          lcov-file: ./coverage/lcov.info
+          title: Types Coverage
+          output-file: lcov-report.md
+
+      - name: Mark the report for the commenter
+        run: |
+          {
+            echo "<!-- types-coverage-report -->"
+            cat lcov-report.md
+          } > types-coverage-report.md
+          cat lcov-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Updated in place on every push, so the thread keeps one comment.
+      - name: Comment the report on the pull request
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { upsertReportComment } = await import(
+              `${process.env.GITHUB_WORKSPACE}/.github/scripts/comment-report.mjs`
+            );
+            await upsertReportComment({
+              github,
+              context,
+              issueNumber: context.issue.number,
+              marker: "<!-- types-coverage-report -->",
+              report: require("fs").readFileSync("types-coverage-report.md", "utf8")
+            });
+
+      # A fork's token cannot comment, so `pr-reports.yml` posts this from the
+      # base repository's context, without running this pull request's code.
+      - name: Upload the report for the pull request comment
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pr-report-types-coverage
+          path: types-coverage-report.md
+          retention-days: 90
