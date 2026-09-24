@@ -507,6 +507,11 @@ const toDocumentationTags = (schema) => {
 	if (schema.properties && Object.keys(schema.properties).length === 0) {
 		tags.push("@emptyProperties");
 	}
+	// WHY: the type took the place the members would have been written in, so
+	// what the schema validates travels as it stands, the way a negation does.
+	if (statesShape(schema) && Object.keys(schema.properties || {}).length > 0) {
+		tags.push(`@properties ${JSON.stringify(schema.properties)}`);
+	}
 	// WHY: a name and a literal each say what they are, and neither carries the
 	// type a schema validates beside it. The command line flags read that, so it
 	// survives rather than being dropped as redundant.
@@ -706,11 +711,7 @@ const toTypeScriptType = (schema, collected) => {
 		}
 		// WHY: an object with no properties of its own says everything it has to say
 		// through `tsType`, and the tags carry the keywords back.
-		if (
-			schema.tsType &&
-			Object.keys(schema.properties || {}).length === 0 &&
-			statesShape(schema)
-		) {
+		if (schema.tsType && statesShape(schema)) {
 			return quoteImports(schema.tsType, '"');
 		}
 		// WHY: an object with nothing in it and nothing allowed into it is an empty
@@ -1099,6 +1100,11 @@ const fromDocumentationTags = (tags) => {
 	}
 	if (tags.has("additionalProperties")) keywords.additionalProperties = true;
 	if (tags.has("emptyProperties")) keywords.properties = {};
+	if (tags.has("properties")) {
+		keywords.properties = JSON.parse(
+			/** @type {string} */ (tags.get("properties"))
+		);
+	}
 	if (tags.has("typeOnly")) keywords.typeOnly = true;
 	if (tags.has("inline")) keywords.inline = true;
 	if (tags.has("jsonType")) keywords.type = tags.get("jsonType");
@@ -1156,7 +1162,7 @@ const describedItems = (node, checker, known) => {
 // The tags a leading comment may carry, matched by name so prose holding an
 // "@" is left alone. `not` takes JSON, so it reads to the end of the comment.
 const KNOWN_TAG_REGEXP = new RegExp(
-	`@(since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join("|")})(?:[ \\t]+([^@]*))?`
+	`@(since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|properties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join("|")})(?:[ \\t]+([^@]*))?`
 );
 
 /**

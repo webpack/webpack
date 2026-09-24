@@ -3245,7 +3245,7 @@
                   "type": "number"
                 }
               },
-              "tsType": "import(\"net\").ListenOptions"
+              "tsType": "import('net').ListenOptions"
             },
             {
               "description": "A custom listen function.",
