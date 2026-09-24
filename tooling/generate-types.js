@@ -274,14 +274,45 @@ ${code}`;
  * @param {string} relPath the schema's path relative to the schemas directory
  * @returns {string} the declaration file's content
  */
+/** @type {Map<string, string> | undefined} */
+let declaring;
+
+/**
+ * @returns {Map<string, string>} the module under `lib/` declaring each schema
+ */
+const declaringModules = () => {
+	if (declaring) return declaring;
+	declaring = new Map();
+	/**
+	 * @param {string} directory the directory to read
+	 * @returns {void}
+	 */
+	const walk = (directory) => {
+		for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+			const absolute = path.resolve(directory, entry.name);
+			if (entry.isDirectory()) {
+				walk(absolute);
+			} else if (entry.name.endsWith(".js")) {
+				const text = fs.readFileSync(absolute, "utf8");
+				if (!text.includes("@schema ")) continue;
+				for (const [, named] of text.matchAll(/@schema[ \t]+([\w/-]+)/g)) {
+					declaring.set(named, absolute.replace(/\.js$/, ""));
+				}
+			}
+		}
+	};
+	walk(path.resolve(root, "lib"));
+	return declaring;
+};
+
 const createDeclaration = (schemaPath, title, relPath) => {
 	const directory = path.dirname(relPath);
 	const basename = path.basename(relPath, path.extname(relPath));
-	const filename = path.resolve(
-		root,
-		declarations,
-		`${path.join(directory, basename)}`
-	);
+	const named = path.join(directory, basename).split(path.sep).join("/");
+	// WHY: a plugin declares its own options, so the type is where the code that
+	// reads it is; only what has not moved is still declared beside the schema.
+	const filename =
+		declaringModules().get(named) || path.resolve(root, declarations, named);
 	const fromSchemaToDeclaration = path
 		.relative(path.dirname(schemaPath), filename)
 		.replace(/\\/g, "/");
