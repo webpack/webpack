@@ -2319,4 +2319,119 @@ describe("a color rewrite paints as the color it replaced", () => {
 		},
 		FILE_TIMEOUT
 	);
+
+	it(
+		"reads a merged <style> run as the sheets it joined",
+		async () => {
+			const {
+				builtinEmbeddedRenderer
+			} = require("../../lib/html/builtinEmbeddedRenderer");
+
+			const renderer = builtinEmbeddedRenderer();
+			// Sheets the input left open or unfinished, each joined to the next only
+			// once closed as its own end of input closed it.
+			const firsts = [
+				"a{}",
+				"a{color:red}/*x",
+				'a{content:"x',
+				'a{content:"x\n}',
+				"a{color:red",
+				"a{color:rgb(1,2,3",
+				"a{}b",
+				"a{}b,c",
+				"@import url(x.css)",
+				"a{}}",
+				'a{color:red}\\"',
+				"@media screen{a{color:red",
+				"a[x",
+				'a[x="y',
+				"@media (min-width:1px",
+				"@layer base",
+				"@font-face{font-family:x",
+				"a{color:red;/*",
+				"a{color:red!",
+				".a{--x:f(",
+				".a{--x:{",
+				"a{background:url(x",
+				'a{background:url(x"',
+				"<!-- a{color:red} -->",
+				"a{color:red} <!--",
+				"@supports (display:grid){a{color:red",
+				"a{color:red;b",
+				":is(",
+				"a:not(.b",
+				"@keyframes k{from{opacity:0",
+				"a{}.b{color:red}.c",
+				"a{color:red}}}",
+				"a{content:'\\'"
+			];
+			const seconds = [
+				"b{color:#00f}",
+				"@media screen{c{color:red}}",
+				".x,.y{margin:1px;animation-name:k}"
+			];
+			const body =
+				'<a class="a b" x="y">a</a><b class="b x">b</b><c class="c y">c</c><p class="a">p</p><div>d</div>';
+			/**
+			 * @param {string} html a head holding both sheets
+			 * @param {boolean} mergeStyles whether to join them
+			 * @returns {string} the head, minified
+			 */
+			const print = (html, mergeStyles) =>
+				new HtmlSourceProcessor().process(html, {
+					mode: "minify",
+					mergeStyles,
+					renderEmbeddedSource: renderer
+				}).code;
+			const page = await browser.newPage();
+			try {
+				/**
+				 * @param {string} head the document's head
+				 * @returns {Promise<string>} every element's style, as the engine computes it
+				 */
+				const computed = async (head) => {
+					await page.setContent(
+						`<!doctype html><html><head>${head}</head><body>${body}</body></html>`
+					);
+					return page.evaluate(() =>
+						[...document.body.querySelectorAll("*")]
+							.map((element) => {
+								const style = getComputedStyle(element);
+								return [
+									"color",
+									"margin-top",
+									"background-image",
+									"content",
+									"opacity",
+									"animation-name",
+									"font-family",
+									"--x"
+								]
+									.map((name) => style.getPropertyValue(name))
+									.join("|");
+							})
+							.join("\n")
+					);
+				};
+				/** @type {string[]} */
+				const differences = [];
+				for (const first of firsts) {
+					for (const second of seconds) {
+						const html = `<style>${first}</style><style>${second}</style>`;
+						const joined = print(html, true);
+						if (joined.split("<style").length !== 2) {
+							differences.push(`not joined: ${html}`);
+						}
+						if ((await computed(print(html, false))) !== (await computed(joined))) {
+							differences.push(`reads differently: ${html}`);
+						}
+					}
+				}
+				expect(differences).toEqual([]);
+			} finally {
+				await page.close();
+			}
+		},
+		FILE_TIMEOUT
+	);
 });
