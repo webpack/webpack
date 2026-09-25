@@ -11373,43 +11373,69 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		// the parent. A target that reads no nesting reads none of what stays.
 		expect(
 			minifyFor("a{color:red;&:autofill{color:blue}}", ["chrome 100"])
-		).toBe("a{color:red}a:-webkit-autofill,a:autofill{color:blue}");
+		).toBe("a{color:red}a:-webkit-autofill{color:blue}a:autofill{color:blue}");
 		expect(
 			minifyFor("a{color:red;&:autofill{color:blue}& b{color:teal}}", [
 				"chrome 100"
 			])
 		).toBe(
-			"a{color:red}a:-webkit-autofill,a:autofill{color:blue}a b{color:teal}"
+			"a{color:red}a:-webkit-autofill{color:blue}a:autofill{color:blue}" +
+				"a b{color:teal}"
 		);
 	});
 
+	it("writes what it took out the way a prefixed rule is written", () => {
+		// One selector an engine cannot read takes the whole list with it, which
+		// is why the prefixing wrote these as rules — the hoist keeps them so.
+		const T = ["chrome 100"];
+		expect(minifyFor("a{color:red;&:autofill{color:blue}}", T)).toBe(
+			`a{color:red}${minifyFor("a:autofill{color:blue}", T)}`
+		);
+	});
+
+	const HOIST_T = ["chrome 100", "firefox 100", "safari 15.4"];
+
 	it.each([
-		["one prefixed rule", "a{&:fullscreen{top:0}}", "a:-webkit-full-screen,a:fullscreen{top:0}"],
+		[
+			"one prefixed rule",
+			"a{&:fullscreen{top:0}}",
+			"a:-webkit-full-screen{top:0}a:fullscreen{top:0}"
+		],
 		[
 			"a prefixed and a plain one",
 			"a{&:defined{top:0}&:fullscreen{top:0}}",
-			"a:-webkit-full-screen,a:defined,a:fullscreen{top:0}"
+			"a:defined{top:0}a:-webkit-full-screen{top:0}a:fullscreen{top:0}"
 		],
 		[
 			"two prefixed",
 			"a{&:fullscreen{top:0}&:autofill{top:0}}",
-			"a:-webkit-autofill,a:-webkit-full-screen,a:autofill,a:fullscreen{top:0}"
+			"a:-webkit-full-screen{top:0}a:fullscreen{top:0}" +
+				"a:-webkit-autofill{top:0}a:autofill{top:0}"
 		],
 		[
 			"a parent that declares as well",
 			"a{top:0;&:fullscreen{left:0}}",
-			"a{top:0}a:-webkit-full-screen,a:fullscreen{left:0}"
+			"a{top:0}a:-webkit-full-screen{left:0}a:fullscreen{left:0}"
 		]
 	])("hoists %s", (_name, css, expected) => {
-		expect(minifyFor(css, ["chrome 100", "firefox 100", "safari 15.4"])).toBe(
-			expected
-		);
+		expect(minifyFor(css, HOIST_T)).toBe(expected);
 	});
 
 	it("leaves a prefixed rule that was never nested alone", () => {
+		expect(minifyFor("a:fullscreen{top:0}", HOIST_T)).toBe(
+			"a:-webkit-full-screen{top:0}a:fullscreen{top:0}"
+		);
+	});
+
+	it("leaves a prefixed rule holding a rule of its own where it stands", () => {
+		// What it holds was resolved against the prelude it was written under,
+		// which every copy but one is not — so the group stays nested.
 		expect(
-			minifyFor("a:fullscreen{top:0}", ["chrome 100", "firefox 100", "safari 15.4"])
-		).toBe("a:-webkit-full-screen{top:0}a:fullscreen{top:0}");
+			minifyFor("a{&:fullscreen{top:0;& .child{left:0}}}", HOIST_T)
+		).toBe(
+			"a{&:-webkit-full-screen{top:0}&:fullscreen{top:0}" +
+				"&:fullscreen .child{left:0}}"
+		);
 	});
 
 	it("leaves a rule written in an at-rule where it stands", () => {
