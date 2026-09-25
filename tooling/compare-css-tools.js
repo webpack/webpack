@@ -1357,6 +1357,35 @@ const wantedPreset = filterFrom("PRESET");
 /** @type {string[]} */
 let _missingFixtures = [];
 
+// A stylesheet for the branches the corpus never takes: every reducer shape
+// below counted zero over every stylesheet on disk, and each stands beside a
+// value it must decline, which is what reads the guard and not the branch.
+const COLD_BRANCHES = `.m1{transform:matrix(2,0,0,3,0,0)}
+.m2{transform:matrix(1,0,0,1,10,20)}
+.m3{transform:matrix(0,1,-1,0,0,0)}
+.m4{transform:matrix(0,-1,1,0,0,0)}
+.m5{transform:matrix(1,2,3,4,5,6)}
+.d1{transform:matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,10,20,0,1)}
+.d2{transform:matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,10,20,30,1)}
+.d3{transform:matrix3d(2,0,0,0,0,3,0,0,0,0,4,0,0,0,0,1)}
+.d4{transform:matrix3d(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)}
+.z1{transform:scale3d(1,1,2)}
+.z2{transform:rotate3d(1,1,0,45deg)}
+.r0{color:rgb(from #808080 r g b)}
+.r1{color:rgba(from #808080 r g b / 0.5)}
+.r2{color:hsl(from #808080 h s l)}
+.r3{color:hsla(from #808080 h s l / 0.5)}
+.r4{color:hwb(from #808080 h w b)}
+.r5{color:lab(from #808080 l a b)}
+.r6{color:oklab(from #808080 l a b)}
+.r7{color:lch(from #808080 l c h)}
+.r8{color:oklch(from #808080 l c h)}
+.r9{color:color(from #808080 srgb r g b)}
+.r10{color:rgb(from currentcolor r g b)}
+.u1{background:url(a\\(b\\).png)}
+.k1 col || .k1 td{color:red}
+`;
+
 const invariantFixtures = () => {
 	/** @type {[string, string][]} */
 	const out = [];
@@ -1376,6 +1405,7 @@ const invariantFixtures = () => {
 		if (fs.existsSync(file)) out.push([label, fs.readFileSync(file, "utf8")]);
 		else missing.push(label);
 	}
+	out.push(["cold branches", COLD_BRANCHES]);
 	return { corpus: out, missing };
 };
 
@@ -1624,6 +1654,7 @@ if (require.main === module) {
 // Where the cache holds each fixture, for a reader that is not this script.
 module.exports = {
 	CACHE,
+	COLD_BRANCHES,
 	INSTALLED_FIXTURES,
 	GENERATED_FIXTURES: /** @type {[string, string][]} */ (
 		GENERATED_FIXTURES.map(([label, file]) => [label, file])

@@ -10212,6 +10212,25 @@ describe("CssSyntax minify — relative colors", () => {
 		expect(minify(`a{color:${css}}`)).toBe(`a{color:${css}}`);
 	});
 
+	// Every function that states channels of its own, so none is left to a
+	// stylesheet to reach first: `hsla()` named a space the model holds under
+	// `hsl()`, and reading it back threw rather than answering.
+	it.each([
+		["rgb", "rgb(from #808080 r g b)", "gray"],
+		["rgba", "rgba(from #808080 r g b/0.5)", "#80808080"],
+		["hsl", "hsl(from #808080 h s l)", "gray"],
+		["hsla", "hsla(from #808080 h s l)", "gray"],
+		["hsla with an alpha", "hsla(from #808080 h s l/0.5)", "#80808080"],
+		["hwb", "hwb(from #808080 h w b)", "gray"],
+		["lab", "lab(from #808080 l a b)", "gray"],
+		["lch", "lch(from #808080 l c h)", "gray"],
+		["oklab", "oklab(from #808080 l a b)", "gray"],
+		["oklch", "oklch(from #808080 l c h)", "gray"],
+		["color", "color(from #808080 srgb r g b)", "gray"]
+	])("writes what %s states its channels in", (_name, css, written) => {
+		expect(minify(`a{color:${css}}`)).toBe(`a{color:${written}}`);
+	});
+
 	it("reads a channel written any way the function takes", () => {
 		// A hue is an angle, and the alpha may be a percentage.
 		expect(minify("a{color:hsl(from red 240deg s l)}")).toBe("a{color:#00f}");
