@@ -881,9 +881,9 @@ const purityRelation = (sources) => {
 
 /**
  * A finding the printer owes nothing for, with the reason it is owed nothing.
- * `relation` and `contains` together name it; `source` narrows it to one
- * fixture where the same repro is a defect elsewhere.
- * @typedef {{ relation: string, contains: string, source?: string, why: string }} Expected
+ * `relation` and `contains` together name it, `what` narrows it to a kind of
+ * finding, and `source` to one fixture where the same repro is a defect elsewhere.
+ * @typedef {{ relation: string, contains: string, what?: string, source?: string, why: string }} Expected
  */
 
 /**
@@ -896,6 +896,9 @@ const purityRelation = (sources) => {
 const _covers = (expected, report, sources) => {
 	if (expected.relation !== report.relation) return false;
 	if (!report.repro.includes(expected.contains)) return false;
+	if (expected.what !== undefined && !report.what.includes(expected.what)) {
+		return false;
+	}
 	if (expected.source === undefined) return true;
 	// Every fixture the group reaches, not any one of them: the same repro found
 	// somewhere the entry does not name is a divergence it says nothing about.
@@ -979,7 +982,9 @@ const findingGroups = (expected = []) => {
 			if (stale.length !== 0) {
 				out(`\nstale — ${stale.length} expectation(s) matched nothing\n`);
 				for (const entry of stale) {
-					out(`    ${entry.relation}: ${entry.contains}\n`);
+					out(
+						`    ${entry.relation}: ${entry.what === undefined ? entry.contains : entry.what}\n`
+					);
 				}
 			}
 			return unexpected.length + stale.length;

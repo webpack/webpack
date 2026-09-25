@@ -730,6 +730,28 @@ describe("compare-tools-harness", () => {
 			expect(text).toContain("idempotence — bytes");
 			expect(text).toContain("stale — 1 expectation(s) matched nothing");
 		});
+
+		it("lets an entry naming a kind of finding cover only that kind", () => {
+			const groups = findingGroups([
+				{ relation: "readable", contains: "", what: "bytes", why: "…" }
+			]);
+			groups.add(finding("readable", "    a -> b"), "default", "one.css");
+			groups.add(
+				{ relation: "readable", what: "differs", repro: "    a -> b" },
+				"default",
+				"one.css"
+			);
+			const { text, count } = written(groups);
+			expect(count).toBe(1);
+			expect(text).toContain("readable — differs");
+		});
+
+		it("names an entry by its kind when it goes stale", () => {
+			const groups = findingGroups([
+				{ relation: "readable", contains: "", what: "left nesting", why: "…" }
+			]);
+			expect(written(groups).text).toContain("readable: left nesting");
+		});
 	});
 });
 

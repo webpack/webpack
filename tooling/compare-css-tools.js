@@ -96,6 +96,7 @@ const {
 	sweepMode,
 	thrownText
 } = require("./compare-tools-harness");
+const { gateFixtures, readability } = require("./css-readability");
 
 const ROOT = path.resolve(__dirname, "..");
 const CACHE_NAME = "css-tool-comparison";
@@ -239,6 +240,15 @@ const PRESETS = [
 	["target", TARGET_OPTIONS],
 	["target+vars", TARGET_VARS_OPTIONS],
 	["legacy", LEGACY_TARGET_OPTIONS]
+];
+
+// WHY: the targets `readable` is asked under beyond the presets: each gate the
+// printer reads (`SUPPORTED_FROM`) is closed in one of them, so every rewrite it
+// withholds and every lowering it declines for want of `:is()` is reached.
+/** @type {[string, string[]][]} */
+const READABILITY_TARGETS = [
+	["before :is()", ["chrome 86", "firefox 77", "safari 13.1"]],
+	["oldest", ["chrome 55", "firefox 44", "safari 10", "ie 11"]]
 ];
 
 // Each entry builds its callable on demand, so the measuring worker loads only
@@ -1215,6 +1225,81 @@ const EXPECTED = [
 		why: "the printed name keeps the source's spelling, so an escaped one costs the bytes the escape takes — the lookups behind it read the unescaped name, which is what `fix(css): read an escaped property name as the name it spells` settled. Unescaping the printed name where the plain spelling is valid would retire this; it is a re-encoding, so it has to show a compressed win first"
 	},
 	{
+		relation: "idempotence",
+		contains: "&:-webkit-",
+		why: "a nested rule the prefixes rewrote stays nested on the first pass, and the second hoists the copies it wrote, which is `readable`'s `a vendor prefix rewrote` seen from here. webpack/webpack#22308 hoists them on the first pass, and retires this entry and the next"
+	},
+	{
+		relation: "idempotence",
+		contains: "& .x:-webkit-",
+		why: "the entry above, for a nested rule naming a descendant"
+	},
+	{
+		relation: "idempotence",
+		contains: "{top:0}.c-",
+		why: "`.c,.c:fullscreen{top:0}` is written with a prefix copy of the one selector that needs it in front, `.c:-webkit-full-screen{top:0}.c,.c:fullscreen{top:0}`, and the next pass writes that copy again, since the list it copies still needs it. Asking whether the rule before already is that copy retires this"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "hoisting nested rules joined",
+		why: "the hoist joins sibling rules sharing a block into one list without asking whether every target reads each selector, so one it cannot read drops the rest: `main{:has(p){top:0}#baz{top:0}}` loses `main #baz` for chrome 100. webpack/webpack#22308 stops the join for prefix copies only; asking `SELECTOR_SUPPORTED_FROM` before joining, as the top-level merge does, retires this"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "as an at-rule written in a style rule",
+		why: "the lowering takes rules out of rules, never an at-rule out of one, so `a{@media print{color:red}}` stays nested and a target without nesting drops it — the unit test `leaves a rule written in an at-rule where it stands` states the decline. Writing the at-rule around a copy of its parent's selector, `@media print{a{color:red}}`, retires this and the two entries after it"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "as a rule an at-rule in a style rule holds",
+		why: "a rule written in an at-rule that is itself in a style rule stays with that at-rule, so it is the entry above's decline, seen one level down"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "as a rule after an at-rule a declaration follows",
+		why: "`a{@media print{top:0}left:0;&:hover{top:0}}` keeps `&:hover` nested: the at-rule stays, as two entries above, and a declaration after it keeps every rule after that where it is, as the entry after this one does for a rule"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "as a rule a declaration follows",
+		why: "`a{color:red;& b{color:blue}color:green}` stays nested, since hoisting `a b` alone would move it after `color:green` — the unit test `keeps the nesting where a declaration is written after a rule` states it. Splitting the parent around it, `a{color:red}a b{color:blue}a{color:green}`, keeps the order and retires this"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "as a rule a vendor prefix rewrote",
+		why: "a nested rule the prefixes rewrote is several rules, which the hoist left where they stood: `.n{&:fullscreen{top:0}}` printed `.n{&:-webkit-full-screen{top:0}&:fullscreen{top:0}}`. webpack/webpack#22308 hoists them, and retires this"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "a media range with a strict bound",
+		why: "`(width<2px)` has no `min-`/`max-` spelling meaning the same, since those are inclusive, so the lowering leaves it. `not all and (min-width:2px)` says it exactly, and writing it retires this"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "in a value `var()` substitutes",
+		why: "`light-dark()` is not lowered in a value holding a `var()`: what that substitutes is known only at computed-value time, so the printer cannot tell whether a half is a color the pair can carry. Lowering it where both halves are plain `var()` references retires this"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "value:text-wrap pretty",
+		why: "`text-wrap-mode:wrap;text-wrap-style:pretty` is merged into `text-wrap:pretty`, which Firefox does not read, so it loses the `wrap` it read before. Asking `VALUE_SUPPORT_PACKED` for the shorthand's value before merging retires this and the entry after it"
+	},
+	{
+		relation: "readable",
+		contains: "",
+		what: "value:flex auto",
+		why: "`flex-grow:1;flex-shrink:1;flex-basis:auto` is merged into `flex:auto`, which the compat data says IE 11 never read, where it read each longhand — the merge asks no value table, as the entry above"
+	},
+	{
 		relation: "respelling leading-zero",
 		contains: "-> 0",
 		why: "the printer leaves scientific notation alone on purpose — `_normalizeNumber` says so in as many words — so `opacity:0.2e2` keeps every byte, and an `@supports` prelude is kept as authored because it is a feature test rather than a declaration to print. Both are judgements to revisit rather than defects; retire this entry if either changes"
@@ -1370,6 +1455,11 @@ const invariantFixtures = () => {
 			fs.readFileSync(file, "utf8")
 		]);
 	}
+	// Written rather than installed: what ships repeats what ships, and these are
+	// every shape each gate the printer reads a target through can be asked in.
+	for (const [gate, css] of gateFixtures()) {
+		out.push([`generated: ${gate}`, css]);
+	}
 	/** @type {string[]} */
 	const missing = [];
 	for (const [label, file] of fixtures()) {
@@ -1443,6 +1533,62 @@ const invariants = (write) => {
 			groups.add(report, "parse", report.repro.trim());
 		}
 		log(`read ${read} stylesheets twice over …`);
+	}
+	if (wantedRelation("readable")) {
+		// A preset differing from another only in what it rewrites past the
+		// selection prints for the same browsers, which this reads alike.
+		const targets = [
+			...presets.filter(
+				([, options], at) =>
+					options.environment !== undefined &&
+					!presets
+						.slice(0, at)
+						.some(
+							([, other]) =>
+								other.environment !== undefined &&
+								other.environment.browsers ===
+									/** @type {NonNullable<CssPrintOptions["environment"]>} */ (
+										options.environment
+									).browsers
+						)
+			),
+			...READABILITY_TARGETS.filter(([name]) => wantedPreset(name)).map(
+				([name, browsers]) =>
+					/** @type {[string, CssPrintOptions]} */ ([
+						name,
+						{ environment: { browsers } }
+					])
+			)
+		];
+		log(
+			`reading ${corpus.length} stylesheets as ${targets.length} targets do …`
+		);
+		for (const [label, css] of corpus) {
+			for (const [preset, options] of targets) {
+				const browsers = /** @type {string[]} */ (
+					/** @type {NonNullable<CssPrintOptions["environment"]>} */ (
+						options.environment
+					).browsers
+				);
+				const print = printerFor(options);
+				/** @type {string} */
+				let printed;
+				try {
+					printed = print(css);
+				} catch (_error) {
+					// Refusing to print is `idempotence`'s to report.
+					continue;
+				}
+				for (const report of readability({
+					source: css,
+					printed,
+					browsers,
+					print
+				})) {
+					groups.add(report, preset, label);
+				}
+			}
+		}
 	}
 	// The printer's two relations share a sweep: both need the output, and
 	// printing it twice to ask two questions of it would double the run.
