@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Stop `output.copy` reading from `output.path`, with an `ignore` hook to override it.
+Stop `output.copy` reading `output.path`, add an `ignore` hook, keep `from` symlinks.
