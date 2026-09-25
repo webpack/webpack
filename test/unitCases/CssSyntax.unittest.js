@@ -11359,6 +11359,26 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		);
 	});
 
+	it("leaves a prefixed rule writing a color-scheme query where it stands", () => {
+		// The query's rule names the prelude as it was written, `&` and all, which
+		// names the parent only where it stays nested.
+		expect(
+			minifyFor(
+				"a{&:fullscreen{color-scheme:light dark;color:light-dark(red,blue)}}",
+				HOIST_T
+			)
+		).toBe(
+			"a{&:-webkit-full-screen{color-scheme:light dark;" +
+				"color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
+				"&:fullscreen{color-scheme:light dark;" +
+				"color:var(--webpack-light,red) var(--webpack-dark,blue);" +
+				"--webpack-light:initial;--webpack-dark:}" +
+				"@media (prefers-color-scheme:dark){&:fullscreen{" +
+				"--webpack-light:;--webpack-dark:initial}}}" +
+				":where(:root){--webpack-light:initial;--webpack-dark:}"
+		);
+	});
+
 	it("leaves a rule written in an at-rule where it stands", () => {
 		// The at-rule is what it is written in, and taking it out of that would
 		// take it out of the query too.
