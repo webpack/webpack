@@ -4230,6 +4230,10 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		for (const [sheet, printed] of [
 			["a{color:red}b", "a{color:red}"],
 			["a{color:red}}", "a{color:red}"],
+			// An unquoted url is one token, a bad one to the first `)`: its brackets
+			// are not blocks to close, and one the input ran out in is closed.
+			["a{b:url(x(.png);color:red", "a{b:url(x(.png);color:red}"],
+			["a{background:url(x", "a{background:url(x)}"],
 			// A lone `@` is a delimiter opening a rule's prelude, not an at-rule.
 			["a{color:red}@", "a{color:red}"],
 			["a{color:red}@-", "a{color:red}"],
