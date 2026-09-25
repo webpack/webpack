@@ -4230,6 +4230,9 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		for (const [sheet, printed] of [
 			["a{color:red}b", "a{color:red}"],
 			["a{color:red}}", "a{color:red}"],
+			// A lone `@` is a delimiter opening a rule's prelude, not an at-rule.
+			["a{color:red}@", "a{color:red}"],
+			["a{color:red}@-", "a{color:red}"],
 			["@import url(x.css)", "@import url(x.css);"],
 			["a[x", ""]
 		]) {
