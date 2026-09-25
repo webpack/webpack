@@ -10,7 +10,7 @@ const ESMImportSideEffectDependency = require("../../lib/dependencies/esm/ESMImp
 /** @import Parser from "../../lib/module/Parser" */
 /** @import Generator from "../../lib/module/Generator" */
 /** @import ModuleGraph from "../../lib/graph/ModuleGraph" */
-/** @import { ImportPhaseType } from "../../lib/dependencies/ImportPhase" */
+/** @import { ImportPhaseType } from "../../lib/dependencies/core/ImportPhase" */
 
 describe("NormalModule", () => {
 	/** @type {InstanceType<typeof NormalModule>} */
@@ -491,7 +491,7 @@ describe("NormalModule", () => {
 			// Mirrors the canonical #20986 reproduction: each module has a
 			// ESMImportSideEffectDependency to the next plus several side-effect-free
 			// deps, and the last closes the loop back to module 0.
-			const ConstDependency = require("../../lib/dependencies/ConstDependency");
+			const ConstDependency = require("../../lib/dependencies/core/ConstDependency");
 
 			const N = 5000;
 			const modules = [];
