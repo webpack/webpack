@@ -332,6 +332,42 @@ const WEB_COMPONENTS = `<!DOCTYPE html>
 </body>
 </html>`;
 
+// cspell:ignore popovertarget contenteditable exportparts
+
+// What the corpus barely reaches: every element and attribute here is in two of
+// its documents or fewer, and fourteen of them in none. Its `<style>` is the
+// only one carrying CSS a target has to be lowered for.
+const COLD_CONSTRUCTS = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Cold constructs</title>
+<style>.a{color:red;.b{color:blue}}.c{color:light-dark(#fff,#000)}@layer x{.d{top:0}}@layer x{.e{top:0}}.f{text-decoration:underline;text-decoration:underline dotted}.g{inset:1px 2px}.h{>.i{top:0}}</style>
+</head>
+<body>
+<search><form><fieldset><legend>Legend</legend>
+	<label>Number <input name=n inputmode=numeric enterkeyhint=done autocapitalize=none spellcheck=false list=opts></label>
+	<datalist id=opts><option value=a><option value=b></datalist>
+	<select><optgroup label=g><option>x</option></optgroup></select>
+	<output name=o for=n>0</output>
+	<progress value=1 max=2></progress><meter value=1 min=0 max=2></meter>
+</fieldset></form></search>
+<hgroup><h1>Title</h1><p>Subhead</p></hgroup>
+<menu><li><button popovertarget=p popovertargetaction=toggle>open</button></li></menu>
+<div id=p popover=auto>popped</div>
+<dialog open><p>dialog</p></dialog>
+<details open><summary>Summary</summary><p>body</p></details>
+<picture><source srcset="a.avif" type="image/avif"><img src=a.png alt="" loading=lazy decoding=async fetchpriority=low referrerpolicy=no-referrer></picture>
+<p><bdi>\u05E2\u05D1\u05E8\u05D9\u05EA</bdi> <bdo dir=rtl>rtl</bdo> long<wbr>word <ruby>\u6F22<rt>kan</rt></ruby></p>
+<p draggable=true translate=no accesskey=k contenteditable=true inert>attributes</p>
+<table><caption>Caption</caption><colgroup><col span=2></colgroup><thead><tr><th>a<th>b<tbody><tr><td>1<td>2<tfoot><tr><td>3<td>4</table>
+<noscript><p>no script</p></noscript>
+<template id=t><slot name=s></slot></template>
+<span is=my-el slot=s part=label exportparts="label: outer">slotted</span>
+<script type="application/ld+json">{ "a" : 1 }</script>
+<script type="importmap">{ "imports" : { "a" : "./a.js" } }</script>
+<script type="speculationrules">{ "prerender" : [ { "where" : { "href_matches" : "/x" } } ] }</script>
+</body>
+</html>`;
+
 /**
  * @param {string} sprite an SVG document
  * @returns {string} it inlined into a page, as an icon sprite is used
@@ -419,14 +455,25 @@ const EMBEDDED_OPTIONS = {
 	renderEmbeddedSource: builtinEmbeddedRenderer()
 };
 
+// `embedded` minifies a `<style>` with no target named, so no lowering inside a
+// document ever runs. This names one they all run for.
+/** @type {HtmlPrintOptions} */
+const EMBEDDED_LEGACY_OPTIONS = {
+	...AGGRESSIVE_OPTIONS,
+	renderEmbeddedSource: builtinEmbeddedRenderer({
+		environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
+	})
+};
+
 // The option sets the invariants are held over. The first two are the ones the
-// comparison's own webpack rows are measured with; the third is what a build
-// actually runs, where a `<style>` and every `style=""` reach the CSS minifier.
+// comparison's own webpack rows are measured with; the last two are what a
+// build runs, where a `<style>` and every `style=""` reach the CSS minifier.
 /** @type {[string, HtmlPrintOptions][]} */
 const PRESETS = [
 	["default", DEFAULT_OPTIONS],
 	["aggressive", AGGRESSIVE_OPTIONS],
-	["embedded", EMBEDDED_OPTIONS]
+	["embedded", EMBEDDED_OPTIONS],
+	["embedded+legacy", EMBEDDED_LEGACY_OPTIONS]
 ];
 
 // Each entry builds its callable on demand, so the measuring worker loads only
@@ -1678,6 +1725,7 @@ const invariantFixtures = () => {
 	out.push(["Table report", tablePage(10)]);
 	out.push(["Tag soup", TAG_SOUP]);
 	out.push(["Web components", WEB_COMPONENTS]);
+	out.push(["cold constructs", COLD_CONSTRUCTS]);
 	/** @type {string[]} */
 	const missing = [];
 	for (const [label, file] of INSTALLED_DOCUMENTS) {
