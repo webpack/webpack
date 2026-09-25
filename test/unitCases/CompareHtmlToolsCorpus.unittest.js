@@ -12,7 +12,8 @@ const { collectFiles } = require("../../tooling/compare-tools-harness");
 
 const ROOT = path.join(__dirname, "..", "..");
 
-// cspell:ignore popovertarget contenteditable exportparts
+// cspell:ignore popovertarget popovertargetaction contenteditable exportparts
+// cspell:ignore autocapitalize referrerpolicy accesskey writingsuggestions
 
 // The fixture exists to reach what the rest of the corpus does not, so each of
 // these is the reason a line of it is there. One edited away takes its reach
@@ -31,7 +32,9 @@ const COLD = [
 	["menu", "<menu"],
 	["loading", "loading="],
 	["is", " is="],
-	["exportparts", "exportparts"]
+	["exportparts", "exportparts"],
+	["col", "<col "],
+	["nomodule", "nomodule"]
 ];
 
 // What the printer branches on that the corpus does carry, but thinly — kept
@@ -53,7 +56,15 @@ const THIN = [
 	["fetchpriority", "fetchpriority"],
 	["spellcheck", "spellcheck"],
 	["draggable", "draggable"],
-	["contenteditable", "contenteditable"]
+	["contenteditable", "contenteditable"],
+	["autocapitalize", "autocapitalize"],
+	["referrerpolicy", "referrerpolicy"],
+	["translate", "translate="],
+	["accesskey", "accesskey"],
+	["slot", "slot="],
+	["popovertargetaction", "popovertargetaction"],
+	["writingsuggestions", "writingsuggestions"],
+	["thead", "<thead"]
 ];
 
 /**

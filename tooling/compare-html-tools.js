@@ -332,7 +332,8 @@ const WEB_COMPONENTS = `<!DOCTYPE html>
 </body>
 </html>`;
 
-// cspell:ignore popovertarget contenteditable exportparts
+// cspell:ignore popovertarget popovertargetaction contenteditable exportparts
+// cspell:ignore autocapitalize referrerpolicy accesskey writingsuggestions
 
 // What the corpus barely reaches: every element and attribute here is in two of
 // its documents or fewer, and fourteen of them in none. Its `<style>` is the
@@ -344,7 +345,7 @@ const COLD_CONSTRUCTS = `<!DOCTYPE html>
 </head>
 <body>
 <search><form><fieldset><legend>Legend</legend>
-	<label>Number <input name=n inputmode=numeric enterkeyhint=done autocapitalize=none spellcheck=false list=opts></label>
+	<label>Number <input name=n inputmode=numeric enterkeyhint=done autocapitalize=none spellcheck=false writingsuggestions=false list=opts></label>
 	<datalist id=opts><option value=a><option value=b></datalist>
 	<select><optgroup label=g><option>x</option></optgroup></select>
 	<output name=o for=n>0</output>
@@ -362,7 +363,7 @@ const COLD_CONSTRUCTS = `<!DOCTYPE html>
 <noscript><p>no script</p></noscript>
 <template id=t><slot name=s></slot></template>
 <span is=my-el slot=s part=label exportparts="label: outer">slotted</span>
-<script type="application/ld+json">{ "a" : 1 }</script>
+<script nomodule type="application/ld+json">{ "a" : 1 }</script>
 <script type="importmap">{ "imports" : { "a" : "./a.js" } }</script>
 <script type="speculationrules">{ "prerender" : [ { "where" : { "href_matches" : "/x" } } ] }</script>
 </body>
