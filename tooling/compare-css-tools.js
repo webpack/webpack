@@ -1382,6 +1382,10 @@ const COLD_BRANCHES = `.m1{transform:matrix(2,0,0,3,0,0)}
 .r8{color:oklch(from #808080 l c h)}
 .r9{color:color(from #808080 srgb r g b)}
 .r10{color:rgb(from currentcolor r g b)}
+.f1{color:rgb(from oklch(0.5 0.1 200) r g b)}
+.f2{color:rgb(from color-mix(in oklch,red,blue) r g b)}
+.f3{color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}
+.f4{color:oklch(from red calc(l * 0.8) c h)}
 .u1{background:url(a\\(b\\).png)}
 .k1 col || .k1 td{color:red}
 `;

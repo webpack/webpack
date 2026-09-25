@@ -9456,10 +9456,18 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 	});
 
 	it("writes none where there is no color to write", () => {
-		// A relative color whose result sRGB cannot show has no hex to fall back to.
+		// A substitution is what nothing here can resolve, so the reference it
+		// stands in names no color to write before it.
 		expect(
-			minifyFor("a{color:oklch(from red calc(l * 0.8) c h)}", ["chrome 100"])
-		).toBe("a{color:oklch(from red calc(l*.8) c h)}");
+			minifyFor("a{color:oklch(from var(--x) l c h)}", ["chrome 100"])
+		).toBe("a{color:oklch(from var(--x) l c h)}");
+		expect(
+			minifyFor("a{color:color-mix(in oklch,var(--x),red)}", ["chrome 100"])
+		).toBe("a{color:color-mix(in oklch,var(--x),red)}");
+		// ...as is a channel taking the other color's value.
+		expect(minifyFor("a{color:oklch(from red l c none)}", ["chrome 100"])).toBe(
+			"a{color:oklch(from red l c none)}"
+		);
 		// A custom property's value is handed back as written.
 		expect(minifyFor("a{--x:oklch(0.7 0.1 20)}", ["chrome 100"])).toBe(
 			"a{--x:oklch(0.7 0.1 20)}"
@@ -9474,13 +9482,22 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 		// Chrome 100 reads none of these, so a fallback still naming one is dropped
 		// by the same engine that drops the declaration it stands before.
 		expect(
+			minifyFor("a{color:light-dark(oklch(0.7 0.1 20),red)}", ["chrome 100"])
+		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+		// A mix is the color it names, though, so one over colors that resolve
+		// folds to a byte and the fallback is readable after all.
+		expect(
 			minifyFor("a{color:color-mix(in oklch,oklch(0.7 0.1 20),red)}", [
 				"chrome 100"
 			])
-		).toBe("a{color:color-mix(in oklch,oklch(.7 .1 20),red)}");
+		).toBe("a{color:#ed5d5a;color:color-mix(in oklch,oklch(.7 .1 20),red)}");
+		// ...and one over a color nothing resolves still writes none.
 		expect(
-			minifyFor("a{color:light-dark(oklch(0.7 0.1 20),red)}", ["chrome 100"])
-		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+			minifyFor(
+				"a{color:color-mix(in oklch,oklch(0.7 0.1 20),color(--my 1 0 0))}",
+				["chrome 100"]
+			)
+		).toBe("a{color:color-mix(in oklch,oklch(.7 .1 20),color(--my 1 0 0))}");
 		// A custom color space is one nothing here can fold, so the `color()` it
 		// stands in stays — and the fallback would be dropped with it.
 		expect(
@@ -9489,6 +9506,47 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 				["chrome 100"]
 			)
 		).toBe("a{background:linear-gradient(oklch(.7 .1 20),color(--my 1 0 0))}");
+	});
+
+	// A call that folds on what it is written over, over an origin the target
+	// cannot read. Resolving the origin alone leaves the call itself standing,
+	// which a second pass would then fold — so one pass has to settle both.
+	it.each([
+		["oklch", "rgb(from oklch(0.5 0.1 200) r g b)", "#00747a"],
+		["lab", "rgb(from lab(50 20 30) r g b)", "#a16945"],
+		["lch", "rgb(from lch(50 30 40) r g b)", "#a26757"],
+		["oklab", "rgb(from oklab(0.5 0.05 0.1) r g b)", "#8f5305"],
+		["hwb", "rgb(from hwb(194 0% 0%) r g b)", "#00c3ff"],
+		["color()", "rgb(from color(display-p3 0.2 0.5 0.6) r g b)", "#00829c"],
+		["color-mix()", "rgb(from color-mix(in oklch,red,blue) r g b)", "#ba00c2"],
+		["a mix of its own", "color-mix(in oklch,oklch(0.7 0.1 20),red)", "#ed5d5a"],
+		[
+			"a mix against transparent",
+			"color-mix(in srgb,oklch(63.7% .237 25.331) 50%,#0000)",
+			"#fb2c3680"
+		],
+		["a call holding a call", "oklch(from red calc(l * 0.8) c h)", "#d00000"]
+	])("settles a fallback written over %s", (_name, value, byte) => {
+		const css = `a{color:${value}}`;
+		const once = minifyFor(css, ["chrome 100", "firefox 100", "safari 15.4"]);
+		expect(once.startsWith(`a{color:${byte};`)).toBe(true);
+		expect(minifyFor(once, ["chrome 100", "firefox 100", "safari 15.4"])).toBe(
+			once
+		);
+	});
+
+	it("reads the arguments the author wrote, not the bytes they fold to", () => {
+		// Each color of this mix is one sRGB cannot show, so writing it as a byte
+		// first rounds it into eight bits — and the mix of two rounded colors is
+		// not the color the mix names. lightningcss and Color.js both say this.
+		expect(
+			minifyFor(
+				"a{color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}",
+				["chrome 100"]
+			)
+		).toBe(
+			"a{color:#bd33da;color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}"
+		);
 	});
 
 	it("folds only the functions the target is missing", () => {
@@ -10037,7 +10095,9 @@ describe("CssSyntax minify — color-mix()", () => {
 	it("declines the space's own spelling where the target cannot read it", () => {
 		const mix =
 			"a{color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}";
-		expect(minifyFor(mix, ["chrome 100"])).toBe(mix);
+		// The mix stands as written, since `oklch()` is what it would answer in —
+		// and the hex before it is read by the engine that reads neither.
+		expect(minifyFor(mix, ["chrome 100"])).toBe(`a{color:#bd33da;${mix.slice(2)}`);
 	});
 
 	it.each([
