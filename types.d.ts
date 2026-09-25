@@ -19570,6 +19570,7 @@ declare class NormalModule extends Module {
 	generatorOptions?: GeneratorOptions;
 	resource: string;
 	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
+	attributes?: ImportAttributes;
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
@@ -19726,6 +19727,11 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	 * resource resolve data
 	 */
 	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
+
+	/**
+	 * import attributes
+	 */
+	attributes?: ImportAttributes;
 
 	/**
 	 * context directory for resolving
@@ -20302,6 +20308,11 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	hashDigest: string;
 	hashDigestLength: number;
 	hashSalt?: string;
+
+	/**
+	 * The import attributes.
+	 */
+	importAttributes?: ImportAttributes;
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
@@ -26477,11 +26488,11 @@ declare interface RuleCondition {
 			| "compiler"
 			| "dependency"
 			| "resource"
+			| "attributes"
 			| "scheme"
 			| "realResource"
 			| "resourceQuery"
 			| "resourceFragment"
-			| "attributes"
 			| "mimetype"
 			| "descriptionData"
 			| "descriptionRelativePath"
