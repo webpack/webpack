@@ -6607,19 +6607,16 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		).toEqual([]);
 	});
 
-	it("offers a percent-escaped `data:` payload decoded, and reads `#` as content", () => {
+	it("offers a percent-escaped `data:` payload decoded, but not one a raw `#` cuts short", () => {
 		const html =
 			'<a href="data:application/json,%7B%20%22a%22%20:%201%20%7D">a</a>' +
 			'<a href="data:application/json,{ &quot;b&quot; : &quot;#&quot; }">b</a>';
 
-		expect(offered(html)).toEqual([
-			["json", "stylesheet", '{ "a" : 1 }'],
-			["json", "stylesheet", '{ "b" : "#" }']
-		]);
-		// Written back escaping only what changes a URL's meaning: the `#`.
+		expect(offered(html)).toEqual([["json", "stylesheet", '{ "a" : 1 }']]);
+		// A browser loads only what precedes the `#`, so that URL stays as written.
 		expect(minify(html, compactJson)).toBe(
 			"<a href='data:application/json,{\"a\":1}'>a</a>" +
-				"<a href='data:application/json,{\"b\":\"%23\"}'>b</a>"
+				"<a href='data:application/json,{ \"b\" : \"#\" }'>b</a>"
 		);
 	});
 

@@ -249,4 +249,12 @@ describe("readEmbeddedDataURI", () => {
 		expect(readEmbeddedDataURI("data:image/png;base64,AAAA")).toBeNull();
 		expect(readEmbeddedDataURI("data:application/json,")).toBeNull();
 	});
+
+	it("should decline a raw # a browser reads as a fragment", () => {
+		expect(readEmbeddedDataURI('data:application/json,{ "b" : "#" }')).toBeNull();
+		// An escaped one is content, so the payload is offered.
+		expect(
+			readEmbeddedDataURI('data:application/json,{ "b" : "%23" }')
+		).toMatchObject({ payload: '{ "b" : "#" }' });
+	});
 });
