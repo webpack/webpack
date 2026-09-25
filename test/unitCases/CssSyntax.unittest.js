@@ -12449,3 +12449,49 @@ describe("SourceProcessor — an at-rule named with CSS escapes", () => {
 		expect(Date.now() - started).toBeLessThan(2000);
 	});
 });
+
+describe("CssSyntax — recurseBlocks", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {boolean} recurseBlocks whether to walk into block bodies
+	 * @returns {number} how many qualified rules the walk visited
+	 */
+	const visited = (css, recurseBlocks) => {
+		let seen = 0;
+		new SourceProcessor()
+			.use({
+				[NodeType.QualifiedRule]: () => {
+					seen++;
+				}
+			})
+			.process(css, { recurseBlocks });
+		return seen;
+	};
+
+	it.each([
+		["an at-rule body", "@media screen{a{color:red}}", 1, 0],
+		["a nested rule", "b{c{color:blue}}", 2, 1],
+		["a layer holding both", "@layer a{d{e{top:0}}}", 2, 0]
+	])("walks %s only where asked", (_name, css, deep, shallow) => {
+		expect(visited(css, true)).toBe(deep);
+		expect(visited(css, false)).toBe(shallow);
+	});
+
+	it.each([
+		["a declaration alone", "a{color:red}"],
+		["an at-rule body", "@media screen{a{color:red}}"],
+		["a nested rule", "b{c{color:blue}}"],
+		["a supports body", "@supports (a:b){x{top:0}}"],
+		["a layer holding both", "@layer a{d{e{top:0}}}"]
+	])("prints %s whatever it is set to", (_name, css) => {
+		// A block is printed from its children, so printing needs every one of
+		// them — which is why a writer reads this no differently than `skip`.
+		const asked = new SourceProcessor().process(css, {
+			mode: "minify",
+			recurseBlocks: false
+		}).code;
+		expect(asked).toBe(
+			new SourceProcessor().process(css, { mode: "minify" }).code
+		);
+	});
+});
