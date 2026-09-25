@@ -186,6 +186,7 @@ const CASES = [
 	["default export of an object", "export default { a };", true],
 	["import.meta and dynamic imports", "x = import.meta.url; y = import('z'); w = import('v', { with: {} });", true],
 	["a default export ending at a line break", "export default function () {}\nfoo();", true],
+	["a default export ending the source", "export default function () {}", true],
 	["BigInt keys, which terser keys by their digits", "x = { 0b1n: 1, 1_0n: 2, 0x1Fn: 3 }; class A { 0o7n() {} }"]
 ];
 
@@ -209,6 +210,7 @@ const DECLINED = [
 	["a keyword spelled with escapes", "x = { \\u0074his: 1 };"],
 	["let as a declared name", "var let = 1;"],
 	["let as a shorthand property", "x = { let };"],
+	["let as a shorthand assignment target", "({ let } = x);"],
 	["yield naming a function inside a generator", "function* g() { (function yield() {}); }"],
 	["await as a name", "var a = await;"],
 	["a class field named get before a generator", "class A { get\n*b() {} }"],
