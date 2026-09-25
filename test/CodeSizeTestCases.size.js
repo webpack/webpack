@@ -602,6 +602,12 @@ const changeMarker = (delta) =>
 	delta > 0 ? "🔴 ↑" : delta < 0 ? "🟢 ↓" : "🔀";
 
 /**
+ * A new asset did not grow, it was created: there is no before to be red about,
+ * so it reads gray and says so, apart from the assets that changed.
+ */
+const ADDED_MARKER = "⚪ added";
+
+/**
  * @param {string[]} parts sentence fragments
  * @returns {string} them read as a list
  */
@@ -930,7 +936,7 @@ const formatIntroducedAssets = (changes, status) => {
 		.sort((a, b) => metricsOf(b).raw - metricsOf(a).raw)
 		.map((change) => {
 			const metrics = metricsOf(change);
-			return `| ${added ? "➕" : "➖"} | \`${change.name}\` | ${formatBytes(
+			return `| ${added ? ADDED_MARKER : "➖"} | \`${change.name}\` | ${formatBytes(
 				metrics.raw
 			)} | ${COMPRESSED.map((metric) => formatBytes(metrics[metric])).join(
 				" | "
@@ -1157,7 +1163,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: sumDelta(generated, "gzip"),
 			raw: sumDelta(generated, "raw"),
 			input: 0,
-			delta: true
+			delta: true,
+			added: false
 		},
 		{
 			label: "Changed, test edited",
@@ -1166,7 +1173,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: sumDelta(rebuilt, "gzip"),
 			raw: sumDelta(rebuilt, "raw"),
 			input: rebuiltInput,
-			delta: true
+			delta: true,
+			added: false
 		},
 		{
 			label: "New",
@@ -1175,7 +1183,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: sumDelta(added, "gzip"),
 			raw: sumDelta(added, "raw"),
 			input: 0,
-			delta: false
+			delta: false,
+			added: true
 		},
 		{
 			label: "Deleted",
@@ -1184,7 +1193,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: sumDelta(removed, "gzip"),
 			raw: sumDelta(removed, "raw"),
 			input: 0,
-			delta: false
+			delta: false,
+			added: false
 		},
 		{
 			label: "Unchanged",
@@ -1193,7 +1203,8 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 			gzip: 0,
 			raw: 0,
 			input: 0,
-			delta: false
+			delta: false,
+			added: false
 		}
 	];
 	const repositoryUrl = readRepositoryUrl();
@@ -1219,11 +1230,26 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		"| What moved | Tests | Assets | Gzip | Raw | Test edit |",
 		"| :-- | --: | --: | --: | --: | --: |"
 	);
-	for (const { label, cases, assets, gzip, raw, input, delta } of rows) {
+	for (const {
+		label,
+		cases,
+		assets,
+		gzip,
+		raw,
+		input,
+		delta,
+		added: created
+	} of rows) {
 		const bytes = (/** @type {number} */ value) =>
 			value === 0
 				? "—"
-				: `${delta ? `${changeMarker(value)} ` : ""}${formatDelta(value)}`;
+				: `${
+						delta
+							? `${changeMarker(value)} `
+							: created
+								? `${ADDED_MARKER} `
+								: ""
+					}${formatDelta(value)}`;
 		lines.push(
 			`| ${label} | ${cases === undefined ? "—" : cases} | ${assets} | ${bytes(
 				gzip
@@ -1232,7 +1258,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	}
 	lines.push(
 		"",
-		"**Read `Changed, test untouched` first**: the test is byte-identical on both sides, so webpack generated the difference. `Changed, test edited` moved partly because the test did — `Test edit` is how many bytes the test gained, and a bundle that grew by less is not a regression. `New` and `Deleted` are whole files, not deltas, so adding tests cannot bury a real change. Gzip decides, because that is what users download; raw is the tiebreak, and brotli and zstd are per asset below.",
+		"**Read `Changed, test untouched` first**: the test is byte-identical on both sides, so webpack generated the difference. `Changed, test edited` moved partly because the test did — `Test edit` is how many bytes the test gained, and a bundle that grew by less is not a regression. `New` and `Deleted` are whole files, not deltas — a new asset was created, not grown, so it reads gray (⚪ added) — and adding tests cannot bury a real change. Gzip decides, because that is what users download; raw is the tiebreak, and brotli and zstd are per asset below.",
 		""
 	);
 
