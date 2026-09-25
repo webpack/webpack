@@ -30513,6 +30513,9 @@ declare interface Terser {
 	minify: typeof minify;
 	phases: string[];
 }
+declare interface TerserFormatOptions {
+	[index: string]: any;
+}
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
@@ -30710,6 +30713,27 @@ declare class TopLevelSymbol {
 	 */
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
+}
+declare interface TreeOptions {
+	/**
+	 * whether the source is a module
+	 */
+	module?: boolean;
+
+	/**
+	 * whether `return` may sit at the top level
+	 */
+	bare_returns?: boolean;
+
+	/**
+	 * the name tokens carry
+	 */
+	filename?: null | string;
+
+	/**
+	 * whether a leading `#!` line is a comment
+	 */
+	shebang?: boolean;
 }
 
 /**
@@ -32429,6 +32453,10 @@ declare namespace exports {
 			export namespace printer {
 				export let load: () => Promise<Terser>;
 				export let PHASES: Phase[];
+				export let FORMAT_DEFAULTS: TerserFormatOptions;
+				export let createTerserTree: (
+					__0?: any
+				) => (source: string, options: TreeOptions) => any;
 			}
 		}
 		export {

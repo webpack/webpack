@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify JavaScript through webpack's terser entry point, mangling names faster.
+Minify JavaScript through webpack's own terser phases under `futureDefaults`.
