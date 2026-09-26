@@ -11421,6 +11421,41 @@ describe("CssSyntax minify — nesting the target cannot read", () => {
 		expect(minifyFor(css, HOIST_T)).toBe(expected);
 	});
 
+	it("names the hoisted rule in the dark-scheme copy it writes", () => {
+		// The copy repeats the rule's prelude, which the hoist resolves against
+		// the parent and may join into a list.
+		const L = "b{color:light-dark(red,blue)}";
+		const tail =
+			"b{color:var(--webpack-light,red) var(--webpack-dark,blue)}" +
+			":where(:root){--webpack-light:initial;--webpack-dark:}";
+		/**
+		 * @param {string} selector the rule's prelude standing on its own
+		 * @returns {string} the rule and the dark-scheme copy naming it
+		 */
+		const scheme = (selector) =>
+			`${selector}{color-scheme:light dark;--webpack-light:initial;--webpack-dark:}` +
+			`@media (prefers-color-scheme:dark){${selector}{--webpack-light:;--webpack-dark:initial}}`;
+		expect(minifyFor(`a{&:hover{color-scheme:light dark}}${L}`, HOIST_T)).toBe(
+			scheme("a:hover") + tail
+		);
+		expect(
+			minifyFor(
+				`a{&:hover{color-scheme:light dark}& i{color-scheme:light dark}}${L}`,
+				HOIST_T
+			)
+		).toBe(scheme("a i,a:hover") + tail);
+		expect(
+			minifyFor(`a[x$="$&"]{&:hover{color-scheme:light dark}}${L}`, HOIST_T)
+		).toBe(scheme('a[x$="$&"]:hover') + tail);
+	});
+
+	it("writes a hoisted prefix copy the way a top-level one is written", () => {
+		const L = "b{color:light-dark(red,blue)}";
+		expect(
+			minifyFor(`a{&:fullscreen{color-scheme:light dark}}${L}`, HOIST_T)
+		).toBe(minifyFor(`a:fullscreen{color-scheme:light dark}${L}`, HOIST_T));
+	});
+
 	it("leaves a prefixed rule that was never nested alone", () => {
 		expect(minifyFor("a:fullscreen{top:0}", HOIST_T)).toBe(
 			"a:-webkit-full-screen{top:0}a:fullscreen{top:0}"
