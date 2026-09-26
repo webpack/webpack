@@ -70,6 +70,10 @@ export default defineConfig([
 		// Auto generation
 		"lib/sharing/semver.js",
 
+		// terser's lib as released: held to terser's output, not to these rules
+		"lib/javascript/terser/**/*.js",
+		"!lib/javascript/terser/index.js",
+
 		// Ignore some examples files
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
 		"!examples/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
