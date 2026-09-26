@@ -155,6 +155,8 @@ export default defineConfig([
 				{
 					definedTags: [
 						"schema",
+						"publishes",
+						"required",
 						"definition",
 						"inline",
 						"title",
