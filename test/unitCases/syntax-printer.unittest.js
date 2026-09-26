@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore fnames
+// cspell:ignore fnames, propmangle
 
 const {
 	FORMAT_DEFAULTS,
@@ -516,6 +516,137 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	const INLINE_MAP = Buffer.from(
+		JSON.stringify({ version: 3, sources: ["x.js"], names: [], mappings: "AAAA" })
+	).toString("base64");
+
+	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
+	const DRIVER_CASES = [
+		["timings", "sink(1 + 2);", { timings: true }],
+		[
+			"a source map written inline",
+			{ "a.js": "function f(x) { return x + 1; } sink(f);" },
+			{ sourceMap: { url: "inline", filename: "out.js" } }
+		],
+		[
+			"a source map as an object, with a url",
+			{ "a.js": "sink(1);" },
+			{ sourceMap: { asObject: true, url: "out.js.map", root: "/" } }
+		],
+		[
+			"a source map read from the input",
+			`sink(1)\n//# sourceMappingURL=data:application/json;base64,${INLINE_MAP}`,
+			{ sourceMap: { content: "inline" } }
+		],
+		[
+			"an input map read from two files",
+			{ "a.js": "sink(1);", "b.js": "sink(2);" },
+			{ sourceMap: { content: "inline" } }
+		],
+		["a source without the input map it names", "sink(1);", { sourceMap: { content: "inline" } }],
+		["wrapped as a CommonJS module", "exports.a = 1;", { wrap: "lib" }],
+		["enclosed", "sink(window);", { enclose: "window:w" }],
+		[
+			"property mangling with quoted keys and a name cache",
+			"var o = { alpha: 1, 'beta': 2 }; sink(o.alpha, o.beta, o['gamma']);",
+			{ mangle: { properties: { keep_quoted: true } }, nameCache: {} }
+		],
+		[
+			"property mangling, strictly quoted",
+			"var o = { alpha: 1, 'beta': 2 }; sink(o.alpha, o.beta);",
+			{ mangle: { properties: { keep_quoted: "strict" } } }
+		],
+		["a name cache", "function f(longName) { return longName; } sink(f);", { nameCache: { vars: { props: {} } }, toplevel: true }],
+		["private members", "class A { #x = 1; get x() { return this.#x; } } sink(A);", {}],
+		["private members in files", { "a.js": "class A { #x = 1; m() { return #x in this; } } sink(A);" }, {}],
+		["the tree kept", "sink(1);", { format: { ast: true } }],
+		["no code", "sink(1);", { format: { code: false } }],
+		["ESTree out", "sink(1);", { format: { spidermonkey: true } }],
+		[
+			"ESTree in",
+			{
+				type: "Program",
+				body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 1 } }]
+			},
+			{ parse: { spidermonkey: true } }
+		],
+		["output and format both", "sink(1);", { output: {}, format: {} }],
+		["an unknown option", "sink(1);", { unknown: true }],
+		["no source", {}, {}],
+		["an array of sources", ["sink(1);", "sink(2);"], {}],
+		["mangling off", "function f(longName) { return longName; } sink(f);", { mangle: false }],
+		["property mangling on", "var o = { alpha: 1 }; sink(o.alpha);", { mangle: { properties: true } }],
+		[
+			"property mangling with reserved names kept quoted",
+			"var o = { alpha: 1, 'beta': 2 }; sink(o.alpha, o.beta);",
+			{ mangle: { properties: { keep_quoted: true, reserved: ["alpha"] } } }
+		],
+		[
+			"ESTree in, from two files",
+			{
+				"a.js": { type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 1 } }] },
+				"b.js": { type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 2 } }] }
+			},
+			{ parse: { spidermonkey: true }, compress: false }
+		],
+		["names kept as told", "class Long {} function f() {} sink(Long, f);", { keep_classnames: false, keep_fnames: true, rename: false }],
+		[
+			"a name cache already holding names",
+			"function f(longName) { return longName; } sink(f);",
+			{ nameCache: { vars: { props: { $f: "q" } } }, toplevel: true }
+		],
+		["a name cache without a mangle cache", "sink(1);", { nameCache: {}, mangle: { cache: null } }],
+		["an inline source map as an object", "sink(1);", { sourceMap: { url: "inline", asObject: true } }]
+	];
+
+	for (const [name, files, options] of DRIVER_CASES) {
+		it(`should drive a minify as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/**
+			 * @param {typeof minify} run a minify
+			 * @returns {Promise<EXPECTED_ANY>} what it wrote, or the error it threw
+			 */
+			const outcome = async (run) => {
+				const settings = JSON.parse(JSON.stringify(options));
+				try {
+					/** @type {EXPECTED_ANY} */
+					const result = await run(JSON.parse(JSON.stringify(files)), settings);
+					return {
+						code: result.code,
+						map: result.map,
+						decoded: result.decoded_map,
+						ast: result.ast === undefined ? undefined : typeof result.ast,
+						timings: result.timings && Object.keys(result.timings),
+						nameCache: settings.nameCache && JSON.stringify(settings.nameCache)
+					};
+				} catch (err) {
+					return { error: /** @type {Error} */ (err).message };
+				}
+			};
+			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
+		});
+	}
+
+	it("should leave terser's debug log to terser", async () => {
+		const { minify } = await load();
+		/** @type {number[]} */
+		const written = [];
+		const fs = { writeFileSync: () => written.push(1), mkdirSync() {} };
+		/** @type {(files: string, options: object, fs: object) => Promise<{ code?: string }>} */
+		const run = /** @type {EXPECTED_ANY} */ (minify);
+		const previous = process.env.TERSER_DEBUG_DIR;
+		process.env.TERSER_DEBUG_DIR = "debug";
+		try {
+			const result = await run("sink(1 + 2);", {}, fs);
+			expect(result.code).toBe("sink(3);");
+		} finally {
+			if (previous === undefined) delete process.env.TERSER_DEBUG_DIR;
+			else process.env.TERSER_DEBUG_DIR = previous;
+		}
+		expect(written).toHaveLength(1);
+	});
+
 	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
 	const PARSED_BY_TERSER = [
 		["an expression rather than a program", "a + b", { parse: { expression: true } }],
@@ -719,6 +850,29 @@ describe("syntax-printer", () => {
 				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
 				parse,
 				utils
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose driver it does not know", () => {
+		const driver =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "minify")
+			);
+		const modules = {
+			directory: "/nowhere",
+			compress: { Compressor() {} },
+			propmangle: { mangle_private_properties() {} },
+			sourcemap: { SourceMap() {} },
+			utils: { map_from_object() {}, map_to_object() {}, HOP() {} }
+		};
+		expect(driver.supports({ ...modules, directory: undefined })).toBe(false);
+		// No `lib/minify.js` there to read.
+		expect(driver.supports(modules)).toBe(false);
+		expect(
+			driver.supports({
+				...modules,
+				directory: require("path").dirname(require.resolve("acorn/package.json"))
 			})
 		).toBe(false);
 	});
