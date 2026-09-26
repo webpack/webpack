@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-vendor-prefixes-flexbox-2009 minimize-vendor-prefixes-flexbox-2009 should compile 1`] = `
+Array [
+  "/*! a container, and the keywords the draft renamed */.t01{display:-webkit-box;display:-moz-box;display:flex;-webkit-box-align:start;-moz-box-align:start;align-items:flex-start;-webkit-box-pack:justify;-moz-box-pack:justify;justify-content:space-between}",
+  "/*! one direction is two properties there */.t02{display:-webkit-inline-box;display:-moz-inline-box;display:inline-flex;-webkit-box-orient:vertical;-webkit-box-direction:reverse;-moz-box-orient:vertical;-moz-box-direction:reverse;flex-direction:column-reverse}",
+  "/*! \`box-flex\` reads the grow factor, and \`box-ordinal-group\` counts from 1 */.t03{-webkit-box-flex:1;-moz-box-flex:1;flex:1;-webkit-box-ordinal-group:3;-moz-box-ordinal-group:3;order:2}.t05{-webkit-box-flex:2;-moz-box-flex:2;flex:2;-webkit-box-ordinal-group:1;-moz-box-ordinal-group:1;order:0}.t06{-webkit-box-flex:1;-moz-box-flex:1;flex:auto}.t07{-webkit-box-flex:0;-moz-box-flex:0;flex:none}",
+  "/*! neither reads a number it cannot be given: a negative group, a basis alone */.t08{flex:10px;order:-1}",
+  "/*! a value the draft cannot read gets no copy at all */.t04{justify-content:space-evenly}",
+]
+`;

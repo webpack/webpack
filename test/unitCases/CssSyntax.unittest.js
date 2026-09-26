@@ -7600,7 +7600,8 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 
 	it("merges the longhands a droppable alias stands between", () => {
 		// The alias is dropped whether it stands there or not, so the shorthand is
-		// built over it rather than after a second pass has taken it away.
+		// built over it rather than after a second pass has taken it away. The 2009
+		// draft's names are aliases too, of `flex-direction`.
 		expect(
 			minifyFor(
 				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-ms-flex-direction:row;flex-direction:row}",
@@ -7612,8 +7613,24 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 				"a{-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}",
 				["chrome 120"]
 			)
-		).toBe(
-			"a{flex-flow:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal}"
+		).toBe("a{flex-flow:wrap}");
+	});
+
+	it("writes the 2009 draft's number from the standard value", () => {
+		// `box-ordinal-group` counts from 1 and `box-flex` reads the grow factor
+		// alone; a value neither can be given one writes no copy.
+		for (const [css, printed] of [
+			["a{order:1}", "a{-webkit-box-ordinal-group:2;order:1}"],
+			["a{order:-1}", "a{order:-1}"],
+			["a{flex:2 1 0%}", "a{-webkit-box-flex:2;flex:2}"],
+			["a{flex:auto}", "a{-webkit-box-flex:1;flex:auto}"],
+			["a{flex:none}", "a{-webkit-box-flex:0;flex:none}"],
+			["a{flex:10px}", "a{flex:10px}"]
+		]) {
+			expect(minifyFor(css, ["android 4.3"])).toBe(printed);
+		}
+		expect(minifyFor("a{order:1;flex:.5}", ["firefox 20"])).toBe(
+			"a{-moz-box-ordinal-group:2;order:1;-moz-box-flex:.5;flex:.5}"
 		);
 	});
 

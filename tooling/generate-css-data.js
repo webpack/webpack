@@ -5903,7 +5903,7 @@ const LOGICAL_SIZE_WINDOWS = [
 	["android", "4.4", "57"]
 ];
 
-/** @type {Map<string, [string, [string, string, string | number][], [string, string][]?][]>} */
+/** @type {Map<string, [string, [string, string, string | number][], [string, string][]?, number?][]>} */
 const PREFIX_SUPPLEMENT = new Map([
 	[
 		// WHY: Multi-column's own gap, prefixed until the module went unprefixed — Chrome
@@ -6030,6 +6030,93 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
+	// WHY: The 2009 flexbox draft, which WebKit and Gecko shipped under `display:
+	// -webkit-box` / `-moz-box` before the 2012 one (caniuse, through autoprefixer's
+	// table). It named each property anew, and no dataset maps the names across.
+	// `box-flex` reads the grow factor alone, and `auto` and `none` as theirs.
+	[
+		"flex",
+		[
+			[
+				"-webkit-box-flex",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["auto", "1"],
+					["none", "0"]
+				],
+				0
+			],
+			[
+				"-moz-box-flex",
+				[["firefox", "2", "22"]],
+				[
+					["auto", "1"],
+					["none", "0"]
+				],
+				0
+			]
+		]
+	],
+	[
+		"flex-direction",
+		[
+			[
+				"-webkit-box-orient",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["row", "horizontal"],
+					["row-reverse", "horizontal"],
+					["column", "vertical"],
+					["column-reverse", "vertical"]
+				]
+			],
+			[
+				"-webkit-box-direction",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["row", "normal"],
+					["row-reverse", "reverse"],
+					["column", "normal"],
+					["column-reverse", "reverse"]
+				]
+			],
+			[
+				"-moz-box-orient",
+				[["firefox", "2", "22"]],
+				[
+					["row", "horizontal"],
+					["row-reverse", "horizontal"],
+					["column", "vertical"],
+					["column-reverse", "vertical"]
+				]
+			],
+			[
+				"-moz-box-direction",
+				[["firefox", "2", "22"]],
+				[
+					["row", "normal"],
+					["row-reverse", "reverse"],
+					["column", "normal"],
+					["column-reverse", "reverse"]
+				]
+			]
+		]
+	],
 	// WHY: IE 10's flexbox, the 2012 draft: it renamed the properties rather than
 	// prefixing them, and BCD records the renames unevenly — `-ms-flex-positive`
 	// as an `alternative_name`, `-ms-flex-order` as a `-ms-` prefix on `order`
@@ -6048,7 +6135,20 @@ const PREFIX_SUPPLEMENT = new Map([
 					["ie", "10", "11"],
 					["ie_mob", "10", "11"]
 				]
-			]
+			],
+			// `-webkit-box-ordinal-group` counts from 1 where `order` counts from 0.
+			[
+				"-webkit-box-ordinal-group",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[],
+				1
+			],
+			["-moz-box-ordinal-group", [["firefox", "2", "22"]], [], 1]
 		]
 	],
 	[
@@ -6119,6 +6219,33 @@ const PREFIX_SUPPLEMENT = new Map([
 					["baseline", "baseline"],
 					["stretch", "stretch"]
 				]
+			],
+			[
+				"-webkit-box-align",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
+			],
+			[
+				"-moz-box-align",
+				[["firefox", "2", "22"]],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
 			]
 		]
 	],
@@ -6157,6 +6284,31 @@ const PREFIX_SUPPLEMENT = new Map([
 					["center", "center"],
 					["space-between", "justify"],
 					["space-around", "distribute"]
+				]
+			],
+			[
+				"-webkit-box-pack",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"]
+				]
+			],
+			[
+				"-moz-box-pack",
+				[["firefox", "2", "22"]],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"]
 				]
 			]
 		]
@@ -6318,6 +6470,22 @@ const PREFIX_SUPPLEMENT = new Map([
  * spelling that table writes.
  * @returns {[string, [string, string][]][]} `[spelling, [standard, legacy][]][]`
  */
+/**
+ * The offset each legacy spelling reading a number adds to the standard value's
+ * first component, from the fourth element of a `PREFIX_SUPPLEMENT` entry.
+ * @returns {[string, number][]} spelling and offset, sorted by spelling
+ */
+const collectPrefixSpellingNumbers = () => {
+	/** @type {[string, number][]} */
+	const out = [];
+	for (const [, stated] of PREFIX_SUPPLEMENT) {
+		for (const [spelling, , , offset] of stated) {
+			if (offset !== undefined) out.push([spelling, offset]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 const collectPrefixSpellingKeywords = () => {
 	/** @type {[string, [string, string][]][]} */
 	const out = [];
@@ -6412,7 +6580,16 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	// BCD dates a `-webkit-` longhand on the old Android WebView, but the WebKit
 	// fork that WebView ran carries the `-webkit-border-image` shorthand and no
 	// longhand of it, and no other engine's property list has ever had this name.
-	["border-image-slice", ["-webkit-border-image-slice"]]
+	["border-image-slice", ["-webkit-border-image-slice"]],
+	// WHY: The 2009 flexbox draft's names, which BCD files as properties of their own
+	// that no engine ever spelled without a prefix. `PREFIX_SUPPLEMENT` states each
+	// as the legacy spelling of the property that replaced it.
+	["box-align", ["-webkit-", "-moz-"]],
+	["box-direction", ["-webkit-", "-moz-"]],
+	["box-flex", ["-webkit-", "-moz-"]],
+	["box-ordinal-group", ["-webkit-", "-moz-"]],
+	["box-orient", ["-webkit-", "-moz-"]],
+	["box-pack", ["-webkit-", "-moz-"]]
 ]);
 
 // A vendor spelling BCD files under a keyword it does not spell, by keyword —
@@ -6484,6 +6661,38 @@ const VALUE_PREFIX_SUPPLEMENT = new Map([
 					["opera", "15", "35"]
 				]
 			]
+		]
+	],
+	// WHY: The 2009 flexbox draft's containers, which BCD does not record under
+	// `display` at all; their windows are the draft's properties' own.
+	[
+		"flex",
+		[
+			[
+				"-webkit-box",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				]
+			],
+			["-moz-box", [["firefox", "2", "22"]]]
+		]
+	],
+	[
+		"inline-flex",
+		[
+			[
+				"-webkit-inline-box",
+				[
+					["chrome", "4", "21"],
+					["safari", "3.1", "6.1"],
+					["ios_saf", "3.2", "7"],
+					["android", "2.1", "4.4"]
+				]
+			],
+			["-moz-inline-box", [["firefox", "2", "22"]]]
 		]
 	]
 ]);
@@ -6809,6 +7018,7 @@ const collectData = async () => {
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
 	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
+	const prefixSpellingNumbers = collectPrefixSpellingNumbers();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
 	const selectorSupport = collectSelectorSupport();
 	/** @type {[string, [string, number][]][]} */
@@ -7599,10 +7809,24 @@ const PREFIXED_SPELLING_KEYWORDS = new Map([
 ${prefixSpellingKeywords
 	.map(
 		([spelling, keywords]) =>
-			`\t["${spelling}", new Map([${keywords
-				.map(([standard, legacy]) => `["${standard}", "${legacy}"]`)
-				.join(", ")}])]`
+			`\t["${spelling}", new Map(${
+				keywords.length === 0
+					? ""
+					: `[${keywords
+							.map(([standard, legacy]) => `["${standard}", "${legacy}"]`)
+							.join(", ")}]`
+			})]`
 	)
+	.join(",\n")}
+]);
+
+// WHY: The legacy spellings reading a number where the standard property reads
+// more, as \`spelling -> offset\`: the standard value's first component, when a
+// plain non-negative number, plus the offset — \`order:1\` is \`box-ordinal-group:2\`.
+/** @type {Map<string, number>} */
+const PREFIXED_SPELLING_NUMBERS = new Map([
+${prefixSpellingNumbers
+	.map(([spelling, offset]) => `\t["${spelling}", ${offset}]`)
 	.join(",\n")}
 ]);
 
@@ -7650,6 +7874,7 @@ module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
 module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
+module.exports.PREFIXED_SPELLING_NUMBERS = PREFIXED_SPELLING_NUMBERS;
 module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
