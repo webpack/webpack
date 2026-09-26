@@ -5,7 +5,12 @@
 .t01 { display: flex; align-items: flex-start; justify-content: space-between }
 /*! one direction is two properties there */
 .t02 { display: inline-flex; flex-direction: column-reverse }
-/*! `box-flex` and `box-ordinal-group` read numbers, so no copy is written */
+/*! `box-flex` reads the grow factor, and `box-ordinal-group` counts from 1 */
 .t03 { flex: 1; order: 2 }
+.t05 { flex: 2 1 0%; order: 0 }
+.t06 { flex: auto }
+.t07 { flex: none }
+/*! neither reads a number it cannot be given: a negative group, a basis alone */
+.t08 { flex: 10px; order: -1 }
 /*! a value the draft cannot read gets no copy at all */
 .t04 { justify-content: space-evenly }

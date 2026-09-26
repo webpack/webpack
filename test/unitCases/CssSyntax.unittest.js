@@ -7616,6 +7616,24 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		).toBe("a{flex-flow:wrap}");
 	});
 
+	it("writes the 2009 draft's number from the standard value", () => {
+		// `box-ordinal-group` counts from 1 and `box-flex` reads the grow factor
+		// alone; a value neither can be given one writes no copy.
+		for (const [css, printed] of [
+			["a{order:1}", "a{-webkit-box-ordinal-group:2;order:1}"],
+			["a{order:-1}", "a{order:-1}"],
+			["a{flex:2 1 0%}", "a{-webkit-box-flex:2;flex:2}"],
+			["a{flex:auto}", "a{-webkit-box-flex:1;flex:auto}"],
+			["a{flex:none}", "a{-webkit-box-flex:0;flex:none}"],
+			["a{flex:10px}", "a{flex:10px}"]
+		]) {
+			expect(minifyFor(css, ["android 4.3"])).toBe(printed);
+		}
+		expect(minifyFor("a{order:1;flex:.5}", ["firefox 20"])).toBe(
+			"a{-moz-box-ordinal-group:2;order:1;-moz-box-flex:.5;flex:.5}"
+		);
+	});
+
 	it("lets an alias a target still reads block the merge around it", () => {
 		expect(
 			minifyFor(
