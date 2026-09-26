@@ -21,7 +21,7 @@ const zlib = require("zlib");
 const acorn = require("acorn");
 const { loadPhases, selectPhases } = require("../helpers/printerPhases");
 
-/** @typedef {import("terser").MinifyOptions} MinifyOptions */
+/** @typedef {import("../../lib/javascript/terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ expected: string | Error | true, input: string, prepend: string, microtasks?: boolean, strict?: boolean }} Stdout */
@@ -886,7 +886,7 @@ const formatLeads = (leads) => {
 };
 
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
+	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined }, released?: { minify: Minify, ast: EXPECTED_ANY }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	const selected = selectPhases(process.env.PHASES);
 	/** @type {Lead[]} */
@@ -897,6 +897,15 @@ describe("JavaScript minifier", () => {
 	let microtasks = false;
 
 	beforeAll(async () => {
+		// The copy webpack carries, as a build without `printer` minifies with it:
+		// read in a registry of its own, so the phases installed below go into a
+		// different copy and this one is held to the reference exactly as released.
+		jest.isolateModules(() => {
+			loaded.released = {
+				minify: require("../../lib/javascript/terser").minify,
+				ast: require("../../lib/javascript/terser/ast")
+			};
+		});
 		loaded.printer = await loadPhases(selected);
 		if (!isPresent(referenceDir)) return;
 		// eslint-disable-next-line no-new-func
@@ -959,6 +968,19 @@ describe("JavaScript minifier", () => {
 		expect(phases).toEqual(selected);
 	});
 
+	it("should hold the released copy apart from the one the phases went into", () => {
+		const { ast } = /** @type {NonNullable<typeof loaded.released>} */ (
+			loaded.released
+		);
+
+		const phased = require("../../lib/javascript/terser/ast");
+
+		expect(ast.AST_Node).not.toBe(phased.AST_Node);
+		expect(ast.AST_Toplevel.prototype.mangle_names).not.toBe(
+			phased.AST_Toplevel.prototype.mangle_names
+		);
+	});
+
 	it("should read PHASES as a list to keep or, prefixed with -, to drop", () => {
 		const names = require("../../lib/javascript/syntax").printer.PHASES.map(
 			(/** @type {{ name: string }} */ phase) => phase.name
@@ -990,6 +1012,12 @@ describe("JavaScript minifier", () => {
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
 			).version;
 			expect(pinned).toBe(require("terser/package.json").version);
+			// ...and to the release webpack carries, which is what a build caches
+			// its minified output against.
+			expect(
+				require("../../lib/javascript/jsMinify").getMinimizerVersion()
+			).toBe(pinned);
+			expect(require("../../lib/javascript/terser").version).toBe(pinned);
 		});
 	}
 
@@ -1095,6 +1123,9 @@ describe("JavaScript minifier", () => {
 						const printer = /** @type {NonNullable<typeof loaded.printer>} */ (
 							loaded.printer
 						);
+						const released = /** @type {NonNullable<typeof loaded.released>} */ (
+							loaded.released
+						);
 						/** @type {string[]} */
 						const differences = [];
 						for (const file of group.files) {
@@ -1121,6 +1152,19 @@ describe("JavaScript minifier", () => {
 										source.input,
 										optionsFor(source)
 									);
+									const carried = await outcome(
+										released.minify,
+										source.input,
+										optionsFor(source)
+									);
+									if (
+										theirs.code !== carried.code ||
+										theirs.error !== carried.error
+									) {
+										differences.push(
+											`${source.name} (${setName}, as released)\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(carried)}`
+										);
+									}
 									if (
 										corpus.ownOptionsKnown &&
 										setName === "its own options" &&

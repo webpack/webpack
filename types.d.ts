@@ -126,7 +126,6 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
-import { minify } from "terser";
 import { Context as ContextImport } from "vm";
 import {
 	addScopesToSourceMap,
@@ -4656,6 +4655,116 @@ declare class Compiler {
 	): void;
 }
 type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
+declare interface CompressOptions {
+	arguments?: boolean;
+	arrows?: boolean;
+	booleans_as_integers?: boolean;
+	booleans?: boolean;
+	collapse_vars?: boolean;
+	comparisons?: boolean;
+	computed_props?: boolean;
+	conditionals?: boolean;
+	dead_code?: boolean;
+	defaults?: boolean;
+	directives?: boolean;
+	drop_console?:
+		| boolean
+		| (
+				| "error"
+				| "warn"
+				| "info"
+				| "log"
+				| "debug"
+				| "clear"
+				| "profile"
+				| "dir"
+				| "assert"
+				| "trace"
+				| "group"
+				| "groupCollapsed"
+				| "groupEnd"
+				| "profileEnd"
+				| "time"
+				| "count"
+				| "countReset"
+				| "dirxml"
+				| "table"
+				| "timeEnd"
+				| "timeLog"
+				| "timeStamp"
+				| "Console"
+		  )[];
+	drop_debugger?: boolean;
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+	builtins_ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+	builtins_pure?: boolean;
+	evaluate?: boolean;
+	expression?: boolean;
+	global_defs?: object;
+	hoist_funs?: boolean;
+	hoist_props?: boolean;
+	hoist_vars?: boolean;
+	ie8?: boolean;
+	if_return?: boolean;
+	inline?: boolean | 0 | 1 | 2 | 3;
+	join_vars?: boolean;
+	keep_classnames?: boolean | RegExp;
+	keep_fargs?: boolean;
+	keep_fnames?: boolean | RegExp;
+	keep_infinity?: boolean;
+	lhs_constants?: boolean;
+	loops?: boolean;
+	module?: boolean;
+	negate_iife?: boolean;
+	passes?: number;
+	properties?: boolean;
+	pure_funcs?: string[];
+	pure_new?: boolean;
+	pure_getters?: boolean | "strict";
+	reduce_funcs?: boolean;
+	reduce_vars?: boolean;
+	sequences?: number | boolean;
+	side_effects?: boolean;
+	switches?: boolean;
+	toplevel?: boolean;
+	top_retain?: null | string | RegExp | string[];
+	typeofs?: boolean;
+	unsafe_arrows?: boolean;
+	unsafe?: boolean;
+	unsafe_comps?: boolean;
+	unsafe_Function?: boolean;
+	unsafe_math?: boolean;
+	unsafe_symbols?: boolean;
+	unsafe_methods?: boolean;
+	unsafe_proto?: boolean;
+	unsafe_regexp?: boolean;
+	unsafe_undefined?: boolean;
+	unused?: boolean;
+}
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
 	getChildren(): Source[];
@@ -6711,6 +6820,9 @@ declare interface DecodedEntitiesWithMap {
 	text: string;
 	map?: number[];
 }
+declare interface DecodedSourceMap extends SourceMapV3 {
+	mappings: SourceMapSegment[][];
+}
 declare interface DefaultHandlerOptions {
 	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
@@ -8094,6 +8206,16 @@ declare class EnableWasmLoadingPlugin {
 	 * attempts to use it.
 	 */
 	static checkEnabled(compiler: Compiler, type: string): void;
+}
+declare interface EncodedSourceMap {
+	file?: null | string;
+	names: ReadonlyArray<string>;
+	sourceRoot?: string;
+	sources: ReadonlyArray<null | string>;
+	sourcesContent?: ReadonlyArray<null | string>;
+	version: 3;
+	ignoreList?: ReadonlyArray<number>;
+	mappings: string;
 }
 type EncodingOptionFs =
 	| undefined
@@ -10360,6 +10482,64 @@ type FileTimestamp =
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
+}
+declare interface FormatOptions {
+	ascii_only?: boolean;
+
+	/**
+	 * Not implemented anymore
+	 * @deprecated
+	 */
+	beautify?: boolean;
+	braces?: boolean;
+	comments?:
+		| boolean
+		| RegExp
+		| "all"
+		| "some"
+		| ((
+				node: any,
+				comment: {
+					value: string;
+					type: "comment1" | "comment2" | "comment3" | "comment4";
+					pos: number;
+					line: number;
+					col: number;
+				}
+		  ) => boolean);
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+	ie8?: boolean;
+	keep_numbers?: boolean;
+	indent_level?: number;
+	indent_start?: number;
+	inline_script?: boolean;
+	keep_quoted_props?: boolean;
+	max_line_len?: number | false;
+	preamble?: string;
+	preserve_annotations?: boolean;
+	quote_keys?: boolean;
+	quote_style?: 0 | 1 | 2 | 3;
+	safari10?: boolean;
+	semicolons?: boolean;
+	shebang?: boolean;
+	shorthand?: boolean;
+	source_map?: SourceMapOptionsTerserIndex;
+	webkit?: boolean;
+	width?: number;
+	wrap_iife?: boolean;
+	wrap_func_args?: boolean;
 }
 declare interface FullHashChunkModuleHashes {
 	[index: string]: string;
@@ -17766,6 +17946,25 @@ declare interface MakeDirectoryOptions {
 	recursive?: boolean;
 	mode?: string | number;
 }
+declare interface MangleOptions {
+	eval?: boolean;
+	keep_classnames?: boolean | RegExp;
+	keep_fnames?: boolean | RegExp;
+	module?: boolean;
+	nth_identifier?: SimpleIdentifierMangler | WeightedIdentifierMangler;
+	properties?: boolean | ManglePropertiesOptions;
+	reserved?: string[];
+	safari10?: boolean;
+	toplevel?: boolean;
+}
+declare interface ManglePropertiesOptions {
+	builtins?: boolean;
+	debug?: boolean;
+	keep_quoted?: boolean | "strict";
+	nth_identifier?: SimpleIdentifierMangler | WeightedIdentifierMangler;
+	regex?: string | RegExp;
+	reserved?: string[];
+}
 
 /**
  * Describes a manifest entrypoint.
@@ -18024,6 +18223,44 @@ declare interface MinChunkSizePluginOptions {
 	 * Minimum number of characters.
 	 */
 	minChunkSize: number;
+}
+declare interface MinifyOptions {
+	compress?: boolean | CompressOptions;
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+	enclose?: string | boolean;
+	ie8?: boolean;
+	keep_classnames?: boolean | RegExp;
+	keep_fnames?: boolean | RegExp;
+	mangle?: boolean | MangleOptions;
+	module?: boolean;
+	nameCache?: object;
+	format?: FormatOptions;
+
+	/**
+	 * @deprecated
+	 */
+	output?: FormatOptions;
+	parse?: ParseOptionsTerserIndex;
+	safari10?: boolean;
+	sourceMap?: boolean | SourceMapOptionsTerserIndex;
+	toplevel?: boolean;
+}
+declare interface MinifyOutput {
+	code?: string;
+	map?: string | EncodedSourceMap;
+	decoded_map?: null | DecodedSourceMap;
 }
 
 /**
@@ -23388,6 +23625,29 @@ declare interface ParseOptionsSyntaxParser {
 	 */
 	comment?: (input: string, start: number, end: number) => number;
 }
+declare interface ParseOptionsTerserIndex {
+	bare_returns?: boolean;
+
+	/**
+	 * legacy option. Currently, all supported EcmaScript is valid to parse.
+	 * @deprecated
+	 */
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+	html5_comments?: boolean;
+	shebang?: boolean;
+}
 
 /**
  * Defines the parse result type used by this module.
@@ -24808,7 +25068,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * them ahead of the next top-level node as well.
 	 */
 	takeInserts(start: number, end: number): string;
-	sourceMap(options: SourceMapOptions, code?: string): SourceMap;
+	sourceMap(options: SourceMapOptionsSourceProcessor, code?: string): SourceMap;
 
 	/**
 	 * Stand the text `resolve` gives back in place of every deferred write left
@@ -28696,6 +28956,18 @@ declare interface ScopesReplay {
 	 */
 	names: number;
 }
+type SectionedSourceMapInput =
+	| string
+	| (SourceMapV3 & { mappings: string } & XInput)
+	| (DecodedSourceMap & XInput)
+	| {
+			file?: null | string;
+			sections: {
+				offset: { line: number; column: number };
+				map: SectionedSourceMapInput;
+			}[];
+			version: 3;
+	  };
 
 /**
  * Defines the selector type used by this module.
@@ -28884,6 +29156,18 @@ type SimpleBlock = NodeSyntaxParser & {
 	value: ComponentValue[];
 };
 type SimpleBlockToken = "{" | "(" | "[";
+
+/**
+ * An identifier mangler for which the output is invariant with respect to the source code.
+ */
+declare interface SimpleIdentifierMangler {
+	/**
+	 * Obtains the nth most favored (usually shortest) identifier to rename a variable to.
+	 * The mangler will increment n and retry until the return value is not in use in scope, and is not a reserved word.
+	 * This function is expected to be stable; Evaluating get(n) === get(n) should always return true.
+	 */
+	get(n: number): string;
+}
 type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -29427,10 +29711,36 @@ declare interface SourceMapDevToolPluginOptions {
  * (`sources[0]` / optional `sourcesContent[0]`). Present => `process` returns
  * `{ code, map }` instead of a bare string.
  */
-declare interface SourceMapOptions {
+declare interface SourceMapOptionsSourceProcessor {
 	source: string;
 	content?: string;
 }
+declare interface SourceMapOptionsTerserIndex {
+	/**
+	 * Source map object, 'inline' or source map file content
+	 */
+	content?:
+		| string
+		| (SourceMapV3 & { mappings: string } & XInput)
+		| (DecodedSourceMap & XInput)
+		| {
+				file?: null | string;
+				sections: {
+					offset: { line: number; column: number };
+					map: SectionedSourceMapInput;
+				}[];
+				version: 3;
+		  };
+	includeSources?: boolean;
+	filename?: string;
+	root?: string;
+	asObject?: boolean;
+	url?: string;
+}
+type SourceMapSegment =
+	| [number]
+	| [number, number, number, number]
+	| [number, number, number, number, number];
 declare class SourceMapSource extends Source {
 	constructor(
 		value: string | Buffer,
@@ -29467,6 +29777,15 @@ declare class SourceMapSource extends Source {
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
+}
+declare interface SourceMapV3 {
+	file?: null | string;
+	names: string[];
+	sourceRoot?: string;
+	sources: (null | string)[];
+	sourcesContent?: (null | string)[];
+	version: 3;
+	ignoreList?: number[];
 }
 
 /**
@@ -31121,7 +31440,10 @@ declare interface TemplatePathFn<T extends PathData = PathData> {
  * what a caller minifies with, and the switch of its corrections
  */
 declare interface Terser {
-	minify: typeof minify;
+	minify: (
+		files: string | string[] | { [index: string]: string },
+		options?: MinifyOptions
+	) => Promise<MinifyOutput>;
 	phases: string[];
 	corrections?: { enabled: boolean };
 }
@@ -32522,6 +32844,27 @@ declare interface WebpackRequire {
 }
 
 /**
+ * An identifier mangler that leverages character frequency analysis to determine identifier precedence.
+ */
+declare interface WeightedIdentifierMangler extends SimpleIdentifierMangler {
+	/**
+	 * Modifies the internal weighting of the input characters by the specified delta.
+	 * Will be invoked on the entire printed AST, and then deduct mangleable identifiers.
+	 */
+	consider(chars: string, delta: number): number;
+
+	/**
+	 * Resets character weights.
+	 */
+	reset(): void;
+
+	/**
+	 * Sorts identifiers by character frequency, in preparation for calls to get(n).
+	 */
+	sort(): void;
+}
+
+/**
  * Defines the with id type used by this module.
  */
 declare interface WithId {
@@ -32581,6 +32924,9 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
+declare interface XInput {
+	x_google_ignoreList?: number[];
+}
 declare interface _functionSyntaxParser {
 	/**
 	 * Decode HTML character references in a string. Handles all numeric
@@ -33085,12 +33431,23 @@ declare namespace exports {
 			}
 			export namespace printer {
 				export let load: () => Promise<Terser>;
-				export let loadSources: () => Promise<any>;
+				export let loadSources: () => any;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
 				export let createTerserTree: (
 					__0?: any
 				) => (source: string, options: TreeOptions) => any;
+				export namespace terser {
+					export let minify: (
+						files: string | string[] | { [index: string]: string },
+						options?: MinifyOptions
+					) => Promise<MinifyOutput>;
+					export let minify_sync: (
+						files: string | string[] | { [index: string]: string },
+						options?: MinifyOptions
+					) => MinifyOutput;
+					export let version: string;
+				}
 			}
 		}
 		export {
