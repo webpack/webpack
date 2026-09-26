@@ -29,4 +29,3 @@ package-lock.json
 /dist
 
 # Generated from schemas/**/*.json by tooling/generate-types.js
-/declarations/

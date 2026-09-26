@@ -12,7 +12,6 @@ const { Name, _, default: Ajv } = require("ajv");
 const standaloneCode = require("ajv/dist/standalone").default;
 const findCommonDir = require("commondir");
 const { globSync } = require("glob");
-const { compile } = require("json-schema-to-typescript");
 const prettier = require("prettier");
 const terser = require("terser");
 const ts = require("typescript");
@@ -28,6 +27,9 @@ const {
 	types: outputFile,
 	templateLiterals
 } = argv;
+
+// Where the hand-written option types that are not a plugin's own live.
+const DECLARATIONS_DIRECTORY = path.resolve(root, declarations);
 
 /**
  * A schema node holds arbitrary JSON, so its values have no narrower type.
@@ -111,248 +113,6 @@ const loadSchemas = () => {
 			parse: () => JSON.parse(content)
 		};
 	});
-};
-
-/**
- * Compiles every schema into the declaration file its options are read from.
- * These are build output rather than a tracked artifact, so they are written
- * whatever the mode: a checkout that has never generated them has none
- * @param {SchemaFile[]} schemas every schema, already read
- * @returns {Promise<boolean>} whether every declaration could be written
- */
-const makeDeclarations = async (schemas) => {
-	const results = await Promise.all(schemas.map(makeDefinitionsForSchema));
-	return results.every(Boolean);
-};
-
-/**
- * @param {SchemaFile} schemaFile the schema to compile
- * @returns {Promise<boolean>} whether the declaration is up to date
- */
-const makeDefinitionsForSchema = async (schemaFile) => {
-	const { relPath, basename } = schemaFile;
-	if (path.basename(relPath).startsWith("_")) return true;
-	const directory = path.dirname(relPath);
-	const filename = path.resolve(
-		root,
-		declarations,
-		`${path.join(directory, basename)}.d.ts`
-	);
-	const schema = schemaFile.parse();
-	const keys = Object.keys(schema);
-	if (keys.length === 1 && keys[0] === "$ref") return true;
-
-	const prettierConfig = await prettier.resolveConfig(
-		path.resolve(root, declarations, "result.d.ts")
-	);
-	if (!prettierConfig) {
-		throw new Error("Prettier options not found");
-	}
-
-	const style = {
-		printWidth: prettierConfig.printWidth,
-		useTabs: prettierConfig.useTabs,
-		tabWidth: prettierConfig.tabWidth
-	};
-
-	preprocessSchema(schema);
-	return compile(schema, basename, {
-		bannerComment:
-			"/*\n * This file was automatically generated.\n * DO NOT MODIFY BY HAND.\n * Run `yarn fix:special` to update\n */",
-		unreachableDefinitions: true,
-		unknownAny: false,
-		style
-	}).then(
-		(ts) => {
-			ts = ts.replace(
-				/\s+\*\s+\* This interface was referenced by `.+`'s JSON-Schema\s+\* via the `definition` ".+"\./g,
-				""
-			);
-			let normalizedContent = "";
-			try {
-				const content = fs.readFileSync(filename, "utf8");
-				normalizedContent = content.replace(/\r\n?/g, "\n");
-			} catch (_err) {
-				// ignore
-			}
-			if (normalizedContent.trim() === ts.trim()) return true;
-			fs.mkdirSync(path.dirname(filename), { recursive: true });
-			fs.writeFileSync(filename, ts, "utf8");
-			if (verbose) {
-				console.error(
-					`declarations/${relPath.replace(/\\/g, "/")}.d.ts updated`
-				);
-			}
-			return true;
-		},
-		(err) => {
-			console.error(err);
-			return false;
-		}
-	);
-};
-
-/**
- * @param {Schema} root the schema the reference is relative to
- * @param {string} ref a `#/`-prefixed JSON pointer
- * @returns {Schema} the referenced schema
- */
-const resolvePath = (root, ref) => {
-	const parts = ref.split("/");
-	if (parts[0] !== "#") throw new Error("Unexpected ref");
-	let current = root;
-	for (const p of parts.slice(1)) {
-		current = current[p];
-	}
-	return current;
-};
-
-/**
- * Folds the documentation-only keywords into descriptions and splits the shapes
- * `json-schema-to-typescript` cannot express into named definitions.
- * @param {Schema} schema the schema node to process
- * @param {Schema=} root the schema the node belongs to
- * @param {string[]=} path the property names walked to reach the node
- * @returns {void}
- */
-const preprocessSchema = (schema, root = schema, path = []) => {
-	if (schema.added) {
-		const added =
-			typeof schema.added === "string" ? `@since ${schema.added}` : "@since";
-		schema.description = schema.description
-			? `${schema.description}\n${added}`
-			: added;
-		delete schema.added;
-	}
-	if (schema.experimental) {
-		const experimental =
-			typeof schema.experimental === "string"
-				? `@experimental ${schema.experimental}`
-				: "@experimental";
-		schema.description = schema.description
-			? `${schema.description}\n${experimental}`
-			: experimental;
-		delete schema.experimental;
-	}
-	if ("definitions" in schema) {
-		for (const key of Object.keys(schema.definitions)) {
-			preprocessSchema(schema.definitions[key], root, [key]);
-		}
-	}
-	if ("properties" in schema) {
-		for (const key of Object.keys(schema.properties)) {
-			const property = schema.properties[key];
-			if ("$ref" in property) {
-				const result = resolvePath(root, property.$ref);
-				if (!result) {
-					throw new Error(
-						`Unable to resolve "$ref": "${property.$ref}" in ${path.join("/")}`
-					);
-				}
-				schema.properties[key] = {
-					description: result.description,
-					deprecated: result.deprecated,
-					experimental: result.experimental,
-					added: result.added,
-					anyOf: [property]
-				};
-			} else if (
-				"oneOf" in property &&
-				property.oneOf.length === 1 &&
-				"$ref" in property.oneOf[0]
-			) {
-				const result = resolvePath(root, property.oneOf[0].$ref);
-				schema.properties[key] = {
-					description: property.description || result.description,
-					deprecated: property.deprecated || result.deprecated,
-					experimental: property.experimental || result.experimental,
-					added: property.added || result.added,
-					anyOf: property.oneOf
-				};
-				preprocessSchema(schema.properties[key], root, [...path, key]);
-			} else {
-				preprocessSchema(property, root, [...path, key]);
-			}
-		}
-	}
-	if ("items" in schema) {
-		preprocessSchema(schema.items, root, [...path, "item"]);
-	}
-	if (typeof schema.additionalProperties === "object") {
-		preprocessSchema(schema.additionalProperties, root, [...path, "property"]);
-	}
-	const arrayProperties = ["oneOf", "anyOf", "allOf"];
-	for (const prop of arrayProperties) {
-		if (Array.isArray(schema[prop])) {
-			let i = 0;
-			for (const item of schema[prop]) {
-				preprocessSchema(item, root, [...path, item.type || i++]);
-			}
-		}
-	}
-	if ("type" in schema && schema.type === "array") {
-		// Workaround for a typescript bug that
-		// string[] is not assignable to [string, ...string]
-		delete schema.minItems;
-	}
-	if ("implements" in schema) {
-		const implementedProps = new Set();
-		const implementedNames = [];
-		for (const impl of [schema.implements].flat()) {
-			const referencedSchema = resolvePath(root, impl);
-			for (const prop of Object.keys(referencedSchema.properties)) {
-				implementedProps.add(prop);
-			}
-			implementedNames.push(
-				/** @type {RegExpExecArray} */ (/\/([^/]+)$/.exec(impl))[1]
-			);
-		}
-		const propEntries = Object.entries(schema.properties).filter(
-			([name]) => !implementedProps.has(name)
-		);
-		if (propEntries.length > 0) {
-			const key = `${path
-				.map((x) => x[0].toUpperCase() + x.slice(1))
-				.join("")}Extra`;
-			implementedNames.push(key);
-			// `implements` is a reserved word under strict mode, so it is dropped
-			// from the copy rather than destructured out of it
-			const remainingSchema = { ...schema };
-			delete remainingSchema.implements;
-			root.definitions[key] = {
-				...remainingSchema,
-				properties: Object.fromEntries(propEntries)
-			};
-			preprocessSchema(root.definitions[key], root, [key]);
-		}
-		schema.tsType = implementedNames.join(" & ");
-		return;
-	}
-	if (
-		"properties" in schema &&
-		typeof schema.additionalProperties === "object" &&
-		!schema.tsType
-	) {
-		const { properties, additionalProperties, ...remaining } = schema;
-		const key1 = `${path
-			.map((x) => x[0].toUpperCase() + x.slice(1))
-			.join("")}Known`;
-		const key2 = `${path
-			.map((x) => x[0].toUpperCase() + x.slice(1))
-			.join("")}Unknown`;
-		root.definitions[key1] = {
-			...remaining,
-			properties,
-			additionalProperties: false
-		};
-		preprocessSchema(root.definitions[key1], root, [key1]);
-		root.definitions[key2] = {
-			...remaining,
-			additionalProperties
-		};
-		preprocessSchema(root.definitions[key2], root, [key2]);
-		schema.tsType = `${key1} & ${key2}`;
-	}
 };
 
 const ajv = new Ajv({
@@ -511,6 +271,39 @@ ${code}`;
 	return code;
 };
 
+/** @type {Map<string, string> | undefined} */
+let declaring;
+
+/**
+ * @returns {Map<string, string>} the module under `lib/` declaring each schema
+ */
+const declaringModules = () => {
+	if (declaring) return declaring;
+	/** @type {Map<string, string>} */
+	const found = new Map();
+	/**
+	 * @param {string} directory the directory to read
+	 * @returns {void}
+	 */
+	const walk = (directory) => {
+		for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+			const absolute = path.resolve(directory, entry.name);
+			if (entry.isDirectory()) {
+				walk(absolute);
+			} else if (entry.name.endsWith(".js")) {
+				const text = fs.readFileSync(absolute, "utf8");
+				if (!text.includes("@schema ")) continue;
+				for (const [, named] of text.matchAll(/@schema[ \t]+([\w/-]+)/g)) {
+					found.set(named, absolute.replace(/\.js$/, ""));
+				}
+			}
+		}
+	};
+	walk(path.resolve(root, "lib"));
+	declaring = found;
+	return found;
+};
+
 /**
  * @param {string} schemaPath absolute path of the schema
  * @param {string} title the schema's title
@@ -520,11 +313,11 @@ ${code}`;
 const createDeclaration = (schemaPath, title, relPath) => {
 	const directory = path.dirname(relPath);
 	const basename = path.basename(relPath, path.extname(relPath));
-	const filename = path.resolve(
-		root,
-		declarations,
-		`${path.join(directory, basename)}`
-	);
+	const named = path.join(directory, basename).split(path.sep).join("/");
+	// WHY: a plugin declares its own options, so the type is where the code that
+	// reads it is; only what has not moved is still declared beside the schema.
+	const filename =
+		declaringModules().get(named) || path.resolve(root, declarations, named);
 	const fromSchemaToDeclaration = path
 		.relative(path.dirname(schemaPath), filename)
 		.replace(/\\/g, "/");
@@ -860,14 +653,8 @@ class TupleMap {
 (async () => {
 	const rootPath = path.resolve(root);
 
-	// The declarations have to be on disk before the program below reads them,
-	// and both passes run before any report so one run names every stale output
 	const schemas = loadSchemas();
-	const declarationsAreCurrent = await makeDeclarations(schemas);
-	const validatorsAreCurrent = await precompileSchemas(schemas);
-	if (!declarationsAreCurrent || !validatorsAreCurrent) {
-		exitCode = 1;
-	}
+	if (!(await precompileSchemas(schemas))) exitCode = 1;
 
 	const ownConfigPath = path.resolve(rootPath, "generate-types-config.js");
 	/**
@@ -1324,6 +1111,52 @@ class TupleMap {
 		`@(?:${FORWARDED_TAG_NAMES.join("|")})\\b`
 	);
 
+	// WHY: a schema property written as a bare `$ref` says what its target says,
+	// so a property named by a schema type shows that type's description where it
+	// has none of its own. Only the schema sources count: elsewhere a property
+	// named by a type says something else than the type does.
+	const schemaSources = new Set([
+		DECLARATIONS_DIRECTORY,
+		...[...declaringModules().values()].map((one) => `${one}.js`)
+	]);
+
+	/**
+	 * @param {ts.Symbol} prop the property to read the written type of
+	 * @returns {ts.Symbol | undefined} the schema type it names, when it names one
+	 */
+	const schemaAlias = (prop) => {
+		const declaration = (prop.declarations || [])[0];
+		const written =
+			declaration &&
+			(ts.isPropertySignature(declaration) ||
+				ts.isPropertyDeclaration(declaration)) &&
+			declaration.type;
+		if (!written || !ts.isTypeReferenceNode(written)) return undefined;
+		const alias = checker.getSymbolAtLocation(written.typeName);
+		const declared = alias && (alias.declarations || [])[0];
+		if (!declared) return undefined;
+		const file = declared.getSourceFile().fileName;
+		const fromSchemaSource = [...schemaSources].some(
+			(source) => file === source || file.startsWith(`${source}${path.sep}`)
+		);
+		return fromSchemaSource ? alias : undefined;
+	};
+
+	/**
+	 * A `@typedef {object}` declares its type as a `JSDocTypeLiteral`, and a JSDoc
+	 * block attaches to the statement after it — so TypeScript documents that
+	 * symbol with the next statement's comment, which says nothing about the type.
+	 * The block the typedef is written in is the one that describes it.
+	 * @param {ts.Symbol | ts.Signature} symbol the symbol a type was read from
+	 * @returns {ts.JSDoc | undefined} the block it was declared in, when it is one
+	 */
+	const declaringJsDoc = (symbol) => {
+		const declarations = /** @type {ts.Symbol} */ (symbol).declarations;
+		const declaration = declarations && declarations[0];
+		if (!declaration || !ts.isJSDocTypeLiteral(declaration)) return undefined;
+		return ts.findAncestor(declaration, ts.isJSDoc);
+	};
+
 	/**
 	 * @param {ts.Symbol | ts.Signature | undefined} symbol symbol
 	 * @returns {string} documentation comment
@@ -1341,8 +1174,23 @@ class TupleMap {
 				.replace(/\n+/g, "\n")
 				.trim();
 
-		const commentText = normalizeText(symbol.getDocumentationComment(checker));
-		const jsDocTags = symbol.getJsDocTags(checker);
+		const block = declaringJsDoc(symbol);
+		const commentText = block
+			? normalizeText([
+					{ kind: "text", text: ts.getTextOfJSDocComment(block.comment) || "" }
+				])
+			: normalizeText(symbol.getDocumentationComment(checker));
+		const jsDocTags = block
+			? (block.tags || []).map((tag) => ({
+					name: tag.tagName.text,
+					text: [
+						{
+							kind: "text",
+							text: ts.getTextOfJSDocComment(tag.comment) || ""
+						}
+					]
+				}))
+			: symbol.getJsDocTags(checker);
 		const forwardedTags = FORWARDED_TAG_NAMES.flatMap((name) =>
 			jsDocTags.filter((tag) => tag.name === name)
 		);
@@ -1602,7 +1450,8 @@ class TupleMap {
 					getter:
 						(flags & ts.SymbolFlags.GetAccessor) !== 0 &&
 						(flags & ts.SymbolFlags.SetAccessor) === 0,
-					documentation: getDocumentation(prop)
+					documentation:
+						getDocumentation(prop) || getDocumentation(schemaAlias(prop))
 				});
 			}
 			return properties;
@@ -1850,7 +1699,11 @@ class TupleMap {
 				constructors: [],
 				calls: [],
 				baseTypes: [],
-				documentation: getDocumentation(type.getSymbol())
+				// WHY: a type alias to an anonymous object holds the description, where
+				// the type it names has none of its own.
+				documentation:
+					getDocumentation(type.getSymbol()) ||
+					getDocumentation(type.aliasSymbol)
 			};
 		}
 
@@ -2078,7 +1931,10 @@ class TupleMap {
 						  type.aliasTypeArguments.length > 0
 						? type.aliasTypeArguments
 						: undefined,
-			documentation: getDocumentation(type.getSymbol())
+			// WHY: a type alias to an anonymous object holds the description, where
+			// the type it names has none of its own.
+			documentation:
+				getDocumentation(type.getSymbol()) || getDocumentation(type.aliasSymbol)
 		};
 	};
 

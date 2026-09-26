@@ -53,12 +53,7 @@
       "additionalProperties": false,
       "properties": {
         "content": {
-          "description": "The mappings from request to module info.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/DllReferencePluginOptionsContent"
-            }
-          ]
+          "$ref": "#/definitions/DllReferencePluginOptionsContent"
         },
         "name": {
           "description": "The name where the dll is exposed (external name).",
@@ -66,12 +61,7 @@
           "minLength": 1
         },
         "type": {
-          "description": "The type how the dll is exposed (external type).",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
-            }
-          ]
+          "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
         }
       },
       "required": ["content"]
@@ -157,12 +147,7 @@
       "additionalProperties": false,
       "properties": {
         "content": {
-          "description": "The mappings from request to module info.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/DllReferencePluginOptionsContent"
-            }
-          ]
+          "$ref": "#/definitions/DllReferencePluginOptionsContent"
         },
         "context": {
           "description": "Context of requests in the manifest (or content property) as absolute path.",

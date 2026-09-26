@@ -31,12 +31,7 @@
           "type": "boolean"
         },
         "handler": {
-          "description": "Function that executes for every progress step.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/HandlerFunction"
-            }
-          ]
+          "$ref": "#/definitions/HandlerFunction"
         },
         "modules": {
           "description": "Show modules count in progress message.",

@@ -149,7 +149,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataModule>"
         }
       ]
     },
@@ -162,14 +162,14 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataModule>"
         }
       ]
     },
     "AssetParserDataUrlFunction": {
       "description": "Function that executes for module and should return whenever asset should be inlined as DataUrl.",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/asset/AssetParser\").AssetParserDataUrlFunction"
+      "tsType": "import('../lib/asset/AssetParser').AssetParserDataUrlFunction"
     },
     "AssetParserDataUrlOptions": {
       "description": "Options object for DataUrl condition.",
@@ -380,7 +380,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/output/CleanPlugin\").KeepFn"
+              "tsType": "import('../lib/output/CleanPlugin').KeepFn"
             }
           ]
         }
@@ -753,7 +753,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataModule>"
         }
       ]
     },
@@ -955,8 +955,7 @@
     },
     "DeferImportExperimentOptions": {
       "description": "Options for defer import.",
-      "type": "boolean",
-      "required": ["asyncModule"]
+      "type": "boolean"
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -1797,28 +1796,7 @@
           "type": "string"
         },
         {
-          "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/ExternalItemValue"
-          },
-          "properties": {
-            "byLayer": {
-              "description": "Specify externals depending on the layer.",
-              "anyOf": [
-                {
-                  "type": "object",
-                  "additionalProperties": {
-                    "$ref": "#/definitions/ExternalItem"
-                  }
-                },
-                {
-                  "instanceof": "Function",
-                  "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
-                }
-              ]
-            }
-          }
+          "$ref": "#/definitions/ExternalItemObject"
         },
         {
           "$ref": "#/definitions/ExternalItemFunction"
@@ -1839,17 +1817,41 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/externals/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
+      "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemFunctionCallback"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/externals/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
+      "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemFunctionPromise"
     },
     "ExternalItemInterop": {
       "description": "How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.",
       "enum": ["default", "esModule"],
       "added": "5.109.0"
+    },
+    "ExternalItemObject": {
+      "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ExternalItemValue"
+      },
+      "properties": {
+        "byLayer": {
+          "description": "Specify externals depending on the layer.",
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/ExternalItem"
+              }
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "import('../lib/externals/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
+            }
+          ]
+        }
+      }
     },
     "ExternalItemSideEffects": {
       "description": "Whether importing the external has side effects (like the `sideEffects` flag in a package.json). `false` allows webpack to drop the external when none of its exports are used. Defaults to `true`, as webpack can't analyze an external.",
@@ -2223,7 +2225,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataChunk>"
         }
       ]
     },
@@ -2736,7 +2738,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "import(\"../lib/diagnostics/IgnoreWarningsPlugin\").IgnoreFn"
+            "tsType": "import('../lib/diagnostics/IgnoreWarningsPlugin').IgnoreFn"
           }
         ]
       }
@@ -2747,7 +2749,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "import(\"../lib/diagnostics/IgnoreWarningsPlugin\").IgnoreFn"
+        "tsType": "import('../lib/diagnostics/IgnoreWarningsPlugin').IgnoreFn"
       }
     },
     "Iife": {
@@ -3243,12 +3245,12 @@
                   "type": "number"
                 }
               },
-              "tsType": "import(\"net\").ListenOptions"
+              "tsType": "import('net').ListenOptions"
             },
             {
               "description": "A custom listen function.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").Listen"
+              "tsType": "import('../lib/hmr/lazyCompilationBackend').Listen"
             }
           ]
         },
@@ -3269,7 +3271,7 @@
             {
               "description": "A custom create server function.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").CreateServerFunction"
+              "tsType": "import('../lib/hmr/lazyCompilationBackend').CreateServerFunction"
             }
           ]
         }
@@ -3286,7 +3288,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/LazyCompilationPlugin\").BackEnd"
+              "tsType": "import('../lib/hmr/LazyCompilationPlugin').BackEnd"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
@@ -3673,7 +3675,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/Compilation\").UnsafeCachePredicate"
+              "tsType": "import('../lib/Compilation').UnsafeCachePredicate"
             }
           ]
         },
@@ -3767,7 +3769,7 @@
               },
               {
                 "instanceof": "Function",
-                "tsType": "import(\"../lib/module/NormalModule\").NoParseFn"
+                "tsType": "import('../lib/module/NormalModule').NoParseFn"
               }
             ]
           },
@@ -3785,7 +3787,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/module/NormalModule\").NoParseFn"
+          "tsType": "import('../lib/module/NormalModule').NoParseFn"
         }
       ]
     },
@@ -4052,7 +4054,7 @@
           "added": "5.110.0"
         },
         "dropOverriddenDeclarations": {
-          "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name \u2014 which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
+          "description": "Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.",
           "type": "boolean",
           "added": "5.112.0"
         },
@@ -4640,7 +4642,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataChunk>"
             }
           ]
         },
@@ -4969,7 +4971,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn<import('../lib/Compilation').PathDataChunk>"
             }
           ]
         },
@@ -6057,7 +6059,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/template/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import('../lib/template/TemplatedPathPlugin').TemplatePathFn"
         }
       ]
     },
@@ -6234,7 +6236,7 @@
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached.",
           "instanceof": "Function",
-          "tsType": "((request: import('enhanced-resolve').ResolveRequest) => boolean)"
+          "tsType": "(request: import('enhanced-resolve').ResolveRequest) => boolean"
         },
         "cacheWithContext": {
           "description": "Include the context information in the cache identifier when caching.",
@@ -7920,7 +7922,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/stats/DefaultStatsPresetPlugin\").WarningFilterFn"
+          "tsType": "import('../lib/stats/DefaultStatsPresetPlugin').WarningFilterFn"
         }
       ]
     },

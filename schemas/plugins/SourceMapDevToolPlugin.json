@@ -1,6 +1,6 @@
 {
   "definitions": {
-    "rule": {
+    "Rule": {
       "description": "Condition used to match resource (string, RegExp or Function).",
       "anyOf": [
         {
@@ -17,7 +17,7 @@
         }
       ]
     },
-    "rules": {
+    "Rules": {
       "description": "One or multiple conditions used to match resource.",
       "anyOf": [
         {
@@ -26,13 +26,13 @@
             "description": "A rule condition.",
             "oneOf": [
               {
-                "$ref": "#/definitions/rule"
+                "$ref": "#/definitions/Rule"
               }
             ]
           }
         },
         {
-          "$ref": "#/definitions/rule"
+          "$ref": "#/definitions/Rule"
         }
       ]
     }
@@ -70,7 +70,7 @@
       "description": "Exclude modules that match the given value from source map generation.",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     },
@@ -110,7 +110,7 @@
       "description": "Decide whether to ignore source files that match the specified value in the SourceMap.",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     },
@@ -118,7 +118,7 @@
       "description": "Include source maps for module paths that match the given value.",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     },
@@ -160,7 +160,7 @@
       "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
       "oneOf": [
         {
-          "$ref": "#/definitions/rules"
+          "$ref": "#/definitions/Rules"
         }
       ]
     }
