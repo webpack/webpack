@@ -5109,6 +5109,7 @@ declare class ConstDependency extends NullDependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
+	static ESM_CATEGORY: "esm";
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -6917,6 +6918,7 @@ declare class Dependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
+	static ESM_CATEGORY: "esm";
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -7652,6 +7654,7 @@ declare class ESMImportDependency extends ModuleDependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
+	static ESM_CATEGORY: "esm";
 }
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
@@ -18036,6 +18039,7 @@ declare class ModuleDependency extends Dependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
+	static ESM_CATEGORY: "esm";
 }
 
 /**
@@ -20410,6 +20414,7 @@ declare class NullDependency extends Dependency {
 	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
+	static ESM_CATEGORY: "esm";
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
