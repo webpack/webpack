@@ -207,7 +207,7 @@ They are documentation only (stripped from precompiled validators). A pure `$ref
 
 **`normalization.js`** canonicalizes the user's config shape (shorthand → full form); **`defaults.js`** fills values (often mode/target-dependent). Edit whichever matches.
 
-**New dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (emits the code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`.
+**New dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (emits the code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`. A plugin outside the repo reaches all three through `compiler.webpack` — `Dependency`, `template.DependencyTemplate`, `module.NullFactory` and `util.makeSerializable` are public for it, and `makeSerializable` registers globally, so build the class once rather than per `apply`.
 
 **Finding a hook:** hooks live on their owning class — compiler-wide in `lib/Compiler.js`, per-compilation in `lib/Compilation.js`; tap with a unique plugin-name string.
 
