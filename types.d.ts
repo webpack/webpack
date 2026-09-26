@@ -20426,6 +20426,9 @@ declare class NullDependency extends Dependency {
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
 }
+declare class NullFactory extends ModuleFactory {
+	constructor();
+}
 declare interface ObjectConfiguration {
 	[index: string]: any;
 }
@@ -32621,6 +32624,12 @@ declare namespace exports {
 			LoadScriptRuntimeModule
 		};
 	}
+	export namespace module {
+		export { NullFactory };
+	}
+	export namespace template {
+		export { DependencyTemplate };
+	}
 	export namespace prefetch {
 		export {
 			AutomaticPrefetchPlugin,
@@ -33830,6 +33839,11 @@ declare namespace exports {
 			) => Serializer<D, S, C>;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
+		export const makeSerializable: <T extends Constructor>(
+			Constructor: T,
+			request: string,
+			name?: null | string
+		) => void;
 		export const cleverMerge: <T, O>(
 			first?: null | T,
 			second?: null | O
