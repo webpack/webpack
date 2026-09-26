@@ -288,6 +288,7 @@ describe("syntax-printer", () => {
 			expect.arrayContaining(terser.phases)
 		);
 		if (!("Deno" in globalThis)) {
+			expect(terser.phases).toContain("walk");
 			expect(terser.phases).toContain("mangle");
 			expect(terser.phases).toContain("output");
 			expect(terser.phases).toContain("print");
@@ -492,6 +493,79 @@ describe("syntax-printer", () => {
 				ast: reference,
 				parse: { parse: () => ({ TYPE: "Toplevel", body: [] }) }
 			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose walk it does not know", () => {
+		const walk =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "walk")
+			);
+		/**
+		 * @param {string} source what the function prints as
+		 * @returns {() => void} a function printing as that source
+		 */
+		const printingAs = (source) =>
+			Object.assign(() => {}, { toString: () => source });
+		const terserVisit = printingAs(
+			"_visit(node, descend) { this.push(node); var ret = this.visit(node, descend ? function() { descend.call(node); } : noop); if (!ret && descend) { descend.call(node); } this.pop(); return ret; }"
+		);
+		/**
+		 * @param {string[]} walks each node class's walk, as its source
+		 * @param {Record<string, unknown>=} exports what the ast module exports besides
+		 * @returns {boolean} whether the phase fits
+		 */
+		const fits = (walks, exports = {}) =>
+			walk.supports({
+				ast: {
+					TreeWalker: Object.assign(function TreeWalker() {}, {
+						prototype: { _visit: terserVisit }
+					}),
+					AST_Node: {
+						prototype: {
+							_walk: printingAs("function(visitor) { return visitor._visit(this); }")
+						},
+						SUBCLASSES: [
+							{ prototype: {}, SUBCLASSES: [] },
+							...walks.map((source) => ({
+								prototype: { _walk: printingAs(source) },
+								SUBCLASSES: []
+							}))
+						]
+					},
+					...exports
+				},
+				utils: { noop() {} }
+			});
+
+		expect(walk.supports({ ast: {}, utils: {} })).toBe(false);
+		expect(fits([])).toBe(true);
+		expect(
+			fits([
+				"function(visitor) { return visitor._visit(this, this.value && function() { this.value._walk(visitor); }); }"
+			])
+		).toBe(true);
+		// A walk that does not hand its children's walk to the visitor.
+		expect(fits(["function(visitor) { visitor.seen(this); }"])).toBe(false);
+		// Children walked through a helper the ast module does not export.
+		expect(
+			fits([
+				"function(visitor) { return visitor._visit(this, function() { walk_body(this, visitor); }); }"
+			])
+		).toBe(false);
+		expect(
+			fits(
+				[
+					"function(visitor) { return visitor._visit(this, function() { walk_body(this, visitor); }); }"
+				],
+				{ walk_body() {} }
+			)
+		).toBe(true);
+		// Children walked by code webpack's parser refuses.
+		expect(
+			fits([
+				"function(visitor) { return visitor._visit(this, function() { this.body._walk(visitor; }); }"
+			])
 		).toBe(false);
 	});
 
