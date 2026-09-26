@@ -130,6 +130,44 @@ describe("jsMinify", () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
 	});
 
+	for (const printer of [false, true]) {
+		it(`should match string comment patterns like RegExp conditions (printer: ${printer})`, async () => {
+			const input = {
+				"comments.js":
+					"/*! @license first */ first();\n" +
+					"/* ordinary */ second();\n" +
+					"/*! @license last */ last();"
+			};
+			const actual = await jsMinify(
+				input,
+				INPUT_MAP,
+				{ printer, format: { comments: "first|last" } },
+				{ condition: "@license" }
+			);
+			const expected = await jsMinify(
+				input,
+				INPUT_MAP,
+				{ printer, format: { comments: /first|last/ } },
+				{ condition: /@license/ }
+			);
+			expect(actual).toEqual(expected);
+			expect(actual.extractedComments).toHaveLength(2);
+		});
+
+		it(`should defer invalid comment patterns until a comment is tested (printer: ${printer})`, async () => {
+			const options = { printer, format: { comments: "[" } };
+			const input = { "plain.js": "run();" };
+			expect(await jsMinify(input, undefined, options, { condition: "[" })).toEqual(
+				await jsMinify(input, undefined, { printer, format: { comments: false } }, false)
+			);
+			const commented = { "commented.js": "/* comment */ run();" };
+			await expect(jsMinify(commented, undefined, options, false)).rejects.toThrow(SyntaxError);
+			await expect(
+				jsMinify(commented, undefined, { printer }, { condition: "[" })
+			).rejects.toThrow(SyntaxError);
+		});
+	}
+
 	it("should claim JavaScript assets only", () => {
 		expect(jsMinify.filter("app.js")).toBe(true);
 		expect(jsMinify.filter("app.mjs?v=1")).toBe(true);

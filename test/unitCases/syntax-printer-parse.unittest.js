@@ -167,7 +167,7 @@ const CASES = [
 	["regular expressions read twice", "{}\n/a/.test(b); if (c) /d/.test(e); x = yield_ => /f/;"],
 	["literals", "a = [1, 1.5, .5, 1e3, 0x10, 0b1, 0o7, 1_000, 10n, 0x1Fn, 1e400, 'x', \"y\", null, true, false, /re/giu];"],
 	["identifiers beyond ASCII", "var été = 1, \u{1d49c} = 2; sink(été, \u{1d49c});"],
-	["line breaks of every kind", "a = 1\r\nb = 2\rc = 3 d = 4 e = /* x\r\ny */ 5;"],
+	["line breaks of every kind", "a = 1\r\nb = 2\rc = 3d = 4e = /* x\r\ny */ 5;"],
 	["a shebang and banners", "#!/usr/bin/env node\n/*! banner */\n// line\nsink();"],
 	["an empty source", ""],
 	["only comments", "/* a */ // b\n"],
@@ -262,6 +262,32 @@ describe("syntax-printer parse", () => {
 			expect(firstDifference(terser.ast, theirs, toTree(source, options))).toBeUndefined();
 		});
 	}
+
+	it("should preserve token positions when releasing oversized buffers", () => {
+		if (!loaded) return;
+		const convert = createTerserTree(terser);
+		const options = { filename: "large.js" };
+		const body = "const value = (first + second); use(value);";
+		for (const source of [body, body + " ".repeat((1 << 23) + 1), body]) {
+			const theirs = terser.parse.parse(source, options);
+			const ours = convert(source, options);
+			expect(ours).toBeDefined();
+			expect(firstDifference(terser.ast, theirs, ours)).toBeUndefined();
+		}
+	});
+
+	it("should grow token tables across files and template boundaries", () => {
+		if (!loaded) return;
+		const convert = createTerserTree(terser);
+		const options = { filename: "tokens.js" };
+		for (const count of [1, 800, 1600, 2]) {
+			const source = "consume(`before${value}after`, /pattern/g);\n".repeat(count);
+			const theirs = terser.parse.parse(source, options);
+			const ours = convert(source, options);
+			expect(ours).toBeDefined();
+			expect(firstDifference(terser.ast, theirs, ours)).toBeUndefined();
+		}
+	});
 
 	for (const [name, source, module] of DECLINED) {
 		it(`should leave to terser: ${name}`, () => {
