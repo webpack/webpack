@@ -15,6 +15,23 @@ const {
  */
 const CASES = [
 	[
+		"an object whose properties are hoisted into variables",
+		`function area() {
+			var box = { width: 2, height: 3 };
+			sink(box.width, box.height);
+		}
+		sink(area);`
+	],
+	[
+		"an object left whole where hoisting is off",
+		`function area() {
+			var box = { width: 2, height: 3 };
+			sink(box.width, box.height);
+		}
+		sink(area);`,
+		{ compress: { hoist_props: false } }
+	],
+	[
 		"nested scopes",
 		`function outer(first, second) {
 			function inner(third) { return first + second + third; }
@@ -560,6 +577,19 @@ describe("syntax-printer", () => {
 			fits([
 				"function(visitor) { return visitor._visit(this, function() { this.body._walk(visitor; }); }"
 			])
+		).toBe(false);
+	});
+
+	it("should decline a terser whose hoisting it does not know", () => {
+		const hoist =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "hoist")
+			);
+		expect(hoist.supports({ ast: {} })).toBe(false);
+		expect(
+			hoist.supports({
+				ast: { AST_Scope: { prototype: { hoist_properties() {} } } }
+			})
 		).toBe(false);
 	});
 

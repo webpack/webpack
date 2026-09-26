@@ -8,6 +8,10 @@ exports[`syntax-printer should mangle exactly as terser does: a function express
 
 exports[`syntax-printer should mangle exactly as terser does: a name referenced from an inner scope 1`] = `"const shared=1;function reader(){return 3}sink(reader());"`;
 
+exports[`syntax-printer should mangle exactly as terser does: an object left whole where hoisting is off 1`] = `"function area(){var i={width:2,height:3};sink(i.width,i.height)}sink(area);"`;
+
+exports[`syntax-printer should mangle exactly as terser does: an object whose properties are hoisted into variables 1`] = `"function area(){sink(2,3)}sink(area);"`;
+
 exports[`syntax-printer should mangle exactly as terser does: class and method names beside mangled locals 1`] = `"class Thing{constructor(e){this.value=e}read(e){return this.value+e}}sink(new Thing(1).read(2));"`;
 
 exports[`syntax-printer should mangle exactly as terser does: exported names, which a module may not rename 1`] = `"export const exported=1;export function run(r){return r+1}"`;
