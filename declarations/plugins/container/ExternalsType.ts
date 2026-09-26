@@ -10,4 +10,4 @@
 /**
  * @schema
  */
-export type { ExternalsType } from "./ModuleFederationPlugin";
+export type { ExternalsType } from "../../../lib/container/ModuleFederationPlugin";

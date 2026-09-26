@@ -877,7 +877,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | Rule_1[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -887,7 +887,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | Rule_1[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -902,7 +902,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | Rule_1[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -5316,9 +5316,6 @@ declare class ConsumeSharedPlugin {
  * Options for consuming shared modules.
  */
 declare interface ConsumeSharedPluginOptions {
-	/**
-	 * Modules that should be consumed from share scope. When provided, property names are used to match requested modules in this compilation.
-	 */
 	consumes: Consumes;
 
 	/**
@@ -5326,7 +5323,8 @@ declare interface ConsumeSharedPluginOptions {
 	 */
 	shareScope?: string;
 }
-type Consumes = (string | ConsumesObject)[] | ConsumesObject;
+type Consumes = ConsumesObject | ConsumesBranch1Item[];
+type ConsumesBranch1Item = string | ConsumesObject;
 
 /**
  * Advanced configuration for modules that should be consumed from share scope.
@@ -5336,22 +5334,12 @@ declare interface ConsumesConfig {
 	 * Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 * @since 5.112.0
-	 */
 	exclude?: SharedModuleFilter;
 
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: string | false;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 * @since 5.112.0
-	 */
 	include?: SharedModuleFilter;
 
 	/**
@@ -5389,8 +5377,9 @@ declare interface ConsumesConfig {
  * Modules that should be consumed from share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
  */
 declare interface ConsumesObject {
-	[index: string]: string | ConsumesConfig;
+	[index: string]: ConsumesObjectValue;
 }
+type ConsumesObjectValue = string | ConsumesConfig;
 type ContainerOptionsFormat<T> = Item<T> | (string | Item<T>)[];
 declare class ContainerPlugin {
 	/**
@@ -5405,29 +5394,18 @@ declare class ContainerPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface ContainerPluginOptions {
-	/**
-	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
-	 */
 	exposes: Exposes;
 
 	/**
 	 * The filename for this container relative path inside the `output.path` directory.
 	 */
 	filename?: string;
-
-	/**
-	 * Options for library.
-	 */
 	library?: LibraryOptions;
 
 	/**
 	 * The name for this container.
 	 */
 	name: string;
-
-	/**
-	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
-	 */
 	runtime?: string | false;
 
 	/**
@@ -5452,10 +5430,6 @@ declare interface ContainerReferencePluginOptions {
 	 * The external type of the remote containers.
 	 */
 	remoteType: ExternalsType;
-
-	/**
-	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
-	 */
 	remotes: Remotes;
 
 	/**
@@ -6787,22 +6761,7 @@ declare interface DecodedEntitiesWithMap {
 	map?: number[];
 }
 declare interface DefaultHandlerOptions {
-	progressBar?:
-		| false
-		| Required<{
-				/**
-				 * Color used for the filled portion of the bar.
-				 */
-				color?: string;
-				/**
-				 * Name shown before the progress bar.
-				 */
-				name?: string;
-				/**
-				 * Width of the progress bar in characters. Default: 25.
-				 */
-				width?: number;
-		  }>;
+	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
 	phaseTimings?: boolean;
 }
@@ -7576,132 +7535,143 @@ declare class DllReferencePlugin {
 	apply(compiler: Compiler): void;
 }
 type DllReferencePluginOptions =
-	| {
-			/**
-			 * Context of requests in the manifest (or content property) as absolute path.
-			 */
-			context?: string;
-			/**
-			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
-			 */
-			extensions?: string[];
-			/**
-			 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
-			 */
-			manifest: string | DllReferencePluginOptionsManifest;
-			/**
-			 * The name where the dll is exposed (external name, defaults to manifest.name).
-			 */
-			name?: string;
-			/**
-			 * Prefix which is used for accessing the content of the dll.
-			 */
-			scope?: string;
-			/**
-			 * How the dll is exposed (libraryTarget, defaults to manifest.type).
-			 */
-			sourceType?:
-				| "var"
-				| "assign"
-				| "this"
-				| "window"
-				| "global"
-				| "commonjs"
-				| "commonjs2"
-				| "commonjs-module"
-				| "amd"
-				| "amd-require"
-				| "umd"
-				| "umd2"
-				| "jsonp"
-				| "system";
-			/**
-			 * The way how the export of the dll bundle is used.
-			 */
-			type?: "object" | "require";
-	  }
-	| {
-			/**
-			 * The mappings from request to module info.
-			 */
-			content: DllReferencePluginOptionsContent;
-			/**
-			 * Context of requests in the manifest (or content property) as absolute path.
-			 */
-			context?: string;
-			/**
-			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
-			 */
-			extensions?: string[];
-			/**
-			 * The name where the dll is exposed (external name).
-			 */
-			name: string;
-			/**
-			 * Prefix which is used for accessing the content of the dll.
-			 */
-			scope?: string;
-			/**
-			 * How the dll is exposed (libraryTarget).
-			 */
-			sourceType?:
-				| "var"
-				| "assign"
-				| "this"
-				| "window"
-				| "global"
-				| "commonjs"
-				| "commonjs2"
-				| "commonjs-module"
-				| "amd"
-				| "amd-require"
-				| "umd"
-				| "umd2"
-				| "jsonp"
-				| "system";
-			/**
-			 * The way how the export of the dll bundle is used.
-			 */
-			type?: "object" | "require";
-	  };
+	| DllReferencePluginOptionsBranch1Object
+	| DllReferencePluginOptionsBranch2Object;
+declare interface DllReferencePluginOptionsBranch1Object {
+	/**
+	 * Context of requests in the manifest (or content property) as absolute path.
+	 */
+	context?: string;
+
+	/**
+	 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
+	 */
+	extensions?: string[];
+
+	/**
+	 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
+	 */
+	manifest: string | DllReferencePluginOptionsManifest;
+
+	/**
+	 * The name where the dll is exposed (external name, defaults to manifest.name).
+	 */
+	name?: string;
+
+	/**
+	 * Prefix which is used for accessing the content of the dll.
+	 */
+	scope?: string;
+
+	/**
+	 * How the dll is exposed (libraryTarget, defaults to manifest.type).
+	 */
+	sourceType?:
+		| "var"
+		| "assign"
+		| "this"
+		| "window"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system";
+
+	/**
+	 * The way how the export of the dll bundle is used.
+	 */
+	type?: "object" | "require";
+}
+declare interface DllReferencePluginOptionsBranch2Object {
+	content: DllReferencePluginOptionsContent;
+
+	/**
+	 * Context of requests in the manifest (or content property) as absolute path.
+	 */
+	context?: string;
+
+	/**
+	 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
+	 */
+	extensions?: string[];
+
+	/**
+	 * The name where the dll is exposed (external name).
+	 */
+	name: string;
+
+	/**
+	 * Prefix which is used for accessing the content of the dll.
+	 */
+	scope?: string;
+
+	/**
+	 * How the dll is exposed (libraryTarget).
+	 */
+	sourceType?:
+		| "var"
+		| "assign"
+		| "this"
+		| "window"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system";
+
+	/**
+	 * The way how the export of the dll bundle is used.
+	 */
+	type?: "object" | "require";
+}
 
 /**
  * The mappings from request to module info.
  */
 declare interface DllReferencePluginOptionsContent {
-	[index: string]: {
-		/**
-		 * Meta information about the module.
-		 */
-		buildMeta?: { [index: string]: any };
-		/**
-		 * Information about the provided exports of the module.
-		 */
-		exports?: true | string[];
-		/**
-		 * Module ID.
-		 */
-		id: string | number;
-	};
+	[index: string]: DllReferencePluginOptionsContentValue;
+}
+
+/**
+ * Module info.
+ */
+declare interface DllReferencePluginOptionsContentValue {
+	/**
+	 * Meta information about the module.
+	 */
+	buildMeta?: { [index: string]: any };
+
+	/**
+	 * Information about the provided exports of the module.
+	 */
+	exports?: true | string[];
+
+	/**
+	 * Module ID.
+	 */
+	id: string | number;
 }
 
 /**
  * An object containing content, name and type.
  */
 declare interface DllReferencePluginOptionsManifest {
-	/**
-	 * The mappings from request to module info.
-	 */
 	content: DllReferencePluginOptionsContent;
 
 	/**
 	 * The name where the dll is exposed (external name).
 	 */
 	name?: string;
-
-	/**
-	 * The type how the dll is exposed (external type).
-	 */
 	type?:
 		| "var"
 		| "assign"
@@ -8823,7 +8793,9 @@ declare interface Experiments {
 	 * @since 5.49.0
 	 * @experimental
 	 */
-	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
+	buildHttp?:
+		| HttpUriOptionsWebpackOptions
+		| (string | RegExp | ((uri: string) => boolean))[];
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -8912,7 +8884,7 @@ declare interface ExperimentsNormalized {
 	 * @since 5.49.0
 	 * @experimental
 	 */
-	buildHttp?: HttpUriOptions;
+	buildHttp?: HttpUriOptionsWebpackOptions;
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -9460,7 +9432,8 @@ declare interface ExportsSpec {
 }
 type ExportsType =
 	"namespace" | "dynamic" | "default-only" | "default-with-named";
-type Exposes = (string | ExposesObject)[] | ExposesObject;
+type Exposes = ExposesObject | ExposesBranch1Item[];
+type ExposesBranch1Item = string | ExposesObject;
 
 /**
  * Advanced configuration for modules that should be exposed by this container.
@@ -9481,8 +9454,9 @@ declare interface ExposesConfig {
  * Modules that should be exposed by this container. Property names are used as public paths.
  */
 declare interface ExposesObject {
-	[index: string]: string | ExposesConfig | string[];
+	[index: string]: ExposesObjectValue;
 }
+type ExposesObjectValue = string | ExposesConfig | string[];
 type ExpressionEstreeIndex =
 	| ImportExpressionImport
 	| UnaryExpression
@@ -11824,11 +11798,45 @@ declare interface HtmlTransformTagsContext {
 	outputName: string;
 	html: string;
 }
+type HttpUriOptionsAllowedUrisItem =
+	string | RegExp | ((uri: string) => boolean);
 
 /**
  * Options for building http resources.
  */
-declare interface HttpUriOptions {
+declare interface HttpUriOptionsHttpUriPlugin {
+	allowedUris: HttpUriOptionsAllowedUrisItem[];
+
+	/**
+	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
+	 */
+	cacheLocation?: string | false;
+
+	/**
+	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
+	 */
+	frozen?: boolean;
+
+	/**
+	 * Location of the lockfile.
+	 */
+	lockfileLocation?: string;
+
+	/**
+	 * Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.
+	 */
+	proxy?: string;
+
+	/**
+	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
+	 */
+	upgrade?: boolean;
+}
+
+/**
+ * Options for building http resources.
+ */
+declare interface HttpUriOptionsWebpackOptions {
 	/**
 	 * List of allowed URIs (resp. the beginning of them).
 	 */
@@ -11863,8 +11871,8 @@ declare class HttpUriPlugin {
 	/**
 	 * Creates an instance of HttpUriPlugin.
 	 */
-	constructor(options: HttpUriOptions);
-	options: HttpUriOptions;
+	constructor(options: HttpUriOptionsHttpUriPlugin);
+	options: HttpUriOptionsHttpUriPlugin;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -18784,19 +18792,12 @@ declare class ModuleFederationPlugin {
 	};
 }
 declare interface ModuleFederationPluginOptions {
-	/**
-	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
-	 */
-	exposes?: (string | ExposesObject)[] | ExposesObject;
+	exposes?: ExposesObject | ExposesBranch1Item[];
 
 	/**
 	 * The filename of the container as relative path inside the `output.path` directory.
 	 */
 	filename?: string;
-
-	/**
-	 * Options for library.
-	 */
 	library?: LibraryOptions;
 
 	/**
@@ -18835,26 +18836,14 @@ declare interface ModuleFederationPluginOptions {
 		| "asset-url"
 		| "css-import"
 		| "css-url";
-
-	/**
-	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
-	 */
-	remotes?: (string | RemotesObject)[] | RemotesObject;
-
-	/**
-	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
-	 */
+	remotes?: RemotesObject | RemotesBranch1Item[];
 	runtime?: string | false;
 
 	/**
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */
 	shareScope?: string;
-
-	/**
-	 * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
-	 */
-	shared?: (string | SharedObject)[] | SharedObject;
+	shared?: SharedObject | SharedBranch1Item[];
 }
 
 /**
@@ -25008,22 +24997,7 @@ declare class ProgressPlugin {
 	showActiveModules: boolean;
 	percentBy: null | "entries" | "modules" | "dependencies";
 	progressBar:
-		| false
-		| "auto"
-		| Required<{
-				/**
-				 * Color used for the filled portion of the bar.
-				 */
-				color?: string;
-				/**
-				 * Name shown before the progress bar.
-				 */
-				name?: string;
-				/**
-				 * Width of the progress bar in characters. Default: 25.
-				 */
-				width?: number;
-		  }>;
+		false | "auto" | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime: boolean;
 	phaseTimings: boolean;
 
@@ -25077,10 +25051,6 @@ declare interface ProgressPluginOptions {
 	 * Show estimated time remaining based on build progress. Default: false.
 	 */
 	estimatedTime?: boolean;
-
-	/**
-	 * Function that executes for every progress step.
-	 */
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
 
 	/**
@@ -25112,22 +25082,23 @@ declare interface ProgressPluginOptions {
 	 * Generate progress bar. `"auto"` enables it only for interactive terminals. Default: false.
 	 */
 	progressBar?:
-		| boolean
-		| "auto"
-		| {
-				/**
-				 * Color used for the filled portion of the bar.
-				 */
-				color?: string;
-				/**
-				 * Name shown before the progress bar.
-				 */
-				name?: string;
-				/**
-				 * Width of the progress bar in characters. Default: 25.
-				 */
-				width?: number;
-		  };
+		boolean | "auto" | ProgressPluginOptionsProgressBarBranch3Object;
+}
+declare interface ProgressPluginOptionsProgressBarBranch3Object {
+	/**
+	 * Color used for the filled portion of the bar.
+	 */
+	color?: string;
+
+	/**
+	 * Name shown before the progress bar.
+	 */
+	name?: string;
+
+	/**
+	 * Width of the progress bar in characters. Default: 25.
+	 */
+	width?: number;
 }
 declare class ProvidePlugin {
 	/**
@@ -25154,9 +25125,6 @@ declare class ProvideSharedPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface ProvideSharedPluginOptions {
-	/**
-	 * Modules that should be provided as shared modules to the share scope. When provided, property name is used to match modules, otherwise this is automatically inferred from share key.
-	 */
 	provides: Provides;
 
 	/**
@@ -25164,7 +25132,8 @@ declare interface ProvideSharedPluginOptions {
 	 */
 	shareScope?: string;
 }
-type Provides = (string | ProvidesObject)[] | ProvidesObject;
+type Provides = ProvidesObject | ProvidesBranch1Item[];
+type ProvidesBranch1Item = string | ProvidesObject;
 
 /**
  * Advanced configuration for modules that should be provided as shared modules to the share scope.
@@ -25174,17 +25143,7 @@ declare interface ProvidesConfig {
 	 * Include the provided module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 * @since 5.112.0
-	 */
 	exclude?: SharedModuleFilter;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 * @since 5.112.0
-	 */
 	include?: SharedModuleFilter;
 
 	/**
@@ -25207,8 +25166,9 @@ declare interface ProvidesConfig {
  * Modules that should be provided as shared modules to the share scope. Property names are used as share keys.
  */
 declare interface ProvidesObject {
-	[index: string]: string | ProvidesConfig;
+	[index: string]: ProvidesObjectValue;
 }
+type ProvidesObjectValue = string | ProvidesConfig;
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
 type QualifiedRule = NodeSyntaxParser & {
@@ -26101,7 +26061,8 @@ declare abstract class RegExpValidationState {
 	eat(ch: number, forceU?: boolean): boolean;
 	eatChars(chs: number[], forceU?: boolean): boolean;
 }
-type Remotes = (string | RemotesObject)[] | RemotesObject;
+type Remotes = RemotesObject | RemotesBranch1Item[];
+type RemotesBranch1Item = string | RemotesObject;
 
 /**
  * Advanced configuration for container locations from which modules should be resolved and loaded at runtime.
@@ -26122,8 +26083,9 @@ declare interface RemotesConfig {
  * Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.
  */
 declare interface RemotesObject {
-	[index: string]: string | RemotesConfig | string[];
+	[index: string]: RemotesObjectValue;
 }
+type RemotesObjectValue = string | RemotesConfig | string[];
 
 /**
  * Defines the render bootstrap context type used by this module.
@@ -27402,6 +27364,7 @@ declare interface RuleCondition {
 			| "phase"]
 	) => boolean;
 }
+type RuleObject = string | RegExp | ((str: string) => boolean);
 
 /**
  * Defines the rule set type used by this module.
@@ -27879,7 +27842,6 @@ type RuleSetUseItem =
 			options?: string | { [index: string]: any };
 	  };
 type RuleSyntaxParser = AtRule | QualifiedRule;
-type Rule_1 = string | RegExp | ((str: string) => boolean);
 declare class RuntimeChunkPlugin {
 	/**
 	 * Creates an instance of RuntimeChunkPlugin.
@@ -29156,13 +29118,10 @@ declare interface SharePluginOptions {
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */
 	shareScope?: string;
-
-	/**
-	 * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
-	 */
 	shared: Shared;
 }
-type Shared = (string | SharedObject)[] | SharedObject;
+type Shared = SharedObject | SharedBranch1Item[];
+type SharedBranch1Item = string | SharedObject;
 
 /**
  * Advanced configuration for modules that should be shared in the share scope.
@@ -29172,22 +29131,12 @@ declare interface SharedConfig {
 	 * Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 * @since 5.112.0
-	 */
 	exclude?: SharedModuleFilter;
 
 	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: string | false;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 * @since 5.112.0
-	 */
 	include?: SharedModuleFilter;
 
 	/**
@@ -29246,8 +29195,9 @@ declare interface SharedModuleFilter {
  * Modules that should be shared in the share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
  */
 declare interface SharedObject {
-	[index: string]: string | SharedConfig;
+	[index: string]: SharedObjectValue;
 }
+type SharedObjectValue = string | SharedConfig;
 declare class SideEffectsFlagPlugin {
 	/**
 	 * Creates an instance of SideEffectsFlagPlugin.
@@ -29746,7 +29696,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | Rule_1[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -29767,12 +29717,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | ((str: string) => boolean) | Rule_1[];
+	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | Rule_1[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -29808,7 +29758,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | Rule_1[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 }
 
 /**

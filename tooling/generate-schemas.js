@@ -1148,9 +1148,10 @@ const wrapReference = (schema, described) =>
  * Derives a schema from one source file.
  * @param {ts.SourceFile} source the file to read
  * @param {ts.TypeChecker} checker the checker that resolves its references
+ * @param {Map<string, string>} schemaOf the schema each module declares, by module
  * @returns {Record<string, EXPECTED_ANY>} the schema it describes
  */
-const typeScriptToSchema = (source, checker) => {
+const typeScriptToSchema = (source, checker, schemaOf = new Map()) => {
 	// WHY: a schema that is nothing but a reference to another one is written as
 	// a re-export, which is the whole file and carries no title of its own.
 	for (const statement of source.statements) {
@@ -1162,8 +1163,23 @@ const typeScriptToSchema = (source, checker) => {
 		const exported = /** @type {ts.NamedExports} */ (statement.exportClause);
 		const from = /** @type {ts.StringLiteral} */ (statement.moduleSpecifier)
 			.text;
+		// WHY: the target is a module now, where it used to be the declarations file
+		// beside the schema. What the reference names is the schema that module
+		// declares, reached the way one schema reaches another.
+		const resolved = path.resolve(path.dirname(source.fileName), from);
+		const named = schemaOf.get(resolved);
+		const here = path
+			.relative(TYPES_DIRECTORY, path.dirname(source.fileName))
+			.split(path.sep)
+			.join("/");
+		const target = named
+			? `${path
+					.relative(here || ".", named)
+					.split(path.sep)
+					.join("/")}`
+			: from;
 		return {
-			$ref: `${from}.json#/definitions/${exported.elements[0].name.text}`
+			$ref: `${target.startsWith(".") ? target : `./${target}`}.json#/definitions/${exported.elements[0].name.text}`
 		};
 	}
 	const declarations = declarationsOf(source);
@@ -1375,6 +1391,14 @@ const main = async () => {
 	sources.set(vocabularyPath, fs.readFileSync(vocabularyPath, "utf8"));
 
 	const declaredInLib = findDeclaringModules();
+	// The schema each module declares, keyed the way a re-export names the module.
+	/** @type {Map<string, string>} */
+	const schemaOf = new Map(
+		[...declaredInLib].map(([named, file]) => [
+			file.replace(/\.js$/, ""),
+			named
+		])
+	);
 	for (const schemaFile of schemaFiles) {
 		const name = path
 			.relative(SCHEMAS_DIRECTORY, schemaFile)
@@ -1407,17 +1431,19 @@ const main = async () => {
 		const name = path.relative(SCHEMAS_DIRECTORY, schemaFile);
 		let generated;
 		try {
-			generated = walkSchema(typeScriptToSchema(source, checker), (node) =>
-				typeof node.tsType === "string"
-					? {
-							...node,
-							tsType: repointImports(
-								node.tsType,
-								path.dirname(target),
-								path.dirname(schemaFile)
-							)
-						}
-					: node
+			generated = walkSchema(
+				typeScriptToSchema(source, checker, schemaOf),
+				(node) =>
+					typeof node.tsType === "string"
+						? {
+								...node,
+								tsType: repointImports(
+									node.tsType,
+									path.dirname(target),
+									path.dirname(schemaFile)
+								)
+							}
+						: node
 			);
 		} catch (err) {
 			failures.push(`${name}: ${/** @type {Error} */ (err).message}`);
