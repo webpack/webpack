@@ -3,5 +3,5 @@
  * DO NOT MODIFY BY HAND.
  * Run `yarn fix:special` to update
  */
-declare const check: (options: import("../../../declarations/plugins/debug/ProfilingPlugin").ProfilingPluginOptions) => boolean;
+declare const check: (options: import("../../../lib/debug/ProfilingPlugin").ProfilingPluginOptions) => boolean;
 export = check;
