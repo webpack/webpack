@@ -150,6 +150,7 @@
     "@types/convert-source-map": "^2.0.3",
     "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.7",
     "@types/mime-db": "^1.43.6",
     "@types/node": "^26.2.0",
     "@types/xxhashjs": "^0.2.4",
