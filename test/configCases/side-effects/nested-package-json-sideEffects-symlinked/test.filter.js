@@ -22,14 +22,14 @@ const removeLink = (link) => {
 };
 
 module.exports = () => {
-	// three suites run this filter at once, so each process probes its own path
-	const probe = path.resolve(
-		__dirname,
-		`../../../js/side-effects-symlinked-probe-${process.pid}`
+	const parent = path.resolve(__dirname, "../../../js");
+	fs.mkdirSync(parent, { recursive: true });
+	// suites run this filter at once, as processes or (under Bun) threads of one
+	// process sharing a pid, so each call probes inside a directory of its own
+	const directory = fs.mkdtempSync(
+		path.join(parent, "side-effects-symlinked-probe-")
 	);
-	fs.mkdirSync(path.dirname(probe), { recursive: true });
-	// a probe a failed cleanup left behind would read as EEXIST, i.e. "cannot"
-	removeLink(probe);
+	const probe = path.join(directory, "probe");
 	try {
 		fs.symlinkSync(path.join(__dirname, "package"), probe, "junction");
 	} catch (err) {
@@ -40,7 +40,9 @@ module.exports = () => {
 			throw err;
 		}
 		return false;
+	} finally {
+		removeLink(probe);
+		fs.rmdirSync(directory);
 	}
-	removeLink(probe);
 	return true;
 };

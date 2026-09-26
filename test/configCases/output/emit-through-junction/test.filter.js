@@ -6,21 +6,28 @@ const path = require("path");
 // Skip where directory junctions / symlinks cannot be created (e.g. Windows
 // without the required privilege).
 module.exports = () => {
-	// two suites run this filter at once, so each process probes its own path
-	const real = path.join(__dirname, `.testreal-${process.pid}`);
-	const link = path.join(__dirname, `.testlink-${process.pid}`);
+	const parent = path.resolve(__dirname, "../../../js");
+	fs.mkdirSync(parent, { recursive: true });
+	// suites run this filter at once, as processes or (under Bun) threads of one
+	// process sharing a pid, so each call probes inside a directory of its own
+	const directory = fs.mkdtempSync(
+		path.join(parent, "emit-through-junction-probe-")
+	);
+	const real = path.join(directory, "real");
+	const link = path.join(directory, "link");
 	try {
-		fs.mkdirSync(real, { recursive: true });
+		fs.mkdirSync(real);
 		fs.symlinkSync(real, link, "junction");
 		fs.unlinkSync(link);
-		fs.rmdirSync(real);
 		return true;
 	} catch (_err) {
+		return false;
+	} finally {
 		try {
 			fs.rmdirSync(real);
-		} catch (_err2) {
-			// ignore cleanup failure
+		} catch (_err) {
+			// never made
 		}
-		return false;
+		fs.rmdirSync(directory);
 	}
 };
