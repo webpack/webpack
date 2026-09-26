@@ -6,8 +6,9 @@ const path = require("path");
 // Skip where directory junctions / symlinks cannot be created (e.g. Windows
 // without the required privilege).
 module.exports = () => {
-	const real = path.join(__dirname, ".testreal");
-	const link = path.join(__dirname, ".testlink");
+	// two suites run this filter at once, so each process probes its own path
+	const real = path.join(__dirname, `.testreal-${process.pid}`);
+	const link = path.join(__dirname, `.testlink-${process.pid}`);
 	try {
 		fs.mkdirSync(real, { recursive: true });
 		fs.symlinkSync(real, link, "junction");

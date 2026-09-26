@@ -5,9 +5,6 @@ const path = require("path");
 
 const PLUGIN_NAME = "BuildSymlinkedTreePlugin";
 
-// the tree carries symlinks, so it is built outside the repository
-const source = path.resolve(__dirname, "../../../js/copy-symlink-source");
-
 /**
  * Removes the tree, unlinking a symbolic link rather than descending into what
  * it points at. `fs.rmSync` is newer than the Node version a fixture runs on.
@@ -44,9 +41,10 @@ const removeTree = (target) => {
 /**
  * Builds `real/a.txt`, a `link` to that directory, a `loop` inside it pointing
  * back at the base, and a relative link to the file.
+ * @param {string} source where the tree is built
  * @returns {void}
  */
-const buildTree = () => {
+const buildTree = (source) => {
 	removeTree(source);
 	fs.mkdirSync(path.join(source, "real"), { recursive: true });
 	fs.writeFileSync(path.join(source, "real/a.txt"), "a");
@@ -60,17 +58,28 @@ const buildTree = () => {
 	fs.symlinkSync("real/a.txt", path.join(source, "relative.txt"), "file");
 };
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
-	output: {
-		copy: [
-			{ from: source },
-			{ from: source, globOptions: { followSymlinks: false }, to: "no-follow" }
+/**
+ * The tree carries symlinks, so it is built outside the repository, next to the
+ * suite's own output: two suites rebuild it while the other may be copying it.
+ * @type {(env: unknown, argv: { testPath: string }) => import("../../../../").Configuration}
+ */
+module.exports = (env, { testPath }) => {
+	const source = `${testPath}-source`;
+	return {
+		output: {
+			copy: [
+				{ from: source },
+				{
+					from: source,
+					globOptions: { followSymlinks: false },
+					to: "no-follow"
+				}
+			]
+		},
+		plugins: [
+			(compiler) => {
+				compiler.hooks.environment.tap(PLUGIN_NAME, () => buildTree(source));
+			}
 		]
-	},
-	plugins: [
-		(compiler) => {
-			compiler.hooks.environment.tap(PLUGIN_NAME, buildTree);
-		}
-	]
+	};
 };

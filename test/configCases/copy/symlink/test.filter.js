@@ -46,7 +46,11 @@ const canLink = (probe, target, type) => {
 };
 
 module.exports = () => {
-	const probe = path.resolve(__dirname, "../../../js/copy-symlink-probe");
+	// two suites run this filter at once, so each process probes its own path
+	const probe = path.resolve(
+		__dirname,
+		`../../../js/copy-symlink-probe-${process.pid}`
+	);
 	fs.mkdirSync(path.dirname(probe), { recursive: true });
 	// the case both walks links and emits them, and Windows gates each kind
 	// separately — a junction needs no privilege where the other two do
