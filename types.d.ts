@@ -6353,7 +6353,7 @@ declare interface CssProcessOptions {
 	locConverter?: LocConverter;
 
 	/**
-	 * walk into block bodies' nested rules (default true)
+	 * walk into block bodies' nested rules (default true); ignored while printing, as `skip` is, since a block is printed from the children it would leave unread
 	 */
 	recurseBlocks?: boolean;
 

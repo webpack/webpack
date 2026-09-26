@@ -9456,10 +9456,18 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 	});
 
 	it("writes none where there is no color to write", () => {
-		// A relative color whose result sRGB cannot show has no hex to fall back to.
+		// A substitution is what nothing here can resolve, so the reference it
+		// stands in names no color to write before it.
 		expect(
-			minifyFor("a{color:oklch(from red calc(l * 0.8) c h)}", ["chrome 100"])
-		).toBe("a{color:oklch(from red calc(l*.8) c h)}");
+			minifyFor("a{color:oklch(from var(--x) l c h)}", ["chrome 100"])
+		).toBe("a{color:oklch(from var(--x) l c h)}");
+		expect(
+			minifyFor("a{color:color-mix(in oklch,var(--x),red)}", ["chrome 100"])
+		).toBe("a{color:color-mix(in oklch,var(--x),red)}");
+		// ...as is a channel taking the other color's value.
+		expect(minifyFor("a{color:oklch(from red l c none)}", ["chrome 100"])).toBe(
+			"a{color:oklch(from red l c none)}"
+		);
 		// A custom property's value is handed back as written.
 		expect(minifyFor("a{--x:oklch(0.7 0.1 20)}", ["chrome 100"])).toBe(
 			"a{--x:oklch(0.7 0.1 20)}"
@@ -9474,13 +9482,22 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 		// Chrome 100 reads none of these, so a fallback still naming one is dropped
 		// by the same engine that drops the declaration it stands before.
 		expect(
+			minifyFor("a{color:light-dark(oklch(0.7 0.1 20),red)}", ["chrome 100"])
+		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+		// A mix is the color it names, though, so one over colors that resolve
+		// folds to a byte and the fallback is readable after all.
+		expect(
 			minifyFor("a{color:color-mix(in oklch,oklch(0.7 0.1 20),red)}", [
 				"chrome 100"
 			])
-		).toBe("a{color:color-mix(in oklch,oklch(.7 .1 20),red)}");
+		).toBe("a{color:#ed5d5a;color:color-mix(in oklch,oklch(.7 .1 20),red)}");
+		// ...and one over a color nothing resolves still writes none.
 		expect(
-			minifyFor("a{color:light-dark(oklch(0.7 0.1 20),red)}", ["chrome 100"])
-		).toBe("a{color:light-dark(oklch(.7 .1 20),red)}");
+			minifyFor(
+				"a{color:color-mix(in oklch,oklch(0.7 0.1 20),color(--my 1 0 0))}",
+				["chrome 100"]
+			)
+		).toBe("a{color:color-mix(in oklch,oklch(.7 .1 20),color(--my 1 0 0))}");
 		// A custom color space is one nothing here can fold, so the `color()` it
 		// stands in stays — and the fallback would be dropped with it.
 		expect(
@@ -9489,6 +9506,47 @@ describe("CssSyntax minify — a fallback for a color the target cannot read", (
 				["chrome 100"]
 			)
 		).toBe("a{background:linear-gradient(oklch(.7 .1 20),color(--my 1 0 0))}");
+	});
+
+	// A call that folds on what it is written over, over an origin the target
+	// cannot read. Resolving the origin alone leaves the call itself standing,
+	// which a second pass would then fold — so one pass has to settle both.
+	it.each([
+		["oklch", "rgb(from oklch(0.5 0.1 200) r g b)", "#00747a"],
+		["lab", "rgb(from lab(50 20 30) r g b)", "#a16945"],
+		["lch", "rgb(from lch(50 30 40) r g b)", "#a26757"],
+		["oklab", "rgb(from oklab(0.5 0.05 0.1) r g b)", "#8f5305"],
+		["hwb", "rgb(from hwb(194 0% 0%) r g b)", "#00c3ff"],
+		["color()", "rgb(from color(display-p3 0.2 0.5 0.6) r g b)", "#00829c"],
+		["color-mix()", "rgb(from color-mix(in oklch,red,blue) r g b)", "#ba00c2"],
+		["a mix of its own", "color-mix(in oklch,oklch(0.7 0.1 20),red)", "#ed5d5a"],
+		[
+			"a mix against transparent",
+			"color-mix(in srgb,oklch(63.7% .237 25.331) 50%,#0000)",
+			"#fb2c3680"
+		],
+		["a call holding a call", "oklch(from red calc(l * 0.8) c h)", "#d00000"]
+	])("settles a fallback written over %s", (_name, value, byte) => {
+		const css = `a{color:${value}}`;
+		const once = minifyFor(css, ["chrome 100", "firefox 100", "safari 15.4"]);
+		expect(once.startsWith(`a{color:${byte};`)).toBe(true);
+		expect(minifyFor(once, ["chrome 100", "firefox 100", "safari 15.4"])).toBe(
+			once
+		);
+	});
+
+	it("reads the arguments the author wrote, not the bytes they fold to", () => {
+		// Each color of this mix is one sRGB cannot show, so writing it as a byte
+		// first rounds it into eight bits — and the mix of two rounded colors is
+		// not the color the mix names. lightningcss and Color.js both say this.
+		expect(
+			minifyFor(
+				"a{color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}",
+				["chrome 100"]
+			)
+		).toBe(
+			"a{color:#bd33da;color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}"
+		);
 	});
 
 	it("folds only the functions the target is missing", () => {
@@ -10037,7 +10095,9 @@ describe("CssSyntax minify — color-mix()", () => {
 	it("declines the space's own spelling where the target cannot read it", () => {
 		const mix =
 			"a{color:color-mix(in oklch,oklch(70% .3 30),oklch(50% .2 250))}";
-		expect(minifyFor(mix, ["chrome 100"])).toBe(mix);
+		// The mix stands as written, since `oklch()` is what it would answer in —
+		// and the hex before it is read by the engine that reads neither.
+		expect(minifyFor(mix, ["chrome 100"])).toBe(`a{color:#bd33da;${mix.slice(2)}`);
 	});
 
 	it.each([
@@ -10210,6 +10270,25 @@ describe("CssSyntax minify — relative colors", () => {
 		["an expression of no tokens", "rgb(from red calc(r@ 2) g b)"]
 	])("keeps a relative reference naming %s", (_name, css) => {
 		expect(minify(`a{color:${css}}`)).toBe(`a{color:${css}}`);
+	});
+
+	// Every function that states channels of its own, so none is left to a
+	// stylesheet to reach first: `hsla()` named a space the model holds under
+	// `hsl()`, and reading it back threw rather than answering.
+	it.each([
+		["rgb", "rgb(from #808080 r g b)", "gray"],
+		["rgba", "rgba(from #808080 r g b/0.5)", "#80808080"],
+		["hsl", "hsl(from #808080 h s l)", "gray"],
+		["hsla", "hsla(from #808080 h s l)", "gray"],
+		["hsla with an alpha", "hsla(from #808080 h s l/0.5)", "#80808080"],
+		["hwb", "hwb(from #808080 h w b)", "gray"],
+		["lab", "lab(from #808080 l a b)", "gray"],
+		["lch", "lch(from #808080 l c h)", "gray"],
+		["oklab", "oklab(from #808080 l a b)", "gray"],
+		["oklch", "oklch(from #808080 l c h)", "gray"],
+		["color", "color(from #808080 srgb r g b)", "gray"]
+	])("writes what %s states its channels in", (_name, css, written) => {
+		expect(minify(`a{color:${css}}`)).toBe(`a{color:${written}}`);
 	});
 
 	it("reads a channel written any way the function takes", () => {
@@ -12368,5 +12447,51 @@ describe("SourceProcessor — an at-rule named with CSS escapes", () => {
 		const started = Date.now();
 		expect(typeof minify(sheet)).toBe("string");
 		expect(Date.now() - started).toBeLessThan(2000);
+	});
+});
+
+describe("CssSyntax — recurseBlocks", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {boolean} recurseBlocks whether to walk into block bodies
+	 * @returns {number} how many qualified rules the walk visited
+	 */
+	const visited = (css, recurseBlocks) => {
+		let seen = 0;
+		new SourceProcessor()
+			.use({
+				[NodeType.QualifiedRule]: () => {
+					seen++;
+				}
+			})
+			.process(css, { recurseBlocks });
+		return seen;
+	};
+
+	it.each([
+		["an at-rule body", "@media screen{a{color:red}}", 1, 0],
+		["a nested rule", "b{c{color:blue}}", 2, 1],
+		["a layer holding both", "@layer a{d{e{top:0}}}", 2, 0]
+	])("walks %s only where asked", (_name, css, deep, shallow) => {
+		expect(visited(css, true)).toBe(deep);
+		expect(visited(css, false)).toBe(shallow);
+	});
+
+	it.each([
+		["a declaration alone", "a{color:red}"],
+		["an at-rule body", "@media screen{a{color:red}}"],
+		["a nested rule", "b{c{color:blue}}"],
+		["a supports body", "@supports (a:b){x{top:0}}"],
+		["a layer holding both", "@layer a{d{e{top:0}}}"]
+	])("prints %s whatever it is set to", (_name, css) => {
+		// A block is printed from its children, so printing needs every one of
+		// them — which is why a writer reads this no differently than `skip`.
+		const asked = new SourceProcessor().process(css, {
+			mode: "minify",
+			recurseBlocks: false
+		}).code;
+		expect(asked).toBe(
+			new SourceProcessor().process(css, { mode: "minify" }).code
+		);
 	});
 });
