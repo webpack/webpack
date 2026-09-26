@@ -17421,17 +17421,27 @@ declare class LoaderOptionsPlugin {
 	/**
 	 * Creates an instance of LoaderOptionsPlugin.
 	 */
-	constructor(options?: LoaderOptionsPluginOptions & MatchObject);
-	options: LoaderOptionsPluginOptions & MatchObject;
+	constructor(
+		options?: LoaderOptionsPluginOptions & MatchObject & Record<string, any>
+	);
+	options: LoaderOptionsPluginOptions & MatchObject & Record<string, any>;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
 }
-declare interface LoaderOptionsPluginOptions {
-	[index: string]: any;
 
+/**
+ * A configuration object that can be used to configure older loaders.
+ */
+declare interface LoaderOptionsPluginLoaderOptions {
+	/**
+	 * The context that can be used to configure older loaders.
+	 */
+	context?: string;
+}
+declare interface LoaderOptionsPluginOptions {
 	/**
 	 * Whether loaders should be in debug mode or not. debug will be removed as of webpack 3.
 	 */
@@ -17441,17 +17451,7 @@ declare interface LoaderOptionsPluginOptions {
 	 * Where loaders can be switched to minimize mode.
 	 */
 	minimize?: boolean;
-
-	/**
-	 * A configuration object that can be used to configure older loaders.
-	 */
-	options?: {
-		[index: string]: any;
-		/**
-		 * The context that can be used to configure older loaders.
-		 */
-		context?: string;
-	};
+	options?: LoaderOptionsPluginLoaderOptions & Record<string, any>;
 }
 
 /**
@@ -17864,13 +17864,12 @@ declare interface ManifestItem {
 	 */
 	src?: string;
 }
+type ManifestObject = ManifestObjectKnown & ManifestObjectUnknown;
 
 /**
  * The manifest object.
  */
-declare interface ManifestObject {
-	[index: string]: any;
-
+declare interface ManifestObjectKnown {
 	/**
 	 * Contains the names of assets.
 	 */
@@ -17880,6 +17879,9 @@ declare interface ManifestObject {
 	 * Contains the names of entrypoints.
 	 */
 	entrypoints: Record<string, ManifestEntrypoint>;
+}
+declare interface ManifestObjectUnknown {
+	[index: string]: any;
 }
 declare class ManifestPlugin {
 	/**
@@ -29004,16 +29006,7 @@ declare class SSRManifestPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface SSRManifestPluginOptions {
-	/**
-	 * The base directory used to compute the source-module keys (defaults to the compiler context).
-	 * @since 5.111.0
-	 */
 	context?: string;
-
-	/**
-	 * Specifies the filename of the emitted manifest on disk. By default the plugin will emit `ssr-manifest.json` inside the 'output.path' directory.
-	 * @since 5.111.0
-	 */
 	filename?: string;
 }
 
@@ -32146,6 +32139,7 @@ declare interface WatchFileSystem {
 		callbackUndelayed: (value: string, num: number) => void
 	) => Watcher;
 }
+type WatchIgnoreEntry = string | RegExp;
 declare class WatchIgnorePlugin {
 	/**
 	 * Creates an instance of WatchIgnorePlugin.
@@ -32159,10 +32153,7 @@ declare class WatchIgnorePlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface WatchIgnorePluginOptions {
-	/**
-	 * A list of RegExps or absolute paths to directories or files that should be ignored.
-	 */
-	paths: (string | RegExp)[];
+	paths: WatchIgnoreEntry[];
 }
 
 /**

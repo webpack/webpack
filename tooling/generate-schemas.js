@@ -375,6 +375,53 @@ const readReference = (reference) => {
  */
 
 /**
+ * Every name a declaration writes in its own types, so a module holding types of
+ * its own is read for the ones its schema reaches rather than all of them.
+ * @param {Declared} declared the declaration to read
+ * @returns {string[]} the names it refers to
+ */
+const referencedNames = (declared) => {
+	/** @type {string[]} */
+	const names = [];
+	/**
+	 * @param {ts.Node} node the node to walk
+	 * @returns {void}
+	 */
+	const walk = (node) => {
+		if (ts.isTypeReferenceNode(node)) names.push(node.typeName.getText());
+		// WHY: a `tsType` names a type the module itself declares, so what that
+		// type is made of is the schema's too.
+		if (ts.isImportTypeNode(node) && node.qualifier) {
+			names.push(node.qualifier.getText());
+		}
+		ts.forEachChild(node, walk);
+	};
+	for (const member of declared.members || []) walk(member);
+	for (const tag of declared.propertyTags || []) walk(tag);
+	if (declared.type) walk(declared.type);
+	return names;
+};
+
+/**
+ * @param {string} rootName the name the `@schema` tag is on
+ * @param {Map<string, Declared>} declaredByName what the file declares, by name
+ * @returns {Set<string>} that declaration and everything it reaches
+ */
+const reachableFrom = (rootName, declaredByName) => {
+	const reached = new Set();
+	/** @type {string[]} */
+	const pending = [rootName];
+	while (pending.length > 0) {
+		const name = /** @type {string} */ (pending.pop());
+		if (reached.has(name)) continue;
+		reached.add(name);
+		const declared = declaredByName.get(name);
+		if (declared) pending.push(...referencedNames(declared));
+	}
+	return reached;
+};
+
+/**
  * What an `@implements` intersection is written out as: the members of every
  * definition it names, in the order they are named, each property once.
  * @param {ts.IntersectionTypeNode} node the intersection the declaration is
@@ -397,6 +444,26 @@ const implementedMembers = (node, declaredByName) => {
 		}
 	}
 	return members;
+};
+
+/**
+ * Whether a type is the `Record<string, …>` half of an object that admits keys
+ * the schema does not name.
+ * @param {ts.TypeNode} node the type to read
+ * @returns {boolean} whether it stands for the unknown keys
+ */
+const isUnknownKeyRecord = (node) => {
+	if (!ts.isTypeReferenceNode(node)) return false;
+	if (node.typeName.getText() !== "Record") return false;
+	const args = node.typeArguments || [];
+	if (args.length !== 2) return false;
+	if (args[0].kind !== ts.SyntaxKind.StringKeyword) return false;
+	const value = args[1].getText();
+	return (
+		args[1].kind === ts.SyntaxKind.AnyKeyword ||
+		args[1].kind === ts.SyntaxKind.UnknownKeyword ||
+		value === "EXPECTED_ANY"
+	);
 };
 
 /**
@@ -750,6 +817,14 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 	if (ts.isIntersectionTypeNode(node)) {
 		const base = halvedReference(node, known);
 		if (base !== "") return { $ref: `#/definitions/${base}` };
+		// WHY: JSDoc has no index signature of its own, so an object that admits
+		// unknown keys is written as itself intersected with `Record`. What the
+		// schema says about those keys is the `@additionalProperties` tag, so the
+		// `Record` half says nothing the schema reads.
+		const named = node.types.filter((one) => !isUnknownKeyRecord(one));
+		if (named.length === 1 && named.length < node.types.length) {
+			return fromTypeNode(named[0], checker, known);
+		}
 		if (node.types.every((one) => ts.isTypeLiteralNode(one))) {
 			const members = node.types.flatMap((one) => [
 				.../** @type {ts.TypeLiteralNode} */ (one).members
@@ -1035,7 +1110,15 @@ const fromPropertyTags = (propertyTags, checker, known, head) => {
 		});
 		if (!optional && !tag.isBracketed) required.push(name);
 	}
-	return toObjectSchema(head, properties, required, false);
+	// WHY: what the object admits beyond its properties is the typedef's own
+	// `@additionalProperties`, which `head` already carries — saying it again here
+	// would overwrite it.
+	return toObjectSchema(
+		head,
+		properties,
+		required,
+		head.additionalProperties === true ? undefined : false
+	);
 };
 
 /**
@@ -1098,7 +1181,17 @@ const typeScriptToSchema = (source, checker) => {
 	const declaredByName = new Map(
 		declarations.map((declaration) => [declaration.name, declaration])
 	);
+	// WHY: a plugin's module declares the types its own code reads as well as the
+	// ones its options are made of, so only what the schema reaches is the schema.
+	// A declarations file is the schema's own, every declaration in it included.
+	const schemaRoot = source.fileName.endsWith(".js")
+		? declarations.find((one) => one.tags.has("schema"))
+		: undefined;
+	const reached = schemaRoot
+		? reachableFrom(schemaRoot.name, declaredByName)
+		: undefined;
 	for (const declaration of declarations) {
+		if (reached && !reached.has(declaration.name)) continue;
 		const { name, description, tags, members, propertyTags, type } =
 			declaration;
 		const keywords = fromDocumentationTags(tags);
