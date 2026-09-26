@@ -284,15 +284,10 @@ describe("syntax-printer", () => {
 		// so asserting either outcome there failed at random. What it owes
 		// everywhere is to install phases this build declares and nothing else;
 		// Node, which always reaches the sources, owes the whole set.
-		expect(PHASES.map((phase) => phase.name)).toEqual(
-			expect.arrayContaining(terser.phases)
-		);
+		const declared = PHASES.map((phase) => phase.name);
+		expect(declared).toEqual(expect.arrayContaining(terser.phases));
 		if (!("Deno" in globalThis)) {
-			expect(terser.phases).toContain("mangle");
-			expect(terser.phases).toContain("output");
-			expect(terser.phases).toContain("print");
-			expect(terser.phases).toContain("parse");
-			expect(terser.phases).toContain("frequency");
+			expect(terser.phases).toEqual(expect.arrayContaining(declared));
 		}
 	});
 
