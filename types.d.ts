@@ -33437,17 +33437,6 @@ declare namespace exports {
 				export let createTerserTree: (
 					__0?: any
 				) => (source: string, options: TreeOptions) => any;
-				export namespace terser {
-					export let minify: (
-						files: string | string[] | { [index: string]: string },
-						options?: MinifyOptions
-					) => Promise<MinifyOutput>;
-					export let minify_sync: (
-						files: string | string[] | { [index: string]: string },
-						options?: MinifyOptions
-					) => MinifyOutput;
-					export let version: string;
-				}
 			}
 		}
 		export {

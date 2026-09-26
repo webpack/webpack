@@ -126,6 +126,39 @@ describe("jsMinify", () => {
 		}
 	}
 
+	it("should load no more than the copy of terser without printer", () => {
+		const { execFileSync } = require("child_process");
+
+		// A process of its own, as a worker is: what a minify loads is what
+		// every worker of the pool holds for as long as the pool lives.
+		const loaded = JSON.parse(
+			execFileSync(
+				process.execPath,
+				[
+					"-e",
+					`const jsMinify = require(${JSON.stringify(require.resolve("../../lib/javascript/jsMinify"))});
+					jsMinify({ "a.js": "sink(1 + 2)" }).then((result) => {
+						const files = Object.keys(require.cache).map((file) => file.replace(/\\\\/g, "/"));
+						const has = (end) => files.some((file) => file.endsWith(end));
+						process.stdout.write(JSON.stringify({
+							code: result.code,
+							copy: has("/lib/javascript/terser/minify.js"),
+							index: has("/lib/index.js"),
+							printer: has("/lib/javascript/syntax-printer.js")
+						}));
+					});`
+				],
+				{ encoding: "utf8" }
+			)
+		);
+		expect(loaded).toEqual({
+			code: "sink(3);",
+			copy: true,
+			index: false,
+			printer: false
+		});
+	});
+
 	it("should report a parse error rather than throwing a different shape", async () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
 	});
