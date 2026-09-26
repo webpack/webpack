@@ -64,9 +64,10 @@ const createFiles = () => {
 /**
  * @param {{ from: string, to: string, globOptions?: { followSymlinks?: boolean, ignore?: string[] } }} pattern what the build copies
  * @param {((copiedPath: string) => boolean | void)=} ignore what to tap the `ignore` hook with
+ * @param {Record<string, EXPECTED_ANY>=} inputFileSystemOverrides members to replace on the input file system
  * @returns {Promise<import("../../").Compilation>} the compilation of one build
  */
-const compile = (pattern, ignore) => {
+const compile = (pattern, ignore, inputFileSystemOverrides) => {
 	const webpack = require("../..");
 	const compiler = webpack({
 		mode: "development",
@@ -91,6 +92,12 @@ const compile = (pattern, ignore) => {
 	compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
 		createFsFromVolume(new Volume())
 	);
+	if (inputFileSystemOverrides) {
+		compiler.inputFileSystem = Object.assign(
+			Object.create(compiler.inputFileSystem),
+			inputFileSystemOverrides
+		);
+	}
 
 	return new Promise((resolve, reject) => {
 		compiler.run((err, stats) => {
@@ -205,6 +212,62 @@ describe("CopyPlugin", () => {
 		expect(
 			/** @type {import("../../").Asset} */ (asset).info.symlink
 		).toBeUndefined();
+	});
+
+	it("should skip a link globOptions.ignore names when not following", async () => {
+		if (!fileAliased) return;
+		const ignored = await compile({
+			from: "static",
+			to: ".",
+			globOptions: { followSymlinks: false, ignore: ["**/stale-link.txt"] }
+		});
+		expect(ignored.getAsset("stale-link.txt")).toBeUndefined();
+		expect(ignored.getAsset("keep.txt")).toBeDefined();
+	});
+
+	it("should treat a glob from as a glob when not following", async () => {
+		// `lstat` reports the glob missing, which says it is no link either
+		const globbed = await compile({
+			from: "static/*.txt",
+			to: "globbed",
+			globOptions: { followSymlinks: false }
+		});
+		expect(globbed.getAsset("globbed/keep.txt")).toBeDefined();
+		expect(globbed.errors).toHaveLength(0);
+	});
+
+	it("should copy a file from as a file on a file system without lstat", async () => {
+		const withoutLstat = await compile(
+			{
+				from: "static/keep.txt",
+				to: "plain",
+				globOptions: { followSymlinks: false }
+			},
+			undefined,
+			{ lstat: undefined }
+		);
+		expect(withoutLstat.getAsset("plain/keep.txt")).toBeDefined();
+		expect(withoutLstat.errors).toHaveLength(0);
+	});
+
+	it("should report an lstat failure other than a missing path", async () => {
+		const failing = await compile(
+			{
+				from: "static/keep.txt",
+				to: "failing",
+				globOptions: { followSymlinks: false }
+			},
+			undefined,
+			{
+				lstat: (
+					/** @type {string} */ _path,
+					/** @type {(err: NodeJS.ErrnoException) => void} */ callback
+				) => callback(Object.assign(new Error("lstat failed"), { code: "EIO" }))
+			}
+		);
+		expect(failing.getAsset("failing/keep.txt")).toBeUndefined();
+		expect(failing.errors.length).toBeGreaterThan(0);
+		expect(String(failing.errors[0].message)).toContain("lstat failed");
 	});
 
 	it("should report no error or warning", () => {
