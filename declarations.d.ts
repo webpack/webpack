@@ -16,6 +16,16 @@ declare module "color-name" {
 	export = colors;
 }
 
+// The config half of browserslist, which the default target reads without the
+// caniuse data a query needs
+declare module "browserslist/node" {
+	export function loadConfig(opts: {
+		path?: string;
+		config?: string;
+		env?: string;
+	}): string | string[] | undefined;
+}
+
 // Deprecated NodeJS API usages in webpack
 declare namespace NodeJS {
 	interface Process {
