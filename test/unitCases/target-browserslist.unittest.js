@@ -173,9 +173,33 @@ describe("browserslist target", () => {
 		const withoutConfig = path.resolve(__dirname, "../fixtures");
 		const withConfig = path.resolve(__dirname, "../fixtures/browserslist");
 
+		// What a browserslist query reads, asked for by request rather than by
+		// path, so `require.cache` is read with the key Node itself wrote
+		const QUERY_DATA = [
+			"browserslist",
+			"caniuse-lite/dist/unpacker/agents",
+			"electron-to-chromium/versions",
+			"node-releases/data/processed/envs.json",
+			"baseline-browser-mapping"
+		];
+
 		/**
-		 * Resolves the default target in a fresh process, reporting whether the
-		 * data browserslist reads to run a query was loaded to answer it.
+		 * The environment without the browserslist variables, which decide a
+		 * config of their own and would otherwise reach the child.
+		 * @returns {NodeJS.ProcessEnv} the environment to run a child in
+		 */
+		const environmentWithoutBrowserslist = () => {
+			/** @type {NodeJS.ProcessEnv} */
+			const environment = {};
+			for (const [name, value] of Object.entries(process.env)) {
+				if (!name.startsWith("BROWSERSLIST")) environment[name] = value;
+			}
+			return environment;
+		};
+
+		/**
+		 * Resolves the default target in a fresh process, reporting which of the
+		 * things a query reads were loaded to answer it.
 		 * @param {string} context the context directory
 		 * @returns {{ target: string, queryData: string[] }} what it answered
 		 */
@@ -185,20 +209,20 @@ describe("browserslist target", () => {
 					require.resolve("../../lib/config/target")
 				)});
 				const target = getDefaultTarget(${JSON.stringify(context)});
-				const carriers = [
-					"browserslist/index.js",
-					"caniuse-lite/dist/unpacker/agents",
-					"electron-to-chromium",
-					"node-releases",
-					"baseline-browser-mapping"
-				];
-				const queryData = carriers.filter((carrier) =>
-					Object.keys(require.cache).some((key) => key.includes(carrier))
-				);
+				const queryData = ${JSON.stringify(QUERY_DATA)}.filter((request) => {
+					try {
+						return require.cache[require.resolve(request)] !== undefined;
+					} catch (_err) {
+						return false;
+					}
+				});
 				process.stdout.write(JSON.stringify({ target, queryData }));
 			`;
 			return JSON.parse(
-				execFileSync(process.execPath, ["-e", script], { encoding: "utf8" })
+				execFileSync(process.execPath, ["-e", script], {
+					encoding: "utf8",
+					env: environmentWithoutBrowserslist()
+				})
 			);
 		};
 
@@ -212,7 +236,7 @@ describe("browserslist target", () => {
 			const { target, queryData } = resolveInChildProcess(withConfig);
 			expect(target).toBe("browserslist");
 			// A config means the queries do run, so the data is read after all
-			expect(queryData).toContain("browserslist/index.js");
+			expect(queryData).toEqual(QUERY_DATA);
 		});
 	});
 });
