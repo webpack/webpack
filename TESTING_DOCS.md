@@ -35,12 +35,12 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 ### `external/`
 
-- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
+- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below and terser's own tests. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
 
 #### `test262-cases/`
 
 - **Purpose**: ECMAScript test262 conformance test cases.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runner: `test/specCases/test262.spectest.js`.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, and `test/specCases/js-minify.spectest.js`, which minifies each test with webpack's printer and with terser.
 
 #### `html5lib-tests/`
 
@@ -56,6 +56,11 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 - **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/external/css-parsing-tests`. Test runner: `test/specCases/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
+
+#### `terser/`
+
+- **Purpose**: terser's own repository, pinned to the version webpack depends on. Its `test/compress` cases and `test/input` files are two of the corpora `lib/javascript/syntax-printer.js` is held to (test262 is the third): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/js-minify.spectest.js` (`yarn test:js-minify`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
 
 ### `fixtures/`
 
@@ -97,6 +102,7 @@ Directories come first, in alphabetical order, then the individual files worth t
   - `html5lib.spectest.js` — `yarn test:html5lib`
   - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
   - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
+  - `js-minify.spectest.js` — `yarn test:js-minify`
 
 ### `statsCases/`
 

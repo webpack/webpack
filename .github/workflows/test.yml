@@ -294,6 +294,11 @@ jobs:
           - language: js
             submodules: test/external/test262-cases
             script: test:test262-parser
+          # Minifies every source of each JS corpus with the published minifier
+          # and with webpack's own, and requires the same bytes back.
+          - language: js-minify
+            submodules: test/external/terser test/external/test262-cases
+            script: test:js-minify
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.

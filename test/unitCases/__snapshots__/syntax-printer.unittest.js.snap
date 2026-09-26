@@ -22,6 +22,8 @@ exports[`syntax-printer should mangle exactly as terser does: options this phase
 
 exports[`syntax-printer should mangle exactly as terser does: reserved names, which stay as written 1`] = `"function keep(reservedName,e){return reservedName+e}sink(keep(1,2));"`;
 
+exports[`syntax-printer should mangle exactly as terser does: short exported names, which no scope hands out even where unseen 1`] = `"export const z=1,y=2;export function crowded(n,o,r,t,e,c,d,i,p,s,u,x,f,k,w,a,b,g,h,j,l,m,q,v,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,nn,on,rn,tn,en,cn,dn,pn){return sink(n,o,r,t,e,c,d,i,p,s,u,x,f,k,w,a,b,g,h,j,l,m,q,v,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,$,_,nn,on,rn,tn,en,cn,dn,pn)}"`;
+
 exports[`syntax-printer should print exactly as terser does: asm.js, whose numbers are printed as written 1`] = `"function module(n){\\"use asm\\";var u=1.0,e=0x10;function r(){return+(u+2.50)}return{f:r}}sink(module,1);"`;
 
 exports[`syntax-printer should print exactly as terser does: classes and objects 1`] = `"class A extends(B,C){static#t=1;#s;static{init()}get[k](){return this.#s}set v(t){}async*gen(){}static async m(){}\\"quoted key\\"(){}1(){}}sink({a:1,b:2,\\"c-d\\":3,4:5,[e]:6,get g(){return 1},set g(t){},h(){},async i(){},*j(){},...k,l:l,if:1,a:2});"`;
