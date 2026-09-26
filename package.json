@@ -137,7 +137,7 @@
     "tapable": "^2.3.0",
     "terser": "^5.51.0",
     "watchpack": "^2.5.2",
-    "webpack-sources": "^3.5.3"
+    "webpack-sources": "^3.6.0"
   },
   "devDependencies": {
     "@babel/core": "^8.0.1",

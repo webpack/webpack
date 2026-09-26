@@ -228,7 +228,8 @@ declare module "webpack-sources" {
 		PrefixSource,
 		CachedSource,
 		SizeOnlySource,
-		CompatSource
+		CompatSource,
+		util
 	} from "webpack-sources/types";
 }
 

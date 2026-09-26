@@ -124,6 +124,21 @@ import {
 import { minify } from "terser";
 import { URL } from "url";
 import { Context as ContextImport } from "vm";
+import {
+	addScopesToSourceMap,
+	collectSourceScopes,
+	createScopeCollector,
+	createScopesWriter,
+	encodeScopes
+} from "webpack-sources/types/helpers/scopes";
+import {
+	disableDualStringBufferCaching,
+	enableDualStringBufferCaching,
+	enterStringInterningRange,
+	exitStringInterningRange,
+	internString,
+	isDualStringBufferCachingEnabled
+} from "webpack-sources/types/helpers/stringBufferUtils";
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -1314,6 +1329,7 @@ type BufferEncodingOption = "buffer" | { encoding: "buffer" };
 declare interface BufferEntry {
 	map?: null | RawSourceMap;
 	bufferedMap?: null | BufferedMap;
+	scopes?: ScopesReplay;
 }
 declare interface BufferedMap {
 	/**
@@ -1671,7 +1687,7 @@ declare class CachedSource extends Source {
 	originalLazy(): Source | (() => Source);
 	original(): Source;
 	streamChunks(
-		options: StreamChunksOptions,
+		options: OptionsStreamChunks,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -1684,7 +1700,8 @@ declare class CachedSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string
+			sourceContent?: string,
+			scopeBindings?: Map<string, string>
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -1775,6 +1792,7 @@ declare interface CappedSplit {
 	modules: number;
 }
 type Cell<T> = undefined | T;
+type Child = string | Source | SourceLike;
 
 /**
  * A Chunk is a unit of encapsulation for Modules.
@@ -4528,12 +4546,12 @@ declare class Compiler {
 }
 type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
 declare class ConcatSource extends Source {
-	constructor(...args: ConcatSourceChild[]);
+	constructor(...args: Child[]);
 	getChildren(): Source[];
-	add(item: ConcatSourceChild): void;
-	addAllSkipOptimizing(items: ConcatSourceChild[]): void;
+	add(item: Child): void;
+	addAllSkipOptimizing(items: Child[]): void;
 	streamChunks(
-		options: StreamChunksOptions,
+		options: OptionsStreamChunks,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -4546,12 +4564,12 @@ declare class ConcatSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string
+			sourceContent?: string,
+			scopeBindings?: Map<string, string>
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
 }
-type ConcatSourceChild = string | Source | SourceLike;
 
 /**
  * Advanced options for module concatenation.
@@ -7018,8 +7036,21 @@ declare interface DependencyTemplateContext {
 	 * get access to the code generation data
 	 */
 	getData?: () => CodeGenerationResultData;
+
+	/**
+	 * what each imported binding of the current module reads, by its name in the source, for the source map `scopes` field
+	 */
+	importBindings?: Map<string, string>;
 }
 declare abstract class DependencyTemplates {
+	importBindingScopes: boolean;
+
+	/**
+	 * Asks the templates to record what each imported binding reads, which a
+	 * source map's `scopes` field names and nothing else needs.
+	 */
+	enableImportBindingScopes(): void;
+
 	/**
 	 * Returns template for this dependency.
 	 */
@@ -7665,6 +7696,7 @@ declare class ESMImportDependency extends ModuleDependency {
 }
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
+	declaredSpecifiers?: [string[], string][];
 }
 type EcmaVersion =
 	| 3
@@ -17361,6 +17393,11 @@ declare interface MapOptions {
 	 * is module
 	 */
 	module?: boolean;
+
+	/**
+	 * emit the `scopes` field from the bindings the sources declare
+	 */
+	scopes?: boolean;
 }
 declare interface MatchObject {
 	test?:
@@ -21648,6 +21685,12 @@ declare interface OptionsDelegatedModuleFactoryPlugin {
 	 */
 	associatedObjectForCache?: object;
 }
+declare interface OptionsStreamChunks {
+	source?: boolean;
+	finalSource?: boolean;
+	columns?: boolean;
+	scopes?: boolean;
+}
 declare interface OptionsSyntaxParser {
 	/**
 	 * which edition to parse
@@ -21775,10 +21818,14 @@ declare interface OriginRecord {
 	request: string;
 }
 declare class OriginalSource extends Source {
-	constructor(value: string | Buffer, name: string);
+	constructor(
+		value: string | Buffer,
+		name: string,
+		scopeBindings?: Map<string, string>
+	);
 	getName(): string;
 	streamChunks(
-		options: StreamChunksOptions,
+		options: OptionsStreamChunks,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -21791,7 +21838,8 @@ declare class OriginalSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string
+			sourceContent?: string,
+			scopeBindings?: Map<string, string>
 		) => void,
 		_onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -23936,7 +23984,7 @@ declare class PrefixSource extends Source {
 	getPrefix(): string;
 	original(): Source;
 	streamChunks(
-		options: StreamChunksOptions,
+		options: OptionsStreamChunks,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -23949,7 +23997,8 @@ declare class PrefixSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string
+			sourceContent?: string,
+			scopeBindings?: Map<string, string>
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -24504,7 +24553,7 @@ declare class RawSource extends Source {
 	constructor(value: string | Buffer, convertToString?: boolean);
 	isBuffer(): boolean;
 	streamChunks(
-		options: StreamChunksOptions,
+		options: OptionsStreamChunks,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -24517,7 +24566,8 @@ declare class RawSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string
+			sourceContent?: string,
+			scopeBindings?: Map<string, string>
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -24567,6 +24617,11 @@ declare interface RawSourceMap {
 	 * ignore list
 	 */
 	ignoreList?: number[];
+
+	/**
+	 * encoded `scopes` field of the "Scopes" proposal
+	 */
+	scopes?: string;
 }
 declare interface Read<
 	TBuffer extends NodeJS.ArrayBufferView = NodeJS.ArrayBufferView
@@ -25448,7 +25503,7 @@ declare class ReplaceSource extends Source {
 	insert(pos: number, newValue: string, name?: string): void;
 	original(): Source;
 	streamChunks(
-		options: StreamChunksOptions,
+		options: OptionsStreamChunks,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -25461,7 +25516,8 @@ declare class ReplaceSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string
+			sourceContent?: string,
+			scopeBindings?: Map<string, string>
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -28180,6 +28236,17 @@ type ScopeType =
 	| "block"
 	| "class-field-initializer"
 	| "class-static-block";
+declare interface ScopesReplay {
+	/**
+	 * bindings by source index
+	 */
+	bindings: (undefined | Map<string, string>)[];
+
+	/**
+	 * number of names the stream reported
+	 */
+	names: number;
+}
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
@@ -28883,6 +28950,12 @@ declare interface SourceMapDevToolPluginOptions {
 	publicPath?: string;
 
 	/**
+	 * Emit the 'scopes' field, which tells a debugger the generated expression each imported ESM binding reads, so it resolves under the name the source uses.
+	 * @since 5.112.0
+	 */
+	scopes?: boolean;
+
+	/**
 	 * Provide a custom value for the 'sourceRoot' property in the SourceMap.
 	 */
 	sourceRoot?: string;
@@ -28914,7 +28987,7 @@ declare class SourceMapSource extends Source {
 		undefined | boolean
 	];
 	streamChunks(
-		options: StreamChunksOptions,
+		options: OptionsStreamChunks,
 		onChunk: (
 			chunk: undefined | string,
 			generatedLine: number,
@@ -28927,7 +29000,8 @@ declare class SourceMapSource extends Source {
 		onSource: (
 			sourceIndex: number,
 			source: null | string,
-			sourceContent?: string
+			sourceContent?: string,
+			scopeBindings?: Map<string, string>
 		) => void,
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
@@ -30331,11 +30405,6 @@ type StatsValue =
 	| "normal"
 	| "detailed"
 	| "verbose";
-declare interface StreamChunksOptions {
-	source?: boolean;
-	finalSource?: boolean;
-	columns?: boolean;
-}
 
 /**
  * Returns location of targetPath relative to rootPath.
@@ -33898,6 +33967,27 @@ declare namespace exports {
 		export { LazySet, RequestShortener };
 	}
 	export namespace sources {
+		export namespace util {
+			export namespace scopes {
+				export {
+					addScopesToSourceMap,
+					collectSourceScopes,
+					createScopeCollector,
+					createScopesWriter,
+					encodeScopes
+				};
+			}
+			export namespace stringBufferUtils {
+				export {
+					disableDualStringBufferCaching,
+					enableDualStringBufferCaching,
+					enterStringInterningRange,
+					exitStringInterningRange,
+					internString,
+					isDualStringBufferCachingEnabled
+				};
+			}
+		}
 		export {
 			Source,
 			RawSource,
