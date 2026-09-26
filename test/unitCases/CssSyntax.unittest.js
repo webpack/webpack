@@ -1692,9 +1692,9 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(a)}");
 		// A kept one is placed where it stood, at depth too.
 		expect(min("a{--x:foo(a/*!k*/b)}")).toBe("a{--x:foo(a/*!k*/b)}");
-		// A function closed at EOF gets its `)` written back, or the rule's `}`
-		// lands inside it and the declaration is lost.
-		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b)}");
+		// A function the input ran out in is left open, and so is the rule after
+		// it: the engine keeps the value as written, and nothing follows it.
+		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b");
 	});
 
 	it("minifies the whitespace between a custom property's tokens", () => {
@@ -1854,24 +1854,40 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	// Printed as written and left open, the `}` the rule ends on is read inside
 	// what is open — in Chromium a custom property is then lost whole, and each
 	// pass writes another `}`. So what the input left open is closed once.
-	it("closes what a value written as it stands left open at EOF", () => {
+	it("leaves a custom property's value the input ran out in as written", () => {
+		// The engine keeps such a value as written, open. A `}` printed after it
+		// would land inside, so none is: the input ended there, and so does this.
 		const cases = [
-			["a{--x:lab(50%", "a{--x:lab(50%)}"],
-			["a{--x:[", "a{--x:[]}"],
-			["a{--x:{", "a{--x:{}}"],
-			["a{--x:f(g(x", "a{--x:f(g(x))}"],
+			["a{--x:lab(50%", "a{--x:lab(50%"],
+			["a{--x:[", "a{--x:["],
+			["a{--x:{", "a{--x:{"],
+			["a{--x:f(g(x", "a{--x:f(g(x"],
 			// §5.4.8 ends a block only on its own closer; `]` is a token in `(`.
-			["a{--x:(]", "a{--x:(])}"],
+			["a{--x:(]", "a{--x:(]"],
+			["a{--x:f((b)[c", "a{--x:f((b)[c"],
 			// Read off the children: the string ends on the closer's character.
-			['a{--x:f(")', 'a{--x:f(")")}'],
-			['a{--s:"x', 'a{--s:"x"}'],
-			// §4.3.5 drops a `\` a string ends on; §4.3.7 reads one elsewhere as
-			// U+FFFD. Kept, either would escape the closer written after it.
+			['a{--x:f(")', 'a{--x:f(")'],
+			['a{--s:"x', 'a{--s:"x'],
+			// A comment the input ran out in, kept, is left open with it; one that
+			// only looks like it ends on a `)` does not close the function.
+			["a{--x:calc(1px /*!", "a{--x:calc(1px /*!"],
+			["a{--x:calc(1px /*!)", "a{--x:calc(1px /*!)"],
+			// What the minifier drops at the end still leaves the rest open.
+			["a{--x:f( ", "a{--x:f("],
+			["a{--x:f(1px /*a*/", "a{--x:f(1px"],
+			["a{--x:f(g() ", "a{--x:f(g()"],
+			['a{--x:f("a"', 'a{--x:f("a"'],
+			// Closed, the value is the minifier's, and so is the rule's `}`.
+			["a{--x:f(a)", "a{--x:f(a)}"],
+			["a{--x:f(a /*x*/ )", "a{--x:f(a)}"],
+			// §4.3.7: an escape the input ran out of is a token the engine rewrites,
+			// and writes back closed — as this does.
 			['a{--s:"x\\', 'a{--s:"x"}'],
 			["a{--x:a\\", "a{--x:a�}"],
-			["a{--u:url(x", "a{--u:url(x)}"],
+			["a{--u:url(x", "a{--u:url(x"],
 			["a{--u:url(x\\", "a{--u:url(x�)}"],
-			// Kept verbatim too: text the rule's block holds that is no declaration.
+			// Text the rule's block holds that is no declaration is closed: the
+			// engine keeps none of it.
 			[".f{&:is(", ".f{&:is()}"],
 			[".f{&:is(a /* c", ".f{&:is(a /* c*/)}"],
 			[".f{&:is(a  ", ".f{&:is(a)}"],
@@ -1887,7 +1903,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			});
 			expect(min(expected)).toBe(expected);
 		}
-		// Written as it stands when minifying too: the same closing applies.
+		// Rewritten, the value is the minifier's own, closed like any other.
 		/**
 		 * @param {string} src css source
 		 * @returns {string} the minified serialization, custom properties rewritten
@@ -1908,6 +1924,28 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(beautify("a{--x:lab(50%")).toBe("a {\n--x: lab(50%);\n}");
 		// Raw text the input did not end inside is written as it stands.
 		expect(min(".f{&:is(a);color:red}")).toBe(".f{&:is(a);color:red}");
+		// A rule written after the sheet ends needs the value closed before it.
+		expect(
+			minifyFor("a{color:light-dark(red,blue);--x:f(", ["chrome 100"])
+		).toBe(
+			"a{color:var(--webpack-light,red) var(--webpack-dark,blue);--x:f()}:where(:root){--webpack-light:initial;--webpack-dark:}"
+		);
+		// Left open, the value keeps the mappings it has closed.
+		/**
+		 * @param {string} sheet css source
+		 * @returns {{ code: string, map: EXPECTED_ANY }} the printed sheet and its map
+		 */
+		const mapped = (sheet) =>
+			new SourceProcessor().process(sheet, {
+				mode: "minify",
+				source: "s.css",
+				content: sheet
+			});
+		const open = mapped("a{color:red}\nb{--x:f( g");
+		expect(open.code).toBe("a{color:red}b{--x:f(g");
+		expect(open.map.mappings).toBe(
+			mapped("a{color:red}\nb{--x:f( g)}").map.mappings
+		);
 	});
 
 	it("keeps an empty rule a `@namespace` after it is made inert by", () => {
@@ -1938,8 +1976,8 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("@media a\\")).toBe("@media a\uFFFD;");
 		// §4.3.5 instead inside a string, where it names nothing at all.
 		expect(min('a{content:"x\\')).toBe('a{content:"x"}');
-		// The input ran out inside the string, so the engine closed it there: the
-		// `}` written after it is the end of the rule, not more of the string.
+		// The engine rewrites a string the input ran out in mid-escape, closed, so
+		// the `}` written after it is the end of the rule, not more of the string.
 		expect(min('a{--x:"foo\\')).toBe('a{--x:"foo"}');
 		expect(min("a{--x:'foo\\")).toBe("a{--x:'foo'}");
 		// A url token the input ran out of mid-escape holds a value its text no
@@ -3706,8 +3744,11 @@ describe("CssSyntax — print modes", () => {
 			const once = print("{y/*", mode);
 			expect(print(once, mode)).toBe(once);
 		}
-		// A comment the source did close is written back as it stands.
+		// A comment the source did close is written back as it stands, the input
+		// ending on it or on one it left open after it.
 		expect(print("{y/**/ z", "minify")).toBe("{y/**/ z}");
+		expect(print("a{!x/* c */", "minify")).toBe("a{!x/* c */}");
+		expect(print("a{!x/* c */ /* d", "minify")).toBe("a{!x/* c */ /* d*/}");
 	});
 
 	it("beautifies to something that minifies back the same", () => {

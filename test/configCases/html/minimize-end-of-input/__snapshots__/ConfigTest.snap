@@ -14,12 +14,12 @@ Object {
 <div style=--x:a�>after a dangling backslash</div>
 <div style=background:url(#i)>a url folded on the first pass</div>
 <div style=background:url(#x\\\\\\\\)>a url padded, with a dangling backslash</div>
-<style>.a{--x:f()}</style>
+<style>.a{--x:f(</style>
 <style>.b{&:is()}</style>
 <style>.c{color:red}</style>
 ",
   "end-tag-br.html": "<!doctype html><body><div>an end tag the input ends inside</div></body></html>",
   "end-tag-p.html": "<!doctype html><body><div>an end tag the input ends inside</div></body></html>",
-  "style-body.html": "<!doctype html><body><style>.a{--x:lab(50%)}</style></body></html>",
+  "style-body.html": "<!doctype html><body><style>.a{--x:lab(50%</style></body></html>",
 }
 `;

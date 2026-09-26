@@ -4088,6 +4088,27 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		expect(minify(html)).toBe(html);
 	});
 
+	it("declines to join across a sheet declaring a namespace", () => {
+		/**
+		 * @param {string} name an at-rule name
+		 * @returns {string} the name with every character escaped
+		 */
+		const escaped = (name) =>
+			name.replace(/./g, (char) => `\\${char.charCodeAt(0).toString(16)} `);
+		// A namespace applies to the whole sheet declaring it, so a sheet joined
+		// after one would read its selectors in it.
+		for (const html of [
+			"<style>@namespace url(http://www.w3.org/2000/svg);</style><style>p{color:red}</style>",
+			"<style>@namespace s url(x);</style><style>s|a{color:red}</style>",
+			// An escaped name spells the at-rule it escapes.
+			`<style>a{color:red}</style><style>@${escaped("namespace")}url(x);p{color:red}</style>`,
+			`<style>a{color:red}</style><style>@${escaped("import")}url(x.css);p{color:red}</style>`,
+			`<style>@${escaped("namespace")}url(x);</style><style>p{color:red}</style>`
+		]) {
+			expect(minifyAsWritten(html)).toBe(html);
+		}
+	});
+
 	it("still absorbs into a sheet whose own `@import` leads", () => {
 		expect(
 			minify(
@@ -4096,20 +4117,24 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		).toBe("<style>@import url(x.css);a{color:red}b{color:#00f}</style>");
 	});
 
-	it("declines a sheet ending inside a comment", () => {
-		// Appending to text the comment swallows would comment the next sheet out;
-		// what is judged is what printed, so a sheet the renderer closed joins.
+	it("closes a sheet ending inside a comment before joining it", () => {
+		// Appending to text the comment swallows would comment the next sheet out,
+		// so it is closed first, as its own end of input closed it.
 		const open = "<style>a{color:red}/*x</style><style>b{color:#00f}</style>";
-		expect(minifyAsWritten(open)).toBe(open);
+		expect(minifyAsWritten(open)).toBe(
+			"<style>a{color:red}/*x*/b{color:#00f}</style>"
+		);
 		expect(minify(open)).toBe("<style>a{color:red}b{color:#00f}</style>");
 		expect(
 			minify("<style>a{color:red}/*x*/</style><style>b{color:#00f}</style>")
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
 	});
 
-	it("declines a sheet ending inside a string", () => {
+	it("closes a sheet ending inside a string before joining it", () => {
 		const open = '<style>a{content:"x</style><style>b{color:#00f}</style>';
-		expect(minifyAsWritten(open)).toBe(open);
+		expect(minifyAsWritten(open)).toBe(
+			'<style>a{content:"x"}b{color:#00f}</style>'
+		);
 		expect(minify(open)).toBe('<style>a{content:"x"}b{color:#00f}</style>');
 		// A newline ends a bad string, so this one is over where the sheet is.
 		expect(
@@ -4122,36 +4147,263 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 
 	it("reads an escape outside a string as one too", () => {
-		// Were the quote not escaped it would open a string running to the end.
+		// Were the quote not escaped it would open a string running to the end; as
+		// it is, the escape starts a rule the sheet does not finish, closed with `{}`.
 		expect(
 			minify('<style>a{color:red}\\"</style><style>b{color:#00f}</style>')
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
 	});
 
-	it("declines a sheet left inside a bracket", () => {
+	it("closes a sheet left inside a bracket before joining it", () => {
 		const block = "<style>a{color:red</style><style>b{color:#00f}</style>";
 		const call =
 			"<style>a{color:rgb(1,2,3}</style><style>b{color:#00f}</style>";
-		expect(minifyAsWritten(block)).toBe(block);
-		expect(minifyAsWritten(call)).toBe(call);
+		expect(minifyAsWritten(block)).toBe(
+			"<style>a{color:red}b{color:#00f}</style>"
+		);
+		expect(minifyAsWritten(call)).toBe(
+			"<style>a{color:rgb(1,2,3})}b{color:#00f}</style>"
+		);
 		expect(minify(block)).toBe("<style>a{color:red}b{color:#00f}</style>");
 		expect(minify(call)).toBe(
 			"<style>a{color:rgb(1,2,3})}b{color:#00f}</style>"
 		);
 	});
 
-	it("declines a sheet the CSS minifier could not read", () => {
-		// Deep enough to overflow the CSS parser's stack. Text it never parsed may
-		// be unterminated, and appending to that makes the next sheet part of it.
+	it("closes a sheet the CSS minifier could not read before joining it", () => {
+		// Deep enough to overflow the CSS parser's stack, so the run is written as
+		// it stands — the blocks it left open closed, or the next sheet is in them.
 		const unreadable = "a{".repeat(20000);
 		const head = minify(
 			`<style>${unreadable}</style><style>b{color:#00f}</style>`
 		);
-		expect(head).toContain("</style><style>b{color:#00f}</style>");
+		expect(head).toContain(`${"}".repeat(20000)}b{color:#00f}</style>`);
 		const tail = minify(
 			`<style>a{color:red}</style><style>${unreadable}</style>`
 		);
-		expect(tail).toContain("<style>a{color:red}</style><style>a{a{");
+		expect(tail).toContain("<style>a{color:red}a{a{");
+	});
+
+	it("minifies a joined run as the one sheet it prints", () => {
+		// Each sheet minified on its own, the joined text still holds two rules a
+		// second pass folds into one.
+		const once = minify(
+			"<style>a{color:red}</style><style>b{color:red}</style>"
+		);
+		expect(once).toBe("<style>a,b{color:red}</style>");
+		expect(minify(once)).toBe(once);
+	});
+
+	it("joins a blank sheet as nothing", () => {
+		const once = minify("<style> </style><style>b{color:red}</style>");
+		expect(once).toBe("<style>b{color:red}</style>");
+		expect(minify(once)).toBe(once);
+		expect(minify("<style> </style><style>  </style>")).toBe(
+			"<style>   </style>"
+		);
+	});
+
+	it("reads the attributes each sheet will print, not the ones it holds", () => {
+		const html =
+			'<style type="text/css">a{color:red}</style><style>b{color:#00f}</style>';
+		const print = (/** @type {boolean} */ removeRedundantAttributes) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				mergeStyles: true,
+				removeRedundantAttributes,
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			}).code;
+		expect(print(true)).toBe("<style>a{color:red}b{color:#00f}</style>");
+		expect(print(false)).toBe(
+			"<style type=text/css>a{color:red}</style><style>b{color:#00f}</style>"
+		);
+	});
+
+	it("declines a run parted by text", () => {
+		expect(
+			minify("<body><style>a{color:red}</style>x<style>b{color:#00f}</style>")
+		).toBe(
+			"<body><style>a{color:red}</style>x<style>b{color:#00f}</style></body>"
+		);
+	});
+
+	it("reads a sheet's closed comment, escape and escaped quote as closed", () => {
+		for (const sheet of [
+			"a{}/* x */",
+			".a\\{b{}",
+			'a{content:"\\""}',
+			"a[x]{}",
+			// §5.4.8: a `]` in a `(` is a token in it, not the block's end.
+			"a{b:(])}"
+		]) {
+			expect(
+				minifyAsWritten(`<style>${sheet}</style><style>b{}</style>`)
+			).toBe(`<style>${sheet}b{}</style>`);
+		}
+		// Nothing follows the last sheet, so it may be left open; one that leads
+		// with `@import` is not joined, and one before it is closed first.
+		expect(minifyAsWritten('<style>a{}</style><style>b{c:"d</style>')).toBe(
+			'<style>a{}b{c:"d</style>'
+		);
+		for (const [html, printed] of [
+			[
+				"<style>a{}</style><style>@import url(x.css);</style>",
+				"<style>a{}</style><style>@import url(x.css);</style>"
+			],
+			['<style>b{c:"d</style><style>a{}</style>', '<style>b{c:"d"}a{}</style>'],
+			["<style>a{}b</style><style>c{}</style>", "<style>a{}b{}c{}</style>"],
+			[
+				"<style>@import url(x)</style><style>c{}</style>",
+				"<style>@import url(x);c{}</style>"
+			],
+			["<style>a{}}</style><style>c{}</style>", "<style>a{}}{}c{}</style>"],
+			// A custom property's value the input ran out in is kept as written, so
+			// nothing is appended to it.
+			[
+				"<style>a{--x:f(</style><style>c{}</style>",
+				"<style>a{--x:f(</style><style>c{}</style>"
+			]
+		]) {
+			expect(minifyAsWritten(html)).toBe(printed);
+		}
+		// Minified, each of those is closed as its end of input closed it, and joined.
+		for (const [sheet, printed] of [
+			["a{color:red}b", "a{color:red}"],
+			["a{color:red}}", "a{color:red}"],
+			// An unquoted url is one token, a bad one to the first `)`: its brackets
+			// are not blocks to close, and one the input ran out in is closed.
+			["a{b:url(x(.png);color:red", "a{b:url(x(.png);color:red}"],
+			["a{background:url(x", "a{background:url(x)}"],
+			// A lone `@` is a delimiter opening a rule's prelude, not an at-rule.
+			["a{color:red}@", "a{color:red}"],
+			["a{color:red}@-", "a{color:red}"],
+			["@import url(x.css)", "@import url(x.css);"],
+			["a[x", ""]
+		]) {
+			expect(minify(`<style>${sheet}</style><style>c{color:#00f}</style>`)).toBe(
+				`<style>${printed}c{color:#00f}</style>`
+			);
+		}
+		// A lone backslash would escape whatever followed, so nothing is joined.
+		expect(minify("<style>a\\</style><style>c{color:#00f}</style>")).toBe(
+			"<style></style><style>c{color:#00f}</style>"
+		);
+		expect(
+			minify('<style>a{b:"x\\</style><style>c{color:#00f}</style>')
+		).toContain("</style><style>c{color:#00f}</style>");
+		// A rule, an at-rule's `;` and a CDC each end where a rule may start.
+		expect(
+			minifyAsWritten(
+				"<style>@import url(x);</style><style><!-- a{} --></style><style>b{}</style>"
+			)
+		).toBe("<style>@import url(x);<!-- a{} -->b{}</style>");
+	});
+
+	it("drops a run's first element only where every sheet in it prints nothing", () => {
+		/**
+		 * @param {string} html input markup
+		 * @returns {string} the minified serialization
+		 */
+		const emptying = (html) =>
+			new SourceProcessor().process(html, {
+				mode: "minify",
+				mergeStyles: true,
+				removeEmptyElements: true,
+				renderEmbeddedSource: builtinEmbeddedRenderer()
+			}).code;
+		expect(emptying("<style>a{}</style><style>b{color:red}</style>")).toBe(
+			"<style>b{color:red}</style>"
+		);
+		expect(emptying("<style>a{}</style><style>b{}</style>")).toBe("");
+		expect(
+			emptying("<style>a{}</style><style>@import url(x.css);</style>")
+		).toBe("<style>@import url(x.css);</style>");
+		expect(emptying('<style>a{}</style><style>b{c:"d</style>')).toBe(
+			'<style>b{c:"d"}</style>'
+		);
+		// A sheet printed open is not joined, so it prints in its own element.
+		const { code } = new SourceProcessor().process(
+			"<style>a{}</style><style>b{}</style>",
+			{
+				mode: "minify",
+				mergeStyles: true,
+				removeEmptyElements: true,
+				renderEmbeddedSource: (source) => (source === "a{}" ? "" : 'b{c:"d')
+			}
+		);
+		expect(code).toBe('<style>b{c:"d</style>');
+		// Unjoined, each sheet is judged alone.
+		expect(
+			new SourceProcessor().process(
+				"<style>a{}</style><style>b{color:red}</style>",
+				{
+					mode: "minify",
+					removeEmptyElements: true,
+					renderEmbeddedSource: builtinEmbeddedRenderer()
+				}
+			).code
+		).toBe("<style>b{color:red}</style>");
+	});
+
+	it("closes a sheet as its end of input closes it", () => {
+		const { _sheetClosing } = require("../../lib/html/syntax-parser");
+
+		for (const [sheet, closing] of /** @type {[string, string | null][]} */ ([
+			// §4.3.6: whitespace may open and end a url; a bad one runs to a `)`.
+			["a{b:url( x", ")}"],
+			["a{b:url(  ", ")}"],
+			["a{b:url( x )", "}"],
+			["a{b:url(x ", ")}"],
+			["a{b:url(x  )", "}"],
+			["url(x", "){}"],
+			["a{b:url(x y(", ")}"],
+			["a{b:url(x\\)y", ")}"],
+			["a{b:url(x\\\ny(", ")}"],
+			["a{b:url(x\\\ny\\\nz", ")}"],
+			// A quoted url is a function holding a string.
+			['a{b:url("x', '")}'],
+			// Part of a longer name, `url(` is a function's name, not a url token.
+			["a{b:image-url(x", ")}"],
+			["a{b:\\url(x", ")}"],
+			// An escape starts a name, so `@` opens an at-rule; one before a
+			// newline is no escape, and `@` a delimiter opening a prelude.
+			["x{}@\\61 b", ";"],
+			["x{}@-\\61", ";"],
+			["x{}@-\\\n", "{}"],
+			// Past whitespace and comments, a custom property's open value is kept.
+			["a{/*c*/--x:f(", null],
+			["a{\t--x:[1", null],
+			["a{ /*c*/ b:f(", ")}"],
+			["a{b:1;/*", "*/}"],
+			// A lone backslash escapes whatever would follow it.
+			["a{b:url(x\\", null],
+			["x{}@\\", null]
+		])) {
+			expect({ sheet, closing: _sheetClosing(sheet) }).toEqual({
+				sheet,
+				closing
+			});
+		}
+	});
+
+	it("minifies a joined run as one sheet on the asynchronous path too", async () => {
+		const builtin = builtinEmbeddedRenderer();
+		/** @type {string[]} */
+		const offered = [];
+		const { code } = await new SourceProcessor().processAsync(
+			"<style>a{color:red}</style><style> </style><style>b{color:red}</style>",
+			{
+				mode: "minify",
+				mergeStyles: true,
+				renderEmbeddedSource: async (source, hole) => {
+					offered.push(source);
+					return builtin(source, hole);
+				}
+			}
+		);
+		expect(code).toBe("<style>a,b{color:red}</style>");
+		// Once, joined as written: each ends at a rule, so no answer is waited for.
+		expect(offered).toEqual(["a{color:red} b{color:red}"]);
 	});
 });
 
@@ -6170,7 +6422,8 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("prints again where an answer overturns a choice made on the source", async () => {
 		// Each choice is one a deferred print makes on the source: the emptied
-		// sheet and list go with their elements, and the open sheet joins the next.
+		// sheet and list go with their elements; the sheet the input left open
+		// in a custom property's value is kept as written, on its own.
 		const html =
 			'<p>x<style>a{}</style><div style="color:"></div>' +
 			"<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>";
@@ -6196,7 +6449,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		});
 
 		expect(now.code).toBe(
-			"<p>x<style>.a{--x:f()}.b{color:red}</style><script>1</script>"
+			"<p>x<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"
 		);
 		expect(later.code).toBe(now.code);
 		// The second print reads the first one's answers rather than asking again.
@@ -6209,9 +6462,9 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		]);
 	});
 
-	it("prints again where an answer leaves open a sheet its source closed", async () => {
-		// Joined on the source, the next sheet would land inside the answer's
-		// string; the answer is what is joined, so it is what decides.
+	it("joins sheets on their sources, where no answer can leave one open", async () => {
+		// Were answers joined, this one's open string would take in the next sheet;
+		// sources ending at a rule are joined first and the run is asked for once.
 		const html = "<style>a{b:c}</style><style>d{e:f}</style>";
 		const open = (/** @type {string} */ source) =>
 			source === "a{b:c}" ? 'a{b:"c' : source;
@@ -6228,7 +6481,7 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			renderEmbeddedSource: async (source) => open(source)
 		});
 
-		expect(now.code).toBe('<style>a{b:"c</style><style>d{e:f}</style>');
+		expect(now.code).toBe("<style>a{b:c}d{e:f}</style>");
 		expect(later.code).toBe(now.code);
 	});
 

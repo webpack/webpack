@@ -31,11 +31,12 @@ module.exports = {
 		// builds the element it would have.
 		expect(emitted["end-tag-p.html"]).not.toContain("<p");
 		expect(emitted["end-tag-br.html"]).not.toContain("<br");
-		// In a stylesheet the rule's `}` is written after a value the input left
-		// open, and read inside it would lose the declaration — so it is closed.
-		expect(emitted["css.html"]).toContain("<style>.a{--x:f()}</style>");
-		expect(emitted["style-body.html"]).toContain(".a{--x:lab(50%)}");
-		// A `style=""` list prints nothing after it, so it stays as written.
+		// A custom property keeps its value as the input left it, open where the
+		// sheet ends, as a browser stores it; nothing is printed after it.
+		expect(emitted["css.html"]).toContain("<style>.a{--x:f(</style>");
+		expect(emitted["style-body.html"]).toContain(".a{--x:lab(50%");
+		expect(emitted["style-body.html"]).not.toContain(".a{--x:lab(50%)");
+		// A `style=""` list stays as written too.
 		expect(emitted["css.html"]).toContain("<div style=--x:lab(50%>");
 		expect(emitted).toMatchSnapshot();
 	}

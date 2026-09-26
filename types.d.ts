@@ -24036,6 +24036,12 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	dropTrailing(from: number, charCode: number): void;
 
 	/**
+	 * Stand `text` in place of the output's end, where that is `printed` followed
+	 * only by `closer`s — what the printer wrote after a value the input ran out in.
+	 */
+	replaceEnd(printed: string, text: string, closer: number): boolean;
+
+	/**
 	 * Run the node printer for `node` and store what it returns (the grammar calls
 	 * this once the node's visitors and children are done). `path` is on `node`.
 	 */

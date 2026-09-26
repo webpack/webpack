@@ -234,14 +234,6 @@ const FILED_WPT_VALUE_DEFECTS = new Map([
 		"webkit only: the unimplemented `paint()` again \u2014 see `paint( mypaint`"
 	],
 	[
-		"var(--webpack-probe):background-image:paint( mypaint",
-		"webkit only: the unimplemented `paint()` again, read through the custom property \u2014 see `paint( mypaint`"
-	],
-	[
-		"var(--webpack-probe):background-image:paint(mypaint ",
-		"webkit only: the unimplemented `paint()` again, read through the custom property \u2014 see `paint( mypaint`"
-	],
-	[
 		"font-family:\"New Century Schoolbook\", serif",
 		"firefox only: not a printer defect — Gecko carries the source's quoting into the computed family where Blink drops it, so unquoting a name neither engine reads differently still reads as a difference there"
 	]
@@ -2316,6 +2308,131 @@ describe("a color rewrite paints as the color it replaced", () => {
 			// A filed entry outlives its defect by one run: the set is matched
 			// exactly, so a rewrite the engine stopped moving fails here.
 			expect([...stillFiled].sort()).toEqual([...filedColors.keys()].sort());
+		},
+		FILE_TIMEOUT
+	);
+
+	it(
+		"reads a merged <style> run as the sheets it joined",
+		async () => {
+			const {
+				builtinEmbeddedRenderer
+			} = require("../../lib/html/builtinEmbeddedRenderer");
+
+			const renderer = builtinEmbeddedRenderer();
+			// Sheets the input left open or unfinished, each joined to the next only
+			// once closed as its own end of input closed it.
+			const firsts = [
+				"a{}",
+				"a{color:red}/*x",
+				'a{content:"x',
+				'a{content:"x\n}',
+				"a{color:red",
+				"a{color:rgb(1,2,3",
+				"a{}b",
+				"a{}b,c",
+				"@import url(x.css)",
+				"a{}}",
+				'a{color:red}\\"',
+				"@media screen{a{color:red",
+				"a[x",
+				'a[x="y',
+				"@media (min-width:1px",
+				"@layer base",
+				"@font-face{font-family:x",
+				"a{color:red;/*",
+				"a{color:red!",
+				".a{--x:f(",
+				".a{--x:{",
+				"a{background:url(x",
+				'a{background:url(x"',
+				"<!-- a{color:red} -->",
+				"a{color:red} <!--",
+				"@supports (display:grid){a{color:red",
+				"a{color:red;b",
+				":is(",
+				"a:not(.b",
+				"@keyframes k{from{opacity:0",
+				"a{}.b{color:red}.c",
+				"a{color:red}}}",
+				"a{content:'\\'",
+				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
+			];
+			// A custom property's value is kept open as the input left it, and a
+			// namespace applies to its whole sheet, so either is left apart.
+			const apart = new Set([
+				".a{--x:f(",
+				".a{--x:{",
+				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
+			]);
+			const seconds = [
+				"b{color:#00f}",
+				"@media screen{c{color:red}}",
+				".x,.y{margin:1px;animation-name:k}"
+			];
+			const body =
+				'<a class="a b" x="y">a</a><b class="b x">b</b><c class="c y">c</c><p class="a">p</p><div>d</div>';
+			/**
+			 * @param {string} html a head holding both sheets
+			 * @param {boolean} mergeStyles whether to join them
+			 * @returns {string} the head, minified
+			 */
+			const print = (html, mergeStyles) =>
+				new HtmlSourceProcessor().process(html, {
+					mode: "minify",
+					mergeStyles,
+					renderEmbeddedSource: renderer
+				}).code;
+			const page = await browser.newPage();
+			try {
+				/**
+				 * @param {string} head the document's head
+				 * @returns {Promise<string>} every element's style, as the engine computes it
+				 */
+				const computed = async (head) => {
+					await page.setContent(
+						`<!doctype html><html><head>${head}</head><body>${body}</body></html>`
+					);
+					return page.evaluate(() =>
+						[...document.body.querySelectorAll("*")]
+							.map((element) => {
+								const style = getComputedStyle(element);
+								return [
+									"color",
+									"margin-top",
+									"background-image",
+									"content",
+									"opacity",
+									"animation-name",
+									"font-family",
+									"--x"
+								]
+									.map((name) => style.getPropertyValue(name))
+									.join("|");
+							})
+							.join("\n")
+					);
+				};
+				/** @type {string[]} */
+				const differences = [];
+				for (const first of firsts) {
+					for (const second of seconds) {
+						const html = `<style>${first}</style><style>${second}</style>`;
+						const joined = print(html, true);
+						if (joined.split("<style").length !== (apart.has(first) ? 3 : 2)) {
+							differences.push(`joined wrongly: ${html}`);
+						}
+						if ((await computed(print(html, false))) !== (await computed(joined))) {
+							differences.push(`reads differently: ${html}`);
+						}
+					}
+				}
+				expect(differences).toEqual([]);
+			} finally {
+				await page.close();
+			}
 		},
 		FILE_TIMEOUT
 	);
