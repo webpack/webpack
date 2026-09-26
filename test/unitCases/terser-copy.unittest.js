@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore fnames
+// cspell:ignore fnames domprops
 
 const acorn = require("acorn");
 const carried = require("../../lib/javascript/terser");
@@ -88,6 +88,41 @@ const outcome = async (minify, input, options) => {
 
 describe("terser as webpack carries it", () => {
 	const published = require("terser");
+
+	it("should read the DOM property names and the ESTree conversions only when asked", () => {
+		const { execFileSync } = require("child_process");
+
+		const entry = require.resolve("../../lib/javascript/terser");
+		// A process of its own, as each worker of the minimizer's pool is: what
+		// a minify loads there is held for as long as the pool lives.
+		/**
+		 * @param {string} options the options, as source
+		 * @returns {{ domprops: boolean, estree: boolean }} what the minify read
+		 */
+		const readBy = (options) =>
+			JSON.parse(
+				execFileSync(
+					process.execPath,
+					[
+						"-e",
+						`require(${JSON.stringify(entry)}).minify("sink(a.b)", ${options}).then(() => {
+							const has = (end) => Object.keys(require.cache).some((file) => file.replace(/\\\\/g, "/").endsWith(end));
+							process.stdout.write(JSON.stringify({ domprops: has("/terser/domprops.js"), estree: has("/terser/mozilla-ast.js") }));
+						});`
+					],
+					{ encoding: "utf8" }
+				)
+			);
+		expect(readBy("{}")).toEqual({ domprops: false, estree: false });
+		expect(readBy("{ mangle: { properties: true } }")).toEqual({
+			domprops: true,
+			estree: false
+		});
+		expect(readBy("{ format: { spidermonkey: true, code: false } }")).toEqual({
+			domprops: false,
+			estree: true
+		});
+	});
 
 	for (const [source, isModule] of /** @type {[string, boolean][]} */ ([
 		[SCRIPT, false],
