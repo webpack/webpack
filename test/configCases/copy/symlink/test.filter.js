@@ -46,13 +46,22 @@ const canLink = (probe, target, type) => {
 };
 
 module.exports = () => {
-	const probe = path.resolve(__dirname, "../../../js/copy-symlink-probe");
-	fs.mkdirSync(path.dirname(probe), { recursive: true });
-	// the case both walks links and emits them, and Windows gates each kind
-	// separately — a junction needs no privilege where the other two do
-	return (
-		canLink(probe, __dirname, "junction") &&
-		canLink(probe, __dirname, "dir") &&
-		canLink(probe, __filename, "file")
-	);
+	const parent = path.resolve(__dirname, "../../../js");
+	fs.mkdirSync(parent, { recursive: true });
+	// suites run this filter at once, as processes or (under Bun) threads of one
+	// process sharing a pid, so each call probes inside a directory of its own
+	const directory = fs.mkdtempSync(path.join(parent, "copy-symlink-probe-"));
+	const probe = path.join(directory, "probe");
+	try {
+		// the case both walks links and emits them, and Windows gates each kind
+		// separately — a junction needs no privilege where the other two do
+		return (
+			canLink(probe, __dirname, "junction") &&
+			canLink(probe, __dirname, "dir") &&
+			canLink(probe, __filename, "file")
+		);
+	} finally {
+		removeLink(probe);
+		fs.rmdirSync(directory);
+	}
 };
