@@ -445,6 +445,77 @@ describe("syntax-printer", () => {
 		).toBe(false);
 	});
 
+	/** @type {[string, string, EXPECTED_OBJECT][]} */
+	const SCOPE_CASES = [
+		["a label defined twice", "a: { a: { sink(1); break a; } }", {}],
+		["a name declared twice with let", "let a = 1; let a = 2; sink(a);", {}],
+		["a with statement", "with (o) { sink(x); }", {}],
+		["eval called in a function", "function f(x) { eval('x'); return x; } sink(f);", {}],
+		["arguments read in a function", "function f(a) { return arguments[0] + a; } sink(f);", {}],
+		[
+			"a parameter default reading a name the body redeclares",
+			"var x = 1; function f(a = x, b = a) { var x = 2, a; return x + a + b; } sink(f);",
+			{}
+		],
+		["a switch with block-scoped cases", "switch (x) { case 1: let y = 1; sink(y); break; default: sink(x); }", {}],
+		[
+			"exports, destructured and default",
+			"export var a = 1; export const { b, c: [d] } = o; export function f() { return a; } export default class { m() { return b; } }",
+			{ module: true }
+		],
+		["a default exported function", "export default function f() { return 1; }", { module: true }],
+		["a re-export under another name", "export { a as b } from 'c'; export { e as default }; var e = 1;", { module: true }],
+		["an export of an undeclared name", "export { undeclared };", { module: true }],
+		["a block function in sloppy code", "{ function f() { return 1; } } sink(f);", {}],
+		["a block function in strict code", "'use strict'; { function f() { return 1; } sink(f); }", {}],
+		["a class body, strict of its own", "class A { static x = 1; m() { function g() {} return g; } } sink(A);", {}],
+		[
+			"a catch parameter redeclaring a parameter",
+			"function f(e) { try { sink(e); } catch (e) { var e = 2; sink(e); } return e; } sink(f);",
+			{}
+		],
+		["a function expression named arguments", "var f = function arguments() { return 1; }; sink(f);", {}],
+		[
+			"catch and loop scopes for old engines",
+			"function f(a) { try { sink(a); } catch (a) { sink(a); } for (let i = 0; i < 2; i++) sink(i, a); } sink(f);",
+			{ mangle: { ie8: true, safari10: true } }
+		],
+		["a labelled loop continued", "a: for (;;) { for (;;) { continue a; } }", {}],
+		["a parameter default reading an outer name", "var y = 1; function f(a = y) { return a; } sink(f);", {}],
+		["a named class expression", "var C = class Named { m() { return Named; } }; sink(C);", {}],
+		[
+			"top-level catch parameters for old engines",
+			"try { sink(1); } catch (e) { sink(e); } try { sink(2); } catch (q) { sink(q); } sink(e);",
+			{ mangle: { ie8: true } }
+		]
+	];
+
+	for (const [name, source, options] of SCOPE_CASES) {
+		it(`should analyse scopes as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/**
+			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_OBJECT} settings its options
+			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
+			 */
+			const outcome = async (run, settings) => {
+				try {
+					return { code: (await run(source, settings)).code };
+				} catch (err) {
+					return { error: /** @type {Error} */ (err).message };
+				}
+			};
+			for (const compress of [false, { passes: 2 }]) {
+				/** @returns {EXPECTED_OBJECT} the options */
+				const settings = () => ({ compress, mangle: true, ...JSON.parse(JSON.stringify(options)) });
+				expect(await outcome(minify, settings())).toEqual(
+					await outcome(reference.minify, settings())
+				);
+			}
+		});
+	}
+
 	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
 	const PARSED_BY_TERSER = [
 		["an expression rather than a program", "a + b", { parse: { expression: true } }],
@@ -624,6 +695,30 @@ describe("syntax-printer", () => {
 		expect(
 			hoist.supports({
 				ast: { AST_Scope: { prototype: { hoist_properties() {} } } }
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose scope analysis it does not know", () => {
+		const scope =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "scope")
+			);
+		const utils = { defaults() {}, push_uniq() {}, string_template() {} };
+		const parse = { js_error() {} };
+		expect(scope.supports({ ast: {}, parse, utils })).toBe(false);
+		expect(
+			scope.supports({
+				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
+				parse: {},
+				utils
+			})
+		).toBe(false);
+		expect(
+			scope.supports({
+				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
+				parse,
+				utils
 			})
 		).toBe(false);
 	});
