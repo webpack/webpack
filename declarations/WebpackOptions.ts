@@ -79,12 +79,14 @@ export interface AssetGeneratorDataUrlOptions {
 /**
  * Generator options for asset modules.
  * @implements #/definitions/AssetInlineGeneratorOptions, #/definitions/AssetResourceGeneratorOptions
+ * @publishes plugins/asset/AssetGeneratorOptions
  */
 export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
 	AssetResourceGeneratorOptions;
 
 /**
  * Generator options for asset/inline modules.
+ * @publishes plugins/asset/AssetInlineGeneratorOptions
  */
 export interface AssetInlineGeneratorOptions {
 	/**
@@ -133,6 +135,7 @@ export interface AssetParserDataUrlOptions {
 
 /**
  * Parser options for asset modules.
+ * @publishes plugins/asset/AssetParserOptions
  */
 export interface AssetParserOptions {
 	/**
@@ -143,6 +146,7 @@ export interface AssetParserOptions {
 
 /**
  * Generator options for asset/resource modules.
+ * @publishes plugins/asset/AssetResourceGeneratorOptions
  */
 export interface AssetResourceGeneratorOptions {
 	/**
@@ -427,6 +431,7 @@ export type CrossOriginLoading = false | "anonymous" | "use-credentials";
 
 /**
  * Parser options for css/auto and css/module modules.
+ * @publishes plugins/css/CssAutoOrModuleParserOptions
  */
 export interface CssAutoOrModuleParserOptions {
 	/**
@@ -537,6 +542,7 @@ export type CssGeneratorLocalIdentName =
 
 /**
  * Generator options for css modules.
+ * @publishes plugins/css/CssGeneratorOptions
  */
 export interface CssGeneratorOptions {
 	/**
@@ -551,6 +557,7 @@ export interface CssGeneratorOptions {
 
 /**
  * Generator options for css/module modules.
+ * @publishes plugins/css/CssModuleGeneratorOptions
  */
 export interface CssModuleGeneratorOptions {
 	/**
@@ -593,6 +600,7 @@ export interface CssModuleGeneratorOptions {
 
 /**
  * Parser options for css/global modules.
+ * @publishes plugins/css/CssModuleParserOptions
  */
 export interface CssModuleParserOptions {
 	/**
@@ -731,6 +739,7 @@ export type CssParserNamedExports = boolean;
 
 /**
  * Parser options for css modules.
+ * @publishes plugins/css/CssParserOptions
  */
 export interface CssParserOptions {
 	/**
@@ -1914,6 +1923,7 @@ export type HtmlFilename = FilenameTemplate;
 
 /**
  * Generator options for html modules.
+ * @publishes plugins/HtmlGeneratorOptions
  */
 export interface HtmlGeneratorOptions {
 	/**
@@ -1930,6 +1940,7 @@ export type HtmlParserAs = "document" | string;
 
 /**
  * Parser options for html modules.
+ * @publishes plugins/HtmlParserOptions
  */
 export interface HtmlParserOptions {
 	/**
@@ -2463,6 +2474,7 @@ export interface JavascriptParserOptions {
 
 /**
  * Generator options for json modules.
+ * @publishes plugins/json/JsonModulesPluginGenerator
  */
 export interface JsonGeneratorOptions {
 	/**
@@ -2473,6 +2485,7 @@ export interface JsonGeneratorOptions {
 
 /**
  * Parser options for JSON modules.
+ * @publishes plugins/json/JsonModulesPluginParser
  */
 export interface JsonParserOptions {
 	/**

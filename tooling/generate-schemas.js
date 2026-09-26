@@ -932,7 +932,9 @@ const fromMembers = (members, checker, known, head) => {
 			const valueType = /** @type {ts.TypeNode} */ (member.type);
 			if (
 				valueType.kind === ts.SyntaxKind.AnyKeyword ||
-				valueType.kind === ts.SyntaxKind.UnknownKeyword
+				valueType.kind === ts.SyntaxKind.UnknownKeyword ||
+				// The spelling `lib/` uses for a value no type describes.
+				valueType.getText() === "EXPECTED_ANY"
 			) {
 				additionalProperties = undefined;
 				continue;
@@ -1356,6 +1358,49 @@ const writeFile = (filePath, text) => {
  * tag gives — which is what makes the declaration find its own schema.
  * @returns {Map<string, string>} the module declaring each schema
  */
+/**
+ * The schemas a declaration publishes besides the one its own file derives: an
+ * `@publishes` tag names a schema that is nothing but a reference to it.
+ * @returns {Map<string, { file: string, name: string }>} the declaration each one names
+ */
+const findPublishedSchemas = () => {
+	/** @type {Map<string, { file: string, name: string }>} */
+	const published = new Map();
+	/**
+	 * @param {string} directory the directory to read
+	 * @param {string} extension the files to read in it
+	 * @returns {void}
+	 */
+	const walk = (directory, extension) => {
+		for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+			const absolute = path.resolve(directory, entry.name);
+			if (entry.isDirectory()) {
+				walk(absolute, extension);
+				continue;
+			}
+			if (!entry.name.endsWith(extension)) continue;
+			const text = fs.readFileSync(absolute, "utf8");
+			if (!text.includes("@publishes ")) continue;
+			// The name is the one the block itself declares: a `@typedef` inside it,
+			// or the declaration the block is written in front of.
+			for (const block of text.matchAll(
+				/\/\*\*([\s\S]*?)\*\/([^\n]*\n[^\n]*)/g
+			)) {
+				const inside = block[1];
+				const said = /@publishes[ \t]+([\w/-]+)/.exec(inside);
+				if (!said) continue;
+				const typedef = /@typedef \{[\s\S]*\}[ \t]+(\w+)/.exec(inside);
+				const exported = /export (?:interface|type) (\w+)/.exec(block[2]);
+				const name = typedef ? typedef[1] : exported && exported[1];
+				if (name) published.set(said[1], { file: absolute, name });
+			}
+		}
+	};
+	walk(path.resolve(ROOT, "lib"), ".js");
+	walk(TYPES_DIRECTORY, ".ts");
+	return published;
+};
+
 const findDeclaringModules = () => {
 	/** @type {Map<string, string>} */
 	const declaring = new Map();
@@ -1399,12 +1444,33 @@ const main = async () => {
 			named
 		])
 	);
+	const published = findPublishedSchemas();
+	/** @type {Map<string, Record<string, EXPECTED_ANY>>} */
+	const referenced = new Map();
 	for (const schemaFile of schemaFiles) {
 		const name = path
 			.relative(SCHEMAS_DIRECTORY, schemaFile)
 			.replace(/\.json$/, "")
 			.split(path.sep)
 			.join("/");
+		// WHY: a schema that is nothing but a reference to a definition of another
+		// one is said where that definition is, as an `@publishes` tag.
+		const says = published.get(name);
+		if (says) {
+			const host = says.file.endsWith(".js")
+				? /** @type {string} */ (schemaOf.get(says.file.replace(/\.js$/, "")))
+				: path
+						.relative(TYPES_DIRECTORY, says.file)
+						.replace(/\.ts$/, "")
+						.split(path.sep)
+						.join("/");
+			const from = path.posix.dirname(name);
+			const to = path.posix.relative(from === "." ? "" : from, host);
+			referenced.set(schemaFile, {
+				$ref: `${to.startsWith(".") ? to : `./${to}`}.json#/definitions/${says.name}`
+			});
+			continue;
+		}
 		// WHY: a plugin declares its own options beside the code that reads them;
 		// what has not moved there yet is still read from `declarations/`.
 		const target =
@@ -1425,15 +1491,50 @@ const main = async () => {
 	/** @type {string[]} */
 	const reordered = [];
 
-	for (const [target, schemaFile] of sourceOf) {
-		const source = /** @type {ts.SourceFile} */ (program.getSourceFile(target));
+	/**
+	 * Holds one derived schema against the committed one.
+	 * @param {string} schemaFile the committed schema
+	 * @param {Record<string, EXPECTED_ANY>} generated what its source derives
+	 * @returns {Promise<void>} once it has been reported, and written when asked
+	 */
+	const hold = async (schemaFile, generated) => {
 		const committed = JSON.parse(fs.readFileSync(schemaFile, "utf8"));
 		const name = path.relative(SCHEMAS_DIRECTORY, schemaFile);
+		if (!deepEqual(committed, generated)) {
+			const differences = findDifferences(committed, generated);
+			failures.push(
+				`${name}: ${differences.length} difference(s)\n${differences
+					.map((difference) => `    ${difference}`)
+					.join("\n")}`
+			);
+			return;
+		}
+		matching++;
+		const text = await format(
+			schemaFile,
+			JSON.stringify(orderKeys(generated), null, 2)
+		);
+		if (text === fs.readFileSync(schemaFile, "utf8")) {
+			identical++;
+		} else {
+			reordered.push(name);
+		}
+		if (write) writeFile(schemaFile, text);
+	};
+
+	// A schema that is only a reference to a definition of another one is said
+	// where that definition is, so there is nothing of its own to read.
+	for (const [schemaFile, generated] of referenced) {
+		await hold(schemaFile, generated);
+	}
+	for (const [target, schemaFile] of sourceOf) {
+		const source = /** @type {ts.SourceFile} */ (program.getSourceFile(target));
+		const name = path.relative(SCHEMAS_DIRECTORY, schemaFile);
+		/** @type {Record<string, EXPECTED_ANY>} */
 		let generated;
 		try {
-			generated = walkSchema(
-				typeScriptToSchema(source, checker, schemaOf),
-				(node) =>
+			generated = /** @type {Record<string, EXPECTED_ANY>} */ (
+				walkSchema(typeScriptToSchema(source, checker, schemaOf), (node) =>
 					typeof node.tsType === "string"
 						? {
 								...node,
@@ -1444,35 +1545,17 @@ const main = async () => {
 								)
 							}
 						: node
+				)
 			);
 		} catch (err) {
 			failures.push(`${name}: ${/** @type {Error} */ (err).message}`);
 			continue;
 		}
-		if (deepEqual(committed, generated)) {
-			matching++;
-			const text = await format(
-				schemaFile,
-				JSON.stringify(orderKeys(generated), null, 2)
-			);
-			if (text === fs.readFileSync(schemaFile, "utf8")) {
-				identical++;
-			} else {
-				reordered.push(name);
-			}
-			if (write) writeFile(schemaFile, text);
-			continue;
-		}
-		const differences = findDifferences(committed, generated);
-		failures.push(
-			`${name}: ${differences.length} difference(s)\n${differences
-				.map((difference) => `    ${difference}`)
-				.join("\n")}`
-		);
+		await hold(schemaFile, generated);
 	}
 
 	console.log(
-		`${matching} of ${sourceOf.size} schemas derive from their sources, ${identical} byte for byte.`
+		`${matching} of ${referenced.size + sourceOf.size} schemas derive from their sources, ${identical} byte for byte.`
 	);
 	if (reordered.length > 0) {
 		console.log(
