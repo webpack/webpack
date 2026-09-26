@@ -124,6 +124,21 @@ import {
 import { minify } from "terser";
 import { URL } from "url";
 import { Context as ContextImport } from "vm";
+import {
+	addScopesToSourceMap,
+	collectSourceScopes,
+	createScopeCollector,
+	createScopesWriter,
+	encodeScopes
+} from "webpack-sources/types/helpers/scopes";
+import {
+	disableDualStringBufferCaching,
+	enableDualStringBufferCaching,
+	enterStringInterningRange,
+	exitStringInterningRange,
+	internString,
+	isDualStringBufferCachingEnabled
+} from "webpack-sources/types/helpers/stringBufferUtils";
 
 declare interface Abortable {
 	signal?: AbortSignal;
@@ -28170,17 +28185,6 @@ declare interface ScopeInfo {
 	isAsmJs: boolean;
 	terminated?: 1 | 2;
 }
-declare interface ScopePosition {
-	/**
-	 * line
-	 */
-	line: number;
-
-	/**
-	 * column
-	 */
-	column: number;
-}
 
 /**
  * A lexical scope. One shape for every kind, so the property loads in the
@@ -29240,37 +29244,6 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
-}
-declare interface SourceScope {
-	/**
-	 * index into the map's `sources`
-	 */
-	sourceIndex: number;
-
-	/**
-	 * the names the source declares
-	 */
-	variables: string[];
-
-	/**
-	 * the generated expression each name evaluates to
-	 */
-	values: string[];
-
-	/**
-	 * end of the original scope, exclusive
-	 */
-	originalEnd: ScopePosition;
-
-	/**
-	 * start of each generated range, inclusive
-	 */
-	rangeStarts: ScopePosition[];
-
-	/**
-	 * end of each generated range, exclusive
-	 */
-	rangeEnds: ScopePosition[];
 }
 declare interface SourceTable {
 	[index: string]: SourceBucket;
@@ -33996,53 +33969,23 @@ declare namespace exports {
 	export namespace sources {
 		export namespace util {
 			export namespace scopes {
-				export let addScopesToSourceMap: (
-					sourceMap: RawSourceMap,
-					getBindings: (sourceIndex: number) => undefined | Map<string, string>
-				) => void;
-				export let collectSourceScopes: (
-					mappings: string,
-					sourceCount: number
-				) => SourceScope[];
-				export let createScopeCollector: (sourceCount?: number) => {
-					add: (
-						generatedLine: number,
-						generatedColumn: number,
-						sourceIndex: number,
-						originalLine: number
-					) => void;
-					finish: (lastLine: number, lastColumn?: number) => SourceScope[];
+				export {
+					addScopesToSourceMap,
+					collectSourceScopes,
+					createScopeCollector,
+					createScopesWriter,
+					encodeScopes
 				};
-				export let createScopesWriter: () => {
-					add: (
-						generatedLine: number,
-						generatedColumn: number,
-						sourceIndex: number,
-						originalLine: number
-					) => void;
-					addSource: (
-						sourceIndex: number,
-						scopeBindings?: Map<string, string>
-					) => void;
-					finish: (
-						map: RawSourceMap,
-						generatedLine: number,
-						generatedColumn?: number
-					) => void;
-				};
-				export let encodeScopes: (
-					scopes: SourceScope[],
-					sourceCount: number,
-					names: string[]
-				) => string;
 			}
 			export namespace stringBufferUtils {
-				export let disableDualStringBufferCaching: () => void;
-				export let enableDualStringBufferCaching: () => void;
-				export let enterStringInterningRange: () => void;
-				export let exitStringInterningRange: () => void;
-				export let internString: (str: string) => string;
-				export let isDualStringBufferCachingEnabled: () => boolean;
+				export {
+					disableDualStringBufferCaching,
+					enableDualStringBufferCaching,
+					enterStringInterningRange,
+					exitStringInterningRange,
+					internString,
+					isDualStringBufferCachingEnabled
+				};
 			}
 		}
 		export {

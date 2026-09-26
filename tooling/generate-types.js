@@ -1954,6 +1954,17 @@ class TupleMap {
 							)}`
 						);
 					}
+				} else if (exportName === ts.InternalSymbolName.ExportEquals) {
+					// A module written as `export = X` exports no name an import can
+					// carry, so the type it declares is inlined below, as it was while
+					// the same declaration sat in the package's entry file.
+					if (verbose) {
+						console.log(
+							`${parseName(type).join(" ")} is exported with \`export =\` from ${
+								/** @type {ts.SourceFile} */ (externalSource).fileName
+							}, inlining it`
+						);
+					}
 				} else if (isSourceFileModule(externalSource)) {
 					const match =
 						/^(.+\/node_modules\/(?:@types\/)?)((?:@[^/]+\/)?[^/]+)(.*?)(\.d\.ts)?$/.exec(
