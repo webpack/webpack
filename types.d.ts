@@ -7036,20 +7036,9 @@ declare interface DependencyTemplateContext {
 	 * get access to the code generation data
 	 */
 	getData?: () => CodeGenerationResultData;
-
-	/**
-	 * what each imported binding of the current module reads, by its name in the source, for the source map `scopes` field
-	 */
-	importBindings?: Map<string, string>;
 }
 declare abstract class DependencyTemplates {
 	importBindingScopes: boolean;
-
-	/**
-	 * Asks the templates to record what each imported binding reads, which a
-	 * source map's `scopes` field names and nothing else needs.
-	 */
-	enableImportBindingScopes(): void;
 
 	/**
 	 * Returns template for this dependency.
@@ -7696,7 +7685,7 @@ declare class ESMImportDependency extends ModuleDependency {
 }
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
-	declaredSpecifiers?: [string[], string][];
+	namespaceSpecifiers?: string[];
 }
 type EcmaVersion =
 	| 3
