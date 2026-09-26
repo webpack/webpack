@@ -1,6 +1,6 @@
 "use strict";
 
-const Queue = require("../../lib/util/Queue");
+const Queue = require("../../lib/optimize/Queue");
 
 describe("Queue", () => {
 	it("constructor", () => {

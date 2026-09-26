@@ -1,6 +1,6 @@
 "use strict";
 
-const StackedMap = require("../../lib/util/StackedMap");
+const StackedMap = require("../../lib/javascript/StackedMap");
 
 describe("StackedMap", () => {
 	it("should behave like a map in a single layer", () => {

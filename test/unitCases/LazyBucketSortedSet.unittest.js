@@ -1,6 +1,6 @@
 "use strict";
 
-const LazyBucketSortedSet = require("../../lib/util/LazyBucketSortedSet");
+const LazyBucketSortedSet = require("../../lib/optimize/LazyBucketSortedSet");
 
 /** @typedef {{ v: number }} Box */
 

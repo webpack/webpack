@@ -1,6 +1,6 @@
 "use strict";
 
-const topologicalSort = require("../../lib/util/topologicalSort");
+const topologicalSort = require("../../lib/css/topologicalSort");
 
 /**
  * @template T
