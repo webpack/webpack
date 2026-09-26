@@ -1,5 +1,146 @@
 # webpack
 
+## 5.112.0
+
+### Minor Changes
+
+- Add `optimization.minimize.css.dropOverriddenDeclarations`, dropping a declaration a later one overrides where no target is named. (by [@alexander-akait](https://github.com/alexander-akait) in [#22175](https://github.com/webpack/webpack/pull/22175))
+
+- Export more plugins under their scope, move eleven loose exports under theirs, deprecate the old, and expose `template.DependencyTemplate`, `module.NullFactory` and `util.makeSerializable`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22261](https://github.com/webpack/webpack/pull/22261))
+
+- Add `library.entryExports: "all"` to expose the exports of every entry module. (by [@alexander-akait](https://github.com/alexander-akait) in [#22235](https://github.com/webpack/webpack/pull/22235))
+
+- Bundle a run of inline `<script>` tags into one chunk the page can inline. (by [@alexander-akait](https://github.com/alexander-akait) in [#22188](https://github.com/webpack/webpack/pull/22188))
+
+- Add `module.parser.javascript.topLevelThis` for classic-script `this` semantics. (by [@alexander-akait](https://github.com/alexander-akait) in [#22193](https://github.com/webpack/webpack/pull/22193))
+
+- Add `module.parser.html.chunkName` and a `webpackChunkName` comment for tags. (by [@alexander-akait](https://github.com/alexander-akait) in [#22200](https://github.com/webpack/webpack/pull/22200))
+
+- Add `include`/`exclude` version and request filters to shared modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#22297](https://github.com/webpack/webpack/pull/22297))
+
+- Keep module side-effect information in ESM output as PURE annotations. (by [@alexander-akait](https://github.com/alexander-akait) in [#21789](https://github.com/webpack/webpack/pull/21789))
+
+- Add `optimization.splitChunks.dedupDepth` to discover chunk intersections. (by [@alexander-akait](https://github.com/alexander-akait) in [#22240](https://github.com/webpack/webpack/pull/22240))
+
+- Add `optimization.minimizeOptions.json`, on by default with `futureDefaults`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22286](https://github.com/webpack/webpack/pull/22286))
+
+- Add `SSRManifestPlugin` and fix server-rendered CSS collection and adoption. (by [@alexander-akait](https://github.com/alexander-akait) in [#21913](https://github.com/webpack/webpack/pull/21913))
+
+- Add an `ignore` hook to `output.copy` and keep unfollowed `from` symlinks. (by [@alexander-akait](https://github.com/alexander-akait) in [#22216](https://github.com/webpack/webpack/pull/22216))
+
+- Add `optimization.minimize.css.convertApproximateColors`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22157](https://github.com/webpack/webpack/pull/22157))
+
+- Resolve an async `DefinePlugin.runtimeValue` over an async `beforeParse` hook. (by [@alexander-akait](https://github.com/alexander-akait) in [#22210](https://github.com/webpack/webpack/pull/22210))
+
+- Reduce `css.syntax` and `html.syntax` to `parser`, `printer`, `SourceProcessor`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22233](https://github.com/webpack/webpack/pull/22233))
+
+### Patch Changes
+
+- Join rules a gathered `@layer` leaves adjacent, and an at-rule with a later one (by [@alexander-akait](https://github.com/alexander-akait) in [#22204](https://github.com/webpack/webpack/pull/22204))
+  stating the same condition; read what a condition declares.
+
+- Read an escaped CSS property name as the name it spells. (by [@alexander-akait](https://github.com/alexander-akait) in [#22262](https://github.com/webpack/webpack/pull/22262))
+
+- Minify JavaScript, CSS and HTML assets whose names carry a `#fragment`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22277](https://github.com/webpack/webpack/pull/22277))
+
+- Require `minimizer-webpack-plugin` 5.12, so inline scripts in HTML minify again. (by [@alexander-akait](https://github.com/alexander-akait) in [#22296](https://github.com/webpack/webpack/pull/22296))
+
+- Minify the attributes of an HTML tag without rewriting the template in it. (by [@alexander-akait](https://github.com/alexander-akait) in [#22166](https://github.com/webpack/webpack/pull/22166))
+
+- Order joined at-rule selector lists and gather a repeated large `@layer` block. (by [@alexander-akait](https://github.com/alexander-akait) in [#22224](https://github.com/webpack/webpack/pull/22224))
+
+- Preserve case-sensitive template identifiers when minifying HTML tag attributes. (by [@bjohansebas](https://github.com/bjohansebas) in [#22177](https://github.com/webpack/webpack/pull/22177))
+
+- Recognize strict mode only from valid directives throughout the prologue. (by [@bjohansebas](https://github.com/bjohansebas) in [#22185](https://github.com/webpack/webpack/pull/22185))
+
+- Join rules a nesting lowering or duplicate drop left for a second pass. (by [@aryanraj45](https://github.com/aryanraj45) in [#22268](https://github.com/webpack/webpack/pull/22268))
+
+- Write U+00A0 in a minified HTML attribute as the character, not `&nbsp;`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22208](https://github.com/webpack/webpack/pull/22208))
+
+- Escape a foreign `<script>` or `<style>` body, which is character data. (by [@alexander-akait](https://github.com/alexander-akait) in [#22233](https://github.com/webpack/webpack/pull/22233))
+
+- Name the runtime module whose generation fails while hashing. (by [@alexander-akait](https://github.com/alexander-akait) in [#22203](https://github.com/webpack/webpack/pull/22203))
+
+- Take out the declaration a lowered shorthand writes over, which its source spelling made look like a fallback. (by [@aryanraj45](https://github.com/aryanraj45) in [#22270](https://github.com/webpack/webpack/pull/22270))
+
+- Read a foreign `<script>` or `<style>` body as character data, not as raw text. (by [@alexander-akait](https://github.com/alexander-akait) in [#22258](https://github.com/webpack/webpack/pull/22258))
+
+- Keep an inline `<style>` body as written when rebuilding a page webpack emitted. (by [@alexander-akait](https://github.com/alexander-akait) in [#22265](https://github.com/webpack/webpack/pull/22265))
+
+- Record a build dependency required through a spread on Bun. (by [@alexander-akait](https://github.com/alexander-akait) in [#22230](https://github.com/webpack/webpack/pull/22230))
+
+- Write a nested selector opening on a combinator against its parent the way the printer writes one. (by [@aryanraj45](https://github.com/aryanraj45) in [#22271](https://github.com/webpack/webpack/pull/22271))
+
+- Order the list a lowered nested selector lands in on what is written, not on what was. (by [@aryanraj45](https://github.com/aryanraj45) in [#22287](https://github.com/webpack/webpack/pull/22287))
+
+- Hoist a vendor-prefixed nested rule for a target that reads no nesting. (by [@aryanraj45](https://github.com/aryanraj45) in [#22308](https://github.com/webpack/webpack/pull/22308))
+
+- Name a hoisted nested rule in the dark-scheme copy it writes. (by [@alexander-akait](https://github.com/alexander-akait) in [#22318](https://github.com/webpack/webpack/pull/22318))
+
+- Minify data: URL payloads in HTML attributes and `new URL`, and web manifests. (by [@alexander-akait](https://github.com/alexander-akait) in [#22300](https://github.com/webpack/webpack/pull/22300))
+
+- fold a fallback's colors over the author's arguments, and print with (by [@aryanraj45](https://github.com/aryanraj45) in [#22314](https://github.com/webpack/webpack/pull/22314))
+  `recurseBlocks: false` rather than throwing
+
+- Read a regular expression repeating a capture group name in linear time. (by [@alexander-akait](https://github.com/alexander-akait) in [#22187](https://github.com/webpack/webpack/pull/22187))
+
+- Speed up JavaScript parsing: comment lookup, the tokenizer and the grammar. (by [@bjohansebas](https://github.com/bjohansebas) in [#22179](https://github.com/webpack/webpack/pull/22179))
+
+- Keep `initial` where Gecko or WebKit reads the property's keyword apart. (by [@aryanraj45](https://github.com/aryanraj45) in [#22176](https://github.com/webpack/webpack/pull/22176))
+
+- Keep the `calc()` where a bare number would revive a refused declaration. (by [@aryanraj45](https://github.com/aryanraj45) in [#22205](https://github.com/webpack/webpack/pull/22205))
+
+- Keep a `color-mix()` whose hue rests on a gray's conversion residue. (by [@alexander-akait](https://github.com/alexander-akait) in [#22198](https://github.com/webpack/webpack/pull/22198))
+
+- Group `lib/` and `lib/dependencies/` sources into directories. (by [@alexander-akait](https://github.com/alexander-akait) in [#22118](https://github.com/webpack/webpack/pull/22118))
+
+- Treat a browserslist target given at a bare major version (e.g. `safari 10`) as `<major>.0` when a feature's first supported version is a `[major, minor]` pair, so it is no longer reported as unsupported. (by [@Eshiv-Pandey](https://github.com/Eshiv-Pandey) in [#22280](https://github.com/webpack/webpack/pull/22280))
+
+- Read and print a CSS backslash as the spec does, and a NUL as U+FFFD. (by [@alexander-akait](https://github.com/alexander-akait) in [#22201](https://github.com/webpack/webpack/pull/22201))
+
+- Make minified CSS and HTML stable on a second pass, even for truncated input. (by [@alexander-akait](https://github.com/alexander-akait) in [#22290](https://github.com/webpack/webpack/pull/22290))
+
+- Minify a merged `<style>` run as one sheet, closing each where its input ended. (by [@alexander-akait](https://github.com/alexander-akait) in [#22302](https://github.com/webpack/webpack/pull/22302))
+
+- Minify JavaScript through webpack's own terser phases under `futureDefaults`. (by [@alexander-akait](https://github.com/alexander-akait) in [#22217](https://github.com/webpack/webpack/pull/22217))
+
+- Preserve `wrappedContextRegExp` flags when rebuilding context request matchers. (by [@Eshiv-Pandey](https://github.com/Eshiv-Pandey) in [#22303](https://github.com/webpack/webpack/pull/22303))
+
+- Fold unitless `hsl()`/`hwb()` channels, and only where the separators are valid. (by [@alexander-akait](https://github.com/alexander-akait) in [#22242](https://github.com/webpack/webpack/pull/22242))
+
+- Split `@value` imports on the `from` keyword, not a substring in the path. (by [@Eshiv-Pandey](https://github.com/Eshiv-Pandey) in [#22306](https://github.com/webpack/webpack/pull/22306))
+
+- Destructure a dotted `DefinePlugin` key whose value is falsy or a runtimeValue. (by [@alexander-akait](https://github.com/alexander-akait) in [#22215](https://github.com/webpack/webpack/pull/22215))
+
+- Make `Stats.hasErrors()` read errors through the `processErrors` hook (via `getErrors()`), matching `hasWarnings()`, so a plugin that filters errors out of the hook is no longer contradicted by `hasErrors()`. (by [@Eshiv-Pandey](https://github.com/Eshiv-Pandey) in [#22281](https://github.com/webpack/webpack/pull/22281))
+
+- Allow wrapping an external concatenated module, now asked of the module itself, and re-exporting a JSON or asset `default` as a namespace object. (by [@hai-x](https://github.com/hai-x) in [#22226](https://github.com/webpack/webpack/pull/22226))
+
+- Reduce HTML syntax processing time and memory use. (by [@alexander-akait](https://github.com/alexander-akait) in [#22135](https://github.com/webpack/webpack/pull/22135))
+
+- Reuse free names instead of re-parsing modules for the entry IIFE rename. (by [@hai-x](https://github.com/hai-x) in [#22206](https://github.com/webpack/webpack/pull/22206))
+
+- Release each module's ast once scope-analysed, and encode each export path once. (by [@alexander-akait](https://github.com/alexander-akait) in [#22241](https://github.com/webpack/webpack/pull/22241))
+
+- Export a module library entry's default expression as its own binding, and keep (by [@hai-x](https://github.com/hai-x) in [#22227](https://github.com/webpack/webpack/pull/22227))
+  the export helpers where the entry is not inlined.
+
+- Give a wrapped concatenated body the same function header as a module factory. (by [@hai-x](https://github.com/hai-x) in [#22254](https://github.com/webpack/webpack/pull/22254))
+
+- Skip reading every asset when no content hash is named. (by [@alexander-akait](https://github.com/alexander-akait) in [#22256](https://github.com/webpack/webpack/pull/22256))
+
+- Reduce allocations on module graph, chunk graph and ESM import hot paths. (by [@alexander-akait](https://github.com/alexander-akait) in [#22289](https://github.com/webpack/webpack/pull/22289))
+
+- Stop a module source from being held as both a string and a buffer. (by [@alexander-akait](https://github.com/alexander-akait) in [#22294](https://github.com/webpack/webpack/pull/22294))
+
+- Rename the `lib/dependencies/Harmony*` files to `ESM*`. (by [@hai-x](https://github.com/hai-x) in [#22283](https://github.com/webpack/webpack/pull/22283))
+
+- Keep the `calc()` around a `steps()` count `jump-none` would reject bare. (by [@alexander-akait](https://github.com/alexander-akait) in [#22168](https://github.com/webpack/webpack/pull/22168))
+
+- Split the CSS syntax module into a parser file and a printer file. (by [@alexander-akait](https://github.com/alexander-akait) in [#22222](https://github.com/webpack/webpack/pull/22222))
+
+- Split the HTML syntax module into a parser file and a printer file. (by [@alexander-akait](https://github.com/alexander-akait) in [#22223](https://github.com/webpack/webpack/pull/22223))
+
 ## 5.111.1
 
 ### Patch Changes
