@@ -334,6 +334,21 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	it("should minify a source too large to keep its buffers as terser does", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		// Past the 8 MiB the conversion keeps its buffers for, in a comment both
+		// parsers skip quickly.
+		const source = `var box = { width: 2, height: 3 }; sink(box);\n/*${"x".repeat(
+			1 << 23
+		)}*/`;
+		const options = () => ({ compress: false, mangle: false });
+		const ours = await minify(source, options());
+		const theirs = await reference.minify(source, options());
+
+		expect(ours.code).toBe(theirs.code);
+	});
+
 	it("should leave a name terser cannot mangle alone", async () => {
 		const { minify } = await load();
 		const result = await minify("function top(argument) { return argument; }", {
