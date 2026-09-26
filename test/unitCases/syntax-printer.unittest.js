@@ -15,6 +15,23 @@ const {
  */
 const CASES = [
 	[
+		"an object whose properties are hoisted into variables",
+		`function area() {
+			var box = { width: 2, height: 3 };
+			sink(box.width, box.height);
+		}
+		sink(area);`
+	],
+	[
+		"an object left whole where hoisting is off",
+		`function area() {
+			var box = { width: 2, height: 3 };
+			sink(box.width, box.height);
+		}
+		sink(area);`,
+		{ compress: { hoist_props: false } }
+	],
+	[
 		"nested scopes",
 		`function outer(first, second) {
 			function inner(third) { return first + second + third; }
@@ -288,6 +305,8 @@ describe("syntax-printer", () => {
 			expect.arrayContaining(terser.phases)
 		);
 		if (!("Deno" in globalThis)) {
+			expect(terser.phases).toContain("walk");
+			expect(terser.phases).toContain("hoist");
 			expect(terser.phases).toContain("mangle");
 			expect(terser.phases).toContain("output");
 			expect(terser.phases).toContain("print");
@@ -314,6 +333,34 @@ describe("syntax-printer", () => {
 			expect(ours.code).toMatchSnapshot();
 		});
 	}
+
+	it("should minify a source too large to keep its buffers as terser does", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		// Past the 8 MiB the conversion keeps its buffers for, in a comment both
+		// parsers skip quickly.
+		const source = `var box = { width: 2, height: 3 }; sink(box);\n/*${"x".repeat(
+			1 << 23
+		)}*/`;
+		const options = () => ({ compress: false, mangle: false });
+		const ours = await minify(source, options());
+		const theirs = await reference.minify(source, options());
+
+		expect(ours.code).toBe(theirs.code);
+	});
+
+	it("should minify a source denser in tokens than its buffers start as terser does", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		// Two characters a token: past the quarter of the length the buffers
+		// start at, however large an earlier source left them here.
+		const source = `sink([${"1,".repeat(200000)}]);`;
+		const options = () => ({ compress: false, mangle: false });
+		const ours = await minify(source, options());
+		const theirs = await reference.minify(source, options());
+
+		expect(ours.code).toBe(theirs.code);
+	});
 
 	it("should leave a name terser cannot mangle alone", async () => {
 		const { minify } = await load();
@@ -397,6 +444,77 @@ describe("syntax-printer", () => {
 			fits((options) => (options ? rejectNaming(FORMAT_DEFAULTS) : { print() {} }))
 		).toBe(false);
 	});
+
+	/** @type {[string, string, EXPECTED_OBJECT][]} */
+	const SCOPE_CASES = [
+		["a label defined twice", "a: { a: { sink(1); break a; } }", {}],
+		["a name declared twice with let", "let a = 1; let a = 2; sink(a);", {}],
+		["a with statement", "with (o) { sink(x); }", {}],
+		["eval called in a function", "function f(x) { eval('x'); return x; } sink(f);", {}],
+		["arguments read in a function", "function f(a) { return arguments[0] + a; } sink(f);", {}],
+		[
+			"a parameter default reading a name the body redeclares",
+			"var x = 1; function f(a = x, b = a) { var x = 2, a; return x + a + b; } sink(f);",
+			{}
+		],
+		["a switch with block-scoped cases", "switch (x) { case 1: let y = 1; sink(y); break; default: sink(x); }", {}],
+		[
+			"exports, destructured and default",
+			"export var a = 1; export const { b, c: [d] } = o; export function f() { return a; } export default class { m() { return b; } }",
+			{ module: true }
+		],
+		["a default exported function", "export default function f() { return 1; }", { module: true }],
+		["a re-export under another name", "export { a as b } from 'c'; export { e as default }; var e = 1;", { module: true }],
+		["an export of an undeclared name", "export { undeclared };", { module: true }],
+		["a block function in sloppy code", "{ function f() { return 1; } } sink(f);", {}],
+		["a block function in strict code", "'use strict'; { function f() { return 1; } sink(f); }", {}],
+		["a class body, strict of its own", "class A { static x = 1; m() { function g() {} return g; } } sink(A);", {}],
+		[
+			"a catch parameter redeclaring a parameter",
+			"function f(e) { try { sink(e); } catch (e) { var e = 2; sink(e); } return e; } sink(f);",
+			{}
+		],
+		["a function expression named arguments", "var f = function arguments() { return 1; }; sink(f);", {}],
+		[
+			"catch and loop scopes for old engines",
+			"function f(a) { try { sink(a); } catch (a) { sink(a); } for (let i = 0; i < 2; i++) sink(i, a); } sink(f);",
+			{ mangle: { ie8: true, safari10: true } }
+		],
+		["a labelled loop continued", "a: for (;;) { for (;;) { continue a; } }", {}],
+		["a parameter default reading an outer name", "var y = 1; function f(a = y) { return a; } sink(f);", {}],
+		["a named class expression", "var C = class Named { m() { return Named; } }; sink(C);", {}],
+		[
+			"top-level catch parameters for old engines",
+			"try { sink(1); } catch (e) { sink(e); } try { sink(2); } catch (q) { sink(q); } sink(e);",
+			{ mangle: { ie8: true } }
+		]
+	];
+
+	for (const [name, source, options] of SCOPE_CASES) {
+		it(`should analyse scopes as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/**
+			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_OBJECT} settings its options
+			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
+			 */
+			const outcome = async (run, settings) => {
+				try {
+					return { code: (await run(source, settings)).code };
+				} catch (err) {
+					return { error: /** @type {Error} */ (err).message };
+				}
+			};
+			for (const compress of [false, { passes: 2 }]) {
+				/** @returns {EXPECTED_OBJECT} the options */
+				const settings = () => ({ compress, mangle: true, ...JSON.parse(JSON.stringify(options)) });
+				expect(await outcome(minify, settings())).toEqual(
+					await outcome(reference.minify, settings())
+				);
+			}
+		});
+	}
 
 	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
 	const PARSED_BY_TERSER = [
@@ -491,6 +609,116 @@ describe("syntax-printer", () => {
 			parse.supports({
 				ast: reference,
 				parse: { parse: () => ({ TYPE: "Toplevel", body: [] }) }
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose walk it does not know", () => {
+		const walk =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "walk")
+			);
+		/**
+		 * @param {string} source what the function prints as
+		 * @returns {() => void} a function printing as that source
+		 */
+		const printingAs = (source) =>
+			Object.assign(() => {}, { toString: () => source });
+		const terserVisit = printingAs(
+			"_visit(node, descend) { this.push(node); var ret = this.visit(node, descend ? function() { descend.call(node); } : noop); if (!ret && descend) { descend.call(node); } this.pop(); return ret; }"
+		);
+		/**
+		 * @param {string[]} walks each node class's walk, as its source
+		 * @param {Record<string, unknown>=} exports what the ast module exports besides
+		 * @returns {boolean} whether the phase fits
+		 */
+		const fits = (walks, exports = {}) =>
+			walk.supports({
+				ast: {
+					TreeWalker: Object.assign(function TreeWalker() {}, {
+						prototype: { _visit: terserVisit }
+					}),
+					AST_Node: {
+						prototype: {
+							_walk: printingAs("function(visitor) { return visitor._visit(this); }")
+						},
+						SUBCLASSES: [
+							{ prototype: {}, SUBCLASSES: [] },
+							...walks.map((source) => ({
+								prototype: { _walk: printingAs(source) },
+								SUBCLASSES: []
+							}))
+						]
+					},
+					...exports
+				},
+				utils: { noop() {} }
+			});
+
+		expect(walk.supports({ ast: {}, utils: {} })).toBe(false);
+		expect(fits([])).toBe(true);
+		expect(
+			fits([
+				"function(visitor) { return visitor._visit(this, this.value && function() { this.value._walk(visitor); }); }"
+			])
+		).toBe(true);
+		// A walk that does not hand its children's walk to the visitor.
+		expect(fits(["function(visitor) { visitor.seen(this); }"])).toBe(false);
+		// Children walked through a helper the ast module does not export.
+		expect(
+			fits([
+				"function(visitor) { return visitor._visit(this, function() { walk_body(this, visitor); }); }"
+			])
+		).toBe(false);
+		expect(
+			fits(
+				[
+					"function(visitor) { return visitor._visit(this, function() { walk_body(this, visitor); }); }"
+				],
+				{ walk_body() {} }
+			)
+		).toBe(true);
+		// Children walked by code webpack's parser refuses.
+		expect(
+			fits([
+				"function(visitor) { return visitor._visit(this, function() { this.body._walk(visitor; }); }"
+			])
+		).toBe(false);
+	});
+
+	it("should decline a terser whose hoisting it does not know", () => {
+		const hoist =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "hoist")
+			);
+		expect(hoist.supports({ ast: {} })).toBe(false);
+		expect(
+			hoist.supports({
+				ast: { AST_Scope: { prototype: { hoist_properties() {} } } }
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose scope analysis it does not know", () => {
+		const scope =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "scope")
+			);
+		const utils = { defaults() {}, push_uniq() {}, string_template() {} };
+		const parse = { js_error() {} };
+		expect(scope.supports({ ast: {}, parse, utils })).toBe(false);
+		expect(
+			scope.supports({
+				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
+				parse: {},
+				utils
+			})
+		).toBe(false);
+		expect(
+			scope.supports({
+				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
+				parse,
+				utils
 			})
 		).toBe(false);
 	});
