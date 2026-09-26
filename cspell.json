@@ -610,6 +610,7 @@
     "test/cases/json/weird-properties/globals.json",
     "test/unitCases/JavascriptParser.unittest.js",
     "lib/javascript/data.js",
+    "lib/javascript/terser/**",
     "tooling/html-entities.json",
     "test/external/test262-cases/**",
     "test/external/wpt/**",
