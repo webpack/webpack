@@ -141,8 +141,9 @@ describe("jsMinify", () => {
 			const actual = await jsMinify(
 				input,
 				INPUT_MAP,
-				{ printer, format: { comments: "first|last" } },
-				{ condition: "@license" }
+				// Terser accepts string patterns at runtime, but its types exclude them.
+				{ printer, format: { comments: /** @type {EXPECTED_ANY} */ ("first|last") } },
+				{ condition: /** @type {EXPECTED_ANY} */ ("@license") }
 			);
 			const expected = await jsMinify(
 				input,
@@ -155,15 +156,17 @@ describe("jsMinify", () => {
 		});
 
 		it(`should defer invalid comment patterns until a comment is tested (printer: ${printer})`, async () => {
-			const options = { printer, format: { comments: "[" } };
+			// Exercise a malformed runtime pattern outside the published type union.
+			const invalidPattern = /** @type {EXPECTED_ANY} */ ("[");
+			const options = { printer, format: { comments: invalidPattern } };
 			const input = { "plain.js": "run();" };
-			expect(await jsMinify(input, undefined, options, { condition: "[" })).toEqual(
+			expect(await jsMinify(input, undefined, options, { condition: invalidPattern })).toEqual(
 				await jsMinify(input, undefined, { printer, format: { comments: false } }, false)
 			);
 			const commented = { "commented.js": "/* comment */ run();" };
 			await expect(jsMinify(commented, undefined, options, false)).rejects.toThrow(SyntaxError);
 			await expect(
-				jsMinify(commented, undefined, { printer }, { condition: "[" })
+				jsMinify(commented, undefined, { printer }, { condition: invalidPattern })
 			).rejects.toThrow(SyntaxError);
 		});
 	}
