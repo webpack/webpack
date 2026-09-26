@@ -10,7 +10,7 @@ const { pathToFileURL } = require("url");
 const acorn = require("acorn");
 const { PHASES } = require("../../lib/javascript/syntax").printer;
 
-/** @typedef {import("terser").MinifyOptions} MinifyOptions */
+/** @typedef {import("../../lib/javascript/terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT } }} Source */
@@ -283,10 +283,19 @@ const isPresent = (directory) =>
 	fs.existsSync(directory) && fs.readdirSync(directory).length > 0;
 
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[] } }} */
+	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[] }, released?: { minify: Minify, ast: EXPECTED_ANY } }} */
 	const loaded = {};
 
 	beforeAll(async () => {
+		// The copy webpack carries, as a build without `printer` minifies with it:
+		// read in a registry of its own, so the phases installed below go into a
+		// different copy and this one is held to the reference exactly as released.
+		jest.isolateModules(() => {
+			loaded.released = {
+				minify: require("../../lib/javascript/terser").minify,
+				ast: require("../../lib/javascript/terser/ast")
+			};
+		});
 		loaded.printer = await require("../../lib/javascript/syntax").printer.load();
 		if (!isPresent(referenceDir)) return;
 		// eslint-disable-next-line no-new-func
@@ -307,12 +316,30 @@ describe("JavaScript minifier", () => {
 		expect(phases).toEqual(PHASES.map((phase) => phase.name));
 	});
 
+	it("should hold the released copy apart from the one the phases went into", () => {
+		const { ast } = /** @type {NonNullable<typeof loaded.released>} */ (
+			loaded.released
+		);
+
+		const phased = require("../../lib/javascript/terser/ast");
+
+		expect(ast.AST_Node).not.toBe(phased.AST_Node);
+		expect(ast.AST_Toplevel.prototype.mangle_names).not.toBe(
+			phased.AST_Toplevel.prototype.mangle_names
+		);
+	});
+
 	if (isPresent(referenceDir)) {
 		it("should pin the reference's corpus to the version it is compared with", () => {
 			const pinned = JSON.parse(
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
 			).version;
 			expect(pinned).toBe(require("terser/package.json").version);
+			// ...and to the release webpack carries, which is what a build caches
+			// its minified output against.
+			expect(
+				require("../../lib/javascript/jsMinify").getMinimizerVersion()
+			).toBe(pinned);
 		});
 	}
 
@@ -346,6 +373,9 @@ describe("JavaScript minifier", () => {
 						const printer = /** @type {NonNullable<typeof loaded.printer>} */ (
 							loaded.printer
 						);
+						const released = /** @type {NonNullable<typeof loaded.released>} */ (
+							loaded.released
+						);
 						/** @type {string[]} */
 						const differences = [];
 						for (const file of group.files) {
@@ -367,6 +397,19 @@ describe("JavaScript minifier", () => {
 									if (theirs.code !== ours.code || theirs.error !== ours.error) {
 										differences.push(
 											`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(ours)}`
+										);
+									}
+									const carried = await outcome(
+										released.minify,
+										source.input,
+										optionsFor(source)
+									);
+									if (
+										theirs.code !== carried.code ||
+										theirs.error !== carried.error
+									) {
+										differences.push(
+											`${source.name} (${setName}, as released)\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(carried)}`
 										);
 									}
 								}

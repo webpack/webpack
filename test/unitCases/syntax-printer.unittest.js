@@ -100,7 +100,7 @@ const CASES = [
 
 // The option sets the printer is held to terser under: a build's own, and
 // every format option that changes what the stream writes.
-/** @type {import("terser").MinifyOptions[]} */
+/** @type {import("../../lib/javascript/terser").MinifyOptions[]} */
 const OUTPUT_OPTIONS = [
 	{ compress: { passes: 2 }, mangle: true, format: { comments: false } },
 	{ compress: false, mangle: false, format: { comments: "all" } },
@@ -279,21 +279,10 @@ describe("syntax-printer", () => {
 	it("should install onto terser", async () => {
 		const terser = await load();
 		expect(typeof terser.minify).toBe("function");
-		// WHY: whether a runtime reaches terser's own sources is the one thing
-		// `load` is written to tolerate, and Deno reaches them only sometimes —
-		// so asserting either outcome there failed at random. What it owes
-		// everywhere is to install phases this build declares and nothing else;
-		// Node, which always reaches the sources, owes the whole set.
-		expect(PHASES.map((phase) => phase.name)).toEqual(
-			expect.arrayContaining(terser.phases)
-		);
-		if (!("Deno" in globalThis)) {
-			expect(terser.phases).toContain("mangle");
-			expect(terser.phases).toContain("output");
-			expect(terser.phases).toContain("print");
-			expect(terser.phases).toContain("parse");
-			expect(terser.phases).toContain("frequency");
-		}
+		// WHY: terser is carried by webpack and read with `require`, so every
+		// runtime reaches the same sources and owes the whole set — Deno too,
+		// which a dynamic import of terser's own files reached only sometimes.
+		expect(terser.phases).toEqual(PHASES.map((phase) => phase.name));
 	});
 
 	for (const [name, source, options] of CASES) {

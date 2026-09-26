@@ -53,3 +53,7 @@ examples/**
 # Ignore local working files
 pr.md
 issue.md
+
+# terser's lib as released: held to terser's output, not to this format
+lib/javascript/terser/**
+!lib/javascript/terser/index.js

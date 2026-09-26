@@ -38,7 +38,7 @@ const INPUT_MAP = {
 /**
  * Every comment-selection shape the plugin accepts, paired with the source and
  * production it is exercised against.
- * @type {[string, { [file: string]: string }, import("terser").MinifyOptions & { as?: "script" | "module" | "event-handler" }, EXPECTED_ANY][]}
+ * @type {[string, { [file: string]: string }, import("../../lib/javascript/terser").MinifyOptions & { as?: "script" | "module" | "event-handler" }, EXPECTED_ANY][]}
  */
 const CASES = [
 	["defaults", { "script.js": SCRIPT }, { compress: { passes: 2 } }, true],
@@ -139,9 +139,30 @@ describe("jsMinify", () => {
 		expect(jsMinify.supportsWorkerThreads()).toBe(true);
 	});
 
-	it("should report terser's version, so a cache entry follows it", () => {
-		expect(jsMinify.getMinimizerVersion()).toBe(
-			require("terser/package.json").version
-		);
+	it("should report the terser release it carries, so a cache entry follows it", () => {
+		const fs = require("fs");
+		const path = require("path");
+
+		const directory = path.join(__dirname, "../../lib/javascript/terser");
+		/** @type {Set<string>} */
+		const releases = new Set();
+		/**
+		 * @param {string} dir a directory of the copy
+		 */
+		const read = (dir) => {
+			for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+				const file = path.join(dir, entry.name);
+				if (entry.isDirectory()) {
+					read(file);
+				} else if (file.endsWith(".js") && entry.name !== "index.js") {
+					const named = /Vendored from terser v(\S+),/.exec(
+						fs.readFileSync(file, "utf8")
+					);
+					releases.add(named ? named[1] : `none in ${entry.name}`);
+				}
+			}
+		};
+		read(directory);
+		expect([...releases]).toEqual([jsMinify.getMinimizerVersion()]);
 	});
 });
