@@ -53,7 +53,7 @@ function makeHtml(blocks) {
  * One axis each: `wide table` and `nested lists` are wide with a shallow
  * repeating nest, `flat siblings` is one long run at depth 1, `deep nesting` a
  * narrow 20-deep spine. Together they separate per-sibling from per-frame cost.
- * @type {[string, string, { fragmentContext?: string }][]} name, source, extra process options
+ * @type {[string, string, { fragmentContext?: string, mergeStyles?: boolean }][]} name, source, extra process options
  */
 const FIXTURES = [
 	["document", makeHtml(2000), {}],
@@ -147,7 +147,8 @@ const FIXTURES = [
 			const css = rule.repeat(Math.ceil((2 * 1024 * 1024) / rule.length));
 			return `<!DOCTYPE html><html><head><style>${css}</style></head><body><p>hello</p></body></html>`;
 		})(),
-		{}
+		// A lone sheet has nothing to merge, so its body needs no closure scan.
+		{ mergeStyles: true }
 	]
 ];
 
