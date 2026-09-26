@@ -2365,6 +2365,9 @@ describe("a color rewrite paints as the color it replaced", () => {
 				"a{color:red}}}",
 				"a{content:'\\'"
 			];
+			// A custom property's value is kept open as the input left it, so a
+			// sheet ending in one is left apart.
+			const apart = new Set([".a{--x:f(", ".a{--x:{"]);
 			const seconds = [
 				"b{color:#00f}",
 				"@media screen{c{color:red}}",
@@ -2419,8 +2422,8 @@ describe("a color rewrite paints as the color it replaced", () => {
 					for (const second of seconds) {
 						const html = `<style>${first}</style><style>${second}</style>`;
 						const joined = print(html, true);
-						if (joined.split("<style").length !== 2) {
-							differences.push(`not joined: ${html}`);
+						if (joined.split("<style").length !== (apart.has(first) ? 3 : 2)) {
+							differences.push(`joined wrongly: ${html}`);
 						}
 						if ((await computed(print(html, false))) !== (await computed(joined))) {
 							differences.push(`reads differently: ${html}`);

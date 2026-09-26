@@ -4098,10 +4098,11 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 
 	it("closes a sheet ending inside a comment before joining it", () => {
 		// Appending to text the comment swallows would comment the next sheet out,
-		// so it is closed first, as its own end of input closed it. Printed as
-		// written, the closing would stay in the output, so it is not joined there.
+		// so it is closed first, as its own end of input closed it.
 		const open = "<style>a{color:red}/*x</style><style>b{color:#00f}</style>";
-		expect(minifyAsWritten(open)).toBe(open);
+		expect(minifyAsWritten(open)).toBe(
+			"<style>a{color:red}/*x*/b{color:#00f}</style>"
+		);
 		expect(minify(open)).toBe("<style>a{color:red}b{color:#00f}</style>");
 		expect(
 			minify("<style>a{color:red}/*x*/</style><style>b{color:#00f}</style>")
@@ -4110,7 +4111,9 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 
 	it("closes a sheet ending inside a string before joining it", () => {
 		const open = '<style>a{content:"x</style><style>b{color:#00f}</style>';
-		expect(minifyAsWritten(open)).toBe(open);
+		expect(minifyAsWritten(open)).toBe(
+			'<style>a{content:"x"}b{color:#00f}</style>'
+		);
 		expect(minify(open)).toBe('<style>a{content:"x"}b{color:#00f}</style>');
 		// A newline ends a bad string, so this one is over where the sheet is.
 		expect(
@@ -4134,8 +4137,12 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		const block = "<style>a{color:red</style><style>b{color:#00f}</style>";
 		const call =
 			"<style>a{color:rgb(1,2,3}</style><style>b{color:#00f}</style>";
-		expect(minifyAsWritten(block)).toBe(block);
-		expect(minifyAsWritten(call)).toBe(call);
+		expect(minifyAsWritten(block)).toBe(
+			"<style>a{color:red}b{color:#00f}</style>"
+		);
+		expect(minifyAsWritten(call)).toBe(
+			"<style>a{color:rgb(1,2,3})}b{color:#00f}</style>"
+		);
 		expect(minify(block)).toBe("<style>a{color:red}b{color:#00f}</style>");
 		expect(minify(call)).toBe(
 			"<style>a{color:rgb(1,2,3})}b{color:#00f}</style>"
@@ -4213,18 +4220,30 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			).toBe(`<style>${sheet}b{}</style>`);
 		}
 		// Nothing follows the last sheet, so it may be left open; one that leads
-		// with `@import` is not joined, and nothing is joined after an open one.
+		// with `@import` is not joined, and one before it is closed first.
 		expect(minifyAsWritten('<style>a{}</style><style>b{c:"d</style>')).toBe(
 			'<style>a{}b{c:"d</style>'
 		);
-		for (const html of [
-			"<style>a{}</style><style>@import url(x.css);</style>",
-			'<style>b{c:"d</style><style>a{}</style>',
-			"<style>a{}b</style><style>c{}</style>",
-			"<style>@import url(x)</style><style>c{}</style>",
-			"<style>a{}}</style><style>c{}</style>"
+		for (const [html, printed] of [
+			[
+				"<style>a{}</style><style>@import url(x.css);</style>",
+				"<style>a{}</style><style>@import url(x.css);</style>"
+			],
+			['<style>b{c:"d</style><style>a{}</style>', '<style>b{c:"d"}a{}</style>'],
+			["<style>a{}b</style><style>c{}</style>", "<style>a{}b{}c{}</style>"],
+			[
+				"<style>@import url(x)</style><style>c{}</style>",
+				"<style>@import url(x);c{}</style>"
+			],
+			["<style>a{}}</style><style>c{}</style>", "<style>a{}}{}c{}</style>"],
+			// A custom property's value the input ran out in is kept as written, so
+			// nothing is appended to it.
+			[
+				"<style>a{--x:f(</style><style>c{}</style>",
+				"<style>a{--x:f(</style><style>c{}</style>"
+			]
 		]) {
-			expect(minifyAsWritten(html)).toBe(html);
+			expect(minifyAsWritten(html)).toBe(printed);
 		}
 		// Minified, each of those is closed as its end of input closed it, and joined.
 		for (const [sheet, printed] of [
@@ -4292,6 +4311,53 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			}
 		);
 		expect(code).toBe('<style>b{c:"d</style>');
+		// Unjoined, each sheet is judged alone.
+		expect(
+			new SourceProcessor().process(
+				"<style>a{}</style><style>b{color:red}</style>",
+				{
+					mode: "minify",
+					removeEmptyElements: true,
+					renderEmbeddedSource: builtinEmbeddedRenderer()
+				}
+			).code
+		).toBe("<style>b{color:red}</style>");
+	});
+
+	it("closes a sheet as its end of input closes it", () => {
+		const { _sheetClosing } = require("../../lib/html/syntax-parser");
+
+		for (const [sheet, closing] of /** @type {[string, string | null][]} */ ([
+			// §4.3.6: whitespace may open and end a url; a bad one runs to a `)`.
+			["a{b:url( x", ")}"],
+			["a{b:url(  ", ")}"],
+			["a{b:url( x )", "}"],
+			["a{b:url(x ", ")}"],
+			["a{b:url(x  )", "}"],
+			["url(x", "){}"],
+			["a{b:url(x y(", ")}"],
+			["a{b:url(x\\)y", ")}"],
+			["a{b:url(x\\\ny(", ")}"],
+			["a{b:url(x\\\ny\\\nz", ")}"],
+			// A quoted url is a function holding a string.
+			['a{b:url("x', '")}'],
+			// Part of a longer name, `url(` is a function's name, not a url token.
+			["a{b:image-url(x", ")}"],
+			["a{b:\\url(x", ")}"],
+			// An escape starts a name, so `@` opens an at-rule; one before a
+			// newline is no escape, and `@` a delimiter opening a prelude.
+			["x{}@\\61 b", ";"],
+			["x{}@-\\61", ";"],
+			["x{}@-\\\n", "{}"],
+			// A lone backslash escapes whatever would follow it.
+			["a{b:url(x\\", null],
+			["x{}@\\", null]
+		])) {
+			expect({ sheet, closing: _sheetClosing(sheet) }).toEqual({
+				sheet,
+				closing
+			});
+		}
 	});
 
 	it("minifies a joined run as one sheet on the asynchronous path too", async () => {
@@ -6330,8 +6396,8 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("prints again where an answer overturns a choice made on the source", async () => {
 		// Each choice is one a deferred print makes on the source: the emptied
-		// sheet and list go with their elements, and the open sheet is closed and
-		// joined to the next, the run offered once.
+		// sheet and list go with their elements; the sheet the input left open
+		// in a custom property's value is kept as written, on its own.
 		const html =
 			'<p>x<style>a{}</style><div style="color:"></div>' +
 			"<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>";
@@ -6357,14 +6423,15 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		});
 
 		expect(now.code).toBe(
-			"<p>x<style>.a{--x:f()}.b{color:red}</style><script>1</script>"
+			"<p>x<style>.a{--x:f(</style><style>.b{color:red}</style><script>1</script>"
 		);
 		expect(later.code).toBe(now.code);
 		// The second print reads the first one's answers rather than asking again.
 		expect(offered).toEqual([
 			"a{}",
 			"color:",
-			".a{--x:f()}.b{color:red}",
+			".a{--x:f(",
+			".b{color:red}",
 			"1"
 		]);
 	});
