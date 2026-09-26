@@ -396,6 +396,9 @@ const referencedNames = (declared) => {
 		}
 		ts.forEachChild(node, walk);
 	};
+	// WHY: a declaration the schema states as a `tsType` is named as text, so the
+	// types its text is written from are not the schema's to define.
+	if (declared.tags.has("tsType")) return names;
 	for (const member of declared.members || []) walk(member);
 	for (const tag of declared.propertyTags || []) walk(tag);
 	if (declared.type) walk(declared.type);
@@ -661,7 +664,7 @@ const describedItems = (node, checker, known) => {
 // The tags a leading comment may carry, matched by name so prose holding an
 // "@" is left alone. `not` takes JSON, so it reads to the end of the comment.
 const KNOWN_TAG_REGEXP = new RegExp(
-	`@(title|since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|properties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join(
+	`@(definition|title|since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|properties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join(
 		"|"
 	)})(?:[ \\t]+([^@]*))?`
 );
@@ -1187,8 +1190,15 @@ const typeScriptToSchema = (source, checker) => {
 	const schemaRoot = source.fileName.endsWith(".js")
 		? declarations.find((one) => one.tags.has("schema"))
 		: undefined;
+	// WHY: a definition the root does not reach is still the schema's when it says
+	// so — a type the schema names only through a `tsType` is reached no other way.
 	const reached = schemaRoot
-		? reachableFrom(schemaRoot.name, declaredByName)
+		? new Set([
+				...reachableFrom(schemaRoot.name, declaredByName),
+				...declarations
+					.filter((one) => one.tags.has("definition"))
+					.flatMap((one) => [...reachableFrom(one.name, declaredByName)])
+			])
 		: undefined;
 	for (const declaration of declarations) {
 		if (reached && !reached.has(declaration.name)) continue;

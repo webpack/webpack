@@ -155,6 +155,7 @@ export default defineConfig([
 				{
 					definedTags: [
 						"schema",
+						"definition",
 						"inline",
 						"title",
 						"minLength",
