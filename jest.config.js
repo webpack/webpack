@@ -52,6 +52,9 @@ const config = {
 		// Serialized to the minimizer's worker pool as source (like runtime code):
 		// coverage instrumentation would inject counters the worker can't resolve.
 		"[\\\\/]lib[\\\\/](?:css[\\\\/]cssMinify|html[\\\\/]htmlMinify|javascript[\\\\/]jsMinify|json[\\\\/]jsonMinify)\\.js$",
+		// terser as released: the printer's phases read its sources to know they
+		// still fit, and counters written into them are a terser they do not know.
+		"[\\\\/]lib[\\\\/]javascript[\\\\/]terser[\\\\/]",
 		"<rootDir>/test",
 		"<rootDir>/schemas",
 		"<rootDir>/examples",
