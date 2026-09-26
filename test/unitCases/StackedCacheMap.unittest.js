@@ -1,6 +1,6 @@
 "use strict";
 
-const StackedCacheMap = require("../../lib/util/StackedCacheMap");
+const StackedCacheMap = require("../../lib/fs/StackedCacheMap");
 
 describe("StackedCacheMap", () => {
 	it("should read values from immutable layers and the mutable fallback", () => {

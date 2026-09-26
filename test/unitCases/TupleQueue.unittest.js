@@ -1,6 +1,6 @@
 "use strict";
 
-const TupleQueue = require("../../lib/util/TupleQueue");
+const TupleQueue = require("../../lib/optimize/TupleQueue");
 
 describe("TupleQueue", () => {
 	it("should seed from an iterable and deduplicate tuples", () => {
