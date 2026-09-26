@@ -349,6 +349,19 @@ describe("syntax-printer", () => {
 		expect(ours.code).toBe(theirs.code);
 	});
 
+	it("should minify a source denser in tokens than its buffers start as terser does", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		// Two characters a token: past the quarter of the length the buffers
+		// start at, however large an earlier source left them here.
+		const source = `sink([${"1,".repeat(200000)}]);`;
+		const options = () => ({ compress: false, mangle: false });
+		const ours = await minify(source, options());
+		const theirs = await reference.minify(source, options());
+
+		expect(ours.code).toBe(theirs.code);
+	});
+
 	it("should leave a name terser cannot mangle alone", async () => {
 		const { minify } = await load();
 		const result = await minify("function top(argument) { return argument; }", {
