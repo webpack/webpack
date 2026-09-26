@@ -1,5 +1,6 @@
 "use strict";
 
+const { execFileSync } = require("child_process");
 const path = require("path");
 const { load, resolve } = require("../../lib/config/browserslistTargetHandler");
 
@@ -165,6 +166,53 @@ describe("browserslist target", () => {
 			expect(load("last 1 chrome version", context)).not.toBe(
 				load(null, context)
 			);
+		});
+	});
+
+	describe("the default target", () => {
+		const withoutConfig = path.resolve(__dirname, "../fixtures");
+		const withConfig = path.resolve(__dirname, "../fixtures/browserslist");
+
+		/**
+		 * Resolves the default target in a fresh process, reporting whether the
+		 * data browserslist reads to run a query was loaded to answer it.
+		 * @param {string} context the context directory
+		 * @returns {{ target: string, queryData: string[] }} what it answered
+		 */
+		const resolveInChildProcess = (context) => {
+			const script = `
+				const { getDefaultTarget } = require(${JSON.stringify(
+					require.resolve("../../lib/config/target")
+				)});
+				const target = getDefaultTarget(${JSON.stringify(context)});
+				const carriers = [
+					"browserslist/index.js",
+					"caniuse-lite/dist/unpacker/agents",
+					"electron-to-chromium",
+					"node-releases",
+					"baseline-browser-mapping"
+				];
+				const queryData = carriers.filter((carrier) =>
+					Object.keys(require.cache).some((key) => key.includes(carrier))
+				);
+				process.stdout.write(JSON.stringify({ target, queryData }));
+			`;
+			return JSON.parse(
+				execFileSync(process.execPath, ["-e", script], { encoding: "utf8" })
+			);
+		};
+
+		it("reads no query data where no browserslist config exists", () => {
+			const { target, queryData } = resolveInChildProcess(withoutConfig);
+			expect(target).toBe("web");
+			expect(queryData).toEqual([]);
+		});
+
+		it("answers browserslist where a config exists", () => {
+			const { target, queryData } = resolveInChildProcess(withConfig);
+			expect(target).toBe("browserslist");
+			// A config means the queries do run, so the data is read after all
+			expect(queryData).toContain("browserslist/index.js");
 		});
 	});
 });
