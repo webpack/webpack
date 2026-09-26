@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore fnames, propmangle
+// cspell:ignore fnames, propmangle, fargs
 
 const {
 	FORMAT_DEFAULTS,
@@ -516,6 +516,104 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	/** @type {[string, string, Record<string, EXPECTED_ANY>][]} */
+	const UNUSED_CASES = [
+		["unused off", "function f() { var a = 1; } sink(f);", { compress: { unused: false } }],
+		["assignments kept", "function f() { var a; a = g(); } sink(f);", { compress: { unused: "keep_assign" } }],
+		["a retained top-level name", "var keep = 1, drop = 2; function gone() {} sink(1);", { toplevel: true, compress: { top_retain: ["keep"] } }],
+		["a write-only increment", "function f() { var x = 0; x++; x += 2; } sink(f);", {}],
+		["arguments beside destructured parameters", "function f({ a }, b) { return arguments; } sink(f);", {}],
+		["a class referring to itself", "var A = class B { static s = B.foo(); }; sink(1);", {}],
+		["a class with a side effect", "class C { static s = sink(); } sink(1);", { toplevel: true }],
+		["an unused class", "function f() { class A {} class B { static x = sink(); } } sink(f);", {}],
+		["assignments to an unused name", "function f() { var a, b; a = g(); (b = 1, c = 2); b = 3; } sink(f);", {}],
+		["an unused rest parameter", "function f(a, ...rest) { return a; } sink(f);", { compress: { keep_fargs: false } }],
+		["an IIFE's unused parameters", "sink((function (a, b, c) { return a; })(1));", {}],
+		["a for head with an unused initializer", "function f() { for (var i = 0, j = g(); i < 1; i++) sink(i); } sink(f);", {}],
+		["a labelled for with an unused initializer", "function f() { l: for (var a = g(), b; ;) break l; } sink(f);", {}],
+		["a name declared twice", "function f() { var a = 1; var a = g(); return a; } sink(f);", {}],
+		["side effects cascaded", "function f() { var a = g(), b = 1, c = h(), d = i(); return b + d; } sink(f);", {}],
+		["side effects before a kept name", "function f() { var a = g(), b; return b; } sink(f);", {}],
+		["a catch parameter redeclared", "function f() { try { sink(); } catch (e) { var e = g(); } } sink(f);", {}],
+		["an unused block-scoped name", "function f() { { let a = g(); const b = 1; } } sink(f);", {}],
+		["destructuring with pure getters", "function f() { var {} = o; var [] = p; var { a } = q; } sink(f);", { compress: { pure_getters: true } }],
+		["a fixed value reassigned", "function f() { var a = 1; a = 2; return a; } sink(f);", {}],
+		["an initializer assigning another name", "function f() { var a = function () { b = 1; }; var b; return a; } sink(f);", {}],
+		["a for-in over a declaration", "function f(o) { for (var k in o) sink(); } sink(f);", {}],
+		["a named function expression", "sink(function named() { return 1; }, class Named {});", {}],
+		["a getter", "sink({ get a() { var unused = 1; return 2; } });", {}],
+		["a labelled for left a block", "function f() { l: for (var a = g(), b = 1; b; ) break l; } sink(f);", {}],
+		["a fixed value moved to an assignment", "function f() { var a = g(); a = 1; return a; } sink(f);", {}],
+		["a name declared twice apart", "function f() { var a = 1; sink(a); var a = g(); return a; } sink(f);", {}],
+		["side effects after a kept name", "function f() { var b = x(), a = g(), c = h(); return b + c; } sink(f);", {}]
+	];
+
+	// Cases of terser's own suite reaching a branch no case above reaches, under
+	// the compress options it gives them.
+	/** @type {[string, string, import("terser").CompressOptions][]} */
+	const UNUSED_TERSER_CASES = [
+		[
+			"arguments beside a destructured parameter",
+			'(function ({ d }) { console.log(a = "foo", arguments[0].d); })({ d: "Bar" });',
+			{ arguments: true, defaults: true }
+		],
+		[
+			"side effects joined into a kept initializer",
+			"function f2(x) { var a = 4, b = x.prop, c = 5, not_used = sideeffect1(), e = sideeffect2(); return b + (function () { return -a * e - c; })(); }",
+			{ collapse_vars: true, evaluate: true, join_vars: true, reduce_funcs: true, reduce_vars: true, sequences: true, side_effects: true, unused: true }
+		],
+		[
+			"a name declared twice with a value",
+			"console.log(function () { var a = 1, b = 2, c = 3; var a = c++, b = b /= a; return function () { return a; }() + b; }());",
+			{ collapse_vars: true, unused: true }
+		],
+		[
+			"a labelled for's initializer moved out",
+			"!function () { L: for (var a = 1, b = console.log(a); --a;) continue L; }();",
+			{ unused: true }
+		],
+		[
+			"a declaration reassigned before it is read",
+			"function f2() { var a = {}; a = []; return a; } console.log(f2());",
+			{ passes: 2, reduce_vars: true, side_effects: true, unused: true }
+		]
+	];
+
+	for (const [name, source, compress] of UNUSED_TERSER_CASES) {
+		it(`should drop unused names as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/** @returns {EXPECTED_OBJECT} the options */
+			const settings = () => ({
+				compress: compress.defaults ? { ...compress } : { defaults: false, ...compress },
+				mangle: false
+			});
+			const ours = await minify(source, settings());
+			const theirs = await reference.minify(source, settings());
+			expect(ours.code).toBe(theirs.code);
+		});
+	}
+
+	for (const [name, source, options] of UNUSED_CASES) {
+		it(`should drop unused names as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			for (const base of [{ compress: { passes: 2 }, mangle: true }, { mangle: false }]) {
+				/** @returns {EXPECTED_OBJECT} the options */
+				const settings = () => {
+					const merged = { ...base, ...JSON.parse(JSON.stringify(options)) };
+					if (options.compress) {
+						merged.compress = { ...(base.compress || {}), ...options.compress };
+					}
+					return merged;
+				};
+				const ours = await minify(source, settings());
+				const theirs = await reference.minify(source, settings());
+				expect(ours.code).toBe(theirs.code);
+			}
+		});
+	}
+
 	const INLINE_MAP = Buffer.from(
 		JSON.stringify({ version: 3, sources: ["x.js"], names: [], mappings: "AAAA" })
 	).toString("base64");
@@ -873,6 +971,21 @@ describe("syntax-printer", () => {
 			driver.supports({
 				...modules,
 				directory: require("path").dirname(require.resolve("acorn/package.json"))
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose unused-name dropping it does not know", () => {
+		const unused =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "unused")
+			);
+		const modules = { common: {}, flags: {}, inference: {}, scope: {}, utils: {} };
+		expect(unused.supports({ ...modules, ast: {} })).toBe(false);
+		expect(
+			unused.supports({
+				...modules,
+				ast: { AST_Scope: { prototype: { drop_unused() {} } } }
 			})
 		).toBe(false);
 	});
