@@ -2363,11 +2363,18 @@ describe("a color rewrite paints as the color it replaced", () => {
 				"@keyframes k{from{opacity:0",
 				"a{}.b{color:red}.c",
 				"a{color:red}}}",
-				"a{content:'\\'"
+				"a{content:'\\'",
+				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
 			];
-			// A custom property's value is kept open as the input left it, so a
-			// sheet ending in one is left apart.
-			const apart = new Set([".a{--x:f(", ".a{--x:{"]);
+			// A custom property's value is kept open as the input left it, and a
+			// namespace applies to its whole sheet, so either is left apart.
+			const apart = new Set([
+				".a{--x:f(",
+				".a{--x:{",
+				"@namespace url(http://www.w3.org/2000/svg);",
+				"@\\6e \\61 \\6d \\65 \\73 \\70 \\61 \\63 \\65 url(http://www.w3.org/2000/svg);"
+			]);
 			const seconds = [
 				"b{color:#00f}",
 				"@media screen{c{color:red}}",

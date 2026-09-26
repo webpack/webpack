@@ -4088,6 +4088,27 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		expect(minify(html)).toBe(html);
 	});
 
+	it("declines to join across a sheet declaring a namespace", () => {
+		/**
+		 * @param {string} name an at-rule name
+		 * @returns {string} the name with every character escaped
+		 */
+		const escaped = (name) =>
+			name.replace(/./g, (char) => `\\${char.charCodeAt(0).toString(16)} `);
+		// A namespace applies to the whole sheet declaring it, so a sheet joined
+		// after one would read its selectors in it.
+		for (const html of [
+			"<style>@namespace url(http://www.w3.org/2000/svg);</style><style>p{color:red}</style>",
+			"<style>@namespace s url(x);</style><style>s|a{color:red}</style>",
+			// An escaped name spells the at-rule it escapes.
+			`<style>a{color:red}</style><style>@${escaped("namespace")}url(x);p{color:red}</style>`,
+			`<style>a{color:red}</style><style>@${escaped("import")}url(x.css);p{color:red}</style>`,
+			`<style>@${escaped("namespace")}url(x);</style><style>p{color:red}</style>`
+		]) {
+			expect(minifyAsWritten(html)).toBe(html);
+		}
+	});
+
 	it("still absorbs into a sheet whose own `@import` leads", () => {
 		expect(
 			minify(
@@ -4349,6 +4370,11 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			["x{}@\\61 b", ";"],
 			["x{}@-\\61", ";"],
 			["x{}@-\\\n", "{}"],
+			// Past whitespace and comments, a custom property's open value is kept.
+			["a{/*c*/--x:f(", null],
+			["a{\t--x:[1", null],
+			["a{ /*c*/ b:f(", ")}"],
+			["a{b:1;/*", "*/}"],
 			// A lone backslash escapes whatever would follow it.
 			["a{b:url(x\\", null],
 			["x{}@\\", null]
