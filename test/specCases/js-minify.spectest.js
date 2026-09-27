@@ -16,7 +16,7 @@ const { PHASES } = require("../../lib/javascript/syntax").printer;
 /** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT } }} Source */
 /** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY, compressOptions: Set<string>, mangleOptions: Set<string> }} CaseReader */
 /** @typedef {{ name: string, files: string[] }} Group */
-/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, ownOptionsKnown?: boolean }} Corpus */
+/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean }} Corpus */
 
 const externalDir = path.resolve(__dirname, "../external");
 const referenceDir = path.join(externalDir, "terser");
@@ -241,8 +241,10 @@ const readSwcTest = (file, { compressOptions, mangleOptions }) => {
 	while (dir.startsWith(swcTestsDir) && !fs.existsSync(path.join(dir, "config.json"))) {
 		dir = path.dirname(dir);
 	}
+	// swc reads a config that leaves `defaults` unnamed as naming it true, where
+	// terser's own tests leave it off; read as terser's, most passes never run.
 	const compress = dir.startsWith(swcTestsDir)
-		? readJson(path.join(dir, "config.json"))
+		? { defaults: true, ...readJson(path.join(dir, "config.json")) }
 		: undefined;
 	let module = false;
 	try {
@@ -358,7 +360,9 @@ const CORPORA = [
 		minimumOwn: 900,
 		// Its own options are cut to what terser reads, so terser refusing one
 		// is the reader letting a key through.
-		ownOptionsKnown: true
+		ownOptionsKnown: true,
+		// Each names `defaults`, as swc reads a config that leaves it unnamed.
+		ownDefaultsNamed: true
 	}
 ];
 
@@ -440,11 +444,19 @@ describe("JavaScript minifier", () => {
 				const reader = /** @type {CaseReader} */ (loaded.reader);
 				let count = 0;
 				let own = 0;
+				let defaultsUnnamed = 0;
 				for (const { files } of groups) {
 					for (const file of files) {
 						for (const source of corpus.read(file, reader)) {
 							count++;
 							if (source.own) own++;
+							if (
+								source.own &&
+								source.own.compress &&
+								source.own.compress.defaults === undefined
+							) {
+								defaultsUnnamed++;
+							}
 						}
 					}
 				}
@@ -452,6 +464,7 @@ describe("JavaScript minifier", () => {
 				if (corpus.minimumOwn !== undefined) {
 					expect(own).toBeGreaterThan(corpus.minimumOwn);
 				}
+				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
 			});
 
 			for (const group of groups) {
