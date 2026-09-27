@@ -4146,6 +4146,18 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		).toBe("<style>a{content:'x\"y'}b{color:#00f}</style>");
 	});
 
+	it.each(["\n", "\r", "\r\n", "\f"])(
+		"keeps the next sheet after a string ended by %j",
+		(newline) => {
+			const html = `<style>a{content:"x${newline};color:blue}</style><style>b{color:red}</style>`;
+			// CSS preprocessing makes each newline equivalent to LF, including
+			// where it ends a bad string before the next sheet is joined.
+			expect(minify(html)).toBe(
+				minify('<style>a{content:"x\n;color:blue}</style><style>b{color:red}</style>')
+			);
+		}
+	);
+
 	it("reads an escape outside a string as one too", () => {
 		// Were the quote not escaped it would open a string running to the end; as
 		// it is, the escape starts a rule the sheet does not finish, closed with `{}`.
