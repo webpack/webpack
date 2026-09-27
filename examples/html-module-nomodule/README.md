@@ -155,20 +155,20 @@ The emitted page, with the modern `type="module"` entry tag plus the injected
 ```
 modern:
   asset index.html 745 bytes [emitted] (auxiliary name: page)
-  asset app.modern.js 449 bytes [emitted] [javascript module] (name: __html_6d047296_0)
+  asset app.modern.js 449 bytes [emitted] [javascript module] (name: src-index-0)
   Entrypoint page (745 bytes) = 1 auxiliary asset
-  Entrypoint __html_6d047296_0 449 bytes = app.modern.js
-  chunk (runtime: __html_6d047296_0) app.modern.js (__html_6d047296_0) 300 bytes [entry] [rendered]
-    > ./app.js __html_6d047296_0
-    ./src/app.js 300 bytes [built] [code generated]
-      [used exports unknown]
-      entry ./app.js __html_6d047296_0
+  Entrypoint src-index-0 449 bytes = app.modern.js
   chunk (runtime: page) (page) 359 bytes [entry]
     > ./src/index.html page
     ./src/index.html 359 bytes [built] [code generated]
       [exports: default]
       [used exports unknown]
       entry ./src/index.html page
+  chunk (runtime: src-index-0) app.modern.js (src-index-0) 300 bytes [entry] [rendered]
+    > ./app.js src-index-0
+    ./src/app.js 300 bytes [built] [code generated]
+      [used exports unknown]
+      entry ./app.js src-index-0
   modern (webpack X.X.X) compiled successfully
 
 legacy:
@@ -186,14 +186,14 @@ legacy:
 ```
 modern:
   asset index.html 584 bytes [emitted] [minimized] (auxiliary name: page)
-  asset app.modern.js 90 bytes [emitted] [javascript module] [minimized] (name: __html_6d047296_0)
+  asset app.modern.js 90 bytes [emitted] [javascript module] [minimized] (name: src-index-0)
   Entrypoint page (584 bytes) = 1 auxiliary asset
-  Entrypoint __html_6d047296_0 90 bytes = app.modern.js
-  chunk (runtime: __html_6d047296_0) app.modern.js (__html_6d047296_0) 300 bytes [entry] [rendered]
-    > ./app.js __html_6d047296_0
+  Entrypoint src-index-0 90 bytes = app.modern.js
+  chunk (runtime: src-index-0) app.modern.js (src-index-0) 300 bytes [entry] [rendered]
+    > ./app.js src-index-0
     ./src/app.js 300 bytes [built] [code generated]
       [no exports used]
-      entry ./app.js __html_6d047296_0
+      entry ./app.js src-index-0
   chunk (runtime: page) (page) 359 bytes [entry]
     > ./src/index.html page
     ./src/index.html 359 bytes [built] [code generated]
