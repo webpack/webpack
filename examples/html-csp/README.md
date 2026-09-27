@@ -104,7 +104,7 @@ carrying a hash for each one.
 ```html
 <!DOCTYPE html>
 <html lang="en">
-	<head><meta http-equiv="Content-Security-Policy" content="script-src 'self' 'sha256-5NlCGoSN8ETSUabbmQKYTt1H6nvYWb5OGZJTsWS8iC8='; style-src 'self' 'sha256-vp73KxgWfPhtZ9IRKOt378FrPIkD/T6FbLXnXfaktI8=' 'sha256-+Ver9ZPpEiV0Cq4WfPc7DL+LUo1ECenMRe/8IigO+wA='; object-src 'none'; base-uri 'self'">
+	<head><meta http-equiv="Content-Security-Policy" content="script-src 'self' 'sha256-5NlCGoSN8ETSUabbmQKYTt1H6nvYWb5OGZJTsWS8iC8='; style-src 'self' 'sha256-vp73KxgWfPhtZ9IRKOt378FrPIkD/T6FbLXnXfaktI8=' 'sha256-PeRoLnh26TSx4wkeBvm/ZhVSCqLZCkG+9GLVbJikD+I='; object-src 'none'; base-uri 'self'">
 		<meta charset="utf-8" />
 		<title>CSP</title>
 
@@ -131,8 +131,7 @@ h1.ready {
 			body {
 				font-family: sans-serif;
 			}
-		
-</style>
+		</style>
 	</head>
 	<body>
 		<h1>Content-Security-Policy</h1>
@@ -159,23 +158,11 @@ console.log("bundled + inlined script, covered by a CSP hash");
 
 ```
 asset index.html 1.59 KiB [emitted] (auxiliary name: index)
-asset app.js 319 bytes [emitted] (name: __html_6d047296_1)
-asset styles.css 157 bytes [emitted] (name: __html_6d047296_0)
+asset app.js 319 bytes [emitted] (name: src-index-1)
+asset styles.css 157 bytes [emitted] (name: src-index-0)
 Entrypoint index (1.59 KiB) = 1 auxiliary asset
-Entrypoint __html_6d047296_1 319 bytes = app.js
-Entrypoint __html_6d047296_0 157 bytes = styles.css
-chunk (runtime: __html_6d047296_0) styles.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
-  > ./styles.css __html_6d047296_0
-  runtime modules 0 bytes 1 module
-  css ./src/styles.css 55 bytes [built] [code generated]
-    [no exports]
-    [used exports unknown]
-    entry ./styles.css __html_6d047296_0
-chunk (runtime: __html_6d047296_1) app.js (__html_6d047296_1) 117 bytes [entry] [rendered]
-  > ./app.js __html_6d047296_1
-  ./src/app.js 117 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./app.js __html_6d047296_1
+Entrypoint src-index-1 319 bytes = app.js
+Entrypoint src-index-0 157 bytes = styles.css
 chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 47 bytes [dependent] 1 module
@@ -183,6 +170,18 @@ chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
     [exports: default]
     [used exports unknown]
     entry ./src/index.html index
+chunk (runtime: src-index-0) styles.css (src-index-0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
+  > ./styles.css src-index-0
+  runtime modules 0 bytes 1 module
+  css ./src/styles.css 55 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./styles.css src-index-0
+chunk (runtime: src-index-1) app.js (src-index-1) 117 bytes [entry] [rendered]
+  > ./app.js src-index-1
+  ./src/app.js 117 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./app.js src-index-1
 webpack X.X.X compiled successfully
 ```
 
@@ -190,10 +189,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset index.html 570 bytes [emitted] [minimized] (auxiliary name: index)
-asset styles.css 40 bytes [emitted] [minimized] (name: __html_6d047296_0)
+asset styles.css 40 bytes [emitted] [minimized] (name: src-index-0)
 Entrypoint index (570 bytes) = 1 auxiliary asset
-Entrypoint __html_6d047296_1 =
-Entrypoint __html_6d047296_0 40 bytes = styles.css
+Entrypoint src-index-1 =
+Entrypoint src-index-0 40 bytes = styles.css
 chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
   > ./src/index.html index
   dependent modules 47 bytes [dependent] 1 module
@@ -201,17 +200,17 @@ chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: __html_6d047296_0) styles.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
-  > ./styles.css __html_6d047296_0
+chunk (runtime: src-index-0) styles.css (src-index-0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
+  > ./styles.css src-index-0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 55 bytes [built] [code generated]
     [no exports]
     [no exports used]
-    entry ./styles.css __html_6d047296_0
-chunk (runtime: __html_6d047296_1) (__html_6d047296_1) 117 bytes [entry] [rendered]
-  > ./app.js __html_6d047296_1
+    entry ./styles.css src-index-0
+chunk (runtime: src-index-1) (src-index-1) 117 bytes [entry] [rendered]
+  > ./app.js src-index-1
   ./src/app.js 117 bytes [built] [code generated]
     [no exports used]
-    entry ./app.js __html_6d047296_1
+    entry ./app.js src-index-1
 webpack X.X.X compiled successfully
 ```
