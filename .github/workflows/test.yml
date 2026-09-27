@@ -295,7 +295,8 @@ jobs:
             submodules: test/external/test262-cases
             script: test:test262-parser
           # Minifies every source of each JS corpus with the published minifier
-          # and with webpack's own, and requires the same bytes back.
+          # and with webpack's own, and requires the same bytes back. swc's
+          # minifier tests are checked out by a step of their own, below.
           - language: js-minify
             submodules: test/external/terser test/external/test262-cases
             script: test:js-minify
@@ -308,6 +309,18 @@ jobs:
 
       - name: Check out the ${{ matrix.language }} corpus
         run: node tooling/retry.js git submodule update --init --depth 1 ${{ matrix.submodules }}
+
+      # swc's minifier tests are one directory of a large repository, so only it
+      # is checked out, at the commit the submodule pins: 130 MB, not the repo.
+      - name: Check out swc's minifier tests
+        if: matrix.language == 'js-minify'
+        run: |
+          sha=$(git rev-parse HEAD:test/external/swc)
+          git init -q test/external/swc
+          git -C test/external/swc remote add origin https://github.com/swc-project/swc
+          git -C test/external/swc sparse-checkout set crates/swc_ecma_minifier/tests
+          node tooling/retry.js git -C test/external/swc fetch --depth 1 --filter=blob:none origin "$sha"
+          git -C test/external/swc checkout -q FETCH_HEAD
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0

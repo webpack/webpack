@@ -13,3 +13,6 @@
 [submodule "test/external/terser"]
 	path = test/external/terser
 	url = https://github.com/terser/terser
+[submodule "test/external/swc"]
+	path = test/external/swc
+	url = https://github.com/swc-project/swc

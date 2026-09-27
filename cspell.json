@@ -616,6 +616,7 @@
     "test/external/css-parsing-tests/**",
     "test/external/html5lib-tests/**",
     "test/external/terser/**",
+    "test/external/swc/**",
     "**/*.svg",
     "*.log",
     "**/*.wasm",
