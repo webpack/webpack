@@ -14,7 +14,7 @@ const { PHASES } = require("../../lib/javascript/syntax").printer;
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT } }} Source */
-/** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY, compressOptions: Set<string>, mangleOptions: Set<string> }} CaseReader */
+/** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY, knows: (group: "compress" | "mangle", key: string) => boolean }} CaseReader */
 /** @typedef {{ name: string, files: string[] }} Group */
 /** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean }} Corpus */
 
@@ -208,12 +208,15 @@ const readTest262File = (file) => {
  * their own, and terser refuses a whole object over one it does not know, which
  * would leave none of the test's other options run.
  * @param {EXPECTED_ANY} options as the test names them
- * @param {Set<string>} known the keys terser reads
+ * @param {"compress" | "mangle"} group which of terser's options they are
+ * @param {CaseReader["knows"]} knows whether terser reads a key
  * @returns {EXPECTED_ANY} those it reads
  */
-const knownTo = (options, known) =>
+const knownTo = (options, group, knows) =>
 	options && typeof options === "object"
-		? Object.fromEntries(Object.entries(options).filter(([key]) => known.has(key)))
+		? Object.fromEntries(
+				Object.entries(options).filter(([key]) => knows(group, key))
+			)
 		: options;
 
 /**
@@ -224,8 +227,8 @@ const knownTo = (options, known) =>
  * @param {CaseReader} reader terser's own modules, unpatched
  * @returns {Source[]} the test as one source
  */
-const readSwcTest = (file, { compressOptions, mangleOptions }) => {
-	if (!compressOptions) {
+const readSwcTest = (file, { knows }) => {
+	if (!knows) {
 		throw new Error(
 			"swc's tests are read with terser's own options, from test/external/terser, which is not checked out"
 		);
@@ -263,10 +266,11 @@ const readSwcTest = (file, { compressOptions, mangleOptions }) => {
 			input,
 			module,
 			own: compress && {
-				compress: knownTo(compress, compressOptions),
+				compress: knownTo(compress, "compress", knows),
 				mangle: knownTo(
 					readJson(path.join(path.dirname(file), "mangle.json")),
-					mangleOptions
+					"mangle",
+					knows
 				),
 				format: undefined,
 				parse: undefined
@@ -402,14 +406,32 @@ describe("JavaScript minifier", () => {
 		 */
 		const at = (file) =>
 			importModule(pathToFileURL(path.join(referenceDir, "lib", file)).href);
-		const { Compressor } = await at("compress/index.js");
-		const { format_mangler_options: formatManglerOptions } = await at("scope.js");
+		// Read for its effect: `minify` reaches `transform` on every node class.
+		await at("transform.js");
+		const { minify_sync: minifySync } = await at("minify.js");
+		/** @type {Map<string, boolean>} */
+		const known = new Map();
 		loaded.reader = {
 			AST: await at("ast.js"),
 			parse: (await at("parse.js")).parse,
-			// The options terser's compressor and mangler read, as they say.
-			compressOptions: new Set(Object.keys(new Compressor({}, {}).options)),
-			mangleOptions: new Set(Object.keys(formatManglerOptions({})))
+			// Whether terser reads a key, as its own `minify` answers: it refuses an
+			// options object naming one it does not, and nothing else says so whole.
+			knows: (group, key) => {
+				const id = `${group}.${key}`;
+				let answer = known.get(id);
+				if (answer === undefined) {
+					try {
+						minifySync("0", { [group]: { [key]: undefined } });
+						answer = true;
+					} catch (err) {
+						answer = !/is not a supported option/.test(
+							String(/** @type {Error} */ (err).message)
+						);
+					}
+					known.set(id, answer);
+				}
+				return answer;
+			}
 		};
 	});
 
