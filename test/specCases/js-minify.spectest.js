@@ -14,12 +14,16 @@ const { PHASES } = require("../../lib/javascript/syntax").printer;
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT } }} Source */
-/** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY }} CaseReader */
+/** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY, compressOptions: Set<string>, mangleOptions: Set<string> }} CaseReader */
 /** @typedef {{ name: string, files: string[] }} Group */
-/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number }} Corpus */
+/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, ownOptionsKnown?: boolean }} Corpus */
 
 const externalDir = path.resolve(__dirname, "../external");
 const referenceDir = path.join(externalDir, "terser");
+const swcTestsDir = path.join(
+	externalDir,
+	"swc/crates/swc_ecma_minifier/tests"
+);
 
 // A group minifies each of its sources once per option set, with both minifiers.
 const GROUP_TIMEOUT = 300000;
@@ -200,6 +204,76 @@ const readTest262File = (file) => {
 };
 
 /**
+ * An options object with only the keys terser reads: swc's tests name a few of
+ * their own, and terser refuses a whole object over one it does not know, which
+ * would leave none of the test's other options run.
+ * @param {EXPECTED_ANY} options as the test names them
+ * @param {Set<string>} known the keys terser reads
+ * @returns {EXPECTED_ANY} those it reads
+ */
+const knownTo = (options, known) =>
+	options && typeof options === "object"
+		? Object.fromEntries(Object.entries(options).filter(([key]) => known.has(key)))
+		: options;
+
+/**
+ * One of swc's minifier tests, as swc's own harness reads it: the compress
+ * options of the nearest `config.json` up the tree, and a `mangle.json` beside
+ * the input. A source that parses only as a module is read as one.
+ * @param {string} file the input
+ * @param {CaseReader} reader terser's own modules, unpatched
+ * @returns {Source[]} the test as one source
+ */
+const readSwcTest = (file, { compressOptions, mangleOptions }) => {
+	if (!compressOptions) {
+		throw new Error(
+			"swc's tests are read with terser's own options, from test/external/terser, which is not checked out"
+		);
+	}
+	const input = fs.readFileSync(file, "utf8");
+	/**
+	 * @param {string} at a file
+	 * @returns {EXPECTED_ANY} its JSON, or undefined where there is none
+	 */
+	const readJson = (at) =>
+		fs.existsSync(at) ? JSON.parse(fs.readFileSync(at, "utf8")) : undefined;
+	let dir = path.dirname(file);
+	while (dir.startsWith(swcTestsDir) && !fs.existsSync(path.join(dir, "config.json"))) {
+		dir = path.dirname(dir);
+	}
+	const compress = dir.startsWith(swcTestsDir)
+		? readJson(path.join(dir, "config.json"))
+		: undefined;
+	let module = false;
+	try {
+		acorn.parse(input, { ecmaVersion: "latest", sourceType: "script" });
+	} catch (_err) {
+		try {
+			acorn.parse(input, { ecmaVersion: "latest", sourceType: "module" });
+			module = true;
+		} catch (_err2) {
+			// Neither: both minifiers are held to refusing it alike.
+		}
+	}
+	return [
+		{
+			name: path.relative(swcTestsDir, file),
+			input,
+			module,
+			own: compress && {
+				compress: knownTo(compress, compressOptions),
+				mangle: knownTo(
+					readJson(path.join(path.dirname(file), "mangle.json")),
+					mangleOptions
+				),
+				format: undefined,
+				parse: undefined
+			}
+		}
+	];
+};
+
+/**
  * @param {string} directory a corpus directory
  * @param {number} depth how many directory levels name a group
  * @param {(file: string) => boolean} include which files the corpus holds
@@ -258,6 +332,33 @@ const CORPORA = [
 		read: readTest262File,
 		optionSets: ["the default minimizer's options", "printing alone"],
 		minimum: 50000
+	},
+	{
+		name: "swc minifier",
+		submodule: "test/external/swc",
+		directory: swcTestsDir,
+		// Each test's input, the real libraries and projects swc measures itself
+		// on, and not the port of terser's own tests the first corpus reads.
+		groups: groupByDirectory(swcTestsDir, 2, (file) => {
+			const [area, next] = path.relative(swcTestsDir, file).split(path.sep);
+			if (area === "terser") return false;
+			if (area === "benches-full") return true;
+			if (area === "projects") return next === "files";
+			return path.basename(file) === "input.js";
+		}),
+		read: readSwcTest,
+		optionSets: [
+			"its own options",
+			"the default minimizer's options",
+			"printing alone"
+		],
+		// 940 at the pinned commit, 908 of them under a config of their own; a
+		// reader that stopped finding configs up the tree reads 219.
+		minimum: 900,
+		minimumOwn: 900,
+		// Its own options are cut to what terser reads, so terser refusing one
+		// is the reader letting a key through.
+		ownOptionsKnown: true
 	}
 ];
 
@@ -297,7 +398,15 @@ describe("JavaScript minifier", () => {
 		 */
 		const at = (file) =>
 			importModule(pathToFileURL(path.join(referenceDir, "lib", file)).href);
-		loaded.reader = { AST: await at("ast.js"), parse: (await at("parse.js")).parse };
+		const { Compressor } = await at("compress/index.js");
+		const { format_mangler_options: formatManglerOptions } = await at("scope.js");
+		loaded.reader = {
+			AST: await at("ast.js"),
+			parse: (await at("parse.js")).parse,
+			// The options terser's compressor and mangler read, as they say.
+			compressOptions: new Set(Object.keys(new Compressor({}, {}).options)),
+			mangleOptions: new Set(Object.keys(formatManglerOptions({})))
+		};
 	});
 
 	it("should install every phase, so each corpus reaches all of them", () => {
@@ -330,10 +439,19 @@ describe("JavaScript minifier", () => {
 			it("should read every source the corpus holds", () => {
 				const reader = /** @type {CaseReader} */ (loaded.reader);
 				let count = 0;
+				let own = 0;
 				for (const { files } of groups) {
-					for (const file of files) count += corpus.read(file, reader).length;
+					for (const file of files) {
+						for (const source of corpus.read(file, reader)) {
+							count++;
+							if (source.own) own++;
+						}
+					}
 				}
 				expect(count).toBeGreaterThan(corpus.minimum);
+				if (corpus.minimumOwn !== undefined) {
+					expect(own).toBeGreaterThan(corpus.minimumOwn);
+				}
 			});
 
 			for (const group of groups) {
@@ -364,6 +482,16 @@ describe("JavaScript minifier", () => {
 										source.input,
 										optionsFor(source)
 									);
+									if (
+										corpus.ownOptionsKnown &&
+										setName === "its own options" &&
+										theirs.error !== undefined &&
+										/is not a supported option/.test(theirs.error)
+									) {
+										differences.push(
+											`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
+										);
+									}
 									if (theirs.code !== ours.code || theirs.error !== ours.error) {
 										differences.push(
 											`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(ours)}`
