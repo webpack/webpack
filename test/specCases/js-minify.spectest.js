@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore fnames
+
 // Holds webpack's JavaScript minifier to the minifier it replaces: every source
 // of every corpus below is minified by both under the same options, and the two
 // must write the same bytes, or refuse the source with the same error.
@@ -220,6 +222,25 @@ const knownTo = (options, group, knows) =>
 		: options;
 
 /**
+ * @param {string} input a source
+ * @returns {boolean} whether it parses only as a module
+ */
+const readsAsModule = (input) => {
+	try {
+		acorn.parse(input, { ecmaVersion: "latest", sourceType: "script" });
+		return false;
+	} catch (_err) {
+		try {
+			acorn.parse(input, { ecmaVersion: "latest", sourceType: "module" });
+			return true;
+		} catch (_err2) {
+			// Neither: both minifiers are held to refusing it alike.
+			return false;
+		}
+	}
+};
+
+/**
  * One of swc's minifier tests, as swc's own harness reads it: the compress
  * options of the nearest `config.json` up the tree, and a `mangle.json` beside
  * the input. A source that parses only as a module is read as one.
@@ -249,22 +270,11 @@ const readSwcTest = (file, { knows }) => {
 	const compress = dir.startsWith(swcTestsDir)
 		? { defaults: true, ...readJson(path.join(dir, "config.json")) }
 		: undefined;
-	let module = false;
-	try {
-		acorn.parse(input, { ecmaVersion: "latest", sourceType: "script" });
-	} catch (_err) {
-		try {
-			acorn.parse(input, { ecmaVersion: "latest", sourceType: "module" });
-			module = true;
-		} catch (_err2) {
-			// Neither: both minifiers are held to refusing it alike.
-		}
-	}
 	return [
 		{
 			name: path.relative(swcTestsDir, file),
 			input,
-			module,
+			module: readsAsModule(input),
 			own: compress && {
 				compress: knownTo(compress, "compress", knows),
 				mangle: knownTo(
@@ -277,6 +287,129 @@ const readSwcTest = (file, { knows }) => {
 			}
 		}
 	];
+};
+
+/**
+ * A Rust string literal starting at `at`, read as Rust reads it: `r#"…"#` raw,
+ * or `"…"` with its escapes.
+ * @param {string} text the source
+ * @param {number} at where a literal may start
+ * @returns {{ value: string, end: number } | undefined} the string, and where it ends
+ */
+const readRustString = (text, at) => {
+	const raw = /^r(#*)"/.exec(text.slice(at, at + 16));
+	if (raw) {
+		const close = `"${raw[1]}`;
+		const start = at + raw[0].length;
+		const end = text.indexOf(close, start);
+		return { value: text.slice(start, end), end: end + close.length };
+	}
+	if (text[at] !== '"') return undefined;
+	/** @type {Record<string, string>} */
+	const escaped = { n: "\n", r: "\r", t: "\t", 0: "\0", "\\": "\\", '"': '"', "'": "'" };
+	let value = "";
+	let i = at + 1;
+	for (; text[i] !== '"'; i++) {
+		if (text[i] !== "\\") {
+			value += text[i];
+			continue;
+		}
+		const next = text[++i];
+		if (next === "u") {
+			const close = text.indexOf("}", i);
+			value += String.fromCodePoint(Number.parseInt(text.slice(i + 2, close), 16));
+			i = close;
+		} else if (next === "x") {
+			value += String.fromCharCode(Number.parseInt(text.slice(i + 1, i + 3), 16));
+			i += 2;
+		} else if (next === "\n") {
+			// A line continuation, which drops the break and the indent after it.
+			while (/\s/.test(text[i + 1])) i++;
+		} else {
+			value += escaped[next];
+		}
+	}
+	return { value, end: i + 1 };
+};
+
+// The mangle options swc's exec tests run with, by the helper each calls.
+const SWC_EXEC_MANGLE = { keep_fnames: true, toplevel: true };
+
+/**
+ * The tests swc writes inline in `exec.rs`, as the helper each calls runs them:
+ * its source, and a config read with `defaults` on where it leaves it unnamed.
+ * @param {string} file `exec.rs`
+ * @param {CaseReader} reader terser's own modules, unpatched
+ * @returns {Source[]} one source per test
+ */
+const readSwcExecTests = (file, { knows }) => {
+	const text = fs.readFileSync(file, "utf8");
+	/** @type {Source[]} */
+	const sources = [];
+	for (const test of text.split("#[test]").slice(1)) {
+		const name = /** @type {RegExpExecArray} */ (/fn\s+(\w+)/.exec(test))[1];
+		const call =
+			/\b(run_exec_test|run_default_exec_test|run_mangle_props_exec_test)\(/.exec(
+				test
+			);
+		// A test with a harness of its own, which reads no one source.
+		if (!call) continue;
+		/** @type {Map<string, string>} */
+		const bound = new Map();
+		for (const binding of test.matchAll(/let\s+(\w+)\s*=\s*/g)) {
+			const literal = readRustString(
+				test,
+				/** @type {number} */ (binding.index) + binding[0].length
+			);
+			if (literal) bound.set(binding[1], literal.value);
+		}
+		/** @type {(string | boolean | undefined)[]} */
+		const args = [];
+		let i = call.index + call[0].length;
+		for (;;) {
+			while (/[\s,]/.test(test[i])) i++;
+			if (test[i] === ")") break;
+			const literal = readRustString(test, i);
+			if (literal) {
+				args.push(literal.value);
+				i = literal.end;
+				continue;
+			}
+			const word = /^\w+/.exec(test.slice(i));
+			if (!word) throw new Error(`Unread argument to ${call[1]} in ${name}`);
+			args.push(
+				word[0] === "true" ? true : word[0] === "false" ? false : bound.get(word[0])
+			);
+			i += word[0].length;
+		}
+		const [input, config, skipMangle] = args;
+		if (typeof input !== "string") {
+			throw new Error(`Unread source for ${call[1]} in ${name}`);
+		}
+		/** @type {EXPECTED_ANY} */
+		let compress = { defaults: true, toplevel: true };
+		/** @type {EXPECTED_ANY} */
+		let mangle = SWC_EXEC_MANGLE;
+		if (call[1] === "run_exec_test") {
+			compress = { defaults: true, ...JSON.parse(/** @type {string} */ (config)) };
+			mangle = skipMangle ? false : SWC_EXEC_MANGLE;
+		} else if (call[1] === "run_mangle_props_exec_test") {
+			compress = false;
+			mangle = { toplevel: true, properties: {} };
+		}
+		sources.push({
+			name,
+			input,
+			module: readsAsModule(input),
+			own: {
+				compress: knownTo(compress, "compress", knows),
+				mangle: knownTo(mangle, "mangle", knows),
+				format: undefined,
+				parse: undefined
+			}
+		});
+	}
+	return sources;
 };
 
 /**
@@ -366,6 +499,23 @@ const CORPORA = [
 		// is the reader letting a key through.
 		ownOptionsKnown: true,
 		// Each names `defaults`, as swc reads a config that leaves it unnamed.
+		ownDefaultsNamed: true
+	},
+	{
+		name: "swc exec",
+		submodule: "test/external/swc",
+		directory: swcTestsDir,
+		groups: () => [{ name: "exec.rs", files: [path.join(swcTestsDir, "exec.rs")] }],
+		read: readSwcExecTests,
+		optionSets: [
+			"its own options",
+			"the default minimizer's options",
+			"printing alone"
+		],
+		// 502 at the pinned commit: every test but two with harnesses of their own.
+		minimum: 500,
+		minimumOwn: 500,
+		ownOptionsKnown: true,
 		ownDefaultsNamed: true
 	}
 ];
