@@ -413,6 +413,81 @@ const readSwcExecTests = (file, { knows }) => {
 };
 
 /**
+ * The tests swc writes inline in `mangle.rs`: each source, and the options its
+ * `MangleOptions` literal names. Rust spells three of terser's options its own
+ * way, `top_level`, `props` and `atom!` names, so those are read by name; a
+ * field terser does not read is cut as any other test's is.
+ * @param {string} file `mangle.rs`
+ * @param {CaseReader} reader terser's own modules, unpatched
+ * @returns {Source[]} one source per test
+ */
+const readSwcMangleTests = (file, { knows }) => {
+	const text = fs.readFileSync(file, "utf8");
+	/**
+	 * @param {string} list a `vec![atom!("…"), …]`
+	 * @returns {string[]} the names in it
+	 */
+	const atoms = (list) => [...list.matchAll(/atom!\("([^"]*)"\)/g)].map((m) => m[1]);
+	/** @type {Source[]} */
+	const sources = [];
+	for (const test of text.split("#[test]").slice(1)) {
+		const name = /** @type {RegExpExecArray} */ (/fn\s+(\w+)/.exec(test))[1];
+		const binding = /let\s+src\s*=\s*/.exec(test);
+		const at = test.indexOf("MangleOptions {");
+		if (!binding || at === -1) continue;
+		const literal = readRustString(
+			test,
+			/** @type {number} */ (binding.index) + binding[0].length
+		);
+		if (!literal) throw new Error(`Unread source in ${name}`);
+		const struct = test.slice(at);
+		const props = /props:\s*Some\(ManglePropertiesOptions\s*\{([\s\S]*?)\}\)/.exec(
+			struct
+		);
+		const outside = props ? struct.replace(props[0], "") : struct;
+		/** @type {Record<string, EXPECTED_ANY>} */
+		const mangle = {};
+		const topLevel = /top_level:\s*Some\((true|false)\)/.exec(outside);
+		if (topLevel) mangle.toplevel = topLevel[1] === "true";
+		const reserved = /reserved:\s*(vec!\[[^\]]*\])/.exec(outside);
+		if (reserved) mangle.reserved = atoms(reserved[1]);
+		for (const field of outside.matchAll(/(\w+):\s*(true|false)\b/g)) {
+			mangle[field[1]] = field[2] === "true";
+		}
+		if (props) {
+			const kept = /reserved:\s*(vec!\[[^\]]*\])/.exec(props[1]);
+			mangle.properties = kept ? { reserved: atoms(kept[1]) } : {};
+		}
+		// A field read by none of the above is an option this would drop unseen.
+		const read = new Set(["top_level", "reserved", ...Object.keys(mangle)]);
+		for (const [scope, fields] of [
+			["MangleOptions", outside.slice(0, outside.indexOf("..Default::default()"))],
+			["ManglePropertiesOptions", props ? props[1] : ""]
+		]) {
+			for (const field of fields
+				.replace(/\.\.Default::default\(\)/g, "")
+				.matchAll(/(\w+):/g)) {
+				if (!read.has(field[1])) {
+					throw new Error(`Unread ${scope} field ${field[1]} in ${name}`);
+				}
+			}
+		}
+		sources.push({
+			name,
+			input: literal.value,
+			module: readsAsModule(literal.value),
+			own: {
+				compress: false,
+				mangle: knownTo(mangle, "mangle", knows),
+				format: undefined,
+				parse: undefined
+			}
+		});
+	}
+	return sources;
+};
+
+/**
  * @param {string} directory a corpus directory
  * @param {number} depth how many directory levels name a group
  * @param {(file: string) => boolean} include which files the corpus holds
@@ -517,6 +592,20 @@ const CORPORA = [
 		minimumOwn: 500,
 		ownOptionsKnown: true,
 		ownDefaultsNamed: true
+	},
+	{
+		name: "swc mangle",
+		submodule: "test/external/swc",
+		directory: swcTestsDir,
+		groups: () => [
+			{ name: "mangle.rs", files: [path.join(swcTestsDir, "mangle.rs")] }
+		],
+		read: readSwcMangleTests,
+		optionSets: ["its own options", "the default minimizer's options"],
+		// 10 at the pinned commit.
+		minimum: 9,
+		minimumOwn: 9,
+		ownOptionsKnown: true
 	}
 ];
 
