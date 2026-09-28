@@ -11,7 +11,7 @@
  * @property {boolean} verbose whether to print more info to output
  * @property {string} root root repository directory
  * @property {string} schemas glob to find schemas in the root directory
- * @property {string} declarations output folder for declarations generated from schemas
+ * @property {string} declarations folder holding the option types that are not a plugin's own
  * @property {string} source glob to find source code in the root directory
  * @property {string} types output file for types declarations
  * @property {boolean} templateLiterals whether template literal types are allowed
