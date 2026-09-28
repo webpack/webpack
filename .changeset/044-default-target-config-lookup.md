@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read only the browserslist config when choosing the default target.
+Read the browserslist data and options schema only when a build needs them.
