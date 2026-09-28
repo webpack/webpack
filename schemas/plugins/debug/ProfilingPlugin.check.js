@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*
  * This file was automatically generated.
  * DO NOT MODIFY BY HAND.
