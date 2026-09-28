@@ -11743,7 +11743,9 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 		["a property name, folded", "a{CO\\4c OR:red}", "a{color:red}"],
 		["a custom property's name", "a{--x\\2e y:1}", "a{--x\\.y:1}"],
 		["an at-rule name", "@m\\65 dia print{a{top:0}}", "@media print{a{top:0}}"],
-		["a keyword", "a{display:BL\\4f CK}", "a{display:block}"]
+		["a keyword", "a{display:BL\\4f CK}", "a{display:block}"],
+		// Off, the call keeps its quotes too: unquoting it rests on the escape.
+		["a `url()` call", 'a{background:u\\72 l("a")}', "a{background:url(a)}"]
 	];
 
 	for (const [what, source, shorter] of written) {
@@ -11817,6 +11819,16 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 			["a{width:\\31 x(1px)}", "a{width:\\31x(1px)}"],
 			["a{width:--F\\6f o(1px)}", "a{width:--Foo(1px)}"],
 			["a{color:--\\72 ed}", "a{color:--red}"]
+		]) {
+			expect(minifyFor(source, ["chrome 120"])).toBe(printed);
+		}
+	});
+
+	it("folds only ASCII letters in a name it spells", () => {
+		// U+212A is the Kelvin sign: no `k` to CSS, so neither name is one it knows.
+		for (const [source, printed] of [
+			["a{color:pin\\212A}", "a{color:pin\u212A}"],
+			["a{bac\\212Aground:red}", "a{bac\u212Aground:red}"]
 		]) {
 			expect(minifyFor(source, ["chrome 120"])).toBe(printed);
 		}
