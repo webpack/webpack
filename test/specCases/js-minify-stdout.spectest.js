@@ -165,7 +165,7 @@ const readStdoutCases = (file, { AST, parse }) => {
 
 /**
  * The options a case is minified under: its own, then, unless it opts out,
- * each set terser's runner reminifies it with.
+ * each set terser's runner reminifies it with and the set webpack minifies with.
  * @param {StdoutCase} test a case
  * @param {EXPECTED_OBJECT[]} reminifySets terser's `test/ufuzz.json`
  * @returns {[string, MinifyOptions][]} the option sets, by name
@@ -188,9 +188,15 @@ const optionSetsFor = (test, reminifySets) => {
 		]
 	];
 	if (!test.reminify) return sets;
-	for (const [index, set] of reminifySets.entries()) {
-		sets.push([
+	for (const [name, set] of [
+		...reminifySets.map((set, index) => [
 			`reminify ${index} ${JSON.stringify(set)}`,
+			set
+		]),
+		["the default minimizer's options", { compress: { passes: 2 }, mangle: true }]
+	]) {
+		sets.push([
+			name,
 			{
 				...copy(set),
 				keep_fnames: options.keep_fnames,
@@ -325,6 +331,9 @@ describe("JavaScript minifier output", () => {
 							);
 							continue;
 						}
+						// As terser's runner reminifies: an output already run prints the same.
+						/** @type {Set<string>} */
+						const seen = new Set();
 						for (const [setName, options] of optionSetsFor(test, reminifySets)) {
 							let code;
 							try {
@@ -335,6 +344,8 @@ describe("JavaScript minifier output", () => {
 								);
 								continue;
 							}
+							if (seen.has(code)) continue;
+							seen.add(code);
 							let actual = runCode(code, test.prepend);
 							// As terser's runner reminifies: a throw of the expected kind
 							// passes whatever its message says.
