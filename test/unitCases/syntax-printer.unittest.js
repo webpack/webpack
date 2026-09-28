@@ -509,6 +509,70 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	/** @type {[string, string, (ast: EXPECTED_ANY) => EXPECTED_ANY][]} */
+	const SCOPE_ERROR_CASES = [
+		["a scope that is not a program", "function f() {}", (ast) => ast.body[0]],
+		[
+			"a label defined twice",
+			"a: { b: { break b; } }",
+			(ast) => {
+				const inner = ast.body[0].body.body[0];
+				inner.label.name = "a";
+				inner.body.body[0].label.name = "a";
+				return ast;
+			}
+		],
+		[
+			"a break to an undefined label",
+			"a: { break a; }",
+			(ast) => {
+				ast.body[0].body.body[0].label.name = "b";
+				return ast;
+			}
+		],
+		[
+			"an import below the top level",
+			"import x from 'y'; { sink(x); }",
+			(ast) => {
+				ast.body[1].body.push(ast.body.shift());
+				return ast;
+			}
+		]
+	];
+
+	for (const [name, source, reshape] of SCOPE_ERROR_CASES) {
+		it(`should refuse a tree as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/**
+			 * @param {typeof minify} run a minify
+			 * @returns {Promise<string | undefined>} what figuring out scopes threw
+			 */
+			const refusal = async (run) => {
+				// terser's typings leave out `format.ast`, which returns the tree.
+				const { ast } = /** @type {EXPECTED_ANY} */ (
+					await run(
+						source,
+						/** @type {EXPECTED_ANY} */ ({
+							compress: false,
+							mangle: false,
+							module: true,
+							format: { ast: true, code: false }
+						})
+					)
+				);
+				try {
+					reshape(ast).figure_out_scope({});
+				} catch (err) {
+					return /** @type {Error} */ (err).message;
+				}
+			};
+			const theirs = await refusal(reference.minify);
+			expect(theirs).toEqual(expect.any(String));
+			expect(await refusal(minify)).toBe(theirs);
+		});
+	}
+
 	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
 	const PARSED_BY_TERSER = [
 		["an expression rather than a program", "a + b", { parse: { expression: true } }],
