@@ -12,7 +12,8 @@ const path = require("path");
 const { pathToFileURL } = require("url");
 const vm = require("vm");
 const acorn = require("acorn");
-const { PHASES, loadSources } = require("../../lib/javascript/syntax").printer;
+const { PHASES } = require("../../lib/javascript/syntax").printer;
+const { loadPhases, selectPhases } = require("../helpers/printerPhases");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {{ name: string, input: string, expected: string | Error | true, prepend: string, nodeVersion?: string, reminify: boolean, options: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT }} StdoutCase */
@@ -24,33 +25,6 @@ const GROUP_TIMEOUT = 300000;
 // terser's sandbox runs code with no time limit, so an output that never ends
 // would hang the suite rather than fail it.
 const RUN_TIMEOUT = 5000;
-
-/**
- * @param {string | undefined} setting the PHASES variable
- * @returns {string[]} the phases to install, in the order they install
- */
-const selectPhases = (setting) => {
-	const names = PHASES.map((phase) => phase.name);
-	const entries = (setting || "")
-		.split(",")
-		.map((entry) => entry.trim())
-		.filter(Boolean);
-	for (const entry of entries) {
-		if (!names.includes(entry.replace(/^-/, ""))) {
-			throw new Error(
-				`Unknown phase "${entry}" in PHASES, expected one of ${names.join(", ")}`
-			);
-		}
-	}
-	const kept = entries.filter((entry) => !entry.startsWith("-"));
-	const dropped = entries
-		.filter((entry) => entry.startsWith("-"))
-		.map((entry) => entry.slice(1));
-	return names.filter(
-		(name) =>
-			(kept.length === 0 || kept.includes(name)) && !dropped.includes(name)
-	);
-};
 
 /**
  * @template T
@@ -283,14 +257,9 @@ describe("JavaScript minifier output", () => {
 			.map((file) => path.join(referenceDir, "test/compress", file));
 
 		beforeAll(async () => {
-			const modules = await loadSources();
-			loaded.installed = [];
-			for (const phase of PHASES) {
-				if (!selected.includes(phase.name) || !phase.supports(modules)) continue;
-				phase.install(modules);
-				loaded.installed.push(phase.name);
-			}
-			loaded.minify = modules.minify;
+			const { minify, phases } = await loadPhases(selected);
+			loaded.installed = phases;
+			loaded.minify = minify;
 			// eslint-disable-next-line no-new-func
 			const importModule = new Function("specifier", "return import(specifier)");
 			/**

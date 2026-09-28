@@ -8,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
 const acorn = require("acorn");
-const { PHASES } = require("../../lib/javascript/syntax").printer;
+const { loadPhases, selectPhases } = require("../helpers/printerPhases");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
@@ -285,9 +285,10 @@ const isPresent = (directory) =>
 describe("JavaScript minifier", () => {
 	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[] } }} */
 	const loaded = {};
+	const selected = selectPhases(process.env.PHASES);
 
 	beforeAll(async () => {
-		loaded.printer = await require("../../lib/javascript/syntax").printer.load();
+		loaded.printer = await loadPhases(selected);
 		if (!isPresent(referenceDir)) return;
 		// eslint-disable-next-line no-new-func
 		const importModule = new Function("specifier", "return import(specifier)");
@@ -300,11 +301,11 @@ describe("JavaScript minifier", () => {
 		loaded.reader = { AST: await at("ast.js"), parse: (await at("parse.js")).parse };
 	});
 
-	it("should install every phase, so each corpus reaches all of them", () => {
+	it("should install every phase PHASES selects, so each corpus reaches them", () => {
 		const { phases } = /** @type {NonNullable<typeof loaded.printer>} */ (
 			loaded.printer
 		);
-		expect(phases).toEqual(PHASES.map((phase) => phase.name));
+		expect(phases).toEqual(selected);
 	});
 
 	if (isPresent(referenceDir)) {
