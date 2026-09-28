@@ -109,7 +109,7 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
 - `hot/` — browser-side HMR runtime (not Node tooling).
 - `bin/` — `webpack` CLI entry point.
 - `tooling/` — repo-internal scripts:
-  - Codegen run by `yarn fix:special`: runtime/wasm generators, the hash-debug tool, and `generate-types.js` — the one entry point and file for everything derived from `schemas/**/*.json`. It reads each schema once, emits its declaration and precompiled validator, then `types.d.ts`, so ordering is internal and one check run names every stale output.
+  - Codegen run by `yarn fix:special`: runtime/wasm generators, the hash-debug tool, `generate-schemas.js` — which derives each schema from the module declaring its options and reports what no longer derives — and `generate-types.js`, the one entry point and file for everything derived from `schemas/**/*.json`. It reads each schema once, emits its precompiled validator, then `types.d.ts`, so ordering is internal and one check run names every stale output.
   - `compare-css-tools.js` / `compare-html-tools.js` / `compare-js-tools.js` (`yarn benchmark:css-tools` / `:html-tools` / `:js-tools`, sharing `compare-tools-harness.js`) — no arguments or source reading needed. Each runs webpack's implementation for the language and ecosystem equivalents over popular framework stylesheets, real documents and shipped JS bundles.
     - **Three tables per fixture**: parse only, parse + readable print (`beautify`), parse + minified print (`minify`) — separating parse cost from printing/transform cost. Each shows best-of-3 wall and cpu ms and the worker's peak RSS, every tool × fixture in its own process; RSS comes from `/proc/self/status`, since Linux carries `maxRSS` across `fork`+`exec` and a worker asking for its own gets the parent's. **Read wall and cpu together**: cpu above wall = more than one core (V8 background threads, a native pool); below = waiting. A tool working in its own service process says so in its name and shows `-` for cpu and peak (esbuild today).
     - Printing tables add output size raw and gzip/brotli/zstd (`test:size` settings), whether the output lost classes / changed the DOM / stopped naming a property ("rejects it" = the tool errored), and `2nd`: what printing the output again moved — the idempotence question asked of every tool (`-` is a printer done printing). A round-trip printer that reformats nothing (postcss for CSS, parse5 for HTML) sits in `beautify` as the floor.
@@ -132,11 +132,14 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
 - `assembly/` — WebAssembly source for the hash function.
 - `setup/` — one-time setup; `setup.js` (`yarn setup`) is the only entry point and safe to re-run. A contributor at a terminal gets the interactive path (installs yarn if missing, links through yarn's registry); everything else gets the non-interactive one (verifies the lockfile instead of rewriting it, installs no global yarn, links the checkout as `node_modules/webpack` without touching yarn's machine-global registry). It decides from both streams being a TTY with `CI` unset — never a vendor-variable list, so an unknown agent takes the safe path. An agent allocating a PTY reads as a contributor and should set `WEBPACK_SETUP=automated` (`interactive` forces the other path).
 
-**Schemas (source of truth for the config API)**
+**The config API — declared as types, validated by JSON Schema**
 
+Every schema is derived from the module declaring its options by `generate-schemas.js`; edit the declaration, not the schema. What JSON Schema states and a type has no syntax for travels as a JSDoc tag (`@minItems`, `@additionalProperties`, `@since`, `@tsType`, `@not`, …), and an alias names the constraints a plain type cannot carry where no JSDoc block can attach, on a union member (`NonEmptyString`, `AbsolutePath`, …), declared in the file that writes it.
+
+- `lib/**/*.js` — **the source** for a plugin's options: JSDoc typedefs beside the code reading them, the root one tagged `@schema <path>` with the schema it derives. A module holds types of its own too, so only what that root reaches is the schema; one it reaches no other way says `@definition`.
+- `declarations/WebpackOptions.ts` — **the source** for the configuration itself, and the only file left in `declarations/`. A definition of it that is also published as a schema of its own says `@publishes <path>`, and that schema is the reference.
 - `schemas/WebpackOptions.json` — top-level options.
 - `schemas/plugins/*.json` — per-plugin options (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
-- `schemas/_container.json`, `schemas/_sharing.json` — Module Federation sub-schemas.
 
 **Tests** — structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
@@ -179,7 +182,7 @@ Keep `--depth 1` (`wpt` alone is ~161k files). `--remote` changes the recorded c
 
 **Adding or renaming a webpack option** touches every layer, in order — skipping one silently breaks the option:
 
-1. **Schema** — `schemas/WebpackOptions.json` (or `schemas/plugins/<Name>.json`).
+1. **Type** — `declarations/WebpackOptions.ts` for a configuration option, or the JSDoc typedefs in the `lib/` module reading it for a plugin's, which `yarn fix:special` turns into the schema.
 2. **Defaults** — `lib/config/defaults.js`.
 3. **Normalization** — `lib/config/normalization.js`.
 4. **Implementation** — where the option is consumed.
@@ -196,12 +199,12 @@ Consider updating `examples/` and running `yarn build:examples` after adding or 
 
 **A nested minifier needs the outer one's options.** `lib/html/htmlMinify.js` runs the CSS minifier over inline `<style>` and every `style=""`, so `output.environment` must reach both, or a `.css` asset and the same declaration inline disagree about what the target reads. Any future HTML-minifies-JS hook has the same obligation.
 
-**Schema documentation keywords** become JSDoc tags in the generated declarations:
+**Documentation keywords are written as JSDoc tags**, and the schema states what they say:
 
-- `"added": "<version>"` → `@since`: the first webpack version shipping the option. An unreleased option gets the upcoming version (`package.json` version with pending changesets applied — on `5.108.x` with minor changesets pending, `"added": "5.109.0"`).
-- `"experimental": true` → `@experimental`, for `experiments` options or others subject to breaking changes.
+- `@since <version>` → `"added"`: the first webpack version shipping the option. An unreleased option gets the upcoming version (`package.json` version with pending changesets applied — on `5.108.x` with minor changesets pending, `@since 5.109.0`).
+- `@experimental` → `"experimental"`, for `experiments` options or others subject to breaking changes.
 
-They are documentation only (stripped from precompiled validators). A pure `$ref` property can't carry them — annotate the referenced definition.
+They are documentation only (stripped from precompiled validators). A pure `$ref` property can't carry them — annotate the referenced definition. A keyword cannot sit after a `@property` line either, where a stray tag ends the property list: a property carrying one is a named typedef tagged `@inline`, whose body the schema puts back where the reference was.
 
 **What a schema may say is the lint rule's job, not the generator's.** `webpack/valid-schema` rejects extra keys beside a `$ref`, any `minLength` but `1`, and an `enum` holding non-primitives (the validator emits no other length check and compares nothing else); `yarn lint:code` reports them at the key, and the generator assumes they hold.
 
@@ -656,7 +659,6 @@ Silence isn't skipping: read every event and investigate what it names; this gov
 Produced by `yarn fix:special` — never edit by hand:
 
 - `types.d.ts` — from JSDoc + schemas.
-- `declarations/**/*.d.ts` — per-schema/plugin declarations from `schemas/**/*.json`. Untracked: `generate-types.js` writes them every run, check mode included, since a fresh checkout has none.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (`tooling/generate-runtime-code.js`).
 - `lib/css/data.js` — every table the CSS minifier looks names up in, plus the arithmetic its math-function descriptors bind to: from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) and the generator's `SUPPLEMENT` of spec-prose tables and math primitives, by `tooling/generate-css-data.js` — which also holds the value-definition-syntax parser those grammars are read with, and runs generation only as the entry point so its tests can require it.
@@ -673,7 +675,7 @@ A `syntax-parser.js` or `syntax-printer.js` is algorithm only — a new lookup t
 
 Re-run `yarn fix:special` **before the next commit** after touching:
 
-- `schemas/**/*.json` — validators, declarations, `types.d.ts`.
+- An option type in `lib/**/*.js` or `declarations/**/*.ts` — rewrites that schema, its validator and `types.d.ts`.
 - JSDoc in `lib/**/*.js` reachable from a public export — `types.d.ts`.
 - `tooling/generate-runtime-code.js`, `generate-wasm-code.js`, `generate-css-data.js`, `generate-html-data.js`, `generate-js-data.js`, or anything they consume (incl. the `acorn` / `mdn-data` / `color-name` / `@webref/*` versions in `package.json` and `tooling/html-entities.json`).
 

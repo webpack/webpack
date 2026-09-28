@@ -23,6 +23,26 @@ function getSharedConfig(name) {
 	return sharedConfig;
 }
 
+/**
+ * The `jsdoc` plugin as `eslint-config-webpack` already registers it: a rule set
+ * to anything but "off" needs the plugin resolved, and taking it from the shared
+ * config keeps the version webpack lints with in one place.
+ * @returns {import("eslint").ESLint.Plugin} the plugin object
+ */
+function getJsdocPlugin() {
+	const shared = getSharedConfig("typescript/jsdoc");
+	const flat = Array.isArray(shared) ? shared : [shared];
+	const holder = flat.find((one) => one && one.plugins && one.plugins.jsdoc);
+
+	if (!holder) {
+		throw new Error(
+			'eslint-config-webpack\'s "typescript/jsdoc" config registers no `jsdoc` plugin. The installed one is older than the version package.json asks for — run `yarn setup`.'
+		);
+	}
+
+	return holder.plugins.jsdoc;
+}
+
 export default defineConfig([
 	globalIgnores([
 		// Ignore some test files
@@ -124,7 +144,60 @@ export default defineConfig([
 	},
 	getSharedConfig("webpack/schemas"),
 	getSharedConfig("webpack/types"),
+	{
+		files: ["lib/**/*.js"],
+		plugins: { jsdoc: getJsdocPlugin() },
+		rules: {
+			// The keywords an option type states for `tooling/generate-schemas.js`,
+			// which JSON Schema has and JSDoc does not
+			"jsdoc/check-tag-names": [
+				"error",
+				{
+					definedTags: [
+						"schema",
+						"publishes",
+						"required",
+						"definition",
+						"inline",
+						"title",
+						"minLength",
+						"minItems",
+						"minProperties",
+						"minimum",
+						"uniqueItems",
+						"absolutePath",
+						"pattern",
+						"additionalProperties",
+						"emptyProperties",
+						"undefinedAsNull",
+						"cliHelper",
+						"cliExclude",
+						"jsonType",
+						"tsType",
+						"typeOnly",
+						"properties",
+						"not"
+					]
+				}
+			]
+		}
+	},
 	getSharedConfig("webpack/comments"),
+	{
+		// The option sources `tooling/generate-schemas.js` derives the schemas from
+		// are modules, and their comments are what a schema says rather than prose.
+		files: ["declarations/**/*.ts"],
+		languageOptions: { parser: tseslint.parser, sourceType: "module" },
+		rules: {
+			"webpack/comment-length": "off",
+			// They declare types and emit nothing, so the runtime baseline is moot
+			"n/no-unsupported-features/es-syntax": "off",
+			// TypeScript resolves the names here, including the ambient ones
+			"no-undef": "off",
+			// The spellings are the ones the option takes, not ones to choose from
+			"unicorn/text-encoding-identifier-case": "off"
+		}
+	},
 	{
 		// An example's commented-out config is what a reader copies, and its prose
 		// is the example's own documentation — neither is commentary to shorten.

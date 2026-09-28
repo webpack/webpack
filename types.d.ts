@@ -238,6 +238,10 @@ declare class AbstractLibraryPlugin<T> {
 	): void;
 	static COMMON_LIBRARY_NAME_MESSAGE: string;
 }
+
+/**
+ * Defines the abstract library plugin options type used by this module.
+ */
 declare interface AbstractLibraryPluginOptions {
 	/**
 	 * name of the plugin
@@ -282,6 +286,10 @@ declare class AggressiveMergingPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the aggressive merging plugin options type used by this module.
+ */
 declare interface AggressiveMergingPluginOptions {
 	/**
 	 * minimal size reduction to trigger merging
@@ -332,6 +340,10 @@ declare interface AliasOption {
 	name: string;
 	onlyModule?: boolean;
 }
+
+/**
+ * Defines the all code generation schemas type used by this module.
+ */
 declare interface AllCodeGenerationSchemas {
 	/**
 	 * top level declarations for javascript modules
@@ -402,7 +414,7 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	HotModuleReplacementPluginLoaderContext;
 
 /**
- * Returns object of arguments.
+ * Defines the argument type used by this module.
  */
 declare interface Argument {
 	description?: string;
@@ -412,7 +424,7 @@ declare interface Argument {
 }
 
 /**
- * Returns object of arguments.
+ * Defines the argument config type used by this module.
  */
 declare interface ArgumentConfig {
 	description?: string;
@@ -422,6 +434,10 @@ declare interface ArgumentConfig {
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
 	values?: EnumValue[];
 }
+
+/**
+ * Defines the asset type used by this module.
+ */
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -454,7 +470,7 @@ declare interface AssetDependencyMeta {
 }
 
 /**
- * Checks whether this object is sorted.
+ * Defines the asset emitted info type used by this module.
  */
 declare interface AssetEmittedInfo {
 	content: Buffer;
@@ -550,6 +566,10 @@ declare class AssetModulesPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Represents the asset modules plugin runtime component.
+ */
 declare interface AssetModulesPluginOptions {
 	sideEffectFree?: boolean;
 }
@@ -628,6 +648,10 @@ declare abstract class AssetSourceGenerator extends Generator {
 	): null | Source;
 }
 declare abstract class AssetSourceParser extends ParserClass {}
+
+/**
+ * Where an asset which is a symbolic link points, as the link itself spells it.
+ */
 declare interface AssetSymlink {
 	/**
 	 * what the link points at, left as it is written
@@ -639,6 +663,10 @@ declare interface AssetSymlink {
 	 */
 	isDirectory: boolean;
 }
+
+/**
+ * Access and modification times an asset carries onto the file it is written to.
+ */
 declare interface AssetTimestamps {
 	/**
 	 * last access time, in milliseconds
@@ -756,6 +784,10 @@ declare class AsyncWebAssemblyModulesPlugin {
 	): Source;
 	static getCompilationHooks: (compilation: Compilation) => CompilationHooks;
 }
+
+/**
+ * Defines the async web assembly modules plugin options type used by this module.
+ */
 declare interface AsyncWebAssemblyModulesPluginOptions {
 	/**
 	 * mangle imports
@@ -788,6 +820,10 @@ declare class AutomaticPrefetchPlugin {
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 declare const BLOCK_DECLARATIONS: unique symbol;
+
+/**
+ * Defines the backend api type used by this module.
+ */
 declare interface BackendApi {
 	dispose: (callback: (err?: null | Error) => void) => void;
 	module: (module: Module) => ModuleResult;
@@ -804,7 +840,15 @@ declare class BannerPlugin {
 	 */
 	constructor(options: BannerPluginArgument);
 	options: BannerPluginOptions;
-	banner: (data: { hash?: string; chunk: Chunk; filename: string }) => string;
+	banner: (data: {
+		hash?: string;
+		/**
+		 * Wraps banner text in a JavaScript block comment, preserving multi-line
+		 * formatting and escaping accidental comment terminators.
+		 */
+		chunk: Chunk;
+		filename: string;
+	}) => string;
 
 	/**
 	 * Validates the configured options and injects rendered banner comments into
@@ -815,14 +859,30 @@ declare class BannerPlugin {
 type BannerPluginArgument =
 	| string
 	| BannerPluginOptions
-	| ((data: { hash?: string; chunk: Chunk; filename: string }) => string);
+	| ((data: {
+			hash?: string;
+			/**
+			 * Wraps banner text in a JavaScript block comment, preserving multi-line
+			 * formatting and escaping accidental comment terminators.
+			 */
+			chunk: Chunk;
+			filename: string;
+	  }) => string);
 declare interface BannerPluginOptions {
 	/**
 	 * Specifies the banner.
 	 */
 	banner:
 		| string
-		| ((data: { hash?: string; chunk: Chunk; filename: string }) => string);
+		| ((data: {
+				hash?: string;
+				/**
+				 * Wraps banner text in a JavaScript block comment, preserving multi-line
+				 * formatting and escaping accidental comment terminators.
+				 */
+				chunk: Chunk;
+				filename: string;
+		  }) => string);
 
 	/**
 	 * If true, the banner will only be added to the entry chunks.
@@ -832,7 +892,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -842,7 +902,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -857,7 +917,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -1281,9 +1341,17 @@ declare abstract class BasicEvaluatedExpression {
 	): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
+
+/**
+ * Defines the bind cache type used by this module.
+ */
 declare interface BindCache<T> {
 	(cache: object): BindCacheResultFn<T>;
 }
+
+/**
+ * Defines the bind cache result fn type used by this module.
+ */
 declare interface BindCacheResultFn<T> {
 	(value: string): T;
 }
@@ -1379,6 +1447,10 @@ type BuildDependencyItem =
 			 */
 			optional?: boolean;
 	  };
+
+/**
+ * What a build recorded for stats and the performance hints to report, kept on the build info so a module restored from the cache still has it.
+ */
 declare interface BuildDiagnostics {
 	/**
 	 * what parser plugins reported as optimization bailouts, replayed into the module graph of every compilation that reuses the module
@@ -1412,6 +1484,11 @@ declare interface BuildDiagnostics {
 }
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
+
+/**
+ * What this minifies inline CSS with: the CSS minifier's own options, so an
+ * inline declaration is held to the rules a `.css` asset is.
+ */
 declare interface BuiltinEmbeddedRendererOptions {
 	/**
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
@@ -1621,6 +1698,10 @@ declare abstract class CacheFacade {
 		computer: () => T | Promise<T>
 	): Promise<T>;
 }
+
+/**
+ * Defines the cache group source type used by this module.
+ */
 declare interface CacheGroupSource {
 	key: string;
 	priority?: number;
@@ -1647,6 +1728,10 @@ declare interface CacheGroupSource {
 	reuseExistingChunk?: boolean;
 	usedExports?: boolean;
 }
+
+/**
+ * Defines the cache groups context type used by this module.
+ */
 declare interface CacheGroupsContext {
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
@@ -1724,6 +1809,10 @@ declare interface CallExpressionInfo {
 	getMembersOptionals: () => boolean[];
 	getMemberRanges: () => [number, number][];
 }
+
+/**
+ * Defines the callback callback.
+ */
 declare interface CallbackAsyncQueue<T> {
 	(err?: null | WebpackError, result?: null | T): void;
 }
@@ -1739,9 +1828,17 @@ declare interface CallbackCacheCache<T> {
 	 */
 	(err: null | Error, result?: T): void;
 }
+
+/**
+ * Defines the callback cache callback.
+ */
 declare interface CallbackCacheCacheFacade<T> {
 	(err?: null | Error, result?: null | T): void;
 }
+
+/**
+ * Defines the callback normal error cache callback.
+ */
 declare interface CallbackNormalErrorCache<T> {
 	(err?: null | Error, result?: T): void;
 }
@@ -1765,6 +1862,11 @@ declare interface CallbackWebpackFunction_2<T, R = void> {
 	 */
 	(err: null | Error, result?: T): R;
 }
+
+/**
+ * A split `maxInitialRequests`/`maxAsyncRequests` refused, recorded for
+ * `performance.splitChunksCapped`.
+ */
 declare interface CappedSplit {
 	/**
 	 * the cache group whose split was refused
@@ -2829,6 +2931,10 @@ declare interface ChunkGroupInfoWithName {
 	chunkGroup: ChunkGroup;
 }
 type ChunkGroupOptions = RawChunkGroupOptions & { name?: null | string };
+
+/**
+ * Defines the chunk hash context type used by this module.
+ */
 declare interface ChunkHashContext {
 	/**
 	 * results of code generation
@@ -2855,6 +2961,11 @@ declare interface ChunkHashes {
 	[index: string]: string;
 }
 type ChunkId = string | number;
+
+/**
+ * Defines the chunk maps type used by this module.
+ * @deprecated
+ */
 declare interface ChunkMaps {
 	hash: Record<ChunkId, string>;
 	contentHash: Record<ChunkId, Record<string, string>>;
@@ -2867,6 +2978,10 @@ declare interface ChunkModuleHashMap {
 declare interface ChunkModuleHashes {
 	[index: string]: string;
 }
+
+/**
+ * Defines the chunk module id map type used by this module.
+ */
 declare interface ChunkModuleIdMapEs5Alias_1 {
 	[index: number]: ChunkId[];
 	[index: string]: ChunkId[];
@@ -2887,6 +3002,10 @@ declare class ChunkModuleIdRangePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the chunk module id range plugin options type used by this module.
+ */
 declare interface ChunkModuleIdRangePluginOptions {
 	/**
 	 * the chunk name
@@ -2912,11 +3031,20 @@ declare interface ChunkModuleIds {
 	[index: number]: ModuleId[];
 	[index: string]: ModuleId[];
 }
+
+/**
+ * Defines the chunk module maps type used by this module.
+ * @deprecated
+ */
 declare interface ChunkModuleMaps {
 	id: ChunkModuleIdMapEs5Alias_1;
 	hash: chunkModuleHashMap;
 }
 type ChunkName = null | string;
+
+/**
+ * Defines the chunk path data type used by this module.
+ */
 declare interface ChunkPathData {
 	id: string | number;
 	name?: string;
@@ -2952,6 +3080,10 @@ declare class ChunkPrefetchPreloadPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the chunk render context type used by this module.
+ */
 declare interface ChunkRenderContextCssModulesPlugin {
 	/**
 	 * the chunk
@@ -2993,6 +3125,10 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	 */
 	moduleSourceContent: Source;
 }
+
+/**
+ * Defines the chunk render context type used by this module.
+ */
 declare interface ChunkRenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
@@ -3048,6 +3184,10 @@ declare interface ChunkRuntime {
 	[index: number]: string;
 	[index: string]: string;
 }
+
+/**
+ * Represents the module hash info runtime component.
+ */
 declare interface ChunkSizeOptions {
 	/**
 	 * constant overhead for a chunk
@@ -3168,6 +3308,10 @@ declare interface ClearCacheOptions {
 	 */
 	parsedMap?: boolean;
 }
+
+/**
+ * Defines the code gen map overloads type used by this module.
+ */
 declare interface CodeGenMapOverloads {
 	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
 	set: <K extends string>(
@@ -3192,6 +3336,10 @@ type CodeGenValue<K extends string> = K extends
 	| "fullContentHash"
 	? AllCodeGenerationSchemas[K]
 	: any;
+
+/**
+ * Defines the code generation context type used by this module.
+ */
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -3249,6 +3397,10 @@ declare interface CodeGenerationJob {
 	runtime: RuntimeSpec;
 	runtimes: RuntimeSpec[];
 }
+
+/**
+ * Defines the code generation result type used by this module.
+ */
 declare interface CodeGenerationResult {
 	/**
 	 * the resulting sources for all source types
@@ -3409,7 +3561,7 @@ declare interface Colors {
 }
 
 /**
- * Creates a colors from the provided colors option.
+ * Defines the colors options type used by this module.
  */
 declare interface ColorsOptions {
 	/**
@@ -3422,10 +3574,18 @@ type CommentJavascriptParser = CommentImport & {
 	end: number;
 	loc?: null | SourceLocation;
 };
+
+/**
+ * Defines the common js import settings type used by this module.
+ */
 declare interface CommonJsImportSettings {
 	name?: string;
 	context: string;
 }
+
+/**
+ * Defines the comparator type used by this module.
+ */
 declare interface Comparator<T> {
 	(a: T, b: T): 0 | 1 | -1;
 }
@@ -3433,10 +3593,20 @@ declare class CompatSource extends Source {
 	constructor(sourceLike: SourceLike);
 	static from(sourceLike: SourceLike): Source;
 }
+
+/**
+ * Stores the replacement variable name and the declaration metadata tracked
+ * for a compatibility rewrite.
+ */
 declare interface CompatibilitySettings {
 	name: string;
 	declaration: CompatibilitySettingsDeclaration;
 }
+
+/**
+ * Captures the source range of a renamed compatibility binding so it can be
+ * rewritten exactly once.
+ */
 declare interface CompatibilitySettingsDeclaration {
 	updated: boolean;
 	loc: DependencyLocation;
@@ -4230,6 +4400,10 @@ declare class Compilation {
 declare interface CompilationAssets {
 	[index: string]: Source;
 }
+
+/**
+ * Defines the compilation hooks type used by this module.
+ */
 declare interface CompilationHooks {
 	renderModuleContent: SyncWaterfallHook<
 		[Source, Module, WebAssemblyRenderContext],
@@ -4238,7 +4412,7 @@ declare interface CompilationHooks {
 }
 
 /**
- * Checks whether this object is sorted.
+ * Defines the compilation params type used by this module.
  */
 declare interface CompilationParams {
 	normalModuleFactory: NormalModuleFactory;
@@ -4311,6 +4485,10 @@ declare interface CompiledAliasOptions {
 	 */
 	useBuckets: boolean;
 }
+
+/**
+ * Defines the compiled rule type used by this module.
+ */
 declare interface CompiledRule {
 	path: string;
 	raw: RuleSetRule;
@@ -4673,6 +4851,10 @@ declare interface ConcatenatedModuleInfo {
 	exportsTypeNonStrict?:
 		"namespace" | "dynamic" | "default-only" | "default-with-named";
 }
+
+/**
+ * Defines the concatenation bailout reason context type used by this module.
+ */
 declare interface ConcatenationBailoutReasonContext {
 	/**
 	 * the module graph
@@ -4872,7 +5054,7 @@ declare interface Configuration {
 	externals?:
 		| string
 		| RegExp
-		| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
+		| ExternalItemObject
 		| ((
 				data: ExternalItemFunctionData,
 				callback: (
@@ -5152,9 +5334,6 @@ declare class ConsumeSharedPlugin {
  * Options for consuming shared modules.
  */
 declare interface ConsumeSharedPluginOptions {
-	/**
-	 * Modules that should be consumed from share scope. When provided, property names are used to match requested modules in this compilation.
-	 */
 	consumes: Consumes;
 
 	/**
@@ -5162,7 +5341,8 @@ declare interface ConsumeSharedPluginOptions {
 	 */
 	shareScope?: string;
 }
-type Consumes = (string | ConsumesObject)[] | ConsumesObject;
+type Consumes = ConsumesObject | ConsumesBranch1Item[];
+type ConsumesBranch1Item = string | ConsumesObject;
 
 /**
  * Advanced configuration for modules that should be consumed from share scope.
@@ -5172,20 +5352,12 @@ declare interface ConsumesConfig {
 	 * Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
 	exclude?: SharedModuleFilter;
 
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: string | false;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
 	include?: SharedModuleFilter;
 
 	/**
@@ -5223,8 +5395,9 @@ declare interface ConsumesConfig {
  * Modules that should be consumed from share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
  */
 declare interface ConsumesObject {
-	[index: string]: string | ConsumesConfig;
+	[index: string]: ConsumesObjectValue;
 }
+type ConsumesObjectValue = string | ConsumesConfig;
 type ContainerOptionsFormat<T> = Item<T> | (string | Item<T>)[];
 declare class ContainerPlugin {
 	/**
@@ -5239,29 +5412,18 @@ declare class ContainerPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface ContainerPluginOptions {
-	/**
-	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
-	 */
 	exposes: Exposes;
 
 	/**
 	 * The filename for this container relative path inside the `output.path` directory.
 	 */
 	filename?: string;
-
-	/**
-	 * Options for library.
-	 */
 	library?: LibraryOptions;
 
 	/**
 	 * The name for this container.
 	 */
 	name: string;
-
-	/**
-	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
-	 */
 	runtime?: string | false;
 
 	/**
@@ -5286,10 +5448,6 @@ declare interface ContainerReferencePluginOptions {
 	 * The external type of the remote containers.
 	 */
 	remoteType: ExternalsType;
-
-	/**
-	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
-	 */
 	remotes: Remotes;
 
 	/**
@@ -5335,12 +5493,20 @@ declare class ContextExclusionPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the context file system info entry type used by this module.
+ */
 declare interface ContextFileSystemInfoEntry {
 	safeTime: number;
 	timestampHash?: string;
 	resolved?: ResolvedContextFileSystemInfoEntry;
 	symlinks?: Set<string>;
 }
+
+/**
+ * Defines the context hash type used by this module.
+ */
 declare interface ContextHash {
 	hash: string;
 	resolved?: string;
@@ -5485,6 +5651,10 @@ declare class ContextReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the context resolve data type used by this module.
+ */
 declare interface ContextResolveData {
 	context: string;
 	request: string;
@@ -5499,6 +5669,10 @@ type ContextTimestamp =
 	| "ignore"
 	| ContextFileSystemInfoEntry
 	| ExistenceOnlyTimeEntryFileSystemInfo;
+
+/**
+ * Defines the context timestamp and hash type used by this module.
+ */
 declare interface ContextTimestampAndHash {
 	safeTime: number;
 	timestampHash?: string;
@@ -5507,6 +5681,12 @@ declare interface ContextTimestampAndHash {
 	symlinks?: Set<string>;
 }
 type ContextTypes = KnownContext & Record<any, any>;
+
+/**
+ * What every callback of a pattern other than `filename` and `transform` reads
+ * the file from. `filename` takes webpack's own `(pathData, assetInfo)` instead,
+ * as it is a filename template like any other in the configuration.
+ */
 declare interface CopiedFileData {
 	/**
 	 * absolute path of the source file
@@ -5717,11 +5897,13 @@ declare interface CssAutoOrModuleParserOptions {
 
 	/**
 	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 * @since 5.109.0
 	 */
 	customMedia?: boolean;
 
 	/**
 	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 * @since 5.109.0
 	 */
 	customSelectors?: boolean;
 
@@ -5737,6 +5919,7 @@ declare interface CssAutoOrModuleParserOptions {
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 * @since 5.109.0
 	 */
 	fontPreload?: boolean;
 
@@ -5772,9 +5955,14 @@ declare interface CssAutoOrModuleParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
+
+/**
+ * Defines the css data type used by this module.
+ */
 declare interface CssData {
 	/**
 	 * whether export __esModule
@@ -5791,6 +5979,11 @@ declare interface CssData {
 	 */
 	exportLocs?: Map<string, { line: number; column: number }>;
 }
+
+/**
+ * The environment the stylesheet is built for. Every CSS ability the printer
+ * reaches for is read off this selection, so nothing states one separately.
+ */
 declare interface CssEnvironment {
 	/**
 	 * the browserslist selection (`["chrome 100", "safari 15"]`), so vendor prefixes and every spelling a target has to be able to read are decided for exactly these browsers; absent leaves prefixes untouched and assumes every ability
@@ -6006,11 +6199,13 @@ declare interface CssModuleParserOptions {
 
 	/**
 	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 * @since 5.109.0
 	 */
 	customMedia?: boolean;
 
 	/**
 	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 * @since 5.109.0
 	 */
 	customSelectors?: boolean;
 
@@ -6026,6 +6221,7 @@ declare interface CssModuleParserOptions {
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 * @since 5.109.0
 	 */
 	fontPreload?: boolean;
 
@@ -6056,6 +6252,7 @@ declare interface CssModuleParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
@@ -6207,10 +6404,12 @@ declare abstract class CssParser extends ParserClass {
 		customIdents: boolean;
 		/**
 		 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+		 * @since 5.109.0
 		 */
 		customMedia: boolean;
 		/**
 		 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+		 * @since 5.109.0
 		 */
 		customSelectors: boolean;
 		/**
@@ -6223,6 +6422,7 @@ declare abstract class CssParser extends ParserClass {
 		exportType?: "link" | "text" | "css-style-sheet" | "style";
 		/**
 		 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+		 * @since 5.109.0
 		 */
 		fontPreload?: boolean;
 		/**
@@ -6251,6 +6451,7 @@ declare abstract class CssParser extends ParserClass {
 		url: boolean;
 		/**
 		 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+		 * @since 5.109.0
 		 */
 		urlHints?: UrlHintRule[];
 		/**
@@ -6310,9 +6511,16 @@ declare interface CssParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
+
+/**
+ * What the CSS printer may be told, on top of the `mode` every language has —
+ * the printing slice of `CssProcessOptions`, named once so nothing outside CSS
+ * has to enumerate it.
+ */
 declare interface CssPrintOptions {
 	/**
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
@@ -6466,6 +6674,11 @@ declare interface CssProcessOptions {
 	 */
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
 }
+
+/**
+ * What the minifying printer may rewrite. Every entry is on unless it is
+ * `false`, so a document one transform breaks can still be minified by the rest.
+ */
 declare interface CssTransformOptions {
 	/**
 	 * write a color the target cannot read as an extra declaration before it, in a spelling it does read
@@ -6566,22 +6779,7 @@ declare interface DecodedEntitiesWithMap {
 	map?: number[];
 }
 declare interface DefaultHandlerOptions {
-	progressBar?:
-		| false
-		| Required<{
-				/**
-				 * Color used for the filled portion of the bar.
-				 */
-				color?: string;
-				/**
-				 * Name shown before the progress bar.
-				 */
-				name?: string;
-				/**
-				 * Width of the progress bar in characters. Default: 25.
-				 */
-				width?: number;
-		  }>;
+	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
 	phaseTimings?: boolean;
 }
@@ -6590,6 +6788,16 @@ type DeferredEmbeddedSource = DeferredWrite & {
 	hostType: string;
 	as?: string;
 };
+
+/**
+ * One write the print left a marker for, collected into the `deferEmbeddedSource`
+ * print option by whichever grammar offered it — the other half of
+ * {@link deferredWrite}. `source` is the text offered, `build` spells what is
+ * printed around the answer (an untapped run's spelling where there is none), and
+ * `decides` says whether the answer overturns a choice the print made without it.
+ * A grammar carries whatever else describes the offer (`type`, `hostType`, `as`,
+ * …) on the same object.
+ */
 declare interface DeferredWrite {
 	source: string;
 	build: (answer?: string) => string;
@@ -6743,6 +6951,10 @@ declare abstract class DependenciesBlock {
 	 */
 	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_2): void;
 }
+
+/**
+ * Defines the dependencies block like type used by this module.
+ */
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
@@ -6951,7 +7163,7 @@ declare interface DependencyConstructor {
 type DependencyLocation = SyntheticDependencyLocation | RealDependencyLocation;
 
 /**
- * Creates a cached parameterized comparator.
+ * Defines the dependency source order type used by this module.
  */
 declare interface DependencySourceOrder {
 	/**
@@ -6976,6 +7188,10 @@ declare class DependencyTemplate {
 		templateContext: DependencyTemplateContext
 	): void;
 }
+
+/**
+ * Defines the dependency template context type used by this module.
+ */
 declare interface DependencyTemplateContext {
 	/**
 	 * the runtime template
@@ -7062,9 +7278,8 @@ declare abstract class DependencyTemplates {
 }
 
 /**
- * Helper function for joining two ranges into a single range. This is useful
- * when working with AST nodes, as it allows you to combine the ranges of child nodes
- * to create the range of the _parent node_.
+ * Defines the destructuring assignment property type used by this module.
+ * Carries only the range — consumers derive line/column via `getLocation`.
  */
 declare interface DestructuringAssignmentProperty {
 	id: string;
@@ -7098,6 +7313,10 @@ declare class DeterministicChunkIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the deterministic chunk ids plugin options type used by this module.
+ */
 declare interface DeterministicChunkIdsPluginOptions {
 	/**
 	 * context for ids
@@ -7121,6 +7340,10 @@ declare class DeterministicModuleIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the deterministic module ids plugin options type used by this module.
+ */
 declare interface DeterministicModuleIdsPluginOptions {
 	/**
 	 * context relative to which module identifiers are computed
@@ -7158,7 +7381,7 @@ type DevtoolModuleFilenameTemplate =
 	string | ((context: ModuleFilenameTemplateContext) => string);
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the dirent type used by this module.
  */
 declare interface DirentFs<T extends string | Buffer = string> {
 	/**
@@ -7332,132 +7555,143 @@ declare class DllReferencePlugin {
 	apply(compiler: Compiler): void;
 }
 type DllReferencePluginOptions =
-	| {
-			/**
-			 * Context of requests in the manifest (or content property) as absolute path.
-			 */
-			context?: string;
-			/**
-			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
-			 */
-			extensions?: string[];
-			/**
-			 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
-			 */
-			manifest: string | DllReferencePluginOptionsManifest;
-			/**
-			 * The name where the dll is exposed (external name, defaults to manifest.name).
-			 */
-			name?: string;
-			/**
-			 * Prefix which is used for accessing the content of the dll.
-			 */
-			scope?: string;
-			/**
-			 * How the dll is exposed (libraryTarget, defaults to manifest.type).
-			 */
-			sourceType?:
-				| "var"
-				| "assign"
-				| "this"
-				| "window"
-				| "global"
-				| "commonjs"
-				| "commonjs2"
-				| "commonjs-module"
-				| "amd"
-				| "amd-require"
-				| "umd"
-				| "umd2"
-				| "jsonp"
-				| "system";
-			/**
-			 * The way how the export of the dll bundle is used.
-			 */
-			type?: "object" | "require";
-	  }
-	| {
-			/**
-			 * The mappings from request to module info.
-			 */
-			content: DllReferencePluginOptionsContent;
-			/**
-			 * Context of requests in the manifest (or content property) as absolute path.
-			 */
-			context?: string;
-			/**
-			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
-			 */
-			extensions?: string[];
-			/**
-			 * The name where the dll is exposed (external name).
-			 */
-			name: string;
-			/**
-			 * Prefix which is used for accessing the content of the dll.
-			 */
-			scope?: string;
-			/**
-			 * How the dll is exposed (libraryTarget).
-			 */
-			sourceType?:
-				| "var"
-				| "assign"
-				| "this"
-				| "window"
-				| "global"
-				| "commonjs"
-				| "commonjs2"
-				| "commonjs-module"
-				| "amd"
-				| "amd-require"
-				| "umd"
-				| "umd2"
-				| "jsonp"
-				| "system";
-			/**
-			 * The way how the export of the dll bundle is used.
-			 */
-			type?: "object" | "require";
-	  };
+	| DllReferencePluginOptionsBranch1Object
+	| DllReferencePluginOptionsBranch2Object;
+declare interface DllReferencePluginOptionsBranch1Object {
+	/**
+	 * Context of requests in the manifest (or content property) as absolute path.
+	 */
+	context?: string;
+
+	/**
+	 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
+	 */
+	extensions?: string[];
+
+	/**
+	 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
+	 */
+	manifest: string | DllReferencePluginOptionsManifest;
+
+	/**
+	 * The name where the dll is exposed (external name, defaults to manifest.name).
+	 */
+	name?: string;
+
+	/**
+	 * Prefix which is used for accessing the content of the dll.
+	 */
+	scope?: string;
+
+	/**
+	 * How the dll is exposed (libraryTarget, defaults to manifest.type).
+	 */
+	sourceType?:
+		| "var"
+		| "assign"
+		| "this"
+		| "window"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system";
+
+	/**
+	 * The way how the export of the dll bundle is used.
+	 */
+	type?: "object" | "require";
+}
+declare interface DllReferencePluginOptionsBranch2Object {
+	content: DllReferencePluginOptionsContent;
+
+	/**
+	 * Context of requests in the manifest (or content property) as absolute path.
+	 */
+	context?: string;
+
+	/**
+	 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
+	 */
+	extensions?: string[];
+
+	/**
+	 * The name where the dll is exposed (external name).
+	 */
+	name: string;
+
+	/**
+	 * Prefix which is used for accessing the content of the dll.
+	 */
+	scope?: string;
+
+	/**
+	 * How the dll is exposed (libraryTarget).
+	 */
+	sourceType?:
+		| "var"
+		| "assign"
+		| "this"
+		| "window"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system";
+
+	/**
+	 * The way how the export of the dll bundle is used.
+	 */
+	type?: "object" | "require";
+}
 
 /**
  * The mappings from request to module info.
  */
 declare interface DllReferencePluginOptionsContent {
-	[index: string]: {
-		/**
-		 * Meta information about the module.
-		 */
-		buildMeta?: { [index: string]: any };
-		/**
-		 * Information about the provided exports of the module.
-		 */
-		exports?: true | string[];
-		/**
-		 * Module ID.
-		 */
-		id: string | number;
-	};
+	[index: string]: DllReferencePluginOptionsContentValue;
+}
+
+/**
+ * Module info.
+ */
+declare interface DllReferencePluginOptionsContentValue {
+	/**
+	 * Meta information about the module.
+	 */
+	buildMeta?: { [index: string]: any };
+
+	/**
+	 * Information about the provided exports of the module.
+	 */
+	exports?: true | string[];
+
+	/**
+	 * Module ID.
+	 */
+	id: string | number;
 }
 
 /**
  * An object containing content, name and type.
  */
 declare interface DllReferencePluginOptionsManifest {
-	/**
-	 * The mappings from request to module info.
-	 */
 	content: DllReferencePluginOptionsContent;
 
 	/**
 	 * The name where the dll is exposed (external name).
 	 */
 	name?: string;
-
-	/**
-	 * The type how the dll is exposed (external type).
-	 */
 	type?:
 		| "var"
 		| "assign"
@@ -7716,10 +7950,18 @@ type EcmaVersion =
 	| 2026
 	| "latest";
 type Effect = EffectUse | EffectBasic;
+
+/**
+ * Defines the effect basic type used by this module.
+ */
 declare interface EffectBasic {
 	type: string;
 	value: any;
 }
+
+/**
+ * Defines the effect data type used by this module.
+ */
 declare interface EffectData {
 	resource?: string;
 	realResource?: string;
@@ -7736,6 +7978,10 @@ declare interface EffectData {
 	issuerLayer: string;
 	phase?: string;
 }
+
+/**
+ * Defines the effect use type used by this module.
+ */
 declare interface EffectUse {
 	type: EffectUseType;
 	value: {
@@ -7784,6 +8030,10 @@ declare class ElectronTargetPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * One language's source embedded in another's output.
+ */
 declare interface EmbeddedSourceInfo {
 	/**
 	 * the embedded source's type, e.g. `"css"` / `"html"`
@@ -7805,6 +8055,11 @@ declare interface EmbeddedSourceInfo {
 	 */
 	as?: string;
 }
+
+/**
+ * What a renderer made of one embedded body: the minified text, and anything it
+ * has to report about it. A bare string is the text alone.
+ */
 declare interface EmbeddedSourceResult {
 	code?: string;
 	warnings?: (string | Error)[];
@@ -7867,7 +8122,7 @@ declare class EnableLibraryPlugin {
 }
 
 /**
- * Returns enabled types.
+ * Defines the enable library plugin options type used by this module.
  */
 declare interface EnableLibraryPluginOptions {
 	/**
@@ -7939,6 +8194,10 @@ type EncodingOptionTypes =
 	| "binary"
 	| "hex"
 	| ObjectEncodingOptionsTypes;
+
+/**
+ * Defines the entry data type used by this module.
+ */
 declare interface EntryData {
 	/**
 	 * dependencies of the entrypoint that should be evaluated at startup
@@ -8104,10 +8363,6 @@ type EntryLibIndex =
 	| string[];
 type EntryNormalized =
 	(() => Promise<EntryStaticNormalized>) | EntryStaticNormalized;
-
-/**
- * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
- */
 declare interface EntryObject {
 	[index: string]: string | string[] | EntryDescription;
 }
@@ -8373,7 +8628,7 @@ declare class EnvironmentPlugin {
 	/**
 	 * Creates an instance of EnvironmentPlugin.
 	 */
-	constructor(...keys: (string | string[] | Record<string, any>)[]);
+	constructor(...keys: (string | Record<string, any> | string[])[]);
 	keys: string[];
 	defaultValues: Record<string, any>;
 
@@ -8385,8 +8640,8 @@ declare class EnvironmentPlugin {
 type ErrorWithDetail = Error & { details?: string };
 
 /**
- * Creates a callback wrapper that waits for a fixed number of completions and
- * forwards the first error immediately.
+ * Cache validation token whose string representation identifies the build
+ * inputs associated with a cached value.
  */
 declare interface Etag {
 	toString: () => string;
@@ -8405,6 +8660,10 @@ declare class EvalDevToolModulePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the eval dev tool module plugin options type used by this module.
+ */
 declare interface EvalDevToolModulePluginOptions {
 	/**
 	 * namespace
@@ -8438,17 +8697,29 @@ declare class EvalSourceMapDevToolPlugin {
 	apply(compiler: Compiler): void;
 }
 type ExcludeModulesType = "module" | "chunk" | "root-of-chunk" | "nested";
+
+/**
+ * Defines the execute module argument type used by this module.
+ */
 declare interface ExecuteModuleArgument {
 	module: Module;
 	moduleObject?: ExecuteModuleObject;
 	codeGenerationResult: CodeGenerationResult;
 }
+
+/**
+ * Defines the execute module context type used by this module.
+ */
 declare interface ExecuteModuleContext {
 	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	chunk: Chunk;
 	chunkGraph: ChunkGraph;
 	__webpack_require__?: WebpackRequire;
 }
+
+/**
+ * Defines the execute module object type used by this module.
+ */
 declare interface ExecuteModuleObject {
 	/**
 	 * module id
@@ -8470,9 +8741,17 @@ declare interface ExecuteModuleObject {
 	 */
 	error?: Error;
 }
+
+/**
+ * Defines the execute module options type used by this module.
+ */
 declare interface ExecuteModuleOptions {
 	entryOptions?: EntryOptions;
 }
+
+/**
+ * Defines the execute module result type used by this module.
+ */
 declare interface ExecuteModuleResult {
 	exports: any;
 	cacheable: boolean;
@@ -8487,6 +8766,10 @@ declare interface ExecuteModuleResult {
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
 }
+
+/**
+ * Defines the execute options type used by this module.
+ */
 declare interface ExecuteOptions {
 	/**
 	 * module id
@@ -8531,7 +8814,7 @@ declare interface Experiments {
 	 * @since 5.49.0
 	 * @experimental
 	 */
-	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
+	buildHttp?: HttpUriOptions | HttpUriOptionsAllowedUrisItem[];
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -8895,6 +9178,10 @@ type ExportModeType =
 	| "normal-reexport"
 	| "dynamic-reexport";
 type ExportPresenceMode = 0 | 1 | 2 | 3;
+
+/**
+ * Defines the export spec type used by this module.
+ */
 declare interface ExportSpec {
 	/**
 	 * the name of the export
@@ -9112,6 +9399,10 @@ declare abstract class ExportsInfo {
 	 */
 	restoreProvided(__0: RestoreProvidedData): void;
 }
+
+/**
+ * Defines the exports spec type used by this module.
+ */
 declare interface ExportsSpec {
 	/**
 	 * exported names, true for unknown exports or null for no exports
@@ -9160,7 +9451,8 @@ declare interface ExportsSpec {
 }
 type ExportsType =
 	"namespace" | "dynamic" | "default-only" | "default-with-named";
-type Exposes = (string | ExposesObject)[] | ExposesObject;
+type Exposes = ExposesObject | ExposesBranch1Item[];
+type ExposesBranch1Item = string | ExposesObject;
 
 /**
  * Advanced configuration for modules that should be exposed by this container.
@@ -9181,8 +9473,9 @@ declare interface ExposesConfig {
  * Modules that should be exposed by this container. Property names are used as public paths.
  */
 declare interface ExposesObject {
-	[index: string]: string | ExposesConfig | string[];
+	[index: string]: ExposesObjectValue;
 }
+type ExposesObjectValue = string | ExposesConfig | string[];
 type ExpressionEstreeIndex =
 	| ImportExpressionImport
 	| UnaryExpression
@@ -9261,7 +9554,7 @@ declare interface ExtensionAliasOptions {
 type ExternalItem =
 	| string
 	| RegExp
-	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
+	| ExternalItemObject
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (
@@ -9289,6 +9582,10 @@ type ExternalItemFunction =
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
+
+/**
+ * Defines the external item function data type used by this module.
+ */
 declare interface ExternalItemFunctionData {
 	/**
 	 * the directory in which the request is placed
@@ -9332,6 +9629,7 @@ declare interface ExternalItemFunctionData {
 	 */
 	originalRequest: string;
 }
+type ExternalItemObject = ExternalItemObjectKnown & ExternalItemObjectUnknown;
 
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
@@ -9554,7 +9852,7 @@ type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
 	| string
 	| RegExp
-	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
+	| ExternalItemObject
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (
@@ -9747,7 +10045,7 @@ type ExternalsType =
 	| "css-url";
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the fs implementation type used by this module.
  */
 declare interface FSImplementation {
 	open?: (...args: any[]) => any;
@@ -9755,7 +10053,7 @@ declare interface FSImplementation {
 }
 
 /**
- * Processes the provided factorize module option.
+ * Defines the factorize module options type used by this module.
  */
 declare interface FactorizeModuleOptions {
 	currentProfile?: ModuleProfile;
@@ -9770,15 +10068,23 @@ declare interface FactorizeModuleOptions {
 	contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 	context?: string;
 }
+
+/**
+ * Defines the factory meta type used by this module.
+ */
 declare interface FactoryMeta {
 	sideEffectFree?: boolean;
 }
 type FakeHook<T> = T & FakeHookMarker;
 
 /**
- * Creates a deprecation.
+ * Defines the fake hook marker type used by this module.
  */
 declare interface FakeHookMarker {}
+
+/**
+ * Defines the fallback cache group type used by this module.
+ */
 declare interface FallbackCacheGroup {
 	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	minSize: SplitChunksSizes;
@@ -9818,6 +10124,11 @@ declare class FetchCompileWasmPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Options that influence how synchronous WebAssembly modules are emitted for
+ * the fetch-based wasm loading runtime.
+ */
 declare interface FetchCompileWasmPluginOptions {
 	/**
 	 * mangle imports
@@ -10110,6 +10421,10 @@ declare abstract class FileSystemInfo {
 	getDeprecatedFileTimestamps(): Map<string, null | number>;
 	getDeprecatedContextTimestamps(): Map<string, null | number>;
 }
+
+/**
+ * Defines the file system info entry type used by this module.
+ */
 declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
@@ -10129,6 +10444,10 @@ type FunctionNode = NodeSyntaxParser & {
 	nameEnd: number;
 	value: ComponentValue[];
 };
+
+/**
+ * Defines the generate context type used by this module.
+ */
 declare interface GenerateContext {
 	/**
 	 * mapping from dependencies to templates
@@ -10430,7 +10749,7 @@ declare interface GotHandler<T> {
 }
 
 /**
- * Returns grouped items.
+ * Defines the group config type used by this module.
  */
 declare interface GroupConfig<T, R> {
 	getKeys: (item: T) => undefined | string[];
@@ -10442,17 +10761,25 @@ type GroupOptionsAsyncDependenciesBlock = RawChunkGroupOptions & {
 } & { entryOptions?: EntryOptions } & { circular?: boolean };
 
 /**
- * Returns grouped items.
+ * Defines the group options type used by this module.
  */
 declare interface GroupOptionsSmartGrouping {
 	groupChildren?: boolean;
 	force?: boolean;
 	targetGroupCount?: number;
 }
+
+/**
+ * per-branch guard frames pushed onto the parser state guard stack
+ */
 declare interface GuardCollection {
 	consequent?: object;
 	alternate?: object;
 }
+
+/**
+ * Defines the hmr javascript parser hooks type used by this module.
+ */
 declare interface HMRJavascriptParserHooks {
 	hotAcceptCallback: SyncBailHook<
 		[
@@ -10493,6 +10820,10 @@ declare interface HMRJavascriptParserHooks {
 	hotAcceptWithoutCallback: SyncBailHook<[CallExpression, string[]], void>;
 }
 declare const HOISTED_DECLARATIONS: unique symbol;
+
+/**
+ * Defines the handle module creation options type used by this module.
+ */
 declare interface HandleModuleCreationOptions {
 	factory: ModuleFactory;
 	dependencies: Dependency[];
@@ -10526,6 +10857,10 @@ declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 		referencedModule: Module
 	): undefined | string | boolean | SortableSet<string>;
 }
+
+/**
+ * Defines the harmony settings type used by this module.
+ */
 declare interface HarmonySettings {
 	ids: string[];
 	source: string;
@@ -10599,6 +10934,10 @@ declare interface HashLike {
 	 */
 	digest: (encoding?: string) => string | Buffer;
 }
+
+/**
+ * Represents the lazy hashed etag runtime component.
+ */
 declare interface HashableObject {
 	updateHash: (hash: Hash) => void;
 }
@@ -10679,6 +11018,12 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+
+/**
+ * Optional node kinds a consumer can drop from the AST for speed/memory. Each
+ * is a pure output reduction — tree construction (and quirks detection) runs
+ * unchanged, so element structure and offsets are identical either way.
+ */
 declare interface HtmlAstSkip {
 	/**
 	 * drop every `Text` node. Raw-text element bodies (`<script>`/`<style>`/…) aren't emitted either — their content span is recorded as the element's `contentEnd` (see `RAW_TEXT_ELEMENTS`) so a consumer can read `[tagEnd, contentEnd]` by offset. For consumers that read text by offset (e.g. `HtmlParser`), never the html5lib serializer.
@@ -10695,6 +11040,12 @@ declare interface HtmlAstSkip {
 	 */
 	doctype?: boolean;
 }
+
+/**
+ * A materialized attribute as returned by `A.attributes` (tests/tooling) —
+ * the parser-facing representation is an id into the attribute columns, read
+ * through the scalar `A.attr*` accessors.
+ */
 declare interface HtmlAttribute {
 	/**
 	 * lowercased (and, in foreign content, adjusted) attribute name
@@ -10918,6 +11269,12 @@ declare class HtmlModulesPlugin {
 		htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
 	};
 }
+
+/**
+ * A `<script>`/`<link>`/`<style>`/`<meta>` tag already present in an emitted
+ * page, exposed for in-place mutation by `transformTags`. Mutate `attrs`, set
+ * `remove`, or change `injectTo` to move it; don't reorder the array itself.
+ */
 declare interface HtmlMutableTag {
 	/**
 	 * the (lowercased) tag name
@@ -11030,9 +11387,17 @@ declare interface HtmlParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 }
+
+/**
+ * What the HTML printer may be told, on top of the `mode` every language has:
+ * `optimization.minimize.html`, and the renderer every nested body goes through.
+ * `optimization.minimize.css` reaches inline CSS through `builtinEmbeddedRenderer`,
+ * which `htmlMinify` passes (see `lib/config/defaults.js`).
+ */
 declare interface HtmlPrintOptions {
 	transforms?: HtmlTransformOptions;
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
@@ -11145,6 +11510,12 @@ declare interface HtmlProcessOptions {
 		info: { type: string; hostType: string; as?: string }
 	) => undefined | string;
 }
+
+/**
+ * A custom resource-hint `<link>` (`output.html.resourceHints`). Exactly one of
+ * `href` / `chunk` / `entry` names the target; `chunk`/`entry` URLs (hash and
+ * public path) are resolved by webpack, `href` is used verbatim.
+ */
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
 	 * hint relationship
@@ -11254,6 +11625,11 @@ declare interface HtmlResourceHintWebpackOptions {
 	 */
 	type?: string;
 }
+
+/**
+ * A tag to inject into an emitted page as a structured descriptor. Injected
+ * verbatim (not re-bundled) at the `injectTo` position.
+ */
 declare interface HtmlTagDescriptor {
 	/**
 	 * tag name, e.g. `"script"` / `"link"` / `"meta"`
@@ -11391,6 +11767,11 @@ declare interface HtmlTokenCallbacks {
 declare interface HtmlTransformHtmlContext {
 	outputName: string;
 }
+
+/**
+ * What the minifying printer may rewrite. Every entry is on unless it is
+ * `false`, so a document one transform breaks can still be minified by the rest.
+ */
 declare interface HtmlTransformOptions {
 	/**
 	 * write a boolean attribute as the bare name its presence already means; `true` only the spellings the spec canonicalizes, `"all"` any value
@@ -11444,7 +11825,7 @@ declare interface HttpUriOptions {
 	/**
 	 * List of allowed URIs (resp. the beginning of them).
 	 */
-	allowedUris: (string | RegExp | ((uri: string) => boolean))[];
+	allowedUris: HttpUriOptionsAllowedUrisItem[];
 
 	/**
 	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
@@ -11471,6 +11852,8 @@ declare interface HttpUriOptions {
 	 */
 	upgrade?: boolean;
 }
+type HttpUriOptionsAllowedUrisItem =
+	string | RegExp | ((uri: string) => boolean);
 declare class HttpUriPlugin {
 	/**
 	 * Creates an instance of HttpUriPlugin.
@@ -11497,7 +11880,7 @@ type IBigIntStatsTypes = IStatsBaseTypes<bigint> & {
 };
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the i stats base type used by this module.
  */
 declare interface IStatsBaseFs<T> {
 	isFile: () => boolean;
@@ -11654,7 +12037,7 @@ declare interface IStatsBaseTypes<T> {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the i stats base type used by this module.
  */
 declare interface IStatsFs {
 	isFile: () => boolean;
@@ -11832,23 +12215,25 @@ declare class IgnorePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface IgnorePluginCheckOptions {
+	/**
+	 * A filter function for resource and context.
+	 */
+	checkResource: (resource: string, context: string) => boolean;
+}
 type IgnorePluginOptions =
-	| {
-			/**
-			 * A RegExp to test the context (directory) against.
-			 */
-			contextRegExp?: RegExp;
-			/**
-			 * A RegExp to test the request against.
-			 */
-			resourceRegExp: RegExp;
-	  }
-	| {
-			/**
-			 * A filter function for resource and context.
-			 */
-			checkResource: (resource: string, context: string) => boolean;
-	  };
+	IgnorePluginPatternOptions | IgnorePluginCheckOptions;
+declare interface IgnorePluginPatternOptions {
+	/**
+	 * A RegExp to test the context (directory) against.
+	 */
+	contextRegExp?: RegExp;
+
+	/**
+	 * A RegExp to test the request against.
+	 */
+	resourceRegExp: RegExp;
+}
 type ImportAttributes = Record<string, string> & {};
 declare interface ImportDependencyMeta {
 	attributes?: ImportAttributes;
@@ -11928,6 +12313,10 @@ declare interface ImportModuleMethod {
 	): void;
 	(request: string, options?: ImportModuleOptions): Promise<any>;
 }
+
+/**
+ * Defines the import module options type used by this module.
+ */
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -12135,7 +12524,7 @@ declare interface InnerGraphUtils {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the input file system type used by this module.
  */
 declare interface InputFileSystem {
 	readFile: ReadFileFs;
@@ -12174,7 +12563,7 @@ type IntermediateFileSystem = InputFileSystem &
 	IntermediateFileSystemExtras;
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the intermediate file system extras type used by this module.
  */
 declare interface IntermediateFileSystemExtras {
 	mkdirSync: MkdirSync;
@@ -12214,6 +12603,10 @@ declare interface InterpolatedPathAndAssetInfo {
 }
 type Issuer = undefined | null | Module;
 type IssuerLayer = null | string;
+
+/**
+ * Defines the item type used by this module.
+ */
 declare interface Item<T> {
 	[index: string]: string | string[] | T;
 }
@@ -15403,6 +15796,7 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
+	 * @since 5.109.0
 	 */
 	urlHints?: UrlHintRule[];
 
@@ -15597,6 +15991,10 @@ declare class JsonpTemplatePlugin {
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
 }
+
+/**
+ * Defines the known asset info type used by this module.
+ */
 declare interface KnownAssetInfo {
 	/**
 	 * true, if the asset can be long term cached forever (contains a hash)
@@ -15688,6 +16086,10 @@ declare interface KnownAssetInfo {
 	 */
 	related?: Record<string, null | string | string[]>;
 }
+
+/**
+ * Defines the build info properties specific to asset modules.
+ */
 declare interface KnownAssetModuleBuildInfo {
 	/**
 	 * whether the asset is inlined as a data url
@@ -15704,6 +16106,11 @@ declare interface KnownAssetModuleBuildInfo {
 	 */
 	assetResource?: string;
 }
+
+/**
+ * Defines the build info properties common to all module types.
+ * Module type specific properties live in the `Known*BuildInfo` typedef of the dedicated module class.
+ */
 declare interface KnownBuildInfo {
 	/**
 	 * the module hands out a spec Module Namespace Exotic Object
@@ -15745,12 +16152,21 @@ declare interface KnownBuildInfo {
 	 */
 	diagnostics?: BuildDiagnostics;
 }
+
+/**
+ * Defines the build meta properties common to all module types.
+ * Module type specific properties live in the `Known*BuildMeta` typedef of the dedicated module class.
+ */
 declare interface KnownBuildMeta {
 	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	async?: boolean;
 	sideEffectFree?: boolean;
 }
+
+/**
+ * Defines the build info properties specific to concatenated modules.
+ */
 declare interface KnownConcatenatedModuleBuildInfo {
 	fileDependencies?: LazySet<string>;
 	contextDependencies?: LazySet<string>;
@@ -15772,12 +16188,24 @@ declare interface KnownContext {
 	 */
 	environments?: string[];
 }
+
+/**
+ * Defines the build info properties specific to context modules.
+ */
 declare interface KnownContextModuleBuildInfo {
 	snapshot?: null | Snapshot;
 }
+
+/**
+ * Defines the known create stats options context type used by this module.
+ */
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
 }
+
+/**
+ * Defines the build info properties specific to css modules.
+ */
 declare interface KnownCssModuleBuildInfo {
 	cssData?: CssData;
 
@@ -15786,10 +16214,18 @@ declare interface KnownCssModuleBuildInfo {
 	 */
 	charset?: string;
 }
+
+/**
+ * Defines the build meta properties specific to css modules.
+ */
 declare interface KnownCssModuleBuildMeta {
 	isCssModule?: boolean;
 	needIdInConcatenation?: boolean;
 }
+
+/**
+ * Defines the build info properties specific to external modules.
+ */
 declare interface KnownExternalModuleBuildInfo {
 	/**
 	 * true when emitting an ESM external (`output.module`)
@@ -15828,6 +16264,10 @@ declare interface KnownHooks {
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
 }
+
+/**
+ * Defines the build info properties specific to html modules.
+ */
 declare interface KnownHtmlModuleBuildInfo {
 	/**
 	 * entries collected from the document, grouped by kind
@@ -15839,6 +16279,10 @@ declare interface KnownHtmlModuleBuildInfo {
 	 */
 	baseUrlPrefix?: string;
 }
+
+/**
+ * Defines the build info properties specific to javascript modules.
+ */
 declare interface KnownJavascriptModuleBuildInfo {
 	/**
 	 * using in CommonJs
@@ -15875,19 +16319,35 @@ declare interface KnownJavascriptModuleBuildInfo {
 	 */
 	usesTopLevelUsingDeclaration?: boolean;
 }
+
+/**
+ * Defines the build meta properties specific to javascript modules.
+ */
 declare interface KnownJavascriptModuleBuildMeta {
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
 }
+
+/**
+ * Defines the known javascript parser state type used by this module.
+ */
 declare interface KnownJavascriptParserState {
 	harmonyNamedExports?: Set<string>;
 	harmonyStarExports?: HarmonyStarExportsList;
 	lastHarmonyImportOrder?: number;
 	localModules?: LocalModule[];
 }
+
+/**
+ * Defines the build info properties specific to json modules.
+ */
 declare interface KnownJsonModuleBuildInfo {
 	jsonData?: JsonData;
 }
+
+/**
+ * Defines the known meta type used by this module.
+ */
 declare interface KnownMeta {
 	importVarMap?: Map<Module, string>;
 	deferredImportVarMap?: Map<Module, string>;
@@ -15897,6 +16357,10 @@ declare interface KnownMeta {
 	 */
 	onDemandExports?: boolean;
 }
+
+/**
+ * Defines the build info properties of normal modules (filesystem-backed, loader-processed).
+ */
 declare interface KnownNormalModuleBuildInfo {
 	parsed?: boolean;
 	hash?: string;
@@ -15912,6 +16376,10 @@ declare interface KnownNormalModuleBuildInfo {
 	 */
 	resourceIntegrity?: string;
 }
+
+/**
+ * Defines the known normalized stats options type used by this module.
+ */
 declare interface KnownNormalizedStatsOptions {
 	context: string;
 	requestShortener: RequestShortener;
@@ -15957,7 +16425,7 @@ declare interface KnownNormalizedStatsOptions {
 }
 
 /**
- * Checks whether this object is sorted.
+ * Defines the known records type used by this module.
  */
 declare interface KnownRecords {
 	aggressiveSplits?: SplitData[];
@@ -15973,7 +16441,7 @@ declare interface KnownRecords {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats asset type used by this module.
  */
 declare interface KnownStatsAsset {
 	type: string;
@@ -15995,7 +16463,7 @@ declare interface KnownStatsAsset {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats chunk type used by this module.
  */
 declare interface KnownStatsChunk {
 	rendered: boolean;
@@ -16022,7 +16490,7 @@ declare interface KnownStatsChunk {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats chunk group type used by this module.
  */
 declare interface KnownStatsChunkGroup {
 	name?: null | string;
@@ -16039,7 +16507,7 @@ declare interface KnownStatsChunkGroup {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats chunk origin type used by this module.
  */
 declare interface KnownStatsChunkOrigin {
 	module: string;
@@ -16051,7 +16519,7 @@ declare interface KnownStatsChunkOrigin {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats compilation type used by this module.
  */
 declare interface KnownStatsCompilation {
 	env?: any;
@@ -16084,7 +16552,7 @@ declare interface KnownStatsCompilation {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats error type used by this module.
  */
 declare interface KnownStatsError {
 	message: string;
@@ -16104,6 +16572,10 @@ declare interface KnownStatsError {
 	errors?: KnownStatsError[];
 	compilerPath?: string;
 }
+
+/**
+ * Defines the known stats factory context type used by this module.
+ */
 declare interface KnownStatsFactoryContext {
 	type: string;
 	compilation: Compilation;
@@ -16117,7 +16589,7 @@ declare interface KnownStatsFactoryContext {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats logging type used by this module.
  */
 declare interface KnownStatsLogging {
 	entries: StatsLoggingEntry[];
@@ -16126,7 +16598,7 @@ declare interface KnownStatsLogging {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats logging entry type used by this module.
  */
 declare interface KnownStatsLoggingEntry {
 	type: string;
@@ -16138,7 +16610,7 @@ declare interface KnownStatsLoggingEntry {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats module type used by this module.
  */
 declare interface KnownStatsModule {
 	type?: string;
@@ -16184,7 +16656,7 @@ declare interface KnownStatsModule {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats module issuer type used by this module.
  */
 declare interface KnownStatsModuleIssuer {
 	identifier: string;
@@ -16194,7 +16666,7 @@ declare interface KnownStatsModuleIssuer {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats module reason type used by this module.
  */
 declare interface KnownStatsModuleReason {
 	moduleIdentifier: null | string;
@@ -16212,14 +16684,14 @@ declare interface KnownStatsModuleReason {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats module trace dependency type used by this module.
  */
 declare interface KnownStatsModuleTraceDependency {
 	loc?: string;
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats module trace item type used by this module.
  */
 declare interface KnownStatsModuleTraceItem {
 	originIdentifier?: string;
@@ -16230,6 +16702,10 @@ declare interface KnownStatsModuleTraceItem {
 	originId?: string | number;
 	moduleId?: string | number;
 }
+
+/**
+ * Defines the known stats printer color functions type used by this module.
+ */
 declare interface KnownStatsPrinterColorFunctions {
 	bold?: (value: string | number) => string;
 	yellow?: (value: string | number) => string;
@@ -16238,6 +16714,10 @@ declare interface KnownStatsPrinterColorFunctions {
 	magenta?: (value: string | number) => string;
 	cyan?: (value: string | number) => string;
 }
+
+/**
+ * Defines the known stats printer context type used by this module.
+ */
 declare interface KnownStatsPrinterContext {
 	type?: string;
 	compilation?: StatsCompilation;
@@ -16254,6 +16734,10 @@ declare interface KnownStatsPrinterContext {
 	moduleTraceItem?: StatsModuleTraceItem;
 	moduleTraceDependency?: StatsModuleTraceDependency;
 }
+
+/**
+ * Defines the known stats printer formatters type used by this module.
+ */
 declare interface KnownStatsPrinterFormatters {
 	formatFilename?: (file: string, oversize?: boolean) => string;
 	formatModuleId?: (id: string | number) => string;
@@ -16270,7 +16754,7 @@ declare interface KnownStatsPrinterFormatters {
 }
 
 /**
- * Returns array of values.
+ * Defines the known stats profile type used by this module.
  */
 declare interface KnownStatsProfile {
 	total: number;
@@ -16284,9 +16768,17 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
+
+/**
+ * Defines the build meta properties specific to sync wasm modules.
+ */
 declare interface KnownSyncWasmModuleBuildMeta {
 	jsIncompatibleExports?: Record<string, string>;
 }
+
+/**
+ * Defines the known unsafe cache data type used by this module.
+ */
 declare interface KnownUnsafeCacheData {
 	/**
 	 * factory meta
@@ -16301,6 +16793,10 @@ declare interface KnownUnsafeCacheData {
 	generatorOptions?: GeneratorOptions;
 }
 declare const LEGACY_ASSERT_ATTRIBUTES: unique symbol;
+
+/**
+ * Describes the l stat shape.
+ */
 declare interface LStatFs {
 	(
 		path: PathLikeFs,
@@ -16328,6 +16824,10 @@ declare interface LStatFs {
 		) => void
 	): void;
 }
+
+/**
+ * Describes the l stat sync shape.
+ */
 declare interface LStatSync {
 	(path: PathLikeFs): IStatsFs;
 	(
@@ -16392,6 +16892,10 @@ declare class Label {
 	name?: string;
 	statementStart?: number;
 }
+
+/**
+ * a label in scope, as any caller may hold one
+ */
 declare interface LabelLike {
 	kind?: null | string;
 	name?: string;
@@ -16561,6 +17065,10 @@ declare class LazySet<T> {
 		__0: ObjectDeserializerContextObjectMiddlewareObject_2<(number | T)[]>
 	): LazySet<T>;
 }
+
+/**
+ * Defines the lib ident options type used by this module.
+ */
 declare interface LibIdentOptions {
 	/**
 	 * absolute context path to which lib ident is relative to
@@ -16584,6 +17092,10 @@ declare class LibManifestPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the lib manifest plugin options type used by this module.
+ */
 declare interface LibManifestPluginOptions {
 	/**
 	 * Context of requests in the manifest file (defaults to the webpack context).
@@ -16615,6 +17127,10 @@ declare interface LibManifestPluginOptions {
 	 */
 	type?: string;
 }
+
+/**
+ * Defines the library context type used by this module.
+ */
 declare interface LibraryContext<T> {
 	compilation: Compilation;
 	chunkGraph: ChunkGraph;
@@ -16705,6 +17221,7 @@ declare interface LibraryOptions {
 
 	/**
 	 * Add a branch to the UMD wrapper for an AMD-style loader exposing `define` on a container object, given as a dot-separated path, after the `define.amd` branch.
+	 * @since 5.110.0
 	 */
 	umdAmdContainer?: string;
 
@@ -16883,6 +17400,11 @@ declare interface LoaderItem {
 	ident?: null | string;
 	type?: null | string;
 }
+
+/**
+ * The loader-authoring types, re-exported here because this file is what
+ * `generate-types.js` reads webpack's public type surface from
+ */
 declare interface LoaderModule<OptionsType = {}, ContextAdditions = {}> {
 	default?:
 		| RawLoaderDefinitionFunction<OptionsType, ContextAdditions>
@@ -16894,17 +17416,27 @@ declare class LoaderOptionsPlugin {
 	/**
 	 * Creates an instance of LoaderOptionsPlugin.
 	 */
-	constructor(options?: LoaderOptionsPluginOptions & MatchObject);
-	options: LoaderOptionsPluginOptions & MatchObject;
+	constructor(
+		options?: LoaderOptionsPluginOptions & MatchObject & Record<string, any>
+	);
+	options: LoaderOptionsPluginOptions & MatchObject & Record<string, any>;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
 }
-declare interface LoaderOptionsPluginOptions {
-	[index: string]: any;
 
+/**
+ * A configuration object that can be used to configure older loaders.
+ */
+declare interface LoaderOptionsPluginLoaderOptions {
+	/**
+	 * The context that can be used to configure older loaders.
+	 */
+	context?: string;
+}
+declare interface LoaderOptionsPluginOptions {
 	/**
 	 * Whether loaders should be in debug mode or not. debug will be removed as of webpack 3.
 	 */
@@ -16914,18 +17446,12 @@ declare interface LoaderOptionsPluginOptions {
 	 * Where loaders can be switched to minimize mode.
 	 */
 	minimize?: boolean;
-
-	/**
-	 * A configuration object that can be used to configure older loaders.
-	 */
-	options?: {
-		[index: string]: any;
-		/**
-		 * The context that can be used to configure older loaders.
-		 */
-		context?: string;
-	};
+	options?: LoaderOptionsPluginLoaderOptions & Record<string, any>;
 }
+
+/**
+ * These properties are added by the LoaderPlugin
+ */
 declare interface LoaderPluginLoaderContext {
 	/**
 	 * Resolves the given request to a module, applies all configured loaders and calls
@@ -17052,6 +17578,11 @@ declare interface LoaderRunnerMutableContext<OptionsType> {
 	 */
 	environment: Environment;
 }
+
+/**
+ * The members the runner never lets a loader assign. They carry no
+ * documentation, so a type literal loses nothing and keeps `readonly`
+ */
 declare interface LoaderRunnerReadonlyContext<OptionsType> {
 	readonly currentRequest: string;
 	readonly data: any;
@@ -17103,6 +17634,10 @@ declare abstract class LocalModule {
 	 */
 	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_3): void;
 }
+
+/**
+ * Defines the log entry type used by this module.
+ */
 declare interface LogEntry {
 	type:
 		| "error"
@@ -17141,6 +17676,10 @@ type LogTypeEnum =
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
 declare const MODULE_DECLARATIONS: unique symbol;
+
+/**
+ * Defines the main render context type used by this module.
+ */
 declare interface MainRenderContext {
 	/**
 	 * the chunk
@@ -17275,9 +17814,17 @@ declare abstract class MainTemplate {
 	get requireFn(): "__webpack_require__";
 	get outputOptions(): OutputNormalizedWithDefaults;
 }
+
+/**
+ * Defines the make cacheable result type used by this module.
+ */
 declare interface MakeCacheableResult<T> {
 	(value: string, cache?: object): T;
 }
+
+/**
+ * Defines the make directory options type used by this module.
+ */
 declare interface MakeDirectoryOptions {
 	recursive?: boolean;
 	mode?: string | number;
@@ -17312,13 +17859,12 @@ declare interface ManifestItem {
 	 */
 	src?: string;
 }
+type ManifestObject = ManifestObjectKnown & ManifestObjectUnknown;
 
 /**
  * The manifest object.
  */
-declare interface ManifestObject {
-	[index: string]: any;
-
+declare interface ManifestObjectKnown {
 	/**
 	 * Contains the names of assets.
 	 */
@@ -17328,6 +17874,9 @@ declare interface ManifestObject {
 	 * Contains the names of entrypoints.
 	 */
 	entrypoints: Record<string, ManifestEntrypoint>;
+}
+declare interface ManifestObjectUnknown {
+	[index: string]: any;
 }
 declare class ManifestPlugin {
 	/**
@@ -17410,6 +17959,10 @@ type Matcher =
 	| RegExp
 	| ((str: string) => boolean)
 	| (string | RegExp | ((str: string) => boolean))[];
+
+/**
+ * Defines the maybe mergeable init fragment type used by this module.
+ */
 declare interface MaybeMergeableInitFragment<GenerateContext> {
 	key?: string;
 	stage: number;
@@ -17535,6 +18088,10 @@ declare interface MinChunkSizePluginOptions {
 	 */
 	minChunkSize: number;
 }
+
+/**
+ * Describes the mkdir shape.
+ */
 declare interface Mkdir {
 	(
 		file: PathLikeFs,
@@ -17561,6 +18118,10 @@ declare interface Mkdir {
 		callback: (err: null | NodeJS.ErrnoException) => void
 	): void;
 }
+
+/**
+ * Describes the mkdir sync shape.
+ */
 declare interface MkdirSync {
 	(
 		path: PathLikeFs,
@@ -18138,6 +18699,10 @@ declare class ModuleFactory {
 		callback: (err?: null | Error, result?: ModuleFactoryResult) => void
 	): void;
 }
+
+/**
+ * Defines the module factory cache entry type used by this module.
+ */
 declare interface ModuleFactoryCacheEntry {
 	/**
 	 * - The undo path to the CSS file
@@ -18159,17 +18724,29 @@ declare interface ModuleFactoryCacheEntry {
 	 */
 	source: CachedSource;
 }
+
+/**
+ * Defines the module factory create data type used by this module.
+ */
 declare interface ModuleFactoryCreateData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
 	resolveOptions?: ResolveOptions;
 	context: string;
 	dependencies: Dependency[];
 }
+
+/**
+ * Defines the module factory create data context info type used by this module.
+ */
 declare interface ModuleFactoryCreateDataContextInfo {
 	issuer: string;
 	issuerLayer: IssuerLayer;
 	compiler?: string;
 }
+
+/**
+ * Defines the module factory result type used by this module.
+ */
 declare interface ModuleFactoryResult {
 	/**
 	 * the created module or unset if no module was created
@@ -18207,19 +18784,12 @@ declare class ModuleFederationPlugin {
 	};
 }
 declare interface ModuleFederationPluginOptions {
-	/**
-	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
-	 */
-	exposes?: (string | ExposesObject)[] | ExposesObject;
+	exposes?: ExposesObject | ExposesBranch1Item[];
 
 	/**
 	 * The filename of the container as relative path inside the `output.path` directory.
 	 */
 	filename?: string;
-
-	/**
-	 * Options for library.
-	 */
 	library?: LibraryOptions;
 
 	/**
@@ -18258,27 +18828,19 @@ declare interface ModuleFederationPluginOptions {
 		| "asset-url"
 		| "css-import"
 		| "css-url";
-
-	/**
-	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
-	 */
-	remotes?: (string | RemotesObject)[] | RemotesObject;
-
-	/**
-	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
-	 */
+	remotes?: RemotesObject | RemotesBranch1Item[];
 	runtime?: string | false;
 
 	/**
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */
 	shareScope?: string;
-
-	/**
-	 * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
-	 */
-	shared?: (string | SharedObject)[] | SharedObject;
+	shared?: SharedObject | SharedBranch1Item[];
 }
+
+/**
+ * Defines the module filename template context type used by this module.
+ */
 declare interface ModuleFilenameTemplateContext {
 	/**
 	 * the identifier of the module
@@ -18831,8 +19393,8 @@ declare interface ModuleOptions {
 	noParse?:
 		| string
 		| RegExp
-		| ((content: string) => boolean)
-		| (string | RegExp | ((content: string) => boolean))[];
+		| (string | RegExp | ((content: string) => boolean))[]
+		| ((content: string) => boolean);
 
 	/**
 	 * Specify options for each parser.
@@ -18924,8 +19486,8 @@ declare interface ModuleOptionsNormalized {
 	noParse?:
 		| string
 		| RegExp
-		| ((content: string) => boolean)
-		| (string | RegExp | ((content: string) => boolean))[];
+		| (string | RegExp | ((content: string) => boolean))[]
+		| ((content: string) => boolean);
 
 	/**
 	 * Specify options for each parser.
@@ -18942,6 +19504,10 @@ declare interface ModuleOptionsNormalized {
 	 */
 	unsafeCache?: boolean | ((module: Module) => boolean);
 }
+
+/**
+ * Defines the module path data type used by this module.
+ */
 declare interface ModulePathData {
 	id: string | number;
 	hash: string;
@@ -18999,6 +19565,11 @@ declare interface ModuleReferenceMatch {
 	name: string;
 	leaked: boolean;
 }
+
+/**
+ * Encodes how a concatenated module reference should be interpreted when it is
+ * later reconstructed from its placeholder identifier.
+ */
 declare interface ModuleReferenceOptions {
 	/**
 	 * the properties or exports selected from the referenced module
@@ -19035,6 +19606,10 @@ declare interface ModuleReferenceOptions {
 	 */
 	asiSafe?: boolean;
 }
+
+/**
+ * Defines the module render context type used by this module.
+ */
 declare interface ModuleRenderContext {
 	/**
 	 * the chunk
@@ -19295,6 +19870,10 @@ declare class MultiCompiler {
 	 */
 	close(callback: (err: null | Error, result?: void) => void): void;
 }
+
+/**
+ * Defines the multi compiler options type used by this module.
+ */
 declare interface MultiCompilerOptions {
 	/**
 	 * how many Compilers are allows to run at the same time in parallel
@@ -19366,6 +19945,17 @@ declare abstract class MultiWatching {
 	 */
 	close(callback: (err: null | Error, result?: void) => void): void;
 }
+
+/**
+ * A mutable lexer token. The `next` / `consume` hot path reuses a single
+ * instance per `TokenStream` (the lexer writes into it instead of allocating
+ * one object per token), which also keeps the parser's `t.type` reads
+ * monomorphic. All fields are present from construction so the shape never
+ * transitions; type-specific fields (`isId` / `contentStart` / `contentEnd` /
+ * `unitStart`) carry stale values for unrelated token types and are only read
+ * by `tokenToNode` for the matching type. Pass a fresh one per `readToken` call
+ * to collect the raw token list (e.g. tests).
+ */
 declare interface MutableToken {
 	/**
 	 * one of the `TT_*` constants
@@ -19414,6 +20004,10 @@ declare class NamedChunkIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the named chunk ids plugin options type used by this module.
+ */
 declare interface NamedChunkIdsPluginOptions {
 	/**
 	 * context
@@ -19437,6 +20031,10 @@ declare class NamedModuleIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the named module ids plugin options type used by this module.
+ */
 declare interface NamedModuleIdsPluginOptions {
 	/**
 	 * context
@@ -19451,6 +20049,10 @@ declare class NaturalModuleIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the need build context type used by this module.
+ */
 declare interface NeedBuildContext {
 	compilation: Compilation;
 	fileSystemInfo: FileSystemInfo;
@@ -19479,12 +20081,20 @@ declare class NodeEnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the node environment plugin options type used by this module.
+ */
 declare interface NodeEnvironmentPluginOptions {
 	/**
 	 * infrastructure logging options
 	 */
 	infrastructureLogging: InfrastructureLogging;
 }
+
+/**
+ * a node as this parser builds one, whichever fields the options asked for
+ */
 declare interface NodeLike {
 	type: string;
 	start: number;
@@ -19513,6 +20123,15 @@ declare interface NodeOptions {
 	 */
 	global?: boolean | "warn";
 }
+
+/**
+ * A language node printer, fired for one node once all its visitors have run and
+ * its children are printed. It takes the same `path` a visitor gets plus the
+ * print context as its `writer`; it switches on `path.type()` and **returns** the
+ * node's serialized text, reading its children's text from `writer.get` — knowing
+ * nothing of the walk. Returning (rather than writing to a buffer) is what lets a
+ * parent compose / transform its text from its finished children.
+ */
 declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
 }
@@ -19524,6 +20143,16 @@ declare class NodeSourcePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Base AST node — the property-accessor view the `parseA*` entry points return
+ * (see `_makeReader`). Every concrete node carries the `[start, end)` byte
+ * `range` of the source slice it covers; `loc` is computed on demand from the
+ * shared `LocConverter`, so line/column conversion is only paid when a consumer
+ * needs it. The concrete node typedefs below extend this via `&`.
+ * Inside the parser a node ref is an integer id into the columns; the reader
+ * exposes this property shape over a retained snapshot of those columns.
+ */
 declare interface NodeSyntaxParser {
 	/**
 	 * node-type discriminator
@@ -19587,6 +20216,10 @@ declare class NodeTemplatePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Represents the node template plugin runtime component.
+ */
 declare interface NodeTemplatePluginOptions {
 	/**
 	 * enable async chunk loading
@@ -19653,8 +20286,8 @@ declare class NormalModule extends Module {
 			| undefined
 			| string
 			| RegExp
-			| ((content: string) => boolean)
-			| (string | RegExp | ((content: string) => boolean))[],
+			| (string | RegExp | ((content: string) => boolean))[]
+			| ((content: string) => boolean),
 		request: string
 	): boolean;
 	static getCompilationHooks(compilation: Compilation): {
@@ -20271,6 +20904,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveOptions?: ResolveOptionsWithDependencyType
 	): ResolverWithOptions;
 }
+
+/**
+ * These properties are added by the NormalModule
+ */
 declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
 
@@ -20467,7 +21104,9 @@ declare namespace ObjectDeserializerContextObjectMiddlewareObject_1 {
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object deserializer context type used by this module.
+ * `T` is the tuple of values read in order: `read` returns the head, and `rest`
+ * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
 declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
 	T extends ReadonlyArray<any> = ReadonlyArray<any>
@@ -20478,7 +21117,9 @@ declare interface ObjectDeserializerContextObjectMiddlewareObject_2<
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object deserializer context type used by this module.
+ * `T` is the tuple of values read in order: `read` returns the head, and `rest`
+ * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
 declare interface ObjectDeserializerContextObjectMiddlewareObject_3 {
 	read: () => string;
@@ -20487,7 +21128,7 @@ declare interface ObjectDeserializerContextObjectMiddlewareObject_3 {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the object encoding options type used by this module.
  */
 declare interface ObjectEncodingOptionsFs {
 	encoding?:
@@ -20526,7 +21167,7 @@ declare interface ObjectEncodingOptionsTypes {
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object serializer type used by this module.
  */
 declare interface ObjectSerializer {
 	serialize: (
@@ -20539,7 +21180,8 @@ declare interface ObjectSerializer {
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object serializer context type used by this module.
+ * `T` is the tuple of values written in order; each `write` consumes the head.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
 	write: (
@@ -20571,7 +21213,8 @@ declare namespace ObjectSerializerContextObjectMiddlewareObject_2 {
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object serializer context type used by this module.
+ * `T` is the tuple of values written in order; each `write` consumes the head.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 	T extends ReadonlyArray<any> = ReadonlyArray<any>
@@ -20590,7 +21233,8 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_3<
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object serializer context type used by this module.
+ * `T` is the tuple of values written in order; each `write` consumes the head.
  */
 declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 	write: (
@@ -20609,7 +21253,7 @@ declare interface ObjectSerializerContextObjectMiddlewareObject_4 {
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object serializer snapshot type used by this module.
  */
 declare interface ObjectSerializerSnapshot {
 	length: number;
@@ -20658,6 +21302,10 @@ declare interface OccurrenceModuleIdsPluginOptions {
 declare interface OnlySafeTimeEntry {
 	safeTime: number;
 }
+
+/**
+ * Describes the open shape.
+ */
 declare interface Open {
 	(
 		file: PathLikeFs,
@@ -20743,6 +21391,7 @@ declare interface Optimization {
 
 	/**
 	 * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
+	 * @since 5.110.0
 	 */
 	minimizeOptions?: OptimizationMinimizeOptions;
 
@@ -21638,6 +22287,10 @@ declare abstract class OptionsApply {
 		interception?: WebpackOptionsInterception
 	): WebpackOptionsNormalizedWithDefaults;
 }
+
+/**
+ * Defines the options type used by this module.
+ */
 declare interface OptionsDelegatedModuleFactoryPlugin {
 	/**
 	 * source
@@ -21680,6 +22333,10 @@ declare interface OptionsStreamChunks {
 	columns?: boolean;
 	scopes?: boolean;
 }
+
+/**
+ * what a caller may ask the parser for
+ */
 declare interface OptionsSyntaxParser {
 	/**
 	 * which edition to parse
@@ -22039,7 +22696,7 @@ declare interface Output {
 	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
-	library?: string | string[] | LibraryOptions | LibraryCustomUmdObject;
+	library?: string | LibraryOptions | string[] | LibraryCustomUmdObject;
 
 	/**
 	 * Specify which export should be exposed as library.
@@ -22073,6 +22730,7 @@ declare interface Output {
 
 	/**
 	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">` / `<link rel="preconnect">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `"prefetch"` / `"preload"` / `"none"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`. `initial` defaults on for ESM output (`output.module`), where native `import()` would otherwise waterfall; classic output stays opt-in.
+	 * @since 5.109.0
 	 */
 	resourceHints?:
 		| boolean
@@ -22144,6 +22802,7 @@ declare interface Output {
 
 	/**
 	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 * @since 5.109.0
 	 */
 	wasmStreamingFallback?: boolean;
 
@@ -22174,7 +22833,7 @@ declare interface Output {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the output file system type used by this module.
  */
 declare interface OutputFileSystem {
 	mkdir: Mkdir;
@@ -22611,6 +23270,7 @@ declare interface OutputNormalized {
 
 	/**
 	 * Full resource-hint configuration.
+	 * @since 5.109.0
 	 */
 	resourceHints?: ResourceHintsOptions;
 
@@ -22662,6 +23322,7 @@ declare interface OutputNormalized {
 
 	/**
 	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 * @since 5.109.0
 	 */
 	wasmStreamingFallback?: boolean;
 
@@ -22743,10 +23404,18 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	>;
 	wasmLoading: NonNullable<undefined | string | false>;
 };
+
+/**
+ * Defines the parameterized comparator type used by this module.
+ */
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
 type ParseErrorSeverity = "error" | "warning";
+
+/**
+ * Defines the parse options type used by this module.
+ */
 declare interface ParseOptionsJavascriptParser {
 	sourceType: "module" | "script";
 	ecmaVersion: EcmaVersion;
@@ -22782,10 +23451,20 @@ declare interface ParseOptionsSyntaxParser {
 	 */
 	comment?: (input: string, start: number, end: number) => number;
 }
+
+/**
+ * Defines the parse result type used by this module.
+ */
 declare interface ParseResult {
 	ast: ProgramImport;
 	comments: CommentJavascriptParser[];
 }
+
+/**
+ * A `data:` URI split into the parts a caller has to put back together.
+ * `parameters` is every `;…` after the media type (`;base64` included) and
+ * `payload` the text after the comma, both in the form they were written.
+ */
 declare interface ParsedDataURI {
 	mediaType: string;
 	parameters: string;
@@ -22976,6 +23655,10 @@ declare class ParserSourceLocation {
 	source: any;
 }
 type ParserState = ParserStateBase & Record<string, any>;
+
+/**
+ * Defines the parser state base type used by this module.
+ */
 declare interface ParserStateBase {
 	source: string | Buffer;
 	current: NormalModule;
@@ -23566,6 +24249,10 @@ declare interface PathCacheFunctions {
 	 */
 	basename: BasenameCacheEntry;
 }
+
+/**
+ * Defines the path data type used by this module.
+ */
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
 	hash?: string;
@@ -23770,7 +24457,7 @@ declare interface PerformanceOptions {
 	osDependentRules?: boolean;
 
 	/**
-	 * Report '/*#__PURE__* /' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).
+	 * Report '/*#__PURE__*\/' annotations that sit somewhere the parser does not read them (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	pureAnnotations?: boolean;
@@ -23835,6 +24522,11 @@ declare interface PerformanceOptions {
 	 */
 	unusedModules?: boolean;
 }
+
+/**
+ * A phase webpack implements in place of terser's. `supports` reads the
+ * installed terser and says whether this phase still fits it.
+ */
 declare interface Phase {
 	name: string;
 	supports: (modules?: any) => boolean;
@@ -23875,7 +24567,7 @@ declare class PlatformPlugin {
 }
 
 /**
- * Returns check if version is greater or equal.
+ * Defines the platform target properties type used by this module.
  */
 declare interface PlatformTargetProperties {
 	/**
@@ -23951,6 +24643,10 @@ declare class Position {
 	column: number;
 	offset(n: number): Position;
 }
+
+/**
+ * a position as any caller may state one
+ */
 declare interface PositionLike {
 	line: number;
 	column: number;
@@ -24216,16 +24912,28 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	replaceAll(text: string): void;
 	result(): string;
 }
+
+/**
+ * What every language's print options carry, read by the node printer via
+ * `writer.options`. Only `mode` is here: what else a printer may be told is the
+ * language's own business, and a language names it by instantiating
+ * {@link PrintContext} with its own type — nothing CSS reads belongs in a
+ * typedef HTML also depends on.
+ */
 declare interface PrintOptions {
 	mode: "minify" | "beautify";
 }
+
+/**
+ * Defines the printed element type used by this module.
+ */
 declare interface PrintedElement {
 	element: string;
 	content?: string;
 }
 
 /**
- * Returns object of arguments.
+ * Defines the problem type used by this module.
  */
 declare interface Problem {
 	type: ProblemType;
@@ -24302,22 +25010,7 @@ declare class ProgressPlugin {
 	showActiveModules: boolean;
 	percentBy: null | "entries" | "modules" | "dependencies";
 	progressBar:
-		| false
-		| "auto"
-		| Required<{
-				/**
-				 * Color used for the filled portion of the bar.
-				 */
-				color?: string;
-				/**
-				 * Name shown before the progress bar.
-				 */
-				name?: string;
-				/**
-				 * Width of the progress bar in characters. Default: 25.
-				 */
-				width?: number;
-		  }>;
+		false | "auto" | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime: boolean;
 	phaseTimings: boolean;
 
@@ -24371,10 +25064,6 @@ declare interface ProgressPluginOptions {
 	 * Show estimated time remaining based on build progress. Default: false.
 	 */
 	estimatedTime?: boolean;
-
-	/**
-	 * Function that executes for every progress step.
-	 */
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
 
 	/**
@@ -24406,22 +25095,23 @@ declare interface ProgressPluginOptions {
 	 * Generate progress bar. `"auto"` enables it only for interactive terminals. Default: false.
 	 */
 	progressBar?:
-		| boolean
-		| "auto"
-		| {
-				/**
-				 * Color used for the filled portion of the bar.
-				 */
-				color?: string;
-				/**
-				 * Name shown before the progress bar.
-				 */
-				name?: string;
-				/**
-				 * Width of the progress bar in characters. Default: 25.
-				 */
-				width?: number;
-		  };
+		boolean | "auto" | ProgressPluginOptionsProgressBarBranch3Object;
+}
+declare interface ProgressPluginOptionsProgressBarBranch3Object {
+	/**
+	 * Color used for the filled portion of the bar.
+	 */
+	color?: string;
+
+	/**
+	 * Name shown before the progress bar.
+	 */
+	name?: string;
+
+	/**
+	 * Width of the progress bar in characters. Default: 25.
+	 */
+	width?: number;
 }
 declare class ProvidePlugin {
 	/**
@@ -24448,9 +25138,6 @@ declare class ProvideSharedPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface ProvideSharedPluginOptions {
-	/**
-	 * Modules that should be provided as shared modules to the share scope. When provided, property name is used to match modules, otherwise this is automatically inferred from share key.
-	 */
 	provides: Provides;
 
 	/**
@@ -24458,7 +25145,8 @@ declare interface ProvideSharedPluginOptions {
 	 */
 	shareScope?: string;
 }
-type Provides = (string | ProvidesObject)[] | ProvidesObject;
+type Provides = ProvidesObject | ProvidesBranch1Item[];
+type ProvidesBranch1Item = string | ProvidesObject;
 
 /**
  * Advanced configuration for modules that should be provided as shared modules to the share scope.
@@ -24468,15 +25156,7 @@ declare interface ProvidesConfig {
 	 * Include the provided module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
 	exclude?: SharedModuleFilter;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
 	include?: SharedModuleFilter;
 
 	/**
@@ -24499,8 +25179,9 @@ declare interface ProvidesConfig {
  * Modules that should be provided as shared modules to the share scope. Property names are used as share keys.
  */
 declare interface ProvidesObject {
-	[index: string]: string | ProvidesConfig;
+	[index: string]: ProvidesObjectValue;
 }
+type ProvidesObjectValue = string | ProvidesConfig;
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
 type QualifiedRule = NodeSyntaxParser & {
@@ -24510,6 +25191,12 @@ type QualifiedRule = NodeSyntaxParser & {
 	blockStart: number;
 	blockEnd: number;
 };
+
+/**
+ * Describes the scheduling hints that can be attached to a chunk group.
+ * These values influence how child groups are ordered for preload/prefetch
+ * and how their fetch priority is exposed to runtime code.
+ */
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
@@ -24618,6 +25305,10 @@ declare interface RawSourceMap {
 	 */
 	scopes?: string;
 }
+
+/**
+ * Defines the shared type used by this module.
+ */
 declare interface Read<
 	TBuffer extends NodeJS.ArrayBufferView = NodeJS.ArrayBufferView
 > {
@@ -24653,7 +25344,7 @@ declare interface Read<
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the read async options type used by this module.
  */
 declare interface ReadAsyncOptions<TBuffer extends NodeJS.ArrayBufferView> {
 	offset?: number;
@@ -24672,6 +25363,10 @@ declare class ReadFileCompileAsyncWasmPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the read file compile async wasm plugin options type used by this module.
+ */
 declare interface ReadFileCompileAsyncWasmPluginOptions {
 	/**
 	 * use import?
@@ -24690,6 +25385,10 @@ declare class ReadFileCompileWasmPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Defines the read file compile wasm plugin options type used by this module.
+ */
 declare interface ReadFileCompileWasmPluginOptions {
 	/**
 	 * mangle imports
@@ -24701,6 +25400,10 @@ declare interface ReadFileCompileWasmPluginOptions {
 	 */
 	import?: boolean;
 }
+
+/**
+ * Describes the read file shape.
+ */
 declare interface ReadFileFs {
 	(
 		path: PathOrFileDescriptorFs,
@@ -24754,6 +25457,10 @@ declare interface ReadFileFs {
 		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 }
+
+/**
+ * Describes the read file sync shape.
+ */
 declare interface ReadFileSync {
 	(
 		path: PathOrFileDescriptorFs,
@@ -24838,6 +25545,10 @@ type ReadStreamOptions = StreamOptions & {
 	fs?: null | CreateReadStreamFSImplementation;
 	end?: number;
 };
+
+/**
+ * Describes the readdir shape.
+ */
 declare interface ReaddirFs {
 	(
 		path: PathLikeFs,
@@ -24933,6 +25644,10 @@ declare interface ReaddirFs {
 		) => void
 	): void;
 }
+
+/**
+ * Describes the readdir sync shape.
+ */
 declare interface ReaddirSync {
 	(
 		path: PathLikeFs,
@@ -25100,6 +25815,10 @@ declare interface ReaddirTypes {
 		) => void
 	): void;
 }
+
+/**
+ * Describes the readlink shape.
+ */
 declare interface ReadlinkFs {
 	(
 		path: PathLikeFs,
@@ -25124,6 +25843,10 @@ declare interface ReadlinkFs {
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 }
+
+/**
+ * Describes the readlink sync shape.
+ */
 declare interface ReadlinkSync {
 	(path: PathLikeFs, options?: EncodingOptionFs): string;
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
@@ -25170,6 +25893,10 @@ declare class RealContentHashPlugin {
 		updateHash: SyncBailHook<[Buffer[], string], string | void>;
 	};
 }
+
+/**
+ * Defines the real content hash plugin options type used by this module.
+ */
 declare interface RealContentHashPluginOptions {
 	/**
 	 * the hash function to use
@@ -25186,11 +25913,19 @@ declare interface RealContentHashPluginOptions {
 	 */
 	onDemand?: boolean;
 }
+
+/**
+ * Defines the real dependency location type used by this module.
+ */
 declare interface RealDependencyLocation {
 	start: SourcePosition;
 	end?: SourcePosition;
 	index?: number;
 }
+
+/**
+ * Describes the real path shape.
+ */
 declare interface RealPathFs {
 	(
 		path: PathLikeFs,
@@ -25215,6 +25950,10 @@ declare interface RealPathFs {
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 }
+
+/**
+ * Describes the real path sync shape.
+ */
 declare interface RealPathSync {
 	(path: PathLikeFs, options?: EncodingOptionFs): string;
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
@@ -25247,11 +25986,19 @@ declare interface RealPathTypes {
 type Records = KnownRecords &
 	Record<string, KnownRecords[]> &
 	Record<string, any>;
+
+/**
+ * Defines the records chunks type used by this module.
+ */
 declare interface RecordsChunks {
 	byName?: Record<string, number>;
 	bySource?: Record<string, number>;
 	usedIds?: number[];
 }
+
+/**
+ * Defines the records modules type used by this module.
+ */
 declare interface RecordsModules {
 	byIdentifier?: Record<string, number>;
 	usedIds?: number[];
@@ -25260,6 +26007,10 @@ type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
 	| RecursiveArrayOrRecord<T>[]
 	| T;
+
+/**
+ * Defines the recursive non nullable type used by this module.
+ */
 declare interface RecursiveNonNullable<T> {}
 
 /**
@@ -25271,6 +26022,10 @@ declare abstract class Reference {
 	resolved?: Variable;
 }
 type ReferenceableItem = string | object;
+
+/**
+ * Defines the referenced export type used by this module.
+ */
 declare interface ReferencedExport {
 	/**
 	 * name of the referenced export
@@ -25325,7 +26080,8 @@ declare abstract class RegExpValidationState {
 	eat(ch: number, forceU?: boolean): boolean;
 	eatChars(chs: number[], forceU?: boolean): boolean;
 }
-type Remotes = (string | RemotesObject)[] | RemotesObject;
+type Remotes = RemotesObject | RemotesBranch1Item[];
+type RemotesBranch1Item = string | RemotesObject;
 
 /**
  * Advanced configuration for container locations from which modules should be resolved and loaded at runtime.
@@ -25346,8 +26102,13 @@ declare interface RemotesConfig {
  * Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.
  */
 declare interface RemotesObject {
-	[index: string]: string | RemotesConfig | string[];
+	[index: string]: RemotesObjectValue;
 }
+type RemotesObjectValue = string | RemotesConfig | string[];
+
+/**
+ * Defines the render bootstrap context type used by this module.
+ */
 declare interface RenderBootstrapContext {
 	/**
 	 * the chunk
@@ -25379,6 +26140,10 @@ declare interface RenderBootstrapContext {
 	 */
 	hash: string;
 }
+
+/**
+ * Defines the render context type used by this module.
+ */
 declare interface RenderContextCssModulesPlugin {
 	/**
 	 * the chunk
@@ -25420,6 +26185,10 @@ declare interface RenderContextCssModulesPlugin {
 	 */
 	modules: CssModule[];
 }
+
+/**
+ * Defines the render context type used by this module.
+ */
 declare interface RenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
@@ -25458,6 +26227,10 @@ declare interface RenderContextJavascriptModulesPlugin {
 }
 type RenderManifestEntry =
 	RenderManifestEntryTemplated | RenderManifestEntryStatic;
+
+/**
+ * Defines the render manifest entry static type used by this module.
+ */
 declare interface RenderManifestEntryStatic {
 	render: () => Source;
 	filename: string;
@@ -25466,6 +26239,10 @@ declare interface RenderManifestEntryStatic {
 	hash?: string;
 	auxiliary?: boolean;
 }
+
+/**
+ * Defines the render manifest entry templated type used by this module.
+ */
 declare interface RenderManifestEntryTemplated {
 	render: () => Source;
 	filenameTemplate: string | TemplatePathFn<any>;
@@ -25475,6 +26252,10 @@ declare interface RenderManifestEntryTemplated {
 	hash?: string;
 	auxiliary?: boolean;
 }
+
+/**
+ * Defines the render manifest options type used by this module.
+ */
 declare interface RenderManifestOptions {
 	/**
 	 * the chunk used to render
@@ -25548,6 +26329,10 @@ declare class RequestShortener {
 	 */
 	shorten(request?: null | string): undefined | null | string;
 }
+
+/**
+ * Defines the resolve build dependencies result type used by this module.
+ */
 declare interface ResolveBuildDependenciesResult {
 	/**
 	 * list of files
@@ -25605,6 +26390,10 @@ declare interface ResolveContext {
 	 */
 	yield?: (request: ResolveRequest) => void;
 }
+
+/**
+ * Defines the resolve data type used by this module.
+ */
 declare interface ResolveData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
 	resolveOptions?: ResolveOptions;
@@ -25625,6 +26414,10 @@ declare interface ResolveData {
 	 */
 	cacheable: boolean;
 }
+
+/**
+ * Defines the resolve dependencies type used by this module.
+ */
 declare interface ResolveDependencies {
 	/**
 	 * list of files
@@ -26161,21 +26954,37 @@ type ResolvePluginInstance =
 	  }
 	| ((this: Resolver, arg1: Resolver) => void);
 type ResolveRequest = BaseResolveRequest & Partial<ParsedIdentifier>;
+
+/**
+ * Defines the resolved context file system info entry type used by this module.
+ */
 declare interface ResolvedContextFileSystemInfoEntry {
 	safeTime: number;
 	timestampHash?: string;
 }
+
+/**
+ * Defines the resolved context timestamp and hash type used by this module.
+ */
 declare interface ResolvedContextTimestampAndHash {
 	safeTime: number;
 	timestampHash?: string;
 	hash: string;
 }
+
+/**
+ * Defines the resolved options type used by this module.
+ */
 declare interface ResolvedOptionsDefaults {
 	/**
 	 * - platform target properties
 	 */
 	platform: false | PlatformTargetProperties;
 }
+
+/**
+ * the options once every default is filled in and every alternative spelling is normalized
+ */
 declare interface ResolvedOptionsSyntaxParser {
 	/**
 	 * the edition, as the number the parser compares against
@@ -26401,6 +27210,10 @@ declare abstract class Resolver {
 	dirname(path: string): string;
 	basename(path: string, suffix?: string): string;
 }
+
+/**
+ * Represents the resolver factory runtime component.
+ */
 declare interface ResolverCache {
 	direct: WeakMap<ResolveOptionsWithDependencyType, ResolverWithOptions>;
 	stringified: Map<string, ResolverWithOptions>;
@@ -26435,6 +27248,9 @@ declare abstract class ResolverFactory {
 }
 type ResolverWithOptions = Resolver & WithOptions;
 
+/**
+ * Defines the resource data type used by this module.
+ */
 declare interface ResourceDataWithData {
 	resource: string;
 	path?: string;
@@ -26494,6 +27310,10 @@ declare interface ResourceHintsOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
+
+/**
+ * Defines the resource scheme data type used by this module.
+ */
 declare interface ResourceSchemeData {
 	/**
 	 * mime type of the resource
@@ -26526,6 +27346,10 @@ declare abstract class RestoreProvidedData {
 	 */
 	serialize(context: ObjectSerializerContextObjectMiddlewareObject_4): void;
 }
+
+/**
+ * Defines the restore provided data exports type used by this module.
+ */
 declare interface RestoreProvidedDataExports {
 	name: string;
 	provided?: null | boolean;
@@ -26535,7 +27359,10 @@ declare interface RestoreProvidedDataExports {
 	pureProvide?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
-type RuleAlias = string | RegExp | ((str: string) => boolean);
+
+/**
+ * Defines the rule condition type used by this module.
+ */
 declare interface RuleCondition {
 	property: string | string[];
 	matchWhenEmpty: boolean;
@@ -26557,6 +27384,11 @@ declare interface RuleCondition {
 			| "phase"]
 	) => boolean;
 }
+type RuleObject = string | RegExp | ((str: string) => boolean);
+
+/**
+ * Defines the rule set type used by this module.
+ */
 declare interface RuleSet {
 	/**
 	 * map of references in the rule set (may grow over time)
@@ -27121,6 +27953,10 @@ declare class RuntimeModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
+
+/**
+ * Defines the runtime requirements context type used by this module.
+ */
 declare interface RuntimeRequirementsContext {
 	/**
 	 * the chunk graph
@@ -28125,7 +28961,7 @@ declare abstract class RuntimeValue {
 }
 
 /**
- * Whether the generator is declared `async`.
+ * Defines the runtime value options type used by this module.
  */
 declare interface RuntimeValueOptions {
 	fileDependencies?: string[];
@@ -28152,23 +28988,12 @@ declare class SSRManifestPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface SSRManifestPluginOptions {
-	/**
-	 * The base directory used to compute the source-module keys (defaults to the compiler context).
-	 * @since 5.111.0
-	 */
 	context?: string;
-
-	/**
-	 * Specifies the filename of the emitted manifest on disk. By default the plugin will emit `ssr-manifest.json` inside the 'output.path' directory.
-	 * @since 5.111.0
-	 */
 	filename?: string;
 }
 
 /**
- * Helper function for joining two ranges into a single range. This is useful
- * when working with AST nodes, as it allows you to combine the ranges of child nodes
- * to create the range of the _parent node_.
+ * Defines the scope info type used by this module.
  */
 declare interface ScopeInfo {
 	definitions: StackedMap<string, VariableInfo | ScopeInfo>;
@@ -28231,6 +29056,14 @@ type ScopeType =
 	| "block"
 	| "class-field-initializer"
 	| "class-static-block";
+
+/**
+ * What replaying an entry streamed for a `scopes` request needs besides its
+ * map. The map only keeps the encoded `scopes` field, so `bindings` holds, by
+ * source index, the bindings each source reported. The field also appended
+ * names to the map, and `names` counts the ones the stream itself reported,
+ * so a replay reports the same names a fresh stream would.
+ */
 declare interface ScopesReplay {
 	/**
 	 * bindings by source index
@@ -28242,6 +29075,10 @@ declare interface ScopesReplay {
 	 */
 	names: number;
 }
+
+/**
+ * Defines the selector type used by this module.
+ */
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
@@ -28320,13 +29157,10 @@ declare interface SharePluginOptions {
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */
 	shareScope?: string;
-
-	/**
-	 * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
-	 */
 	shared: Shared;
 }
-type Shared = (string | SharedObject)[] | SharedObject;
+type Shared = SharedObject | SharedBranch1Item[];
+type SharedBranch1Item = string | SharedObject;
 
 /**
  * Advanced configuration for modules that should be shared in the share scope.
@@ -28336,20 +29170,12 @@ declare interface SharedConfig {
 	 * Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
 	exclude?: SharedModuleFilter;
 
 	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: string | false;
-
-	/**
-	 * Filters shared modules by version or request: with 'include' only matching modules are shared, with 'exclude' matching ones are not. A filtered-out module is resolved and bundled as if it wasn't shared.
-	 */
 	include?: SharedModuleFilter;
 
 	/**
@@ -28408,8 +29234,9 @@ declare interface SharedModuleFilter {
  * Modules that should be shared in the share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
  */
 declare interface SharedObject {
-	[index: string]: string | SharedConfig;
+	[index: string]: SharedObjectValue;
 }
+type SharedObjectValue = string | SharedConfig;
 declare class SideEffectsFlagPlugin {
 	/**
 	 * Creates an instance of SideEffectsFlagPlugin.
@@ -28440,6 +29267,10 @@ type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
 }
+
+/**
+ * `CssProcessOptions.skip`: two independent axes, so each reads unambiguously.
+ */
 declare interface SkipOptions {
 	/**
 	 * component-value node types to drop from declaration value / function-arg lists (indexed by `NodeType`, 1 = skip; build with `buildSkipSet`)
@@ -28633,6 +29464,10 @@ type SnapshotNormalizedWithDefaults = SnapshotOptionsWebpackOptions & {
 		timestamp?: boolean;
 	};
 };
+
+/**
+ * Defines the snapshot options type used by this module.
+ */
 declare interface SnapshotOptionsFileSystemInfo {
 	/**
 	 * should use hash to snapshot
@@ -28734,6 +29569,10 @@ declare interface SnapshotOptionsWebpackOptions {
 	 */
 	unmanagedPaths?: (string | RegExp)[];
 }
+
+/**
+ * Create a new sortable set
+ */
 declare interface SortFunction<T> {
 	(a: T, b: T): number;
 }
@@ -28846,6 +29685,12 @@ declare interface SourceLike {
 	 */
 	clearCache?: (options?: ClearCacheOptions, visited?: WeakSet<Source>) => void;
 }
+
+/**
+ * A version-3 source map. Written structurally (with the `3` literal) so it
+ * satisfies both `webpack-sources` and the minimizer plugin's map types without
+ * depending on either.
+ */
 declare interface SourceMap {
 	version: 3;
 	file: string;
@@ -28890,7 +29735,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -28911,12 +29756,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -28943,11 +29788,6 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Provide a custom public path for the SourceMapping comment.
 	 */
 	publicPath?: string;
-
-	/**
-	 * Emit the 'scopes' field, which tells a debugger the generated expression each imported ESM binding reads, so it resolves under the name the source uses.
-	 * @since 5.112.0
-	 */
 	scopes?: boolean;
 
 	/**
@@ -28958,8 +29798,14 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 }
+
+/**
+ * The `process` source-map option: turns map collection on and names the input
+ * (`sources[0]` / optional `sourcesContent[0]`). Present => `process` returns
+ * `{ code, map }` instead of a bare string.
+ */
 declare interface SourceMapOptions {
 	source: string;
 	content?: string;
@@ -29001,6 +29847,10 @@ declare class SourceMapSource extends Source {
 		onName: (nameIndex: number, name: string) => void
 	): GeneratedSourceInfo;
 }
+
+/**
+ * Defines the source position type used by this module.
+ */
 declare interface SourcePosition {
 	line: number;
 	column?: number;
@@ -29275,6 +30125,10 @@ type SourceTypeOrResolver =
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
+
+/**
+ * Defines the split chunks options type used by this module.
+ */
 declare interface SplitChunksOptions {
 	dedupDepth?: number;
 	chunksFilter: (chunk: Chunk) => undefined | boolean;
@@ -29465,7 +30319,9 @@ declare abstract class StackedMap<K, V> {
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object deserializer context type used by this module.
+ * `T` is the tuple of values read in order: `read` returns the head, and `rest`
+ * re-types the same context to `Tail<T>` so successive reads stay positional.
  */
 declare interface StarListDeserializerContext {
 	read: () => ESMExportImportedSpecifierDependency[];
@@ -29474,7 +30330,8 @@ declare interface StarListDeserializerContext {
 }
 
 /**
- * Updates map size using the provided map.
+ * Defines the object serializer context type used by this module.
+ * `T` is the tuple of values written in order; each `write` consumes the head.
  */
 declare interface StarListSerializerContext {
 	write: (
@@ -29489,6 +30346,10 @@ declare interface StarListSerializerContext {
 		obj?: LazyOptions
 	) => LazyFunction<any, any, any, LazyOptions>;
 }
+
+/**
+ * Defines the startup render context type used by this module.
+ */
 declare interface StartupRenderContext {
 	/**
 	 * the chunk
@@ -29545,6 +30406,10 @@ declare interface StartupRenderContext {
 	 */
 	renamedDeclarations?: Map<string, string>;
 }
+
+/**
+ * Describes the stat shape.
+ */
 declare interface StatFs {
 	(
 		path: PathLikeFs,
@@ -29574,7 +30439,7 @@ declare interface StatFs {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the stat options type used by this module.
  */
 declare interface StatOptionsFs {
 	bigint?: boolean;
@@ -29585,6 +30450,10 @@ declare interface StatOptionsTypes {
 	 */
 	bigint?: boolean;
 }
+
+/**
+ * Describes the stat sync shape.
+ */
 declare interface StatSync {
 	(path: PathLikeFs): IStatsFs;
 	(
@@ -29614,7 +30483,7 @@ declare interface StatSync {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the stat sync options type used by this module.
  */
 declare interface StatSyncOptions {
 	bigint?: boolean;
@@ -29799,6 +30668,10 @@ declare abstract class StatsFactory {
 	): CreatedObject<FactoryData, FallbackCreatedObject>;
 }
 type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
+
+/**
+ * Defines the stats factory hooks type used by this module.
+ */
 declare interface StatsFactoryHooks {
 	extract: HookMap<SyncBailHook<[any, any, StatsFactoryContext], void>>;
 	filter: HookMap<
@@ -30352,6 +31225,10 @@ declare interface StatsOptions {
 	 */
 	warningsSpace?: number;
 }
+
+/**
+ * Represents the stats printer runtime component.
+ */
 declare interface StatsPrintHooks {
 	sortElements: HookMap<SyncBailHook<[string[], StatsPrinterContext], void>>;
 	printElements: HookMap<
@@ -30402,7 +31279,7 @@ type StatsValue =
 	| "verbose";
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the stream options type used by this module.
  */
 declare interface StreamOptions {
 	flags?: string;
@@ -30426,6 +31303,10 @@ declare interface StreamOptions {
 	start?: number;
 	signal?: null | AbortSignal;
 }
+
+/**
+ * Represents the template runtime component.
+ */
 declare interface Stringable {
 	toString: () => string;
 }
@@ -30443,6 +31324,10 @@ declare class SyncModuleIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * Represents the sync module ids plugin runtime component.
+ */
 declare interface SyncModuleIdsPluginOptions {
 	/**
 	 * path to file
@@ -30467,12 +31352,20 @@ declare interface SyncModuleIdsPluginOptions {
 type SyncWasmModuleBuildMeta = KnownBuildMeta &
 	Record<string, any> &
 	KnownSyncWasmModuleBuildMeta;
+
+/**
+ * Defines the synthetic dependency location type used by this module.
+ */
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
 }
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
+
+/**
+ * Defines the tag info type used by this module.
+ */
 declare interface TagInfo {
 	tag: symbol;
 	data?:
@@ -30586,16 +31479,35 @@ declare class Template {
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 }
 type TemplatePath = string | TemplatePathFn<PathData>;
+
+/**
+ * Callback used to compute a path from contextual data. The type parameter
+ * narrows the `pathData` shape when the caller knows it operates in a chunk
+ * (`PathDataChunk`) or module (`PathDataModule`) context — defaults to the
+ * fully-optional `PathData` for backward compatibility.
+ */
 declare interface TemplatePathFn<T extends PathData = PathData> {
 	(pathData: T, assetInfo?: AssetInfo): string;
 }
+
+/**
+ * what a caller minifies with
+ */
 declare interface Terser {
 	minify: typeof minify;
 	phases: string[];
 }
+
+/**
+ * terser's `format` options, defaulted
+ */
 declare interface TerserFormatOptions {
 	[index: string]: any;
 }
+
+/**
+ * Defines the timestamp and hash type used by this module.
+ */
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
@@ -30620,6 +31532,10 @@ declare class TokContext {
 	override?: (parser?: any) => void;
 	generator: boolean;
 }
+
+/**
+ * a tokenizer context, as the owned tokenizer reads one
+ */
 declare interface TokContextLike {
 	token: string;
 	isExpr: boolean;
@@ -30794,6 +31710,10 @@ declare class TopLevelSymbol {
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
 }
+
+/**
+ * What the tree is built from, as terser's own `parse` options name it.
+ */
 declare interface TreeOptions {
 	/**
 	 * whether the source is a module
@@ -30895,15 +31815,29 @@ declare class TypeScriptPlugin {
 declare const UNDEFINED_MARKER: unique symbol;
 declare interface URL_url extends URL {}
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
+
+/**
+ * Specifiers the module declares but never reads, with the presence level to
+ * report them at. Allocated only for a module that has one, so the common
+ * import pays a single empty slot.
+ */
 declare interface UnusedSpecifiers {
 	exportPresenceMode: ExportPresenceMode;
 	specifiers: [string[], string][];
 }
+
+/**
+ * Defines the update hash context type used by this module.
+ */
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 	runtimeTemplate?: RuntimeTemplate;
 }
+
+/**
+ * Represents the generator runtime component.
+ */
 declare interface UpdateHashContextGenerator {
 	/**
 	 * the module
@@ -31136,6 +32070,18 @@ declare class VirtualUrlPlugin {
 }
 type VisitorBucket<TPath> =
 	VisitorFn<TPath> | { enter?: VisitorFn<TPath>; exit?: VisitorFn<TPath> };
+
+/**
+ * Babel-style visitor map keyed by a numeric node-type discriminator; a bucket
+ * is a function (enter-only) or `{ enter?, exit? }`.
+ * A visitor receives a single `path` argument (the Babel `path` shape): the
+ * language's AST accessor with the current position on it — `path.node`,
+ * `path.parent` (null at a root) — plus `path.skipChildren()` (enter only)
+ * to stop the walk descending, and every field-read method (which defaults
+ * to the current node). The path is one reused object rebound before each callback:
+ * it is only valid during the callback, and future per-node functionality
+ * lands on it without changing any visitor signature.
+ */
 declare interface VisitorFn<TPath> {
 	(path: TPath): void;
 }
@@ -31146,7 +32092,7 @@ type WarningFilterItemTypes =
 	string | RegExp | ((warning: StatsError, warningString: string) => boolean);
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the watch file system type used by this module.
  */
 declare interface WatchFileSystem {
 	watch: (
@@ -31179,6 +32125,7 @@ declare interface WatchFileSystem {
 		callbackUndelayed: (value: string, num: number) => void
 	) => Watcher;
 }
+type WatchIgnoreEntry = string | RegExp;
 declare class WatchIgnorePlugin {
 	/**
 	 * Creates an instance of WatchIgnorePlugin.
@@ -31192,10 +32139,7 @@ declare class WatchIgnorePlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface WatchIgnorePluginOptions {
-	/**
-	 * A list of RegExps or absolute paths to directories or files that should be ignored.
-	 */
-	paths: (string | RegExp)[];
+	paths: WatchIgnoreEntry[];
 }
 
 /**
@@ -31229,7 +32173,7 @@ declare interface WatchOptions {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the watcher type used by this module.
  */
 declare interface Watcher {
 	/**
@@ -31283,7 +32227,7 @@ declare interface Watcher {
 }
 
 /**
- * Returns location of targetPath relative to rootPath.
+ * Defines the watcher info type used by this module.
  */
 declare interface WatcherInfo {
 	/**
@@ -31408,6 +32352,10 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 }
 declare abstract class WebAssemblyParserAsyncWebAssemblyParser extends ParserClass {}
 declare abstract class WebAssemblyParserClass extends ParserClass {}
+
+/**
+ * Defines the web assembly render context type used by this module.
+ */
 declare interface WebAssemblyRenderContext {
 	/**
 	 * the chunk
@@ -31620,6 +32568,10 @@ declare class WebpackOptionsDefaulter {
 	 */
 	process(options: Configuration): WebpackOptionsNormalized;
 }
+
+/**
+ * Defines the webpack options interception type used by this module.
+ */
 declare interface WebpackOptionsInterception {
 	devtool?:
 		| string
@@ -31983,9 +32935,17 @@ declare interface WebpackRequire {
 	c?: Record<string, ExecuteModuleObject>;
 	p?: string;
 }
+
+/**
+ * Defines the with id type used by this module.
+ */
 declare interface WithId {
 	id: string | number;
 }
+
+/**
+ * Defines the with options type used by this module.
+ */
 declare interface WithOptions {
 	/**
 	 * create a resolver with additional/different options
@@ -31994,6 +32954,10 @@ declare interface WithOptions {
 		options: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
 }
+
+/**
+ * Describes the write file shape.
+ */
 declare interface WriteFile {
 	(
 		file: PathOrFileDescriptorFs,
@@ -32088,6 +33052,10 @@ declare interface _functionWebpack {
 	 */
 	(options: MultiConfiguration): MultiCompiler;
 }
+
+/**
+ * Defines the chunk module hash map type used by this module.
+ */
 declare interface chunkModuleHashMap {
 	[index: number]: string;
 	[index: string]: string;
