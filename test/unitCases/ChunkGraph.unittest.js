@@ -4,6 +4,7 @@ const Chunk = require("../../lib/graph/Chunk");
 const ChunkGraph = require("../../lib/graph/ChunkGraph");
 const Entrypoint = require("../../lib/graph/Entrypoint");
 const ModuleGraph = require("../../lib/graph/ModuleGraph");
+const RawModule = require("../../lib/module/RawModule");
 
 // The build-level behaviour lives in `configCases/runtime/depend-on-diamond-chain`.
 // Only the visit counts are here: a real build can show the cost as elapsed time
@@ -114,6 +115,78 @@ describe("ChunkGraph", () => {
 			expect(visits.map((visit) => visit.count)).toEqual(
 				Array.from({ length: depth }).fill(1)
 			);
+		});
+	});
+
+	describe("a module in no chunk", () => {
+		// Most modules are in none once concatenation has absorbed them, so the
+		// chunk set is built only where a chunk is added. Every reader has to
+		// answer without one.
+		it("answers every accessor without a chunk set", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "no-chunk");
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(0);
+			expect([...chunkGraph.getModuleChunksIterable(module)]).toEqual([]);
+			expect(chunkGraph.getModuleChunks(module)).toEqual([]);
+			expect([
+				...chunkGraph.getOrderedModuleChunksIterable(module, () => 0)
+			]).toEqual([]);
+			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual([]);
+			expect(chunkGraph.isModuleInChunk(module, new Chunk("a", false))).toBe(
+				false
+			);
+		});
+
+		it("refuses to have the shared answer modified", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "frozen");
+			const chunks = /** @type {EXPECTED_ANY} */ (
+				chunkGraph.getModuleChunksIterable(module)
+			);
+			// Every module in no chunk is answered with this one array, so a caller
+			// ignoring "do not modify" must not be able to reach the others.
+			expect(() => chunks.push(new Chunk("a", false))).toThrow();
+		});
+
+		it("takes its chunks back when disconnected", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "connected");
+			const chunk = new Chunk("a", false);
+			chunkGraph.connectChunkAndModule(chunk, module);
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(1);
+			expect(chunkGraph.getModuleChunks(module)).toEqual([chunk]);
+			chunkGraph.disconnectChunkAndModule(chunk, module);
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(0);
+			expect(chunkGraph.getModuleChunks(module)).toEqual([]);
+		});
+
+		it("can be disconnected although it holds no chunk set", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "never-connected");
+			const chunk = new Chunk("a", false);
+			// Nothing to delete from, which must not throw.
+			chunkGraph.disconnectChunkAndModule(chunk, module);
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(0);
+		});
+
+		it("moves a replaced module's chunks onto one holding no set", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const oldModule = new RawModule("", "old");
+			const newModule = new RawModule("", "new");
+			const chunk = new Chunk("a", false);
+			chunkGraph.connectChunkAndModule(chunk, oldModule);
+			chunkGraph.replaceModule(oldModule, newModule);
+			expect(chunkGraph.getModuleChunks(newModule)).toEqual([chunk]);
+			expect(chunkGraph.getNumberOfModuleChunks(oldModule)).toBe(0);
+			expect(chunkGraph.isModuleInChunk(newModule, chunk)).toBe(true);
+		});
+
+		it("replaces a module that is in no chunk", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const oldModule = new RawModule("", "old-loose");
+			const newModule = new RawModule("", "new-loose");
+			chunkGraph.replaceModule(oldModule, newModule);
+			expect(chunkGraph.getNumberOfModuleChunks(newModule)).toBe(0);
 		});
 	});
 });
