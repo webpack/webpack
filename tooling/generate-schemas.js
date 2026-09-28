@@ -66,100 +66,6 @@ const KEY_ORDER = [
 ];
 
 /**
- * @typedef {object} VocabularyEntry
- * @property {string} name the alias a source writes instead of the constraint
- * @property {string} typeParameter the parameter it takes, or the empty string
- * @property {string} underlying the TypeScript type it stands for
- * @property {string} description what the alias means, for its own declaration
- * @property {Record<string, string | number | boolean>} constraints the keywords it carries
- */
-
-// WHY: every combination of validation-only keywords the committed schemas use,
-// and the whole of what TypeScript cannot say on its own. Each is an alias
-// rather than a tag because most sit on a union member, where no JSDoc block
-// can attach. Most specific first: matching takes the first that fits.
-/** @type {VocabularyEntry[]} */
-const VOCABULARY = [
-	{
-		name: "NonEmptyRelativePath",
-		typeParameter: "",
-		underlying: "string",
-		description: "A path that is neither empty nor absolute.",
-		constraints: { type: "string", minLength: 1, absolutePath: false }
-	},
-	{
-		name: "DottedIdentifier",
-		typeParameter: "",
-		underlying: "string",
-		description: "A JavaScript identifier, or several joined by dots.",
-		constraints: {
-			type: "string",
-			minLength: 1,
-			pattern: "^[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*$"
-		}
-	},
-	{
-		name: "AbsolutePath",
-		typeParameter: "",
-		underlying: "string",
-		description: "An absolute path.",
-		constraints: { type: "string", absolutePath: true }
-	},
-	{
-		name: "RelativePath",
-		typeParameter: "",
-		underlying: "string",
-		description: "A path that is not absolute.",
-		constraints: { type: "string", absolutePath: false }
-	},
-	{
-		name: "HttpUrl",
-		typeParameter: "",
-		underlying: "string",
-		description: "A URL with the http or https scheme.",
-		constraints: { type: "string", pattern: "^https?://" }
-	},
-	{
-		name: "NonEmptyString",
-		typeParameter: "",
-		underlying: "string",
-		description: "A string that is not empty.",
-		constraints: { type: "string", minLength: 1 }
-	},
-	{
-		name: "DevToolSpelling",
-		typeParameter: "",
-		underlying: "string",
-		description: "A source map kind, spelled the way `devtool` takes it.",
-		constraints: {
-			type: "string",
-			pattern:
-				"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?(-scopes)?$"
-		}
-	},
-	{
-		name: "NonNegativeNumber",
-		typeParameter: "",
-		underlying: "number",
-		description: "A number that is not negative.",
-		constraints: { type: "number", minimum: 0 }
-	},
-	{
-		name: "PositiveNumber",
-		typeParameter: "",
-		underlying: "number",
-		description: "A number of at least one.",
-		constraints: { type: "number", minimum: 1 }
-	}
-];
-
-// Every keyword an alias may carry, which is also what a node must state none
-// of beyond its own for that alias to be the right name for it.
-const VOCABULARY_BY_NAME = new Map(
-	VOCABULARY.map((entry) => [entry.name, entry])
-);
-
-/**
  * Walks a directory tree and answers with every JSON schema below it.
  * @param {string} directory the directory to read
  * @returns {string[]} absolute paths, sorted so a run reports in a stable order
@@ -854,24 +760,6 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 	}
 	if (ts.isTypeReferenceNode(node)) {
 		const name = node.typeName.getText();
-		const entry = VOCABULARY_BY_NAME.get(name);
-		if (entry) {
-			const constraints = { ...entry.constraints };
-			const argument = node.typeArguments && node.typeArguments[0];
-			if (argument && constraints.type === "array") {
-				return {
-					...constraints,
-					items: describedItems(argument, checker, known)
-				};
-			}
-			if (argument && constraints.type === "object") {
-				const values = fromTypeNode(argument, checker, known);
-				return values.type === "unknown"
-					? constraints
-					: { ...constraints, additionalProperties: values };
-			}
-			return constraints;
-		}
 		if (name === "Array") {
 			const argument = /** @type {ts.NodeArray<ts.TypeNode>} */ (
 				node.typeArguments
@@ -1260,7 +1148,6 @@ const typeScriptToSchema = (source, checker, schemaOf = new Map()) => {
 		) {
 			continue;
 		}
-		if (VOCABULARY_BY_NAME.has(name)) continue;
 		const half = /^(.+)(Known|Unknown)$/.exec(name);
 		const base = half ? half[1] : "";
 		if (half && known.has(`${base}Known`) && known.has(`${base}Unknown`)) {
@@ -1288,7 +1175,11 @@ const typeScriptToSchema = (source, checker, schemaOf = new Map()) => {
 				...wrapReference(omit(root, ["description"]), true)
 			}
 		: { definitions };
-	const resolved = walkSchema(document, (node) => {
+	/**
+	 * @param {Record<string, EXPECTED_ANY>} node a node that may name an inlined type
+	 * @returns {Record<string, EXPECTED_ANY>} what it says once put back
+	 */
+	const substitute = (node) => {
 		// WHY: a reference written with a description of its own is wrapped in a
 		// `oneOf`, which an inlined body does not need: it merges in place.
 		if (Array.isArray(node.oneOf) && node.oneOf.length === 1) {
@@ -1298,6 +1189,19 @@ const typeScriptToSchema = (source, checker, schemaOf = new Map()) => {
 		}
 		const held = node.$ref && inlined.get(readReference(node.$ref).name);
 		return held || node;
+	};
+	// WHY: one inlined type is written as another — a name for a constraint is
+	// itself a name — so a body is put back until it names none of them.
+	const resolved = walkSchema(document, (node) => {
+		let current = node;
+		for (
+			let step = substitute(current);
+			step !== current;
+			step = substitute(current)
+		) {
+			current = step;
+		}
+		return current;
 	});
 	return /** @type {Record<string, EXPECTED_ANY>} */ (resolved);
 };
