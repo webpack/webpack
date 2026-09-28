@@ -3198,7 +3198,7 @@ export interface OptimizationMinimizeCss {
 	 */
 	rewriteDirSelector?: boolean;
 	/**
-	 * Write an escaped identifier the shortest way that names the same thing, in a value or an id: `grid-area:\66oot` becomes `grid-area:foot` and `#\41 x` becomes `#Ax`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.
+	 * Write an escaped identifier the shortest way that names the same thing, wherever it stands — a selector, a property, at-rule or function name, or a value: `grid-area:\66oot` becomes `grid-area:foot`, `#\41 x` becomes `#Ax`, `col\6f r:red` becomes `color:red` and `c\61 lc(` becomes `calc(`. On by default, and exact: the escape and what replaces it are the same identifier. Off leaves every escape as the author wrote it, which is what a consumer comparing the text rather than reading the identifier needs.
 	 * @since 5.111.0
 	 */
 	rewriteEscapes?: boolean;
