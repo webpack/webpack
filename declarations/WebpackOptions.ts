@@ -7,17 +7,61 @@
 // matching JSON schema from this file, so a change here is a change to what
 // webpack validates, to its types and to its command line flags alike.
 
-import {
-	type AbsolutePath,
-	type DevToolSpelling,
-	type DottedIdentifier,
-	type HttpUrl,
-	type NonEmptyRelativePath,
-	type NonEmptyString,
-	type NonNegativeNumber,
-	type PositiveNumber,
-	type RelativePath
-} from "./vocabulary";
+/**
+ * A path that is neither empty nor absolute.
+ * @minLength 1
+ * @absolutePath false
+ */
+export type NonEmptyRelativePath = string;
+
+/**
+ * A JavaScript identifier, or several joined by dots.
+ * @minLength 1
+ * @pattern ^[A-Za-z_$][A-Za-z0-9_$]*(\.[A-Za-z_$][A-Za-z0-9_$]*)*$
+ */
+export type DottedIdentifier = string;
+
+/**
+ * An absolute path.
+ * @absolutePath true
+ */
+export type AbsolutePath = string;
+
+/**
+ * A path that is not absolute.
+ * @absolutePath false
+ */
+export type RelativePath = string;
+
+/**
+ * A URL with the http or https scheme.
+ * @pattern ^https?://
+ */
+export type HttpUrl = string;
+
+/**
+ * A string that is not empty.
+ * @minLength 1
+ */
+export type NonEmptyString = string;
+
+/**
+ * A source map kind, spelled the way `devtool` takes it.
+ * @pattern ^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$
+ */
+export type DevToolSpelling = string;
+
+/**
+ * A number that is not negative.
+ * @minimum 0
+ */
+export type NonNegativeNumber = number;
+
+/**
+ * A number of at least one.
+ * @minimum 1
+ */
+export type PositiveNumber = number;
 
 /**
  * Set the value of `require.amd` and `define.amd`. Or disable AMD support.

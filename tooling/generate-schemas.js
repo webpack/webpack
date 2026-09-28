@@ -25,7 +25,6 @@ const ts = require("typescript");
 const ROOT = path.resolve(__dirname, "..");
 const SCHEMAS_DIRECTORY = path.resolve(ROOT, "schemas");
 const TYPES_DIRECTORY = path.resolve(ROOT, "declarations");
-const VOCABULARY_NAME = "vocabulary";
 
 const write = process.argv.includes("--write");
 const verbose = process.argv.includes("--verbose");
@@ -1432,8 +1431,6 @@ const main = async () => {
 	const sources = new Map();
 	/** @type {Map<string, string>} */
 	const sourceOf = new Map();
-	const vocabularyPath = path.resolve(TYPES_DIRECTORY, `${VOCABULARY_NAME}.ts`);
-	sources.set(vocabularyPath, fs.readFileSync(vocabularyPath, "utf8"));
 
 	const declaredInLib = findDeclaringModules();
 	// The schema each module declares, keyed the way a re-export names the module.

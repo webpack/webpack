@@ -134,13 +134,12 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
 
 **The config API — declared as types, validated by JSON Schema**
 
-Every schema is derived from the module declaring its options by `generate-schemas.js`; edit the declaration, not the schema. What JSON Schema states and a type has no syntax for travels as a JSDoc tag (`@minItems`, `@additionalProperties`, `@since`, `@tsType`, `@not`, …), and `declarations/vocabulary.ts` names the constraints a plain type cannot carry (`NonEmptyString`, `AbsolutePath`, …).
+Every schema is derived from the module declaring its options by `generate-schemas.js`; edit the declaration, not the schema. What JSON Schema states and a type has no syntax for travels as a JSDoc tag (`@minItems`, `@additionalProperties`, `@since`, `@tsType`, `@not`, …), and an alias names the constraints a plain type cannot carry where no JSDoc block can attach, on a union member (`NonEmptyString`, `AbsolutePath`, …), declared in the file that writes it.
 
 - `lib/**/*.js` — **the source** for a plugin's options: JSDoc typedefs beside the code reading them, the root one tagged `@schema <path>` with the schema it derives. A module holds types of its own too, so only what that root reaches is the schema; one it reaches no other way says `@definition`.
-- `declarations/WebpackOptions.ts` (plus `_container.ts`, `_sharing.ts`) — **the source** for the configuration itself. A definition of it that is also published as a schema of its own says `@publishes <path>`, and that schema is the reference.
+- `declarations/WebpackOptions.ts` — **the source** for the configuration itself, and the only file left in `declarations/`. A definition of it that is also published as a schema of its own says `@publishes <path>`, and that schema is the reference.
 - `schemas/WebpackOptions.json` — top-level options.
 - `schemas/plugins/*.json` — per-plugin options (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
-- `schemas/_container.json`, `schemas/_sharing.json` — Module Federation sub-schemas.
 
 **Tests** — structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
