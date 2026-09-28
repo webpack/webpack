@@ -108,20 +108,19 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	}, 120000);
 
-	it("output.clean=true should keep 1 last update", (done) => {
+	it("output.clean=true should keep the last update until a newer one is emitted", (done) => {
 		const outputPath = path.join(testDirectory, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");
 		const recordsFile = path.join(outputPath, "records.json");
 		let step = 0;
-		/** @type {string} */
-		let firstUpdate;
 		try {
 			fs.mkdirSync(outputPath, { recursive: true });
 		} catch (_err) {
 			// empty
 		}
 		fs.writeFileSync(entryFile, `${++step}`, "utf8");
-		const updates = new Set();
+		/** @type {string[][]} */
+		const updates = [];
 		const hasFile = (/** @type {string} */ file) => {
 			try {
 				fs.statSync(path.join(outputPath, file));
@@ -149,38 +148,44 @@ describe("HotModuleReplacementPlugin", () => {
 		) => {
 			if (err) return done(err);
 			const stats = /** @type {import("../../").Stats} */ (_stats);
-			const jsonStats = stats.toJson();
-			const hash = jsonStats.hash;
-			const hmrUpdateMainFileName = `0.${hash}.hot-update.json`;
+			const hash = stats.toJson().hash;
+			updates.push([`0.${hash}.hot-update.json`, `0.${hash}.hot-update.js`]);
 
 			switch (step) {
-				case 1:
-					expect(updates.size).toBe(0);
-					firstUpdate = hmrUpdateMainFileName;
-					break;
 				case 2:
-					expect(updates.size).toBe(1);
-					expect(updates.has(firstUpdate)).toBe(true);
-					expect(hasFile(firstUpdate)).toBe(true);
+					for (const file of updates[0]) expect(hasFile(file)).toBe(true);
 					break;
 				case 3:
-					expect(updates.size).toBe(2);
-					for (const file of updates) {
-						expect(hasFile(file)).toBe(true);
-					}
+					for (const file of updates[0]) expect(hasFile(file)).toBe(true);
+					for (const file of updates[1]) expect(hasFile(file)).toBe(true);
+					// a client that received the "done" of step 3 may fetch that update
+					// while step 4 compiles, so it must survive the emit of step 4 even
+					// when step 4 starts more than 10 seconds later
 					return setTimeout(() => {
 						fs.writeFileSync(entryFile, `${++step}`, "utf8");
 						compiler.run((err) => {
 							if (err) return done(err);
-							for (const file of updates) {
-								expect(hasFile(file)).toBe(false);
+							try {
+								for (const file of updates[0]) expect(hasFile(file)).toBe(false);
+								for (const file of updates[1]) expect(hasFile(file)).toBe(true);
+							} catch (err) {
+								return done(err);
 							}
-							done();
+							fs.writeFileSync(entryFile, `${++step}`, "utf8");
+							compiler.run((err) => {
+								if (err) return done(err);
+								try {
+									for (const file of updates[1]) expect(hasFile(file)).toBe(false);
+									for (const file of updates[2]) expect(hasFile(file)).toBe(true);
+								} catch (err) {
+									return done(err);
+								}
+								done();
+							});
 						});
 					}, 10100);
 			}
 
-			updates.add(hmrUpdateMainFileName);
 			fs.writeFileSync(entryFile, `${++step}`, "utf8");
 			compiler.run(callback);
 		};
