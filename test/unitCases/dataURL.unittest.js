@@ -1,6 +1,7 @@
 "use strict";
 
 const {
+	EMBEDDED_LANGUAGES,
 	URIRegEx,
 	buildDataURI,
 	decodeDataURI,
@@ -11,6 +12,9 @@ const {
 	parseDataURI,
 	readEmbeddedDataURI
 } = require("../../lib/util/dataURL");
+const cssMinify = require("../../lib/css/cssMinify");
+const htmlMinify = require("../../lib/html/htmlMinify");
+const htmlSyntax = require("../../lib/html/syntax");
 
 describe("dataURL", () => {
 	it("should decode base64 payloads", () => {
@@ -256,5 +260,21 @@ describe("readEmbeddedDataURI", () => {
 		expect(
 			readEmbeddedDataURI('data:application/json,{ "b" : "%23" }')
 		).toMatchObject({ payload: '{ "b" : "#" }' });
+	});
+});
+
+describe("EMBEDDED_LANGUAGES", () => {
+	it("should be what each minifier says it can offer", () => {
+		/**
+		 * @param {string[]} languages languages a consumer says it handles
+		 * @returns {string[]} the same languages, in a comparable order
+		 */
+		const sorted = (languages) => [...languages].sort();
+		const shared = sorted(EMBEDDED_LANGUAGES);
+		expect(sorted(cssMinify.getEmbeddedTypes())).toEqual(shared);
+		expect(sorted(htmlMinify.getEmbeddedTypes())).toEqual(shared);
+		// The HTML parser names the languages its offer sites reach; a site
+		// added there without this list would make the answer above wrong.
+		expect(sorted(htmlSyntax.parser.EMBEDDED_LANGUAGES)).toEqual(shared);
 	});
 });
