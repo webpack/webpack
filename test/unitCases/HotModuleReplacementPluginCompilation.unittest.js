@@ -108,26 +108,34 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	}, 120000);
 
-	it("output.clean=true should keep 1 last update", (done) => {
+	it("output.clean=true should keep the last update until a newer one is emitted", (done) => {
 		const outputPath = path.join(testDirectory, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");
 		const recordsFile = path.join(outputPath, "records.json");
 		let step = 0;
-		/** @type {string} */
-		let firstUpdate;
 		try {
 			fs.mkdirSync(outputPath, { recursive: true });
 		} catch (_err) {
 			// empty
 		}
 		fs.writeFileSync(entryFile, `${++step}`, "utf8");
-		const updates = new Set();
+		/** @type {string[][]} */
+		const updates = [];
 		const hasFile = (/** @type {string} */ file) => {
 			try {
 				fs.statSync(path.join(outputPath, file));
 				return true;
 			} catch (_err) {
 				return false;
+			}
+		};
+		/**
+		 * @param {string[]} files files
+		 * @param {boolean} expected whether the files should exist
+		 */
+		const expectFiles = (files, expected) => {
+			for (const file of files) {
+				expect(hasFile(file)).toBe(expected);
 			}
 		};
 		const compiler = webpack({
@@ -143,49 +151,75 @@ describe("HotModuleReplacementPlugin", () => {
 			},
 			plugins: [new webpack.HotModuleReplacementPlugin()]
 		});
-		const callback = (
-			/** @type {Error | null} */ err,
-			/** @type {import("../../").Stats | undefined} */ _stats
-		) => {
-			if (err) return done(err);
-			const stats = /** @type {import("../../").Stats} */ (_stats);
-			const jsonStats = stats.toJson();
-			const hash = jsonStats.hash;
-			const hmrUpdateMainFileName = `0.${hash}.hot-update.json`;
-
-			switch (step) {
-				case 1:
-					expect(updates.size).toBe(0);
-					firstUpdate = hmrUpdateMainFileName;
-					break;
-				case 2:
-					expect(updates.size).toBe(1);
-					expect(updates.has(firstUpdate)).toBe(true);
-					expect(hasFile(firstUpdate)).toBe(true);
-					break;
-				case 3:
-					expect(updates.size).toBe(2);
-					for (const file of updates) {
-						expect(hasFile(file)).toBe(true);
-					}
-					return setTimeout(() => {
-						fs.writeFileSync(entryFile, `${++step}`, "utf8");
-						compiler.run((err) => {
-							if (err) return done(err);
-							for (const file of updates) {
-								expect(hasFile(file)).toBe(false);
-							}
-							done();
-						});
-					}, 10100);
-			}
-
-			updates.add(hmrUpdateMainFileName);
+		/**
+		 * @param {Error | null} err error
+		 * @param {import("../../").Stats=} stats stats
+		 * @returns {string[]} the update files the next compilation will emit
+		 */
+		const recordUpdate = (err, stats) => {
+			if (err) throw err;
+			const hash = /** @type {import("../../").Stats} */ (stats).toJson().hash;
+			const files = [`0.${hash}.hot-update.json`, `0.${hash}.hot-update.js`];
+			updates.push(files);
+			return files;
+		};
+		/**
+		 * @param {import("../../").Callback<import("../../").Stats>} callback callback
+		 */
+		const rebuild = (callback) => {
 			fs.writeFileSync(entryFile, `${++step}`, "utf8");
 			compiler.run(callback);
 		};
 
-		compiler.run(callback);
+		compiler.run((err, stats) => {
+			try {
+				recordUpdate(err, stats);
+			} catch (err) {
+				return done(err);
+			}
+			rebuild((err, stats) => {
+				try {
+					recordUpdate(err, stats);
+					expectFiles(updates[0], true);
+				} catch (err) {
+					return done(err);
+				}
+				rebuild((err, stats) => {
+					try {
+						recordUpdate(err, stats);
+						expectFiles(updates[0], true);
+						expectFiles(updates[1], true);
+					} catch (err) {
+						return done(err);
+					}
+					// A client that received the "done" of this compilation may fetch
+					// its update while the next compilation runs, so that update has
+					// to survive the next emit even when more than 10 seconds pass.
+					setTimeout(() => {
+						rebuild((err, stats) => {
+							try {
+								recordUpdate(err, stats);
+								expectFiles(updates[0], false);
+								expectFiles(updates[1], true);
+							} catch (err) {
+								return done(err);
+							}
+							// Once a newer update exists, an update older than 10 seconds goes.
+							rebuild((err, stats) => {
+								try {
+									recordUpdate(err, stats);
+									expectFiles(updates[1], false);
+									expectFiles(updates[2], true);
+								} catch (err) {
+									return done(err);
+								}
+								done();
+							});
+						});
+					}, 10100);
+				});
+			});
+		});
 	}, 20000);
 
 	it("should correct working when entry is Object and key is a number", (done) => {
