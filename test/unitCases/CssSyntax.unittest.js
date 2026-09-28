@@ -2020,7 +2020,9 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			expect(min(out)).toBe(out);
 		}
 		// A CRLF terminator is one terminator, so it needs the one separator too.
-		expect(min("a{b:\\41\r\n\tc}")).toBe("a{b:\\41\r\n c}");
+		expect(min("a{b:\\31\r\n\tc}")).toBe("a{b:\\31\r\n c}");
+		// Written literally, the code point needs no terminator at all.
+		expect(min("a{b:\\41\r\n\tc}")).toBe("a{b:A c}");
 	});
 });
 
@@ -11772,10 +11774,73 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 			],
 			["a{\\74 op:1px;top:2px}", "a{top:2px}"],
 			["a{color:yel\\6c ow}", "a{color:#ff0}"],
-			["a{color:transp\\61 rent}", "a{color:#0000}"]
+			["a{color:transp\\61 rent}", "a{color:#0000}"],
+			["a{width:c\\61 lc(1px + 1px)}", "a{width:2px}"],
+			["a{color:\\72 gb(255,0,0)}", "a{color:red}"],
+			["a:\\6e ot(.b){top:0}", "a:not(.b){top:0}"],
+			// Each still names the one step count `jump-none` needs two for.
+			[
+				"a{animation-timing-function:st\\65 ps(calc(1),jump-none)}",
+				"a{animation-timing-function:steps(calc(1),jump-none)}"
+			],
+			[
+				"a{animation-timing-function:steps(calc(1),j\\75 mp-none)}",
+				"a{animation-timing-function:steps(calc(1),jump-none)}"
+			],
+			// A substitution: what it expands to is not known here.
+			["a{margin:v\\61 r(--x) 0 0 0}", "a{margin:var(--x) 0 0 0}"],
+			["a{color:v\\61 r(--x,WHITE)}", "a{color:var(--x,WHITE)}"],
+			// A custom property or `initial-value` keeps its value as written.
+			["a{\\2d -x:WHITE}", "a{--x:WHITE}"],
+			[
+				'@property --x{syntax:"*";inherits:false;initial-v\\61 lue:#FFFFFF}',
+				'@property --x{syntax:"*";inherits:false;initial-value:#FFFFFF}'
+			],
+			// Identical declarations either side of a nested rule are both kept.
+			[
+				".k{co\\6c or:red;.n{top:0}co\\6c or:red}",
+				".k{color:red;.n{top:0}color:red}"
+			]
 		]) {
 			expect(minifyFor(source, ["chrome 120"])).toBe(printed);
 		}
+	});
+
+	it("writes a name the shortest way, wherever its escape ends", () => {
+		for (const [source, printed] of [
+			["\\61 {top:0}", "a{top:0}"],
+			[".\\62 {top:0}", ".b{top:0}"],
+			// Its terminator ends the identifier, so nothing parts it from `.b`.
+			[".a\\31 .b{top:0}", ".a1.b{top:0}"],
+			// A leading digit has to stay escaped, terminator and all.
+			[".\\31 .b{top:0}", ".\\31 .b{top:0}"],
+			["a{width:\\31 x(1px)}", "a{width:\\31x(1px)}"],
+			["a{width:--F\\6f o(1px)}", "a{width:--Foo(1px)}"],
+			["a{color:--\\72 ed}", "a{color:--red}"]
+		]) {
+			expect(minifyFor(source, ["chrome 120"])).toBe(printed);
+		}
+	});
+
+	it("leaves the case of a dashed ident alone", () => {
+		// An author's name (CSS Values 4 §4.2), never a keyword to fold.
+		expect(minifyFor("a{color:--RED}", ["chrome 120"])).toBe("a{color:--RED}");
+	});
+
+	it("leaves an escaped unicode range escaped", () => {
+		// Chromium reads a urange only from a literal `u`, so this one is invalid.
+		const source = "@font-face{unicode-range:\\55+0025-00FF}";
+		expect(minifyFor(source, ["chrome 120"])).toBe(source);
+	});
+
+	it("rewrites a function's name on, and leaves it alone off", () => {
+		const source = "a{transform:rot\\61 te(1turn)}";
+		expect(
+			minifyForWith(source, ["chrome 120"], { rewriteEscapes: true })
+		).toBe("a{transform:rotate(1turn)}");
+		expect(
+			minifyForWith(source, ["chrome 120"], { rewriteEscapes: false })
+		).toBe(source);
 	});
 });
 

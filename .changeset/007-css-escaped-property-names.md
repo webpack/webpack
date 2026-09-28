@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read escaped CSS names and `!important` as spelled; minify them unescaped.
+Read escaped CSS names and functions as spelled, and minify them unescaped.
