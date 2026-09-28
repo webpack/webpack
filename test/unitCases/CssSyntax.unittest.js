@@ -240,7 +240,7 @@ describe("CssSyntax — an escape the input ran out of", () => {
 		// Printing the `\` would escape the `}` or `;` written after it, so a
 		// second pass would read one construct where the first wrote one.
 		expect(minifyFor("a{color:re\\")).toBe("a{color:re�}");
-		expect(minifyFor("@\\30 media\\")).toBe("@\\30 media�;");
+		expect(minifyFor("@\\30 media\\")).toBe("@\\30media�;");
 		expect(minifyFor('a{content:"x\\')).toBe('a{content:"x"}');
 	});
 });
@@ -528,6 +528,12 @@ describe("CssSyntax — parser entry points", () => {
 		expect(
 			/** @type {import("../../lib/css/syntax-parser").Declaration} */ (
 				parseADeclaration("color: red !important")
+			).important
+		).toBe(true);
+		// The ident is matched by the value its escape spells (§5.4.6 step 6).
+		expect(
+			/** @type {import("../../lib/css/syntax-parser").Declaration} */ (
+				parseADeclaration("color: red !import\\61 nt")
 			).important
 		).toBe(true);
 		expect(parseADeclaration("123")).toBeUndefined();
@@ -2508,7 +2514,9 @@ describe("CssSyntax — minify transforms, in-process", () => {
 				"a media type and the keyword before it",
 				"@media ONLY SCREEN{a{b:c}}",
 				"@media only screen{a{b:c}}"
-			]
+			],
+			// Written the shortest way first: the escape spells an `O`.
+			["an escaped name", "a{c\\4Flor:red}", "a{color:red}"]
 		])("is printed lowercase: %s", (_name, css, expected) => {
 			expect(min(css)).toBe(expected);
 		});
@@ -2529,10 +2537,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			// written here, which is read as written.
 			["a style query", "@container style(--x:Foo){a{b:c}}"],
 			["a string in a condition", '@media (font-family:"My Font"){a{b:c}}'],
-			["a font family", "a{font-family:Other Face,MyFont}"],
-			// A name carrying an escape names its characters by case: `\\G` is not
-			// `\\g`.
-			["an escaped name", "a{c\\4Flor:red}"]
+			["a font family", "a{font-family:Other Face,MyFont}"]
 		])("is left as written: %s", (_name, css) => {
 			expect(min(css)).toBe(css);
 		});
@@ -4038,7 +4043,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// rule the prologue needs is kept either way.
 			[
 				".e{}@name\\73pace url(x);.a{color:red}",
-				".e{}@name\\73pace url(x);.a{color:red}"
+				".e{}@namespace url(x);.a{color:red}"
 			],
 			["a{font-size:initial}", "a{font-size:initial}"]
 		])("%s", (css, expected) => {
@@ -4487,12 +4492,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"two anonymous layers say the same rule",
 				"@layer{a{color:red}}@layer{a{color:red}}"
 			],
-			[
-				"the layers spell their name with an escape",
-				"@media all{@l\\61yer{.a{c:red}}@l\\61yer{.a{c:blue}}}"
-			]
 		])("keeps both where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		it("keeps both where the layers spell their name with an escape", () => {
+			expect(
+				minify("@media all{@l\\61yer{.a{c:red}}@l\\61yer{.a{c:blue}}}")
+			).toBe("@media all{@layer{.a{c:red}}@layer{.a{c:blue}}}");
 		});
 
 		it("drops one the same anonymous layer says again", () => {
@@ -11729,7 +11736,12 @@ describe("CssSyntax minify — `foldCase`", () => {
 describe("CssSyntax minify — `rewriteEscapes`", () => {
 	const written = [
 		["a value's ident", ".a{grid-area:\\66oot}", ".a{grid-area:foot}"],
-		["an id", "#\\41 x{color:red}", "#Ax{color:red}"]
+		["an id", "#\\41 x{color:red}", "#Ax{color:red}"],
+		["a property name", "a{col\\6f r:red}", "a{color:red}"],
+		["a property name, folded", "a{CO\\4c OR:red}", "a{color:red}"],
+		["a custom property's name", "a{--x\\2e y:1}", "a{--x\\.y:1}"],
+		["an at-rule name", "@m\\65 dia print{a{top:0}}", "@media print{a{top:0}}"],
+		["a keyword", "a{display:BL\\4f CK}", "a{display:block}"]
 	];
 
 	for (const [what, source, shorter] of written) {
@@ -11742,6 +11754,29 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 			).toBe(source);
 		});
 	}
+
+	it("leaves an escaped `@charset` escaped", () => {
+		// Only the literal bytes declare an encoding, so the escape keeps it inert.
+		const source = '@char\\73 et "x";a{top:0}';
+		expect(
+			minifyForWith(source, ["chrome 120"], { rewriteEscapes: true })
+		).toBe(source);
+	});
+
+	it("reads an escaped name or keyword by what it spells", () => {
+		// Merged, overridden and shortened as the plain spelling would be.
+		for (const [source, printed] of [
+			[
+				"a{mar\\67 in-left:1px;margin-right:1px;margin-top:1px;margin-bottom:1px}",
+				"a{margin:1px}"
+			],
+			["a{\\74 op:1px;top:2px}", "a{top:2px}"],
+			["a{color:yel\\6c ow}", "a{color:#ff0}"],
+			["a{color:transp\\61 rent}", "a{color:#0000}"]
+		]) {
+			expect(minifyFor(source, ["chrome 120"])).toBe(printed);
+		}
+	});
 });
 
 describe("CssSyntax minify — `@custom-selector`", () => {
@@ -12205,17 +12240,17 @@ describe("SourceProcessor — mergeDistantRules", () => {
 
 	it("joins an at-rule written under an escaped name", () => {
 		// The name the parser read is the name the escape spells, so the two state
-		// one condition — the spelling itself is echoed back as it was written.
+		// one condition — and it is printed the shortest way, as the plain name.
 		const media = escapedName("media");
 		const sheet = `${media} (min-width:1px){.a{color:red}}.b{margin:0}${media} (min-width:1px){.c{color:blue}}`;
 		expect(minify(sheet, true)).toBe(
-			`${media} (width>=1px){.a{color:red}.c{color:blue}}.b{margin:0}`
+			"@media (width>=1px){.a{color:red}.c{color:blue}}.b{margin:0}"
 		);
 		// Reading the name is what reaches the refusal too, so a rule between that
 		// declares what the block does keeps the two apart under either spelling.
 		const shadowed = `${media} (min-width:1px){.a{color:red}}.b{color:green}${media} (min-width:1px){.c{color:blue}}`;
 		expect(minify(shadowed, true)).toBe(
-			`${media} (width>=1px){.a{color:red}}.b{color:green}${media} (width>=1px){.c{color:blue}}`
+			"@media (width>=1px){.a{color:red}}.b{color:green}@media (width>=1px){.c{color:blue}}"
 		);
 	});
 
@@ -12231,19 +12266,25 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		const frames = escapedName("keyframes");
 		const escaped = `${frames} k{to{opacity:1}}.b{margin:0}${frames} k{from{opacity:0}}`;
 		expect(minify(escaped, true)).toBe(
-			`${frames} k{to{opacity:1}}.b{margin:0}${frames} k{0%{opacity:0}}`
+			"@keyframes k{to{opacity:1}}.b{margin:0}@keyframes k{0%{opacity:0}}"
 		);
 	});
 
 	it("leaves `@layer` alone however it is spelled", () => {
 		const layer = escapedName("layer");
+		const named = "@layer L{.a{color:red}}.b{margin:0}@layer L{.c{color:blue}}";
 		for (const sheet of [
-			"@layer L{.a{color:red}}.b{margin:0}@layer L{.c{color:blue}}",
-			"@layer{.a{color:red}}.b{margin:0}@layer{.c{color:blue}}",
-			`${layer} L{.a{color:red}}.b{margin:0}${layer} L{.c{color:blue}}`
+			named,
+			"@layer{.a{color:red}}.b{margin:0}@layer{.c{color:blue}}"
 		]) {
 			expect(minify(sheet, true)).toBe(sheet);
 		}
+		expect(
+			minify(
+				`${layer} L{.a{color:red}}.b{margin:0}${layer} L{.c{color:blue}}`,
+				true
+			)
+		).toBe(named);
 	});
 
 	// The same question asked of a block's own children, which are gathered as
@@ -12499,7 +12540,12 @@ describe("SourceProcessor — an at-rule named with CSS escapes", () => {
 	 * @returns {string} the minified stylesheet
 	 */
 	const minify = (sheet, options) =>
-		new SourceProcessor().process(sheet, { mode: "minify", ...options }).code;
+		new SourceProcessor().process(sheet, {
+			mode: "minify",
+			// The escape is echoed back, so each test reads which rule it named.
+			transforms: { rewriteEscapes: false },
+			...options
+		}).code;
 
 	/**
 	 * The same at-rule name with its first letter written as a hexadecimal CSS

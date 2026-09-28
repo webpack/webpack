@@ -1212,7 +1212,7 @@ const EXPECTED = [
 		// Every one of them writes an escape, and nothing else in this relation
 		// does, so the backslash is what they have in common.
 		contains: "\\",
-		why: "the printed name keeps the source's spelling, so an escaped one costs the bytes the escape takes — the lookups behind it read the unescaped name, which is what `fix(css): read an escaped property name as the name it spells` settled. Unescaping the printed name where the plain spelling is valid would retire this; it is a re-encoding, so it has to show a compressed win first"
+		why: "property, at-rule and value keyword names are written the shortest way already; what keeps its escape is a selector, a whole-token escape such as `\\61`, a `var()` reference and a name inside an at-rule prelude (`@layer`, custom media). Each is one more place to write the spelled name, which only removes bytes"
 	},
 	{
 		relation: "respelling leading-zero",
