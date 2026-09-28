@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Cut module graph, chunk graph, lazy barrel and ESM import memory and allocations.
+Cut graph, cached set, lazy barrel and ESM import memory and allocations.
