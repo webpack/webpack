@@ -430,7 +430,20 @@ const readJsDoc = (node) => {
 // share one comment position with it.
 const ARRAY_CONSTRAINTS = ["minItems", "uniqueItems"];
 
-const CONSTRAINT_TAGS = [
+// The keywords a source states as a tag of the same name. Adding one here is
+// all a new keyword needs: what the tag says is what the schema says.
+const KEYWORD_TAGS = [
+	"title",
+	"deprecated",
+	"experimental",
+	"undefinedAsNull",
+	"additionalProperties",
+	"properties",
+	"not",
+	"typeOnly",
+	"tsType",
+	"inline",
+	"required",
 	"minLength",
 	"uniqueItems",
 	"absolutePath",
@@ -440,6 +453,48 @@ const CONSTRAINT_TAGS = [
 	"minProperties"
 ];
 
+// The keywords a tag states by being there: what follows one is prose about it,
+// which the schema does not carry — `@deprecated` says a reason as often as not.
+const FLAG_TAGS = [
+	"deprecated",
+	"experimental",
+	"undefinedAsNull",
+	"typeOnly",
+	"inline",
+	"additionalProperties",
+	"uniqueItems"
+];
+
+// The keywords a source states by another name, or in another shape.
+const TRANSLATED_TAGS = [
+	"since",
+	"cliHelper",
+	"cliExclude",
+	"emptyProperties",
+	"implements",
+	"jsonType"
+];
+
+// The tags the tooling reads: they say where a definition lives, not what it
+// validates, so no schema carries them.
+const TOOLING_TAGS = ["schema", "publishes", "definition"];
+
+/**
+ * What a tag says, as the schema states it: a value written as JSON is that
+ * value, a tag written with nothing is `true`, and anything else is its text.
+ * @param {string} written what the tag says
+ * @returns {EXPECTED_ANY} the value it stands for
+ */
+const toKeywordValue = (written) => {
+	if (written === "") return true;
+	if (!/^[-\d{["]|^(?:true|false|null)$/.test(written)) return written;
+	try {
+		return JSON.parse(written);
+	} catch (_err) {
+		return written;
+	}
+};
+
 /**
  * @param {Map<string, string>} tags the tags a declaration carries
  * @returns {Record<string, EXPECTED_ANY>} the keywords they become
@@ -447,46 +502,24 @@ const CONSTRAINT_TAGS = [
 const fromDocumentationTags = (tags) => {
 	/** @type {Record<string, EXPECTED_ANY>} */
 	const keywords = {};
+	for (const keyword of KEYWORD_TAGS) {
+		const written = tags.get(keyword);
+		if (written === undefined) continue;
+		keywords[keyword] = FLAG_TAGS.includes(keyword)
+			? true
+			: toKeywordValue(written);
+	}
 	if (tags.has("since")) {
 		keywords.added = /** @type {string} */ (tags.get("since"));
 	}
-	if (tags.has("title")) keywords.title = tags.get("title");
-	if (tags.has("experimental")) keywords.experimental = true;
-	if (tags.has("deprecated")) keywords.deprecated = true;
-	if (tags.has("undefinedAsNull")) keywords.undefinedAsNull = true;
+	if (tags.has("jsonType")) keywords.type = tags.get("jsonType");
 	if (tags.has("cliHelper")) keywords.cli = { ...keywords.cli, helper: true };
 	if (tags.has("cliExclude")) keywords.cli = { ...keywords.cli, exclude: true };
+	if (tags.has("emptyProperties")) keywords.properties = {};
 	if (tags.has("implements")) {
 		keywords.implements = /** @type {string} */ (tags.get("implements"))
 			.split(",")
 			.map((one) => one.trim());
-	}
-	if (tags.has("not")) {
-		keywords.not = JSON.parse(/** @type {string} */ (tags.get("not")));
-	}
-	if (tags.has("additionalProperties")) keywords.additionalProperties = true;
-	if (tags.has("emptyProperties")) keywords.properties = {};
-	if (tags.has("properties")) {
-		keywords.properties = JSON.parse(
-			/** @type {string} */ (tags.get("properties"))
-		);
-	}
-	if (tags.has("typeOnly")) keywords.typeOnly = true;
-	if (tags.has("inline")) keywords.inline = true;
-	if (tags.has("jsonType")) keywords.type = tags.get("jsonType");
-	if (tags.has("tsType")) keywords.tsType = tags.get("tsType");
-	if (tags.has("required")) {
-		keywords.required = /** @type {string} */ (tags.get("required"));
-	}
-	for (const keyword of CONSTRAINT_TAGS) {
-		const written = tags.get(keyword);
-		if (written === undefined) continue;
-		keywords[keyword] =
-			written === "true" || written === "false"
-				? written === "true"
-				: /^\d+$/.test(written)
-					? Number(written)
-					: written;
 	}
 	return keywords;
 };
@@ -533,7 +566,7 @@ const describedItems = (node, known) => {
 // The tags a leading comment may carry, matched by name so prose holding an
 // "@" is left alone. `not` takes JSON, so it reads to the end of the comment.
 const KNOWN_TAG_REGEXP = new RegExp(
-	`@(definition|title|since|experimental|deprecated|undefinedAsNull|cliHelper|cliExclude|implements|additionalProperties|emptyProperties|properties|typeOnly|tsType|jsonType|inline|not|${CONSTRAINT_TAGS.join(
+	`@(${[...TOOLING_TAGS, ...TRANSLATED_TAGS, ...KEYWORD_TAGS].join(
 		"|"
 	)})(?:[ \\t]+([^@]*))?`
 );
