@@ -7677,14 +7677,14 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("re-shrinks the columns after a pathologically large document", () => {
-		// > 16 Ki nodes and attributes grow the columns past the shrink
+		// > 64 Ki nodes and attributes grow the columns past the shrink
 		// threshold; the release after the parse re-shrinks them and the next
 		// parse must work from the re-grown baseline
 		let src = "";
-		for (let i = 0; i < 18000; i++) src += `<i data-n="${i}"></i>`;
+		for (let i = 0; i < 70000; i++) src += `<i data-n="${i}"></i>`;
 		const nodes = body(src);
-		expect(nodes).toHaveLength(18000);
-		expect(nodes[17999].attributes[0].value).toBe("17999");
+		expect(nodes).toHaveLength(70000);
+		expect(nodes[69999].attributes[0].value).toBe("69999");
 		const small = body('<b class="c">x</b>');
 		expect(small).toHaveLength(1);
 		expect(small[0].attributes[0].value).toBe("c");

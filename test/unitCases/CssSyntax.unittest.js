@@ -904,22 +904,22 @@ describe("CssSyntax — SourceProcessor", () => {
 	});
 
 	it("re-shrinks the SoA buffers after a pathologically large rule", () => {
-		// one top-level rule with > 16 Ki component-value nodes grows the SoA
+		// one top-level rule with > 64 Ki component-value nodes grows the SoA
 		// buffers past the shrink threshold; the next parse must work after the
 		// post-parse release re-shrinks them
-		const big = `a{b:${"x ".repeat(18000)}}`;
+		const big = `a{b:${"x ".repeat(70000)}}`;
 		let idents = 0;
 		new SourceProcessor()
 			.use({ [NodeType.Ident]: () => idents++ })
 			.process(big);
-		// 18000 value idents + the selector ident
-		expect(idents).toBe(18001);
+		// 70000 value idents + the selector ident
+		expect(idents).toBe(70001);
 		// again: the regrow-hint path must restore exactly enough capacity
 		idents = 0;
 		new SourceProcessor()
 			.use({ [NodeType.Ident]: () => idents++ })
 			.process(big);
-		expect(idents).toBe(18001);
+		expect(idents).toBe(70001);
 		/** @type {string[]} */
 		const names = [];
 		new SourceProcessor()
