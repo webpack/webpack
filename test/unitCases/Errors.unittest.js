@@ -371,7 +371,10 @@ describe("Errors", () => {
 				message.lastIndexOf("file.js")
 			);
 		} finally {
-			fs.rmSync(directory, { recursive: true, force: true });
+			for (const file of fs.readdirSync(directory)) {
+				fs.unlinkSync(path.join(directory, file));
+			}
+			fs.rmdirSync(directory);
 		}
 	});
 
