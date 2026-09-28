@@ -2,6 +2,7 @@
 
 require("../helpers/warmup-webpack");
 
+const os = require("os");
 const path = require("path");
 const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
@@ -333,6 +334,46 @@ describe("Errors", () => {
 		`);
 		});
 	}
+
+	// WHY: the warning needs two modules whose names differ only in case, which a
+	// checkout cannot hold on a case-insensitive filesystem — so the pair is
+	// written to a temporary directory, and only a case-sensitive one keeps them
+	// apart. The branch above covers the other filesystem.
+	it("should emit warning for modules differing only in casing", async () => {
+		const directory = fs.mkdtempSync(
+			path.join(os.tmpdir(), "webpack-case-conflict-")
+		);
+		try {
+			fs.writeFileSync(path.join(directory, "file.js"), "module.exports = 1;\n");
+			fs.writeFileSync(path.join(directory, "FILE.js"), "module.exports = 2;\n");
+			const keptApart =
+				fs.readFileSync(path.join(directory, "file.js"), "utf8") ===
+				"module.exports = 1;\n";
+			if (!keptApart) return;
+			fs.writeFileSync(
+				path.join(directory, "index.js"),
+				'require("./file");\nrequire("./FILE");\n'
+			);
+			const { errors, warnings } = await compile({
+				context: directory,
+				mode: "development",
+				entry: "./index"
+			});
+			expect(errors).toHaveLength(0);
+			expect(warnings).toHaveLength(1);
+			const { message } = warnings[0];
+			expect(message).toContain(
+				"There are multiple modules with names that only differ in casing."
+			);
+			// The list names a representative importer for each module.
+			expect(message).toContain("module(s), i. e.");
+			expect(message.indexOf("FILE.js")).toBeLessThan(
+				message.lastIndexOf("file.js")
+			);
+		} finally {
+			fs.rmSync(directory, { recursive: true, force: true });
+		}
+	});
 
 	it("should emit warning for undef mode", async () => {
 		await expect(compile({ mode: undefined, entry: "./entry-point" })).resolves
