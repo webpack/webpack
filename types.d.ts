@@ -8793,9 +8793,7 @@ declare interface Experiments {
 	 * @since 5.49.0
 	 * @experimental
 	 */
-	buildHttp?:
-		| HttpUriOptionsWebpackOptions
-		| (string | RegExp | ((uri: string) => boolean))[];
+	buildHttp?: HttpUriOptions | HttpUriOptionsAllowedUrisItem[];
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -8884,7 +8882,7 @@ declare interface ExperimentsNormalized {
 	 * @since 5.49.0
 	 * @experimental
 	 */
-	buildHttp?: HttpUriOptionsWebpackOptions;
+	buildHttp?: HttpUriOptions;
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -11798,13 +11796,14 @@ declare interface HtmlTransformTagsContext {
 	outputName: string;
 	html: string;
 }
-type HttpUriOptionsAllowedUrisItem =
-	string | RegExp | ((uri: string) => boolean);
 
 /**
  * Options for building http resources.
  */
-declare interface HttpUriOptionsHttpUriPlugin {
+declare interface HttpUriOptions {
+	/**
+	 * List of allowed URIs (resp. the beginning of them).
+	 */
 	allowedUris: HttpUriOptionsAllowedUrisItem[];
 
 	/**
@@ -11832,47 +11831,14 @@ declare interface HttpUriOptionsHttpUriPlugin {
 	 */
 	upgrade?: boolean;
 }
-
-/**
- * Options for building http resources.
- */
-declare interface HttpUriOptionsWebpackOptions {
-	/**
-	 * List of allowed URIs (resp. the beginning of them).
-	 */
-	allowedUris: (string | RegExp | ((uri: string) => boolean))[];
-
-	/**
-	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
-	 */
-	cacheLocation?: string | false;
-
-	/**
-	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
-	 */
-	frozen?: boolean;
-
-	/**
-	 * Location of the lockfile.
-	 */
-	lockfileLocation?: string;
-
-	/**
-	 * Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.
-	 */
-	proxy?: string;
-
-	/**
-	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
-	 */
-	upgrade?: boolean;
-}
+type HttpUriOptionsAllowedUrisItem =
+	string | RegExp | ((uri: string) => boolean);
 declare class HttpUriPlugin {
 	/**
 	 * Creates an instance of HttpUriPlugin.
 	 */
-	constructor(options: HttpUriOptionsHttpUriPlugin);
-	options: HttpUriOptionsHttpUriPlugin;
+	constructor(options: HttpUriOptions);
+	options: HttpUriOptions;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.

@@ -2090,13 +2090,37 @@ export interface HttpUriOptions {
 }
 
 /**
+ * Allowed URI pattern.
+ * @inline
+ */
+export type HttpUriOptionsAllowedUrisItemBranch1 = RegExp;
+
+/**
+ * Allowed URI (resp. the beginning of it).
+ * @inline
+ */
+export type HttpUriOptionsAllowedUrisItemBranch2 = HttpUrl;
+
+/**
+ * Allowed URI filter function.
+ * @inline
+ */
+export type HttpUriOptionsAllowedUrisItemBranch3 =
+	import("../lib/schemes/HttpUriPlugin").AllowedUriFn;
+
+/**
+ * List of allowed URIs (resp. the beginning of them).
+ * @inline
+ */
+export type HttpUriOptionsAllowedUrisItem =
+	| HttpUriOptionsAllowedUrisItemBranch1
+	| HttpUriOptionsAllowedUrisItemBranch2
+	| HttpUriOptionsAllowedUrisItemBranch3;
+
+/**
  * List of allowed URIs (resp. the beginning of them).
  */
-export type HttpUriOptionsAllowedUris = Array<
-	| /** List of allowed URIs (resp. the beginning of them). */ /** Allowed URI pattern. */ RegExp
-	| /** Allowed URI (resp. the beginning of it). */ HttpUrl
-	| /** Allowed URI filter function. */ import("../lib/schemes/HttpUriPlugin").AllowedUriFn
->;
+export type HttpUriOptionsAllowedUris = HttpUriOptionsAllowedUrisItem[];
 
 /**
  * Ignore specific warnings.
