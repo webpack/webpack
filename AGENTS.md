@@ -136,8 +136,8 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
 
 Every schema is derived from the module declaring its options by `generate-schemas.js`; edit the declaration, not the schema. What JSON Schema states and a type has no syntax for travels as a JSDoc tag (`@minItems`, `@additionalProperties`, `@since`, `@tsType`, `@not`, …), and `declarations/vocabulary.ts` names the constraints a plain type cannot carry (`NonEmptyString`, `AbsolutePath`, …).
 
-- `lib/**/*.js` — **the source** for a plugin's options: JSDoc typedefs beside the code reading them, the root one tagged `@schema <path>` with the schema it derives.
-- `declarations/WebpackOptions.ts` (plus `_container.ts`, `_sharing.ts`) — **the source** for the configuration itself.
+- `lib/**/*.js` — **the source** for a plugin's options: JSDoc typedefs beside the code reading them, the root one tagged `@schema <path>` with the schema it derives. A module holds types of its own too, so only what that root reaches is the schema; one it reaches no other way says `@definition`.
+- `declarations/WebpackOptions.ts` (plus `_container.ts`, `_sharing.ts`) — **the source** for the configuration itself. A definition of it that is also published as a schema of its own says `@publishes <path>`, and that schema is the reference.
 - `schemas/WebpackOptions.json` — top-level options.
 - `schemas/plugins/*.json` — per-plugin options (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
 - `schemas/_container.json`, `schemas/_sharing.json` — Module Federation sub-schemas.
@@ -183,7 +183,7 @@ Keep `--depth 1` (`wpt` alone is ~161k files). `--remote` changes the recorded c
 
 **Adding or renaming a webpack option** touches every layer, in order — skipping one silently breaks the option:
 
-1. **Type** — `declarations/WebpackOptions.ts` (or `declarations/plugins/<Name>.ts`), which `yarn fix:special` turns into the schema.
+1. **Type** — `declarations/WebpackOptions.ts` for a configuration option, or the JSDoc typedefs in the `lib/` module reading it for a plugin's, which `yarn fix:special` turns into the schema.
 2. **Defaults** — `lib/config/defaults.js`.
 3. **Normalization** — `lib/config/normalization.js`.
 4. **Implementation** — where the option is consumed.
@@ -200,12 +200,12 @@ Consider updating `examples/` and running `yarn build:examples` after adding or 
 
 **A nested minifier needs the outer one's options.** `lib/html/htmlMinify.js` runs the CSS minifier over inline `<style>` and every `style=""`, so `output.environment` must reach both, or a `.css` asset and the same declaration inline disagree about what the target reads. Any future HTML-minifies-JS hook has the same obligation.
 
-**Schema documentation keywords** become JSDoc tags in the generated declarations:
+**Documentation keywords are written as JSDoc tags**, and the schema states what they say:
 
-- `"added": "<version>"` → `@since`: the first webpack version shipping the option. An unreleased option gets the upcoming version (`package.json` version with pending changesets applied — on `5.108.x` with minor changesets pending, `"added": "5.109.0"`).
-- `"experimental": true` → `@experimental`, for `experiments` options or others subject to breaking changes.
+- `@since <version>` → `"added"`: the first webpack version shipping the option. An unreleased option gets the upcoming version (`package.json` version with pending changesets applied — on `5.108.x` with minor changesets pending, `@since 5.109.0`).
+- `@experimental` → `"experimental"`, for `experiments` options or others subject to breaking changes.
 
-They are documentation only (stripped from precompiled validators). A pure `$ref` property can't carry them — annotate the referenced definition.
+They are documentation only (stripped from precompiled validators). A pure `$ref` property can't carry them — annotate the referenced definition. A keyword cannot sit after a `@property` line either, where a stray tag ends the property list: a property carrying one is a named typedef tagged `@inline`, whose body the schema puts back where the reference was.
 
 **What a schema may say is the lint rule's job, not the generator's.** `webpack/valid-schema` rejects extra keys beside a `$ref`, any `minLength` but `1`, and an `enum` holding non-primitives (the validator emits no other length check and compares nothing else); `yarn lint:code` reports them at the key, and the generator assumes they hold.
 
