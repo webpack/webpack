@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce module graph, chunk graph and ESM import memory and allocations.
+Cut module graph, chunk graph, lazy barrel and ESM import memory and allocations.
