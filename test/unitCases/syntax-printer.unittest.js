@@ -633,6 +633,11 @@ describe("syntax-printer", () => {
 			"a declaration reassigned before it is read",
 			"function f2() { var a = {}; a = []; return a; } console.log(f2());",
 			{ passes: 2, reduce_vars: true, side_effects: true, unused: true }
+		],
+		[
+			"a fixed name redeclared with a value",
+			"function f6(a) { a = {}; var a = []; return a; } console.log(f6());",
+			{ passes: 2, reduce_vars: true, side_effects: true, unused: true }
 		]
 	];
 
@@ -751,7 +756,15 @@ describe("syntax-printer", () => {
 			{ nameCache: { vars: { props: { $f: "q" } } }, toplevel: true }
 		],
 		["a name cache without a mangle cache", "sink(1);", { nameCache: {}, mangle: { cache: null } }],
-		["an inline source map as an object", "sink(1);", { sourceMap: { url: "inline", asObject: true } }]
+		["an inline source map as an object", "sink(1);", { sourceMap: { url: "inline", asObject: true } }],
+		[
+			"ESTree in, as an array",
+			[
+				{ type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 1 } }] },
+				{ type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 2 } }] }
+			],
+			{ parse: { spidermonkey: true }, compress: false }
+		]
 	];
 
 	for (const [name, files, options] of DRIVER_CASES) {
@@ -782,6 +795,89 @@ describe("syntax-printer", () => {
 			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
 		});
 	}
+
+	it("should drive a minify as terser does: sources inherited by the files object", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/** @returns {Record<string, string>} own and inherited sources */
+		const files = () =>
+			Object.assign(Object.create({ "inherited.js": "sink(0);" }), {
+				"a.js": "sink(1);",
+				"b.js": "sink(2);"
+			});
+		expect((await minify(files(), {})).code).toBe(
+			(await reference.minify(files(), {})).code
+		);
+	});
+
+	it("should drive a minify as terser does: a tree with its sources asked for", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<string | undefined>} what the second minify threw
+		 */
+		const refusal = async (run) => {
+			// terser's typings leave out `format.ast`, which returns the tree.
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await run("sink(1);", /** @type {EXPECTED_ANY} */ ({ format: { ast: true } }))
+			);
+			try {
+				await run(ast, { sourceMap: { includeSources: true } });
+			} catch (err) {
+				return /** @type {Error} */ (err).message;
+			}
+		};
+		const theirs = await refusal(reference.minify);
+		expect(theirs).toEqual(expect.any(String));
+		expect(await refusal(minify)).toBe(theirs);
+	});
+
+	it("should drop unused names as terser does: sequences emptied in a tree", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<string | undefined>} the tree minified with its sequences emptied
+		 */
+		const emptied = async (run) => {
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await run(
+					"function f(a) { sink(a, (a, a)); a, a; } sink(f);",
+					/** @type {EXPECTED_ANY} */ ({ compress: false, mangle: false, format: { ast: true } })
+				)
+			);
+			const body = ast.body[0].body;
+			body[0].body.args[1].expressions = [];
+			body[1].body.expressions = [];
+			return (
+				await run(ast, { compress: { defaults: false, unused: true }, mangle: false })
+			).code;
+		};
+		expect(await emptied(minify)).toBe(await emptied(reference.minify));
+	});
+
+	it("should drop unused names as terser does: a scope without its variables", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		const compressor = { option: () => true, has_directive: () => undefined };
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<EXPECTED_ANY>} what dropping unused names in the class returned
+		 */
+		const dropped = async (run) => {
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await run(
+					"class A {}",
+					/** @type {EXPECTED_ANY} */ ({ compress: false, mangle: false, format: { ast: true } })
+				)
+			);
+			const node = ast.body[0];
+			node.variables = undefined;
+			return node.drop_unused(compressor);
+		};
+		expect(await dropped(minify)).toBe(await dropped(reference.minify));
+	});
 
 	it("should leave terser's debug log to terser", async () => {
 		const { minify } = await load();
@@ -1030,6 +1126,21 @@ describe("syntax-printer", () => {
 				directory: require("path").dirname(require.resolve("acorn/package.json"))
 			})
 		).toBe(false);
+		// A driver whose source is not the one the phase pins.
+		const fs = require("fs");
+		const os = require("os");
+		const path = require("path");
+		const directory = fs.mkdtempSync(path.join(os.tmpdir(), "terser-"));
+		const file = path.join(directory, "lib", "minify.js");
+		fs.mkdirSync(path.dirname(file));
+		fs.writeFileSync(file, "export function minify() {}");
+		try {
+			expect(driver.supports({ ...modules, directory })).toBe(false);
+		} finally {
+			fs.unlinkSync(file);
+			fs.rmdirSync(path.dirname(file));
+			fs.rmdirSync(directory);
+		}
 	});
 
 	it("should decline a terser whose unused-name dropping it does not know", () => {
@@ -1043,6 +1154,30 @@ describe("syntax-printer", () => {
 			unused.supports({
 				...modules,
 				ast: { AST_Scope: { prototype: { drop_unused() {} } } }
+			})
+		).toBe(false);
+		// Every helper there, but a pass whose source is not the one pinned.
+		const helper = () => {};
+		expect(
+			unused.supports({
+				ast: { AST_Scope: { prototype: { drop_unused() {} } } },
+				scope: { SymbolDef: helper },
+				utils: {
+					keep_name: helper,
+					make_node: helper,
+					map_add: helper,
+					remove: helper,
+					MAP: helper
+				},
+				common: {
+					make_sequence: helper,
+					maintain_this_binding: helper,
+					is_empty: helper,
+					is_ref_of: helper,
+					can_be_evicted_from_block: helper
+				},
+				inference: { is_used_in_expression: helper },
+				flags: { WRITE_ONLY: 1, UNUSED: 2 }
 			})
 		).toBe(false);
 	});
