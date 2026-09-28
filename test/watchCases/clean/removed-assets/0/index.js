@@ -14,3 +14,7 @@ it("should keep only the extra asset of the current build", () => {
 		expect(exists(`extra.${i}.txt`)).toBe(i === step);
 	}
 });
+
+it("should keep an asset whose name goes through a directory", () => {
+	expect(exists("kept.txt")).toBe(true);
+});

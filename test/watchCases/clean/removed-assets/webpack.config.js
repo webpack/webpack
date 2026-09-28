@@ -32,6 +32,11 @@ module.exports = {
 							`extra.${currentWatchStep.step}.txt`,
 							new compiler.webpack.sources.RawSource("extra")
 						);
+						// written to `kept.txt`, so it has to be matched to that file
+						compilation.emitAsset(
+							"nested/../kept.txt",
+							new compiler.webpack.sources.RawSource("kept")
+						);
 					});
 				});
 				compiler.hooks.afterEmit.tap("Test", (compilation) => {
