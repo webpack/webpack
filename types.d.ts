@@ -32532,6 +32532,7 @@ declare namespace exports {
 			}
 			export namespace printer {
 				export let load: () => Promise<Terser>;
+				export let loadSources: () => Promise<any>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
 				export let createTerserTree: (
