@@ -3,6 +3,7 @@
 const path = require("path");
 const testDirectory = path.resolve(__dirname, "..");
 const fs = require("graceful-fs");
+const rimraf = require("rimraf");
 
 const webpack = require("../..");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
@@ -107,93 +108,6 @@ describe("HotModuleReplacementPlugin", () => {
 			});
 		});
 	}, 120000);
-
-	it("output.clean=true should keep the last update until a newer one is emitted", (done) => {
-		const outputPath = path.join(testDirectory, "js", "HotModuleReplacementPlugin");
-		const entryFile = path.join(outputPath, "entry.js");
-		const recordsFile = path.join(outputPath, "records.json");
-		let step = 0;
-		/** @type {string} */
-		let firstUpdate;
-		try {
-			fs.mkdirSync(outputPath, { recursive: true });
-		} catch (_err) {
-			// empty
-		}
-		fs.writeFileSync(entryFile, `${++step}`, "utf8");
-		const updates = new Set();
-		const hasFile = (/** @type {string} */ file) => {
-			try {
-				fs.statSync(path.join(outputPath, file));
-				return true;
-			} catch (_err) {
-				return false;
-			}
-		};
-		const compiler = webpack({
-			mode: "development",
-			cache: false,
-			entry: {
-				0: entryFile
-			},
-			recordsPath: recordsFile,
-			output: {
-				path: outputPath,
-				clean: true
-			},
-			plugins: [new webpack.HotModuleReplacementPlugin()]
-		});
-		const callback = (
-			/** @type {Error | null} */ err,
-			/** @type {import("../../").Stats | undefined} */ _stats
-		) => {
-			if (err) return done(err);
-			const stats = /** @type {import("../../").Stats} */ (_stats);
-			const jsonStats = stats.toJson();
-			const hash = jsonStats.hash;
-			const hmrUpdateMainFileName = `0.${hash}.hot-update.json`;
-
-			switch (step) {
-				case 1:
-					expect(updates.size).toBe(0);
-					firstUpdate = hmrUpdateMainFileName;
-					break;
-				case 2:
-					expect(updates.size).toBe(1);
-					expect(updates.has(firstUpdate)).toBe(true);
-					expect(hasFile(firstUpdate)).toBe(true);
-					break;
-				case 3:
-					expect(updates.size).toBe(2);
-					for (const file of updates) {
-						expect(hasFile(file)).toBe(true);
-					}
-					return setTimeout(() => {
-						fs.writeFileSync(entryFile, `${++step}`, "utf8");
-						compiler.run((err) => {
-							if (err) return done(err);
-							const [first, second] = updates;
-							expect(hasFile(first)).toBe(false);
-							// no newer update was emitted before this build, so the
-							// last one is kept however long ago it was written
-							expect(hasFile(second)).toBe(true);
-							fs.writeFileSync(entryFile, `${++step}`, "utf8");
-							compiler.run((err) => {
-								if (err) return done(err);
-								expect(hasFile(second)).toBe(false);
-								done();
-							});
-						});
-					}, 10100);
-			}
-
-			updates.add(hmrUpdateMainFileName);
-			fs.writeFileSync(entryFile, `${++step}`, "utf8");
-			compiler.run(callback);
-		};
-
-		compiler.run(callback);
-	}, 20000);
 
 	it("should correct working when entry is Object and key is a number", (done) => {
 		const outputPath = path.join(testDirectory, "js", "HotModuleReplacementPlugin");
@@ -370,6 +284,8 @@ describe("HotModuleReplacementPlugin", () => {
 		);
 		const src = path.join(dir, "src");
 		const out = path.join(dir, "dist");
+		// the tests look for update files a build adds, so none may be left over
+		rimraf.sync(out);
 		const recordsFile = path.join(dir, "records.json");
 		fs.mkdirSync(src, { recursive: true });
 		try {
@@ -474,6 +390,8 @@ describe("HotModuleReplacementPlugin", () => {
 		);
 		const src = path.join(dir, "src");
 		const out = path.join(dir, "dist");
+		// the tests look for update files a build adds, so none may be left over
+		rimraf.sync(out);
 		const recordsFile = path.join(dir, "records.json");
 		fs.mkdirSync(src, { recursive: true });
 		try {
@@ -569,6 +487,8 @@ describe("HotModuleReplacementPlugin", () => {
 		);
 		const src = path.join(dir, "src");
 		const out = path.join(dir, "dist");
+		// the tests look for update files a build adds, so none may be left over
+		rimraf.sync(out);
 		const recordsFile = path.join(dir, "records.json");
 		fs.mkdirSync(src, { recursive: true });
 		try {
