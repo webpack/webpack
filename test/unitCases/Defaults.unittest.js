@@ -652,6 +652,7 @@ describe("snapshots", () => {
 		    "flagIncludedChunks": false,
 		    "inlineExports": false,
 		    "innerGraph": false,
+		    "localImportBindings": false,
 		    "mangleExports": false,
 		    "mangleWasmImports": false,
 		    "mergeDuplicateChunks": true,
@@ -1224,7 +1225,6 @@ describe("snapshots", () => {
 		-     "flagIncludedChunks": false,
 		-     "inlineExports": false,
 		-     "innerGraph": false,
-		-     "mangleExports": false,
 		+     "avoidEntryIife": true,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
@@ -1233,6 +1233,8 @@ describe("snapshots", () => {
 		+     "flagIncludedChunks": true,
 		+     "inlineExports": true,
 		+     "innerGraph": true,
+		@@ ... @@
+		-     "mangleExports": false,
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
@@ -1335,7 +1337,6 @@ describe("snapshots", () => {
 		-     "flagIncludedChunks": false,
 		-     "inlineExports": false,
 		-     "innerGraph": false,
-		-     "mangleExports": false,
 		+     "avoidEntryIife": true,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
@@ -1344,6 +1345,8 @@ describe("snapshots", () => {
 		+     "flagIncludedChunks": true,
 		+     "inlineExports": true,
 		+     "innerGraph": true,
+		@@ ... @@
+		-     "mangleExports": false,
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
@@ -1474,6 +1477,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "chunkIds": "natural",
 		+     "chunkIds": "named",
+		@@ ... @@
+		-     "localImportBindings": false,
+		+     "localImportBindings": true,
 		@@ ... @@
 		-     "moduleIds": "natural",
 		-     "nodeEnv": false,
@@ -1727,6 +1733,9 @@ describe("snapshots", () => {
 			-     "chunkIds": "natural",
 			+     "chunkIds": "named",
 			@@ ... @@
+			-     "localImportBindings": false,
+			+     "localImportBindings": true,
+			@@ ... @@
 			-     "moduleIds": "natural",
 			-     "nodeEnv": false,
 			+     "moduleIds": "named",
@@ -1746,11 +1755,11 @@ describe("snapshots", () => {
 			-       "jsonp",
 			-       "import-scripts",
 			+       "import",
-			+     ],
-			+     "enabledLibraryTypes": Array [
-			+       "module",
 			@@ ... @@
 			-     "enabledLibraryTypes": Array [],
+			+     "enabledLibraryTypes": Array [
+			+       "module",
+			+     ],
 			@@ ... @@
 			-       "dynamicImport": undefined,
 			-       "dynamicImportInWorker": undefined,
@@ -1881,6 +1890,9 @@ describe("snapshots", () => {
 			-     "chunkIds": "natural",
 			+     "chunkIds": "named",
 			@@ ... @@
+			-     "localImportBindings": false,
+			+     "localImportBindings": true,
+			@@ ... @@
 			-     "moduleIds": "natural",
 			-     "nodeEnv": false,
 			+     "moduleIds": "named",
@@ -1990,7 +2002,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -1998,7 +2010,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
-			@@ ... @@
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -2048,6 +2060,9 @@ describe("snapshots", () => {
 			-     "chunkIds": "natural",
 			+     "chunkIds": "named",
 			@@ ... @@
+			-     "localImportBindings": false,
+			+     "localImportBindings": true,
+			@@ ... @@
 			-     "moduleIds": "natural",
 			-     "nodeEnv": false,
 			+     "moduleIds": "named",
@@ -2068,11 +2083,10 @@ describe("snapshots", () => {
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "myLib",
 			@@ ... @@
-			+     ],
+			-     "enabledLibraryTypes": Array [],
 			+     "enabledLibraryTypes": Array [
 			+       "var",
-			@@ ... @@
-			-     "enabledLibraryTypes": Array [],
+			+     ],
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
@@ -4529,6 +4543,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "chunkIds": "natural",
 			+     "chunkIds": "named",
+			@@ ... @@
+			-     "localImportBindings": false,
+			+     "localImportBindings": true,
 			@@ ... @@
 			-     "moduleIds": "natural",
 			-     "nodeEnv": false,

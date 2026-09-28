@@ -3,10 +3,9 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
-	devtool: "source-map-scopes",
-	entry: "./index.js",
+	devtool: false,
 	optimization: {
 		localImportBindings: true,
-		concatenateModules: false
+		concatenateModules: true
 	}
 };
