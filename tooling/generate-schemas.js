@@ -399,40 +399,6 @@ const halvedReference = (node, known) => {
 // #region TypeScript to schema
 
 /**
- * Builds a program over the given sources, reading anything they import from
- * disk, so a type imported out of `lib/` resolves the way it does in a build.
- * @param {Map<string, string>} sources file contents, keyed by absolute path
- * @returns {ts.Program} the program over them
- */
-const createProgram = (sources) => {
-	const options = {
-		allowJs: true,
-		checkJs: false,
-		noEmit: true,
-		strict: false,
-		target: ts.ScriptTarget.ES2017,
-		module: ts.ModuleKind.CommonJS,
-		esModuleInterop: true,
-		skipLibCheck: true
-	};
-	const host = ts.createCompilerHost(options, true);
-	const readFile = host.readFile.bind(host);
-	const fileExists = host.fileExists.bind(host);
-	const getSourceFile = host.getSourceFile.bind(host);
-	host.readFile = (fileName) =>
-		sources.get(path.resolve(fileName)) || readFile(fileName);
-	host.fileExists = (fileName) =>
-		sources.has(path.resolve(fileName)) || fileExists(fileName);
-	host.getSourceFile = (fileName, languageVersion, onError, shouldCreate) => {
-		const overlay = sources.get(path.resolve(fileName));
-		return overlay === undefined
-			? getSourceFile(fileName, languageVersion, onError, shouldCreate)
-			: ts.createSourceFile(fileName, overlay, languageVersion, true);
-	};
-	return ts.createProgram([...sources.keys()], options, host);
-};
-
-/**
  * @param {ts.Node} node any node
  * @returns {{ description: string, tags: Map<string, string> }} what its JSDoc says
  */
@@ -528,7 +494,6 @@ const fromDocumentationTags = (tags) => {
 /**
  * An array's item type, carrying the description written in front of it.
  * @param {ts.TypeNode} node the item type
- * @param {ts.TypeChecker} checker the checker that resolves its references
  * @param {Map<string, string>} known what each name declared in the same file says
  * @returns {Record<string, EXPECTED_ANY>} the schema for the items
  */
@@ -547,12 +512,11 @@ const tagsAreWholeType = (stated) =>
 /**
  * The item type of an array, with the description written in front of it.
  * @param {ts.TypeNode} node the item type
- * @param {ts.TypeChecker} checker the checker that resolves its references
  * @param {Map<string, string>} known what each name declared in the same file says
  * @returns {Record<string, EXPECTED_ANY>} the schema the items are
  */
-const describedItems = (node, checker, known) => {
-	const items = fromTypeNode(node, checker, known, 1);
+const describedItems = (node, known) => {
+	const items = fromTypeNode(node, known, 1);
 	const held = ts.isUnionTypeNode(node) ? node.types[0] : node;
 	const { description, tags } = readLeadingComment(held, 0, node.pos);
 	const stated = omit(fromDocumentationTags(tags), ARRAY_CONSTRAINTS);
@@ -622,23 +586,208 @@ const toTsType = (node) =>
 		"'"
 	);
 
+// A type is written where it is declared, so whether it can be called is read
+// from its declaration rather than resolved: the schema only needs to know
+// whether to say `instanceof: "Function"` or `type: "object"`.
+
+// Stands for a signature written as a `@callback`, which has no type node.
+const CALLABLE = /** @type {ts.TypeNode} */ (
+	/** @type {unknown} */ ({ kind: -1 })
+);
+
+/** @type {Map<string, ts.SourceFile | undefined>} */
+const parsedFiles = new Map();
+
 /**
- * @param {ts.Type} type a resolved type
- * @returns {boolean} whether a value of it is a function
+ * @param {string} file the file to read
+ * @returns {ts.SourceFile | undefined} it parsed, or nothing when it is not ours
  */
-const isCallable = (type) =>
-	type.getCallSignatures().length > 0 ||
-	type.getConstructSignatures().length > 0;
+const parseFile = (file) => {
+	if (parsedFiles.has(file)) return parsedFiles.get(file);
+	/** @type {ts.SourceFile | undefined} */
+	let parsed;
+	try {
+		parsed = ts.createSourceFile(
+			file,
+			fs.readFileSync(file, "utf8"),
+			ts.ScriptTarget.Latest,
+			true
+		);
+	} catch (_err) {
+		parsed = undefined;
+	}
+	parsedFiles.set(file, parsed);
+	return parsed;
+};
+
+/**
+ * @param {string} specifier what an `import()` names
+ * @param {string} from the file naming it
+ * @returns {string | undefined} the file it means, when the repository holds it
+ */
+const resolveSpecifier = (specifier, from) => {
+	if (!specifier.startsWith(".")) return undefined;
+	const base = path.resolve(path.dirname(from), specifier);
+	for (const candidate of [
+		`${base}.js`,
+		`${base}.ts`,
+		`${base}.d.ts`,
+		path.join(base, "index.js")
+	]) {
+		if (fs.existsSync(candidate)) return candidate;
+	}
+	return undefined;
+};
+
+/**
+ * @param {ts.SourceFile} source the file to look in
+ * @param {string} name the type it declares
+ * @param {number} depth how many aliases have been followed
+ * @returns {ts.TypeNode | undefined} what the name is written as
+ */
+const declaredTypeIn = (source, name, depth = 0) => {
+	/** @type {ts.TypeNode | undefined} */
+	let written;
+	/**
+	 * @param {ts.Node} node the node to walk
+	 * @returns {void}
+	 */
+	const visit = (node) => {
+		if (written) return;
+		const blocks = /** @type {{ jsDoc?: ts.JSDoc[] }} */ (
+			/** @type {unknown} */ (node)
+		).jsDoc;
+		for (const block of blocks || []) {
+			for (const tag of block.tags || []) {
+				// A function type is written either way round: as the type a
+				// `@typedef` names, or as the signature a `@callback` spells out.
+				if (
+					ts.isJSDocCallbackTag(tag) &&
+					tag.name &&
+					tag.name.getText() === name
+				) {
+					written = CALLABLE;
+				}
+				if (
+					ts.isJSDocTypedefTag(tag) &&
+					tag.name &&
+					tag.name.getText() === name &&
+					tag.typeExpression &&
+					"type" in tag.typeExpression
+				) {
+					written = /** @type {ts.TypeNode} */ (tag.typeExpression.type);
+				}
+			}
+		}
+		if (ts.isTypeAliasDeclaration(node) && node.name.getText() === name) {
+			written = node.type;
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(source);
+	return written;
+};
+
+/**
+ * @param {ts.TypeNode | undefined} node what a name is written as
+ * @param {ts.SourceFile} source the file writing it
+ * @param {number} depth how many names have been followed
+ * @returns {boolean} whether the schema should call it a function
+ */
+const isWrittenCallable = (node, source, depth = 0) => {
+	if (!node || depth > 4) return false;
+	if (node === CALLABLE) return true;
+	if (ts.isParenthesizedTypeNode(node)) {
+		return isWrittenCallable(node.type, source, depth);
+	}
+	if (ts.isFunctionTypeNode(node) || ts.isConstructorTypeNode(node)) {
+		return true;
+	}
+	// A union is callable where every one of its members is.
+	if (ts.isUnionTypeNode(node)) {
+		return node.types.every((one) => isWrittenCallable(one, source, depth + 1));
+	}
+	if (ts.isTypeReferenceNode(node)) {
+		const next = declaredTypeIn(source, node.typeName.getText());
+		return isWrittenCallable(next, source, depth + 1);
+	}
+	return false;
+};
+
+/**
+ * @param {ts.SourceFile} source a module
+ * @returns {boolean} whether what it exports is a class or a function
+ */
+const exportsSomethingCallable = (source) => {
+	const names = new Set();
+	/** @type {string | undefined} */
+	let exported;
+	/**
+	 * @param {ts.Node} node the node to walk
+	 * @returns {void}
+	 */
+	const visit = (node) => {
+		if (
+			(ts.isClassDeclaration(node) || ts.isFunctionDeclaration(node)) &&
+			node.name
+		) {
+			names.add(node.name.getText());
+		}
+		if (
+			ts.isExpressionStatement(node) &&
+			ts.isBinaryExpression(node.expression) &&
+			node.expression.left.getText() === "module.exports"
+		) {
+			const value = node.expression.right;
+			if (ts.isClassExpression(value) || ts.isFunctionExpression(value)) {
+				exported = "";
+				names.add("");
+			} else if (ts.isIdentifier(value)) {
+				exported = value.getText();
+			}
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(source);
+	return exported !== undefined && names.has(exported);
+};
+
+/**
+ * @param {ts.TypeNode} node a type naming something in another file
+ * @returns {boolean} whether the schema should call it a function
+ */
+const namesCallable = (node) => {
+	if (!ts.isImportTypeNode(node)) return false;
+	const literal = node.argument;
+	if (!ts.isLiteralTypeNode(literal) || !ts.isStringLiteral(literal.literal)) {
+		return false;
+	}
+	const file = resolveSpecifier(
+		literal.literal.text,
+		node.getSourceFile().fileName
+	);
+	if (!file) return false;
+	const source = parseFile(file);
+	if (!source) return false;
+	// `typeof import(…)` is the module itself, which is callable when what it
+	// exports is a class or a function.
+	if (!node.qualifier) {
+		return node.isTypeOf ? exportsSomethingCallable(source) : false;
+	}
+	return isWrittenCallable(
+		declaredTypeIn(source, node.qualifier.getText()),
+		source
+	);
+};
 
 /**
  * Turns one TypeScript type node into a schema node.
  * @param {ts.TypeNode} node the type to read
- * @param {ts.TypeChecker} checker the checker that resolves its references
  * @param {Map<string, string>} known what each name declared in the same file says
  * @param {number} spoken how many comments in front of it a caller already read
  * @returns {Record<string, EXPECTED_ANY>} the schema node
  */
-const fromTypeNode = (node, checker, known, spoken = 0) => {
+const fromTypeNode = (node, known, spoken = 0) => {
 	// WHY: a function type written out is a `tsType` like a named one, and the
 	// parentheses around it are part of what the schema states.
 	const callable = ts.isParenthesizedTypeNode(node) ? node.type : node;
@@ -646,11 +795,11 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 		return { instanceof: "Function", tsType: toTsType(node) };
 	}
 	if (ts.isParenthesizedTypeNode(node)) {
-		return fromTypeNode(node.type, checker, known);
+		return fromTypeNode(node.type, known);
 	}
 	if (ts.isUnionTypeNode(node)) {
 		const branches = node.types.map((one) => {
-			const described = fromTypeNode(one, checker, known);
+			const described = fromTypeNode(one, known);
 			// WHY: prettier moves the bar between two comments that meet, so where
 			// the first branch's own comment starts is not fixed. Reading from the
 			// union's start covers both layouts, and the caller's comes first.
@@ -709,7 +858,7 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 		return {
 			type: "array",
 			...constraints,
-			items: describedItems(node.elementType, checker, known)
+			items: describedItems(node.elementType, known)
 		};
 	}
 	if (ts.isLiteralTypeNode(node)) {
@@ -731,7 +880,7 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 		// `Record` half says nothing the schema reads.
 		const named = node.types.filter((one) => !isUnknownKeyRecord(one));
 		if (named.length === 1 && named.length < node.types.length) {
-			return fromTypeNode(named[0], checker, known);
+			return fromTypeNode(named[0], known);
 		}
 		if (node.types.every((one) => ts.isTypeLiteralNode(one))) {
 			const members = node.types.flatMap((one) => [
@@ -741,7 +890,6 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 				/** @type {ts.NodeArray<ts.TypeElement>} */ (
 					/** @type {unknown} */ (members)
 				),
-				checker,
 				known,
 				{}
 			);
@@ -749,12 +897,11 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 		return { type: "object", tsType: toTsType(node) };
 	}
 	if (ts.isTypeLiteralNode(node)) {
-		return fromMembers(node.members, checker, known, {});
+		return fromMembers(node.members, known, {});
 	}
 	if (ts.isImportTypeNode(node)) {
-		const type = checker.getTypeFromTypeNode(node);
 		const tsType = toTsType(node);
-		return isCallable(type)
+		return namesCallable(node)
 			? { instanceof: "Function", tsType }
 			: { type: "object", tsType };
 	}
@@ -766,7 +913,7 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 			)[0];
 			return {
 				type: "array",
-				items: describedItems(argument, checker, known)
+				items: describedItems(argument, known)
 			};
 		}
 		if (name === "RegExp") return { instanceof: "RegExp", tsType: "RegExp" };
@@ -774,10 +921,8 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 		if (name === "Record") {
 			return { type: "object", tsType: toTsType(node) };
 		}
-		const type = checker.getTypeFromTypeNode(node);
-		return isCallable(type)
-			? { instanceof: "Function", tsType: toTsType(node) }
-			: { type: "object", tsType: toTsType(node) };
+		// A name from outside the file, which the schema can only carry as text.
+		return { type: "object", tsType: toTsType(node) };
 	}
 	switch (node.kind) {
 		case ts.SyntaxKind.StringKeyword:
@@ -800,12 +945,11 @@ const fromTypeNode = (node, checker, known, spoken = 0) => {
 
 /**
  * @param {ts.NodeArray<ts.TypeElement>} members the members of an interface or type literal
- * @param {ts.TypeChecker} checker the checker that resolves their types
  * @param {Map<string, string>} known what each name declared in the same file says
  * @param {Record<string, EXPECTED_ANY>} head keywords the declaration itself carries
  * @returns {Record<string, EXPECTED_ANY>} the object schema they become
  */
-const fromMembers = (members, checker, known, head) => {
+const fromMembers = (members, known, head) => {
 	/** @type {Record<string, EXPECTED_ANY>} */
 	const properties = {};
 	/** @type {string[]} */
@@ -827,7 +971,7 @@ const fromMembers = (members, checker, known, head) => {
 				continue;
 			}
 			const { description, tags } = readJsDoc(member);
-			const value = fromTypeNode(valueType, checker, known);
+			const value = fromTypeNode(valueType, known);
 			additionalProperties = {
 				...(description ? { description } : {}),
 				...fromDocumentationTags(tags),
@@ -840,7 +984,7 @@ const fromMembers = (members, checker, known, head) => {
 			? member.name.text
 			: /** @type {ts.StringLiteral} */ (member.name).text;
 		const { description: written, tags } = readJsDoc(member);
-		const value = fromTypeNode(member.type, checker, known);
+		const value = fromTypeNode(member.type, known);
 		// WHY: a member written as a bare reference carries the definition's own
 		// documentation, which the schema states there rather than twice.
 		const echoed =
@@ -968,12 +1112,11 @@ const toObjectSchema = (head, properties, required, additionalProperties) => {
  * The same as `fromMembers`, for an object written as a JSDoc `@typedef` whose
  * members are `@property` tags rather than an interface's.
  * @param {readonly ts.JSDocPropertyLikeTag[]} propertyTags the `@property` tags
- * @param {ts.TypeChecker} checker the checker that resolves their types
  * @param {Map<string, string>} known what each name declared in the file says
  * @param {Record<string, EXPECTED_ANY>} head keywords the typedef carries
  * @returns {Record<string, EXPECTED_ANY>} the object schema they are
  */
-const fromPropertyTags = (propertyTags, checker, known, head) => {
+const fromPropertyTags = (propertyTags, known, head) => {
 	/** @type {Record<string, EXPECTED_ANY>} */
 	const properties = {};
 	/** @type {string[]} */
@@ -989,7 +1132,7 @@ const fromPropertyTags = (propertyTags, checker, known, head) => {
 			typeof tag.comment === "string"
 				? unescapeComment(tag.comment.trim())
 				: "";
-		const value = fromTypeNode(node, checker, known);
+		const value = fromTypeNode(node, known);
 		// WHY: a member written as a bare reference carries the definition's own
 		// documentation, which the schema states there rather than twice.
 		const echoed =
@@ -1036,11 +1179,10 @@ const wrapReference = (schema, described) =>
 /**
  * Derives a schema from one source file.
  * @param {ts.SourceFile} source the file to read
- * @param {ts.TypeChecker} checker the checker that resolves its references
  * @param {Map<string, string>} schemaOf the schema each module declares, by module
  * @returns {Record<string, EXPECTED_ANY>} the schema it describes
  */
-const typeScriptToSchema = (source, checker, schemaOf = new Map()) => {
+const typeScriptToSchema = (source, schemaOf = new Map()) => {
 	// WHY: a schema that is nothing but a reference to another one is written as
 	// a re-export, which is the whole file and carries no title of its own.
 	for (const statement of source.statements) {
@@ -1122,15 +1264,14 @@ const typeScriptToSchema = (source, checker, schemaOf = new Map()) => {
 					/** @type {ts.NodeArray<ts.TypeElement>} */ (
 						/** @type {unknown} */ (implemented)
 					),
-					checker,
 					known,
 					keywords
 				)
 			: propertyTags
-				? fromPropertyTags(propertyTags, checker, known, keywords)
+				? fromPropertyTags(propertyTags, known, keywords)
 				: members
-					? fromMembers(members, checker, known, keywords)
-					: fromTypeNode(/** @type {ts.TypeNode} */ (type), checker, known);
+					? fromMembers(members, known, keywords)
+					: fromTypeNode(/** @type {ts.TypeNode} */ (type), known);
 		const stated = omit(keywords, ["required"]);
 		const carries = description !== "" || Object.keys(stated).length > 0;
 		const schema = applyTypeOnly({
@@ -1332,8 +1473,6 @@ const findDeclaringModules = () => {
 const main = async () => {
 	const schemaFiles = findSchemas(SCHEMAS_DIRECTORY);
 	/** @type {Map<string, string>} */
-	const sources = new Map();
-	/** @type {Map<string, string>} */
 	const sourceOf = new Map();
 
 	const declaredInLib = findDeclaringModules();
@@ -1379,12 +1518,9 @@ const main = async () => {
 		if (!fs.existsSync(target)) {
 			throw new Error(`${name} declares no options in lib/`);
 		}
-		sources.set(target, fs.readFileSync(target, "utf8"));
 		sourceOf.set(target, schemaFile);
 	}
 
-	const program = createProgram(sources);
-	const checker = program.getTypeChecker();
 	let matching = 0;
 	let identical = 0;
 	/** @type {string[]} */
@@ -1429,13 +1565,13 @@ const main = async () => {
 		await hold(schemaFile, generated);
 	}
 	for (const [target, schemaFile] of sourceOf) {
-		const source = /** @type {ts.SourceFile} */ (program.getSourceFile(target));
+		const source = /** @type {ts.SourceFile} */ (parseFile(target));
 		const name = path.relative(SCHEMAS_DIRECTORY, schemaFile);
 		/** @type {Record<string, EXPECTED_ANY>} */
 		let generated;
 		try {
 			generated = /** @type {Record<string, EXPECTED_ANY>} */ (
-				walkSchema(typeScriptToSchema(source, checker, schemaOf), (node) =>
+				walkSchema(typeScriptToSchema(source, schemaOf), (node) =>
 					typeof node.tsType === "string"
 						? {
 								...node,
@@ -1470,7 +1606,9 @@ const main = async () => {
 	}
 	if (verbose) {
 		const sample = [...sourceOf.keys()][0];
-		console.log(`\n--- ${path.relative(ROOT, sample)}\n${sources.get(sample)}`);
+		console.log(
+			`\n--- ${path.relative(ROOT, sample)}\n${fs.readFileSync(sample, "utf8")}`
+		);
 	}
 	process.exitCode = failures.length > 0 ? 1 : 0;
 };
