@@ -84,6 +84,17 @@ const extractWebpackLibRequest = (call) => {
 };
 
 /**
+ * Reads every request a call names, since `makeSerializable` takes the
+ * current one plus the legacy ones a moved class stays readable under.
+ * @param {string} call call source
+ * @returns {string[]} requests, current one first
+ */
+const extractWebpackLibRequests = (call) =>
+	[...call.matchAll(/["'`](webpack\/lib\/[^"'`]+)["'`]/g)].map(
+		(match) => match[1]
+	);
+
+/**
  * @param {string} absoluteFile file under lib/
  * @returns {string} require path relative to lib/util/
  */
@@ -137,8 +148,9 @@ const collectEntries = () => {
 			: undefined;
 
 		forEachCall(source, "makeSerializable", (call) => {
-			const request = extractWebpackLibRequest(call);
-			if (request) add(request, requirePath, relative);
+			for (const request of extractWebpackLibRequests(call)) {
+				add(request, requirePath, relative);
+			}
 		});
 
 		forEachCall(source, "register", (call) => {

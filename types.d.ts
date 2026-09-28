@@ -34874,7 +34874,7 @@ declare namespace exports {
 		}
 		export const makeSerializable: <T extends Constructor>(
 			Constructor: T,
-			request: string,
+			request: string | string[],
 			name?: null | string
 		) => void;
 		export const cleverMerge: <T, O>(
