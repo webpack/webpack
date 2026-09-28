@@ -108,7 +108,7 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	}, 120000);
 
-	it("output.clean=true should keep 1 last update", (done) => {
+	it("output.clean=true should keep the last update until a newer one is emitted", (done) => {
 		const outputPath = path.join(testDirectory, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");
 		const recordsFile = path.join(outputPath, "records.json");
@@ -172,10 +172,17 @@ describe("HotModuleReplacementPlugin", () => {
 						fs.writeFileSync(entryFile, `${++step}`, "utf8");
 						compiler.run((err) => {
 							if (err) return done(err);
-							for (const file of updates) {
-								expect(hasFile(file)).toBe(false);
-							}
-							done();
+							const [first, second] = updates;
+							expect(hasFile(first)).toBe(false);
+							// no newer update was emitted before this build, so the
+							// last one is kept however long ago it was written
+							expect(hasFile(second)).toBe(true);
+							fs.writeFileSync(entryFile, `${++step}`, "utf8");
+							compiler.run((err) => {
+								if (err) return done(err);
+								expect(hasFile(second)).toBe(false);
+								done();
+							});
 						});
 					}, 10100);
 			}
