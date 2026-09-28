@@ -134,7 +134,7 @@ const VOCABULARY = [
 		constraints: {
 			type: "string",
 			pattern:
-				"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$"
+				"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?(-scopes)?$"
 		}
 	},
 	{

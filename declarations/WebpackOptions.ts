@@ -47,7 +47,7 @@ export type NonEmptyString = string;
 
 /**
  * A source map kind, spelled the way `devtool` takes it.
- * @pattern ^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?$
+ * @pattern ^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?(-scopes)?$
  */
 export type DevToolSpelling = string;
 
