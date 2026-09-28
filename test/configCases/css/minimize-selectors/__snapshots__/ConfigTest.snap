@@ -37,7 +37,7 @@ Array [
   "/*! webpack: ...but stays when the next code point is a hex digit */.\\\\31 abc{color:red}",
   "/*! webpack: ...and when it is the identifier's own end */.\\\\31 {color:red}",
   "/*! webpack: ...and when a real space follows it (a descendant combinator) */.\\\\32  x{color:red}",
-  "/*! webpack: an escape that ends the identifier keeps the compound together */.a\\\\31 .b{color:red}",
+  "/*! webpack: an escape that ends the identifier keeps the compound together */.a1.b{color:red}",
   "/*! webpack: an escape needing no escape at all is written literally */",
   "/*! webpack: ...including a 6-digit one */.Abc{color:red}",
   "/*! webpack: ...but not where the code point cannot start an identifier */.\\\\31x{color:red}",

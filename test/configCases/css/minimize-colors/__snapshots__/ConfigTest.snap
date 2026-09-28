@@ -87,6 +87,6 @@ Array [
   "/*! a mix is the color it computes; one whose argument no byte holds stands */.m01{color:color-mix(in oklab,lch(50% 20 30),red)}.m02{color:#9f6020}",
   "/*! the legacy sRGB forms fold there too, where their channels are already bytes */.m03{color:color-mix(in srgb,#010203,red)}",
   "/*! the escapes name the same things: \`\\\\66 rom\` is the keyword, and an escaped
-   \`color-mix\` or gradient name is that function */.r10{color:rgb(from rgb(50% 50% 50%) r g b)}.m04{color:color-\\\\6d ix(in oklab,lch(50% 20 30),red)}.g05{background-image:linear-\\\\67 radient(lch(50 20 30),red)}",
+   \`color-mix\` or gradient name is that function */.r10{color:rgb(from rgb(50% 50% 50%) r g b)}.m04{color:color-mix(in oklab,lch(50% 20 30),red)}.g05{background-image:linear-gradient(lch(50 20 30),red)}",
 ]
 `;

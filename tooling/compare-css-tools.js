@@ -1055,29 +1055,56 @@ const canonicalToken = (type, text, token) => {
  */
 
 /**
- * Where a custom property's value sits. Its value is an arbitrary token stream
- * the spec keeps as authored — `var()` substitutes it into somewhere else, so
- * nothing may normalize it — which makes it the one region where how something
- * was spelled decides the output on purpose.
+ * Where a declaration an escape cannot be respelled in sits: a custom property,
+ * `@property`'s `initial-value`, `@function`'s `result` and a lone `{}` block
+ * are kept as authored, and a `unicode-range` reads its tokens' representations.
  * @param {string} css a stylesheet
  * @returns {[number, number][]} each range, in source order
  */
-const customPropertyRanges = (css) => {
+const opaqueDeclarationRanges = (css) => {
 	/** @type {[number, number][]} */
 	const ranges = [];
-	/** @type {Record<number, { enter: () => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
+	// The at-rules open around the walk: `result` stays `@function`'s inside a
+	// condition nested in it.
+	/** @type {string[]} */
+	const atRules = [];
+	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
 	const visitors = {
+		[NodeType.AtRule]: {
+			enter: (nodePath) => {
+				atRules.push(unescapeIdentifier(nodePath.name()).toLowerCase());
+			},
+			exit: () => {
+				atRules.pop();
+			}
+		},
 		[NodeType.Declaration]: {
 			enter: () => {},
 			exit: (nodePath) => {
-				if (nodePath.name().startsWith("--")) {
+				const name = nodePath.unescapedName().toLowerCase();
+				const first =
+					nodePath.childCount() === 1 ? nodePath.childAt(nodePath.node, 0) : -1;
+				if (
+					name.startsWith("--") ||
+					// CSS Syntax 3 §7.1 reads a urange off the source text, and Chromium
+					// reads one only from a literal `u`.
+					name === "unicode-range" ||
+					(name === "initial-value" &&
+						atRules[atRules.length - 1] === "property") ||
+					(name === "result" && atRules.includes("function")) ||
+					(first !== -1 &&
+						nodePath.type(first) === NodeType.SimpleBlock &&
+						nodePath.blockToken(first) === "{")
+				) {
 					ranges.push([nodePath.start(), nodePath.end()]);
 				}
 			}
 		}
 	};
 	new SourceProcessor().use(visitors).process(css, {});
-	return ranges;
+	// Visited in the order the walk finishes them, which puts a nested block's
+	// declarations after its parent's later ones.
+	return ranges.sort((a, b) => a[0] - b[0]);
 };
 
 /**
@@ -1086,7 +1113,7 @@ const customPropertyRanges = (css) => {
  * @returns {Site[]} the sites
  */
 const cssSites = (css) => {
-	const kept = customPropertyRanges(css);
+	const kept = opaqueDeclarationRanges(css);
 	const stream = new TokenStream(css);
 	/** @type {Site[]} */
 	const sites = [];
@@ -1094,9 +1121,41 @@ const cssSites = (css) => {
 	// rather than searched for each one: a stylesheet of custom properties holds
 	// thousands, and asking every token about all of them is quadratic.
 	let range = 0;
+	// A container style query compares token streams as written, so the printer
+	// keeps each `style()` whole (CSS Conditional 5 §5).
+	let containerPrelude = false;
+	let styleDepth = 0;
 	for (;;) {
 		const token = stream.consume();
 		if (token.type === TT_EOF) break;
+		if (styleDepth !== 0) {
+			if (token.type === TT_FUNCTION || token.type === TT_LEFT_PARENTHESIS) {
+				styleDepth++;
+			} else if (token.type === TT_RIGHT_PARENTHESIS) {
+				styleDepth--;
+			}
+			continue;
+		}
+		if (token.type === TT_AT_KEYWORD) {
+			containerPrelude =
+				unescapeIdentifier(
+					css.slice(token.start + 1, token.end)
+				).toLowerCase() === "container";
+		} else if (
+			token.type === TT_LEFT_CURLY_BRACKET ||
+			token.type === TT_SEMICOLON
+		) {
+			containerPrelude = false;
+		} else if (
+			containerPrelude &&
+			token.type === TT_FUNCTION &&
+			unescapeIdentifier(
+				css.slice(token.start, token.end - 1)
+			).toLowerCase() === "style"
+		) {
+			styleDepth = 1;
+			continue;
+		}
 		while (range < kept.length && kept[range][1] <= token.start) range++;
 		if (range < kept.length && token.start >= kept[range][0]) continue;
 		sites.push({
@@ -1209,10 +1268,14 @@ const CSS_RESPELLINGS = [
 const EXPECTED = [
 	{
 		relation: "respelling escape",
-		// Every one of them writes an escape, and nothing else in this relation
-		// does, so the backslash is what they have in common.
-		contains: "\\",
-		why: "the printed name keeps the source's spelling, so an escaped one costs the bytes the escape takes — the lookups behind it read the unescaped name, which is what `fix(css): read an escaped property name as the name it spells` settled. Unescaping the printed name where the plain spelling is valid would retire this; it is a re-encoding, so it has to show a compressed win first"
+		contains: "-> \\7a ",
+		why: "`*zoom: 1` is no declaration but the star hack an engine drops, which the printer writes back as authored, escape included"
+	},
+	{
+		relation: "respelling escape",
+		contains: "-> \\76 ",
+		source: "parsing/cases/declaration.css",
+		why: "`prop: {value}{value}` is no declaration: it reparses as a rule whose selector `prop:` is invalid, which the printer writes back as authored"
 	},
 	{
 		relation: "respelling leading-zero",

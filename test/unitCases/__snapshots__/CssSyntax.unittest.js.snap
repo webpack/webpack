@@ -488,7 +488,7 @@ height: 100px important;
 z-index: 1 \\"\\" !important;
 padding: 1px !important;
 prop: red !important;
-color: red !imp\\\\ortant;
+color: red !important;
 }/*! test *//*! test */"
 `;
 
