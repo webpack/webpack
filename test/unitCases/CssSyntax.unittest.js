@@ -11817,6 +11817,9 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 			// A leading digit has to stay escaped, terminator and all.
 			[".\\31 .b{top:0}", ".\\31 .b{top:0}"],
 			["a{width:\\31 x(1px)}", "a{width:\\31x(1px)}"],
+			// A hex digit written after a kept escape would extend it: `\31a` is U+31A.
+			[".\\31\\61 {top:0}", ".\\31 a{top:0}"],
+			[".\\31\\61 b{top:0}", ".\\31 ab{top:0}"],
 			["a{width:--F\\6f o(1px)}", "a{width:--Foo(1px)}"],
 			["a{color:--\\72 ed}", "a{color:--red}"]
 		]) {
