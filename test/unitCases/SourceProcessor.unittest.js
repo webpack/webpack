@@ -19,6 +19,36 @@ const LANGUAGES = [
 ];
 
 describe("SourceProcessor", () => {
+	it("reuses the caller's print options", () => {
+		const options = { mode: /** @type {const} */ ("minify") };
+		let received;
+		const processor = new GenericSourceProcessor(
+			(input, visitors, writer) =>
+				/** @type {InstanceType<typeof PrintContext>} */ (writer).printPiece(
+					null
+				),
+			(path, writer) => {
+				received = writer.options;
+				return "";
+			}
+		);
+
+		processor.process("", options);
+		expect(received).toBe(options);
+	});
+
+	it("shares the empty mapping column when source maps are not requested", () => {
+		const first = new PrintContext({ mode: "minify" }, () => "");
+		const second = new PrintContext({ mode: "minify" }, () => "");
+		const mapped = new PrintContext(
+			{ mode: "minify", source: "input.css" },
+			() => ""
+		);
+
+		expect(first._mappings).toBe(second._mappings);
+		expect(mapped._mappings).not.toBe(first._mappings);
+	});
+
 	// A language whose printer is a module of its own hands one of these over
 	// instead of the printer, so a walk that never prints never loads it.
 	describe("deferred printer", () => {
