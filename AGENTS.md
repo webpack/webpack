@@ -71,7 +71,7 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
   - `lib/dll/` — DllPlugin / DllReferencePlugin, and the two dependencies they own, `DllEntryDependency` and `DelegatedSourceDependency`.
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — target-specific runtime templates and externals presets. `lib/node/` also holds the three `ExternalModule*` dependencies, which only `NodeStuffPlugin` applies: they import a host module inline (`fileURLToPath` from `node:url` for `__dirname`) and are unrelated to `lib/externals/ExternalModule`, despite the name.
   - `lib/entry/` — the `entry` option: `EntryPlugin` with the `EntryDependency` it builds one from, `EntryOptionPlugin` (reads the option into it), `DynamicEntryPlugin` (function entry). `Entrypoint` is a `ChunkGroup` → `lib/graph/`.
-  - `lib/errors/` — error and warning class hierarchy.
+  - `lib/errors/` — every error and warning class, whatever raises them, and the helpers that shape them (`ErrorHelpers`, `deriveStackFromNestedError`). The raising plugin stays in its own directory and imports the class from here, so a diagnostic is found by kind rather than by which subsystem happened to emit it.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/externals/` — the `externals` option's module, factory plugin and presets.
   - `lib/fs/` — the filesystem webpack reads/writes through: `fs.js` declares the `InputFileSystem`/`OutputFileSystem` surface callers are typed against, plus path helpers; `FileSystemInfo` records the snapshots, timestamps and build dependencies watch and cache judge staleness from. `StackedCacheMap` is here for the same reason: `FileSystemInfo` alone keeps its timestamps in one, and it trades `delete`/`has` away to add whole maps at once. A target-supplied filesystem stays with its target (`NodeWatchFileSystem` in `lib/node/`). `lib/FileSystemInfo` stays a re-export (html-webpack-plugin types against it).
@@ -244,7 +244,7 @@ This applies equally to moves **between** `lib/` directories, where 6 is what ha
 
 A hint reuses existing reporting: `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`; hardcoding one list makes a hint impossible to escalate. Prefer an option saying _whether_ to run the check and leave severity to `performance.hints`.
 
-**`makeSerializable` follows from where a diagnostic is created.** Anything reachable from a module (`ModuleError`, `ModuleWarning`, `ModuleBuildError`) is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack (why nothing in `lib/performance/` registers). A wrong guess is silent except for `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there.
+**`makeSerializable` follows from where a diagnostic is created.** Anything reachable from a module (`ModuleError`, `ModuleWarning`, `ModuleBuildError`) is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack, which is why the size-limit and duplicate-package warnings register nothing. A wrong guess is silent except for `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there.
 
 ## Code conventions
 
