@@ -8,57 +8,57 @@
 // webpack validates, to its types and to its command line flags alike.
 
 /**
- * A path that is neither empty nor absolute.
+ * @inline
  * @minLength 1
  * @absolutePath false
  */
 export type NonEmptyRelativePath = string;
 
 /**
- * A JavaScript identifier, or several joined by dots.
+ * @inline
  * @minLength 1
  * @pattern ^[A-Za-z_$][A-Za-z0-9_$]*(\.[A-Za-z_$][A-Za-z0-9_$]*)*$
  */
 export type DottedIdentifier = string;
 
 /**
- * An absolute path.
+ * @inline
  * @absolutePath true
  */
 export type AbsolutePath = string;
 
 /**
- * A path that is not absolute.
+ * @inline
  * @absolutePath false
  */
 export type RelativePath = string;
 
 /**
- * A URL with the http or https scheme.
+ * @inline
  * @pattern ^https?://
  */
 export type HttpUrl = string;
 
 /**
- * A string that is not empty.
+ * @inline
  * @minLength 1
  */
 export type NonEmptyString = string;
 
 /**
- * A source map kind, spelled the way `devtool` takes it.
+ * @inline
  * @pattern ^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map(-debugids)?(-scopes)?$
  */
 export type DevToolSpelling = string;
 
 /**
- * A number that is not negative.
+ * @inline
  * @minimum 0
  */
 export type NonNegativeNumber = number;
 
 /**
- * A number of at least one.
+ * @inline
  * @minimum 1
  */
 export type PositiveNumber = number;

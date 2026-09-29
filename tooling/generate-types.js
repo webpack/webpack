@@ -262,7 +262,10 @@ const postprocess = async (code) => {
 	code = /** @type {string} */ (minified.code);
 
 	// banner
-	code = `/*
+	// WHY: the declaration beside it used to shadow it, so the validator was never
+	// type checked — minified code TypeScript would have plenty to say about.
+	code = `// @ts-nocheck
+/*
  * This file was automatically generated.
  * DO NOT MODIFY BY HAND.
  * Run \`yarn fix:special\` to update
@@ -305,37 +308,6 @@ const declaringModules = () => {
 };
 
 /**
- * @param {string} schemaPath absolute path of the schema
- * @param {string} title the schema's title
- * @param {string} relPath the schema's path relative to the schemas directory
- * @returns {string} the declaration file's content
- */
-const createDeclaration = (schemaPath, title, relPath) => {
-	const directory = path.dirname(relPath);
-	const basename = path.basename(relPath, path.extname(relPath));
-	const named = path.join(directory, basename).split(path.sep).join("/");
-	// WHY: a plugin declares its own options, so the type is where the code that
-	// reads it is; only what has not moved is still declared beside the schema.
-	const filename =
-		declaringModules().get(named) || path.resolve(root, declarations, named);
-	const fromSchemaToDeclaration = path
-		.relative(path.dirname(schemaPath), filename)
-		.replace(/\\/g, "/");
-	return `/*
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run \`yarn fix:special\` to update
- */
-declare const check: (options: ${
-		title
-			? `import(${JSON.stringify(fromSchemaToDeclaration)}).${title}`
-			: "any"
-	}) => boolean;
-export = check;
-`;
-};
-
-/**
  * @param {string} path the file to compare against
  * @param {string} expected the content the file must hold
  * @returns {boolean} whether the file already holds it
@@ -363,27 +335,15 @@ const updateFile = (path, expected) => {
  * @returns {Promise<boolean>} whether the validator is up to date
  */
 const precompileSchema = async (schemaFile) => {
-	const { absPath: schemaPath, relPath } = schemaFile;
+	const { absPath: schemaPath } = schemaFile;
 	if (path.basename(schemaPath).startsWith("_")) return true;
 	try {
-		const schema = schemaFile.parse();
-
-		const title = schema.title;
-		const processedSchema = processJson(schema);
+		const processedSchema = processJson(schemaFile.parse());
 		processedSchema.$id = pathToFileURL(schemaPath).href;
 		const validate = await ajv.compileAsync(processedSchema);
 		const code = await postprocess(standaloneCode(ajv, validate));
 		const precompiledSchemaPath = schemaPath.replace(/\.json$/, ".check.js");
-		const precompiledSchemaDeclarationPath = schemaPath.replace(
-			/\.json$/,
-			".check.d.ts"
-		);
-		const codeIsCurrent = updateFile(precompiledSchemaPath, code);
-		const declarationIsCurrent = updateFile(
-			precompiledSchemaDeclarationPath,
-			createDeclaration(schemaPath, title, relPath)
-		);
-		return codeIsCurrent && declarationIsCurrent;
+		return updateFile(precompiledSchemaPath, code);
 	} catch (err) {
 		const error = /** @type {Error} */ (err);
 
