@@ -1246,36 +1246,18 @@ describe("syntax-printer", () => {
 				PHASES.find((phase) => phase.name === "minify")
 			);
 		const modules = {
-			directory: "/nowhere",
+			version: require("terser/package.json").version,
+			minify() {},
 			compress: { Compressor() {} },
 			propmangle: { mangle_private_properties() {} },
 			sourcemap: { SourceMap() {} },
 			utils: { map_from_object() {}, map_to_object() {}, HOP() {} }
 		};
-		expect(driver.supports({ ...modules, directory: undefined })).toBe(false);
-		// No `lib/minify.js` there to read.
+		// Another release, whose module-private driver the phase cannot read.
+		expect(driver.supports({ ...modules, version: "0.0.0" })).toBe(false);
+		expect(driver.supports({ ...modules, minify: undefined })).toBe(false);
+		// The pinned release, but a `minify` whose source is not the one pinned.
 		expect(driver.supports(modules)).toBe(false);
-		expect(
-			driver.supports({
-				...modules,
-				directory: require("path").dirname(require.resolve("acorn/package.json"))
-			})
-		).toBe(false);
-		// A driver whose source is not the one the phase pins.
-		const fs = require("fs");
-		const os = require("os");
-		const path = require("path");
-		const directory = fs.mkdtempSync(path.join(os.tmpdir(), "terser-"));
-		const file = path.join(directory, "lib", "minify.js");
-		fs.mkdirSync(path.dirname(file));
-		fs.writeFileSync(file, "export function minify() {}");
-		try {
-			expect(driver.supports({ ...modules, directory })).toBe(false);
-		} finally {
-			fs.unlinkSync(file);
-			fs.rmdirSync(path.dirname(file));
-			fs.rmdirSync(directory);
-		}
 	});
 
 	it("should decline a terser whose unused-name dropping it does not know", () => {
@@ -1323,27 +1305,10 @@ describe("syntax-printer", () => {
 				PHASES.find((phase) => phase.name === "reduce")
 			);
 		const modules = await loadSources();
-		expect(reduce.supports({ ...modules, directory: undefined })).toBe(false);
+		// Another release, whose module-private helpers the phase cannot read.
+		expect(reduce.supports({ ...modules, version: "0.0.0" })).toBe(false);
 		expect(reduce.supports({ ...modules, flags: {} })).toBe(false);
-		// No `lib/compress/reduce-vars.js` there to read.
-		expect(reduce.supports({ ...modules, directory: "/nowhere" })).toBe(false);
-		// A file whose source is not the one the phase pins.
-		const fs = require("fs");
-		const os = require("os");
-		const path = require("path");
-		const directory = fs.mkdtempSync(path.join(os.tmpdir(), "terser-"));
-		const file = path.join(directory, "lib", "compress", "reduce-vars.js");
-		fs.mkdirSync(path.dirname(file), { recursive: true });
-		fs.writeFileSync(file, "export {};");
-		try {
-			expect(reduce.supports({ ...modules, directory })).toBe(false);
-		} finally {
-			fs.unlinkSync(file);
-			fs.rmdirSync(path.dirname(file));
-			fs.rmdirSync(path.dirname(path.dirname(file)));
-			fs.rmdirSync(directory);
-		}
-		// The pinned file, but a walk running it that is not the one pinned.
+		// The pinned release, but a walk running the analysis that is not pinned.
 		const ast = {
 			...modules.ast,
 			AST_Toplevel: { prototype: { reset_opt_flags() {} } }
