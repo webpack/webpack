@@ -1364,15 +1364,43 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 		const held = node.$ref && inlined.get(readReference(node.$ref).name);
 		return held || node;
 	};
+	/**
+	 * The inlined type a node names, from either place a reference may sit.
+	 * @param {Record<string, EXPECTED_ANY>} node a node being put back
+	 * @returns {string} the name, or the empty string where it names none
+	 */
+	const namedInline = (node) => {
+		const one =
+			Array.isArray(node.oneOf) && node.oneOf.length === 1
+				? node.oneOf[0]
+				: undefined;
+		const written = node.$ref || (one && one.$ref);
+		if (!written) return "";
+		const { name } = readReference(written);
+		return inlined.has(name) ? name : "";
+	};
 	// WHY: one inlined type is written as another — a name for a constraint is
-	// itself a name — so a body is put back until it names none of them.
+	// itself a name — so a body is put back until it names none of them. Two that
+	// name each other would never stop, and a schema that cannot be derived says
+	// so rather than hanging: TypeScript would refuse the same pair, but nothing
+	// here resolves a type, so this is the only place it is caught.
 	const resolved = walkSchema(document, (node) => {
 		let current = node;
+		const seen = new Set();
 		for (
 			let step = substitute(current);
 			step !== current;
 			step = substitute(current)
 		) {
+			const name = namedInline(current);
+			if (name !== "") {
+				if (seen.has(name)) {
+					throw new Error(
+						`${name} is written as a type that is written as ${name}: an inlined type cannot name itself, by any number of steps`
+					);
+				}
+				seen.add(name);
+			}
 			current = step;
 		}
 		return current;
