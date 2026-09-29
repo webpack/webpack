@@ -5,6 +5,11 @@
  */
 
 import { Buffer } from "buffer";
+import { CompiledAliasOptions } from "enhanced-resolve/types/AliasUtils";
+import {
+	ResolveOptions as ResolveOptionsImport,
+	UserResolveOptions
+} from "enhanced-resolve/types/ResolverFactory";
 import {
 	ArrayExpression,
 	ArrayPattern,
@@ -122,7 +127,6 @@ import {
 	TypedHookMap
 } from "tapable";
 import { minify } from "terser";
-import { URL } from "url";
 import { Context as ContextImport } from "vm";
 import {
 	addScopesToSourceMap,
@@ -333,12 +337,6 @@ declare interface AggressiveSplittingPluginOptions {
 	 * Byte, split point. (Default: 30kiB).
 	 */
 	minSize?: number;
-}
-type Alias = string | false | string[];
-declare interface AliasOption {
-	alias: Alias;
-	name: string;
-	onlyModule?: boolean;
 }
 
 /**
@@ -928,7 +926,7 @@ declare interface BaseResolveRequest {
 	/**
 	 * content
 	 */
-	context?: ContextTypes;
+	context?: ContextResolver;
 
 	/**
 	 * description file path
@@ -943,7 +941,7 @@ declare interface BaseResolveRequest {
 	/**
 	 * description file data
 	 */
-	descriptionFileData?: JsonObjectTypes;
+	descriptionFileData?: JsonObjectResolver;
 
 	/**
 	 * tsconfig paths map
@@ -964,6 +962,11 @@ declare interface BaseResolveRequest {
 	 * true when full specified, otherwise false
 	 */
 	fullySpecified?: boolean;
+
+	/**
+	 * package id the request was resolved to in the package map, to be propagated to resolutions made from the resulting file (`@experimental`, see the `packageMap` option)
+	 */
+	packageId?: string;
 
 	/**
 	 * inner request for internal usage
@@ -1552,7 +1555,7 @@ declare const CIRCULAR_CONNECTION: unique symbol;
  * Abstract cache interface backed by tapable hooks for reading, writing, idle
  * transitions, and shutdown across webpack cache implementations.
  */
-declare class CacheClass {
+declare class Cache {
 	/**
 	 * Initializes the cache lifecycle hooks implemented by cache backends.
 	 */
@@ -1737,9 +1740,6 @@ declare interface CacheGroupsContext {
 	chunkGraph: ChunkGraph;
 }
 type CacheOptionsNormalized = false | FileCacheOptions | MemoryCacheOptions;
-declare interface CacheTypes {
-	[index: string]: undefined | ResolveRequest | ResolveRequest[];
-}
 declare interface CachedData {
 	/**
 	 * source
@@ -4418,73 +4418,6 @@ declare interface CompilationParams {
 	normalModuleFactory: NormalModuleFactory;
 	contextModuleFactory: ContextModuleFactory;
 }
-declare interface CompiledAliasOption {
-	/**
-	 * original alias name
-	 */
-	name: string;
-
-	/**
-	 * name + "/" — precomputed to avoid per-resolve concat
-	 */
-	nameWithSlash: string;
-
-	/**
-	 * alias target(s)
-	 */
-	alias: Alias;
-
-	/**
-	 * normalized onlyModule flag
-	 */
-	onlyModule: boolean;
-
-	/**
-	 * absolute form of `name` (with slash ending), null when not absolute
-	 */
-	absolutePath: null | string;
-
-	/**
-	 * substring before the single "*" in `name`, null when no wildcard
-	 */
-	wildcardPrefix: null | string;
-
-	/**
-	 * substring after the single "*" in `name`, null when no wildcard
-	 */
-	wildcardSuffix: null | string;
-
-	/**
-	 * first character code of `name` — used as a cheap screen on the hot path. `-1` indicates "matches any first char" (empty wildcard prefix).
-	 */
-	firstCharCode: number;
-
-	/**
-	 * true when `alias` is an array — precomputed so the hot path skips `Array.isArray`
-	 */
-	arrayAlias: boolean;
-}
-declare interface CompiledAliasOptions {
-	/**
-	 * declaration-ordered list
-	 */
-	all: CompiledAliasOption[];
-
-	/**
-	 * bucketed by first char code
-	 */
-	byFirstChar: Map<number, CompiledAliasOption[]>;
-
-	/**
-	 * true when an empty-prefix wildcard is present
-	 */
-	hasAnyFirstChar: boolean;
-
-	/**
-	 * true when the bucket fast-path should be used at resolve time
-	 */
-	useBuckets: boolean;
-}
 
 /**
  * Defines the compiled rule type used by this module.
@@ -4602,7 +4535,7 @@ declare class Compiler {
 	options: WebpackOptionsNormalized;
 	context: string;
 	requestShortener: RequestShortener;
-	cache: CacheClass;
+	cache: Cache;
 	moduleMemCaches?: Map<Module, ModuleMemCachesItem>;
 	compilerPath: string;
 	running: boolean;
@@ -5215,12 +5148,12 @@ declare interface Configuration {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptions;
+	resolve?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader?: ResolveOptions;
+	resolveLoader?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options affecting how file system snapshots are created and validated.
@@ -5565,7 +5498,7 @@ declare interface ContextModuleOptionsExtras {
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
-	resolveOptions?: ResolveOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 }
 declare interface ContextOptions {
 	mode: ContextMode;
@@ -5658,12 +5591,13 @@ declare class ContextReplacementPlugin {
 declare interface ContextResolveData {
 	context: string;
 	request: string;
-	resolveOptions?: ResolveOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
 	dependencies: ContextDependency[];
 }
+type ContextResolver = KnownContext & Record<any, any>;
 type ContextTimestamp =
 	| null
 	| "ignore"
@@ -5680,7 +5614,6 @@ declare interface ContextTimestampAndHash {
 	resolved?: ResolvedContextTimestampAndHash;
 	symlinks?: Set<string>;
 }
-type ContextTypes = KnownContext & Record<any, any>;
 
 /**
  * What every callback of a pattern other than `filename` and `transform` reads
@@ -7434,7 +7367,7 @@ declare interface DirentFs<T extends string | Buffer = string> {
 	 */
 	path?: string;
 }
-declare interface DirentTypes<T extends string | Buffer = string> {
+declare interface DirentResolver<T extends string | Buffer = string> {
 	/**
 	 * true when is file, otherwise false
 	 */
@@ -7971,7 +7904,7 @@ declare interface EffectData {
 	attributes?: ImportAttributes;
 	mimetype?: string;
 	dependency: string;
-	descriptionData?: JsonObjectTypes;
+	descriptionData?: JsonObjectResolver;
 	descriptionRelativePath?: string;
 	compiler?: string;
 	issuer: string;
@@ -8178,7 +8111,7 @@ type EncodingOptionFs =
 	| "binary"
 	| "hex"
 	| ObjectEncodingOptionsFs;
-type EncodingOptionTypes =
+type EncodingOptionResolver =
 	| undefined
 	| null
 	| "ascii"
@@ -8193,7 +8126,7 @@ type EncodingOptionTypes =
 	| "latin1"
 	| "binary"
 	| "hex"
-	| ObjectEncodingOptionsTypes;
+	| ObjectEncodingOptionsResolver;
 
 /**
  * Defines the entry data type used by this module.
@@ -9544,13 +9477,6 @@ type ExpressionSyntaxParser =
 			type: "ParenthesizedExpression";
 			expression: ExpressionSyntaxParser;
 	  });
-declare interface ExtensionAliasOption {
-	alias: string | string[];
-	extension: string;
-}
-declare interface ExtensionAliasOptions {
-	[index: string]: string | string[];
-}
 type ExternalItem =
 	| string
 	| RegExp
@@ -9606,7 +9532,7 @@ declare interface ExternalItemFunctionData {
 	 * get a resolve function with the current resolver options
 	 */
 	getResolve: (
-		options?: ResolveOptions
+		options?: ResolveOptionsWebpackOptions
 	) =>
 		| ((
 				context: string,
@@ -10244,43 +10170,43 @@ declare interface FileSystem {
 	/**
 	 * read file method
 	 */
-	readFile: ReadFileTypes;
+	readFile: ReadFileResolver;
 
 	/**
 	 * readdir method
 	 */
-	readdir: ReaddirTypes;
+	readdir: ReaddirResolver;
 
 	/**
 	 * read json method
 	 */
 	readJson?: (
-		pathOrFileDescription: PathOrFileDescriptorTypes,
+		pathOrFileDescription: PathOrFileDescriptorResolver,
 		callback: (
 			err: null | Error | NodeJS.ErrnoException,
-			result?: JsonObjectTypes
+			result?: JsonObjectResolver
 		) => void
 	) => void;
 
 	/**
 	 * read link method
 	 */
-	readlink: ReadlinkTypes;
+	readlink: ReadlinkResolver;
 
 	/**
 	 * lstat method
 	 */
-	lstat?: LStatTypes;
+	lstat?: LStatResolver;
 
 	/**
 	 * stat method
 	 */
-	stat: StatTypes;
+	stat: StatResolver;
 
 	/**
 	 * realpath method
 	 */
-	realpath?: RealPathTypes;
+	realpath?: RealPathResolver;
 }
 
 /**
@@ -11872,7 +11798,7 @@ type IBigIntStatsFs = IStatsBaseFs<bigint> & {
 	ctimeNs: bigint;
 	birthtimeNs: bigint;
 };
-type IBigIntStatsTypes = IStatsBaseTypes<bigint> & {
+type IBigIntStatsResolver = IStatsBaseResolver<bigint> & {
 	atimeNs: bigint;
 	mtimeNs: bigint;
 	ctimeNs: bigint;
@@ -11909,7 +11835,7 @@ declare interface IStatsBaseFs<T> {
 	ctime: Date;
 	birthtime: Date;
 }
-declare interface IStatsBaseTypes<T> {
+declare interface IStatsBaseResolver<T> {
 	/**
 	 * is file
 	 */
@@ -12066,7 +11992,7 @@ declare interface IStatsFs {
 	ctime: Date;
 	birthtime: Date;
 }
-declare interface IStatsTypes {
+declare interface IStatsResolver {
 	/**
 	 * is file
 	 */
@@ -15895,15 +15821,15 @@ declare interface JsonObjectFs {
 	[index: string]:
 		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
 }
-declare interface JsonObjectTypes {
+declare interface JsonObjectResolver {
 	[index: string]:
 		| undefined
 		| null
 		| string
 		| number
 		| boolean
-		| JsonObjectTypes
-		| JsonValueTypes[];
+		| JsonObjectResolver
+		| JsonValueResolver[];
 }
 declare abstract class JsonParser extends ParserClass {
 	options: JsonParserOptions;
@@ -15932,8 +15858,8 @@ declare interface JsonParserOptions {
 }
 type JsonValueFs =
 	null | string | number | boolean | JsonObjectFs | JsonValueFs[];
-type JsonValueTypes =
-	null | string | number | boolean | JsonObjectTypes | JsonValueTypes[];
+type JsonValueResolver =
+	null | string | number | boolean | JsonObjectResolver | JsonValueResolver[];
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
 	static getCompilationHooks: (
@@ -16187,6 +16113,11 @@ declare interface KnownContext {
 	 * environments
 	 */
 	environments?: string[];
+
+	/**
+	 * package id of the importing file in the package map, propagated from a previous result to disambiguate package entries that share a location (`@experimental`, see the `packageMap` option)
+	 */
+	packageId?: string;
 }
 
 /**
@@ -16788,7 +16719,7 @@ declare interface KnownUnsafeCacheData {
 	/**
 	 * resolve options
 	 */
-	resolveOptions?: ResolveOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 	parserOptions?: ParserOptionsNormalModule;
 	generatorOptions?: GeneratorOptions;
 }
@@ -16824,6 +16755,39 @@ declare interface LStatFs {
 		) => void
 	): void;
 }
+declare interface LStatResolver {
+	(
+		path: PathLikeResolver,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IStatsResolver
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: undefined | (StatOptionsResolver & { bigint?: false }),
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IStatsResolver
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: StatOptionsResolver & { bigint: true },
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IBigIntStatsResolver
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: undefined | StatOptionsResolver,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IStatsResolver | IBigIntStatsResolver
+		) => void
+	): void;
+}
 
 /**
  * Describes the l stat sync shape.
@@ -16854,33 +16818,6 @@ declare interface LStatSync {
 		path: PathLikeFs,
 		options?: StatSyncOptions
 	): undefined | IStatsFs | IBigIntStatsFs;
-}
-declare interface LStatTypes {
-	(
-		path: PathLikeTypes,
-		callback: (err: null | NodeJS.ErrnoException, result?: IStatsTypes) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: undefined | (StatOptionsTypes & { bigint?: false }),
-		callback: (err: null | NodeJS.ErrnoException, result?: IStatsTypes) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: StatOptionsTypes & { bigint: true },
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			result?: IBigIntStatsTypes
-		) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: undefined | StatOptionsTypes,
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			result?: IStatsTypes | IBigIntStatsTypes
-		) => void
-	): void;
 }
 
 /**
@@ -18147,7 +18084,7 @@ declare class Module extends DependenciesBlock {
 	layer: null | string;
 	needId: boolean;
 	debugId: number;
-	resolveOptions?: ResolveOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 	factoryMeta?: FactoryMeta;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
@@ -18730,7 +18667,7 @@ declare interface ModuleFactoryCacheEntry {
  */
 declare interface ModuleFactoryCreateData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
-	resolveOptions?: ResolveOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 	context: string;
 	dependencies: Dependency[];
 }
@@ -19700,7 +19637,7 @@ declare interface ModuleSettings {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptions;
+	resolve?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Flags a module as with or without side effects.
@@ -20494,7 +20431,7 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	/**
 	 * options used for resolving requests from this module
 	 */
-	resolveOptions?: ResolveOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * enable/disable extracting source map
@@ -21146,7 +21083,7 @@ declare interface ObjectEncodingOptionsFs {
 		| "binary"
 		| "hex";
 }
-declare interface ObjectEncodingOptionsTypes {
+declare interface ObjectEncodingOptionsResolver {
 	/**
 	 * encoding
 	 */
@@ -24313,9 +24250,9 @@ type PathDataModule = PathData & {
 	chunkGraph: ChunkGraph;
 };
 type PathLikeFs = string | Buffer | URL;
-type PathLikeTypes = string | URL_url | Buffer;
+type PathLikeResolver = string | URL | Buffer;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
-type PathOrFileDescriptorTypes = string | number | URL_url | Buffer;
+type PathOrFileDescriptorResolver = string | number | URL | Buffer;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -24614,24 +24551,6 @@ declare interface PlatformTargetProperties {
 	 * universal ESM target spanning both web and node (target `"universal"` or `["web", "node"]`)
 	 */
 	universal?: null | boolean;
-}
-type Plugin =
-	| undefined
-	| null
-	| false
-	| ""
-	| 0
-	| { apply: (this: Resolver, resolver: Resolver) => void }
-	| ((this: Resolver, resolver: Resolver) => void);
-declare interface PnpApi {
-	/**
-	 * resolve to unqualified
-	 */
-	resolveToUnqualified: (
-		packageName: string,
-		issuer: string,
-		options: { considerBuiltins: boolean }
-	) => null | string;
 }
 
 /**
@@ -25457,6 +25376,59 @@ declare interface ReadFileFs {
 		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 }
+declare interface ReadFileResolver {
+	(
+		path: PathOrFileDescriptorResolver,
+		options:
+			undefined | null | ({ encoding?: null; flag?: string } & Abortable),
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
+	): void;
+	(
+		path: PathOrFileDescriptorResolver,
+		options:
+			| "ascii"
+			| "utf8"
+			| "utf-8"
+			| "utf16le"
+			| "utf-16le"
+			| "ucs2"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "latin1"
+			| "binary"
+			| "hex"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
+	): void;
+	(
+		path: PathOrFileDescriptorResolver,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf-8"
+			| "utf16le"
+			| "utf-16le"
+			| "ucs2"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "latin1"
+			| "binary"
+			| "hex"
+			| (ObjectEncodingOptionsResolver & { flag?: string } & Abortable),
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathOrFileDescriptorResolver,
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
+	): void;
+}
 
 /**
  * Describes the read file sync shape.
@@ -25487,59 +25459,6 @@ declare interface ReadFileSync {
 		path: PathOrFileDescriptorFs,
 		options: ObjectEncodingOptionsFs & { flag?: string }
 	): string | Buffer;
-}
-declare interface ReadFileTypes {
-	(
-		path: PathOrFileDescriptorTypes,
-		options:
-			undefined | null | ({ encoding?: null; flag?: string } & Abortable),
-		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
-	): void;
-	(
-		path: PathOrFileDescriptorTypes,
-		options:
-			| "ascii"
-			| "utf8"
-			| "utf-8"
-			| "utf16le"
-			| "utf-16le"
-			| "ucs2"
-			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
-			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
-		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
-	): void;
-	(
-		path: PathOrFileDescriptorTypes,
-		options:
-			| undefined
-			| null
-			| "ascii"
-			| "utf8"
-			| "utf-8"
-			| "utf16le"
-			| "utf-16le"
-			| "ucs2"
-			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
-			| (ObjectEncodingOptionsTypes & { flag?: string } & Abortable),
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			result?: string | Buffer
-		) => void
-	): void;
-	(
-		path: PathOrFileDescriptorTypes,
-		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
-	): void;
 }
 type ReadStreamOptions = StreamOptions & {
 	fs?: null | CreateReadStreamFSImplementation;
@@ -25644,6 +25563,101 @@ declare interface ReaddirFs {
 		) => void
 	): void;
 }
+declare interface ReaddirResolver {
+	(
+		path: PathLikeResolver,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf-8"
+			| "utf16le"
+			| "utf-16le"
+			| "ucs2"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "latin1"
+			| "binary"
+			| "hex"
+			| {
+					encoding:
+						| null
+						| "ascii"
+						| "utf8"
+						| "utf-8"
+						| "utf16le"
+						| "utf-16le"
+						| "ucs2"
+						| "ucs-2"
+						| "base64"
+						| "base64url"
+						| "latin1"
+						| "binary"
+						| "hex";
+					withFileTypes?: false;
+					recursive?: boolean;
+			  },
+		callback: (err: null | NodeJS.ErrnoException, files?: string[]) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options:
+			| "buffer"
+			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
+		callback: (err: null | NodeJS.ErrnoException, files?: Buffer[]) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf-8"
+			| "utf16le"
+			| "utf-16le"
+			| "ucs2"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "latin1"
+			| "binary"
+			| "hex"
+			| (ObjectEncodingOptionsResolver & {
+					withFileTypes?: false;
+					recursive?: boolean;
+			  }),
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			files?: string[] | Buffer[]
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		callback: (err: null | NodeJS.ErrnoException, files?: string[]) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: ObjectEncodingOptionsResolver & {
+			withFileTypes: true;
+			recursive?: boolean;
+		},
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			files?: DirentResolver<string>[]
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: { encoding: "buffer"; withFileTypes: true; recursive?: boolean },
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			files: DirentResolver<Buffer>[]
+		) => void
+	): void;
+}
 
 /**
  * Describes the readdir sync shape.
@@ -25723,98 +25737,6 @@ declare interface ReaddirSync {
 		options: { encoding: "buffer"; withFileTypes: true; recursive?: boolean }
 	): DirentFs<Buffer>[];
 }
-declare interface ReaddirTypes {
-	(
-		path: PathLikeTypes,
-		options:
-			| undefined
-			| null
-			| "ascii"
-			| "utf8"
-			| "utf-8"
-			| "utf16le"
-			| "utf-16le"
-			| "ucs2"
-			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
-			| {
-					encoding:
-						| null
-						| "ascii"
-						| "utf8"
-						| "utf-8"
-						| "utf16le"
-						| "utf-16le"
-						| "ucs2"
-						| "ucs-2"
-						| "base64"
-						| "base64url"
-						| "latin1"
-						| "binary"
-						| "hex";
-					withFileTypes?: false;
-					recursive?: boolean;
-			  },
-		callback: (err: null | NodeJS.ErrnoException, files?: string[]) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options:
-			| "buffer"
-			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
-		callback: (err: null | NodeJS.ErrnoException, files?: Buffer[]) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options:
-			| undefined
-			| null
-			| "ascii"
-			| "utf8"
-			| "utf-8"
-			| "utf16le"
-			| "utf-16le"
-			| "ucs2"
-			| "ucs-2"
-			| "base64"
-			| "base64url"
-			| "latin1"
-			| "binary"
-			| "hex"
-			| (ObjectEncodingOptionsTypes & {
-					withFileTypes?: false;
-					recursive?: boolean;
-			  }),
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			files?: string[] | Buffer[]
-		) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		callback: (err: null | NodeJS.ErrnoException, files?: string[]) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: ObjectEncodingOptionsTypes & {
-			withFileTypes: true;
-			recursive?: boolean;
-		},
-		callback: (err: null | NodeJS.ErrnoException, files?: DirentTypes[]) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: { encoding: "buffer"; withFileTypes: true; recursive?: boolean },
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			files: DirentTypes<Buffer>[]
-		) => void
-	): void;
-}
 
 /**
  * Describes the readlink shape.
@@ -25843,6 +25765,30 @@ declare interface ReadlinkFs {
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 }
+declare interface ReadlinkResolver {
+	(
+		path: PathLikeResolver,
+		options: EncodingOptionResolver,
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: BufferEncodingOption,
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: EncodingOptionResolver,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
+	): void;
+}
 
 /**
  * Describes the readlink sync shape.
@@ -25851,30 +25797,6 @@ declare interface ReadlinkSync {
 	(path: PathLikeFs, options?: EncodingOptionFs): string;
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
 	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
-}
-declare interface ReadlinkTypes {
-	(
-		path: PathLikeTypes,
-		options: EncodingOptionTypes,
-		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: BufferEncodingOption,
-		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: EncodingOptionTypes,
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			result?: string | Buffer
-		) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
-	): void;
 }
 declare class RealContentHashPlugin {
 	/**
@@ -25950,6 +25872,30 @@ declare interface RealPathFs {
 		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
 	): void;
 }
+declare interface RealPathResolver {
+	(
+		path: PathLikeResolver,
+		options: EncodingOptionResolver,
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: BufferEncodingOption,
+		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: EncodingOptionResolver,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
+	): void;
+}
 
 /**
  * Describes the real path sync shape.
@@ -25958,30 +25904,6 @@ declare interface RealPathSync {
 	(path: PathLikeFs, options?: EncodingOptionFs): string;
 	(path: PathLikeFs, options: BufferEncodingOption): Buffer;
 	(path: PathLikeFs, options?: EncodingOptionFs): string | Buffer;
-}
-declare interface RealPathTypes {
-	(
-		path: PathLikeTypes,
-		options: EncodingOptionTypes,
-		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: BufferEncodingOption,
-		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: EncodingOptionTypes,
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			result?: string | Buffer
-		) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		callback: (err: null | NodeJS.ErrnoException, result?: string) => void
-	): void;
 }
 type Records = KnownRecords &
 	Record<string, KnownRecords[]> &
@@ -26359,6 +26281,10 @@ declare interface ResolveBuildDependenciesResult {
 	 */
 	resolveDependencies: ResolveDependencies;
 }
+
+/**
+ * Resolve context
+ */
 declare interface ResolveContext {
 	/**
 	 * directories that was found on file system
@@ -26396,7 +26322,7 @@ declare interface ResolveContext {
  */
 declare interface ResolveData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
-	resolveOptions?: ResolveOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 	context: string;
 	request: string;
 	phase?: "defer" | "source" | "evaluation";
@@ -26438,7 +26364,7 @@ declare interface ResolveDependencies {
 /**
  * Options object for resolving requests.
  */
-declare interface ResolveOptions {
+declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Redirect module requests.
 	 */
@@ -26467,7 +26393,7 @@ declare interface ResolveOptions {
 	/**
 	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
 	 */
-	byDependency?: { [index: string]: ResolveOptions };
+	byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
 
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
@@ -26641,306 +26567,7 @@ declare interface ResolveOptions {
 	 */
 	useSyncFileSystemCalls?: boolean;
 }
-declare interface ResolveOptionsResolverFactoryObject1 {
-	/**
-	 * alias
-	 */
-	alias: AliasOption[];
-
-	/**
-	 * fallback
-	 */
-	fallback: AliasOption[];
-
-	/**
-	 * alias fields
-	 */
-	aliasFields: Set<string | string[]>;
-
-	/**
-	 * extension alias
-	 */
-	extensionAlias: ExtensionAliasOption[];
-
-	/**
-	 * apply extension alias to exports field targets
-	 */
-	extensionAliasForExports: boolean;
-
-	/**
-	 * cache predicate
-	 */
-	cachePredicate: (predicate: ResolveRequest) => boolean;
-
-	/**
-	 * cache with context
-	 */
-	cacheWithContext: boolean;
-
-	/**
-	 * A list of exports field condition names.
-	 */
-	conditionNames: Set<string>;
-
-	/**
-	 * description files
-	 */
-	descriptionFiles: string[];
-
-	/**
-	 * enforce extension
-	 */
-	enforceExtension: boolean;
-
-	/**
-	 * exports fields
-	 */
-	exportsFields: Set<string | string[]>;
-
-	/**
-	 * imports fields
-	 */
-	importsFields: Set<string | string[]>;
-
-	/**
-	 * extensions
-	 */
-	extensions: Set<string>;
-
-	/**
-	 * fileSystem
-	 */
-	fileSystem: FileSystem;
-
-	/**
-	 * unsafe cache
-	 */
-	unsafeCache: false | CacheTypes;
-
-	/**
-	 * symlinks
-	 */
-	symlinks: boolean;
-
-	/**
-	 * resolver
-	 */
-	resolver?: Resolver;
-
-	/**
-	 * modules
-	 */
-	modules: (string | string[])[];
-
-	/**
-	 * main fields
-	 */
-	mainFields: { name: string[]; forceRelative: boolean }[];
-
-	/**
-	 * main files
-	 */
-	mainFiles: Set<string>;
-
-	/**
-	 * plugins
-	 */
-	plugins: Plugin[];
-
-	/**
-	 * pnp API
-	 */
-	pnpApi: null | PnpApi;
-
-	/**
-	 * roots
-	 */
-	roots: Set<string>;
-
-	/**
-	 * fully specified
-	 */
-	fullySpecified: boolean;
-
-	/**
-	 * resolve to context
-	 */
-	resolveToContext: boolean;
-
-	/**
-	 * restrictions
-	 */
-	restrictions: Set<string | RegExp>;
-
-	/**
-	 * prefer relative
-	 */
-	preferRelative: boolean;
-
-	/**
-	 * prefer absolute
-	 */
-	preferAbsolute: boolean;
-
-	/**
-	 * tsconfig file path or config object
-	 */
-	tsconfig: string | boolean | TsconfigOptions;
-}
-declare interface ResolveOptionsResolverFactoryObject2 {
-	/**
-	 * A list of module alias configurations or an object which maps key to value
-	 */
-	alias?: UserAliasOptions | UserAliasOptionEntry[];
-
-	/**
-	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
-	 */
-	fallback?: UserAliasOptions | UserAliasOptionEntry[];
-
-	/**
-	 * An object which maps extension to extension aliases
-	 */
-	extensionAlias?: ExtensionAliasOptions;
-
-	/**
-	 * Also apply `extensionAlias` to paths resolved through the package.json `exports` field. Off by default (Node.js-aligned); when enabled, matches TypeScript's behavior for packages that ship TS sources alongside compiled JS.
-	 */
-	extensionAliasForExports?: boolean;
-
-	/**
-	 * A list of alias fields in description files
-	 */
-	aliasFields?: (string | string[])[];
-
-	/**
-	 * A function which decides whether a request should be cached or not. An object is passed with at least `path` and `request` properties.
-	 */
-	cachePredicate?: (predicate: ResolveRequest) => boolean;
-
-	/**
-	 * Whether or not the unsafeCache should include request context as part of the cache key.
-	 */
-	cacheWithContext?: boolean;
-
-	/**
-	 * A list of description files to read from
-	 */
-	descriptionFiles?: string[];
-
-	/**
-	 * A list of exports field condition names.
-	 */
-	conditionNames?: string[];
-
-	/**
-	 * Enforce that a extension from extensions must be used
-	 */
-	enforceExtension?: boolean;
-
-	/**
-	 * A list of exports fields in description files
-	 */
-	exportsFields?: (string | string[])[];
-
-	/**
-	 * A list of imports fields in description files
-	 */
-	importsFields?: (string | string[])[];
-
-	/**
-	 * A list of extensions which should be tried for files
-	 */
-	extensions?: string[];
-
-	/**
-	 * The file system which should be used
-	 */
-	fileSystem: FileSystem;
-
-	/**
-	 * Use this cache object to unsafely cache the successful requests
-	 */
-	unsafeCache?: boolean | CacheTypes;
-
-	/**
-	 * Resolve symlinks to their symlinked location
-	 */
-	symlinks?: boolean;
-
-	/**
-	 * A prepared Resolver to which the plugins are attached
-	 */
-	resolver?: Resolver;
-
-	/**
-	 * A list of directories to resolve modules from, can be absolute path, folder name, or a `file:` URL
-	 */
-	modules?: string | URL_url | (string | URL_url)[];
-
-	/**
-	 * A list of main fields in description files
-	 */
-	mainFields?: (
-		string | string[] | { name: string | string[]; forceRelative: boolean }
-	)[];
-
-	/**
-	 * A list of main files in directories
-	 */
-	mainFiles?: string[];
-
-	/**
-	 * A list of additional resolve plugins which should be applied
-	 */
-	plugins?: Plugin[];
-
-	/**
-	 * A PnP API that should be used - null is "never", undefined is "auto"
-	 */
-	pnpApi?: null | PnpApi;
-
-	/**
-	 * A list of root paths, each an absolute path or a `file:` URL
-	 */
-	roots?: (string | URL_url)[];
-
-	/**
-	 * The request is already fully specified and no extensions or directories are resolved for it
-	 */
-	fullySpecified?: boolean;
-
-	/**
-	 * Resolve to a context instead of a file
-	 */
-	resolveToContext?: boolean;
-
-	/**
-	 * A list of resolve restrictions, each an absolute path, a `file:` URL, or a RegExp
-	 */
-	restrictions?: (string | RegExp | URL_url)[];
-
-	/**
-	 * Use only the sync constraints of the file system calls
-	 */
-	useSyncFileSystemCalls?: boolean;
-
-	/**
-	 * Prefer to resolve module requests as relative requests before falling back to modules
-	 */
-	preferRelative?: boolean;
-
-	/**
-	 * Prefer to resolve server-relative urls as absolute paths before falling back to resolve in roots
-	 */
-	preferAbsolute?: boolean;
-
-	/**
-	 * TypeScript config file path (or `file:` URL) or config object with configFile and references
-	 */
-	tsconfig?: string | boolean | URL_url | UserTsconfigOptions;
-}
-type ResolveOptionsWithDependencyType = ResolveOptions & {
+type ResolveOptionsWithDependencyType = ResolveOptionsWebpackOptions & {
 	dependencyType?: string;
 	resolveToContext?: boolean;
 };
@@ -27104,7 +26731,7 @@ declare interface ResolvedOptionsSyntaxParser {
 }
 declare abstract class Resolver {
 	fileSystem: FileSystem;
-	options: ResolveOptionsResolverFactoryObject1;
+	options: ResolveOptionsImport;
 	pathCache: PathCacheFunctions;
 	hooks: KnownHooks;
 	ensureHook(
@@ -27130,30 +26757,30 @@ declare abstract class Resolver {
 		null | ResolveRequest
 	>;
 	resolveSync(
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		parent: string | URL,
+		specifier: string | URL,
 		resolveContext?: ResolveContext
 	): string | false;
 	resolveSync(
-		context: ContextTypes,
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		context: ContextResolver,
+		parent: string | URL,
+		specifier: string | URL,
 		resolveContext?: ResolveContext
 	): string | false;
 	resolvePromise(
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		parent: string | URL,
+		specifier: string | URL,
 		resolveContext?: ResolveContext
 	): Promise<string | false>;
 	resolvePromise(
-		context: ContextTypes,
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		context: ContextResolver,
+		parent: string | URL,
+		specifier: string | URL,
 		resolveContext?: ResolveContext
 	): Promise<string | false>;
 	resolve(
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		parent: string | URL,
+		specifier: string | URL,
 		callback: (
 			err: null | ErrorWithDetail,
 			res?: string | false,
@@ -27161,8 +26788,8 @@ declare abstract class Resolver {
 		) => void
 	): void;
 	resolve(
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		parent: string | URL,
+		specifier: string | URL,
 		resolveContext: ResolveContext,
 		callback: (
 			err: null | ErrorWithDetail,
@@ -27171,9 +26798,9 @@ declare abstract class Resolver {
 		) => void
 	): void;
 	resolve(
-		context: ContextTypes,
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		context: ContextResolver,
+		parent: string | URL,
+		specifier: string | URL,
 		callback: (
 			err: null | ErrorWithDetail,
 			res?: string | false,
@@ -27181,9 +26808,9 @@ declare abstract class Resolver {
 		) => void
 	): void;
 	resolve(
-		context: ContextTypes,
-		parent: string | URL_url,
-		specifier: string | URL_url,
+		context: ContextResolver,
+		parent: string | URL,
+		specifier: string | URL,
 		resolveContext: ResolveContext,
 		callback: (
 			err: null | ErrorWithDetail,
@@ -27227,13 +26854,7 @@ declare abstract class ResolverFactory {
 			>
 		>;
 		resolver: HookMap<
-			SyncHook<
-				[
-					Resolver,
-					ResolveOptionsResolverFactoryObject2,
-					ResolveOptionsWithDependencyType
-				]
-			>
+			SyncHook<[Resolver, UserResolveOptions, ResolveOptionsWithDependencyType]>
 		>;
 	}>;
 	cache: Map<string, ResolverCache>;
@@ -27651,7 +27272,7 @@ declare interface RuleSetRule {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptions;
+	resolve?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Match the resource path of the module.
@@ -30444,11 +30065,44 @@ declare interface StatFs {
 declare interface StatOptionsFs {
 	bigint?: boolean;
 }
-declare interface StatOptionsTypes {
+declare interface StatOptionsResolver {
 	/**
 	 * need bigint values
 	 */
 	bigint?: boolean;
+}
+declare interface StatResolver {
+	(
+		path: PathLikeResolver,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IStatsResolver
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: undefined | (StatOptionsResolver & { bigint?: false }),
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IStatsResolver
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: StatOptionsResolver & { bigint: true },
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IBigIntStatsResolver
+		) => void
+	): void;
+	(
+		path: PathLikeResolver,
+		options: undefined | StatOptionsResolver,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			result?: IStatsResolver | IBigIntStatsResolver
+		) => void
+	): void;
 }
 
 /**
@@ -30488,33 +30142,6 @@ declare interface StatSync {
 declare interface StatSyncOptions {
 	bigint?: boolean;
 	throwIfNoEntry?: boolean;
-}
-declare interface StatTypes {
-	(
-		path: PathLikeTypes,
-		callback: (err: null | NodeJS.ErrnoException, result?: IStatsTypes) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: undefined | (StatOptionsTypes & { bigint?: false }),
-		callback: (err: null | NodeJS.ErrnoException, result?: IStatsTypes) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: StatOptionsTypes & { bigint: true },
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			result?: IBigIntStatsTypes
-		) => void
-	): void;
-	(
-		path: PathLikeTypes,
-		options: undefined | StatOptionsTypes,
-		callback: (
-			err: null | NodeJS.ErrnoException,
-			result?: IStatsTypes | IBigIntStatsTypes
-		) => void
-	): void;
 }
 type Statement =
 	| FunctionDeclaration
@@ -31750,22 +31377,6 @@ declare interface TrustedTypes {
 	 */
 	policyName?: string;
 }
-declare interface TsconfigOptions {
-	/**
-	 * A relative path to the tsconfig file based on cwd, or an absolute path of tsconfig file
-	 */
-	configFile?: string;
-
-	/**
-	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths
-	 */
-	references?: string[] | "auto";
-
-	/**
-	 * Override baseUrl from tsconfig.json. If provided, this value will be used instead of the baseUrl in the tsconfig file
-	 */
-	baseUrl?: string;
-}
 declare interface TsconfigPathsData {
 	/**
 	 * tsconfig file data
@@ -31813,7 +31424,6 @@ declare class TypeScriptPlugin {
 	apply(compiler: Compiler): void;
 }
 declare const UNDEFINED_MARKER: unique symbol;
-declare interface URL_url extends URL {}
 type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
 
 /**
@@ -31916,32 +31526,6 @@ declare interface UrlHintRule {
 type Usage = string | true | TopLevelSymbol;
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[] | InlinedUsedName;
-declare interface UserAliasOptionEntry {
-	alias: UserAliasOptionNewRequest;
-	name: string;
-	onlyModule?: boolean;
-}
-type UserAliasOptionNewRequest =
-	string | false | URL_url | (string | URL_url)[];
-declare interface UserAliasOptions {
-	[index: string]: UserAliasOptionNewRequest;
-}
-declare interface UserTsconfigOptions {
-	/**
-	 * A path, or `file:` URL, pointing at the tsconfig file
-	 */
-	configFile?: string | URL_url;
-
-	/**
-	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths or `file:` URLs
-	 */
-	references?: "auto" | (string | URL_url)[];
-
-	/**
-	 * Override baseUrl from tsconfig.json with a path or `file:` URL
-	 */
-	baseUrl?: string | URL_url;
-}
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
 declare interface Values {
@@ -32776,12 +32360,12 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve: ResolveOptions;
+	resolve: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader: ResolveOptions;
+	resolveLoader: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options affecting how file system snapshots are created and validated.
@@ -33290,7 +32874,7 @@ declare namespace exports {
 		Used: 4;
 	}>;
 	export namespace cache {
-		export { CacheClass as Cache, MemoryCachePlugin };
+		export { Cache, MemoryCachePlugin };
 	}
 	export namespace config {
 		export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
@@ -35033,7 +34617,7 @@ declare namespace exports {
 		) => void
 	) => void;
 	export type ExternalItemFunctionDataGetResolve = (
-		options?: ResolveOptions
+		options?: ResolveOptionsWebpackOptions
 	) =>
 		| ((
 				context: string,
@@ -35073,7 +34657,7 @@ declare namespace exports {
 		/** Resolves every module of the last build eagerly. @deprecated use `prefetch.AutomaticPrefetchPlugin` — TODO in the next major release: remove */ AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
 		BannerPlugin,
-		/** The cache a compilation stores and restores through. @deprecated use `cache.Cache` — TODO in the next major release: remove */ CacheClass as Cache,
+		/** The cache a compilation stores and restores through. @deprecated use `cache.Cache` — TODO in the next major release: remove */ Cache,
 		Chunk,
 		ChunkGraph,
 		CleanPlugin,
@@ -35148,7 +34732,7 @@ declare namespace exports {
 		MemoryCacheOptions,
 		ModuleOptions,
 		ParserOptionsByModuleTypeKnown,
-		ResolveOptions,
+		ResolveOptionsWebpackOptions as ResolveOptions,
 		RuleSetCondition,
 		RuleSetConditionAbsolute,
 		RuleSetRule,
