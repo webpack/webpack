@@ -202,6 +202,12 @@ describe("ChunkGraph", () => {
 			chunkGraph.connectChunkAndModule(chunk, module);
 			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual(["a"]);
 			expect([...chunkGraph.getModuleChunksIterable(module)]).toEqual([chunk]);
+			// This array is the membership itself, so modifying it would change the
+			// graph without the chunk side hearing of it.
+			expect(() =>
+				/** @type {EXPECTED_ANY} */
+				(chunkGraph.getModuleChunks(module)).push(new Chunk("b", false))
+			).toThrow();
 		});
 
 		it("takes a third chunk into the set it already has", () => {
