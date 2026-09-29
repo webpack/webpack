@@ -105,7 +105,7 @@ git log --format='%h author=%an <%ae> committer=%cn <%ce>' origin/main..HEAD
 
 **Then re-run the tests covering your change**: git rebases text, not meaning, so a renamed helper, changed default or shared fixture landing on `main` can break your code with no conflict.
 
-A stale base also makes CI lie both ways: `Code Size` and benchmarks compare against `main`'s last report, attributing commits your branch predates to you (a one-line diff reported as `+163 KiB`), and a red check may be a defect already fixed on `main`. So when `main` moves under a long-lived PR, rebase and push again instead of reading a cross-base comparison. `update_pull_request_branch` is fine when the repo is configured to rebase; otherwise rebase locally as above.
+A stale base also makes CI lie both ways: `Code Size` and benchmarks compare against `main`'s last report, attributing commits your branch predates to you (a one-line diff reported as `+163 KiB`), and a red check may be a defect already fixed on `main`. So when `main` moves under a long-lived PR, don't read a cross-base comparison as a result: ask the requester before rebasing an open PR ([below](#watching-a-pr-and-updating-its-branch)), and once they agree, rebase locally as above, or use `update_pull_request_branch` when the repo is configured to rebase.
 
 ## Pull request body
 
@@ -189,7 +189,7 @@ Anything naming a possible bug, regression or improvement must be investigated, 
 
 **The target is the whole run green — every check.** A red check is never something to explain, defer or wait out; no wake on one ends without a pushed commit or a reply naming the blocker, and "that one isn't important" is not your call.
 
-- **A check that failed once is re-run before it's believed.** Infrastructure fails (runner dies, network fetch times out, an engine crashes on its own bug — the tell is a job reporting every test passing then dying anyway). Re-run the failing job once; **if the re-run fails the same way, it is real** — root-cause and fix it, unless the job died before any test ran (checkout, install, runner loss): then say so on the PR and move on. No more re-runs, and never skip or disable a test to get green.
+- **A check that failed once is re-run before it's believed.** Infrastructure fails (runner dies, network fetch times out, an engine crashes on its own bug — the tell is a job reporting every test passing then dying anyway). Re-run the failing job once; **if the re-run fails the same way, it is real** — root-cause and fix it, unless the job died before any test ran (checkout, install, runner loss): then report it in the session (posting on the PR needs the requester's OK, [below](#writing-on-github--ask-first)) and move on. No more re-runs, and never skip or disable a test to get green.
 - **Coverage is read only once the uploading suites finish** (below).
 
 Neither excuses a check you can run yourself: **one that reproduces locally is never re-run and shrugged at** — it's your failure until a run on unmodified `main` proves otherwise. Fix and push.
