@@ -1394,6 +1394,21 @@ describe("syntax-printer", () => {
 		expect(first.equivalent_to(second)).toBe(true);
 	});
 
+	it("should refuse an option terser refuses", async () => {
+		const { minify } = await load();
+		const options = /** @type {EXPECTED_ANY} */ ({ unknown: true });
+		const reference = await require("terser")
+			.minify("a;", options)
+			.then(
+				() => "",
+				(/** @type {Error} */ err) => `${err.name}: ${err.message}`
+			);
+		await expect(minify("a;", options)).rejects.toThrow(
+			reference.replace(/^DefaultsError: /, "")
+		);
+		expect(reference).toMatch(/^DefaultsError: /);
+	});
+
 	it("should write the source map terser writes", async () => {
 		const { minify } = await load();
 		const terser = require("terser");
