@@ -271,6 +271,18 @@ One upstream corpus is vendored rather than pinned as a submodule:
 
 - `test/fixtures/acorn-corpus.json` — acorn's test suite — the one upstream corpus vendored rather than pinned, because acorn's npm tarball ships no tests. `unitCases/WebpackParser.unittest.js` holds both webpack parser entry points to it and owns recording it (no generator script or `package.json` entry): it replays acorn's `test/tests*.js` against a recording driver, keeping sources and options but never expected trees, which come from acorn itself. Bumping the `acorn` devDependency moves the corpus; to refresh, clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run with `WEBPACK_UPDATE_ACORN_CORPUS=1`. With that checkout present the run checks the vendored corpus against it; without it (CI, most machines) the corpus stands on the version it names, which the run pins to the installed acorn.
 
+### Running one integration case
+
+**Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
+
+```sh
+yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<category> <case>"
+```
+
+Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [below](#how-to-run-tests)). The `test262`, `html5lib`, `syntax-equivalence` and `css-parsing` suites need submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
+
+**A `configCases/` case** is a mini project: `index.js` (assertions; a throw fails) plus `webpack.config.js`; the emitted bundle is executed, so it must run. Optional: `errors.js` / `warnings.js` export matcher arrays for expected diagnostics (otherwise any error/warning fails the case); `test.filter.js` returns `false` to skip (e.g. by Node version when the fixture itself needs newer syntax — see [Target the Node baseline](AGENTS.md#target-the-node-baseline)); `test.config.js` customizes the run (e.g. `findBundle`).
+
 ## How to Run Tests
 
 To execute all tests:

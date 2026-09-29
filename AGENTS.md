@@ -4,7 +4,13 @@
 
 A `> [!REQUIRED]` callout directly under a heading makes that whole section **mandatory**: follow it exactly — do not paraphrase, skip, or substitute a similar-looking convention from other tooling. Reviewers keep flagging skipped or partly filled REQUIRED sections (especially the [Pull request body](docs/pull-requests.md#pull-request-body)), and every such skip blocks the PR — so re-read each one in full whenever it applies instead of relying on memory or a previous task's output. Sections without the callout are guidance — apply judgement.
 
-**Editing this guide:** keep every change short and simple, and never drop a rule, fact, number or reason to shorten it — reword or merge instead.
+**Editing this guide.** Keep every change short and simple. Every session loads this file whole, so each line costs every task:
+
+- **Size budget: 40,000 characters**, where Claude Code starts warning about a large instruction file. Check `wc -c AGENTS.md` after every edit; over budget, move a task-specific section to `docs/<topic>.md`, leaving its heading, its `[!REQUIRED]` callout, one line per rule it enforces and a link.
+- **What stays here**: rules every task needs — "never" prohibitions, conventions touching every edit, gotchas that look safe but aren't. **What moves**: workflows for one kind of task, reference material, explanations of a tool, maps.
+- **Never drop a rule, fact, number or reason to shorten** — move it verbatim, or reword or merge.
+- **One fact, one place**: link instead of restating, and don't copy what the repo already says (a directory listing, the `package.json` scripts, a signature).
+- **Docs live in `docs/`**, never `lib/` (it is published); renaming a heading breaks its `#anchor` links, so grep for them.
 
 ## Project overview
 
@@ -33,7 +39,7 @@ All defined in `package.json` `scripts`.
 - `yarn test:unit` — All `*.unittest.js`.
 - `yarn test:integration` — Integration suites (`basictest`/`longtest`/`test`).
 - `yarn test:test262` / `test:html5lib` / `test:css-parsing` — Spec-conformance suites.
-- `yarn test:minify-corpora` — webpack's JS minifier vs the published one it replaces, byte for byte (errors included), over every JS corpus: terser's own `test/compress` and `test/input`, test262, and swc's minifier tests; where a test states what its input prints, the output is also run and must print it. `PHASES=` picks the printer phases installed; `JS_MINIFY_REPORT=<file>` writes where swc's recorded output is smaller.
+- `yarn test:minify-corpora` — webpack's JS minifier vs the published one it replaces, byte for byte, over every JS corpus ([details](docs/syntax.md#javascript)).
 - `yarn test:syntax-equivalence` — HTML/CSS printers vs a real browser's reading of their output (`configCases`, `wpt`).
 - `yarn test:base -u` — Update snapshots (eyeball the diff first).
 - `yarn test:size` — Generated-code size over all `configCases/` (per asset, plus runtime modules per runtime).
@@ -99,24 +105,11 @@ They are documentation only (stripped from precompiled validators). A pure `$ref
 
 > [!REQUIRED]
 
-**Run `yarn find-deep-imports:check` on every move, before committing.** A path leaving `lib/` root breaks any published package importing it; `tooling/deep-webpack-imports.json` records which. `--write` refreshes it off the registry; `--check` needs no network and is what CI runs. Its `removed` map (paths no webpack 5 build can reach) is disjoint from the imports — `--write` skips a path `removed` names.
+**Read [docs/architecture.md](docs/architecture.md#moving-a-file-out-of-lib-root) before moving any file under `lib/`**, out of its root or between directories. The rules it enforces:
 
-**A re-export is owed only to a webpack-5 package importing the path unconditionally.** Read the importer's tarball, not its download count: if its `peerDependencies`/`dependencies` name webpack 5 and it requires the path at top level, add a `// TODO in the next major release: remove` re-export at the old path. If it is webpack 4 only (imports something webpack 5 deleted) or probes the path inside a `try` to detect webpack 4, add a `removed` entry with that reason instead — a re-export would send it down the wrong branch.
-
-**Six things carry a path, only the first obvious.** Rewrite all, then confirm by regenerating, not reading:
-
-1. `require("…")` / `require.resolve("…")`, including template literals and a string in a ternary branch lines away from its call.
-2. `@import … from "…"` in JSDoc.
-3. `@typedef {import("…")}` — a different form; missing it silently drops the type from the public surface.
-4. `tsType` in `schemas/**/*.json` — fails loudly in `fix:special` or silently degrades a public type to `any`.
-5. `makeSerializable(Class, "webpack/lib/…")` — the request moves with the class, and every request it was written under before goes in an array after the new one (current first), or pre-move cache packs stop loading. Reach for `registerLegacyRequest` only where the array cannot say it: a class registered with `register` and a serializer of its own, or an old request carrying a different `name`.
-6. A path in a config or generator outside `lib/` — the input list in `tooling/generate-runtime-code.js`, an `ignores` entry in `eslint.config.mjs`. Both silently stop matching; the second fails as style errors in a file nobody edited.
-
-`yarn fix:special` leaving `types.d.ts` byte-identical confirms 3 and 4; `ConfigCacheTestCases` reporting no `Pack got invalid` line confirms 5; nothing static catches 1 — only building `lib/index.js` does.
-
-This applies equally to moves **between** `lib/` directories, where 6 is what has actually gone wrong (`lib/util/semver.js` was named in both files above).
-
-**Update [docs/architecture.md](docs/architecture.md) in the same commit**, and grep this guide and `docs/` for the old path — prose elsewhere names files too.
+- Run `yarn find-deep-imports:check` on every move, before committing; a path a webpack 5 package imports unconditionally owes a `// TODO in the next major release: remove` re-export at its old path.
+- Rewrite all six places a path hides (`require`, JSDoc `@import`, `@typedef {import()}`, schema `tsType`, `makeSerializable` requests with the old ones kept after the new, configs and generators outside `lib/`), then confirm by regenerating, not reading.
+- Update the map in `docs/architecture.md` in the same commit.
 
 ### Diagnostics and hints
 
@@ -241,15 +234,7 @@ A local failure is yours only if it doesn't reproduce on `main` — check in a w
 - **Never read pass/fail through a pipe** — `yarn test:base … | grep …` discards jest's exit code. Check the exit status or read the `Tests:` line.
 - **Never attribute a failure without a base run** — re-run that exact case on unmodified files first; most surprises are pre-existing or contention flakes.
 
-**Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
-
-```sh
-yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<category> <case>"
-```
-
-Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [TESTING_DOCS.md](TESTING_DOCS.md)). The `test262`, `html5lib`, `syntax-equivalence` and `css-parsing` suites need submodules — run `git submodule update --init --depth 1 test/external/test262-cases test/external/html5lib-tests test/external/wpt test/external/css-parsing-tests` first, or they fail confusingly.
-
-**A `configCases/` case** is a mini project: `index.js` (assertions; a throw fails) plus `webpack.config.js`; the emitted bundle is executed, so it must run. Optional: `errors.js` / `warnings.js` export matcher arrays for expected diagnostics (otherwise any error/warning fails the case); `test.filter.js` returns `false` to skip (e.g. by Node version when the fixture itself needs newer syntax — see [Target the Node baseline](#target-the-node-baseline)); `test.config.js` customizes the run (e.g. `findBundle`).
+Running one integration case, and what a `configCases/` case contains: [TESTING_DOCS.md](TESTING_DOCS.md#running-one-integration-case).
 
 **Cover every line you add or change** — a commit must not lower coverage (CI enforces patch coverage, target 90%+). Every new branch, fast path and fallback needs a test: `configCases/` when a real build reaches it, a focused `*.unittest.js` only when a config case can't reasonably drive it or adds nothing (e.g. tokenizer cold-path fallbacks, where fast and delegated branches each still need exercising). Check with `yarn cover:unit` or the PR's "patch" report until no changed line is missing.
 
@@ -301,9 +286,7 @@ Produced by `yarn fix:special` — never edit by hand:
 
 A `syntax-parser.js` or `syntax-printer.js` is algorithm only — a new lookup table belongs in the matching generator. Generator-written regions such as `// #region html entities` are the exception; `syntax.js` is a facade, neither.
 
-**In the generator, derive — don't type out.** Read tables from published datasets (`mdn-data`, `color-name`, `@webref/idl`) whenever derivable, _including by analyzing a grammar rather than listing names_: the value-definition syntax says which properties take an `<integer>`, so that set is computed. An existing `SUPPLEMENT` table counts as a source too — cosine at each eighth turn is sine two eighths along, and each inverse trig table is its forward one read back.
-
-**Per-construct behavior is a table too.** Where the minifier differs per name (each math function; next, properties or at-rules), the per-name part is a descriptor in the generator and the shared part an engine in `syntax-printer.js` keyed by it. `MATH_FUNCTION_FOLD` is the example: it says how each function's arguments are read, which arithmetic runs and what unit results carry, so the printer implements none and names no function. The arithmetic is emitted alongside and bound by reference, not name, so an undefined name fails generation instead of folding nothing. A new function is one line; one whose arithmetic exists needs nothing else. A test must drive every descriptor (one input per entry) so a wrong-but-existing binding fails instead of silently declining. Hand-listing names into `SUPPLEMENT` is the last resort, each entry stating why it can't be derived (spec prose, an equivalence between spellings, a judgement no dataset states) — hand lists go stale unnoticed when specs move; derived ones turn a spec change into a reviewable diff.
+How a generator derives its tables and per-construct descriptors: [docs/syntax.md](docs/syntax.md#generated-tables).
 
 `declarations.d.ts`, `declarations.test.d.ts` and `module.d.ts` _are_ editable.
 

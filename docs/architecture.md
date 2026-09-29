@@ -101,3 +101,26 @@ Every schema is derived from the module declaring its options by `generate-schem
 - `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — lint/spell/test/type-gen configs.
 - `.github/workflows/`, `.github/scripts/` — CI.
 - `test/patches/` — test-only dependency patches (e.g. jest-worker), `git apply`'d in the CI Bun job.
+
+## Moving a file out of `lib/` root
+
+> [!REQUIRED]
+
+**Run `yarn find-deep-imports:check` on every move, before committing.** A path leaving `lib/` root breaks any published package importing it; `tooling/deep-webpack-imports.json` records which. `--write` refreshes it off the registry; `--check` needs no network and is what CI runs. Its `removed` map (paths no webpack 5 build can reach) is disjoint from the imports — `--write` skips a path `removed` names.
+
+**A re-export is owed only to a webpack-5 package importing the path unconditionally.** Read the importer's tarball, not its download count: if its `peerDependencies`/`dependencies` name webpack 5 and it requires the path at top level, add a `// TODO in the next major release: remove` re-export at the old path. If it is webpack 4 only (imports something webpack 5 deleted) or probes the path inside a `try` to detect webpack 4, add a `removed` entry with that reason instead — a re-export would send it down the wrong branch.
+
+**Six things carry a path, only the first obvious.** Rewrite all, then confirm by regenerating, not reading:
+
+1. `require("…")` / `require.resolve("…")`, including template literals and a string in a ternary branch lines away from its call.
+2. `@import … from "…"` in JSDoc.
+3. `@typedef {import("…")}` — a different form; missing it silently drops the type from the public surface.
+4. `tsType` in `schemas/**/*.json` — fails loudly in `fix:special` or silently degrades a public type to `any`.
+5. `makeSerializable(Class, "webpack/lib/…")` — the request moves with the class, and every request it was written under before goes in an array after the new one (current first), or pre-move cache packs stop loading. Reach for `registerLegacyRequest` only where the array cannot say it: a class registered with `register` and a serializer of its own, or an old request carrying a different `name`.
+6. A path in a config or generator outside `lib/` — the input list in `tooling/generate-runtime-code.js`, an `ignores` entry in `eslint.config.mjs`. Both silently stop matching; the second fails as style errors in a file nobody edited.
+
+`yarn fix:special` leaving `types.d.ts` byte-identical confirms 3 and 4; `ConfigCacheTestCases` reporting no `Pack got invalid` line confirms 5; nothing static catches 1 — only building `lib/index.js` does.
+
+This applies equally to moves **between** `lib/` directories, where 6 is what has actually gone wrong (`lib/util/semver.js` was named in both files above).
+
+**Update the map above in the same commit**, and grep `AGENTS.md` and `docs/` for the old path — prose elsewhere names files too.
