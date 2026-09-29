@@ -2,7 +2,7 @@
 
 ## Conventions in this guide
 
-A `> [!REQUIRED]` callout directly under a heading makes that whole section **mandatory**: follow it exactly — do not paraphrase, skip, or substitute a similar-looking convention from other tooling. Reviewers keep flagging skipped or partly filled REQUIRED sections (especially the [Pull request body](#pull-request-body)), and every such skip blocks the PR — so re-read each one in full whenever it applies instead of relying on memory or a previous task's output. Sections without the callout are guidance — apply judgement.
+A `> [!REQUIRED]` callout directly under a heading makes that whole section **mandatory**: follow it exactly — do not paraphrase, skip, or substitute a similar-looking convention from other tooling. Reviewers keep flagging skipped or partly filled REQUIRED sections (especially the [Pull request body](docs/pull-requests.md#pull-request-body)), and every such skip blocks the PR — so re-read each one in full whenever it applies instead of relying on memory or a previous task's output. Sections without the callout are guidance — apply judgement.
 
 **Editing this guide:** keep every change short and simple, and never drop a rule, fact, number or reason to shorten it — reword or merge instead.
 
@@ -44,7 +44,7 @@ All defined in `package.json` `scripts`.
 
 Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag lives only in `test:base`, and bare jest crashes the ESM/test262 suites. Running a single case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
-**CI must come back fully green** ([details](#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Two jobs are unusual — watch both when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one of them is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (reported as `benchmarks / benchmark (1/4)`); on `main` nothing gates them (plain `benchmark (1/4)`) so CodSpeed always has a baseline.
+**CI must come back fully green** ([details](docs/pull-requests.md#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Two jobs are unusual — watch both when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one of them is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (reported as `benchmarks / benchmark (1/4)`); on `main` nothing gates them (plain `benchmark (1/4)`) so CodSpeed always has a baseline.
 
 ## Architecture
 
@@ -241,20 +241,6 @@ A local failure is yours only if it doesn't reproduce on `main` — check in a w
 - **Never read pass/fail through a pipe** — `yarn test:base … | grep …` discards jest's exit code. Check the exit status or read the `Tests:` line.
 - **Never attribute a failure without a base run** — re-run that exact case on unmodified files first; most surprises are pre-existing or contention flakes.
 
-### Read CI rather than re-running it
-
-> [!REQUIRED]
-
-**When CI is red, read its log instead of reproducing the whole job locally** — rediscovering one line by re-running `yarn lint` or a suite wastes minutes and tokens. Filter the run to failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content`, asking for enough lines to clear the trailing `Post job cleanup`), then reproduce **only the named case**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
-
-Traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first failing stage, so a CI failure in `lint:code` says nothing about later stages — just as a local `lint:special` complaint `main` also makes says nothing about CI.
-
-### Verifying a performance or memory change
-
-> [!REQUIRED]
-
-Read [docs/performance.md](docs/performance.md) before claiming or measuring a performance, memory or emitted-size change. In short: prefer counting over CPU-profile attribution over retained heap over wall timing, inside a real build, never a micro-benchmark; for size, gzip decides and a re-encoding must show a compressed win; `readWord`, `readString` and `finishToken` in `lib/javascript/syntax-parser.js` sit just under V8's inlining budget — check their bytecode size before and after touching them.
-
 **Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
 
 ```sh
@@ -268,6 +254,20 @@ Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in 
 **Cover every line you add or change** — a commit must not lower coverage (CI enforces patch coverage, target 90%+). Every new branch, fast path and fallback needs a test: `configCases/` when a real build reaches it, a focused `*.unittest.js` only when a config case can't reasonably drive it or adds nothing (e.g. tokenizer cold-path fallbacks, where fast and delegated branches each still need exercising). Check with `yarn cover:unit` or the PR's "patch" report until no changed line is missing.
 
 **Don't lower type coverage either.** CI collects it (`yarn types:cover:report`) and reports the delta on the PR. Prefer real types over `EXPECTED_ANY` ([Type annotations](#type-annotations)), and run `yarn types:cover` if you widened any annotation.
+
+### Read CI rather than re-running it
+
+> [!REQUIRED]
+
+**When CI is red, read its log instead of reproducing the whole job locally** — rediscovering one line by re-running `yarn lint` or a suite wastes minutes and tokens. Filter the run to failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content`, asking for enough lines to clear the trailing `Post job cleanup`), then reproduce **only the named case**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
+
+Traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first failing stage, so a CI failure in `lint:code` says nothing about later stages — just as a local `lint:special` complaint `main` also makes says nothing about CI.
+
+### Verifying a performance or memory change
+
+> [!REQUIRED]
+
+Read [docs/performance.md](docs/performance.md) before claiming or measuring a performance, memory or emitted-size change. In short: prefer counting over CPU-profile attribution over retained heap over wall timing, inside a real build, never a micro-benchmark; for size, gzip decides and a re-encoding must show a compressed win; `readWord`, `readString` and `finishToken` in `lib/javascript/syntax-parser.js` sit just under V8's inlining budget — check their bytecode size before and after touching them.
 
 ## Git & PR rules
 
@@ -374,131 +374,18 @@ git log --format='%h author=%an <%ae> committer=%cn <%ce>' origin/main..HEAD
 
 A stale base also makes CI lie both ways: `Code Size` and benchmarks compare against `main`'s last report, attributing commits your branch predates to you (a one-line diff reported as `+163 KiB`), and a red check may be a defect already fixed on `main`. So when `main` moves under a long-lived PR, rebase and push again instead of reading a cross-base comparison. `update_pull_request_branch` is fine when the repo is configured to rebase; otherwise rebase locally as above.
 
-### Pull request body
+### Opening and watching a PR
 
 > [!REQUIRED]
 
-webpack uses an **org-wide** PR template that `gh pr create` does **not** prefill — paste it yourself. Every PR body, whatever its size or framing, contains **every** section below, in order, labels spelled exactly; write `n/a` where a section doesn't apply. Never delete sections or substitute another template (e.g. `## Summary` / `## Test plan`). Titles are plain text — raw `<`, `>`, never HTML entities.
+**Read [docs/pull-requests.md](docs/pull-requests.md) in full before opening a PR and on every event of one you opened** — it holds the PR body template and how to drive the PR to green. The rules it enforces:
 
-**Keep answers short — ideally one sentence, at most two or three**: the body orients reviewers rather than recapping the investigation, and a reviewer should read the whole body in well under 30 seconds. Where another section of this guide requires rationale in the PR body, give enough to satisfy it (concise multi-paragraph is fine). No bench tables, code blocks, or walkthroughs of iterations/reverts; put extra background in a linked issue/discussion, the relevant inline review thread, or the squash-merge commit body.
-
-Mistakes that block PRs: `## Summary` headings instead of `**Summary**` bold labels; omitting **Use of AI** (mandatory per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md)); omitting or mis-answering **What kind of change…** (must match the branch prefix); dropping the HTML comment hints or leaving sections blank instead of `n/a`.
-
-Paste this body (without the fence lines):
-
-```markdown
-<!-- Thanks for submitting a pull request! Please provide enough information so that others can review your pull request. -->
-
-**Summary**
-
-<!-- Explain the **motivation** for making this change. What existing problem does the pull request solve? -->
-<!-- Try to link to an open issue for more information. -->
-<!-- Any other information related to changes. -->
-
-<!-- In addition to that please answer these questions: -->
-
-**What kind of change does this PR introduce?**
-
-<!-- E.g. a fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs or describe it if you did not find a suitable kind of change. -->
-
-**Did you add tests for your changes?**
-
-<!-- Please note: in most cases, if you change the code, we will not merge your changes unless you add tests. -->
-
-**Does this PR introduce a breaking change?**
-
-<!-- If this PR introduces a breaking change, please describe the impact and a migration path for existing applications. -->
-
-**If relevant, what needs to be documented once your changes are merged or what have you already documented?**
-
-<!-- List all the information that needs to be added to the documentation after merge that has already been documented in this PR. -->
-
-**Use of AI**
-
-<!-- If you have used AI, please state so here. Explain how you used it.
-Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due to irresponsible use of AI. -->
-```
-
-Answers (one sentence each is the target, two or three the maximum):
-
-- **Summary** — motivation and the problem solved; link the issue. Use `Closes #…` / `Fixes #…` when the PR resolves it, `Refs #…` only for issues it merely relates to.
-- **What kind of change…** — one of fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
-- **Did you add tests…** — yes/no + which files.
-- **Breaking change** — yes/no + migration path if yes.
-- **Documentation** — doc updates, or `n/a`.
-- **Use of AI** — that AI was used and how; omitting or misrepresenting it can get the PR closed per the AI policy.
-
-### After push — verify PR body
-
-After every `git push` of a new branch, check whether a PR was auto-created (webpack has this webhook); if so, `update_pull_request` to install the full template — the auto-created body never matches.
-
-### Watching a PR, and updating its branch
-
-> [!REQUIRED]
-
-**Subscribe to every PR you open** (`subscribe_pr_activity`) as the last step of opening it — not a question for the requester. You own it until it lands, and [every check ends green](#after-opening-the-pr--every-check-ends-green) and [the automated reviews](#after-opening-the-pr--wait-for-the-automated-reviews) need the session awake. Stay subscribed until merged or closed, or the requester says stop.
-
-Don't, unasked, **rebase or merge the base branch into the PR** — maintainers usually land PRs through their own pipeline. Merely being behind `main` isn't a defect; doing it unasked rewrites history their pipeline was about to handle, restarts every check, and can drop an approval. Do it when the requester asks or the PR is reported genuinely un-mergeable, and say which applies before pushing. Pushing your own commits to your own branch is free; anything changing how the PR gets landed needs asking.
-
-### Writing on GitHub — ask first
-
-> [!REQUIRED]
-
-**Never post to GitHub on your own initiative.** Pushing to your own branch is fine; publishing text others read is not — PR comments, review replies, issue comments, PR body edits after opening (except installing the template over an auto-created body, [below](#after-push--verify-pr-body)), and every reply to any bot.
-
-Reading is never banned. Bot noise may be skipped: status checks, a benchmark that swings on re-run, a coverage report still waiting on uploads, changeset/preview echoes — replying to those costs maintainers more attention than the finding.
-
-Anything naming a possible bug, regression or improvement must be investigated, whoever raised it — being a bot is no reason to dismiss it; judge the claim. Reproduce it, then fix and push (no permission needed) or, if you believe it's wrong, bring it **into the session**: what you found, the reply you'd send, and let the requester decide whether to post. Never leave such a finding unanswered.
-
-### After opening the PR — every check ends green
-
-> [!REQUIRED]
-
-**The target is the whole run green — every check.** A red check is never something to explain, defer or wait out; no wake on one ends without a pushed commit or a reply naming the blocker, and "that one isn't important" is not your call.
-
-- **A check that failed once is re-run before it's believed.** Infrastructure fails (runner dies, network fetch times out, an engine crashes on its own bug — the tell is a job reporting every test passing then dying anyway). Re-run the failing job; **if the re-run fails the same way, ignore it and move on** — no more re-runs, no rewriting working code around it, no holding the PR.
-- **Coverage is read only once the uploading suites finish** (below).
-
-Neither excuses a check you can run yourself: **one that reproduces locally is never re-run and shrugged at** — it's your failure until a run on unmodified `main` proves otherwise. Fix and push.
-
-Read the failing job's log ([how](#read-ci-rather-than-re-running-it)), reproduce **only the named case**, fix the cause, re-run that case, then push — never re-run the whole job to find what the log already says. Two recurring failures:
-
-- **cspell** rejects a word — reword (the codebase is American English, and [Naming](#naming) forbids abbreviations) or add a genuine term to `cspell.json`.
-- **A snapshot lives in two suites** — `ConfigTestCases` and `ConfigCacheTestCases` both snapshot `configCases/`, and `--testPathPatterns=ConfigTestCases` doesn't match the latter. Use `yarn test:basic --testNamePattern="<case>" -u` (no path filter): the name filter covers that case in both suites, no full `test:basic` needed.
-
-A measuring report (performance, memory, a preview build) is investigated and answered with evidence, not a reflex commit. Reproduce the claim first ([how](#verifying-a-performance-or-memory-change)); a comparison against a base that never ran, across different runner environments, or with a different set of co-running cases is an artifact and usually says so. Reporting an artifact as one is a green outcome; leaving it unexamined is not. Replying to the bot needs permission ([Writing on GitHub](#writing-on-github--ask-first)).
-
-**Don't read, chase or act on coverage until every suite uploading it has finished.** Each suite uploads its flag on completion and the service recomputes after each, so until the last lands the number is a partial sum — a large drop, a comment rewritten in place with changing percentages — meaning "not all suites reported", not "coverage lost". The report names how many uploads the head still lacks; **read that line before the percentage**, and treat non-zero as "not ready". **A red coverage check while coverage changed is normal mid-run**, not a failure.
-
-**Wait for those suites, not the whole run.** Uploaders are the jobs calling the coverage action in `.github/workflows/test.yml` — today `unit`, `integration` (sharded, most uploads, gated behind `lint`, `basic`, `unit`), `test262`, `syntax-equivalence (chrome)` and the `parser (css)` / `parser (html)` legs; the other two browsers and `parser (js)` run uninstrumented. Read the workflow if they've moved. Benchmarks, code scanning, dependency review, preview publishing, type-coverage and the changeset echo never upload and can't move the number, so a coverage gap is safe to fix while they run or are red.
-
-Once the uploaders are in, read the report; only then is a genuine patch gap worth a test. Chasing an intermediate number costs pointless commits and tempts `lib/` changes that exist only to move a percentage.
-
-### After opening the PR — wait for the automated reviews
-
-> [!REQUIRED]
-
-Every webpack PR is reviewed automatically on the initial commit and every push, by whichever automated reviewers the repo enables. Always wait for them and address every comment; judge a bot's finding on the claim and reproduce it before deciding.
-
-1. After `create_pull_request`, `subscribe_pr_activity` ([see above](#watching-a-pr-and-updating-its-branch)); reviews then wake the session — do **not** poll.
-2. For each review comment: if correct, push a fix in a new commit — **including for bugs your own PR introduced**, the common case. If wrong, draft a reply and ask the requester before posting ([Writing on GitHub](#writing-on-github--ask-first)) — never ignore it silently.
-3. Every push re-runs the reviewers; repeat step 2 until each one's latest review has zero outstanding threads.
-4. `unsubscribe_pr_activity` only once every comment is handled and CI is green, or when the user says stop.
-
-### While watching — report only what needs a decision
-
-> [!REQUIRED]
-
-**A wake that changes nothing ends with no message.** Report — in a line or two — only when:
-
-- a review comment (human or bot, judged on the claim) needs an action or decision;
-- a check failed for this PR's reason, with the fix pushed or what blocks it;
-- a measuring report is **final** and moved: code size (read gzip), coverage once every uploader reported, a benchmark whose output doesn't disclaim itself;
-- the PR merged or closed, or the requester must choose something.
-
-**Never narrate the rest** — intermediate coverage recomputes, partial-upload percentages, bot echoes (changeset, preview publish, "review in progress"), a check turning green, lists of job states. That buries the one wake that matters.
-
-Silence isn't skipping: read every event and investigate what it names; this governs only what reaches the requester. A finding judged an artifact is still reported once, with evidence ([see above](#after-opening-the-pr--every-check-ends-green)).
+- **PR body**: paste the org template yourself with every section, bold labels spelled exactly and `n/a` where one doesn't apply, including **Use of AI** and a **What kind of change…** answer matching the branch prefix.
+- **Subscribe to every PR you open** and stay subscribed until it is merged or closed, or the requester says stop.
+- **Never post to GitHub on your own initiative** — comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots. Bring the finding and your draft reply into the session.
+- **Don't rebase or merge the base branch into an open PR unasked.**
+- **Every check ends green**; read coverage only once every uploading suite has reported.
+- **A wake that changes nothing ends with no message.**
 
 ## Do not touch
 
@@ -554,15 +441,7 @@ Otherwise write it in baseline syntax so it runs everywhere. This capability gat
 
 Runtime-emitting code — chunk loading (`lib/web/` JSONP, `lib/esm/`, `lib/node/`, `lib/webworker/`), prefetch/preload/resource hints, library and externals presets — is **per-target**: browsers/JSONP, ESM `output.module`, `node`, `webworker`, `deno`, `electron`, `bun`, and the **universal** `target: ["web", "node"]` neutral-platform path each have their own module or wiring — changing one and forgetting the others is the easy mistake. Apply a change to **every** affected target, with an integration case per target (typically `target: "web"`, `output.module`, `target: ["web", "node"]`; plus `node`/`webworker`/`bun`/`deno`/`electron` when in scope). The universal runtime guards browser APIs behind `typeof document === "undefined"` so its bundles run in Node without a DOM, and its config case must gate DOM assertions on `typeof document !== "undefined"` (see `configCases/target/universal-prefetch-preload`).
 
-**Then check wire cost.** `yarn test:size` (and the `Code Size` CI job, which compares against `main`'s last report and comments on the PR) builds every `configCases/` case and reports **one row per changed asset**: raw before → after plus gzip/brotli/zstd. **It is information, never a verdict** — it doesn't fail, and moving numbers isn't a defect. It answers:
-
-- **Which files changed, by how much?** The per-asset table is the headline; no suite-wide total is reported (nothing actionable). Raw is what the generator wrote, compressed is what users download — read both; a raw saving with no gzip saving mostly moved entropy. [gzip decides](docs/performance.md).
-- **Which way?** 🔴 ↑ grew, 🟢 ↓ shrank.
-- **Change or new?** Assets both runs emit are changes; ones only this run emits are new files, not deltas. They're in separate tables — changed first and unfolded, new/deleted folded, each with its own row budget — and separate verdict rows (`Changed …` vs `New` / `Deleted`), so new test cases' bundles don't bury real changes.
-- **webpack or the case?** A bundle is a function of its case's source, so adding assertions to a `configCases/` case grows its bundle without touching `lib/`. The report measures each case's module source and splits changed assets: `Changed, test untouched` is webpack's doing and the row size claims are read from; `Changed, test edited` has a `Test edit` column with bytes of source gained — a bundle growing less than its case isn't a regression. Cite the first row, never suite-wide numbers, when a PR touches both `lib/` and tests.
-- **Did a runtime gain or lose a runtime module?** A second table counts runtime modules per runtime and names those that came or went, split the same way (a runtime a new case brought gained nothing). Deliberately no per-runtime-module bytes (not what anyone downloads); the count catches a runtime module added for one target and forgotten for another.
-
-Read the "emitted nothing" note first: a case whose build now errors contributes no bytes, which otherwise looks like an improvement. When the numbers moved, say what it reported in the PR.
+**Then check wire cost** with `yarn test:size` (and the `Code Size` CI job, which comments the diff on the PR). It is information, never a verdict; how to read its report: [docs/performance.md](docs/performance.md#reading-the-code-size-report). When the numbers moved, say what it reported in the PR.
 
 ### Lint covers every file, docs included
 

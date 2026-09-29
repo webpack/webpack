@@ -40,3 +40,15 @@ Pitfalls that produced wrong conclusions here:
 - **Changing async structure is not neutral** — adding `process.nextTick`/`setImmediate` or collapsing callbacks reorders module processing and drags order-dependent work along. Prove order unchanged before believing the delta.
 - **Pick a fixture that emits** — `three-long` tree-shakes to 0 bytes in production, skipping codegen/render/minify and inflating any front-end phase's share. Corroborate on a case that emits.
 - **Verify semantics every time** — module count, on-disk output hashes, and error/warning counts unchanged. Two empty outputs prove nothing.
+
+## Reading the code-size report
+
+**Then check wire cost.** `yarn test:size` (and the `Code Size` CI job, which compares against `main`'s last report and comments on the PR) builds every `configCases/` case and reports **one row per changed asset**: raw before → after plus gzip/brotli/zstd. **It is information, never a verdict** — it doesn't fail, and moving numbers isn't a defect. It answers:
+
+- **Which files changed, by how much?** The per-asset table is the headline; no suite-wide total is reported (nothing actionable). Raw is what the generator wrote, compressed is what users download — read both; a raw saving with no gzip saving mostly moved entropy. [gzip decides](#verifying-a-performance-or-memory-change).
+- **Which way?** 🔴 ↑ grew, 🟢 ↓ shrank.
+- **Change or new?** Assets both runs emit are changes; ones only this run emits are new files, not deltas. They're in separate tables — changed first and unfolded, new/deleted folded, each with its own row budget — and separate verdict rows (`Changed …` vs `New` / `Deleted`), so new test cases' bundles don't bury real changes.
+- **webpack or the case?** A bundle is a function of its case's source, so adding assertions to a `configCases/` case grows its bundle without touching `lib/`. The report measures each case's module source and splits changed assets: `Changed, test untouched` is webpack's doing and the row size claims are read from; `Changed, test edited` has a `Test edit` column with bytes of source gained — a bundle growing less than its case isn't a regression. Cite the first row, never suite-wide numbers, when a PR touches both `lib/` and tests.
+- **Did a runtime gain or lose a runtime module?** A second table counts runtime modules per runtime and names those that came or went, split the same way (a runtime a new case brought gained nothing). Deliberately no per-runtime-module bytes (not what anyone downloads); the count catches a runtime module added for one target and forgotten for another.
+
+Read the "emitted nothing" note first: a case whose build now errors contributes no bytes, which otherwise looks like an improvement. When the numbers moved, say what it reported in the PR.
