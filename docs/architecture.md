@@ -6,7 +6,7 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
 
 **Source**
 
-- `lib/` — main source (CommonJS; JSDoc types). Its **root is the core** — what a build is made of (`Compilation`, `Compiler`, `Dependency`, `MultiCompiler`) and what publishes it (`webpack.js`, `index.js`) — plus re-export shims keeping old `webpack/lib/<Name>` paths open for the ecosystem. **A plugin never belongs in the root**: it goes in the directory for what it acts on (asset set → `lib/output/`, module graph → `lib/optimize/`, entry → `lib/entry/`); if none fits, add a directory, with its bullet here, in the same commit. A file leaving the root owes a shim at its old path only once it has shipped there; `yarn find-deep-imports --check` and `deepPathShims.unittest.js` decide.
+- `lib/` — main source (CommonJS; JSDoc types). Its **root is the core** — what a build is made of (`Compilation`, `Compiler`, `Dependency`, `MultiCompiler`) and what publishes it (`webpack.js`, `index.js`) — plus re-export shims keeping old `webpack/lib/<Name>` paths open for the ecosystem. **A plugin never belongs in the root**: it goes in the directory for what it acts on (asset set → `lib/output/`, module graph → `lib/optimize/`, entry → `lib/entry/`); if none fits, add a directory, with its bullet here, in the same commit. A file leaving the root owes a shim at its old path only once it has shipped there; `yarn find-deep-imports:check` and `deepPathShims.unittest.js` decide.
   - `lib/asset/` — asset modules (images, fonts, raw files), incl. the `asset/webmanifest` type parsing `<link rel="manifest">` icon URLs.
   - `lib/async-modules/` — top-level await.
   - `lib/bun/` — Bun target externals preset (`bun:*` and Node built-ins).
