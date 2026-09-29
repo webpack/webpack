@@ -11966,9 +11966,9 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 		).toBe("@media (width>=30em) and (pointer:fine){a{color:red}}");
 	});
 
-	it("writes a query naming alternatives only as the whole condition", () => {
+	it("writes a query naming alternatives as one query each beside an `and`", () => {
 		// A list written beside an `and` would leave it binding to the last
-		// alternative alone, and CSS has no parentheses to group one with.
+		// alternative alone; an `or` would be read by no Media Queries 3 target.
 		const list = "@custom-media --m (width>400px),(orientation:portrait);";
 		expect(
 			minifyForWith(`${list}@media (--m){a{color:red}}`, ["chrome 120"], {
@@ -11981,7 +11981,9 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 				["chrome 120"],
 				{ resolveCustomAtRules: true }
 			)
-		).toBe("@media screen and (--m){a{color:red}}");
+		).toBe(
+			"@media screen and (width>400px),screen and (orientation:portrait){a{color:red}}"
+		);
 	});
 
 	it("writes a query of one condition wherever it is asked for", () => {
@@ -12013,16 +12015,136 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 		).toBe("@media (--nope){a{color:red}}");
 	});
 
-	it("leaves a condition standing before the rule that names it", () => {
-		// The rules are read in the order they are written, so the query is not
-		// there yet — and the rule naming it is dropped, which no engine reads.
+	/** @type {(css: string) => string} */
+	const resolve = (css) =>
+		minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true });
+
+	it("writes a condition standing before the rule that names it", () => {
+		expect(
+			resolve("@media (--m){a{color:red}}@custom-media --m (width>400px);")
+		).toBe("@media (width>400px){a{color:red}}");
+		expect(
+			resolve("@import url(a.css) (--m);@custom-media --m (max-width:30em);")
+		).toBe("@import url(a.css) (width<=30em);");
+	});
+
+	it("writes the last rule stating a name", () => {
+		expect(
+			resolve(
+				"@custom-media --m (width>1px);@media (--m){a{color:red}}@custom-media --m (width>2px);"
+			)
+		).toBe("@media (width>2px){a{color:red}}");
+	});
+
+	it("writes a name read through one stated after it", () => {
+		expect(
+			resolve(
+				"@custom-media --b (--a) and (hover);@custom-media --a (width>1px);@media (--b){a{color:red}}"
+			)
+		).toBe("@media (width>1px) and (hover){a{color:red}}");
+	});
+
+	it("leaves names on a cycle as written", () => {
+		expect(
+			resolve(
+				"@custom-media --a (--b);@custom-media --b (--a);@media (--a){a{color:red}}@media (--b){a{color:red}}"
+			)
+		).toBe("@media (--a){a{color:red}}@media (--b){a{color:red}}");
+		expect(
+			resolve("@custom-media --a (--a) and (x:1);@media (--a){a{color:red}}")
+		).toBe("@media (--a){a{color:red}}");
+	});
+
+	it("reads a rule wherever it is written", () => {
+		expect(
+			resolve("@media (--m){a{color:red}}@layer x{@custom-media --m (a:1)}")
+		).toBe("@media (a:1){a{color:red}}@layer x{}");
+		expect(resolve("@media (--m){a{color:red}}@custom-media --m (a:1)")).toBe(
+			"@media (a:1){a{color:red}}"
+		);
+		expect(
+			resolve("@media (--m){a{color:red}}@custom-media --m (a:f(b;c)) and (d:[e;f]);")
+		).toBe("@media (a:f(b;c)) and (d:[e;f]){a{color:red}}");
+	});
+
+	it("writes a query of no condition as written", () => {
+		expect(resolve("@custom-media --m 1px;@media (--m){a{color:red}}")).toBe(
+			"@media 1px{a{color:red}}"
+		);
+		expect(
+			resolve("@custom-media --m 1px;@media (--m) and (hover){a{color:red}}")
+		).toBe("@media (--m) and (hover){a{color:red}}");
+	});
+
+	it("reads a rule opening a block as no `@custom-media`", () => {
+		expect(
+			resolve("@media (--m){a{color:red}}@custom-media --m (width>1px){}")
+		).toBe("@media (--m){a{color:red}}@custom-media --m (width>1px){}");
+	});
+
+	it.each([
+		// `true` and `false`
+		["--m true", "(--m)", "all"],
+		["--m false", "(--m)", "not all"],
+		["--m true", "(--m) and (hover)", "(hover)"],
+		["--m true", "screen and (--m)", "screen"],
+		["--m false", "(--m) and (hover),print", "print"],
+		["--m false", "(--m) and (hover)", "not all"],
+		// a media type, written first
+		["--m screen and (hover)", "(--m) and (color)", "screen and (hover) and (color)"],
+		["--m only screen", "(--m) and (color)", "only screen and (color)"],
+		["--m all and (hover)", "screen and (--m)", "screen and (hover)"],
+		// alternatives, one query each
+		["--m (a:1),(b:2)", "print,(--m)", "print,(a:1),(b:2)"],
+		["--m screen,(hover)", "(--m) and (color)", "screen and (color),(hover) and (color)"],
+		// a condition, as one group where it cannot be written out
+		["--m (a:1) and (b:2)", "(--m) and (c:3)", "(a:1) and (b:2) and (c:3)"],
+		["--m (a:1) and (b:2)", "not (--m)", "not ((a:1) and (b:2))"],
+		["--m (a:1) or (b:2)", "(--m) and (c:3)", "((a:1) or (b:2)) and (c:3)"],
+		["--m (a:1),(b:2)", "(--m) or (c:3)", "((a:1) or (b:2)) or (c:3)"],
+		["--m (a:1),(b:2)", "((--m) and (c:3))", "(((a:1) or (b:2)) and (c:3))"],
+		["--m (hover) and/**/(color)", "(--m) and (c:3)", "(hover) and/**/(color) and (c:3)"],
+		["--m (hover) and/**/(color)", "not (--m)", "not ((hover) and/**/(color))"],
+		// one name after another
+		["--m (a:1),(b:2);@custom-media --n screen", "(--m) and (--n)", "screen and (a:1),screen and (b:2)"],
+		// a list the rule ends with a comma, as written
+		["--m (a:1),", "(--m)", "(a:1),"],
+		// the name in a group written out, the one beside it left
+		["--c (a:1);@custom-media --s screen", "((--c) or (x:1)) or (--s)", "((a:1) or (x:1)) or (--s)"],
+		["--c (a:1);@custom-media --s screen", "print and ((--c) or (x:1)) and (--s)", "print and ((a:1) or (x:1)) and (--s)"],
+		["--c (a:1);@custom-media --t true", "((--c) or (x:1)) (--t)", "((a:1) or (x:1)) (--t)"],
+		["--c (a:1);@custom-media --o 1px", "((--c) or (x:1)) and (--o)", "((a:1) or (x:1)) and (--o)"]
+	])("writes `@custom-media %s` in `@media %s` as %s", (rule, query, expected) => {
+		expect(resolve(`@custom-media ${rule};@media ${query}{a{color:red}}`)).toBe(
+			`@media ${expected}{a{color:red}}`
+		);
+	});
+
+	it.each([
+		// two media types, or a `not` turning one
+		["--m screen", "print and (--m)"],
+		["--m not screen", "(--m) and (hover)"],
+		["--m screen", "(hover) or (--m)"],
+		["--m screen", "not (--m)"],
+		["--m screen", "((--m) and (hover))"],
+		["--m screen", "((--nope) and (hover))"],
+		// no `and` joining the name, which was never a valid query
+		["--m true", "screen (--m)"],
+		["--m true", "(--m) and"]
+	])("leaves `@custom-media %s` in `@media %s` as written", (rule, query) => {
+		expect(resolve(`@custom-media ${rule};@media ${query}{a{color:red}}`)).toBe(
+			`@media ${query}{a{color:red}}`
+		);
+	});
+
+	it("writes alternatives as queries a Media Queries 3 target reads", () => {
 		expect(
 			minifyForWith(
-				"@media (--m){a{color:red}}@custom-media --m (width>400px);",
-				["chrome 120"],
+				"@custom-media --m (width>=1px),(hover);@media screen and (--m){a{color:red}}",
+				["chrome 90"],
 				{ resolveCustomAtRules: true }
 			)
-		).toBe("@media (--m){a{color:red}}");
+		).toBe("@media screen and (min-width:1px),screen and (hover){a{color:red}}");
 	});
 });
 
