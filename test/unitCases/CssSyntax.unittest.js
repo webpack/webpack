@@ -12076,6 +12076,20 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 		).toBe("@media (y:1){a{color:red}}");
 	});
 
+	it("reads a feature named like a rule as no reference to it", () => {
+		expect(
+			resolve(
+				"@custom-media --foo (--bar: 1px);@custom-media --bar (--foo);@media (--bar){a{color:red}}"
+			)
+		).toBe("@media (--bar:1px){a{color:red}}");
+		// A name spaced or commented inside its parentheses is still one.
+		expect(
+			resolve(
+				"@custom-media --b ( /* c */ --a ) and (y:1);@custom-media --a (width>1px);@media (--b){a{color:red}}"
+			)
+		).toBe("@media (width>1px) and (y:1){a{color:red}}");
+	});
+
 	it("reads past a rule stating no name", () => {
 		expect(
 			resolve(
