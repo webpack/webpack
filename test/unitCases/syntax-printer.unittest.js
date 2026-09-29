@@ -1327,6 +1327,24 @@ describe("syntax-printer", () => {
 		).toBe(false);
 	});
 
+	it("should decline a terser whose compressor it does not know", () => {
+		const compressor =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "compressor")
+			);
+		expect(compressor.supports({ compress: {}, flags: {} })).toBe(false);
+		expect(
+			compressor.supports({
+				compress: {
+					Compressor: Object.assign(function Compressor() {}, {
+						prototype: { before() {}, in_computed_key() {} }
+					})
+				},
+				flags: { SQUEEZED: 256 }
+			})
+		).toBe(false);
+	});
+
 	it("should hand back a fresh list, which a clone may share", async () => {
 		await load();
 		const { ast, parse, utils } = await loadSources();
