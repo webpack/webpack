@@ -23,7 +23,7 @@ node --print-bytecode --print-bytecode-filter=readWord <script that parses somet
 
 **Instruction counts and time are different claims** — say which a number is. Callgrind over a warmed parse (`valgrind --tool=callgrind --smc-check=all-non-file`, differencing two run lengths so startup and tier-up drop out) resolves work to ~±0.2% and answers "does this do less", not "is the build faster": CPU time on a shared machine needs tens of fresh processes per arm to resolve a few percent, and allocation changes move GC timing in steps that swamp the mutator delta.
 
-Claims about **webpack's CSS/HTML minifier or JS parser vs the ecosystem** (size, speed, memory, safety): run `yarn benchmark:css-tools` / `:html-tools` / `:js-tools` and read the tables (see [tooling/COMPARE_TOOLS.md](tooling/COMPARE_TOOLS.md)) instead of hand-rolling a comparison.
+Claims about **webpack's CSS/HTML minifier or JS parser vs the ecosystem** (size, speed, memory, safety): run `yarn benchmark:css-tools` / `:html-tools` / `:js-tools` and read the tables (see [tooling/COMPARE_TOOLS.md](../tooling/COMPARE_TOOLS.md)) instead of hand-rolling a comparison.
 
 Claims about **emitted size** are counted with `yarn test:size`: it builds every `configCases/` case with user defaults and reports each asset's raw/gzip/brotli/zstd size, so `lib/runtime/` or dependency-template changes show as bytes on the wire. Compare runs with `--baseline <report>`; the `Code Size` CI job compares against `main`'s last report and comments the diff on the PR.
 
