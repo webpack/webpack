@@ -833,6 +833,31 @@ describe("syntax-printer", () => {
 		expect(await refusal(minify)).toBe(theirs);
 	});
 
+	it("should drive a minify as terser does: a tree handed back with a private member", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<string | undefined>} a returned tree, given a private member, minified again
+		 */
+		const handedBack = async (run) => {
+			const settings = /** @type {EXPECTED_ANY} */ ({
+				compress: false,
+				mangle: false,
+				format: { ast: true }
+			});
+			const { ast } = /** @type {EXPECTED_ANY} */ (await run("sink(1);", settings));
+			const { ast: other } = /** @type {EXPECTED_ANY} */ (
+				await run("class A { #x = 1; m() { return this.#x; } } sink(A);", settings)
+			);
+			ast.body = other.body;
+			return (await run(ast, {})).code;
+		};
+		const code = await handedBack(minify);
+		expect(code).toBe(await handedBack(reference.minify));
+		expect(code).toMatchSnapshot();
+	});
+
 	it("should drop unused names as terser does: sequences emptied in a tree", async () => {
 		const { minify } = await load();
 		const reference = require("terser");
