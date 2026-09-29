@@ -345,12 +345,24 @@ const profiled = async (run) => {
 	await post("Profiler.start");
 	/** @type {CpuProfile | undefined} */
 	let profile;
+	let failed = false;
+	/** @type {unknown} */
+	let runError;
 	try {
 		await run();
-	} finally {
+	} catch (error) {
+		failed = true;
+		runError = error;
+	}
+	try {
 		({ profile } = await post("Profiler.stop"));
+	} catch (error) {
+		// A failing run's own error is the one worth reporting.
+		if (!failed) throw error;
+	} finally {
 		session.disconnect();
 	}
+	if (failed) throw runError;
 	return profileShares(/** @type {CpuProfile} */ (profile));
 };
 
