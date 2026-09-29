@@ -39,7 +39,7 @@
 - [Support](#support)
 - [Current project members](#current-project-members)
   - [TSC (Technical Steering Committee)](#tsc-technical-steering-committee)
-  - [Core Collaborators](#core-collaborators)
+  - [Maintenance](#maintenance)
 - [Sponsoring](#sponsoring)
   - [Premium Partners](#premium-partners)
   - [Gold Sponsors](#gold-sponsors)
