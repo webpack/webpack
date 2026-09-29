@@ -222,5 +222,8 @@ Array [
    keyword it would be replaced by is a different computed value under one */.initial-length{outline-width:initial;border-top-width:initial;font-size:initial}",
   "/*! a keyword that is not a length is the value \`initial\` computes to */.initial-keyword{float:none;display:inline}",
   "/*! \`mdn-data\` writes this one's initial as prose, so the keyword is supplemented */.initial-prose{text-align:start}",
+  "/*! scientific: an exponent is written plainly where that is no longer */.sci01{opacity:2;line-height:2.5;width:.001px;font-weight:400}",
+  "/*! scientific: ...else on an integer mantissa */.sci02{width:1e4px;margin-left:15e-8px;transition-duration:1s}",
+  "/*! scientific: an integer property keeps a <number>, which it throws out */.sci03{z-index:2e0;order:1e0;column-count:3e0}",
 ]
 `;

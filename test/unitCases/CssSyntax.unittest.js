@@ -3957,6 +3957,251 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"@supports (color:rgba(0,0,0,.5)){a{x:1px}}"
 			);
 		});
+
+		it("leaves an `@import`'s supports() condition as written", () => {
+			// An 8-digit hex is newer than `rgba()`, so writing one would ask another
+			// question — and skip the import where only the old spelling reads.
+			expect(minify("@import url(a.css) supports(color:rgba(0,0,0,.5));")).toBe(
+				"@import url(a.css) supports(color:rgba(0,0,0,.5));"
+			);
+			expect(
+				minify("@import url(a.css) supports((color:rgba(0,0,0,.5)));")
+			).toBe("@import url(a.css) supports((color:rgba(0,0,0,.5)));");
+		});
+	});
+
+	describe("a `@supports` condition", () => {
+		/** @type {(condition: string) => string} */
+		const condition = (text) =>
+			minify(`@supports ${text}{a{color:red}}`).slice(10, -14);
+
+		it.each([
+			// comments and whitespace a condition does not need
+			["( display : grid )", "(display:grid)"],
+			["/* c */ (display:grid) /* d */", "(display:grid)"],
+			["(display:grid)  and  (gap:1px)", "(display:grid) and (gap:1px)"],
+			["(display: grid) or ( not ( display: flex ) )", "(display:grid) or (not (display:flex))"],
+			["(display:/* c */grid)", "(display:grid)"],
+			["(transform:translate( 1px , 2px ))", "(transform:translate(1px,2px))"],
+			["font-tech( color-COLRv1 )", "font-tech(color-COLRv1)"],
+			// a tested `!important`, spaced or not
+			["(display:grid ! important)", "(display:grid!important)"],
+			["(display:grid !important)", "(display:grid!important)"],
+			["(--x: a !important)", "(--x:a!important)"],
+			// a selector's combinators, at any depth
+			["selector( .a  >  .b )", "selector(.a>.b)"],
+			["selector(.a + .b ~ .c)", "selector(.a+.b~.c)"],
+			["selector(:is( .a > .b ))", "selector(:is(.a>.b))"],
+			["selector(a:has( > b ))", "selector(a:has(>b))"],
+			["selector(.a >/* c */.b)", "selector(.a>.b)"],
+			["selector(.a/* c */ > .b)", "selector(.a>.b)"],
+			["selector(.a , .b)", "selector(.a,.b)"],
+			// an escape spelling a plain name
+			["(col\\6f r:r\\65 d)", "(color:red)"],
+			["sel\\65 ctor(.\\61  > .b)", "selector(.a>.b)"]
+		])("writes %s as %s", (input, expected) => {
+			expect(condition(input)).toBe(expected);
+		});
+
+		it.each([
+			// `not(` would be a function, and so an unknown condition
+			["not (display:grid)"],
+			["not(display:grid)"],
+			["(display:grid) AND (gap:1px)"],
+			// the author's own spacing, which no dropped comment decided
+			["(display:grid)and (gap:1px)"],
+			// a descendant combinator is the whitespace itself
+			["selector(.a .b)"],
+			// `|` is a namespace or a column, never trimmed
+			["selector(.a || .b)"],
+			["selector(ns | a)"],
+			// the selector under test is not rewritten, only spaced
+			["selector(*.a)"],
+			["selector(:HOVER)"],
+			// `calc()` needs the space around `+`
+			["(width:calc(1px + 2px))"],
+			["(width:calc(1px+2px))"]
+		])("keeps %s", (input) => {
+			expect(condition(input)).toBe(input);
+		});
+
+		it("keeps the comment a keyword's condition was parted from it by", () => {
+			// WebKit reads `and`, `or` or `not` as invalid unless whitespace follows,
+			// as it reads the source here, so a space in its place would make it read.
+			expect(condition("(display:grid)/**/and/**/(gap:1px)")).toBe(
+				"(display:grid)and/**/(gap:1px)"
+			);
+			expect(condition("((a:b) OR/**/(c:d)) and (e:f)")).toBe(
+				"((a:b) OR/**/(c:d)) and (e:f)"
+			);
+			expect(condition("not/**/(display:grid)")).toBe("not/**/(display:grid)");
+			expect(minify("@import url(a.css) supports(not/**/(a:b));")).toBe(
+				"@import url(a.css) supports(not/**/(a:b));"
+			);
+			// Before the keyword WebKit needs nothing, so a comment there goes.
+			expect(minify("@import url(a.css) supports((a:b)/**/or (c:d));")).toBe(
+				"@import url(a.css) supports((a:b)or (c:d));"
+			);
+		});
+
+		it("keeps the space that parts two tokens a trim would fuse", () => {
+			// `<!--` is a CDO and `-->` a CDC, each one token, not the ones written.
+			expect(condition("(--x: a < !--b)")).toBe("(--x:a< !--b)");
+			expect(condition("(--x: a -- > b)")).toBe("(--x:a -- >b)");
+		});
+
+		it.each([
+			[
+				"@import url(a.css) supports( display : grid ) screen;",
+				"@import url(a.css) supports(display:grid) screen;"
+			],
+			[
+				"@import url(a.css) supports(display: grid ! important);",
+				"@import url(a.css) supports(display:grid!important);"
+			],
+			[
+				"@import url(a.css) supports(( display : grid ) and ( gap : 1px ));",
+				"@import url(a.css) supports((display:grid) and (gap:1px));"
+			],
+			[
+				"@import url(a.css) supports(selector( .a > .b ));",
+				"@import url(a.css) supports(selector(.a>.b));"
+			],
+			[
+				"@import url(a.css) SUPPORTS( display : grid );",
+				"@import url(a.css) supports(display:grid);"
+			],
+			[
+				"@import url(a.css) supp\\6f rts( display : grid );",
+				"@import url(a.css) supports(display:grid);"
+			],
+			[
+				'@import "a.css" layer( x ) supports( display : grid ) screen;',
+				'@import "a.css" layer(x) supports(display:grid) screen;'
+			]
+		])("writes an `@import`'s %s as %s", (input, expected) => {
+			expect(minify(input)).toBe(expected);
+		});
+
+		it("reads an `@import`'s media query as a `@media` one", () => {
+			expect(
+				minify("@import url(a.css) SCREEN AND (MIN-WIDTH: 400.0PX), print;")
+			).toBe("@import url(a.css) screen and (width>=400px),print;");
+			expect(minify("@import url(a.css) all and (min-width:400px);")).toBe(
+				"@import url(a.css) (width>=400px);"
+			);
+			expect(
+				minify("@import url(a.css) (min-width:400px) and (max-width:800px);")
+			).toBe("@import url(a.css) (400px<=width<=800px);");
+			expect(
+				minify(
+					"@import url(A.css) layer(Foo) supports(opacity:0.50) ALL and (min-width:1px);"
+				)
+			).toBe("@import url(A.css) layer(Foo) supports(opacity:0.50) (width>=1px);");
+			// A layer's name and the URL are the author's, whatever their case.
+			expect(minify("@import url(A.css) LAYER ALL;")).toBe(
+				"@import url(A.css) LAYER all;"
+			);
+			expect(minify('@import "a.css"SCREEN;')).toBe('@import "a.css"screen;');
+		});
+
+		it("leaves an `@import` with no media query as written", () => {
+			for (const rule of [
+				"@import url(a.css);",
+				"@import url(a.css) layer;",
+				"@import url(a.css) layer(x);",
+				"@import url(a.css) supports(display:grid);",
+				"@import url(a.css) layer(x) supports((min-width:1px));"
+			]) {
+				expect(minify(rule)).toBe(rule);
+			}
+		});
+
+		it("lowers an `@import`'s range spelling where the target needs it", () => {
+			expect(
+				minifyForWith("@import url(a.css) (width>=400px);", ["chrome 90"], {})
+			).toBe("@import url(a.css) (min-width:400px);");
+		});
+
+		it("writes a `@custom-media` an `@import` names", () => {
+			// Otherwise the rule is dropped and the import is left asking for nothing.
+			expect(
+				minifyForWith(
+					"@custom-media --n (max-width:30em);@import url(a.css) (--n);",
+					["chrome 120"],
+					{ resolveCustomAtRules: true }
+				)
+			).toBe("@import url(a.css) (max-width:30em);");
+		});
+
+		it("leaves a supports() outside an `@import` alone", () => {
+			// Only `@import` reads one; anywhere else it is an unknown function.
+			expect(minify("@media supports( display : grid ){a{color:red}}")).toBe(
+				"@media supports(display : grid){a{color:red}}"
+			);
+		});
+	});
+
+	describe("scientific notation", () => {
+		/** @type {(declaration: string) => string} */
+		const declaration = (text) => minify(`a{${text}}`).slice(2, -1);
+
+		it.each([
+			// the plain spelling where it is no longer
+			["opacity:0.2e1", "opacity:2"],
+			["opacity:.5E0", "opacity:.5"],
+			["line-height:2.5e0", "line-height:2.5"],
+			["width:-0.5e1px", "width:-5px"],
+			["width:+1e+2px", "width:100px"],
+			["width:1e-3px", "width:.001px"],
+			["font-weight:4e2", "font-weight:400"],
+			["transform:rotate(1e1deg)", "transform:rotate(10deg)"],
+			["transition:all 1e3ms", "transition:1s"],
+			// else the exponent, on an integer mantissa
+			["width:10E3px", "width:1e4px"],
+			["width:1.5e-7px", "width:15e-8px"],
+			["width:1e21px", "width:1e21px"],
+			["width:1e999px", "width:1e999px"],
+			["width:0.0e0px", "width:0"],
+			["width:calc(1e3px + 1e-2%)", "width:calc(1e3px + .01%)"]
+		])("writes %s as %s", (input, expected) => {
+			expect(declaration(input)).toBe(expected);
+		});
+
+		it.each([
+			// An exponent makes a `<number>`, which an `<integer>` does not take, so
+			// a spelling that would be an integer keeps one.
+			["z-index:0.2e1", "z-index:2e0"],
+			["z-index:10E2", "z-index:1e3"],
+			["z-index:1.5e1", "z-index:15e0"],
+			["order:-1e0", "order:-1e0"],
+			["z-index:0e3", "z-index:0e0"],
+			["animation:x 1s steps(2e0)", "animation:x 1s steps(2e0)"]
+		])("keeps %s a <number> as %s", (input, expected) => {
+			expect(declaration(input)).toBe(expected);
+		});
+
+		it("keeps a media feature's number a <number>", () => {
+			// `color` takes an `<integer>`, and nothing outside a declaration says
+			// which feature does.
+			expect(minify("@media (color:8e0){a{b:c}}")).toBe(
+				"@media (color:8e0){a{b:c}}"
+			);
+			expect(minify("@media (min-width:1E3px){a{b:c}}")).toBe(
+				"@media (width>=1e3px){a{b:c}}"
+			);
+		});
+
+		it.each([
+			// tested, substituted or stepped, the number is left as written
+			["@supports (opacity:0.2e1){a{b:c}}"],
+			["a{--x:1e3}"],
+			["a{width:round(1.5E1px,1px)}"],
+			// `e3` is the unit, which a plain number would take as its exponent
+			["a{width:2e1e3}"]
+		])("keeps %s", (input) => {
+			expect(minify(input)).toBe(input);
+		});
 	});
 
 	describe("unicode-range", () => {
@@ -6204,14 +6449,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a:not( ){top:0}")).toBe("a:not(){top:0}");
 		});
 
-		it("keeps a `@supports` condition as written", () => {
-			// The condition is the syntax being tested, and an engine hands it back
-			// verbatim — `selector(.a>.b)` builds a different CSSOM from `.a > .b`.
-			expect(minify("@supports selector(.a > .b){c{color:red}}")).toBe(
-				"@supports selector(.a > .b){c{color:red}}"
+		it("trims only whitespace in a `@supports` selector()", () => {
+			// The selector is under test, so no universal or pseudo name is rewritten.
+			expect(minify("@supports selector(*.a > .b){c{color:red}}")).toBe(
+				"@supports selector(*.a>.b){c{color:red}}"
 			);
-			expect(minify("@supports selector(:is(.a > .b)){c{color:red}}")).toBe(
-				"@supports selector(:is(.a > .b)){c{color:red}}"
+			expect(minify("@supports selector(.a:HOVER > .b){c{color:red}}")).toBe(
+				"@supports selector(.a:HOVER>.b){c{color:red}}"
 			);
 		});
 
@@ -7499,7 +7743,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// An answer that overflows a double is not one either.
 			["calc(pow(1e308,2)*1px)"],
 			["calc(exp(1000)*1px)"],
-			["hypot(1.5e308,1.5e308)"],
+			["hypot(15e307,15e307)"],
 			["calc(1e308 + 1e308)"],
 			["calc(1/1e-320)"],
 			["calc(1px/0)"]

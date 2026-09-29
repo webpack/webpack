@@ -1280,7 +1280,7 @@ const EXPECTED = [
 	{
 		relation: "respelling leading-zero",
 		contains: "-> 0",
-		why: "the printer leaves scientific notation alone on purpose — `_normalizeNumber` says so in as many words — so `opacity:0.2e2` keeps every byte, and an `@supports` prelude is kept as authored because it is a feature test rather than a declaration to print. Both are judgements to revisit rather than defects; retire this entry if either changes"
+		why: "an `@supports` prelude is kept as authored because it is a feature test rather than a declaration to print, so `(color:rgba(0,0,0,.5))` keeps every byte. A judgement to revisit rather than a defect; retire this entry if it changes"
 	}
 ];
 

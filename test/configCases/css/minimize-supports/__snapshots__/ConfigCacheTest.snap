@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-supports minimize-supports should compile 1`] = `
+Array [
+  "/*! supports: whitespace inside the parentheses */@supports (display:grid){.s01{color:red}}",
+  "/*! supports: comments around the condition */@supports (display:grid){.s02{color:red}}",
+  "/*! supports: whitespace between the conditions */@supports (display:grid) and (gap:1px){.s03{color:red}}",
+  "/*! supports: nested conditions */@supports (display:grid) or (not (display:inline-grid)){.s04{color:red}}",
+  "/*! supports: a tested !important */@supports (display:grid!important){.s05{color:red}}",
+  "/*! supports: a function's arguments */@supports (transform:translate(1px,2px)){.s06{color:red}}",
+  "/*! supports: font-tech() and font-format() */@supports font-tech(color-COLRv1) and font-format(woff2){.s07{color:red}}",
+  "/*! supports: a selector's combinators */@supports selector(.a>.b+.c~.d){.s08{color:red}}",
+  "/*! supports: a combinator nested in :is() and :has() */@supports selector(:is(.a>.b)) and selector(a:has(>b)){.s09{color:red}}",
+  "/*! supports: a comment beside a combinator */@supports selector(.a>.b){.s10{color:red}}",
+  "/*! supports: an escaped name */@supports (color:red){.s11{color:red}}",
+  "/*! kept: the space \`not\` needs before its parenthesis */@supports not (display:grid){.k01{color:red}}",
+  "/*! kept: a descendant combinator */@supports selector(.a .b){.k02{color:red}}",
+  "/*! kept: the selector under test */@supports selector(*.a:HOVER){.k03{color:red}}",
+  "/*! kept: calc() needs its spaces */@supports (width:calc(1px + 2px)){.k04{color:red}}",
+  "/*! kept: a value that is newer when shortened */@supports (color:rgba(0,0,0,.5)){.k05{color:red}}",
+  "/*! kept: the comment WebKit needs between a keyword and its condition */@supports (display:grid)and/**/(gap:1px){.s12{color:red}}@supports not/**/(display:flex){.s13{color:red}}",
+]
+`;
