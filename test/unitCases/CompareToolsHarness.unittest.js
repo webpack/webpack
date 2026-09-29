@@ -5,6 +5,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { Readable } = require("stream");
+const { pathToFileURL } = require("url");
 const {
 	compress,
 	exists,
@@ -860,7 +861,7 @@ describe("profileShares", () => {
 		});
 		const nodes = [
 			{ id: 1, ...frame("minify", "file:///x/node_modules/terser/lib/minify.js") },
-			{ id: 2, ...frame("print", `file://${path.join(__dirname, "../../lib/javascript/syntax-printer.js")}`) },
+			{ id: 2, ...frame("print", pathToFileURL(path.join(__dirname, "../../lib/javascript/syntax-printer.js")).href) },
 			{ id: 3, ...frame("(garbage collector)", "") },
 			{ id: 4, ...frame("anonymous", "") },
 			{ id: 5, ...frame("helper", "file:///x/node_modules/other/index.js") }

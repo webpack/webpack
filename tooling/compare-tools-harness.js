@@ -15,6 +15,7 @@ const { spawn } = require("child_process");
 const { createHash } = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { pathToFileURL } = require("url");
 const { promisify } = require("util");
 const zlib = require("zlib");
 
@@ -274,6 +275,8 @@ const lossColumn = (classes, examples, notices) => {
 // How many files `PROFILE` lists under a row.
 const PROFILE_ROWS = 12;
 
+const LIB_URL = pathToFileURL(path.join(ROOT, "lib/")).href;
+
 /**
  * Where a sample landed, read as its file: terser's and webpack's by their path
  * in `lib`, the engine's own work (collector, compiler) by its name.
@@ -284,7 +287,8 @@ const profileBucket = ({ callFrame: { functionName, url } }) => {
 	const terser = url.lastIndexOf("/terser/lib/");
 	if (terser !== -1) return `terser ${url.slice(terser + 12)}`;
 	const webpack = url.lastIndexOf("/lib/");
-	if (webpack !== -1 && url.includes(path.join(ROOT, "lib"))) {
+	// The inspector names a file by its URL, which on Windows is not its path.
+	if (webpack !== -1 && url.startsWith(LIB_URL)) {
 		return `webpack ${url.slice(webpack + 5)}`;
 	}
 	if (functionName.startsWith("(")) return functionName;
