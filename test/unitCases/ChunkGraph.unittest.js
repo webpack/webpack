@@ -169,6 +169,66 @@ describe("ChunkGraph", () => {
 			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(0);
 		});
 
+		it("grows into a set once a second chunk contains it", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "two-chunks");
+			const first = new Chunk("a", false);
+			first.runtime = "a";
+			const second = new Chunk("b", false);
+			second.runtime = "b";
+			chunkGraph.connectChunkAndModule(first, module);
+			// Connecting the same chunk twice must not grow anything.
+			chunkGraph.connectChunkAndModule(first, module);
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(1);
+			chunkGraph.connectChunkAndModule(second, module);
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(2);
+			expect(chunkGraph.getModuleChunks(module)).toEqual([first, second]);
+			expect([...chunkGraph.getModuleRuntimes(module)].sort()).toEqual([
+				"a",
+				"b"
+			]);
+			// Losing one leaves the set, which is not shrunk back to an array.
+			chunkGraph.disconnectChunkAndModule(second, module);
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(1);
+			expect(chunkGraph.getModuleChunks(module)).toEqual([first]);
+			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual(["a"]);
+		});
+
+		it("orders one chunk without asking the comparer", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "ordered-one");
+			const chunk = new Chunk("a", false);
+			chunkGraph.connectChunkAndModule(chunk, module);
+			let asked = 0;
+			const ordered = [
+				...chunkGraph.getOrderedModuleChunksIterable(module, () => {
+					asked++;
+					return 0;
+				})
+			];
+			expect(ordered).toEqual([chunk]);
+			expect(asked).toBe(0);
+		});
+
+		it("orders the chunks of a module in several", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "ordered-many");
+			const first = new Chunk("a", false);
+			const second = new Chunk("b", false);
+			chunkGraph.connectChunkAndModule(second, module);
+			chunkGraph.connectChunkAndModule(first, module);
+			const byName = [
+				...chunkGraph.getOrderedModuleChunksIterable(module, (a, b) =>
+					/** @type {string} */ (a.name) < /** @type {string} */ (b.name)
+						? -1
+						: /** @type {string} */ (a.name) > /** @type {string} */ (b.name)
+							? 1
+							: 0
+				)
+			];
+			expect(byName).toEqual([first, second]);
+		});
+
 		it("moves a replaced module's chunks onto one holding no set", () => {
 			const chunkGraph = new ChunkGraph(new ModuleGraph());
 			const oldModule = new RawModule("", "old");
