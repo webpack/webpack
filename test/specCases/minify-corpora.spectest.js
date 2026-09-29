@@ -1,24 +1,35 @@
 "use strict";
 
-// cspell:ignore fnames
+// cspell:ignore fnames reminify reminifies ufuzz
 
-// Holds webpack's JavaScript minifier to the minifier it replaces: every source
-// of every corpus below is minified by both under the same options, and the two
-// must write the same bytes, or refuse the source with the same error.
+// Holds webpack's JavaScript minifier to every test terser and swc write for
+// theirs. Each source of each corpus below is minified by webpack and by the
+// minifier it replaces under the same options, and:
+// 1. both must write the same bytes, or refuse the source with the same error;
+// 2. where the test states what its input prints, webpack's output, run in
+//    terser's own sandbox, must print it too, whatever the bytes;
+// 3. where swc records its own output, a smaller one is a lead for printing
+//    less, written to the file JS_MINIFY_REPORT names (never a failure).
+// PHASES chooses the printer phases installed: `PHASES=mangle,output` for
+// those two only, `PHASES=-parse` for all but one.
 
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
+const vm = require("vm");
+const zlib = require("zlib");
 const acorn = require("acorn");
 const { loadPhases, selectPhases } = require("../helpers/printerPhases");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
-/** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT } }} Source */
+/** @typedef {{ expected: string | Error | true, input: string, prepend: string, microtasks?: boolean, strict?: boolean }} Stdout */
+/** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT }, stdout?: Stdout, reminify?: boolean, rival?: { name: string, code: string } }} Source */
 /** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY, knows: (group: "compress" | "mangle", key: string) => boolean }} CaseReader */
 /** @typedef {{ name: string, files: string[] }} Group */
-/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean }} Corpus */
+/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, minimumRun?: number, minimumRival?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean }} Corpus */
+/** @typedef {{ source: string, rival: string, ours: number, theirs: number, oursGzip: number, theirsGzip: number }} Lead */
 
 const externalDir = path.resolve(__dirname, "../external");
 const referenceDir = path.join(externalDir, "terser");
@@ -51,6 +62,24 @@ const copy = (value) => {
 };
 
 /**
+ * A case keeping function or class names prints them, so a set it is run under
+ * keeps them too.
+ * @param {Source["own"]} own the case's own options
+ * @returns {{ keep_fnames?: boolean, keep_classnames?: boolean }} those it names
+ */
+const keptNames = (own) => {
+	const compress = own && own.compress;
+	if (!compress || typeof compress !== "object") return {};
+	/** @type {{ keep_fnames?: boolean, keep_classnames?: boolean }} */
+	const names = {};
+	if (compress.keep_fnames !== undefined) names.keep_fnames = compress.keep_fnames;
+	if (compress.keep_classnames !== undefined) {
+		names.keep_classnames = compress.keep_classnames;
+	}
+	return names;
+};
+
+/**
  * The option sets a source can be minified under, by name. A set returning
  * undefined does not apply to that source.
  * @type {Record<string, (source: Source) => MinifyOptions | undefined>}
@@ -70,6 +99,7 @@ const OPTION_SETS = {
 		compress: { passes: 2 },
 		mangle: true,
 		module,
+		...keptNames(own),
 		...(own && { parse: copy(own.parse) })
 	}),
 	"printing alone": ({ own, module }) => ({
@@ -82,9 +112,33 @@ const OPTION_SETS = {
 		compress: { passes: 2 },
 		mangle: { toplevel: true },
 		module: true,
+		...keptNames(own),
 		...(own && { parse: copy(own.parse) })
 	})
 };
+
+const reminifyFile = path.join(referenceDir, "test/ufuzz.json");
+
+// The sets terser's runner reminifies a case stating its stdout with, keeping
+// the case's own `keep_fnames` and `keep_classnames`, unless it opts out.
+if (fs.existsSync(reminifyFile)) {
+	for (const [index, set] of JSON.parse(
+		fs.readFileSync(reminifyFile, "utf8")
+	).entries()) {
+		OPTION_SETS[`reminify ${index} ${JSON.stringify(set)}`] = ({
+			own,
+			stdout,
+			reminify
+		}) =>
+			stdout && reminify
+				? { ...copy(set), ...keptNames(own) }
+				: undefined;
+	}
+}
+
+// terser's sandbox runs code with no time limit, so an output that never ends
+// would hang the suite rather than fail it.
+const RUN_TIMEOUT = 5000;
 
 /**
  * @param {string} directory a directory
@@ -101,6 +155,52 @@ const listFiles = (directory) =>
 					: []
 		)
 		.sort();
+
+/**
+ * @param {string} range a case's `node_version`
+ * @returns {boolean} whether this Node is in it
+ */
+const nodeSatisfies = (range) => {
+	const match = /^>=\s*(\d+)(?:\.0\.0)?$/.exec(range);
+	if (!match) throw new Error(`Unsupported node_version "${range}"`);
+	return Number(process.versions.node.split(".")[0]) >= Number(match[1]);
+};
+
+/**
+ * @param {EXPECTED_ANY} node a string or an array of strings in a terser case
+ * @param {EXPECTED_ANY} AST terser's node classes
+ * @param {string} name the file, for the error
+ * @returns {string} the text, array elements joined by lines
+ */
+const readStringList = (node, AST, name) => {
+	if (node instanceof AST.AST_String) return node.value;
+	if (node instanceof AST.AST_Array) {
+		return node.elements
+			.map((/** @type {EXPECTED_ANY} */ element) =>
+				readStringList(element, AST, name)
+			)
+			.join("\n");
+	}
+	throw new Error(`Expected a string or an array of strings in ${name}`);
+};
+
+/**
+ * A case's `expect_stdout`: `true` for whatever its input prints, an error it
+ * throws, or the lines it prints.
+ * @param {EXPECTED_ANY} node the value
+ * @param {EXPECTED_ANY} AST terser's node classes
+ * @param {string} name the file, for the error
+ * @returns {string | Error | true} what the case expects
+ */
+const readExpectedStdout = (node, AST, name) => {
+	if (node instanceof AST.AST_Boolean) return node.value;
+	if (node instanceof AST.AST_Call) {
+		return new /** @type {ErrorConstructor} */ (
+			/** @type {EXPECTED_ANY} */ (globalThis)[node.expression.name]
+		)(...node.args.map((/** @type {EXPECTED_ANY} */ arg) => arg.value));
+	}
+	return `${readStringList(node, AST, name)}\n`;
+};
 
 /**
  * Every case in one of terser's `test/compress` files, as its runner reads it:
@@ -148,17 +248,23 @@ const readCompressCases = (file, { AST, parse }) => {
 	for (const statement of parse(text, { filename: name }).body) {
 		if (!(statement instanceof AST.AST_LabeledStatement)) continue;
 		/** @type {Record<string, EXPECTED_ANY>} */
-		const test = {};
+		const test = { reminify: true };
 		for (const node of statement.body.body) {
 			if (node instanceof AST.AST_LabeledStatement) {
+				const label = node.label.name;
 				const { body } = node;
 				if (body instanceof AST.AST_BlockStatement) {
-					test[node.label.name] = blockBody(body.start.pos);
-				} else if (
-					body instanceof AST.AST_SimpleStatement &&
-					body.body instanceof AST.AST_TemplateString
-				) {
-					test[node.label.name] = body.body.segments[0].value;
+					test[label] = blockBody(body.start.pos);
+				} else if (!(body instanceof AST.AST_SimpleStatement)) {
+					continue;
+				} else if (label === "expect_stdout") {
+					test.expect_stdout = readExpectedStdout(body.body, AST, name);
+				} else if (label === "reminify") {
+					test.reminify = body.body.value;
+				} else if (label === "node_version" || label === "prepend_code") {
+					test[label] = readStringList(body.body, AST, name);
+				} else if (body.body instanceof AST.AST_TemplateString) {
+					test[label] = body.body.segments[0].value;
 				}
 			} else if (
 				node instanceof AST.AST_SimpleStatement &&
@@ -168,15 +274,31 @@ const readCompressCases = (file, { AST, parse }) => {
 			}
 		}
 		if (typeof test.input !== "string") continue;
+		const format = test.beautify || test.format;
 		cases.push({
 			name: statement.label.name,
 			input: test.input,
 			own: {
 				compress: test.options,
 				mangle: test.mangle,
-				format: test.beautify || test.format,
+				format,
 				parse: test.parse
-			}
+			},
+			reminify: test.reminify,
+			// Run as terser's runner runs it: parsed and printed by the reference.
+			stdout:
+				test.expect_stdout !== undefined &&
+				test.expect_stdout !== false &&
+				(!test.node_version || nodeSatisfies(test.node_version))
+					? {
+							expected: test.expect_stdout,
+							input: parse(test.input, { ...test.parse }).print_to_string({
+								...format
+							}),
+							prepend: test.prepend_code || "",
+							strict: true
+						}
+					: undefined
 		});
 	}
 	return cases;
@@ -270,21 +392,48 @@ const readSwcTest = (file, { knows }) => {
 	const compress = dir.startsWith(swcTestsDir)
 		? { defaults: true, ...readJson(path.join(dir, "config.json")) }
 		: undefined;
+	const [area] = path.relative(swcTestsDir, file).split(path.sep);
+	const mangle = readJson(path.join(path.dirname(file), "mangle.json"));
+	const module = readsAsModule(input);
+	const expectedStdout = path.join(path.dirname(file), "expected.stdout");
+	// swc records what it wrote for each test beside its input, and for each
+	// project under `output`, the way its harness compares them.
+	const rival =
+		area === "projects"
+			? path.join(swcTestsDir, "projects/output", path.basename(file))
+			: path.join(path.dirname(file), "output.js");
 	return [
 		{
 			name: path.relative(swcTestsDir, file),
 			input,
-			module: readsAsModule(input),
+			module,
 			own: compress && {
 				compress: knownTo(compress, "compress", knows),
+				// swc's harness mangles its `full` tests at the top level.
 				mangle: knownTo(
-					readJson(path.join(path.dirname(file), "mangle.json")),
+					mangle || (area === "full" ? { toplevel: true } : undefined),
 					"mangle",
 					knows
 				),
 				format: undefined,
 				parse: undefined
-			}
+			},
+			// Run as swc's harness runs it, after its own helpers; the sandbox
+			// runs a script, so a module is left to the bytes alone.
+			stdout:
+				!module && fs.existsSync(expectedStdout)
+					? {
+							expected: fs.readFileSync(expectedStdout, "utf8"),
+							input,
+							prepend: fs.readFileSync(
+								path.join(swcTestsDir, "terser_exec_base.js"),
+								"utf8"
+							)
+						}
+					: undefined,
+			rival: fs.existsSync(rival)
+				? { name: "swc", code: fs.readFileSync(rival, "utf8") }
+				: undefined
 		}
 	];
 };
@@ -397,16 +546,22 @@ const readSwcExecTests = (file, { knows }) => {
 			compress = false;
 			mangle = { toplevel: true, properties: {} };
 		}
+		const module = readsAsModule(input);
 		sources.push({
 			name,
 			input,
-			module: readsAsModule(input),
+			module,
 			own: {
 				compress: knownTo(compress, "compress", knows),
 				mangle: knownTo(mangle, "mangle", knows),
 				format: undefined,
 				parse: undefined
-			}
+			},
+			// swc's harness requires the output to print what the input prints,
+			// promise callbacks included.
+			stdout: module
+				? undefined
+				: { expected: true, input, prepend: "", microtasks: true }
 		});
 	}
 	return sources;
@@ -610,6 +765,74 @@ const CORPORA = [
 ];
 
 /**
+ * Sources whose output misprints under a set as terser's does, each with why
+ * that is not a defect; an entry that starts printing right fails until retired.
+ * @type {Record<string, string>}
+ */
+const INHERITED = {
+	"swc exec: terser_pure_funcs_issue_3065_3 (its own options)":
+		"`pure_funcs` names these calls free of effects, so dropping them is what it asks",
+	"swc exec: terser_pure_funcs_issue_3065_4 (its own options)":
+		"`pure_funcs` names these calls free of effects, so dropping them is what it asks",
+	"swc exec: terser_pure_getters_impure_getter_2 (its own options)":
+		"`pure_getters` says property reads have no effects, so dropping the getter is what it asks"
+};
+
+/**
+ * Sources terser misprints under a set and webpack's `correct` phase prints
+ * right, each with the defect: without the phase each must misprint as terser's.
+ * @type {Record<string, string>}
+ */
+const CORRECTED = {
+	"swc exec: object_spread_proto_key_is_not_flattened (its own options)":
+		"terser flattens a spread object carrying a `__proto__` key into a literal, where it sets the prototype",
+	"swc exec: object_spread_proto_key_is_not_flattened (the default minimizer's options)":
+		"terser flattens a spread object carrying a `__proto__` key into a literal, where it sets the prototype",
+	"swc exec: terser_reduce_vars_shorthand_proto_null (its own options)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc exec: terser_reduce_vars_shorthand_proto_null (printing alone)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc exec: terser_reduce_vars_shorthand_proto_null (the default minimizer's options)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc exec: terser_reduce_vars_shorthand_proto_object (its own options)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc exec: terser_reduce_vars_shorthand_proto_object (printing alone)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc exec: terser_reduce_vars_shorthand_proto_object (the default minimizer's options)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc minifier: fixture/issues/12182/callee-contexts/input.js (its own options)":
+		"terser drops the `(0, \u2026)` detaching a callee from its receiver, so `this` becomes the object",
+	"swc minifier: fixture/issues/12182/callee-contexts/input.js (the default minimizer's options)":
+		"terser drops the `(0, \u2026)` detaching a callee from its receiver, so `this` becomes the object",
+	"swc minifier: fixture/issues/12182/callee-safety/direct-eval/input.js (its own options)":
+		"terser calls a function reading `this` through direct `eval` out of the array holding it, so `this` is lost",
+	"swc minifier: fixture/issues/12182/callee-safety/direct-eval/input.js (the default minimizer's options)":
+		"terser calls a function reading `this` through direct `eval` out of the array holding it, so `this` is lost",
+	"swc minifier: fixture/issues/12209/input.js (its own options)":
+		"terser reads `arguments[0]` as a parameter reassigned in the body, though no argument was passed to alias it",
+	"swc minifier: fixture/issues/12214/input.js (its own options)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc minifier: fixture/issues/12214/input.js (printing alone)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc minifier: fixture/issues/12214/input.js (the default minimizer's options)":
+		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
+	"swc minifier: fixture/issues/12222/input.js (its own options)":
+		"terser drops calls whose parameter defaults or destructuring have effects or throw",
+	"swc minifier: fixture/issues/12222/input.js (the default minimizer's options)":
+		"terser drops calls whose parameter defaults or destructuring have effects or throw",
+	"swc minifier: fixture/issues/12296/input.js (its own options)":
+		"terser moves a class declaration into a block the closure reading it cannot see, so it throws",
+	"swc minifier: fixture/issues/12307/input.js (its own options)":
+		"terser folds `f().a == f().a` to true, though each call returns a different object",
+	"swc minifier: fixture/issues/12307/input.js (the default minimizer's options)":
+		"terser folds `f().a == f().a` to true, though each call returns a different object",
+	"swc minifier: fixture/issues/9460/side-effects/input.js (its own options)":
+		"terser drops destructuring defaults and patterns whose evaluation has effects or throws",
+	"swc minifier: fixture/issues/9460/side-effects/input.js (the default minimizer's options)":
+		"terser drops destructuring defaults and patterns whose evaluation has effects or throws"
+};
+
+/**
  * @param {Minify} minify a minifier
  * @param {string} code the source
  * @param {MinifyOptions} options the options
@@ -630,10 +853,48 @@ const outcome = async (minify, code, options) => {
 const isPresent = (directory) =>
 	fs.existsSync(directory) && fs.readdirSync(directory).length > 0;
 
+/**
+ * @param {string} code a program
+ * @returns {{ raw: number, gzip: number }} its size, and gzipped at level 9
+ */
+const sizeOf = (code) => ({
+	raw: Buffer.byteLength(code),
+	gzip: zlib.gzipSync(code, { level: 9 }).length
+});
+
+/**
+ * @param {Lead[]} leads where another minifier wrote less
+ * @returns {string} them as a Markdown table, the most bytes first
+ */
+const formatLeads = (leads) => {
+	const rows = [...leads]
+		.sort((a, b) => b.ours - b.theirs - (a.ours - a.theirs))
+		.map(
+			(lead) =>
+				`| ${lead.source} | ${lead.rival} | ${lead.ours} | ${lead.theirs} | ${lead.ours - lead.theirs} | ${lead.oursGzip - lead.theirsGzip} |`
+		);
+	return [
+		"# Where another minifier's recorded output is smaller",
+		"",
+		"Both outputs printed alone by webpack's printer; bytes more than theirs.",
+		"",
+		"| Source | Rival | Ours | Theirs | Raw more | Gzip more |",
+		"| --- | --- | --: | --: | --: | --: |",
+		...rows,
+		""
+	].join("\n");
+};
+
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[] } }} */
+	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	const selected = selectPhases(process.env.PHASES);
+	/** @type {Lead[]} */
+	const leads = [];
+	const { runInNewContext } = vm;
+	// Whether the sandbox also drains promise callbacks: swc's harness runs a
+	// whole process, terser's runner captures only what runs synchronously.
+	let microtasks = false;
 
 	beforeAll(async () => {
 		loaded.printer = await loadPhases(selected);
@@ -641,19 +902,22 @@ describe("JavaScript minifier", () => {
 		// eslint-disable-next-line no-new-func
 		const importModule = new Function("specifier", "return import(specifier)");
 		/**
-		 * @param {string} file a file in the reference's `lib`
+		 * @param {string} file a file in the reference checkout
 		 * @returns {Promise<EXPECTED_ANY>} the module
 		 */
 		const at = (file) =>
-			importModule(pathToFileURL(path.join(referenceDir, "lib", file)).href);
-		// Read for its effect: `minify` reaches `transform` on every node class.
-		await at("transform.js");
-		const { minify_sync: minifySync } = await at("minify.js");
+			importModule(pathToFileURL(path.join(referenceDir, file)).href);
+		// Read for their effect: `minify` reaches `transform` on every node
+		// class, and a case's input is printed as terser's runner prints it.
+		await at("lib/transform.js");
+		await at("lib/scope.js");
+		await at("lib/output.js");
+		const { minify_sync: minifySync } = await at("lib/minify.js");
 		/** @type {Map<string, boolean>} */
 		const known = new Map();
 		loaded.reader = {
-			AST: await at("ast.js"),
-			parse: (await at("parse.js")).parse,
+			AST: await at("lib/ast.js"),
+			parse: (await at("lib/parse.js")).parse,
 			// Whether terser reads a key, as its own `minify` answers: it refuses an
 			// options object naming one it does not, and nothing else says so whole.
 			knows: (group, key) => {
@@ -673,6 +937,19 @@ describe("JavaScript minifier", () => {
 				return answer;
 			}
 		};
+		loaded.sandbox = await at("test/sandbox.js");
+		vm.runInNewContext = (code, context, options) =>
+			runInNewContext(code, context, {
+				...options,
+				timeout: RUN_TIMEOUT,
+				...(microtasks && { microtaskMode: "afterEvaluate" })
+			});
+	});
+
+	afterAll(() => {
+		vm.runInNewContext = runInNewContext;
+		const report = process.env.JS_MINIFY_REPORT;
+		if (report) fs.writeFileSync(report, formatLeads(leads));
 	});
 
 	it("should install every phase PHASES selects, so each corpus reaches them", () => {
@@ -680,6 +957,31 @@ describe("JavaScript minifier", () => {
 			loaded.printer
 		);
 		expect(phases).toEqual(selected);
+	});
+
+	it("should read PHASES as a list to keep or, prefixed with -, to drop", () => {
+		const names = require("../../lib/javascript/syntax").printer.PHASES.map(
+			(/** @type {{ name: string }} */ phase) => phase.name
+		);
+
+		expect(selectPhases(undefined)).toEqual(names);
+		expect(selectPhases("")).toEqual(names);
+		expect(selectPhases("print, mangle")).toEqual(["mangle", "print"]);
+		expect(selectPhases("-parse")).toEqual(
+			names.filter((name) => name !== "parse")
+		);
+		expect(selectPhases("mangle,output,-output")).toEqual(["mangle"]);
+		expect(() => selectPhases("mangel")).toThrow(/Unknown phase "mangel"/);
+		expect(() => selectPhases("-mangel")).toThrow(/Unknown phase "-mangel"/);
+	});
+
+	it("should run only the node_version ranges it can read", () => {
+		const major = Number(process.versions.node.split(".")[0]);
+		expect(nodeSatisfies(`>=${major}`)).toBe(true);
+		expect(nodeSatisfies(`>= ${major}`)).toBe(true);
+		expect(nodeSatisfies(`>=${major}.0.0`)).toBe(true);
+		expect(nodeSatisfies(`>=${major + 1}`)).toBe(false);
+		expect(() => nodeSatisfies(`^${major}`)).toThrow(/Unsupported/);
 	});
 
 	if (isPresent(referenceDir)) {
@@ -690,6 +992,50 @@ describe("JavaScript minifier", () => {
 			expect(pinned).toBe(require("terser/package.json").version);
 		});
 	}
+
+	/**
+	 * @param {Stdout} stdout what a source prints
+	 * @param {string} code a program
+	 * @returns {string | Error} what it prints, or the error it throws
+	 */
+	const run = (stdout, code) => {
+		const { run_code: runCode } = /** @type {NonNullable<typeof loaded.sandbox>} */ (
+			loaded.sandbox
+		);
+		microtasks = Boolean(stdout.microtasks);
+		try {
+			return runCode(code, stdout.prepend);
+		} finally {
+			microtasks = false;
+		}
+	};
+
+	/**
+	 * What a source's input prints, where the sandbox can tell: an input that
+	 * prints nothing or throws where it should print says nothing to hold to.
+	 * @param {Stdout} stdout what a source prints
+	 * @returns {{ expected?: string | Error, disagrees?: string }} the answer
+	 */
+	const expectedOf = (stdout) => {
+		const { same_stdout: sameStdout } =
+			/** @type {NonNullable<typeof loaded.sandbox>} */ (loaded.sandbox);
+		const printed = run(stdout, stdout.input);
+		// terser's runner holds an output to whatever its input does, a throw or
+		// silence included; swc's harness needs the input to print.
+		if (stdout.expected === true) {
+			return stdout.strict || (typeof printed === "string" && printed !== "")
+				? { expected: printed }
+				: {};
+		}
+		if (sameStdout(stdout.expected, printed)) return { expected: stdout.expected };
+		// swc's harness runs a whole Node process, with `process` and timers,
+		// where terser's sandbox has neither: only terser's own cases must agree.
+		return stdout.strict
+			? {
+					disagrees: `the input prints ${String(printed)}, not ${String(stdout.expected)}`
+				}
+			: {};
+	};
 
 	for (const corpus of CORPORA) {
 		describe(corpus.name, () => {
@@ -707,11 +1053,15 @@ describe("JavaScript minifier", () => {
 				let count = 0;
 				let own = 0;
 				let defaultsUnnamed = 0;
+				let runnable = 0;
+				let rivals = 0;
 				for (const { files } of groups) {
 					for (const file of files) {
 						for (const source of corpus.read(file, reader)) {
 							count++;
 							if (source.own) own++;
+							if (source.stdout) runnable++;
+							if (source.rival) rivals++;
 							if (
 								source.own &&
 								source.own.compress &&
@@ -726,12 +1076,18 @@ describe("JavaScript minifier", () => {
 				if (corpus.minimumOwn !== undefined) {
 					expect(own).toBeGreaterThan(corpus.minimumOwn);
 				}
+				if (corpus.minimumRun !== undefined) {
+					expect(runnable).toBeGreaterThan(corpus.minimumRun);
+				}
+				if (corpus.minimumRival !== undefined) {
+					expect(rivals).toBeGreaterThan(corpus.minimumRival);
+				}
 				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
 			});
 
 			for (const group of groups) {
 				it(
-					`should minify exactly as the reference does: ${group.name || "."}`,
+					`should minify as the reference does, printing what the input prints: ${group.name || "."}`,
 					async () => {
 						const reference = require("terser");
 
@@ -743,6 +1099,14 @@ describe("JavaScript minifier", () => {
 						const differences = [];
 						for (const file of group.files) {
 							for (const source of corpus.read(file, reader)) {
+								const expectation = source.stdout
+									? expectedOf(source.stdout)
+									: {};
+								if (expectation.disagrees) {
+									differences.push(`${source.name}: ${expectation.disagrees}`);
+								}
+								/** @type {Map<string, string | undefined>} */
+								const verdicts = new Map();
 								for (const setName of corpus.optionSets) {
 									const optionsFor = OPTION_SETS[setName];
 									const options = optionsFor(source);
@@ -767,10 +1131,124 @@ describe("JavaScript minifier", () => {
 											`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
 										);
 									}
+									const { expected } = expectation;
+									// Run where the case says what it prints: under its own options
+									// always, under another set unless it opts out, and never as a
+									// module where it is a script, since a module is strict.
+									const runs =
+										expected !== undefined &&
+										(setName === "its own options" ||
+											(source.reminify !== false &&
+												!(options.module && !source.module)));
+									/**
+									 * @param {string} code an output
+									 * @returns {string | undefined} how it misprints, if it does
+									 */
+									const misprint = (code) => {
+										const { same_stdout: sameStdout } =
+											/** @type {NonNullable<typeof loaded.sandbox>} */ (
+												loaded.sandbox
+											);
+										const stdout = /** @type {Stdout} */ (source.stdout);
+										const wanted = /** @type {string | Error} */ (expected);
+										let actual = run(stdout, code);
+										// As terser's runner reminifies: a throw of the expected kind
+										// passes whatever its message says.
+										if (
+											setName !== "its own options" &&
+											typeof wanted !== "string" &&
+											typeof actual !== "string" &&
+											wanted.name === actual.name
+										) {
+											actual = wanted;
+										}
+										return sameStdout(wanted, actual)
+											? undefined
+											: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
+									};
+									const key = `${corpus.name}: ${source.name} (${setName})`;
 									if (theirs.code !== ours.code || theirs.error !== ours.error) {
-										differences.push(
-											`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(ours)}`
+										// A difference only the `correct` phase makes is its fix, which
+										// the run check below holds to; any other is a difference.
+										const { corrections } = printer;
+										let uncorrected = ours;
+										if (corrections && corrections.enabled) {
+											corrections.enabled = false;
+											try {
+												uncorrected = await outcome(
+													printer.minify,
+													source.input,
+													optionsFor(source)
+												);
+											} finally {
+												corrections.enabled = true;
+											}
+										}
+										if (
+											theirs.code !== uncorrected.code ||
+											theirs.error !== uncorrected.error
+										) {
+											differences.push(
+												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
+											);
+										}
+									}
+									if (runs && ours.code !== undefined) {
+										let wrong = verdicts.get(ours.code);
+										if (!verdicts.has(ours.code)) {
+											wrong = misprint(ours.code);
+											verdicts.set(ours.code, wrong);
+										}
+										const corrected = Boolean(
+											printer.corrections && printer.corrections.enabled
 										);
+										const table = Object.prototype.hasOwnProperty.call(
+											INHERITED,
+											key
+										)
+											? "INHERITED"
+											: !corrected &&
+												  Object.prototype.hasOwnProperty.call(CORRECTED, key)
+												? "CORRECTED"
+												: undefined;
+										if (wrong !== undefined && table === undefined) {
+											differences.push(`${key} prints differently${wrong}`);
+										} else if (wrong === undefined && table !== undefined) {
+											differences.push(
+												`${key} prints what it should now: retire it from ${table}`
+											);
+										}
+									}
+									if (
+										source.rival &&
+										setName === "its own options" &&
+										ours.code !== undefined
+									) {
+										const printing = {
+											compress: false,
+											mangle: false,
+											module: source.module
+										};
+										const rival = await outcome(
+											printer.minify,
+											source.rival.code,
+											printing
+										);
+										const mine = await outcome(printer.minify, ours.code, printing);
+										if (rival.code !== undefined && mine.code !== undefined) {
+											const oursSize = sizeOf(mine.code);
+											const theirsSize = sizeOf(rival.code);
+											if (theirsSize.raw < oursSize.raw) {
+												leads.push({
+													source: `${corpus.name}: ${source.name}`,
+													rival: source.rival.name,
+													ours: oursSize.raw,
+													theirs: theirsSize.raw,
+													oursGzip: oursSize.gzip,
+													theirsGzip: theirsSize.gzip
+												});
+											}
+										}
 									}
 								}
 							}

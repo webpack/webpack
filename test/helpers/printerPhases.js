@@ -35,7 +35,7 @@ const selectPhases = (setting) => {
 
 /**
  * @param {string[]} selected the phases to install
- * @returns {Promise<{ minify: (code: string, options: import("terser").MinifyOptions) => Promise<{ code?: string }>, phases: string[] }>} terser and the phases it took
+ * @returns {Promise<{ minify: (code: string, options: import("terser").MinifyOptions) => Promise<{ code?: string }>, phases: string[], corrections: { enabled: boolean } | undefined }>} terser, the phases it took, and the switch of its corrections
  */
 const loadPhases = async (selected) => {
 	const modules = await loadSources();
@@ -46,7 +46,7 @@ const loadPhases = async (selected) => {
 		phase.install(modules);
 		phases.push(phase.name);
 	}
-	return { minify: modules.minify, phases };
+	return { minify: modules.minify, phases, corrections: modules.corrections };
 };
 
 module.exports = { loadPhases, selectPhases };
