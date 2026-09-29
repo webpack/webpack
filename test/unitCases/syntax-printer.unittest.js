@@ -5,6 +5,7 @@
 const {
 	FORMAT_DEFAULTS,
 	load,
+	loadSources,
 	PHASES
 } = require("../../lib/javascript/syntax").printer;
 
@@ -676,6 +677,113 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	// Sources reaching each node class's flow analysis: hoisted functions read
+	// before a write, branches, loops, chains and the assignments it tracks.
+	/** @type {[string, string, import("terser").CompressOptions?][]} */
+	const REDUCE_CASES = [
+		["a hoisted function read before a write", "f(); var a = g(); function f() { return a; } sink(f);"],
+		[
+			"hoisted functions calling each other",
+			"b(); var x = g(); function a() { return x; } function b() { return a(); } function c() { return b() + x; } sink(a, b, c);"
+		],
+		[
+			"hoisted functions inside a function",
+			"function outer() { k(); var v = h(); function g() { return v; } function k() { return g(); } function unread() { return v; } return k; } sink(outer);"
+		],
+		[
+			"a hoisted function written after it is read",
+			"function outer() { var v = h(); function g() { return v; } v = h(); return g; } sink(outer);"
+		],
+		["a recursive function", "function r(n) { return n && r(n - 1) + x; } var x = g(); sink(r(2));"],
+		["a named function expression", "var f = function g(n) { return n ? g(n - 1) : 0; }; sink(f(3));"],
+		["an IIFE's parameters", "(function (a, b) { sink(a + b); })(1, 2); (function (a, b) { sink(a, b); })(1);"],
+		[
+			"an IIFE reading its arguments",
+			'(function (a, b) { "use strict"; sink(arguments, a); })(1); (function (a) { sink(arguments, a); })(1); (function (a, a2) { sink(a); })(...g());'
+		],
+		["optional chains", "var o = g(); sink(o?.a?.(o.b), o?.[k], o.c?.d);"],
+		["logical assignments", "var a = g(); a ||= 1; a &&= b(); a ??= c; var d; d ||= 2; sink(a, d);"],
+		["compound assignments and steps", "var a = 1; a += 2; a++; --a; var b = g(); b -= 1; sink(a, b);"],
+		["a for loop with continue", "for (var i = 0; i < 3; i++) { if (i) continue; sink(i); }"],
+		["a do loop with break", "var a = 1; do { if (g()) break; a = 2; } while (a < 3); sink(a);"],
+		["a while loop", "var a = g(); while (a) { a = h(a); } sink(a);"],
+		["a for-in and a for-of", "var o = g(); for (var k in o) sink(k); for (const v of o) sink(v);"],
+		["try, catch and finally", "var a = 1; try { a = g(); } catch (e) { e = 1; sink(e); } finally { sink(a); }"],
+		["a switch with a default", "var a = 1; switch (g()) { case a: a = 2; break; default: sink(a); }"],
+		["a labelled block", "l: { var a = g(); if (a) break l; sink(a); }"],
+		["a class with a static block", "class C { static { var a = 1; sink(a); } m() { return C; } } sink(new C());"],
+		["destructuring", "var { a, b } = g(); [a, b] = [b, a]; sink(a, b);"],
+		["conditionals and lazy operators", "var a = g(); var b = a ? 1 : 2; var c = a || b; sink(b, c, a && h());"],
+		["values escaping through properties", "var o = { a: { b: 1 } }, p = [o]; sink(o.a.b, o.a, p[0], ...p);"],
+		["accessors", "sink({ get a() { var x = 1; return x; }, set a(v) { var y = v; sink(y); } });"],
+		["a value modified after it is fixed", "var o = {}; o.x = 1; var a = [1]; a.push(2); sink(o, a);"],
+		[
+			"generators, async functions and calls",
+			"function* gen() { var a = {}; yield a; } async function h() { var b = {}; await b; return b; } var C = function () {}; var o = new C(); sink(gen, h, o);"
+		],
+		["a top level analysed", "var a = 1; function f() { return a; } f();", { toplevel: true }],
+		[
+			"a retained top-level function",
+			"function f() { return 1; } function g() { return f(); } g();",
+			{ toplevel: true, top_retain: ["f"] }
+		],
+		["without flow analysis", "var a = 1; function f() { return a; } sink(f());", { reduce_vars: false }],
+		[
+			"a single-use value modified, then read and assigned",
+			"function f() { var o = {}; o.p = 1; sink(o); o = 2; return o; } sink(f);"
+		],
+		["a declared `arguments` read", "function f() { var arguments; return arguments; } sink(f);"],
+		["a function name assigned", "function f() { function g() {} g = h(); return g; } sink(f);"],
+		["a class expression escaping", "function f() { var C = class {}; sink(C); } sink(f);"],
+		["a value yielded from another scope", "var a = {}; function* g() { yield a; } sink(g);"],
+		[
+			"properties read off a value before it escapes",
+			"var o = { a: { b: g() } }, p = { a: { b: {} } }; function h() { return o.a; } function k() { return p.a.b; } sink(h, k);",
+			{ toplevel: true }
+		],
+		[
+			"assignments in a function",
+			"function f() { var a; a += 1; var b; (b = {}).x = 1; var c = g(); c ||= 1; c &&= h(); var d = 1; d += 2; d++; --d; var e; e++; o.x++; return [a, b, c, d, e]; } sink(f);"
+		],
+		["an IIFE parameter redeclared", "(function (a) { var a; sink(a); })(1);"],
+		[
+			"hoisted functions reached twice",
+			"function outer() { a(); var x = g(); function a() { return b() + c(); } function b() { return d(); } function c() { return d(); } function d() { return x; } return a; } sink(outer);"
+		],
+		["a `using` declaration", "function f() { using r = g(); sink(r); } sink(f);"],
+		["an arrow declaring `arguments`", "sink(() => { var arguments; return arguments; });"],
+		[
+			"an assignment after a loop head gave up on it",
+			"function f(o) { var a = 1; for (a in o); a = 2; return a; } sink(f);"
+		],
+		[
+			"a function name stepped",
+			"function f() { function g() {} g += 1; function k() {} k++; return [g, k]; } sink(f);"
+		],
+		["a local value yielded", "function* gen() { var a = g(); yield a; } sink(gen);"]
+	];
+
+	for (const [name, source, compress] of REDUCE_CASES) {
+		it(`should analyse flow as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/** @type {string[]} */
+			const outputs = [];
+			for (const base of [{ passes: 2 }, {}]) {
+				/** @returns {EXPECTED_OBJECT} the options */
+				const settings = () => ({
+					compress: { ...base, ...compress },
+					mangle: Object.keys(base).length !== 0
+				});
+				const ours = await minify(source, settings());
+				const theirs = await reference.minify(source, settings());
+				expect(ours.code).toBe(theirs.code);
+				outputs.push(/** @type {string} */ (ours.code));
+			}
+			expect(outputs).toMatchSnapshot();
+		});
+	}
+
 	const INLINE_MAP = Buffer.from(
 		JSON.stringify({ version: 3, sources: ["x.js"], names: [], mappings: "AAAA" })
 	).toString("base64");
@@ -1138,36 +1246,18 @@ describe("syntax-printer", () => {
 				PHASES.find((phase) => phase.name === "minify")
 			);
 		const modules = {
-			directory: "/nowhere",
+			version: require("terser/package.json").version,
+			minify() {},
 			compress: { Compressor() {} },
 			propmangle: { mangle_private_properties() {} },
 			sourcemap: { SourceMap() {} },
 			utils: { map_from_object() {}, map_to_object() {}, HOP() {} }
 		};
-		expect(driver.supports({ ...modules, directory: undefined })).toBe(false);
-		// No `lib/minify.js` there to read.
+		// Another release, whose module-private driver the phase cannot read.
+		expect(driver.supports({ ...modules, version: "0.0.0" })).toBe(false);
+		expect(driver.supports({ ...modules, minify: undefined })).toBe(false);
+		// The pinned release, but a `minify` whose source is not the one pinned.
 		expect(driver.supports(modules)).toBe(false);
-		expect(
-			driver.supports({
-				...modules,
-				directory: require("path").dirname(require.resolve("acorn/package.json"))
-			})
-		).toBe(false);
-		// A driver whose source is not the one the phase pins.
-		const fs = require("fs");
-		const os = require("os");
-		const path = require("path");
-		const directory = fs.mkdtempSync(path.join(os.tmpdir(), "terser-"));
-		const file = path.join(directory, "lib", "minify.js");
-		fs.mkdirSync(path.dirname(file));
-		fs.writeFileSync(file, "export function minify() {}");
-		try {
-			expect(driver.supports({ ...modules, directory })).toBe(false);
-		} finally {
-			fs.unlinkSync(file);
-			fs.rmdirSync(path.dirname(file));
-			fs.rmdirSync(directory);
-		}
 	});
 
 	it("should decline a terser whose unused-name dropping it does not know", () => {
@@ -1207,6 +1297,23 @@ describe("syntax-printer", () => {
 				flags: { WRITE_ONLY: 1, UNUSED: 2 }
 			})
 		).toBe(false);
+	});
+
+	it("should decline a terser whose flow analysis it does not know", async () => {
+		const reduce =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "reduce")
+			);
+		const modules = await loadSources();
+		// Another release, whose module-private helpers the phase cannot read.
+		expect(reduce.supports({ ...modules, version: "0.0.0" })).toBe(false);
+		expect(reduce.supports({ ...modules, flags: {} })).toBe(false);
+		// The pinned release, but a walk running the analysis that is not pinned.
+		const ast = {
+			...modules.ast,
+			AST_Toplevel: { prototype: { reset_opt_flags() {} } }
+		};
+		expect(reduce.supports({ ...modules, ast })).toBe(false);
 	});
 
 	it("should decline a terser whose per-node print it does not know", () => {

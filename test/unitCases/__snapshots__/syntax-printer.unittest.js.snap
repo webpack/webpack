@@ -1,5 +1,299 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`syntax-printer should analyse flow as terser does: a \`using\` declaration 1`] = `
+Array [
+  "function f(){using n=g();sink(n)}sink(f);",
+  "function f(){using r=g();sink(r)}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a class expression escaping 1`] = `
+Array [
+  "function f(){sink(class{})}sink(f);",
+  "function f(){sink(class{})}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a class with a static block 1`] = `
+Array [
+  "class C{static{var s=1;sink(s)}m(){return C}}sink(new C);",
+  "class C{static{var a=1;sink(a)}m(){return C}}sink(new C);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a declared \`arguments\` read 1`] = `
+Array [
+  "function f(){var arguments;return arguments}sink(f);",
+  "function f(){var arguments;return arguments}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a do loop with break 1`] = `
+Array [
+  "var a=1;do{if(g())break;a=2}while(a<3);sink(a);",
+  "var a=1;do{if(g())break;a=2}while(a<3);sink(a);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a for loop with continue 1`] = `
+Array [
+  "for(var i=0;i<3;i++)i||sink(i);",
+  "for(var i=0;i<3;i++)i||sink(i);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a for-in and a for-of 1`] = `
+Array [
+  "var o=g();for(var k in o)sink(k);for(const k of o)sink(k);",
+  "var o=g();for(var k in o)sink(k);for(const v of o)sink(v);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a function name assigned 1`] = `
+Array [
+  "function f(){return h()}sink(f);",
+  "function f(){return h()}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a function name stepped 1`] = `
+Array [
+  "function f(){function n(){}function f(){}return[n+=1,++f]}sink(f);",
+  "function f(){function g(){}function k(){}return[g+=1,++k]}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a hoisted function read before a write 1`] = `
+Array [
+  "f();var a=g();function f(){return a}sink(f);",
+  "f();var a=g();function f(){return a}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a hoisted function written after it is read 1`] = `
+Array [
+  "function outer(){var n=h();return n=h(),function(){return n}}sink(outer);",
+  "function outer(){var v=h();return v=h(),function(){return v}}sink(outer);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a labelled block 1`] = `
+Array [
+  "var a=g();a||sink(a);",
+  "var a=g();a||sink(a);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a local value yielded 1`] = `
+Array [
+  "function*gen(){var n=g();yield n}sink(gen);",
+  "function*gen(){var a=g();yield a}sink(gen);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a named function expression 1`] = `
+Array [
+  "var f=function n(f){return f?n(f-1):0};sink(f(3));",
+  "var f=function g(n){return n?g(n-1):0};sink(f(3));",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a recursive function 1`] = `
+Array [
+  "function r(n){return n&&r(n-1)+x}var x=g();sink(r(2));",
+  "function r(n){return n&&r(n-1)+x}var x=g();sink(r(2));",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a retained top-level function 1`] = `
+Array [
+  "function f(){return 1}f();",
+  "function f(){return 1}f();",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a single-use value modified, then read and assigned 1`] = `
+Array [
+  "function f(){var n={p:1};return sink(n),2}sink(f);",
+  "function f(){var o={p:1};return sink(o),o=2}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a switch with a default 1`] = `
+Array [
+  "var a=1;g()===a?a=2:sink(a);",
+  "var a=1;if(g()===a)a=2;else sink(a);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a top level analysed 1`] = `
+Array [
+  "",
+  "",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a value modified after it is fixed 1`] = `
+Array [
+  "var o={x:1},a=[1];a.push(2),sink(o,a);",
+  "var o={x:1},a=[1];a.push(2),sink(o,a);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a value yielded from another scope 1`] = `
+Array [
+  "var a={};function*g(){yield a}sink(g);",
+  "var a={};function*g(){yield a}sink(g);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: a while loop 1`] = `
+Array [
+  "for(var a=g();a;)a=h(a);sink(a);",
+  "for(var a=g();a;)a=h(a);sink(a);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: accessors 1`] = `
+Array [
+  "sink({get a(){return 1},set a(e){sink(e)}});",
+  "sink({get a(){return 1},set a(v){sink(v)}});",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: an IIFE parameter redeclared 1`] = `
+Array [
+  "sink(1);",
+  "!function(a){sink(a)}(1);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: an IIFE reading its arguments 1`] = `
+Array [
+  "!function(n){\\"use strict\\";sink(arguments,n)}(1),function(n){sink(arguments,n)}(1),function(n){sink(n)}(...g());",
+  "!function(a){\\"use strict\\";sink(arguments,a)}(1),function(a){sink(arguments,a)}(1),function(a){sink(a)}(...g());",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: an IIFE's parameters 1`] = `
+Array [
+  "sink(3),sink(1,void 0);",
+  "sink(3),sink(1,void 0);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: an arrow declaring \`arguments\` 1`] = `
+Array [
+  "sink(()=>{var arguments;return arguments});",
+  "sink(()=>{var arguments;return arguments});",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: an assignment after a loop head gave up on it 1`] = `
+Array [
+  "function f(n){var f=1;for(f in n);return 2}sink(f);",
+  "function f(o){var a=1;for(a in o);return a=2}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: assignments in a function 1`] = `
+Array [
+  "function f(){var n,r;n+=1,(r={}).x=1;var f,a=g();return a||=1,a&&=h(),f++,o.x++,[n,r,a,3,f]}sink(f);",
+  "function f(){var a,b;a+=1,(b={}).x=1;var c=g();c||=1,c&&=h();var e;return e++,o.x++,[a,b,c,3,e]}sink(f);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: compound assignments and steps 1`] = `
+Array [
+  "var a=1;a+=2,a++,--a;var b=g();sink(a,b-=1);",
+  "var a=1;a+=2,a++,--a;var b=g();sink(a,b-=1);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: conditionals and lazy operators 1`] = `
+Array [
+  "var a=g(),b=a?1:2,c=a||b;sink(b,c,a&&h());",
+  "var a=g(),b=a?1:2,c=a||b;sink(b,c,a&&h());",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: destructuring 1`] = `
+Array [
+  "var{a:a,b:b}=g();[a,b]=[b,a],sink(a,b);",
+  "var{a:a,b:b}=g();[a,b]=[b,a],sink(a,b);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: generators, async functions and calls 1`] = `
+Array [
+  "function*gen(){yield{}}async function h(){var n={};return await n,n}var C=function(){},o=new C;sink(gen,h,o);",
+  "function*gen(){yield{}}async function h(){var b={};return await b,b}var C=function(){},o=new C;sink(gen,h,o);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: hoisted functions calling each other 1`] = `
+Array [
+  "b();var x=g();function a(){return x}function b(){return a()}function c(){return b()+x}sink(a,b,c);",
+  "b();var x=g();function a(){return x}function b(){return a()}function c(){return b()+x}sink(a,b,c);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: hoisted functions inside a function 1`] = `
+Array [
+  "function outer(){r();var n=h();function r(){return n}return r}sink(outer);",
+  "function outer(){k();var v=h();function k(){return v}return k}sink(outer);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: hoisted functions reached twice 1`] = `
+Array [
+  "function outer(){r();var n=g();function r(){return t()+t()}function t(){return n}return r}sink(outer);",
+  "function outer(){a();var x=g();function a(){return d()+d()}function d(){return x}return a}sink(outer);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: logical assignments 1`] = `
+Array [
+  "var d,a=g();a||=1,a&&=b(),a??=c,d||=2,sink(a,d);",
+  "var d,a=g();a||=1,a&&=b(),a??=c,d||=2,sink(a,d);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: optional chains 1`] = `
+Array [
+  "var o=g();sink(o?.a?.(o.b),o?.[k],o.c?.d);",
+  "var o=g();sink(o?.a?.(o.b),o?.[k],o.c?.d);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: properties read off a value before it escapes 1`] = `
+Array [
+  "var o={a:{b:g()}},p_a_b={};sink(function(){return o.a},function(){return p_a_b});",
+  "var o={a:{b:g()}},p_a={b:{}};sink(function(){return o.a},function(){return p_a.b});",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: try, catch and finally 1`] = `
+Array [
+  "var a=1;try{a=g()}catch(a){sink(a=1)}finally{sink(a)}",
+  "var a=1;try{a=g()}catch(e){sink(e=1)}finally{sink(a)}",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: values escaping through properties 1`] = `
+Array [
+  "var o={a:{b:1}},p=[o];sink(o.a.b,o.a,p[0],...p);",
+  "var o={a:{b:1}},p=[o];sink(o.a.b,o.a,p[0],...p);",
+]
+`;
+
+exports[`syntax-printer should analyse flow as terser does: without flow analysis 1`] = `
+Array [
+  "var a=1;function f(){return a}sink(f());",
+  "var a=1;function f(){return a}sink(f());",
+]
+`;
+
 exports[`syntax-printer should drive a minify as terser does: a tree handed back with a private member 1`] = `"class A{#s=1;m(){return this.#s}}sink(A);"`;
 
 exports[`syntax-printer should drive a minify as terser does: sources inherited by the files object 1`] = `"sink(1),sink(2);"`;
