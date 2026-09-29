@@ -294,11 +294,11 @@ jobs:
           - language: js
             submodules: test/external/test262-cases
             script: test:test262-parser
-          # Runs what webpack's minifier writes for each terser case that
-          # states its stdout. A leg of its own, as it installs phases into
+          # Runs what webpack's minifier writes for each terser and swc test
+          # that states its stdout. A leg of its own, as it installs phases into
           # terser's modules that the js-minify leg must not share.
           - language: js-minify-stdout
-            submodules: test/external/terser
+            submodules: test/external/terser test/external/swc
             script: test:js-minify-stdout
           # Minifies every source of each JS corpus with the published minifier
           # and with webpack's own, and requires the same bytes back.

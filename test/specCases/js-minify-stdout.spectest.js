@@ -2,9 +2,9 @@
 
 // cspell:ignore reminify reminifies ufuzz fnames
 
-// Runs what webpack's JavaScript minifier writes: every terser case that says
-// what its input prints is minified, run in terser's own sandbox, and has to
-// print the same. Set PHASES to choose the phases webpack installs, e.g.
+// Runs what webpack's JavaScript minifier writes: every terser and swc test that
+// says what its input prints is minified, run in terser's own sandbox, and has
+// to print the same. Set PHASES to choose the phases webpack installs, e.g.
 // `PHASES=mangle,output` for those two only or `PHASES=-parse` for all but one.
 
 const fs = require("fs");
@@ -14,8 +14,17 @@ const vm = require("vm");
 const acorn = require("acorn");
 const { PHASES } = require("../../lib/javascript/syntax").printer;
 const { loadPhases, selectPhases } = require("../helpers/printerPhases");
+const {
+	createKnows,
+	readSwcExecTests,
+	readSwcTest,
+	swcTestsDir
+} = require("../helpers/swcMinifierTests");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
+/** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
+/** @typedef {{ runCode: (code: string, prepend?: string) => string | Error, sameStdout: (expected: string | Error, actual: string | Error) => boolean }} Sandbox */
+/** @typedef {{ name: string, input: string, prepend: string, expected: string | Error }} RunnableCase */
 /** @typedef {{ name: string, input: string, expected: string | Error | true, prepend: string, nodeVersion?: string, reminify: boolean, options: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT }} StdoutCase */
 
 const referenceDir = path.resolve(__dirname, "../external/terser");
@@ -208,6 +217,99 @@ const optionSetsFor = (test, reminifySets) => {
 };
 
 /**
+ * The options one of swc's tests is minified under: its own, and the set
+ * webpack minifies with.
+ * @param {import("../helpers/swcMinifierTests").Source} source the test
+ * @returns {[string, MinifyOptions][]} the option sets, by name
+ */
+const swcOptionSets = ({ own }) => [
+	[
+		"its own options",
+		{
+			compress:
+				own && own.compress && own.compress.defaults !== undefined
+					? copy(own.compress)
+					: { defaults: false, ...copy(own && own.compress) },
+			mangle: copy(own && own.mangle) || false
+		}
+	],
+	["the default minimizer's options", { compress: { passes: 2 }, mangle: true }]
+];
+
+/**
+ * @param {Minify} minify a minifier
+ * @param {RunnableCase} test a case
+ * @param {MinifyOptions} options the options
+ * @param {Sandbox} sandbox terser's sandbox
+ * @returns {Promise<{ code?: string, printed: string | Error }>} what it wrote and what that printed, or the error it threw
+ */
+const runMinified = async (minify, test, options, { runCode }) => {
+	let code;
+	try {
+		code = (await minify(test.input, copy(options))).code;
+	} catch (err) {
+		return { printed: /** @type {Error} */ (err) };
+	}
+	return { code, printed: runCode(/** @type {string} */ (code), test.prepend) };
+};
+
+/**
+ * Minifies a case under each option set and runs what that writes. An output
+ * the case already ran is not run again, as terser's runner skips it, and one
+ * that the reference's output fails the same way is terser's to fix.
+ * @param {Minify} minify webpack's minifier
+ * @param {RunnableCase} test a case whose input prints what it expects
+ * @param {[string, MinifyOptions][]} sets the option sets
+ * @param {Sandbox} sandbox terser's sandbox
+ * @returns {Promise<string[]>} a line per option set whose output printed otherwise
+ */
+const checkOutputs = async (minify, test, sets, sandbox) => {
+	const { sameStdout } = sandbox;
+	const { expected } = test;
+	/** @type {string[]} */
+	const failures = [];
+	/** @type {Set<string>} */
+	const seen = new Set();
+	for (const [setName, options] of sets) {
+		const ours = await runMinified(minify, test, options, sandbox);
+		if (ours.code !== undefined) {
+			if (seen.has(ours.code)) continue;
+			seen.add(ours.code);
+			let actual = ours.printed;
+			// As terser's runner reminifies: a throw of the expected kind passes
+			// whatever its message says.
+			if (
+				setName !== "its own options" &&
+				typeof expected !== "string" &&
+				typeof actual !== "string" &&
+				expected.name === actual.name
+			) {
+				actual = expected;
+			}
+			if (sameStdout(expected, actual)) continue;
+		}
+		const theirs = await runMinified(
+			require("terser").minify,
+			test,
+			options,
+			sandbox
+		);
+		if (
+			ours.code === undefined
+				? theirs.code === undefined &&
+					String(theirs.printed) === String(ours.printed)
+				: theirs.code !== undefined && sameStdout(theirs.printed, ours.printed)
+		) {
+			continue;
+		}
+		failures.push(
+			`${test.name} (${setName})\n\toutput:   ${ours.code}\n\texpected: ${String(expected)}\n\tprinted:  ${String(ours.printed)}\n\tterser:   ${String(theirs.printed)}`
+		);
+	}
+	return failures;
+};
+
+/**
  * @param {string} directory a directory
  * @returns {boolean} whether it holds anything
  */
@@ -247,20 +349,12 @@ describe("JavaScript minifier output", () => {
 		return;
 	}
 
-	describe("terser compress", () => {
+	describe("in terser's sandbox", () => {
 		const selected = selectPhases(process.env.PHASES);
 
 		const { runInNewContext } = vm;
-		/** @type {{ minify?: (code: string, options: MinifyOptions) => Promise<{ code?: string }>, installed?: string[], reader?: { AST: EXPECTED_ANY, parse: EXPECTED_ANY }, sandbox?: EXPECTED_ANY }} */
+		/** @type {{ minify?: Minify, installed?: string[], reader?: { AST: EXPECTED_ANY, parse: EXPECTED_ANY, knows: import("../helpers/swcMinifierTests").Knows }, sandbox?: Sandbox }} */
 		const loaded = {};
-		const reminifySets = JSON.parse(
-			fs.readFileSync(path.join(referenceDir, "test/ufuzz.json"), "utf8")
-		);
-		const files = fs
-			.readdirSync(path.join(referenceDir, "test/compress"))
-			.filter((file) => file.endsWith(".js"))
-			.sort()
-			.map((file) => path.join(referenceDir, "test/compress", file));
 
 		beforeAll(async () => {
 			const { minify, phases } = await loadPhases(selected);
@@ -274,14 +368,21 @@ describe("JavaScript minifier output", () => {
 			 */
 			const at = (file) =>
 				importModule(pathToFileURL(path.join(referenceDir, file)).href);
+			// Read for its effect: `minify` reaches `transform` on every node class.
+			await at("lib/transform.js");
 			loaded.reader = {
 				AST: await at("lib/ast.js"),
-				parse: (await at("lib/parse.js")).parse
+				parse: (await at("lib/parse.js")).parse,
+				knows: createKnows((await at("lib/minify.js")).minify_sync)
 			};
 			// Read for their effect: the reader prints an input as terser's runner does.
 			await at("lib/scope.js");
 			await at("lib/output.js");
-			loaded.sandbox = await at("test/sandbox.js");
+			const sandbox = await at("test/sandbox.js");
+			loaded.sandbox = {
+				runCode: sandbox.run_code,
+				sameStdout: sandbox.same_stdout
+			};
 			vm.runInNewContext = (code, context, options) =>
 				runInNewContext(code, context, { ...options, timeout: RUN_TIMEOUT });
 		});
@@ -294,81 +395,176 @@ describe("JavaScript minifier output", () => {
 			expect(loaded.installed).toEqual(selected);
 		});
 
-		it("should read every case that states what it prints", () => {
-			const reader = /** @type {NonNullable<typeof loaded.reader>} */ (
-				loaded.reader
+		describe("terser compress", () => {
+			const reminifySets = JSON.parse(
+				fs.readFileSync(path.join(referenceDir, "test/ufuzz.json"), "utf8")
 			);
-			let count = 0;
-			for (const file of files) count += readStdoutCases(file, reader).length;
-			// 1307 at the pinned 5.51.2; a reader that stopped matching reads none.
-			expect(count).toBeGreaterThan(1250);
+			const files = fs
+				.readdirSync(path.join(referenceDir, "test/compress"))
+				.filter((file) => file.endsWith(".js"))
+				.sort()
+				.map((file) => path.join(referenceDir, "test/compress", file));
+
+			it("should read every case that states what it prints", () => {
+				const reader = /** @type {NonNullable<typeof loaded.reader>} */ (
+					loaded.reader
+				);
+				let count = 0;
+				for (const file of files) count += readStdoutCases(file, reader).length;
+				// 1307 at the pinned 5.51.2; a reader that stopped matching reads none.
+				expect(count).toBeGreaterThan(1250);
+			});
+
+			for (const file of files) {
+				it(
+					`should print what the input prints: ${path.basename(file)}`,
+					async () => {
+						const minify = /** @type {Minify} */ (loaded.minify);
+						const sandbox = /** @type {Sandbox} */ (loaded.sandbox);
+						const reader = /** @type {NonNullable<typeof loaded.reader>} */ (
+							loaded.reader
+						);
+						/** @type {string[]} */
+						const failures = [];
+						for (const test of readStdoutCases(file, reader)) {
+							if (test.nodeVersion && !nodeSatisfies(test.nodeVersion)) continue;
+							// Run as terser's runner runs it: parsed and printed by the reference.
+							const input = reader
+								.parse(test.input, { ...test.parse })
+								.print_to_string({ ...test.format });
+							const printed = sandbox.runCode(input, test.prepend);
+							const expected = test.expected === true ? printed : test.expected;
+							if (!sandbox.sameStdout(expected, printed)) {
+								failures.push(
+									`${test.name}: the input prints ${String(printed)}, not ${String(expected)}`
+								);
+								continue;
+							}
+							failures.push(
+								...(await checkOutputs(
+									minify,
+									{ ...test, expected },
+									optionSetsFor(test, reminifySets),
+									sandbox
+								))
+							);
+						}
+
+						expect(failures).toEqual([]);
+					},
+					GROUP_TIMEOUT
+				);
+			}
 		});
 
-		for (const file of files) {
+		describe("swc", () => {
+			if (!isPresent(swcTestsDir)) {
+				it("submodule not initialized (run `git submodule update --init --depth 1 test/external/swc`)", () => {
+					// No-op: the corpus is an optional git submodule.
+				});
+
+				return;
+			}
+
+			// swc's harness runs the input with node and requires the output to print
+			// the same; an input terser's sandbox cannot run, one that throws or prints
+			// nothing, holds nothing to compare.
 			it(
-				`should print what the input prints: ${path.basename(file)}`,
+				"should print what the input prints: exec.rs",
 				async () => {
-					const minify =
-						/** @type {NonNullable<typeof loaded.minify>} */ (loaded.minify);
-					const { run_code: runCode, same_stdout: sameStdout } =
-						loaded.sandbox;
+					const minify = /** @type {Minify} */ (loaded.minify);
+					const sandbox = /** @type {Sandbox} */ (loaded.sandbox);
 					const reader = /** @type {NonNullable<typeof loaded.reader>} */ (
 						loaded.reader
 					);
 					/** @type {string[]} */
 					const failures = [];
-					for (const test of readStdoutCases(file, reader)) {
-						if (test.nodeVersion && !nodeSatisfies(test.nodeVersion)) continue;
-						// Run as terser's runner runs it: parsed and printed by the reference.
-						const input = reader
-							.parse(test.input, { ...test.parse })
-							.print_to_string({ ...test.format });
-						const printed = runCode(input, test.prepend);
-						const expected = test.expected === true ? printed : test.expected;
-						if (!sameStdout(expected, printed)) {
-							failures.push(
-								`${test.name}: the input prints ${String(printed)}, not ${String(expected)}`
-							);
-							continue;
+					let ran = 0;
+					for (const source of readSwcExecTests(
+						path.join(swcTestsDir, "exec.rs"),
+						reader
+					)) {
+						const expected = sandbox.runCode(source.input);
+						if (typeof expected !== "string" || expected === "") continue;
+						ran++;
+						failures.push(
+							...(await checkOutputs(
+								minify,
+								{ name: source.name, input: source.input, prepend: "", expected },
+								swcOptionSets(source),
+								sandbox
+							))
+						);
+					}
+
+					expect(failures).toEqual([]);
+					// 497 of 502 at the pinned commit.
+					expect(ran).toBeGreaterThan(490);
+				},
+				GROUP_TIMEOUT
+			);
+
+			// The fixtures with an `expected.stdout`, but for the port of terser's
+			// own tests; one that prints otherwise in terser's sandbox reads what
+			// only node gives it, as `process` or a timer.
+			it(
+				"should print each fixture's expected.stdout",
+				async () => {
+					const minify = /** @type {Minify} */ (loaded.minify);
+					const sandbox = /** @type {Sandbox} */ (loaded.sandbox);
+					const reader = /** @type {NonNullable<typeof loaded.reader>} */ (
+						loaded.reader
+					);
+					/** @type {string[]} */
+					const inputs = [];
+					/**
+					 * @param {string} directory a directory
+					 * @returns {void}
+					 */
+					const find = (directory) => {
+						for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+							const at = path.join(directory, entry.name);
+							if (entry.isDirectory()) {find(at);}
+							else if (
+								entry.name === "expected.stdout" &&
+								fs.existsSync(path.join(directory, "input.js"))
+							) {
+								inputs.push(path.join(directory, "input.js"));
+							}
 						}
-						// As terser's runner reminifies: an output already run prints the same.
-						/** @type {Set<string>} */
-						const seen = new Set();
-						for (const [setName, options] of optionSetsFor(test, reminifySets)) {
-							let code;
-							try {
-								code = (await minify(test.input, options)).code;
-							} catch (err) {
-								failures.push(
-									`${test.name} (${setName}): ${/** @type {Error} */ (err).message}`
-								);
+					};
+					find(path.join(swcTestsDir, "fixture"));
+					/** @type {string[]} */
+					const failures = [];
+					let ran = 0;
+					for (const file of inputs.sort()) {
+						const expected = fs.readFileSync(
+							path.join(path.dirname(file), "expected.stdout"),
+							"utf8"
+						);
+						for (const source of readSwcTest(file, reader)) {
+							if (source.module) continue;
+							if (!sandbox.sameStdout(expected, sandbox.runCode(source.input))) {
 								continue;
 							}
-							if (seen.has(code)) continue;
-							seen.add(code);
-							let actual = runCode(code, test.prepend);
-							// As terser's runner reminifies: a throw of the expected kind
-							// passes whatever its message says.
-							if (
-								setName !== "its own options" &&
-								typeof expected !== "string" &&
-								typeof actual !== "string" &&
-								expected.name === actual.name
-							) {
-								actual = expected;
-							}
-							if (!sameStdout(expected, actual)) {
-								failures.push(
-									`${test.name} (${setName})\n\toutput:   ${code}\n\texpected: ${String(expected)}\n\tprinted:  ${String(actual)}`
-								);
-							}
+							ran++;
+							failures.push(
+								...(await checkOutputs(
+									minify,
+									{ name: source.name, input: source.input, prepend: "", expected },
+									swcOptionSets(source),
+									sandbox
+								))
+							);
 						}
 					}
 
 					expect(failures).toEqual([]);
+					// 135 of 150 at the pinned commit.
+					expect(ran).toBeGreaterThan(130);
 				},
 				GROUP_TIMEOUT
 			);
-		}
+		});
 	});
 });
