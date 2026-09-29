@@ -12410,14 +12410,53 @@ describe("CssSyntax minify — `@custom-selector`", () => {
 		).toBe(":--nope{color:red}");
 	});
 
-	it("leaves a selector standing before the rule that names it", () => {
+	/** @type {(css: string) => string} */
+	const resolve = (css) => minifyForWith(css, ["chrome 120"], on);
+
+	it("writes a selector standing before the rule that names it", () => {
+		expect(resolve(":--h{color:red}@custom-selector :--h h1;")).toBe(
+			":is(h1){color:red}"
+		);
+	});
+
+	it("writes the last rule stating a name", () => {
 		expect(
-			minifyForWith(
-				":--h{color:red}@custom-selector :--h h1;",
-				["chrome 120"],
-				on
+			resolve(
+				"@custom-selector :--h h1;:--h{color:red}@custom-selector :--h h2;"
 			)
-		).toBe(":--h{color:red}");
+		).toBe(":is(h2){color:red}");
+	});
+
+	it("writes a name its list reads, stated before or after it", () => {
+		expect(
+			resolve(
+				"@custom-selector :--a h1,h2;@custom-selector :--b :--a .x,:--a:hover;:--b{color:red}"
+			)
+		).toBe(":is(:is(h1,h2) .x,:is(h1,h2):hover){color:red}");
+		expect(
+			resolve(
+				"@custom-selector :--b :--a .x;@custom-selector :--a h1,h2;:--b{color:red}"
+			)
+		).toBe(":is(:is(h1,h2) .x){color:red}");
+	});
+
+	it("leaves names on a cycle as written", () => {
+		expect(
+			resolve(
+				"@custom-selector :--a :--b;@custom-selector :--b :--a;:--a{color:red}"
+			)
+		).toBe(":--a{color:red}");
+		expect(resolve("@custom-selector :--a :--a .x;:--a{color:red}")).toBe(
+			":--a{color:red}"
+		);
+	});
+
+	it("keeps a selector name apart from a `@custom-media` one", () => {
+		expect(
+			resolve(
+				"@custom-selector :--m h1;@custom-media --m (x:1);@media (--m){:--m{color:red}}"
+			)
+		).toBe("@media (x:1){:is(h1){color:red}}");
 	});
 
 	it("keeps the rule where the target reads no `:is()`", () => {

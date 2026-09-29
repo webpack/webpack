@@ -11,10 +11,11 @@ it("should leave unresolvable @custom-media references untouched and warn", () =
 	expect(css).toContain("(--loop)");
 	expect(css).toContain("(min-width: 1px) and (--tvish)");
 	expect(css).toContain("(--parenthesised-type)");
-	// A compound value keeps its reference rather than emitting it unresolved.
+	// A value reading an unknown name keeps its reference.
 	expect(css).toContain("(--compound)");
-	expect(css).toContain("(--negated)");
-	expect(css).toContain("(--segment)");
+	expect(css).toContain("(--bad-inner)");
+	expect(css).toContain("(--bad-segment)");
+	expect(css).toContain("(--type-segment)");
 	// The definitions themselves are still removed, malformed ones included.
 	expect(css).not.toContain("@custom-media");
 	expect(css).not.toContain("@custom-selector");
