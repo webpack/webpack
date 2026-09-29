@@ -1344,8 +1344,10 @@ describe("syntax-printer", () => {
 			fs.rmdirSync(directory);
 		}
 		// The pinned file, but a walk running it that is not the one pinned.
-		const ast = Object.create(modules.ast);
-		ast.AST_Toplevel = { prototype: { reset_opt_flags() {} } };
+		const ast = {
+			...modules.ast,
+			AST_Toplevel: { prototype: { reset_opt_flags() {} } }
+		};
 		expect(reduce.supports({ ...modules, ast })).toBe(false);
 	});
 
