@@ -14,7 +14,8 @@ module.exports = {
 		minimizer: ["..."],
 		minimizeOptions: {
 			css: {
-				resolveCustomAtRules: true,
+				customMedia: true,
+				customSelectors: true,
 				rewriteDirSelector: true
 			}
 		}

@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Resolve CSS custom media and selectors that read each other, in any order.
+Add CSS `customMedia`/`customSelectors` minimize options; resolve chained names.

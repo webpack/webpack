@@ -3128,6 +3128,16 @@ export interface OptimizationMinimizeCss {
 	 */
 	convertLengthUnits?: boolean;
 	/**
+	 * Resolve the `@custom-media` at-rule: write the query a name stands for wherever a condition asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`. Off by default: `module.parser.css.customMedia` already resolves it in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Every rule is read first, so a name resolves wherever its rule stands, the last rule stating it holds, and one name may be read through another; names that read each other in a cycle stand for nothing and are left as written.
+	 * @since 5.112.0
+	 */
+	customMedia?: boolean;
+	/**
+	 * Resolve the `@custom-selector` at-rule: write the selector list a name stands for as `:is(…)` wherever a selector asks for it, and drop the rule that named it. `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off by default, for the reason `customMedia` is: `module.parser.css.customSelectors` already resolves it in every stylesheet webpack parses. Rules are read as `customMedia` reads them, and a name is written out only where the target reads `:is()`.
+	 * @since 5.112.0
+	 */
+	customSelectors?: boolean;
+	/**
 	 * Drop a declaration a later one in the same block overrides even where nothing states that the target can read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
 	 * @since 5.112.0
 	 */
@@ -3183,7 +3193,8 @@ export interface OptimizationMinimizeCss {
 	 */
 	removeDeadRules?: boolean;
 	/**
-	 * Resolve the `@custom-media` and `@custom-selector` at-rules: write the query or the selector list a name stands for wherever one asks for it, and drop the rule that named it. `@custom-media --wide (width>400px)` with `@media (--wide)` becomes `@media (width>400px)`, and `@custom-selector :--heading h1, h2` with `:--heading` becomes `:is(h1, h2)`. Off until asked for: `module.parser.css.customMedia` and `module.parser.css.customSelectors` already resolve both in every stylesheet webpack parses, so this is for a `.css` asset that reached the minimizer without being parsed — one emitted by `asset/resource` or copied in. Only a name stated before the rule asking for it is written out — the rules are read in the order they are written — and a rule naming one this has not come to is left as the author had it. A selector list is written as `:is(…)`, so a name is substituted only where the target reads `:is()`.
+	 * Deprecated in favor of `customMedia` and `customSelectors`: it turns on each of the two that is not set. Resolve the `@custom-media` and `@custom-selector` at-rules.
+	 * @deprecated
 	 * @since 5.111.0
 	 */
 	resolveCustomAtRules?: boolean;

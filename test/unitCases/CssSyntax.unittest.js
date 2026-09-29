@@ -4155,7 +4155,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minifyForWith(
 					"@custom-media --n (max-width:30em);@import url(a.css) (--n);",
 					["chrome 120"],
-					{ resolveCustomAtRules: true }
+					{ customMedia: true }
 				)
 			).toBe("@import url(a.css) (width<=30em);");
 		});
@@ -11934,7 +11934,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 
 	it("writes the query wherever a condition asks for it", () => {
 		expect(
-			minifyForWith(sheet, ["chrome 120"], { resolveCustomAtRules: true })
+			minifyForWith(sheet, ["chrome 120"], { customMedia: true })
 		).toBe("@media (width>400px){a{color:red}}");
 	});
 
@@ -11943,7 +11943,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --m (width>400px);@media screen and (--m){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media screen and (width>400px){a{color:red}}");
 	});
@@ -11962,7 +11962,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				`@custom-media --m ${query};@media (--m){a{color:red}}`,
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe(`@media ${expected}{a{color:red}}`);
 	});
@@ -11981,7 +11981,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --a (min-width:30em);@custom-media --b (--a) and (pointer:fine);@media (--b){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media (width>=30em) and (pointer:fine){a{color:red}}");
 	});
@@ -11992,14 +11992,14 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 		const list = "@custom-media --m (width>400px),(orientation:portrait);";
 		expect(
 			minifyForWith(`${list}@media (--m){a{color:red}}`, ["chrome 120"], {
-				resolveCustomAtRules: true
+				customMedia: true
 			})
 		).toBe("@media (width>400px),(orientation:portrait){a{color:red}}");
 		expect(
 			minifyForWith(
 				`${list}@media screen and (--m){a{color:red}}`,
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe(
 			"@media screen and (width>400px),screen and (orientation:portrait){a{color:red}}"
@@ -12011,7 +12011,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --w (width>400px);@media screen and (--w){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media screen and (width>400px){a{color:red}}");
 	});
@@ -12019,7 +12019,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 	it("leaves a rule stating no query alone", () => {
 		const css = "@custom-media --m;@media (--m){a{color:red}}";
 		expect(
-			minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true })
+			minifyForWith(css, ["chrome 120"], { customMedia: true })
 		).toBe(css);
 	});
 
@@ -12030,14 +12030,14 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --m (width>400px);@media (--nope){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media (--nope){a{color:red}}");
 	});
 
 	/** @type {(css: string) => string} */
 	const resolve = (css) =>
-		minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true });
+		minifyForWith(css, ["chrome 120"], { customMedia: true });
 
 	it("writes a condition standing before the rule that names it", () => {
 		expect(
@@ -12196,7 +12196,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --m (width>=1px),(hover);@media screen and (--m){a{color:red}}",
 				["chrome 90"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media screen and (min-width:1px),screen and (hover){a{color:red}}");
 	});
@@ -12375,7 +12375,7 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 
 describe("CssSyntax minify — `@custom-selector`", () => {
 	const sheet = "@custom-selector :--h h1,h2;:--h{color:red}";
-	const on = { resolveCustomAtRules: true };
+	const on = { customSelectors: true };
 
 	it("writes the list wherever a selector asks for it", () => {
 		expect(minifyForWith(sheet, ["chrome 120"], on)).toBe(
@@ -12481,10 +12481,43 @@ describe("CssSyntax minify — `@custom-selector`", () => {
 
 	it("keeps a selector name apart from a `@custom-media` one", () => {
 		expect(
-			resolve(
-				"@custom-selector :--m h1;@custom-media --m (x:1);@media (--m){:--m{color:red}}"
+			minifyForWith(
+				"@custom-selector :--m h1;@custom-media --m (x:1);@media (--m){:--m{color:red}}",
+				["chrome 120"],
+				{ customMedia: true, customSelectors: true }
 			)
 		).toBe("@media (x:1){:is(h1){color:red}}");
+	});
+
+	it("resolves each of the two only where its own option is on", () => {
+		const css =
+			"@custom-media --m (x:1);@custom-selector :--h h1;@media (--m){:--h{color:red}}";
+		expect(minifyForWith(css, ["chrome 120"], { customMedia: true })).toBe(
+			"@custom-selector :--h h1;@media (x:1){:--h{color:red}}"
+		);
+		expect(minifyForWith(css, ["chrome 120"], { customSelectors: true })).toBe(
+			"@custom-media --m (x:1);@media (--m){:is(h1){color:red}}"
+		);
+	});
+
+	it("reads the deprecated `resolveCustomAtRules` as both, unless one is set", () => {
+		const css =
+			"@custom-media --m (x:1);@custom-selector :--h h1;@media (--m){:--h{color:red}}";
+		expect(
+			minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true })
+		).toBe("@media (x:1){:is(h1){color:red}}");
+		expect(
+			minifyForWith(css, ["chrome 120"], {
+				resolveCustomAtRules: true,
+				customSelectors: false
+			})
+		).toBe("@custom-selector :--h h1;@media (x:1){:--h{color:red}}");
+		expect(
+			minifyForWith(css, ["chrome 120"], {
+				resolveCustomAtRules: true,
+				customMedia: false
+			})
+		).toBe("@custom-media --m (x:1);@media (--m){:is(h1){color:red}}");
 	});
 
 	it("keeps the rule where the target reads no `:is()`", () => {

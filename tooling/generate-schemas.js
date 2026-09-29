@@ -57,11 +57,11 @@ const KEY_ORDER = [
 	"experimental",
 	"properties",
 	"required",
-	"added",
-	"pattern",
 	"undefinedAsNull",
 	"tsType",
 	"deprecated",
+	"added",
+	"pattern",
 	"uniqueItems"
 ];
 
