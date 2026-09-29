@@ -138,7 +138,7 @@ const runProgram = (code) => {
 };
 
 // Each prints one thing and terser's output another, under the options named.
-/** @type {[string, string, import("terser").MinifyOptions][]} */
+/** @type {[string, string, import("../../lib/javascript/terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
 		"a `{ __proto__ }` shorthand, printed",
