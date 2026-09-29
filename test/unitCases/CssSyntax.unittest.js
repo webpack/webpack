@@ -12500,26 +12500,6 @@ describe("CssSyntax minify — `@custom-selector`", () => {
 		);
 	});
 
-	it("reads the deprecated `resolveCustomAtRules` as both, unless one is set", () => {
-		const css =
-			"@custom-media --m (x:1);@custom-selector :--h h1;@media (--m){:--h{color:red}}";
-		expect(
-			minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true })
-		).toBe("@media (x:1){:is(h1){color:red}}");
-		expect(
-			minifyForWith(css, ["chrome 120"], {
-				resolveCustomAtRules: true,
-				customSelectors: false
-			})
-		).toBe("@custom-selector :--h h1;@media (x:1){:--h{color:red}}");
-		expect(
-			minifyForWith(css, ["chrome 120"], {
-				resolveCustomAtRules: true,
-				customMedia: false
-			})
-		).toBe("@custom-media --m (x:1);@media (--m){:is(h1){color:red}}");
-	});
-
 	it("keeps the rule where the target reads no `:is()`", () => {
 		// Nothing to write the name as, so dropping what states it would leave
 		// every selector asking for it unreadable instead of merely unresolved.

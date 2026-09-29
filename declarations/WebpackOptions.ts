@@ -3193,12 +3193,6 @@ export interface OptimizationMinimizeCss {
 	 */
 	removeDeadRules?: boolean;
 	/**
-	 * Deprecated in favor of `customMedia` and `customSelectors`: it turns on each of the two that is not set. Resolve the `@custom-media` and `@custom-selector` at-rules.
-	 * @deprecated
-	 * @since 5.111.0
-	 */
-	resolveCustomAtRules?: boolean;
-	/**
 	 * Shorten the values of custom properties (`--x: #ffffff` -> `#fff`, `--y: 0.5rem` -> `.5rem`), which are otherwise written back exactly as authored. Off by default: `getComputedStyle().getPropertyValue()` hands this text back, so a rewritten value is a different CSSOM — the one place a declaration's authored text survives. What it may rewrite is exactly what any other value's tokens may be, a color in a substitution's fallback included — that fallback being the property's value rather than the function's own argument.
 	 * @since 5.110.0
 	 */

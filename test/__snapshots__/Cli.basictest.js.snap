@@ -11426,19 +11426,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-css-resolve-custom-at-rules": Object {
-    "configs": Array [
-      Object {
-        "description": "Deprecated in favor of \`customMedia\` and \`customSelectors\`: it turns on each of the two that is not set. Resolve the \`@custom-media\` and \`@custom-selector\` at-rules.",
-        "multiple": false,
-        "path": "optimization.minimize.css.resolveCustomAtRules",
-        "type": "boolean",
-      },
-    ],
-    "description": "Deprecated in favor of \`customMedia\` and \`customSelectors\`: it turns on each of the two that is not set. Resolve the \`@custom-media\` and \`@custom-selector\` at-rules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-minimize-css-rewrite-custom-properties": Object {
     "configs": Array [
       Object {
@@ -12153,19 +12140,6 @@ Object {
       },
     ],
     "description": "Drop a rule or declaration nothing can read: a rule whose block ends up empty, a declaration a later one in the same block overrides, a rule an identical later sibling makes dead, and the \`@charset\` naming an encoding the output is not written in. On by default. Joining rules that are not dead is \`mergeRules\`.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "optimization-minimize-options-css-resolve-custom-at-rules": Object {
-    "configs": Array [
-      Object {
-        "description": "Deprecated in favor of \`customMedia\` and \`customSelectors\`: it turns on each of the two that is not set. Resolve the \`@custom-media\` and \`@custom-selector\` at-rules.",
-        "multiple": false,
-        "path": "optimization.minimizeOptions.css.resolveCustomAtRules",
-        "type": "boolean",
-      },
-    ],
-    "description": "Deprecated in favor of \`customMedia\` and \`customSelectors\`: it turns on each of the two that is not set. Resolve the \`@custom-media\` and \`@custom-selector\` at-rules.",
     "multiple": false,
     "simpleType": "boolean",
   },
