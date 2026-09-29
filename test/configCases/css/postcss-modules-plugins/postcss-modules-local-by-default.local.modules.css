@@ -310,10 +310,10 @@
 /* incorrectly handle nested selectors */
 .bar:not(:global .foo-name, .baz-name) { a_value: some-value; }
 
-/* compile explict global element */
+/* compile explicit global element */
 :global(input) { a_value: some-value; }
 
-/* compile explict global attribute */
+/* compile explicit global attribute */
 :global([type="radio"]), :not(:global [type="radio"]) { a_value: some-value; }
 
 /* TODO bug no report */

@@ -744,7 +744,7 @@ if (
  * @template T
  * @param {T[]} array an array
  * @param {number} n number of chunks
- * @returns {T[][]} splitted to n chunks
+ * @returns {T[][]} split into n chunks
  */
 function splitToNChunks(array, n) {
 	/** @type {T[][]} */
