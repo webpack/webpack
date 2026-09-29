@@ -196,6 +196,28 @@ describe("ExportsInfo", () => {
 		expect(exportsInfo._hasInlinedExports).toBe(false);
 	});
 
+	it("getOwnExportInfo creates an owned export info and reuses it", () => {
+		const exportsInfo = new ExportsInfo();
+		expect([...exportsInfo.ownedExports]).toHaveLength(0);
+
+		const created = exportsInfo.getOwnExportInfo("foo");
+
+		expect(created.name).toBe("foo");
+		expect([...exportsInfo.ownedExports]).toEqual([created]);
+		expect(exportsInfo.getOwnExportInfo("foo")).toBe(created);
+	});
+
+	it("getOwnExportInfo owns the export a redirect would have answered", () => {
+		const exportsInfo = new ExportsInfo();
+		const redirectTarget = new ExportsInfo();
+		exportsInfo.setRedirectNamedTo(redirectTarget);
+		const redirected = redirectTarget.getExportInfo("foo");
+
+		// getExportInfo follows the redirect, getOwnExportInfo never does
+		expect(exportsInfo.getExportInfo("foo")).toBe(redirected);
+		expect(exportsInfo.getOwnExportInfo("foo")).not.toBe(redirected);
+	});
+
 	it("_resetUsedExports does not wipe a redirect target owned by another module", () => {
 		const exportsInfo = new ExportsInfo();
 		const redirectTarget = new ExportsInfo();
