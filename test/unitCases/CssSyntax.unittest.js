@@ -12062,6 +12062,26 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 				"@custom-media --b (--a) and (hover);@custom-media --a (width>1px);@media (--b){a{color:red}}"
 			)
 		).toBe("@media (width>1px) and (hover){a{color:red}}");
+		// Each read through the next, written last to first.
+		expect(
+			resolve(
+				"@custom-media --c (--b) and (x:1);@custom-media --b (--a) and (y:1);@custom-media --a (width>1px);@media (--c){a{color:red}}"
+			)
+		).toBe("@media (width>1px) and (y:1) and (x:1){a{color:red}}");
+		// Through the last of two rules stating it.
+		expect(
+			resolve(
+				"@custom-media --b (--a);@custom-media --a (x:1);@custom-media --a (y:1);@media (--b){a{color:red}}"
+			)
+		).toBe("@media (y:1){a{color:red}}");
+	});
+
+	it("reads past a rule stating no name", () => {
+		expect(
+			resolve(
+				"@media (--m){a{color:red}}@custom-media (x:1);@custom-media --m (y:1);"
+			)
+		).toBe("@media (y:1){a{color:red}}@custom-media (x:1);");
 	});
 
 	it("leaves names on a cycle as written", () => {
