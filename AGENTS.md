@@ -12,22 +12,9 @@ A `> [!REQUIRED]` callout directly under a heading makes that whole section **ma
 - **One fact, one place**: link instead of restating, and don't copy what the repo already says (a directory listing, the `package.json` scripts, a signature).
 - **Docs live in `docs/`**, never `lib/` (it is published); renaming a heading breaks its `#anchor` links, so grep for them.
 
-## Project overview
-
-webpack is a JavaScript module bundler: it builds a dependency graph from entry modules and emits optimized static assets (chunks) for browsers, Node.js and other targets. The config API is defined by JSON schemas, and everything is wired through `tapable` hooks.
-
-**Core model:** a `Compiler` drives the build; each run creates a `Compilation` holding the module graph (`Module`s) and output `Chunk`s, which is `seal`ed and `emit`ted. Plugins expose `apply(compiler)` and tap the hooks they need.
-
-## Tech stack
-
-- **Language:** JavaScript. `lib/` is **CommonJS only**; types are JSDoc `@typedef`s compiled into `types.d.ts`.
-- **Package manager:** **yarn** (not npm).
-- **Tests:** jest, through the `test:base` wrapper (never bare `jest`).
-- **Types:** TypeScript over the JSDoc annotations.
-
 ## Commands
 
-Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
+Use **yarn**, not npm. Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
 
 - `yarn fix` — `fix:code` (ESLint) + `fix:special` + `fmt` (Prettier). Prefer as the final step.
 - `yarn fix:special` — Regenerate `types.d.ts`, declarations, schema validators and generated runtime code.
@@ -54,41 +41,13 @@ Rules the map carries that apply everywhere:
 - **Edit an option's declaration, never its schema**: JSDoc typedefs in `lib/` for a plugin, `declarations/WebpackOptions.ts` for the configuration; `generate-schemas.js` derives `schemas/**`.
 - **Git submodules** live under `test/external/`, fetched on demand and always `--depth 1` (`wpt` alone is ~161k files); each is described in [TESTING_DOCS.md](TESTING_DOCS.md#external-test-corpora).
 
-**Adding or renaming a webpack option** touches every layer, in order — skipping one silently breaks the option:
-
-1. **Type** — `declarations/WebpackOptions.ts` for a configuration option, or the JSDoc typedefs in the `lib/` module reading it for a plugin's, which `yarn fix:special` turns into the schema.
-2. **Defaults** — `lib/config/defaults.js`.
-3. **Normalization** — `lib/config/normalization.js`.
-4. **Implementation** — where the option is consumed.
-5. **Generated output and snapshots** — run `yarn fix:special` (so `lib/` can reference the new types), then update the snapshots the option's _name_ leaks into, which no `configCases/` pattern matches:
-   - `test/__snapshots__/Cli.basictest.js.snap` — CLI flags derive from the schema; every property adds one.
-   - `test/configCases/ecmaVersion/browserslist*/webpack.config.js` — **inline** snapshots of the resolved `output.environment`: one entry across nine config files.
-   - `test/unitCases/__snapshots__/target-browserslist.unittest.js.snap` — same, per browserslist query.
-   - `test/unitCases/Defaults.unittest.js` — **inline** snapshots of the whole resolved config (base defaults plus once per browserslist fixture), so an `output.environment` property adds a line to each. Runs in the `unit` flag, which no `configCases` or `basic` run reaches.
-   - `test/unitCases/Validation.unittest.js` — **inline** snapshots quote the "these properties are valid" list, so a new `module.rules` property changes one. Runs in the `unit` matrix, not `basic`.
-
-Consider updating `examples/` and running `yarn build:examples` after adding or modifying options.
+**Adding or renaming a webpack option** touches every layer in order — type, defaults, normalization, implementation, generated output and five snapshot files no `configCases/` pattern matches — and skipping one silently breaks the option: read [docs/options.md](docs/options.md) first, which also covers the `@since`/`@experimental` JSDoc keywords and what `webpack/valid-schema` rejects.
 
 > [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you didn't touch. That churn means your toolchain resolved differently from CI's: commit only your own hunks, then **verify them against the generator** (re-run and diff) — never hand-write what you think it would emit. A hand-written JSDoc block missing the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with only `… need to be updated`.
 
 **A nested minifier needs the outer one's options.** `lib/html/htmlMinify.js` runs the CSS minifier over inline `<style>` and every `style=""`, so `output.environment` must reach both, or a `.css` asset and the same declaration inline disagree about what the target reads. Any future HTML-minifies-JS hook has the same obligation.
 
-**Documentation keywords are written as JSDoc tags**, and the schema states what they say:
-
-- `@since <version>` → `"added"`: the first webpack version shipping the option. An unreleased option gets the upcoming version (`package.json` version with pending changesets applied — on `5.108.x` with minor changesets pending, `@since 5.109.0`).
-- `@experimental` → `"experimental"`, for `experiments` options or others subject to breaking changes.
-
-They are documentation only (stripped from precompiled validators). A pure `$ref` property can't carry them — annotate the referenced definition. A keyword cannot sit after a `@property` line either, where a stray tag ends the property list: a property carrying one is a named typedef tagged `@inline`, whose body the schema puts back where the reference was.
-
-**What a schema may say is the lint rule's job, not the generator's.** `webpack/valid-schema` rejects extra keys beside a `$ref`, any `minLength` but `1`, and an `enum` holding non-primitives (the validator emits no other length check and compares nothing else); `yarn lint:code` reports them at the key, and the generator assumes they hold.
-
-**`normalization.js`** canonicalizes the user's config shape (shorthand → full form); **`defaults.js`** fills values (often mode/target-dependent). Edit whichever matches.
-
-**New dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (emits the code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`. A plugin outside the repo reaches all three through `compiler.webpack` — `Dependency`, `template.DependencyTemplate`, `module.NullFactory` and `util.makeSerializable` are public for it, and `makeSerializable` registers globally, so build the class once rather than per `apply`.
-
-**Finding a hook:** hooks live on their owning class — compiler-wide in `lib/Compiler.js`, per-compilation in `lib/Compilation.js`; tap with a unique plugin-name string.
-
-**New runtime requirement:** declare it in `lib/runtime/RuntimeGlobals.js`, emit it with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (`…InModule` variants for per-module needs).
+**Adding a dependency type or runtime requirement** needs three pieces wired together (a `makeSerializable` registration among them): read [docs/architecture.md](docs/architecture.md#adding-a-dependency-type-or-runtime-requirement) first.
 
 ### Moving a file out of `lib/` root
 

@@ -102,6 +102,14 @@ Every schema is derived from the module declaring its options by `generate-schem
 - `.github/workflows/`, `.github/scripts/` — CI.
 - `test/patches/` — test-only dependency patches (e.g. jest-worker), `git apply`'d in the CI Bun job.
 
+## Adding a dependency type or runtime requirement
+
+**New dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (emits the code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`. A plugin outside the repo reaches all three through `compiler.webpack` — `Dependency`, `template.DependencyTemplate`, `module.NullFactory` and `util.makeSerializable` are public for it, and `makeSerializable` registers globally, so build the class once rather than per `apply`.
+
+**New runtime requirement:** declare it in `lib/runtime/RuntimeGlobals.js`, emit it with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (`…InModule` variants for per-module needs).
+
+Tap every hook with a unique plugin-name string.
+
 ## Moving a file out of `lib/` root
 
 > [!REQUIRED]
