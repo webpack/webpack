@@ -266,6 +266,10 @@ When a function's output type depends on its input, use a generic (`@template`) 
 
 Spell names out in full (functions, variables, parameters, properties): `insertHtmlElement` not `insHtmlEl`, `attributeCount` not `attrCnt`, `current` not `cur`, `element` not `el`. Exceptions: abbreviations webpack already uses pervasively (`ast`, `ns`, `id`, `url`, `css`, `js`, `dir`, `env`, `fs`) or spec-defined ones (`afe` — the HTML spec's active formatting elements), and throwaway loop indices (`i`, `j`, `k`). Otherwise write the full word.
 
+**Name a class for what it does, and the file for the class.** The name says the idea, and ends in the suffix its kind uses — `*Plugin`, `*Dependency`, `*RuntimeModule`, `*Warning`, `*Error`, `*Module`, `*Factory`, `*Generator`, `*Parser`, `*Template` (546 of 668 PascalCase files in `lib/`). A file exporting one class takes that name; where the two disagree, rename whichever is wrong — often the file. Exempt: core nouns (`Compiler`, `Chunk`), helper and data-structure modules, and any module exporting several things.
+
+**A name never** invents a role suffix (`lib/` has no `*Controller`, `*Manager`, `*Service` or `*Util` — a class that controls a thing is the thing), carries a `Webpack` prefix where the bare word is free, or repeats another class in `lib/`, since a stack trace and `types.d.ts` show the name alone.
+
 ### Path regexps and helpers live in one file
 
 > [!REQUIRED]
