@@ -4025,12 +4025,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(condition(input)).toBe(input);
 		});
 
-		it("writes no space before a keyword only a comment parted", () => {
-			// WebKit reads a `@supports` `and` / `or` with no whitespace before it as
-			// invalid, as the source is there, so a space would make it read.
+		it("keeps the comment a keyword's condition was parted from it by", () => {
+			// WebKit reads `and`, `or` or `not` as invalid unless whitespace follows,
+			// as it reads the source here, so a space in its place would make it read.
 			expect(condition("(display:grid)/**/and/**/(gap:1px)")).toBe(
-				"(display:grid)and (gap:1px)"
+				"(display:grid)and/**/(gap:1px)"
 			);
+			expect(condition("((a:b) OR/**/(c:d)) and (e:f)")).toBe(
+				"((a:b) OR/**/(c:d)) and (e:f)"
+			);
+			expect(condition("not/**/(display:grid)")).toBe("not/**/(display:grid)");
+			expect(minify("@import url(a.css) supports(not/**/(a:b));")).toBe(
+				"@import url(a.css) supports(not/**/(a:b));"
+			);
+			// Before the keyword WebKit needs nothing, so a comment there goes.
 			expect(minify("@import url(a.css) supports((a:b)/**/or (c:d));")).toBe(
 				"@import url(a.css) supports((a:b)or (c:d));"
 			);
