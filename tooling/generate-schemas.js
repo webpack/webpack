@@ -1380,31 +1380,54 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 		return inlined.has(name) ? name : "";
 	};
 	// WHY: one inlined type is written as another — a name for a constraint is
-	// itself a name — so a body is put back until it names none of them. Two that
-	// name each other would never stop, and a schema that cannot be derived says
-	// so rather than hanging: TypeScript would refuse the same pair, but nothing
-	// here resolves a type, so this is the only place it is caught.
-	const resolved = walkSchema(document, (node) => {
-		let current = node;
-		const seen = new Set();
-		for (
-			let step = substitute(current);
-			step !== current;
-			step = substitute(current)
-		) {
-			const name = namedInline(current);
-			if (name !== "") {
-				if (seen.has(name)) {
-					throw new Error(
-						`${name} is written as a type that is written as ${name}: an inlined type cannot name itself, by any number of steps`
-					);
-				}
-				seen.add(name);
+	// itself a name — so a body is put back until it names none of them. A type
+	// written as itself, directly or through the properties of others, would never
+	// stop: TypeScript would refuse the same pair, but nothing here resolves a
+	// type, so this is the only place it is caught. It says which name comes back
+	// to itself, where the recursion running out said only how it ended.
+	/**
+	 * @param {unknown} value a schema, or any part of one
+	 * @param {Set<string>} naming the inlined types this part is written inside
+	 * @returns {unknown} it, with every inlined body put back
+	 */
+	const putBack = (value, naming) => {
+		if (Array.isArray(value)) return value.map((one) => putBack(one, naming));
+		if (!isObject(value)) return value;
+		let node = /** @type {Record<string, EXPECTED_ANY>} */ (value);
+		/** @type {string[]} */
+		const entered = [];
+		for (let name = namedInline(node); name !== ""; name = namedInline(node)) {
+			if (naming.has(name)) {
+				throw new Error(
+					`${name} is written as itself: an inlined type cannot name itself, by any number of steps or through what any of them holds`
+				);
 			}
-			current = step;
+			naming.add(name);
+			entered.push(name);
+			node = substitute(node);
 		}
-		return current;
-	});
+		/** @type {Record<string, unknown>} */
+		const walked = {};
+		for (const [keyword, nested] of Object.entries(node)) {
+			if (keyword !== "properties" && keyword !== "definitions") {
+				walked[keyword] = putBack(nested, naming);
+				continue;
+			}
+			/** @type {Record<string, unknown>} */
+			const inner = {};
+			for (const [name, schema] of Object.entries(
+				/** @type {Record<string, unknown>} */ (nested)
+			)) {
+				inner[name] = putBack(schema, naming);
+			}
+			walked[keyword] = inner;
+		}
+		// A name is only being written inside for as long as this part is: the same
+		// one is free to stand in a part beside it.
+		for (const name of entered) naming.delete(name);
+		return walked;
+	};
+	const resolved = putBack(document, new Set());
 	return /** @type {Record<string, EXPECTED_ANY>} */ (resolved);
 };
 
