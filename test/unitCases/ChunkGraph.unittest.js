@@ -321,6 +321,20 @@ describe("ChunkGraph", () => {
 			expect(chunkGraph.isModuleInChunk(newModule, chunk)).toBe(true);
 		});
 
+		it("forgets the runtimes of a module it replaced", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const oldModule = new RawModule("", "old-runtimes");
+			const newModule = new RawModule("", "new-runtimes");
+			const chunk = new Chunk("a", false);
+			chunk.runtime = "a";
+			chunkGraph.connectChunkAndModule(chunk, oldModule);
+			// Reading it first is what leaves the answer on the record.
+			expect([...chunkGraph.getModuleRuntimes(oldModule)]).toEqual(["a"]);
+			chunkGraph.replaceModule(oldModule, newModule);
+			expect([...chunkGraph.getModuleRuntimes(oldModule)]).toEqual([]);
+			expect([...chunkGraph.getModuleRuntimes(newModule)]).toEqual(["a"]);
+		});
+
 		it("replaces a module that is in no chunk", () => {
 			const chunkGraph = new ChunkGraph(new ModuleGraph());
 			const oldModule = new RawModule("", "old-loose");
