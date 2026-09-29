@@ -113,7 +113,7 @@ A stale base also makes CI lie both ways: `Code Size` and benchmarks compare aga
 
 webpack uses an **org-wide** PR template that `gh pr create` does **not** prefill — paste it yourself. Every PR body, whatever its size or framing, contains **every** section below, in order, labels spelled exactly; write `n/a` where a section doesn't apply. Never delete sections or substitute another template (e.g. `## Summary` / `## Test plan`). Titles are plain text — raw `<`, `>`, never HTML entities.
 
-**Keep answers short — ideally one sentence, at most two or three**: the body orients reviewers rather than recapping the investigation, and a reviewer should read the whole body in well under 30 seconds. Where another section of this guide requires rationale in the PR body, give enough to satisfy it (concise multi-paragraph is fine). No bench tables, code blocks, or walkthroughs of iterations/reverts; put extra background in a linked issue/discussion, the relevant inline review thread, or the squash-merge commit body.
+**Write briefly and simply** — plain words, short sentences, no filler; there is no fixed line or word limit, but the body must stay small and quick to read. It orients reviewers rather than recapping the investigation: no walkthroughs of iterations or reverts; extra background goes in a linked issue/discussion, the relevant review thread, or the squash-merge commit body. Where another section of this guide requires rationale in the PR body, give enough to satisfy it.
 
 Mistakes that block PRs: `## Summary` headings instead of `**Summary**` bold labels; omitting **Use of AI** (mandatory per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md)); omitting or mis-answering **What kind of change…** (must match the branch prefix); dropping the HTML comment hints or leaving sections blank instead of `n/a`.
 
@@ -152,9 +152,9 @@ Paste this body (without the fence lines):
 Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due to irresponsible use of AI. -->
 ```
 
-Answers (one sentence each is the target, two or three the maximum):
+Answers (brief and simple; one sentence is often enough):
 
-- **Summary** — motivation and the problem solved; link the issue. Use `Closes #…` / `Fixes #…` when the PR resolves it, `Refs #…` only for issues it merely relates to.
+- **Summary** — motivation and the problem solved; link the issue. Use `Closes #…` / `Fixes #…` when the PR resolves it, `Refs #…` only for issues it merely relates to. **For a fix or improvement, show a real before/after under it** where one exists: the input code and what changed — the output, size (gzip), memory or CPU — as a short code block or two-row table, taken from an actual run, never invented.
 - **What kind of change…** — one of fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
 - **Did you add tests…** — yes/no + which files.
 - **Breaking change** — yes/no + migration path if yes.
