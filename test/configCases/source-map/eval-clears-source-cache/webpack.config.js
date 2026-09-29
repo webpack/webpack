@@ -8,6 +8,7 @@
  */
 const observeSourceCacheClearing = {
 	apply(compiler) {
+		const { ExternalModule } = compiler.webpack;
 		const { JavascriptModulesPlugin } = compiler.webpack.javascript;
 		compiler.hooks.compilation.tap("Observe", (compilation) => {
 			/** @type {Map<import("webpack-sources").Source, string>} */
@@ -19,7 +20,10 @@ const observeSourceCacheClearing = {
 			// original source rather than the eval wrapper replacing it.
 			JavascriptModulesPlugin.getCompilationHooks(
 				compilation
-			).renderModuleContent.tap("Observe", (source) => {
+			).renderModuleContent.tap("Observe", (source, module) => {
+				// The plugin hands an external module's source back untouched, so its
+				// cache is never cleared and it is not part of the contract tested here.
+				if (module instanceof ExternalModule) return source;
 				if (textBefore.has(source)) return source;
 				textBefore.set(source, String(source.source()));
 				const { clearCache } = source;
