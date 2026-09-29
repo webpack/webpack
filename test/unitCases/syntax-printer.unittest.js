@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore fnames
+// cspell:ignore fnames, propmangle, fargs
 
 const {
 	FORMAT_DEFAULTS,
@@ -573,6 +573,358 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	/** @type {[string, string, Record<string, EXPECTED_ANY>][]} */
+	const UNUSED_CASES = [
+		["unused off", "function f() { var a = 1; } sink(f);", { compress: { unused: false } }],
+		["assignments kept", "function f() { var a; a = g(); } sink(f);", { compress: { unused: "keep_assign" } }],
+		["a retained top-level name", "var keep = 1, drop = 2; function gone() {} sink(1);", { toplevel: true, compress: { top_retain: ["keep"] } }],
+		["a write-only increment", "function f() { var x = 0; x++; x += 2; } sink(f);", {}],
+		["arguments beside destructured parameters", "function f({ a }, b) { return arguments; } sink(f);", {}],
+		["a class referring to itself", "var A = class B { static s = B.foo(); }; sink(1);", {}],
+		["a class with a side effect", "class C { static s = sink(); } sink(1);", { toplevel: true }],
+		["an unused class", "function f() { class A {} class B { static x = sink(); } } sink(f);", {}],
+		["assignments to an unused name", "function f() { var a, b; a = g(); (b = 1, c = 2); b = 3; } sink(f);", {}],
+		["an unused rest parameter", "function f(a, ...rest) { return a; } sink(f);", { compress: { keep_fargs: false } }],
+		["an IIFE's unused parameters", "sink((function (a, b, c) { return a; })(1));", {}],
+		["a for head with an unused initializer", "function f() { for (var i = 0, j = g(); i < 1; i++) sink(i); } sink(f);", {}],
+		["a labelled for with an unused initializer", "function f() { l: for (var a = g(), b; ;) break l; } sink(f);", {}],
+		["a name declared twice", "function f() { var a = 1; var a = g(); return a; } sink(f);", {}],
+		["side effects cascaded", "function f() { var a = g(), b = 1, c = h(), d = i(); return b + d; } sink(f);", {}],
+		["side effects before a kept name", "function f() { var a = g(), b; return b; } sink(f);", {}],
+		["a catch parameter redeclared", "function f() { try { sink(); } catch (e) { var e = g(); } } sink(f);", {}],
+		["an unused block-scoped name", "function f() { { let a = g(); const b = 1; } } sink(f);", {}],
+		["destructuring with pure getters", "function f() { var {} = o; var [] = p; var { a } = q; } sink(f);", { compress: { pure_getters: true } }],
+		["a fixed value reassigned", "function f() { var a = 1; a = 2; return a; } sink(f);", {}],
+		["an initializer assigning another name", "function f() { var a = function () { b = 1; }; var b; return a; } sink(f);", {}],
+		["a for-in over a declaration", "function f(o) { for (var k in o) sink(); } sink(f);", {}],
+		["a named function expression", "sink(function named() { return 1; }, class Named {});", {}],
+		["a getter", "sink({ get a() { var unused = 1; return 2; } });", {}],
+		["a labelled for left a block", "function f() { l: for (var a = g(), b = 1; b; ) break l; } sink(f);", {}],
+		["a fixed value moved to an assignment", "function f() { var a = g(); a = 1; return a; } sink(f);", {}],
+		["a name declared twice apart", "function f() { var a = 1; sink(a); var a = g(); return a; } sink(f);", {}],
+		["side effects after a kept name", "function f() { var b = x(), a = g(), c = h(); return b + c; } sink(f);", {}]
+	];
+
+	// Cases of terser's own suite reaching a branch no case above reaches, under
+	// the compress options it gives them.
+	/** @type {[string, string, import("terser").CompressOptions][]} */
+	const UNUSED_TERSER_CASES = [
+		[
+			"arguments beside a destructured parameter",
+			'(function ({ d }) { console.log(a = "foo", arguments[0].d); })({ d: "Bar" });',
+			{ arguments: true, defaults: true }
+		],
+		[
+			"side effects joined into a kept initializer",
+			"function f2(x) { var a = 4, b = x.prop, c = 5, not_used = sideeffect1(), e = sideeffect2(); return b + (function () { return -a * e - c; })(); }",
+			{ collapse_vars: true, evaluate: true, join_vars: true, reduce_funcs: true, reduce_vars: true, sequences: true, side_effects: true, unused: true }
+		],
+		[
+			"a name declared twice with a value",
+			"console.log(function () { var a = 1, b = 2, c = 3; var a = c++, b = b /= a; return function () { return a; }() + b; }());",
+			{ collapse_vars: true, unused: true }
+		],
+		[
+			"a labelled for's initializer moved out",
+			"!function () { L: for (var a = 1, b = console.log(a); --a;) continue L; }();",
+			{ unused: true }
+		],
+		[
+			"a declaration reassigned before it is read",
+			"function f2() { var a = {}; a = []; return a; } console.log(f2());",
+			{ passes: 2, reduce_vars: true, side_effects: true, unused: true }
+		],
+		[
+			"a fixed name redeclared with a value",
+			"function f6(a) { a = {}; var a = []; return a; } console.log(f6());",
+			{ passes: 2, reduce_vars: true, side_effects: true, unused: true }
+		]
+	];
+
+	for (const [name, source, compress] of UNUSED_TERSER_CASES) {
+		it(`should drop unused names as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/** @returns {EXPECTED_OBJECT} the options */
+			const settings = () => ({
+				compress: compress.defaults ? { ...compress } : { defaults: false, ...compress },
+				mangle: false
+			});
+			const ours = await minify(source, settings());
+			const theirs = await reference.minify(source, settings());
+			expect(ours.code).toBe(theirs.code);
+		});
+	}
+
+	for (const [name, source, options] of UNUSED_CASES) {
+		it(`should drop unused names as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			for (const base of [{ compress: { passes: 2 }, mangle: true }, { mangle: false }]) {
+				/** @returns {EXPECTED_OBJECT} the options */
+				const settings = () => {
+					const merged = { ...base, ...JSON.parse(JSON.stringify(options)) };
+					if (options.compress) {
+						merged.compress = { ...(base.compress || {}), ...options.compress };
+					}
+					return merged;
+				};
+				const ours = await minify(source, settings());
+				const theirs = await reference.minify(source, settings());
+				expect(ours.code).toBe(theirs.code);
+			}
+		});
+	}
+
+	const INLINE_MAP = Buffer.from(
+		JSON.stringify({ version: 3, sources: ["x.js"], names: [], mappings: "AAAA" })
+	).toString("base64");
+
+	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
+	const DRIVER_CASES = [
+		["timings", "sink(1 + 2);", { timings: true }],
+		[
+			"a source map written inline",
+			{ "a.js": "function f(x) { return x + 1; } sink(f);" },
+			{ sourceMap: { url: "inline", filename: "out.js" } }
+		],
+		[
+			"a source map as an object, with a url",
+			{ "a.js": "sink(1);" },
+			{ sourceMap: { asObject: true, url: "out.js.map", root: "/" } }
+		],
+		[
+			"a source map read from the input",
+			`sink(1)\n//# sourceMappingURL=data:application/json;base64,${INLINE_MAP}`,
+			{ sourceMap: { content: "inline" } }
+		],
+		[
+			"an input map read from two files",
+			{ "a.js": "sink(1);", "b.js": "sink(2);" },
+			{ sourceMap: { content: "inline" } }
+		],
+		["a source without the input map it names", "sink(1);", { sourceMap: { content: "inline" } }],
+		["wrapped as a CommonJS module", "exports.a = 1;", { wrap: "lib" }],
+		["enclosed", "sink(window);", { enclose: "window:w" }],
+		[
+			"property mangling with quoted keys and a name cache",
+			"var o = { alpha: 1, 'beta': 2 }; sink(o.alpha, o.beta, o['gamma']);",
+			{ mangle: { properties: { keep_quoted: true } }, nameCache: {} }
+		],
+		[
+			"property mangling, strictly quoted",
+			"var o = { alpha: 1, 'beta': 2 }; sink(o.alpha, o.beta);",
+			{ mangle: { properties: { keep_quoted: "strict" } } }
+		],
+		["a name cache", "function f(longName) { return longName; } sink(f);", { nameCache: { vars: { props: {} } }, toplevel: true }],
+		["private members", "class A { #x = 1; get x() { return this.#x; } } sink(A);", {}],
+		["private members in files", { "a.js": "class A { #x = 1; m() { return #x in this; } } sink(A);" }, {}],
+		["the tree kept", "sink(1);", { format: { ast: true } }],
+		["no code", "sink(1);", { format: { code: false } }],
+		["ESTree out", "sink(1);", { format: { spidermonkey: true } }],
+		[
+			"ESTree in",
+			{
+				type: "Program",
+				body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 1 } }]
+			},
+			{ parse: { spidermonkey: true } }
+		],
+		["output and format both", "sink(1);", { output: {}, format: {} }],
+		["an unknown option", "sink(1);", { unknown: true }],
+		["no source", {}, {}],
+		["an array of sources", ["sink(1);", "sink(2);"], {}],
+		["mangling off", "function f(longName) { return longName; } sink(f);", { mangle: false }],
+		["property mangling on", "var o = { alpha: 1 }; sink(o.alpha);", { mangle: { properties: true } }],
+		[
+			"property mangling with reserved names kept quoted",
+			"var o = { alpha: 1, 'beta': 2 }; sink(o.alpha, o.beta);",
+			{ mangle: { properties: { keep_quoted: true, reserved: ["alpha"] } } }
+		],
+		[
+			"ESTree in, from two files",
+			{
+				"a.js": { type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 1 } }] },
+				"b.js": { type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 2 } }] }
+			},
+			{ parse: { spidermonkey: true }, compress: false }
+		],
+		["names kept as told", "class Long {} function f() {} sink(Long, f);", { keep_classnames: false, keep_fnames: true, rename: false }],
+		[
+			"a name cache already holding names",
+			"function f(longName) { return longName; } sink(f);",
+			{ nameCache: { vars: { props: { $f: "q" } } }, toplevel: true }
+		],
+		["a name cache without a mangle cache", "sink(1);", { nameCache: {}, mangle: { cache: null } }],
+		["an inline source map as an object", "sink(1);", { sourceMap: { url: "inline", asObject: true } }],
+		[
+			"ESTree in, as an array",
+			[
+				{ type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 1 } }] },
+				{ type: "Program", body: [{ type: "ExpressionStatement", expression: { type: "Literal", value: 2 } }] }
+			],
+			{ parse: { spidermonkey: true }, compress: false }
+		]
+	];
+
+	for (const [name, files, options] of DRIVER_CASES) {
+		it(`should drive a minify as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/**
+			 * @param {typeof minify} run a minify
+			 * @returns {Promise<EXPECTED_ANY>} what it wrote, or the error it threw
+			 */
+			const outcome = async (run) => {
+				const settings = JSON.parse(JSON.stringify(options));
+				try {
+					/** @type {EXPECTED_ANY} */
+					const result = await run(JSON.parse(JSON.stringify(files)), settings);
+					return {
+						code: result.code,
+						map: result.map,
+						decoded: result.decoded_map,
+						ast: result.ast === undefined ? undefined : typeof result.ast,
+						timings: result.timings && Object.keys(result.timings),
+						nameCache: settings.nameCache && JSON.stringify(settings.nameCache)
+					};
+				} catch (err) {
+					return { error: /** @type {Error} */ (err).message };
+				}
+			};
+			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
+		});
+	}
+
+	it("should drive a minify as terser does: sources inherited by the files object", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/** @returns {Record<string, string>} own and inherited sources */
+		const files = () =>
+			Object.assign(Object.create({ "inherited.js": "sink(0);" }), {
+				"a.js": "sink(1);",
+				"b.js": "sink(2);"
+			});
+		const { code } = await minify(files(), {});
+		expect(code).toBe((await reference.minify(files(), {})).code);
+		expect(code).toMatchSnapshot();
+	});
+
+	it("should drive a minify as terser does: a tree with its sources asked for", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<string | undefined>} what the second minify threw
+		 */
+		const refusal = async (run) => {
+			// terser's typings leave out `format.ast`, which returns the tree.
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await run("sink(1);", /** @type {EXPECTED_ANY} */ ({ format: { ast: true } }))
+			);
+			try {
+				await run(ast, { sourceMap: { includeSources: true } });
+			} catch (err) {
+				return /** @type {Error} */ (err).message;
+			}
+		};
+		const theirs = await refusal(reference.minify);
+		expect(theirs).toEqual(expect.any(String));
+		expect(await refusal(minify)).toBe(theirs);
+	});
+
+	it("should drive a minify as terser does: a tree handed back with a private member", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<string | undefined>} a returned tree, given a private member, minified again
+		 */
+		const handedBack = async (run) => {
+			const settings = /** @type {EXPECTED_ANY} */ ({
+				compress: false,
+				mangle: false,
+				format: { ast: true }
+			});
+			const { ast } = /** @type {EXPECTED_ANY} */ (await run("sink(1);", settings));
+			const { ast: other } = /** @type {EXPECTED_ANY} */ (
+				await run("class A { #x = 1; m() { return this.#x; } } sink(A);", settings)
+			);
+			ast.body = other.body;
+			return (await run(ast, {})).code;
+		};
+		const code = await handedBack(minify);
+		expect(code).toBe(await handedBack(reference.minify));
+		expect(code).toMatchSnapshot();
+	});
+
+	it("should drop unused names as terser does: sequences emptied in a tree", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<string | undefined>} the tree minified with its sequences emptied
+		 */
+		const emptied = async (run) => {
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await run(
+					"function f(a) { sink(a, (a, a)); a, a; } sink(f);",
+					/** @type {EXPECTED_ANY} */ ({ compress: false, mangle: false, format: { ast: true } })
+				)
+			);
+			const body = ast.body[0].body;
+			body[0].body.args[1].expressions = [];
+			body[1].body.expressions = [];
+			return (
+				await run(ast, { compress: { defaults: false, unused: true }, mangle: false })
+			).code;
+		};
+		const code = await emptied(minify);
+		expect(code).toBe(await emptied(reference.minify));
+		expect(code).toMatchSnapshot();
+	});
+
+	it("should drop unused names as terser does: a scope without its variables", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		const compressor = { option: () => true, has_directive: () => undefined };
+		/**
+		 * @param {typeof minify} run a minify
+		 * @returns {Promise<EXPECTED_ANY>} what dropping unused names in the class returned
+		 */
+		const dropped = async (run) => {
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await run(
+					"class A {}",
+					/** @type {EXPECTED_ANY} */ ({ compress: false, mangle: false, format: { ast: true } })
+				)
+			);
+			const node = ast.body[0];
+			node.variables = undefined;
+			return node.drop_unused(compressor);
+		};
+		expect(await dropped(minify)).toBe(await dropped(reference.minify));
+	});
+
+	it("should leave terser's debug log to terser", async () => {
+		const { minify } = await load();
+		/** @type {number[]} */
+		const written = [];
+		const fs = { writeFileSync: () => written.push(1), mkdirSync() {} };
+		/** @type {(files: string, options: object, fs: object) => Promise<{ code?: string }>} */
+		const run = /** @type {EXPECTED_ANY} */ (minify);
+		const previous = process.env.TERSER_DEBUG_DIR;
+		process.env.TERSER_DEBUG_DIR = "debug";
+		try {
+			const result = await run("sink(1 + 2);", {}, fs);
+			expect(result.code).toBe("sink(3);");
+		} finally {
+			if (previous === undefined) delete process.env.TERSER_DEBUG_DIR;
+			else process.env.TERSER_DEBUG_DIR = previous;
+		}
+		expect(written).toHaveLength(1);
+	});
+
 	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
 	const PARSED_BY_TERSER = [
 		["an expression rather than a program", "a + b", { parse: { expression: true } }],
@@ -776,6 +1128,83 @@ describe("syntax-printer", () => {
 				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
 				parse,
 				utils
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose driver it does not know", () => {
+		const driver =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "minify")
+			);
+		const modules = {
+			directory: "/nowhere",
+			compress: { Compressor() {} },
+			propmangle: { mangle_private_properties() {} },
+			sourcemap: { SourceMap() {} },
+			utils: { map_from_object() {}, map_to_object() {}, HOP() {} }
+		};
+		expect(driver.supports({ ...modules, directory: undefined })).toBe(false);
+		// No `lib/minify.js` there to read.
+		expect(driver.supports(modules)).toBe(false);
+		expect(
+			driver.supports({
+				...modules,
+				directory: require("path").dirname(require.resolve("acorn/package.json"))
+			})
+		).toBe(false);
+		// A driver whose source is not the one the phase pins.
+		const fs = require("fs");
+		const os = require("os");
+		const path = require("path");
+		const directory = fs.mkdtempSync(path.join(os.tmpdir(), "terser-"));
+		const file = path.join(directory, "lib", "minify.js");
+		fs.mkdirSync(path.dirname(file));
+		fs.writeFileSync(file, "export function minify() {}");
+		try {
+			expect(driver.supports({ ...modules, directory })).toBe(false);
+		} finally {
+			fs.unlinkSync(file);
+			fs.rmdirSync(path.dirname(file));
+			fs.rmdirSync(directory);
+		}
+	});
+
+	it("should decline a terser whose unused-name dropping it does not know", () => {
+		const unused =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "unused")
+			);
+		const modules = { common: {}, flags: {}, inference: {}, scope: {}, utils: {} };
+		expect(unused.supports({ ...modules, ast: {} })).toBe(false);
+		expect(
+			unused.supports({
+				...modules,
+				ast: { AST_Scope: { prototype: { drop_unused() {} } } }
+			})
+		).toBe(false);
+		// Every helper there, but a pass whose source is not the one pinned.
+		const helper = () => {};
+		expect(
+			unused.supports({
+				ast: { AST_Scope: { prototype: { drop_unused() {} } } },
+				scope: { SymbolDef: helper },
+				utils: {
+					keep_name: helper,
+					make_node: helper,
+					map_add: helper,
+					remove: helper,
+					MAP: helper
+				},
+				common: {
+					make_sequence: helper,
+					maintain_this_binding: helper,
+					is_empty: helper,
+					is_ref_of: helper,
+					can_be_evicted_from_block: helper
+				},
+				inference: { is_used_in_expression: helper },
+				flags: { WRITE_ONLY: 1, UNUSED: 2 }
 			})
 		).toBe(false);
 	});

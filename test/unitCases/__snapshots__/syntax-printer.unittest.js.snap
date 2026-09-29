@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`syntax-printer should drive a minify as terser does: a tree handed back with a private member 1`] = `"class A{#s=1;m(){return this.#s}}sink(A);"`;
+
+exports[`syntax-printer should drive a minify as terser does: sources inherited by the files object 1`] = `"sink(1),sink(2);"`;
+
+exports[`syntax-printer should drop unused names as terser does: sequences emptied in a tree 1`] = `"function f(a){sink(a,0);0}sink(f);"`;
+
 exports[`syntax-printer should mangle exactly as terser does: a catch parameter redefining a function-scoped name 1`] = `"function run(n){try{sink(n)}catch(n){sink(n)}return n}sink(run(1));"`;
 
 exports[`syntax-printer should mangle exactly as terser does: a function declared inside a block 1`] = `"function host(){sink(1);return\\"function\\"}sink(host());"`;
