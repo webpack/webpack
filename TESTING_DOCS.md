@@ -247,9 +247,29 @@ the neutral platform);
 each flag off on its own against an otherwise current target, which a version
 sweep cannot do; and `esm-environment` repeats both over ESM output.
 
-### The acorn corpus
+### External test corpora
 
-- `fixtures/acorn-corpus.json` — acorn's test suite — the one upstream corpus vendored rather than pinned, because acorn's npm tarball ships no tests. `unitCases/WebpackParser.unittest.js` holds both webpack parser entry points to it and owns recording it (no generator script or `package.json` entry): it replays acorn's `test/tests*.js` against a recording driver, keeping sources and options but never expected trees, which come from acorn itself. Bumping the `acorn` devDependency moves the corpus; to refresh, clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run with `WEBPACK_UPDATE_ACORN_CORPUS=1`. With that checkout present the run checks the vendored corpus against it; without it (CI, most machines) the corpus stands on the version it names, which the run pins to the installed acorn.
+Upstream test suites webpack runs against but doesn't maintain — upstream's to change, ours only to pin.
+
+Git submodules, all under `test/external/`, checked out on demand: `yarn setup` doesn't fetch them, and each CI job fetches only its own, one commit deep.
+
+- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `parser (js)`, `parser (minify-corpora)`
+- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `parser (html)`
+- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `parser (html)`, `syntax-equivalence` (browsers)
+- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `parser (css)`
+- `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `parser (minify-corpora)`
+- `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `parser (minify-corpora)`
+
+```sh
+git submodule update --init --recursive --depth 1   # check out the commits the repo pins
+git submodule update --init --recursive --remote --depth 1 # move every pin to its upstream tip
+```
+
+Keep `--depth 1` (`wpt` alone is ~161k files). `--remote` changes the recorded commits, so `git status` shows the paths modified — commit that only once CI is green on them, or `git submodule update` back to the pins.
+
+One upstream corpus is vendored rather than pinned as a submodule:
+
+- `test/fixtures/acorn-corpus.json` — acorn's test suite — the one upstream corpus vendored rather than pinned, because acorn's npm tarball ships no tests. `unitCases/WebpackParser.unittest.js` holds both webpack parser entry points to it and owns recording it (no generator script or `package.json` entry): it replays acorn's `test/tests*.js` against a recording driver, keeping sources and options but never expected trees, which come from acorn itself. Bumping the `acorn` devDependency moves the corpus; to refresh, clone acorn at the new version into `node_modules/.cache/acorn-<version>` and re-run with `WEBPACK_UPDATE_ACORN_CORPUS=1`. With that checkout present the run checks the vendored corpus against it; without it (CI, most machines) the corpus stands on the version it names, which the run pins to the installed acorn.
 
 ## How to Run Tests
 

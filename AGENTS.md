@@ -57,7 +57,7 @@ Rules the map carries that apply everywhere:
 - **A plugin never belongs in `lib/` root**: it goes in the directory for what it acts on (asset set → `lib/output/`, module graph → `lib/optimize/`, entry → `lib/entry/`); if none fits, add a directory, with its bullet in the map, in the same commit.
 - **Documentation lives in `docs/`**, never under `lib/`, which is published (`package.json` `files`); docs about `test/` or `tooling/` may sit in those directories.
 - **Edit an option's declaration, never its schema**: JSDoc typedefs in `lib/` for a plugin, `declarations/WebpackOptions.ts` for the configuration; `generate-schemas.js` derives `schemas/**`.
-- **Git submodules** live under `test/external/`, fetched on demand and always `--depth 1` (`wpt` alone is ~161k files).
+- **Git submodules** live under `test/external/`, fetched on demand and always `--depth 1` (`wpt` alone is ~161k files); each is described in [TESTING_DOCS.md](TESTING_DOCS.md#external-test-corpora).
 
 **Adding or renaming a webpack option** touches every layer, in order — skipping one silently breaks the option:
 

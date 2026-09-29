@@ -83,23 +83,9 @@ Every schema is derived from the module declaring its options by `generate-schem
   - `harness/` — what runs the suites: jest lifecycle (`globalSetup.js`, `globalTeardown.js`, `setupTestFramework.js`), the `patch-node-env.js` environment, the crash reporter, the case `runner/`, the `snapshot/` resolver, and `runtimes/` (preload/setup files for Bun and Deno). Reusable assertions and fixtures go in `helpers/`.
   - `RoundTripConfigCases` re-bundles the output of `configCases` that have a `roundTrip.js`.
   - `external/` — what webpack doesn't maintain: every git submodule (today the four spec corpora below and terser's and swc's own tests) — upstream's to change, ours only to pin. `external/wpt/` (web-platform-tests), checked out one commit deep by `parser (html)` and `syntax-equivalence`, holds the HTML tree-construction corpus since html5lib-tests dropped it.
-  - `fixtures/acorn-corpus.json` — acorn's test suite, vendored rather than pinned (acorn's npm tarball ships no tests); `unitCases/WebpackParser.unittest.js` records and checks it — refreshing it: [TESTING_DOCS.md](../TESTING_DOCS.md#the-acorn-corpus).
+  - `fixtures/acorn-corpus.json` — acorn's test suite, vendored rather than pinned as a submodule ([details](../TESTING_DOCS.md#external-test-corpora)).
 
-**Git submodules** — all under `test/external/`, checked out on demand: `yarn setup` doesn't fetch them, and each CI job fetches only its own, one commit deep.
-
-- `test/external/test262-cases` — [tc39/test262](https://github.com/tc39/test262); fetched by `test262`, `parser (js)`, `parser (minify-corpora)`
-- `test/external/html5lib-tests` — [html5lib/html5lib-tests](https://github.com/html5lib/html5lib-tests); fetched by `parser (html)`
-- `test/external/wpt` — [web-platform-tests/wpt](https://github.com/web-platform-tests/wpt); fetched by `parser (html)`, `syntax-equivalence` (browsers)
-- `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `parser (css)`
-- `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `parser (minify-corpora)`
-- `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `parser (minify-corpora)`
-
-```sh
-git submodule update --init --recursive --depth 1   # check out the commits the repo pins
-git submodule update --init --recursive --remote --depth 1 # move every pin to its upstream tip
-```
-
-Keep `--depth 1` (`wpt` alone is ~161k files). `--remote` changes the recorded commits, so `git status` shows the paths modified — commit that only once CI is green on them, or `git submodule update` back to the pins.
+**Git submodules and other external corpora** — what each is, which CI job fetches it and how to update the pins: [TESTING_DOCS.md](../TESTING_DOCS.md#external-test-corpora).
 
 **Examples & changesets**
 
