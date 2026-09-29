@@ -1345,6 +1345,29 @@ describe("syntax-printer", () => {
 		).toBe(false);
 	});
 
+	it("should write the source map terser writes", async () => {
+		const { minify } = await load();
+		const terser = require("terser");
+		const input = await terser.minify(
+			{ "in.js": "function add(a, b) {\n  return a + b;\n}\nconsole.log(add(1, 2));\n" },
+			{ sourceMap: { includeSources: true } }
+		);
+		const source = "var one = 1;\nfunction two(x) { return x * 2; }\nconsole.log(two(one));\n";
+		/** @type {[Record<string, string>, import("terser").SourceMapOptions][]} */
+		const cases = [
+			[{ "a.js": source }, {}],
+			[{ "a.js": source }, { includeSources: true, filename: "a.min.js", root: "/r" }],
+			[{ "b.js": /** @type {string} */ (input.code) }, { content: /** @type {string} */ (input.map), includeSources: true }],
+			[{ "b.js": /** @type {string} */ (input.code) }, { content: /** @type {string} */ (input.map) }]
+		];
+		for (const [files, sourceMap] of cases) {
+			const ours = await minify(files, { sourceMap: { ...sourceMap } });
+			const reference = await terser.minify(files, { sourceMap: { ...sourceMap } });
+			expect(ours.code).toBe(reference.code);
+			expect(ours.map).toBe(reference.map);
+		}
+	});
+
 	it("should hand back a fresh list, which a clone may share", async () => {
 		await load();
 		const { ast, parse, utils } = await loadSources();
