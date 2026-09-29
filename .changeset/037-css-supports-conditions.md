@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify CSS `@supports` and `@import` conditions, and numbers with an exponent.
+Minify CSS `@supports`, `@import` and `@custom-media` conditions, and exponent numbers.

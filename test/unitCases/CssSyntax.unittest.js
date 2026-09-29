@@ -1594,7 +1594,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// dropping a comment must never merge the tokens it stood between.
 		expect(min("a{margin:1px/**/2}")).toBe("a{margin:1px 2}");
 		expect(min("@media screen/**/and/**/(min-width:1px){a{c:1}}")).toBe(
-			"@media screen and (width>=1px){a{c:1}}"
+			"@media screen and/**/(width>=1px){a{c:1}}"
 		);
 	});
 
@@ -3996,6 +3996,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["selector(.a >/* c */.b)", "selector(.a>.b)"],
 			["selector(.a/* c */ > .b)", "selector(.a>.b)"],
 			["selector(.a , .b)", "selector(.a,.b)"],
+			// the selector under test, spaced but not rewritten
+			['selector(a[ href = "x" ])', 'selector(a[href="x"])'],
+			["selector(a:nth-child( 2n + 1 ))", "selector(a:nth-child(2n+1))"],
+			["selector(:IS( .a > .b ))", "selector(:IS(.a>.b))"],
 			// an escape spelling a plain name
 			["(col\\6f r:r\\65 d)", "(color:red)"],
 			["sel\\65 ctor(.\\61  > .b)", "selector(.a>.b)"]
@@ -4018,6 +4022,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// the selector under test is not rewritten, only spaced
 			["selector(*.a)"],
 			["selector(:HOVER)"],
+			["selector(a:nth-child(2n+1))"],
+			["selector(a:nth-child(2n+0))"],
+			["selector(a:NTH-CHILD(even))"],
+			["selector(a:nth-of-type(odd))"],
+			["SELECTOR(.a)"],
+			['selector([href="x"])'],
+			["selector(:IS(.a))"],
+			["selector(::BEFORE)"],
 			// `calc()` needs the space around `+`
 			["(width:calc(1px + 2px))"],
 			["(width:calc(1px+2px))"]
@@ -4041,6 +4053,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Before the keyword WebKit needs nothing, so a comment there goes.
 			expect(minify("@import url(a.css) supports((a:b)/**/or (c:d));")).toBe(
 				"@import url(a.css) supports((a:b)or (c:d));"
+			);
+		});
+
+		it("keeps an `@import`'s tested selector as written", () => {
+			expect(
+				minify(
+					"@import url(a.css) SUPPORTS(selector(a:NTH-CHILD( 2n + 1 )));"
+				)
+			).toBe("@import url(a.css) supports(selector(a:NTH-CHILD(2n+1)));");
+		});
+
+		it("rewrites the same selector outside a condition", () => {
+			expect(minify('a:NTH-CHILD(2n+1)[href="x"]{color:red}')).toBe(
+				"a:nth-child(odd)[href=x]{color:red}"
 			);
 		});
 
@@ -4131,7 +4157,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 					["chrome 120"],
 					{ resolveCustomAtRules: true }
 				)
-			).toBe("@import url(a.css) (max-width:30em);");
+			).toBe("@import url(a.css) (width<=30em);");
 		});
 
 		it("leaves a supports() outside an `@import` alone", () => {
@@ -7391,6 +7417,40 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(
 				minify("@media (min-width:1200px) and (min-width:1300px){a{color:red}}")
 			).toBe("@media (width>=1200px) and (width>=1300px){a{color:red}}");
+		});
+
+		it("declines an `and` a comment was kept after", () => {
+			expect(
+				minify(
+					"@media (min-width:1200px) and/**/(max-width:2000px){a{color:red}}"
+				)
+			).toBe("@media (width>=1200px) and/**/(width<=2000px){a{color:red}}");
+		});
+	});
+
+	describe("a media query's keyword comments", () => {
+		// As in a `@supports` condition: WebKit may read `and/**/(` unlike `and (`.
+		it.each([
+			["@media (hover) and/* c */(pointer:fine)", "@media (hover) and/**/(pointer:fine)"],
+			["@media not/**/(hover)", "@media not/**/(hover)"],
+			["@media (hover) OR/**/(pointer:fine)", "@media (hover) or/**/(pointer:fine)"],
+			["@media screen and/**/(hover)", "@media screen and/**/(hover)"],
+			["@media all and/**/(hover)", "@media all and/**/(hover)"],
+			["@media ((hover) and/**/(pointer:fine))", "@media ((hover) and/**/(pointer:fine))"],
+			["@container card not/**/(width>1px)", "@container card not/**/(width>1px)"],
+			// before the keyword, or beside whitespace, it decides nothing
+			["@media (hover)/**/and (pointer:fine)", "@media (hover)and (pointer:fine)"],
+			["@media (hover) and /**/ (pointer:fine)", "@media (hover) and (pointer:fine)"]
+		])("writes %s as %s", (input, expected) => {
+			expect(minify(`${input}{a{color:red}}`)).toBe(
+				`${expected}{a{color:red}}`
+			);
+		});
+
+		it("keeps one in an `@import`'s media query", () => {
+			expect(minify("@import url(a.css) screen and/**/(hover);")).toBe(
+				"@import url(a.css) screen and/**/(hover);"
+			);
 		});
 	});
 
@@ -11870,6 +11930,40 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 
 	it("is off until asked for", () => {
 		expect(minifyFor(sheet, ["chrome 120"])).toBe(sheet);
+	});
+
+	it.each([
+		["(MAX-WIDTH: 30.0em)", "(width<=30em)"],
+		["all and (min-width:30em)", "(width>=30em)"],
+		["(min-width:30em) and (max-width:60em)", "(30em<=width<=60em)"],
+		["(hover) and/**/(pointer:fine)", "(hover) and/**/(pointer:fine)"]
+	])("minifies the query %s as %s", (query, expected) => {
+		expect(
+			minifyForWith(
+				`@custom-media --m ${query};@media (--m){a{color:red}}`,
+				["chrome 120"],
+				{ resolveCustomAtRules: true }
+			)
+		).toBe(`@media ${expected}{a{color:red}}`);
+	});
+
+	it("minifies a rule it leaves in place", () => {
+		expect(
+			minifyFor("@custom-media --m (MAX-WIDTH: 30.0em);", ["chrome 120"])
+		).toBe("@custom-media --m (width<=30em);");
+		expect(
+			minifyFor("@custom-media --m (width<=30em);", ["chrome 90"])
+		).toBe("@custom-media --m (max-width:30em);");
+	});
+
+	it("minifies a query named inside another", () => {
+		expect(
+			minifyForWith(
+				"@custom-media --a (min-width:30em);@custom-media --b (--a) and (pointer:fine);@media (--b){a{color:red}}",
+				["chrome 120"],
+				{ resolveCustomAtRules: true }
+			)
+		).toBe("@media (width>=30em) and (pointer:fine){a{color:red}}");
 	});
 
 	it("writes a query naming alternatives only as the whole condition", () => {

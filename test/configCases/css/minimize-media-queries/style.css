@@ -1,0 +1,21 @@
+/* A media or container query written with a comment alone between `and`, `or`
+   or `not` and its condition keeps that comment: WebKit reads a `@supports` one
+   as invalid without whitespace there, and a query is read the same way. */
+
+/*! kept: the comment after `and` */
+@media (hover) and/* c */(pointer: fine) { .m01 { color: red } }
+/*! kept: the comment after `not` */
+@media not/* c */(hover) { .m02 { color: red } }
+/*! kept: the comment after `or`, which keeps the range from being joined */
+@media (min-width: 100px) or/* c */(max-width: 200px) { .m03 { color: red } }
+/*! kept: a media type and its `and` */
+@media screen and/* c */(min-width: 100px) { .m04 { color: red } }
+/*! dropped: a comment before the keyword */
+@media (hover)/* c */and (pointer: fine) { .m05 { color: red } }
+/*! dropped: a comment beside whitespace */
+@media (hover) and /* c */ (pointer: fine) { .m06 { color: red } }
+/*! kept: nested */
+@media ((hover) and/* c */(pointer: fine)) { .m07 { color: red } }
+/*! kept: a container query */
+.c01 { container-type: inline-size }
+@container (width > 1px) and/* c */(height > 1px) { .c02 { color: red } }
