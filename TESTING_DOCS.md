@@ -35,12 +35,12 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 ### `external/`
 
-- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below and terser's own tests. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
+- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below and terser's and swc's own tests. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
 
 #### `test262-cases/`
 
 - **Purpose**: ECMAScript test262 conformance test cases.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, and `test/specCases/minify-corpora.spectest.js`, which minifies each test with webpack's printer and with terser.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, which builds and runs each test in development and in production once per JavaScript minimizer — terser, and webpack's printer, as `experiments.futureDefaults` switches it — skipping the `fn-name` cases a renamed binding changes; what each minimizer still fails is listed by reason in `test/helpers/test262MinifiedFailures.js`, and a listed case that passes fails the suite until removed. And `test/specCases/minify-corpora.spectest.js`, which minifies each test with webpack's printer and with terser.
 
 #### `html5lib-tests/`
 

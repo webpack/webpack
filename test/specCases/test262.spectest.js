@@ -6,8 +6,11 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 const vm = require("vm");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../..");
+const jsMinify = require("../../lib/javascript/jsMinify");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
+const test262MinifiedFailures = require("../helpers/test262MinifiedFailures");
 
 /** @import NormalModule from "../../lib/module/NormalModule" */
 
@@ -349,9 +352,42 @@ const knownV8Bugs = [
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
 
+// The JavaScript minimizer each minified mode builds with, under the options
+// production minifies with: terser as published, and webpack's printer, which
+// `experiments.futureDefaults` switches it to.
+const MINIFY = {
+	terser: { compress: { passes: 2 } },
+	printer: { compress: { passes: 2 }, printer: true }
+};
+
+// A minifier renames bindings, so a function naming itself after one reads the
+// new name: test262 files these SetFunctionName cases as `fn-name`.
+const renamedByMinifier = /(?:^|[/-])fn-name(?:[-.]|$)/;
+
+// Each minified mode's failing tests, by `name (scenario)`, with the reason.
+/** @type {Record<string, Map<string, string>>} */
+const minifiedFailures = { terser: new Map(), printer: new Map() };
+for (const { reason, minifiers, tests } of test262MinifiedFailures) {
+	for (const minifier of minifiers) {
+		for (const test of tests) minifiedFailures[minifier].set(test, reason);
+	}
+}
+
+// Each mode the suite builds with; production is built once per minimizer.
+// TODO remove the `terser` mode once webpack's printer has replaced terser
+const MODES = [
+	{ name: "development", mode: "development" },
+	{ name: "production", mode: "production", minify: "terser" },
+	{
+		name: "production (future defaults)",
+		mode: "production",
+		minify: "printer"
+	}
+];
+
 const compile = async (entry, scenario, options = {}) =>
 	new Promise((resolve, reject) => {
-		const { exportsPresence, ...webpackOptions } = options;
+		const { exportsPresence, minify, ...webpackOptions } = options;
 		const compiler = webpack({
 			...webpackOptions,
 			entry,
@@ -373,7 +409,19 @@ const compile = async (entry, scenario, options = {}) =>
 			},
 			optimization: {
 				emitOnErrors: true,
-				minimize: false
+				minimize: Boolean(minify),
+				// The plugin and minify function production uses, run in this process:
+				// a worker pool per build would cost more than the build.
+				...(minify && {
+					minimizer: [
+						new MinimizerPlugin({
+							test: /\.[cm]?js$/i,
+							minify: jsMinify,
+							minimizerOptions: MINIFY[minify],
+							parallel: false
+						})
+					]
+				})
 			},
 			cache: false,
 			module: {
@@ -765,14 +813,14 @@ const shardedTestFiles = splitToNChunks([...testFiles], shard[1])[shard[0] - 1];
 expectNoDeprecations();
 
 describe("test262", () => {
-	for (const mode of ["development", "production"]) {
-		describe(mode, () => {
+	for (const { name: modeName, mode, minify } of MODES) {
+		describe(modeName, () => {
 			for (const testFile of shardedTestFiles) {
 				const name = path.posix.relative(baseDir, testFile);
 				const outputPath = path.resolve(
 					__dirname,
 					"../js/test262-cases",
-					mode,
+					minify ? `${mode}-${minify}` : mode,
 					path.join(path.dirname(name), path.basename(name, path.extname(name)))
 				);
 				const outputFile = path.resolve(outputPath, "./main.js");
@@ -798,7 +846,8 @@ describe("test262", () => {
 						!(meta.negative && meta.negative.phase === "parse")) ||
 					knownBugs.includes(name) ||
 					(mode === "production" &&
-						deliberateProductionDivergences.includes(name))
+						deliberateProductionDivergences.includes(name)) ||
+					(minify !== undefined && renamedByMinifier.test(name))
 				) {
 					// eslint-disable-next-line jest/no-disabled-tests
 					it.skip(name, () => {});
@@ -821,7 +870,7 @@ describe("test262", () => {
 				}
 
 				for (const scenario of scenarios) {
-					it(`${name} ("${scenario}")`, async () => {
+					const runCase = async () => {
 						if (needDebug) {
 							process.stdout.write(`Running ${name} ("${scenario}")\n`);
 						}
@@ -834,6 +883,7 @@ describe("test262", () => {
 
 						const stats = await compile(testFile, scenario, {
 							mode,
+							minify,
 							...(isLinkErrorTest ? { exportsPresence: "error" } : {}),
 							output: {
 								path: outputPath,
@@ -1078,6 +1128,38 @@ describe("test262", () => {
 						if (needDebug) {
 							process.stdout.write(`Finished ${name} ("${scenario}")\n`);
 						}
+					};
+					const expected =
+						minify === undefined
+							? undefined
+							: minifiedFailures[minify].get(`${name} (${scenario})`);
+
+					it(`${name} ("${scenario}")`, async () => {
+						if (expected === undefined) return runCase();
+						let failed = false;
+						try {
+							await runCase();
+						} catch (_err) {
+							failed = true;
+						}
+						// An async case can fail after its body settles, as a rejection
+						// nothing handles; drain those and count them as its failure.
+						await new Promise((resolve) => {
+							setImmediate(resolve);
+						});
+						const runningTest =
+							globalThis.JEST_STATE_SYMBOL &&
+							globalThis.JEST_STATE_SYMBOL.currentlyRunningTest;
+						const byPromise =
+							runningTest && runningTest.unhandledRejectionErrorByPromise;
+						if (byPromise && byPromise.size > 0) {
+							failed = true;
+							byPromise.clear();
+						}
+						if (failed) return;
+						throw new Error(
+							`${name} ("${scenario}") passes under ${modeName} now: remove it from test262MinifiedFailures (${expected})`
+						);
 					});
 				}
 			}
