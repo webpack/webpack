@@ -2382,6 +2382,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 				hooks: {
 					done: new AsyncSeriesHook(["stats"]),
 					failed: new SyncHook(["error"]),
+					afterEmit: new AsyncSeriesHook(["compilation"]),
 					compilation: new SyncHook(["compilation", "params"])
 				}
 			};
