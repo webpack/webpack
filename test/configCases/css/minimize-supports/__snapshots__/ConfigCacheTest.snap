@@ -18,5 +18,6 @@ Array [
   "/*! kept: the selector under test */@supports selector(*.a:HOVER){.k03{color:red}}",
   "/*! kept: calc() needs its spaces */@supports (width:calc(1px + 2px)){.k04{color:red}}",
   "/*! kept: a value that is newer when shortened */@supports (color:rgba(0,0,0,.5)){.k05{color:red}}",
+  "/*! supports: a space where a comment parted a condition and its keyword */@supports (display:grid) and (gap:1px){.s12{color:red}}",
 ]
 `;

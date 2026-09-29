@@ -480,3 +480,10 @@
 .initial-keyword { float: initial; display: initial }
 /*! `mdn-data` writes this one's initial as prose, so the keyword is supplemented */
 .initial-prose { text-align: initial }
+
+/*! scientific: an exponent is written plainly where that is no longer */
+.sci01 { opacity: 0.2e1; line-height: 2.5E0; width: 1e-3px; font-weight: 4e2 }
+/*! scientific: ...else on an integer mantissa */
+.sci02 { width: 10E3px; margin-left: 1.5e-7px; transition-duration: 1e3ms }
+/*! scientific: an integer property keeps a <number>, which it throws out */
+.sci03 { z-index: 0.2e1; order: 1E0; column-count: 3e0 }
