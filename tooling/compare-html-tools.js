@@ -48,6 +48,7 @@ const {
 	filterFrom,
 	findingGroups,
 	formatCost,
+	formatProfile,
 	formatSecond,
 	hasher,
 	idempotence,
@@ -1938,6 +1939,7 @@ const main = async () => {
 							cost.peak.padStart(9)
 						}\n`
 					);
+					process.stdout.write(formatProfile(result));
 					continue;
 				}
 				const code = /** @type {string} */ (result.code);
@@ -1964,6 +1966,7 @@ const main = async () => {
 						formatSecond(result.second).padStart(7)
 					}   ${notes.length === 0 ? "-" : notes.slice(0, 4).join(", ")}\n`
 				);
+				process.stdout.write(formatProfile(result));
 			}
 		}
 	}

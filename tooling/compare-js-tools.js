@@ -39,6 +39,7 @@ const {
 	filterFrom,
 	findingGroups,
 	formatCost,
+	formatProfile,
 	hasher,
 	installPackages,
 	kb,
@@ -421,6 +422,29 @@ const TOOLS = [
 						},
 						false
 					)
+				).code;
+		}
+	},
+	{
+		// The same work through webpack's printer, as `experiments.futureDefaults`
+		// minifies; `PHASES` picks which of its phases install, for an A/B.
+		name: "webpack printer",
+		stage: "minify",
+		create: () => {
+			const {
+				loadPhases,
+				selectPhases
+			} = require("../test/helpers/printerPhases");
+
+			const loading = loadPhases(selectPhases(process.env.PHASES));
+			return async (code) =>
+				(
+					await (
+						await loading
+					).minify(code, {
+						compress: { passes: 2 },
+						module: sourceType() === "module"
+					})
 				).code;
 		}
 	},
@@ -1267,6 +1291,7 @@ const main = async () => {
 							cost.peak.padStart(9)
 						}   ${await agreement(tool.name, code)}\n`
 					);
+					process.stdout.write(formatProfile(result));
 					continue;
 				}
 				const printed = /** @type {string} */ (result.code);
@@ -1289,6 +1314,7 @@ const main = async () => {
 						/** @type {"module" | "script"} */ (goal)
 					)}\n`
 				);
+				process.stdout.write(formatProfile(result));
 			}
 		}
 	}

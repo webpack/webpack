@@ -1307,6 +1307,76 @@ describe("syntax-printer", () => {
 		).toBe(false);
 	});
 
+	it("should decline a terser whose transform it does not know", async () => {
+		const transform =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "transform")
+			);
+		const modules = await loadSources();
+		expect(transform.supports({ ...modules, compress: {} })).toBe(false);
+		expect(
+			transform.supports({
+				...modules,
+				ast: {
+					...modules.ast,
+					TreeWalker: Object.assign(function TreeWalker() {}, {
+						prototype: { push() {}, pop() {} }
+					})
+				}
+			})
+		).toBe(false);
+	});
+
+	it("should hand back a fresh list, which a clone may share", async () => {
+		await load();
+		const { ast, parse, utils } = await loadSources();
+		const { AST_SimpleStatement, TreeTransformer } = ast;
+		const toplevel = parse.parse("a; b; c; d;");
+		const { body } = toplevel;
+		toplevel.transform(new TreeTransformer(() => undefined));
+		// terser's shallow clone shares lists, so each transform must copy them.
+		expect(toplevel.body).not.toBe(body);
+		expect(toplevel.body).toEqual(body);
+
+		toplevel.transform(
+			new TreeTransformer(
+				/**
+				 * @param {EXPECTED_ANY} node the node visited
+				 * @returns {EXPECTED_ANY} what replaces it
+				 */
+				(node) => {
+					if (!(node instanceof AST_SimpleStatement)) return;
+					const name = node.body.name;
+					if (name === "b") return utils.MAP.skip;
+					if (name === "c") return utils.MAP.splice([node, node]);
+					return node;
+				}
+			)
+		);
+		expect(toplevel.body).not.toBe(body);
+		expect(
+			toplevel.body.map(
+				(/** @type {EXPECTED_ANY} */ statement) => statement.body.name
+			)
+		).toEqual(["a", "c", "c", "d"]);
+	});
+
+	it("should not revisit a node the compressor squeezed", async () => {
+		await load();
+		const { ast, compress, flags, parse } = await loadSources();
+		const compressor = new compress.Compressor({}, {});
+		const toplevel = parse.parse('"use strict"; a;');
+		const [directive, statement] = toplevel.body;
+		directive.flags |= flags.SQUEEZED;
+		statement.flags |= flags.SQUEEZED;
+		expect(statement.transform(compressor)).toBe(statement);
+		expect(compressor.stack).toEqual([]);
+		// A directive is still pushed, which records it on the walker.
+		expect(directive.transform(compressor)).toBe(directive);
+		expect(compressor.has_directive("use strict")).toBe(directive);
+		expect(ast.TreeWalker.prototype.webpackSkipsSqueezed).toBe(false);
+	});
+
 	it("should decline a terser whose hoisting it does not know", () => {
 		const hoist =
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
