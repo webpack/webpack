@@ -4037,6 +4037,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(condition(input)).toBe(input);
 		});
 
+		it.each([
+			["(color:rgba(0,0,0,0.5))", "(color:rgba(0,0,0,.5))"],
+			["(width:0.50PX)", "(width:.5px)"],
+			["not (opacity:00.5)", "not (opacity:.5)"],
+			// a written fraction keeps the number from reading as an integer
+			["(z-index:1.0)", "(z-index:1.0)"],
+			["(width:-0.0px)", "(width:-.0px)"],
+			["(height:10.50%)", "(height:10.5%)"],
+			// the sign is a token boundary, and the rest is not rewritten
+			["(width:+0.5px)", "(width:+.5px)"],
+			["(width:5E-1px)", "(width:5E-1px)"],
+			["(width:16px)", "(width:16px)"],
+			["selector(:nth-child(+2n+01))", "selector(:nth-child(+2n+01))"]
+		])("spells the numbers of %s as %s", (input, expected) => {
+			expect(condition(input)).toBe(expected);
+		});
+
 		it("keeps the comment a keyword's condition was parted from it by", () => {
 			// WebKit reads `and`, `or` or `not` as invalid unless whitespace follows,
 			// as it reads the source here, so a space in its place would make it read.
@@ -4123,7 +4140,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"@import url(A.css) layer(Foo) supports(opacity:0.50) ALL and (min-width:1px);"
 				)
-			).toBe("@import url(A.css) layer(Foo) supports(opacity:0.50) (width>=1px);");
+			).toBe("@import url(A.css) layer(Foo) supports(opacity:.5) (width>=1px);");
 			// A layer's name and the URL are the author's, whatever their case.
 			expect(minify("@import url(A.css) LAYER ALL;")).toBe(
 				"@import url(A.css) LAYER all;"
@@ -7203,12 +7220,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("@media (aspect-ratio:16/9){a{color:red}}")).toBe(
 				"@media (aspect-ratio:16/9){a{color:red}}"
 			);
-			// A style query compares the tokens as written, and `@supports` reads a
-			// declaration rather than a feature.
+			// A style query compares the tokens as written, and a `@supports` test
+			// keeps its fraction: `z-index:1.0` holds no integer.
 			const style = "@container style(--x: 0480.0px){a{color:red}}";
 			expect(minify(style)).toBe(style);
-			const supports = "@supports (width:0480.0px){a{color:red}}";
-			expect(minify(supports)).toBe(supports);
+			expect(minify("@supports (width:0480.0px){a{color:red}}")).toBe(
+				"@supports (width:480.0px){a{color:red}}"
+			);
 			// ...and a selector's own An+B keeps every sign it was written with.
 			expect(minify("li:nth-child(2n+3){color:red}")).toBe(
 				"li:nth-child(2n+3){color:red}"
