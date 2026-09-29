@@ -436,6 +436,56 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	it("should mangle as terser does under each option the fast path leaves out", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		const source = `var counter = function () { return 1; };
+			function outer(first, second) {
+				label: for (var i = 0; i < 2; i++) { if (i) break label; }
+				try { first(); } catch (error) { second(error); }
+				if (first) { function inBlock() { return second; } inBlock(); }
+				class Shape { area() { return first; } }
+				var named = function inner(argument) { return argument + counter(); };
+				return [new Shape(), named, (function f(f) { return f; })(1)];
+			}
+			export { outer };`;
+		const variants = [
+			{ mangle: { keep_fnames: true } },
+			{ mangle: { keep_fnames: /^inner$/, keep_classnames: true } },
+			{ mangle: { ie8: true } },
+			{ mangle: { safari10: true } },
+			{ mangle: { toplevel: true, keep_classnames: /^Sh/ } },
+			{ compress: false, mangle: true, rename: true },
+			{ compress: { passes: 2 }, mangle: { reserved: ["first"] }, rename: true }
+		];
+		for (const variant of variants) {
+			const settings = () => ({
+				compress: { passes: 2 },
+				module: true,
+				...JSON.parse(JSON.stringify(variant)),
+				...(variant.mangle && typeof variant.mangle === "object"
+					? { mangle: { ...variant.mangle } }
+					: {})
+			});
+			const ours = await minify(source, settings());
+			const theirs = await reference.minify(source, settings());
+			expect([variant, ours.code]).toEqual([variant, theirs.code]);
+		}
+		// A name cache carries the names one minify handed out into the next.
+		const ourCache = {};
+		const theirCache = {};
+		for (const input of [source, "var counter = 2; export { counter };"]) {
+			const options = () => ({ mangle: { toplevel: true } });
+			const ours = await minify(input, { ...options(), nameCache: ourCache });
+			const theirs = await reference.minify(input, {
+				...options(),
+				nameCache: theirCache
+			});
+			expect(ours.code).toBe(theirs.code);
+		}
+		expect(ourCache).toEqual(theirCache);
+	});
+
 	it("should minify a source too large to keep its buffers as terser does", async () => {
 		const { minify } = await load();
 		const reference = require("terser");
