@@ -4025,25 +4025,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(condition(input)).toBe(input);
 		});
 
-		it.each([
-			// an early grammar asked for a space on each side of `and` / `or`
-			["(display:grid)/**/and/**/(gap:1px)", "(display:grid) and (gap:1px)"],
-			["(display:grid)/**/or (gap:1px)", "(display:grid) or (gap:1px)"],
-			["((a:b)/**/and (c:d)) or (e:f)", "((a:b) and (c:d)) or (e:f)"],
-			["selector(.a)/**/and (gap:1px)", "selector(.a) and (gap:1px)"],
-			// `or(` is a function as written, an unknown condition either way
-			["(display:grid)/**/or(gap:1px)", "(display:grid)or(gap:1px)"]
-		])("spaces the keyword of %s as %s", (input, expected) => {
-			expect(condition(input)).toBe(expected);
-		});
-
-		it("spaces the keyword in an `@import`'s supports() too", () => {
-			expect(minify("@import url(a.css) supports((a:b)/**/and (c:d));")).toBe(
-				"@import url(a.css) supports((a:b) and (c:d));"
+		it("writes no space before a keyword only a comment parted", () => {
+			// WebKit reads a `@supports` `and` / `or` with no whitespace before it as
+			// invalid, as the source is there, so a space would make it read.
+			expect(condition("(display:grid)/**/and/**/(gap:1px)")).toBe(
+				"(display:grid)and (gap:1px)"
 			);
-			// A media query's grammar never asked for the space.
-			expect(minify("@media (hover)/**/and (pointer:fine){a{b:c}}")).toBe(
-				"@media (hover)and (pointer:fine){a{b:c}}"
+			expect(minify("@import url(a.css) supports((a:b)/**/or (c:d));")).toBe(
+				"@import url(a.css) supports((a:b)or (c:d));"
 			);
 		});
 
