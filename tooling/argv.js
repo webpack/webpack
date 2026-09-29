@@ -12,7 +12,6 @@
  * @property {string} root root repository directory
  * @property {string} schemas glob to find schemas in the root directory
  * @property {string} declarations folder holding the option types that are not a plugin's own
- * @property {string} source glob to find source code in the root directory
  * @property {string} types output file for types declarations
  * @property {boolean} templateLiterals whether template literal types are allowed
  */
@@ -24,7 +23,6 @@ const DEFAULTS = {
 	root: process.env.INIT_CWD || process.cwd(),
 	schemas: "./schemas/**/*.json",
 	declarations: "declarations",
-	source: "./lib/**/*.js",
 	types: "types.d.ts",
 	templateLiterals: true
 };

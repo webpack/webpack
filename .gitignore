@@ -28,4 +28,3 @@ package-lock.json
 /events.json
 /dist
 
-# Generated from schemas/**/*.json by tooling/generate-types.js
