@@ -57,9 +57,14 @@ Directories come first, in alphabetical order, then the individual files worth t
 - **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/external/css-parsing-tests`. Test runner: `test/specCases/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
 
+#### `swc/`
+
+- **Purpose**: swc's repository, read only under `crates/swc_ecma_minifier/tests`: its fixtures with their configs, the tests `exec.rs` and `mangle.rs` write inline, and the libraries it measures itself on. Each is held to terser's bytes like the terser corpora; a test with an `expected.stdout`, and every `exec.rs` test, also has its outputs run, and each fixture's recorded `output.js` is what `JS_MINIFY_REPORT=<file>` compares sizes against.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/swc`. Test runner: `test/specCases/js-minify.spectest.js` (`yarn test:js-minify`).
+
 #### `terser/`
 
-- **Purpose**: terser's own repository, pinned to the version webpack depends on. Its `test/compress` cases and `test/input` files are two of the corpora `lib/javascript/syntax-printer.js` is held to (test262 is the third): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same.
+- **Purpose**: terser's own repository, pinned to the version webpack depends on. Its `test/compress` cases and `test/input` files are two of the corpora `lib/javascript/syntax-printer.js` is held to (test262 is the third): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same. A case stating its `expect_stdout` also has each output run in terser's sandbox, which must print it.
 - **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/js-minify.spectest.js` (`yarn test:js-minify`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
 
 ### `fixtures/`
