@@ -3832,7 +3832,7 @@ declare class Compilation {
 	valueCacheVersions: Map<string, ValueCacheVersion>;
 	requestShortener: RequestShortener;
 	compilerPath: string;
-	logger: WebpackLogger;
+	logger: Logger;
 	options: WebpackOptionsNormalizedWithDefaults;
 	outputOptions: OutputNormalizedWithDefaults;
 	bail: boolean;
@@ -3930,7 +3930,7 @@ declare class Compilation {
 	/**
 	 * Returns a logger with that name.
 	 */
-	getLogger(name: string | (() => string)): WebpackLogger;
+	getLogger(name: string | (() => string)): Logger;
 
 	/**
 	 * Adds the provided module to the compilation.
@@ -4550,7 +4550,7 @@ declare class Compiler {
 	/**
 	 * Gets infrastructure logger.
 	 */
-	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
+	getInfrastructureLogger(name: string | (() => string)): Logger;
 
 	/**
 	 * Returns a compiler watcher.
@@ -10214,7 +10214,7 @@ declare interface FileSystem {
  */
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
-	logger?: WebpackLogger;
+	logger?: Logger;
 	fileTimestampQueue: AsyncQueue<string, string, FileSystemInfoEntry>;
 	fileHashQueue: AsyncQueue<string, string, string>;
 	contextTimestampQueue: AsyncQueue<string, string, ContextFileSystemInfoEntry>;
@@ -17610,6 +17610,92 @@ type LogTypeEnum =
 	| "profileEnd"
 	| "time"
 	| "status";
+declare abstract class Logger {
+	getChildLogger: (name: string | (() => string)) => Logger;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	error(...args: any[]): void;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	warn(...args: any[]): void;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	info(...args: any[]): void;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	log(...args: any[]): void;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	debug(...args: any[]): void;
+
+	/**
+	 * Processes the provided condition.
+	 */
+	assert(condition: undefined | boolean, ...args: any[]): void;
+	trace(): void;
+	clear(): void;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	status(...args: any[]): void;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	group(...args: any[]): void;
+
+	/**
+	 * Processes the provided arg.
+	 */
+	groupCollapsed(...args: any[]): void;
+	groupEnd(): void;
+
+	/**
+	 * Processes the provided label.
+	 */
+	profile(label?: string): void;
+
+	/**
+	 * Processes the provided label.
+	 */
+	profileEnd(label?: string): void;
+
+	/**
+	 * Processes the provided label.
+	 */
+	time(label: string): void;
+
+	/**
+	 * Processes the provided label.
+	 */
+	timeLog(label?: string): void;
+
+	/**
+	 * Processes the provided label.
+	 */
+	timeEnd(label?: string): void;
+
+	/**
+	 * Processes the provided label.
+	 */
+	timeAggregate(label?: string): void;
+
+	/**
+	 * Time aggregate end.
+	 */
+	timeAggregateEnd(label?: string): void;
+}
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
 declare const MODULE_DECLARATIONS: unique symbol;
@@ -19761,7 +19847,7 @@ declare class MultiCompiler {
 	/**
 	 * Gets infrastructure logger.
 	 */
-	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
+	getInfrastructureLogger(name: string | (() => string)): Logger;
 
 	/**
 	 * Updates dependencies using the provided compiler.
@@ -20870,7 +20956,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	 * Gets a logger instance scoped to this loader and module.
 	 * Useful for emitting debug or compilation information in a structured way.
 	 */
-	getLogger: (name?: string) => WebpackLogger;
+	getLogger: (name?: string) => Logger;
 
 	/**
 	 * Resolves a module request (e.g., a relative path or module name) to an absolute file path.
@@ -24947,7 +25033,7 @@ declare class ProgressPlugin {
 	static defaultOptions: Required<Omit<ProgressPluginOptions, "handler">>;
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
-		logger: WebpackLogger,
+		logger: Logger,
 		options?: DefaultHandlerOptions
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
@@ -32055,92 +32141,6 @@ declare class WebpackError extends Error {
 	 * not capture any frames.
 	 */
 	static stackTraceLimit: number;
-}
-declare abstract class WebpackLogger {
-	getChildLogger: (name: string | (() => string)) => WebpackLogger;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	error(...args: any[]): void;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	warn(...args: any[]): void;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	info(...args: any[]): void;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	log(...args: any[]): void;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	debug(...args: any[]): void;
-
-	/**
-	 * Processes the provided condition.
-	 */
-	assert(condition: undefined | boolean, ...args: any[]): void;
-	trace(): void;
-	clear(): void;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	status(...args: any[]): void;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	group(...args: any[]): void;
-
-	/**
-	 * Processes the provided arg.
-	 */
-	groupCollapsed(...args: any[]): void;
-	groupEnd(): void;
-
-	/**
-	 * Processes the provided label.
-	 */
-	profile(label?: string): void;
-
-	/**
-	 * Processes the provided label.
-	 */
-	profileEnd(label?: string): void;
-
-	/**
-	 * Processes the provided label.
-	 */
-	time(label: string): void;
-
-	/**
-	 * Processes the provided label.
-	 */
-	timeLog(label?: string): void;
-
-	/**
-	 * Processes the provided label.
-	 */
-	timeEnd(label?: string): void;
-
-	/**
-	 * Processes the provided label.
-	 */
-	timeAggregate(label?: string): void;
-
-	/**
-	 * Time aggregate end.
-	 */
-	timeAggregateEnd(label?: string): void;
 }
 declare class WebpackOptionsApply extends OptionsApply {
 	constructor();
