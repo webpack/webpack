@@ -37,3 +37,5 @@
 /*! kept: the comment WebKit needs between a keyword and its condition */
 @supports (display: grid)/* c */and/* d */(gap: 1px) { .s12 { color: red } }
 @supports not/* c */(display: flex) { .s13 { color: red } }
+/*! kept: An+B, case and quotes of the selector under test */
+@supports selector(a:NTH-CHILD(2n + 1)) and selector([data-x="y"]) { .k06 { color: red } }
