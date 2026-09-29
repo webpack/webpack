@@ -1,11 +1,12 @@
 "use strict";
 
-// cspell:ignore fnames, propmangle, fargs
+// cspell:ignore fnames, propmangle, fargs, domprops
 
 const vm = require("vm");
 const {
 	FORMAT_DEFAULTS,
 	IGNORED_FORMAT_OPTIONS,
+	createUnicode,
 	estreeType,
 	load,
 	loadSources,
@@ -534,7 +535,6 @@ describe("syntax-printer", () => {
 				PHASES.find((phase) => phase.name === "output")
 			);
 		const utils = { defaults: () => ({}) };
-		const unicode = new Proxy({}, { get: () => () => false });
 		const ast = {
 			AST_Node: { prototype: { _print() {}, print_to_string() {} } }
 		};
@@ -543,7 +543,7 @@ describe("syntax-printer", () => {
 		 * @returns {boolean} whether the phase fits it
 		 */
 		const fits = (OutputStream) =>
-			output.supports({ ast, output: { OutputStream }, utils, unicode });
+			output.supports({ ast, output: { OutputStream }, utils });
 		/**
 		 * @param {object=} defs the option set a rejection names
 		 * @returns {never} always throws
@@ -552,7 +552,7 @@ describe("syntax-printer", () => {
 			throw Object.assign(new Error("unsupported"), { defs });
 		};
 
-		expect(output.supports({ ast, output: {}, utils, unicode })).toBe(false);
+		expect(output.supports({ ast, output: {}, utils })).toBe(false);
 		// Accepts an option it should reject, so its option set cannot be read.
 		expect(fits(() => ({}))).toBe(false);
 		expect(fits(() => rejectNaming())).toBe(false);
@@ -1461,6 +1461,44 @@ describe("syntax-printer", () => {
 		}
 	});
 
+	it("should read characters as terser's unicode helpers do", async () => {
+		const terserUnicode = await import(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/unicode.js")
+		);
+		const ours = createUnicode();
+		/** @type {string[]} */
+		const disagreements = [];
+		for (let code = 0; code <= 0x10ffff; code++) {
+			const character = String.fromCodePoint(code);
+			for (const [mine, theirs] of [
+				[ours.isIdentifierStart, terserUnicode.is_identifier_start],
+				[ours.isIdentifierChar, terserUnicode.is_identifier_char],
+				[ours.isIdentifierStartBroad, terserUnicode.is_identifier_start_broad],
+				[ours.isIdentifierCharBroad, terserUnicode.is_identifier_char_broad]
+			]) {
+				if (mine(character) !== theirs(character)) {
+					disagreements.push(`${theirs.name} U+${code.toString(16)}`);
+				}
+			}
+		}
+		expect(disagreements).toEqual([]);
+		for (const text of ["a\u{1F600}b", "\uD83D", "\uDE00x", "x\uD83D\uDE00"]) {
+			for (let i = 0; i < text.length; i++) {
+				expect(ours.getFullChar(text, i)).toBe(
+					terserUnicode.get_full_char(text, i)
+				);
+				expect(ours.getFullCharCode(text, i)).toBe(
+					terserUnicode.get_full_char_code(text, i)
+				);
+			}
+		}
+		for (const name of ["a", "$_9", "9a", "a-b", "é", ""]) {
+			expect(ours.isBasicIdentifier(name)).toBe(
+				terserUnicode.is_basic_identifier_string(name)
+			);
+		}
+	});
+
 	it("should name each node the ESTree type terser converts it to", async () => {
 		const { ast, parse } = await loadSources();
 		markEstreeTypes({ ast });
@@ -1625,7 +1663,7 @@ describe("syntax-printer", () => {
 			version: require("terser/package.json").version,
 			minify() {},
 			compress: { Compressor() {} },
-			propmangle: { mangle_private_properties() {} },
+			domprops: { domprops: [] },
 			sourcemap: { SourceMap() {} },
 			utils: { map_from_object() {}, map_to_object() {}, HOP() {} }
 		};
