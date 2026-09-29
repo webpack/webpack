@@ -1276,11 +1276,6 @@ const EXPECTED = [
 		contains: "-> \\76 ",
 		source: "parsing/cases/declaration.css",
 		why: "`prop: {value}{value}` is no declaration: it reparses as a rule whose selector `prop:` is invalid, which the printer writes back as authored"
-	},
-	{
-		relation: "respelling leading-zero",
-		contains: "-> 0",
-		why: "an `@supports` prelude is kept as authored because it is a feature test rather than a declaration to print, so `(color:rgba(0,0,0,.5))` keeps every byte. A judgement to revisit rather than a defect; retire this entry if it changes"
 	}
 ];
 

@@ -4037,6 +4037,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(condition(input)).toBe(input);
 		});
 
+		it.each([
+			["(color:rgba(0,0,0,0.5))", "(color:rgba(0,0,0,.5))"],
+			["(width:0.50PX)", "(width:.5px)"],
+			["not (opacity:00.5)", "not (opacity:.5)"],
+			// a written fraction keeps the number from reading as an integer
+			["(z-index:1.0)", "(z-index:1.0)"],
+			["(width:-0.0px)", "(width:-.0px)"],
+			["(height:10.50%)", "(height:10.5%)"],
+			// the sign is a token boundary, and the rest is not rewritten
+			["(width:+0.5px)", "(width:+.5px)"],
+			["(width:5E-1px)", "(width:5E-1px)"],
+			["(width:16px)", "(width:16px)"],
+			["selector(:nth-child(+2n+01))", "selector(:nth-child(+2n+01))"]
+		])("spells the numbers of %s as %s", (input, expected) => {
+			expect(condition(input)).toBe(expected);
+		});
+
 		it("keeps the comment a keyword's condition was parted from it by", () => {
 			// WebKit reads `and`, `or` or `not` as invalid unless whitespace follows,
 			// as it reads the source here, so a space in its place would make it read.
@@ -4123,7 +4140,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"@import url(A.css) layer(Foo) supports(opacity:0.50) ALL and (min-width:1px);"
 				)
-			).toBe("@import url(A.css) layer(Foo) supports(opacity:0.50) (width>=1px);");
+			).toBe("@import url(A.css) layer(Foo) supports(opacity:.5) (width>=1px);");
 			// A layer's name and the URL are the author's, whatever their case.
 			expect(minify("@import url(A.css) LAYER ALL;")).toBe(
 				"@import url(A.css) LAYER all;"
@@ -4155,7 +4172,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minifyForWith(
 					"@custom-media --n (max-width:30em);@import url(a.css) (--n);",
 					["chrome 120"],
-					{ resolveCustomAtRules: true }
+					{ customMedia: true }
 				)
 			).toBe("@import url(a.css) (width<=30em);");
 		});
@@ -7203,12 +7220,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("@media (aspect-ratio:16/9){a{color:red}}")).toBe(
 				"@media (aspect-ratio:16/9){a{color:red}}"
 			);
-			// A style query compares the tokens as written, and `@supports` reads a
-			// declaration rather than a feature.
+			// A style query compares the tokens as written, and a `@supports` test
+			// keeps its fraction: `z-index:1.0` holds no integer.
 			const style = "@container style(--x: 0480.0px){a{color:red}}";
 			expect(minify(style)).toBe(style);
-			const supports = "@supports (width:0480.0px){a{color:red}}";
-			expect(minify(supports)).toBe(supports);
+			expect(minify("@supports (width:0480.0px){a{color:red}}")).toBe(
+				"@supports (width:480.0px){a{color:red}}"
+			);
 			// ...and a selector's own An+B keeps every sign it was written with.
 			expect(minify("li:nth-child(2n+3){color:red}")).toBe(
 				"li:nth-child(2n+3){color:red}"
@@ -11934,7 +11952,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 
 	it("writes the query wherever a condition asks for it", () => {
 		expect(
-			minifyForWith(sheet, ["chrome 120"], { resolveCustomAtRules: true })
+			minifyForWith(sheet, ["chrome 120"], { customMedia: true })
 		).toBe("@media (width>400px){a{color:red}}");
 	});
 
@@ -11943,7 +11961,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --m (width>400px);@media screen and (--m){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media screen and (width>400px){a{color:red}}");
 	});
@@ -11962,7 +11980,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				`@custom-media --m ${query};@media (--m){a{color:red}}`,
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe(`@media ${expected}{a{color:red}}`);
 	});
@@ -11981,7 +11999,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --a (min-width:30em);@custom-media --b (--a) and (pointer:fine);@media (--b){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media (width>=30em) and (pointer:fine){a{color:red}}");
 	});
@@ -11992,14 +12010,14 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 		const list = "@custom-media --m (width>400px),(orientation:portrait);";
 		expect(
 			minifyForWith(`${list}@media (--m){a{color:red}}`, ["chrome 120"], {
-				resolveCustomAtRules: true
+				customMedia: true
 			})
 		).toBe("@media (width>400px),(orientation:portrait){a{color:red}}");
 		expect(
 			minifyForWith(
 				`${list}@media screen and (--m){a{color:red}}`,
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe(
 			"@media screen and (width>400px),screen and (orientation:portrait){a{color:red}}"
@@ -12011,7 +12029,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --w (width>400px);@media screen and (--w){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media screen and (width>400px){a{color:red}}");
 	});
@@ -12019,7 +12037,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 	it("leaves a rule stating no query alone", () => {
 		const css = "@custom-media --m;@media (--m){a{color:red}}";
 		expect(
-			minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true })
+			minifyForWith(css, ["chrome 120"], { customMedia: true })
 		).toBe(css);
 	});
 
@@ -12030,14 +12048,14 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --m (width>400px);@media (--nope){a{color:red}}",
 				["chrome 120"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media (--nope){a{color:red}}");
 	});
 
 	/** @type {(css: string) => string} */
 	const resolve = (css) =>
-		minifyForWith(css, ["chrome 120"], { resolveCustomAtRules: true });
+		minifyForWith(css, ["chrome 120"], { customMedia: true });
 
 	it("writes a condition standing before the rule that names it", () => {
 		expect(
@@ -12062,6 +12080,40 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 				"@custom-media --b (--a) and (hover);@custom-media --a (width>1px);@media (--b){a{color:red}}"
 			)
 		).toBe("@media (width>1px) and (hover){a{color:red}}");
+		// Each read through the next, written last to first.
+		expect(
+			resolve(
+				"@custom-media --c (--b) and (x:1);@custom-media --b (--a) and (y:1);@custom-media --a (width>1px);@media (--c){a{color:red}}"
+			)
+		).toBe("@media (width>1px) and (y:1) and (x:1){a{color:red}}");
+		// Through the last of two rules stating it.
+		expect(
+			resolve(
+				"@custom-media --b (--a);@custom-media --a (x:1);@custom-media --a (y:1);@media (--b){a{color:red}}"
+			)
+		).toBe("@media (y:1){a{color:red}}");
+	});
+
+	it("reads a feature named like a rule as no reference to it", () => {
+		expect(
+			resolve(
+				"@custom-media --foo (--bar: 1px);@custom-media --bar (--foo);@media (--bar){a{color:red}}"
+			)
+		).toBe("@media (--bar:1px){a{color:red}}");
+		// A name spaced or commented inside its parentheses is still one.
+		expect(
+			resolve(
+				"@custom-media --b ( /* c */ --a ) and (y:1);@custom-media --a (width>1px);@media (--b){a{color:red}}"
+			)
+		).toBe("@media (width>1px) and (y:1){a{color:red}}");
+	});
+
+	it("reads past a rule stating no name", () => {
+		expect(
+			resolve(
+				"@media (--m){a{color:red}}@custom-media (x:1);@custom-media --m (y:1);"
+			)
+		).toBe("@media (y:1){a{color:red}}@custom-media (x:1);");
 	});
 
 	it("leaves names on a cycle as written", () => {
@@ -12162,7 +12214,7 @@ describe("CssSyntax minify — `@custom-media` / `@custom-selector`", () => {
 			minifyForWith(
 				"@custom-media --m (width>=1px),(hover);@media screen and (--m){a{color:red}}",
 				["chrome 90"],
-				{ resolveCustomAtRules: true }
+				{ customMedia: true }
 			)
 		).toBe("@media screen and (min-width:1px),screen and (hover){a{color:red}}");
 	});
@@ -12341,7 +12393,7 @@ describe("CssSyntax minify — `rewriteEscapes`", () => {
 
 describe("CssSyntax minify — `@custom-selector`", () => {
 	const sheet = "@custom-selector :--h h1,h2;:--h{color:red}";
-	const on = { resolveCustomAtRules: true };
+	const on = { customSelectors: true };
 
 	it("writes the list wherever a selector asks for it", () => {
 		expect(minifyForWith(sheet, ["chrome 120"], on)).toBe(
@@ -12390,14 +12442,80 @@ describe("CssSyntax minify — `@custom-selector`", () => {
 		).toBe(":--nope{color:red}");
 	});
 
-	it("leaves a selector standing before the rule that names it", () => {
+	/** @type {(css: string) => string} */
+	const resolve = (css) => minifyForWith(css, ["chrome 120"], on);
+
+	it("writes a selector standing before the rule that names it", () => {
+		expect(resolve(":--h{color:red}@custom-selector :--h h1;")).toBe(
+			":is(h1){color:red}"
+		);
+	});
+
+	it("writes the last rule stating a name", () => {
+		expect(
+			resolve(
+				"@custom-selector :--h h1;:--h{color:red}@custom-selector :--h h2;"
+			)
+		).toBe(":is(h2){color:red}");
+	});
+
+	it("writes a name its list reads, stated before or after it", () => {
+		expect(
+			resolve(
+				"@custom-selector :--a h1,h2;@custom-selector :--b :--a .x,:--a:hover;:--b{color:red}"
+			)
+		).toBe(":is(:is(h1,h2) .x,:is(h1,h2):hover){color:red}");
+		expect(
+			resolve(
+				"@custom-selector :--b :--a .x;@custom-selector :--a h1,h2;:--b{color:red}"
+			)
+		).toBe(":is(:is(h1,h2) .x){color:red}");
+	});
+
+	it("leaves names on a cycle as written", () => {
+		expect(
+			resolve(
+				"@custom-selector :--a :--b;@custom-selector :--b :--a;:--a{color:red}"
+			)
+		).toBe(":--a{color:red}");
+		expect(resolve("@custom-selector :--a :--a .x;:--a{color:red}")).toBe(
+			":--a{color:red}"
+		);
+	});
+
+	it("reads no name a string spells", () => {
+		expect(
+			resolve(
+				'@custom-selector :--bar h1;@custom-selector :--foo [data-x=":--bar x"],[data-y=\'a\\\' :--bar\'];:--foo{color:red}'
+			)
+		).toBe(':is([data-x=":--bar x"],[data-y="a\' :--bar"]){color:red}');
+		// Nor one after an escape, or in a string holding both quotes.
+		expect(
+			resolve(
+				"@custom-selector :--bar h1;@custom-selector :--foo .a\\:--bar,[data-z=\"a\\\"b' :--bar\"];:--foo{color:red}"
+			)
+		).toBe(":is(.a\\:--bar,[data-z=\"a\\\"b' :--bar\"]){color:red}");
+	});
+
+	it("keeps a selector name apart from a `@custom-media` one", () => {
 		expect(
 			minifyForWith(
-				":--h{color:red}@custom-selector :--h h1;",
+				"@custom-selector :--m h1;@custom-media --m (x:1);@media (--m){:--m{color:red}}",
 				["chrome 120"],
-				on
+				{ customMedia: true, customSelectors: true }
 			)
-		).toBe(":--h{color:red}");
+		).toBe("@media (x:1){:is(h1){color:red}}");
+	});
+
+	it("resolves each of the two only where its own option is on", () => {
+		const css =
+			"@custom-media --m (x:1);@custom-selector :--h h1;@media (--m){:--h{color:red}}";
+		expect(minifyForWith(css, ["chrome 120"], { customMedia: true })).toBe(
+			"@custom-selector :--h h1;@media (x:1){:--h{color:red}}"
+		);
+		expect(minifyForWith(css, ["chrome 120"], { customSelectors: true })).toBe(
+			"@custom-media --m (x:1);@media (--m){:is(h1){color:red}}"
+		);
 	});
 
 	it("keeps the rule where the target reads no `:is()`", () => {
