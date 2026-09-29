@@ -5,8 +5,10 @@
 const vm = require("vm");
 const {
 	FORMAT_DEFAULTS,
+	estreeType,
 	load,
 	loadSources,
+	markEstreeTypes,
 	PHASES
 } = require("../../lib/javascript/syntax").printer;
 
@@ -1430,6 +1432,74 @@ describe("syntax-printer", () => {
 			expect(ours.code).toBe(reference.code);
 			expect(ours.map).toBe(reference.map);
 		}
+	});
+
+	it("should name each node the ESTree type terser converts it to", async () => {
+		const { ast, parse } = await loadSources();
+		markEstreeTypes({ ast });
+		const source = `"use strict";
+			import a, { b as c, "d" as e } from "f"; import * as g from "h";
+			export default class extends a { static #p = 1; static { g(); } get [c]() { return #p in this; } set s(v) {} m() {} q = 2; #r() {} }
+			export { a as default2, e as "q" }; export * from "i"; export * as j from "k";
+			export const l = 1, { m, ...n } = o, [p = 1, ...q] = r;
+			export function* s(t, u = 1, ...v) { yield t; yield* u; }
+			label: for (let w = 0; w < 1; w++) { if (w) continue label; else break; }
+			for (const x in y) ; for (const z of y) ; do ; while (0); while (0) ;
+			switch (a) { case 1: debugger; default: }
+			try { throw a } catch ({ e }) {} finally {}
+			(async () => { await a; for await (const b of c); })();
+			new a(...b)?.c?.[d]?.(e); a = b ? c : d; a += typeof b; a++; --a; !a;
+			a = { b, c: 1, [d]: 2, get e() {}, set e(f) {}, g() {}, async *h() {}, ...i };
+			a = [, b, ...c]; a = \`x\${b}y\`; a = tag\`z\`; a = /re/g; a = 1n; a = null;
+			a = true; a = void 0; a = NaN; a = Infinity; a = (b, c); a = b ?? (c && d || e);
+			a = import.meta; a = import("x"); function f() { new.target; return this; }`;
+		let count = 0;
+		const walker = new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+			const parent = walker.parent();
+			let expected;
+			if (
+				(node.TYPE === "ObjectGetter" || node.TYPE === "ObjectSetter") &&
+				parent.TYPE !== "Object"
+			) {
+				// terser maps a class's members with the index as their parent, which
+				// reads a class accessor as an object's; ESTree makes it a method.
+				expected = { type: "MethodDefinition" };
+			} else if (node.TYPE === "Expansion") {
+				// terser's converter reads this off its own stack, and makes a rest
+				// parameter a spread; ESTree binds with a rest element in both.
+				expected = {
+					type:
+						parent.TYPE === "Destructuring" || parent instanceof ast.AST_Lambda
+							? "RestElement"
+							: "SpreadElement"
+				};
+			} else if (typeof node.to_mozilla_ast === "function") {
+				expected = node.to_mozilla_ast(parent);
+			} else if (node.TYPE === "TemplateSegment") {
+				expected = parent.to_mozilla_ast().quasi || parent.to_mozilla_ast();
+				expected = { type: expected.quasis[0].type };
+			} else {
+				// A name mapping is converted with its declaration, as a specifier.
+				const list = parent.imported_names || parent.exported_names;
+				const converted = parent.to_mozilla_ast();
+				// `export * as a` names what it exports on the declaration itself.
+				expected =
+					converted.specifiers === undefined
+						? null
+						: converted.specifiers.filter(
+								(/** @type {{ type: string }} */ specifier) =>
+									specifier.type !== "ImportDefaultSpecifier"
+							)[list.indexOf(node)];
+			}
+			expect([node.TYPE, estreeType(node, parent)]).toEqual([
+				node.TYPE,
+				expected === null ? null : expected.type
+			]);
+			count++;
+		});
+		parse.parse(source, { module: true }).walk(walker);
+		parse.parse("with (a) b;").walk(walker);
+		expect(count).toBeGreaterThan(300);
 	});
 
 	it("should hand back a fresh list, which a clone may share", async () => {
