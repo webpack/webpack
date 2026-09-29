@@ -194,6 +194,59 @@ describe("ChunkGraph", () => {
 			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual(["a"]);
 		});
 
+		it("reads the runtime of the one chunk it is in", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "one-runtime");
+			const chunk = new Chunk("a", false);
+			chunk.runtime = "a";
+			chunkGraph.connectChunkAndModule(chunk, module);
+			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual(["a"]);
+			expect([...chunkGraph.getModuleChunksIterable(module)]).toEqual([chunk]);
+		});
+
+		it("takes a third chunk into the set it already has", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "three-chunks");
+			const chunks = ["a", "b", "c"].map((name) => {
+				const chunk = new Chunk(name, false);
+				chunk.runtime = name;
+				return chunk;
+			});
+			for (const chunk of chunks) {
+				chunkGraph.connectChunkAndModule(chunk, module);
+			}
+			expect(chunkGraph.getNumberOfModuleChunks(module)).toBe(3);
+			expect([...chunkGraph.getModuleRuntimes(module)].sort()).toEqual([
+				"a",
+				"b",
+				"c"
+			]);
+		});
+
+		it("lets go of a chunk that disconnects every module at once", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const first = new RawModule("", "first");
+			const second = new RawModule("", "second");
+			const chunk = new Chunk("a", false);
+			chunkGraph.connectChunkAndModule(chunk, first);
+			chunkGraph.connectChunkAndModule(chunk, second);
+			chunkGraph.disconnectChunk(chunk);
+			expect(chunkGraph.getNumberOfModuleChunks(first)).toBe(0);
+			expect(chunkGraph.getNumberOfModuleChunks(second)).toBe(0);
+			expect(chunkGraph.getNumberOfChunkModules(chunk)).toBe(0);
+		});
+
+		it("keeps the one chunk it has when another disconnects", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "other-chunk");
+			const held = new Chunk("a", false);
+			const other = new Chunk("b", false);
+			chunkGraph.connectChunkAndModule(held, module);
+			// Nothing of this module's is in the other chunk, so nothing changes.
+			chunkGraph.disconnectChunkAndModule(other, module);
+			expect(chunkGraph.getModuleChunks(module)).toEqual([held]);
+		});
+
 		it("orders one chunk without asking the comparer", () => {
 			const chunkGraph = new ChunkGraph(new ModuleGraph());
 			const module = new RawModule("", "ordered-one");
