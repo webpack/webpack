@@ -1345,6 +1345,30 @@ describe("syntax-printer", () => {
 		).toBe(false);
 	});
 
+	it("should decline a terser whose sizes it does not know", () => {
+		const size =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "size")
+			);
+		expect(size.supports({ ast: {} })).toBe(false);
+	});
+
+	it("should count a node's size inside a size being counted", async () => {
+		await load();
+		const { parse } = await loadSources();
+		const toplevel = parse.parse("var a = 1; function b(c) { return c + a; }");
+		const [, declaration] = toplevel.body;
+		const inner = declaration.size();
+		const original = declaration._size;
+		let nested = 0;
+		declaration._size = function (/** @type {EXPECTED_ANY} */ info) {
+			nested = declaration.body[0].size();
+			return original.call(this, info);
+		};
+		expect(toplevel.size()).toBeGreaterThan(inner);
+		expect(nested).toBe(declaration.body[0].size());
+	});
+
 	it("should write the source map terser writes", async () => {
 		const { minify } = await load();
 		const terser = require("terser");
