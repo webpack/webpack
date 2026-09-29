@@ -210,6 +210,27 @@ describe("ChunkGraph", () => {
 			).toThrow();
 		});
 
+		it("forgets the runtime it cached when its chunk changes", () => {
+			const chunkGraph = new ChunkGraph(new ModuleGraph());
+			const module = new RawModule("", "moved");
+			const first = new Chunk("a", false);
+			first.runtime = "a";
+			const second = new Chunk("b", false);
+			second.runtime = "b";
+			chunkGraph.connectChunkAndModule(first, module);
+			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual(["a"]);
+			// The record keeps this answer, so both transitions have to drop it.
+			chunkGraph.disconnectChunkAndModule(first, module);
+			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual([]);
+			chunkGraph.connectChunkAndModule(second, module);
+			expect([...chunkGraph.getModuleRuntimes(module)]).toEqual(["b"]);
+			chunkGraph.connectChunkAndModule(first, module);
+			expect([...chunkGraph.getModuleRuntimes(module)].sort()).toEqual([
+				"a",
+				"b"
+			]);
+		});
+
 		it("takes a third chunk into the set it already has", () => {
 			const chunkGraph = new ChunkGraph(new ModuleGraph());
 			const module = new RawModule("", "three-chunks");
