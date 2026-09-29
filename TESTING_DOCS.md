@@ -40,7 +40,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 #### `test262-cases/`
 
 - **Purpose**: ECMAScript test262 conformance test cases.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, and `test/specCases/js-minify.spectest.js`, which minifies each test with webpack's printer and with terser.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/external/test262-cases`. Test runners: `test/specCases/test262.spectest.js`, and `test/specCases/minify-corpora.spectest.js`, which minifies each test with webpack's printer and with terser.
 
 #### `html5lib-tests/`
 
@@ -60,12 +60,12 @@ Directories come first, in alphabetical order, then the individual files worth t
 #### `swc/`
 
 - **Purpose**: swc's repository, read only under `crates/swc_ecma_minifier/tests`: its fixtures with their configs, the tests `exec.rs` and `mangle.rs` write inline, and the libraries it measures itself on. Each is held to terser's bytes like the terser corpora; a test with an `expected.stdout`, and every `exec.rs` test, also has its outputs run, and each fixture's recorded `output.js` is what `JS_MINIFY_REPORT=<file>` compares sizes against.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/swc`. Test runner: `test/specCases/js-minify.spectest.js` (`yarn test:js-minify`).
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/swc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`).
 
 #### `terser/`
 
 - **Purpose**: terser's own repository, pinned to the version webpack depends on. Its `test/compress` cases and `test/input` files are two of the corpora `lib/javascript/syntax-printer.js` is held to (test262 is the third): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same. A case stating its `expect_stdout` also has each output run in terser's sandbox, which must print it.
-- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/js-minify.spectest.js` (`yarn test:js-minify`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
 
 ### `fixtures/`
 
@@ -107,7 +107,7 @@ Directories come first, in alphabetical order, then the individual files worth t
   - `html5lib.spectest.js` — `yarn test:html5lib`
   - `syntaxEquivalence.spectest.js` — `yarn test:syntax-equivalence`
   - `cssParsing-webpack.spectest.js` — `yarn test:css-parsing`
-  - `js-minify.spectest.js` — `yarn test:js-minify`
+  - `minify-corpora.spectest.js` — `yarn test:minify-corpora`
 
 ### `statsCases/`
 

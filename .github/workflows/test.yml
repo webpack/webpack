@@ -297,9 +297,9 @@ jobs:
           # Minifies every source of each JS corpus with the published minifier
           # and with webpack's own: the same bytes back, and where a test says
           # what its input prints, an output printing it too.
-          - language: js-minify
+          - language: minify-corpora
             submodules: test/external/terser test/external/test262-cases test/external/swc
-            script: test:js-minify
+            script: test:minify-corpora
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
