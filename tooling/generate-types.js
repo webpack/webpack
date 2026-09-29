@@ -146,167 +146,77 @@ const flatten = (iterable) => {
  */
 const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
+/**
+ * Every distinct tuple element, numbered, so a tuple can be a string key: a
+ * `Map` compares an array key by identity, not by what the array holds.
+ * @type {Map<EXPECTED_ANY, number>}
+ */
+const tupleElements = new Map();
+
+/**
+ * @param {EXPECTED_ANY[]} tuple the key tuple
+ * @returns {string} a key equal for equal elements in equal order
+ */
+const tupleKey = (tuple) => {
+	let key = "";
+	for (const element of tuple) {
+		let id = tupleElements.get(element);
+		if (id === undefined) {
+			id = tupleElements.size;
+			tupleElements.set(element, id);
+		}
+		// An id holds no comma, so no two tuples share a key
+		key += `${id},`;
+	}
+	return key;
+};
+
+/** A `Map` taking a tuple of anything as its key. */
 class TupleMap {
 	constructor() {
-		/** @type {Map<any, { map: TupleMap | undefined, hasValue: boolean, value: any }>} */
+		/** @type {Map<string, EXPECTED_ANY>} */
 		this.map = new Map();
 	}
 
 	/**
-	 * @param {any[]} tuple tuple
-	 * @returns {any} value or undefined
+	 * @param {EXPECTED_ANY[]} tuple the key tuple
+	 * @returns {EXPECTED_ANY} the value held for it, or `undefined`
 	 */
 	get(tuple) {
-		return this._get(tuple, 0);
+		return this.map.get(tupleKey(tuple));
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {EXPECTED_ANY} the value at that tuple
-	 */
-	_get(tuple, index) {
-		const entry = this.map.get(tuple[index]);
-		if (entry === undefined) return undefined;
-		if (tuple.length === index + 1) return entry.value;
-		if (entry.map === undefined) return undefined;
-		return entry.map._get(tuple, index + 1);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
-	 * @returns {boolean} true, if it's in the map
+	 * @returns {boolean} whether the tuple is present
 	 */
 	has(tuple) {
-		return this._has(tuple, 0);
+		return this.map.has(tupleKey(tuple));
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {boolean} true when the tuple is present
-	 */
-	_has(tuple, index) {
-		const entry = this.map.get(tuple[index]);
-		if (entry === undefined) return false;
-		if (tuple.length === index + 1) return entry.hasValue;
-		if (entry.map === undefined) return false;
-		return entry.map._has(tuple, index + 1);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
-	 * @param {any} value the new value
+	 * @param {EXPECTED_ANY} value the value to hold for it
 	 * @returns {void}
 	 */
 	set(tuple, value) {
-		return this._set(tuple, 0, value);
+		this.map.set(tupleKey(tuple), value);
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @param {EXPECTED_ANY} value the new value
-	 * @returns {void} nothing
-	 */
-	_set(tuple, index, value) {
-		let entry = this.map.get(tuple[index]);
-		if (entry === undefined) {
-			entry = { map: undefined, hasValue: false, value: undefined };
-			this.map.set(tuple[index], entry);
-		}
-		if (tuple.length === index + 1) {
-			entry.hasValue = true;
-			entry.value = value;
-			return;
-		}
-		if (entry.map === undefined) {
-			entry.map = new TupleMap();
-		}
-		entry.map._set(tuple, index + 1, value);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
 	 * @returns {void}
 	 */
 	add(tuple) {
-		return this._add(tuple, 0);
+		this.map.set(tupleKey(tuple), undefined);
 	}
 
 	/**
 	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {void} nothing
-	 */
-	_add(tuple, index) {
-		let entry = this.map.get(tuple[index]);
-		if (entry === undefined) {
-			entry = { map: undefined, hasValue: false, value: undefined };
-			this.map.set(tuple[index], entry);
-		}
-		if (tuple.length === index + 1) {
-			entry.hasValue = true;
-			entry.value = undefined;
-			return;
-		}
-		if (entry.map === undefined) {
-			entry.map = new TupleMap();
-		}
-		entry.map._add(tuple, index + 1);
-	}
-
-	/**
-	 * @param {any[]} tuple tuple
 	 * @returns {void}
 	 */
 	delete(tuple) {
-		return this._delete(tuple, 0);
-	}
-
-	/**
-	 * @param {EXPECTED_ANY[]} tuple the key tuple
-	 * @param {number} index how far into the tuple this level is
-	 * @returns {void} nothing
-	 */
-	_delete(tuple, index) {
-		const entry = this.map.get(tuple[index]);
-		if (entry === undefined) {
-			return;
-		}
-		if (tuple.length === index + 1) {
-			entry.hasValue = false;
-			entry.value = undefined;
-			if (entry.map === undefined) {
-				this.map.delete(tuple[index]);
-			}
-			return;
-		}
-		if (entry.map === undefined) {
-			return;
-		}
-		entry.map._delete(tuple, index + 1);
-		if (entry.map.map.size === 0) {
-			entry.map = undefined;
-			if (!entry.hasValue) {
-				this.map.delete(tuple[index]);
-			}
-		}
-	}
-
-	/**
-	 * @returns {EXPECTED_ANY[]} every value in the map, at any depth
-	 */
-	values() {
-		/** @type {EXPECTED_ANY[]} */
-		const values = [];
-		for (const entry of this.map.values()) {
-			if (entry.hasValue) values.push(entry.value);
-			if (entry.map !== undefined) {
-				values.push(...entry.map.values());
-			}
-		}
-		return values;
+		this.map.delete(tupleKey(tuple));
 	}
 }
 
