@@ -245,10 +245,6 @@ class TupleMap {
 /** @typedef {ParsedType | MergedClassType | MergedNamespaceType} MergedType */
 
 /**
- * @param {ts.SourceFile} source source file
- * @returns {boolean} true when it's a module
- */
-/**
  * @param {ts.SourceFile | undefined} source the file to test
  * @returns {boolean} true when the file is a module
  */
@@ -260,10 +256,6 @@ const isSourceFileModule = (source) => {
 	);
 };
 
-/**
- * @param {ts.Symbol} current current
- * @returns {string} full escaped name
- */
 /**
  * @param {SymbolWithParent} symbol the symbol to name
  * @returns {string} the symbol's name, prefixed by every enclosing one
@@ -373,12 +365,6 @@ const isSimpleFunction = (parsed) =>
 	parsed.calls.length === 1 &&
 	(!parsed.typeParameters || parsed.typeParameters.length === 0);
 
-/**
- * @param {string} prefix type parameter prefix
- * @param {ParsedSignature} signature signature
- * @param {number} index signature index
- * @returns {any[] | undefined} hash
- */
 /**
  * @param {string} prefix what kind of signature it is
  * @param {ParsedSignature} signature the signature to hash
@@ -2333,11 +2319,6 @@ const generateDeclarations = ({
 	const exports = [];
 	const typeToCode = new TupleMap();
 
-	/**
-	 * @param {string} key key for sorting
-	 * @param {string} text content
-	 * @returns {void}
-	 */
 	/**
 	 * @param {string | string[]} key what the declaration is keyed by
 	 * @param {string} text the declaration source
