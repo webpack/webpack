@@ -23,6 +23,7 @@ const config = {
 		"<rootDir>/.git",
 		"<rootDir>/node_modules",
 		"<rootDir>/test/external/wpt",
+		"<rootDir>/test/external/swc",
 		"<rootDir>/test/js",
 		"<rootDir>/test/fixtures/temp-cache-fixture",
 		"<rootDir>/test/fixtures/temp-",
@@ -35,6 +36,7 @@ const config = {
 	modulePathIgnorePatterns: [
 		"<rootDir>/.git",
 		"<rootDir>/test/external/wpt",
+		"<rootDir>/test/external/swc",
 		"<rootDir>/node_modules/webpack/node_modules",
 		"<rootDir>/test/js",
 		"<rootDir>/test/fixtures/temp-cache-fixture",
