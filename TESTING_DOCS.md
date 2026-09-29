@@ -285,6 +285,23 @@ Swap in `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in 
 
 ## How to Run Tests
 
+### More scripts
+
+Every command is a `package.json` script; `AGENTS.md` lists the few whose use isn't obvious. The rest:
+
+- `yarn setup` — Install dependencies and link the checkout as `webpack`; non-interactive off a TTY.
+- `yarn tsc` — Type check the `lib/` JSDoc.
+- `yarn validate:changeset` — Validate pending `.changeset/` files.
+- `yarn test:unit` — All `*.unittest.js`.
+- `yarn test:integration` — Integration suites (`basictest`/`longtest`/`test`).
+- `yarn test:test262` / `test:html5lib` / `test:css-parsing` — Spec-conformance suites.
+- `yarn test:minify-corpora` — webpack's JS minifier vs the published one it replaces, byte for byte, over every JS corpus ([details](docs/syntax.md#javascript)).
+- `yarn test:syntax-equivalence` — HTML/CSS printers vs a real browser's reading of their output (`configCases`, `wpt`).
+- `yarn test:size` — Generated-code size over all `configCases/` (per asset, plus runtime modules per runtime).
+- `yarn cover:unit` — Unit-test coverage.
+- `yarn types:cover` — Share of `lib/` that is precisely typed.
+- `yarn build:examples` — Build `examples/` (verify after changing options).
+
 To execute all tests:
 
 ```sh

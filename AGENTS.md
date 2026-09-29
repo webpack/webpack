@@ -6,7 +6,7 @@ A `> [!REQUIRED]` callout directly under a heading makes that whole section **ma
 
 **Editing this guide.** Keep every change short and simple. Every session loads this file whole, so each line costs every task:
 
-- **Size budget: 40,000 characters**, where Claude Code starts warning about a large instruction file. Check `wc -c AGENTS.md` after every edit; over budget, move a task-specific section to `docs/<topic>.md`, leaving its heading, its `[!REQUIRED]` callout, one line per rule it enforces and a link.
+- **Size budget: 40,000 characters**, where Claude Code starts warning about a large instruction file. `yarn lint:agents` (part of `yarn lint`) enforces it; over budget, move a task-specific section to `docs/<topic>.md`, leaving its heading, its `[!REQUIRED]` callout, one line per rule it enforces and a link.
 - **What stays here**: rules every task needs — "never" prohibitions, conventions touching every edit, gotchas that look safe but aren't. **What moves**: workflows for one kind of task, reference material, explanations of a tool, maps.
 - **Never drop a rule, fact, number or reason to shorten** — move it verbatim, or reword or merge.
 - **One fact, one place**: link instead of restating, and don't copy what the repo already says (a directory listing, the `package.json` scripts, a signature).
@@ -27,26 +27,15 @@ webpack is a JavaScript module bundler: it builds a dependency graph from entry 
 
 ## Commands
 
-All defined in `package.json` `scripts`.
+Every command is a `package.json` script; these are the ones whose use isn't obvious from the name:
 
 - `yarn fix` — `fix:code` (ESLint) + `fix:special` + `fmt` (Prettier). Prefer as the final step.
-- `yarn setup` — Install dependencies and link the checkout as `webpack`; non-interactive off a TTY.
 - `yarn fix:special` — Regenerate `types.d.ts`, declarations, schema validators and generated runtime code.
-- `yarn lint` — What CI runs: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck.
-- `yarn tsc` — Type check the `lib/` JSDoc.
-- `yarn validate:changeset` — Validate pending `.changeset/` files.
-- `yarn test:base --testPathPatterns="<pattern>"` / `-t "<name>"` — Targeted tests.
-- `yarn test:unit` — All `*.unittest.js`.
-- `yarn test:integration` — Integration suites (`basictest`/`longtest`/`test`).
-- `yarn test:test262` / `test:html5lib` / `test:css-parsing` — Spec-conformance suites.
-- `yarn test:minify-corpora` — webpack's JS minifier vs the published one it replaces, byte for byte, over every JS corpus ([details](docs/syntax.md#javascript)).
-- `yarn test:syntax-equivalence` — HTML/CSS printers vs a real browser's reading of their output (`configCases`, `wpt`).
-- `yarn test:base -u` — Update snapshots (eyeball the diff first).
-- `yarn test:size` — Generated-code size over all `configCases/` (per asset, plus runtime modules per runtime).
-- `yarn cover:unit` — Unit-test coverage.
-- `yarn types:cover` — Share of `lib/` that is precisely typed.
-- `yarn build:examples` — Build `examples/` (verify after changing options).
+- `yarn lint` — What CI runs: ESLint + the `AGENTS.md` size budget + generated-output checks + every `tsc` project + Prettier + spellcheck.
+- `yarn test:base --testPathPatterns="<pattern>"` / `-t "<name>"` — Targeted tests; `-u` updates snapshots (eyeball the diff first).
 - `yarn test` — Full suite — only when asked.
+
+Every other script, with what it does: [TESTING_DOCS.md](TESTING_DOCS.md#more-scripts).
 
 Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag lives only in `test:base`, and bare jest crashes the ESM/test262 suites. Running a single case: [TESTING_DOCS.md](TESTING_DOCS.md).
 
@@ -223,11 +212,11 @@ Run targeted tests only — `yarn test:base --testPathPatterns="<pattern>"` or `
 
 > [!REQUIRED] > **Two kinds of change widen the blast radius.** Touching `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates moves the whole option surface. Still don't sweep suites locally: push, let CI sweep, and [read the failing job's log](#read-ci-rather-than-re-running-it). Locally run only the touched `configCases/`, `yarn lint:code` and `yarn fix:special` (whose output says whether a generated file is stale). `lint`, `basic` and `unit` gate the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: [lint, basic, unit]`), so a red one — `lint` included — stops every integration upload, and coverage then computes patch coverage from whichever cheap suite did report: it reads like a coverage problem but isn't.
 
-> [!REQUIRED] > **Run every stage of `lint` before every push — not a chosen few, not only your files.** `yarn lint:types` plus `npx eslint <files>` is **not** "lint passed": it skips `lint:special` (fails on stale generated files) and `lint:spellcheck` (reads every Markdown file). `yarn fix` isn't it either — it regenerates and formats but doesn't type check or spellcheck — so **run `yarn lint` after it** (or all nine stages by hand if an early one trips on sandbox drift). Read each stage's output whole: piping through `tail`/`grep` is how a finding just above the summary reaches CI instead of you.
+> [!REQUIRED] > **Run every stage of `lint` before every push — not a chosen few, not only your files.** `yarn lint:types` plus `npx eslint <files>` is **not** "lint passed": it skips `lint:special` (fails on stale generated files) and `lint:spellcheck` (reads every Markdown file). `yarn fix` isn't it either — it regenerates and formats but doesn't type check or spellcheck — so **run `yarn lint` after it** (or all ten stages by hand if an early one trips on sandbox drift). Read each stage's output whole: piping through `tail`/`grep` is how a finding just above the summary reaches CI instead of you.
 >
 > **A generated file is stale as soon as any JSDoc it copies changes — prose included.** `types.d.ts` carries the comment above `process()`, not just its signature; a reworded comment, or a signature edited without its doc paragraph, fails `lint` with the same `types.d.ts need to be updated` a missing member gives. After splicing your hunks, diff your file against the generator's whole output for that symbol's **region**, not just the lines you meant to change.
 
-`yarn lint` is an `&&` chain, so the first stage tripping on sandbox drift hides the rest. If `lint:special` reports declarations "need to be updated" that `main` reports too, run the rest by hand: `lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`. `lint:types-test` catches `tsc` errors in `test/`; skipping it is how a red `lint` survives "lint passed locally".
+`yarn lint` is an `&&` chain, so the first stage tripping on sandbox drift hides the rest. If `lint:special` reports declarations "need to be updated" that `main` reports too, run the rest by hand: `lint:agents`, `lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`. `lint:types-test` catches `tsc` errors in `test/`; skipping it is how a red `lint` survives "lint passed locally".
 
 A local failure is yours only if it doesn't reproduce on `main` — check in a worktree (`git worktree add <dir> origin/main`) first. Sandboxes routinely fail `Cli createColors`, `profiling-plugin` and the `many-replacements` cases for environment reasons, and the generated-declaration check flags files CI accepts. **Hard rule — no broad local sweeps**: never run the spec-conformance suites (`test:test262` alone takes tens of minutes, `test:html5lib`, `test:css-parsing`) or the full `test:integration` matrix as routine local verification — CI runs them on every push; locally, run the `configCases/` relevant to your change. Broad local sweeps cost minutes and, on a busy machine, manufacture timeouts that look like regressions. Narrow the pattern until a run takes seconds, and:
 
