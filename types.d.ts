@@ -33099,9 +33099,21 @@ declare namespace exports {
 				export let loadSources: () => Promise<any>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
+				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createTerserTree: (
 					__0?: any
 				) => (source: string, options: TreeOptions) => any;
+				export let createUnicode: () => {
+					getFullChar: (str: string, pos: number) => string;
+					getFullCharCode: (str: string, pos: number) => number;
+					isBasicIdentifier: (str: string) => boolean;
+					isIdentifierStart: (character: string) => boolean;
+					isIdentifierChar: (character: string) => boolean;
+					isIdentifierStartBroad: (character: string) => boolean;
+					isIdentifierCharBroad: (character: string) => boolean;
+				};
+				export let estreeType: (node?: any, parent?: any) => null | string;
+				export let markEstreeTypes: (__0?: any) => void;
 			}
 		}
 		export {
