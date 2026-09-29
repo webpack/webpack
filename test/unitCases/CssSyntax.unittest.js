@@ -12465,6 +12465,20 @@ describe("CssSyntax minify — `@custom-selector`", () => {
 		);
 	});
 
+	it("reads no name a string spells", () => {
+		expect(
+			resolve(
+				'@custom-selector :--bar h1;@custom-selector :--foo [data-x=":--bar x"],[data-y=\'a\\\' :--bar\'];:--foo{color:red}'
+			)
+		).toBe(':is([data-x=":--bar x"],[data-y="a\' :--bar"]){color:red}');
+		// Nor one after an escape, or in a string holding both quotes.
+		expect(
+			resolve(
+				"@custom-selector :--bar h1;@custom-selector :--foo .a\\:--bar,[data-z=\"a\\\"b' :--bar\"];:--foo{color:red}"
+			)
+		).toBe(":is(.a\\:--bar,[data-z=\"a\\\"b' :--bar\"]){color:red}");
+	});
+
 	it("keeps a selector name apart from a `@custom-media` one", () => {
 		expect(
 			resolve(
