@@ -29,6 +29,8 @@ const {
 	templateLiterals
 } = argv;
 
+const ROOT_PATH = path.resolve(root);
+
 // Where the hand-written option types that are not a plugin's own live.
 const DECLARATIONS_DIRECTORY = path.resolve(root, declarations);
 
@@ -220,21 +222,390 @@ class TupleMap {
 	}
 }
 
-(async () => {
-	// Failing until the run says otherwise, so a throw on the way is a failure too
-	process.exitCode = 1;
+/** @typedef {{ name: string, optional: boolean, spread: boolean, documentation: string, type: ts.Type }} ParsedParameter */
+/** @typedef {{ documentation: string, typeParameters?: readonly ts.Type[], args: ParsedParameter[], thisType?: ts.Type, returnType: ts.Type }} ParsedSignature */
+/** @typedef {string[]} SymbolName */
+/** @typedef {Map<string, { type: ts.Type, method: boolean, optional: boolean, readonly: boolean, getter: boolean, documentation: string }>} PropertiesMap */
 
-	const rootPath = path.resolve(root);
+/** @typedef {{ type: "primitive", name: string }} ParsedPrimitiveType */
+/** @typedef {{ type: "typeParameter", name: string, constraint?: ts.Type, defaultValue?: ts.Type }} ParsedTypeParameterType */
+/** @typedef {{ type: "tuple", typeArguments: readonly ts.Type[] }} ParsedTupleType */
+/** @typedef {{ type: "interface", symbolName: SymbolName, subtype: "class" | "module" | "literal" | undefined, properties: PropertiesMap, constructors: ParsedSignature[], calls: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseTypes: readonly ts.Type[], documentation: string }} ParsedInterfaceType */
+/** @typedef {{ type: "class" | "typeof class", symbolName: SymbolName, properties: PropertiesMap, staticProperties: PropertiesMap, constructors: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseType: ts.Type, correspondingType: ts.Type | undefined, documentation: string }} MergedClassType */
+/** @typedef {{ type: "namespace", symbolName: SymbolName, calls: ParsedSignature[], exports: PropertiesMap }} MergedNamespaceType */
+/** @typedef {{ type: "reference", target: ts.Type, typeArguments: readonly ts.Type[], typeArgumentsWithoutDefaults: readonly ts.Type[] }} ParsedReferenceType */
+/** @typedef {{ type: "union", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedUnionType */
+/** @typedef {{ type: "intersection", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedIntersectionType */
+/** @typedef {{ type: "index", symbolName: SymbolName, objectType: ts.Type, indexType: ts.Type }} ParsedIndexType */
+/** @typedef {{ type: "template", texts: readonly string[], types: readonly ts.Type[] }} ParsedTemplateType */
+/** @typedef {{ type: "import", symbolName: SymbolName, exportName: string, from: string, isValue: boolean }} ParsedImportType */
+/** @typedef {{ type: "symbol", symbolName: SymbolName }} ParsedSymbolType */
+/** @typedef {{ type: "conditional", symbolName: SymbolName, checkType: ts.Type, extendsType: ts.Type, trueType: ts.Type, falseType: ts.Type, typeParameters?: readonly ts.Type[] }} ParsedConditionalType */
+/** @typedef {ParsedPrimitiveType | ParsedTypeParameterType | ParsedTupleType | ParsedInterfaceType | ParsedReferenceType | ParsedUnionType | ParsedIntersectionType | ParsedIndexType | ParsedTemplateType | ParsedImportType | ParsedSymbolType | ParsedConditionalType} ParsedType */
+/** @typedef {ParsedType | MergedClassType | MergedNamespaceType} MergedType */
 
-	const ownConfigPath = path.resolve(rootPath, "generate-types-config.js");
-	/**
-	 * @typedef {object} GeneratorOptions
-	 * @property {Record<string, RegExp>} nameMapping preferred name per matching key
-	 * @property {Record<string, string>} typeMapping replacement type per matching name
-	 * @property {RegExp[]} exclude names to leave out
-	 * @property {RegExp[]} include names to keep
-	 */
+/**
+ * @param {ts.SourceFile} source source file
+ * @returns {boolean} true when it's a module
+ */
+/**
+ * @param {ts.SourceFile | undefined} source the file to test
+ * @returns {boolean} true when the file is a module
+ */
+const isSourceFileModule = (source) => {
+	const sourceAsAny = /** @type {any} */ (source);
+	return Boolean(
+		sourceAsAny &&
+		(sourceAsAny.externalModuleIndicator || sourceAsAny.commonJsModuleIndicator)
+	);
+};
 
+/**
+ * @param {ts.Symbol} current current
+ * @returns {string} full escaped name
+ */
+/**
+ * @param {SymbolWithParent} symbol the symbol to name
+ * @returns {string} the symbol's name, prefixed by every enclosing one
+ */
+const getFullEscapedName = (symbol) => {
+	let current = symbol;
+	let name = current.escapedName.toString();
+	while (current.parent) {
+		current = current.parent;
+		if (
+			current.escapedName === undefined ||
+			current.escapedName.toString() === "__global"
+		) {
+			break;
+		}
+		name = `${current.escapedName.toString()}.${name}`;
+	}
+	return name;
+};
+
+/**
+ * @param {ts.Symbol} symbol symbol
+ * @returns {string} location of the symbol for error messages
+ */
+const getSymbolLocation = (symbol) => {
+	const decls = symbol.getDeclarations();
+	const decl = decls && decls[0];
+	if (!decl) return "<unknown location>";
+	const source = decl.getSourceFile();
+	const { line, character } = ts.getLineAndCharacterOfPosition(
+		source,
+		decl.getStart()
+	);
+	return `${source.fileName} (${line + 1},${character + 1})`;
+};
+
+/**
+ * Renders a documentation block onto one line, for a place that has no
+ * line of its own — an export specifier inside `export { … }`.
+ * @param {string} documentation a block from `getDocumentation`
+ * @returns {string} the same content as a one-line block comment
+ */
+const toInlineDocumentation = (documentation) => {
+	const content = documentation
+		.split("\n")
+		.map((line) => line.replace(/^\s*\/?\*+\/?/, "").trim())
+		.filter(Boolean)
+		.join(" ");
+	return `/** ${content} */ `;
+};
+
+/**
+ * @param {ts.SourceFile} sourceFile the file to test
+ * @returns {boolean} true when it comes from node_modules
+ */
+const isNodeModulesSource = (sourceFile) =>
+	sourceFile.isDeclarationFile &&
+	sourceFile.fileName.slice(ROOT_PATH.length + 1).startsWith("node_modules/");
+
+/**
+ * @param {ts.Program} program the program the file was read into
+ * @param {ts.SourceFile} sourceFile the file to look up
+ * @returns {ts.SourceFile | undefined} the package's own type declarations
+ */
+const getRootPackage = (program, sourceFile) => {
+	const match = /^(node_modules\/(@[^/]+\/)?[^/]+)/.exec(
+		sourceFile.fileName.slice(ROOT_PATH.length + 1)
+	);
+	if (!match) return undefined;
+
+	const pkg = require(`${ROOT_PATH}/${match[1]}/package.json`);
+
+	const types = pkg.types || "index.d.ts";
+	return program.getSourceFile(`${ROOT_PATH}/${match[1]}/${types}`);
+};
+
+/**
+ * @param {string} name the type name to test
+ * @returns {boolean} true when it is one of the typed array types
+ */
+const isArrayBufferLike = (name) =>
+	[
+		"Uint8Array",
+		"Uint8ClampedArray",
+		"Uint16Array",
+		"Uint32Array",
+		"Int8Array",
+		"Int16Array",
+		"Int32Array",
+		"BigUint64Array",
+		"BigInt64Array",
+		"Float16Array",
+		"Float32Array",
+		"Float64Array",
+		"DataView",
+		"Buffer"
+	].includes(name);
+
+/**
+ * @param {MergedType} parsed the parsed type
+ * @returns {boolean} true when it is a bare call signature
+ */
+const isSimpleFunction = (parsed) =>
+	parsed.type === "interface" &&
+	parsed.properties.size === 0 &&
+	parsed.constructors.length === 0 &&
+	parsed.calls.length === 1 &&
+	(!parsed.typeParameters || parsed.typeParameters.length === 0);
+
+/**
+ * @param {string} prefix type parameter prefix
+ * @param {ParsedSignature} signature signature
+ * @param {number} index signature index
+ * @returns {any[] | undefined} hash
+ */
+/**
+ * @param {string} prefix what kind of signature it is
+ * @param {ParsedSignature} signature the signature to hash
+ * @param {number} index its position among the type's signatures
+ * @returns {EXPECTED_ANY[]} the hash parts
+ */
+const getSigHash = (prefix, signature, index) => {
+	const { args, returnType, typeParameters, documentation } = signature;
+	const typeParametersMap = new Map(
+		typeParameters && typeParameters.map((t, i) => [t, i])
+	);
+	return [
+		"args",
+		...flatten(
+			args.map((arg) => [
+				arg.name,
+				arg.optional,
+				arg.spread,
+				arg.type,
+				arg.documentation
+			])
+		),
+		"return",
+		returnType,
+		"typeParameters",
+		typeParameters ? typeParameters.length : 0,
+		"documentation",
+		documentation
+	].map((item) => {
+		const x = typeParametersMap.get(item);
+		return x === undefined ? item : `${prefix}${index}_${x}`;
+	});
+};
+
+/**
+ * @param {MergedType} parsed type
+ * @returns {any[] | undefined} hash
+ */
+const getTypeHash = (parsed) => {
+	switch (parsed.type) {
+		case "primitive": {
+			return [parsed.type, parsed.name];
+		}
+		case "typeParameter": {
+			return [parsed.type, parsed.name, parsed.constraint, parsed.defaultValue];
+		}
+		case "template": {
+			return [parsed.type, ...parsed.texts, ...parsed.types];
+		}
+		case "reference": {
+			const { target, typeArgumentsWithoutDefaults } = parsed;
+			if (typeArgumentsWithoutDefaults.length === 0) return undefined;
+			return [parsed.type, target, ...typeArgumentsWithoutDefaults];
+		}
+		case "index": {
+			const { objectType, indexType } = parsed;
+			return [parsed.type, objectType, indexType];
+		}
+		case "union":
+		case "intersection": {
+			const { symbolName, types, typeParameters } = parsed;
+			const typeParametersMap = new Map(
+				typeParameters && typeParameters.map((t, i) => [t, i])
+			);
+			return [
+				parsed.type,
+				symbolName[0],
+				typeParameters ? typeParameters.length : 0,
+				...types
+			].map((item) => {
+				const x = typeParametersMap.get(/** @type {ts.Type} */ (item));
+				return x === undefined ? item : x;
+			});
+		}
+		case "conditional": {
+			const { symbolName, checkType, extendsType, trueType, falseType } =
+				parsed;
+			return [
+				parsed.type,
+				symbolName[0],
+				checkType,
+				extendsType,
+				trueType,
+				falseType
+			];
+		}
+		case "interface": {
+			const {
+				symbolName,
+				baseTypes,
+				calls,
+				constructors,
+				properties,
+				numberIndex,
+				stringIndex,
+				typeParameters,
+				documentation
+			} = parsed;
+			if (
+				calls.length === 0 &&
+				constructors.length === 0 &&
+				properties.size === 0 &&
+				!numberIndex &&
+				!stringIndex
+			) {
+				// need to have something unique
+				return undefined;
+			}
+			const callHashes = calls.map(getSigHash.bind(null, "call"));
+			if (callHashes.some((x) => !x)) return undefined;
+			const constructorHashes = constructors.map(
+				getSigHash.bind(null, "constructor")
+			);
+			if (constructorHashes.some((x) => !x)) return undefined;
+			const typeParametersMap = new Map(
+				typeParameters && typeParameters.map((t, i) => [t, i])
+			);
+			return [
+				parsed.type,
+				symbolName[0],
+				"base",
+				...baseTypes,
+				"calls",
+				...flatten(callHashes),
+				"constructors",
+				...flatten(constructorHashes),
+				"properties",
+				...flatten(
+					Array.from(properties, ([name, { type, optional }]) => [
+						name,
+						type,
+						optional
+					])
+				),
+				"numberIndex",
+				numberIndex,
+				"stringIndex",
+				stringIndex,
+				"typeParameters",
+				typeParameters ? typeParameters.length : 0,
+				"documentation",
+				documentation
+			].map((item) => {
+				const x = typeParametersMap.get(item);
+				return x === undefined ? item : x;
+			});
+		}
+	}
+	return undefined;
+};
+
+/**
+ * @param {string} code the rendered type
+ * @param {boolean=} optional whether it is already known to be optional
+ * @returns {{ code: string, optional: boolean }} the type without its `undefined`
+ */
+const extractOptional = (code, optional = false) => {
+	if (code.startsWith("(undefined | ")) {
+		return {
+			code: `(${code.slice("(undefined | ".length)}`,
+			optional: true
+		};
+	} else if (code.endsWith(" | undefined)")) {
+		return {
+			code: `${code.slice(0, -" | undefined)".length)})`,
+			optional: true
+		};
+	}
+	return {
+		code,
+		optional
+	};
+};
+
+/**
+ * @typedef {object} GeneratorOptions
+ * @property {Record<string, RegExp>} nameMapping preferred name per matching key
+ * @property {Record<string, string>} typeMapping replacement type per matching name
+ * @property {RegExp[]} exclude names to leave out
+ * @property {RegExp[]} include names to keep
+ */
+
+// The tags a consumer acts on, so they are carried into the declarations
+// rather than left behind in the source.
+const FORWARDED_TAG_NAMES = ["since", "deprecated", "experimental"];
+const FORWARDED_TAG_REGEXP = new RegExp(
+	`@(?:${FORWARDED_TAG_NAMES.join("|")})\\b`
+);
+
+/**
+ * @param {ts.Symbol | undefined} symbol the symbol to look up
+ * @returns {ts.Declaration | undefined} the declaration it was declared by
+ */
+const getDeclaration = (symbol) => {
+	if (!symbol) return undefined;
+	/** @type {ts.Declaration | undefined} */
+	let decl;
+	if (symbol.valueDeclaration) {
+		decl = symbol.valueDeclaration;
+	} else {
+		const decls = symbol.getDeclarations();
+		if (decls) decl = decls[0];
+	}
+	if (decl) {
+		const symbol = /** @type {any} */ (decl).symbol;
+		if (symbol && symbol.name === ts.InternalSymbolName.Type && decl.parent) {
+			const parent = decl.parent;
+			if (parent.kind === ts.SyntaxKind.TypeAliasDeclaration) {
+				decl = /** @type {ts.Declaration} */ (parent);
+			}
+			if (
+				parent.kind === ts.SyntaxKind.JSDocTypeExpression &&
+				parent.parent &&
+				parent.parent.kind === ts.SyntaxKind.JSDocTypedefTag
+			) {
+				decl = /** @type {ts.Declaration} */ (parent.parent);
+			}
+		}
+	}
+
+	return decl;
+};
+
+/**
+ * @returns {GeneratorOptions} what `generate-types-config.js` says, defaulted
+ */
+const readGeneratorOptions = () => {
 	/** @type {GeneratorOptions} */
 	const options = {
 		nameMapping: {},
@@ -243,17 +614,28 @@ class TupleMap {
 		include: []
 	};
 	try {
-		Object.assign(options, require(ownConfigPath));
+		Object.assign(
+			options,
+			require(path.resolve(ROOT_PATH, "generate-types-config.js"))
+		);
 	} catch (err) {
 		if (verbose) {
 			console.log(`Can't read config file: ${err}`);
 		}
 	}
+	return options;
+};
 
-	const program = createTypeScriptProgram("tsconfig.types.json");
-
-	const checker = program.getTypeChecker();
-
+/**
+ * Reads every type the entry file exposes, and everything those reach, into the
+ * shape the passes after this one work on.
+ * @param {object} context the program to read
+ * @param {ts.Program} context.program the program holding the sources
+ * @param {ts.TypeChecker} context.checker the program's type checker
+ * @param {GeneratorOptions} context.options the generator's own options
+ * @returns {{ typeReferencedBy: Map<ts.Type, Set<ts.Type>>, exposedType: ts.Type | undefined, typeExports: Map<EXPECTED_ANY, EXPECTED_ANY>, parsedCollectedTypes: Map<ts.Type, MergedType>, typeUsedAsArgument: Set<ts.Type>, typeUsedAsBaseType: Set<ts.Type>, typeUsedAsConstructedValue: Set<ts.Type>, typeUsedAsReturnValue: Set<ts.Type>, typeUsedAsTypeArgument: Set<ts.Type> }} every type, parsed, and how each is used
+ */
+const collectTypes = ({ program, checker, options }) => {
 	const exposedFiles = ["lib/index.js"];
 
 	/** @type {Set<ts.Type>} */
@@ -330,63 +712,6 @@ class TupleMap {
 			return map;
 		}
 		throw new Error("Not a module");
-	};
-
-	/**
-	 * @param {ts.SourceFile} source source file
-	 * @returns {boolean} true when it's a module
-	 */
-	/**
-	 * @param {ts.SourceFile | undefined} source the file to test
-	 * @returns {boolean} true when the file is a module
-	 */
-	const isSourceFileModule = (source) => {
-		const sourceAsAny = /** @type {any} */ (source);
-		return Boolean(
-			sourceAsAny &&
-			(sourceAsAny.externalModuleIndicator ||
-				sourceAsAny.commonJsModuleIndicator)
-		);
-	};
-
-	/**
-	 * @param {ts.Symbol} current current
-	 * @returns {string} full escaped name
-	 */
-	/**
-	 * @param {SymbolWithParent} symbol the symbol to name
-	 * @returns {string} the symbol's name, prefixed by every enclosing one
-	 */
-	const getFullEscapedName = (symbol) => {
-		let current = symbol;
-		let name = current.escapedName.toString();
-		while (current.parent) {
-			current = current.parent;
-			if (
-				current.escapedName === undefined ||
-				current.escapedName.toString() === "__global"
-			) {
-				break;
-			}
-			name = `${current.escapedName.toString()}.${name}`;
-		}
-		return name;
-	};
-
-	/**
-	 * @param {ts.Symbol} symbol symbol
-	 * @returns {string} location of the symbol for error messages
-	 */
-	const getSymbolLocation = (symbol) => {
-		const decls = symbol.getDeclarations();
-		const decl = decls && decls[0];
-		if (!decl) return "<unknown location>";
-		const source = decl.getSourceFile();
-		const { line, character } = ts.getLineAndCharacterOfPosition(
-			source,
-			decl.getStart()
-		);
-		return `${source.fileName} (${line + 1},${character + 1})`;
 	};
 
 	/**
@@ -474,40 +799,6 @@ class TupleMap {
 	};
 
 	/**
-	 * @param {ts.Symbol | undefined} symbol the symbol to look up
-	 * @returns {ts.Declaration | undefined} the declaration it was declared by
-	 */
-	const getDeclaration = (symbol) => {
-		if (!symbol) return undefined;
-		/** @type {ts.Declaration | undefined} */
-		let decl;
-		if (symbol.valueDeclaration) {
-			decl = symbol.valueDeclaration;
-		} else {
-			const decls = symbol.getDeclarations();
-			if (decls) decl = decls[0];
-		}
-		if (decl) {
-			const symbol = /** @type {any} */ (decl).symbol;
-			if (symbol && symbol.name === ts.InternalSymbolName.Type && decl.parent) {
-				const parent = decl.parent;
-				if (parent.kind === ts.SyntaxKind.TypeAliasDeclaration) {
-					decl = /** @type {ts.Declaration} */ (parent);
-				}
-				if (
-					parent.kind === ts.SyntaxKind.JSDocTypeExpression &&
-					parent.parent &&
-					parent.parent.kind === ts.SyntaxKind.JSDocTypedefTag
-				) {
-					decl = /** @type {ts.Declaration} */ (parent.parent);
-				}
-			}
-		}
-
-		return decl;
-	};
-
-	/**
 	 * @param {ts.SourceFile} source source file
 	 * @returns {Map<ts.Symbol, string>} exposed symbols with their names
 	 */
@@ -565,7 +856,7 @@ class TupleMap {
 
 	for (const exposedFile of exposedFiles) {
 		const exposedSource = program.getSourceFile(
-			path.resolve(rootPath, exposedFile)
+			path.resolve(ROOT_PATH, exposedFile)
 		);
 		if (!exposedSource) {
 			console.error(
@@ -588,28 +879,6 @@ class TupleMap {
 			typeExports.set(name, type);
 		}
 	}
-
-	/** @typedef {{ name: string, optional: boolean, spread: boolean, documentation: string, type: ts.Type }} ParsedParameter */
-	/** @typedef {{ documentation: string, typeParameters?: readonly ts.Type[], args: ParsedParameter[], thisType?: ts.Type, returnType: ts.Type }} ParsedSignature */
-	/** @typedef {string[]} SymbolName */
-	/** @typedef {Map<string, { type: ts.Type, method: boolean, optional: boolean, readonly: boolean, getter: boolean, documentation: string }>} PropertiesMap */
-
-	/** @typedef {{ type: "primitive", name: string }} ParsedPrimitiveType */
-	/** @typedef {{ type: "typeParameter", name: string, constraint?: ts.Type, defaultValue?: ts.Type }} ParsedTypeParameterType */
-	/** @typedef {{ type: "tuple", typeArguments: readonly ts.Type[] }} ParsedTupleType */
-	/** @typedef {{ type: "interface", symbolName: SymbolName, subtype: "class" | "module" | "literal" | undefined, properties: PropertiesMap, constructors: ParsedSignature[], calls: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseTypes: readonly ts.Type[], documentation: string }} ParsedInterfaceType */
-	/** @typedef {{ type: "class" | "typeof class", symbolName: SymbolName, properties: PropertiesMap, staticProperties: PropertiesMap, constructors: ParsedSignature[], numberIndex?: ts.Type, stringIndex?: ts.Type, typeParameters?: readonly ts.Type[], baseType: ts.Type, correspondingType: ts.Type | undefined, documentation: string }} MergedClassType */
-	/** @typedef {{ type: "namespace", symbolName: SymbolName, calls: ParsedSignature[], exports: PropertiesMap }} MergedNamespaceType */
-	/** @typedef {{ type: "reference", target: ts.Type, typeArguments: readonly ts.Type[], typeArgumentsWithoutDefaults: readonly ts.Type[] }} ParsedReferenceType */
-	/** @typedef {{ type: "union", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedUnionType */
-	/** @typedef {{ type: "intersection", symbolName: SymbolName, types: ts.Type[], typeParameters?: readonly ts.Type[] }} ParsedIntersectionType */
-	/** @typedef {{ type: "index", symbolName: SymbolName, objectType: ts.Type, indexType: ts.Type }} ParsedIndexType */
-	/** @typedef {{ type: "template", texts: readonly string[], types: readonly ts.Type[] }} ParsedTemplateType */
-	/** @typedef {{ type: "import", symbolName: SymbolName, exportName: string, from: string, isValue: boolean }} ParsedImportType */
-	/** @typedef {{ type: "symbol", symbolName: SymbolName }} ParsedSymbolType */
-	/** @typedef {{ type: "conditional", symbolName: SymbolName, checkType: ts.Type, extendsType: ts.Type, trueType: ts.Type, falseType: ts.Type, typeParameters?: readonly ts.Type[] }} ParsedConditionalType */
-	/** @typedef {ParsedPrimitiveType | ParsedTypeParameterType | ParsedTupleType | ParsedInterfaceType | ParsedReferenceType | ParsedUnionType | ParsedIntersectionType | ParsedIndexType | ParsedTemplateType | ParsedImportType | ParsedSymbolType | ParsedConditionalType} ParsedType */
-	/** @typedef {ParsedType | MergedClassType | MergedNamespaceType} MergedType */
 
 	/**
 	 * @param {string} name the name to test
@@ -656,7 +925,7 @@ class TupleMap {
 			toIdentifier(
 				valueDeclaration
 					.getSourceFile()
-					.fileName.slice(rootPath.length + 1)
+					.fileName.slice(ROOT_PATH.length + 1)
 					.replace(/^.*\/(?!index)/, "")
 					.replace(/^lib\./, "")
 					.replace(/\.(js|(d\.)?ts)$/, "")
@@ -673,13 +942,6 @@ class TupleMap {
 		}
 		return [...new Set(result.filter((x) => x !== undefined))];
 	};
-
-	// The tags a consumer acts on, so they are carried into the declarations
-	// rather than left behind in the source.
-	const FORWARDED_TAG_NAMES = ["since", "deprecated", "experimental"];
-	const FORWARDED_TAG_REGEXP = new RegExp(
-		`@(?:${FORWARDED_TAG_NAMES.join("|")})\\b`
-	);
 
 	// WHY: a schema property written as a bare `$ref` says what its target says,
 	// so a property named by a schema type shows that type's description where it
@@ -791,21 +1053,6 @@ class TupleMap {
 	};
 
 	/**
-	 * Renders a documentation block onto one line, for a place that has no
-	 * line of its own — an export specifier inside `export { … }`.
-	 * @param {string} documentation a block from `getDocumentation`
-	 * @returns {string} the same content as a one-line block comment
-	 */
-	const toInlineDocumentation = (documentation) => {
-		const content = documentation
-			.split("\n")
-			.map((line) => line.replace(/^\s*\/?\*+\/?/, "").trim())
-			.filter(Boolean)
-			.join(" ");
-		return `/** ${content} */ `;
-	};
-
-	/**
 	 * @param {ts.Signature} signature signature
 	 * @returns {ParsedSignature} parsed signature
 	 */
@@ -889,52 +1136,7 @@ class TupleMap {
 		};
 	};
 
-	/**
-	 * @param {ts.SourceFile} sourceFile the file to test
-	 * @returns {boolean} true when it comes from node_modules
-	 */
-	const isNodeModulesSource = (sourceFile) =>
-		sourceFile.isDeclarationFile &&
-		sourceFile.fileName.slice(rootPath.length + 1).startsWith("node_modules/");
-	/**
-	 * @param {ts.SourceFile} sourceFile the file to look up
-	 * @returns {ts.SourceFile | undefined} the package's own type declarations
-	 */
-	const getRootPackage = (sourceFile) => {
-		const match = /^(node_modules\/(@[^/]+\/)?[^/]+)/.exec(
-			sourceFile.fileName.slice(rootPath.length + 1)
-		);
-		if (!match) return undefined;
-
-		const pkg = require(`${rootPath}/${match[1]}/package.json`);
-
-		const types = pkg.types || "index.d.ts";
-		return program.getSourceFile(`${rootPath}/${match[1]}/${types}`);
-	};
-
 	const { typeMapping } = options;
-
-	/**
-	 * @param {string} name the type name to test
-	 * @returns {boolean} true when it is one of the typed array types
-	 */
-	const isArrayBufferLike = (name) =>
-		[
-			"Uint8Array",
-			"Uint8ClampedArray",
-			"Uint16Array",
-			"Uint32Array",
-			"Int8Array",
-			"Int16Array",
-			"Int32Array",
-			"BigUint64Array",
-			"BigInt64Array",
-			"Float16Array",
-			"Float32Array",
-			"Float64Array",
-			"DataView",
-			"Buffer"
-		].includes(name);
 
 	/**
 	 * @param {ts.Type} type type
@@ -1323,9 +1525,10 @@ class TupleMap {
 						symbol.flags & ts.SymbolFlags.Class)
 				);
 				const potentialSources = /** @type {ts.SourceFile[]} */ (
-					[getRootPackage(decl.getSourceFile()), decl.getSourceFile()].filter(
-						Boolean
-					)
+					[
+						getRootPackage(program, decl.getSourceFile()),
+						decl.getSourceFile()
+					].filter(Boolean)
 				);
 				/** @type {ts.SourceFile | undefined} */
 				let externalSource;
@@ -1619,18 +1822,27 @@ class TupleMap {
 		}
 	}
 
-	/**
-	 * @param {MergedType} parsed the parsed type
-	 * @returns {boolean} true when it is a bare call signature
-	 */
-	const isSimpleFunction = (parsed) =>
-		parsed.type === "interface" &&
-		parsed.properties.size === 0 &&
-		parsed.constructors.length === 0 &&
-		parsed.calls.length === 1 &&
-		(!parsed.typeParameters || parsed.typeParameters.length === 0);
+	return {
+		typeReferencedBy,
+		exposedType,
+		typeExports,
+		parsedCollectedTypes,
+		typeUsedAsArgument,
+		typeUsedAsBaseType,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	};
+};
 
-	// / Convert interfaces to classes ///
+/**
+ * Writes as a class every interface that is only ever used as one.
+ * @param {object} context what the passes before this one worked out
+ * @param {ts.TypeChecker} context.checker the program's type checker
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @returns {void}
+ */
+const classifyInterfaces = ({ checker, parsedCollectedTypes }) => {
 	/**
 	 * @param {ts.Type} type the type
 	 * @param {ParsedType | MergedType} parsed the parsed variant
@@ -1751,9 +1963,25 @@ class TupleMap {
 		};
 		parsedCollectedTypes.set(type, newParsed);
 	}
+};
 
-	// / Analyse unions and intersections ///
-
+/**
+ * Reads what each union and intersection is made of.
+ * @param {object} context what the passes before this one worked out
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {Map<ts.Type, Set<ts.Type>>} context.typeReferencedBy what refers to each type
+ * @param {Set<ts.Type>} context.typeUsedAsConstructedValue the types a constructor returns
+ * @param {Set<ts.Type>} context.typeUsedAsReturnValue the types a call returns
+ * @param {Set<ts.Type>} context.typeUsedAsTypeArgument the types passed as a type argument
+ * @returns {void}
+ */
+const analyseUnionsAndIntersections = ({
+	parsedCollectedTypes,
+	typeReferencedBy,
+	typeUsedAsConstructedValue,
+	typeUsedAsReturnValue,
+	typeUsedAsTypeArgument
+}) => {
 	for (const [type, parsed] of parsedCollectedTypes) {
 		if (parsed.type === "union" || parsed.type === "intersection") {
 			if (typeUsedAsTypeArgument.has(type)) {
@@ -1831,9 +2059,31 @@ class TupleMap {
 			}
 		}
 	}
+};
 
-	// / Convert interfaces to namespaces ///
-
+/**
+ * Writes as a namespace every interface only ever used to reach its members.
+ * @param {object} context what the passes before this one worked out
+ * @param {ts.Type | undefined} context.exposedType the type the entry file exports
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {Map<ts.Type, Set<ts.Type>>} context.typeReferencedBy what refers to each type
+ * @param {Set<ts.Type>} context.typeUsedAsArgument the types taken by a parameter
+ * @param {Set<ts.Type>} context.typeUsedAsBaseType the types something extends
+ * @param {Set<ts.Type>} context.typeUsedAsConstructedValue the types a constructor returns
+ * @param {Set<ts.Type>} context.typeUsedAsReturnValue the types a call returns
+ * @param {Set<ts.Type>} context.typeUsedAsTypeArgument the types passed as a type argument
+ * @returns {void}
+ */
+const convertInterfacesToNamespaces = ({
+	exposedType,
+	parsedCollectedTypes,
+	typeReferencedBy,
+	typeUsedAsArgument,
+	typeUsedAsBaseType,
+	typeUsedAsConstructedValue,
+	typeUsedAsReturnValue,
+	typeUsedAsTypeArgument
+}) => {
 	for (const [type, parsed] of parsedCollectedTypes) {
 		if (parsed.type !== "interface") continue;
 		if (
@@ -1879,171 +2129,15 @@ class TupleMap {
 		};
 		parsedCollectedTypes.set(type, newParsed);
 	}
+};
 
-	// / Merge identical types ///
-
-	/**
-	 * @param {string} prefix type parameter prefix
-	 * @param {ParsedSignature} signature signature
-	 * @param {number} index signature index
-	 * @returns {any[] | undefined} hash
-	 */
-	/**
-	 * @param {string} prefix what kind of signature it is
-	 * @param {ParsedSignature} signature the signature to hash
-	 * @param {number} index its position among the type's signatures
-	 * @returns {EXPECTED_ANY[]} the hash parts
-	 */
-	const getSigHash = (prefix, signature, index) => {
-		const { args, returnType, typeParameters, documentation } = signature;
-		const typeParametersMap = new Map(
-			typeParameters && typeParameters.map((t, i) => [t, i])
-		);
-		return [
-			"args",
-			...flatten(
-				args.map((arg) => [
-					arg.name,
-					arg.optional,
-					arg.spread,
-					arg.type,
-					arg.documentation
-				])
-			),
-			"return",
-			returnType,
-			"typeParameters",
-			typeParameters ? typeParameters.length : 0,
-			"documentation",
-			documentation
-		].map((item) => {
-			const x = typeParametersMap.get(item);
-			return x === undefined ? item : `${prefix}${index}_${x}`;
-		});
-	};
-
-	/**
-	 * @param {MergedType} parsed type
-	 * @returns {any[] | undefined} hash
-	 */
-	const getTypeHash = (parsed) => {
-		switch (parsed.type) {
-			case "primitive": {
-				return [parsed.type, parsed.name];
-			}
-			case "typeParameter": {
-				return [
-					parsed.type,
-					parsed.name,
-					parsed.constraint,
-					parsed.defaultValue
-				];
-			}
-			case "template": {
-				return [parsed.type, ...parsed.texts, ...parsed.types];
-			}
-			case "reference": {
-				const { target, typeArgumentsWithoutDefaults } = parsed;
-				if (typeArgumentsWithoutDefaults.length === 0) return undefined;
-				return [parsed.type, target, ...typeArgumentsWithoutDefaults];
-			}
-			case "index": {
-				const { objectType, indexType } = parsed;
-				return [parsed.type, objectType, indexType];
-			}
-			case "union":
-			case "intersection": {
-				const { symbolName, types, typeParameters } = parsed;
-				const typeParametersMap = new Map(
-					typeParameters && typeParameters.map((t, i) => [t, i])
-				);
-				return [
-					parsed.type,
-					symbolName[0],
-					typeParameters ? typeParameters.length : 0,
-					...types
-				].map((item) => {
-					const x = typeParametersMap.get(/** @type {ts.Type} */ (item));
-					return x === undefined ? item : x;
-				});
-			}
-			case "conditional": {
-				const { symbolName, checkType, extendsType, trueType, falseType } =
-					parsed;
-				return [
-					parsed.type,
-					symbolName[0],
-					checkType,
-					extendsType,
-					trueType,
-					falseType
-				];
-			}
-			case "interface": {
-				const {
-					symbolName,
-					baseTypes,
-					calls,
-					constructors,
-					properties,
-					numberIndex,
-					stringIndex,
-					typeParameters,
-					documentation
-				} = parsed;
-				if (
-					calls.length === 0 &&
-					constructors.length === 0 &&
-					properties.size === 0 &&
-					!numberIndex &&
-					!stringIndex
-				) {
-					// need to have something unique
-					return undefined;
-				}
-				const callHashes = calls.map(getSigHash.bind(null, "call"));
-				if (callHashes.some((x) => !x)) return undefined;
-				const constructorHashes = constructors.map(
-					getSigHash.bind(null, "constructor")
-				);
-				if (constructorHashes.some((x) => !x)) return undefined;
-				const typeParametersMap = new Map(
-					typeParameters && typeParameters.map((t, i) => [t, i])
-				);
-				return [
-					parsed.type,
-					symbolName[0],
-					"base",
-					...baseTypes,
-					"calls",
-					...flatten(callHashes),
-					"constructors",
-					...flatten(constructorHashes),
-					"properties",
-					...flatten(
-						Array.from(properties, ([name, { type, optional }]) => [
-							name,
-							type,
-							optional
-						])
-					),
-					"numberIndex",
-					numberIndex,
-					"stringIndex",
-					stringIndex,
-					"typeParameters",
-					typeParameters ? typeParameters.length : 0,
-					"documentation",
-					documentation
-				].map((item) => {
-					const x = typeParametersMap.get(item);
-					return x === undefined ? item : x;
-				});
-			}
-		}
-		return undefined;
-	};
-
+/**
+ * Points every type that says what another says at that one.
+ * @param {object} context what the passes before this one worked out
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @returns {void}
+ */
+const mergeIdenticalTypes = ({ parsedCollectedTypes }) => {
 	const knownTypes = new TupleMap();
 	let updates = true;
 	while (updates) {
@@ -2095,9 +2189,16 @@ class TupleMap {
 			}
 		}
 	}
-
-	// / Determine names for types ///
-
+};
+/**
+ * Gives every type that needs one a name no other type has taken.
+ * @param {object} context what the passes before this one worked out
+ * @param {GeneratorOptions} context.options the generator's own options
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {ts.Type | undefined} context.exposedType the type the entry file exports
+ * @returns {{ usedNames: Set<string>, findName: (symbolName: string[], requeueOnConflict?: boolean) => string | undefined, typeToVariable: Map<ts.Type, string | undefined> }} the names given
+ */
+const nameTypes = ({ options, parsedCollectedTypes, exposedType }) => {
 	const usedNames = new Set([AnonymousType]);
 
 	/** @type {[ts.Type, { symbolName: SymbolName }][]} */
@@ -2192,11 +2293,34 @@ class TupleMap {
 		nameToQueueEntry.set(name, entry);
 	}
 
-	// / Determine code for types
+	return { usedNames, findName, typeToVariable };
+};
 
+/**
+ * Writes each collected type as TypeScript, naming what it references.
+ * @param {object} context what the passes before this one worked out
+ * @param {GeneratorOptions} context.options the generator's own options
+ * @param {ts.TypeChecker} context.checker the program's type checker
+ * @param {Map<ts.Type, MergedType>} context.parsedCollectedTypes every type, parsed
+ * @param {Map<ts.Type, string | undefined>} context.typeToVariable the name given to each type
+ * @param {Set<string>} context.usedNames every name already taken
+ * @param {(symbolName: string[], requeueOnConflict?: boolean) => string | undefined} context.findName takes the next free name
+ * @param {ts.Type | undefined} context.exposedType the type the entry file exports
+ * @param {Map<EXPECTED_ANY, EXPECTED_ANY>} context.typeExports what each exposed file exports
+ * @returns {{ declarations: Set<string>, declarationKeys: Map<string, string | string[]>, imports: Map<string, Set<string>>, importDeclarations: Set<string>, exports: string[] }} the file's parts
+ */
+const generateDeclarations = ({
+	options,
+	checker,
+	parsedCollectedTypes,
+	typeToVariable,
+	usedNames,
+	findName,
+	exposedType,
+	typeExports
+}) => {
 	/** @type {Set<string>} */
 	const declarations = new Set();
-	/** @type {Map<string, string>} */
 	/** @type {Map<string, string | string[]>} */
 	const declarationKeys = new Map();
 	/** @type {Map<string, Set<string>>} */
@@ -2265,29 +2389,6 @@ class TupleMap {
 				`type ${name} = import(${JSON.stringify(from)}).${exportName};`
 			);
 		}
-	};
-
-	/**
-	 * @param {string} code the rendered type
-	 * @param {boolean=} optional whether it is already known to be optional
-	 * @returns {{ code: string, optional: boolean }} the type without its `undefined`
-	 */
-	const extractOptional = (code, optional = false) => {
-		if (code.startsWith("(undefined | ")) {
-			return {
-				code: `(${code.slice("(undefined | ".length)}`,
-				optional: true
-			};
-		} else if (code.endsWith(" | undefined)")) {
-			return {
-				code: `${code.slice(0, -" | undefined)".length)})`,
-				optional: true
-			};
-		}
-		return {
-			code,
-			optional
-		};
 	};
 
 	/**
@@ -2780,7 +2881,7 @@ class TupleMap {
 			case "class": {
 				const classType =
 					parsed.type === "typeof class" ? parsed.correspondingType : type;
-				const variable = typeToVariable.get(classType);
+				const variable = typeToVariable.get(/** @type {ts.Type} */ (classType));
 				queueDeclaration(/** @type {ts.Type} */ (classType), variable, () => {
 					const parsed = /** @type {MergedClassType} */ (
 						parsedCollectedTypes.get(/** @type {ts.Type} */ (classType))
@@ -2904,7 +3005,9 @@ class TupleMap {
 					return ns(state.slice("in namespace ".length), true);
 				}
 				const variable = typeToVariable.get(type);
-				queueDeclaration(type, variable, () => ns(variable));
+				queueDeclaration(type, variable, () =>
+					ns(/** @type {string} */ (variable))
+				);
 				return `typeof ${variable}`;
 			}
 			case "symbol": {
@@ -2918,7 +3021,11 @@ class TupleMap {
 			}
 			case "import": {
 				const variable = typeToVariable.get(type);
-				addImport(parsed.exportName, variable, parsed.from);
+				addImport(
+					parsed.exportName,
+					/** @type {string} */ (variable),
+					parsed.from
+				);
 				return (
 					(parsed.isValue && !type.isClass() && state !== "with type args"
 						? "typeof "
@@ -2983,6 +3090,88 @@ class TupleMap {
 	for (const [, fn] of emitDeclarations) {
 		fn();
 	}
+
+	return {
+		declarations,
+		declarationKeys,
+		imports,
+		importDeclarations,
+		exports
+	};
+};
+
+(async () => {
+	// Failing until the run says otherwise, so a throw on the way is a failure too
+	process.exitCode = 1;
+
+	const options = readGeneratorOptions();
+
+	const program = createTypeScriptProgram("tsconfig.types.json");
+
+	const checker = program.getTypeChecker();
+
+	const {
+		typeReferencedBy,
+		exposedType,
+		typeExports,
+		parsedCollectedTypes,
+		typeUsedAsArgument,
+		typeUsedAsBaseType,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	} = collectTypes({ program, checker, options });
+
+	classifyInterfaces({
+		checker,
+		parsedCollectedTypes
+	});
+
+	analyseUnionsAndIntersections({
+		parsedCollectedTypes,
+		typeReferencedBy,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	});
+
+	convertInterfacesToNamespaces({
+		exposedType,
+		parsedCollectedTypes,
+		typeReferencedBy,
+		typeUsedAsArgument,
+		typeUsedAsBaseType,
+		typeUsedAsConstructedValue,
+		typeUsedAsReturnValue,
+		typeUsedAsTypeArgument
+	});
+
+	mergeIdenticalTypes({
+		parsedCollectedTypes
+	});
+
+	const { usedNames, findName, typeToVariable } = nameTypes({
+		options,
+		parsedCollectedTypes,
+		exposedType
+	});
+
+	const {
+		declarations,
+		declarationKeys,
+		imports,
+		importDeclarations,
+		exports
+	} = generateDeclarations({
+		options,
+		checker,
+		parsedCollectedTypes,
+		typeToVariable,
+		usedNames,
+		findName,
+		exposedType,
+		typeExports
+	});
 
 	if (hasUnresolvableTypes) {
 		console.error(
