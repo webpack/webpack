@@ -805,9 +805,9 @@ describe("syntax-printer", () => {
 				"a.js": "sink(1);",
 				"b.js": "sink(2);"
 			});
-		expect((await minify(files(), {})).code).toBe(
-			(await reference.minify(files(), {})).code
-		);
+		const { code } = await minify(files(), {});
+		expect(code).toBe((await reference.minify(files(), {})).code);
+		expect(code).toMatchSnapshot();
 	});
 
 	it("should drive a minify as terser does: a tree with its sources asked for", async () => {
@@ -854,7 +854,9 @@ describe("syntax-printer", () => {
 				await run(ast, { compress: { defaults: false, unused: true }, mangle: false })
 			).code;
 		};
-		expect(await emptied(minify)).toBe(await emptied(reference.minify));
+		const code = await emptied(minify);
+		expect(code).toBe(await emptied(reference.minify));
+		expect(code).toMatchSnapshot();
 	});
 
 	it("should drop unused names as terser does: a scope without its variables", async () => {
