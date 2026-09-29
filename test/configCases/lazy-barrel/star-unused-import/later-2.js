@@ -1,1 +1,1 @@
-export { unused } from "./barrel.js";
+export { unused, mixedLocal } from "./barrel.js";
