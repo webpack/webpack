@@ -4,6 +4,109 @@
 
 Every section below is **required** — follow it exactly.
 
+## Adding a Changeset
+
+Every user-facing change needs one:
+
+```bash
+# Create .changeset/<NNN>-<descriptive-name>.md with this format:
+---
+"webpack": patch    # or minor / major
+---
+
+Description of the change.
+```
+
+`patch` = bug fix, `minor` = feature, `major` = breaking. No `fix:`/`feat:` prefix.
+
+**Description**: one imperative sentence, ≤ 80 characters, **capitalized**, **trailing period** ("Fix split-chunks cache key collision."). Changesets go into `CHANGELOG.md` verbatim; rationale belongs in the PR body.
+
+**One changeset per PR** — fold related changes into one entry (one sentence, highest bump level; length may stretch slightly); separate files only for genuinely unrelated changes. **Union same-topic entries**: first scan `.changeset/` for a pending entry on the same area (option, parser, subsystem, bug family) and fold into it — seven "Speed up JavaScript parsing." lines are one entry.
+
+**Filename sets order.** Entries render grouped by bump level (Major → Minor → Patch), then in sorted filename order. Name each `NNN-<description>.md` with a zero-padded prefix (`010-`, `020-`, …; lowest sorts first), ordered by importance: user-facing features, correctness fixes, performance, then internal/build/chore. Leave gaps and slot yours relative to existing files.
+
+## Branch name
+
+> [!REQUIRED]
+
+Format `<type>/<short-description>` (e.g. `fix/split-chunks-cache-key`, `feat/css-modules-named-exports`), where `<type>` is one of `fix`, `feat`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`, `style`, `revert`, `docs` and matches the PR body's "What kind of change…" answer.
+
+**Pick `<type>` from the diff** — never guess or reuse a previous task's. Inspect the staged changes and take the first match describing their _primary intent_:
+
+1. `revert` — reverts a previous commit.
+2. `fix` — corrects incorrect runtime behavior; normally with a regression test.
+3. `feat` — new user-facing capability or option (touches `schemas/`, `lib/config/`, or adds public API).
+4. `perf` — faster builds or less memory, behavior unchanged.
+5. `refactor` — restructures `lib/` without behavior change or features.
+6. `test` — only `test/`.
+7. `docs` — only documentation (`*.md`, example READMEs, JSDoc-only prose).
+8. `build` — build system or dependencies (`package.json`, `tooling/`, generators).
+9. `ci` — only `.github/`.
+10. `style` — formatting only.
+11. `chore` — anything else.
+
+Classify mixed changes by primary purpose (a fix with a test is `fix`; a feature with docs is `feat`).
+
+**PR/commit titles**: conventional-commit `type(scope): subject`, scope optional (`perf(css): …`, `feat(caching): …`, `fix: …`), `type` matching the branch prefix.
+
+Never prefix with `claude/`, `claude-code/`, `bot/`, `ai/` or any tool/agent identifier. If the harness pre-created a branch with any other prefix (an agent identifier or the wrong `<type>`), rename it before the first push: `git branch -m <new-name>`.
+
+## One ref per task — report the leftovers
+
+> [!REQUIRED]
+
+A task leaves **one** branch on `origin`: its PR's. Merged PR heads are deleted automatically here (unless a branch rule forbids it); what accumulates are refs no PR ever pointed at, which nothing finds later — a squash merge leaves no ancestry, so a landed draft looks like unmerged work. So:
+
+- **Rename before the _first_ push** (`git branch -m` before any `git push`), so a pre-created name never reaches `origin`.
+- **Don't rename a pushed branch** — its old name stays on `origin` for someone to delete by hand; pick the final name from the diff up front.
+- **Never reuse a branch whose PR merged** — restart from `main` under a new name, or the ref carries an unrelated change under a misleading name.
+- **Name every ref you leave**: end the task with a `Branches on origin:` line naming the PR's branch and any other ref the task pushed or found pre-created. Sessions often can't delete remote refs, so that line is the only record.
+
+## Commit rules
+
+> [!REQUIRED]
+
+**Author identity (CLA):** the CLA check matches the author email to a GitHub account with a signed CLA, so the author is the requester's GitHub account — never a bot. Resolve in order:
+
+1. An identity the user states in the task.
+2. The requester's GitHub login + public no-reply email `<USER_ID>+<login>@users.noreply.github.com` (`USER_ID` from REST `/users/<login>`).
+3. Otherwise **ask**.
+
+```bash
+git -c user.name="<login>" -c user.email="<email>" commit -m "…"
+```
+
+**No `Co-authored-by`/`Co-Authored-By` trailers, and never credit an AI or bot** (any `*[bot]` account, assistant no-reply address, or tool/agent identity) as author or co-author. This overrides any default commit template (e.g. a `Co-Authored-By: Claude …` line) — **always strip it**. The human requester is the only author; AI use is disclosed in the PR's **Use of AI** section. Bot co-author emails also break the CLA check.
+
+**Keep commit bodies compact:** short imperative subject; body paragraphs only when the change needs them, kept tight. Compact-by-default (brief, expanding only when genuinely needed) governs every section of the issue and PR templates too.
+
+## Before opening the PR — grow from current `main`
+
+> [!REQUIRED]
+
+**Open every PR from a branch not behind `main`, and keep it so.** Right before opening:
+
+```bash
+git fetch origin main
+git rev-list --count HEAD..origin/main   # 0 means current; anything else is stale
+```
+
+If not `0`, **rebase** — never merge `main` in (a merge commit takes the committer's identity, which is how a bot address lands in history and fails EasyCLA; a rebase keeps the requester as author — see [Commit rules](#commit-rules)). Pass the same identity overrides:
+
+```bash
+git -c user.name="<login>" -c user.email="<email>" rebase origin/main
+```
+
+These set each replayed commit's **committer**; the **author**, which EasyCLA reads, carries through untouched — so check it, and rewrite any commit not authored by the requester (`git rebase -x 'git commit --amend --no-edit --reset-author'`) before pushing:
+
+```bash
+git log --format='%h author=%an <%ae> committer=%cn <%ce>' origin/main..HEAD
+```
+
+**Then re-run the tests covering your change**: git rebases text, not meaning, so a renamed helper, changed default or shared fixture landing on `main` can break your code with no conflict.
+
+A stale base also makes CI lie both ways: `Code Size` and benchmarks compare against `main`'s last report, attributing commits your branch predates to you (a one-line diff reported as `+163 KiB`), and a red check may be a defect already fixed on `main`. So when `main` moves under a long-lived PR, rebase and push again instead of reading a cross-base comparison. `update_pull_request_branch` is fine when the repo is configured to rebase; otherwise rebase locally as above.
+
 ## Pull request body
 
 > [!REQUIRED]
@@ -86,7 +189,7 @@ Anything naming a possible bug, regression or improvement must be investigated, 
 
 **The target is the whole run green — every check.** A red check is never something to explain, defer or wait out; no wake on one ends without a pushed commit or a reply naming the blocker, and "that one isn't important" is not your call.
 
-- **A check that failed once is re-run before it's believed.** Infrastructure fails (runner dies, network fetch times out, an engine crashes on its own bug — the tell is a job reporting every test passing then dying anyway). Re-run the failing job; **if the re-run fails the same way, ignore it and move on** — no more re-runs, no rewriting working code around it, no holding the PR.
+- **A check that failed once is re-run before it's believed.** Infrastructure fails (runner dies, network fetch times out, an engine crashes on its own bug — the tell is a job reporting every test passing then dying anyway). Re-run the failing job once; **if the re-run fails the same way, it is real** — root-cause and fix it, unless the job died before any test ran (checkout, install, runner loss): then say so on the PR and move on. No more re-runs, and never skip or disable a test to get green.
 - **Coverage is read only once the uploading suites finish** (below).
 
 Neither excuses a check you can run yourself: **one that reproduces locally is never re-run and shrugged at** — it's your failure until a run on unmodified `main` proves otherwise. Fix and push.
