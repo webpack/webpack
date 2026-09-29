@@ -9617,6 +9617,26 @@ describe("CssSyntax minify — lowering a spelling the target cannot read", () =
 		);
 	});
 
+	it.each([
+		// an `or` whose comment is kept, and a `not`, which would negate one bound
+		[
+			"(color) or/**/(1px<=width<=2px)",
+			"(color) or/**/((min-width:1px) and (max-width:2px))"
+		],
+		["not (1px<=width<=2px)", "not ((min-width:1px) and (max-width:2px))"],
+		["not/**/(1px<=width<=2px)", "not/**/((min-width:1px) and (max-width:2px))"],
+		[
+			"screen and not (1px<=width<=2px)",
+			"screen and not ((min-width:1px) and (max-width:2px))"
+		],
+		// a nested group, whose bounds are no interval's
+		["((1px<=width<=2px))", "((1px<=width<=2px))"]
+	])("writes the interval in `@media %s` as %s", (query, expected) => {
+		expect(minifyFor(`@media ${query}{a{color:red}}`, ["chrome 100"])).toBe(
+			`@media ${expected}{a{color:red}}`
+		);
+	});
+
 	it("leaves a comparison with no `min-` / `max-` equivalent", () => {
 		// A strict bound is only `not (max-width:…)`, which is Media Queries 4 as
 		// much as the range spelling it would replace.
