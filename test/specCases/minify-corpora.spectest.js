@@ -765,22 +765,29 @@ const CORPORA = [
 ];
 
 /**
- * Sources webpack misprints under a set exactly as terser does, each with why:
- * webpack writes terser's bytes, so it inherits these until it fixes them, and
- * an entry that starts printing what it should fails until it is retired.
+ * Sources whose output misprints under a set as terser's does, each with why
+ * that is not a defect; an entry that starts printing right fails until retired.
  * @type {Record<string, string>}
  */
 const INHERITED = {
+	"swc exec: terser_pure_funcs_issue_3065_3 (its own options)":
+		"`pure_funcs` names these calls free of effects, so dropping them is what it asks",
+	"swc exec: terser_pure_funcs_issue_3065_4 (its own options)":
+		"`pure_funcs` names these calls free of effects, so dropping them is what it asks",
+	"swc exec: terser_pure_getters_impure_getter_2 (its own options)":
+		"`pure_getters` says property reads have no effects, so dropping the getter is what it asks"
+};
+
+/**
+ * Sources terser misprints under a set and webpack's `correct` phase prints
+ * right, each with the defect: without the phase each must misprint as terser's.
+ * @type {Record<string, string>}
+ */
+const CORRECTED = {
 	"swc exec: object_spread_proto_key_is_not_flattened (its own options)":
 		"terser flattens a spread object carrying a `__proto__` key into a literal, where it sets the prototype",
 	"swc exec: object_spread_proto_key_is_not_flattened (the default minimizer's options)":
 		"terser flattens a spread object carrying a `__proto__` key into a literal, where it sets the prototype",
-	"swc exec: terser_pure_funcs_issue_3065_3 (its own options)":
-		"`pure_funcs` n says these calls or getters have no effects, so dropping them is what it asks",
-	"swc exec: terser_pure_funcs_issue_3065_4 (its own options)":
-		"`pure_funcs` n says these calls or getters have no effects, so dropping them is what it asks",
-	"swc exec: terser_pure_getters_impure_getter_2 (its own options)":
-		"`pure_getters` n says these calls or getters have no effects, so dropping them is what it asks",
 	"swc exec: terser_reduce_vars_shorthand_proto_null (its own options)":
 		"terser prints a `{ __proto__ }` shorthand as `__proto__: \u2026`, which sets the prototype instead of an own property",
 	"swc exec: terser_reduce_vars_shorthand_proto_null (printing alone)":
@@ -879,7 +886,7 @@ const formatLeads = (leads) => {
 };
 
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[] }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
+	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	const selected = selectPhases(process.env.PHASES);
 	/** @type {Lead[]} */
@@ -1013,8 +1020,10 @@ describe("JavaScript minifier", () => {
 		const { same_stdout: sameStdout } =
 			/** @type {NonNullable<typeof loaded.sandbox>} */ (loaded.sandbox);
 		const printed = run(stdout, stdout.input);
+		// terser's runner holds an output to whatever its input does, a throw or
+		// silence included; swc's harness needs the input to print.
 		if (stdout.expected === true) {
-			return typeof printed === "string" && printed !== ""
+			return stdout.strict || (typeof printed === "string" && printed !== "")
 				? { expected: printed }
 				: {};
 		}
@@ -1159,17 +1168,28 @@ describe("JavaScript minifier", () => {
 									};
 									const key = `${corpus.name}: ${source.name} (${setName})`;
 									if (theirs.code !== ours.code || theirs.error !== ours.error) {
-										// Printing what terser's output misprints is a fix, not a
-										// difference.
-										const fixes =
-											runs &&
-											ours.code !== undefined &&
-											theirs.code !== undefined &&
-											misprint(ours.code) === undefined &&
-											misprint(theirs.code) !== undefined;
-										if (!fixes) {
+										// A difference only the `correct` phase makes is its fix, which
+										// the run check below holds to; any other is a difference.
+										const { corrections } = printer;
+										let uncorrected = ours;
+										if (corrections && corrections.enabled) {
+											corrections.enabled = false;
+											try {
+												uncorrected = await outcome(
+													printer.minify,
+													source.input,
+													optionsFor(source)
+												);
+											} finally {
+												corrections.enabled = true;
+											}
+										}
+										if (
+											theirs.code !== uncorrected.code ||
+											theirs.error !== uncorrected.error
+										) {
 											differences.push(
-												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(ours)}`
+												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
 											);
 										}
 									}
@@ -1179,15 +1199,23 @@ describe("JavaScript minifier", () => {
 											wrong = misprint(ours.code);
 											verdicts.set(ours.code, wrong);
 										}
-										const inherited = Object.prototype.hasOwnProperty.call(
+										const corrected = Boolean(
+											printer.corrections && printer.corrections.enabled
+										);
+										const table = Object.prototype.hasOwnProperty.call(
 											INHERITED,
 											key
-										);
-										if (wrong !== undefined && !inherited) {
+										)
+											? "INHERITED"
+											: !corrected &&
+												  Object.prototype.hasOwnProperty.call(CORRECTED, key)
+												? "CORRECTED"
+												: undefined;
+										if (wrong !== undefined && table === undefined) {
 											differences.push(`${key} prints differently${wrong}`);
-										} else if (wrong === undefined && inherited) {
+										} else if (wrong === undefined && table !== undefined) {
 											differences.push(
-												`${key} prints what it should now: retire it from INHERITED`
+												`${key} prints what it should now: retire it from ${table}`
 											);
 										}
 									}
