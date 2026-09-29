@@ -1369,6 +1369,31 @@ describe("syntax-printer", () => {
 		expect(nested).toBe(declaration.body[0].size());
 	});
 
+	it("should decline a terser whose equivalence it does not know", () => {
+		const equivalent =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "equivalent")
+			);
+		expect(equivalent.supports({ ast: {} })).toBe(false);
+	});
+
+	it("should compare trees as terser does", async () => {
+		await load();
+		const { parse } = await loadSources();
+		const [first, second, third, fourth] = parse.parse(
+			"a.b(c + 1); a.b(c + 1); a.b(c + 2); a.b(c, 1);"
+		).body;
+		expect(first.equivalent_to(second)).toBe(true);
+		expect(first.equivalent_to(third)).toBe(false);
+		expect(first.equivalent_to(fourth)).toBe(false);
+		const original = first.body.shallow_cmp;
+		first.body.shallow_cmp = function (/** @type {EXPECTED_ANY} */ other) {
+			expect(third.equivalent_to(fourth)).toBe(false);
+			return original.call(this, other);
+		};
+		expect(first.equivalent_to(second)).toBe(true);
+	});
+
 	it("should write the source map terser writes", async () => {
 		const { minify } = await load();
 		const terser = require("terser");
