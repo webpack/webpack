@@ -5,6 +5,7 @@
 const vm = require("vm");
 const {
 	FORMAT_DEFAULTS,
+	IGNORED_FORMAT_OPTIONS,
 	estreeType,
 	load,
 	loadSources,
@@ -489,9 +490,16 @@ describe("syntax-printer", () => {
 			for (const settings of OUTPUT_OPTIONS) {
 				const options = () => ({ ...settings, format: { ...settings.format } });
 				const ours = await minify({ "input.js": source }, options());
+				// The printer writes minified output only, so it is held to terser's.
+				const referenceOptions = options();
+				for (const name of IGNORED_FORMAT_OPTIONS) {
+					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
+						name
+					];
+				}
 				const theirs = await reference.minify(
 					{ "input.js": source },
-					options()
+					referenceOptions
 				);
 				expect(ours.code).toBe(theirs.code);
 				expect(ours.map).toEqual(theirs.map);
@@ -500,6 +508,25 @@ describe("syntax-printer", () => {
 			expect(code).toMatchSnapshot();
 		});
 	}
+
+	it("should write minified output whatever layout it is asked for", async () => {
+		const { minify } = await load();
+		const source = "if (a) { b(1, 2), c(3) } else for (;;) d([4, 5]);";
+		const { code } = await minify(source, { compress: false, mangle: false });
+		const laidOut = await minify(source, {
+			compress: false,
+			mangle: false,
+			format: {
+				beautify: true,
+				braces: true,
+				indent_level: 2,
+				indent_start: 4,
+				max_line_len: 10,
+				width: 10
+			}
+		});
+		expect(laidOut.code).toBe(code);
+	});
 
 	it("should decline a terser whose stream it does not know", () => {
 		const output =
