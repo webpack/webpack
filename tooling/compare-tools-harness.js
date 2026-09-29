@@ -1207,6 +1207,7 @@ module.exports = {
 	missingReport,
 	oneLine,
 	pathSpanWalk,
+	profileShares,
 	purityRelation,
 	run,
 	shrink,
