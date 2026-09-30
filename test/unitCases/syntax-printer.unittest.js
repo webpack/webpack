@@ -420,8 +420,8 @@ let fn = (a, b = 1, ...c) => a, one = x => x * 2, block = async () => { return a
 const tpl = tag\`a\${b}c\${d}\`, re = /x+/gi, str = 'q"', num = 1.5e3, big = 12n;
 x = [1, , 3], y = { a, b: 1, [c]: 2, get d() { return 1; }, set d(v) {}, e() {}, async *f() { yield 1; }, "g h": 1, 1: 2 };
 ({ a } = y);
-z = null + NaN + undefined + Infinity + true + false + void 0 + typeof a + -a + !b + ~c + a?.b + a?.[b] + a?.(b) + a.b + a[b] + (a, b) + (a ? b : c) + (a || b) + (a ?? b) + a ** b;
-class A extends B { static x = 1; y; #z = 2; static #w; static { f(); } constructor() { super(); new.target; } get g() { return this.#z; } set g(v) {} static m() {} *gen() {} async am() {} #pm() { return #z in this; } static get sg() {} }
+z = null + NaN + undefined + Infinity + true + false + void 0 + typeof a + -a + !b + ~c + 0.5 + (a + +b) + (a - -b) + a?.b + a?.[b] + a?.(b) + a.b + a[b] + (a, b) + (a ? b : c) + (a || b) + (a ?? b) + a ** b;
+class A extends B { static x = 1; y; #z = 2; static #w; static { f(); } constructor() { super(); new.target; } get g() { return this.#z; } set g(v) {} static m() {} *gen() {} async am() {} #pm() { return #z in this; } get #pg() { return 1; } set #pg(v) {} static get sg() {} }
 new (class {})();
 function named(a) { return arguments; }
 async function* generate() { for await (const v of w) yield* v; }`;
@@ -432,7 +432,8 @@ async function* generate() { for await (const v of w) yield* v; }`;
  */
 const SIZED_MODULE = `import d, { a as b, c } from "m"; import * as ns from "n"; import "side"; import json from "j" with { type: "json" };
 export { b, c as e }; export * from "o"; export * as p from "q"; export default [import.meta.url, import("x"), import.source("y")];
-export const k = 1; export class K {}`;
+export const k = 1; export class K {}
+{ using x = y; } async function f() { await using z = w; }`;
 
 /**
  * Properties the mangler reads each way terser does: quoted, computed, in a
@@ -1525,34 +1526,39 @@ describe("syntax-printer", () => {
 	});
 
 	it("should size and compare every node as terser does", async () => {
-		await load();
+		const { minify } = await load();
+		const { ast } = await loadSources();
 		const reference = require("terser");
-		const { parse, ast } = await loadSources();
-		/** @type {[string, boolean][]} */
+		// A compressed tree holds the nodes only the compressor makes, as `NaN`.
+		/** @type {[string, EXPECTED_OBJECT][]} */
 		const sources = [
-			[SIZED_SCRIPT, false],
-			[SIZED_MODULE, true]
+			[SIZED_SCRIPT, { compress: false }],
+			[SIZED_MODULE, { compress: false, module: true }],
+			["sink(NaN, void 0, 1 / 0, a + +b, a - -b);", { compress: {} }]
 		];
-		for (const [source, module] of sources) {
+		for (const [source, options] of sources) {
+			/**
+			 * @returns {EXPECTED_ANY} the options, asking for the tree
+			 */
+			const settings = () => ({
+				...options,
+				mangle: false,
+				format: { ast: true, code: false }
+			});
+			const { ast: ourTree } = /** @type {EXPECTED_ANY} */ (
+				await minify(source, settings())
+			);
 			/** @type {EXPECTED_ANY[]} */
 			const ours = [];
-			parse
-				.parse(source, { module })
-				.walk(new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+			ourTree.walk(
+				new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
 					ours.push(node);
-				}));
+				})
+			);
 			// terser's published build hands out its own tree, sized and compared
 			// by terser's own methods.
 			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
-				await reference.minify(
-					source,
-					/** @type {EXPECTED_ANY} */ ({
-						compress: false,
-						mangle: false,
-						module,
-						format: { ast: true, code: false }
-					})
-				)
+				await reference.minify(source, settings())
 			);
 			/** @type {EXPECTED_ANY[]} */
 			const theirs = [];
