@@ -20,6 +20,7 @@
 .cache
 .eslintcache
 .cspellcache
+/.prettierignore-eslint
 package-lock.json
 # Except the comparison corpora: each one's lockfile is the record of what
 # the benchmarks and the invariant sweeps actually ran against.
