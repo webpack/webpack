@@ -7247,6 +7247,61 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 			"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"
 		);
 	});
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the markup minified for a target `hwb()` needs a fallback for
+	 */
+	const minifyLegacy = (html) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			renderEmbeddedSource: builtinEmbeddedRenderer({
+				environment: { browsers: ["chrome 100"] }
+			})
+		}).code;
+
+	it("keeps a lowered list however the source spelled it", () => {
+		const lowered = '<p style="background:#00c3ff;background:hwb(194 0% 0%)">x';
+		expect(minifyLegacy('<p style="background: hwb(194 0% 0%)">x')).toBe(
+			lowered
+		);
+		expect(minifyLegacy('<p style="background&#x3a; hwb(194 0% 0%)">x')).toBe(
+			lowered
+		);
+	});
+
+	it("keeps a lowered list that holds both quotes", () => {
+		expect(
+			minifyLegacy(
+				`<p style="content:'\\''; background: hwb(194 0% 0%)">x`
+			)
+		).toBe(
+			`<p style="content:'\\'';background:#00c3ff;background:hwb(194 0% 0%)">x`
+		);
+	});
+
+	it("keeps the source's delimiter for a lowered list where quotes are frozen", () => {
+		expect(
+			new SourceProcessor().process(
+				"<p style='background&#x3a; hwb(194 0% 0%)'>x",
+				{
+					mode: "minify",
+					transforms: { normalizeAttributeQuotes: false },
+					renderEmbeddedSource: builtinEmbeddedRenderer({
+						environment: { browsers: ["chrome 100"] }
+					})
+				}
+			).code
+		).toBe("<p style='background:#00c3ff;background:hwb(194 0% 0%)'>x");
+	});
+
+	it("writes a list the same whichever references the source spelled", () => {
+		const plain = minifyLegacy(`<p style="content:'\\'';color:red">x`);
+		expect(plain).toBe(`<p style="content:'\\'';color:red">x`);
+		expect(
+			minifyLegacy(`<p style="content:&#39;\\&#39;&#39;;color:red">x`)
+		).toBe(plain);
+	});
 });
 
 describe("parseHtml — insertion-mode edge cases", () => {
@@ -9050,15 +9105,97 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	});
 
 	describe("<noscript> content", () => {
-		it("re-escapes decoded text inside <noscript>", () => {
+		// A browser with scripting on reads it as raw text, so it is written back
+		// as the source spelled it, for either reader.
+		it("keeps the text inside <noscript> as written", () => {
 			expect(minify("<body><noscript>a &lt;b&gt; c</noscript>")).toBe(
-				"<body><noscript>a &lt;b> c</noscript></body>"
+				"<body><noscript>a &lt;b&gt; c</noscript></body>"
 			);
 		});
 
-		it("round-trips elements nested inside <noscript>", () => {
+		it("keeps the markup inside <noscript> as written", () => {
 			expect(minify('<noscript><link href="x"></noscript>')).toBe(
-				"<noscript><link href=x></noscript>"
+				'<noscript><link href="x"></noscript>'
+			);
+		});
+
+		it("keeps what a <noscript> in <head> holds inside it", () => {
+			// Read with scripting off, the `<img>` leaves the head for the body,
+			// where a reader with scripting on would load it too.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><img src=x.gif></noscript><title>t</title></head><p>hi"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><img src=x.gif></noscript><title>t</title></head><p>hi"
+			);
+		});
+
+		it("keeps the head whitespace a reader with scripting off reads as body text", () => {
+			// That reader leaves the head at the `<img>`, so what follows is in the body.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><img src=x></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><img src=x></noscript> <title>t</title></head><p>x"
+			);
+			expect(
+				minify("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x")
+			).toBe("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x</body>");
+			// `<!-->` closes at once, so `PASS` is text to that reader, not a comment.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><!-->PASS<!-- --></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><!-->PASS<!-- --></noscript> <title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript><!-- a --!>PASS<!-- b --></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><!-- a --!>PASS<!-- b --></noscript> <title>t</title></head><p>x"
+			);
+			// The mode passes a `<style>` through, but only void elements are read as safe.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><style>a{}</style></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><style>a{}</style></noscript> <title>t</title></head><p>x"
+			);
+		});
+
+		it("drops the head whitespace where every reader keeps the head", () => {
+			expect(
+				minify(
+					"<!doctype html><head><noscript><link rel=a href=b><!-- c --></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><link rel=a href=b><!-- c --></noscript><title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript><!-- a --!><!----><link rel=a href=b></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><!-- a --!><!----><link rel=a href=b></noscript><title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript><META charset=x></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><META charset=x></noscript><title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript></noscript><title>t</title></head><p>x"
 			);
 		});
 	});
@@ -9592,6 +9729,23 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 		]);
 		// A context element with no content mode of its own stays in data.
 		expect(walk("<b>x</b>", { fragmentContext: "td" })).toEqual([
+			["open", "b"],
+			["text", "x"],
+			["close", "b"]
+		]);
+	});
+
+	it("seeds a `noscript` context from the scripting flag", () => {
+		expect(
+			walk("<b>x</b></noscript>", {
+				fragmentContext: "noscript",
+				scripting: true
+			})
+		).toEqual([
+			["text", "<b>x</b>"],
+			["close", "noscript"]
+		]);
+		expect(walk("<b>x</b>", { fragmentContext: "noscript" })).toEqual([
 			["open", "b"],
 			["text", "x"],
 			["close", "b"]

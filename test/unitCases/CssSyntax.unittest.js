@@ -2688,6 +2688,37 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		);
 	});
 
+	describe("a string inside a style attribute", () => {
+		/**
+		 * @param {string} css a declaration list
+		 * @returns {string} the list minified as a `style=""` value
+		 */
+		const attribute = (css) =>
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				as: "block-contents"
+			}).code;
+
+		it("wraps one holding an apostrophe in `'`, so the list holds no `\"`", () => {
+			expect(attribute("content:'\\''")).toBe("content:'\\''");
+			expect(attribute('content:"it\'s"')).toBe("content:'it\\'s'");
+			expect(attribute('content:"say \\"hi\\" it\'s"')).toBe(
+				"content:'say \"hi\" it\\'s'"
+			);
+			// Another escape is copied as it is.
+			expect(attribute("content:'\\61\\''")).toBe("content:'\\61\\''");
+		});
+
+		it("quotes one holding no apostrophe as a stylesheet does", () => {
+			expect(attribute("content:'a'")).toBe('content:"a"');
+			expect(attribute('content:"a"')).toBe('content:"a"');
+		});
+
+		it("closes one the input ended inside of, with what it held", () => {
+			expect(attribute("content:\"it's\\\"")).toBe("content:'it\\'s\"'");
+		});
+	});
+
 	it("re-quotes a string whose escapes the other quote would avoid", () => {
 		expect(min("a{content:'it\\'s'}")).toBe('a{content:"it\'s"}');
 		// Both quotes appear escaped, so switching saves nothing.
@@ -12716,6 +12747,123 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		const nested =
 			".a{color:red}@media print{@media screen{.x{width:0}}}.c{color:red}";
 		expect(minify(nested, true)).toBe(nested);
+	});
+
+	// An element has one type, so a rule between whose subjects all name other
+	// types never reaches an element the moved selectors match.
+	describe("past a rule matching other element types", () => {
+		it("joins past a rule of another type declaring the same property", () => {
+			expect(minify("h1{color:red}h3{color:blue}h2{color:red}", true)).toBe(
+				"h1,h2{color:red}h3{color:blue}"
+			);
+			expect(
+				minify("nav a{color:red}p{color:blue}ul li{color:red}", true)
+			).toBe("nav a,ul li{color:red}p{color:blue}");
+		});
+
+		it("reads the subject past what an attribute or a pseudo holds", () => {
+			expect(
+				minify('h1{color:red}p[title="a h2"]{color:blue}h2{color:red}', true)
+			).toBe('h1,h2{color:red}p[title="a h2"]{color:blue}');
+			expect(
+				minify("h1{color:red}p:nth-child(2n + 1){color:blue}h2{color:red}", true)
+			).toBe("h1,h2{color:red}p:nth-child(odd){color:blue}");
+		});
+
+		it("joins past a condition whose rules match other types", () => {
+			expect(
+				minify("h1{color:red}@media print{h3{color:blue}}h2{color:red}", true)
+			).toBe("h1,h2{color:red}@media print{h3{color:blue}}");
+		});
+
+		it.each([
+			"h2.x",
+			"h2:hover",
+			"div h2",
+			"div>h2",
+			"H2",
+			"h3,h2",
+			".x",
+			"*",
+			"[title]",
+			"svg|h2",
+			".sm\\:flex"
+		])("declines past `%s`, which can match the same element", (between) => {
+			const sheet = `h1{color:red}${between}{color:blue}h2{color:red}`;
+			expect(minify(sheet, true)).toBe(minify(sheet));
+		});
+
+		it("declines where the moved selector names no type", () => {
+			const sheet = "h1{color:red}h3{color:blue}.c{color:red}";
+			expect(minify(sheet, true)).toBe(sheet);
+		});
+
+		it("gathers a condition past a rule of another type", () => {
+			expect(
+				minify(
+					"@media print{h1{color:red}}h1{color:blue}@media print{h2{color:red}}",
+					true
+				)
+			).toBe("@media print{h1,h2{color:red}}h1{color:blue}");
+			const shadows =
+				"@media print{h1{color:red}}h2{color:blue}@media print{h2{color:red}}";
+			expect(minify(shadows, true)).toBe(shadows);
+		});
+
+		it("joins inside a block past a rule of another type", () => {
+			expect(
+				minify(
+					"@media screen{h1{color:red;background:blue}h3{color:#00f}h2{color:red;background:blue}}",
+					true
+				)
+			).toBe("@media screen{h1,h2{color:red;background:blue}h3{color:#00f}}");
+			expect(
+				minify(
+					"@media screen{h1{color:red;background:blue}@media print{h3{color:#00f}}h2{color:red;background:blue}}",
+					true
+				)
+			).toBe(
+				"@media screen{h1,h2{color:red;background:blue}@media print{h3{color:#00f}}}"
+			);
+			const shadows =
+				"@media screen{h1{color:red;background:blue}h2.x{color:#00f}h2{color:red;background:blue}}";
+			expect(minify(shadows, true)).toBe(shadows);
+		});
+	});
+
+	it("does not write into a rule a later copy took back", () => {
+		const sheet =
+			".a{color:red;margin:0}.b{padding:0}.a{color:red;margin:0}.d{top:0}.c{color:red;margin:0}";
+		expect(minify(sheet, true)).toBe(
+			".b{padding:0}.a{color:red;margin:0}.d{top:0}.c{color:red;margin:0}"
+		);
+	});
+
+	it("keeps a rule's list whole where a merge grew it and its neighbor shares its selector", () => {
+		// The look-back join once read the grown `.z,h2.y` as `.z` and cut it at
+		// that length, folding half a selector into the rule before it.
+		expect(
+			minify(
+				".z{top:2px;display:block;margin:2px 3px}.z{all:unset;border:1px solid red}span{border-top-color:blue}h2.y{all:unset;border:1px solid red}",
+				true
+			)
+		).toBe(
+			".z{top:2px;display:block;margin:2px 3px}.z,h2.y{all:unset;border:1px solid red}span{border-top-color:blue}"
+		);
+	});
+
+	it("declines to move a block setting `all` past anything declared since", () => {
+		// For `p.b` the source reads `all:unset` last; moved up, `color` wins.
+		const sheet = ".a{all:unset}p{color:red}.b{all:unset}";
+		expect(minify(sheet, true)).toBe(sheet);
+		expect(minify("h1{all:unset}p{color:red}h2{all:unset}", true)).toBe(
+			"h1,h2{all:unset}p{color:red}"
+		);
+		expect(minify("h1{margin:0}p{all:unset}h2{margin:0}", true)).toBe(
+			"h1,h2{margin:0}p{all:unset}"
+		);
+		const same = "h1{margin:0}p{all:unset}p{margin:0}";
+		expect(minify(same, true)).toBe(same);
 	});
 
 	// Rules inside a block are joined as the block is assembled rather than as

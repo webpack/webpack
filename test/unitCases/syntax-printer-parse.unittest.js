@@ -14,8 +14,10 @@ const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
  * @returns {Promise<{ ast: EXPECTED_ANY, parse: EXPECTED_ANY }>} the modules
  */
 const loadTerser = async () => {
+	// Spelled apart from `loadSources`: V8 hands back the function first compiled
+	// from the same text, bound to a Jest environment that may already be gone.
 	// eslint-disable-next-line no-new-func
-	const importModule = new Function("specifier", "return import(specifier)");
+	const importModule = new Function("file", "return import(file)");
 	const directory = path.dirname(require.resolve("terser/package.json"));
 	/**
 	 * @param {string} file a file in terser's `lib`
