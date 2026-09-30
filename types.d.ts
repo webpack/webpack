@@ -24563,8 +24563,8 @@ declare interface PerformanceOptions {
  */
 declare interface Phase {
 	name: string;
-	supports: (modules?: any) => boolean;
-	install: (modules?: any) => void;
+	supports: (modules: TerserModules) => boolean;
+	install: (modules: TerserModules) => void;
 }
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
@@ -31036,6 +31036,14 @@ declare interface Stringable {
 }
 type Stylesheet = NodeSyntaxParser & { rules: RuleSyntaxParser[] };
 type Supports = undefined | string;
+
+/**
+ * one of terser's `SymbolDef`s
+ */
+declare interface SymbolDefinition {
+	[index: number]: any;
+	[index: string]: any;
+}
 declare class SyncModuleIdsPlugin {
 	/**
 	 * Creates an instance of SyncModuleIdsPlugin.
@@ -31224,6 +31232,21 @@ declare interface Terser {
 }
 
 /**
+ * terser's compressor: the methods the phases call typed, the rest open.
+ */
+declare interface TerserCompressor {
+	[index: string]: any;
+	options: Record<string, any>;
+	stack: TerserNode[];
+	option(name: string): any;
+	has_directive(directive: string): any;
+	parent(level?: number): TerserNode;
+	self(): TerserNode;
+	find_parent(Type?: any): undefined | TerserNode;
+	in_boolean_context(): undefined | boolean;
+}
+
+/**
  * terser's `format` options, defaulted
  */
 declare interface TerserFormatOptions {
@@ -31231,11 +31254,55 @@ declare interface TerserFormatOptions {
 }
 
 /**
- * one of terser's AST nodes
+ * terser's own modules
+ */
+declare interface TerserModules {
+	[index: string]: any;
+}
+
+/**
+ * One of terser's AST nodes: the fields and methods the phases share typed, the
+ * rest open.
  */
 declare interface TerserNode {
-	[index: number]: any;
 	[index: string]: any;
+	TYPE: string;
+	flags: number;
+	start: TokenEs5;
+	end: TokenEs5;
+	expression: TerserNode;
+	left: TerserNode;
+	right: TerserNode;
+	operator: string;
+	condition: TerserNode;
+	consequent: TerserNode;
+	alternative: TerserNode;
+	args: TerserNode[];
+	elements: TerserNode[];
+	properties: TerserNode[];
+	definitions: TerserNode[];
+	expressions: TerserNode[];
+	segments: TerserNode[];
+	argnames: TerserNode[];
+	scope: TerserNode;
+	thedef: SymbolDefinition;
+	definition(): SymbolDefinition;
+	fixed_value(): any;
+	tail_node(): TerserNode;
+	clone(deep?: boolean): TerserNode;
+	transform(walker?: any, inList?: boolean): TerserNode;
+	optimize(compressor: TerserCompressor): TerserNode;
+	has_side_effects(compressor: TerserCompressor): boolean;
+	may_throw(compressor: TerserCompressor): boolean;
+	drop_side_effect_free(
+		compressor: TerserCompressor,
+		firstInStatement?: boolean
+	): null | TerserNode;
+	is_constant_expression(scope?: TerserNode): boolean | "f";
+	evaluate(compressor: TerserCompressor): any;
+	negate(compressor: TerserCompressor, firstInStatement?: boolean): TerserNode;
+	size(compressor?: TerserCompressor, stack?: any): number;
+	print_to_string(options?: Record<string, any>): string;
 }
 
 /**
@@ -31275,6 +31342,14 @@ declare interface TokContextLike {
 	preserveSpace?: boolean;
 	override?: any;
 	generator?: boolean;
+}
+
+/**
+ * one of terser's tokens
+ */
+declare interface TokenEs5 {
+	[index: number]: any;
+	[index: string]: any;
 }
 
 /**
@@ -33104,12 +33179,14 @@ declare namespace exports {
 			}
 			export namespace printer {
 				export let load: () => Promise<Terser>;
-				export let loadSources: () => Promise<any>;
+				export let loadSources: () => Promise<
+					TerserModules & { minify: typeof minify }
+				>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
 				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createTerserTree: (
-					__0?: any
+					__0: TerserModules
 				) => (source: string, options: TreeOptions) => undefined | TerserNode;
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
@@ -33124,7 +33201,7 @@ declare namespace exports {
 					node: TerserNode,
 					parent?: TerserNode
 				) => null | string;
-				export let markEstreeTypes: (__0?: any) => void;
+				export let markEstreeTypes: (__0: TerserModules) => void;
 			}
 		}
 		export {
