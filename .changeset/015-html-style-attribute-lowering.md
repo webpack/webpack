@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep a `style` attribute's lowered CSS however its source spelled it.
+Keep lowered CSS in any `style` spelling, and quote its strings for HTML.

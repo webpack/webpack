@@ -2688,6 +2688,37 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		);
 	});
 
+	describe("a string inside a style attribute", () => {
+		/**
+		 * @param {string} css a declaration list
+		 * @returns {string} the list minified as a `style=""` value
+		 */
+		const attribute = (css) =>
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				as: "block-contents"
+			}).code;
+
+		it("wraps one holding an apostrophe in `'`, so the list holds no `\"`", () => {
+			expect(attribute("content:'\\''")).toBe("content:'\\''");
+			expect(attribute('content:"it\'s"')).toBe("content:'it\\'s'");
+			expect(attribute('content:"say \\"hi\\" it\'s"')).toBe(
+				"content:'say \"hi\" it\\'s'"
+			);
+			// Another escape is copied as it is.
+			expect(attribute("content:'\\61\\''")).toBe("content:'\\61\\''");
+		});
+
+		it("quotes one holding no apostrophe as a stylesheet does", () => {
+			expect(attribute("content:'a'")).toBe('content:"a"');
+			expect(attribute('content:"a"')).toBe('content:"a"');
+		});
+
+		it("closes one the input ended inside of, with what it held", () => {
+			expect(attribute("content:\"it's\\\"")).toBe("content:'it\\'s\"'");
+		});
+	});
+
 	it("re-quotes a string whose escapes the other quote would avoid", () => {
 		expect(min("a{content:'it\\'s'}")).toBe('a{content:"it\'s"}');
 		// Both quotes appear escaped, so switching saves nothing.

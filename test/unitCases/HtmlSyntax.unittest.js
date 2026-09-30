@@ -7276,7 +7276,7 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 				`<p style="content:'\\''; background: hwb(194 0% 0%)">x`
 			)
 		).toBe(
-			`<p style='content:"&#39;";background:#00c3ff;background:hwb(194 0% 0%)'>x`
+			`<p style="content:'\\'';background:#00c3ff;background:hwb(194 0% 0%)">x`
 		);
 	});
 
@@ -7297,7 +7297,7 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 
 	it("writes a list the same whichever references the source spelled", () => {
 		const plain = minifyLegacy(`<p style="content:'\\'';color:red">x`);
-		expect(plain).toBe(`<p style='content:"&#39;";color:red'>x`);
+		expect(plain).toBe(`<p style="content:'\\'';color:red">x`);
 		expect(
 			minifyLegacy(`<p style="content:&#39;\\&#39;&#39;;color:red">x`)
 		).toBe(plain);
