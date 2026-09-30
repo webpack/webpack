@@ -1,11 +1,12 @@
 "use strict";
 
-// cspell:ignore fnames, propmangle, fargs, domprops
+// cspell:ignore binop, fnames, propmangle, fargs, domprops
 
 const vm = require("vm");
 const {
 	FORMAT_DEFAULTS,
 	IGNORED_FORMAT_OPTIONS,
+	createCompressHelpers,
 	createUnicode,
 	estreeType,
 	load,
@@ -484,6 +485,143 @@ describe("syntax-printer", () => {
 		if (!("Deno" in globalThis)) {
 			expect(terser.phases).toEqual(expect.arrayContaining(declared));
 		}
+	});
+
+	it("should port every compress helper the phases read under terser's name", async () => {
+		const modules = await loadSources();
+		const helpers = createCompressHelpers(modules);
+		const printerSource = require("fs").readFileSync(
+			require.resolve("../../lib/javascript/syntax-printer"),
+			"utf8"
+		);
+		/** @type {Record<"common" | "inference" | "flags" | "utils", Set<string>>} */
+		const read = {
+			common: new Set(),
+			inference: new Set(),
+			flags: new Set(),
+			utils: new Set()
+		};
+		const destructured =
+			/const\s*\{([^}]*)\}\s*=\s*(?:modules\.)?(common|inference|flags|utils)\s*;/g;
+		let match;
+		while ((match = destructured.exec(printerSource)) !== null) {
+			for (const part of match[1].split(",")) {
+				const name = part.split(":")[0].trim();
+				if (name) read[/** @type {keyof typeof read} */ (match[2])].add(name);
+			}
+		}
+		// The lookbehind skips file names such as `compress/common.js`.
+		const accessed =
+			/(?<![\w/.`$-])(?:modules\.)?(common|inference|flags|utils)\.([A-Za-z_$][\w$]*)/g;
+		while ((match = accessed.exec(printerSource)) !== null) {
+			read[/** @type {keyof typeof read} */ (match[1])].add(match[2]);
+		}
+
+		for (const helper of /** @type {(keyof typeof read)[]} */ (
+			Object.keys(read)
+		)) {
+			const ported = Object.keys(helpers[helper]).sort();
+			expect(ported).toEqual([...read[helper]].sort());
+			for (const name of ported) {
+				expect(modules[helper]).toHaveProperty(name);
+				expect(typeof helpers[helper][name]).toBe(
+					typeof modules[helper][name]
+				);
+			}
+		}
+
+		expect(Object.keys(helpers.flags).sort()).toEqual(
+			Object.keys(modules.flags).sort()
+		);
+		for (const [name, value] of Object.entries(modules.flags)) {
+			if (typeof value === "number") expect(helpers.flags[name]).toBe(value);
+		}
+	});
+
+	it("should keep the quirks of terser's compress helpers", async () => {
+		const modules = await loadSources();
+		const { common, inference, flags, utils } =
+			createCompressHelpers(modules);
+		const { ast } = modules;
+
+		const words = ["b", "a"];
+		expect(utils.makePredicate(words)).toEqual(new Set(["a", "b"]));
+		expect(words).toEqual(["a", "b"]);
+		expect(utils.makePredicate("x y")).toEqual(
+			modules.utils.makePredicate("x y")
+		);
+		expect(common.identifier_atom).toEqual(modules.common.identifier_atom);
+		for (const name of ["bitwise_binop", "lazy_op", "unary_side_effects"]) {
+			expect(inference[name]).toEqual(modules.inference[name]);
+		}
+
+		for (const source of ["a\nb", "a\\\nb", "a\\\\\nb", "\0\r\u2028\u2029"]) {
+			expect(utils.regexp_source_fix(source)).toBe(
+				modules.utils.regexp_source_fix(source)
+			);
+		}
+		for (const source of ["^a+$", "(a+)+"]) {
+			expect(utils.regexp_is_safe(source)).toBe(
+				modules.utils.regexp_is_safe(source)
+			);
+		}
+
+		const node = new ast.AST_Number({ value: 1 });
+		node.flags = 0;
+		flags.set_flag(node, flags.TOP | flags.UNUSED);
+		flags.clear_flag(node, flags.UNUSED);
+		expect(flags.has_flag(node, flags.TOP)).toBe(flags.TOP);
+		expect(node.flags).toBe(modules.flags.TOP);
+
+		const list = [1, 2, 1, 3];
+		utils.remove(list, 1);
+		expect(list).toEqual([2, 3]);
+		expect(utils.member(2, list)).toBe(true);
+		expect(utils.return_false()).toBe(false);
+
+		// A splice from either side is spread by either `MAP`.
+		const nodes = [
+			new ast.AST_Number({ value: 1 }),
+			new ast.AST_Number({ value: 2 }),
+			new ast.AST_Number({ value: 3 })
+		];
+		const spliced = new ast.AST_Number({ value: 4 });
+		for (const [mine, theirs] of [
+			[utils, modules.utils],
+			[modules.utils, utils]
+		]) {
+			const walker = new ast.TreeTransformer((/** @type {EXPECTED_ANY} */ item) => {
+				if (item === nodes[0]) return theirs.MAP.skip;
+				if (item === nodes[1]) return theirs.MAP.splice([spliced, spliced]);
+				return item;
+			});
+			expect(mine.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
+		}
+
+		for (const value of [
+			"a",
+			0,
+			-0,
+			-1,
+			Number.NaN,
+			Infinity,
+			-Infinity,
+			true,
+			null,
+			undefined,
+			/a\n/g
+		]) {
+			expect(common.make_node_from_constant(value, node)).toEqual(
+				modules.common.make_node_from_constant(value, node)
+			);
+		}
+		expect(() => common.make_node_from_constant({}, node)).toThrow(
+			"Can't handle constant of type: object"
+		);
+		expect(() => common.make_sequence(node, [])).toThrow(
+			"trying to create a sequence with length zero!"
+		);
+		expect(common.make_sequence(node, [node])).toBe(node);
 	});
 
 	for (const [name, source, options] of CASES) {
@@ -1593,6 +1731,159 @@ describe("syntax-printer", () => {
 				flags: { SQUEEZED: 256 }
 			})
 		).toBe(false);
+	});
+
+	it("should look native objects up as terser's native-objects.js does", async () => {
+		const helpers =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "helpers")
+			);
+		const modules = await loadSources();
+		const reference = modules.nativeObjects;
+		expect(helpers.supports(modules)).toBe(true);
+		helpers.install(modules);
+		const own = modules.nativeObjects;
+		expect(own).not.toBe(reference);
+		expect(Object.keys(own).sort()).toEqual(Object.keys(reference).sort());
+		expect(own.pure_prop_access_globals).toEqual(
+			reference.pure_prop_access_globals
+		);
+
+		const data = require("../../lib/javascript/data").nativeObjectTables();
+		/** @type {Set<string>} */
+		const globalNames = new Set(["globalThis", "Reflect", "unknownGlobal"]);
+		/** @type {Set<string>} */
+		const memberNames = new Set(["unknownMember", "__proto__", "hasOwn"]);
+		/**
+		 * @param {(string | { name: string })[]} names a table's names
+		 * @param {Set<string>} into where to collect them
+		 */
+		const collect = (names, into) => {
+			for (const entry of names) {
+				into.add(typeof entry === "string" ? entry : entry.name);
+			}
+		};
+		collect(data.NATIVE_PURE_ACCESS_GLOBALS, globalNames);
+		collect(data.NATIVE_PURE_FUNCTIONS, globalNames);
+		for (const table of [
+			data.NATIVE_PURE_METHODS,
+			data.NATIVE_PURE_STATIC_FUNCTIONS,
+			data.NATIVE_PURE_STATIC_PROPERTIES
+		]) {
+			for (const globalName of Object.keys(table)) {
+				globalNames.add(globalName);
+				collect(table[globalName].names, memberNames);
+			}
+		}
+
+		for (const unsafe of [true, false, 0]) {
+			for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
+				/** @type {Record<string, unknown>} */
+				const options = { unsafe, builtins_ecma: ecma };
+				const compressor = {
+					/**
+					 * @param {string} key an option
+					 * @returns {unknown} its value
+					 */
+					option: (key) => options[key]
+				};
+				const label = `unsafe: ${unsafe}, builtins_ecma: ${ecma}`;
+				/** @type {string[]} */
+				const mismatches = [];
+				for (const name of /** @type {const} */ ([
+					"pure_access_globals",
+					"is_pure_native_fn"
+				])) {
+					const expected = reference[name](compressor);
+					const actual = own[name](compressor);
+					for (const globalName of globalNames) {
+						if (actual(globalName) !== expected(globalName)) {
+							mismatches.push(`${label} ${name}(${globalName})`);
+						}
+					}
+				}
+				for (const name of /** @type {const} */ ([
+					"is_pure_native_method",
+					"is_pure_native_static_fn",
+					"is_pure_native_static_property"
+				])) {
+					const expected = reference[name](compressor);
+					const actual = own[name](compressor);
+					for (const globalName of globalNames) {
+						for (const memberName of [...memberNames, 0]) {
+							if (
+								actual(globalName, memberName) !==
+								expected(globalName, memberName)
+							) {
+								mismatches.push(
+									`${label} ${name}(${globalName}, ${memberName})`
+								);
+							}
+						}
+					}
+				}
+				expect(mismatches).toEqual([]);
+			}
+		}
+	});
+
+	it("should find pure builtin calls as terser's native-objects.js does", async () => {
+		const helpers =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "helpers")
+			);
+		const modules = await loadSources();
+		const reference = modules.nativeObjects;
+		helpers.install(modules);
+		const own = modules.nativeObjects;
+		const toplevel = modules.parse.parse(
+			[
+				"var x = 3, list = [1];",
+				"Array(1); new Array(1); new Array(-1); new Array(1, 2); new Array(x);",
+				"new Set; new Set([]); new Set(x); new WeakMap([]); new Map(list);",
+				"new Float32Array(3); new Int8Array([]); new Uint8Array(-1);",
+				"new ArrayBuffer(x); BigInt(1); new BigInt(1); new AggregateError;",
+				"Math.abs(1); Math.nope(); String.fromCodePoint(1); Object.keys(x);",
+				"globalThis.Math.max(); globalThis.Map(); globalThis.String(1);",
+				"globalThis.a.b.c(); foo(); x(); x.y(); (0, Math.abs)(1); new Promise;",
+				"RegExp.escape(''); Error.isError(x); Array.of(1); a.Math.abs();"
+			].join("\n")
+		);
+		toplevel.figure_out_scope({});
+		/** @type {import("../../lib/javascript/syntax-printer").Node[]} */
+		const calls = [];
+		modules.ast.walk(
+			toplevel,
+			(/** @type {import("../../lib/javascript/syntax-printer").Node} */ node) => {
+				if (node instanceof modules.ast.AST_Call) calls.push(node);
+			}
+		);
+		expect(calls.length).toBeGreaterThan(30);
+		for (const unsafe of [true, false]) {
+			for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
+				const compressor = new modules.compress.Compressor(
+					{ unsafe, builtins_ecma: ecma },
+					{}
+				);
+				/** @type {boolean[]} */
+				const expected = calls.map((call) =>
+					reference.is_pure_builtin_call(compressor, call)
+				);
+				for (const name of [
+					"pure_access_globals",
+					"is_pure_native_fn",
+					"is_pure_native_method",
+					"is_pure_native_static_fn",
+					"is_pure_native_static_property"
+				]) {
+					compressor[name] = own[name](compressor);
+				}
+				expect(
+					calls.map((call) => own.is_pure_builtin_call(compressor, call))
+				).toEqual(expected);
+				expect(expected).toContain(true);
+			}
+		}
 	});
 
 	it("should decline a terser whose sizes it does not know", () => {

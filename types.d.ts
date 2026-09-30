@@ -4656,6 +4656,32 @@ declare class Compiler {
 	): void;
 }
 type ComponentValue = TokenSyntaxParserObject | FunctionNode | SimpleBlock;
+
+/**
+ * The exports of terser's `compress/common.js`, `inference.js`,
+ * `compressor-flags.js` and `utils/index.js` the phases read, ported.
+ */
+declare interface CompressHelpers {
+	/**
+	 * terser's `compress/common.js`
+	 */
+	common: Record<string, any>;
+
+	/**
+	 * the functions of terser's `compress/inference.js`
+	 */
+	inference: Record<string, any>;
+
+	/**
+	 * terser's `compress/compressor-flags.js`
+	 */
+	flags: Record<string, any>;
+
+	/**
+	 * terser's `utils/index.js`
+	 */
+	utils: Record<string, any>;
+}
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
 	getChildren(): Source[];
@@ -33195,6 +33221,9 @@ declare namespace exports {
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
 				export let IGNORED_FORMAT_OPTIONS: string[];
+				export let createCompressHelpers: (
+					modules: TerserModules
+				) => CompressHelpers;
 				export let createTerserTree: (
 					__0: TerserModules
 				) => (source: string, options: TreeOptions) => undefined | TerserNode;

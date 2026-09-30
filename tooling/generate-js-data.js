@@ -162,6 +162,316 @@ const collectUnicodeProperties = () => {
 	return tables;
 };
 
+// terser's `native-objects.js` tables: what each is called there, and the
+// constant it becomes here. `object_methods` is only ever expanded in place.
+const NATIVE_OBJECT_TABLES = new Map([
+	["pure_access_globals", "NATIVE_PURE_ACCESS_GLOBALS"],
+	["pure_prop_access_globals", "NATIVE_PURE_PROP_ACCESS_GLOBALS"],
+	["is_pure_native_fn", "NATIVE_PURE_FUNCTIONS"],
+	["is_pure_native_method", "NATIVE_PURE_METHODS"],
+	["is_pure_native_static_fn", "NATIVE_PURE_STATIC_FUNCTIONS"],
+	["is_pure_native_static_property", "NATIVE_PURE_STATIC_PROPERTIES"],
+	["arg1_is_iterable", "NATIVE_ARG1_IS_ITERABLE"],
+	["arg1_is_range_or_iterable", "NATIVE_ARG1_IS_RANGE_OR_ITERABLE"],
+	["lone_arg_is_range", "NATIVE_LONE_ARG_IS_RANGE"]
+]);
+
+/** @typedef {"sloppy" | number} NativeCondition */
+/** @typedef {string | { name: string, when: NativeCondition[] }} NativeName */
+/** @typedef {{ when?: NativeCondition[], names: NativeName[] }} NativeGroup */
+/** @typedef {NativeName[] | Record<string, NativeGroup>} NativeTable */
+/** @typedef {import("estree").Node} EstreeNode */
+
+/**
+ * @param {EstreeNode} node the node terser's source holds there
+ * @param {string} expected what the generator expected to find
+ * @returns {Error} the failure naming where terser's source moved
+ */
+const unexpectedNativeSyntax = (node, expected) =>
+	new Error(
+		`terser's native-objects.js holds a ${node.type} at offset ${
+			/** @type {EstreeNode & { start: number }} */ (node).start
+		} where this generator expects ${expected}`
+	);
+
+/**
+ * Split an `a && b && c` chain into its conditions and its final value, each
+ * condition read as `sloppy` or `es >= N` in the order terser evaluates them.
+ * @param {EstreeNode} node the element or property value
+ * @returns {{ when: NativeCondition[], value: EstreeNode }} the parts
+ */
+const splitNativeConditions = (node) => {
+	/** @type {EstreeNode[]} */
+	const operands = [];
+	/**
+	 * @param {EstreeNode} current a node of the chain
+	 * @returns {void}
+	 */
+	const flatten = (current) => {
+		if (current.type === "LogicalExpression" && current.operator === "&&") {
+			flatten(current.left);
+			flatten(current.right);
+		} else {
+			operands.push(current);
+		}
+	};
+	flatten(node);
+	const value = /** @type {EstreeNode} */ (operands.pop());
+	/** @type {NativeCondition[]} */
+	const when = operands.map((operand) => {
+		if (operand.type === "Identifier" && operand.name === "sloppy") {
+			return "sloppy";
+		}
+		if (
+			operand.type === "BinaryExpression" &&
+			operand.operator === ">=" &&
+			operand.left.type === "Identifier" &&
+			operand.left.name === "es" &&
+			operand.right.type === "Literal" &&
+			typeof operand.right.value === "number"
+		) {
+			return operand.right.value;
+		}
+		throw unexpectedNativeSyntax(operand, "`sloppy` or `es >= <number>`");
+	});
+	return { when, value };
+};
+
+/**
+ * @param {EstreeNode} node an array literal of names
+ * @param {Map<string, NativeName[]>} lists the plain lists declared so far
+ * @returns {NativeName[]} its names, each with its conditions
+ */
+const readNativeNames = (node, lists) => {
+	if (node.type !== "ArrayExpression") {
+		throw unexpectedNativeSyntax(node, "an array of names");
+	}
+	/** @type {NativeName[]} */
+	const names = [];
+	for (const element of node.elements) {
+		if (element === null) {
+			throw unexpectedNativeSyntax(node, "an array without holes");
+		}
+		if (element.type === "SpreadElement") {
+			names.push(...readNativeList(element.argument, lists));
+			continue;
+		}
+		const { when, value } = splitNativeConditions(element);
+		if (value.type !== "Literal" || typeof value.value !== "string") {
+			throw unexpectedNativeSyntax(value, "a string name");
+		}
+		names.push(when.length === 0 ? value.value : { name: value.value, when });
+	}
+	return names;
+};
+
+/**
+ * @param {EstreeNode} node an array literal, or a list declared earlier
+ * @param {Map<string, NativeName[]>} lists the plain lists declared so far
+ * @returns {NativeName[]} its names, a declared list expanded in place
+ */
+const readNativeList = (node, lists) => {
+	if (node.type === "Identifier") {
+		const list = lists.get(node.name);
+		if (list === undefined) {
+			throw unexpectedNativeSyntax(node, "a list declared above");
+		}
+		return [...list];
+	}
+	return readNativeNames(node, lists);
+};
+
+/**
+ * @param {EstreeNode} node what a `make_lookup` or `make_nested_lookup` receives
+ * @returns {EstreeNode} the value its arrow returns for `{ sloppy, es }`
+ */
+const readFeatureCallback = (node) => {
+	if (
+		node.type !== "ArrowFunctionExpression" ||
+		node.params.length !== 1 ||
+		node.params[0].type !== "ObjectPattern" ||
+		node.params[0].properties
+			.map((property) =>
+				property.type === "Property" && property.key.type === "Identifier"
+					? property.key.name
+					: ""
+			)
+			.join() !== "sloppy,es" ||
+		node.body.type === "BlockStatement"
+	) {
+		throw unexpectedNativeSyntax(node, "`({ sloppy, es }) => <table>`");
+	}
+	return node.body;
+};
+
+/**
+ * Read one table's initializer: a `make_lookup` list, a `make_nested_lookup`
+ * object of lists, a `new Set` of names or a plain list.
+ * @param {EstreeNode} init the declarator's initializer
+ * @param {Map<string, NativeName[]>} lists the plain lists declared so far
+ * @returns {NativeTable} the table
+ */
+const readNativeTable = (init, lists) => {
+	/**
+	 * @param {EstreeNode} node an array literal outside any `{ sloppy, es }`
+	 * @returns {string[]} its names, none of which can carry a condition
+	 */
+	const readPlainNames = (node) =>
+		readNativeNames(node, lists).map((entry) => {
+			if (typeof entry !== "string") {
+				throw unexpectedNativeSyntax(node, "names without conditions");
+			}
+			return entry;
+		});
+	if (init.type === "ArrayExpression") {
+		return readPlainNames(init);
+	}
+	if (
+		init.type === "NewExpression" &&
+		init.callee.type === "Identifier" &&
+		init.callee.name === "Set" &&
+		init.arguments.length === 1
+	) {
+		return readPlainNames(/** @type {EstreeNode} */ (init.arguments[0]));
+	}
+	if (
+		init.type === "CallExpression" &&
+		init.callee.type === "Identifier" &&
+		init.arguments.length === 1
+	) {
+		const body = readFeatureCallback(
+			/** @type {EstreeNode} */ (init.arguments[0])
+		);
+		if (init.callee.name === "make_lookup") {
+			return readNativeNames(body, lists);
+		}
+		if (init.callee.name === "make_nested_lookup") {
+			if (body.type !== "ObjectExpression") {
+				throw unexpectedNativeSyntax(body, "an object of lists");
+			}
+			/** @type {Record<string, NativeGroup>} */
+			const groups = {};
+			for (const property of body.properties) {
+				if (
+					property.type !== "Property" ||
+					property.computed ||
+					property.kind !== "init" ||
+					property.key.type !== "Identifier"
+				) {
+					throw unexpectedNativeSyntax(property, "`Name: <list>`");
+				}
+				const { when, value } = splitNativeConditions(property.value);
+				const names = readNativeList(value, lists);
+				groups[property.key.name] =
+					when.length === 0 ? { names } : { when, names };
+			}
+			return groups;
+		}
+	}
+	throw unexpectedNativeSyntax(init, "a table");
+};
+
+/**
+ * The tables terser's compressor reads to decide which globals, calls and
+ * properties are pure, parsed out of its `native-objects.js` source.
+ * @returns {Record<string, NativeTable>} each table by its constant here
+ */
+const collectNativeObjects = () => {
+	const source = fs.readFileSync(
+		path.join(
+			path.dirname(require.resolve("terser/package.json")),
+			"lib/compress/native-objects.js"
+		),
+		"utf8"
+	);
+	const program = acorn.parse(source, {
+		ecmaVersion: "latest",
+		sourceType: "module"
+	});
+	/** @type {Map<string, NativeName[]>} */
+	const lists = new Map();
+	/** @type {Record<string, NativeTable>} */
+	const tables = {};
+	for (const statement of /** @type {EstreeNode[]} */ (
+		/** @type {unknown} */ (program.body)
+	)) {
+		const declaration =
+			statement.type === "ExportNamedDeclaration"
+				? statement.declaration
+				: statement;
+		if (!declaration || declaration.type !== "VariableDeclaration") continue;
+		for (const declarator of declaration.declarations) {
+			if (declarator.id.type !== "Identifier" || !declarator.init) continue;
+			const name = declarator.id.name;
+			const init = declarator.init;
+			const isTable =
+				init.type === "ArrayExpression" ||
+				init.type === "NewExpression" ||
+				(init.type === "CallExpression" &&
+					init.callee.type === "Identifier" &&
+					/^make_(?:nested_)?lookup$/.test(init.callee.name));
+			if (!isTable) continue;
+			const table = readNativeTable(init, lists);
+			if (name === "object_methods" && Array.isArray(table)) {
+				lists.set(name, table);
+				continue;
+			}
+			const constant = NATIVE_OBJECT_TABLES.get(name);
+			if (constant === undefined) {
+				throw new Error(
+					`terser's native-objects.js declares a table \`${name}\` this generator does not know`
+				);
+			}
+			tables[constant] = table;
+		}
+	}
+	for (const [name, constant] of NATIVE_OBJECT_TABLES) {
+		if (!tables[constant]) {
+			throw new Error(
+				`terser's native-objects.js no longer declares \`${name}\``
+			);
+		}
+	}
+	return tables;
+};
+
+/**
+ * The native-object tables, as a section of the data module.
+ * @returns {string} its source
+ */
+const renderNativeObjects = () => {
+	const tables = collectNativeObjects();
+	const listType = '(string | { name: string, when: ("sloppy" | number)[] })[]';
+	const sections = Object.keys(tables).map((constant) => {
+		const table = tables[constant];
+		const type = !Array.isArray(table)
+			? `Record<string, { when?: ("sloppy" | number)[], names: ${listType} }>`
+			: table.every((entry) => typeof entry === "string")
+				? "string[]"
+				: listType;
+		return { constant, type, source: JSON.stringify(table) };
+	});
+	const properties = sections
+		.map(({ constant, type }) => ` * @property {${type}} ${constant}`)
+		.join("\n");
+	return `
+/**
+ * @typedef {object} NativeObjectTables
+${properties}
+ */
+
+// terser's native-object tables, each name with what terser gates it on, in its
+// order: "sloppy" is the \`unsafe\` option, a number N reads \`builtins_ecma >= N\`.
+// Built on call, so the parser, which loads this module too, allocates none.
+/**
+ * @returns {NativeObjectTables} the tables, fresh on each call
+ */
+const nativeObjectTables = () => ({
+${sections.map(({ constant, source }) => `\t${constant}: ${source}`).join(",\n")}
+});
+`;
+};
+
 /**
  * Render one encoded table as a module-scope constant.
  * @param {string} name the constant's name
@@ -171,7 +481,9 @@ const collectUnicodeProperties = () => {
  * @returns {string} the source for it
  */
 const renderTable = (name, description, ranges, base) =>
-	`// ${description}\n// Pairs of gap-since-the-previous-range and range-length, from ${`0x${base.toString(16)}`}.\n/** @type {number[]} */\nconst ${name} = [${ranges.join(",")}];\n`;
+	`// ${description}\n// Pairs of gap-since-the-previous-range and range-length, from ${`0x${base.toString(
+		16
+	)}`}.\n/** @type {number[]} */\nconst ${name} = [${ranges.join(",")}];\n`;
 
 /**
  * The header every generated module here opens with.
@@ -183,14 +495,17 @@ const renderHeader = () => `/*
 */
 
 // GENERATED by tooling/generate-js-data.js — do not edit.
-// Sources: acorn ${acorn.version}, terser ${require("terser/package.json").version}.
+// Sources: acorn ${acorn.version}, terser ${
+	require("terser/package.json").version
+}.
 
 "use strict";
 `;
 
 /**
  * Build the module the parser classifies with: the identifier ranges the
- * tokenizer reads, and the property names `\\p{...}` accepts.
+ * tokenizer reads, the property names `\\p{...}` accepts and the native
+ * objects the compressor knows to be pure.
  * @returns {string} its source
  */
 const renderData = () => {
@@ -233,7 +548,7 @@ ${renderTable(
 	narrow.part,
 	0
 )}
-${renderUnicodeProperties()}
+${renderUnicodeProperties()}${renderNativeObjects()}
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
@@ -245,6 +560,7 @@ module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
 module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
 module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
+module.exports.nativeObjectTables = nativeObjectTables;
 `;
 };
 
@@ -260,10 +576,16 @@ const renderUnicodeProperties = () => {
 const UNICODE_BINARY_PROPERTIES = ${JSON.stringify(properties.binary, null, 1)};
 
 /** @type {Record<string, string>} */
-const UNICODE_BINARY_PROPERTIES_OF_STRINGS = ${JSON.stringify(properties.binaryOfStrings, null, 1)};
+const UNICODE_BINARY_PROPERTIES_OF_STRINGS = ${JSON.stringify(
+		properties.binaryOfStrings,
+		null,
+		1
+	)};
 
 /** @type {string} */
-const UNICODE_GENERAL_CATEGORY_VALUES = ${JSON.stringify(properties.generalCategory)};
+const UNICODE_GENERAL_CATEGORY_VALUES = ${JSON.stringify(
+		properties.generalCategory
+	)};
 
 /** @type {Record<string, string>} */
 const UNICODE_SCRIPT_VALUES = ${JSON.stringify(properties.script, null, 1)};
@@ -320,5 +642,6 @@ if (require.main === module) {
 module.exports.DATA_TARGET = DATA_TARGET;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
+module.exports.collectNativeObjects = collectNativeObjects;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;
