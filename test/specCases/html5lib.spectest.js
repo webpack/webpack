@@ -9,8 +9,8 @@
 //    (Mirrors cssParsing-webpack.spectest.js; URL extraction is off so
 //    nothing needs to resolve — the point is no crash on malformed input.)
 // 2. "wpt tree-construction" — compares parseHtml's serialized tree to the
-//    expected one for every tree-construction case (only the scripting-enabled
-//    cases, which webpack does not run, are skipped).
+//    expected one for every tree-construction case, each under the scripting
+//    flag it names (a `scripted_` file, whose tree needs its script run, is not).
 // 3. "html5lib tokenizer" — compares the token stream `tokenize` reports to
 //    the expected one, for every tokenizer case in an initial state the public
 //    API can express (the rest are registered as skipped, with the reason).
@@ -312,12 +312,13 @@ const parseDat = (text) => {
 };
 
 /**
- * @param {{ data: string, fragment: string | null }} c case
+ * @param {{ data: string, fragment: string | null, scriptMode: string | null }} c case
  * @returns {string} serialized tree
  */
 const runTreeCase = (c) => {
 	const doc = parseHtml(c.data, 0, {
-		fragmentContext: c.fragment || undefined
+		fragmentContext: c.fragment || undefined,
+		scripting: c.scriptMode === "on"
 	});
 	// In fragment mode the result is the children of the synthesized root.
 	const first = A.firstChild(doc);
@@ -331,7 +332,7 @@ const hasTreeCorpus =
 const treeRuns = new Map();
 // Counted rather than dropped: a case the suite never compares is coverage
 // nothing reads, so the shape of what it declines is asserted below.
-const treeSkipped = { scripting: 0, withoutTree: 0 };
+const treeSkipped = { executesScript: 0, withoutTree: 0 };
 
 if (hasTreeCorpus) {
 	for (const file of fs
@@ -342,11 +343,10 @@ if (hasTreeCorpus) {
 		const runs = [];
 		const cases = parseDat(fs.readFileSync(path.join(treeDir, file), "utf8"));
 		for (const [index, c] of cases.entries()) {
-			// Scripting is disabled in webpack, so a case that needs it describes a
-			// document webpack never builds; one without an expected tree states
-			// nothing to compare to.
-			if (c.scriptMode === "on") {
-				treeSkipped.scripting++;
+			// A `scripted_` tree holds what its script did to the document, which a
+			// parser without a script engine cannot; one without a tree states nothing.
+			if (file.startsWith("scripted_")) {
+				treeSkipped.executesScript++;
 				continue;
 			}
 			if (c.document === null) {
@@ -369,7 +369,7 @@ describe("wpt tree-construction", () => {
 	}
 
 	it("compares every case that describes a document webpack can build", () => {
-		expect(treeSkipped).toEqual({ scripting: 14, withoutTree: 0 });
+		expect(treeSkipped).toEqual({ executesScript: 6, withoutTree: 0 });
 	});
 
 	for (const [file, runs] of treeRuns) {

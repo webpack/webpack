@@ -9105,15 +9105,29 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	});
 
 	describe("<noscript> content", () => {
-		it("re-escapes decoded text inside <noscript>", () => {
+		// A browser with scripting on reads it as raw text, so it is written back
+		// as the source spelled it, for either reader.
+		it("keeps the text inside <noscript> as written", () => {
 			expect(minify("<body><noscript>a &lt;b&gt; c</noscript>")).toBe(
-				"<body><noscript>a &lt;b> c</noscript></body>"
+				"<body><noscript>a &lt;b&gt; c</noscript></body>"
 			);
 		});
 
-		it("round-trips elements nested inside <noscript>", () => {
+		it("keeps the markup inside <noscript> as written", () => {
 			expect(minify('<noscript><link href="x"></noscript>')).toBe(
-				"<noscript><link href=x></noscript>"
+				'<noscript><link href="x"></noscript>'
+			);
+		});
+
+		it("keeps what a <noscript> in <head> holds inside it", () => {
+			// Read with scripting off, the `<img>` leaves the head for the body,
+			// where a reader with scripting on would load it too.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><img src=x.gif></noscript><title>t</title></head><p>hi"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><img src=x.gif></noscript><title>t</title></head><p>hi"
 			);
 		});
 	});
@@ -9647,6 +9661,23 @@ describe("tokenize — content modes, CDATA and NUL arcs", () => {
 		]);
 		// A context element with no content mode of its own stays in data.
 		expect(walk("<b>x</b>", { fragmentContext: "td" })).toEqual([
+			["open", "b"],
+			["text", "x"],
+			["close", "b"]
+		]);
+	});
+
+	it("seeds a `noscript` context from the scripting flag", () => {
+		expect(
+			walk("<b>x</b></noscript>", {
+				fragmentContext: "noscript",
+				scripting: true
+			})
+		).toEqual([
+			["text", "<b>x</b>"],
+			["close", "noscript"]
+		]);
+		expect(walk("<b>x</b>", { fragmentContext: "noscript" })).toEqual([
 			["open", "b"],
 			["text", "x"],
 			["close", "b"]

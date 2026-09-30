@@ -1356,8 +1356,17 @@ const PARSER_TABLES = [
 	[
 		"LITERAL_TEXT_PARENTS",
 		"set",
-		"Elements whose text children serialize literally, no escaping. `textarea` / `title` are escapable, so they are not here.",
-		["script", "style", "xmp", "iframe", "noembed", "noframes", "plaintext"]
+		"Elements whose text children serialize literally, no escaping. `textarea` / `title` are escapable, so they are not here. `noscript` holds text only as a printed document is parsed, with scripting on.",
+		[
+			"script",
+			"style",
+			"xmp",
+			"iframe",
+			"noembed",
+			"noframes",
+			"noscript",
+			"plaintext"
+		]
 	],
 	[
 		"TRANSPARENT_IMPLIED_ELEMENTS",

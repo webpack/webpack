@@ -11237,6 +11237,11 @@ declare interface HtmlParseOptions {
 	 * node kinds to omit from the AST (see `HtmlAstSkip`); omit to build the full tree
 	 */
 	skip?: HtmlAstSkip;
+
+	/**
+	 * parse as a browser with scripting on does, where a `noscript` holds raw text; off by default, so what it holds is read as markup
+	 */
+	scripting?: boolean;
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
@@ -11694,6 +11699,11 @@ declare interface HtmlTokenCallbacks {
 	 * context element tag name for fragment parsing; seeds the initial content mode
 	 */
 	fragmentContext?: string;
+
+	/**
+	 * read a `noscript` as raw text, as a document with scripting on does
+	 */
+	scripting?: boolean;
 }
 declare interface HtmlTransformHtmlContext {
 	outputName: string;
