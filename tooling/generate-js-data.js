@@ -449,14 +449,27 @@ const renderNativeObjects = () => {
 			: table.every((entry) => typeof entry === "string")
 				? "string[]"
 				: listType;
-		return `/** @type {${type}} */\nconst ${constant} = ${JSON.stringify(
-			table
-		)};\n`;
+		return { constant, type, source: JSON.stringify(table) };
 	});
+	const properties = sections
+		.map(({ constant, type }) => ` * @property {${type}} ${constant}`)
+		.join("\n");
 	return `
+/**
+ * @typedef {object} NativeObjectTables
+${properties}
+ */
+
 // terser's native-object tables, each name with what terser gates it on, in its
 // order: "sloppy" is the \`unsafe\` option, a number N reads \`builtins_ecma >= N\`.
-${sections.join("\n")}`;
+// Built on call, so the parser, which loads this module too, allocates none.
+/**
+ * @returns {NativeObjectTables} the tables, fresh on each call
+ */
+const nativeObjectTables = () => ({
+${sections.map(({ constant, source }) => `\t${constant}: ${source}`).join(",\n")}
+});
+`;
 };
 
 /**
@@ -498,10 +511,6 @@ const renderHeader = () => `/*
 const renderData = () => {
 	const tables = collectIdentifierTables();
 	const narrow = collectNarrowIdentifierTables();
-	const nativeExports = [...NATIVE_OBJECT_TABLES.values()]
-		.sort()
-		.map((constant) => `module.exports.${constant} = ${constant};\n`)
-		.join("");
 	return `${renderHeader()}
 ${renderTable(
 	"IDENTIFIER_START_RANGES",
@@ -546,11 +555,12 @@ module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
 module.exports.IDENTIFIER_START_RANGES = IDENTIFIER_START_RANGES;
 module.exports.NARROW_IDENTIFIER_PART_RANGES = NARROW_IDENTIFIER_PART_RANGES;
 module.exports.NARROW_IDENTIFIER_START_RANGES = NARROW_IDENTIFIER_START_RANGES;
-${nativeExports}module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
+module.exports.UNICODE_BINARY_PROPERTIES = UNICODE_BINARY_PROPERTIES;
 module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
 module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
 module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
+module.exports.nativeObjectTables = nativeObjectTables;
 `;
 };
 

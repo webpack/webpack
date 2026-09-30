@@ -1749,7 +1749,7 @@ describe("syntax-printer", () => {
 			reference.pure_prop_access_globals
 		);
 
-		const data = require("../../lib/javascript/data");
+		const data = require("../../lib/javascript/data").nativeObjectTables();
 		/** @type {Set<string>} */
 		const globalNames = new Set(["globalThis", "Reflect", "unknownGlobal"]);
 		/** @type {Set<string>} */
