@@ -96,14 +96,40 @@ const evaluateDeep = async (page, fn, arg) =>
 		)
 	);
 
+// No script runs in a frame and nothing reaches the network, so a page renders
+// the same every time it is loaded; eval is for the suite's own page functions.
+const PAGE_POLICY =
+	"default-src 'none'; script-src 'unsafe-eval'; style-src 'unsafe-inline' data:; img-src data:; font-src data:; media-src data:";
+const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${PAGE_POLICY}"></head><body></body></html>`;
+
+// What no width reaches, set by media emulation where the engine offers it;
+// each runs only over the pairs whose text names it.
+/** @type {{ label: string, named: RegExp, apply: (page: import("puppeteer-core").Page, on: boolean) => Promise<void> }[]} */
+const EMULATIONS = EMULATES_MEDIA
+	? [
+			{
+				label: "dark",
+				named: /prefers-color-scheme/i,
+				apply: (page, on) =>
+					page.emulateMediaFeatures(
+						on ? [{ name: "prefers-color-scheme", value: "dark" }] : []
+					)
+			},
+			{
+				label: "print",
+				named: /@media[^{]*\bprint\b/i,
+				apply: (page, on) => page.emulateMediaType(on ? "print" : undefined)
+			}
+		]
+	: [];
+
 const {
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
-	compareCascades,
+	cascadeLines,
 	compareRenders,
-	compareRules,
-	conditionSignatures,
+	compareStyles,
 	installHelpers,
 	numericallyEqual
 } = require("../helpers/syntaxEquivalence");
@@ -118,7 +144,50 @@ const {
 	readDocument
 } = require("../helpers/wptCorpus");
 
-/** @import { Fixture, PageHelpers } from "../helpers/syntaxEquivalence" */
+/** @import { Fixture, PageHelpers, StylePair } from "../helpers/syntaxEquivalence" */
+
+/**
+ * Every pair whose stylesheets style some element differently, on a page with
+ * the helpers installed — at the default media, then under each emulation.
+ * @param {import("puppeteer-core").Page} page the page
+ * @param {StylePair[]} pairs the pairs
+ * @param {string[]=} types element types every pair nests in each other
+ * @returns {Promise<{ name: string, why: string }[]>} what moved, per pair
+ */
+const styleDifferences = async (page, pairs, types = []) => {
+	/** @type {{ name: string, why: string }[]} */
+	const out = [];
+	for (const emulation of [undefined, ...EMULATIONS]) {
+		const chosen =
+			emulation === undefined
+				? pairs
+				: pairs.filter(
+						(pair) =>
+							emulation.named.test(pair.before) ||
+							emulation.named.test(pair.after)
+					);
+		if (chosen.length === 0) continue;
+		if (emulation !== undefined) await emulation.apply(page, true);
+		for (let at = 0; at < chosen.length; at += 20) {
+			const reports = await evaluateDeep(page, compareStyles, {
+				pairs: chosen.slice(at, at + 20),
+				types
+			});
+			for (const report of reports) {
+				const lines = cascadeLines(report);
+				if (lines.length === 0 || out.some((one) => one.name === report.name)) {
+					continue;
+				}
+				out.push({
+					name: report.name,
+					why: `${emulation === undefined ? "" : `${emulation.label} `}${lines.join("; ")}`
+				});
+			}
+		}
+		if (emulation !== undefined) await emulation.apply(page, false);
+	}
+	return out;
+};
 
 const CONFIG_CASES = path.join(__dirname, "../configCases");
 // How many documents go to the page at once — the wpt corpus is far larger than
@@ -432,6 +501,39 @@ const buildCorpora = () => {
 
 const corpora = buildCorpora();
 
+// Pairs named `bad …` style some element differently and must be reported;
+// `good …` only respell, and must not be.
+/** @type {Map<string, [string, string]>} */
+const STYLE_CONTROLS = new Map([
+	["bad dropped rule", [".a{color:red}.b{color:blue}", ".a{color:red}"]],
+	["bad reordered cascade", [".a{color:red}.b{color:blue}", ".b{color:blue}.a{color:red}"]],
+	["bad state", [".a:hover{color:red}", ".a:hover{color:blue}"]],
+	["bad media threshold", ["@media (min-width:500px){.a{color:red}}", "@media (min-width:501px){.a{color:red}}"]],
+	["bad container threshold", ["@container (min-width:300px){.a{color:red}}", "@container (min-width:301px){.a{color:red}}"]],
+	["bad keyframes", ["@keyframes k{from{opacity:0}}.a{animation:k 1s}", "@keyframes k{from{opacity:.5}}.a{animation:k 1s}"]],
+	["bad font face", ["@font-face{font-family:x;src:url(a.woff)}", "@font-face{font-family:x;src:url(b.woff)}"]],
+	["bad layer order", ["@layer a,b;@layer a{.a{color:red}}@layer b{.a{color:blue}}", "@layer b,a;@layer a{.a{color:red}}@layer b{.a{color:blue}}"]],
+	["bad nested", [".a{& .b{color:red}}", ".a{& .b{color:blue}}"]],
+	["bad custom property", [":root{--x:1px}.a{margin:var(--x)}", ":root{--x:2px}.a{margin:var(--x)}"]],
+	["bad pseudo-element", [".a::before{content:'x'}", ".a::before{content:'y'}"]],
+	// A `)` inside a quoted `url()` belongs to the address, not to a color.
+	["bad quoted url body", ['.a{--u:url("assets/)#fff")}', '.a{--u:url("assets/)#ffffff")}']],
+	// A private-use character is a value's own, not a space the printer may write.
+	["bad private use", [".a{--x:a\uE000b}", ".a{--x:a b}"]],
+	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
+	// CSS Syntax 4.3.6: recovery ends a bad url at the next `)`.
+	["good bad url", ['.a{--u:url(foo")#fff)}', '.a{--u:url(foo")#ffffff)}']],
+	// CSS Syntax 4.2: U+00A0 is no whitespace, so the quote after it ends a bad url.
+	["good url after a non-breaking space", ['.a{--u:url(\u00A0"foo)#fff")}', '.a{--u:url(\u00A0"foo)#ffffff")}']],
+	["good color against a name", [".a{--s:oklch(0% 0 0) calc(1px)}", ".a{--s:oklch(0% 0 0)calc(1px)}"]],
+	["good color against a non-ascii name", [".a{--s:oklch(0% 0 0) \u00E9}", ".a{--s:oklch(0% 0 0)\u00E9}"]],
+	// CSS Cascade 4 §6.2: a later normal declaration loses to an important one.
+	["good important then normal", [".a{--x:red!important}.a{--x:blue}", ".a{--x:red!important}"]],
+	["good normal then normal", [".a{--y:red}.a{--y:blue}", ".a{--y:blue}"]],
+	["good colors inside a value", [".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}", ".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"]],
+	["good blocks under one layer statement", ["@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}", "@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"]]
+]);
+
 /**
  * Run `evaluate` over `items` in batches the page can hold.
  * @template TIn
@@ -474,9 +576,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	/** @returns {Promise<import("puppeteer-core").Page>} a page with the helpers */
 	const freshPage = async () => {
 		const opened = await browser.newPage();
-		await opened.setContent(
-			"<!doctype html><html><head></head><body></body></html>"
-		);
+		await opened.setContent(POLICED_PAGE);
 		await opened.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
 		return opened;
 	};
@@ -518,12 +618,9 @@ describe(`printer output in real ${ENGINE}`, () => {
 
 	/**
 	 * Every page in `cases`, compared as the engine builds it: the facets it
-	 * reports, and the CSSOM of every stylesheet it carries. Batched — and the
-	 * conditions are sampled per batch, since sampling every length named
-	 * anywhere in the corpus against every condition in it grows with the
-	 * product of the two.
+	 * reports, and what each stylesheet it carries styles.
 	 * @param {Fixture[]} cases the corpus
-	 * @param {boolean} withStyles whether to compare the CSSOM too
+	 * @param {boolean} withStyles whether to compare the stylesheets too
 	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per page
 	 */
 	const comparePages = async (cases, withStyles) => {
@@ -532,6 +629,8 @@ describe(`printer output in real ${ENGINE}`, () => {
 		const active = await pageFor(cases.length * 2);
 		/** @type {{ name: string, why: string }[]} */
 		const differences = [];
+		/** @type {StylePair[]} */
+		const sheets = [];
 		for (let at = 0; at < cases.length; at += BATCH) {
 			const collected = await evaluateDeep(
 				active,
@@ -546,13 +645,6 @@ describe(`printer output in real ${ENGINE}`, () => {
 					}));
 				},
 				cases.slice(at, at + BATCH)
-			);
-			const signatures = await conditionSignatures(
-				active,
-				collected.flatMap((each) => [
-					...each.before.styles,
-					...each.after.styles
-				])
 			);
 			for (const { name, before, after } of collected) {
 				let why = "";
@@ -589,64 +681,34 @@ describe(`printer output in real ${ENGINE}`, () => {
 						break;
 					}
 				}
-				if (withStyles) {
-					if (why === "" && before.styles.length !== after.styles.length) {
+				if (why === "" && withStyles) {
+					if (before.styles.length === after.styles.length) {
+						for (const [i, sheet] of before.styles.entries()) {
+							if (sheet !== after.styles[i]) {
+								sheets.push({ name, before: sheet, after: after.styles[i] });
+							}
+						}
+					} else {
 						why = `styles: ${before.styles.length} vs ${after.styles.length}`;
-					}
-					for (let i = 0; why === "" && i < before.styles.length; i++) {
-						const reason = compareRules(
-							before.styles[i],
-							after.styles[i],
-							signatures
-						);
-						if (reason !== "") why = `style ${i}: ${reason}`;
 					}
 				}
 				if (why !== "") differences.push({ name, why });
 			}
 		}
+		differences.push(...(await styleDifferences(active, sheets)));
 		return differences;
 	};
 
 	/**
-	 * Every stylesheet in `cases`, compared as the engine parses it.
+	 * Every stylesheet in `cases`, compared by what it styles.
 	 * @param {Fixture[]} cases the corpus
 	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per sheet
 	 */
-	const compareStylesheets = async (cases) => {
-		const active = await pageFor(cases.length * 2);
-		const collected = await inBatches(active, cases, (batch) =>
-			evaluateDeep(
-				active,
-				(sheets) => {
-					const { cssRules } = /** @type {{ __eq: PageHelpers }} */ (
-						/** @type {unknown} */ (window)
-					).__eq;
-					return sheets.map((each) => ({
-						name: each.name,
-						before: cssRules(each.raw),
-						after: cssRules(each.min)
-					}));
-				},
-				batch
-			)
+	const compareStylesheets = async (cases) =>
+		styleDifferences(
+			await pageFor(cases.length * 2),
+			cases.map(({ name, raw, min }) => ({ name, before: raw, after: min }))
 		);
-		const signatures = await conditionSignatures(
-			active,
-			collected.flatMap((each) => [each.before || [], each.after || []])
-		);
-		/** @type {{ name: string, why: string }[]} */
-		const differences = [];
-		for (const { name, before, after } of collected) {
-			if (before === null || after === null) {
-				differences.push({ name, why: "stylesheet did not parse" });
-				continue;
-			}
-			const why = compareRules(before, after, signatures);
-			if (why !== "") differences.push({ name, why });
-		}
-		return differences;
-	};
 
 	/**
 	 * What a fixture is expected to differ on: the file itself when a defect is
@@ -765,148 +827,6 @@ describe(`printer output in real ${ENGINE}`, () => {
 				FILE_TIMEOUT
 			);
 
-			// A `)` inside a quoted `url()` belongs to the address; one met after an
-			// illegal quote ends the bad url, and the rest is a color again.
-			it(
-				"reads no color out of a quoted url() body",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "quoted-url-fragment",
-							raw: '.a{--u:url("assets/)#fff")}',
-							min: '.a{--u:url("assets/)#ffffff")}'
-						}
-					]);
-					expect(differences).toEqual([
-						{
-							name: "quoted-url-fragment",
-							why: 'rule 0:  .a { --u:url("assets/)#fff") } vs  .a { --u:url("assets/)#ffffff") }'
-						}
-					]);
-				},
-				FILE_TIMEOUT
-			);
-
-			// CSS Syntax 4.3.6: the quote is a parse error, and recovery ends the url
-			// at the next `)`, so the hex after it is read as the color it is.
-			it(
-				"ends a bad url() at the paren its recovery reaches",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "bad-url-fragment",
-							raw: '.a{--u:url(foo")#fff)}',
-							min: '.a{--u:url(foo")#ffffff)}'
-						}
-					]);
-					expect(differences).toEqual([]);
-				},
-				FILE_TIMEOUT
-			);
-
-			// CSS Syntax 4.2 counts five code points as whitespace, and U+00A0 is not
-			// one: it opens no quoted body, so the quote after it ends a bad url.
-			it(
-				"skips no non-breaking space before a url() body",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "nbsp-url-fragment",
-							raw: '.a{--u:url(\u00A0"foo)#fff")}',
-							min: '.a{--u:url(\u00A0"foo)#ffffff")}'
-						}
-					]);
-					expect(differences).toEqual([]);
-				},
-				FILE_TIMEOUT
-			);
-
-			// A pixel ends in a channel, so the pixel a color paints has to be parted
-			// from a name code point after it, which the `)` it replaced parted.
-			it(
-				"parts a painted color from the token written against it",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "color-then-name-token",
-							raw: ".a{--s:oklch(0% 0 0) calc(1px)}",
-							min: ".a{--s:oklch(0% 0 0)calc(1px)}"
-						},
-						{
-							name: "color-then-non-ascii-name",
-							raw: ".a{--s:oklch(0% 0 0) \u00E9}",
-							min: ".a{--s:oklch(0% 0 0)\u00E9}"
-						}
-					]);
-					expect(differences).toEqual([]);
-				},
-				FILE_TIMEOUT
-			);
-
-			// CSS Cascade 4 §6.2: a normal declaration written after an important one
-			// does not override it, so the later block is the dead one.
-			it(
-				"reads a repeated selector's importance as the cascade does",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "important-then-normal",
-							raw: ".a{--x:red!important}.a{--x:blue}",
-							min: ".a{--x:red!important}"
-						},
-						{
-							name: "normal-then-normal",
-							raw: ".a{--y:red}.a{--y:blue}",
-							min: ".a{--y:blue}"
-						}
-					]);
-					expect(differences).toEqual([]);
-				},
-				FILE_TIMEOUT
-			);
-
-			// WHY: the whitespace a math operator needs is carried under a marker
-			// across the rule that drops a delimiter's, and a marker a value can
-			// spell is one this tier reads two values as one through. U+0000 is the
-			// one no value holds: CSS Syntax §3.3 names U+FFFD for the null a source
-			// spells and §4.3.7 for the null an escape names.
-			it(
-				"reads a value's own private-use character as no space of its own",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "private-use-is-not-a-space",
-							raw: ".a{--x:a\uE000b}",
-							min: ".a{--x:a b}"
-						}
-					]);
-					expect(differences).toEqual([
-						{
-							name: "private-use-is-not-a-space",
-							why: "rule 0:  .a { --x:a\uE000b } vs  .a { --x:a b }"
-						}
-					]);
-				},
-				FILE_TIMEOUT
-			);
-
-			// A value that is not itself a color still carries them, and the computed
-			// value keeps the space each was written in.
-			it(
-				"paints the colors a computed value carries",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "shadow-color-space",
-							raw: ".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}",
-							min: ".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"
-						}
-					]);
-					expect(differences).toEqual([]);
-				},
-				FILE_TIMEOUT
-			);
-
 			// `/*` inside an unquoted `url()` is the address, so a fixture whose url
 			// spells one out is naming no option.
 			it("reads no cssom note out of a url() body", () => {
@@ -919,24 +839,6 @@ describe(`printer output in real ${ENGINE}`, () => {
 					cssomDirective("/* cssom: rewriteCustomProperties */a{color:red}")
 				).toEqual(["rewriteCustomProperties"]);
 			});
-
-			// The rules are read layer by layer, and an `@layer` statement is what
-			// fixes those layers' order — so the same blocks written the other way
-			// round under one are the same sheet, wherever each block stands.
-			it(
-				"should read blocks under one layer statement in its order",
-				async () => {
-					const differences = await compareStylesheets([
-						{
-							name: "layer-statement",
-							raw: "@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}",
-							min: "@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"
-						}
-					]);
-					expect(differences).toEqual([]);
-				},
-				FILE_TIMEOUT
-			);
 
 			// A defect filed against a file no longer in the corpus is one nothing
 			// would report, since the test that carried it is gone with the file.
@@ -954,6 +856,34 @@ describe(`printer output in real ${ENGINE}`, () => {
 	// Which corpora were built depends on what is checked out, so each names
 	// itself, and one that could not be built says so rather than going quiet.
 	for (const at of corpora.keys()) describeCorpus(at);
+
+	// What the comparison has to tell apart, and what it has to leave alone.
+	it(
+		"should report every pair that styles an element differently, and only those",
+		async () => {
+			const differences = await compareStylesheets(
+				[...STYLE_CONTROLS].map(([name, [raw, min]]) => ({ name, raw, min }))
+			);
+			expect(differences.map((each) => each.name).sort()).toEqual(
+				[...STYLE_CONTROLS.keys()].filter((name) => name.startsWith("bad ")).sort()
+			);
+		},
+		FILE_TIMEOUT
+	);
+
+	// A reading that moves between two runs over one sheet would be reported as
+	// a printer defect, so every sheet has to read the same against itself.
+	it(
+		"should read every configCases stylesheet the same against itself",
+		async () => {
+			const differences = await compareStylesheets(
+				buildCorpus(CONFIG_CASES, ".css", (source) => source)
+			);
+			expect(differences).toEqual([]);
+		},
+		1800000
+	);
+
 	for (const [label, why] of [
 		["wpt", NO_CORPUS],
 		["benchmark corpus", NO_BENCHMARK_CORPUS]
@@ -2472,11 +2402,6 @@ const MERGE_DECLARATIONS = [
 // Stylesheets the merge changes, drawn until there are this many; about half of
 // those drawn are, and the page compares a hundred in a few seconds.
 const MERGE_SAMPLES = 1500;
-// A real stylesheet's media queries hold at one width or the other.
-const MERGE_CONDITIONS = [
-	{ width: 360, scheme: "light" },
-	{ width: 1400, scheme: "dark" }
-];
 
 /**
  * A stylesheet drawn from the seeded sequence: rules repeating a few blocks
@@ -2550,7 +2475,7 @@ const mergeSheet = (random) => {
  * A stylesheet minified with and without `mergeDistantRules`, where the two differ.
  * @param {string} name what to call it
  * @param {string} source the stylesheet
- * @returns {import("../helpers/syntaxEquivalence").CascadePair | null} both prints, or null where the merge changed nothing
+ * @returns {StylePair | null} both prints, or null where the merge changed nothing
  */
 const mergePair = (name, source) => {
 	/**
@@ -2584,9 +2509,8 @@ describe("a distant merge keeps every element's cascade", () => {
 			protocolTimeout: FILE_TIMEOUT
 		});
 		page = await browser.newPage();
-		await page.setContent(
-			"<!doctype html><html><head></head><body></body></html>"
-		);
+		await page.setContent(POLICED_PAGE);
+		await page.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
@@ -2595,36 +2519,11 @@ describe("a distant merge keeps every element's cascade", () => {
 	});
 
 	/**
-	 * Every element each pair styles differently, under one viewport and scheme.
-	 * @param {import("../helpers/syntaxEquivalence").CascadePair[]} pairs the pairs
-	 * @param {string[]} types element types every pair nests in each other
-	 * @param {{ width: number, scheme: string }} condition the viewport and scheme
-	 * @returns {Promise<string[]>} one line per element that differs
+	 * @param {StylePair[]} pairs the pairs
+	 * @param {string[]=} types element types every pair nests in each other
+	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per pair
 	 */
-	const differing = async (pairs, types, condition) => {
-		await page.setViewport({ width: condition.width, height: 800 });
-		// An engine with no media emulation keeps its own scheme, so there the
-		// condition varies the width alone.
-		if (EMULATES_MEDIA) {
-			await page.emulateMediaFeatures([
-				{ name: "prefers-color-scheme", value: condition.scheme }
-			]);
-		}
-		/** @type {string[]} */
-		const out = [];
-		for (let at = 0; at < pairs.length; at += 100) {
-			const reports = await evaluateDeep(page, compareCascades, {
-				pairs: pairs.slice(at, at + 100),
-				types
-			});
-			for (const report of reports) {
-				for (const difference of report.differences) {
-					out.push(`${report.name}: ${difference}`);
-				}
-			}
-		}
-		return out;
-	};
+	const differing = (pairs, types) => styleDifferences(page, pairs, types);
 
 	it(
 		"over a seeded corpus of rules repeating blocks",
@@ -2634,16 +2533,14 @@ describe("a distant merge keeps every element's cascade", () => {
 				seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
 				return seed / 2147483648;
 			};
-			/** @type {import("../helpers/syntaxEquivalence").CascadePair[]} */
+			/** @type {StylePair[]} */
 			const pairs = [];
 			for (let drawn = 0; pairs.length < MERGE_SAMPLES; drawn++) {
 				const source = mergeSheet(random);
 				const pair = mergePair(`sheet ${drawn}: ${source}`, source);
 				if (pair !== null) pairs.push(pair);
 			}
-			expect(
-				await differing(pairs, MERGE_TYPES, MERGE_CONDITIONS[0])
-			).toEqual([]);
+			expect(await differing(pairs, MERGE_TYPES)).toEqual([]);
 		},
 		FILE_TIMEOUT
 	);
@@ -2651,7 +2548,7 @@ describe("a distant merge keeps every element's cascade", () => {
 	it(
 		"over every configCases stylesheet the merge changes",
 		async () => {
-			/** @type {import("../helpers/syntaxEquivalence").CascadePair[]} */
+			/** @type {StylePair[]} */
 			const pairs = [];
 			for (const fixture of buildCorpus(CONFIG_CASES, ".css", (source) => source)) {
 				const pair = mergePair(fixture.name, fixture.raw);
@@ -2659,9 +2556,7 @@ describe("a distant merge keeps every element's cascade", () => {
 			}
 			// The merge has to have happened somewhere, or this proves nothing.
 			expect(pairs.length).toBeGreaterThan(0);
-			for (const condition of MERGE_CONDITIONS) {
-				expect(await differing(pairs, [], condition)).toEqual([]);
-			}
+			expect(await differing(pairs)).toEqual([]);
 		},
 		FILE_TIMEOUT
 	);
@@ -2678,19 +2573,13 @@ describe("a distant merge keeps every element's cascade", () => {
 			async () => {
 				const pair = mergePair(fixture.name, fixture.raw);
 				if (pair === null) return;
-				for (const condition of MERGE_CONDITIONS) {
-					expect(await differing([pair], [], condition)).toEqual([]);
-				}
+				expect(await differing([pair])).toEqual([]);
 			},
 			FILE_TIMEOUT
 		);
 	}
 });
 
-// No script runs in the frame and nothing reaches the network, so a page renders
-// the same every time it is loaded; eval is for the suite's own page functions.
-const RENDER_POLICY =
-	"default-src 'none'; script-src 'unsafe-eval'; style-src 'unsafe-inline' data:; img-src data:; font-src data:; media-src data:";
 // A narrow viewport and a wide one, since media queries switch between them.
 const RENDER_WIDTHS = [360, 1400];
 
@@ -2706,9 +2595,8 @@ describe("a minified page renders as the page it came from", () => {
 			protocolTimeout: FILE_TIMEOUT
 		});
 		page = await browser.newPage();
-		await page.setContent(
-			`<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${RENDER_POLICY}"></head><body></body></html>`
-		);
+		await page.setContent(POLICED_PAGE);
+		await page.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {

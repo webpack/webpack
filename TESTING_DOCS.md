@@ -199,10 +199,13 @@ through playwright, which is what reaches it, under a shim in
 call. Fetch the browser first — `yarn setup:firefox`, `yarn setup:webkit` —
 which installs into puppeteer's own cache (`PUPPETEER_CACHE_DIR`, defaulting to
 `~/.cache/puppeteer`) or playwright's; `FIREFOX_EXECUTABLE_PATH` and
-`WEBKIT_EXECUTABLE_PATH` point at one already on the machine. Only Chromium
-answers the media-emulation calls, so elsewhere a condition carries what no
-viewport varies as text. A defect only one engine has is filed against it with a
-reason opening `<engine> only:` rather than tolerated in all three.
+`WEBKIT_EXECUTABLE_PATH` point at one already on the machine. It compares
+effects, never CSSOM text: a stylesheet by the styles elements built from its
+selectors compute, at the widths its queries switch on; a page by its DOM and
+its render. Only Chromium answers the media-emulation calls, so only there is a
+stylesheet naming a color scheme or print also read under it. A defect only one
+engine has is filed against it with a reason opening `<engine> only:` rather
+than tolerated in all three.
 
 They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
 in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails
