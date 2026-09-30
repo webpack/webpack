@@ -1,12 +1,16 @@
 "use strict";
 
-// cspell:ignore fnames, propmangle, fargs
+// cspell:ignore fnames, propmangle, fargs, domprops
 
 const vm = require("vm");
 const {
 	FORMAT_DEFAULTS,
+	IGNORED_FORMAT_OPTIONS,
+	createUnicode,
+	estreeType,
 	load,
 	loadSources,
+	markEstreeTypes,
 	PHASES
 } = require("../../lib/javascript/syntax").printer;
 
@@ -397,6 +401,75 @@ const OUTPUT_CASES = [
 	]
 ];
 
+/**
+ * Every node terser sizes in a script, `with` included, which a module forbids.
+ */
+const SIZED_SCRIPT = `"a directive"; debugger; {} ;
+label: for (;;) { break label; }
+outer: do { continue outer; } while (a);
+while (b) break;
+for (var i in o) c();
+for (const v of w) d();
+with (o) e;
+switch (x) { case 1: f(); break; default: g(); }
+try { h(); } catch { } try { h(); } catch (error) { } finally { k(); }
+if (a) b(); else c();
+throw new Error("x", 1);
+var [p, ...q] = r, { s, t: [u] } = v;
+let fn = (a, b = 1, ...c) => a, one = x => x * 2, block = async () => { return await 1; };
+const tpl = tag\`a\${b}c\${d}\`, re = /x+/gi, str = 'q"', num = 1.5e3, big = 12n;
+x = [1, , 3], y = { a, b: 1, [c]: 2, get d() { return 1; }, set d(v) {}, e() {}, async *f() { yield 1; }, "g h": 1, 1: 2 };
+({ a } = y);
+z = null + NaN + undefined + Infinity + true + false + void 0 + typeof a + -a + !b + ~c + 0.5 + (a + +b) + (a - -b) + a?.b + a?.[b] + a?.(b) + a.b + a[b] + (a, b) + (a ? b : c) + (a || b) + (a ?? b) + a ** b;
+class A extends B { static x = 1; y; #z = 2; static #w; static { f(); } constructor() { super(); new.target; } get g() { return this.#z; } set g(v) {} static m() {} *gen() {} async am() {} #pm() { return #z in this; } get #pg() { return 1; } set #pg(v) {} static get sg() {} }
+new (class {})();
+function named(a) { return arguments; }
+async function* generate() { for await (const v of w) yield* v; }`;
+
+/**
+ * Every node terser sizes only in a module. terser cannot size an exported
+ * default function, whose size asks for a stack the export does not pass.
+ */
+const SIZED_MODULE = `import d, { a as b, c } from "m"; import * as ns from "n"; import "side"; import json from "j" with { type: "json" };
+export { b, c as e }; export * from "o"; export * as p from "q"; export default [import.meta.url, import("x"), import.source("y")];
+export const k = 1; export class K {}
+{ using x = y; } async function f() { await using z = w; }`;
+
+/**
+ * Properties the mangler reads each way terser does: quoted, computed, in a
+ * `defineProperty`, an `in`, and the `@__KEY__` and `@__MANGLE_PROP__` notes.
+ */
+const MANGLED_PROPERTIES = `var obj = { alpha: 1, "beta": 2, [c ? "gamma" : "delta"]: 3, get eps() { return 1; }, method() {}, 42: 1 };
+obj.alpha = obj.beta + obj["gamma"] + obj[(0, "delta")] + obj[c ? "eps" : "method"];
+Object.defineProperty(obj, "zeta", { value: 1 });
+sink("eta" in obj, /*@__KEY__*/ "theta", obj[/*@__MANGLE_PROP__*/ "iota"]);
+var ann = { /*@__MANGLE_PROP__*/ kappa: 1 }; ann.kappa++;
+undeclared.lambda = 1;
+class Shape { #priv = 1; field = 2; get #getter() { return 1; } method() { return this.#priv + this.field + this.#getter; } }
+sink(obj, new Shape());`;
+
+/**
+ * Names the mangler keeps, moves or hands out apart: a function declared in a
+ * block, a named and a kept function value, a catch, a label and `arguments`.
+ */
+const MANGLED_NAMES = `var counter = function () { return 1; };
+function outer(first, second) {
+	if (first) { function inBlock() { return second; } inBlock(); }
+	var named = function (argument) { return argument + counter(); };
+	var keptLambda = function () { return 1; };
+	try { first(); } catch (error) { second(error); }
+	function inner() { var arrow = () => arguments[0]; return arrow(); }
+	label: for (;;) { break label; }
+	return [named, keptLambda, inner(), first.prop, first["quoted"]];
+}
+sink(outer);`;
+
+/**
+ * Exported names, which a name cache and a toplevel mangle keep.
+ */
+const MANGLED_MODULE =
+	"export var kept = 1; var hidden = 2; export { hidden as shown }; export default function main(alpha) { return alpha + kept + hidden; }";
+
 describe("syntax-printer", () => {
 	it("should install onto terser", async () => {
 		const terser = await load();
@@ -431,6 +504,56 @@ describe("syntax-printer", () => {
 			expect(ours.code).toMatchSnapshot();
 		});
 	}
+
+	it("should mangle as terser does under each option the fast path leaves out", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		const source = `var counter = function () { return 1; };
+			function outer(first, second) {
+				label: for (var i = 0; i < 2; i++) { if (i) break label; }
+				try { first(); } catch (error) { second(error); }
+				if (first) { function inBlock() { return second; } inBlock(); }
+				class Shape { area() { return first; } }
+				var named = function inner(argument) { return argument + counter(); };
+				return [new Shape(), named, (function f(f) { return f; })(1)];
+			}
+			export { outer };`;
+		const variants = [
+			{ mangle: { keep_fnames: true } },
+			{ mangle: { keep_fnames: /^inner$/, keep_classnames: true } },
+			{ mangle: { ie8: true } },
+			{ mangle: { safari10: true } },
+			{ mangle: { toplevel: true, keep_classnames: /^Sh/ } },
+			{ compress: false, mangle: true, rename: true },
+			{ compress: { passes: 2 }, mangle: { reserved: ["first"] }, rename: true }
+		];
+		for (const variant of variants) {
+			const settings = () => ({
+				compress: { passes: 2 },
+				module: true,
+				...JSON.parse(JSON.stringify(variant)),
+				...(variant.mangle && typeof variant.mangle === "object"
+					? { mangle: { ...variant.mangle } }
+					: {})
+			});
+			const ours = await minify(source, settings());
+			const theirs = await reference.minify(source, settings());
+			expect([variant, ours.code]).toEqual([variant, theirs.code]);
+		}
+		// A name cache carries the names one minify handed out into the next.
+		const ourCache = {};
+		const theirCache = {};
+		for (const input of [source, "var counter = 2; export { counter };"]) {
+			const options = () => ({ mangle: { toplevel: true } });
+			const ours = await minify(input, { ...options(), nameCache: ourCache });
+			const theirs = await reference.minify(input, {
+				...options(),
+				nameCache: theirCache
+			});
+			expect(ours.code).toBe(theirs.code);
+		}
+		expect(ourCache).toEqual(theirCache);
+	});
 
 	it("should minify a source too large to keep its buffers as terser does", async () => {
 		const { minify } = await load();
@@ -487,9 +610,16 @@ describe("syntax-printer", () => {
 			for (const settings of OUTPUT_OPTIONS) {
 				const options = () => ({ ...settings, format: { ...settings.format } });
 				const ours = await minify({ "input.js": source }, options());
+				// The printer writes minified output only, so it is held to terser's.
+				const referenceOptions = options();
+				for (const name of IGNORED_FORMAT_OPTIONS) {
+					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
+						name
+					];
+				}
 				const theirs = await reference.minify(
 					{ "input.js": source },
-					options()
+					referenceOptions
 				);
 				expect(ours.code).toBe(theirs.code);
 				expect(ours.map).toEqual(theirs.map);
@@ -499,13 +629,31 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	it("should write minified output whatever layout it is asked for", async () => {
+		const { minify } = await load();
+		const source = "if (a) { b(1, 2), c(3) } else for (;;) d([4, 5]);";
+		const { code } = await minify(source, { compress: false, mangle: false });
+		const laidOut = await minify(source, {
+			compress: false,
+			mangle: false,
+			format: {
+				beautify: true,
+				braces: true,
+				indent_level: 2,
+				indent_start: 4,
+				max_line_len: 10,
+				width: 10
+			}
+		});
+		expect(laidOut.code).toBe(code);
+	});
+
 	it("should decline a terser whose stream it does not know", () => {
 		const output =
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
 				PHASES.find((phase) => phase.name === "output")
 			);
 		const utils = { defaults: () => ({}) };
-		const unicode = new Proxy({}, { get: () => () => false });
 		const ast = {
 			AST_Node: { prototype: { _print() {}, print_to_string() {} } }
 		};
@@ -514,7 +662,7 @@ describe("syntax-printer", () => {
 		 * @returns {boolean} whether the phase fits it
 		 */
 		const fits = (OutputStream) =>
-			output.supports({ ast, output: { OutputStream }, utils, unicode });
+			output.supports({ ast, output: { OutputStream }, utils });
 		/**
 		 * @param {object=} defs the option set a rejection names
 		 * @returns {never} always throws
@@ -523,7 +671,7 @@ describe("syntax-printer", () => {
 			throw Object.assign(new Error("unsupported"), { defs });
 		};
 
-		expect(output.supports({ ast, output: {}, utils, unicode })).toBe(false);
+		expect(output.supports({ ast, output: {}, utils })).toBe(false);
 		// Accepts an option it should reject, so its option set cannot be read.
 		expect(fits(() => ({}))).toBe(false);
 		expect(fits(() => rejectNaming())).toBe(false);
@@ -1377,6 +1525,154 @@ describe("syntax-printer", () => {
 		expect(equivalent.supports({ ast: {} })).toBe(false);
 	});
 
+	it("should size and compare every node as terser does", async () => {
+		const { minify } = await load();
+		const { ast } = await loadSources();
+		const reference = require("terser");
+		// A compressed tree holds the nodes only the compressor makes, as `NaN`.
+		/** @type {[string, EXPECTED_OBJECT][]} */
+		const sources = [
+			[SIZED_SCRIPT, { compress: false }],
+			[SIZED_MODULE, { compress: false, module: true }],
+			["sink(NaN, void 0, 1 / 0, a + +b, a - -b);", { compress: {} }]
+		];
+		for (const [source, options] of sources) {
+			/**
+			 * @returns {EXPECTED_ANY} the options, asking for the tree
+			 */
+			const settings = () => ({
+				...options,
+				mangle: false,
+				format: { ast: true, code: false }
+			});
+			const { ast: ourTree } = /** @type {EXPECTED_ANY} */ (
+				await minify(source, settings())
+			);
+			/** @type {EXPECTED_ANY[]} */
+			const ours = [];
+			ourTree.walk(
+				new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+					ours.push(node);
+				})
+			);
+			// terser's published build hands out its own tree, sized and compared
+			// by terser's own methods.
+			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
+				await reference.minify(source, settings())
+			);
+			/** @type {EXPECTED_ANY[]} */
+			const theirs = [];
+			tree.walk({
+				/**
+				 * @param {EXPECTED_ANY} node a node of terser's tree
+				 * @param {EXPECTED_FUNCTION=} descend walks its children
+				 */
+				_visit(node, descend) {
+					theirs.push(node);
+					if (descend) descend.call(node);
+				}
+			});
+			expect(ours.map((node) => [node.TYPE, node.size()])).toEqual(
+				theirs.map((node) => [node.TYPE, node.size()])
+			);
+			for (let i = 0; i < ours.length; i++) {
+				for (let j = 0; j < ours.length; j++) {
+					if (ours[i].TYPE !== ours[j].TYPE) continue;
+					expect([i, j, ours[i].equivalent_to(ours[j])]).toEqual([
+						i,
+						j,
+						theirs[i].equivalent_to(theirs[j])
+					]);
+				}
+			}
+		}
+	});
+
+	it("should mangle names and properties as terser does under every option", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/** @type {[string, () => EXPECTED_OBJECT][]} */
+		const variants = [
+			[MANGLED_PROPERTIES, () => ({ mangle: { properties: true } })],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ mangle: { properties: { keep_quoted: true } } })
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ mangle: { properties: { keep_quoted: "strict" } } })
+			],
+			[MANGLED_PROPERTIES, () => ({ mangle: { properties: { debug: true } } })],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ mangle: { properties: { debug: "suffix" } } })
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({
+					mangle: {
+						properties: { regex: "^(alpha|beta)$", reserved: ["gamma"] }
+					}
+				})
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({
+					mangle: { properties: { undeclared: true, builtins: true } }
+				})
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ compress: false, mangle: { properties: true } })
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({
+					mangle: { properties: { only_cache: true } },
+					nameCache: { props: { props: { $alpha: "Q" } } }
+				})
+			],
+			[
+				MANGLED_NAMES,
+				() => ({ compress: false, mangle: { keep_fnames: true } })
+			],
+			[
+				MANGLED_NAMES,
+				() => ({ compress: false, mangle: { keep_fnames: /^kept/ } })
+			],
+			[MANGLED_NAMES, () => ({ compress: false, mangle: { safari10: true } })],
+			[MANGLED_NAMES, () => ({ compress: false, mangle: { ie8: true } })],
+			[
+				MANGLED_NAMES,
+				() => ({ compress: { passes: 2, inline: 3 }, mangle: true })
+			],
+			[
+				MANGLED_MODULE,
+				() => ({ module: true, mangle: { toplevel: true }, nameCache: {} })
+			],
+			[
+				MANGLED_MODULE,
+				() => ({
+					module: true,
+					compress: false,
+					mangle: { keep_fnames: true, toplevel: true },
+					nameCache: { vars: { props: { $hidden: "z" } } }
+				})
+			]
+		];
+		for (const [source, options] of variants) {
+			const ourOptions = /** @type {EXPECTED_ANY} */ (options());
+			const theirOptions = /** @type {EXPECTED_ANY} */ (options());
+			const ours = await minify(source, ourOptions);
+			const theirs = await reference.minify(source, theirOptions);
+			expect([ourOptions.mangle, ours.code]).toEqual([
+				theirOptions.mangle,
+				theirs.code
+			]);
+			expect(ourOptions.nameCache).toEqual(theirOptions.nameCache);
+		}
+	});
+
 	it("should compare trees as terser does", async () => {
 		await load();
 		const { parse } = await loadSources();
@@ -1430,6 +1726,112 @@ describe("syntax-printer", () => {
 			expect(ours.code).toBe(reference.code);
 			expect(ours.map).toBe(reference.map);
 		}
+	});
+
+	it("should read characters as terser's unicode helpers do", async () => {
+		const terserUnicode = await import(
+			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/unicode.js")
+		);
+		const ours = createUnicode();
+		/** @type {string[]} */
+		const disagreements = [];
+		for (let code = 0; code <= 0x10ffff; code++) {
+			const character = String.fromCodePoint(code);
+			for (const [mine, theirs] of [
+				[ours.isIdentifierStart, terserUnicode.is_identifier_start],
+				[ours.isIdentifierChar, terserUnicode.is_identifier_char],
+				[ours.isIdentifierStartBroad, terserUnicode.is_identifier_start_broad],
+				[ours.isIdentifierCharBroad, terserUnicode.is_identifier_char_broad]
+			]) {
+				if (mine(character) !== theirs(character)) {
+					disagreements.push(`${theirs.name} U+${code.toString(16)}`);
+				}
+			}
+		}
+		expect(disagreements).toEqual([]);
+		for (const text of ["a\u{1F600}b", "\uD83D", "\uDE00x", "x\uD83D\uDE00"]) {
+			for (let i = 0; i < text.length; i++) {
+				expect(ours.getFullChar(text, i)).toBe(
+					terserUnicode.get_full_char(text, i)
+				);
+				expect(ours.getFullCharCode(text, i)).toBe(
+					terserUnicode.get_full_char_code(text, i)
+				);
+			}
+		}
+		for (const name of ["a", "$_9", "9a", "a-b", "é", ""]) {
+			expect(ours.isBasicIdentifier(name)).toBe(
+				terserUnicode.is_basic_identifier_string(name)
+			);
+		}
+	});
+
+	it("should name each node the ESTree type terser converts it to", async () => {
+		const { ast, parse } = await loadSources();
+		markEstreeTypes({ ast });
+		const source = `"use strict";
+			import a, { b as c, "d" as e } from "f"; import * as g from "h";
+			export default class extends a { static #p = 1; static { g(); } get [c]() { return #p in this; } set s(v) {} m() {} q = 2; #r() {} }
+			export { a as default2, e as "q" }; export * from "i"; export * as j from "k";
+			export const l = 1, { m, ...n } = o, [p = 1, ...q] = r;
+			export function* s(t, u = 1, ...v) { yield t; yield* u; }
+			label: for (let w = 0; w < 1; w++) { if (w) continue label; else break; }
+			for (const x in y) ; for (const z of y) ; do ; while (0); while (0) ;
+			switch (a) { case 1: debugger; default: }
+			try { throw a } catch ({ e }) {} finally {}
+			(async () => { await a; for await (const b of c); })();
+			new a(...b)?.c?.[d]?.(e); a = b ? c : d; a += typeof b; a++; --a; !a;
+			a = { b, c: 1, [d]: 2, get e() {}, set e(f) {}, g() {}, async *h() {}, ...i };
+			a = [, b, ...c]; a = \`x\${b}y\`; a = tag\`z\`; a = /re/g; a = 1n; a = null;
+			a = true; a = void 0; a = NaN; a = Infinity; a = (b, c); a = b ?? (c && d || e);
+			a = import.meta; a = import("x"); function f() { new.target; return this; }`;
+		let count = 0;
+		const walker = new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+			const parent = walker.parent();
+			let expected;
+			if (
+				(node.TYPE === "ObjectGetter" || node.TYPE === "ObjectSetter") &&
+				parent.TYPE !== "Object"
+			) {
+				// terser maps a class's members with the index as their parent, which
+				// reads a class accessor as an object's; ESTree makes it a method.
+				expected = { type: "MethodDefinition" };
+			} else if (node.TYPE === "Expansion") {
+				// terser's converter reads this off its own stack, and makes a rest
+				// parameter a spread; ESTree binds with a rest element in both.
+				expected = {
+					type:
+						parent.TYPE === "Destructuring" || parent instanceof ast.AST_Lambda
+							? "RestElement"
+							: "SpreadElement"
+				};
+			} else if (typeof node.to_mozilla_ast === "function") {
+				expected = node.to_mozilla_ast(parent);
+			} else if (node.TYPE === "TemplateSegment") {
+				expected = parent.to_mozilla_ast().quasi || parent.to_mozilla_ast();
+				expected = { type: expected.quasis[0].type };
+			} else {
+				// A name mapping is converted with its declaration, as a specifier.
+				const list = parent.imported_names || parent.exported_names;
+				const converted = parent.to_mozilla_ast();
+				// `export * as a` names what it exports on the declaration itself.
+				expected =
+					converted.specifiers === undefined
+						? null
+						: converted.specifiers.filter(
+								(/** @type {{ type: string }} */ specifier) =>
+									specifier.type !== "ImportDefaultSpecifier"
+							)[list.indexOf(node)];
+			}
+			expect([node.TYPE, estreeType(node, parent)]).toEqual([
+				node.TYPE,
+				expected === null ? null : expected.type
+			]);
+			count++;
+		});
+		parse.parse(source, { module: true }).walk(walker);
+		parse.parse("with (a) b;").walk(walker);
+		expect(count).toBeGreaterThan(300);
 	});
 
 	it("should hand back a fresh list, which a clone may share", async () => {
@@ -1528,7 +1930,7 @@ describe("syntax-printer", () => {
 			version: require("terser/package.json").version,
 			minify() {},
 			compress: { Compressor() {} },
-			propmangle: { mangle_private_properties() {} },
+			domprops: { domprops: [] },
 			sourcemap: { SourceMap() {} },
 			utils: { map_from_object() {}, map_to_object() {}, HOP() {} }
 		};

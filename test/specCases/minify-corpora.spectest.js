@@ -19,6 +19,8 @@ const { pathToFileURL } = require("url");
 const vm = require("vm");
 const zlib = require("zlib");
 const acorn = require("acorn");
+const { IGNORED_FORMAT_OPTIONS } =
+	require("../../lib/javascript/syntax").printer;
 const { loadPhases, selectPhases } = require("../helpers/printerPhases");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
@@ -77,6 +79,28 @@ const keptNames = (own) => {
 		names.keep_classnames = compress.keep_classnames;
 	}
 	return names;
+};
+
+/**
+ * The options as webpack's printer reads them: it writes minified output only,
+ * so the reference is asked for that too, with every layout option at its default.
+ * @param {MinifyOptions} options options for either minifier
+ * @returns {MinifyOptions} the same, less the layout options
+ */
+const withoutLayout = (options) => {
+	/** @type {Record<string, unknown>} */
+	const result = { ...options };
+	// `output` is terser's older name for `format`.
+	for (const key of ["format", "output"]) {
+		const given = /** @type {Record<string, unknown> | undefined} */ (
+			result[key]
+		);
+		if (!given || typeof given !== "object") continue;
+		const format = { ...given };
+		for (const name of IGNORED_FORMAT_OPTIONS) delete format[name];
+		result[key] = format;
+	}
+	return /** @type {MinifyOptions} */ (result);
 };
 
 /**
@@ -1114,7 +1138,7 @@ describe("JavaScript minifier", () => {
 									const theirs = await outcome(
 										reference.minify,
 										source.input,
-										options
+										withoutLayout(options)
 									);
 									const ours = await outcome(
 										printer.minify,

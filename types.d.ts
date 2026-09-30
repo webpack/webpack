@@ -24937,7 +24937,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
  * typedef HTML also depends on.
  */
 declare interface PrintOptions {
-	mode: "minify" | "beautify";
+	mode: "beautify" | "minify";
 }
 
 /**
@@ -29611,14 +29611,14 @@ declare abstract class SourceProcessorClass<
 	 */
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "minify" | "beautify" } & {
+		options: TProcessOptions & { mode: "beautify" | "minify" } & {
 			source: string;
 			content?: string;
 		}
 	): { code: string; map: SourceMap };
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "minify" | "beautify" }
+		options: TProcessOptions & { mode: "beautify" | "minify" }
 	): { code: string; map: undefined };
 	process(input: string, options?: TProcessOptions): undefined;
 
@@ -29635,7 +29635,7 @@ declare abstract class SourceProcessorClass<
 	processAsync(
 		input: string,
 		options: Omit<TProcessOptions, "renderEmbeddedSource"> & {
-			mode: "minify" | "beautify";
+			mode: "beautify" | "minify";
 		} & {
 			source?: string;
 			content?: string;
@@ -33099,9 +33099,21 @@ declare namespace exports {
 				export let loadSources: () => Promise<any>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
+				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createTerserTree: (
 					__0?: any
 				) => (source: string, options: TreeOptions) => any;
+				export let createUnicode: () => {
+					getFullChar: (str: string, pos: number) => string;
+					getFullCharCode: (str: string, pos: number) => number;
+					isBasicIdentifier: (str: string) => boolean;
+					isIdentifierStart: (character: string) => boolean;
+					isIdentifierChar: (character: string) => boolean;
+					isIdentifierStartBroad: (character: string) => boolean;
+					isIdentifierCharBroad: (character: string) => boolean;
+				};
+				export let estreeType: (node?: any, parent?: any) => null | string;
+				export let markEstreeTypes: (__0?: any) => void;
 			}
 		}
 		export {
