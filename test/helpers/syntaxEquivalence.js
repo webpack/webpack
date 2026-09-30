@@ -1219,10 +1219,13 @@ const installHelpers = (generics) => {
 	 * `<style>` body is read as CSS and a JSON `<script>` as JSON, because both
 	 * are minified in their own right; every other script body is data and must
 	 * survive byte for byte.
-	 * @param {string} html the page
+	 * @param {string} source the page
 	 * @returns {Facets} its facets
 	 */
-	const htmlFacets = (html) => {
+	const htmlFacets = (source) => {
+		// HTML §13.2.3.1: the decoder consumes a leading byte order mark, which a
+		// string handed to the parser would keep as text.
+		const html = source.charCodeAt(0) === 0xfeff ? source.slice(1) : source;
 		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
 		// leaves an inert `<template>`, so the tree below is the one a page gets.
 		const attached =
