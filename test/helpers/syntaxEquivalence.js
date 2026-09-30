@@ -2199,10 +2199,10 @@ const compareCascades = ({ pairs, types }) => {
 		return sheet;
 	};
 	const root = document.createElement("div");
-	document.body.append(root);
 	/** @type {CascadeReport[]} */
 	const reports = [];
 	for (const pair of pairs) {
+		root.remove();
 		root.textContent = "";
 		const afterRules = inventory(adopt(pair.after).cssRules, "", new Map());
 		const beforeRules = inventory(adopt(pair.before).cssRules, "", new Map());
@@ -2306,20 +2306,14 @@ const compareCascades = ({ pairs, types }) => {
 			}
 			return out;
 		};
-		/**
-		 * Reinsert the root so its subtree is styled afresh under the current sheet.
-		 * WebKit can otherwise keep a value the root inherited under an earlier one.
-		 */
-		const restyle = () => {
-			root.remove();
-			document.body.append(root);
-		};
-		restyle();
+		// Inserted only once both sheets are adopted: WebKit kept what a root
+		// already in the document inherited before, and reinserting between reads
+		// would reload what a replaced element shows.
+		document.body.append(root);
 		// Layout first: an `<object>` settles what it renders as only once one runs.
 		const renderedBefore = rendered();
 		const before = read();
 		adopt(pair.after);
-		restyle();
 		const renderedAfter = rendered();
 		const after = read();
 		/** @type {string[]} */
