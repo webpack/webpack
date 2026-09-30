@@ -24937,7 +24937,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
  * typedef HTML also depends on.
  */
 declare interface PrintOptions {
-	mode: "minify" | "beautify";
+	mode: "beautify" | "minify";
 }
 
 /**
@@ -29611,14 +29611,14 @@ declare abstract class SourceProcessorClass<
 	 */
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "minify" | "beautify" } & {
+		options: TProcessOptions & { mode: "beautify" | "minify" } & {
 			source: string;
 			content?: string;
 		}
 	): { code: string; map: SourceMap };
 	process(
 		input: string,
-		options: TProcessOptions & { mode: "minify" | "beautify" }
+		options: TProcessOptions & { mode: "beautify" | "minify" }
 	): { code: string; map: undefined };
 	process(input: string, options?: TProcessOptions): undefined;
 
@@ -29635,7 +29635,7 @@ declare abstract class SourceProcessorClass<
 	processAsync(
 		input: string,
 		options: Omit<TProcessOptions, "renderEmbeddedSource"> & {
-			mode: "minify" | "beautify";
+			mode: "beautify" | "minify";
 		} & {
 			source?: string;
 			content?: string;
