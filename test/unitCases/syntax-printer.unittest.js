@@ -1976,6 +1976,48 @@ describe("syntax-printer", () => {
 		expect(optimize.supports(modules)).toBe(true);
 	});
 
+	it("should decline a terser whose code generators it does not know", async () => {
+		const codegen =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "codegen")
+			);
+		const modules = await loadSources();
+		const fitting = { ...modules, MinifiedOutput: class {} };
+		// Without the output phase there is no stream to print into.
+		expect(codegen.supports(modules)).toBe(false);
+		expect(
+			codegen.supports({
+				...fitting,
+				parse: { ...modules.parse, PRECEDENCE: undefined }
+			})
+		).toBe(false);
+		expect(
+			codegen.supports({
+				...fitting,
+				utils: { ...modules.utils, regexp_source_fix: undefined }
+			})
+		).toBe(false);
+		expect(
+			codegen.supports({
+				...fitting,
+				ast: { ...modules.ast, AST_Toplevel: { prototype: {} } }
+			})
+		).toBe(false);
+		const fs = require("fs");
+		const read = jest.spyOn(fs, "readFileSync");
+		try {
+			read.mockImplementationOnce(() => "export {};");
+			expect(codegen.supports(fitting)).toBe(false);
+			read.mockImplementationOnce(() => {
+				throw new Error("ENOENT");
+			});
+			expect(codegen.supports(fitting)).toBe(false);
+		} finally {
+			read.mockRestore();
+		}
+		expect(codegen.supports(fitting)).toBe(true);
+	});
+
 	it("should decline a terser whose effect dropping it does not know", async () => {
 		const drop =
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (

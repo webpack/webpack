@@ -33235,6 +33235,10 @@ declare namespace exports {
 					isIdentifierChar: (character: string) => boolean;
 					isIdentifierStartBroad: (character: string) => boolean;
 					isIdentifierCharBroad: (character: string) => boolean;
+					isIdentifierString: (
+						str: string,
+						allowSurrogates?: boolean
+					) => boolean;
 				};
 				export let estreeType: (
 					node: TerserNode,
