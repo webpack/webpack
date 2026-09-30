@@ -31320,6 +31320,11 @@ declare interface TerserNode {
 	expressions: TerserNode[];
 	segments: TerserNode[];
 	argnames: TerserNode[];
+	quote?: string;
+	raw?: string;
+	optional: boolean;
+	prefix: TerserNode;
+	extends: TerserNode;
 	scope: TerserNode;
 	thedef: SymbolDefinition;
 	definition(): SymbolDefinition;
@@ -31339,6 +31344,15 @@ declare interface TerserNode {
 	negate(compressor: TerserCompressor, firstInStatement?: boolean): TerserNode;
 	size(compressor?: TerserCompressor, stack?: any): number;
 	print_to_string(options?: Record<string, any>): string;
+	print(output: TerserOutputStream, forceParens?: boolean): void;
+}
+
+/**
+ * terser's output stream
+ */
+declare interface TerserOutputStream {
+	[index: number]: any;
+	[index: string]: any;
 }
 
 /**
@@ -33235,6 +33249,10 @@ declare namespace exports {
 					isIdentifierChar: (character: string) => boolean;
 					isIdentifierStartBroad: (character: string) => boolean;
 					isIdentifierCharBroad: (character: string) => boolean;
+					isIdentifierString: (
+						str: string,
+						allowSurrogates?: boolean
+					) => boolean;
 				};
 				export let estreeType: (
 					node: TerserNode,
