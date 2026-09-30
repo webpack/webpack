@@ -1999,6 +1999,7 @@ const compareRules = (before, after, signatures) => {
  */
 const compareCascades = ({ pairs, types }) => {
 	const REPORTED = 5;
+	const DOCUMENT_ELEMENTS = new Set(["html", "head", "body"]);
 
 	/**
 	 * @param {string} text an identifier as the CSSOM serializes it
@@ -2232,6 +2233,12 @@ const compareCascades = ({ pairs, types }) => {
 				/** @type {Element | null} */
 				let last = null;
 				for (const compound of chain) {
+					// A document has one of each, and the root already stands inside them;
+					// a second one is a tree no page holds, which engines style apart.
+					if (DOCUMENT_ELEMENTS.has(compound.type)) {
+						if (last === null) continue;
+						break;
+					}
 					if (compound.type !== "") named.add(compound.type);
 					for (const name of compound.classes) classes.add(name);
 					for (const [name, value] of compound.attributes) {
@@ -2278,6 +2285,11 @@ const compareCascades = ({ pairs, types }) => {
 		];
 		const PSEUDOS = [null, "::before", "::after"];
 		/**
+		 * @returns {boolean[]} whether each element has a box
+		 */
+		const rendered = () =>
+			elements.map((element) => element.getClientRects().length !== 0);
+		/**
 		 * @returns {string[][]} every tracked value of every element and pseudo
 		 */
 		const read = () => {
@@ -2294,8 +2306,11 @@ const compareCascades = ({ pairs, types }) => {
 			}
 			return out;
 		};
+		// Layout first: an `<object>` settles what it renders as only once one runs.
+		const renderedBefore = rendered();
 		const before = read();
 		adopt(pair.after);
+		const renderedAfter = rendered();
 		const after = read();
 		/** @type {string[]} */
 		const differences = [];
@@ -2307,8 +2322,16 @@ const compareCascades = ({ pairs, types }) => {
 					moved.push(`${tracked[at]}: ${before[i][at]} -> ${after[i][at]}`);
 				}
 			}
-			if (moved.length === 0) continue;
-			const element = elements[Math.floor(i / PSEUDOS.length)];
+			const index = Math.floor(i / PSEUDOS.length);
+			// Without a box under either sheet nothing shows the value, and WebKit
+			// resolves such an element's style apart from the tree it stands in.
+			if (
+				moved.length === 0 ||
+				!(renderedBefore[index] || renderedAfter[index])
+			) {
+				continue;
+			}
+			const element = elements[index];
 			const pseudo = PSEUDOS[i % PSEUDOS.length] || "";
 			const tag = element.outerHTML.slice(
 				0,
