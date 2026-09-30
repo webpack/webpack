@@ -187,7 +187,11 @@ const CASES = [
 	["import.meta and dynamic imports", "x = import.meta.url; y = import('z'); w = import('v', { with: {} });", true],
 	["a default export ending at a line break", "export default function () {}\nfoo();", true],
 	["a default export ending the source", "export default function () {}", true],
-	["BigInt keys, which terser keys by their digits", "x = { 0b1n: 1, 1_0n: 2, 0x1Fn: 3 }; class A { 0o7n() {} }"]
+	["BigInt keys, which terser keys by their digits", "x = { 0b1n: 1, 1_0n: 2, 0x1Fn: 3 }; class A { 0o7n() {} }"],
+	[
+		"HTML comment sequences a literal holds as text",
+		'x = `<!-- a ${b} -->`; y = `${c}-->`; z = "<!--"; w = /-->/;'
+	]
 ];
 
 /**
