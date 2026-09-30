@@ -2,7 +2,7 @@
 
 <!-- Moved out of AGENTS.md so it loads only when needed; AGENTS.md keeps its rules and a pointer here. -->
 
-Persistent caching is a shipped feature, not a test mode. `ConfigCacheTestCases` re-runs **every** `configCases/` case with `cache.type: "filesystem"` and fails it if the second or third run writes to the pack:
+Persistent caching is a shipped feature, not a test mode. `ConfigCacheTestCases` re-runs **every** `configCases/` case its `test.filter.js` doesn't skip with `cache.type: "filesystem"` and fails it if the second or third run writes to the pack unexpectedly (an `infrastructure-log.js` declares an expected write, see below):
 
 ```
 Pack got invalid because of write to: <identifier>
