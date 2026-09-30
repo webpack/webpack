@@ -31231,6 +31231,14 @@ declare interface TerserFormatOptions {
 }
 
 /**
+ * one of terser's AST nodes
+ */
+declare interface TerserNode {
+	[index: number]: any;
+	[index: string]: any;
+}
+
+/**
  * Defines the timestamp and hash type used by this module.
  */
 declare interface TimestampAndHash {
@@ -33102,7 +33110,7 @@ declare namespace exports {
 				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createTerserTree: (
 					__0?: any
-				) => (source: string, options: TreeOptions) => any;
+				) => (source: string, options: TreeOptions) => undefined | TerserNode;
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
 					getFullCharCode: (str: string, pos: number) => number;
@@ -33112,7 +33120,10 @@ declare namespace exports {
 					isIdentifierStartBroad: (character: string) => boolean;
 					isIdentifierCharBroad: (character: string) => boolean;
 				};
-				export let estreeType: (node?: any, parent?: any) => null | string;
+				export let estreeType: (
+					node: TerserNode,
+					parent?: TerserNode
+				) => null | string;
 				export let markEstreeTypes: (__0?: any) => void;
 			}
 		}
