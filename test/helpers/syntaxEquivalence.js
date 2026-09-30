@@ -1991,9 +1991,8 @@ const compareRules = (before, after, signatures) => {
  */
 
 /**
- * Runs in the page. Builds, per pair, elements its selectors reach — a chain per
- * selector, and one element per type carrying every class and attribute named,
- * so rules meet in one cascade — then reads each under `before` and `after`.
+ * Runs in the page: builds the elements each pair's selectors reach, plus one per
+ * type carrying every class and attribute named, and reads them under both sheets.
  * Only what a rule held by one sheet alone declares can differ, so only that is read.
  * @param {{ pairs: CascadePair[], types: string[] }} input the pairs, and element types every pair nests in each other
  * @returns {CascadeReport[]} one report per pair, in order
@@ -2186,26 +2185,26 @@ const compareCascades = ({ pairs, types }) => {
 		return out;
 	};
 
-	const style = document.createElement("style");
-	document.head.append(style);
+	/**
+	 * Adopt `text` as the document's one sheet. Built, not parsed from a `<style>`:
+	 * Gecko leaves that element's sheet null a while after an `@import`.
+	 * @param {string} text a stylesheet
+	 * @returns {CSSStyleSheet} the sheet now applied
+	 */
+	const adopt = (text) => {
+		const sheet = new CSSStyleSheet();
+		sheet.replaceSync(text);
+		document.adoptedStyleSheets = [sheet];
+		return sheet;
+	};
 	const root = document.createElement("div");
 	document.body.append(root);
 	/** @type {CascadeReport[]} */
 	const reports = [];
 	for (const pair of pairs) {
 		root.textContent = "";
-		style.textContent = pair.after;
-		const afterRules = inventory(
-			/** @type {CSSStyleSheet} */ (style.sheet).cssRules,
-			"",
-			new Map()
-		);
-		style.textContent = pair.before;
-		const beforeRules = inventory(
-			/** @type {CSSStyleSheet} */ (style.sheet).cssRules,
-			"",
-			new Map()
-		);
+		const afterRules = inventory(adopt(pair.after).cssRules, "", new Map());
+		const beforeRules = inventory(adopt(pair.before).cssRules, "", new Map());
 		/** @type {Set<string>} */
 		const properties = new Set();
 		for (const [one, other] of [
@@ -2296,7 +2295,7 @@ const compareCascades = ({ pairs, types }) => {
 			return out;
 		};
 		const before = read();
-		style.textContent = pair.after;
+		adopt(pair.after);
 		const after = read();
 		/** @type {string[]} */
 		const differences = [];
@@ -2324,7 +2323,7 @@ const compareCascades = ({ pairs, types }) => {
 			differences
 		});
 	}
-	style.remove();
+	document.adoptedStyleSheets = [];
 	root.remove();
 	return reports;
 };
