@@ -67,7 +67,7 @@ Rules the map carries that apply everywhere:
 
 A hint reuses existing reporting: `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`; hardcoding one list makes a hint impossible to escalate. Prefer an option saying _whether_ to run the check and leave severity to `performance.hints`.
 
-**`makeSerializable` follows from where a diagnostic is created.** Anything reachable from a module (`ModuleError`, `ModuleWarning`, `ModuleBuildError`) is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack, which is why the size-limit and duplicate-package warnings register nothing. A wrong guess is silent except for `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there.
+**`makeSerializable` follows from where a diagnostic is created**: register one reachable from a module, not one pushed onto `compilation.warnings` after seal, and cover a new diagnostic under `ConfigCacheTestCases` ([why](docs/caching.md#diagnostics)).
 
 ## Code conventions
 
@@ -163,9 +163,9 @@ Directory structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS
 
 **Prefer integration tests** (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) driving a real `webpack()` build whenever the behavior is reachable that way — they catch regressions mocked unit tests miss. Use `*.unittest.js` only for pure helpers a build can't naturally reach.
 
-**Behavior across rebuilds is a `watchCases/` case, never a unit test calling `compiler.run` in a loop** — `output.clean`, HMR update files, caches, anything one build leaves for the next. Each numbered step directory is one rebuild; its tests read `WATCH_STEP` and `STATS_JSON`, and the config can read the step from `test/helpers/currentWatchStep`. What the output can't show (which files a plugin touched) is recorded by a plugin in the config, which pushes a `compilation.errors` entry when it differs (`watchCases/clean/removed-assets`). A step needing time to pass waits in its own `it` with a longer timeout (`watchCases/clean/hot-update-slow-rebuild`).
+**Behavior across rebuilds is a `watchCases/` case, never a unit test calling `compiler.run` in a loop** ([how](TESTING_DOCS.md#writing-a-test)).
 
-**Snapshot printed code; assert everything else.** When the thing tested _is_ generated output — bundles, minified CSS/HTML, serialized ASTs, stats text — use `toMatchSnapshot()`, not `expect(...).toBe(...)` on fragments (which pins one substring and ignores every other byte). For behavior, invariants, equivalences and error paths use explicit `expect`s; a snapshot there only records what happened to be true. Never snapshot a value some machine can't produce (a snapshot skipped without an optional browser or native binary is reported obsolete and fails the run there), and keep control characters out of snapshots (one NUL makes git treat the file as binary and hide its diff).
+**Snapshot printed code; assert everything else** — never snapshot a value some machine can't produce, and keep control characters out ([details](TESTING_DOCS.md#writing-a-test)).
 
 Run targeted tests only — `yarn test:base --testPathPatterns="<pattern>"` or `-t "<name>"` — covering the touched code, and leave broad suites to CI. Never bare `yarn jest`/`npx jest` (see [Commands](#commands)); no `yarn test` unless asked; eyeball the diff before `yarn test:base -u`.
 
@@ -228,9 +228,7 @@ Produced by `yarn fix:special` — never edit by hand:
 - `types.d.ts` — from JSDoc + schemas.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (`tooling/generate-runtime-code.js`).
-- `lib/css/data.js` — every table the CSS minifier looks names up in, plus the arithmetic its math-function descriptors bind to: from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) and the generator's `SUPPLEMENT` of spec-prose tables and math primitives, by `tooling/generate-css-data.js` — which also holds the value-definition-syntax parser those grammars are read with, and runs generation only as the entry point so its tests can require it.
-- `lib/html/data.js` — every table the HTML parser and minifier look names up in: reflected-attribute tables from webref's HTML IDL (`@webref/idl`, `@webref/elements`) plus the generator's `SUPPLEMENT` and `PARSER_TABLES` of §13.2 tree-construction vocabulary, by `tooling/generate-html-data.js` — which also emits the `// #region html entities` block in `lib/html/syntax-parser.js` from the vendored `tooling/html-entities.json` (WHATWG's named character references).
-- `lib/javascript/data.js` — the JS parser's Unicode tables in one module: run-length identifier ranges the tokenizer decodes at its first non-ASCII code point, and per-edition `\p{...}` property names (reached only for a pattern the engine rejected), by `tooling/generate-js-data.js`, which reads both from the pinned acorn devDependency — bumping it moves them.
+- `lib/css/data.js`, `lib/html/data.js`, `lib/javascript/data.js` — every lookup table the CSS minifier, HTML parser/minifier and JS parser read, by `tooling/generate-css-data.js`, `generate-html-data.js` and `generate-js-data.js`; `generate-html-data.js` also writes the `// #region html entities` block in `lib/html/syntax-parser.js`. Sources and contents: [docs/syntax.md](docs/syntax.md#generated-tables).
 
 A `syntax-parser.js` or `syntax-printer.js` is algorithm only — a new lookup table belongs in the matching generator. Generator-written regions such as `// #region html entities` are the exception; `syntax.js` is a facade, neither.
 
@@ -269,9 +267,7 @@ Otherwise write it in baseline syntax so it runs everywhere. This capability gat
 
 ### Runtime code ships to every target
 
-Runtime-emitting code — chunk loading (`lib/web/` JSONP, `lib/esm/`, `lib/node/`, `lib/webworker/`), prefetch/preload/resource hints, library and externals presets — is **per-target**: browsers/JSONP, ESM `output.module`, `node`, `webworker`, `deno`, `electron`, `bun`, and the **universal** `target: ["web", "node"]` neutral-platform path each have their own module or wiring — changing one and forgetting the others is the easy mistake. Apply a change to **every** affected target, with an integration case per target (typically `target: "web"`, `output.module`, `target: ["web", "node"]`; plus `node`/`webworker`/`bun`/`deno`/`electron` when in scope). The universal runtime guards browser APIs behind `typeof document === "undefined"` so its bundles run in Node without a DOM, and its config case must gate DOM assertions on `typeof document !== "undefined"` (see `configCases/target/universal-prefetch-preload`).
-
-**Then check wire cost** with `yarn test:size` (and the `Code Size` CI job, which comments the diff on the PR). It is information, never a verdict; how to read its report: [docs/performance.md](docs/performance.md#reading-the-code-size-report). When the numbers moved, say what it reported in the PR.
+Runtime-emitting code (chunk loading, resource hints, library and externals presets) is **per-target**: apply a change to **every** affected target with an integration case per target, then check wire cost with `yarn test:size` and say in the PR what moved. Targets, the universal runtime's DOM guard and how to read the size report: [docs/runtime.md](docs/runtime.md).
 
 ### Lint covers every file, docs included
 
@@ -281,24 +277,13 @@ Runtime-emitting code — chunk loading (`lib/web/` JSONP, `lib/esm/`, `lib/node
 
 > [!REQUIRED]
 
-Persistent caching is a shipped feature, not a test mode. `ConfigCacheTestCases` re-runs **every** `configCases/` case with `cache.type: "filesystem"` and fails it if the second or third run writes to the pack:
+**Read [docs/caching.md](docs/caching.md) whenever `ConfigCacheTestCases` fails.** The rules it enforces:
 
-```
-Pack got invalid because of write to: <identifier>
-```
-
-`<identifier>` was **not** restored but rebuilt — on a user's machine, work redone every incremental build. **Treat it as a defect and find the cause**; don't silence it.
-
-The cache serializes the module graph, so every new serializable class (a `Module`, `Dependency` or error subclass, a cached value, …) must call `makeSerializable(...)` (~140 files do), and `yarn fix:serializables` regenerates `internalSerializables`. Forgetting is the most common cause, silent apart from the line above. The suite runs with `infrastructureLogging.debug`, so the log usually names the cause a few lines earlier:
-
-- `No serializer registered for <Class>` — the class never called `makeSerializable(...)`.
-- `Skipped not serializable cache item '<key>'` — something reachable from the value can't be written.
-- `Restoring failed for <identifier> from pack: <err>` — written, but deserialization threw. It re-enters the constructor with **no arguments**, so a constructor dereferencing a parameter (`err.message`) must guard (`err ? err.message : ""`).
-- Nothing — the identifier isn't stable between runs, or the module reports it needs rebuilding.
-
-**Never silence it with `test.filter.js`** (`module.exports = (config) => !config.cache`): that drops the case from the cache suite entirely, including the parts that worked. A new case must pass both suites. (Gating a fixture needing post-baseline syntax is different and fine — see [Target the Node baseline](#target-the-node-baseline).)
-
-The one expected write webpack ships is a module carrying a **build error**: `NormalModule.needBuild` returns true while `this.error` is set, since errors are retried every build. A case whose subject is an error therefore invalidates the pack by design and says so with an `infrastructure-log.js` returning `[/Pack got invalid because of write to/]` when `cache.type === "filesystem"` (~20 cases do). That's the only expectation needing no justification; any other must carry, next to it, why it isn't a bug — "it is noise here" isn't a reason.
+- `Pack got invalid because of write to: <identifier>` means work redone every incremental build: **treat it as a defect and find the cause**.
+- Every new serializable class (`Module`, `Dependency`, error subclass, cached value) calls `makeSerializable(...)`; `yarn fix:serializables` regenerates `internalSerializables`.
+- Deserialization re-enters a constructor with **no arguments**, so one dereferencing a parameter must guard.
+- **Never silence it with `test.filter.js`**; a new case passes both suites (post-baseline syntax gating is different — [Target the Node baseline](#target-the-node-baseline)).
+- Only a case whose subject is a build error may expect the write, via `infrastructure-log.js`; any other expectation states why it isn't a bug.
 
 ### Performance and memory
 
