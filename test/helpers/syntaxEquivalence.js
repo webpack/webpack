@@ -2306,10 +2306,20 @@ const compareCascades = ({ pairs, types }) => {
 			}
 			return out;
 		};
+		/**
+		 * Reinsert the root so its subtree is styled afresh under the current sheet.
+		 * WebKit can otherwise keep a value the root inherited under an earlier one.
+		 */
+		const restyle = () => {
+			root.remove();
+			document.body.append(root);
+		};
+		restyle();
 		// Layout first: an `<object>` settles what it renders as only once one runs.
 		const renderedBefore = rendered();
 		const before = read();
 		adopt(pair.after);
+		restyle();
 		const renderedAfter = rendered();
 		const after = read();
 		/** @type {string[]} */
