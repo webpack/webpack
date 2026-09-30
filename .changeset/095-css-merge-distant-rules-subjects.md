@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Let `mergeDistantRules` pass rules for other element types, and keep `all` last.
+Stop `mergeDistantRules` mangling rules or reordering `all`, and merge more.

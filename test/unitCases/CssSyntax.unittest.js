@@ -12831,6 +12831,27 @@ describe("SourceProcessor — mergeDistantRules", () => {
 		});
 	});
 
+	it("does not write into a rule a later copy took back", () => {
+		const sheet =
+			".a{color:red;margin:0}.b{padding:0}.a{color:red;margin:0}.d{top:0}.c{color:red;margin:0}";
+		expect(minify(sheet, true)).toBe(
+			".b{padding:0}.a{color:red;margin:0}.d{top:0}.c{color:red;margin:0}"
+		);
+	});
+
+	it("keeps a rule's list whole where a merge grew it and its neighbor shares its selector", () => {
+		// The look-back join once read the grown `.z,h2.y` as `.z` and cut it at
+		// that length, folding half a selector into the rule before it.
+		expect(
+			minify(
+				".z{top:2px;display:block;margin:2px 3px}.z{all:unset;border:1px solid red}span{border-top-color:blue}h2.y{all:unset;border:1px solid red}",
+				true
+			)
+		).toBe(
+			".z{top:2px;display:block;margin:2px 3px}.z,h2.y{all:unset;border:1px solid red}span{border-top-color:blue}"
+		);
+	});
+
 	it("declines to move a block setting `all` past anything declared since", () => {
 		// For `p.b` the source reads `all:unset` last; moved up, `color` wins.
 		const sheet = ".a{all:unset}p{color:red}.b{all:unset}";
