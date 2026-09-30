@@ -1980,11 +1980,361 @@ const compareRules = (before, after, signatures) => {
 	return "";
 };
 
+/**
+ * One stylesheet printed two ways that must style every element alike.
+ * @typedef {{ name: string, before: string, after: string }} CascadePair
+ */
+
+/**
+ * What one pair styled differently, per element, and how much was compared.
+ * @typedef {{ name: string, elements: number, properties: number, differences: string[] }} CascadeReport
+ */
+
+/**
+ * Runs in the page. Builds, per pair, elements its selectors reach — a chain per
+ * selector, and one element per type carrying every class and attribute named,
+ * so rules meet in one cascade — then reads each under `before` and `after`.
+ * Only what a rule held by one sheet alone declares can differ, so only that is read.
+ * @param {{ pairs: CascadePair[], types: string[] }} input the pairs, and element types every pair nests in each other
+ * @returns {CascadeReport[]} one report per pair, in order
+ */
+const compareCascades = ({ pairs, types }) => {
+	const REPORTED = 5;
+
+	/**
+	 * @param {string} text an identifier as the CSSOM serializes it
+	 * @returns {string} the name it spells
+	 */
+	const unescapeIdentifier = (text) =>
+		text.replace(/\\(?:([0-9a-fA-F]{1,6}) ?|([\s\S]))/g, (_, hex, other) =>
+			hex === undefined ? other : String.fromCodePoint(Number.parseInt(hex, 16))
+		);
+
+	/**
+	 * @param {string} list a selector list
+	 * @returns {string[]} its selectors
+	 */
+	const splitList = (list) => {
+		/** @type {string[]} */
+		const out = [];
+		let depth = 0;
+		let quote = "";
+		let start = 0;
+		for (let i = 0; i < list.length; i++) {
+			const char = list[i];
+			if (char === "\\") {
+				i++;
+			} else if (quote !== "") {
+				if (char === quote) quote = "";
+			} else if (char === '"' || char === "'") {
+				quote = char;
+			} else if (char === "(" || char === "[") {
+				depth++;
+			} else if (char === ")" || char === "]") {
+				depth--;
+			} else if (char === "," && depth === 0) {
+				out.push(list.slice(start, i).trim());
+				start = i + 1;
+			}
+		}
+		out.push(list.slice(start).trim());
+		return out;
+	};
+
+	/** @typedef {{ combinator: string, type: string, classes: string[], id: string, attributes: [string, string][] }} Compound */
+
+	/**
+	 * A selector as the compounds an element chain has to carry, pseudos left out:
+	 * the element is still built, whether or not one matches it.
+	 * @param {string} selector one selector
+	 * @returns {Compound[] | null} the chain, or null for a shape not read here
+	 */
+	const parseSelector = (selector) => {
+		const IDENTIFIER =
+			/^(?:[-\w\u00A0-\uFFFF]|\\(?:[0-9a-fA-F]{1,6} ?|[\s\S]))+/;
+		const ATTRIBUTE =
+			/^\[\s*([-\w]+)\s*(?:[~|^$*]?=\s*("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[^\s\]]+)\s*[iIsS]?\s*)?\]/;
+		/** @type {Compound[]} */
+		const chain = [];
+		/** @type {Compound} */
+		let current = {
+			combinator: "",
+			type: "",
+			classes: [],
+			id: "",
+			attributes: []
+		};
+		let started = false;
+		let at = 0;
+		while (at < selector.length) {
+			const rest = selector.slice(at);
+			const combinator = /^[\s>+~]+/.exec(rest);
+			if (combinator !== null) {
+				if (started) {
+					chain.push(current);
+					const named = combinator[0].replace(/\s/g, "");
+					current = {
+						combinator: named === "" ? " " : named,
+						type: "",
+						classes: [],
+						id: "",
+						attributes: []
+					};
+					started = false;
+				}
+				at += combinator[0].length;
+				continue;
+			}
+			started = true;
+			const char = rest[0];
+			if (char === "*") {
+				at++;
+			} else if (char === "." || char === "#") {
+				const name = IDENTIFIER.exec(rest.slice(1));
+				if (name === null) return null;
+				if (char === ".") current.classes.push(unescapeIdentifier(name[0]));
+				else current.id = unescapeIdentifier(name[0]);
+				at += 1 + name[0].length;
+			} else if (char === "[") {
+				const attribute = ATTRIBUTE.exec(rest);
+				if (attribute === null) return null;
+				const value = attribute[2] === undefined ? "" : attribute[2];
+				current.attributes.push([
+					attribute[1],
+					unescapeIdentifier(/^["']/.test(value) ? value.slice(1, -1) : value)
+				]);
+				at += attribute[0].length;
+			} else if (char === ":") {
+				const name = /^::?[-\w]+/.exec(rest);
+				if (name === null) return null;
+				at += name[0].length;
+				if (selector[at] === "(") {
+					for (let depth = 0; at < selector.length; at++) {
+						if (selector[at] === "(") depth++;
+						else if (selector[at] === ")" && --depth === 0) break;
+					}
+					at++;
+				}
+			} else {
+				const name = IDENTIFIER.exec(rest);
+				// A namespace, a nesting selector: the chain would not say what it matches.
+				if (name === null) return null;
+				current.type = unescapeIdentifier(name[0]).toLowerCase();
+				at += name[0].length;
+			}
+		}
+		chain.push(current);
+		return chain;
+	};
+
+	/**
+	 * @param {Compound} compound what the element carries
+	 * @returns {Element} the element
+	 */
+	const build = (compound) => {
+		/** @type {Element} */
+		let element;
+		try {
+			element = document.createElement(compound.type || "div");
+		} catch (_err) {
+			element = document.createElement("div");
+		}
+		if (compound.classes.length > 0) {
+			element.setAttribute("class", compound.classes.join(" "));
+		}
+		if (compound.id !== "") element.id = compound.id;
+		for (const [name, value] of compound.attributes) {
+			try {
+				element.setAttribute(name, value);
+			} catch (_err) {
+				// A name the DOM will not take is one no element carries either.
+			}
+		}
+		return element;
+	};
+
+	/**
+	 * Every style rule a sheet holds, keyed by the text it reads as in its
+	 * context and counted, so the rules only one of two sheets holds stand out.
+	 * @param {CSSRuleList} rules the rules
+	 * @param {string} context the conditions and layers around them
+	 * @param {Map<string, { count: number, rule: CSSStyleRule }>} out what was found
+	 * @returns {Map<string, { count: number, rule: CSSStyleRule }>} the same map
+	 */
+	const inventory = (rules, context, out) => {
+		for (const rule of rules) {
+			const grouping = /** @type {CSSConditionRule & CSSLayerBlockRule} */ (
+				/** @type {unknown} */ (rule)
+			);
+			const inside =
+				grouping.conditionText !== undefined
+					? `${context}@${grouping.conditionText}`
+					: grouping.name !== undefined
+						? `${context}@layer ${grouping.name}`
+						: context;
+			if (rule instanceof CSSStyleRule) {
+				const key = `${context}|${rule.cssText}`;
+				const found = out.get(key);
+				if (found === undefined) out.set(key, { count: 1, rule });
+				else found.count++;
+			}
+			const nested = /** @type {CSSGroupingRule} */ (
+				/** @type {unknown} */ (rule)
+			).cssRules;
+			if (nested !== undefined) inventory(nested, inside, out);
+		}
+		return out;
+	};
+
+	const style = document.createElement("style");
+	document.head.append(style);
+	const root = document.createElement("div");
+	document.body.append(root);
+	/** @type {CascadeReport[]} */
+	const reports = [];
+	for (const pair of pairs) {
+		root.textContent = "";
+		style.textContent = pair.after;
+		const afterRules = inventory(
+			/** @type {CSSStyleSheet} */ (style.sheet).cssRules,
+			"",
+			new Map()
+		);
+		style.textContent = pair.before;
+		const beforeRules = inventory(
+			/** @type {CSSStyleSheet} */ (style.sheet).cssRules,
+			"",
+			new Map()
+		);
+		/** @type {Set<string>} */
+		const properties = new Set();
+		for (const [one, other] of [
+			[beforeRules, afterRules],
+			[afterRules, beforeRules]
+		]) {
+			for (const [key, { count, rule }] of one) {
+				const there = other.get(key);
+				if (there !== undefined && there.count === count) continue;
+				for (let i = 0; i < rule.style.length; i++) {
+					properties.add(rule.style.item(i));
+				}
+			}
+		}
+		/** @type {Set<string>} */
+		const named = new Set(["div", ...types]);
+		/** @type {Set<string>} */
+		const classes = new Set();
+		/** @type {Map<string, string>} */
+		const attributes = new Map();
+		for (const { rule } of beforeRules.values()) {
+			for (const selector of splitList(rule.selectorText)) {
+				const chain = parseSelector(selector);
+				if (chain === null) continue;
+				/** @type {Element | null} */
+				let last = null;
+				for (const compound of chain) {
+					if (compound.type !== "") named.add(compound.type);
+					for (const name of compound.classes) classes.add(name);
+					for (const [name, value] of compound.attributes) {
+						attributes.set(name, value);
+					}
+					const element = build(compound);
+					if (
+						last !== null &&
+						(compound.combinator === "+" || compound.combinator === "~")
+					) {
+						last.after(element);
+					} else {
+						(last === null ? root : last).append(element);
+					}
+					last = element;
+				}
+			}
+		}
+		/** @type {Compound} */
+		const everything = {
+			combinator: "",
+			type: "",
+			classes: [...classes],
+			id: "",
+			attributes: [...attributes]
+		};
+		for (const type of named) {
+			const outer = build({ ...everything, type });
+			outer.append(build({ ...everything, type: "div" }));
+			root.append(outer);
+			for (const inner of types) {
+				const parent = build({ ...everything, type, classes: [] });
+				parent.append(build({ ...everything, type: inner, classes: [] }));
+				parent.append(build({ ...everything, type: inner }));
+				root.append(parent);
+			}
+		}
+		const tracked = [...properties];
+		const elements = [
+			document.documentElement,
+			document.body,
+			root,
+			...root.querySelectorAll("*")
+		];
+		const PSEUDOS = [null, "::before", "::after"];
+		/**
+		 * @returns {string[][]} every tracked value of every element and pseudo
+		 */
+		const read = () => {
+			// Swapping the sheet restarts every animation, which a read would
+			// otherwise catch part way through interpolating.
+			for (const running of document.getAnimations()) running.cancel();
+			/** @type {string[][]} */
+			const out = [];
+			for (const element of elements) {
+				for (const pseudo of PSEUDOS) {
+					const computed = getComputedStyle(element, pseudo);
+					out.push(tracked.map((name) => computed.getPropertyValue(name)));
+				}
+			}
+			return out;
+		};
+		const before = read();
+		style.textContent = pair.after;
+		const after = read();
+		/** @type {string[]} */
+		const differences = [];
+		for (let i = 0; i < before.length && differences.length < REPORTED; i++) {
+			/** @type {string[]} */
+			const moved = [];
+			for (let at = 0; at < tracked.length; at++) {
+				if (before[i][at] !== after[i][at]) {
+					moved.push(`${tracked[at]}: ${before[i][at]} -> ${after[i][at]}`);
+				}
+			}
+			if (moved.length === 0) continue;
+			const element = elements[Math.floor(i / PSEUDOS.length)];
+			const pseudo = PSEUDOS[i % PSEUDOS.length] || "";
+			const tag = element.outerHTML.slice(
+				0,
+				element.outerHTML.indexOf(">") + 1
+			);
+			differences.push(`${tag.slice(0, 160)}${pseudo} ${moved.join("; ")}`);
+		}
+		reports.push({
+			name: pair.name,
+			elements: elements.length,
+			properties: tracked.length,
+			differences
+		});
+	}
+	style.remove();
+	root.remove();
+	return reports;
+};
+
 module.exports = {
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
 	collectFixtures,
+	compareCascades,
 	compareRules,
 	conditionSignatures,
 	installHelpers,

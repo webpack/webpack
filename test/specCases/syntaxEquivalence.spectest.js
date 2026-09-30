@@ -99,6 +99,7 @@ const {
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
+	compareCascades,
 	compareRules,
 	conditionSignatures,
 	installHelpers,
@@ -2436,4 +2437,250 @@ describe("a color rewrite paints as the color it replaced", () => {
 		},
 		FILE_TIMEOUT
 	);
+});
+
+// A generated stylesheet repeats a few blocks under overlapping selectors, so
+// the merge has pairs to join and rules between them that may or may not reach
+// the same element.
+const MERGE_TYPES = ["div", "p", "span", "h1", "h2", "a", "li"];
+const MERGE_CLASSES = ["x", "y", "z"];
+const MERGE_DECLARATIONS = [
+	"color:red",
+	"color:#00f",
+	"background-color:#0f0",
+	"margin:1px",
+	"margin:2px 3px",
+	"margin-top:5px",
+	"padding-left:4px",
+	"display:flex",
+	"display:block",
+	"border:1px solid red",
+	"border-top-color:blue",
+	"inset:1px",
+	"top:2px",
+	"position:relative",
+	"font:12px serif",
+	"line-height:3",
+	"all:unset",
+	"color:red!important",
+	"--v:1",
+	"width:10px",
+	"width:var(--v,7px)"
+];
+// Stylesheets the merge changes, drawn until there are this many; about half of
+// those drawn are, and the page compares a hundred in a few seconds.
+const MERGE_SAMPLES = 1500;
+// A real stylesheet's media queries hold at one width or the other.
+const MERGE_CONDITIONS = [
+	{ width: 360, scheme: "light" },
+	{ width: 1400, scheme: "dark" }
+];
+
+/**
+ * A stylesheet drawn from the seeded sequence: rules repeating a few blocks
+ * under overlapping selectors, some inside a condition or a layer.
+ * @param {() => number} random the sequence
+ * @returns {string} the stylesheet
+ */
+const mergeSheet = (random) => {
+	/**
+	 * @template T
+	 * @param {T[]} list the choices
+	 * @returns {T} one of them
+	 */
+	const pick = (list) => list[Math.floor(random() * list.length)];
+	/**
+	 * @returns {string} one selector
+	 */
+	const selector = () => {
+		const type = pick(MERGE_TYPES);
+		const other = pick(MERGE_TYPES);
+		const name = `.${pick(MERGE_CLASSES)}`;
+		return pick([
+			type,
+			type,
+			name,
+			`${type}${name}`,
+			`${type} ${other}`,
+			`${type}>${other}`,
+			`${type}+${other}`,
+			`${type}~${other}`,
+			`${type}:first-child`,
+			`${type}::before`,
+			"[data-a]",
+			`${type}[data-a=v]`
+		]);
+	};
+	/** @type {string[]} */
+	const blocks = [];
+	for (let i = 0; i < 4; i++) {
+		const size = 1 + Math.floor(random() * 3);
+		/** @type {Set<string>} */
+		const declarations = new Set();
+		while (declarations.size < size) declarations.add(pick(MERGE_DECLARATIONS));
+		blocks.push([...declarations].join(";"));
+	}
+	/**
+	 * @returns {string} one rule, most of them repeating a block
+	 */
+	const rule = () =>
+		`${random() < 0.15 ? `${selector()},${selector()}` : selector()}{${
+			random() < 0.7 ? pick(blocks) : pick(MERGE_DECLARATIONS)
+		}}`;
+	/** @type {string[]} */
+	const rules = [];
+	const count = 6 + Math.floor(random() * 10);
+	for (let i = 0; i < count; i++) {
+		const shape = random();
+		if (shape < 0.1) {rules.push(`@media (min-width:0){${rule()}${rule()}}`);}
+		else if (shape < 0.15) {rules.push(`@media (max-width:0){${rule()}}`);}
+		else if (shape < 0.2) {rules.push(`@supports (display:grid){${rule()}}`);}
+		else if (shape < 0.24) {
+			rules.push(`@layer l${Math.floor(random() * 2)}{${rule()}}`);
+		} else if (shape < 0.26) {
+			rules.push(`@media (min-width:0){@media (min-width:1px){${rule()}}}`);
+		} else {rules.push(rule());}
+	}
+	return rules.join("");
+};
+
+/**
+ * A stylesheet minified with and without `mergeDistantRules`, where the two differ.
+ * @param {string} name what to call it
+ * @param {string} source the stylesheet
+ * @returns {import("../helpers/syntaxEquivalence").CascadePair | null} both prints, or null where the merge changed nothing
+ */
+const mergePair = (name, source) => {
+	/**
+	 * @param {boolean} mergeDistantRules whether to merge
+	 * @returns {string} the print
+	 */
+	const print = (mergeDistantRules) =>
+		/** @type {{ code: string }} */ (
+			new CssSourceProcessor().process(source, {
+				mode: "minify",
+				mergeDistantRules
+			})
+		).code;
+	const before = print(false);
+	const after = print(true);
+	return before === after ? null : { name, before, after };
+};
+
+// Read while jest collects, one test per stylesheet.
+const mergeStylesheets = benchmarkStylesheets((source) => source);
+
+describe("a distant merge keeps every element's cascade", () => {
+	/** @type {import("puppeteer-core").Browser} */
+	let browser;
+	/** @type {import("puppeteer-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({
+			browser: ENGINE,
+			protocolTimeout: FILE_TIMEOUT
+		});
+		page = await browser.newPage();
+		await page.setContent(
+			"<!doctype html><html><head></head><body></body></html>"
+		);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (page !== undefined) await page.close();
+		if (browser !== undefined) await browser.close();
+	});
+
+	/**
+	 * Every element each pair styles differently, under one viewport and scheme.
+	 * @param {import("../helpers/syntaxEquivalence").CascadePair[]} pairs the pairs
+	 * @param {string[]} types element types every pair nests in each other
+	 * @param {{ width: number, scheme: string }} condition the viewport and scheme
+	 * @returns {Promise<string[]>} one line per element that differs
+	 */
+	const differing = async (pairs, types, condition) => {
+		await page.setViewport({ width: condition.width, height: 800 });
+		// An engine with no media emulation keeps its own scheme, so there the
+		// condition varies the width alone.
+		if (EMULATES_MEDIA) {
+			await page.emulateMediaFeatures([
+				{ name: "prefers-color-scheme", value: condition.scheme }
+			]);
+		}
+		/** @type {string[]} */
+		const out = [];
+		for (let at = 0; at < pairs.length; at += 100) {
+			const reports = await evaluateDeep(page, compareCascades, {
+				pairs: pairs.slice(at, at + 100),
+				types
+			});
+			for (const report of reports) {
+				for (const difference of report.differences) {
+					out.push(`${report.name}: ${difference}`);
+				}
+			}
+		}
+		return out;
+	};
+
+	it(
+		"over a seeded corpus of rules repeating blocks",
+		async () => {
+			let seed = 20260930;
+			const random = () => {
+				seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
+				return seed / 2147483648;
+			};
+			/** @type {import("../helpers/syntaxEquivalence").CascadePair[]} */
+			const pairs = [];
+			for (let drawn = 0; pairs.length < MERGE_SAMPLES; drawn++) {
+				const source = mergeSheet(random);
+				const pair = mergePair(`sheet ${drawn}: ${source}`, source);
+				if (pair !== null) pairs.push(pair);
+			}
+			expect(
+				await differing(pairs, MERGE_TYPES, MERGE_CONDITIONS[0])
+			).toEqual([]);
+		},
+		FILE_TIMEOUT
+	);
+
+	it(
+		"over every configCases stylesheet the merge changes",
+		async () => {
+			/** @type {import("../helpers/syntaxEquivalence").CascadePair[]} */
+			const pairs = [];
+			for (const fixture of buildCorpus(CONFIG_CASES, ".css", (source) => source)) {
+				const pair = mergePair(fixture.name, fixture.raw);
+				if (pair !== null) pairs.push(pair);
+			}
+			// The merge has to have happened somewhere, or this proves nothing.
+			expect(pairs.length).toBeGreaterThan(0);
+			for (const condition of MERGE_CONDITIONS) {
+				expect(await differing(pairs, [], condition)).toEqual([]);
+			}
+		},
+		FILE_TIMEOUT
+	);
+
+	if (mergeStylesheets.length === 0) {
+		it(NO_BENCHMARK_CORPUS, () => {
+			// No-op: the stylesheets are installed by the benchmark.
+		});
+	}
+
+	for (const fixture of mergeStylesheets) {
+		it(
+			`over ${fixture.name}`,
+			async () => {
+				const pair = mergePair(fixture.name, fixture.raw);
+				if (pair === null) return;
+				for (const condition of MERGE_CONDITIONS) {
+					expect(await differing([pair], [], condition)).toEqual([]);
+				}
+			},
+			FILE_TIMEOUT
+		);
+	}
 });
