@@ -2367,12 +2367,200 @@ const compareCascades = ({ pairs, types }) => {
 	return reports;
 };
 
+/**
+ * One page printed two ways that must render alike.
+ * @typedef {{ name: string, before: string, after: string }} RenderPair
+ */
+
+/**
+ * What one pair rendered differently, and how many elements were compared.
+ * @typedef {{ name: string, elements: number, differences: string[] }} RenderReport
+ */
+
+/**
+ * Runs in the page: renders both documents of each pair in one sandboxed frame
+ * at one width, and compares every element's boxes and the text a reader sees.
+ * The frame runs no script, and the page's content security policy, which a
+ * `srcdoc` frame inherits, keeps it off the network.
+ * @param {{ pairs: RenderPair[], width: number }} input the pairs, and the frame's width
+ * @returns {Promise<RenderReport[]>} one report per pair, in order
+ */
+const compareRenders = async ({ pairs, width }) => {
+	const REPORTED = 5;
+	// Under Chromium's 1/64px layout grid, where the same line laid out from
+	// text split differently can land.
+	const TOLERANCE = 0.05;
+	const frame = document.createElement("iframe");
+	frame.setAttribute("sandbox", "allow-same-origin");
+	frame.style.cssText = `width:${width}px;height:800px;border:0`;
+	document.body.append(frame);
+
+	/**
+	 * @param {string} html a document
+	 * @returns {Promise<void>} once the frame has loaded it
+	 */
+	const render = (html) =>
+		new Promise((resolve) => {
+			frame.addEventListener("load", () => resolve(), { once: true });
+			frame.srcdoc = html;
+		});
+
+	/**
+	 * @param {Element} element an element
+	 * @returns {string} where it stands, closest ancestors last
+	 */
+	const whereIs = (element) => {
+		/** @type {string[]} */
+		const path = [];
+		for (
+			let current = /** @type {Element | null} */ (element);
+			current !== null && path.length < 4;
+			current = current.parentElement
+		) {
+			const classes = current.getAttribute("class");
+			path.unshift(
+				`${current.localName}${current.id ? `#${current.id}` : ""}${
+					classes ? `.${classes.trim().split(/\s+/).join(".")}` : ""
+				}`
+			);
+		}
+		return path.join(" > ");
+	};
+
+	/**
+	 * The boxes an element's fragments take, those touching on one line joined:
+	 * a text node split by a comment the printer drops ends a fragment there.
+	 * @param {Element} element an element
+	 * @returns {number[][]} its boxes as `[x, y, width, height]`
+	 */
+	const boxesOf = (element) => {
+		/** @type {number[][]} */
+		const out = [];
+		for (const box of element.getClientRects()) {
+			const last = out[out.length - 1];
+			if (
+				last !== undefined &&
+				last[1] === box.y &&
+				last[3] === box.height &&
+				Math.abs(last[0] + last[2] - box.x) < TOLERANCE
+			) {
+				last[2] = box.x + box.width - last[0];
+			} else {
+				out.push([box.x, box.y, box.width, box.height]);
+			}
+		}
+		return out;
+	};
+
+	/**
+	 * @param {number[][]} one boxes
+	 * @param {number[][]} other boxes
+	 * @returns {boolean} whether they stand in the same place, to within the tolerance
+	 */
+	const sameBoxes = (one, other) =>
+		one.length === other.length &&
+		one.every((box, at) =>
+			box.every((edge, side) => Math.abs(edge - other[at][side]) < TOLERANCE)
+		);
+
+	/**
+	 * @param {number[][]} boxes boxes
+	 * @returns {string} them, readable
+	 */
+	const showBoxes = (boxes) =>
+		boxes.length === 0
+			? "no box"
+			: boxes
+					.map(
+						([x, y, boxWidth, height]) =>
+							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(2)}x${height.toFixed(2)}`
+					)
+					.join(" ");
+
+	/**
+	 * @returns {Promise<{ tags: string[], where: string[], boxes: number[][][], text: string, title: string, size: string }>} what the frame renders
+	 */
+	const measure = async () => {
+		const doc = /** @type {Document} */ (frame.contentDocument);
+		await doc.fonts.ready;
+		// A transition or animation would be read part way through.
+		for (const running of doc.getAnimations()) running.cancel();
+		const root = /** @type {HTMLElement} */ (doc.documentElement);
+		const elements = [...doc.querySelectorAll("*")];
+		return {
+			tags: elements.map((element) => element.localName),
+			where: elements.map(whereIs),
+			// What a `<marquee>` holds moves as it scrolls, whenever it is read.
+			boxes: elements.map((element) =>
+				element.closest("marquee") === null ? boxesOf(element) : []
+			),
+			text: root.innerText,
+			title: doc.title,
+			size: `${root.scrollWidth}x${root.scrollHeight}`
+		};
+	};
+
+	/** @type {RenderReport[]} */
+	const reports = [];
+	for (const pair of pairs) {
+		await render(pair.before);
+		const before = await measure();
+		await render(pair.after);
+		const after = await measure();
+		/** @type {string[]} */
+		const differences = [];
+		if (before.title !== after.title) {
+			differences.push(`title: ${before.title} -> ${after.title}`);
+		}
+		if (before.text !== after.text) {
+			let at = 0;
+			while (before.text[at] === after.text[at]) at++;
+			const from = Math.max(0, at - 30);
+			differences.push(
+				`text at ${at}: ${JSON.stringify(
+					before.text.slice(from, at + 30)
+				)} -> ${JSON.stringify(after.text.slice(from, at + 30))}`
+			);
+		}
+		if (before.tags.join(" ") !== after.tags.join(" ")) {
+			differences.push(
+				`elements: ${before.tags.length} -> ${after.tags.length}`
+			);
+		} else {
+			for (
+				let at = 0;
+				at < before.boxes.length && differences.length < REPORTED;
+				at++
+			) {
+				if (!sameBoxes(before.boxes[at], after.boxes[at])) {
+					differences.push(
+						`${before.where[at]}: ${showBoxes(before.boxes[at])} -> ${showBoxes(
+							after.boxes[at]
+						)}`
+					);
+				}
+			}
+		}
+		if (differences.length === 0 && before.size !== after.size) {
+			differences.push(`size: ${before.size} -> ${after.size}`);
+		}
+		reports.push({
+			name: pair.name,
+			elements: before.tags.length,
+			differences
+		});
+	}
+	frame.remove();
+	return reports;
+};
+
 module.exports = {
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
 	collectFixtures,
 	compareCascades,
+	compareRenders,
 	compareRules,
 	conditionSignatures,
 	installHelpers,

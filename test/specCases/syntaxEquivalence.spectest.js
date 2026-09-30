@@ -88,8 +88,9 @@ const forEngine = (filed) =>
 const evaluateDeep = async (page, fn, arg) =>
 	JSON.parse(
 		await page.evaluate(
-			// eslint-disable-next-line no-new-func
-			(source, each) => JSON.stringify(new Function(`return (${source})`)()(each)),
+			async (source, each) =>
+				// eslint-disable-next-line no-new-func
+				JSON.stringify(await new Function(`return (${source})`)()(each)),
 			fn.toString(),
 			arg
 		)
@@ -100,6 +101,7 @@ const {
 	benchmarkStylesheets,
 	buildCorpus,
 	compareCascades,
+	compareRenders,
 	compareRules,
 	conditionSignatures,
 	installHelpers,
@@ -2679,6 +2681,127 @@ describe("a distant merge keeps every element's cascade", () => {
 				for (const condition of MERGE_CONDITIONS) {
 					expect(await differing([pair], [], condition)).toEqual([]);
 				}
+			},
+			FILE_TIMEOUT
+		);
+	}
+});
+
+// No script runs in the frame and nothing reaches the network, so a page renders
+// the same every time it is loaded; eval is for the suite's own page functions.
+const RENDER_POLICY =
+	"default-src 'none'; script-src 'unsafe-eval'; style-src 'unsafe-inline' data:; img-src data:; font-src data:; media-src data:";
+// A narrow viewport and a wide one, since media queries switch between them.
+const RENDER_WIDTHS = [360, 1400];
+
+describe("a minified page renders as the page it came from", () => {
+	/** @type {import("puppeteer-core").Browser} */
+	let browser;
+	/** @type {import("puppeteer-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({
+			browser: ENGINE,
+			protocolTimeout: FILE_TIMEOUT
+		});
+		page = await browser.newPage();
+		await page.setContent(
+			`<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${RENDER_POLICY}"></head><body></body></html>`
+		);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (page !== undefined) await page.close();
+		if (browser !== undefined) await browser.close();
+	});
+
+	/**
+	 * @param {import("../helpers/syntaxEquivalence").RenderPair[]} pairs the pairs
+	 * @returns {Promise<string[]>} one line per difference, at every width
+	 */
+	const differing = async (pairs) => {
+		/** @type {string[]} */
+		const out = [];
+		for (const width of RENDER_WIDTHS) {
+			for (let at = 0; at < pairs.length; at += 20) {
+				const reports = await evaluateDeep(page, compareRenders, {
+					pairs: pairs.slice(at, at + 20),
+					width
+				});
+				for (const report of reports) {
+					for (const difference of report.differences) {
+						out.push(`${width}px ${report.name}: ${difference}`);
+					}
+				}
+			}
+		}
+		return out;
+	};
+
+	/**
+	 * @param {import("../helpers/syntaxEquivalence").Fixture[]} fixtures the documents
+	 * @param {{ removeImpliedTags?: boolean | "smart" }} options print options
+	 * @returns {import("../helpers/syntaxEquivalence").RenderPair[]} each document and its print, where they differ
+	 */
+	const renderPairs = (fixtures, options) =>
+		fixtures.flatMap((fixture) => {
+			const after = minifyHtml(fixture.raw, options);
+			return after === fixture.raw
+				? []
+				: [{ name: fixture.name, before: fixture.raw, after }];
+		});
+
+	const configPages = buildCorpus(CONFIG_CASES, ".html", (source) => source);
+	const benchmarkPages = benchmarkDocuments((source) => source);
+	/** @type {Map<string, import("../helpers/syntaxEquivalence").Fixture[]>} */
+	const wptPages = new Map();
+	for (const file of hasCorpus() ? browserCorpus() : []) {
+		const name = nameOf(file);
+		const raw = readDocument(file);
+		// A crash test is written to take the renderer down.
+		if (raw === null || /-crash\./.test(name)) continue;
+		// WHY: engines disagree on a NUL, so no print of one renders alike in all:
+		// the spec ignores it in body text, while Chromium turns one right after a
+		// `<` into U+FFFD — measured: `a<\0!` renders `a<\uFFFD!` in Chrome 141.
+		if (raw.includes("\u0000")) continue;
+		const group = name.split("/").slice(2, 4).join("/");
+		const pages = wptPages.get(group);
+		const fixture = { name, raw, min: raw };
+		if (pages === undefined) wptPages.set(group, [fixture]);
+		else pages.push(fixture);
+	}
+
+	for (const [label, options] of /** @type {[string, { removeImpliedTags?: boolean | "smart" }][]} */ ([
+		["minified", {}],
+		["minified with every implied tag left out", { removeImpliedTags: true }]
+	])) {
+		it(
+			`over every configCases page, ${label}`,
+			async () => {
+				const pairs = renderPairs(configPages, options);
+				expect(pairs.length).toBeGreaterThan(0);
+				expect(await differing(pairs)).toEqual([]);
+			},
+			FILE_TIMEOUT
+		);
+
+		for (const [group, fixtures] of wptPages) {
+			it(
+				`over ${group}, ${label}`,
+				async () => {
+					expect(await differing(renderPairs(fixtures, options))).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+		}
+
+		it(
+			`over the benchmark pages, ${label}`,
+			async () => {
+				expect(await differing(renderPairs(benchmarkPages, options))).toEqual(
+					[]
+				);
 			},
 			FILE_TIMEOUT
 		);
