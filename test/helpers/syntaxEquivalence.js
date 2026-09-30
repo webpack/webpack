@@ -185,6 +185,8 @@ const benchmarkDocuments = (minify) => {
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  * @property {(value: string) => string} canonical a value under the one name the spec gives it
  * @property {(value: string) => string} paintedColors a value with every color it holds painted
+ * @property {(value: string) => string} normalizeValue a value spelled one way, for what is compared as written
+ * @property {(property: string, value: string) => string} cascadeValue a computed value in the one spelling rules are compared in
  */
 
 /**
@@ -1420,6 +1422,43 @@ const installHelpers = (generics) => {
 		return [property, reflected];
 	};
 
+	/**
+	 * Every data URL's payload decoded, as `decodeDataUrls` does outside the page:
+	 * the URL parser decodes `%3D` and `=` to one byte before anything reads it.
+	 * @param {string} text a value
+	 * @returns {string} it, each data URL's payload decoded
+	 */
+	const decodeDataUrls = (text) =>
+		text.replace(
+			/url\("(data:[^,"]*,)((?:[^"\\]|\\.)*)"\)/gi,
+			(whole, metadata, payload) => {
+				try {
+					return `url("${metadata}${decodeURIComponent(payload)}")`;
+				} catch (_err) {
+					return whole;
+				}
+			}
+		);
+
+	/**
+	 * A value an element computes, in the one spelling rules are compared in: a
+	 * custom property as its token stream, anything else named once, its colors
+	 * painted and its data URLs decoded.
+	 * @param {string} property the property
+	 * @param {string} value its computed value
+	 * @returns {string} the value, spelled once
+	 */
+	const cascadeValue = (property, value) => {
+		if (property.startsWith("--")) return decodeDataUrls(normalizeValue(value));
+		const named = canonical(
+			property === "font-family" || property === "font"
+				? unquoteFamilies(value)
+				: value
+		);
+		const whole = painted(named);
+		return decodeDataUrls(whole === named ? paintedColors(named) : whole);
+	};
+
 	/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq =
 		{
 			cssRules,
@@ -1428,7 +1467,9 @@ const installHelpers = (generics) => {
 			supportsSignatures,
 			probeReflection,
 			canonical,
-			paintedColors
+			paintedColors,
+			normalizeValue,
+			cascadeValue
 		};
 };
 
@@ -2557,14 +2598,767 @@ const compareRenders = async ({ pairs, width }) => {
 	return reports;
 };
 
+/**
+ * One stylesheet printed two ways that must style every element alike.
+ * @typedef {{ name: string, before: string, after: string }} StylePair
+ */
+
+/**
+ * One element or pseudo-element a pair styles differently: where it stands and
+ * under which sample, and per property the two values as computed and as spelled once.
+ * @typedef {{ at: string, moved: [string, string, string, string, string][] }} StyleDifference
+ */
+
+/**
+ * What one pair styled differently, and how much was compared.
+ * @typedef {{ name: string, elements: number, properties: number, samples: number, differences: StyleDifference[] }} StyleReport
+ */
+
+/**
+ * Runs in the page: builds the elements each pair's selectors reach, one set
+ * in each of two frames, adopts one sheet per frame, and compares every element's
+ * computed style at each viewport and container size a query of either sheet
+ * names. What no element can show — a font face, a counter style — is compared as
+ * the engine serializes it.
+ * @param {{ pairs: StylePair[], types: string[] }} input the pairs, and element types every pair nests in each other
+ * @returns {Promise<StyleReport[]>} one report per pair, in order
+ */
+const compareStyles = async ({ pairs, types }) => {
+	// Enough to leave several once rounding is set aside outside the page.
+	const KEPT = 200;
+	// Each sample reads every element again, so a sheet naming many breakpoints
+	// is sampled at the first ones.
+	const MAX_SAMPLES = 24;
+	const DOCUMENT_ELEMENTS = new Set(["html", "head", "body"]);
+	// WHY: a state only input puts an element in would leave its rules applying in
+	// neither frame, so a printer's defect there would compare equal. Both sheets
+	// read each as an attribute instead — rewritten in what the engine serialized,
+	// so the two spellings of one selector are rewritten alike.
+	const STATES =
+		/(^|[^:\\]):(hover|active|focus|focus-visible|focus-within|visited|link|any-link|local-link|target|target-within|checked|indeterminate|default|disabled|enabled|required|optional|valid|invalid|user-valid|user-invalid|in-range|out-of-range|placeholder-shown|autofill|-webkit-autofill|read-only|read-write|open|closed|popover-open|modal|fullscreen|picture-in-picture|playing|paused|seeking|buffering|stalled|muted|volume-locked|current|past|future|blank|defined)(?![\w-])/gi;
+	// The pseudo-elements `getComputedStyle` reads, beyond the two every element has.
+	const PSEUDOS =
+		/::(marker|placeholder|first-line|first-letter|selection|backdrop|file-selector-button)(?![\w-])/gi;
+	const { cascadeValue, normalizeValue } =
+		/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq;
+
+	/**
+	 * @param {string} text an identifier as the CSSOM serializes it
+	 * @returns {string} the name it spells
+	 */
+	const unescapeIdentifier = (text) =>
+		text.replace(/\\(?:([0-9a-fA-F]{1,6}) ?|([\s\S]))/g, (_, hex, other) =>
+			hex === undefined ? other : String.fromCodePoint(Number.parseInt(hex, 16))
+		);
+
+	/**
+	 * @param {string} list a selector list
+	 * @returns {string[]} its selectors
+	 */
+	const splitList = (list) => {
+		/** @type {string[]} */
+		const out = [];
+		let depth = 0;
+		let quote = "";
+		let start = 0;
+		for (let i = 0; i < list.length; i++) {
+			const char = list[i];
+			if (char === "\\") {
+				i++;
+			} else if (quote !== "") {
+				if (char === quote) quote = "";
+			} else if (char === '"' || char === "'") {
+				quote = char;
+			} else if (char === "(" || char === "[") {
+				depth++;
+			} else if (char === ")" || char === "]") {
+				depth--;
+			} else if (char === "," && depth === 0) {
+				out.push(list.slice(start, i).trim());
+				start = i + 1;
+			}
+		}
+		out.push(list.slice(start).trim());
+		return out;
+	};
+
+	/** @typedef {{ combinator: string, type: string, classes: string[], id: string, attributes: [string, string][] }} Compound */
+
+	/**
+	 * A selector as the compounds an element chain has to carry. A pseudo-class is
+	 * left out, and so is what it holds — but the first selector of an `:is()` or
+	 * `:where()` is taken in, since the element has to be one of those.
+	 * @param {string} selector one selector
+	 * @returns {Compound[] | null} the chain, or null for a shape not read here
+	 */
+	const parseSelector = (selector) => {
+		const IDENTIFIER =
+			/^(?:[-\w\u00A0-\uFFFF]|\\(?:[0-9a-fA-F]{1,6} ?|[\s\S]))+/;
+		const ATTRIBUTE =
+			/^\[\s*([-\w]+)\s*(?:[~|^$*]?=\s*("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|[^\s\]]+)\s*[iIsS]?\s*)?\]/;
+		/** @type {Compound[]} */
+		const chain = [];
+		/** @returns {Compound} an empty compound */
+		const fresh = () => ({
+			combinator: "",
+			type: "",
+			classes: [],
+			id: "",
+			attributes: []
+		});
+		let current = fresh();
+		let started = false;
+		let at = 0;
+		while (at < selector.length) {
+			const rest = selector.slice(at);
+			const combinator = /^[\s>+~]+/.exec(rest);
+			if (combinator !== null) {
+				if (started) {
+					chain.push(current);
+					const named = combinator[0].replace(/\s/g, "");
+					current = fresh();
+					current.combinator = named === "" ? " " : named;
+					started = false;
+				}
+				at += combinator[0].length;
+				continue;
+			}
+			started = true;
+			const char = rest[0];
+			if (char === "*") {
+				at++;
+			} else if (char === "." || char === "#") {
+				const name = IDENTIFIER.exec(rest.slice(1));
+				if (name === null) return null;
+				if (char === ".") current.classes.push(unescapeIdentifier(name[0]));
+				else current.id = unescapeIdentifier(name[0]);
+				at += 1 + name[0].length;
+			} else if (char === "[") {
+				const attribute = ATTRIBUTE.exec(rest);
+				if (attribute === null) return null;
+				const value = attribute[2] === undefined ? "" : attribute[2];
+				current.attributes.push([
+					attribute[1],
+					unescapeIdentifier(/^["']/.test(value) ? value.slice(1, -1) : value)
+				]);
+				at += attribute[0].length;
+			} else if (char === ":") {
+				const name = /^::?[-\w]+/.exec(rest);
+				if (name === null) return null;
+				at += name[0].length;
+				if (selector[at] === "(") {
+					const open = at;
+					for (let depth = 0; at < selector.length; at++) {
+						if (selector[at] === "(") depth++;
+						else if (selector[at] === ")" && --depth === 0) break;
+					}
+					at++;
+					if (/^:(?:is|where)$/i.test(name[0])) {
+						const [first] = splitList(selector.slice(open + 1, at - 1));
+						const inner = parseSelector(first);
+						// One compound only: a chain inside cannot stand in this one's place.
+						if (inner !== null && inner.length === 1) {
+							const [one] = inner;
+							if (one.type !== "") current.type = one.type;
+							if (one.id !== "") current.id = one.id;
+							current.classes.push(...one.classes);
+							current.attributes.push(...one.attributes);
+						}
+					}
+				}
+			} else {
+				const name = IDENTIFIER.exec(rest);
+				// A namespace or a nesting selector: the chain would not say what it matches.
+				if (name === null) return null;
+				current.type = unescapeIdentifier(name[0]).toLowerCase();
+				at += name[0].length;
+			}
+		}
+		chain.push(current);
+		return chain;
+	};
+
+	/**
+	 * @param {Document} doc the document to build in
+	 * @param {Compound} compound what the element carries
+	 * @returns {Element} the element
+	 */
+	const build = (doc, compound) => {
+		/** @type {Element} */
+		let element;
+		try {
+			element = doc.createElement(compound.type || "div");
+		} catch (_err) {
+			element = doc.createElement("div");
+		}
+		if (compound.classes.length > 0) {
+			element.setAttribute("class", compound.classes.join(" "));
+		}
+		if (compound.id !== "") element.id = compound.id;
+		for (const [name, value] of compound.attributes) {
+			try {
+				element.setAttribute(name, value);
+			} catch (_err) {
+				// A name the DOM will not take is one no element carries either.
+			}
+		}
+		return element;
+	};
+
+	/**
+	 * @param {string} srcdoc the document
+	 * @returns {Promise<HTMLIFrameElement>} a frame showing it
+	 */
+	const openFrame = (srcdoc) =>
+		new Promise((resolve) => {
+			const frame = document.createElement("iframe");
+			frame.style.cssText = "border:0;display:block;width:1400px;height:800px";
+			frame.addEventListener("load", () => resolve(frame), { once: true });
+			frame.srcdoc = srcdoc;
+			document.body.append(frame);
+		});
+
+	/**
+	 * @param {Window} win a frame's window
+	 * @returns {Promise<void>} once it has rendered twice
+	 */
+	const settle = (win) =>
+		new Promise((resolve) => {
+			win.requestAnimationFrame(() =>
+				win.requestAnimationFrame(() => resolve())
+			);
+		});
+
+	/**
+	 * @typedef {object} SheetReading
+	 * @property {Map<string, string[]>} sequences per property, every declaration of it in cascade order
+	 * @property {string[]} selectors every selector a style rule applies under, nesting resolved
+	 * @property {string[]} described what no element shows, as the engine serializes it
+	 * @property {string[]} mediaTexts every media condition
+	 * @property {string[]} containerQueries every container condition
+	 * @property {Set<string>} containerNames every container a query names
+	 * @property {Map<string, Set<string>>} reads per custom property, the properties that substitute it
+	 * @property {string[]} layers every layer in the order the cascade ranks them, which is where each is first named
+	 */
+
+	/**
+	 * Every rule of a sheet, rewriting each state it names into an attribute.
+	 * @param {CSSStyleSheet} sheet the sheet, adopted
+	 * @returns {SheetReading} what the comparison needs of it
+	 */
+	const readSheet = (sheet) => {
+		/** @type {SheetReading} */
+		const out = {
+			sequences: new Map(),
+			selectors: [],
+			described: [],
+			mediaTexts: [],
+			containerQueries: [],
+			containerNames: new Set(),
+			reads: new Map(),
+			layers: []
+		};
+		/**
+		 * @param {string} name a layer's full name
+		 */
+		const layer = (name) => {
+			if (!out.layers.includes(name)) out.layers.push(name);
+		};
+		/**
+		 * @param {CSSRuleList} rules the rules
+		 * @param {string} context the conditions around them
+		 * @param {string[] | null} parents the selectors of the style rule they nest in
+		 * @param {string} scope the scope root's selector, or ""
+		 */
+		const walk = (rules, context, parents, scope) => {
+			for (const rule of rules) {
+				const kind = rule.constructor.name;
+				const any = /** @type {EXPECTED_ANY} */ (rule);
+				if (kind === "CSSStyleRule" || kind === "CSSNestedDeclarations") {
+					let own = parents || [""];
+					if (kind === "CSSStyleRule") {
+						const mapped = any.selectorText.replace(STATES, "$1[data-eq-$2]");
+						if (mapped !== any.selectorText) any.selectorText = mapped;
+						own = [];
+						for (const one of splitList(any.selectorText)) {
+							for (const parent of parents || [scope]) {
+								if (parent === "") {
+									own.push(one.replace(/:scope|&/g, "").trim() || "*");
+								} else if (/&|:scope/.test(one)) {
+									own.push(one.replace(/&|:scope/g, parent));
+								} else {
+									own.push(`${parent} ${one}`);
+								}
+							}
+						}
+						out.selectors.push(...own);
+					}
+					const style = /** @type {CSSStyleDeclaration} */ (any.style);
+					const where = `${context}\u0001${
+						kind === "CSSStyleRule" ? any.selectorText : "&"
+					}`;
+					// A shorthand holding a `var()` leaves each longhand empty until it is
+					// substituted, so what the rule says there is its whole text.
+					const text = style.cssText;
+					const substitutes = [...text.matchAll(/var\(\s*(--[\w-]+)/g)].map(
+						([, name]) => name
+					);
+					for (let i = 0; i < style.length; i++) {
+						const property = style.item(i);
+						const value = style.getPropertyValue(property) || text;
+						const sequence = out.sequences.get(property);
+						const entry = `${where}\u0001${value}\u0001${style.getPropertyPriority(property)}`;
+						if (sequence === undefined) out.sequences.set(property, [entry]);
+						else sequence.push(entry);
+						for (const name of substitutes) {
+							const readers = out.reads.get(name);
+							if (readers === undefined) {
+								out.reads.set(name, new Set([property]));
+							} else {
+								readers.add(property);
+							}
+						}
+					}
+					if (any.cssRules !== undefined) walk(any.cssRules, where, own, scope);
+				} else if (kind === "CSSMediaRule") {
+					out.mediaTexts.push(any.media.mediaText);
+					walk(
+						any.cssRules,
+						`${context}@media ${any.media.mediaText}`,
+						parents,
+						scope
+					);
+				} else if (kind === "CSSContainerRule") {
+					out.containerQueries.push(any.containerQuery);
+					if (any.containerName) out.containerNames.add(any.containerName);
+					walk(
+						any.cssRules,
+						`${context}@container ${any.containerName}${any.containerQuery}`,
+						parents,
+						scope
+					);
+				} else if (kind === "CSSSupportsRule") {
+					walk(
+						any.cssRules,
+						`${context}@supports ${any.conditionText}`,
+						parents,
+						scope
+					);
+				} else if (kind === "CSSLayerBlockRule") {
+					layer(`${context}@layer ${any.name}`);
+					walk(any.cssRules, `${context}@layer ${any.name}`, parents, scope);
+				} else if (kind === "CSSLayerStatementRule") {
+					for (const name of any.nameList) layer(`${context}@layer ${name}`);
+				} else if (kind === "CSSScopeRule") {
+					walk(
+						any.cssRules,
+						`${context}@scope ${any.start}`,
+						parents,
+						any.start || ""
+					);
+				} else if (kind === "CSSKeyframesRule" || kind === "CSSImportRule") {
+					// A keyframe shows in the animations the elements run, and an adopted
+					// sheet holds no import.
+				} else {
+					// A font face, a counter style, a page, a registered property and
+					// anything grouping what no element computes, such as `@starting-style`.
+					out.described.push(`${context}${normalizeValue(rule.cssText)}`);
+				}
+			}
+		};
+		walk(sheet.cssRules, "", null, "");
+		return out;
+	};
+
+	/**
+	 * The lengths a set of conditions names, in pixels, and which dimension each is of.
+	 * @param {string[]} conditions the conditions
+	 * @returns {{ width: number[], height: number[] }} the lengths per dimension
+	 */
+	const lengthsIn = (conditions) => {
+		/** @type {{ width: number[], height: number[] }} */
+		const out = { width: [], height: [] };
+		for (const condition of conditions) {
+			for (const [, feature, rest] of condition.matchAll(
+				/\(([^():]*?)(?:[:<>=]+)([^()]*)\)/g
+			)) {
+				const dimension = /height|block-size/.test(feature)
+					? "height"
+					: "width";
+				for (const [, number, unit] of `${feature} ${rest}`.matchAll(
+					/(\d*\.?\d+)(px|r?em)\b/gi
+				)) {
+					const size = Number(number) * (unit.toLowerCase() === "px" ? 1 : 16);
+					if (size > 0 && size < 10000) out[dimension].push(Math.round(size));
+				}
+			}
+		}
+		return out;
+	};
+
+	/**
+	 * @param {number[]} lengths lengths a condition names
+	 * @returns {number[]} a pixel under, at and over each
+	 */
+	const around = (lengths) =>
+		lengths.flatMap((length) => [Math.max(1, length - 1), length, length + 1]);
+
+	/** @type {StyleReport[]} */
+	const reports = [];
+	const frames = [
+		await openFrame("<!doctype html><html><head></head><body></body></html>"),
+		await openFrame("<!doctype html><html><head></head><body></body></html>")
+	];
+	for (const pair of pairs) {
+		const docs = frames.map(
+			(frame) => /** @type {Document} */ (frame.contentDocument)
+		);
+		const readings = [pair.before, pair.after].map((text, at) => {
+			const win = /** @type {Window & typeof globalThis} */ (
+				frames[at].contentWindow
+			);
+			const sheet = new win.CSSStyleSheet();
+			sheet.replaceSync(text);
+			docs[at].adoptedStyleSheets = [sheet];
+			return readSheet(sheet);
+		});
+		const [one, other] = readings;
+
+		// A property is read wherever the two sheets declare it apart — a value, a
+		// selector, a condition or an order — and so is one reading a custom property that is.
+		/** @type {Set<string>} */
+		const tracked = new Set();
+		for (const property of new Set([
+			...one.sequences.keys(),
+			...other.sequences.keys()
+		])) {
+			const a = one.sequences.get(property) || [];
+			const b = other.sequences.get(property) || [];
+			if (a.join("\u0002") !== b.join("\u0002")) tracked.add(property);
+		}
+		// Layers ranked apart move every declaration inside one, whatever it says.
+		if (one.layers.join("\u0002") !== other.layers.join("\u0002")) {
+			for (const reading of readings) {
+				for (const property of reading.sequences.keys()) tracked.add(property);
+			}
+		}
+		for (const property of tracked) {
+			if (!property.startsWith("--")) continue;
+			for (const reading of readings) {
+				for (const reader of reading.reads.get(property) || []) {
+					tracked.add(reader);
+				}
+			}
+		}
+
+		const describedA = one.described.join("\n");
+		const describedB = other.described.join("\n");
+		/** @type {StyleDifference[]} */
+		const moved = [];
+		if (describedA !== describedB) {
+			const at = one.described.findIndex(
+				(text, i) => text !== other.described[i]
+			);
+			const [a, b] = [String(one.described[at]), String(other.described[at])];
+			moved.push({
+				at: "rules no element computes",
+				moved: [["", a, b, a, b]]
+			});
+		}
+
+		// The same elements in both frames: each selector's chain, and each type
+		// carrying every class and attribute any selector names.
+		/** @type {Set<string>} */
+		const named = new Set(["div", ...types]);
+		/** @type {Set<string>} */
+		const classes = new Set();
+		/** @type {Map<string, string>} */
+		const attributes = new Map();
+		/** @type {Set<string>} */
+		const pseudos = new Set(["", "::before", "::after"]);
+		const selectors = [...new Set([...one.selectors, ...other.selectors])];
+		/** @type {Compound[][]} */
+		const chains = [];
+		for (const selector of selectors) {
+			for (const [, pseudo] of selector.matchAll(PSEUDOS)) {
+				pseudos.add(`::${pseudo.toLowerCase()}`);
+			}
+			const chain = parseSelector(selector);
+			if (chain === null) continue;
+			chains.push(chain);
+			for (const compound of chain) {
+				if (compound.type !== "" && !DOCUMENT_ELEMENTS.has(compound.type)) {
+					named.add(compound.type);
+				}
+				for (const name of compound.classes) classes.add(name);
+				for (const [name, value] of compound.attributes) {
+					attributes.set(name, value);
+				}
+			}
+		}
+		const containerNames = [
+			...new Set([...one.containerNames, ...other.containerNames])
+		];
+		const containers = lengthsIn([
+			...one.containerQueries,
+			...other.containerQueries
+		]);
+		const media = lengthsIn([...one.mediaTexts, ...other.mediaTexts]);
+		const queried =
+			containers.width.length + containers.height.length > 0 ||
+			one.containerQueries.length + other.containerQueries.length > 0;
+
+		/** @type {Element[][]} */
+		const elements = docs.map((doc) => {
+			const holder = doc.createElement("div");
+			holder.id = "eq-holder";
+			const root = doc.createElement("div");
+			holder.append(root);
+			for (const chain of chains) {
+				/** @type {Element | null} */
+				let last = null;
+				for (const compound of chain) {
+					// A document has one of each, and the root already stands inside them.
+					if (DOCUMENT_ELEMENTS.has(compound.type)) {
+						if (last === null) continue;
+						break;
+					}
+					const element = build(doc, compound);
+					if (
+						last !== null &&
+						(compound.combinator === "+" || compound.combinator === "~")
+					) {
+						last.after(element);
+					} else {
+						(last === null ? root : last).append(element);
+					}
+					last = element;
+				}
+			}
+			const everything = {
+				combinator: "",
+				type: "",
+				classes: [...classes],
+				id: "",
+				attributes: [...attributes]
+			};
+			for (const type of named) {
+				const outer = build(doc, { ...everything, type });
+				outer.append(build(doc, { ...everything, type: "div" }));
+				root.append(outer);
+				// The same type carrying nothing, which is what a negated state reaches.
+				root.append(
+					build(doc, { ...everything, type, classes: [], attributes: [] })
+				);
+				for (const inner of types) {
+					const parent = build(doc, { ...everything, type, classes: [] });
+					parent.append(
+						build(doc, { ...everything, type: inner, classes: [] })
+					);
+					parent.append(build(doc, { ...everything, type: inner }));
+					root.append(parent);
+				}
+			}
+			doc.body.append(holder);
+			return [
+				doc.documentElement,
+				doc.body,
+				root,
+				...root.querySelectorAll("*")
+			];
+		});
+		await Promise.all(
+			frames.map((frame) => settle(/** @type {Window} */ (frame.contentWindow)))
+		);
+
+		// Where each frame is read: the two widths every sheet is, and a pixel either
+		// side of every length a query names, so a threshold moved by one separates them.
+		/** @type {{ width: number, height: number, box: number }[]} */
+		const samples = [
+			{ width: 360, height: 800, box: 0 },
+			{ width: 1400, height: 800, box: 0 }
+		];
+		for (const width of around(media.width)) {
+			samples.push({ width, height: 800, box: 0 });
+		}
+		for (const height of around(media.height)) {
+			samples.push({ width: 1024, height, box: 0 });
+		}
+		for (const box of around([...containers.width, ...containers.height])) {
+			samples.push({ width: 1400, height: 800, box });
+		}
+		const seen = new Set();
+		const sampled = samples
+			.filter((sample) => {
+				const key = `${sample.width}x${sample.height}/${sample.box}`;
+				if (seen.has(key)) return false;
+				seen.add(key);
+				return true;
+			})
+			.slice(0, MAX_SAMPLES);
+
+		const properties = [...tracked];
+		for (const sample of sampled) {
+			for (const [at, frame] of frames.entries()) {
+				frame.style.width = `${sample.width}px`;
+				frame.style.height = `${sample.height}px`;
+				const holder = /** @type {HTMLElement} */ (
+					docs[at].getElementById("eq-holder")
+				);
+				holder.style.cssText = queried
+					? `container-type:size;container-name:${containerNames.join(" ") || "none"};width:${
+							sample.box || sample.width
+						}px;height:${sample.box || sample.height}px`
+					: "";
+			}
+			/**
+			 * @param {number} at which frame
+			 * @returns {{ values: string[][], rendered: boolean[], animations: string[] }} what it computes
+			 */
+			const read = (at) => {
+				const list = elements[at];
+				// Layout first: an `<object>` settles what it renders as only once one runs.
+				const rendered = list.map(
+					(element) => element.getClientRects().length !== 0
+				);
+				// Read before they are cancelled, which is what reads the keyframes.
+				const animations = list.map((element) =>
+					element
+						.getAnimations()
+						.map((animation) => {
+							const effect = /** @type {KeyframeEffect} */ (animation.effect);
+							return `${/** @type {EXPECTED_ANY} */ (animation).animationName}:${effect
+								.getKeyframes()
+								.map((frame) =>
+									Object.keys(frame)
+										.filter((key) => key !== "computedOffset")
+										.sort()
+										.map(
+											(key) => `${key}=${cascadeValue(key, String(frame[key]))}`
+										)
+										.join(";")
+								)
+								.join("|")}`;
+						})
+						.join(" ")
+				);
+				for (const element of list) {
+					for (const running of element.getAnimations()) running.cancel();
+				}
+				/** @type {string[][]} */
+				const values = [];
+				for (const element of list) {
+					for (const pseudo of pseudos) {
+						const computed = /** @type {Window} */ (
+							frames[at].contentWindow
+						).getComputedStyle(element, pseudo || null);
+						values.push(
+							properties.map((name) => computed.getPropertyValue(name))
+						);
+					}
+				}
+				return { values, rendered, animations };
+			};
+			const before = read(0);
+			const after = read(1);
+			const perElement = pseudos.size;
+			for (let i = 0; i < before.values.length && moved.length < KEPT; i++) {
+				const index = Math.floor(i / perElement);
+				// Without a box in either frame nothing shows the value, and WebKit
+				// resolves such an element's style apart from the tree it stands in.
+				if (!(before.rendered[index] || after.rendered[index])) continue;
+				/** @type {[string, string, string, string, string][]} */
+				const changed = [];
+				for (let p = 0; p < properties.length; p++) {
+					const a = before.values[i][p];
+					const b = after.values[i][p];
+					if (a === b) continue;
+					const x = cascadeValue(properties[p], a);
+					const y = cascadeValue(properties[p], b);
+					if (x !== y) changed.push([properties[p], a, b, x, y]);
+				}
+				if (
+					i % perElement === 0 &&
+					before.animations[index] !== after.animations[index]
+				) {
+					const [a, b] = [before.animations[index], after.animations[index]];
+					changed.push(["@keyframes", a, b, a, b]);
+				}
+				if (changed.length === 0) continue;
+				const element = elements[0][index];
+				const tag = element.outerHTML.slice(
+					0,
+					element.outerHTML.indexOf(">") + 1
+				);
+				/** @type {string[]} */
+				const path = [];
+				for (
+					let ancestor = element.parentElement;
+					ancestor !== null && ancestor.id !== "eq-holder";
+					ancestor = ancestor.parentElement
+				) {
+					path.unshift(ancestor.localName);
+				}
+				moved.push({
+					at: `${sample.width}x${sample.height}${sample.box ? ` in ${sample.box}px` : ""}: ${[
+						...path,
+						tag.slice(0, 160)
+					].join(" > ")}${[...pseudos][i % perElement]}`,
+					moved: changed
+				});
+			}
+		}
+		for (const doc of docs) {
+			doc.adoptedStyleSheets = [];
+			const holder = doc.getElementById("eq-holder");
+			if (holder !== null) holder.remove();
+		}
+		reports.push({
+			name: pair.name,
+			elements: elements[0].length,
+			properties: properties.length,
+			samples: sampled.length,
+			differences: moved
+		});
+	}
+	for (const frame of frames) frame.remove();
+	return reports;
+};
+
+/**
+ * The elements a report names once the printer's own rounding is set aside,
+ * one line each and a few at most.
+ * @param {StyleReport} report what the page found for one pair
+ * @returns {string[]} one line per element that differs
+ */
+const cascadeLines = (report) => {
+	/** @type {string[]} */
+	const out = [];
+	for (const { at, moved } of report.differences) {
+		const real = moved.filter(
+			([, , , one, other]) => !numericallyEqual(one, other)
+		);
+		if (real.length === 0) continue;
+		out.push(
+			`${report.name}: ${at} ${real
+				.map(([property, one, other]) => `${property}: ${one} -> ${other}`)
+				.join("; ")}`
+		);
+		if (out.length === 5) break;
+	}
+	return out;
+};
+
 module.exports = {
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
+	cascadeLines,
 	collectFixtures,
 	compareCascades,
 	compareRenders,
 	compareRules,
+	compareStyles,
 	conditionSignatures,
 	installHelpers,
 	numericallyEqual
