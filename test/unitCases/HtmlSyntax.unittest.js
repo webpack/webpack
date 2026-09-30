@@ -9130,6 +9130,52 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 				"<!doctype html><head><noscript><img src=x.gif></noscript><title>t</title></head><p>hi"
 			);
 		});
+
+		it("keeps the head whitespace a reader with scripting off reads as body text", () => {
+			// That reader leaves the head at the `<img>`, so what follows is in the body.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><img src=x></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><img src=x></noscript> <title>t</title></head><p>x"
+			);
+			expect(
+				minify("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x")
+			).toBe("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x</body>");
+			// The mode passes a `<style>` through, but only void elements are read as safe.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><style>a{}</style></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><style>a{}</style></noscript> <title>t</title></head><p>x"
+			);
+		});
+
+		it("drops the head whitespace where every reader keeps the head", () => {
+			expect(
+				minify(
+					"<!doctype html><head><noscript><link rel=a href=b><!-- c --></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><link rel=a href=b><!-- c --></noscript><title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript><META charset=x></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><META charset=x></noscript><title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript></noscript><title>t</title></head><p>x"
+			);
+		});
 	});
 
 	describe("comments", () => {
