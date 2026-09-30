@@ -401,6 +401,74 @@ const OUTPUT_CASES = [
 	]
 ];
 
+/**
+ * Every node terser sizes in a script, `with` included, which a module forbids.
+ */
+const SIZED_SCRIPT = `"a directive"; debugger; {} ;
+label: for (;;) { break label; }
+outer: do { continue outer; } while (a);
+while (b) break;
+for (var i in o) c();
+for (const v of w) d();
+with (o) e;
+switch (x) { case 1: f(); break; default: g(); }
+try { h(); } catch { } try { h(); } catch (error) { } finally { k(); }
+if (a) b(); else c();
+throw new Error("x", 1);
+var [p, ...q] = r, { s, t: [u] } = v;
+let fn = (a, b = 1, ...c) => a, one = x => x * 2, block = async () => { return await 1; };
+const tpl = tag\`a\${b}c\${d}\`, re = /x+/gi, str = 'q"', num = 1.5e3, big = 12n;
+x = [1, , 3], y = { a, b: 1, [c]: 2, get d() { return 1; }, set d(v) {}, e() {}, async *f() { yield 1; }, "g h": 1, 1: 2 };
+({ a } = y);
+z = null + NaN + undefined + Infinity + true + false + void 0 + typeof a + -a + !b + ~c + a?.b + a?.[b] + a?.(b) + a.b + a[b] + (a, b) + (a ? b : c) + (a || b) + (a ?? b) + a ** b;
+class A extends B { static x = 1; y; #z = 2; static #w; static { f(); } constructor() { super(); new.target; } get g() { return this.#z; } set g(v) {} static m() {} *gen() {} async am() {} #pm() { return #z in this; } static get sg() {} }
+new (class {})();
+function named(a) { return arguments; }
+async function* generate() { for await (const v of w) yield* v; }`;
+
+/**
+ * Every node terser sizes only in a module. terser cannot size an exported
+ * default function, whose size asks for a stack the export does not pass.
+ */
+const SIZED_MODULE = `import d, { a as b, c } from "m"; import * as ns from "n"; import "side"; import json from "j" with { type: "json" };
+export { b, c as e }; export * from "o"; export * as p from "q"; export default [import.meta.url, import("x"), import.source("y")];
+export const k = 1; export class K {}`;
+
+/**
+ * Properties the mangler reads each way terser does: quoted, computed, in a
+ * `defineProperty`, an `in`, and the `@__KEY__` and `@__MANGLE_PROP__` notes.
+ */
+const MANGLED_PROPERTIES = `var obj = { alpha: 1, "beta": 2, [c ? "gamma" : "delta"]: 3, get eps() { return 1; }, method() {}, 42: 1 };
+obj.alpha = obj.beta + obj["gamma"] + obj[(0, "delta")] + obj[c ? "eps" : "method"];
+Object.defineProperty(obj, "zeta", { value: 1 });
+sink("eta" in obj, /*@__KEY__*/ "theta", obj[/*@__MANGLE_PROP__*/ "iota"]);
+var ann = { /*@__MANGLE_PROP__*/ kappa: 1 }; ann.kappa++;
+undeclared.lambda = 1;
+class Shape { #priv = 1; field = 2; get #getter() { return 1; } method() { return this.#priv + this.field + this.#getter; } }
+sink(obj, new Shape());`;
+
+/**
+ * Names the mangler keeps, moves or hands out apart: a function declared in a
+ * block, a named and a kept function value, a catch, a label and `arguments`.
+ */
+const MANGLED_NAMES = `var counter = function () { return 1; };
+function outer(first, second) {
+	if (first) { function inBlock() { return second; } inBlock(); }
+	var named = function (argument) { return argument + counter(); };
+	var keptLambda = function () { return 1; };
+	try { first(); } catch (error) { second(error); }
+	function inner() { var arrow = () => arguments[0]; return arrow(); }
+	label: for (;;) { break label; }
+	return [named, keptLambda, inner(), first.prop, first["quoted"]];
+}
+sink(outer);`;
+
+/**
+ * Exported names, which a name cache and a toplevel mangle keep.
+ */
+const MANGLED_MODULE =
+	"export var kept = 1; var hidden = 2; export { hidden as shown }; export default function main(alpha) { return alpha + kept + hidden; }";
+
 describe("syntax-printer", () => {
 	it("should install onto terser", async () => {
 		const terser = await load();
@@ -1454,6 +1522,149 @@ describe("syntax-printer", () => {
 				PHASES.find((phase) => phase.name === "equivalent")
 			);
 		expect(equivalent.supports({ ast: {} })).toBe(false);
+	});
+
+	it("should size and compare every node as terser does", async () => {
+		await load();
+		const reference = require("terser");
+		const { parse, ast } = await loadSources();
+		/** @type {[string, boolean][]} */
+		const sources = [
+			[SIZED_SCRIPT, false],
+			[SIZED_MODULE, true]
+		];
+		for (const [source, module] of sources) {
+			/** @type {EXPECTED_ANY[]} */
+			const ours = [];
+			parse
+				.parse(source, { module })
+				.walk(new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+					ours.push(node);
+				}));
+			// terser's published build hands out its own tree, sized and compared
+			// by terser's own methods.
+			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
+				await reference.minify(
+					source,
+					/** @type {EXPECTED_ANY} */ ({
+						compress: false,
+						mangle: false,
+						module,
+						format: { ast: true, code: false }
+					})
+				)
+			);
+			/** @type {EXPECTED_ANY[]} */
+			const theirs = [];
+			tree.walk({
+				/**
+				 * @param {EXPECTED_ANY} node a node of terser's tree
+				 * @param {EXPECTED_FUNCTION=} descend walks its children
+				 */
+				_visit(node, descend) {
+					theirs.push(node);
+					if (descend) descend.call(node);
+				}
+			});
+			expect(ours.map((node) => [node.TYPE, node.size()])).toEqual(
+				theirs.map((node) => [node.TYPE, node.size()])
+			);
+			for (let i = 0; i < ours.length; i++) {
+				for (let j = 0; j < ours.length; j++) {
+					if (ours[i].TYPE !== ours[j].TYPE) continue;
+					expect([i, j, ours[i].equivalent_to(ours[j])]).toEqual([
+						i,
+						j,
+						theirs[i].equivalent_to(theirs[j])
+					]);
+				}
+			}
+		}
+	});
+
+	it("should mangle names and properties as terser does under every option", async () => {
+		const { minify } = await load();
+		const reference = require("terser");
+		/** @type {[string, () => EXPECTED_OBJECT][]} */
+		const variants = [
+			[MANGLED_PROPERTIES, () => ({ mangle: { properties: true } })],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ mangle: { properties: { keep_quoted: true } } })
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ mangle: { properties: { keep_quoted: "strict" } } })
+			],
+			[MANGLED_PROPERTIES, () => ({ mangle: { properties: { debug: true } } })],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ mangle: { properties: { debug: "suffix" } } })
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({
+					mangle: {
+						properties: { regex: "^(alpha|beta)$", reserved: ["gamma"] }
+					}
+				})
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({
+					mangle: { properties: { undeclared: true, builtins: true } }
+				})
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({ compress: false, mangle: { properties: true } })
+			],
+			[
+				MANGLED_PROPERTIES,
+				() => ({
+					mangle: { properties: { only_cache: true } },
+					nameCache: { props: { props: { $alpha: "Q" } } }
+				})
+			],
+			[
+				MANGLED_NAMES,
+				() => ({ compress: false, mangle: { keep_fnames: true } })
+			],
+			[
+				MANGLED_NAMES,
+				() => ({ compress: false, mangle: { keep_fnames: /^kept/ } })
+			],
+			[MANGLED_NAMES, () => ({ compress: false, mangle: { safari10: true } })],
+			[MANGLED_NAMES, () => ({ compress: false, mangle: { ie8: true } })],
+			[
+				MANGLED_NAMES,
+				() => ({ compress: { passes: 2, inline: 3 }, mangle: true })
+			],
+			[
+				MANGLED_MODULE,
+				() => ({ module: true, mangle: { toplevel: true }, nameCache: {} })
+			],
+			[
+				MANGLED_MODULE,
+				() => ({
+					module: true,
+					compress: false,
+					mangle: { keep_fnames: true, toplevel: true },
+					nameCache: { vars: { props: { $hidden: "z" } } }
+				})
+			]
+		];
+		for (const [source, options] of variants) {
+			const ourOptions = /** @type {EXPECTED_ANY} */ (options());
+			const theirOptions = /** @type {EXPECTED_ANY} */ (options());
+			const ours = await minify(source, ourOptions);
+			const theirs = await reference.minify(source, theirOptions);
+			expect([ourOptions.mangle, ours.code]).toEqual([
+				theirOptions.mangle,
+				theirs.code
+			]);
+			expect(ourOptions.nameCache).toEqual(theirOptions.nameCache);
+		}
 	});
 
 	it("should compare trees as terser does", async () => {
