@@ -46,7 +46,7 @@
     "version:release": "node ./node_modules/.bin/changeset version && node node_modules/prettier/bin/prettier.cjs --log-level warn --write CHANGELOG.md",
     "validate:types": "tsc -p tsconfig.validation.json",
     "fmt": "yarn fmt:base --log-level warn --write",
-    "fmt:check": "node tooling/check-format.js",
+    "fmt:check": "yarn fmt:base --check",
     "fmt:base": "node node_modules/prettier/bin/prettier.cjs --cache --ignore-unknown .",
     "fix": "yarn fix:code && yarn fix:special && yarn fmt",
     "fix:code": "yarn lint:code --fix",

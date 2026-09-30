@@ -271,7 +271,7 @@ Runtime-emitting code (chunk loading, resource hints, library and externals pres
 
 ### Lint covers every file, docs included
 
-`lint` runs Prettier (`fmt:check`, and ESLint's `prettier/prettier` for JavaScript) and cspell (`lint:spellcheck`) over the **whole repo**, Markdown and this guide included. Run `yarn fix` before pushing even a docs change: an unaligned Markdown table or unknown word fails `lint` alone. Add a genuine new word to `words` in `cspell.json` (or reword); Prettier reformats Markdown tables, so hand-written columns must match its output.
+`lint` runs Prettier (`fmt:check`) and cspell (`lint:spellcheck`) over the **whole repo**, Markdown and this guide included. Run `yarn fix` before pushing even a docs change: an unaligned Markdown table or unknown word fails `lint` alone. Add a genuine new word to `words` in `cspell.json` (or reword); Prettier reformats Markdown tables, so hand-written columns must match its output.
 
 ### The persistent cache has to keep working
 
