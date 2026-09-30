@@ -15,6 +15,7 @@ const { spawn } = require("child_process");
 const { createHash } = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { pathToFileURL } = require("url");
 const { promisify } = require("util");
 const zlib = require("zlib");
 
@@ -254,7 +255,135 @@ const lossColumn = (classes, examples, notices) => {
  * @typedef {{ stable: boolean, delta: number, error?: string }} SecondPass
  */
 
-/** @typedef {{ code: string | undefined, second: SecondPass | undefined, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
+/** @typedef {[string, number][]} ProfileShares each file's share of the sampled time, largest first */
+
+/** @typedef {{ code: string | undefined, second: SecondPass | undefined, wall: number, cpu: number, peak: number, profile?: ProfileShares } | { error: string }} Measurement */
+
+/**
+ * @typedef {object} CpuProfileNode
+ * @property {number} id the node's id
+ * @property {{ functionName: string, url: string }} callFrame where it ran
+ */
+
+/**
+ * @typedef {object} CpuProfile
+ * @property {CpuProfileNode[]} nodes every call frame sampled
+ * @property {number[]} samples the node each sample landed in
+ * @property {number[]} timeDeltas the microseconds before each sample
+ */
+
+// How many files `PROFILE` lists under a row.
+const PROFILE_ROWS = 12;
+
+const LIB_URL = pathToFileURL(path.join(ROOT, "lib/")).href;
+
+/**
+ * Where a sample landed, read as its file: terser's and webpack's by their path
+ * in `lib`, the engine's own work (collector, compiler) by its name.
+ * @param {CpuProfileNode} node a sampled frame
+ * @returns {string} the bucket it counts toward
+ */
+const profileBucket = ({ callFrame: { functionName, url } }) => {
+	const terser = url.lastIndexOf("/terser/lib/");
+	if (terser !== -1) return `terser ${url.slice(terser + 12)}`;
+	const webpack = url.lastIndexOf("/lib/");
+	// The inspector names a file by its URL, which on Windows is not its path.
+	if (webpack !== -1 && url.startsWith(LIB_URL)) {
+		return `webpack ${url.slice(webpack + 5)}`;
+	}
+	if (functionName.startsWith("(")) return functionName;
+	// Code built with `new Function` has no file of its own.
+	return url === "" ? "(generated)" : "other";
+};
+
+/**
+ * @param {CpuProfile} profile what the inspector sampled
+ * @returns {ProfileShares} each bucket's share of the time, largest first
+ */
+const profileShares = (profile) => {
+	/** @type {Map<number, CpuProfileNode>} */
+	const byId = new Map(profile.nodes.map((node) => [node.id, node]));
+	/** @type {Map<string, number>} */
+	const buckets = new Map();
+	let total = 0;
+	for (let i = 0; i < profile.samples.length; i++) {
+		const delta = profile.timeDeltas[i] || 0;
+		const bucket = profileBucket(
+			/** @type {CpuProfileNode} */ (byId.get(profile.samples[i]))
+		);
+		buckets.set(bucket, (buckets.get(bucket) || 0) + delta);
+		total += delta;
+	}
+	return [...buckets]
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, PROFILE_ROWS)
+		.map(([bucket, time]) => [bucket, total === 0 ? 0 : time / total]);
+};
+
+/**
+ * Samples the CPU while `run` runs, when `PROFILE` asks for it.
+ * @param {() => Promise<void>} run the timed work
+ * @returns {Promise<ProfileShares | undefined>} where the time went, if sampled
+ */
+const profiled = async (run) => {
+	if (!process.env.PROFILE) {
+		await run();
+		return;
+	}
+
+	const { Session } = require("inspector");
+
+	const session = new Session();
+	session.connect();
+	/**
+	 * @param {string} method an inspector method
+	 * @returns {Promise<EXPECTED_ANY>} what it answered
+	 */
+	const post = (method) =>
+		new Promise((resolve, reject) => {
+			session.post(method, (error, result) =>
+				error ? reject(error) : resolve(result)
+			);
+		});
+	await post("Profiler.enable");
+	await post("Profiler.start");
+	/** @type {CpuProfile | undefined} */
+	let profile;
+	let failed = false;
+	/** @type {unknown} */
+	let runError;
+	try {
+		await run();
+	} catch (error) {
+		failed = true;
+		runError = error;
+	}
+	try {
+		({ profile } = await post("Profiler.stop"));
+	} catch (error) {
+		// A failing run's own error is the one worth reporting.
+		if (!failed) throw error;
+	} finally {
+		session.disconnect();
+	}
+	if (failed) throw runError;
+	return profileShares(/** @type {CpuProfile} */ (profile));
+};
+
+/**
+ * The lines `PROFILE` prints under a row: where its timed runs spent the CPU.
+ * @param {Measurement} result one measurement
+ * @returns {string} the lines, empty when nothing was sampled
+ */
+const formatProfile = (result) =>
+	"profile" in result && result.profile !== undefined
+		? result.profile
+				.map(
+					([bucket, share]) =>
+						`${`${(share * 100).toFixed(1)}%`.padStart(12)}  ${bucket}\n`
+				)
+				.join("")
+		: "";
 
 // Held across the timing loop so a parse whose tree is never read cannot be
 // taken for dead code.
@@ -338,14 +467,16 @@ const measure = async (tools) => {
 		}
 		let wall = Infinity;
 		let cpu = Infinity;
-		for (let i = 0; i < 3; i++) {
-			const cpuStarted = process.cpuUsage();
-			const started = process.hrtime.bigint();
-			sink = await call(source);
-			wall = Math.min(wall, Number(process.hrtime.bigint() - started) / 1e6);
-			const used = process.cpuUsage(cpuStarted);
-			cpu = Math.min(cpu, (used.user + used.system) / 1e3);
-		}
+		const profile = await profiled(async () => {
+			for (let i = 0; i < 3; i++) {
+				const cpuStarted = process.cpuUsage();
+				const started = process.hrtime.bigint();
+				sink = await call(source);
+				wall = Math.min(wall, Number(process.hrtime.bigint() - started) / 1e6);
+				const used = process.cpuUsage(cpuStarted);
+				cpu = Math.min(cpu, (used.user + used.system) / 1e3);
+			}
+		});
 		// A parse hands back a tree, which is measured but never reported; the two
 		// printing stages must hand back the text they wrote.
 		const code = stage === "parse" ? undefined : String(sink);
@@ -354,7 +485,8 @@ const measure = async (tools) => {
 			second: code === undefined ? undefined : await secondPass(call, code),
 			wall,
 			cpu,
-			peak: peakResidentKilobytes()
+			peak: peakResidentKilobytes(),
+			profile
 		};
 	} catch (error) {
 		report = { error: thrownText(error) };
@@ -1064,6 +1196,7 @@ module.exports = {
 	findingGroups,
 	firstDifference,
 	formatCost,
+	formatProfile,
 	formatSecond,
 	hasher,
 	idempotence,
@@ -1078,6 +1211,7 @@ module.exports = {
 	missingReport,
 	oneLine,
 	pathSpanWalk,
+	profileShares,
 	purityRelation,
 	run,
 	shrink,

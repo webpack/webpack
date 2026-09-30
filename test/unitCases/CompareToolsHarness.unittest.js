@@ -5,12 +5,14 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { Readable } = require("stream");
+const { pathToFileURL } = require("url");
 const {
 	compress,
 	exists,
 	filterFrom,
 	findingGroups,
 	formatCost,
+	formatProfile,
 	installPackages,
 	kb,
 	legalNotices,
@@ -20,6 +22,7 @@ const {
 	measure,
 	measureInWorker,
 	missingReport,
+	profileShares,
 	run,
 	sweepExitCode,
 	sweepMode
@@ -43,6 +46,18 @@ const TOOLS = [
 		stage: "minify",
 		create: () => () => {
 			throw new Error("nope\nand more");
+		}
+	},
+	{
+		// Warms up, then fails once the timed runs start.
+		name: "tires",
+		stage: "minify",
+		create: () => {
+			let calls = 0;
+			return (/** @type {string} */ source) => {
+				if (++calls > 8) throw new Error("tired");
+				return source;
+			};
 		}
 	}
 ];
@@ -178,6 +193,50 @@ describe("compare-tools-harness", () => {
 			const result = await measureHere("parse", "counts", "abcd");
 			expect(result.code).toBeUndefined();
 			expect(result.peak).toBeGreaterThan(0);
+		});
+
+		describe("with PROFILE set", () => {
+			const previous = process.env.PROFILE;
+			beforeEach(() => {
+				process.env.PROFILE = "1";
+			});
+			afterEach(() => {
+				if (previous === undefined) delete process.env.PROFILE;
+				else process.env.PROFILE = previous;
+			});
+
+			it("reports where the timed runs spent the CPU", async () => {
+				const result = await measureHere("minify", "trims", "  a{}  ");
+				expect(result.code).toBe("a{}");
+				expect(Array.isArray(result.profile)).toBe(true);
+				let total = 0;
+				for (const [bucket, share] of result.profile) {
+					expect(typeof bucket).toBe("string");
+					total += share;
+				}
+				expect(total).toBeLessThanOrEqual(1.0001);
+				expect(formatProfile(result)).toBe(
+					result.profile
+						.map(
+							(/** @type {[string, number]} */ [bucket, share]) =>
+								`${`${(share * 100).toFixed(1)}%`.padStart(12)}  ${bucket}\n`
+						)
+						.join("")
+				);
+			});
+
+			it("reports the error of a run failing while sampled", async () => {
+				expect(await measureHere("minify", "tires", "a")).toEqual({
+					error: "tired"
+				});
+			});
+		});
+
+		it("prints no profile for a row that has none", () => {
+			expect(
+				formatProfile({ code: "", second: undefined, wall: 1, cpu: 1, peak: 1 })
+			).toBe("");
+			expect(formatProfile({ error: "nope" })).toBe("");
 		});
 
 		/**
@@ -792,5 +851,36 @@ describe("sweepMode", () => {
 	it("names no mode where only the modifier was given", () => {
 		expect(sweepMode(["node", "x.js"])).toBeUndefined();
 		expect(sweepMode(["node", "x.js", "--require-corpus"])).toBeUndefined();
+	});
+});
+
+describe("profileShares", () => {
+	it("counts each sample toward its file, the engine's work by name", () => {
+		const frame = (/** @type {string} */ functionName, /** @type {string} */ url) => ({
+			callFrame: { functionName, url }
+		});
+		const nodes = [
+			{ id: 1, ...frame("minify", "file:///x/node_modules/terser/lib/minify.js") },
+			{ id: 2, ...frame("print", pathToFileURL(path.join(__dirname, "../../lib/javascript/syntax-printer.js")).href) },
+			{ id: 3, ...frame("(garbage collector)", "") },
+			{ id: 4, ...frame("anonymous", "") },
+			{ id: 5, ...frame("helper", "file:///x/node_modules/other/index.js") }
+		];
+		const shares = profileShares({
+			nodes,
+			samples: [1, 1, 2, 3, 4, 5, 1, 5],
+			timeDeltas: [10, 10, 20, 5, 5, 10, 20]
+		});
+		expect(shares).toEqual([
+			["terser minify.js", 40 / 80],
+			["webpack javascript/syntax-printer.js", 20 / 80],
+			["other", 10 / 80],
+			["(garbage collector)", 5 / 80],
+			["(generated)", 5 / 80]
+		]);
+		expect(profileShares({ nodes, samples: [], timeDeltas: [] })).toEqual([]);
+		expect(
+			profileShares({ nodes, samples: [1], timeDeltas: [0] })
+		).toEqual([["terser minify.js", 0]]);
 	});
 });

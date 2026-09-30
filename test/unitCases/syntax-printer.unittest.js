@@ -1307,6 +1307,181 @@ describe("syntax-printer", () => {
 		).toBe(false);
 	});
 
+	it("should decline a terser whose transform it does not know", async () => {
+		const transform =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "transform")
+			);
+		const modules = await loadSources();
+		expect(transform.supports({ ...modules, compress: {} })).toBe(false);
+		expect(
+			transform.supports({
+				...modules,
+				ast: {
+					...modules.ast,
+					TreeWalker: Object.assign(function TreeWalker() {}, {
+						prototype: { push() {}, pop() {} }
+					})
+				}
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose compressor it does not know", () => {
+		const compressor =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "compressor")
+			);
+		expect(compressor.supports({ compress: {}, flags: {} })).toBe(false);
+		expect(
+			compressor.supports({
+				compress: {
+					Compressor: Object.assign(function Compressor() {}, {
+						prototype: { before() {}, in_computed_key() {} }
+					})
+				},
+				flags: { SQUEEZED: 256 }
+			})
+		).toBe(false);
+	});
+
+	it("should decline a terser whose sizes it does not know", () => {
+		const size =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "size")
+			);
+		expect(size.supports({ ast: {} })).toBe(false);
+	});
+
+	it("should count a node's size inside a size being counted", async () => {
+		await load();
+		const { parse } = await loadSources();
+		const toplevel = parse.parse("var a = 1; function b(c) { return c + a; }");
+		const [, declaration] = toplevel.body;
+		const inner = declaration.size();
+		const original = declaration._size;
+		let nested = 0;
+		declaration._size = function (/** @type {EXPECTED_ANY} */ info) {
+			nested = declaration.body[0].size();
+			return original.call(this, info);
+		};
+		expect(toplevel.size()).toBeGreaterThan(inner);
+		expect(nested).toBe(declaration.body[0].size());
+	});
+
+	it("should decline a terser whose equivalence it does not know", () => {
+		const equivalent =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "equivalent")
+			);
+		expect(equivalent.supports({ ast: {} })).toBe(false);
+	});
+
+	it("should compare trees as terser does", async () => {
+		await load();
+		const { parse } = await loadSources();
+		const [first, second, third, fourth] = parse.parse(
+			"a.b(c + 1); a.b(c + 1); a.b(c + 2); a.b(c, 1);"
+		).body;
+		expect(first.equivalent_to(second)).toBe(true);
+		expect(first.equivalent_to(third)).toBe(false);
+		expect(first.equivalent_to(fourth)).toBe(false);
+		const original = first.body.shallow_cmp;
+		first.body.shallow_cmp = function (/** @type {EXPECTED_ANY} */ other) {
+			expect(third.equivalent_to(fourth)).toBe(false);
+			return original.call(this, other);
+		};
+		expect(first.equivalent_to(second)).toBe(true);
+	});
+
+	it("should refuse an option terser refuses", async () => {
+		const { minify } = await load();
+		const options = /** @type {EXPECTED_ANY} */ ({ unknown: true });
+		const reference = await require("terser")
+			.minify("a;", options)
+			.then(
+				() => "",
+				(/** @type {Error} */ err) => `${err.name}: ${err.message}`
+			);
+		await expect(minify("a;", options)).rejects.toThrow(
+			reference.replace(/^DefaultsError: /, "")
+		);
+		expect(reference).toMatch(/^DefaultsError: /);
+	});
+
+	it("should write the source map terser writes", async () => {
+		const { minify } = await load();
+		const terser = require("terser");
+		const input = await terser.minify(
+			{ "in.js": "function add(a, b) {\n  return a + b;\n}\nconsole.log(add(1, 2));\n" },
+			{ sourceMap: { includeSources: true } }
+		);
+		const source = "var one = 1;\nfunction two(x) { return x * 2; }\nconsole.log(two(one));\n";
+		/** @type {[Record<string, string>, import("terser").SourceMapOptions][]} */
+		const cases = [
+			[{ "a.js": source }, {}],
+			[{ "a.js": source }, { includeSources: true, filename: "a.min.js", root: "/r" }],
+			[{ "b.js": /** @type {string} */ (input.code) }, { content: /** @type {string} */ (input.map), includeSources: true }],
+			[{ "b.js": /** @type {string} */ (input.code) }, { content: /** @type {string} */ (input.map) }]
+		];
+		for (const [files, sourceMap] of cases) {
+			const ours = await minify(files, { sourceMap: { ...sourceMap } });
+			const reference = await terser.minify(files, { sourceMap: { ...sourceMap } });
+			expect(ours.code).toBe(reference.code);
+			expect(ours.map).toBe(reference.map);
+		}
+	});
+
+	it("should hand back a fresh list, which a clone may share", async () => {
+		await load();
+		const { ast, parse, utils } = await loadSources();
+		const { AST_SimpleStatement, TreeTransformer } = ast;
+		const toplevel = parse.parse("a; b; c; d;");
+		const { body } = toplevel;
+		toplevel.transform(new TreeTransformer(() => undefined));
+		// terser's shallow clone shares lists, so each transform must copy them.
+		expect(toplevel.body).not.toBe(body);
+		expect(toplevel.body).toEqual(body);
+
+		toplevel.transform(
+			new TreeTransformer(
+				/**
+				 * @param {EXPECTED_ANY} node the node visited
+				 * @returns {EXPECTED_ANY} what replaces it
+				 */
+				(node) => {
+					if (!(node instanceof AST_SimpleStatement)) return;
+					const name = node.body.name;
+					if (name === "b") return utils.MAP.skip;
+					if (name === "c") return utils.MAP.splice([node, node]);
+					return node;
+				}
+			)
+		);
+		expect(toplevel.body).not.toBe(body);
+		expect(
+			toplevel.body.map(
+				(/** @type {EXPECTED_ANY} */ statement) => statement.body.name
+			)
+		).toEqual(["a", "c", "c", "d"]);
+	});
+
+	it("should not revisit a node the compressor squeezed", async () => {
+		await load();
+		const { ast, compress, flags, parse } = await loadSources();
+		const compressor = new compress.Compressor({}, {});
+		const toplevel = parse.parse('"use strict"; a;');
+		const [directive, statement] = toplevel.body;
+		directive.flags |= flags.SQUEEZED;
+		statement.flags |= flags.SQUEEZED;
+		expect(statement.transform(compressor)).toBe(statement);
+		expect(compressor.stack).toEqual([]);
+		// A directive is still pushed, which records it on the walker.
+		expect(directive.transform(compressor)).toBe(directive);
+		expect(compressor.has_directive("use strict")).toBe(directive);
+		expect(ast.TreeWalker.prototype.webpackSkipsSqueezed).toBe(false);
+	});
+
 	it("should decline a terser whose hoisting it does not know", () => {
 		const hoist =
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
