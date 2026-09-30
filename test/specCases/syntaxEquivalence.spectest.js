@@ -2699,82 +2699,22 @@ describe("a minified page renders as the page it came from", () => {
 	let browser;
 	/** @type {import("puppeteer-core").Page} */
 	let page;
-	/** @type {Error | undefined} */
-	let unrecovered;
-
-	// WHY: a WebKit run never returned from one wpt/css batch, and every later
-	// test then waited behind it on the same page. Past a deadline the batch is
-	// rendered again a pair at a time, on a fresh page, to name what never ends.
-	const BATCH_DEADLINE = 40000;
-	const PAIR_DEADLINE = 20000;
-
-	/** @returns {Promise<import("puppeteer-core").Page>} a page ready to render in */
-	const openPage = async () => {
-		const opened = await browser.newPage();
-		await opened.setContent(
-			`<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${RENDER_POLICY}"></head><body></body></html>`
-		);
-		return opened;
-	};
 
 	beforeAll(async () => {
 		browser = await launchBrowser({
 			browser: ENGINE,
 			protocolTimeout: FILE_TIMEOUT
 		});
-		page = await openPage();
+		page = await browser.newPage();
+		await page.setContent(
+			`<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${RENDER_POLICY}"></head><body></body></html>`
+		);
 	}, FILE_TIMEOUT);
 
 	afterAll(async () => {
 		if (page !== undefined) await page.close();
 		if (browser !== undefined) await browser.close();
 	});
-
-	/**
-	 * @template T
-	 * @param {Promise<T>} pending what to wait for
-	 * @param {number} deadline how long, in milliseconds
-	 * @returns {Promise<T | undefined>} its value, or undefined past the deadline
-	 */
-	const within = (pending, deadline) => {
-		/** @type {NodeJS.Timeout | undefined} */
-		let timer;
-		return Promise.race([
-			pending,
-			/** @type {Promise<undefined>} */ (
-				new Promise((resolve) => {
-					timer = setTimeout(() => resolve(undefined), deadline);
-				})
-			)
-		]).finally(() => clearTimeout(timer));
-	};
-
-	/**
-	 * @param {import("../helpers/syntaxEquivalence").RenderPair[]} batch the pairs
-	 * @param {number} width the frame's width
-	 * @param {number} deadline how long the batch may take, in milliseconds
-	 * @returns {Promise<import("../helpers/syntaxEquivalence").RenderReport[] | undefined>} the reports, or undefined when it ran past the deadline
-	 */
-	const renderWithin = async (batch, width, deadline) => {
-		if (unrecovered !== undefined) throw unrecovered;
-		const pending = evaluateDeep(page, compareRenders, { pairs: batch, width });
-		const reports = await within(pending, deadline);
-		if (reports === undefined) {
-			pending.catch(() => {});
-			const stuck = page;
-			await within(stuck.close(), PAIR_DEADLINE).catch(() => {});
-			try {
-				page = await openPage();
-			} catch (error) {
-				unrecovered = new Error(
-					`no page to render in once ${batch.map(({ name }) => name).join(", ")} ran past ${deadline}ms`,
-					{ cause: error }
-				);
-				throw unrecovered;
-			}
-		}
-		return reports;
-	};
 
 	/**
 	 * @param {import("../helpers/syntaxEquivalence").RenderPair[]} pairs the pairs
@@ -2785,21 +2725,10 @@ describe("a minified page renders as the page it came from", () => {
 		const out = [];
 		for (const width of RENDER_WIDTHS) {
 			for (let at = 0; at < pairs.length; at += 20) {
-				const batch = pairs.slice(at, at + 20);
-				let reports = await renderWithin(batch, width, BATCH_DEADLINE);
-				if (reports === undefined) {
-					reports = [];
-					for (const pair of batch) {
-						const one = await renderWithin([pair], width, PAIR_DEADLINE);
-						if (one === undefined) {
-							out.push(
-								`${width}px ${pair.name}: no render within ${PAIR_DEADLINE}ms`
-							);
-						} else {
-							reports.push(...one);
-						}
-					}
-				}
+				const reports = await evaluateDeep(page, compareRenders, {
+					pairs: pairs.slice(at, at + 20),
+					width
+				});
 				for (const report of reports) {
 					for (const difference of report.differences) {
 						out.push(`${width}px ${report.name}: ${difference}`);
