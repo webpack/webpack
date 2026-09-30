@@ -9143,6 +9143,21 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			expect(
 				minify("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x")
 			).toBe("<!doctype html><head><noscript>PASS</noscript></head>\n<body>x</body>");
+			// `<!-->` closes at once, so `PASS` is text to that reader, not a comment.
+			expect(
+				minify(
+					"<!doctype html><head><noscript><!-->PASS<!-- --></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><!-->PASS<!-- --></noscript> <title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript><!-- a --!>PASS<!-- b --></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><!-- a --!>PASS<!-- b --></noscript> <title>t</title></head><p>x"
+			);
 			// The mode passes a `<style>` through, but only void elements are read as safe.
 			expect(
 				minify(
@@ -9160,6 +9175,13 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 				)
 			).toBe(
 				"<!doctype html><head><noscript><link rel=a href=b><!-- c --></noscript><title>t</title></head><p>x"
+			);
+			expect(
+				minify(
+					"<!doctype html><head><noscript><!-- a --!><!----><link rel=a href=b></noscript> <title>t</title></head><p>x"
+				)
+			).toBe(
+				"<!doctype html><head><noscript><!-- a --!><!----><link rel=a href=b></noscript><title>t</title></head><p>x"
 			);
 			expect(
 				minify(
