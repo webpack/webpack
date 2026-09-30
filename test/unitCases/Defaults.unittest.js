@@ -6612,3 +6612,66 @@ describe("cache.buildDependencies.defaultWebpack", () => {
 		]);
 	});
 });
+
+describe("cache.cacheDirectory", () => {
+	const fs = require("fs");
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	/**
+	 * @param {string} code error code
+	 * @returns {Error & { code: string }} error carrying that code
+	 */
+	const fsError = (code) => {
+		const err = /** @type {Error & { code: string }} */ (new Error(code));
+		err.code = code;
+		return err;
+	};
+
+	it("rethrows a non-ENOENT statSync error (e.g. EACCES)", () => {
+		jest.spyOn(fs, "statSync").mockImplementation(() => {
+			throw fsError("EACCES");
+		});
+		/** @type {unknown} */
+		let thrown;
+		try {
+			getDefaultConfig({ mode: "production", cache: { type: "filesystem" } });
+		} catch (err) {
+			thrown = err;
+		}
+		expect(/** @type {Error & { code: string }} */ (thrown).code).toBe("EACCES");
+	});
+
+	it("falls back to cwd/.cache/webpack when no package.json is found (ENOENT)", () => {
+		jest.spyOn(fs, "statSync").mockImplementation(() => {
+			throw fsError("ENOENT");
+		});
+		const config = getDefaultConfig({
+			mode: "production",
+			cache: { type: "filesystem" }
+		});
+		expect(config.cache).toEqual(
+			expect.objectContaining({
+				cacheDirectory: path.resolve(cwd, ".cache/webpack")
+			})
+		);
+	});
+
+	it("treats ENOTDIR like ENOENT and keeps walking up", () => {
+		jest.spyOn(fs, "statSync").mockImplementation(() => {
+			throw fsError("ENOTDIR");
+		});
+		const config = getDefaultConfig({
+			mode: "production",
+			cache: { type: "filesystem" }
+		});
+		expect(config.cache).toEqual(
+			expect.objectContaining({
+				cacheDirectory: path.resolve(cwd, ".cache/webpack")
+			})
+		);
+	});
+
+});
