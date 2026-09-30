@@ -1525,6 +1525,44 @@ describe("syntax-printer", () => {
 		expect(equivalent.supports({ ast: {} })).toBe(false);
 	});
 
+	it("should decline a terser whose evaluation it does not know", async () => {
+		const evaluate =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "evaluate")
+			);
+		const modules = await loadSources();
+		expect(evaluate.supports({ ast: {} })).toBe(false);
+		expect(evaluate.supports({ ...modules, utils: {} })).toBe(false);
+		expect(evaluate.supports(modules)).toBe(true);
+	});
+
+	it("should decline a terser whose inference it does not know", async () => {
+		const inference =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "inference")
+			);
+		const modules = await loadSources();
+		expect(inference.supports({ ast: {} })).toBe(false);
+		expect(
+			inference.supports({
+				...modules,
+				nativeObjects: { is_pure_builtin_call() {} }
+			})
+		).toBe(false);
+		expect(inference.supports(modules)).toBe(true);
+	});
+
+	it("should decline a terser whose effect dropping it does not know", async () => {
+		const drop =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "drop")
+			);
+		const modules = await loadSources();
+		expect(drop.supports({ ast: {} })).toBe(false);
+		expect(drop.supports({ ...modules, inference: {} })).toBe(false);
+		expect(drop.supports(modules)).toBe(true);
+	});
+
 	it("should size and compare every node as terser does", async () => {
 		const { minify } = await load();
 		const { ast } = await loadSources();
