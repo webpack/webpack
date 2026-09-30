@@ -403,6 +403,43 @@ const OUTPUT_CASES = [
 ];
 
 /**
+ * Sources chosen for what the code generators decide: where a parenthesis,
+ * brace or keyword goes around each kind of node.
+ * @type {string[]}
+ */
+const CODEGEN_CASES = [
+	"if (a); else b(); for (;;); while (a) ; label: ;",
+	"if (a) function f() {}",
+	"if (a) do x(); while (b); else y();",
+	"if (a) { if (b) c(); } else d();",
+	"for (var f = function () { return a in b; }, g = () => a in b; ;) break;",
+	"x = [0.0001, 0.00012, 1e-7, 1000, 1e21, 0.5];",
+	"x = { 1e3: 1, 10: 2, 0x10: 3, 1.5: 4 };",
+	"({}.t)`x`; ({}).a.b; ({} = a);",
+	"(function () {}).call(); (function () {})(); new (a())(); new (a().b)(); new (a.b()); (a, b).c; f((a, b)); (a = b).c; (a ? b : c).d; (a ? b : c)(); -(a ? b : c);",
+	"(-1).toString(); (1).x; (1.5).x; (-0.5) ** 2; (-a) ** 2; (a || b) ?? c; (a ?? b) || c; a ?? (b && c);",
+	"(async () => 1)(); (() => 1).x; (a => a)?.x; typeof (a => a); (a => a) || b; x = (a => a) ? 1 : 2;",
+	"class C { #x; m(o) { return #x in (a ? o : o) && #x in (a, o) && (#x in o) in o; } }",
+	"function* g() { x = yield; (yield a).b; (yield a)(); a + (yield b); -(yield); x = yield a ? b : c; }",
+	"async function h() { (await x).y; (await x)(); -(await x); new (await x)(); for await (const v of w); }",
+	"debugger; 'use strict'; function d() { 'use asm'; return; }",
+	"class A extends B { [a]() {} get [b]() {} set [c](v) {} static *[d]() {} async [e]() {} m() { super.m(); return new.target; } }",
+	"x = `a${b}c${d}`; x = tag`a${b}`;",
+	"f = () => { return; }; g = () => { return {}; }; h = () => ({}).a; i = () => ({ a } = b);",
+	"if (a) b(); else if (c) d(); else { e(); }",
+	"switch (a) {} switch (a) { case 1: default: }",
+	"import a, * as b from 'c'; import * as d from 'e'; import { 'f g' as h, i } from 'j'; import k from 'l' with { type: 'json' };",
+	"export { a as 'b c', d }; export * as '*' from 'x'; export * as y from 'x'; export * from 'z'; export { e, f, g } from 'h' with { type: 'json' }; export default (a, b);",
+	"import defer * as ns from 'm'; import source s from 'm'; import.meta.url; import('x'); import.source('x'); import.defer('x');",
+	"a?.[b]; a?.b(); a?.(); a?.[b]?.(c); (a?.b).c;",
+	"(5).toString(); 5.5.toString(); 0x10.toString(); 1e21.x; (-5).x;",
+	"x = /<\\/script>/; y = a < /script>/.x; z = /a/ instanceof RegExp; w = /a/ in b; v = /a/gimsuy;",
+	"({ a = 1 } = b); ({ a: a = 1 } = b); ({ 'a': a = 2 } = b); ({ [a]: b = 1 } = c);",
+	"new (a.b.c)(); new (a().b.c)(); new a; new (function () {})(); new (class {})();",
+	"x = (a, b) ? c : d; x = a ? (b, c) : d; x = (a = b) ? c : d; (a = b) ? c : d; x = !(a = b);"
+];
+
+/**
  * Every node terser sizes in a script, `with` included, which a module forbids.
  */
 const SIZED_SCRIPT = `"a directive"; debugger; {} ;
@@ -764,6 +801,29 @@ describe("syntax-printer", () => {
 			}
 			const { code } = await minify(source, OUTPUT_OPTIONS[0]);
 			expect(code).toMatchSnapshot();
+		});
+	}
+
+	for (const source of CODEGEN_CASES) {
+		it(`should generate code as terser does: ${source}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			for (const settings of OUTPUT_OPTIONS) {
+				const options = () => ({ ...settings, format: { ...settings.format } });
+				const ours = await minify({ "input.js": source }, options());
+				const referenceOptions = options();
+				for (const name of IGNORED_FORMAT_OPTIONS) {
+					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
+						name
+					];
+				}
+				const theirs = await reference.minify(
+					{ "input.js": source },
+					referenceOptions
+				);
+				expect(ours.code).toBe(theirs.code);
+				expect(ours.map).toEqual(theirs.map);
+			}
 		});
 	}
 
