@@ -1757,19 +1757,7 @@ const EXPECTED = [
 		relation: "respelling quote-double",
 		contains: "&#34;",
 		source: "style-attribute",
-		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
-	},
-	{
-		relation: "respelling quote-single",
-		contains: 'content:"&#39;"',
-		source: "minimize-transforms",
-		why: 'a `style` the CSS minifier shortens is written back only where the shorter CSS survives being escaped into the attribute, and respelling the apostrophes as character references makes the source the longer of the two — so the minified declarations win here where the source won as written. Both spell `content: "\'"`; the relation reads the attribute as HTML, which cannot see that two spellings of one declaration list are the same CSS'
-	},
-	{
-		relation: "respelling references",
-		contains: 'content:"&#39;"',
-		source: "minimize-transforms",
-		why: "the same `style` attribute as the entry above, reached by respelling its text as character references rather than its delimiter: it lengthens the source the same way, so the minified declarations win the same comparison"
+		why: "the value carries both quotes, so one stays a character reference whichever delimiter is picked, and the printer echoes the spelling the source wrote rather than normalizing it — `&#34;` is a byte under `&quot;`, which is the difference reported. Writing `&#34;` everywhere was measured and refused: over the fixtures and wpt's `html/` documents it saves 5 raw bytes and costs 5 gzip, and a re-encoding has to win compressed. No build reads this: `htmlMinify` hands every `style` to the CSS minifier, and that round trip writes `&quot;` for either spelling"
 	}
 ];
 

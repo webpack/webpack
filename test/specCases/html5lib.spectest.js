@@ -616,12 +616,44 @@ const coalesceCharacters = (output) => {
 
 /** @type {{ id: string, state: string, context: (string | undefined), input: string, expected: Html5libToken[] }[]} */
 const tokenizerRuns = [];
+/** @type {{ id: string, input: string, expected: string }[]} */
+const cdataRuns = [];
+
+/**
+ * Run a CDATA section case through the tree builder: a `<![CDATA[` opens one only
+ * where the adjusted current node is foreign, which `tokenize` alone cannot see.
+ * @param {string} input the section's contents onwards
+ * @returns {string} the serialized fragment
+ */
+const runCdataCase = (input) => {
+	const doc = parseHtml(`<![CDATA[${input}`, 0, {
+		fragmentContext: "svg svg"
+	});
+	return serialize(A.firstChild(doc));
+};
 /** @type {Map<string, { state: string, lastStartTag: (string | null), count: number }>} */
 const unreachableByShape = new Map();
 
 for (const testCase of tokenizerCases) {
 	for (const state of testCase.initialStates) {
 		const lastStartTag = testCase.lastStartTag;
+		// Character data only, so the tree holds nothing but the text; foreign
+		// content inserts U+FFFD for a NULL where the tokenizer emitted it.
+		if (
+			state === "CDATA section state" &&
+			lastStartTag === undefined &&
+			testCase.output.every((token) => token[0] === "Character")
+		) {
+			const text = replaceNull(
+				testCase.output.map((token) => token[1]).join("")
+			);
+			cdataRuns.push({
+				id: `${testCase.id} (${state})`,
+				input: testCase.input.replace(/\r\n?/g, "\n"),
+				expected: text === "" ? "" : `| "${text}"`
+			});
+			continue;
+		}
 		const stateTags = STATE_TAGS.get(state);
 		const reachable =
 			state === "Data state" ||
@@ -671,8 +703,8 @@ describe("html5lib tokenizer", () => {
 		const shapes = [...unreachableByShape.values()].sort((a, b) =>
 			`${a.state} ${a.lastStartTag}` < `${b.state} ${b.lastStartTag}` ? -1 : 1
 		);
+		expect(cdataRuns).toHaveLength(56);
 		expect(shapes).toEqual([
-			{ state: "CDATA section state", lastStartTag: null, count: 56 },
 			{ state: "RCDATA state", lastStartTag: "xmp", count: 20 },
 			{ state: "Script data state", lastStartTag: "xmp", count: 5 }
 		]);
@@ -689,6 +721,12 @@ describe("html5lib tokenizer", () => {
 
 		it(id, () => {
 			expect(runTokenizerCase(input, context)).toEqual(expected);
+		});
+	}
+
+	for (const { id, input, expected } of cdataRuns) {
+		it(id, () => {
+			expect(runCdataCase(input)).toBe(expected);
 		});
 	}
 });

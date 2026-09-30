@@ -7247,6 +7247,61 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 			"<p style=color:rgba(255,0,0,.5)>x</p><style>.a{color:rgba(255,0,0,.5)}</style>"
 		);
 	});
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the markup minified for a target `hwb()` needs a fallback for
+	 */
+	const minifyLegacy = (html) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			renderEmbeddedSource: builtinEmbeddedRenderer({
+				environment: { browsers: ["chrome 100"] }
+			})
+		}).code;
+
+	it("keeps a lowered list however the source spelled it", () => {
+		const lowered = '<p style="background:#00c3ff;background:hwb(194 0% 0%)">x';
+		expect(minifyLegacy('<p style="background: hwb(194 0% 0%)">x')).toBe(
+			lowered
+		);
+		expect(minifyLegacy('<p style="background&#x3a; hwb(194 0% 0%)">x')).toBe(
+			lowered
+		);
+	});
+
+	it("keeps a lowered list that holds both quotes", () => {
+		expect(
+			minifyLegacy(
+				`<p style="content:'\\''; background: hwb(194 0% 0%)">x`
+			)
+		).toBe(
+			`<p style='content:"&#39;";background:#00c3ff;background:hwb(194 0% 0%)'>x`
+		);
+	});
+
+	it("keeps the source's delimiter for a lowered list where quotes are frozen", () => {
+		expect(
+			new SourceProcessor().process(
+				"<p style='background&#x3a; hwb(194 0% 0%)'>x",
+				{
+					mode: "minify",
+					transforms: { normalizeAttributeQuotes: false },
+					renderEmbeddedSource: builtinEmbeddedRenderer({
+						environment: { browsers: ["chrome 100"] }
+					})
+				}
+			).code
+		).toBe("<p style='background:#00c3ff;background:hwb(194 0% 0%)'>x");
+	});
+
+	it("writes a list the same whichever references the source spelled", () => {
+		const plain = minifyLegacy(`<p style="content:'\\'';color:red">x`);
+		expect(plain).toBe(`<p style='content:"&#39;";color:red'>x`);
+		expect(
+			minifyLegacy(`<p style="content:&#39;\\&#39;&#39;;color:red">x`)
+		).toBe(plain);
+	});
 });
 
 describe("parseHtml — insertion-mode edge cases", () => {
