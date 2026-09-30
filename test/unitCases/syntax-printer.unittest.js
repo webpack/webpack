@@ -762,6 +762,108 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	const UNSAFE = {
+		unsafe: true,
+		unsafe_comps: true,
+		unsafe_math: true,
+		unsafe_regexp: true,
+		unsafe_undefined: true,
+		passes: 2
+	};
+	/** @type {[string, string, EXPECTED_OBJECT][]} */
+	const COMPRESS_CASES = [
+		[
+			"unsafe literals",
+			"sink([1, 2, 3].join('-'), ({ a: 1, b: 'x' }).b, [1, [2]].length, ({ a: 1, toString() { return 'o'; } }).a, ({ ...x }).y, ({ a: function () {} }).a, 'abc'.charAt(1), 'abc'[1], [1, 2][1], /a+b/g.source, /a/gi.global, (function f() {}).length, Math.max(1, 2), Math.floor(2.5), String.fromCharCode(65), Number('1'), [1, 2].indexOf(2), ({})[k], Object.keys);",
+			UNSAFE
+		],
+		[
+			"every binary operator on constants",
+			"sink(1 && 2, 0 || 3, null ?? 4, 1 | 2, 1 & 3, 1 ^ 3, 1 + 2, 3 * 4, 8 / 2, 7 % 3, 5 - 1, 1 << 3, 16 >> 2, -16 >>> 28, 2 ** 3, 1 == '1', 1 != '2', 1 === 1, 1 !== 2, 1 < 2, 1 <= 2, 2 > 1, 2 >= 3, 1n + 2n, NaN == NaN, 'a' + 1, typeof 1, void 0, !0, ~1, -'2', +'3');",
+			UNSAFE
+		],
+		[
+			"comparisons negated under unsafe_comps",
+			"if (!(a <= b)) sink(1); if (!(a < b)) sink(2); if (!(a >= b)) sink(3); if (!(a > b)) sink(4); if (!(a == b)) sink(5); if (!(a != b)) sink(6); if (!(a === b) && !(c !== d)) sink(7); sink(!(a && b), !(a || b), !(a ? b : c), !(a, b));",
+			UNSAFE
+		],
+		[
+			"optional chains and nullish reads",
+			"var n = null; sink(n?.a, n?.[k], n?.(), a?.b.c, a?.[b]?.[c], (void 0)?.x); n?.a; n?.[f()]; a?.b; a?.[b()]; x?.y(); (0, a?.b)();",
+			{ pure_getters: "strict", passes: 2, unsafe: true }
+		],
+		[
+			"strict getters, classes and constant expressions",
+			"var o = { get a() { return 1; } }; o.a; ({ ...o }).b; (class { static x = 1 }).y; (class A extends B { static [k] = f() }); (function () {}).prototype.x; (a = 1).b; (a ||= b).c; (a, b).c; (x ? y : z).w; arguments.length; function g() { return arguments[0]; } sink(g); var C = class { static #p = 1; static m() {} get [k]() {} }; C.m;",
+			{ pure_getters: "strict", passes: 3, toplevel: true, reduce_vars: true, unused: true }
+		],
+		[
+			"side effects of every statement kind",
+			"function f() { try { a(); } catch (e) { b(); } finally { c(); } switch (x) { case 1: y(); default: z(); } if (a) b(); else c(); l: for (;;) break l; { d(); } return e; } void f; (function () { var u = 1; u++; --u; delete u.x; typeof u; })(); (() => 1)(); new Date(); new Foo(); `a${b}c`; tag`x`; [...a]; ({ [k]: v, ...r }); class K { [a()] = 1; static [b()] = 2; static { c(); } #m() {} get #g() {} set #s(v) {} m() {} }",
+			{ passes: 2, toplevel: true, side_effects: true, pure_new: true }
+		],
+		[
+			"pure calls and builtins",
+			"Math.abs(1); Object.freeze({}); [1, 2].map(x => x); 'a'.toUpperCase(); (1).toFixed(2); /a/.test(s); true.toString(); ({}).hasOwnProperty.call(o, 'k'); Object.prototype.hasOwnProperty.call(o, k); Boolean(x); Number(y); String(z); isNaN(w); parseInt('1'); /*@__PURE__*/ f(); g(); Array.isArray(a); JSON.stringify(b);",
+			{ unsafe: true, pure_funcs: ["g"], passes: 2 }
+		],
+		[
+			"builtins pure without unsafe",
+			"Math.abs(1); Object.keys(o); Array.from(a); new Map(); new Set([1]); [].concat(a); 'x'.slice(1);",
+			{ builtins_pure: true, passes: 2 }
+		],
+		[
+			"conditional and logical effects dropped",
+			"a ? b() : c; a ? b : c(); a ? b : c; a && b; a || b(); a ?? b(); (a, b, c); x = x; y += 0; (z = 1).w; for (var i in o); !function () {}(); +function () { f(); }(); void function () {}();",
+			{ passes: 2, negate_iife: true, sequences: true }
+		],
+		[
+			"self-referential classes and templates",
+			"var A = class A { static x = A.y; }; class B { static [B] = 1; } `${a}${b}`; String.raw`x${y}`; sink(`a${1}b${'c'}d`);",
+			{ passes: 2, toplevel: true, unused: true, evaluate: true }
+		],
+		[
+			"regexps and functions evaluated once",
+			"var r = /(a|b)*c/; sink(r.source, r.flags, /x/y.sticky, /x/s.dotAll, /x/u.unicode, /x/m.multiline, /x/i.ignoreCase, ('' + function () { return 1; }), [function () {}].length, [0, ...[1, 2]].length);",
+			UNSAFE
+		],
+		[
+			"bitwise negation and 32-bit contexts",
+			"sink(~~a, ~~(a | 0), ~(~a), ~1, ~-1, ~123456789, a | ~~b, ~(a & b), ~~a >>> 0, (~a) ^ 0, +a | 0, ~a ? 1 : 2);",
+			{ passes: 2, unsafe_math: true }
+		]
+	];
+
+	for (const [name, source, options] of COMPRESS_CASES) {
+		it(`should compress as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			/**
+			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_OBJECT} settings its options
+			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
+			 */
+			const outcome = async (run, settings) => {
+				try {
+					return { code: (await run(source, settings)).code };
+				} catch (err) {
+					return { error: /** @type {Error} */ (err).message };
+				}
+			};
+			for (const module of [false, true]) {
+				/** @returns {EXPECTED_OBJECT} the options */
+				const settings = () => ({
+					module,
+					mangle: false,
+					compress: JSON.parse(JSON.stringify(options))
+				});
+				expect(await outcome(minify, settings())).toEqual(
+					await outcome(reference.minify, settings())
+				);
+			}
+		});
+	}
+
 	/** @type {[string, string, (ast: EXPECTED_ANY) => EXPECTED_ANY][]} */
 	const SCOPE_ERROR_CASES = [
 		["a scope that is not a program", "function f() {}", (ast) => ast.body[0]],
@@ -1523,6 +1625,50 @@ describe("syntax-printer", () => {
 				PHASES.find((phase) => phase.name === "equivalent")
 			);
 		expect(equivalent.supports({ ast: {} })).toBe(false);
+	});
+
+	it("should decline a terser whose evaluation it does not know", async () => {
+		const evaluate =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "evaluate")
+			);
+		const modules = await loadSources();
+		expect(evaluate.supports({ ast: {} })).toBe(false);
+		expect(evaluate.supports({ ...modules, utils: {} })).toBe(false);
+		expect(evaluate.supports(modules)).toBe(true);
+	});
+
+	it("should decline a terser whose inference it does not know", async () => {
+		const inference =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "inference")
+			);
+		const modules = await loadSources();
+		expect(inference.supports({ ast: {} })).toBe(false);
+		expect(
+			inference.supports({
+				...modules,
+				nativeObjects: { ...modules.nativeObjects, is_pure_builtin_call: {} }
+			})
+		).toBe(false);
+		expect(
+			inference.supports({
+				...modules,
+				nativeObjects: { ...modules.nativeObjects, pure_prop_access_globals: [] }
+			})
+		).toBe(false);
+		expect(inference.supports(modules)).toBe(true);
+	});
+
+	it("should decline a terser whose effect dropping it does not know", async () => {
+		const drop =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "drop")
+			);
+		const modules = await loadSources();
+		expect(drop.supports({ ast: {} })).toBe(false);
+		expect(drop.supports({ ...modules, inference: {} })).toBe(false);
+		expect(drop.supports(modules)).toBe(true);
 	});
 
 	it("should size and compare every node as terser does", async () => {
