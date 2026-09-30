@@ -2314,7 +2314,19 @@ const compareCascades = ({ pairs, types }) => {
 				0,
 				element.outerHTML.indexOf(">") + 1
 			);
-			differences.push(`${tag.slice(0, 160)}${pseudo} ${moved.join("; ")}`);
+			// Where it stands, since what an element inherits is what it sits in.
+			/** @type {string[]} */
+			const path = [];
+			for (
+				let ancestor = element.parentElement;
+				ancestor !== null && ancestor !== root;
+				ancestor = ancestor.parentElement
+			) {
+				path.unshift(ancestor.localName);
+			}
+			differences.push(
+				`${[...path, tag.slice(0, 160)].join(" > ")}${pseudo} ${moved.join("; ")}`
+			);
 		}
 		reports.push({
 			name: pair.name,
