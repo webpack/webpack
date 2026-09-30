@@ -770,7 +770,7 @@ describe("syntax-printer", () => {
 		unsafe_undefined: true,
 		passes: 2
 	};
-	/** @type {[string, string, EXPECTED_OBJECT][]} */
+	/** @type {[string, string, import("terser").CompressOptions][]} */
 	const COMPRESS_CASES = [
 		[
 			"unsafe literals",
@@ -840,8 +840,8 @@ describe("syntax-printer", () => {
 			const reference = require("terser");
 			/**
 			 * @param {typeof minify} run a minify
-			 * @param {EXPECTED_OBJECT} settings its options
-			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
+			 * @param {import("terser").MinifyOptions} settings its options
+			 * @returns {Promise<{ code: string | undefined } | { error: string }>} its result, or the error it threw
 			 */
 			const outcome = async (run, settings) => {
 				try {
@@ -851,7 +851,7 @@ describe("syntax-printer", () => {
 				}
 			};
 			for (const module of [false, true]) {
-				/** @returns {EXPECTED_OBJECT} the options */
+				/** @returns {import("terser").MinifyOptions} the options */
 				const settings = () => ({
 					module,
 					mangle: false,
@@ -1658,6 +1658,31 @@ describe("syntax-printer", () => {
 			})
 		).toBe(false);
 		expect(inference.supports(modules)).toBe(true);
+	});
+
+	it("should decline a terser whose optimizers it does not know", async () => {
+		const optimize =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "optimize")
+			);
+		const modules = await loadSources();
+		expect(optimize.supports({ ast: {} })).toBe(false);
+		expect(
+			optimize.supports({
+				...modules,
+				common: { ...modules.common, make_sequence: undefined }
+			})
+		).toBe(false);
+		expect(
+			optimize.supports({
+				...modules,
+				ast: {
+					...modules.ast,
+					AST_Node: { prototype: {} }
+				}
+			})
+		).toBe(false);
+		expect(optimize.supports(modules)).toBe(true);
 	});
 
 	it("should decline a terser whose effect dropping it does not know", async () => {
