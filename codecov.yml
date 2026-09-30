@@ -17,6 +17,7 @@ coverage:
           - css-parsing
           - html5lib
           - test262
+          - minify-corpora
         target: auto
     patch:
       default:
