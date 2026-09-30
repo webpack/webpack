@@ -104,9 +104,9 @@ Every schema is derived from the module declaring its options by `generate-schem
 
 ## Adding a dependency type or runtime requirement
 
-**New dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (emits the code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`. A plugin outside the repo reaches all three through `compiler.webpack` — `Dependency`, `template.DependencyTemplate`, `module.NullFactory` and `util.makeSerializable` are public for it, and `makeSerializable` registers globally, so build the class once rather than per `apply`.
+**New dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (emits the code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`. One whose `getResourceIdentifier()` returns a value resolves a module, so it also needs a factory in `compilation.dependencyFactories`, or the build throws `No module factory available for dependency type`. A plugin outside the repo reaches all three through `compiler.webpack` — `Dependency`, `template.DependencyTemplate`, `module.NullFactory` and `util.makeSerializable` are public for it, and `makeSerializable` registers globally, so build the class once rather than per `apply`.
 
-**New runtime requirement:** declare it in `lib/runtime/RuntimeGlobals.js`, emit it with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (`…InModule` variants for per-module needs).
+**New runtime requirement:** declare it in `lib/runtime/RuntimeGlobals.js`, emit it with a `RuntimeModule` subclass, and inject it through the `compilation.hooks` pair matching its scope: `additionalModuleRuntimeRequirements`/`runtimeRequirementInModule` per module, `additionalChunkRuntimeRequirements`/`runtimeRequirementInChunk` per chunk, or `additionalTreeRuntimeRequirements`/`runtimeRequirementInTree` per runtime chunk and everything it loads.
 
 Tap every hook with a unique plugin-name string.
 
