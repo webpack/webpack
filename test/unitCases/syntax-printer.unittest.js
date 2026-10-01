@@ -157,6 +157,85 @@ const runProgram = (code) => {
 	return lines.join("\n");
 };
 
+// What the `improve` phase writes shorter: a statement calling a function in
+// place runs its body as a block, or in its list when nothing in it is scoped.
+const TRY = "try { console.log(1); } catch (e) {}";
+
+/** @type {[string, string, import("terser").MinifyOptions][]} */
+const IMPROVED_CASES = [
+	[
+		"a function, its body joining the list",
+		`!function () { ${TRY} console.log(2); }();`,
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an arrow, its body joining the list",
+		`(() => { ${TRY} console.log(2); })();`,
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a call after `void`",
+		`void function () { ${TRY} console.log(2); }();`,
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `let`, kept in a block",
+		"!function () { let a = console.log.name; console.log(a, a); }();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a class, kept in a block",
+		"(() => { class A {} console.log(typeof new A(), A.name); })();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a loop's body, which is no list",
+		`for (const x of [1, 2]) (() => { ${TRY} console.log(x); })();`,
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a string first, kept in a block",
+		`(() => { ("x"); ${TRY} })();`,
+		{ compress: { side_effects: false }, mangle: false }
+	],
+	[
+		"an arrow reading `this`, which it shares",
+		`(() => { ${TRY} console.log(typeof this); })();`,
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a nested function reading its own `this`",
+		`!function () { ${TRY} console.log([1].map(function () { return typeof this; })[0]); }();`,
+		{ compress: {}, mangle: false }
+	]
+];
+
+// What the `improve` phase leaves as terser writes it: each body has something
+// of its function's own, or the call passes, keeps or constructs something.
+/** @type {[string, string][]} */
+const KEPT_CASES = [
+	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
+	["a `return`", `!function () { for (const x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
+	["`this`", `!function () { ${TRY} console.log(this); }();`],
+	["`arguments`", `!function () { ${TRY} console.log(arguments.length); }();`],
+	["`new.target`", `!function () { ${TRY} console.log(new.target); }();`],
+	["an arrow reading `this`", `!function () { ${TRY} [1].map(() => this); }();`],
+	["an arrow calling `eval`", `!function () { ${TRY} [1].map(() => eval("this")); }();`],
+	["a parameter given an argument", `!function (a) { ${TRY} console.log(a); }(Math.random());`],
+	["a parameter given nothing", `!function (a) { ${TRY} console.log(a, a = Math.random()); }();`],
+	["a name", `!function f() { ${TRY} console.log(f); }();`],
+	["`async`", `!async function () { ${TRY} console.log(2); }();`],
+	["a generator", `!function* () { ${TRY} console.log(2); }().next();`],
+	["a function declaration", "!function () { function g() {} console.log(g, g); }();"],
+	["a label", `!function () { a: for (;;) { ${TRY} break a; } console.log(2); }();`],
+	["a directive", `!function () { "use strict"; ${TRY} console.log(2); }();`],
+	["`eval`", `!function () { ${TRY} eval("1"); }();`],
+	["`with`", "!function () { with (Math) console.log(PI); console.log(2); }();"],
+	["`new`", `new function () { ${TRY} console.log(2); }();`],
+	["an optional call", `(() => { ${TRY} console.log(2); })?.();`],
+	["its value used", `console.log(function () { ${TRY} console.log(2); }());`]
+];
+
 // Each prints one thing and terser's output another, under the options named.
 /** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
@@ -2455,5 +2534,62 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+	});
+
+	describe("improve phase", () => {
+		it("should install", async () => {
+			const { phases } = await load();
+			expect(phases).toContain("improve");
+		});
+
+		for (const [name, input, options] of IMPROVED_CASES) {
+			it(`should write less, printing the same: ${name}`, async () => {
+				const { minify, improvements } = await load();
+				const expected = runProgram(input);
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(expected);
+
+				if (!improvements) throw new Error("the improve phase is not installed");
+				improvements.enabled = false;
+				try {
+					const unimproved = await minify(input, options);
+					const reference = await terserReference().minify(input, options);
+					expect(unimproved.code).toBe(reference.code);
+					expect(/** @type {string} */ (code).length).toBeLessThan(
+						/** @type {string} */ (unimproved.code).length
+					);
+				} finally {
+					improvements.enabled = true;
+				}
+			});
+		}
+
+		for (const [name, input] of KEPT_CASES) {
+			it(`should write what terser writes: ${name}`, async () => {
+				const { minify } = await load();
+				const options = { compress: {}, mangle: false };
+				const { code } = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(code).toBe(reference.code);
+			});
+		}
+
+		it("should leave the program's value alone under `expression`", async () => {
+			const { minify } = await load();
+			const input = `!function () { ${TRY} console.log(2); }();`;
+			const options = { compress: { expression: true }, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+
+		it("should leave the calls alone without `inline`", async () => {
+			const { minify } = await load();
+			const input = `!function () { ${TRY} console.log(2); }();`;
+			const options = { compress: { inline: false }, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
 	});
 });

@@ -915,6 +915,26 @@ const outcome = async (minify, code, options) => {
 };
 
 /**
+ * Runs `run` with each enabled switch turned off, as though the printer had
+ * no such phase, and turns them back on after.
+ * @template T
+ * @param {({ enabled: boolean } | undefined)[]} switches the phases' switches
+ * @param {() => Promise<T>} run what to run
+ * @returns {Promise<T>} what it returned
+ */
+const outcomeWithout = async (switches, run) => {
+	const off = /** @type {{ enabled: boolean }[]} */ (
+		switches.filter((phase) => phase && phase.enabled)
+	);
+	for (const phase of off) phase.enabled = false;
+	try {
+		return await run();
+	} finally {
+		for (const phase of off) phase.enabled = true;
+	}
+};
+
+/**
  * @param {string} directory a corpus directory
  * @returns {boolean} whether its submodule is checked out
  */
@@ -991,7 +1011,7 @@ const formatLeads = (leads) => {
 };
 
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
+	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	/** @type {Lead[]} */
 	const leads = [];
@@ -1250,22 +1270,21 @@ describe("JavaScript minifier", () => {
 									};
 									const key = `${corpus.name}: ${source.name} (${setName})`;
 									if (theirs.code !== ours.code || theirs.error !== ours.error) {
-										// A difference only the `correct` phase makes is its fix, which
-										// the run check below holds to; any other is a difference.
-										const { corrections } = printer;
-										let uncorrected = ours;
-										if (corrections && corrections.enabled) {
-											corrections.enabled = false;
-											try {
-												uncorrected = await outcome(
-													printer.minify,
-													source.input,
-													optionsFor(source)
-												);
-											} finally {
-												corrections.enabled = true;
-											}
-										}
+										// A difference only the `correct` and `improve` phases make is
+										// theirs, which the run check below holds to; any other is a
+										// difference, and an improvement must not write more.
+										const { corrections, improvements } = printer;
+										const unimproved = await outcomeWithout([improvements], () =>
+											outcome(printer.minify, source.input, optionsFor(source))
+										);
+										// Without the improvements terser's bytes back, nothing else differs.
+										const uncorrected =
+											theirs.code === unimproved.code &&
+											theirs.error === unimproved.error
+												? unimproved
+												: await outcomeWithout([corrections, improvements], () =>
+														outcome(printer.minify, source.input, optionsFor(source))
+													);
 										if (
 											theirs.code !== uncorrected.code ||
 											theirs.error !== uncorrected.error
@@ -1273,6 +1292,32 @@ describe("JavaScript minifier", () => {
 											differences.push(
 												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
 											);
+										}
+										if (unimproved.error !== ours.error) {
+											differences.push(
+												`${source.name} (${setName}) refused differently with the improvements\n\twithout: ${JSON.stringify(unimproved)}\n\twith:    ${JSON.stringify(ours)}`
+											);
+										} else if (
+											ours.code !== undefined &&
+											unimproved.code !== undefined &&
+											ours.code !== unimproved.code
+										) {
+											const withSize = sizeOf(ours.code);
+											const withoutSize = sizeOf(unimproved.code);
+											/** @type {Lead} */
+											const lead = {
+												source: source.name,
+												rival: "unimproved",
+												ours: withSize.raw,
+												theirs: withoutSize.raw,
+												oursGzip: withSize.gzip,
+												theirsGzip: withoutSize.gzip
+											};
+											if (standingOf(lead) === "worse") {
+												differences.push(
+													`${source.name} (${setName}) is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
+												);
+											}
 										}
 									}
 									if (runs && ours.code !== undefined) {
