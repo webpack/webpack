@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce HTML syntax processing time and memory; load none of it without HTML.
+Reduce CSS and HTML syntax time and memory; load only the parts a build uses.

@@ -13158,14 +13158,14 @@ describe("SourceProcessor — mergeDistantRules", () => {
 describe("CssData — the version tables stay in their element type", () => {
 	const {
 		NEVER,
-		PREFIX_WINDOWS,
+		getPrefixWindows,
 		PREFIX_WINDOW_STARTS,
-		SUPPORT_PROFILES
+		getSupportProfiles
 	} = require("../../lib/css/data");
 
 	it.each([
-		["PREFIX_WINDOWS", () => PREFIX_WINDOWS],
-		["SUPPORT_PROFILES", () => SUPPORT_PROFILES]
+		["getPrefixWindows()", () => getPrefixWindows()],
+		["getSupportProfiles()", () => getSupportProfiles()]
 	])("%s holds versions the element type represents exactly", (_name, get) => {
 		const table = get();
 		expect(table).toBeInstanceOf(Uint32Array);
@@ -13191,11 +13191,11 @@ describe("CssData — the version tables stay in their element type", () => {
 	it("indexes the window table within its element type", () => {
 		expect(PREFIX_WINDOW_STARTS).toBeInstanceOf(Uint16Array);
 		for (const start of PREFIX_WINDOW_STARTS) {
-			expect(start).toBeLessThanOrEqual(PREFIX_WINDOWS.length);
+			expect(start).toBeLessThanOrEqual(getPrefixWindows().length);
 		}
 		// The last start is the end of the last list, so it is the table's length.
 		expect(PREFIX_WINDOW_STARTS[PREFIX_WINDOW_STARTS.length - 1]).toBe(
-			PREFIX_WINDOWS.length
+			getPrefixWindows().length
 		);
 	});
 });
