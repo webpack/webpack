@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun
+// cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE
 
 const vm = require("vm");
 const {
@@ -249,7 +249,10 @@ const KEPT_CASES = [
 	["`new`", `new function () { ${TRY} console.log(2); }();`],
 	["an optional call", `(() => { ${TRY} console.log(2); })?.();`],
 	["its value used", `console.log(function () { ${TRY} console.log(2); }());`],
-	["a sequence calling nothing in place", "console.log(1); console.log(2);"]
+	["a sequence calling nothing in place", "console.log(1); console.log(2);"],
+	["`@__NOINLINE__`", `/*@__NOINLINE__*/(function () { ${TRY} console.log(2); })();`],
+	["a `yield` identifier", `function* g() { !function () { ${TRY} console.log(yield); }(); } g().next();`],
+	["an `await` identifier", `async function f() { !function () { ${TRY} console.log(await); }(); } f();`]
 ];
 
 // Each prints one thing and terser's output another, under the options named.
