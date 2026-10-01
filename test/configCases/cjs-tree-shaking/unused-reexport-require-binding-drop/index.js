@@ -1,4 +1,4 @@
-import { used, part, partA } from "./lib.cjs";
+import { used, part, partA, ignored } from "./lib.cjs";
 
 const libSource = () => String(__webpack_modules__["./lib.cjs"]);
 
@@ -27,4 +27,9 @@ it("keeps the side effects of a module whose require binding is re-exported unus
 	expect(src).not.toMatch(/exports\.value/);
 	expect(src).toMatch(/__webpack_unused_export__ = \[\];/);
 	expect(libSource()).not.toMatch(/exports\.effect/);
+});
+
+it("leaves a `webpackIgnore` require binding to the runtime require", () => {
+	expect(typeof ignored.join).toBe("function");
+	expect(libSource()).toMatch(/exports\.ignored = ignored;/);
 });

@@ -29,3 +29,32 @@ it("should tree-shake a require binding assigned to CommonJS exports", () => {
 	// The binding is re-exported, so only reads through the re-export count.
 	expect(viaExports.usedExports).toEqual(["a", "usedExports"]);
 });
+
+it("should not re-export through a getter whose parameter or name shadows the binding", () => {
+	const shadowed = require("./reexport-cjs-shadowed");
+	expect(shadowed.ns.a).toBe("a");
+	expect(typeof shadowed.namedGetter).toBe("function");
+	expect(shadowed.paramGetter).toBe("param");
+});
+
+it("should keep the descriptor attributes of a require binding re-export", () => {
+	const descriptor = require("./reexport-cjs-descriptor");
+	const attributes = Object.getOwnPropertyDescriptor(descriptor, "attributes");
+	expect(attributes.value.a).toBe("a");
+	expect(attributes.enumerable).toBe(true);
+	expect(attributes.writable).toBe(true);
+	expect(attributes.configurable).toBe(true);
+	const hidden = Object.getOwnPropertyDescriptor(descriptor, "hidden");
+	expect(hidden.get().a).toBe("a");
+	expect(hidden.enumerable).toBe(false);
+});
+
+it("should keep async and generator getters returning their wrappers", async () => {
+	const descriptor = require("./reexport-cjs-descriptor");
+	const fromAsync = descriptor.asyncGetter;
+	expect(fromAsync).toBeInstanceOf(Promise);
+	expect((await fromAsync).a).toBe("a");
+	const iterator = descriptor.generatorGetter;
+	expect(typeof iterator.next).toBe("function");
+	expect(iterator.next().value.a).toBe("a");
+});
