@@ -1899,7 +1899,9 @@ const collectColorSpaceModel = () => {
 		for (const name of spellings) {
 			names.push(name);
 			entries.push(
-				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, conversion: ${conversion}, written: ${written(name)}, uncertainHue: ${uncertainHue} }]`
+				`\t["${name}", { to: ${to}, from: ${from}, hue: ${hue}, conversion: ${conversion}, written: ${written(
+					name
+				)}, uncertainHue: ${uncertainHue} }]`
 			);
 		}
 	};
@@ -1916,7 +1918,9 @@ const collectColorSpaceModel = () => {
 		/** @type {boolean[]} */ percent,
 		/** @type {string} */ feature
 	) =>
-		`{ open: "${open}", scale: [${scale.join(", ")}], percent: [${percent.join(", ")}], feature: "${feature}" }`;
+		`{ open: "${open}", scale: [${scale.join(", ")}], percent: [${percent.join(
+			", "
+		)}], feature: "${feature}" }`;
 	const plain = [1, 1, 1];
 	const numbers = [false, false, false];
 	const percentPair = [false, true, true];
@@ -1953,7 +1957,10 @@ const collectColorSpaceModel = () => {
 			`const ${upper}_M = ${flat(invertMatrix(toSrgb))};`,
 			`const ${upper}_I = ${flat(toSrgb)};`,
 			typedConverter(
-				`const to${title} = (c) => applyModel(${upper}_M, c).map(${transfer.replace("Transfer", "Encode")});`
+				`const to${title} = (c) => applyModel(${upper}_M, c).map(${transfer.replace(
+					"Transfer",
+					"Encode"
+				)});`
 			),
 			typedConverter(
 				`const from${title} = (c) => applyModel(${upper}_I, c.map(${transfer}));`
@@ -1975,7 +1982,9 @@ const collectColorSpaceModel = () => {
 		`const XYZ_M = ${flat(linearSrgbToXyz)};`,
 		`const XYZ_I = ${flat(XYZ_TO_LINEAR_SRGB)};`,
 		`const XYZ_D50_M = ${flat(multiplyMatrix(d65ToD50, linearSrgbToXyz))};`,
-		`const XYZ_D50_I = ${flat(multiplyMatrix(XYZ_TO_LINEAR_SRGB, D50_TO_D65))};`,
+		`const XYZ_D50_I = ${flat(
+			multiplyMatrix(XYZ_TO_LINEAR_SRGB, D50_TO_D65)
+		)};`,
 		typedConverter("const toXyz = (c) => applyModel(XYZ_M, c);"),
 		typedConverter("const fromXyz = (c) => applyModel(XYZ_I, c);"),
 		typedConverter("const toXyzD50 = (c) => applyModel(XYZ_D50_M, c);"),
@@ -2036,7 +2045,11 @@ const ${UNCERTAIN_OKLCH_HUE} = (c) => Math.abs(c[1]) < 0.03;`
 		throw new Error("no predefined space states the sRGB byte itself");
 	}
 	return {
-		text: `${sources.join("\n")}\n\n// The space a hex and an \`rgb()\` state their components in.\nconst SRGB_SPACE = "${encodedSpace}";\n\n/** @typedef {{ to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, conversion: number, written: { open: string, scale: number[], percent: boolean[], feature: string }, uncertainHue: ((c: number[]) => boolean) | null }} ColorSpaceModel */\n\n/** @type {Map<string, ColorSpaceModel>} */\nconst COLOR_SPACE_MODEL = new Map([\n${entries.join(",\n")}\n]);`,
+		text: `${sources.join(
+			"\n"
+		)}\n\n// The space a hex and an \`rgb()\` state their components in.\nconst SRGB_SPACE = "${encodedSpace}";\n\n/** @typedef {{ to: (c: number[]) => number[], from: (c: number[]) => number[], hue: number, conversion: number, written: { open: string, scale: number[], percent: boolean[], feature: string }, uncertainHue: ((c: number[]) => boolean) | null }} ColorSpaceModel */\n\n/** @type {() => Map<string, ColorSpaceModel>} */\nconst getColorSpaceModel = memoize(() => new Map([\n${entries.join(
+			",\n"
+		)}\n]));`,
 		names
 	};
 };
@@ -7066,6 +7079,11 @@ const collectData = async () => {
 
 "use strict";
 
+const memoize = require("../util/memoize");
+
+// Tables only the minifier or a \`css/module\` reads are getters built on first use,
+// so a build parsing CSS without them never compiles or allocates them.
+
 /** @typedef {(sums: Map<string, number>[]) => [string, number[]] | null} MathArgumentReader */
 /** @typedef {(values: number[], strategy: string, table: Map<number, number>) => number | null} MathOperation */
 
@@ -7151,9 +7169,9 @@ const SLASH_LONGHANDS = new Map([${slashLonghands
 
 // Every longhand each shorthand sets, so one block can be asked whether another
 // could shadow it. Not every shorthand prefixes its longhands: \`inset\` sets \`top\`.
-const SHORTHAND_LONGHANDS = new Map([${shorthandLonghands
+const getShorthandLonghands = memoize(() => new Map([${shorthandLonghands
 		.map(([name, longhands]) => `["${name}", ${setLiteral(longhands)}]`)
-		.join(", ")}]);
+		.join(", ")}]));
 
 // WHY: Every longhand the three merge tables above can consume, so a block is asked
 // once whether it holds anything mergeable at all. Two of them have to be
@@ -7240,7 +7258,9 @@ const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
 // directly in one is a keyword rather than a name of the author's — and matches
 // ASCII case-insensitively. A call's arguments are read against the function's
 // own grammar, so they are not covered.
-const KEYWORD_ONLY_PROPERTIES = ${setLiteral(keywordOnlyProperties)};
+const getKeywordOnlyProperties = memoize(() => ${setLiteral(
+		keywordOnlyProperties
+	)});
 
 // Each two-keyword \`display\` -> the single keyword naming the same box.
 const DISPLAY_SHORT_FORMS = new Map([
@@ -7259,7 +7279,8 @@ const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
 // spelling its own slot takes: the slot's keywords, and each function it
 // accepts written \`name()\`. A sibling out of that set means the value fills the
 // slot twice, which is a declaration the engine drops.
-const SHORTHAND_INITIAL_KEYWORDS = new Map([
+/** @type {() => Map<string, Map<string, { spellings: Set<string>, classes: Set<string> }>>} */
+const getShorthandInitialKeywords = memoize(() => new Map([
 ${shorthandInitialKeywords
 	.map(
 		([name, entries]) =>
@@ -7273,7 +7294,7 @@ ${shorthandInitialKeywords
 				.join(", ")}])]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // Each \`font-stretch\` keyword -> the percentage it names, which is the same
 // value in fewer bytes.
@@ -7366,25 +7387,25 @@ const REPEAT_STYLE_PROPERTIES = ${setLiteral(repeatStyleProperties)};
 
 // Each property whose initial value is a keyword shorter than \`initial\` -> that
 // keyword, which is the same declaration written in fewer bytes.
-const INITIAL_VALUE_KEYWORDS = new Map([
+const getInitialValueKeywords = memoize(() => new Map([
 ${initialValueKeywords
 	.map(
 		([name, initial]) =>
 			`\t[${JSON.stringify(name)}, ${JSON.stringify(initial)}]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // Each named color a shorter spelling beats -> that spelling, so a name written
 // where a color is unambiguous prints as the shortest text for the same value.
-const COLOR_NAME_TO_SHORTEST = new Map([
+const getColorNameToShortest = memoize(() => new Map([
 ${shorterColorSpellings
 	.map(
 		([name, shortest]) =>
 			`\t[${JSON.stringify(name)}, ${JSON.stringify(shortest)}]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // The functions whose argument is a selector, so a \`>\` / \`+\` / \`~\` inside one
 // is a combinator and needs no whitespace around it.
@@ -7569,10 +7590,10 @@ const LATER_COLOR_NAMES = ${setLiteral(laterColorNames)};
 // Every named color as its packed \`0xrrggbb\` value — what a color a mix or a
 // relative reference names resolves through. The two tables above cut this one
 // down to the spellings worth rewriting; this one answers for every name.
-/** @type {Map<string, number>} */
-const COLOR_NAME_TO_RGB = new Map([${colorNameValues
+/** @type {() => Map<string, number>} */
+const getColorNameToRgb = memoize(() => new Map([${colorNameValues
 		.map(([name, packed]) => `["${name}", ${packed}]`)
-		.join(", ")}]);
+		.join(", ")}]));
 
 // What a layered shorthand's position, size, origin and clip hold when nothing
 // writes them, as \`[x, y, size, origin, clip]\`. A layer holding its own is a
@@ -7691,7 +7712,7 @@ const RATIO_PROPERTIES = ${setLiteral(ratioProperties)};
 // The keywords of every property a \`css/module\` reads a scoped name out of,
 // each mapped to how many times it may be spelled before the next one is the
 // name (\`Infinity\` — never the name). Derived from each property's grammar.
-const CSS_MODULES_KEYWORDS = new Map([
+const getCssModulesKeywords = memoize(() => new Map([
 ${cssModulesKeywords
 	.map(
 		([name, , table]) =>
@@ -7700,7 +7721,7 @@ ${cssModulesKeywords
 				.join(", ")}])]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // The parser option gating each of them.
 const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(
@@ -7740,15 +7761,15 @@ ${colorNames
 // unprefixedFrom\` triples — the slot is the browser's place in
 // \`SUPPORT_BROWSERS\`, so no name is restated. A spelling names its list by
 // index, and two thirds of the lists are shared.
-const PREFIX_WINDOWS = new Uint32Array([${windowTriples
+const getPrefixWindows = memoize(() => new Uint32Array([${windowTriples
 		.map(versionLiteral)
-		.join(", ")}]);
+		.join(", ")}]));
 
 // Where each window list begins; the entry after it is where it ends.
 const PREFIX_WINDOW_STARTS = new Uint16Array([${windowStarts.join(", ")}]);
 
-/** @type {Map<string, [string, number][]>} */
-const PREFIXED_PROPERTIES = ${prefixedPropertiesText};
+/** @type {() => Map<string, [string, number][]>} */
+const getPrefixedProperties = memoize(() => ${prefixedPropertiesText});
 
 /** @type {Map<string, [string, number][]>} */
 const PREFIXED_SELECTORS = ${prefixedSelectorsText};
@@ -7771,10 +7792,10 @@ const SUPPORT_BROWSERS = ${JSON.stringify(pooled.browsers)};
 // The versions themselves, rows of \`SUPPORT_BROWSERS.length\` laid end to end,
 // one row per distinct profile: a construct names the row it reads rather than
 // carrying its own copy of it. \`NEVER\` is a browser that never shipped it.
-const SUPPORT_PROFILES = new Uint32Array([${pooled.profiles
+const getSupportProfiles = memoize(() => new Uint32Array([${pooled.profiles
 		.flat()
 		.map(versionLiteral)
-		.join(", ")}]);
+		.join(", ")}]));
 
 /** @type {Map<string, number>} */
 const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
@@ -7782,30 +7803,33 @@ const SUPPORTED_FROM = ${supportLiteral(supportedFrom, pooled.indexes[0])};
 // When each browser first read a pseudo-class or pseudo-element, by the spelling
 // a selector carries. A pseudo missing here is one no target is known to read,
 // so it never joins a selector list.
-/** @type {Map<string, number>} */
-const SELECTOR_SUPPORTED_FROM = ${supportLiteral(selectorSupport, pooled.indexes[1])};
+/** @type {() => Map<string, number>} */
+const getSelectorSupportedFrom = memoize(() => ${supportLiteral(
+		selectorSupport,
+		pooled.indexes[1]
+	)});
 
 // When each browser first read a value a declaration may name, as
 // \`property:keyword index keyword index|...\` with the color functions under no
 // property. A value missing here is one no target is known to read.
-const VALUE_SUPPORT_PACKED =
-	${valueSupportLiteral(valueSupport, pooled.indexes[2])};
+const getValueSupportPacked = memoize(() =>
+	${valueSupportLiteral(valueSupport, pooled.indexes[2])});
 
 // WHY: The vendor spellings of a property's own keyword values, as \`property ->
 // keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
 // was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
 // Only keywords the property's syntax names are here, so a function whose older
 // spelling read its arguments differently is not.
-/** @type {Map<string, Map<string, [string, number][]>>} */
-const PREFIXED_VALUES = ${prefixedValuesText};
+/** @type {() => Map<string, Map<string, [string, number][]>>} */
+const getPrefixedValues = memoize(() => ${prefixedValuesText});
 
 // WHY: The keywords a vendor spelling reads in place of the standard ones, as
 // \`spelling -> standard -> legacy\` — IE 10's \`-ms-flex-pack\` reads
 // \`space-around\` as \`distribute\`. Each map is the older property's whole
 // grammar, so a value naming anything it does not is one that property cannot
 // read and no copy is written.
-/** @type {Map<string, Map<string, string>>} */
-const PREFIXED_SPELLING_KEYWORDS = new Map([
+/** @type {() => Map<string, Map<string, string>>} */
+const getPrefixedSpellingKeywords = memoize(() => new Map([
 ${prefixSpellingKeywords
 	.map(
 		([spelling, keywords]) =>
@@ -7818,7 +7842,7 @@ ${prefixSpellingKeywords
 			})]`
 	)
 	.join(",\n")}
-]);
+]));
 
 // WHY: The legacy spellings reading a number where the standard property reads
 // more, as \`spelling -> offset\`: the standard value's first component, when a
@@ -7840,9 +7864,9 @@ module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.CALC_CONSTANTS = CALC_CONSTANTS;\nmodule.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CANONICAL_NAMES = CANONICAL_NAMES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_FUNCTIONS = COLOR_FUNCTIONS;
-module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_RGB = COLOR_NAME_TO_RGB;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.COLOR_SPACE_MODEL = COLOR_SPACE_MODEL;
+module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.getColorNameToRgb = getColorNameToRgb;\nmodule.exports.getColorNameToShortest = getColorNameToShortest;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;\nmodule.exports.getColorSpaceModel = getColorSpaceModel;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
-module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
+module.exports.getCssModulesKeywords = getCssModulesKeywords;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
 module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.CUSTOM_IDENT_LIST_PROPERTIES = CUSTOM_IDENT_LIST_PROPERTIES;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;
@@ -7856,7 +7880,7 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_INITIALS = FAMILY_SLOT_INITIALS;\nmodule.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.KEYWORD_ONLY_PROPERTIES = KEYWORD_ONLY_PROPERTIES;\nmodule.exports.LATER_COLOR_NAMES = LATER_COLOR_NAMES;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.getInitialValueKeywords = getInitialValueKeywords;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;\nmodule.exports.getKeywordOnlyProperties = getKeywordOnlyProperties;\nmodule.exports.LATER_COLOR_NAMES = LATER_COLOR_NAMES;
 module.exports.LAYER_INITIALS = LAYER_INITIALS;\nmodule.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;\nmodule.exports.LINEAR_SRGB_TO_P3 = LINEAR_SRGB_TO_P3;
@@ -7871,19 +7895,19 @@ module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.ex
 module.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREDEFINED_COLOR_SPACES = PREDEFINED_COLOR_SPACES;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
-module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
+module.exports.getPrefixedProperties = getPrefixedProperties;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
-module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
+module.exports.getPrefixedSpellingKeywords = getPrefixedSpellingKeywords;
 module.exports.PREFIXED_SPELLING_NUMBERS = PREFIXED_SPELLING_NUMBERS;
-module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
-module.exports.PREFIX_WINDOWS = PREFIX_WINDOWS;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
+module.exports.getPrefixedValues = getPrefixedValues;
+module.exports.getPrefixWindows = getPrefixWindows;\nmodule.exports.PREFIX_WINDOW_STARTS = PREFIX_WINDOW_STARTS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SELECTOR_SUPPORTED_FROM = SELECTOR_SUPPORTED_FROM;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SHORTHAND_LONGHANDS = SHORTHAND_LONGHANDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.getSelectorSupportedFrom = getSelectorSupportedFrom;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.getShorthandInitialKeywords = getShorthandInitialKeywords;\nmodule.exports.getShorthandLonghands = getShorthandLonghands;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;\nmodule.exports.SRGB_SPACE = SRGB_SPACE;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;\nmodule.exports.STEP_POSITION_MINIMUM_COUNTS = STEP_POSITION_MINIMUM_COUNTS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.SUPPORT_PROFILES = SUPPORT_PROFILES;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.SUPPORTED_FROM = SUPPORTED_FROM;\nmodule.exports.SUPPORT_BROWSERS = SUPPORT_BROWSERS;\nmodule.exports.getSupportProfiles = getSupportProfiles;\nmodule.exports.SYSTEM_UI_STACK = SYSTEM_UI_STACK;\nmodule.exports.THROUGH_MATRIX = THROUGH_MATRIX;\nmodule.exports.THROUGH_TRANSFER = THROUGH_TRANSFER;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
-module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.VALUE_SUPPORT_PACKED = VALUE_SUPPORT_PACKED;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.getValueSupportPacked = getValueSupportPacked;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The arithmetic the printer's own evaluator needs. Sorted after the tables:\n// \`import/order\` orders exports by case, uppercase first.\nmodule.exports.foldAdd = foldAdd;\nmodule.exports.foldDivide = foldDivide;\nmodule.exports.foldMultiply = foldMultiply;
 `;

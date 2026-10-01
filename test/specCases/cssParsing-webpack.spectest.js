@@ -13,7 +13,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
-const { COLOR_NAME_TO_RGB } = require("../../lib/css/data");
+const { getColorNameToRgb } = require("../../lib/css/data");
 const { SourceProcessor } = require("../../lib/css/syntax");
 const {
 	parseABlocksContents,
@@ -261,7 +261,7 @@ describe("css-parsing-tests colors", () => {
 	 * @returns {string | null} the same color as `#rrggbb`, or null if it is not sRGB
 	 */
 	const canonical = (folded) => {
-		const named = COLOR_NAME_TO_RGB.get(folded);
+		const named = getColorNameToRgb().get(folded);
 		if (named !== undefined) return `#${named.toString(16).padStart(6, "0")}`;
 		const short = /^#([0-9a-f]{3})$/.exec(folded);
 		if (short) return `#${[...short[1]].map((c) => c + c).join("")}`;
