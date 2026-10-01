@@ -8,8 +8,9 @@
 // 1. both must write the same bytes, or refuse the source with the same error;
 // 2. where the test states what its input prints, webpack's output, run in
 //    terser's own sandbox, must print it too, whatever the bytes;
-// 3. where swc records its own output, a smaller one is a lead for printing
-//    less, written to the file JS_MINIFY_REPORT names (never a failure).
+// 3. where swc records its own output, webpack's must be no bigger (gzip, then
+//    raw), unless SWC_SMALLER lists why; JS_MINIFY_REPORT names a file to tally
+//    where it is worse, the same and better.
 
 const fs = require("fs");
 const path = require("path");
@@ -29,6 +30,7 @@ const { IGNORED_FORMAT_OPTIONS, load } =
 /** @typedef {{ name: string, files: string[] }} Group */
 /** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, minimumRun?: number, minimumRival?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean }} Corpus */
 /** @typedef {{ source: string, rival: string, ours: number, theirs: number, oursGzip: number, theirsGzip: number }} Lead */
+/** @typedef {"worse" | "same" | "better"} Standing */
 
 const externalDir = path.resolve(__dirname, "../external");
 const referenceDir = path.join(externalDir, "terser");
@@ -854,6 +856,14 @@ const CORRECTED = {
 };
 
 /**
+ * Sources whose output under their own options is bigger than swc's recorded
+ * one, each with what swc does that webpack does not yet; an entry that stops
+ * being bigger fails until retired.
+ * @type {Record<string, string>}
+ */
+const SWC_SMALLER = {};
+
+/**
  * @param {Minify} minify a minifier
  * @param {string} code the source
  * @param {MinifyOptions} options the options
@@ -884,24 +894,61 @@ const sizeOf = (code) => ({
 });
 
 /**
- * @param {Lead[]} leads where another minifier wrote less
- * @returns {string} them as a Markdown table, the most bytes first
+ * Where webpack's output stands beside another minifier's: gzip decides, and
+ * raw breaks a tie, as `docs/performance.md` weighs a size change.
+ * @param {Lead} lead both sizes
+ * @returns {Standing} webpack's standing
+ */
+const standingOf = ({ ours, theirs, oursGzip, theirsGzip }) => {
+	const delta = oursGzip !== theirsGzip ? oursGzip - theirsGzip : ours - theirs;
+	return delta > 0 ? "worse" : delta < 0 ? "better" : "same";
+};
+
+/**
+ * @param {Lead[]} leads every comparison with another minifier's output
+ * @returns {string} a tally, and a Markdown table each of where webpack's is worse and better
  */
 const formatLeads = (leads) => {
-	const rows = [...leads]
-		.sort((a, b) => b.ours - b.theirs - (a.ours - a.theirs))
-		.map(
-			(lead) =>
-				`| ${lead.source} | ${lead.rival} | ${lead.ours} | ${lead.theirs} | ${lead.ours - lead.theirs} | ${lead.oursGzip - lead.theirsGzip} |`
-		);
-	return [
-		"# Where another minifier's recorded output is smaller",
-		"",
-		"Both outputs printed alone by webpack's printer; bytes more than theirs.",
-		"",
+	/**
+	 * @param {Standing} standing which rows
+	 * @returns {string[]} those rows, the most gzip bytes apart first
+	 */
+	const table = (standing) => [
 		"| Source | Rival | Ours | Theirs | Raw more | Gzip more |",
 		"| --- | --- | --: | --: | --: | --: |",
-		...rows,
+		...leads
+			.filter((lead) => standingOf(lead) === standing)
+			.sort(
+				(a, b) =>
+					Math.abs(b.oursGzip - b.theirsGzip) -
+						Math.abs(a.oursGzip - a.theirsGzip) ||
+					Math.abs(b.ours - b.theirs) - Math.abs(a.ours - a.theirs)
+			)
+			.map(
+				(lead) =>
+					`| ${lead.source} | ${lead.rival} | ${lead.ours} | ${lead.theirs} | ${lead.ours - lead.theirs} | ${lead.oursGzip - lead.theirsGzip} |`
+			)
+	];
+	/**
+	 * @param {Standing} standing which rows
+	 * @returns {number} how many
+	 */
+	const count = (standing) =>
+		leads.filter((lead) => standingOf(lead) === standing).length;
+	return [
+		"# webpack's output beside another minifier's recorded output",
+		"",
+		"Both printed alone by webpack's printer; gzip decides, raw breaks a tie.",
+		"",
+		`Worse: ${count("worse")}, the same: ${count("same")}, better: ${count("better")}.`,
+		"",
+		"## Worse",
+		"",
+		...table("worse"),
+		"",
+		"## Better",
+		"",
+		...table("better"),
 		""
 	].join("\n");
 };
@@ -1235,15 +1282,29 @@ describe("JavaScript minifier", () => {
 										if (rival.code !== undefined && mine.code !== undefined) {
 											const oursSize = sizeOf(mine.code);
 											const theirsSize = sizeOf(rival.code);
-											if (theirsSize.raw < oursSize.raw) {
-												leads.push({
-													source: `${corpus.name}: ${source.name}`,
-													rival: source.rival.name,
-													ours: oursSize.raw,
-													theirs: theirsSize.raw,
-													oursGzip: oursSize.gzip,
-													theirsGzip: theirsSize.gzip
-												});
+											/** @type {Lead} */
+											const lead = {
+												source: `${corpus.name}: ${source.name}`,
+												rival: source.rival.name,
+												ours: oursSize.raw,
+												theirs: theirsSize.raw,
+												oursGzip: oursSize.gzip,
+												theirsGzip: theirsSize.gzip
+											};
+											leads.push(lead);
+											const worse = standingOf(lead) === "worse";
+											const listed = Object.prototype.hasOwnProperty.call(
+												SWC_SMALLER,
+												lead.source
+											);
+											if (worse && !listed) {
+												differences.push(
+													`${lead.source} is bigger than ${lead.rival}'s output: ${lead.ours} raw, ${lead.oursGzip} gzip, against ${lead.theirs} raw, ${lead.theirsGzip} gzip`
+												);
+											} else if (!worse && listed) {
+												differences.push(
+													`${lead.source} is no bigger than ${lead.rival}'s output now: retire it from SWC_SMALLER`
+												);
 											}
 										}
 									}
