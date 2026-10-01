@@ -14,7 +14,7 @@ const fs = require("fs");
 const path = require("path");
 
 const LIB_ROOT = path.resolve(__dirname, "../lib");
-const CLASS_DECLARATION_REGEXP = /^class ([A-Z][A-Za-z0-9]*)/gm;
+const CLASS_DECLARATION_REGEXP = /^class ([A-Za-z_$][\w$]*)/gm;
 
 /**
  * Maps every top-level class declared under a directory to the files declaring it.
