@@ -41,6 +41,8 @@ Pitfalls that produced wrong conclusions here:
 - **Changing async structure is not neutral** — adding `process.nextTick`/`setImmediate` or collapsing callbacks reorders module processing and drags order-dependent work along. Prove order unchanged before believing the delta.
 - **Pick a fixture that emits** — `three-long` tree-shakes to 0 bytes in production, skipping codegen/render/minify and inflating any front-end phase's share. Corroborate on a case that emits.
 - **Verify semantics every time** — module count, on-disk output hashes, and error/warning counts unchanged. Two empty outputs prove nothing.
+- **A live-byte saving need not lower peak RSS** — the high-water is set by the allocation trajectory, and the GC keeps the slack it already took. Two trims inside the printer's parse phase: replacing a 69 MiB per-byte offset table with a 2 MiB block index moved peak by nothing and cost 6% time, while sharing one empty comment list, 20 MiB, moved it 19. Claim a peak win only from a measured peak, and prefer trimming what the next phase holds (a smaller tree reaches the compressor) over what dies with the phase.
+- **Peak and retained are different numbers** — peak is `VmHWM` from `/proc/self/status`, the RSS high-water, which counts typed arrays and whatever the GC has not returned; retained is `used_heap_size` after several GCs, read from a clean stack. A typed array lives outside the V8 heap, so `used_heap_size` never sees it, and reading retained inside the callback that finished the build keeps that callback's locals alive — once 33 MiB of them.
 
 ## Reading the code-size report
 
