@@ -5,7 +5,7 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE
+// cspell:ignore DEFNODE, PUNC
 
 const fs = require("fs");
 const path = require("path");
@@ -911,6 +911,214 @@ const nodeClasses = () => ${JSON.stringify(collectNodeClasses())};
 `;
 
 /**
+ * @param {EstreeNode} node the node terser's source holds there
+ * @param {string} expected what the generator expected to find
+ * @returns {Error} the failure naming where terser's source moved
+ */
+const unexpectedParserSyntax = (node, expected) =>
+	new Error(
+		`terser's parse.js holds a ${node.type} at offset ${
+			/** @type {EstreeNode & { start: number }} */ (node).start
+		} where this generator expects ${expected}`
+	);
+
+/** @typedef {string | string[] | { words: string[] } | { levels: string[][] }} ParserValue */
+
+/**
+ * The value of one of terser's table declarations, as far as tables are
+ * written: strings, their concatenation, `makePredicate` over words and
+ * `characters` over a string, and the IIFE that numbers operator precedence.
+ * @param {EstreeNode} node the expression
+ * @param {Map<string, ParserValue>} known the tables read before it
+ * @returns {ParserValue} its value
+ */
+const evaluateParserTable = (node, known) => {
+	if (node.type === "Literal" && typeof node.value === "string") {
+		return node.value;
+	}
+	if (node.type === "Identifier" && known.has(node.name)) {
+		return /** @type {ParserValue} */ (known.get(node.name));
+	}
+	if (node.type === "BinaryExpression" && node.operator === "+") {
+		const left = evaluateParserTable(
+			/** @type {EstreeNode} */ (node.left),
+			known
+		);
+		const right = evaluateParserTable(node.right, known);
+		if (typeof left === "string" && typeof right === "string") {
+			return left + right;
+		}
+	}
+	if (node.type === "ArrayExpression") {
+		return node.elements.map((element) => {
+			const value = evaluateParserTable(
+				/** @type {EstreeNode} */ (element),
+				known
+			);
+			if (typeof value !== "string") {
+				throw unexpectedParserSyntax(
+					/** @type {EstreeNode} */ (element),
+					"a string"
+				);
+			}
+			return value;
+		});
+	}
+	if (node.type === "CallExpression") {
+		const { callee } = node;
+		const [argument] = /** @type {EstreeNode[]} */ (node.arguments);
+		if (callee.type === "Identifier" && callee.name === "characters") {
+			const value = evaluateParserTable(argument, known);
+			if (typeof value === "string") return [...value];
+		}
+		if (callee.type === "Identifier" && callee.name === "makePredicate") {
+			const value = evaluateParserTable(argument, known);
+			// terser's `makePredicate` splits a string at spaces and sorts the words.
+			const words = typeof value === "string" ? value.split(" ") : value;
+			if (Array.isArray(words)) return { words: [...words].sort() };
+		}
+		// The precedence table: an IIFE numbering each group of operators.
+		if (
+			callee.type === "FunctionExpression" &&
+			argument &&
+			argument.type === "ArrayExpression"
+		) {
+			return {
+				levels: argument.elements.map(
+					(level) =>
+						/** @type {string[]} */ (
+							evaluateParserTable(/** @type {EstreeNode} */ (level), known)
+						)
+				)
+			};
+		}
+	}
+	throw unexpectedParserSyntax(node, "a table");
+};
+
+// terser's `parse.js` tables the parser port reads, and the predefined type
+// names its TypeScript stripping declares inside `parse`.
+const PARSER_TABLES = [
+	"KEYWORDS",
+	"KEYWORDS_ATOM",
+	"RESERVED_WORDS",
+	"ALL_RESERVED_WORDS",
+	"KEYWORDS_BEFORE_EXPRESSION",
+	"OPERATOR_CHARS",
+	"OPERATORS",
+	"WHITESPACE_CHARS",
+	"NEWLINE_CHARS",
+	"PUNC_AFTER_EXPRESSION",
+	"PUNC_BEFORE_EXPRESSION",
+	"PUNC_CHARS",
+	"UNARY_PREFIX",
+	"UNARY_POSTFIX",
+	"ASSIGNMENT",
+	"LOGICAL_ASSIGNMENT",
+	"PRECEDENCE",
+	"ATOMIC_START_TOKEN",
+	"_TS_PREDEFINED_TYPES"
+];
+
+/**
+ * terser's tokenizer and parser tables, parsed out of its `parse.js`: each a
+ * list of words in the order terser's `makePredicate` holds them, and the
+ * operators of each precedence level, loosest first.
+ * @returns {Record<string, string[] | string[][]>} each table by its name there
+ */
+const collectParserTables = () => {
+	const source = fs.readFileSync(
+		path.join(
+			path.dirname(require.resolve("terser/package.json")),
+			"lib/parse.js"
+		),
+		"utf8"
+	);
+	const program = acorn.parse(source, {
+		ecmaVersion: "latest",
+		sourceType: "module"
+	});
+	/** @type {Map<string, ParserValue>} */
+	const known = new Map();
+	/**
+	 * @param {EstreeNode[]} statements a body
+	 * @returns {void}
+	 */
+	const read = (statements) => {
+		for (const statement of statements) {
+			if (statement.type === "VariableDeclaration") {
+				for (const declarator of statement.declarations) {
+					if (
+						declarator.id.type !== "Identifier" ||
+						!PARSER_TABLES.includes(declarator.id.name) ||
+						!declarator.init
+					) {
+						continue;
+					}
+					known.set(
+						declarator.id.name,
+						evaluateParserTable(
+							/** @type {EstreeNode} */ (declarator.init),
+							known
+						)
+					);
+				}
+			} else if (
+				statement.type === "ExpressionStatement" &&
+				statement.expression.type === "AssignmentExpression" &&
+				statement.expression.left.type === "Identifier" &&
+				PARSER_TABLES.includes(statement.expression.left.name)
+			) {
+				known.set(
+					statement.expression.left.name,
+					evaluateParserTable(statement.expression.right, known)
+				);
+			} else if (
+				statement.type === "FunctionDeclaration" &&
+				statement.id &&
+				statement.id.name === "parse"
+			) {
+				read(statement.body.body);
+			}
+		}
+	};
+	read(/** @type {EstreeNode[]} */ (/** @type {unknown} */ (program.body)));
+	/** @type {Record<string, string[] | string[][]>} */
+	const tables = {};
+	for (const name of PARSER_TABLES) {
+		const value = known.get(name);
+		if (value === undefined) {
+			throw new Error(`terser's parse.js no longer declares \`${name}\``);
+		}
+		if (typeof value === "string") {
+			throw new Error(`terser's parse.js leaves \`${name}\` a string`);
+		}
+		tables[name.replace(/^_/, "")] = Array.isArray(value)
+			? value
+			: "words" in value
+				? value.words
+				: value.levels;
+	}
+	return tables;
+};
+
+/**
+ * terser's parser tables, as a section of the data module.
+ * @returns {string} its source
+ */
+const renderParserTables = () => `
+// terser's tokenizer and parser tables, read out of its \`parse.js\`: each a
+// list of words, and \`PRECEDENCE\` the operators of each level, loosest first.
+/**
+ * @returns {Record<string, string[] | string[][]>} the tables, fresh on each call
+ */
+const parserTables = () => (${JSON.stringify(collectParserTables()).replace(
+	/[^\u0020-\u007E]/g,
+	(char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
+)});
+`;
+
+/**
  * Render one encoded table as a module-scope constant.
  * @param {string} name the constant's name
  * @param {string} description what the table holds
@@ -986,7 +1194,7 @@ ${renderTable(
 	narrow.part,
 	0
 )}
-${renderUnicodeProperties()}${renderNativeObjects()}${renderNodeClasses()}
+${renderUnicodeProperties()}${renderNativeObjects()}${renderNodeClasses()}${renderParserTables()}
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
@@ -1000,6 +1208,7 @@ module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES
 module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
 module.exports.nativeObjectTables = nativeObjectTables;
 module.exports.nodeClasses = nodeClasses;
+module.exports.parserTables = parserTables;
 `;
 };
 
@@ -1083,5 +1292,6 @@ module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
 module.exports.collectNativeObjects = collectNativeObjects;
 module.exports.collectNodeClasses = collectNodeClasses;
+module.exports.collectParserTables = collectParserTables;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;
