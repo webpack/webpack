@@ -2529,33 +2529,18 @@ const compareRenders = async ({ pairs, width }) => {
 		};
 	};
 
-	const page = /** @type {{ __eqIconLoaded?: boolean }} */ (
-		/** @type {unknown} */ (window)
-	);
-	if (!page.__eqIconLoaded) {
-		// WHY: Chrome draws a blocked image's broken-image icon only once it has
-		// loaded that icon — measured in CI: the first blocked `<img>` a page
-		// rendered read 0x0 and the same one in the next document 16x16 — so a
-		// throwaway one is broken first, and its icon waited for.
-		await render('<img src="eq-icon.png">');
-		const image = /** @type {Document} */ (frame.contentDocument).images[0];
-		for (
-			let waited = 0;
-			waited < PATIENCE && image.getBoundingClientRect().width === 0;
-			waited += 50
-		) {
-			await new Promise((resolve) => {
-				setTimeout(resolve, 50);
-			});
-		}
-		page.__eqIconLoaded = true;
-	}
-
 	/** @type {RenderReport[]} */
 	const reports = [];
 	for (const pair of pairs) {
 		const loaded = [await render(pair.before)];
-		const before = await measure();
+		let before = await measure();
+		// WHY: Chrome boxed a blocked image 0x0 on a URL's first load and 16x16 on
+		// a later one — measured in CI: srcset.html read 0x0, its minified copy
+		// 16x16 — so a page with images is read on its second load, as its copy is.
+		if (/** @type {Document} */ (frame.contentDocument).images.length > 0) {
+			loaded[0] = await render(pair.before);
+			before = await measure();
+		}
 		loaded.push(await render(pair.after));
 		const after = await measure();
 		/** @type {string[]} */
