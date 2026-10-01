@@ -27,6 +27,9 @@ const cacheDir = path.join(root, "node_modules/.cache/tsc");
 // reused while yarn's integrity record (rewritten by every install) matches.
 const INSTALL_STATE_FILES = ["node_modules/.yarn-integrity", "yarn.lock"];
 
+// The install-state hash and extension after `<name>-` in a build-info file.
+const BUILD_INFO_SUFFIX = /^[0-9a-f]{16}\.tsbuildinfo$/;
+
 /**
  * @returns {Promise<string>} short hash of the installed dependency set
  */
@@ -52,10 +55,15 @@ const hashInstallState = async () => {
 const run = async (name, tscArgs) => {
 	const buildInfoFile = `${name}-${await hashInstallState()}.tsbuildinfo`;
 	await mkdir(cacheDir, { recursive: true });
-	const staleFile = new RegExp(`^${name}-[0-9a-f]{16}\\.tsbuildinfo$`);
+	const prefix = `${name}-`;
 	await Promise.all(
 		(await readdir(cacheDir))
-			.filter((file) => staleFile.test(file) && file !== buildInfoFile)
+			.filter(
+				(file) =>
+					file !== buildInfoFile &&
+					file.startsWith(prefix) &&
+					BUILD_INFO_SUFFIX.test(file.slice(prefix.length))
+			)
 			.map((file) => unlink(path.join(cacheDir, file)))
 	);
 	return new Promise((resolve, reject) => {
