@@ -25,6 +25,38 @@ import {
 	value as usedSefValue,
 	getter as usedSefGetter
 } from "./forms/side-effect-free-used";
+import {
+	wrapped,
+	wrappedMember,
+	wrappedChain,
+	innerWrapped,
+	comment,
+	computed,
+	computedChain,
+	value as parenthesizedValue,
+	valueWhole,
+	getter as parenthesizedGetter,
+	getterWhole,
+	method as parenthesizedMethod,
+	info as parenthesizedInfo
+} from "./forms/parenthesized";
+import {
+	whole as noSemicolonsWhole,
+	member as noSemicolonsMember,
+	after as noSemicolonsAfter,
+	inUnusedExpression
+} from "./forms/no-semicolons";
+import {
+	reFoo,
+	starValue,
+	reDefault,
+	ns as esmReexporterNs
+} from "./forms/esm-reexporter";
+import {
+	external as externalWhole,
+	a as externalA,
+	b as externalB
+} from "./forms/external";
 import { foo as esmFoo, bump as esmBump } from "./forms/esm";
 import { name as jsonName, list as jsonList, key as jsonKey } from "./forms/json";
 import { text, lazyText } from "./forms/asset";
@@ -200,6 +232,51 @@ it(`[${VARIANT}] re-exports a side-effect-free target read only through re-expor
 	expect(usedSefGetter).toBe(usedSef);
 });
 
+it(`[${VARIANT}] re-exports through parentheses, comments and computed keys`, () => {
+	expect(wrapped.a).toBe("a");
+	expect(wrappedMember).toBe("a");
+	expect(wrappedChain).toBe("x");
+	expect(innerWrapped).toBe("b");
+	expect(comment).toBe("a");
+	expect(computed).toBe("c");
+	expect(computedChain).toBe("y");
+	expect(parenthesizedValue).toBe("b");
+	expect(valueWhole.a).toBe("a");
+	expect(parenthesizedGetter).toBe("c");
+	expect(getterWhole.a).toBe("a");
+	expect(parenthesizedMethod).toBe("x");
+	shaken(parenthesizedInfo, ["a", "b", "c", "nested", "usedExports"]);
+});
+
+it(`[${VARIANT}] re-exports without semicolons, used and unused`, () => {
+	expect(noSemicolonsWhole.a).toBe("a");
+	expect(noSemicolonsMember).toBe("a");
+	expect(noSemicolonsAfter).toBe(2);
+	expect(inUnusedExpression).toBe("c");
+});
+
+it(`[${VARIANT}] re-exports members of an ESM target re-exporting another module`, () => {
+	expect(reFoo).toBe("foo");
+	expect(starValue).toBe("star");
+	expect(reDefault).toBe("default-value");
+	expect(esmReexporterNs.reFoo).toBe("foo");
+	expect(esmReexporterNs.__esModule).toBe(true);
+});
+
+it(`[${VARIANT}] re-exports an external module`, () => {
+	expect(externalWhole.a).toBe("ext-a");
+	expect(externalA).toBe("ext-a");
+	expect(externalB).toBe("ext-b");
+});
+
+it(`[${VARIANT}] keeps compound assignments to exports as written`, () => {
+	const exports = require("./forms/compound");
+	expect(exports.appended).toBe("xa");
+	expect(exports.direct).toBe("yc");
+	expect(exports.viaModule).toBe("zb");
+	expect(exports.counter).toBe(3);
+});
+
 it(`[${VARIANT}] re-exports an ESM target as its namespace, with live bindings`, () => {
 	expect(esmFoo).toBe("foo");
 	const exports = require("./forms/esm");
@@ -265,6 +342,16 @@ it(`[${VARIANT}] leaves a binding of an AMD local module alone`, () => {
 	const exports = require("./bailouts/local-module");
 	expect(exports.local).toEqual({ local: "amd" });
 	expect(exports.localMember).toBe("amd");
+});
+
+it(`[${VARIANT}] resolves a binding name shadowed by hoisting, catch and classes`, () => {
+	const exports = require("./bailouts/hoisted-shadow");
+	expect(exports.outer).toBe("a");
+	expect(exports.beforeVar).toBe(undefined);
+	expect(exports.afterVar).toBe("var");
+	expect(exports.functionShadow).toBe("function");
+	expect(exports.catchParam).toBe("catch");
+	expect(exports.fromClass).toBe("b");
 });
 
 it(`[${VARIANT}] treats a destructured require as plain values`, () => {

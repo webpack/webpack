@@ -12,6 +12,7 @@ const webpack = require("../../../../");
 const variant = (name, options) => ({
 	devtool: false,
 	...options,
+	externals: { "matrix-external": "var ({ a: 'ext-a', b: 'ext-b' })" },
 	module: {
 		rules: [
 			{ test: /\.txt$/, type: "asset/source" },
