@@ -869,8 +869,23 @@ const installHelpers = (generics) => {
 		const known = readCache.get(value);
 		if (known !== undefined) return known;
 		if (!readCache.has("")) readCache.set("", readEach(""));
-		const through = readEach(value);
-		const read = through === readCache.get("") ? spacedOnce(value) : through;
+		// A reader resolves a relative url against the probe's document, where Gecko
+		// reads `./a.png` and `.z/a.png` alike, so each address is compared as
+		// written too, its quotes and padding dropped.
+		const addresses = [
+			...value.matchAll(
+				/url\([\t\n\f\r ]*(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|([^)]*?))[\t\n\f\r ]*\)/gi
+			)
+		]
+			.map(([, double, single, bare]) =>
+				double !== undefined ? double : single !== undefined ? single : bare
+			)
+			.join("\u0002");
+		const through = `${readEach(value)}\u0003${addresses}`;
+		const read =
+			through === `${readCache.get("")}\u0003${addresses}`
+				? spacedOnce(value)
+				: through;
 		readCache.set(value, read);
 		return read;
 	};

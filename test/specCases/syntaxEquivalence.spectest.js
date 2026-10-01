@@ -210,10 +210,6 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 		"test/configCases/css/minimize-values/style.css",
 		"firefox, webkit only: not a printer defect — Gecko echoes a `calc()` inside a `var()` fallback as written where Blink folds it as it parses, so both spellings read alike there. Measured in Firefox 156: `width:var(--foo,calc(10px + 10px))` reads back whole, while both engines compute `20px`. WebKit drops a `shape-image-threshold` the others keep, which shifts every rule index after it"
 	],
-	[
-		"test/configCases/css/minimize-cssnano-custom-properties/style.css",
-		"firefox only: the `calc()` in a `var()` fallback again — see `minimize-values`"
-	],
 ]);
 
 const FILED_CONFIG_HTML_DEFECTS = new Map([
@@ -234,6 +230,7 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
 	["Fomantic-UI 2", "webkit only: not a printer defect — WebKit lays out in units of a sixty-fourth of a pixel, so a width the others compute whole lands one step below it. Measured in the first WebKit run: `112px` against `111.984375px`, which is `112 - 1/64`"],
 	["Foundation 6", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
+	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
 	["Radix Themes 3 (components)", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
 	["Semantic UI 2", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
 	["Tailwind 4 + daisyUI 5", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"]
@@ -2664,11 +2661,17 @@ const ENGINE_QUIRKS = [
 	},
 	{
 		engines: ["firefox"],
-		quirk: "truncates a result nested deeper than three levels",
+		quirk: "truncates a deeply nested result",
 		workaround: "`evaluateDeep` carrying results as JSON",
-		holds: async (page) =>
-			JSON.stringify(await page.evaluate(() => ({ a: { b: { c: { d: 1 } } } }))) !==
-			'{"a":{"b":{"c":{"d":1}}}}'
+		holds: async (page) => {
+			// A report's own shape, and then some: a list of objects holding lists of lists.
+			const nested = () => [
+				{ moved: [{ at: [[["x", [["y", [[1]]]]]]] }] }
+			];
+			return (
+				JSON.stringify(await page.evaluate(nested)) !== JSON.stringify(nested())
+			);
+		}
 	}
 ];
 
