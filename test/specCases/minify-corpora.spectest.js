@@ -433,7 +433,8 @@ const readSwcTest = (file, { knows }) => {
 			: path.join(path.dirname(file), "output.js");
 	return [
 		{
-			name: path.relative(swcTestsDir, file),
+			// Written with `/` on every platform, as the tables keyed by it are.
+			name: path.relative(swcTestsDir, file).split(path.sep).join("/"),
 			input,
 			module,
 			own: compress && {
