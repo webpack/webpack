@@ -11411,3 +11411,32 @@ describe("SourceProcessor — the dropped-duplicate flag is per tag", () => {
 		expect(minify("<br>")).toBe("<br>");
 	});
 });
+
+// HTML §13.2.3.1: the decoder takes a leading BOM as the encoding's mark, so the
+// document the parser sees starts after it.
+describe("SourceProcessor — a byte order mark", () => {
+	const { SourceProcessor } = require("../../lib/html/syntax");
+
+	const page = "﻿<!DOCTYPE html><title>t</title><p>x";
+
+	it("keeps the doctype it stands before and prints it first when minifying", () => {
+		expect(new SourceProcessor().process(page, { mode: "minify" }).code).toBe(
+			"﻿<!doctype html><title>t</title><p>x"
+		);
+	});
+
+	it("keeps the doctype it stands before when beautifying", () => {
+		expect(
+			new SourceProcessor().process(page, { mode: "beautify" }).code
+		).toMatch(/^﻿<!DOCTYPE html>/);
+	});
+
+	it("walks the doctype it stands before", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({ [NodeType.Doctype]: () => log.push("doctype") })
+			.process(page);
+		expect(log).toEqual(["doctype"]);
+	});
+});

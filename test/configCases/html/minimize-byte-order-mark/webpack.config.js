@@ -1,0 +1,43 @@
+"use strict";
+
+const MinimizerPlugin = require("minimizer-webpack-plugin");
+const webpack = require("../../../../");
+
+const { htmlMinify } = webpack.html;
+
+/** @type {import("../../../../").Configuration} */
+module.exports = {
+	target: "web",
+	mode: "production",
+	output: {
+		filename: "[name].js",
+		pathinfo: false
+	},
+	module: {
+		rules: [
+			{
+				test: /page\.html$/,
+				type: "asset/resource",
+				generator: { filename: "page.html" }
+			}
+		]
+	},
+	optimization: {
+		minimize: true,
+		minimizer: [
+			{
+				apply: (compiler) => {
+					new MinimizerPlugin({
+						test: /\.(?:[cm]?js|html)(\?.*)?$/i,
+						parallel: false,
+						minify: [MinimizerPlugin.terserMinify, htmlMinify],
+						minimizerOptions: [{}, {}]
+					}).apply(compiler);
+				}
+			}
+		]
+	},
+	experiments: {
+		html: true
+	}
+};

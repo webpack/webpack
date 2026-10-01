@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix minified HTML for `style` spellings, CSS string quotes and `<noscript>`.
+Fix minified HTML for `style` spellings, CSS quotes, `<noscript>` and a BOM.

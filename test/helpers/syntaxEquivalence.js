@@ -1219,10 +1219,13 @@ const installHelpers = (generics) => {
 	 * `<style>` body is read as CSS and a JSON `<script>` as JSON, because both
 	 * are minified in their own right; every other script body is data and must
 	 * survive byte for byte.
-	 * @param {string} html the page
+	 * @param {string} source the page
 	 * @returns {Facets} its facets
 	 */
-	const htmlFacets = (html) => {
+	const htmlFacets = (source) => {
+		// HTML §13.2.3.1: the decoder consumes a leading byte order mark, which a
+		// string handed to the parser would keep as text.
+		const html = source.charCodeAt(0) === 0xfeff ? source.slice(1) : source;
 		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
 		// leaves an inert `<template>`, so the tree below is the one a page gets.
 		const attached =
@@ -2367,12 +2370,235 @@ const compareCascades = ({ pairs, types }) => {
 	return reports;
 };
 
+/**
+ * One page printed two ways that must render alike.
+ * @typedef {{ name: string, before: string, after: string }} RenderPair
+ */
+
+/**
+ * What one pair rendered differently, and how many elements were compared.
+ * @typedef {{ name: string, elements: number, differences: string[] }} RenderReport
+ */
+
+/**
+ * Runs in the page: renders both documents of each pair in one sandboxed frame
+ * at one width, and compares every element's boxes and the text a reader sees.
+ * The frame runs no script, and the page's content security policy, which a
+ * `srcdoc` frame inherits, keeps it off the network.
+ * @param {{ pairs: RenderPair[], width: number }} input the pairs, and the frame's width
+ * @returns {Promise<RenderReport[]>} one report per pair, in order
+ */
+const compareRenders = async ({ pairs, width }) => {
+	const REPORTED = 5;
+	// Under Chromium's 1/64px layout grid, where the same line laid out from
+	// text split differently can land.
+	const TOLERANCE = 0.05;
+	// WHY: WebKit can leave a frame's `load` or `document.fonts.ready` pending
+	// for good on a page whose subresource the policy blocks, so each wait is
+	// bounded; what is read then is the page as far as it got.
+	const PATIENCE = 3000;
+	/** @type {HTMLIFrameElement} */
+	let frame = document.createElement("iframe");
+
+	/**
+	 * @param {Promise<unknown>} pending what to wait for
+	 * @returns {Promise<boolean>} whether it settled within the patience
+	 */
+	const settled = (pending) =>
+		Promise.race([
+			pending.then(() => true),
+			new Promise((resolve) => {
+				setTimeout(() => resolve(false), PATIENCE);
+			})
+		]);
+
+	/**
+	 * A fresh frame per document, so a late event of one cannot be the next one's.
+	 * @param {string} html a document
+	 * @returns {Promise<boolean>} whether the frame finished loading it
+	 */
+	const render = (html) => {
+		frame.remove();
+		frame = document.createElement("iframe");
+		frame.setAttribute("sandbox", "allow-same-origin");
+		frame.style.cssText = `width:${width}px;height:800px;border:0`;
+		const loaded = settled(
+			new Promise((resolve) => {
+				frame.addEventListener("load", () => resolve(undefined), {
+					once: true
+				});
+			})
+		);
+		frame.srcdoc = html;
+		document.body.append(frame);
+		return loaded;
+	};
+
+	/**
+	 * @param {Element} element an element
+	 * @returns {string} where it stands, closest ancestors last
+	 */
+	const whereIs = (element) => {
+		/** @type {string[]} */
+		const path = [];
+		for (
+			let current = /** @type {Element | null} */ (element);
+			current !== null && path.length < 4;
+			current = current.parentElement
+		) {
+			const classes = current.getAttribute("class");
+			path.unshift(
+				`${current.localName}${current.id ? `#${current.id}` : ""}${
+					classes ? `.${classes.trim().split(/\s+/).join(".")}` : ""
+				}`
+			);
+		}
+		return path.join(" > ");
+	};
+
+	/**
+	 * The boxes an element's fragments take, those touching on one line joined:
+	 * a text node split by a comment the printer drops ends a fragment there.
+	 * @param {Element} element an element
+	 * @returns {number[][]} its boxes as `[x, y, width, height]`
+	 */
+	const boxesOf = (element) => {
+		/** @type {number[][]} */
+		const out = [];
+		for (const box of element.getClientRects()) {
+			const last = out[out.length - 1];
+			if (
+				last !== undefined &&
+				last[1] === box.y &&
+				last[3] === box.height &&
+				Math.abs(last[0] + last[2] - box.x) < TOLERANCE
+			) {
+				last[2] = box.x + box.width - last[0];
+			} else {
+				out.push([box.x, box.y, box.width, box.height]);
+			}
+		}
+		return out;
+	};
+
+	/**
+	 * @param {number[][]} one boxes
+	 * @param {number[][]} other boxes
+	 * @returns {boolean} whether they stand in the same place, to within the tolerance
+	 */
+	const sameBoxes = (one, other) =>
+		one.length === other.length &&
+		one.every((box, at) =>
+			box.every((edge, side) => Math.abs(edge - other[at][side]) < TOLERANCE)
+		);
+
+	/**
+	 * @param {number[][]} boxes boxes
+	 * @returns {string} them, readable
+	 */
+	const showBoxes = (boxes) =>
+		boxes.length === 0
+			? "no box"
+			: boxes
+					.map(
+						([x, y, boxWidth, height]) =>
+							`${x.toFixed(2)},${y.toFixed(2)} ${boxWidth.toFixed(2)}x${height.toFixed(2)}`
+					)
+					.join(" ");
+
+	/**
+	 * @returns {Promise<{ tags: string[], where: string[], boxes: number[][][], text: string, title: string, size: string }>} what the frame renders
+	 */
+	const measure = async () => {
+		const doc = /** @type {Document} */ (frame.contentDocument);
+		await settled(doc.fonts.ready);
+		// WHY: Chrome boxes a blocked `<img>` with no `alt` 0x0 or as a 16x16 icon
+		// apparently at random — measured in CI on srcset.html, both orders at once
+		// — while one with an empty `alt` represents nothing, so both copies get one.
+		for (const image of doc.images) {
+			if (!image.hasAttribute("alt")) image.setAttribute("alt", "");
+		}
+		// A transition or animation would be read part way through.
+		for (const running of doc.getAnimations()) running.cancel();
+		const root = /** @type {HTMLElement} */ (doc.documentElement);
+		const elements = [...doc.querySelectorAll("*")];
+		return {
+			tags: elements.map((element) => element.localName),
+			where: elements.map(whereIs),
+			// What a `<marquee>` holds moves as it scrolls, whenever it is read.
+			boxes: elements.map((element) =>
+				element.closest("marquee") === null ? boxesOf(element) : []
+			),
+			text: root.innerText,
+			title: doc.title,
+			size: `${root.scrollWidth}x${root.scrollHeight}`
+		};
+	};
+
+	/** @type {RenderReport[]} */
+	const reports = [];
+	for (const pair of pairs) {
+		const loaded = [await render(pair.before)];
+		const before = await measure();
+		loaded.push(await render(pair.after));
+		const after = await measure();
+		/** @type {string[]} */
+		const differences = [];
+		if (before.title !== after.title) {
+			differences.push(`title: ${before.title} -> ${after.title}`);
+		}
+		if (before.text !== after.text) {
+			let at = 0;
+			while (before.text[at] === after.text[at]) at++;
+			const from = Math.max(0, at - 30);
+			differences.push(
+				`text at ${at}: ${JSON.stringify(
+					before.text.slice(from, at + 30)
+				)} -> ${JSON.stringify(after.text.slice(from, at + 30))}`
+			);
+		}
+		if (before.tags.join(" ") !== after.tags.join(" ")) {
+			differences.push(
+				`elements: ${before.tags.length} -> ${after.tags.length}`
+			);
+		} else {
+			for (
+				let at = 0;
+				at < before.boxes.length && differences.length < REPORTED;
+				at++
+			) {
+				if (!sameBoxes(before.boxes[at], after.boxes[at])) {
+					differences.push(
+						`${before.where[at]}: ${showBoxes(before.boxes[at])} -> ${showBoxes(
+							after.boxes[at]
+						)}`
+					);
+				}
+			}
+		}
+		if (loaded[0] !== loaded[1]) {
+			differences.push(`loaded: ${loaded[0]} -> ${loaded[1]}`);
+		}
+		if (differences.length === 0 && before.size !== after.size) {
+			differences.push(`size: ${before.size} -> ${after.size}`);
+		}
+		reports.push({
+			name: pair.name,
+			elements: before.tags.length,
+			differences
+		});
+	}
+	frame.remove();
+	return reports;
+};
+
 module.exports = {
 	benchmarkDocuments,
 	benchmarkStylesheets,
 	buildCorpus,
 	collectFixtures,
 	compareCascades,
+	compareRenders,
 	compareRules,
 	conditionSignatures,
 	installHelpers,
