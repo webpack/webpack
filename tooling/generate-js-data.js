@@ -502,6 +502,49 @@ const readThisField = (node) =>
 
 /**
  * @param {EstreeNode} node a constructor's statement
+ * @returns {boolean} whether it is `this.flags = 0`
+ */
+const isFlagsReset = (node) =>
+	node.type === "ExpressionStatement" &&
+	node.expression.type === "AssignmentExpression" &&
+	readThisField(/** @type {EstreeNode} */ (node.expression.left)) === "flags" &&
+	node.expression.right.type === "Literal" &&
+	node.expression.right.value === 0;
+
+/**
+ * The source of a value a node class sets on its prototype, as terser writes
+ * them: a literal, `1/0`, `0/0`, or a call of an empty function for undefined.
+ * @param {EstreeNode} node the value's expression
+ * @returns {string | undefined} its source, or undefined where it is not a value
+ */
+const readPrototypeValue = (node) => {
+	if (node.type === "Identifier") return undefined;
+	if (node.type === "Literal" && typeof node.value !== "object") {
+		return JSON.stringify(node.value);
+	}
+	if (node.type === "Literal" && node.value === null) return "null";
+	if (
+		node.type === "BinaryExpression" &&
+		node.operator === "/" &&
+		node.left.type === "Literal" &&
+		node.right.type === "Literal" &&
+		node.right.value === 0
+	) {
+		return node.left.value === 0 ? "NaN" : "Infinity";
+	}
+	if (
+		node.type === "CallExpression" &&
+		node.arguments.length === 0 &&
+		node.callee.type === "FunctionExpression" &&
+		node.callee.body.body.length === 0
+	) {
+		return "undefined";
+	}
+	throw unexpectedNodeSyntax(node, "a node class's prototype", "a value");
+};
+
+/**
+ * @param {EstreeNode} node a constructor's statement
  * @returns {boolean} whether it is `this.field = props.field`
  */
 const isPropsCopy = (node) =>
@@ -701,6 +744,9 @@ const readChildren = (statements, method, where) => {
  * @property {string | null} base the `TYPE` of the class it extends
  * @property {string[]} fields what its constructor copies off its argument, in order
  * @property {boolean} initializes whether its constructor then calls `initialize`
+ * @property {boolean} guarded whether it copies only where given an argument
+ * @property {boolean} setsFlags whether it then sets `flags` to 0
+ * @property {Record<string, string>} values the source of each value it sets on its prototype
  * @property {string[] | null} walk the children its own `_walk` visits, null where it inherits one
  * @property {string | null} guard the field a walk visits children only when set
  * @property {string[] | null} backwards the children its own `_children_backwards` pushes, null where it inherits one
@@ -765,15 +811,28 @@ const collectNodeClasses = () => {
 			/** @type {string[]} */
 			const fields = [];
 			let initializes = false;
+			let guarded = false;
+			let setsFlags = false;
 			for (const inner of ctorNode.body.body) {
-				// Most constructors copy under `if (props)`; `ClassStaticBlock` does not,
-				// and every one sets `this.flags = 0`, which copies nothing.
+				// Most constructors copy under `if (props)`; `ClassStaticBlock` copies
+				// unguarded, and is the one that never sets `this.flags = 0`.
+				if (isFlagsReset(inner)) {
+					setsFlags = true;
+					continue;
+				}
+				if (inner.type === "IfStatement") {
+					guarded = true;
+				} else if (!isPropsCopy(inner)) {
+					throw unexpectedNodeSyntax(
+						inner,
+						`${type}'s constructor`,
+						"a field copied"
+					);
+				}
 				const assignments =
 					inner.type === "IfStatement"
 						? statementsOf(inner.consequent)
-						: isPropsCopy(inner)
-							? [inner]
-							: [];
+						: [inner];
 				for (const assignment of assignments) {
 					const expression =
 						assignment.type === "ExpressionStatement"
@@ -808,6 +867,9 @@ const collectNodeClasses = () => {
 				base,
 				fields,
 				initializes,
+				guarded,
+				setsFlags,
+				values: {},
 				walk: null,
 				guard: null,
 				backwards: null
@@ -825,6 +887,12 @@ const collectNodeClasses = () => {
 						fn.type !== "FunctionExpression" &&
 						fn.type !== "ArrowFunctionExpression"
 					) {
+						// `$`-prefixed members are terser's documentation, set on the class.
+						const value =
+							property.key.name[0] === "$" ? undefined : readPrototypeValue(fn);
+						if (value !== undefined) {
+							nodeClass.values[property.key.name] = value;
+						}
 						continue;
 					}
 					const body = fn.body.type === "BlockStatement" ? fn.body.body : [];
@@ -897,6 +965,9 @@ const renderNodeClasses = () => `
  * @property {string | null} base the \`TYPE\` of the class it extends
  * @property {string[]} fields what its constructor copies off its argument, in order
  * @property {boolean} initializes whether its constructor then calls \`initialize\`
+ * @property {boolean} guarded whether it copies only where given an argument
+ * @property {boolean} setsFlags whether it then sets \`flags\` to 0
+ * @property {Record<string, string>} values the source of each value it sets on its prototype
  * @property {string[] | null} walk the children its walk visits
  * @property {string | null} guard the field its walk descends only where set
  * @property {string[] | null} backwards the children it pushes backwards
