@@ -3,7 +3,10 @@
 // cspell:ignore dgimsuyv, nlb, thedef, privatename, NOINLINE, endpos, endcol, endline, readonly, satisfies
 
 const { load } = require("../../lib/javascript/syntax").printer;
-const { loadTerserSources } = require("../helpers/terserSources");
+const {
+	loadTerserSources,
+	thrownMessage
+} = require("../helpers/terserSources");
 
 /**
  * @param {string} specifier a module's URL
@@ -91,7 +94,7 @@ const firstDifference = (theirs, ours) => {
  */
 const describeError = (error) => ({
 	name: error.name,
-	message: error.message,
+	message: thrownMessage(error),
 	filename: error.filename,
 	line: error.line,
 	col: error.col,
@@ -357,7 +360,7 @@ describe("syntax-printer's port of terser's parser", () => {
 		}
 		if (theirError || ourError) {
 			if (!theirError || !ourError) {
-				return `throws: ${theirError ? theirError.message : "no"} / ${ourError ? ourError.message : "no"}`;
+				return `throws: ${theirError ? thrownMessage(theirError) : "no"} / ${ourError ? thrownMessage(ourError) : "no"}`;
 			}
 			const expected = JSON.stringify(describeError(theirError));
 			const actual = JSON.stringify(describeError(ourError));

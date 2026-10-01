@@ -59,4 +59,15 @@ const loadTerserSources = async (importModule) => {
 	};
 };
 
-module.exports = { loadTerserSources };
+/**
+ * The message a comparison with terser reads off what was thrown. An engine's
+ * own `TypeError` reads as its name, since JavaScriptCore quotes the failing expression.
+ * @param {EXPECTED_ANY} error what was thrown
+ * @returns {string} what to compare
+ */
+const thrownMessage = (error) =>
+	error && error.name === "TypeError"
+		? "TypeError"
+		: String(error && error.message);
+
+module.exports = { loadTerserSources, thrownMessage };

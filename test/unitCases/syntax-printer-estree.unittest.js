@@ -4,7 +4,10 @@
 
 const acorn = require("acorn");
 const { load } = require("../../lib/javascript/syntax").printer;
-const { loadTerserSources } = require("../helpers/terserSources");
+const {
+	loadTerserSources,
+	thrownMessage
+} = require("../helpers/terserSources");
 
 /**
  * @param {string} specifier a module's URL
@@ -136,7 +139,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 				try {
 					results.push(ast.AST_Node.from_mozilla_ast(fresh()));
 				} catch (err) {
-					results.push(new Error(/** @type {Error} */ (err).message));
+					results.push(new Error(thrownMessage(err)));
 				}
 			}
 			const [theirs, ours] = results;
@@ -161,7 +164,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 					}
 					results.push(text(tree.to_mozilla_ast()));
 				} catch (err) {
-					results.push(`throws ${/** @type {Error} */ (err).message}`);
+					results.push(`throws ${thrownMessage(err)}`);
 				}
 			}
 			if (results[0] !== results[1]) {
@@ -306,7 +309,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 				try {
 					results.push(text(ast.AST_Node.from_mozilla_ast(JSON.parse(JSON.stringify(tree))).TYPE));
 				} catch (err) {
-					results.push(`throws ${/** @type {Error} */ (err).message}`);
+					results.push(`throws ${thrownMessage(err)}`);
 				}
 			}
 			expect(results[1]).toBe(results[0]);

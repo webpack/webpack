@@ -13,7 +13,10 @@ const {
 	markEstreeTypes,
 	PHASES
 } = require("../../lib/javascript/syntax").printer;
-const { loadTerserSources } = require("../helpers/terserSources");
+const {
+	loadTerserSources,
+	thrownMessage
+} = require("../helpers/terserSources");
 
 /**
  * @param {string} specifier a module's URL
@@ -1404,7 +1407,7 @@ describe("syntax-printer", () => {
 						nameCache: settings.nameCache && JSON.stringify(settings.nameCache)
 					};
 				} catch (err) {
-					return { error: /** @type {Error} */ (err).message };
+					return { error: thrownMessage(err) };
 				}
 			};
 			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
@@ -1634,7 +1637,7 @@ describe("syntax-printer", () => {
 					});
 					return { code: result.code, map: result.map };
 				} catch (err) {
-					return { error: /** @type {Error} */ (err).message };
+					return { error: thrownMessage(err) };
 				}
 			};
 			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
