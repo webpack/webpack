@@ -1111,6 +1111,45 @@ const compareRenders = async ({ pairs, width }) => {
 		await settled(doc.fonts.ready);
 		// A transition or animation would be read part way through.
 		for (const running of doc.getAnimations()) running.cancel();
+		// WHY: Chrome can give a blocked image its broken-image box some time after
+		// `load` — measured in CI: an `<img>` read 0x0 in one frame and 16x16 in the
+		// next — so a page holding replaced content is read once its sizes stop moving.
+		const replaced = [
+			...doc.querySelectorAll("img, input, video, object, embed, iframe")
+		];
+		if (replaced.length > 0) {
+			/** @returns {string} the replaced elements' sizes */
+			const sizes = () =>
+				replaced
+					.map((element) => {
+						const box = element.getBoundingClientRect();
+						return `${box.width}x${box.height}`;
+					})
+					.join(" ");
+			await settled(
+				(async () => {
+					await Promise.all(
+						[...doc.images].map((image) =>
+							image.complete
+								? undefined
+								: new Promise((resolve) => {
+										image.addEventListener("load", resolve, { once: true });
+										image.addEventListener("error", resolve, { once: true });
+									})
+						)
+					);
+					let last = "";
+					let now = sizes();
+					while (now !== last) {
+						last = now;
+						await new Promise((resolve) => {
+							setTimeout(resolve, 50);
+						});
+						now = sizes();
+					}
+				})()
+			);
+		}
 		const root = /** @type {HTMLElement} */ (doc.documentElement);
 		const elements = [...doc.querySelectorAll("*")];
 		return {

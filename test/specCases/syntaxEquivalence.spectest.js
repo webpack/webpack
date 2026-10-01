@@ -74,28 +74,6 @@ const forEngine = (filed) =>
 		})
 	);
 
-/**
- * `page.evaluate` for a result nested deeper than three levels. Gecko's
- * WebDriver BiDi truncates a deeper structure to `null` where Chromium's CDP
- * returns it whole, and puppeteer exposes no depth to raise, so the page hands
- * back text and the depth is carried by JSON rather than by the protocol.
- * @template T, A
- * @param {import("puppeteer-core").Page} page the page to ask
- * @param {(arg: A) => T} fn what to run in it
- * @param {A} arg its argument
- * @returns {Promise<T>} the result, at full depth
- */
-const evaluateDeep = async (page, fn, arg) =>
-	JSON.parse(
-		await page.evaluate(
-			async (source, each) =>
-				// eslint-disable-next-line no-new-func
-				JSON.stringify(await new Function(`return (${source})`)()(each)),
-			fn.toString(),
-			arg
-		)
-	);
-
 // No script runs in a frame and nothing reaches the network, so a page renders
 // the same every time it is loaded; eval is for the suite's own page functions.
 const PAGE_POLICY =
@@ -161,7 +139,7 @@ const styleDifferences = async (page, pairs, types = []) => {
 		if (chosen.length === 0) continue;
 		if (emulation !== undefined) await emulation.apply(page, true);
 		for (let at = 0; at < chosen.length; at += 20) {
-			const reports = await evaluateDeep(page, compareStyles, {
+			const reports = await page.evaluate(compareStyles, {
 				pairs: chosen.slice(at, at + 20),
 				types
 			});
@@ -205,12 +183,8 @@ const CUSTOM_PROPERTY = "--webpack-probe";
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
 // exactly, so an entry outlives its defect by one run.
-const FILED_CONFIG_CSS_DEFECTS = new Map([
-	[
-		"test/configCases/css/minimize-values/style.css",
-		"firefox, webkit only: not a printer defect — Gecko echoes a `calc()` inside a `var()` fallback as written where Blink folds it as it parses, so both spellings read alike there. Measured in Firefox 156: `width:var(--foo,calc(10px + 10px))` reads back whole, while both engines compute `20px`. WebKit drops a `shape-image-threshold` the others keep, which shifts every rule index after it"
-	],
-]);
+/** @type {Map<string, string>} */
+const FILED_CONFIG_CSS_DEFECTS = new Map();
 
 const FILED_CONFIG_HTML_DEFECTS = new Map([
 	[
@@ -638,8 +612,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 		/** @type {StylePair[]} */
 		const sheets = [];
 		for (let at = 0; at < cases.length; at += BATCH) {
-			const collected = await evaluateDeep(
-				active,
+			const collected = await active.evaluate(
 				(batch) => {
 					const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
 						/** @type {unknown} */ (window)
@@ -2658,20 +2631,6 @@ const ENGINE_QUIRKS = [
 				element.remove();
 				return read.startsWith('"');
 			})
-	},
-	{
-		engines: ["firefox"],
-		quirk: "truncates a deeply nested result",
-		workaround: "`evaluateDeep` carrying results as JSON",
-		holds: async (page) => {
-			// A report's own shape, and then some: a list of objects holding lists of lists.
-			const nested = () => [
-				{ moved: [{ at: [[["x", [["y", [[1]]]]]]] }] }
-			];
-			return (
-				JSON.stringify(await page.evaluate(nested)) !== JSON.stringify(nested())
-			);
-		}
 	}
 ];
 
@@ -2769,7 +2728,7 @@ describe("a minified page renders as the page it came from", () => {
 	 * @returns {Promise<import("../helpers/syntaxEquivalence").RenderReport[] | undefined>} the reports, or undefined when it ran past the deadline
 	 */
 	const renderWithin = async (batch, width, deadline) => {
-		const pending = evaluateDeep(page, compareRenders, { pairs: batch, width });
+		const pending = page.evaluate(compareRenders, { pairs: batch, width });
 		const reports = await within(pending, deadline);
 		if (reports === undefined) {
 			pending.catch(() => {});
