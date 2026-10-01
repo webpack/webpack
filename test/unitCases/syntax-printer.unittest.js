@@ -194,6 +194,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a loop's body declaring a `const`, one block",
+		"for (const x of [1, 2]) (() => { const a = console.log.name + x; console.log(a, a); })();",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a string first, kept in a block",
 		`(() => { ("x"); ${TRY} })();`,
 		{ compress: { side_effects: false }, mangle: false }
@@ -202,6 +207,16 @@ const IMPROVED_CASES = [
 		"an arrow reading `this`, which it shares",
 		`(() => { ${TRY} console.log(typeof this); })();`,
 		{ compress: {}, mangle: false }
+	],
+	[
+		"a call between expressions, which terser joined in a sequence",
+		`console.log(0); (() => { ${TRY} console.log(2); })(); console.log(3);`,
+		{ compress: {}, mangle: false }
+	],
+	[
+		"two calls in a sequence, one keeping a `let` in a block",
+		`(() => { let a = console.log.name; console.log(a, a); })(); (() => { ${TRY} console.log(2); })();`,
+		{ compress: { passes: 2 }, mangle: true }
 	],
 	[
 		"a nested function reading its own `this`",
@@ -233,7 +248,8 @@ const KEPT_CASES = [
 	["`with`", "!function () { with (Math) console.log(PI); console.log(2); }();"],
 	["`new`", `new function () { ${TRY} console.log(2); }();`],
 	["an optional call", `(() => { ${TRY} console.log(2); })?.();`],
-	["its value used", `console.log(function () { ${TRY} console.log(2); }());`]
+	["its value used", `console.log(function () { ${TRY} console.log(2); }());`],
+	["a sequence calling nothing in place", "console.log(1); console.log(2);"]
 ];
 
 // Each prints one thing and terser's output another, under the options named.

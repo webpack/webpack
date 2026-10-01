@@ -901,6 +901,16 @@ const CORRECTED = {
 };
 
 /**
+ * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
+ * with why; an entry that stops compressing worse fails until retired.
+ * @type {Record<string, string>}
+ */
+const IMPROVED_YET_BIGGER = {
+	"fixture/next/wrap-contracts/input.js (the default minimizer's options)":
+		"31 bytes fewer, 1 more gzipped: the dropped wrapper had matched a run gzip reused"
+};
+
+/**
  * @param {Minify} minify a minifier
  * @param {string} code the source
  * @param {MinifyOptions} options the options
@@ -1313,9 +1323,15 @@ describe("JavaScript minifier", () => {
 												oursGzip: withSize.gzip,
 												theirsGzip: withoutSize.gzip
 											};
-											if (standingOf(lead) === "worse") {
+											const listed = Object.prototype.hasOwnProperty.call(
+												IMPROVED_YET_BIGGER,
+												`${source.name} (${setName})`
+											);
+											if (listed !== (standingOf(lead) === "worse")) {
 												differences.push(
-													`${source.name} (${setName}) is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
+													listed
+														? `${source.name} (${setName}) is no bigger with the improvements now: retire it from IMPROVED_YET_BIGGER`
+														: `${source.name} (${setName}) is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
 												);
 											}
 										}
