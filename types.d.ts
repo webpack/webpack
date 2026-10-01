@@ -126,7 +126,6 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
-import { minify } from "terser";
 import { Context as ContextImport } from "vm";
 import {
 	addScopesToSourceMap,
@@ -3576,6 +3575,36 @@ type CommentJavascriptParser = CommentImport & {
 };
 
 /**
+ * A comment as a `comments` predicate is handed it.
+ */
+declare interface CommentJsMinify {
+	/**
+	 * its text
+	 */
+	value: string;
+
+	/**
+	 * `//`, `/*`, `<!--` or `-->`
+	 */
+	type: "comment1" | "comment2" | "comment3" | "comment4";
+
+	/**
+	 * its offset
+	 */
+	pos: number;
+
+	/**
+	 * its line
+	 */
+	line: number;
+
+	/**
+	 * its column
+	 */
+	col: number;
+}
+
+/**
  * Defines the common js import settings type used by this module.
  */
 declare interface CommonJsImportSettings {
@@ -4681,6 +4710,321 @@ declare interface CompressHelpers {
 	 * terser's `utils/index.js`
 	 */
 	utils: Record<string, any>;
+}
+declare interface CompressOptions {
+	/**
+	 * whether `arguments[i]` becomes the parameter it reads
+	 */
+	arguments?: boolean;
+
+	/**
+	 * whether functions become arrow functions where nothing changes
+	 */
+	arrows?: boolean;
+
+	/**
+	 * whether `true` and `false` become `1` and `0`
+	 */
+	booleans_as_integers?: boolean;
+
+	/**
+	 * whether boolean contexts are simplified
+	 */
+	booleans?: boolean;
+
+	/**
+	 * whether single-use variables are inlined
+	 */
+	collapse_vars?: boolean;
+
+	/**
+	 * whether comparisons are simplified
+	 */
+	comparisons?: boolean;
+
+	/**
+	 * whether constant computed keys become plain ones
+	 */
+	computed_props?: boolean;
+
+	/**
+	 * whether `if` and `?:` are simplified
+	 */
+	conditionals?: boolean;
+
+	/**
+	 * whether unreachable code is dropped
+	 */
+	dead_code?: boolean;
+
+	/**
+	 * whether the options default to on
+	 */
+	defaults?: boolean;
+
+	/**
+	 * whether redundant directives are dropped
+	 */
+	directives?: boolean;
+
+	/**
+	 * whether calls to `console`, or to the methods named, are dropped
+	 */
+	drop_console?: boolean | string[];
+
+	/**
+	 * whether `debugger` statements are dropped
+	 */
+	drop_debugger?: boolean;
+
+	/**
+	 * the edition the compressor may write
+	 */
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+
+	/**
+	 * the edition whose built-ins it may assume
+	 */
+	builtins_ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+
+	/**
+	 * whether built-in calls count as pure
+	 */
+	builtins_pure?: boolean;
+
+	/**
+	 * whether constant expressions are evaluated
+	 */
+	evaluate?: boolean;
+
+	/**
+	 * whether the input is one expression
+	 */
+	expression?: boolean;
+
+	/**
+	 * the globals replaced by values
+	 */
+	global_defs?: Record<string, any>;
+
+	/**
+	 * whether function declarations are hoisted
+	 */
+	hoist_funs?: boolean;
+
+	/**
+	 * whether object properties become variables
+	 */
+	hoist_props?: boolean;
+
+	/**
+	 * whether `var` declarations are hoisted
+	 */
+	hoist_vars?: boolean;
+
+	/**
+	 * whether Internet Explorer 8 is supported
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether `if` / `return` combinations are simplified
+	 */
+	if_return?: boolean;
+
+	/**
+	 * how far functions are inlined
+	 */
+	inline?: boolean | 0 | 1 | 2 | 3;
+
+	/**
+	 * whether consecutive declarations are joined
+	 */
+	join_vars?: boolean;
+
+	/**
+	 * whether class names are kept
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * whether unused parameters are kept
+	 */
+	keep_fargs?: boolean;
+
+	/**
+	 * whether function names are kept
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * whether `Infinity` is kept as written
+	 */
+	keep_infinity?: boolean;
+
+	/**
+	 * whether constants move to the left of comparisons
+	 */
+	lhs_constants?: boolean;
+
+	/**
+	 * whether loops are simplified
+	 */
+	loops?: boolean;
+
+	/**
+	 * whether the input is a module
+	 */
+	module?: boolean;
+
+	/**
+	 * whether an unused IIFE's result is negated
+	 */
+	negate_iife?: boolean;
+
+	/**
+	 * how many times to compress
+	 */
+	passes?: number;
+
+	/**
+	 * whether `a["b"]` becomes `a.b`
+	 */
+	properties?: boolean;
+
+	/**
+	 * the functions whose calls count as pure
+	 */
+	pure_funcs?: string[];
+
+	/**
+	 * whether `new` of a pure class counts as pure
+	 */
+	pure_new?: boolean;
+
+	/**
+	 * whether reading a property counts as pure
+	 */
+	pure_getters?: boolean | "strict";
+
+	/**
+	 * whether single-use functions are inlined
+	 */
+	reduce_funcs?: boolean;
+
+	/**
+	 * whether variables assigned constants are replaced
+	 */
+	reduce_vars?: boolean;
+
+	/**
+	 * whether statements are joined with commas, or at most how many
+	 */
+	sequences?: number | boolean;
+
+	/**
+	 * whether expressions without side effects are dropped
+	 */
+	side_effects?: boolean;
+
+	/**
+	 * whether `switch` statements are simplified
+	 */
+	switches?: boolean;
+
+	/**
+	 * whether top-level names may be dropped
+	 */
+	toplevel?: boolean;
+
+	/**
+	 * the top-level names kept
+	 */
+	top_retain?: null | string | RegExp | string[];
+
+	/**
+	 * whether `typeof x == "undefined"` becomes `x === void 0`
+	 */
+	typeofs?: boolean;
+
+	/**
+	 * whether functions not using `this` become arrows
+	 */
+	unsafe_arrows?: boolean;
+
+	/**
+	 * whether transforms assuming built-ins are untouched are applied
+	 */
+	unsafe?: boolean;
+
+	/**
+	 * whether comparisons are reordered unsafely
+	 */
+	unsafe_comps?: boolean;
+
+	/**
+	 * whether `Function(…)` with constant arguments is compressed
+	 */
+	unsafe_Function?: boolean;
+
+	/**
+	 * whether arithmetic is reordered unsafely
+	 */
+	unsafe_math?: boolean;
+
+	/**
+	 * whether `Symbol("x")` descriptions may be dropped
+	 */
+	unsafe_symbols?: boolean;
+
+	/**
+	 * whether methods become arrow functions
+	 */
+	unsafe_methods?: boolean;
+
+	/**
+	 * whether `Array.prototype.x` becomes `[].x`
+	 */
+	unsafe_proto?: boolean;
+
+	/**
+	 * whether regexps assigned to constants are inlined
+	 */
+	unsafe_regexp?: boolean;
+
+	/**
+	 * whether `undefined` becomes a local variable
+	 */
+	unsafe_undefined?: boolean;
+
+	/**
+	 * whether unused declarations are dropped
+	 */
+	unused?: boolean;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
@@ -10392,6 +10736,154 @@ type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
 }
+
+/**
+ * The output's options. Only those changing the code written count: the output
+ * is always minified, so layout options are read and left unused.
+ */
+declare interface FormatOptions {
+	/**
+	 * whether non-ASCII characters are escaped
+	 */
+	ascii_only?: boolean;
+
+	/**
+	 * unused
+	 */
+	beautify?: boolean;
+
+	/**
+	 * unused
+	 */
+	braces?: boolean;
+
+	/**
+	 * which comments are kept
+	 */
+	comments?:
+		| boolean
+		| RegExp
+		| "all"
+		| "some"
+		| ((node: any, comment: CommentJsMinify) => boolean);
+
+	/**
+	 * the edition the output may use
+	 */
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+
+	/**
+	 * whether Internet Explorer 8 is supported
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether numbers are written as in the input
+	 */
+	keep_numbers?: boolean;
+
+	/**
+	 * unused
+	 */
+	indent_level?: number;
+
+	/**
+	 * unused
+	 */
+	indent_start?: number;
+
+	/**
+	 * whether `</script` is escaped
+	 */
+	inline_script?: boolean;
+
+	/**
+	 * whether quoted property names stay quoted
+	 */
+	keep_quoted_props?: boolean;
+
+	/**
+	 * unused
+	 */
+	max_line_len?: number | false;
+
+	/**
+	 * text written before the output
+	 */
+	preamble?: string;
+
+	/**
+	 * whether `#__PURE__` and similar comments are kept
+	 */
+	preserve_annotations?: boolean;
+
+	/**
+	 * whether every property name is quoted
+	 */
+	quote_keys?: boolean;
+
+	/**
+	 * which quotes strings take
+	 */
+	quote_style?: 0 | 1 | 2 | 3;
+
+	/**
+	 * whether Safari 10's bugs are worked around
+	 */
+	safari10?: boolean;
+
+	/**
+	 * unused
+	 */
+	semicolons?: boolean;
+
+	/**
+	 * whether a leading `#!` line is kept
+	 */
+	shebang?: boolean;
+
+	/**
+	 * whether object shorthand may be written
+	 */
+	shorthand?: boolean;
+
+	/**
+	 * the source map written
+	 */
+	source_map?: SourceMapOptionsJsMinify;
+
+	/**
+	 * whether WebKit's bugs are worked around
+	 */
+	webkit?: boolean;
+
+	/**
+	 * unused
+	 */
+	width?: number;
+
+	/**
+	 * whether an immediately invoked function is wrapped in parentheses
+	 */
+	wrap_iife?: boolean;
+
+	/**
+	 * whether function arguments are wrapped in parentheses
+	 */
+	wrap_func_args?: boolean;
+}
 declare interface FullHashChunkModuleHashes {
 	[index: string]: string;
 }
@@ -12163,6 +12655,31 @@ declare interface IdToHashMap {
 	[index: number]: string;
 	[index: string]: string;
 }
+
+/**
+ * Where mangled names come from: the nth most favored name.
+ */
+declare interface IdentifierMangler {
+	/**
+	 * the nth name
+	 */
+	get: (n: number) => string;
+
+	/**
+	 * weighs characters, for a mangler that counts them
+	 */
+	consider?: (chars: string, delta: number) => number;
+
+	/**
+	 * clears the weights
+	 */
+	reset?: () => void;
+
+	/**
+	 * orders the names by the weights
+	 */
+	sort?: () => void;
+}
 declare class IgnorePlugin {
 	/**
 	 * Creates an instance of IgnorePlugin.
@@ -12615,6 +13132,76 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 	extends Iterator<T, TReturn, TNext>, Disposable {
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
+}
+
+/**
+ * terser's `JS_Parse_Error`, what its parser throws for a source it refuses.
+ */
+declare class JSParseError extends Error {
+	constructor(
+		message: string,
+		filename: undefined | null | string,
+		line: number,
+		col: number,
+		pos: number
+	);
+	filename?: null | string;
+	line: number;
+	col: number;
+	pos: number;
+
+	/**
+	 * Creates a `.stack` property on `targetObject`, which when accessed returns
+	 * a string representing the location in the code at which
+	 * `Error.captureStackTrace()` was called.
+	 * ```js
+	 * const myObject = {};
+	 * Error.captureStackTrace(myObject);
+	 * myObject.stack;  // Similar to `new Error().stack`
+	 * ```
+	 * The first line of the trace will be prefixed with
+	 * `${myObject.name}: ${myObject.message}`.
+	 * The optional `constructorOpt` argument accepts a function. If given, all frames
+	 * above `constructorOpt`, including `constructorOpt`, will be omitted from the
+	 * generated stack trace.
+	 * The `constructorOpt` argument is useful for hiding implementation
+	 * details of error generation from the user. For instance:
+	 * ```js
+	 * function a() {
+	 *   b();
+	 * }
+	 * function b() {
+	 *   c();
+	 * }
+	 * function c() {
+	 *   // Create an error without stack trace to avoid calculating the stack trace twice.
+	 *   const { stackTraceLimit } = Error;
+	 *   Error.stackTraceLimit = 0;
+	 *   const error = new Error();
+	 *   Error.stackTraceLimit = stackTraceLimit;
+	 *   // Capture the stack trace above function b
+	 *   Error.captureStackTrace(error, b); // Neither function c, nor b is included in the stack trace
+	 *   throw error;
+	 * }
+	 * a();
+	 * ```
+	 */
+	static captureStackTrace(
+		targetObject: object,
+		constructorOpt?: Function
+	): void;
+	static prepareStackTrace(err: Error, stackTraces: NodeJS.CallSite[]): any;
+
+	/**
+	 * The `Error.stackTraceLimit` property specifies the number of stack frames
+	 * collected by a stack trace (whether generated by `new Error().stack` or
+	 * `Error.captureStackTrace(obj)`).
+	 * The default value is `10` but may be set to any valid JavaScript number. Changes
+	 * will affect any stack trace captured _after_ the value has been changed.
+	 * If set to a non-number value, or set to a negative number, stack traces will
+	 * not capture any frames.
+	 */
+	static stackTraceLimit: number;
 }
 declare abstract class JavascriptGenerator extends Generator {
 	/**
@@ -17893,6 +18480,83 @@ declare interface MakeDirectoryOptions {
 	recursive?: boolean;
 	mode?: string | number;
 }
+declare interface MangleOptions {
+	/**
+	 * whether names in scopes using `eval` or `with` are mangled
+	 */
+	eval?: boolean;
+
+	/**
+	 * whether class names are kept
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * whether function names are kept
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * whether the input is a module
+	 */
+	module?: boolean;
+
+	/**
+	 * where mangled names come from
+	 */
+	nth_identifier?: IdentifierMangler;
+
+	/**
+	 * whether, and which, property names are mangled
+	 */
+	properties?: boolean | ManglePropertiesOptions;
+
+	/**
+	 * the names kept
+	 */
+	reserved?: string[];
+
+	/**
+	 * whether Safari 10's loop-scoping bug is worked around
+	 */
+	safari10?: boolean;
+
+	/**
+	 * whether top-level names are mangled
+	 */
+	toplevel?: boolean;
+}
+declare interface ManglePropertiesOptions {
+	/**
+	 * whether the DOM's and built-ins' property names are mangled too
+	 */
+	builtins?: boolean;
+
+	/**
+	 * whether mangled names keep their originals
+	 */
+	debug?: boolean;
+
+	/**
+	 * whether quoted property names are kept
+	 */
+	keep_quoted?: boolean | "strict";
+
+	/**
+	 * where mangled names come from
+	 */
+	nth_identifier?: IdentifierMangler;
+
+	/**
+	 * the property names mangled
+	 */
+	regex?: string | RegExp;
+
+	/**
+	 * the property names kept
+	 */
+	reserved?: string[];
+}
 
 /**
  * Describes a manifest entrypoint.
@@ -18151,6 +18815,114 @@ declare interface MinChunkSizePluginOptions {
 	 * Minimum number of characters.
 	 */
 	minChunkSize: number;
+}
+
+/**
+ * The options of webpack's JavaScript minifier, which are terser's.
+ */
+declare interface MinifyOptions {
+	/**
+	 * whether, and how, the code is compressed
+	 */
+	compress?: boolean | CompressOptions;
+
+	/**
+	 * the edition the output may use
+	 */
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+
+	/**
+	 * whether the output is wrapped in a function, and its parameters and arguments
+	 */
+	enclose?: string | boolean;
+
+	/**
+	 * whether Internet Explorer 8 is supported
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether class names are kept
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * whether function names are kept
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * whether, and how, names are mangled
+	 */
+	mangle?: boolean | MangleOptions;
+
+	/**
+	 * whether the input is a module
+	 */
+	module?: boolean;
+
+	/**
+	 * the mangled names, read and updated across calls
+	 */
+	nameCache?: Record<string, any>;
+
+	/**
+	 * the output's options
+	 */
+	format?: FormatOptions;
+
+	/**
+	 * the deprecated spelling of `format`
+	 */
+	output?: FormatOptions;
+
+	/**
+	 * the parser's options
+	 */
+	parse?: ParseOptionsJsMinify;
+
+	/**
+	 * whether Safari 10's bugs are worked around
+	 */
+	safari10?: boolean;
+
+	/**
+	 * whether, and how, a source map is written
+	 */
+	sourceMap?: boolean | SourceMapOptionsJsMinify;
+
+	/**
+	 * whether top-level names are mangled and may be dropped
+	 */
+	toplevel?: boolean;
+}
+declare interface MinifyOutput {
+	/**
+	 * the minified code
+	 */
+	code?: string;
+
+	/**
+	 * its source map
+	 */
+	map?: string | RawSourceMap;
+
+	/**
+	 * its source map, its mappings decoded
+	 */
+	decoded_map?: null | Record<string, any>;
 }
 
 /**
@@ -23515,6 +24287,39 @@ declare interface ParseOptionsJavascriptParser {
 	 */
 	moduleFallback?: boolean;
 }
+declare interface ParseOptionsJsMinify {
+	/**
+	 * whether a `return` may stand outside a function
+	 */
+	bare_returns?: boolean;
+
+	/**
+	 * unused: every edition is read
+	 */
+	ecma?:
+		| 5
+		| 2015
+		| 2016
+		| 2017
+		| 2018
+		| 2019
+		| 2020
+		| 2021
+		| 2022
+		| 2023
+		| 2024
+		| 2025;
+
+	/**
+	 * whether `<!--` and `-->` start comments
+	 */
+	html5_comments?: boolean;
+
+	/**
+	 * whether a leading `#!` line is kept
+	 */
+	shebang?: boolean;
+}
 declare interface ParseOptionsSyntaxParser {
 	/**
 	 * optional comment-token callback; the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
@@ -24594,12 +25399,11 @@ declare interface PerformanceOptions {
 }
 
 /**
- * A phase webpack implements in place of terser's. `supports` reads the
- * installed terser and says whether this phase still fits it.
+ * One step building webpack's minifier, installing what it implements onto
+ * the modules.
  */
 declare interface Phase {
 	name: string;
-	supports: (modules: TerserModules) => boolean;
 	install: (modules: TerserModules) => void;
 }
 declare interface PitchLoaderDefinitionFunction<
@@ -24941,7 +25745,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	 * them ahead of the next top-level node as well.
 	 */
 	takeInserts(start: number, end: number): string;
-	sourceMap(options: SourceMapOptions, code?: string): SourceMap;
+	sourceMap(options: SourceMapOptionsSourceProcessor, code?: string): SourceMap;
 
 	/**
 	 * Stand the text `resolve` gives back in place of every deferred write left
@@ -29554,13 +30358,44 @@ declare interface SourceMapDevToolPluginOptions {
 	 */
 	test?: string | RegExp | ((str: string) => boolean) | RuleObject[];
 }
+declare interface SourceMapOptionsJsMinify {
+	/**
+	 * the input's own map, `"inline"` to read it from the input
+	 */
+	content?: string | RawSourceMap;
+
+	/**
+	 * whether the map carries the sources
+	 */
+	includeSources?: boolean;
+
+	/**
+	 * the output's name
+	 */
+	filename?: string;
+
+	/**
+	 * the sources' root
+	 */
+	root?: string;
+
+	/**
+	 * whether the map is returned as an object
+	 */
+	asObject?: boolean;
+
+	/**
+	 * where the output says its map is, `"inline"` to inline it
+	 */
+	url?: string;
+}
 
 /**
  * The `process` source-map option: turns map collection on and names the input
  * (`sources[0]` / optional `sourcesContent[0]`). Present => `process` returns
  * `{ code, map }` instead of a bare string.
  */
-declare interface SourceMapOptions {
+declare interface SourceMapOptionsSourceProcessor {
 	source: string;
 	content?: string;
 }
@@ -31259,12 +32094,16 @@ declare interface TemplatePathFn<T extends PathData = PathData> {
 }
 
 /**
- * what a caller minifies with, and the switch of its corrections
+ * what a caller minifies with, the switch of its corrections, and the modules it is built from
  */
 declare interface Terser {
-	minify: typeof minify;
+	minify: (
+		files: string | string[] | Record<string, string>,
+		options?: MinifyOptions
+	) => Promise<MinifyOutput>;
 	phases: string[];
 	corrections?: { enabled: boolean };
+	modules: TerserModules;
 }
 
 /**
@@ -33229,15 +34068,33 @@ declare namespace exports {
 			}
 			export namespace printer {
 				export let load: () => Promise<Terser>;
-				export let loadSources: () => Promise<
-					TerserModules & { minify: typeof minify }
-				>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
 				export let IGNORED_FORMAT_OPTIONS: string[];
+				export let createAst: () => Record<string, any>;
+				export let createModules: () => TerserModules;
 				export let createCompressHelpers: (
 					modules: TerserModules
 				) => CompressHelpers;
+				export let createTerserParser: (modules: TerserModules) => {
+					parse: (text: string | Function, options?: object) => TerserNode;
+					tokenizer: (
+						text: string,
+						filename: undefined | null | string,
+						html5Comments: boolean,
+						shebang: boolean
+					) => any;
+					JS_Parse_Error: typeof JSParseError;
+					js_error: (
+						message: string,
+						filename: undefined | null | string,
+						line: number,
+						col: number,
+						pos: number
+					) => never;
+					PRECEDENCE: Record<string, number>;
+					ALL_RESERVED_WORDS: Set<string>;
+				};
 				export let createTerserTree: (
 					__0: TerserModules
 				) => (source: string, options: TreeOptions) => undefined | TerserNode;
