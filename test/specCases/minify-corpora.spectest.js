@@ -226,6 +226,41 @@ const readExpectedStdout = (node, AST, name) => {
 	return `${readStringList(node, AST, name)}\n`;
 };
 
+/** @type {Set<string> | undefined} */
+let swcPortPassing;
+
+/**
+ * What swc recorded for its port of one of terser's cases, where its harness
+ * holds the port to that output: listed as passing, and not left empty.
+ * @param {string} file the case's file, as terser names it
+ * @param {string} label the case's label
+ * @returns {{ name: string, code: string } | undefined} swc's output
+ */
+const readSwcPortOutput = (file, label) => {
+	if (!isPresent(swcTestsDir)) return undefined;
+	if (swcPortPassing === undefined) {
+		swcPortPassing = new Set(
+			fs
+				.readFileSync(path.join(swcTestsDir, "passing.txt"), "utf8")
+				.split("\n")
+				.map((line) => line.trim())
+		);
+	}
+	// swc ported the files before terser renamed `drop_unused.js` and others
+	// to `drop-unused.js`, and keeps the older spelling.
+	for (const name of new Set([file.replace(/-/g, "_"), file])) {
+		const output = path.join(swcTestsDir, "terser/compress", name, label, "output.js");
+		if (
+			swcPortPassing.has(`${name}/${label}/input.js`) &&
+			fs.existsSync(output)
+		) {
+			const code = fs.readFileSync(output, "utf8");
+			return code.trim() === "" ? undefined : { name: "swc", code };
+		}
+	}
+	return undefined;
+};
+
 /**
  * Every case in one of terser's `test/compress` files, as its runner reads it:
  * a labeled block holding `input`, and assignments naming the options.
@@ -300,7 +335,7 @@ const readCompressCases = (file, { AST, parse }) => {
 		if (typeof test.input !== "string") continue;
 		const format = test.beautify || test.format;
 		cases.push({
-			name: statement.label.name,
+			name: `${path.basename(file, ".js")}/${statement.label.name}`,
 			input: test.input,
 			own: {
 				compress: test.options,
@@ -322,7 +357,8 @@ const readCompressCases = (file, { AST, parse }) => {
 							prepend: test.prepend_code || "",
 							strict: true
 						}
-					: undefined
+					: undefined,
+			rival: readSwcPortOutput(path.basename(file, ".js"), statement.label.name)
 		});
 	}
 	return cases;
@@ -706,7 +742,9 @@ const CORPORA = [
 		read: readCompressCases,
 		optionSets: Object.keys(OPTION_SETS),
 		// 2602 at the pinned 5.51.2; a reader that stopped matching reads none.
-		minimum: 2500
+		minimum: 2500,
+		// 1587 at swc's pinned commit carry the output swc's port records.
+		minimumRival: 1500
 	},
 	{
 		name: "terser input",
@@ -1122,7 +1160,8 @@ describe("JavaScript minifier", () => {
 				if (corpus.minimumRun !== undefined) {
 					expect(runnable).toBeGreaterThan(corpus.minimumRun);
 				}
-				if (corpus.minimumRival !== undefined) {
+				// Rivals are read from swc's checkout, which another corpus may run without.
+				if (corpus.minimumRival !== undefined && isPresent(swcTestsDir)) {
 					expect(rivals).toBeGreaterThan(corpus.minimumRival);
 				}
 				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
