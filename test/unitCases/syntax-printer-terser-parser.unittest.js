@@ -272,7 +272,12 @@ const SOURCES = [
 	"x = /[/]/g; y = /\\//u; z = /a/dgimsuyv",
 	"// comment at the end",
 	"\uFEFFa",
-	"a\u00A0=\u2003b"
+	"a\u00A0=\u2003b",
+	"'a\\\r\nb'",
+	"1e5 + 1.5e-3 + 0x1e + 2E+2",
+	"1e5e",
+	"async function f() { await using /* c */ x = y; await using // c\n z = w; await using\n v; }",
+	"for (using of /* c */ = a; ; );"
 ];
 
 /**
@@ -281,6 +286,12 @@ const SOURCES = [
  * @type {string[]}
  */
 const TYPESCRIPT_SOURCES = [
+	"a<{ b: (c: 'x\\'y') => void /* > */ // >\n }>(d); e<[f, \"g\"]>(i); j<k>?.(l); m<n> + o",
+	"const f = <T,>(a: T = 'x\\'y', b = (1), c = { d: [1] } /* c ) */, e = \"//\"): T => a;",
+	"const g = <T,>(a = '\\\\', b = `t`, // c )\n): T => a;",
+	"type /* c */ A = number;",
+	"type // c\nA = number;",
+	"let a = <T>(b: T) => /* x */ b;",
 	"let a: number = 1; const b: string[] = []; var c: Array<number> | null;",
 	"function f(this: Window, a?: number, b: string = 'x', ...c: number[]): void {}",
 	"function f<T, U extends keyof T = T>(a: T): U { return a as U; }",
