@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep the `calc()` where a bare number would revive a refused declaration.
+Keep `calc()` where a bare number revives a refused declaration or is inexact.

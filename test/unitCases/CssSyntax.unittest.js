@@ -7535,19 +7535,31 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			// The fold prints a double back, so its result is rounded the way an
-			// authored number is — six significant digits.
-			["calc(3px/1.1)", "2.72727px"],
-			["calc(100%/3)", "33.3333%"],
-			["calc(1/3*1px)", ".333333px"],
+			// The fold prints a double back, so what rounding removes is the double's
+			// own noise: `6 / 10 - 0.375` is `.22499999999999998`.
 			["calc((6/10 - .375)*1em)", ".225em"],
-			["calc((6/14 - .375)*1em)", ".0535714em"],
-			// An angle keeps every digit: `rotate()` runs it through trig.
-			["calc(1turn/3)", "calc(1turn/3)"],
+			["calc(100%/4)", "25%"],
+			["calc(1px/64)", ".015625px"],
 			// Above the range the rounding covers the digits carry, so they stay.
 			["calc(1e4px + 1px)", "10001px"]
 		])("%s folds to %s", (expression, expected) => {
 			expect(value(expression)).toBe(expected);
+		});
+
+		it.each([
+			// No decimal is exact here, and a rounded one lays out a layout unit short
+			// wherever the exact answer falls on one: Chromium reads
+			// `translate(15px,33.3333%)` as `5.99999` where `calc(100%/3)` reads `6`.
+			["calc(3px/1.1)"],
+			["calc(100%/3)"],
+			["calc(1/3*1px)"],
+			["calc((6/14 - .375)*1em)"],
+			// ...a quotient past six digits too, exact as a double but not as six.
+			["calc(1px/1024)"],
+			// An angle keeps every digit, which here are longer than the expression.
+			["calc(1turn/3)"]
+		])("keeps %s, which has no exact short decimal", (expression) => {
+			expect(value(expression)).toBe(expression);
 		});
 
 		it("folds through a parenthesized group and a nested calc()", () => {
@@ -7566,10 +7578,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(converted("calc(1cm + 1mm)")).toBe("11mm");
 			expect(converted("calc(1in + 1cm)")).toBe("3.54cm");
 			expect(converted("calc(4.5cm + 0cm)")).toBe("45mm");
-			// Where no unit of the group spells it exactly, the sum still lands in one
-			// the expression was written with, at the precision every number is
-			// written at.
-			expect(value("calc(1px + 1cm)")).toBe("38.7953px");
+			// Where no unit of the group spells it exactly, the sum stays written out.
+			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
 		});
 
 		it("keeps the parentheses on a negative the property refuses", () => {
@@ -7729,9 +7739,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("takes hypot()", () => {
 			expect(value("hypot(3px,4px)")).toBe("5px");
 			expect(value("hypot(6px,8px,0px)")).toBe("10px");
-			// Irrational for most inputs, and written at the precision every number
-			// is written at.
-			expect(value("calc(hypot(1px,1px)*100)")).toBe("141.421px");
+			// Irrational for most inputs, so there is no exact decimal to write.
+			expect(value("calc(hypot(1px,1px)*100)")).toBe(
+				"calc(hypot(1px,1px)*100)"
+			);
 		});
 	});
 
@@ -7803,26 +7814,27 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	});
 
 	describe("sqrt(), pow(), log(), exp() and the trig functions", () => {
+		it("folds a trig answer that is exact", () => {
+			expect(value("calc(sin(30deg)*100px)")).toBe("50px");
+		});
+
 		it.each([
-			// The printer holds every number it writes to six significant digits
-			// below 1e4, which is under what a stylesheet can observe, so an
-			// irrational answer is written at the precision any other number is.
-			["calc(sqrt(2)*100px)", "141.421px"],
-			["calc(pow(2,.5)*100px)", "141.421px"],
-			["calc(exp(1)*100px)", "271.828px"],
-			["calc(log(10)*100px)", "230.259px"],
-			["calc(log(9,2)*100px)", "316.993px"],
-			["calc(sin(30deg)*100px)", "50px"],
-			["calc(sin(45deg)*100px)", "70.7107px"],
-			["calc(cos(50grad)*100px)", "70.7107px"],
+			// An irrational answer has no exact decimal, so the expression stays.
+			["calc(sqrt(2)*100px)"],
+			["calc(pow(2,.5)*100px)"],
+			["calc(exp(1)*100px)"],
+			["calc(log(10)*100px)"],
+			["calc(log(9,2)*100px)"],
+			["calc(sin(45deg)*100px)"],
+			["calc(cos(50grad)*100px)"],
 			// A bare number is radians (CSS Values 4 §10.6).
-			["calc(sin(1)*100px)", "84.1471px"],
-			["calc(cos(1rad)*100px)", "54.0302px"],
+			["calc(sin(1)*100px)"],
+			["calc(cos(1rad)*100px)"],
 			// ...and the constants a calculation may name.
-			["calc(pi*100px)", "314.159px"],
-			["calc(e*100px)", "271.828px"]
-		])("folds %s", (expression, folded) => {
-			expect(value(expression)).toBe(folded);
+			["calc(pi*100px)"],
+			["calc(e*100px)"]
+		])("keeps %s, whose answer is irrational", (expression) => {
+			expect(value(expression)).toBe(expression);
 		});
 
 		it.each([
@@ -7884,8 +7896,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(cos(180deg)*1px)")).toBe("calc(-1px)");
 			expect(value("calc(tan(45deg)*1px)")).toBe("1px");
 			expect(value("calc(tan(180deg)*1px)")).toBe("0");
-			// Between them it is computed like every other irrational answer.
-			expect(value("calc(tan(30deg)*1px)")).toBe(".57735px");
+			// Between them it is irrational, and kept like every other such answer.
+			expect(value("calc(tan(30deg)*1px)")).toBe("calc(tan(30deg)*1px)");
 		});
 
 		it("answers the inverse functions in degrees", () => {
@@ -7954,10 +7966,9 @@ describe("CssSyntax — convertLengthUnits", () => {
 		expect(width("calc(1px + 15px)", true)).toBe("1pc");
 	});
 
-	it("lands a sum in a unit it was written with, gate or no gate", () => {
-		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves — so
-		// the sum lands there, at the precision every number is written at.
-		expect(width("calc(1cm + 1px)")).toBe("38.7953px");
+	it("keeps a sum no unit it may land in spells exactly", () => {
+		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves.
+		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
 	});
 });
 
