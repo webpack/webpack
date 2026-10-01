@@ -7279,6 +7279,7 @@ const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
 // spelling its own slot takes: the slot's keywords, and each function it
 // accepts written \`name()\`. A sibling out of that set means the value fills the
 // slot twice, which is a declaration the engine drops.
+/** @type {() => Map<string, Map<string, { spellings: Set<string>, classes: Set<string> }>>} */
 const getShorthandInitialKeywords = memoize(() => new Map([
 ${shorthandInitialKeywords
 	.map(
