@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify from the printer's own parser, not a tree converted from webpack's.
+Minify by parsing with webpack's own parser rather than terser's.

@@ -6,6 +6,7 @@ const vm = require("vm");
 const {
 	FORMAT_DEFAULTS,
 	IGNORED_FORMAT_OPTIONS,
+	IGNORED_PARSE_OPTIONS,
 	createCompressHelpers,
 	createUnicode,
 	estreeType,
@@ -243,6 +244,24 @@ const CORRECTED_CASES = [
 // The option sets the printer is held to terser under: a build's own, and
 // every format option that changes what the stream writes.
 /** @type {import("terser").MinifyOptions[]} */
+// The printer's own tests hold the printer to terser's, so they read the tree
+// terser's parser builds; webpack's parser is held to terser's by the corpora.
+const TERSER_PARSE = /** @type {EXPECTED_ANY} */ ({ webpackParser: false });
+
+/**
+ * Drops what webpack reads and terser would refuse, in place.
+ * @param {EXPECTED_ANY} options the options terser is about to be asked with
+ * @returns {EXPECTED_ANY} the same options
+ */
+const forTerser = (options) => {
+	if (options.parse) {
+		options.parse = { ...options.parse };
+		for (const name of IGNORED_PARSE_OPTIONS) delete options.parse[name];
+		if (Object.keys(options.parse).length === 0) delete options.parse;
+	}
+	return options;
+};
+
 const OUTPUT_OPTIONS = [
 	{ compress: { passes: 2 }, mangle: true, format: { comments: false } },
 	{ compress: false, mangle: false, format: { comments: "all" } },
@@ -784,10 +803,17 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			for (const settings of OUTPUT_OPTIONS) {
-				const options = () => ({ ...settings, format: { ...settings.format } });
+				// The union the table infers does not narrow to terser's options.
+				const options = () =>
+					/** @type {EXPECTED_ANY} */ ({
+						...settings,
+						parse: TERSER_PARSE,
+						format: { ...settings.format }
+					});
 				const ours = await minify({ "input.js": source }, options());
 				// The printer writes minified output only, so it is held to terser's.
 				const referenceOptions = options();
+				forTerser(referenceOptions);
 				for (const name of IGNORED_FORMAT_OPTIONS) {
 					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
 						name
@@ -800,7 +826,10 @@ describe("syntax-printer", () => {
 				expect(ours.code).toBe(theirs.code);
 				expect(ours.map).toEqual(theirs.map);
 			}
-			const { code } = await minify(source, OUTPUT_OPTIONS[0]);
+			const { code } = await minify(
+				source,
+				/** @type {EXPECTED_ANY} */ (OUTPUT_OPTIONS[0])
+			);
 			expect(code).toMatchSnapshot();
 		});
 	}
@@ -810,9 +839,16 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			for (const settings of OUTPUT_OPTIONS) {
-				const options = () => ({ ...settings, format: { ...settings.format } });
+				// The union the table infers does not narrow to terser's options.
+				const options = () =>
+					/** @type {EXPECTED_ANY} */ ({
+						...settings,
+						parse: TERSER_PARSE,
+						format: { ...settings.format }
+					});
 				const ours = await minify({ "input.js": source }, options());
 				const referenceOptions = options();
+				forTerser(referenceOptions);
 				for (const name of IGNORED_FORMAT_OPTIONS) {
 					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
 						name
@@ -2035,8 +2071,14 @@ describe("syntax-printer", () => {
 			/**
 			 * @returns {EXPECTED_ANY} the options, asking for the tree
 			 */
+			// terser's parser leaves an accessor's `async` unset where webpack's
+			// writes false, which terser's own `equivalent_to` reads as a difference.
 			const settings = () => ({
 				...options,
+				parse: {
+					.../** @type {EXPECTED_ANY} */ (options).parse,
+					...TERSER_PARSE
+				},
 				mangle: false,
 				format: { ast: true, code: false }
 			});
@@ -2053,7 +2095,7 @@ describe("syntax-printer", () => {
 			// terser's published build hands out its own tree, sized and compared
 			// by terser's own methods.
 			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
-				await reference.minify(source, settings())
+				await reference.minify(source, forTerser(settings()))
 			);
 			/** @type {EXPECTED_ANY[]} */
 			const theirs = [];

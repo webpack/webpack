@@ -33278,6 +33278,7 @@ declare namespace exports {
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: TerserFormatOptions;
 				export let IGNORED_FORMAT_OPTIONS: string[];
+				export let IGNORED_PARSE_OPTIONS: string[];
 				export let createAst: () => Record<string, any>;
 				export let createModules: () => TerserModules;
 				export let createCompressHelpers: (
@@ -33285,6 +33286,10 @@ declare namespace exports {
 				) => CompressHelpers;
 				export let createTerserParser: (modules: TerserModules) => {
 					parse: (text: string | Function, options?: object) => TerserNode;
+					parseWithWebpackParser: (
+						text: string | Function,
+						options?: object
+					) => TerserNode;
 					tokenizer: (
 						text: string,
 						filename: undefined | null | string,
