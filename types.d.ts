@@ -126,7 +126,6 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
-import { minify } from "terser";
 import { Context as ContextImport } from "vm";
 import {
 	addScopesToSourceMap,
@@ -18391,6 +18390,109 @@ declare interface MinChunkSizePluginOptions {
 }
 
 /**
+ * What a source is minified with. The keys the minifier reads are named; the
+ * rest are open, so an option a caller passes through is not refused here.
+ */
+declare interface MinifyOptions {
+	/**
+	 * what the compressor does, or false to leave the tree as read
+	 */
+	compress?: boolean | Record<string, any>;
+
+	/**
+	 * which names are renamed, or false to keep them
+	 */
+	mangle?: boolean | Record<string, any>;
+
+	/**
+	 * how the output is written
+	 */
+	format?: Record<string, any>;
+
+	/**
+	 * the older spelling of `format`, which may not be named beside it
+	 */
+	output?: Record<string, any>;
+
+	/**
+	 * how the source is read
+	 */
+	parse?: Record<string, any>;
+
+	/**
+	 * whether a source map is written, and how
+	 */
+	sourceMap?: boolean | Record<string, any>;
+
+	/**
+	 * whether the source is a module
+	 */
+	module?: boolean;
+
+	/**
+	 * which edition the output may use
+	 */
+	ecma?: number;
+
+	/**
+	 * whether top-level names may be renamed or dropped
+	 */
+	toplevel?: boolean;
+
+	/**
+	 * names held across assets, which this writes into
+	 */
+	nameCache?: null | Record<string, any>;
+
+	/**
+	 * which class names survive
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * which function names survive
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10?: boolean;
+}
+
+/**
+ * What a minify answers with: the code it wrote, the map it was asked for, and
+ * the tree where the format options asked for one instead of code.
+ */
+declare interface MinifyOutput {
+	/**
+	 * the minified source
+	 */
+	code?: string;
+
+	/**
+	 * the source map, as a string or an object
+	 */
+	map?: string | Record<string, any>;
+
+	/**
+	 * the map with its mappings read
+	 */
+	decoded_map?: null | Record<string, any>;
+
+	/**
+	 * the tree, where `format.ast` asked for it
+	 */
+	ast?: TerserNode;
+}
+type MinifySources = string | string[] | Record<string, string> | TerserNode;
+
+/**
  * Describes the mkdir shape.
  */
 declare interface Mkdir {
@@ -31332,7 +31434,10 @@ declare interface TemplatePathFn<T extends PathData = PathData> {
  * what a caller minifies with, the switches of its corrections and improvements, and the modules it is built from
  */
 declare interface Terser {
-	minify: typeof minify;
+	minify: (
+		sources: MinifySources,
+		options?: MinifyOptions
+	) => Promise<MinifyOutput>;
 	phases: string[];
 	corrections?: { enabled: boolean };
 	improvements?: { enabled: boolean };

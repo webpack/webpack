@@ -352,26 +352,21 @@ const knownV8Bugs = [
 ];
 
 // The JavaScript minimizer each minified mode builds with, under the options
-// production minifies with: terser as published, and webpack's printer, which
-// `experiments.futureDefaults` switches it to.
-const MINIFY = {
-	terser: { compress: { passes: 2 } },
-	printer: { compress: { passes: 2 }, printer: true }
-};
+// The options production minifies with.
+const MINIFY = { compress: { passes: 2 } };
 
 // A minifier renames bindings, so a function naming itself after one reads the
 // new name: test262 files these SetFunctionName cases as `fn-name`.
 const renamedByMinifier = /(?:^|[/-])fn-name(?:[-.]|$)/;
 
-// test262 cases each minified mode fails, by `name (scenario)`, grouped by why.
-// Each still runs and must fail; one passing fails the suite until removed, so
-// the `printer` entries are what webpack's `correct` phase has left to fix.
+// The test262 cases the minified mode fails, by `name (scenario)`, grouped by
+// why. Each still runs and must fail; one passing fails the suite until it is
+// removed, so this list is what the minifier has left to fix.
 /* cspell:disable */
-/** @type {{ reason: string, minifiers: ("terser" | "printer")[], tests: string[] }[]} */
+/** @type {{ reason: string, tests: string[] }[]} */
 const MINIFIED_FAILURES = [
 	{
 		reason: "terser drops an evaluation that throws",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"arguments-object/10.6-13-c-1-s.js (strict)",
 			"computed-property-names/class/static/generator-prototype.js (sloppy)",
@@ -742,7 +737,6 @@ const MINIFIED_FAILURES = [
 	{
 		reason:
 			"terser's parser refuses a program the spec allows, which fails the build",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
 			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
@@ -1277,7 +1271,6 @@ const MINIFIED_FAILURES = [
 	},
 	{
 		reason: "terser changes what the program does",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/addition/coerce-symbol-to-prim-invocation.js (sloppy)",
 			"expressions/addition/coerce-symbol-to-prim-invocation.js (strict)",
@@ -1371,7 +1364,6 @@ const MINIFIED_FAILURES = [
 	{
 		reason:
 			"terser assumes `toString` and `valueOf` have no effects, as its documentation states",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/addition/order-of-evaluation.js (sloppy)",
 			"expressions/addition/order-of-evaluation.js (strict)",
@@ -1409,7 +1401,6 @@ const MINIFIED_FAILURES = [
 	},
 	{
 		reason: "terser writes a program that reads a binding outside its scope",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/arrow-function/scope-paramsbody-var-open.js (sloppy)",
 			"expressions/arrow-function/scope-paramsbody-var-open.js (strict)",
@@ -1458,7 +1449,6 @@ const MINIFIED_FAILURES = [
 	{
 		reason:
 			"terser renames a binding or private name that a function takes its name from",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/async-function/name.js (sloppy)",
 			"expressions/async-function/name.js (strict)",
@@ -1504,7 +1494,6 @@ const MINIFIED_FAILURES = [
 	},
 	{
 		reason: "terser writes a program that no longer parses",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/await/await-in-nested-function.js (sloppy)",
 			"expressions/dynamic-import/import-attributes/2nd-param-await-ident.js (strict)",
@@ -1576,55 +1565,8 @@ const MINIFIED_FAILURES = [
 		]
 	},
 	{
-		reason: "terser drops an evaluation that throws",
-		minifiers: ["terser"],
-		tests: [
-			"expressions/call/spread-err-mult-err-expr-throws.js (sloppy)",
-			"expressions/call/spread-err-mult-err-expr-throws.js (strict)",
-			"expressions/call/spread-err-mult-err-iter-get-value.js (sloppy)",
-			"expressions/call/spread-err-mult-err-iter-get-value.js (strict)",
-			"expressions/call/spread-err-mult-err-itr-get-call.js (sloppy)",
-			"expressions/call/spread-err-mult-err-itr-get-call.js (strict)",
-			"expressions/call/spread-err-mult-err-itr-get-get.js (sloppy)",
-			"expressions/call/spread-err-mult-err-itr-get-get.js (strict)",
-			"expressions/call/spread-err-mult-err-itr-step.js (sloppy)",
-			"expressions/call/spread-err-mult-err-itr-step.js (strict)",
-			"expressions/call/spread-err-mult-err-itr-value.js (sloppy)",
-			"expressions/call/spread-err-mult-err-itr-value.js (strict)",
-			"expressions/call/spread-err-sngl-err-expr-throws.js (sloppy)",
-			"expressions/call/spread-err-sngl-err-expr-throws.js (strict)",
-			"expressions/call/spread-err-sngl-err-itr-get-call.js (sloppy)",
-			"expressions/call/spread-err-sngl-err-itr-get-call.js (strict)",
-			"expressions/call/spread-err-sngl-err-itr-get-get.js (sloppy)",
-			"expressions/call/spread-err-sngl-err-itr-get-get.js (strict)",
-			"expressions/call/spread-err-sngl-err-itr-get-value.js (sloppy)",
-			"expressions/call/spread-err-sngl-err-itr-get-value.js (strict)",
-			"expressions/call/spread-err-sngl-err-itr-step.js (sloppy)",
-			"expressions/call/spread-err-sngl-err-itr-step.js (strict)",
-			"expressions/call/spread-err-sngl-err-itr-value.js (sloppy)",
-			"expressions/call/spread-err-sngl-err-itr-value.js (strict)"
-		]
-	},
-	{
-		reason: "terser writes a program that no longer parses",
-		minifiers: ["terser"],
-		tests: [
-			"expressions/function/static-init-await-reference.js (sloppy)",
-			"expressions/function/static-init-await-reference.js (strict)"
-		]
-	},
-	{
-		reason: "terser changes what the program does",
-		minifiers: ["terser"],
-		tests: [
-			"expressions/generators/static-init-await-reference.js (sloppy)",
-			"expressions/generators/static-init-await-reference.js (strict)"
-		]
-	},
-	{
 		reason:
 			"terser folds an expression that throws when it runs, which fails the build",
-		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/modulus/bigint-modulo-zero.js (sloppy)",
 			"expressions/modulus/bigint-modulo-zero.js (strict)",
@@ -1635,25 +1577,17 @@ const MINIFIED_FAILURES = [
 ];
 /* cspell:enable */
 
-// Each minified mode's failing tests, by `name (scenario)`, with the reason.
-/** @type {Record<string, Map<string, string>>} */
-const minifiedFailures = { terser: new Map(), printer: new Map() };
-for (const { reason, minifiers, tests } of MINIFIED_FAILURES) {
-	for (const minifier of minifiers) {
-		for (const test of tests) minifiedFailures[minifier].set(test, reason);
-	}
+// The minified mode's failing tests, by `name (scenario)`, with the reason.
+/** @type {Map<string, string>} */
+const minifiedFailures = new Map();
+for (const { reason, tests } of MINIFIED_FAILURES) {
+	for (const test of tests) minifiedFailures.set(test, reason);
 }
 
-// Each mode the suite builds with; production is built once per minimizer.
-// TODO remove the `terser` mode once webpack's printer has replaced terser
+// Each mode the suite builds with.
 const MODES = [
 	{ name: "development", mode: "development" },
-	{ name: "production", mode: "production", minify: "terser" },
-	{
-		name: "production (future defaults)",
-		mode: "production",
-		minify: "printer"
-	}
+	{ name: "production", mode: "production", minify: true }
 ];
 
 const compile = async (entry, scenario, options = {}) =>
@@ -1688,7 +1622,7 @@ const compile = async (entry, scenario, options = {}) =>
 						new MinimizerPlugin({
 							test: /\.[cm]?js$/i,
 							minify: jsMinify,
-							minimizerOptions: MINIFY[minify],
+							minimizerOptions: MINIFY,
 							parallel: false
 						})
 					]
@@ -2400,10 +2334,9 @@ describe("test262", () => {
 							process.stdout.write(`Finished ${name} ("${scenario}")\n`);
 						}
 					};
-					const expected =
-						minify === undefined
-							? undefined
-							: minifiedFailures[minify].get(`${name} (${scenario})`);
+					const expected = minify
+						? minifiedFailures.get(`${name} (${scenario})`)
+						: undefined;
 
 					it(`${name} ("${scenario}")`, async () => {
 						if (expected === undefined) return runCase();
