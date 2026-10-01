@@ -31641,31 +31641,6 @@ declare class TopLevelSymbol {
 }
 
 /**
- * What the tree is built from, as terser's own `parse` options name it.
- */
-declare interface TreeOptions {
-	/**
-	 * whether the source is a module
-	 */
-	module?: boolean;
-
-	/**
-	 * whether `return` may sit at the top level
-	 */
-	bare_returns?: boolean;
-
-	/**
-	 * the name tokens carry
-	 */
-	filename?: null | string;
-
-	/**
-	 * whether a leading `#!` line is a comment
-	 */
-	shebang?: boolean;
-}
-
-/**
  * Use a Trusted Types policy to create urls for chunks.
  */
 declare interface TrustedTypes {
@@ -33327,9 +33302,6 @@ declare namespace exports {
 					PRECEDENCE: Record<string, number>;
 					ALL_RESERVED_WORDS: Set<string>;
 				};
-				export let createTerserTree: (
-					__0: TerserModules
-				) => (source: string, options: TreeOptions) => undefined | TerserNode;
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
 					getFullCharCode: (str: string, pos: number) => number;
