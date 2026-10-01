@@ -2529,6 +2529,28 @@ const compareRenders = async ({ pairs, width }) => {
 		};
 	};
 
+	const page = /** @type {{ __eqIconLoaded?: boolean }} */ (
+		/** @type {unknown} */ (window)
+	);
+	if (!page.__eqIconLoaded) {
+		// WHY: Chrome draws a blocked image's broken-image icon only once it has
+		// loaded that icon — measured in CI: the first blocked `<img>` a page
+		// rendered read 0x0 and the same one in the next document 16x16 — so a
+		// throwaway one is broken first, and its icon waited for.
+		await render('<img src="eq-icon.png">');
+		const image = /** @type {Document} */ (frame.contentDocument).images[0];
+		for (
+			let waited = 0;
+			waited < PATIENCE && image.getBoundingClientRect().width === 0;
+			waited += 50
+		) {
+			await new Promise((resolve) => {
+				setTimeout(resolve, 50);
+			});
+		}
+		page.__eqIconLoaded = true;
+	}
+
 	/** @type {RenderReport[]} */
 	const reports = [];
 	for (const pair of pairs) {
