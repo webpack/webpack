@@ -2512,6 +2512,47 @@ const compareRenders = async ({ pairs, width }) => {
 	const measure = async () => {
 		const doc = /** @type {Document} */ (frame.contentDocument);
 		await settled(doc.fonts.ready);
+		// WHY: Chrome boxes a blocked image 0x0 until it has failed and 16x16 after,
+		// and the failure can land after `load` — measured in CI on srcset.html, in
+		// both orders — so a page with images is read once they have all settled.
+		const images = [...doc.images];
+		if (images.length > 0) {
+			await settled(
+				(async () => {
+					await Promise.all(
+						images.map((image) =>
+							image.complete
+								? undefined
+								: new Promise((resolve) => {
+										image.addEventListener("load", resolve, { once: true });
+										image.addEventListener("error", resolve, { once: true });
+									})
+						)
+					);
+					/** @returns {string} every image's size */
+					const sizes = () =>
+						images
+							.map((image) => {
+								const box = image.getBoundingClientRect();
+								return `${box.width}x${box.height}`;
+							})
+							.join(" ");
+					let last = sizes();
+					for (
+						let unchanged = 0, tries = 0;
+						unchanged < 2 && tries < PATIENCE / 25;
+						tries++
+					) {
+						await new Promise((resolve) => {
+							setTimeout(resolve, 25);
+						});
+						const now = sizes();
+						unchanged = now === last ? unchanged + 1 : 0;
+						last = now;
+					}
+				})()
+			);
+		}
 		// A transition or animation would be read part way through.
 		for (const running of doc.getAnimations()) running.cancel();
 		const root = /** @type {HTMLElement} */ (doc.documentElement);
@@ -2533,14 +2574,7 @@ const compareRenders = async ({ pairs, width }) => {
 	const reports = [];
 	for (const pair of pairs) {
 		const loaded = [await render(pair.before)];
-		let before = await measure();
-		// WHY: Chrome boxed a blocked image 0x0 on a URL's first load and 16x16 on
-		// a later one — measured in CI: srcset.html read 0x0, its minified copy
-		// 16x16 — so a page with images is read on its second load, as its copy is.
-		if (/** @type {Document} */ (frame.contentDocument).images.length > 0) {
-			loaded[0] = await render(pair.before);
-			before = await measure();
-		}
+		const before = await measure();
 		loaded.push(await render(pair.after));
 		const after = await measure();
 		/** @type {string[]} */
