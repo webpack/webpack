@@ -2699,6 +2699,8 @@ describe("a minified page renders as the page it came from", () => {
 	let browser;
 	/** @type {import("puppeteer-core").Page} */
 	let page;
+	/** @type {Error | undefined} */
+	let unrecovered;
 
 	// WHY: a WebKit run never returned from one wpt/css batch, and every later
 	// test then waited behind it on the same page. Past a deadline the batch is
@@ -2754,13 +2756,22 @@ describe("a minified page renders as the page it came from", () => {
 	 * @returns {Promise<import("../helpers/syntaxEquivalence").RenderReport[] | undefined>} the reports, or undefined when it ran past the deadline
 	 */
 	const renderWithin = async (batch, width, deadline) => {
+		if (unrecovered !== undefined) throw unrecovered;
 		const pending = evaluateDeep(page, compareRenders, { pairs: batch, width });
 		const reports = await within(pending, deadline);
 		if (reports === undefined) {
 			pending.catch(() => {});
 			const stuck = page;
 			await within(stuck.close(), PAIR_DEADLINE).catch(() => {});
-			page = await openPage();
+			try {
+				page = await openPage();
+			} catch (error) {
+				unrecovered = new Error(
+					`no page to render in once ${batch.map(({ name }) => name).join(", ")} ran past ${deadline}ms`,
+					{ cause: error }
+				);
+				throw unrecovered;
+			}
 		}
 		return reports;
 	};
