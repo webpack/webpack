@@ -71,11 +71,14 @@ describe("JavaScript minifier under terser's fuzzer", () => {
 		const { runInNewContext } = vm;
 		/** @type {{ minify?: (code: string, options: EXPECTED_OBJECT) => Promise<{ code?: string }>, sandbox?: EXPECTED_ANY, generator?: (seed: number) => () => string }} */
 		const loaded = {};
-		// The sets ufuzz minifies a program under, and the one it falls back to
-		// where the program itself throws.
-		const optionSets = JSON.parse(
-			fs.readFileSync(path.join(referenceDir, "test/ufuzz.json"), "utf8")
-		);
+		// The sets ufuzz minifies a program under, then the one webpack's minimizer
+		// uses, and the one ufuzz falls back to where the program itself throws.
+		const optionSets = [
+			...JSON.parse(
+				fs.readFileSync(path.join(referenceDir, "test/ufuzz.json"), "utf8")
+			),
+			{ compress: { passes: 2 }, mangle: true }
+		];
 		const fallbackSets = [{ compress: false, mangle: false }];
 
 		beforeAll(async () => {
