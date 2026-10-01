@@ -6340,7 +6340,7 @@ describe("optimization.minimize", () => {
 		).toEqual(DEFAULT_MINIMIZE_OPTIONS);
 	});
 
-	it("should minify JavaScript with the same options whether futureDefaults is on or not", () => {
+	it("should minify JavaScript through webpack's printer under futureDefaults only", () => {
 		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 			require("../..").config;
 
@@ -6361,23 +6361,27 @@ describe("optimization.minimize", () => {
 			).javascript;
 		};
 
-		for (const futureDefaults of [false, true]) {
-			expect(javascriptOptions(futureDefaults, undefined)).toEqual({
-				compress: { passes: 2 }
-			});
-			const configured = { compress: false };
-			expect(
-				javascriptOptions(futureDefaults, {
-					minimizeOptions: { javascript: configured }
-				})
-			).toBe(configured);
-			expect(configured).toEqual({ compress: false });
-			expect(
-				javascriptOptions(futureDefaults, {
-					minimizeOptions: { javascript: false }
-				})
-			).toBe(false);
-		}
+		expect(javascriptOptions(false, undefined)).toEqual({
+			compress: { passes: 2 }
+		});
+		expect(javascriptOptions(true, undefined)).toEqual({
+			printer: true,
+			compress: { passes: 2 }
+		});
+		// The user's object gains the default on a copy, never in place.
+		const configured = { compress: false };
+		expect(
+			javascriptOptions(true, { minimizeOptions: { javascript: configured } })
+		).toEqual({ printer: true, compress: false });
+		expect(configured).toEqual({ compress: false });
+		expect(
+			javascriptOptions(true, {
+				minimizeOptions: { javascript: { printer: false } }
+			})
+		).toEqual({ printer: false });
+		expect(
+			javascriptOptions(true, { minimizeOptions: { javascript: false } })
+		).toBe(false);
 	});
 
 	it("should accept a shorthand assigned after normalization", () => {

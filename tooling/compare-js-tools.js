@@ -426,6 +426,25 @@ const TOOLS = [
 		}
 	},
 	{
+		// The same work through webpack's printer, as `experiments.futureDefaults`
+		// minifies.
+		name: "webpack printer",
+		stage: "minify",
+		create: () => {
+			const loading = require("../lib/javascript/syntax").printer.load();
+
+			return async (code) =>
+				(
+					await (
+						await loading
+					).minify(code, {
+						compress: { passes: 2 },
+						module: sourceType() === "module"
+					})
+				).code;
+		}
+	},
+	{
 		name: "terser",
 		stage: "minify",
 		create: () => {

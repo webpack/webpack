@@ -17,7 +17,7 @@ const { loadTerserSources } = require("../helpers/terserSources");
 
 /**
  * terser as published, the minifier the printer is held to.
- * @returns {{ minify: import("../../lib/javascript/jsMinify").Minify }} it
+ * @returns {{ minify: typeof import("terser").minify }} it
  */
 const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
 
@@ -149,7 +149,7 @@ const runProgram = (code) => {
 };
 
 // Each prints one thing and terser's output another, under the options named.
-/** @type {[string, string, import("../../lib/javascript/jsMinify").MinifyOptions][]} */
+/** @type {[string, string, import("terser").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
 		"a `{ __proto__ }` shorthand, printed",
@@ -233,7 +233,7 @@ const CORRECTED_CASES = [
 
 // The option sets the printer is held to terser under: a build's own, and
 // every format option that changes what the stream writes.
-/** @type {import("../../lib/javascript/jsMinify").MinifyOptions[]} */
+/** @type {import("terser").MinifyOptions[]} */
 const OUTPUT_OPTIONS = [
 	{ compress: { passes: 2 }, mangle: true, format: { comments: false } },
 	{ compress: false, mangle: false, format: { comments: "all" } },
@@ -917,7 +917,7 @@ describe("syntax-printer", () => {
 		unsafe_undefined: true,
 		passes: 2
 	};
-	/** @type {[string, string, import("../../lib/javascript/jsMinify").CompressOptions][]} */
+	/** @type {[string, string, import("terser").CompressOptions][]} */
 	const COMPRESS_CASES = [
 		[
 			"unsafe literals",
@@ -987,7 +987,7 @@ describe("syntax-printer", () => {
 			const reference = terserReference();
 			/**
 			 * @param {typeof minify} run a minify
-			 * @param {import("../../lib/javascript/jsMinify").MinifyOptions} settings its options
+			 * @param {import("terser").MinifyOptions} settings its options
 			 * @returns {Promise<{ code: string | undefined } | { error: string }>} its result, or the error it threw
 			 */
 			const outcome = async (run, settings) => {
@@ -998,7 +998,7 @@ describe("syntax-printer", () => {
 				}
 			};
 			for (const module of [false, true]) {
-				/** @returns {import("../../lib/javascript/jsMinify").MinifyOptions} the options */
+				/** @returns {import("terser").MinifyOptions} the options */
 				const settings = () => ({
 					module,
 					mangle: false,
@@ -1109,7 +1109,7 @@ describe("syntax-printer", () => {
 
 	// Cases of terser's own suite reaching a branch no case above reaches, under
 	// the compress options it gives them.
-	/** @type {[string, string, import("../../lib/javascript/jsMinify").CompressOptions][]} */
+	/** @type {[string, string, import("terser").CompressOptions][]} */
 	const UNUSED_TERSER_CASES = [
 		[
 			"arguments beside a destructured parameter",
@@ -1180,7 +1180,7 @@ describe("syntax-printer", () => {
 
 	// Sources reaching each node class's flow analysis: hoisted functions read
 	// before a write, branches, loops, chains and the assignments it tracks.
-	/** @type {[string, string, import("../../lib/javascript/jsMinify").CompressOptions?][]} */
+	/** @type {[string, string, import("terser").CompressOptions?][]} */
 	const REDUCE_CASES = [
 		["a hoisted function read before a write", "f(); var a = g(); function f() { return a; } sink(f);"],
 		[
@@ -1692,11 +1692,11 @@ describe("syntax-printer", () => {
 			const reference = terserReference();
 			const ours = await minify(
 				source,
-				/** @type {import("../../lib/javascript/jsMinify").MinifyOptions} */ ({ ...options })
+				/** @type {import("terser").MinifyOptions} */ ({ ...options })
 			);
 			const theirs = await reference.minify(
 				source,
-				/** @type {import("../../lib/javascript/jsMinify").MinifyOptions} */ ({ ...options })
+				/** @type {import("terser").MinifyOptions} */ ({ ...options })
 			);
 			expect(ours.code).toBe(theirs.code);
 		});
@@ -2198,7 +2198,7 @@ describe("syntax-printer", () => {
 			{ sourceMap: { includeSources: true } }
 		);
 		const source = "var one = 1;\nfunction two(x) { return x * 2; }\nconsole.log(two(one));\n";
-		/** @type {[Record<string, string>, import("../../lib/javascript/jsMinify").SourceMapOptions][]} */
+		/** @type {[Record<string, string>, import("terser").SourceMapOptions][]} */
 		const cases = [
 			[{ "a.js": source }, {}],
 			[{ "a.js": source }, { includeSources: true, filename: "a.min.js", root: "/r" }],

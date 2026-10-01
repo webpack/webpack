@@ -38,7 +38,7 @@ const INPUT_MAP = {
 /**
  * Every comment-selection shape the plugin accepts, paired with the source and
  * production it is exercised against.
- * @type {[string, { [file: string]: string }, import("../../lib/javascript/jsMinify").MinifyOptions & { as?: "script" | "module" | "event-handler" }, EXPECTED_ANY][]}
+ * @type {[string, { [file: string]: string }, import("terser").MinifyOptions & { as?: "script" | "module" | "event-handler" }, EXPECTED_ANY][]}
  */
 const CASES = [
 	["defaults", { "script.js": SCRIPT }, { compress: { passes: 2 } }, true],
@@ -102,13 +102,14 @@ describe("jsMinify", () => {
 				expect(mine.map).toEqual(reference.map);
 			});
 
-			// `printer` once chose terser as published; it is read and left unused.
-			it(`should ignore the printer option: ${label}`, async () => {
+			// `futureDefaults` minifies through webpack's printer, which owes the
+			// same answer as terser as published.
+			it(`should match the reference minifier through the printer: ${label}`, async () => {
 				const map = withMap ? INPUT_MAP : undefined;
 				const mine = await jsMinify(
 					input,
 					map,
-					{ ...options, printer: false },
+					{ ...options, printer: true },
 					extractComments
 				);
 				const reference = await terserMinify(
@@ -129,44 +130,46 @@ describe("jsMinify", () => {
 		await expect(jsMinify({ "broken.js": "function (" })).rejects.toThrow();
 	});
 
-	it("should match string comment patterns like RegExp conditions", async () => {
-		const input = {
-			"comments.js":
-				"/*! @license first */ first();\n" +
-				"/* ordinary */ second();\n" +
-				"/*! @license last */ last();"
-		};
-		const actual = await jsMinify(
-			input,
-			INPUT_MAP,
-			// Terser accepts string patterns at runtime, but its types exclude them.
-			{ format: { comments: /** @type {EXPECTED_ANY} */ ("first|last") } },
-			{ condition: /** @type {EXPECTED_ANY} */ ("@license") }
-		);
-		const expected = await jsMinify(
-			input,
-			INPUT_MAP,
-			{ format: { comments: /first|last/ } },
-			{ condition: /@license/ }
-		);
-		expect(actual).toEqual(expected);
-		expect(actual.extractedComments).toHaveLength(2);
-	});
+	for (const printer of [false, true]) {
+		it(`should match string comment patterns like RegExp conditions (printer: ${printer})`, async () => {
+			const input = {
+				"comments.js":
+					"/*! @license first */ first();\n" +
+					"/* ordinary */ second();\n" +
+					"/*! @license last */ last();"
+			};
+			const actual = await jsMinify(
+				input,
+				INPUT_MAP,
+				// Terser accepts string patterns at runtime, but its types exclude them.
+				{ printer, format: { comments: /** @type {EXPECTED_ANY} */ ("first|last") } },
+				{ condition: /** @type {EXPECTED_ANY} */ ("@license") }
+			);
+			const expected = await jsMinify(
+				input,
+				INPUT_MAP,
+				{ printer, format: { comments: /first|last/ } },
+				{ condition: /@license/ }
+			);
+			expect(actual).toEqual(expected);
+			expect(actual.extractedComments).toHaveLength(2);
+		});
 
-	it("should defer invalid comment patterns until a comment is tested", async () => {
-		// Exercise a malformed runtime pattern outside the published type union.
-		const invalidPattern = /** @type {EXPECTED_ANY} */ ("[");
-		const options = { format: { comments: invalidPattern } };
-		const input = { "plain.js": "run();" };
-		expect(await jsMinify(input, undefined, options, { condition: invalidPattern })).toEqual(
-			await jsMinify(input, undefined, { format: { comments: false } }, false)
-		);
-		const commented = { "commented.js": "/* comment */ run();" };
-		await expect(jsMinify(commented, undefined, options, false)).rejects.toThrow(SyntaxError);
-		await expect(
-			jsMinify(commented, undefined, {}, { condition: invalidPattern })
-		).rejects.toThrow(SyntaxError);
-	});
+		it(`should defer invalid comment patterns until a comment is tested (printer: ${printer})`, async () => {
+			// Exercise a malformed runtime pattern outside the published type union.
+			const invalidPattern = /** @type {EXPECTED_ANY} */ ("[");
+			const options = { printer, format: { comments: invalidPattern } };
+			const input = { "plain.js": "run();" };
+			expect(await jsMinify(input, undefined, options, { condition: invalidPattern })).toEqual(
+				await jsMinify(input, undefined, { printer, format: { comments: false } }, false)
+			);
+			const commented = { "commented.js": "/* comment */ run();" };
+			await expect(jsMinify(commented, undefined, options, false)).rejects.toThrow(SyntaxError);
+			await expect(
+				jsMinify(commented, undefined, { printer }, { condition: invalidPattern })
+			).rejects.toThrow(SyntaxError);
+		});
+	}
 
 	it("should claim JavaScript assets only", () => {
 		expect(jsMinify.filter("app.js")).toBe(true);
@@ -177,9 +180,9 @@ describe("jsMinify", () => {
 		expect(jsMinify.supportsWorkerThreads()).toBe(true);
 	});
 
-	it("should report webpack's version, so a cache entry follows its printer", () => {
+	it("should report terser's version, so a cache entry follows it", () => {
 		expect(jsMinify.getMinimizerVersion()).toBe(
-			require("../../package.json").version
+			require("terser/package.json").version
 		);
 	});
 });

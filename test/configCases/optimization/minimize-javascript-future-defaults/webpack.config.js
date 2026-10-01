@@ -10,7 +10,7 @@ module.exports = {
 		minimizer: ["..."]
 	},
 	experiments: {
-		// JavaScript minifies as it does without the future defaults.
+		// Minifies through webpack's printer rather than terser as published.
 		futureDefaults: true
 	}
 };
