@@ -13,6 +13,10 @@ const acorn = require("acorn");
 const prettier = require("prettier");
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
+const PRINTER_DATA_TARGET = path.resolve(
+	__dirname,
+	"../lib/javascript/syntax-printer-data.js"
+);
 
 // The largest code point Unicode defines, and the first one above the BMP.
 const MAX_CODE_POINT = 0x10ffff;
@@ -1297,8 +1301,7 @@ const renderHeader = () => `/*
 
 /**
  * Build the module the parser classifies with: the identifier ranges the
- * tokenizer reads, the property names `\\p{...}` accepts and the native
- * objects the compressor knows to be pure.
+ * tokenizer reads and the property names `\\p{...}` accepts.
  * @returns {string} its source
  */
 const renderData = () => {
@@ -1341,7 +1344,7 @@ ${renderTable(
 	narrow.part,
 	0
 )}
-${renderUnicodeProperties()}${renderNativeObjects()}${renderNodeClasses()}${renderParserTables()}${renderDomProperties()}
+${renderUnicodeProperties()}
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
@@ -1353,12 +1356,21 @@ module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
 module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
 module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
+`;
+};
+
+/**
+ * Build the module only the printer reads, so a build that parses without
+ * minifying through it never loads these tables.
+ * @returns {string} its source
+ */
+const renderPrinterData =
+	() => `${renderHeader()}${renderNativeObjects()}${renderNodeClasses()}${renderParserTables()}${renderDomProperties()}
 module.exports.domProperties = domProperties;
 module.exports.nativeObjectTables = nativeObjectTables;
 module.exports.nodeClasses = nodeClasses;
 module.exports.parserTables = parserTables;
 `;
-};
 
 /**
  * The Unicode property names `\\p{...}` accepts, as a section of that module.
@@ -1424,6 +1436,7 @@ const writeGenerated = async (target, source) => {
  */
 const generate = async () => {
 	await writeGenerated(DATA_TARGET, renderData());
+	await writeGenerated(PRINTER_DATA_TARGET, renderPrinterData());
 };
 
 if (require.main === module) {
@@ -1436,6 +1449,7 @@ if (require.main === module) {
 }
 
 module.exports.DATA_TARGET = DATA_TARGET;
+module.exports.PRINTER_DATA_TARGET = PRINTER_DATA_TARGET;
 module.exports.collectDomProperties = collectDomProperties;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;

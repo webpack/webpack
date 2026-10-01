@@ -228,7 +228,7 @@ Produced by `yarn fix:special` — never edit by hand:
 - `types.d.ts` — from JSDoc + schemas.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (`tooling/generate-runtime-code.js`).
-- `lib/css/data.js`, `lib/html/data.js`, `lib/javascript/data.js` — every lookup table the CSS minifier, HTML parser/minifier and JS parser read, by `tooling/generate-css-data.js`, `generate-html-data.js` and `generate-js-data.js`; `generate-html-data.js` also writes the `// #region html entities` block in `lib/html/syntax-parser.js`. Sources and contents: [docs/syntax.md](docs/syntax.md#generated-tables).
+- `lib/css/data.js`, `lib/html/data.js`, `lib/javascript/data.js`, `lib/javascript/syntax-printer-data.js` — every lookup table the CSS minifier, HTML parser/minifier and JS parser and printer read, by `tooling/generate-css-data.js`, `generate-html-data.js` and `generate-js-data.js`; `generate-html-data.js` also writes the `// #region html entities` block in `lib/html/syntax-parser.js`. Sources and contents: [docs/syntax.md](docs/syntax.md#generated-tables).
 
 A `syntax-parser.js` or `syntax-printer.js` is algorithm only — a new lookup table belongs in the matching generator. Generator-written regions such as `// #region html entities` are the exception; `syntax.js` is a facade, neither.
 
