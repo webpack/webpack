@@ -426,29 +426,6 @@ const TOOLS = [
 		}
 	},
 	{
-		// The same work through webpack's printer, as `experiments.futureDefaults`
-		// minifies; `PHASES` picks which of its phases install, for an A/B.
-		name: "webpack printer",
-		stage: "minify",
-		create: () => {
-			const {
-				loadPhases,
-				selectPhases
-			} = require("../test/helpers/printerPhases");
-
-			const loading = loadPhases(selectPhases(process.env.PHASES));
-			return async (code) =>
-				(
-					await (
-						await loading
-					).minify(code, {
-						compress: { passes: 2 },
-						module: sourceType() === "module"
-					})
-				).code;
-		}
-	},
-	{
 		name: "terser",
 		stage: "minify",
 		create: () => {

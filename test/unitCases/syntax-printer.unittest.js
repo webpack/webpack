@@ -10,10 +10,10 @@ const {
 	createUnicode,
 	estreeType,
 	load,
-	loadSources,
 	markEstreeTypes,
 	PHASES
 } = require("../../lib/javascript/syntax").printer;
+const { loadTerserSources } = require("../helpers/terserSources");
 
 /**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
@@ -509,23 +509,15 @@ const MANGLED_MODULE =
 	"export var kept = 1; var hidden = 2; export { hidden as shown }; export default function main(alpha) { return alpha + kept + hidden; }";
 
 describe("syntax-printer", () => {
-	it("should install onto terser", async () => {
-		const terser = await load();
-		expect(typeof terser.minify).toBe("function");
-		// WHY: whether a runtime reaches terser's own sources is the one thing
-		// `load` is written to tolerate, and Deno reaches them only sometimes —
-		// so asserting either outcome there failed at random. What it owes
-		// everywhere is to install phases this build declares and nothing else;
-		// Node, which always reaches the sources, owes the whole set.
-		const declared = PHASES.map((phase) => phase.name);
-		expect(declared).toEqual(expect.arrayContaining(terser.phases));
-		if (!("Deno" in globalThis)) {
-			expect(terser.phases).toEqual(expect.arrayContaining(declared));
-		}
+	it("should install every phase", async () => {
+		const printer = await load();
+		expect(typeof printer.minify).toBe("function");
+		expect(printer.phases).toEqual(PHASES.map((phase) => phase.name));
+		expect(await load()).toBe(printer);
 	});
 
 	it("should port every compress helper the phases read under terser's name", async () => {
-		const modules = await loadSources();
+		const modules = await loadTerserSources();
 		const helpers = createCompressHelpers(modules);
 		const printerSource = require("fs").readFileSync(
 			require.resolve("../../lib/javascript/syntax-printer"),
@@ -576,7 +568,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should keep the quirks of terser's compress helpers", async () => {
-		const modules = await loadSources();
+		const modules = await loadTerserSources();
 		const { common, inference, flags, utils } =
 			createCompressHelpers(modules);
 		const { ast } = modules;
@@ -616,24 +608,18 @@ describe("syntax-printer", () => {
 		expect(utils.member(2, list)).toBe(true);
 		expect(utils.return_false()).toBe(false);
 
-		// A splice from either side is spread by either `MAP`.
 		const nodes = [
 			new ast.AST_Number({ value: 1 }),
 			new ast.AST_Number({ value: 2 }),
 			new ast.AST_Number({ value: 3 })
 		];
 		const spliced = new ast.AST_Number({ value: 4 });
-		for (const [mine, theirs] of [
-			[utils, modules.utils],
-			[modules.utils, utils]
-		]) {
-			const walker = new ast.TreeTransformer((/** @type {EXPECTED_ANY} */ item) => {
-				if (item === nodes[0]) return theirs.MAP.skip;
-				if (item === nodes[1]) return theirs.MAP.splice([spliced, spliced]);
-				return item;
-			});
-			expect(mine.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
-		}
+		const walker = new ast.TreeTransformer((/** @type {EXPECTED_ANY} */ item) => {
+			if (item === nodes[0]) return utils.MAP.skip;
+			if (item === nodes[1]) return utils.MAP.splice([spliced, spliced]);
+			return item;
+		});
+		expect(utils.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
 
 		for (const value of [
 			"a",
@@ -844,49 +830,6 @@ describe("syntax-printer", () => {
 			}
 		});
 		expect(laidOut.code).toBe(code);
-	});
-
-	it("should decline a terser whose stream it does not know", () => {
-		const output =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "output")
-			);
-		const utils = { defaults: () => ({}) };
-		const ast = {
-			AST_Node: { prototype: { _print() {}, print_to_string() {} } }
-		};
-		/**
-		 * @param {(options?: object) => object} OutputStream a stream factory
-		 * @returns {boolean} whether the phase fits it
-		 */
-		const fits = (OutputStream) =>
-			output.supports({ ast, output: { OutputStream }, utils });
-		/**
-		 * @param {object=} defs the option set a rejection names
-		 * @returns {never} always throws
-		 */
-		const rejectNaming = (defs) => {
-			throw Object.assign(new Error("unsupported"), { defs });
-		};
-
-		expect(output.supports({ ast, output: {}, utils })).toBe(false);
-		// Accepts an option it should reject, so its option set cannot be read.
-		expect(fits(() => ({}))).toBe(false);
-		expect(fits(() => rejectNaming())).toBe(false);
-		expect(fits(() => rejectNaming({ ...FORMAT_DEFAULTS, added: false }))).toBe(
-			false
-		);
-		/** @type {Record<string, unknown>} */
-		const renamed = { ...FORMAT_DEFAULTS, renamed: false };
-		delete renamed.width;
-		expect(fits(() => rejectNaming(renamed))).toBe(false);
-		expect(fits(() => rejectNaming({ ...FORMAT_DEFAULTS, width: 120 }))).toBe(
-			false
-		);
-		// Knows the option set but hands its generators other members.
-		expect(
-			fits((options) => (options ? rejectNaming(FORMAT_DEFAULTS) : { print() {} }))
-		).toBe(false);
 	});
 
 	/** @type {[string, string, EXPECTED_OBJECT][]} */
@@ -1566,23 +1509,73 @@ describe("syntax-printer", () => {
 		expect(await dropped(minify)).toBe(await dropped(reference.minify));
 	});
 
-	it("should leave terser's debug log to terser", async () => {
+	it("should write terser's debug log as terser does", async () => {
 		const { minify } = await load();
-		/** @type {number[]} */
-		const written = [];
-		const fs = { writeFileSync: () => written.push(1), mkdirSync() {} };
-		/** @type {(files: string, options: object, fs: object) => Promise<{ code?: string }>} */
-		const run = /** @type {EXPECTED_ANY} */ (minify);
-		const previous = process.env.TERSER_DEBUG_DIR;
+		const reference = require("terser");
+		/**
+		 * @param {EXPECTED_FUNCTION} run a minify
+		 * @param {EXPECTED_ANY} files the sources
+		 * @param {EXPECTED_OBJECT} options the options
+		 * @returns {Promise<{ code?: string, logs: string[][] }>} the result, and each file written with its name
+		 */
+		const logged = async (run, files, options) => {
+			/** @type {string[][]} */
+			const logs = [];
+			const fs = {
+				writeFileSync: (/** @type {string} */ file, /** @type {string} */ text) =>
+					logs.push([file, text]),
+				mkdirSync() {
+					throw Object.assign(new Error("exists"), { code: "EEXIST" });
+				}
+			};
+			const previous = process.env.TERSER_DEBUG_DIR;
+			process.env.TERSER_DEBUG_DIR = "debug";
+			try {
+				const { code } = await run(files, options, fs);
+				return { code, logs };
+			} finally {
+				if (previous === undefined) delete process.env.TERSER_DEBUG_DIR;
+				else process.env.TERSER_DEBUG_DIR = previous;
+			}
+		};
+		// Built per run: both minifiers write into the option groups they are given.
+		/** @type {[EXPECTED_ANY, () => EXPECTED_OBJECT][]} */
+		const inputs = [
+			["sink(1 + 2);", () => ({ compress: { pure_funcs: ["f"] } })],
+			[
+				{ "a.js": "sink(1);", "b.js": "sink(2);" },
+				() => ({ mangle: { reserved: ["x"] } })
+			],
+			[
+				{ type: "Program", body: [] },
+				() => ({ parse: { spidermonkey: true }, format: { comments: /^!/ } })
+			]
+		];
+		for (const [files, options] of inputs) {
+			const ours = await logged(minify, files, options());
+			const theirs = await logged(reference.minify, files, options());
+			expect(ours.code).toBe(theirs.code);
+			expect(ours.logs).toHaveLength(1);
+			expect(ours.logs[0][0]).toMatch(/^debug\/terser-debug-\d+\.log$/);
+			expect(ours.logs[0][1]).toBe(theirs.logs[0][1]);
+		}
+
+		const failing = {
+			writeFileSync() {},
+			mkdirSync() {
+				throw Object.assign(new Error("denied"), { code: "EACCES" });
+			}
+		};
 		process.env.TERSER_DEBUG_DIR = "debug";
 		try {
-			const result = await run("sink(1 + 2);", {}, fs);
-			expect(result.code).toBe("sink(3);");
+			await expect(
+				/** @type {EXPECTED_FUNCTION} */ (minify)("a", {}, failing)
+			).rejects.toThrow("denied");
+			const result = await /** @type {EXPECTED_FUNCTION} */ (minify)("a", {}, {});
+			expect(result.code).toBe("a;");
 		} finally {
-			if (previous === undefined) delete process.env.TERSER_DEBUG_DIR;
-			else process.env.TERSER_DEBUG_DIR = previous;
+			delete process.env.TERSER_DEBUG_DIR;
 		}
-		expect(written).toHaveLength(1);
 	});
 
 	/** @type {[string, EXPECTED_ANY, EXPECTED_OBJECT][]} */
@@ -1635,120 +1628,6 @@ describe("syntax-printer", () => {
 			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
 		});
 	}
-
-	it("should decline a terser whose names it does not reproduce", () => {
-		const frequency =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "frequency")
-			);
-		/**
-		 * @param {string} alphabet the characters it names with
-		 * @returns {object} a counter that ignores what it is shown
-		 */
-		const counter = (alphabet) => ({
-			reset() {},
-			consider() {},
-			sort() {},
-			get: (/** @type {number} */ num) => alphabet[num % alphabet.length]
-		});
-		/**
-		 * @param {EXPECTED_ANY[]} items items to sort
-		 * @param {(a: EXPECTED_ANY, b: EXPECTED_ANY) => number} compare their order
-		 * @returns {EXPECTED_ANY[]} them, sorted
-		 */
-		const mergeSort = (items, compare) => [...items].sort(compare);
-		expect(frequency.supports({ scope: {}, utils: { mergeSort } })).toBe(false);
-		expect(
-			frequency.supports({ scope: { base54: counter("abc") }, utils: {} })
-		).toBe(false);
-		expect(
-			frequency.supports({ scope: { base54: counter("xyz") }, utils: { mergeSort } })
-		).toBe(false);
-	});
-
-	it("should decline a terser whose parse it does not reproduce", () => {
-		const parse =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "parse")
-			);
-		expect(parse.supports({ ast: {}, parse: {} })).toBe(false);
-		// A parser whose tree differs from what the conversion builds.
-		const reference = { AST_Token: class {}, AST_Node: { prototype: { print_to_string() {} } } };
-		expect(
-			parse.supports({
-				ast: reference,
-				parse: { parse: () => ({ TYPE: "Toplevel", body: [] }) }
-			})
-		).toBe(false);
-	});
-
-	it("should decline a terser whose walk it does not know", async () => {
-		const walk =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "walk")
-			);
-		const loaded = await loadSources();
-		// terser's own visit, which an earlier test may have replaced already.
-		const terserVisit = Object.assign(() => {}, {
-			toString: () =>
-				"_visit(node, descend) { this.push(node); var ret = this.visit(node, descend ? function() { descend.call(node); } : noop); if (!ret && descend) { descend.call(node); } this.pop(); return ret; }"
-		});
-		const modules = {
-			...loaded,
-			ast: {
-				...loaded.ast,
-				TreeWalker: Object.assign(function TreeWalker() {}, {
-					prototype: { _visit: terserVisit }
-				})
-			}
-		};
-		expect(walk.supports(modules)).toBe(true);
-		expect(walk.supports({ ast: {}, utils: {} })).toBe(false);
-		/**
-		 * @param {Record<string, unknown>} changes node classes replaced
-		 * @returns {boolean} whether the phase fits terser with them
-		 */
-		const fitsWith = (changes) =>
-			walk.supports({ ...modules, ast: { ...modules.ast, ...changes } });
-		// A walker whose visit is not terser's.
-		expect(
-			fitsWith({
-				TreeWalker: Object.assign(function TreeWalker() {}, {
-					prototype: { _visit() {} }
-				})
-			})
-		).toBe(false);
-		// A class missing, renamed, or extending another.
-		expect(fitsWith({ AST_Call: undefined })).toBe(false);
-		expect(
-			fitsWith({ AST_Call: Object.assign(function AST_Call() {}, { TYPE: "Calls" }) })
-		).toBe(false);
-		expect(
-			fitsWith({
-				AST_Call: Object.assign(function AST_Call() {}, {
-					TYPE: "Call",
-					BASE: modules.ast.AST_Statement
-				})
-			})
-		).toBe(false);
-		expect(
-			fitsWith({
-				AST_Node: Object.assign(function AST_Node() {}, {
-					TYPE: "Node",
-					BASE: modules.ast.AST_Statement
-				})
-			})
-		).toBe(false);
-		// An `ast.js` other than the one the table was generated from.
-		const fs = require("fs");
-
-		const spy = jest.spyOn(fs, "readFileSync").mockImplementation(() => "");
-		try {
-			expect(walk.supports(modules)).toBe(false);
-		} finally {
-			spy.mockRestore();
-		}
-	});
 
 	// `wrap` and `enclose` are options terser reads but its types omit.
 	/** @type {[string, string, EXPECTED_OBJECT][]} */
@@ -1818,8 +1697,10 @@ describe("syntax-printer", () => {
 	}
 
 	it("should give a global the copy of a node `global_defs` gives it", async () => {
-		const { minify } = await load();
-		const { parse } = await loadSources();
+		const {
+			minify,
+			modules: { parse }
+		} = await load();
 		const value = parse.parse("(function () { return 1 + x; })").body[0].body;
 		const { code } = await minify("console.log(A, A, B);", {
 			compress: {
@@ -1836,8 +1717,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should give terser's nodes the methods terser writes by hand", async () => {
-		await load();
-		const { ast, parse } = await loadSources();
+		const { ast, parse } = (await load()).modules;
 		const { TreeWalker } = ast;
 		/**
 		 * @param {string} source a script
@@ -1956,77 +1836,13 @@ describe("syntax-printer", () => {
 		});
 	});
 
-	it("should decline a terser whose node methods it does not know", async () => {
-		const nodes =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "nodes")
-			);
-		const modules = await loadSources();
-		expect(nodes.supports(modules)).toBe(true);
-		expect(nodes.supports({ ...modules, parse: {} })).toBe(false);
-		expect(nodes.supports({ ...modules, utils: {} })).toBe(false);
-		expect(nodes.supports({ ...modules, ast: undefined })).toBe(false);
-	});
-
-	it("should decline a terser whose global definitions it does not know", async () => {
-		const defines =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "defines")
-			);
-		expect(defines.supports({ ast: undefined })).toBe(false);
-		expect(
-			defines.supports({
-				ast: { AST_Toplevel: { prototype: { drop_console() {} } } }
-			})
-		).toBe(false);
-	});
-
-	it("should decline a terser whose transform it does not know", async () => {
-		const transform =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "transform")
-			);
-		const modules = await loadSources();
-		expect(transform.supports({ ...modules, compress: {} })).toBe(false);
-		expect(
-			transform.supports({
-				...modules,
-				ast: {
-					...modules.ast,
-					TreeWalker: Object.assign(function TreeWalker() {}, {
-						prototype: { push() {}, pop() {} }
-					})
-				}
-			})
-		).toBe(false);
-	});
-
-	it("should decline a terser whose compressor it does not know", () => {
-		const compressor =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "compressor")
-			);
-		expect(compressor.supports({ compress: {}, flags: {} })).toBe(false);
-		expect(
-			compressor.supports({
-				compress: {
-					Compressor: Object.assign(function Compressor() {}, {
-						prototype: { before() {}, in_computed_key() {} }
-					})
-				},
-				flags: { SQUEEZED: 256 }
-			})
-		).toBe(false);
-	});
-
 	it("should look native objects up as terser's native-objects.js does", async () => {
 		const helpers =
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
 				PHASES.find((phase) => phase.name === "helpers")
 			);
-		const modules = await loadSources();
+		const modules = await loadTerserSources();
 		const reference = modules.nativeObjects;
-		expect(helpers.supports(modules)).toBe(true);
 		helpers.install(modules);
 		const own = modules.nativeObjects;
 		expect(own).not.toBe(reference);
@@ -2118,7 +1934,7 @@ describe("syntax-printer", () => {
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
 				PHASES.find((phase) => phase.name === "helpers")
 			);
-		const modules = await loadSources();
+		const modules = await loadTerserSources();
 		const reference = modules.nativeObjects;
 		helpers.install(modules);
 		const own = modules.nativeObjects;
@@ -2172,17 +1988,8 @@ describe("syntax-printer", () => {
 		}
 	});
 
-	it("should decline a terser whose sizes it does not know", () => {
-		const size =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "size")
-			);
-		expect(size.supports({ ast: {} })).toBe(false);
-	});
-
 	it("should count a node's size inside a size being counted", async () => {
-		await load();
-		const { parse } = await loadSources();
+		const { parse } = (await load()).modules;
 		const toplevel = parse.parse("var a = 1; function b(c) { return c + a; }");
 		const [, declaration] = toplevel.body;
 		const inner = declaration.size();
@@ -2196,128 +2003,11 @@ describe("syntax-printer", () => {
 		expect(nested).toBe(declaration.body[0].size());
 	});
 
-	it("should decline a terser whose equivalence it does not know", () => {
-		const equivalent =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "equivalent")
-			);
-		expect(equivalent.supports({ ast: {} })).toBe(false);
-	});
-
-	it("should decline a terser whose evaluation it does not know", async () => {
-		const evaluate =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "evaluate")
-			);
-		const modules = await loadSources();
-		expect(evaluate.supports({ ast: {} })).toBe(false);
-		expect(evaluate.supports({ ...modules, utils: {} })).toBe(false);
-		expect(evaluate.supports(modules)).toBe(true);
-	});
-
-	it("should decline a terser whose inference it does not know", async () => {
-		const inference =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "inference")
-			);
-		const modules = await loadSources();
-		expect(inference.supports({ ast: {} })).toBe(false);
-		expect(
-			inference.supports({
-				...modules,
-				nativeObjects: { ...modules.nativeObjects, is_pure_builtin_call: {} }
-			})
-		).toBe(false);
-		expect(
-			inference.supports({
-				...modules,
-				nativeObjects: { ...modules.nativeObjects, pure_prop_access_globals: [] }
-			})
-		).toBe(false);
-		expect(inference.supports(modules)).toBe(true);
-	});
-
-	it("should decline a terser whose optimizers it does not know", async () => {
-		const optimize =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "optimize")
-			);
-		const modules = await loadSources();
-		expect(optimize.supports({ ast: {} })).toBe(false);
-		expect(
-			optimize.supports({
-				...modules,
-				common: { ...modules.common, make_sequence: undefined }
-			})
-		).toBe(false);
-		expect(
-			optimize.supports({
-				...modules,
-				ast: {
-					...modules.ast,
-					AST_Node: { prototype: {} }
-				}
-			})
-		).toBe(false);
-		expect(optimize.supports(modules)).toBe(true);
-	});
-
-	it("should decline a terser whose code generators it does not know", async () => {
-		const codegen =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "codegen")
-			);
-		const modules = await loadSources();
-		const fitting = { ...modules, MinifiedOutput: class {} };
-		// Without the output phase there is no stream to print into.
-		expect(codegen.supports(modules)).toBe(false);
-		expect(
-			codegen.supports({
-				...fitting,
-				parse: { ...modules.parse, PRECEDENCE: undefined }
-			})
-		).toBe(false);
-		expect(
-			codegen.supports({
-				...fitting,
-				utils: { ...modules.utils, regexp_source_fix: undefined }
-			})
-		).toBe(false);
-		expect(
-			codegen.supports({
-				...fitting,
-				ast: { ...modules.ast, AST_Toplevel: { prototype: {} } }
-			})
-		).toBe(false);
-		const fs = require("fs");
-		const read = jest.spyOn(fs, "readFileSync");
-		try {
-			read.mockImplementationOnce(() => "export {};");
-			expect(codegen.supports(fitting)).toBe(false);
-			read.mockImplementationOnce(() => {
-				throw new Error("ENOENT");
-			});
-			expect(codegen.supports(fitting)).toBe(false);
-		} finally {
-			read.mockRestore();
-		}
-		expect(codegen.supports(fitting)).toBe(true);
-	});
-
-	it("should decline a terser whose effect dropping it does not know", async () => {
-		const drop =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "drop")
-			);
-		const modules = await loadSources();
-		expect(drop.supports({ ast: {} })).toBe(false);
-		expect(drop.supports({ ...modules, inference: {} })).toBe(false);
-		expect(drop.supports(modules)).toBe(true);
-	});
-
 	it("should size and compare every node as terser does", async () => {
-		const { minify } = await load();
-		const { ast } = await loadSources();
+		const {
+			minify,
+			modules: { ast }
+		} = await load();
 		const reference = require("terser");
 		// A compressed tree holds the nodes only the compressor makes, as `NaN`.
 		/** @type {[string, EXPECTED_OBJECT][]} */
@@ -2464,8 +2154,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should compare trees as terser does", async () => {
-		await load();
-		const { parse } = await loadSources();
+		const { parse } = (await load()).modules;
 		const [first, second, third, fourth] = parse.parse(
 			"a.b(c + 1); a.b(c + 1); a.b(c + 2); a.b(c, 1);"
 		).body;
@@ -2557,7 +2246,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should name each node the ESTree type terser converts it to", async () => {
-		const { ast, parse } = await loadSources();
+		const { ast, parse } = (await load()).modules;
 		markEstreeTypes({ ast });
 		const source = `"use strict";
 			import a, { b as c, "d" as e } from "f"; import * as g from "h";
@@ -2625,8 +2314,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should hand back a fresh list, which a clone may share", async () => {
-		await load();
-		const { ast, parse, utils } = await loadSources();
+		const { ast, parse, utils } = (await load()).modules;
 		const { AST_SimpleStatement, TreeTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
@@ -2659,8 +2347,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should not revisit a node the compressor squeezed", async () => {
-		await load();
-		const { ast, compress, flags, parse } = await loadSources();
+		const { ast, compress, flags, parse } = (await load()).modules;
 		const compressor = new compress.Compressor({}, {});
 		const toplevel = parse.parse('"use strict"; a;');
 		const [directive, statement] = toplevel.body;
@@ -2674,159 +2361,10 @@ describe("syntax-printer", () => {
 		expect(ast.TreeWalker.prototype.webpackSkipsSqueezed).toBe(false);
 	});
 
-	it("should decline a terser whose hoisting it does not know", () => {
-		const hoist =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "hoist")
-			);
-		expect(hoist.supports({ ast: {} })).toBe(false);
-		expect(
-			hoist.supports({
-				ast: { AST_Scope: { prototype: { hoist_properties() {} } } }
-			})
-		).toBe(false);
-	});
-
-	it("should decline a terser whose scope analysis it does not know", () => {
-		const scope =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "scope")
-			);
-		const utils = { defaults() {}, push_uniq() {}, string_template() {} };
-		const parse = { js_error() {} };
-		expect(scope.supports({ ast: {}, parse, utils })).toBe(false);
-		expect(
-			scope.supports({
-				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
-				parse: {},
-				utils
-			})
-		).toBe(false);
-		expect(
-			scope.supports({
-				ast: { AST_Scope: { prototype: { figure_out_scope() {} } } },
-				parse,
-				utils
-			})
-		).toBe(false);
-	});
-
-	it("should decline a terser whose driver it does not know", () => {
-		const driver =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "minify")
-			);
-		const modules = {
-			version: require("terser/package.json").version,
-			minify() {},
-			compress: { Compressor() {} },
-			domprops: { domprops: [] },
-			sourcemap: { SourceMap() {} },
-			utils: { map_from_object() {}, map_to_object() {}, HOP() {} }
-		};
-		// Another release, whose module-private driver the phase cannot read.
-		expect(driver.supports({ ...modules, version: "0.0.0" })).toBe(false);
-		expect(driver.supports({ ...modules, minify: undefined })).toBe(false);
-		// The pinned release, but a `minify` whose source is not the one pinned.
-		expect(driver.supports(modules)).toBe(false);
-	});
-
-	it("should decline a terser whose unused-name dropping it does not know", () => {
-		const unused =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "unused")
-			);
-		const modules = { common: {}, flags: {}, inference: {}, scope: {}, utils: {} };
-		expect(unused.supports({ ...modules, ast: {} })).toBe(false);
-		expect(
-			unused.supports({
-				...modules,
-				ast: { AST_Scope: { prototype: { drop_unused() {} } } }
-			})
-		).toBe(false);
-		// Every helper there, but a pass whose source is not the one pinned.
-		const helper = () => {};
-		expect(
-			unused.supports({
-				ast: { AST_Scope: { prototype: { drop_unused() {} } } },
-				scope: { SymbolDef: helper },
-				utils: {
-					keep_name: helper,
-					make_node: helper,
-					map_add: helper,
-					remove: helper,
-					MAP: helper
-				},
-				common: {
-					make_sequence: helper,
-					maintain_this_binding: helper,
-					is_empty: helper,
-					is_ref_of: helper,
-					can_be_evicted_from_block: helper
-				},
-				inference: { is_used_in_expression: helper },
-				flags: { WRITE_ONLY: 1, UNUSED: 2 }
-			})
-		).toBe(false);
-	});
-
-	it("should decline a terser whose flow analysis it does not know", async () => {
-		const reduce =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "reduce")
-			);
-		const modules = await loadSources();
-		// Another release, whose module-private helpers the phase cannot read.
-		expect(reduce.supports({ ...modules, version: "0.0.0" })).toBe(false);
-		expect(reduce.supports({ ...modules, flags: {} })).toBe(false);
-		// The pinned release, but a walk running the analysis that is not pinned.
-		const ast = {
-			...modules.ast,
-			AST_Toplevel: { prototype: { reset_opt_flags() {} } }
-		};
-		expect(reduce.supports({ ...modules, ast })).toBe(false);
-	});
-
-	it("should decline a terser whose per-node print it does not know", () => {
-		const print =
-			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "print")
-			);
-		/**
-		 * @param {object} prototype the node prototype's print methods
-		 * @param {unknown=} MinifiedOutput the stream the output phase installed
-		 * @returns {boolean} whether the phase fits
-		 */
-		const fits = (prototype, MinifiedOutput = class {}) =>
-			print.supports({ ast: { AST_Node: { prototype } }, MinifiedOutput });
-		/**
-		 * @param {unknown} output the stream
-		 * @returns {boolean} whether one was given
-		 */
-		function other(output) {
-			return Boolean(output);
-		}
-
-		// Without the output phase there is no stream to print into.
-		expect(fits({ print: other, _print: other }, undefined)).toBe(false);
-		expect(fits({ print: other, _print: undefined })).toBe(false);
-		// Already wrapped by something else.
-		expect(fits({ print: () => {}, _print: other })).toBe(false);
-		// A print terser rewrote.
-		expect(fits({ print: other, _print: other })).toBe(false);
-	});
-
 	describe("correct phase", () => {
 		it("should install", async () => {
 			const { phases } = await load();
 			expect(phases).toContain("correct");
-		});
-
-		it("should decline a terser it cannot read", () => {
-			const correct = /** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
-				PHASES.find((phase) => phase.name === "correct")
-			);
-			expect(correct.supports({ ast: {} })).toBe(false);
 		});
 
 		for (const [name, input, options] of CORRECTED_CASES) {

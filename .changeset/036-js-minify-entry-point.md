@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify JavaScript through webpack's own terser phases under `futureDefaults`, ignoring layout options.
+Minify JavaScript with webpack's printer, not terser, ignoring layout options.

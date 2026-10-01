@@ -121,6 +121,7 @@
     "dlight",
     "docstrings",
     "domcontentloaded",
+    "domprops",
     "donotcallme",
     "doubleposition",
     "downloadurl",
@@ -583,11 +584,7 @@
     "xywh",
     "Yann",
     "zizmor",
-    "zstd",
-    "xiaoxiaojx",
-    "Natsu",
-    "Xiao",
-    "Haijie"
+    "zstd"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

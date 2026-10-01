@@ -10,8 +10,6 @@
 //    terser's own sandbox, must print it too, whatever the bytes;
 // 3. where swc records its own output, a smaller one is a lead for printing
 //    less, written to the file JS_MINIFY_REPORT names (never a failure).
-// PHASES chooses the printer phases installed: `PHASES=mangle,output` for
-// those two only, `PHASES=-parse` for all but one.
 
 const fs = require("fs");
 const path = require("path");
@@ -19,11 +17,10 @@ const { pathToFileURL } = require("url");
 const vm = require("vm");
 const zlib = require("zlib");
 const acorn = require("acorn");
-const { IGNORED_FORMAT_OPTIONS } =
+const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
-const { loadPhases, selectPhases } = require("../helpers/printerPhases");
 
-/** @typedef {import("terser").MinifyOptions} MinifyOptions */
+/** @typedef {import("../../lib/javascript/jsMinify").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ expected: string | Error | true, input: string, prepend: string, microtasks?: boolean, strict?: boolean }} Stdout */
@@ -912,7 +909,6 @@ const formatLeads = (leads) => {
 describe("JavaScript minifier", () => {
 	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
-	const selected = selectPhases(process.env.PHASES);
 	/** @type {Lead[]} */
 	const leads = [];
 	const { runInNewContext } = vm;
@@ -921,7 +917,7 @@ describe("JavaScript minifier", () => {
 	let microtasks = false;
 
 	beforeAll(async () => {
-		loaded.printer = await loadPhases(selected);
+		loaded.printer = await load();
 		if (!isPresent(referenceDir)) return;
 		// eslint-disable-next-line no-new-func
 		const importModule = new Function("specifier", "return import(specifier)");
@@ -974,29 +970,6 @@ describe("JavaScript minifier", () => {
 		vm.runInNewContext = runInNewContext;
 		const report = process.env.JS_MINIFY_REPORT;
 		if (report) fs.writeFileSync(report, formatLeads(leads));
-	});
-
-	it("should install every phase PHASES selects, so each corpus reaches them", () => {
-		const { phases } = /** @type {NonNullable<typeof loaded.printer>} */ (
-			loaded.printer
-		);
-		expect(phases).toEqual(selected);
-	});
-
-	it("should read PHASES as a list to keep or, prefixed with -, to drop", () => {
-		const names = require("../../lib/javascript/syntax").printer.PHASES.map(
-			(/** @type {{ name: string }} */ phase) => phase.name
-		);
-
-		expect(selectPhases(undefined)).toEqual(names);
-		expect(selectPhases("")).toEqual(names);
-		expect(selectPhases("print, mangle")).toEqual(["mangle", "print"]);
-		expect(selectPhases("-parse")).toEqual(
-			names.filter((name) => name !== "parse")
-		);
-		expect(selectPhases("mangle,output,-output")).toEqual(["mangle"]);
-		expect(() => selectPhases("mangel")).toThrow(/Unknown phase "mangel"/);
-		expect(() => selectPhases("-mangel")).toThrow(/Unknown phase "-mangel"/);
 	});
 
 	it("should run only the node_version ranges it can read", () => {
