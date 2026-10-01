@@ -5,7 +5,7 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE
+// cspell:ignore DEFNODE, PUNC
 
 const fs = require("fs");
 const path = require("path");
@@ -13,6 +13,10 @@ const acorn = require("acorn");
 const prettier = require("prettier");
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
+const PRINTER_DATA_TARGET = path.resolve(
+	__dirname,
+	"../lib/javascript/syntax-printer-data.js"
+);
 
 // The largest code point Unicode defines, and the first one above the BMP.
 const MAX_CODE_POINT = 0x10ffff;
@@ -501,6 +505,62 @@ const readThisField = (node) =>
 		: undefined;
 
 /**
+ * @param {EstreeNode} node a constructor's statement
+ * @returns {boolean} whether it is `this.flags = 0`
+ */
+const isFlagsReset = (node) =>
+	node.type === "ExpressionStatement" &&
+	node.expression.type === "AssignmentExpression" &&
+	readThisField(/** @type {EstreeNode} */ (node.expression.left)) === "flags" &&
+	node.expression.right.type === "Literal" &&
+	node.expression.right.value === 0;
+
+/**
+ * The source of a value a node class sets on its prototype, as terser writes
+ * them: a literal, `1/0`, `0/0`, or a call of an empty function for undefined.
+ * @param {EstreeNode} node the value's expression
+ * @returns {string | undefined} its source, or undefined where it is not a value
+ */
+const readPrototypeValue = (node) => {
+	if (node.type === "Identifier") return undefined;
+	if (node.type === "Literal" && typeof node.value !== "object") {
+		return JSON.stringify(node.value);
+	}
+	if (node.type === "Literal" && node.value === null) return "null";
+	if (
+		node.type === "BinaryExpression" &&
+		node.operator === "/" &&
+		node.left.type === "Literal" &&
+		node.right.type === "Literal" &&
+		node.right.value === 0
+	) {
+		return node.left.value === 0 ? "NaN" : "Infinity";
+	}
+	if (
+		node.type === "CallExpression" &&
+		node.arguments.length === 0 &&
+		node.callee.type === "FunctionExpression" &&
+		node.callee.body.body.length === 0
+	) {
+		return "undefined";
+	}
+	throw unexpectedNodeSyntax(node, "a node class's prototype", "a value");
+};
+
+/**
+ * @param {EstreeNode} node a constructor's statement
+ * @returns {boolean} whether it is `this.field = props.field`
+ */
+const isPropsCopy = (node) =>
+	node.type === "ExpressionStatement" &&
+	node.expression.type === "AssignmentExpression" &&
+	readThisField(/** @type {EstreeNode} */ (node.expression.left)) !==
+		undefined &&
+	node.expression.right.type === "MemberExpression" &&
+	node.expression.right.object.type === "Identifier" &&
+	node.expression.right.object.name === "props";
+
+/**
  * @param {EstreeNode} node a statement
  * @returns {EstreeNode[]} it, or the statements of the block it is
  */
@@ -688,6 +748,9 @@ const readChildren = (statements, method, where) => {
  * @property {string | null} base the `TYPE` of the class it extends
  * @property {string[]} fields what its constructor copies off its argument, in order
  * @property {boolean} initializes whether its constructor then calls `initialize`
+ * @property {boolean} guarded whether it copies only where given an argument
+ * @property {boolean} setsFlags whether it then sets `flags` to 0
+ * @property {Record<string, string>} values the source of each value it sets on its prototype
  * @property {string[] | null} walk the children its own `_walk` visits, null where it inherits one
  * @property {string | null} guard the field a walk visits children only when set
  * @property {string[] | null} backwards the children its own `_children_backwards` pushes, null where it inherits one
@@ -752,9 +815,29 @@ const collectNodeClasses = () => {
 			/** @type {string[]} */
 			const fields = [];
 			let initializes = false;
+			let guarded = false;
+			let setsFlags = false;
 			for (const inner of ctorNode.body.body) {
-				if (inner.type !== "IfStatement") continue;
-				for (const assignment of statementsOf(inner.consequent)) {
+				// Most constructors copy under `if (props)`; `ClassStaticBlock` copies
+				// unguarded, and is the one that never sets `this.flags = 0`.
+				if (isFlagsReset(inner)) {
+					setsFlags = true;
+					continue;
+				}
+				if (inner.type === "IfStatement") {
+					guarded = true;
+				} else if (!isPropsCopy(inner)) {
+					throw unexpectedNodeSyntax(
+						inner,
+						`${type}'s constructor`,
+						"a field copied"
+					);
+				}
+				const assignments =
+					inner.type === "IfStatement"
+						? statementsOf(inner.consequent)
+						: [inner];
+				for (const assignment of assignments) {
 					const expression =
 						assignment.type === "ExpressionStatement"
 							? assignment.expression
@@ -788,6 +871,9 @@ const collectNodeClasses = () => {
 				base,
 				fields,
 				initializes,
+				guarded,
+				setsFlags,
+				values: {},
 				walk: null,
 				guard: null,
 				backwards: null
@@ -805,6 +891,12 @@ const collectNodeClasses = () => {
 						fn.type !== "FunctionExpression" &&
 						fn.type !== "ArrowFunctionExpression"
 					) {
+						// `$`-prefixed members are terser's documentation, set on the class.
+						const value =
+							property.key.name[0] === "$" ? undefined : readPrototypeValue(fn);
+						if (value !== undefined) {
+							nodeClass.values[property.key.name] = value;
+						}
 						continue;
 					}
 					const body = fn.body.type === "BlockStatement" ? fn.body.body : [];
@@ -877,6 +969,9 @@ const renderNodeClasses = () => `
  * @property {string | null} base the \`TYPE\` of the class it extends
  * @property {string[]} fields what its constructor copies off its argument, in order
  * @property {boolean} initializes whether its constructor then calls \`initialize\`
+ * @property {boolean} guarded whether it copies only where given an argument
+ * @property {boolean} setsFlags whether it then sets \`flags\` to 0
+ * @property {Record<string, string>} values the source of each value it sets on its prototype
  * @property {string[] | null} walk the children its walk visits
  * @property {string | null} guard the field its walk descends only where set
  * @property {string[] | null} backwards the children it pushes backwards
@@ -888,6 +983,289 @@ const renderNodeClasses = () => `
  * @returns {NodeClass[]} the classes, fresh on each call
  */
 const nodeClasses = () => ${JSON.stringify(collectNodeClasses())};
+`;
+
+/**
+ * @param {EstreeNode} node the node terser's source holds there
+ * @param {string} expected what the generator expected to find
+ * @returns {Error} the failure naming where terser's source moved
+ */
+const unexpectedParserSyntax = (node, expected) =>
+	new Error(
+		`terser's parse.js holds a ${node.type} at offset ${
+			/** @type {EstreeNode & { start: number }} */ (node).start
+		} where this generator expects ${expected}`
+	);
+
+/** @typedef {string | string[] | { words: string[] } | { levels: string[][] }} ParserValue */
+
+/**
+ * The value of one of terser's table declarations, as far as tables are
+ * written: strings, their concatenation, `makePredicate` over words and
+ * `characters` over a string, and the IIFE that numbers operator precedence.
+ * @param {EstreeNode} node the expression
+ * @param {Map<string, ParserValue>} known the tables read before it
+ * @returns {ParserValue} its value
+ */
+const evaluateParserTable = (node, known) => {
+	if (node.type === "Literal" && typeof node.value === "string") {
+		return node.value;
+	}
+	if (node.type === "Identifier" && known.has(node.name)) {
+		return /** @type {ParserValue} */ (known.get(node.name));
+	}
+	if (node.type === "BinaryExpression" && node.operator === "+") {
+		const left = evaluateParserTable(
+			/** @type {EstreeNode} */ (node.left),
+			known
+		);
+		const right = evaluateParserTable(node.right, known);
+		if (typeof left === "string" && typeof right === "string") {
+			return left + right;
+		}
+	}
+	if (node.type === "ArrayExpression") {
+		return node.elements.map((element) => {
+			if (element === null || element.type === "SpreadElement") {
+				throw unexpectedParserSyntax(node, "an array of strings without holes");
+			}
+			const value = evaluateParserTable(
+				/** @type {EstreeNode} */ (element),
+				known
+			);
+			if (typeof value !== "string") {
+				throw unexpectedParserSyntax(
+					/** @type {EstreeNode} */ (element),
+					"a string"
+				);
+			}
+			return value;
+		});
+	}
+	if (node.type === "CallExpression") {
+		const { callee } = node;
+		const [argument] = /** @type {EstreeNode[]} */ (node.arguments);
+		if (callee.type === "Identifier" && callee.name === "characters") {
+			const value = evaluateParserTable(argument, known);
+			if (typeof value === "string") return [...value];
+		}
+		if (callee.type === "Identifier" && callee.name === "makePredicate") {
+			const value = evaluateParserTable(argument, known);
+			// terser's `makePredicate` splits a string at spaces and sorts the words.
+			const words = typeof value === "string" ? value.split(" ") : value;
+			if (Array.isArray(words)) return { words: [...words].sort() };
+		}
+		// The precedence table: an IIFE numbering each group of operators.
+		if (
+			callee.type === "FunctionExpression" &&
+			argument &&
+			argument.type === "ArrayExpression"
+		) {
+			return {
+				levels: argument.elements.map(
+					(level) =>
+						/** @type {string[]} */ (
+							evaluateParserTable(/** @type {EstreeNode} */ (level), known)
+						)
+				)
+			};
+		}
+	}
+	throw unexpectedParserSyntax(node, "a table");
+};
+
+// terser's `parse.js` tables the parser port reads, and the predefined type
+// names its TypeScript stripping declares inside `parse`.
+const PARSER_TABLES = [
+	"KEYWORDS",
+	"KEYWORDS_ATOM",
+	"RESERVED_WORDS",
+	"ALL_RESERVED_WORDS",
+	"KEYWORDS_BEFORE_EXPRESSION",
+	"OPERATOR_CHARS",
+	"OPERATORS",
+	"WHITESPACE_CHARS",
+	"NEWLINE_CHARS",
+	"PUNC_AFTER_EXPRESSION",
+	"PUNC_BEFORE_EXPRESSION",
+	"PUNC_CHARS",
+	"UNARY_PREFIX",
+	"UNARY_POSTFIX",
+	"ASSIGNMENT",
+	"LOGICAL_ASSIGNMENT",
+	"PRECEDENCE",
+	"ATOMIC_START_TOKEN",
+	"_TS_PREDEFINED_TYPES"
+];
+
+/**
+ * terser's tokenizer and parser tables, parsed out of its `parse.js`: each a
+ * list of words in the order terser's `makePredicate` holds them, and the
+ * operators of each precedence level, loosest first.
+ * @returns {Record<string, string[] | string[][]>} each table by its name there
+ */
+const collectParserTables = () => {
+	const source = fs.readFileSync(
+		path.join(
+			path.dirname(require.resolve("terser/package.json")),
+			"lib/parse.js"
+		),
+		"utf8"
+	);
+	const program = acorn.parse(source, {
+		ecmaVersion: "latest",
+		sourceType: "module"
+	});
+	/** @type {Map<string, ParserValue>} */
+	const known = new Map();
+	/**
+	 * @param {EstreeNode[]} statements a body
+	 * @returns {void}
+	 */
+	const read = (statements) => {
+		for (const statement of statements) {
+			if (statement.type === "VariableDeclaration") {
+				for (const declarator of statement.declarations) {
+					if (
+						declarator.id.type !== "Identifier" ||
+						!PARSER_TABLES.includes(declarator.id.name) ||
+						!declarator.init
+					) {
+						continue;
+					}
+					known.set(
+						declarator.id.name,
+						evaluateParserTable(
+							/** @type {EstreeNode} */ (declarator.init),
+							known
+						)
+					);
+				}
+			} else if (
+				statement.type === "ExpressionStatement" &&
+				statement.expression.type === "AssignmentExpression" &&
+				statement.expression.left.type === "Identifier" &&
+				PARSER_TABLES.includes(statement.expression.left.name)
+			) {
+				known.set(
+					statement.expression.left.name,
+					evaluateParserTable(statement.expression.right, known)
+				);
+			} else if (
+				statement.type === "FunctionDeclaration" &&
+				statement.id &&
+				statement.id.name === "parse"
+			) {
+				read(statement.body.body);
+			}
+		}
+	};
+	read(/** @type {EstreeNode[]} */ (/** @type {unknown} */ (program.body)));
+	/** @type {Record<string, string[] | string[][]>} */
+	const tables = {};
+	for (const name of PARSER_TABLES) {
+		const value = known.get(name);
+		if (value === undefined) {
+			throw new Error(`terser's parse.js no longer declares \`${name}\``);
+		}
+		if (typeof value === "string") {
+			throw new Error(`terser's parse.js leaves \`${name}\` a string`);
+		}
+		tables[name.replace(/^_/, "")] = Array.isArray(value)
+			? value
+			: "words" in value
+				? value.words
+				: value.levels;
+	}
+	return tables;
+};
+
+/**
+ * The DOM's property names terser's `tools/domprops.js` lists, which property
+ * mangling leaves alone unless told otherwise.
+ * @returns {string[]} the names, in terser's order
+ */
+const collectDomProperties = () => {
+	const source = fs.readFileSync(
+		path.join(
+			path.dirname(require.resolve("terser/package.json")),
+			"tools/domprops.js"
+		),
+		"utf8"
+	);
+	const program = acorn.parse(source, {
+		ecmaVersion: "latest",
+		sourceType: "module"
+	});
+	for (const statement of /** @type {EstreeNode[]} */ (
+		/** @type {unknown} */ (program.body)
+	)) {
+		const declaration =
+			statement.type === "ExportNamedDeclaration"
+				? /** @type {EstreeNode | null | undefined} */ (statement.declaration)
+				: statement;
+		if (!declaration || declaration.type !== "VariableDeclaration") continue;
+		for (const declarator of declaration.declarations) {
+			if (
+				declarator.id.type === "Identifier" &&
+				declarator.id.name === "domprops" &&
+				declarator.init &&
+				declarator.init.type === "ArrayExpression"
+			) {
+				return /** @type {string[]} */ (
+					evaluateParserTable(
+						/** @type {EstreeNode} */ (declarator.init),
+						new Map()
+					)
+				);
+			}
+		}
+	}
+	throw new Error("terser's tools/domprops.js no longer declares `domprops`");
+};
+
+/**
+ * terser's DOM property names, as a section of the data module.
+ * @returns {string} its source
+ */
+const renderDomProperties = () => {
+	const names = collectDomProperties();
+	for (const name of names) {
+		if (/\s/.test(name)) {
+			throw new Error(
+				`terser's DOM property name ${JSON.stringify(name)} holds a space`
+			);
+		}
+	}
+	return `
+// The DOM's property names terser's \`tools/domprops.js\` lists, space separated.
+/**
+ * @returns {string[]} the names, fresh on each call
+ */
+const domProperties = () => ${JSON.stringify(names.join(" "))}.split(" ");
+`;
+};
+
+/**
+ * terser's parser tables, as a section of the data module.
+ * @returns {string} its source
+ */
+const renderParserTables = () => `
+// terser's tokenizer and parser tables, read out of its \`parse.js\`: each a
+// list of words, and \`PRECEDENCE\` the operators of each level, loosest first.
+/**
+ * @returns {Record<string, string[] | string[][]>} the tables, fresh on each call
+ */
+const parserTables = () => (${JSON.stringify(collectParserTables())
+	.replace(
+		/[^\u0020-\u007E]/g,
+		(char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
+	)
+	// Upper case, as the linter writes an escape, JSON's own ones included.
+	.replace(
+		/\\u[\dA-Fa-f]{4}/g,
+		(escape) => `\\u${escape.slice(2).toUpperCase()}`
+	)});
 `;
 
 /**
@@ -915,15 +1293,15 @@ const renderHeader = () => `/*
 // GENERATED by tooling/generate-js-data.js — do not edit.
 // Sources: acorn ${acorn.version}, terser ${
 	require("terser/package.json").version
-}.
+}. The tables read from terser are under its
+// license, quoted in full in syntax-printer.js.
 
 "use strict";
 `;
 
 /**
  * Build the module the parser classifies with: the identifier ranges the
- * tokenizer reads, the property names `\\p{...}` accepts and the native
- * objects the compressor knows to be pure.
+ * tokenizer reads and the property names `\\p{...}` accepts.
  * @returns {string} its source
  */
 const renderData = () => {
@@ -966,7 +1344,7 @@ ${renderTable(
 	narrow.part,
 	0
 )}
-${renderUnicodeProperties()}${renderNativeObjects()}${renderNodeClasses()}
+${renderUnicodeProperties()}
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
@@ -978,10 +1356,21 @@ module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 	UNICODE_BINARY_PROPERTIES_OF_STRINGS;
 module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
 module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
-module.exports.nativeObjectTables = nativeObjectTables;
-module.exports.nodeClasses = nodeClasses;
 `;
 };
+
+/**
+ * Build the module only the printer reads, so a build that parses without
+ * minifying through it never loads these tables.
+ * @returns {string} its source
+ */
+const renderPrinterData =
+	() => `${renderHeader()}${renderNativeObjects()}${renderNodeClasses()}${renderParserTables()}${renderDomProperties()}
+module.exports.domProperties = domProperties;
+module.exports.nativeObjectTables = nativeObjectTables;
+module.exports.nodeClasses = nodeClasses;
+module.exports.parserTables = parserTables;
+`;
 
 /**
  * The Unicode property names `\\p{...}` accepts, as a section of that module.
@@ -1047,6 +1436,7 @@ const writeGenerated = async (target, source) => {
  */
 const generate = async () => {
 	await writeGenerated(DATA_TARGET, renderData());
+	await writeGenerated(PRINTER_DATA_TARGET, renderPrinterData());
 };
 
 if (require.main === module) {
@@ -1059,9 +1449,12 @@ if (require.main === module) {
 }
 
 module.exports.DATA_TARGET = DATA_TARGET;
+module.exports.PRINTER_DATA_TARGET = PRINTER_DATA_TARGET;
+module.exports.collectDomProperties = collectDomProperties;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
 module.exports.collectNativeObjects = collectNativeObjects;
 module.exports.collectNodeClasses = collectNodeClasses;
+module.exports.collectParserTables = collectParserTables;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;

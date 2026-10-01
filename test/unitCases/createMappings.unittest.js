@@ -2,7 +2,9 @@
 
 // cspell:disable -- VLQ-encoded source-map mappings strings below
 const {
+	decodeMappings,
 	decodeVLQ,
+	encodeDecodedMappings,
 	encodeMappings,
 	encodeVLQ
 } = require("../../lib/util/createMappings");
@@ -145,4 +147,45 @@ describe("encodeMappings", () => {
 		expect(result).toBe("AAAAA;AACAC");
 	});
 });
-// cspell:enable
+
+describe("decodeMappings", () => {
+	it("should read each line's segments, carrying the source fields across lines", () => {
+		expect(decodeMappings("AAAAA,EAAC;;IACAC,C")).toEqual([
+			[
+				[0, 0, 0, 0, 0],
+				[2, 0, 0, 1]
+			],
+			[],
+			[[4, 0, 1, 1, 1], [5]]
+		]);
+		expect(decodeMappings("")).toEqual([[]]);
+		expect(decodeMappings("A;")).toEqual([[[0]], []]);
+	});
+
+	it("should sort a line out of column order", () => {
+		expect(decodeMappings("IAAA,DAAC")).toEqual([
+			[
+				[3, 0, 0, 1],
+				[4, 0, 0, 0]
+			]
+		]);
+	});
+
+	it("should read a negative zero as source-map readers do, and skip an invalid character", () => {
+		expect(decodeMappings("CAAA,BAAA")).toEqual([
+			[
+				[-2147483647, 0, 0, 0],
+				[1, 0, 0, 0]
+			]
+		]);
+		expect(decodeMappings("!A")).toEqual([[[0, 0, 0, 0]]]);
+	});
+});
+
+describe("encodeDecodedMappings", () => {
+	it("should write back what decodeMappings reads", () => {
+		for (const mappings of ["AAAAA,EAAC;;IACAC,C", "", ";;A", "AAAA;AACA,MAAMC"]) {
+			expect(encodeDecodedMappings(decodeMappings(mappings))).toBe(mappings);
+		}
+	});
+});
