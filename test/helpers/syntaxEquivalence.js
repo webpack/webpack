@@ -1111,45 +1111,6 @@ const compareRenders = async ({ pairs, width }) => {
 		await settled(doc.fonts.ready);
 		// A transition or animation would be read part way through.
 		for (const running of doc.getAnimations()) running.cancel();
-		// WHY: Chrome can give a blocked image its broken-image box some time after
-		// `load` — measured in CI: an `<img>` read 0x0 in one frame and 16x16 in the
-		// next — so a page holding replaced content is read once its sizes stop moving.
-		const replaced = [
-			...doc.querySelectorAll("img, input, video, object, embed, iframe")
-		];
-		if (replaced.length > 0) {
-			/** @returns {string} the replaced elements' sizes */
-			const sizes = () =>
-				replaced
-					.map((element) => {
-						const box = element.getBoundingClientRect();
-						return `${box.width}x${box.height}`;
-					})
-					.join(" ");
-			await settled(
-				(async () => {
-					await Promise.all(
-						[...doc.images].map((image) =>
-							image.complete
-								? undefined
-								: new Promise((resolve) => {
-										image.addEventListener("load", resolve, { once: true });
-										image.addEventListener("error", resolve, { once: true });
-									})
-						)
-					);
-					let last = "";
-					let now = sizes();
-					while (now !== last) {
-						last = now;
-						await new Promise((resolve) => {
-							setTimeout(resolve, 50);
-						});
-						now = sizes();
-					}
-				})()
-			);
-		}
 		const root = /** @type {HTMLElement} */ (doc.documentElement);
 		const elements = [...doc.querySelectorAll("*")];
 		return {
@@ -1168,6 +1129,28 @@ const compareRenders = async ({ pairs, width }) => {
 			size: `${root.scrollWidth}x${root.scrollHeight}`
 		};
 	};
+
+	const page = /** @type {{ __eqIconLoaded?: boolean }} */ (
+		/** @type {unknown} */ (window)
+	);
+	if (!page.__eqIconLoaded) {
+		// WHY: Chrome draws a blocked image's broken-image icon only once it has
+		// loaded that icon — measured in CI: the first blocked `<img>` a page
+		// rendered read 0x0 and the same one in the next document 16x16 — so a
+		// throwaway one is broken first, and its icon waited for.
+		await render('<img src="eq-icon.png">');
+		const image = /** @type {Document} */ (frame.contentDocument).images[0];
+		for (
+			let waited = 0;
+			waited < PATIENCE && image.getBoundingClientRect().width === 0;
+			waited += 50
+		) {
+			await new Promise((resolve) => {
+				setTimeout(resolve, 50);
+			});
+		}
+		page.__eqIconLoaded = true;
+	}
 
 	/** @type {RenderReport[]} */
 	const reports = [];
