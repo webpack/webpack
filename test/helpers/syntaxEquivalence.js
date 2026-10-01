@@ -1104,7 +1104,7 @@ const compareRenders = async ({ pairs, width }) => {
 	};
 
 	/**
-	 * @returns {Promise<{ tags: string[], where: string[], boxes: number[][][], styled: string[], text: string, title: string, size: string }>} what the frame renders
+	 * @returns {Promise<{ tags: string[], where: string[], boxes: number[][][], styled: string[], withoutAlt: string, text: string, title: string, size: string }>} what the frame renders
 	 */
 	const measure = async () => {
 		const doc = /** @type {Document} */ (frame.contentDocument);
@@ -1112,8 +1112,13 @@ const compareRenders = async ({ pairs, width }) => {
 		// WHY: Chrome boxes a blocked `<img>` with no `alt` 0x0 or as a 16x16 icon
 		// apparently at random — measured in CI on srcset.html, both orders at once
 		// — while one with an empty `alt` represents nothing, so both copies get one.
-		for (const image of doc.images) {
-			if (!image.hasAttribute("alt")) image.setAttribute("alt", "");
+		// Which had one is compared on its own, so a dropped `alt=""` still shows.
+		/** @type {number[]} */
+		const withoutAlt = [];
+		for (const [at, image] of [...doc.images].entries()) {
+			if (image.hasAttribute("alt")) continue;
+			withoutAlt.push(at);
+			image.setAttribute("alt", "");
 		}
 		// A transition or animation would be read part way through.
 		for (const running of doc.getAnimations()) running.cancel();
@@ -1130,19 +1135,35 @@ const compareRenders = async ({ pairs, width }) => {
 				element.closest("marquee") === null ? boxesOf(element) : []
 			),
 			styled: elements.map(styledBy),
+			withoutAlt: withoutAlt.join(" "),
 			text: root.innerText,
 			title: doc.title,
 			size: `${root.scrollWidth}x${root.scrollHeight}`
 		};
 	};
 
-	/** @type {RenderReport[]} */
-	const reports = [];
-	for (const pair of pairs) {
+	/**
+	 * @param {RenderPair} pair a page and its minified copy
+	 * @returns {Promise<{ loaded: boolean[], before: Awaited<ReturnType<typeof measure>>, after: Awaited<ReturnType<typeof measure>> }>} whether each loaded, and what each renders
+	 */
+	const renderBoth = async (pair) => {
 		const loaded = [await render(pair.before)];
 		const before = await measure();
 		loaded.push(await render(pair.after));
-		const after = await measure();
+		return { loaded, before, after: await measure() };
+	};
+
+	/** @type {RenderReport[]} */
+	const reports = [];
+	for (const pair of pairs) {
+		let rendered = await renderBoth(pair);
+		// WHY: on a busy machine one copy can miss the patience and be read unloaded
+		// — measured locally on wpt/css layer-media-query.html — so a pair where
+		// only one loaded renders again; a copy that truly never loads still differs.
+		if (rendered.loaded[0] !== rendered.loaded[1]) {
+			rendered = await renderBoth(pair);
+		}
+		const { loaded, before, after } = rendered;
 		/** @type {string[]} */
 		const differences = [];
 		if (before.title !== after.title) {
@@ -1180,6 +1201,11 @@ const compareRenders = async ({ pairs, width }) => {
 					);
 				}
 			}
+		}
+		if (before.withoutAlt !== after.withoutAlt) {
+			differences.push(
+				`images without alt: ${before.withoutAlt} -> ${after.withoutAlt}`
+			);
 		}
 		if (loaded[0] !== loaded[1]) {
 			differences.push(`loaded: ${loaded[0]} -> ${loaded[1]}`);
@@ -1425,14 +1451,20 @@ const compareStyles = async ({ pairs, types }) => {
 			document.body.append(frame);
 		});
 
+	// WHY: WebKit throttles `requestAnimationFrame` in an iframe outside the
+	// viewport, and the second frame sits below it, so the page waits on its own
+	// frames — bounded by a timer, as a page an engine reads as hidden gets none.
 	/**
-	 * @param {Window} win a frame's window
-	 * @returns {Promise<void>} once it has rendered twice
+	 * @returns {Promise<void>} once the page has rendered twice, or 100ms passed
 	 */
-	const settle = (win) =>
+	const settle = () =>
 		new Promise((resolve) => {
-			win.requestAnimationFrame(() =>
-				win.requestAnimationFrame(() => resolve())
+			const timer = setTimeout(resolve, 100);
+			requestAnimationFrame(() =>
+				requestAnimationFrame(() => {
+					clearTimeout(timer);
+					resolve(undefined);
+				})
 			);
 		});
 
@@ -2007,7 +2039,7 @@ const compareStyles = async ({ pairs, types }) => {
 		 * @param {Set<string> | null} only the properties these samples can move, or null for any
 		 */
 		const measure = async (built, samples, only) => {
-			await Promise.all(windows.map(settle));
+			await settle();
 			for (const sample of samples) {
 				if (moved.length >= KEPT) return;
 				for (const [at, frame] of frames.entries()) {
