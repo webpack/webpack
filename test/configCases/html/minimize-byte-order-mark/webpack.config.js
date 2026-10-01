@@ -32,7 +32,7 @@ module.exports = {
 						parallel: false,
 						minify: [MinimizerPlugin.terserMinify, htmlMinify],
 						minimizerOptions: [{}, {}]
-					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
+					}).apply(compiler);
 				}
 			}
 		]
