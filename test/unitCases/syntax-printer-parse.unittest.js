@@ -193,7 +193,12 @@ const CASES = [
 	[
 		"HTML comment sequences a literal holds as text",
 		'x = `<!-- a ${b} -->`; y = `${c}-->`; z = "<!--"; w = /-->/;'
-	]
+	],
+	[
+		"a string holding a line continuation",
+		"x = 'a\\\nb'; y = 'c\\\r\nd'; w = 1;"
+	],
+	["a template holding a line continuation", "x = `a\\\nb${c}d\\\ne`; y = 2;"]
 ];
 
 /**
@@ -204,8 +209,11 @@ const CASES = [
 const DECLINED = [
 	["an HTML comment opening", "x = 1; <!-- y\n"],
 	["an HTML comment closing a line", "x = 1;\n--> y\n"],
-	["a string holding a line continuation", "x = 'a\\\nb';"],
-	["a template holding a line continuation", "x = `a\\\nb`;"],
+	["a line continuation at a break terser keeps", "x = 'a\\\u2028b';"],
+	["a template continuation at a break terser keeps", "x = `a\\\u2029b`;"],
+	["a line continuation at a lone carriage return", "x = 'a\\\rb';"],
+	["a template continuation at a carriage return", "x = `a\\\r\nb`;"],
+	["a template continuation at a lone carriage return", "x = `a\\\rb`;"],
 	["an invalid escape in a tagged template", "f`\\x`;"],
 	["a legacy octal number", "x = 0123;"],
 	["a bare async before a function", "async\nfunction f() {}"],
