@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Read a line continuation in the printer's parse phase instead of refusing it.
+Cut what the printer's parse phase holds and let it read a line continuation.
