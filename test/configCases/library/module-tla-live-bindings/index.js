@@ -46,3 +46,22 @@ it("should publish asynchronous and partially completed writes", async () => {
 it("should preserve earlier module rendering hooks", () => {
  expect(library.renderedValue()).toBe("after rendering");
 });
+
+it("should observe writes using lexical binding identity", () => {
+ expect(library.updateLate()).toBe(2);
+ expect(library.late).toBe(2);
+ expect(library.patternTwice()).toBe(31);
+ expect(library.count).toBe(31);
+ expect(() => library.assignFixed()).toThrow(TypeError);
+ expect(library.fixed).toBe(42);
+ const seen = [];
+ library.keys({ first: 1, second: 2 }, () => seen.push(library.count));
+ expect(seen).toEqual(["first", "second"]);
+ library.defaultClass();
+ expect(library.callable.name).toBe("callable");
+});
+
+it("should preserve renamed local bindings", () => {
+ expect(library.updateCollision()).toBe(1);
+ expect(library.collision).toBe(2);
+});

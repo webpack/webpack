@@ -40,3 +40,29 @@ export function partialAssignment() {
 export function renderedValue() {
  return "before rendering";
 }
+
+let late = 1;
+export function updateLate() {
+ return ++late;
+}
+export { late };
+export const fixed = 42;
+export function assignFixed() {
+ fixed = 0;
+}
+export function patternTwice() {
+ [count] = [30];
+ return ++count;
+}
+export function keys(object, observe) {
+ for (count in object) observe();
+}
+export function defaultClass() {
+ ({ callable = class {} } = {});
+}
+
+let __webpack_exports__ = 1;
+export { __webpack_exports__ as collision };
+export function updateCollision() {
+ return __webpack_exports__++;
+}
