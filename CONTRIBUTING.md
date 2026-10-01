@@ -10,7 +10,7 @@ work is not in vain.
 Most of the time, if webpack is not working correctly for you, it is a simple configuration issue.
 
 If you are still having difficulty after looking over your configuration carefully, please post
-a question to [Discussions](https://github.com/webpack/webpack/discussions), [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack) or ask this in our [Discord](https://discord.com/invite/webpack). Questions
+a question to [Discussions](https://github.com/webpack/webpack/discussions), [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack) or ask this in our [Discord](https://discord.gg/webpack). Questions
 that include your webpack.config.js, relevant files, and the full error message are more likely to receive responses.
 
 > ⚠️ Note on dependency vulnerability warnings
