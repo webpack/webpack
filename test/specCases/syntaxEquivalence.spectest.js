@@ -207,6 +207,7 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
 	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
+	["Radix Themes 3 (components)", "firefox only: `calc(100% / 3)` prints as `33.3333%`, six digits being calibrated on Blink's 1/64px layout; Gecko lays out in 1/60px, so a `translateX(100%)` over that width moves by 0.03px"],
 ]);
 
 const FILED_BENCHMARK_HTML_DEFECTS = new Map();
@@ -355,8 +356,9 @@ const cssomDirective = (source) => {
 };
 
 const minifyCss = (source) => {
+	// The merge too, which is off by default: every corpus is then held to it.
 	/** @type {{ mode: string, [k: string]: EXPECTED_ANY }} */
-	const options = { mode: "minify" };
+	const options = { mode: "minify", mergeDistantRules: true };
 	for (const name of cssomDirective(source)) options[name] = true;
 	return /** @type {{ code: string }} */ (
 		new CssSourceProcessor().process(source, options)
@@ -496,7 +498,20 @@ const STYLE_CONTROLS = new Map([
 	["bad quoted url body", ['.a{--u:url("assets/)#fff")}', '.a{--u:url("assets/)#ffffff")}']],
 	// A private-use character is a value's own, not a space the printer may write.
 	["bad private use", [".a{--x:a\uE000b}", ".a{--x:a b}"]],
+	// An element stands where a structural selector reaches it, so one reaching another position differs.
+	["bad nth-child", ["li:nth-child(2n+1){color:red}", "li:first-child{color:red}"]],
+	["bad nth-last-child", ["li:nth-last-child(2){color:red}", "li:nth-child(2){color:red}"]],
+	["bad nth-of-type", ["p:nth-of-type(3){color:red}", "p:nth-of-type(2){color:red}"]],
+	["bad has sibling", ["a:has(+ b){color:red}", "a:has(b){color:red}"]],
+	["bad has child", ["a:has(> b){color:red}", "a:has(> i){color:red}"]],
+	// The siblings a position counts are built around the ones already there, so what it declares is read.
+	["bad nth-child of", ["li:nth-child(2 of .x){color:red}", "li:nth-child(2 of .x){color:blue}"]],
+	["bad nth-child after", [".a+.b:nth-child(3){color:red}", ".a+.b:nth-child(3){color:blue}"]],
+	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
+	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
+	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],
+	["good has spacing", ["a:has( > b ){color:red}", "a:has(>b){color:red}"]],
 	["good custom property spacing", [".a{--c:#e9ecef #e9ecef #dee2e6;--f:400 1rem / 1.5 \"Mona Sans\", sans-serif}", ".a{--c:#e9ecef#e9ecef#dee2e6;--f:400/**/1rem/ 1.5\"Mona Sans\",sans-serif}"]],
 	// CSS Syntax 4.3.6: recovery ends a bad url at the next `)`.
 	["good bad url", ['.a{--u:url(foo")#fff)}', '.a{--u:url(foo")#ffffff)}']],
@@ -2472,9 +2487,6 @@ const mergePair = (name, source) => {
 	return before === after ? null : { name, before, after };
 };
 
-// Read while jest collects, one test per stylesheet.
-const mergeStylesheets = benchmarkStylesheets((source) => source);
-
 describe("a distant merge keeps every element's cascade", () => {
 	/** @type {import("puppeteer-core").Browser} */
 	let browser;
@@ -2523,39 +2535,6 @@ describe("a distant merge keeps every element's cascade", () => {
 		FILE_TIMEOUT
 	);
 
-	it(
-		"over every configCases stylesheet the merge changes",
-		async () => {
-			/** @type {StylePair[]} */
-			const pairs = [];
-			for (const fixture of buildCorpus(CONFIG_CASES, ".css", (source) => source)) {
-				const pair = mergePair(fixture.name, fixture.raw);
-				if (pair !== null) pairs.push(pair);
-			}
-			// The merge has to have happened somewhere, or this proves nothing.
-			expect(pairs.length).toBeGreaterThan(0);
-			expect(await differing(pairs)).toEqual([]);
-		},
-		FILE_TIMEOUT
-	);
-
-	if (mergeStylesheets.length === 0) {
-		it(NO_BENCHMARK_CORPUS, () => {
-			// No-op: the stylesheets are installed by the benchmark.
-		});
-	}
-
-	for (const fixture of mergeStylesheets) {
-		it(
-			`over ${fixture.name}`,
-			async () => {
-				const pair = mergePair(fixture.name, fixture.raw);
-				if (pair === null) return;
-				expect(await differing([pair])).toEqual([]);
-			},
-			FILE_TIMEOUT
-		);
-	}
 });
 
 // A narrow viewport and a wide one, since media queries switch between them.

@@ -1313,7 +1313,40 @@ const compareStyles = async ({ pairs, types }) => {
 		return out;
 	};
 
-	/** @typedef {{ combinator: string, type: string, classes: string[], id: string, attributes: [string, string][] }} Compound */
+	/** @typedef {{ combinator: string, type: string, classes: string[], id: string, attributes: [string, string][], before: number, after: number, typed: boolean, counted: string, has: { combinator: string, chain: Compound[] }[] }} Compound */
+
+	/**
+	 * The position among its siblings an `An+B` argument picks for an element to
+	 * stand at: the second it matches, so `odd` is not also `:first-child`.
+	 * @param {string} argument the argument, an `of S` part included
+	 * @returns {number} the position, counted from 1, or 0 where none is built
+	 */
+	const nthPosition = (argument) => {
+		const text = argument
+			.replace(/\s+of\s[\s\S]*$/i, "")
+			.replace(/\s+/g, "")
+			.toLowerCase();
+		const spelled = text === "odd" ? "2n+1" : text === "even" ? "2n" : text;
+		const match = /^(?:([+-]?\d*)n)?([+-]?\d+)?$/.exec(spelled);
+		if (match === null || spelled === "") return 0;
+		const step =
+			match[1] === undefined
+				? 0
+				: match[1] === "" || match[1] === "+"
+					? 1
+					: match[1] === "-"
+						? -1
+						: Number(match[1]);
+		const offset = match[2] === undefined ? 0 : Number(match[2]);
+		let position = offset;
+		if (step > 0) {
+			const first =
+				offset >= 1 ? offset : offset + step * Math.ceil((1 - offset) / step);
+			position = first + step;
+		}
+		// A sibling list is built for it, so a far position is left unbuilt.
+		return position >= 1 && position <= 12 ? position : 0;
+	};
 
 	/**
 	 * A selector as the compounds an element chain has to carry. A pseudo-class is
@@ -1336,8 +1369,35 @@ const compareStyles = async ({ pairs, types }) => {
 			type: "",
 			classes: [],
 			id: "",
-			attributes: []
+			attributes: [],
+			before: 0,
+			after: 0,
+			typed: false,
+			counted: "",
+			has: []
 		});
+		/**
+		 * Takes in the first selector of a list when it is one compound, since the
+		 * element has to match it too.
+		 * @param {Compound} into the compound to take it into
+		 * @param {string} list the selector list
+		 * @returns {void}
+		 */
+		const absorb = (into, list) => {
+			const [first] = splitList(list);
+			const inner = parseSelector(first);
+			if (inner === null || inner.length !== 1) return;
+			const [one] = inner;
+			if (one.type !== "") into.type = one.type;
+			if (one.id !== "") into.id = one.id;
+			into.classes.push(...one.classes);
+			into.attributes.push(...one.attributes);
+			into.before = Math.max(into.before, one.before);
+			into.after = Math.max(into.after, one.after);
+			into.typed = into.typed || one.typed;
+			if (one.counted !== "") into.counted = one.counted;
+			into.has.push(...one.has);
+		};
 		/** @type {Compound[]} */
 		const chain = [];
 		let current = fresh("");
@@ -1386,18 +1446,34 @@ const compareStyles = async ({ pairs, types }) => {
 						else if (selector[at] === ")" && --depth === 0) break;
 					}
 					at++;
-					if (/^:(?:is|where)$/i.test(name[0])) {
-						const [first] = splitList(selector.slice(open + 1, at - 1));
-						const inner = parseSelector(first);
-						// One compound only: a chain inside cannot stand in this one's place.
-						if (inner !== null && inner.length === 1) {
-							const [one] = inner;
-							if (one.type !== "") current.type = one.type;
-							if (one.id !== "") current.id = one.id;
-							current.classes.push(...one.classes);
-							current.attributes.push(...one.attributes);
+					const argument = selector.slice(open + 1, at - 1);
+					const pseudo = name[0].toLowerCase();
+					if (/^:nth-(?:last-)?(?:child|of-type)$/.test(pseudo)) {
+						const position = nthPosition(argument) - 1;
+						if (pseudo.startsWith(":nth-last")) {
+							current.after = Math.max(current.after, position);
+						} else {
+							current.before = Math.max(current.before, position);
+						}
+						if (pseudo.endsWith("of-type")) current.typed = true;
+						// `of S` counts only siblings matching S, which it matches too.
+						const of = /\sof\s([\s\S]*)$/i.exec(argument);
+						if (of !== null) {
+							current.counted = of[1].trim();
+							absorb(current, of[1]);
+						}
+					} else if (pseudo === ":has") {
+						const [relative] = splitList(argument);
+						const leading = /^\s*([>+~]?)\s*/.exec(relative);
+						const combinator = leading === null ? "" : leading[1];
+						const inner = parseSelector(
+							relative.slice(leading === null ? 0 : leading[0].length)
+						);
+						if (inner !== null) {
+							current.has.push({ combinator: combinator || " ", chain: inner });
 						}
 					}
+					if (/^:(?:is|where)$/i.test(name[0])) absorb(current, argument);
 				}
 			} else {
 				const name = IDENTIFIER.exec(rest);
@@ -1436,6 +1512,85 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 		}
 		return element;
+	};
+
+	/**
+	 * Counts the siblings on one side of an element that its `:nth-*()` counts.
+	 * @param {Element} element the element
+	 * @param {Compound} compound what it carries
+	 * @param {boolean} following whether the ones after it, not before
+	 * @returns {number} how many there are
+	 */
+	const countSiblings = (element, compound, following) => {
+		let count = 0;
+		for (
+			let at = following
+				? element.nextElementSibling
+				: element.previousElementSibling;
+			at !== null;
+			at = following ? at.nextElementSibling : at.previousElementSibling
+		) {
+			if (compound.typed && at.localName !== element.localName) continue;
+			if (compound.counted !== "") {
+				try {
+					if (!at.matches(compound.counted)) continue;
+				} catch (_err) {
+					// A selector the engine will not read counts no sibling.
+					continue;
+				}
+			}
+			count++;
+		}
+		return count;
+	};
+
+	/**
+	 * Builds a chain where its selector reaches its last element: each compound
+	 * at the position among its siblings it names, holding what its `:has()` asks.
+	 * @param {Document} doc the document to build in
+	 * @param {Compound[]} chain the compounds
+	 * @param {Element} anchor what the first compound joins
+	 * @param {string} combinator how it joins it — a relative selector's own
+	 * @returns {Element | null} the last element, or null where none was built
+	 */
+	const buildChain = (doc, chain, anchor, combinator) => {
+		/** @type {Element | null} */
+		let last = null;
+		for (const compound of chain) {
+			// A document has one of each, and the root already stands inside them.
+			if (DOCUMENT_ELEMENTS.has(compound.type)) {
+				if (last === null) continue;
+				break;
+			}
+			const element = build(doc, compound);
+			const joined = last === null ? combinator : compound.combinator;
+			const target = last === null ? anchor : last;
+			if (joined === "+" || joined === "~") target.after(element);
+			else target.append(element);
+			const sibling = () =>
+				build(doc, { ...compound, id: "", before: 0, after: 0, has: [] });
+			// In front of the pair `+` joins, which cannot be parted.
+			const front = joined === "+" ? target : element;
+			for (
+				let i = compound.before - countSiblings(element, compound, false);
+				i > 0;
+				i--
+			) {
+				front.before(sibling());
+			}
+			for (
+				let i = compound.after - countSiblings(element, compound, true);
+				i > 0;
+				i--
+			) {
+				element.after(sibling());
+			}
+			for (const held of compound.has) {
+				buildChain(doc, held.chain, element, held.combinator);
+			}
+			last = element;
+		}
+		return last;
 	};
 
 	/**
@@ -1943,26 +2098,7 @@ const compareStyles = async ({ pairs, types }) => {
 				for (const selector of selectors) {
 					const chain = chains.get(selector);
 					if (chain === undefined) continue;
-					const inside = box();
-					/** @type {Element | null} */
-					let last = null;
-					for (const compound of chain) {
-						// A document has one of each, and the root already stands inside them.
-						if (DOCUMENT_ELEMENTS.has(compound.type)) {
-							if (last === null) continue;
-							break;
-						}
-						const element = build(doc, compound);
-						if (
-							last !== null &&
-							(compound.combinator === "+" || compound.combinator === "~")
-						) {
-							last.after(element);
-						} else {
-							(last === null ? inside : last).append(element);
-						}
-						last = element;
-					}
+					const last = buildChain(doc, chain, box(), "");
 					// The element the selector reaches; the ones on the way are reached by
 					// selectors of their own.
 					if (last !== null) {
@@ -1985,12 +2121,18 @@ const compareStyles = async ({ pairs, types }) => {
 						}
 					}
 				}
+				/** @type {Compound} */
 				const everything = {
 					combinator: "",
 					type: "",
 					classes: [...classes],
 					id: "",
-					attributes: [...attributes]
+					attributes: [...attributes],
+					before: 0,
+					after: 0,
+					typed: false,
+					counted: "",
+					has: []
 				};
 				for (const type of named) {
 					const outer = build(doc, { ...everything, type });
