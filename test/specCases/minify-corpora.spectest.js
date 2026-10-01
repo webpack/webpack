@@ -8,8 +8,9 @@
 // 1. both must write the same bytes, or refuse the source with the same error;
 // 2. where the test states what its input prints, webpack's output, run in
 //    terser's own sandbox, must print it too, whatever the bytes;
-// 3. where swc records its own output, a smaller one is a lead for printing
-//    less, written to the file JS_MINIFY_REPORT names (never a failure).
+// 3. where swc records its own output, webpack's must be no bigger (gzip, then
+//    raw), unless SWC_SMALLER lists why; JS_MINIFY_REPORT names a file to tally
+//    where it is worse, the same and better.
 
 const fs = require("fs");
 const path = require("path");
@@ -19,6 +20,7 @@ const zlib = require("zlib");
 const acorn = require("acorn");
 const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
+const SWC_SMALLER = require("../helpers/swcSmaller");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
@@ -29,6 +31,7 @@ const { IGNORED_FORMAT_OPTIONS, load } =
 /** @typedef {{ name: string, files: string[] }} Group */
 /** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, minimumRun?: number, minimumRival?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean }} Corpus */
 /** @typedef {{ source: string, rival: string, ours: number, theirs: number, oursGzip: number, theirsGzip: number }} Lead */
+/** @typedef {"worse" | "same" | "better"} Standing */
 
 const externalDir = path.resolve(__dirname, "../external");
 const referenceDir = path.join(externalDir, "terser");
@@ -223,6 +226,41 @@ const readExpectedStdout = (node, AST, name) => {
 	return `${readStringList(node, AST, name)}\n`;
 };
 
+/** @type {Set<string> | undefined} */
+let swcPortPassing;
+
+/**
+ * What swc recorded for its port of one of terser's cases, where its harness
+ * holds the port to that output: listed as passing, and not left empty.
+ * @param {string} file the case's file, as terser names it
+ * @param {string} label the case's label
+ * @returns {{ name: string, code: string } | undefined} swc's output
+ */
+const readSwcPortOutput = (file, label) => {
+	if (!isPresent(swcTestsDir)) return undefined;
+	if (swcPortPassing === undefined) {
+		swcPortPassing = new Set(
+			fs
+				.readFileSync(path.join(swcTestsDir, "passing.txt"), "utf8")
+				.split("\n")
+				.map((line) => line.trim())
+		);
+	}
+	// swc ported the files before terser renamed `drop_unused.js` and others
+	// to `drop-unused.js`, and keeps the older spelling.
+	for (const name of new Set([file.replace(/-/g, "_"), file])) {
+		const output = path.join(swcTestsDir, "terser/compress", name, label, "output.js");
+		if (
+			swcPortPassing.has(`${name}/${label}/input.js`) &&
+			fs.existsSync(output)
+		) {
+			const code = fs.readFileSync(output, "utf8");
+			return code.trim() === "" ? undefined : { name: "swc", code };
+		}
+	}
+	return undefined;
+};
+
 /**
  * Every case in one of terser's `test/compress` files, as its runner reads it:
  * a labeled block holding `input`, and assignments naming the options.
@@ -297,7 +335,7 @@ const readCompressCases = (file, { AST, parse }) => {
 		if (typeof test.input !== "string") continue;
 		const format = test.beautify || test.format;
 		cases.push({
-			name: statement.label.name,
+			name: `${path.basename(file, ".js")}/${statement.label.name}`,
 			input: test.input,
 			own: {
 				compress: test.options,
@@ -319,7 +357,8 @@ const readCompressCases = (file, { AST, parse }) => {
 							prepend: test.prepend_code || "",
 							strict: true
 						}
-					: undefined
+					: undefined,
+			rival: readSwcPortOutput(path.basename(file, ".js"), statement.label.name)
 		});
 	}
 	return cases;
@@ -415,6 +454,11 @@ const readSwcTest = (file, { knows }) => {
 		: undefined;
 	const [area] = path.relative(swcTestsDir, file).split(path.sep);
 	const mangle = readJson(path.join(path.dirname(file), "mangle.json"));
+	// swc also reads its Rust field's camelCase spelling, which terser does not.
+	if (mangle && mangle.topLevel !== undefined) {
+		mangle.toplevel = mangle.topLevel;
+		delete mangle.topLevel;
+	}
 	const module = readsAsModule(input);
 	const expectedStdout = path.join(path.dirname(file), "expected.stdout");
 	// swc records what it wrote for each test beside its input, and for each
@@ -425,7 +469,8 @@ const readSwcTest = (file, { knows }) => {
 			: path.join(path.dirname(file), "output.js");
 	return [
 		{
-			name: path.relative(swcTestsDir, file),
+			// Written with `/` on every platform, as the tables keyed by it are.
+			name: path.relative(swcTestsDir, file).split(path.sep).join("/"),
 			input,
 			module,
 			own: compress && {
@@ -697,7 +742,9 @@ const CORPORA = [
 		read: readCompressCases,
 		optionSets: Object.keys(OPTION_SETS),
 		// 2602 at the pinned 5.51.2; a reader that stopped matching reads none.
-		minimum: 2500
+		minimum: 2500,
+		// 1587 at swc's pinned commit carry the output swc's port records.
+		minimumRival: 1500
 	},
 	{
 		name: "terser input",
@@ -884,24 +931,61 @@ const sizeOf = (code) => ({
 });
 
 /**
- * @param {Lead[]} leads where another minifier wrote less
- * @returns {string} them as a Markdown table, the most bytes first
+ * Where webpack's output stands beside another minifier's: gzip decides, and
+ * raw breaks a tie, as `docs/performance.md` weighs a size change.
+ * @param {Lead} lead both sizes
+ * @returns {Standing} webpack's standing
+ */
+const standingOf = ({ ours, theirs, oursGzip, theirsGzip }) => {
+	const delta = oursGzip !== theirsGzip ? oursGzip - theirsGzip : ours - theirs;
+	return delta > 0 ? "worse" : delta < 0 ? "better" : "same";
+};
+
+/**
+ * @param {Lead[]} leads every comparison with another minifier's output
+ * @returns {string} a tally, and a Markdown table each of where webpack's is worse and better
  */
 const formatLeads = (leads) => {
-	const rows = [...leads]
-		.sort((a, b) => b.ours - b.theirs - (a.ours - a.theirs))
-		.map(
-			(lead) =>
-				`| ${lead.source} | ${lead.rival} | ${lead.ours} | ${lead.theirs} | ${lead.ours - lead.theirs} | ${lead.oursGzip - lead.theirsGzip} |`
-		);
-	return [
-		"# Where another minifier's recorded output is smaller",
-		"",
-		"Both outputs printed alone by webpack's printer; bytes more than theirs.",
-		"",
+	/**
+	 * @param {Standing} standing which rows
+	 * @returns {string[]} those rows, the most gzip bytes apart first
+	 */
+	const table = (standing) => [
 		"| Source | Rival | Ours | Theirs | Raw more | Gzip more |",
 		"| --- | --- | --: | --: | --: | --: |",
-		...rows,
+		...leads
+			.filter((lead) => standingOf(lead) === standing)
+			.sort(
+				(a, b) =>
+					Math.abs(b.oursGzip - b.theirsGzip) -
+						Math.abs(a.oursGzip - a.theirsGzip) ||
+					Math.abs(b.ours - b.theirs) - Math.abs(a.ours - a.theirs)
+			)
+			.map(
+				(lead) =>
+					`| ${lead.source} | ${lead.rival} | ${lead.ours} | ${lead.theirs} | ${lead.ours - lead.theirs} | ${lead.oursGzip - lead.theirsGzip} |`
+			)
+	];
+	/**
+	 * @param {Standing} standing which rows
+	 * @returns {number} how many
+	 */
+	const count = (standing) =>
+		leads.filter((lead) => standingOf(lead) === standing).length;
+	return [
+		"# webpack's output beside another minifier's recorded output",
+		"",
+		"Both printed alone by webpack's printer; gzip decides, raw breaks a tie.",
+		"",
+		`Worse: ${count("worse")}, the same: ${count("same")}, better: ${count("better")}.`,
+		"",
+		"## Worse",
+		"",
+		...table("worse"),
+		"",
+		"## Better",
+		"",
+		...table("better"),
 		""
 	].join("\n");
 };
@@ -1076,7 +1160,8 @@ describe("JavaScript minifier", () => {
 				if (corpus.minimumRun !== undefined) {
 					expect(runnable).toBeGreaterThan(corpus.minimumRun);
 				}
-				if (corpus.minimumRival !== undefined) {
+				// Rivals are read from swc's checkout, which another corpus may run without.
+				if (corpus.minimumRival !== undefined && isPresent(swcTestsDir)) {
 					expect(rivals).toBeGreaterThan(corpus.minimumRival);
 				}
 				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
@@ -1235,15 +1320,29 @@ describe("JavaScript minifier", () => {
 										if (rival.code !== undefined && mine.code !== undefined) {
 											const oursSize = sizeOf(mine.code);
 											const theirsSize = sizeOf(rival.code);
-											if (theirsSize.raw < oursSize.raw) {
-												leads.push({
-													source: `${corpus.name}: ${source.name}`,
-													rival: source.rival.name,
-													ours: oursSize.raw,
-													theirs: theirsSize.raw,
-													oursGzip: oursSize.gzip,
-													theirsGzip: theirsSize.gzip
-												});
+											/** @type {Lead} */
+											const lead = {
+												source: `${corpus.name}: ${source.name}`,
+												rival: source.rival.name,
+												ours: oursSize.raw,
+												theirs: theirsSize.raw,
+												oursGzip: oursSize.gzip,
+												theirsGzip: theirsSize.gzip
+											};
+											leads.push(lead);
+											const worse = standingOf(lead) === "worse";
+											const listed = Object.prototype.hasOwnProperty.call(
+												SWC_SMALLER,
+												lead.source
+											);
+											if (worse && !listed) {
+												differences.push(
+													`${lead.source} is bigger than ${lead.rival}'s output: ${lead.ours} raw, ${lead.oursGzip} gzip, against ${lead.theirs} raw, ${lead.theirsGzip} gzip`
+												);
+											} else if (!worse && listed) {
+												differences.push(
+													`${lead.source} is no bigger than ${lead.rival}'s output now: retire it from SWC_SMALLER`
+												);
 											}
 										}
 									}
