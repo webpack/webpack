@@ -481,12 +481,5 @@ export default defineConfig([
 			"no-console": "off",
 			"n/no-unsupported-features/node-builtins": "off"
 		}
-	},
-	{
-		// `fmt:check` runs Prettier over every file; running it again as a lint
-		// rule doubled the work. Editors format on save with Prettier instead.
-		rules: {
-			"prettier/prettier": "off"
-		}
 	}
 ]);
