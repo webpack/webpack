@@ -201,7 +201,7 @@
     "lint-staged": "^17.0.7",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
-    "mdn-data": "^2.29.0",
+    "mdn-data": "^2.37.1",
     "memfs": "^4.57.6",
     "meriyah": "^7.0.0",
     "mini-css-extract-plugin": "^2.9.0",

@@ -7152,10 +7152,10 @@ mdast-util-to-string@^4.0.0:
   dependencies:
     "@types/mdast" "^4.0.0"
 
-mdn-data@^2.29.0:
-  version "2.36.0"
-  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.36.0.tgz#6262d149a342d888aef2f3f235fd01cd17df5ea4"
-  integrity sha512-EdCTmJ/7XyvlyqkbL0iHDbK/4b1f1qsZb3+jSihfwfxepmeBfQB7m6nQj6iLv0te037dqYCkbQe+/q0PxWdIOA==
+mdn-data@^2.37.1:
+  version "2.37.1"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.37.1.tgz#1174ae11032f1dc2a98fbf92179019cdc44ed36a"
+  integrity sha512-xtAbd7xf9TJVY2VOxwn0o2SBB4wr2BFkqHdo9z+xN0hZ2PmkJlzBetlpwpnSJA3QWM/sWmnA2Iq9TCO+828PQw==
 
 media-typer@^1.1.0:
   version "1.1.1"
