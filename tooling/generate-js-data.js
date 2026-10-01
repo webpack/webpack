@@ -5,6 +5,8 @@
 
 "use strict";
 
+// cspell:ignore DEFNODE
+
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
@@ -473,6 +475,422 @@ ${sections.map(({ constant, source }) => `\t${constant}: ${source}`).join(",\n")
 };
 
 /**
+ * @param {EstreeNode} node the node terser's source holds there
+ * @param {string} where the class and method it belongs to
+ * @param {string} expected what the generator expected to find
+ * @returns {Error} the failure naming where terser's source moved
+ */
+const unexpectedNodeSyntax = (node, where, expected) =>
+	new Error(
+		`terser's ast.js holds a ${node.type} in ${where} at offset ${
+			/** @type {EstreeNode & { start: number }} */ (node).start
+		} where this generator expects ${expected}`
+	);
+
+/**
+ * @param {EstreeNode | null | undefined} node an expression
+ * @returns {string | undefined} `field` where it reads `this.field`
+ */
+const readThisField = (node) =>
+	node &&
+	node.type === "MemberExpression" &&
+	node.object.type === "ThisExpression" &&
+	!node.computed &&
+	node.property.type === "Identifier"
+		? node.property.name
+		: undefined;
+
+/**
+ * @param {EstreeNode} node a statement
+ * @returns {EstreeNode[]} it, or the statements of the block it is
+ */
+const statementsOf = (node) =>
+	node.type === "BlockStatement" ? node.body : [node];
+
+/**
+ * @param {EstreeNode} node an expression
+ * @param {string} method `_walk` or `push`
+ * @returns {EstreeNode | undefined} what it walks or pushes, where it does
+ */
+const readVisited = (node, method) => {
+	if (node.type !== "CallExpression") return undefined;
+	const { callee } = node;
+	if (method === "push") {
+		return callee.type === "Identifier" &&
+			callee.name === "push" &&
+			node.arguments.length === 1
+			? /** @type {EstreeNode} */ (node.arguments[0])
+			: undefined;
+	}
+	return callee.type === "MemberExpression" &&
+		!callee.computed &&
+		callee.property.type === "Identifier" &&
+		(callee.property.name === "_walk" || callee.property.name === "walk") &&
+		node.arguments.length === 1 &&
+		node.arguments[0].type === "Identifier" &&
+		node.arguments[0].name === "visitor"
+		? /** @type {EstreeNode} */ (callee.object)
+		: undefined;
+};
+
+/**
+ * The children a `_walk` or `_children_backwards` reaches, in the order it
+ * reaches them: `f` a child that is always there, `?f` one that may be absent,
+ * `~f` one that may not be a node, `*f` a list, `?*f` a list that may be absent.
+ * @param {EstreeNode[]} statements the method's body
+ * @param {string} method `_walk` or `push`
+ * @param {string} where the class and method, for the error
+ * @returns {string[]} the children
+ */
+const readChildren = (statements, method, where) => {
+	/** @type {string[]} */
+	const children = [];
+	/** @type {Map<string, string>} */
+	const aliases = new Map();
+	/**
+	 * @param {EstreeNode} node an expression read element by element
+	 * @returns {string | undefined} the list field it reads
+	 */
+	const listOf = (node) =>
+		node.type === "Identifier" ? aliases.get(node.name) : readThisField(node);
+	/**
+	 * @param {EstreeNode} statement one statement of the body
+	 * @param {string} prefix `?` where it runs only when its field is set
+	 * @returns {void}
+	 */
+	const read = (statement, prefix) => {
+		if (statement.type === "ExpressionStatement") {
+			const expression = statement.expression;
+			const visited = readVisited(expression, method);
+			const field = visited && readThisField(visited);
+			if (field !== undefined) {
+				children.push(`${prefix}${field}`);
+				return;
+			}
+			// `walk_body(this, visitor)` walks `body`.
+			if (
+				method !== "push" &&
+				expression.type === "CallExpression" &&
+				expression.callee.type === "Identifier" &&
+				expression.callee.name === "walk_body"
+			) {
+				children.push(`${prefix}*body`);
+				return;
+			}
+			// `this.field.forEach((item) => item._walk(visitor))`.
+			if (
+				expression.type === "CallExpression" &&
+				expression.callee.type === "MemberExpression" &&
+				!expression.callee.computed &&
+				expression.callee.property.type === "Identifier" &&
+				expression.callee.property.name === "forEach"
+			) {
+				const list = listOf(
+					/** @type {EstreeNode} */ (expression.callee.object)
+				);
+				if (list !== undefined) {
+					children.push(`${prefix}*${list}`);
+					return;
+				}
+			}
+		}
+		if (statement.type === "VariableDeclaration") {
+			for (const declarator of statement.declarations) {
+				const field = readThisField(
+					/** @type {EstreeNode} */ (declarator.init)
+				);
+				if (declarator.id.type === "Identifier" && field !== undefined) {
+					aliases.set(declarator.id.name, field);
+					continue;
+				}
+				// `let i = this.field.length`, the count a backwards loop runs down.
+				const init = /** @type {EstreeNode} */ (declarator.init);
+				if (
+					init.type === "MemberExpression" &&
+					!init.computed &&
+					init.property.type === "Identifier" &&
+					init.property.name === "length" &&
+					readThisField(/** @type {EstreeNode} */ (init.object)) !== undefined
+				) {
+					continue;
+				}
+				throw unexpectedNodeSyntax(statement, where, "a list read once");
+			}
+			return;
+		}
+		// `i = this.field.length`, a backwards loop's count reused.
+		if (
+			statement.type === "ExpressionStatement" &&
+			statement.expression.type === "AssignmentExpression"
+		) {
+			return;
+		}
+		if (
+			statement.type === "ForStatement" ||
+			statement.type === "WhileStatement"
+		) {
+			const body = statementsOf(statement.body);
+			const visited =
+				body.length === 1 && body[0].type === "ExpressionStatement"
+					? readVisited(body[0].expression, method)
+					: undefined;
+			if (visited && visited.type === "MemberExpression" && visited.computed) {
+				const list = listOf(/** @type {EstreeNode} */ (visited.object));
+				if (list !== undefined) {
+					children.push(`${prefix}*${list}`);
+					return;
+				}
+			}
+			throw unexpectedNodeSyntax(statement, where, "a loop over a list");
+		}
+		if (statement.type === "IfStatement" && !statement.alternate) {
+			const { test } = statement;
+			const field = readThisField(test);
+			if (field !== undefined) {
+				const before = children.length;
+				for (const inner of statementsOf(statement.consequent)) {
+					read(inner, "?");
+				}
+				for (let i = before; i < children.length; i++) {
+					if (children[i].replace(/^\?\*?/, "") !== field) {
+						throw unexpectedNodeSyntax(statement, where, `only \`${field}\``);
+					}
+				}
+				return;
+			}
+			if (
+				test.type === "BinaryExpression" &&
+				test.operator === "instanceof" &&
+				test.right.type === "Identifier" &&
+				test.right.name === "AST_Node"
+			) {
+				const tested = readThisField(/** @type {EstreeNode} */ (test.left));
+				const inner = statementsOf(statement.consequent);
+				const visited =
+					inner.length === 1 && inner[0].type === "ExpressionStatement"
+						? readVisited(inner[0].expression, method)
+						: undefined;
+				if (tested !== undefined && readThisField(visited) === tested) {
+					children.push(`~${tested}`);
+					return;
+				}
+			}
+		}
+		throw unexpectedNodeSyntax(statement, where, "a child walked or pushed");
+	};
+	for (const statement of statements) read(statement, "");
+	return children;
+};
+
+/**
+ * @typedef {object} NodeClass
+ * @property {string} type the class's `TYPE`
+ * @property {string | null} base the `TYPE` of the class it extends
+ * @property {string[]} fields what its constructor copies off its argument, in order
+ * @property {boolean} initializes whether its constructor then calls `initialize`
+ * @property {string[] | null} walk the children its own `_walk` visits, null where it inherits one
+ * @property {string | null} guard the field a walk visits children only when set
+ * @property {string[] | null} backwards the children its own `_children_backwards` pushes, null where it inherits one
+ */
+
+/**
+ * terser's node classes, parsed out of its `ast.js`: each one's place in the
+ * hierarchy, the fields its constructor copies and the children it walks.
+ * @returns {NodeClass[]} the classes, in the order terser defines them
+ */
+const collectNodeClasses = () => {
+	const source = fs.readFileSync(
+		path.join(
+			path.dirname(require.resolve("terser/package.json")),
+			"lib/ast.js"
+		),
+		"utf8"
+	);
+	const program = acorn.parse(source, {
+		ecmaVersion: "latest",
+		sourceType: "module"
+	});
+	/** @type {Map<string, string>} */
+	const typeOf = new Map();
+	/** @type {NodeClass[]} */
+	const classes = [];
+	for (const statement of /** @type {EstreeNode[]} */ (
+		/** @type {unknown} */ (program.body)
+	)) {
+		if (statement.type !== "VariableDeclaration") continue;
+		for (const declarator of statement.declarations) {
+			const init = /** @type {EstreeNode | null} */ (declarator.init);
+			if (
+				!init ||
+				init.type !== "CallExpression" ||
+				init.callee.type !== "Identifier" ||
+				init.callee.name !== "DEFNODE"
+			) {
+				continue;
+			}
+			const [typeNode, , ctorNode, methodsNode, baseNode] =
+				/** @type {EstreeNode[]} */ (init.arguments);
+			if (
+				typeNode.type !== "Literal" ||
+				typeof typeNode.value !== "string" ||
+				ctorNode.type !== "FunctionExpression" ||
+				declarator.id.type !== "Identifier"
+			) {
+				throw unexpectedNodeSyntax(init, "DEFNODE", "a named node class");
+			}
+			const type = typeNode.value;
+			typeOf.set(declarator.id.name, type);
+			/** @type {string | null} */
+			let base = "Node";
+			if (baseNode === undefined) {
+				base = type === "Node" ? null : "Node";
+			} else if (baseNode.type === "Literal") {
+				base = null;
+			} else if (baseNode.type === "Identifier") {
+				base = /** @type {string} */ (typeOf.get(baseNode.name));
+			}
+			/** @type {string[]} */
+			const fields = [];
+			let initializes = false;
+			for (const inner of ctorNode.body.body) {
+				if (inner.type !== "IfStatement") continue;
+				for (const assignment of statementsOf(inner.consequent)) {
+					const expression =
+						assignment.type === "ExpressionStatement"
+							? assignment.expression
+							: undefined;
+					if (
+						expression &&
+						expression.type === "CallExpression" &&
+						readThisField(/** @type {EstreeNode} */ (expression.callee)) ===
+							"initialize"
+					) {
+						initializes = true;
+						continue;
+					}
+					const field =
+						expression && expression.type === "AssignmentExpression"
+							? readThisField(/** @type {EstreeNode} */ (expression.left))
+							: undefined;
+					if (field === undefined) {
+						throw unexpectedNodeSyntax(
+							assignment,
+							`${type}'s constructor`,
+							"a field copied"
+						);
+					}
+					fields.push(field);
+				}
+			}
+			/** @type {NodeClass} */
+			const nodeClass = {
+				type,
+				base,
+				fields,
+				initializes,
+				walk: null,
+				guard: null,
+				backwards: null
+			};
+			if (methodsNode && methodsNode.type === "ObjectExpression") {
+				for (const property of methodsNode.properties) {
+					if (
+						property.type !== "Property" ||
+						property.key.type !== "Identifier"
+					) {
+						continue;
+					}
+					const fn = /** @type {EstreeNode} */ (property.value);
+					if (
+						fn.type !== "FunctionExpression" &&
+						fn.type !== "ArrowFunctionExpression"
+					) {
+						continue;
+					}
+					const body = fn.body.type === "BlockStatement" ? fn.body.body : [];
+					if (property.key.name === "_walk") {
+						const returned = body.length === 1 ? body[0] : undefined;
+						const visit =
+							returned &&
+							returned.type === "ReturnStatement" &&
+							returned.argument &&
+							returned.argument.type === "CallExpression"
+								? returned.argument
+								: undefined;
+						if (!visit) {
+							throw unexpectedNodeSyntax(fn, `${type}._walk`, "a visit");
+						}
+						let descend = /** @type {EstreeNode | undefined} */ (
+							visit.arguments[1]
+						);
+						if (
+							descend &&
+							descend.type === "LogicalExpression" &&
+							descend.operator === "&&"
+						) {
+							nodeClass.guard =
+								readThisField(/** @type {EstreeNode} */ (descend.left)) || null;
+							descend = /** @type {EstreeNode} */ (descend.right);
+						}
+						if (descend === undefined) {
+							nodeClass.walk = [];
+							continue;
+						}
+						if (
+							descend.type !== "FunctionExpression" ||
+							descend.body.type !== "BlockStatement"
+						) {
+							throw unexpectedNodeSyntax(descend, `${type}._walk`, "a descent");
+						}
+						nodeClass.walk = readChildren(
+							descend.body.body,
+							"_walk",
+							`${type}._walk`
+						);
+					} else if (property.key.name === "_children_backwards") {
+						nodeClass.backwards = readChildren(
+							body,
+							"push",
+							`${type}._children_backwards`
+						);
+					}
+				}
+			}
+			classes.push(nodeClass);
+		}
+	}
+	return classes;
+};
+
+/**
+ * terser's node classes, as a section of the data module.
+ * @returns {string} its source
+ */
+const renderNodeClasses = () => `
+/**
+ * A node class of terser's: \`walk\` and \`backwards\` list its children in the
+ * order its own \`_walk\` and \`_children_backwards\` reach them, null where it
+ * inherits them — \`f\` a child always there, \`?f\` one that may be absent,
+ * \`~f\` one that may not be a node, \`*f\` a list, \`?*f\` a list that may be absent.
+ * @typedef {object} NodeClass
+ * @property {string} type its \`TYPE\`
+ * @property {string | null} base the \`TYPE\` of the class it extends
+ * @property {string[]} fields what its constructor copies off its argument, in order
+ * @property {boolean} initializes whether its constructor then calls \`initialize\`
+ * @property {string[] | null} walk the children its walk visits
+ * @property {string | null} guard the field its walk descends only where set
+ * @property {string[] | null} backwards the children it pushes backwards
+ */
+
+// terser's node classes, in the order its \`ast.js\` defines them, each after
+// the class it extends. Built on call, so the parser allocates none.
+/**
+ * @returns {NodeClass[]} the classes, fresh on each call
+ */
+const nodeClasses = () => ${JSON.stringify(collectNodeClasses())};
+`;
+
+/**
  * Render one encoded table as a module-scope constant.
  * @param {string} name the constant's name
  * @param {string} description what the table holds
@@ -548,7 +966,7 @@ ${renderTable(
 	narrow.part,
 	0
 )}
-${renderUnicodeProperties()}${renderNativeObjects()}
+${renderUnicodeProperties()}${renderNativeObjects()}${renderNodeClasses()}
 module.exports.ASTRAL_IDENTIFIER_PART_RANGES = ASTRAL_IDENTIFIER_PART_RANGES;
 module.exports.ASTRAL_IDENTIFIER_START_RANGES = ASTRAL_IDENTIFIER_START_RANGES;
 module.exports.IDENTIFIER_PART_RANGES = IDENTIFIER_PART_RANGES;
@@ -561,6 +979,7 @@ module.exports.UNICODE_BINARY_PROPERTIES_OF_STRINGS =
 module.exports.UNICODE_GENERAL_CATEGORY_VALUES = UNICODE_GENERAL_CATEGORY_VALUES;
 module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
 module.exports.nativeObjectTables = nativeObjectTables;
+module.exports.nodeClasses = nodeClasses;
 `;
 };
 
@@ -643,5 +1062,6 @@ module.exports.DATA_TARGET = DATA_TARGET;
 module.exports.collectIdentifierTables = collectIdentifierTables;
 module.exports.collectNarrowIdentifierTables = collectNarrowIdentifierTables;
 module.exports.collectNativeObjects = collectNativeObjects;
+module.exports.collectNodeClasses = collectNodeClasses;
 module.exports.collectUnicodeProperties = collectUnicodeProperties;
 module.exports.encodeRanges = encodeRanges;
