@@ -1680,10 +1680,10 @@ describe("syntax-printer", () => {
 		});
 	}
 
-	// Layouts where a comment decides where a line break is printed, which
-	// terser's tokenizer and its parentheses each have a rule for.
+	// Layouts where a comment decides where a line break or a brace is printed,
+	// which terser's tokenizer, its parentheses and its sequences each decide.
 	/** @type {[string, string][]} */
-	const COMMENT_BREAK_CASES = [
+	const COMMENT_PLACEMENT_CASES = [
 		[
 			"a banner comment before a parenthesized call",
 			"/*!\n * banner\n */\n(function (w) { w.x = 1; })(this);"
@@ -1715,10 +1715,23 @@ describe("syntax-printer", () => {
 		[
 			"a comment broken by a line separator",
 			"/*!\u2028 * banner\u2029 */\n(function (w) { w.x = 1; })(this);"
-		]
+		],
+		[
+			"a comment after a function returning a sequence",
+			"function q(t) { return f(t), new d(t); }\n/*! keep */\nsink(q);"
+		],
+		[
+			"a comment after a function returning a parenthesized sequence",
+			"function q(t) { return (f(t), new d(t)); }\n/*! keep */\nsink(q);"
+		],
+		[
+			"a comment after a sequence of its own",
+			"D.A = new D(1), D.B = new D(2);\n/*! keep */\nsink(D);"
+		],
+		["a sequence ending the source", "/*! keep */\nsink(a), sink(b)"]
 	];
-	for (const [name, source] of COMMENT_BREAK_CASES) {
-		it(`should break a line around a comment as terser does: ${name}`, async () => {
+	for (const [name, source] of COMMENT_PLACEMENT_CASES) {
+		it(`should print a comment where terser does: ${name}`, async () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			const options = { compress: false, mangle: false };
@@ -1772,6 +1785,11 @@ describe("syntax-printer", () => {
 			"a labeled loop inlined twice",
 			"function f(n) { l: for (var i = 0; i < n; i++) { if (i > 2) break l; } return i; } console.log(f(5), f(1));",
 			{ compress: { passes: 3, inline: 3, reduce_funcs: false }, mangle: false }
+		],
+		[
+			"a call of an annotated call",
+			"var r = /* @__PURE__ */ ((x) => y.z)(function (x) {})(E || {}); sink(r);",
+			{ compress: { passes: 2 }, mangle: false }
 		],
 		[
 			"a class reading itself as it is defined",
