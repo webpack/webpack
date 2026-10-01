@@ -1778,6 +1778,54 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	// Layouts where a comment decides where a line break is printed, which
+	// terser's tokenizer and its parentheses each have a rule for.
+	/** @type {[string, string][]} */
+	const COMMENT_BREAK_CASES = [
+		[
+			"a banner comment before a parenthesized call",
+			"/*!\n * banner\n */\n(function (w) { w.x = 1; })(this);"
+		],
+		[
+			"a banner comment read after an operator",
+			"!/*!\n * banner\n */\nfunction (g) { g.x = 1; }(this);"
+		],
+		[
+			"a comment of a parenthesis, on the line before it",
+			"var a = 1;/*! keep */\n(function () { a++; })();"
+		],
+		[
+			"two comments of a parenthesis, on the line before it",
+			"var a = 1;/*! one */ /*! two */\n(function () { a++; })();"
+		],
+		[
+			"a comment on the line its parenthesis opens",
+			"/*! a */(function () {})();"
+		],
+		[
+			"a comment inside a parenthesis holding none of its own",
+			"sink((/*! a */ function () {})());"
+		],
+		[
+			"a comment whose line breaks are carriage returns",
+			"/*!\r\n * banner\r\n */\r\n(function (w) { w.x = 1; })(this);\r\n"
+		],
+		[
+			"a comment broken by a line separator",
+			"/*!\u2028 * banner\u2029 */\n(function (w) { w.x = 1; })(this);"
+		]
+	];
+	for (const [name, source] of COMMENT_BREAK_CASES) {
+		it(`should break a line around a comment as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = terserReference();
+			const options = { compress: false, mangle: false };
+			const ours = await minify(source, { ...options });
+			const theirs = await reference.minify(source, { ...options });
+			expect(ours.code).toBe(theirs.code);
+		});
+	}
+
 	// `wrap` and `enclose` are options terser reads but its types omit.
 	/** @type {[string, string, EXPECTED_OBJECT][]} */
 	const DEFINE_CASES = [
