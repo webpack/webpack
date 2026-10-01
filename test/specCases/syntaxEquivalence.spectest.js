@@ -183,8 +183,12 @@ const CUSTOM_PROPERTY = "--webpack-probe";
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
 // exactly, so an entry outlives its defect by one run.
-/** @type {Map<string, string>} */
-const FILED_CONFIG_CSS_DEFECTS = new Map();
+const FILED_CONFIG_CSS_DEFECTS = new Map([
+	[
+		"test/configCases/css/minimize-values/style.css",
+		"webkit only: not a printer defect — `shape-image-threshold: 12.5%` prints as `.125`, the number CSS Shapes 1 says the percentage names, but WebKit takes no percentage there, so it drops the source's declaration and reads the printed one"
+	]
+]);
 
 const FILED_CONFIG_HTML_DEFECTS = new Map([
 	[
@@ -202,12 +206,7 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 ]);
 
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
-	["Fomantic-UI 2", "webkit only: not a printer defect — WebKit lays out in units of a sixty-fourth of a pixel, so a width the others compute whole lands one step below it. Measured in the first WebKit run: `112px` against `111.984375px`, which is `112 - 1/64`"],
-	["Foundation 6", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
 	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
-	["Radix Themes 3 (components)", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
-	["Semantic UI 2", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"],
-	["Tailwind 4 + daisyUI 5", "webkit only: the sixty-fourth of a pixel again — see `Fomantic-UI 2`"]
 ]);
 
 const FILED_BENCHMARK_HTML_DEFECTS = new Map();
@@ -2606,7 +2605,7 @@ const ENGINE_QUIRKS = [
 	},
 	{
 		engines: ["webkit"],
-		quirk: "serializes a computed length to six significant digits",
+		quirk: "serializes a computed length other than as Chromium does",
 		workaround: "`atPrintedPrecision` outside Chromium",
 		holds: (page) =>
 			page.evaluate(() => {
@@ -2615,7 +2614,8 @@ const ENGINE_QUIRKS = [
 				document.body.append(element);
 				const read = getComputedStyle(element).letterSpacing;
 				element.remove();
-				return read === "38.7953px";
+				// What Chromium 141 reads, at six significant digits.
+				return read !== "38.7953px";
 			})
 	},
 	{
