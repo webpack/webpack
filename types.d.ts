@@ -375,7 +375,7 @@ declare interface AllCodeGenerationSchemas {
 	exportsBindingSource: string;
 
 	/**
-	 * local expression for each used export, for native library bindings
+	 * final name of each used export of a concatenated module whose definitions were left out on demand
 	 */
 	exportsFinalName: Record<string, string>;
 
@@ -5379,6 +5379,7 @@ declare class ConstDependency extends NullDependency {
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-binding"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -8023,6 +8024,7 @@ declare class Dependency {
 			| "esm-import"
 			| "dynamic-import"
 			| "esm-reexport"
+			| "esm-export-binding"
 			| "esm-side-effect-import"
 			| "context-element"
 			| "esm-bare-side-effect-import"
@@ -8200,6 +8202,7 @@ declare class Dependency {
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-binding"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -8971,6 +8974,7 @@ declare class ESMImportDependency extends ModuleDependency {
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-binding"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -10170,6 +10174,10 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	typescript?: boolean | "auto";
+}
+declare interface ExportBinding {
+	id: null | string | number;
+	name: string;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -15434,6 +15442,7 @@ declare class JavascriptParser extends Parser {
 		canRename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		rename: HookMap<SyncBailHook<[ExpressionEstreeIndex], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
+		assignment: SyncHook<[AssignmentExpression]>;
 		write: HookMap<SyncBailHook<[WriteStatement], boolean | void>>;
 		writeMemberChain: HookMap<
 			SyncBailHook<[WriteStatement, string[]], boolean | void>
@@ -18090,6 +18099,16 @@ declare interface KnownMeta {
 	deferredImportVarMap?: Map<Module, string>;
 
 	/**
+	 * library bindings requiring write notifications
+	 */
+	libraryExportBindings?: Map<string, ExportBinding>;
+
+	/**
+	 * native exports backed by write notifications
+	 */
+	libraryExportAliases?: Map<string, ExportBinding>;
+
+	/**
 	 * generate export definitions on demand
 	 */
 	onDemandExports?: boolean;
@@ -20625,6 +20644,7 @@ declare class ModuleDependency extends Dependency {
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-binding"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"
@@ -23451,6 +23471,7 @@ declare class NullDependency extends Dependency {
 		| "esm-import"
 		| "dynamic-import"
 		| "esm-reexport"
+		| "esm-export-binding"
 		| "esm-side-effect-import"
 		| "context-element"
 		| "esm-bare-side-effect-import"

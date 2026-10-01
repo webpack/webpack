@@ -1,5 +1,6 @@
 "use strict";
 
+const acorn = require("acorn");
 const { javascript, sources } = require("../../../../");
 
 /** @param {import("../../../../").Compiler} compiler compiler */
@@ -37,6 +38,34 @@ module.exports = ["node14", "web", ["web", "node14"]].flatMap(
 								mode: targetIndex === 1 ? "development" : "production",
 								devtool: false,
 								plugins: [renderPlugin],
+								module:
+									index === 1
+										? {
+												rules: [
+													{
+														test: /store\.js$/,
+														loader: require.resolve("./return-loader"),
+														parser: {
+															// A custom parser permits a return that is valid inside the module factory.
+															/**
+															 * @param {string} code source
+															 * @param {import("../../../../lib/javascript/JavascriptParser").ParseOptions} options parser options
+															 * @returns {{ ast: import("acorn").Program, comments: [] }} parsed source
+															 */
+															parse: (code, options) => ({
+																ast: acorn.parse(code, {
+																	...options,
+																	ecmaVersion: "latest",
+																	ranges: true,
+																	allowReturnOutsideFunction: true
+																}),
+																comments: []
+															})
+														}
+													}
+												]
+											}
+										: undefined,
 								target,
 								entry: {
 									main: "./index.js",
