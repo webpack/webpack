@@ -501,6 +501,19 @@ const readThisField = (node) =>
 		: undefined;
 
 /**
+ * @param {EstreeNode} node a constructor's statement
+ * @returns {boolean} whether it is `this.field = props.field`
+ */
+const isPropsCopy = (node) =>
+	node.type === "ExpressionStatement" &&
+	node.expression.type === "AssignmentExpression" &&
+	readThisField(/** @type {EstreeNode} */ (node.expression.left)) !==
+		undefined &&
+	node.expression.right.type === "MemberExpression" &&
+	node.expression.right.object.type === "Identifier" &&
+	node.expression.right.object.name === "props";
+
+/**
  * @param {EstreeNode} node a statement
  * @returns {EstreeNode[]} it, or the statements of the block it is
  */
@@ -753,8 +766,15 @@ const collectNodeClasses = () => {
 			const fields = [];
 			let initializes = false;
 			for (const inner of ctorNode.body.body) {
-				if (inner.type !== "IfStatement") continue;
-				for (const assignment of statementsOf(inner.consequent)) {
+				// Most constructors copy under `if (props)`; `ClassStaticBlock` does not,
+				// and every one sets `this.flags = 0`, which copies nothing.
+				const assignments =
+					inner.type === "IfStatement"
+						? statementsOf(inner.consequent)
+						: isPropsCopy(inner)
+							? [inner]
+							: [];
+				for (const assignment of assignments) {
 					const expression =
 						assignment.type === "ExpressionStatement"
 							? assignment.expression
