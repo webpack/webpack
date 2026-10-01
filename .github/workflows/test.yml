@@ -309,6 +309,12 @@ jobs:
             submodules: test/external/terser test/external/test262-cases test/external/swc
             script: cover:minify-corpora
             flags: minify-corpora
+          # Runs terser's fuzzer against webpack's minifier: fixed seeds, so the
+          # same random programs each run, each output printing what its program
+          # prints. A leg of its own, as the phases it installs outlive the file.
+          - language: minify-fuzz
+            submodules: test/external/terser
+            script: test:minify-fuzz
     runs-on: ubuntu-latest
     # Bounded: the js leg allows ten minutes per area per mode, so a stall
     # would otherwise hold a runner for the 6h default.
