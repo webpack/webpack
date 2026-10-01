@@ -20,6 +20,11 @@ import {
 } from "./forms/define-shaking";
 import { kept } from "./forms/unused";
 import { kept as keptWithConfig } from "./forms/unused-config";
+import {
+	sef as usedSef,
+	value as usedSefValue,
+	getter as usedSefGetter
+} from "./forms/side-effect-free-used";
 import { foo as esmFoo, bump as esmBump } from "./forms/esm";
 import { name as jsonName, list as jsonList, key as jsonKey } from "./forms/json";
 import { text, lazyText } from "./forms/asset";
@@ -187,6 +192,12 @@ it(`[${VARIANT}] drops a side-effect-free target re-exported only unused`, () =>
 	const source = fs.readFileSync(__filename, "utf-8");
 	const marker = ["SIDE_EFFECT_FREE", "MARKER"].join("_");
 	expect(source.includes(marker)).toBe(!TREE_SHAKES);
+});
+
+it(`[${VARIANT}] re-exports a side-effect-free target read only through re-exports`, () => {
+	expect(usedSef.value).toBe("used-value");
+	expect(usedSefValue).toBe("used-value");
+	expect(usedSefGetter).toBe(usedSef);
 });
 
 it(`[${VARIANT}] re-exports an ESM target as its namespace, with live bindings`, () => {

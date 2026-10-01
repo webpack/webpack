@@ -1,6 +1,5 @@
 "use strict";
 
-const path = require("path");
 const webpack = require("../../../../");
 
 /** @import { Configuration } from "../../../../" */
@@ -17,7 +16,7 @@ const variant = (name, options) => ({
 		rules: [
 			{ test: /\.txt$/, type: "asset/source" },
 			{
-				test: path.resolve(__dirname, "targets/side-effect-free.js"),
+				test: /targets[\\/]side-effect-free(-used)?\.js$/,
 				sideEffects: false
 			}
 		]
@@ -53,7 +52,8 @@ module.exports = [
 		mode: "production",
 		optimization: {
 			concatenateModules: { commonjs: true },
-			mangleExports: "size"
+			mangleExports: "size",
+			minimize: true
 		}
 	}),
 	variant("development", { mode: "development" })
