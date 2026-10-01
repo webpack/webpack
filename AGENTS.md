@@ -18,7 +18,7 @@ Use **yarn**, not npm. Every command is a `package.json` script; these are the o
 
 - `yarn fix` — `fix:code` (ESLint) + `fix:special` + `fmt` (Prettier). Prefer as the final step.
 - `yarn fix:special` — Regenerate `types.d.ts`, declarations, schema validators and generated runtime code.
-- `yarn lint` — What CI runs: ESLint + the `AGENTS.md` size budget + generated-output checks + every `tsc` project + Prettier + spellcheck.
+- `yarn lint` — What CI runs: ESLint + the `AGENTS.md` size budget + unique `lib/` class names + generated-output checks + every `tsc` project + Prettier + spellcheck.
 - `yarn test:base --testPathPatterns="<pattern>"` / `-t "<name>"` — Targeted tests; `-u` updates snapshots (eyeball the diff first).
 - `yarn test` — Full suite — only when asked.
 
