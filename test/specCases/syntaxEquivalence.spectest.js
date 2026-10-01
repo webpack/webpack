@@ -503,6 +503,11 @@ const STYLE_CONTROLS = new Map([
 	["bad nth-of-type", ["p:nth-of-type(3){color:red}", "p:nth-of-type(2){color:red}"]],
 	["bad has sibling", ["a:has(+ b){color:red}", "a:has(b){color:red}"]],
 	["bad has child", ["a:has(> b){color:red}", "a:has(> i){color:red}"]],
+	// The siblings a position counts are built around the ones already there, so what it declares is read.
+	["bad nth-child of", ["li:nth-child(2 of .x){color:red}", "li:nth-child(2 of .x){color:blue}"]],
+	["bad nth-child after", [".a+.b:nth-child(3){color:red}", ".a+.b:nth-child(3){color:blue}"]],
+	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
+	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
 	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],
 	["good has spacing", ["a:has( > b ){color:red}", "a:has(>b){color:red}"]],
