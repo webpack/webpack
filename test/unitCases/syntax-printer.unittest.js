@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore binop, fnames, propmangle, fargs, domprops
+// cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun
 
 const vm = require("vm");
 const {
@@ -1682,76 +1682,302 @@ describe("syntax-printer", () => {
 		).toBe(false);
 	});
 
-	it("should decline a terser whose walk it does not know", () => {
+	it("should decline a terser whose walk it does not know", async () => {
 		const walk =
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
 				PHASES.find((phase) => phase.name === "walk")
 			);
-		/**
-		 * @param {string} source what the function prints as
-		 * @returns {() => void} a function printing as that source
-		 */
-		const printingAs = (source) =>
-			Object.assign(() => {}, { toString: () => source });
-		const terserVisit = printingAs(
-			"_visit(node, descend) { this.push(node); var ret = this.visit(node, descend ? function() { descend.call(node); } : noop); if (!ret && descend) { descend.call(node); } this.pop(); return ret; }"
-		);
-		/**
-		 * @param {string[]} walks each node class's walk, as its source
-		 * @param {Record<string, unknown>=} exports what the ast module exports besides
-		 * @returns {boolean} whether the phase fits
-		 */
-		const fits = (walks, exports = {}) =>
-			walk.supports({
-				ast: {
-					TreeWalker: Object.assign(function TreeWalker() {}, {
-						prototype: { _visit: terserVisit }
-					}),
-					AST_Node: {
-						prototype: {
-							_walk: printingAs("function(visitor) { return visitor._visit(this); }")
-						},
-						SUBCLASSES: [
-							{ prototype: {}, SUBCLASSES: [] },
-							...walks.map((source) => ({
-								prototype: { _walk: printingAs(source) },
-								SUBCLASSES: []
-							}))
-						]
-					},
-					...exports
-				},
-				utils: { noop() {} }
-			});
-
+		const loaded = await loadSources();
+		// terser's own visit, which an earlier test may have replaced already.
+		const terserVisit = Object.assign(() => {}, {
+			toString: () =>
+				"_visit(node, descend) { this.push(node); var ret = this.visit(node, descend ? function() { descend.call(node); } : noop); if (!ret && descend) { descend.call(node); } this.pop(); return ret; }"
+		});
+		const modules = {
+			...loaded,
+			ast: {
+				...loaded.ast,
+				TreeWalker: Object.assign(function TreeWalker() {}, {
+					prototype: { _visit: terserVisit }
+				})
+			}
+		};
+		expect(walk.supports(modules)).toBe(true);
 		expect(walk.supports({ ast: {}, utils: {} })).toBe(false);
-		expect(fits([])).toBe(true);
+		/**
+		 * @param {Record<string, unknown>} changes node classes replaced
+		 * @returns {boolean} whether the phase fits terser with them
+		 */
+		const fitsWith = (changes) =>
+			walk.supports({ ...modules, ast: { ...modules.ast, ...changes } });
+		// A walker whose visit is not terser's.
 		expect(
-			fits([
-				"function(visitor) { return visitor._visit(this, this.value && function() { this.value._walk(visitor); }); }"
-			])
-		).toBe(true);
-		// A walk that does not hand its children's walk to the visitor.
-		expect(fits(["function(visitor) { visitor.seen(this); }"])).toBe(false);
-		// Children walked through a helper the ast module does not export.
+			fitsWith({
+				TreeWalker: Object.assign(function TreeWalker() {}, {
+					prototype: { _visit() {} }
+				})
+			})
+		).toBe(false);
+		// A class missing, renamed, or extending another.
+		expect(fitsWith({ AST_Call: undefined })).toBe(false);
 		expect(
-			fits([
-				"function(visitor) { return visitor._visit(this, function() { walk_body(this, visitor); }); }"
-			])
+			fitsWith({ AST_Call: Object.assign(function AST_Call() {}, { TYPE: "Calls" }) })
 		).toBe(false);
 		expect(
-			fits(
-				[
-					"function(visitor) { return visitor._visit(this, function() { walk_body(this, visitor); }); }"
-				],
-				{ walk_body() {} }
-			)
-		).toBe(true);
-		// Children walked by code webpack's parser refuses.
+			fitsWith({
+				AST_Call: Object.assign(function AST_Call() {}, {
+					TYPE: "Call",
+					BASE: modules.ast.AST_Statement
+				})
+			})
+		).toBe(false);
 		expect(
-			fits([
-				"function(visitor) { return visitor._visit(this, function() { this.body._walk(visitor; }); }"
-			])
+			fitsWith({
+				AST_Node: Object.assign(function AST_Node() {}, {
+					TYPE: "Node",
+					BASE: modules.ast.AST_Statement
+				})
+			})
+		).toBe(false);
+		// An `ast.js` other than the one the table was generated from.
+		const fs = require("fs");
+
+		const spy = jest.spyOn(fs, "readFileSync").mockImplementation(() => "");
+		try {
+			expect(walk.supports(modules)).toBe(false);
+		} finally {
+			spy.mockRestore();
+		}
+	});
+
+	// `wrap` and `enclose` are options terser reads but its types omit.
+	/** @type {[string, string, EXPECTED_OBJECT][]} */
+	const DEFINE_CASES = [
+		[
+			"globals replaced by what `global_defs` gives them",
+			"if (DEBUG) console.log(FOO.bar, import.meta.env, O?.x, FOO.bar.baz); FOO.bar = 1; function g(DEBUG) { return DEBUG; } console.log(g(2));",
+			{
+				module: true,
+				compress: {
+					global_defs: {
+						DEBUG: false,
+						"FOO.bar": [1, { a: 2 }],
+						"import.meta.env": 3,
+						O: { x: "y" }
+					}
+				}
+			}
+		],
+		[
+			"every `console` call dropped",
+			"console.log(1); var f = console.log.bind(console); console.log.call(console, 2); console.a.b.c(); x = console.warn.apply(console, []); f();",
+			{ compress: { drop_console: true } }
+		],
+		[
+			"only the `console` methods named dropped",
+			"console.log(1); console.warn(2); var f = console.log.bind(console); f();",
+			{ compress: { drop_console: ["log"] } }
+		],
+		["a module wrapped as CommonJS", "var x = 1; exports.x = x;", { wrap: "lib" }],
+		[
+			"a script enclosed in a call",
+			"console.log(a, b);",
+			{ enclose: "a,b:1,2", compress: false }
+		],
+		["a script enclosed without arguments", "console.log(1);", { enclose: true }],
+		[
+			"parameters and declarations destructured",
+			"function f({ a }, [b], ...c) { return a + b + c.length; } function g(d = 1, { e } = {}) { var { h, i: [j] } = e; return d + h + j; } console.log(f({ a: 1 }, [2], 3), g(), f.length, g.length);",
+			{ compress: { passes: 2, unsafe: true }, mangle: false }
+		],
+		[
+			"a labeled loop inlined twice",
+			"function f(n) { l: for (var i = 0; i < n; i++) { if (i > 2) break l; } return i; } console.log(f(5), f(1));",
+			{ compress: { passes: 3, inline: 3, reduce_funcs: false }, mangle: false }
+		],
+		[
+			"a class reading itself as it is defined",
+			"class A { static x = A.name; static [Symbol.iterator] = 1; static { this.y = 1; } m() {} } class B { static x = this; } class C extends Object { static z = function () { return this; }; }",
+			{ module: true, compress: { toplevel: true, unused: true } }
+		]
+	];
+	for (const [name, source, options] of DEFINE_CASES) {
+		it(`should minify as terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = require("terser");
+			const ours = await minify(
+				source,
+				/** @type {import("terser").MinifyOptions} */ ({ ...options })
+			);
+			const theirs = await reference.minify(
+				source,
+				/** @type {import("terser").MinifyOptions} */ ({ ...options })
+			);
+			expect(ours.code).toBe(theirs.code);
+		});
+	}
+
+	it("should give a global the copy of a node `global_defs` gives it", async () => {
+		const { minify } = await load();
+		const { parse } = await loadSources();
+		const value = parse.parse("(function () { return 1 + x; })").body[0].body;
+		const { code } = await minify("console.log(A, A, B);", {
+			compress: {
+				global_defs: { A: value, B: parse.parse("2").body[0].body },
+				passes: 1,
+				reduce_vars: false,
+				unused: false
+			},
+			mangle: false
+		});
+		expect(code).toBe(
+			"console.log(function(){return 1+x},function(){return 1+x},2);"
+		);
+	});
+
+	it("should give terser's nodes the methods terser writes by hand", async () => {
+		await load();
+		const { ast, parse } = await loadSources();
+		const { TreeWalker } = ast;
+		/**
+		 * @param {string} source a script
+		 * @returns {EXPECTED_ANY} its toplevel, its scopes worked out
+		 */
+		const parsed = (source) => {
+			const toplevel = parse.parse(source);
+			toplevel.figure_out_scope({});
+			return toplevel;
+		};
+
+		const labeled = parsed("l: for (;;) { { let x; } break l; }").body[0];
+		const copy = labeled.clone(true);
+		expect(copy).not.toBe(labeled);
+		expect(copy.label.references).toHaveLength(1);
+		expect(labeled.clone(false).body).toBe(labeled.body);
+
+		const toplevel = parsed("function f(a) { return a; }");
+		const declared = toplevel.body[0];
+		const cloned = declared.clone(true, toplevel);
+		expect(cloned.variables).not.toBe(declared.variables);
+		expect(declared.clone(false).variables).not.toBe(declared.variables);
+		expect(declared.get_defun_scope()).toBe(declared);
+		expect(declared.pinned()).toBeFalsy();
+
+		const lambda = parsed("function f({ a }, [b], ...c) {} function g(d = 1, e) { return d; } function h(p, q) {}").body;
+		expect(lambda[2].args_as_names()).toBe(lambda[2].argnames);
+		expect(lambda[1].argnames[0].all_symbols().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
+		expect(lambda[0].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["a", "b", "c"]);
+		expect(lambda[1].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d", "e"]);
+		expect(lambda[0].length_property()).toBe(2);
+		expect(lambda[1].is_braceless()).toBeTruthy();
+		expect(lambda[0].is_braceless()).toBeFalsy();
+		const definitions = parsed("var { h, i: [j] } = o, k;").body[0].definitions;
+		expect(definitions[0].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
+		expect(definitions[1].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
+
+		const object = parsed("({ a: 1, [b]: 2, get c() {}, set [d](v) {}, e() {} })").body[0].body;
+		expect(object.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([false, true, false, true, false]);
+		const declaredClass = parsed(
+			"class K extends L { #p = 1; static q = this; r = 2; static { s(); } #t() {} get #u() {} set #u(v) {} static [w] = 3; x() {} }"
+		).body[0];
+		expect(declaredClass.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([
+			false, false, false, false, false, false, false, true, false
+		]);
+		/**
+		 * @param {string} method a class's method walking parts of it
+		 * @returns {string[]} the types of the nodes it visits
+		 */
+		const visits = (method) => {
+			/** @type {string[]} */
+			const types = [];
+			declaredClass[method](
+				new TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+					types.push(node.TYPE);
+				})
+			);
+			return types;
+		};
+		expect(visits("visit_nondeferred_class_parts")).toEqual([
+			"SymbolRef", "This", "ClassStaticBlock", "SimpleStatement", "Call", "SymbolRef", "SymbolRef", "Number"
+		]);
+		// A field's value is walked with the field pushed, not visited.
+		expect(visits("visit_deferred_class_parts")).toEqual([
+			"Number", "Number", "PrivateMethod", "SymbolMethod", "Accessor", "ConciseMethod", "SymbolMethod", "Accessor"
+		]);
+
+		/** @type {Record<string, unknown>} */
+		const seen = {};
+		const walked = parsed(
+			'"use strict"; function f() { a: for (var i in o) { switch (i) { case 1: break; default: continue a; } } while (1) { for (let j = g(); j; ) { break; } } }'
+		);
+		walked.walk(
+			new TreeWalker(
+				/**
+				 * @this {EXPECTED_ANY} the walker
+				 * @param {EXPECTED_ANY} node the node visited
+				 * @returns {void}
+				 */
+				function visit(node) {
+				if (node.TYPE === "Break" || node.TYPE === "Continue") {
+					const target = this.loopcontrol_target(node);
+					const key = `${node.TYPE}${node.label ? " label" : ""}`;
+					seen[key] = [...(/** @type {string[]} */ (seen[key]) || []), target.TYPE];
+				}
+				if (node.TYPE === "Call") {
+					seen.withinLoop = this.is_within_loop();
+					seen.scope = this.find_scope().TYPE;
+					seen.parent = this.parent().TYPE;
+					seen.self = this.self().TYPE;
+					seen.lambda = this.find_parent(ast.AST_Lambda).TYPE;
+					seen.strict = Boolean(this.has_directive("use strict"));
+				}
+				if (node.TYPE === "SymbolRef" && node.name === "o") {
+					seen.objectWithinLoop = this.is_within_loop();
+				}
+				if (node.TYPE === "Toplevel") {
+					seen.toplevelStrict = Boolean(this.has_directive("use strict"));
+					seen.toplevelAsm = this.has_directive("use asm");
+				}
+				}
+			)
+		);
+		expect(seen).toEqual({
+			toplevelStrict: true,
+			toplevelAsm: undefined,
+			objectWithinLoop: false,
+			Break: ["Switch", "For"],
+			"Continue label": ["ForIn"],
+			withinLoop: true,
+			scope: "Scope",
+			parent: "VarDef",
+			self: "Call",
+			lambda: "Defun",
+			strict: true
+		});
+	});
+
+	it("should decline a terser whose node methods it does not know", async () => {
+		const nodes =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "nodes")
+			);
+		const modules = await loadSources();
+		expect(nodes.supports(modules)).toBe(true);
+		expect(nodes.supports({ ...modules, parse: {} })).toBe(false);
+		expect(nodes.supports({ ...modules, utils: {} })).toBe(false);
+		expect(nodes.supports({ ...modules, ast: undefined })).toBe(false);
+	});
+
+	it("should decline a terser whose global definitions it does not know", async () => {
+		const defines =
+			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
+				PHASES.find((phase) => phase.name === "defines")
+			);
+		expect(defines.supports({ ast: undefined })).toBe(false);
+		expect(
+			defines.supports({
+				ast: { AST_Toplevel: { prototype: { drop_console() {} } } }
+			})
 		).toBe(false);
 	});
 
