@@ -5,6 +5,12 @@
 const acorn = require("acorn");
 const { load } = require("../../lib/javascript/syntax").printer;
 const { loadTerserSources } = require("../helpers/terserSources");
+
+/**
+ * @param {string} specifier a module's URL
+ * @returns {Promise<EXPECTED_ANY>} the module, imported through this file's runtime
+ */
+const importTerserSource = (specifier) => import(specifier);
 const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
 
 // A token's fields, past which a converted tree keeps nothing a minify reads.
@@ -87,7 +93,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 	const modules = { theirs: undefined, ours: undefined };
 
 	beforeAll(async () => {
-		modules.theirs = await loadTerserSources();
+		modules.theirs = await loadTerserSources(importTerserSource);
 		modules.ours = (await load()).modules;
 	});
 

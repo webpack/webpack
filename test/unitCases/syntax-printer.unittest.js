@@ -16,6 +16,12 @@ const {
 const { loadTerserSources } = require("../helpers/terserSources");
 
 /**
+ * @param {string} specifier a module's URL
+ * @returns {Promise<EXPECTED_ANY>} the module, imported through this file's runtime
+ */
+const importTerserSource = (specifier) => import(specifier);
+
+/**
  * terser as published, the minifier the printer is held to.
  * @returns {{ minify: typeof import("terser").minify }} it
  */
@@ -523,7 +529,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should port every compress helper the phases read under terser's name", async () => {
-		const modules = await loadTerserSources();
+		const modules = await loadTerserSources(importTerserSource);
 		const helpers = createCompressHelpers(modules);
 		const printerSource = require("fs").readFileSync(
 			require.resolve("../../lib/javascript/syntax-printer"),
@@ -574,7 +580,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should keep the quirks of terser's compress helpers", async () => {
-		const modules = await loadTerserSources();
+		const modules = await loadTerserSources(importTerserSource);
 		const { common, inference, flags, utils } =
 			createCompressHelpers(modules);
 		const { ast } = modules;
@@ -1847,7 +1853,7 @@ describe("syntax-printer", () => {
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
 				PHASES.find((phase) => phase.name === "helpers")
 			);
-		const modules = await loadTerserSources();
+		const modules = await loadTerserSources(importTerserSource);
 		const reference = modules.nativeObjects;
 		helpers.install(modules);
 		const own = modules.nativeObjects;
@@ -1940,7 +1946,7 @@ describe("syntax-printer", () => {
 			/** @type {import("../../lib/javascript/syntax-printer").Phase} */ (
 				PHASES.find((phase) => phase.name === "helpers")
 			);
-		const modules = await loadTerserSources();
+		const modules = await loadTerserSources(importTerserSource);
 		const reference = modules.nativeObjects;
 		helpers.install(modules);
 		const own = modules.nativeObjects;

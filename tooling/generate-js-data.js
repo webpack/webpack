@@ -1022,6 +1022,9 @@ const evaluateParserTable = (node, known) => {
 	}
 	if (node.type === "ArrayExpression") {
 		return node.elements.map((element) => {
+			if (element === null || element.type === "SpreadElement") {
+				throw unexpectedParserSyntax(node, "an array of strings without holes");
+			}
 			const value = evaluateParserTable(
 				/** @type {EstreeNode} */ (element),
 				known

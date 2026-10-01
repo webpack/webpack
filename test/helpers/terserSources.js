@@ -5,16 +5,14 @@
 /**
  * terser's own modules, which its published entry point does not expose: the
  * reference the printer's tests compare webpack's ports with.
+ * @param {(specifier: string) => Promise<EXPECTED_ANY>} importModule the calling test's own `import()`, bound to its runtime
  * @returns {Promise<Record<string, EXPECTED_ANY>>} the modules, by what they hold
  */
-const loadTerserSources = async () => {
+const loadTerserSources = async (importModule) => {
 	const path = require("path");
 	const { pathToFileURL } = require("url");
 	const { createRequire } = require("module");
 
-	// Built at call time, so Jest compiles no `import()` of its own.
-	// eslint-disable-next-line no-new-func
-	const importModule = new Function("specifier", "return import(specifier)");
 	const directory = path.dirname(require.resolve("terser/package.json"));
 	/**
 	 * @param {string} file a file in terser's `lib`
