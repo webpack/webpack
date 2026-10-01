@@ -22566,6 +22566,11 @@ declare interface OptionsSyntaxParser {
 	onToken?: any[] | ((token?: any) => void);
 
 	/**
+	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
+	 */
+	onTokenRead?: (parser?: any) => void;
+
+	/**
 	 * where comments are reported
 	 */
 	onComment?:
@@ -26897,6 +26902,11 @@ declare interface ResolvedOptionsSyntaxParser {
 	 * where tokens are reported
 	 */
 	onToken: null | ((token?: any) => void);
+
+	/**
+	 * the parser itself at each token
+	 */
+	onTokenRead: null | ((parser?: any) => void);
 
 	/**
 	 * where comments are reported
@@ -33142,6 +33152,7 @@ declare namespace exports {
 					export let locations: boolean;
 					export let startLocation: null;
 					export let onToken: null;
+					export let onTokenRead: null;
 					export let onComment: null;
 					export let ranges: boolean;
 					export let program: null;
