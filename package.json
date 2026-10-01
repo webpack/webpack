@@ -122,7 +122,6 @@
     ]
   },
   "dependencies": {
-    "@jridgewell/source-map": "^0.3.3",
     "@types/estree": "^1.0.8",
     "@types/json-schema": "^7.0.15",
     "@webassemblyjs/ast": "^1.14.1",

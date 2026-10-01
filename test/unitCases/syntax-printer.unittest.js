@@ -2203,15 +2203,69 @@ describe("syntax-printer", () => {
 			[{ "a.js": source }, {}],
 			[{ "a.js": source }, { includeSources: true, filename: "a.min.js", root: "/r" }],
 			[{ "b.js": /** @type {string} */ (input.code) }, { content: /** @type {string} */ (input.map), includeSources: true }],
-			[{ "b.js": /** @type {string} */ (input.code) }, { content: /** @type {string} */ (input.map) }]
+			[{ "b.js": /** @type {string} */ (input.code) }, { content: /** @type {string} */ (input.map) }],
+			[{ "b.js": /** @type {string} */ (input.code) }, { content: JSON.parse(/** @type {string} */ (input.map)), asObject: true }]
 		];
 		for (const [files, sourceMap] of cases) {
 			const ours = await minify(files, { sourceMap: { ...sourceMap } });
 			const reference = await terser.minify(files, { sourceMap: { ...sourceMap } });
 			expect(ours.code).toBe(reference.code);
-			expect(ours.map).toBe(reference.map);
+			expect(ours.map).toStrictEqual(reference.map);
 		}
 	});
+
+	// cspell:disable -- VLQ-encoded source-map mappings strings below
+	it("should map through an input map as terser reads it, index maps and decoded mappings included", async () => {
+		const { minify } = await load();
+		const terser = terserReference();
+		const source = "var one = 1;\nfunction two(x) { return x * 2; }\nconsole.log(two(one));\n";
+		/** @type {(string | Record<string, EXPECTED_ANY>)[]} */
+		const inputs = [
+			{
+				version: 3,
+				sections: [
+					{ offset: { line: 0, column: 0 }, map: { version: 3, sources: ["./a/../one.js"], sourcesContent: ["one"], names: ["n"], mappings: "AAAAA,EAAC;AACA" } },
+					{
+						offset: { line: 1, column: 4 },
+						map: {
+							version: 3,
+							sections: [
+								{ offset: { line: 0, column: 2 }, map: JSON.stringify({ version: 3, sourceRoot: "root", sources: ["two.js", null], names: [], mappings: "AAAA,CACA;ACAA,BAAA" }) },
+								{ offset: { line: 1, column: 0 }, map: { version: 3, sources: ["three.js"], names: [], mappings: "AAAA" } }
+							]
+						}
+					},
+					{ offset: { line: 2, column: 0 }, map: { version: 3, sources: ["four.js"], names: [], mappings: ";AAAA" } }
+				]
+			},
+			{ version: 3, sources: ["one.js"], names: ["x"], mappings: [[[8, 0, 0, 0, 0], [0, 0, 1, 1]], [], [[3, 0, 2, 2], [0]]] },
+			JSON.stringify({ version: 3, sources: ["one.js"], names: [], mappings: [[[8, 0, 0, 0], [0, 0, 1, 1]]] }),
+			{ version: 3, sources: ["one.js"], names: [], mappings: "IAAA,AACC;;GAAE,A" },
+			{ version: 3, sources: ["one.js"], names: [], mappings: "!A" }
+		];
+		for (const content of inputs) {
+			for (const compress of [false, undefined]) {
+				const options = () => ({ compress, mangle: false, sourceMap: { content: JSON.parse(JSON.stringify(content)), includeSources: true } });
+				const ours = await minify({ "in.js": source }, options());
+				const reference = await terser.minify({ "in.js": source }, options());
+				expect(ours.map).toBe(reference.map);
+			}
+		}
+		const invalid = { version: 3, sources: [] };
+		/**
+		 * @param {(code: Record<string, string>, options: import("terser").MinifyOptions) => Promise<EXPECTED_ANY>} run a minify
+		 * @returns {Promise<string>} the message it rejects with
+		 */
+		const rejection = (run) =>
+			run({ "in.js": source }, { sourceMap: { content: /** @type {EXPECTED_ANY} */ (invalid) } }).then(
+				() => "",
+				(error) => error.message
+			);
+		const message = await rejection(minify);
+		expect(message).toMatch(/^invalid source map: /);
+		expect(message).toBe(await rejection(terser.minify));
+	});
+	// cspell:enable
 
 	it("should read characters as terser's unicode helpers do", async () => {
 		const terserUnicode = await import(

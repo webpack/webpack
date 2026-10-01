@@ -5,6 +5,44 @@ const { pathToFileURL } = require("url");
 const identifierUtil = require("../../lib/util/identifier");
 
 describe("util/identifier", () => {
+	describe("normalizeSourceMapUrl", () => {
+		it("should normalize a source map's source as its readers resolve it", () => {
+			/** @type {[string, string][]} */
+			const cases = [
+				["", ""],
+				[".", "."],
+				["a", "a"],
+				["a/", "a/"],
+				["a/..", "."],
+				["a/../..", ".."],
+				["./a/../b.js", "./b.js"],
+				["../../x/./y.js", "../../x/y.js"],
+				["src//a.js", "src/a.js"],
+				["a/b/../../..", ".."],
+				["a/./", "a/"],
+				["./?q", "?q"],
+				["a?q#h", "a?q#h"],
+				["?q", "?q"],
+				["#h", "#h"],
+				["/", "/"],
+				["/a//b/../c", "/a/c"],
+				["/..", "/"],
+				["//host:80/a/../b?q#h", "//host:80/b?q#h"],
+				["//", "///"],
+				["http://u@h.com:8/x/../y/?q#h", "http://u@h.com:8/y/?q#h"],
+				["webpack:///./src/a.js", "webpack:///src/a.js"],
+				["file:///C:/a/../b", "file:///C:/b"],
+				["file:a/b", "file:///a/b"],
+				["file://host/a/./b?q", "file://host/a/b?q"],
+				["..a/b", "..a/b"],
+				["C:\\a\\b.js", "C:\\a\\b.js"]
+			];
+			for (const [url, expected] of cases) {
+				expect(identifierUtil.normalizeSourceMapUrl(url)).toBe(expected);
+			}
+		});
+	});
+
 	describe("ABSOLUTE_PATH_REGEXP", () => {
 		const { ABSOLUTE_PATH_REGEXP } = identifierUtil;
 
