@@ -20,6 +20,7 @@ const zlib = require("zlib");
 const acorn = require("acorn");
 const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
+const SWC_SMALLER = require("../helpers/swcSmaller");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
@@ -417,6 +418,11 @@ const readSwcTest = (file, { knows }) => {
 		: undefined;
 	const [area] = path.relative(swcTestsDir, file).split(path.sep);
 	const mangle = readJson(path.join(path.dirname(file), "mangle.json"));
+	// swc also reads its Rust field's camelCase spelling, which terser does not.
+	if (mangle && mangle.topLevel !== undefined) {
+		mangle.toplevel = mangle.topLevel;
+		delete mangle.topLevel;
+	}
 	const module = readsAsModule(input);
 	const expectedStdout = path.join(path.dirname(file), "expected.stdout");
 	// swc records what it wrote for each test beside its input, and for each
@@ -854,14 +860,6 @@ const CORRECTED = {
 	"swc minifier: fixture/issues/9460/side-effects/input.js (the default minimizer's options)":
 		"terser drops destructuring defaults and patterns whose evaluation has effects or throws"
 };
-
-/**
- * Sources whose output under their own options is bigger than swc's recorded
- * one, each with what swc does that webpack does not yet; an entry that stops
- * being bigger fails until retired.
- * @type {Record<string, string>}
- */
-const SWC_SMALLER = {};
 
 /**
  * @param {Minify} minify a minifier
