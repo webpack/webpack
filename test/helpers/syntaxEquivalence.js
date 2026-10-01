@@ -2393,20 +2393,46 @@ const compareRenders = async ({ pairs, width }) => {
 	// Under Chromium's 1/64px layout grid, where the same line laid out from
 	// text split differently can land.
 	const TOLERANCE = 0.05;
-	const frame = document.createElement("iframe");
-	frame.setAttribute("sandbox", "allow-same-origin");
-	frame.style.cssText = `width:${width}px;height:800px;border:0`;
-	document.body.append(frame);
+	// WHY: WebKit can leave a frame's `load` or `document.fonts.ready` pending
+	// for good on a page whose subresource the policy blocks, so each wait is
+	// bounded; what is read then is the page as far as it got.
+	const PATIENCE = 3000;
+	/** @type {HTMLIFrameElement} */
+	let frame = document.createElement("iframe");
 
 	/**
-	 * @param {string} html a document
-	 * @returns {Promise<void>} once the frame has loaded it
+	 * @param {Promise<unknown>} pending what to wait for
+	 * @returns {Promise<boolean>} whether it settled within the patience
 	 */
-	const render = (html) =>
-		new Promise((resolve) => {
-			frame.addEventListener("load", () => resolve(), { once: true });
-			frame.srcdoc = html;
-		});
+	const settled = (pending) =>
+		Promise.race([
+			pending.then(() => true),
+			new Promise((resolve) => {
+				setTimeout(() => resolve(false), PATIENCE);
+			})
+		]);
+
+	/**
+	 * A fresh frame per document, so a late event of one cannot be the next one's.
+	 * @param {string} html a document
+	 * @returns {Promise<boolean>} whether the frame finished loading it
+	 */
+	const render = (html) => {
+		frame.remove();
+		frame = document.createElement("iframe");
+		frame.setAttribute("sandbox", "allow-same-origin");
+		frame.style.cssText = `width:${width}px;height:800px;border:0`;
+		const loaded = settled(
+			new Promise((resolve) => {
+				frame.addEventListener("load", () => resolve(undefined), {
+					once: true
+				});
+			})
+		);
+		frame.srcdoc = html;
+		document.body.append(frame);
+		return loaded;
+	};
 
 	/**
 	 * @param {Element} element an element
@@ -2485,7 +2511,7 @@ const compareRenders = async ({ pairs, width }) => {
 	 */
 	const measure = async () => {
 		const doc = /** @type {Document} */ (frame.contentDocument);
-		await doc.fonts.ready;
+		await settled(doc.fonts.ready);
 		// A transition or animation would be read part way through.
 		for (const running of doc.getAnimations()) running.cancel();
 		const root = /** @type {HTMLElement} */ (doc.documentElement);
@@ -2506,9 +2532,9 @@ const compareRenders = async ({ pairs, width }) => {
 	/** @type {RenderReport[]} */
 	const reports = [];
 	for (const pair of pairs) {
-		await render(pair.before);
+		const loaded = [await render(pair.before)];
 		const before = await measure();
-		await render(pair.after);
+		loaded.push(await render(pair.after));
 		const after = await measure();
 		/** @type {string[]} */
 		const differences = [];
@@ -2543,6 +2569,9 @@ const compareRenders = async ({ pairs, width }) => {
 					);
 				}
 			}
+		}
+		if (loaded[0] !== loaded[1]) {
+			differences.push(`loaded: ${loaded[0]} -> ${loaded[1]}`);
 		}
 		if (differences.length === 0 && before.size !== after.size) {
 			differences.push(`size: ${before.size} -> ${after.size}`);
