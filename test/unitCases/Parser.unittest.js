@@ -1016,8 +1016,10 @@ describe("Parser", () => {
 					allowAwaitOutsideFunction: true
 				})
 			).toThrow(/allowAwaitOutsideFunction with sourceType: commonjs/);
+			// The defaults are acorn's, plus the one hook webpack adds: a reader
+			// takes what it needs off the parser rather than a token of its own.
 			expect(Object.keys(defaultOptions).sort()).toEqual(
-				Object.keys(acorn.defaultOptions).sort()
+				[...Object.keys(acorn.defaultOptions), "onTokenRead"].sort()
 			);
 		});
 
