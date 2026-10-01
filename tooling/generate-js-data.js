@@ -1249,10 +1249,16 @@ const renderParserTables = () => `
 /**
  * @returns {Record<string, string[] | string[][]>} the tables, fresh on each call
  */
-const parserTables = () => (${JSON.stringify(collectParserTables()).replace(
-	/[^\u0020-\u007E]/g,
-	(char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
-)});
+const parserTables = () => (${JSON.stringify(collectParserTables())
+	.replace(
+		/[^\u0020-\u007E]/g,
+		(char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`
+	)
+	// Upper case, as the linter writes an escape, JSON's own ones included.
+	.replace(
+		/\\u[\dA-Fa-f]{4}/g,
+		(escape) => `\\u${escape.slice(2).toUpperCase()}`
+	)});
 `;
 
 /**

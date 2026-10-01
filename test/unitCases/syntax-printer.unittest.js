@@ -16,6 +16,12 @@ const {
 const { loadTerserSources } = require("../helpers/terserSources");
 
 /**
+ * terser as published, the minifier the printer is held to.
+ * @returns {{ minify: import("../../lib/javascript/jsMinify").Minify }} it
+ */
+const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
+
+/**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
  * name, and which names it may not hand out.
  * @type {[string, string, EXPECTED_OBJECT?][]}
@@ -143,7 +149,7 @@ const runProgram = (code) => {
 };
 
 // Each prints one thing and terser's output another, under the options named.
-/** @type {[string, string, import("terser").MinifyOptions][]} */
+/** @type {[string, string, import("../../lib/javascript/jsMinify").MinifyOptions][]} */
 const CORRECTED_CASES = [
 	[
 		"a `{ __proto__ }` shorthand, printed",
@@ -227,7 +233,7 @@ const CORRECTED_CASES = [
 
 // The option sets the printer is held to terser under: a build's own, and
 // every format option that changes what the stream writes.
-/** @type {import("terser").MinifyOptions[]} */
+/** @type {import("../../lib/javascript/jsMinify").MinifyOptions[]} */
 const OUTPUT_OPTIONS = [
 	{ compress: { passes: 2 }, mangle: true, format: { comments: false } },
 	{ compress: false, mangle: false, format: { comments: "all" } },
@@ -650,7 +656,7 @@ describe("syntax-printer", () => {
 	for (const [name, source, options] of CASES) {
 		it(`should mangle exactly as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			const settings = {
 				compress: { passes: 2 },
 				mangle: true,
@@ -668,7 +674,7 @@ describe("syntax-printer", () => {
 
 	it("should mangle as terser does under each option the fast path leaves out", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		const source = `var counter = function () { return 1; };
 			function outer(first, second) {
 				label: for (var i = 0; i < 2; i++) { if (i) break label; }
@@ -718,7 +724,7 @@ describe("syntax-printer", () => {
 
 	it("should minify a source too large to keep its buffers as terser does", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		// Past the 8 MiB the conversion keeps its buffers for, in a comment both
 		// parsers skip quickly.
 		const source = `var box = { width: 2, height: 3 }; sink(box);\n/*${"x".repeat(
@@ -733,7 +739,7 @@ describe("syntax-printer", () => {
 
 	it("should minify a source denser in tokens than its buffers start as terser does", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		// Two characters a token: past the quarter of the length the buffers
 		// start at, however large an earlier source left them here.
 		const source = `sink([${"1,".repeat(200000)}]);`;
@@ -767,7 +773,7 @@ describe("syntax-printer", () => {
 	for (const [name, source] of OUTPUT_CASES) {
 		it(`should print exactly as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			for (const settings of OUTPUT_OPTIONS) {
 				const options = () => ({ ...settings, format: { ...settings.format } });
 				const ours = await minify({ "input.js": source }, options());
@@ -793,7 +799,7 @@ describe("syntax-printer", () => {
 	for (const source of CODEGEN_CASES) {
 		it(`should generate code as terser does: ${source}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			for (const settings of OUTPUT_OPTIONS) {
 				const options = () => ({ ...settings, format: { ...settings.format } });
 				const ours = await minify({ "input.js": source }, options());
@@ -880,7 +886,7 @@ describe("syntax-printer", () => {
 	for (const [name, source, options] of SCOPE_CASES) {
 		it(`should analyse scopes as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			/**
 			 * @param {typeof minify} run a minify
 			 * @param {EXPECTED_OBJECT} settings its options
@@ -911,7 +917,7 @@ describe("syntax-printer", () => {
 		unsafe_undefined: true,
 		passes: 2
 	};
-	/** @type {[string, string, import("terser").CompressOptions][]} */
+	/** @type {[string, string, import("../../lib/javascript/jsMinify").CompressOptions][]} */
 	const COMPRESS_CASES = [
 		[
 			"unsafe literals",
@@ -978,10 +984,10 @@ describe("syntax-printer", () => {
 	for (const [name, source, options] of COMPRESS_CASES) {
 		it(`should compress as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			/**
 			 * @param {typeof minify} run a minify
-			 * @param {import("terser").MinifyOptions} settings its options
+			 * @param {import("../../lib/javascript/jsMinify").MinifyOptions} settings its options
 			 * @returns {Promise<{ code: string | undefined } | { error: string }>} its result, or the error it threw
 			 */
 			const outcome = async (run, settings) => {
@@ -992,7 +998,7 @@ describe("syntax-printer", () => {
 				}
 			};
 			for (const module of [false, true]) {
-				/** @returns {import("terser").MinifyOptions} the options */
+				/** @returns {import("../../lib/javascript/jsMinify").MinifyOptions} the options */
 				const settings = () => ({
 					module,
 					mangle: false,
@@ -1039,7 +1045,7 @@ describe("syntax-printer", () => {
 	for (const [name, source, reshape] of SCOPE_ERROR_CASES) {
 		it(`should refuse a tree as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			/**
 			 * @param {typeof minify} run a minify
 			 * @returns {Promise<string | undefined>} what figuring out scopes threw
@@ -1103,7 +1109,7 @@ describe("syntax-printer", () => {
 
 	// Cases of terser's own suite reaching a branch no case above reaches, under
 	// the compress options it gives them.
-	/** @type {[string, string, import("terser").CompressOptions][]} */
+	/** @type {[string, string, import("../../lib/javascript/jsMinify").CompressOptions][]} */
 	const UNUSED_TERSER_CASES = [
 		[
 			"arguments beside a destructured parameter",
@@ -1140,7 +1146,7 @@ describe("syntax-printer", () => {
 	for (const [name, source, compress] of UNUSED_TERSER_CASES) {
 		it(`should drop unused names as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			/** @returns {EXPECTED_OBJECT} the options */
 			const settings = () => ({
 				compress: compress.defaults ? { ...compress } : { defaults: false, ...compress },
@@ -1155,7 +1161,7 @@ describe("syntax-printer", () => {
 	for (const [name, source, options] of UNUSED_CASES) {
 		it(`should drop unused names as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			for (const base of [{ compress: { passes: 2 }, mangle: true }, { mangle: false }]) {
 				/** @returns {EXPECTED_OBJECT} the options */
 				const settings = () => {
@@ -1174,7 +1180,7 @@ describe("syntax-printer", () => {
 
 	// Sources reaching each node class's flow analysis: hoisted functions read
 	// before a write, branches, loops, chains and the assignments it tracks.
-	/** @type {[string, string, import("terser").CompressOptions?][]} */
+	/** @type {[string, string, import("../../lib/javascript/jsMinify").CompressOptions?][]} */
 	const REDUCE_CASES = [
 		["a hoisted function read before a write", "f(); var a = g(); function f() { return a; } sink(f);"],
 		[
@@ -1261,7 +1267,7 @@ describe("syntax-printer", () => {
 	for (const [name, source, compress] of REDUCE_CASES) {
 		it(`should analyse flow as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			/** @type {string[]} */
 			const outputs = [];
 			for (const base of [{ passes: 2 }, {}]) {
@@ -1373,7 +1379,7 @@ describe("syntax-printer", () => {
 	for (const [name, files, options] of DRIVER_CASES) {
 		it(`should drive a minify as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			/**
 			 * @param {typeof minify} run a minify
 			 * @returns {Promise<EXPECTED_ANY>} what it wrote, or the error it threw
@@ -1401,7 +1407,7 @@ describe("syntax-printer", () => {
 
 	it("should drive a minify as terser does: sources inherited by the files object", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		/** @returns {Record<string, string>} own and inherited sources */
 		const files = () =>
 			Object.assign(Object.create({ "inherited.js": "sink(0);" }), {
@@ -1415,7 +1421,7 @@ describe("syntax-printer", () => {
 
 	it("should drive a minify as terser does: a tree with its sources asked for", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		/**
 		 * @param {typeof minify} run a minify
 		 * @returns {Promise<string | undefined>} what the second minify threw
@@ -1438,7 +1444,7 @@ describe("syntax-printer", () => {
 
 	it("should drive a minify as terser does: a tree handed back with a private member", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		/**
 		 * @param {typeof minify} run a minify
 		 * @returns {Promise<string | undefined>} a returned tree, given a private member, minified again
@@ -1463,7 +1469,7 @@ describe("syntax-printer", () => {
 
 	it("should drop unused names as terser does: sequences emptied in a tree", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		/**
 		 * @param {typeof minify} run a minify
 		 * @returns {Promise<string | undefined>} the tree minified with its sequences emptied
@@ -1489,7 +1495,7 @@ describe("syntax-printer", () => {
 
 	it("should drop unused names as terser does: a scope without its variables", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		const compressor = { option: () => true, has_directive: () => undefined };
 		/**
 		 * @param {typeof minify} run a minify
@@ -1511,7 +1517,7 @@ describe("syntax-printer", () => {
 
 	it("should write terser's debug log as terser does", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		/**
 		 * @param {EXPECTED_FUNCTION} run a minify
 		 * @param {EXPECTED_ANY} files the sources
@@ -1609,7 +1615,7 @@ describe("syntax-printer", () => {
 	for (const [name, files, options] of PARSED_BY_TERSER) {
 		it(`should minify as terser does where terser parses: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			/**
 			 * @param {typeof minify} run a minify
 			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
@@ -1683,14 +1689,14 @@ describe("syntax-printer", () => {
 	for (const [name, source, options] of DEFINE_CASES) {
 		it(`should minify as terser does: ${name}`, async () => {
 			const { minify } = await load();
-			const reference = require("terser");
+			const reference = terserReference();
 			const ours = await minify(
 				source,
-				/** @type {import("terser").MinifyOptions} */ ({ ...options })
+				/** @type {import("../../lib/javascript/jsMinify").MinifyOptions} */ ({ ...options })
 			);
 			const theirs = await reference.minify(
 				source,
-				/** @type {import("terser").MinifyOptions} */ ({ ...options })
+				/** @type {import("../../lib/javascript/jsMinify").MinifyOptions} */ ({ ...options })
 			);
 			expect(ours.code).toBe(theirs.code);
 		});
@@ -2008,7 +2014,7 @@ describe("syntax-printer", () => {
 			minify,
 			modules: { ast }
 		} = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		// A compressed tree holds the nodes only the compressor makes, as `NaN`.
 		/** @type {[string, EXPECTED_OBJECT][]} */
 		const sources = [
@@ -2070,7 +2076,7 @@ describe("syntax-printer", () => {
 
 	it("should mangle names and properties as terser does under every option", async () => {
 		const { minify } = await load();
-		const reference = require("terser");
+		const reference = terserReference();
 		/** @type {[string, () => EXPECTED_OBJECT][]} */
 		const variants = [
 			[MANGLED_PROPERTIES, () => ({ mangle: { properties: true } })],
@@ -2172,7 +2178,7 @@ describe("syntax-printer", () => {
 	it("should refuse an option terser refuses", async () => {
 		const { minify } = await load();
 		const options = /** @type {EXPECTED_ANY} */ ({ unknown: true });
-		const reference = await require("terser")
+		const reference = await terserReference()
 			.minify("a;", options)
 			.then(
 				() => "",
@@ -2186,13 +2192,13 @@ describe("syntax-printer", () => {
 
 	it("should write the source map terser writes", async () => {
 		const { minify } = await load();
-		const terser = require("terser");
+		const terser = terserReference();
 		const input = await terser.minify(
 			{ "in.js": "function add(a, b) {\n  return a + b;\n}\nconsole.log(add(1, 2));\n" },
 			{ sourceMap: { includeSources: true } }
 		);
 		const source = "var one = 1;\nfunction two(x) { return x * 2; }\nconsole.log(two(one));\n";
-		/** @type {[Record<string, string>, import("terser").SourceMapOptions][]} */
+		/** @type {[Record<string, string>, import("../../lib/javascript/jsMinify").SourceMapOptions][]} */
 		const cases = [
 			[{ "a.js": source }, {}],
 			[{ "a.js": source }, { includeSources: true, filename: "a.min.js", root: "/r" }],
@@ -2378,7 +2384,7 @@ describe("syntax-printer", () => {
 				corrections.enabled = false;
 				try {
 					const uncorrected = await minify(input, options);
-					const reference = await require("terser").minify(input, options);
+					const reference = await terserReference().minify(input, options);
 					expect(uncorrected.code).toBe(reference.code);
 					expect(runProgram(/** @type {string} */ (reference.code))).not.toBe(expected);
 				} finally {
