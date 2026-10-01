@@ -207,6 +207,7 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
 	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
+	["Radix Themes 3 (components)", "firefox only: `calc(100% / 3)` prints as `33.3333%`, six digits being calibrated on Blink's 1/64px layout; Gecko lays out in 1/60px, so a `translateX(100%)` over that width moves by 0.03px"],
 ]);
 
 const FILED_BENCHMARK_HTML_DEFECTS = new Map();
