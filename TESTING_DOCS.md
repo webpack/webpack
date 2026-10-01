@@ -202,8 +202,9 @@ which installs into puppeteer's own cache (`PUPPETEER_CACHE_DIR`, defaulting to
 `WEBKIT_EXECUTABLE_PATH` point at one already on the machine. It compares
 effects, never CSSOM text: a stylesheet by the styles elements built from its
 selectors compute, at the widths its queries switch on; a page by its DOM and
-its render. Only Chromium answers the media-emulation calls, so only there is a
-stylesheet naming a color scheme or print also read under it. A defect only one
+its render, with the dark color scheme read through each frame's own. Only
+Chromium answers the media-emulation calls, so only there is a stylesheet naming
+print also read under it. A defect only one
 engine has is filed against it with a reason opening `<engine> only:` rather
 than tolerated in all three.
 

@@ -175,7 +175,8 @@ const benchmarkDocuments = (minify) => {
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  * @property {(value: string) => string} canonical a value under the one name the spec gives it
  * @property {(value: string) => string} paintedColors a value with every color it holds painted
- * @property {(value: string) => string} normalizeValue a value spelled one way, for what is compared as written
+ * @property {(text: string) => string} spacedOnce text as its tokens, spaced one way
+ * @property {(element: Element) => string} whereIs an element and its nearest ancestors, for a report
  * @property {(property: string, value: string) => string} cascadeValue a computed value in the one spelling rules are compared in
  */
 
@@ -196,25 +197,6 @@ const installHelpers = (generics) => {
 		canvas.getContext("2d", { willReadFrequently: true })
 	);
 	document.body.append(probe);
-
-	// Every absolute unit is a fixed multiple of another, so one spelling stands
-	// for all of them: 1in is 96px, 1pt is 96/72px, 1turn is 360deg, 1s is 1000ms.
-	/** @type {Map<string, [number, string]>} */
-	const UNITS = new Map([
-		["px", [1, "px"]],
-		["pt", [96 / 72, "px"]],
-		["pc", [16, "px"]],
-		["in", [96, "px"]],
-		["cm", [96 / 2.54, "px"]],
-		["mm", [96 / 25.4, "px"]],
-		["q", [96 / 101.6, "px"]],
-		["deg", [1, "deg"]],
-		["grad", [0.9, "deg"]],
-		["rad", [180 / Math.PI, "deg"]],
-		["turn", [360, "deg"]],
-		["s", [1000, "ms"]],
-		["ms", [1, "ms"]]
-	]);
 
 	/**
 	 * The pixel a color paints as. A color carried in one space and the same
@@ -339,238 +321,6 @@ const installHelpers = (generics) => {
 			take();
 			return out;
 		});
-
-	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
-	const NEWLINE = /[\n\r\f]/;
-
-	/**
-	 * The escape starting at `text[at]` — a backslash — decoded, with the index
-	 * just past it. A hex escape takes up to six digits and swallows one
-	 * whitespace after them; anything else names the next character itself.
-	 * @param {string} text the text being read
-	 * @param {number} at the index of the backslash
-	 * @returns {[string, number]} the character it names, and where it ends
-	 */
-	const readEscape = (text, at) => {
-		const hex = /^[\da-f]{1,6}/i.exec(text.slice(at + 1, at + 7));
-		if (hex === null) {
-			const next = text[at + 1];
-			return next === undefined ? ["\uFFFD", at + 1] : [next, at + 2];
-		}
-		let end = at + 1 + hex[0].length;
-		if (/[\t\n\f\r ]/.test(text[end])) end++;
-		const code = Number.parseInt(hex[0], 16);
-		// §4.3.7: zero, a surrogate and anything past the maximum all name U+FFFD.
-		const named =
-			code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)
-				? "\uFFFD"
-				: String.fromCodePoint(code);
-		return [named, end];
-	};
-
-	// cspell:ignore rlh rcap cqmin cqmax vmin vmax dvmin dvmax lvmin lvmax svmin svmax
-	// Every length unit CSS Values 4 states, longest first so `vmin` is not read
-	// as `vm` — a zero is the same zero in any of them.
-	const LENGTH_UNITS = [
-		"cqmin",
-		"cqmax",
-		"svmin",
-		"svmax",
-		"lvmin",
-		"lvmax",
-		"dvmin",
-		"dvmax",
-		"rcap",
-		"vmin",
-		"vmax",
-		"cap",
-		"rlh",
-		"rem",
-		"rex",
-		"rch",
-		"ric",
-		"svw",
-		"svh",
-		"svi",
-		"svb",
-		"lvw",
-		"lvh",
-		"lvi",
-		"lvb",
-		"dvw",
-		"dvh",
-		"dvi",
-		"dvb",
-		"cqw",
-		"cqh",
-		"cqi",
-		"cqb",
-		"px",
-		"cm",
-		"mm",
-		"in",
-		"pt",
-		"pc",
-		"em",
-		"ex",
-		"ch",
-		"ic",
-		"lh",
-		"vw",
-		"vh",
-		"vi",
-		"vb",
-		"q"
-	];
-	// A unit runs on through `-`, an escape and any non-ASCII name character, so
-	// `\b` would read `0rcap-foo` as `0rcap` and hand back a value nothing wrote.
-	const ZERO_LENGTH_RE = new RegExp(
-		`(^|[^\\w.#%-])0(?:\\.0*)?(?:${LENGTH_UNITS.join("|")})(?![\\w\\u00a0-\\uffff\\\\-])`,
-		"gi"
-	);
-
-	// A character an escape can be dropped from without the value reading
-	// differently — everything a name is spelled out of.
-	const BARE_ESCAPED = /[\w\u00A0-\uFFFF-]/;
-
-	// What a math operator's own whitespace is held under while the delimiters
-	// beside it lose theirs (see `normalizeValue`). §4.3.7 names U+FFFD for a
-	// null escape and §3.3 for a null the source spells, so no value holds one.
-	const MATH_OPERATOR_SPACE = "\u0000";
-
-	/**
-	 * A value spelled one way, for the values that have to be compared as written
-	 * rather than as computed. CSS does not need the whitespace around a `,`, a
-	 * bracket, a `*` or a `/`, and a string means the same in either quote —
-	 * `calc()` does need the space around `+` and `-`, and a string's own
-	 * whitespace is its content.
-	 * @param {string} text a specified value
-	 * @returns {string} the same value, spelled one way
-	 */
-	const normalizeValue = (text) => {
-		let out = "";
-		let quote = "";
-		let string = "";
-		// Where the last string ended, so the space after one is dropped too.
-		let closed = -1;
-		/** @type {string[]} */
-		const open = [];
-		for (let at = 0; at < text.length; at++) {
-			const ch = text[at];
-			// A comment separates tokens and says nothing else, so it reads as the
-			// whitespace it stands in for.
-			if (quote === "" && ch === "/" && text[at + 1] === "*") {
-				const end = text.indexOf("*/", at + 2);
-				at = end === -1 ? text.length : end + 1;
-				if (!out.endsWith(" ")) out += " ";
-				continue;
-			}
-			// A CSS escape is resolved before a name is matched, so `\2d-two` and
-			// `\2d\2d two` are one identifier — decoded here, and written back escaped in a
-			// single spelling where the character would otherwise read as punctuation.
-			if (ch === "\\") {
-				// §4.3.4: a `\` before a newline continues the string's line — the pair
-				// names nothing, unlike every other escape.
-				if (quote !== "" && NEWLINE.test(text[at + 1] || "")) {
-					if (text[at + 1] === "\r" && text[at + 2] === "\n") at++;
-					at++;
-					continue;
-				}
-				const [named, end] = readEscape(text, at);
-				// §4.3.4: a `\` a string runs out after names nothing, unlike the
-				// U+FFFD the same escape names anywhere else.
-				const ranOut = end === at + 1;
-				at = end - 1;
-				const code = /** @type {number} */ (named.codePointAt(0));
-				const written = BARE_ESCAPED.test(named)
-					? named
-					: `\\${code.toString(16).padStart(6, "0")}`;
-				if (quote === "") out += written;
-				else if (!ranOut) string += named;
-				continue;
-			}
-			if (quote !== "") {
-				if (ch === quote) {
-					out += JSON.stringify(string);
-					quote = "";
-					closed = out.length;
-				} else {
-					string += ch;
-				}
-			} else if (ch === '"' || ch === "'") {
-				// A string, or a hash after a space, starts a token no neighbor joins,
-				// so the space beside one separates nothing.
-				if (out.endsWith(" ")) out = out.slice(0, -1);
-				quote = ch;
-				string = "";
-			} else if (/[\t\n\f\r ]/.test(ch)) {
-				if (!out.endsWith(" ") && closed !== out.length) out += " ";
-			} else {
-				if (ch === "#" && out.endsWith(" ")) out = out.slice(0, -1);
-				if (ch === "(") open.push(")");
-				else if (ch === "[") open.push("]");
-				else if (ch === "{") open.push("}");
-				else if (open[open.length - 1] === ch) open.pop();
-				out += ch;
-			}
-		}
-		if (quote !== "") out += JSON.stringify(string);
-		// CSS Syntax §4.3.1 and §5.4.9: a string, a function and a block left open
-		// at the end of the input are closed there, so an engine echoing the value
-		// back without those closers means the same as a printer writing them.
-		while (open.length > 0) out += /** @type {string} */ (open.pop());
-		// Arithmetic nothing has to substitute into is arithmetic the engine can
-		// do now, and both spellings reach the same answer.
-		out = out.replace(/calc\([^()]*\)/g, (call, offset) => {
-			try {
-				const folded = CSSNumericValue.parse(call).toString();
-				// A `calc()` left holding one term is that term, still parted from a
-				// name after it as the `)` parted them.
-				const single = /^calc\((-?[\d.]+[a-z%]*)\)$/i.exec(folded);
-				if (single === null) return folded;
-				const next = out[offset + call.length] || "";
-				return /[\w\u0080-\uFFFF#.-]/.test(next) ? `${single[1]} ` : single[1];
-			} catch (_err) {
-				return call;
-			}
-		});
-		// CSS Color 4 §5: `transparent` is that color written as a keyword, and an
-		// engine echoing a descriptor hands back whichever spelling it was given.
-		out = out.replace(/(^|[^\w-])transparent(?![\w-])/gi, "$1rgba(0, 0, 0, 0)");
-		// A string is text and a `url()` body names something, so neither holds a
-		// color: `url(#fff)` and `url(#ffffff)` are two different elements.
-		out = paintedColors(out);
-		return (
-			out
-				// WHY: a `+` or `-` spelled with whitespace on both sides is the math
-				// operator CSS Values 4 §10.1 requires that whitespace for, not a sign.
-				// Held aside first, or the rule below reads `) - ` as a space beside a
-				// delimiter and drops it — which is how `calc(var(--a) - var(--b))` and
-				// the invalid `calc(var(--a)- var(--b))` read as one value (#22149).
-				.replace(/ ([+-]) /g, `${MATH_OPERATOR_SPACE}$1${MATH_OPERATOR_SPACE}`)
-				// Nothing fuses with a comma or a block's delimiters, so the whitespace
-				// beside one says only what the delimiter already does.
-				.replace(/ ?([,()[\]{}*/]) ?/g, "$1")
-				.split(MATH_OPERATOR_SPACE)
-				.join(" ")
-				// `.25` and `0.25` are one number, and an absolute unit converts to px,
-				// degrees or seconds exactly — the spec fixes every ratio.
-				.replace(
-					/(^|[^\w.%-])(\d*\.?\d+)(px|pt|pc|in|cm|mm|q|deg|grad|rad|turn|s|ms)\b/gi,
-					(all, before, number, unit) => {
-						const scale = UNITS.get(unit.toLowerCase());
-						if (scale === undefined) return all;
-						const size = Number(number) * scale[0];
-						return `${before}${Number(size.toFixed(6))}${scale[1]}`;
-					}
-				)
-				.replace(/(^|[^\w.%-])0*(\.\d)/g, "$10$2")
-				// A zero length is the same zero however it is spelled, and a value
-				// held as written is the one place the printer's `0px` → `0` shows.
-				.replace(ZERO_LENGTH_RE, "$10")
-				.trim()
-		);
-	};
 
 	// The spec defines each easing keyword as the function it stands for, so the
 	// two spellings are one value however the engine echoes them back.
@@ -985,6 +735,30 @@ const installHelpers = (generics) => {
 	};
 
 	/**
+	 * An element as its tag, and its nearest ancestors as their names and classes.
+	 * @param {Element} element an element
+	 * @returns {string} where it stands, for a report
+	 */
+	const whereIs = (element) => {
+		const tag = element.outerHTML;
+		/** @type {string[]} */
+		const path = [tag.slice(0, Math.min(tag.indexOf(">") + 1, 160))];
+		for (
+			let current = element.parentElement;
+			current !== null && path.length < 4 && current.id !== "eq-holder";
+			current = current.parentElement
+		) {
+			const classes = current.getAttribute("class");
+			path.unshift(
+				`${current.localName}${current.id ? `#${current.id}` : ""}${
+					classes ? `.${classes.trim().split(/\s+/).join(".")}` : ""
+				}`
+			);
+		}
+		return path.join(" > ");
+	};
+
+	/**
 	 * The IDL member an attribute reflects, and what it reads back. Probed on an
 	 * element the spec defines the attribute for, so a scoped one is read where
 	 * it means something rather than skipped as unknown.
@@ -1026,16 +800,91 @@ const installHelpers = (generics) => {
 			}
 		);
 
+	// Readers taking between them every token a value holds — a name, string, url,
+	// color, number, dimension, function, `[name]`, `/`, any list — and in `calc()`
+	// the arithmetic a value leaves for its reader to finish.
+	/** @type {[string, string][]} */
+	const READERS = [
+		["font-family", ""],
+		["font", ""],
+		["content", ""],
+		["background-image", ""],
+		["color", ""],
+		["border-color", ""],
+		["width", ""],
+		["scale", ""],
+		["transform", ""],
+		["box-shadow", ""],
+		["transition", ""],
+		["grid-template-areas", ""],
+		["grid-template-columns", ""],
+		["counter-reset", ""],
+		["margin-left", "calc"],
+		["scale", "calc"]
+	];
+	// One element per reader, since two shorthands on one would set each other's longhands.
+	const readers = READERS.map(() => document.createElement("div"));
+	probe.append(...readers);
+	/** @type {Map<string, string>} */
+	const readCache = new Map();
+
+	/**
+	 * @param {string} text a value, or "" to leave the property unset
+	 * @returns {string} each reader's computed value, joined
+	 */
+	const readEach = (text) => {
+		for (const [at, [name, wrap]] of READERS.entries()) {
+			readers[at].style.cssText = "";
+			readers[at].style.setProperty("--eq-read", text);
+			readers[at].style.setProperty(
+				name,
+				wrap === "" ? "var(--eq-read)" : `${wrap}(var(--eq-read))`
+			);
+		}
+		return READERS.map(([name], at) =>
+			cascadeValue(name, getComputedStyle(readers[at]).getPropertyValue(name))
+		).join("\u0001");
+	};
+
+	/**
+	 * Text as its tokens, which comments and the spaces beside a delimiter do not change.
+	 * @param {string} text text the engine echoes as written
+	 * @returns {string} it, spaced one way
+	 */
+	const spacedOnce = (text) =>
+		text
+			.replace(/\/\*[\s\S]*?\*\//g, " ")
+			.trim()
+			.replace(/\s+/g, " ")
+			.replace(/ ?([{}()[\],:;/*]) ?/g, "$1");
+
+	/**
+	 * A custom property as what substituting it computes in each reader, since
+	 * only a reader gives its tokens a meaning. One no reader takes is read as
+	 * its text, comments and every space beside a delimiter dropped.
+	 * @param {string} value a custom property's computed value
+	 * @returns {string} what the readers compute from it
+	 */
+	const readThrough = (value) => {
+		const known = readCache.get(value);
+		if (known !== undefined) return known;
+		if (!readCache.has("")) readCache.set("", readEach(""));
+		const through = readEach(value);
+		const read = through === readCache.get("") ? spacedOnce(value) : through;
+		readCache.set(value, read);
+		return read;
+	};
+
 	/**
 	 * A value an element computes, in the one spelling rules are compared in: a
-	 * custom property as its token stream, anything else named once, its colors
-	 * painted and its data URLs decoded.
+	 * custom property as what reading it computes, anything else named once, its
+	 * colors painted and its data URLs decoded.
 	 * @param {string} property the property
 	 * @param {string} value its computed value
 	 * @returns {string} the value, spelled once
 	 */
 	const cascadeValue = (property, value) => {
-		if (property.startsWith("--")) return decodeDataUrls(normalizeValue(value));
+		if (property.startsWith("--")) return readThrough(value);
 		const named = canonical(
 			property === "font-family" || property === "font"
 				? unquoteFamilies(value)
@@ -1051,8 +900,9 @@ const installHelpers = (generics) => {
 			probeReflection,
 			canonical,
 			paintedColors,
-			normalizeValue,
-			cascadeValue
+			cascadeValue,
+			spacedOnce,
+			whereIs
 		};
 };
 
@@ -1135,28 +985,6 @@ const compareRenders = async ({ pairs, width }) => {
 			frame.addEventListener("load", () => resolve(), { once: true });
 			frame.srcdoc = html;
 		});
-
-	/**
-	 * @param {Element} element an element
-	 * @returns {string} where it stands, closest ancestors last
-	 */
-	const whereIs = (element) => {
-		/** @type {string[]} */
-		const path = [];
-		for (
-			let current = /** @type {Element | null} */ (element);
-			current !== null && path.length < 4;
-			current = current.parentElement
-		) {
-			const classes = current.getAttribute("class");
-			path.unshift(
-				`${current.localName}${current.id ? `#${current.id}` : ""}${
-					classes ? `.${classes.trim().split(/\s+/).join(".")}` : ""
-				}`
-			);
-		}
-		return path.join(" > ");
-	};
 
 	/**
 	 * The boxes an element's fragments take, those touching on one line joined:
@@ -1246,7 +1074,10 @@ const compareRenders = async ({ pairs, width }) => {
 		const elements = [...doc.querySelectorAll("*")];
 		return {
 			tags: elements.map((element) => element.localName),
-			where: elements.map(whereIs),
+			where: elements.map(
+				/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window))
+					.__eq.whereIs
+			),
 			// What a `<marquee>` holds moves as it scrolls, whenever it is read.
 			boxes: elements.map((element) =>
 				element.closest("marquee") === null ? boxesOf(element) : []
@@ -1354,14 +1185,16 @@ const compareStyles = async ({ pairs, types }) => {
 	// so the two spellings of one selector are rewritten alike.
 	const STATES =
 		/(^|[^:\\]):(hover|active|focus|focus-visible|focus-within|visited|link|any-link|local-link|target|target-within|checked|indeterminate|default|disabled|enabled|required|optional|valid|invalid|user-valid|user-invalid|in-range|out-of-range|placeholder-shown|autofill|-webkit-autofill|read-only|read-write|open|closed|popover-open|modal|fullscreen|picture-in-picture|playing|paused|seeking|buffering|stalled|muted|volume-locked|current|past|future|blank|defined)(?![\w-])/gi;
+	// WHY: a theme is a class on `html` or `body`, and a document has one of
+	// each — so both sheets also let a built `div` stand for one, at the same
+	// specificity, which is what reaches `body.dark` beside `body.light`.
+	const DOCUMENT_TYPES = /(^|[\s>+~(,])(html|body)(?![\w-])/gi;
 	// The pseudo-elements `getComputedStyle` reads, beyond the two every element has.
 	const PSEUDOS =
 		/::(marker|placeholder|first-line|first-letter|selection|backdrop|file-selector-button)(?![\w-])/gi;
-	// What a keyframe says besides its properties, which `offset` is one of too.
-	const KEYFRAME_FIELDS = new Set(["offset", "easing", "composite"]);
 	// What `content` computes to on a pseudo-element that renders nothing.
 	const NO_CONTENT = /^(?:none|normal)$/;
-	const { cascadeValue, normalizeValue } =
+	const { cascadeValue, spacedOnce, whereIs } =
 		/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq;
 
 	/**
@@ -1537,7 +1370,8 @@ const compareStyles = async ({ pairs, types }) => {
 			const frame = document.createElement("iframe");
 			frame.style.cssText = "border:0;display:block;width:1400px;height:800px";
 			frame.addEventListener("load", () => resolve(frame), { once: true });
-			frame.srcdoc = "<!doctype html><html><head></head><body></body></html>";
+			frame.srcdoc =
+				"<!doctype html><html data-eq-html data-eq-root><head></head><body data-eq-body></body></html>";
 			document.body.append(frame);
 		});
 
@@ -1578,49 +1412,6 @@ const compareStyles = async ({ pairs, types }) => {
 	};
 
 	/**
-	 * Every animation a document runs, by element, spelled as its name and keyframes,
-	 * then cancelled. Taken document-wide, since each cancel invalidates the style a
-	 * per-element read would recompute.
-	 * @param {Document} doc the document
-	 * @returns {Map<Element, string>} per element, its animations
-	 */
-	const takeAnimations = (doc) => {
-		/** @type {Map<Element, string>} */
-		const out = new Map();
-		const running = doc.getAnimations();
-		for (const animation of running) {
-			const effect = /** @type {KeyframeEffect} */ (animation.effect);
-			if (effect === null || effect.target === null) continue;
-			const described = `${effect.pseudoElement || ""}${
-				/** @type {EXPECTED_ANY} */ (animation).animationName
-			}:${effect
-				.getKeyframes()
-				.map((frame) =>
-					Object.keys(frame)
-						.filter((key) => key !== "computedOffset")
-						.sort()
-						.map(
-							(key) =>
-								`${key}=${
-									KEYFRAME_FIELDS.has(key)
-										? normalizeValue(String(frame[key]))
-										: computedAs(key, String(frame[key]))
-								}`
-						)
-						.join(";")
-				)
-				.join("|")}`;
-			const earlier = out.get(effect.target);
-			out.set(
-				effect.target,
-				earlier === undefined ? described : `${earlier} ${described}`
-			);
-		}
-		for (const animation of running) animation.cancel();
-		return out;
-	};
-
-	/**
 	 * The lengths a condition names, in pixels, by the dimension each is of.
 	 * @param {string} condition a media or container condition
 	 * @returns {{ width: number[], height: number[] }} its lengths
@@ -1653,10 +1444,11 @@ const compareStyles = async ({ pairs, types }) => {
 	 * @returns {string} the value, spelled once
 	 */
 	const computedAs = (name, value) => {
-		probe.style.cssText = "";
+		// Sized, so a percentage resolves to a length rather than to zero.
+		probe.style.cssText = "width:97px;height:89px";
 		probe.style.setProperty(name, value);
 		return probe.style.getPropertyValue(name) === ""
-			? normalizeValue(value)
+			? value
 			: cascadeValue(name, getComputedStyle(probe).getPropertyValue(name));
 	};
 
@@ -1681,12 +1473,14 @@ const compareStyles = async ({ pairs, types }) => {
 	 * @property {Map<string, Set<string>>} atLength per `<dimension><px>` a query names, the selectors of the rules under it
 	 * @property {Set<string>} conditioned every property a rule under a media or container query declares
 	 * @property {Map<string, Set<string>>} reads per custom property, the properties that substitute it
+	 * @property {Set<string>} referenced every custom property a `var()` names with no fallback
+	 * @property {Set<string>} defaulted every custom property a `var()` names with a fallback
+	 * @property {Set<string>} registered every custom property an `@property` rule registers
 	 * @property {string[]} layers every layer in the order the cascade ranks them, which is where each is first named
 	 * @property {Set<string>} containerNames every container a query names
 	 * @property {boolean} queried whether any container query is written
 	 * @property {string[]} described what no element shows, as the engine serializes it
-	 * @property {string[]} keyframes every keyframes rule, as the engine serializes it
-	 * @property {Map<string, string>} unobserved per selector and property under `@starting-style`, the declaration that wins
+	 * @property {Map<string, string>} unobserved per selector or keyframe and property under `@starting-style` or `@keyframes`, the declaration that wins
 	 */
 
 	/**
@@ -1702,11 +1496,13 @@ const compareStyles = async ({ pairs, types }) => {
 			atLength: new Map(),
 			conditioned: new Set(),
 			reads: new Map(),
+			referenced: new Set(),
+			defaulted: new Set(),
+			registered: new Set(),
 			layers: [],
 			containerNames: new Set(),
 			queried: false,
 			described: [],
-			keyframes: [],
 			unobserved: new Map()
 		};
 		/**
@@ -1734,7 +1530,14 @@ const compareStyles = async ({ pairs, types }) => {
 				if (kind === "CSSStyleRule" || kind === "CSSNestedDeclarations") {
 					let own = parents || [""];
 					if (kind === "CSSStyleRule") {
-						const mapped = any.selectorText.replace(STATES, "$1[data-eq-$2]");
+						const mapped = any.selectorText
+							.replace(STATES, "$1[data-eq-$2]")
+							.replace(
+								/:(dir|lang)\(\s*["']?([\w-]+)["']?\s*\)/gi,
+								"[data-eq-$1-$2]"
+							)
+							.replace(DOCUMENT_TYPES, "$1:is(div, $2):where([data-eq-$2])")
+							.replace(/:root(?![\w-])/gi, ":is([data-eq-root], :root)");
 						if (mapped !== any.selectorText) any.selectorText = mapped;
 						own = [];
 						for (const one of splitList(any.selectorText)) {
@@ -1757,9 +1560,17 @@ const compareStyles = async ({ pairs, types }) => {
 					// A shorthand holding a `var()` leaves each longhand empty until it is
 					// substituted, so what the rule says there is its whole text.
 					const text = style.cssText;
-					const substitutes = [...text.matchAll(/var\(\s*(--[\w-]+)/g)].map(
-						([, name]) => name
-					);
+					/** @type {string[]} */
+					const substitutes = [];
+					for (const [, name, comma] of text.matchAll(
+						/var\(\s*(--[\w-]+)\s*(,?)/g
+					)) {
+						substitutes.push(name);
+						(comma === "" ? out.referenced : out.defaulted).add(name);
+					}
+					// `light-dark()` shows its second color only under a dark color scheme.
+					const darkened = /light-dark\(/i.test(text);
+					if (darkened) addAll(out.atLength, "dark", own);
 					for (let i = 0; i < style.length; i++) {
 						const property = style.item(i);
 						const entry = `${where}\u0001${
@@ -1769,7 +1580,7 @@ const compareStyles = async ({ pairs, types }) => {
 						if (sequence === undefined) out.sequences.set(property, [entry]);
 						else sequence.push(entry);
 						addAll(out.selectors, property, own);
-						if (lengths.length > 0) out.conditioned.add(property);
+						if (lengths.length > 0 || darkened) out.conditioned.add(property);
 						for (const name of substitutes) addAll(out.reads, name, [property]);
 					}
 					if (any.cssRules !== undefined) {
@@ -1786,13 +1597,14 @@ const compareStyles = async ({ pairs, types }) => {
 					const prefix = kind === "CSSMediaRule" ? "" : "box";
 					walk(
 						any.cssRules,
-						`${context}@${kind === "CSSMediaRule" ? "media" : `container ${any.containerName}`} ${condition}`,
+						`${context}@${kind === "CSSMediaRule" ? "media" : `container ${any.containerName}`} ${spacedOnce(condition)}`,
 						parents,
 						scope,
 						[
 							...lengths,
 							...named.width.map((px) => `${prefix}width${px}`),
 							...named.height.map((px) => `${prefix}height${px}`),
+							...(/prefers-color-scheme/i.test(condition) ? ["dark"] : []),
 							// A query naming no length still holds at some sizes and not others.
 							`${prefix}any`
 						]
@@ -1800,7 +1612,7 @@ const compareStyles = async ({ pairs, types }) => {
 				} else if (kind === "CSSSupportsRule") {
 					walk(
 						any.cssRules,
-						`${context}@supports ${any.conditionText}`,
+						`${context}@supports ${spacedOnce(any.conditionText)}`,
 						parents,
 						scope,
 						lengths
@@ -1823,7 +1635,20 @@ const compareStyles = async ({ pairs, types }) => {
 						lengths
 					);
 				} else if (kind === "CSSKeyframesRule") {
-					out.keyframes.push(`${context}${normalizeValue(rule.cssText)}`);
+					// Read per offset and property, the one that wins there, since a
+					// printer may join or split the keyframes declaring it.
+					for (const frame of any.cssRules) {
+						const style = /** @type {CSSStyleDeclaration} */ (frame.style);
+						for (const offset of frame.keyText.split(",")) {
+							for (let i = 0; i < style.length; i++) {
+								const name = style.item(i);
+								out.unobserved.set(
+									`${context}@keyframes ${any.name} ${offset.trim()} ${name}`,
+									computedAs(name, style.getPropertyValue(name))
+								);
+							}
+						}
+					}
 				} else if (kind === "CSSStartingStyleRule") {
 					// What no element computes until it transitions, read per selector and
 					// property since a printer may join or merge the blocks declaring it.
@@ -1865,13 +1690,14 @@ const compareStyles = async ({ pairs, types }) => {
 					};
 					flat(any.cssRules, `${context}@starting-style `);
 				} else if (kind !== "CSSImportRule") {
+					if (kind === "CSSPropertyRule") out.registered.add(any.name);
 					// A font face, a counter style, a page or a registered property. An
 					// adopted sheet holds no import.
 					const text = rule.cssText;
 					out.described.push(
 						`${context}${
 							any.style === undefined
-								? normalizeValue(text)
+								? spacedOnce(text)
 								: `${text.slice(0, text.indexOf("{")).trim()}${described(any.style)}`
 						}`
 					);
@@ -1894,23 +1720,26 @@ const compareStyles = async ({ pairs, types }) => {
 	for (const pair of pairs) {
 		const readings = [pair.before, pair.after].map((text, at) => {
 			const sheet = new windows[at].CSSStyleSheet();
-			sheet.replaceSync(text);
+			// CSS Syntax §3.2: decoding drops a leading byte order mark, which
+			// `replaceSync` would read as part of the first selector.
+			sheet.replaceSync(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text);
 			docs[at].adoptedStyleSheets = [sheet];
 			return readSheet(sheet);
 		});
 		const [one, other] = readings;
 		/** @type {StyleDifference[]} */
 		const moved = [];
-		const unobserved = [one, other].map((reading) =>
-			[...reading.unobserved].sort().join("\n")
-		);
-		if (unobserved[0] !== unobserved[1]) {
-			moved.push({
-				at: "rules under @starting-style",
-				moved: [
-					["", unobserved[0], unobserved[1], unobserved[0], unobserved[1]]
-				]
-			});
+		for (const key of new Set([
+			...one.unobserved.keys(),
+			...other.unobserved.keys()
+		])) {
+			const [a, b] = [one.unobserved.get(key), other.unobserved.get(key)];
+			if (a !== b && moved.length < KEPT) {
+				moved.push({
+					at: key,
+					moved: [["", String(a), String(b), String(a), String(b)]]
+				});
+			}
 		}
 		if (one.described.join("\n") !== other.described.join("\n")) {
 			const at = one.described.findIndex(
@@ -1938,10 +1767,6 @@ const compareStyles = async ({ pairs, types }) => {
 			if (layered || a.join("\u0002") !== b.join("\u0002")) {
 				tracked.add(property);
 			}
-		}
-		// A keyframe shows in the animations an element runs, which it runs by name.
-		if (one.keyframes.join("\u0002") !== other.keyframes.join("\u0002")) {
-			tracked.add("animation-name");
 		}
 		for (const property of tracked) {
 			if (!property.startsWith("--")) continue;
@@ -1997,7 +1822,8 @@ const compareStyles = async ({ pairs, types }) => {
 		 */
 		const populate = (selectors) => {
 			/** @type {Set<string>} */
-			const named = new Set(["div", ...types]);
+			// A `span` too: a value dropped can leave a `div` as it was and not a `span`.
+			const named = new Set(["div", "span", ...types]);
 			/** @type {Set<string>} */
 			const classes = new Set();
 			/** @type {Map<string, string>} */
@@ -2127,7 +1953,7 @@ const compareStyles = async ({ pairs, types }) => {
 		/**
 		 * Reads both frames at each sample and records what the two compute apart.
 		 * @param {{ elements: Element[][], asked: string[][], through: string[][] }} built what was built
-		 * @param {{ width: number, height: number, box: number }[]} samples where to read
+		 * @param {{ width: number, height: number, box: number, dark?: boolean }[]} samples where to read
 		 * @param {Set<string> | null} only the properties these samples can move, or null for any
 		 */
 		const measure = async (built, samples, only) => {
@@ -2137,6 +1963,13 @@ const compareStyles = async ({ pairs, types }) => {
 				for (const [at, frame] of frames.entries()) {
 					frame.style.width = `${sample.width}px`;
 					frame.style.height = `${sample.height}px`;
+					// CSS Color Adjust 1 §2.3: a frame's `prefers-color-scheme` follows
+					// the color scheme its embedding element is used with, and an
+					// element's `light-dark()` the color scheme it is used with itself.
+					frame.style.colorScheme = sample.dark ? "dark" : "";
+					/** @type {HTMLElement} */ (
+						docs[at].documentElement
+					).style.setProperty("color-scheme", sample.dark ? "dark" : "");
 					const holder = /** @type {HTMLElement} */ (
 						docs[at].getElementById("eq-holder")
 					);
@@ -2152,10 +1985,9 @@ const compareStyles = async ({ pairs, types }) => {
 					list.map((element) => element.getClientRects().length !== 0)
 				);
 				// Cancelled before any value is read, so none is part way through one.
-				const animations = read.map((list, at) => {
-					const taken = takeAnimations(docs[at]);
-					return list.map((element) => taken.get(element) || "");
-				});
+				for (const doc of docs) {
+					for (const running of doc.getAnimations()) running.cancel();
+				}
 				/** @type {{ i: number, pseudo: string, at: string, changed: [string, string, string, string, string][] }[]} */
 				const found = [];
 				for (let i = 0; i < read[0].length && found.length < KEPT; i++) {
@@ -2188,34 +2020,11 @@ const compareStyles = async ({ pairs, types }) => {
 							const y = cascadeValue(name, b);
 							if (x !== y) changed.push([name, a, b, x, y]);
 						}
-						if (pseudo === "" && animations[0][i] !== animations[1][i]) {
-							const [a, b] = [animations[0][i], animations[1][i]];
-							changed.push(["@keyframes", a, b, a, b]);
-						}
 						if (changed.length === 0) continue;
-						const element = read[0][i];
-						const tag = element.outerHTML.slice(
-							0,
-							element.outerHTML.indexOf(">") + 1
-						);
-						/** @type {string[]} */
-						const path = [];
-						for (
-							let ancestor = element.parentElement;
-							ancestor !== null && ancestor.id !== "eq-holder";
-							ancestor = ancestor.parentElement
-						) {
-							if (!ancestor.hasAttribute("style")) {
-								path.unshift(ancestor.localName);
-							}
-						}
 						found.push({
 							i,
 							pseudo,
-							at: `${sample.width}x${sample.height}${sample.box ? ` in ${sample.box}px` : ""}: ${[
-								...path,
-								tag.slice(0, 160)
-							].join(" > ")}${pseudo}`,
+							at: `${sample.width}x${sample.height}${sample.dark ? " dark" : ""}${sample.box ? ` in ${sample.box}px` : ""}: ${whereIs(read[0][i])}${pseudo}`,
 							changed
 						});
 					}
@@ -2272,11 +2081,38 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 		};
 
+		// WHY: a value naming a custom property no sheet defines computes to
+		// nothing, which hides a broken `calc()` around it — so each such name holds
+		// a length. One also named with a fallback is left unset, or that would hide.
+		/** @type {string[]} */
+		const unset = [];
+		for (const reading of readings) {
+			for (const name of reading.referenced) {
+				if (
+					readings.every(
+						(each) =>
+							!each.sequences.has(name) &&
+							!each.registered.has(name) &&
+							!each.defaulted.has(name)
+					) &&
+					!unset.includes(name)
+				) {
+					unset.push(name);
+				}
+			}
+		}
+		for (const doc of docs) {
+			/** @type {HTMLElement} */ (doc.documentElement).style.cssText = unset
+				.map((name) => `${name}:1px`)
+				.join(";");
+		}
+
 		let elementCount = 0;
 		let sampled = 0;
 		if (properties.length > 0) {
-			// Everything at two widths, then a pixel under, at and over every length a
-			// query names, reading only what the rules under such a query reach.
+			// Everything at two widths, then the dark color scheme and a pixel under,
+			// at and over every length a query names, reading only what the rules
+			// under such a query reach.
 			const whole = populate([...chains.keys()]);
 			elementCount = whole.elements[0].length;
 			await measure(
@@ -2297,7 +2133,9 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 			for (const key of [...keys].sort()) {
 				const found = /^(box)?(width|height)(\d+)$/.exec(key);
-				if (found === null || conditioned.length === 0) continue;
+				if ((found === null && key !== "dark") || conditioned.length === 0) {
+					continue;
+				}
 				if (sampled + 3 > MAX_SAMPLES || moved.length >= KEPT) break;
 				/** @type {Set<string>} */
 				const reached = new Set();
@@ -2306,15 +2144,27 @@ const compareStyles = async ({ pairs, types }) => {
 						if (chains.has(selector)) reached.add(selector);
 					}
 				}
-				const length = Number(found[3]);
 				const part = populate([...reached]);
 				await measure(
 					part,
-					[Math.max(1, length - 1), length, length + 1].map((size) => ({
-						width: found[1] === "box" || found[2] === "height" ? 1400 : size,
-						height: found[1] !== "box" && found[2] === "height" ? size : 800,
-						box: found[1] === "box" ? size : 0
-					})),
+					found === null
+						? [360, 1400].map((width) => ({
+								width,
+								height: 800,
+								box: 0,
+								dark: true
+							}))
+						: [
+								Math.max(1, Number(found[3]) - 1),
+								Number(found[3]),
+								Number(found[3]) + 1
+							].map((size) => ({
+								width:
+									found[1] === "box" || found[2] === "height" ? 1400 : size,
+								height:
+									found[1] !== "box" && found[2] === "height" ? size : 800,
+								box: found[1] === "box" ? size : 0
+							})),
 					onlyConditioned
 				);
 				clear();

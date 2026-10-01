@@ -102,19 +102,11 @@ const PAGE_POLICY =
 	"default-src 'none'; script-src 'unsafe-eval'; style-src 'unsafe-inline' data:; img-src data:; font-src data:; media-src data:";
 const POLICED_PAGE = `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${PAGE_POLICY}"></head><body></body></html>`;
 
-// What no width reaches, set by media emulation where the engine offers it;
-// each runs only over the pairs whose text names it.
+// What neither a width nor a frame's color scheme reaches, set by media
+// emulation where the engine offers it; each runs only over the pairs naming it.
 /** @type {{ label: string, named: RegExp, apply: (page: import("puppeteer-core").Page, on: boolean) => Promise<void> }[]} */
 const EMULATIONS = EMULATES_MEDIA
 	? [
-			{
-				label: "dark",
-				named: /prefers-color-scheme/i,
-				apply: (page, on) =>
-					page.emulateMediaFeatures(
-						on ? [{ name: "prefers-color-scheme", value: "dark" }] : []
-					)
-			},
 			{
 				label: "print",
 				named: /@media[^{]*\bprint\b/i,
@@ -516,11 +508,26 @@ const STYLE_CONTROLS = new Map([
 	["bad nested", [".a{& .b{color:red}}", ".a{& .b{color:blue}}"]],
 	["bad custom property", [":root{--x:1px}.a{margin:var(--x)}", ":root{--x:2px}.a{margin:var(--x)}"]],
 	["bad pseudo-element", [".a::before{content:'x'}", ".a::before{content:'y'}"]],
+	["bad dark scheme", ["@media (prefers-color-scheme:dark){.a{color:red}}", "@media (prefers-color-scheme:dark){.a{color:blue}}"]],
+	["bad theme on body", ["body.dark{--c:#4a4458}body.light{--c:#fff}", "body.dark{--c:#4a4558}body.light{--c:#fff}"]],
+	["bad theme on root", [":root.dark .a{color:red}", ":root.dark .a{color:blue}"]],
+	// A value naming custom properties no sheet defines still has to keep its arithmetic.
+	["bad operator over unset properties", [".a{width:calc(var(--r) + var(--w))}", ".a{width:calc(var(--r) - var(--w))}"]],
+	["bad custom number", [".a{--x:1}", ".a{--x:2}"]],
+	["bad custom list length", [".a{--k:0px 0px 0px 0px}", ".a{--k:0px 0px 0px}"]],
+	["bad custom url", ['.a{--u:url("./img.png")}', '.a{--u:url(".z/img.png")}']],
+	["bad keyframe", ["@keyframes k{50%{opacity:.7}}.a{animation-name:k}", "@keyframes k{50%{opacity:.8}}.a{animation-name:k}"]],
+	["bad direction", [".a:dir(rtl){color:red}", ".a:dir(rtl){color:blue}"]],
+	["bad dark color", [".a{color:light-dark(#eee,#111)}", ".a{color:light-dark(#eee,#a11)}"]],
+	["bad dropped display", [".a{display:block}", ".a{}"]],
+	["bad keyframe percentage", ["@keyframes k{to{transform:translateY(-5%)}}", "@keyframes k{to{transform:translateY(-6%)}}"]],
+	["bad rule after a byte order mark", ["\uFEFFbody{color:red}", "\uFEFFbody{color:blue}"]],
 	// A `)` inside a quoted `url()` belongs to the address, not to a color.
 	["bad quoted url body", ['.a{--u:url("assets/)#fff")}', '.a{--u:url("assets/)#ffffff")}']],
 	// A private-use character is a value's own, not a space the printer may write.
 	["bad private use", [".a{--x:a\uE000b}", ".a{--x:a b}"]],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
+	["good custom property spacing", [".a{--c:#e9ecef #e9ecef #dee2e6;--f:400 1rem / 1.5 \"Mona Sans\", sans-serif}", ".a{--c:#e9ecef#e9ecef#dee2e6;--f:400/**/1rem/ 1.5\"Mona Sans\",sans-serif}"]],
 	// CSS Syntax 4.3.6: recovery ends a bad url at the next `)`.
 	["good bad url", ['.a{--u:url(foo")#fff)}', '.a{--u:url(foo")#ffffff)}']],
 	// CSS Syntax 4.2: U+00A0 is no whitespace, so the quote after it ends a bad url.
@@ -531,6 +538,8 @@ const STYLE_CONTROLS = new Map([
 	["good important then normal", [".a{--x:red!important}.a{--x:blue}", ".a{--x:red!important}"]],
 	["good normal then normal", [".a{--y:red}.a{--y:blue}", ".a{--y:blue}"]],
 	["good colors inside a value", [".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}", ".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"]],
+	["good condition spacing", ["@supports (display: grid){@keyframes k{to{opacity:0}}}", "@supports (display:grid){@keyframes k{to{opacity:0}}}"]],
+	["good keyframes joined", ["@keyframes k{from{opacity:0}to{opacity:0}}", "@keyframes k{0%,to{opacity:0}}"]],
 	["good blocks under one layer statement", ["@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}", "@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"]]
 ]);
 
