@@ -206,7 +206,9 @@ its render, with the dark color scheme read through each frame's own. Only
 Chromium answers the media-emulation calls, so only there is a stylesheet naming
 print also read under it. A defect only one
 engine has is filed against it with a reason opening `<engine> only:` rather
-than tolerated in all three.
+than tolerated in all three, and each list must match exactly, so a defect the
+engine fixes fails until its entry goes. A workaround in the suite's own code
+gets the same treatment through a probe in `ENGINE_QUIRKS`.
 
 They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
 in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails

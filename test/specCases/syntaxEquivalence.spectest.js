@@ -2592,6 +2592,121 @@ describe("a distant merge keeps every element's cascade", () => {
 // A narrow viewport and a wide one, since media queries switch between them.
 const RENDER_WIDTHS = [360, 1400];
 
+// Engine behaviors a workaround in this suite exists for, each probed in the
+// engines it was measured in: once one is fixed its test fails, naming the
+// workaround to take back out.
+/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: import("puppeteer-core").Page) => Promise<boolean> }[]} */
+const ENGINE_QUIRKS = [
+	{
+		engines: ["chrome"],
+		quirk: "reads a NUL right after `<` as U+FFFD",
+		workaround: "the render tier skipping every page holding a NUL",
+		holds: (page) =>
+			page.evaluate(
+				() =>
+					new DOMParser().parseFromString("a<\u0000!", "text/html").body
+						.textContent === "a<\uFFFD!"
+			)
+	},
+	{
+		engines: ["firefox"],
+		quirk: "paints a relative color a byte away from its sRGB spelling",
+		workaround: "`withinAByte` in the color rewrite tier",
+		holds: (page) =>
+			page.evaluate(() => {
+				const context = /** @type {CanvasRenderingContext2D} */ (
+					document
+						.createElement("canvas")
+						.getContext("2d", { willReadFrequently: true })
+				);
+				/**
+				 * @param {string} color a color
+				 * @returns {string} the pixel it paints
+				 */
+				const paint = (color) => {
+					context.fillStyle = color;
+					context.fillRect(0, 0, 1, 1);
+					return [...context.getImageData(0, 0, 1, 1).data].join(",");
+				};
+				return (
+					paint("hsl(from rgb(214.7 138.3 226.0) calc(h + 40) s calc(l * .9))") !==
+					paint("#db6da0")
+				);
+			})
+	},
+	{
+		engines: ["webkit"],
+		quirk: "serializes a computed length to six significant digits",
+		workaround: "`atPrintedPrecision` outside Chromium",
+		holds: (page) =>
+			page.evaluate(() => {
+				const element = document.createElement("div");
+				element.style.letterSpacing = "calc(1px + 1cm)";
+				document.body.append(element);
+				const read = getComputedStyle(element).letterSpacing;
+				element.remove();
+				return read === "38.7953px";
+			})
+	},
+	{
+		engines: ["firefox"],
+		quirk: "keeps a family name's quotes in its computed value",
+		workaround: "`unquoteFamilies` in the page helpers",
+		holds: (page) =>
+			page.evaluate(() => {
+				const element = document.createElement("div");
+				element.style.fontFamily = '"Manrope"';
+				document.body.append(element);
+				const read = getComputedStyle(element).fontFamily;
+				element.remove();
+				return read.startsWith('"');
+			})
+	},
+	{
+		engines: ["firefox"],
+		quirk: "truncates a result nested deeper than three levels",
+		workaround: "`evaluateDeep` carrying results as JSON",
+		holds: async (page) =>
+			JSON.stringify(await page.evaluate(() => ({ a: { b: { c: { d: 1 } } } }))) !==
+			'{"a":{"b":{"c":{"d":1}}}}'
+	}
+];
+
+describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
+	/** @type {import("puppeteer-core").Browser} */
+	let browser;
+	/** @type {import("puppeteer-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		browser = await launchBrowser({
+			browser: ENGINE,
+			protocolTimeout: FILE_TIMEOUT
+		});
+		page = await browser.newPage();
+		await page.setContent(POLICED_PAGE);
+	}, FILE_TIMEOUT);
+
+	afterAll(async () => {
+		if (page !== undefined) await page.close();
+		if (browser !== undefined) await browser.close();
+	});
+
+	const quirks = ENGINE_QUIRKS.filter(({ engines }) => engines.includes(ENGINE));
+	if (quirks.length === 0) {
+		it("has no quirk filed for this engine", () => {
+			// No-op: every workaround here was measured in another engine.
+		});
+	} else {
+		it.each(quirks.map(({ quirk, workaround, holds }) => [quirk, workaround, holds]))(
+			"still %s, or %s can go",
+			async (_quirk, _workaround, holds) => {
+				expect(await holds(page)).toBe(true);
+			}
+		);
+	}
+});
+
 describe("a minified page renders as the page it came from", () => {
 	/** @type {import("puppeteer-core").Browser} */
 	let browser;
