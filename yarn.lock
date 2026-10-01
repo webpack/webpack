@@ -1786,10 +1786,10 @@
     tinyglobby "^0.2.13"
     yaml "^2.9.0"
 
-"@mdn/browser-compat-data@^8.0.9":
-  version "8.1.2"
-  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-8.1.2.tgz#37043c91bc9059c7904a90c0f9d41f289db1a74e"
-  integrity sha512-pe2qO3VDkRybAvmpr1UfC4zMnvOiVHUp4EMJU8RboulqzEvearRrUWCi/Y0QVRvkfe6Fh5Nahdk9uncU9anrFw==
+"@mdn/browser-compat-data@^8.1.4":
+  version "8.1.4"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-8.1.4.tgz#bff58f46c6a5a062f46279a574a839d2996a15a2"
+  integrity sha512-Cgp3OP3u9x57kT1sZPI115SP5H1IyaBhdDPnvnHRYZ1988kW83wuqcIdcMinLJXlMKOL5Y2cufWHzngh5cVtow==
 
 "@napi-rs/wasm-runtime@^1.1.4":
   version "1.2.4"

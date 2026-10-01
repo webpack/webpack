@@ -147,7 +147,7 @@
     "@changesets/cli": "^3.0.1",
     "@changesets/get-github-info": "^1.0.1",
     "@codspeed/core": "^5.5.0",
-    "@mdn/browser-compat-data": "^8.0.9",
+    "@mdn/browser-compat-data": "^8.1.4",
     "@puppeteer/browsers": "^3.2.2",
     "@types/convert-source-map": "^2.0.3",
     "@types/graceful-fs": "^4.1.9",
