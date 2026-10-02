@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Run a statement-level IIFE's body in place in webpack's JavaScript minifier.
+Run statement IIFEs in place and fold built-in calls on literals when minifying JS.
