@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef
+// cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 
 const vm = require("vm");
 const {
@@ -29,6 +29,8 @@ const importTerserSource = (specifier) => import(specifier);
  * @returns {{ minify: typeof import("terser").minify }} it
  */
 const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
+
+/** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
@@ -659,7 +661,6 @@ const PRINT_TREE_SKIPPED_KEYS = new Set([
 	"heldAsDefinition",
 	"atom",
 	"annotatedKey",
-	"source",
 	"attributesStartToken",
 	"attributesEndToken",
 	// terser keeps no record of a shorthand, which the printer decides.
@@ -3698,7 +3699,7 @@ describe("syntax-printer", () => {
 			).toEqual(["1.0", "0x10", "1_000", ".5", "12n", "0x1Fn"]);
 		});
 
-		it("should carry the tokens, quotes, definitions and source-map names the printer reads", async () => {
+		it("should carry the tokens, quotes, names and source-map names the printer reads", async () => {
 			const { modules } = await load();
 			const tree = await terserTree(
 				"var v = { 'a': 1, b: 2, [c]: 3, \"d\"() {} }; class K { 'e' = 1; #f = 2; [g] = 3 } import h from 'i' with { type: 'json' };",
@@ -3706,10 +3707,11 @@ describe("syntax-printer", () => {
 			);
 			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
 			const declarator = printTree.body[0].declarations[0];
-			expect(declarator.id.definition).toBe(
-				tree.body[0].definitions[0].name.definition()
-			);
-			expect(declarator.id.definition).toEqual(expect.any(Object));
+			// A name reads as terser's definition named it, and as written for the ESTree mangler.
+			const definition = tree.body[0].definitions[0].name.definition();
+			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
+			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
+			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
 			expect(declarator.startToken).toBe(tree.body[0].definitions[0].start);
 			const [a, b, c, d] = declarator.init.properties;
 			expect([a.quote, a.key.quote, a.mapName]).toEqual(["'", "'", "a"]);
@@ -3800,10 +3802,10 @@ describe("syntax-printer", () => {
 			modules.toPrintTree(
 				tree,
 				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
-					if (printNode !== null && printNode.type === "Identifier" && printNode.definition) {
-						expect(printNode.definition).toBe(node.definition());
-						if (printNode.definition.mangled_name) {
-							expect(printNode.name).toBe(printNode.definition.mangled_name);
+					if (printNode !== null && printNode.type === "Identifier" && node.definition) {
+						const definition = node.definition();
+						if (definition && definition.mangled_name) {
+							expect(printNode.name).toBe(definition.mangled_name);
 							renamed.push([node.name, printNode.name]);
 						}
 					}
@@ -4479,7 +4481,7 @@ describe("syntax-printer", () => {
 			const mangleBothWays = async (input, makeOptions) => {
 				const { minify, corrections, improvements } = await load();
 				/**
-				 * @param {EXPECTED_FUNCTION} minifier a `minify`
+				 * @param {Minifying} minifier a `minify`
 				 * @param {EXPECTED_ANY} options its options
 				 * @returns {Promise<EXPECTED_ANY>} what it wrote
 				 */
@@ -4514,7 +4516,7 @@ describe("syntax-printer", () => {
 				for (const [setName, makeSet] of Object.entries(MANGLE_OPTION_SETS)) {
 					for (const compress of [false, { passes: 2 }]) {
 						for (const module of [false, true]) {
-							const options = { ...makeSet(), compress, module };
+							const options = /** @type {EXPECTED_ANY} */ ({ ...makeSet(), compress, module });
 							try {
 								const { code } = await minify(source, options);
 								outputs.push(`${setName}, ${compress ? "compressed" : "parsed"}: ${code} ${JSON.stringify(options.nameCache)}`);
@@ -4716,7 +4718,7 @@ describe("syntax-printer", () => {
 				const { minify } = await load();
 				/** @type {EXPECTED_ANY[]} */
 				const caches = [];
-				for (const minifier of [terserReference().minify, minify]) {
+				for (const minifier of /** @type {Minifying[]} */ ([terserReference().minify, minify])) {
 					const nameCache = {};
 					await minifier("function f(long) { return long; } f(1); var g = 2;", {
 						mangle: { toplevel: true, properties: true },
@@ -4728,12 +4730,33 @@ describe("syntax-printer", () => {
 				expect(caches[1]).toEqual(caches[0]);
 			});
 
+			it("should drop a tree it was given once printed, as terser does", async () => {
+				const { minify } = await load();
+				const source = "function f(long) { return long; } f(1);";
+				for (const [minifier, format] of /** @type {[Minifying, EXPECTED_OBJECT][]} */ ([
+					[terserReference().minify, { spidermonkey: true }],
+					[minify, { spidermonkey: true }],
+					[minify, {}]
+				])) {
+					const { ast } = /** @type {EXPECTED_ANY} */ (
+						await minifier(source, { compress: false, mangle: false, format: { ast: true, code: false } })
+					);
+					const { code } = await minifier(ast, { compress: false, mangle: { toplevel: true }, format });
+					expect([code, ast.body[0].body.length, ast.body[0].argnames.length, ast.variables]).toEqual([
+						"function n(n){return n}n(1);",
+						0,
+						0,
+						undefined
+					]);
+				}
+			});
+
 			it("should hand the tree back mangled as terser does", async () => {
 				const { minify } = await load();
 				const source =
 					"function f(long) { var o = { foo: 1, 'bar': 2, get baz() { return 3; }, [k]: 4 }; return long + o.foo + o['bar'] + o[/*@__KEY__*/ 'qux']; } class C { #x = 1; static y = 2; 'z' = 3; #w() {} m(p) { return #x in p && this.#x + this.#w(); } } l: for (;;) { f(1); break l; } new C();";
 				for (const mangle of [{ toplevel: true }, { toplevel: true, properties: { keep_quoted: true } }, { properties: {} }]) {
-					const options = () => ({ compress: false, mangle: { ...mangle }, format: { ast: true } });
+					const options = () => /** @type {EXPECTED_ANY} */ ({ compress: false, mangle: { ...mangle }, format: { ast: true } });
 					const theirs = /** @type {EXPECTED_ANY} */ (await terserReference().minify(source, options()));
 					const ours = /** @type {EXPECTED_ANY} */ (await minify(source, options()));
 					expect(ours.code).toBe(theirs.code);
@@ -4742,7 +4765,8 @@ describe("syntax-printer", () => {
 					expect((await minify(ours.ast, reprint)).code).toBe(
 						(await terserReference().minify(theirs.ast, reprint)).code
 					);
-					const estreeOptions = () => ({ compress: false, mangle: { ...mangle }, format: { spidermonkey: true } });
+					const estreeOptions = () =>
+						/** @type {EXPECTED_ANY} */ ({ compress: false, mangle: { ...mangle }, format: { spidermonkey: true } });
 					// Where the parsers place a node apart is no concern of mangling's.
 					/**
 					 * @param {EXPECTED_ANY} result a result
@@ -4760,10 +4784,12 @@ describe("syntax-printer", () => {
 				const { minify } = await load();
 				for (const source of [
 					"var f = new Function('alpha', 'beta', 'var gamma = alpha + beta; return function inner(delta) { return gamma * delta; }'); console.log(f);",
-					"var f = Function('alpha', '{ beta, gamma }', 'return (x => x + alpha + beta)(gamma)'); console.log(f);"
+					"var f = Function('alpha', '{ beta, gamma }', 'return (x => x + alpha + beta)(gamma)'); console.log(f);",
+					// A body closing the function early: the first function terser's walk meets is taken.
+					"var f = Function('a', '}); function g() { for (;;) s(); return [, s]; } (function () {'); console.log(f);"
 				]) {
 					const options = () => ({
-						compress: { unsafe: true, unsafe_Function: true, unsafe_arrows: true, passes: 2 },
+						compress: { unsafe: true, unsafe_Function: true, unsafe_arrows: true, hoist_funs: true, passes: 2 },
 						mangle: true,
 						ecma: /** @type {const} */ (2020)
 					});
