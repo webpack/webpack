@@ -24,6 +24,7 @@ module.exports = {
 		// `false` excludes a type from the built-in minimizer: only the CSS
 		// asset is minimized here.
 		minimize: {
+			css: { extractComments: false },
 			javascript: false,
 			html: false
 		},

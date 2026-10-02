@@ -51,7 +51,7 @@ module.exports = {
 		pathinfo: false
 	},
 	optimization: {
-		minimize: true,
+		minimize: { css: { extractComments: false } },
 		// `"..."` expands to webpack's own default minimizer, so this drives the
 		// real `lib/config/defaults.js` wiring rather than a hand-built one.
 		minimizer: ["..."]

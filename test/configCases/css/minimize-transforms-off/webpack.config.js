@@ -10,6 +10,7 @@ module.exports = {
 	optimization: {
 		minimize: {
 			css: {
+				extractComments: false,
 				// `false` here would drop every comment; `"all"` is the level that
 				// makes none of them go, which is what leaves each label below.
 				comments: "all",

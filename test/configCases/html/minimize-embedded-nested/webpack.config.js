@@ -19,6 +19,7 @@ module.exports = {
 			{
 				apply: (compiler) => {
 					new MinimizerPlugin({
+						extractComments: false,
 						test: /\.(?:[cm]?js|css|html|json|svg)(\?.*)?$/i,
 						minify: [
 							MinimizerPlugin.terserMinify,

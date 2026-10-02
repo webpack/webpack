@@ -23,6 +23,7 @@ module.exports = {
 	optimization: {
 		minimize: {
 			css: {
+				extractComments: false,
 				convertLengthUnits: true,
 				convertApproximateColors: true,
 				dropOverriddenDeclarations: true,

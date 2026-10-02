@@ -8,7 +8,7 @@ module.exports = {
 		pathinfo: false
 	},
 	optimization: {
-		minimize: true,
+		minimize: { css: { extractComments: false } },
 		minimizer: ["..."]
 	},
 	experiments: {
