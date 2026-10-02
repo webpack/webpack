@@ -1896,6 +1896,7 @@ describe("WebpackParser", () => {
 		});
 
 		it("should read `assert` only as the legacy keyword it is", () => {
+			// cspell:ignore ssert
 			// A call on the next line is a statement of its own.
 			const { body } = parse('import x from "x"\nassert(x);', {
 				sourceType: "module"
