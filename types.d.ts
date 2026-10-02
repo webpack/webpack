@@ -7075,7 +7075,7 @@ declare class Dependency {
 	/**
 	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
 	 */
-	isLazy(): undefined | boolean;
+	isLazy(): boolean;
 
 	/**
 	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
