@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("path");
+const createLazyBarrelTest = require("../_helpers/createLazyBarrelTest");
 
 /** @import { NormalModule } from "../../../../" */
 
@@ -51,9 +52,7 @@ const config = (sideEffects, concatenateModules) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [
-	config(true, false),
-	config(true, true),
-	config(false, false)
-];
+module.exports = createLazyBarrelTest(
+	[],
+	[config(true, false), config(true, true), config(false, false)]
+);

@@ -2,15 +2,9 @@
 
 const fs = require("fs");
 const path = require("path");
+const createLazyBarrelTest = require("../_helpers/createLazyBarrelTest");
 
-/** @import { NormalModule } from "../../../../" */
-
-const lazyModules = new Set(
-	["lib/Button.js"].map((file) => path.resolve(__dirname, file))
-);
-
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+module.exports = createLazyBarrelTest(["lib/Button.js"], {
 	mode: "production",
 	target: "web",
 	devtool: false,
@@ -33,17 +27,7 @@ module.exports = {
 	},
 	plugins: [
 		(compiler) => {
-			const created = new Set();
-			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
-				compilation.hooks.buildModule.tap("Test", (module) => {
-					created.add(/** @type {NormalModule} */ (module).resource);
-				});
-			});
 			compiler.hooks.done.tap("Test", (stats) => {
-				for (const module of lazyModules) {
-					expect(created.has(module)).toBe(false);
-				}
-
 				const css = fs.readFileSync(
 					path.join(
 						/** @type {string} */ (stats.compilation.outputOptions.path),
@@ -56,4 +40,4 @@ module.exports = {
 			});
 		}
 	]
-};
+});

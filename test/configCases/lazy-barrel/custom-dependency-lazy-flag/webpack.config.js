@@ -2,6 +2,7 @@
 
 const webpack = require("../../../../");
 const makeSerializable = require("../../../../lib/util/makeSerializable");
+const createLazyBarrelTest = require("../_helpers/createLazyBarrelTest");
 
 /**
  * @import {
@@ -47,8 +48,7 @@ makeSerializable(
 	"LazyFlagDependency"
 );
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+module.exports = createLazyBarrelTest([], {
 	mode: "production",
 	target: "web",
 	devtool: false,
@@ -75,4 +75,4 @@ module.exports = {
 			});
 		}
 	]
-};
+});
