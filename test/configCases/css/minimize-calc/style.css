@@ -73,8 +73,7 @@
 .f21 { rotate: calc(1turn/3) }
 /*! declined: a math function other than calc() */
 .d07 { width: min(1px + 2px, 4px) }
-/*! declined: two angle units — only `deg`/`grad`/`turn` convert exactly, and
-   nothing converts them here, so they stay two terms */
+/*! two angle units add in degrees, as lightningcss adds them */
 .d08 { rotate: calc(45deg + 0.125turn) }
 
 /* Taking the parentheses off, and the two shapes where that changes the value. */

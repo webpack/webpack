@@ -1559,6 +1559,26 @@ const collectZeroUnitAmbiguousProperties = (propertyTable = properties) => {
 };
 
 /**
+ * The properties whose grammar offers a `<number>` or an `<integer>`, so a
+ * unitless zero is that number there, as `calc(0)` is, and never a length.
+ * @param {PartialSyntaxTable} propertyTable the `properties.json` to read
+ * @returns {string[]} the property names, sorted
+ */
+const collectNumberZeroProperties = (propertyTable = properties) => {
+	const out = [];
+	for (const [name, entry] of Object.entries(propertyTable)) {
+		if (typeof entry.syntax !== "string") continue;
+		const kinds = valueLevelNumericTypes(entry.syntax, propertyTable);
+		if (!kinds.has("number") && !kinds.has("integer")) continue;
+		// A shorthand with a length slot may give the bare zero to that slot
+		// (`columns:0` is a `column-width`), where `calc(0)` fills the number one.
+		if (Array.isArray(entry.computed) && kinds.has("length")) continue;
+		out.push(name);
+	}
+	return out.sort();
+};
+
+/**
  * The properties whose whole value is `<number> | <percentage>` reading the two
  * as one quantity, a percentage being the number hundredfold. Only the whole
  * value: a percentage beside a length means something else again.
@@ -3311,6 +3331,28 @@ const collectZeroAngleFunctions = () => {
 };
 
 /**
+ * The functions every argument of which is a `<number>` or a `<percentage>`, so a
+ * folded `calc()` holding one needs no parentheses there.
+ * @returns {string[]} the function names, sorted
+ */
+const collectNumberArgumentFunctions = () => {
+	const names = [];
+	for (const [name, entry] of Object.entries(functions)) {
+		if (typeof entry.syntax !== "string" || !name.endsWith("()")) continue;
+		// A bounded type such as `<number [0,1]>` is one a `calc()` clamps into and
+		// a bare number outside it is not, so only the unbounded two count.
+		const types = entry.syntax.match(/<[^>]+>/g) || [];
+		if (types.length === 0) continue;
+		if (types.some((one) => one !== "<number>" && one !== "<percentage>")) {
+			continue;
+		}
+		// Function names match ASCII case-insensitively; the printer lowercases.
+		names.push(name.slice(0, -2).toLowerCase());
+	}
+	return names.sort();
+};
+
+/**
  * The pseudo-class functions taking An+B, spotted by the `<an+b>` their own
  * grammar names — the notation `odd` and `even` are the keywords of.
  * @returns {string[]} the function names, sorted
@@ -3790,7 +3832,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], angleDegrees: [string, number][], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -4126,6 +4168,14 @@ const SUPPLEMENT = {
 	// argument through trig, which amplifies a truncated digit into a different
 	// computed matrix (measured in headless Chromium).
 	angleUnits: ["deg", "grad", "rad", "turn"],
+	// CSS Values 4 §7.1: how many degrees one of each angle unit is. A sum written
+	// in two of them folds into degrees, as lightningcss folds it.
+	angleDegrees: [
+		["deg", 1],
+		["grad", 0.9],
+		["rad", 180 / Math.PI],
+		["turn", 360]
+	],
 	// WHY: CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
 	// The trig functions are only folded on these, so the table is what says
 	// where. `rad` has no entry — a quarter turn is π/2 of them, which no double
@@ -6960,6 +7010,8 @@ const collectData = async () => {
 		colorName
 	);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
+	const numberArgumentFunctions = collectNumberArgumentFunctions();
+	const numberZeroProperties = collectNumberZeroProperties();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
 		mathFunctions,
@@ -7415,6 +7467,14 @@ const SELECTOR_FUNCTIONS = ${setLiteral(selectorFunctions)};
 // unit wherever it stands.
 const ZERO_ANGLE_FUNCTIONS = ${setLiteral(zeroAngleFunctions)};
 
+// The properties a unitless zero is a number in, so a folded \`calc(0)\` there
+// is written \`0\`; anywhere else \`0\` is a length \`calc(0)\` is not.
+const NUMBER_ZERO_PROPERTIES = ${setLiteral(numberZeroProperties)};
+
+// The functions every argument of which is a number or a percentage, so a
+// folded \`calc()\` standing as one is written bare there.
+const NUMBER_ARGUMENT_FUNCTIONS = ${setLiteral(numberArgumentFunctions)};
+
 // CSS Values 4's math functions: everything inside one is a math expression, so
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
 const MATH_FUNCTIONS = ${setLiteral(mathFunctions)};
@@ -7614,9 +7674,13 @@ const FAMILY_SLOT_INITIALS = ${mapLiteral(familySlotInitials)};
 // The font stack \`system-ui\` names, for a target that does not read the keyword.
 const SYSTEM_UI_STACK = ${JSON.stringify(SUPPLEMENT.systemUiStack.join(","))};
 
-// The angle units. Excluded from rounding: \`rotate()\` runs its argument through
-// trig, which turns a truncated digit into a different computed matrix.
+// The angle units. An authored one is excluded from rounding: \`rotate()\` runs
+// its argument through trig, which turns a truncated digit into another matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
+
+// How many degrees one of each angle unit is, so a sum in two of them folds.
+/** @type {Map<string, number>} */
+const ANGLE_DEGREES = new Map(${JSON.stringify(SUPPLEMENT.angleDegrees)});
 
 // The constants a calculation may name (CSS Values 4 §10.7), as \`name -> value\`.
 // \`infinity\` and \`NaN\` are named with none: no printed number spells either, so
@@ -7855,7 +7919,7 @@ ${prefixSpellingNumbers
 ]);
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
-module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
+module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_DEGREES = ANGLE_DEGREES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
@@ -7892,7 +7956,7 @@ module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodul
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;\nmodule.exports.NEVER = NEVER;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.ORDERED_LONGHANDS = ORDERED_LONGHANDS;
-module.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
+module.exports.NUMBER_ARGUMENT_FUNCTIONS = NUMBER_ARGUMENT_FUNCTIONS;\nmodule.exports.NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES = NUMBER_ONLY_OUTSIDE_CALC_PROPERTIES;\nmodule.exports.NUMBER_ZERO_PROPERTIES = NUMBER_ZERO_PROPERTIES;\nmodule.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREDEFINED_COLOR_SPACES = PREDEFINED_COLOR_SPACES;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.getPrefixedProperties = getPrefixedProperties;

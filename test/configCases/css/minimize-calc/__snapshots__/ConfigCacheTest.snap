@@ -36,8 +36,7 @@ Array [
   "/*! the fold prints a double back, so its result is rounded to six digits */.f20{width:33.3333%}",
   "/*! an angle rounds to six digits too, as lightningcss rounds it */.f21{rotate:.333333turn}",
   "/*! declined: a math function other than calc() */.d07{width:3px}",
-  "/*! declined: two angle units — only \`deg\`/\`grad\`/\`turn\` convert exactly, and
-   nothing converts them here, so they stay two terms */.d08{rotate:calc(45deg + .125turn)}",
+  "/*! two angle units add in degrees, as lightningcss adds them */.d08{rotate:90deg}",
   "/*! unwrap: a positive dimension means the same bare */.u01{width:3px}",
   "/*! unwrap: a percentage too — no \`<integer>\` carries one */.u02{width:50%}",
   "/*! unwrap: an integer is an integer either way */.u03{z-index:2}",

@@ -146,7 +146,7 @@
 .k071 { column-count: calc(5 / 2) }
 /*! aspect-ratio: calc(16 / 9) — same as lightningcss: 1.77778 */
 .k072 { aspect-ratio: calc(16 / 9) }
-/*! aspect-ratio: 16 / calc(18 / 2) — lightningcss: 16/9 — a ratio keeps the spacing it was written with */
+/*! aspect-ratio: 16 / calc(18 / 2) — same as lightningcss: 16/9 */
 .k073 { aspect-ratio: 16 / calc(18 / 2) }
 /*! rotate: calc(45deg + 45deg) — same as lightningcss: 90deg */
 .k074 { rotate: calc(45deg + 45deg) }
@@ -156,7 +156,7 @@
 .k076 { rotate: calc(1turn / 3) }
 /*! rotate: calc(90deg / 7) — same as lightningcss: 12.8571deg */
 .k077 { rotate: calc(90deg / 7) }
-/*! rotate: calc(1rad + 1deg) — lightningcss: 58.2958deg — rad converts to deg only through pi, so the two stay two terms */
+/*! rotate: calc(1rad + 1deg) — same as lightningcss: 58.2958deg */
 .k078 { rotate: calc(1rad + 1deg) }
 /*! rotate: calc(100grad) — same as lightningcss: 100grad */
 .k079 { rotate: calc(100grad) }
@@ -214,9 +214,9 @@
 .k105 { opacity: pow(0.5, 2) }
 /*! opacity: exp(0) — same as lightningcss: 1 */
 .k106 { opacity: exp(0) }
-/*! opacity: log(1) — lightningcss: 0 — a unitless zero keeps its expression, as width:calc(0) has to */
+/*! opacity: log(1) — same as lightningcss: 0 */
 .k107 { opacity: log(1) }
-/*! opacity: sin(0) — lightningcss: 0 — a unitless zero keeps its expression, as width:calc(0) has to */
+/*! opacity: sin(0) — same as lightningcss: 0 */
 .k108 { opacity: sin(0) }
 /*! opacity: cos(0) — same as lightningcss: 1 */
 .k109 { opacity: cos(0) }
@@ -280,7 +280,7 @@
 .k138 { transform: translate(calc(10px + 5px), calc(100% / 3)) }
 /*! transform: rotate(calc(45deg * 2)) — same as lightningcss: rotate(90deg) */
 .k139 { transform: rotate(calc(45deg * 2)) }
-/*! transform: scale(calc(1 / 3)) — lightningcss: scale(.333333) — a fraction inside a function argument keeps its calc(), its grammar not read here */
+/*! transform: scale(calc(1 / 3)) — same as lightningcss: scale(.333333) */
 .k140 { transform: scale(calc(1 / 3)) }
 /*! background-position: calc(100% / 3) calc(50% + 10px) — lightningcss: 33.3333% calc(50% + 10px) — the same value, ours dropping a space the tokens do not need */
 .k141 { background-position: calc(100% / 3) calc(50% + 10px) }
@@ -292,9 +292,9 @@
 .k144 { color: rgb(calc(255 / 3) 0 0) }
 /*! color: rgb(calc(100 + 55) 0 0) — same as lightningcss: #9b0000 */
 .k145 { color: rgb(calc(100 + 55) 0 0) }
-/*! color: hsl(calc(360 / 7) 50% 50%) — lightningcss: #bfad40 — a calc() channel keeps its color function */
+/*! color: hsl(calc(360 / 7) 50% 50%) — same as lightningcss: #bfad40 */
 .k146 { color: hsl(calc(360 / 7) 50% 50%) }
-/*! color: rgb(0 0 0 / calc(1 / 3)) — lightningcss: #0005 — a calc() channel keeps its color function */
+/*! color: rgb(0 0 0 / calc(1 / 3)) — same as lightningcss: #0005 */
 .k147 { color: rgb(0 0 0 / calc(1 / 3)) }
 /*! font: calc(10px + 2px)/1.5 serif — same as lightningcss: 12px/1.5 serif */
 .k148 { font: calc(10px + 2px)/1.5 serif }
@@ -308,3 +308,43 @@
 .k152 { width: calc(1px * 3 / 3) }
 /*! width: calc(1 / 3 * 3px) — same as lightningcss: 1px */
 .k153 { width: calc(1 / 3 * 3px) }
+/*! opacity: calc(1 - 1) — same as lightningcss: 0 */
+.k154 { opacity: calc(1 - 1) }
+/*! width: calc(1 - 1) — lightningcss: 0 — a bare zero is a length the declaration takes, where calc(0) is dropped */
+.k155 { width: calc(1 - 1) }
+/*! line-height: calc(1 - 1) — same as lightningcss: 0 */
+.k156 { line-height: calc(1 - 1) }
+/*! columns: calc(1 - 1) — lightningcss: calc(1 - 1) — ours is shorter */
+.k157 { columns: calc(1 - 1) }
+/*! flex: calc(1 - 1) — lightningcss: 0 — a shorthand with a length slot keeps calc(0), which fills only its number slot */
+.k158 { flex: calc(1 - 1) }
+/*! z-index: calc(1 - 1) — lightningcss: calc(1 - 1) — ours is shorter */
+.k159 { z-index: calc(1 - 1) }
+/*! filter: brightness(calc(1 / 2)) — same as lightningcss: brightness(.5) */
+.k160 { filter: brightness(calc(1 / 2)) }
+/*! transform: scale(calc(1 / 3), calc(1 / 2)) — same as lightningcss: scale(.333333,.5) */
+.k161 { transform: scale(calc(1 / 3), calc(1 / 2)) }
+/*! transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) — lightningcss: matrix(.333333,0,0,1,0,0) — the same matrix, which ours writes as the shorter scaleX() */
+.k162 { transform: matrix(calc(1 / 3), 0, 0, 1, 0, 0) }
+/*! transform: scale(calc(-1 / 3)) — lightningcss: scale(-.333333) — a negative argument keeps its calc(), as a filter function of the same shape takes none */
+.k163 { transform: scale(calc(-1 / 3)) }
+/*! transition-timing-function: cubic-bezier(calc(1 / 2), 0, 1, 1) — lightningcss: cubic-bezier(.5,0,1,1) — a bounded argument keeps its calc(), which clamps where a bare value outside it is dropped */
+.k164 { transition-timing-function: cubic-bezier(calc(1 / 2), 0, 1, 1) }
+/*! color: rgb(calc(255 / 7) 0 0) — same as lightningcss: #240000 */
+.k165 { color: rgb(calc(255 / 7) 0 0) }
+/*! color: rgba(0, 0, 0, calc(1 / 3)) — same as lightningcss: #0005 */
+.k166 { color: rgba(0, 0, 0, calc(1 / 3)) }
+/*! color: color(srgb calc(1 / 3) 0 0) — lightningcss: color(srgb .333333 0 0) — the same color, whose channel is a whole byte, written in hex */
+.k167 { color: color(srgb calc(1 / 3) 0 0) }
+/*! rotate: calc(45deg + 0.125turn) — same as lightningcss: 90deg */
+.k168 { rotate: calc(45deg + 0.125turn) }
+/*! rotate: calc(100grad + 10deg) — same as lightningcss: 100deg */
+.k169 { rotate: calc(100grad + 10deg) }
+/*! rotate: calc(1turn - 90deg) — same as lightningcss: 270deg */
+.k170 { rotate: calc(1turn - 90deg) }
+/*! aspect-ratio: 16 / 9 — same as lightningcss: 16/9 */
+.k171 { aspect-ratio: 16 / 9 }
+/*! aspect-ratio: auto 16 / 9 — same as lightningcss: auto 16/9 */
+.k172 { aspect-ratio: auto 16 / 9 }
+/*! background: linear-gradient(red calc(100% / 3), blue) — lightningcss: linear-gradient(red 33.3333%,#00f) — the same length either way */
+.k173 { background: linear-gradient(red calc(100% / 3), blue) }
