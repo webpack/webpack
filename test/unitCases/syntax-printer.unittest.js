@@ -239,6 +239,41 @@ const IMPROVED_CASES = [
 		"a nested function reading its own `this`",
 		`!function () { ${TRY} console.log([1].map(function () { return typeof this; })[0]); }();`,
 		{ compress: {}, mangle: false }
+	],
+	[
+		"a string method called on a literal",
+		'console.log("abcde".charAt(1), "abc".at(-1), "abcde".replaceAll("c", "x"));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Math` functions called on literals",
+		"console.log(Math.max(1, 5, 2), Math.abs(-3), Math.round(-0.4), Math.imul(3, 4));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"global functions called on literals",
+		'console.log(parseInt("ff", 16), encodeURIComponent("a b"), isNaN("x"));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Number` and `String` functions called on literals",
+		"console.log(Number.isInteger(5), Number.isSafeInteger(2 ** 53), String.fromCharCode(65, 66));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an array literal joined",
+		'console.log([1, "a", , null].join("-"));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an array literal of compressed literals joined",
+		"console.log([true, void 0, NaN, -1].join());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an array literal of literals left as written joined",
+		'console.log(["a", true, false, Infinity].join("-"));',
+		{ compress: { booleans: false, keep_infinity: true }, mangle: false }
 	]
 ];
 
@@ -269,7 +304,22 @@ const KEPT_CASES = [
 	["a sequence calling nothing in place", "console.log(1); console.log(2);"],
 	["`@__NOINLINE__`", `/*@__NOINLINE__*/(function () { ${TRY} console.log(2); })();`],
 	["a `yield` identifier", `function* g() { !function () { ${TRY} console.log(yield); }(); } g().next();`],
-	["an `await` identifier", `async function f() { !function () { ${TRY} console.log(await); }(); } f();`]
+	["an `await` identifier", `async function f() { !function () { ${TRY} console.log(await); }(); } f();`],
+	["a `Math` the program declares", "var Math = { abs: () => 9 }; console.log(Math.abs(-1));"],
+	["a global a direct `eval` could rebind", 'function f() { eval(""); return Math.abs(-1); } console.log(f());'],
+	["a global a `with` could rebind", "with ({}) console.log(Math.abs(-1));"],
+	["case not in ASCII", 'console.log("\\u00c4B".toLowerCase());'],
+	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
+	["a result longer than the call", 'console.log("ab".repeat(100));'],
+	["an argument no literal", 'console.log("abc".charAt(Math.random() > 2 ? 0 : 1));'],
+	["an argument some other operator makes", 'console.log("abc".indexOf(typeof Math.random()));'],
+	["a global no built-in", "try { console.log(at(1)); } catch (e) { console.log(2); }"],
+	["a function its object does not have", "try { console.log(Number.abs(-1)); } catch (e) { console.log(2); }"],
+	["a method of no literal", "console.log(String(1).charAt(0));"],
+	["a string method left out", 'try { console.log("a".join()); } catch (e) { console.log(2); }'],
+	["an array of something no literal", "console.log([Math.random() > 2].join());"],
+	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
+	["an optional call", 'console.log("abc"?.charAt(1));']
 ];
 
 // Each prints one thing and terser's output another, under the options named.
@@ -1386,8 +1436,9 @@ describe("syntax-printer", () => {
 
 	for (const [name, source, options] of COMPRESS_CASES) {
 		it(`should compress as terser does: ${name}`, async () => {
-			const { minify } = await load();
+			const { minify, improvements } = await load();
 			const reference = terserReference();
+			if (!improvements) throw new Error("the improve phase is not installed");
 			/**
 			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @param {import("terser").MinifyOptions} settings its options
@@ -1400,16 +1451,22 @@ describe("syntax-printer", () => {
 					return { error: /** @type {Error} */ (err).message };
 				}
 			};
-			for (const module of [false, true]) {
-				/** @returns {import("terser").MinifyOptions} the options */
-				const settings = () => ({
-					module,
-					mangle: false,
-					compress: JSON.parse(JSON.stringify(options))
-				});
-				expect(await outcome(minify, settings())).toEqual(
-					await outcome(reference.minify, settings())
-				);
+			// terser's bytes are what the compressor ports; `improve` writes less.
+			improvements.enabled = false;
+			try {
+				for (const module of [false, true]) {
+					/** @returns {import("terser").MinifyOptions} the options */
+					const settings = () => ({
+						module,
+						mangle: false,
+						compress: JSON.parse(JSON.stringify(options))
+					});
+					expect(await outcome(minify, settings())).toEqual(
+						await outcome(reference.minify, settings())
+					);
+				}
+			} finally {
+				improvements.enabled = true;
 			}
 		});
 	}
@@ -3448,6 +3505,15 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const input = `!function () { ${TRY} console.log(2); }();`;
 			const options = { compress: { expression: true }, mangle: false };
+			const { code } = await minify(input, options);
+			const reference = await terserReference().minify(input, options);
+			expect(code).toBe(reference.code);
+		});
+
+		it("should leave built-in calls alone without `evaluate`", async () => {
+			const { minify } = await load();
+			const input = "console.log(Math.abs(-3));";
+			const options = { compress: { evaluate: false }, mangle: false };
 			const { code } = await minify(input, options);
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);

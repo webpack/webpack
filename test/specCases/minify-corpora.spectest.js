@@ -1276,7 +1276,35 @@ const misprintsSeen = new Set();
  */
 const IMPROVED_YET_BIGGER = {
 	"fixture/next/wrap-contracts/input.js (the default minimizer's options)":
-		"31 bytes fewer, 1 more gzipped: the dropped wrapper had matched a run gzip reused"
+		"31 bytes fewer, 1 more gzipped: the dropped wrapper had matched a run gzip reused",
+	"evaluate/string_case (the default minimizer's options)":
+		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
+	"evaluate/string_case (a module mangled at its top level)":
+		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
+	"evaluate/string_case (reminify 2 {\"mangle\":false})":
+		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
+	"evaluate/string_case (reminify 3 {})":
+		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
+	"evaluate/string_case (reminify 4 {\"toplevel\":true})":
+		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
+	"evaluate/string_case (reminify 7 {\"safari10\":true})":
+		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
+	"evaluate/string_case (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
+		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
+	"harmony/issue_2345 (the default minimizer's options)":
+		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
+	"harmony/issue_2345 (reminify 2 {\"mangle\":false})":
+		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
+	"harmony/issue_2345 (reminify 3 {})":
+		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
+	"harmony/issue_2345 (reminify 7 {\"safari10\":true})":
+		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
+	"harmony/issue_2345 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
+		"10 bytes fewer, 7 more gzipped: the folded `[3,2,1].join(\"-\")` matched the one left after it",
+	"fixture/issues/12215/input.js (its own options)":
+		"20 bytes fewer, 5 more gzipped: the folded global call matched a shadowed one beside it",
+	"issue_8864_1 (its own options)":
+		"19 bytes fewer, 1 more gzipped: the folded `toUpperCase()` matched the one left in the template"
 };
 
 /**
