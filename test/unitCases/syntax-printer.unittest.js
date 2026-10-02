@@ -656,6 +656,7 @@ const PRINT_TREE_SKIPPED_KEYS = new Set([
 	"definition",
 	"mapName",
 	"atom",
+	"source",
 	"attributesStartToken",
 	"attributesEndToken",
 	// terser keeps no record of a shorthand, which the printer decides.
@@ -2989,7 +2990,7 @@ describe("syntax-printer", () => {
 		 * @returns {Promise<{ compared: number, differences: string[] }>} how many printed, and every one printed otherwise
 		 */
 		const compareExpressions = async (source, options) => {
-			const { minify, modules, corrections } = await load();
+			const { minify, modules } = await load();
 			// terser's typings leave out `format.ast`, which returns the tree.
 			const { ast } = /** @type {EXPECTED_ANY} */ (
 				await minify(source, { ...options, format: { ast: true, code: false } })
@@ -3008,13 +3009,7 @@ describe("syntax-printer", () => {
 					const theirs = modules.output.OutputStream(given);
 					// A subtree's comments are held to terser's by whole programs below.
 					theirs.readonly = true;
-					// `correct` rewrites terser's key printing, which the ESTree printer takes over later.
-					/** @type {{ enabled: boolean }} */ (corrections).enabled = false;
-					try {
-						expression.print(theirs);
-					} finally {
-						/** @type {{ enabled: boolean }} */ (corrections).enabled = true;
-					}
+					expression.print(theirs);
 					const ours = modules.output.OutputStream(given);
 					ours.readonly = true;
 					modules.printEstree(modules.toPrintTree(expression), ours);
@@ -3075,7 +3070,7 @@ describe("syntax-printer", () => {
 		 * @returns {Promise<string[]>} every format printed otherwise
 		 */
 		const compareProgram = async (source, options) => {
-			const { minify, modules, corrections } = await load();
+			const { minify, modules } = await load();
 			// terser's typings leave out `format.ast`, which returns the tree.
 			const { ast } = /** @type {EXPECTED_ANY} */ (
 				await minify(source, { ...options, format: { ast: true, code: false } })
@@ -3086,12 +3081,7 @@ describe("syntax-printer", () => {
 				const given = { ...format, comments: false };
 				const theirs = modules.output.OutputStream(given);
 				theirs.readonly = true;
-				/** @type {{ enabled: boolean }} */ (corrections).enabled = false;
-				try {
-					ast.print(theirs);
-				} finally {
-					/** @type {{ enabled: boolean }} */ (corrections).enabled = true;
-				}
+				ast.print(theirs);
 				const ours = modules.output.OutputStream(given);
 				ours.readonly = true;
 				modules.printEstree(modules.toPrintTree(ast), ours);
@@ -3256,31 +3246,25 @@ describe("syntax-printer", () => {
 		});
 
 		/**
-		 * A source minified as terser's printer prints it and as `printEstree` does,
-		 * the corrections off both ways, as `correct` rewrites terser's key printing.
+		 * A source minified as terser's printer prints it and as `printEstree` does.
 		 * @param {string | Record<string, string>} source a source, or files
 		 * @param {EXPECTED_ANY} options what to minify it with
 		 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }>} both results
 		 */
 		const minifyBothWays = async (source, options) => {
-			const { minify, modules, corrections } = await load();
-			const correcting = /** @type {{ enabled: boolean }} */ (corrections);
+			const { minify, modules } = await load();
 			const printer = /** @type {{ enabled: boolean }} */ (
 				modules.estreePrinter
 			);
-			correcting.enabled = false;
+			printer.enabled = false;
+			let theirs;
 			try {
-				const theirs = await minify(source, copyOptions(options));
-				printer.enabled = true;
-				try {
-					const ours = await minify(source, copyOptions(options));
-					return { theirs, ours };
-				} finally {
-					printer.enabled = false;
-				}
+				theirs = await minify(source, copyOptions(options));
 			} finally {
-				correcting.enabled = true;
+				printer.enabled = true;
 			}
+			const ours = await minify(source, copyOptions(options));
+			return { theirs, ours };
 		};
 
 		/**
@@ -3475,9 +3459,102 @@ describe("syntax-printer", () => {
 			]);
 		});
 
-		it("should be off", async () => {
+		// Each runtime user of the printer: the frequency mangling orders names
+		// by, `correct`'s `__proto__`, and what the compressor prints to compare.
+		/** @type {[string, string, EXPECTED_ANY][]} */
+		const PRINTER_USER_CASES = [
+			[
+				"the frequency",
+				"function f(longName,other){var o={a:longName,b:other.c};return o.a+o.b+longName}f(1,{c:2});label:for(;;)break label;",
+				{ compress: false, mangle: true }
+			],
+			[
+				"private names",
+				"class K{#secret=1;#m(){return this.#secret}static has(o){return #secret in o}run(){return this.#m()}}new K().run()",
+				{ compress: false, mangle: true }
+			],
+			[
+				"properties",
+				'var o={alpha:1,beta:2,"gamma":3};o.alpha+o.beta+o.gamma+o["beta"]+o[x?"delta":"eps"]+o[(x,"zeta")];class Q{#pv;m(){return this.#pv}}',
+				{ compress: false, mangle: { properties: { keep_quoted: true } } }
+			],
+			[
+				"`__proto__`",
+				'var p={},a={__proto__:p},b={__proto__},c={"__proto__":p};function g(__proto__){return{__proto__:__proto__}}console.log(a,b,c,g(1))',
+				{ compress: false, mangle: true }
+			],
+			[
+				"`Function`",
+				"var f=Function(\"a\",\"b\",\"'use strict';return a+b\");f(1,2)",
+				{ compress: { unsafe_Function: true }, mangle: true }
+			],
+			[
+				"a function as a string",
+				'console.log(""+function(){return 1})',
+				{ compress: { unsafe: true }, mangle: false }
+			],
+			[
+				"`pure_funcs`",
+				"console.log(1);Math.floor(2);a.b.c(3)",
+				{ compress: { pure_funcs: ["console.log", "a.b.c"] }, mangle: false }
+			],
+			[
+				"`Object.defineProperty`",
+				'var o={};Object.defineProperty(o,"x",{value:1});console.log(o.x)',
+				{ compress: { passes: 2, unsafe: true }, mangle: false }
+			],
+			[
+				"`spidermonkey`",
+				'"use strict";var r=/a+/gi,n=1e3,s="x",b=10n;',
+				{ compress: false, mangle: false, format: { spidermonkey: true } }
+			]
+		];
+		for (const [name, source, options] of PRINTER_USER_CASES) {
+			it(`should print for ${name} as terser's printer does`, async () => {
+				const { theirs, ours } = await minifyBothWays(source, options);
+				expect(ours.code).toBe(theirs.code);
+				expect(JSON.stringify(ours.ast)).toBe(JSON.stringify(theirs.ast));
+			});
+		}
+
+		it("should drop a given tree's function bodies as terser's printer does", async () => {
+			const { minify, modules } = await load();
+			const source = "function f(a){return()=>a}var g=function(b){return b};f(g)";
+			for (const mangle of [false, true]) {
+				/** @type {number[][]} */
+				const lengths = [];
+				for (const enabled of [false, true]) {
+					/** @type {{ enabled: boolean }} */ (modules.estreePrinter).enabled =
+						enabled;
+					try {
+						const { ast } = /** @type {EXPECTED_ANY} */ (
+							await minify(source, {
+								compress: false,
+								mangle: false,
+								format: { ast: true, code: false }
+							})
+						);
+						const { code } = await minify(ast, { compress: false, mangle });
+						expect(code).toMatch(/^function f\(/);
+						/** @type {number[]} */
+						const sizes = [];
+						modules.ast.walk(ast, (/** @type {EXPECTED_ANY} */ node) => {
+							if (node.argnames) sizes.push(node.body.length);
+						});
+						lengths.push(sizes);
+					} finally {
+						/** @type {{ enabled: boolean }} */ (modules.estreePrinter).enabled =
+							true;
+					}
+				}
+				expect(lengths[1]).toEqual(lengths[0]);
+				expect(lengths[1]).toEqual([0, 0]);
+			}
+		});
+
+		it("should be on", async () => {
 			const { modules } = await load();
-			expect(modules.estreePrinter).toEqual({ enabled: false });
+			expect(modules.estreePrinter).toEqual({ enabled: true });
 		});
 	});
 
