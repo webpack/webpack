@@ -1895,6 +1895,22 @@ describe("WebpackParser", () => {
 			).toBe("ImportDeclaration");
 		});
 
+		it("should read `assert` only as the legacy keyword it is", () => {
+			// A call on the next line is a statement of its own.
+			const { body } = parse('import x from "x"\nassert(x);', {
+				sourceType: "module"
+			}).ast;
+			expect(body.map((statement) => statement.type)).toEqual([
+				"ImportDeclaration",
+				"ExpressionStatement"
+			]);
+			expect(() =>
+				parse('import x from "x" \\u0061ssert { type: "json" };', {
+					sourceType: "module"
+				})
+			).toThrow(/Unexpected token/);
+		});
+
 		it("should reject a duplicate attribute key", () => {
 			expect(() =>
 				parse('import x from "x" with { type: "json", type: "js" };', {
