@@ -618,6 +618,7 @@
     "test/external/html5lib-tests/**",
     "test/external/terser/**",
     "test/external/swc/**",
+    "test/external/oxc/**",
     "**/*.svg",
     "*.log",
     "**/*.wasm",

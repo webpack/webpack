@@ -1,17 +1,18 @@
 "use strict";
 
-// cspell:ignore fnames reminify reminifies ufuzz
+// cspell:ignore fnames napi reminify reminifies ufuzz
 
-// Holds webpack's JavaScript minifier to every test terser and swc write for
-// theirs. Each source of each corpus below is minified by webpack and by the
+// Holds webpack's JavaScript minifier to every test terser, swc and oxc write
+// for theirs. Each source of each corpus below is minified by webpack and by the
 // minifier it replaces under the same options, and:
 // 1. both must write the same bytes, or refuse the source with the same error;
 // 2. where the test states what its input prints, webpack's output, run in
 //    terser's own sandbox, must print it too, whatever the bytes;
 // 3. where swc records its own output, webpack's must be no bigger (gzip, then
-//    raw), unless SWC_SMALLER lists why; JS_MINIFY_REPORT names a file to tally
-//    where it is worse, the same and better.
+//    raw), unless SWC_SMALLER lists why, nor than oxc's unless OXC_SMALLER does;
+//    JS_MINIFY_REPORT names a file to tally where it is worse, the same and better.
 
+const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
@@ -20,6 +21,7 @@ const zlib = require("zlib");
 const acorn = require("acorn");
 const { IGNORED_FORMAT_OPTIONS, load } =
 	require("../../lib/javascript/syntax").printer;
+const OXC_SMALLER = require("../helpers/oxcSmaller");
 const SWC_SMALLER = require("../helpers/swcSmaller");
 
 /** @typedef {import("terser").MinifyOptions} MinifyOptions */
@@ -29,7 +31,7 @@ const SWC_SMALLER = require("../helpers/swcSmaller");
 /** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT }, stdout?: Stdout, reminify?: boolean, rival?: { name: string, code: string } }} Source */
 /** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY, knows: (group: "compress" | "mangle", key: string) => boolean }} CaseReader */
 /** @typedef {{ name: string, files: string[] }} Group */
-/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, minimumRun?: number, minimumRival?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean }} Corpus */
+/** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, minimumRun?: number, minimumRival?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean, withoutOxc?: boolean }} Corpus */
 /** @typedef {{ source: string, rival: string, ours: number, theirs: number, oursGzip: number, theirsGzip: number }} Lead */
 /** @typedef {"worse" | "same" | "better"} Standing */
 
@@ -39,6 +41,7 @@ const swcTestsDir = path.join(
 	externalDir,
 	"swc/crates/swc_ecma_minifier/tests"
 );
+const oxcTestsDir = path.join(externalDir, "oxc/crates/oxc_minifier/tests");
 
 // A group minifies each of its sources once per option set, with both minifiers.
 const GROUP_TIMEOUT = 300000;
@@ -369,7 +372,14 @@ const readCompressCases = (file, { AST, parse }) => {
  * @returns {Source[]} the file as one source
  */
 const readWholeFile = (file) => [
-	{ name: path.basename(file), input: fs.readFileSync(file, "utf8") }
+	{
+		// Named by its path: many directories hold a file of the same name.
+		name: path
+			.relative(path.join(referenceDir, "test/input"), file)
+			.split(path.sep)
+			.join("/"),
+		input: fs.readFileSync(file, "utf8")
+	}
 ];
 
 /**
@@ -709,6 +719,78 @@ const readSwcMangleTests = (file, { knows }) => {
 };
 
 /**
+ * Where a Rust call's argument list ends, its string literals skipped whole.
+ * @param {string} text the Rust source
+ * @param {number} at a position inside the argument list
+ * @returns {number} the position of its closing parenthesis
+ */
+const callEnd = (text, at) => {
+	let depth = 1;
+	for (let i = at; i < text.length; i++) {
+		const literal = /["r]/.test(text[i]) ? readRustString(text, i) : undefined;
+		if (literal) {
+			i = literal.end - 1;
+		} else if (text[i] === "(") {
+			depth++;
+		} else if (text[i] === ")" && --depth === 0) {
+			return i;
+		}
+	}
+	return text.length;
+};
+
+/**
+ * The tests oxc writes inline in its minifier's Rust tests: the source each
+ * `test…(` helper call passes first, once per distinct source in a file.
+ * @param {string} file one of the test files
+ * @returns {Source[]} one source per distinct source
+ */
+const readOxcTests = (file) => {
+	const text = fs.readFileSync(file, "utf8");
+	/** @type {Set<string>} */
+	const seen = new Set();
+	/** @type {Source[]} */
+	const sources = [];
+	for (const call of text.matchAll(/\b(test\w*)\(/g)) {
+		const index = /** @type {number} */ (call.index);
+		// A helper's own definition, not a call to it.
+		if (/\bfn\s+$/.test(text.slice(Math.max(0, index - 8), index))) continue;
+		let at = index + call[0].length;
+		while (/\s/.test(text[at])) at++;
+		const literal = readRustString(text, at);
+		if (!literal || seen.has(literal.value)) continue;
+		// TypeScript, which neither minifier reads, and terser 5.51 loops on a
+		// `type` or `interface` declaration it is not told to read as TypeScript.
+		const rest = text.slice(literal.end, callEnd(text, literal.end));
+		if (/SourceType::(ts|tsx|d_ts)\(/.test(rest)) continue;
+		seen.add(literal.value);
+		const line = text.slice(0, index).split("\n").length;
+		sources.push({
+			name: `${path.relative(oxcTestsDir, file).split(path.sep).join("/")}:${line}`,
+			input: literal.value,
+			module: readsAsModule(literal.value)
+		});
+	}
+	return sources;
+};
+
+/**
+ * @param {string} directory a directory
+ * @returns {string[]} every Rust file under it, sorted
+ */
+const listRustFiles = (directory) =>
+	fs
+		.readdirSync(directory, { withFileTypes: true })
+		.flatMap((entry) =>
+			entry.isDirectory()
+				? listRustFiles(path.join(directory, entry.name))
+				: entry.name.endsWith(".rs")
+					? [path.join(directory, entry.name)]
+					: []
+		)
+		.sort();
+
+/**
  * @param {string} directory a corpus directory
  * @param {number} depth how many directory levels name a group
  * @param {(file: string) => boolean} include which files the corpus holds
@@ -768,7 +850,9 @@ const CORPORA = [
 		),
 		read: readTest262File,
 		optionSets: ["the default minimizer's options", "printing alone"],
-		minimum: 50000
+		minimum: 50000,
+		// Conformance tests of syntax, not of size, and fifty thousand of them.
+		withoutOxc: true
 	},
 	{
 		name: "swc minifier",
@@ -829,6 +913,20 @@ const CORPORA = [
 		minimum: 9,
 		minimumOwn: 9,
 		ownOptionsKnown: true
+	},
+	{
+		name: "oxc minifier",
+		submodule: "test/external/oxc",
+		directory: oxcTestsDir,
+		groups: () =>
+			listRustFiles(oxcTestsDir).map((file) => ({
+				name: path.relative(oxcTestsDir, file).split(path.sep).join("/"),
+				files: [file]
+			})),
+		read: readOxcTests,
+		optionSets: ["the default minimizer's options", "printing alone"],
+		// 7553 at the pinned commit, its TypeScript left out.
+		minimum: 7000
 	}
 ];
 
@@ -901,6 +999,16 @@ const CORRECTED = {
 };
 
 /**
+ * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
+ * with why; an entry that stops compressing worse fails until retired.
+ * @type {Record<string, string>}
+ */
+const IMPROVED_YET_BIGGER = {
+	"fixture/next/wrap-contracts/input.js (the default minimizer's options)":
+		"31 bytes fewer, 1 more gzipped: the dropped wrapper had matched a run gzip reused"
+};
+
+/**
  * @param {Minify} minify a minifier
  * @param {string} code the source
  * @param {MinifyOptions} options the options
@@ -912,6 +1020,72 @@ const outcome = async (minify, code, options) => {
 	} catch (err) {
 		return { error: String(/** @type {Error} */ (err).message) };
 	}
+};
+
+/**
+ * Runs `run` with each enabled switch turned off, as though the printer had
+ * no such phase, and turns them back on after.
+ * @template T
+ * @param {({ enabled: boolean } | undefined)[]} switches the phases' switches
+ * @param {() => Promise<T>} run what to run
+ * @returns {Promise<T>} what it returned
+ */
+const outcomeWithout = async (switches, run) => {
+	const off = /** @type {{ enabled: boolean }[]} */ (
+		switches.filter((phase) => phase && phase.enabled)
+	);
+	for (const phase of off) phase.enabled = false;
+	try {
+		return await run();
+	} finally {
+		for (const phase of off) phase.enabled = true;
+	}
+};
+
+/** @typedef {{ filename: string, input: string, options: EXPECTED_OBJECT }} OxcJob */
+
+/**
+ * The options webpack's printer is given, as oxc spells them.
+ * @param {MinifyOptions & { keep_fnames?: boolean, keep_classnames?: boolean }} options the options
+ * @returns {{ filename: string, options: EXPECTED_OBJECT }} oxc's file name and options
+ */
+const oxcOptionsOf = (options) => {
+	const keepNames = {
+		function: Boolean(options.keep_fnames),
+		class: Boolean(options.keep_classnames)
+	};
+	const module = Boolean(options.module);
+	return {
+		filename: module ? "input.mjs" : "input.js",
+		options: {
+			module,
+			compress: { keepNames },
+			mangle: { toplevel: module, keepNames },
+			codegen: { removeWhitespace: true }
+		}
+	};
+};
+
+const oxcBatch = path.resolve(__dirname, "../helpers/oxcMinifyBatch.js");
+
+/**
+ * oxc's output for each job, in a process of its own, since a panic in oxc
+ * aborts the process it runs in; a batch that aborts is run again job by job.
+ * @param {OxcJob[]} jobs the sources and their options
+ * @returns {(string | null | Error)[]} each output, null where oxc refused it,
+ * or the error where oxc aborted
+ */
+const minifyAllWithOxc = (jobs) => {
+	if (jobs.length === 0) return [];
+	const child = spawnSync(process.execPath, [oxcBatch], {
+		input: JSON.stringify(jobs),
+		maxBuffer: 1024 * 1024 * 1024
+	});
+	if (child.status === 0) return JSON.parse(child.stdout.toString("utf8"));
+	if (jobs.length === 1) {
+		return [new Error(child.stderr.toString("utf8").split("\n")[1] || "aborted")];
+	}
+	return jobs.flatMap((job) => minifyAllWithOxc([job]));
 };
 
 /**
@@ -991,7 +1165,7 @@ const formatLeads = (leads) => {
 };
 
 describe("JavaScript minifier", () => {
-	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
+	/** @type {{ reader?: CaseReader, printer?: { minify: Minify, phases: string[], corrections: { enabled: boolean } | undefined, improvements?: { enabled: boolean } | undefined }, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
 	/** @type {Lead[]} */
 	const leads = [];
@@ -1071,6 +1245,18 @@ describe("JavaScript minifier", () => {
 				fs.readFileSync(path.join(referenceDir, "package.json"), "utf8")
 			).version;
 			expect(pinned).toBe(require("terser/package.json").version);
+		});
+	}
+
+	if (isPresent(oxcTestsDir)) {
+		it("should pin oxc's corpus to the oxc-minify it is compared with", () => {
+			const pinned = JSON.parse(
+				fs.readFileSync(
+					path.join(externalDir, "oxc/napi/minify/package.json"),
+					"utf8"
+				)
+			).version;
+			expect(pinned).toBe(require("oxc-minify/package.json").version);
 		});
 	}
 
@@ -1179,173 +1365,261 @@ describe("JavaScript minifier", () => {
 						);
 						/** @type {string[]} */
 						const differences = [];
-						for (const file of group.files) {
-							for (const source of corpus.read(file, reader)) {
-								const expectation = source.stdout
-									? expectedOf(source.stdout)
-									: {};
-								if (expectation.disagrees) {
-									differences.push(`${source.name}: ${expectation.disagrees}`);
+						/**
+						 * Holds webpack's output to another minifier's, both printed alone
+						 * by webpack's printer: no bigger, unless the table lists why.
+						 * @param {Source} source the source both minified
+						 * @param {{ name: string, code: string }} rival its output
+						 * @param {string} code webpack's output
+						 * @param {Record<string, string>} table sources listed as bigger
+						 * @param {string} tableName the table's name
+						 * @returns {Promise<void>} once compared
+						 */
+						const compareWithRival = async (
+							source,
+							rival,
+							code,
+							table,
+							tableName
+						) => {
+							const printing = {
+								compress: false,
+								mangle: false,
+								module: source.module
+							};
+							const theirs = await outcome(printer.minify, rival.code, printing);
+							const mine = await outcome(printer.minify, code, printing);
+							if (theirs.code === undefined || mine.code === undefined) return;
+							const oursSize = sizeOf(mine.code);
+							const theirsSize = sizeOf(theirs.code);
+							/** @type {Lead} */
+							const lead = {
+								source: `${corpus.name}: ${source.name}`,
+								rival: rival.name,
+								ours: oursSize.raw,
+								theirs: theirsSize.raw,
+								oursGzip: oursSize.gzip,
+								theirsGzip: theirsSize.gzip
+							};
+							leads.push(lead);
+							const worse = standingOf(lead) === "worse";
+							const listed = Object.prototype.hasOwnProperty.call(
+								table,
+								lead.source
+							);
+							if (worse && !listed) {
+								differences.push(
+									`${lead.source} is bigger than ${lead.rival}'s output: ${lead.ours} raw, ${lead.oursGzip} gzip, against ${lead.theirs} raw, ${lead.theirsGzip} gzip`
+								);
+							} else if (!worse && listed) {
+								differences.push(
+									`${lead.source} is no bigger than ${lead.rival}'s output now: retire it from ${tableName}`
+								);
+							}
+						};
+						const sources = group.files.flatMap((file) =>
+							corpus.read(file, reader)
+						);
+						const oxcSet = "the default minimizer's options";
+						/** @type {Map<Source, string | null | Error>} */
+						const oxcOutputs = new Map();
+						if (!corpus.withoutOxc && corpus.optionSets.includes(oxcSet)) {
+							const jobs = sources.map((source) => ({
+								input: source.input,
+								...oxcOptionsOf(
+									/** @type {MinifyOptions} */ (OPTION_SETS[oxcSet](source))
+								)
+							}));
+							const outputs = minifyAllWithOxc(jobs);
+							for (const [i, source] of sources.entries()) {
+								oxcOutputs.set(source, outputs[i]);
+							}
+						}
+						for (const source of sources) {
+							const expectation = source.stdout
+								? expectedOf(source.stdout)
+								: {};
+							if (expectation.disagrees) {
+								differences.push(`${source.name}: ${expectation.disagrees}`);
+							}
+							/** @type {Map<string, string | undefined>} */
+							const verdicts = new Map();
+							for (const setName of corpus.optionSets) {
+								const optionsFor = OPTION_SETS[setName];
+								const options = optionsFor(source);
+								if (!options) continue;
+								const theirs = await outcome(
+									reference.minify,
+									source.input,
+									withoutLayout(options)
+								);
+								const ours = await outcome(
+									printer.minify,
+									source.input,
+									optionsFor(source)
+								);
+								if (
+									corpus.ownOptionsKnown &&
+									setName === "its own options" &&
+									theirs.error !== undefined &&
+									/is not a supported option/.test(theirs.error)
+								) {
+									differences.push(
+										`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
+									);
 								}
-								/** @type {Map<string, string | undefined>} */
-								const verdicts = new Map();
-								for (const setName of corpus.optionSets) {
-									const optionsFor = OPTION_SETS[setName];
-									const options = optionsFor(source);
-									if (!options) continue;
-									const theirs = await outcome(
-										reference.minify,
-										source.input,
-										withoutLayout(options)
-									);
-									const ours = await outcome(
-										printer.minify,
-										source.input,
-										optionsFor(source)
-									);
+								const { expected } = expectation;
+								// Run where the case says what it prints: under its own options
+								// always, under another set unless it opts out, and never as a
+								// module where it is a script, since a module is strict.
+								const runs =
+									expected !== undefined &&
+									(setName === "its own options" ||
+										(source.reminify !== false &&
+											!(options.module && !source.module)));
+								/**
+								 * @param {string} code an output
+								 * @returns {string | undefined} how it misprints, if it does
+								 */
+								const misprint = (code) => {
+									const { same_stdout: sameStdout } =
+										/** @type {NonNullable<typeof loaded.sandbox>} */ (
+											loaded.sandbox
+										);
+									const stdout = /** @type {Stdout} */ (source.stdout);
+									const wanted = /** @type {string | Error} */ (expected);
+									let actual = run(stdout, code);
+									// As terser's runner reminifies: a throw of the expected kind
+									// passes whatever its message says.
 									if (
-										corpus.ownOptionsKnown &&
-										setName === "its own options" &&
-										theirs.error !== undefined &&
-										/is not a supported option/.test(theirs.error)
+										setName !== "its own options" &&
+										typeof wanted !== "string" &&
+										typeof actual !== "string" &&
+										wanted.name === actual.name
+									) {
+										actual = wanted;
+									}
+									return sameStdout(wanted, actual)
+										? undefined
+										: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
+								};
+								const key = `${corpus.name}: ${source.name} (${setName})`;
+								if (theirs.code !== ours.code || theirs.error !== ours.error) {
+									// A difference only the `correct` and `improve` phases make is
+									// theirs, which the run check below holds to; any other is a
+									// difference, and an improvement must not write more.
+									const { corrections, improvements } = printer;
+									const unimproved = await outcomeWithout([improvements], () =>
+										outcome(printer.minify, source.input, optionsFor(source))
+									);
+									// Without the improvements terser's bytes back, nothing else differs.
+									const uncorrected =
+										theirs.code === unimproved.code &&
+										theirs.error === unimproved.error
+											? unimproved
+											: await outcomeWithout([corrections, improvements], () =>
+													outcome(printer.minify, source.input, optionsFor(source))
+												);
+									if (
+										theirs.code !== uncorrected.code ||
+										theirs.error !== uncorrected.error
 									) {
 										differences.push(
-											`${source.name} (${setName})\n\tterser refused an option: ${theirs.error}`
+											`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
 										);
 									}
-									const { expected } = expectation;
-									// Run where the case says what it prints: under its own options
-									// always, under another set unless it opts out, and never as a
-									// module where it is a script, since a module is strict.
-									const runs =
-										expected !== undefined &&
-										(setName === "its own options" ||
-											(source.reminify !== false &&
-												!(options.module && !source.module)));
-									/**
-									 * @param {string} code an output
-									 * @returns {string | undefined} how it misprints, if it does
-									 */
-									const misprint = (code) => {
-										const { same_stdout: sameStdout } =
-											/** @type {NonNullable<typeof loaded.sandbox>} */ (
-												loaded.sandbox
-											);
-										const stdout = /** @type {Stdout} */ (source.stdout);
-										const wanted = /** @type {string | Error} */ (expected);
-										let actual = run(stdout, code);
-										// As terser's runner reminifies: a throw of the expected kind
-										// passes whatever its message says.
-										if (
-											setName !== "its own options" &&
-											typeof wanted !== "string" &&
-											typeof actual !== "string" &&
-											wanted.name === actual.name
-										) {
-											actual = wanted;
-										}
-										return sameStdout(wanted, actual)
-											? undefined
-											: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
-									};
-									const key = `${corpus.name}: ${source.name} (${setName})`;
-									if (theirs.code !== ours.code || theirs.error !== ours.error) {
-										// A difference only the `correct` phase makes is its fix, which
-										// the run check below holds to; any other is a difference.
-										const { corrections } = printer;
-										let uncorrected = ours;
-										if (corrections && corrections.enabled) {
-											corrections.enabled = false;
-											try {
-												uncorrected = await outcome(
-													printer.minify,
-													source.input,
-													optionsFor(source)
-												);
-											} finally {
-												corrections.enabled = true;
-											}
-										}
-										if (
-											theirs.code !== uncorrected.code ||
-											theirs.error !== uncorrected.error
-										) {
-											differences.push(
-												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
-											);
-										}
-									}
-									if (runs && ours.code !== undefined) {
-										let wrong = verdicts.get(ours.code);
-										if (!verdicts.has(ours.code)) {
-											wrong = misprint(ours.code);
-											verdicts.set(ours.code, wrong);
-										}
-										const corrected = Boolean(
-											printer.corrections && printer.corrections.enabled
+									if (unimproved.error !== ours.error) {
+										differences.push(
+											`${source.name} (${setName}) refused differently with the improvements\n\twithout: ${JSON.stringify(unimproved)}\n\twith:    ${JSON.stringify(ours)}`
 										);
-										const table = Object.prototype.hasOwnProperty.call(
-											INHERITED,
-											key
-										)
-											? "INHERITED"
-											: !corrected &&
-												  Object.prototype.hasOwnProperty.call(CORRECTED, key)
-												? "CORRECTED"
-												: undefined;
-										if (wrong !== undefined && table === undefined) {
-											differences.push(`${key} prints differently${wrong}`);
-										} else if (wrong === undefined && table !== undefined) {
-											differences.push(
-												`${key} prints what it should now: retire it from ${table}`
-											);
-										}
-									}
-									if (
-										source.rival &&
-										setName === "its own options" &&
-										ours.code !== undefined
+									} else if (
+										ours.code !== undefined &&
+										unimproved.code !== undefined &&
+										ours.code !== unimproved.code
 									) {
-										const printing = {
-											compress: false,
-											mangle: false,
-											module: source.module
+										const withSize = sizeOf(ours.code);
+										const withoutSize = sizeOf(unimproved.code);
+										/** @type {Lead} */
+										const lead = {
+											source: source.name,
+											rival: "unimproved",
+											ours: withSize.raw,
+											theirs: withoutSize.raw,
+											oursGzip: withSize.gzip,
+											theirsGzip: withoutSize.gzip
 										};
-										const rival = await outcome(
-											printer.minify,
-											source.rival.code,
-											printing
+										const listed = Object.prototype.hasOwnProperty.call(
+											IMPROVED_YET_BIGGER,
+											`${source.name} (${setName})`
 										);
-										const mine = await outcome(printer.minify, ours.code, printing);
-										if (rival.code !== undefined && mine.code !== undefined) {
-											const oursSize = sizeOf(mine.code);
-											const theirsSize = sizeOf(rival.code);
-											/** @type {Lead} */
-											const lead = {
-												source: `${corpus.name}: ${source.name}`,
-												rival: source.rival.name,
-												ours: oursSize.raw,
-												theirs: theirsSize.raw,
-												oursGzip: oursSize.gzip,
-												theirsGzip: theirsSize.gzip
-											};
-											leads.push(lead);
-											const worse = standingOf(lead) === "worse";
-											const listed = Object.prototype.hasOwnProperty.call(
-												SWC_SMALLER,
-												lead.source
+										if (listed !== (standingOf(lead) === "worse")) {
+											differences.push(
+												listed
+													? `${source.name} (${setName}) is no bigger with the improvements now: retire it from IMPROVED_YET_BIGGER`
+													: `${source.name} (${setName}) is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
 											);
-											if (worse && !listed) {
-												differences.push(
-													`${lead.source} is bigger than ${lead.rival}'s output: ${lead.ours} raw, ${lead.oursGzip} gzip, against ${lead.theirs} raw, ${lead.theirsGzip} gzip`
-												);
-											} else if (!worse && listed) {
-												differences.push(
-													`${lead.source} is no bigger than ${lead.rival}'s output now: retire it from SWC_SMALLER`
-												);
-											}
 										}
 									}
+								}
+								if (runs && ours.code !== undefined) {
+									let wrong = verdicts.get(ours.code);
+									if (!verdicts.has(ours.code)) {
+										wrong = misprint(ours.code);
+										verdicts.set(ours.code, wrong);
+									}
+									const corrected = Boolean(
+										printer.corrections && printer.corrections.enabled
+									);
+									const table = Object.prototype.hasOwnProperty.call(
+										INHERITED,
+										key
+									)
+										? "INHERITED"
+										: !corrected &&
+											  Object.prototype.hasOwnProperty.call(CORRECTED, key)
+											? "CORRECTED"
+											: undefined;
+									if (wrong !== undefined && table === undefined) {
+										differences.push(`${key} prints differently${wrong}`);
+									} else if (wrong === undefined && table !== undefined) {
+										differences.push(
+											`${key} prints what it should now: retire it from ${table}`
+										);
+									}
+								}
+								if (
+									source.rival &&
+									setName === "its own options" &&
+									ours.code !== undefined
+								) {
+									await compareWithRival(
+										source,
+										source.rival,
+										ours.code,
+										SWC_SMALLER,
+										"SWC_SMALLER"
+									);
+								}
+								const oxc = oxcOutputs.get(source);
+								const oxcKey = `${corpus.name}: ${source.name}`;
+								if (oxc instanceof Error && setName === oxcSet) {
+									if (!Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+										differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
+									}
+								} else if (
+									typeof oxc === "string" &&
+									setName === oxcSet &&
+									ours.code !== undefined &&
+									// A smaller output that prints wrong is no lead to follow.
+									!(expected !== undefined && runs && misprint(oxc))
+								) {
+									await compareWithRival(
+										source,
+										{ name: "oxc", code: oxc },
+										ours.code,
+										OXC_SMALLER,
+										"OXC_SMALLER"
+									);
 								}
 							}
 						}

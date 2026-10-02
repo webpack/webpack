@@ -25,6 +25,7 @@ test/external/test262-cases/**/*.*
 test/external/wpt/**
 test/external/terser/**
 test/external/swc/**
+test/external/oxc/**
 
 # Ignore some folders
 benchmark/

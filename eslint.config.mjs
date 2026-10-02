@@ -74,6 +74,7 @@ export default defineConfig([
 		"test/external/wpt/**/*.*",
 		"test/external/terser/**",
 		"test/external/swc/**",
+		"test/external/oxc/**",
 
 		// Ignore some folders
 		"benchmark",

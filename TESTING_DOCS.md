@@ -35,7 +35,7 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 ### `external/`
 
-- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below and terser's and swc's own tests. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
+- **Purpose**: Every git submodule webpack checks out for testing — today the four spec corpora below and terser's, swc's and oxc's own tests. Nothing here is webpack's to edit: each directory belongs to its upstream project, and this repository only pins a commit.
 
 #### `test262-cases/`
 
@@ -62,9 +62,14 @@ Directories come first, in alphabetical order, then the individual files worth t
 - **Purpose**: swc's repository, read only under `crates/swc_ecma_minifier/tests`: its fixtures with their configs, the tests `exec.rs` and `mangle.rs` write inline, and the libraries it measures itself on. Each is held to terser's bytes like the terser corpora; a test with an `expected.stdout`, and every `exec.rs` test, also has its outputs run, and webpack's output may be no bigger than each fixture's recorded `output.js`, nor than what swc's port of a terser case records when its `passing.txt` lists it, unless `SWC_SMALLER` lists why.
 - **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/swc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`).
 
+#### `oxc/`
+
+- **Purpose**: oxc's repository, pinned to the commit that released webpack's `oxc-minify` devDependency and read only under `crates/oxc_minifier/tests`: the source each `test…(` helper call in its Rust tests passes first, but TypeScript. Each is held to terser's bytes like the other corpora, and under the default minimizer's options every source of every corpus but test262 is also minified by `oxc-minify`: webpack's output may be no bigger than oxc's unless `OXC_SMALLER` lists why, and an oxc output that misprints is no lead.
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/oxc`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `oxc-minify` disagree.
+
 #### `terser/`
 
-- **Purpose**: terser's own repository, pinned to webpack's `terser` devDependency. Its `test/compress` cases and `test/input` files are two of the six corpora `lib/javascript/syntax-printer.js` is held to (test262 and swc's fixtures, `exec.rs` and `mangle.rs` tests are the other four): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same, but for what webpack's `correct` phase fixes. A case stating its `expect_stdout` also has each output run in terser's sandbox, which must print it — or, for `expect_stdout: true`, do whatever its input does, a throw or silence included.
+- **Purpose**: terser's own repository, pinned to webpack's `terser` devDependency. Its `test/compress` cases and `test/input` files are two of the seven corpora `lib/javascript/syntax-printer.js` is held to (test262, swc's fixtures, `exec.rs` and `mangle.rs` tests, and oxc's tests are the other five): each source is minified by terser as published and by webpack's printer under several option sets, and the outputs, or the errors, must be byte-for-byte the same, but for what webpack's `correct` phase fixes. A case stating its `expect_stdout` also has each output run in terser's sandbox, which must print it — or, for `expect_stdout: true`, do whatever its input does, a throw or silence included.
 - **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/external/terser`. Test runner: `test/specCases/minify-corpora.spectest.js` (`yarn test:minify-corpora`), which also fails when the pin and the installed `terser` disagree, so bumping the dependency means moving the pin with it. A new corpus is one entry in its `CORPORA` list.
 
 ### `fixtures/`
@@ -271,6 +276,7 @@ Git submodules, all under `test/external/`, checked out on demand: `yarn setup` 
 - `test/external/css-parsing-tests` — [CourtBouillon/css-parsing-tests](https://github.com/CourtBouillon/css-parsing-tests); fetched by `parser (css)`
 - `test/external/terser` — [terser/terser](https://github.com/terser/terser), pinned to the installed `terser`'s version; fetched by `parser (minify-corpora)`
 - `test/external/swc` — [swc-project/swc](https://github.com/swc-project/swc), read only under `crates/swc_ecma_minifier/tests`; fetched by `parser (minify-corpora)`
+- `test/external/oxc` — [oxc-project/oxc](https://github.com/oxc-project/oxc), pinned to the installed `oxc-minify`'s release and read only under `crates/oxc_minifier/tests`; fetched by `parser (minify-corpora)`
 
 ```sh
 git submodule update --init --recursive --depth 1   # check out the commits the repo pins

@@ -31319,12 +31319,13 @@ declare interface TemplatePathFn<T extends PathData = PathData> {
 }
 
 /**
- * what a caller minifies with, the switch of its corrections, and the modules it is built from
+ * what a caller minifies with, the switches of its corrections and improvements, and the modules it is built from
  */
 declare interface Terser {
 	minify: typeof minify;
 	phases: string[];
 	corrections?: { enabled: boolean };
+	improvements?: { enabled: boolean };
 	modules: TerserModules;
 }
 
