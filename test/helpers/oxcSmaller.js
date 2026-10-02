@@ -2118,9 +2118,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_declaration.rs:1040",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1041",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1043",
-			"oxc minifier: peephole/remove_unused_declaration.rs:1051",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1053",
-			"oxc minifier: peephole/remove_unused_declaration.rs:1058",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1064",
 			"oxc minifier: peephole/remove_unused_declaration.rs:1079",
 			"oxc minifier: peephole/remove_unused_declaration.rs:108",
@@ -2659,7 +2657,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"swc minifier: fixture/check/1/input.js",
 			"swc minifier: fixture/issues/6192/1/input.js",
-			"swc minifier: fixture/issues/6192/2/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js",
 			"swc minifier: fixture/pure-annotations-not-member-pattern/input.js",
 			"terser compress: export/import_multiple_string",

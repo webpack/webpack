@@ -72,11 +72,16 @@ const firstDifference = (theirs, ours) => {
 			return undefined;
 		}
 		if (a instanceof RegExp) return undefined;
-		if (a.constructor.name !== b.constructor.name) {
+		// webpack names a node's class for its type with `Node` after it and its
+		// token class `ParsedToken`, where terser prefixes `AST_`, so the classes
+		// are compared by what they hold rather than by name.
+		const kindOf = (/** @type {EXPECTED_ANY} */ node) =>
+			node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, "");
+		if (kindOf(a) !== kindOf(b)) {
 			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
 		}
 		const keys =
-			a.constructor.name === "AST_Token"
+			a.constructor.name === "ParsedToken" || a.constructor.name === "AST_Token"
 				? TOKEN_FIELDS
 				: new Set([...Object.keys(a), ...Object.keys(b)]);
 		for (const key of keys) {
@@ -460,8 +465,9 @@ describe("syntax-printer's port of terser's parser", () => {
 		for (const source of ["a", "`b`", "'`'"]) {
 			const theirs = parsers.theirs.parse(source).start;
 			const ours = parsers.ours.parse(source).start;
+			// The same line but for the class's own name, which is webpack's here.
 			expect(inspect(ours, { colors: true })).toBe(
-				inspect(theirs, { colors: true })
+				inspect(theirs, { colors: true }).replace("AST_Token", "ParsedToken")
 			);
 		}
 	});

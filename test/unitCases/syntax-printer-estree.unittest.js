@@ -66,11 +66,16 @@ const firstDifference = (theirs, ours) => {
 			}
 			return undefined;
 		}
-		if (a.constructor.name !== b.constructor.name) {
+		// webpack names a node's class for its type with `Node` after it and its
+		// token class `ParsedToken`, where terser prefixes `AST_`, so the classes
+		// are compared by what they hold rather than by name.
+		const kindOf = (/** @type {EXPECTED_ANY} */ node) =>
+			node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, "");
+		if (kindOf(a) !== kindOf(b)) {
 			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
 		}
 		const keys =
-			a.constructor.name === "AST_Token"
+			kindOf(a) === "Token"
 				? TOKEN_FIELDS
 				: new Set([...Object.keys(a), ...Object.keys(b)]);
 		for (const key of keys) {
@@ -90,6 +95,14 @@ const text = (value) =>
 	JSON.stringify(value, (_key, item) =>
 		typeof item === "bigint" ? `${item}n` : item
 	);
+
+/**
+ * The root node class of either side: webpack names it for what it is, terser
+ * prefixes `AST_`.
+ * @param {EXPECTED_ANY} ast one side's node classes
+ * @returns {EXPECTED_ANY} its root class
+ */
+const rootOf = (ast) => ast.SyntaxNode || ast.AST_Node;
 
 describe("syntax-printer's port of terser's ESTree conversion", () => {
 	/** @type {{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }} */
@@ -137,7 +150,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 			const results = [];
 			for (const { ast } of [modules.theirs, modules.ours]) {
 				try {
-					results.push(ast.AST_Node.from_mozilla_ast(fresh()));
+					results.push(rootOf(ast).from_mozilla_ast(fresh()));
 				} catch (err) {
 					results.push(new Error(thrownMessage(err)));
 				}
@@ -307,7 +320,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 			const results = [];
 			for (const { ast } of [modules.theirs, modules.ours]) {
 				try {
-					results.push(text(ast.AST_Node.from_mozilla_ast(JSON.parse(JSON.stringify(tree))).TYPE));
+					results.push(text(rootOf(ast).from_mozilla_ast(JSON.parse(JSON.stringify(tree))).TYPE));
 				} catch (err) {
 					results.push(`throws ${thrownMessage(err)}`);
 				}

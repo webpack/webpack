@@ -126,7 +126,6 @@ import {
 	TapOptions,
 	TypedHookMap
 } from "tapable";
-import { minify } from "terser";
 import { Context as ContextImport } from "vm";
 import {
 	addScopesToSourceMap,
@@ -4682,6 +4681,21 @@ declare interface CompressHelpers {
 	 * terser's `utils/index.js`
 	 */
 	utils: Record<string, any>;
+}
+
+/**
+ * terser's compressor: the methods the phases call typed, the rest open.
+ */
+declare interface CompressorShape {
+	[index: string]: any;
+	options: Record<string, any>;
+	stack: NodeShape[];
+	option(name: string): any;
+	has_directive(directive: string): any;
+	parent(level?: number): NodeShape;
+	self(): NodeShape;
+	find_parent(Type?: any): undefined | NodeShape;
+	in_boolean_context(): undefined | boolean;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
@@ -10466,6 +10480,13 @@ type FileTimestamp =
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
+}
+
+/**
+ * terser's `format` options, defaulted
+ */
+declare interface FormatOptions {
+	[index: string]: any;
 }
 declare interface FoundTargetItem {
 	module: Module;
@@ -18391,6 +18412,130 @@ declare interface MinChunkSizePluginOptions {
 }
 
 /**
+ * what a caller minifies with, the switches of its corrections and improvements, and the modules it is built from
+ */
+declare interface Minifier {
+	minify: (
+		sources: MinifySources,
+		options?: MinifyOptions
+	) => Promise<MinifyOutput>;
+	phases: string[];
+	corrections?: { enabled: boolean };
+	improvements?: { enabled: boolean };
+	modules: MinifierModules;
+}
+
+/**
+ * terser's own modules
+ */
+declare interface MinifierModules {
+	[index: string]: any;
+}
+
+/**
+ * What a source is minified with. The keys the minifier reads are named; the
+ * rest are open, so an option a caller passes through is not refused here.
+ */
+declare interface MinifyOptions {
+	/**
+	 * what the compressor does, or false to leave the tree as read
+	 */
+	compress?: boolean | Record<string, any>;
+
+	/**
+	 * which names are renamed, or false to keep them
+	 */
+	mangle?: boolean | Record<string, any>;
+
+	/**
+	 * how the output is written
+	 */
+	format?: Record<string, any>;
+
+	/**
+	 * the older spelling of `format`, which may not be named beside it
+	 */
+	output?: Record<string, any>;
+
+	/**
+	 * how the source is read
+	 */
+	parse?: Record<string, any>;
+
+	/**
+	 * whether a source map is written, and how
+	 */
+	sourceMap?: boolean | Record<string, any>;
+
+	/**
+	 * whether the source is a module
+	 */
+	module?: boolean;
+
+	/**
+	 * which edition the output may use
+	 */
+	ecma?: number;
+
+	/**
+	 * whether top-level names may be renamed or dropped
+	 */
+	toplevel?: boolean;
+
+	/**
+	 * names held across assets, which this writes into
+	 */
+	nameCache?: null | Record<string, any>;
+
+	/**
+	 * which class names survive
+	 */
+	keep_classnames?: boolean | RegExp;
+
+	/**
+	 * which function names survive
+	 */
+	keep_fnames?: boolean | RegExp;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8?: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10?: boolean;
+}
+
+/**
+ * What a minify answers with: the code it wrote, the map it was asked for, and
+ * the tree where the format options asked for one instead of code.
+ */
+declare interface MinifyOutput {
+	/**
+	 * the minified source
+	 */
+	code?: string;
+
+	/**
+	 * the source map, as a string or an object
+	 */
+	map?: string | Record<string, any>;
+
+	/**
+	 * the map with its mappings read
+	 */
+	decoded_map?: null | Record<string, any>;
+
+	/**
+	 * the tree, where `format.ast` asked for it
+	 */
+	ast?: NodeShape;
+}
+type MinifySources = string | string[] | Record<string, string> | NodeShape;
+
+/**
  * Describes the mkdir shape.
  */
 declare interface Mkdir {
@@ -20435,6 +20580,57 @@ declare interface NodeOptions {
  */
 declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
 	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
+}
+
+/**
+ * One of terser's AST nodes: the fields and methods the phases share typed, the
+ * rest open.
+ */
+declare interface NodeShape {
+	[index: string]: any;
+	TYPE: string;
+	flags: number;
+	start: TokenEs5;
+	end: TokenEs5;
+	expression: NodeShape;
+	left: NodeShape;
+	right: NodeShape;
+	operator: string;
+	condition: NodeShape;
+	consequent: NodeShape;
+	alternative: NodeShape;
+	args: NodeShape[];
+	elements: NodeShape[];
+	properties: NodeShape[];
+	definitions: NodeShape[];
+	expressions: NodeShape[];
+	segments: NodeShape[];
+	argnames: NodeShape[];
+	quote?: string;
+	raw?: string;
+	optional: boolean;
+	prefix: NodeShape;
+	extends: NodeShape;
+	scope: NodeShape;
+	thedef: SymbolDefinition;
+	definition(): SymbolDefinition;
+	fixed_value(): any;
+	tail_node(): NodeShape;
+	clone(deep?: boolean): NodeShape;
+	transform(walker?: any, inList?: boolean): NodeShape;
+	optimize(compressor: CompressorShape): NodeShape;
+	has_side_effects(compressor: CompressorShape): boolean;
+	may_throw(compressor: CompressorShape): boolean;
+	drop_side_effect_free(
+		compressor: CompressorShape,
+		firstInStatement?: boolean
+	): null | NodeShape;
+	is_constant_expression(scope?: NodeShape): boolean | "f";
+	evaluate(compressor: CompressorShape): any;
+	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
+	size(compressor?: CompressorShape, stack?: any): number;
+	print_to_string(options?: Record<string, any>): string;
+	print(output: OutputStream, forceParens?: boolean): void;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -22718,6 +22914,11 @@ declare interface OptionsSyntaxParser {
 	onToken?: any[] | ((token?: any) => void);
 
 	/**
+	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
+	 */
+	onTokenRead?: (parser?: any) => void;
+
+	/**
 	 * where comments are reported
 	 */
 	onComment?:
@@ -23704,6 +23905,14 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 };
 
 /**
+ * terser's output stream
+ */
+declare interface OutputStream {
+	[index: number]: any;
+	[index: string]: any;
+}
+
+/**
  * Defines the parameterized comparator type used by this module.
  */
 declare interface ParameterizedComparator<TArg extends object, T> {
@@ -24274,7 +24483,7 @@ declare interface PerformanceOptions {
  */
 declare interface Phase {
 	name: string;
-	install: (modules: TerserModules) => void;
+	install: (modules: MinifierModules) => void;
 }
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
@@ -26496,6 +26705,11 @@ declare interface ResolvedOptionsSyntaxParser {
 	 * where tokens are reported
 	 */
 	onToken: null | ((token?: any) => void);
+
+	/**
+	 * the parser itself at each token
+	 */
+	onTokenRead: null | ((parser?: any) => void);
 
 	/**
 	 * where comments are reported
@@ -31319,105 +31533,6 @@ declare interface TemplatePathFn<T extends PathData = PathData> {
 }
 
 /**
- * what a caller minifies with, the switches of its corrections and improvements, and the modules it is built from
- */
-declare interface Terser {
-	minify: typeof minify;
-	phases: string[];
-	corrections?: { enabled: boolean };
-	improvements?: { enabled: boolean };
-	modules: TerserModules;
-}
-
-/**
- * terser's compressor: the methods the phases call typed, the rest open.
- */
-declare interface TerserCompressor {
-	[index: string]: any;
-	options: Record<string, any>;
-	stack: TerserNode[];
-	option(name: string): any;
-	has_directive(directive: string): any;
-	parent(level?: number): TerserNode;
-	self(): TerserNode;
-	find_parent(Type?: any): undefined | TerserNode;
-	in_boolean_context(): undefined | boolean;
-}
-
-/**
- * terser's `format` options, defaulted
- */
-declare interface TerserFormatOptions {
-	[index: string]: any;
-}
-
-/**
- * terser's own modules
- */
-declare interface TerserModules {
-	[index: string]: any;
-}
-
-/**
- * One of terser's AST nodes: the fields and methods the phases share typed, the
- * rest open.
- */
-declare interface TerserNode {
-	[index: string]: any;
-	TYPE: string;
-	flags: number;
-	start: TokenEs5;
-	end: TokenEs5;
-	expression: TerserNode;
-	left: TerserNode;
-	right: TerserNode;
-	operator: string;
-	condition: TerserNode;
-	consequent: TerserNode;
-	alternative: TerserNode;
-	args: TerserNode[];
-	elements: TerserNode[];
-	properties: TerserNode[];
-	definitions: TerserNode[];
-	expressions: TerserNode[];
-	segments: TerserNode[];
-	argnames: TerserNode[];
-	quote?: string;
-	raw?: string;
-	optional: boolean;
-	prefix: TerserNode;
-	extends: TerserNode;
-	scope: TerserNode;
-	thedef: SymbolDefinition;
-	definition(): SymbolDefinition;
-	fixed_value(): any;
-	tail_node(): TerserNode;
-	clone(deep?: boolean): TerserNode;
-	transform(walker?: any, inList?: boolean): TerserNode;
-	optimize(compressor: TerserCompressor): TerserNode;
-	has_side_effects(compressor: TerserCompressor): boolean;
-	may_throw(compressor: TerserCompressor): boolean;
-	drop_side_effect_free(
-		compressor: TerserCompressor,
-		firstInStatement?: boolean
-	): null | TerserNode;
-	is_constant_expression(scope?: TerserNode): boolean | "f";
-	evaluate(compressor: TerserCompressor): any;
-	negate(compressor: TerserCompressor, firstInStatement?: boolean): TerserNode;
-	size(compressor?: TerserCompressor, stack?: any): number;
-	print_to_string(options?: Record<string, any>): string;
-	print(output: TerserOutputStream, forceParens?: boolean): void;
-}
-
-/**
- * terser's output stream
- */
-declare interface TerserOutputStream {
-	[index: number]: any;
-	[index: string]: any;
-}
-
-/**
  * Defines the timestamp and hash type used by this module.
  */
 declare interface TimestampAndHash {
@@ -31629,31 +31744,6 @@ declare class TopLevelSymbol {
 	 */
 	setPure(pure: PureCondition): void;
 	isPure(compilation: Compilation, module: Module): boolean;
-}
-
-/**
- * What the tree is built from, as terser's own `parse` options name it.
- */
-declare interface TreeOptions {
-	/**
-	 * whether the source is a module
-	 */
-	module?: boolean;
-
-	/**
-	 * whether `return` may sit at the top level
-	 */
-	bare_returns?: boolean;
-
-	/**
-	 * the name tokens carry
-	 */
-	filename?: null | string;
-
-	/**
-	 * whether a leading `#!` line is a comment
-	 */
-	shebang?: boolean;
 }
 
 /**
@@ -33155,6 +33245,7 @@ declare namespace exports {
 					export let locations: boolean;
 					export let startLocation: null;
 					export let onToken: null;
+					export let onTokenRead: null;
 					export let onComment: null;
 					export let ranges: boolean;
 					export let program: null;
@@ -33287,17 +33378,22 @@ declare namespace exports {
 				};
 			}
 			export namespace printer {
-				export let load: () => Promise<Terser>;
+				export let load: () => Promise<Minifier>;
 				export let PHASES: Phase[];
-				export let FORMAT_DEFAULTS: TerserFormatOptions;
+				export let FORMAT_DEFAULTS: FormatOptions;
 				export let IGNORED_FORMAT_OPTIONS: string[];
+				export let IGNORED_PARSE_OPTIONS: string[];
 				export let createAst: () => Record<string, any>;
-				export let createModules: () => TerserModules;
+				export let createModules: () => MinifierModules;
 				export let createCompressHelpers: (
-					modules: TerserModules
+					modules: MinifierModules
 				) => CompressHelpers;
-				export let createTerserParser: (modules: TerserModules) => {
-					parse: (text: string | Function, options?: object) => TerserNode;
+				export let createLenientParser: (modules: MinifierModules) => {
+					parse: (text: string | Function, options?: object) => NodeShape;
+					parseWithWebpackParser: (
+						text: string | Function,
+						options?: object
+					) => NodeShape;
 					tokenizer: (
 						text: string,
 						filename: undefined | null | string,
@@ -33315,9 +33411,6 @@ declare namespace exports {
 					PRECEDENCE: Record<string, number>;
 					ALL_RESERVED_WORDS: Set<string>;
 				};
-				export let createTerserTree: (
-					__0: TerserModules
-				) => (source: string, options: TreeOptions) => undefined | TerserNode;
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
 					getFullCharCode: (str: string, pos: number) => number;
@@ -33332,10 +33425,10 @@ declare namespace exports {
 					) => boolean;
 				};
 				export let estreeType: (
-					node: TerserNode,
-					parent?: TerserNode
+					node: NodeShape,
+					parent?: NodeShape
 				) => null | string;
-				export let markEstreeTypes: (__0: TerserModules) => void;
+				export let markEstreeTypes: (__0: MinifierModules) => void;
 			}
 		}
 		export {

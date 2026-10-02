@@ -6,6 +6,7 @@ const vm = require("vm");
 const {
 	FORMAT_DEFAULTS,
 	IGNORED_FORMAT_OPTIONS,
+	IGNORED_PARSE_OPTIONS,
 	createCompressHelpers,
 	createUnicode,
 	estreeType,
@@ -341,6 +342,24 @@ const CORRECTED_CASES = [
 // The option sets the printer is held to terser under: a build's own, and
 // every format option that changes what the stream writes.
 /** @type {import("terser").MinifyOptions[]} */
+// The printer's own tests hold the printer to terser's, so they read the tree
+// terser's parser builds; webpack's parser is held to terser's by the corpora.
+const TERSER_PARSE = /** @type {EXPECTED_ANY} */ ({ webpackParser: false });
+
+/**
+ * Drops what webpack reads and terser would refuse, in place.
+ * @param {EXPECTED_ANY} options the options terser is about to be asked with
+ * @returns {EXPECTED_ANY} the same options
+ */
+const forTerser = (options) => {
+	if (options.parse) {
+		options.parse = { ...options.parse };
+		for (const name of IGNORED_PARSE_OPTIONS) delete options.parse[name];
+		if (Object.keys(options.parse).length === 0) delete options.parse;
+	}
+	return options;
+};
+
 const OUTPUT_OPTIONS = [
 	{ compress: { passes: 2 }, mangle: true, format: { comments: false } },
 	{ compress: false, mangle: false, format: { comments: "all" } },
@@ -882,10 +901,17 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			for (const settings of OUTPUT_OPTIONS) {
-				const options = () => ({ ...settings, format: { ...settings.format } });
+				// The union the table infers does not narrow to terser's options.
+				const options = () =>
+					/** @type {EXPECTED_ANY} */ ({
+						...settings,
+						parse: TERSER_PARSE,
+						format: { ...settings.format }
+					});
 				const ours = await minify({ "input.js": source }, options());
 				// The printer writes minified output only, so it is held to terser's.
 				const referenceOptions = options();
+				forTerser(referenceOptions);
 				for (const name of IGNORED_FORMAT_OPTIONS) {
 					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
 						name
@@ -898,7 +924,10 @@ describe("syntax-printer", () => {
 				expect(ours.code).toBe(theirs.code);
 				expect(ours.map).toEqual(theirs.map);
 			}
-			const { code } = await minify(source, OUTPUT_OPTIONS[0]);
+			const { code } = await minify(
+				source,
+				/** @type {EXPECTED_ANY} */ (OUTPUT_OPTIONS[0])
+			);
 			expect(code).toMatchSnapshot();
 		});
 	}
@@ -908,9 +937,16 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			for (const settings of OUTPUT_OPTIONS) {
-				const options = () => ({ ...settings, format: { ...settings.format } });
+				// The union the table infers does not narrow to terser's options.
+				const options = () =>
+					/** @type {EXPECTED_ANY} */ ({
+						...settings,
+						parse: TERSER_PARSE,
+						format: { ...settings.format }
+					});
 				const ours = await minify({ "input.js": source }, options());
 				const referenceOptions = options();
+				forTerser(referenceOptions);
 				for (const name of IGNORED_FORMAT_OPTIONS) {
 					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
 						name
@@ -995,7 +1031,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @param {EXPECTED_OBJECT} settings its options
 			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
 			 */
@@ -1093,7 +1129,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @param {import("terser").MinifyOptions} settings its options
 			 * @returns {Promise<{ code: string | undefined } | { error: string }>} its result, or the error it threw
 			 */
@@ -1154,7 +1190,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @returns {Promise<string | undefined>} what figuring out scopes threw
 			 */
 			const refusal = async (run) => {
@@ -1488,7 +1524,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @returns {Promise<EXPECTED_ANY>} what it wrote, or the error it threw
 			 */
 			const outcome = async (run) => {
@@ -1530,7 +1566,7 @@ describe("syntax-printer", () => {
 		const { minify } = await load();
 		const reference = terserReference();
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<string | undefined>} what the second minify threw
 		 */
 		const refusal = async (run) => {
@@ -1553,7 +1589,7 @@ describe("syntax-printer", () => {
 		const { minify } = await load();
 		const reference = terserReference();
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<string | undefined>} a returned tree, given a private member, minified again
 		 */
 		const handedBack = async (run) => {
@@ -1578,7 +1614,7 @@ describe("syntax-printer", () => {
 		const { minify } = await load();
 		const reference = terserReference();
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<string | undefined>} the tree minified with its sequences emptied
 		 */
 		const emptied = async (run) => {
@@ -1605,7 +1641,7 @@ describe("syntax-printer", () => {
 		const reference = terserReference();
 		const compressor = { option: () => true, has_directive: () => undefined };
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<EXPECTED_ANY>} what dropping unused names in the class returned
 		 */
 		const dropped = async (run) => {
@@ -1709,6 +1745,8 @@ describe("syntax-printer", () => {
 		["an array of sources", ["sink(1)", "sink(2)"], {}],
 		["a file that is not text", { "a.js": 1 }, {}],
 		["a source webpack's parser refuses", "sink(", {}],
+		["a private field with no class around it", "sink(foo.#bar);", {}],
+		["a private field tested with no class around it", "sink(#foo in bar);", {}],
 		["a source terser reads its own way", "x = 0123;", {}],
 		["a module", "export const a = 1; import b from 'c'; sink(b);", { module: true }],
 		["a module named by the parse options", "export const a = 1;", { parse: { module: true } }],
@@ -1724,7 +1762,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
 			 */
 			const outcome = async (run) => {
@@ -1739,6 +1777,71 @@ describe("syntax-printer", () => {
 				}
 			};
 			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
+		});
+	}
+
+	// Layouts where a comment decides where a line break or a brace is printed,
+	// which terser's tokenizer, its parentheses and its sequences each decide.
+	/** @type {[string, string][]} */
+	const COMMENT_PLACEMENT_CASES = [
+		[
+			"a banner comment before a parenthesized call",
+			"/*!\n * banner\n */\n(function (w) { w.x = 1; })(this);"
+		],
+		[
+			"a banner comment read after an operator",
+			"!/*!\n * banner\n */\nfunction (g) { g.x = 1; }(this);"
+		],
+		[
+			"a comment of a parenthesis, on the line before it",
+			"var a = 1;/*! keep */\n(function () { a++; })();"
+		],
+		[
+			"two comments of a parenthesis, on the line before it",
+			"var a = 1;/*! one */ /*! two */\n(function () { a++; })();"
+		],
+		[
+			"a comment on the line its parenthesis opens",
+			"/*! a */(function () {})();"
+		],
+		[
+			"a comment inside a parenthesis holding none of its own",
+			"sink((/*! a */ function () {})());"
+		],
+		[
+			"a bigint written with separators and each radix",
+			"sink(0x20n, 123_456_789n, 0b1010n, 1_000n, 0o17n, 9_007_199_254_740_993n);"
+		],
+		[
+			"a comment whose line breaks are carriage returns",
+			"/*!\r\n * banner\r\n */\r\n(function (w) { w.x = 1; })(this);\r\n"
+		],
+		[
+			"a comment broken by a line separator",
+			"/*!\u2028 * banner\u2029 */\n(function (w) { w.x = 1; })(this);"
+		],
+		[
+			"a comment after a function returning a sequence",
+			"function q(t) { return f(t), new d(t); }\n/*! keep */\nsink(q);"
+		],
+		[
+			"a comment after a function returning a parenthesized sequence",
+			"function q(t) { return (f(t), new d(t)); }\n/*! keep */\nsink(q);"
+		],
+		[
+			"a comment after a sequence of its own",
+			"D.A = new D(1), D.B = new D(2);\n/*! keep */\nsink(D);"
+		],
+		["a sequence ending the source", "/*! keep */\nsink(a), sink(b)"]
+	];
+	for (const [name, source] of COMMENT_PLACEMENT_CASES) {
+		it(`should print a comment where terser does: ${name}`, async () => {
+			const { minify } = await load();
+			const reference = terserReference();
+			const options = { compress: false, mangle: false };
+			const ours = await minify(source, { ...options });
+			const theirs = await reference.minify(source, { ...options });
+			expect(ours.code).toBe(theirs.code);
 		});
 	}
 
@@ -1786,6 +1889,11 @@ describe("syntax-printer", () => {
 			"a labeled loop inlined twice",
 			"function f(n) { l: for (var i = 0; i < n; i++) { if (i > 2) break l; } return i; } console.log(f(5), f(1));",
 			{ compress: { passes: 3, inline: 3, reduce_funcs: false }, mangle: false }
+		],
+		[
+			"a call of an annotated call",
+			"var r = /* @__PURE__ */ ((x) => y.z)(function (x) {})(E || {}); sink(r);",
+			{ compress: { passes: 2 }, mangle: false }
 		],
 		[
 			"a class reading itself as it is defined",
@@ -1921,7 +2029,7 @@ describe("syntax-printer", () => {
 					seen.scope = this.find_scope().TYPE;
 					seen.parent = this.parent().TYPE;
 					seen.self = this.self().TYPE;
-					seen.lambda = this.find_parent(ast.AST_Lambda).TYPE;
+					seen.lambda = this.find_parent(ast.LambdaNode).TYPE;
 					seen.strict = Boolean(this.has_directive("use strict"));
 				}
 				if (node.TYPE === "SymbolRef" && node.name === "o") {
@@ -2133,8 +2241,14 @@ describe("syntax-printer", () => {
 			/**
 			 * @returns {EXPECTED_ANY} the options, asking for the tree
 			 */
+			// terser's parser leaves an accessor's `async` unset where webpack's
+			// writes false, which terser's own `equivalent_to` reads as a difference.
 			const settings = () => ({
 				...options,
+				parse: {
+					.../** @type {EXPECTED_ANY} */ (options).parse,
+					...TERSER_PARSE
+				},
 				mangle: false,
 				format: { ast: true, code: false }
 			});
@@ -2151,7 +2265,7 @@ describe("syntax-printer", () => {
 			// terser's published build hands out its own tree, sized and compared
 			// by terser's own methods.
 			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
-				await reference.minify(source, settings())
+				await reference.minify(source, forTerser(settings()))
 			);
 			/** @type {EXPECTED_ANY[]} */
 			const theirs = [];
@@ -2447,7 +2561,7 @@ describe("syntax-printer", () => {
 				// parameter a spread; ESTree binds with a rest element in both.
 				expected = {
 					type:
-						parent.TYPE === "Destructuring" || parent instanceof ast.AST_Lambda
+						parent.TYPE === "Destructuring" || parent instanceof ast.LambdaNode
 							? "RestElement"
 							: "SpreadElement"
 				};
@@ -2482,7 +2596,7 @@ describe("syntax-printer", () => {
 
 	it("should hand back a fresh list, which a clone may share", async () => {
 		const { ast, parse, utils } = (await load()).modules;
-		const { AST_SimpleStatement, TreeTransformer } = ast;
+		const { SimpleStatementNode, TreeTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
 		toplevel.transform(new TreeTransformer(() => undefined));
@@ -2497,7 +2611,7 @@ describe("syntax-printer", () => {
 				 * @returns {EXPECTED_ANY} what replaces it
 				 */
 				(node) => {
-					if (!(node instanceof AST_SimpleStatement)) return;
+					if (!(node instanceof SimpleStatementNode)) return;
 					const name = node.body.name;
 					if (name === "b") return utils.MAP.skip;
 					if (name === "c") return utils.MAP.splice([node, node]);

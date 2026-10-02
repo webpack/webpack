@@ -998,6 +998,137 @@ const CORRECTED = {
 		"terser drops destructuring defaults and patterns whose evaluation has effects or throws"
 };
 
+/* cspell:disable */
+// What the reference gets wrong, or how its output and webpack's agree, where
+// several sources differ for the same reason.
+const ASI_LET =
+	"terser reads a `let` before a line break as a declaration, where the semicolon inserted after it leaves a name";
+const ASI_ASYNC =
+	"terser reads an `async` before a line break as the modifier, where the semicolon inserted after it leaves a name";
+const CONTINUATION =
+	"terser writes a line continuation's own break into the string, which holds nothing";
+const NUMERIC_KEY =
+	"terser quotes a binary, octal or hex key as it is written, naming the property `0b1` where it is `1`";
+const RAW_BREAK =
+	"a tagged template's raw text reads either break as one line feed, and webpack writes the feed itself";
+const ESCAPED_DIRECTIVE =
+	"webpack keeps the escape that stops the string being a directive, where terser unescapes it and detaches it with `;`";
+const EMPTY_IMPORT =
+	"webpack writes an import of nothing without the empty list, which imports the same";
+const EMPTY_ATTRIBUTES =
+	"webpack writes an import without the empty attributes, which asks for the same";
+const AWAIT_IDENTIFIER =
+	"terser reads `await` in a class field as the operator, where a script may hold it as a name";
+
+/**
+ * Parse errors the reference answers with where the spec allows the source,
+ * each with what makes it legal: webpack reads these and prints, and the output
+ * is still run against what the test says it prints. A message the reference
+ * stops answering with fails until retired.
+ * @type {Record<string, string>}
+ */
+const REFUSED_BY_REFERENCE = {
+	"Escaped characters are not allowed in keywords":
+		"an escape is allowed anywhere in an identifier name; only a keyword read as one may not hold it",
+	"Unexpected token: punc ())":
+		"an argument list may end in a comma, `import()`'s included",
+	"Unexpected token: operator (/)":
+		"a regular expression may follow any of the spec's white space, which the reference reads as division",
+	"Unexpected character '\u1680'":
+		"the ogham space mark is white space, which the reference does not read as any",
+	"Name expected":
+		"`let` is an identifier outside strict mode, so it names a binding and a property",
+	"Yield cannot be used as identifier inside generators":
+		"a function expression or declaration inside a generator may be named `yield`",
+	"Name or string expected": "`export * as default from` names the namespace",
+	"Unexpected token: keyword (if)":
+		"a class or function exported as the default ends at the semicolon inserted after it",
+	"Unexpected token: name (a)":
+		"a field named `get` or `set` ends at the semicolon inserted before a generator",
+	"Unicode reference out of bounds":
+		"a tagged template may hold an escape no cooked value can read, which only its raw text keeps",
+	"Unexpected token: keyword (let)":
+		"a rest parameter may be named `yield` outside strict mode",
+	"Unexpected token: operator (>)":
+		"Annex B reads this as the identifier it is, not an operator",
+	"Strict mode may not include a with statement":
+		"the corpus reads this module as a script, where `with` is allowed"
+};
+
+/**
+ * Sources the reference reads or prints differently, each with what it gets
+ * wrong or how the two agree; webpack's output stands, and is still run against
+ * what the test says it prints. An entry that stops differing fails until
+ * retired.
+ * @type {Record<string, string>}
+ */
+const REFERENCE_MISPRINTS = {
+	"test262: let-identifier-with-newline.js (printing alone)": ASI_LET,
+	"test262: let-identifier-with-newline.js (the default minimizer's options)":
+		ASI_LET,
+	"test262: let-block-with-newline.js (printing alone)": ASI_LET,
+	"test262: let-block-with-newline.js (the default minimizer's options)":
+		ASI_LET,
+	"test262: syntax-declaration-no-line-terminator.js (printing alone)": ASI_ASYNC,
+	"test262: syntax-declaration-no-line-terminator.js (the default minimizer's options)":
+		ASI_ASYNC,
+	"test262: escaped-async-line-terminator.js (printing alone)": ASI_ASYNC,
+	"test262: escaped-async-line-terminator.js (the default minimizer's options)":
+		ASI_ASYNC,
+	"test262: async-lineterminator-identifier-throws.js (printing alone)":
+		ASI_ASYNC,
+	"test262: async-lineterminator-identifier-throws.js (the default minimizer's options)":
+		ASI_ASYNC,
+	"test262: line-continuation-double.js (printing alone)": CONTINUATION,
+	"test262: line-continuation-double.js (the default minimizer's options)":
+		CONTINUATION,
+	"test262: line-continuation-single.js (printing alone)": CONTINUATION,
+	"test262: line-continuation-single.js (the default minimizer's options)":
+		CONTINUATION,
+	"test262: property-name.js (printing alone)": NUMERIC_KEY,
+	"test262: property-name.js (the default minimizer's options)": NUMERIC_KEY,
+	"test262: special-characters.js (printing alone)": RAW_BREAK,
+	"test262: special-characters.js (the default minimizer's options)": RAW_BREAK,
+	"test262: tv-line-continuation.js (printing alone)": RAW_BREAK,
+	"test262: tv-line-continuation.js (the default minimizer's options)": RAW_BREAK,
+	"test262: 14.1-4-s.js (printing alone)": ESCAPED_DIRECTIVE,
+	"test262: 14.1-5-s.js (printing alone)": ESCAPED_DIRECTIVE,
+	"test262: eval-rqstd-order.js (printing alone)": EMPTY_IMPORT,
+	"test262: eval-rqstd-order.js (the default minimizer's options)": EMPTY_IMPORT,
+	"test262: eval-self-once.js (printing alone)": EMPTY_IMPORT,
+	"test262: eval-self-once.js (the default minimizer's options)": EMPTY_IMPORT,
+	"test262: instn-once.js (printing alone)": EMPTY_IMPORT,
+	"test262: instn-once.js (the default minimizer's options)": EMPTY_IMPORT,
+	"test262: instn-resolve-empty-import.js (printing alone)": EMPTY_IMPORT,
+	"test262: instn-resolve-empty-import.js (the default minimizer's options)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1051 (printing alone)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1051 (the default minimizer's options)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1058 (printing alone)":
+		EMPTY_IMPORT,
+	"oxc minifier: peephole/remove_unused_declaration.rs:1058 (the default minimizer's options)":
+		EMPTY_IMPORT,
+	"test262: import-attribute-empty.js (printing alone)": EMPTY_ATTRIBUTES,
+	"test262: import-attribute-empty.js (the default minimizer's options)":
+		EMPTY_ATTRIBUTES,
+	"test262: await-identifier-script.js (printing alone)": AWAIT_IDENTIFIER,
+	"test262: await-identifier-script.js (the default minimizer's options)":
+		AWAIT_IDENTIFIER,
+	"test262: await-identifier-module-2.js (printing alone)": AWAIT_IDENTIFIER,
+	"test262: await-identifier-module-2.js (the default minimizer's options)":
+		AWAIT_IDENTIFIER
+};
+/* cspell:enable */
+
+// What this run met of the two tables above, so an entry it no longer meets
+// fails instead of lingering.
+/** @type {Set<string>} */
+const refusalsSeen = new Set();
+/** @type {Set<string>} */
+const misprintsSeen = new Set();
+
 /**
  * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
  * with why; an entry that stops compressing worse fails until retired.
@@ -1524,9 +1655,29 @@ describe("JavaScript minifier", () => {
 										theirs.code !== uncorrected.code ||
 										theirs.error !== uncorrected.error
 									) {
-										differences.push(
-											`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
-										);
+										const refused =
+											uncorrected.code !== undefined &&
+											typeof theirs.error === "string" &&
+											Object.prototype.hasOwnProperty.call(
+												REFUSED_BY_REFERENCE,
+												theirs.error
+											);
+										if (refused) {
+											refusalsSeen.add(
+												/** @type {string} */ (theirs.error)
+											);
+										} else if (
+											Object.prototype.hasOwnProperty.call(
+												REFERENCE_MISPRINTS,
+												key
+											)
+										) {
+											misprintsSeen.add(key);
+										} else {
+											differences.push(
+												`${source.name} (${setName})\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(uncorrected)}`
+											);
+										}
 									}
 									if (unimproved.error !== ours.error) {
 										differences.push(
@@ -1631,4 +1782,15 @@ describe("JavaScript minifier", () => {
 			}
 		});
 	}
+
+	it("should list no difference the reference no longer makes", () => {
+		expect([
+			...Object.keys(REFUSED_BY_REFERENCE)
+				.filter((message) => !refusalsSeen.has(message))
+				.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
+			...Object.keys(REFERENCE_MISPRINTS)
+				.filter((key) => !misprintsSeen.has(key))
+				.map((key) => `REFERENCE_MISPRINTS: ${key}`)
+		]).toEqual([]);
+	});
 });
