@@ -127,9 +127,9 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 	/**
 	 * @param {string} code a source
 	 * @param {"script" | "module"} sourceType how acorn reads it
-	 * @returns {string[]} how the conversions disagree
+	 * @returns {Promise<string[]>} how the conversions disagree
 	 */
-	const disagreements = (code, sourceType) => {
+	const disagreements = async (code, sourceType) => {
 		/** @type {string[]} */
 		const found = [];
 		for (const locations of [false, true]) {
@@ -175,9 +175,9 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 			const results = [];
 			// Both trees are read from the same ESTree, as the conversion above
 			// holds them alike, so only the conversion back is compared.
-			for (const { ast } of [modules.theirs, modules.ours]) {
+			for (const side of [modules.theirs, modules.ours]) {
 				try {
-					const tree = rootOf(ast).from_mozilla_ast(
+					const tree = rootOf(side.ast).from_mozilla_ast(
 						JSON.parse(
 							text(
 								acorn.parse(code, {
@@ -191,11 +191,16 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 						)
 					);
 					if (mangled) {
-						tree.figure_out_scope({ module: sourceType === "module" });
-						tree.compute_char_frequency({});
-						tree.mangle_names({ module: sourceType === "module" });
+						// terser's `minify` mangles a tree it is given, and hands it back.
+						const { ast } = await side.minify(tree, {
+							compress: false,
+							mangle: { module: sourceType === "module" },
+							format: { spidermonkey: true, code: false }
+						});
+						results.push(text(ast));
+					} else {
+						results.push(text(tree.to_mozilla_ast()));
 					}
-					results.push(text(tree.to_mozilla_ast()));
 				} catch (err) {
 					results.push(`throws ${thrownMessage(err)}`);
 				}
@@ -207,20 +212,20 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 		return found;
 	};
 
-	it("should convert acorn's corpus both ways as terser does", () => {
+	it("should convert acorn's corpus both ways as terser does", async () => {
 		/** @type {string[]} */
 		const found = [];
 		for (const { code, options } of ACORN_CORPUS.cases) {
 			const sourceType =
 				options && options.sourceType === "module" ? "module" : "script";
-			for (const difference of disagreements(code, sourceType)) {
+			for (const difference of await disagreements(code, sourceType)) {
 				found.push(`${JSON.stringify(code)}: ${difference}`);
 			}
 		}
 		expect(found).toEqual([]);
 	});
 
-	it("should convert what the corpus leaves out as terser does", () => {
+	it("should convert what the corpus leaves out as terser does", async () => {
 		/** @type {[string, "script" | "module"][]} */
 		const sources = [
 			["class A { static #a = 1; #b() {} get #c() {} set #c(v) {} static { #a in this; } }", "script"],
@@ -242,7 +247,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 		/** @type {string[]} */
 		const found = [];
 		for (const [code, sourceType] of sources) {
-			for (const difference of disagreements(code, sourceType)) {
+			for (const difference of await disagreements(code, sourceType)) {
 				found.push(`${JSON.stringify(code)}: ${difference}`);
 			}
 		}

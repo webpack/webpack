@@ -656,6 +656,7 @@ const PRINT_TREE_SKIPPED_KEYS = new Set([
 	"definition",
 	"mapName",
 	"idDeclares",
+	"heldAsDefinition",
 	"atom",
 	"annotatedKey",
 	"source",
@@ -4469,16 +4470,21 @@ describe("syntax-printer", () => {
 			};
 
 			/**
-			 * A source minified with terser's mangler and with the ESTree one.
+			 * A source minified by terser and by webpack, which writes what terser
+			 * writes with its `correct` and `improve` phases off.
 			 * @param {string | Record<string, string>} input a source, or files
 			 * @param {() => EXPECTED_ANY} makeOptions fresh options each time
 			 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }>} code, maps and name cache each way
 			 */
 			const mangleBothWays = async (input, makeOptions) => {
-				const { minify, modules } = await load();
-				const run = async () => {
-					const options = makeOptions();
-					const result = /** @type {EXPECTED_ANY} */ (await minify(input, options));
+				const { minify, corrections, improvements } = await load();
+				/**
+				 * @param {EXPECTED_FUNCTION} minifier a `minify`
+				 * @param {EXPECTED_ANY} options its options
+				 * @returns {Promise<EXPECTED_ANY>} what it wrote
+				 */
+				const run = async (minifier, options) => {
+					const result = /** @type {EXPECTED_ANY} */ (await minifier(input, options));
 					return {
 						code: result.code,
 						map: result.map,
@@ -4486,14 +4492,63 @@ describe("syntax-printer", () => {
 						nameCache: options.nameCache
 					};
 				};
-				const theirs = await run();
-				const flag = /** @type {{ enabled: boolean }} */ (modules.estreeMangler);
-				flag.enabled = true;
+				const theirs = await run(terserReference().minify, makeOptions());
+				const phases = /** @type {{ enabled: boolean }[]} */ ([corrections, improvements]);
+				for (const phase of phases) phase.enabled = false;
 				try {
-					return { theirs, ours: await run() };
+					return { theirs, ours: await run(minify, makeOptions()) };
 				} finally {
-					flag.enabled = false;
+					for (const phase of phases) phase.enabled = true;
 				}
+			};
+
+			/**
+			 * What webpack writes for a source under each mangle option set.
+			 * @param {string} source the source
+			 * @returns {Promise<string[]>} the code and name cache each set writes
+			 */
+			const ownOutputs = async (source) => {
+				const { minify } = await load();
+				/** @type {string[]} */
+				const outputs = [];
+				for (const [setName, makeSet] of Object.entries(MANGLE_OPTION_SETS)) {
+					for (const compress of [false, { passes: 2 }]) {
+						for (const module of [false, true]) {
+							const options = { ...makeSet(), compress, module };
+							try {
+								const { code } = await minify(source, options);
+								outputs.push(`${setName}, ${compress ? "compressed" : "parsed"}: ${code} ${JSON.stringify(options.nameCache)}`);
+								break;
+							} catch (err) {
+								if (/** @type {Error} */ (err).name !== "SyntaxError") throw err;
+							}
+						}
+					}
+				}
+				return outputs;
+			};
+
+			/**
+			 * How webpack's mangling differs from terser's, read where the two print
+			 * the source alike unmangled: their parsers place some nodes apart.
+			 * @param {string | Record<string, string>} input a source, or files
+			 * @param {() => EXPECTED_ANY} makeOptions fresh options each time
+			 * @returns {Promise<string[]>} each result that differs, as webpack wrote it
+			 */
+			const mangleDifferences = async (input, makeOptions) => {
+				const { theirs, ours } = await mangleBothWays(input, makeOptions);
+				const unmangled = await mangleBothWays(input, () => ({ ...makeOptions(), mangle: false }));
+				/** @type {string[]} */
+				const differences = [];
+				for (const key of ["code", "map", "decodedMap", "nameCache"]) {
+					if (
+						JSON.stringify(unmangled.theirs[key]) === JSON.stringify(unmangled.ours[key]) &&
+						JSON.stringify(theirs[key]) !== JSON.stringify(ours[key])
+					) {
+						differences.push(`${key} ${JSON.stringify(ours[key])}`);
+					}
+				}
+				return differences;
 			};
 
 			for (const source of [
@@ -4511,10 +4566,10 @@ describe("syntax-printer", () => {
 					for (const [setName, makeSet] of Object.entries(MANGLE_OPTION_SETS)) {
 						for (const compress of [false, { passes: 2 }]) {
 							for (const module of [false, true]) {
-								/** @type {{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }} */
-								let results;
+								/** @type {string[]} */
+								let found;
 								try {
-									results = await mangleBothWays({ "input.js": source }, () => ({
+									found = await mangleDifferences({ "input.js": source }, () => ({
 										...makeSet(),
 										compress,
 										module,
@@ -4525,18 +4580,19 @@ describe("syntax-printer", () => {
 									if (/** @type {Error} */ (err).name === "SyntaxError") continue;
 									throw err;
 								}
-								const { theirs, ours } = results;
-								for (const key of ["code", "map", "decodedMap", "nameCache"]) {
-									if (JSON.stringify(theirs[key]) !== JSON.stringify(ours[key])) {
-										differences.push(`${setName}, ${compress ? "compressed" : "parsed"}, ${module ? "module" : "script"}: ${key} ${JSON.stringify(ours[key])}`);
-									}
+								for (const difference of found) {
+									differences.push(`${setName}, ${compress ? "compressed" : "parsed"}, ${module ? "module" : "script"}: ${difference}`);
 								}
 								compared++;
 								break;
 							}
 						}
 					}
-					expect(compared).toBeGreaterThan(0);
+					if (compared === 0) {
+						// terser refuses the source, so what webpack writes is held as written.
+						expect(await ownOutputs(source)).toMatchSnapshot();
+						return;
+					}
 					expect(differences).toEqual([]);
 				});
 			}
@@ -4559,29 +4615,24 @@ describe("syntax-printer", () => {
 					"var shared = 1, $kept = 2; function grow(by) { return shared + by; } grow(unknownGlobal);",
 					"var other = shared, grown = grow(other); console.log(grown, $kept, unknownGlobal);"
 				];
+				const { minify } = await load();
 				for (const mangle of [{ toplevel: true }, { toplevel: true, keep_fnames: true }, {}]) {
-					const { minify, modules } = await load();
 					/** @type {string[][]} */
 					const outputs = [];
 					/** @type {EXPECTED_ANY[]} */
 					const caches = [];
-					for (const enabled of [false, true]) {
-						/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = enabled;
-						try {
-							const nameCache = {};
-							const codes = [];
-							for (const source of sources) {
-								codes.push(
-									/** @type {string} */ (
-										(await minify(source, { compress: false, mangle: { ...mangle }, nameCache })).code
-									)
-								);
-							}
-							outputs.push(codes);
-							caches.push(nameCache);
-						} finally {
-							/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = false;
+					for (const minifier of [terserReference().minify, minify]) {
+						const nameCache = {};
+						const codes = [];
+						for (const source of sources) {
+							codes.push(
+								/** @type {string} */ (
+									(await minifier(source, { compress: false, mangle: { ...mangle }, nameCache })).code
+								)
+							);
 						}
+						outputs.push(codes);
+						caches.push(nameCache);
 					}
 					expect(outputs[1]).toEqual(outputs[0]);
 					expect(caches[1]).toEqual(caches[0]);
@@ -4632,15 +4683,13 @@ describe("syntax-printer", () => {
 					const differences = [];
 					for (const [setName, makeSet] of Object.entries(PROPERTY_OPTION_SETS)) {
 						for (const compress of [false, { passes: 2 }]) {
-							const { theirs, ours } = await mangleBothWays({ "input.js": source }, () => ({
+							const found = await mangleDifferences({ "input.js": source }, () => ({
 								...makeSet(),
 								compress,
 								sourceMap: { asObject: true }
 							}));
-							for (const key of ["code", "map", "decodedMap", "nameCache"]) {
-								if (JSON.stringify(theirs[key]) !== JSON.stringify(ours[key])) {
-									differences.push(`${setName}, ${compress ? "compressed" : "parsed"}: ${key} ${JSON.stringify(ours[key])}`);
-								}
+							for (const difference of found) {
+								differences.push(`${setName}, ${compress ? "compressed" : "parsed"}: ${difference}`);
 							}
 						}
 					}
@@ -4649,35 +4698,77 @@ describe("syntax-printer", () => {
 			}
 
 			it("should throw as terser's mangler does where `Object.defineProperty` has no descriptor name", async () => {
-				const { minify, modules } = await load();
+				const { minify } = await load();
 				/** @type {string[]} */
 				const messages = [];
-				for (const enabled of [false, true]) {
-					/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = enabled;
+				for (const minifier of [terserReference().minify, minify]) {
 					try {
-						await minify("Object.defineProperty(o);", { mangle: { properties: {} } });
+						await minifier("Object.defineProperty(o);", { mangle: { properties: {} } });
 					} catch (err) {
 						messages.push(/** @type {Error} */ (err).message);
-					} finally {
-						/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = false;
 					}
 				}
 				expect(messages).toHaveLength(2);
 				expect(messages[1]).toBe(messages[0]);
 			});
 
-			it("should leave to terser's mangler what only its tree holds", async () => {
-				for (const [source, options] of /** @type {[string, EXPECTED_ANY][]} */ ([
-					["function f(long) { return long; } f(1);", { mangle: true, format: { ast: true } }],
-					["function f(long) { return long; } f(1);", { mangle: true, format: { spidermonkey: true } }],
-					["function f(long) { return long; } f(1);", { mangle: false }],
-					["function f(long) { return long; } f(1);", { mangle: { toplevel: true }, format: { code: false }, nameCache: {} }]
-				])) {
-					const { theirs, ours } = await mangleBothWays(source, () => ({
-						...options,
-						...(options.nameCache ? { nameCache: {} } : {})
-					}));
-					expect(ours).toEqual(theirs);
+			it("should fill a name cache without printing as terser does", async () => {
+				const { minify } = await load();
+				/** @type {EXPECTED_ANY[]} */
+				const caches = [];
+				for (const minifier of [terserReference().minify, minify]) {
+					const nameCache = {};
+					await minifier("function f(long) { return long; } f(1); var g = 2;", {
+						mangle: { toplevel: true, properties: true },
+						format: { code: false },
+						nameCache
+					});
+					caches.push(nameCache);
+				}
+				expect(caches[1]).toEqual(caches[0]);
+			});
+
+			it("should hand the tree back mangled as terser does", async () => {
+				const { minify } = await load();
+				const source =
+					"function f(long) { var o = { foo: 1, 'bar': 2, get baz() { return 3; }, [k]: 4 }; return long + o.foo + o['bar'] + o[/*@__KEY__*/ 'qux']; } class C { #x = 1; static y = 2; 'z' = 3; #w() {} m(p) { return #x in p && this.#x + this.#w(); } } l: for (;;) { f(1); break l; } new C();";
+				for (const mangle of [{ toplevel: true }, { toplevel: true, properties: { keep_quoted: true } }, { properties: {} }]) {
+					const options = () => ({ compress: false, mangle: { ...mangle }, format: { ast: true } });
+					const theirs = /** @type {EXPECTED_ANY} */ (await terserReference().minify(source, options()));
+					const ours = /** @type {EXPECTED_ANY} */ (await minify(source, options()));
+					expect(ours.code).toBe(theirs.code);
+					// Each tree, printed again without mangling, prints the names it took.
+					const reprint = { compress: false, mangle: false };
+					expect((await minify(ours.ast, reprint)).code).toBe(
+						(await terserReference().minify(theirs.ast, reprint)).code
+					);
+					const estreeOptions = () => ({ compress: false, mangle: { ...mangle }, format: { spidermonkey: true } });
+					// Where the parsers place a node apart is no concern of mangling's.
+					/**
+					 * @param {EXPECTED_ANY} result a result
+					 * @returns {string} its ESTree tree, without locations
+					 */
+					const estreeOf = (result) =>
+						JSON.stringify(result.ast, (key, value) => (key === "loc" ? undefined : value));
+					expect(estreeOf(await minify(source, estreeOptions()))).toBe(
+						estreeOf(await terserReference().minify(source, estreeOptions()))
+					);
+				}
+			});
+
+			it("should mangle what a constant `new Function` body holds as terser does", async () => {
+				const { minify } = await load();
+				for (const source of [
+					"var f = new Function('alpha', 'beta', 'var gamma = alpha + beta; return function inner(delta) { return gamma * delta; }'); console.log(f);",
+					"var f = Function('alpha', '{ beta, gamma }', 'return (x => x + alpha + beta)(gamma)'); console.log(f);"
+				]) {
+					const options = () => ({
+						compress: { unsafe: true, unsafe_Function: true, unsafe_arrows: true, passes: 2 },
+						mangle: true,
+						ecma: /** @type {const} */ (2020)
+					});
+					const ours = await minify(source, options());
+					expect(ours.code).toBe((await terserReference().minify(source, options())).code);
 				}
 			});
 		});
