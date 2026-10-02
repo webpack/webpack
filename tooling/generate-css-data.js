@@ -1567,7 +1567,7 @@ const collectZeroUnitAmbiguousProperties = (propertyTable = properties) => {
 /**
  * The properties whose grammar offers a `<number>` or an `<integer>`, so a
  * unitless zero is that number there, as `calc(0)` is, and never a length.
- * @param {PartialSyntaxTable} propertyTable the `properties.json` to read
+ * @param {{ [name: string]: { syntax?: string, computed?: string | string[] } }} propertyTable the `properties.json` to read
  * @returns {string[]} the property names, sorted
  */
 const collectNumberZeroProperties = (propertyTable = properties) => {
@@ -1595,8 +1595,7 @@ const collectNumberZeroProperties = (propertyTable = properties) => {
 		if (!zeroNumber) continue;
 		// A shorthand with a length slot may give the bare zero to that slot
 		// (`columns:0` is a `column-width`), where `calc(0)` fills the number one.
-		const computed = /** @type {{ computed?: unknown }} */ (entry).computed;
-		if (Array.isArray(computed) && kinds.has("length")) continue;
+		if (Array.isArray(entry.computed) && kinds.has("length")) continue;
 		out.push(name);
 	}
 	return out.sort();
@@ -3357,11 +3356,12 @@ const collectZeroAngleFunctions = () => {
 /**
  * The functions every argument of which is a `<number>` or a `<percentage>`, so a
  * folded `calc()` holding one needs no parentheses there.
+ * @param {PartialSyntaxTable} functionTable the `functions.json` to read
  * @returns {string[]} the function names, sorted
  */
-const collectNumberArgumentFunctions = () => {
+const collectNumberArgumentFunctions = (functionTable = functions) => {
 	const names = [];
-	for (const [name, entry] of Object.entries(functions)) {
+	for (const [name, entry] of Object.entries(functionTable)) {
 		if (typeof entry.syntax !== "string" || !name.endsWith("()")) continue;
 		// A bounded type such as `<number [0,1]>` is one a `calc()` clamps into and
 		// a bare number outside it is not, so only the unbounded two count.
@@ -8081,6 +8081,8 @@ module.exports.collectGradientFunctions = collectGradientFunctions;
 module.exports.collectLaterColorNames = collectLaterColorNames;
 module.exports.collectMergeableAtRules = collectMergeableAtRules;
 module.exports.collectNthNamedEquivalents = collectNthNamedEquivalents;
+module.exports.collectNumberArgumentFunctions = collectNumberArgumentFunctions;
+module.exports.collectNumberZeroProperties = collectNumberZeroProperties;
 module.exports.collectOmittableInitialKeywords =
 	collectOmittableInitialKeywords;
 module.exports.collectRatioProperties = collectRatioProperties;
