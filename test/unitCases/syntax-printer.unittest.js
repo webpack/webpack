@@ -4364,5 +4364,245 @@ describe("syntax-printer", () => {
 			expect(modules.isUnmangleable(short, options, kept)).toBe(true);
 			expect(modules.isUnmangleable(other, options, kept)).toBe(false);
 		});
+
+		describe("mangleManglingScopes", () => {
+			/**
+			 * An identifier source ordering its names by the characters counted.
+			 * @returns {EXPECTED_ANY} the source
+			 */
+			const sortingIdentifiers = () => {
+				/** @type {string[]} */
+				let characters = [];
+				/** @type {Map<string, number>} */
+				let counts = new Map();
+				return {
+					reset() {
+						characters = [..."abcdefghijklmnopqrstuvwxyz"];
+						counts = new Map();
+					},
+					/**
+					 * @param {string} text characters printed
+					 * @param {number} delta how to count them
+					 */
+					consider(text, delta) {
+						for (const character of text) {
+							counts.set(character, (counts.get(character) || 0) + delta);
+						}
+					},
+					sort() {
+						characters.sort(
+							(first, second) =>
+								(counts.get(second) || 0) - (counts.get(first) || 0) ||
+								(first < second ? -1 : 1)
+						);
+					},
+					/**
+					 * @param {number} index which name
+					 * @returns {string} the name
+					 */
+					get(index) {
+						const alphabet = characters.length > 0 ? characters : [..."abcdefghijklmnopqrstuvwxyz"];
+						let name = "";
+						let rest = index + 1;
+						do {
+							rest--;
+							name += alphabet[rest % 26];
+							rest = Math.floor(rest / 26);
+						} while (rest > 0);
+						return name;
+					}
+				};
+			};
+
+			/**
+			 * An identifier source ignoring frequency, handing out reserved words too.
+			 * @returns {EXPECTED_ANY} the source
+			 */
+			const plainIdentifiers = () => ({
+				/**
+				 * @param {number} index which name
+				 * @returns {string} the name
+				 */
+				get(index) {
+					let name = "";
+					let rest = index + 1;
+					do {
+						rest--;
+						name += ["i", "f", "d", "o", "n", "a", "e", "l", "t", "r"][rest % 10];
+						rest = Math.floor(rest / 10);
+					} while (rest > 0);
+					return name;
+				}
+			});
+
+			/** @type {Record<string, () => EXPECTED_OBJECT>} */
+			const MANGLE_OPTION_SETS = {
+				default: () => ({ mangle: {} }),
+				toplevel: () => ({ mangle: { toplevel: true } }),
+				module: () => ({ mangle: { module: true } }),
+				ie8: () => ({ mangle: { ie8: true } }),
+				safari10: () => ({ mangle: { safari10: true } }),
+				"ie8 and safari10": () => ({ mangle: { ie8: true, safari10: true, toplevel: true } }),
+				eval: () => ({ mangle: { eval: true } }),
+				"kept names": () => ({ mangle: { keep_fnames: true, keep_classnames: true } }),
+				"kept names by a global regexp": () => ({
+					mangle: { keep_fnames: /^[a-m]/g, keep_classnames: /[n-z]/g, toplevel: true }
+				}),
+				reserved: () => ({ mangle: { reserved: ["a", "b", "e", "t", "n", "r"], toplevel: true } }),
+				"reserved names, the slow way": () => ({
+					mangle: { reserved: ["a", "b", "e", "t", "n", "r"], safari10: true }
+				}),
+				"identifiers sorted by frequency": () => ({ mangle: { nth_identifier: sortingIdentifiers() } }),
+				"identifiers ignoring frequency": () => ({
+					mangle: { nth_identifier: plainIdentifiers(), toplevel: true }
+				}),
+				"a name cache": () => ({
+					mangle: {},
+					nameCache: { vars: { props: { $foo: "a", $console: "b", $f: "zz", $e: "t" } } }
+				}),
+				"a name cache at the top level": () => ({ mangle: { toplevel: true }, nameCache: {} }),
+				"a name cache, kept names and ie8": () => ({
+					mangle: { toplevel: true, keep_fnames: /^[a-f]/g, ie8: true },
+					nameCache: { vars: { props: { $a: "n" } } }
+				})
+			};
+
+			/**
+			 * A source minified with terser's mangler and with the ESTree one.
+			 * @param {string | Record<string, string>} input a source, or files
+			 * @param {() => EXPECTED_ANY} makeOptions fresh options each time
+			 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }>} code, maps and name cache each way
+			 */
+			const mangleBothWays = async (input, makeOptions) => {
+				const { minify, modules } = await load();
+				const run = async () => {
+					const options = makeOptions();
+					const result = /** @type {EXPECTED_ANY} */ (await minify(input, options));
+					return {
+						code: result.code,
+						map: result.map,
+						decodedMap: result.decoded_map,
+						nameCache: options.nameCache
+					};
+				};
+				const theirs = await run();
+				const flag = /** @type {{ enabled: boolean }} */ (modules.estreeMangler);
+				flag.enabled = true;
+				try {
+					return { theirs, ours: await run() };
+				} finally {
+					flag.enabled = false;
+				}
+			};
+
+			for (const source of [
+				...TABLE_SOURCES,
+				...SCOPE_CASES.map(([, scopeSource]) => scopeSource),
+				"a: { b: for (;;) { c: if (x) break b; } d: e: while (y) { (function () { f: g: for (;;) continue f; })(); break d; } }",
+				"function f(a, b) { var c = a + b; try { g(); } catch (e) { var e = 1; l: for (;;) { m: break l; } } return function h(x, y) { return x + y + c + h; }; } f(1, 2); var $foo = 1; foo; console.log(f);",
+				"function outer() { if (a) { function inner(x) { return x; } inner(1); } var y = function named(z, w) { return named(z) + w; }; try {} catch (q) { var q; } return [, y, , outer]; } outer();",
+				"var reused = 1; function f() { var a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9; return [a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9, reused]; }"
+			]) {
+				it(`should mangle as terser's mangler does: ${source.slice(0, 60)}`, async () => {
+					/** @type {string[]} */
+					const differences = [];
+					let compared = 0;
+					for (const [setName, makeSet] of Object.entries(MANGLE_OPTION_SETS)) {
+						for (const compress of [false, { passes: 2 }]) {
+							for (const module of [false, true]) {
+								/** @type {{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }} */
+								let results;
+								try {
+									results = await mangleBothWays({ "input.js": source }, () => ({
+										...makeSet(),
+										compress,
+										module,
+										sourceMap: { asObject: true }
+									}));
+								} catch (err) {
+									// A source may be one only a script, or only a module, reads.
+									if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+									throw err;
+								}
+								const { theirs, ours } = results;
+								for (const key of ["code", "map", "decodedMap", "nameCache"]) {
+									if (JSON.stringify(theirs[key]) !== JSON.stringify(ours[key])) {
+										differences.push(`${setName}, ${compress ? "compressed" : "parsed"}, ${module ? "module" : "script"}: ${key} ${JSON.stringify(ours[key])}`);
+									}
+								}
+								compared++;
+								break;
+							}
+						}
+					}
+					expect(compared).toBeGreaterThan(0);
+					expect(differences).toEqual([]);
+				});
+			}
+
+			it("should not name a parameter as its function, kept as declared, as terser's mangler does", async () => {
+				const source =
+					"function n(t) { return t + 1; } function e(n) { return n; } console.log([1].map(n), [2].map(e));";
+				const { theirs, ours } = await mangleBothWays(source, () => ({
+					compress: { keep_fnames: true, toplevel: true, passes: 2 },
+					mangle: {}
+				}));
+				expect(theirs.code).toBe(
+					"console.log([1].map(function n(o){return o+1}),[2].map(function e(n){return n}));"
+				);
+				expect(ours).toEqual(theirs);
+			});
+
+			it("should hand a name cache from one source to the next as terser's mangler does", async () => {
+				const sources = [
+					"var shared = 1, $kept = 2; function grow(by) { return shared + by; } grow(unknownGlobal);",
+					"var other = shared, grown = grow(other); console.log(grown, $kept, unknownGlobal);"
+				];
+				for (const mangle of [{ toplevel: true }, { toplevel: true, keep_fnames: true }, {}]) {
+					const { minify, modules } = await load();
+					/** @type {string[][]} */
+					const outputs = [];
+					/** @type {EXPECTED_ANY[]} */
+					const caches = [];
+					for (const enabled of [false, true]) {
+						/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = enabled;
+						try {
+							const nameCache = {};
+							const codes = [];
+							for (const source of sources) {
+								codes.push(
+									/** @type {string} */ (
+										(await minify(source, { compress: false, mangle: { ...mangle }, nameCache })).code
+									)
+								);
+							}
+							outputs.push(codes);
+							caches.push(nameCache);
+						} finally {
+							/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = false;
+						}
+					}
+					expect(outputs[1]).toEqual(outputs[0]);
+					expect(caches[1]).toEqual(caches[0]);
+				}
+			});
+
+			it("should leave to terser's mangler what only its tree holds", async () => {
+				for (const [source, options] of /** @type {[string, EXPECTED_ANY][]} */ ([
+					["class A { #secret = 1; get() { return this.#secret; } } new A();", { mangle: true }],
+					["var o = { alpha: 1 }; o.alpha = function (long) { return long; };", { mangle: { properties: true } }],
+					["function f(long) { return long; } f(1);", { mangle: true, format: { ast: true } }],
+					["function f(long) { return long; } f(1);", { mangle: true, format: { spidermonkey: true } }],
+					["function f(long) { return long; } f(1);", { mangle: false }],
+					["function f(long) { return long; } f(1);", { mangle: { toplevel: true }, format: { code: false }, nameCache: {} }]
+				])) {
+					const { theirs, ours } = await mangleBothWays(source, () => ({
+						...options,
+						...(options.nameCache ? { nameCache: {} } : {})
+					}));
+					expect(ours).toEqual(theirs);
+				}
+			});
+		});
 	});
 });
