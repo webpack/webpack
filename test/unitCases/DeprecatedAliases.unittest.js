@@ -6,6 +6,8 @@ const webpack = require("../../");
 
 const ESM_REQUEST =
 	"webpack/lib/dependencies/esm/ESMExportImportedSpecifierDependency";
+const RELEASED_REQUEST =
+	"webpack/lib/dependencies/HarmonyExportImportedSpecifierDependency";
 
 describe("DeprecatedAliases", () => {
 	it("should export the ESM import dependency under both spellings", () => {
@@ -19,6 +21,9 @@ describe("DeprecatedAliases", () => {
 	});
 
 	describe("the star exports list serializer", () => {
+		const current = () =>
+			ObjectMiddleware.getDeserializerFor(ESM_REQUEST, "ESMStarExportsList");
+
 		it("should write under its current request and name", () => {
 			const { ESMStarExportsList } = ESMExportImportedSpecifierDependency;
 			const { request, name } = ObjectMiddleware.getSerializerFor(
@@ -28,32 +33,31 @@ describe("DeprecatedAliases", () => {
 			expect(name).toBe("ESMStarExportsList");
 		});
 
-		// TODO in the next major release: remove, these keys read cache packs
-		// written before the move and before the rename
-		const legacy = [
+		it("should still read what the last release wrote", () => {
+			// TODO in the next major release: remove with the legacy key itself
+			expect(
+				ObjectMiddleware.getDeserializerFor(
+					RELEASED_REQUEST,
+					"HarmonyStarExportsList"
+				)
+			).toBe(current());
+		});
+
+		// The ESM rename and the move into `esm/` are both unreleased, so no
+		// published webpack wrote a pack under either intermediate key.
+		for (const [request, name] of [
 			[ESM_REQUEST, "HarmonyStarExportsList"],
 			[
 				"webpack/lib/dependencies/ESMExportImportedSpecifierDependency",
 				"HarmonyStarExportsList"
 			],
-			[
-				"webpack/lib/dependencies/HarmonyExportImportedSpecifierDependency",
-				"HarmonyStarExportsList"
-			]
-		];
-
-		for (const [request, name] of legacy) {
-			it(`should still read ${request} / ${name}`, () => {
-				expect(ObjectMiddleware.getDeserializerFor(request, name)).toBe(
-					ObjectMiddleware.getDeserializerFor(ESM_REQUEST, "ESMStarExportsList")
-				);
+			[ESM_REQUEST, "NotAName"]
+		]) {
+			it(`should not read ${request} / ${name}`, () => {
+				expect(() =>
+					ObjectMiddleware.getDeserializerFor(request, name)
+				).toThrow();
 			});
 		}
-
-		it("should not read a request and name it was never written under", () => {
-			expect(() =>
-				ObjectMiddleware.getDeserializerFor(ESM_REQUEST, "NotAName")
-			).toThrow();
-		});
 	});
 });
