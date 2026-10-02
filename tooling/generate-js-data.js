@@ -9,7 +9,15 @@
 
 const fs = require("fs");
 const path = require("path");
+const bcd =
+	/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, __meta: { version: string } }} */ (
+		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
+	);
 const acorn = require("acorn");
+
+/** @typedef {{ version_added?: string | boolean | null }} BcdSupport */
+/** @typedef {{ spec_url?: string | string[], support: Record<string, BcdSupport | BcdSupport[]> }} BcdCompat */
+/** @typedef {{ [name: string]: { __compat: BcdCompat } }} BcdMembers */
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
 const PRINTER_DATA_TARGET = path.resolve(
@@ -725,6 +733,386 @@ const domProperties = () => ${JSON.stringify(names.join(" "))}.split(" ");
 `;
 };
 
+// The built-ins `improve` evaluates on literals: `global`'s functions, `X`'s
+// statics, `X.prototype`'s methods. Each exactly specified, reading only its
+// receiver and arguments, and answering a primitive.
+const FOLDED_BUILT_INS = {
+	global: [
+		"decodeURI",
+		"decodeURIComponent",
+		"encodeURI",
+		"encodeURIComponent",
+		"isFinite",
+		"isNaN",
+		"parseFloat",
+		"parseInt"
+	],
+	Math: [
+		"abs",
+		"ceil",
+		"clz32",
+		"floor",
+		"fround",
+		"imul",
+		"max",
+		"min",
+		"round",
+		"sign",
+		"sqrt",
+		"trunc"
+	],
+	Number: [
+		"isFinite",
+		"isInteger",
+		"isNaN",
+		"isSafeInteger",
+		"parseFloat",
+		"parseInt"
+	],
+	String: ["fromCharCode", "fromCodePoint"],
+	"String.prototype": [
+		"charAt",
+		"charCodeAt",
+		"codePointAt",
+		"concat",
+		"endsWith",
+		"includes",
+		"indexOf",
+		"lastIndexOf",
+		"normalize",
+		"padEnd",
+		"padStart",
+		"repeat",
+		"replace",
+		"slice",
+		"startsWith",
+		"substr",
+		"substring",
+		"toLowerCase",
+		"toUpperCase",
+		"trim",
+		"trimEnd",
+		"trimStart"
+	],
+	"Array.prototype": ["join"]
+};
+
+// Methods whose answer for a string outside ASCII follows the engine's Unicode
+// version, which the printer folds on ASCII strings only.
+const UNICODE_DEPENDENT_METHODS = [
+	"normalize",
+	"toLowerCase",
+	"toUpperCase",
+	"trim",
+	"trimEnd",
+	"trimStart"
+];
+
+// Every other member @mdn/browser-compat-data lists of `Math`, `Number`,
+// `String`, `Array` and the global functions, by why it is not folded; one it
+// starts listing fails generation until it is placed here or above.
+const UNFOLDED_BUILT_INS = {
+	"it is a value or a syntax feature, not a function": [
+		"globalThis",
+		"undefined",
+		"Math.E",
+		"Math.LN10",
+		"Math.LN2",
+		"Math.LOG10E",
+		"Math.LOG2E",
+		"Math.PI",
+		"Math.SQRT1_2",
+		"Math.SQRT2",
+		"Number.EPSILON",
+		"Number.MAX_SAFE_INTEGER",
+		"Number.MAX_VALUE",
+		"Number.MIN_SAFE_INTEGER",
+		"Number.MIN_VALUE",
+		"Number.NEGATIVE_INFINITY",
+		"Number.NaN",
+		"Number.POSITIVE_INFINITY",
+		"String.prototype.length",
+		"String.unicode_code_point_escapes",
+		"Array.prototype.length",
+		"Array.@@species",
+		"Array.prototype.@@unscopables"
+	],
+	"it runs code, or answers differently on each call": ["eval", "Math.random"],
+	"the spec lets each engine approximate its answer": [
+		"Math.acos",
+		"Math.acosh",
+		"Math.asin",
+		"Math.asinh",
+		"Math.atan",
+		"Math.atan2",
+		"Math.atanh",
+		"Math.cbrt",
+		"Math.cos",
+		"Math.cosh",
+		"Math.exp",
+		"Math.expm1",
+		"Math.hypot",
+		"Math.log",
+		"Math.log10",
+		"Math.log1p",
+		"Math.log2",
+		"Math.pow",
+		"Math.sin",
+		"Math.sinh",
+		"Math.tan",
+		"Math.tanh"
+	],
+	"its answer reads the host's locale": [
+		"Number.prototype.toLocaleString",
+		"String.prototype.localeCompare",
+		"String.prototype.toLocaleLowerCase",
+		"String.prototype.toLocaleUpperCase",
+		"Array.prototype.toLocaleString"
+	],
+	"the oldest Node webpack builds on lacks it, so folding it would tie the output to the build's Node":
+		[
+			"Math.f16round",
+			"Math.sumPrecise",
+			"String.prototype.at",
+			"String.prototype.isWellFormed",
+			"String.prototype.replaceAll",
+			"String.prototype.toWellFormed"
+		],
+	"it answers an object, which no literal the printer writes stands for": [
+		"String.prototype.@@iterator",
+		"String.prototype.match",
+		"String.prototype.matchAll",
+		"Array.prototype.@@iterator",
+		"Array.prototype.entries",
+		"Array.prototype.keys",
+		"Array.prototype.values"
+	],
+	"it answers an array, which gzips worse as a literal than the call": [
+		"String.prototype.split"
+	],
+	"the printer evaluates calls on string and array literals only": [
+		"Number.prototype.toExponential",
+		"Number.prototype.toFixed",
+		"Number.prototype.toPrecision",
+		"Number.prototype.toString",
+		"Number.prototype.valueOf"
+	],
+	"rarely called on literals, so not weighed yet": [
+		"escape",
+		"unescape",
+		"Number.Number",
+		"String.String",
+		"String.raw",
+		"String.prototype.anchor",
+		"String.prototype.big",
+		"String.prototype.blink",
+		"String.prototype.bold",
+		"String.prototype.fixed",
+		"String.prototype.fontcolor",
+		"String.prototype.fontsize",
+		"String.prototype.italics",
+		"String.prototype.link",
+		"String.prototype.search",
+		"String.prototype.small",
+		"String.prototype.strike",
+		"String.prototype.sub",
+		"String.prototype.sup",
+		"String.prototype.toString",
+		"String.prototype.trimLeft",
+		"String.prototype.trimRight",
+		"String.prototype.valueOf",
+		"Array.Array",
+		"Array.from",
+		"Array.fromAsync",
+		"Array.isArray",
+		"Array.of",
+		"Array.prototype.at",
+		"Array.prototype.concat",
+		"Array.prototype.copyWithin",
+		"Array.prototype.every",
+		"Array.prototype.fill",
+		"Array.prototype.filter",
+		"Array.prototype.find",
+		"Array.prototype.findIndex",
+		"Array.prototype.findLast",
+		"Array.prototype.findLastIndex",
+		"Array.prototype.flat",
+		"Array.prototype.flatMap",
+		"Array.prototype.forEach",
+		"Array.prototype.includes",
+		"Array.prototype.indexOf",
+		"Array.prototype.lastIndexOf",
+		"Array.prototype.map",
+		"Array.prototype.pop",
+		"Array.prototype.push",
+		"Array.prototype.reduce",
+		"Array.prototype.reduceRight",
+		"Array.prototype.reverse",
+		"Array.prototype.shift",
+		"Array.prototype.slice",
+		"Array.prototype.some",
+		"Array.prototype.sort",
+		"Array.prototype.splice",
+		"Array.prototype.toReversed",
+		"Array.prototype.toSorted",
+		"Array.prototype.toSpliced",
+		"Array.prototype.toString",
+		"Array.prototype.unshift",
+		"Array.prototype.with"
+	]
+};
+
+/**
+ * The compat entry of every member BCD lists of an owner the printer folds
+ * on, by its name as the tables above spell it.
+ * @returns {Map<string, BcdCompat>} the entries
+ */
+const collectBuiltInMembers = () => {
+	const builtins = bcd.javascript.builtins;
+	/** @type {Map<string, BcdCompat>} */
+	const members = new Map();
+	for (const key of Object.keys(builtins)) {
+		if (/^[a-z]/.test(key)) members.set(key, builtins[key].__compat);
+	}
+	for (const owner of ["Math", "Number", "String", "Array"]) {
+		for (const key of Object.keys(builtins[owner])) {
+			if (key === "__compat") continue;
+			const compat = builtins[owner][key].__compat;
+			const spec = String(compat.spec_url);
+			// The anchor names the prototype for a method or an instance property.
+			const onPrototype = /\.prototype[.-]|-instances-/i.test(spec);
+			members.set(`${owner}.${onPrototype ? "prototype." : ""}${key}`, compat);
+		}
+	}
+	return members;
+};
+
+/**
+ * The oldest Node version webpack supports, from its `engines` field.
+ * @returns {number[]} major, minor and patch
+ */
+const oldestSupportedNode = () =>
+	/** @type {string} */ (
+		/** @type {RegExpMatchArray} */ (
+			require("../package.json").engines.node.match(/\d+\.\d+\.\d+/)
+		)[0]
+	)
+		.split(".")
+		.map(Number);
+
+/**
+ * Whether one dotted version comes no later than another.
+ * @param {string} version a version as BCD writes it
+ * @param {number[]} limit major, minor and patch
+ * @returns {boolean} true when it does
+ */
+const isNoLaterThan = (version, limit) => {
+	const parts = version.split(".").map(Number);
+	for (let i = 0; i < limit.length; i++) {
+		const part = parts[i] || 0;
+		if (part !== limit[i]) return part < limit[i];
+	}
+	return true;
+};
+
+/**
+ * The built-ins `improve` folds, checked against BCD: each one present, on the
+ * owner it is spelled under, and in every Node webpack builds on.
+ * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, unicodeDependent: string[] }} the tables
+ */
+const collectFoldedBuiltIns = () => {
+	const members = collectBuiltInMembers();
+	const oldestNode = oldestSupportedNode();
+	/** @type {Map<string, string>} */
+	const placed = new Map();
+	/**
+	 * @param {string} name a member's name
+	 * @param {string} place where the tables put it
+	 */
+	const place = (name, place) => {
+		if (!members.has(name)) {
+			throw new Error(
+				`@mdn/browser-compat-data lists no built-in ${name}, which ${place} names`
+			);
+		}
+		if (placed.has(name)) {
+			throw new Error(`${name} is both ${placed.get(name)} and ${place}`);
+		}
+		placed.set(name, place);
+	};
+	/** @type {string[]} */
+	const globals = [];
+	/** @type {Record<string, string[]>} */
+	const statics = {};
+	/** @type {Record<string, string[]>} */
+	const methods = {};
+	for (const [owner, names] of Object.entries(FOLDED_BUILT_INS)) {
+		for (const name of names) {
+			const qualified = owner === "global" ? name : `${owner}.${name}`;
+			place(qualified, "FOLDED_BUILT_INS");
+			const support = /** @type {BcdCompat} */ (members.get(qualified)).support
+				.nodejs;
+			const added = (Array.isArray(support) ? support[0] : support)
+				.version_added;
+			if (typeof added !== "string" || !isNoLaterThan(added, oldestNode)) {
+				throw new Error(
+					`${qualified} is in Node from ${added} only, after the oldest Node webpack builds on, so folding it would tie the output to the build's Node`
+				);
+			}
+		}
+		if (owner === "global") {
+			globals.push(...names);
+		} else if (owner.endsWith(".prototype")) {
+			methods[owner.slice(0, -".prototype".length)] = names;
+		} else {
+			statics[owner] = names;
+		}
+	}
+	for (const [reason, names] of Object.entries(UNFOLDED_BUILT_INS)) {
+		for (const name of names) place(name, `left out as "${reason}"`);
+	}
+	const unplaced = [...members.keys()].filter((name) => !placed.has(name));
+	if (unplaced.length > 0) {
+		throw new Error(
+			`Place each built-in @mdn/browser-compat-data now lists in FOLDED_BUILT_INS or UNFOLDED_BUILT_INS in tooling/generate-js-data.js: ${unplaced.join(
+				", "
+			)}`
+		);
+	}
+	for (const name of UNICODE_DEPENDENT_METHODS) {
+		if (!FOLDED_BUILT_INS["String.prototype"].includes(name)) {
+			throw new Error(`${name} is not a folded string method`);
+		}
+	}
+	return {
+		globals,
+		statics,
+		methods,
+		unicodeDependent: UNICODE_DEPENDENT_METHODS
+	};
+};
+
+/**
+ * The built-ins `improve` folds, as a section of the printer's data module.
+ * @returns {string} its source
+ */
+const renderFoldedBuiltIns = () => `
+/**
+ * @typedef {object} FoldedBuiltIns
+ * @property {string[]} globals the global functions
+ * @property {Record<string, string[]>} statics the functions of each global object
+ * @property {Record<string, string[]>} methods the prototype methods of each constructor
+ * @property {string[]} unicodeDependent the string methods folded on ASCII only
+ */
+
+// The built-ins the \`improve\` phase evaluates on literals, by owner, as
+// tooling/generate-js-data.js checks them against @mdn/browser-compat-data.
+/**
+ * @returns {FoldedBuiltIns} the tables, fresh on each call
+ */
+const foldedBuiltIns = () => (${JSON.stringify(collectFoldedBuiltIns())});
+`;
+
 /**
  * terser's parser tables, as a section of the data module.
  * @returns {string} its source
@@ -763,21 +1151,22 @@ const renderTable = (name, description, ranges, base) =>
 
 /**
  * The header every generated module here opens with.
+ * @param {string} sources the packages its tables are read from, with versions
  * @returns {string} its source
  */
-const renderHeader = () => `/*
+const renderHeader = (sources) => `/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Alexander Akait @alexander-akait
 */
 
 // GENERATED by tooling/generate-js-data.js — do not edit.
-// Sources: acorn ${acorn.version}, terser ${
-	require("terser/package.json").version
-}. The tables read from terser are under its
+// Sources: ${sources}. The tables read from terser are under its
 // license, quoted in full in syntax-printer.js.
 
 "use strict";
 `;
+
+const TERSER_SOURCE = `terser ${require("terser/package.json").version}`;
 
 /**
  * Build the module the parser classifies with: the identifier ranges the
@@ -787,7 +1176,7 @@ const renderHeader = () => `/*
 const renderData = () => {
 	const tables = collectIdentifierTables();
 	const narrow = collectNarrowIdentifierTables();
-	return `${renderHeader()}
+	return `${renderHeader(`acorn ${acorn.version}, ${TERSER_SOURCE}`)}
 ${renderTable(
 	"IDENTIFIER_START_RANGES",
 	"Non-ASCII code points in the BMP that may start an identifier.",
@@ -844,9 +1233,11 @@ module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
  * minifying through it never loads these tables.
  * @returns {string} its source
  */
-const renderPrinterData =
-	() => `${renderHeader()}${renderNativeObjects()}${renderParserTables()}${renderDomProperties()}
+const renderPrinterData = () => `${renderHeader(
+	`${TERSER_SOURCE}, @mdn/browser-compat-data ${bcd.__meta.version}`
+)}${renderNativeObjects()}${renderParserTables()}${renderDomProperties()}${renderFoldedBuiltIns()}
 module.exports.domProperties = domProperties;
+module.exports.foldedBuiltIns = foldedBuiltIns;
 module.exports.nativeObjectTables = nativeObjectTables;
 module.exports.parserTables = parserTables;
 `;
