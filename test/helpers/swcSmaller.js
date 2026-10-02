@@ -11,7 +11,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc drops what nothing reads or what has no effect: unused variables and destructuring, side-effect-free `new Map()` and pure calls, an empty constructor",
 		[
-			"swc minifier: fixture/issues/10700/input.js",
 			"swc minifier: fixture/issues/11303/input.js",
 			"swc minifier: fixture/issues/11320/input.js",
 			"swc minifier: fixture/issues/12192/input.js",
@@ -168,7 +167,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: parameters/default_arguments",
 			"terser compress: reduce_vars/duplicate_lambda_defun_name_1",
 			"terser compress: reduce_vars/iife_assign",
-			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/inner_var_for_in_1",
 			"terser compress: reduce_vars/issue_1595_2",
 			"terser compress: reduce_vars/issue_1595_3",
@@ -442,9 +440,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc evaluates a built-in called on literals at build time (`toFixed`, `Object.keys`, `[…].join`, `String.fromCharCode`, `Math.*`, string methods), which terser leaves to run time",
 		[
 			"swc minifier: fixture/issues/11102/input.js",
-			"swc minifier: fixture/issues/11545/input.js",
-			"swc minifier: fixture/issues/12195/controls/input.js",
-			"swc minifier: fixture/issues/12196/input.js",
 			"swc minifier: fixture/issues/12197/input.js",
 			"swc minifier: fixture/issues/12199/template/input.js",
 			"swc minifier: fixture/issues/12200/1/input.js",
@@ -460,7 +455,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/6957/2/input.js",
 			"swc minifier: fixture/issues/7714/1/input.js",
 			"swc minifier: fixture/issues/8706/input.js",
-			"swc minifier: fixture/issues/9007/input.js",
 			"swc minifier: fixture/issues/9741_multiple_methods/input.js",
 			"swc minifier: fixture/issues/non-finite-number-method-call/input.js",
 			"swc minifier: fixture/issues/string-from-char-code-uint16/input.js",
@@ -577,7 +571,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/buble/1/input.js",
 			"swc minifier: fixture/issues/regexp/1/input.js",
 			"swc minifier: fixture/issues/vercel/001/input.js",
-			"swc minifier: fixture/next/feedback-regex/input.js",
 			"swc minifier: fixture/projects/backbone/18/input.js",
 			"swc minifier: fixture/projects/react/3/input.js",
 			"swc minifier: pass-1/regexp/1/input.js",
