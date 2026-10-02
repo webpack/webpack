@@ -1109,17 +1109,35 @@ const compareRenders = async ({ pairs, width }) => {
 	const measure = async () => {
 		const doc = /** @type {Document} */ (frame.contentDocument);
 		await settled(doc.fonts.ready);
-		// WHY: Chrome boxes a blocked `<img>` with no `alt` 0x0 or as a 16x16 icon
-		// apparently at random — measured in CI on srcset.html, both orders at once
-		// — while one with an empty `alt` represents nothing, so both copies get one.
-		// Which had one is compared on its own, so a dropped `alt=""` still shows.
+		// WHY: how Chrome boxes a broken `<img>` with no `alt` follows how far its
+		// fetch got — 0x0 where none was made, a 16x16 icon where one came back
+		// undecodable — so on a page whose images cannot load it is timing, not the
+		// printer, that decides; measured in CI on srcset.html, both orders at once.
+		// An empty `alt` makes one represent nothing, but only where it is there as
+		// the element breaks: setting it afterwards leaves the icon, so each image
+		// is loaded again under it. Which had one is compared on its own, so a
+		// dropped `alt=""` still shows.
 		/** @type {number[]} */
 		const withoutAlt = [];
+		/** @type {Promise<unknown>[]} */
+		const breaking = [];
 		for (const [at, image] of [...doc.images].entries()) {
 			if (image.hasAttribute("alt")) continue;
 			withoutAlt.push(at);
-			image.setAttribute("alt", "");
+			// A clone runs the image update algorithm again, whatever names the
+			// source — an `src`, a `srcset` or a `<source>` beside it.
+			const under = /** @type {HTMLImageElement} */ (image.cloneNode(true));
+			under.setAttribute("alt", "");
+			image.replaceWith(under);
+			if (under.complete) continue;
+			breaking.push(
+				new Promise((resolve) => {
+					under.addEventListener("load", resolve, { once: true });
+					under.addEventListener("error", resolve, { once: true });
+				})
+			);
 		}
+		if (breaking.length > 0) await settled(Promise.all(breaking));
 		// A transition or animation would be read part way through.
 		for (const running of doc.getAnimations()) running.cancel();
 		const root = /** @type {HTMLElement} */ (doc.documentElement);
