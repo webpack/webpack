@@ -3576,6 +3576,33 @@ type CommentJavascriptParser = CommentImport & {
 };
 
 /**
+ * How one language writes a comment, and which it keeps where nothing is extracted.
+ */
+declare interface CommentSyntax {
+	/**
+	 * what opens a comment, e.g. `/*`
+	 */
+	open: string;
+
+	/**
+	 * what closes it
+	 */
+	close: string;
+
+	/**
+	 * what the `comments: "some"` level keeps
+	 */
+	some: (comment: string) => boolean;
+
+	/**
+	 * what is kept when `comments` is unset
+	 */
+	unstated: (comment: string) => boolean;
+}
+type CommentsOption =
+	string | boolean | RegExp | ((comment: string) => boolean);
+
+/**
  * Defines the common js import settings type used by this module.
  */
 declare interface CommonJsImportSettings {
@@ -10142,6 +10169,36 @@ type ExternalsType =
 	| "asset-url"
 	| "css-import"
 	| "css-url";
+declare interface ExtractCommentsObject {
+	/**
+	 * condition which comments need to be expected
+	 */
+	condition?:
+		| boolean
+		| RegExp
+		| "all"
+		| "some"
+		| ((
+				astNode: any,
+				comment: {
+					value: string;
+					type: "comment1" | "comment2" | "comment3" | "comment4";
+					pos: number;
+					line: number;
+					col: number;
+				}
+		  ) => boolean);
+
+	/**
+	 * filename for extracted comments
+	 */
+	filename?: string | TemplatePathFn;
+
+	/**
+	 * banner in filename for extracted comments
+	 */
+	banner?: string | boolean | ((commentsFile: string) => string);
+}
 
 /**
  * Defines the fs implementation type used by this module.
@@ -22039,6 +22096,16 @@ declare interface OptimizationMinimizeCss {
 	dropOverriddenDeclarations?: boolean;
 
 	/**
+	 * Move comments out of a `.css` asset into the `[file].LICENSE.txt` the minimizer plugin writes for JavaScript, leaving a one-line banner pointing at it. Takes terser's values: `true` or `"some"` (the default) a `/*!` banner and a comment annotated `@preserve` or `@lic` — terser's `some` bar IE's `@cc_on`, which is left alone, `"all"` every comment, a RegExp or a string read as one the comments it matches, and a function the comments it returns `true` for, asked with the comment's `value` (its text without the delimiters), `line` (from 1) and `col` (from 0). `false` leaves them in the stylesheet, where `comments` decides which survive. A stylesheet webpack minifies inside another document — an inline `<style>`, a `style=""` — keeps them, having no file of its own to point from.
+	 * @since 5.112.0
+	 */
+	extractComments?:
+		| string
+		| boolean
+		| RegExp
+		| ((comment: { value: string; line: number; col: number }) => boolean);
+
+	/**
 	 * Write a name that matches ASCII case-insensitively in lowercase: an at-rule name, a property name, a pseudo-class or pseudo-element name, a function name, a unit, and a keyword standing in a value whose grammar takes keywords alone. `@MEDIA`, `COLOR`, `:NTH-CHILD`, `URL(`, `1PX` and `currentColor` become `@media`, `color`, `:nth-child`, `url(`, `1px` and `currentcolor`. On by default, and exact: CSS matches every one of these ASCII case-insensitively, so the fold names the same thing. What it never touches is a name the author chose — a custom property, a custom ident such as an animation or grid-area name, an id, a class, a type selector, an attribute's value, or anything inside a substituted value. `@charset` is left as written, being read as bytes rather than matched, and `!important` is always written in lowercase because the printer writes the keyword rather than copying it.
 	 * @since 5.111.0
 	 */
@@ -22175,6 +22242,16 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	comments?: string | boolean | RegExp | ((comment: string) => boolean);
+
+	/**
+	 * Move comments out of an `.html` asset into the `[file].LICENSE.txt` the minimizer plugin writes for JavaScript, leaving a `<!-- … -->` banner at the end of the document pointing at it, so the doctype stays first. Takes the values `minimize.css.extractComments` takes: `true` or `"some"` (the default) a comment opening with `!` or annotated `@preserve` or `@lic` — terser's `some` bar IE's `@cc_on`, which is left alone, `"all"` every comment, a RegExp or a string read as one the comments it matches, and a function the comments it returns `true` for, asked with the comment's `value` (its text without the delimiters), `line` (from 1) and `col` (from 0). `false` leaves them in the document, where `comments` decides which survive. A conditional comment, a server-side include and a `<?…?>` template directive are code and are never taken, and a document nested in another — an `<iframe srcdoc>`, a conditional comment's body — keeps its comments.
+	 * @since 5.112.0
+	 */
+	extractComments?:
+		| string
+		| boolean
+		| RegExp
+		| ((comment: { value: string; line: number; col: number }) => boolean);
 
 	/**
 	 * Print a run of adjacent `<script>` elements as one, joined by a newline and a `;`. Only bare ones fold — any attribute at all, a `src`, `type`, `nonce`, `async` or `id` among them, says the two are not interchangeable with one — and only where the print writes the bodies itself, so a `<script>` that `output.html.inline` fills in after the print is left alone. A body is left alone too wherever appending it would change what it means: one still inside a string, template or block comment would swallow the next, and a directive prologue, a hashbang or a leading `-->` mean what they do only at a start the appended body no longer has. Off by default: it removes elements, so `document.scripts`, a `script:nth-child()` selector and `querySelectorAll("script").length` all read a different document; a later body's `var` and `function` declarations become visible to the bodies before it; and a body that throws takes the rest of its run with it rather than only itself, while one that does not parse takes the whole run, its own code included.
@@ -33670,6 +33747,15 @@ declare namespace exports {
 				convertLengthUnits?: boolean;
 				convertApproximateColors?: boolean;
 				dropOverriddenDeclarations?: boolean;
+				extractComments?:
+					| string
+					| boolean
+					| RegExp
+					| ((comment: {
+							value: string;
+							line: number;
+							col: number;
+					  }) => boolean);
 				mergeDistantRules?: boolean;
 				rewriteCustomProperties?: boolean;
 				unusedSymbols?: string[];
@@ -33682,10 +33768,27 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-			} & CssTransformOptions
+			} & CssTransformOptions,
+			extractComments?:
+				| boolean
+				| RegExp
+				| "all"
+				| "some"
+				| ((
+						astNode: any,
+						comment: {
+							value: string;
+							type: "comment1" | "comment2" | "comment3" | "comment4";
+							pos: number;
+							line: number;
+							col: number;
+						}
+				  ) => boolean)
+				| ExtractCommentsObject
 		): Promise<{
 			code: string;
 			map?: SourceMap;
+			extractedComments?: string[];
 			warnings?: (string | Error)[];
 			errors?: (string | Error)[];
 		}>;
@@ -34186,6 +34289,15 @@ declare namespace exports {
 					pseudoClasses?: { [index: string]: string };
 				};
 				minifyConditionalComments?: boolean;
+				extractComments?:
+					| string
+					| boolean
+					| RegExp
+					| ((comment: {
+							value: string;
+							line: number;
+							col: number;
+					  }) => boolean);
 				renderEmbeddedSource?: (
 					source: string,
 					info: { type: string; hostType: string; as?: string }
@@ -34194,9 +34306,26 @@ declare namespace exports {
 					| string
 					| EmbeddedSourceResult
 					| Promise<undefined | string | EmbeddedSourceResult>;
-			}
+			},
+			extractComments?:
+				| boolean
+				| RegExp
+				| "all"
+				| "some"
+				| ((
+						astNode: any,
+						comment: {
+							value: string;
+							type: "comment1" | "comment2" | "comment3" | "comment4";
+							pos: number;
+							line: number;
+							col: number;
+						}
+				  ) => boolean)
+				| ExtractCommentsObject
 		): Promise<{
 			code: string;
+			extractedComments?: string[];
 			warnings?: (string | Error)[];
 			errors?: (string | Error)[];
 		}>;
@@ -34205,6 +34334,8 @@ declare namespace exports {
 			export let getTypes: () => string[];
 			export let getEmbeddedTypes: () => string[];
 			export let filter: (name: string) => boolean;
+			export let formatBanner: (banner: string) => string;
+			export let getBannerPosition: () => "end";
 		}
 		export namespace syntax {
 			export namespace parser {
@@ -34875,6 +35006,51 @@ declare namespace exports {
 			export let readEmbeddedDataURI: (
 				uri: string
 			) => null | { parsed: ParsedDataURI; type: string; payload: string };
+		}
+		export namespace extractComments {
+			export let extractComments: (
+				option:
+					| undefined
+					| string
+					| boolean
+					| RegExp
+					| ((
+							astNode: any,
+							comment: {
+								value: string;
+								type: "comment1" | "comment2" | "comment3" | "comment4";
+								pos: number;
+								line: number;
+								col: number;
+							}
+					  ) => boolean)
+					| ExtractCommentsObject
+					| ((comment: {
+							value: string;
+							line: number;
+							col: number;
+					  }) => boolean),
+				comments:
+					| undefined
+					| string
+					| boolean
+					| RegExp
+					| ((comment: string) => boolean),
+				syntax: CommentSyntax
+			) =>
+				| undefined
+				| {
+						comments: (
+							comment: string,
+							line: number,
+							column: number
+						) => boolean;
+						extracted: string[];
+				  };
+			export let keepCondition: (
+				comments: CommentsOption,
+				some: (comment: string) => boolean
+			) => (comment: string) => boolean;
 		}
 		export { LazySet, RequestShortener };
 	}

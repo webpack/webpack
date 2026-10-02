@@ -129,5 +129,13 @@ Array [
   "/*! test_font_face: @font-face {unicode-range: U+100000-10FFFF;} */@font-face{unicode-range:U+10????}",
   "/*! test_font_face: @font-face {unicode-range: U+1e1e?;} */@font-face{unicode-range:U+1e1e?}",
   "/*! test_font_face: @font-face {unicode-range: u+????, U+1????, U+10????;} */@font-face{unicode-range:u+????,U+1????,U+10????}",
+  "/*! corpora: .foo { background-image: linear-gradient(to right, black, transparent) } */.foo{background-image:linear-gradient(90deg,#000,#0000)}",
+  "/*! corpora: .foo { background-image: linear-gradient(to left, black, transparent) } */.foo{background-image:linear-gradient(270deg,#000,#0000)}",
+  "/*! corpora: .foo { background-image: linear-gradient(to top, white, transparent) } */.foo{background-image:linear-gradient(#0000,#fff)}",
+  "/*! corpora: .foo { background-image: linear-gradient(to top right, black, white) } */.foo{background-image:linear-gradient(to top right,#000,#fff)}",
+  "/*! corpora: .foo { mask-image: radial-gradient(circle at center, transparent 57%, currentColor 60%) } */.foo{mask-image:radial-gradient(circle,#0000 57%,currentColor 60%)}",
+  "/*! corpora: .foo { background: conic-gradient(from 90deg at 50% 50%, black, white) } */.foo{background:conic-gradient(from 90deg,#000,#fff)}",
+  "/*! corpora: .foo { box-shadow: 0 0 currentcolor } */.foo{box-shadow:0 0}",
+  "/*! corpora: .foo { text-shadow: 1px 1px 2px currentColor, 0 0 1px red } */.foo{text-shadow:1px 1px 2px,0 0 1px red}",
 ]
 `;

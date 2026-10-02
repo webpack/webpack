@@ -10,7 +10,10 @@ module.exports = {
 		parser: { html: { sources: false } }
 	},
 	optimization: {
-		minimize: { html: { removeEmptyAttributes: true } },
+		minimize: {
+			css: { extractComments: false },
+			html: { removeEmptyAttributes: true }
+		},
 		minimizer: ["..."]
 	},
 	experiments: { html: true }

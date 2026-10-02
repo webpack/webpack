@@ -21,6 +21,7 @@ module.exports = {
 					// used it: each `<script>` and handler reaches it with an `as` naming
 					// its production, which a plugin before 5.10.0 handed to terser as is.
 					new MinimizerPlugin({
+						extractComments: false,
 						test: /\.(?:[cm]?js|css|html)(\?.*)?$/i,
 						minify: [MinimizerPlugin.terserMinify, cssMinify, htmlMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}, {}]

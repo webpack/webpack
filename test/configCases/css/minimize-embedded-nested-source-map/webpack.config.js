@@ -22,6 +22,7 @@ module.exports = {
 			{
 				apply: (compiler) => {
 					new MinimizerPlugin({
+						extractComments: false,
 						test: /\.(?:[cm]?js|css|svg)(\?.*)?$/i,
 						minify: [MinimizerPlugin.terserMinify, cssMinify, svgMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}, {}]

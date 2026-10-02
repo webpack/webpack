@@ -11091,6 +11091,132 @@ describe("htmlMinify export", () => {
 		// `</p>` is an optional end tag, so minifying drops it.
 		expect(code).toMatchInlineSnapshot('"<p class=x>  a  "');
 	});
+
+	it("writes the extracted comments' banner as an HTML comment, at the end", () => {
+		const htmlMinify = require("../../lib/html/htmlMinify");
+
+		expect(htmlMinify.formatBanner("see a.LICENSE.txt")).toBe(
+			"<!-- see a.LICENSE.txt -->"
+		);
+		expect(htmlMinify.getBannerPosition()).toBe("end");
+	});
+
+	describe("extractComments", () => {
+		const page =
+			"<!--! one --><p>a</p><!-- plain --><!-- @license two -->" +
+			"<!--! one --><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->";
+
+		/**
+		 * @param {EXPECTED_ANY} extractComments the plugin's option
+		 * @param {Record<string, EXPECTED_ANY>=} options `minimize.html`
+		 * @param {string=} html the document
+		 * @returns {Promise<{ code: string, extractedComments?: string[] }>} what the minifier answers
+		 */
+		const run = async (extractComments, options = {}, html = page) => {
+			const htmlMinify = require("../../lib/html/htmlMinify");
+
+			const { code, extractedComments } = await htmlMinify(
+				{ "a.html": html },
+				undefined,
+				options,
+				extractComments
+			);
+			return { code, extractedComments };
+		};
+		// A conditional comment and a server-side include are code, never taken.
+		const rest =
+			"<p>a</p><!--[if IE]><b>x</b><![endif]--><!--#include virtual=x -->";
+
+		it.each([
+			[true, ["<!--! one -->", "<!-- @license two -->"]],
+			["some", ["<!--! one -->", "<!-- @license two -->"]],
+			[
+				"all",
+				["<!--! one -->", "<!-- plain -->", "<!-- @license two -->"]
+			],
+			[/license/, ["<!-- @license two -->"]],
+			["^!", ["<!--! one -->"]],
+			[
+				(/** @type {{ value: string }} */ comment) =>
+					comment.value.includes("one"),
+				["<!--! one -->"]
+			]
+		])(
+			"takes out what `minimize.html.extractComments: %p` names, over the plugin's",
+			async (extractComments, extracted) => {
+				expect(await run(false, { extractComments })).toEqual({
+					code: rest,
+					extractedComments: extracted
+				});
+			}
+		);
+
+		it("leaves IE's `@cc_on` to `comments`", async () => {
+			expect(
+				await run(true, { comments: "cc_on" }, "<!--@cc_on--><p>a</p>")
+			).toEqual({
+				code: "<!--@cc_on--><p>a",
+				extractedComments: undefined
+			});
+		});
+
+		it("reads the plugin's option where `minimize.html` sets none", async () => {
+			expect(await run({ condition: /license/ })).toEqual({
+				code: rest,
+				extractedComments: ["<!-- @license two -->"]
+			});
+		});
+
+		it("keeps the comments `comments` names that are not taken", async () => {
+			expect(await run(true, { comments: "plain" })).toEqual({
+				code: "<p>a</p><!-- plain -->" + rest.slice(8),
+				extractedComments: ["<!--! one -->", "<!-- @license two -->"]
+			});
+		});
+
+		it.each([
+			["the plugin asks for none", false, {}],
+			["the plugin states nothing", undefined, {}],
+			["`minimize.html` asks for none", true, { extractComments: false }]
+		])("takes none where %s", async (_name, extractComments, options) => {
+			expect(await run(extractComments, options)).toEqual({
+				code: rest,
+				extractedComments: undefined
+			});
+		});
+
+		it("hands a predicate the comment's text, line and column", async () => {
+			/** @type {{ value: string, line: number, col: number }[]} */
+			const seen = [];
+			await run(
+				false,
+				{
+					extractComments: (
+						/** @type {{ value: string, line: number, col: number }} */ comment
+					) => {
+						seen.push(comment);
+						return false;
+					}
+				},
+				"<!--! a -->\n<p>a</p>\n\t<!-- b --><p>b</p> <!-- c -->\n"
+			);
+			expect(seen).toEqual([
+				{ value: "! a ", line: 1, col: 0 },
+				{ value: " b ", line: 3, col: 1 },
+				{ value: " c ", line: 3, col: 20 }
+			]);
+		});
+
+		it("leaves a nested document's comments to it", async () => {
+			const { code, extractedComments } = await run(
+				true,
+				{ comments: "all" },
+				'<!--! top --><iframe srcdoc="<!--! inner --><p>x</p>"></iframe>'
+			);
+			expect(extractedComments).toEqual(["<!--! top -->"]);
+			expect(code).toContain("inner");
+		});
+	});
 });
 
 describe("SourceProcessor — attribute rewrites as switches", () => {

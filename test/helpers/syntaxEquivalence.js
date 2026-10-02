@@ -353,12 +353,69 @@ const installHelpers = (generics) => {
 				GENERIC_FAMILIES.has(name.toLowerCase()) ? quoted : name
 		);
 
+	// CSS Images 3 §3.1: a side is the angle pointing at it, and a gradient run
+	// bottom to top is its stops read in reverse.
+	const SIDE_ANGLES = new Map([
+		["to right", "90deg"],
+		["to left", "270deg"],
+		["to top", "0deg"]
+	]);
+
+	/**
+	 * Every unprefixed linear gradient with its direction named once: a side as
+	 * its angle, and `0deg` over bare color stops as those stops reversed.
+	 * @param {string} value a value
+	 * @returns {string} the same value, each gradient's direction named once
+	 */
+	const directGradients = (value) => {
+		const opening = /(^|[^\w-])(?:repeating-)?linear-gradient\(/gi;
+		let out = "";
+		let from = 0;
+		let match;
+		while ((match = opening.exec(value)) !== null) {
+			const open = match.index + match[0].length - 1;
+			/** @type {string[]} */
+			const args = [];
+			let depth = 0;
+			let start = open + 1;
+			let close = -1;
+			for (let i = open; i < value.length; i++) {
+				const ch = value[i];
+				if (ch === "(") {
+					depth++;
+				} else if (ch === ")" && --depth === 0) {
+					close = i;
+					break;
+				} else if (ch === "," && depth === 1) {
+					args.push(value.slice(start, i).trim());
+					start = i + 1;
+				}
+			}
+			if (close === -1) break;
+			args.push(value.slice(start, close).trim());
+			const angle = SIDE_ANGLES.get(args[0].toLowerCase());
+			if (angle !== undefined) args[0] = angle;
+			// A stop with a position has a space outside its color's parentheses.
+			const bare = args
+				.slice(1)
+				.every((stop) => !/^[\d.]/.test(stop) && !/\s(?![^(]*\))/.test(stop));
+			if (args[0] === "0deg" && bare) {
+				args.shift();
+				args.reverse();
+			}
+			out += `${value.slice(from, open + 1)}${args.join(", ")})`;
+			from = close + 1;
+			opening.lastIndex = from;
+		}
+		return out + value.slice(from);
+	};
+
 	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
 	 * is the curve it stands for, `jump-start` names the step position `start`
-	 * does, and a gradient's last color stop is at the end of the gradient line
-	 * whether or not it says so (CSS Images 3 §3.4.3). A two-position stop needs
-	 * nothing here: the engine expands it into the two stops itself.
+	 * does, a gradient's last color stop is at the end of the gradient line
+	 * whether or not it says so (CSS Images 3 §3.4.3), and a direction is one
+	 * flow. A two-position stop needs nothing here: the engine expands it itself.
 	 * @param {string} value a value
 	 * @returns {string} the same value, named once
 	 */
@@ -372,9 +429,11 @@ const installHelpers = (generics) => {
 		}
 		// Anchored left: a prefixed gradient folds under its own rules, so
 		// canonicalizing one would hide a fold the printer must not make.
-		return named.replace(
-			/(^|[^\w-])((?:repeating-)?(?:linear|radial|conic)-gradient\([^()]*(?:\([^()]*\)[^()]*)*)\s(?:100%|360deg)\)/gi,
-			"$1$2)"
+		return directGradients(
+			named.replace(
+				/(^|[^\w-])((?:repeating-)?(?:linear|radial|conic)-gradient\([^()]*(?:\([^()]*\)[^()]*)*)\s(?:100%|360deg)\)/gi,
+				"$1$2)"
+			)
 		);
 	};
 

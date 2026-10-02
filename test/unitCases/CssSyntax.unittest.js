@@ -5706,7 +5706,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("a shadow's trailing zero lengths", () => {
+	describe("what a shadow's notation implies", () => {
 		it.each([
 			[
 				"a{box-shadow:0 0 0 0 #22242626 inset}",
@@ -5727,6 +5727,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{box-shadow:0px 0px 0px 1px red inset,0px 0em 0px 0px blue inset}",
 				"a{box-shadow:0 0 0 1px red inset,0 0 blue inset}"
+			],
+			// CSS Backgrounds 3 §7.1: an absent color is `currentcolor`.
+			["a{box-shadow:0 0 2px currentcolor}", "a{box-shadow:0 0 2px}"],
+			["a{text-shadow:CurrentColor 1px 1px}", "a{text-shadow:1px 1px}"],
+			[
+				"a{box-shadow:inset 0 0 0 0 currentcolor,0 0 red}",
+				"a{box-shadow:inset 0 0,0 0 red}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -5747,6 +5754,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{box-shadow:inset 0 0 0 1px#0000000d}"
 			],
 			["the value is a keyword", "a{box-shadow:none}"],
+			[
+				"a substitution may hold the color",
+				"a{box-shadow:0 0 var(--c,currentcolor)}"
+			],
 			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
 			// `0%` is a percentage, which a shadow's `<length>` slots do not take.
 			["a percentage is no zero length", "a{box-shadow:1px 1px 0%0%red}"],
@@ -6284,10 +6295,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
+			// A corner is no fixed angle: it follows the box's aspect ratio.
 			[
-				"the direction is not the default",
-				"a{background:linear-gradient(to right,#fff,#000)}"
+				"the direction is a corner",
+				"a{background:linear-gradient(to top right,#fff,#000)}"
 			],
+			// `to bottom` is shorter as nothing, `90deg` shorter than this already.
+			["the angle is already the shorter", "a{background:linear-gradient(90deg,#fff,#000)}"],
 			// A prefixed gradient measures its angle the other way round.
 			[
 				"the gradient is prefixed",
@@ -6302,6 +6316,137 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a linear gradient's side keyword", () => {
+		it.each([
+			// CSS Images 3 §3.1: each side is the angle pointing at it.
+			[
+				"a{background:linear-gradient(to right,red,blue)}",
+				"a{background:linear-gradient(90deg,red,blue)}"
+			],
+			// The default's opposite with only bare colors: the stops in reverse.
+			[
+				"a{background:linear-gradient(to top,red,blue,green)}",
+				"a{background:linear-gradient(green,blue,red)}"
+			],
+			[
+				"a{background:repeating-linear-gradient(0deg,white,transparent)}",
+				"a{background:repeating-linear-gradient(#0000,#fff)}"
+			],
+			// A position or a hint would have to be mirrored: the angle instead.
+			[
+				"a{background:linear-gradient(to top,red 10%,blue)}",
+				"a{background:linear-gradient(0deg,red 10%,blue)}"
+			],
+			[
+				"a{background:linear-gradient(to top,red,50%,blue)}",
+				"a{background:linear-gradient(0deg,red,50%,blue)}"
+			],
+			[
+				"a{background:linear-gradient(to top,#ff0,#000 40%,red)}",
+				"a{background:linear-gradient(0deg,#ff0,#000 40%,red)}"
+			],
+			[
+				"a{background:linear-gradient(to top,red,calc(30%),blue)}",
+				"a{background:linear-gradient(0deg,red,30%,blue)}"
+			],
+			[
+				"a{background:linear-gradient(to top,rgb(1 2 3),currentcolor)}",
+				"a{background:linear-gradient(currentcolor,#010203)}"
+			],
+			[
+				"a{background:linear-gradient(TO  LEFT,red,blue)}",
+				"a{background:linear-gradient(270deg,red,blue)}"
+			],
+			[
+				"a{background:repeating-linear-gradient(to right,red,blue 10px)}",
+				"a{background:repeating-linear-gradient(90deg,red,blue 10px)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// A prefixed gradient's legacy keyword names where it starts from.
+			[
+				"the gradient is prefixed",
+				"a{background:-webkit-linear-gradient(left,red,blue)}"
+			],
+			[
+				"the gradient is radial",
+				"a{background:radial-gradient(circle at right,red,blue)}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a radial or conic gradient's default position", () => {
+		it.each([
+			// CSS Images 3 §3.2: with no `at <position>` the gradient is centered.
+			[
+				"a{background:radial-gradient(circle at center,red,blue)}",
+				"a{background:radial-gradient(circle,red,blue)}"
+			],
+			[
+				"a{background:radial-gradient(at 50% 50%,red,blue)}",
+				"a{background:radial-gradient(red,blue)}"
+			],
+			[
+				"a{background:repeating-radial-gradient(10px 20px AT Center Center,red,blue 5px)}",
+				"a{background:repeating-radial-gradient(10px 20px,red,blue 5px)}"
+			],
+			[
+				"a{background:conic-gradient(from 90deg at 50%,red,blue)}",
+				"a{background:conic-gradient(from 90deg,red,blue)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the position is elsewhere", "a{background:radial-gradient(circle at top,red,blue)}"],
+			[
+				"a substitution names it",
+				"a{background:radial-gradient(circle at var(--p),red,blue)}"
+			],
+			["the gradient is linear", "a{background:linear-gradient(red,blue)}"],
+			["there is no other argument", "a{background:radial-gradient(at center)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a named color among a gradient's arguments", () => {
+		it.each([
+			[
+				"a{background:linear-gradient(black,white 50%)}",
+				"a{background:linear-gradient(#000,#fff 50%)}"
+			],
+			[
+				"a{mask-image:radial-gradient(circle,black,transparent)}",
+				"a{mask-image:radial-gradient(circle,#000,#0000)}"
+			],
+			[
+				"a{background:conic-gradient(from 0deg,Black,white)}",
+				"a{background:conic-gradient(from 0deg,#000,#fff)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// A custom property's value is read back as written.
+			["the value is a custom property's", "a{--x:linear-gradient(black,white)}"],
+			[
+				"the gradient is prefixed",
+				"a{background:-webkit-linear-gradient(top,black,white)}"
+			],
+			["the function is no gradient", "a{width:calc(black)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a gradient's color stops", () => {
 		it.each([
 			// CSS Images 3 §3.4.3 puts the last stop at 100% when it has none.
@@ -6311,7 +6456,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			[
 				"a{background:linear-gradient(to right,red,blue 100%)}",
-				"a{background:linear-gradient(to right,red,blue)}"
+				"a{background:linear-gradient(90deg,red,blue)}"
 			],
 			// Both folds run: dropping the default direction must not cost the stop.
 			[
@@ -12707,6 +12852,185 @@ describe("cssMinify export", () => {
 		});
 
 		expect(code).toBe('a:before{content:"é"}');
+	});
+
+	describe("extractComments", () => {
+		const sheet =
+			"/*! one */a{color:red}/* plain */b{color:blue}/*! one */" +
+			"/* @license two */c{margin:0}/*# sourceMappingURL=a.map */";
+
+		/**
+		 * @param {EXPECTED_ANY} extractComments the plugin's option
+		 * @param {Record<string, EXPECTED_ANY>=} options `minimize.css`
+		 * @returns {Promise<{ code: string, extractedComments?: string[] }>} what the minifier answers
+		 */
+		const run = async (extractComments, options = {}) => {
+			const cssMinify = require("../../lib/css/cssMinify");
+
+			const { code, extractedComments } = await cssMinify(
+				{ "a.css": sheet },
+				undefined,
+				options,
+				extractComments
+			);
+			return { code, extractedComments };
+		};
+
+		it.each([
+			// The plugin's default: a banner or license, once each, and the pragma stays.
+			[
+				true,
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/*! one */", "/* @license two */"]
+			],
+			[
+				{},
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/*! one */", "/* @license two */"]
+			],
+			[
+				/license/,
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/* @license two */"]
+			],
+			[
+				"^!",
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/*! one */"]
+			],
+			[
+				{ condition: "all" },
+				"a{color:red}b{color:blue}c{margin:0}",
+				[
+					"/*! one */",
+					"/* plain */",
+					"/* @license two */",
+					"/*# sourceMappingURL=a.map */"
+				]
+			],
+			[
+				{
+					condition: (/** @type {{ value: string }} */ comment) =>
+						comment.value.includes("two")
+				},
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/* @license two */"]
+			],
+			// Extracting with a condition nothing meets still leaves the rest out.
+			[
+				{ condition: false },
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				undefined
+			]
+		])("takes out what %p names", async (extractComments, code, extracted) => {
+			expect(await run(extractComments)).toEqual({
+				code,
+				extractedComments: extracted
+			});
+		});
+
+		it.each([
+			[
+				true,
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/*! one */", "/* @license two */"]
+			],
+			[
+				"all",
+				"a{color:red}b{color:blue}c{margin:0}",
+				[
+					"/*! one */",
+					"/* plain */",
+					"/* @license two */",
+					"/*# sourceMappingURL=a.map */"
+				]
+			],
+			[
+				/license/,
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/* @license two */"]
+			],
+			[
+				(/** @type {{ value: string }} */ comment) =>
+					comment.value.includes("one"),
+				"a{color:red}b{color:blue}c{margin:0}/*# sourceMappingURL=a.map */",
+				["/*! one */"]
+			]
+		])(
+			"takes out what `minimize.css.extractComments: %p` names, over the plugin's",
+			async (extractComments, code, extracted) => {
+				expect(await run(false, { extractComments })).toEqual({
+					code,
+					extractedComments: extracted
+				});
+			}
+		);
+
+		it.each([
+			["the plugin asks for none", false, {}],
+			["the plugin states nothing", undefined, {}],
+			["`minimize.css` asks for none", true, { extractComments: false }]
+		])("leaves them in place where %s", async (_name, extractComments, options) => {
+			expect(await run(extractComments, options)).toEqual({
+				code: "/*! one */a{color:red}b{color:blue}/*! one *//* @license two */c{margin:0}/*# sourceMappingURL=a.map */",
+				extractedComments: undefined
+			});
+		});
+
+		// cspell:ignore licence
+		it("hands a predicate the comment's text, line and column", async () => {
+			const cssMinify = require("../../lib/css/cssMinify");
+
+			/** @type {{ value: string, line: number, col: number }[]} */
+			const seen = [];
+			await cssMinify(
+				{ "a.css": "/*! a */\n.a{}\n\t/* b */\n.b{} /* c */\n" },
+				undefined,
+				{
+					extractComments: (
+						/** @type {{ value: string, line: number, col: number }} */ comment
+					) => {
+						seen.push(comment);
+						return false;
+					}
+				}
+			);
+			expect(seen).toEqual([
+				{ value: "! a ", line: 1, col: 0 },
+				{ value: " b ", line: 3, col: 1 },
+				{ value: " c ", line: 4, col: 5 }
+			]);
+		});
+
+		it("takes what terser's own `some` takes, bar IE's `@cc_on`", async () => {
+			const cssMinify = require("../../lib/css/cssMinify");
+
+			const { code, extractedComments } = await cssMinify(
+				{
+					"a.css":
+						"/**! three */a{color:red}/* @licence four */b{color:blue}" +
+						"/* @cc_on */c{margin:0}/* plain */"
+				},
+				undefined,
+				{},
+				"some"
+			);
+			expect(code).toBe("a{color:red}b{color:blue}c{margin:0}");
+			expect(extractedComments).toEqual(["/**! three */", "/* @licence four */"]);
+		});
+
+		it.each([
+			[true, "/* plain */"],
+			["all", "/* plain */"],
+			[false, ""],
+			["plain", "/* plain */"],
+			[/plain/, "/* plain */"],
+			[(/** @type {string} */ comment) => comment.includes("plain"), "/* plain */"]
+		])("keeps what `comments: %p` keeps of the rest", async (comments, kept) => {
+			const { code } = await run(true, { comments });
+			expect(code).toContain(`a{color:red}${kept}b{color:blue}`);
+			expect(code).not.toContain("/*! one */");
+		});
 	});
 });
 

@@ -11,9 +11,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
-			css: {
-				lowerUnsupported: false
-			}
+			css: { extractComments: false, lowerUnsupported: false }
 		},
 		minimizer: ["..."]
 	},

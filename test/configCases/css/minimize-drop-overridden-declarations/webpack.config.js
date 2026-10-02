@@ -11,9 +11,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
-			css: {
-				dropOverriddenDeclarations: true
-			}
+			css: { extractComments: false, dropOverriddenDeclarations: true }
 		},
 		// `"..."` keeps the default minimizer, which is what reads
 		// `optimization.minimize.css` and hands it to `cssMinify`.

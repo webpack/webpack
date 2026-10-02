@@ -11,6 +11,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: {
+			css: { extractComments: false },
 			html: { removeEmptyElements: true, removeEmptyAttributes: true }
 		},
 		minimizer: ["..."]
