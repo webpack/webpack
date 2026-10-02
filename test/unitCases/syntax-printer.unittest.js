@@ -1031,7 +1031,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @param {EXPECTED_OBJECT} settings its options
 			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
 			 */
@@ -1129,7 +1129,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @param {import("terser").MinifyOptions} settings its options
 			 * @returns {Promise<{ code: string | undefined } | { error: string }>} its result, or the error it threw
 			 */
@@ -1190,7 +1190,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @returns {Promise<string | undefined>} what figuring out scopes threw
 			 */
 			const refusal = async (run) => {
@@ -1524,7 +1524,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @returns {Promise<EXPECTED_ANY>} what it wrote, or the error it threw
 			 */
 			const outcome = async (run) => {
@@ -1566,7 +1566,7 @@ describe("syntax-printer", () => {
 		const { minify } = await load();
 		const reference = terserReference();
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<string | undefined>} what the second minify threw
 		 */
 		const refusal = async (run) => {
@@ -1589,7 +1589,7 @@ describe("syntax-printer", () => {
 		const { minify } = await load();
 		const reference = terserReference();
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<string | undefined>} a returned tree, given a private member, minified again
 		 */
 		const handedBack = async (run) => {
@@ -1614,7 +1614,7 @@ describe("syntax-printer", () => {
 		const { minify } = await load();
 		const reference = terserReference();
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<string | undefined>} the tree minified with its sequences emptied
 		 */
 		const emptied = async (run) => {
@@ -1641,7 +1641,7 @@ describe("syntax-printer", () => {
 		const reference = terserReference();
 		const compressor = { option: () => true, has_directive: () => undefined };
 		/**
-		 * @param {typeof minify} run a minify
+		 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 		 * @returns {Promise<EXPECTED_ANY>} what dropping unused names in the class returned
 		 */
 		const dropped = async (run) => {
@@ -1760,7 +1760,7 @@ describe("syntax-printer", () => {
 			const { minify } = await load();
 			const reference = terserReference();
 			/**
-			 * @param {typeof minify} run a minify
+			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
 			 * @returns {Promise<EXPECTED_ANY>} its result, or the error it threw
 			 */
 			const outcome = async (run) => {
@@ -1805,6 +1805,10 @@ describe("syntax-printer", () => {
 		[
 			"a comment inside a parenthesis holding none of its own",
 			"sink((/*! a */ function () {})());"
+		],
+		[
+			"a bigint written with separators and each radix",
+			"sink(0x20n, 123_456_789n, 0b1010n, 1_000n, 0o17n, 9_007_199_254_740_993n);"
 		],
 		[
 			"a comment whose line breaks are carriage returns",
@@ -2023,7 +2027,7 @@ describe("syntax-printer", () => {
 					seen.scope = this.find_scope().TYPE;
 					seen.parent = this.parent().TYPE;
 					seen.self = this.self().TYPE;
-					seen.lambda = this.find_parent(ast.AST_Lambda).TYPE;
+					seen.lambda = this.find_parent(ast.LambdaNode).TYPE;
 					seen.strict = Boolean(this.has_directive("use strict"));
 				}
 				if (node.TYPE === "SymbolRef" && node.name === "o") {
@@ -2555,7 +2559,7 @@ describe("syntax-printer", () => {
 				// parameter a spread; ESTree binds with a rest element in both.
 				expected = {
 					type:
-						parent.TYPE === "Destructuring" || parent instanceof ast.AST_Lambda
+						parent.TYPE === "Destructuring" || parent instanceof ast.LambdaNode
 							? "RestElement"
 							: "SpreadElement"
 				};
@@ -2590,7 +2594,7 @@ describe("syntax-printer", () => {
 
 	it("should hand back a fresh list, which a clone may share", async () => {
 		const { ast, parse, utils } = (await load()).modules;
-		const { AST_SimpleStatement, TreeTransformer } = ast;
+		const { SimpleStatementNode, TreeTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
 		toplevel.transform(new TreeTransformer(() => undefined));
@@ -2605,7 +2609,7 @@ describe("syntax-printer", () => {
 				 * @returns {EXPECTED_ANY} what replaces it
 				 */
 				(node) => {
-					if (!(node instanceof AST_SimpleStatement)) return;
+					if (!(node instanceof SimpleStatementNode)) return;
 					const name = node.body.name;
 					if (name === "b") return utils.MAP.skip;
 					if (name === "c") return utils.MAP.splice([node, node]);

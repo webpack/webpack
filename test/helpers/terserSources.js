@@ -3,6 +3,29 @@
 // cspell:ignore jridgewell
 
 /**
+ * terser's node classes under the names webpack gives them as well as their
+ * own: `AST_Node` is webpack's `SyntaxNode`, `AST_Call` its `CallNode`, and
+ * `AST_Token` its `ParsedToken`.
+ * @param {EXPECTED_ANY} ast terser's `ast.js`
+ * @returns {EXPECTED_ANY} it, reading under either name
+ */
+const webpackNames = (ast) => {
+	const named = { ...ast };
+	for (const name of Object.keys(ast)) {
+		if (!name.startsWith("AST_")) continue;
+		const type = name.slice(4);
+		named[
+			type === "Node"
+				? "SyntaxNode"
+				: type === "Token"
+					? "ParsedToken"
+					: `${type}Node`
+		] = ast[name];
+	}
+	return named;
+};
+
+/**
  * terser's own modules, which its published entry point does not expose: the
  * reference the printer's tests compare webpack's ports with.
  * @param {(specifier: string) => Promise<EXPECTED_ANY>} importModule the calling test's own `import()`, bound to its runtime
@@ -42,7 +65,10 @@ const loadTerserSources = async (importModule) => {
 		"@jridgewell/source-map"
 	);
 	return {
-		ast,
+		// webpack's own factories read a node class by the name webpack gives it,
+		// so terser's classes answer to both here: a test hands these modules to
+		// one of those factories to hold it to terser's own behaviour.
+		ast: webpackNames(ast),
 		scope,
 		parse,
 		output,
