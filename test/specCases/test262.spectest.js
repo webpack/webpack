@@ -1577,6 +1577,10 @@ const MINIFIED_FAILURES = [
 ];
 /* cspell:enable */
 
+// The cases listed as failing that passed, which the suite reports together.
+/** @type {string[]} */
+const stale = [];
+
 // The minified mode's failing tests, by `name (scenario)`, with the reason.
 /** @type {Map<string, string>} */
 const minifiedFailures = new Map();
@@ -2361,12 +2365,19 @@ describe("test262", () => {
 							byPromise.clear();
 						}
 						if (failed) return;
-						throw new Error(
-							`${name} ("${scenario}") passes under ${modeName} now: remove it from MINIFIED_FAILURES (${expected})`
-						);
+						// Reported once below rather than per case: a list of them reads
+						// as the edit it asks for, and a log holds it whole.
+						stale.push(`${name} (${scenario})`);
 					});
 				}
 			}
+
+			it("should list no case in MINIFIED_FAILURES that passes", () => {
+				if (stale.length === 0) return;
+				throw new Error(
+					`${stale.length} case(s) in MINIFIED_FAILURES pass now and must be removed from it:\n${stale.join("\n")}`
+				);
+			});
 		});
 	}
 });
