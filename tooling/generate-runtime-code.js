@@ -98,7 +98,7 @@ const files = ["lib/sharing/semver.js"];
  * @param {RuntimeTemplate} runtimeTemplate
  * @returns {string}
  */
-exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTemplate.basicFunction("${args}", [
+module.exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTemplate.basicFunction("${args}", [
 	"// see webpack/${file} for original code",
 	${templateLiteral ? `\`${code}\`` : `'${code}'`}
 ])}\`;
