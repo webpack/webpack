@@ -361,6 +361,16 @@ const CORRECTED_CASES = [
 		"a function naming `await`, inlined into an async function by reference",
 		"var await; const g = function () { await = 1; }; async function f() { g(); } f(); console.log(await);",
 		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	],
+	[
+		"a function naming `await`, inlined into an async generator",
+		"var await; async function* g() { function h() { await = 1; } h(); } g().next(); console.log(await);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a function naming `yield`, inlined into an async generator",
+		"var yield; async function* g() { function h() { yield = 1; } h(); } g().next(); console.log(yield);",
+		{ compress: { passes: 2 }, mangle: false }
 	]
 ];
 
