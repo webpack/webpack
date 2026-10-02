@@ -7542,12 +7542,86 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["calc(1/3*1px)", ".333333px"],
 			["calc((6/10 - .375)*1em)", ".225em"],
 			["calc((6/14 - .375)*1em)", ".0535714em"],
-			// An angle keeps every digit: `rotate()` runs it through trig.
-			["calc(1turn/3)", "calc(1turn/3)"],
+			// An angle rounds the same way, as lightningcss rounds it.
+			["calc(1turn/3)", ".333333turn"],
+			["calc(90deg/7)", "12.8571deg"],
 			// Above the range the rounding covers the digits carry, so they stay.
 			["calc(1e4px + 1px)", "10001px"]
 		])("%s folds to %s", (expression, expected) => {
 			expect(value(expression)).toBe(expected);
+		});
+
+		it("folds a number or a negative bare where the property takes one", () => {
+			// `calc(.333333)` is longer than `calc(1/3)`, but the declaration takes
+			// the bare number, which is shorter, as lightningcss writes it.
+			expect(minify("a{opacity:calc(1/3)}")).toBe("a{opacity:.333333}");
+			expect(minify("a{line-height:calc(4/3)}")).toBe("a{line-height:1.33333}");
+			expect(minify("a{animation-delay:calc(-1s/4)}")).toBe(
+				"a{animation-delay:-.25s}"
+			);
+			// ...and not where the bare value means something else.
+			expect(minify("a{width:calc(-1px/3)}")).toBe("a{width:calc(-1px/3)}");
+			expect(minify("a{z-index:calc(10/4)}")).toBe("a{z-index:calc(2.5)}");
+		});
+
+		it("writes a fold bare inside a function taking a number there", () => {
+			expect(minify("a{transform:scale(calc(1/3),calc(1/2))}")).toBe(
+				"a{transform:scale(.333333,.5)}"
+			);
+			expect(minify("a{filter:brightness(calc(1/2))}")).toBe(
+				"a{filter:brightness(.5)}"
+			);
+			// ...and the color it then is shortens as any other does.
+			expect(minify("a{color:hsl(calc(360/7) 50% 50%)}")).toBe("a{color:#bfad40}");
+			expect(minify("a{color:rgb(0 0 0/calc(1/3))}")).toBe("a{color:#0005}");
+			expect(minify("a{color:rgb(calc(255/7) 0 0)}")).toBe("a{color:#240000}");
+			// A bounded argument clamps a `calc()` and drops a bare value outside it,
+			// and a filter function takes no negative, so both keep the parentheses.
+			expect(
+				minify("a{transition-timing-function:cubic-bezier(calc(1/2),0,1,1)}")
+			).toBe("a{transition-timing-function:cubic-bezier(calc(.5),0,1,1)}");
+			expect(minify("a{transform:scale(calc(-1/3))}")).toBe(
+				"a{transform:scale(calc(-1/3))}"
+			);
+		});
+
+		it("writes a unitless zero bare where the property's number may be zero", () => {
+			expect(minify("a{opacity:log(1)}")).toBe("a{opacity:0}");
+			expect(minify("a{aspect-ratio:calc(1 - 1)}")).toBe("a{aspect-ratio:0}");
+			// `width:0` is a length the declaration takes, where `calc(0)` is a
+			// number it drops; `columns:0` gives the zero to `column-width`.
+			expect(minify("a{width:calc(1 - 1)}")).toBe("a{width:calc(0)}");
+			expect(minify("a{columns:calc(1 - 1)}")).toBe("a{columns:calc(0)}");
+			// `font-weight:0` is out of `[1,1000]` and dropped where `calc(0)` is
+			// clamped to 1; `column-count`'s range is the same, unstated in mdn-data.
+			expect(minify("a{font-weight:calc(1 - 1)}")).toBe("a{font-weight:calc(0)}");
+			expect(minify("a{column-count:calc(1 - 1)}")).toBe(
+				"a{column-count:calc(0)}"
+			);
+		});
+
+		it("adds a sum of angle units in degrees", () => {
+			expect(value("calc(1rad + 1deg)")).toBe("58.2958deg");
+			expect(value("calc(45deg + .125turn)")).toBe("90deg");
+			expect(value("calc(100grad + 10deg)")).toBe("100deg");
+			// A length beside an angle is no sum at all.
+			expect(value("calc(1px + 1deg)")).toBe("calc(1px + 1deg)");
+		});
+
+		it("writes a ratio's slash without the spaces around it", () => {
+			expect(minify("a{aspect-ratio:16 / 9}")).toBe("a{aspect-ratio:16/9}");
+			expect(minify("a{aspect-ratio:auto 16 / 9}")).toBe(
+				"a{aspect-ratio:auto 16/9}"
+			);
+			expect(minify("a{aspect-ratio:16 / 1}")).toBe("a{aspect-ratio:16}");
+			// A substitution is left as written.
+			expect(minify("a{aspect-ratio:var(--a) / 9}")).toBe(
+				"a{aspect-ratio:var(--a) / 9}"
+			);
+		});
+
+		it("lands a sum in a unit it was written in, though no conversion targets it", () => {
+			expect(value("calc(1q*4)")).toBe("4q");
 		});
 
 		it("folds through a parenthesized group and a nested calc()", () => {

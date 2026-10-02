@@ -12,6 +12,8 @@ const {
 	collectLaterColorNames,
 	collectMergeableAtRules,
 	collectNthNamedEquivalents,
+	collectNumberArgumentFunctions,
+	collectNumberZeroProperties,
 	collectOmittableInitialKeywords,
 	collectRatioProperties,
 	collectUnsharedLonghandKeywords,
@@ -573,6 +575,48 @@ describe("CssValueSyntax", () => {
 					d: { syntax: "steps(<number>) | <length>" }
 				})
 			).toEqual(["a", "b"]);
+		});
+	});
+
+	describe("collectNumberZeroProperties", () => {
+		it("names a property whose number's stated range holds zero", () => {
+			expect(collectNumberZeroProperties()).toContain("zoom");
+			expect(collectNumberZeroProperties()).not.toContain("font-weight");
+		});
+
+		it("needs a stated range, and skips a shorthand with a length slot", () => {
+			expect(
+				collectNumberZeroProperties({
+					a: {},
+					b: { syntax: "<number [0,1]>" },
+					c: { syntax: "<number [1,1000]>" },
+					d: { syntax: "<number>" },
+					e: { syntax: "<length> | <number [0,∞]>" },
+					f: {
+						syntax: "<length> | <number [0,∞]>",
+						computed: ["e", "b"]
+					}
+				})
+			).toEqual(["b", "e"]);
+		});
+	});
+
+	describe("collectNumberArgumentFunctions", () => {
+		it("names a function taking only unbounded numbers or percentages", () => {
+			expect(collectNumberArgumentFunctions()).toContain("scale");
+			expect(collectNumberArgumentFunctions()).not.toContain("cubic-bezier");
+		});
+
+		it("skips a function with no type, a bounded one, or no syntax", () => {
+			expect(
+				collectNumberArgumentFunctions({
+					"a()": { syntax: "a( <number> , <percentage> )" },
+					"b()": { syntax: "b( <number [0,1]> )" },
+					"c()": { syntax: "c( auto )" },
+					"d()": {},
+					e: { syntax: "<number>" }
+				})
+			).toEqual(["a"]);
 		});
 	});
 

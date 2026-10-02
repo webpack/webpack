@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep the `calc()` where a bare number would revive a refused declaration.
+Fold `calc()` as lightningcss does, keeping it where a bare value is refused.
