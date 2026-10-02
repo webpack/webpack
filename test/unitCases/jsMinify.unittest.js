@@ -180,9 +180,9 @@ describe("jsMinify", () => {
 		expect(jsMinify.supportsWorkerThreads()).toBe(true);
 	});
 
-	it("should report webpack's version, so a cache entry follows it", () => {
+	it("should report terser's version, so a cache entry follows it", () => {
 		expect(jsMinify.getMinimizerVersion()).toBe(
-			require("../../package.json").version
+			require("terser/package.json").version
 		);
 	});
 });

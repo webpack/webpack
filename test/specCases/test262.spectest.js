@@ -351,9 +351,9 @@ const knownV8Bugs = [
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
 
-// The JavaScript minimizer each minified mode builds with, under the options
-// The options production minifies with.
-const MINIFY = { compress: { passes: 2 } };
+// The options production minifies with, through webpack's own printer: this
+// suite holds that minifier to the spec, not the one a user brings.
+const MINIFY = { compress: { passes: 2 }, printer: true };
 
 // A minifier renames bindings, so a function naming itself after one reads the
 // new name: test262 files these SetFunctionName cases as `fn-name`.

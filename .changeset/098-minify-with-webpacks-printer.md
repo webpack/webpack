@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Minify JavaScript with webpack's own printer instead of terser.
+Refuse a private field with no class around it when minifying with the printer.
