@@ -3072,12 +3072,12 @@ describe("syntax-printer", () => {
 					`terser reads ${theirExpressions.length} where webpack reads ${ourExpressions.length}${theirs.refused === undefined ? "" : `: ${theirs.refused}`}`
 				);
 			}
-			for (const format of ESTREE_PRINT_FORMATS) {
+			for (const format of paired ? ESTREE_PRINT_FORMATS : []) {
 				const given = { ...format, comments: false };
 				for (const [i, expression] of ourExpressions.entries()) {
-					const expected = paired
-						? theirExpressions[i].print_to_string(withoutLayout(given))
-						: undefined;
+					const expected = theirExpressions[i].print_to_string(
+						withoutLayout(given)
+					);
 					const printed = modules.printToString(expression, given);
 					compared++;
 					if (printed !== expected) {
