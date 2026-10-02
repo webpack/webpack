@@ -104,6 +104,17 @@ const text = (value) =>
  */
 const rootOf = (ast) => ast.SyntaxNode || ast.AST_Node;
 
+/**
+ * Reads back a BigInt `text` wrote as a string.
+ * @param {string} _key the key
+ * @param {unknown} item the value read
+ * @returns {unknown} the value, a BigInt where it was one
+ */
+const reviveBigInt = (_key, item) =>
+	typeof item === "string" && /^-?\d+n$/.test(item)
+		? BigInt(item.slice(0, -1))
+		: item;
+
 describe("syntax-printer's port of terser's ESTree conversion", () => {
 	/** @type {{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }} */
 	const modules = { theirs: undefined, ours: undefined };
@@ -140,12 +151,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 				return found;
 			}
 			// Each conversion is handed its own copy: terser's writes into it.
-			const fresh = () =>
-				JSON.parse(estree, (_key, item) =>
-					typeof item === "string" && /^-?\d+n$/.test(item)
-						? BigInt(item.slice(0, -1))
-						: item
-				);
+			const fresh = () => JSON.parse(estree, reviveBigInt);
 			/** @type {EXPECTED_ANY[]} */
 			const results = [];
 			for (const { ast } of [modules.theirs, modules.ours]) {
@@ -167,9 +173,23 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 		for (const mangled of [false, true]) {
 			/** @type {string[]} */
 			const results = [];
-			for (const { parse } of [modules.theirs, modules.ours]) {
+			// Both trees are read from the same ESTree, as the conversion above
+			// holds them alike, so only the conversion back is compared.
+			for (const { ast } of [modules.theirs, modules.ours]) {
 				try {
-					const tree = parse.parse(code, { module: sourceType === "module" });
+					const tree = rootOf(ast).from_mozilla_ast(
+						JSON.parse(
+							text(
+								acorn.parse(code, {
+									ecmaVersion: "latest",
+									sourceType,
+									allowHashBang: true,
+									allowReturnOutsideFunction: true
+								})
+							),
+							reviveBigInt
+						)
+					);
 					if (mangled) {
 						tree.figure_out_scope({ module: sourceType === "module" });
 						tree.compute_char_frequency({});

@@ -1074,28 +1074,15 @@ const evaluateParserTable = (node, known) => {
 	throw unexpectedParserSyntax(node, "a table");
 };
 
-// terser's `parse.js` tables the parser port reads, and the predefined type
-// names its TypeScript stripping declares inside `parse`.
+// terser's `parse.js` tables the printer reads: the words its tokens are named
+// by, what a name may not be, and each operator's precedence.
 const PARSER_TABLES = [
 	"KEYWORDS",
 	"KEYWORDS_ATOM",
 	"RESERVED_WORDS",
 	"ALL_RESERVED_WORDS",
-	"KEYWORDS_BEFORE_EXPRESSION",
-	"OPERATOR_CHARS",
 	"OPERATORS",
-	"WHITESPACE_CHARS",
-	"NEWLINE_CHARS",
-	"PUNC_AFTER_EXPRESSION",
-	"PUNC_BEFORE_EXPRESSION",
-	"PUNC_CHARS",
-	"UNARY_PREFIX",
-	"UNARY_POSTFIX",
-	"ASSIGNMENT",
-	"LOGICAL_ASSIGNMENT",
-	"PRECEDENCE",
-	"ATOMIC_START_TOKEN",
-	"_TS_PREDEFINED_TYPES"
+	"PRECEDENCE"
 ];
 
 /**
@@ -1251,8 +1238,9 @@ const domProperties = () => ${JSON.stringify(names.join(" "))}.split(" ");
  * @returns {string} its source
  */
 const renderParserTables = () => `
-// terser's tokenizer and parser tables, read out of its \`parse.js\`: each a
-// list of words, and \`PRECEDENCE\` the operators of each level, loosest first.
+// terser's tables the printer names tokens by, read out of its \`parse.js\`:
+// each a list of words, and \`PRECEDENCE\` the operators of each level, loosest
+// first.
 /**
  * @returns {Record<string, string[] | string[][]>} the tables, fresh on each call
  */

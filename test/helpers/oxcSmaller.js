@@ -2662,7 +2662,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: export/import_multiple_string",
 			"terser compress: export/import_string",
 			"terser compress: harmony/import_all_statement",
-			"terser compress: harmony/import_no_mappings",
 			"terser compress: harmony/import_statement",
 			"terser input: spidermonkey/input-no-astring.js"
 		]
