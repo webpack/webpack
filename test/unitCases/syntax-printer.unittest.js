@@ -790,6 +790,21 @@ const ESTREE_PRINT_STATEMENT_CASES = [
 	"function f() { return; } function g() { throw a; } var a = 1, b, [c] = d, { e } = f; let i = 1; const h = 2; label: { break label; } debugger;"
 ];
 
+/**
+ * Comments where the ESTree printer reads them: before a keyword's value and
+ * down its leftmost edge, inside empty braces, after statements, and first.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_COMMENT_CASES = [
+	"#!/usr/bin/env node\n/*! kept */ 'use strict'; // after\na(); /* @lic */",
+	"function f() { return /* a */ b; } function g() { return (/* a */ b) + c; } function h() { return /* a */ b.c(/* d */ e)[f] ? g : h; } function i() { throw /* x */ a, b; } function j() { return (\n// line\na); }",
+	"async function f() { await /* a */ b; await (/* b */ c)(); x = await /* c */ d++; } function* g() { yield /* a */ b; yield (/* b */ c) || d; yield; } x = class { #p; m(o) { return /* a */ #p in o; } n(o) { return /* a */ o.#p; } }; function h() { return /* a */ ++b; } function i() { return /* a */ b = c; }",
+	"function f() { /* inner */ } x = { /* inner */ }; switch (a) { /* inner */ } class C { /* inner */ } x = function () { // line\n}; x = () => { /* inner */ }; if (a) { /* inner */ } try { /* t */ } catch { /* c */ } finally { /* f */ }",
+	"a(); // after a\nb() /* after b */; c = /* before d */ d /* after d */ + e; x = [/* a */ 1, /* b */ 2 /* c */]; f(/* arg */ g, h /* after h */);",
+	"x = /*@__PURE__*/ f(); y = /* #__PURE__ */ new C(); /*#__NO_SIDE_EFFECTS__*/ function g() {} export const h = /*@__PURE__*/ (() => 1)();",
+	"label: /* l */ for (;;) { /* body */ break label; } var a = /* a */ 1, /* b */ b = 2; if (/* c */ a) /* d */ b(); else /* e */ c();"
+];
+
 // The format options that change how a statement prints, past an expression's.
 /** @type {EXPECTED_OBJECT[]} */
 const ESTREE_PRINT_STATEMENT_FORMATS = [
@@ -2988,7 +3003,7 @@ describe("syntax-printer", () => {
 				const given = { ...format, comments: false };
 				for (const expression of expressions) {
 					const theirs = modules.output.OutputStream(given);
-					// Comments print once the ESTree printer reads them.
+					// A subtree's comments are held to terser's by whole programs below.
 					theirs.readonly = true;
 					// `correct` rewrites terser's key printing, which the ESTree printer takes over later.
 					/** @type {{ enabled: boolean }} */ (corrections).enabled = false;
@@ -2998,6 +3013,7 @@ describe("syntax-printer", () => {
 						/** @type {{ enabled: boolean }} */ (corrections).enabled = true;
 					}
 					const ours = modules.output.OutputStream(given);
+					ours.readonly = true;
 					modules.printEstree(modules.toPrintTree(expression), ours);
 					compared++;
 					if (ours.get() !== theirs.get()) {
@@ -3224,6 +3240,139 @@ describe("syntax-printer", () => {
 			expect(declaration.body.body).toEqual([]);
 			expect(declaration.params).toEqual([]);
 			expect(arrow.expression.right.body.body).toEqual([]);
+		});
+
+		/**
+		 * @param {EXPECTED_ANY} options minify options
+		 * @returns {EXPECTED_ANY} a copy `minify` may write into, as it does a source map's
+		 */
+		const copyOptions = (options) => ({
+			...options,
+			format: { ...options.format },
+			...(options.sourceMap ? { sourceMap: { ...options.sourceMap } } : {})
+		});
+
+		/**
+		 * A source minified as terser's printer prints it and as `printEstree` does,
+		 * the corrections off both ways, as `correct` rewrites terser's key printing.
+		 * @param {string | Record<string, string>} source a source, or files
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }>} both results
+		 */
+		const minifyBothWays = async (source, options) => {
+			const { minify, modules, corrections } = await load();
+			const correcting = /** @type {{ enabled: boolean }} */ (corrections);
+			const printer = /** @type {{ enabled: boolean }} */ (
+				modules.estreePrinter
+			);
+			correcting.enabled = false;
+			try {
+				const theirs = await minify(source, copyOptions(options));
+				printer.enabled = true;
+				try {
+					const ours = await minify(source, copyOptions(options));
+					return { theirs, ours };
+				} finally {
+					printer.enabled = false;
+				}
+			} finally {
+				correcting.enabled = true;
+			}
+		};
+
+		/**
+		 * @param {string} source a source
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY } | undefined>} both results, as a script or else a module, or none when neither parses
+		 */
+		const minifyScriptOrModule = async (source, options) => {
+			for (const module of [false, true]) {
+				try {
+					return await minifyBothWays(source, { ...options, module });
+				} catch (err) {
+					if (/** @type {Error} */ (err).name !== "SyntaxError") throw err;
+				}
+			}
+			return undefined;
+		};
+
+		// The comment options, past the table's: the default minimizer's callback,
+		// annotations alone, and every kind compressed and mangled.
+		/** @type {EXPECTED_ANY[]} */
+		const commentOptionSets = [
+			...OUTPUT_OPTIONS,
+			{
+				compress: { passes: 2 },
+				mangle: true,
+				format: {
+					beautify: false,
+					comments: (
+						/** @type {unknown} */ node,
+						/** @type {{ type: string, value: string }} */ comment
+					) =>
+						(comment.type === "comment2" || comment.type === "comment1") &&
+						/@preserve|@lic|@cc_on|^\**!/i.test(comment.value)
+				}
+			},
+			{
+				compress: { passes: 2 },
+				mangle: true,
+				format: { preserve_annotations: true }
+			},
+			{
+				compress: false,
+				mangle: false,
+				format: { comments: false, preserve_annotations: true }
+			},
+			{ compress: { passes: 2 }, mangle: true, format: { comments: "all" } },
+			{ compress: {}, mangle: true, format: { comments: /kept|@lic/ } },
+			{
+				compress: false,
+				mangle: false,
+				format: { comments: "all", preamble: "/*! p */", semicolons: false }
+			}
+		];
+
+		for (const source of [
+			...programSources,
+			...ESTREE_PRINT_MODULE_CASES,
+			...ESTREE_PRINT_MODULE_STATEMENT_CASES,
+			...ESTREE_PRINT_COMMENT_CASES
+		]) {
+			it(`should print the comments terser's printer does: ${source.slice(0, 60)}`, async () => {
+				let compared = 0;
+				for (const options of commentOptionSets) {
+					const result = await minifyScriptOrModule(source, options);
+					if (result === undefined) continue;
+					expect(result.ours.code).toBe(result.theirs.code);
+					compared++;
+				}
+				expect(compared).toBeGreaterThan(0);
+			});
+		}
+
+		it("should call the comments callback with the ESTree node", async () => {
+			/** @type {string[]} */
+			const types = [];
+			const { ours } = await minifyBothWays("/*a*/ x(); function f() { /*b*/ return /*c*/ y; }", {
+				compress: false,
+				mangle: false,
+				format: {
+					comments: (
+						/** @type {{ type: string }} */ node,
+						/** @type {{ value: string }} */ comment
+					) => {
+						types.push(`${comment.value}:${node.type}`);
+						return true;
+					}
+				}
+			});
+			expect(ours.code).toBe("/*a*/x();function f(){/*b*/ /*c*/return y}");
+			expect(types.slice(types.length / 2)).toEqual([
+				"a:Program",
+				"b:ReturnStatement",
+				"c:ReturnStatement"
+			]);
 		});
 
 		it("should be off", async () => {
