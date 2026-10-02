@@ -373,6 +373,21 @@ const CORRECTED_CASES = [
 		{ compress: { passes: 2, toplevel: true }, mangle: false }
 	],
 	[
+		"an escaping arrow whose parameter is `await`, inlined into an async function",
+		"var sink; function g() { sink = (await) => await + 1; } async function f() { g(); } f(); console.log(sink(1));",
+		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	],
+	[
+		"an escaping arrow whose parameter is `yield`, inlined into a generator",
+		"var sink; function g() { sink = (yield) => yield + 1; } function* h() { g(); } h().next(); console.log(sink(1));",
+		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	],
+	[
+		"an escaping arrow whose parameter is `await`, inlined into a class static block",
+		"var sink; function g() { sink = (await) => await + 1; } class C { static { g(); } } console.log(sink(1), C.name);",
+		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	],
+	[
 		"an arrow naming `await`, its body run inside a class static block",
 		"var await; class C { static { (() => { await = 1; })(); } } console.log(await, C.name);",
 		{ compress: { passes: 2 }, mangle: false }
@@ -401,6 +416,21 @@ const RESERVED_NAME_CASES = [
 	[
 		"an arrow naming `yield`, its body run inside a generator",
 		"var yield; const g = () => { yield = 1; }; function* h() { g(); } h().next(); console.log(yield);",
+		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	],
+	[
+		"an arrow whose parameter is `await`, kept by the arrow around it in an async function",
+		"var sink; async function f() { (() => { sink = (await) => await + 1; })(); } f(); console.log(sink(1));",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"an arrow whose parameter is `yield`, kept by the arrow around it in a generator",
+		"var sink; function* h() { (() => { sink = (yield) => yield + 1; })(); } h().next(); console.log(sink(1));",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"an arrow whose parameter is `await`, kept by the arrow around it in a static block",
+		"var sink; class C { static { (() => { sink = (await) => await + 1; })(); } } console.log(sink(1), C.name);",
 		{ compress: { passes: 2, toplevel: true }, mangle: false }
 	]
 ];
