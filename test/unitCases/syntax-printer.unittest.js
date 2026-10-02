@@ -655,6 +655,7 @@ const PRINT_TREE_SKIPPED_KEYS = new Set([
 	"quote",
 	"definition",
 	"mapName",
+	"atom",
 	// terser keeps no record of a shorthand, which the printer decides.
 	"shorthand",
 	// terser keeps a number's source alone, checked on its own below.
@@ -706,6 +707,77 @@ const comparableTree = (node) => {
 	}
 	return result;
 };
+
+// Every source of the tables above, which the ESTree printer is held to.
+const TABLE_SOURCES = [
+	...OUTPUT_CASES.map(([, source]) => source),
+	...CODEGEN_CASES,
+	SIZED_SCRIPT,
+	SIZED_MODULE,
+	MANGLED_PROPERTIES,
+	MANGLED_NAMES,
+	MANGLED_MODULE,
+	...CASES.map(([, source]) => source)
+];
+
+/**
+ * Expressions for what the ESTree printer decides that the tables above leave
+ * out: parentheses, spaces between operators, and keys.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_CASES = [
+	"x = a > --b; y = c-- > d; z = !--e; w = - --f; v = -(-g); u = +(+h); t = typeof typeof i; s = - -j; r = a-- >> b;",
+	"x = 1..toString() + 1.5.toFixed() + 0x10.y + 1e21.w + .5.v + 5n.u + (-5n).t + 1e300 + 0.000001 + 1000000 + 0xff + 1_000 + 0x1fn;",
+	String.raw`x = /a<\/script/g.test(y) || /x/ in z || /y/ instanceof w || a < /script/ || /\u{1F600}/u.x || /é/;`,
+	"new (a.b().c); new (a`x`); new (b.c); new a.b; new (new a)(); (new a).b; (new a)``; new a()(); new (a.b.c); new (function () { a(); }.b);",
+	"x = class { #p; q = (o) => #p in o && (#p in o) in o && #p in (o ? o : o) && (#p in o) + 1 && !(#p in o) && (#p in o)(); r = a ?? (b || c); static s = (a ?? b) && c; [t] = 1; 'u' = 2; 4 = 5; static #v = 6; static {} constructor() {} get a() {} set a(b) {} static async *m() {} get #w() {} set #w(v) {} #z() {} 'quoted'() {} 7() {} };",
+	"async function f() { await (a, b); await a.b; await a(); await -a; await 1; await (await a); await {}; await (a ? b : c); await this; await class {}; (await a)(); (await a).b; (await a) ** 2; !await a; x = await a; }",
+	"function* g() { yield; yield* a; (yield a) + 1; x = yield b; (yield a)(); (yield a).b; (yield a) ? 1 : 2; !(yield a); [...(yield a)]; f(yield a, yield); ({ a: yield }); }",
+	"(function () {})(); (function () {}).call(); x = function () {}; f(function () {}, () => 1); (() => {}).x; (a => a) ? 1 : 2; a || (() => 1); !(() => 1); (() => 1)(); x = async (a, b) => ({}); y = async a => ({}).x; z = () => ({}) ? 1 : 2; w = () => ({}).x(); v = ([a], { b }, ...c) => a; (function () {})().x = 1; (function () {}).x = 1; (function () {})()``; (function* () {}); (async function () {}); (async function* f() {});",
+	"({}).x; ({} = a); ({ a } = b); [a] = b; ({}).x = 1; ({})(); ({}).x``; ({}) ? 1 : 2; ({}) + 1; ({}).a++; ({}, 1); ({ a, b: c = 1, 'd': d, [e]: f, ...g } = h); ({ 'a': a } = b); ({ 1: a, 'b c': b } = c); ({ a: { b } } = c);",
+	"x = { a, b: c, 'd': d, 1: e, [f]: g, ...h, get i() {}, set j(k) {}, *l() {}, async m() {}, async *n() {}, 'o'() {}, if: p, 'q r': s, '1': t, 1.5: u, '01': v, async: w, get: y, set: z, 'é': 1, 'class': 2, [a + b]() {}, get [c]() {}, 0b11: 3, 1e3: 4, NaN: NaN, undefined, this: this };",
+	"x = `a${b}c${`d${e}`}`; tag`a\\u{41}${b}`; (a + b)`x`; (a, b)`x`; (a ? b : c)`x`; (!a)`x`; ({}).a`x`; (() => 1)`x`; a.b`x`; (function () {})`x`; (a = b)`x`; x = `\\u{1F600}${'é'}`; x = `\\${a}`;",
+	"a?.b; a?.[b]; a?.(); (a?.b).c; (a?.b)(); a?.b.c(); new (a?.b)(); (a?.()).b; a?.b?.c?.(d)?.[e];",
+	"x = (a, b); f((a, b)); [(a, b)]; ({ a: (b, c) }); (a, b) ? c : d; a ? (b, c) : (d, e); x = `${(a, b)}`; [...(a, b)]; f(...(a, b)); (a, b).c; (a, b)[c]; (a, b)(); -(a, b); a + (b, c); x = () => (a, b); ({ [(a, b)]: c });",
+	"x = a = b ? c : d; (a = b) ? c : d; (a ? b : c) ? d : e; (a = b).c; (a ? b : c)(); !(a = b); a + (b = c); a, b = c; x = a => b = c; x = (a ? b : c) || d; x = a || (b ? c : d); a = b = c; a += b -= c; x = { a: b = c }; [a = b] = c; f(a = b);",
+	String.raw`x = 'é \0' + "'" + '"' + '\'' + "\"" + true + null + false + this + 'a\nb' + '\x7f\x80' + '😀' + '\ud83d' + '</script>';`,
+	"delete a[0], void 0, typeof a, a++ + ++b, a-- - --b, (-a) ** 2, (+a) ** 2, (++a) ** 2, (a++) ** 2, a ** -b, (a ** b) ** c, a ** b ** c, (a * b) ** c, a - (b - c), a - b - c, a * (b + c), (a, b) ** c, !(a ** b), (typeof a) ** 2, (void a) ** 2;",
+	"(a || b) ?? c; (a && b) ?? c; a ?? (b || c); a ?? (b && c); (a ?? b) || c; (a ?? b) && c; a ?? b ?? c; (a ?? b) ?? c; a || b && c; (a || b) && c; a in b in c; a in (b in c); a instanceof (b instanceof c);",
+	"a = class extends (a, b) {}; a = class extends a.b {}; a = class extends class {} {}; a = class extends function () {} {}; a = class extends f() {}; a = class extends (a ? b : c) {}; a = class extends this {}; a = class B extends C {}; (class {}).x; (class {})(); x = class { m() { super.m(); super['n'](); } };",
+	"x = [, , 1, , ]; [, a, , ] = b; [...a] = b; f(...a); x = []; x = [,]; x = [a, , b]; ({ ...a } = b); [{ a } = b, [c] = d] = e;",
+	String.raw`x = a.if + a.class + a['b c'] + a['é'] + a['\u{1F600}'] + a['1'] + a.ℹ + a?.if + a['𝐀'];`,
+	"function f() { new.target; (new.target).x; new new.target; }",
+	"x = 0.0001; x = 1e-7; x = 1.5e-10; x = 123456789e5; x = 1e21; x = -0; x = 2 ** 53; x = 0x123456; x = 1/0; x = -1/0; x = 0/0;",
+	"x = (1, eval)('a'); x = (0, a.b)(); x = (a, b.c)``; x = void (a, b); x = a, b, c;",
+	"f = () => ({}).x``; g = () => ({})?.a; h = () => ({}).a++; i = () => ++({}).a; j = () => ({}).a?.(); k = () => a``; l = () => a?.b; m = () => a++; n = () => ({}) + 1; o = () => ({} = a);",
+	"({})?.a; ({}).a?.b; (function () {})?.(); (class {})?.a;",
+	"new (a[[b]].c); new (a[[b()]].c); new (a[b].c); new (a[(() => b())()].c); new (a[function () {}].c);",
+	"x = class { #p; q = (o) => [o.#p, o?.#p, #p in (a + b), #p in (a < b), #p in (a || b), #p in (#p in o), #p in o ** 2, -(#p in o)]; };"
+];
+
+/**
+ * Sources only a module reads, whose expressions the ESTree printer is held to.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_MODULE_CASES = [
+	"import.meta.x; import('a'); import('a', { with: { type: 'json' } }); import.source('a'); import.defer('b'); (import.meta).x; await (a, b); !await a;"
+];
+
+// The format options that change how an expression prints.
+/** @type {EXPECTED_OBJECT[]} */
+const ESTREE_PRINT_FORMATS = [
+	{},
+	{ ascii_only: true, ecma: 2020 },
+	{ ascii_only: true, ecma: 5 },
+	{ quote_style: 1, keep_quoted_props: true },
+	{ quote_style: 2, keep_numbers: true },
+	{ quote_style: 3, wrap_iife: true, wrap_func_args: true },
+	{ ecma: 5, ie8: true, safari10: true, webkit: true },
+	{ quote_keys: true, shorthand: false },
+	{ quote_keys: true, ecma: 2020 },
+	{ keep_quoted_props: true, ecma: 2020 },
+	{ max_line_len: 40 }
+];
 
 describe("syntax-printer", () => {
 	it("should install every phase", async () => {
@@ -2850,6 +2922,124 @@ describe("syntax-printer", () => {
 		});
 	});
 
+	describe("printEstree", () => {
+		/**
+		 * Each expression statement in a source's tree, and its expression, as terser
+		 * prints it alone and as `printEstree` prints its ESTree tree alone.
+		 * @param {string} source a source
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<{ compared: number, differences: string[] }>} how many printed, and every one printed otherwise
+		 */
+		const compareExpressions = async (source, options) => {
+			const { minify, modules, corrections } = await load();
+			// terser's typings leave out `format.ast`, which returns the tree.
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await minify(source, { ...options, format: { ast: true, code: false } })
+			);
+			/** @type {EXPECTED_ANY[]} */
+			const expressions = [];
+			modules.ast.walk(ast, (/** @type {EXPECTED_ANY} */ node) => {
+				if (node.TYPE === "SimpleStatement") expressions.push(node, node.body);
+			});
+			let compared = 0;
+			/** @type {string[]} */
+			const differences = [];
+			for (const format of ESTREE_PRINT_FORMATS) {
+				const given = { ...format, comments: false };
+				for (const expression of expressions) {
+					const theirs = modules.output.OutputStream(given);
+					// Comments print once the ESTree printer reads them.
+					theirs.readonly = true;
+					// `correct` rewrites terser's key printing, which the ESTree printer takes over later.
+					/** @type {{ enabled: boolean }} */ (corrections).enabled = false;
+					try {
+						expression.print(theirs);
+					} finally {
+						/** @type {{ enabled: boolean }} */ (corrections).enabled = true;
+					}
+					const ours = modules.output.OutputStream(given);
+					try {
+						modules.printEstree(modules.toPrintTree(expression), ours);
+					} catch (err) {
+						// A function's statements print once statements are ported.
+						if (/cannot print a/.test(/** @type {Error} */ (err).message)) {
+							continue;
+						}
+						throw err;
+					}
+					compared++;
+					if (ours.get() !== theirs.get()) {
+						differences.push(
+							`${JSON.stringify(format)}: ${theirs.get()} printed ${ours.get()}`
+						);
+					}
+				}
+			}
+			return { compared, differences };
+		};
+
+		const scripts = [...TABLE_SOURCES, ...ESTREE_PRINT_CASES];
+		const optionSets = [
+			{ compress: false, mangle: false },
+			{ compress: { passes: 2 }, mangle: true }
+		];
+		for (const source of [...scripts, ...ESTREE_PRINT_MODULE_CASES]) {
+			it(`should print each expression as terser's printer does: ${source.slice(0, 60)}`, async () => {
+				const module = ESTREE_PRINT_MODULE_CASES.includes(source);
+				let compared = 0;
+				for (const options of optionSets) {
+					let result;
+					try {
+						result = await compareExpressions(source, { ...options, module });
+					} catch (err) {
+						// A table's source may be one only a module reads, or none.
+						if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+						throw err;
+					}
+					expect(result.differences).toEqual([]);
+					compared += result.compared;
+				}
+				if (ESTREE_PRINT_CASES.includes(source) || module) {
+					expect(compared).toBeGreaterThan(0);
+				}
+			});
+		}
+
+		it("should refuse a node it cannot print yet, statements among them", async () => {
+			const { modules } = await load();
+			const output = modules.output.OutputStream({});
+			expect(() =>
+				modules.printEstree({ type: "IfStatement", startToken: null, endToken: null }, output)
+			).toThrow("printEstree cannot print a IfStatement node yet");
+			expect(() =>
+				modules.printEstree(
+					{
+						type: "ExpressionStatement",
+						directive: "use strict",
+						startToken: null,
+						endToken: null
+					},
+					output
+				)
+			).toThrow("printEstree cannot print a directive yet");
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await (await load()).minify("x = function () { a(); };", {
+					compress: false,
+					mangle: false,
+					format: { ast: true, code: false }
+				})
+			);
+			expect(() =>
+				modules.printEstree(modules.toPrintTree(ast.body[0].body), output)
+			).toThrow("printEstree cannot print a body's statements yet");
+		});
+
+		it("should be off", async () => {
+			const { modules } = await load();
+			expect(modules.estreePrinter).toEqual({ enabled: false });
+		});
+	});
+
 	describe("toPrintTree", () => {
 		/**
 		 * @param {string} source a script
@@ -2867,16 +3057,7 @@ describe("syntax-printer", () => {
 			);
 			return ast;
 		};
-		const sources = [
-			...OUTPUT_CASES.map(([, source]) => source),
-			...CODEGEN_CASES,
-			SIZED_SCRIPT,
-			SIZED_MODULE,
-			MANGLED_PROPERTIES,
-			MANGLED_NAMES,
-			MANGLED_MODULE,
-			...CASES.map(([, source]) => source)
-		];
+		const sources = TABLE_SOURCES;
 
 		for (const source of sources) {
 			it(`should read terser's tree as webpack's parser reads the source: ${source.slice(0, 60)}`, async () => {
