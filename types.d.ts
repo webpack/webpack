@@ -10169,36 +10169,6 @@ type ExternalsType =
 	| "asset-url"
 	| "css-import"
 	| "css-url";
-declare interface ExtractCommentsObject {
-	/**
-	 * condition which comments need to be expected
-	 */
-	condition?:
-		| boolean
-		| RegExp
-		| "all"
-		| "some"
-		| ((
-				astNode: any,
-				comment: {
-					value: string;
-					type: "comment1" | "comment2" | "comment3" | "comment4";
-					pos: number;
-					line: number;
-					col: number;
-				}
-		  ) => boolean);
-
-	/**
-	 * filename for extracted comments
-	 */
-	filename?: string | TemplatePathFn;
-
-	/**
-	 * banner in filename for extracted comments
-	 */
-	banner?: string | boolean | ((commentsFile: string) => string);
-}
 
 /**
  * Defines the fs implementation type used by this module.
@@ -33770,21 +33740,14 @@ declare namespace exports {
 					| Promise<undefined | string | EmbeddedSourceResult>;
 			} & CssTransformOptions,
 			extractComments?:
+				| string
 				| boolean
 				| RegExp
-				| "all"
-				| "some"
-				| ((
-						astNode: any,
-						comment: {
-							value: string;
-							type: "comment1" | "comment2" | "comment3" | "comment4";
-							pos: number;
-							line: number;
-							col: number;
-						}
-				  ) => boolean)
-				| ExtractCommentsObject
+				| ((...args: any[]) => boolean)
+				| {
+						condition?:
+							string | boolean | RegExp | ((...args: any[]) => boolean);
+				  }
 		): Promise<{
 			code: string;
 			map?: SourceMap;
@@ -34308,21 +34271,14 @@ declare namespace exports {
 					| Promise<undefined | string | EmbeddedSourceResult>;
 			},
 			extractComments?:
+				| string
 				| boolean
 				| RegExp
-				| "all"
-				| "some"
-				| ((
-						astNode: any,
-						comment: {
-							value: string;
-							type: "comment1" | "comment2" | "comment3" | "comment4";
-							pos: number;
-							line: number;
-							col: number;
-						}
-				  ) => boolean)
-				| ExtractCommentsObject
+				| ((...args: any[]) => boolean)
+				| {
+						condition?:
+							string | boolean | RegExp | ((...args: any[]) => boolean);
+				  }
 		): Promise<{
 			code: string;
 			extractedComments?: string[];
@@ -35014,17 +34970,11 @@ declare namespace exports {
 					| string
 					| boolean
 					| RegExp
-					| ((
-							astNode: any,
-							comment: {
-								value: string;
-								type: "comment1" | "comment2" | "comment3" | "comment4";
-								pos: number;
-								line: number;
-								col: number;
-							}
-					  ) => boolean)
-					| ExtractCommentsObject
+					| ((...args: any[]) => boolean)
+					| {
+							condition?:
+								string | boolean | RegExp | ((...args: any[]) => boolean);
+					  }
 					| ((comment: {
 							value: string;
 							line: number;
