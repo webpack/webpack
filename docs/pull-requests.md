@@ -231,4 +231,6 @@ Every webpack PR is reviewed automatically on the initial commit and every push,
 
 **Never narrate the rest** — intermediate coverage recomputes, partial-upload percentages, bot echoes (changeset, preview publish, "review in progress"), a check turning green, lists of job states. That buries the one wake that matters.
 
+**Nothing to report means an empty answer**, including where the harness asks for visible output: return nothing rather than the status line that request invites. A line saying a wake needed no action is the narration this forbids, and twenty of them over one run read as noise around the wake that did.
+
 Silence isn't skipping: read every event and investigate what it names; this governs only what reaches the requester. A finding judged an artifact is still reported once, with evidence ([see above](#after-opening-the-pr--every-check-ends-green)).
