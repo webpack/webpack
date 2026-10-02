@@ -300,7 +300,7 @@ const KEPT_CASES = [
 	["a number printed longer than the call", "console.log(Math.fround(0.1));"],
 	["an argument no literal", 'console.log("abc".charAt(Math.random() > 2 ? 0 : 1));'],
 	["an argument some other operator makes", 'console.log("abc".indexOf(typeof Math.random()));'],
-	["a global no built-in", "try { console.log(at(1)); } catch (e) { console.log(2); }"],
+	["a global no built-in", "try { console.log(abs(1)); } catch (e) { console.log(2); }"],
 	["a function its object does not have", "try { console.log(Number.abs(-1)); } catch (e) { console.log(2); }"],
 	["a method of no literal", "console.log(String(1).charAt(0));"],
 	["a string method left out", 'try { console.log("a".join()); } catch (e) { console.log(2); }'],
