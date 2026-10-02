@@ -1745,6 +1745,8 @@ describe("syntax-printer", () => {
 		["an array of sources", ["sink(1)", "sink(2)"], {}],
 		["a file that is not text", { "a.js": 1 }, {}],
 		["a source webpack's parser refuses", "sink(", {}],
+		["a private field with no class around it", "sink(foo.#bar);", {}],
+		["a private field tested with no class around it", "sink(#foo in bar);", {}],
 		["a source terser reads its own way", "x = 0123;", {}],
 		["a module", "export const a = 1; import b from 'c'; sink(b);", { module: true }],
 		["a module named by the parse options", "export const a = 1;", { parse: { module: true } }],
