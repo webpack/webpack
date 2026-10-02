@@ -371,7 +371,8 @@ const renamedByMinifier = /(?:^|[/-])fn-name(?:[-.]|$)/;
 /** @type {{ reason: string, minifiers: ("terser" | "printer")[], tests: string[] }[]} */
 const MINIFIED_FAILURES = [
 	{
-		reason: "terser drops an evaluation that throws",
+		reason:
+			"terser drops an evaluation that throws",
 		minifiers: ["terser", "printer"],
 		tests: [
 			"arguments-object/10.6-13-c-1-s.js (strict)",
@@ -439,10 +440,6 @@ const MINIFIED_FAILURES = [
 			"expressions/assignment/dstr/obj-prop-elem-init-let.js (strict)",
 			"expressions/assignment/dstr/obj-prop-put-let.js (sloppy)",
 			"expressions/assignment/dstr/obj-prop-put-let.js (strict)",
-			"expressions/async-arrow-function/async-lineterminator-identifier-throws.js (sloppy)",
-			"expressions/async-arrow-function/async-lineterminator-identifier-throws.js (strict)",
-			"expressions/async-arrow-function/escaped-async-line-terminator.js (sloppy)",
-			"expressions/async-arrow-function/escaped-async-line-terminator.js (strict)",
 			"expressions/bitwise-and/bigint-and-number.js (sloppy)",
 			"expressions/bitwise-and/bigint-and-number.js (strict)",
 			"expressions/bitwise-and/bigint-errors.js (sloppy)",
@@ -596,8 +593,6 @@ const MINIFIED_FAILURES = [
 			"module-code/instn-local-bndng-export-const.js (module)",
 			"module-code/instn-local-bndng-export-let.js (module)",
 			"module-code/instn-local-bndng-let.js (module)",
-			"statements/async-function/syntax-declaration-no-line-terminator.js (sloppy)",
-			"statements/async-function/syntax-declaration-no-line-terminator.js (strict)",
 			"statements/await-using/block-local-closure-get-before-initialization.js (sloppy)",
 			"statements/await-using/block-local-closure-get-before-initialization.js (strict)",
 			"statements/await-using/block-local-use-before-initialization-in-prior-statement.js (sloppy)",
@@ -1152,7 +1147,6 @@ const MINIFIED_FAILURES = [
 			"expressions/object/method-definition/yield-as-function-expression-binding-identifier.js (sloppy)",
 			"expressions/tagged-template/invalid-escape-sequences.js (sloppy)",
 			"expressions/tagged-template/invalid-escape-sequences.js (strict)",
-			"import/import-attributes/text-javascript.js (module)",
 			"module-code/top-level-await/await-expr-regexp.js (module)",
 			"module-code/top-level-await/new-await-script-code.js (strict)",
 			"module-code/top-level-await/syntax/block-await-expr-regexp.js (module)",
@@ -1284,7 +1278,8 @@ const MINIFIED_FAILURES = [
 		]
 	},
 	{
-		reason: "terser changes what the program does",
+		reason:
+			"terser changes what the program does",
 		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/addition/coerce-symbol-to-prim-invocation.js (sloppy)",
@@ -1340,10 +1335,6 @@ const MINIFIED_FAILURES = [
 			"import/import-defer/evaluation-triggers/trigger-exported-string-hasProperty.js (module)",
 			"import/import-defer/evaluation-triggers/trigger-not-exported-string-hasProperty-in-prototype.js (module)",
 			"import/import-defer/evaluation-triggers/trigger-not-exported-string-hasProperty.js (module)",
-			"literals/string/line-continuation-double.js (sloppy)",
-			"literals/string/line-continuation-double.js (strict)",
-			"literals/string/line-continuation-single.js (sloppy)",
-			"literals/string/line-continuation-single.js (strict)",
 			"statements/async-generator/return-undefined-implicit-and-explicit.js (sloppy)",
 			"statements/async-generator/return-undefined-implicit-and-explicit.js (strict)",
 			"statements/class/elements/private-async-generator-method-name.js (sloppy)",
@@ -1416,7 +1407,8 @@ const MINIFIED_FAILURES = [
 		]
 	},
 	{
-		reason: "terser writes a program that reads a binding outside its scope",
+		reason:
+			"terser writes a program that reads a binding outside its scope",
 		minifiers: ["terser", "printer"],
 		tests: [
 			"expressions/arrow-function/scope-paramsbody-var-open.js (sloppy)",
@@ -1511,11 +1503,10 @@ const MINIFIED_FAILURES = [
 		]
 	},
 	{
-		reason: "terser writes a program that no longer parses",
+		reason:
+			"terser writes a program that no longer parses",
 		minifiers: ["terser", "printer"],
 		tests: [
-			"expressions/await/await-in-nested-function.js (sloppy)",
-			"expressions/dynamic-import/import-attributes/2nd-param-await-ident.js (strict)",
 			"expressions/in/private-field-rhs-yield-present.js (sloppy)",
 			"expressions/in/private-field-rhs-yield-present.js (strict)",
 			"expressions/new.target/unary-expr.js (sloppy)",
@@ -1554,13 +1545,10 @@ const MINIFIED_FAILURES = [
 			"statements/class/elements/private-static-method-visible-to-direct-eval.js (strict)",
 			"statements/class/elements/private-static-setter-visible-to-direct-eval.js (sloppy)",
 			"statements/class/elements/private-static-setter-visible-to-direct-eval.js (strict)",
-			"statements/for-await-of/let-block-with-newline.js (sloppy)",
-			"statements/for-in/let-block-with-newline.js (sloppy)",
 			"statements/for-of/head-lhs-async-escaped.js (sloppy)",
 			"statements/for-of/head-lhs-async-escaped.js (strict)",
 			"statements/for-of/head-lhs-async-parens.js (sloppy)",
 			"statements/for-of/head-lhs-async-parens.js (strict)",
-			"statements/for-of/let-block-with-newline.js (sloppy)",
 			"statements/return/S12.9_A1_T1.js (sloppy)",
 			"statements/return/S12.9_A1_T1.js (strict)",
 			"statements/return/S12.9_A1_T10.js (sloppy)",
@@ -1584,9 +1572,14 @@ const MINIFIED_FAILURES = [
 		]
 	},
 	{
-		reason: "terser drops an evaluation that throws",
+		reason:
+			"terser drops an evaluation that throws",
 		minifiers: ["terser"],
 		tests: [
+			"expressions/async-arrow-function/async-lineterminator-identifier-throws.js (sloppy)",
+			"expressions/async-arrow-function/async-lineterminator-identifier-throws.js (strict)",
+			"expressions/async-arrow-function/escaped-async-line-terminator.js (sloppy)",
+			"expressions/async-arrow-function/escaped-async-line-terminator.js (strict)",
 			"expressions/call/spread-err-mult-err-expr-throws.js (sloppy)",
 			"expressions/call/spread-err-mult-err-expr-throws.js (strict)",
 			"expressions/call/spread-err-mult-err-iter-get-value.js (sloppy)",
@@ -1610,23 +1603,36 @@ const MINIFIED_FAILURES = [
 			"expressions/call/spread-err-sngl-err-itr-step.js (sloppy)",
 			"expressions/call/spread-err-sngl-err-itr-step.js (strict)",
 			"expressions/call/spread-err-sngl-err-itr-value.js (sloppy)",
-			"expressions/call/spread-err-sngl-err-itr-value.js (strict)"
+			"expressions/call/spread-err-sngl-err-itr-value.js (strict)",
+			"statements/async-function/syntax-declaration-no-line-terminator.js (sloppy)",
+			"statements/async-function/syntax-declaration-no-line-terminator.js (strict)"
 		]
 	},
 	{
-		reason: "terser writes a program that no longer parses",
+		reason:
+			"terser writes a program that no longer parses",
 		minifiers: ["terser"],
 		tests: [
+			"expressions/await/await-in-nested-function.js (sloppy)",
+			"expressions/dynamic-import/import-attributes/2nd-param-await-ident.js (strict)",
 			"expressions/function/static-init-await-reference.js (sloppy)",
-			"expressions/function/static-init-await-reference.js (strict)"
+			"expressions/function/static-init-await-reference.js (strict)",
+			"statements/for-await-of/let-block-with-newline.js (sloppy)",
+			"statements/for-in/let-block-with-newline.js (sloppy)",
+			"statements/for-of/let-block-with-newline.js (sloppy)"
 		]
 	},
 	{
-		reason: "terser changes what the program does",
+		reason:
+			"terser changes what the program does",
 		minifiers: ["terser"],
 		tests: [
 			"expressions/generators/static-init-await-reference.js (sloppy)",
-			"expressions/generators/static-init-await-reference.js (strict)"
+			"expressions/generators/static-init-await-reference.js (strict)",
+			"literals/string/line-continuation-double.js (sloppy)",
+			"literals/string/line-continuation-double.js (strict)",
+			"literals/string/line-continuation-single.js (sloppy)",
+			"literals/string/line-continuation-single.js (strict)"
 		]
 	},
 	{
@@ -1638,6 +1644,23 @@ const MINIFIED_FAILURES = [
 			"expressions/modulus/bigint-modulo-zero.js (strict)",
 			"expressions/unary-plus/bigint-throws.js (sloppy)",
 			"expressions/unary-plus/bigint-throws.js (strict)"
+		]
+	},
+	{
+		reason:
+			"the fixture imported is not parsable JavaScript, so minifying it fails the build",
+		minifiers: ["terser", "printer"],
+		tests: [
+			"import/import-attributes/text-javascript.js (module)"
+		]
+	},
+	{
+		reason:
+			"the printer inlines a function naming `await` into an async function, so its output does not parse",
+		minifiers: ["printer"],
+		tests: [
+			"expressions/await/await-in-nested-function.js (sloppy)",
+			"expressions/await/await-in-nested-function.js (strict)"
 		]
 	}
 ];
