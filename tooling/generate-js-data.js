@@ -808,6 +808,10 @@ const UNICODE_DEPENDENT_METHODS = [
 	"trimStart"
 ];
 
+// String methods whose count or length argument sets their result's size,
+// which the printer refuses past the call's own size before running them.
+const SIZED_BY_ARGUMENT_METHODS = ["padEnd", "padStart", "repeat"];
+
 // Every other member @mdn/browser-compat-data lists of `Math`, `Number`,
 // `String`, `Array` and the global functions, by why it is not folded; one it
 // starts listing fails generation until it is placed here or above.
@@ -1018,7 +1022,7 @@ const isNoLaterThan = (version, limit) => {
 /**
  * The built-ins `improve` folds, checked against BCD: each one present, on the
  * owner it is spelled under, and in every Node webpack builds on.
- * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, unicodeDependent: string[] }} the tables
+ * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[] }} the tables
  */
 const collectFoldedBuiltIns = () => {
 	const members = collectBuiltInMembers();
@@ -1079,7 +1083,10 @@ const collectFoldedBuiltIns = () => {
 			)}`
 		);
 	}
-	for (const name of UNICODE_DEPENDENT_METHODS) {
+	for (const name of [
+		...UNICODE_DEPENDENT_METHODS,
+		...SIZED_BY_ARGUMENT_METHODS
+	]) {
 		if (!FOLDED_BUILT_INS["String.prototype"].includes(name)) {
 			throw new Error(`${name} is not a folded string method`);
 		}
@@ -1088,7 +1095,8 @@ const collectFoldedBuiltIns = () => {
 		globals,
 		statics,
 		methods,
-		unicodeDependent: UNICODE_DEPENDENT_METHODS
+		unicodeDependent: UNICODE_DEPENDENT_METHODS,
+		sizedByArgument: SIZED_BY_ARGUMENT_METHODS
 	};
 };
 
@@ -1103,6 +1111,7 @@ const renderFoldedBuiltIns = () => `
  * @property {Record<string, string[]>} statics the functions of each global object
  * @property {Record<string, string[]>} methods the prototype methods of each constructor
  * @property {string[]} unicodeDependent the string methods folded on ASCII only
+ * @property {string[]} sizedByArgument the string methods a count or length argument sizes
  */
 
 // The built-ins the \`improve\` phase evaluates on literals, by owner, as
