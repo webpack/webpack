@@ -656,6 +656,8 @@ const PRINT_TREE_SKIPPED_KEYS = new Set([
 	"definition",
 	"mapName",
 	"atom",
+	"attributesStartToken",
+	"attributesEndToken",
 	// terser keeps no record of a shorthand, which the printer decides.
 	"shorthand",
 	// terser keeps a number's source alone, checked on its own below.
@@ -766,7 +768,8 @@ const ESTREE_PRINT_MODULE_STATEMENT_CASES = [
 	"export default (a, b);",
 	"export default function f() {}",
 	"export default class C {}",
-	"export default async () => {};"
+	"export default async () => {};",
+	"export * from 'a' with { type: 'json' }; export * as b from 'c' with { type: 'json' };"
 ];
 
 /**
@@ -3346,6 +3349,103 @@ describe("syntax-printer", () => {
 					if (result === undefined) continue;
 					expect(result.ours.code).toBe(result.theirs.code);
 					compared++;
+				}
+				expect(compared).toBeGreaterThan(0);
+			});
+		}
+
+		/**
+		 * The source map option sets, over a source and its printed form with that
+		 * form's map, read as an object and inline.
+		 * @param {string} source a source
+		 * @param {{ code: string, map: EXPECTED_OBJECT }} printed the source minified with a map
+		 * @returns {[string | Record<string, string>, EXPECTED_ANY][]} each input with its options
+		 */
+		const mapOptionSets = (source, printed) => [
+			[
+				{ "input.js": source },
+				{ compress: false, mangle: false, sourceMap: { asObject: true } }
+			],
+			[
+				{ "input.js": source },
+				{
+					compress: { passes: 2 },
+					mangle: true,
+					sourceMap: {
+						includeSources: true,
+						filename: "out.js",
+						root: "src/",
+						url: "inline"
+					},
+					format: { comments: "all" }
+				}
+			],
+			[
+				{ "input.js": source },
+				{
+					compress: false,
+					mangle: false,
+					sourceMap: { asObject: true },
+					format: { comments: "some", preserve_annotations: true }
+				}
+			],
+			[
+				printed.code,
+				{
+					compress: false,
+					mangle: true,
+					sourceMap: { asObject: true, content: printed.map }
+				}
+			],
+			[
+				`${printed.code}\n//# sourceMappingURL=data:application/json;base64,${Buffer.from(
+					JSON.stringify(printed.map)
+				).toString("base64")}`,
+				{
+					compress: {},
+					mangle: true,
+					sourceMap: { content: "inline", includeSources: true }
+				}
+			]
+		];
+
+		for (const source of [
+			...programSources,
+			...ESTREE_PRINT_MODULE_CASES,
+			...ESTREE_PRINT_MODULE_STATEMENT_CASES,
+			...ESTREE_PRINT_COMMENT_CASES
+		]) {
+			it(`should map as terser's printer does: ${source.slice(0, 60)}`, async () => {
+				const { minify } = await load();
+				let compared = 0;
+				for (const module of [false, true]) {
+					let printed;
+					try {
+						printed = await minify(source, {
+							module,
+							compress: false,
+							mangle: { toplevel: true },
+							sourceMap: { asObject: true }
+						});
+					} catch (err) {
+						// A source may be one only a script, or only a module, reads.
+						if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+						throw err;
+					}
+					for (const [input, options] of mapOptionSets(
+						source,
+						/** @type {EXPECTED_ANY} */ (printed)
+					)) {
+						const { theirs, ours } = await minifyBothWays(input, {
+							...options,
+							module
+						});
+						expect(ours.code).toBe(theirs.code);
+						expect(ours.map).toEqual(theirs.map);
+						expect(ours.decoded_map).toEqual(theirs.decoded_map);
+						compared++;
+					}
+					break;
 				}
 				expect(compared).toBeGreaterThan(0);
 			});
