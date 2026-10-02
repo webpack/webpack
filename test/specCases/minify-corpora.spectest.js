@@ -1067,6 +1067,8 @@ const REFUSED_BY_REFERENCE = {
  * @type {Record<string, string>}
  */
 const REFERENCE_MISPRINTS = {
+	"test262: import-attributes.js (the default minimizer's options)": EMPTY_ATTRIBUTES,
+	"test262: import-attributes.js (printing alone)": EMPTY_ATTRIBUTES,
 	"swc minifier: fixture/issues/6192/2/input.js (its own options)": EMPTY_IMPORT,
 	"swc minifier: fixture/issues/6192/2/input.js (the default minimizer's options)": EMPTY_IMPORT,
 	"swc minifier: fixture/issues/6192/2/input.js (printing alone)": EMPTY_IMPORT,
@@ -1242,6 +1244,9 @@ const REFUSED_BY_WEBPACK = {
 	"terser compress: using/using_should_be_kept_with_defaults_unsafe": USING_IN_SCRIPT,
 	"terser compress: using/using_with_comments": USING_IN_SCRIPT,
 	"terser compress: yield/yield_as_identifier_outside_strict_mode": REDECLARED,
+	"test262: grammar-field-accessor.js": AUTO_ACCESSOR,
+	"test262: private-auto-accessor.js": AUTO_ACCESSOR,
+	"test262: public-auto-accessor.js": AUTO_ACCESSOR,
 };
 /* cspell:enable */
 
@@ -1826,6 +1831,8 @@ describe("JavaScript minifier", () => {
 												/** @type {string} */ (theirs.error)
 											);
 										} else if (
+											// A misprint is the reference's: webpack must still print.
+											uncorrected.code !== undefined &&
 											Object.prototype.hasOwnProperty.call(
 												REFERENCE_MISPRINTS,
 												key
