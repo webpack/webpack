@@ -15833,6 +15833,12 @@ declare interface JavascriptParserOptions {
 	dynamicUrl?: boolean;
 
 	/**
+	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 * @since 5.112.0
+	 */
+	esm?: boolean;
+
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: false | "auto" | "error" | "warn";
@@ -15858,7 +15864,8 @@ declare interface JavascriptParserOptions {
 	exprContextRequest?: string;
 
 	/**
-	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 * Deprecated in favor of "esm". Enable/disable parsing of EcmaScript Modules syntax.
+	 * @deprecated
 	 */
 	harmony?: boolean;
 
@@ -16539,12 +16546,28 @@ declare interface KnownJavascriptModuleBuildMeta {
 
 /**
  * Defines the known javascript parser state type used by this module.
+ * The `harmony*` properties forward to their `esm*` namesake.
  */
 declare interface KnownJavascriptParserState {
-	harmonyNamedExports?: Set<string>;
-	harmonyStarExports?: ESMStarExportsList;
-	lastHarmonyImportOrder?: number;
+	esmNamedExports?: Set<string>;
+	esmStarExports?: ESMStarExportsList;
+	lastESMImportOrder?: number;
 	localModules?: LocalModule[];
+
+	/**
+	 * deprecated, use `esmNamedExports`
+	 */
+	harmonyNamedExports?: Set<string>;
+
+	/**
+	 * deprecated, use `esmStarExports`
+	 */
+	harmonyStarExports?: ESMStarExportsList;
+
+	/**
+	 * deprecated, use `lastESMImportOrder`
+	 */
+	lastHarmonyImportOrder?: number;
 }
 
 /**
@@ -33099,7 +33122,8 @@ declare namespace exports {
 	export namespace dependencies {
 		export {
 			ModuleDependency,
-			ESMImportDependency as HarmonyImportDependency,
+			ESMImportDependency,
+			/** The dependency an ESM `import` declaration makes. @deprecated use `dependencies.ESMImportDependency` — TODO in the next major release: remove */ ESMImportDependency as HarmonyImportDependency,
 			ConstDependency,
 			NullDependency
 		};
@@ -34705,7 +34729,7 @@ declare namespace exports {
 		}
 		export const makeSerializable: <T extends Constructor>(
 			Constructor: T,
-			request: string | string[],
+			request: string | (string | [string, null | string])[],
 			name?: null | string
 		) => void;
 		export const cleverMerge: <T, O>(

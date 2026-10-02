@@ -2372,6 +2372,11 @@ export interface JavascriptParserOptions {
 	 */
 	dynamicUrl?: boolean;
 	/**
+	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 * @since 5.112.0
+	 */
+	esm?: boolean;
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: "error" | "warn" | "auto" | false;
@@ -2392,7 +2397,8 @@ export interface JavascriptParserOptions {
 	 */
 	exprContextRequest?: string;
 	/**
-	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 * Deprecated in favor of "esm". Enable/disable parsing of EcmaScript Modules syntax.
+	 * @deprecated
 	 */
 	harmony?: boolean;
 	/**

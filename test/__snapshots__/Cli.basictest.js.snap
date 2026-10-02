@@ -4851,6 +4851,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-exports-presence": Object {
     "configs": Array [
       Object {
@@ -4931,13 +4944,13 @@ Object {
   "module-parser-javascript-auto-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript/auto.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6179,6 +6192,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-exports-presence": Object {
     "configs": Array [
       Object {
@@ -6259,13 +6285,13 @@ Object {
   "module-parser-javascript-dynamic-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -7329,6 +7355,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-amd": Object {
     "configs": Array [
       Object {
@@ -7537,6 +7576,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-esm": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.esm",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-exports-presence": Object {
     "configs": Array [
       Object {
@@ -7617,13 +7669,13 @@ Object {
   "module-parser-javascript-esm-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript/esm.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8666,13 +8718,13 @@ Object {
   "module-parser-javascript-harmony": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
         "multiple": false,
         "path": "module.parser.javascript.harmony",
         "type": "boolean",
       },
     ],
-    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "description": "Deprecated in favor of \\"esm\\". Enable/disable parsing of EcmaScript Modules syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
