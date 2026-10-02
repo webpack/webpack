@@ -1476,11 +1476,7 @@ const collectIntegerProperties = () => {
  * @param {(node: TypeNode) => void=} onType called with each numeric type reached
  * @returns {Set<string>} the numeric type names reachable at the value's level
  */
-const valueLevelNumericTypes = (
-	syntax,
-	propertyTable = properties,
-	onType = undefined
-) => {
+const valueLevelNumericTypes = (syntax, propertyTable, onType) => {
 	/** @type {Set<string>} */
 	const found = new Set();
 	/** @type {Set<string>} */
