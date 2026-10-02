@@ -6341,19 +6341,59 @@ describe("optimization.minimize", () => {
 	});
 
 	it("should minify JavaScript through webpack's printer under futureDefaults only", () => {
+		const MinimizerPlugin = require("minimizer-webpack-plugin");
+		const jsMinify = require("../../lib/javascript/jsMinify");
 		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 			require("../..").config;
 
 		/**
+		 * The JavaScript `minify` the default minimizer dispatches to, taken off
+		 * the plugin instead of applied: the asset pipeline is not the subject.
 		 * @param {boolean} futureDefaults whether `experiments.futureDefaults` is on
-		 * @param {import("../..").Configuration["optimization"]} optimization optimization options
-		 * @returns {unknown} the resolved `optimization.minimizeOptions.javascript`
+		 * @returns {EXPECTED_ANY} the minify function, or the array it sits first in
 		 */
-		const javascriptOptions = (futureDefaults, optimization) => {
+		const wiredMinify = (futureDefaults) => {
 			const normalized = getNormalizedWebpackOptions({
 				mode: "production",
-				experiments: { futureDefaults },
-				optimization
+				experiments: { futureDefaults }
+			});
+			applyWebpackOptionsDefaults(normalized);
+			/** @type {EXPECTED_ANY} */
+			let implementation;
+			const { apply } = MinimizerPlugin.prototype;
+			MinimizerPlugin.prototype.apply =
+				/** @type {EXPECTED_ANY} */
+				(
+					function () {
+						implementation =
+							/** @type {EXPECTED_ANY} */
+							(this).options.minimizer.implementation;
+					}
+				);
+			try {
+				/** @type {EXPECTED_ANY} */
+				(normalized.optimization.minimizer)[0].apply({ options: normalized });
+			} finally {
+				MinimizerPlugin.prototype.apply = apply;
+			}
+			return Array.isArray(implementation)
+				? implementation[0]
+				: implementation;
+		};
+
+		// terser as the plugin publishes it, until the printer is proven on real
+		// builds; the printer writes what it writes, so neither needs an option.
+		expect(wiredMinify(false)).toBe(MinimizerPlugin.terserMinify);
+		expect(wiredMinify(true)).toBe(jsMinify);
+
+		/**
+		 * @param {boolean} futureDefaults whether `experiments.futureDefaults` is on
+		 * @returns {unknown} the resolved `optimization.minimizeOptions.javascript`
+		 */
+		const javascriptOptions = (futureDefaults) => {
+			const normalized = getNormalizedWebpackOptions({
+				mode: "production",
+				experiments: { futureDefaults }
 			});
 			applyWebpackOptionsDefaults(normalized);
 			return /** @type {NonNullable<import("../..").WebpackOptionsNormalized["optimization"]["minimizeOptions"]>} */ (
@@ -6361,27 +6401,9 @@ describe("optimization.minimize", () => {
 			).javascript;
 		};
 
-		expect(javascriptOptions(false, undefined)).toEqual({
-			compress: { passes: 2 }
-		});
-		expect(javascriptOptions(true, undefined)).toEqual({
-			printer: true,
-			compress: { passes: 2 }
-		});
-		// The user's object gains the default on a copy, never in place.
-		const configured = { compress: false };
-		expect(
-			javascriptOptions(true, { minimizeOptions: { javascript: configured } })
-		).toEqual({ printer: true, compress: false });
-		expect(configured).toEqual({ compress: false });
-		expect(
-			javascriptOptions(true, {
-				minimizeOptions: { javascript: { printer: false } }
-			})
-		).toEqual({ printer: false });
-		expect(
-			javascriptOptions(true, { minimizeOptions: { javascript: false } })
-		).toBe(false);
+		// Both minifiers read the same options, so the switch leaves them alone.
+		expect(javascriptOptions(false)).toEqual({ compress: { passes: 2 } });
+		expect(javascriptOptions(true)).toEqual({ compress: { passes: 2 } });
 	});
 
 	it("should accept a shorthand assigned after normalization", () => {

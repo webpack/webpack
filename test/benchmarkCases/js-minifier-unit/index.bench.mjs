@@ -18,7 +18,7 @@ export default (bench) => {
 		await jsMinify(
 			{ "lodash.js": source },
 			undefined,
-			{ printer: true, compress: { passes: 2 } },
+			{ compress: { passes: 2 } },
 			true
 		);
 	});

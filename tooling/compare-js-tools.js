@@ -360,9 +360,8 @@ const TOOLS = [
 		}
 	},
 	{
-		// webpack's own printing path: `jsMinify` with every transform off, which
-		// today prints through terser. The row is here so that a printer webpack
-		// owns is read against what it replaced, in the same table.
+		// webpack's own printing path: `jsMinify` with every transform off, so the
+		// printer webpack owns is read against what it replaced, in one table.
 		name: "webpack (format only)",
 		stage: "beautify",
 		create: () => {
@@ -403,9 +402,9 @@ const TOOLS = [
 		}
 	},
 	{
-		// What a production build pays: webpack's own minify function under the
-		// options `optimization.minimize` defaults to, whose second compress pass
-		// is why this row is not a like for like against terser's default row.
+		// What a `futureDefaults` production build pays: webpack's own minify
+		// function under the options `optimization.minimize` defaults to, whose
+		// second compress pass is why this is no like for like against terser's.
 		name: "webpack (2 passes)",
 		stage: "minify",
 		create: () => {
@@ -426,8 +425,8 @@ const TOOLS = [
 		}
 	},
 	{
-		// The same work through webpack's printer, as `experiments.futureDefaults`
-		// minifies.
+		// The same printer without the minify function around it, so the row above
+		// shows what that function's own plumbing costs.
 		name: "webpack printer",
 		stage: "minify",
 		create: () => {
