@@ -7825,7 +7825,7 @@ declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDep
 	activeExports: Set<string>;
 	otherStarExports: null | ReadonlyArray<ESMExportImportedSpecifierDependency>;
 	exportPresenceMode: ExportPresenceMode;
-	allStarExports: null | HarmonyStarExportsList;
+	allStarExports: null | ESMStarExportsList;
 
 	/**
 	 * Returns id.
@@ -7877,7 +7877,7 @@ declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDep
 }
 declare class ESMImportDependency extends ModuleDependency {
 	/**
-	 * Creates an instance of HarmonyImportDependency.
+	 * Creates an instance of ESMImportDependency.
 	 */
 	constructor(
 		request: string,
@@ -7914,7 +7914,7 @@ declare class ESMImportDependency extends ModuleDependency {
 		ids: string[],
 		additionalMessage: string
 	): undefined | WebpackError[];
-	static Template: typeof HarmonyImportDependencyTemplate;
+	static Template: typeof ESMImportDependencyTemplate;
 	static ExportPresenceModes: {
 		NONE: ExportPresenceMode;
 		WARN: ExportPresenceMode;
@@ -7970,9 +7970,62 @@ declare class ESMImportDependency extends ModuleDependency {
 	static LAZY_UNTIL_REQUEST: "@";
 	static ESM_CATEGORY: "esm";
 }
+declare class ESMImportDependencyTemplate extends DependencyTemplate {
+	constructor();
+
+	/**
+	 * Gets import emitted runtime.
+	 */
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
 	namespaceSpecifiers?: string[];
+}
+
+/**
+ * Defines the harmony settings type used by this module.
+ */
+declare interface ESMSettings {
+	ids: string[];
+	source: string;
+	sourceOrder: number;
+	name: string;
+	await: boolean;
+	attributes?: ImportAttributes;
+	phase: ImportPhaseType;
+
+	/**
+	 * whether the binding is referenced anywhere
+	 */
+	used: boolean;
+
+	/**
+	 * the statement's own dependency
+	 */
+	dependency?: ESMImportSideEffectDependency;
+}
+declare abstract class ESMStarExportsList {
+	dependencies: ESMExportImportedSpecifierDependency[];
+
+	/**
+	 * Processes the provided dep.
+	 */
+	push(dep: ESMExportImportedSpecifierDependency): void;
+	slice(): ESMExportImportedSpecifierDependency[];
+
+	/**
+	 * Serializes this instance into the provided serializer context.
+	 */
+	serialize(__0: StarListSerializerContext): void;
+
+	/**
+	 * Restores this instance from the provided deserializer context.
+	 */
+	deserialize(__0: StarListDeserializerContext): void;
 }
 type EcmaVersion =
 	| 3
@@ -10904,59 +10957,6 @@ declare interface HandleModuleCreationOptions {
 	 * check the cycle dependencies of the created module
 	 */
 	checkCycle?: boolean;
-}
-declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
-	constructor();
-
-	/**
-	 * Gets import emitted runtime.
-	 */
-	static getImportEmittedRuntime(
-		module: Module,
-		referencedModule: Module
-	): undefined | string | boolean | SortableSet<string>;
-}
-
-/**
- * Defines the harmony settings type used by this module.
- */
-declare interface HarmonySettings {
-	ids: string[];
-	source: string;
-	sourceOrder: number;
-	name: string;
-	await: boolean;
-	attributes?: ImportAttributes;
-	phase: ImportPhaseType;
-
-	/**
-	 * whether the binding is referenced anywhere
-	 */
-	used: boolean;
-
-	/**
-	 * the statement's own dependency
-	 */
-	dependency?: ESMImportSideEffectDependency;
-}
-declare abstract class HarmonyStarExportsList {
-	dependencies: ESMExportImportedSpecifierDependency[];
-
-	/**
-	 * Processes the provided dep.
-	 */
-	push(dep: ESMExportImportedSpecifierDependency): void;
-	slice(): ESMExportImportedSpecifierDependency[];
-
-	/**
-	 * Serializes this instance into the provided serializer context.
-	 */
-	serialize(__0: StarListSerializerContext): void;
-
-	/**
-	 * Restores this instance from the provided deserializer context.
-	 */
-	deserialize(__0: StarListDeserializerContext): void;
 }
 declare class Hash {
 	constructor();
@@ -14163,7 +14163,7 @@ declare class JavascriptParser extends Parser {
 	currentTagData?:
 		| Record<string, any>
 		| TopLevelSymbol
-		| HarmonySettings
+		| ESMSettings
 		| ImportSettings
 		| CommonJsImportSettings
 		| CompatibilitySettings;
@@ -15501,7 +15501,7 @@ declare class JavascriptParser extends Parser {
 		| undefined
 		| Record<string, any>
 		| TopLevelSymbol
-		| HarmonySettings
+		| ESMSettings
 		| ImportSettings
 		| CommonJsImportSettings
 		| CompatibilitySettings;
@@ -15515,7 +15515,7 @@ declare class JavascriptParser extends Parser {
 		data?:
 			| Record<string, any>
 			| TopLevelSymbol
-			| HarmonySettings
+			| ESMSettings
 			| ImportSettings
 			| CommonJsImportSettings
 			| CompatibilitySettings,
@@ -15854,6 +15854,12 @@ declare interface JavascriptParserOptions {
 	dynamicUrl?: boolean;
 
 	/**
+	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 * @since 5.112.0
+	 */
+	esm?: boolean;
+
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: false | "auto" | "error" | "warn";
@@ -15879,7 +15885,8 @@ declare interface JavascriptParserOptions {
 	exprContextRequest?: string;
 
 	/**
-	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 * Deprecated in favor of "esm". Enable/disable parsing of EcmaScript Modules syntax.
+	 * @deprecated
 	 */
 	harmony?: boolean;
 
@@ -16560,12 +16567,28 @@ declare interface KnownJavascriptModuleBuildMeta {
 
 /**
  * Defines the known javascript parser state type used by this module.
+ * The `harmony*` properties forward to their `esm*` namesake.
  */
 declare interface KnownJavascriptParserState {
-	harmonyNamedExports?: Set<string>;
-	harmonyStarExports?: HarmonyStarExportsList;
-	lastHarmonyImportOrder?: number;
+	esmNamedExports?: Set<string>;
+	esmStarExports?: ESMStarExportsList;
+	lastESMImportOrder?: number;
 	localModules?: LocalModule[];
+
+	/**
+	 * deprecated, use `esmNamedExports`
+	 */
+	harmonyNamedExports?: Set<string>;
+
+	/**
+	 * deprecated, use `esmStarExports`
+	 */
+	harmonyStarExports?: ESMStarExportsList;
+
+	/**
+	 * deprecated, use `lastESMImportOrder`
+	 */
+	lastHarmonyImportOrder?: number;
 }
 
 /**
@@ -31418,7 +31441,7 @@ declare interface TagInfo {
 	data?:
 		| Record<string, any>
 		| TopLevelSymbol
-		| HarmonySettings
+		| ESMSettings
 		| ImportSettings
 		| CommonJsImportSettings
 		| CompatibilitySettings;
@@ -33189,7 +33212,8 @@ declare namespace exports {
 	export namespace dependencies {
 		export {
 			ModuleDependency,
-			ESMImportDependency as HarmonyImportDependency,
+			ESMImportDependency,
+			/** The dependency an ESM `import` declaration makes. @deprecated use `dependencies.ESMImportDependency` — TODO in the next major release: remove */ ESMImportDependency as HarmonyImportDependency,
 			ConstDependency,
 			NullDependency
 		};
@@ -34798,7 +34822,7 @@ declare namespace exports {
 		}
 		export const makeSerializable: <T extends Constructor>(
 			Constructor: T,
-			request: string | string[],
+			request: string | (string | [string, null | string])[],
 			name?: null | string
 		) => void;
 		export const cleverMerge: <T, O>(

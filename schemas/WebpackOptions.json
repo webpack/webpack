@@ -2948,6 +2948,11 @@
           "description": "Enable/disable parsing of dynamic URL.",
           "type": "boolean"
         },
+        "esm": {
+          "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+          "type": "boolean",
+          "added": "5.112.0"
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
@@ -2977,8 +2982,9 @@
           "type": "string"
         },
         "harmony": {
-          "description": "Enable/disable parsing of EcmaScript Modules syntax.",
-          "type": "boolean"
+          "description": "Deprecated in favor of \"esm\". Enable/disable parsing of EcmaScript Modules syntax.",
+          "type": "boolean",
+          "deprecated": true
         },
         "import": {
           "description": "Enable/disable parsing of import() syntax.",

@@ -1,6 +1,6 @@
 import foo, { named } from "./lib";
 
-// webpack's HarmonyDetectionParserPlugin was skipping the arguments of `define`
+// webpack's ESMDetectionParserPlugin was skipping the arguments of `define`
 // calls in ES modules, so import bindings used inside the callback were not
 // rewritten. Calling `define(...)` is what fires the parser's call hook.
 var __globalThis = Function("return this")();

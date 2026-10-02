@@ -16,13 +16,13 @@ describe("sortWithSourceOrder", () => {
 	it("dependency without the sourceOrder attribute must keep their original index in the array", () => {
 		const deps = /** @type {Dependency[]} */ (
 			/** @type {unknown[]} */ ([
-				// HarmonyImportSpecifierDependency
+				// ESMImportSpecifierDependency
 				{ name: "b", sourceOrder: 10 },
 				// CommonJSRequireDependency
 				{ name: "a" },
 				// CommonJSRequireDependency
 				{ name: "d" },
-				// HarmonyImportSpecifierDependency
+				// ESMImportSpecifierDependency
 				{ name: "c", sourceOrder: 5 }
 			])
 		);

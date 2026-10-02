@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Rename the `lib/dependencies/Harmony*` files to `ESM*`.
+Rename the `Harmony*` names to `ESM*` and deprecate the old spellings.

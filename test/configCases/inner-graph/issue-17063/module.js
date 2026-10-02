@@ -1,7 +1,7 @@
 import { x, y } from "./dependency";
 
 // `x` is referenced inside an inline `define` callback. Before the fix for #17063,
-// `HarmonyDetectionParserPlugin` skipped walking the arguments of `define(...)` in
+// `ESMDetectionParserPlugin` skipped walking the arguments of `define(...)` in
 // ES modules, so the reference was never tracked and tree-shaking dropped it.
 function useX() {
 	define(function () {
