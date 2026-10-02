@@ -5764,7 +5764,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
 			// A comma with nothing either side is a layer no shadow fills.
 			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],
-			["a leading comma does the same", "a{box-shadow:,0 0 0 0 red}"]
+			["a leading comma does the same", "a{box-shadow:,0 0 0 0 red}"],
+			// An invalid layer drops the declaration; a rewrite must not make it valid.
+			["a layer names two colors", "a{box-shadow:0 0 red currentcolor}"],
+			["a box shadow holds five lengths", "a{box-shadow:0 0 0 0 0 red}"],
+			["a text shadow holds four lengths", "a{text-shadow:1px 1px 0 0 red}"],
+			["a color parts the lengths", "a{box-shadow:0 0 red 0 0}"],
+			["a layer is inset twice", "a{box-shadow:inset inset 0 0 currentcolor}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});

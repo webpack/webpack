@@ -2265,32 +2265,40 @@ const collectPositionProperties = () => {
 };
 
 // A shadow states its offsets as `<length>{MIN,MAX}`; MIN of them are the two
-// offsets every shadow needs.
+// offsets every shadow needs, and one past MAX is no shadow.
 const SHADOW_LENGTHS_REGEXP = /<length>\{(\d+),(\d+)\}/;
 
 /**
- * Each property whose value is a list of shadows -> how many lengths a shadow
- * cannot go below. The grammar states the range itself (`<length>{2,4}` on
+ * Each property whose value is a list of shadows -> the fewest and most lengths a
+ * shadow takes. The grammar states the range itself (`<length>{2,4}` on
  * `box-shadow`, `{2,3}` on `text-shadow`), so a trailing zero past the minimum
  * is a value the notation already implies.
- * @returns {[string, number][]} the entries, sorted by property
+ * @returns {[string, [number, number]][]} the entries, sorted by property
  */
 const collectShadowProperties = () => {
-	/** @type {[string, number][]} */
+	/** @type {[string, [number, number]][]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
-		let minimum = null;
+		/** @type {[number, number] | null} */
+		let lengths = null;
 		for (const raw of references(entry.syntax)) {
 			const definition = definitions.get(raw);
 			if (definition === undefined) continue;
 			const range = SHADOW_LENGTHS_REGEXP.exec(definition);
 			if (range === null) continue;
+			const minimum = Number(range[1]);
+			const maximum = Number(range[2]);
 			// Two productions naming different ranges is no single shadow shape.
-			if (minimum !== null && minimum !== Number(range[1])) return [];
-			minimum = Number(range[1]);
+			if (
+				lengths !== null &&
+				(lengths[0] !== minimum || lengths[1] !== maximum)
+			) {
+				return [];
+			}
+			lengths = [minimum, maximum];
 		}
-		if (minimum !== null) out.push([name, minimum]);
+		if (lengths !== null) out.push([name, lengths]);
 	}
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
 };
@@ -3766,15 +3774,6 @@ const setLiteral = (names) =>
 const mapLiteral = (entries) =>
 	`new Map([${entries
 		.map(([key, value]) => `["${key}", "${value}"]`)
-		.join(", ")}])`;
-
-/**
- * @param {[string, number][]} entries string-keyed, number-valued pairs
- * @returns {string} the `Map` literal
- */
-const countMapLiteral = (entries) =>
-	`new Map([${entries
-		.map(([key, value]) => `["${key}", ${value}]`)
 		.join(", ")}])`;
 
 /**
@@ -7351,9 +7350,13 @@ ${displayShortForms
 	.join(",\n")}
 ]);
 
-// Each property whose value is a list of shadows -> the count of lengths a
-// shadow cannot go below, past which a trailing zero is already implied.
-const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
+// Each property whose value is a list of shadows -> the fewest and most lengths
+// a shadow takes; a trailing zero past the fewest is already implied.
+const SHADOW_PROPERTIES = new Map([${shadowProperties
+		.map(
+			([name, [minimum, maximum]]) => `["${name}", [${minimum}, ${maximum}]]`
+		)
+		.join(", ")}]);
 
 // WHY: Each shorthand -> the keywords one of its values may drop, each with every
 // spelling its own slot takes: the slot's keywords, and each function it

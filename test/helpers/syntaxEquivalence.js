@@ -429,11 +429,12 @@ const installHelpers = (generics) => {
 		}
 		// Anchored left: a prefixed gradient folds under its own rules, so
 		// canonicalizing one would hide a fold the printer must not make.
-		return directGradients(
+		return outsideText(
 			named.replace(
 				/(^|[^\w-])((?:repeating-)?(?:linear|radial|conic)-gradient\([^()]*(?:\([^()]*\)[^()]*)*)\s(?:100%|360deg)\)/gi,
 				"$1$2)"
-			)
+			),
+			directGradients
 		);
 	};
 
