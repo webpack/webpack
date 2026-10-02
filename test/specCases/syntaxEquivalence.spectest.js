@@ -207,6 +207,7 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
 	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
+	["Radix Themes 3 (components)", "firefox only: `calc(100% / 3)` prints as `33.3333%`, six digits being calibrated on Blink's 1/64px layout; Gecko lays out in 1/60px, so a `translateX(100%)` over that width moves by 0.03px"],
 ]);
 
 const FILED_BENCHMARK_HTML_DEFECTS = new Map();
@@ -1687,15 +1688,7 @@ const LOWERING_FIXTURES = [
 			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
 			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
 		browsers: ["chrome 130"],
-		// Only an exact answer is written; an irrational or recurring one keeps
-		// its expression, since a rounded decimal lands a layout unit off.
-		produces: [
-			"width:calc(sqrt(2)*100px)",
-			"margin-left:.3px",
-			"border-top-width:5px",
-			"left:30px",
-			"right:10.24px"
-		],
+		produces: ["width:141.421px", "height:70.7107px", "margin-left:.3px"],
 		html: '<button id=b style="position:absolute">x</button>',
 		probes: [
 			["#b", "width"],
@@ -1708,6 +1701,18 @@ const LOWERING_FIXTURES = [
 			["#b", "top"],
 			["#b", "left"],
 			["#b", "right"]
+		],
+		// The engine computes at full precision and serializes what it computed; the
+		// printer writes the six significant digits a stylesheet can observe. So these
+		// are held to `numericallyEqual` rather than to the same text.
+		numeric: [
+			"width",
+			"height",
+			"margin-right",
+			"padding-left",
+			"padding-right",
+			"top",
+			"right"
 		]
 	},
 	{
