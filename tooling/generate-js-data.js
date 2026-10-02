@@ -16,7 +16,7 @@ const bcd =
 const acorn = require("acorn");
 
 /** @typedef {{ version_added?: string | boolean | null }} BcdSupport */
-/** @typedef {{ spec_url?: string | string[], support: Record<string, BcdSupport | BcdSupport[]> }} BcdCompat */
+/** @typedef {{ spec_url?: string | string[], mdn_url?: string, status?: { standard_track: boolean, deprecated: boolean }, support: Record<string, BcdSupport | BcdSupport[]> }} BcdCompat */
 /** @typedef {{ [name: string]: { __compat: BcdCompat } }} BcdMembers */
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
@@ -1122,6 +1122,145 @@ const renderFoldedBuiltIns = () => `
 const foldedBuiltIns = () => (${JSON.stringify(collectFoldedBuiltIns())});
 `;
 
+// Built-ins whose call `improve` never drops, even on literal arguments, by why.
+const IMPURE_BUILT_INS = {
+	"it runs code given as a string": ["eval", "Function"],
+	"it may answer a rejected promise, which an unhandled-rejection handler observes":
+		["Promise.all", "Promise.any", "Promise.race", "Promise.reject"],
+	"it blocks or wakes another agent": [
+		"Atomics.wait",
+		"Atomics.notify",
+		"Atomics.waitAsync"
+	]
+};
+
+// Built-in globals `improve` neither reads nor calls away, by why.
+const UNREAD_BUILT_INS = {
+	"its answers follow the host's locale and ICU data": ["Intl"],
+	"browsers leave it undefined outside cross-origin isolated pages": [
+		"SharedArrayBuffer"
+	]
+};
+
+/**
+ * Whether BCD says a feature is in every Node webpack builds on.
+ * @param {BcdCompat} compat the feature's compat entry
+ * @param {number[]} oldestNode major, minor and patch
+ * @returns {boolean} true when it is
+ */
+const isInOldestNode = (compat, oldestNode) => {
+	const support = compat.support.nodejs;
+	if (!support) return false;
+	const added = (Array.isArray(support) ? support[0] : support).version_added;
+	return (
+		typeof added === "string" &&
+		isNoLaterThan(added.replace(/^≤/, ""), oldestNode)
+	);
+};
+
+/**
+ * The built-ins `improve` drops when nothing reads what they answer: the
+ * globals it may read, those it may call, and each one's static members.
+ * @returns {{ globals: string[], callableGlobals: string[], statics: Record<string, string[]> }} the tables
+ */
+const collectPureBuiltIns = () => {
+	const builtins = bcd.javascript.builtins;
+	const oldestNode = oldestSupportedNode();
+	/** @type {Set<string>} */
+	const unread = new Set();
+	for (const names of Object.values(UNREAD_BUILT_INS)) {
+		for (const name of names) {
+			if (!builtins[name]) {
+				throw new Error(`@mdn/browser-compat-data lists no built-in ${name}`);
+			}
+			unread.add(name);
+		}
+	}
+	/** @type {Set<string>} */
+	const impure = new Set();
+	for (const names of Object.values(IMPURE_BUILT_INS)) {
+		for (const name of names) {
+			const [owner, member] = name.split(".");
+			if (!builtins[owner] || (member && !builtins[owner][member])) {
+				throw new Error(`@mdn/browser-compat-data lists no built-in ${name}`);
+			}
+			impure.add(name);
+		}
+	}
+	/** @type {string[]} */
+	const globals = [];
+	/** @type {Record<string, string[]>} */
+	const statics = {};
+	for (const name of Object.keys(builtins).sort()) {
+		const entry = builtins[name];
+		// A constructor's own entry dates the global; a namespace's dates itself.
+		const compat = (entry[name] || entry).__compat;
+		if (
+			unread.has(name) ||
+			!isInOldestNode(compat, oldestNode) ||
+			!Object.prototype.hasOwnProperty.call(global, name)
+		) {
+			continue;
+		}
+		globals.push(name);
+		if (!/^[A-Z]/.test(name)) continue;
+		/** @type {string[]} */
+		const members = [];
+		for (const key of Object.keys(entry).sort()) {
+			// BCD names a syntax feature in snake case, as `json_superset`.
+			if (
+				key === "__compat" ||
+				key === name ||
+				!/^[a-z]\w*$/i.test(key) ||
+				/^[a-z]+_[a-z_]+$/.test(key)
+			) {
+				continue;
+			}
+			const memberCompat = entry[key].__compat;
+			// A feature BCD tracks without a page of its own is no member.
+			if (
+				!memberCompat ||
+				!memberCompat.mdn_url ||
+				!memberCompat.status ||
+				!memberCompat.status.standard_track
+			) {
+				continue;
+			}
+			const spec = String(memberCompat.spec_url);
+			if (!spec.startsWith("https://tc39.es/ecma262/")) continue;
+			if (/\.prototype[.-]|-instances-/i.test(spec)) continue;
+			if (impure.has(`${name}.${key}`)) continue;
+			if (isInOldestNode(memberCompat, oldestNode)) members.push(key);
+		}
+		if (members.length > 0) statics[name] = members;
+	}
+	return {
+		globals,
+		callableGlobals: globals.filter((name) => !impure.has(name)),
+		statics
+	};
+};
+
+/**
+ * The built-ins `improve` drops, as a section of the printer's data module.
+ * @returns {string} its source
+ */
+const renderPureBuiltIns = () => `
+/**
+ * @typedef {object} PureBuiltIns
+ * @property {string[]} globals the globals a read of which has no effect
+ * @property {string[]} callableGlobals the globals a call of which on literals has none but a throw
+ * @property {Record<string, string[]>} statics the functions of each global a call of which on literals has none but a throw
+ */
+
+// The built-ins the \`improve\` phase drops where nothing reads them, each in
+// every Node webpack builds on, as @mdn/browser-compat-data lists them.
+/**
+ * @returns {PureBuiltIns} the tables, fresh on each call
+ */
+const pureBuiltIns = () => (${JSON.stringify(collectPureBuiltIns())});
+`;
+
 /**
  * terser's parser tables, as a section of the data module.
  * @returns {string} its source
@@ -1244,9 +1383,10 @@ module.exports.UNICODE_SCRIPT_VALUES = UNICODE_SCRIPT_VALUES;
  */
 const renderPrinterData = () => `${renderHeader(
 	`${TERSER_SOURCE}, @mdn/browser-compat-data ${bcd.__meta.version}`
-)}${renderNativeObjects()}${renderParserTables()}${renderDomProperties()}${renderFoldedBuiltIns()}
+)}${renderNativeObjects()}${renderParserTables()}${renderDomProperties()}${renderFoldedBuiltIns()}${renderPureBuiltIns()}
 module.exports.domProperties = domProperties;
 module.exports.foldedBuiltIns = foldedBuiltIns;
+module.exports.pureBuiltIns = pureBuiltIns;
 module.exports.nativeObjectTables = nativeObjectTables;
 module.exports.parserTables = parserTables;
 `;
