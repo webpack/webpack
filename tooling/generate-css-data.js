@@ -3856,7 +3856,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], angleDegrees: [string, number][], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], initialValueKeywords: [string, string][], initialKeywordsAnEngineReadsApart: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], numberOnlyOutsideCalcProperties: string[], clampedValueRanges: [string, string, number, number][], stepPositionMinimumCounts: [string, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], orderedShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], colorSpacePrimitives: [string, string][], oklabMatrices: number[][], systemUiStack: string[], colorTransfers: [string, string][], predefinedColorSpaces: [string, string, string, string][], colorPrimaries: [string, number[]][], colorWhitePoints: [string, number[]][], enginesDisagreeOnTransfer: string[], calcConstantValues: [string, string][], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -4192,14 +4192,6 @@ const SUPPLEMENT = {
 	// argument through trig, which amplifies a truncated digit into a different
 	// computed matrix (measured in headless Chromium).
 	angleUnits: ["deg", "grad", "rad", "turn"],
-	// CSS Values 4 §7.1: how many degrees one of each angle unit is. A sum written
-	// in two of them folds into degrees, as lightningcss folds it.
-	angleDegrees: [
-		["deg", 1],
-		["grad", 0.9],
-		["rad", 180 / Math.PI],
-		["turn", 360]
-	],
 	// WHY: CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
 	// The trig functions are only folded on these, so the table is what says
 	// where. `rad` has no entry — a quarter turn is π/2 of them, which no double
@@ -7707,7 +7699,11 @@ const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 
 // How many degrees one of each angle unit is, so a sum in two of them folds.
 /** @type {Map<string, number>} */
-const ANGLE_DEGREES = new Map(${JSON.stringify(SUPPLEMENT.angleDegrees)});
+const ANGLE_DEGREES = new Map(${JSON.stringify([
+		...SUPPLEMENT.quarterTurnAngle.map(([unit, count]) => [unit, 90 / count]),
+		// CSS Values 4 §7.1: a radian is 180/π degrees, which no quarter turn spells.
+		["rad", 180 / Math.PI]
+	])});
 
 // The constants a calculation may name (CSS Values 4 §10.7), as \`name -> value\`.
 // \`infinity\` and \`NaN\` are named with none: no printed number spells either, so
