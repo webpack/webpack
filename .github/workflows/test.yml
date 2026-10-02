@@ -306,7 +306,7 @@ jobs:
           # what its input prints, an output printing it too. It uploads, as
           # the one suite reaching every compressor phase the printer owns.
           - language: minify-corpora
-            submodules: test/external/terser test/external/test262-cases test/external/swc
+            submodules: test/external/terser test/external/test262-cases test/external/swc test/external/oxc
             script: cover:minify-corpora
             flags: minify-corpora
     runs-on: ubuntu-latest
