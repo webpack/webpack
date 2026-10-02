@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Refuse a private field with no class around it when minifying with the printer.
+Read JavaScript with webpack's parser alone when minifying, refusing early errors.

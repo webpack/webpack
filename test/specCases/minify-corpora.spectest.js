@@ -28,7 +28,7 @@ const SWC_SMALLER = require("../helpers/swcSmaller");
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }>} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ expected: string | Error | true, input: string, prepend: string, microtasks?: boolean, strict?: boolean }} Stdout */
-/** @typedef {{ name: string, input: string, module?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT }, stdout?: Stdout, reminify?: boolean, rival?: { name: string, code: string } }} Source */
+/** @typedef {{ name: string, input: string, module?: boolean, invalid?: boolean, own?: { compress: EXPECTED_ANY, mangle: EXPECTED_ANY, format: EXPECTED_OBJECT, parse: EXPECTED_OBJECT }, stdout?: Stdout, reminify?: boolean, rival?: { name: string, code: string } }} Source */
 /** @typedef {{ AST: EXPECTED_ANY, parse: EXPECTED_ANY, knows: (group: "compress" | "mangle", key: string) => boolean }} CaseReader */
 /** @typedef {{ name: string, files: string[] }} Group */
 /** @typedef {{ name: string, submodule: string, directory: string, groups: () => Group[], read: (file: string, reader: CaseReader) => Source[], optionSets: string[], minimum: number, minimumOwn?: number, minimumRun?: number, minimumRival?: number, ownOptionsKnown?: boolean, ownDefaultsNamed?: boolean, withoutOxc?: boolean }} Corpus */
@@ -384,7 +384,8 @@ const readWholeFile = (file) => [
 
 /**
  * @param {string} file a test262 test
- * @returns {Source[]} the test as one source, a module where its flags say so
+ * @returns {Source[]} the test as one source, a module where its flags say so,
+ * and invalid where it expects a parse or early error
  */
 const readTest262File = (file) => {
 	const input = fs.readFileSync(file, "utf8");
@@ -392,7 +393,8 @@ const readTest262File = (file) => {
 		{
 			name: path.basename(file),
 			input,
-			module: /flags:.*\bmodule\b/.test(input)
+			module: /flags:.*\bmodule\b/.test(input),
+			invalid: /negative:\s*\n\s*phase:\s*parse\b/.test(input)
 		}
 	];
 };
@@ -1001,6 +1003,8 @@ const CORRECTED = {
 /* cspell:disable */
 // What the reference gets wrong, or how its output and webpack's agree, where
 // several sources differ for the same reason.
+const DEFAULT_FUNCTION_ENDS =
+	"an exported default function declaration ends at its `}`, so `(foo)` is a statement of its own, which terser's own FIXME says";
 const ASI_LET =
 	"terser reads a `let` before a line break as a declaration, where the semicolon inserted after it leaves a name";
 const ASI_ASYNC =
@@ -1063,6 +1067,21 @@ const REFUSED_BY_REFERENCE = {
  * @type {Record<string, string>}
  */
 const REFERENCE_MISPRINTS = {
+	"swc minifier: fixture/issues/6192/2/input.js (its own options)": EMPTY_IMPORT,
+	"swc minifier: fixture/issues/6192/2/input.js (the default minimizer's options)": EMPTY_IMPORT,
+	"swc minifier: fixture/issues/6192/2/input.js (printing alone)": EMPTY_IMPORT,
+	"terser compress: export/export_default_anonymous_function_not_call (its own options)":
+		DEFAULT_FUNCTION_ENDS,
+	"terser compress: export/export_default_anonymous_function_not_call (the default minimizer's options)":
+		DEFAULT_FUNCTION_ENDS,
+	"terser compress: export/export_default_anonymous_function_not_call (printing alone)":
+		DEFAULT_FUNCTION_ENDS,
+	"terser compress: export/export_default_anonymous_function_not_call (a module mangled at its top level)":
+		DEFAULT_FUNCTION_ENDS,
+	"terser compress: harmony/import_no_mappings (its own options)": EMPTY_IMPORT,
+	"terser compress: harmony/import_no_mappings (the default minimizer's options)": EMPTY_IMPORT,
+	"terser compress: harmony/import_no_mappings (printing alone)": EMPTY_IMPORT,
+	"terser compress: harmony/import_no_mappings (a module mangled at its top level)": EMPTY_IMPORT,
 	"test262: let-identifier-with-newline.js (printing alone)": ASI_LET,
 	"test262: let-identifier-with-newline.js (the default minimizer's options)":
 		ASI_LET,
@@ -1122,10 +1141,126 @@ const REFERENCE_MISPRINTS = {
 };
 /* cspell:enable */
 
-// What this run met of the two tables above, so an entry it no longer meets
-// fails instead of lingering.
+// terser's parse options for what is not a program in the spec's sense: an
+// expression alone, TypeScript, and a stricter reading than the spec's.
+const DROPPED_PARSE_OPTIONS = ["expression", "experimental_typescript", "strict"];
+
+/* cspell:disable */
+const PRIVATE_UNDECLARED =
+	"a private name must be declared by a class enclosing it (AllPrivateIdentifiersValid)";
+const SETTER_ARITY = "a setter has exactly one parameter";
+const EXPORT_RESERVED =
+	"an export with no `from` names a binding, which a reserved word cannot be";
+const DUPLICATE_EXPORT = "a module exports each name once";
+const NEW_TARGET = "`new.target` is only allowed inside a function or static block";
+const PARAMETER_CLASH =
+	"a parameter list with a pattern may not bind a name twice, sloppy or not";
+const REDECLARED =
+	"a lexical binding, an import's included, may not share a name in its scope";
+const SUPER_OUTSIDE = "`super` is only allowed inside a method";
+const AWAIT_IN_SCRIPT = "top-level `await` is only allowed in a module";
+const USING_IN_SCRIPT = "`using` may not be declared at the top level of a script";
+const AUTO_ACCESSOR =
+	"`accessor` fields are a proposal; the spec reads `accessor` as a field name, which a name may not follow";
+const INVALID_PATTERN = "a regular expression literal must hold a valid pattern";
+const FOR_OF_SEQUENCE =
+	"the right of `for…of` is an AssignmentExpression, never a comma sequence";
+
+/**
+ * Sources webpack refuses where the reference reads them, each with the rule
+ * the source breaks: webpack reads with its own parser alone, as the spec has
+ * it. A source no longer refused fails until retired.
+ * @type {Record<string, string>}
+ */
+const REFUSED_BY_WEBPACK = {
+	"oxc minifier: ecmascript/may_have_side_effects.rs:465": SUPER_OUTSIDE,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:818": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:819": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:821": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:822": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:823": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:824": AUTO_ACCESSOR,
+	"oxc minifier: mangler/property_mangler.rs:311": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_declaration.rs:356": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_declaration.rs:357": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:752": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:753": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:859": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_private_members.rs:49": AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_private_members.rs:53": AUTO_ACCESSOR,
+	"oxc minifier: peephole/replace_known_methods.rs:1260": INVALID_PATTERN,
+	"oxc minifier: peephole/replace_known_methods.rs:1262": INVALID_PATTERN,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:705": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:718": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:720": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:737": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:742": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:744": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:746": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:757": AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:760": AUTO_ACCESSOR,
+	"swc minifier: fixture/issues/11133/input.js": REDECLARED,
+	"terser compress: class-properties/parens_in": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_10": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_11": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_2": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_3": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_4": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_5": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_6": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_7": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_8": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/parens_in_9": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/privatein_precedence": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/privatein_precedence_2": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/privatein_precedence_3": PRIVATE_UNDECLARED,
+	"terser compress: evaluate/unsafe_object_accessor": SETTER_ARITY,
+	"terser compress: export/export_default_string": EXPORT_RESERVED,
+	"terser compress: export/export_multiple_named_default_string": EXPORT_RESERVED,
+	"terser compress: export/export_named_string": DUPLICATE_EXPORT,
+	"terser compress: export/keyword_invalid_1": EXPORT_RESERVED,
+	"terser compress: export/keyword_invalid_2": EXPORT_RESERVED,
+	"terser compress: export/keyword_invalid_3": EXPORT_RESERVED,
+	"terser compress: harmony/class_statics": SETTER_ARITY,
+	"terser compress: harmony/export_from_statement": DUPLICATE_EXPORT,
+	"terser compress: harmony/import_statement": REDECLARED,
+	"terser compress: harmony/issue_2794_6": FOR_OF_SEQUENCE,
+	"terser compress: harmony/new_target": NEW_TARGET,
+	"terser compress: issue-12/keep_name_of_setter": SETTER_ARITY,
+	"terser compress: parameters/accept_duplicated_parameters_in_non_strict_without_spread_or_default_assignment": PARAMETER_CLASH,
+	"terser compress: pure_getters/issue_2265_3": SETTER_ARITY,
+	"terser compress: reduce_vars/defun_catch_4": REDECLARED,
+	"terser compress: reduce_vars/defun_catch_5": REDECLARED,
+	"terser compress: super/super_can_be_parsed": SUPER_OUTSIDE,
+	"terser compress: toplevel-await/toplevel_await": AWAIT_IN_SCRIPT,
+	"terser compress: toplevel-await/toplevel_await_for": AWAIT_IN_SCRIPT,
+	"terser compress: using/multiple_using_can_be_joined_with_join_vars": USING_IN_SCRIPT,
+	"terser compress: using/unused_using_should_be_kept": USING_IN_SCRIPT,
+	"terser compress: using/using_basic": USING_IN_SCRIPT,
+	"terser compress: using/using_definition_transformer": USING_IN_SCRIPT,
+	"terser compress: using/using_multiple": USING_IN_SCRIPT,
+	"terser compress: using/using_should_be_kept_with_defaults_unsafe": USING_IN_SCRIPT,
+	"terser compress: using/using_with_comments": USING_IN_SCRIPT,
+	"terser compress: yield/yield_as_identifier_outside_strict_mode": REDECLARED,
+};
+/* cspell:enable */
+
+/**
+ * Whether two outcomes agree: the same code, or both a refusal, whatever
+ * either says, since the two parsers word their errors each their own way.
+ * @param {Outcome} a an outcome
+ * @param {Outcome} b another
+ * @returns {boolean} whether they agree
+ */
+const sameOutcome = (a, b) =>
+	a.code === b.code && (a.error === undefined) === (b.error === undefined);
+
+// What this run met of the tables above, so an entry it no longer meets fails
+// instead of lingering.
 /** @type {Set<string>} */
 const refusalsSeen = new Set();
+/** @type {Set<string>} */
+const webpackRefusalsSeen = new Set();
 /** @type {Set<string>} */
 const misprintsSeen = new Set();
 
@@ -1589,6 +1724,17 @@ describe("JavaScript minifier", () => {
 									source.input,
 									optionsFor(source)
 								);
+								// A case reading its source with a parser option webpack's
+								// parser has no counterpart for holds nothing of webpack's.
+								if (
+									ours.error !== undefined &&
+									DROPPED_PARSE_OPTIONS.some(
+										(name) =>
+											ours.error === `\`${name}\` is not a supported option`
+									)
+								) {
+									continue;
+								}
 								if (
 									corpus.ownOptionsKnown &&
 									setName === "its own options" &&
@@ -1635,7 +1781,7 @@ describe("JavaScript minifier", () => {
 										: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
 								};
 								const key = `${corpus.name}: ${source.name} (${setName})`;
-								if (theirs.code !== ours.code || theirs.error !== ours.error) {
+								if (!sameOutcome(theirs, ours)) {
 									// A difference only the `correct` and `improve` phases make is
 									// theirs, which the run check below holds to; any other is a
 									// difference, and an improvement must not write more.
@@ -1644,17 +1790,17 @@ describe("JavaScript minifier", () => {
 										outcome(printer.minify, source.input, optionsFor(source))
 									);
 									// Without the improvements terser's bytes back, nothing else differs.
-									const uncorrected =
-										theirs.code === unimproved.code &&
-										theirs.error === unimproved.error
-											? unimproved
+									const uncorrected = sameOutcome(theirs, unimproved)
+										? unimproved
 											: await outcomeWithout([corrections, improvements], () =>
 													outcome(printer.minify, source.input, optionsFor(source))
 												);
-									if (
-										theirs.code !== uncorrected.code ||
-										theirs.error !== uncorrected.error
-									) {
+									if (!sameOutcome(theirs, uncorrected)) {
+										const webpackRefusal =
+											theirs.code !== undefined &&
+											uncorrected.error !== undefined
+												? `${corpus.name}: ${source.name}`
+												: undefined;
 										const refused =
 											uncorrected.code !== undefined &&
 											typeof theirs.error === "string" &&
@@ -1662,7 +1808,20 @@ describe("JavaScript minifier", () => {
 												REFUSED_BY_REFERENCE,
 												theirs.error
 											);
-										if (refused) {
+										if (
+											webpackRefusal !== undefined &&
+											Object.prototype.hasOwnProperty.call(
+												REFUSED_BY_WEBPACK,
+												webpackRefusal
+											)
+										) {
+											webpackRefusalsSeen.add(webpackRefusal);
+										} else if (
+											webpackRefusal !== undefined &&
+											source.invalid
+										) {
+											// The corpus says the source is not JavaScript.
+										} else if (refused) {
 											refusalsSeen.add(
 												/** @type {string} */ (theirs.error)
 											);
@@ -1788,6 +1947,9 @@ describe("JavaScript minifier", () => {
 			...Object.keys(REFUSED_BY_REFERENCE)
 				.filter((message) => !refusalsSeen.has(message))
 				.map((message) => `REFUSED_BY_REFERENCE: ${message}`),
+			...Object.keys(REFUSED_BY_WEBPACK)
+				.filter((message) => !webpackRefusalsSeen.has(message))
+				.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
 			...Object.keys(REFERENCE_MISPRINTS)
 				.filter((key) => !misprintsSeen.has(key))
 				.map((key) => `REFERENCE_MISPRINTS: ${key}`)
