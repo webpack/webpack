@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases lazy-barrel skip-build skip-build should compile 1`] = `
+"./index.js
+└─ (used) ./node_modules/heavy-lib/index.js [barrel]
+   ├─ (default) ./node_modules/heavy-lib/used.js
+   └─ (default) ./unused.js [raw] [lazy]"
+`;

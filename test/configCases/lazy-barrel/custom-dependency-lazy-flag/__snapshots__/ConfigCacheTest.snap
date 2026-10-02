@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel custom-dependency-lazy-flag custom-dependency-lazy-flag should compile 1`] = `
+"./index.js
+└─ (missing, value) ./lib/index.js [barrel]
+   └─ (value) ./lib/value.js"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel custom-dependency-lazy-flag custom-dependency-lazy-flag should compile 2`] = `
+"./index.js
+└─ (missing, value) ./lib/index.js [barrel]
+   └─ (value) ./lib/value.js"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel custom-dependency-lazy-flag custom-dependency-lazy-flag should pre-compile to fill disk cache (1st) 1`] = `
+"./index.js
+└─ (missing, value) ./lib/index.js [barrel]
+   └─ (value) ./lib/value.js"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel custom-dependency-lazy-flag custom-dependency-lazy-flag should pre-compile to fill disk cache (2nd) 1`] = `
+"./index.js
+└─ (missing, value) ./lib/index.js [barrel]
+   └─ (value) ./lib/value.js"
+`;

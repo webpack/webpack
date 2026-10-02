@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases lazy-barrel custom-dependency-lazy-flag custom-dependency-lazy-flag should compile 1`] = `
+"./index.js
+└─ (missing, value) ./lib/index.js [barrel]
+   └─ (value) ./lib/value.js"
+`;

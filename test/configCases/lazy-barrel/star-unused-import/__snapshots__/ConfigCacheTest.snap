@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should compile: side-effects-false-concatenation-false 1`] = `
+"./index.js
+├─ (used) ./barrel.js
+│  ├─ (*) ./used.js
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js
+│  │  └─ (expensiveHelper) ./large-subtree.js
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js
+└─ (*) ./later.js
+   └─ (mixedLocal, unused) ./later-1.js
+      └─ (mixedLocal, unused) ./later-2.js
+         └─ (mixedLocal, unused) ./barrel.js (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should compile: side-effects-false-concatenation-false 2`] = `
+"./index.js
+├─ (used) ./barrel.js
+│  ├─ (*) ./used.js
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js
+│  │  └─ (expensiveHelper) ./large-subtree.js
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js
+└─ (*) ./later.js
+   └─ (mixedLocal, unused) ./later-1.js
+      └─ (mixedLocal, unused) ./later-2.js
+         └─ (mixedLocal, unused) ./barrel.js (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should compile: side-effects-true-concatenation-false 1`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should compile: side-effects-true-concatenation-false 2`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should compile: side-effects-true-concatenation-true 1`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should compile: side-effects-true-concatenation-true 2`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should pre-compile to fill disk cache (1st): side-effects-false-concatenation-false 1`] = `
+"./index.js
+├─ (used) ./barrel.js
+│  ├─ (*) ./used.js
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js
+│  │  └─ (expensiveHelper) ./large-subtree.js
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js
+└─ (*) ./later.js
+   └─ (mixedLocal, unused) ./later-1.js
+      └─ (mixedLocal, unused) ./later-2.js
+         └─ (mixedLocal, unused) ./barrel.js (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should pre-compile to fill disk cache (1st): side-effects-true-concatenation-false 1`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should pre-compile to fill disk cache (1st): side-effects-true-concatenation-true 1`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should pre-compile to fill disk cache (2nd): side-effects-false-concatenation-false 1`] = `
+"./index.js
+├─ (used) ./barrel.js
+│  ├─ (*) ./used.js
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js
+│  │  └─ (expensiveHelper) ./large-subtree.js
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js
+└─ (*) ./later.js
+   └─ (mixedLocal, unused) ./later-1.js
+      └─ (mixedLocal, unused) ./later-2.js
+         └─ (mixedLocal, unused) ./barrel.js (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should pre-compile to fill disk cache (2nd): side-effects-true-concatenation-false 1`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
+
+exports[`ConfigCacheTestCases lazy-barrel star-unused-import star-unused-import should pre-compile to fill disk cache (2nd): side-effects-true-concatenation-true 1`] = `
+"./index.js [barrel]
+├─ (used) ./barrel.js [barrel]
+│  ├─ (*) ./used.js [barrel]
+│  │  └─ (usedHelper) ./used-helper.js
+│  ├─ (*) ./unused.js [barrel]
+│  │  └─ (expensiveHelper) ./large-subtree.js [barrel]
+│  │     └─ (deep) ./deep.js
+│  └─ (*) ./mixed.js [barrel]
+│     ├─ (mixedHelper) ./mixed-helper.js
+│     └─ (reexported) ./reexported.js [raw] [lazy]
+└─ (*) ./later.js [barrel]
+   └─ (mixedLocal, unused) ./later-1.js [barrel]
+      └─ (mixedLocal, unused) ./later-2.js [barrel]
+         └─ (mixedLocal, unused) ./barrel.js [barrel] (deduped)"
+`;
