@@ -351,13 +351,14 @@ const knownV8Bugs = [
 	"module-code/namespace/internals/super-access-to-tdz-binding.js"
 ];
 
-// The JavaScript minimizer each minified mode builds with, under the options
-// production minifies with: terser as published, and webpack's printer, which
-// `experiments.futureDefaults` switches it to.
-const MINIFY = {
-	terser: { compress: { passes: 2 } },
-	printer: { compress: { passes: 2 }, printer: true }
+// The JavaScript minimizer each minified mode builds with: terser as the plugin
+// publishes it, and webpack's printer, which `futureDefaults` switches to. Both
+// read the same options, so a difference between the modes is the minifier's.
+const MINIFIERS = {
+	terser: MinimizerPlugin.terserMinify,
+	printer: jsMinify
 };
+const MINIFY_OPTIONS = { compress: { passes: 2 } };
 
 // A minifier renames bindings, so a function naming itself after one reads the
 // new name: test262 files these SetFunctionName cases as `fn-name`.
@@ -742,16 +743,8 @@ const MINIFIED_FAILURES = [
 	{
 		reason:
 			"terser's parser refuses a program the spec allows, which fails the build",
-		minifiers: ["terser", "printer"],
+		minifiers: ["terser"],
 		tests: [
-			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
-			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
-			"eval-code/direct/async-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
-			"eval-code/direct/async-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
-			"eval-code/direct/async-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
-			"eval-code/direct/async-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
-			"eval-code/direct/async-meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
-			"eval-code/direct/async-meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
 			"expressions/assignment/dstr/ident-name-prop-name-literal-break-escaped.js (sloppy)",
 			"expressions/assignment/dstr/ident-name-prop-name-literal-case-escaped.js (sloppy)",
 			"expressions/assignment/dstr/ident-name-prop-name-literal-catch-escaped.js (sloppy)",
@@ -937,8 +930,6 @@ const MINIFIED_FAILURES = [
 			"expressions/class/ident-name-method-def-while-escaped.js (strict)",
 			"expressions/class/ident-name-method-def-with-escaped.js (sloppy)",
 			"expressions/class/ident-name-method-def-with-escaped.js (strict)",
-			"expressions/function/arguments-with-arguments-lex.js (sloppy)",
-			"expressions/generators/arguments-with-arguments-lex.js (sloppy)",
 			"expressions/generators/yield-as-function-expression-binding-identifier.js (sloppy)",
 			"expressions/object/covered-ident-name-prop-name-literal-break-escaped.js (sloppy)",
 			"expressions/object/covered-ident-name-prop-name-literal-break-escaped.js (strict)",
@@ -1263,16 +1254,33 @@ const MINIFIED_FAILURES = [
 			"statements/for-in/identifier-let-allowed-as-lefthandside-expression-not-strict.js (sloppy)",
 			"statements/for-of/head-var-bound-names-let.js (sloppy)",
 			"statements/for/head-lhs-let.js (sloppy)",
-			"statements/for/scope-head-lex-open.js (sloppy)",
-			"statements/for/scope-head-lex-open.js (strict)",
-			"statements/function/arguments-with-arguments-lex.js (sloppy)",
-			"statements/generators/arguments-with-arguments-lex.js (sloppy)",
 			"statements/generators/yield-as-function-expression-binding-identifier.js (sloppy)",
 			"statements/generators/yield-as-generator-declaration-binding-identifier.js (sloppy)",
 			"statements/let/syntax/escaped-let.js (sloppy)",
 			"statements/using/syntax/using-declaring-let-split-across-two-lines.js (sloppy)",
 			"white-space/after-regular-expression-literal-ogham-space.js (sloppy)",
 			"white-space/after-regular-expression-literal-ogham-space.js (strict)"
+		]
+	},
+	{
+		reason:
+			"terser rejects a redeclaration the spec allows, and the printer ports that refusal",
+		minifiers: ["terser", "printer"],
+		tests: [
+			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
+			"eval-code/direct/async-func-decl-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
+			"eval-code/direct/async-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
+			"eval-code/direct/async-func-expr-named-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
+			"eval-code/direct/async-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
+			"eval-code/direct/async-func-expr-nameless-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
+			"eval-code/direct/async-meth-fn-body-cntns-arguments-lex-bind-declare-arguments-and-assign.js (sloppy)",
+			"eval-code/direct/async-meth-fn-body-cntns-arguments-lex-bind-declare-arguments.js (sloppy)",
+			"expressions/function/arguments-with-arguments-lex.js (sloppy)",
+			"expressions/generators/arguments-with-arguments-lex.js (sloppy)",
+			"statements/for/scope-head-lex-open.js (sloppy)",
+			"statements/for/scope-head-lex-open.js (strict)",
+			"statements/function/arguments-with-arguments-lex.js (sloppy)",
+			"statements/generators/arguments-with-arguments-lex.js (sloppy)"
 		]
 	},
 	{
@@ -1692,8 +1700,8 @@ const compile = async (entry, scenario, options = {}) =>
 					minimizer: [
 						new MinimizerPlugin({
 							test: /\.[cm]?js$/i,
-							minify: jsMinify,
-							minimizerOptions: MINIFY[minify],
+							minify: MINIFIERS[minify],
+							minimizerOptions: MINIFY_OPTIONS,
 							parallel: false
 						})
 					]
