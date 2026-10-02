@@ -1473,9 +1473,14 @@ const collectIntegerProperties = () => {
  * could have been written as.
  * @param {string} syntax a value definition
  * @param {PartialSyntaxTable} propertyTable where a `<'property'>` is read
+ * @param {(node: TypeNode) => void=} onType called with each numeric type reached
  * @returns {Set<string>} the numeric type names reachable at the value's level
  */
-const valueLevelNumericTypes = (syntax, propertyTable = properties) => {
+const valueLevelNumericTypes = (
+	syntax,
+	propertyTable = properties,
+	onType = undefined
+) => {
 	/** @type {Set<string>} */
 	const found = new Set();
 	/** @type {Set<string>} */
@@ -1516,6 +1521,7 @@ const valueLevelNumericTypes = (syntax, propertyTable = properties) => {
 			case "type": {
 				if (NUMERIC_TYPES.has(node.name)) {
 					found.add(node.name);
+					if (onType !== undefined) onType(node);
 					return;
 				}
 				if (node.name === "length-percentage") {
@@ -1568,11 +1574,29 @@ const collectNumberZeroProperties = (propertyTable = properties) => {
 	const out = [];
 	for (const [name, entry] of Object.entries(propertyTable)) {
 		if (typeof entry.syntax !== "string") continue;
-		const kinds = valueLevelNumericTypes(entry.syntax, propertyTable);
-		if (!kinds.has("number") && !kinds.has("integer")) continue;
+		// WHY: A range leaving zero out drops a bare zero where `calc(0)` is clamped
+		// into it (`font-weight:0`), and `mdn-data` states no range for several that
+		// do (`column-count`, `widows`), so only a range naming zero counts.
+		let zeroNumber = false;
+		const kinds = valueLevelNumericTypes(
+			entry.syntax,
+			propertyTable,
+			(node) => {
+				if (node.name !== "number" && node.name !== "integer") return;
+				if (
+					node.min !== null &&
+					node.min <= 0 &&
+					(node.max === null || node.max >= 0)
+				) {
+					zeroNumber = true;
+				}
+			}
+		);
+		if (!zeroNumber) continue;
 		// A shorthand with a length slot may give the bare zero to that slot
 		// (`columns:0` is a `column-width`), where `calc(0)` fills the number one.
-		if (Array.isArray(entry.computed) && kinds.has("length")) continue;
+		const computed = /** @type {{ computed?: unknown }} */ (entry).computed;
+		if (Array.isArray(computed) && kinds.has("length")) continue;
 		out.push(name);
 	}
 	return out.sort();
@@ -7011,7 +7035,6 @@ const collectData = async () => {
 	);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const numberArgumentFunctions = collectNumberArgumentFunctions();
-	const numberZeroProperties = collectNumberZeroProperties();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
 		mathFunctions,
@@ -7025,6 +7048,10 @@ const collectData = async () => {
 		])
 	].sort();
 	const alphaValueProperties = collectAlphaValueProperties();
+	// An `<alpha-value>` takes every number, zero among them, ranged or not.
+	const numberZeroProperties = [
+		...new Set([...collectNumberZeroProperties(), ...alphaValueProperties])
+	].sort();
 	const ratioProperties = collectRatioProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();

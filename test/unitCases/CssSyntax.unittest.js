@@ -7585,15 +7585,19 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 		});
 
-		it("writes a unitless zero bare where the property takes a number", () => {
+		it("writes a unitless zero bare where the property's number may be zero", () => {
 			expect(minify("a{opacity:log(1)}")).toBe("a{opacity:0}");
-			expect(minify("a{flex-grow:sin(0)}")).toBe("a{flex-grow:0}");
-			expect(minify("a{line-height:calc(1 - 1)}")).toBe("a{line-height:0}");
+			expect(minify("a{aspect-ratio:calc(1 - 1)}")).toBe("a{aspect-ratio:0}");
 			// `width:0` is a length the declaration takes, where `calc(0)` is a
-			// number it drops; `columns:0` and `flex:0` give the zero to a length.
+			// number it drops; `columns:0` gives the zero to `column-width`.
 			expect(minify("a{width:calc(1 - 1)}")).toBe("a{width:calc(0)}");
 			expect(minify("a{columns:calc(1 - 1)}")).toBe("a{columns:calc(0)}");
-			expect(minify("a{flex:calc(1 - 1)}")).toBe("a{flex:calc(0)}");
+			// `font-weight:0` is out of `[1,1000]` and dropped where `calc(0)` is
+			// clamped to 1; `column-count`'s range is the same, unstated in mdn-data.
+			expect(minify("a{font-weight:calc(1 - 1)}")).toBe("a{font-weight:calc(0)}");
+			expect(minify("a{column-count:calc(1 - 1)}")).toBe(
+				"a{column-count:calc(0)}"
+			);
 		});
 
 		it("adds a sum of angle units in degrees", () => {
@@ -7790,8 +7794,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("turns a sign() into the number it is", () => {
 			expect(minify("a{z-index:sign(5px)}")).toBe("a{z-index:1}");
-			// `z-index` takes a number, so a zero is that number bare there.
-			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:0}");
+			// Zero keeps its parentheses too — see the unitless-zero case below.
+			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:calc(0)}");
 			// `z-index` takes a negative, so the answer prints bare.
 			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:-1}");
 		});
