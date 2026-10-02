@@ -657,6 +657,7 @@ const PRINT_TREE_SKIPPED_KEYS = new Set([
 	"mapName",
 	"idDeclares",
 	"atom",
+	"annotatedKey",
 	"source",
 	"attributesStartToken",
 	"attributesEndToken",
@@ -4587,10 +4588,86 @@ describe("syntax-printer", () => {
 				}
 			});
 
+			/** @type {Record<string, () => EXPECTED_OBJECT>} */
+			const PROPERTY_OPTION_SETS = {
+				"private names alone": () => ({ mangle: {} }),
+				properties: () => ({ mangle: { properties: {} } }),
+				"properties at the top level": () => ({ mangle: { toplevel: true, properties: true } }),
+				"properties by a regexp": () => ({ mangle: { properties: { regex: /^[a-m_$]/ } } }),
+				"properties by a global regexp": () => ({ mangle: { properties: { regex: /^[a-q]/g } } }),
+				"quoted properties kept": () => ({ mangle: { properties: { keep_quoted: true } } }),
+				"quoted properties kept strictly": () => ({ mangle: { properties: { keep_quoted: "strict" } } }),
+				"debug properties": () => ({ mangle: { properties: { debug: true } } }),
+				"debug properties with a suffix": () => ({ mangle: { properties: { debug: "XYZ" } } }),
+				"builtin properties": () => ({ mangle: { toplevel: true, properties: { builtins: true } } }),
+				"undeclared properties": () => ({ mangle: { properties: { undeclared: true } } }),
+				"annotated properties alone": () => ({ mangle: { properties: { only_annotated: true } } }),
+				"reserved properties": () => ({ mangle: { properties: { reserved: ["foo", "p", "value"] } } }),
+				"cached properties alone": () => ({
+					mangle: { properties: { only_cache: true } },
+					nameCache: { props: { props: { $foo: "a", $bar: "zz", $1: "one", $value: "v" } } }
+				}),
+				"a property name cache": () => ({
+					mangle: { properties: {} },
+					nameCache: { vars: { props: { $foo: "a" } }, props: { props: { $foo: "a", $1: "b", $length: "q" } } }
+				}),
+				"identifiers sorted by frequency": () => ({
+					mangle: { nth_identifier: sortingIdentifiers(), properties: { nth_identifier: sortingIdentifiers() } }
+				}),
+				"identifiers ignoring frequency": () => ({ mangle: { nth_identifier: plainIdentifiers(), properties: {} } }),
+				"properties and ie8": () => ({ mangle: { ie8: true, safari10: true, keep_fnames: true, properties: {} } })
+			};
+
+			for (const source of [
+				"class A { #x = 1; #y() { return this.#x; } static #z; get #w() { return 1; } set #w(v) {} static { A.#z = 2; } m(o) { return #x in o && this.#y().#x?.#w; } } new A().m({});",
+				"var o = { foo: 1, 'bar': 2, 3: 4, [baz]: 5, get qux() { return 1; }, set qux(v) {}, [k]() {}, *gen() {}, async am() {} }; o.foo = o['bar'] + o.qux + o[3]; Object.defineProperty(o, 'zed', {}); 'foo' in o; o[c ? 'a1' : (0, 'b1')]; console.log(o, window.beta, x.y.z, (await_ => 1)(), this.vee, (-u).neg, (n++).inc, new N().made, f().called, a?.b.chained, (a?.b).parenthesized);",
+				"var { alpha: aa, gamma = 2, ...rest } = o, [{ delta }] = p; class C { constructor() {} static eps = 1; 'zeta' = 2; [zz] = 3; if = 4; 1 = 5; method() {} 'quoted'() {} } new C().eps; for (const { theta } of list) theta;",
+				"function f(Object) { return Object.defineProperty(a, 'p', { value: 1 }); } var q = { p: 1, /*@__KEY__*/ 'r': 2, 'r2': /*@__KEY__*/ 'p' }; q[/*@__KEY__*/ 'r']; f({}); new Object.defineProperty(b, 'nu', {}); Object['defineProperty'](b, 'xi', {}); Object?.defineProperty(b, 'omicron', {}); Object.defineProperty?.(b, 'pi', {}); Object.defineProperty(b, ...rho); class Sigma { #tau = 1; get() { return this.#tau; } }",
+				"var o = { if: 1, null: 2, 1e3: 3, 0x10: 4, 'a b': 5, [`t`]: 6, [function () {}]() {}, [() => 1]() {}, [class {}]() {}, [function named() {}]() {}, [class Named {}]() {}, [NaN]() {}, [void 0]() {}, [x.y]() {} }; o.if + o.null + o[1000] + o['a b'] + o[1];",
+				"async function f(a) { return (await a).awaited + (typeof a).length; } function* g(b) { (yield).empty; (yield b).full; } l: for (var key in obj) { if (key.skip) continue l; break l; } f(g);",
+				"var o = { ['computed']: 1, value: 2 }; Object.defineProperty(o, c ? 'cond1' : 'cond2', {}); o.foo.bar = 1; window.foo; foo.bar; new Foo().bar; export_ = { value: o.value };"
+			]) {
+				it(`should mangle properties and private names as terser's mangler does: ${source.slice(0, 60)}`, async () => {
+					/** @type {string[]} */
+					const differences = [];
+					for (const [setName, makeSet] of Object.entries(PROPERTY_OPTION_SETS)) {
+						for (const compress of [false, { passes: 2 }]) {
+							const { theirs, ours } = await mangleBothWays({ "input.js": source }, () => ({
+								...makeSet(),
+								compress,
+								sourceMap: { asObject: true }
+							}));
+							for (const key of ["code", "map", "decodedMap", "nameCache"]) {
+								if (JSON.stringify(theirs[key]) !== JSON.stringify(ours[key])) {
+									differences.push(`${setName}, ${compress ? "compressed" : "parsed"}: ${key} ${JSON.stringify(ours[key])}`);
+								}
+							}
+						}
+					}
+					expect(differences).toEqual([]);
+				});
+			}
+
+			it("should throw as terser's mangler does where `Object.defineProperty` has no descriptor name", async () => {
+				const { minify, modules } = await load();
+				/** @type {string[]} */
+				const messages = [];
+				for (const enabled of [false, true]) {
+					/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = enabled;
+					try {
+						await minify("Object.defineProperty(o);", { mangle: { properties: {} } });
+					} catch (err) {
+						messages.push(/** @type {Error} */ (err).message);
+					} finally {
+						/** @type {{ enabled: boolean }} */ (modules.estreeMangler).enabled = false;
+					}
+				}
+				expect(messages).toHaveLength(2);
+				expect(messages[1]).toBe(messages[0]);
+			});
+
 			it("should leave to terser's mangler what only its tree holds", async () => {
 				for (const [source, options] of /** @type {[string, EXPECTED_ANY][]} */ ([
-					["class A { #secret = 1; get() { return this.#secret; } } new A();", { mangle: true }],
-					["var o = { alpha: 1 }; o.alpha = function (long) { return long; };", { mangle: { properties: true } }],
 					["function f(long) { return long; } f(1);", { mangle: true, format: { ast: true } }],
 					["function f(long) { return long; } f(1);", { mangle: true, format: { spidermonkey: true } }],
 					["function f(long) { return long; } f(1);", { mangle: false }],
