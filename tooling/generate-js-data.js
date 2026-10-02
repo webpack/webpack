@@ -5,7 +5,7 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE, PUNC
+// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname
 
 const fs = require("fs");
 const path = require("path");
@@ -754,7 +754,69 @@ const readChildren = (statements, method, where) => {
  * @property {string[] | null} walk the children its own `_walk` visits, null where it inherits one
  * @property {string | null} guard the field a walk visits children only when set
  * @property {string[] | null} backwards the children its own `_children_backwards` pushes, null where it inherits one
+ * @property {Record<string, string>} renamed what terser calls each field given its ESTree name, by that name
  */
+
+// What terser calls a field ESTree names otherwise, by the class declaring it
+// (its subclasses inherit the rename) and ESTree's name. The compressor moves
+// onto ESTree a field at a time; terser's `ast.js` cannot say which it meant.
+/** @type {Record<string, Record<string, string>>} */
+const ESTREE_FIELD_NAMES = {
+	DWLoop: { test: "condition" },
+	For: { test: "condition", update: "step" },
+	If: { test: "condition", alternate: "alternative" },
+	Conditional: { test: "condition", alternate: "alternative" },
+	Lambda: { params: "argnames", generator: "is_generator" },
+	Call: { arguments: "args" },
+	Try: { handler: "bcatch", finalizer: "bfinally" },
+	Catch: { param: "argname" },
+	DefinitionsLike: { declarations: "definitions" },
+	PrefixedTemplateString: { tag: "prefix", quasi: "template_string" },
+	Class: { superClass: "extends" },
+	Yield: { delegate: "is_star" }
+};
+
+/**
+ * Gives each class the ESTree names of its fields, and records what terser
+ * called each one renamed in `renamed`.
+ * @param {NodeClass[]} classes the classes, each after the class it extends
+ * @returns {NodeClass[]} the same classes, renamed
+ */
+const renameNodeFields = (classes) => {
+	/** @type {Map<string, Record<string, string>>} */
+	const renamesOf = new Map();
+	for (const nodeClass of classes) {
+		/** @type {Record<string, string>} */
+		const renames = {
+			...(nodeClass.base === null ? {} : renamesOf.get(nodeClass.base))
+		};
+		const own = ESTREE_FIELD_NAMES[nodeClass.type] || {};
+		for (const estreeName of Object.keys(own)) {
+			renames[own[estreeName]] = estreeName;
+		}
+		renamesOf.set(nodeClass.type, renames);
+		/**
+		 * @param {string} child a field, after the prefixes `readChildren` writes
+		 * @returns {string} it renamed
+		 */
+		const rename = (child) =>
+			child.replace(/[a-z_]+$/, (field) =>
+				Object.prototype.hasOwnProperty.call(renames, field)
+					? renames[field]
+					: field
+			);
+		nodeClass.fields = nodeClass.fields.map(rename);
+		if (nodeClass.walk) nodeClass.walk = nodeClass.walk.map(rename);
+		if (nodeClass.backwards) {
+			nodeClass.backwards = nodeClass.backwards.map(rename);
+		}
+		if (nodeClass.guard) nodeClass.guard = rename(nodeClass.guard);
+		for (const field of Object.keys(renames)) {
+			nodeClass.renamed[renames[field]] = field;
+		}
+	}
+	return classes;
+};
 
 /**
  * terser's node classes, parsed out of its `ast.js`: each one's place in the
@@ -876,7 +938,8 @@ const collectNodeClasses = () => {
 				values: {},
 				walk: null,
 				guard: null,
-				backwards: null
+				backwards: null,
+				renamed: {}
 			};
 			if (methodsNode && methodsNode.type === "ObjectExpression") {
 				for (const property of methodsNode.properties) {
@@ -951,7 +1014,7 @@ const collectNodeClasses = () => {
 			classes.push(nodeClass);
 		}
 	}
-	return classes;
+	return renameNodeFields(classes);
 };
 
 /**
@@ -975,6 +1038,7 @@ const renderNodeClasses = () => `
  * @property {string[] | null} walk the children its walk visits
  * @property {string | null} guard the field its walk descends only where set
  * @property {string[] | null} backwards the children it pushes backwards
+ * @property {Record<string, string>} renamed what terser calls each field given its ESTree name, by that name
  */
 
 // terser's node classes, in the order its \`ast.js\` defines them, each after

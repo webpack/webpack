@@ -1858,7 +1858,9 @@ describe("syntax-printer", () => {
 				)
 			);
 			const body = ast.body[0].body;
-			body[0].body.args[1].expressions = [];
+			// terser's call holds `args`, webpack's ESTree's `arguments`.
+			const call = body[0].body;
+			(call.arguments || call.args)[1].expressions = [];
 			body[1].body.expressions = [];
 			return (
 				await run(ast, { compress: { defaults: false, unused: true }, mangle: false })
@@ -2223,16 +2225,16 @@ describe("syntax-printer", () => {
 		expect(declared.pinned()).toBeFalsy();
 
 		const lambda = parsed("function f({ a }, [b], ...c) {} function g(d = 1, e) { return d; } function h(p, q) {}").body;
-		expect(lambda[2].args_as_names()).toBe(lambda[2].argnames);
-		expect(lambda[1].argnames[0].all_symbols().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
+		expect(lambda[2].args_as_names()).toBe(lambda[2].params);
+		expect(lambda[1].params[0].all_symbols().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
 		expect(lambda[0].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["a", "b", "c"]);
 		expect(lambda[1].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d", "e"]);
 		expect(lambda[0].length_property()).toBe(2);
 		expect(lambda[1].is_braceless()).toBeTruthy();
 		expect(lambda[0].is_braceless()).toBeFalsy();
-		const definitions = parsed("var { h, i: [j] } = o, k;").body[0].definitions;
-		expect(definitions[0].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
-		expect(definitions[1].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
+		const declarations = parsed("var { h, i: [j] } = o, k;").body[0].declarations;
+		expect(declarations[0].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
+		expect(declarations[1].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
 
 		const object = parsed("({ a: 1, [b]: 2, get c() {}, set [d](v) {}, e() {} })").body[0].body;
 		expect(object.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([false, true, false, true, false]);
@@ -2440,6 +2442,13 @@ describe("syntax-printer", () => {
 			}
 		);
 		expect(calls.length).toBeGreaterThan(30);
+		// webpack's helpers read a call's arguments under ESTree's name.
+		Object.defineProperty(modules.ast.AST_Call.prototype, "arguments", {
+			configurable: true,
+			get() {
+				return this.args;
+			}
+		});
 		for (const unsafe of [true, false]) {
 			for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
 				const compressor = new modules.compress.Compressor(
@@ -2899,6 +2908,113 @@ describe("syntax-printer", () => {
 		expect(directive.transform(compressor)).toBe(directive);
 		expect(compressor.has_directive("use strict")).toBe(directive);
 		expect(ast.TreeWalker.prototype.webpackSkipsSqueezed).toBe(false);
+	});
+
+	describe("fields named as ESTree names them", () => {
+		// Each field the node classes take ESTree's name for, read and written
+		// by every phase: a loop, branch, call, generator, class, template, try.
+		const SOURCE = `
+			function* walk(list, ...rest) {
+				var index = 0, total;
+				for (let i = 0; i < list.length; i++) if (list[i]) total = i; else continue;
+				do { index++; } while (index < rest.length && cond(index));
+				while (index--) yield* rest;
+				try { use(total ? list : rest); } catch ({ message }) { log(message); } finally { done(); }
+				return tag\`a\${index}b\` + (total ? 1 : 2);
+			}
+			class Base { m() { return 1; } }
+			class Derived extends Base { m() { return new Base(walk([1, 2], 3)).m(); } }
+			if (typeof window === "object") sink(Derived); else sink(Base, walk);
+			sink([1, 2].map((item) => item ? item * 2 : 0), Math.max.apply(Math, [1, 2]));
+		`;
+
+		it("should give the nodes it builds ESTree's names", async () => {
+			const { parse } = (await load()).modules;
+			const [walk, , derived, branch] = parse.parse(SOURCE).body;
+			expect(Object.keys(walk)).toEqual(
+				expect.arrayContaining(["params", "generator"])
+			);
+			expect(Object.keys(walk)).not.toContain("argnames");
+			expect(Object.keys(walk.body[0])).toContain("declarations");
+			expect(Object.keys(walk.body[1])).toEqual(
+				expect.arrayContaining(["test", "update"])
+			);
+			expect(Object.keys(walk.body[1].body)).toEqual(
+				expect.arrayContaining(["test", "alternate"])
+			);
+			expect(Object.keys(walk.body[4])).toEqual(
+				expect.arrayContaining(["handler", "finalizer"])
+			);
+			expect(Object.keys(walk.body[4].handler)).toContain("param");
+			expect(Object.keys(walk.body[3].body.body)).toContain("delegate");
+			expect(Object.keys(walk.body[5].value.left)).toEqual(
+				expect.arrayContaining(["tag", "quasi"])
+			);
+			expect(Object.keys(derived)).toContain("superClass");
+			expect(Object.keys(branch.body.body)).toContain("arguments");
+			// A `pure_funcs` function still reads terser's name for the arguments.
+			expect(branch.body.body.args).toBe(branch.body.body.arguments);
+		});
+
+		it("should minify them as terser does", async () => {
+			const { minify } = await load();
+			const reference = terserReference();
+			for (const options of [
+				{},
+				{ compress: { passes: 3, unsafe: true, keep_fargs: false } },
+				{ compress: { toplevel: true, inline: 1, sequences: false } },
+				{ compress: { hoist_vars: true, hoist_funs: true }, mangle: false },
+				{
+					compress: {
+						pure_funcs: (/** @type {EXPECTED_ANY} */ node) =>
+							node.args.length !== 1
+					}
+				},
+				{ compress: false, mangle: false },
+				{ format: { spidermonkey: true } }
+			]) {
+				const ours = /** @type {EXPECTED_ANY} */ (
+					await minify(SOURCE, /** @type {EXPECTED_ANY} */ (options))
+				);
+				const theirs = /** @type {EXPECTED_ANY} */ (
+					await reference.minify(SOURCE, /** @type {EXPECTED_ANY} */ (options))
+				);
+				// Positions apart: the parsers place some nodes apart.
+				/**
+				 * @param {string} key a key
+				 * @param {unknown} value its value
+				 * @returns {unknown} the value, nothing for a position
+				 */
+				const withoutPositions = (key, value) =>
+					key === "loc" ? undefined : value;
+				expect([ours.code, JSON.stringify(ours.ast, withoutPositions)]).toEqual([
+					theirs.code,
+					JSON.stringify(theirs.ast, withoutPositions)
+				]);
+			}
+		});
+
+		it("should read a tree it handed back, as terser does", async () => {
+			const { minify } = await load();
+			const reference = terserReference();
+			/**
+			 * @param {Minifying} run a minify, webpack's or terser's
+			 * @returns {Promise<string | undefined>} the tree handed back, compressed
+			 */
+			const roundTrip = async (run) => {
+				const { ast } = /** @type {EXPECTED_ANY} */ (
+					await run(SOURCE, {
+						compress: false,
+						mangle: false,
+						format: /** @type {EXPECTED_ANY} */ ({ ast: true, code: false })
+					})
+				);
+				return (await run(ast, { compress: { passes: 2 } })).code;
+			};
+			expect(await roundTrip(minify)).toBe(
+				await roundTrip(reference.minify)
+			);
+		});
 	});
 
 	describe("correct phase", () => {
@@ -3635,7 +3751,7 @@ describe("syntax-printer", () => {
 					/** @type {number[]} */
 					const sizes = [];
 					walk(ast, (/** @type {EXPECTED_ANY} */ node) => {
-						if (node.argnames) sizes.push(node.body.length);
+						if (node.argnames || node.params) sizes.push(node.body.length);
 					});
 					lengths.push(sizes);
 				}
@@ -3708,11 +3824,11 @@ describe("syntax-printer", () => {
 			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
 			const declarator = printTree.body[0].declarations[0];
 			// A name reads as terser's definition named it, and as written for the ESTree mangler.
-			const definition = tree.body[0].definitions[0].name.definition();
+			const definition = tree.body[0].declarations[0].name.definition();
 			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
 			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
 			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
-			expect(declarator.startToken).toBe(tree.body[0].definitions[0].start);
+			expect(declarator.startToken).toBe(tree.body[0].declarations[0].start);
 			const [a, b, c, d] = declarator.init.properties;
 			expect([a.quote, a.key.quote, a.mapName]).toEqual(["'", "'", "a"]);
 			expect([Boolean(b.quote), b.key.type, b.mapName]).toEqual([
@@ -4751,7 +4867,7 @@ describe("syntax-printer", () => {
 						await minifier(source, { compress: false, mangle: false, format: { ast: true, code: false } })
 					);
 					const { code } = await minifier(ast, { compress: false, mangle: { toplevel: true }, format });
-					expect([code, ast.body[0].body.length, ast.body[0].argnames.length, ast.variables]).toEqual([
+					expect([code, ast.body[0].body.length, (ast.body[0].params || ast.body[0].argnames).length, ast.variables]).toEqual([
 						"function n(n){return n}n(1);",
 						0,
 						0,

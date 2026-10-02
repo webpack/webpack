@@ -15,6 +15,14 @@ const {
  */
 const importTerserSource = (specifier) => import(specifier);
 const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
+const { nodeClasses } = require("../../lib/javascript/syntax-printer-data");
+
+// What terser calls each field webpack's node classes name as ESTree does, by
+// class: the trees are compared under terser's names.
+/** @type {Map<string, Record<string, string>>} */
+const RENAMED_FIELDS = new Map(
+	nodeClasses().map(({ type, renamed }) => [type, renamed])
+);
 
 // A token's fields, past which a converted tree keeps nothing a minify reads.
 const TOKEN_FIELDS = [
@@ -74,12 +82,21 @@ const firstDifference = (theirs, ours) => {
 		if (kindOf(a) !== kindOf(b)) {
 			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
 		}
+		const renamed = (kindOf(b) !== "Token" && RENAMED_FIELDS.get(b.TYPE)) || {};
+		/** @type {Record<string, string>} */
+		const ourNames = {};
+		for (const ourName of Object.keys(renamed)) {
+			ourNames[renamed[ourName]] = ourName;
+		}
 		const keys =
 			kindOf(a) === "Token"
 				? TOKEN_FIELDS
-				: new Set([...Object.keys(a), ...Object.keys(b)]);
+				: new Set([
+						...Object.keys(a),
+						...Object.keys(b).map((key) => renamed[key] || key)
+					]);
 		for (const key of keys) {
-			const inner = walk(`${where}.${key}`, a[key], b[key]);
+			const inner = walk(`${where}.${key}`, a[key], b[ourNames[key] || key]);
 			if (inner) return inner;
 		}
 		return undefined;
