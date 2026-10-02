@@ -234,6 +234,11 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a string method given an index past the string",
+		'console.log("xy".charCodeAt(1e99), "abcde".charAt(4294967295));',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"global functions called on literals",
 		'console.log(parseInt("ff", 16), encodeURIComponent("a b"), isNaN("x"));',
 		{ compress: {}, mangle: false }
