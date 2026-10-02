@@ -223,6 +223,16 @@ const IMPROVED_CASES = [
 		"a nested function reading its own `this`",
 		`!function () { ${TRY} console.log([1].map(function () { return typeof this; })[0]); }();`,
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an arrow naming `yield` in an async function, which reserves only `await`",
+		"var yield; async function f(n) { while (n--) { (() => { yield = 1; })(); } } f(2); console.log(yield);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"an arrow naming `await` in a generator, which reserves only `yield`",
+		"var await; function* g(n) { while (n--) { (() => { await = 1; })(); } } g(2).next(); console.log(await);",
+		{ compress: { passes: 2 }, mangle: false }
 	]
 ];
 
@@ -361,6 +371,11 @@ const CORRECTED_CASES = [
 		"a function naming `await`, inlined into an async function by reference",
 		"var await; const g = function () { await = 1; }; async function f() { g(); } f(); console.log(await);",
 		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	],
+	[
+		"an arrow naming `await`, its body run inside a class static block",
+		"var await; class C { static { (() => { await = 1; })(); } } console.log(await, C.name);",
+		{ compress: { passes: 2 }, mangle: false }
 	],
 	[
 		"a function naming `await`, inlined into an async generator",
