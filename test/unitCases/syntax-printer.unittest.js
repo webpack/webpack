@@ -226,7 +226,7 @@ const IMPROVED_CASES = [
 	],
 	[
 		"a string method called on a literal",
-		'console.log("abcde".charAt(1), "abc".at(-1), "abcde".replaceAll("c", "x"));',
+		'console.log("abcde".charAt(1), "abc".normalize(), "abcde".replace("c", "x"));',
 		{ compress: {}, mangle: false }
 	],
 	[
@@ -241,7 +241,7 @@ const IMPROVED_CASES = [
 	],
 	[
 		"`Number` and `String` functions called on literals",
-		"console.log(Number.isInteger(5), Number.isSafeInteger(2 ** 53), String.fromCharCode(65, 66));",
+		"console.log(Number.isInteger(5), Number.isSafeInteger(2 ** 53), String.fromCharCode(65, 66), String.fromCodePoint(67));",
 		{ compress: {}, mangle: false }
 	],
 	[
@@ -303,6 +303,7 @@ const KEPT_CASES = [
 	["a string method left out", 'try { console.log("a".join()); } catch (e) { console.log(2); }'],
 	["an array of something no literal", "console.log([Math.random() > 2].join());"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
+	["a method the oldest Node lacks", 'console.log("abc".at(-1), "abc".replaceAll("b", "x"));'],
 	["an optional call", 'console.log("abc"?.charAt(1));']
 ];
 
