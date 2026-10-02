@@ -2374,6 +2374,24 @@ describe("syntax-printer", () => {
 	});
 	// cspell:enable
 
+	// terser 5.51 loops until out of memory on these, so only ours is run.
+	it("should refuse a `type` or `interface` statement unless reading TypeScript", async () => {
+		const { minify } = await load();
+		for (const [source, token] of [
+			["type T = number;", "name (T)"],
+			["interface I {}", "name (I)"]
+		]) {
+			await expect(minify(source, {})).rejects.toThrow(
+				`Unexpected token: ${token}`
+			);
+		}
+		// `type` before a line break is a name, which terser reads as one.
+		const identifier = "var type = 1, T; type\nT = 2; log(type, T);";
+		expect((await minify(identifier, {})).code).toBe(
+			(await require("terser").minify(identifier, {})).code
+		);
+	});
+
 	it("should read characters as terser's unicode helpers do", async () => {
 		const terserUnicode = await import(
 			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/unicode.js")
