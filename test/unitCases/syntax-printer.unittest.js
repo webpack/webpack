@@ -336,6 +336,65 @@ const CORRECTED_CASES = [
 		"`===` between two calls returning different types",
 		"var i = 0; function f() { return { a: i++ ? '1' : 1 }; } console.log(f().a === f().a);",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"a function naming `await`, inlined into an async function",
+		"var await; async function f() { function g() { await = 1; } g(); } f(); console.log(await);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a function naming `yield`, inlined into a generator",
+		"var yield; function* g() { function h() { yield = 1; } h(); } g().next(); console.log(yield);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a function naming `await`, inlined into an async arrow",
+		"var await; const f = async () => { function g() { await = 1; } g(); }; f(); console.log(await);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a function naming `await`, inlined into an arrow inside an async function",
+		"var await; async function f() { const a = () => { function g() { await = 1; } g(); }; a(); } f(); console.log(await);",
+		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"a function naming `await`, inlined into an async function by reference",
+		"var await; const g = function () { await = 1; }; async function f() { g(); } f(); console.log(await);",
+		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	]
+];
+
+// Each writes a name where terser writes it as a keyword, through the `improve`
+// phase rather than the `correct` one, so terser's bytes are not the measure.
+/** @type {[string, string, import("terser").MinifyOptions][]} */
+const RESERVED_NAME_CASES = [
+	[
+		"an arrow naming `await`, its body run inside an async function",
+		"var await; const g = () => { await = 1; }; async function f() { g(); } f(); console.log(await);",
+		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	],
+	[
+		"an arrow naming `yield`, its body run inside a generator",
+		"var yield; const g = () => { yield = 1; }; function* h() { g(); } h().next(); console.log(yield);",
+		{ compress: { passes: 2, toplevel: true }, mangle: false }
+	]
+];
+
+// Each still inlines, so the name a context reserves holds back only the inline
+// that would write it where it is a keyword.
+/** @type {[string, string][]} */
+const STILL_INLINED_CASES = [
+	[
+		"a nested function keeping its own context",
+		"var await; async function f() { function g() { sink(function () { await = 1; }); } g(); } f();"
+	],
+	[
+		"`await` as a property name",
+		"async function f() { function g() { sink({ await: 1 }.await); } g(); } f();"
+	],
+	[
+		"`yield` named where only `await` is reserved",
+		"var yield; async function f() { function g() { yield = 1; } g(); } f(); sink(yield);"
 	]
 ];
 
@@ -2665,6 +2724,37 @@ describe("syntax-printer", () => {
 				} finally {
 					corrections.enabled = true;
 				}
+			});
+		}
+	});
+
+	describe("a name a context reserves", () => {
+		for (const [name, input, options] of RESERVED_NAME_CASES) {
+			it(`should not write it where it is a keyword: ${name}`, async () => {
+				const { minify } = await load();
+				const expected = runProgram(input);
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(expected);
+
+				const reference = await terserReference().minify(input, options);
+				expect(
+					runProgram(/** @type {string} */ (reference.code))
+				).not.toBe(expected);
+			});
+		}
+	});
+
+	describe("inlining a name a context reserves", () => {
+		for (const [name, input] of STILL_INLINED_CASES) {
+			it(`should still write what terser writes: ${name}`, async () => {
+				const { minify } = await load();
+				const options = {
+					compress: { passes: 2 },
+					mangle: false
+				};
+				const { code } = await minify(input, options);
+				const reference = await terserReference().minify(input, options);
+				expect(code).toBe(reference.code);
 			});
 		}
 	});
