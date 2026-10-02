@@ -240,7 +240,7 @@ Re-run `yarn fix:special` **before the next commit** after touching:
 
 - An option type in `lib/**/*.js` or `declarations/**/*.ts` — rewrites that schema, its validator and `types.d.ts`.
 - JSDoc in `lib/**/*.js` reachable from a public export — `types.d.ts`.
-- `tooling/generate-runtime-code.js`, `generate-wasm-code.js`, `generate-css-data.js`, `generate-html-data.js`, `generate-js-data.js`, or anything they consume (incl. the `acorn` / `mdn-data` / `color-name` / `@webref/*` versions in `package.json` and `tooling/html-entities.json`).
+- `tooling/generate-runtime-code.js`, `generate-wasm-code.js`, `generate-css-data.js`, `generate-html-data.js`, `generate-js-data.js`, or anything they consume (incl. the `acorn` / `mdn-data` / `@mdn/browser-compat-data` / `color-name` / `@webref/*` versions in `package.json` and `tooling/html-entities.json`).
 
 CI's `lint` job verifies these are current; `yarn fix` (`fix:code` + `fix:special` + `fmt`) is the preferred final step.
 

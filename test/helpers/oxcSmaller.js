@@ -128,7 +128,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1250",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1251",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1252",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1255",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1259",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1266",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1267",
@@ -166,8 +165,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1340",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1341",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1365",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1374",
-			"oxc minifier: ecmascript/may_have_side_effects.rs:1375",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1396",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1399",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:1400",
@@ -2380,6 +2377,16 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/value_type.rs:233",
 			"oxc minifier: ecmascript/value_type.rs:234",
 			"oxc minifier: ecmascript/value_type.rs:62"
+		]
+	],
+	[
+		"oxc folds `at` and `replaceAll` on literals, which webpack leaves to the engine: the oldest Node it builds on lacks them, and folding them would tie the output to the build's Node",
+		[
+			"oxc minifier: peephole/replace_known_methods.rs:172",
+			"oxc minifier: peephole/replace_known_methods.rs:173",
+			"oxc minifier: peephole/replace_known_methods.rs:174",
+			"oxc minifier: peephole/replace_known_methods.rs:175",
+			"oxc minifier: peephole/replace_known_methods.rs:177"
 		]
 	],
 	[
