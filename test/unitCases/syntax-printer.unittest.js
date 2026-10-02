@@ -756,11 +756,45 @@ const ESTREE_PRINT_CASES = [
 ];
 
 /**
+ * Modules for the imports and exports the ESTree printer prints.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_MODULE_STATEMENT_CASES = [
+	"import a, { b as c, d, 'e f' as g, \"h\" as h, default as i } from 'j' with { type: 'json', 'k': 'l' }; import n, * as o from 'p'; import * as q from 'r'; import { '*' as s } from 't'; import {} from 'u'; import source v from 'w'; import defer * as x from 'y'; export { a, c as z, d as 'y z', i as j }; export {}; export { k as l, m as 'n' } from 'o'; export * from 'p'; export * as q from 'r'; export * as 'r s' from 's'; export * as '*' from 't'; export { '*' as star } from 'u'; export { 'v w' } from 'v'; export { 'w' as x } from 'y' with { type: 'json' }; export default (function () {})(); export var t = 1, u = (v, w); export let ab; export const ac = 1; export function ad() {} export class ae {}; await using af = ag;",
+	"export default function () {} export function* f() {}",
+	"export default class {}; export async function f() {}",
+	"export default (a, b);",
+	"export default function f() {}",
+	"export default class C {}",
+	"export default async () => {};"
+];
+
+/**
  * Sources only a module reads, whose expressions the ESTree printer is held to.
  * @type {string[]}
  */
 const ESTREE_PRINT_MODULE_CASES = [
 	"import.meta.x; import('a'); import('a', { with: { type: 'json' } }); import.source('a'); import.defer('b'); (import.meta).x; await (a, b); !await a;"
+];
+
+/**
+ * Statements for what the ESTree printer decides that the tables above leave
+ * out: braces, semicolons, `in` inside a loop's head, and directives.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_STATEMENT_CASES = [
+	"for (var a = (b in c);;); for (a = (b in c);;); for (var a = () => (b in c);;); for (var a = function () { b in c; };;); for (var a = [b in c];;); for (; a in b;) c(); for (;;) var d = e in f; for (var a in b) var c = d in e; for (let a of (b, c)); for ((a in b).c in d);",
+	"if (a) { if (b) c(); } else d(); if (a) if (b) c(); else d(); else e(); if (a) for (;;) if (b) c(); else d(); else e(); if (a) for (;;) if (b) c(); else e(); if (a) do b(); while (c); else d(); if (a); else; while (a); with (a) ; with (a) { b(); } l: for (;;) if (a) break l; else continue l;",
+	"switch (a) {} switch (a) { case 1: case 2: b(); break; default: ; } try { a(); } catch { } finally { } try {} catch ({ a, b }) { c(); } do ; while (a); do { a(); } while (b); do a(); while (b);",
+	"'use strict'; 'use asm'; ; 'not a directive'; x = 0x10 + 1.0; function f() { 'use asm'; return 0x10 + 1.0; } function g() { a(); 'b'; return 0x10; } (function () { ; 'use asm'; b(); })(); x = () => { 'not'; a(); }; class C { static { 'not'; } m() { 'use asm'; return 0x10; } }",
+	"function f() { return; } function g() { throw a; } var a = 1, b, [c] = d, { e } = f; let i = 1; const h = 2; label: { break label; } debugger;"
+];
+
+// The format options that change how a statement prints, past an expression's.
+/** @type {EXPECTED_OBJECT[]} */
+const ESTREE_PRINT_STATEMENT_FORMATS = [
+	{ semicolons: false },
+	{ ie8: true, ecma: 5 }
 ];
 
 // The format options that change how an expression prints.
@@ -777,6 +811,12 @@ const ESTREE_PRINT_FORMATS = [
 	{ quote_keys: true, ecma: 2020 },
 	{ keep_quoted_props: true, ecma: 2020 },
 	{ max_line_len: 40 }
+];
+
+// Every format option a whole program is printed under.
+const ESTREE_PRINT_PROGRAM_FORMATS = [
+	...ESTREE_PRINT_FORMATS,
+	...ESTREE_PRINT_STATEMENT_FORMATS
 ];
 
 describe("syntax-printer", () => {
@@ -2958,15 +2998,7 @@ describe("syntax-printer", () => {
 						/** @type {{ enabled: boolean }} */ (corrections).enabled = true;
 					}
 					const ours = modules.output.OutputStream(given);
-					try {
-						modules.printEstree(modules.toPrintTree(expression), ours);
-					} catch (err) {
-						// A function's statements print once statements are ported.
-						if (/cannot print a/.test(/** @type {Error} */ (err).message)) {
-							continue;
-						}
-						throw err;
-					}
+					modules.printEstree(modules.toPrintTree(expression), ours);
 					compared++;
 					if (ours.get() !== theirs.get()) {
 						differences.push(
@@ -3005,33 +3037,193 @@ describe("syntax-printer", () => {
 			});
 		}
 
-		it("should refuse a node it cannot print yet, statements among them", async () => {
+		it("should refuse a node it cannot print yet", async () => {
 			const { modules } = await load();
 			const output = modules.output.OutputStream({});
 			expect(() =>
-				modules.printEstree({ type: "IfStatement", startToken: null, endToken: null }, output)
-			).toThrow("printEstree cannot print a IfStatement node yet");
-			expect(() =>
 				modules.printEstree(
-					{
-						type: "ExpressionStatement",
-						directive: "use strict",
+					{ type: "Unknown", startToken: null, endToken: null },
+					output
+				)
+			).toThrow("printEstree cannot print a Unknown node yet");
+		});
+
+		/**
+		 * A source's whole tree after compressing and mangling, as terser prints it
+		 * and as `printEstree` prints its ESTree tree.
+		 * @param {string} source a source
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<string[]>} every format printed otherwise
+		 */
+		const compareProgram = async (source, options) => {
+			const { minify, modules, corrections } = await load();
+			// terser's typings leave out `format.ast`, which returns the tree.
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await minify(source, { ...options, format: { ast: true, code: false } })
+			);
+			/** @type {string[]} */
+			const differences = [];
+			for (const format of ESTREE_PRINT_PROGRAM_FORMATS) {
+				const given = { ...format, comments: false };
+				const theirs = modules.output.OutputStream(given);
+				theirs.readonly = true;
+				/** @type {{ enabled: boolean }} */ (corrections).enabled = false;
+				try {
+					ast.print(theirs);
+				} finally {
+					/** @type {{ enabled: boolean }} */ (corrections).enabled = true;
+				}
+				const ours = modules.output.OutputStream(given);
+				ours.readonly = true;
+				modules.printEstree(modules.toPrintTree(ast), ours);
+				if (ours.get() !== theirs.get()) {
+					differences.push(
+						`${JSON.stringify(format)}: ${theirs.get()} printed ${ours.get()}`
+					);
+				}
+			}
+			return differences;
+		};
+
+		const programOptionSets = [
+			{ compress: false, mangle: false },
+			{ compress: false, mangle: true },
+			{ compress: { passes: 2 }, mangle: true },
+			{ compress: { passes: 2 }, mangle: { toplevel: true }, toplevel: true }
+		];
+		const programSources = [
+			...TABLE_SOURCES,
+			...ESTREE_PRINT_CASES,
+			...ESTREE_PRINT_STATEMENT_CASES
+		];
+		for (const source of [
+			...programSources,
+			...ESTREE_PRINT_MODULE_CASES,
+			...ESTREE_PRINT_MODULE_STATEMENT_CASES
+		]) {
+			it(`should print the whole program as terser's printer does: ${source.slice(0, 60)}`, async () => {
+				let compared = 0;
+				for (const module of [false, true]) {
+					for (const options of programOptionSets) {
+						let differences;
+						try {
+							differences = await compareProgram(source, { ...options, module });
+						} catch (err) {
+							// A source may be one only a script, or only a module, reads.
+							if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+							throw err;
+						}
+						expect(differences).toEqual([]);
+						compared++;
+					}
+				}
+				expect(compared).toBeGreaterThan(0);
+			});
+		}
+
+		it("should parenthesize a value with comments before it, as terser does", async () => {
+			const { modules } = await load();
+			const output = modules.output.OutputStream({});
+			const argument = {
+				type: "Identifier",
+				name: "a",
+				startToken: { comments_before: [{ type: "comment2", value: "x" }] },
+				endToken: null
+			};
+			modules.printEstree(
+				{ type: "ReturnStatement", argument, startToken: null, endToken: null },
+				output
+			);
+			expect(output.get()).toBe("return(a)");
+		});
+
+		it("should brace a statement's body where it must be", async () => {
+			const { modules } = await load();
+			const output = modules.output.OutputStream({});
+			const identifier = (/** @type {string} */ name) => ({
+				type: "Identifier",
+				name,
+				startToken: null,
+				endToken: null
+			});
+			modules.printEstree(
+				{
+					type: "IfStatement",
+					test: identifier("a"),
+					consequent: {
+						type: "VariableDeclaration",
+						kind: "let",
+						declarations: [
+							{
+								type: "VariableDeclarator",
+								id: identifier("b"),
+								init: null,
+								startToken: null,
+								endToken: null
+							}
+						],
 						startToken: null,
 						endToken: null
 					},
-					output
-				)
-			).toThrow("printEstree cannot print a directive yet");
+					alternate: {
+						type: "ClassDeclaration",
+						id: identifier("C"),
+						superClass: null,
+						body: { type: "ClassBody", body: [], startToken: null, endToken: null },
+						startToken: null,
+						endToken: null
+					},
+					startToken: null,
+					endToken: null
+				},
+				output
+			);
+			expect(output.get()).toBe("if(a){let b}else{class C{}}");
+			// What only the compressor leaves: an `if` with no `else` before one.
+			const nested = modules.output.OutputStream({});
+			modules.printEstree(
+				{
+					type: "IfStatement",
+					test: identifier("a"),
+					consequent: {
+						type: "IfStatement",
+						test: identifier("b"),
+						consequent: {
+							type: "ExpressionStatement",
+							expression: identifier("c"),
+							startToken: null,
+							endToken: null
+						},
+						alternate: null,
+						startToken: null,
+						endToken: null
+					},
+					alternate: { type: "EmptyStatement", startToken: null, endToken: null },
+					startToken: null,
+					endToken: null
+				},
+				nested
+			);
+			expect(nested.get()).toBe("if(a){if(b)c}else;");
+		});
+
+		it("should drop a printed function's body under `_destroy_ast`", async () => {
+			const { minify, modules } = await load();
 			const { ast } = /** @type {EXPECTED_ANY} */ (
-				await (await load()).minify("x = function () { a(); };", {
+				await minify("function f(a) { a(); } x = (b) => { b(); }; y = (c) => c;", {
 					compress: false,
 					mangle: false,
 					format: { ast: true, code: false }
 				})
 			);
-			expect(() =>
-				modules.printEstree(modules.toPrintTree(ast.body[0].body), output)
-			).toThrow("printEstree cannot print a body's statements yet");
+			const tree = modules.toPrintTree(ast);
+			const output = modules.output.OutputStream({ _destroy_ast: true });
+			modules.printEstree(tree, output);
+			expect(output.get()).toBe("function f(a){a()}x=b=>{b()};y=c=>c;");
+			const [declaration, arrow] = tree.body;
+			expect(declaration.body.body).toEqual([]);
+			expect(declaration.params).toEqual([]);
+			expect(arrow.expression.right.body.body).toEqual([]);
 		});
 
 		it("should be off", async () => {
