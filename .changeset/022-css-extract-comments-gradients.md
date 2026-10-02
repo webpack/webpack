@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `minimize.css.extractComments` and `minimize.html.extractComments` to extract license comments like JS; shorten CSS gradients and shadow colors.
+Extract CSS and HTML license comments like JS, and shorten CSS gradients.
