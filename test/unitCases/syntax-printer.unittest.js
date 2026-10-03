@@ -35,6 +35,21 @@ const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
 /** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
+ * Calls what terser holds as a method of its nodes, which webpack's minifier
+ * holds as a function of `ast` taking the node first, on a node of either tree.
+ * @param {EXPECTED_ANY} ast webpack's `ast`
+ * @param {EXPECTED_ANY} node a node of terser's tree or of webpack's
+ * @param {string} method terser's method
+ * @param {string} name webpack's function
+ * @param {...EXPECTED_ANY} args the arguments
+ * @returns {EXPECTED_ANY} what it returns
+ */
+const callNode = (ast, node, method, name, ...args) =>
+	typeof node[method] === "function"
+		? node[method](...args)
+		: ast[name](node, ...args);
+
+/**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
  * name, and which names it may not hand out.
  * @type {[string, string, EXPECTED_OBJECT?][]}
@@ -1449,7 +1464,7 @@ describe("syntax-printer", () => {
 
 	for (const [name, source, reshape] of SCOPE_ERROR_CASES) {
 		it(`should refuse a tree as terser does: ${name}`, async () => {
-			const { minify } = await load();
+			const { minify, modules } = await load();
 			const reference = terserReference();
 			/**
 			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
@@ -1469,7 +1484,7 @@ describe("syntax-printer", () => {
 					)
 				);
 				try {
-					reshape(ast).figure_out_scope({});
+					callNode(modules.ast, reshape(ast), "figure_out_scope", "figureOutScope", {});
 				} catch (err) {
 					return /** @type {Error} */ (err).message;
 				}
@@ -1916,7 +1931,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should drop unused names as terser does: a scope without its variables", async () => {
-		const { minify } = await load();
+		const { minify, modules } = await load();
 		const reference = terserReference();
 		const compressor = { option: () => true, has_directive: () => undefined };
 		/**
@@ -1932,7 +1947,7 @@ describe("syntax-printer", () => {
 			);
 			const node = ast.body[0];
 			node.variables = undefined;
-			return node.drop_unused(compressor);
+			return callNode(modules.ast, node, "drop_unused", "dropUnused", compressor);
 		};
 		expect(await dropped(minify)).toBe(await dropped(reference.minify));
 	});
@@ -2251,7 +2266,7 @@ describe("syntax-printer", () => {
 		 */
 		const parsed = (source) => {
 			const toplevel = parse.parse(source);
-			toplevel.figure_out_scope({});
+			ast.figureOutScope(toplevel, {});
 			return toplevel;
 		};
 
@@ -2266,8 +2281,8 @@ describe("syntax-printer", () => {
 		const cloned = declared.clone(true, toplevel);
 		expect(cloned.variables).not.toBe(declared.variables);
 		expect(declared.clone(false).variables).not.toBe(declared.variables);
-		expect(declared.get_defun_scope()).toBe(declared);
-		expect(declared.pinned()).toBeFalsy();
+		expect(ast.getDefunScope(declared)).toBe(declared);
+		expect(ast.isPinned(declared)).toBeFalsy();
 
 		const lambda = parsed("function f({ a }, [b], ...c) {} function g(d = 1, e) { return d; } function h(p, q) {}").body;
 		expect(lambda[2].args_as_names()).toBe(lambda[2].params);
@@ -2569,6 +2584,9 @@ describe("syntax-printer", () => {
 					}
 				}
 			);
+			// webpack's helpers read a symbol's value through `ast`, not a method.
+			modules.ast.fixedValue = (/** @type {EXPECTED_ANY} */ node) =>
+				node.fixed_value();
 			for (const unsafe of [true, false]) {
 				for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
 					const compressor = new modules.compress.Compressor(
@@ -4244,7 +4262,7 @@ describe("syntax-printer", () => {
 			/** @type {EXPECTED_ANY} */
 			let ourError;
 			try {
-				tree.figure_out_scope(options);
+				ast.figureOutScope(tree, options);
 			} catch (error) {
 				theirError = error;
 			}
@@ -4301,11 +4319,11 @@ describe("syntax-printer", () => {
 						return true;
 					}
 					if (node instanceof ast.DefunNode && !(walker.parent() instanceof ast.ScopeNode)) {
-						theirBlockDefunScopes.add(node.parent_scope.get_defun_scope());
+						theirBlockDefunScopes.add(ast.getDefunScope(node.parent_scope));
 					}
 					if (node instanceof ast.ScopeNode) {
 						theirScopes.push(node);
-					} else if (node.is_block_scope()) {
+					} else if (ast.isBlockScope(node)) {
 						theirScopes.push(node.block_scope);
 						blockNodes.set(node.block_scope, node);
 					} else if (
@@ -4374,7 +4392,7 @@ describe("syntax-printer", () => {
 				if ((scopeOf.get(theirs.parent_scope) || null) !== ours.parent) {
 					differences.push(`${where} parent`);
 				}
-				if (scopeOf.get(theirs.get_defun_scope()) !== ours.defun) {
+				if (scopeOf.get(ast.getDefunScope(theirs)) !== ours.defun) {
 					differences.push(`${where} defun`);
 				}
 				if (Boolean(theirs.uses_eval) !== ours.usesEval) {
@@ -4416,7 +4434,7 @@ describe("syntax-printer", () => {
 					["scope", scopeOf.get(theirs.scope), ours.scope],
 					[
 						"unmangleable",
-						Boolean(theirs.unmangleable(options)),
+						Boolean(ast.isDefinitionUnmangleable(theirs, options)),
 						modules.isUnmangleable(ours, options, null)
 					]
 				]) {
@@ -4688,7 +4706,7 @@ describe("syntax-printer", () => {
 					})
 				);
 				change(tree, modules);
-				expect(() => tree.figure_out_scope({})).toThrow(message);
+				expect(() => modules.ast.figureOutScope(tree, {})).toThrow(message);
 				expect(scopeDifferences(modules, tree, {})).toEqual([]);
 			});
 		}
