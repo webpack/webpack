@@ -8,12 +8,11 @@ const {
 	IGNORED_FORMAT_OPTIONS,
 	createCompressHelpers,
 	createUnicode,
-	estreeType,
 	load,
-	markEstreeTypes,
 	PHASES
 } = require("../../lib/javascript/syntax").printer;
 const {
+	kindName,
 	loadTerserSources,
 	terserTypeOf,
 	thrownMessage
@@ -31,7 +30,6 @@ const importTerserSource = (specifier) => import(specifier);
  */
 const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
 
-/** @typedef {import("../../lib/javascript/syntax-printer").AstClass} AstClass */
 /** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
@@ -922,7 +920,7 @@ describe("syntax-printer", () => {
 		const modules = await loadTerserSources(importTerserSource);
 		// webpack's helpers hand a unary operation its operand under ESTree's
 		// name, which terser's constructor reads as `expression`.
-		const TerserUnaryPrefix = modules.ast.UnaryPrefixNode;
+		const TerserUnaryPrefix = /** @type {EXPECTED_ANY} */ (modules.ast.UnaryPrefixNode);
 		/**
 		 * @param {EXPECTED_ANY} props the fields, ESTree's names included
 		 * @returns {EXPECTED_ANY} terser's node
@@ -931,7 +929,7 @@ describe("syntax-printer", () => {
 			return new TerserUnaryPrefix({ ...props, expression: props.argument });
 		}
 		UnaryPrefixNode.prototype = TerserUnaryPrefix.prototype;
-		modules.ast.UnaryPrefixNode = /** @type {AstClass} */ (
+		modules.ast.UnaryPrefixNode = /** @type {EXPECTED_ANY} */ (
 			/** @type {unknown} */ (UnaryPrefixNode)
 		);
 		let helpers;
@@ -981,11 +979,11 @@ describe("syntax-printer", () => {
 		// `MAP` transforms with webpack's own walk, over webpack's own nodes.
 		const own = (await load()).modules;
 		const nodes = [
-			new own.ast.NumberNode({ value: 1 }),
-			new own.ast.NumberNode({ value: 2 }),
-			new own.ast.NumberNode({ value: 3 })
+			own.ast.NumberNode({ value: 1 }),
+			own.ast.NumberNode({ value: 2 }),
+			own.ast.NumberNode({ value: 3 })
 		];
-		const spliced = new own.ast.NumberNode({ value: 4 });
+		const spliced = own.ast.NumberNode({ value: 4 });
 		const walker = own.ast.createTransformer((/** @type {EXPECTED_ANY} */ item) => {
 			if (item === nodes[0]) return own.utils.MAP.skip;
 			if (item === nodes[1]) return own.utils.MAP.splice([spliced, spliced]);
@@ -1000,9 +998,9 @@ describe("syntax-printer", () => {
 		 * @returns {EXPECTED_ANY} its type, operator, value and operand
 		 */
 		const shapeOf = (built) =>
-			built && built.TYPE
+			built && kindName(built)
 				? {
-						TYPE: built.TYPE,
+						TYPE: kindName(built),
 						operator: built.operator,
 						value: built.value,
 						operand: shapeOf(built.argument || built.expression)
@@ -2315,7 +2313,7 @@ describe("syntax-printer", () => {
 			ast[method](
 				declaredClass,
 				createWalker((/** @type {EXPECTED_ANY} */ node) => {
-					types.push(node.TYPE);
+					types.push(kindName(node));
 				})
 			);
 			return types;
@@ -2340,23 +2338,23 @@ describe("syntax-printer", () => {
 				 * @returns {void}
 				 */
 				function visit(node) {
-				if (node.TYPE === "Break" || node.TYPE === "Continue") {
+				if (kindName(node) === "Break" || kindName(node) === "Continue") {
 					const target = this.loopcontrol_target(node);
-					const key = `${node.TYPE}${node.label ? " label" : ""}`;
-					seen[key] = [...(/** @type {string[]} */ (seen[key]) || []), target.TYPE];
+					const key = `${kindName(node)}${node.label ? " label" : ""}`;
+					seen[key] = [...(/** @type {string[]} */ (seen[key]) || []), kindName(target)];
 				}
-				if (node.TYPE === "CallExpression") {
+				if (kindName(node) === "CallExpression") {
 					seen.withinLoop = this.is_within_loop();
-					seen.scope = this.find_scope().TYPE;
-					seen.parent = this.parent().TYPE;
-					seen.self = this.self().TYPE;
-					seen.lambda = this.find_parent(ast.isLambdaNode).TYPE;
+					seen.scope = kindName(this.find_scope());
+					seen.parent = kindName(this.parent());
+					seen.self = kindName(this.self());
+					seen.lambda = kindName(this.find_parent(ast.isLambdaNode));
 					seen.strict = Boolean(this.has_directive("use strict"));
 				}
-				if (node.TYPE === "SymbolRef" && node.name === "o") {
+				if (kindName(node) === "SymbolRef" && node.name === "o") {
 					seen.objectWithinLoop = this.is_within_loop();
 				}
-				if (node.TYPE === "Toplevel") {
+				if (kindName(node) === "Toplevel") {
 					seen.toplevelStrict = Boolean(this.has_directive("use strict"));
 					seen.toplevelAsm = this.has_directive("use asm");
 				}
@@ -2378,23 +2376,77 @@ describe("syntax-printer", () => {
 		});
 	});
 
-	it("should name a predicate per node class answering as `instanceof` does", async () => {
+	it("should name a predicate per node class answering on the node's data", async () => {
 		const { ast } = (await load()).modules;
-		const classNames = Object.keys(ast).filter(
-			(name) => /Node$/.test(name) && typeof ast[`is${name}`] === "function"
+		const { nodeClasses } = require("../../lib/javascript/syntax-printer-data");
+		/** @type {Map<string, string | null>} */
+		const baseOf = new Map(
+			nodeClasses().map((/** @type {EXPECTED_ANY} */ c) => [c.type, c.base])
 		);
-		expect(classNames).toHaveLength(155);
-		for (const name of classNames) {
-			const probe = Object.create(ast[name].prototype);
+		/**
+		 * @param {string} name a class
+		 * @returns {string[]} it and its bases
+		 */
+		const ancestry = (name) => {
+			/** @type {string[]} */
+			const names = [];
+			for (let at = /** @type {string | null} */ (name); at; at = /** @type {string | null} */ (baseOf.get(at))) {
+				names.push(at);
+			}
+			return names;
+		};
+		const method = (/** @type {string | undefined} */ type = undefined) =>
+			ast.SymbolMethodNode({ name: "m", type });
+		// What tells each kind apart from the others of its type, where its own
+		// values do not.
+		/** @type {Record<string, () => EXPECTED_OBJECT>} */
+		const props = {
+			Directive: () => ({ directive: "use strict" }),
+			Case: () => ({ test: ast.NumberNode({ value: 1 }) }),
+			Dot: () => ({ property: ast.SymbolPropertyNode({ name: "p" }) }),
+			DotHash: () => ({ property: ast.SymbolPrivatePropertyNode({ name: "p" }) }),
+			Sub: () => ({ property: ast.NumberNode({ value: 1 }) }),
+			ObjectKeyVal: () => ({ kind: "init" }),
+			PrivateGetter: () => ({ key: method("PrivateIdentifier") }),
+			PrivateSetter: () => ({ key: method("PrivateIdentifier") }),
+			PrivateMethod: () => ({ key: method("PrivateIdentifier"), kind: "method" }),
+			ClassGetter: () => ({ key: method() }),
+			ClassSetter: () => ({ key: method() }),
+			ClassMethod: () => ({ key: method(), kind: "method" }),
+			ClassProperty: () => ({ key: ast.SymbolClassPropertyNode({ name: "p" }) }),
+			ClassPrivateProperty: () => ({ key: ast.SymbolPrivatePropertyNode({ name: "p" }) }),
+			NameMapping: () => ({ local: ast.SymbolExportNode({ name: "*" }) }),
+			ExportSpecifier: () => ({ local: ast.SymbolExportNode({ name: "a" }) }),
+			ImportSpecifier: () => ({ local: ast.SymbolImportNode({ name: "a" }) }),
+			ImportNamespaceSpecifier: () => ({ local: ast.SymbolImportNode({ name: "a" }) }),
+			String: () => ({ value: "a" }),
+			Number: () => ({ value: 1 }),
+			BigInt: () => ({ value: "1" }),
+			RegExp: () => ({ value: { source: "a", flags: "" } })
+		};
+		const classNames = [...baseOf.keys()].filter(
+			(name) => typeof ast[`is${name}Node`] === "function"
+		);
+		let probed = 0;
+		for (const name of baseOf.keys()) {
+			const factory = ast[name === "Node" ? "SyntaxNode" : `${name}Node`];
+			if (typeof factory !== "function" || name === "Call" || name === "Destructuring" || name === "Export") continue;
+			const probe = factory(props[name] ? props[name]() : {});
+			probed++;
+			expect([name, ast.kindOf(probe)]).toEqual([name, name]);
+			const classes = ancestry(name);
+			expect(ast.isSyntaxNode(probe)).toBe(true);
 			for (const other of classNames) {
-				expect([name, other, ast[`is${other}`](probe)]).toEqual([
+				expect([name, other, ast[`is${other}Node`](probe)]).toEqual([
 					name,
 					other,
-					probe instanceof ast[other]
+					classes.includes(other)
 				]);
 			}
 		}
-		expect([null, undefined, "x", 1].some(ast.isSyntaxNode)).toBe(false);
+		expect(probed).toBeGreaterThan(120);
+		expect([null, undefined, "x", 1, { type: "Identifier", role: "reference" }].some(ast.isSyntaxNode)).toBe(false);
+		expect(ast.isSymbolRefNode({ type: "Identifier", role: "reference" })).toBe(false);
 	});
 
 	it("should look native objects up as terser's native-objects.js does", async () => {
@@ -2688,21 +2740,21 @@ describe("syntax-printer", () => {
 				_visit(node, descend) {
 					// terser's parser leaves some accessors' `async` and `is_generator`
 					// unset where webpack's writes false, which `equivalent_to` reads.
-					if (node.TYPE === "Accessor" && node.async === undefined) {
+					if (kindName(node) === "Accessor" && node.async === undefined) {
 						node.async = false;
 						node.is_generator = false;
 					}
 					// webpack holds a hole as null, which no walk reaches.
-					if (node.TYPE !== "Hole") theirs.push(node);
+					if (kindName(node) !== "Hole") theirs.push(node);
 					if (descend) descend.call(node);
 				}
 			});
-			expect(ours.map((node) => [terserTypeOf(node.TYPE), ast.nodeSize(node)])).toEqual(
-				theirs.map((node) => [node.TYPE, node.size()])
+			expect(ours.map((node) => [terserTypeOf(kindName(node)), ast.nodeSize(node)])).toEqual(
+				theirs.map((node) => [kindName(node), node.size()])
 			);
 			for (let i = 0; i < ours.length; i++) {
 				for (let j = 0; j < ours.length; j++) {
-					if (ours[i].TYPE !== ours[j].TYPE) continue;
+					if (kindName(ours[i]) !== kindName(ours[j])) continue;
 					expect([i, j, ast.isEquivalent(ours[i], ours[j])]).toEqual([
 						i,
 						j,
@@ -2940,7 +2992,7 @@ describe("syntax-printer", () => {
 
 	it("should name each node the ESTree type terser converts it to", async () => {
 		const { ast, parse } = (await load()).modules;
-		markEstreeTypes({ ast });
+
 		const source = `"use strict";
 			import a, { b as c, "d" as e } from "f"; import * as g from "h";
 			export default class extends a { static #p = 1; static { g(); } get [c]() { return #p in this; } set s(v) {} m() {} q = 2; #r() {} }
@@ -2962,32 +3014,36 @@ describe("syntax-printer", () => {
 			const parent = walker.parent();
 			let expected;
 			if (
-				(terserTypeOf(node.TYPE) === "ObjectGetter" ||
-					terserTypeOf(node.TYPE) === "ObjectSetter") &&
-				parent.TYPE !== "Object"
+				(terserTypeOf(kindName(node)) === "ObjectGetter" ||
+					terserTypeOf(kindName(node)) === "ObjectSetter") &&
+				kindName(parent) !== "Object"
 			) {
 				// terser maps a class's members with the index as their parent, which
 				// reads a class accessor as an object's; ESTree makes it a method.
 				expected = { type: "MethodDefinition" };
-			} else if (terserTypeOf(node.TYPE) === "Expansion") {
+			} else if (terserTypeOf(kindName(node)) === "Expansion") {
 				// terser's converter reads this off its own stack, and makes a rest
 				// parameter a spread; ESTree binds with a rest element in both.
 				expected = {
 					type:
-						terserTypeOf(parent.TYPE) === "Destructuring" ||
-						parent instanceof ast.LambdaNode
+						terserTypeOf(kindName(parent)) === "Destructuring" ||
+						ast.isLambdaNode(parent)
 							? "RestElement"
 							: "SpreadElement"
 				};
-			} else if (node.TYPE === "SymbolPrivateProperty") {
+			} else if (
+				kindName(node) === "SymbolPrivateProperty" ||
+				(kindName(node) === "SymbolMethod" &&
+					kindName(parent).startsWith("Private"))
+			) {
 				// terser converts a private name with its holder, as ESTree's own type.
 				expected = { type: "PrivateIdentifier" };
 			} else if (
-				node.TYPE !== "TemplateSegment" &&
-				terserTypeOf(node.TYPE) !== "NameMapping"
+				kindName(node) !== "TemplateSegment" &&
+				terserTypeOf(kindName(node)) !== "NameMapping"
 			) {
 				expected = ast.toEstree(node, parent);
-			} else if (node.TYPE === "TemplateSegment") {
+			} else if (kindName(node) === "TemplateSegment") {
 				expected = ast.toEstree(parent).quasi || ast.toEstree(parent);
 				expected = { type: expected.quasis[0].type };
 			} else {
@@ -3005,13 +3061,13 @@ describe("syntax-printer", () => {
 			}
 			// The mapping `export *` makes, which ESTree has no node for, is walked
 			// as a specifier.
-			expect([node.TYPE, estreeType(node, parent)]).toEqual([
-				node.TYPE,
+			expect([kindName(node), node.type]).toEqual([
+				kindName(node),
 				expected === null ? "ExportSpecifier" : expected.type
 			]);
 			// A class whose every node has one ESTree type holds it as `type`.
 			if (node.type !== undefined && expected !== null) {
-				expect([node.TYPE, node.type]).toEqual([node.TYPE, expected.type]);
+				expect([kindName(node), node.type]).toEqual([kindName(node), expected.type]);
 			}
 			count++;
 		});
@@ -3022,7 +3078,7 @@ describe("syntax-printer", () => {
 
 	it("should hand back a fresh list, which a clone may share", async () => {
 		const { ast, parse, utils } = (await load()).modules;
-		const { SimpleStatementNode, createTransformer } = ast;
+		const { createTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
 		ast.transformNode(toplevel, createTransformer(() => undefined));
@@ -3036,7 +3092,7 @@ describe("syntax-printer", () => {
 				 * @returns {EXPECTED_ANY} what replaces it
 				 */
 				(node) => {
-					if (!(node instanceof SimpleStatementNode)) return;
+					if (!ast.isSimpleStatementNode(node)) return;
 					const name = node.expression.name;
 					if (name === "b") return utils.MAP.skip;
 					if (name === "c") return utils.MAP.splice([node, node]);
@@ -3134,9 +3190,9 @@ describe("syntax-printer", () => {
 				expect.arrayContaining(["handler", "finalizer"])
 			);
 			expect(Object.keys(walk.body.body[4].handler)).toContain("param");
-			expect(walk.body.TYPE).toBe("BlockStatement");
-			expect(walk.body.body[4].block.TYPE).toBe("TryBlock");
-			expect(walk.body.body[4].handler.body.TYPE).toBe("BlockStatement");
+			expect(kindName(walk.body)).toBe("BlockStatement");
+			expect(kindName(walk.body.body[4].block)).toBe("TryBlock");
+			expect(kindName(walk.body.body[4].handler.body)).toBe("BlockStatement");
 			expect(Object.keys(walk.body.body[3].body)).toContain("expression");
 			expect(Object.keys(walk.body.body[3].body)).not.toContain("body");
 			expect(Object.keys(walk.body.body[3].body.expression)).toEqual(
@@ -3163,8 +3219,8 @@ describe("syntax-printer", () => {
 				expect.arrayContaining(["id", "superClass"])
 			);
 			expect(Object.keys(derived)).not.toContain("properties");
-			expect(derived.body.TYPE).toBe("ClassBody");
-			expect(derived.body.body[0].TYPE).toBe("ClassMethod");
+			expect(kindName(derived.body)).toBe("ClassBody");
+			expect(kindName(derived.body.body[0])).toBe("ClassMethod");
 			const call = branch.consequent.expression;
 			expect(Object.keys(call)).toEqual(
 				expect.arrayContaining(["callee", "arguments"])
@@ -3183,7 +3239,7 @@ describe("syntax-printer", () => {
 			 * @returns {unknown[]} its key's type and name, and its ESTree fields
 			 */
 			const shape = (node) => [
-				node.key.TYPE,
+				kindName(node.key),
 				node.key.name,
 				node.computed,
 				node.kind,
@@ -3209,17 +3265,17 @@ describe("syntax-printer", () => {
 				["SymbolClassProperty", "i", false, undefined]
 			]);
 			const hash = members.body.body[3].value;
-			expect([hash.computed, hash.property.TYPE, hash.property.name]).toEqual([
+			expect([hash.computed, kindName(hash.property), hash.property.name]).toEqual([
 				false,
 				"SymbolPrivateProperty",
 				"h"
 			]);
-			expect([hash.object.computed, hash.object.property.TYPE]).toEqual([
+			expect([hash.object.computed, kindName(hash.object.property)]).toEqual([
 				true,
 				"SymbolRef"
 			]);
 			const dot = hash.object.object;
-			expect([dot.computed, dot.property.TYPE, dot.property.name]).toEqual([
+			expect([dot.computed, kindName(dot.property), dot.property.name]).toEqual([
 				false,
 				"SymbolProperty",
 				"k"
@@ -3239,7 +3295,7 @@ describe("syntax-printer", () => {
 				[null, 2]
 			);
 			const test = privateIn.body.body[1].value.body.body[0].argument;
-			expect([test.left.TYPE, test.left.name, test.right.name]).toEqual([
+			expect([kindName(test.left), test.left.name, test.right.name]).toEqual([
 				"SymbolPrivateProperty",
 				"w",
 				"y"
@@ -3275,7 +3331,7 @@ describe("syntax-printer", () => {
 					compress: {
 						pure_funcs: (/** @type {EXPECTED_ANY} */ node) =>
 							node.args.length !== 1 ||
-							(node.expression.TYPE === "Dot" &&
+							(kindName(node.expression) === "Dot" &&
 								node.expression.expression.name === "Math")
 					}
 				},
@@ -3486,7 +3542,7 @@ describe("syntax-printer", () => {
 				const expressions = [];
 				walk(tree, (node) => {
 					// terser's statement holds `body`, webpack's ESTree's `expression`.
-					if (node.TYPE === "SimpleStatement") {
+					if (kindName(node) === "SimpleStatement") {
 						expressions.push(node, node.expression || node.body);
 					}
 				});
@@ -4165,12 +4221,12 @@ describe("syntax-printer", () => {
 			const { modules } = await load();
 			const { ast } = modules;
 			expect(
-				[new ast.NaNNode(), new ast.UndefinedNode(), new ast.InfinityNode()].map(
+				[ast.NaNNode(), ast.UndefinedNode(), ast.InfinityNode()].map(
 					(node) => /** @type {EXPECTED_ANY} */ (modules.toPrintTree(node)).name
 				)
 			).toEqual(["NaN", "undefined", "Infinity"]);
-			expect(() => modules.toPrintTree(new ast.SyntaxNode())).toThrow(
-				"toPrintTree cannot read a Node node"
+			expect(() => modules.toPrintTree(ast.ScopeNode())).toThrow(
+				"toPrintTree cannot read a Scope node"
 			);
 		});
 
@@ -4188,17 +4244,17 @@ describe("syntax-printer", () => {
 					if (printNode === null) return;
 					for (const kind of Object.keys(modules.kindOf)) {
 						// An Accessor, only ever a method's value, reads as a Function.
-						if (kind === "Function" && node.TYPE === "Accessor") continue;
+						if (kind === "Function" && kindName(node) === "Accessor") continue;
 						// A try's blocks, never a statement of their own, read as statements.
 						if (
 							kind === "BlockStatement" &&
-							(node.TYPE === "TryBlock" || node.TYPE === "Finally")
+							(kindName(node) === "TryBlock" || kindName(node) === "Finally")
 						) {
 							continue;
 						}
-						const expected = node instanceof modules.ast[`${kind}Node`];
+						const expected = modules.ast[`is${kind}Node`](node);
 						if (modules.kindOf[kind](printNode) !== expected) {
-							disagreements.push(`${node.TYPE} as ${printNode.type}: ${kind}`);
+							disagreements.push(`${kindName(node)} as ${printNode.type}: ${kind}`);
 						}
 					}
 				}
@@ -4337,7 +4393,7 @@ describe("syntax-printer", () => {
 			// As terser's mangler walks: the scopes, labels and kept declarators.
 			const walker = ast.createWalker(
 				(/** @type {EXPECTED_ANY} */ node, /** @type {() => void} */ descend) => {
-					if (node instanceof ast.LabeledStatementNode) {
+					if (ast.isLabeledStatementNode(node)) {
 						theirLabels.push({
 							label: node.label,
 							parent: labelStack.length > 0 ? labelStack[labelStack.length - 1] : null
@@ -4347,18 +4403,18 @@ describe("syntax-printer", () => {
 						labelStack.pop();
 						return true;
 					}
-					if (node instanceof ast.DefunNode && !(walker.parent() instanceof ast.ScopeNode)) {
+					if (ast.isDefunNode(node) && !(ast.isScopeNode(walker.parent()))) {
 						theirBlockDefunScopes.add(ast.getDefunScope(node.parent_scope));
 					}
-					if (node instanceof ast.ScopeNode) {
+					if (ast.isScopeNode(node)) {
 						theirScopes.push(node);
 					} else if (ast.isBlockScope(node)) {
 						theirScopes.push(node.block_scope);
 						blockNodes.set(node.block_scope, node);
 					} else if (
-						node instanceof ast.VarDefNode &&
-						node.id instanceof ast.SymbolNode &&
-						node.init instanceof ast.LambdaNode &&
+						ast.isVarDefNode(node) &&
+						ast.isSymbolNode(node.id) &&
+						ast.isLambdaNode(node.init) &&
 						!node.init.id
 					) {
 						theirDeclarators.push(node.id);
@@ -4442,7 +4498,7 @@ describe("syntax-printer", () => {
 					);
 				}
 				const functionName =
-					theirs instanceof ast.FunctionNode && theirs.id
+					ast.isFunctionNode(theirs) && theirs.id
 						? definitionOf.get(theirs.id.definition)
 						: null;
 				if (functionName !== ours.functionName) {
@@ -4451,7 +4507,7 @@ describe("syntax-printer", () => {
 			}
 			for (const [theirs, ours] of definitionOf) {
 				const where = `${theirs.name} in scope ${ourScopes.indexOf(ours.scope)}`;
-				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[terserTypeOf(symbol.TYPE)]);
+				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[terserTypeOf(kindName(symbol))]);
 				if (kinds.join() !== ours.kinds.join()) {
 					differences.push(`${where} declared as ${ours.kinds}, terser ${kinds}`);
 				}
@@ -4492,13 +4548,13 @@ describe("syntax-printer", () => {
 					if (printNode.type !== "Identifier") continue;
 					symbolNodes.add(printNode);
 					let expected = null;
-					if (node instanceof ast.LabelNode) expected = labelOf.get(node);
-					else if (node instanceof ast.LabelRefNode) expected = labelOf.get(node.definition);
-					else if (node instanceof ast.SymbolNode && node.definition && node.definition !== star) {
+					if (ast.isLabelNode(node)) expected = labelOf.get(node);
+					else if (ast.isLabelRefNode(node)) expected = labelOf.get(node.definition);
+					else if (ast.isSymbolNode(node) && node.definition && node.definition !== star) {
 						expected = definitionOf.get(node.definition);
 					}
 					if (expected !== printNode.definition) {
-						differences.push(`${node.TYPE} ${node.name} names another definition`);
+						differences.push(`${kindName(node)} ${node.name} names another definition`);
 					}
 				}
 			}
@@ -4666,7 +4722,7 @@ describe("syntax-printer", () => {
 			/** @type {EXPECTED_ANY} */
 			let found;
 			modules.ast.walk(tree, (/** @type {EXPECTED_ANY} */ node) => {
-				if (!found && node.TYPE === type && node.name === name) found = node;
+				if (!found && kindName(node) === type && node.name === name) found = node;
 			});
 			return found;
 		};

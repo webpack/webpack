@@ -20,7 +20,16 @@ const webpackNames = (ast) => {
 			continue;
 		}
 		const className = type === "Node" ? "SyntaxNode" : `${type}Node`;
-		named[className] = Type;
+		// webpack's factories are called, where terser's classes are constructed.
+		/**
+		 * @param {EXPECTED_ANY} props the node's properties
+		 * @returns {EXPECTED_ANY} terser's node
+		 */
+		function factory(props) {
+			return new Type(props);
+		}
+		factory.prototype = Type.prototype;
+		named[className] = factory;
 		named[`is${className}`] = (/** @type {unknown} */ value) =>
 			value instanceof Type;
 	}
@@ -112,4 +121,21 @@ const terserTypeOf = (type) => {
 		: type;
 };
 
-module.exports = { loadTerserSources, terserTypeOf, thrownMessage };
+/** @type {EXPECTED_ANY} */
+let ownAst;
+
+/**
+ * The class of a node of terser's tree, or the kind, terser's class, of a
+ * node of webpack's, which holds it as data read by `kindOf`.
+ * @param {EXPECTED_ANY} node a node of either tree
+ * @returns {string} the class
+ */
+const kindName = (node) => {
+	if (node.TYPE !== undefined) return node.TYPE;
+	if (ownAst === undefined) {
+		ownAst = require("../../lib/javascript/syntax-printer").createAst();
+	}
+	return ownAst.kindOf(node);
+};
+
+module.exports = { kindName, loadTerserSources, terserTypeOf, thrownMessage };

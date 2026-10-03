@@ -5,6 +5,7 @@
 const acorn = require("acorn");
 const { load } = require("../../lib/javascript/syntax").printer;
 const {
+	kindName,
 	loadTerserSources,
 	terserTypeOf,
 	thrownMessage
@@ -27,7 +28,20 @@ const RENAMED_FIELDS = new Map(
 
 // The fields webpack's node classes hold where ESTree has them and terser's
 // classes none.
-const ESTREE_ADDED_FIELDS = new Set(["computed", "kind", "method", "shorthand"]);
+// The fields webpack's nodes hold that terser's do not: ESTree's, and the
+// values that tell one kind of node from another of its type.
+const ESTREE_ADDED_FIELDS = new Set([
+	"computed",
+	"kind",
+	"method",
+	"shorthand",
+	"type",
+	"role",
+	"atom",
+	"prefix",
+	"operator",
+	"_block_scope"
+]);
 
 // A token's fields, past which a converted tree keeps nothing a minify reads.
 const TOKEN_FIELDS = [
@@ -67,7 +81,7 @@ const firstDifference = (theirs, ours) => {
 			typeof a === "string" &&
 			typeof b === "object" &&
 			b !== null &&
-			(b.TYPE === "SymbolProperty" || b.TYPE === "SymbolPrivateProperty")
+			(kindName(b) === "SymbolProperty" || kindName(b) === "SymbolPrivateProperty")
 		) {
 			return a === b.name ? undefined : `${where}: ${a} vs ${b.name}`;
 		}
@@ -96,11 +110,13 @@ const firstDifference = (theirs, ours) => {
 		// token class `ParsedToken`, where terser prefixes `AST_`, so the classes
 		// are compared by what they hold rather than by name.
 		const kindOf = (/** @type {EXPECTED_ANY} */ node) =>
-			terserTypeOf(node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, ""));
+			node.constructor && node.constructor.name !== "Object"
+				? terserTypeOf(node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, ""))
+				: terserTypeOf(kindName(node));
 		if (kindOf(a) !== kindOf(b)) {
-			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
+			return `${where}: ${kindOf(a)} vs ${kindOf(b)}`;
 		}
-		const renamed = (kindOf(b) !== "Token" && RENAMED_FIELDS.get(b.TYPE)) || {};
+		const renamed = (kindOf(b) !== "Token" && RENAMED_FIELDS.get(kindName(b))) || {};
 		/** @type {Record<string, string>} */
 		const ourNames = {};
 		for (const ourName of Object.keys(renamed)) {
@@ -116,22 +132,22 @@ const firstDifference = (theirs, ours) => {
 		for (const key of keys) {
 			// webpack holds a class's members in a class body, where terser's
 			// class holds them as `properties` and its `body` holds nothing.
-			const isClass = b.TYPE === "DefClass" || b.TYPE === "ClassExpression";
+			const isClass = kindName(b) === "DefClass" || kindName(b) === "ClassExpression";
 			if (isClass && key === "body" && a.body === undefined) continue;
 			// webpack's directive holds terser's `value` as `directive`, its quote
 			// on the string literal it holds as `expression`.
-			const isDirective = b.TYPE === "Directive";
+			const isDirective = kindName(b) === "Directive";
 			if (isDirective && (key === "directive" || key === "expression")) {
 				continue;
 			}
 			if (ESTREE_ADDED_FIELDS.has(key) && !(key in a)) continue;
 			// webpack's destructuring holds terser's `names` as an array pattern's
 			// `elements` or an object pattern's `properties`, the other null.
-			const isPattern = terserTypeOf(b.TYPE) === "Destructuring";
+			const isPattern = terserTypeOf(kindName(b)) === "Destructuring";
 			if (isPattern && (key === "elements" || key === "properties")) continue;
 			// webpack's specifier holds terser's `foreign_name` as what it imports
 			// or what it exports, the other null.
-			const isMapping = terserTypeOf(b.TYPE) === "NameMapping";
+			const isMapping = terserTypeOf(kindName(b)) === "NameMapping";
 			if (isMapping && (key === "imported" || key === "exported")) continue;
 			let ours =
 				isClass && key === "properties"
@@ -151,7 +167,7 @@ const firstDifference = (theirs, ours) => {
 			if (
 				Array.isArray(a[key]) &&
 				ours &&
-				ours.TYPE === "BlockStatement" &&
+				kindName(ours) === "BlockStatement" &&
 				Array.isArray(ours.body)
 			) {
 				ours = ours.body;
@@ -179,7 +195,10 @@ const text = (value) =>
  * @param {EXPECTED_ANY} ast one side's node classes
  * @returns {EXPECTED_ANY} its root class
  */
-const rootOf = (ast) => ast.SyntaxNode || ast.AST_Node;
+const rootOf = (ast) =>
+	ast.AST_Node || {
+		from_mozilla_ast: /** @type {EXPECTED_FUNCTION} */ (ast.fromMozillaAst)
+	};
 
 /**
  * Reads back a BigInt `text` wrote as a string.
@@ -429,7 +448,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 			const results = [];
 			for (const { ast } of [modules.theirs, modules.ours]) {
 				try {
-					results.push(text(rootOf(ast).from_mozilla_ast(JSON.parse(JSON.stringify(tree))).TYPE));
+					results.push(text(kindName(rootOf(ast).from_mozilla_ast(JSON.parse(JSON.stringify(tree))))));
 				} catch (err) {
 					results.push(`throws ${thrownMessage(err)}`);
 				}
