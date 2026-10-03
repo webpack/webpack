@@ -20570,8 +20570,8 @@ declare interface NodeShape {
 	[index: string]: any;
 	TYPE: string;
 	flags: number;
-	start: TokenEs5;
-	end: TokenEs5;
+	startToken: TokenEs5;
+	endToken: TokenEs5;
 	expression: NodeShape;
 	callee: NodeShape;
 	object: NodeShape;

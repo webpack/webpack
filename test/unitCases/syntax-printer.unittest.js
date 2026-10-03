@@ -3907,7 +3907,7 @@ describe("syntax-printer", () => {
 			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
 			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
 			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
-			expect(declarator.startToken).toBe(tree.body[0].declarations[0].start);
+			expect(declarator.startToken).toBe(tree.body[0].declarations[0].startToken);
 			const [a, b, c, d] = declarator.init.properties;
 			expect([a.quote, a.key.quote, a.mapName]).toEqual(["'", "'", "a"]);
 			expect([Boolean(b.quote), b.key.type, b.mapName]).toEqual([

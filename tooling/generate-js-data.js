@@ -762,6 +762,7 @@ const readChildren = (statements, method, where) => {
 // onto ESTree a field at a time; terser's `ast.js` cannot say which it meant.
 /** @type {Record<string, Record<string, string>>} */
 const ESTREE_FIELD_NAMES = {
+	Node: { startToken: "start", endToken: "end" },
 	DWLoop: { test: "condition" },
 	For: { test: "condition", update: "step" },
 	If: { test: "condition", consequent: "body", alternate: "alternative" },
