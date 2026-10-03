@@ -1136,10 +1136,14 @@ const ESTREE_NODE_TYPES = {
 	Boolean: "Literal"
 };
 
-// The other fields ESTree gives every node of a class, by class: whether an
-// operator comes first, and the operator `#x in y` spells without a field.
+// The other fields ESTree gives every node of a class, by class: the name of
+// a constant written as one, marked as an atom no shorthand may read, whether
+// an operator comes first, and the operator `#x in y` spells without a field.
 /** @type {Record<string, Record<string, unknown>>} */
 const ESTREE_NODE_VALUES = {
+	NaN: { name: "NaN", atom: true },
+	Undefined: { name: "undefined", atom: true },
+	Infinity: { name: "Infinity", atom: true },
 	UnaryPrefix: { prefix: true },
 	UnaryPostfix: { prefix: false },
 	PrivateIn: { operator: "in" }
