@@ -33425,6 +33425,7 @@ declare namespace exports {
 				};
 			}
 			export namespace printer {
+				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
 				export let load: () => Promise<Minifier>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: FormatOptions;

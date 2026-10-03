@@ -107,19 +107,41 @@ const thrownMessage = (error) =>
 		? "TypeError"
 		: String(error && error.message);
 
+// The kinds terser has no class for, each a leaf of the class it extends,
+// which ESTree types apart.
+/** @type {Record<string, string>} */
+const ESTREE_LEAF_CLASSES = {
+	Logical: "Binary",
+	UpdatePrefix: "UnaryPrefix",
+	CallExpression: "Call",
+	SymbolImportForeignLiteral: "SymbolImportForeign",
+	SymbolExportForeignLiteral: "SymbolExportForeign",
+	SymbolExportLiteral: "SymbolExport",
+	ArrayPattern: "Destructuring",
+	ObjectPattern: "Destructuring",
+	ExportAllDeclaration: "Export",
+	ExportDefaultDeclaration: "Export",
+	ExportNamedDeclaration: "Export",
+	ImportSpecifier: "NameMapping",
+	ImportNamespaceSpecifier: "NameMapping",
+	ExportSpecifier: "NameMapping",
+	RestElement: "Expansion",
+	SpreadElement: "Expansion",
+	ClassGetter: "ObjectGetter",
+	ClassSetter: "ObjectSetter",
+	ClassMethod: "ConciseMethod"
+};
+
 /**
  * The class terser holds a node of one of webpack's classes as: a leaf class
  * terser has none for, which ESTree types apart, names the class it extends.
  * @param {string} type the class's `TYPE`
  * @returns {string} terser's class's `TYPE`
  */
-const terserTypeOf = (type) => {
-	const { ESTREE_LEAF_CLASSES } = require("../../tooling/generate-js-data");
-
-	return Object.prototype.hasOwnProperty.call(ESTREE_LEAF_CLASSES, type)
+const terserTypeOf = (type) =>
+	Object.prototype.hasOwnProperty.call(ESTREE_LEAF_CLASSES, type)
 		? terserTypeOf(ESTREE_LEAF_CLASSES[type])
 		: type;
-};
 
 /** @type {EXPECTED_ANY} */
 let ownAst;

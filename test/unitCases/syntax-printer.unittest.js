@@ -2378,23 +2378,12 @@ describe("syntax-printer", () => {
 
 	it("should name a predicate per node class answering on the node's data", async () => {
 		const { ast } = (await load()).modules;
-		const { nodeClasses } = require("../../lib/javascript/syntax-printer-data");
-		/** @type {Map<string, string | null>} */
-		const baseOf = new Map(
-			nodeClasses().map((/** @type {EXPECTED_ANY} */ c) => [c.type, c.base])
-		);
+		const { NODE_KIND_ANCESTRY } = require("../../lib/javascript/syntax-printer");
 		/**
-		 * @param {string} name a class
-		 * @returns {string[]} it and its bases
+		 * @param {string} name a kind
+		 * @returns {string[]} it and the kinds it is one of
 		 */
-		const ancestry = (name) => {
-			/** @type {string[]} */
-			const names = [];
-			for (let at = /** @type {string | null} */ (name); at; at = /** @type {string | null} */ (baseOf.get(at))) {
-				names.push(at);
-			}
-			return names;
-		};
+		const ancestry = (name) => NODE_KIND_ANCESTRY[name];
 		const method = (/** @type {string | undefined} */ type = undefined) =>
 			ast.SymbolMethodNode({ name: "m", type });
 		// What tells each kind apart from the others of its type, where its own
@@ -2424,13 +2413,12 @@ describe("syntax-printer", () => {
 			BigInt: () => ({ value: "1" }),
 			RegExp: () => ({ value: { source: "a", flags: "" } })
 		};
-		const classNames = [...baseOf.keys()].filter(
-			(name) => typeof ast[`is${name}Node`] === "function"
-		);
+		const classNames = [
+			...new Set(Object.values(NODE_KIND_ANCESTRY).flat())
+		].filter((name) => typeof ast[`is${name}Node`] === "function");
 		let probed = 0;
-		for (const name of baseOf.keys()) {
-			const factory = ast[name === "Node" ? "SyntaxNode" : `${name}Node`];
-			if (typeof factory !== "function" || name === "Call" || name === "Destructuring" || name === "Export") continue;
+		for (const name of Object.keys(NODE_KIND_ANCESTRY)) {
+			const factory = ast[`${name}Node`];
 			const probe = factory(props[name] ? props[name]() : {});
 			probed++;
 			expect([name, ast.kindOf(probe)]).toEqual([name, name]);

@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore argnames, bcatch, bfinally, argname
+
 // cspell:ignore endline, endcol, endpos, nlb, thedef
 
 const acorn = require("acorn");
@@ -17,13 +19,57 @@ const {
  */
 const importTerserSource = (specifier) => import(specifier);
 const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
-const { nodeClasses } = require("../../lib/javascript/syntax-printer-data");
+const { NODE_KIND_ANCESTRY } = require("../../lib/javascript/syntax-printer");
 
-// What terser calls each field webpack's node classes name as ESTree does, by
-// class: the trees are compared under terser's names.
+// What terser calls each field webpack's nodes name as ESTree does, by the
+// kind renaming it, terser's class, whose kinds rename it too.
+/** @type {Record<string, Record<string, string>>} */
+const OWN_RENAMES = {
+	Node: {"startToken": "start", "endToken": "end"},
+	SimpleStatement: {"expression": "body"},
+	DWLoop: {"test": "condition"},
+	For: {"test": "condition", "update": "step"},
+	ForIn: {"left": "init", "right": "object"},
+	With: {"object": "expression"},
+	Expansion: {"argument": "expression"},
+	Lambda: {"id": "name", "params": "argnames", "generator": "is_generator"},
+	PrefixedTemplateString: {"tag": "prefix", "quasi": "template_string"},
+	Exit: {"argument": "value"},
+	Await: {"argument": "expression"},
+	Yield: {"argument": "expression", "delegate": "is_star"},
+	If: {"test": "condition", "consequent": "body", "alternate": "alternative"},
+	Switch: {"discriminant": "expression", "cases": "body"},
+	SwitchBranch: {"consequent": "body"},
+	Case: {"test": "expression"},
+	Try: {"block": "body", "handler": "bcatch", "finalizer": "bfinally"},
+	Catch: {"param": "argname"},
+	DefinitionsLike: {"declarations": "definitions"},
+	VarDefLike: {"id": "name", "init": "value"},
+	NameMapping: {"local": "name"},
+	Import: {"source": "module_name"},
+	Export: {"source": "module_name"},
+	Call: {"callee": "expression", "arguments": "args"},
+	PropAccess: {"object": "expression"},
+	Unary: {"argument": "expression"},
+	Conditional: {"test": "condition", "alternate": "alternative"},
+	Class: {"id": "name", "superClass": "extends"},
+	PrivateIn: {"left": "key", "right": "value"},
+	Symbol: {"definition": "thedef"}
+};
+
+// Each kind's renames, its own and those of the kinds it is one of: the
+// trees are compared under terser's names.
 /** @type {Map<string, Record<string, string>>} */
 const RENAMED_FIELDS = new Map(
-	nodeClasses().map(({ type, renamed }) => [type, renamed])
+	Object.keys(NODE_KIND_ANCESTRY).map((kind) => [
+		kind,
+		Object.assign(
+			{},
+			...[...NODE_KIND_ANCESTRY[kind]]
+				.reverse()
+				.map((name) => OWN_RENAMES[name] || {})
+		)
+	])
 );
 
 // The fields webpack's node classes hold where ESTree has them and terser's
@@ -197,7 +243,7 @@ const text = (value) =>
  */
 const rootOf = (ast) =>
 	ast.AST_Node || {
-		from_mozilla_ast: /** @type {EXPECTED_FUNCTION} */ (ast.fromMozillaAst)
+		from_mozilla_ast: /** @type {EXPECTED_FUNCTION} */ (ast.adoptEstree)
 	};
 
 /**
