@@ -7234,6 +7234,13 @@
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob matching an immutable directory at any depth, or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }
@@ -7253,6 +7260,13 @@
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob matching a managed directory at any depth (e.g. `node_modules`), or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }
@@ -7317,6 +7331,13 @@
                 "description": "A path to an unmanaged directory.",
                 "type": "string",
                 "absolutePath": true
+              },
+              {
+                "description": "A glob matching an unmanaged directory at any depth, or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost.",
+                "type": "string",
+                "absolutePath": false,
+                "minLength": 1,
+                "added": "5.112.0"
               }
             ]
           }
