@@ -10,7 +10,6 @@
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
-const prettier = require("prettier");
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
 const PRINTER_DATA_TARGET = path.resolve(
@@ -1910,6 +1909,11 @@ const UNICODE_SCRIPT_VALUES = ${JSON.stringify(properties.script, null, 1)};
 const writeGenerated = async (target, source) => {
 	const write = process.argv.includes("--write");
 	const name = `lib/javascript/${path.basename(target)}`;
+
+	// Loaded here, not at the top: tests read this module's tables, and Bun's
+	// worker threads exit when they load prettier.
+	const prettier = require("prettier");
+
 	const config = await prettier.resolveConfig(target);
 	const formatted = await prettier.format(source, {
 		...config,
