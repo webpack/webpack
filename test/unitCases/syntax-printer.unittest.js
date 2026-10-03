@@ -30,6 +30,7 @@ const importTerserSource = (specifier) => import(specifier);
  */
 const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
 
+/** @typedef {import("../../lib/javascript/syntax-printer").AstClass} AstClass */
 /** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
@@ -914,7 +915,9 @@ describe("syntax-printer", () => {
 			return new TerserUnaryPrefix({ ...props, expression: props.argument });
 		}
 		UnaryPrefixNode.prototype = TerserUnaryPrefix.prototype;
-		modules.ast.UnaryPrefixNode = UnaryPrefixNode;
+		modules.ast.UnaryPrefixNode = /** @type {AstClass} */ (
+			/** @type {unknown} */ (UnaryPrefixNode)
+		);
 		let helpers;
 		try {
 			helpers = createCompressHelpers(modules);

@@ -675,6 +675,16 @@ declare interface AssetTimestamps {
 	 */
 	mtime: number;
 }
+
+/**
+ * What terser's `ast.js` exports: each class, the predicate `is<Class>` for
+ * it, and the walkers and helpers, which stay open.
+ */
+declare interface Ast {
+	[index: string]: any;
+	expressionOf(node: NodeShape): undefined | NodeShape;
+	namesOf(node: NodeShape): (null | NodeShape)[];
+}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
@@ -18410,6 +18420,7 @@ declare interface Minifier {
  */
 declare interface MinifierModules {
 	[index: string]: any;
+	ast: Ast;
 }
 
 /**
@@ -33377,7 +33388,7 @@ declare namespace exports {
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: FormatOptions;
 				export let IGNORED_FORMAT_OPTIONS: string[];
-				export let createAst: () => Record<string, any>;
+				export let createAst: () => Ast;
 				export let createModules: () => MinifierModules;
 				export let createCompressHelpers: (
 					modules: MinifierModules

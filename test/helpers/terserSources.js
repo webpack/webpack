@@ -31,7 +31,7 @@ const webpackNames = (ast) => {
  * terser's own modules, which its published entry point does not expose: the
  * reference the printer's tests compare webpack's ports with.
  * @param {(specifier: string) => Promise<EXPECTED_ANY>} importModule the calling test's own `import()`, bound to its runtime
- * @returns {Promise<Record<string, EXPECTED_ANY>>} the modules, by what they hold
+ * @returns {Promise<import("../../lib/javascript/syntax-printer").MinifierModules>} the modules, by what they hold
  */
 const loadTerserSources = async (importModule) => {
 	const path = require("path");
