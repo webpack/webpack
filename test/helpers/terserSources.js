@@ -6,8 +6,8 @@
  * terser's node classes under the names webpack gives them as well as their
  * own: `AST_Node` is webpack's `SyntaxNode`, `AST_Call` its `CallNode`, and
  * `AST_Token` its `ParsedToken`, with the `isCallNode` predicates webpack reads.
- * @param {EXPECTED_ANY} ast terser's `ast.js`
- * @returns {EXPECTED_ANY} it, reading under either name
+ * @param {Record<string, EXPECTED_ANY>} ast terser's `ast.js`
+ * @returns {import("../../lib/javascript/syntax-printer").Ast} it, reading under either name
  */
 const webpackNames = (ast) => {
 	const named = { ...ast };
@@ -22,8 +22,8 @@ const webpackNames = (ast) => {
 		const className = type === "Node" ? "SyntaxNode" : `${type}Node`;
 		// webpack's factories are called, where terser's classes are constructed.
 		/**
-		 * @param {EXPECTED_ANY} props the node's properties
-		 * @returns {EXPECTED_ANY} terser's node
+		 * @param {Record<string, unknown>} props the node's properties
+		 * @returns {EXPECTED_OBJECT} terser's node
 		 */
 		function factory(props) {
 			return new Type(props);
@@ -33,7 +33,9 @@ const webpackNames = (ast) => {
 		named[`is${className}`] = (/** @type {unknown} */ value) =>
 			value instanceof Type;
 	}
-	return named;
+	return /** @type {import("../../lib/javascript/syntax-printer").Ast} */ (
+		/** @type {unknown} */ (named)
+	);
 };
 
 /**
@@ -143,13 +145,13 @@ const terserTypeOf = (type) =>
 		? terserTypeOf(ESTREE_LEAF_CLASSES[type])
 		: type;
 
-/** @type {EXPECTED_ANY} */
+/** @type {import("../../lib/javascript/syntax-printer").Ast | undefined} */
 let ownAst;
 
 /**
  * The class of a node of terser's tree, or the kind, terser's class, of a
  * node of webpack's, which holds it as data read by `kindOf`.
- * @param {EXPECTED_ANY} node a node of either tree
+ * @param {import("../../lib/javascript/syntax-printer").Node} node a node of either tree
  * @returns {string} the class
  */
 const kindName = (node) => {
@@ -157,7 +159,7 @@ const kindName = (node) => {
 	if (ownAst === undefined) {
 		ownAst = require("../../lib/javascript/syntax-printer").createAst();
 	}
-	return ownAst.kindOf(node);
+	return String(ownAst.kindOf(node));
 };
 
 module.exports = { kindName, loadTerserSources, terserTypeOf, thrownMessage };

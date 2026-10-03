@@ -2618,7 +2618,13 @@ describe("syntax-printer", () => {
 					/** @type {import("../../lib/javascript/syntax-printer").Node} */ node
 				) => {
 					if (node instanceof modules.ast.AST_Dot) {
-						node.property = { name: node.property };
+						// terser's dot holds its property as a string.
+						const name = /** @type {string} */ (
+							/** @type {unknown} */ (node.property)
+						);
+						node.property = /** @type {import("../../lib/javascript/syntax-printer").Node} */ ({
+							name
+						});
 					}
 					if (node instanceof modules.ast.AST_Symbol) {
 						node.definition = node.thedef;

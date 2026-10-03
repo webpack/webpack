@@ -20622,6 +20622,13 @@ declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
 declare interface NodeShape {
 	[index: string]: any;
 	TYPE: string;
+	type: string;
+	name: string;
+	kind: string;
+	role: string;
+	computed: boolean;
+	label: NodeShape;
+	property: NodeShape;
 	flags: number;
 	startToken: TokenEs5;
 	endToken: TokenEs5;
