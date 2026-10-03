@@ -3840,7 +3840,8 @@ describe("syntax-printer", () => {
 		 */
 		const errorOf = (error) =>
 			error &&
-			`${error.message}${error.line === undefined ? "" : ` at ${error.line}:${error.col}:${error.pos}`}`;
+			// Only a parse error has a `pos`: JavaScriptCore puts its own `line` on every error.
+			`${error.message}${error.pos === undefined ? "" : ` at ${error.line}:${error.col}:${error.pos}`}`;
 
 		/**
 		 * terser's scope analysis and webpack's, each over the same tree: where
@@ -4579,7 +4580,14 @@ describe("syntax-printer", () => {
 									}));
 								} catch (err) {
 									// A source may be one only a script, or only a module, reads.
-									if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+									if (/** @type {Error} */ (err).name !== "SyntaxError") throw err;
+									const terserRefuses = await terserReference()
+										.minify({ "input.js": source }, { ...makeSet(), compress, module })
+										.then(
+											() => false,
+											() => true
+										);
+									if (terserRefuses) continue;
 									throw err;
 								}
 								for (const difference of found) {
@@ -4707,11 +4715,12 @@ describe("syntax-printer", () => {
 					try {
 						await minifier("Object.defineProperty(o);", { mangle: { properties: {} } });
 					} catch (err) {
-						messages.push(/** @type {Error} */ (err).message);
+						// JavaScriptCore quotes the failing expression, which differs between the two.
+						const { name, message } = /** @type {Error} */ (err);
+						messages.push(`${name} ${/\bwalk\b/.test(message)}`);
 					}
 				}
-				expect(messages).toHaveLength(2);
-				expect(messages[1]).toBe(messages[0]);
+				expect(messages).toEqual(["TypeError true", "TypeError true"]);
 			});
 
 			it("should fill a name cache without printing as terser does", async () => {
