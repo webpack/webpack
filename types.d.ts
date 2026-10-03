@@ -20573,6 +20573,10 @@ declare interface NodeShape {
 	start: TokenEs5;
 	end: TokenEs5;
 	expression: NodeShape;
+	callee: NodeShape;
+	object: NodeShape;
+	argument: NodeShape;
+	discriminant: NodeShape;
 	left: NodeShape;
 	right: NodeShape;
 	operator: string;

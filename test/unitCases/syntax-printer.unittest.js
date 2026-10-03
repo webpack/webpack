@@ -903,8 +903,25 @@ describe("syntax-printer", () => {
 
 	it("should keep the quirks of terser's compress helpers", async () => {
 		const modules = await loadTerserSources(importTerserSource);
-		const { common, inference, flags, utils } =
-			createCompressHelpers(modules);
+		// webpack's helpers hand a unary operation its operand under ESTree's
+		// name, which terser's constructor reads as `expression`.
+		const TerserUnaryPrefix = modules.ast.UnaryPrefixNode;
+		/**
+		 * @param {EXPECTED_ANY} props the fields, ESTree's names included
+		 * @returns {EXPECTED_ANY} terser's node
+		 */
+		function UnaryPrefixNode(props) {
+			return new TerserUnaryPrefix({ ...props, expression: props.argument });
+		}
+		UnaryPrefixNode.prototype = TerserUnaryPrefix.prototype;
+		modules.ast.UnaryPrefixNode = UnaryPrefixNode;
+		let helpers;
+		try {
+			helpers = createCompressHelpers(modules);
+		} finally {
+			modules.ast.UnaryPrefixNode = TerserUnaryPrefix;
+		}
+		const { common, inference, flags, utils } = helpers;
 		const { ast } = modules;
 
 		const words = ["b", "a"];
@@ -955,6 +972,21 @@ describe("syntax-printer", () => {
 		});
 		expect(utils.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
 
+		/**
+		 * A constant's node as plain data, terser's `expression` and ESTree's
+		 * `argument` read as one operand.
+		 * @param {EXPECTED_ANY} built a node
+		 * @returns {EXPECTED_ANY} its type, operator, value and operand
+		 */
+		const shapeOf = (built) =>
+			built && built.TYPE
+				? {
+						TYPE: built.TYPE,
+						operator: built.operator,
+						value: built.value,
+						operand: shapeOf(built.argument || built.expression)
+					}
+				: built;
 		for (const value of [
 			"a",
 			0,
@@ -968,8 +1000,8 @@ describe("syntax-printer", () => {
 			undefined,
 			/a\n/g
 		]) {
-			expect(common.make_node_from_constant(value, node)).toEqual(
-				modules.common.make_node_from_constant(value, node)
+			expect(shapeOf(common.make_node_from_constant(value, node))).toEqual(
+				shapeOf(modules.common.make_node_from_constant(value, node))
 			);
 		}
 		expect(() => common.make_node_from_constant({}, node)).toThrow(
@@ -1858,10 +1890,11 @@ describe("syntax-printer", () => {
 				)
 			);
 			const body = ast.body[0].body;
-			// terser's call holds `args`, webpack's ESTree's `arguments`.
-			const call = body[0].body;
+			// terser's names are `body` and `args`, webpack's ESTree's `expression`
+			// and `arguments`.
+			const call = body[0].expression || body[0].body;
 			(call.arguments || call.args)[1].expressions = [];
-			body[1].body.expressions = [];
+			(body[1].expression || body[1].body).expressions = [];
 			return (
 				await run(ast, { compress: { defaults: false, unused: true }, mangle: false })
 			).code;
@@ -2175,10 +2208,11 @@ describe("syntax-printer", () => {
 			minify,
 			modules: { parse }
 		} = await load();
-		const value = parse.parse("(function () { return 1 + x; })").body[0].body;
+		const value = parse.parse("(function () { return 1 + x; })").body[0]
+			.expression;
 		const { code } = await minify("console.log(A, A, B);", {
 			compress: {
-				global_defs: { A: value, B: parse.parse("2").body[0].body },
+				global_defs: { A: value, B: parse.parse("2").body[0].expression },
 				passes: 1,
 				reduce_vars: false,
 				unused: false
@@ -2236,7 +2270,7 @@ describe("syntax-printer", () => {
 		expect(declarations[0].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
 		expect(declarations[1].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
 
-		const object = parsed("({ a: 1, [b]: 2, get c() {}, set [d](v) {}, e() {} })").body[0].body;
+		const object = parsed("({ a: 1, [b]: 2, get c() {}, set [d](v) {}, e() {} })").body[0].expression;
 		expect(object.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([false, true, false, true, false]);
 		const declaredClass = parsed(
 			"class K extends L { #p = 1; static q = this; r = 2; static { s(); } #t() {} get #u() {} set #u(v) {} static [w] = 3; x() {} }"
@@ -2442,11 +2476,24 @@ describe("syntax-printer", () => {
 			}
 		);
 		expect(calls.length).toBeGreaterThan(30);
-		// webpack's helpers read a call's arguments under ESTree's name.
+		// webpack's helpers read a call's and a property read's fields under
+		// ESTree's names.
 		Object.defineProperty(modules.ast.AST_Call.prototype, "arguments", {
 			configurable: true,
 			get() {
 				return this.args;
+			}
+		});
+		Object.defineProperty(modules.ast.AST_Call.prototype, "callee", {
+			configurable: true,
+			get() {
+				return this.expression;
+			}
+		});
+		Object.defineProperty(modules.ast.AST_PropAccess.prototype, "object", {
+			configurable: true,
+			get() {
+				return this.expression;
 			}
 		});
 		for (const unsafe of [true, false]) {
@@ -2656,8 +2703,8 @@ describe("syntax-printer", () => {
 		expect(first.equivalent_to(second)).toBe(true);
 		expect(first.equivalent_to(third)).toBe(false);
 		expect(first.equivalent_to(fourth)).toBe(false);
-		const original = first.body.shallow_cmp;
-		first.body.shallow_cmp = function (/** @type {EXPECTED_ANY} */ other) {
+		const original = first.expression.shallow_cmp;
+		first.expression.shallow_cmp = function (/** @type {EXPECTED_ANY} */ other) {
 			expect(third.equivalent_to(fourth)).toBe(false);
 			return original.call(this, other);
 		};
@@ -2880,7 +2927,7 @@ describe("syntax-printer", () => {
 				 */
 				(node) => {
 					if (!(node instanceof SimpleStatementNode)) return;
-					const name = node.body.name;
+					const name = node.expression.name;
 					if (name === "b") return utils.MAP.skip;
 					if (name === "c") return utils.MAP.splice([node, node]);
 					return node;
@@ -2890,7 +2937,7 @@ describe("syntax-printer", () => {
 		expect(toplevel.body).not.toBe(body);
 		expect(
 			toplevel.body.map(
-				(/** @type {EXPECTED_ANY} */ statement) => statement.body.name
+				(/** @type {EXPECTED_ANY} */ statement) => statement.expression.name
 			)
 		).toEqual(["a", "c", "c", "d"]);
 	});
@@ -2946,14 +2993,23 @@ describe("syntax-printer", () => {
 				expect.arrayContaining(["handler", "finalizer"])
 			);
 			expect(Object.keys(walk.body[4].handler)).toContain("param");
-			expect(Object.keys(walk.body[3].body.body)).toContain("delegate");
+			expect(Object.keys(walk.body[3].body)).toContain("expression");
+			expect(Object.keys(walk.body[3].body)).not.toContain("body");
+			expect(Object.keys(walk.body[3].body.expression)).toEqual(
+				expect.arrayContaining(["argument", "delegate"])
+			);
 			expect(Object.keys(walk.body[5].value.left)).toEqual(
 				expect.arrayContaining(["tag", "quasi"])
 			);
 			expect(Object.keys(derived)).toContain("superClass");
-			expect(Object.keys(branch.body.body)).toContain("arguments");
-			// A `pure_funcs` function still reads terser's name for the arguments.
-			expect(branch.body.body.args).toBe(branch.body.body.arguments);
+			const call = branch.body.expression;
+			expect(Object.keys(call)).toEqual(
+				expect.arrayContaining(["callee", "arguments"])
+			);
+			expect(Object.keys(branch.test.left)).toContain("argument");
+			// A `pure_funcs` function still reads terser's names for the call.
+			expect(call.args).toBe(call.arguments);
+			expect(call.expression).toBe(call.callee);
 		});
 
 		it("should minify them as terser does", async () => {
@@ -2967,7 +3023,9 @@ describe("syntax-printer", () => {
 				{
 					compress: {
 						pure_funcs: (/** @type {EXPECTED_ANY} */ node) =>
-							node.args.length !== 1
+							node.args.length !== 1 ||
+							(node.expression.TYPE === "Dot" &&
+								node.expression.expression.name === "Math")
 					}
 				},
 				{ compress: false, mangle: false },
@@ -3176,7 +3234,10 @@ describe("syntax-printer", () => {
 				/** @type {EXPECTED_ANY[]} */
 				const expressions = [];
 				walk(tree, (node) => {
-					if (node.TYPE === "SimpleStatement") expressions.push(node, node.body);
+					// terser's statement holds `body`, webpack's ESTree's `expression`.
+					if (node.TYPE === "SimpleStatement") {
+						expressions.push(node, node.expression || node.body);
+					}
 				});
 				return expressions;
 			};

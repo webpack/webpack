@@ -767,13 +767,21 @@ const ESTREE_FIELD_NAMES = {
 	If: { test: "condition", alternate: "alternative" },
 	Conditional: { test: "condition", alternate: "alternative" },
 	Lambda: { params: "argnames", generator: "is_generator" },
-	Call: { arguments: "args" },
+	Call: { callee: "expression", arguments: "args" },
+	PropAccess: { object: "expression" },
+	Unary: { argument: "expression" },
+	Await: { argument: "expression" },
+	Expansion: { argument: "expression" },
+	Switch: { discriminant: "expression" },
+	Case: { test: "expression" },
+	With: { object: "expression" },
+	SimpleStatement: { expression: "body" },
 	Try: { handler: "bcatch", finalizer: "bfinally" },
 	Catch: { param: "argname" },
 	DefinitionsLike: { declarations: "definitions" },
 	PrefixedTemplateString: { tag: "prefix", quasi: "template_string" },
 	Class: { superClass: "extends" },
-	Yield: { delegate: "is_star" }
+	Yield: { argument: "expression", delegate: "is_star" }
 };
 
 /**
@@ -785,7 +793,19 @@ const ESTREE_FIELD_NAMES = {
 const renameNodeFields = (classes) => {
 	/** @type {Map<string, Record<string, string>>} */
 	const renamesOf = new Map();
+	// Each class's walk, guard and backwards push as terser names them, its own
+	// or inherited: a rename of an inherited child needs a copy of its own.
+	/** @type {Map<string, { walk: string[] | null, guard: string | null, backwards: string[] | null }>} */
+	const terserWalkOf = new Map();
 	for (const nodeClass of classes) {
+		const inherited =
+			nodeClass.base === null ? undefined : terserWalkOf.get(nodeClass.base);
+		const terserWalk = {
+			walk: nodeClass.walk || (inherited ? inherited.walk : null),
+			guard: nodeClass.walk || !inherited ? nodeClass.guard : inherited.guard,
+			backwards: nodeClass.backwards || (inherited ? inherited.backwards : null)
+		};
+		terserWalkOf.set(nodeClass.type, terserWalk);
 		/** @type {Record<string, string>} */
 		const renames = {
 			...(nodeClass.base === null ? {} : renamesOf.get(nodeClass.base))
@@ -806,11 +826,28 @@ const renameNodeFields = (classes) => {
 					: field
 			);
 		nodeClass.fields = nodeClass.fields.map(rename);
-		if (nodeClass.walk) nodeClass.walk = nodeClass.walk.map(rename);
-		if (nodeClass.backwards) {
-			nodeClass.backwards = nodeClass.backwards.map(rename);
+		const baseRenames =
+			nodeClass.base === null ? {} : renamesOf.get(nodeClass.base);
+		const ownsWalk =
+			nodeClass.walk !== null ||
+			Object.keys(own).some((estreeName) =>
+				[
+					...(terserWalk.walk || []),
+					...(terserWalk.backwards || []),
+					terserWalk.guard || ""
+				].some(
+					(child) =>
+						child.replace(/^[?*~]+/, "") === own[estreeName] &&
+						!Object.prototype.hasOwnProperty.call(baseRenames, own[estreeName])
+				)
+			);
+		if (ownsWalk) {
+			if (terserWalk.walk) nodeClass.walk = terserWalk.walk.map(rename);
+			if (terserWalk.backwards) {
+				nodeClass.backwards = terserWalk.backwards.map(rename);
+			}
+			nodeClass.guard = terserWalk.guard && rename(terserWalk.guard);
 		}
-		if (nodeClass.guard) nodeClass.guard = rename(nodeClass.guard);
 		for (const field of Object.keys(renames)) {
 			nodeClass.renamed[renames[field]] = field;
 		}
