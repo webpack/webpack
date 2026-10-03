@@ -1615,6 +1615,10 @@ describe("syntax-printer", () => {
 		["a switch with a default", "var a = 1; switch (g()) { case a: a = 2; break; default: sink(a); }"],
 		["a labelled block", "l: { var a = g(); if (a) break l; sink(a); }"],
 		["a class with a static block", "class C { static { var a = 1; sink(a); } m() { return C; } } sink(new C());"],
+		[
+			"a labelled loop in a static block of a class collapsed past",
+			"function f() { var C = class { static { l: for (;;) if (g()) break l; } }; return h(), C; } sink(f);"
+		],
 		["destructuring", "var { a, b } = g(); [a, b] = [b, a]; sink(a, b);"],
 		["conditionals and lazy operators", "var a = g(); var b = a ? 1 : 2; var c = a || b; sink(b, c, a && h());"],
 		["values escaping through properties", "var o = { a: { b: 1 } }, p = [o]; sink(o.a.b, o.a, p[0], ...p);"],
@@ -3156,6 +3160,8 @@ describe("syntax-printer", () => {
 				"SymbolProperty",
 				"k"
 			]);
+			// A `pure_funcs` function reads terser's name for what a read is off.
+			expect(dot.expression).toBe(dot.object);
 			const [patterns, privateIn] = parse.parse(
 				"var [p, , q] = r, { s, ...t } = u; class V { #w; x(y) { return #w in y; } }"
 			).body;
