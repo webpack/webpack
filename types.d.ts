@@ -677,8 +677,8 @@ declare interface AssetTimestamps {
 }
 
 /**
- * What terser's `ast.js` exports: each class, the predicate `is<Class>` for
- * it, and the walkers and helpers, which stay open.
+ * What terser's `ast.js` exports: each kind's factory, the predicate
+ * `is<Kind>Node` for it, and the walkers and helpers, which stay open.
  */
 declare interface Ast {
 	[index: string]: any;
@@ -20622,6 +20622,13 @@ declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
 declare interface NodeShape {
 	[index: string]: any;
 	TYPE: string;
+	type: string;
+	name: string;
+	kind: string;
+	role: string;
+	computed: boolean;
+	label: NodeShape;
+	property: NodeShape;
 	flags: number;
 	startToken: TokenEs5;
 	endToken: TokenEs5;
@@ -33425,6 +33432,7 @@ declare namespace exports {
 				};
 			}
 			export namespace printer {
+				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
 				export let load: () => Promise<Minifier>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: FormatOptions;
@@ -33447,11 +33455,6 @@ declare namespace exports {
 						allowSurrogates?: boolean
 					) => boolean;
 				};
-				export let estreeType: (
-					node: NodeShape,
-					parent?: NodeShape
-				) => null | string;
-				export let markEstreeTypes: (__0: MinifierModules) => void;
 			}
 		}
 		export {

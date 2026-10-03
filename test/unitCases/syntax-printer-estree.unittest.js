@@ -1,10 +1,13 @@
 "use strict";
 
+// cspell:ignore argnames, bcatch, bfinally, argname
+
 // cspell:ignore endline, endcol, endpos, nlb, thedef
 
 const acorn = require("acorn");
 const { load } = require("../../lib/javascript/syntax").printer;
 const {
+	kindName,
 	loadTerserSources,
 	terserTypeOf,
 	thrownMessage
@@ -16,18 +19,73 @@ const {
  */
 const importTerserSource = (specifier) => import(specifier);
 const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
-const { nodeClasses } = require("../../lib/javascript/syntax-printer-data");
+const { NODE_KIND_ANCESTRY } = require("../../lib/javascript/syntax-printer");
 
-// What terser calls each field webpack's node classes name as ESTree does, by
-// class: the trees are compared under terser's names.
+// What terser calls each field webpack's nodes name as ESTree does, by the
+// kind renaming it, terser's class, whose kinds rename it too.
+/** @type {Record<string, Record<string, string>>} */
+const OWN_RENAMES = {
+	Node: {"startToken": "start", "endToken": "end"},
+	SimpleStatement: {"expression": "body"},
+	DWLoop: {"test": "condition"},
+	For: {"test": "condition", "update": "step"},
+	ForIn: {"left": "init", "right": "object"},
+	With: {"object": "expression"},
+	Expansion: {"argument": "expression"},
+	Lambda: {"id": "name", "params": "argnames", "generator": "is_generator"},
+	PrefixedTemplateString: {"tag": "prefix", "quasi": "template_string"},
+	Exit: {"argument": "value"},
+	Await: {"argument": "expression"},
+	Yield: {"argument": "expression", "delegate": "is_star"},
+	If: {"test": "condition", "consequent": "body", "alternate": "alternative"},
+	Switch: {"discriminant": "expression", "cases": "body"},
+	SwitchBranch: {"consequent": "body"},
+	Case: {"test": "expression"},
+	Try: {"block": "body", "handler": "bcatch", "finalizer": "bfinally"},
+	Catch: {"param": "argname"},
+	DefinitionsLike: {"declarations": "definitions"},
+	VarDefLike: {"id": "name", "init": "value"},
+	NameMapping: {"local": "name"},
+	Import: {"source": "module_name"},
+	Export: {"source": "module_name"},
+	Call: {"callee": "expression", "arguments": "args"},
+	PropAccess: {"object": "expression"},
+	Unary: {"argument": "expression"},
+	Conditional: {"test": "condition", "alternate": "alternative"},
+	Class: {"id": "name", "superClass": "extends"},
+	PrivateIn: {"left": "key", "right": "value"},
+	Symbol: {"definition": "thedef"}
+};
+
+// Each kind's renames, its own and those of the kinds it is one of: the
+// trees are compared under terser's names.
 /** @type {Map<string, Record<string, string>>} */
 const RENAMED_FIELDS = new Map(
-	nodeClasses().map(({ type, renamed }) => [type, renamed])
+	Object.keys(NODE_KIND_ANCESTRY).map((kind) => [
+		kind,
+		Object.assign(
+			{},
+			...[...NODE_KIND_ANCESTRY[kind]]
+				.reverse()
+				.map((name) => OWN_RENAMES[name] || {})
+		)
+	])
 );
 
-// The fields webpack's node classes hold where ESTree has them and terser's
-// classes none.
-const ESTREE_ADDED_FIELDS = new Set(["computed", "kind", "method", "shorthand"]);
+// The fields webpack's nodes hold that terser's do not: ESTree's, and the
+// values that tell one kind of node from another of its type.
+const ESTREE_ADDED_FIELDS = new Set([
+	"computed",
+	"kind",
+	"method",
+	"shorthand",
+	"type",
+	"role",
+	"atom",
+	"prefix",
+	"operator",
+	"_block_scope"
+]);
 
 // A token's fields, past which a converted tree keeps nothing a minify reads.
 const TOKEN_FIELDS = [
@@ -67,7 +125,7 @@ const firstDifference = (theirs, ours) => {
 			typeof a === "string" &&
 			typeof b === "object" &&
 			b !== null &&
-			(b.TYPE === "SymbolProperty" || b.TYPE === "SymbolPrivateProperty")
+			(kindName(b) === "SymbolProperty" || kindName(b) === "SymbolPrivateProperty")
 		) {
 			return a === b.name ? undefined : `${where}: ${a} vs ${b.name}`;
 		}
@@ -96,11 +154,13 @@ const firstDifference = (theirs, ours) => {
 		// token class `ParsedToken`, where terser prefixes `AST_`, so the classes
 		// are compared by what they hold rather than by name.
 		const kindOf = (/** @type {EXPECTED_ANY} */ node) =>
-			terserTypeOf(node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, ""));
+			node.constructor && node.constructor.name !== "Object"
+				? terserTypeOf(node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, ""))
+				: terserTypeOf(kindName(node));
 		if (kindOf(a) !== kindOf(b)) {
-			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
+			return `${where}: ${kindOf(a)} vs ${kindOf(b)}`;
 		}
-		const renamed = (kindOf(b) !== "Token" && RENAMED_FIELDS.get(b.TYPE)) || {};
+		const renamed = (kindOf(b) !== "Token" && RENAMED_FIELDS.get(kindName(b))) || {};
 		/** @type {Record<string, string>} */
 		const ourNames = {};
 		for (const ourName of Object.keys(renamed)) {
@@ -116,22 +176,22 @@ const firstDifference = (theirs, ours) => {
 		for (const key of keys) {
 			// webpack holds a class's members in a class body, where terser's
 			// class holds them as `properties` and its `body` holds nothing.
-			const isClass = b.TYPE === "DefClass" || b.TYPE === "ClassExpression";
+			const isClass = kindName(b) === "DefClass" || kindName(b) === "ClassExpression";
 			if (isClass && key === "body" && a.body === undefined) continue;
 			// webpack's directive holds terser's `value` as `directive`, its quote
 			// on the string literal it holds as `expression`.
-			const isDirective = b.TYPE === "Directive";
+			const isDirective = kindName(b) === "Directive";
 			if (isDirective && (key === "directive" || key === "expression")) {
 				continue;
 			}
 			if (ESTREE_ADDED_FIELDS.has(key) && !(key in a)) continue;
 			// webpack's destructuring holds terser's `names` as an array pattern's
 			// `elements` or an object pattern's `properties`, the other null.
-			const isPattern = terserTypeOf(b.TYPE) === "Destructuring";
+			const isPattern = terserTypeOf(kindName(b)) === "Destructuring";
 			if (isPattern && (key === "elements" || key === "properties")) continue;
 			// webpack's specifier holds terser's `foreign_name` as what it imports
 			// or what it exports, the other null.
-			const isMapping = terserTypeOf(b.TYPE) === "NameMapping";
+			const isMapping = terserTypeOf(kindName(b)) === "NameMapping";
 			if (isMapping && (key === "imported" || key === "exported")) continue;
 			let ours =
 				isClass && key === "properties"
@@ -151,7 +211,7 @@ const firstDifference = (theirs, ours) => {
 			if (
 				Array.isArray(a[key]) &&
 				ours &&
-				ours.TYPE === "BlockStatement" &&
+				kindName(ours) === "BlockStatement" &&
 				Array.isArray(ours.body)
 			) {
 				ours = ours.body;
@@ -179,7 +239,10 @@ const text = (value) =>
  * @param {EXPECTED_ANY} ast one side's node classes
  * @returns {EXPECTED_ANY} its root class
  */
-const rootOf = (ast) => ast.SyntaxNode || ast.AST_Node;
+const rootOf = (ast) =>
+	ast.AST_Node || {
+		from_mozilla_ast: /** @type {EXPECTED_FUNCTION} */ (ast.adoptEstree)
+	};
 
 /**
  * Reads back a BigInt `text` wrote as a string.
@@ -429,7 +492,7 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 			const results = [];
 			for (const { ast } of [modules.theirs, modules.ours]) {
 				try {
-					results.push(text(rootOf(ast).from_mozilla_ast(JSON.parse(JSON.stringify(tree))).TYPE));
+					results.push(text(kindName(rootOf(ast).from_mozilla_ast(JSON.parse(JSON.stringify(tree))))));
 				} catch (err) {
 					results.push(`throws ${thrownMessage(err)}`);
 				}
