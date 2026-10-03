@@ -2982,15 +2982,18 @@ describe("syntax-printer", () => {
 			} else if (node.TYPE === "SymbolPrivateProperty") {
 				// terser converts a private name with its holder, as ESTree's own type.
 				expected = { type: "PrivateIdentifier" };
-			} else if (typeof node.to_mozilla_ast === "function") {
-				expected = node.to_mozilla_ast(parent);
+			} else if (
+				node.TYPE !== "TemplateSegment" &&
+				terserTypeOf(node.TYPE) !== "NameMapping"
+			) {
+				expected = ast.toEstree(node, parent);
 			} else if (node.TYPE === "TemplateSegment") {
-				expected = parent.to_mozilla_ast().quasi || parent.to_mozilla_ast();
+				expected = ast.toEstree(parent).quasi || ast.toEstree(parent);
 				expected = { type: expected.quasis[0].type };
 			} else {
 				// A name mapping is converted with its declaration, as a specifier.
 				const list = parent.imported_names || parent.exported_names;
-				const converted = parent.to_mozilla_ast();
+				const converted = ast.toEstree(parent);
 				// `export * as a` names what it exports on the declaration itself.
 				expected =
 					converted.specifiers === undefined
