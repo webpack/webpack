@@ -3049,6 +3049,35 @@ describe("syntax-printer", () => {
 		).toEqual(["a", "c", "c", "d"]);
 	});
 
+	it("should hand a pure_funcs function a call read with terser's names", async () => {
+		const { minify } = await load();
+		/** @type {unknown[]} */
+		const seen = [];
+		const { code } = /** @type {EXPECTED_ANY} */ (
+			await minify("a.b(c + 1, d); e(f);", {
+				compress: {
+					pure_funcs: (/** @type {EXPECTED_ANY} */ node) => {
+						seen.push([
+							node.args.length,
+							node.args[0].print_to_string(),
+							node.expression.print_to_string(),
+							node.expression.expression && node.expression.expression.name
+						]);
+						return node.expression.name !== "e";
+					}
+				},
+				mangle: false
+			})
+		);
+		// Asked once a pass, the first call twice.
+		expect(seen).toEqual([
+			[2, "c+1", "a.b", "a"],
+			[1, "f", "e", undefined],
+			[2, "c+1", "a.b", "a"]
+		]);
+		expect(code).toBe("a.b(c+1,d),f;");
+	});
+
 	it("should not revisit a node the compressor squeezed", async () => {
 		const { ast, compress, flags, parse } = (await load()).modules;
 		const compressor = compress.createCompressor({}, {});
@@ -3138,9 +3167,6 @@ describe("syntax-printer", () => {
 				expect.arrayContaining(["callee", "arguments"])
 			);
 			expect(Object.keys(branch.test.left)).toContain("argument");
-			// A `pure_funcs` function still reads terser's names for the call.
-			expect(call.args).toBe(call.arguments);
-			expect(call.expression).toBe(call.callee);
 		});
 
 		it("should hold keys and members in ESTree's shapes", async () => {
@@ -3195,8 +3221,6 @@ describe("syntax-printer", () => {
 				"SymbolProperty",
 				"k"
 			]);
-			// A `pure_funcs` function reads terser's name for what a read is off.
-			expect(dot.expression).toBe(dot.object);
 			const [patterns, privateIn] = parse.parse(
 				"var [p, , q] = r, { s, ...t } = u; class V { #w; x(y) { return #w in y; } }"
 			).body;
