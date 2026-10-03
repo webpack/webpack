@@ -12656,10 +12656,28 @@ declare class InitFragment<GenerateContext> {
 	): Source;
 	static STAGE_CONSTANTS: number;
 	static STAGE_ASYNC_BOUNDARY: number;
-	static STAGE_HARMONY_EXPORTS: number;
-	static STAGE_HARMONY_IMPORTS: number;
+	static STAGE_ESM_EXPORTS: number;
+	static STAGE_ESM_IMPORTS: number;
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
+	static STAGE_ASYNC_ESM_IMPORTS: number;
+
+	/**
+	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove
+	 * @deprecated
+	 */
+	static STAGE_HARMONY_EXPORTS: number;
+
+	/**
+	 * use `STAGE_ESM_IMPORTS` — TODO in the next major release: remove
+	 * @deprecated
+	 */
+	static STAGE_HARMONY_IMPORTS: number;
+
+	/**
+	 * use `STAGE_ASYNC_ESM_IMPORTS` — TODO in the next major release: remove
+	 * @deprecated
+	 */
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
 declare abstract class InlinedUsedName {
@@ -19119,10 +19137,28 @@ declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	): Source;
 	static STAGE_CONSTANTS: number;
 	static STAGE_ASYNC_BOUNDARY: number;
-	static STAGE_HARMONY_EXPORTS: number;
-	static STAGE_HARMONY_IMPORTS: number;
+	static STAGE_ESM_EXPORTS: number;
+	static STAGE_ESM_IMPORTS: number;
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
+	static STAGE_ASYNC_ESM_IMPORTS: number;
+
+	/**
+	 * use `STAGE_ESM_EXPORTS` — TODO in the next major release: remove
+	 * @deprecated
+	 */
+	static STAGE_HARMONY_EXPORTS: number;
+
+	/**
+	 * use `STAGE_ESM_IMPORTS` — TODO in the next major release: remove
+	 * @deprecated
+	 */
+	static STAGE_HARMONY_IMPORTS: number;
+
+	/**
+	 * use `STAGE_ASYNC_ESM_IMPORTS` — TODO in the next major release: remove
+	 * @deprecated
+	 */
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
 declare class ModuleFactory {
@@ -33093,6 +33129,7 @@ declare namespace exports {
 		export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
 		export let entryModuleId: "__webpack_require__.s";
 		export let esmIds: "__webpack_esm_ids__";
+		export let esmModuleDecorator: "__webpack_require__.hmd";
 		export let esmModules: "__webpack_esm_modules__";
 		export let esmRuntime: "__webpack_esm_runtime__";
 		export let exports: "__webpack_exports__";
@@ -33107,7 +33144,7 @@ declare namespace exports {
 		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
 		export let getWorkletBootstrap: "__webpack_require__.wb";
 		export let global: "__webpack_require__.g";
-		export let harmonyModuleDecorator: "__webpack_require__.hmd";
+		/** esm module decorator @deprecated use `esmModuleDecorator` — TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
 		export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 		export let hasFetchPriority: "has fetch priority";
@@ -33484,6 +33521,7 @@ declare namespace exports {
 			export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
 			export let entryModuleId: "__webpack_require__.s";
 			export let esmIds: "__webpack_esm_ids__";
+			export let esmModuleDecorator: "__webpack_require__.hmd";
 			export let esmModules: "__webpack_esm_modules__";
 			export let esmRuntime: "__webpack_esm_runtime__";
 			export let exports: "__webpack_exports__";
@@ -33498,7 +33536,7 @@ declare namespace exports {
 			export let getUpdateManifestFilename: "__webpack_require__.hmrF";
 			export let getWorkletBootstrap: "__webpack_require__.wb";
 			export let global: "__webpack_require__.g";
-			export let harmonyModuleDecorator: "__webpack_require__.hmd";
+			/** esm module decorator @deprecated use `esmModuleDecorator` — TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
 			export let hasCssModules: "has css modules";
 			export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 			export let hasFetchPriority: "has fetch priority";

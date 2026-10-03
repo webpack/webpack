@@ -20,6 +20,31 @@ describe("DeprecatedAliases", () => {
 		);
 	});
 
+	it("should name the esm module decorator under both spellings", () => {
+		const { esmModuleDecorator, harmonyModuleDecorator } =
+			webpack.RuntimeGlobals;
+		expect(esmModuleDecorator).toBe("__webpack_require__.hmd");
+		// TODO in the next major release: drop the deprecated half
+		expect(harmonyModuleDecorator).toBe(esmModuleDecorator);
+	});
+
+	it("should number the init fragment stages under both spellings", () => {
+		const { InitFragment } = webpack;
+		expect(InitFragment.STAGE_ESM_EXPORTS).toBe(30);
+		expect(InitFragment.STAGE_ESM_IMPORTS).toBe(40);
+		expect(InitFragment.STAGE_ASYNC_ESM_IMPORTS).toBe(70);
+		// TODO in the next major release: drop the three deprecated halves
+		expect(InitFragment.STAGE_HARMONY_EXPORTS).toBe(
+			InitFragment.STAGE_ESM_EXPORTS
+		);
+		expect(InitFragment.STAGE_HARMONY_IMPORTS).toBe(
+			InitFragment.STAGE_ESM_IMPORTS
+		);
+		expect(InitFragment.STAGE_ASYNC_HARMONY_IMPORTS).toBe(
+			InitFragment.STAGE_ASYNC_ESM_IMPORTS
+		);
+	});
+
 	describe("the star exports list serializer", () => {
 		const current = () =>
 			ObjectMiddleware.getDeserializerFor(ESM_REQUEST, "ESMStarExportsList");
