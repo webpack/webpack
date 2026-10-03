@@ -897,11 +897,19 @@ const CLASS_BODY = {
 };
 
 // The fields ESTree has that terser's class lacks, by the class gaining them
-// (its subclasses inherit them): whether a key or property read is an expression.
+// (its subclasses inherit them): whether a key or property read is an
+// expression, and a member's kind — with, in an object, method and shorthand.
 /** @type {Record<string, string[]>} */
 const ESTREE_ADDED_FIELDS = {
 	ObjectProperty: ["computed"],
-	PropAccess: ["computed"]
+	PropAccess: ["computed"],
+	ObjectKeyVal: ["kind", "method", "shorthand"],
+	ObjectGetter: ["kind", "method", "shorthand"],
+	ObjectSetter: ["kind", "method", "shorthand"],
+	ConciseMethod: ["kind", "method", "shorthand"],
+	PrivateGetter: ["kind"],
+	PrivateSetter: ["kind"],
+	PrivateMethod: ["kind"]
 };
 
 // The children a walk reaches only where the class's key is computed: a key

@@ -3059,6 +3059,60 @@ describe("syntax-printer", () => {
 			expect(call.expression).toBe(call.callee);
 		});
 
+		it("should hold keys and members in ESTree's shapes", async () => {
+			const { parse } = (await load()).modules;
+			const [object, members] = parse.parse(
+				"({ a, 'b': 1, [c]: 2, get d() {}, e() {} }); class F { constructor() {} static g() {} set #h(v) {} i = j.k[l].#h }"
+			).body;
+			const properties = object.expression.properties;
+			/**
+			 * @param {EXPECTED_ANY} node a member
+			 * @returns {unknown[]} its key's type and name, and its ESTree fields
+			 */
+			const shape = (node) => [
+				node.key.TYPE,
+				node.key.name,
+				node.computed,
+				node.kind,
+				node.method,
+				node.shorthand
+			];
+			expect(properties.map(shape)).toEqual([
+				["SymbolProperty", "a", false, "init", false, true],
+				["SymbolProperty", "b", false, "init", false, false],
+				["SymbolRef", "c", true, "init", false, false],
+				["SymbolMethod", "d", false, "get", false, false],
+				["SymbolMethod", "e", false, "init", true, false]
+			]);
+			expect(
+				members.body.body.map((/** @type {EXPECTED_ANY} */ member) =>
+					shape(member).slice(0, 4)
+				)
+			).toEqual([
+				["SymbolMethod", "constructor", false, "constructor"],
+				["SymbolMethod", "g", false, "method"],
+				// terser names a private method with a method's symbol.
+				["SymbolMethod", "h", false, "set"],
+				["SymbolClassProperty", "i", false, undefined]
+			]);
+			const hash = members.body.body[3].value;
+			expect([hash.computed, hash.property.TYPE, hash.property.name]).toEqual([
+				false,
+				"SymbolPrivateProperty",
+				"h"
+			]);
+			expect([hash.object.computed, hash.object.property.TYPE]).toEqual([
+				true,
+				"SymbolRef"
+			]);
+			const dot = hash.object.object;
+			expect([dot.computed, dot.property.TYPE, dot.property.name]).toEqual([
+				false,
+				"SymbolProperty",
+				"k"
+			]);
+		});
+
 		it("should minify them as terser does", async () => {
 			const { minify } = await load();
 			const reference = terserReference();

@@ -26,7 +26,7 @@ const RENAMED_FIELDS = new Map(
 
 // The fields webpack's node classes hold where ESTree has them and terser's
 // classes none.
-const ESTREE_ADDED_FIELDS = new Set(["computed"]);
+const ESTREE_ADDED_FIELDS = new Set(["computed", "kind", "method", "shorthand"]);
 
 // A token's fields, past which a converted tree keeps nothing a minify reads.
 const TOKEN_FIELDS = [
