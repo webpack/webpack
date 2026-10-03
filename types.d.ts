@@ -20581,7 +20581,6 @@ declare interface NodeShape {
 	right: NodeShape;
 	operator: string;
 	test: NodeShape;
-	consequent: NodeShape;
 	alternate: NodeShape;
 	arguments: NodeShape[];
 	elements: NodeShape[];

@@ -2967,6 +2967,8 @@ describe("syntax-printer", () => {
 				do { index++; } while (index < rest.length && cond(index));
 				while (index--) yield* rest;
 				try { use(total ? list : rest); } catch ({ message }) { log(message); } finally { done(); }
+				switch (index) { case 0: total = 1; break; default: total = 2; }
+				for (var key in list) index += key;
 				return tag\`a\${index}b\` + (total ? 1 : 2);
 			}
 			class Base { m() { return 1; } }
@@ -2998,11 +3000,27 @@ describe("syntax-printer", () => {
 			expect(Object.keys(walk.body[3].body.expression)).toEqual(
 				expect.arrayContaining(["argument", "delegate"])
 			);
-			expect(Object.keys(walk.body[5].value.left)).toEqual(
+			expect(Object.keys(walk.body[7].argument.left)).toEqual(
 				expect.arrayContaining(["tag", "quasi"])
 			);
-			expect(Object.keys(derived)).toContain("superClass");
-			const call = branch.body.expression;
+			expect(Object.keys(walk)).toContain("id");
+			expect(Object.keys(walk.body[0].declarations[0])).toEqual(
+				expect.arrayContaining(["id", "init"])
+			);
+			expect(Object.keys(walk.body[1].body)).toContain("consequent");
+			expect(Object.keys(walk.body[5])).toEqual(
+				expect.arrayContaining(["discriminant", "cases"])
+			);
+			expect(Object.keys(walk.body[5].cases[0])).toEqual(
+				expect.arrayContaining(["test", "consequent"])
+			);
+			expect(Object.keys(walk.body[6])).toEqual(
+				expect.arrayContaining(["left", "right"])
+			);
+			expect(Object.keys(derived)).toEqual(
+				expect.arrayContaining(["id", "superClass"])
+			);
+			const call = branch.consequent.expression;
 			expect(Object.keys(call)).toEqual(
 				expect.arrayContaining(["callee", "arguments"])
 			);
@@ -3885,7 +3903,7 @@ describe("syntax-printer", () => {
 			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
 			const declarator = printTree.body[0].declarations[0];
 			// A name reads as terser's definition named it, and as written for the ESTree mangler.
-			const definition = tree.body[0].declarations[0].name.definition();
+			const definition = tree.body[0].declarations[0].id.definition();
 			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
 			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
 			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
@@ -4103,11 +4121,11 @@ describe("syntax-printer", () => {
 						blockNodes.set(node.block_scope, node);
 					} else if (
 						node instanceof ast.VarDefNode &&
-						node.name instanceof ast.SymbolNode &&
-						node.value instanceof ast.LambdaNode &&
-						!node.value.name
+						node.id instanceof ast.SymbolNode &&
+						node.init instanceof ast.LambdaNode &&
+						!node.init.id
 					) {
-						theirDeclarators.push(node.name);
+						theirDeclarators.push(node.id);
 					}
 				}
 			);
@@ -4188,8 +4206,8 @@ describe("syntax-printer", () => {
 					);
 				}
 				const functionName =
-					theirs instanceof ast.FunctionNode && theirs.name
-						? definitionOf.get(theirs.name.thedef)
+					theirs instanceof ast.FunctionNode && theirs.id
+						? definitionOf.get(theirs.id.thedef)
 						: null;
 				if (functionName !== ours.functionName) {
 					differences.push(`${where} function name`);
