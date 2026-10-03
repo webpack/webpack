@@ -1677,16 +1677,19 @@ const compareStyles = async ({ pairs, types }) => {
 	const openFrame = () =>
 		new Promise((resolve) => {
 			const frame = document.createElement("iframe");
-			frame.style.cssText = "border:0;display:block;width:1400px;height:800px";
+			// WHY: WebKit stops rendering an iframe wholly outside the viewport, and
+			// then resolves a box-less element's style with nothing inherited — so
+			// both frames stand at the corner, where neither is ever below the fold.
+			frame.style.cssText =
+				"border:0;display:block;position:absolute;top:0;left:0;width:1400px;height:800px";
 			frame.addEventListener("load", () => resolve(frame), { once: true });
 			frame.srcdoc =
 				"<!doctype html><html data-eq-html data-eq-root><head></head><body data-eq-body></body></html>";
 			document.body.append(frame);
 		});
 
-	// WHY: WebKit throttles `requestAnimationFrame` in an iframe outside the
-	// viewport, and the second frame sits below it, so the page waits on its own
-	// frames — bounded by a timer, as a page an engine reads as hidden gets none.
+	// The page waits on its own frames, bounded by a timer, as a page an engine
+	// reads as hidden gets none.
 	/**
 	 * @returns {Promise<void>} once the page has rendered twice, or 100ms passed
 	 */
@@ -2283,9 +2286,18 @@ const compareStyles = async ({ pairs, types }) => {
 				}
 				const read = built.elements;
 				// Layout first: an `<object>` settles what it renders as only once one runs.
-				const rendered = read.map((list) =>
-					list.map((element) => element.getClientRects().length !== 0)
-				);
+				/** @returns {boolean[][]} per frame, whether each element has a box */
+				const boxes = () =>
+					read.map((list) =>
+						list.map((element) => element.getClientRects().length !== 0)
+					);
+				let rendered = boxes();
+				// A box in one frame alone is read after a render, so a frame the engine
+				// has yet to lay out is not taken for a sheet hiding the element.
+				if (rendered[0].some((one, i) => one !== rendered[1][i])) {
+					await settle();
+					rendered = boxes();
+				}
 				// Cancelled before any value is read, so none is part way through one.
 				for (const doc of docs) {
 					for (const running of doc.getAnimations()) running.cancel();
