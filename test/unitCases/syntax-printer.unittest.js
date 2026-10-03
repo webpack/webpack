@@ -2674,7 +2674,11 @@ describe("syntax-printer", () => {
 		// The count asks whether an arrow is braceless, which here counts again.
 		const isBraceless = ast.isBraceless;
 		let nested = 0;
-		ast.isBraceless = (/** @type {EXPECTED_ANY} */ node) => {
+		let calls = 0;
+		ast.isBraceless = (
+			/** @type {import("../../lib/javascript/syntax-printer").Node} */ node
+		) => {
+			calls++;
 			nested = ast.nodeSize(first);
 			return isBraceless(node);
 		};
@@ -2683,6 +2687,7 @@ describe("syntax-printer", () => {
 		} finally {
 			ast.isBraceless = isBraceless;
 		}
+		expect(calls).toBeGreaterThan(0);
 		expect(nested).toBe(inner);
 		expect(ast.nodeSize(second)).toBeGreaterThan(0);
 	});

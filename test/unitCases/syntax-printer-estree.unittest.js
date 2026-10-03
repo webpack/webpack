@@ -72,8 +72,6 @@ const RENAMED_FIELDS = new Map(
 	])
 );
 
-// The fields webpack's node classes hold where ESTree has them and terser's
-// classes none.
 // The fields webpack's nodes hold that terser's do not: ESTree's, and the
 // values that tell one kind of node from another of its type.
 const ESTREE_ADDED_FIELDS = new Set([
