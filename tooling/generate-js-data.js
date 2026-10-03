@@ -862,34 +862,72 @@ const renameNodeFields = (classes) => {
 	return classes;
 };
 
-// The classes whose statements ESTree holds in a block, by the field holding
-// it: a walk reaches the block's list, never the block, as terser's did its own.
-/** @type {Record<string, string>} */
-const ESTREE_BLOCK_BODIES = { Lambda: "body", Catch: "body" };
+// The classes whose list ESTree holds in a block, by class: the list's field
+// as terser names it, then the field holding the block. A walk reaches the
+// block's list, never the block, as terser's walked its array.
+/** @type {Record<string, [string, string]>} */
+const ESTREE_BLOCK_BODIES = {
+	Lambda: ["body", "body"],
+	Catch: ["body", "body"],
+	Class: ["properties", "body"]
+};
+
+// The block holding a class's members, which terser has no class for.
+/** @type {NodeClass} */
+const CLASS_BODY = {
+	type: "ClassBody",
+	base: "Node",
+	fields: ["body", "startToken", "endToken"],
+	initializes: false,
+	guarded: true,
+	setsFlags: true,
+	values: {},
+	walk: ["*body"],
+	guard: null,
+	backwards: ["*body"],
+	renamed: {}
+};
 
 /**
- * Points the walks of the classes holding a block at the block's statements.
+ * Points the walks of the classes holding a block at the block's list, and
+ * drops the list's own field from them and the classes extending them.
  * @param {NodeClass[]} classes the classes, renamed
- * @returns {NodeClass[]} the same classes
+ * @returns {NodeClass[]} the same classes, and the class body's
  */
 const reshapeNodeFields = (classes) => {
+	/** @type {Map<string, string>} */
+	const droppedOf = new Map();
 	for (const nodeClass of classes) {
-		if (
-			!Object.prototype.hasOwnProperty.call(ESTREE_BLOCK_BODIES, nodeClass.type)
-		) {
-			continue;
+		const inherited =
+			nodeClass.base === null ? undefined : droppedOf.get(nodeClass.base);
+		const own = Object.prototype.hasOwnProperty.call(
+			ESTREE_BLOCK_BODIES,
+			nodeClass.type
+		)
+			? ESTREE_BLOCK_BODIES[nodeClass.type]
+			: undefined;
+		if (own !== undefined && own[0] !== own[1]) {
+			droppedOf.set(nodeClass.type, own[0]);
+		} else if (inherited !== undefined) {
+			droppedOf.set(nodeClass.type, inherited);
 		}
-		const list = `*${ESTREE_BLOCK_BODIES[nodeClass.type]}`;
+		const dropped = droppedOf.get(nodeClass.type);
+		if (dropped !== undefined) {
+			nodeClass.fields = nodeClass.fields.filter((field) => field !== dropped);
+		}
+		if (own === undefined) continue;
+		const [list, holder] = own;
 		/**
 		 * @param {string} child a child as `readChildren` writes it
-		 * @returns {string} it, the block's statements where it was the list
+		 * @returns {string} it, the block's list where it was the list
 		 */
-		const reach = (child) => (child === list ? `${list}.body` : child);
+		const reach = (child) => (child === `*${list}` ? `*${holder}.body` : child);
 		if (nodeClass.walk) nodeClass.walk = nodeClass.walk.map(reach);
 		if (nodeClass.backwards) {
 			nodeClass.backwards = nodeClass.backwards.map(reach);
 		}
 	}
+	classes.push(CLASS_BODY);
 	return classes;
 };
 
@@ -1102,7 +1140,7 @@ const renderNodeClasses = () => `
  * order its own \`_walk\` and \`_children_backwards\` reach them, null where it
  * inherits them — \`f\` a child always there, \`?f\` one that may be absent,
  * \`~f\` one that may not be a node, \`*f\` a list, \`?*f\` a list that may be absent,
- * \`*f.body\` the statements of the block \`f\` holds.
+ * \`*f.body\` the list of the block \`f\` holds.
  * @typedef {object} NodeClass
  * @property {string} type its \`TYPE\`
  * @property {string | null} base the \`TYPE\` of the class it extends

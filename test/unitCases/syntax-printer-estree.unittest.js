@@ -96,7 +96,14 @@ const firstDifference = (theirs, ours) => {
 						...Object.keys(b).map((key) => renamed[key] || key)
 					]);
 		for (const key of keys) {
-			let ours = b[ourNames[key] || key];
+			// webpack holds a class's members in a class body, where terser's
+			// class holds them as `properties` and its `body` holds nothing.
+			const isClass = b.TYPE === "DefClass" || b.TYPE === "ClassExpression";
+			if (isClass && key === "body" && a.body === undefined) continue;
+			let ours =
+				isClass && key === "properties"
+					? b.body.body
+					: b[ourNames[key] || key];
 			// webpack holds a function's or catch's statements in a block.
 			if (
 				Array.isArray(a[key]) &&

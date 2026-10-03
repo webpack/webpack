@@ -2276,7 +2276,7 @@ describe("syntax-printer", () => {
 		const declaredClass = parsed(
 			"class K extends L { #p = 1; static q = this; r = 2; static { s(); } #t() {} get #u() {} set #u(v) {} static [w] = 3; x() {} }"
 		).body[0];
-		expect(declaredClass.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([
+		expect(declaredClass.body.body.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([
 			false, false, false, false, false, false, false, true, false
 		]);
 		/**
@@ -3024,6 +3024,9 @@ describe("syntax-printer", () => {
 			expect(Object.keys(derived)).toEqual(
 				expect.arrayContaining(["id", "superClass"])
 			);
+			expect(Object.keys(derived)).not.toContain("properties");
+			expect(derived.body.TYPE).toBe("ClassBody");
+			expect(derived.body.body[0].TYPE).toBe("ConciseMethod");
 			const call = branch.consequent.expression;
 			expect(Object.keys(call)).toEqual(
 				expect.arrayContaining(["callee", "arguments"])
