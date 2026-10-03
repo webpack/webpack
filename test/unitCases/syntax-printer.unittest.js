@@ -2271,22 +2271,22 @@ describe("syntax-printer", () => {
 		};
 
 		const labeled = parsed("l: for (;;) { { let x; } break l; }").body[0];
-		const copy = labeled.clone(true);
+		const copy = ast.cloneNode(labeled, true);
 		expect(copy).not.toBe(labeled);
 		expect(copy.label.references).toHaveLength(1);
-		expect(labeled.clone(false).body).toBe(labeled.body);
+		expect(ast.cloneNode(labeled, false).body).toBe(labeled.body);
 
 		const toplevel = parsed("function f(a) { return a; }");
 		const declared = toplevel.body[0];
-		const cloned = declared.clone(true, toplevel);
+		const cloned = ast.cloneNode(declared, true, toplevel);
 		expect(cloned.variables).not.toBe(declared.variables);
-		expect(declared.clone(false).variables).not.toBe(declared.variables);
+		expect(ast.cloneNode(declared, false).variables).not.toBe(declared.variables);
 		expect(ast.getDefunScope(declared)).toBe(declared);
 		expect(ast.isPinned(declared)).toBeFalsy();
 
 		const lambda = parsed("function f({ a }, [b], ...c) {} function g(d = 1, e) { return d; } function h(p, q) {}").body;
 		expect(ast.argsAsNames(lambda[2])).toBe(lambda[2].params);
-		expect(lambda[1].params[0].all_symbols().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
+		expect(ast.allSymbols(lambda[1].params[0]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
 		expect(ast.argsAsNames(lambda[0]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["a", "b", "c"]);
 		expect(ast.argsAsNames(lambda[1]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d", "e"]);
 		expect(ast.lengthProperty(lambda[0])).toBe(2);
