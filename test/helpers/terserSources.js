@@ -5,7 +5,7 @@
 /**
  * terser's node classes under the names webpack gives them as well as their
  * own: `AST_Node` is webpack's `SyntaxNode`, `AST_Call` its `CallNode`, and
- * `AST_Token` its `ParsedToken`.
+ * `AST_Token` its `ParsedToken`, with the `isCallNode` predicates webpack reads.
  * @param {EXPECTED_ANY} ast terser's `ast.js`
  * @returns {EXPECTED_ANY} it, reading under either name
  */
@@ -14,13 +14,15 @@ const webpackNames = (ast) => {
 	for (const name of Object.keys(ast)) {
 		if (!name.startsWith("AST_")) continue;
 		const type = name.slice(4);
-		named[
-			type === "Node"
-				? "SyntaxNode"
-				: type === "Token"
-					? "ParsedToken"
-					: `${type}Node`
-		] = ast[name];
+		const Type = ast[name];
+		if (type === "Token") {
+			named.ParsedToken = Type;
+			continue;
+		}
+		const className = type === "Node" ? "SyntaxNode" : `${type}Node`;
+		named[className] = Type;
+		named[`is${className}`] = (/** @type {unknown} */ value) =>
+			value instanceof Type;
 	}
 	return named;
 };
