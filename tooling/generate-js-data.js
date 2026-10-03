@@ -872,6 +872,10 @@ const ESTREE_BLOCK_BODIES = {
 	Class: ["properties", "body"]
 };
 
+// The fields a directive takes for terser's `value` and `quote`, as ESTree's
+// statement holds it: the directive's text and the string literal spelling it.
+const DIRECTIVE_FIELDS = ["directive", "expression"];
+
 // The block holding a class's members, which terser has no class for.
 /** @type {NodeClass} */
 const CLASS_BODY = {
@@ -910,6 +914,14 @@ const reshapeNodeFields = (classes) => {
 			droppedOf.set(nodeClass.type, own[0]);
 		} else if (inherited !== undefined) {
 			droppedOf.set(nodeClass.type, inherited);
+		}
+		if (nodeClass.type === "Directive") {
+			nodeClass.fields = [
+				...DIRECTIVE_FIELDS,
+				...nodeClass.fields.filter(
+					(field) => field !== "value" && field !== "quote"
+				)
+			];
 		}
 		const dropped = droppedOf.get(nodeClass.type);
 		if (dropped !== undefined) {

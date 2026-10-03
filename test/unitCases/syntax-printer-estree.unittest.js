@@ -100,10 +100,20 @@ const firstDifference = (theirs, ours) => {
 			// class holds them as `properties` and its `body` holds nothing.
 			const isClass = b.TYPE === "DefClass" || b.TYPE === "ClassExpression";
 			if (isClass && key === "body" && a.body === undefined) continue;
+			// webpack's directive holds terser's `value` as `directive`, its quote
+			// on the string literal it holds as `expression`.
+			const isDirective = b.TYPE === "Directive";
+			if (isDirective && (key === "directive" || key === "expression")) {
+				continue;
+			}
 			let ours =
 				isClass && key === "properties"
 					? b.body.body
-					: b[ourNames[key] || key];
+					: isDirective && key === "value"
+						? b.directive
+						: isDirective && key === "quote"
+							? b.expression.quote
+							: b[ourNames[key] || key];
 			// webpack holds a function's or catch's statements in a block.
 			if (
 				Array.isArray(a[key]) &&
