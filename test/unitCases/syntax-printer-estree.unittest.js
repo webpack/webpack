@@ -6,6 +6,7 @@ const acorn = require("acorn");
 const { load } = require("../../lib/javascript/syntax").printer;
 const {
 	loadTerserSources,
+	terserTypeOf,
 	thrownMessage
 } = require("../helpers/terserSources");
 
@@ -95,7 +96,7 @@ const firstDifference = (theirs, ours) => {
 		// token class `ParsedToken`, where terser prefixes `AST_`, so the classes
 		// are compared by what they hold rather than by name.
 		const kindOf = (/** @type {EXPECTED_ANY} */ node) =>
-			node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, "");
+			terserTypeOf(node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, ""));
 		if (kindOf(a) !== kindOf(b)) {
 			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
 		}
@@ -126,11 +127,11 @@ const firstDifference = (theirs, ours) => {
 			if (ESTREE_ADDED_FIELDS.has(key) && !(key in a)) continue;
 			// webpack's destructuring holds terser's `names` as an array pattern's
 			// `elements` or an object pattern's `properties`, the other null.
-			const isPattern = b.TYPE === "Destructuring";
+			const isPattern = terserTypeOf(b.TYPE) === "Destructuring";
 			if (isPattern && (key === "elements" || key === "properties")) continue;
 			// webpack's specifier holds terser's `foreign_name` as what it imports
 			// or what it exports, the other null.
-			const isMapping = b.TYPE === "NameMapping";
+			const isMapping = terserTypeOf(b.TYPE) === "NameMapping";
 			if (isMapping && (key === "imported" || key === "exported")) continue;
 			let ours =
 				isClass && key === "properties"

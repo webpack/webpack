@@ -5,12 +5,11 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname
+// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname, thedef, Defun, Funarg, funarg
 
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
-const prettier = require("prettier");
 
 const DATA_TARGET = path.resolve(__dirname, "../lib/javascript/data.js");
 const PRINTER_DATA_TARGET = path.resolve(
@@ -789,6 +788,7 @@ const ESTREE_FIELD_NAMES = {
 	PrefixedTemplateString: { tag: "prefix", quasi: "template_string" },
 	Class: { id: "name", superClass: "extends" },
 	PrivateIn: { left: "key", right: "value" },
+	Symbol: { definition: "thedef" },
 	NameMapping: { local: "name" },
 	Yield: { argument: "expression", delegate: "is_star" }
 };
@@ -1060,6 +1060,209 @@ const reshapeNodeFields = (classes) => {
 	return classes;
 };
 
+// The ESTree type of every node of a class, by class (its subclasses inherit
+// it), set on its prototype as \`type\`. A class whose nodes ESTree types apart
+// has none yet.
+/** @type {Record<string, string>} */
+const ESTREE_NODE_TYPES = {
+	Debugger: "DebuggerStatement",
+	Directive: "ExpressionStatement",
+	SimpleStatement: "ExpressionStatement",
+	BlockStatement: "BlockStatement",
+	TryBlock: "BlockStatement",
+	Finally: "BlockStatement",
+	ClassBody: "ClassBody",
+	Toplevel: "Program",
+	Accessor: "FunctionExpression",
+	Function: "FunctionExpression",
+	Arrow: "ArrowFunctionExpression",
+	Defun: "FunctionDeclaration",
+	DefClass: "ClassDeclaration",
+	ClassExpression: "ClassExpression",
+	ClassStaticBlock: "StaticBlock",
+	Switch: "SwitchStatement",
+	SwitchBranch: "SwitchCase",
+	Catch: "CatchClause",
+	EmptyStatement: "EmptyStatement",
+	LabeledStatement: "LabeledStatement",
+	Do: "DoWhileStatement",
+	While: "WhileStatement",
+	For: "ForStatement",
+	ForIn: "ForInStatement",
+	ForOf: "ForOfStatement",
+	With: "WithStatement",
+	If: "IfStatement",
+	Return: "ReturnStatement",
+	Throw: "ThrowStatement",
+	Break: "BreakStatement",
+	Continue: "ContinueStatement",
+	Try: "TryStatement",
+	DefinitionsLike: "VariableDeclaration",
+	PrefixedTemplateString: "TaggedTemplateExpression",
+	TemplateString: "TemplateLiteral",
+	TemplateSegment: "TemplateElement",
+	Await: "AwaitExpression",
+	Yield: "YieldExpression",
+	VarDefLike: "VariableDeclarator",
+	Import: "ImportDeclaration",
+	ImportMeta: "MetaProperty",
+	NewTarget: "MetaProperty",
+	DynamicImport: "ImportExpression",
+	Call: "CallExpression",
+	New: "NewExpression",
+	Sequence: "SequenceExpression",
+	PropAccess: "MemberExpression",
+	Chain: "ChainExpression",
+	UnaryPrefix: "UnaryExpression",
+	UpdatePrefix: "UpdateExpression",
+	UnaryPostfix: "UpdateExpression",
+	Binary: "BinaryExpression",
+	Logical: "LogicalExpression",
+	Assign: "AssignmentExpression",
+	DefaultAssign: "AssignmentPattern",
+	Conditional: "ConditionalExpression",
+	Array: "ArrayExpression",
+	Object: "ObjectExpression",
+	ObjectKeyVal: "Property",
+	ClassProperty: "PropertyDefinition",
+	ClassPrivateProperty: "PropertyDefinition",
+	PrivateIn: "BinaryExpression",
+	SymbolDeclaration: "Identifier",
+	SymbolImportForeign: "Identifier",
+	Label: "Identifier",
+	SymbolRef: "Identifier",
+	SymbolExportForeign: "Identifier",
+	LabelRef: "Identifier",
+	SymbolPrivateProperty: "PrivateIdentifier",
+	SymbolImportForeignLiteral: "Literal",
+	SymbolExportForeignLiteral: "Literal",
+	SymbolExportLiteral: "Literal",
+	ArrayPattern: "ArrayPattern",
+	ObjectPattern: "ObjectPattern",
+	ExportAllDeclaration: "ExportAllDeclaration",
+	ExportDefaultDeclaration: "ExportDefaultDeclaration",
+	ExportNamedDeclaration: "ExportNamedDeclaration",
+	ImportSpecifier: "ImportSpecifier",
+	ImportNamespaceSpecifier: "ImportNamespaceSpecifier",
+	ExportSpecifier: "ExportSpecifier",
+	RestElement: "RestElement",
+	SpreadElement: "SpreadElement",
+	ObjectGetter: "Property",
+	ObjectSetter: "Property",
+	ConciseMethod: "Property",
+	PrivateGetter: "MethodDefinition",
+	PrivateSetter: "MethodDefinition",
+	PrivateMethod: "MethodDefinition",
+	ClassGetter: "MethodDefinition",
+	ClassSetter: "MethodDefinition",
+	ClassMethod: "MethodDefinition",
+	This: "ThisExpression",
+	Super: "Super",
+	Constant: "Literal",
+	Atom: "Identifier",
+	Null: "Literal",
+	Boolean: "Literal"
+};
+
+// The other fields every node of a class has, by class: an atom's name, marked
+// as one no shorthand may read, whether an operator comes first, the operator
+// `#x in y` spells without a field, and a name's role, terser's symbol class.
+/** @type {Record<string, Record<string, unknown>>} */
+const ESTREE_NODE_VALUES = {
+	SymbolVar: { role: "var" },
+	SymbolConst: { role: "const" },
+	SymbolUsing: { role: "using" },
+	SymbolLet: { role: "let" },
+	SymbolFunarg: { role: "funarg" },
+	SymbolDefun: { role: "defun" },
+	SymbolMethod: { role: "method" },
+	SymbolClassProperty: { role: "classProperty" },
+	SymbolLambda: { role: "lambda" },
+	SymbolDefClass: { role: "defClass" },
+	SymbolClass: { role: "class" },
+	SymbolCatch: { role: "catch" },
+	SymbolImport: { role: "import" },
+	SymbolImportForeign: { role: "importForeign" },
+	Label: { role: "label" },
+	SymbolRef: { role: "reference" },
+	SymbolExport: { role: "export" },
+	SymbolExportForeign: { role: "exportForeign" },
+	LabelRef: { role: "labelReference" },
+	SymbolPrivateProperty: { role: "privateProperty" },
+	SymbolProperty: { role: "property" },
+	NaN: { name: "NaN", atom: true },
+	Undefined: { name: "undefined", atom: true },
+	Infinity: { name: "Infinity", atom: true },
+	UnaryPrefix: { prefix: true },
+	UnaryPostfix: { prefix: false },
+	PrivateIn: { operator: "in" }
+};
+
+// The classes terser has none for, each a leaf of the class it extends, which
+// its nodes take where ESTree types them apart, by a field (an operator, a
+// quote, a pattern's brackets) or by position (a rest, a class's method).
+/** @type {Record<string, string>} */
+const ESTREE_LEAF_CLASSES = {
+	Logical: "Binary",
+	UpdatePrefix: "UnaryPrefix",
+	CallExpression: "Call",
+	SymbolImportForeignLiteral: "SymbolImportForeign",
+	SymbolExportForeignLiteral: "SymbolExportForeign",
+	SymbolExportLiteral: "SymbolExport",
+	ArrayPattern: "Destructuring",
+	ObjectPattern: "Destructuring",
+	ExportAllDeclaration: "Export",
+	ExportDefaultDeclaration: "Export",
+	ExportNamedDeclaration: "Export",
+	ImportSpecifier: "NameMapping",
+	ImportNamespaceSpecifier: "NameMapping",
+	ExportSpecifier: "NameMapping",
+	RestElement: "Expansion",
+	SpreadElement: "Expansion",
+	ClassGetter: "ObjectGetter",
+	ClassSetter: "ObjectSetter",
+	ClassMethod: "ConciseMethod"
+};
+
+/**
+ * Adds the leaf classes, then sets each class's ESTree type, where every node
+ * of it has one, and its other ESTree values as values on its prototype.
+ * @param {NodeClass[]} classes the classes, reshaped
+ * @returns {NodeClass[]} the same classes and the leaves, typed
+ */
+const typeNodeClasses = (classes) => {
+	for (const type of Object.keys(ESTREE_LEAF_CLASSES)) {
+		const base = /** @type {NodeClass} */ (
+			classes.find((nodeClass) => nodeClass.type === ESTREE_LEAF_CLASSES[type])
+		);
+		classes.push({
+			type,
+			base: base.type,
+			fields: [...base.fields],
+			initializes: base.initializes,
+			guarded: base.guarded,
+			setsFlags: base.setsFlags,
+			values: {},
+			walk: null,
+			guard: null,
+			backwards: null,
+			renamed: { ...base.renamed }
+		});
+	}
+	for (const nodeClass of classes) {
+		if (
+			Object.prototype.hasOwnProperty.call(ESTREE_NODE_TYPES, nodeClass.type)
+		) {
+			nodeClass.values.type = JSON.stringify(ESTREE_NODE_TYPES[nodeClass.type]);
+		}
+		const values = ESTREE_NODE_VALUES[nodeClass.type] || {};
+		for (const name of Object.keys(values)) {
+			nodeClass.values[name] = JSON.stringify(values[name]);
+		}
+	}
+	return classes;
+};
+
 /**
  * terser's node classes, parsed out of its `ast.js`: each one's place in the
  * hierarchy, the fields its constructor copies and the children it walks.
@@ -1256,7 +1459,7 @@ const collectNodeClasses = () => {
 			classes.push(nodeClass);
 		}
 	}
-	return reshapeNodeFields(renameNodeFields(classes));
+	return typeNodeClasses(reshapeNodeFields(renameNodeFields(classes)));
 };
 
 /**
@@ -1706,6 +1909,11 @@ const UNICODE_SCRIPT_VALUES = ${JSON.stringify(properties.script, null, 1)};
 const writeGenerated = async (target, source) => {
 	const write = process.argv.includes("--write");
 	const name = `lib/javascript/${path.basename(target)}`;
+
+	// Loaded here, not at the top: tests read this module's tables, and Bun's
+	// worker threads exit when they load prettier.
+	const prettier = require("prettier");
+
 	const config = await prettier.resolveConfig(target);
 	const formatted = await prettier.format(source, {
 		...config,
@@ -1746,6 +1954,7 @@ if (require.main === module) {
 }
 
 module.exports.DATA_TARGET = DATA_TARGET;
+module.exports.ESTREE_LEAF_CLASSES = ESTREE_LEAF_CLASSES;
 module.exports.PRINTER_DATA_TARGET = PRINTER_DATA_TARGET;
 module.exports.collectDomProperties = collectDomProperties;
 module.exports.collectIdentifierTables = collectIdentifierTables;

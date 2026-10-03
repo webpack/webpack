@@ -15,6 +15,7 @@ const {
 } = require("../../lib/javascript/syntax").printer;
 const {
 	loadTerserSources,
+	terserTypeOf,
 	thrownMessage
 } = require("../helpers/terserSources");
 
@@ -2302,11 +2303,11 @@ describe("syntax-printer", () => {
 			return types;
 		};
 		expect(visits("visit_nondeferred_class_parts")).toEqual([
-			"SymbolRef", "This", "ClassStaticBlock", "SimpleStatement", "Call", "SymbolRef", "SymbolRef", "Number"
+			"SymbolRef", "This", "ClassStaticBlock", "SimpleStatement", "CallExpression", "SymbolRef", "SymbolRef", "Number"
 		]);
 		// A field's value is walked with the field pushed, not visited.
 		expect(visits("visit_deferred_class_parts")).toEqual([
-			"Number", "Number", "PrivateMethod", "SymbolMethod", "Accessor", "ConciseMethod", "SymbolMethod", "Accessor"
+			"Number", "Number", "PrivateMethod", "SymbolMethod", "Accessor", "ClassMethod", "SymbolMethod", "Accessor"
 		]);
 
 		/** @type {Record<string, unknown>} */
@@ -2327,7 +2328,7 @@ describe("syntax-printer", () => {
 					const key = `${node.TYPE}${node.label ? " label" : ""}`;
 					seen[key] = [...(/** @type {string[]} */ (seen[key]) || []), target.TYPE];
 				}
-				if (node.TYPE === "Call") {
+				if (node.TYPE === "CallExpression") {
 					seen.withinLoop = this.is_within_loop();
 					seen.scope = this.find_scope().TYPE;
 					seen.parent = this.parent().TYPE;
@@ -2354,7 +2355,7 @@ describe("syntax-printer", () => {
 			withinLoop: true,
 			scope: "Scope",
 			parent: "VarDef",
-			self: "Call",
+			self: "CallExpression",
 			lambda: "Defun",
 			strict: true
 		});
@@ -2365,7 +2366,7 @@ describe("syntax-printer", () => {
 		const classNames = Object.keys(ast).filter(
 			(name) => /Node$/.test(name) && typeof ast[`is${name}`] === "function"
 		);
-		expect(classNames).toHaveLength(136);
+		expect(classNames).toHaveLength(155);
 		for (const name of classNames) {
 			const probe = Object.create(ast[name].prototype);
 			for (const other of classNames) {
@@ -2552,7 +2553,8 @@ describe("syntax-printer", () => {
 				}
 			}
 			// webpack's helpers read a property read's name off a node, as ESTree
-			// holds it, where terser's tree holds a string.
+			// holds it, where terser's tree holds a string, and a symbol's definition
+			// off a field, where terser's has a method.
 			modules.ast.walk(
 				toplevel,
 				(
@@ -2560,6 +2562,9 @@ describe("syntax-printer", () => {
 				) => {
 					if (node instanceof modules.ast.AST_Dot) {
 						node.property = { name: node.property };
+					}
+					if (node instanceof modules.ast.AST_Symbol) {
+						node.definition = node.thedef;
 					}
 				}
 			);
@@ -2666,7 +2671,7 @@ describe("syntax-printer", () => {
 					if (descend) descend.call(node);
 				}
 			});
-			expect(ours.map((node) => [node.TYPE, node.size()])).toEqual(
+			expect(ours.map((node) => [terserTypeOf(node.TYPE), node.size()])).toEqual(
 				theirs.map((node) => [node.TYPE, node.size()])
 			);
 			for (let i = 0; i < ours.length; i++) {
@@ -2937,21 +2942,26 @@ describe("syntax-printer", () => {
 			const parent = walker.parent();
 			let expected;
 			if (
-				(node.TYPE === "ObjectGetter" || node.TYPE === "ObjectSetter") &&
+				(terserTypeOf(node.TYPE) === "ObjectGetter" ||
+					terserTypeOf(node.TYPE) === "ObjectSetter") &&
 				parent.TYPE !== "Object"
 			) {
 				// terser maps a class's members with the index as their parent, which
 				// reads a class accessor as an object's; ESTree makes it a method.
 				expected = { type: "MethodDefinition" };
-			} else if (node.TYPE === "Expansion") {
+			} else if (terserTypeOf(node.TYPE) === "Expansion") {
 				// terser's converter reads this off its own stack, and makes a rest
 				// parameter a spread; ESTree binds with a rest element in both.
 				expected = {
 					type:
-						parent.TYPE === "Destructuring" || parent instanceof ast.LambdaNode
+						terserTypeOf(parent.TYPE) === "Destructuring" ||
+						parent instanceof ast.LambdaNode
 							? "RestElement"
 							: "SpreadElement"
 				};
+			} else if (node.TYPE === "SymbolPrivateProperty") {
+				// terser converts a private name with its holder, as ESTree's own type.
+				expected = { type: "PrivateIdentifier" };
 			} else if (typeof node.to_mozilla_ast === "function") {
 				expected = node.to_mozilla_ast(parent);
 			} else if (node.TYPE === "TemplateSegment") {
@@ -2974,6 +2984,10 @@ describe("syntax-printer", () => {
 				node.TYPE,
 				expected === null ? null : expected.type
 			]);
+			// A class whose every node has one ESTree type holds it as `type`.
+			if (node.type !== undefined) {
+				expect([node.TYPE, node.type]).toEqual([node.TYPE, expected.type]);
+			}
 			count++;
 		});
 		parse.parse(source, { module: true }).walk(walker);
@@ -3097,7 +3111,7 @@ describe("syntax-printer", () => {
 			);
 			expect(Object.keys(derived)).not.toContain("properties");
 			expect(derived.body.TYPE).toBe("ClassBody");
-			expect(derived.body.body[0].TYPE).toBe("ConciseMethod");
+			expect(derived.body.body[0].TYPE).toBe("ClassMethod");
 			const call = branch.consequent.expression;
 			expect(Object.keys(call)).toEqual(
 				expect.arrayContaining(["callee", "arguments"])
@@ -4077,7 +4091,7 @@ describe("syntax-printer", () => {
 			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
 			const declarator = printTree.body[0].declarations[0];
 			// A name reads as terser's definition named it, and as written for the ESTree mangler.
-			const definition = tree.body[0].declarations[0].id.definition();
+			const definition = tree.body[0].declarations[0].id.definition;
 			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
 			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
 			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
@@ -4172,7 +4186,7 @@ describe("syntax-printer", () => {
 				tree,
 				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
 					if (printNode !== null && printNode.type === "Identifier" && node.definition) {
-						const definition = node.definition();
+						const definition = node.definition;
 						if (definition && definition.mangled_name) {
 							expect(printNode.name).toBe(definition.mangled_name);
 							renamed.push([node.name, printNode.name]);
@@ -4381,7 +4395,7 @@ describe("syntax-printer", () => {
 				}
 				const functionName =
 					theirs instanceof ast.FunctionNode && theirs.id
-						? definitionOf.get(theirs.id.thedef)
+						? definitionOf.get(theirs.id.definition)
 						: null;
 				if (functionName !== ours.functionName) {
 					differences.push(`${where} function name`);
@@ -4389,7 +4403,7 @@ describe("syntax-printer", () => {
 			}
 			for (const [theirs, ours] of definitionOf) {
 				const where = `${theirs.name} in scope ${ourScopes.indexOf(ours.scope)}`;
-				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[symbol.TYPE]);
+				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[terserTypeOf(symbol.TYPE)]);
 				if (kinds.join() !== ours.kinds.join()) {
 					differences.push(`${where} declared as ${ours.kinds}, terser ${kinds}`);
 				}
@@ -4431,9 +4445,9 @@ describe("syntax-printer", () => {
 					symbolNodes.add(printNode);
 					let expected = null;
 					if (node instanceof ast.LabelNode) expected = labelOf.get(node);
-					else if (node instanceof ast.LabelRefNode) expected = labelOf.get(node.thedef);
-					else if (node instanceof ast.SymbolNode && node.thedef && node.thedef !== star) {
-						expected = definitionOf.get(node.thedef);
+					else if (node instanceof ast.LabelRefNode) expected = labelOf.get(node.definition);
+					else if (node instanceof ast.SymbolNode && node.definition && node.definition !== star) {
+						expected = definitionOf.get(node.definition);
 					}
 					if (expected !== printNode.definition) {
 						differences.push(`${node.TYPE} ${node.name} names another definition`);
