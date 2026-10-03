@@ -5394,6 +5394,7 @@ export interface SnapshotOptions {
 	immutablePaths?: Array<
 		| /** List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable. */ /** A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash) */ RegExp
 		| /** A path to an immutable directory (usually a package manager cache directory). */ AbsolutePath
+		| /** A glob matching an immutable directory at any depth, or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost. @since 5.112.0 */ NonEmptyRelativePath
 	>;
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
@@ -5401,6 +5402,7 @@ export interface SnapshotOptions {
 	managedPaths?: Array<
 		| /** List of paths that are managed by a package manager and can be trusted to not be modified otherwise. */ /** A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash) */ RegExp
 		| /** A path to a managed directory (usually a node_modules directory). */ AbsolutePath
+		| /** A glob matching a managed directory at any depth (e.g. `node_modules`), or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost. @since 5.112.0 */ NonEmptyRelativePath
 	>;
 	/**
 	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
@@ -5447,6 +5449,7 @@ export interface SnapshotOptions {
 	unmanagedPaths?: Array<
 		| /** List of paths that are not managed by a package manager and the contents are subject to change. */ /** A RegExp matching an unmanaged directory. */ RegExp
 		| /** A path to an unmanaged directory. */ AbsolutePath
+		| /** A glob matching an unmanaged directory at any depth, or relative to the context when it starts with `./` or `../`; a path under several matches takes the outermost. @since 5.112.0 */ NonEmptyRelativePath
 	>;
 }
 
