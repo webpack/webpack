@@ -1114,7 +1114,11 @@ const ESTREE_NODE_TYPES = {
 	Sequence: "SequenceExpression",
 	PropAccess: "MemberExpression",
 	Chain: "ChainExpression",
+	UnaryPrefix: "UnaryExpression",
+	UpdatePrefix: "UpdateExpression",
 	UnaryPostfix: "UpdateExpression",
+	Binary: "BinaryExpression",
+	Logical: "LogicalExpression",
 	Assign: "AssignmentExpression",
 	DefaultAssign: "AssignmentPattern",
 	Conditional: "ConditionalExpression",
@@ -1132,18 +1136,59 @@ const ESTREE_NODE_TYPES = {
 	Boolean: "Literal"
 };
 
+// The other fields ESTree gives every node of a class, by class: whether an
+// operator comes first, and the operator `#x in y` spells without a field.
+/** @type {Record<string, Record<string, unknown>>} */
+const ESTREE_NODE_VALUES = {
+	UnaryPrefix: { prefix: true },
+	UnaryPostfix: { prefix: false },
+	PrivateIn: { operator: "in" }
+};
+
+// The classes terser has none for, each a leaf of the class it extends, which
+// its nodes take where ESTree types them apart: a logical operator, an
+// increment or decrement written first, a call that is not a `new`.
+/** @type {Record<string, string>} */
+const ESTREE_LEAF_CLASSES = {
+	Logical: "Binary",
+	UpdatePrefix: "UnaryPrefix",
+	CallExpression: "Call"
+};
+
 /**
- * Sets each class's ESTree type, where every node of it has one, as a value on
- * its prototype.
+ * Adds the leaf classes, then sets each class's ESTree type, where every node
+ * of it has one, and its other ESTree values as values on its prototype.
  * @param {NodeClass[]} classes the classes, reshaped
- * @returns {NodeClass[]} the same classes, typed
+ * @returns {NodeClass[]} the same classes and the leaves, typed
  */
 const typeNodeClasses = (classes) => {
+	for (const type of Object.keys(ESTREE_LEAF_CLASSES)) {
+		const base = /** @type {NodeClass} */ (
+			classes.find((nodeClass) => nodeClass.type === ESTREE_LEAF_CLASSES[type])
+		);
+		classes.push({
+			type,
+			base: base.type,
+			fields: [...base.fields],
+			initializes: base.initializes,
+			guarded: base.guarded,
+			setsFlags: base.setsFlags,
+			values: {},
+			walk: null,
+			guard: null,
+			backwards: null,
+			renamed: { ...base.renamed }
+		});
+	}
 	for (const nodeClass of classes) {
 		if (
 			Object.prototype.hasOwnProperty.call(ESTREE_NODE_TYPES, nodeClass.type)
 		) {
 			nodeClass.values.type = JSON.stringify(ESTREE_NODE_TYPES[nodeClass.type]);
+		}
+		const values = ESTREE_NODE_VALUES[nodeClass.type] || {};
+		for (const name of Object.keys(values)) {
+			nodeClass.values[name] = JSON.stringify(values[name]);
 		}
 	}
 	return classes;
@@ -1835,6 +1880,7 @@ if (require.main === module) {
 }
 
 module.exports.DATA_TARGET = DATA_TARGET;
+module.exports.ESTREE_LEAF_CLASSES = ESTREE_LEAF_CLASSES;
 module.exports.PRINTER_DATA_TARGET = PRINTER_DATA_TARGET;
 module.exports.collectDomProperties = collectDomProperties;
 module.exports.collectIdentifierTables = collectIdentifierTables;

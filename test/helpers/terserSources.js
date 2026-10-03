@@ -98,4 +98,18 @@ const thrownMessage = (error) =>
 		? "TypeError"
 		: String(error && error.message);
 
-module.exports = { loadTerserSources, thrownMessage };
+/**
+ * The class terser holds a node of one of webpack's classes as: a leaf class
+ * terser has none for, which ESTree types apart, names the class it extends.
+ * @param {string} type the class's `TYPE`
+ * @returns {string} terser's class's `TYPE`
+ */
+const terserTypeOf = (type) => {
+	const { ESTREE_LEAF_CLASSES } = require("../../tooling/generate-js-data");
+
+	return Object.prototype.hasOwnProperty.call(ESTREE_LEAF_CLASSES, type)
+		? terserTypeOf(ESTREE_LEAF_CLASSES[type])
+		: type;
+};
+
+module.exports = { loadTerserSources, terserTypeOf, thrownMessage };

@@ -6,6 +6,7 @@ const acorn = require("acorn");
 const { load } = require("../../lib/javascript/syntax").printer;
 const {
 	loadTerserSources,
+	terserTypeOf,
 	thrownMessage
 } = require("../helpers/terserSources");
 
@@ -95,7 +96,7 @@ const firstDifference = (theirs, ours) => {
 		// token class `ParsedToken`, where terser prefixes `AST_`, so the classes
 		// are compared by what they hold rather than by name.
 		const kindOf = (/** @type {EXPECTED_ANY} */ node) =>
-			node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, "");
+			terserTypeOf(node.constructor.name.replace(/^(?:AST_|Parsed)/, "").replace(/Node$/, ""));
 		if (kindOf(a) !== kindOf(b)) {
 			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
 		}

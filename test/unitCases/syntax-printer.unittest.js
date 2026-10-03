@@ -15,6 +15,7 @@ const {
 } = require("../../lib/javascript/syntax").printer;
 const {
 	loadTerserSources,
+	terserTypeOf,
 	thrownMessage
 } = require("../helpers/terserSources");
 
@@ -2302,7 +2303,7 @@ describe("syntax-printer", () => {
 			return types;
 		};
 		expect(visits("visit_nondeferred_class_parts")).toEqual([
-			"SymbolRef", "This", "ClassStaticBlock", "SimpleStatement", "Call", "SymbolRef", "SymbolRef", "Number"
+			"SymbolRef", "This", "ClassStaticBlock", "SimpleStatement", "CallExpression", "SymbolRef", "SymbolRef", "Number"
 		]);
 		// A field's value is walked with the field pushed, not visited.
 		expect(visits("visit_deferred_class_parts")).toEqual([
@@ -2327,7 +2328,7 @@ describe("syntax-printer", () => {
 					const key = `${node.TYPE}${node.label ? " label" : ""}`;
 					seen[key] = [...(/** @type {string[]} */ (seen[key]) || []), target.TYPE];
 				}
-				if (node.TYPE === "Call") {
+				if (node.TYPE === "CallExpression") {
 					seen.withinLoop = this.is_within_loop();
 					seen.scope = this.find_scope().TYPE;
 					seen.parent = this.parent().TYPE;
@@ -2354,7 +2355,7 @@ describe("syntax-printer", () => {
 			withinLoop: true,
 			scope: "Scope",
 			parent: "VarDef",
-			self: "Call",
+			self: "CallExpression",
 			lambda: "Defun",
 			strict: true
 		});
@@ -2365,7 +2366,7 @@ describe("syntax-printer", () => {
 		const classNames = Object.keys(ast).filter(
 			(name) => /Node$/.test(name) && typeof ast[`is${name}`] === "function"
 		);
-		expect(classNames).toHaveLength(136);
+		expect(classNames).toHaveLength(139);
 		for (const name of classNames) {
 			const probe = Object.create(ast[name].prototype);
 			for (const other of classNames) {
@@ -2670,7 +2671,7 @@ describe("syntax-printer", () => {
 					if (descend) descend.call(node);
 				}
 			});
-			expect(ours.map((node) => [node.TYPE, node.size()])).toEqual(
+			expect(ours.map((node) => [terserTypeOf(node.TYPE), node.size()])).toEqual(
 				theirs.map((node) => [node.TYPE, node.size()])
 			);
 			for (let i = 0; i < ours.length; i++) {
