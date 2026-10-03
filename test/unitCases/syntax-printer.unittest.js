@@ -2366,7 +2366,7 @@ describe("syntax-printer", () => {
 		const classNames = Object.keys(ast).filter(
 			(name) => /Node$/.test(name) && typeof ast[`is${name}`] === "function"
 		);
-		expect(classNames).toHaveLength(139);
+		expect(classNames).toHaveLength(142);
 		for (const name of classNames) {
 			const probe = Object.create(ast[name].prototype);
 			for (const other of classNames) {
@@ -2957,6 +2957,9 @@ describe("syntax-printer", () => {
 							? "RestElement"
 							: "SpreadElement"
 				};
+			} else if (node.TYPE === "SymbolPrivateProperty") {
+				// terser converts a private name with its holder, as ESTree's own type.
+				expected = { type: "PrivateIdentifier" };
 			} else if (typeof node.to_mozilla_ast === "function") {
 				expected = node.to_mozilla_ast(parent);
 			} else if (node.TYPE === "TemplateSegment") {
@@ -4398,7 +4401,7 @@ describe("syntax-printer", () => {
 			}
 			for (const [theirs, ours] of definitionOf) {
 				const where = `${theirs.name} in scope ${ourScopes.indexOf(ours.scope)}`;
-				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[symbol.TYPE]);
+				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[terserTypeOf(symbol.TYPE)]);
 				if (kinds.join() !== ours.kinds.join()) {
 					differences.push(`${where} declared as ${ours.kinds}, terser ${kinds}`);
 				}

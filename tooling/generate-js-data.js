@@ -5,7 +5,7 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname, thedef, Defun
+// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname, thedef, Defun, Funarg, funarg
 
 const fs = require("fs");
 const path = require("path");
@@ -1128,6 +1128,16 @@ const ESTREE_NODE_TYPES = {
 	ClassProperty: "PropertyDefinition",
 	ClassPrivateProperty: "PropertyDefinition",
 	PrivateIn: "BinaryExpression",
+	SymbolDeclaration: "Identifier",
+	SymbolImportForeign: "Identifier",
+	Label: "Identifier",
+	SymbolRef: "Identifier",
+	SymbolExportForeign: "Identifier",
+	LabelRef: "Identifier",
+	SymbolPrivateProperty: "PrivateIdentifier",
+	SymbolImportForeignLiteral: "Literal",
+	SymbolExportForeignLiteral: "Literal",
+	SymbolExportLiteral: "Literal",
 	This: "ThisExpression",
 	Super: "Super",
 	Constant: "Literal",
@@ -1136,11 +1146,32 @@ const ESTREE_NODE_TYPES = {
 	Boolean: "Literal"
 };
 
-// The other fields ESTree gives every node of a class, by class: the name of
-// a constant written as one, marked as an atom no shorthand may read, whether
-// an operator comes first, and the operator `#x in y` spells without a field.
+// The other fields every node of a class has, by class: an atom's name, marked
+// as one no shorthand may read, whether an operator comes first, the operator
+// `#x in y` spells without a field, and a name's role, terser's symbol class.
 /** @type {Record<string, Record<string, unknown>>} */
 const ESTREE_NODE_VALUES = {
+	SymbolVar: { role: "var" },
+	SymbolConst: { role: "const" },
+	SymbolUsing: { role: "using" },
+	SymbolLet: { role: "let" },
+	SymbolFunarg: { role: "funarg" },
+	SymbolDefun: { role: "defun" },
+	SymbolMethod: { role: "method" },
+	SymbolClassProperty: { role: "classProperty" },
+	SymbolLambda: { role: "lambda" },
+	SymbolDefClass: { role: "defClass" },
+	SymbolClass: { role: "class" },
+	SymbolCatch: { role: "catch" },
+	SymbolImport: { role: "import" },
+	SymbolImportForeign: { role: "importForeign" },
+	Label: { role: "label" },
+	SymbolRef: { role: "reference" },
+	SymbolExport: { role: "export" },
+	SymbolExportForeign: { role: "exportForeign" },
+	LabelRef: { role: "labelReference" },
+	SymbolPrivateProperty: { role: "privateProperty" },
+	SymbolProperty: { role: "property" },
 	NaN: { name: "NaN", atom: true },
 	Undefined: { name: "undefined", atom: true },
 	Infinity: { name: "Infinity", atom: true },
@@ -1150,13 +1181,16 @@ const ESTREE_NODE_VALUES = {
 };
 
 // The classes terser has none for, each a leaf of the class it extends, which
-// its nodes take where ESTree types them apart: a logical operator, an
-// increment or decrement written first, a call that is not a `new`.
+// its nodes take where ESTree types them apart: a logical operator, a prefix
+// `++`/`--`, a call not a `new`, a module's export name written as a string.
 /** @type {Record<string, string>} */
 const ESTREE_LEAF_CLASSES = {
 	Logical: "Binary",
 	UpdatePrefix: "UnaryPrefix",
-	CallExpression: "Call"
+	CallExpression: "Call",
+	SymbolImportForeignLiteral: "SymbolImportForeign",
+	SymbolExportForeignLiteral: "SymbolExportForeign",
+	SymbolExportLiteral: "SymbolExport"
 };
 
 /**
