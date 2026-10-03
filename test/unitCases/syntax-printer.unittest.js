@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE
+// cspell:ignore binop, fnames, propmangle, fargs, domprops, argnames, nondeferred, loopcontrol, Defun, defun, NOINLINE, Funarg, unmangleable, Unmangleable, thedef, funs
 
 const vm = require("vm");
 const {
@@ -29,6 +29,8 @@ const importTerserSource = (specifier) => import(specifier);
  * @returns {{ minify: typeof import("terser").minify }} it
  */
 const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
+
+/** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
@@ -655,8 +657,10 @@ const PRINT_TREE_SKIPPED_KEYS = new Set([
 	"quote",
 	"definition",
 	"mapName",
+	"idDeclares",
+	"heldAsDefinition",
 	"atom",
-	"source",
+	"annotatedKey",
 	"attributesStartToken",
 	"attributesEndToken",
 	// terser keeps no record of a shorthand, which the printer decides.
@@ -3695,7 +3699,7 @@ describe("syntax-printer", () => {
 			).toEqual(["1.0", "0x10", "1_000", ".5", "12n", "0x1Fn"]);
 		});
 
-		it("should carry the tokens, quotes, definitions and source-map names the printer reads", async () => {
+		it("should carry the tokens, quotes, names and source-map names the printer reads", async () => {
 			const { modules } = await load();
 			const tree = await terserTree(
 				"var v = { 'a': 1, b: 2, [c]: 3, \"d\"() {} }; class K { 'e' = 1; #f = 2; [g] = 3 } import h from 'i' with { type: 'json' };",
@@ -3703,10 +3707,11 @@ describe("syntax-printer", () => {
 			);
 			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
 			const declarator = printTree.body[0].declarations[0];
-			expect(declarator.id.definition).toBe(
-				tree.body[0].definitions[0].name.definition()
-			);
-			expect(declarator.id.definition).toEqual(expect.any(Object));
+			// A name reads as terser's definition named it, and as written for the ESTree mangler.
+			const definition = tree.body[0].definitions[0].name.definition();
+			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
+			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
+			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
 			expect(declarator.startToken).toBe(tree.body[0].definitions[0].start);
 			const [a, b, c, d] = declarator.init.properties;
 			expect([a.quote, a.key.quote, a.mapName]).toEqual(["'", "'", "a"]);
@@ -3797,16 +3802,1010 @@ describe("syntax-printer", () => {
 			modules.toPrintTree(
 				tree,
 				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
-					if (printNode !== null && printNode.type === "Identifier" && printNode.definition) {
-						expect(printNode.definition).toBe(node.definition());
-						if (printNode.definition.mangled_name) {
-							expect(printNode.name).toBe(printNode.definition.mangled_name);
+					if (printNode !== null && printNode.type === "Identifier" && node.definition) {
+						const definition = node.definition();
+						if (definition && definition.mangled_name) {
+							expect(printNode.name).toBe(definition.mangled_name);
 							renamed.push([node.name, printNode.name]);
 						}
 					}
 				}
 			);
 			expect(renamed).toContainEqual(["first", expect.any(String)]);
+		});
+	});
+
+	describe("analyzeManglingScopes", () => {
+		// The symbol classes terser declares with, as the analysis codes them.
+		/** @type {Record<string, number>} */
+		const DECLARING_KINDS = {
+			SymbolVar: 1,
+			SymbolFunarg: 2,
+			SymbolLet: 3,
+			SymbolConst: 4,
+			SymbolUsing: 5,
+			SymbolCatch: 6,
+			SymbolImport: 7,
+			SymbolDefun: 8,
+			SymbolLambda: 9,
+			SymbolClass: 10,
+			SymbolDefClass: 11,
+			SymbolRef: 12,
+			SymbolExport: 12
+		};
+
+		/**
+		 * @param {EXPECTED_ANY} error what was thrown, if anything
+		 * @returns {string | undefined} its message and where it points
+		 */
+		const errorOf = (error) =>
+			error &&
+			// Only a parse error has a `pos`: JavaScriptCore puts its own `line` on every error.
+			`${error.message}${error.pos === undefined ? "" : ` at ${error.line}:${error.col}:${error.pos}`}`;
+
+		/**
+		 * terser's scope analysis and webpack's, each over the same tree: where
+		 * the two disagree, as the mangler would read them.
+		 * @param {EXPECTED_ANY} modules the minifier's modules
+		 * @param {EXPECTED_ANY} tree terser's tree
+		 * @param {EXPECTED_ANY} options the mangle options
+		 * @returns {string[]} the disagreements
+		 */
+		const scopeDifferences = (modules, tree, options) => {
+			const { ast } = modules;
+			/** @type {string[]} */
+			const differences = [];
+			/** @type {EXPECTED_ANY} */
+			let theirError;
+			/** @type {EXPECTED_ANY} */
+			let ourError;
+			try {
+				tree.figure_out_scope(options);
+			} catch (error) {
+				theirError = error;
+			}
+			/** @type {Map<EXPECTED_ANY, EXPECTED_ANY[]>} */
+			const pairs = new Map();
+			const program = modules.toPrintTree(
+				tree,
+				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
+					if (printNode === null) return;
+					const known = pairs.get(node);
+					if (known) known.push(printNode);
+					else pairs.set(node, [printNode]);
+				},
+				undefined,
+				false,
+				true
+			);
+			/** @type {EXPECTED_ANY} */
+			let analysis;
+			try {
+				analysis = modules.analyzeManglingScopes(program, options);
+			} catch (error) {
+				ourError = error;
+			}
+			if (theirError || ourError) {
+				if (errorOf(theirError) !== errorOf(ourError)) {
+					differences.push(`threw ${errorOf(theirError)}, ours ${errorOf(ourError)}`);
+				}
+				return differences;
+			}
+			/** @type {EXPECTED_ANY[]} */
+			const theirScopes = [];
+			/** @type {Map<EXPECTED_ANY, EXPECTED_ANY>} */
+			const blockNodes = new Map();
+			/** @type {{ label: EXPECTED_ANY, parent: EXPECTED_ANY }[]} */
+			const theirLabels = [];
+			/** @type {EXPECTED_ANY[]} */
+			const labelStack = [];
+			/** @type {Set<EXPECTED_ANY>} */
+			const theirBlockDefunScopes = new Set();
+			/** @type {EXPECTED_ANY[]} */
+			const theirDeclarators = [];
+			// As terser's mangler walks: the scopes, labels and kept declarators.
+			const walker = new ast.TreeWalker(
+				(/** @type {EXPECTED_ANY} */ node, /** @type {() => void} */ descend) => {
+					if (node instanceof ast.LabeledStatementNode) {
+						theirLabels.push({
+							label: node.label,
+							parent: labelStack.length > 0 ? labelStack[labelStack.length - 1] : null
+						});
+						labelStack.push(node.label);
+						descend();
+						labelStack.pop();
+						return true;
+					}
+					if (node instanceof ast.DefunNode && !(walker.parent() instanceof ast.ScopeNode)) {
+						theirBlockDefunScopes.add(node.parent_scope.get_defun_scope());
+					}
+					if (node instanceof ast.ScopeNode) {
+						theirScopes.push(node);
+					} else if (node.is_block_scope()) {
+						theirScopes.push(node.block_scope);
+						blockNodes.set(node.block_scope, node);
+					} else if (
+						node instanceof ast.VarDefNode &&
+						node.name instanceof ast.SymbolNode &&
+						node.value instanceof ast.LambdaNode &&
+						!node.value.name
+					) {
+						theirDeclarators.push(node.name);
+					}
+				}
+			);
+			tree.walk(walker);
+			/** @type {EXPECTED_ANY[]} */
+			const ourScopes = analysis.scopes;
+			if (ourScopes.length !== theirScopes.length) {
+				differences.push(`${ourScopes.length} scopes, terser ${theirScopes.length}`);
+				return differences;
+			}
+			/** @type {Map<EXPECTED_ANY, EXPECTED_ANY>} */
+			const scopeOf = new Map();
+			/** @type {Map<EXPECTED_ANY, EXPECTED_ANY>} */
+			const definitionOf = new Map();
+			/**
+			 * @param {EXPECTED_ANY} theirs terser's definition
+			 * @param {EXPECTED_ANY} ours the analysis' definition
+			 * @returns {void}
+			 */
+			const pairDefinitions = (theirs, ours) => {
+				const known = definitionOf.get(theirs);
+				if (known === undefined) definitionOf.set(theirs, ours);
+				else if (known !== ours) differences.push(`${theirs.name} paired twice`);
+			};
+			for (const [index, theirs] of theirScopes.entries()) {
+				const ours = ourScopes[index];
+				const where = `scope ${index} (${ours.node.type})`;
+				const nodes = pairs.get(blockNodes.get(theirs) || theirs) || [];
+				if (nodes.length !== 1 || nodes[0] !== ours.node) {
+					differences.push(`${where} opened by another node`);
+					return differences;
+				}
+				scopeOf.set(theirs, ours);
+				const names = [...theirs.variables.keys()];
+				if (names.join() !== [...ours.variables.keys()].join()) {
+					differences.push(`${where} declares ${[...ours.variables.keys()]}, terser ${names}`);
+				}
+				for (const name of names) {
+					if (ours.variables.has(name)) {
+						pairDefinitions(theirs.variables.get(name), ours.variables.get(name));
+					}
+				}
+			}
+			// The bridge reads no name off `export *`, whose global terser makes.
+			const star = tree.globals.get("*");
+			const globalNames = [...tree.globals.keys()].filter((name) => name !== "*");
+			if (globalNames.join() !== [...analysis.globals.keys()].join()) {
+				differences.push(`globals ${[...analysis.globals.keys()]}, terser ${globalNames}`);
+			}
+			for (const name of globalNames) {
+				if (analysis.globals.has(name)) {
+					pairDefinitions(tree.globals.get(name), analysis.globals.get(name));
+				}
+			}
+			for (const [theirs, ours] of scopeOf) {
+				const where = `scope ${ourScopes.indexOf(ours)} (${ours.node.type})`;
+				if ((scopeOf.get(theirs.parent_scope) || null) !== ours.parent) {
+					differences.push(`${where} parent`);
+				}
+				if (scopeOf.get(theirs.get_defun_scope()) !== ours.defun) {
+					differences.push(`${where} defun`);
+				}
+				if (Boolean(theirs.uses_eval) !== ours.usesEval) {
+					differences.push(`${where} uses eval: ${ours.usesEval}`);
+				}
+				if (Boolean(theirs.uses_with) !== ours.usesWith) {
+					differences.push(`${where} uses with: ${ours.usesWith}`);
+				}
+				const enclosed = theirs.enclosed
+					.filter((/** @type {EXPECTED_ANY} */ definition) => definition !== star)
+					.map((/** @type {EXPECTED_ANY} */ definition) => definitionOf.get(definition));
+				if (
+					enclosed.length !== ours.enclosed.length ||
+					enclosed.some((/** @type {EXPECTED_ANY} */ definition, /** @type {number} */ index) => definition !== ours.enclosed[index])
+				) {
+					differences.push(
+						`${where} encloses ${ours.enclosed.map((/** @type {EXPECTED_ANY} */ definition) => definition.name)}, terser ${theirs.enclosed.map((/** @type {EXPECTED_ANY} */ definition) => definition.name)}`
+					);
+				}
+				const functionName =
+					theirs instanceof ast.FunctionNode && theirs.name
+						? definitionOf.get(theirs.name.thedef)
+						: null;
+				if (functionName !== ours.functionName) {
+					differences.push(`${where} function name`);
+				}
+			}
+			for (const [theirs, ours] of definitionOf) {
+				const where = `${theirs.name} in scope ${ourScopes.indexOf(ours.scope)}`;
+				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[symbol.TYPE]);
+				if (kinds.join() !== ours.kinds.join()) {
+					differences.push(`${where} declared as ${ours.kinds}, terser ${kinds}`);
+				}
+				for (const [field, theirValue, ourValue] of [
+					["name", theirs.name, ours.name],
+					["global", theirs.global, ours.global],
+					["undeclared", theirs.undeclared, ours.undeclared],
+					["export", theirs.export, ours.export],
+					["scope", scopeOf.get(theirs.scope), ours.scope],
+					[
+						"unmangleable",
+						Boolean(theirs.unmangleable(options)),
+						modules.isUnmangleable(ours, options, null)
+					]
+				]) {
+					if (theirValue !== ourValue) {
+						differences.push(`${where} ${field}: ${ourValue}, terser ${theirValue}`);
+					}
+				}
+			}
+			/** @type {Map<EXPECTED_ANY, EXPECTED_ANY>} */
+			const labelOf = new Map();
+			if (theirLabels.length !== analysis.labels.length) {
+				differences.push(`${analysis.labels.length} labels, terser ${theirLabels.length}`);
+			}
+			for (const [index, { label, parent }] of theirLabels.entries()) {
+				const ours = analysis.labels[index];
+				if (ours === undefined) break;
+				labelOf.set(label, ours);
+				if (label.name !== ours.name || (parent ? labelOf.get(parent) : null) !== ours.parent) {
+					differences.push(`label ${index} (${ours.name})`);
+				}
+			}
+			/** @type {Set<EXPECTED_ANY>} */
+			const symbolNodes = new Set();
+			for (const [node, printNodes] of pairs) {
+				for (const printNode of printNodes) {
+					if (printNode.type !== "Identifier") continue;
+					symbolNodes.add(printNode);
+					let expected = null;
+					if (node instanceof ast.LabelNode) expected = labelOf.get(node);
+					else if (node instanceof ast.LabelRefNode) expected = labelOf.get(node.thedef);
+					else if (node instanceof ast.SymbolNode && node.thedef && node.thedef !== star) {
+						expected = definitionOf.get(node.thedef);
+					}
+					if (expected !== printNode.definition) {
+						differences.push(`${node.TYPE} ${node.name} names another definition`);
+					}
+				}
+			}
+			/**
+			 * @param {EXPECTED_ANY} node a print node, or a list of them
+			 * @returns {void}
+			 */
+			const checkUnnamed = (node) => {
+				if (Array.isArray(node)) {
+					for (const child of node) checkUnnamed(child);
+					return;
+				}
+				if (node === null || typeof node !== "object" || typeof node.type !== "string") return;
+				if (node.type === "Identifier" && !symbolNodes.has(node) && node.definition) {
+					differences.push(`${node.name}, no name terser scopes, has a definition`);
+				}
+				for (const key of Object.keys(node)) {
+					if (!/Token$|^definition$|^source$/.test(key)) checkUnnamed(node[key]);
+				}
+			};
+			checkUnnamed(program);
+			const blockDefunScopes = [...theirBlockDefunScopes].map((scope) => scopeOf.get(scope));
+			if (
+				blockDefunScopes.length !== analysis.blockDefunScopes.size ||
+				blockDefunScopes.some((scope) => !analysis.blockDefunScopes.has(scope))
+			) {
+				differences.push("block function scopes");
+			}
+			const declarators = options.keep_fnames
+				? theirDeclarators.map((symbol) => /** @type {EXPECTED_ANY[]} */ (pairs.get(symbol))[0])
+				: null;
+			if (JSON.stringify(declarators && declarators.map((identifier) => identifier.name)) !== JSON.stringify(analysis.functionDeclarators && analysis.functionDeclarators.map((/** @type {EXPECTED_ANY} */ identifier) => identifier.name)) ||
+				(declarators !== null && declarators.some((identifier, index) => identifier !== analysis.functionDeclarators[index]))) {
+				differences.push("declarators naming a function");
+			}
+			return differences;
+		};
+
+		/** @type {Record<string, EXPECTED_OBJECT>} */
+		const SCOPE_OPTION_SETS = {
+			default: {},
+			toplevel: { toplevel: true },
+			module: { module: true, toplevel: true },
+			ie8: { ie8: true },
+			safari10: { safari10: true },
+			"ie8 and safari10": { ie8: true, safari10: true },
+			eval: { eval: true },
+			"kept names": { keep_fnames: true, keep_classnames: true },
+			"kept names by regexp": { keep_fnames: /^[a-m]/, keep_classnames: /^[n-z]/ }
+		};
+
+		/** @type {[string, string, boolean?][]} */
+		const SCOPE_CASES = [
+			[
+				"a with before a block and after one",
+				"function f(a) { { let b = a; } with (a) { c; } { let d = a; } } function g() { { let e; } }"
+			],
+			[
+				"eval called, passed, constructed and read",
+				"function f() { g(eval); } function h() { new eval(); } function i() { return eval; } function j() { eval?.(1); } function k() { import(eval); } function l() { { let m; eval('m'); } }"
+			],
+			[
+				"catch parameters and the vars redeclaring them",
+				"var e, x; try { a(); } catch (e) { var e = 1; e; } function f() { try { b(); } catch ({ x2, y: [z] }) { var x; z; x2; } try {} catch (w) { w; } return x; } try {} catch { c; }"
+			],
+			[
+				"function declarations in blocks, sloppy and strict",
+				"{ function a() {} } if (x) function b() {} c: function d() {} function e() { { function f() {} } switch (1) { case 1: function g() {} } } function h() { 'use strict'; { function i() {} } } class K { static { { function j() {} } } }"
+			],
+			[
+				"function declarations in blocks of a module",
+				"{ function a() {} } export function b() {} export default function c() {}",
+				true
+			],
+			[
+				"exports and imports",
+				"import d, { e as f, 'g h' as i } from 'm'; import * as ns from 'n'; export { d, ns as n2 }; export { x as y } from 'o'; export { 'q r' as s } from 'p'; export * from 'q'; export * as t from 'r'; export const { u, v: [w], z = function () { var hidden; } } = d; export let [a1 = class Inner {}] = f; export var b1; { let c1; } export class C1 {} export default class D1 {}",
+				true
+			],
+			["an anonymous default export", "export default function () { return d; } var d;", true],
+			["a default exported class expression", "export default (class E {});", true],
+			[
+				"classes and their names",
+				"class A extends B { static x = A; [k] = 1; #p = 2; m() { return A; } get n() { return this.#p; } static { var s = 1; t: for (;;) break t; } } var C = class D extends D2 { e = () => D; }; (class {});"
+			],
+			[
+				"named function expressions and their parameters",
+				"(function f(f, g) { return g; }); (function arguments() { return arguments; }); (function h(i = h) { return () => arguments; })"
+			],
+			[
+				"nested labels",
+				"a: { b: for (;;) { c: for (;;) { break a; } continue b; } } d: { function e() { f: g: while (1) break f; } }"
+			],
+			[
+				"switch and loops",
+				"switch (function () { return x; }) { case 1: let x = 1; default: x; } for (let i = 0; i < 1; i++) { let j = i; } for (const k in o) k; for (const [l, { m }] of o) l; for (n in o); for ([p, q = 1, ...r] of o); for (o.s in o); while (u) { let v; break; } do { let w; continue; } while (y);"
+			],
+			[
+				"patterns, defaults and rest",
+				"function f({ a, b: { c } = {}, [d]: e, ...g }, [h, , i = 2, ...j], k = h) { var l; ({ a, m: [n] } = g); [o.p, ...q] = j; } function r({ s = function () { var t; } }) {}"
+			],
+			[
+				"catch parameters ie8 moves",
+				"try {} catch (e) { e; } function f() { var e; try {} catch (e) { e; var e; } try {} catch (g) { (function () { g; }); } } (function () { try {} catch (a) {} })(function () { try {} catch (b) {} }); try {} catch (undeclared) {} undeclared;"
+			],
+			[
+				"loops safari10 encloses",
+				"var a, b; for (let i = 0; ; ) { let c; } for (const k in a) {} for (const v of b) {} function f(d) { for (;;) {} }"
+			],
+			[
+				"declarators naming an anonymous function",
+				"var a = function () {}, b = () => {}, c = function c() {}, { d } = function () {}, e = 1; let f = function () { var k = () => {}; }; const g = class {}; var h = function () {}, i; { using j = function () {}; }"
+			],
+			[
+				"directives, arguments and strictness",
+				"'use strict'; { function a() {} } function b() { return arguments; } var c = () => arguments; function d() { 'use strict'; return () => arguments; }"
+			],
+			[
+				"templates, chains, members and spread",
+				"a?.b(c)?.[d]; `${e}${f}` ; g`${h}`; new i(...j); k = { l, m: n, [o]: p, q() { return r; }, get s() { return t; }, ...u }; v in w; class X { #y; z(o) { return #y in o; } }"
+			],
+			["constants the compressor writes", "f(undefined, NaN, Infinity, void 0, 1 / 0, 0 / 0);"],
+			[
+				"a function and a class declared, inlined as expressions",
+				"function f() { var a = []; function bar() {} a.map(bar); } function g() { class Foo {} return Foo.name; }"
+			],
+			[
+				"a debugger, empty statements, yield and await",
+				"function* a() { yield; yield b; debugger; ; } async function c() { await d; return; } (async () => { for await (const e of f) e; })(); function h() { return new.target; } this; throw g;"
+			]
+		];
+
+		for (const [name, source, isModule] of SCOPE_CASES) {
+			it(`should scope ${name} as terser does`, async () => {
+				const { minify, modules } = await load();
+				/** @type {string[]} */
+				const differences = [];
+				for (const compress of [false, { passes: 2, keep_fnames: true, keep_classnames: true }]) {
+					for (const [setName, options] of Object.entries(SCOPE_OPTION_SETS)) {
+						const { ast: tree } = /** @type {EXPECTED_ANY} */ (
+							await minify(source, {
+								compress,
+								mangle: false,
+								module: isModule,
+								format: { ast: true, code: false }
+							})
+						);
+						for (const difference of scopeDifferences(modules, tree, { ...options })) {
+							differences.push(`${compress ? "compressed" : "parsed"}, ${setName}: ${difference}`);
+						}
+					}
+				}
+				expect(differences).toEqual([]);
+			});
+		}
+
+		/**
+		 * @param {EXPECTED_ANY} modules the minifier's modules
+		 * @param {EXPECTED_ANY} tree terser's tree
+		 * @param {string} type a symbol class
+		 * @param {string} name a name
+		 * @returns {EXPECTED_ANY} the first symbol of that class with that name
+		 */
+		const symbolOf = (modules, tree, type, name) => {
+			/** @type {EXPECTED_ANY} */
+			let found;
+			modules.ast.walk(tree, (/** @type {EXPECTED_ANY} */ node) => {
+				if (!found && node.TYPE === type && node.name === name) found = node;
+			});
+			return found;
+		};
+
+		/** @type {[string, boolean, (tree: EXPECTED_ANY, modules: EXPECTED_ANY) => void, string][]} */
+		const SCOPE_ERRORS = [
+			[
+				"var a; let b;",
+				false,
+				(tree, modules) => {
+					symbolOf(modules, tree, "SymbolLet", "b").name = "a";
+				},
+				'"a" is redeclared'
+			],
+			[
+				"let a; var b;",
+				false,
+				(tree, modules) => {
+					symbolOf(modules, tree, "SymbolVar", "b").name = "a";
+				},
+				'"a" is redeclared'
+			],
+			[
+				"import x from 'm'; { y; }",
+				true,
+				(tree) => {
+					tree.body[1].body.unshift(tree.body.shift());
+				},
+				'"Import" statement may only appear at the top level'
+			],
+			[
+				"export const x = 1; { y; }",
+				true,
+				(tree) => {
+					tree.body[1].body.unshift(tree.body.shift());
+				},
+				'"Export" statement may only appear at the top level'
+			],
+			[
+				"a: b: ;",
+				false,
+				(tree) => {
+					tree.body[0].body.label.name = "a";
+				},
+				"Label a defined twice"
+			],
+			[
+				"a: for (;;) break a;",
+				false,
+				(tree, modules) => {
+					symbolOf(modules, tree, "LabelRef", "a").name = "z";
+				},
+				"Undefined label z [1,18]"
+			]
+		];
+
+		for (const [source, isModule, change, message] of SCOPE_ERRORS) {
+			it(`should throw ${message} as terser does`, async () => {
+				const { minify, modules } = await load();
+				const { ast: tree } = /** @type {EXPECTED_ANY} */ (
+					await minify(source, {
+						compress: false,
+						mangle: false,
+						module: isModule,
+						format: { ast: true, code: false }
+					})
+				);
+				change(tree, modules);
+				expect(() => tree.figure_out_scope({})).toThrow(message);
+				expect(scopeDifferences(modules, tree, {})).toEqual([]);
+			});
+		}
+
+		it("should read a name as declared where the compressor inlined its declaration", async () => {
+			const { minify, modules } = await load();
+			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
+				await minify(
+					"function f() { function bar() {} a.map(bar); } function g() { class Foo {} return Foo; }",
+					{
+						compress: { keep_fnames: true, keep_classnames: true },
+						mangle: false,
+						format: { ast: true, code: false }
+					}
+				)
+			);
+			const program = modules.toPrintTree(tree, undefined, undefined, false, true);
+			const analysis = modules.analyzeManglingScopes(program, {});
+			const [f, g] = program.body;
+			const inlined = [
+				f.body.body[0].expression.arguments[0],
+				g.body.body[0].argument
+			];
+			expect(inlined.map((/** @type {EXPECTED_ANY} */ node) => node.type)).toEqual([
+				"FunctionExpression",
+				"ClassExpression"
+			]);
+			// Declared in the function holding them, as the declarations were.
+			expect(inlined.map((/** @type {EXPECTED_ANY} */ node) => node.id.definition.scope.node)).toEqual([f, g]);
+			expect(analysis.scopes.find((/** @type {EXPECTED_ANY} */ scope) => scope.node === inlined[0]).functionName).toBe(inlined[0].id.definition);
+		});
+
+		it("should read only the nodes the bridge writes", async () => {
+			const { modules } = await load();
+			expect(() =>
+				modules.analyzeManglingScopes(
+					{ type: "Program", body: [{ type: "Unknown" }] },
+					{}
+				)
+			).toThrow("analyzeManglingScopes cannot read a Unknown node");
+		});
+
+		it("should keep a kept declarator's name while mangling", async () => {
+			const { minify, modules } = await load();
+			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
+				await minify("var short = function () {}, other = () => {};", {
+					compress: false,
+					mangle: false,
+					format: { ast: true, code: false }
+				})
+			);
+			const options = { keep_fnames: /^s/, toplevel: true };
+			const analysis = modules.analyzeManglingScopes(
+				modules.toPrintTree(tree, undefined, undefined, false, true),
+				options
+			);
+			const [short, other] = analysis.functionDeclarators.map(
+				(/** @type {EXPECTED_ANY} */ identifier) => identifier.definition
+			);
+			const kept = new Set([short, other]);
+			expect(modules.isUnmangleable(short, options, null)).toBe(false);
+			expect(modules.isUnmangleable(short, options, kept)).toBe(true);
+			expect(modules.isUnmangleable(other, options, kept)).toBe(false);
+		});
+
+		describe("mangleManglingScopes", () => {
+			/**
+			 * An identifier source ordering its names by the characters counted.
+			 * @returns {EXPECTED_ANY} the source
+			 */
+			const sortingIdentifiers = () => {
+				/** @type {string[]} */
+				let characters = [];
+				/** @type {Map<string, number>} */
+				let counts = new Map();
+				return {
+					reset() {
+						characters = [..."abcdefghijklmnopqrstuvwxyz"];
+						counts = new Map();
+					},
+					/**
+					 * @param {string} text characters printed
+					 * @param {number} delta how to count them
+					 */
+					consider(text, delta) {
+						for (const character of text) {
+							counts.set(character, (counts.get(character) || 0) + delta);
+						}
+					},
+					sort() {
+						characters.sort(
+							(first, second) =>
+								(counts.get(second) || 0) - (counts.get(first) || 0) ||
+								(first < second ? -1 : 1)
+						);
+					},
+					/**
+					 * @param {number} index which name
+					 * @returns {string} the name
+					 */
+					get(index) {
+						const alphabet = characters.length > 0 ? characters : [..."abcdefghijklmnopqrstuvwxyz"];
+						let name = "";
+						let rest = index + 1;
+						do {
+							rest--;
+							name += alphabet[rest % 26];
+							rest = Math.floor(rest / 26);
+						} while (rest > 0);
+						return name;
+					}
+				};
+			};
+
+			/**
+			 * An identifier source ignoring frequency, handing out reserved words too.
+			 * @returns {EXPECTED_ANY} the source
+			 */
+			const plainIdentifiers = () => ({
+				/**
+				 * @param {number} index which name
+				 * @returns {string} the name
+				 */
+				get(index) {
+					let name = "";
+					let rest = index + 1;
+					do {
+						rest--;
+						name += ["i", "f", "d", "o", "n", "a", "e", "l", "t", "r"][rest % 10];
+						rest = Math.floor(rest / 10);
+					} while (rest > 0);
+					return name;
+				}
+			});
+
+			/** @type {Record<string, () => EXPECTED_OBJECT>} */
+			const MANGLE_OPTION_SETS = {
+				default: () => ({ mangle: {} }),
+				toplevel: () => ({ mangle: { toplevel: true } }),
+				module: () => ({ mangle: { module: true } }),
+				ie8: () => ({ mangle: { ie8: true } }),
+				safari10: () => ({ mangle: { safari10: true } }),
+				"ie8 and safari10": () => ({ mangle: { ie8: true, safari10: true, toplevel: true } }),
+				eval: () => ({ mangle: { eval: true } }),
+				"kept names": () => ({ mangle: { keep_fnames: true, keep_classnames: true } }),
+				"kept names by a global regexp": () => ({
+					mangle: { keep_fnames: /^[a-m]/g, keep_classnames: /[n-z]/g, toplevel: true }
+				}),
+				reserved: () => ({ mangle: { reserved: ["a", "b", "e", "t", "n", "r"], toplevel: true } }),
+				"reserved names, the slow way": () => ({
+					mangle: { reserved: ["a", "b", "e", "t", "n", "r"], safari10: true }
+				}),
+				"identifiers sorted by frequency": () => ({ mangle: { nth_identifier: sortingIdentifiers() } }),
+				"identifiers ignoring frequency": () => ({
+					mangle: { nth_identifier: plainIdentifiers(), toplevel: true }
+				}),
+				"a name cache": () => ({
+					mangle: {},
+					nameCache: { vars: { props: { $foo: "a", $console: "b", $f: "zz", $e: "t" } } }
+				}),
+				"a name cache at the top level": () => ({ mangle: { toplevel: true }, nameCache: {} }),
+				"a name cache, kept names and ie8": () => ({
+					mangle: { toplevel: true, keep_fnames: /^[a-f]/g, ie8: true },
+					nameCache: { vars: { props: { $a: "n" } } }
+				})
+			};
+
+			/**
+			 * A source minified by terser and by webpack, which writes what terser
+			 * writes with its `correct` and `improve` phases off.
+			 * @param {string | Record<string, string>} input a source, or files
+			 * @param {() => EXPECTED_ANY} makeOptions fresh options each time
+			 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }>} code, maps and name cache each way
+			 */
+			const mangleBothWays = async (input, makeOptions) => {
+				const { minify, corrections, improvements } = await load();
+				/**
+				 * @param {Minifying} minifier a `minify`
+				 * @param {EXPECTED_ANY} options its options
+				 * @returns {Promise<EXPECTED_ANY>} what it wrote
+				 */
+				const run = async (minifier, options) => {
+					const result = /** @type {EXPECTED_ANY} */ (await minifier(input, options));
+					return {
+						code: result.code,
+						map: result.map,
+						decodedMap: result.decoded_map,
+						nameCache: options.nameCache
+					};
+				};
+				const theirs = await run(terserReference().minify, makeOptions());
+				const phases = /** @type {{ enabled: boolean }[]} */ ([corrections, improvements]);
+				for (const phase of phases) phase.enabled = false;
+				try {
+					return { theirs, ours: await run(minify, makeOptions()) };
+				} finally {
+					for (const phase of phases) phase.enabled = true;
+				}
+			};
+
+			/**
+			 * What webpack writes for a source under each mangle option set.
+			 * @param {string} source the source
+			 * @returns {Promise<string[]>} the code and name cache each set writes
+			 */
+			const ownOutputs = async (source) => {
+				const { minify } = await load();
+				/** @type {string[]} */
+				const outputs = [];
+				for (const [setName, makeSet] of Object.entries(MANGLE_OPTION_SETS)) {
+					for (const compress of [false, { passes: 2 }]) {
+						for (const module of [false, true]) {
+							const options = /** @type {EXPECTED_ANY} */ ({ ...makeSet(), compress, module });
+							try {
+								const { code } = await minify(source, options);
+								outputs.push(`${setName}, ${compress ? "compressed" : "parsed"}: ${code} ${JSON.stringify(options.nameCache)}`);
+								break;
+							} catch (err) {
+								if (/** @type {Error} */ (err).name !== "SyntaxError") throw err;
+							}
+						}
+					}
+				}
+				return outputs;
+			};
+
+			/**
+			 * How webpack's mangling differs from terser's, read where the two print
+			 * the source alike unmangled: their parsers place some nodes apart.
+			 * @param {string | Record<string, string>} input a source, or files
+			 * @param {() => EXPECTED_ANY} makeOptions fresh options each time
+			 * @returns {Promise<string[]>} each result that differs, as webpack wrote it
+			 */
+			const mangleDifferences = async (input, makeOptions) => {
+				const { theirs, ours } = await mangleBothWays(input, makeOptions);
+				const unmangled = await mangleBothWays(input, () => ({ ...makeOptions(), mangle: false }));
+				/** @type {string[]} */
+				const differences = [];
+				for (const key of ["code", "map", "decodedMap", "nameCache"]) {
+					if (
+						JSON.stringify(unmangled.theirs[key]) === JSON.stringify(unmangled.ours[key]) &&
+						JSON.stringify(theirs[key]) !== JSON.stringify(ours[key])
+					) {
+						differences.push(`${key} ${JSON.stringify(ours[key])}`);
+					}
+				}
+				return differences;
+			};
+
+			for (const source of [
+				...TABLE_SOURCES,
+				...SCOPE_CASES.map(([, scopeSource]) => scopeSource),
+				"a: { b: for (;;) { c: if (x) break b; } d: e: while (y) { (function () { f: g: for (;;) continue f; })(); break d; } }",
+				"function f(a, b) { var c = a + b; try { g(); } catch (e) { var e = 1; l: for (;;) { m: break l; } } return function h(x, y) { return x + y + c + h; }; } f(1, 2); var $foo = 1; foo; console.log(f);",
+				"function outer() { if (a) { function inner(x) { return x; } inner(1); } var y = function named(z, w) { return named(z) + w; }; try {} catch (q) { var q; } return [, y, , outer]; } outer();",
+				"var reused = 1; function f() { var a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9; return [a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9, reused]; }"
+			]) {
+				it(`should mangle as terser's mangler does: ${source.slice(0, 60)}`, async () => {
+					/** @type {string[]} */
+					const differences = [];
+					let compared = 0;
+					for (const [setName, makeSet] of Object.entries(MANGLE_OPTION_SETS)) {
+						for (const compress of [false, { passes: 2 }]) {
+							for (const module of [false, true]) {
+								/** @type {string[]} */
+								let found;
+								try {
+									found = await mangleDifferences({ "input.js": source }, () => ({
+										...makeSet(),
+										compress,
+										module,
+										sourceMap: { asObject: true }
+									}));
+								} catch (err) {
+									// A source may be one only a script, or only a module, reads.
+									if (/** @type {Error} */ (err).name !== "SyntaxError") throw err;
+									const terserRefuses = await terserReference()
+										.minify({ "input.js": source }, { ...makeSet(), compress, module })
+										.then(
+											() => false,
+											() => true
+										);
+									if (terserRefuses) continue;
+									throw err;
+								}
+								for (const difference of found) {
+									differences.push(`${setName}, ${compress ? "compressed" : "parsed"}, ${module ? "module" : "script"}: ${difference}`);
+								}
+								compared++;
+								break;
+							}
+						}
+					}
+					if (compared === 0) {
+						// terser refuses the source, so what webpack writes is held as written.
+						expect(await ownOutputs(source)).toMatchSnapshot();
+						return;
+					}
+					expect(differences).toEqual([]);
+				});
+			}
+
+			it("should not name a parameter as its function, kept as declared, as terser's mangler does", async () => {
+				const source =
+					"function n(t) { return t + 1; } function e(n) { return n; } console.log([1].map(n), [2].map(e));";
+				const { theirs, ours } = await mangleBothWays(source, () => ({
+					compress: { keep_fnames: true, toplevel: true, passes: 2 },
+					mangle: {}
+				}));
+				expect(theirs.code).toBe(
+					"console.log([1].map(function n(o){return o+1}),[2].map(function e(n){return n}));"
+				);
+				expect(ours).toEqual(theirs);
+			});
+
+			it("should hand a name cache from one source to the next as terser's mangler does", async () => {
+				const sources = [
+					"var shared = 1, $kept = 2; function grow(by) { return shared + by; } grow(unknownGlobal);",
+					"var other = shared, grown = grow(other); console.log(grown, $kept, unknownGlobal);"
+				];
+				const { minify } = await load();
+				for (const mangle of [{ toplevel: true }, { toplevel: true, keep_fnames: true }, {}]) {
+					/** @type {string[][]} */
+					const outputs = [];
+					/** @type {EXPECTED_ANY[]} */
+					const caches = [];
+					for (const minifier of [terserReference().minify, minify]) {
+						const nameCache = {};
+						const codes = [];
+						for (const source of sources) {
+							codes.push(
+								/** @type {string} */ (
+									(await minifier(source, { compress: false, mangle: { ...mangle }, nameCache })).code
+								)
+							);
+						}
+						outputs.push(codes);
+						caches.push(nameCache);
+					}
+					expect(outputs[1]).toEqual(outputs[0]);
+					expect(caches[1]).toEqual(caches[0]);
+				}
+			});
+
+			/** @type {Record<string, () => EXPECTED_OBJECT>} */
+			const PROPERTY_OPTION_SETS = {
+				"private names alone": () => ({ mangle: {} }),
+				properties: () => ({ mangle: { properties: {} } }),
+				"properties at the top level": () => ({ mangle: { toplevel: true, properties: true } }),
+				"properties by a regexp": () => ({ mangle: { properties: { regex: /^[a-m_$]/ } } }),
+				"properties by a global regexp": () => ({ mangle: { properties: { regex: /^[a-q]/g } } }),
+				"quoted properties kept": () => ({ mangle: { properties: { keep_quoted: true } } }),
+				"quoted properties kept strictly": () => ({ mangle: { properties: { keep_quoted: "strict" } } }),
+				"debug properties": () => ({ mangle: { properties: { debug: true } } }),
+				"debug properties with a suffix": () => ({ mangle: { properties: { debug: "XYZ" } } }),
+				"builtin properties": () => ({ mangle: { toplevel: true, properties: { builtins: true } } }),
+				"undeclared properties": () => ({ mangle: { properties: { undeclared: true } } }),
+				"annotated properties alone": () => ({ mangle: { properties: { only_annotated: true } } }),
+				"reserved properties": () => ({ mangle: { properties: { reserved: ["foo", "p", "value"] } } }),
+				"cached properties alone": () => ({
+					mangle: { properties: { only_cache: true } },
+					nameCache: { props: { props: { $foo: "a", $bar: "zz", $1: "one", $value: "v" } } }
+				}),
+				"a property name cache": () => ({
+					mangle: { properties: {} },
+					nameCache: { vars: { props: { $foo: "a" } }, props: { props: { $foo: "a", $1: "b", $length: "q" } } }
+				}),
+				"identifiers sorted by frequency": () => ({
+					mangle: { nth_identifier: sortingIdentifiers(), properties: { nth_identifier: sortingIdentifiers() } }
+				}),
+				"identifiers ignoring frequency": () => ({ mangle: { nth_identifier: plainIdentifiers(), properties: {} } }),
+				"properties and ie8": () => ({ mangle: { ie8: true, safari10: true, keep_fnames: true, properties: {} } })
+			};
+
+			for (const source of [
+				"class A { #x = 1; #y() { return this.#x; } static #z; get #w() { return 1; } set #w(v) {} static { A.#z = 2; } m(o) { return #x in o && this.#y().#x?.#w; } } new A().m({});",
+				"var o = { foo: 1, 'bar': 2, 3: 4, [baz]: 5, get qux() { return 1; }, set qux(v) {}, [k]() {}, *gen() {}, async am() {} }; o.foo = o['bar'] + o.qux + o[3]; Object.defineProperty(o, 'zed', {}); 'foo' in o; o[c ? 'a1' : (0, 'b1')]; console.log(o, window.beta, x.y.z, (await_ => 1)(), this.vee, (-u).neg, (n++).inc, new N().made, f().called, a?.b.chained, (a?.b).parenthesized);",
+				"var { alpha: aa, gamma = 2, ...rest } = o, [{ delta }] = p; class C { constructor() {} static eps = 1; 'zeta' = 2; [zz] = 3; if = 4; 1 = 5; method() {} 'quoted'() {} } new C().eps; for (const { theta } of list) theta;",
+				"function f(Object) { return Object.defineProperty(a, 'p', { value: 1 }); } var q = { p: 1, /*@__KEY__*/ 'r': 2, 'r2': /*@__KEY__*/ 'p' }; q[/*@__KEY__*/ 'r']; f({}); new Object.defineProperty(b, 'nu', {}); Object['defineProperty'](b, 'xi', {}); Object?.defineProperty(b, 'omicron', {}); Object.defineProperty?.(b, 'pi', {}); Object.defineProperty(b, ...rho); class Sigma { #tau = 1; get() { return this.#tau; } }",
+				"var o = { if: 1, null: 2, 1e3: 3, 0x10: 4, 'a b': 5, [`t`]: 6, [function () {}]() {}, [() => 1]() {}, [class {}]() {}, [function named() {}]() {}, [class Named {}]() {}, [NaN]() {}, [void 0]() {}, [x.y]() {} }; o.if + o.null + o[1000] + o['a b'] + o[1];",
+				"async function f(a) { return (await a).awaited + (typeof a).length; } function* g(b) { (yield).empty; (yield b).full; } l: for (var key in obj) { if (key.skip) continue l; break l; } f(g);",
+				"var o = { ['computed']: 1, value: 2 }; Object.defineProperty(o, c ? 'cond1' : 'cond2', {}); o.foo.bar = 1; window.foo; foo.bar; new Foo().bar; export_ = { value: o.value };"
+			]) {
+				it(`should mangle properties and private names as terser's mangler does: ${source.slice(0, 60)}`, async () => {
+					/** @type {string[]} */
+					const differences = [];
+					for (const [setName, makeSet] of Object.entries(PROPERTY_OPTION_SETS)) {
+						for (const compress of [false, { passes: 2 }]) {
+							const found = await mangleDifferences({ "input.js": source }, () => ({
+								...makeSet(),
+								compress,
+								sourceMap: { asObject: true }
+							}));
+							for (const difference of found) {
+								differences.push(`${setName}, ${compress ? "compressed" : "parsed"}: ${difference}`);
+							}
+						}
+					}
+					expect(differences).toEqual([]);
+				});
+			}
+
+			it("should throw as terser's mangler does where `Object.defineProperty` has no descriptor name", async () => {
+				const { minify } = await load();
+				/** @type {string[]} */
+				const messages = [];
+				for (const minifier of [terserReference().minify, minify]) {
+					try {
+						await minifier("Object.defineProperty(o);", { mangle: { properties: {} } });
+					} catch (err) {
+						// JavaScriptCore quotes the failing expression, which differs between the two.
+						const { name, message } = /** @type {Error} */ (err);
+						messages.push(`${name} ${/\bwalk\b/.test(message)}`);
+					}
+				}
+				expect(messages).toEqual(["TypeError true", "TypeError true"]);
+			});
+
+			it("should fill a name cache without printing as terser does", async () => {
+				const { minify } = await load();
+				/** @type {EXPECTED_ANY[]} */
+				const caches = [];
+				for (const minifier of /** @type {Minifying[]} */ ([terserReference().minify, minify])) {
+					const nameCache = {};
+					await minifier("function f(long) { return long; } f(1); var g = 2;", {
+						mangle: { toplevel: true, properties: true },
+						format: { code: false },
+						nameCache
+					});
+					caches.push(nameCache);
+				}
+				expect(caches[1]).toEqual(caches[0]);
+			});
+
+			it("should drop a tree it was given once printed, as terser does", async () => {
+				const { minify } = await load();
+				const source = "function f(long) { return long; } f(1);";
+				for (const [minifier, format] of /** @type {[Minifying, EXPECTED_OBJECT][]} */ ([
+					[terserReference().minify, { spidermonkey: true }],
+					[minify, { spidermonkey: true }],
+					[minify, {}]
+				])) {
+					const { ast } = /** @type {EXPECTED_ANY} */ (
+						await minifier(source, { compress: false, mangle: false, format: { ast: true, code: false } })
+					);
+					const { code } = await minifier(ast, { compress: false, mangle: { toplevel: true }, format });
+					expect([code, ast.body[0].body.length, ast.body[0].argnames.length, ast.variables]).toEqual([
+						"function n(n){return n}n(1);",
+						0,
+						0,
+						undefined
+					]);
+				}
+			});
+
+			it("should hand the tree back mangled as terser does", async () => {
+				const { minify } = await load();
+				const source =
+					"function f(long) { var o = { foo: 1, 'bar': 2, get baz() { return 3; }, [k]: 4 }; return long + o.foo + o['bar'] + o[/*@__KEY__*/ 'qux']; } class C { #x = 1; static y = 2; 'z' = 3; #w() {} m(p) { return #x in p && this.#x + this.#w(); } } l: for (;;) { f(1); break l; } new C();";
+				for (const mangle of [{ toplevel: true }, { toplevel: true, properties: { keep_quoted: true } }, { properties: {} }]) {
+					const options = () => /** @type {EXPECTED_ANY} */ ({ compress: false, mangle: { ...mangle }, format: { ast: true } });
+					const theirs = /** @type {EXPECTED_ANY} */ (await terserReference().minify(source, options()));
+					const ours = /** @type {EXPECTED_ANY} */ (await minify(source, options()));
+					expect(ours.code).toBe(theirs.code);
+					// Each tree, printed again without mangling, prints the names it took.
+					const reprint = { compress: false, mangle: false };
+					expect((await minify(ours.ast, reprint)).code).toBe(
+						(await terserReference().minify(theirs.ast, reprint)).code
+					);
+					const estreeOptions = () =>
+						/** @type {EXPECTED_ANY} */ ({ compress: false, mangle: { ...mangle }, format: { spidermonkey: true } });
+					// Where the parsers place a node apart is no concern of mangling's.
+					/**
+					 * @param {EXPECTED_ANY} result a result
+					 * @returns {string} its ESTree tree, without locations
+					 */
+					const estreeOf = (result) =>
+						JSON.stringify(result.ast, (key, value) => (key === "loc" ? undefined : value));
+					expect(estreeOf(await minify(source, estreeOptions()))).toBe(
+						estreeOf(await terserReference().minify(source, estreeOptions()))
+					);
+				}
+			});
+
+			it("should mangle what a constant `new Function` body holds as terser does", async () => {
+				const { minify } = await load();
+				for (const source of [
+					"var f = new Function('alpha', 'beta', 'var gamma = alpha + beta; return function inner(delta) { return gamma * delta; }'); console.log(f);",
+					"var f = Function('alpha', '{ beta, gamma }', 'return (x => x + alpha + beta)(gamma)'); console.log(f);",
+					// A body closing the function early: the first function terser's walk meets is taken.
+					"var f = Function('a', '}); function g() { for (;;) s(); return [, s]; } (function () {'); console.log(f);"
+				]) {
+					const options = () => ({
+						compress: { unsafe: true, unsafe_Function: true, unsafe_arrows: true, hoist_funs: true, passes: 2 },
+						mangle: true,
+						ecma: /** @type {const} */ (2020)
+					});
+					const ours = await minify(source, options());
+					expect(ours.code).toBe((await terserReference().minify(source, options())).code);
+				}
+			});
 		});
 	});
 });
