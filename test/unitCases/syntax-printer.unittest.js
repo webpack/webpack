@@ -2325,7 +2325,7 @@ describe("syntax-printer", () => {
 					seen.scope = this.find_scope().TYPE;
 					seen.parent = this.parent().TYPE;
 					seen.self = this.self().TYPE;
-					seen.lambda = this.find_parent(ast.LambdaNode).TYPE;
+					seen.lambda = this.find_parent(ast.isLambdaNode).TYPE;
 					seen.strict = Boolean(this.has_directive("use strict"));
 				}
 				if (node.TYPE === "SymbolRef" && node.name === "o") {
@@ -2351,6 +2351,25 @@ describe("syntax-printer", () => {
 			lambda: "Defun",
 			strict: true
 		});
+	});
+
+	it("should name a predicate per node class answering as `instanceof` does", async () => {
+		const { ast } = (await load()).modules;
+		const classNames = Object.keys(ast).filter(
+			(name) => /Node$/.test(name) && typeof ast[`is${name}`] === "function"
+		);
+		expect(classNames).toHaveLength(136);
+		for (const name of classNames) {
+			const probe = Object.create(ast[name].prototype);
+			for (const other of classNames) {
+				expect([name, other, ast[`is${other}`](probe)]).toEqual([
+					name,
+					other,
+					probe instanceof ast[other]
+				]);
+			}
+		}
+		expect([null, undefined, "x", 1].some(ast.isSyntaxNode)).toBe(false);
 	});
 
 	it("should look native objects up as terser's native-objects.js does", async () => {

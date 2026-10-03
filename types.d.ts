@@ -4721,7 +4721,7 @@ declare interface CompressorShape {
 	has_directive(directive: string): any;
 	parent(level?: number): NodeShape;
 	self(): NodeShape;
-	find_parent(Type?: any): undefined | NodeShape;
+	find_parent(test: (value: unknown) => boolean): undefined | NodeShape;
 	in_boolean_context(): undefined | boolean;
 }
 declare class ConcatSource extends Source {
