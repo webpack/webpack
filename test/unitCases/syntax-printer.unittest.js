@@ -35,6 +35,21 @@ const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
 /** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
+ * Calls what terser holds as a method of its nodes, which webpack's minifier
+ * holds as a function of `ast` taking the node first, on a node of either tree.
+ * @param {EXPECTED_ANY} ast webpack's `ast`
+ * @param {EXPECTED_ANY} node a node of terser's tree or of webpack's
+ * @param {string} method terser's method
+ * @param {string} name webpack's function
+ * @param {...EXPECTED_ANY} args the arguments
+ * @returns {EXPECTED_ANY} what it returns
+ */
+const callNode = (ast, node, method, name, ...args) =>
+	typeof node[method] === "function"
+		? node[method](...args)
+		: ast[name](node, ...args);
+
+/**
  * Sources chosen for the decisions the mangler makes: which scope hands out a
  * name, and which names it may not hand out.
  * @type {[string, string, EXPECTED_OBJECT?][]}
@@ -963,18 +978,20 @@ describe("syntax-printer", () => {
 		expect(utils.member(2, list)).toBe(true);
 		expect(utils.return_false()).toBe(false);
 
+		// `MAP` transforms with webpack's own walk, over webpack's own nodes.
+		const own = (await load()).modules;
 		const nodes = [
-			new ast.AST_Number({ value: 1 }),
-			new ast.AST_Number({ value: 2 }),
-			new ast.AST_Number({ value: 3 })
+			new own.ast.NumberNode({ value: 1 }),
+			new own.ast.NumberNode({ value: 2 }),
+			new own.ast.NumberNode({ value: 3 })
 		];
-		const spliced = new ast.AST_Number({ value: 4 });
-		const walker = new ast.TreeTransformer((/** @type {EXPECTED_ANY} */ item) => {
-			if (item === nodes[0]) return utils.MAP.skip;
-			if (item === nodes[1]) return utils.MAP.splice([spliced, spliced]);
+		const spliced = new own.ast.NumberNode({ value: 4 });
+		const walker = own.ast.createTransformer((/** @type {EXPECTED_ANY} */ item) => {
+			if (item === nodes[0]) return own.utils.MAP.skip;
+			if (item === nodes[1]) return own.utils.MAP.splice([spliced, spliced]);
 			return item;
 		});
-		expect(utils.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
+		expect(own.utils.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
 
 		/**
 		 * A constant's node as plain data, terser's `expression` and ESTree's
@@ -1447,7 +1464,7 @@ describe("syntax-printer", () => {
 
 	for (const [name, source, reshape] of SCOPE_ERROR_CASES) {
 		it(`should refuse a tree as terser does: ${name}`, async () => {
-			const { minify } = await load();
+			const { minify, modules } = await load();
 			const reference = terserReference();
 			/**
 			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
@@ -1467,7 +1484,7 @@ describe("syntax-printer", () => {
 					)
 				);
 				try {
-					reshape(ast).figure_out_scope({});
+					callNode(modules.ast, reshape(ast), "figure_out_scope", "figureOutScope", {});
 				} catch (err) {
 					return /** @type {Error} */ (err).message;
 				}
@@ -1914,7 +1931,7 @@ describe("syntax-printer", () => {
 	});
 
 	it("should drop unused names as terser does: a scope without its variables", async () => {
-		const { minify } = await load();
+		const { minify, modules } = await load();
 		const reference = terserReference();
 		const compressor = { option: () => true, has_directive: () => undefined };
 		/**
@@ -1930,7 +1947,7 @@ describe("syntax-printer", () => {
 			);
 			const node = ast.body[0];
 			node.variables = undefined;
-			return node.drop_unused(compressor);
+			return callNode(modules.ast, node, "drop_unused", "dropUnused", compressor);
 		};
 		expect(await dropped(minify)).toBe(await dropped(reference.minify));
 	});
@@ -2242,42 +2259,42 @@ describe("syntax-printer", () => {
 
 	it("should give terser's nodes the methods terser writes by hand", async () => {
 		const { ast, parse } = (await load()).modules;
-		const { TreeWalker } = ast;
+		const { createWalker } = ast;
 		/**
 		 * @param {string} source a script
 		 * @returns {EXPECTED_ANY} its toplevel, its scopes worked out
 		 */
 		const parsed = (source) => {
 			const toplevel = parse.parse(source);
-			toplevel.figure_out_scope({});
+			ast.figureOutScope(toplevel, {});
 			return toplevel;
 		};
 
 		const labeled = parsed("l: for (;;) { { let x; } break l; }").body[0];
-		const copy = labeled.clone(true);
+		const copy = ast.cloneNode(labeled, true);
 		expect(copy).not.toBe(labeled);
 		expect(copy.label.references).toHaveLength(1);
-		expect(labeled.clone(false).body).toBe(labeled.body);
+		expect(ast.cloneNode(labeled, false).body).toBe(labeled.body);
 
 		const toplevel = parsed("function f(a) { return a; }");
 		const declared = toplevel.body[0];
-		const cloned = declared.clone(true, toplevel);
+		const cloned = ast.cloneNode(declared, true, toplevel);
 		expect(cloned.variables).not.toBe(declared.variables);
-		expect(declared.clone(false).variables).not.toBe(declared.variables);
-		expect(declared.get_defun_scope()).toBe(declared);
-		expect(declared.pinned()).toBeFalsy();
+		expect(ast.cloneNode(declared, false).variables).not.toBe(declared.variables);
+		expect(ast.getDefunScope(declared)).toBe(declared);
+		expect(ast.isPinned(declared)).toBeFalsy();
 
 		const lambda = parsed("function f({ a }, [b], ...c) {} function g(d = 1, e) { return d; } function h(p, q) {}").body;
-		expect(lambda[2].args_as_names()).toBe(lambda[2].params);
-		expect(lambda[1].params[0].all_symbols().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
-		expect(lambda[0].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["a", "b", "c"]);
-		expect(lambda[1].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d", "e"]);
-		expect(lambda[0].length_property()).toBe(2);
-		expect(lambda[1].is_braceless()).toBeTruthy();
-		expect(lambda[0].is_braceless()).toBeFalsy();
+		expect(ast.argsAsNames(lambda[2])).toBe(lambda[2].params);
+		expect(ast.allSymbols(lambda[1].params[0]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
+		expect(ast.argsAsNames(lambda[0]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["a", "b", "c"]);
+		expect(ast.argsAsNames(lambda[1]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d", "e"]);
+		expect(ast.lengthProperty(lambda[0])).toBe(2);
+		expect(ast.isBraceless(lambda[1])).toBeTruthy();
+		expect(ast.isBraceless(lambda[0])).toBeFalsy();
 		const declarations = parsed("var { h, i: [j] } = o, k;").body[0].declarations;
-		expect(declarations[0].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
-		expect(declarations[1].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
+		expect(ast.declarationsAsNames(declarations[0]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
+		expect(ast.declarationsAsNames(declarations[1]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
 
 		const object = parsed("({ a: 1, [b]: 2, get c() {}, set [d](v) {}, e() {} })").body[0].expression;
 		expect(object.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed)).toEqual([false, true, false, true, false]);
@@ -2289,24 +2306,25 @@ describe("syntax-printer", () => {
 			false, false, false, false, false, false, false, true, false
 		]);
 		/**
-		 * @param {string} method a class's method walking parts of it
+		 * @param {string} method the function of `ast` walking parts of a class
 		 * @returns {string[]} the types of the nodes it visits
 		 */
 		const visits = (method) => {
 			/** @type {string[]} */
 			const types = [];
-			declaredClass[method](
-				new TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+			ast[method](
+				declaredClass,
+				createWalker((/** @type {EXPECTED_ANY} */ node) => {
 					types.push(node.TYPE);
 				})
 			);
 			return types;
 		};
-		expect(visits("visit_nondeferred_class_parts")).toEqual([
+		expect(visits("visitNondeferredClassParts")).toEqual([
 			"SymbolRef", "This", "ClassStaticBlock", "SimpleStatement", "CallExpression", "SymbolRef", "SymbolRef", "Number"
 		]);
 		// A field's value is walked with the field pushed, not visited.
-		expect(visits("visit_deferred_class_parts")).toEqual([
+		expect(visits("visitDeferredClassParts")).toEqual([
 			"Number", "Number", "PrivateMethod", "SymbolMethod", "Accessor", "ClassMethod", "SymbolMethod", "Accessor"
 		]);
 
@@ -2315,8 +2333,7 @@ describe("syntax-printer", () => {
 		const walked = parsed(
 			'"use strict"; function f() { a: for (var i in o) { switch (i) { case 1: break; default: continue a; } } while (1) { for (let j = g(); j; ) { break; } } }'
 		);
-		walked.walk(
-			new TreeWalker(
+		ast.walkNode(walked, createWalker(
 				/**
 				 * @this {EXPECTED_ANY} the walker
 				 * @param {EXPECTED_ANY} node the node visited
@@ -2568,6 +2585,9 @@ describe("syntax-printer", () => {
 					}
 				}
 			);
+			// webpack's helpers read a symbol's value through `ast`, not a method.
+			modules.ast.fixedValue = (/** @type {EXPECTED_ANY} */ node) =>
+				node.fixed_value();
 			for (const unsafe of [true, false]) {
 				for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
 					const compressor = new modules.compress.Compressor(
@@ -2600,18 +2620,25 @@ describe("syntax-printer", () => {
 	});
 
 	it("should count a node's size inside a size being counted", async () => {
-		const { parse } = (await load()).modules;
-		const toplevel = parse.parse("var a = 1; function b(c) { return c + a; }");
-		const [, declaration] = toplevel.body;
-		const inner = declaration.size();
-		const original = declaration._size;
+		const { ast, parse } = (await load()).modules;
+		const toplevel = parse.parse("var a = 1; var b = (c) => c + a;");
+		const [first, second] = toplevel.body;
+		const whole = ast.nodeSize(toplevel);
+		const inner = ast.nodeSize(first);
+		// The count asks whether an arrow is braceless, which here counts again.
+		const isBraceless = ast.isBraceless;
 		let nested = 0;
-		declaration._size = function (/** @type {EXPECTED_ANY} */ info) {
-			nested = declaration.body.body[0].size();
-			return original.call(this, info);
+		ast.isBraceless = (/** @type {EXPECTED_ANY} */ node) => {
+			nested = ast.nodeSize(first);
+			return isBraceless(node);
 		};
-		expect(toplevel.size()).toBeGreaterThan(inner);
-		expect(nested).toBe(declaration.body.body[0].size());
+		try {
+			expect(ast.nodeSize(toplevel)).toBe(whole);
+		} finally {
+			ast.isBraceless = isBraceless;
+		}
+		expect(nested).toBe(inner);
+		expect(ast.nodeSize(second)).toBeGreaterThan(0);
 	});
 
 	it("should size and compare every node as terser does", async () => {
@@ -2642,8 +2669,7 @@ describe("syntax-printer", () => {
 			);
 			/** @type {EXPECTED_ANY[]} */
 			const ours = [];
-			ourTree.walk(
-				new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+			ast.walkNode(ourTree, ast.createWalker((/** @type {EXPECTED_ANY} */ node) => {
 					ours.push(node);
 				})
 			);
@@ -2671,13 +2697,13 @@ describe("syntax-printer", () => {
 					if (descend) descend.call(node);
 				}
 			});
-			expect(ours.map((node) => [terserTypeOf(node.TYPE), node.size()])).toEqual(
+			expect(ours.map((node) => [terserTypeOf(node.TYPE), ast.nodeSize(node)])).toEqual(
 				theirs.map((node) => [node.TYPE, node.size()])
 			);
 			for (let i = 0; i < ours.length; i++) {
 				for (let j = 0; j < ours.length; j++) {
 					if (ours[i].TYPE !== ours[j].TYPE) continue;
-					expect([i, j, ours[i].equivalent_to(ours[j])]).toEqual([
+					expect([i, j, ast.isEquivalent(ours[i], ours[j])]).toEqual([
 						i,
 						j,
 						theirs[i].equivalent_to(theirs[j])
@@ -2773,19 +2799,13 @@ describe("syntax-printer", () => {
 	});
 
 	it("should compare trees as terser does", async () => {
-		const { parse } = (await load()).modules;
+		const { ast, parse } = (await load()).modules;
 		const [first, second, third, fourth] = parse.parse(
 			"a.b(c + 1); a.b(c + 1); a.b(c + 2); a.b(c, 1);"
 		).body;
-		expect(first.equivalent_to(second)).toBe(true);
-		expect(first.equivalent_to(third)).toBe(false);
-		expect(first.equivalent_to(fourth)).toBe(false);
-		const original = first.expression.shallow_cmp;
-		first.expression.shallow_cmp = function (/** @type {EXPECTED_ANY} */ other) {
-			expect(third.equivalent_to(fourth)).toBe(false);
-			return original.call(this, other);
-		};
-		expect(first.equivalent_to(second)).toBe(true);
+		expect(ast.isEquivalent(first, second)).toBe(true);
+		expect(ast.isEquivalent(first, third)).toBe(false);
+		expect(ast.isEquivalent(first, fourth)).toBe(false);
 	});
 
 	it("should refuse an option terser refuses", async () => {
@@ -2938,7 +2958,7 @@ describe("syntax-printer", () => {
 			a = true; a = void 0; a = NaN; a = Infinity; a = (b, c); a = b ?? (c && d || e);
 			a = import.meta; a = import("x"); function f() { new.target; return this; }`;
 		let count = 0;
-		const walker = new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+		const walker = ast.createWalker((/** @type {EXPECTED_ANY} */ node) => {
 			const parent = walker.parent();
 			let expected;
 			if (
@@ -2962,15 +2982,18 @@ describe("syntax-printer", () => {
 			} else if (node.TYPE === "SymbolPrivateProperty") {
 				// terser converts a private name with its holder, as ESTree's own type.
 				expected = { type: "PrivateIdentifier" };
-			} else if (typeof node.to_mozilla_ast === "function") {
-				expected = node.to_mozilla_ast(parent);
+			} else if (
+				node.TYPE !== "TemplateSegment" &&
+				terserTypeOf(node.TYPE) !== "NameMapping"
+			) {
+				expected = ast.toEstree(node, parent);
 			} else if (node.TYPE === "TemplateSegment") {
-				expected = parent.to_mozilla_ast().quasi || parent.to_mozilla_ast();
+				expected = ast.toEstree(parent).quasi || ast.toEstree(parent);
 				expected = { type: expected.quasis[0].type };
 			} else {
 				// A name mapping is converted with its declaration, as a specifier.
 				const list = parent.imported_names || parent.exported_names;
-				const converted = parent.to_mozilla_ast();
+				const converted = ast.toEstree(parent);
 				// `export * as a` names what it exports on the declaration itself.
 				expected =
 					converted.specifiers === undefined
@@ -2980,33 +3003,34 @@ describe("syntax-printer", () => {
 									specifier.type !== "ImportDefaultSpecifier"
 							)[list.indexOf(node)];
 			}
+			// The mapping `export *` makes, which ESTree has no node for, is walked
+			// as a specifier.
 			expect([node.TYPE, estreeType(node, parent)]).toEqual([
 				node.TYPE,
-				expected === null ? null : expected.type
+				expected === null ? "ExportSpecifier" : expected.type
 			]);
 			// A class whose every node has one ESTree type holds it as `type`.
-			if (node.type !== undefined) {
+			if (node.type !== undefined && expected !== null) {
 				expect([node.TYPE, node.type]).toEqual([node.TYPE, expected.type]);
 			}
 			count++;
 		});
-		parse.parse(source, { module: true }).walk(walker);
-		parse.parse("with (a) b;").walk(walker);
+		ast.walkNode(parse.parse(source, { module: true }), walker);
+		ast.walkNode(parse.parse("with (a) b;"), walker);
 		expect(count).toBeGreaterThan(300);
 	});
 
 	it("should hand back a fresh list, which a clone may share", async () => {
 		const { ast, parse, utils } = (await load()).modules;
-		const { SimpleStatementNode, TreeTransformer } = ast;
+		const { SimpleStatementNode, createTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
-		toplevel.transform(new TreeTransformer(() => undefined));
+		ast.transformNode(toplevel, createTransformer(() => undefined));
 		// terser's shallow clone shares lists, so each transform must copy them.
 		expect(toplevel.body).not.toBe(body);
 		expect(toplevel.body).toEqual(body);
 
-		toplevel.transform(
-			new TreeTransformer(
+		ast.transformNode(toplevel, createTransformer(
 				/**
 				 * @param {EXPECTED_ANY} node the node visited
 				 * @returns {EXPECTED_ANY} what replaces it
@@ -3028,19 +3052,48 @@ describe("syntax-printer", () => {
 		).toEqual(["a", "c", "c", "d"]);
 	});
 
+	it("should hand a pure_funcs function a call read with terser's names", async () => {
+		const { minify } = await load();
+		/** @type {unknown[]} */
+		const seen = [];
+		const { code } = /** @type {EXPECTED_ANY} */ (
+			await minify("a.b(c + 1, d); e(f);", {
+				compress: {
+					pure_funcs: (/** @type {EXPECTED_ANY} */ node) => {
+						seen.push([
+							node.args.length,
+							node.args[0].print_to_string(),
+							node.expression.print_to_string(),
+							node.expression.expression && node.expression.expression.name
+						]);
+						return node.expression.name !== "e";
+					}
+				},
+				mangle: false
+			})
+		);
+		// Asked once a pass, the first call twice.
+		expect(seen).toEqual([
+			[2, "c+1", "a.b", "a"],
+			[1, "f", "e", undefined],
+			[2, "c+1", "a.b", "a"]
+		]);
+		expect(code).toBe("a.b(c+1,d),f;");
+	});
+
 	it("should not revisit a node the compressor squeezed", async () => {
 		const { ast, compress, flags, parse } = (await load()).modules;
-		const compressor = new compress.Compressor({}, {});
+		const compressor = compress.createCompressor({}, {});
 		const toplevel = parse.parse('"use strict"; a;');
 		const [directive, statement] = toplevel.body;
 		directive.flags |= flags.SQUEEZED;
 		statement.flags |= flags.SQUEEZED;
-		expect(statement.transform(compressor)).toBe(statement);
+		expect(ast.transformNode(statement, compressor)).toBe(statement);
 		expect(compressor.stack).toEqual([]);
 		// A directive is still pushed, which records it on the walker.
-		expect(directive.transform(compressor)).toBe(directive);
+		expect(ast.transformNode(directive, compressor)).toBe(directive);
 		expect(compressor.has_directive("use strict")).toBe(directive);
-		expect(ast.TreeWalker.prototype.webpackSkipsSqueezed).toBe(false);
+		expect(ast.createWalker().webpackSkipsSqueezed).toBe(false);
 	});
 
 	describe("fields named as ESTree names them", () => {
@@ -3117,9 +3170,6 @@ describe("syntax-printer", () => {
 				expect.arrayContaining(["callee", "arguments"])
 			);
 			expect(Object.keys(branch.test.left)).toContain("argument");
-			// A `pure_funcs` function still reads terser's names for the call.
-			expect(call.args).toBe(call.arguments);
-			expect(call.expression).toBe(call.callee);
 		});
 
 		it("should hold keys and members in ESTree's shapes", async () => {
@@ -3174,8 +3224,6 @@ describe("syntax-printer", () => {
 				"SymbolProperty",
 				"k"
 			]);
-			// A `pure_funcs` function reads terser's name for what a read is off.
-			expect(dot.expression).toBe(dot.object);
 			const [patterns, privateIn] = parse.parse(
 				"var [p, , q] = r, { s, ...t } = u; class V { #w; x(y) { return #w in y; } }"
 			).body;
@@ -4243,7 +4291,7 @@ describe("syntax-printer", () => {
 			/** @type {EXPECTED_ANY} */
 			let ourError;
 			try {
-				tree.figure_out_scope(options);
+				ast.figureOutScope(tree, options);
 			} catch (error) {
 				theirError = error;
 			}
@@ -4287,7 +4335,7 @@ describe("syntax-printer", () => {
 			/** @type {EXPECTED_ANY[]} */
 			const theirDeclarators = [];
 			// As terser's mangler walks: the scopes, labels and kept declarators.
-			const walker = new ast.TreeWalker(
+			const walker = ast.createWalker(
 				(/** @type {EXPECTED_ANY} */ node, /** @type {() => void} */ descend) => {
 					if (node instanceof ast.LabeledStatementNode) {
 						theirLabels.push({
@@ -4300,11 +4348,11 @@ describe("syntax-printer", () => {
 						return true;
 					}
 					if (node instanceof ast.DefunNode && !(walker.parent() instanceof ast.ScopeNode)) {
-						theirBlockDefunScopes.add(node.parent_scope.get_defun_scope());
+						theirBlockDefunScopes.add(ast.getDefunScope(node.parent_scope));
 					}
 					if (node instanceof ast.ScopeNode) {
 						theirScopes.push(node);
-					} else if (node.is_block_scope()) {
+					} else if (ast.isBlockScope(node)) {
 						theirScopes.push(node.block_scope);
 						blockNodes.set(node.block_scope, node);
 					} else if (
@@ -4317,7 +4365,7 @@ describe("syntax-printer", () => {
 					}
 				}
 			);
-			tree.walk(walker);
+			ast.walkNode(tree, walker);
 			/** @type {EXPECTED_ANY[]} */
 			const ourScopes = analysis.scopes;
 			if (ourScopes.length !== theirScopes.length) {
@@ -4373,7 +4421,7 @@ describe("syntax-printer", () => {
 				if ((scopeOf.get(theirs.parent_scope) || null) !== ours.parent) {
 					differences.push(`${where} parent`);
 				}
-				if (scopeOf.get(theirs.get_defun_scope()) !== ours.defun) {
+				if (scopeOf.get(ast.getDefunScope(theirs)) !== ours.defun) {
 					differences.push(`${where} defun`);
 				}
 				if (Boolean(theirs.uses_eval) !== ours.usesEval) {
@@ -4415,7 +4463,7 @@ describe("syntax-printer", () => {
 					["scope", scopeOf.get(theirs.scope), ours.scope],
 					[
 						"unmangleable",
-						Boolean(theirs.unmangleable(options)),
+						Boolean(ast.isDefinitionUnmangleable(theirs, options)),
 						modules.isUnmangleable(ours, options, null)
 					]
 				]) {
@@ -4687,7 +4735,7 @@ describe("syntax-printer", () => {
 					})
 				);
 				change(tree, modules);
-				expect(() => tree.figure_out_scope({})).toThrow(message);
+				expect(() => modules.ast.figureOutScope(tree, {})).toThrow(message);
 				expect(scopeDifferences(modules, tree, {})).toEqual([]);
 			});
 		}

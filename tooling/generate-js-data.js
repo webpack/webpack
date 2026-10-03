@@ -1104,6 +1104,9 @@ const ESTREE_NODE_TYPES = {
 	Await: "AwaitExpression",
 	Yield: "YieldExpression",
 	VarDefLike: "VariableDeclarator",
+	// The mapping `export *` makes, which ESTree holds no node for, is walked as
+	// an export's specifier.
+	NameMapping: "ExportSpecifier",
 	Import: "ImportDeclaration",
 	ImportMeta: "MetaProperty",
 	NewTarget: "MetaProperty",
@@ -1134,6 +1137,11 @@ const ESTREE_NODE_TYPES = {
 	SymbolExportForeign: "Identifier",
 	LabelRef: "Identifier",
 	SymbolPrivateProperty: "PrivateIdentifier",
+	// A key not computed, a name whichever quote the member had, which the
+	// printer writes as the member's quote says.
+	SymbolMethod: "Identifier",
+	SymbolClassProperty: "Identifier",
+	SymbolProperty: "Identifier",
 	SymbolImportForeignLiteral: "Literal",
 	SymbolExportForeignLiteral: "Literal",
 	SymbolExportLiteral: "Literal",

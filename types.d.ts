@@ -684,6 +684,12 @@ declare interface Ast {
 	[index: string]: any;
 	expressionOf(node: NodeShape): undefined | NodeShape;
 	namesOf(node: NodeShape): (null | NodeShape)[];
+	wrapOptimizer(
+		name: string,
+		wrap: (
+			original: (self: NodeShape, compressor: CompressorShape) => NodeShape
+		) => (self: NodeShape, compressor: CompressorShape) => NodeShape
+	): boolean;
 }
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
@@ -20658,7 +20664,6 @@ declare interface NodeShape {
 	evaluate(compressor: CompressorShape): any;
 	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
 	size(compressor?: CompressorShape, stack?: any): number;
-	print_to_string(options?: Record<string, any>): string;
 }
 declare class NodeSourcePlugin {
 	constructor();

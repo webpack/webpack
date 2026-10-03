@@ -276,7 +276,14 @@ describe("syntax-printer's port of terser's ESTree conversion", () => {
 						});
 						results.push(text(ast));
 					} else {
-						results.push(text(tree.to_mozilla_ast()));
+						// webpack converts back through `ast`, terser through a method.
+						results.push(
+							text(
+								typeof tree.to_mozilla_ast === "function"
+									? tree.to_mozilla_ast()
+									: side.ast.toEstree(tree)
+							)
+						);
 					}
 				} catch (err) {
 					results.push(`throws ${thrownMessage(err)}`);
