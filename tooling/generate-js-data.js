@@ -5,7 +5,7 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname, thedef
+// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname, thedef, Defun
 
 const fs = require("fs");
 const path = require("path");
@@ -1061,6 +1061,94 @@ const reshapeNodeFields = (classes) => {
 	return classes;
 };
 
+// The ESTree type of every node of a class, by class (its subclasses inherit
+// it), set on its prototype as \`type\`. A class whose nodes ESTree types apart
+// has none yet.
+/** @type {Record<string, string>} */
+const ESTREE_NODE_TYPES = {
+	Debugger: "DebuggerStatement",
+	Directive: "ExpressionStatement",
+	SimpleStatement: "ExpressionStatement",
+	BlockStatement: "BlockStatement",
+	TryBlock: "BlockStatement",
+	Finally: "BlockStatement",
+	ClassBody: "ClassBody",
+	Toplevel: "Program",
+	Accessor: "FunctionExpression",
+	Function: "FunctionExpression",
+	Arrow: "ArrowFunctionExpression",
+	Defun: "FunctionDeclaration",
+	DefClass: "ClassDeclaration",
+	ClassExpression: "ClassExpression",
+	ClassStaticBlock: "StaticBlock",
+	Switch: "SwitchStatement",
+	SwitchBranch: "SwitchCase",
+	Catch: "CatchClause",
+	EmptyStatement: "EmptyStatement",
+	LabeledStatement: "LabeledStatement",
+	Do: "DoWhileStatement",
+	While: "WhileStatement",
+	For: "ForStatement",
+	ForIn: "ForInStatement",
+	ForOf: "ForOfStatement",
+	With: "WithStatement",
+	If: "IfStatement",
+	Return: "ReturnStatement",
+	Throw: "ThrowStatement",
+	Break: "BreakStatement",
+	Continue: "ContinueStatement",
+	Try: "TryStatement",
+	DefinitionsLike: "VariableDeclaration",
+	PrefixedTemplateString: "TaggedTemplateExpression",
+	TemplateString: "TemplateLiteral",
+	TemplateSegment: "TemplateElement",
+	Await: "AwaitExpression",
+	Yield: "YieldExpression",
+	VarDefLike: "VariableDeclarator",
+	Import: "ImportDeclaration",
+	ImportMeta: "MetaProperty",
+	NewTarget: "MetaProperty",
+	DynamicImport: "ImportExpression",
+	Call: "CallExpression",
+	New: "NewExpression",
+	Sequence: "SequenceExpression",
+	PropAccess: "MemberExpression",
+	Chain: "ChainExpression",
+	UnaryPostfix: "UpdateExpression",
+	Assign: "AssignmentExpression",
+	DefaultAssign: "AssignmentPattern",
+	Conditional: "ConditionalExpression",
+	Array: "ArrayExpression",
+	Object: "ObjectExpression",
+	ObjectKeyVal: "Property",
+	ClassProperty: "PropertyDefinition",
+	ClassPrivateProperty: "PropertyDefinition",
+	PrivateIn: "BinaryExpression",
+	This: "ThisExpression",
+	Super: "Super",
+	Constant: "Literal",
+	Atom: "Identifier",
+	Null: "Literal",
+	Boolean: "Literal"
+};
+
+/**
+ * Sets each class's ESTree type, where every node of it has one, as a value on
+ * its prototype.
+ * @param {NodeClass[]} classes the classes, reshaped
+ * @returns {NodeClass[]} the same classes, typed
+ */
+const typeNodeClasses = (classes) => {
+	for (const nodeClass of classes) {
+		if (
+			Object.prototype.hasOwnProperty.call(ESTREE_NODE_TYPES, nodeClass.type)
+		) {
+			nodeClass.values.type = JSON.stringify(ESTREE_NODE_TYPES[nodeClass.type]);
+		}
+	}
+	return classes;
+};
+
 /**
  * terser's node classes, parsed out of its `ast.js`: each one's place in the
  * hierarchy, the fields its constructor copies and the children it walks.
@@ -1257,7 +1345,7 @@ const collectNodeClasses = () => {
 			classes.push(nodeClass);
 		}
 	}
-	return reshapeNodeFields(renameNodeFields(classes));
+	return typeNodeClasses(reshapeNodeFields(renameNodeFields(classes)));
 };
 
 /**

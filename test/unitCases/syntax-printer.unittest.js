@@ -2978,6 +2978,10 @@ describe("syntax-printer", () => {
 				node.TYPE,
 				expected === null ? null : expected.type
 			]);
+			// A class whose every node has one ESTree type holds it as `type`.
+			if (node.type !== undefined) {
+				expect([node.TYPE, node.type]).toEqual([node.TYPE, expected.type]);
+			}
 			count++;
 		});
 		parse.parse(source, { module: true }).walk(walker);
