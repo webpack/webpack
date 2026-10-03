@@ -783,7 +783,7 @@ const ESTREE_FIELD_NAMES = {
 	ForIn: { left: "init", right: "object" },
 	Import: { source: "module_name" },
 	Export: { source: "module_name" },
-	Try: { handler: "bcatch", finalizer: "bfinally" },
+	Try: { block: "body", handler: "bcatch", finalizer: "bfinally" },
 	Catch: { param: "argname" },
 	DefinitionsLike: { declarations: "definitions" },
 	PrefixedTemplateString: { tag: "prefix", quasi: "template_string" },
@@ -857,6 +857,37 @@ const renameNodeFields = (classes) => {
 		}
 		for (const field of Object.keys(renames)) {
 			nodeClass.renamed[renames[field]] = field;
+		}
+	}
+	return classes;
+};
+
+// The classes whose statements ESTree holds in a block, by the field holding
+// it: a walk reaches the block's list, never the block, as terser's did its own.
+/** @type {Record<string, string>} */
+const ESTREE_BLOCK_BODIES = { Lambda: "body", Catch: "body" };
+
+/**
+ * Points the walks of the classes holding a block at the block's statements.
+ * @param {NodeClass[]} classes the classes, renamed
+ * @returns {NodeClass[]} the same classes
+ */
+const reshapeNodeFields = (classes) => {
+	for (const nodeClass of classes) {
+		if (
+			!Object.prototype.hasOwnProperty.call(ESTREE_BLOCK_BODIES, nodeClass.type)
+		) {
+			continue;
+		}
+		const list = `*${ESTREE_BLOCK_BODIES[nodeClass.type]}`;
+		/**
+		 * @param {string} child a child as `readChildren` writes it
+		 * @returns {string} it, the block's statements where it was the list
+		 */
+		const reach = (child) => (child === list ? `${list}.body` : child);
+		if (nodeClass.walk) nodeClass.walk = nodeClass.walk.map(reach);
+		if (nodeClass.backwards) {
+			nodeClass.backwards = nodeClass.backwards.map(reach);
 		}
 	}
 	return classes;
@@ -1058,7 +1089,7 @@ const collectNodeClasses = () => {
 			classes.push(nodeClass);
 		}
 	}
-	return renameNodeFields(classes);
+	return reshapeNodeFields(renameNodeFields(classes));
 };
 
 /**
@@ -1070,7 +1101,8 @@ const renderNodeClasses = () => `
  * A node class of terser's: \`walk\` and \`backwards\` list its children in the
  * order its own \`_walk\` and \`_children_backwards\` reach them, null where it
  * inherits them — \`f\` a child always there, \`?f\` one that may be absent,
- * \`~f\` one that may not be a node, \`*f\` a list, \`?*f\` a list that may be absent.
+ * \`~f\` one that may not be a node, \`*f\` a list, \`?*f\` a list that may be absent,
+ * \`*f.body\` the statements of the block \`f\` holds.
  * @typedef {object} NodeClass
  * @property {string} type its \`TYPE\`
  * @property {string | null} base the \`TYPE\` of the class it extends

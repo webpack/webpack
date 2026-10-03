@@ -96,7 +96,17 @@ const firstDifference = (theirs, ours) => {
 						...Object.keys(b).map((key) => renamed[key] || key)
 					]);
 		for (const key of keys) {
-			const inner = walk(`${where}.${key}`, a[key], b[ourNames[key] || key]);
+			let ours = b[ourNames[key] || key];
+			// webpack holds a function's or catch's statements in a block.
+			if (
+				Array.isArray(a[key]) &&
+				ours &&
+				ours.TYPE === "BlockStatement" &&
+				Array.isArray(ours.body)
+			) {
+				ours = ours.body;
+			}
+			const inner = walk(`${where}.${key}`, a[key], ours);
 			if (inner) return inner;
 		}
 		return undefined;

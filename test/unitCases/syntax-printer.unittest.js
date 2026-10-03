@@ -1889,9 +1889,10 @@ describe("syntax-printer", () => {
 					/** @type {EXPECTED_ANY} */ ({ compress: false, mangle: false, format: { ast: true } })
 				)
 			);
-			const body = ast.body[0].body;
+			const fn = ast.body[0];
 			// terser's names are `body` and `args`, webpack's ESTree's `expression`
-			// and `arguments`.
+			// and `arguments`; webpack's function holds its statements in a block.
+			const body = Array.isArray(fn.body) ? fn.body : fn.body.body;
 			const call = body[0].expression || body[0].body;
 			(call.arguments || call.args)[1].expressions = [];
 			(body[1].expression || body[1].body).expressions = [];
@@ -2531,11 +2532,11 @@ describe("syntax-printer", () => {
 		const original = declaration._size;
 		let nested = 0;
 		declaration._size = function (/** @type {EXPECTED_ANY} */ info) {
-			nested = declaration.body[0].size();
+			nested = declaration.body.body[0].size();
 			return original.call(this, info);
 		};
 		expect(toplevel.size()).toBeGreaterThan(inner);
-		expect(nested).toBe(declaration.body[0].size());
+		expect(nested).toBe(declaration.body.body[0].size());
 	});
 
 	it("should size and compare every node as terser does", async () => {
@@ -2984,37 +2985,40 @@ describe("syntax-printer", () => {
 				expect.arrayContaining(["params", "generator"])
 			);
 			expect(Object.keys(walk)).not.toContain("argnames");
-			expect(Object.keys(walk.body[0])).toContain("declarations");
-			expect(Object.keys(walk.body[1])).toEqual(
+			expect(Object.keys(walk.body.body[0])).toContain("declarations");
+			expect(Object.keys(walk.body.body[1])).toEqual(
 				expect.arrayContaining(["test", "update"])
 			);
-			expect(Object.keys(walk.body[1].body)).toEqual(
+			expect(Object.keys(walk.body.body[1].body)).toEqual(
 				expect.arrayContaining(["test", "alternate"])
 			);
-			expect(Object.keys(walk.body[4])).toEqual(
+			expect(Object.keys(walk.body.body[4])).toEqual(
 				expect.arrayContaining(["handler", "finalizer"])
 			);
-			expect(Object.keys(walk.body[4].handler)).toContain("param");
-			expect(Object.keys(walk.body[3].body)).toContain("expression");
-			expect(Object.keys(walk.body[3].body)).not.toContain("body");
-			expect(Object.keys(walk.body[3].body.expression)).toEqual(
+			expect(Object.keys(walk.body.body[4].handler)).toContain("param");
+			expect(walk.body.TYPE).toBe("BlockStatement");
+			expect(walk.body.body[4].block.TYPE).toBe("TryBlock");
+			expect(walk.body.body[4].handler.body.TYPE).toBe("BlockStatement");
+			expect(Object.keys(walk.body.body[3].body)).toContain("expression");
+			expect(Object.keys(walk.body.body[3].body)).not.toContain("body");
+			expect(Object.keys(walk.body.body[3].body.expression)).toEqual(
 				expect.arrayContaining(["argument", "delegate"])
 			);
-			expect(Object.keys(walk.body[7].argument.left)).toEqual(
+			expect(Object.keys(walk.body.body[7].argument.left)).toEqual(
 				expect.arrayContaining(["tag", "quasi"])
 			);
 			expect(Object.keys(walk)).toContain("id");
-			expect(Object.keys(walk.body[0].declarations[0])).toEqual(
+			expect(Object.keys(walk.body.body[0].declarations[0])).toEqual(
 				expect.arrayContaining(["id", "init"])
 			);
-			expect(Object.keys(walk.body[1].body)).toContain("consequent");
-			expect(Object.keys(walk.body[5])).toEqual(
+			expect(Object.keys(walk.body.body[1].body)).toContain("consequent");
+			expect(Object.keys(walk.body.body[5])).toEqual(
 				expect.arrayContaining(["discriminant", "cases"])
 			);
-			expect(Object.keys(walk.body[5].cases[0])).toEqual(
+			expect(Object.keys(walk.body.body[5].cases[0])).toEqual(
 				expect.arrayContaining(["test", "consequent"])
 			);
-			expect(Object.keys(walk.body[6])).toEqual(
+			expect(Object.keys(walk.body.body[6])).toEqual(
 				expect.arrayContaining(["left", "right"])
 			);
 			expect(Object.keys(derived)).toEqual(
@@ -3830,7 +3834,10 @@ describe("syntax-printer", () => {
 					/** @type {number[]} */
 					const sizes = [];
 					walk(ast, (/** @type {EXPECTED_ANY} */ node) => {
-						if (node.argnames || node.params) sizes.push(node.body.length);
+						if (node.argnames || node.params) {
+							// webpack's function holds its statements in a block.
+							sizes.push((Array.isArray(node.body) ? node.body : node.body.body).length);
+						}
 					});
 					lengths.push(sizes);
 				}
@@ -4946,7 +4953,7 @@ describe("syntax-printer", () => {
 						await minifier(source, { compress: false, mangle: false, format: { ast: true, code: false } })
 					);
 					const { code } = await minifier(ast, { compress: false, mangle: { toplevel: true }, format });
-					expect([code, ast.body[0].body.length, (ast.body[0].params || ast.body[0].argnames).length, ast.variables]).toEqual([
+					expect([code, (Array.isArray(ast.body[0].body) ? ast.body[0].body : ast.body[0].body.body).length, (ast.body[0].params || ast.body[0].argnames).length, ast.variables]).toEqual([
 						"function n(n){return n}n(1);",
 						0,
 						0,
