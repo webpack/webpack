@@ -2223,6 +2223,13 @@ Array [
 ]
 `;
 
+exports[`syntax-printer should analyse flow as terser does: a labelled loop in a static block of a class collapsed past 1`] = `
+Array [
+  "function f(){var f=class{static{for(;!g(););}};return h(),f}sink(f);",
+  "function f(){var C=class{static{l:for(;!g(););}};return h(),C}sink(f);",
+]
+`;
+
 exports[`syntax-printer should analyse flow as terser does: a local value yielded 1`] = `
 Array [
   "function*gen(){var n=g();yield n}sink(gen);",

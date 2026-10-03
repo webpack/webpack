@@ -5,7 +5,7 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE, PUNC
+// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname
 
 const fs = require("fs");
 const path = require("path");
@@ -754,7 +754,311 @@ const readChildren = (statements, method, where) => {
  * @property {string[] | null} walk the children its own `_walk` visits, null where it inherits one
  * @property {string | null} guard the field a walk visits children only when set
  * @property {string[] | null} backwards the children its own `_children_backwards` pushes, null where it inherits one
+ * @property {Record<string, string>} renamed what terser calls each field given its ESTree name, by that name
  */
+
+// What terser calls a field ESTree names otherwise, by the class declaring it
+// (its subclasses inherit the rename) and ESTree's name. The compressor moves
+// onto ESTree a field at a time; terser's `ast.js` cannot say which it meant.
+/** @type {Record<string, Record<string, string>>} */
+const ESTREE_FIELD_NAMES = {
+	Node: { startToken: "start", endToken: "end" },
+	DWLoop: { test: "condition" },
+	For: { test: "condition", update: "step" },
+	If: { test: "condition", consequent: "body", alternate: "alternative" },
+	Conditional: { test: "condition", alternate: "alternative" },
+	Lambda: { id: "name", params: "argnames", generator: "is_generator" },
+	Call: { callee: "expression", arguments: "args" },
+	PropAccess: { object: "expression" },
+	Unary: { argument: "expression" },
+	Await: { argument: "expression" },
+	Expansion: { argument: "expression" },
+	Switch: { discriminant: "expression", cases: "body" },
+	SwitchBranch: { consequent: "body" },
+	Case: { test: "expression" },
+	With: { object: "expression" },
+	SimpleStatement: { expression: "body" },
+	Exit: { argument: "value" },
+	VarDefLike: { id: "name", init: "value" },
+	ForIn: { left: "init", right: "object" },
+	Import: { source: "module_name" },
+	Export: { source: "module_name" },
+	Try: { block: "body", handler: "bcatch", finalizer: "bfinally" },
+	Catch: { param: "argname" },
+	DefinitionsLike: { declarations: "definitions" },
+	PrefixedTemplateString: { tag: "prefix", quasi: "template_string" },
+	Class: { id: "name", superClass: "extends" },
+	PrivateIn: { left: "key", right: "value" },
+	NameMapping: { local: "name" },
+	Yield: { argument: "expression", delegate: "is_star" }
+};
+
+/**
+ * Gives each class the ESTree names of its fields, and records what terser
+ * called each one renamed in `renamed`.
+ * @param {NodeClass[]} classes the classes, each after the class it extends
+ * @returns {NodeClass[]} the same classes, renamed
+ */
+const renameNodeFields = (classes) => {
+	/** @type {Map<string, Record<string, string>>} */
+	const renamesOf = new Map();
+	// Each class's walk, guard and backwards push as terser names them, its own
+	// or inherited: a rename of an inherited child needs a copy of its own.
+	/** @type {Map<string, { walk: string[] | null, guard: string | null, backwards: string[] | null }>} */
+	const terserWalkOf = new Map();
+	for (const nodeClass of classes) {
+		const inherited =
+			nodeClass.base === null ? undefined : terserWalkOf.get(nodeClass.base);
+		const terserWalk = {
+			walk: nodeClass.walk || (inherited ? inherited.walk : null),
+			guard: nodeClass.walk || !inherited ? nodeClass.guard : inherited.guard,
+			backwards: nodeClass.backwards || (inherited ? inherited.backwards : null)
+		};
+		terserWalkOf.set(nodeClass.type, terserWalk);
+		/** @type {Record<string, string>} */
+		const renames = {
+			...(nodeClass.base === null ? {} : renamesOf.get(nodeClass.base))
+		};
+		const own = ESTREE_FIELD_NAMES[nodeClass.type] || {};
+		for (const estreeName of Object.keys(own)) {
+			renames[own[estreeName]] = estreeName;
+		}
+		renamesOf.set(nodeClass.type, renames);
+		/**
+		 * @param {string} child a field, after the prefixes `readChildren` writes
+		 * @returns {string} it renamed
+		 */
+		const rename = (child) =>
+			child.replace(/[a-z_]+$/, (field) =>
+				Object.prototype.hasOwnProperty.call(renames, field)
+					? renames[field]
+					: field
+			);
+		nodeClass.fields = nodeClass.fields.map(rename);
+		const baseRenames =
+			nodeClass.base === null ? {} : renamesOf.get(nodeClass.base);
+		const ownsWalk =
+			nodeClass.walk !== null ||
+			Object.keys(own).some((estreeName) =>
+				[
+					...(terserWalk.walk || []),
+					...(terserWalk.backwards || []),
+					terserWalk.guard || ""
+				].some(
+					(child) =>
+						child.replace(/^[?*~]+/, "") === own[estreeName] &&
+						!Object.prototype.hasOwnProperty.call(baseRenames, own[estreeName])
+				)
+			);
+		if (ownsWalk) {
+			if (terserWalk.walk) nodeClass.walk = terserWalk.walk.map(rename);
+			if (terserWalk.backwards) {
+				nodeClass.backwards = terserWalk.backwards.map(rename);
+			}
+			nodeClass.guard = terserWalk.guard && rename(terserWalk.guard);
+		}
+		for (const field of Object.keys(renames)) {
+			nodeClass.renamed[renames[field]] = field;
+		}
+	}
+	return classes;
+};
+
+// The classes whose list ESTree holds in a block, by class: the list's field
+// as terser names it, then the field holding the block. A walk reaches the
+// block's list, never the block, as terser's walked its array.
+/** @type {Record<string, [string, string]>} */
+const ESTREE_BLOCK_BODIES = {
+	Lambda: ["body", "body"],
+	Catch: ["body", "body"],
+	Class: ["properties", "body"]
+};
+
+// The lists ESTree holds a hole in as null, where terser has a node for it.
+/** @type {Record<string, string>} */
+const ESTREE_HOLE_LISTS = { Array: "elements" };
+
+// The fields terser holds one of where ESTree names it by what holds it, the
+// other null: a pattern's list (an array's holding holes as null), and a
+// specifier's foreign name, imported or exported. Each with its new walks.
+/** @type {Record<string, { field: string, into: string[], walk: string[], backwards: string[] }>} */
+const ESTREE_SPLIT_FIELDS = {
+	Destructuring: {
+		field: "names",
+		into: ["elements", "properties"],
+		walk: ["?+elements", "?*properties"],
+		backwards: ["?*properties", "?+elements"]
+	},
+	NameMapping: {
+		field: "foreign_name",
+		into: ["imported", "exported"],
+		walk: ["?imported", "?exported", "local"],
+		backwards: ["local", "?exported", "?imported"]
+	}
+};
+
+// The fields a directive takes for terser's `value` and `quote`, as ESTree's
+// statement holds it: the directive's text and the string literal spelling it.
+const DIRECTIVE_FIELDS = ["directive", "expression"];
+
+// The block holding a class's members, which terser has no class for.
+/** @type {NodeClass} */
+const CLASS_BODY = {
+	type: "ClassBody",
+	base: "Node",
+	fields: ["body", "startToken", "endToken"],
+	initializes: false,
+	guarded: true,
+	setsFlags: true,
+	values: {},
+	walk: ["*body"],
+	guard: null,
+	backwards: ["*body"],
+	renamed: {}
+};
+
+// The fields ESTree has that terser's class lacks, by the class gaining them
+// (its subclasses inherit them): whether a key or property read is an
+// expression, and a member's kind — with, in an object, method and shorthand.
+/** @type {Record<string, string[]>} */
+const ESTREE_ADDED_FIELDS = {
+	ObjectProperty: ["computed"],
+	PropAccess: ["computed"],
+	ObjectKeyVal: ["kind", "method", "shorthand"],
+	ObjectGetter: ["kind", "method", "shorthand"],
+	ObjectSetter: ["kind", "method", "shorthand"],
+	ConciseMethod: ["kind", "method", "shorthand"],
+	PrivateGetter: ["kind"],
+	PrivateSetter: ["kind"],
+	PrivateMethod: ["kind"]
+};
+
+// The children a walk reaches only where the class's key is computed: a key
+// terser held as a string, now a node no walk visits, as none visited the string.
+/** @type {Record<string, { walk: string[], backwards: string[] }>} */
+const ESTREE_COMPUTED_KEY_WALKS = {
+	ObjectKeyVal: { walk: ["^key", "value"], backwards: ["value", "^key"] }
+};
+
+/**
+ * The name of a property or member terser held as a string, a symbol of its
+ * own as ESTree's identifier is; its fields are the name and its tokens alone.
+ * @param {NodeClass} symbol the class of symbols
+ * @returns {NodeClass} the class
+ */
+const symbolPropertyClass = (symbol) => ({
+	type: "SymbolProperty",
+	base: symbol.type,
+	fields: ["name", "startToken", "endToken"],
+	initializes: false,
+	guarded: symbol.guarded,
+	setsFlags: symbol.setsFlags,
+	values: {},
+	walk: null,
+	guard: null,
+	backwards: null,
+	renamed: { startToken: "start", endToken: "end" }
+});
+
+/**
+ * Points the walks of the classes holding a block at the block's list, and
+ * drops the list's own field from them and the classes extending them.
+ * @param {NodeClass[]} classes the classes, renamed
+ * @returns {NodeClass[]} the same classes, the class body's and the property name's
+ */
+const reshapeNodeFields = (classes) => {
+	/** @type {Map<string, string>} */
+	const droppedOf = new Map();
+	/** @type {Map<string, string[]>} */
+	const addedOf = new Map();
+	for (const nodeClass of classes) {
+		const added = [
+			...((nodeClass.base !== null && addedOf.get(nodeClass.base)) || []),
+			...(ESTREE_ADDED_FIELDS[nodeClass.type] || [])
+		];
+		addedOf.set(nodeClass.type, added);
+		nodeClass.fields.push(...added);
+		if (
+			Object.prototype.hasOwnProperty.call(ESTREE_SPLIT_FIELDS, nodeClass.type)
+		) {
+			const { field, into, walk, backwards } =
+				ESTREE_SPLIT_FIELDS[nodeClass.type];
+			nodeClass.fields.splice(nodeClass.fields.indexOf(field), 1, ...into);
+			nodeClass.walk = walk;
+			nodeClass.backwards = backwards;
+		}
+		if (
+			Object.prototype.hasOwnProperty.call(
+				ESTREE_COMPUTED_KEY_WALKS,
+				nodeClass.type
+			)
+		) {
+			const { walk, backwards } = ESTREE_COMPUTED_KEY_WALKS[nodeClass.type];
+			nodeClass.walk = walk;
+			nodeClass.backwards = backwards;
+		}
+		const inherited =
+			nodeClass.base === null ? undefined : droppedOf.get(nodeClass.base);
+		const own = Object.prototype.hasOwnProperty.call(
+			ESTREE_BLOCK_BODIES,
+			nodeClass.type
+		)
+			? ESTREE_BLOCK_BODIES[nodeClass.type]
+			: undefined;
+		if (own !== undefined && own[0] !== own[1]) {
+			droppedOf.set(nodeClass.type, own[0]);
+		} else if (inherited !== undefined) {
+			droppedOf.set(nodeClass.type, inherited);
+		}
+		if (nodeClass.type === "Directive") {
+			nodeClass.fields = [
+				...DIRECTIVE_FIELDS,
+				...nodeClass.fields.filter(
+					(field) => field !== "value" && field !== "quote"
+				)
+			];
+		}
+		if (
+			Object.prototype.hasOwnProperty.call(ESTREE_HOLE_LISTS, nodeClass.type)
+		) {
+			const list = `*${ESTREE_HOLE_LISTS[nodeClass.type]}`;
+			/**
+			 * @param {string} child a child as `readChildren` writes it
+			 * @returns {string} it, a list holding holes where it was the list
+			 */
+			const reachHoles = (child) =>
+				child === list ? `+${list.slice(1)}` : child;
+			if (nodeClass.walk) nodeClass.walk = nodeClass.walk.map(reachHoles);
+			if (nodeClass.backwards) {
+				nodeClass.backwards = nodeClass.backwards.map(reachHoles);
+			}
+		}
+		const dropped = droppedOf.get(nodeClass.type);
+		if (dropped !== undefined) {
+			nodeClass.fields = nodeClass.fields.filter((field) => field !== dropped);
+		}
+		if (own === undefined) continue;
+		const [list, holder] = own;
+		/**
+		 * @param {string} child a child as `readChildren` writes it
+		 * @returns {string} it, the block's list where it was the list
+		 */
+		const reach = (child) => (child === `*${list}` ? `*${holder}.body` : child);
+		if (nodeClass.walk) nodeClass.walk = nodeClass.walk.map(reach);
+		if (nodeClass.backwards) {
+			nodeClass.backwards = nodeClass.backwards.map(reach);
+		}
+	}
+	classes.push(
+		CLASS_BODY,
+		symbolPropertyClass(
+			/** @type {NodeClass} */ (
+				classes.find((nodeClass) => nodeClass.type === "Symbol")
+			)
+		)
+	);
+	return classes;
+};
 
 /**
  * terser's node classes, parsed out of its `ast.js`: each one's place in the
@@ -876,7 +1180,8 @@ const collectNodeClasses = () => {
 				values: {},
 				walk: null,
 				guard: null,
-				backwards: null
+				backwards: null,
+				renamed: {}
 			};
 			if (methodsNode && methodsNode.type === "ObjectExpression") {
 				for (const property of methodsNode.properties) {
@@ -951,7 +1256,7 @@ const collectNodeClasses = () => {
 			classes.push(nodeClass);
 		}
 	}
-	return classes;
+	return reshapeNodeFields(renameNodeFields(classes));
 };
 
 /**
@@ -963,7 +1268,10 @@ const renderNodeClasses = () => `
  * A node class of terser's: \`walk\` and \`backwards\` list its children in the
  * order its own \`_walk\` and \`_children_backwards\` reach them, null where it
  * inherits them — \`f\` a child always there, \`?f\` one that may be absent,
- * \`~f\` one that may not be a node, \`*f\` a list, \`?*f\` a list that may be absent.
+ * \`~f\` one that may not be a node, \`^f\` a key walked only where \`computed\`,
+ * \`*f\` a list, \`?*f\` a list that may be absent,
+ * \`+f\` a list that may hold null, a hole,
+ * \`*f.body\` the list of the block \`f\` holds.
  * @typedef {object} NodeClass
  * @property {string} type its \`TYPE\`
  * @property {string | null} base the \`TYPE\` of the class it extends
@@ -975,6 +1283,7 @@ const renderNodeClasses = () => `
  * @property {string[] | null} walk the children its walk visits
  * @property {string | null} guard the field its walk descends only where set
  * @property {string[] | null} backwards the children it pushes backwards
+ * @property {Record<string, string>} renamed what terser calls each field given its ESTree name, by that name
  */
 
 // terser's node classes, in the order its \`ast.js\` defines them, each after

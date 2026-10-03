@@ -675,6 +675,16 @@ declare interface AssetTimestamps {
 	 */
 	mtime: number;
 }
+
+/**
+ * What terser's `ast.js` exports: each class, the predicate `is<Class>` for
+ * it, and the walkers and helpers, which stay open.
+ */
+declare interface Ast {
+	[index: string]: any;
+	expressionOf(node: NodeShape): undefined | NodeShape;
+	namesOf(node: NodeShape): (null | NodeShape)[];
+}
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
 		groupOptions: null | string | GroupOptionsAsyncDependenciesBlock,
@@ -4721,7 +4731,7 @@ declare interface CompressorShape {
 	has_directive(directive: string): any;
 	parent(level?: number): NodeShape;
 	self(): NodeShape;
-	find_parent(Type?: any): undefined | NodeShape;
+	find_parent(test: (value: unknown) => boolean): undefined | NodeShape;
 	in_boolean_context(): undefined | boolean;
 }
 declare class ConcatSource extends Source {
@@ -18410,6 +18420,7 @@ declare interface Minifier {
  */
 declare interface MinifierModules {
 	[index: string]: any;
+	ast: Ast;
 }
 
 /**
@@ -20570,27 +20581,30 @@ declare interface NodeShape {
 	[index: string]: any;
 	TYPE: string;
 	flags: number;
-	start: TokenEs5;
-	end: TokenEs5;
+	startToken: TokenEs5;
+	endToken: TokenEs5;
 	expression: NodeShape;
+	callee: NodeShape;
+	object: NodeShape;
+	argument: NodeShape;
+	discriminant: NodeShape;
 	left: NodeShape;
 	right: NodeShape;
 	operator: string;
-	condition: NodeShape;
-	consequent: NodeShape;
-	alternative: NodeShape;
-	args: NodeShape[];
-	elements: NodeShape[];
+	test: NodeShape;
+	alternate: NodeShape;
+	arguments: NodeShape[];
+	elements: (null | NodeShape)[];
 	properties: NodeShape[];
-	definitions: NodeShape[];
+	declarations: NodeShape[];
 	expressions: NodeShape[];
 	segments: NodeShape[];
-	argnames: NodeShape[];
+	params: NodeShape[];
 	quote?: string;
 	raw?: string;
 	optional: boolean;
-	prefix: NodeShape;
-	extends: NodeShape;
+	tag: NodeShape;
+	superClass: NodeShape;
 	scope: NodeShape;
 	thedef: SymbolDefinition;
 	definition(): SymbolDefinition;
@@ -33374,7 +33388,7 @@ declare namespace exports {
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: FormatOptions;
 				export let IGNORED_FORMAT_OPTIONS: string[];
-				export let createAst: () => Record<string, any>;
+				export let createAst: () => Ast;
 				export let createModules: () => MinifierModules;
 				export let createCompressHelpers: (
 					modules: MinifierModules

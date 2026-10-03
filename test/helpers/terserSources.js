@@ -5,7 +5,7 @@
 /**
  * terser's node classes under the names webpack gives them as well as their
  * own: `AST_Node` is webpack's `SyntaxNode`, `AST_Call` its `CallNode`, and
- * `AST_Token` its `ParsedToken`.
+ * `AST_Token` its `ParsedToken`, with the `isCallNode` predicates webpack reads.
  * @param {EXPECTED_ANY} ast terser's `ast.js`
  * @returns {EXPECTED_ANY} it, reading under either name
  */
@@ -14,13 +14,15 @@ const webpackNames = (ast) => {
 	for (const name of Object.keys(ast)) {
 		if (!name.startsWith("AST_")) continue;
 		const type = name.slice(4);
-		named[
-			type === "Node"
-				? "SyntaxNode"
-				: type === "Token"
-					? "ParsedToken"
-					: `${type}Node`
-		] = ast[name];
+		const Type = ast[name];
+		if (type === "Token") {
+			named.ParsedToken = Type;
+			continue;
+		}
+		const className = type === "Node" ? "SyntaxNode" : `${type}Node`;
+		named[className] = Type;
+		named[`is${className}`] = (/** @type {unknown} */ value) =>
+			value instanceof Type;
 	}
 	return named;
 };
@@ -29,7 +31,7 @@ const webpackNames = (ast) => {
  * terser's own modules, which its published entry point does not expose: the
  * reference the printer's tests compare webpack's ports with.
  * @param {(specifier: string) => Promise<EXPECTED_ANY>} importModule the calling test's own `import()`, bound to its runtime
- * @returns {Promise<Record<string, EXPECTED_ANY>>} the modules, by what they hold
+ * @returns {Promise<import("../../lib/javascript/syntax-printer").MinifierModules>} the modules, by what they hold
  */
 const loadTerserSources = async (importModule) => {
 	const path = require("path");

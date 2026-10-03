@@ -15,6 +15,18 @@ const {
  */
 const importTerserSource = (specifier) => import(specifier);
 const ACORN_CORPUS = require("../fixtures/acorn-corpus.json");
+const { nodeClasses } = require("../../lib/javascript/syntax-printer-data");
+
+// What terser calls each field webpack's node classes name as ESTree does, by
+// class: the trees are compared under terser's names.
+/** @type {Map<string, Record<string, string>>} */
+const RENAMED_FIELDS = new Map(
+	nodeClasses().map(({ type, renamed }) => [type, renamed])
+);
+
+// The fields webpack's node classes hold where ESTree has them and terser's
+// classes none.
+const ESTREE_ADDED_FIELDS = new Set(["computed", "kind", "method", "shorthand"]);
 
 // A token's fields, past which a converted tree keeps nothing a minify reads.
 const TOKEN_FIELDS = [
@@ -49,8 +61,21 @@ const firstDifference = (theirs, ours) => {
 	 */
 	const walk = (where, a, b) => {
 		if (a === b) return undefined;
+		// webpack holds a name terser held as a string as a node.
+		if (
+			typeof a === "string" &&
+			typeof b === "object" &&
+			b !== null &&
+			(b.TYPE === "SymbolProperty" || b.TYPE === "SymbolPrivateProperty")
+		) {
+			return a === b.name ? undefined : `${where}: ${a} vs ${b.name}`;
+		}
 		if (typeof a !== typeof b) return `${where}: ${typeof a} vs ${typeof b}`;
 		if (typeof a === "number" && Number.isNaN(a) && Number.isNaN(b)) {
+			return undefined;
+		}
+		// webpack holds a hole as null, where terser has a node.
+		if (b === null && a !== null && a.constructor.name === "AST_Hole") {
 			return undefined;
 		}
 		if (typeof a !== "object" || a === null || b === null) {
@@ -74,12 +99,63 @@ const firstDifference = (theirs, ours) => {
 		if (kindOf(a) !== kindOf(b)) {
 			return `${where}: ${a.constructor.name} vs ${b.constructor.name}`;
 		}
+		const renamed = (kindOf(b) !== "Token" && RENAMED_FIELDS.get(b.TYPE)) || {};
+		/** @type {Record<string, string>} */
+		const ourNames = {};
+		for (const ourName of Object.keys(renamed)) {
+			ourNames[renamed[ourName]] = ourName;
+		}
 		const keys =
 			kindOf(a) === "Token"
 				? TOKEN_FIELDS
-				: new Set([...Object.keys(a), ...Object.keys(b)]);
+				: new Set([
+						...Object.keys(a),
+						...Object.keys(b).map((key) => renamed[key] || key)
+					]);
 		for (const key of keys) {
-			const inner = walk(`${where}.${key}`, a[key], b[key]);
+			// webpack holds a class's members in a class body, where terser's
+			// class holds them as `properties` and its `body` holds nothing.
+			const isClass = b.TYPE === "DefClass" || b.TYPE === "ClassExpression";
+			if (isClass && key === "body" && a.body === undefined) continue;
+			// webpack's directive holds terser's `value` as `directive`, its quote
+			// on the string literal it holds as `expression`.
+			const isDirective = b.TYPE === "Directive";
+			if (isDirective && (key === "directive" || key === "expression")) {
+				continue;
+			}
+			if (ESTREE_ADDED_FIELDS.has(key) && !(key in a)) continue;
+			// webpack's destructuring holds terser's `names` as an array pattern's
+			// `elements` or an object pattern's `properties`, the other null.
+			const isPattern = b.TYPE === "Destructuring";
+			if (isPattern && (key === "elements" || key === "properties")) continue;
+			// webpack's specifier holds terser's `foreign_name` as what it imports
+			// or what it exports, the other null.
+			const isMapping = b.TYPE === "NameMapping";
+			if (isMapping && (key === "imported" || key === "exported")) continue;
+			let ours =
+				isClass && key === "properties"
+					? b.body.body
+					: isPattern && key === "names"
+						? b.is_array
+							? b.elements
+							: b.properties
+						: isMapping && key === "foreign_name"
+							? b.imported || b.exported
+							: isDirective && key === "value"
+								? b.directive
+								: isDirective && key === "quote"
+									? b.expression.quote
+									: b[ourNames[key] || key];
+			// webpack holds a function's or catch's statements in a block.
+			if (
+				Array.isArray(a[key]) &&
+				ours &&
+				ours.TYPE === "BlockStatement" &&
+				Array.isArray(ours.body)
+			) {
+				ours = ours.body;
+			}
+			const inner = walk(`${where}.${key}`, a[key], ours);
 			if (inner) return inner;
 		}
 		return undefined;
