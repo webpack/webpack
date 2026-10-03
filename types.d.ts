@@ -20606,8 +20606,7 @@ declare interface NodeShape {
 	tag: NodeShape;
 	superClass: NodeShape;
 	scope: NodeShape;
-	thedef: SymbolDefinition;
-	definition(): SymbolDefinition;
+	definition: SymbolDefinition;
 	fixed_value(): any;
 	tail_node(): NodeShape;
 	clone(deep?: boolean): NodeShape;

@@ -5,7 +5,7 @@
 
 "use strict";
 
-// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname
+// cspell:ignore DEFNODE, PUNC, argnames, bcatch, bfinally, argname, thedef
 
 const fs = require("fs");
 const path = require("path");
@@ -789,6 +789,7 @@ const ESTREE_FIELD_NAMES = {
 	PrefixedTemplateString: { tag: "prefix", quasi: "template_string" },
 	Class: { id: "name", superClass: "extends" },
 	PrivateIn: { left: "key", right: "value" },
+	Symbol: { definition: "thedef" },
 	NameMapping: { local: "name" },
 	Yield: { argument: "expression", delegate: "is_star" }
 };

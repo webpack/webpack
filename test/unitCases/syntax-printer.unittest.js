@@ -2552,7 +2552,8 @@ describe("syntax-printer", () => {
 				}
 			}
 			// webpack's helpers read a property read's name off a node, as ESTree
-			// holds it, where terser's tree holds a string.
+			// holds it, where terser's tree holds a string, and a symbol's definition
+			// off a field, where terser's has a method.
 			modules.ast.walk(
 				toplevel,
 				(
@@ -2560,6 +2561,9 @@ describe("syntax-printer", () => {
 				) => {
 					if (node instanceof modules.ast.AST_Dot) {
 						node.property = { name: node.property };
+					}
+					if (node instanceof modules.ast.AST_Symbol) {
+						node.definition = node.thedef;
 					}
 				}
 			);
@@ -4077,7 +4081,7 @@ describe("syntax-printer", () => {
 			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
 			const declarator = printTree.body[0].declarations[0];
 			// A name reads as terser's definition named it, and as written for the ESTree mangler.
-			const definition = tree.body[0].declarations[0].id.definition();
+			const definition = tree.body[0].declarations[0].id.definition;
 			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
 			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
 			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
@@ -4172,7 +4176,7 @@ describe("syntax-printer", () => {
 				tree,
 				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
 					if (printNode !== null && printNode.type === "Identifier" && node.definition) {
-						const definition = node.definition();
+						const definition = node.definition;
 						if (definition && definition.mangled_name) {
 							expect(printNode.name).toBe(definition.mangled_name);
 							renamed.push([node.name, printNode.name]);
@@ -4381,7 +4385,7 @@ describe("syntax-printer", () => {
 				}
 				const functionName =
 					theirs instanceof ast.FunctionNode && theirs.id
-						? definitionOf.get(theirs.id.thedef)
+						? definitionOf.get(theirs.id.definition)
 						: null;
 				if (functionName !== ours.functionName) {
 					differences.push(`${where} function name`);
@@ -4431,9 +4435,9 @@ describe("syntax-printer", () => {
 					symbolNodes.add(printNode);
 					let expected = null;
 					if (node instanceof ast.LabelNode) expected = labelOf.get(node);
-					else if (node instanceof ast.LabelRefNode) expected = labelOf.get(node.thedef);
-					else if (node instanceof ast.SymbolNode && node.thedef && node.thedef !== star) {
-						expected = definitionOf.get(node.thedef);
+					else if (node instanceof ast.LabelRefNode) expected = labelOf.get(node.definition);
+					else if (node instanceof ast.SymbolNode && node.definition && node.definition !== star) {
+						expected = definitionOf.get(node.definition);
 					}
 					if (expected !== printNode.definition) {
 						differences.push(`${node.TYPE} ${node.name} names another definition`);
