@@ -375,6 +375,34 @@ const CORRECTED_CASES = [
 		[
 			"a class dropped for its effects, a computed method key reading its private name",
 			"var o = {}; try { (function () { class C { [o.#f]() {} #f = 2; } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class expression dropped for its effects, a computed key reading its private name",
+			"var o = {}; try { (function () { (class { [o.#f] = 1; #f = 2; }); })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a computed key reading its private method",
+			"var o = {}; try { (function () { class C { [o.#m] = 1; #m() {} } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a computed key reading its private getter",
+			"var o = {}; try { (function () { class C { [o.#g] = 1; get #g() { return 1; } } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a computed key reading its private setter",
+			"var o = {}; try { (function () { class C { [o.#s] = 1; set #s(v) {} } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a computed key reading its static private method",
+			"var o = {}; try { (function () { class C { [o.#m] = 1; static #m() {} } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a class in its computed key reading its private name",
+			'var o = {}; (function () { class C { [(class { static r(x) { return #f in x; } }).r(o)] = 1; #f = 2; } })(); console.log("ok");'
+		],
+		[
+			"a class dropped for its effects, the extends of a class in its key reading its private name",
+			"var o = {}; try { (function () { class C { [((class extends (o.#f, Object) { #f = 1; }), 1)] = 1; #f = 2; } })(); } catch (e) { console.log(e.name); }"
 		]
 	].map(
 		([name, input]) =>
@@ -3359,6 +3387,20 @@ describe("syntax-printer", () => {
 		it("should install", async () => {
 			const { phases } = await load();
 			expect(phases).toContain("correct");
+		});
+
+		it("should drop a class whose effects read only a nested class's own private name, as terser does", async () => {
+			const { minify } = await load();
+			const input =
+				'var o = {}; (function () { class C { [(class { #f = 1; static r(x) { return #f in x; } }).r(o)] = 1; #f = 2; #g = 3; } })(); console.log("ok");';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			const reference = await terserReference().minify(input, {
+				compress: {},
+				mangle: false
+			});
+
+			expect(code).toBe(reference.code);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
 		it("should drop a class whose effects read only an enclosing class's private name, as terser does", async () => {
