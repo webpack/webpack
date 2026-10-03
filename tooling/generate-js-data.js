@@ -1104,6 +1104,9 @@ const ESTREE_NODE_TYPES = {
 	Await: "AwaitExpression",
 	Yield: "YieldExpression",
 	VarDefLike: "VariableDeclarator",
+	// The mapping `export *` makes, which ESTree holds no node for, is walked as
+	// an export's specifier.
+	NameMapping: "ExportSpecifier",
 	Import: "ImportDeclaration",
 	ImportMeta: "MetaProperty",
 	NewTarget: "MetaProperty",

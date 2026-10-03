@@ -963,18 +963,20 @@ describe("syntax-printer", () => {
 		expect(utils.member(2, list)).toBe(true);
 		expect(utils.return_false()).toBe(false);
 
+		// `MAP` transforms with webpack's own walk, over webpack's own nodes.
+		const own = (await load()).modules;
 		const nodes = [
-			new ast.AST_Number({ value: 1 }),
-			new ast.AST_Number({ value: 2 }),
-			new ast.AST_Number({ value: 3 })
+			new own.ast.NumberNode({ value: 1 }),
+			new own.ast.NumberNode({ value: 2 }),
+			new own.ast.NumberNode({ value: 3 })
 		];
-		const spliced = new ast.AST_Number({ value: 4 });
-		const walker = new ast.TreeTransformer((/** @type {EXPECTED_ANY} */ item) => {
-			if (item === nodes[0]) return utils.MAP.skip;
-			if (item === nodes[1]) return utils.MAP.splice([spliced, spliced]);
+		const spliced = new own.ast.NumberNode({ value: 4 });
+		const walker = new own.ast.TreeTransformer((/** @type {EXPECTED_ANY} */ item) => {
+			if (item === nodes[0]) return own.utils.MAP.skip;
+			if (item === nodes[1]) return own.utils.MAP.splice([spliced, spliced]);
 			return item;
 		});
-		expect(utils.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
+		expect(own.utils.MAP(nodes, walker)).toEqual([spliced, spliced, nodes[2]]);
 
 		/**
 		 * A constant's node as plain data, terser's `expression` and ESTree's
@@ -2315,8 +2317,7 @@ describe("syntax-printer", () => {
 		const walked = parsed(
 			'"use strict"; function f() { a: for (var i in o) { switch (i) { case 1: break; default: continue a; } } while (1) { for (let j = g(); j; ) { break; } } }'
 		);
-		walked.walk(
-			new TreeWalker(
+		ast.walkNode(walked, new TreeWalker(
 				/**
 				 * @this {EXPECTED_ANY} the walker
 				 * @param {EXPECTED_ANY} node the node visited
@@ -2642,8 +2643,7 @@ describe("syntax-printer", () => {
 			);
 			/** @type {EXPECTED_ANY[]} */
 			const ours = [];
-			ourTree.walk(
-				new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+			ast.walkNode(ourTree, new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
 					ours.push(node);
 				})
 			);
@@ -2980,18 +2980,20 @@ describe("syntax-printer", () => {
 									specifier.type !== "ImportDefaultSpecifier"
 							)[list.indexOf(node)];
 			}
+			// The mapping `export *` makes, which ESTree has no node for, is walked
+			// as a specifier.
 			expect([node.TYPE, estreeType(node, parent)]).toEqual([
 				node.TYPE,
-				expected === null ? null : expected.type
+				expected === null ? "ExportSpecifier" : expected.type
 			]);
 			// A class whose every node has one ESTree type holds it as `type`.
-			if (node.type !== undefined) {
+			if (node.type !== undefined && expected !== null) {
 				expect([node.TYPE, node.type]).toEqual([node.TYPE, expected.type]);
 			}
 			count++;
 		});
-		parse.parse(source, { module: true }).walk(walker);
-		parse.parse("with (a) b;").walk(walker);
+		ast.walkNode(parse.parse(source, { module: true }), walker);
+		ast.walkNode(parse.parse("with (a) b;"), walker);
 		expect(count).toBeGreaterThan(300);
 	});
 
@@ -3000,13 +3002,12 @@ describe("syntax-printer", () => {
 		const { SimpleStatementNode, TreeTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
-		toplevel.transform(new TreeTransformer(() => undefined));
+		ast.transformNode(toplevel, new TreeTransformer(() => undefined));
 		// terser's shallow clone shares lists, so each transform must copy them.
 		expect(toplevel.body).not.toBe(body);
 		expect(toplevel.body).toEqual(body);
 
-		toplevel.transform(
-			new TreeTransformer(
+		ast.transformNode(toplevel, new TreeTransformer(
 				/**
 				 * @param {EXPECTED_ANY} node the node visited
 				 * @returns {EXPECTED_ANY} what replaces it
@@ -3035,12 +3036,12 @@ describe("syntax-printer", () => {
 		const [directive, statement] = toplevel.body;
 		directive.flags |= flags.SQUEEZED;
 		statement.flags |= flags.SQUEEZED;
-		expect(statement.transform(compressor)).toBe(statement);
+		expect(ast.transformNode(statement, compressor)).toBe(statement);
 		expect(compressor.stack).toEqual([]);
 		// A directive is still pushed, which records it on the walker.
-		expect(directive.transform(compressor)).toBe(directive);
+		expect(ast.transformNode(directive, compressor)).toBe(directive);
 		expect(compressor.has_directive("use strict")).toBe(directive);
-		expect(ast.TreeWalker.prototype.webpackSkipsSqueezed).toBe(false);
+		expect(new ast.TreeWalker().webpackSkipsSqueezed).toBe(false);
 	});
 
 	describe("fields named as ESTree names them", () => {
@@ -4317,7 +4318,7 @@ describe("syntax-printer", () => {
 					}
 				}
 			);
-			tree.walk(walker);
+			ast.walkNode(tree, walker);
 			/** @type {EXPECTED_ANY[]} */
 			const ourScopes = analysis.scopes;
 			if (ourScopes.length !== theirScopes.length) {
