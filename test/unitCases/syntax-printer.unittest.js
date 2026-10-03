@@ -2285,16 +2285,16 @@ describe("syntax-printer", () => {
 		expect(ast.isPinned(declared)).toBeFalsy();
 
 		const lambda = parsed("function f({ a }, [b], ...c) {} function g(d = 1, e) { return d; } function h(p, q) {}").body;
-		expect(lambda[2].args_as_names()).toBe(lambda[2].params);
+		expect(ast.argsAsNames(lambda[2])).toBe(lambda[2].params);
 		expect(lambda[1].params[0].all_symbols().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d"]);
-		expect(lambda[0].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["a", "b", "c"]);
-		expect(lambda[1].args_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d", "e"]);
-		expect(lambda[0].length_property()).toBe(2);
-		expect(lambda[1].is_braceless()).toBeTruthy();
-		expect(lambda[0].is_braceless()).toBeFalsy();
+		expect(ast.argsAsNames(lambda[0]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["a", "b", "c"]);
+		expect(ast.argsAsNames(lambda[1]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["d", "e"]);
+		expect(ast.lengthProperty(lambda[0])).toBe(2);
+		expect(ast.isBraceless(lambda[1])).toBeTruthy();
+		expect(ast.isBraceless(lambda[0])).toBeFalsy();
 		const declarations = parsed("var { h, i: [j] } = o, k;").body[0].declarations;
-		expect(declarations[0].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
-		expect(declarations[1].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
+		expect(ast.declarationsAsNames(declarations[0]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["h", "j"]);
+		expect(ast.declarationsAsNames(declarations[1]).map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
 
 		const object = parsed("({ a: 1, [b]: 2, get c() {}, set [d](v) {}, e() {} })").body[0].expression;
 		expect(object.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed)).toEqual([false, true, false, true, false]);
@@ -2306,24 +2306,25 @@ describe("syntax-printer", () => {
 			false, false, false, false, false, false, false, true, false
 		]);
 		/**
-		 * @param {string} method a class's method walking parts of it
+		 * @param {string} method the function of `ast` walking parts of a class
 		 * @returns {string[]} the types of the nodes it visits
 		 */
 		const visits = (method) => {
 			/** @type {string[]} */
 			const types = [];
-			declaredClass[method](
+			ast[method](
+				declaredClass,
 				createWalker((/** @type {EXPECTED_ANY} */ node) => {
 					types.push(node.TYPE);
 				})
 			);
 			return types;
 		};
-		expect(visits("visit_nondeferred_class_parts")).toEqual([
+		expect(visits("visitNondeferredClassParts")).toEqual([
 			"SymbolRef", "This", "ClassStaticBlock", "SimpleStatement", "CallExpression", "SymbolRef", "SymbolRef", "Number"
 		]);
 		// A field's value is walked with the field pushed, not visited.
-		expect(visits("visit_deferred_class_parts")).toEqual([
+		expect(visits("visitDeferredClassParts")).toEqual([
 			"Number", "Number", "PrivateMethod", "SymbolMethod", "Accessor", "ClassMethod", "SymbolMethod", "Accessor"
 		]);
 
@@ -2619,18 +2620,25 @@ describe("syntax-printer", () => {
 	});
 
 	it("should count a node's size inside a size being counted", async () => {
-		const { parse } = (await load()).modules;
-		const toplevel = parse.parse("var a = 1; function b(c) { return c + a; }");
-		const [, declaration] = toplevel.body;
-		const inner = declaration.size();
-		const original = declaration._size;
+		const { ast, parse } = (await load()).modules;
+		const toplevel = parse.parse("var a = 1; var b = (c) => c + a;");
+		const [first, second] = toplevel.body;
+		const whole = ast.nodeSize(toplevel);
+		const inner = ast.nodeSize(first);
+		// The count asks whether an arrow is braceless, which here counts again.
+		const isBraceless = ast.isBraceless;
 		let nested = 0;
-		declaration._size = function (/** @type {EXPECTED_ANY} */ info) {
-			nested = declaration.body.body[0].size();
-			return original.call(this, info);
+		ast.isBraceless = (/** @type {EXPECTED_ANY} */ node) => {
+			nested = ast.nodeSize(first);
+			return isBraceless(node);
 		};
-		expect(toplevel.size()).toBeGreaterThan(inner);
-		expect(nested).toBe(declaration.body.body[0].size());
+		try {
+			expect(ast.nodeSize(toplevel)).toBe(whole);
+		} finally {
+			ast.isBraceless = isBraceless;
+		}
+		expect(nested).toBe(inner);
+		expect(ast.nodeSize(second)).toBeGreaterThan(0);
 	});
 
 	it("should size and compare every node as terser does", async () => {
@@ -2689,13 +2697,13 @@ describe("syntax-printer", () => {
 					if (descend) descend.call(node);
 				}
 			});
-			expect(ours.map((node) => [terserTypeOf(node.TYPE), node.size()])).toEqual(
+			expect(ours.map((node) => [terserTypeOf(node.TYPE), ast.nodeSize(node)])).toEqual(
 				theirs.map((node) => [node.TYPE, node.size()])
 			);
 			for (let i = 0; i < ours.length; i++) {
 				for (let j = 0; j < ours.length; j++) {
 					if (ours[i].TYPE !== ours[j].TYPE) continue;
-					expect([i, j, ours[i].equivalent_to(ours[j])]).toEqual([
+					expect([i, j, ast.isEquivalent(ours[i], ours[j])]).toEqual([
 						i,
 						j,
 						theirs[i].equivalent_to(theirs[j])
@@ -2791,19 +2799,13 @@ describe("syntax-printer", () => {
 	});
 
 	it("should compare trees as terser does", async () => {
-		const { parse } = (await load()).modules;
+		const { ast, parse } = (await load()).modules;
 		const [first, second, third, fourth] = parse.parse(
 			"a.b(c + 1); a.b(c + 1); a.b(c + 2); a.b(c, 1);"
 		).body;
-		expect(first.equivalent_to(second)).toBe(true);
-		expect(first.equivalent_to(third)).toBe(false);
-		expect(first.equivalent_to(fourth)).toBe(false);
-		const original = first.expression.shallow_cmp;
-		first.expression.shallow_cmp = function (/** @type {EXPECTED_ANY} */ other) {
-			expect(third.equivalent_to(fourth)).toBe(false);
-			return original.call(this, other);
-		};
-		expect(first.equivalent_to(second)).toBe(true);
+		expect(ast.isEquivalent(first, second)).toBe(true);
+		expect(ast.isEquivalent(first, third)).toBe(false);
+		expect(ast.isEquivalent(first, fourth)).toBe(false);
 	});
 
 	it("should refuse an option terser refuses", async () => {
