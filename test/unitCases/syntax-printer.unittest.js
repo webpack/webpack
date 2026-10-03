@@ -3131,6 +3131,23 @@ describe("syntax-printer", () => {
 				"w",
 				"y"
 			]);
+			const [imports, exports] = parse.parse(
+				"import { a as b, c } from 'd'; export { b as e };",
+				{ module: true }
+			).body;
+			/**
+			 * @param {EXPECTED_ANY} mapping a specifier
+			 * @returns {unknown[]} the names it holds, null where it holds none
+			 */
+			const names = (mapping) =>
+				[mapping.imported, mapping.exported, mapping.local].map(
+					(/** @type {EXPECTED_ANY} */ name) => name && name.name
+				);
+			expect(imports.imported_names.map(names)).toEqual([
+				["a", null, "b"],
+				["c", null, "c"]
+			]);
+			expect(exports.exported_names.map(names)).toEqual([[null, "e", "b"]]);
 		});
 
 		it("should minify them as terser does", async () => {

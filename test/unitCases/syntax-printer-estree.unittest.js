@@ -128,6 +128,10 @@ const firstDifference = (theirs, ours) => {
 			// `elements` or an object pattern's `properties`, the other null.
 			const isPattern = b.TYPE === "Destructuring";
 			if (isPattern && (key === "elements" || key === "properties")) continue;
+			// webpack's specifier holds terser's `foreign_name` as what it imports
+			// or what it exports, the other null.
+			const isMapping = b.TYPE === "NameMapping";
+			if (isMapping && (key === "imported" || key === "exported")) continue;
 			let ours =
 				isClass && key === "properties"
 					? b.body.body
@@ -135,11 +139,13 @@ const firstDifference = (theirs, ours) => {
 						? b.is_array
 							? b.elements
 							: b.properties
-						: isDirective && key === "value"
-						? b.directive
-						: isDirective && key === "quote"
-							? b.expression.quote
-							: b[ourNames[key] || key];
+						: isMapping && key === "foreign_name"
+							? b.imported || b.exported
+							: isDirective && key === "value"
+								? b.directive
+								: isDirective && key === "quote"
+									? b.expression.quote
+									: b[ourNames[key] || key];
 			// webpack holds a function's or catch's statements in a block.
 			if (
 				Array.isArray(a[key]) &&
