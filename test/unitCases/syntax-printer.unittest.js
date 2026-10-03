@@ -476,7 +476,36 @@ const CORRECTED_CASES = [
 		"a function naming `yield`, inlined into an async generator",
 		"var yield; async function* g() { function h() { yield = 1; } h(); } g().next(); console.log(yield);",
 		{ compress: { passes: 2 }, mangle: false }
-	]
+	],
+	...[
+		[
+			"a class dropped for its effects, a computed key reading its private name",
+			"var o = {}; try { (function () { class C { [o.#f] = 1; #f = 2; } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a computed key testing its private name with `in`",
+			'var o = {}; (function () { class C { [#f in o ? "a" : "b"] = 1; #f = 2; } })(); console.log("ok");'
+		],
+		[
+			"a class dropped for its effects, a computed key reading its private name through `?.`",
+			"var o = {}; try { (function () { class C { [o?.#f] = 1; #f = 2; } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a static value reading its private name",
+			"var o = {}; try { (function () { class C { static x = o.#f; #f = 2; } })(); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"a class dropped for its effects, a computed method key reading its private name",
+			"var o = {}; try { (function () { class C { [o.#f]() {} #f = 2; } })(); } catch (e) { console.log(e.name); }"
+		]
+	].map(
+		([name, input]) =>
+			/** @type {[string, string, import("terser").MinifyOptions]} */ ([
+				name,
+				input,
+				{ compress: {}, mangle: false }
+			])
+	)
 ];
 
 // Each writes a name where terser writes it as a keyword, through the `improve`
@@ -3563,6 +3592,20 @@ describe("syntax-printer", () => {
 		it("should install", async () => {
 			const { phases } = await load();
 			expect(phases).toContain("correct");
+		});
+
+		it("should drop a class whose effects read only an enclosing class's private name, as terser does", async () => {
+			const { minify } = await load();
+			const input =
+				'class D { #p = 1; m() { var t = this; (function () { class C { [t.#p] = 1; #q = 2; } })(); return "ok"; } } console.log(new D().m());';
+			const { code } = await minify(input, { compress: {}, mangle: false });
+			const reference = await terserReference().minify(input, {
+				compress: {},
+				mangle: false
+			});
+
+			expect(code).toBe(reference.code);
+			expect(code).not.toContain("class C");
 		});
 
 		for (const [name, input, options] of CORRECTED_CASES) {
