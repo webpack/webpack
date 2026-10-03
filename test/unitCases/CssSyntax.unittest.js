@@ -779,6 +779,82 @@ describe("CssSyntax — Node / Token", () => {
 	});
 });
 
+describe("CssSyntax — substitution span searches", () => {
+	const { _hasSubstitutionInSpan } = require("../../lib/css/syntax-parser");
+
+	it.each(["", ";last:var(--x)"])(
+		"shares one search across values without calls before %s",
+		(suffix) => {
+			expect.assertions(2);
+			const css = `a{one:1;two:2;three:3${suffix}}`;
+			const spans = ["one:1", "two:2", "three:3"].map((declaration) => [
+				css.indexOf(declaration),
+				declaration.length
+			]);
+			new SourceProcessor()
+				.use({
+					[NodeType.QualifiedRule]: () => {
+						const search = jest.spyOn(String.prototype, "indexOf");
+						try {
+							const results = spans.map(([from, length]) =>
+								_hasSubstitutionInSpan(from, from + length)
+							);
+							const calls = search.mock.calls.filter(
+								([value]) => value === "("
+							);
+							expect(results).toEqual([false, false, false]);
+							expect(calls).toHaveLength(1);
+						} finally {
+							search.mockRestore();
+						}
+					}
+				})
+				.process(css);
+		}
+	);
+
+	it("handles overlapping and backward spans after a hit or end of input", () => {
+		expect.assertions(7);
+		const css = "a{a:var(--x);b:calc(1px + env(safe-area-inset-top));c:0}";
+		const first = css.indexOf("var");
+		const second = css.indexOf("calc");
+		const last = css.indexOf("c:0");
+		const opening = css.indexOf("(");
+		new SourceProcessor()
+			.use({
+				[NodeType.QualifiedRule]: () => {
+					expect(_hasSubstitutionInSpan(first, opening)).toBe(false);
+					expect(_hasSubstitutionInSpan(first, opening + 1)).toBe(true);
+					expect(_hasSubstitutionInSpan(opening, opening + 1)).toBe(false);
+					expect(_hasSubstitutionInSpan(second, last)).toBe(true);
+					expect(_hasSubstitutionInSpan(first, second)).toBe(true);
+					expect(_hasSubstitutionInSpan(last, css.length)).toBe(false);
+					expect(_hasSubstitutionInSpan(second, last)).toBe(true);
+				}
+			})
+			.process(css);
+	});
+
+	it("resets search results between stylesheets, including escaped calls", () => {
+		expect.assertions(5);
+		for (const { css, expected } of [
+			{ css: "a{color:red}", expected: false },
+			{ css: "a{color:var(--x)}", expected: true },
+			{ css: "a{color:red}", expected: false },
+			{ css: "a{color:v\\61r(--x)}", expected: true },
+			{ css: "a{color:--theme()}", expected: true }
+		]) {
+			new SourceProcessor()
+				.use({
+					[NodeType.QualifiedRule]: () => {
+						expect(_hasSubstitutionInSpan(2, css.length - 1)).toBe(expected);
+					}
+				})
+				.process(css);
+		}
+	});
+});
+
 describe("CssSyntax — SourceProcessor", () => {
 	it("exposes range / unescaped / typeFlag / setEnd / setBlockEnd on the path", () => {
 		/** @type {Record<string, unknown>} */
