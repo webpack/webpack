@@ -24,6 +24,10 @@ const RENAMED_FIELDS = new Map(
 	nodeClasses().map(({ type, renamed }) => [type, renamed])
 );
 
+// The fields webpack's node classes hold where ESTree has them and terser's
+// classes none.
+const ESTREE_ADDED_FIELDS = new Set(["computed"]);
+
 // A token's fields, past which a converted tree keeps nothing a minify reads.
 const TOKEN_FIELDS = [
 	"type",
@@ -57,6 +61,10 @@ const firstDifference = (theirs, ours) => {
 	 */
 	const walk = (where, a, b) => {
 		if (a === b) return undefined;
+		// webpack holds a name terser held as a string as a node.
+		if (typeof a === "string" && typeof b === "object" && b !== null && b.TYPE === "SymbolProperty") {
+			return a === b.name ? undefined : `${where}: ${a} vs ${b.name}`;
+		}
 		if (typeof a !== typeof b) return `${where}: ${typeof a} vs ${typeof b}`;
 		if (typeof a === "number" && Number.isNaN(a) && Number.isNaN(b)) {
 			return undefined;
@@ -110,6 +118,7 @@ const firstDifference = (theirs, ours) => {
 			if (isDirective && (key === "directive" || key === "expression")) {
 				continue;
 			}
+			if (ESTREE_ADDED_FIELDS.has(key) && !(key in a)) continue;
 			let ours =
 				isClass && key === "properties"
 					? b.body.body

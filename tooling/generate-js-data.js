@@ -896,16 +896,66 @@ const CLASS_BODY = {
 	renamed: {}
 };
 
+// The fields ESTree has that terser's class lacks, by the class gaining them
+// (its subclasses inherit them): whether a member's key is an expression.
+/** @type {Record<string, string[]>} */
+const ESTREE_ADDED_FIELDS = { ObjectProperty: ["computed"] };
+
+// The children a walk reaches only where the class's key is computed: a key
+// terser held as a string, now a node no walk visits, as none visited the string.
+/** @type {Record<string, { walk: string[], backwards: string[] }>} */
+const ESTREE_COMPUTED_KEY_WALKS = {
+	ObjectKeyVal: { walk: ["^key", "value"], backwards: ["value", "^key"] }
+};
+
+/**
+ * The name of a property or member terser held as a string, a symbol of its
+ * own as ESTree's identifier is; its fields are the name and its tokens alone.
+ * @param {NodeClass} symbol the class of symbols
+ * @returns {NodeClass} the class
+ */
+const symbolPropertyClass = (symbol) => ({
+	type: "SymbolProperty",
+	base: symbol.type,
+	fields: ["name", "startToken", "endToken"],
+	initializes: false,
+	guarded: symbol.guarded,
+	setsFlags: symbol.setsFlags,
+	values: {},
+	walk: null,
+	guard: null,
+	backwards: null,
+	renamed: { startToken: "start", endToken: "end" }
+});
+
 /**
  * Points the walks of the classes holding a block at the block's list, and
  * drops the list's own field from them and the classes extending them.
  * @param {NodeClass[]} classes the classes, renamed
- * @returns {NodeClass[]} the same classes, and the class body's
+ * @returns {NodeClass[]} the same classes, the class body's and the property name's
  */
 const reshapeNodeFields = (classes) => {
 	/** @type {Map<string, string>} */
 	const droppedOf = new Map();
+	/** @type {Map<string, string[]>} */
+	const addedOf = new Map();
 	for (const nodeClass of classes) {
+		const added = [
+			...((nodeClass.base !== null && addedOf.get(nodeClass.base)) || []),
+			...(ESTREE_ADDED_FIELDS[nodeClass.type] || [])
+		];
+		addedOf.set(nodeClass.type, added);
+		nodeClass.fields.push(...added);
+		if (
+			Object.prototype.hasOwnProperty.call(
+				ESTREE_COMPUTED_KEY_WALKS,
+				nodeClass.type
+			)
+		) {
+			const { walk, backwards } = ESTREE_COMPUTED_KEY_WALKS[nodeClass.type];
+			nodeClass.walk = walk;
+			nodeClass.backwards = backwards;
+		}
 		const inherited =
 			nodeClass.base === null ? undefined : droppedOf.get(nodeClass.base);
 		const own = Object.prototype.hasOwnProperty.call(
@@ -958,7 +1008,14 @@ const reshapeNodeFields = (classes) => {
 			nodeClass.backwards = nodeClass.backwards.map(reach);
 		}
 	}
-	classes.push(CLASS_BODY);
+	classes.push(
+		CLASS_BODY,
+		symbolPropertyClass(
+			/** @type {NodeClass} */ (
+				classes.find((nodeClass) => nodeClass.type === "Symbol")
+			)
+		)
+	);
 	return classes;
 };
 
@@ -1170,7 +1227,8 @@ const renderNodeClasses = () => `
  * A node class of terser's: \`walk\` and \`backwards\` list its children in the
  * order its own \`_walk\` and \`_children_backwards\` reach them, null where it
  * inherits them — \`f\` a child always there, \`?f\` one that may be absent,
- * \`~f\` one that may not be a node, \`*f\` a list, \`?*f\` a list that may be absent,
+ * \`~f\` one that may not be a node, \`^f\` a key walked only where \`computed\`,
+ * \`*f\` a list, \`?*f\` a list that may be absent,
  * \`+f\` a list that may hold null, a hole,
  * \`*f.body\` the list of the block \`f\` holds.
  * @typedef {object} NodeClass

@@ -2272,11 +2272,12 @@ describe("syntax-printer", () => {
 		expect(declarations[1].declarations_as_names().map((/** @type {EXPECTED_ANY} */ n) => n.name)).toEqual(["k"]);
 
 		const object = parsed("({ a: 1, [b]: 2, get c() {}, set [d](v) {}, e() {} })").body[0].expression;
-		expect(object.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([false, true, false, true, false]);
+		expect(object.properties.map((/** @type {EXPECTED_ANY} */ p) => p.computed)).toEqual([false, true, false, true, false]);
 		const declaredClass = parsed(
 			"class K extends L { #p = 1; static q = this; r = 2; static { s(); } #t() {} get #u() {} set #u(v) {} static [w] = 3; x() {} }"
 		).body[0];
-		expect(declaredClass.body.body.map((/** @type {EXPECTED_ANY} */ p) => p.computed_key())).toEqual([
+		// A static block has no key, so nothing says whether it is computed.
+		expect(declaredClass.body.body.map((/** @type {EXPECTED_ANY} */ p) => Boolean(p.computed))).toEqual([
 			false, false, false, false, false, false, false, true, false
 		]);
 		/**
