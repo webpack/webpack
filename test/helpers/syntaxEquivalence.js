@@ -2035,6 +2035,32 @@ const compareStyles = async ({ pairs, types }) => {
 	const docs = frames.map(
 		(frame) => /** @type {Document} */ (frame.contentDocument)
 	);
+
+	/**
+	 * Renders both compared frames and lays them out, so the next read sees
+	 * styles each frame has resolved in full.
+	 * @returns {Promise<void>} once the page and each frame have rendered, or 100ms passed
+	 */
+	const settleFrames = async () => {
+		await settle();
+		await Promise.all(
+			windows.map(
+				(view) =>
+					new Promise((resolve) => {
+						const timer = setTimeout(resolve, 100);
+						view.requestAnimationFrame(() => {
+							clearTimeout(timer);
+							resolve(undefined);
+						});
+					})
+			)
+		);
+		for (const doc of docs) {
+			/** @type {HTMLElement} */ (doc.documentElement).getBoundingClientRect();
+			for (const running of doc.getAnimations()) running.cancel();
+		}
+	};
+
 	for (const pair of pairs) {
 		const readings = [pair.before, pair.after].map((text, at) => {
 			const sheet = new windows[at].CSSStyleSheet();
@@ -2302,8 +2328,38 @@ const compareStyles = async ({ pairs, types }) => {
 				for (const doc of docs) {
 					for (const running of doc.getAnimations()) running.cancel();
 				}
+				/**
+				 * @param {number} i the element
+				 * @param {string} pseudo the pseudo-element, or "" for the element itself
+				 * @param {string[]} names the properties to read
+				 * @returns {[string, string, string, string, string][] | null} what the two compute apart, or null when the pseudo-element renders nothing
+				 */
+				const differ = (i, pseudo, names) => {
+					const styles = [0, 1].map((at) =>
+						windows[at].getComputedStyle(read[at][i], pseudo || null)
+					);
+					// Nothing renders a `::before` or `::after` with no content.
+					if (
+						(pseudo === "::before" || pseudo === "::after") &&
+						NO_CONTENT.test(styles[0].content) &&
+						NO_CONTENT.test(styles[1].content)
+					) {
+						return null;
+					}
+					/** @type {[string, string, string, string, string][]} */
+					const changed = [];
+					for (const name of names) {
+						const a = styles[0].getPropertyValue(name);
+						const b = styles[1].getPropertyValue(name);
+						if (a === b) continue;
+						const x = cascadeValue(name, a);
+						const y = cascadeValue(name, b);
+						if (x !== y) changed.push([name, a, b, x, y]);
+					}
+					return changed;
+				};
 				/** @type {{ i: number, pseudo: string, at: string, changed: [string, string, string, string, string][] }[]} */
-				const found = [];
+				let found = [];
 				for (let i = 0; i < read[0].length && found.length < KEPT; i++) {
 					// Without a box in either frame nothing shows the value, and WebKit
 					// resolves such an element's style apart from the tree it stands in.
@@ -2313,28 +2369,8 @@ const compareStyles = async ({ pairs, types }) => {
 							? built.asked[i]
 							: built.asked[i].filter((name) => only.has(name));
 					for (const pseudo of built.through[i]) {
-						const styles = [0, 1].map((at) =>
-							windows[at].getComputedStyle(read[at][i], pseudo || null)
-						);
-						// Nothing renders a `::before` or `::after` with no content.
-						if (
-							(pseudo === "::before" || pseudo === "::after") &&
-							NO_CONTENT.test(styles[0].content) &&
-							NO_CONTENT.test(styles[1].content)
-						) {
-							continue;
-						}
-						/** @type {[string, string, string, string, string][]} */
-						const changed = [];
-						for (const name of asked) {
-							const a = styles[0].getPropertyValue(name);
-							const b = styles[1].getPropertyValue(name);
-							if (a === b) continue;
-							const x = cascadeValue(name, a);
-							const y = cascadeValue(name, b);
-							if (x !== y) changed.push([name, a, b, x, y]);
-						}
-						if (changed.length === 0) continue;
+						const changed = differ(i, pseudo, asked);
+						if (changed === null || changed.length === 0) continue;
 						found.push({
 							i,
 							pseudo,
@@ -2342,6 +2378,24 @@ const compareStyles = async ({ pairs, types }) => {
 							changed
 						});
 					}
+				}
+				// WHY: WebKit can hand back one element's style resolved with nothing
+				// inherited — Beer CSS's root `<div>` read every default in one frame
+				// once, with a box in both and its own children inheriting fine. That is
+				// a stale read, not the cascade, so a difference counts only once it
+				// survives renders of both frames; a sheet's real one reads the same.
+				for (let retry = 0; retry < 2 && found.length > 0; retry++) {
+					await settleFrames();
+					found = found.filter((entry) => {
+						const changed = differ(
+							entry.i,
+							entry.pseudo,
+							entry.changed.map(([name]) => name)
+						);
+						if (changed === null || changed.length === 0) return false;
+						entry.changed = changed;
+						return true;
+					});
 				}
 				// WHY: a used length is floored to the layout grid, and a percentage
 				// table multiplies that step — Semantic UI's `td{width:18.75%}` moved
