@@ -2500,69 +2500,92 @@ describe("syntax-printer", () => {
 			}
 		);
 		expect(calls.length).toBeGreaterThan(30);
-		// webpack's helpers read a call's and a property read's fields under
-		// ESTree's names.
-		Object.defineProperty(modules.ast.AST_Call.prototype, "arguments", {
-			configurable: true,
-			get() {
-				return this.args;
-			}
-		});
-		Object.defineProperty(modules.ast.AST_Call.prototype, "callee", {
-			configurable: true,
-			get() {
-				return this.expression;
-			}
-		});
-		Object.defineProperty(modules.ast.AST_PropAccess.prototype, "object", {
-			configurable: true,
-			get() {
-				return this.expression;
-			}
-		});
-		/** @type {boolean[][]} */
-		const expectations = [];
-		for (const unsafe of [true, false]) {
-			for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
-				const compressor = new modules.compress.Compressor(
-					{ unsafe, builtins_ecma: ecma },
-					{}
-				);
-				expectations.push(
-					calls.map((call) => reference.is_pure_builtin_call(compressor, call))
-				);
-			}
-		}
-		// webpack's helpers read a property read's name off a node, as ESTree
-		// holds it, where terser's tree holds a string.
-		modules.ast.walk(
-			toplevel,
-			(/** @type {import("../../lib/javascript/syntax-printer").Node} */ node) => {
-				if (node instanceof modules.ast.AST_Dot) {
-					node.property = { name: node.property };
-				}
-			}
+		// terser's classes are shared with later tests, so each getter put on them
+		// is taken off again, restoring what the prototype held before.
+		/** @type {[Record<string, unknown>, string][]} */
+		const renamed = [
+			[modules.ast.AST_Call.prototype, "arguments"],
+			[modules.ast.AST_Call.prototype, "callee"],
+			[modules.ast.AST_PropAccess.prototype, "object"]
+		];
+		const saved = renamed.map(([prototype, key]) =>
+			Object.getOwnPropertyDescriptor(prototype, key)
 		);
-		for (const unsafe of [true, false]) {
-			for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
-				const compressor = new modules.compress.Compressor(
-					{ unsafe, builtins_ecma: ecma },
-					{}
-				);
-				const expected = /** @type {boolean[]} */ (expectations.shift());
-				for (const name of [
-					"pure_access_globals",
-					"is_pure_native_fn",
-					"is_pure_native_method",
-					"is_pure_native_static_fn",
-					"is_pure_native_static_property"
-				]) {
-					compressor[name] = own[name](compressor);
+		try {
+			// webpack's helpers read a call's and a property read's fields under
+			// ESTree's names.
+			Object.defineProperty(modules.ast.AST_Call.prototype, "arguments", {
+				configurable: true,
+				get() {
+					return this.args;
 				}
-				expect(
-					calls.map((call) => own.is_pure_builtin_call(compressor, call))
-				).toEqual(expected);
-				expect(expected).toContain(true);
+			});
+			Object.defineProperty(modules.ast.AST_Call.prototype, "callee", {
+				configurable: true,
+				get() {
+					return this.expression;
+				}
+			});
+			Object.defineProperty(modules.ast.AST_PropAccess.prototype, "object", {
+				configurable: true,
+				get() {
+					return this.expression;
+				}
+			});
+			/** @type {boolean[][]} */
+			const expectations = [];
+			for (const unsafe of [true, false]) {
+				for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
+					const compressor = new modules.compress.Compressor(
+						{ unsafe, builtins_ecma: ecma },
+						{}
+					);
+					expectations.push(
+						calls.map((call) =>
+							reference.is_pure_builtin_call(compressor, call)
+						)
+					);
+				}
+			}
+			// webpack's helpers read a property read's name off a node, as ESTree
+			// holds it, where terser's tree holds a string.
+			modules.ast.walk(
+				toplevel,
+				(
+					/** @type {import("../../lib/javascript/syntax-printer").Node} */ node
+				) => {
+					if (node instanceof modules.ast.AST_Dot) {
+						node.property = { name: node.property };
+					}
+				}
+			);
+			for (const unsafe of [true, false]) {
+				for (const ecma of [5, 2015, 2020, 2021, 2022, 2025, 2026]) {
+					const compressor = new modules.compress.Compressor(
+						{ unsafe, builtins_ecma: ecma },
+						{}
+					);
+					const expected = /** @type {boolean[]} */ (expectations.shift());
+					for (const name of [
+						"pure_access_globals",
+						"is_pure_native_fn",
+						"is_pure_native_method",
+						"is_pure_native_static_fn",
+						"is_pure_native_static_property"
+					]) {
+						compressor[name] = own[name](compressor);
+					}
+					expect(
+						calls.map((call) => own.is_pure_builtin_call(compressor, call))
+					).toEqual(expected);
+					expect(expected).toContain(true);
+				}
+			}
+		} finally {
+			for (const [i, [prototype, key]] of renamed.entries()) {
+				const descriptor = saved[i];
+				if (descriptor) Object.defineProperty(prototype, key, descriptor);
+				else delete prototype[key];
 			}
 		}
 	});
