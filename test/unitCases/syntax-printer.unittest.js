@@ -640,6 +640,204 @@ sink(outer);`;
 const MANGLED_MODULE =
 	"export var kept = 1; var hidden = 2; export { hidden as shown }; export default function main(alpha) { return alpha + kept + hidden; }";
 
+/**
+ * The keys a tree comparison skips: positions, which the two trees count
+ * differently, and what `toPrintTree` adds to ESTree for the printer.
+ */
+const PRINT_TREE_SKIPPED_KEYS = new Set([
+	"start",
+	"end",
+	"loc",
+	"range",
+	"sourceType",
+	"startToken",
+	"endToken",
+	"quote",
+	"definition",
+	"mapName",
+	"atom",
+	"source",
+	"attributesStartToken",
+	"attributesEndToken",
+	// terser keeps no record of a shorthand, which the printer decides.
+	"shorthand",
+	// terser keeps a number's source alone, checked on its own below.
+	"raw"
+]);
+
+/**
+ * An ESTree tree as plain data to compare, rewritten where `toPrintTree` holds
+ * a node in terser's shape rather than the parse's.
+ * @param {EXPECTED_ANY} node a node, a list or a value
+ * @returns {EXPECTED_ANY} it, comparable
+ */
+const comparableTree = (node) => {
+	if (Array.isArray(node)) return node.map(comparableTree);
+	if (node === null || typeof node !== "object") return node;
+	/** @type {Record<string, EXPECTED_ANY>} */
+	const result = {};
+	for (const key of Object.keys(node)) {
+		if (PRINT_TREE_SKIPPED_KEYS.has(key) || node[key] === undefined) continue;
+		result[key] = comparableTree(node[key]);
+	}
+	if (node.type === "Literal" && (node.regex || node.bigint !== undefined)) {
+		// terser holds a regular expression's parts, not a RegExp, and a
+		// bigint's digits as written, which ESTree holds in decimal.
+		delete result.value;
+		if (node.bigint !== undefined) result.bigint = String(BigInt(node.bigint));
+	}
+	if (node.regex) {
+		// terser drops an escape before a character beyond ASCII, as it reads.
+		result.regex.pattern = node.regex.pattern.replace(
+			/\\(.)/gu,
+			(/** @type {string} */ escape, /** @type {string} */ character) =>
+				/** @type {number} */ (character.codePointAt(0)) > 0x7f
+					? character
+					: escape
+		);
+	}
+	if (typeof node.directive === "string") {
+		// terser holds a directive as written, which ESTree holds read.
+		delete result.expression.value;
+	}
+	if (node.type === "ArrowFunctionExpression" && node.expression) {
+		// terser holds an arrow's body as statements, a value as its return.
+		result.expression = false;
+		result.body = {
+			type: "BlockStatement",
+			body: [{ type: "ReturnStatement", argument: result.body }]
+		};
+	}
+	return result;
+};
+
+// Every source of the tables above, which the ESTree printer is held to.
+const TABLE_SOURCES = [
+	...OUTPUT_CASES.map(([, source]) => source),
+	...CODEGEN_CASES,
+	SIZED_SCRIPT,
+	SIZED_MODULE,
+	MANGLED_PROPERTIES,
+	MANGLED_NAMES,
+	MANGLED_MODULE,
+	...CASES.map(([, source]) => source)
+];
+
+/**
+ * Expressions for what the ESTree printer decides that the tables above leave
+ * out: parentheses, spaces between operators, and keys.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_CASES = [
+	"x = a > --b; y = c-- > d; z = !--e; w = - --f; v = -(-g); u = +(+h); t = typeof typeof i; s = - -j; r = a-- >> b;",
+	"x = 1..toString() + 1.5.toFixed() + 0x10.y + 1e21.w + .5.v + 5n.u + (-5n).t + 1e300 + 0.000001 + 1000000 + 0xff + 1_000 + 0x1fn;",
+	String.raw`x = /a<\/script/g.test(y) || /x/ in z || /y/ instanceof w || a < /script/ || /\u{1F600}/u.x || /é/;`,
+	"new (a.b().c); new (a`x`); new (b.c); new a.b; new (new a)(); (new a).b; (new a)``; new a()(); new (a.b.c); new (function () { a(); }.b);",
+	"x = class { #p; q = (o) => #p in o && (#p in o) in o && #p in (o ? o : o) && (#p in o) + 1 && !(#p in o) && (#p in o)(); r = a ?? (b || c); static s = (a ?? b) && c; [t] = 1; 'u' = 2; 4 = 5; static #v = 6; static {} constructor() {} get a() {} set a(b) {} static async *m() {} get #w() {} set #w(v) {} #z() {} 'quoted'() {} 7() {} };",
+	"async function f() { await (a, b); await a.b; await a(); await -a; await 1; await (await a); await {}; await (a ? b : c); await this; await class {}; (await a)(); (await a).b; (await a) ** 2; !await a; x = await a; }",
+	"function* g() { yield; yield* a; (yield a) + 1; x = yield b; (yield a)(); (yield a).b; (yield a) ? 1 : 2; !(yield a); [...(yield a)]; f(yield a, yield); ({ a: yield }); }",
+	"(function () {})(); (function () {}).call(); x = function () {}; f(function () {}, () => 1); (() => {}).x; (a => a) ? 1 : 2; a || (() => 1); !(() => 1); (() => 1)(); x = async (a, b) => ({}); y = async a => ({}).x; z = () => ({}) ? 1 : 2; w = () => ({}).x(); v = ([a], { b }, ...c) => a; (function () {})().x = 1; (function () {}).x = 1; (function () {})()``; (function* () {}); (async function () {}); (async function* f() {});",
+	"({}).x; ({} = a); ({ a } = b); [a] = b; ({}).x = 1; ({})(); ({}).x``; ({}) ? 1 : 2; ({}) + 1; ({}).a++; ({}, 1); ({ a, b: c = 1, 'd': d, [e]: f, ...g } = h); ({ 'a': a } = b); ({ 1: a, 'b c': b } = c); ({ a: { b } } = c);",
+	"x = { a, b: c, 'd': d, 1: e, [f]: g, ...h, get i() {}, set j(k) {}, *l() {}, async m() {}, async *n() {}, 'o'() {}, if: p, 'q r': s, '1': t, 1.5: u, '01': v, async: w, get: y, set: z, 'é': 1, 'class': 2, [a + b]() {}, get [c]() {}, 0b11: 3, 1e3: 4, NaN: NaN, undefined, this: this };",
+	"x = `a${b}c${`d${e}`}`; tag`a\\u{41}${b}`; (a + b)`x`; (a, b)`x`; (a ? b : c)`x`; (!a)`x`; ({}).a`x`; (() => 1)`x`; a.b`x`; (function () {})`x`; (a = b)`x`; x = `\\u{1F600}${'é'}`; x = `\\${a}`;",
+	"a?.b; a?.[b]; a?.(); (a?.b).c; (a?.b)(); a?.b.c(); new (a?.b)(); (a?.()).b; a?.b?.c?.(d)?.[e];",
+	"x = (a, b); f((a, b)); [(a, b)]; ({ a: (b, c) }); (a, b) ? c : d; a ? (b, c) : (d, e); x = `${(a, b)}`; [...(a, b)]; f(...(a, b)); (a, b).c; (a, b)[c]; (a, b)(); -(a, b); a + (b, c); x = () => (a, b); ({ [(a, b)]: c });",
+	"x = a = b ? c : d; (a = b) ? c : d; (a ? b : c) ? d : e; (a = b).c; (a ? b : c)(); !(a = b); a + (b = c); a, b = c; x = a => b = c; x = (a ? b : c) || d; x = a || (b ? c : d); a = b = c; a += b -= c; x = { a: b = c }; [a = b] = c; f(a = b);",
+	String.raw`x = 'é \0' + "'" + '"' + '\'' + "\"" + true + null + false + this + 'a\nb' + '\x7f\x80' + '😀' + '\ud83d' + '</script>';`,
+	"delete a[0], void 0, typeof a, a++ + ++b, a-- - --b, (-a) ** 2, (+a) ** 2, (++a) ** 2, (a++) ** 2, a ** -b, (a ** b) ** c, a ** b ** c, (a * b) ** c, a - (b - c), a - b - c, a * (b + c), (a, b) ** c, !(a ** b), (typeof a) ** 2, (void a) ** 2;",
+	"(a || b) ?? c; (a && b) ?? c; a ?? (b || c); a ?? (b && c); (a ?? b) || c; (a ?? b) && c; a ?? b ?? c; (a ?? b) ?? c; a || b && c; (a || b) && c; a in b in c; a in (b in c); a instanceof (b instanceof c);",
+	"a = class extends (a, b) {}; a = class extends a.b {}; a = class extends class {} {}; a = class extends function () {} {}; a = class extends f() {}; a = class extends (a ? b : c) {}; a = class extends this {}; a = class B extends C {}; (class {}).x; (class {})(); x = class { m() { super.m(); super['n'](); } };",
+	"x = [, , 1, , ]; [, a, , ] = b; [...a] = b; f(...a); x = []; x = [,]; x = [a, , b]; ({ ...a } = b); [{ a } = b, [c] = d] = e;",
+	String.raw`x = a.if + a.class + a['b c'] + a['é'] + a['\u{1F600}'] + a['1'] + a.ℹ + a?.if + a['𝐀'];`,
+	"function f() { new.target; (new.target).x; new new.target; }",
+	"x = 0.0001; x = 1e-7; x = 1.5e-10; x = 123456789e5; x = 1e21; x = -0; x = 2 ** 53; x = 0x123456; x = 1/0; x = -1/0; x = 0/0;",
+	"x = (1, eval)('a'); x = (0, a.b)(); x = (a, b.c)``; x = void (a, b); x = a, b, c;",
+	"f = () => ({}).x``; g = () => ({})?.a; h = () => ({}).a++; i = () => ++({}).a; j = () => ({}).a?.(); k = () => a``; l = () => a?.b; m = () => a++; n = () => ({}) + 1; o = () => ({} = a);",
+	"({})?.a; ({}).a?.b; (function () {})?.(); (class {})?.a;",
+	"new (a[[b]].c); new (a[[b()]].c); new (a[b].c); new (a[(() => b())()].c); new (a[function () {}].c);",
+	"x = class { #p; q = (o) => [o.#p, o?.#p, #p in (a + b), #p in (a < b), #p in (a || b), #p in (#p in o), #p in o ** 2, -(#p in o)]; };"
+];
+
+/**
+ * Modules for the imports and exports the ESTree printer prints.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_MODULE_STATEMENT_CASES = [
+	"import a, { b as c, d, 'e f' as g, \"h\" as h, default as i } from 'j' with { type: 'json', 'k': 'l' }; import n, * as o from 'p'; import * as q from 'r'; import { '*' as s } from 't'; import {} from 'u'; import source v from 'w'; import defer * as x from 'y'; export { a, c as z, d as 'y z', i as j }; export {}; export { k as l, m as 'n' } from 'o'; export * from 'p'; export * as q from 'r'; export * as 'r s' from 's'; export * as '*' from 't'; export { '*' as star } from 'u'; export { 'v w' } from 'v'; export { 'w' as x } from 'y' with { type: 'json' }; export default (function () {})(); export var t = 1, u = (v, w); export let ab; export const ac = 1; export function ad() {} export class ae {}; await using af = ag;",
+	"export default function () {} export function* f() {}",
+	"export default class {}; export async function f() {}",
+	"export default (a, b);",
+	"export default function f() {}",
+	"export default class C {}",
+	"export default async () => {};",
+	"export * from 'a' with { type: 'json' }; export * as b from 'c' with { type: 'json' };"
+];
+
+/**
+ * Sources only a module reads, whose expressions the ESTree printer is held to.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_MODULE_CASES = [
+	"import.meta.x; import('a'); import('a', { with: { type: 'json' } }); import.source('a'); import.defer('b'); (import.meta).x; await (a, b); !await a;"
+];
+
+/**
+ * Statements for what the ESTree printer decides that the tables above leave
+ * out: braces, semicolons, `in` inside a loop's head, and directives.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_STATEMENT_CASES = [
+	"for (var a = (b in c);;); for (a = (b in c);;); for (var a = () => (b in c);;); for (var a = function () { b in c; };;); for (var a = [b in c];;); for (; a in b;) c(); for (;;) var d = e in f; for (var a in b) var c = d in e; for (let a of (b, c)); for ((a in b).c in d);",
+	"if (a) { if (b) c(); } else d(); if (a) if (b) c(); else d(); else e(); if (a) for (;;) if (b) c(); else d(); else e(); if (a) for (;;) if (b) c(); else e(); if (a) do b(); while (c); else d(); if (a); else; while (a); with (a) ; with (a) { b(); } l: for (;;) if (a) break l; else continue l;",
+	"switch (a) {} switch (a) { case 1: case 2: b(); break; default: ; } try { a(); } catch { } finally { } try {} catch ({ a, b }) { c(); } do ; while (a); do { a(); } while (b); do a(); while (b);",
+	"'use strict'; 'use asm'; ; 'not a directive'; x = 0x10 + 1.0; function f() { 'use asm'; return 0x10 + 1.0; } function g() { a(); 'b'; return 0x10; } (function () { ; 'use asm'; b(); })(); x = () => { 'not'; a(); }; class C { static { 'not'; } m() { 'use asm'; return 0x10; } }",
+	"function f() { return; } function g() { throw a; } var a = 1, b, [c] = d, { e } = f; let i = 1; const h = 2; label: { break label; } debugger;"
+];
+
+/**
+ * Comments where the ESTree printer reads them: before a keyword's value and
+ * down its leftmost edge, inside empty braces, after statements, and first.
+ * @type {string[]}
+ */
+const ESTREE_PRINT_COMMENT_CASES = [
+	"#!/usr/bin/env node\n/*! kept */ 'use strict'; // after\na(); /* @lic */",
+	"function f() { return /* a */ b; } function g() { return (/* a */ b) + c; } function h() { return /* a */ b.c(/* d */ e)[f] ? g : h; } function i() { throw /* x */ a, b; } function j() { return (\n// line\na); }",
+	"async function f() { await /* a */ b; await (/* b */ c)(); x = await /* c */ d++; } function* g() { yield /* a */ b; yield (/* b */ c) || d; yield; } x = class { #p; m(o) { return /* a */ #p in o; } n(o) { return /* a */ o.#p; } }; function h() { return /* a */ ++b; } function i() { return /* a */ b = c; }",
+	"function f() { /* inner */ } x = { /* inner */ }; switch (a) { /* inner */ } class C { /* inner */ } x = function () { // line\n}; x = () => { /* inner */ }; if (a) { /* inner */ } try { /* t */ } catch { /* c */ } finally { /* f */ }",
+	"a(); // after a\nb() /* after b */; c = /* before d */ d /* after d */ + e; x = [/* a */ 1, /* b */ 2 /* c */]; f(/* arg */ g, h /* after h */);",
+	"x = /*@__PURE__*/ f(); y = /* #__PURE__ */ new C(); /*#__NO_SIDE_EFFECTS__*/ function g() {} export const h = /*@__PURE__*/ (() => 1)();",
+	"label: /* l */ for (;;) { /* body */ break label; } var a = /* a */ 1, /* b */ b = 2; if (/* c */ a) /* d */ b(); else /* e */ c();"
+];
+
+// The format options that change how a statement prints, past an expression's.
+/** @type {EXPECTED_OBJECT[]} */
+const ESTREE_PRINT_STATEMENT_FORMATS = [
+	{ semicolons: false },
+	{ ie8: true, ecma: 5 }
+];
+
+// The format options that change how an expression prints.
+/** @type {EXPECTED_OBJECT[]} */
+const ESTREE_PRINT_FORMATS = [
+	{},
+	{ ascii_only: true, ecma: 2020 },
+	{ ascii_only: true, ecma: 5 },
+	{ quote_style: 1, keep_quoted_props: true },
+	{ quote_style: 2, keep_numbers: true },
+	{ quote_style: 3, wrap_iife: true, wrap_func_args: true },
+	{ ecma: 5, ie8: true, safari10: true, webkit: true },
+	{ quote_keys: true, shorthand: false },
+	{ quote_keys: true, ecma: 2020 },
+	{ keep_quoted_props: true, ecma: 2020 },
+	{ max_line_len: 40 }
+];
+
+// Every format option a whole program is printed under.
+const ESTREE_PRINT_PROGRAM_FORMATS = [
+	...ESTREE_PRINT_FORMATS,
+	...ESTREE_PRINT_STATEMENT_FORMATS
+];
+
 describe("syntax-printer", () => {
 	it("should install every phase", async () => {
 		const printer = await load();
@@ -2780,6 +2978,835 @@ describe("syntax-printer", () => {
 			const { code } = await minify(input, options);
 			const reference = await terserReference().minify(input, options);
 			expect(code).toBe(reference.code);
+		});
+	});
+
+	describe("printEstree", () => {
+		/**
+		 * Runs a minify with the `correct` and `improve` phases off, so that it
+		 * writes what terser writes.
+		 * @template T
+		 * @param {() => Promise<T>} run the minify
+		 * @returns {Promise<T>} its result
+		 */
+		const writingAsTerser = async (run) => {
+			const { corrections, improvements } = await load();
+			if (!corrections || !improvements) {
+				throw new Error("the correct and improve phases are not installed");
+			}
+			corrections.enabled = false;
+			improvements.enabled = false;
+			try {
+				return await run();
+			} finally {
+				corrections.enabled = true;
+				improvements.enabled = true;
+			}
+		};
+
+		/**
+		 * terser's result, or what it throws where it refuses what webpack reads.
+		 * @param {() => Promise<EXPECTED_ANY>} run terser's minify
+		 * @returns {Promise<EXPECTED_ANY>} its result, or `{ refused }` with the error's message
+		 */
+		const terserResult = async (run) => {
+			try {
+				return await run();
+			} catch (err) {
+				return { refused: /** @type {Error} */ (err).message };
+			}
+		};
+
+		/**
+		 * @param {EXPECTED_ANY} format format options
+		 * @returns {EXPECTED_ANY} the same without the layout the printer ignores, for terser
+		 */
+		const withoutLayout = (format) => {
+			const result = { ...format };
+			for (const name of IGNORED_FORMAT_OPTIONS) delete result[name];
+			return result;
+		};
+
+		/**
+		 * Each expression statement in a source's tree, and its expression, as
+		 * `printToString` prints it and as terser's own printer does in its tree.
+		 * Where the trees differ, as where terser refuses the source, it lists all.
+		 * @param {string} source a source
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<{ compared: number, differences: string[] }>} how many printed, and every one printed otherwise
+		 */
+		const compareExpressions = async (source, options) => {
+			const { minify, modules } = await load();
+			const terser = await loadTerserSources(importTerserSource);
+			const withTree = () => ({
+				...JSON.parse(JSON.stringify(options)),
+				format: { ast: true, code: false }
+			});
+			// terser's typings leave out `format.ast`, which returns the tree.
+			const ours = /** @type {EXPECTED_ANY} */ (
+				await writingAsTerser(() => minify(source, withTree()))
+			);
+			const theirs = await terserResult(() => terser.minify(source, withTree()));
+			/**
+			 * @param {EXPECTED_ANY} tree a toplevel
+			 * @param {(tree: EXPECTED_ANY, visit: (node: EXPECTED_ANY) => void) => void} walk the walk of its tree's classes
+			 * @returns {EXPECTED_ANY[]} its expression statements, each followed by its expression
+			 */
+			const collect = (tree, walk) => {
+				/** @type {EXPECTED_ANY[]} */
+				const expressions = [];
+				walk(tree, (node) => {
+					if (node.TYPE === "SimpleStatement") expressions.push(node, node.body);
+				});
+				return expressions;
+			};
+			const ourExpressions = collect(ours.ast, modules.ast.walk);
+			const theirExpressions =
+				theirs.refused === undefined ? collect(theirs.ast, terser.ast.walk) : [];
+			let compared = 0;
+			/** @type {string[]} */
+			const differences = [];
+			const paired = ourExpressions.length === theirExpressions.length;
+			if (!paired) {
+				differences.push(
+					`terser reads ${theirExpressions.length} where webpack reads ${ourExpressions.length}${theirs.refused === undefined ? "" : `: ${theirs.refused}`}`
+				);
+			}
+			for (const format of paired ? ESTREE_PRINT_FORMATS : []) {
+				const given = { ...format, comments: false };
+				for (const [i, expression] of ourExpressions.entries()) {
+					const expected = theirExpressions[i].print_to_string(
+						withoutLayout(given)
+					);
+					const printed = modules.printToString(expression, given);
+					compared++;
+					if (printed !== expected) {
+						differences.push(
+							`${JSON.stringify(format)}: ${expected} printed ${printed}`
+						);
+					}
+				}
+			}
+			return { compared, differences };
+		};
+
+		const scripts = [...TABLE_SOURCES, ...ESTREE_PRINT_CASES];
+		const optionSets = [
+			{ compress: false, mangle: false },
+			{ compress: { passes: 2 }, mangle: true }
+		];
+		for (const source of [...scripts, ...ESTREE_PRINT_MODULE_CASES]) {
+			it(`should print each expression as terser does: ${source.slice(0, 60)}`, async () => {
+				const module = ESTREE_PRINT_MODULE_CASES.includes(source);
+				let compared = 0;
+				/** @type {string[]} */
+				const differences = [];
+				for (const options of optionSets) {
+					let result;
+					try {
+						result = await compareExpressions(source, { ...options, module });
+					} catch (err) {
+						// A table's source may be one only a module reads, or none.
+						if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+						throw err;
+					}
+					differences.push(...result.differences);
+					compared += result.compared;
+				}
+				if (ESTREE_PRINT_CASES.includes(source) || module) {
+					expect(compared).toBeGreaterThan(0);
+				}
+				// Where webpack reads a source otherwise than terser, its own output.
+				expect(differences).toMatchSnapshot();
+			});
+		}
+
+		it("should refuse a node it cannot print yet", async () => {
+			const { modules } = await load();
+			const output = modules.output.OutputStream({});
+			expect(() =>
+				modules.printEstree(
+					{ type: "Unknown", startToken: null, endToken: null },
+					output
+				)
+			).toThrow("printEstree cannot print a Unknown node yet");
+		});
+
+		/**
+		 * A source minified by `minify` and by terser, under each format.
+		 * @param {string} source a source
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<string[]>} every format printed otherwise
+		 */
+		const compareProgram = async (source, options) => {
+			const { minify } = await load();
+			/** @type {string[]} */
+			const differences = [];
+			for (const format of ESTREE_PRINT_PROGRAM_FORMATS) {
+				const given = () => ({
+					...JSON.parse(JSON.stringify(options)),
+					format: { ...format, comments: false }
+				});
+				const ours = await writingAsTerser(() => minify(source, given()));
+				const theirs = await terserResult(() =>
+					terserReference().minify(source, {
+						...given(),
+						format: withoutLayout({ ...format, comments: false })
+					})
+				);
+				if (ours.code !== theirs.code) {
+					differences.push(
+						`${JSON.stringify(format)}: ${theirs.refused || theirs.code} printed ${ours.code}`
+					);
+				}
+			}
+			return differences;
+		};
+
+		const programOptionSets = [
+			{ compress: false, mangle: false },
+			{ compress: false, mangle: true },
+			{ compress: { passes: 2 }, mangle: true },
+			{ compress: { passes: 2 }, mangle: { toplevel: true }, toplevel: true }
+		];
+		const programSources = [
+			...TABLE_SOURCES,
+			...ESTREE_PRINT_CASES,
+			...ESTREE_PRINT_STATEMENT_CASES
+		];
+		for (const source of [
+			...programSources,
+			...ESTREE_PRINT_MODULE_CASES,
+			...ESTREE_PRINT_MODULE_STATEMENT_CASES
+		]) {
+			it(`should print the whole program as terser does: ${source.slice(0, 60)}`, async () => {
+				let compared = 0;
+				/** @type {string[]} */
+				const differences = [];
+				for (const module of [false, true]) {
+					for (const options of programOptionSets) {
+						try {
+							differences.push(
+								...(await compareProgram(source, { ...options, module }))
+							);
+						} catch (err) {
+							// A source may be one only a script, or only a module, reads.
+							if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+							throw err;
+						}
+						compared++;
+					}
+				}
+				expect(compared).toBeGreaterThan(0);
+				// Where webpack reads a source otherwise than terser, its own output.
+				expect(differences).toMatchSnapshot();
+			});
+		}
+
+		it("should parenthesize a value with comments before it, as terser does", async () => {
+			const { modules } = await load();
+			const output = modules.output.OutputStream({});
+			const argument = {
+				type: "Identifier",
+				name: "a",
+				startToken: { comments_before: [{ type: "comment2", value: "x" }] },
+				endToken: null
+			};
+			modules.printEstree(
+				{ type: "ReturnStatement", argument, startToken: null, endToken: null },
+				output
+			);
+			expect(output.get()).toBe("return(a)");
+		});
+
+		it("should brace a statement's body where it must be", async () => {
+			const { modules } = await load();
+			const output = modules.output.OutputStream({});
+			const identifier = (/** @type {string} */ name) => ({
+				type: "Identifier",
+				name,
+				startToken: null,
+				endToken: null
+			});
+			modules.printEstree(
+				{
+					type: "IfStatement",
+					test: identifier("a"),
+					consequent: {
+						type: "VariableDeclaration",
+						kind: "let",
+						declarations: [
+							{
+								type: "VariableDeclarator",
+								id: identifier("b"),
+								init: null,
+								startToken: null,
+								endToken: null
+							}
+						],
+						startToken: null,
+						endToken: null
+					},
+					alternate: {
+						type: "ClassDeclaration",
+						id: identifier("C"),
+						superClass: null,
+						body: { type: "ClassBody", body: [], startToken: null, endToken: null },
+						startToken: null,
+						endToken: null
+					},
+					startToken: null,
+					endToken: null
+				},
+				output
+			);
+			expect(output.get()).toBe("if(a){let b}else{class C{}}");
+			// What only the compressor leaves: an `if` with no `else` before one.
+			const nested = modules.output.OutputStream({});
+			modules.printEstree(
+				{
+					type: "IfStatement",
+					test: identifier("a"),
+					consequent: {
+						type: "IfStatement",
+						test: identifier("b"),
+						consequent: {
+							type: "ExpressionStatement",
+							expression: identifier("c"),
+							startToken: null,
+							endToken: null
+						},
+						alternate: null,
+						startToken: null,
+						endToken: null
+					},
+					alternate: { type: "EmptyStatement", startToken: null, endToken: null },
+					startToken: null,
+					endToken: null
+				},
+				nested
+			);
+			expect(nested.get()).toBe("if(a){if(b)c}else;");
+		});
+
+		it("should drop a printed function's body under `_destroy_ast`", async () => {
+			const { minify, modules } = await load();
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await minify("function f(a) { a(); } x = (b) => { b(); }; y = (c) => c;", {
+					compress: false,
+					mangle: false,
+					format: { ast: true, code: false }
+				})
+			);
+			const tree = modules.toPrintTree(ast);
+			const output = modules.output.OutputStream({ _destroy_ast: true });
+			modules.printEstree(tree, output);
+			expect(output.get()).toBe("function f(a){a()}x=b=>{b()};y=c=>c;");
+			const [declaration, arrow] = tree.body;
+			expect(declaration.body.body).toEqual([]);
+			expect(declaration.params).toEqual([]);
+			expect(arrow.expression.right.body.body).toEqual([]);
+		});
+
+		/**
+		 * @param {EXPECTED_ANY} options minify options
+		 * @returns {EXPECTED_ANY} a copy `minify` may write into, as it does a source map's
+		 */
+		const copyOptions = (options) => ({
+			...options,
+			format: { ...options.format },
+			...(options.sourceMap ? { sourceMap: { ...options.sourceMap } } : {})
+		});
+
+		/**
+		 * A source minified by terser, or what it throws, and by `minify`, writing
+		 * as terser.
+		 * @param {string | Record<string, string>} source a source, or files
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY }>} both results
+		 */
+		const minifyBothWays = async (source, options) => {
+			const { minify } = await load();
+			const referenceOptions = copyOptions(options);
+			referenceOptions.format = withoutLayout(referenceOptions.format);
+			const theirs = await terserResult(() =>
+				terserReference().minify(source, referenceOptions)
+			);
+			const ours = await writingAsTerser(() =>
+				minify(source, copyOptions(options))
+			);
+			return { theirs, ours };
+		};
+
+		/**
+		 * @param {string} source a source
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<{ theirs: EXPECTED_ANY, ours: EXPECTED_ANY } | undefined>} both results, as a script or else a module, or none when neither parses
+		 */
+		const minifyScriptOrModule = async (source, options) => {
+			for (const module of [false, true]) {
+				try {
+					return await minifyBothWays(source, { ...options, module });
+				} catch (err) {
+					if (/** @type {Error} */ (err).name !== "SyntaxError") throw err;
+				}
+			}
+			return undefined;
+		};
+
+		// The comment options, past the table's: the default minimizer's callback,
+		// annotations alone, and every kind compressed and mangled.
+		/** @type {EXPECTED_ANY[]} */
+		const commentOptionSets = [
+			...OUTPUT_OPTIONS,
+			{
+				compress: { passes: 2 },
+				mangle: true,
+				format: {
+					beautify: false,
+					comments: (
+						/** @type {unknown} */ node,
+						/** @type {{ type: string, value: string }} */ comment
+					) =>
+						(comment.type === "comment2" || comment.type === "comment1") &&
+						/@preserve|@lic|@cc_on|^\**!/i.test(comment.value)
+				}
+			},
+			{
+				compress: { passes: 2 },
+				mangle: true,
+				format: { preserve_annotations: true }
+			},
+			{
+				compress: false,
+				mangle: false,
+				format: { comments: false, preserve_annotations: true }
+			},
+			{ compress: { passes: 2 }, mangle: true, format: { comments: "all" } },
+			{ compress: {}, mangle: true, format: { comments: /kept|@lic/ } },
+			{
+				compress: false,
+				mangle: false,
+				format: { comments: "all", preamble: "/*! p */", semicolons: false }
+			}
+		];
+
+		for (const source of [
+			...programSources,
+			...ESTREE_PRINT_MODULE_CASES,
+			...ESTREE_PRINT_MODULE_STATEMENT_CASES,
+			...ESTREE_PRINT_COMMENT_CASES
+		]) {
+			it(`should print the comments terser does: ${source.slice(0, 60)}`, async () => {
+				let compared = 0;
+				/** @type {string[]} */
+				const differences = [];
+				for (const [index, options] of commentOptionSets.entries()) {
+					const result = await minifyScriptOrModule(source, options);
+					if (result === undefined) continue;
+					const { ours, theirs } = result;
+					if (ours.code !== theirs.code) {
+						differences.push(
+							`set ${index}: ${theirs.refused || theirs.code} printed ${ours.code}`
+						);
+					}
+					compared++;
+				}
+				expect(compared).toBeGreaterThan(0);
+				// Where webpack reads a source otherwise than terser, its own output.
+				expect(differences).toMatchSnapshot();
+			});
+		}
+
+		/**
+		 * The source map option sets, over a source and its printed form with that
+		 * form's map, read as an object and inline.
+		 * @param {string} source a source
+		 * @param {{ code: string, map: EXPECTED_OBJECT }} printed the source minified with a map
+		 * @returns {[string | Record<string, string>, EXPECTED_ANY][]} each input with its options
+		 */
+		const mapOptionSets = (source, printed) => [
+			[
+				{ "input.js": source },
+				{ compress: false, mangle: false, sourceMap: { asObject: true } }
+			],
+			[
+				{ "input.js": source },
+				{
+					compress: { passes: 2 },
+					mangle: true,
+					sourceMap: {
+						includeSources: true,
+						filename: "out.js",
+						root: "src/",
+						url: "inline"
+					},
+					format: { comments: "all" }
+				}
+			],
+			[
+				{ "input.js": source },
+				{
+					compress: false,
+					mangle: false,
+					sourceMap: { asObject: true },
+					format: { comments: "some", preserve_annotations: true }
+				}
+			],
+			[
+				printed.code,
+				{
+					compress: false,
+					mangle: true,
+					sourceMap: { asObject: true, content: printed.map }
+				}
+			],
+			[
+				`${printed.code}\n//# sourceMappingURL=data:application/json;base64,${Buffer.from(
+					JSON.stringify(printed.map)
+				).toString("base64")}`,
+				{
+					compress: {},
+					mangle: true,
+					sourceMap: { content: "inline", includeSources: true }
+				}
+			]
+		];
+
+		for (const source of [
+			...programSources,
+			...ESTREE_PRINT_MODULE_CASES,
+			...ESTREE_PRINT_MODULE_STATEMENT_CASES,
+			...ESTREE_PRINT_COMMENT_CASES
+		]) {
+			it(`should map as terser does: ${source.slice(0, 60)}`, async () => {
+				const { minify } = await load();
+				let compared = 0;
+				/** @type {string[]} */
+				const differences = [];
+				for (const module of [false, true]) {
+					let printed;
+					try {
+						printed = await minify(source, {
+							module,
+							compress: false,
+							mangle: { toplevel: true },
+							sourceMap: { asObject: true }
+						});
+					} catch (err) {
+						// A source may be one only a script, or only a module, reads.
+						if (/** @type {Error} */ (err).name === "SyntaxError") continue;
+						throw err;
+					}
+					for (const [index, [input, options]] of mapOptionSets(
+						source,
+						/** @type {EXPECTED_ANY} */ (printed)
+					).entries()) {
+						const { theirs, ours } = await minifyBothWays(input, {
+							...options,
+							module
+						});
+						for (const key of ["code", "map", "decoded_map"]) {
+							const expected = JSON.stringify(theirs.refused || theirs[key]);
+							const actual = JSON.stringify(ours[key]);
+							if (actual !== expected) {
+								differences.push(
+									`set ${index} ${key}: ${expected} printed ${actual}`
+								);
+							}
+						}
+						compared++;
+					}
+					break;
+				}
+				expect(compared).toBeGreaterThan(0);
+				// Where webpack reads a source otherwise than terser, its own output.
+				expect(differences).toMatchSnapshot();
+			});
+		}
+
+		it("should call the comments callback with the ESTree node", async () => {
+			/** @type {string[]} */
+			const types = [];
+			const { minify } = await load();
+			const ours = await minify("/*a*/ x(); function f() { /*b*/ return /*c*/ y; }", {
+				compress: false,
+				mangle: false,
+				format: {
+					comments: (
+						/** @type {{ type: string }} */ node,
+						/** @type {{ value: string }} */ comment
+					) => {
+						types.push(`${comment.value}:${node.type}`);
+						return true;
+					}
+				}
+			});
+			expect(ours.code).toBe("/*a*/x();function f(){/*b*/ /*c*/return y}");
+			expect(types).toEqual([
+				"a:Program",
+				"b:ReturnStatement",
+				"c:ReturnStatement"
+			]);
+		});
+
+		// Each runtime user of the printer: the frequency mangling orders names
+		// by, `correct`'s `__proto__`, and what the compressor prints to compare.
+		/** @type {[string, string, EXPECTED_ANY][]} */
+		const PRINTER_USER_CASES = [
+			[
+				"the frequency",
+				"function f(longName,other){var o={a:longName,b:other.c};return o.a+o.b+longName}f(1,{c:2});label:for(;;)break label;",
+				{ compress: false, mangle: true }
+			],
+			[
+				"private names",
+				"class K{#secret=1;#m(){return this.#secret}static has(o){return #secret in o}run(){return this.#m()}}new K().run()",
+				{ compress: false, mangle: true }
+			],
+			[
+				"properties",
+				'var o={alpha:1,beta:2,"gamma":3};o.alpha+o.beta+o.gamma+o["beta"]+o[x?"delta":"eps"]+o[(x,"zeta")];class Q{#pv;m(){return this.#pv}}',
+				{ compress: false, mangle: { properties: { keep_quoted: true } } }
+			],
+			[
+				"`__proto__`",
+				'var p={},a={__proto__:p},b={__proto__},c={"__proto__":p};function g(__proto__){return{__proto__:__proto__}}console.log(a,b,c,g(1))',
+				{ compress: false, mangle: true }
+			],
+			[
+				"`Function`",
+				"var f=Function(\"a\",\"b\",\"'use strict';return a+b\");f(1,2)",
+				{ compress: { unsafe_Function: true }, mangle: true }
+			],
+			[
+				"a function as a string",
+				'console.log(""+function(){return 1})',
+				{ compress: { unsafe: true }, mangle: false }
+			],
+			[
+				"`pure_funcs`",
+				"console.log(1);Math.floor(2);a.b.c(3)",
+				{ compress: { pure_funcs: ["console.log", "a.b.c"] }, mangle: false }
+			],
+			[
+				"`Object.defineProperty`",
+				'var o={};Object.defineProperty(o,"x",{value:1});console.log(o.x)',
+				{ compress: { passes: 2, unsafe: true }, mangle: false }
+			],
+			[
+				"`spidermonkey`",
+				'"use strict";var r=/a+/gi,n=1e3,s="x",b=10n;',
+				{ compress: false, mangle: false, format: { spidermonkey: true } }
+			]
+		];
+		for (const [name, source, options] of PRINTER_USER_CASES) {
+			it(`should print for ${name} as terser does`, async () => {
+				const { theirs, ours } = await minifyBothWays(source, options);
+				expect(ours.code).toBe(theirs.code);
+				expect(JSON.stringify(ours.ast)).toBe(JSON.stringify(theirs.ast));
+			});
+		}
+
+		it("should drop a given tree's function bodies as terser does", async () => {
+			const { minify, modules } = await load();
+			const terser = await loadTerserSources(importTerserSource);
+			const source = "function f(a){return()=>a}var g=function(b){return b};f(g)";
+			for (const mangle of [false, true]) {
+				/** @type {number[][]} */
+				const lengths = [];
+				for (const [minifier, walk] of [
+					[minify, modules.ast.walk],
+					[terser.minify, terser.ast.walk]
+				]) {
+					const { ast } = /** @type {EXPECTED_ANY} */ (
+						await minifier(source, {
+							compress: false,
+							mangle: false,
+							format: { ast: true, code: false }
+						})
+					);
+					const { code } = await minifier(ast, { compress: false, mangle });
+					expect(code).toMatch(/^function f\(/);
+					/** @type {number[]} */
+					const sizes = [];
+					walk(ast, (/** @type {EXPECTED_ANY} */ node) => {
+						if (node.argnames) sizes.push(node.body.length);
+					});
+					lengths.push(sizes);
+				}
+				expect(lengths[0]).toEqual(lengths[1]);
+				expect(lengths[0]).toEqual([0, 0]);
+			}
+		});
+	});
+
+	describe("toPrintTree", () => {
+		/**
+		 * @param {string} source a script
+		 * @param {EXPECTED_ANY} options what to minify it with
+		 * @returns {Promise<EXPECTED_ANY>} terser's tree of it
+		 */
+		const terserTree = async (source, options) => {
+			const { minify } = await load();
+			// terser's typings leave out `format.ast`, which returns the tree.
+			const { ast } = /** @type {EXPECTED_ANY} */ (
+				await minify(source, {
+					...options,
+					format: { ast: true, code: false }
+				})
+			);
+			return ast;
+		};
+		const sources = TABLE_SOURCES;
+
+		for (const source of sources) {
+			it(`should read terser's tree as webpack's parser reads the source: ${source.slice(0, 60)}`, async () => {
+				const { modules } = await load();
+				const { parse } = require("../../lib/javascript/syntax-parser");
+				const tree = await terserTree(source, {
+					compress: false,
+					mangle: false
+				});
+				const parsed = parse(source, {
+					ecmaVersion: "latest",
+					sourceType: "script",
+					allowHashBang: true,
+					allowSuperOutsideMethod: true,
+					allowImportExportEverywhere: true,
+					importPhases: true
+				});
+				expect(comparableTree(modules.toPrintTree(tree))).toEqual(
+					comparableTree(parsed)
+				);
+			});
+		}
+
+		it("should keep a number's and a bigint's source", async () => {
+			const { modules } = await load();
+			const tree = await terserTree("x = [1.0, 0x10, 1_000, .5, 12n, 0x1Fn];", {
+				compress: false,
+				mangle: false
+			});
+			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
+			const elements = printTree.body[0].expression.right.elements;
+			expect(
+				elements.map((/** @type {EXPECTED_ANY} */ element) => element.raw)
+			).toEqual(["1.0", "0x10", "1_000", ".5", "12n", "0x1Fn"]);
+		});
+
+		it("should carry the tokens, quotes, definitions and source-map names the printer reads", async () => {
+			const { modules } = await load();
+			const tree = await terserTree(
+				"var v = { 'a': 1, b: 2, [c]: 3, \"d\"() {} }; class K { 'e' = 1; #f = 2; [g] = 3 } import h from 'i' with { type: 'json' };",
+				{ compress: false, mangle: true }
+			);
+			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
+			const declarator = printTree.body[0].declarations[0];
+			expect(declarator.id.definition).toBe(
+				tree.body[0].definitions[0].name.definition()
+			);
+			expect(declarator.id.definition).toEqual(expect.any(Object));
+			expect(declarator.startToken).toBe(tree.body[0].definitions[0].start);
+			const [a, b, c, d] = declarator.init.properties;
+			expect([a.quote, a.key.quote, a.mapName]).toEqual(["'", "'", "a"]);
+			expect([Boolean(b.quote), b.key.type, b.mapName]).toEqual([
+				false,
+				"Identifier",
+				"b"
+			]);
+			expect([c.computed, c.mapName]).toEqual([true, "c"]);
+			expect([d.method, d.key.quote, d.mapName]).toEqual([true, '"', false]);
+			const [e, f, g] = printTree.body[1].body.body;
+			expect([e.type, e.key.quote, e.mapName]).toEqual(["PropertyDefinition", "'", "e"]);
+			expect([f.key.type, f.mapName]).toEqual(["PrivateIdentifier", f.key.name]);
+			expect([g.computed, g.mapName]).toEqual([true, "g"]);
+			const [attribute] = printTree.body[2].attributes;
+			expect([attribute.key.name, attribute.value.quote]).toEqual(["type", "'"]);
+		});
+
+		it("should read the nodes only the compressor makes, and refuse one it does not know", async () => {
+			const { modules } = await load();
+			const { ast } = modules;
+			expect(
+				[new ast.NaNNode(), new ast.UndefinedNode(), new ast.InfinityNode()].map(
+					(node) => /** @type {EXPECTED_ANY} */ (modules.toPrintTree(node)).name
+				)
+			).toEqual(["NaN", "undefined", "Infinity"]);
+			expect(() => modules.toPrintTree(new ast.SyntaxNode())).toThrow(
+				"toPrintTree cannot read a Node node"
+			);
+		});
+
+		/**
+		 * @param {EXPECTED_ANY} modules the minifier's modules
+		 * @param {EXPECTED_ANY} tree terser's tree
+		 * @returns {string[]} where a kind of `kindOf` and terser's class disagree
+		 */
+		const kindDisagreements = (modules, tree) => {
+			/** @type {string[]} */
+			const disagreements = [];
+			modules.toPrintTree(
+				tree,
+				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
+					if (printNode === null) return;
+					for (const kind of Object.keys(modules.kindOf)) {
+						// An Accessor, only ever a method's value, reads as a Function.
+						if (kind === "Function" && node.TYPE === "Accessor") continue;
+						// A try's blocks, never a statement of their own, read as statements.
+						if (
+							kind === "BlockStatement" &&
+							(node.TYPE === "TryBlock" || node.TYPE === "Finally")
+						) {
+							continue;
+						}
+						const expected = node instanceof modules.ast[`${kind}Node`];
+						if (modules.kindOf[kind](printNode) !== expected) {
+							disagreements.push(`${node.TYPE} as ${printNode.type}: ${kind}`);
+						}
+					}
+				}
+			);
+			return disagreements;
+		};
+
+		for (const source of sources) {
+			it(`should read a compressed and mangled tree, its kinds as terser's: ${source.slice(0, 60)}`, async () => {
+				const { modules } = await load();
+				for (const tree of [
+					await terserTree(source, { compress: false, mangle: false }),
+					await terserTree(source, {
+						compress: { passes: 2 },
+						mangle: true,
+						toplevel: true
+					})
+				]) {
+					expect(kindDisagreements(modules, tree)).toEqual([]);
+				}
+			});
+		}
+
+		it("should bake mangled names into the identifiers", async () => {
+			const { modules } = await load();
+			const tree = await terserTree(MANGLED_NAMES, {
+				compress: { passes: 2 },
+				mangle: true
+			});
+			/** @type {[string, string][]} */
+			const renamed = [];
+			modules.toPrintTree(
+				tree,
+				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
+					if (printNode !== null && printNode.type === "Identifier" && printNode.definition) {
+						expect(printNode.definition).toBe(node.definition());
+						if (printNode.definition.mangled_name) {
+							expect(printNode.name).toBe(printNode.definition.mangled_name);
+							renamed.push([node.name, printNode.name]);
+						}
+					}
+				}
+			);
+			expect(renamed).toContainEqual(["first", expect.any(String)]);
 		});
 	});
 });

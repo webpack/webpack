@@ -20610,7 +20610,6 @@ declare interface NodeShape {
 	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
 	size(compressor?: CompressorShape, stack?: any): number;
 	print_to_string(options?: Record<string, any>): string;
-	print(output: OutputStream, forceParens?: boolean): void;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -23903,14 +23902,6 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	>;
 	wasmLoading: NonNullable<undefined | string | false>;
 };
-
-/**
- * terser's output stream
- */
-declare interface OutputStream {
-	[index: number]: any;
-	[index: string]: any;
-}
 
 /**
  * Defines the parameterized comparator type used by this module.
