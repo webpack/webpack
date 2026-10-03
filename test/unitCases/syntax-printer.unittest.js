@@ -2307,7 +2307,7 @@ describe("syntax-printer", () => {
 		]);
 		// A field's value is walked with the field pushed, not visited.
 		expect(visits("visit_deferred_class_parts")).toEqual([
-			"Number", "Number", "PrivateMethod", "SymbolMethod", "Accessor", "ConciseMethod", "SymbolMethod", "Accessor"
+			"Number", "Number", "PrivateMethod", "SymbolMethod", "Accessor", "ClassMethod", "SymbolMethod", "Accessor"
 		]);
 
 		/** @type {Record<string, unknown>} */
@@ -2366,7 +2366,7 @@ describe("syntax-printer", () => {
 		const classNames = Object.keys(ast).filter(
 			(name) => /Node$/.test(name) && typeof ast[`is${name}`] === "function"
 		);
-		expect(classNames).toHaveLength(142);
+		expect(classNames).toHaveLength(155);
 		for (const name of classNames) {
 			const probe = Object.create(ast[name].prototype);
 			for (const other of classNames) {
@@ -2942,18 +2942,20 @@ describe("syntax-printer", () => {
 			const parent = walker.parent();
 			let expected;
 			if (
-				(node.TYPE === "ObjectGetter" || node.TYPE === "ObjectSetter") &&
+				(terserTypeOf(node.TYPE) === "ObjectGetter" ||
+					terserTypeOf(node.TYPE) === "ObjectSetter") &&
 				parent.TYPE !== "Object"
 			) {
 				// terser maps a class's members with the index as their parent, which
 				// reads a class accessor as an object's; ESTree makes it a method.
 				expected = { type: "MethodDefinition" };
-			} else if (node.TYPE === "Expansion") {
+			} else if (terserTypeOf(node.TYPE) === "Expansion") {
 				// terser's converter reads this off its own stack, and makes a rest
 				// parameter a spread; ESTree binds with a rest element in both.
 				expected = {
 					type:
-						parent.TYPE === "Destructuring" || parent instanceof ast.LambdaNode
+						terserTypeOf(parent.TYPE) === "Destructuring" ||
+						parent instanceof ast.LambdaNode
 							? "RestElement"
 							: "SpreadElement"
 				};
@@ -3109,7 +3111,7 @@ describe("syntax-printer", () => {
 			);
 			expect(Object.keys(derived)).not.toContain("properties");
 			expect(derived.body.TYPE).toBe("ClassBody");
-			expect(derived.body.body[0].TYPE).toBe("ConciseMethod");
+			expect(derived.body.body[0].TYPE).toBe("ClassMethod");
 			const call = branch.consequent.expression;
 			expect(Object.keys(call)).toEqual(
 				expect.arrayContaining(["callee", "arguments"])

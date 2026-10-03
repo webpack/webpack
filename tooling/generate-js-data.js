@@ -1138,6 +1138,25 @@ const ESTREE_NODE_TYPES = {
 	SymbolImportForeignLiteral: "Literal",
 	SymbolExportForeignLiteral: "Literal",
 	SymbolExportLiteral: "Literal",
+	ArrayPattern: "ArrayPattern",
+	ObjectPattern: "ObjectPattern",
+	ExportAllDeclaration: "ExportAllDeclaration",
+	ExportDefaultDeclaration: "ExportDefaultDeclaration",
+	ExportNamedDeclaration: "ExportNamedDeclaration",
+	ImportSpecifier: "ImportSpecifier",
+	ImportNamespaceSpecifier: "ImportNamespaceSpecifier",
+	ExportSpecifier: "ExportSpecifier",
+	RestElement: "RestElement",
+	SpreadElement: "SpreadElement",
+	ObjectGetter: "Property",
+	ObjectSetter: "Property",
+	ConciseMethod: "Property",
+	PrivateGetter: "MethodDefinition",
+	PrivateSetter: "MethodDefinition",
+	PrivateMethod: "MethodDefinition",
+	ClassGetter: "MethodDefinition",
+	ClassSetter: "MethodDefinition",
+	ClassMethod: "MethodDefinition",
 	This: "ThisExpression",
 	Super: "Super",
 	Constant: "Literal",
@@ -1181,8 +1200,8 @@ const ESTREE_NODE_VALUES = {
 };
 
 // The classes terser has none for, each a leaf of the class it extends, which
-// its nodes take where ESTree types them apart: a logical operator, a prefix
-// `++`/`--`, a call not a `new`, a module's export name written as a string.
+// its nodes take where ESTree types them apart, by a field (an operator, a
+// quote, a pattern's brackets) or by position (a rest, a class's method).
 /** @type {Record<string, string>} */
 const ESTREE_LEAF_CLASSES = {
 	Logical: "Binary",
@@ -1190,7 +1209,20 @@ const ESTREE_LEAF_CLASSES = {
 	CallExpression: "Call",
 	SymbolImportForeignLiteral: "SymbolImportForeign",
 	SymbolExportForeignLiteral: "SymbolExportForeign",
-	SymbolExportLiteral: "SymbolExport"
+	SymbolExportLiteral: "SymbolExport",
+	ArrayPattern: "Destructuring",
+	ObjectPattern: "Destructuring",
+	ExportAllDeclaration: "Export",
+	ExportDefaultDeclaration: "Export",
+	ExportNamedDeclaration: "Export",
+	ImportSpecifier: "NameMapping",
+	ImportNamespaceSpecifier: "NameMapping",
+	ExportSpecifier: "NameMapping",
+	RestElement: "Expansion",
+	SpreadElement: "Expansion",
+	ClassGetter: "ObjectGetter",
+	ClassSetter: "ObjectSetter",
+	ClassMethod: "ConciseMethod"
 };
 
 /**
