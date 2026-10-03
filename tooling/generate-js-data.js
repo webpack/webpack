@@ -897,9 +897,12 @@ const CLASS_BODY = {
 };
 
 // The fields ESTree has that terser's class lacks, by the class gaining them
-// (its subclasses inherit them): whether a member's key is an expression.
+// (its subclasses inherit them): whether a key or property read is an expression.
 /** @type {Record<string, string[]>} */
-const ESTREE_ADDED_FIELDS = { ObjectProperty: ["computed"] };
+const ESTREE_ADDED_FIELDS = {
+	ObjectProperty: ["computed"],
+	PropAccess: ["computed"]
+};
 
 // The children a walk reaches only where the class's key is computed: a key
 // terser held as a string, now a node no walk visits, as none visited the string.

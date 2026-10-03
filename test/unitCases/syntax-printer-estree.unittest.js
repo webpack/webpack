@@ -62,7 +62,12 @@ const firstDifference = (theirs, ours) => {
 	const walk = (where, a, b) => {
 		if (a === b) return undefined;
 		// webpack holds a name terser held as a string as a node.
-		if (typeof a === "string" && typeof b === "object" && b !== null && b.TYPE === "SymbolProperty") {
+		if (
+			typeof a === "string" &&
+			typeof b === "object" &&
+			b !== null &&
+			(b.TYPE === "SymbolProperty" || b.TYPE === "SymbolPrivateProperty")
+		) {
 			return a === b.name ? undefined : `${where}: ${a} vs ${b.name}`;
 		}
 		if (typeof a !== typeof b) return `${where}: ${typeof a} vs ${typeof b}`;
