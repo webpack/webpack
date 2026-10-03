@@ -1137,6 +1137,11 @@ const ESTREE_NODE_TYPES = {
 	SymbolExportForeign: "Identifier",
 	LabelRef: "Identifier",
 	SymbolPrivateProperty: "PrivateIdentifier",
+	// A key not computed, a name whichever quote the member had, which the
+	// printer writes as the member's quote says.
+	SymbolMethod: "Identifier",
+	SymbolClassProperty: "Identifier",
+	SymbolProperty: "Identifier",
 	SymbolImportForeignLiteral: "Literal",
 	SymbolExportForeignLiteral: "Literal",
 	SymbolExportLiteral: "Literal",
