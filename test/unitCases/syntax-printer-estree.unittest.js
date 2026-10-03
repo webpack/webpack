@@ -124,10 +124,18 @@ const firstDifference = (theirs, ours) => {
 				continue;
 			}
 			if (ESTREE_ADDED_FIELDS.has(key) && !(key in a)) continue;
+			// webpack's destructuring holds terser's `names` as an array pattern's
+			// `elements` or an object pattern's `properties`, the other null.
+			const isPattern = b.TYPE === "Destructuring";
+			if (isPattern && (key === "elements" || key === "properties")) continue;
 			let ours =
 				isClass && key === "properties"
 					? b.body.body
-					: isDirective && key === "value"
+					: isPattern && key === "names"
+						? b.is_array
+							? b.elements
+							: b.properties
+						: isDirective && key === "value"
 						? b.directive
 						: isDirective && key === "quote"
 							? b.expression.quote

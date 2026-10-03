@@ -3111,6 +3111,26 @@ describe("syntax-printer", () => {
 				"SymbolProperty",
 				"k"
 			]);
+			const [patterns, privateIn] = parse.parse(
+				"var [p, , q] = r, { s, ...t } = u; class V { #w; x(y) { return #w in y; } }"
+			).body;
+			const [arrayPattern, objectPattern] = patterns.declarations.map(
+				(/** @type {EXPECTED_ANY} */ declaration) => declaration.id
+			);
+			expect([
+				arrayPattern.elements.length,
+				arrayPattern.elements[1],
+				arrayPattern.properties
+			]).toEqual([3, null, null]);
+			expect([objectPattern.elements, objectPattern.properties.length]).toEqual(
+				[null, 2]
+			);
+			const test = privateIn.body.body[1].value.body.body[0].argument;
+			expect([test.left.TYPE, test.left.name, test.right.name]).toEqual([
+				"SymbolPrivateProperty",
+				"w",
+				"y"
+			]);
 		});
 
 		it("should minify them as terser does", async () => {

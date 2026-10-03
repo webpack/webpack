@@ -788,6 +788,7 @@ const ESTREE_FIELD_NAMES = {
 	DefinitionsLike: { declarations: "definitions" },
 	PrefixedTemplateString: { tag: "prefix", quasi: "template_string" },
 	Class: { id: "name", superClass: "extends" },
+	PrivateIn: { left: "key", right: "value" },
 	Yield: { argument: "expression", delegate: "is_star" }
 };
 
@@ -874,7 +875,11 @@ const ESTREE_BLOCK_BODIES = {
 
 // The lists ESTree holds a hole in as null, where terser has a node for it.
 /** @type {Record<string, string>} */
-const ESTREE_HOLE_LISTS = { Array: "elements", Destructuring: "names" };
+const ESTREE_HOLE_LISTS = { Array: "elements" };
+
+// A pattern's list, which ESTree holds as an array pattern's \`elements\`
+// (holes as null) or an object pattern's \`properties\`: the one not held is null.
+const PATTERN_LISTS = ["elements", "properties"];
 
 // The fields a directive takes for terser's `value` and `quote`, as ESTree's
 // statement holds it: the directive's text and the string literal spelling it.
@@ -957,6 +962,12 @@ const reshapeNodeFields = (classes) => {
 		];
 		addedOf.set(nodeClass.type, added);
 		nodeClass.fields.push(...added);
+		if (nodeClass.type === "Destructuring") {
+			const at = nodeClass.fields.indexOf("names");
+			nodeClass.fields.splice(at, 1, ...PATTERN_LISTS);
+			nodeClass.walk = ["?+elements", "?*properties"];
+			nodeClass.backwards = ["?*properties", "?+elements"];
+		}
 		if (
 			Object.prototype.hasOwnProperty.call(
 				ESTREE_COMPUTED_KEY_WALKS,
