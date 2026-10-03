@@ -971,7 +971,7 @@ describe("syntax-printer", () => {
 			new own.ast.NumberNode({ value: 3 })
 		];
 		const spliced = new own.ast.NumberNode({ value: 4 });
-		const walker = new own.ast.TreeTransformer((/** @type {EXPECTED_ANY} */ item) => {
+		const walker = own.ast.createTransformer((/** @type {EXPECTED_ANY} */ item) => {
 			if (item === nodes[0]) return own.utils.MAP.skip;
 			if (item === nodes[1]) return own.utils.MAP.splice([spliced, spliced]);
 			return item;
@@ -2244,7 +2244,7 @@ describe("syntax-printer", () => {
 
 	it("should give terser's nodes the methods terser writes by hand", async () => {
 		const { ast, parse } = (await load()).modules;
-		const { TreeWalker } = ast;
+		const { createWalker } = ast;
 		/**
 		 * @param {string} source a script
 		 * @returns {EXPECTED_ANY} its toplevel, its scopes worked out
@@ -2298,7 +2298,7 @@ describe("syntax-printer", () => {
 			/** @type {string[]} */
 			const types = [];
 			declaredClass[method](
-				new TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+				createWalker((/** @type {EXPECTED_ANY} */ node) => {
 					types.push(node.TYPE);
 				})
 			);
@@ -2317,7 +2317,7 @@ describe("syntax-printer", () => {
 		const walked = parsed(
 			'"use strict"; function f() { a: for (var i in o) { switch (i) { case 1: break; default: continue a; } } while (1) { for (let j = g(); j; ) { break; } } }'
 		);
-		ast.walkNode(walked, new TreeWalker(
+		ast.walkNode(walked, createWalker(
 				/**
 				 * @this {EXPECTED_ANY} the walker
 				 * @param {EXPECTED_ANY} node the node visited
@@ -2643,7 +2643,7 @@ describe("syntax-printer", () => {
 			);
 			/** @type {EXPECTED_ANY[]} */
 			const ours = [];
-			ast.walkNode(ourTree, new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+			ast.walkNode(ourTree, ast.createWalker((/** @type {EXPECTED_ANY} */ node) => {
 					ours.push(node);
 				})
 			);
@@ -2938,7 +2938,7 @@ describe("syntax-printer", () => {
 			a = true; a = void 0; a = NaN; a = Infinity; a = (b, c); a = b ?? (c && d || e);
 			a = import.meta; a = import("x"); function f() { new.target; return this; }`;
 		let count = 0;
-		const walker = new ast.TreeWalker((/** @type {EXPECTED_ANY} */ node) => {
+		const walker = ast.createWalker((/** @type {EXPECTED_ANY} */ node) => {
 			const parent = walker.parent();
 			let expected;
 			if (
@@ -2999,15 +2999,15 @@ describe("syntax-printer", () => {
 
 	it("should hand back a fresh list, which a clone may share", async () => {
 		const { ast, parse, utils } = (await load()).modules;
-		const { SimpleStatementNode, TreeTransformer } = ast;
+		const { SimpleStatementNode, createTransformer } = ast;
 		const toplevel = parse.parse("a; b; c; d;");
 		const { body } = toplevel;
-		ast.transformNode(toplevel, new TreeTransformer(() => undefined));
+		ast.transformNode(toplevel, createTransformer(() => undefined));
 		// terser's shallow clone shares lists, so each transform must copy them.
 		expect(toplevel.body).not.toBe(body);
 		expect(toplevel.body).toEqual(body);
 
-		ast.transformNode(toplevel, new TreeTransformer(
+		ast.transformNode(toplevel, createTransformer(
 				/**
 				 * @param {EXPECTED_ANY} node the node visited
 				 * @returns {EXPECTED_ANY} what replaces it
@@ -3031,7 +3031,7 @@ describe("syntax-printer", () => {
 
 	it("should not revisit a node the compressor squeezed", async () => {
 		const { ast, compress, flags, parse } = (await load()).modules;
-		const compressor = new compress.Compressor({}, {});
+		const compressor = compress.createCompressor({}, {});
 		const toplevel = parse.parse('"use strict"; a;');
 		const [directive, statement] = toplevel.body;
 		directive.flags |= flags.SQUEEZED;
@@ -3041,7 +3041,7 @@ describe("syntax-printer", () => {
 		// A directive is still pushed, which records it on the walker.
 		expect(ast.transformNode(directive, compressor)).toBe(directive);
 		expect(compressor.has_directive("use strict")).toBe(directive);
-		expect(new ast.TreeWalker().webpackSkipsSqueezed).toBe(false);
+		expect(ast.createWalker().webpackSkipsSqueezed).toBe(false);
 	});
 
 	describe("fields named as ESTree names them", () => {
@@ -4288,7 +4288,7 @@ describe("syntax-printer", () => {
 			/** @type {EXPECTED_ANY[]} */
 			const theirDeclarators = [];
 			// As terser's mangler walks: the scopes, labels and kept declarators.
-			const walker = new ast.TreeWalker(
+			const walker = ast.createWalker(
 				(/** @type {EXPECTED_ANY} */ node, /** @type {() => void} */ descend) => {
 					if (node instanceof ast.LabeledStatementNode) {
 						theirLabels.push({
