@@ -61,6 +61,10 @@ const firstDifference = (theirs, ours) => {
 		if (typeof a === "number" && Number.isNaN(a) && Number.isNaN(b)) {
 			return undefined;
 		}
+		// webpack holds a hole as null, where terser has a node.
+		if (b === null && a !== null && a.constructor.name === "AST_Hole") {
+			return undefined;
+		}
 		if (typeof a !== "object" || a === null || b === null) {
 			return `${where}: ${String(a)} vs ${String(b)}`;
 		}

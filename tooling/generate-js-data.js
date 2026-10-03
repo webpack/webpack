@@ -872,6 +872,10 @@ const ESTREE_BLOCK_BODIES = {
 	Class: ["properties", "body"]
 };
 
+// The lists ESTree holds a hole in as null, where terser has a node for it.
+/** @type {Record<string, string>} */
+const ESTREE_HOLE_LISTS = { Array: "elements", Destructuring: "names" };
+
 // The fields a directive takes for terser's `value` and `quote`, as ESTree's
 // statement holds it: the directive's text and the string literal spelling it.
 const DIRECTIVE_FIELDS = ["directive", "expression"];
@@ -922,6 +926,21 @@ const reshapeNodeFields = (classes) => {
 					(field) => field !== "value" && field !== "quote"
 				)
 			];
+		}
+		if (
+			Object.prototype.hasOwnProperty.call(ESTREE_HOLE_LISTS, nodeClass.type)
+		) {
+			const list = `*${ESTREE_HOLE_LISTS[nodeClass.type]}`;
+			/**
+			 * @param {string} child a child as `readChildren` writes it
+			 * @returns {string} it, a list holding holes where it was the list
+			 */
+			const reachHoles = (child) =>
+				child === list ? `+${list.slice(1)}` : child;
+			if (nodeClass.walk) nodeClass.walk = nodeClass.walk.map(reachHoles);
+			if (nodeClass.backwards) {
+				nodeClass.backwards = nodeClass.backwards.map(reachHoles);
+			}
 		}
 		const dropped = droppedOf.get(nodeClass.type);
 		if (dropped !== undefined) {
@@ -1152,6 +1171,7 @@ const renderNodeClasses = () => `
  * order its own \`_walk\` and \`_children_backwards\` reach them, null where it
  * inherits them — \`f\` a child always there, \`?f\` one that may be absent,
  * \`~f\` one that may not be a node, \`*f\` a list, \`?*f\` a list that may be absent,
+ * \`+f\` a list that may hold null, a hole,
  * \`*f.body\` the list of the block \`f\` holds.
  * @typedef {object} NodeClass
  * @property {string} type its \`TYPE\`

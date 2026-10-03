@@ -20583,7 +20583,7 @@ declare interface NodeShape {
 	test: NodeShape;
 	alternate: NodeShape;
 	arguments: NodeShape[];
-	elements: NodeShape[];
+	elements: (null | NodeShape)[];
 	properties: NodeShape[];
 	declarations: NodeShape[];
 	expressions: NodeShape[];

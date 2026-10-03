@@ -2591,7 +2591,8 @@ describe("syntax-printer", () => {
 						node.async = false;
 						node.is_generator = false;
 					}
-					theirs.push(node);
+					// webpack holds a hole as null, which no walk reaches.
+					if (node.TYPE !== "Hole") theirs.push(node);
 					if (descend) descend.call(node);
 				}
 			});
