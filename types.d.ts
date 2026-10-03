@@ -20664,7 +20664,6 @@ declare interface NodeShape {
 	evaluate(compressor: CompressorShape): any;
 	negate(compressor: CompressorShape, firstInStatement?: boolean): NodeShape;
 	size(compressor?: CompressorShape, stack?: any): number;
-	print_to_string(options?: Record<string, any>): string;
 }
 declare class NodeSourcePlugin {
 	constructor();
