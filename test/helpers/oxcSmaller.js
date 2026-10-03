@@ -2844,6 +2844,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it renames `LocalCtor` inside a `with` body, so a `LocalCtor` property on the `with` object is no longer used",
 		["swc minifier: fixture/issues/11684/with-scope/input.js"]
+	],
+	[
+		"oxc's output is wrong: it renames a `#private` name a direct `eval` reads, so the `eval` throws a SyntaxError",
+		["oxc minifier: peephole/remove_unused_private_members.rs:27"]
 	]
 ];
 
