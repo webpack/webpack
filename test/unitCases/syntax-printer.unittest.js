@@ -4923,7 +4923,7 @@ describe("syntax-printer", () => {
 				}
 			}
 			// The bridge reads no name off `export *`, whose global terser makes.
-			const theirGlobals = tree.block_scope.globals;
+			const theirGlobals = tree.globals;
 			const star = theirGlobals.get("*");
 			const globalNames = [...theirGlobals.keys()].filter((name) => name !== "*");
 			if (globalNames.join() !== [...analysis.globals.keys()].join()) {
