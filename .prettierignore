@@ -11,6 +11,7 @@ test/**/*.*
 !test/**/webpack.config.cjs
 !test/**/webpack.config.mjs
 !test/**/test.config.js
+!test/watchCases/**/scenario.js
 !test/**/test.filter.js
 !test/**/errors.js
 !test/**/warnings.js
