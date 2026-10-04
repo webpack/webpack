@@ -2578,6 +2578,16 @@ describe("syntax-printer", () => {
 				"(function f(a) { return 1; })(2);",
 				{ compress: { keep_fnames: true } },
 				""
+			],
+			[
+				"function arguments() {} console.log(typeof arguments);",
+				{ toplevel: true },
+				'console.log("function");'
+			],
+			[
+				"var f = function arguments() { return typeof arguments; }; console.log(f());",
+				{ toplevel: true },
+				"console.log(function(){return typeof arguments}());"
 			]
 		];
 		for (const [source, options, expected] of cases) {
