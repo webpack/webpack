@@ -661,7 +661,15 @@ const MANGLED_MODULE =
  * The keys a tree comparison skips: positions, which the two trees count
  * differently, and what `toPrintTree` adds to ESTree for the printer.
  */
+const FUNCTION_FLAGS = new Set(["expression", "generator", "async"]);
+
 const PRINT_TREE_SKIPPED_KEYS = new Set([
+	// What the compressor's nodes hold, which the printer reads them as.
+	"flags",
+	"logical",
+	"_annotations",
+	"block_scope",
+	"is_array",
 	"start",
 	"end",
 	"loc",
@@ -695,9 +703,25 @@ const comparableTree = (node) => {
 	if (node === null || typeof node !== "object") return node;
 	/** @type {Record<string, EXPECTED_ANY>} */
 	const result = {};
-	for (const key of Object.keys(node)) {
+	// A node's type and the values its kind fixes are its prototype's.
+	for (const key in node) {
 		if (PRINT_TREE_SKIPPED_KEYS.has(key) || node[key] === undefined) continue;
+		// The compressor leaves a function's flags unset where ESTree's are false.
+		if (FUNCTION_FLAGS.has(key) && node[key] === false) continue;
 		result[key] = comparableTree(node[key]);
+	}
+	// What tells the compressor's kinds of one type apart, which ESTree holds
+	// otherwise or not at all.
+	delete result.role;
+	if (node.type === "ThisExpression" || node.type === "Super") delete result.name;
+	if (node.type === "AssignmentPattern") delete result.operator;
+	if (node.type === "SwitchCase" && node.test === null) delete result.test;
+	if (node.type === "Property" && node.static === false) delete result.static;
+	if (node.type === "ObjectPattern") delete result.elements;
+	if (node.type === "ArrayPattern") delete result.properties;
+	if (node.type === "VariableDeclaration") {
+		if (node.await === true) result.kind = "await using";
+		delete result.await;
 	}
 	if (node.type === "Literal" && (node.regex || node.bigint !== undefined)) {
 		// terser holds a regular expression's parts, not a RegExp, and a
@@ -721,7 +745,7 @@ const comparableTree = (node) => {
 	}
 	if (node.type === "ArrowFunctionExpression" && node.expression) {
 		// terser holds an arrow's body as statements, a value as its return.
-		result.expression = false;
+		delete result.expression;
 		result.body = {
 			type: "BlockStatement",
 			body: [{ type: "ReturnStatement", argument: result.body }]
@@ -1127,6 +1151,44 @@ describe("syntax-printer", () => {
 		const theirs = await reference.minify(source, options());
 
 		expect(ours.code).toBe(theirs.code);
+	});
+
+	it("should mangle by the characters of an output too long to hold whole as terser does", async () => {
+		const { minify } = await load();
+		const reference = terserReference();
+		// Past the parts the frequency print holds before it counts them.
+		const functions = [];
+		for (let i = 0; i < 4000; i++) {
+			functions.push(
+				`function f${i}(first, second) { var third = first + second; sink("${"qz".repeat(
+					20 + (i % 7)
+				)}", third); }`
+			);
+		}
+		const source = `${functions.join("\n")}\nsink(f0, f3999);`;
+		const options = () => ({ compress: false, mangle: true });
+		const ours = await minify(source, options());
+		const theirs = await reference.minify(source, options());
+
+		expect(String(ours.code).length).toBeGreaterThan(300000);
+		expect(ours.code).toBe(theirs.code);
+	});
+
+	it("should build factories from plain identifiers alone", () => {
+		const { plainIdentifier } = require("../../lib/javascript/syntax-printer");
+
+		expect(plainIdentifier("_annotations")).toBe("_annotations");
+		expect(() => plainIdentifier("a-b")).toThrow("Not a plain identifier: a-b");
+	});
+
+	it("should read a node a released tree holds twice in place once", async () => {
+		const { modules } = await load();
+		const toplevel = modules.parse.parse("sink(1);");
+		toplevel.body.push(toplevel.body[0]);
+		const tree = modules.toPrintTree(toplevel, undefined, undefined, true, true);
+
+		expect(tree.body[1]).toBe(tree.body[0]);
+		expect(modules.printEstreeToString(tree)).toBe("sink(1);sink(1);");
 	});
 
 	it("should leave a name terser cannot mangle alone", async () => {
@@ -4571,7 +4633,7 @@ describe("syntax-printer", () => {
 					differences.push(`${node.name}, no name terser scopes, has a definition`);
 				}
 				for (const key of Object.keys(node)) {
-					if (!/Token$|^definition$|^source$/.test(key)) checkUnnamed(node[key]);
+					if (!/Token$|^(definition|source|scope|parent_scope|variables|enclosed|block_scope|globals)$/.test(key)) checkUnnamed(node[key]);
 				}
 			};
 			checkUnnamed(program);

@@ -20623,6 +20623,10 @@ declare interface NodeShape {
 	[index: string]: any;
 	TYPE: string;
 	type: string;
+	idDeclares?: number;
+	mapName?: null | string | false;
+	shorthand: boolean;
+	annotatedKey: boolean;
 	name: string;
 	kind: string;
 	role: string;
@@ -33433,6 +33437,7 @@ declare namespace exports {
 			}
 			export namespace printer {
 				export let NODE_KIND_ANCESTRY: Record<string, string[]>;
+				export let plainIdentifier: (name: string) => string;
 				export let load: () => Promise<Minifier>;
 				export let PHASES: Phase[];
 				export let FORMAT_DEFAULTS: FormatOptions;
