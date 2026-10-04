@@ -1129,6 +1129,44 @@ describe("syntax-printer", () => {
 		expect(ours.code).toBe(theirs.code);
 	});
 
+	it("should mangle by the characters of an output too long to hold whole as terser does", async () => {
+		const { minify } = await load();
+		const reference = terserReference();
+		// Past the parts the frequency print holds before it counts them.
+		const functions = [];
+		for (let i = 0; i < 4000; i++) {
+			functions.push(
+				`function f${i}(first, second) { var third = first + second; sink("${"qz".repeat(
+					20 + (i % 7)
+				)}", third); }`
+			);
+		}
+		const source = `${functions.join("\n")}\nsink(f0, f3999);`;
+		const options = () => ({ compress: false, mangle: true });
+		const ours = await minify(source, options());
+		const theirs = await reference.minify(source, options());
+
+		expect(String(ours.code).length).toBeGreaterThan(300000);
+		expect(ours.code).toBe(theirs.code);
+	});
+
+	it("should build factories from plain identifiers alone", () => {
+		const { plainIdentifier } = require("../../lib/javascript/syntax-printer");
+
+		expect(plainIdentifier("_annotations")).toBe("_annotations");
+		expect(() => plainIdentifier("a-b")).toThrow("Not a plain identifier: a-b");
+	});
+
+	it("should read a node a released tree holds twice in place once", async () => {
+		const { modules } = await load();
+		const toplevel = modules.parse.parse("sink(1);");
+		toplevel.body.push(toplevel.body[0]);
+		const tree = modules.toPrintTree(toplevel, undefined, undefined, true, true);
+
+		expect(tree.body[1]).toBe(tree.body[0]);
+		expect(modules.printEstreeToString(tree)).toBe("sink(1);sink(1);");
+	});
+
 	it("should leave a name terser cannot mangle alone", async () => {
 		const { minify } = await load();
 		const result = await minify("function top(argument) { return argument; }", {
