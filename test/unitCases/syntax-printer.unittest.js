@@ -661,6 +661,8 @@ const MANGLED_MODULE =
  * The keys a tree comparison skips: positions, which the two trees count
  * differently, and what `toPrintTree` adds to ESTree for the printer.
  */
+const FUNCTION_FLAGS = new Set(["expression", "generator", "async"]);
+
 const PRINT_TREE_SKIPPED_KEYS = new Set([
 	// What the compressor's nodes hold, which the printer reads them as.
 	"flags",
@@ -704,6 +706,8 @@ const comparableTree = (node) => {
 	// A node's type and the values its kind fixes are its prototype's.
 	for (const key in node) {
 		if (PRINT_TREE_SKIPPED_KEYS.has(key) || node[key] === undefined) continue;
+		// The compressor leaves a function's flags unset where ESTree's are false.
+		if (FUNCTION_FLAGS.has(key) && node[key] === false) continue;
 		result[key] = comparableTree(node[key]);
 	}
 	// What tells the compressor's kinds of one type apart, which ESTree holds
@@ -711,6 +715,7 @@ const comparableTree = (node) => {
 	delete result.role;
 	if (node.type === "ThisExpression" || node.type === "Super") delete result.name;
 	if (node.type === "AssignmentPattern") delete result.operator;
+	if (node.type === "Property" && node.static === false) delete result.static;
 	if (node.type === "ObjectPattern") delete result.elements;
 	if (node.type === "ArrayPattern") delete result.properties;
 	if (node.type === "VariableDeclaration") {
@@ -739,7 +744,7 @@ const comparableTree = (node) => {
 	}
 	if (node.type === "ArrowFunctionExpression" && node.expression) {
 		// terser holds an arrow's body as statements, a value as its return.
-		result.expression = false;
+		delete result.expression;
 		result.body = {
 			type: "BlockStatement",
 			body: [{ type: "ReturnStatement", argument: result.body }]
