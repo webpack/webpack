@@ -1653,15 +1653,6 @@ const MINIFIED_FAILURES = [
 		tests: [
 			"import/import-attributes/text-javascript.js (module)"
 		]
-	},
-	{
-		reason:
-			"the printer inlines a function naming `await` into an async function, so its output does not parse",
-		minifiers: ["printer"],
-		tests: [
-			"expressions/await/await-in-nested-function.js (sloppy)",
-			"expressions/await/await-in-nested-function.js (strict)"
-		]
 	}
 ];
 /* cspell:enable */
