@@ -657,103 +657,6 @@ sink(outer);`;
 const MANGLED_MODULE =
 	"export var kept = 1; var hidden = 2; export { hidden as shown }; export default function main(alpha) { return alpha + kept + hidden; }";
 
-/**
- * The keys a tree comparison skips: positions, which the two trees count
- * differently, and what `toPrintTree` adds to ESTree for the printer.
- */
-const FUNCTION_FLAGS = new Set(["expression", "generator", "async"]);
-
-const PRINT_TREE_SKIPPED_KEYS = new Set([
-	// What the compressor's nodes hold, which the printer reads them as.
-	"flags",
-	"logical",
-	"_annotations",
-	"block_scope",
-	"is_array",
-	"start",
-	"end",
-	"loc",
-	"range",
-	"sourceType",
-	"startToken",
-	"endToken",
-	"quote",
-	"definition",
-	"mapName",
-	"idDeclares",
-	"heldAsDefinition",
-	"atom",
-	"annotatedKey",
-	"attributesStartToken",
-	"attributesEndToken",
-	// terser keeps no record of a shorthand, which the printer decides.
-	"shorthand",
-	// terser keeps a number's source alone, checked on its own below.
-	"raw"
-]);
-
-/**
- * An ESTree tree as plain data to compare, rewritten where `toPrintTree` holds
- * a node in terser's shape rather than the parse's.
- * @param {EXPECTED_ANY} node a node, a list or a value
- * @returns {EXPECTED_ANY} it, comparable
- */
-const comparableTree = (node) => {
-	if (Array.isArray(node)) return node.map(comparableTree);
-	if (node === null || typeof node !== "object") return node;
-	/** @type {Record<string, EXPECTED_ANY>} */
-	const result = {};
-	// A node's type and the values its kind fixes are its prototype's.
-	for (const key in node) {
-		if (PRINT_TREE_SKIPPED_KEYS.has(key) || node[key] === undefined) continue;
-		// The compressor leaves a function's flags unset where ESTree's are false.
-		if (FUNCTION_FLAGS.has(key) && node[key] === false) continue;
-		result[key] = comparableTree(node[key]);
-	}
-	// What tells the compressor's kinds of one type apart, which ESTree holds
-	// otherwise or not at all.
-	delete result.role;
-	if (node.type === "ThisExpression" || node.type === "Super") delete result.name;
-	if (node.type === "AssignmentPattern") delete result.operator;
-	if (node.type === "SwitchCase" && node.test === null) delete result.test;
-	if (node.type === "Property" && node.static === false) delete result.static;
-	if (node.type === "ObjectPattern") delete result.elements;
-	if (node.type === "ArrayPattern") delete result.properties;
-	if (node.type === "VariableDeclaration") {
-		if (node.await === true) result.kind = "await using";
-		delete result.await;
-	}
-	if (node.type === "Literal" && (node.regex || node.bigint !== undefined)) {
-		// terser holds a regular expression's parts, not a RegExp, and a
-		// bigint's digits as written, which ESTree holds in decimal.
-		delete result.value;
-		if (node.bigint !== undefined) result.bigint = String(BigInt(node.bigint));
-	}
-	if (node.regex) {
-		// terser drops an escape before a character beyond ASCII, as it reads.
-		result.regex.pattern = node.regex.pattern.replace(
-			/\\(.)/gu,
-			(/** @type {string} */ escape, /** @type {string} */ character) =>
-				/** @type {number} */ (character.codePointAt(0)) > 0x7f
-					? character
-					: escape
-		);
-	}
-	if (typeof node.directive === "string") {
-		// terser holds a directive as written, which ESTree holds read.
-		delete result.expression.value;
-	}
-	if (node.type === "ArrowFunctionExpression" && node.expression) {
-		// terser holds an arrow's body as statements, a value as its return.
-		delete result.expression;
-		result.body = {
-			type: "BlockStatement",
-			body: [{ type: "ReturnStatement", argument: result.body }]
-		};
-	}
-	return result;
-};
-
 // Every source of the tables above, which the ESTree printer is held to.
 const TABLE_SOURCES = [
 	...OUTPUT_CASES.map(([, source]) => source),
@@ -1075,6 +978,25 @@ describe("syntax-printer", () => {
 		});
 	}
 
+	it("should print and map a valueless yield in a loop head as terser does", async () => {
+		const { minify } = await load();
+		const reference = terserReference();
+		/** @type {[string, import("terser").MinifyOptions][]} */
+		const sources = [
+			// A `yield` with no value, read for an `in` a loop's head would take.
+			["function* g() { for (var a = (yield, b in c); ;); }", { compress: false }]
+		];
+		for (const [source, options] of sources) {
+			const settings = { mangle: false, sourceMap: { asObject: true }, ...options };
+			const ours = await minify(source, JSON.parse(JSON.stringify(settings)));
+			const theirs = await reference.minify(
+				source,
+				JSON.parse(JSON.stringify(settings))
+			);
+			expect([ours.code, ours.map]).toEqual([theirs.code, theirs.map]);
+		}
+	});
+
 	it("should mangle as terser does under each option the fast path leaves out", async () => {
 		const { minify } = await load();
 		const reference = terserReference();
@@ -1181,14 +1103,15 @@ describe("syntax-printer", () => {
 		expect(() => plainIdentifier("a-b")).toThrow("Not a plain identifier: a-b");
 	});
 
-	it("should read a node a released tree holds twice in place once", async () => {
+	it("should print a node a released tree holds twice", async () => {
 		const { modules } = await load();
 		const toplevel = modules.parse.parse("sink(1);");
 		toplevel.body.push(toplevel.body[0]);
-		const tree = modules.toPrintTree(toplevel, undefined, undefined, true, true);
+		const output = modules.output.OutputStream();
+		modules.printProgram(toplevel, output, true);
 
-		expect(tree.body[1]).toBe(tree.body[0]);
-		expect(modules.printEstreeToString(tree)).toBe("sink(1);sink(1);");
+		expect(output.get()).toBe("sink(1);sink(1);");
+		expect(toplevel.body[1]).toBe(toplevel.body[0]);
 	});
 
 	it("should leave a name terser cannot mangle alone", async () => {
@@ -3847,7 +3770,7 @@ describe("syntax-printer", () => {
 					format: { ast: true, code: false }
 				})
 			);
-			const tree = modules.toPrintTree(ast);
+			const tree = ast;
 			const output = modules.output.OutputStream({ _destroy_ast: true });
 			modules.printEstree(tree, output);
 			expect(output.get()).toBe("function f(a){a()}x=b=>{b()};y=c=>c;");
@@ -4193,7 +4116,7 @@ describe("syntax-printer", () => {
 		});
 	});
 
-	describe("toPrintTree", () => {
+	describe("the compressed tree, as the printer reads it", () => {
 		/**
 		 * @param {string} source a script
 		 * @param {EXPECTED_ANY} options what to minify it with
@@ -4210,84 +4133,65 @@ describe("syntax-printer", () => {
 			);
 			return ast;
 		};
-		const sources = TABLE_SOURCES;
-
-		for (const source of sources) {
-			it(`should read terser's tree as webpack's parser reads the source: ${source.slice(0, 60)}`, async () => {
-				const { modules } = await load();
-				const { parse } = require("../../lib/javascript/syntax-parser");
-				const tree = await terserTree(source, {
-					compress: false,
-					mangle: false
-				});
-				const parsed = parse(source, {
-					ecmaVersion: "latest",
-					sourceType: "script",
-					allowHashBang: true,
-					allowSuperOutsideMethod: true,
-					allowImportExportEverywhere: true,
-					importPhases: true
-				});
-				expect(comparableTree(modules.toPrintTree(tree))).toEqual(
-					comparableTree(parsed)
-				);
-			});
-		}
 
 		it("should keep a number's and a bigint's source", async () => {
-			const { modules } = await load();
 			const tree = await terserTree("x = [1.0, 0x10, 1_000, .5, 12n, 0x1Fn];", {
 				compress: false,
 				mangle: false
 			});
-			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
-			const elements = printTree.body[0].expression.right.elements;
+			const elements = tree.body[0].expression.right.elements;
 			expect(
 				elements.map((/** @type {EXPECTED_ANY} */ element) => element.raw)
 			).toEqual(["1.0", "0x10", "1_000", ".5", "12n", "0x1Fn"]);
 		});
 
-		it("should carry the tokens, quotes, names and source-map names the printer reads", async () => {
+		it("should read the quotes, names and source-map names the printer prints", async () => {
 			const { modules } = await load();
 			const tree = await terserTree(
 				"var v = { 'a': 1, b: 2, [c]: 3, \"d\"() {} }; class K { 'e' = 1; #f = 2; [g] = 3 } import h from 'i' with { type: 'json' };",
 				{ compress: false, mangle: true }
 			);
-			const printTree = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree));
-			const declarator = printTree.body[0].declarations[0];
-			// A name reads as terser's definition named it, and as written for the ESTree mangler.
-			const definition = tree.body[0].declarations[0].id.definition;
-			expect([declarator.id.name, declarator.id.definition]).toEqual([definition.mangled_name || definition.name, null]);
-			const asWritten = /** @type {EXPECTED_ANY} */ (modules.toPrintTree(tree, undefined, undefined, false, true));
-			expect(asWritten.body[0].declarations[0].id.name).toBe("v");
-			expect(declarator.startToken).toBe(tree.body[0].declarations[0].startToken);
+			const declarator = tree.body[0].declarations[0];
+			// A name is held as written and prints as its definition names it.
+			const { definition } = declarator.id;
+			expect(declarator.id.name).toBe("v");
+			expect(modules.printToString(declarator.id)).toBe(
+				definition.mangled_name || definition.name
+			);
 			const [a, b, c, d] = declarator.init.properties;
-			expect([a.quote, a.key.quote, a.mapName]).toEqual(["'", "'", "a"]);
-			expect([Boolean(b.quote), b.key.type, b.mapName]).toEqual([
+			expect([a.quote, modules.mapNameOf(a)]).toEqual(["'", "a"]);
+			expect([Boolean(b.quote), b.key.type, modules.mapNameOf(b)]).toEqual([
 				false,
 				"Identifier",
 				"b"
 			]);
-			expect([c.computed, c.mapName]).toEqual([true, "c"]);
-			expect([d.method, d.key.quote, d.mapName]).toEqual([true, '"', false]);
-			const [e, f, g] = printTree.body[1].body.body;
-			expect([e.type, e.key.quote, e.mapName]).toEqual(["PropertyDefinition", "'", "e"]);
-			expect([f.key.type, f.mapName]).toEqual(["PrivateIdentifier", f.key.name]);
-			expect([g.computed, g.mapName]).toEqual([true, "g"]);
-			const [attribute] = printTree.body[2].attributes;
+			expect([c.computed, modules.mapNameOf(c)]).toEqual([true, "c"]);
+			expect([d.method, d.quote]).toEqual([true, '"']);
+			const [e, f, g] = tree.body[1].body.body;
+			expect([e.type, e.quote, modules.mapNameOf(e)]).toEqual([
+				"PropertyDefinition",
+				"'",
+				"e"
+			]);
+			expect([f.key.type, modules.mapNameOf(f)]).toEqual([
+				"PrivateIdentifier",
+				f.key.name
+			]);
+			expect([g.computed, modules.mapNameOf(g)]).toEqual([true, "g"]);
+			const [attribute] = tree.body[2].attributes.properties;
 			expect([attribute.key.name, attribute.value.quote]).toEqual(["type", "'"]);
 		});
 
-		it("should read the nodes only the compressor makes, and refuse one it does not know", async () => {
+		it("should print the nodes only the compressor makes, and refuse one it does not know", async () => {
 			const { modules } = await load();
 			const { ast } = modules;
 			expect(
-				[ast.NaNNode(), ast.UndefinedNode(), ast.InfinityNode()].map(
-					(node) => /** @type {EXPECTED_ANY} */ (modules.toPrintTree(node)).name
+				[ast.NaNNode(), ast.UndefinedNode(), ast.InfinityNode()].map((node) =>
+					modules.printToString(node)
 				)
 			).toEqual(["NaN", "undefined", "Infinity"]);
-			expect(() => modules.toPrintTree(ast.ScopeNode())).toThrow(
-				"toPrintTree cannot read a Scope node"
+			expect(() => modules.printToString(ast.ScopeNode())).toThrow(
+				"printEstree cannot print a undefined node yet"
 			);
 		});
 
@@ -4299,32 +4203,28 @@ describe("syntax-printer", () => {
 		const kindDisagreements = (modules, tree) => {
 			/** @type {string[]} */
 			const disagreements = [];
-			modules.toPrintTree(
-				tree,
-				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
-					if (printNode === null) return;
-					for (const kind of Object.keys(modules.kindOf)) {
-						// An Accessor, only ever a method's value, reads as a Function.
-						if (kind === "Function" && kindName(node) === "Accessor") continue;
-						// A try's blocks, never a statement of their own, read as statements.
-						if (
-							kind === "BlockStatement" &&
-							(kindName(node) === "TryBlock" || kindName(node) === "Finally")
-						) {
-							continue;
-						}
-						const expected = modules.ast[`is${kind}Node`](node);
-						if (modules.kindOf[kind](printNode) !== expected) {
-							disagreements.push(`${kindName(node)} as ${printNode.type}: ${kind}`);
-						}
+			modules.ast.walk(tree, (/** @type {EXPECTED_ANY} */ node) => {
+				for (const kind of Object.keys(modules.kindOf)) {
+					// An Accessor, only ever a method's value, reads as a Function.
+					if (kind === "Function" && kindName(node) === "Accessor") continue;
+					// A try's blocks, never a statement of their own, read as statements.
+					if (
+						kind === "BlockStatement" &&
+						(kindName(node) === "TryBlock" || kindName(node) === "Finally")
+					) {
+						continue;
+					}
+					const expected = modules.ast[`is${kind}Node`](node);
+					if (modules.kindOf[kind](node) !== expected) {
+						disagreements.push(`${kindName(node)} as ${node.type}: ${kind}`);
 					}
 				}
-			);
+			});
 			return disagreements;
 		};
 
-		for (const source of sources) {
-			it(`should read a compressed and mangled tree, its kinds as terser's: ${source.slice(0, 60)}`, async () => {
+		for (const source of TABLE_SOURCES) {
+			it(`should ask terser's kinds of a compressed and mangled tree: ${source.slice(0, 60)}`, async () => {
 				const { modules } = await load();
 				for (const tree of [
 					await terserTree(source, { compress: false, mangle: false }),
@@ -4339,7 +4239,7 @@ describe("syntax-printer", () => {
 			});
 		}
 
-		it("should bake mangled names into the identifiers", async () => {
+		it("should print the names mangling chose, off their definitions", async () => {
 			const { modules } = await load();
 			const tree = await terserTree(MANGLED_NAMES, {
 				compress: { passes: 2 },
@@ -4347,18 +4247,14 @@ describe("syntax-printer", () => {
 			});
 			/** @type {[string, string][]} */
 			const renamed = [];
-			modules.toPrintTree(
-				tree,
-				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
-					if (printNode !== null && printNode.type === "Identifier" && node.definition) {
-						const definition = node.definition;
-						if (definition && definition.mangled_name) {
-							expect(printNode.name).toBe(definition.mangled_name);
-							renamed.push([node.name, printNode.name]);
-						}
-					}
+			modules.ast.walk(tree, (/** @type {EXPECTED_ANY} */ node) => {
+				const { definition } = node;
+				if (node.type === "Identifier" && definition && definition.mangled_name) {
+					const printed = modules.printToString(node);
+					expect(printed).toBe(definition.mangled_name);
+					renamed.push([node.name, printed]);
 				}
-			);
+			});
 			expect(renamed).toContainEqual(["first", expect.any(String)]);
 		});
 	});
@@ -4412,24 +4308,21 @@ describe("syntax-printer", () => {
 			} catch (error) {
 				theirError = error;
 			}
-			/** @type {Map<EXPECTED_ANY, EXPECTED_ANY[]>} */
-			const pairs = new Map();
-			const program = modules.toPrintTree(
-				tree,
-				(/** @type {EXPECTED_ANY} */ node, /** @type {EXPECTED_ANY} */ printNode) => {
-					if (printNode === null) return;
-					const known = pairs.get(node);
-					if (known) known.push(printNode);
-					else pairs.set(node, [printNode]);
-				},
-				undefined,
-				false,
-				true
-			);
+			// Both analyses write a name's `definition`: terser's is kept aside.
+			/** @type {Map<EXPECTED_ANY, EXPECTED_ANY>} */
+			const theirDefinitions = new Map();
+			if (!theirError) {
+				ast.walk(tree, (/** @type {EXPECTED_ANY} */ node) => {
+					if (node.type === "Identifier" && node.atom !== true) {
+						theirDefinitions.set(node, node.definition);
+						if (node.definition) node.definition = null;
+					}
+				});
+			}
 			/** @type {EXPECTED_ANY} */
 			let analysis;
 			try {
-				analysis = modules.analyzeManglingScopes(program, options);
+				analysis = modules.analyzeManglingScopes(tree, options);
 			} catch (error) {
 				ourError = error;
 			}
@@ -4506,8 +4399,7 @@ describe("syntax-printer", () => {
 			for (const [index, theirs] of theirScopes.entries()) {
 				const ours = ourScopes[index];
 				const where = `scope ${index} (${ours.node.type})`;
-				const nodes = pairs.get(blockNodes.get(theirs) || theirs) || [];
-				if (nodes.length !== 1 || nodes[0] !== ours.node) {
+				if ((blockNodes.get(theirs) || theirs) !== ours.node) {
 					differences.push(`${where} opened by another node`);
 					return differences;
 				}
@@ -4560,7 +4452,7 @@ describe("syntax-printer", () => {
 				}
 				const functionName =
 					ast.isFunctionNode(theirs) && theirs.id
-						? definitionOf.get(theirs.id.definition)
+						? definitionOf.get(theirDefinitions.get(theirs.id))
 						: null;
 				if (functionName !== ours.functionName) {
 					differences.push(`${where} function name`);
@@ -4602,41 +4494,17 @@ describe("syntax-printer", () => {
 					differences.push(`label ${index} (${ours.name})`);
 				}
 			}
-			/** @type {Set<EXPECTED_ANY>} */
-			const symbolNodes = new Set();
-			for (const [node, printNodes] of pairs) {
-				for (const printNode of printNodes) {
-					if (printNode.type !== "Identifier") continue;
-					symbolNodes.add(printNode);
-					let expected = null;
-					if (ast.isLabelNode(node)) expected = labelOf.get(node);
-					else if (ast.isLabelRefNode(node)) expected = labelOf.get(node.definition);
-					else if (ast.isSymbolNode(node) && node.definition && node.definition !== star) {
-						expected = definitionOf.get(node.definition);
-					}
-					if (expected !== printNode.definition) {
-						differences.push(`${kindName(node)} ${node.name} names another definition`);
-					}
+			for (const [node, theirDefinition] of theirDefinitions) {
+				let expected = null;
+				if (ast.isLabelNode(node)) expected = labelOf.get(node);
+				else if (ast.isLabelRefNode(node)) expected = labelOf.get(theirDefinition);
+				else if (ast.isSymbolNode(node) && theirDefinition && theirDefinition !== star) {
+					expected = definitionOf.get(theirDefinition);
+				}
+				if (expected !== (node.definition || null)) {
+					differences.push(`${kindName(node)} ${node.name} names another definition`);
 				}
 			}
-			/**
-			 * @param {EXPECTED_ANY} node a print node, or a list of them
-			 * @returns {void}
-			 */
-			const checkUnnamed = (node) => {
-				if (Array.isArray(node)) {
-					for (const child of node) checkUnnamed(child);
-					return;
-				}
-				if (node === null || typeof node !== "object" || typeof node.type !== "string") return;
-				if (node.type === "Identifier" && !symbolNodes.has(node) && node.definition) {
-					differences.push(`${node.name}, no name terser scopes, has a definition`);
-				}
-				for (const key of Object.keys(node)) {
-					if (!/Token$|^(definition|source|scope|parent_scope|variables|enclosed|block_scope|globals)$/.test(key)) checkUnnamed(node[key]);
-				}
-			};
-			checkUnnamed(program);
 			const blockDefunScopes = [...theirBlockDefunScopes].map((scope) => scopeOf.get(scope));
 			if (
 				blockDefunScopes.length !== analysis.blockDefunScopes.size ||
@@ -4645,7 +4513,7 @@ describe("syntax-printer", () => {
 				differences.push("block function scopes");
 			}
 			const declarators = options.keep_fnames
-				? theirDeclarators.map((symbol) => /** @type {EXPECTED_ANY[]} */ (pairs.get(symbol))[0])
+				? theirDeclarators
 				: null;
 			if (JSON.stringify(declarators && declarators.map((identifier) => identifier.name)) !== JSON.stringify(analysis.functionDeclarators && analysis.functionDeclarators.map((/** @type {EXPECTED_ANY} */ identifier) => identifier.name)) ||
 				(declarators !== null && declarators.some((identifier, index) => identifier !== analysis.functionDeclarators[index]))) {
@@ -4869,7 +4737,7 @@ describe("syntax-printer", () => {
 					}
 				)
 			);
-			const program = modules.toPrintTree(tree, undefined, undefined, false, true);
+			const program = tree;
 			const analysis = modules.analyzeManglingScopes(program, {});
 			const [f, g] = program.body;
 			const inlined = [
@@ -4885,7 +4753,7 @@ describe("syntax-printer", () => {
 			expect(analysis.scopes.find((/** @type {EXPECTED_ANY} */ scope) => scope.node === inlined[0]).functionName).toBe(inlined[0].id.definition);
 		});
 
-		it("should read only the nodes the bridge writes", async () => {
+		it("should refuse a node it cannot read", async () => {
 			const { modules } = await load();
 			expect(() =>
 				modules.analyzeManglingScopes(
@@ -4905,10 +4773,7 @@ describe("syntax-printer", () => {
 				})
 			);
 			const options = { keep_fnames: /^s/, toplevel: true };
-			const analysis = modules.analyzeManglingScopes(
-				modules.toPrintTree(tree, undefined, undefined, false, true),
-				options
-			);
+			const analysis = modules.analyzeManglingScopes(tree, options);
 			const [short, other] = analysis.functionDeclarators.map(
 				(/** @type {EXPECTED_ANY} */ identifier) => identifier.definition
 			);
