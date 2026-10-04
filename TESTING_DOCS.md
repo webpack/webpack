@@ -224,6 +224,31 @@ without a dependency parent, such as those created directly by plugins, remain
 valid and have a positive control in the mutation audit.
 `incremental/prefetch-rebuild-connections` covers this invariant when prefetch
 rebuilds an uncached loader module during the make hook.
+`incremental/restored-file-cache` removes and restores a detached module with
+filesystem caching, checking that a failed snapshot read cannot hide the restored
+file from the next rebuild.
+
+`incremental/hmr-runtime` applies real watch updates in a retained runtime for
+node, async-node, web and webworker targets. It checks accept/dispose callbacks,
+dispose data, module removal and recovery after a syntax error. HMR's history
+prevents a fresh-build comparison; graph checks and explicit runtime assertions
+cover every step, including that the entry and shared state remain alive. Its
+numbered directories contain the sources and `test.js` assertions. `findBundle`
+loads those assertions while `STATE` retains the initial runtime per configuration.
+
+`incremental/plugin-error-recovery` injects synchronous and asynchronous failures
+in make, finishMake, finishModules, processAssets, afterSeal, afterCompile, emit
+and done. After replacing a dependency, the invalidation must report the error
+once, then recover without another edit and continue rebuilding. Successful
+builds still compare with fresh compilations. Steps 1 through 8 each fail in one
+hook; step 9 verifies the next ordinary rebuild. The case uses filesystem
+caching and runs in both watch suites.
+
+A watch case can provide `watchError(error, compiler)` in `test.config.js` to
+assert an expected fatal error and invalidate the same compiler without editing
+files. Throwing or rejecting fails the test; without this callback, fatal errors
+close the compiler as usual. This leaves recovery cases on the standard watch
+runner, including fresh-build comparisons and the operating system file watcher.
 
 **Snapshot printed code; assert everything else.** When the thing tested _is_ generated output — bundles, minified CSS/HTML, serialized ASTs, stats text — use `toMatchSnapshot()`, not `expect(...).toBe(...)` on fragments (which pins one substring and ignores every other byte). For behavior, invariants, equivalences and error paths use explicit `expect`s; a snapshot there only records what happened to be true. Never snapshot a value some machine can't produce (a snapshot skipped without an optional browser or native binary is reported obsolete and fails the run there), and keep control characters out of snapshots (one NUL makes git treat the file as binary and hide its diff).
 
