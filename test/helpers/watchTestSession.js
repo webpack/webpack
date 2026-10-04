@@ -190,7 +190,7 @@ const createWatchTestSession = (directory, configuration, comparison = {}) => {
 		},
 		async compare(stats) {
 			await compare(stats);
-			if (!stats.hasErrors()) {
+			if (!comparison.skipFreshCompilation && !stats.hasErrors()) {
 				expect(readExports(outputDirectory)).toEqual(
 					readExports(path.join(freshDirectory, "0"))
 				);
