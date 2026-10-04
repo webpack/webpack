@@ -2580,6 +2580,11 @@ describe("syntax-printer", () => {
 				""
 			],
 			[
+				"(function f(a) { g(); })(2);",
+				{ compress: { keep_fnames: true } },
+				"!function n(){g()}();"
+			],
+			[
 				"function arguments() {} console.log(typeof arguments);",
 				{ toplevel: true },
 				'console.log("function");'
