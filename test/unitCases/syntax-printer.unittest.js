@@ -4640,6 +4640,25 @@ describe("syntax-printer", () => {
 		};
 
 		/**
+		 * @param {EXPECTED_ANY} analysis what `analyzeManglingScopes` answered
+		 * @returns {EXPECTED_ANY[]} its scopes, in the order opened
+		 */
+		const scopesOf = (analysis) => {
+			/** @type {EXPECTED_ANY[]} */
+			const scopes = [];
+			/**
+			 * @param {EXPECTED_ANY} scope a scope
+			 * @returns {void}
+			 */
+			const add = (scope) => {
+				scopes.push(scope);
+				for (const child of scope.childScopes) add(child);
+			};
+			add(analysis.toplevel);
+			return scopes;
+		};
+
+		/**
 		 * @param {EXPECTED_ANY} error what was thrown, if anything
 		 * @returns {string | undefined} its message and where it points
 		 */
@@ -4738,7 +4757,7 @@ describe("syntax-printer", () => {
 			);
 			ast.walkNode(tree, walker);
 			/** @type {EXPECTED_ANY[]} */
-			const ourScopes = analysis.scopes;
+			const ourScopes = scopesOf(analysis);
 			if (ourScopes.length !== theirScopes.length) {
 				differences.push(`${ourScopes.length} scopes, terser ${theirScopes.length}`);
 				return differences;
@@ -4766,12 +4785,13 @@ describe("syntax-printer", () => {
 				}
 				scopeOf.set(theirs, ours);
 				const names = [...theirs.variables.keys()];
-				if (names.join() !== [...ours.variables.keys()].join()) {
-					differences.push(`${where} declares ${[...ours.variables.keys()]}, terser ${names}`);
+				const ourNames = ours.variables.map((/** @type {EXPECTED_ANY} */ variable) => variable.name);
+				if (names.join() !== ourNames.join()) {
+					differences.push(`${where} declares ${ourNames}, terser ${names}`);
 				}
 				for (const name of names) {
-					if (ours.variables.has(name)) {
-						pairDefinitions(theirs.variables.get(name), ours.variables.get(name));
+					if (ours.getBinding(name) !== undefined) {
+						pairDefinitions(theirs.variables.get(name), ours.getBinding(name));
 					}
 				}
 			}
@@ -4788,10 +4808,10 @@ describe("syntax-printer", () => {
 			}
 			for (const [theirs, ours] of scopeOf) {
 				const where = `scope ${ourScopes.indexOf(ours)} (${ours.node.type})`;
-				if ((scopeOf.get(theirs.parent_scope) || null) !== ours.parent) {
+				if ((scopeOf.get(theirs.parent_scope) || null) !== ours.upper) {
 					differences.push(`${where} parent`);
 				}
-				if (scopeOf.get(ast.getDefunScope(theirs)) !== ours.defun) {
+				if (scopeOf.get(ast.getDefunScope(theirs)) !== ours.variableScope) {
 					differences.push(`${where} defun`);
 				}
 				if (Boolean(theirs.uses_eval) !== ours.usesEval) {
@@ -4822,8 +4842,9 @@ describe("syntax-printer", () => {
 			for (const [theirs, ours] of definitionOf) {
 				const where = `${theirs.name} in scope ${ourScopes.indexOf(ours.scope)}`;
 				const kinds = theirs.orig.map((/** @type {EXPECTED_ANY} */ symbol) => DECLARING_KINDS[terserTypeOf(kindName(symbol))]);
-				if (kinds.join() !== ours.kinds.join()) {
-					differences.push(`${where} declared as ${ours.kinds}, terser ${kinds}`);
+				const declarations = kinds.reduce((/** @type {number} */ bits, /** @type {number} */ kind) => bits | (1 << kind), 0);
+				if (kinds[0] !== ours.kind || declarations !== ours.declarations) {
+					differences.push(`${where} declared as ${ours.kind}/${ours.declarations}, terser ${kinds}`);
 				}
 				for (const [field, theirValue, ourValue] of [
 					["name", theirs.name, ours.name],
@@ -5111,7 +5132,7 @@ describe("syntax-printer", () => {
 			]);
 			// Declared in the function holding them, as the declarations were.
 			expect(inlined.map((/** @type {EXPECTED_ANY} */ node) => node.id.definition.scope.node)).toEqual([f, g]);
-			expect(analysis.scopes.find((/** @type {EXPECTED_ANY} */ scope) => scope.node === inlined[0]).functionName).toBe(inlined[0].id.definition);
+			expect(scopesOf(analysis).find((/** @type {EXPECTED_ANY} */ scope) => scope.node === inlined[0]).functionName).toBe(inlined[0].id.definition);
 		});
 
 		it("should refuse a node it cannot read", async () => {
@@ -5121,7 +5142,36 @@ describe("syntax-printer", () => {
 					{ type: "Program", body: [{ type: "Unknown" }] },
 					{}
 				)
-			).toThrow("analyzeManglingScopes cannot read a Unknown node");
+			).toThrow("The minifier's scope analysis cannot read a Unknown node");
+		});
+
+		it("should hold terser's scopes in webpack's scope model", async () => {
+			const { minify, modules } = await load();
+			const analyzeScope = require("../../lib/javascript/ScopeAnalyzer");
+			const { ast: tree } = /** @type {EXPECTED_ANY} */ (
+				await minify(
+					"var a = function f(b) { { let c = b; } try {} catch (e) { let d = e; } return f; };",
+					{ compress: false, mangle: false, format: { ast: true, code: false } }
+				)
+			);
+			const { toplevel } = modules.analyzeManglingScopes(tree, {});
+			expect(toplevel).toBeInstanceOf(analyzeScope.Scope);
+			expect(toplevel.upper).toBeNull();
+			expect(toplevel.getBinding("a")).toBeInstanceOf(analyzeScope.MinifierVariable);
+			const [lambda] = toplevel.childScopes;
+			// The function's own name and `arguments` sit in its scope, before its parameters.
+			expect(lambda.variables.map((/** @type {EXPECTED_ANY} */ variable) => variable.name)).toEqual(["arguments", "f", "b"]);
+			expect(lambda.functionName).toBe(lambda.getBinding("f"));
+			expect(lambda.variableScope).toBe(lambda);
+			// A scope for every block, even one declaring nothing, and a catch's,
+			// whose body is no scope of its own.
+			const [block, tryBlock, catchScope] = lambda.childScopes;
+			expect(tryBlock.variables).toEqual([]);
+			expect(block.variableScope).toBe(lambda);
+			expect(block.variables.map((/** @type {EXPECTED_ANY} */ variable) => variable.name)).toEqual(["c"]);
+			expect(catchScope.variables.map((/** @type {EXPECTED_ANY} */ variable) => variable.name)).toEqual(["e", "d"]);
+			expect(catchScope.childScopes).toEqual([]);
+			expect(block.enclosed).toContain(lambda.getBinding("b"));
 		});
 
 		it("should keep a kept declarator's name while mangling", async () => {
