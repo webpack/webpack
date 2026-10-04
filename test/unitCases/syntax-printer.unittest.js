@@ -662,6 +662,12 @@ const MANGLED_MODULE =
  * differently, and what `toPrintTree` adds to ESTree for the printer.
  */
 const PRINT_TREE_SKIPPED_KEYS = new Set([
+	// What the compressor's nodes hold, which the printer reads them as.
+	"flags",
+	"logical",
+	"_annotations",
+	"block_scope",
+	"is_array",
 	"start",
 	"end",
 	"loc",
@@ -695,9 +701,21 @@ const comparableTree = (node) => {
 	if (node === null || typeof node !== "object") return node;
 	/** @type {Record<string, EXPECTED_ANY>} */
 	const result = {};
-	for (const key of Object.keys(node)) {
+	// A node's type and the values its kind fixes are its prototype's.
+	for (const key in node) {
 		if (PRINT_TREE_SKIPPED_KEYS.has(key) || node[key] === undefined) continue;
 		result[key] = comparableTree(node[key]);
+	}
+	// What tells the compressor's kinds of one type apart, which ESTree holds
+	// otherwise or not at all.
+	delete result.role;
+	if (node.type === "ThisExpression" || node.type === "Super") delete result.name;
+	if (node.type === "AssignmentPattern") delete result.operator;
+	if (node.type === "ObjectPattern") delete result.elements;
+	if (node.type === "ArrayPattern") delete result.properties;
+	if (node.type === "VariableDeclaration") {
+		if (node.await === true) result.kind = "await using";
+		delete result.await;
 	}
 	if (node.type === "Literal" && (node.regex || node.bigint !== undefined)) {
 		// terser holds a regular expression's parts, not a RegExp, and a
@@ -4609,7 +4627,7 @@ describe("syntax-printer", () => {
 					differences.push(`${node.name}, no name terser scopes, has a definition`);
 				}
 				for (const key of Object.keys(node)) {
-					if (!/Token$|^definition$|^source$/.test(key)) checkUnnamed(node[key]);
+					if (!/Token$|^(definition|source|scope|parent_scope|variables|enclosed|block_scope|globals)$/.test(key)) checkUnnamed(node[key]);
 				}
 			};
 			checkUnnamed(program);
