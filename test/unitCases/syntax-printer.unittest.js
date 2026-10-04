@@ -256,6 +256,26 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"built-in calls and constructions on literals no one reads",
+		'Math.random(); Object.keys([1, , 2]); Date(); String([1, { a: [2] }]); new Set; new Error("m"); new Date(0); new Uint8Array(16); console.log(1);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"built-in globals and their properties no one reads",
+		"JSON; Reflect; Math.PI; Number.NaN; Object.prototype.toString; Symbol.iterator; console.log(1);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a RegExp no one reads",
+		'new RegExp("foobar", "i"); new RegExp("a+"); RegExp("(?<a>x)\\\\k<a>", "gimsuy"); Math?.prototype.toString; console.log(1);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"reads a `typeof` guards",
+		'typeof y != "undefined" && y; typeof y !== "undefined" && y; typeof y === "undefined" || y; typeof y == "undefined" || y; typeof y < "u" && y; typeof y <= "u" && y; typeof y >= "u" || y; typeof y > "u" || y; "u" > typeof y && y; "u" < typeof y || y; console.log(1);',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"global functions called on literals",
 		'console.log(parseInt("ff", 16), encodeURIComponent("a b"), isNaN("x"));',
 		{ compress: {}, mangle: false }
@@ -326,6 +346,29 @@ const KEPT_CASES = [
 	["case not in ASCII", 'console.log("\\u00c4B".toLowerCase());'],
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
 	["a result longer than the call", 'console.log("ab".repeat(100));'],
+	["a built-in call that throws", 'try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }'],
+	["a RegExp an older Node rejects", 'try { new RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
+	["a RegExp pattern holding a slash", 'try { new RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp with flags not a string", 'try { new RegExp("a", 1); } catch (e) { console.log(1); }'],
+	["a RegExp pattern not a string", 'try { new RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
+	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
+	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }); } f([1]); console.log(1);"],
+	["a built-in that runs code", 'eval("console.log(1)");'],
+	["a built-in global the program declares", "var Set = function () { console.log(1); }; new Set();"],
+	["a built-in call a `with` could rebind", "with ({ JSON: { parse: function () { console.log(1); } } }) JSON.parse(\"1\");"],
+	["a global read a `with` could rebind", "with ({ get JSON() { console.log(1); } }) JSON;"],
+	["a getter of a built-in prototype", "try { Map.prototype.size; } catch (e) { console.log(1); }"],
+	["a property read too deep", "try { Math.PI.toFixed; console.log(1); } catch (e) { console.log(2); }"],
+	["an optional built-in call", "Math?.max(1); JSON.parse?.(\"1\"); console.log(1);"],
+	["a static the generated tables leave out", "try { Math.nope(); } catch (e) { console.log(1); }"],
+	["a call of something that is no built-in", "var o = { f: function () { console.log(1); } }; o.f(); (0, o.f)();"],
+	["a `RegExp` newer than ES2018, which a newer host engine reads too", 'new RegExp("(?i:a)"); console.log(1);'],
+	["a `Symbol.for`, which would register its key in the build's own registry", 'Symbol.for("k"); console.log(1);'],
+	["a `typeof` guard of another name", 'try { typeof y != "undefined" && z; } catch (e) { console.log(1); }'],
+	["a `typeof` guard the wrong way round", 'try { typeof y == "undefined" && y; } catch (e) { console.log(1); }'],
+	["a `typeof` comparison guarding the wrong way round", 'try { typeof y < "u" || y; } catch (e) { console.log(1); }'],
+	["a `typeof` guard of a declared name", 'var y = { valueOf: function () { console.log(1); } }; typeof y != "undefined" && +y;'],
+	["a `typeof` guard of no reference", 'typeof 1 != "undefined" && console.log(1); typeof y != 1 && console.log(2); typeof y in {} || console.log(3);'],
 	["a count past the call's own size", 'console.log("a".repeat(1e9), "a".padStart("99999"), "a".padEnd(1e9));'],
 	["a string longer than the call", 'console.log("abcdefgh".repeat(3));'],
 	["a number printed longer than the call", "console.log(Math.fround(0.1));"],
