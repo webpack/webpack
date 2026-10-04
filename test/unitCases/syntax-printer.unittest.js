@@ -715,6 +715,7 @@ const comparableTree = (node) => {
 	delete result.role;
 	if (node.type === "ThisExpression" || node.type === "Super") delete result.name;
 	if (node.type === "AssignmentPattern") delete result.operator;
+	if (node.type === "SwitchCase" && node.test === null) delete result.test;
 	if (node.type === "Property" && node.static === false) delete result.static;
 	if (node.type === "ObjectPattern") delete result.elements;
 	if (node.type === "ArrayPattern") delete result.properties;
