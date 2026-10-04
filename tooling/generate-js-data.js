@@ -1131,6 +1131,9 @@ const IMPURE_BUILT_INS = {
 		"Atomics.wait",
 		"Atomics.notify",
 		"Atomics.waitAsync"
+	],
+	"running it at build time keeps its key in the build's own symbol registry": [
+		"Symbol.for"
 	]
 };
 

@@ -2023,6 +2023,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it renames `LocalCtor` inside a `with` body, so a `LocalCtor` property on the `with` object is no longer used",
 		["swc minifier: fixture/issues/11684/with-scope/input.js"]
+	],
+	[
+		"oxc drops an unused `Symbol.for`, which webpack keeps: running it at build time would keep its key in the build's own symbol registry",
+		["oxc minifier: ecmascript/may_have_side_effects.rs:1259"]
 	]
 ];
 
