@@ -188,9 +188,9 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset index.html 570 bytes [emitted] [minimized] (auxiliary name: index)
+asset index.html 569 bytes [emitted] [minimized] (auxiliary name: index)
 asset styles.css 40 bytes [emitted] [minimized] (name: src-index-0)
-Entrypoint index (570 bytes) = 1 auxiliary asset
+Entrypoint index (569 bytes) = 1 auxiliary asset
 Entrypoint src-index-1 =
 Entrypoint src-index-0 40 bytes = styles.css
 chunk (runtime: index) (index) 47 bytes (css-text) 549 bytes (html) [entry]
