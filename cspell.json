@@ -167,6 +167,7 @@
     "fsevents",
     "fullhash",
     "funcindex",
+    "funcs",
     "functype",
     "gcov",
     "geometricprecision",
