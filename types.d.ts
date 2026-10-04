@@ -20623,6 +20623,10 @@ declare interface NodeShape {
 	[index: string]: any;
 	TYPE: string;
 	type: string;
+	idDeclares?: number;
+	mapName?: null | string | false;
+	shorthand: boolean;
+	annotatedKey: boolean;
 	name: string;
 	kind: string;
 	role: string;
