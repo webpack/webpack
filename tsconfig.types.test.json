@@ -11,6 +11,7 @@
     "test/**/webpack.config.js",
     "test/cases/**/*loader*.js",
     "test/watchCases/**/*loader*.js",
+    "test/watchCases/**/scenario.js",
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
     "test/*.size.js",

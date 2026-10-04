@@ -23,6 +23,7 @@ const requestAdditionalSeal = (compiler) => {
 			return true;
 		});
 		compilation.hooks.afterSeal.tap("AdditionalSealTest", () => {
+			if (!compiler.watchMode) return;
 			const {
 				_incremental: { baseModules: base }
 			} =

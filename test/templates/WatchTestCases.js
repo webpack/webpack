@@ -15,6 +15,9 @@ require("../helpers/warmup-webpack");
  * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
  * @property {boolean=} noTests
  * @property {boolean=} restartCompiler close the compiler after each step and start a new one
+ * @property {string=} skipFreshAssetContent reason asset contents depend on build history
+ * @property {string=} skipFreshWarnings reason warnings depend on build history
+ * @property {string=} skipFreshCompilation reason an independent compilation cannot reproduce this case
  */
 
 const path = require("path");
@@ -25,6 +28,7 @@ const { parseResource } = require("../../lib/util/identifier");
 const { TestRunner } = require("../harness/runner");
 const assertModuleGraph = require("../helpers/assertModuleGraph");
 const checkArrayExpectation = require("../helpers/checkArrayExpectation");
+const compareWatchCompilation = require("../helpers/compareWatchCompilation");
 const createLazyTestEnv = require("../helpers/createLazyTestEnv");
 const deprecationTracking = require("../helpers/deprecationTracking");
 const prepareOptions = require("../helpers/prepareOptions");
@@ -149,6 +153,17 @@ const describeCases = (config) => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
+						const scenarioPath = path.join(testDirectory, "scenario.js");
+						if (fs.existsSync(scenarioPath)) {
+							/** @type {(options: import("../helpers/watchTestSession").ScenarioOptions) => void} */
+							const describeScenario = require(scenarioPath);
+
+							describeScenario({
+								directory: tempDirectory,
+								experiments: config.experiments
+							});
+							return;
+						}
 						/** @type {import("../../").Compiler | import("../../").MultiCompiler | undefined} */
 						let watchedCompiler;
 						/** @type {Promise<Error | null | undefined> | undefined} */
@@ -207,7 +222,16 @@ const describeCases = (config) => {
 								testName
 							);
 
+							const freshOutputDirectory = path.join(
+								testRootDirectory,
+								"js",
+								`${config.name}-fresh`,
+								category.name,
+								testName
+							);
+
 							rimraf.sync(outputDirectory);
+							rimraf.sync(freshOutputDirectory);
 
 							let options = {};
 							const configPath = path.join(testDirectory, "webpack.config.js");
@@ -358,6 +382,25 @@ const describeCases = (config) => {
 							).step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
+							/** @type {WatchTestConfig} */
+							let testConfig = {
+								findBundle(_, options) {
+									const ext = path.extname(
+										parseResource(options.output.filename).path
+									);
+									return `./bundle${ext}`;
+								}
+							};
+							try {
+								// try to load a test file
+								testConfig = Object.assign(
+									testConfig,
+									require(path.join(testDirectory, "test.config.js"))
+								);
+							} catch (_err) {
+								// empty
+							}
+
 							/**
 							 * Gives the watcher a new mtime for each change no build reported while idle.
 							 * @param {import("../../").Compiler[]} compilers watched compilers
@@ -400,6 +443,12 @@ const describeCases = (config) => {
 
 									const compiler = webpack(options);
 									watchedCompiler = compiler;
+									const compare = compareWatchCompilation(
+										compiler,
+										options,
+										freshOutputDirectory,
+										testConfig
+									);
 									const compilers =
 										compiler instanceof webpack.MultiCompiler
 											? compiler.compilers
@@ -457,6 +506,7 @@ const describeCases = (config) => {
 												}
 												lastHash = stats.hash;
 												run.done = true;
+												await compare(stats);
 												run.stats = stats;
 												lastFileDependencies = new Set();
 												lastContextDependencies = [];
@@ -523,24 +573,6 @@ const describeCases = (config) => {
 													return;
 												}
 
-												/** @type {WatchTestConfig} */
-												let testConfig = {
-													findBundle(_, options) {
-														const ext = path.extname(
-															parseResource(options.output.filename).path
-														);
-														return `./bundle${ext}`;
-													}
-												};
-												try {
-													// try to load a test file
-													testConfig = Object.assign(
-														testConfig,
-														require(path.join(testDirectory, "test.config.js"))
-													);
-												} catch (_err) {
-													// empty
-												}
 
 												if (testConfig.noTests) {
 													return process.nextTick(finish);
