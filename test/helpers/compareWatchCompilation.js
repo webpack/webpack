@@ -122,22 +122,22 @@ const getDiagnostics = (stats) => {
 /**
  * Runs an independent, cache-free compiler for every watch step.
  * @param {Compiler | MultiCompiler} compiler watched compiler
- * @param {Configuration | Configuration[]} options original configurations
+ * @param {() => Promise<Configuration[]>} createOptions independent configurations
  * @param {string} outputDirectory case output directory
  * @param {{ skipFreshAssetContent?: string, skipFreshWarnings?: string, skipFreshCompilation?: string }} comparison comparison exceptions
  * @returns {(stats: Stats | MultiStats) => Promise<void>} per-step comparison
  */
 const compareWatchCompilation = (
 	compiler,
-	options,
+	createOptions,
 	outputDirectory,
 	comparison
 ) => {
 	const compilers = "compilers" in compiler ? compiler.compilers : [compiler];
-	const configurations = Array.isArray(options) ? options : [options];
 	const watchedAssets = compilers.map(captureAssets);
 	return async (stats) => {
 		if (comparison.skipFreshCompilation) return;
+		const configurations = await createOptions();
 		const results = "stats" in stats ? stats.stats : [stats];
 		for (const result of results) {
 			const index = compilers.indexOf(result.compilation.compiler);
