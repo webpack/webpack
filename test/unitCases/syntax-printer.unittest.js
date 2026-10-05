@@ -374,6 +374,16 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"`typeof` orderings against \"u\" kept in the order written",
+		'console.log(typeof nothing == "undefined", !("u" > typeof nothing), "u" < typeof nothing);',
+		{ compress: { comparisons: false }, mangle: false }
+	],
+	[
+		"`RegExp` given flags and `Array` given one argument not a short length",
+		'var y = Math.random() < 2 ? "a" : ""; console.log(new RegExp(y, "g").global, new Array(typeof y)[0], new Array(!0).length, new Array(7).length, typeof Object(y));',
+		{ compress: {}, mangle: false }
+	],
+	[
 		"a `+` beside a number literal in arithmetic",
 		'var d = Math.random() < 2 ? "5" : ""; console.log(1000 * +d, 1 - +d, 5 | +d, 2 ** +d);',
 		{ compress: {}, mangle: false }
