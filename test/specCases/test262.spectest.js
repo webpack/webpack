@@ -1409,7 +1409,7 @@ const MINIFIED_FAILURES = [
 	{
 		reason:
 			"terser writes a program that reads a binding outside its scope",
-		minifiers: ["terser", "printer"],
+		minifiers: ["terser"],
 		tests: [
 			"expressions/arrow-function/scope-paramsbody-var-open.js (sloppy)",
 			"expressions/arrow-function/scope-paramsbody-var-open.js (strict)",
