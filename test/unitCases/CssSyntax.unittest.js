@@ -2834,6 +2834,9 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			["the radius is no default", "a{clip-path:circle(farthest-side)}"],
 			["only one radius is", "a{clip-path:ellipse(closest-side 10px)}"],
 			["a corner is rounded", "a{clip-path:inset(1px round 0 5px)}"],
+			// No length, so the engine drops the declaration a drop would bring back.
+			["a corner is no length", "a{clip-path:inset(0 round 0deg)}"],
+			["the same, for xywh", "a{clip-path:xywh(0 0 1px 2px round 0s)}"],
 			["the fill rule is no default", "a{clip-path:polygon(evenodd,0 0,1px 1px)}"],
 			// `rect()` reads its four values by position, not as a box.
 			["a rect's edges repeat", "a{clip-path:rect(1px 2px 1px 2px)}"],
