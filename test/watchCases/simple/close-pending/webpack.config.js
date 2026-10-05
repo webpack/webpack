@@ -40,17 +40,24 @@ module.exports = (_env, { srcPath }) =>
 						assert(watching);
 						const previousBuilds = builds;
 						const previousCompleted = completed;
+						/**
+						 * @param {string} directory directory holding the next value
+						 * @returns {void}
+						 */
+						const replaceValue = (directory) => {
+							// Windows' copyFile keeps the source mtime, hiding the change
+							fs.writeFileSync(
+								path.join(compiler.context, "value.js"),
+								fs.readFileSync(
+									path.join(compiler.context, directory, "value.js")
+								)
+							);
+						};
 						const reached = barrier.arm();
 						try {
-							fs.copyFileSync(
-								path.join(compiler.context, "update/value.js"),
-								path.join(compiler.context, "value.js")
-							);
+							replaceValue("update");
 							await reached;
-							fs.copyFileSync(
-								path.join(compiler.context, "later/value.js"),
-								path.join(compiler.context, "value.js")
-							);
+							replaceValue("later");
 							watching.invalidate();
 							let callbacks = 0;
 							const closing = [0, 1].map(
