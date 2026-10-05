@@ -1033,6 +1033,28 @@ const longhandType = (name, depth, propertyTable = properties) => {
  * @param {string[]} verifiedShorthands the shorthands a merge may emit
  * @returns {[string, string[]][]} `[shorthand, longhands]` in grammar order
  */
+/**
+ * The `animation` longhands whose every value is a keyword, with the keywords,
+ * so one of them is told apart from the other slots in a written layer.
+ * @returns {[string, string[]][]} `[longhand, keywords]`, in the shorthand's order
+ */
+const collectAnimationKeywordSlots = () => {
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const longhand of /** @type {string[]} */ (
+		properties.animation.computed
+	)) {
+		const syntax = properties[longhand] && properties[longhand].syntax;
+		if (typeof syntax !== "string") continue;
+		// The layer's own grammar, a comma list of the single value.
+		const single = syntax.replace(/#$/, "");
+		const { keywords, classes } = acceptedValues(single);
+		if (classes.size !== 0 || keywords.size === 0) continue;
+		out.push([longhand, lowerSorted(keywords)]);
+	}
+	return out;
+};
+
 const collectFamilyLonghands = (
 	propertyTable = properties,
 	verifiedShorthands = SUPPLEMENT.familyShorthands
@@ -7059,6 +7081,7 @@ const collectData = async () => {
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
 	const familySlotInitials = collectFamilySlotInitials(familyLonghands);
+	const animationKeywordSlots = collectAnimationKeywordSlots();
 	const layerInitials = collectLayerInitials();
 	const orderedLonghands = collectOrderedLonghands(
 		SUPPLEMENT.orderedShorthands
@@ -7229,6 +7252,11 @@ const FAMILY_LIST_PROPERTIES = ${setLiteral(familyListProperties)};
 
 const FAMILY_LONGHANDS = new Map([${familyLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
+
+// The \`animation\` longhands whose every value is a keyword, and those keywords.
+const ANIMATION_KEYWORD_SLOTS = new Map([${animationKeywordSlots
+		.map(([name, keywords]) => `["${name}", ${JSON.stringify(keywords)}]`)
 		.join(", ")}]);
 
 // The properties whose comma-separated items take a \`<custom-ident>\`, where a
@@ -7972,6 +8000,7 @@ module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
+module.exports.ANIMATION_KEYWORD_SLOTS = ANIMATION_KEYWORD_SLOTS;
 module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;

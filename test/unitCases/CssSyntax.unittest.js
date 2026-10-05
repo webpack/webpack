@@ -2754,7 +2754,6 @@ describe("CssSyntax — minify transforms, in-process", () => {
 	it("keeps a `flex` value no keyword spells", () => {
 		// `flex:1` means `1 1 0%`, and a length `0` is not a percentage `0%`.
 		expect(min("a{flex:1 1 0}")).toBe("a{flex:1 1 0}");
-		expect(min("a{flex:1 1}")).toBe("a{flex:1 1}");
 		// A basis a factor could be read as: CSS Flexbox 1 §7.1.1 reads a unitless
 		// zero not preceded by two factors as a factor, so `1 1 0` is not `1 0`.
 		expect(min("a{flex:3 1 0}")).toBe("a{flex:3 1 0}");
@@ -2762,6 +2761,123 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min("a{-webkit-box-flex:0 0 auto}")).toBe(
 			"a{-webkit-box-flex:0 0 auto}"
 		);
+	});
+
+	describe("a basic shape's default arguments", () => {
+		it.each([
+			["a{clip-path:circle(closest-side)}", "a{clip-path:circle()}"],
+			["a{clip-path:circle(CLOSEST-SIDE)}", "a{clip-path:circle()}"],
+			[
+				"a{clip-path:circle(closest-side at 10px 20px)}",
+				"a{clip-path:circle(at 10px 20px)}"
+			],
+			[
+				"a{clip-path:ellipse(closest-side closest-side)}",
+				"a{clip-path:ellipse()}"
+			],
+			[
+				"a{clip-path:ellipse(closest-side closest-side at left)}",
+				"a{clip-path:ellipse(at left)}"
+			],
+			["a{clip-path:inset(0 0 0 0 round 0)}", "a{clip-path:inset(0)}"],
+			["a{clip-path:inset(1px 2px 1px 2px)}", "a{clip-path:inset(1px 2px)}"],
+			["a{clip-path:inset(1px round 0 0 0 0)}", "a{clip-path:inset(1px)}"],
+			["a{clip-path:inset(1px round 0px 0% / 0em)}", "a{clip-path:inset(1px)}"],
+			[
+				"a{clip-path:inset(1px round 5px 5px)}",
+				"a{clip-path:inset(1px round 5px)}"
+			],
+			[
+				"a{clip-path:inset(1px round 5px/5px)}",
+				"a{clip-path:inset(1px round 5px)}"
+			],
+			[
+				"a{clip-path:inset(1px round 5px 6px 5px 6px / 1px 1px)}",
+				"a{clip-path:inset(1px round 5px 6px/1px)}"
+			],
+			[
+				"a{clip-path:rect(0 1px 2px 3px round 0)}",
+				"a{clip-path:rect(0 1px 2px 3px)}"
+			],
+			[
+				"a{clip-path:xywh(0 0 1px 2px round 3px 3px)}",
+				"a{clip-path:xywh(0 0 1px 2px round 3px)}"
+			],
+			[
+				"a{clip-path:polygon(nonzero, 0 0, 1px 1px, 0 1px)}",
+				"a{clip-path:polygon(0 0,1px 1px,0 1px)}"
+			],
+			[
+				"a{clip-path:path(NONZERO, 'M0 0L1 1')}",
+				'a{clip-path:path("M0 0L1 1")}'
+			],
+			[
+				"a{shape-outside:circle(closest-side) border-box}",
+				"a{shape-outside:circle()border-box}"
+			],
+			[
+				"a{offset-path:circle(closest-side at 10px)}",
+				"a{offset-path:circle(at 10px)}"
+			],
+			[
+				"a{-webkit-clip-path:inset(1px 1px 1px 1px)}",
+				"a{-webkit-clip-path:inset(1px)}"
+			]
+		])("%s", (css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+
+		it.each([
+			// Engines read the position back as written, so dropping the centre
+			// would change what `getComputedStyle()` reports.
+			["the position is the centre", "a{clip-path:circle(50% at 50% 50%)}"],
+			["the radius is no default", "a{clip-path:circle(farthest-side)}"],
+			["only one radius is", "a{clip-path:ellipse(closest-side 10px)}"],
+			["a corner is rounded", "a{clip-path:inset(1px round 0 5px)}"],
+			["the fill rule is no default", "a{clip-path:polygon(evenodd,0 0,1px 1px)}"],
+			// `rect()` reads its four values by position, not as a box.
+			["a rect's edges repeat", "a{clip-path:rect(1px 2px 1px 2px)}"],
+			["a substitution may be any side", "a{clip-path:inset(var(--a) 0 0 0)}"],
+			["a circle names two radii", "a{clip-path:circle(closest-side closest-side)}"],
+			["an inset names five edges", "a{clip-path:inset(1px 2px 3px 4px 5px)}"],
+			["a call is empty", "a{clip-path:rect()}"],
+			["a rect names no edges", "a{clip-path:rect(round 0)}"],
+			["the same, for an inset", "a{clip-path:inset()}"],
+			[
+				"a corner radius names five values",
+				"a{clip-path:inset(1px round 1px 2px 3px 4px 5px)}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
+	});
+
+	describe("a `flex` value written with fewer than three components", () => {
+		it.each([
+			// An omitted shrink is `1` and an omitted basis `0%` (CSS Flexbox 1 §7.1.1).
+			["a{flex:1 auto}", "a{flex:auto}"],
+			["a{flex:auto 1}", "a{flex:auto}"],
+			["a{flex:1 1}", "a{flex:1}"],
+			["a{flex:2 1}", "a{flex:2}"],
+			["a{FLEX:1 AUTO}", "a{flex:auto}"],
+			["a{-webkit-flex:1 auto}", "a{-webkit-flex:auto}"]
+		])("%s", (css, expected) => {
+			expect(min(css)).toBe(expected);
+		});
+
+		it.each([
+			["the factors are already shortest", "a{flex:2 50%}"],
+			["a basis first is no shorter", "a{flex:content 1}"],
+			["the shrink is no default", "a{flex:1 0 auto}"],
+			["two factors read a bare zero as the basis", "a{flex:0 0}"],
+			["a basis parts the factors", "a{flex:1 auto 2}"],
+			["two bases are written", "a{flex:auto 10px}"],
+			["a substitution may be any slot", "a{flex:var(--a) 1}"],
+			// IE10's 2012 grammar reads an omitted shrink as `0`, not `1`.
+			["IE10 reads it", "a{-ms-flex:1 auto}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(min(css)).toBe(css);
+		});
 	});
 
 	describe("a string inside a style attribute", () => {
@@ -6925,6 +7041,164 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(keyword)).toBe(keyword);
 			const pair = "a{overflow:auto;overflow-y:hidden}";
 			expect(minify(pair)).toBe(pair);
+		});
+
+		describe("a longhand following an order-free shorthand", () => {
+			it.each([
+				["a{border-left:none;border-left-width:0}", "a{border-left:0}"],
+				["a{border-top:1px solid;border-top-color:red}", "a{border-top:1px solid red}"],
+				["a{outline:1px solid;outline-color:red}", "a{outline:1px solid red}"],
+				["a{column-rule:1px solid;column-rule-color:red}", "a{column-rule:1px solid red}"],
+				["a{flex-flow:column;flex-wrap:wrap}", "a{flex-flow:column wrap}"],
+				// The direction left at its initial says nothing once written beside it.
+				["a{flex-flow:row;flex-wrap:wrap}", "a{flex-flow:wrap}"],
+				["a{text-emphasis:dot;text-emphasis-color:red}", "a{text-emphasis:dot red}"],
+				[
+					"a{text-decoration:underline;text-decoration-color:red}",
+					"a{text-decoration:underline red}"
+				],
+				["a{flex:1;flex-basis:auto}", "a{flex:auto}"],
+				["a{flex:1;flex-shrink:0}", "a{flex:1 0}"],
+				[
+					"a{transition:opacity .2s;transition-delay:.1s}",
+					"a{transition:opacity.2s.1s}"
+				],
+				[
+					"a{transition:opacity .2s;transition-timing-function:ease-in}",
+					"a{transition:opacity.2s ease-in}"
+				],
+				[
+					"a{transition:all .2s;transition-property:opacity}",
+					"a{transition:opacity.2s}"
+				],
+				// A slot set to its own initial is no longer written.
+				["a{transition:opacity .2s;transition-delay:0s}", "a{transition:opacity.2s}"],
+				[
+					"a{animation:x 2s linear;animation-iteration-count:infinite}",
+					"a{animation:x 2s linear infinite}"
+				],
+				[
+					"a{animation:loader 1s infinite;animation-delay:.3s}",
+					"a{animation:loader 1s infinite.3s}"
+				],
+				["a{animation:x 1s 2s;animation-delay:3s}", "a{animation:x 1s 3s}"],
+				[
+					"a{animation:x 1s;animation-direction:reverse}",
+					"a{animation:x 1s reverse}"
+				],
+				[
+					"a{-webkit-transition:opacity .2s;-webkit-transition-delay:.1s}",
+					"a{-webkit-transition:opacity.2s.1s}"
+				],
+				[
+					"a{-webkit-animation:x 1s;-webkit-animation-iteration-count:infinite}",
+					"a{-webkit-animation:x 1s infinite}"
+				]
+			])("%s", (css, expected) => {
+				expect(minify(css)).toBe(expected);
+			});
+
+			it.each([
+				[
+					"a{outline:1px solid!important;outline-color:red!important}",
+					"a{outline:1px solid red!important}"
+				],
+				// A shrink no default and a basis no `0%` leave all three written.
+				["a{flex:1 auto;flex-shrink:0}", "a{flex:1 0 auto}"],
+				["a{flex:1;flex-shrink:2}", "a{flex:1 2}"],
+				// A keyword is the factors it names.
+				["a{flex:none;flex-grow:1}", "a{flex:1 0 auto}"],
+				[
+					"a{transition:opacity .2s ease-in;transition-delay:.1s}",
+					"a{transition:opacity.2s.1s ease-in}"
+				],
+				[
+					"a{transition:opacity .2s allow-discrete;transition-delay:.1s}",
+					"a{transition:opacity.2s.1s allow-discrete}"
+				],
+				[
+					"a{transition:opacity .2s;transition-duration:.3s}",
+					"a{transition:opacity.3s}"
+				],
+				[
+					"a{transition:opacity .2s;transition-behavior:allow-discrete}",
+					"a{transition:opacity.2s allow-discrete}"
+				],
+				// A slot set back to its initial is no longer written.
+				[
+					"a{transition:opacity .2s ease-in;transition-timing-function:ease}",
+					"a{transition:opacity.2s}"
+				],
+				[
+					"a{transition:opacity .2s allow-discrete;transition-behavior:normal}",
+					"a{transition:opacity.2s}"
+				],
+				[
+					"a{transition:opacity .2s .1s;transition-duration:0s}",
+					"a{transition:opacity 0s.1s}"
+				],
+				["a{transition:all .2s;transition-delay:.1s}", "a{transition:.2s.1s}"],
+				["a{transition:all;transition-duration:1s}", "a{transition:1s}"],
+				// Nothing left but the property every layer names unwritten.
+				["a{transition:.2s;transition-duration:0s}", "a{transition:all}"],
+				["a{animation:x;animation-duration:1s}", "a{animation:x 1s}"],
+				["a{animation:x 1s;animation-duration:2s}", "a{animation:x 2s}"],
+				[
+					"a{animation:x 1s reverse;animation-direction:alternate}",
+					"a{animation:x 1s alternate}"
+				],
+				[
+					"a{animation:x 1s cubic-bezier(0,0,1,1);animation-timing-function:steps(2)}",
+					"a{animation:x 1s steps(2)}"
+				]
+			])("%s", (css, expected) => {
+				expect(minify(css)).toBe(expected);
+			});
+
+			it.each([
+				["two bases are written", "a{flex:auto 10px;flex-grow:2}"],
+				["the longhand is no factor", "a{flex:1;flex-direction:row}"],
+				["a factor is no number", "a{flex:1;flex-grow:10px}"],
+				["a basis is a bare number", "a{flex:1;flex-basis:2}"],
+				["two names stand in the layer", "a{transition:a b.2s;transition-delay:.1s}"],
+				["two behaviors stand in the layer", "a{transition:a.2s normal allow-discrete;transition-delay:.1s}"],
+				["the duration is no time", "a{transition:a.2s;transition-duration:red}"],
+				["the easing is no easing", "a{transition:a.2s;transition-timing-function:red}"],
+				["the behavior is no behavior", "a{transition:a.2s;transition-behavior:red}"],
+				["the property is another slot's keyword", "a{transition:a.2s;transition-property:ease}"],
+				["the longhand is no transition slot", "a{transition:a.2s;transition-foo:b}"],
+				["the delay is no time", "a{animation:x 1s;animation-delay:red}"],
+				["the count is no count", "a{animation:x 1s;animation-iteration-count:red}"],
+				["the direction is no direction", "a{animation:x 1s;animation-direction:red}"],
+				["the slot is filled twice", "a{animation:x 1s 2 3;animation-iteration-count:4}"],
+				["the longhand is no animation slot", "a{animation:x 1s;animation-foo:b}"]
+			])("keeps it where %s", (_name, css) => {
+				expect(minify(css)).toBe(css);
+			});
+
+			it.each([
+				// A delay is the second `<time>`, so with no duration it would be read
+				// as one — and an animation's unwritten duration is `auto`, not `0s`.
+				["no duration stands before a delay", "a{transition:opacity;transition-delay:.1s}"],
+				["the same, for an animation", "a{animation:x;animation-delay:1s}"],
+				// `none` names an animation and a fill mode, read apart by their order.
+				["a component reads two ways", "a{animation:none;animation-duration:1s}"],
+				["the longhand reads two ways", "a{animation:x 1s;animation-fill-mode:none}"],
+				["the name is no slot a fold keeps", "a{animation:x 1s;animation-name:y}"],
+				["the shorthand has two layers", "a{transition:a.2s,b.3s;transition-delay:.1s}"],
+				["one is `!important`", "a{outline:1px solid!important;outline-color:red}"],
+				["the longhand is a substitution", "a{border-left:1px solid;border-left-color:var(--a)}"],
+				["a declaration stands between", "a{border-left:1px solid;color:red;border-left-color:blue}"],
+				["the longhand is another side's", "a{border-left:1px solid;border-top-color:red}"],
+				// An engine reading `text-wrap` as one keyword drops a value of two.
+				["the shorthand was once one keyword", "a{text-wrap:wrap;text-wrap-style:balance}"],
+				// IE10 reads `-ms-flex` by the 2012 draft, whose omitted factors differ.
+				["IE10 reads it", "a{-ms-flex:1;-ms-flex-basis:auto}"],
+				// `inside` is also a `<custom-ident>`, so which slot it fills is unclear.
+				["a keyword is also a name", "a{list-style:disc;list-style-position:inside}"]
+			])("keeps it where %s", (_name, css) => {
+				expect(minify(css)).toBe(css);
+			});
 		});
 
 		it("declines `inset` when the target cannot read the shorthand", () => {
