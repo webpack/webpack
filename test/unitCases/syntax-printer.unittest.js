@@ -706,6 +706,56 @@ const CORRECTED_CASES = [
 		{ compress: false, mangle: true }
 	],
 	[
+		"a parameter pattern's computed key reading a name its body declares",
+		"var k = 'a'; function f({ [k]: y } = { a: 'out', b: 'in' }) { var k = 'b'; return y; } console.log(f());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default assigning a name its body declares",
+		"var x = 'out'; function f(_ = (x = 'set')) { var x = 'in'; return x; } console.log(f(), x);",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default updating a name its body declares",
+		"var n = 1; function f(_ = n++) { var n = 10; return n; } console.log(f(), n);",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default testing the type of a function its body declares",
+		"function f(_ = typeof h) { function h() {} return _; } console.log(f());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a rest parameter's default reading a name its body declares",
+		"var x = 'out'; var a; function f(...[_ = a = () => x]) { var x = 'in'; } f(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a constructor's parameter default reading a name its body declares",
+		"var x = 'out'; var a; class C { constructor(_ = a = () => x) { var x = 'in'; } } new C(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a setter's parameter default reading a name its body declares",
+		"var x = 'out'; var a; var o = { set p(_ = a = () => x) { var x = 'in'; } }; o.p = undefined; console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a generator's parameter default reading a name its body declares",
+		"var x = 'out'; var a; function* f(_ = a = () => x) { var x = 'in'; yield x; } console.log(f().next().value, a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default reading a name its body declares with `const`",
+		"var x = 'out'; var a; function f(_ = a = () => x) { const x = 'in'; } f(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default reading a class its body declares",
+		"var C = 'out'; var a; function f(_ = a = () => C) { class C {} } f(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
 		"a parameter default's closure reading a name its body declares, compressed",
 		"function g() { var x = 'out'; var a, b; function f(_ = a = () => x) { var x = 'in'; b = () => x; } f(); console.log(a(), b()); } g();",
 		{ compress: {}, mangle: false }
@@ -4083,6 +4133,16 @@ describe("syntax-printer", () => {
 	});
 
 	describe("a parameter list's scope", () => {
+		it("should resolve a copied function's reads by no range an earlier analysis counted", async () => {
+			const { minify } = await load();
+			// The copy of `h` is analysed again, its reads counted from zero.
+			const input =
+				"function P(a = q + q + q + q + q) { var y = arguments.length > 1 ? 'x' : 'in'; function h() { return y; } return [1].map(function () { return h(); })[0]; } var q = 1, y = 'out'; console.log(P());";
+			const { code } = await minify(input, { compress: {}, mangle: false });
+
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
 		it("should still read in a parameter list what the list and its function name declare", async () => {
 			const { minify } = await load();
 			for (const input of [
@@ -4090,7 +4150,9 @@ describe("syntax-printer", () => {
 				"var a; var f = function self(_ = a = () => typeof self) { var z; }; f(); console.log(a());",
 				"var a; function f(_ = a = () => arguments.length) { var y; } f(1, 2); console.log(a());",
 				"var a; try { throw ['e']; } catch ([e, _ = a = () => e]) { let z; } console.log(a());",
-				"var x = 'out'; function f(y = x) { var x = 'in'; return y; } console.log(f());"
+				"var x = 'out'; function f(y = x) { var x = 'in'; return y; } console.log(f());",
+				"function f() { var x = 'body'; function g(_ = () => x) { return _(); } return g(); } var x = 'global'; console.log(f());",
+				"var a; function h() { try { throw []; } catch ([_ = a = () => x]) { var x = 'fn'; } return a(); } console.log(h());"
 			]) {
 				for (const options of [
 					{ compress: false, mangle: true },
