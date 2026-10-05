@@ -694,7 +694,62 @@ const CORRECTED_CASES = [
 				input,
 				{ compress: false, mangle: true }
 			])
-	)
+	),
+	[
+		"a parameter default's closure reading a name its body declares with `var`",
+		"var x = 'out'; var a, b; function f(_ = a = () => x) { var x = 'in'; b = () => x; } f(); console.log(a(), b());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default reading a name its body redeclares",
+		"var x = 1; function f(a = x, b = a) { var x = 2, a; return x + a + b; } console.log(f());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default's closure reading a name its body declares, compressed",
+		"function g() { var x = 'out'; var a, b; function f(_ = a = () => x) { var x = 'in'; b = () => x; } f(); console.log(a(), b()); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a parameter default's closure reading a name its body declares as a function",
+		"var h = 'out'; var a; function f(_ = a = () => h) { function h() {} } f(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a parameter default's closure reading a name its body declares with `let`",
+		"var x = 'out'; var a; function f(_ = a = () => x) { let x = 'in'; } f(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a destructured parameter default's closure reading a name its body declares",
+		"var x = 'out'; var a; function f({ y = a = () => x } = {}) { var x = 'in'; } f(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"an arrow's parameter default reading a name its body declares",
+		"var x = 'out'; var a, b; var f = (_ = a = () => x) => { var x = 'in'; b = () => x; }; f(); console.log(a(), b());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a method's parameter default reading a name its body declares",
+		"var x = 'out'; var a; class C { static m(_ = a = () => x) { var x = 'in'; } } C.m(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a nested function's parameter default reading a name its body declares",
+		"var x = 'out'; var a; function f(_ = function () { return function (__ = a = () => x) { var x = 'deep'; }; }) { var x = 'in'; _()(); } f(); console.log(a());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a catch parameter default's closure reading a name its block declares",
+		"var a, b; let x = 'out'; try { throw []; } catch ([_ = a = () => x]) { b = () => x; let x = 'in'; } console.log(a(), b());",
+		{ compress: false, mangle: true }
+	],
+	[
+		"a catch parameter default's closure reading a name its block declares, compressed",
+		"function g() { var a, b; let x = 'out'; try { throw []; } catch ([_ = a = () => x]) { b = () => x; let x = 'in'; } console.log(a(), b()); } g();",
+		{ compress: {}, mangle: false }
+	]
 ];
 
 // terser's parser refuses `let` as a name, so with corrections off the print
@@ -1702,7 +1757,8 @@ describe("syntax-printer", () => {
 
 	for (const [name, source, options] of SCOPE_CASES) {
 		it(`should analyse scopes as terser does: ${name}`, async () => {
-			const { minify } = await load();
+			const { minify, corrections } = await load();
+			if (!corrections) throw new Error("the correct phase is not installed");
 			const reference = terserReference();
 			/**
 			 * @param {EXPECTED_ANY} run a minify, webpack's or terser's
@@ -1720,9 +1776,17 @@ describe("syntax-printer", () => {
 				/** @returns {EXPECTED_OBJECT} the options */
 				const settings = () => ({ compress, mangle: true, ...JSON.parse(JSON.stringify(options)) });
 				const theirs = await outcome(reference.minify, settings());
+				// The correct phase scopes a parameter list apart from its body.
+				corrections.enabled = false;
+				let ours;
+				try {
+					ours = await outcome(minify, settings());
+				} finally {
+					corrections.enabled = true;
+				}
 				// webpack's parser refuses what the spec makes an early error, in its
 				// own words, before any scope is read.
-				expect(await outcome(minify, settings())).toEqual(
+				expect(ours).toEqual(
 					theirs.error === undefined ? theirs : { error: expect.any(String) }
 				);
 			}
@@ -4016,6 +4080,29 @@ describe("syntax-printer", () => {
 				}
 			});
 		}
+	});
+
+	describe("a parameter list's scope", () => {
+		it("should still read in a parameter list what the list and its function name declare", async () => {
+			const { minify } = await load();
+			for (const input of [
+				"var a; function f(p = 'p', q = a = () => p) { var r = 1; } f(); console.log(a());",
+				"var a; var f = function self(_ = a = () => typeof self) { var z; }; f(); console.log(a());",
+				"var a; function f(_ = a = () => arguments.length) { var y; } f(1, 2); console.log(a());",
+				"var a; try { throw ['e']; } catch ([e, _ = a = () => e]) { let z; } console.log(a());",
+				"var x = 'out'; function f(y = x) { var x = 'in'; return y; } console.log(f());"
+			]) {
+				for (const options of [
+					{ compress: false, mangle: true },
+					{ compress: { passes: 2 }, mangle: true }
+				]) {
+					const { code } = await minify(`function g() { ${input} } g();`, options);
+					expect(runProgram(/** @type {string} */ (code))).toBe(
+						runProgram(input)
+					);
+				}
+			}
+		});
 	});
 
 	describe("a `let` heading a statement or loop", () => {
