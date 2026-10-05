@@ -6342,7 +6342,6 @@ describe("optimization.minimize", () => {
 
 	it("should minify JavaScript through webpack's printer under futureDefaults only", () => {
 		const MinimizerPlugin = require("minimizer-webpack-plugin");
-		const jsMinify = require("../../lib/javascript/jsMinify");
 		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 			require("../..").config;
 
@@ -6382,9 +6381,13 @@ describe("optimization.minimize", () => {
 		};
 
 		// terser as the plugin publishes it, until the printer is proven on real
-		// builds; the printer writes what it writes, so neither needs an option.
-		expect(wiredMinify(false)).toBe(MinimizerPlugin.terserMinify);
-		expect(wiredMinify(true)).toBe(jsMinify);
+		// builds; both implementations are passed as module references so workers
+		// can load them without serializing their function source.
+		expect(wiredMinify(false)).toEqual({
+			path: require.resolve("minimizer-webpack-plugin"),
+			export: "terserMinify"
+		});
+		expect(wiredMinify(true)).toBe(require.resolve("../../lib/javascript/jsMinify"));
 
 		/**
 		 * @param {boolean} futureDefaults whether `experiments.futureDefaults` is on
