@@ -576,7 +576,86 @@ const CORRECTED_CASES = [
 				input,
 				{ compress: {}, mangle: false }
 			])
+	),
+	...[
+		[
+			"a `yield` right of a private `in`",
+			"class C { #x; static *g() { return #x in (yield 1); } } var i = C.g(); i.next(); console.log(i.next(new C()).value);"
+		],
+		[
+			"an assignment right of a private `in`",
+			"class C { #x; static f(o) { var a; return #x in (a = o); } } console.log(C.f(new C()));"
+		],
+		[
+			"a conditional right of a private `in`",
+			"class C { #x; static f(t, o, p) { return #x in (t ? o : p); } } console.log(C.f({}, new C(), {}));"
+		],
+		[
+			"a sequence right of a private `in`",
+			"class C { #x; static f(a, o) { return #x in (a, o); } } console.log(C.f({}, new C()));"
+		],
+		[
+			"an arrow right of a private `in`",
+			"class C { #x; static f() { return #x in (() => 1); } } console.log(C.f());"
+		],
+		[
+			"a `yield` tagging a template",
+			"function* g() { return (yield 1)`t`; } var i = g(); i.next(); console.log(i.next((s) => s[0]).value);"
+		],
+		[
+			"an `await` tagging a template",
+			'var o = function () { console.log("tagged"); }; (async function () { try { (await o)`t`; } catch (e) {} })(); console.log("end");'
+		],
+		[
+			"a private `in` tagging a template",
+			"class C { #x; static f(o) { try { return (#x in o)`t`; } catch (e) { return e.name; } } } console.log(C.f(() => ({})));"
+		],
+		[
+			"an optional chain tagging a template",
+			"var a = { b: (s) => s[0] }; console.log((a?.b)`t`);"
+		],
+		[
+			"a parenthesized `async` heading a for-of",
+			"var async; for ((async) of [7]); console.log(async);"
+		],
+		[
+			"an escaped `async` heading a for-of",
+			"var async; for (\\u0061sync of [7]); console.log(async);"
+		]
+	].map(
+		([name, input]) =>
+			/** @type {[string, string, import("terser").MinifyOptions]} */ ([
+				name,
+				input,
+				{ compress: false, mangle: false }
+			])
 	)
+];
+
+// terser's parser refuses `let` as a name, so with corrections off the print
+// is measured against the input rather than against terser's.
+/** @type {[string, string][]} */
+const LET_HEAD_CASES = [
+	[
+		"a `let` heading a for-await-of",
+		"var let; (async function () { for await ((let) of [1]); })(); console.log(typeof let);"
+	],
+	[
+		"a `let` member heading a for-of",
+		"var let = {}; for ((let).a of [5]); console.log(let.a);"
+	],
+	[
+		"a `let [` heading a for-in",
+		"var let = []; for ((let)[0] in { k: 1 }); console.log(let[0]);"
+	],
+	[
+		"a `let [` heading a for loop",
+		"var let = [0]; for ((let)[0] = 3; ; ) break; console.log(let[0]);"
+	],
+	[
+		"a `let [` starting a statement",
+		"var let = [1]; (let)[0] = 2; console.log(let[0]);"
+	]
 ];
 
 // Each writes a name where terser writes it as a keyword, through the `improve`
@@ -3844,6 +3923,38 @@ describe("syntax-printer", () => {
 					const reference = await terserReference().minify(input, options);
 					expect(uncorrected.code).toBe(reference.code);
 					expect(runProgram(/** @type {string} */ (reference.code))).not.toBe(expected);
+				} finally {
+					corrections.enabled = true;
+				}
+			});
+		}
+	});
+
+	describe("a `let` heading a statement or loop", () => {
+		it("should not parenthesize a `let` or `async` nothing misreads", async () => {
+			const { minify } = await load();
+			const input =
+				"let.a = 1; let?.[0]; x = let[0]; for (let.a in x); for (let in x); for (async.x of y); async function f() { for await (async of y); }";
+			const { code } = await minify(input, { compress: false, mangle: false });
+
+			expect(code).toBe(
+				"let.a=1;let?.[0];x=let[0];for(let.a in x);for(let in x);for(async.x of y);async function f(){for await(async of y);}"
+			);
+		});
+
+		for (const [name, input] of LET_HEAD_CASES) {
+			it(`should print what the input prints: ${name}`, async () => {
+				const { minify, corrections } = await load();
+				const options = { compress: false, mangle: false };
+				const expected = runProgram(input);
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(expected);
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					const uncorrected = await minify(input, options);
+					expect(runProgram(/** @type {string} */ (uncorrected.code))).not.toBe(expected);
 				} finally {
 					corrections.enabled = true;
 				}
