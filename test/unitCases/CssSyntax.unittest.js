@@ -2842,6 +2842,8 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			["an inset names five edges", "a{clip-path:inset(1px 2px 3px 4px 5px)}"],
 			["a call is empty", "a{clip-path:rect()}"],
 			["a rect names no edges", "a{clip-path:rect(round 0)}"],
+			// `offset-path` and `shape-outside` take no fill rule in `path()`.
+			["a path is no clip", 'a{offset-path:path(nonzero,"M0 0H100")}'],
 			["the same, for an inset", "a{clip-path:inset()}"],
 			[
 				"a corner radius names five values",
@@ -7150,7 +7152,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				[
 					"a{animation:x 1s cubic-bezier(0,0,1,1);animation-timing-function:steps(2)}",
 					"a{animation:x 1s steps(2)}"
-				]
+				],
+				// A name keeps the case it was written in: `animation-name` matches it.
+				[
+					"a{animation:placeholderShimmer 2s linear;animation-iteration-count:infinite}",
+					"a{animation:placeholderShimmer 2s linear infinite}"
+				],
+				["a{transition:Opacity .2s;transition-delay:.1s}", "a{transition:Opacity.2s.1s}"]
 			])("%s", (css, expected) => {
 				expect(minify(css)).toBe(expected);
 			});
@@ -7174,6 +7182,21 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				["the longhand is no animation slot", "a{animation:x 1s;animation-foo:b}"]
 			])("keeps it where %s", (_name, css) => {
 				expect(minify(css)).toBe(css);
+			});
+
+			it("folds across a legacy alias the target drops", () => {
+				const css =
+					"a{-webkit-animation:x .6s linear;animation:x .6s linear;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}";
+				const modern = { browsers: ["chrome 120", "firefox 120", "safari 17"] };
+				expect(minify(css, modern)).toBe("a{animation:x.6s linear infinite}");
+				// Read again, the output is what it already was.
+				expect(minify(minify(css, modern), modern)).toBe(
+					"a{animation:x.6s linear infinite}"
+				);
+				// Where nothing drops the alias, it stands between the two.
+				expect(minify(css)).toBe(
+					"a{-webkit-animation:x.6s linear;animation:x.6s linear;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}"
+				);
 			});
 
 			it.each([
