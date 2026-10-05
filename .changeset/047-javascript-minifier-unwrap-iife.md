@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Unwrap IIFEs, fold built-in calls and drop unused built-ins when minifying JS.
+Unwrap IIFEs, fold built-in calls, drop unused built-ins and `new` before one when minifying JS.

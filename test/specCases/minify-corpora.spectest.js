@@ -1271,6 +1271,11 @@ const misprintsSeen = new Set();
 /** @type {Set<string>} */
 const improvedYetBiggerSeen = new Set();
 
+// Across test262 dropping `new` before built-ins saves 2376 gzip bytes; in these
+// tiny tests the `new` had matched one left before `Test262Error`.
+const NEW_DROPPED =
+	"a few bytes fewer, 1 to 7 more gzipped: the dropped `new` had matched one left before another constructor";
+
 /**
  * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
  * with why; an entry that stops compressing worse fails until retired.
@@ -1392,7 +1397,62 @@ const IMPROVED_YET_BIGGER = {
 	"fixture/issues/number-radix-conversion/input.js (its own options)":
 		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
 	"fixture/issues/number-radix-conversion/input.js (the default minimizer's options)":
-		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in"
+		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
+	"15.10.4.1-1.js (the default minimizer's options)": NEW_DROPPED,
+	"15.2.3.6-4-391.js (the default minimizer's options)": NEW_DROPPED,
+	"15.4.3.2-0-6.js (the default minimizer's options)": NEW_DROPPED,
+	"15.4.3.2-1-10.js (the default minimizer's options)": NEW_DROPPED,
+	"15.4.3.2-1-12.js (the default minimizer's options)": NEW_DROPPED,
+	"8.5.1.js (the default minimizer's options)": NEW_DROPPED,
+	"S11.4.1_A2.2_T2.js (the default minimizer's options)": NEW_DROPPED,
+	"S11.9.2_A7.1.js (the default minimizer's options)": NEW_DROPPED,
+	"S11.9.4_A7.js (the default minimizer's options)": NEW_DROPPED,
+	"S11.9.5_A7.js (the default minimizer's options)": NEW_DROPPED,
+	"S12.13_A2_T7.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.10.3.1_A2_T1.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.10.4.1_A1_T4.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.10.4.1_A8_T12.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.10.4.1_A8_T13.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.10.6.2_A2_T1.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.10.6.3_A2_T1.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.10.7_A2_T2.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.3.5_A1_T1.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.4.2.2_A1.1_T3.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.4.2.2_A2.2_T1.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.4.4.11_A1.5_T1.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.4.4.5_A3.2_T2.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.5.1.1_A1_T19.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.5.1.1_A1_T8.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.5.2.1_A1_T19.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.5.4.15_A3_T11.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.5.4.17_A1_T14.js (the default minimizer's options)": NEW_DROPPED,
+	"S15.5.4.19_A1_T14.js (the default minimizer's options)": NEW_DROPPED,
+	"S25.4.4.1_A3.1_T3.js (the default minimizer's options)": NEW_DROPPED,
+	"S8.12.8_A1.js (the default minimizer's options)": NEW_DROPPED,
+	"S8.12.8_A2.js (the default minimizer's options)": NEW_DROPPED,
+	"S8.12.8_A4.js (the default minimizer's options)": NEW_DROPPED,
+	"S8.6.2_A6.js (the default minimizer's options)": NEW_DROPPED,
+	"S8.7_A3.js (the default minimizer's options)": NEW_DROPPED,
+	"S9.2_A6_T1.js (the default minimizer's options)": NEW_DROPPED,
+	"applying-the-exp-operator_A14.js (the default minimizer's options)": NEW_DROPPED,
+	"arguments-are-new-reg-exp-and-hi-and-instance-is-string-hello.js (the default minimizer's options)": NEW_DROPPED,
+	"built-in-exotic-objects-no-call.js (the default minimizer's options)": NEW_DROPPED,
+	"constructor-ArrayBuffer-species-wrap.js (the default minimizer's options)": NEW_DROPPED,
+	"continue-label-from-catch.js (the default minimizer's options)": NEW_DROPPED,
+	"get-next-method-throws.js (the default minimizer's options)": NEW_DROPPED,
+	"next-method-returns-throwing-done.js (the default minimizer's options)": NEW_DROPPED,
+	"next-method-returns-throwing-value-done.js (the default minimizer's options)": NEW_DROPPED,
+	"next-method-returns-throwing-value.js (the default minimizer's options)": NEW_DROPPED,
+	"next-method-throws.js (the default minimizer's options)": NEW_DROPPED,
+	"next-throws.js (the default minimizer's options)": NEW_DROPPED,
+	"non-callable-join-string-tag.js (the default minimizer's options)": NEW_DROPPED,
+	"optional-catch-binding-throws.js (the default minimizer's options)": NEW_DROPPED,
+	"predicate-throws-then-closing-iterator-also-throws.js (the default minimizer's options)": NEW_DROPPED,
+	"return-suspendedStart-broken-promise.js (the default minimizer's options)": NEW_DROPPED,
+	"set-iterator-close-after-add-failure.js (the default minimizer's options)": NEW_DROPPED,
+	"symbol-tag-override-instances.js (the default minimizer's options)": NEW_DROPPED,
+	"this-val-regexp.js (the default minimizer's options)": NEW_DROPPED,
+	"to-string-primitive.js (the default minimizer's options)": NEW_DROPPED
 };
 
 /**

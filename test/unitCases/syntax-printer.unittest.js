@@ -334,7 +334,52 @@ const IMPROVED_CASES = [
 		"an arrow naming `await` in a generator, which reserves only `yield`",
 		"var await; function* g(n) { while (n--) { (() => { await = 1; })(); } } g(2).next(); console.log(await);",
 		{ compress: { passes: 2 }, mangle: false }
-	]
+	],
+	...[
+		[
+			"`new Error` called",
+			"try { throw new Error('x'); } catch (e) { console.log(e instanceof Error, e.message); }"
+		],
+		[
+			"a `new` native error called",
+			"var e = new TypeError('t'), r = new RangeError('r'); console.log(e instanceof TypeError, r instanceof RangeError, e.message);"
+		],
+		[
+			"`new AggregateError` called",
+			"var e = new AggregateError([1], 'a'); console.log(e.errors.length, e.message);"
+		],
+		[
+			"`new Error` with a cause called",
+			"var e = new Error('a', { cause: 1 }); console.log(e.cause);"
+		],
+		[
+			"`new Function` called",
+			"var f = new Function('a', 'return a + 1'); console.log(f(1));"
+		],
+		[
+			"`new Array` called",
+			"var a = new Array(3); console.log(a.length, new Array(1, 2).join());"
+		],
+		[
+			"`new Object` called",
+			"var o = new Object(1); console.log(typeof o, o.valueOf());"
+		],
+		[
+			"`new RegExp` on a string called",
+			"var r = new RegExp('a+', 'g'); console.log(r.source, r.flags);"
+		],
+		[
+			"`new RegExp` without arguments called",
+			"var r = new RegExp(); console.log(r.source);"
+		]
+	].map(
+		([name, input]) =>
+			/** @type {[string, string, import("terser").MinifyOptions]} */ ([
+				name,
+				input,
+				{ compress: {}, mangle: false }
+			])
+	)
 ];
 
 // What the `improve` phase leaves as terser writes it: each body has something
@@ -377,10 +422,10 @@ const KEPT_CASES = [
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
 	["a result longer than the call", 'console.log("ab".repeat(100));'],
 	["a built-in call that throws", 'try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }'],
-	["a RegExp an older Node rejects", 'try { new RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
-	["a RegExp pattern holding a slash", 'try { new RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
-	["a RegExp with flags not a string", 'try { new RegExp("a", 1); } catch (e) { console.log(1); }'],
-	["a RegExp pattern not a string", 'try { new RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp an older Node rejects", 'try { RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
+	["a RegExp pattern holding a slash", 'try { RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp with flags not a string", 'try { RegExp("a", 1); } catch (e) { console.log(1); }'],
+	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
 	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
 	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],
@@ -392,7 +437,7 @@ const KEPT_CASES = [
 	["an optional built-in call", "Math?.max(1); JSON.parse?.(\"1\"); console.log(1);"],
 	["a static the generated tables leave out", "try { Math.nope(); } catch (e) { console.log(1); }"],
 	["a call of something that is no built-in", "var o = { f: function () { console.log(1); } }; o.f(); (0, o.f)();"],
-	["a `RegExp` newer than ES2018, which a newer host engine reads too", 'new RegExp("(?i:a)"); console.log(1);'],
+	["a `RegExp` newer than ES2018, which a newer host engine reads too", 'RegExp("(?i:a)"); console.log(1);'],
 	["a `Symbol.for`, which would register its key in the build's own registry", 'Symbol.for("k"); console.log(1);'],
 	["a `typeof` guard of another name", 'try { typeof y != "undefined" && z; } catch (e) { console.log(1); }'],
 	["a `typeof` guard the wrong way round", 'try { typeof y == "undefined" && y; } catch (e) { console.log(1); }'],
@@ -411,7 +456,11 @@ const KEPT_CASES = [
 	["an array of something no literal", "console.log([Math.random() > 2].join());"],
 	["a function left out", 'console.log(Math.sin(1), "a,b".split(","));'],
 	["a method the oldest Node lacks", 'console.log("abc".at(-1), "abc".replaceAll("b", "x"));'],
-	["an optional call", 'console.log("abc"?.charAt(1));']
+	["an optional call", 'console.log("abc"?.charAt(1));'],
+	["`new RegExp` on a regular expression, which `RegExp` hands back", "var s = /x/; function f(p) { return new RegExp(p); } console.log(f(s) === s, new RegExp(s) === s);"],
+	["`new Error` shadowed by a variable", "var Error = function (m) { this.m = m; }; console.log(new Error('k').m);"],
+	["`new Error` inside `with`", "with ({ Error: class { constructor() { this.w = 1; } } }) { console.log(new Error().w); }"],
+	["`new` of a built-in that needs it", "console.log(new Date(0).getTime(), typeof new String('a'), new Map().size);"]
 ];
 
 // Each prints one thing and terser's output another, under the options named.

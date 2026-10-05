@@ -559,28 +559,9 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc drops `new` before a built-in that constructs the same when called (`Error`, `RegExp`, `Array`)",
 		[
-			"swc minifier: fixture/issues/11829/input.js",
 			"swc minifier: fixture/issues/12187/input.js",
-			"swc minifier: fixture/issues/12191/iterator-errors/input.js",
-			"swc minifier: fixture/issues/4234/input.js",
-			"swc minifier: fixture/issues/buble/1/input.js",
-			"swc minifier: fixture/issues/regexp/1/input.js",
-			"swc minifier: fixture/issues/vercel/001/input.js",
 			"swc minifier: fixture/projects/backbone/18/input.js",
-			"swc minifier: fixture/projects/react/3/input.js",
-			"swc minifier: pass-1/regexp/1/input.js",
-			"terser compress: array-constructor/array_constructor",
-			"terser compress: collapse_vars/issue_1605_1",
-			"terser compress: collapse_vars/issue_2954_2",
-			"terser compress: collapse_vars/issue_2954_3",
-			"terser compress: destructuring/unused_destructuring_decl_2",
-			"terser compress: destructuring/unused_destructuring_decl_3",
-			"terser compress: destructuring/unused_destructuring_decl_4",
-			"terser compress: destructuring/unused_destructuring_decl_5",
-			"terser compress: pure_funcs/babel",
-			"terser compress: reduce_vars/issue_308",
-			"terser compress: sequences/make_sequences_3",
-			"terser compress: unicode/issue_2569"
+			"terser compress: collapse_vars/issue_1605_1"
 		]
 	],
 	[
@@ -740,9 +721,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12315/input.js",
 			"swc minifier: fixture/issues/2044/full/input.js",
 			"swc minifier: fixture/issues/2044/pass-1/input.js",
-			"swc minifier: fixture/issues/2044/pass-10/input.js",
 			"swc minifier: fixture/issues/2257/full/input.js",
-			"swc minifier: fixture/issues/2558/1/input.js",
 			"swc minifier: fixture/issues/5682/input.js",
 			"swc minifier: fixture/issues/6957/exponential/input.js",
 			"swc minifier: fixture/issues/6957/number-tostring/input.js",
@@ -799,7 +778,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/target-es2015/static/chunks/main-04b5934c26266542/input.js",
 			"swc minifier: fixture/next/wrap-contracts/input.js",
 			"swc minifier: fixture/projects/backbone/20/input.js",
-			"swc minifier: fixture/projects/jquery/10/input.js",
 			"swc minifier: fixture/projects/jquery/12/input.js",
 			"swc minifier: fixture/projects/mootools/.11/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/266-aee26c928109d49d6151/input.js",
@@ -807,7 +785,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-no-prefetch-53313deb99cf94686856/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/pages/development-logs/link-with-prefetch-false-13db3186d6589f014e19/input.js",
 			"swc minifier: fixture/projects/next/.archive-4/polyfills-6437a4964f697e5b0b3e/input.js",
-			"swc minifier: fixture/projects/next/.archive-4/webpack-eb940a9a97802b481f9b/input.js",
 			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about-f41723bb58a39accd7f5/input.js",
 			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about1-337f4553e7fa4c711971/input.js",
 			"swc minifier: fixture/projects/next/archive-1/pages/hmr/about2-071e285e01649f2eba6d/input.js",
@@ -845,8 +822,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: pass-1/seq/1/input.js",
 			"swc minifier: projects/files/backbone-1.1.0.js",
 			"swc minifier: projects/files/react-17.0.1.js",
-			"swc minifier: projects/files/react-dom-17.0.2.js",
-			"swc minifier: projects/files/underscore-1.5.2.js"
+			"swc minifier: projects/files/react-dom-17.0.2.js"
 		]
 	],
 	[
