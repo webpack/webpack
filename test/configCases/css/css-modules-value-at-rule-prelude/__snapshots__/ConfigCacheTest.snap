@@ -22,6 +22,10 @@ exports[`ConfigCacheTestCases css css-modules-value-at-rule-prelude exported tes
 	from { opacity: 0; }
 }
 
+.value-at-rule-prelude-values_module_css-linear {
+	color: black;
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/

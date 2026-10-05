@@ -15,3 +15,7 @@
 @keyframes definedAnimName {
 	from { opacity: 0; }
 }
+
+.linear {
+	color: black;
+}
