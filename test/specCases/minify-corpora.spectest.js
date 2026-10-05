@@ -1277,8 +1277,18 @@ const improvedYetBiggerSeen = new Set();
  * @type {Record<string, string>}
  */
 const IMPROVED_YET_BIGGER = {
-	"fixture/next/wrap-contracts/input.js (the default minimizer's options)":
-		"31 bytes fewer, 1 more gzipped: the dropped wrapper had matched a run gzip reused",
+	"benches-full/echarts.js (the default minimizer's options)":
+		"2 bytes fewer, 3 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
+	"benches-full/vue.js (the default minimizer's options)":
+		"9 bytes fewer, 6 more gzipped: the shorter `typeof x<\"u\"` and constructor calls break runs gzip reused",
+	"fixture/next/regression-1/framework-798bab57daac3897/input.js (its own options)":
+		"92 bytes fewer, 1 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
+	"fixture/next/wrap-contracts/input.js (its own options)":
+		"818 bytes fewer, 11 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
+	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (its own options)":
+		"83 bytes fewer, 8 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
+	"fixture/projects/next/.archive-4/framework-054ead69ea8124b4cb27/input.js (the default minimizer's options)":
+		"83 bytes fewer, 3 more gzipped: the shorter `typeof x<\"u\"` breaks the `\"…\"!=typeof` runs gzip reused",
 	"evaluate/string_case (the default minimizer's options)":
 		"57 bytes fewer, 5 more gzipped: `\"I\".toLowerCase().charCodeAt(0)` matched the calls around it",
 	"evaluate/string_case (a module mangled at its top level)":
@@ -1394,6 +1404,158 @@ const IMPROVED_YET_BIGGER = {
 	"fixture/issues/number-radix-conversion/input.js (the default minimizer's options)":
 		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in"
 };
+
+// Sources whose shorter spelling no longer repeats text gzip matched, by the
+// spelling written; an entry that stops compressing worse fails until retired.
+for (const [reason, keys] of /** @type {[string, string[]][]} */ ([
+	[
+		"`Array` written as a literal where the source writes the call again",
+		[
+			"S15.4.1_A1.1_T1.js (the default minimizer's options)",
+			"S15.4.1_A1.1_T3.js (the default minimizer's options)",
+			"S15.4.1_A3.1_T1.js (the default minimizer's options)",
+			"array-constructor/array_constructor_unsafe (its own options)",
+			"fixture/issues/12201/input.js (its own options)",
+			"fixture/issues/12201/input.js (the default minimizer's options)",
+			"terser_array_constructor_unsafe (its own options)"
+		]
+	],
+	[
+		"`new` dropped before a constructor the source quotes or writes again beside it",
+		[
+			"15.2.3.5-4-12.js (the default minimizer's options)",
+			"15.2.3.5-4-174.js (the default minimizer's options)",
+			"15.4.3.2-0-6.js (the default minimizer's options)",
+			"15.4.3.2-1-10.js (the default minimizer's options)",
+			"15.4.3.2-1-12.js (the default minimizer's options)",
+			"15.4.4.20-6-7.js (the default minimizer's options)",
+			"15.4.4.20-9-c-iii-23.js (the default minimizer's options)",
+			"S11.1.2_A1_T1.js (the default minimizer's options)",
+			"S11.10.1_A2.1_T1.js (the default minimizer's options)",
+			"S11.10.2_A2.1_T1.js (the default minimizer's options)",
+			"S11.11.1_A2.1_T1.js (the default minimizer's options)",
+			"S11.11.2_A2.1_T1.js (the default minimizer's options)",
+			"S11.13.1_A2.1_T1.js (the default minimizer's options)",
+			"S11.14_A2.1_T1.js (the default minimizer's options)",
+			"S11.3.1_A2.1_T1.js (the default minimizer's options)",
+			"S11.3.2_A2.1_T1.js (the default minimizer's options)",
+			"S11.4.1_A4.js (the default minimizer's options)",
+			"S11.4.4_A2.1_T1.js (the default minimizer's options)",
+			"S11.4.5_A2.1_T1.js (the default minimizer's options)",
+			"S11.5.1_A2.1_T1.js (the default minimizer's options)",
+			"S11.5.2_A2.1_T1.js (the default minimizer's options)",
+			"S11.5.3_A2.1_T1.js (the default minimizer's options)",
+			"S11.6.1_A2.1_T1.js (the default minimizer's options)",
+			"S11.6.1_A2.2_T2.js (the default minimizer's options)",
+			"S11.6.2_A2.1_T1.js (the default minimizer's options)",
+			"S11.7.1_A2.1_T1.js (the default minimizer's options)",
+			"S11.7.3_A2.1_T1.js (the default minimizer's options)",
+			"S11.8.3_A2.1_T1.js (the default minimizer's options)",
+			"S11.8.6_A7_T3.js (the default minimizer's options)",
+			"S11.9.2_A7.1.js (the default minimizer's options)",
+			"S11.9.4_A2.1_T1.js (the default minimizer's options)",
+			"S11.9.4_A7.js (the default minimizer's options)",
+			"S11.9.5_A2.1_T1.js (the default minimizer's options)",
+			"S11.9.5_A7.js (the default minimizer's options)",
+			"S15.10.1_A1_T14.js (the default minimizer's options)",
+			"S15.10.1_A1_T16.js (the default minimizer's options)",
+			"S15.10.2.11_A1_T1.js (the default minimizer's options)",
+			"S15.10.3.1_A2_T1.js (the default minimizer's options)",
+			"S15.10.4.1_A1_T4.js (the default minimizer's options)",
+			"S15.10.4.1_A8_T12.js (the default minimizer's options)",
+			"S15.10.7_A2_T2.js (the default minimizer's options)",
+			"S15.3.5_A1_T1.js (the default minimizer's options)",
+			"S15.4.2.1_A1.1_T3.js (the default minimizer's options)",
+			"S15.4.2.2_A1.1_T3.js (the default minimizer's options)",
+			"S15.4.2.2_A2.2_T3.js (the default minimizer's options)",
+			"S15.4.4.11_A1.1_T1.js (the default minimizer's options)",
+			"S15.4.4.11_A1.5_T1.js (the default minimizer's options)",
+			"S15.4.4.2_A1_T3.js (the default minimizer's options)",
+			"S15.4.4.5_A1.2_T1.js (the default minimizer's options)",
+			"S15.4.4.5_A1.2_T2.js (the default minimizer's options)",
+			"S15.4.4.5_A3.1_T1.js (the default minimizer's options)",
+			"S15.4.4.5_A3.2_T1.js (the default minimizer's options)",
+			"S15.4.4.5_A3.2_T2.js (the default minimizer's options)",
+			"S15.4.4.6_A1.1_T1.js (the default minimizer's options)",
+			"S15.4.4.6_A1.2_T1.js (the default minimizer's options)",
+			"S15.4.4.9_A1.1_T1.js (the default minimizer's options)",
+			"S15.4.4.9_A1.2_T1.js (the default minimizer's options)",
+			"S15.5.1.1_A1_T19.js (the default minimizer's options)",
+			"S15.5.1.1_A1_T8.js (the default minimizer's options)",
+			"S15.5.2.1_A1_T19.js (the default minimizer's options)",
+			"S15.5.4.13_A3_T1.js (the default minimizer's options)",
+			"S15.5.4.15_A3_T1.js (the default minimizer's options)",
+			"S15.5.4.15_A3_T11.js (the default minimizer's options)",
+			"S15.5.4.15_A3_T2.js (the default minimizer's options)",
+			"S15.5.4.15_A3_T3.js (the default minimizer's options)",
+			"S15.5.4.15_A3_T4.js (the default minimizer's options)",
+			"S15.5.4.15_A3_T5.js (the default minimizer's options)",
+			"S15.5.4.15_A3_T6.js (the default minimizer's options)",
+			"S15.5.4.17_A1_T14.js (the default minimizer's options)",
+			"S15.5.4.19_A1_T14.js (the default minimizer's options)",
+			"S15.5.4.7_A1_T12.js (the default minimizer's options)",
+			"S15.5.4.8_A1_T12.js (the default minimizer's options)",
+			"S15.6.4.2_A1_T1.js (the default minimizer's options)",
+			"S15.6.4.2_A1_T2.js (the default minimizer's options)",
+			"S15.6.4.3_A1_T1.js (the default minimizer's options)",
+			"S25.4.4.3_A4.1_T2.js (the default minimizer's options)",
+			"S8.12.8_A1.js (the default minimizer's options)",
+			"S8.12.8_A2.js (the default minimizer's options)",
+			"S8.6.2_A6.js (the default minimizer's options)",
+			"S8.7_A5_T1.js (the default minimizer's options)",
+			"S9.2_A6_T1.js (the default minimizer's options)",
+			"S9.3_A5_T1.js (the default minimizer's options)",
+			"S9.8_A5_T1.js (the default minimizer's options)",
+			"argument-is-new-reg-exp-and-instance-is-string-hello.js (the default minimizer's options)",
+			"arguments-are-new-reg-exp-and-4-and-instance-is-string-hello.js (the default minimizer's options)",
+			"arguments-are-new-reg-exp-and-hi-and-instance-is-string-hello.js (the default minimizer's options)",
+			"arguments-are-new-reg-exp-and-undefined-and-instance-is-string-hello.js (the default minimizer's options)",
+			"arguments-are-new-reg-exp-and-void-0-and-instance-is-string-hello.js (the default minimizer's options)",
+			"built-in-exotic-objects-no-call.js (the default minimizer's options)",
+			"constructor-ArrayBuffer-species-wrap.js (the default minimizer's options)",
+			"get-next-method-throws.js (the default minimizer's options)",
+			"next-method-returns-throwing-done.js (the default minimizer's options)",
+			"next-method-returns-throwing-value-done.js (the default minimizer's options)",
+			"next-method-returns-throwing-value.js (the default minimizer's options)",
+			"next-method-throws.js (the default minimizer's options)",
+			"next-throws.js (the default minimizer's options)",
+			"non-callable-join-string-tag.js (the default minimizer's options)",
+			"optional-catch-binding-throws.js (the default minimizer's options)",
+			"predicate-throws-then-closing-iterator-also-throws.js (the default minimizer's options)",
+			"quantifier-integer-limit.js (the default minimizer's options)",
+			"sorting_buffer_access.js (the default minimizer's options)",
+			"symbol-tag-override-instances.js (the default minimizer's options)",
+			"this-val-regexp.js (the default minimizer's options)",
+			"to-string-primitive.js (the default minimizer's options)",
+			"try-finally-nested-try-catch-within-catch.js (the default minimizer's options)",
+			"try-finally-nested-try-catch-within-outer-try-after-nested.js (the default minimizer's options)",
+			"yield-promise-reject-next-for-await-of-sync-iterator.js (the default minimizer's options)",
+			"yield-promise-reject-next-yield-star-async-iterator.js (the default minimizer's options)"
+		]
+	],
+	[
+		"a `+` dropped beside a number literal where the source quotes it",
+		[
+			"exp-operator-precedence-unary-expression-semantics.js (the default minimizer's options)"
+		]
+	],
+	[
+		"`typeof x<\"u\"` where the source repeats the `\"undefined\"` comparison gzip matched",
+		[
+			"S11.1.6_A3_T7.js (the default minimizer's options)",
+			"S12.6.2_A2.js (the default minimizer's options)",
+			"S13.2.2_A15_T1.js (the default minimizer's options)",
+			"S13.2.2_A15_T3.js (the default minimizer's options)",
+			"S13.2.2_A16_T2.js (the default minimizer's options)",
+			"S13.2.2_A16_T3.js (the default minimizer's options)",
+			"S13_A1.js (the default minimizer's options)",
+			"S14_A3.js (the default minimizer's options)",
+			"S8.7_A5_T2.js (the default minimizer's options)"
+		]
+	]
+])) {
+	for (const key of keys) IMPROVED_YET_BIGGER[key] = reason;
+}
 
 /**
  * @param {Minify} minify a minifier

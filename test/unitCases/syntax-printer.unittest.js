@@ -30,6 +30,24 @@ const importTerserSource = (specifier) => import(specifier);
  */
 const terserReference = () => /** @type {EXPECTED_ANY} */ (require("terser"));
 
+/**
+ * Runs a minify with the `improve` phase off: terser has none, so a test
+ * holding the output to terser's holds it without one.
+ * @template T
+ * @param {() => Promise<T>} run the minify
+ * @returns {Promise<T>} what it returns
+ */
+const unimproved = async (run) => {
+	const { improvements } = await load();
+	if (!improvements) throw new Error("the improve phase is not installed");
+	improvements.enabled = false;
+	try {
+		return await run();
+	} finally {
+		improvements.enabled = true;
+	}
+};
+
 /** @typedef {(input: EXPECTED_ANY, options: EXPECTED_ANY) => Promise<EXPECTED_ANY>} Minifying terser's `minify` or webpack's, for what both are given */
 
 /**
@@ -334,6 +352,49 @@ const IMPROVED_CASES = [
 		"an arrow naming `await` in a generator, which reserves only `yield`",
 		"var await; function* g(n) { while (n--) { (() => { await = 1; })(); } } g(2).next(); console.log(await);",
 		{ compress: { passes: 2 }, mangle: false }
+	],
+	[
+		"`Array` and `Object` called or constructed, as literals",
+		'var y = Math.random() < 2 ? 2 : 0; console.log(new Array(1, 2).length, Array().length, new Array(3).length, 1 in new Array(3), new Array("a")[0], new Array(y).length, Object.keys(new Object()).length);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"constructors that construct the same called, without `new`",
+		'console.log(new Error("a").message, new TypeError("b") instanceof TypeError, new Function("a", "return a * 2")(3), new RegExp("a", "g").global, new Array(Math.random() < 2 ? 2 : 0, ...[3]).length);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a spread array literal passed to `new`",
+		"function F() { this.n = arguments.length; } console.log(new F(...[1, 2]).n, new F(...[]).n, new F(...[1, 2]).n);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`typeof` against `\"undefined\"` as an ordering",
+		'console.log(typeof nothing === "undefined", typeof console !== "undefined", "undefined" == typeof nothing.length, !(typeof nothing == "undefined"), typeof nothing == "undefined" ? 1 : 2);',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `typeof` terser leaves before \"undefined\"",
+		'var a = typeof nothing != "undefined"; console.log(a);',
+		{
+			compress: { defaults: false, comparisons: true, typeofs: true },
+			mangle: false
+		}
+	],
+	[
+		"`typeof` orderings against \"u\" kept in the order written",
+		'console.log(typeof nothing == "undefined", !("u" > typeof nothing), "u" < typeof nothing);',
+		{ compress: { comparisons: false }, mangle: false }
+	],
+	[
+		"`RegExp` given flags and `Array` given one argument not a short length",
+		'var y = Math.random() < 2 ? "a" : ""; console.log(new RegExp(y, "g").global, new Array(typeof y)[0], new Array(!0).length, new Array(7).length, typeof Object(y));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `+` beside a number literal in arithmetic",
+		'var d = Math.random() < 2 ? "5" : ""; console.log(1000 * +d, 1 - +d, 5 | +d, 2 ** +d);',
+		{ compress: {}, mangle: false }
 	]
 ];
 
@@ -346,6 +407,10 @@ const KEPT_CASES = [
 	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
 	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
 	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
+	["a `RegExp` constructed from a regular expression", "var r = /a/g; console.log(new RegExp(r) === r, RegExp(r) === r);"],
+	["a spread `Array` call", "var a = [3]; console.log(Array(...a).length);"],
+	["a shadowed `Array`", "function f(Array) { return new Array(1, 2); } console.log(f(function (a, b) { this.s = a + b; }).s, f(function () { this.s = 0; }).s);"],
+	["a `+` beside no number literal", 'var s = Math.random() < 2 ? "5" : ""; console.log("2" - +s, +s - +s, 1 + +s);'],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
 	["a `return`", `!function () { for (const x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
 	["`this`", `!function () { ${TRY} console.log(this); }();`],
@@ -377,10 +442,10 @@ const KEPT_CASES = [
 	["a call that throws", 'try { console.log(decodeURI("%")); } catch (e) { console.log(1); }'],
 	["a result longer than the call", 'console.log("ab".repeat(100));'],
 	["a built-in call that throws", 'try { new Set(1); } catch (e) { console.log(1); } try { Object.keys(null); } catch (e) { console.log(2); }'],
-	["a RegExp an older Node rejects", 'try { new RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
-	["a RegExp pattern holding a slash", 'try { new RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
-	["a RegExp with flags not a string", 'try { new RegExp("a", 1); } catch (e) { console.log(1); }'],
-	["a RegExp pattern not a string", 'try { new RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp an older Node rejects", 'try { RegExp("a", "v"); } catch (e) { console.log(1); } try { RegExp("[", "g"); } catch (e) { console.log(2); }'],
+	["a RegExp pattern holding a slash", 'try { RegExp("a/b"); console.log(1); } catch (e) { console.log(2); }'],
+	["a RegExp with flags not a string", 'try { RegExp("a", 1); } catch (e) { console.log(1); }'],
+	["a RegExp pattern not a string", 'try { RegExp(1); console.log(1); } catch (e) { console.log(2); }'],
 	["a count too large to run", 'try { new Uint8Array(1e9); console.log(1); } catch (e) { console.log(2); }'],
 	["an argument no literal", "function f(a) { String(a); Object.keys({ [a]: 1 }); Object.keys({ get b() { return 1; } }); Object.keys({ __proto__: a }); Object.keys([a]); Object.keys({ b: a }); } f([1]); console.log(1);"],
 	["a built-in that runs code", 'eval("console.log(1)");'],
@@ -392,10 +457,10 @@ const KEPT_CASES = [
 	["an optional built-in call", "Math?.max(1); JSON.parse?.(\"1\"); console.log(1);"],
 	["a static the generated tables leave out", "try { Math.nope(); } catch (e) { console.log(1); }"],
 	["a call of something that is no built-in", "var o = { f: function () { console.log(1); } }; o.f(); (0, o.f)();"],
-	["a `RegExp` newer than ES2018, which a newer host engine reads too", 'new RegExp("(?i:a)"); console.log(1);'],
+	["a `RegExp` newer than ES2018, which a newer host engine reads too", 'RegExp("(?i:a)"); console.log(1);'],
 	["a `Symbol.for`, which would register its key in the build's own registry", 'Symbol.for("k"); console.log(1);'],
-	["a `typeof` guard of another name", 'try { typeof y != "undefined" && z; } catch (e) { console.log(1); }'],
-	["a `typeof` guard the wrong way round", 'try { typeof y == "undefined" && y; } catch (e) { console.log(1); }'],
+	["a `typeof` guard of another name", 'try { typeof y < "u" && z; } catch (e) { console.log(1); }'],
+	["a `typeof` guard the wrong way round", 'try { typeof y > "u" && y; } catch (e) { console.log(1); }'],
 	["a `typeof` comparison guarding the wrong way round", 'try { typeof y < "u" || y; } catch (e) { console.log(1); }'],
 	["a `typeof` guard of a declared name", 'var y = { valueOf: function () { console.log(1); } }; typeof y != "undefined" && +y;'],
 	["a `typeof` guard of no reference", 'typeof 1 != "undefined" && console.log(1); typeof y != 1 && console.log(2); typeof y in {} || console.log(3);'],
@@ -1698,7 +1763,9 @@ describe("syntax-printer", () => {
 						...settings,
 						format: { ...settings.format }
 					});
-				const ours = await minify({ "input.js": source }, options());
+				const ours = await unimproved(() =>
+					minify({ "input.js": source }, options())
+				);
 				// The printer writes minified output only, so it is held to terser's.
 				const referenceOptions = options();
 				for (const name of IGNORED_FORMAT_OPTIONS) {
@@ -2385,7 +2452,9 @@ describe("syntax-printer", () => {
 					return { error: thrownMessage(err) };
 				}
 			};
-			expect(await outcome(minify)).toEqual(await outcome(reference.minify));
+			expect(await unimproved(() => outcome(minify))).toEqual(
+				await outcome(reference.minify)
+			);
 		});
 	}
 
@@ -2777,9 +2846,11 @@ describe("syntax-printer", () => {
 		it(`should minify as terser does: ${name}`, async () => {
 			const { minify } = await load();
 			const reference = terserReference();
-			const ours = await minify(
-				source,
-				/** @type {import("terser").MinifyOptions} */ ({ ...options })
+			const ours = await unimproved(() =>
+				minify(
+					source,
+					/** @type {import("terser").MinifyOptions} */ ({ ...options })
+				)
 			);
 			const theirs = await reference.minify(
 				source,
@@ -4352,7 +4423,8 @@ describe("syntax-printer", () => {
 				'typeof y == "undefined" || y',
 				'typeof y === "undefined" || y',
 				'"undefined" != typeof y && y',
-				'typeof y < "u" && y'
+				'typeof y < "u" && y',
+				'typeof y == "undefined" ? 0 : y'
 			]) {
 				const { code } = await minify(`${guard}; console.log(1);`, {
 					compress: {},
