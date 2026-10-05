@@ -2004,6 +2004,10 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops an unused `Symbol.for`, which webpack keeps: running it at build time would keep its key in the build's own symbol registry",
 		["oxc minifier: ecmascript/may_have_side_effects.rs:1259"]
+	],
+	[
+		"oxc's output is wrong: it renames a `#private` name a direct `eval` reads, so the `eval` throws a SyntaxError",
+		["oxc minifier: peephole/remove_unused_private_members.rs:27"]
 	]
 ];
 

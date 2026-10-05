@@ -629,6 +629,71 @@ const CORRECTED_CASES = [
 				input,
 				{ compress: false, mangle: false }
 			])
+	),
+	...[
+		[
+			"a private field a direct `eval` in a method reads",
+			'class C { #m = 1; get() { return eval("this.#m"); } } console.log(new C().get());'
+		],
+		[
+			"a static private field a direct `eval` reads",
+			'class C { static #m = 2; static get() { return eval("C.#m"); } } console.log(C.get());'
+		],
+		[
+			"a private method a direct `eval` calls",
+			'class C { #m() { return 3; } get() { return eval("this.#m()"); } } console.log(new C().get());'
+		],
+		[
+			"a private getter a direct `eval` reads",
+			'class C { get #m() { return 4; } get() { return eval("this.#m"); } } console.log(new C().get());'
+		],
+		[
+			"a private setter a direct `eval` assigns",
+			'class C { #v = 0; set #m(x) { this.#v = x; } get() { eval("this.#m = 5"); return this.#v; } } console.log(new C().get());'
+		],
+		[
+			"a static private method a direct `eval` calls",
+			'class C { static #m() { return 6; } static get() { return eval("C.#m()"); } } console.log(C.get());'
+		],
+		[
+			"a private name a direct `eval` tests with `in`",
+			'class C { #m = 1; has(o) { return eval("#m in o"); } } console.log(new C().has(new C()), new C().has({}));'
+		],
+		[
+			"a private field a direct `eval` reads through `?.`",
+			'class C { #m = 7; get(o) { return eval("o?.#m"); } } console.log(new C().get(new C()));'
+		],
+		[
+			"a private field a direct `eval` in a field initializer reads",
+			'class C { #m = 8; n = eval("this.#m"); } console.log(new C().n);'
+		],
+		[
+			"a private field a direct `eval` in a static block reads",
+			'class C { static #m = 9; static { console.log(eval("C.#m")); } }'
+		],
+		[
+			"a private field a direct `eval` in an arrow reads",
+			'class C { #m = 10; get() { return (() => eval("this.#m"))(); } } console.log(new C().get());'
+		],
+		[
+			"an outer class's private field a direct `eval` in an inner class reads",
+			'class D { #p = 11; get() { const d = this; class C { get() { return eval("d.#p"); } } return new C().get(); } } console.log(new D().get());'
+		],
+		[
+			"a class expression's private field a direct `eval` reads",
+			'const C = class { #m = 12; get() { return eval("this.#m"); } }; console.log(new C().get());'
+		],
+		[
+			"a private name a direct `eval` reads, declared by another class too",
+			'class C { #m = 13; get() { return eval("this.#m"); } } class D { #m = 14; get() { return this.#m; } } console.log(new C().get(), new D().get());'
+		]
+	].map(
+		([name, input]) =>
+			/** @type {[string, string, import("terser").MinifyOptions]} */ ([
+				name,
+				input,
+				{ compress: false, mangle: true }
+			])
 	)
 ];
 
@@ -3907,6 +3972,29 @@ describe("syntax-printer", () => {
 
 			expect(code).toBe(reference.code);
 			expect(code).not.toContain("class C");
+		});
+
+		it("should rename private names an indirect `eval` cannot read", async () => {
+			const { minify } = await load();
+			const input =
+				'class C { #m = 1; get() { return (0, eval)("1") + this.#m; } } console.log(new C().get());';
+			const { code } = await minify(input, { compress: false, mangle: true });
+
+			expect(code).not.toMatch(/#m\b/);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+		});
+
+		it("should rename no private name onto one a direct `eval` keeps", async () => {
+			const { minify } = await load();
+			const input =
+				'class C { #e = 1; get() { return eval("this.#e"); } } class D { #n = 2; #o = 3; get() { return this.#n + this.#o; } } console.log(new C().get(), new D().get());';
+			const { code } = await minify(input, { compress: false, mangle: true });
+
+			expect(code).toContain('#e=1;get(){return eval("this.#e")}');
+			expect(code).not.toMatch(/class D\{[^}]*#e\b/);
+			// A class without `eval` still has its names renamed.
+			expect(code).not.toMatch(/#[no]\b/);
+			expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
 		});
 
 		for (const [name, input, options] of CORRECTED_CASES) {
