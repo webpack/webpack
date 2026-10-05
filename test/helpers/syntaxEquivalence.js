@@ -2382,9 +2382,20 @@ const compareStyles = async ({ pairs, types }) => {
 				// WHY: WebKit can hand back one element's style resolved with nothing
 				// inherited — Beer CSS's root `<div>` read every default in one frame
 				// once, with a box in both and its own children inheriting fine. That is
-				// a stale read, not the cascade, so a difference counts only once it
-				// survives renders of both frames; a sheet's real one reads the same.
+				// a stale read, not the cascade, and renders alone keep it (seen in CI):
+				// nothing marks the element dirty. So each re-read first dirties it by
+				// setting a custom property and restoring its exact `style` attribute,
+				// leaving `[style]` selectors as they were; a sheet's difference survives.
 				for (let retry = 0; retry < 2 && found.length > 0; retry++) {
+					for (const { i } of found) {
+						for (const list of read) {
+							const element = /** @type {HTMLElement} */ (list[i]);
+							const original = element.getAttribute("style");
+							element.style.setProperty("--eq-dirty", String(retry));
+							if (original === null) element.removeAttribute("style");
+							else element.setAttribute("style", original);
+						}
+					}
 					await settleFrames();
 					found = found.filter((entry) => {
 						const changed = differ(
