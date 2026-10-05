@@ -35,6 +35,12 @@ module.exports = (
 				.replace(
 					/\([^)]+\) (\[[^\]]+\]\s*)?(V8:).* 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead\n/g,
 					""
+				)
+				// Babel's note on instrumenting a source over 500KB for coverage, written
+				// on its first require (a cold jest cache) by whichever case runs then
+				.replace(
+					/\[BABEL\] Note: The code generator has .+ as it exceeds the max of .+\n/g,
+					""
 				),
 
 		toStringRaw: () => logs.join(""),
