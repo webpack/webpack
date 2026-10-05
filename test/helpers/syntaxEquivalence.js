@@ -2382,9 +2382,22 @@ const compareStyles = async ({ pairs, types }) => {
 				// WHY: WebKit can hand back one element's style resolved with nothing
 				// inherited — Beer CSS's root `<div>` read every default in one frame
 				// once, with a box in both and its own children inheriting fine. That is
-				// a stale read, not the cascade, so a difference counts only once it
-				// survives renders of both frames; a sheet's real one reads the same.
+				// a stale read, not the cascade, and renders alone keep it (seen in CI):
+				// nothing marks the element dirty. So each re-read first dirties it with
+				// an inline custom property no sheet reads, making WebKit resolve it
+				// again; a difference counts only once it survives that, as a sheet's does.
+				/** @type {Set<number>} */
+				const dirtied = new Set();
 				for (let retry = 0; retry < 2 && found.length > 0; retry++) {
+					for (const { i } of found) {
+						dirtied.add(i);
+						for (const list of read) {
+							/** @type {HTMLElement} */ (list[i]).style.setProperty(
+								"--eq-dirty",
+								String(retry)
+							);
+						}
+					}
 					await settleFrames();
 					found = found.filter((entry) => {
 						const changed = differ(
@@ -2396,6 +2409,13 @@ const compareStyles = async ({ pairs, types }) => {
 						entry.changed = changed;
 						return true;
 					});
+				}
+				for (const i of dirtied) {
+					for (const list of read) {
+						/** @type {HTMLElement} */ (list[i]).style.removeProperty(
+							"--eq-dirty"
+						);
+					}
 				}
 				// WHY: a used length is floored to the layout grid, and a percentage
 				// table multiplies that step — Semantic UI's `td{width:18.75%}` moved
