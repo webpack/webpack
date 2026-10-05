@@ -829,6 +829,41 @@ const CORRECTED_CASES = [
 		"a catch parameter default's closure reading a name its block declares, compressed",
 		"function g() { var a, b; let x = 'out'; try { throw []; } catch ([_ = a = () => x]) { b = () => x; let x = 'in'; } console.log(a(), b()); } g();",
 		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's object pattern default assigning in its own default",
+		"function g() { var a; function f({ y = a = 1 } = {}) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's array pattern default assigning in its own default",
+		"function g() { var a; function f([y = a = 1] = []) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's nested pattern default assigning",
+		"function g() { var a; function f([[y = a = 1]] = [[]]) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's pattern default with a computed key assigning",
+		"function g() { var a; function f({ [a = 2]: y } = {}) {} f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty arrow's pattern default assigning",
+		"function g() { var a; var f = ({ y = a = 1 } = {}) => {}; f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function called twice, its pattern default counting",
+		"function g() { var a = 0; function f({ y = a++ } = {}) {} f(); f(); console.log(a); } g();",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"an empty function's pattern defaulting to `null`, which throws",
+		"function g() { function f({ y } = null) {} try { f(); console.log('ran'); } catch (e) { console.log(e.name); } } g();",
+		{ compress: {}, mangle: false }
 	]
 ];
 
