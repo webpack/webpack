@@ -281,6 +281,31 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"built-ins called on `Infinity`, which the compressor writes as `1/0`",
+		"console.log(Math.abs(-Infinity), isFinite(Infinity), Math.max(0, -Infinity), String.fromCharCode(Infinity));",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`toString` of number literals",
+		"console.log(0 .toString(), 100 .toString(16), 1000000 .toString(36), NaN.toString(2), (-Infinity).toString(2), 0.5.toString());",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`concat` and `Array.of` on literals",
+		'console.log([1, 2].concat(1).concat(2, ["abc"]), "1".concat(1, ["abc"]), [].concat(1).concat(2).join(","), Array.of("a", ["b", "c"]), Array.of().length, [[1]].concat(2));',
+		{ compress: {}, mangle: false }
+	],
+	[
+		"a `Number` constant read after an assignment it ignores",
+		"Number.NaN = 1; console.log(Number.NaN);",
+		{ compress: {}, mangle: false }
+	],
+	[
+		"`Number` constants written as their numbers",
+		"console.log(Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NaN);",
+		{ compress: {}, mangle: false }
+	],
+	[
 		"`Number` and `String` functions called on literals",
 		"console.log(Number.isInteger(5), Number.isSafeInteger(2 ** 53), String.fromCharCode(65, 66), String.fromCodePoint(67));",
 		{ compress: {}, mangle: false }
@@ -316,6 +341,11 @@ const IMPROVED_CASES = [
 // of its function's own, or the call passes, keeps or constructs something.
 /** @type {[string, string][]} */
 const KEPT_CASES = [
+	["a fraction's `toString` in a radix other than ten", "console.log(0.5.toString(3));"],
+	["a `concat` keeping a hole", "console.log([, 1].concat(2).length, 0 in [, 1].concat(2));"],
+	["a `Number` shadowed by a variable", "var Number = { NaN: 1 }; console.log(Number.NaN);"],
+	["`Number.EPSILON`, longer as a number", "console.log(Number.EPSILON);"],
+	["safe-integer bounds, whose digits gzip worse", "console.log(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);"],
 	["a `var`", "!function () { var a = Math.random(); console.log(a, a); }();"],
 	["a `return`", `!function () { for (const x of [1, 2]) { ${TRY} if (x) return; } console.log(2); }();`],
 	["`this`", `!function () { ${TRY} console.log(this); }();`],
@@ -1704,40 +1734,47 @@ describe("syntax-printer", () => {
 
 	for (const source of CODEGEN_CASES) {
 		it(`should generate code as terser does: ${source}`, async () => {
-			const { minify } = await load();
-			const reference = terserReference();
-			let differs = false;
-			for (const settings of OUTPUT_OPTIONS) {
-				// The union the table infers does not narrow to terser's options.
-				const options = () =>
-					/** @type {EXPECTED_ANY} */ ({
-						...settings,
-						format: { ...settings.format }
-					});
-				const ours = await minify({ "input.js": source }, options());
-				const referenceOptions = options();
-				for (const name of IGNORED_FORMAT_OPTIONS) {
-					delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
-						name
-					];
+			const { minify, improvements } = await load();
+			if (!improvements) throw new Error("the improve phase is not installed");
+			// terser has no improve phase, so its output is held to webpack's without one.
+			improvements.enabled = false;
+			try {
+				const reference = terserReference();
+				let differs = false;
+				for (const settings of OUTPUT_OPTIONS) {
+					// The union the table infers does not narrow to terser's options.
+					const options = () =>
+						/** @type {EXPECTED_ANY} */ ({
+							...settings,
+							format: { ...settings.format }
+						});
+					const ours = await minify({ "input.js": source }, options());
+					const referenceOptions = options();
+					for (const name of IGNORED_FORMAT_OPTIONS) {
+						delete (/** @type {Record<string, unknown>} */ (referenceOptions.format))[
+							name
+						];
+					}
+					const theirs = await reference.minify(
+						{ "input.js": source },
+						referenceOptions
+					);
+					if (Object.prototype.hasOwnProperty.call(PARSED_DIFFERENTLY, source)) {
+						differs =
+							differs ||
+							ours.code !== theirs.code ||
+							JSON.stringify(ours.map) !== JSON.stringify(theirs.map);
+						continue;
+					}
+					expect(ours.code).toBe(theirs.code);
+					expect(ours.map).toEqual(theirs.map);
 				}
-				const theirs = await reference.minify(
-					{ "input.js": source },
-					referenceOptions
-				);
 				if (Object.prototype.hasOwnProperty.call(PARSED_DIFFERENTLY, source)) {
-					differs =
-						differs ||
-						ours.code !== theirs.code ||
-						JSON.stringify(ours.map) !== JSON.stringify(theirs.map);
-					continue;
+					// A listed difference that is gone is retired from the list.
+					expect(differs).toBe(true);
 				}
-				expect(ours.code).toBe(theirs.code);
-				expect(ours.map).toEqual(theirs.map);
-			}
-			if (Object.prototype.hasOwnProperty.call(PARSED_DIFFERENTLY, source)) {
-				// A listed difference that is gone is retired from the list.
-				expect(differs).toBe(true);
+			} finally {
+				improvements.enabled = true;
 			}
 		});
 	}

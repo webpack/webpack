@@ -1268,6 +1268,8 @@ const refusalsSeen = new Set();
 const webpackRefusalsSeen = new Set();
 /** @type {Set<string>} */
 const misprintsSeen = new Set();
+/** @type {Set<string>} */
+const improvedYetBiggerSeen = new Set();
 
 /**
  * Outputs the `improve` phase writes shorter yet gzip compresses worse, each
@@ -1305,8 +1307,6 @@ const IMPROVED_YET_BIGGER = {
 		"20 bytes fewer, 5 more gzipped: the folded global call matched a shadowed one beside it",
 	"issue_8864_1 (its own options)":
 		"19 bytes fewer, 1 more gzipped: the folded `toUpperCase()` matched the one left in the template",
-	"returns-undefined-on-position-less-than-zero.js (the default minimizer's options)":
-		"15 bytes fewer, 1 more gzipped: the folded `codePointAt(-1)` matched the call beside it",
 	"S15.1.3.3_A4_T2.js (the default minimizer's options)":
 		"51 bytes fewer, 19 more gzipped: each folded lower-cased URL no longer repeats the upper-cased one",
 	"S15.1.3.4_A4_T2.js (the default minimizer's options)":
@@ -1316,7 +1316,83 @@ const IMPROVED_YET_BIGGER = {
 	"S15.1.2.2_A7.2_T3.js (the default minimizer's options)":
 		"323 bytes fewer, 2 more gzipped: each folded `parseInt` call matched the one in its message",
 	"parseInt-default-to-decimal.js (the default minimizer's options)":
-		"60 bytes fewer, 1 more gzipped: each folded `parseInt` call matched the one in the strict function"
+		"60 bytes fewer, 1 more gzipped: each folded `parseInt` call matched the one in the strict function",
+	"issue-597/beautify_off_1 (its own options)":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_off_1 (the default minimizer's options)":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_off_1 (a module mangled at its top level)":
+		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_off_1 (reminify 2 {\"mangle\":false})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_off_1 (reminify 3 {})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_off_1 (reminify 4 {\"toplevel\":true})":
+		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_off_1 (reminify 7 {\"safari10\":true})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_off_1 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (its own options)":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (the default minimizer's options)":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (a module mangled at its top level)":
+		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (reminify 2 {\"mangle\":false})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (reminify 3 {})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (reminify 4 {\"toplevel\":true})":
+		"17 bytes fewer, 5 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (reminify 7 {\"safari10\":true})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"issue-597/beautify_on_1 (reminify 8 {\"compress\":{\"reduce_funcs\":false}})":
+		"17 bytes fewer, 6 more gzipped: `\"Infinity\"` and `\"NaN\"` broke the run of `.toString()` calls gzip reused",
+	"does-not-use-prototype-properties.js (the default minimizer's options)":
+		"8 bytes fewer, 2 more gzipped: the folded `Array.of` matched the `Array.of.call` left after it",
+	"return-a-new-array-object.js (the default minimizer's options)":
+		"8 bytes fewer, 1 more gzipped: the folded `Array.of` matched the `Array.of.call` left after it",
+	"coerced-indexes.js (the default minimizer's options)":
+		"40 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"positive-infinity.js (the default minimizer's options)":
+		"21 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.5_A2_T2.js (the default minimizer's options)":
+		"61 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.10_A2.1_T3.js (the default minimizer's options)":
+		"21 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.10_A2.1_T4.js (the default minimizer's options)":
+		"20 bytes fewer, 5 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.10_A2.2_T3.js (the default minimizer's options)":
+		"21 bytes fewer, 3 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.10_A2.2_T4.js (the default minimizer's options)":
+		"20 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.12_A2.1_T3.js (the default minimizer's options)":
+		"21 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.12_A2.1_T4.js (the default minimizer's options)":
+		"20 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.12_A2.2_T3.js (the default minimizer's options)":
+		"21 bytes fewer, 3 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.12_A2.2_T4.js (the default minimizer's options)":
+		"20 bytes fewer, 5 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.13_A1_T2.js (the default minimizer's options)":
+		"42 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.4.4.13_A2_T2.js (the default minimizer's options)":
+		"20 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"not-an-object-throws.js (the default minimizer's options)":
+		"20 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S9.2_A4_T3.js (the default minimizer's options)":
+		"41 bytes fewer, 4 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.7.4.5_A1.4_T01.js (the default minimizer's options)":
+		"28 bytes fewer, 2 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.5.4.19_A1_T6.js (the default minimizer's options)":
+		"36 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"S15.5.4.18_A1_T6.js (the default minimizer's options)":
+		"36 bytes fewer, 1 more gzipped: the folded `Number` constant stays quoted in the messages, which gzip had matched",
+	"fixture/issues/number-radix-conversion/input.js (its own options)":
+		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in",
+	"fixture/issues/number-radix-conversion/input.js (the default minimizer's options)":
+		"6 bytes fewer, 9 more gzipped: the folded base-36 digits are a string gzip finds no run in"
 };
 
 /**
@@ -1905,16 +1981,19 @@ describe("JavaScript minifier", () => {
 											oursGzip: withSize.gzip,
 											theirsGzip: withoutSize.gzip
 										};
-										const listed = Object.prototype.hasOwnProperty.call(
-											IMPROVED_YET_BIGGER,
-											`${source.name} (${setName})`
-										);
-										if (listed !== (standingOf(lead) === "worse")) {
-											differences.push(
-												listed
-													? `${source.name} (${setName}) is no bigger with the improvements now: retire it from IMPROVED_YET_BIGGER`
-													: `${source.name} (${setName}) is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
+										const key = `${source.name} (${setName})`;
+										// Sources sharing a name share an entry, standing while one is bigger;
+										// an entry none of them meets fails at the end.
+										if (standingOf(lead) === "worse") {
+											if (
+												Object.prototype.hasOwnProperty.call(IMPROVED_YET_BIGGER, key)
+											) {
+												improvedYetBiggerSeen.add(key);
+											} else {
+												differences.push(
+												`${key} is bigger with the improvements: ${withSize.raw} raw, ${withSize.gzip} gzip, against ${withoutSize.raw} raw, ${withoutSize.gzip} gzip\n\twith:    ${ours.code}\n\twithout: ${unimproved.code}`
 											);
+											}
 										}
 									}
 								}
@@ -1999,7 +2078,10 @@ describe("JavaScript minifier", () => {
 				.map((message) => `REFUSED_BY_WEBPACK: ${message}`),
 			...Object.keys(REFERENCE_MISPRINTS)
 				.filter((key) => !misprintsSeen.has(key))
-				.map((key) => `REFERENCE_MISPRINTS: ${key}`)
+				.map((key) => `REFERENCE_MISPRINTS: ${key}`),
+			...Object.keys(IMPROVED_YET_BIGGER)
+				.filter((key) => !improvedYetBiggerSeen.has(key))
+				.map((key) => `IMPROVED_YET_BIGGER: ${key}`)
 		]).toEqual([]);
 	});
 });
