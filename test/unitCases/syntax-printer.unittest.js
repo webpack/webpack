@@ -3665,6 +3665,34 @@ describe("syntax-printer", () => {
 			expect(phases).toContain("correct");
 		});
 
+		for (const expression of ["+1n", "1n % 0n"]) {
+			it(`should defer the BigInt error from ${expression} until runtime`, async () => {
+				const { minify, corrections } = await load();
+				const input = `
+					try { console.log(${expression}); } catch (error) { console.log(error.name); }
+					try { ${expression}; } catch (error) { console.log(error.name); }
+					try {
+						(function () { const unused = ${expression}; })();
+					} catch (error) { console.log(error.name); }
+					try {
+						(function (value = ${expression}) {})();
+					} catch (error) { console.log(error.name); }
+				`;
+				const options = { compress: { passes: 2 }, mangle: false };
+				const { code } = await minify(input, options);
+				expect(runProgram(/** @type {string} */ (code))).toBe(runProgram(input));
+
+				if (!corrections) throw new Error("the correct phase is not installed");
+				corrections.enabled = false;
+				try {
+					await expect(minify(input, options)).rejects.toThrow();
+					await expect(terserReference().minify(input, options)).rejects.toThrow();
+				} finally {
+					corrections.enabled = true;
+				}
+			});
+		}
+
 		it("should drop a class whose effects read only a nested class's own private name, as terser does", async () => {
 			const { minify } = await load();
 			const input =

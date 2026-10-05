@@ -1638,7 +1638,7 @@ const MINIFIED_FAILURES = [
 	{
 		reason:
 			"terser folds an expression that throws when it runs, which fails the build",
-		minifiers: ["terser", "printer"],
+		minifiers: ["terser"],
 		tests: [
 			"expressions/modulus/bigint-modulo-zero.js (sloppy)",
 			"expressions/modulus/bigint-modulo-zero.js (strict)",
