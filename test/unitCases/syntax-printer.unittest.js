@@ -2082,7 +2082,9 @@ describe("syntax-printer", () => {
 		["a labelled for left a block", "function f() { l: for (var a = g(), b = 1; b; ) break l; } sink(f);", {}],
 		["a fixed value moved to an assignment", "function f() { var a = g(); a = 1; return a; } sink(f);", {}],
 		["a name declared twice apart", "function f() { var a = 1; sink(a); var a = g(); return a; } sink(f);", {}],
-		["side effects after a kept name", "function f() { var b = x(), a = g(), c = h(); return b + c; } sink(f);", {}]
+		["side effects after a kept name", "function f() { var b = x(), a = g(), c = h(); return b + c; } sink(f);", {}],
+		["an assignment to an unused name in a nested function", "function f() { var a; sink(function () { a = g(); }); } sink(f);", {}],
+		["a fixed value reassigned in a nested getter", "let foo = () => 1; const obj = { get 0() { foo = () => 2; return 40; } }; console.log(obj); var c = obj[0]; console.log(foo(c));", { toplevel: true, compress: { drop_console: true } }]
 	];
 
 	// Cases of terser's own suite reaching a branch no case above reaches, under
