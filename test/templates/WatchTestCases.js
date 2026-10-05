@@ -22,6 +22,7 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const { parseResource } = require("../../lib/util/identifier");
 const { TestRunner } = require("../harness/runner");
+const assertModuleGraph = require("../helpers/assertModuleGraph");
 const checkArrayExpectation = require("../helpers/checkArrayExpectation");
 const createLazyTestEnv = require("../helpers/createLazyTestEnv");
 const deprecationTracking = require("../helpers/deprecationTracking");
@@ -328,6 +329,16 @@ const describeCases = (config) => {
 
 									const compiler = webpack(options);
 									watchedCompiler = compiler;
+									const compilers =
+										compiler instanceof webpack.MultiCompiler
+											? compiler.compilers
+											: [compiler];
+									for (const child of compilers) {
+										child.hooks.finishMake.tap(
+											{ name: "WatchTestCasesTest", stage: Infinity },
+											assertModuleGraph
+										);
+									}
 									compiler.hooks.invalid.tap(
 										"WatchTestCasesTest",
 										(filename, _mtime) => {
