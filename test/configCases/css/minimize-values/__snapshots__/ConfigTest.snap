@@ -179,7 +179,7 @@ Array [
   "/*! webpack: ...on either side of a block delimiter, except \`(\`, which forms a
    function token after an identifier */.t144a{--t144a:a[b]c (d)}",
   "/*! webpack: declined: a string is one token, whatever stands inside it */.t145{--t145:\\"a  b\\" \\"c ,  d\\"}",
-  "/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */.t146{box-shadow:0 0 0 1px red inset,0 0 blue inset}",
+  "/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */.t146{box-shadow:inset 0 0 0 1px red,inset 0 0 blue}",
   "/*! webpack: declined: \`0%\` is a percentage, which a shadow's slots do not take */.t147{box-shadow:1px 1px 0%0%red}",
   "/*! webpack: declined: writing the character a hex escape names is value-identical,
    but it trades a repetitive ASCII alphabet for 3-byte UTF-8 runs — 6420 raw bytes

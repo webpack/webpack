@@ -4940,6 +4940,80 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a rule a later one of the same selector writes wholly again", () => {
+		it("drops the earlier, whatever stands between", () => {
+			expect(
+				minify(
+					"@media all{.c{margin-left:1em;width:1px}.d{width:2px}.c{width:3px;margin-left:.75em;color:red}}"
+				)
+			).toBe("@media all{.d{width:2px}.c{width:3px;margin-left:.75em;color:red}}");
+		});
+
+		it("drops each earlier copy, the one a copy between took included", () => {
+			expect(
+				minify("@media all{a{top:1px}b{x:1}a{top:2px}c{x:1}a{top:3px}}")
+			).toBe("@media all{b,c{x:1}a{top:3px}}");
+		});
+
+		it("drops one whose later value every target reads", () => {
+			expect(
+				minifyFor("@media all{a{display:block}b{x:1}a{display:grid}}", [
+					"chrome 120"
+				])
+			).toBe("@media all{b{x:1}a{display:grid}}");
+		});
+
+		it("drops one a later list of the same names overrides", () => {
+			expect(
+				minify(
+					"@media all{a{transition:top .2s}b{x:1}a{transition:top .2s,-webkit-top .2s}}"
+				)
+			).toBe("@media all{b{x:1}a{transition:top.2s,-webkit-top.2s}}");
+		});
+
+		it("drops one a later `!important` declaration overrides", () => {
+			expect(
+				minify("@media all{a{color:#123}b{color:blue}a{color:#456!important}}")
+			).toBe("@media all{b{color:blue}a{color:#456!important}}");
+		});
+
+		it.each([
+			[
+				"a declaration the later rule does not write",
+				"@media all{a{color:red;top:0}b{x:1}a{color:blue}}"
+			],
+			// The earlier one wins wherever the later is plain.
+			[
+				"the earlier declaration is `!important`",
+				"@media all{a{color:red!important}b{x:1}a{color:blue}}"
+			],
+			// An engine not reading the later value reads the earlier one.
+			[
+				"the later value may stand where the earlier is its fallback",
+				"@media all{a{width:1px}b{x:1}a{width:calc(1px + 1%)}}"
+			],
+			[
+				"the selectors differ",
+				"@media all{a{color:red}b{x:1}a:hover{color:blue}}"
+			],
+			[
+				"the earlier writes a custom property",
+				"@media all{a{--x:1}b{x:1}a{--x:2}}"
+			],
+			[
+				"the earlier writes `all`",
+				"@media all{a{all:unset}b{x:1}a{all:initial}}"
+			],
+			// An older engine reads only the last keyframe block of a selector.
+			[
+				"the two are keyframes",
+				"@keyframes k{50%{opacity:0}to{top:0}50%{opacity:1;top:1px}}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a rule an identical later sibling makes dead", () => {
 		it("drops the earlier of two, whatever stands between", () => {
 			expect(minify("@media all{a{color:red}b{color:blue}a{color:red}}")).toBe(
@@ -5907,7 +5981,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			[
 				"a{box-shadow:0 0 0 0 #22242626 inset}",
-				"a{box-shadow:0 0#22242626 inset}"
+				"a{box-shadow:inset 0 0#22242626}"
 			],
 			["a{box-shadow:-1px 0 0 0 #bababc}", "a{box-shadow:-1px 0#bababc}"],
 			["a{box-shadow:inset 0 0 0 0 red}", "a{box-shadow:inset 0 0 red}"],
@@ -5923,7 +5997,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{box-shadow:1px 1px 0em 0rem red}", "a{box-shadow:1px 1px red}"],
 			[
 				"a{box-shadow:0px 0px 0px 1px red inset,0px 0em 0px 0px blue inset}",
-				"a{box-shadow:0 0 0 1px red inset,0 0 blue inset}"
+				"a{box-shadow:inset 0 0 0 1px red,inset 0 0 blue}"
 			],
 			// CSS Backgrounds 3 §7.1: an absent color is `currentcolor`.
 			["a{box-shadow:0 0 2px currentcolor}", "a{box-shadow:0 0 2px}"],
@@ -5931,6 +6005,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{box-shadow:inset 0 0 0 0 currentcolor,0 0 red}",
 				"a{box-shadow:inset 0 0,0 0 red}"
+			],
+			// `inset` stands first, wherever the layer wrote it.
+			["a{box-shadow:red 1px 1px inset}", "a{box-shadow:inset red 1px 1px}"],
+			[
+				"a{-webkit-box-shadow:1px 1px INSET,inset 2px 2px}",
+				"a{-webkit-box-shadow:inset 1px 1px,inset 2px 2px}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -5967,6 +6047,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a box shadow holds five lengths", "a{box-shadow:0 0 0 0 0 red}"],
 			["a text shadow holds four lengths", "a{text-shadow:1px 1px 0 0 red}"],
 			["a color parts the lengths", "a{box-shadow:0 0 red 0 0}"],
+			// Only a box shadow reads `inset`, so a text shadow writing one is dropped.
+			["a text shadow writes `inset`", "a{text-shadow:1px 1px red inset}"],
+			["a layer writes `inset` twice", "a{box-shadow:inset 1px 1px inset}"],
 			["a layer is inset twice", "a{box-shadow:inset inset 0 0 currentcolor}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);

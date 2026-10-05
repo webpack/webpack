@@ -42,3 +42,14 @@
 .l16 { animation: x 1s; animation-fill-mode: none }
 .l17 { transition: opacity; transition-delay: .1s }
 @keyframes x { to { opacity: 0 } }
+
+/* `inset` written first in a box shadow */
+.i1 { box-shadow: 0 0 0 1px red inset }
+.i2 { box-shadow: red 1px 1px inset, 0 0 2px blue }
+
+/* a rule a later one of the same selector writes wholly again */
+@media all {
+	.r1 { top: 1px; color: #123 }
+	.r2 { top: 3px }
+	.r1 { top: 2px; color: #456 }
+}

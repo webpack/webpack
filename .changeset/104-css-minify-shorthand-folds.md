@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold CSS longhands into shorthands, and shorten `flex` and basic shapes.
+Fold CSS longhands, shorten `flex`, shapes and shadows, and drop overridden rules.
