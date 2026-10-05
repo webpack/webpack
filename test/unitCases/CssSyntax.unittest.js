@@ -4952,7 +4952,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("drops each earlier copy, the one a copy between took included", () => {
 			expect(
 				minify("@media all{a{top:1px}b{x:1}a{top:2px}c{x:1}a{top:3px}}")
-			).toBe("@media all{b{x:1}c{x:1}a{top:3px}}");
+			).toBe("@media all{b,c{x:1}a{top:3px}}");
 		});
 
 		it("drops one whose later value every target reads", () => {
