@@ -4040,6 +4040,24 @@ describe("syntax-printer", () => {
 			expect(code).toBe(reference.code);
 		});
 
+		it("should drop each `typeof` guard of a read, strict and loose alike", async () => {
+			const { minify } = await load();
+			for (const guard of [
+				'typeof y != "undefined" && y',
+				'typeof y !== "undefined" && y',
+				'typeof y == "undefined" || y',
+				'typeof y === "undefined" || y',
+				'"undefined" != typeof y && y',
+				'typeof y < "u" && y'
+			]) {
+				const { code } = await minify(`${guard}; console.log(1);`, {
+					compress: {},
+					mangle: false
+				});
+				expect(code).toBe("console.log(1);");
+			}
+		});
+
 		it("should leave built-in calls alone without `evaluate`", async () => {
 			const { minify } = await load();
 			const input = "console.log(Math.abs(-3));";
