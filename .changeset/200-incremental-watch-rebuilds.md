@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Rebuild only changed modules on watch rebuilds by reusing the module graph (incremental make).
+Reuse the module graph and retain loader dependencies across watch rebuilds.
