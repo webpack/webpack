@@ -374,6 +374,14 @@ const IMPROVED_CASES = [
 		{ compress: {}, mangle: false }
 	],
 	[
+		"a `typeof` terser leaves before \"undefined\"",
+		'var a = typeof nothing != "undefined"; console.log(a);',
+		{
+			compress: { defaults: false, comparisons: true, typeofs: true },
+			mangle: false
+		}
+	],
+	[
 		"`typeof` orderings against \"u\" kept in the order written",
 		'console.log(typeof nothing == "undefined", !("u" > typeof nothing), "u" < typeof nothing);',
 		{ compress: { comparisons: false }, mangle: false }
