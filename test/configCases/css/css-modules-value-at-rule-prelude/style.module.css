@@ -213,3 +213,9 @@ importedRichSelValue {
 .imported-local-anim {
 	animation-name: local(importedLocalAnimName);
 }
+
+@value definedAnimName from "./values.module.css";
+
+.defined-anim {
+	animation-name: definedAnimName;
+}

@@ -300,6 +300,12 @@ it("should scope and export an imported @value named by local()", () => {
 	expect(style.importedLocalAnim).toBe(name);
 });
 
+it("should point an imported @value at the @keyframes its defining module scoped", () => {
+	const name = "value-at-rule-prelude-values_module_css-definedAnim";
+	expect(css).toMatch(new RegExp(`@keyframes ${name} \\{`));
+	expect(declarationValue("defined-anim", "animation-name")).toBe(name);
+});
+
 it("should still export the classes of the stylesheet", () => {
 	expect(style.anim).toMatch(/-anim$/);
 	expect(style["in-container"]).toMatch(/-in-container$/);

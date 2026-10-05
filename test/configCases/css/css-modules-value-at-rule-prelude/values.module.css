@@ -10,3 +10,8 @@
 @value importedDuration: 2s;
 @value importedEasing: linear;
 @value importedLocalAnimName: importedLocalAnim;
+@value definedAnimName: definedAnim;
+
+@keyframes definedAnimName {
+	from { opacity: 0; }
+}

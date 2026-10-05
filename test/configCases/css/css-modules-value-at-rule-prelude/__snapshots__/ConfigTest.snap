@@ -17,6 +17,11 @@ exports[`ConfigTestCases css css-modules-value-at-rule-prelude exported tests sh
 
 
 
+
+@keyframes value-at-rule-prelude-values_module_css-definedAnim {
+	from { opacity: 0; }
+}
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -234,6 +239,12 @@ article {
 
 .value-at-rule-prelude-style_module_css-imported-local-anim {
 	animation-name: value-at-rule-prelude-style_module_css-importedLocalAnim;
+}
+
+
+
+.value-at-rule-prelude-style_module_css-defined-anim {
+	animation-name: value-at-rule-prelude-values_module_css-definedAnim;
 }
 
 /*!***********************************!*\\\\
