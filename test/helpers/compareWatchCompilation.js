@@ -3,78 +3,10 @@
 const assert = require("assert");
 const path = require("path");
 const webpack = require("../..");
+const assertModuleGraph = require("./assertModuleGraph");
 
-/** @import { AsyncDependenciesBlock, Compilation, Compiler, Configuration, Dependency, Module, MultiCompiler, MultiStats, Stats } from "../../" */
+/** @import { Compilation, Compiler, Configuration, MultiCompiler, MultiStats, Stats } from "../../" */
 /** @typedef {{ name: string, content: Buffer }[]} Assets */
-
-/**
- * Checks the graph before seal can redirect connections or concatenate modules.
- * @param {Compilation} compilation compilation to check
- * @returns {void}
- */
-const assertModuleGraph = (compilation) => {
-	const { modules, moduleGraph } = compilation;
-	for (const module of modules) {
-		const identifier = module.identifier();
-		/** @type {Set<Dependency>} */
-		const dependencies = new Set();
-		/** @type {(Module | AsyncDependenciesBlock)[]} */
-		const blocks = [module];
-		for (const block of blocks) {
-			for (const dependency of block.dependencies) {
-				dependencies.add(dependency);
-				assert.strictEqual(
-					moduleGraph.getParentModule(dependency),
-					module,
-					`${identifier}: incorrect dependency parent`
-				);
-				assert.strictEqual(
-					moduleGraph.getParentBlock(dependency),
-					block,
-					`${identifier}: incorrect dependency block`
-				);
-			}
-			blocks.push(...block.blocks);
-		}
-		for (const connection of moduleGraph.getOutgoingConnections(module)) {
-			assert.strictEqual(connection.originModule, module, identifier);
-			// Plugin-created connections need not belong to a dependency block.
-			if (
-				connection.dependency &&
-				moduleGraph.getParentModule(connection.dependency) === module
-			) {
-				assert(
-					dependencies.has(connection.dependency),
-					`${identifier}: stale outgoing dependency`
-				);
-			}
-			if (connection.module) {
-				assert(modules.has(connection.module), `${identifier}: missing target`);
-				assert(
-					new Set(moduleGraph.getIncomingConnections(connection.module)).has(
-						connection
-					),
-					`${identifier}: missing incoming connection`
-				);
-			}
-		}
-		for (const connection of moduleGraph.getIncomingConnections(module)) {
-			assert.strictEqual(connection.module, module, identifier);
-			if (connection.originModule) {
-				assert(
-					modules.has(connection.originModule),
-					`${identifier}: missing origin`
-				);
-				assert(
-					new Set(
-						moduleGraph.getOutgoingConnections(connection.originModule)
-					).has(connection),
-					`${identifier}: missing outgoing connection`
-				);
-			}
-		}
-	}
-};
 
 /**
  * Captures asset contents before emit can replace them with size-only sources.
@@ -84,10 +16,6 @@ const assertModuleGraph = (compilation) => {
 const captureAssets = (compiler) => {
 	/** @type {WeakMap<Compilation, Assets>} */
 	const assets = new WeakMap();
-	compiler.hooks.finishMake.tap(
-		{ name: "CompareWatchCompilation", stage: Infinity },
-		assertModuleGraph
-	);
 	compiler.hooks.afterCompile.tap("CompareWatchCompilation", (compilation) => {
 		assets.set(
 			compilation,
@@ -117,6 +45,36 @@ const getDiagnostics = (stats) => {
 		moduleTrace: false
 	});
 	return { errors, warnings };
+};
+
+/**
+ * Maps each compiler's output dependencies to the watched output directory.
+ * @param {Compilation} compilation compilation to compare
+ * @param {string} outputPath watched output directory
+ * @returns {{ fileDependencies: string[], contextDependencies: string[], missingDependencies: string[] }} comparable watch dependencies
+ */
+const getWatchDependencies = (compilation, outputPath) => {
+	/**
+	 * @param {string} dependency watched path
+	 * @returns {string} path in the common output directory
+	 */
+	const normalize = (dependency) => {
+		const relative = path.relative(compilation.compiler.outputPath, dependency);
+		return relative === ".." ||
+			relative.startsWith(`..${path.sep}`) ||
+			path.isAbsolute(relative)
+			? dependency
+			: path.join(outputPath, relative);
+	};
+	return {
+		fileDependencies: [...compilation.fileDependencies].map(normalize).sort(),
+		contextDependencies: [...compilation.contextDependencies]
+			.map(normalize)
+			.sort(),
+		missingDependencies: [...compilation.missingDependencies]
+			.map(normalize)
+			.sort()
+	};
 };
 
 /**
@@ -152,6 +110,10 @@ const compareWatchCompilation = (
 					path: path.join(outputDirectory, String(index))
 				}
 			});
+			freshCompiler.hooks.finishMake.tap(
+				{ name: "CompareWatchCompilation", stage: Infinity },
+				assertModuleGraph
+			);
 			const freshAssets = captureAssets(freshCompiler);
 			await new Promise((resolve, reject) => {
 				freshCompiler.run((error, freshStats) => {
@@ -159,6 +121,17 @@ const compareWatchCompilation = (
 						if (error || closeError) return reject(error || closeError);
 						try {
 							assert(freshStats, "Fresh compiler did not return stats");
+							expect(
+								getWatchDependencies(
+									result.compilation,
+									compilers[index].outputPath
+								)
+							).toEqual(
+								getWatchDependencies(
+									freshStats.compilation,
+									compilers[index].outputPath
+								)
+							);
 							const actualDiagnostics = getDiagnostics(result);
 							const expectedDiagnostics = getDiagnostics(freshStats);
 							expect(actualDiagnostics.errors).toEqual(

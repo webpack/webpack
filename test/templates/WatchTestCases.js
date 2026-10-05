@@ -598,7 +598,6 @@ const describeCases = (config) => {
 													return;
 												}
 
-
 												if (testConfig.noTests) {
 													return process.nextTick(finish);
 												}
