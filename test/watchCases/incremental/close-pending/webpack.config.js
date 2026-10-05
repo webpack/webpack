@@ -38,6 +38,8 @@ module.exports = (_env, { srcPath }) =>
 					plugin.run = async () => {
 						const watching = compiler.watching;
 						assert(watching);
+						const previousBuilds = builds;
+						const previousCompleted = completed;
 						const reached = barrier.arm();
 						try {
 							fs.copyFileSync(
@@ -67,8 +69,8 @@ module.exports = (_env, { srcPath }) =>
 							await Promise.all(closing);
 							expect(callbacks).toBe(2);
 							expect(closed).toBe(1);
-							expect(completed).toBe(1);
-							expect(builds).toBe(2);
+							expect(completed).toBe(previousCompleted);
+							expect(builds).toBe(previousBuilds + 1);
 							expect(compiler.running).toBe(false);
 							expect(compiler.watchMode).toBe(false);
 							expect(compiler.watching).toBeUndefined();
