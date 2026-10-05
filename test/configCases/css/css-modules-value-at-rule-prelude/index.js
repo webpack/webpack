@@ -232,6 +232,22 @@ it("should substitute a @value prelude name once in global mode", () => {
 	expect(css).toMatch(/\.global-anim \{[^}]*--animation-name: globalPulse;/);
 });
 
+it("should export a @value-named at-rule under the name it resolves to", () => {
+	expect(style.animName).toBe("pulseAnim");
+	expect(style.pulseAnim).toBe("value-at-rule-prelude-style_module_css-pulseAnim");
+	expect(style.spinAnim).toBe("value-at-rule-prelude-style_module_css-spinAnim");
+	expect(style.fadeAnim).toBe("value-at-rule-prelude-style_module_css-fadeAnim");
+	expect(style.chainedAnim).toBe(
+		"value-at-rule-prelude-style_module_css-chainedAnim"
+	);
+	expect(style.romanCounter).toBe(
+		"value-at-rule-prelude-style_module_css-romanCounter"
+	);
+	expect(style.sidebarContainer).toBe(
+		"value-at-rule-prelude-style_module_css-sidebarContainer"
+	);
+});
+
 it("should still export the classes of the stylesheet", () => {
 	expect(style.anim).toMatch(/-anim$/);
 	expect(style["in-container"]).toMatch(/-in-container$/);
