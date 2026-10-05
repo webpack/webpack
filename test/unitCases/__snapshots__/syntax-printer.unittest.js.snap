@@ -2483,7 +2483,7 @@ exports[`syntax-printer should print exactly as terser does: classes and objects
 
 exports[`syntax-printer should print exactly as terser does: comments in each position 1`] = `
 "#!/usr/bin/env node
-const kept=build(1);function f(){return value+1}function g(){return a&&b}function*h(){yield x,yield,y}async function i(){throw await z,new Error}function empty(){}a||b(),x=1,sink(1),sink(2),sink(f,g,h,i,empty,kept);"
+const kept=build(1);function f(){return value+1}function g(){return a&&b}function*h(){yield x,yield,y}async function i(){throw await z,Error()}function empty(){}a||b(),x=1,sink(1),sink(2),sink(f,g,h,i,empty,kept);"
 `;
 
 exports[`syntax-printer should print exactly as terser does: directives, and strings that would read as one 1`] = `"\\"use strict\\";function f(){return 1}function g(){}sink(f,g);"`;

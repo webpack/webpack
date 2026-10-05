@@ -819,6 +819,22 @@ const UNICODE_DEPENDENT_METHODS = [
 // which the printer refuses past the call's own size before running them.
 const SIZED_BY_ARGUMENT_METHODS = ["padEnd", "padStart", "repeat"];
 
+// Constructors the spec has construct the same called without `new`, which
+// `improve` calls so; `RegExp` only where it is passed no regular expression.
+const CONSTRUCTED_WHEN_CALLED = [
+	"Array",
+	"Error",
+	"EvalError",
+	"Function",
+	"Object",
+	"RangeError",
+	"ReferenceError",
+	"RegExp",
+	"SyntaxError",
+	"TypeError",
+	"URIError"
+];
+
 // Every other member @mdn/browser-compat-data lists of `Math`, `Number`,
 // `String`, `Array` and the global functions, by why it is not folded; one it
 // starts listing fails generation until it is placed here or above.
@@ -1024,7 +1040,7 @@ const isNoLaterThan = (version, limit) => {
 /**
  * The built-ins `improve` folds, checked against BCD: each one present, on the
  * owner it is spelled under, and in every Node webpack builds on.
- * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[] }} the tables
+ * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[], constructedWhenCalled: string[] }} the tables
  */
 const collectFoldedBuiltIns = () => {
 	const members = collectBuiltInMembers();
@@ -1096,13 +1112,19 @@ const collectFoldedBuiltIns = () => {
 			throw new Error(`${name} is not a folded string method`);
 		}
 	}
+	for (const name of CONSTRUCTED_WHEN_CALLED) {
+		if (!bcd.javascript.builtins[name]) {
+			throw new Error(`@mdn/browser-compat-data lists no built-in ${name}`);
+		}
+	}
 	return {
 		globals,
 		statics,
 		methods,
 		constants: FOLDED_CONSTANTS,
 		unicodeDependent: UNICODE_DEPENDENT_METHODS,
-		sizedByArgument: SIZED_BY_ARGUMENT_METHODS
+		sizedByArgument: SIZED_BY_ARGUMENT_METHODS,
+		constructedWhenCalled: CONSTRUCTED_WHEN_CALLED
 	};
 };
 
@@ -1119,6 +1141,7 @@ const renderFoldedBuiltIns = () => `
  * @property {Record<string, string[]>} constants the static values of each global object
  * @property {string[]} unicodeDependent the string methods folded on ASCII only
  * @property {string[]} sizedByArgument the string methods a count or length argument sizes
+ * @property {string[]} constructedWhenCalled the constructors that construct the same without \`new\`
  */
 
 // The built-ins the \`improve\` phase evaluates on literals, by owner, as
