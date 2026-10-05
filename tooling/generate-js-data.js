@@ -769,6 +769,7 @@ const FOLDED_BUILT_INS = {
 		"parseFloat",
 		"parseInt"
 	],
+	"Number.prototype": ["toString"],
 	String: ["fromCharCode", "fromCodePoint"],
 	"String.prototype": [
 		"charAt",
@@ -794,7 +795,13 @@ const FOLDED_BUILT_INS = {
 		"trimEnd",
 		"trimStart"
 	],
-	"Array.prototype": ["join"]
+	Array: ["of"],
+	"Array.prototype": ["concat", "join"]
+};
+
+// Static values `improve` writes as the number they hold where that is shorter.
+const FOLDED_CONSTANTS = {
+	Number: ["EPSILON", "NEGATIVE_INFINITY", "NaN", "POSITIVE_INFINITY"]
 };
 
 // Methods whose answer for a string outside ASCII follows the engine's Unicode
@@ -827,19 +834,17 @@ const UNFOLDED_BUILT_INS = {
 		"Math.PI",
 		"Math.SQRT1_2",
 		"Math.SQRT2",
-		"Number.EPSILON",
-		"Number.MAX_SAFE_INTEGER",
 		"Number.MAX_VALUE",
-		"Number.MIN_SAFE_INTEGER",
 		"Number.MIN_VALUE",
-		"Number.NEGATIVE_INFINITY",
-		"Number.NaN",
-		"Number.POSITIVE_INFINITY",
 		"String.prototype.length",
 		"String.unicode_code_point_escapes",
 		"Array.prototype.length",
 		"Array.@@species",
 		"Array.prototype.@@unscopables"
+	],
+	"its sixteen digits gzip worse than the name they replace": [
+		"Number.MAX_SAFE_INTEGER",
+		"Number.MIN_SAFE_INTEGER"
 	],
 	"it runs code, or answers differently on each call": ["eval", "Math.random"],
 	"the spec lets each engine approximate its answer": [
@@ -894,11 +899,10 @@ const UNFOLDED_BUILT_INS = {
 	"it answers an array, which gzips worse as a literal than the call": [
 		"String.prototype.split"
 	],
-	"the printer evaluates calls on string and array literals only": [
+	"of number literals, the printer folds `toString` alone": [
 		"Number.prototype.toExponential",
 		"Number.prototype.toFixed",
 		"Number.prototype.toPrecision",
-		"Number.prototype.toString",
 		"Number.prototype.valueOf"
 	],
 	"rarely called on literals, so not weighed yet": [
@@ -929,9 +933,7 @@ const UNFOLDED_BUILT_INS = {
 		"Array.from",
 		"Array.fromAsync",
 		"Array.isArray",
-		"Array.of",
 		"Array.prototype.at",
-		"Array.prototype.concat",
 		"Array.prototype.copyWithin",
 		"Array.prototype.every",
 		"Array.prototype.fill",
@@ -1022,7 +1024,7 @@ const isNoLaterThan = (version, limit) => {
 /**
  * The built-ins `improve` folds, checked against BCD: each one present, on the
  * owner it is spelled under, and in every Node webpack builds on.
- * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[] }} the tables
+ * @returns {{ globals: string[], statics: Record<string, string[]>, methods: Record<string, string[]>, constants: Record<string, string[]>, unicodeDependent: string[], sizedByArgument: string[] }} the tables
  */
 const collectFoldedBuiltIns = () => {
 	const members = collectBuiltInMembers();
@@ -1072,6 +1074,9 @@ const collectFoldedBuiltIns = () => {
 			statics[owner] = names;
 		}
 	}
+	for (const [owner, names] of Object.entries(FOLDED_CONSTANTS)) {
+		for (const name of names) place(`${owner}.${name}`, "FOLDED_CONSTANTS");
+	}
 	for (const [reason, names] of Object.entries(UNFOLDED_BUILT_INS)) {
 		for (const name of names) place(name, `left out as "${reason}"`);
 	}
@@ -1095,6 +1100,7 @@ const collectFoldedBuiltIns = () => {
 		globals,
 		statics,
 		methods,
+		constants: FOLDED_CONSTANTS,
 		unicodeDependent: UNICODE_DEPENDENT_METHODS,
 		sizedByArgument: SIZED_BY_ARGUMENT_METHODS
 	};
@@ -1110,6 +1116,7 @@ const renderFoldedBuiltIns = () => `
  * @property {string[]} globals the global functions
  * @property {Record<string, string[]>} statics the functions of each global object
  * @property {Record<string, string[]>} methods the prototype methods of each constructor
+ * @property {Record<string, string[]>} constants the static values of each global object
  * @property {string[]} unicodeDependent the string methods folded on ASCII only
  * @property {string[]} sizedByArgument the string methods a count or length argument sizes
  */

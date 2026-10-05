@@ -217,7 +217,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/5910/1/input.js",
 			"swc minifier: fixture/issues/6049/1/input.js",
 			"swc minifier: fixture/issues/6407/1/input.js",
-			"swc minifier: fixture/issues/6492/2/input.js",
 			"swc minifier: fixture/issues/6492/3/input.js",
 			"swc minifier: fixture/issues/6492/4/input.js",
 			"swc minifier: fixture/issues/7402/input.js",
@@ -455,14 +454,12 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8706/input.js",
 			"swc minifier: fixture/issues/9741_multiple_methods/input.js",
 			"swc minifier: fixture/issues/non-finite-number-method-call/input.js",
-			"swc minifier: fixture/issues/string-from-char-code-uint16/input.js",
 			"swc minifier: fixture/next/swc-4559/input.js",
 			"swc minifier: pass-1/compute/1/input.js",
 			"swc minifier: pass-default/compute/1/input.js",
 			"swc minifier: pass-default/math-constant-folding/1/input.js",
 			"terser compress: evaluate/issue_2207_1",
 			"terser compress: issue-597/NaN_and_Infinity_must_have_parens_evaluate",
-			"terser compress: issue-597/NaN_and_Infinity_should_not_be_replaced_when_they_are_redefined_evaluate",
 			"terser compress: issue-597/beautify_off_1",
 			"terser compress: issue-597/beautify_on_1"
 		]
