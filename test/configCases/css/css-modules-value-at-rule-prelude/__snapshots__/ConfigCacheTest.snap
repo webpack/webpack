@@ -188,6 +188,21 @@ article {
 	color: silver;
 }
 
+
+
+
+.value-at-rule-prelude-style_module_css-spaced-anim {
+	animation-name: value-at-rule-prelude-style_module_css-spacedAnim;
+}
+
+@keyframes value-at-rule-prelude-style_module_css-spacedAnim {
+	from { opacity: 0; }
+}
+
+@keyframes value-at-rule-prelude-style_module_css-rich\\\\ anim {
+	from { opacity: 0; }
+}
+
 /*!***********************************!*\\\\
   !*** css ./no-scoping.module.css ***!
   \\\\***********************************/

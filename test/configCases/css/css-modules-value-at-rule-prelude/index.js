@@ -248,6 +248,27 @@ it("should export a @value-named at-rule under the name it resolves to", () => {
 	);
 });
 
+it("should export a @value-named at-rule under its resolved name only when that is one ident", () => {
+	expect(style.spacedAnim).toBe(
+		"value-at-rule-prelude-style_module_css-spacedAnim"
+	);
+	expect(declarationValue("spaced-anim", "animation-name")).toBe(
+		style.spacedAnim
+	);
+	expect(style.richAnimName).toBe("rich anim");
+	expect(Object.keys(style)).not.toContain("rich anim");
+});
+
+it("should leave an at-rule named by an imported @value to the defining module's exports", () => {
+	expect(style.importedAnimName).toBe("importedAnim");
+	expect(style.importedCounterName).toBe("importedCounter");
+	expect(style.importedKeyframes).toBe(
+		"value-at-rule-prelude-values_module_css-importedKeyframes"
+	);
+	expect(Object.keys(style)).not.toContain("importedAnim");
+	expect(Object.keys(style)).not.toContain("importedCounter");
+});
+
 it("should still export the classes of the stylesheet", () => {
 	expect(style.anim).toMatch(/-anim$/);
 	expect(style["in-container"]).toMatch(/-in-container$/);

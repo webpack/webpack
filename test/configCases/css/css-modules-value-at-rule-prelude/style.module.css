@@ -170,3 +170,18 @@ richSelValue {
 importedSelValue {
 	color: silver;
 }
+
+@value spacedAnimName:   spacedAnim  ;
+@value richAnimName: rich anim;
+
+.spaced-anim {
+	animation-name: spacedAnimName;
+}
+
+@keyframes spacedAnimName {
+	from { opacity: 0; }
+}
+
+@keyframes richAnimName {
+	from { opacity: 0; }
+}
