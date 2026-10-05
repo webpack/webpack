@@ -124,9 +124,9 @@ it("should resolve a chained @value used as a @keyframes name", () => {
 	expect(declarationValue("chained-anim", "animation-name")).toBe(name);
 });
 
-it("should resolve an imported @value used as a @keyframes name", () => {
+it("should resolve then scope an imported @value used as a @keyframes name, as a local one", () => {
 	const name = preludeName(/@keyframes ([^\s{]*importedAnim)/);
-	expect(name).toBe("importedAnim");
+	expect(name).toBe("value-at-rule-prelude-style_module_css-importedAnim");
 	expect(declarationValue("imported-anim", "animation-name")).toBe(name);
 });
 
@@ -152,6 +152,9 @@ it("should give @counter-style and its list-style references the same name", () 
 
 	const importedName = preludeName(
 		/@counter-style ([^\s{]+) \{\s+system: cyclic;\s+symbols: "\+"/
+	);
+	expect(importedName).toBe(
+		"value-at-rule-prelude-style_module_css-importedCounter"
 	);
 	expect(declarationValue("imported-counter", "list-style")).toBe(importedName);
 });
@@ -199,11 +202,14 @@ it("should substitute a @value naming a richer selector verbatim", () => {
 	expect(css).toMatch(/\.outer \.inner \{\s+color: gray;/);
 });
 
-it("should substitute an imported @value used as a selector verbatim", () => {
-	// The defining module owns the scoped name, so an imported value stays a
-	// plain textual substitution rather than being localized here.
-	expect(css).toMatch(/\.importedCls \{\s+color: silver;/);
-	expect(css).not.toMatch(/_css-importedCls/);
+it("should resolve then localize an imported @value used as a selector, as a local one", () => {
+	expect(css).toMatch(
+		/\.value-at-rule-prelude-style_module_css-importedCls \{\s+color: silver;/
+	);
+	expect(style.importedCls).toBe(
+		"value-at-rule-prelude-style_module_css-importedCls"
+	);
+	expect(css).toMatch(/\.outer \.inner \{\s+color: white;/);
 });
 
 it("should keep substituting a @value used as a whole @media query", () => {
@@ -259,14 +265,39 @@ it("should export a @value-named at-rule under its resolved name only when that 
 	expect(Object.keys(style)).not.toContain("rich anim");
 });
 
-it("should leave an at-rule named by an imported @value to the defining module's exports", () => {
+it("should export an at-rule named by an imported @value under its resolved name, as a local one", () => {
 	expect(style.importedAnimName).toBe("importedAnim");
+	expect(style.importedAnim).toBe(
+		"value-at-rule-prelude-style_module_css-importedAnim"
+	);
 	expect(style.importedCounterName).toBe("importedCounter");
+	expect(style.importedCounter).toBe(
+		"value-at-rule-prelude-style_module_css-importedCounter"
+	);
+	// A name the defining module already scoped stays that module's.
 	expect(style.importedKeyframes).toBe(
 		"value-at-rule-prelude-values_module_css-importedKeyframes"
 	);
-	expect(Object.keys(style)).not.toContain("importedAnim");
-	expect(Object.keys(style)).not.toContain("importedCounter");
+	expect(style.importedRichName).toBe("imported rich");
+	expect(css).toMatch(
+		/@keyframes value-at-rule-prelude-style_module_css-imported\\ rich \{/
+	);
+	expect(Object.keys(style)).not.toContain("imported rich");
+});
+
+it("should substitute a @value that resolves to a non-name or a keyword without scoping it", () => {
+	expect(declarationValue("timing-anim", "animation")).toBe(
+		"value-at-rule-prelude-style_module_css-pulseAnim 1s linear"
+	);
+	expect(declarationValue("imported-timing-anim", "animation")).toBe(
+		"value-at-rule-prelude-style_module_css-importedAnim 2s linear"
+	);
+});
+
+it("should scope and export an imported @value named by local()", () => {
+	const name = "value-at-rule-prelude-style_module_css-importedLocalAnim";
+	expect(declarationValue("imported-local-anim", "animation-name")).toBe(name);
+	expect(style.importedLocalAnim).toBe(name);
 });
 
 it("should still export the classes of the stylesheet", () => {

@@ -12,6 +12,11 @@ exports[`ConfigCacheTestCases css css-modules-value-at-rule-prelude exported tes
 	from { opacity: 0; }
 }
 
+
+
+
+
+
 /*!******************************!*\\\\
   !*** css ./style.module.css ***!
   \\\\******************************/
@@ -70,10 +75,10 @@ exports[`ConfigCacheTestCases css css-modules-value-at-rule-prelude exported tes
 }
 
 .value-at-rule-prelude-style_module_css-imported-anim {
-	animation-name: importedAnim;
+	animation-name: value-at-rule-prelude-style_module_css-importedAnim;
 }
 
-@keyframes importedAnim {
+@keyframes value-at-rule-prelude-style_module_css-importedAnim {
 	from { opacity: 0; }
 }
 
@@ -88,10 +93,10 @@ exports[`ConfigCacheTestCases css css-modules-value-at-rule-prelude exported tes
 }
 
 .value-at-rule-prelude-style_module_css-imported-counter {
-	list-style: importedCounter;
+	list-style: value-at-rule-prelude-style_module_css-importedCounter;
 }
 
-@counter-style importedCounter {
+@counter-style value-at-rule-prelude-style_module_css-importedCounter {
 	system: cyclic;
 	symbols: \\"+\\";
 	suffix: \\" \\";
@@ -184,7 +189,7 @@ article {
 
 
 
-.importedCls {
+.value-at-rule-prelude-style_module_css-importedCls {
 	color: silver;
 }
 
@@ -201,6 +206,34 @@ article {
 
 @keyframes value-at-rule-prelude-style_module_css-rich\\\\ anim {
 	from { opacity: 0; }
+}
+
+
+
+@keyframes value-at-rule-prelude-style_module_css-imported\\\\ rich {
+	from { opacity: 0; }
+}
+
+
+
+.outer .inner {
+	color: white;
+}
+
+
+
+
+
+.value-at-rule-prelude-style_module_css-timing-anim {
+	animation: value-at-rule-prelude-style_module_css-pulseAnim 1s linear;
+}
+
+.value-at-rule-prelude-style_module_css-imported-timing-anim {
+	animation: value-at-rule-prelude-style_module_css-importedAnim 2s linear;
+}
+
+.value-at-rule-prelude-style_module_css-imported-local-anim {
+	animation-name: value-at-rule-prelude-style_module_css-importedLocalAnim;
 }
 
 /*!***********************************!*\\\\

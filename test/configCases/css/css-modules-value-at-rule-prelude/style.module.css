@@ -185,3 +185,31 @@ importedSelValue {
 @keyframes richAnimName {
 	from { opacity: 0; }
 }
+
+@value importedRichName from "./values.module.css";
+
+@keyframes importedRichName {
+	from { opacity: 0; }
+}
+
+@value importedRichSelValue from "./values.module.css";
+
+importedRichSelValue {
+	color: white;
+}
+
+@value duration: 1s;
+@value easing: linear;
+@value importedDuration, importedEasing, importedLocalAnimName from "./values.module.css";
+
+.timing-anim {
+	animation: animName duration easing;
+}
+
+.imported-timing-anim {
+	animation: importedAnimName importedDuration importedEasing;
+}
+
+.imported-local-anim {
+	animation-name: local(importedLocalAnimName);
+}

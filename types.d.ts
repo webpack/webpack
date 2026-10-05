@@ -34002,6 +34002,7 @@ declare namespace exports {
 					options: CssProcessOptions
 				) => void;
 				export let isDashedIdentifier: (identifier: string) => boolean;
+				export let isSimpleIdentifier: (value: string) => boolean;
 				export let isWhitespace: (cc: number) => boolean;
 				export let normalizeUrl: (str: string, isString: boolean) => string;
 				export let parseABlocksContents: (
