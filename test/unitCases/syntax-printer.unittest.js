@@ -341,8 +341,12 @@ const IMPROVED_CASES = [
 			"try { throw new Error('x'); } catch (e) { console.log(e instanceof Error, e.message); }"
 		],
 		[
-			"a `new` native error called",
-			"var e = new TypeError('t'), r = new RangeError('r'); console.log(e instanceof TypeError, r instanceof RangeError, e.message);"
+			"`new TypeError` called",
+			"var e = new TypeError('t'); console.log(e instanceof TypeError, e.message);"
+		],
+		[
+			"`new RangeError` called",
+			"var r = new RangeError('r'); console.log(r instanceof RangeError);"
 		],
 		[
 			"`new AggregateError` called",
@@ -367,6 +371,34 @@ const IMPROVED_CASES = [
 		[
 			"`new RegExp` on a string called",
 			"var r = new RegExp('a+', 'g'); console.log(r.source, r.flags);"
+		],
+		[
+			"`new EvalError` called",
+			"var e = new EvalError('a'); console.log(e instanceof EvalError, e.message);"
+		],
+		[
+			"`new ReferenceError` called",
+			"var e = new ReferenceError('a'); console.log(e instanceof ReferenceError);"
+		],
+		[
+			"`new SyntaxError` called",
+			"var e = new SyntaxError('a'); console.log(e instanceof SyntaxError);"
+		],
+		[
+			"`new URIError` called",
+			"var e = new URIError('a'); console.log(e instanceof URIError);"
+		],
+		[
+			"`new SuppressedError` called",
+			"try { var e = new SuppressedError(1, 2, 'm'); console.log(e.error, e.suppressed, e.message); } catch (e) { console.log(e.name); }"
+		],
+		[
+			"`new RegExp` on a number called",
+			"var r = new RegExp(1); console.log(r.source);"
+		],
+		[
+			"an unused `new Error` called, then dropped",
+			"new Error('a'); new TypeError(); console.log(1);"
 		],
 		[
 			"`new RegExp` without arguments called",
@@ -460,6 +492,8 @@ const KEPT_CASES = [
 	["`new RegExp` on a regular expression, which `RegExp` hands back", "var s = /x/; function f(p) { return new RegExp(p); } console.log(f(s) === s, new RegExp(s) === s);"],
 	["`new Error` shadowed by a variable", "var Error = function (m) { this.m = m; }; console.log(new Error('k').m);"],
 	["`new Error` inside `with`", "with ({ Error: class { constructor() { this.w = 1; } } }) { console.log(new Error().w); }"],
+	["`new Error` shadowed in an enclosing function", "function g() { var Error = function (m) { this.m = m; }; return function () { return new Error('k').m; }; } console.log(g()());"],
+	["`new Error` a direct `eval` could rebind", "function f() { eval(''); return new Error('e').message; } console.log(f());"],
 	["`new` of a built-in that needs it", "console.log(new Date(0).getTime(), typeof new String('a'), new Map().size);"]
 ];
 
