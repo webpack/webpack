@@ -1,0 +1,5 @@
+@value animName from "./values.module.css";
+
+@keyframes animName {
+	from { opacity: 0; }
+}
