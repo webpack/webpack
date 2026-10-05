@@ -159,96 +159,11 @@ Directories come first, in alphabetical order, then the individual files worth t
 
 **Behavior across rebuilds is a `watchCases/` case, never a unit test calling `compiler.run` in a loop** — `output.clean`, HMR update files, caches, anything one build leaves for the next. Each numbered step directory is one rebuild; its tests read `WATCH_STEP` and `STATS_JSON`, and the config can read the step from `test/helpers/currentWatchStep`. What the output can't show (which files a plugin touched) is recorded by a plugin in the config, which pushes a `compilation.errors` entry when it differs (`watchCases/clean/removed-assets`). A step needing time to pass waits in its own `it` with a longer timeout (`watchCases/clean/hot-update-slow-rebuild`).
 
-Every case in `watchCases/` automatically compares each watch step
-with a new compiler with caching disabled; no `test.config.js` is needed.
-Asset names and contents, errors and warnings must match. Before seal, both
-builds check connection symmetry, live endpoints and dependency parents.
-Keep runtime assertions in the fixture too. This comparison supports multiple
-configurations, including rebuilds affecting only one compiler. Prefer
-deterministic output (use named module and chunk IDs when necessary).
-Cases whose behavior intentionally depends on build history must give a reason
-in `test.config.js`: `skipFreshAssetContent` skips only asset contents,
-`skipFreshWarnings` skips only warnings, and `skipFreshCompilation` skips the
-independent build when it cannot reproduce the case (such as HMR updates or
-plugins that advance shared state). Graph checks and runtime assertions always
-run. Keep exceptions as narrow as possible.
-The `incremental/repeated-detach` case exercises repeated removal and restoration
-with memory and filesystem caches. `incremental/basic` also counts resolutions
-and built modules so falling back to a full graph walk fails the test.
-
-For generated edits or precise lifecycle ordering, a case can export a function
-from `scenario.js` that registers its tests. The watch harness passes the isolated
-`directory` and the suite's `experiments`. Use `test/helpers/watchTestSession` to
-drive real watch builds with explicit filesystem notifications and the same fresh
-compilation and graph checks. This controls notification ordering; existing watch
-cases still exercise the operating system's file watcher.
-
-`incremental/generated-sequence` shuffles edit episodes using three fixed seeds
-in development with memory caching and production with filesystem caching. It
-covers additions, removals, restores, import retargeting, export renaming, syntax
-errors and recovery, package entry changes and side effects. Each step compares
-diagnostics, asset names and runtime exports with a fresh build, then checks a
-separate model of the expected exports. Asset contents are excluded because
-rebuilds retain code generation metadata that can change the bytes without
-changing behavior. Run another reproducible seed with:
-
-```sh
-WEBPACK_WATCH_SEED=42 yarn test:base --testPathPatterns='Watch.*TestCases.longtest' --testNamePattern='incremental generated-sequence' --runInBand
-```
-
-On a comparison failure, the case reduces the sequence, saves `replay.json` in
-its temporary directory and prints `WEBPACK_WATCH_SEQUENCE='[...]'` for replay.
-Set that variable with the command above to run the reduced sequence directly.
-Build failures are reported without reduction to avoid repeatedly waiting for a
-stalled build. `incremental/in-flight-invalidation` uses an asynchronous loader
-barrier to cover edits during compilation, consecutive invalidations and closing
-with pending work, without relying on sleeps.
-
-`incremental/mutation-checks` verifies that these checks detect deliberate faults:
-ignoring invalidation, retaining stale outgoing connections and skipping recovery
-after a resolution error. Each scenario first passes with the original code, then
-must fail through the expected assertion with the fault enabled. The test checks
-that the mutated path ran; timeouts and unrelated build errors do not count.
-Mutations replace one method on the watched compilation using a copy compiled in
-an isolated context; source files, shared prototypes and fresh builds stay intact.
-They run automatically in both watch suites, in development with memory caching
-and production with filesystem caching. To run just this audit:
-
-```sh
-yarn test:base --testPathPatterns='Watch.*TestCases.longtest' --testNamePattern='incremental mutation-checks' --runInBand
-```
-
-Graph checks also reject connections whose dependency has been removed from its
-parent module's blocks, even when the emitted bundle still matches. Connections
-without a dependency parent, such as those created directly by plugins, remain
-valid and have a positive control in the mutation audit.
-`incremental/prefetch-rebuild-connections` covers this invariant when prefetch
-rebuilds an uncached loader module during the make hook.
-`incremental/restored-file-cache` removes and restores a detached module with
-filesystem caching, checking that a failed snapshot read cannot hide the restored
-file from the next rebuild.
-
-`incremental/hmr-runtime` applies real watch updates in a retained runtime for
-node, async-node, web and webworker targets. It checks accept/dispose callbacks,
-dispose data, module removal and recovery after a syntax error. HMR's history
-prevents a fresh-build comparison; graph checks and explicit runtime assertions
-cover every step, including that the entry and shared state remain alive. Its
-numbered directories contain the sources and `test.js` assertions. `findBundle`
-loads those assertions while `STATE` retains the initial runtime per configuration.
-
-`incremental/plugin-error-recovery` injects synchronous and asynchronous failures
-in make, finishMake, finishModules, processAssets, afterSeal, afterCompile, emit
-and done. After replacing a dependency, the invalidation must report the error
-once, then recover without another edit and continue rebuilding. Successful
-builds still compare with fresh compilations. Steps 1 through 8 each fail in one
-hook; step 9 verifies the next ordinary rebuild. The case uses filesystem
-caching and runs in both watch suites.
-
-A watch case can provide `watchError(error, compiler)` in `test.config.js` to
-assert an expected fatal error and invalidate the same compiler without editing
-files. Throwing or rejecting fails the test; without this callback, fatal errors
-close the compiler as usual. This leaves recovery cases on the standard watch
-runner, including fresh-build comparisons and the operating system file watcher.
+Watch tests compare assets and diagnostics with a fresh, uncached build and check
+graph invariants. Keep runtime assertions; any `skipFreshAssetContent`,
+`skipFreshWarnings` or `skipFreshCompilation` exception needs a reason in
+`test.config.js`. See [the incremental fixtures](test/watchCases/incremental/)
+for examples.
 
 **Snapshot printed code; assert everything else.** When the thing tested _is_ generated output — bundles, minified CSS/HTML, serialized ASTs, stats text — use `toMatchSnapshot()`, not `expect(...).toBe(...)` on fragments (which pins one substring and ignores every other byte). For behavior, invariants, equivalences and error paths use explicit `expect`s; a snapshot there only records what happened to be true. Never snapshot a value some machine can't produce (a snapshot skipped without an optional browser or native binary is reported obsolete and fails the run there), and keep control characters out of snapshots (one NUL makes git treat the file as binary and hide its diff).
 

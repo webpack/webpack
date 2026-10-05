@@ -15,7 +15,7 @@ require("../helpers/warmup-webpack");
  * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
  * @property {boolean=} noTests
  * @property {boolean=} restartCompiler close the compiler after each step and start a new one
- * @property {((error: Error, compiler: import("../../").Compiler | import("../../").MultiCompiler) => void | Promise<void>)=} watchError check a fatal watch error and request recovery on the same compiler
+ * @property {((error: Error, compiler: import("../../").Compiler | import("../../").MultiCompiler) => void | Promise<void>)=} watchError check a watch or comparison error and request recovery on the same compiler
  * @property {string=} skipFreshAssetContent reason asset contents depend on build history
  * @property {string=} skipFreshWarnings reason warnings depend on build history
  * @property {string=} skipFreshCompilation reason an independent compilation cannot reproduce this case
@@ -154,17 +154,6 @@ const describeCases = (config) => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
-						const scenarioPath = path.join(testDirectory, "scenario.js");
-						if (fs.existsSync(scenarioPath)) {
-							/** @type {(options: import("../helpers/watchTestSession").ScenarioOptions) => void} */
-							const describeScenario = require(scenarioPath);
-
-							describeScenario({
-								directory: tempDirectory,
-								experiments: config.experiments
-							});
-							return;
-						}
 						/** @type {import("../../").Compiler | import("../../").MultiCompiler | undefined} */
 						let watchedCompiler;
 						/** @type {Promise<Error | null | undefined> | undefined} */
@@ -460,6 +449,18 @@ const describeCases = (config) => {
 											assertModuleGraph
 										);
 									}
+									/**
+									 * @param {Error} error watch or comparison failure
+									 * @returns {Promise<void>} error handling and optional recovery
+									 */
+									const handleWatchError = async (error) => {
+										try {
+											if (!testConfig.watchError) throw error;
+											await testConfig.watchError(error, compiler);
+										} catch (error) {
+											await fail(/** @type {Error} */ (error));
+										}
+									};
 									compiler.hooks.invalid.tap(
 										"WatchTestCasesTest",
 										(filename, _mtime) => {
@@ -473,11 +474,7 @@ const describeCases = (config) => {
 										async (err, stats) => {
 											try {
 												if (failed) return;
-												if (err) {
-													if (!testConfig.watchError) throw err;
-													await testConfig.watchError(err, compiler);
-													return;
-												}
+												if (err) return handleWatchError(err);
 												if (!stats) {
 													throw new Error("No stats reported from Compiler");
 												}
@@ -511,7 +508,12 @@ const describeCases = (config) => {
 												}
 												lastHash = stats.hash;
 												run.done = true;
-												await compare(stats);
+												try {
+													await compare(stats);
+												} catch (error) {
+													run.done = false;
+													return handleWatchError(/** @type {Error} */ (error));
+												}
 												run.stats = stats;
 												lastFileDependencies = new Set();
 												lastContextDependencies = [];
@@ -593,12 +595,16 @@ const describeCases = (config) => {
 													},
 													category,
 													testName,
-													setupRunner: ({ runner }) => {
+													setupRunner: ({ runner, index }) => {
 														runner.mergeModuleScope({
 															it: run.it,
 															beforeEach: _beforeEach,
 															afterEach: _afterEach,
 															STATS_JSON: jsonStats,
+															FRESH_OUTPUT_DIRECTORY: path.join(
+																freshOutputDirectory,
+																String(index)
+															),
 															STATE: state,
 															WATCH_STEP: run.name
 														});
