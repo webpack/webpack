@@ -336,6 +336,7 @@ export default defineConfig([
 	},
 	{
 		files: [
+			".claude/hooks/**/*.js",
 			"setup/**/*.js",
 			"tooling/**/*.js",
 			"test/*.benchmark.mjs",
