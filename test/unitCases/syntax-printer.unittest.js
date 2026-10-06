@@ -2401,6 +2401,16 @@ describe("syntax-printer", () => {
 			"a collapse scan in a try stopping after an expression with effects",
 			"function f(b) { try { var a = b.c; x() + q(a); } catch (e) {} } sink(f);",
 			{}
+		],
+		[
+			"statements after an if that returns moved into its other branch",
+			"function f(a) { if (a) { x(); return; } y(); z(); } function g(a) { if (a) { x(); return void h(); } y(); } function k(a) { if (a) { let q = 1; x(q); return; } y(); } function m(a, b) { var v; if (a) return 1; var w; if (b) return 2; x(); } function n(a) { if (a) x(); else { y(); return; } z(); } function p(a, b) { if (a) return 1; var u; if (b) return; w(); } sink(f, g, k, m, n, p);",
+			{ passes: 2 }
+		],
+		[
+			"an if whose branch returns before its end kept",
+			"function f(a) { if (a) { x(); return; y(); } z(); } sink(f);",
+			{ dead_code: false }
 		]
 	];
 
